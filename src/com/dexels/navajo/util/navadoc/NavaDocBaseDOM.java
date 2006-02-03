@@ -14,7 +14,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.log4j.Logger;
 import org.w3c.dom.Comment;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
@@ -28,9 +27,6 @@ public class NavaDocBaseDOM {
 
   public static final String vcIdent =
       "$Id$";
-
-  public static final Logger logger =
-      Logger.getLogger(NavaDocBaseDOM.class.getName());
 
   // DOM Document Builder
   protected DocumentBuilder dBuilder = null;

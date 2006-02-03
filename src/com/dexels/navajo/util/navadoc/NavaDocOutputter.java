@@ -16,10 +16,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Properties;
 
-import javax.servlet.ServletException;
-
-import org.apache.log4j.Logger;
-import org.apache.log4j.Priority;
 import org.apache.xalan.serialize.Serializer;
 import org.apache.xalan.serialize.SerializerFactory;
 import org.apache.xalan.templates.OutputProperties;
@@ -29,8 +25,6 @@ public class NavaDocOutputter {
   public static final String vcIdent =
       "$Id$";
 
-  public static final Logger logger =
-      Logger.getLogger(NavaDocOutputter.class.getName());
 
   private NavaDocBaseDOM dom = null;
 
@@ -80,8 +74,7 @@ public class NavaDocOutputter {
 
   // for writing to servlet output
 
-  public NavaDocOutputter(final NavaDocBaseDOM d, final PrintWriter out) throws
-      ServletException {
+  public NavaDocOutputter(final NavaDocBaseDOM d, final PrintWriter out)   {
     this.dom = d;
     this.init();
     try {
@@ -89,7 +82,7 @@ public class NavaDocOutputter {
       this.serializer.asDOMSerializer().serialize(
           this.dom.getDocument().getDocumentElement());
     } catch ( Exception ex ) {
-      throw new ServletException( ex.toString() );
+      ex.printStackTrace(System.err);
     }
   }
 
@@ -160,8 +153,7 @@ public class NavaDocOutputter {
       fw.close();
     }
     catch (IOException ioe) {
-      logger.log(Priority.WARN, "unable to capture result to file '" +
-                 this.targetFile.getAbsoluteFile() + "': " + ioe);
+      
     }
   } // private void output()
 

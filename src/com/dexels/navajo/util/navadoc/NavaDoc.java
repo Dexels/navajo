@@ -15,10 +15,6 @@ import java.util.Set;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.log4j.BasicConfigurator;
-import org.apache.log4j.Logger;
-import org.apache.log4j.Priority;
-
 import com.dexels.navajo.util.navadoc.config.ConfigurationException;
 import com.dexels.navajo.util.navadoc.config.DocumentSet;
 import com.dexels.navajo.util.navadoc.config.NavaDocConfigurator;
@@ -27,9 +23,6 @@ public class NavaDoc {
 
   public static final String vcIdent =
       "$Id$";
-
-  public static final Logger logger =
-      Logger.getLogger(NavaDoc.class.getName());
 
   private NavaDocConfigurator config = new NavaDocConfigurator();
 
@@ -58,10 +51,7 @@ public class NavaDoc {
     while (iter.hasNext()) {
       final String name = (String) iter.next();
       final DocumentSet dset = (DocumentSet) setMap.get(name);
-      NavaDoc.logger.log(Priority.DEBUG,
-                      "working on documentation for set named '" +
-                      name + "'");
-
+    
       // set-up an index DOM
       try {
         this.index = new NavaDocIndexDOM(dset);
@@ -99,13 +89,7 @@ public class NavaDoc {
 
   public static void main(String[] args) throws ConfigurationException {
 
-    // get some basic logging started
-    BasicConfigurator.configure();
-    Logger.getLogger(NavaDoc.class).log(Priority.DEBUG, "basic logging started");
-
-    final NavaDoc documenter = new NavaDoc();
-
-    logger.log(Priority.INFO, "finished");
+    final NavaDoc documenter = new NavaDoc(); 
 
   }
 

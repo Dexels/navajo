@@ -16,7 +16,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
+
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -28,8 +28,7 @@ public class DocumentSet {
   public static final String vcIdent =
       "$Id$";
 
-  public static final Logger logger =
-      Logger.getLogger(DocumentSet.class.getName());
+  
 
   private String configUri;
   private Element elem;

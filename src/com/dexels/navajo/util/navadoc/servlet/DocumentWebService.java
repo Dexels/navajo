@@ -35,17 +35,11 @@ import com.dexels.navajo.util.navadoc.config.NavaDocConfigurator;
 import com.dexels.navajo.util.navadoc.config.ConfigurationException;
 import com.dexels.navajo.util.navadoc.config.DocumentSet;
 
-// logging
-import org.apache.log4j.Logger;
-import org.apache.log4j.Priority;
-import org.apache.log4j.BasicConfigurator;
+
 
 public class DocumentWebService extends HttpServlet {
 
     public static final String vcIdent = "$Id$";
-
-    public static final Logger logger = Logger
-            .getLogger( DocumentWebService.class.getName() );
 
     private String configUri;
 
@@ -64,10 +58,6 @@ public class DocumentWebService extends HttpServlet {
 
     //Initialize global variables
     public void init() throws ServletException {
-
-        // get some basic logging started
-        BasicConfigurator.configure();
-        DocumentWebService.logger.log( Priority.DEBUG, "basic logging started" );
 
         this.configUri = this
                 .getInitParameter( NavaDocConstants.WEB_CONFIG_INITPARAM );
@@ -173,9 +163,7 @@ public class DocumentWebService extends HttpServlet {
                 // set optional parameters, nulls OK
                 t.setProjectName( dset.getName() );
                 t.setCssUri( cssUri );
-                DocumentWebService.logger.log( Priority.DEBUG,
-                        "created a new transformer for document set '"
-                                + dset.getName() + "'" );
+               
 
                 // cache the list of webservices found in this set
                 final ServicesList l = new ServicesList( sPath );
@@ -241,9 +229,7 @@ public class DocumentWebService extends HttpServlet {
             final NavaDocTransformer t, final ServicesList l ) {
         this.transformMap.put( name, t );
         this.slistMap.put( name, l );
-        DocumentWebService.logger.log( Priority.DEBUG,
-                "cached services list and transfer for document set '" + name
-                        + "'" );
+  
     }
 
     /**
@@ -289,8 +275,7 @@ public class DocumentWebService extends HttpServlet {
 
     private synchronized void cacheIndex( String set, NavaDocIndexDOM idx ) {
         this.indexMap.put( set, idx );
-        DocumentWebService.logger.log( Priority.DEBUG,
-                "cached index page for document set '" + set + "'" );
+      
     }
 
     /**
@@ -301,9 +286,7 @@ public class DocumentWebService extends HttpServlet {
         this.slistMap = new HashMap();
         this.indexMap = new HashMap();
         this.configure();
-        DocumentWebService.logger.log( Priority.DEBUG,
-                "flushed all cached objects and re-read configuration from "
-                        + this.configUri );
+      
 
     }
 }

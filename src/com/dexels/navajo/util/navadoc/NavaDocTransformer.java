@@ -26,8 +26,6 @@ import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamSource;
 
-import org.apache.log4j.Logger;
-import org.apache.log4j.Priority;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
@@ -37,9 +35,6 @@ import org.xml.sax.SAXException;
 public class NavaDocTransformer extends NavaDocBaseDOM {
 
   public static final String vcIdent = "$Id$";
-
-  public static final Logger logger =
-    Logger.getLogger( NavaDocTransformer.class.getName() );
 
   // paths
   private File styleSheetPath = null;
@@ -206,13 +201,13 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
     } catch ( Exception e ) {
 
       this.errorText = "unable to transform source '" + sFile + "': " + e;
-      logger.log( Priority.WARN, this.errorText );
+      
       this.setErrorText( body );
 
     }
 
 
-    logger.log( Priority.INFO, "finished transformation for '" + sname + "'" );
+   
 
   } // public void transformWebService()
 
@@ -224,8 +219,7 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
     while ( enum.hasMoreElements() ) {
       String s = (String) enum.nextElement();
 
-      logger.log( Priority.DEBUG, "transformer property: " +
-        s + " = " + props.getProperty( s ) );
+     
     }
   } // public void dumpProperties()
 

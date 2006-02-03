@@ -13,7 +13,7 @@ package com.dexels.navajo.util.navadoc;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.log4j.Logger;
+
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
 
@@ -24,9 +24,7 @@ public class NavaDocIndexDOM extends NavaDocBaseDOM {
 
   public static final String vcIdent = "$Id$";
 
-  public static final Logger logger =
-    Logger.getLogger( NavaDocIndexDOM.class.getName() );
-
+  
   private String title = null;
   private Element table = null;
   private Element tbody = null;

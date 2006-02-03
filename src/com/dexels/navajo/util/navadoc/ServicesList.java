@@ -1,25 +1,17 @@
 package com.dexels.navajo.util.navadoc;
 
 
-import gnu.regexp.RE;
-import gnu.regexp.REException;
-import gnu.regexp.REMatch;
 
 import java.io.File;
 import java.util.TreeSet;
-
-import org.apache.log4j.Logger;
-import org.apache.log4j.Priority;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.dexels.navajo.util.navadoc.NavaDoc;
 import com.dexels.navajo.util.navadoc.NavaDocConstants;
 import com.dexels.navajo.util.navadoc.config.ConfigurationException;
 
 public class ServicesList extends TreeSet {
-
-
-  public static final Logger logger =
-    Logger.getLogger( NavaDoc.class.getName() );
 
   // filename match expression
   public static final String FMATCH = "[.]" + NavaDocConstants.NAVASCRIPT_EXT + "$";
@@ -35,8 +27,7 @@ public class ServicesList extends TreeSet {
 
     if ( fList != null ) {
       try {
-        RE xslRE = new RE( ".*" + com.dexels.navajo.util.navadoc.ServicesList.FMATCH );
-
+     
         for ( int i = 0; i < fList.length; i++ ) {
           File f = fList[i];
 
@@ -44,18 +35,17 @@ public class ServicesList extends TreeSet {
             String n = f.getName();
 
             // this gets the base name of the web service
-            if ( xslRE.isMatch( n ) ) {
-              RE extRE = new RE( com.dexels.navajo.util.navadoc.ServicesList.FMATCH );
-              REMatch match = extRE.getMatch( n );
-              String base = n.substring( 0, match.getStartIndex() );
-
-              logger.log( Priority.DEBUG, "found service, basename is: '" +
-                base + "'" );
+            if ( n.matches( ".*" + com.dexels.navajo.util.navadoc.ServicesList.FMATCH ) ) {
+              //RE extRE = new RE( com.dexels.navajo.util.navadoc.ServicesList.FMATCH );
+              Pattern extRE = Pattern.compile( com.dexels.navajo.util.navadoc.ServicesList.FMATCH );
+              Matcher m = extRE.matcher( n );
+              m.find();
+              String base = n.substring( 0, m.start() );
               this.add( base );
             }
           }
         }
-      } catch ( REException ree ) {
+      } catch ( Exception ree ) {
         ConfigurationException e =
           new ConfigurationException( ree.toString() );
 
@@ -65,6 +55,14 @@ public class ServicesList extends TreeSet {
 
   } // public ServicesList()
 
+  public static void main(String [] args) {
+	  Pattern p = Pattern.compile( com.dexels.navajo.util.navadoc.ServicesList.FMATCH );
+	  String aap = "Aap.xml";
+	  Matcher m = p.matcher( aap );
+	  System.err.println( m.find() );
+	  System.err.println( aap.substring(0, m.start() ) );
+	  
+  }
 } // public class ServicesList
 
 // EOF: $RCSfile$ //

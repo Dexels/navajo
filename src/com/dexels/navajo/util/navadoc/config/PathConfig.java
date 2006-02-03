@@ -29,9 +29,6 @@ import java.util.HashMap;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-// logging
-import org.apache.log4j.Logger;
-import org.apache.log4j.Priority;
 import org.w3c.dom.Node;
 import java.util.Set;
 import java.util.Iterator;
@@ -40,8 +37,6 @@ public class PathConfig {
 
     public static final String vcIdent = "$Id$";
 
-    public static final Logger logger = Logger.getLogger( PathConfig.class
-            .getName() );
 
     private String configUri;
 
@@ -106,8 +101,7 @@ public class PathConfig {
         final String x = System
                 .getProperty( NavaDocConstants.BASE_SYS_PROPERTY );
         if ( ( x != null ) && ( x.length() > 0 ) ) {
-            PathConfig.logger.log( Priority.DEBUG,
-                    "base directory system property set to '" + x + "'" );
+        
             this.base = new File( x );
             if ( !( this.base.exists() && this.base.isDirectory() ) ) {
                 throw new ConfigurationException( "base directory set to '" + x
@@ -172,8 +166,7 @@ public class PathConfig {
                                             + "' does not exist and could not create it",
                                     this.configUri );
                         }
-                        PathConfig.logger.log( Priority.DEBUG,
-                                "created directory '" + path + "'" );
+                      
 
                     } else if ( name
                             .equals( NavaDocConstants.TARGET_PATH_ELEMENT )
@@ -188,8 +181,7 @@ public class PathConfig {
 
                     }
                     this.pathMap.put( name, path );
-                    PathConfig.logger.log( Priority.DEBUG, "'" + name
-                            + "' directory set to '" + path.toString() + "'" );
+                   
 
                 }
             }

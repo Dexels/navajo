@@ -16,15 +16,10 @@ import org.custommonkey.xmlunit.Difference;
  */
 
 // logging
-import org.apache.log4j.Logger;
-import org.apache.log4j.Priority;
-
 
 public class NavaDocDifferenceListener implements DifferenceListener {
 
-  public static final Logger logger =
-    Logger.getLogger( NavaDocDifferenceListener.class.getName() );
-
+  
   public NavaDocDifferenceListener() {
     super();
   }
@@ -36,15 +31,13 @@ public class NavaDocDifferenceListener implements DifferenceListener {
 
     if ( ( controlNode.getNodeName().compareToIgnoreCase( "meta" ) == 0 ) &&
       ( resultNode.getNodeName().compareToIgnoreCase( "meta" ) == 0 ) ) {
-      logger.log( Priority.DEBUG, "ignoring META tag in comparison test: '" +
-        controlNode + "'" );
+     
       return ( DifferenceListener.RETURN_IGNORE_DIFFERENCE_NODES_SIMILAR );
     }
 
     if ( ( controlNode.getNodeType() == Node.COMMENT_NODE ) &&
       ( resultNode.getNodeType() == Node.COMMENT_NODE ) ) {
-      logger.log( Priority.DEBUG, "ignoring comment tag in comparison test: '" +
-        controlNode + "'" );
+    
       return ( DifferenceListener.RETURN_IGNORE_DIFFERENCE_NODES_SIMILAR );
     }
 

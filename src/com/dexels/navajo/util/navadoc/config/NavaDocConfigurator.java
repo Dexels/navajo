@@ -25,9 +25,6 @@ import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.apache.log4j.Logger;
-import org.apache.log4j.Priority;
-import org.apache.log4j.xml.DOMConfigurator;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -38,9 +35,6 @@ import com.dexels.navajo.util.navadoc.NavaDocConstants;
 public class NavaDocConfigurator {
 
     public static final String vcIdent = "$Id$";
-
-    public static final Logger logger = Logger
-            .getLogger( NavaDocConfigurator.class.getName() );
 
     private String configUri = System.getProperty( "configUri" );
 
@@ -87,8 +81,6 @@ public class NavaDocConfigurator {
             throw ( ce );
         }
 
-        this.configureLogging();
-
         // get NavaDoc configuration from DOM
         this.navConf = (Element) this.configDOM.getElementsByTagName(
                 NavaDocConstants.CONFIGURATION_ELEMENT ).item( 0 );
@@ -120,8 +112,7 @@ public class NavaDocConfigurator {
             if ( ( i == 0 ) || set.isDefault() ) {
                 this.defaultSet = set;
             }
-            NavaDocConfigurator.logger.log( Priority.DEBUG, "configured: "
-                    + set + " " + set.getPathConfiguration() );
+           
         }
 
     } // configure()
@@ -155,56 +146,6 @@ public class NavaDocConfigurator {
 
     // ----------------------------------------------------------- private
     // methods
-
-    /**
-     * configure the logging sub-system if one has been provided
-     * http://jakarta.apache.org/log4j/
-     */
-
-    private void configureLogging() {
-
-        Node n;
-        NodeList logList = this.configDOM
-                .getElementsByTagName( NavaDocConstants.LOG4JCONFIG_ELEMENT );
-
-        // this funny bit of logic allows local declaration of the LOG4J
-        // namespace in the document and expects that NavaTest configuration
-        // will
-        // always be first and LOG4J will always be 2nd in the document
-
-        if ( ( logList != null ) && ( logList.getLength() == 1 ) ) {
-            n = logList.item( 0 );
-            if ( n.getNodeType() == Node.ELEMENT_NODE ) {
-                this.loggerConfig = (Element) n;
-                DOMConfigurator.configure( this.loggerConfig );
-                NavaDocConfigurator.logger.log( Priority.DEBUG,
-                        "reconfigured logging" );
-                return;
-            }
-        } else {
-            logList = this.configDOM
-                    .getElementsByTagName( NavaDocConstants.CONFIGURATION_ELEMENT );
-            if ( ( logList != null ) && ( logList.getLength() == 2 ) ) {
-                n = logList.item( 1 );
-                final Element clone = this.configDOM
-                        .createElement( NavaDocConstants.LOG4JCONFIG_ELEMENT );
-                this.configDOM.getDocumentElement().appendChild( clone );
-                final NodeList children = n.getChildNodes();
-                for ( int i = 0; i < children.getLength(); i++ ) {
-                    final Node m = ( children.item( i ) ).cloneNode( true );
-                    clone.appendChild( m );
-                }
-                this.loggerConfig = clone;
-                DOMConfigurator.configure( this.loggerConfig );
-                NavaDocConfigurator.logger.log( Priority.DEBUG,
-                        "reconfigured logging" );
-                return;
-            }
-            NavaDocConfigurator.logger.log( Priority.DEBUG,
-                    "no valid logging configuration found" );
-            return;
-        }
-    }
 
 } // public class NavaDocConfigurator
 // EOF: $RCSfile$ //
