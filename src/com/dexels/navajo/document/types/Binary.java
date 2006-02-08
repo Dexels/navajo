@@ -39,6 +39,7 @@ public final class Binary extends NavajoType {
       bos.close();
       is.close();
       this.data = bos.toByteArray();
+      this.mimetype = guessContentType();
     } catch (Exception e) {
       e.printStackTrace(System.err);
     }
