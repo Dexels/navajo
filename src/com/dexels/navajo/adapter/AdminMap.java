@@ -38,6 +38,7 @@ public class AdminMap implements Mappable {
   public String adapterPath;
   public String compiledScriptPath;
   public String rootPath;
+  public String webservice;
   public WebserviceAccess webserviceAccess;
   public boolean supportsHotCompile;
   public boolean supportsAsync;
@@ -319,7 +320,14 @@ public class AdminMap implements Mappable {
     Dispatcher.getNavajoConfig().setMonitorExceedTotaltime(monitorTotaltime);
   }
   
-  public WebserviceAccess getWebserviceAccess(String webservice) {
+  public void setWebservice(String w) {
+	  this.webservice = w;
+  }
+  
+  public WebserviceAccess getWebserviceAccess() {
+	  if ( webservice == null ) {
+		  return null;
+	  }
 	  return WebserviceAccessListener.getInstance().getAccessInfo(webservice);
   }
 }
