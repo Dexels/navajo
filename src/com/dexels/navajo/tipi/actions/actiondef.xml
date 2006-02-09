@@ -68,6 +68,12 @@
     <param name="path" type="tipi" required="true"/>
   </tipiaction>
 
+  <tipiaction name="fireEvent"  class="TipiFireEvent" package="com.dexels.navajo.tipi.actions">
+    <param name="path" type="tipi" required="true"/>
+    <param name="type" type="string" required="true"/>
+	<!-- other params will be passed as event parameters -->
+  </tipiaction>
+  
   <tipiaction name="debug" class="TipiDebugOutput" package="com.dexels.navajo.tipi.actions">
     <param name="path" type="object"/>
     <param name="type" type="string" default="bla"/>
