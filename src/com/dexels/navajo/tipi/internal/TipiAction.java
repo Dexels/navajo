@@ -106,6 +106,10 @@ public abstract class TipiAction implements TipiExecutable {
         ArrayList parms = new ArrayList(parameterMap.values());
         return parms;
     }
+    
+    public Set getParameterNames() {
+        return parameterMap.keySet();
+    }
 
     public Operand evaluate(String expr, TipiEvent event) {
         //    if (event==null) {
