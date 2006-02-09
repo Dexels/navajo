@@ -37,16 +37,21 @@ public class DefaultBrowser {
           cmd = "display " + url;
         } else if(url.indexOf(".pdf") >= 0){
           cmd = "xpdf '" + url + "'";
-        }else{ // we don't have a clue..
+        }else if(url.indexOf(".jnlp") >= 0){
+          cmd = "mozilla "+ url;
+        }
+        
+        else{ // we don't have a clue..
           cmd = "mozilla " + url;
         }
         if(cmd != null){
           Process p = Runtime.getRuntime().exec(cmd);
+          
         }
       }
     }
     catch (java.io.IOException ex) {
-      result = false;
+       result = false;
       System.err.println("Could not invoke browser, command=" + cmd);
       System.err.println("Caught: " + ex);
     }
