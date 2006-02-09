@@ -46,12 +46,15 @@ package navajo;
  * 
  * 5.2.0 Added Task Scheduler functionality.
  * 
+ * 5.2.1 Change in CompiledScript. Now using outDoc directly from Access object ( getOutDoc() ), 
+ *       instead of using local field.
+ * 
  */
 public class Version extends dexels.Version {
 
 	public static final int MAJOR = 5;
 	public static final int MINOR = 2;
-	public static final int PATCHLEVEL = 0;
+	public static final int PATCHLEVEL = 1;
 	public static final String VENDOR = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Kernel";
 	public static final String RELEASEDATE = "2006-01-25";
