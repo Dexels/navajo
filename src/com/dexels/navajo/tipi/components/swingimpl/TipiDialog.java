@@ -184,6 +184,7 @@ public class TipiDialog
     myDialog.getContentPane().setLayout(new BorderLayout());
     myDialog.getContentPane().add(getSwingContainer(), BorderLayout.CENTER);
     myDialog.pack();
+    // always the case
     if (myBounds != null) {
       myDialog.setBounds(myBounds);
       System.err.println("Setting bounds: "+myBounds);
@@ -218,7 +219,8 @@ public class TipiDialog
              ( (SwingTipiContext) myContext).addTopLevel(myDialog.getContentPane()); ( (SwingTipiContext) myContext).dialogShowing(true); ( (SwingTipiContext) myContext).
                 updateWaiting();
             SwingClient.getUserInterface().addDialog(myDialog);
-//            myDialog.setVisible(true);
+            myDialog.setSize(myBounds.width,myBounds.height);
+            //            myDialog.setVisible(true);
             if (myContext != null) {
                ( (SwingTipiContext) myContext).dialogShowing(false); if (myDialog != null) {
                  ( (SwingTipiContext) myContext).removeTopLevel(myDialog.getContentPane()); ( (SwingTipiContext) myContext).updateWaiting();
