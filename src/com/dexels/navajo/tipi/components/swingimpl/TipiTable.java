@@ -8,6 +8,7 @@ package com.dexels.navajo.tipi.components.swingimpl;
  * @author not attributable
  * @version 1.0();
  */
+import java.lang.reflect.*;
 import java.util.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -45,6 +46,8 @@ public class TipiTable
   private String remarkBorder = null;
   private String titleExpression = null;
 
+  // use with care. Here for threading probs
+  private int selectedMessageIndex = -1;
   private boolean ignoreColumns = false;
 
   public Object createContainer() {
@@ -337,7 +340,11 @@ public class TipiTable
       mm.setReadOnly(Boolean.valueOf(object.toString()).booleanValue());
     }
     if (name.equals("selectedIndex")) {
-      mm.setSelectedRow( ( (Integer) object).intValue());
+        selectedMessageIndex = ( (Integer) object).intValue();
+        runSyncInEventThread(new Runnable(){
+            public void run() {
+                mm.setSelectedRow(selectedMessageIndex);
+            }});
 //      setColumnsVisible(Boolean.valueOf(object.toString()).booleanValue());
     }
     if (name.equals("rowHeight")) {
@@ -439,10 +446,11 @@ public class TipiTable
         return m;
       }
       else if (name.equals("selectedIndex")) {
-        if (mm.getSelectedMessage() == null) {
-          return new Integer( -1);
-        }
-        return new Integer(mm.getSelectedMessage().getIndex());
+             runSyncInEventThread(new Runnable(){
+                public void run() {
+                     selectedMessageIndex = mm.getSelectedRow();
+                }});
+        return new Integer(selectedMessageIndex);
       }
       if (name.equals("rowCount")) {
         return new Integer(mm.getRowCount());
