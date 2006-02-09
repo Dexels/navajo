@@ -1,7 +1,9 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
+import java.net.*;
 import java.util.*;
 import javax.swing.*;
+
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.internal.*;
@@ -77,13 +79,23 @@ public class TipiMenuItem
       myItem.setAccelerator(KeyStroke.getKeyStroke( (String) object));
     }
     if (name.equals("icon")) {
-      myItem.setIcon( (Icon) object);
-    }
+        //System.err.println("Type: "+object.getClass());
+      if (object instanceof URL) {
+          myItem.setIcon(getIcon( (URL) object));
+      } else {
+          System.err.println("Ignoring strange resource");
+      }
+  }
     if (name.equals("enabled")) {
       // Just for the record.
       iAmEnabled = ((Boolean)object).booleanValue();
     }
   }
+  
+  private ImageIcon getIcon(URL u) {
+      return new ImageIcon(u);
+    }
+  
 //  public void load(XMLElement def, XMLElement instance, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
 //    super.load(def, instance, context);
 //  }
