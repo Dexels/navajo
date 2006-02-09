@@ -20,9 +20,9 @@ public class TipiProperty
   private ArrayList myListeners = new ArrayList();
   private int default_label_width = 50;
   private int default_property_width = 50;
-  private boolean hardEnabled = false;
+//  private boolean hardEnabled = false;
   private boolean myVisibleState = true;
-  private boolean myEnableState = true;
+  private Boolean myEnableState = null;
   private String selectionType = "default";
 //  private Component currentPropertyComponent = null;
   private String myCapitalization = "off";
@@ -118,6 +118,9 @@ public class TipiProperty
         currentType = p.getType();
         setPropFlag = true;
          ( (GenericPropertyComponent) getContainer()).setProperty(p);
+         if (myEnableState!=null) {
+             ( (GenericPropertyComponent) getContainer()).setHardEnabled(myEnableState.booleanValue());
+        }
       }
     });
   }
@@ -177,7 +180,8 @@ public class TipiProperty
           ( (GenericPropertyComponent) getContainer()).setVerticalLabelAlignment(val);
         }
         if ("enabled".equals(name)) {
-           ( (GenericPropertyComponent) getContainer()).setEnabled( ( (Boolean) object).booleanValue());
+            myEnableState = ( (Boolean) object);
+           ( (GenericPropertyComponent) getContainer()).setEnabled(myEnableState.booleanValue());
         }
         if ("visible".equals(name)) {
           myVisibleState = ( (Boolean) object).booleanValue();
@@ -260,8 +264,12 @@ public class TipiProperty
       return vAlign;
     }
     if ("enabled".equals(name)) {
-      return new Boolean(hardEnabled);
-    }
+        if (myEnableState!=null) {
+            return new Boolean(myEnableState.booleanValue());
+        } else {
+            return new Boolean( ( (GenericPropertyComponent) getContainer()).isEnabled());
+        }
+      }
     if ("visible".equals(name)) {
       return new Boolean( ( (GenericPropertyComponent) getContainer()).isVisible());
     }
