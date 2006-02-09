@@ -47,6 +47,8 @@ public class NavajoMap implements Mappable {
   public String messagePointer;
   public boolean exists;
   public String append;
+  // appendParms is used to append entire output doc of called webservice to param block.
+  public String appendParms;
   public boolean sendThrough;
   /**
    * if useCurrentOutDoc is set, the NavajoMap will use the outDoc from the access object instead of creating a new one.
@@ -75,6 +77,11 @@ public class NavajoMap implements Mappable {
     this.inMessage = inMessage;
     try {
       outDoc = NavajoFactory.getInstance().createNavajo();
+      // Always copy globals.
+      if ( inMessage.getMessage("__globals__") != null ) {
+		  Message globals = inMessage.getMessage("__globals__").copy(outDoc);
+		  outDoc.addMessage(globals);
+	  }
     } catch (Exception e) {
       throw new UserException(-1, e.getMessage());
     }
@@ -129,6 +136,45 @@ public class NavajoMap implements Mappable {
           } else {
             currentDoc.addMessage(clone, true);
           }
+        }
+    } catch (NavajoException ne) {
+      throw new UserException(-1, ne.getMessage());
+    }
+  }
+  
+  /**
+   * @param b
+   * @throws UserException
+   *
+   *  if messageOffset is '/', the messages of the received Doc will be appended to the root 
+   *  param block or to the current param message.
+   */
+  public final void setAppendParms(String messageOffset) throws UserException {
+
+    try {
+    	Message parm = ( access.getCompiledScript().currentParamMsg == null ? 
+    			         access.getInDoc().getMessage("__parms__") :
+    			        	 access.getCompiledScript().currentParamMsg);
+    			        	
+        ArrayList list = null;
+        // If append message equals '/'.
+        if ( messageOffset.equals(Navajo.MESSAGE_SEPARATOR) ) {
+        	list = inDoc.getAllMessages();
+        } else if ( inDoc.getMessage(messageOffset) == null ) {
+        	return;
+        } else if ( inDoc.getMessage(messageOffset).getType().equals(Message.MSG_TYPE_ARRAY) ) {
+        	list = new ArrayList();
+        	list.add( inDoc.getMessage(messageOffset) );
+        } else {
+        	list = inDoc.getMessages(messageOffset);
+        }
+        	
+        for (int i = 0; i < list.size(); i++) {
+          Message inMsg = (Message) list.get(i);
+          // Clone message and append it to currentMsg if it exists, else directly under currentDoc.
+          //currentDoc.importMessage(inMsg);
+          Message clone = inDoc.copyMessage(inMsg, parm.getRootDoc());
+          parm.addMessage(clone, true);
         }
     } catch (NavajoException ne) {
       throw new UserException(-1, ne.getMessage());
@@ -632,11 +678,7 @@ public class NavajoMap implements Mappable {
 	  if (b) {
 		  this.useCurrentOutDoc = b;
 		  this.outDoc = access.getOutputDoc();
-		  // Copy globals and param messages.
-		  if ( inMessage.getMessage("__globals__") != null ) {
-			  Message globals = inMessage.getMessage("__globals__").copy(outDoc);
-			  outDoc.addMessage(globals);
-		  }
+		  // Copy param messages.
 		  if ( inMessage.getMessage("__parms__") != null ) {
 			  Message params = inMessage.getMessage("__parms__").copy(outDoc);
 			  outDoc.addMessage(params);
