@@ -111,4 +111,9 @@ public class TipiSwingDesktop
     g.setColor(old);
   }
 
+public void setAlignment(String al) {
+    alignment = al;
+    repaint();
+}
+
 }
