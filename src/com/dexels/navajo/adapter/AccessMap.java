@@ -204,7 +204,10 @@ public final class AccessMap implements Mappable {
 
   private String getResponseNavajo() {
     if (responseNavajo == null) {
-      Navajo in = myAccess.getCompiledScript().outDoc;
+
+        // CHANGED (FRANK) Don't know if its correct! was myAccess.getCompiledScript().outDoc
+        Navajo in = myAccess.getOutputDoc();
+      
       java.io.StringWriter sw = new java.io.StringWriter();
       try {
         in.write(sw);
