@@ -505,7 +505,7 @@ public class TslCompiler {
           result.append(printIdent(ident) + "if (true) {\n");
           // Get required messages.
         }
-        result.append(printIdent(ident + 2) + "com.dexels.navajo.document.Method m = NavajoFactory.getInstance().createMethod(outDoc, \"" +
+        result.append(printIdent(ident + 2) + "com.dexels.navajo.document.Method m = NavajoFactory.getInstance().createMethod(access.getOutputDoc(), \"" +
                       name + "\", \"\");\n");
         result.append(printIdent(ident + 2) + "m.setDescription(\"" +
                       description + "\");\n");
@@ -518,7 +518,7 @@ public class TslCompiler {
                           "\");\n");
           }
         }
-        result.append(printIdent(ident + 2) + "outDoc.addMethod(m);\n");
+        result.append(printIdent(ident + 2) + "access.getOutputDoc().addMethod(m);\n");
         result.append(printIdent(ident) + "}\n");
       }
     }
@@ -572,7 +572,6 @@ public class TslCompiler {
     if (nextElt != null && nextElt.getNodeName().equals("map") &&
         nextElt.getAttribute("ref") != null &&
         !nextElt.getAttribute("ref").equals("")) {
-    	
           ref = nextElt.getAttribute("ref");
           filter = nextElt.getAttribute("filter");
           startElement = nextElt.getAttribute("start_element");
@@ -628,7 +627,7 @@ public class TslCompiler {
     
     if (n.getNodeName().equals("message")) {
 	    result.append(printIdent(ident) + messageList +
-	                  " = MappingUtils.addMessage(outDoc, currentOutMsg, \"" +
+	                  " = MappingUtils.addMessage(access.getOutputDoc(), currentOutMsg, \"" +
 	                  messageName + "\", \"\", count, \"" + type + "\", \"" + mode +
 	                  "\");\n");
     } else { // must be parammessage.
@@ -724,7 +723,7 @@ public class TslCompiler {
 	      result.append(printIdent(ident + 4) +
 	                    "currentOutMsg = MappingUtils.getMessageObject(\"" +
 	                    messageName +
-	                    "\", currentOutMsg, true, outDoc, false, \"\", " + ((startIndex == -1) ? "-1" : startIndexVar + "++") + ");\n");
+	                    "\", currentOutMsg, true, access.getOutputDoc(), false, \"\", " + ((startIndex == -1) ? "-1" : startIndexVar + "++") + ");\n");
 	      result.append(printIdent(ident + 4) +
 	                    "access.setCurrentOutMessage(currentOutMsg);\n");
       } else { // parammessage.
@@ -794,7 +793,7 @@ result.append(printIdent(ident + 4) +
       //result.append(printIdent(ident + 4) +
       //              "currentOutMsg = MappingUtils.getMessageObject(\"" +
       //              messageName +
-      //              "\", currentOutMsg, true, outDoc, false, \"\", -1);\n");
+      //              "\", currentOutMsg, true, access.getOutputDoc(), false, \"\", -1);\n");
       //result.append(printIdent(ident + 4) +
       //              "access.setCurrentOutMessage(currentOutMsg);\n");
 
@@ -923,7 +922,7 @@ result.append(printIdent(ident + 4) +
         String conditional = (optionCondition != null && !optionCondition.equals("")) ?
                              "if (Condition.evaluate(\"" + replaceQuotes(optionCondition) + "\", inMessage, currentMap, currentInMsg, currentParamMsg))\n" : "";
         optionItems.append(conditional+
-            "p.addSelection(NavajoFactory.getInstance().createSelection(outDoc, \"" +
+            "p.addSelection(NavajoFactory.getInstance().createSelection(access.getOutputDoc(), \"" +
             optionName + "\", \"" + optionValue + "\", " + selected + "));\n");
       }
       else if (children.item(i).getNodeName().equals("map")) { // ABout to map a "selection" property!!!
@@ -964,7 +963,7 @@ result.append(printIdent(ident + 4) +
                     propertyName + "\", sValue, type, subtype, \"" + direction +
                     "\", \"" + description + "\", " +
                     length +
-                    ", outDoc, inMessage, !matchingConditions);\n");
+                    ", access.getOutputDoc(), inMessage, !matchingConditions);\n");
     }
     else { // parameter
       result.append(printIdent(ident) +
@@ -972,17 +971,15 @@ result.append(printIdent(ident + 4) +
                     propertyName + "\", sValue, type, subtype, \"" + direction +
                     "\", \"" + description + "\", " +
                     length +
-                    ", outDoc, inMessage, !matchingConditions);\n");
+                    ", access.getOutputDoc(), inMessage, !matchingConditions);\n");
     }
 
     if (isMapped) {
       contextClass = null;
       try {
-    	  contextClass = Class.forName(className, false, loader);
+      contextClass = Class.forName(className, false, loader);
       } catch (Exception e) { throw new Exception("Could not find adapter: " + className); }
       String ref = mapNode.getAttribute("ref");
-      String filter = mapNode.getAttribute("filter");
-      filter = (filter == null) ? "" : filter;
       
       String mappableArrayName = "mappableObject" + (objectCounter++);
       result.append(printIdent(ident + 2) + mappableArrayName +
@@ -999,14 +996,6 @@ result.append(printIdent(ident + 4) +
       result.append(printIdent(ident + 4) +
                     "currentMap = new MappableTreeNode(currentMap, " +
                     mappableArrayName + "[i" + (ident + 2) + "]);\n");
-      
-      if (!filter.equals("")) {
-          result.append(printIdent(ident + 4) + "if (Condition.evaluate(\"" +
-                        replaceQuotes(filter) +
-                        "\", inMessage, currentMap, currentInMsg, currentParamMsg)) {\n");
-          ident += 2;
-      }
-      
       result.append(printIdent(ident + 4) + "String optionName = \"\";\n");
       result.append(printIdent(ident + 4) + "String optionValue = \"\";\n");
       result.append(printIdent(ident + 4) + "boolean optionSelected = false;\n");
@@ -1062,13 +1051,7 @@ result.append(printIdent(ident + 4) +
               "<property> tag expected while sub-mapping a selection property: " + children.item(i).getNodeName());
         }
       }
-      result.append(printIdent(ident + 4) + "p.addSelection(NavajoFactory.getInstance().createSelection(outDoc, optionName, optionValue, optionSelected));\n");
-      
-      if (!filter.equals("")) {
-          ident -= 2;
-          result.append(printIdent(ident + 4) + "}\n");
-      }
-      
+      result.append(printIdent(ident + 4) + "p.addSelection(NavajoFactory.getInstance().createSelection(access.getOutputDoc(), optionName, optionValue, optionSelected));\n");
       result.append(printIdent(ident + 4) +
                     "currentMap.setEndtime();\ncurrentMap = (MappableTreeNode) treeNodeStack.pop();\n");
       result.append(printIdent(ident + 2) +
@@ -1533,7 +1516,7 @@ result.append(printIdent(ident + 4) +
       ident += 2;
 
       result.append(printIdent(ident) + asyncMapFinishedName + " = " + aoName +
-                    ".isFinished(outDoc, access);\n");
+                    ".isFinished(access.getOutputDoc(), access);\n");
       NodeList response = n.getElementsByTagName("response");
       boolean hasResponseNode = false;
 
@@ -1923,7 +1906,7 @@ result.append(printIdent(ident + 4) +
        result.append("System.err.println(\"\\n --------- END NAVAJO REQUEST ---------\\n\");\n");
      }
 
-      result.append("outDoc = access.getOutputDoc();\n");
+//      result.append("outDoc = access.getOutputDoc();\n");
       result.append("inDoc = inMessage;\n");
 
       // First resolve includes.
@@ -1948,7 +1931,7 @@ result.append(printIdent(ident + 4) +
 
       if (debugOutput) {
         result.append("System.err.println(\"\\n --------- BEGIN NAVAJO RESPONSE ---------\\n\");\n");
-        result.append("outDoc.write(System.err);\n");
+        result.append("access.getOutputDoc().write(System.err);\n");
         result.append("System.err.println(\"\\n --------- END NAVAJO RESPONSE ---------\\n\");\n");
       }
 

@@ -523,7 +523,7 @@ public class NanoTslCompiler {
                     result.append(printIdent(ident) + "if (true) {\n");
                     // Get required messages.
                 }
-                result.append(printIdent(ident + 2) + "com.dexels.navajo.document.Method m = NavajoFactory.getInstance().createMethod(outDoc, \""
+                result.append(printIdent(ident + 2) + "com.dexels.navajo.document.Method m = NavajoFactory.getInstance().createMethod(access.getOutputDoc(), \""
                         + name + "\", \"\");\n");
                 result.append(printIdent(ident + 2) + "m.setDescription(\"" + description + "\");\n");
                 Vector required = e.getChildren();
@@ -542,7 +542,7 @@ public class NanoTslCompiler {
                 }
                 addScriptCalls(currentScript, name,req);
 
-                result.append(printIdent(ident + 2) + "outDoc.addMethod(m);\n");
+                result.append(printIdent(ident + 2) + "access.getOutputDoc().addMethod(m);\n");
                 result.append(printIdent(ident) + "}\n");
             }
         }
@@ -644,7 +644,7 @@ public class NanoTslCompiler {
         result.append(printIdent(ident) + "Message [] " + messageList + " = null;\n");
 
         if (n.getName().equals("message")) {
-            result.append(printIdent(ident) + messageList + " = MappingUtils.addMessage(outDoc, currentOutMsg, \"" + messageName
+            result.append(printIdent(ident) + messageList + " = MappingUtils.addMessage(access.getOutputDoc(), currentOutMsg, \"" + messageName
                     + "\", \"\", count, \"" + type + "\", \"" + mode + "\");\n");
         } else { // must be parammessage.
 
@@ -741,7 +741,7 @@ public class NanoTslCompiler {
             if (n.getName().equals("message")) {
                 result.append(printIdent(ident + 4) + "outMsgStack.push(currentOutMsg);\n");
                 result.append(printIdent(ident + 4) + "currentOutMsg = MappingUtils.getMessageObject(\"" + messageName
-                        + "\", currentOutMsg, true, outDoc, false, \"\", " + ((startIndex == -1) ? "-1" : startIndexVar + "++") + ");\n");
+                        + "\", currentOutMsg, true, access.getOutputDoc(), false, \"\", " + ((startIndex == -1) ? "-1" : startIndexVar + "++") + ");\n");
                 result.append(printIdent(ident + 4) + "access.setCurrentOutMessage(currentOutMsg);\n");
             } else { // parammessage.
                 result.append(printIdent(ident + 4) + "paramMsgStack.push(currentParamMsg);\n");
@@ -798,7 +798,7 @@ public class NanoTslCompiler {
             //result.append(printIdent(ident + 4) +
             //              "currentOutMsg = MappingUtils.getMessageObject(\"" +
             //              messageName +
-            //              "\", currentOutMsg, true, outDoc, false, \"\", -1);\n");
+            //              "\", currentOutMsg, true, access.getOutputDoc(), false, \"\", -1);\n");
             //result.append(printIdent(ident + 4) +
             //              "access.setCurrentOutMessage(currentOutMsg);\n");
 
@@ -916,7 +916,7 @@ public class NanoTslCompiler {
                 // Created condition statement if condition is given!
                 String conditional = (optionCondition != null && !optionCondition.equals("")) ? "if (Condition.evaluate(\""
                         + replaceQuotes(optionCondition) + "\", inMessage, currentMap, currentInMsg, currentParamMsg))\n" : "";
-                optionItems.append(conditional + "p.addSelection(NavajoFactory.getInstance().createSelection(outDoc, \"" + optionName + "\", \""
+                optionItems.append(conditional + "p.addSelection(NavajoFactory.getInstance().createSelection(access.getOutputDoc(), \"" + optionName + "\", \""
                         + optionValue + "\", " + selected + "));\n");
             } else if (((XMLElement) children.get(i)).getName().equals("map")) { // ABout
                                                                                  // to
@@ -953,11 +953,11 @@ public class NanoTslCompiler {
         if (n.getName().equals("property")) {
             result.append(printIdent(ident) + "p = MappingUtils.setProperty(false, currentOutMsg, \"" + propertyName
                     + "\", sValue, type, subtype, \"" + direction + "\", \"" + description + "\", " + length
-                    + ", outDoc, inMessage, !matchingConditions);\n");
+                    + ", access.getOutputDoc(), inMessage, !matchingConditions);\n");
         } else { // parameter
             result.append(printIdent(ident) + "p = MappingUtils.setProperty(true, currentParamMsg, \"" + propertyName
                     + "\", sValue, type, subtype, \"" + direction + "\", \"" + description + "\", " + length
-                    + ", outDoc, inMessage, !matchingConditions);\n");
+                    + ", access.getOutputDoc(), inMessage, !matchingConditions);\n");
         }
 
         if (isMapped) {
@@ -1061,7 +1061,7 @@ public class NanoTslCompiler {
                 }
             }
             result.append(printIdent(ident + 4)
-                    + "p.addSelection(NavajoFactory.getInstance().createSelection(outDoc, optionName, optionValue, optionSelected));\n");
+                    + "p.addSelection(NavajoFactory.getInstance().createSelection(access.getOutputDoc(), optionName, optionValue, optionSelected));\n");
             
             if (!filter.equals("")) {
                 ident -= 2;
@@ -1505,7 +1505,7 @@ public class NanoTslCompiler {
             result.append(printIdent(ident) + "try {\n");
             ident += 2;
 
-            result.append(printIdent(ident) + asyncMapFinishedName + " = " + aoName + ".isFinished(outDoc, access);\n");
+            result.append(printIdent(ident) + asyncMapFinishedName + " = " + aoName + ".isFinished(access.getOutputDoc(), access);\n");
             Vector response = n.getElementsByTagName("response");
             boolean hasResponseNode = false;
 
@@ -1924,7 +1924,7 @@ public class NanoTslCompiler {
                 result.append("System.err.println(\"\\n --------- END NAVAJO REQUEST ---------\\n\");\n");
             }
 
-            result.append("outDoc = access.getOutputDoc();\n");
+//            result.append("outDoc = access.getOutputDoc();\n");
             result.append("inDoc = inMessage;\n");
 
             // First resolve includes.
@@ -1952,7 +1952,7 @@ public class NanoTslCompiler {
 
             if (debugOutput) {
                 result.append("System.err.println(\"\\n --------- BEGIN NAVAJO RESPONSE ---------\\n\");\n");
-                result.append("outDoc.write(System.err);\n");
+                result.append("access.getOutputDoc().write(System.err);\n");
                 result.append("System.err.println(\"\\n --------- END NAVAJO RESPONSE ---------\\n\");\n");
             }
 

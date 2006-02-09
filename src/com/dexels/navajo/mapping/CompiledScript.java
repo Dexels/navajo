@@ -40,7 +40,7 @@ public abstract class CompiledScript {
 
   public MappableTreeNode currentMap = null;
   public final Stack treeNodeStack = new Stack();
-  public Navajo outDoc = null;
+//  public Navajo outDoc = null;
   public Navajo inDoc = null;
   public Message currentOutMsg = null;
   public final Stack outMsgStack = new Stack();
