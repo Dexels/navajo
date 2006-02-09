@@ -39,15 +39,17 @@ package navajoadapters;
  *       
  * 2.2.1 SQLMap with new support for getting 'binary' content of a recordset.
  * 
+ * 2.2.2 Added FTPMap. NavajoMap now has appendParms to append result to current params block.
+ * 
  */
 public class Version extends dexels.Version {
 
 	public static final int MAJOR = 2;
 	public static final int MINOR = 2;
-	public static final int PATCHLEVEL = 1;
+	public static final int PATCHLEVEL = 2;
 	public static final String VENDOR = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Adapter Library";
-	public static final String RELEASEDATE = "2006-01-24";
+	public static final String RELEASEDATE = "2006-02-09";
 	
 	//	Included packages.
 	String [] includes = {"navajodocument.Version", "navajo.Version", "navajoclient.Version", "navajofunctions.Version"};
