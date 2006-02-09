@@ -8,10 +8,13 @@
     </tipiaction>
     <tipiaction name="askFile" class="TipiAskFile"
         package="com.dexels.navajo.tipi.components.swingimpl.actions">
-        <!--  <param name="text" type="string"/> -->
         <param name="value" type="string"/>
-        <!--   <param name="initialValue" type="string"/>-->
     </tipiaction>
+    <tipiaction name="saveValue" class="TipiSaveValue"
+        package="com.dexels.navajo.tipi.components.swingimpl.actions">
+        <param name="value" type="string"/>
+    </tipiaction>
+    
     <tipiaction name="createPrintJob" class="TipiCreatePrintJob"
         package="com.dexels.navajo.tipi.components.swingimpl.actions">
         <param name="value" type="reference"/>
@@ -65,7 +68,7 @@
         package="com.dexels.navajo.tipi.components.swingimpl" studio-icon="property.gif" type="tipi"/>
     <tipiclass addtocontainer="true" childcount="0" class="TipiTable" layoutmanager="false"
         module="data" name="tipitable" package="com.dexels.navajo.tipi.components.swingimpl"
-        studio-icon="tipitable.gif" type="tipi">
+        studio-icon="tipitable.gif" type="tipi" customstructure="true">
         <events>
             <event name="onInstantiate"/>
             <event name="onActionPerformed"/>
@@ -159,7 +162,7 @@
     <tipiclass addtocontainer="true" childcount="0" class="TipiMegaTable" layoutmanager="false"
         module="data" name="tipimegatable"
         package="com.dexels.navajo.tipi.components.swingimpl.tipimegatable"
-        studio-icon="tipitable.gif" type="tipi">
+        studio-icon="tipitable.gif" type="tipi" customstructure="true">
         <events>
             <event name="onInstantiate"/>
             <event name="onLoad">
@@ -518,7 +521,8 @@
             <value direction="in" name="background" type="color"/>
             <value direction="in" name="enabled" type="boolean"/>
             <value direction="in" name="visible" type="boolean"/>
-            <value direction="in" name="logo" type="resource"/>
+            <value direction="in" name="logo" type="object"/>
+            <value direction="in" name="alignment" type="string"/>
             <value direction="inout" name="tooltip" type="string"/>
         </values>
         <methods/>
@@ -972,7 +976,7 @@
         <methods/>
     </tipiclass>
     <tipiclass addtocontainer="true" class="TipiToolBar" layoutmanager="false" module="container"
-        name="toolbar" package="com.dexels.navajo.tipi.components.swingimpl"
+        name="toolbar" package="com.dexels.navajo.tipi.components.swingimpl" childcount="*"
         studio-icon="toolbar.gif" type="component">
         <events>
             <event name="onInstantiate"/>
@@ -1072,11 +1076,6 @@
         <methods/>
     </tipiclass>
     
-
-
-
-
-
     <tipiclass class="TipiTableLayout" name="table"
         package="com.dexels.navajo.tipi.components.swingimpl.layout" type="layout"/>
     <tipiclass class="TipiGridBagLayout"
