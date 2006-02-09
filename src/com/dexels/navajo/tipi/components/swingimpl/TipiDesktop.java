@@ -9,7 +9,11 @@ package com.dexels.navajo.tipi.components.swingimpl;
  * @version 1.0
  */
 import java.awt.*;
+import java.net.*;
+
 import javax.swing.*;
+
+import com.dexels.navajo.document.types.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import tipi.*;
@@ -54,13 +58,30 @@ public class TipiDesktop
     if ("logo".equals(name)) {
       runSyncInEventThread(new Runnable() {
         public void run() {
-          ImageIcon im = new ImageIcon(MainApplication.class.getResource( (String) value));
-          if (im != null) {
-            ( (TipiSwingDesktop) getContainer()).setImage(im.getImage());
+          if (value instanceof URL) {
+              ( (TipiSwingDesktop) getContainer()).setImage(new ImageIcon(( (URL) value)).getImage());
+          } else {
+              if (value instanceof Binary) {
+                byte[] data = ((Binary)value).getData();
+                System.err.println(">>>>>>>>>>>>>>>>> Data size: "+data.length);
+                ImageIcon ii = new ImageIcon(data);
+                System.err.println("IMAGEICON CREATED!");
+                
+                ( (TipiSwingDesktop) getContainer()).setImage(ii.getImage());
+                getSwingContainer().repaint();
+                
+            } else {
+                System.err.println("Ignoring strange resource");
+            }
           }
         }
       });
+      
     }
+    if ("alignment".equals(name)) {
+        ( (TipiSwingDesktop) getContainer()).setAlignment((String)value);
+    }
+    
     super.setComponentValue(name, value);
   }
 
