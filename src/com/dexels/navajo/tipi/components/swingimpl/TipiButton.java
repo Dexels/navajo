@@ -38,10 +38,15 @@ public class TipiButton
         }
         if (name.equals("icon")) {
               //System.err.println("Type: "+object.getClass());
-            if (object instanceof URL) {
-                myButton.setIcon(getIcon( (URL) object));
+            if (object==null) {
+                System.err.println("Ignoring null icon");
             } else {
-                System.err.println("Ignoring strange resource");
+                if (object instanceof URL) {
+                    myButton.setIcon(getIcon( (URL) object));
+                } else {
+                    System.err.println("Ignoring strange resource. Type: "+object.getClass());
+                    Thread.dumpStack();
+                }
             }
         }
         if (name.equals("enabled")) {
