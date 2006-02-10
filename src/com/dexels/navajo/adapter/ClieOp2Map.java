@@ -29,7 +29,7 @@ public class ClieOp2Map implements Mappable {
 	public String batchCloseRecord;
 	public String fileCloseRecord;
 
-	public String accountNumber;
+	public String accountNumberSender;
 	public String currency;
 	public String fixedDescription;
 	public Date processingDate;
@@ -127,9 +127,9 @@ public class ClieOp2Map implements Mappable {
 	}
 	public String getBatchPreRecord(){
 		if(isPayment){
-			batchPreRecord = "0010B"+"00"+accountNumber+"0001"+currency;
+			batchPreRecord = "0010B"+"00"+accountNumberSender+"0001"+currency;
 		} else {
-			batchPreRecord = "0010B"+"10"+accountNumber+"0001"+currency;
+			batchPreRecord = "0010B"+"10"+accountNumberSender+"0001"+currency;
 		}
 		return batchPreRecord;
 	}
@@ -173,7 +173,7 @@ public class ClieOp2Map implements Mappable {
 			}
 		}
 
-		sumOfAccountNumbers = sumOfAccountNumbers + ( (long) posts.length * Long.parseLong(accountNumber) );
+		sumOfAccountNumbers = sumOfAccountNumbers + ( (long) posts.length * Long.parseLong(accountNumberSender) );
 
 		String sumOfAccountNumberString = Long.toString(sumOfAccountNumbers);
 
@@ -214,13 +214,13 @@ public class ClieOp2Map implements Mappable {
 
           int size = 10;
           ClieOp2Post[] posts = new ClieOp2Post[size];
-          map.setConstuentName("BU Betaald Voetbal                 ");
+          map.setConstituentName("BU Betaald Voetbal                 ");
           map.setSenderIdentification("KNVB2");
           map.setProcessingDate(new Date());
           map.setFixedDescription("blaat");
           map.setIsPayment(false);
           map.setCurrency("EUR");
-          map.setAccountNumber("0123456789");
+          map.setAccountNumberSender("0123456789");
           for(int i=0;i<size;i++){
             ClieOp2Post post = new ClieOp2Post();
             post.setAccountNumberReceiver("0123456789");
@@ -241,8 +241,14 @@ public class ClieOp2Map implements Mappable {
 		  }
 	}
 
-	public void setAccountNumber(String accountNumber){
-		this.accountNumber = accountNumber;
+	public void setAccountNumberSender(String accountNumberSender){
+		if(accountNumberSender.length()!= 10){
+			int sizeOfLoop = 10-accountNumberSender.length();
+			for (int i=0;i<sizeOfLoop;i++){
+				accountNumberSender = "0"+accountNumberSender;
+			}
+		}
+		this.accountNumberSender = accountNumberSender;
 	}
 	public void setCurrency(String currency){
 		this.currency = currency;
@@ -270,7 +276,7 @@ public class ClieOp2Map implements Mappable {
 	public void setIsPayment(boolean isPayment){
 		this.isPayment = isPayment;
 	}
-	public void setConstuentName(String constituentName){
+	public void setConstituentName(String constituentName){
 		this.constituentName = constituentName;
 	}
 }
