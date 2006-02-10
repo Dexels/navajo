@@ -392,18 +392,17 @@ public abstract class TipiContext
     URL u = getClass().getClassLoader().getResource(location);
     if (u==null) {
 //      System.err.println("CLASSPATH: "+System.getProperty("java.class.path"));
-//      System.err.println("Warning: Null url in getResourceURL: "+location);
+      System.err.println("getResourceURL: "+location+" not found in classpath, continuing");
     }
     if (u!=null) {
         return u;
     }
     if (resourceBaseDirectory!=null) {
-//        System.err.println("ResourceDir found: "+resourceBaseDirectory.getAbsolutePath());
+        System.err.println("ResourceDir found: "+resourceBaseDirectory.getAbsolutePath());
         File locationFile = new File(resourceBaseDirectory.getAbsolutePath()+"/"+location);
-//        if (!locationFile.exists()) {
-//            System.err.println(".. but ");
-//            
-//        }
+        if (!locationFile.exists()) {
+            System.err.println(".. but it did not exist");
+        }
         try {
             return locationFile.toURL();
         } catch (MalformedURLException e) {
