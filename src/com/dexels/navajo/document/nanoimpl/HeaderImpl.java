@@ -129,7 +129,7 @@ public final class HeaderImpl
     Enumeration ee = e.enumerateAttributeNames();
     while (ee.hasMoreElements()) {
         String element = (String) ee.nextElement();
-        System.err.println("Found header attribute: "+element);
+//        System.err.println("Found header attribute: "+element);
         setAttribute(element, e.getStringAttribute(element));
     }
 
