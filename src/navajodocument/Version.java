@@ -28,20 +28,22 @@ package navajodocument;
  * VERSION HISTORY
  *
  * 8.2.19 Added setting of property types when calling setAnyValue() method of Property object.
- * 
+ *
  * 8.2.20 Added pattern matching to ToMoney in case of string argument.
- * 
+ *
  * 8.2.21 Added StopwatchTime type property
+ *
+ * 8.2.22 Fixed bug in StopwatchTime type property
  *
  */
 public class Version extends dexels.Version {
 
-	public static final int MAJOR = 8;
-	public static final int MINOR = 2;
-	public static final int PATCHLEVEL = 21;
-	public static final String VENDOR = "Dexels";
+	public static final int MAJOR          = 8;
+	public static final int MINOR          = 2;
+	public static final int PATCHLEVEL     = 22;
+	public static final String VENDOR      = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Document";
-	public static final String RELEASEDATE = "2006-01-31";
+	public static final String RELEASEDATE = "2006-02-14";
 
 	// Included packages.
 
