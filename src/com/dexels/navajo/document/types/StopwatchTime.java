@@ -22,27 +22,27 @@ import com.dexels.navajo.document.*;
 public final class StopwatchTime extends NavajoType implements Comparable {
 
   long myMillis = -1;
-  
+
   private static int HOURS_MILLIS = 3600000;
   private static int MINUTE_MILLIS = 60000;
   private static int SECOND_MILLIS = 1000;
-  
-  
+
+
   /**
    * Constructor that construct StopwatchTime from millis.
-   * 
+   *
    * @param i
    */
   public StopwatchTime(int i) {
 	  super(Property.STOPWATCHTIME_PROPERTY);
       myMillis = i;
   }
-  
+
   public StopwatchTime(long i) {
 	  super(Property.STOPWATCHTIME_PROPERTY);
       myMillis = i;
   }
-  
+
   /**
    * Create a new ClockTime object from a given String
    * @param value String
@@ -66,7 +66,7 @@ public final class StopwatchTime extends NavajoType implements Comparable {
    * Format 1. HH:mm:SS[:MMM]
    *        2. SS[:MMM]
    *        3. mm:SS[:MMM]
-   * 
+   *
    * @param s
    */
   private void constructCalValue(String s) {
@@ -86,7 +86,7 @@ public final class StopwatchTime extends NavajoType implements Comparable {
 	        int t1 = Integer.parseInt(tokens.nextToken());
 	        String s2 = tokens.nextToken();
 	        int t2 = Integer.parseInt(s2);
-	        if (s2.length() == 3) { // Second and millis 
+	        if (s2.length() == 3) { // Second and millis
 	        	myMillis = t1 * SECOND_MILLIS + t2;
 	        } else { // Minute and seconds
 	        	myMillis = t1 * MINUTE_MILLIS + t2 * SECOND_MILLIS;
@@ -108,12 +108,12 @@ public final class StopwatchTime extends NavajoType implements Comparable {
 		     int t4 = Integer.parseInt(tokens.nextToken());
 		     myMillis = t1 * HOURS_MILLIS + t2 * MINUTE_MILLIS + t3 * SECOND_MILLIS + t4;
 	      }
-	    
+
 	    } catch(Throwable e1) {
 	      e1.printStackTrace();
 	    }
   }
-  
+
   /**
    * Get stopwatchtime in millis.
    * @return
@@ -121,7 +121,7 @@ public final class StopwatchTime extends NavajoType implements Comparable {
   public long getMillis() {
 	  return myMillis;
   }
-  
+
   /**
    * Clone this Clocktime object
    * @return Object
@@ -143,16 +143,21 @@ public final class StopwatchTime extends NavajoType implements Comparable {
 	  millis = millis%MINUTE_MILLIS;
 	  long seconds = millis/SECOND_MILLIS;
 	  millis = millis%SECOND_MILLIS;
-	  
+
+          System.err.println("Hours: "+ hours);
+          System.err.println("Minutes: "+ minutes);
+          System.err.println("Seconds: "+ seconds);
+          System.err.println("Millis: "+ millis);
+
 	  String result = "";
 	  if ( hours == 0 ) {
 		  result += "00:";
-	  } if ( hours < 10 ) {
+	  }else if ( hours < 10 ) {
 		  result += "0"+hours+":";
 	  } else {
 		  result += hours + ":";
 	  }
-	  
+
 	  if ( minutes == 0 ) {
 		  result += "00:";
 	  } else if ( minutes < 10 ) {
@@ -160,7 +165,7 @@ public final class StopwatchTime extends NavajoType implements Comparable {
 	  } else {
 		  result += minutes + ":";
 	  }
-	  
+
 	  if ( seconds == 0 ) {
 		  result += "00:";
 	  } else if ( seconds < 10 ) {
@@ -168,7 +173,7 @@ public final class StopwatchTime extends NavajoType implements Comparable {
 	  } else {
 		  result += seconds + ":";
 	  }
-	  
+
 	  if ( millis == 0 ) {
 		  result += "000";
 	  } else if ( millis < 10 ) {
@@ -178,19 +183,19 @@ public final class StopwatchTime extends NavajoType implements Comparable {
 	  } else {
 		  result += millis;
 	  }
-	  
+
 	  return result;
   }
 
   public final StopwatchTime subtract(StopwatchTime other) {
 	  StopwatchTime result = null;
-	
+
 	  long myMillis = getMillis();
 	  long otherMillis = other.getMillis();
-	 
+
 	  return new StopwatchTime( Math.abs(myMillis - otherMillis) );
   }
-  
+
   public final int compareTo(Object o) {
 
     if(!(o instanceof StopwatchTime)) {
@@ -198,19 +203,19 @@ public final class StopwatchTime extends NavajoType implements Comparable {
     }
 
     StopwatchTime other = (StopwatchTime) o;
-    
+
     return ( (int) ( this.getMillis() - other.getMillis() ) );
   }
 
   public boolean equals(Object obj) {
 
     StopwatchTime other = (StopwatchTime) obj;
-    
+
     return (other.getMillis() == this.getMillis());
   }
-  
+
   public static void main(String [] args) throws Exception {
-	  
+
 	  // Tests.
 
 //    StopwatchTime ck = new StopwatchTime("00:01:44:400");
@@ -225,15 +230,15 @@ public final class StopwatchTime extends NavajoType implements Comparable {
     System.err.println("ck = " + ck5);
     StopwatchTime ck6 = new StopwatchTime("02:01:10");
     System.err.println("ck = " + ck6);
-    StopwatchTime ck7 = new StopwatchTime(80000);
+    StopwatchTime ck7 = new StopwatchTime(1100);
     System.err.println("ck7 = " + ck7);
-	  
+
 	  StopwatchTime sw1 = new StopwatchTime("12:30:00:000");
 	  StopwatchTime sw2 = new StopwatchTime("04:45:12:976");
-	  
-	  
+
+
 	  StopwatchTime result = sw1.subtract(sw2);
-	  
+
 	  System.err.println("result = " + result);
   }
 
