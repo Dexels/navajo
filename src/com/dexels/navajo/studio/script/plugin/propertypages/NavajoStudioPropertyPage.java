@@ -87,16 +87,11 @@ public class NavajoStudioPropertyPage extends PropertyPage implements IWorkbench
                      e1.printStackTrace();
                      return Status.CANCEL_STATUS;
                 }
-                try {
-                    InputStream serverIn = myServerXml.getContents();
-                    myServerNavajo = NavajoFactory.getInstance().createNavajo(serverIn);
-                    serverIn.close();
-                    System.err.println("NAVAJO:");
-                    myServerNavajo.write(System.err);
-                } catch (Exception e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
+//                try {
+                    myServerNavajo = NavajoScriptPluginPlugin.getDefault().loadNavajo(myServerXml);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
 
                 repositoryProperty = myServerNavajo.getProperty("server-configuration/repository/class");
 

@@ -725,7 +725,7 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
         try {
 //            iff.refreshLocal(0, null);
             if (!iff.exists()) {
-                throw new NavajoPluginException("Error accessing navajo project: Navajo nature present, but no .navajoroot file!");
+                throw new NavajoPluginException("Error accessing navajo project: Navajo nature present, but no .navajoroot file. Project: "+prj.getName());
             }
             iss = iff.getContents();
             isr = new BufferedReader(new InputStreamReader(iss));
@@ -850,13 +850,22 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
         if (iff==null || !iff.exists()) {
             return null;
         }
-        InputStream iss;
+        InputStream iss = null;
+        Navajo n = null;
         try {
             iss = iff.getContents();
+            n = NavajoFactory.getInstance().createNavajo(iss);
         } catch (CoreException e) {
             throw new NavajoPluginException("Error loading TML file: "+scriptName);
+        } finally {
+            if (iss!=null) {
+                try {
+                    iss.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
-        Navajo n = NavajoFactory.getInstance().createNavajo(iss);
         return n;
     }
 
@@ -1726,7 +1735,8 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
                 NavajoClientFactory.getClient().setPassword(getRemotePassword());
                 Navajo in = null;
                 if (sourceTml!=null && sourceTml.exists()) {
-                    in = NavajoFactory.getInstance().createNavajo(sourceTml.getContents());
+                    in = loadNavajo(sourceTml);
+//                    in = NavajoFactory.getInstance().createNavajo(sourceTml.getContents());
                 } else {
                     System.err.println("Running init script with empty navajo...");
                     in = NavajoFactory.getInstance().createNavajo();

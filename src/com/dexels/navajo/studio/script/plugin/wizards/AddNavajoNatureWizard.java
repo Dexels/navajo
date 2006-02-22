@@ -74,8 +74,7 @@ public class AddNavajoNatureWizard extends Wizard implements IWizard {
                             NavajoScriptPluginPlugin.getDefault().addNavajoNature(myProject,true,selRoot);
                             monitor.worked(1);
                             IFile server = NavajoScriptPluginPlugin.getDefault().getServerXml(myProject);
-                            is = server.getContents();
-                            Navajo serverNavajo = NavajoFactory.getInstance().createNavajo(is);
+                            Navajo serverNavajo = NavajoScriptPluginPlugin.getDefault().loadNavajo(server);
                             monitor.worked(1);
                                  is.close();
         

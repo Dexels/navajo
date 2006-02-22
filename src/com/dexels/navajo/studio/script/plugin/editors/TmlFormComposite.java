@@ -607,9 +607,10 @@ public class TmlFormComposite extends Composite {
                     if (!sourceTmlFile.isSynchronized(0)) {
                         sourceTmlFile.refreshLocal(0,null);
                     }
-                    InputStream is = sourceTmlFile.getContents();
-                    nn = NavajoFactory.getInstance().createNavajo(is);
-                    is.close();
+                    nn = NavajoScriptPluginPlugin.getDefault().loadNavajo(sourceTmlFile);
+//                    InputStream is = sourceTmlFile.getContents();
+//                    nn = NavajoFactory.getInstance().createNavajo(is);
+//                    is.close();
 //                       System.err.println("LOCATED SOURCE: "+sourceTml);
 //                       nn.write(System.err);
                 }
@@ -725,9 +726,12 @@ public class TmlFormComposite extends Composite {
                 tmlFile.refreshLocal(0,null);
             }
 //            
-            InputStream is = tmlFile.getContents();
-            Navajo n = NavajoFactory.getInstance().createNavajo(is);
-            is.close();
+//            InputStream is = tmlFile.getContents();
+            Navajo n = NavajoScriptPluginPlugin.getDefault().loadNavajo(tmlFile);
+                
+//                NavajoFactory.getInstance().createNavajo(is);
+//            is.close();
+//            
             setNavajo(n, tmlFile,myCurrentName);
             fireGotoScript(name, n);
             myForm.reflow(false);
@@ -789,21 +793,14 @@ public class TmlFormComposite extends Composite {
         if (myEditor != null) {
             NavajoScriptPluginPlugin.getDefault().openInEditor(sourceTmlFile);
         }
-        try {
-//            if (sourceTmlFile!=null) {
-//                sourceTmlFile.refreshLocal(0,null);
-//            }
-            Navajo n = NavajoFactory.getInstance().createNavajo(sourceTmlFile.getContents());
+             Navajo n = NavajoScriptPluginPlugin.getDefault().loadNavajo(sourceTmlFile);
             setNavajo(n, sourceTmlFile,sourceTml);
             fireGotoScript(sourceTml, n);
             // BEware here...
             
             myForm.reflow(true);
             //                    runHref(sourceTmlFile, scriptName, e);
-        } catch (CoreException e1) {
-            e1.printStackTrace();
-        }
-    }
+     }
 
     public void setServerEntry(ServerEntry se) {
         myServerEntry = se;
