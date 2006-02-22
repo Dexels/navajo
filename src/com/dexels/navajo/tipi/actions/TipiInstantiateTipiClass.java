@@ -13,6 +13,6 @@ import com.dexels.navajo.tipi.internal.*;
 public class TipiInstantiateTipiClass
     extends TipiInstantiateTipi {
   public void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
-    instantiateTipi(true);
+    instantiateTipi(true,event);
   }
 }

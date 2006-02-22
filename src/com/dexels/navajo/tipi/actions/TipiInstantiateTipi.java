@@ -18,69 +18,69 @@ public class TipiInstantiateTipi
     extends TipiAction {
   public void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException,
       com.dexels.navajo.tipi.TipiBreakException {
-    instantiateTipi(false);
+    instantiateTipi(false,event);
   }
 
   public static TipiComponent instantiateByClass(TipiComponent parent, boolean force,
-                                                 String id, String className) throws
+                                                 String id, String className,Object constraints) throws
       TipiException {
     TipiInstantiateTipi t = new TipiInstantiateTipi();
     // sort of hackish
     t.setContext(parent.getContext());
-    TipiComponent tc = t.instantiateTipi(true, parent, force, id, className, null, null);
+    TipiComponent tc = t.instantiateTipi(true, parent, force, id, className, null, null,constraints);
     tc.commitToUi();
     return tc;
   }
 
   public static TipiComponent instantiateNonTransientByClass(TipiComponent parent, boolean force,
-                                                 String id, String className) throws
+                                                 String id, String className,Object constraints) throws
       TipiException {
     TipiInstantiateTipi t = new TipiInstantiateTipi();
     // sort of hackish
     t.setContext(parent.getContext());
-    TipiComponent ttt = t.instantiateTipi(true, parent, force, id, className, null, null);
+    TipiComponent ttt = t.instantiateTipi(true, parent, force, id, className, null, null,constraints);
     ttt.setTransient(false);
     return ttt;
   }
 
   public static TipiComponent instantiateByDefinition(TipiComponent parent,
       boolean force, String id,
-      String definitionName) throws
+      String definitionName, Object constraints) throws
       TipiException {
     TipiInstantiateTipi t = new TipiInstantiateTipi();
     // sort of hackish
     t.setContext(parent.getContext());
-    return t.instantiateTipi(false, parent, force, id, null, definitionName, null);
+    return t.instantiateTipi(false, parent, force, id, null, definitionName, null,constraints);
   }
 
   protected TipiComponent instantiateTipiByDefinition(TipiComponent parent,
       boolean force, String id,
       String className,
-      String definitionName) throws
+      String definitionName, Object constraints) throws
       TipiException {
-    return instantiateTipi(false, parent, force, id, className, definitionName, null);
+    return instantiateTipi(false, parent, force, id, className, definitionName, null, constraints);
   }
 
   protected TipiComponent instantiateTipiByClass(TipiComponent parent, boolean force,
                                                  String id, String className,
-                                                 String definitionName) throws
+                                                 String definitionName, Object constraints) throws
       TipiException {
-    return instantiateTipi(true, parent, force, id, className, definitionName, null);
+    return instantiateTipi(true, parent, force, id, className, definitionName, null,constraints);
   }
 
   protected TipiComponent instantiateTipi(boolean byClass, TipiComponent parent,
                                           boolean force, String id, String className,
-                                          String definitionName, Map paramMap) throws
+                                          String definitionName, Map paramMap, Object constraints) throws
       TipiException {
     return instantiateTipi(myContext, null, byClass, parent, force, id,
-                           className, definitionName, null);
+                           className, definitionName, null,constraints);
   }
 
   protected TipiComponent instantiateTipi(TipiContext myContext,
                                           TipiComponent myComponent, boolean byClass,
                                           TipiComponent parent, boolean force, String id,
                                           String className, String definitionName,
-                                          Map paramMap) throws TipiException {
+                                          Map paramMap, Object constraints) throws TipiException {
     String componentPath;
     if (parent != null) {
       componentPath = parent.getPath("component:/") + "/" + id;
@@ -135,13 +135,14 @@ public class TipiInstantiateTipi
     }
     TipiComponent inst = myContext.instantiateComponent(xe);
     inst.setId(id);
-     parent.addComponent(inst, myContext, null);
+     parent.addComponent(inst, myContext, constraints);
     myContext.fireTipiStructureChanged(inst);
     return inst;
   }
 
-  protected void instantiateTipi(boolean byClass) throws TipiException {
+  protected void instantiateTipi(boolean byClass, TipiEvent event) throws TipiException {
     String id = null;
+    Object constraints = null;
     TipiValue forceVal = getParameter("force");
     String forceString = null;
     if (forceVal==null) {
@@ -158,6 +159,7 @@ public class TipiInstantiateTipi
       force = forceString.equals("true");
     }
     try {
+        constraints = getEvaluatedParameter("constraints", event);
       id = (String) evaluate(getParameter("id").getValue(),null).value;
       Object o = evaluate( (getParameter("location").getValue()),null).value;
       if (String.class.isInstance(o)) {
@@ -175,7 +177,7 @@ public class TipiInstantiateTipi
     if (byClass) {
       instantiateTipi(myContext, myComponent, byClass, parent,
                       force, id, getParameter("class").getValue(),
-                      null, parameterMap);
+                      null, parameterMap,constraints);
     }
     else {
       String definitionName = null;
@@ -189,7 +191,7 @@ public class TipiInstantiateTipi
       }
       instantiateTipi(myContext, myComponent, byClass, parent,
                       force, id, null,
-                      definitionName, parameterMap);
+                      definitionName, parameterMap,constraints);
     }
   }
 }
