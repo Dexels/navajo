@@ -18,41 +18,51 @@ public class MainApplication {
           "Usage: tipi [-studio | -classic] <url to tipidef.xml>");
       return;
     }
-
-    Locale.setDefault(new Locale("nl","NL"));
-    System.setProperty("com.dexels.navajo.DocumentImplementation",
-                       "com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl");
-    System.setProperty("com.dexels.navajo.propertyMap", "tipi.propertymap");
-    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-    checkForProperties(args);
-    UIManager.put("Button.showMnemonics", Boolean.TRUE);
-    boolean studiomode = args[0].equals("-studio");
-//    boolean classicmode = args[0].equals("-classic");
-    boolean classicstudiomode = args[0].equals("-web");
-
-
-    boolean debugMode = false;
-    String debugStr = System.getProperty("com.dexels.navajo.tipi.debugMode");
-    System.err.println("DEBUG: "+debugStr);
-    debugMode = debugStr!=null && debugStr.equals("true");
-    TipiContext context = null;
-    if (studiomode || classicstudiomode) {
-      Class c = Class.forName("com.dexels.navajo.tipi.studio.StudioTipiContext");
-      context = (TipiContext)c.newInstance();
-
-
-       context.setStudioMode(true);
-      TipiSwingSplash dts = new TipiSwingSplash(
-          "com/dexels/navajo/tipi/studio/images/studio-splash.png");
-      dts.setVisible(true);
-      System.setProperty("com.dexels.navajo.propertyMap",
-                         "com.dexels.navajo.tipi.studio.propertymap");
-
-      ((SwingTipiContext)context).setDebugMode(debugMode);
-      context.parseStudio();
-      dts.setVisible(false);
+    try {
+        Locale.setDefault(new Locale("nl","NL"));
+        System.setProperty("com.dexels.navajo.DocumentImplementation",
+                           "com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl");
+        System.setProperty("com.dexels.navajo.propertyMap", "tipi.propertymap");
+        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());    
     }
-    else {
+    catch(SecurityException se) {
+        System.err.println("Security exception: "+se.getMessage());
+        se.printStackTrace();
+    }    
+    checkForProperties(args);
+    
+    UIManager.put("Button.showMnemonics", Boolean.TRUE);
+    boolean studiomode = false;
+//    boolean classicmode = args[0].equals("-classic");
+    boolean classicstudiomode = false;
+    boolean debugMode = false;
+    try {
+        String debugStr = System.getProperty("com.dexels.navajo.tipi.debugMode");
+        System.err.println("DEBUG: "+debugStr);
+        debugMode = debugStr!=null && debugStr.equals("true");
+    }
+    catch(SecurityException se) {
+        System.err.println("Security exception: "+se.getMessage());
+        se.printStackTrace();
+    }    
+    TipiContext context = null;
+//    if (studiomode || classicstudiomode) {
+//      Class c = Class.forName("com.dexels.navajo.tipi.studio.StudioTipiContext");
+//      context = (TipiContext)c.newInstance();
+//
+//
+//       context.setStudioMode(true);
+//      TipiSwingSplash dts = new TipiSwingSplash(
+//          "com/dexels/navajo/tipi/studio/images/studio-splash.png");
+//      dts.setVisible(true);
+//      System.setProperty("com.dexels.navajo.propertyMap",
+//                         "com.dexels.navajo.tipi.studio.propertymap");
+//
+//      ((SwingTipiContext)context).setDebugMode(debugMode);
+//      context.parseStudio();
+//      dts.setVisible(false);
+//    }
+//    else {
       System.err.println("Starting non-studio mode. Location: "+args[args.length - 1]);
       context = new SwingTipiContext();
       SwingTipiUserInterface stui = new SwingTipiUserInterface((SwingTipiContext)context);
@@ -65,9 +75,9 @@ public class MainApplication {
 //                         context.getResourceURL(args[args.length - 1]));
       context.parseRequiredIncludes();
       context.parseURL(context.getResourceURL(args[args.length - 1]),false);
-    }
-    long diff = System.currentTimeMillis()-startupTime;
-    System.err.println("\n\n*************8 bootup: "+diff+"\n");
+//    }
+//    long diff = System.currentTimeMillis()-startupTime;
+//    System.err.println("\n\n*************8 bootup: "+diff+"\n");
   }
 
   private static void checkForProperties(String[] args) {
@@ -91,6 +101,9 @@ public class MainApplication {
         }
         catch (NoSuchElementException ex) {
           System.err.println("Error parsing system property");
+        } catch(SecurityException se) {
+            System.err.println("Security exception: "+se.getMessage());
+            se.printStackTrace();
         }
       }
     }
