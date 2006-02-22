@@ -33,9 +33,13 @@ import java.io.*;
 import java.util.*;
 
 /**
- * This class implements the Navajo Class Loader. It is used to implement re-loadable and hot-loadable Navajo adapter classes
- * and Navajo Expression Language functions.
- * It uses a cache for fast multiple instantiation of loaded Classes.
+* This class is an EXACT copy of NavajoClassLoader. Only difference:
+* 
+* jarResources is not static.
+* 
+* In the script plugin I use a different classloader for every project,
+* so the static version will not work.
+
  */
 
 class JarFilter implements FilenameFilter {
