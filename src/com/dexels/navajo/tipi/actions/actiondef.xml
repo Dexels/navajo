@@ -23,6 +23,11 @@
     <param name="text" type="string" required="true"/>
   </tipiaction>
 
+  <tipiaction name="setStorageInstanceId"  class="TipiSetStorageInstanceId" package="com.dexels.navajo.tipi.actions">
+    <param name="id" type="string" required="true"/>
+  </tipiaction>
+
+
   <tipiaction name="execute"  class="TipiRuntime" package="com.dexels.navajo.tipi.actions">
     <param name="command" type="string"/>
   </tipiaction>
