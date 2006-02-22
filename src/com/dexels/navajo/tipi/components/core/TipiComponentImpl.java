@@ -467,8 +467,6 @@ public abstract class TipiComponentImpl
    * @param classdef
    */
   public void initBeforeBuildingChildren(XMLElement instance, XMLElement classdef) {
-	// TODO Auto-generated method stub
-	System.err.println("INITBEFOREBUILDING CHILDREN!!!!!!!!!!!!!!!!!!!!!!");
 }
 
 public void loadStartValues(XMLElement element) {
@@ -683,7 +681,7 @@ public void loadStartValues(XMLElement element) {
       if (!myContext.isDefined(current)) {
         if (!current.isTransient()) {
           current.disposeComponent();
-          current.removeChild(current);
+//          removeChild(current);
         }
       }
 //      myContext.disposeTipiComponent(current);
@@ -697,7 +695,7 @@ public void loadStartValues(XMLElement element) {
     if (child == null) {
       System.err.println("Null child... Can not proceed with deleting.");
       return;
-    }
+    } 
     if (!tipiComponentMap.containsValue(child)) {
       System.err.println("Can not dispose! No such component. I am " + getId() + " my class: " + getClass()+" child id: "+child.getId());
 //      System.err.println("Ids: "+tipiComponentMap.keySet().toString()+" listsize: "+tipiComponentList.size());
