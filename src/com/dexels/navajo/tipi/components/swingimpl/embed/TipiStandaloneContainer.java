@@ -56,15 +56,19 @@ public class TipiStandaloneContainer implements TipiStandaloneToplevelContainer 
       embeddedContext.setUserInterface(ui);
     }
   }
-  public void loadDefinition(String name, InputStream contents, ActivityController al, String resourceBaseDirectory) throws IOException, TipiException {
-      System.err.println("In standalone container (SwingTipi) My classloader: "+getClass().getClassLoader());
-      embeddedContext = new EmbeddedContext(name,contents,libraries, al,resourceBaseDirectory);
-
+  public void loadDefinition(String name, InputStream contents, ActivityController al, String resourceBaseDirectory, ClassLoader cl) throws IOException, TipiException {
+      System.err.println("In standalone container (SwingTipi) My classloader: "+cl);
+      embeddedContext = new EmbeddedContext(name,contents,libraries, al,resourceBaseDirectory,cl);
+//      embeddedContext.setResourceClassLoader(cl);
       if (ui!=null) {
         embeddedContext.setUserInterface(ui);
       }
     }
 
+  public void loadDefinition(String name, InputStream contents, ActivityController al, String resourceBaseDirectory) throws IOException, TipiException {
+      loadDefinition(name, contents, al, resourceBaseDirectory,null);
+  } 
+  
   public ArrayList getListeningServices() {
       if (embeddedContext!=null) {
           return embeddedContext.getListeningServices();

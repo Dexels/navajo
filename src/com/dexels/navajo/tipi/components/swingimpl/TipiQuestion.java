@@ -26,7 +26,7 @@ public class TipiQuestion
   private String messagePath = null;
   private String questionDefinitionName = null;
 //  private TipiQuestionGroup questionGroupPath = null;
-  private TipiQuestionGroup questionGroup = null;
+  private TipiBaseQuestionGroup questionGroup = null;
 
   private final ArrayList mySubQuestions = new ArrayList();
   private String enabledCondition = null;
@@ -51,7 +51,7 @@ public class TipiQuestion
     super.setComponentValue(name, object);
   }
 
-  public void setQuestionGroup(TipiQuestionGroup tqg) {
+  public void setQuestionGroup(TipiBaseQuestionGroup tqg) {
     questionGroup = tqg;
   }
 
@@ -133,7 +133,7 @@ public class TipiQuestion
           try {
 //            System.err.println("\n\n**************************************\nAdding component:..."+id+". \n*******************************************");
             TipiQuestion tc = (TipiQuestion) TipiInstantiateTipi.
-                instantiateByDefinition(tdc, false, myId, questionDefinitionName);
+                instantiateByDefinition(tdc, false, myId, questionDefinitionName,null);
 //            System.err.println("Setting fullmsgname: "+current.getFullMessageName());
             tc.setValue("messagePath", current.getFullMessageName());
             tc.setPrefix(current.getFullMessageName());

@@ -51,7 +51,7 @@ public class TipiTable
   private boolean ignoreColumns = false;
 
   public Object createContainer() {
-    MessageTablePanel mm = new MessageTablePanel();
+    TipiMessageTablePanel mm = new TipiMessageTablePanel(myContext);
     mm.setShowRowHeaders(false);
     // Don't register actionPerformed, that is done elsewhere.
     mm.addListSelectionListener(new ListSelectionListener() {
@@ -317,7 +317,7 @@ public class TipiTable
     }
   }
 
-  public void setComponentValue(String name, Object object) {
+  public void setComponentValue(final String name, final Object object) {
     if (name.equals("filtersvisible")) {
       setFiltersVisible(Boolean.valueOf(object.toString()).booleanValue());
     }
@@ -369,8 +369,12 @@ public class TipiTable
       }
     }
     if (name.equals("columnDefinitionSavePath")) {
-      setColumnDefinitionSavePath(object.toString());
-    }
+        runSyncInEventThread(new Runnable(){
+            public void run() {
+                System.err.println("SETTING SAVE PATH: "+object.toString());
+                setColumnDefinitionSavePath(object.toString());
+            }});
+     }
     if (name.equals("filtermode")) {
       mm.setFilterMode("" + object);
     }

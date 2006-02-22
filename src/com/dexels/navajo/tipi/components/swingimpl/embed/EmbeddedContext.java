@@ -21,12 +21,17 @@ import java.util.*;
 
 public class EmbeddedContext extends SwingTipiContext {
   TipiStandaloneToplevel top = new TipiStandaloneToplevel();
+
   public EmbeddedContext(String tipiDefinition[], boolean debugMode, String[] definitionName, List libraries, String resourceBaseDirectory) throws TipiException, IOException {
+      this(tipiDefinition,debugMode,definitionName,libraries,resourceBaseDirectory,null);
+  }
+  
+  public EmbeddedContext(String tipiDefinition[], boolean debugMode, String[] definitionName, List libraries, String resourceBaseDirectory, ClassLoader resourceClassLoader) throws TipiException, IOException {
     if ( SwingClient.getUserInterface()==null) {
       SwingTipiUserInterface stui = new SwingTipiUserInterface(this);
       SwingClient.setUserInterface(stui);
     };
-
+    setResourceClassLoader(resourceClassLoader);
      setDefaultTopLevel(top);
      getDefaultTopLevel().setContext(this);
      setDebugMode(debugMode);
@@ -41,11 +46,17 @@ public class EmbeddedContext extends SwingTipiContext {
          
     }
      for (int i = 0; i < definitionName.length; i++) {
-       parseURL(getResourceURL(tipiDefinition[i]),false,definitionName[i]);
+       parseURL(getResourceURL(tipiDefinition[i],getClass().getClassLoader()),false,definitionName[i]);
      }
   }
-
   public EmbeddedContext(String definitionName, InputStream contents, List libraries, ActivityController al, String resourceBaseDirectory) throws IOException, TipiException {
+      this(definitionName,contents,libraries,al,resourceBaseDirectory,null);
+  }
+
+  public EmbeddedContext(String definitionName, InputStream contents, List libraries, ActivityController al, String resourceBaseDirectory, ClassLoader cl) throws IOException, TipiException {
+      System.err.println("DefinitionName: "+definitionName);
+      System.err.println("Res: "+resourceBaseDirectory);
+      setResourceClassLoader(cl);
       if ( SwingClient.getUserInterface()==null) {
           SwingTipiUserInterface stui = new SwingTipiUserInterface(this);
           SwingClient.setUserInterface(stui);

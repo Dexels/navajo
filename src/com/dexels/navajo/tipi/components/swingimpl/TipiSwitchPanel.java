@@ -29,6 +29,10 @@ public class TipiSwitchPanel extends TipiPanel {
     private CardLayout cardLayout;
 
 	private final Map componentMap = new HashMap();
+
+    private String selectedId;
+
+    private Integer selectedIndex;
 	public TipiSwitchPanel() {
 	}
 
@@ -52,35 +56,46 @@ public class TipiSwitchPanel extends TipiPanel {
           if (name==null) {
               getSwingContainer().add( (Component) c, name);
               if (getChildCount()<=1) {
-                  cardLayout.show(myPanel,name);
-				System.err.println("Showing component: "+name);
+                  selectedIndex = new Integer(0);
+//                  cardLayout.show(myPanel,name);
+//				System.err.println("Showing component: "+name);
 			}
           } else {
         	  System.err.println("Component: "+c+" not found");
           }
+          updateSelected();
         }
 	 
 	public void setComponentValue(String name, Object object) {
 		super.setComponentValue(name, object);
 		if (name.equals("selected")) {
-//			hideAll();
-			String sel = (String) object;
-            TipiComponent tc = getTipiComponent(sel);
-            if (tc==null) {
-                System.err.println("Oh @#$#@$");
-                return;
-            }
-            cardLayout.show(myPanel, tc.getId());
+		    selectedId = (String) object;
+            selectedIndex = null;
  		}
 		if (name.equals("selectedindex")) {
-			final Integer sel = (Integer) object;
-           TipiComponent tc = getTipiComponent(sel.intValue());
-            if (tc==null) {
-                System.err.println("Oh @#$#@$");
-                return;
-            }
-            cardLayout.show(myPanel, tc.getId());
+			selectedIndex = (Integer) object;
+            selectedId = null;
 		}
-		/** @todo Override this com.dexels.navajo.tipi.TipiComponent method */
+		updateSelected();
+        /** @todo Override this com.dexels.navajo.tipi.TipiComponent method */
 	}
+    
+    private void updateSelected() {
+        
+        TipiComponent tc = null;
+        
+        if (selectedIndex!=null) {
+            tc = getTipiComponent(selectedIndex.intValue());
+        } 
+        if (selectedId!=null) {
+            tc = getTipiComponent(selectedId);
+        } 
+        
+        if (tc==null) {
+            System.err.println("Oh @#$#@$");
+            return;
+        }
+        cardLayout.show(myPanel, tc.getId());
+        
+    }
 }

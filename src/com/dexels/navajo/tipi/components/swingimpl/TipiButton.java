@@ -45,7 +45,9 @@ public class TipiButton
                     myButton.setIcon(getIcon( (URL) object));
                 } else {
                     System.err.println("Ignoring strange resource. Type: "+object.getClass());
+                    System.err.println("Value: "+object);
                     Thread.dumpStack();
+                    
                 }
             }
         }

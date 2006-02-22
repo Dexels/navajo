@@ -246,7 +246,7 @@
             <value direction="inout" name="headerVisible" type="boolean" value="true"/>
         </values>
     </tipiclass>
-    <tipiclass addtocontainer="true" childcount="0" class="TipiQuestion" layoutmanager="false"
+    <tipiclass addtocontainer="true" childcount="*" class="TipiQuestion" layoutmanager="true"
         module="data" name="tipiquestion" package="com.dexels.navajo.tipi.components.swingimpl"
         studio-icon="tipitable.gif" type="tipi">
         <events>
@@ -266,7 +266,7 @@
             <method name="print"/>
         </methods>
     </tipiclass>
-    <tipiclass addtocontainer="true" childcount="0" class="TipiQuestionGroup" layoutmanager="false"
+    <tipiclass addtocontainer="true" childcount="*" class="TipiQuestionGroup" layoutmanager="true"
         module="data" name="tipiquestiongroup" package="com.dexels.navajo.tipi.components.swingimpl"
         studio-icon="tipitable.gif" type="tipi">
         <events>
@@ -280,9 +280,29 @@
             <value direction="inout" name="questionDefinitionName" type="string"/>
             <value direction="inout" name="questionGroupDefinitionName" type="string"/>
             <value direction="in" name="valid" type="boolean"/>
+            <value direction="out" name="description" type="string"/>
         </values>
     </tipiclass>
-    <tipiclass addtocontainer="true" childcount="0" class="TipiQuestionList" layoutmanager="false"
+    <tipiclass addtocontainer="true" childcount="*" class="TipiScrollQuestionGroup" layoutmanager="true"
+        module="data" name="tipiscrollquestiongroup" package="com.dexels.navajo.tipi.components.swingimpl"
+        studio-icon="tipitable.gif" type="tipi">
+        <events>
+            <event name="onInstantiate"/>
+            <event name="onLoad">
+                <param name="service" type="string"/>
+            </event>
+        </events>
+        <values>
+            <value direction="inout" name="messagePath" type="string"/>
+            <value direction="inout" name="questionDefinitionName" type="string"/>
+            <value direction="inout" name="questionGroupDefinitionName" type="string"/>
+            <value direction="in" name="valid" type="boolean"/>
+            <value direction="out" name="description" type="string"/>
+        </values>
+    </tipiclass>
+        
+    
+    <tipiclass addtocontainer="true" childcount="*" class="TipiQuestionList" layoutmanager="true"
         module="data" name="tipiquestionlist" package="com.dexels.navajo.tipi.components.swingimpl"
         studio-icon="tipitable.gif" type="tipi">
         <events>
@@ -322,6 +342,49 @@
             </method>
         </methods>
     </tipiclass>
+    
+    <tipiclass addtocontainer="true" childcount="*" class="TipiTabbedQuestionList" layoutmanager="true"
+        module="data" name="tipitabbedquestionlist" package="com.dexels.navajo.tipi.components.swingimpl"
+        studio-icon="tipitable.gif" type="tipi">
+        <events>
+            <event name="onInstantiate"/>
+            <event name="onLoad">
+                <param name="service" type="string"/>
+            </event>
+            <event name="onValidationChanged">
+                <param name="valid" type="boolean"/>
+            </event>
+        </events>
+        <values>
+            <value direction="in" name="messagePath" type="string"/>
+            <value direction="in" name="questionDefinitionName" type="string"/>
+            <value direction="in" name="questionGroupDefinitionName" type="string"/>
+            <value direction="in" name="questionGroupDefinitionName" type="string"/>
+            <value direction="in" name="valid" type="boolean"/>
+            <value direction="out" name="currentPage" type="integer"/>
+        </values>
+        <methods>
+            <method name="flatten">
+                <param name="serviceName" type="string"/>
+                <param name="serviceUrl" type="string"/>
+                <param name="pincode" type="string"/>
+                <param name="keystore" type="string"/>
+                <param name="keypass" type="string"/>
+            </method>
+            <method name="print">
+                <param name="printJob" type="object"/>
+                <param name="header" type="string"/>
+                <param name="footer" type="string"/>
+            </method>
+            <method name="printpreview">
+                <param name="printJob" type="object"/>
+                <param name="header" type="string"/>
+                <param name="footer" type="string"/>
+            </method>
+        </methods>
+    </tipiclass>    
+    
+    
     <tipiclass addtocontainer="true" childcount="0" class="TipiQuestionEditor" layoutmanager="false"
         module="data" name="tipiquestioneditor"
         package="com.dexels.navajo.tipi.components.swingimpl" studio-icon="tipitable.gif"

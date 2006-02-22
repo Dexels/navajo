@@ -4,6 +4,7 @@ import java.net.*;
 import java.awt.*;
 import javax.swing.*;
 import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.components.swingimpl.embed.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.tipixml.*;
 
@@ -26,7 +27,8 @@ public class TipiFrame
   }
 
   public Object createContainer() {
-    if (myContext.isStudioMode() && !isStudioElement()) {
+     boolean internal = getContext() instanceof EmbeddedContext;
+    if (internal) {
       TipiSwingFrameStudioImpl myFrame;
       myFrame = new TipiSwingFrameStudioImpl(this);
       myFrame.setClosable(true);
@@ -118,7 +120,11 @@ public class TipiFrame
       visible = ( (Boolean) object).booleanValue();
     }
     if ("icon".equals(name)) {
-      setIcon(getIcon( (URL) object));
+        if (object instanceof URL) {
+            setIcon(getIcon( (URL) object));
+        } else {
+            System.err.println("Warning setting icon of tipiframe:");
+        }
     }
     if ("title".equals(name)) {
       this.setTitle( (String) object);
