@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
-<plugin id="com.dexels.plugin" name="NavajoScriptPlugin Plug-in" version="0.90.0"
+<plugin id="com.dexels.plugin" name="NavajoScriptPlugin Plug-in" version="0.92.0"
    provider-name="dexels" class="com.dexels.navajo.studio.script.plugin.NavajoScriptPluginPlugin">
    <runtime>
       <library name="bin/">
@@ -112,21 +112,21 @@
        
    </extension> 
 	<extension point="org.eclipse.ui.commands">
-		<command id="com.dexels.plugin.command.socket" name="Start socket" description="Starts the runner of the current navajo project" category="org.eclipse.ui.category.views"/>
-		<command id="com.dexels.plugin.command.reload" name="Reload" description="Reload current tml" category="org.eclipse.ui.category.views"/>
-		<command id="com.dexels.plugin.command.java" name="Java" description="Show java" category="org.eclipse.ui.category.views"/>
-		<command id="com.dexels.plugin.command.recompile" name="Recompile" description="Recompile" category="org.eclipse.ui.category.views"/>
-		<command id="com.dexels.plugin.command.tml" name="Tml" description="Tml" category="org.eclipse.ui.category.views"/>
+		<command id="com.dexels.plugin.command.socket" name="Start socket" description="Starts the runner of the current navajo project" categoryId="org.eclipse.ui.category.views"/>
+		<command id="com.dexels.plugin.command.reload" name="Reload" description="Reload current tml" categoryId="org.eclipse.ui.category.views"/>
+		<command id="com.dexels.plugin.command.java" name="Java" description="Show java" categoryId="org.eclipse.ui.category.views"/>
+		<command id="com.dexels.plugin.command.recompile" name="Recompile" description="Recompile" categoryId="org.eclipse.ui.category.views"/>
+		<command id="com.dexels.plugin.command.tml" name="Tml" description="Tml" categoryId="org.eclipse.ui.category.views"/>
 
-		<command id="com.dexels.plugin.command.forward" name="Forward" description="Forward" category="org.eclipse.ui.category.views"/>
-		<command id="com.dexels.plugin.command.back" name="Back" description="Back" category="org.eclipse.ui.category.views"/>
-		
+		<command id="com.dexels.plugin.command.forward" name="Forward" description="Forward" categoryId="org.eclipse.ui.category.views"/>
+		<command id="com.dexels.plugin.command.back" name="Back" description="Back" categoryId="org.eclipse.ui.category.views"/>
+		<!--=
 		<keyBinding string="Shift+F7" command="com.dexels.plugin.command.reload" configuration="org.eclipse.ui.defaultAcceleratorConfiguration"/>
 	    <keyBinding string="Shift+F6" command="com.dexels.plugin.command.socket" configuration="org.eclipse.ui.defaultAcceleratorConfiguration"/>
 	    <keyBinding string="Ctrl+U" command="com.dexels.plugin.command.java" configuration="org.eclipse.ui.defaultAcceleratorConfiguration"/>
 	    <keyBinding string="Ctrl+R" command="com.dexels.plugin.command.recompile" configuration="org.eclipse.ui.defaultAcceleratorConfiguration"/>
 	    <keyBinding string="Ctrl+T" command="com.dexels.plugin.command.tml" configuration="org.eclipse.ui.defaultAcceleratorConfiguration"/>
-
+	-->
 
 	<!--
 	Editor commands:
@@ -148,12 +148,15 @@
 		 <key sequence="F5" commandId="com.dexels.plugin.command.reload" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" contextId="com.dexels.navajoContext" />
 	</extension>
 	<extension point="org.eclipse.ui.bindings">
-		 <key sequence="ARROW_LEFT" commandId="com.dexels.plugin.command.back" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" contextId="com.dexels.navajoContext" />
+		 <key sequence="Ctrl+ARROW_LEFT" commandId="com.dexels.plugin.command.back" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" contextId="com.dexels.navajoContext" />
 	</extension>
 	<extension point="org.eclipse.ui.bindings">
-		 <key sequence="ARROW_RIGHT" commandId="com.dexels.plugin.command.forward" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" contextId="com.dexels.navajoContext" />
+		 <key sequence="Ctrl+ARROW_RIGHT" commandId="com.dexels.plugin.command.forward" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" contextId="com.dexels.navajoContext" />
 	</extension>
-
+	<extension point="org.eclipse.ui.bindings">
+		 <key sequence="Shift+F7" commandId="com.dexels.plugin.command.recompile" schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" contextId="com.dexels.navajoContext" />
+	</extension>
+	
    <extension point="org.eclipse.ui.preferencePages">
       <page name="Navajo Browser Preferences"
          class="com.dexels.navajo.studio.script.plugin.navajobrowser.preferences.NavajoPreferencePage"
