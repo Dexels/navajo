@@ -56,6 +56,7 @@ public abstract class TipiContext
 
   private final List resourceReferenceList = new ArrayList();
 
+  protected TipiStorageManager myStorageManager = null;
 
   private final List packageList = new ArrayList();
   private final Map packageMap = new HashMap();
@@ -71,15 +72,20 @@ public abstract class TipiContext
   protected boolean allowLazyIncludes = true;
   private boolean isSwitching = false;
   private ClassLoader tipiClassLoader = null;
-
+  private ClassLoader resourceClassLoader = null;
+ 
   public TipiContext() {
 //    myThreadPool = new TipiThreadPool(this);
     NavajoFactory.getInstance().setExpressionEvaluator(new DefaultExpressionEvaluator());
+    // Use the null implementation as default (Will always return null, will ignore all saves)
+    setStorageManager(new TipiNullStorageManager());
   }
   protected void clearLogFile() {
    }
 
-  
+  public void setResourceClassLoader(ClassLoader c) {
+      resourceClassLoader = c;
+  }
   public void setResourceBaseDirectory(File f) {
       resourceBaseDirectory = f;
   }
@@ -365,13 +371,44 @@ public abstract class TipiContext
       parsePackage(child);
       return;
     }
+
+    if (childName.equals("tipi-storage")) {
+        parseStorage(child);
+        return;
+      }
+    
 //    if (childName.equals("tipi-package-reference")) {
 //      parsePackageReference(child);
 //      return;
 //    }
   }
 
-  public void parseDefinition(XMLElement child) {
+  private void parseStorage(XMLElement child) {
+      String type = child.getStringAttribute("type");
+      if ("asp".equals(type)) {
+        String instanceId = child.getStringAttribute("instanceId");
+        String scriptPrefix = child.getStringAttribute("scriptPrefix");
+        setStorageManager(new TipiGeneralAspManager(scriptPrefix,instanceId));
+    }
+      if ("file".equals(type)) {
+          String basePath = child.getStringAttribute("dir");
+          String instanceId = child.getStringAttribute("instanceId");
+          
+          File baseDir = null;
+          if (basePath!=null) {
+              baseDir= new File(basePath);
+              if (instanceId!=null) {
+                  baseDir = new File(baseDir,instanceId);
+            }
+          }
+          setStorageManager(new TipiFileStorageManager(baseDir));
+      }
+      if ("null".equals(type)) {
+          setStorageManager(new TipiNullStorageManager());
+      }
+      
+  }
+public void parseDefinition(XMLElement child) {
     String childName = child.getName();
     if (childName.equals("tipi") || childName.equals("component")) {
       testDefinition(child);
@@ -389,9 +426,18 @@ public abstract class TipiContext
   }
 
   public URL getResourceURL(String location) {
-    URL u = getClass().getClassLoader().getResource(location);
+      return getResourceURL(location,resourceClassLoader);
+  }  
+  
+  public URL getResourceURL(String location, ClassLoader cl) {
+//      System.err.println("CLASSLOADER: "+System.getProperty("java.class.path"));
+      System.err.println("Getting URL from loader: "+cl+" location: "+location);
+      if (cl==null) {
+          cl = getClass().getClassLoader();
+          System.err.println("No classloader supplied getting default: "+cl);
+      }
+      URL u = cl.getResource(location);
     if (u==null) {
-//      System.err.println("CLASSPATH: "+System.getProperty("java.class.path"));
       System.err.println("getResourceURL: "+location+" not found in classpath, continuing");
     }
     if (u!=null) {
@@ -622,6 +668,9 @@ public abstract class TipiContext
     TipiComponent tc = null;
     if (clas.equals("") && name!=null && !"".equals(name)) {
       XMLElement xx = getComponentDefinition(name);
+      if (xx==null) {
+        throw new TipiException("Definition based instance, but no definition found. Definition: "+name);
+    }
       tc = instantiateComponentByDefinition(xx, instance);
     }
     else {
@@ -1283,16 +1332,19 @@ public abstract class TipiContext
         synchronized (tc) {
           tc.setCurrentEvent(event);
           o = Expression.evaluate(expr, n, null, currentMessage, null, tc);
+          if (o==null) {
+            System.err.println("Expression evaluated to null operand!");
+        }
         }
     }
     catch (Exception ex) {
-//      System.err.println("Not happy while evaluating expression: " + expr + " message: " + ex.getMessage());
+      System.err.println("Not happy while evaluating expression: " + expr + " message: " + ex.getMessage());
       Operand op = new Operand(expr, Property.STRING_PROPERTY, "");
 //      ex.printStackTrace();
       return o;
     }
     catch (Error ex) {
-//      System.err.println("Not happy while evaluating expression: " + expr + " message: " + ex.getMessage());
+      System.err.println("Not happy while evaluating expression: " + expr + " message: " + ex.getMessage());
 //        ex.printStackTrace();
         Operand op = new Operand(expr, Property.STRING_PROPERTY, "");
       return o;
@@ -1312,7 +1364,7 @@ public abstract class TipiContext
 
 
   public Object evaluateExpression(String expression, TipiComponent tc, TipiEvent event) throws Exception {
-    Object obj = null;
+      Object obj = null;
     if (expression.startsWith("{") && expression.endsWith("}")) {
       String path = expression.substring(1, expression.length() - 1);
       // Bad bad and evil. The exist operator should be outside the curlies.
@@ -1748,7 +1800,6 @@ public Set getRequiredIncludes() {
 public void parseRequiredIncludes() {
     for (Iterator iter = getRequiredIncludes().iterator(); iter.hasNext();) {
         String element = (String) iter.next();
-        System.err.println("PASSING THROUGH UNTESTED CODE. BEWARE. INCLUDE: "+element);
         includeList.add(element);
     }
 }
@@ -1757,5 +1808,39 @@ public void enqueueExecutable(TipiExecutable te) throws  TipiBreakException, Tip
     myThreadPool.enqueueExecutable(te);
 }
 
+public TipiStorageManager getStorageManager() {
+    return myStorageManager;
+    
+    
+}
 
- }
+public void setStorageManager(TipiStorageManager tsm) {
+    if (tsm==null) {
+        throw new IllegalArgumentException("setStorageManager: Can not be null");
+    }
+    myStorageManager = tsm;
+}
+
+public Navajo retrieveDocument(String id)  {
+    if (getStorageManager()!=null) {
+        try {
+            return getStorageManager().getStorageDocument(id);
+        } catch (TipiException e) {
+             e.printStackTrace();
+        }
+    }
+    return null;
+}
+public void storeDocument(String id, Navajo n)  {
+    if (getStorageManager()!=null) {
+        try {
+            getStorageManager().setStorageDocument(id,n);
+        } catch (TipiException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+
+
+}
