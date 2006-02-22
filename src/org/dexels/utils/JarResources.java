@@ -1,6 +1,5 @@
 package org.dexels.utils;
 
-
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -8,9 +7,8 @@ import java.util.jar.*;
 import java.util.zip.*;
 
 /**
- * JarResources: JarResources maps all resources included in a
- * Zip or Jar file. Additionaly, it provides a method to extract one
- * as a blob.
+ * JarResources: JarResources maps all resources included in a Zip or Jar file.
+ * Additionaly, it provides a method to extract one as a blob.
  */
 public final class JarResources {
 
@@ -19,36 +17,41 @@ public final class JarResources {
 
     // jar resource mapping tables
     private Hashtable htSizes = new Hashtable();
+
     private Hashtable htJarContents = new Hashtable();
 
     // a jar file
     private File jarFile;
 
     /**
-     * creates a JarResources. It extracts all resources from a Jar
-     * into an internal hashtable, keyed by resource names.
-     * @param jarFileName a jar or zip file
+     * creates a JarResources. It extracts all resources from a Jar into an
+     * internal hashtable, keyed by resource names.
+     * 
+     * @param jarFileName
+     *            a jar or zip file
      */
     public JarResources(File jarFile) {
         this.jarFile = jarFile;
         init();
     }
 
-    public URL getJarURL() throws MalformedURLException  {
+    public URL getJarURL() throws MalformedURLException {
         return jarFile.toURL();
     }
-    
+
     public URL getPathURL(String path) throws MalformedURLException {
         if (!path.startsWith("/")) {
-            path = "/"+path;
+            path = "/" + path;
         }
-        String contents = "jar:"+getJarURL().toString()+"!"+path;
+        String contents = "jar:" + getJarURL().toString() + "!" + path;
         return new URL(contents);
     }
-    
+
     /**
      * Extracts a jar resource as a blob.
-     * @param name a resource name.
+     * 
+     * @param name
+     *            a resource name.
      */
     public final byte[] getResource(String name) throws Exception {
         byte[] resource = (byte[]) htJarContents.get(name);
@@ -78,7 +81,7 @@ public final class JarResources {
                 if (name != null) {
                     int first = name.indexOf("/");
 
-                    if (first != -1) {  // Directory
+                    if (first != -1) { // Directory
                         name = name.substring(0, first);
                         if (!inPath.contains(name))
                             inPath.add(name + "/");
@@ -99,7 +102,7 @@ public final class JarResources {
     public final Iterator getDirectories() {
         return null;
     }
-    
+
     public final boolean hasResource(String resourcePath) {
         return htJarContents.containsKey(resourcePath);
     }
@@ -108,26 +111,39 @@ public final class JarResources {
      * initializes internal hash tables with Jar file resources.
      */
     private final void init() {
+        // extracts just sizes only.
+        ZipFile zf = null;
         try {
-            // extracts just sizes only.
-            ZipFile zf = new ZipFile(jarFile);
+            zf = new ZipFile(jarFile);
             Enumeration e = zf.entries();
 
             while (e.hasMoreElements()) {
                 ZipEntry ze = (ZipEntry) e.nextElement();
 
-
                 // System.out.println(ze.getName());
                 htSizes.put(ze.getName(), new Integer((int) ze.getSize()));
             }
-            zf.close();
+        } catch (IOException io) {
+            io.printStackTrace();
 
-            // extract resources and put them into the hashtable.
-            FileInputStream fis = new FileInputStream(jarFile);
+        } finally {
+            if (zf != null) {
+                try {
+                    zf.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        // extract resources and put them into the hashtable.
+        FileInputStream fis = null;
+        try {
+            fis = new FileInputStream(jarFile);
             BufferedInputStream bis = new BufferedInputStream(fis);
             ZipInputStream zis = new ZipInputStream(bis);
             ZipEntry ze = null;
-            
+
             while ((ze = zis.getNextEntry()) != null) {
                 if (ze.isDirectory()) {
                     ze.getName();
@@ -154,21 +170,32 @@ public final class JarResources {
 
             }
 
-            fis.close();
+        } catch (NullPointerException en) {
+            en.printStackTrace(System.err);
+            // System.out.println("done.");
+        } catch (FileNotFoundException enn) {
+            enn.printStackTrace(System.err);
+        } catch (IOException ennn) {
+            ennn.printStackTrace(System.err);
+        } finally {
+            if (fis != null) {
 
-        } catch (NullPointerException e) {
-           e.printStackTrace(System.err);
-            //System.out.println("done.");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace(System.err);
-        } catch (IOException e) {
-            e.printStackTrace(System.err);
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
         }
+
     }
 
     /**
      * Dumps a zip entry into a string.
-     * @param ze a ZipEntry
+     * 
+     * @param ze
+     *            a ZipEntry
      */
     private final String dumpZipEntry(ZipEntry ze) {
         StringBuffer sb = new StringBuffer();
@@ -195,19 +222,19 @@ public final class JarResources {
     /**
      * Is a test driver. Given a jar file and a resource name, it trys to
      * extract the resource and then tells us whether it could or not.
-     *
-     * <strong>Example</strong>
-     * Let's say you have a JAR file which jarred up a bunch of gif image
-     * files. Now, by using JarResources, you could extract, create, and display
-     * those images on-the-fly.
+     * 
+     * <strong>Example</strong> Let's say you have a JAR file which jarred up a
+     * bunch of gif image files. Now, by using JarResources, you could extract,
+     * create, and display those images on-the-fly.
+     * 
      * <pre>
-     *     ...
-     *     JarResources JR=new JarResources("GifBundle.jar");
-     *     Image image=Toolkit.createImage(JR.getResource("logo.gif");
-     *     Image logo=Toolkit.getDefaultToolkit().createImage(
-     *                   JR.getResources("logo.gif")
-     *                   );
-     *     ...
+     *       ...
+     *       JarResources JR=new JarResources(&quot;GifBundle.jar&quot;);
+     *       Image image=Toolkit.createImage(JR.getResource(&quot;logo.gif&quot;);
+     *       Image logo=Toolkit.getDefaultToolkit().createImage(
+     *                     JR.getResources(&quot;logo.gif&quot;)
+     *                     );
+     *       ...
      * </pre>
      */
     public static void main(String[] args) throws IOException {
@@ -220,8 +247,9 @@ public final class JarResources {
 
             System.out.println(name);
         }
-        // byte [] file = jr.getResource("org/dexels/toolbox/studio/BPFLMethodPanel.class");
+        // byte [] file =
+        // jr.getResource("org/dexels/toolbox/studio/BPFLMethodPanel.class");
 
     }
 
-}	// End of JarResources class.
+} // End of JarResources class.
