@@ -19,9 +19,9 @@
 	<property name="DexelsVersionControl.build" value="${PROJECTHOME}/DexelsVersionControl/classes"/>
 	<path id="depend">
 		<!-- NavajoSwingTipi needs the libraries from the NavajoTipi project, OK? -->
-		<fileset dir="${NavajoTipi}/lib">
+		<!--<fileset dir="${NavajoTipi}/lib">
 			<include name="**/*.jar"/>
-		</fileset>
+		</fileset>-->
 		<pathelement location="${NavajoClient.build}"/>
 		<pathelement location="${NavajoDocument.build}"/>
 		<pathelement location="${Navajo.build}"/>
