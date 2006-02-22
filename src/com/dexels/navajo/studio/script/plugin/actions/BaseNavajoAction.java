@@ -96,6 +96,11 @@ public abstract class BaseNavajoAction implements IWorkbenchWindowActionDelegate
                 //            System.err.println("Null aap!");
                 return;
             }
+            IProject project = file.getProject();
+            if (!project.hasNature(NavajoScriptPluginPlugin.NAVAJO_NATURE)) {
+                // Ignore non navajo projects
+                return;
+            }
             if (!NavajoScriptPluginPlugin.getDefault().hasNavajoBuilder()) {
             }
             if ("xml".equals(file.getFileExtension())) {
@@ -109,7 +114,11 @@ public abstract class BaseNavajoAction implements IWorkbenchWindowActionDelegate
                 scriptName = NavajoScriptPluginPlugin.getDefault().getScriptNameFromResource(file);
              }
         } catch (NavajoPluginException e) {
-            NavajoScriptPluginPlugin.getDefault().log("Setting resource selection in navajo project. This is bad. ",e);
+            NavajoScriptPluginPlugin.getDefault().log("Problem in baseNavajoAction: ",e);
+        } catch (CoreException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            NavajoScriptPluginPlugin.getDefault().log("Core exception in NavajoAction",e);
         }
 
     }
