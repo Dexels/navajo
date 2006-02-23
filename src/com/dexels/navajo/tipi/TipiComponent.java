@@ -205,7 +205,7 @@ public interface TipiComponent
   public void setCurrentEvent(TipiEvent event);
   public void updateId(TipiComponent tc, String oldId, String id);
   public void removeInstantiatedChildren();
-
+  public Object getActualComponent();
 /**
  * 
  */
