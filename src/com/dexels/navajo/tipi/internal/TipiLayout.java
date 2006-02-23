@@ -24,6 +24,7 @@ public abstract class TipiLayout {
   protected TipiContext myContext;
   protected TipiComponent myComponent;
 
+//  protected abstract Object parseConstraint(String text);
   public TipiLayout() {
   }
 
@@ -39,7 +40,7 @@ public abstract class TipiLayout {
 //  public abstract void instantiateLayout(TipiContext context, Tipi t, XMLElement def);
   public abstract void createLayout() throws TipiException;
 
-  protected abstract void loadLayout(XMLElement def, TipiComponent current, Navajo n) throws TipiException;
+  protected abstract void loadLayout(XMLElement def, TipiComponent current) throws TipiException;
 
   public TipiConstraintEditor getConstraintEditor() {
     if (myDefinition == null) {
@@ -48,8 +49,8 @@ public abstract class TipiLayout {
     return myConstraintEditor;
   }
 
-  public void loadLayout(TipiComponent current, Navajo n) throws TipiException {
-    loadLayout(myDefinition, current, n);
+  public void loadLayout(TipiComponent current) throws TipiException {
+    loadLayout(myDefinition, current);
   }
 
   public XMLElement store() {
@@ -133,4 +134,7 @@ public abstract class TipiLayout {
       }
     }
   }
+
+public void childAdded(Object c) {
+}
 }

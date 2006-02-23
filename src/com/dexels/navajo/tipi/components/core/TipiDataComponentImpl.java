@@ -111,7 +111,7 @@ protected String myMethod;
     if (getContainer() != null) {
       setContainerLayout(tl.getLayout());
     }
-    tl.loadLayout(this, null);
+    tl.loadLayout(this);
   }
 
   public String getName() {

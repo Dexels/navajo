@@ -552,7 +552,7 @@ public void loadStartValues(XMLElement element) {
   public void performMethod(String methodName, TipiAction invocation, TipiEvent event) throws TipiBreakException {
     TipiComponentMethod tcm = (TipiComponentMethod) componentMethods.get(methodName);
     if (tcm == null) {
-      System.err.println("Could not find component method: " + methodName);
+      System.err.println("Could not find component method: " + methodName+" component: "+getPath()+" class: "+getClass());
     } else {
     tcm.loadInstance(invocation);
     performComponentMethod(methodName, tcm, event);
@@ -1184,6 +1184,9 @@ if (tipiComponentMap.containsKey(c.getId())) {
         current.commitToUi();
       }
 //      System.err.println("Committed to UI: "+getId());
+  }
+  public Object getActualComponent() {
+	  return getContainer();
   }
 
 }

@@ -18,11 +18,10 @@ public abstract class TipiLayoutImpl
     extends TipiLayout {
   protected XMLElement myInstanceElement;
   protected Object parseConstraint(String text, int index) {
-      System.err.println("UNTESTED CODE___________ CHECK THIS PART: Constraint: "+text+" class: "+getClass());
       return null;
   }
 
-  public void loadLayout(XMLElement def, TipiComponent t, Navajo n) throws com.dexels.navajo.tipi.TipiException {
+  public void loadLayout(XMLElement def, TipiComponent t) throws com.dexels.navajo.tipi.TipiException {
     myInstanceElement = def;
     myComponent = t;
     Vector v = myInstanceElement.getChildren();
