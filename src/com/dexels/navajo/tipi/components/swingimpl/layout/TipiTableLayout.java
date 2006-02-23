@@ -53,7 +53,7 @@ public class TipiTableLayout
     setLayout(new GridBagLayout());
   }
 
-  public void loadLayout(XMLElement table, TipiComponent current, Navajo n) throws TipiException {
+  public void loadLayout(XMLElement table, TipiComponent current) throws TipiException {
     this.myElement = table;
     Container con = (Container) current.getContainer();
     Map columnAttributes;
