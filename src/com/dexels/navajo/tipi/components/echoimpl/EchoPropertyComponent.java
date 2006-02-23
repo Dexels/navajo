@@ -14,6 +14,7 @@ import nextapp.echo2.app.Grid;
 import nextapp.echo2.app.Label;
 import nextapp.echo2.app.ListBox;
 import nextapp.echo2.app.PasswordField;
+import nextapp.echo2.app.ResourceImageReference;
 import nextapp.echo2.app.Row;
 import nextapp.echo2.app.SelectField;
 import nextapp.echo2.app.Table;
@@ -33,6 +34,7 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.nanoimpl.PropertyImpl;
 import com.dexels.navajo.tipi.actions.PropertyEventListener;
+import com.dexels.navajo.tipi.components.echoimpl.impl.BinaryPropertyImage;
 import com.dexels.navajo.tipi.components.echoimpl.impl.MessageTable;
 import com.dexels.navajo.tipi.components.echoimpl.impl.TipiEchoTextField;
 
@@ -295,6 +297,13 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 					myProperty.setValue(cb.getText());
 				}});
 			currentComponent = cb;
+		}
+
+		if (type.equals(Property.BINARY_PROPERTY)) {
+			final Label ll = new Label(p.getValue());
+			ll.setIcon(new BinaryPropertyImage(p));
+			add(ll);
+			currentComponent = ll;
 		}
 
 		if (type.equals(Property.PASSWORD_PROPERTY)) {

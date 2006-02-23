@@ -66,13 +66,13 @@ public class TipiGridPanel extends TipiEchoDataComponentImpl {
 		 Component c = (Component)o;
 		 gridComponent.add(c);
 		 if (constr!=null) {
-			 c.setLayoutData(parseGridConstraints(constr));
+			 c.setLayoutData(parseGridConstraints(constr,c));
 		}
 //		myContainer.setWidth(myContainer.getWidth());
 //		myContainer.setHeight(myContainer.getHeight());
 	 }
 	 
-	 public GridLayoutData parseGridConstraints(String txt) {
+	 public GridLayoutData parseGridConstraints(String txt, Component c) {
 		 StringTokenizer st = new StringTokenizer(txt,";");
 		 GridLayoutData myData = new GridLayoutData();
 		 while (st.hasMoreTokens()) {
@@ -80,12 +80,12 @@ public class TipiGridPanel extends TipiEchoDataComponentImpl {
 			StringTokenizer current = new StringTokenizer(next,":");
 			String key = current.nextToken();
 			String value = current.nextToken();
-			setProperty(key,value,myData);
+			setProperty(key,value,myData,c);
 		}
 		 return myData;
 	 }
 	 
-	private void setProperty(String key, String value, GridLayoutData myData) {
+	private void setProperty(String key, String value, GridLayoutData myData, Component c) {
 		if ("align".equals(key)) {
 			myData.setAlignment(parseAlignment(value));
 		}
@@ -97,6 +97,11 @@ public class TipiGridPanel extends TipiEchoDataComponentImpl {
 		}
 		if ("rowspan".equals(key)) {
 			myData.setRowSpan(Integer.parseInt(value));
+		}
+		if ("height".equals(key)) {
+			int height = Integer.parseInt(value);
+			GridLayoutData gd = new GridLayoutData();
+//			addHeightStrut(currenty, height, current);
 		}
 	}
 
