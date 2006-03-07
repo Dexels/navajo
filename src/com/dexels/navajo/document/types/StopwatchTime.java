@@ -76,8 +76,23 @@ public final class StopwatchTime extends NavajoType implements Comparable {
 	      return;
 	    }
 	    try {
+
+              if(s.indexOf(",") > 0){
+                int pre = Integer.parseInt(s.substring(0,s.indexOf(",")));
+                int post = Integer.parseInt(s.substring(s.indexOf(",")+1));
+                int m_post = 0;
+                if(post < 10){
+                  m_post = 100*post;
+                }
+                if(post > 9 && post < 100){
+                  m_post = 10*post;
+                }
+
+                myMillis = 1000*pre + m_post;
+                return;
+              }
+
 	      StringTokenizer tokens = new StringTokenizer(s, ":");
-	      System.err.println("Tokens: " + tokens.countTokens());
 	      if(tokens.countTokens() == 1) { // Format 2a
 	    	  int h = Integer.parseInt(s);
 	    	  myMillis = SECOND_MILLIS * h;
@@ -143,11 +158,6 @@ public final class StopwatchTime extends NavajoType implements Comparable {
 	  millis = millis%MINUTE_MILLIS;
 	  long seconds = millis/SECOND_MILLIS;
 	  millis = millis%SECOND_MILLIS;
-
-          System.err.println("Hours: "+ hours);
-          System.err.println("Minutes: "+ minutes);
-          System.err.println("Seconds: "+ seconds);
-          System.err.println("Millis: "+ millis);
 
 	  String result = "";
 	  if ( hours == 0 ) {
