@@ -1,7 +1,6 @@
 package com.dexels.navajo.tipi.components.swingimpl.swing;
 
-import java.io.OutputStream;
-import java.io.InputStream;
+import java.io.*;
 
 public class DefaultBrowser {
 
@@ -31,12 +30,15 @@ public class DefaultBrowser {
         Process p = Runtime.getRuntime().exec(cmd);
       }
       else {
+          if (url.indexOf(' ')!=-1) {
+              System.err.println("Warning, spaces in URL, might fail");
+          }
         if(url.indexOf(".doc") >= 0 || url.indexOf(".xls") >= 0 || url.indexOf(".ppt") >= 0 || url.indexOf(".txt") >= 0 || url.indexOf(".rtf") >= 0){
           cmd = "ooffice " + url;
         } else if(url.indexOf(".jpg") >= 0 || url.indexOf(".gif") >= 0 || url.indexOf(".png") >= 0){
           cmd = "display " + url;
         } else if(url.indexOf(".pdf") >= 0){
-          cmd = "xpdf '" + url + "'";
+          cmd = "xpdf " + url;
         }else if(url.indexOf(".jnlp") >= 0){
           cmd = "mozilla "+ url;
         }
@@ -45,8 +47,9 @@ public class DefaultBrowser {
           cmd = "mozilla " + url;
         }
         if(cmd != null){
+          System.err.println("EXECUTING COMMAND:   "+cmd);
           Process p = Runtime.getRuntime().exec(cmd);
-          
+            
         }
       }
     }
@@ -54,7 +57,10 @@ public class DefaultBrowser {
        result = false;
       System.err.println("Could not invoke browser, command=" + cmd);
       System.err.println("Caught: " + ex);
+      ex.printStackTrace();
     }
     return result;
   }
+
+
 }

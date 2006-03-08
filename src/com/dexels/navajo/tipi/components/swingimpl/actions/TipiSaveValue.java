@@ -55,6 +55,11 @@ public class TipiSaveValue extends TipiAction {
             throw new TipiBreakException(-2);
         }
         File f = jf.getSelectedFile();
+        saveFile(value, f);
+        
+    }
+
+    public static void saveFile(Object value, File f) throws TipiBreakException, TipiException {
         if (f==null) {
             throw new TipiBreakException(-3);
         }
@@ -69,8 +74,10 @@ public class TipiSaveValue extends TipiAction {
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+            throw new TipiException("File not found: "+e);
         } catch (IOException e) {
             e.printStackTrace();
+            throw new TipiException("IO Error: "+e);
         } finally {
             if (fos!=null) {
                 try {
@@ -80,7 +87,6 @@ public class TipiSaveValue extends TipiAction {
                 }
             }
         }
-        
     }
 
 }
