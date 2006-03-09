@@ -1,4 +1,4 @@
-package com.dexels.navajo.adapters;
+package com.dexels.navajo.adapter;
 
 import org.eclipse.birt.report.engine.api.*;
 import com.dexels.navajo.server.Parameters;
