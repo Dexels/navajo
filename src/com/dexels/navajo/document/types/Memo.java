@@ -26,6 +26,13 @@ public final class Memo
   }
 
   public int compareTo(Object s) {
-    return contents.compareTo(s);
+	  if (s==null) {
+		return 0;
+	}
+	  if (s instanceof String) {
+		return contents.compareTo((String)s);
+	}
+		return contents.compareTo(s.toString());
+	}
   }
-}
+
