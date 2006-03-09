@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Written by Eclipse BIRT 2.0 -->
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3" id="1">
+    <property name="createdBy">Eclipse BIRT Designer Version 2.0.1 Build &lt;20060222-1204></property>
+    <property name="units">in</property>
+    <data-sources>
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="4">
+            <property name="odaDriverClass">oracle.jdbc.OracleDriver</property>
+            <property name="odaURL">jdbc:oracle:thin:@geranium:6310:DEXORA</property>
+            <property name="odaUser">KNVB_BBKY84H</property>
+            <encrypted-property name="odaPassword">S05WQl9CQktZODRI</encrypted-property>
+        </oda-data-source>
+    </data-sources>
+    <data-sets>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="aaa" id="5">
+            <property name="dataSource">Data Source</property>
+            <property name="queryText">select lastname, initials
+from person</property>
+        </oda-data-set>
+    </data-sets>
+    <page-setup>
+        <simple-master-page name="Simple MasterPage" id="2">
+            <page-footer>
+                <text id="3">
+                    <property name="contentType">html</property>
+                    <text-property name="content"><![CDATA[<value-of>new Date()</value-of>]]></text-property>
+                </text>
+            </page-footer>
+        </simple-master-page>
+    </page-setup>
+    <body>
+        <data id="32">
+            <property name="dataSet">aaa</property>
+            <expression name="valueExpr">row["LASTNAME"]</expression>
+        </data>
+        <table id="33">
+            <property name="width">100%</property>
+            <property name="dataSet">aaa</property>
+            <column id="43"/>
+            <column id="44"/>
+            <header>
+                <row id="34">
+                    <cell id="35">
+                        <label id="45">
+                            <text-property name="text">LASTNAME</text-property>
+                        </label>
+                    </cell>
+                    <cell id="36">
+                        <label id="47">
+                            <text-property name="text">INITIALS</text-property>
+                        </label>
+                    </cell>
+                </row>
+            </header>
+            <detail>
+                <row id="37">
+                    <cell id="38">
+                        <data id="46">
+                            <expression name="valueExpr">row["LASTNAME"]</expression>
+                        </data>
+                    </cell>
+                    <cell id="39">
+                        <data id="48">
+                            <expression name="valueExpr">row["INITIALS"]</expression>
+                        </data>
+                    </cell>
+                </row>
+            </detail>
+            <footer>
+                <row id="40">
+                    <cell id="41"/>
+                    <cell id="42"/>
+                </row>
+            </footer>
+        </table>
+    </body>
+</report>

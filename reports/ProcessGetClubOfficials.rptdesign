@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Written by Eclipse BIRT 2.0 -->
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3" id="1">
+    <property name="createdBy">Eclipse BIRT Designer Version 2.0.1 Build &lt;20060222-1204></property>
+    <property name="units">in</property>
+    <list-property name="configVars">
+        <structure>
+            <property name="name">ClubIdentifier</property>
+            <property name="value">BBKY84H</property>
+        </structure>
+    </list-property>
+    <parameters>
+        <parameter-group name="Club" id="147">
+            <text-property name="displayName">Club</text-property>
+            <parameters>
+                <scalar-parameter name="ClubIdentifier" id="149">
+                    <property name="valueType">static</property>
+                    <property name="dataType">string</property>
+                    <property name="allowBlank">false</property>
+                    <property name="format">Unformatted</property>
+                    <property name="controlType">text-box</property>
+                    <property name="defaultValue">BBKY84H</property>
+                </scalar-parameter>
+            </parameters>
+        </parameter-group>
+    </parameters>
+    <data-sources>
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="ASP DB - DEXORA" id="7">
+            <property name="odaDriverClass">oracle.jdbc.driver.OracleDriver</property>
+            <property name="odaURL">jdbc:oracle:thin:@geranium:6310:DEXORA</property>
+            <property name="odaUser">KNVB_BBKY84H</property>
+            <encrypted-property name="odaPassword">S05WQl9CQktZODRI</encrypted-property>
+        </oda-data-source>
+    </data-sources>
+    <data-sets>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="Functionarissen" id="114">
+            <property name="dataSource">ASP DB - DEXORA</property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">id</property>
+                    <property name="dataType">string</property>
+                    <property name="position">1</property>
+                    <expression name="defaultValue">"BBKY84H"</expression>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <property name="queryText">SELECT 
+  localcode.description, 
+  person.lastname || ', ' || person.initials || ' ' || person.infix AS fullname,
+  address.streetname || ' ' || address.housenumber || ' ' || address.numberappendix AS fulladdress,
+  address.zipcode, 
+  address.city,
+  address.telephonenumber,
+  address.mobilenumber,
+  address.emailaddress
+FROM 
+  organizationmember, 
+  organization, 
+  person, 
+  address,
+  personaddress, 
+  localcode 
+WHERE 
+  ( ltrim(rtrim(organizationmember.roleid)) = 'FUNCTION' OR organizationmember.roleid = 'CLUBFUNCTION' ) and 
+  organizationmember.functionid NOT IN ('PLAYER', 'MEMBER') and
+  organizationmember.personid = person.personid and 
+  organization.organizationid = organizationmember.organizationid and 
+  organization.externalid = ? and
+  person.personid = personaddress.personid and 
+  personaddress.addressid = address.addressid and 
+  localcode.code = organizationmember.functionid and
+  ( localcode.codetable = 'functie' OR localcode.codetable = 'CLUBFUNCTION' ) 
+  AND person.updatestatus NOT IN ('insync_removed', 'removed')
+  AND organizationmember.updatestatus NOT IN ('insync_removed', 'removed')
+order by localcode.description, person.lastname</property>
+        </oda-data-set>
+    </data-sets>
+    <styles>
+        <style name="Header" id="63">
+            <property name="fontFamily">Nimbus Sans L</property>
+            <property name="fontSize">large</property>
+            <property name="fontWeight">bold</property>
+            <property name="paddingTop">10pt</property>
+            <property name="paddingLeft">10pt</property>
+            <property name="paddingBottom">10pt</property>
+            <property name="paddingRight">10pt</property>
+            <property name="textAlign">center</property>
+        </style>
+        <style name="Bordered Table" id="112">
+            <property name="borderBottomStyle">none</property>
+            <property name="borderLeftStyle">none</property>
+            <property name="borderRightStyle">none</property>
+            <property name="borderTopStyle">none</property>
+            <property name="paddingTop">3pt</property>
+            <property name="paddingLeft">3pt</property>
+            <property name="paddingBottom">3pt</property>
+            <property name="paddingRight">3pt</property>
+        </style>
+        <style name="TH" id="136">
+            <property name="backgroundColor">#E6E6FA</property>
+            <property name="fontFamily">Nimbus Sans L</property>
+            <property name="fontSize">small</property>
+            <property name="fontWeight">bold</property>
+            <property name="borderBottomStyle">solid</property>
+            <property name="borderBottomWidth">thin</property>
+            <property name="borderLeftStyle">none</property>
+            <property name="borderLeftWidth">thin</property>
+            <property name="borderRightStyle">solid</property>
+            <property name="borderRightWidth">thin</property>
+            <property name="borderTopStyle">none</property>
+            <property name="borderTopWidth">thin</property>
+        </style>
+        <style name="TD" id="137">
+            <property name="fontFamily">Nimbus Sans L</property>
+            <property name="fontSize">small</property>
+            <property name="paddingTop">3pt</property>
+            <property name="paddingLeft">3pt</property>
+            <property name="paddingBottom">3pt</property>
+            <property name="paddingRight">3pt</property>
+        </style>
+        <style name="Table footer" id="146">
+            <property name="borderBottomStyle">none</property>
+            <property name="borderBottomWidth">thin</property>
+            <property name="borderLeftStyle">none</property>
+            <property name="borderLeftWidth">thin</property>
+            <property name="borderRightStyle">none</property>
+            <property name="borderRightWidth">thin</property>
+            <property name="borderTopStyle">none</property>
+            <property name="borderTopWidth">medium</property>
+        </style>
+    </styles>
+    <page-setup>
+        <simple-master-page name="Simple MasterPage" id="2">
+            <property name="type">a4</property>
+            <property name="orientation">landscape</property>
+            <property name="topMargin">2cm</property>
+            <property name="leftMargin">2cm</property>
+            <property name="bottomMargin">2cm</property>
+            <property name="rightMargin">2cm</property>
+        </simple-master-page>
+    </page-setup>
+    <body>
+        <label id="15">
+            <property name="style">Header</property>
+            <property name="paddingTop">5pt</property>
+            <property name="paddingLeft">0pt</property>
+            <property name="paddingBottom">5pt</property>
+            <property name="textAlign">left</property>
+            <text-property name="text">Functionarissen </text-property>
+        </label>
+        <table id="359">
+            <property name="width">100%</property>
+            <property name="dataSet">Functionarissen</property>
+            <column id="387">
+                <property name="width">1.631in</property>
+            </column>
+            <column id="388">
+                <property name="width">1.389in</property>
+            </column>
+            <column id="466">
+                <property name="width">0.831in</property>
+            </column>
+            <column id="470">
+                <property name="width">1.084in</property>
+            </column>
+            <column id="392">
+                <property name="width">0.863in</property>
+            </column>
+            <column id="393">
+                <property name="width">0.947in</property>
+            </column>
+            <column id="394">
+                <property name="width">1.884in</property>
+            </column>
+            <group id="430">
+                <property name="groupName">Functie</property>
+                <property name="interval">none</property>
+                <property name="sortDirection">asc</property>
+                <expression name="keyExpr">row["DESCRIPTION"]</expression>
+                <header>
+                    <row id="431">
+                        <property name="style">TH</property>
+                        <property name="backgroundColor">#E6E6FA</property>
+                        <cell id="432">
+                            <property name="borderBottomColor">#000000</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
+                            <property name="borderLeftColor">#000000</property>
+                            <property name="borderLeftStyle">solid</property>
+                            <property name="borderLeftWidth">thin</property>
+                            <property name="borderTopColor">#000000</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">thin</property>
+                            <data id="443">
+                                <expression name="valueExpr">row["DESCRIPTION"]</expression>
+                            </data>
+                        </cell>
+                        <cell id="433">
+                            <property name="borderBottomColor">#000000</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
+                            <property name="borderTopColor">#000000</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">thin</property>
+                            <label id="416">
+                                <text-property name="text">Adres</text-property>
+                            </label>
+                        </cell>
+                        <cell id="463">
+                            <property name="borderBottomColor">#000000</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
+                            <property name="borderTopColor">#000000</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">thin</property>
+                            <label id="471">
+                                <text-property name="text">Postcode</text-property>
+                            </label>
+                        </cell>
+                        <cell id="467">
+                            <property name="borderBottomColor">#000000</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
+                            <property name="borderTopColor">#000000</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">thin</property>
+                            <label id="472">
+                                <text-property name="text">Plaats</text-property>
+                            </label>
+                        </cell>
+                        <cell id="434">
+                            <property name="borderBottomColor">#000000</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
+                            <property name="borderTopColor">#000000</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">thin</property>
+                            <label id="424">
+                                <text-property name="text">Telefoon</text-property>
+                            </label>
+                        </cell>
+                        <cell id="435">
+                            <property name="borderBottomColor">#000000</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
+                            <property name="borderTopColor">#000000</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">thin</property>
+                            <label id="426">
+                                <text-property name="text">Mobiel</text-property>
+                            </label>
+                        </cell>
+                        <cell id="436">
+                            <property name="borderBottomColor">#000000</property>
+                            <property name="borderBottomStyle">solid</property>
+                            <property name="borderBottomWidth">thin</property>
+                            <property name="borderRightColor">#000000</property>
+                            <property name="borderRightStyle">solid</property>
+                            <property name="borderRightWidth">thin</property>
+                            <property name="borderTopColor">#000000</property>
+                            <property name="borderTopStyle">solid</property>
+                            <property name="borderTopWidth">thin</property>
+                            <label id="428">
+                                <text-property name="text">Email</text-property>
+                            </label>
+                        </cell>
+                    </row>
+                </header>
+                <footer>
+                    <row id="491">
+                        <cell id="492">
+                            <property name="paddingTop">5pt</property>
+                            <property name="paddingBottom">5pt</property>
+                        </cell>
+                        <cell id="493"/>
+                        <cell id="494"/>
+                        <cell id="495"/>
+                        <cell id="496"/>
+                        <cell id="497"/>
+                        <cell id="498"/>
+                    </row>
+                </footer>
+            </group>
+            <detail>
+                <row id="369">
+                    <property name="height">18px</property>
+                    <property name="style">TD</property>
+                    <cell id="370">
+                        <data id="417">
+                            <expression name="valueExpr">row["FULLNAME"]</expression>
+                        </data>
+                    </cell>
+                    <cell id="371">
+                        <data id="462">
+                            <expression name="valueExpr">row["FULLADDRESS"]</expression>
+                        </data>
+                    </cell>
+                    <cell id="464">
+                        <data id="473">
+                            <expression name="valueExpr">row["ZIPCODE"]</expression>
+                        </data>
+                    </cell>
+                    <cell id="468">
+                        <data id="474">
+                            <expression name="valueExpr">row["CITY"]</expression>
+                        </data>
+                    </cell>
+                    <cell id="375">
+                        <data id="425">
+                            <expression name="valueExpr">row["TELEPHONENUMBER"]</expression>
+                        </data>
+                    </cell>
+                    <cell id="376">
+                        <data id="427">
+                            <expression name="valueExpr">row["MOBILENUMBER"]</expression>
+                        </data>
+                    </cell>
+                    <cell id="377">
+                        <data id="429">
+                            <expression name="valueExpr">row["EMAILADDRESS"]</expression>
+                        </data>
+                    </cell>
+                </row>
+            </detail>
+        </table>
+    </body>
+</report>

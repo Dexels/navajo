@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Written by Eclipse BIRT 2.0 -->
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3" id="1">
+    <property name="createdBy">Eclipse BIRT Designer Version 2.0.1 Build &lt;20060222-1204></property>
+    <property name="units">in</property>
+    <styles>
+        <style name="Header" id="5">
+            <property name="backgroundColor">#FFFCA6</property>
+            <property name="fontFamily">sans-serif</property>
+            <property name="fontSize">xx-large</property>
+            <property name="fontWeight">bold</property>
+            <property name="borderBottomStyle">double</property>
+            <property name="borderBottomWidth">medium</property>
+            <property name="borderLeftStyle">double</property>
+            <property name="borderLeftWidth">medium</property>
+            <property name="borderRightStyle">double</property>
+            <property name="borderRightWidth">medium</property>
+            <property name="borderTopStyle">double</property>
+            <property name="borderTopWidth">medium</property>
+            <property name="paddingTop">5pt</property>
+            <property name="paddingLeft">5pt</property>
+            <property name="paddingBottom">5pt</property>
+            <property name="paddingRight">5pt</property>
+            <property name="textAlign">center</property>
+        </style>
+    </styles>
+    <page-setup>
+        <simple-master-page name="Simple MasterPage" id="2">
+            <property name="type">a4</property>
+            <property name="leftMargin">1in</property>
+            <property name="rightMargin">1in</property>
+        </simple-master-page>
+    </page-setup>
+    <body>
+        <label id="4">
+            <property name="style">Header</property>
+            <text-property name="text">The Quick Brown Fox Jumped Over The Lazy Dog</text-property>
+        </label>
+    </body>
+</report>

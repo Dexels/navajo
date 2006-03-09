@@ -3,7 +3,29 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/NavajoAdapters"/>
-	<classpathentry kind="lib" path="lib/engine.jar"/>
-	<classpathentry kind="lib" path="lib/core.jar"/>
+	<classpathentry kind="lib" path="birt-engine/axis.jar"/>
+	<classpathentry kind="lib" path="birt-engine/axis-ant.jar"/>
+	<classpathentry kind="lib" path="birt-engine/birt-oda.jar"/>
+	<classpathentry kind="lib" path="birt-engine/chart-engine.jar"/>
+	<classpathentry kind="lib" path="birt-engine/commons-cli-1.0.jar"/>
+	<classpathentry kind="lib" path="birt-engine/commons-codec-1.3.jar"/>
+	<classpathentry kind="lib" path="birt-engine/commons-discovery-0.2.jar"/>
+	<classpathentry kind="lib" path="birt-engine/core.jar"/>
+	<classpathentry kind="lib" path="birt-engine/dte.jar"/>
+	<classpathentry kind="lib" path="birt-engine/engine.jar"/>
+	<classpathentry kind="lib" path="birt-engine/flute.jar"/>
+	<classpathentry kind="lib" path="birt-engine/jaxrpc.jar"/>
+	<classpathentry kind="lib" path="birt-engine/js.jar"/>
+	<classpathentry kind="lib" path="birt-engine/model.jar"/>
+	<classpathentry kind="lib" path="birt-engine/oda.jar"/>
+	<classpathentry kind="lib" path="birt-engine/odaconsumer-helper.jar"/>
+	<classpathentry kind="lib" path="birt-engine/org.eclipse.emf.common_2.1.0.jar"/>
+	<classpathentry kind="lib" path="birt-engine/org.eclipse.emf.ecore_2.1.0.jar"/>
+	<classpathentry kind="lib" path="birt-engine/org.eclipse.emf.ecore.xmi_2.1.0.jar"/>
+	<classpathentry kind="lib" path="birt-engine/saaj.jar"/>
+	<classpathentry kind="lib" path="birt-engine/sac.jar"/>
+	<classpathentry kind="lib" path="birt-engine/scriptapi.jar"/>
+	<classpathentry kind="lib" path="birt-engine/Tidy.jar"/>
+	<classpathentry kind="lib" path="birt-engine/wsdl4j-1.5.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

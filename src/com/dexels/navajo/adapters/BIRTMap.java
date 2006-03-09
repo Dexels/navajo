@@ -11,8 +11,8 @@ import java.io.*;
  
 public class BIRTMap implements Mappable {
   private HashMap parameters;
-  private  String reportDir = "C:/Projecten/birt-runtime-2_0_1/reports/";
-  private String engineDir = "C:/Projecten/sportlink-adapters/lib" ;
+  private  String reportDir = "reports/";
+  private String engineDir = "birt-engine/";
 
   public Binary report;
   public String reportName;
@@ -97,7 +97,8 @@ public class BIRTMap implements Mappable {
    * @param args
    */
   public static void main(String[] args) {
-    BIRTMap bm = new BIRTMap();
+	  System.err.println("User dir: "+System.getProperty("user.dir"));
+	  BIRTMap bm = new BIRTMap();
 
     bm.setReportName("ProcessQueryInvoice");
     bm.setOutputFormat("pdf");
