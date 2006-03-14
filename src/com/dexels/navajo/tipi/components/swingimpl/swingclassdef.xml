@@ -175,7 +175,8 @@
             </event>
             <event name="onActionPerformed">
                 <param name="table" type="object"/>
-                <param name="title" type="string" value="'Edit'"/>
+                <param name="selected" type="message"/>
+				<param name="title" type="string" value="'Edit'"/>
             </event>
             <event name="onValueChanged">
                 <param name="name" type="string"/>
