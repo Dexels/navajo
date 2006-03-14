@@ -127,6 +127,12 @@ public abstract class TipiBaseQuestionList extends TipiPanel {
        }
 
 
+       Message formData = input.getMessage("FormData");
+       if (formData!=null) {
+           Message m2 = formData.copy(n);
+           n.addMessage(m2);
+     }
+
       Message sendForm = input.getMessage("SendForm");
       if (sendForm!=null) {
           Message m2 = sendForm.copy(n);

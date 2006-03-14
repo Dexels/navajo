@@ -56,8 +56,8 @@ public class TipiQuestion
   }
 
   public void loadData(final Navajo n, final TipiContext context) throws TipiException {
-   runSyncInEventThread(new Runnable() {
-      public void run() {
+//   runSyncInEventThread(new Runnable() {
+//      public void run() {
       enabledCondition = null;
       visibleCondition = null;
       validationCondition = null;
@@ -157,8 +157,8 @@ public class TipiQuestion
         ex1.printStackTrace();
       }
 
-      }
-    });
+//      }
+//    });
   }
 
 
