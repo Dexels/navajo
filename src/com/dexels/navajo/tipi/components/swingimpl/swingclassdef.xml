@@ -30,6 +30,18 @@
         <param name="extension" type="string"/>
     </tipiaction>
       
+<!-- the actual classes should be refactored too! -->      
+  <tipiaction name="showInfo"  class="TipiShowInfo" package="com.dexels.navajo.tipi.actions">
+    <param name="text" type="string" required="true"/>
+  </tipiaction>
+
+ <tipiaction name="showQuestion"  class="TipiShowQuestion" package="com.dexels.navajo.tipi.actions">
+    <param name="text" type="string" required="true"/>
+  </tipiaction>
+
+      
+      
+      
    <tipiclass addtocontainer="true" childcount="*" class="TipiSwitchPanel" layoutmanager="false"
         module="container" name="switchpanel" package="com.dexels.navajo.tipi.components.swingimpl"
         studio-icon="tabs.gif" type="tipi">
