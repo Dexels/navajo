@@ -218,7 +218,7 @@ public class TipiDialog
           if (myDialog != null) {
              ( (SwingTipiContext) myContext).addTopLevel(myDialog.getContentPane()); ( (SwingTipiContext) myContext).dialogShowing(true); ( (SwingTipiContext) myContext).
                 updateWaiting();
-            SwingClient.getUserInterface().addDialog(myDialog);
+            SwingClient.getUserInterface().showCenteredDialog(myDialog);
             myDialog.setSize(myBounds.width,myBounds.height);
             //            myDialog.setVisible(true);
             if (myContext != null) {

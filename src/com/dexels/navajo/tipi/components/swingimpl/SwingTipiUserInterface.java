@@ -35,7 +35,7 @@ public class SwingTipiUserInterface extends DummyUserInterface{
 
   public void addDialog(JDialog d) {
 //    d.setLocationRelativeTo(getMainFrame());
-//    d.pack();
+    d.pack();
     showCenteredDialog(d);
   }
 
