@@ -41,6 +41,9 @@ public class GetProperty extends FunctionInterface {
       throw new TMLExpressionException(this, "Invalid function call");
     }
     Object m = getOperand(0);
+    if (m==null) {
+        throw new TMLExpressionException(this, "Message argument expected. This one is null");
+    }
     if (!(m instanceof Message)) {
       throw new TMLExpressionException(this, "Message argument expected");
     }
