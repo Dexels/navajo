@@ -157,7 +157,6 @@ public class MessageTable extends SortableTable {
 				}
 			}
 		}
-
 	}
 
 	public Message getSelectedMessage() {

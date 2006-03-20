@@ -43,7 +43,8 @@ public class TipiGridPanel extends TipiEchoDataComponentImpl {
 	public Object createContainer() {
 		myContainer = new GroupBox((String)null);
 		gridComponent = new Grid();
-//		gridComponent = myContainer;
+		myContainer.setBorder(null);
+        //		gridComponent = myContainer;
 //		myContainer.setBorder(null);
 		myContainer.add(gridComponent);
 		return myContainer;
@@ -77,6 +78,7 @@ public class TipiGridPanel extends TipiEchoDataComponentImpl {
 		 GridLayoutData myData = new GridLayoutData();
 		 while (st.hasMoreTokens()) {
 			String next = st.nextToken();
+            System.err.println("NEEXT: "+next);
 			StringTokenizer current = new StringTokenizer(next,":");
 			String key = current.nextToken();
 			String value = current.nextToken();

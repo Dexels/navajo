@@ -33,7 +33,7 @@ public class EchoTipiContext extends TipiContext {
 	public Set getRequiredIncludes() {
 		Set s = super.getRequiredIncludes();
 		s.add("com/dexels/navajo/tipi/components/echoimpl/echoclassdef.xml");
-		s.add("com/dexels/navajo/tipi/actions/echoactiondef.xml");
+//		s.add("com/dexels/navajo/tipi/actions/echoactiondef.xml");
 		return s;
 	}
 
@@ -59,10 +59,7 @@ public class EchoTipiContext extends TipiContext {
 	}
 
 	public void clearTopScreen() {
-		/**
-		 * @todo Implement this com.dexels.navajo.tipi.TipiContext abstract
-		 *       method
-		 */
+
 	}
 
 	public int getPoolSize() {

@@ -1,5 +1,8 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
+import java.net.*;
+
+import echopointng.image.*;
 import nextapp.echo2.app.Label;
 import nextapp.echo2.app.ResourceImageReference;
 
@@ -35,10 +38,16 @@ public class TipiLabel extends TipiEchoComponentImpl {
 		if ("text".equals(name)) {
 			b.setText("" + object);
 		}
-		if ("icon".equals(name)) {
-			System.err.println("URL: " + object.toString());
-			b.setIcon(new ResourceImageReference(object.toString()));
-		}
+        if ("icon".equals(name)) {
+            if (object instanceof URL) {
+            URL u = (URL) object;
+            System.err.println("Using url for button: "+u);
+            b.setIcon(new URLImageReference(u));
+        } else {
+            System.err
+                    .println("Can not set button icon: I guess it failed to parse (TipiButton)");
+        }
+    }
 		super.setComponentValue(name, object);
 	}
 

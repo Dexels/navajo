@@ -2,23 +2,10 @@ package com.dexels.navajo.tipi.components.echoimpl;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
+import java.util.*;
 
-import nextapp.echo2.app.Alignment;
-import nextapp.echo2.app.Button;
-import nextapp.echo2.app.CheckBox;
-import nextapp.echo2.app.Color;
-import nextapp.echo2.app.Component;
-import nextapp.echo2.app.Extent;
-import nextapp.echo2.app.Grid;
-import nextapp.echo2.app.Label;
-import nextapp.echo2.app.ListBox;
-import nextapp.echo2.app.PasswordField;
-import nextapp.echo2.app.ResourceImageReference;
-import nextapp.echo2.app.Row;
-import nextapp.echo2.app.SelectField;
-import nextapp.echo2.app.Table;
-import nextapp.echo2.app.TextArea;
+import nextapp.echo2.app.*;
+import nextapp.echo2.app.button.*;
 import nextapp.echo2.app.event.ActionEvent;
 import nextapp.echo2.app.event.ActionListener;
 import nextapp.echo2.app.event.ChangeEvent;
@@ -42,7 +29,11 @@ import echopointng.ComboBox;
 import echopointng.able.Sizeable;
 
 public class EchoPropertyComponent extends Grid implements TableCellRenderer {
-	private Property myProperty = null;
+
+    private static final int SELECTIONMODE_COMBO = 0;
+    private static final int SELECTIONMODE_RADIO = 1;
+
+    private Property myProperty = null;
 
 	private boolean showLabel = true;
 
@@ -52,9 +43,14 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 	int label_indent = 100;
 	int value_size = 150;
 
+    private int selectionMode = SELECTIONMODE_COMBO;
+    
 	private Component currentComponent;
 
 	private final ArrayList myPropertyEventListeners = new ArrayList();
+    private boolean alwaysUseLabel = false;
+    private boolean useCheckBoxes = false;
+    protected boolean doUpdateRadioButtons = true;
 
 	public EchoPropertyComponent() {
 		super(2);
@@ -108,89 +104,21 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 		String type = p.getType();
 		if (type.equals(Property.SELECTION_PROPERTY)) {
 			if (p.getCardinality().equals("1")) {
+			    switch (selectionMode) {
+                case SELECTIONMODE_COMBO:
+                    createComboBox(p);
+                    break;
+                case SELECTIONMODE_RADIO:
+                    createRadioButtons(p);
+                    break;
 
-				if (p.isDirIn()) {
-					final SelectField lb = new SelectField(p.getAllSelections().toArray());
-					add(lb);
-					lb.setEnabled(p.isDirIn());
-					lb.setWidth(new Extent(value_size));
-					PropertyImpl ppp = (PropertyImpl)p;
-//					System.err.println("PROPERTY:\n=========="+ppp.toXml(null).toString());
-						ArrayList ss = p.getAllSelections();
-						for (int i = 0; i < ss.size(); i++) {
-							Selection cc = (Selection)ss.get(i);
-							if (cc.isSelected()) {
-								lb.setSelectedIndex(i);
-								break;
-							}
-						}
-						if (p.getAllSelectedSelections().size()==0) {
-							p.setSelected((Selection)ss.get(0));
-						}
-					lb.addActionListener(new ActionListener() {
-
-						public void actionPerformed(ActionEvent e) {
-							try {
-//								System.err.println("Listbox changing....");
-								int index = lb.getSelectedIndex();
-								
-								if(index>=0) {
-									Selection s = (Selection) lb.getSelectedItem();
-									if (s != null) {
-//										System.err.println("Selected index: " + index
-//												+ " value: " + s.getValue() + " name: "
-//												+ s.getName());
-										myProperty.setSelected(s);
-									} else {
-										myProperty.clearSelections();
-									}
-								} else {
-									myProperty.clearSelections();
-								}
-								fireTipiEvent("onValueChanged");
-						
-							} catch (NavajoException ex) {
-								ex.printStackTrace();
-							}
-							
-						}});
-
-					currentComponent = lb;
-				
-				} else {
-					final TipiEchoTextField tf = new TipiEchoTextField(p.getValue());
-					tf.setWidth(new Extent(value_size));
-					tf.setEnabled(false);
-					tf.setForeground(new Color(90,90,90));
-					
-					String txt = "-";
-					if (!Selection.DUMMY_SELECTION.equals(p.getSelected().getName())) {
-						txt = p.getSelected().toString();
-					} else {
-						p.clearSelections();
-					}
-					tf.setText(txt);
-					
-					add(tf);
-					currentComponent = tf;
-				}
+                }
 			} else {
-				ListBox lb = new ListBox(p.getAllSelections().toArray());
-				add(lb);
-				lb.setEnabled(p.isDirIn());
-				lb.setWidth(new Extent(value_size));
-				lb.setSelectionMode(ListSelectionModel.MULTIPLE_SELECTION);
-				for (int i = 0; i < p.getAllSelections().size(); i++) {
-					Selection current = (Selection) p.getAllSelections().get(i);
-					lb.setSelectedIndex(i, current.isSelected());
-				}
-				lb.getSelectionModel().addChangeListener(new ChangeListener() {
-					public void stateChanged(ChangeEvent ce) {
-//						System.err.println("Noot: ");
-						fireTipiEvent("onValueChanged");
-					}
-				});
-				currentComponent = lb;
+                if (useCheckBoxes ) {
+                    createCheckBoxes(p);
+                } else {
+                    createMultiSelect(p);
+                }
 			}
 		}
 		if (type.equals(Property.INTEGER_PROPERTY)
@@ -198,77 +126,28 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 				|| type.equals(Property.FLOAT_PROPERTY)
 				|| type.equals(Property.DATE_PROPERTY)) {
 			boolean isEdit = p.isDirIn();
+			if (alwaysUseLabel) {
+                createLabel(p);
+            } else {
+                if ((isEdit && !useLabelForReadOnlyProperties)) {
+                    createTextField(p);
 
-			if (isEdit || !useLabelForReadOnlyProperties) {
-				final TipiEchoTextField tf = new TipiEchoTextField(p.getValue());
-				tf.setWidth(new Extent(value_size));
-				if (!p.isDirIn()) {
-					tf.setForeground(new Color(90,90,90));
-				}
-				add(tf);
-				tf.setEnabled(p.isDirIn());
-				tf.getDocument().addDocumentListener(new DocumentListener() {
-					public void documentUpdate(DocumentEvent e) {
-						String text = tf.getText();
-						myProperty.setValue(text);
+                } else {
+                    createLabel(p);
 
-					}
-				});
-				tf.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						TipiEchoTextField tf = (TipiEchoTextField) e
-								.getSource();
-						String text = tf.getText();
-						myProperty.setValue(text);
-					}
-				});
-				currentComponent = tf;
-
-			} else {
-				String value = p.getValue();
-				if (value==null) {
-					value = "";
-				}
-				final Label tf = new Label(p.getValue());
-				tf.setTextAlignment(new Alignment(Alignment.LEADING,Alignment.CENTER));
-				add(tf);
-				GridLayoutData gd = new GridLayoutData();
-				gd.setAlignment(new Alignment(Alignment.LEADING,Alignment.CENTER));
-				tf.setLayoutData(gd);
-				currentComponent = tf;
-
-			}
+                }
+            }
 		}
 		if (type.equals(Property.BOOLEAN_PROPERTY)) {
 			if (p.isDirIn()) {
-				final CheckBox cb = new CheckBox();
-				cb.setSelected(myProperty.getValue().equals("true"));
-				add(cb);
-				cb.addChangeListener(new ChangeListener(){
-
-					public void stateChanged(ChangeEvent e) {
-						myProperty.setValue(cb.isSelected());
-					}});
-				
-				// double. This one may not be necessary.
-				cb.addActionListener(new ActionListener(){
-					public void actionPerformed(ActionEvent e) {
-						myProperty.setValue(cb.isSelected());
-					}});
-				cb.setEnabled(myProperty.isDirIn());
-				currentComponent = cb;
-				
+                if (alwaysUseLabel) {
+                    createBooleanLabel(p);
+               } else {
+                   createCheckBox(p);
+               }
 			} else {
-				if (useLabelForReadOnlyProperties) {
-					final Label ll = new Label(p.getValue());
-//					tf.setWidth(new Extent(100));
-					ll.setEnabled(false);
-					ll.setForeground(new Color(90,90,90));
-					boolean res = ((Boolean)p.getTypedValue()).booleanValue();
-					ll.setText(res?"ja":"nee");
-					
-					add(ll);
-					currentComponent = ll;
+				if (alwaysUseLabel || useLabelForReadOnlyProperties) {
+					createBooleanLabel(p);
 					
 				} else {
 					final TipiEchoTextField tf = new TipiEchoTextField(p.getValue());
@@ -287,51 +166,360 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 		}
 
 		if (type.equals(Property.MEMO_PROPERTY)) {
-			final TextArea cb = new TextArea();
-			cb.setText(p.getValue());
-			add(cb);
-			cb.setEnabled(p.isDirIn());
-			cb.getDocument().addDocumentListener(new DocumentListener(){
-
-				public void documentUpdate(DocumentEvent e) {
-					myProperty.setValue(cb.getText());
-				}});
-			currentComponent = cb;
+			createMemoProperty(p);
 		}
 
 		if (type.equals(Property.BINARY_PROPERTY)) {
-			final Label ll = new Label(p.getValue());
-			ll.setIcon(new BinaryPropertyImage(p));
-			add(ll);
-			currentComponent = ll;
+			createBinaryImage(p);
 		}
 
 		if (type.equals(Property.PASSWORD_PROPERTY)) {
-			final PasswordField tf = new PasswordField();
-			tf.setWidth(new Extent(value_size));
-			tf.setText(p.getValue());
-			add(tf);
-			boolean isEdit = p.isDirIn();
-			tf.setEnabled(isEdit);
-			tf.getDocument().addDocumentListener(new DocumentListener() {
-				public void documentUpdate(DocumentEvent e) {
-					String text = tf.getText();
-					myProperty.setValue(text);
-				}
-			});
-			tf.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					TipiEchoTextField tf = (TipiEchoTextField) e.getSource();
-					String text = tf.getText();
-					myProperty.setValue(text);
-				}
-			});
-			currentComponent = tf;
+			createPasswordField(p);
 		}
 		GridLayoutData gld = new GridLayoutData();
 		gld.setAlignment(new Alignment(Alignment.LEADING,Alignment.CENTER));
 		currentComponent.setLayoutData(gld);
 	}
+
+    private void createBooleanLabel(Property p) {
+        Label ll = new Label(p.getValue());
+        ll.setEnabled(false);
+        ll.setForeground(new Color(90,90,90));
+        boolean res = ((Boolean)p.getTypedValue()).booleanValue();
+        ll.setText(res?"ja":"nee");
+        
+        add(ll);
+        currentComponent = ll;
+    }
+
+    private void createPasswordField(Property p) {
+        final PasswordField tf = new PasswordField();
+        tf.setWidth(new Extent(value_size));
+        tf.setText(p.getValue());
+        add(tf);
+        boolean isEdit = p.isDirIn();
+        tf.setEnabled(isEdit);
+        tf.getDocument().addDocumentListener(new DocumentListener() {
+        	public void documentUpdate(DocumentEvent e) {
+        		String text = tf.getText();
+        		myProperty.setValue(text);
+        	}
+        });
+        tf.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		TipiEchoTextField tf = (TipiEchoTextField) e.getSource();
+        		String text = tf.getText();
+        		myProperty.setValue(text);
+        	}
+        });
+        currentComponent = tf;
+    }
+
+    private void createBinaryImage(Property p) {
+        final Label ll = new Label(p.getValue());
+        ll.setIcon(new BinaryPropertyImage(p));
+        add(ll);
+        currentComponent = ll;
+    }
+
+    private void createMemoProperty(Property p) {
+        final TextArea cb = new TextArea();
+       
+        System.err.println("Creating memo property: "+value_size);
+        cb.setWidth(new Extent(value_size,Extent.PX));
+        cb.setText(p.getValue());
+        add(cb);
+        cb.setEnabled(p.isDirIn());
+        cb.addActionListener(new ActionListener(){
+
+            public void actionPerformed(ActionEvent arg0) {
+                System.err.println("Memo DIRECT action");
+                myProperty.setValue(cb.getText());
+                fireTipiEvent("onValueChanged");
+            }});
+        cb.getDocument().addDocumentListener(new DocumentListener(){
+
+        	public void documentUpdate(DocumentEvent e) {
+        	    System.err.println("Memo activity!");
+                myProperty.setValue(cb.getText());
+                fireTipiEvent("onValueChanged");
+        	}});
+        cb.addPropertyChangeListener(new PropertyChangeListener(){
+
+            public void propertyChange(PropertyChangeEvent evt) {
+                System.err.println("AAAAAAAAAAAP:"+evt);
+            }});
+        currentComponent = cb;
+
+     
+    }
+
+    private void createCheckBox(Property p) {
+        final CheckBox cb = new CheckBox();
+        cb.setSelected(myProperty.getValue().equals("true"));
+        add(cb);
+        cb.addChangeListener(new ChangeListener(){
+
+        	public void stateChanged(ChangeEvent e) {
+        		myProperty.setValue(cb.isSelected());
+                fireTipiEvent("onStateChanged");
+        	}});
+        
+        // double. This one may not be necessary.
+        cb.addActionListener(new ActionListener(){
+        	public void actionPerformed(ActionEvent e) {
+        		myProperty.setValue(cb.isSelected());
+        	}});
+        cb.setEnabled(myProperty.isDirIn());
+        currentComponent = cb;
+        boolean res = ((Boolean)p.getTypedValue()).booleanValue();
+        cb.setSelected(res);
+    }
+
+    private void createLabel(Property p) {
+        String value = p.getValue();
+        if (value==null) {
+        	value = "";
+        }
+        final Label tf = new Label(p.getValue());
+        tf.setTextAlignment(new Alignment(Alignment.LEADING,Alignment.CENTER));
+        add(tf);
+        GridLayoutData gd = new GridLayoutData();
+        gd.setAlignment(new Alignment(Alignment.LEADING,Alignment.CENTER));
+        tf.setLayoutData(gd);
+        currentComponent = tf;
+    }
+
+    private void createTextField(Property p) {
+        final TipiEchoTextField tf = new TipiEchoTextField(p.getValue());
+        tf.setWidth(new Extent(value_size));
+        if (!p.isDirIn()) {
+        	tf.setForeground(new Color(90,90,90));
+        }
+        add(tf);
+        tf.setEnabled(p.isDirIn());
+        tf.getDocument().addDocumentListener(new DocumentListener() {
+        	public void documentUpdate(DocumentEvent e) {
+                System.err.println("Mies: "+e);
+                String text = tf.getText();
+        		myProperty.setValue(text);
+                fireTipiEvent("onStateChanged");
+
+        	}
+        });
+        tf.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        	    System.err.println("Aap: "+e);
+                TipiEchoTextField tf = (TipiEchoTextField) e
+        				.getSource();
+        		String text = tf.getText();
+        		myProperty.setValue(text);
+                fireTipiEvent("onValueChanged");
+        	}
+        });
+        currentComponent = tf;
+    }
+
+    private void createMultiSelect(Property p) throws NavajoException {
+        ListBox lb = new ListBox(p.getAllSelections().toArray());
+        add(lb);
+        lb.setEnabled(p.isDirIn());
+        lb.setWidth(new Extent(value_size));
+        lb.setSelectionMode(ListSelectionModel.MULTIPLE_SELECTION);
+        for (int i = 0; i < p.getAllSelections().size(); i++) {
+        	Selection current = (Selection) p.getAllSelections().get(i);
+        	lb.setSelectedIndex(i, current.isSelected());
+        }
+        lb.getSelectionModel().addChangeListener(new ChangeListener() {
+        	public void stateChanged(ChangeEvent ce) {
+//						System.err.println("Noot: ");
+        		fireTipiEvent("onValueChanged");
+        	}
+        });
+        currentComponent = lb;
+    }
+    
+    private void createRadioButtons(final Property p) throws NavajoException {
+        final Component r = new Column();
+        final Map buttons = new HashMap();
+//        if (p.isDirIn()) {
+            add(r);
+                ArrayList ss = p.getAllSelections();
+                for (int i = 0; i < ss.size(); i++) {
+                    Selection cc = (Selection)ss.get(i);
+                    final RadioButton rb = new RadioButton();
+                    rb.setEnabled(p.isDirIn());
+//                    rb.setModel(model);
+                    buttons.put(cc.getValue(), rb);
+                    r.add(rb);
+                    rb.setText(cc.getName());
+                    rb.setActionCommand(cc.getValue());
+                    rb.setSelected(cc.isSelected());
+                    rb.addActionListener(new ActionListener(){
+                        public void actionPerformed(ActionEvent arg0) {
+                            try {
+                                System.err.println("radiobutton activity: "+rb.getActionCommand());
+                                if (doUpdateRadioButtons) {
+                                    doUpdateRadioButtons = false;
+                                    updateRadioButtonList(rb,buttons,p);
+                                    fireTipiEvent("onStateChanged");
+                                    doUpdateRadioButtons = true;
+                                }
+                            } catch (NavajoException e) {
+                                e.printStackTrace();
+                            }
+                        }});
+                }
+            currentComponent = r;
+        
+//        } else {
+//            final TipiEchoTextField tf = new TipiEchoTextField(p.getValue());
+//            tf.setWidth(new Extent(value_size));
+//            tf.setEnabled(false);
+//            tf.setForeground(new Color(90,90,90));
+//            
+//            String txt = "-";
+//            if (!Selection.DUMMY_SELECTION.equals(p.getSelected().getName())) {
+//                txt = p.getSelected().toString();
+//            } else {
+//                p.clearSelections();
+//            }
+//            tf.setText(txt);
+//            
+//            add(tf);
+//            currentComponent = tf;
+//        }
+    }
+
+
+    private void createCheckBoxes(final Property p) throws NavajoException {
+        final Component r = new Column();
+        final Map buttons = new HashMap();
+            add(r);
+                ArrayList ss = p.getAllSelections();
+                for (int i = 0; i < ss.size(); i++) {
+                    Selection cc = (Selection)ss.get(i);
+                    final CheckBox rb = new CheckBox();
+//                    rb.setModel(model);
+                    buttons.put(cc, rb);
+                    r.add(rb);
+                    rb.setText(cc.getName());
+                    rb.setActionCommand(cc.getValue());
+                    rb.setSelected(cc.isSelected());
+                    rb.setEnabled(p.isDirIn());
+                    System.err.println("Created checkbox, actionCommand: "+cc.getValue());
+                    rb.addActionListener(new ActionListener(){
+                        public void actionPerformed(ActionEvent arg0) {
+                            System.err.println("checkbox activity!");
+                                try {
+                                updateCheckboxButtonList(rb,buttons,p);
+                                fireTipiEvent("onStateChanged");
+                            } catch (NavajoException e) {
+                                e.printStackTrace();
+                            }
+                        }});
+
+                    
+                }
+            currentComponent = r;
+        }
+
+    
+    
+    protected void updateRadioButtonList(RadioButton rb, Map buttons, Property p) throws NavajoException {
+        p.clearSelections();
+        p.setSelected(rb.getActionCommand());
+        
+//        if (!rb.isSelected()) {
+//            return;
+//        }
+        for (Iterator iter = buttons.values().iterator(); iter.hasNext();) {
+            RadioButton element = (RadioButton) iter.next();
+            Selection s = p.getSelectionByValue(element.getActionCommand());
+            if (s!=null) {
+                s.setSelected(element.isSelected());
+            }
+            if (element==rb) {
+                System.err.println("Setting: "+element.getActionCommand());
+//                element.setSelected(true);
+            } else {
+                System.err.println("Clearing: "+element.getActionCommand());
+                element.setSelected(false);
+            }
+        }
+        }    
+    
+    protected void updateCheckboxButtonList(CheckBox rb, Map buttons, Property p) throws NavajoException {
+        p.clearSelections();
+        for (Iterator iter = buttons.keySet().iterator(); iter.hasNext();) {
+            Selection sel = (Selection)iter.next();
+            CheckBox element = (CheckBox) buttons.get(sel);
+            sel.setSelected(element.isSelected());
+        }
+        }    
+    
+    private void createComboBox(Property p) throws NavajoException {
+        if (p.isDirIn()) {
+        	final SelectField lb = new SelectField(p.getAllSelections().toArray());
+        	add(lb);
+        	lb.setEnabled(p.isDirIn());
+        	lb.setWidth(new Extent(value_size));
+        	PropertyImpl ppp = (PropertyImpl)p;
+        		ArrayList ss = p.getAllSelections();
+        		for (int i = 0; i < ss.size(); i++) {
+        			Selection cc = (Selection)ss.get(i);
+        			if (cc.isSelected()) {
+        				lb.setSelectedIndex(i);
+        				break;
+        			}
+        		}
+        		if (p.getAllSelectedSelections().size()==0) {
+        			p.setSelected((Selection)ss.get(0));
+        		}
+        	lb.addActionListener(new ActionListener() {
+
+        		public void actionPerformed(ActionEvent e) {
+        			try {
+        				int index = lb.getSelectedIndex();
+        				
+        				if(index>=0) {
+        					Selection s = (Selection) lb.getSelectedItem();
+        					if (s != null) {
+        						myProperty.setSelected(s);
+        					} else {
+        						myProperty.clearSelections();
+        					}
+        				} else {
+        					myProperty.clearSelections();
+        				}
+        				fireTipiEvent("onValueChanged");
+        		
+        			} catch (NavajoException ex) {
+        				ex.printStackTrace();
+        			}
+        			
+        		}});
+
+        	currentComponent = lb;
+        
+        } else {
+        	final TipiEchoTextField tf = new TipiEchoTextField(p.getValue());
+        	tf.setWidth(new Extent(value_size));
+        	tf.setEnabled(false);
+        	tf.setForeground(new Color(90,90,90));
+        	
+        	String txt = "-";
+        	if (!Selection.DUMMY_SELECTION.equals(p.getSelected().getName())) {
+        		txt = p.getSelected().toString();
+        	} else {
+        		p.clearSelections();
+        	}
+        	tf.setText(txt);
+        	
+        	add(tf);
+        	currentComponent = tf;
+        }
+    }
 
 	public Component getTableCellRendererComponent(final Table table, final Object value,
 			final int column, final int row) {
@@ -405,7 +593,14 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 		this.useLabelForReadOnlyProperties = useLabelForReadOnlyProperties;
 	}
 
-	public void setZebra(int column, int row, boolean selected) {
+    public void setAlwaysUseLabel(boolean b) {
+        this.alwaysUseLabel  = b;
+    }
+
+    public void setUseCheckBoxes(boolean b) {
+        this.useCheckBoxes = b;
+    }
+    public void setZebra(int column, int row, boolean selected) {
 		if (selected) {
 			setBackground(new Color(200,200,255));
 		} else {
@@ -416,5 +611,17 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 			}
 		}
 	}
+
+    public void setSelectiontype(String type) throws NavajoException {
+        if ("radio".equals(type)) {
+            selectionMode = SELECTIONMODE_RADIO;
+        } else {
+            selectionMode = SELECTIONMODE_COMBO;
+        }
+        if (getProperty()!=null) {
+            setProperty(getProperty());
+        }
+    
+    }
 
 }

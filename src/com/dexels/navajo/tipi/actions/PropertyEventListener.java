@@ -12,7 +12,7 @@ import com.dexels.navajo.document.Property;
 
 /**
  * <p>
- * Title: Seperate project for Navajo Swing client
+ * Title: Seperate project for Navajo echo client
  * </p>
  * <p>
  * Description:

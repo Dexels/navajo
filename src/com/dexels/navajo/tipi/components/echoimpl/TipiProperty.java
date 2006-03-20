@@ -41,6 +41,7 @@ public class TipiProperty extends TipiEchoComponentImpl implements
 	private EchoPropertyComponent myPropertyComponent;
 
 //	private ContainerEx myContainer;
+      private final ArrayList myListeners = new ArrayList();
 
 	public TipiProperty() {
 	}
@@ -64,7 +65,17 @@ public class TipiProperty extends TipiEchoComponentImpl implements
 	}
 
 	public void propertyEventFired(Property p, String eventType) {
-	
+        try {
+	    System.err.println("Property event fired!");
+          Map m = new HashMap();
+          m.put("propertyName", myProperty.getFullPropertyName());
+          m.put("propertyValue", myProperty.getTypedValue());
+          m.put("propertyType", myProperty.getType());
+          m.put("propertyLength", new Integer(myProperty.getLength()));
+            for (int i = 0; i < myListeners.size(); i++) {
+                TipiEventListener tel = (TipiEventListener)myListeners.get(i);
+                tel.performTipiEvent(eventType, m, true);
+            }
 		    if (p == null) {
 		      System.err.println("Trying to fire event from null property!");
 		      return;
@@ -73,15 +84,6 @@ public class TipiProperty extends TipiEchoComponentImpl implements
 		      System.err.println("Mysterious anomaly: Property of event is not the loaded property");
 		      return;
 		    }
-		    try {
-		      Map m = new HashMap();
-		      m.put("propertyName", myProperty.getFullPropertyName());
-		      m.put("propertyValue", myProperty.getTypedValue());
-		      m.put("propertyType", myProperty.getType());
-		      m.put("propertyLength", new Integer(myProperty.getLength()));
-//		      PropertyImpl p = (PropertyImpl)myProperty;
-//		      for (int i = 0; i < myListeners.size(); i++) {
-//		        TipiEventListener current = (TipiEventListener) myListeners.get(i);
 		       performTipiEvent(eventType, m, false);
 //		      }
 		    }
@@ -104,6 +106,9 @@ public class TipiProperty extends TipiEchoComponentImpl implements
 		return myPropertyComponent;
 	}
 
+    public void setUseLabelForReadOnlyProperties(boolean b) {
+        myPropertyComponent.setUseLabelForReadOnlyProperties(b);
+    }
 	/**
 	 * getPropertyName
 	 * 
@@ -123,8 +128,11 @@ public class TipiProperty extends TipiEchoComponentImpl implements
 	 * @todo Implement this com.dexels.navajo.tipi.internal.PropertyComponent
 	 *       method
 	 */
-	public void addTipiEventListener(TipiEventListener listener) {
-	}
+      public void addTipiEventListener(TipiEventListener listener) {
+          if (listener == null) {
+          }
+          myListeners.add(listener);
+        }
 
 	/**
 	 * addTipiEvent
@@ -151,6 +159,34 @@ public class TipiProperty extends TipiEchoComponentImpl implements
 			Integer ii = (Integer)object;
 			me.setValueSize(ii.intValue());
 		}
+        if ("showlabel".equals(name)) {
+            EchoPropertyComponent me = (EchoPropertyComponent) getContainer();
+            me.setLabelVisible("true".equals(object));
+        }
+        if ("selectiontype".equals(name)) {
+            EchoPropertyComponent me = (EchoPropertyComponent) getContainer();
+            try {
+                me.setSelectiontype(""+object);
+            } catch (NavajoException e) {
+                e.printStackTrace();
+            }
+        }
+        if ("useLabelsForReadOnly".equals(name)) {
+             EchoPropertyComponent me = (EchoPropertyComponent) getContainer();
+             boolean val = ((Boolean)object).booleanValue();
+            me.setUseLabelForReadOnlyProperties(val);
+        }
+        if ("alwaysUseLabel".equals(name)) {
+            EchoPropertyComponent me = (EchoPropertyComponent) getContainer();
+            boolean val = ((Boolean)object).booleanValue();
+            me.setAlwaysUseLabel(val);
+        }
+        if ("useCheckBoxes".equals(name)) {
+            EchoPropertyComponent me = (EchoPropertyComponent) getContainer();
+            boolean val = ((Boolean)object).booleanValue();
+           me.setUseCheckBoxes(val);
+        }
+       
 		super.setComponentValue(name, object);
 	}
 

@@ -129,7 +129,7 @@ System.err.println("SETTING BORDER!!!!!!!!!!!!!!! "+c);
 		Component c = (Component) myComponent.getActualComponent();
 		if (c == null) {
 			System.err
-					.println("Cannot register swing event: Container is null!");
+					.println("Cannot register echo event: Container is null!");
 			return;
 		}
 		if (te.isTrigger("onActionPerformed", null)) {

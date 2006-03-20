@@ -1,5 +1,170 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tid errorhandler="error">
+  <tipiaction name="showEchoInfo"  class="TipiEchoShowInfo" package="com.dexels.navajo.tipi.actions">
+    <param name="text" type="string"/>
+  </tipiaction>
+
+  <tipiaction name="showEchoQuestion"  class="TipiEchoShowQuestion" package="com.dexels.navajo.tipi.actions">
+    <param name="text" type="string"/>
+  </tipiaction>
+
+  <tipiaction name="showInfo"  class="TipiEchoShowInfo" package="com.dexels.navajo.tipi.actions">
+    <param name="text" type="string"/>
+  </tipiaction>
+
+  <tipiaction name="showQuestion"  class="TipiEchoShowQuestion" package="com.dexels.navajo.tipi.actions">
+    <param name="text" type="string"/>
+  </tipiaction>
+
+
+  <tipiaction name="exitsession"  class="TipiEchoExit" package="com.dexels.navajo.tipi.actions">
+   <param name="destination" type="string"/>
+ </tipiaction>
+
+
+
+    <tipiclass addtocontainer="true" childcount="*" class="TipiQuestion" layoutmanager="true"
+        module="data" name="tipiquestion" package="com.dexels.navajo.tipi.components.echoimpl"
+        studio-icon="tipitable.gif" type="tipi">
+        <events>
+            <event name="onInstantiate"/>
+            <event name="onLoad">
+                <param name="service" type="string"/>
+            </event>
+            <!-- todo: implement -->
+            <event name="onValueChanged"/>
+        </events>
+        <values>
+            <value direction="inout" name="messagePath" type="string"/>
+            <value direction="inout" name="questionDefinitionName" type="string"/>
+            <value direction="inout" name="questionGroupPath" type="object"/>
+            <value direction="inout" name="columnWidth" type="string"/>
+        </values>
+        <methods>
+            <method name="print"/>
+        </methods>
+    </tipiclass>
+    <tipiclass addtocontainer="true" childcount="*" class="TipiQuestionGroup" layoutmanager="true"
+        module="data" name="tipiquestiongroup" package="com.dexels.navajo.tipi.components.echoimpl"
+        studio-icon="tipitable.gif" type="tipi">
+        <events>
+            <event name="onInstantiate"/>
+            <event name="onLoad">
+                <param name="service" type="string"/>
+            </event>
+        </events>
+        <values>
+            <value direction="inout" name="messagePath" type="string"/>
+            <value direction="inout" name="questionDefinitionName" type="string"/>
+            <value direction="inout" name="questionGroupDefinitionName" type="string"/>
+            <value direction="in" name="valid" type="boolean"/>
+            <value direction="out" name="description" type="string"/>
+            <value direction="inout" name="columnWidth" type="string"/>
+        </values>
+    </tipiclass>
+    <tipiclass addtocontainer="true" childcount="*" class="TipiScrollQuestionGroup" layoutmanager="true"
+        module="data" name="tipiscrollquestiongroup" package="com.dexels.navajo.tipi.components.echoimpl"
+        studio-icon="tipitable.gif" type="tipi">
+        <events>
+            <event name="onInstantiate"/>
+            <event name="onLoad">
+                <param name="service" type="string"/>
+            </event>
+        </events>
+        <values>
+            <value direction="inout" name="messagePath" type="string"/>
+            <value direction="inout" name="questionDefinitionName" type="string"/>
+            <value direction="inout" name="questionGroupDefinitionName" type="string"/>
+            <value direction="in" name="valid" type="boolean"/>
+            <value direction="out" name="description" type="string"/>
+        </values>
+    </tipiclass>
+        
+    
+    <tipiclass addtocontainer="true" childcount="*" class="TipiQuestionList" layoutmanager="true"
+        module="data" name="tipiquestionlist" package="com.dexels.navajo.tipi.components.echoimpl"
+        studio-icon="tipitable.gif" type="tipi">
+        <events>
+            <event name="onInstantiate"/>
+            <event name="onLoad">
+                <param name="service" type="string"/>
+            </event>
+            <event name="onValidationChanged">
+                <param name="valid" type="boolean"/>
+            </event>
+        </events>
+        <values>
+            <value direction="in" name="messagePath" type="string"/>
+            <value direction="in" name="questionDefinitionName" type="string"/>
+            <value direction="in" name="questionGroupDefinitionName" type="string"/>
+            <value direction="in" name="questionGroupDefinitionName" type="string"/>
+            <value direction="in" name="valid" type="boolean"/>
+            <value direction="out" name="currentPage" type="integer"/>
+        </values>
+        <methods>
+            <method name="flatten">
+                <param name="serviceName" type="string"/>
+                <param name="serviceUrl" type="string"/>
+                <param name="pincode" type="string"/>
+                <param name="keystore" type="string"/>
+                <param name="keypass" type="string"/>
+            </method>
+            <method name="print">
+                <param name="printJob" type="object"/>
+                <param name="header" type="string"/>
+                <param name="footer" type="string"/>
+            </method>
+            <method name="printpreview">
+                <param name="printJob" type="object"/>
+                <param name="header" type="string"/>
+                <param name="footer" type="string"/>
+            </method>
+        </methods>
+    </tipiclass>
+    
+    <tipiclass addtocontainer="true" childcount="*" class="TipiTabbedQuestionList" layoutmanager="true"
+        module="data" name="tipitabbedquestionlist" package="com.dexels.navajo.tipi.components.echoimpl"
+        studio-icon="tipitable.gif" type="tipi">
+        <events>
+            <event name="onInstantiate"/>
+            <event name="onLoad">
+                <param name="service" type="string"/>
+            </event>
+            <event name="onValidationChanged">
+                <param name="valid" type="boolean"/>
+            </event>
+        </events>
+        <values>
+            <value direction="in" name="messagePath" type="string"/>
+            <value direction="in" name="questionDefinitionName" type="string"/>
+            <value direction="in" name="questionGroupDefinitionName" type="string"/>
+            <value direction="in" name="questionGroupDefinitionName" type="string"/>
+            <value direction="in" name="valid" type="boolean"/>
+            <value direction="out" name="currentPage" type="integer"/>
+        </values>
+        <methods>
+            <method name="flatten">
+                <param name="serviceName" type="string"/>
+                <param name="serviceUrl" type="string"/>
+                <param name="pincode" type="string"/>
+                <param name="keystore" type="string"/>
+                <param name="keypass" type="string"/>
+            </method>
+            <method name="print">
+                <param name="printJob" type="object"/>
+                <param name="header" type="string"/>
+                <param name="footer" type="string"/>
+            </method>
+            <method name="printpreview">
+                <param name="printJob" type="object"/>
+                <param name="header" type="string"/>
+                <param name="footer" type="string"/>
+            </method>
+        </methods>
+    </tipiclass>    
+
+
+
 
 
     <tipiclass class="TipiScreen" name="screen" package="com.dexels.navajo.tipi.components.echoimpl" type="tipi" childcount="*" layoutmanager="false" addtocontainer="false">
@@ -440,7 +605,11 @@
             <value direction="inout" name="use_checkbox" type="boolean"/>
             <value direction="in" name="visibleRowCount" type="integer"/>
             <value direction="in" name="width" type="integer"/>
-
+            <value direction="in" name="selectiontype" type="selection">
+                <option description="radio" value="radio"/>
+                <option description="combo" value="combo"/>
+            </value>
+		
             <value direction="inout" name="label_halign" type="selection">
                 <option description="Leading" value="leading"/>
                 <option description="Left" value="left"/>
@@ -448,19 +617,24 @@
                 <option description="Right" value="right"/>
                 <option description="Trailing" value="trailing"/>
             </value>
-            <value direction="inout" name="label_valign" type="selection" value="top">
+            <value direction="inout" name="label_valign" type="selection" value="'top'">
                 <option description="Top" value="top"/>
                 <option description="Center" value="center"/>
                 <option description="Bottom" value="bottom"/>
             </value>
             <value direction="inout" name="label_indent" type="integer"/>
             <value direction="inout" name="showlabel" type="boolean" value="true"/>
-            <value direction="inout" name="capitalization" type="selection" value="off">
+            <value direction="inout" name="capitalization" type="selection" value="'off'">
                 <option description="No capitalization" value="off"/>
                 <option description="Capitalize first letter" value="firstupper"/>
                 <option description="Capitalize all letters" value="upper"/>
                 <option description="Make all letters lowercase" value="lower"/>
             </value>
+            <value direction="in" name="useLabelsForReadOnly" type="boolean" value="true"/>
+            <value direction="in" name="alwaysUseLabel" type="boolean" value="true"/>
+           <value direction="in" name="useCheckBoxes" type="boolean" value="true"/>
+          
+            
         </values>
         <methods/>
     </tipiclass>
