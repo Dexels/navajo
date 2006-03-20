@@ -17,7 +17,9 @@ import java.io.*;
  * @version 1.0
  */
 
-/** @todo Refactor, move to NavajoSwingTipi */
+/** @todo Refactor, move to NavajoSwingTipi @deprecated*/
+
+
 public class TipiRuntime
     extends TipiAction {
   public void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {

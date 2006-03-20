@@ -1154,9 +1154,9 @@ if (tipiComponentMap.containsKey(c.getId())) {
       ti.setStudioElement(true);
     }
     addComponent(ti, context, constraints);
-    if (ti instanceof TipiDataComponentImpl) {
-      ( (TipiDataComponentImpl) ti).autoLoadServices(context,null);
-    }
+//    if (ti instanceof TipiDataComponentImpl) {
+//      ( (TipiDataComponentImpl) ti).autoLoadServices(context,null);
+//    }
     return ti;
   }
 

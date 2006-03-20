@@ -1,6 +1,7 @@
 <tid errorhandler="error">
 
   <tipiaction name="break"  class="TipiBreak" package="com.dexels.navajo.tipi.actions"/>
+  <tipiaction name="breakEvent"  class="TipiBreakEvent" package="com.dexels.navajo.tipi.actions"/>
   <tipiaction name="exit"  class="TipiExit" package="com.dexels.navajo.tipi.actions"/>
   <tipiaction name="dump"  class="TipiDumpInstances" package="com.dexels.navajo.tipi.actions"/>
 
@@ -19,10 +20,8 @@
     <param name="condense" type="boolean" default="true"/>
   </tipiaction>
 
-  <tipiaction name="showInfo"  class="TipiShowInfo" package="com.dexels.navajo.tipi.actions">
-    <param name="text" type="string" required="true"/>
-  </tipiaction>
-
+	<!-- REMOVED THE SHOWINFO / SHOWQUESTION ENTRIES -->
+	<!-- they are in swingtipi/ echotipi now -->
   <tipiaction name="setStorageInstanceId"  class="TipiSetStorageInstanceId" package="com.dexels.navajo.tipi.actions">
     <param name="id" type="string" required="true"/>
   </tipiaction>
@@ -32,10 +31,7 @@
     <param name="command" type="string"/>
   </tipiaction>
 
-  <tipiaction name="showQuestion"  class="TipiShowQuestion" package="com.dexels.navajo.tipi.actions">
-    <param name="text" type="string" required="true"/>
-  </tipiaction>
-
+ 
   <tipiaction name="setValue"  class="TipiSetValue" package="com.dexels.navajo.tipi.actions">
     <param name="to" type="reference" required="true"/>
     <param name="from" type="string" required="true"/>
@@ -80,9 +76,10 @@
   </tipiaction>
   
   <tipiaction name="debug" class="TipiDebugOutput" package="com.dexels.navajo.tipi.actions">
-    <param name="path" type="object"/>
-    <param name="type" type="string" default="bla"/>
-    <param name="value" type="object" default="def"/>
+    <param name="value" type="object"/>
+  </tipiaction>
+  <tipiaction name="debugNavajo" class="TipiDebugNavajo" package="com.dexels.navajo.tipi.actions">
+    <param name="tipipath" type="tipi"/>
   </tipiaction>
 
   <tipiaction name="setSystemProperty" class="TipiSetSystemProperty" package="com.dexels.navajo.tipi.actions">

@@ -93,10 +93,12 @@ public class TipiInstantiateTipi
 
     TipiComponent comp = null;
     if (op!=null) {
+        
       comp = (TipiComponent)op.value;
     }
     if (comp != null) {
-      if (force) {
+        
+    if (force) {
 //        System.err.println("Calling dispose from instantiate, with force= true");
 //        System.err.println("Component path: "+comp.getPath());
         myContext.disposeTipiComponent(comp);
@@ -108,6 +110,8 @@ public class TipiInstantiateTipi
         comp.reUse();
         return comp;
       }
+    } else {
+        System.err.println("No element found, so no disposing old components");
     }
     XMLElement xe = new CaseSensitiveXMLElement();
     xe.setName("component-instance");
@@ -133,10 +137,14 @@ public class TipiInstantiateTipi
         }
       }
     }
+    System.err.println("BUILD COMPONENT-INSTANCE: "+xe.toString());
     TipiComponent inst = myContext.instantiateComponent(xe);
+    System.err.println("INSTANTIATED");
     inst.setId(id);
      parent.addComponent(inst, myContext, constraints);
-    myContext.fireTipiStructureChanged(inst);
+     System.err.println("ADDED");
+
+     myContext.fireTipiStructureChanged(inst);
     return inst;
   }
 

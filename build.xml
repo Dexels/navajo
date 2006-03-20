@@ -11,8 +11,6 @@
 	<property name="NavajoDocument.build" value="${NavajoDocument}/classes" />
 	<property name="Navajo" value="${PROJECTHOME}/Navajo" />
 	<property name="Navajo.build" value="${Navajo}/classes" />
-	<property name="NavajoSwingClient" value="${PROJECTHOME}/NavajoSwingClient" />
-	<property name="NavajoSwingClient.build" value="${NavajoSwingClient}/classes" />
 	<path id="depend">
 		<fileset dir="${lib}">
 			<include name="**/*.jar" />
@@ -20,7 +18,6 @@
 		<pathelement location="${NavajoClient.build}" />
 		<pathelement location="${NavajoDocument.build}" />
 		<pathelement location="${Navajo.build}" />
-		<pathelement location="${NavajoSwingClient.build}" />
 	</path>
 	<target name="check-env">
 		<fail unless="PROJECTHOME">  
@@ -38,14 +35,12 @@
 		<mkdir dir="${NavajoDocument.build}" />
 		<mkdir dir="${NavajoClient.build}" />
 		<mkdir dir="${Navajo.build}" />
-		<mkdir dir="${NavajoSwingClient.build}" />
 	</target>
 	<target name="clean" depends="check-env">
 		<delete file="${archive}" />
 		<delete dir="${NavajoClient.build}" />
 		<delete dir="${NavajoDocument.build}" />
 		<delete dir="${Navajo.build}" />
-		<delete dir="${NavajoSwingClient.build}" />
 		<delete dir="${build}" />
 	</target>
 	<target name="Navajo" depends="init">
@@ -53,10 +48,10 @@
 			<property name="PROJECTHOME" value="${PROJECTHOME}" />
 		</ant>
 	</target>
-	<target name="NavajoSwingClient" depends="init">
+	<target name="NavajoClient" depends="init">
 		<!-- NavajoSwingClient sub-project should build NavajoDocument, 
          and NavajoClient sub-projects if necessary -->
-		<ant dir="${NavajoSwingClient}" target="archive" inheritAll="false">
+		<ant dir="${NavajoClient}" target="archive" inheritAll="false">
 			<property name="PROJECTHOME" value="${PROJECTHOME}" />
 		</ant>
 	</target>
@@ -67,7 +62,7 @@
 			</fileset>
 		</copy>
 	</target>
-	<target name="compile" depends="Navajo,NavajoSwingClient">
+	<target name="compile" depends="Navajo,NavajoClient">
 		<javac srcdir="${src}" destdir="${build}">
 			<classpath refid="depend" />
 		</javac>

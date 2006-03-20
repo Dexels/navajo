@@ -19,7 +19,10 @@ public interface TipiDataComponent
   public void loadData(Navajo n, TipiContext context, String method) throws TipiException;
 
   public String getCurrentMethod();
-
+  
+  /**
+   * @deprecated
+   */
   public void performService(TipiContext context, String tipiPath, String service, boolean breakOnError, TipiEvent event, long expirationInterval, String hostUrl, String username, String password,String keystore, String keypass) throws TipiException, TipiBreakException;
 
   public ArrayList getServices();
@@ -34,7 +37,7 @@ public interface TipiDataComponent
 
   public boolean loadErrors(Navajo n, String method);
 
-  public void autoLoadServices(TipiContext context, TipiEvent event) throws TipiException;
+//  public void autoLoadServices(TipiContext context, TipiEvent event) throws TipiException;
 
   public void tipiLoaded();
 

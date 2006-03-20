@@ -1,5 +1,6 @@
 package com.dexels.navajo.tipi.actions;
 
+import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.internal.*;
 
 /**
@@ -16,6 +17,14 @@ public class TipiDebugOutput
   }
 
   protected void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiBreakException, com.dexels.navajo.tipi.TipiException {
-    /**@todo Implement this com.dexels.navajo.tipi.internal.TipiAction abstract method*/
+      Operand value = getEvaluatedParameter("value",event);
+      System.err.println("******** DEBUG *********");
+      if (value!=null) {
+        System.err.println("VALUE: >"+value.value+"<");
+        System.err.println("TYPE: >"+value.type+"<");
+    } else {
+        System.err.println("NULL EVALUATION!");
+    }
+      System.err.println("******** END *********");
   }
 }

@@ -172,6 +172,8 @@ public abstract class TipiContext
     tipiClassDefMap.clear();
     clearTopScreen();
     includeList.clear();
+    System.err.println("clearResources: clearing includeList. ");
+
     eHandler = null;
     errorHandler = null;
     rootPaneList.clear();
@@ -355,7 +357,7 @@ public abstract class TipiContext
     }
     if (childName.equals("tipi-include")) {
       if (!"__ignore".equals(dir)) {
-        parseLibrary(child, studioMode, dir);
+        parseLibrary(child,  dir);
       }
       return;
     }
@@ -458,34 +460,44 @@ public void parseDefinition(XMLElement child) {
     return u;
   }
 
+  
   public final void parseLibraryFromClassPath(String location) {
     parseLibrary(location,false,null,null,false);
   }
 
-  private final void parseLibrary(XMLElement lib, boolean studioMode, String dir) {
+  private final void parseLibrary(XMLElement lib,  String dir) {
 
       String location = (String) lib.getAttribute("location");
        String lazy = (String) lib.getAttribute("lazy");
     boolean isLazy = "true".equals(lazy);
     String componentName = (String)lib.getAttribute("definition");
-    parseLibrary(location,studioMode,dir,componentName,isLazy);
+    parseLibrary(location,true,dir,componentName,isLazy);
   }
 
-  private final void parseLibrary(String location, boolean studioMode, String dir, String definition, boolean isLazy) {
+  public void processRequiredIncludes() {
+      for (Iterator iter = includeList.iterator(); iter.hasNext();) {
+        String element = (String) iter.next();
+        System.err.println("Parsing element: "+element);
+        parseLibrary(element, false, null, null, false);
+    }
+  }
+  private final void parseLibrary(String location, boolean addToInclude, String dir, String definition, boolean isLazy) {
 //    System.err.println("Parsing library: "+location+" dir: "+dir);
-    if (isLazy && !studioMode) {
+    if (isLazy) {
         if (definition==null) {
             throw new IllegalArgumentException("Lazy include, but no definition found. Location: "+location);
         }
         lazyMap.put(definition,location);
         return;
     }
-//    System.err.println("Parsing library @ "+location);
-
     try {
-       if (!studioMode) {
-        includeList.add(location);
-      }
+//       if (addToInclude) {
+//       System.err.println("parseLibrary: adding to includeList: "+location);
+//
+  // HACK!
+        
+//        includeList.add(location);
+//      }
       if (location != null) {
         InputStream in = resolveInclude(location, dir);
         if (in == null) {
@@ -869,7 +881,7 @@ public void parseDefinition(XMLElement child) {
     if (location==null) {
         return null;
     }
-    parseLibrary(location, isStudioMode(),"dir", componentName, false);
+    parseLibrary(location, true,"dir", componentName, false);
     xe = getTipiDefinition(componentName);
 //    if (xe == null) {
 //      System.err.println("Trouble finding component definition. Components: " + tipiComponentMap.keySet());
@@ -919,6 +931,7 @@ public void parseDefinition(XMLElement child) {
     tipiInstanceMap.clear();
     tipiClassMap.clear();
     tipiClassDefMap.clear();
+    System.err.println("closeAll: clearing includeList");
     includeList.clear();
   }
 
@@ -937,11 +950,11 @@ public void parseDefinition(XMLElement child) {
     tc.commitToUi();
     ( (TipiComponent) getDefaultTopLevel()).addComponent(tc, this, null);
     ( (TipiComponent) getDefaultTopLevel()).addToContainer(tc.getContainer(), null);
-    if (TipiDataComponent.class.isInstance(tc)) {
-      ( (TipiDataComponent) tc).autoLoadServices(this, event);
-    }
+//    if (TipiDataComponent.class.isInstance(tc)) {
+//      ( (TipiDataComponent) tc).autoLoadServices(this, event);
+//    }
     setSplashVisible(false);
-    ( (TipiDataComponent) getDefaultTopLevel()).autoLoadServices(this, event);
+//    ( (TipiDataComponent) getDefaultTopLevel()).autoLoadServices(this, event);
 
     currentDefinition = name;
     setSwitching(false);

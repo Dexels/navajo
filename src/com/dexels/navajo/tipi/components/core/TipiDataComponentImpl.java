@@ -20,25 +20,28 @@ public abstract class TipiDataComponentImpl
     implements TipiDataComponent {
   private final ArrayList myServices = new ArrayList();
   protected String prefix;
-  private String autoLoad = null;
-  private String autoLoadDestination = null;
+//  private String autoLoad = null;
+//  private String autoLoadDestination = null;
 protected String myMethod;
   public TipiDataComponentImpl() {
   }
 
-  public void autoLoadServices(TipiContext context, TipiEvent event) throws TipiException {
-    String autoDest;
-    if (autoLoadDestination == null) {
-      autoDest = "*";
-    }
-    else {
-      autoDest = autoLoadDestination;
-    }
-    if (autoLoad != null && !autoLoad.equals("")) {
-//        System.err.println("Performing servicelist for: "+getPath());
-      performServiceList(autoLoad, autoDest, context, event);
-    }
-  }
+//  /**
+//   * @deprecated
+//   */
+//  public void autoLoadServices(TipiContext context, TipiEvent event) throws TipiException {
+//    String autoDest;
+//    if (autoLoadDestination == null) {
+//      autoDest = "*";
+//    }
+//    else {
+//      autoDest = autoLoadDestination;
+//    }
+//    if (autoLoad != null && !autoLoad.equals("")) {
+////        System.err.println("Performing servicelist for: "+getPath());
+//      performServiceList(autoLoad, autoDest, context, event);
+//    }
+//  }
 
   private final void loadServices(String myService) {
     if (myService != null) {
@@ -66,8 +69,8 @@ protected String myMethod;
     prefix = (String) instance.getAttribute("prefix");
 //    String menubar = (String)instance.getAttribute("menubar");
     loadServices( (String) definition.getAttribute("service"));
-    autoLoad = (String) definition.getAttribute("autoload");
-    autoLoadDestination = (String) definition.getAttribute("autoloadDestination");
+//    autoLoad = (String) definition.getAttribute("autoload");
+//    autoLoadDestination = (String) definition.getAttribute("autoloadDestination");
     String constraint = (String) instance.getAttribute("constraint");
     if (constraint == null) {
       constraint = (String) definition.getAttribute("constraint");
@@ -143,6 +146,10 @@ protected String myMethod;
       addToContainer(current.getContainer(), o);
     }
   }
+  
+  /**
+   * @deprecated
+   */
 
   public void performServiceList(String list, String tipiPath, TipiContext context, TipiEvent event) throws TipiException {
     if (list.indexOf(";") < 0) {
@@ -177,14 +184,18 @@ protected String myMethod;
     myServices.remove(service);
   }
 
+  /**
+   * @deprecated
+   */
   public void performService(TipiContext context, String service, TipiEvent event) throws TipiException, TipiBreakException {
     performService(context, "*", service, false, event, -1, null, null, null, null, null);
   }
 
+  /**
+   * @deprecated
+   */
   public void performService(TipiContext context, String tipiPath, String service, boolean breakOnError, TipiEvent event, long expirationInterval, String hostUrl, String username, String password, String keystore, String keypass) throws TipiException, TipiBreakException {
-    /** @todo Tempory HACK!!! */
     tipiPath = "*";
-//    System.err.println("Performing service: "+service+" in component: "+getPath());
     if (myNavajo == null) {
       myNavajo = NavajoFactory.getInstance().createNavajo();
     }

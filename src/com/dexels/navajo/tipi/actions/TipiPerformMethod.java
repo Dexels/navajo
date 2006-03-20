@@ -94,13 +94,14 @@ public class TipiPerformMethod
 
       
 //    /** @todo REWRITE THIS STRANGE CONSTRUCTION. LOOKS OLD. SHOULD BE MUCH EASIER NOW */
-    TipiValue sourceTipi = getParameter("tipipath");
+//    TipiValue sourceTipi = getParameter("tipipath");
 
     Operand method = getEvaluatedParameter("method",event);
     TipiDataComponent evalTipi = null;
     Operand tipi = getEvaluatedParameter("tipipath",event);
-    evalTipi = (TipiDataComponent) tipi.value;
-    
+    if (tipi!=null) {
+        evalTipi = (TipiDataComponent) tipi.value;
+    }
     NavajoClientFactory.getClient().setCondensed(condenseCheck);
     //    String evalMethod = null;
 //    try {

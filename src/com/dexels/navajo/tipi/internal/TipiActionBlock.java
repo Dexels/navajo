@@ -95,6 +95,9 @@ public class TipiActionBlock implements TipiExecutable {
   }
   catch (TipiBreakException ex) {
     System.err.println("Break encountered!");
+    if (TipiBreakException.BREAK_EVENT== ex.getType()) {
+        throw ex;
+    }
     return;
   }
   }
