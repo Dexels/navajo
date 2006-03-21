@@ -256,7 +256,7 @@ protected String myMethod;
       }
     }
     if (n == null) {
-      System.err.println("NULL NAVAJO!");
+//      System.err.println("NULL NAVAJO!");
       return;
     }
     myNavajo = n;
@@ -320,11 +320,11 @@ protected String myMethod;
         param.put("id", ids.toString());
         param.put("description", descs.toString());
         param.put("service", method);
-        System.err.println("Adding to params: (id) "+ids.toString());
-        System.err.println("Adding to params: (description) "+descs.toString());
+//        System.err.println("Adding to params: (id) "+ids.toString());
+//        System.err.println("Adding to params: (description) "+descs.toString());
         return performTipiEvent("onGeneratedErrors", param, true);
       }
-      System.err.println("Did not find condition errors?!");
+//      System.err.println("Did not find condition errors?!");
       return performTipiEvent("onGeneratedErrors", null, true);
     }
     catch (Throwable ex) {
@@ -389,7 +389,7 @@ protected String myMethod;
   public boolean hasProperty(String path) {
     for (int i = 0; i < properties.size(); i++) {
       PropertyComponent current = (PropertyComponent) properties.get(i);
-      System.err.println("Checking hasproperty: " + current.getPropertyName());
+//      System.err.println("Checking hasproperty: " + current.getPropertyName());
       if (path.equals(current.getPropertyName())) {
         return true;
       }

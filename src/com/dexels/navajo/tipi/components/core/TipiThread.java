@@ -55,7 +55,7 @@ public class TipiThread
           }
         }
         finally {
-          System.err.println("Ayyyyy this thread is dying!");
+//          System.err.println("Ayyyyy this thread is dying!");
           myPool.getContext().threadEnded(Thread.currentThread());
         }
       }
@@ -66,7 +66,7 @@ public class TipiThread
       catch (Throwable t) {
         System.err.println("Caught uncaught exception in thread:");
         t.printStackTrace();
-        System.err.println("Reviving dying thread...");
+//        System.err.println("Reviving dying thread...");
       }
     }
   }

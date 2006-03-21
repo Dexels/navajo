@@ -138,7 +138,7 @@ public class TipiPerformMethod
          myContext.performTipiMethod(null, n, destination, method.value.toString(),breakOnError,event,expirationInterval,hostUrl,username,password,keystore,keypass);
       }
       else {
-        System.err.println("Could not evaluate tipi. Calling service with blank navajo");
+//        System.err.println("Could not evaluate tipi. Calling service with blank navajo");
         myContext.performTipiMethod(null, NavajoFactory.getInstance().createNavajo(), destination, method.value.toString(),breakOnError,event,expirationInterval, hostUrl,username,password,keystore,keypass);
       }
       return;

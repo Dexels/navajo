@@ -18,25 +18,25 @@ public class EventParser extends BaseTipiParser {
   public EventParser() {
   }
   public Object parse(TipiComponent source, String expression, TipiEvent event) {
-    System.err.println("parsing expression in eventparser: "+expression);
+//    System.err.println("parsing expression in eventparser: "+expression);
     if (event!=null) {
       Set ks = event.getEventKeySet();
       if (ks==null) {
-        System.err.println("No keys found in event");
+//        System.err.println("No keys found in event");
         return "";
       }
       Iterator it = event.getEventKeySet().iterator();
       while (it.hasNext()) {
         String current = (String)it.next();
-        System.err.println("KEY: "+current);
-        System.err.println("Value: "+event.getEventParameter(expression).getValue());
+//        System.err.println("KEY: "+current);
+//        System.err.println("Value: "+event.getEventParameter(expression).getValue());
       }
       TipiValue o = event.getEventParameter(expression);
        if (o==null) {
          return null;
        }
        if (o.getRawValue()!=null) {
-         System.err.println("About to return value of type: "+o.getRawValue().getClass());
+//         System.err.println("About to return value of type: "+o.getRawValue().getClass());
        }
        return o.getRawValue();
     }

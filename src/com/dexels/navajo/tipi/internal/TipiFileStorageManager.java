@@ -43,14 +43,14 @@ public class TipiFileStorageManager implements TipiStorageManager {
             fis = new FileInputStream(in);
             Navajo n = NavajoFactory.getInstance().createNavajo(fis);
             if (debugMode) {
-                Thread.dumpStack();
-                System.err.println("Loading navajo: "+id);
-                System.err.println("Filename: "+in.toString());
-                try {
-                    n.write(System.err);
-                } catch (NavajoException e) {
-                    e.printStackTrace();
-                }
+//                Thread.dumpStack();
+//                System.err.println("Loading navajo: "+id);
+//                System.err.println("Filename: "+in.toString());
+//                try {
+//                    n.write(System.err);
+//                } catch (NavajoException e) {
+//                    e.printStackTrace();
+//                }
             }
             return n;
 
@@ -78,8 +78,8 @@ public class TipiFileStorageManager implements TipiStorageManager {
 //        File in = new File(base,id);
         File out = new File(base,id);
         if (debugMode) {
-            Thread.dumpStack();
-            System.err.println("Saving navajo to file: "+out);
+//            Thread.dumpStack();
+//            System.err.println("Saving navajo to file: "+out);
             try {
                 n.write(System.err);
             } catch (NavajoException e) {

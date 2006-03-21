@@ -104,15 +104,11 @@ public class TipiInstantiateTipi
         myContext.disposeTipiComponent(comp);
       }
       else {
-        System.err.println("Instantiating, with force= false, so will just invoke onInstantiate");
-        System.err.println("Component path: "+comp.getPath());
         comp.performTipiEvent("onInstantiate", null, false);
         comp.reUse();
         return comp;
       }
-    } else {
-        System.err.println("No element found, so no disposing old components");
-    }
+    } 
     XMLElement xe = new CaseSensitiveXMLElement();
     xe.setName("component-instance");
     if (byClass) {
@@ -137,12 +133,9 @@ public class TipiInstantiateTipi
         }
       }
     }
-    System.err.println("BUILD COMPONENT-INSTANCE: "+xe.toString());
     TipiComponent inst = myContext.instantiateComponent(xe);
-    System.err.println("INSTANTIATED");
     inst.setId(id);
      parent.addComponent(inst, myContext, constraints);
-     System.err.println("ADDED");
 
      myContext.fireTipiStructureChanged(inst);
     return inst;

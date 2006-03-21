@@ -172,7 +172,7 @@ public abstract class TipiContext
     tipiClassDefMap.clear();
     clearTopScreen();
     includeList.clear();
-    System.err.println("clearResources: clearing includeList. ");
+//    System.err.println("clearResources: clearing includeList. ");
 
     eHandler = null;
     errorHandler = null;
@@ -433,20 +433,20 @@ public void parseDefinition(XMLElement child) {
   
   public URL getResourceURL(String location, ClassLoader cl) {
 //      System.err.println("CLASSLOADER: "+System.getProperty("java.class.path"));
-      System.err.println("Getting URL from loader: "+cl+" location: "+location);
+//      System.err.println("Getting URL from loader: "+cl+" location: "+location);
       if (cl==null) {
           cl = getClass().getClassLoader();
-          System.err.println("No classloader supplied getting default: "+cl);
+//          System.err.println("No classloader supplied getting default: "+cl);
       }
       URL u = cl.getResource(location);
     if (u==null) {
-      System.err.println("getResourceURL: "+location+" not found in classpath, continuing");
+//      System.err.println("getResourceURL: "+location+" not found in classpath, continuing");
     }
     if (u!=null) {
         return u;
     }
     if (resourceBaseDirectory!=null) {
-        System.err.println("ResourceDir found: "+resourceBaseDirectory.getAbsolutePath());
+//        System.err.println("ResourceDir found: "+resourceBaseDirectory.getAbsolutePath());
         File locationFile = new File(resourceBaseDirectory.getAbsolutePath()+"/"+location);
         if (!locationFile.exists()) {
             System.err.println(".. but it did not exist");
@@ -477,7 +477,7 @@ public void parseDefinition(XMLElement child) {
   public void processRequiredIncludes() {
       for (Iterator iter = includeList.iterator(); iter.hasNext();) {
         String element = (String) iter.next();
-        System.err.println("Parsing element: "+element);
+//        System.err.println("Parsing element: "+element);
         parseLibrary(element, false, null, null, false);
     }
   }
@@ -627,7 +627,7 @@ public void parseDefinition(XMLElement child) {
     if (!clas.equals("")) {
       Class cc = getTipiClass(clas);
       TipiComponent tc = (TipiComponent) instantiateClass(clas, name, instance);
-      System.err.println("Instantiating component by definition: "+clas);
+//      System.err.println("Instantiating component by definition: "+clas);
       XMLElement classDef = (XMLElement) tipiClassDefMap.get(clas);
 
       /** @todo  think  these two can be removed, because they are invoked in the instantiateClass method*/
@@ -639,8 +639,8 @@ public void parseDefinition(XMLElement child) {
       boolean se = definition.getAttribute("studioelement") != null;
 //      System.err.println("Is studio element? " + se + " (class is:" + tc.getClass() + ")");
 //      System.err.println("Definition is: " + definition);
-      System.err.println("Definition built: "+name);
-      System.err.println("Childcount: "+tc.getChildCount());
+//      System.err.println("Definition built: "+name);
+//      System.err.println("Childcount: "+tc.getChildCount());
       tc.setStudioElement(se);
       tc.commitToUi();
       return tc;
@@ -722,7 +722,7 @@ public void parseDefinition(XMLElement child) {
     if (comp instanceof TipiDataComponent) {
       removeTipiInstance(comp);
     } else {
-        System.err.println("Ignoring non-data component");
+//        System.err.println("Ignoring non-data component");
     }
     killComponent(comp);
   }
@@ -931,7 +931,7 @@ public void parseDefinition(XMLElement child) {
     tipiInstanceMap.clear();
     tipiClassMap.clear();
     tipiClassDefMap.clear();
-    System.err.println("closeAll: clearing includeList");
+//    System.err.println("closeAll: clearing includeList");
     includeList.clear();
   }
 
@@ -940,7 +940,7 @@ public void parseDefinition(XMLElement child) {
     setSwitching(true);
     clearTopScreen();
     setSplashInfo("Starting application");
-    System.err.println("Switching to: "+name);
+//    System.err.println("Switching to: "+name);
     
     XMLElement componentDefinition = getComponentDefinition(name);
     if (componentDefinition==null) {
@@ -996,7 +996,7 @@ public void parseDefinition(XMLElement child) {
   public TipiDataComponent getTipiByPath(String path) {
     TipiComponent tc = getTipiComponentByPath(path);
     if (!TipiDataComponent.class.isInstance(tc)) {
-      System.err.println("Object referred to by path: " + path + " is a TipiComponent, not a Tipi");
+//      System.err.println("Object referred to by path: " + path + " is a TipiComponent, not a Tipi");
       return null;
     }
     return (TipiDataComponent) tc;
@@ -1069,11 +1069,11 @@ public void parseDefinition(XMLElement child) {
         if (NavajoClientFactory.getClient() instanceof DirectClientImpl) {
           ClientInterface ci = NavajoClientFactory.createDefaultClient();
           ci.setServerUrl(hosturl);
-          System.err.println("Specifically sending to: "+hosturl);
+//          System.err.println("Specifically sending to: "+hosturl);
           ci.setUsername(username);
           ci.setPassword(password);
           if (keystore!=null && keypass!=null && !"".equals(keystore)) {
-            System.err.println("Setting secure. Keystore: "+keystore+" keypass: "+keypass);
+//            System.err.println("Setting secure. Keystore: "+keystore+" keypass: "+keypass);
             ci.setSecure(keystore,keypass,true);
           }
 
@@ -1161,7 +1161,7 @@ public void parseDefinition(XMLElement child) {
      if (eHandler.hasErrors(reply)) {
        boolean hasUserDefinedErrorHandler = false;
        try {
-         System.err.println("Error found. Looking for instances listening to: "+method);
+//         System.err.println("Error found. Looking for instances listening to: "+method);
          ArrayList tipis = getTipiInstancesByService(method);
          if (tipis != null) {
            for (int i = 0; i < tipis.size(); i++) {
@@ -1179,7 +1179,7 @@ public void parseDefinition(XMLElement child) {
              }
            }
          } else {
-           System.err.println("No tipis found");
+//           System.err.println("No tipis found");
          }
        }
        catch (TipiException ex1) {
@@ -1188,7 +1188,7 @@ public void parseDefinition(XMLElement child) {
        if (!hasUserDefinedErrorHandler) {
          eHandler.showError();
        }
-       System.err.println("Error found in service... Checking for break");
+//       System.err.println("Error found in service... Checking for break");
        if (breakOnError) {
          //System.err.println("breakOnError set. Breaking event...");
          throw new TipiBreakException( -1);
@@ -1299,7 +1299,7 @@ public void parseDefinition(XMLElement child) {
     }
     catch (Throwable ex) {
 //      ex.printStackTrace();
-      System.err.println("Trouble: "+ex.getMessage()+" Returning original: "+expression);
+//      System.err.println("Trouble: "+ex.getMessage()+" Returning original: "+expression);
       return expression;
     }
     if (o==null) {
@@ -1513,7 +1513,7 @@ public void parseDefinition(XMLElement child) {
       return null;
     }
     if (!c.isInstance(o)) {
-      System.err.println("PRocessing source: " + source.getPath());
+//      System.err.println("PRocessing source: " + source.getPath());
       throw new IllegalArgumentException("Wrong type: Need type: " + name + " (being of class: " + c.toString() + ") but found: " + o.getClass());
     }
     return ttp.toString(o, source);

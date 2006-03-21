@@ -170,7 +170,7 @@ public class TipiEvent
       getContext().performedEvent(myComponent, this);
     }
     catch (BlockActivityException ex1) {
-      System.err.println("Blocked exception");
+//      System.err.println("Blocked exception");
       return;
     }
     try {
@@ -180,7 +180,7 @@ public class TipiEvent
       }
     }
     catch (TipiBreakException ex) {
-      System.err.println("Break encountered in event");
+//      System.err.println("Break encountered in event");
     }
     getContext().debugLog("event   ","finished event: "+this.getEventName()+" in component" +myComponent.getPath());
     listener.eventFinished(this, event);

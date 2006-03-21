@@ -51,8 +51,7 @@ abstract class BaseTipiParser
     else {
       Message msg = (Message) myTipi.getValue(partTwo);
       if (msg == null) {
-          System.err.println("");
-        return null;
+               return null;
       }
 //        msg.write(System.err);
       if (st.hasMoreTokens()) {

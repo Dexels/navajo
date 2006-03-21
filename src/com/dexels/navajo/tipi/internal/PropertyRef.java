@@ -21,7 +21,7 @@ public class PropertyRef implements TipiReference {
   public void setValue(Object expression, TipiComponent tc) {
 //    if (evaluated.value instanceof Property) {
 //      Property p = (Property) evaluated.value;
-    System.err.println("Setvalue called with: "+expression+" operand: "+expression);
+//    System.err.println("Setvalue called with: "+expression+" operand: "+expression);
     // SORT OF BIG CHANGE NOW USES ONLY THE EXPRESSION (WHICH IS EVALUATED ALREADY)
     // evaluatedVAlue is ignored!!!
     

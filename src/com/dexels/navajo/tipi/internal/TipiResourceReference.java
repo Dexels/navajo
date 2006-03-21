@@ -130,7 +130,7 @@ public class TipiResourceReference {
   }
 
   public URLConnection getUncachedURLConnection(TipiComponent source, TipiEvent event) throws IOException{
-    System.err.println("Getting url: "+path);
+//    System.err.println("Getting url: "+path);
     URL u = (URL)myContext.evaluate(path, source, event).value;
 //    URL u = myContext.getResourceURL(path);
     if (u==null) {
