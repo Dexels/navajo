@@ -76,9 +76,9 @@ public class MailMap implements Mappable {
 //    public void setEncoding(String s) {
 //    	this.encoding = s;
 //    }
-    
+
 //    public void setAttachFileName(String name) {
-//    	
+//
 //      if ( attachment == null ) {
 //    	  attachment = new AttachementMap
 //      }
@@ -109,11 +109,12 @@ public class MailMap implements Mappable {
             System.err.println("in MailMap store()");
 
             // Use Navajo input document if no text specified.
-            if (text.equals("")) {
-                java.io.StringWriter writer = new java.io.StringWriter();
-                doc.write(writer);
-                result = writer.toString();
-            } else
+            // REMOVED BECAUSE OF SAFETYISSUES
+//            if (text.equals("")) {
+//                java.io.StringWriter writer = new java.io.StringWriter();
+//                doc.write(writer);
+//                result = writer.toString();
+//            } else
                 result = text;
 
             Properties props = System.getProperties();
@@ -180,7 +181,7 @@ public class MailMap implements Mappable {
                   Binary content = am.getAttachFileContent();
                   String encoding = am.getEncoding();
                   BodyPart bp = new MimeBodyPart();
-                  
+
                   if (file != null) {
                     if ( userFileName  == null ) {
                     	userFileName = file;
@@ -188,19 +189,19 @@ public class MailMap implements Mappable {
                     FileDataSource fileDatasource = new FileDataSource(file);
                     bp.setDataHandler(new DataHandler(fileDatasource));
                   } else if ( content != null ) {
-                   
+
                     ByteArrayDataSource byteArraySource = new ByteArrayDataSource(content.getData(),
                         ( content.getMimeType().startsWith("unknown") ? "text/plain" : content.getMimeType() ), "");
                     DataHandler dh = new DataHandler(byteArraySource);
                     bp.setDataHandler(dh);
-                    
+
                     if ( encoding != null ) {
                     	bp.setHeader("Content-Transfer-Encoding", encoding);
                     	encoding = null;
                     }
-                    
+
                   }
-                  
+
                   bp.setFileName(userFileName);
                   if (relatedMultipart) {
                   	bp.setHeader("Content-ID", "<attach-nr-"+i+">");
@@ -303,11 +304,11 @@ public class MailMap implements Mappable {
   }
 
   public void setMultipleAttachments(AttachementMap[] c) {
-    
+
     if (attachments == null) {
       attachments = new ArrayList();
     }
-  
+
     for (int i = 0; i < c.length; i++) {
        attachments.add(c[i]);
      }
