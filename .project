@@ -3,7 +3,6 @@
 	<name>NavajoDocument</name>
 	<comment></comment>
 	<projects>
-		<project>NavajoClient</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
