@@ -41,15 +41,17 @@ package navajoadapters;
  * 
  * 2.2.2 Added FTPMap. NavajoMap now has appendParms to append result to current params block.
  * 
+ * 2.2.3 Fixed security issue in MailMap for empty text body.
+ * 
  */
 public class Version extends dexels.Version {
 
-	public static final int MAJOR = 2;
-	public static final int MINOR = 2;
-	public static final int PATCHLEVEL = 2;
-	public static final String VENDOR = "Dexels";
+	public static final int    MAJOR       = 2;
+	public static final int    MINOR       = 2;
+	public static final int    PATCHLEVEL  = 3;
+	public static final String VENDOR      = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Adapter Library";
-	public static final String RELEASEDATE = "2006-02-09";
+	public static final String RELEASEDATE = "2006-03-22";
 	
 	//	Included packages.
 	String [] includes = {"navajodocument.Version", "navajo.Version", "navajoclient.Version", "navajofunctions.Version"};
