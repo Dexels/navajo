@@ -355,6 +355,15 @@ public final class PropertyImpl
         return null;
       }
     }
+    if (getType().equals(Property.PERCENTAGE_PROPERTY)) {
+        if (getValue() != null) {
+          return new Percentage( (String) getValue());
+        }
+        else {
+          return null;
+        }
+      }
+    
     else if (getType().equals(Property.STRING_PROPERTY)) {
       return getValue();
     }
