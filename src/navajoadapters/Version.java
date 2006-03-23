@@ -43,15 +43,21 @@ package navajoadapters;
  * 
  * 2.2.3 Fixed security issue in MailMap for empty text body.
  * 
+ * 2.2.4 TEMPORARY FIX! In it's current form the CV32 does not work properly with the previous version
+ *                      Therefore version 1.19 of MailMap.java was restored (instead of 1.21) and the
+ *                      fix of 2.2.3 was applied to version 1.19.
+ *                      When CV32 new style is introduced version 1.21 can overwrite version 1.22 of
+ *                      the file MailMap.java
+ * 
  */
 public class Version extends dexels.Version {
 
 	public static final int    MAJOR       = 2;
 	public static final int    MINOR       = 2;
-	public static final int    PATCHLEVEL  = 3;
+	public static final int    PATCHLEVEL  = 4;
 	public static final String VENDOR      = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Adapter Library";
-	public static final String RELEASEDATE = "2006-03-22";
+	public static final String RELEASEDATE = "2006-03-23";
 	
 	//	Included packages.
 	String [] includes = {"navajodocument.Version", "navajo.Version", "navajoclient.Version", "navajofunctions.Version"};
