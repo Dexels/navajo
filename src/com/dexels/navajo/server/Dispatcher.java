@@ -869,7 +869,7 @@ public final class Dispatcher {
         /**
          * Phase IV: Get application specific parameters for user.
          */
-        System.err.println("REPOSITORY IS: " + navajoConfig.getRepository());
+        //System.err.println("REPOSITORY IS: " + navajoConfig.getRepository());
         
         Parameter[] pl = navajoConfig.getRepository().getParameters(access);
 
