@@ -63,6 +63,7 @@ public class TipiTable
     TipiHelper th = new TipiSwingHelper();
     th.initHelper(this);
     addHelper(th);
+    mm.doLayout();
     return mm;
   }
 
@@ -310,7 +311,9 @@ public class TipiTable
             mtp.setMessage(m);
             mtp.setPreferredSize(d);
             //            System.err.println("MEssage set in TitiTable");
-//            updateTableColumns(mtp);
+            updateTableColumns(mtp);
+            mtp.revalidate();
+//            mtp.dispatchEvent(new ComponentEvent(mtp,ComponentEvent.COMPONENT_RESIZED));
           }
         });
       }

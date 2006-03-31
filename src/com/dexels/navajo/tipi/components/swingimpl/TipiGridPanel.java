@@ -8,10 +8,10 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.util.*;
 
-import javax.swing.Box;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
+import javax.swing.*;
 
+import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
 
 /**
@@ -32,7 +32,7 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
  * @version 1.0
  */
 
-public class TipiGridPanel extends TipiSwingDataComponentImpl {
+public class TipiGridPanel extends TipiPanel {
 
 	private JPanel gridComponent;
 
@@ -42,6 +42,7 @@ public class TipiGridPanel extends TipiSwingDataComponentImpl {
 	private int gridwidth = 0;
 	private final ArrayList myWidths = new ArrayList();
 	private final Map heightStrutComponentMap = new HashMap();
+    private final Set fixedSet = new HashSet();
 //	private final Map heightStrutConstraiintMap = new HashMap();
 	// List of array of boolean
 	private final Set availabilityMatrix = new HashSet(); 
@@ -50,34 +51,59 @@ public class TipiGridPanel extends TipiSwingDataComponentImpl {
 	}
 
 	public Object createContainer() {
-		gridComponent = new JPanel();
+        gridComponent = (JPanel)super.createContainer();
+//        gridComponent = new JPanel();
 		gridComponent.setLayout(new GridBagLayout());
-		return gridComponent;
+           TipiHelper th = new TipiSwingHelper();
+            th.initHelper(this);
+            addHelper(th);
+           		return gridComponent;
 	}
+    
 	
-	 public void addToContainer(Object o, Object constraints){
+	 public void setContainerLayout(Object layout) {
+	     // ignore
+     }
+
+    public void addToContainer(Object o, Object constraints){
 		 String constr = (String)constraints;
 		 Component c = (Component)o;
 		 JComponent jc = null;
 		 if (c instanceof JComponent) {
 			 jc = (JComponent)c;
-		 }
+             System.err.println("Adding component to GridPanel: "+jc+" with pref. size: "+jc.getPreferredSize());
+		 } else {
+		     System.err.println("Scheizze!");
+         }
+//         jc.setBorder(BorderFactory.createLineBorder(Color.CYAN, 5));
+//         System.err.println("|||>"+constr+"<|||");
+//         jc.setVisible(true);
+         //         System.err.println("GRIDPANEL::: ADD TO CONTAINER: ::: "+o);
 //		 c.setBackground(new Color(t.nextFloat(),t.nextFloat(),t.nextFloat()));
-		 gridComponent.add(c,parseGridConstraints(constr,jc));
+         GridBagConstraints gc = parseGridConstraints(constr,jc);
+//         gridComponent.add(new JLabel(">>"+o.toString()),gc);
+         
+         gridComponent.add(c,gc);
 	 }
 	 
 	  public void initBeforeBuildingChildren(XMLElement instance, XMLElement classdef) {
 		  String ss = instance.getStringAttribute("columnWidth");
-		  parseColumns(ss.substring(1,ss.length()-1));
+		  if (ss!=null) {
+              parseColumns(ss.substring(1,ss.length()-1));
+        } else {
+            System.err.println("oh dear, no columnwidth");
+        }
 
 	  }	 
 	 
 	 public GridBagConstraints parseGridConstraints(String txt, JComponent component) {
 		 GridBagConstraints myData = new GridBagConstraints();
 		 myData.fill=GridBagConstraints.BOTH;
-		 myData.weightx=0;
-		 myData.weighty=0;
-//			return myData;
+		 myData.weightx=isFixed(currentx)?0:1;
+		 
+         myData.weighty=0;
+		 
+         //			return myData;
 //		 myData.weightx = 1;
 //		 System.err.println("Parsing constraints: "+txt+" >> "+getPath()+" gridwidth: "+gridwidth);
 		 myData.gridx = currentx;
@@ -117,16 +143,38 @@ public class TipiGridPanel extends TipiSwingDataComponentImpl {
 		 int vertical = height;
 		 vertical -= ins.top;
 		 vertical -= ins.bottom;
-		 int horizontal = ((Integer)myWidths.get(currentx)).intValue();
+		 int horizontal = getCurrentWidth();
 		 horizontal -= ins.left;
 		 horizontal -= ins.right;
-		 
-		 if (component!=null) {
-				component.setMaximumSize(new Dimension(0,height));
-				component.setPreferredSize(new Dimension(horizontal,vertical));
-			}
+         if (horizontal<=0) {
+            horizontal = Integer.MAX_VALUE;
+        }
+         
+         if (vertical<=0) {
+             vertical = Integer.MAX_VALUE;
+         }
+//         System.err.println("UPDATING::::: "+horizontal+" / "+vertical);
+//         System.err.println("PREF: "+component.getPreferredSize().width+" -- "+component.getPreferredSize().height);
+//         System.err.println("min: "+component.getMinimumSize().width+" -- "+component.getMinimumSize().height);
+//         System.err.println("SIZE: "+component.getSize().width+" -- "+component.getSize().height);
+//         
+         if (component!=null) {
+		     // if no height set, leave the maximum size alone
+             if (h!=null) {
+//                    component.setMaximumSize(new Dimension(horizontal,vertical));
+                    }
+             if (isFixed(currentx)) {
+                component.setPreferredSize(new Dimension(horizontal,5));
+            }
+             
+//             component.setPreferredSize(new Dimension(horizontal,vertical));
+             	}
 		
 	}
+
+    private int getCurrentWidth() {
+        return ((Integer)myWidths.get(currentx)).intValue();
+    }
 
 	private void updateAvailability(int xstart, int ystart, int xend, int yend) {
 		 // make sure the grid is high enough:
@@ -139,7 +187,7 @@ public class TipiGridPanel extends TipiSwingDataComponentImpl {
 					System.err.println("Oh dear, already occupied!");
 				} 
 //				 row[x] = true;
-				 System.err.println("Occupying: ["+x+"/"+y+"]");
+//				 System.err.println("Occupying: ["+x+"/"+y+"]");
 //				 System.err.println("=================================\n"+availabilityMatrix+"=================================");
 //				 row.set(x,new Boolean(true));
 				 availabilityMatrix.add(new Coordinate(x,y));
@@ -158,7 +206,6 @@ public class TipiGridPanel extends TipiSwingDataComponentImpl {
 	private void advance() {
 //		System.err.println("ADVANCING. currentx: "+currentx+"/"+currenty);
 		while (isOccupied(currentx,currenty)) {
-			System.err.println("checking");
 			if (currentx==gridwidth-1) {
 //				System.err.println("New row");
 				currentx = 0;
@@ -201,6 +248,15 @@ public class TipiGridPanel extends TipiSwingDataComponentImpl {
 			int height = Integer.parseInt(value);
 			addHeightStrut(currenty, height, current);
 		}
+        if ("maxheight".equals(key)) {
+            int height = Integer.parseInt(value);
+            current.setMaximumSize(new Dimension(current.getMaximumSize().width,height));
+        }
+//        if ("maxwidth".equals(key)) {
+//            int width = Integer.parseInt(value);
+//            current.setMaximumSize(new Dimension(width,current.getMaximumSize().height));
+//            current.setPreferredSize(new Dimension(width,current.getPreferredSize().height));
+//        }
 		 
 	}
 
@@ -292,14 +348,20 @@ public class TipiGridPanel extends TipiSwingDataComponentImpl {
 			gridComponent.add(c,new GridBagConstraints(0,y,1,1,0,0,GridBagConstraints.CENTER,GridBagConstraints.NONE,new Insets(0,0,0,0),0,0));
 	}
 
-	private void parseColumns(String sizes) {
+	protected void parseColumns(String sizes) {
 //		System.err.println("PARSING COLUMNS::::::::::: "+sizes);
 		StringTokenizer st = new StringTokenizer(sizes);
 		myWidths.clear();
 		int count = 0;
 		while (st.hasMoreTokens()) {
 			String element = (String) st.nextElement();
-			int val = new Integer(element).intValue();
+            if (!element.endsWith("*")) {
+                setFixed(count);
+            } else {
+                element = element.substring(0,element.length()-1);
+                System.err.println("Starr. reuslt: "+element);                
+            }
+            int val = new Integer(element).intValue();
 			myWidths.add(new Integer(val));
 			addColumnStrut(count, val);
 			count++;
@@ -307,9 +369,16 @@ public class TipiGridPanel extends TipiSwingDataComponentImpl {
         gridwidth = myWidths.size();
 	}
 
-	private void addColumnStrut(int x, int val) {
-        System.err.println(" Adding columnSTRUUUUUUUUUUT : "+x+" / "+val);
-		Component c = Box.createHorizontalStrut(1); 
+	private void setFixed(int count) {
+	    fixedSet.add(new Integer(count));
+    }
+
+    private boolean isFixed(int count) {
+        return fixedSet.contains(new Integer(count));
+    }
+
+    private void addColumnStrut(int x, int val) {
+ 		Component c = Box.createHorizontalStrut(1); 
 		gridComponent.add(c,new GridBagConstraints(x,0,1,1,0,0,GridBagConstraints.CENTER,GridBagConstraints.NONE,new Insets(0,0,0,0),val-1,0));
 	}
 

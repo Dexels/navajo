@@ -17,7 +17,7 @@ public class TipiScroller extends TipiPanel {
   private JScrollPane jp;
 
   public Object createContainer() {
-    jp = new JScrollPane();
+    jp = new TipiSwingScrollPane();
     jp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
     jp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     TipiHelper th = new TipiSwingHelper();
@@ -32,6 +32,14 @@ public class TipiScroller extends TipiPanel {
   public void removeFromContainer(Object c) {
     jp.getViewport().remove((Component)c);
   }
+  
+//  public TipiComponent getTipiComponentByPath(String path) {
+//      TipiComponent tc = super.getTipiComponentByPath(path);
+//      System.err.println("TipiScroller.getTipiComponentByPath: Looking for: "+path+" children # "+getChildCount());
+//      System.err.println("I am: "+toString());
+//      System.err.println(">> CHILDDUMP: "+childDump());
+//      return tc;
+//  }
 
   /**
    * getComponentValue
