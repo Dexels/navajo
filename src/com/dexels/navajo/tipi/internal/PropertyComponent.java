@@ -11,7 +11,7 @@ import com.dexels.navajo.document.*;
  * @author not attributable
  * @version 1.0
  */
-public interface PropertyComponent {
+public interface PropertyComponent extends TipiComponent{
   public String getPropertyName();
 
   public void addTipiEventListener(TipiEventListener listener);
@@ -23,4 +23,7 @@ public interface PropertyComponent {
   public void setProperty(Property p);
 
   public void checkForConditionErrors(Message m);
+  
+//  public void validate();
+
 }
