@@ -38,8 +38,7 @@ public class MainApplication {
     boolean debugMode = false;
     try {
         String debugStr = System.getProperty("com.dexels.navajo.tipi.debugMode");
-        System.err.println("DEBUG: "+debugStr);
-        debugMode = debugStr!=null && debugStr.equals("true");
+          debugMode = debugStr!=null && debugStr.equals("true");
     }
     catch(SecurityException se) {
         System.err.println("Security exception: "+se.getMessage());
@@ -63,7 +62,6 @@ public class MainApplication {
 //      dts.setVisible(false);
 //    }
 //    else {
-      System.err.println("Starting non-studio mode. Location: "+args[args.length - 1]);
       context = new SwingTipiContext();
       SwingTipiUserInterface stui = new SwingTipiUserInterface((SwingTipiContext)context);
       SwingClient.setUserInterface(stui);
