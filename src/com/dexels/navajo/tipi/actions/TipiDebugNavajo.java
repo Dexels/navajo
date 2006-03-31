@@ -41,7 +41,7 @@ public class TipiDebugNavajo extends TipiAction {
         try {
 //            if (evalTipi == null) {
                  if (file != null) {
-                    w = new PrintStream(file);
+                    w = new PrintStream(new FileOutputStream(file));
                 } else {
                     w = System.err;
                 }
