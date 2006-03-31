@@ -18,8 +18,8 @@ public class TipiProperty
     implements PropertyComponent, PropertyValidatable, PropertyEventListener {
   private Property myProperty = null;
   private ArrayList myListeners = new ArrayList();
-  private int default_label_width = 50;
-  private int default_property_width = 50;
+//  private int default_label_width = 50;
+//  private int default_property_width = 50;
 //  private boolean hardEnabled = false;
   private boolean myVisibleState = true;
   private Boolean myEnableState = null;
@@ -36,6 +36,7 @@ public class TipiProperty
   private boolean showDatePicker = false;
   private boolean verticalScrolls = true;
   private boolean horizontalScrolls = false;
+     
   public TipiProperty(Property p) {
     setProperty(p);
   }
@@ -59,6 +60,13 @@ public class TipiProperty
     return myProperty;
   }
 
+  /* 
+   * Unsure about this method. I do think it should 
+   */
+//  public void validate() {
+//      aya
+//      ((GenericPropertyComponent)getContainer()).();
+//  }
 //
 //  public void addToContainer(Object c, Object constraints) {
 //    throw new UnsupportedOperationException("Can not add to container of class: " + getClass());
@@ -117,12 +125,13 @@ public class TipiProperty
         }
         currentType = p.getType();
         setPropFlag = true;
-         ( (GenericPropertyComponent) getContainer()).setProperty(p);
+          ( (GenericPropertyComponent) getContainer()).setProperty(p);
          if (myEnableState!=null) {
              ( (GenericPropertyComponent) getContainer()).setHardEnabled(myEnableState.booleanValue());
         }
       }
-    });
+
+     });
   }
 
   public void resetComponentValidationStateByRule(final String id) {
@@ -221,12 +230,29 @@ public class TipiProperty
         if ("showdatepicker".equals(name)) {
            ( (GenericPropertyComponent) getContainer()).setShowDatePicker( ( (Boolean) object).booleanValue());
         }
+        if("alwaysUseLabel".equals("name") ) {
+            ( (GenericPropertyComponent) getContainer()).setAlwaysUseLabel( ( (Boolean) object).booleanValue());
+        } 
+        
         if ("propertyValue".equals(name)) {
           if (myProperty == null) {
             throw new IllegalStateException("Can not set the value of a TipiProperty when it has not been loaded! Component: " + me.getPath());
           }
           myProperty.setAnyValue(object);
           ( (GenericPropertyComponent) getContainer()).constructPropertyComponent(myProperty);
+        }
+//        private int checkboxGroupColumnCount = 0;
+//        private int memoColumnCount = 0;
+//        private int memoRowCount = 0;
+//          
+        if("memoRowCount".equals(name)) {
+            ( (GenericPropertyComponent) getContainer()).setMemoRowCount( ( (Integer) object).intValue());            
+        }
+        if("memoColumnCount".equals(name)) {
+            ( (GenericPropertyComponent) getContainer()).setMemoColumnCount( ( (Integer) object).intValue());            
+        }
+        if("checkboxGroupColumnCount".equals(name)) {
+            ( (GenericPropertyComponent) getContainer()).setCheckboxGroupColumnCount( ( (Integer) object).intValue());            
         }
       }
     });
