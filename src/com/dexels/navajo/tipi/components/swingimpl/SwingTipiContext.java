@@ -186,4 +186,27 @@ public class SwingTipiContext
     clearLogFile();
   }
 
+
+  public static void debugSwingTree(Component c, int indent) {
+      printIndent(indent, "Debugging component with hash: "+c.hashCode()+" class: "+c.getClass());
+      printIndent(indent,"Minimumsite: "+c.getMinimumSize()+" max: "+c.getMaximumSize());
+      if (c instanceof JComponent) {
+          printIndent(indent ,"Preferredsize: "+((Component)c).getPreferredSize());
+    }
+      printIndent(indent,"Size: "+c.getSize()+" visible: "+c.isVisible());
+           
+      //      c.setPreferredSize(null);
+      if (c instanceof Container) {
+        Container cc = (Container)c;
+        LayoutManager lm = cc.getLayout();
+        printIndent(indent, "Container. Layout: "+cc.getLayout());
+        for (int i = 0; i < cc.getComponentCount(); i++) {
+            Component ccc = cc.getComponent(i);
+            debugSwingTree(ccc, indent+3);
+        }
+      }
+      printIndent(indent, "End of debug component: "+c.hashCode()+" class: "+c.getClass());
+      
+  }
+  
 }
