@@ -57,4 +57,8 @@ public class TipiSwingButton
   public boolean isGridShowing() {
     return gridFlag;
   }
+  
+  public void setPreferredSize(Dimension d) {
+      // ignore.
+  }
 }

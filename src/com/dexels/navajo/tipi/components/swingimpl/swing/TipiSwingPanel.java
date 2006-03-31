@@ -1,6 +1,7 @@
 package com.dexels.navajo.tipi.components.swingimpl.swing;
 
 import java.awt.*;
+
 import javax.swing.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.*;
@@ -36,8 +37,28 @@ public class TipiSwingPanel
   public TipiSwingPanel(TipiSwingDataComponentImpl me) {
     this.me = me;
   }
+  private Dimension checkMax(Dimension preferredSize) {
+      Dimension maximumSize = getMaximumSize();
+      if (maximumSize==null) {
+          return preferredSize;
+      }
+      return new Dimension(Math.min(preferredSize.width, maximumSize.width),Math.min(preferredSize.height, maximumSize.height));
+  }
+  private Dimension checkMin(Dimension preferredSize) {
+      Dimension minimumSize = getMinimumSize();
+      if (minimumSize==null) {
+          return preferredSize;
+      }
+      return new Dimension(Math.max(preferredSize.width, minimumSize.width),Math.max(preferredSize.height, minimumSize.height));
+  }
 
-  public void paintComponent(Graphics g) {
+  public Dimension checkMaxMin(Dimension d) {
+      return checkMin(checkMax(d));
+  }
+  public Dimension getPreferredSize() {
+      return checkMaxMin(super.getPreferredSize());
+  }
+public void paintComponent(Graphics g) {
     super.paintComponent(g);
     TipiGradientPaint myPaint = me.getPaint();
     if(myPaint != null){

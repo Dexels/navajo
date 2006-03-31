@@ -6,11 +6,17 @@
  */
 package com.dexels.navajo.tipi.components.swingimpl.swing;
 
+import java.awt.*;
+
 import com.dexels.navajo.swingclient.components.*;
 import com.dexels.navajo.tipi.*;
 
 public class TipiMessageTablePanel extends MessageTablePanel {
     public TipiMessageTablePanel(TipiContext tc) {
         super(new TipiMessageTable(tc));
+    }
+    
+    public void setPreferredSize(Dimension d) {
+        // ignore
     }
 }
