@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
+
 import com.dexels.navajo.client.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.parser.*;
@@ -1854,6 +1855,22 @@ public void storeDocument(String id, Navajo n)  {
     }
 }
 
-
+public static void debugTipiComponentTree(TipiComponent c, int indent) {
+    printIndent(indent, "Debugging component"+c.toString() );
+    printIndent(indent, "Childlist"+((TipiComponentImpl)c).childDump() );
+    
+      for (int i = 0; i < c.getChildCount(); i++) {
+          TipiComponent ccc = c.getTipiComponent(i);
+          debugTipiComponentTree(ccc, indent+3);
+      }
+    printIndent(indent, "End of debug component: "+c.getId()+" class: "+c.getClass());
+    
+}
+protected static void printIndent(int indent, String text) {
+    for (int i = 0; i < indent; i++) {
+      System.err.print(" ");
+  }
+    System.err.println(text);
+}
 
 }
