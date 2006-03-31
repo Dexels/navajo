@@ -198,14 +198,18 @@ public interface TipiComponent
 
   public String getExpression(String name);
 
-  public void setChildIndex(TipiComponent child, int index);
-
+ 
   public int getIndexOfComponent(TipiComponent source);
 
   public void setCurrentEvent(TipiEvent event);
   public void updateId(TipiComponent tc, String oldId, String id);
   public void removeInstantiatedChildren();
   public Object getActualComponent();
+  
+  /*
+   * gets all the property components under this property, and also under its (recursive) children
+   */
+  public ArrayList getRecursiveProperties();  
 /**
  * 
  */
