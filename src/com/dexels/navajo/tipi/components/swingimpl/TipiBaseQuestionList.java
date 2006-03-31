@@ -6,7 +6,11 @@
  */
 package com.dexels.navajo.tipi.components.swingimpl;
 
+import java.awt.*;
+import java.awt.event.*;
 import java.util.*;
+
+import javax.swing.*;
 
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
@@ -215,32 +219,47 @@ public abstract class TipiBaseQuestionList extends TipiPanel {
       answerMessage.addProperty(newValue);
       return answerMessage;
     }
-    public void loadData(Navajo n, TipiContext context,String method) throws TipiException {
-        removeInstantiatedChildren();
-        myNavajo = n;
-        Message m = n.getMessage(messagePath);
-        if (m == null) {
-          return;
-        }
-        if (!m.getType().equals(Message.MSG_TYPE_ARRAY)) {
-          return;
-        }
-        for (int i = 0; i < m.getArraySize(); i++) {
-          Message current = m.getMessage(i); 
-          String id = current.getProperty("Id").getValue();
-          System.err.println("Instantiating with id: "+id+" definition name: "+questionGroupDefinitionName);
-          TipiDataComponent tc = (TipiDataComponent) TipiInstantiateTipi.instantiateByDefinition(this, false, id,questionGroupDefinitionName,getGroupConstraints(current));
-          System.err.println("Created component: "+tc.getClass()+" container: "+tc.getContainer());
-          tc.setValue("messagePath", current.getFullMessageName() );
-          tc.setPrefix(current.getFullMessageName());
-          tc.setValue("questionDefinitionName",  questionDefinitionName);
-          tc.setValue("questionGroupDefinitionName", questionGroupDefinitionName );
-          tc.loadData(n, myContext,method);
-          if (tc instanceof TipiBaseQuestionGroup) {
-              TipiBaseQuestionGroup tqg = (TipiBaseQuestionGroup) tc;
-            tqg.setQuestionList(this);
-          }
-        }
-      }
+    public void loadData(final Navajo n, final TipiContext context,final String method) throws TipiException {
+        final TipiBaseQuestionList me = this;
+        runSyncInEventThread(new Runnable(){
 
+            public void run() {
+                removeInstantiatedChildren();
+                myNavajo = n;
+                Message m = n.getMessage(messagePath);
+                if (m == null) {
+                  return;
+                }
+                if (!m.getType().equals(Message.MSG_TYPE_ARRAY)) {
+                  return;
+                }
+                for (int i = 0; i < m.getArraySize(); i++) {
+                  Message current = m.getMessage(i); 
+                  String id = current.getProperty("Id").getValue();
+//                  System.err.println("Instantiating with id: "+id+" definition name: "+questionGroupDefinitionName);
+                  TipiDataComponent tc = null;
+                try {
+                    tc = (TipiDataComponent) TipiInstantiateTipi.instantiateByDefinition(me, false, id,questionGroupDefinitionName,getGroupConstraints(current));
+//                    System.err.println("Created component: "+tc.getClass()+" container: "+tc.getContainer());
+                    tc.setValue("messagePath", current.getFullMessageName() );
+                    tc.setPrefix(current.getFullMessageName());
+                    tc.setValue("questionDefinitionName",  questionDefinitionName);
+                    tc.setValue("questionGroupDefinitionName", questionGroupDefinitionName );
+//                    System.err.println("QUESTION LIST: About to load data");
+//                    TipiContext.debugTipiComponentTree(tc, 8);
+                    tc.loadData(n, myContext,method);
+                    if (tc instanceof TipiBaseQuestionGroup) {
+                        TipiBaseQuestionGroup tqg = (TipiBaseQuestionGroup) tc;
+                      tqg.setQuestionList(me);
+                    }
+//                    final JComponent jc = (JComponent)getContainer();
+//                    jc.revalidate();
+                } catch (TipiException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+//            SwingTipiContext.debugSwingTree((Component)getContainer(), 0);
+         }});
+      }
 }

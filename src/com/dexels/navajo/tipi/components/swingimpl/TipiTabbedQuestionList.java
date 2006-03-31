@@ -70,4 +70,9 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
             }});
        }
 
+    public void removeFromContainer(Object c) {
+        // TODO Auto-generated method stub
+        super.removeFromContainer(c);
+    }
+
 }
