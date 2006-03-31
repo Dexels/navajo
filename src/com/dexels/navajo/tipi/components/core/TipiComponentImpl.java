@@ -37,7 +37,7 @@ public abstract class TipiComponentImpl
   protected TipiComponent myParent = null;
   private String className;
 
-  protected final Map tipiComponentMap = new HashMap();
+  private final Map tipiComponentMap = new HashMap();
   protected final ArrayList properties = new ArrayList();
   protected final ArrayList myEventList = new ArrayList();
 
@@ -396,6 +396,38 @@ public abstract class TipiComponentImpl
 
   }
 
+  private void removeChildComponent(TipiComponent tc) {
+      if(!tipiComponentMap.containsValue(tc)) {
+          System.err.println("!!!!!!   Can not update id: Component not found.");
+        }
+        if(!tipiComponentList.contains(tc)) {
+          System.err.println("!!!!!!   Can not update id: Component not found in list.");
+        }
+        if(!tipiComponentMap.containsKey(tc.getId())) {
+          System.err.println("!!!!!!   Can not update id: Component not found in map.");
+        }
+        tipiComponentList.remove(tc);
+        tipiComponentMap.remove(tc.getId());
+  }
+  
+  private void addChildComponent(TipiComponent tc) {
+      if(tipiComponentList.contains(tc)) {
+          System.err.println("!!!!!!   Can not add child with id: "+tc.getId()+ " component already in list.");
+          tipiComponentList.remove(tc);
+      }
+      if(tipiComponentMap.containsValue(tc)) {
+          System.err.println("!!!!!!   Can not add child with id:"+tc.getId()+ " component already in map.");
+          tipiComponentMap.remove(tc.getId());
+      }
+      tipiComponentMap.put(tc.getId(), tc);
+      tipiComponentList.add(tc);
+  }
+  
+  public void clearAllComponents() {
+      tipiComponentMap.clear();
+      tipiComponentList.clear();
+  }
+  
   public ArrayList getDefinedEvents() {
     ArrayList eventDefs = new ArrayList();
     if (myClassDef != null) {
@@ -567,9 +599,17 @@ public void loadStartValues(XMLElement element) {
   protected void performComponentMethod(String name, TipiComponentMethod compMeth, TipiEvent event) throws TipiBreakException {
   }
 
+  /**
+   * beware, leading slashes will be stripped. To do a global lookup, use the TipiContext
+   */
   public TipiComponent getTipiComponentByPath(String path) {
-//    System.err.println("TIpiCOmponentImpl: Looking for: "+path);
-    if (path.equals(".")) {
+//      System.err.println("getTipiComponentByPath: Looking for: "+path+" children # "+getChildCount());
+//      System.err.println(" I am: "+toString()+"child: "+childDump());
+//      for (int i = 0; i < getChildCount(); i++) {
+//          TipiComponent tc = getTipiComponent(i);
+//          System.err.println("Got: "+tc.toString());
+//      }
+   if (path.equals(".")) {
       return this;
     }
     if (path.equals("..")) {
@@ -594,6 +634,7 @@ public void loadStartValues(XMLElement element) {
     else {
       String name = path.substring(0, s);
       String rest = path.substring(s);
+//      System.err.println("First part getting: "+name);
       TipiComponent t = getTipiComponent(name);
       if (t == null) {
         throw new NullPointerException("Did not find Tipi: " + name);
@@ -611,8 +652,9 @@ public void loadStartValues(XMLElement element) {
   }
 
   public TipiComponent getTipiComponent(String s) {
+//      System.err.println("Getting component: "+s+" children: "+tipiComponentMap.keySet());
     if (tipiComponentMap.size()!=tipiComponentList.size()) {
-//      System.err.println("PROBLEMS: Mapsize: "+tipiComponentMap.size()+" LIST: "+tipiComponentList.size());
+      System.err.println("PROBLEMS: Mapsize: "+tipiComponentMap.size()+" LIST: "+tipiComponentList.size());
     }
 //    System.err.println("getting component. # of components: "+tipiComponentMap.size());
     return (TipiComponent) tipiComponentMap.get(s);
@@ -620,7 +662,7 @@ public void loadStartValues(XMLElement element) {
 
   public TipiComponent getTipiComponent(int i) {
     if (tipiComponentMap.size()!=tipiComponentList.size()) {
-//     System.err.println("PROBLEMS: Mapsize: "+tipiComponentMap.size()+" LIST: "+tipiComponentList.size());
+     System.err.println("PROBLEMS: Mapsize: "+tipiComponentMap.size()+" LIST: "+tipiComponentList.size());
     }
     return (TipiComponent) tipiComponentList.get(i);
   }
@@ -648,8 +690,7 @@ public void loadStartValues(XMLElement element) {
 
   public void disposeComponent() {
     removeAllChildren();
-    tipiComponentList.clear();
-    tipiComponentMap.clear();
+    clearAllComponents();
     helperDispose();
     isDisposed = true;
   }
@@ -666,8 +707,7 @@ public void loadStartValues(XMLElement element) {
 //      myContext.disposeTipiComponent(current);
       current.disposeComponent();
     }
-    tipiComponentList.clear();
-    tipiComponentMap.clear();
+    clearAllComponents();
   }
 
 /**
@@ -690,6 +730,16 @@ public void loadStartValues(XMLElement element) {
 //    tipiComponentMap.clear();
   }
 
+  
+  public ArrayList getRecursiveProperties() {
+      ArrayList al = new ArrayList();
+      for (int i = 0; i < getChildCount(); i++) {
+        TipiComponent tc = getTipiComponent(i);
+        al.addAll(tc.getRecursiveProperties());
+    }
+      al.addAll(properties);
+      return al;
+  }
 
   public void removeChild(TipiComponent child) {
     if (child == null) {
@@ -712,8 +762,7 @@ public void loadStartValues(XMLElement element) {
       properties.remove(child);
 //      propertyNames.remove(pc.getPropertyName());
     }
-    tipiComponentMap.remove(child.getId());
-    tipiComponentList.remove(child);
+    removeChildComponent(child);
     childDisposed();
   }
 
@@ -737,16 +786,17 @@ public void loadStartValues(XMLElement element) {
 
     /** @todo Fix following scenario:
      * What should happen when a component is added with the same id? */
-if (tipiComponentMap.containsKey(c.getId())) {
-  System.err.println("===================================\n   WARNING: Adding component which is already present.\n   =========================================");
-  System.err.println("id: "+c.getId());
-}
-    tipiComponentMap.put(c.getId(), c);
-    if (index<0) {
-      tipiComponentList.add(c);
-    } else {
-      tipiComponentList.add(index,c);
+    if (tipiComponentMap.containsKey(c.getId())) {
+      System.err.println("===================================\n   WARNING: Adding component which is already present.\n   =========================================");
+      System.err.println("id: "+c.getId());
     }
+    addChildComponent(c);
+//    tipiComponentMap.put(c.getId(), c);
+//    if (index<0) {
+//      tipiComponentList.add(c);
+//    } else {
+//      tipiComponentList.add(index,c);
+//    }
     c.setParent(this);
 //    if (c.getContainer() != null && !java.awt.Window.class.isInstance(c.getContainer())) {
 //    if (getContainer()!=null && c.getContainer()!=null ) {
@@ -985,12 +1035,12 @@ if (tipiComponentMap.containsKey(c.getId())) {
   }
 
   public void checkValidation(Message msg) {
-    if (myContainer != null) {
       Iterator it = tipiComponentList.iterator();
       while (it.hasNext()) {
         TipiComponent next = (TipiComponent)it.next();
         next.checkValidation(msg);
       }
+    if (myContainer != null) {
       hadConditionErrors = true;
 //      System.err.println("CHECKING VALIDATION: ");
 //      msg.write(System.err);
@@ -1058,13 +1108,13 @@ if (tipiComponentMap.containsKey(c.getId())) {
     return new AttributeRef(this, name);
   }
 
-  public void setChildIndex(TipiComponent child, int index) {
-    if (!tipiComponentList.contains(child)) {
-      return;
-    }
-    tipiComponentList.remove(child);
-    tipiComponentList.add(index,child);
-  }
+//  public void setChildIndex(TipiComponent child, int index) {
+//    if (!tipiComponentList.contains(child)) {
+//      return;
+//    }
+//    tipiComponentList.remove(child);
+//    tipiComponentList.add(index,child);
+//  }
 
   public int getIndexOfComponent(TipiComponent source) {
     return tipiComponentList.indexOf(source);
@@ -1189,4 +1239,11 @@ if (tipiComponentMap.containsKey(c.getId())) {
 	  return getContainer();
   }
 
+  public String toString() {
+      return "{"+getPath()+" / "+getClass()+" / "+hashCode()+"}";
+  }
+  
+  public String childDump() {
+      return "LIST: "+tipiComponentList+" MAP: "+tipiComponentMap;
+  }
 }
