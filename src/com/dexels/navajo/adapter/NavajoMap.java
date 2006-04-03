@@ -344,12 +344,15 @@ public class NavajoMap implements Mappable {
                                          aaaError.getProperty("Message").getValue());
       }
 
-      if (breakOnConditionError) {
-        Message conditionErrors = inDoc.getMessage("ConditionErrors");
-        if (conditionErrors != null) {
+      if (breakOnConditionError && inDoc.getMessage("ConditionErrors") != null) {
+    	  System.err.println("BREAKONCONDITIONERROR WAS SET TO TRUE, RETURNING CONDITION ERROR");
           throw new ConditionErrorException(inDoc);
-        }
+      } else if (inDoc.getMessage("ConditionErrors") != null) {
+    	  System.err.println("BREAKONCONDITIONERROR WAS SET TO FALSE, RETURNING....");
+    	  return;
       }
+      
+      
 
       if (!compare.equals("")) {
         //isEqual = inMessage.isEqual(inDoc);
@@ -664,9 +667,8 @@ public class NavajoMap implements Mappable {
    * @param breakOnConditionError
    */
   public void setBreakOnConditionError(boolean b) {
-    if (b) {
-      this.breakOnConditionError = b;
-    }
+	System.err.println("IN setBreakOnConditionError(" + b + ")");
+    this.breakOnConditionError = b;
   }
 
   /**
