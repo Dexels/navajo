@@ -20,6 +20,7 @@ import java.util.StringTokenizer;
 import org.dexels.grus.DbConnectionBroker;
 
 import com.dexels.navajo.server.Parameters;
+import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.util.*;
@@ -353,6 +354,10 @@ public class SQLMap implements Mappable, LazyArray {
           ( (Boolean) autoCommitMap.get(datasource)).booleanValue();
       if (!ac) {
         if (con != null) {
+          try {
+			System.err.println("ROLLBACK OF TRANSACTION " + getTransactionContext() + " DUE TO KILL.....");
+		  } catch (UserException e) {	
+		  }
           con.rollback();
         }
       }
