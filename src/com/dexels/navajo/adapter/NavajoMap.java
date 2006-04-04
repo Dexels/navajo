@@ -190,10 +190,10 @@ public class NavajoMap implements Mappable {
       else
         currentProperty = outDoc.getProperty(fullName);
       if (currentProperty == null) {
-          System.out.println("CONSTRUCTING NEW PROPERTY: " + fullName);
+          //System.out.println("CONSTRUCTING NEW PROPERTY: " + fullName);
           currentProperty = NavajoFactory.getInstance().createProperty(outDoc, propName, Property.STRING_PROPERTY, "", 25, "", Property.DIR_IN);
       } else {
-        System.out.println("FOUND EXISTING PROPERTY: " + fullName);
+        //System.out.println("FOUND EXISTING PROPERTY: " + fullName);
       }
     } catch (Exception e) {
       e.printStackTrace();
@@ -202,14 +202,14 @@ public class NavajoMap implements Mappable {
   }
 
   public final void setIntegerProperty(int i) throws UserException {
-     System.out.println("in setIntegerProperty() : i = " + i);
+     //System.out.println("in setIntegerProperty() : i = " + i);
      currentProperty.setType(Property.INTEGER_PROPERTY);
      currentProperty.setValue(i+"");
      addProperty(currentFullName, currentProperty);
   }
 
   public final void setFloatProperty(double i) throws UserException {
-     System.out.println("in setFloatProperty() : i = " + i);
+     //System.out.println("in setFloatProperty() : i = " + i);
      currentProperty.setType(Property.FLOAT_PROPERTY);
      currentProperty.setValue(i+"");
      addProperty(currentFullName, currentProperty);
@@ -233,7 +233,7 @@ public class NavajoMap implements Mappable {
   }
 
   public final void setClockTimeProperty(ClockTime d) throws UserException {
-    System.out.println("setClockTimeProperty() = " + d);
+    //System.out.println("setClockTimeProperty() = " + d);
     currentProperty.setType(Property.CLOCKTIME_PROPERTY);
     if (d != null)
       currentProperty.setValue(d);
@@ -243,7 +243,7 @@ public class NavajoMap implements Mappable {
   }
 
   public final void setBinaryProperty(Binary d) throws UserException {
-    System.out.println("setBinaryProperty() = " + d);
+    //System.out.println("setBinaryProperty() = " + d);
     currentProperty.setType(Property.BINARY_PROPERTY);
     if (d != null)
       currentProperty.setValue(d);
@@ -253,7 +253,7 @@ public class NavajoMap implements Mappable {
   }
 
   public final void setMoneyProperty(Money d) throws UserException {
-   System.out.println("setMoneyProperty() = " + d);
+   //System.out.println("setMoneyProperty() = " + d);
    currentProperty.setType(Property.MONEY_PROPERTY);
    if (d != null)
      currentProperty.setValue(d);
@@ -264,7 +264,7 @@ public class NavajoMap implements Mappable {
 
 
   public final void setDateProperty(Date d) throws UserException {
-    System.out.println("setDateProperty() = " + d);
+    //System.out.println("setDateProperty() = " + d);
     currentProperty.setType(Property.DATE_PROPERTY);
     if (d != null)
       currentProperty.setValue(com.dexels.navajo.util.Util.formatDate(d));
