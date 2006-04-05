@@ -654,7 +654,7 @@ public void loadStartValues(XMLElement element) {
   public TipiComponent getTipiComponent(String s) {
 //      System.err.println("Getting component: "+s+" children: "+tipiComponentMap.keySet());
     if (tipiComponentMap.size()!=tipiComponentList.size()) {
-      System.err.println("PROBLEMS: Mapsize: "+tipiComponentMap.size()+" LIST: "+tipiComponentList.size());
+      System.err.println("PROBLEMS: Mapsize: "+tipiComponentMap.size()+" LIST: "+tipiComponentList.size()+" component: "+getPath());
     }
 //    System.err.println("getting component. # of components: "+tipiComponentMap.size());
     return (TipiComponent) tipiComponentMap.get(s);
@@ -662,7 +662,7 @@ public void loadStartValues(XMLElement element) {
 
   public TipiComponent getTipiComponent(int i) {
     if (tipiComponentMap.size()!=tipiComponentList.size()) {
-     System.err.println("PROBLEMS: Mapsize: "+tipiComponentMap.size()+" LIST: "+tipiComponentList.size());
+     System.err.println("PROBLEMS: Mapsize: "+tipiComponentMap.size()+" LIST: "+tipiComponentList.size()+" component: "+getPath());
     }
     return (TipiComponent) tipiComponentList.get(i);
   }
