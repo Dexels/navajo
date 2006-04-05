@@ -1,16 +1,19 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
 import com.dexels.navajo.tipi.components.core.*;
-import com.dexels.navajo.tipi.components.swingimpl.swing.*;
+import com.dexels.navajo.tipi.internal.*;
+//import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.document.*;
 
 import com.dexels.navajo.tipi.actions.*;
 
-import java.awt.*;
+//import java.awt.*;
 import java.util.*;
 
 import javax.swing.*;
+
+//import javax.swing.*;
 
 /**
  * <p>
@@ -30,7 +33,7 @@ import javax.swing.*;
  * @version 1.0
  */
 
-public abstract class TipiBaseQuestionGroup extends TipiPanel {
+public abstract class TipiBaseQuestionGroup extends TipiDataComponentImpl {
     protected String messagePath = null;
 
     protected String questionDefinitionName = null;
@@ -48,6 +51,8 @@ public abstract class TipiBaseQuestionGroup extends TipiPanel {
     private String subComponent = null;
 
     private String subConstraint = null;
+
+    private String subQuestionPath;
 
     public TipiBaseQuestionGroup() {
     }
@@ -109,6 +114,9 @@ public abstract class TipiBaseQuestionGroup extends TipiPanel {
             subConstraint = (String) object;
         }
         
+        if (name.equals("subQuestionPath")) {
+            subQuestionPath = (String) object;
+        }
         
         super.setComponentValue(name, object);
     }
@@ -123,17 +131,27 @@ public abstract class TipiBaseQuestionGroup extends TipiPanel {
         return super.getComponentValue(name);
     }
 
-    public boolean isValid() {
-        for (int i = 0; i < getChildCount(); i++) {
-            if (getTipiComponent(i) instanceof TipiQuestion) {
-                TipiQuestion tq = (TipiQuestion) getTipiComponent(i);
-                if (!tq.isRecursiveValid()) {
-                    return false;
-                }
+    private void recursiveListQuestions(TipiComponent start, ArrayList result) {
+        if (start instanceof TipiQuestion) {
+            result.add(start);
+        } else {
+            for (int i = 0; i < start.getChildCount(); i++) {
+                     recursiveListQuestions(start.getTipiComponent(i), result);
             }
-
         }
-        System.err.println("No invalid questions found. Group is valid.");
+    }
+    
+    public boolean isValid() {
+        ArrayList l = new ArrayList();
+        recursiveListQuestions(this,l);
+//        System.err.println("QUESTIONS:::: "+l.size());
+        for (int i = 0; i < l.size(); i++) {
+            TipiQuestion tq = (TipiQuestion)l.get(i);
+            if (!tq.isRecursiveValid()) {
+                return false;
+            }
+        }
+//        System.err.println("No invalid questions found. Group is valid.");
         return true;
     }
 
@@ -142,6 +160,12 @@ public abstract class TipiBaseQuestionGroup extends TipiPanel {
         myQuestions.clear();
         
         TipiComponent currentComponent = this;
+
+        Message m = n.getMessage(messagePath);
+        if (m == null) {
+            return;
+        }
+        
         if (subComponent!=null) {
 //            System.err.println("Looking for: "+subComponent+" children # "+getChildCount());
             for (int i = 0; i < getChildCount(); i++) {
@@ -150,36 +174,47 @@ public abstract class TipiBaseQuestionGroup extends TipiPanel {
             }
             currentComponent = getTipiComponentByPath(subComponent);
             if (currentComponent==null) {
-                System.err.println("NO COMPONENT FOUND");
+//                System.err.println("NO COMPONENT FOUND");
                 currentComponent = this;
+            }
+            
+            
+            
+        }
+        ArrayList localprops = getRecursiveProperties();
+
+//        TipiContext.debugTipiComponentTree(this, 5);
+//        System.err.println("Property count: "+localprops.size());
+        for (int i = 0; i < localprops.size(); i++) {
+            PropertyComponent o = (PropertyComponent) localprops.get(i);
+            Property pp = m.getProperty(o.getPropertyName());
+            System.err.println("Current: "+o.getPropertyName());
+            if (pp!=null) {
+                o.setProperty(pp);
+                
             }
         }
         
-        Message m = n.getMessage(messagePath);
-        if (m == null) {
-            return;
-        }
         Message question = m.getMessage("Question");
         if (question != null) {
             for (int i = 0; i < question.getArraySize(); i++) {
                 Message current = question.getMessage(i);
-
                 String id = current.getProperty("Id").getValue();
-//                System.err.println("About to create a question with id: " + id);
                 TipiQuestion tc = (TipiQuestion) TipiInstantiateTipi.instantiateByDefinition(currentComponent, false, id, questionDefinitionName, subConstraint);
                 tc.setValue("messagePath", current.getFullMessageName());
-//                tc.setPrefix(current.getFullMessageName());
                 tc.setValue("questionDefinitionName", questionDefinitionName);
-//                System.err.println("Creating question. Setting path: " + getPath());
-                // tc.setValue("questionGroupPath",this);
+                System.err.println("BaseQuestionGroup. Setting subQuestionPAth to: "+subQuestionPath);
+                tc.setValue("subQuestionPath", subQuestionPath);
+
+                
                 tc.setQuestionGroup(this);
+                tc.setQuestionList(myQuestionList);
                 tc.loadData(n, myContext);
                 myQuestions.add(tc);
             }
         }
-        doLayout();
         updateQuestions();
-
+        myQuestionList.setGroupValid(isValid(),this);
     }
 
     public String getDescription() {
@@ -199,13 +234,14 @@ public abstract class TipiBaseQuestionGroup extends TipiPanel {
     }
 
     public void updateQuestions() {
+//        System.err.println("Update questions. Count: "+myQuestions.size());
         for (int i = 0; i < myQuestions.size(); i++) {
             TipiQuestion tq = (TipiQuestion) myQuestions.get(i);
             tq.updateSubQuestions();
         }
         boolean valid = isValid();
         if (myQuestionList != null) {
-            myQuestionList.setValid(valid);
+            myQuestionList.setGroupValid(valid,this);
         }
     }
 

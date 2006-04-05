@@ -71,7 +71,7 @@ public class TipiGridPanel extends TipiPanel {
 		 JComponent jc = null;
 		 if (c instanceof JComponent) {
 			 jc = (JComponent)c;
-             System.err.println("Adding component to GridPanel: "+jc+" with pref. size: "+jc.getPreferredSize());
+//             System.err.println("Adding component to GridPanel: "+jc+" with pref. size: "+jc.getPreferredSize());
 		 } else {
 		     System.err.println("Scheizze!");
          }
@@ -164,6 +164,7 @@ public class TipiGridPanel extends TipiPanel {
 //                    component.setMaximumSize(new Dimension(horizontal,vertical));
                     }
              if (isFixed(currentx)) {
+                 System.err.println("Harrr. Not good. Bad prefsize.");
                 component.setPreferredSize(new Dimension(horizontal,5));
             }
              
@@ -245,13 +246,20 @@ public class TipiGridPanel extends TipiPanel {
 			myData.gridheight = Integer.parseInt(value);
 		}
 		if ("height".equals(key)) {
-			int height = Integer.parseInt(value);
-			addHeightStrut(currenty, height, current);
+		    if (value.endsWith("*")) {
+                int height = Integer.parseInt(value.substring(0, value.length()-1));
+                addHeightStrut(currenty, height, current);
+//                current.setMaximumSize(new Dimension(current.getMaximumSize().width,height));
+                myData.weighty = 1;
+            } else {
+                int height = Integer.parseInt(value);
+                addHeightStrut(currenty, height, current);
+                current.setMaximumSize(new Dimension(current.getMaximumSize().width,height));
+            }
 		}
-        if ("maxheight".equals(key)) {
-            int height = Integer.parseInt(value);
-            current.setMaximumSize(new Dimension(current.getMaximumSize().width,height));
-        }
+//        if ("maxheight".equals(key)) {
+//            int height = Integer.parseInt(value);
+//        }
 //        if ("maxwidth".equals(key)) {
 //            int width = Integer.parseInt(value);
 //            current.setMaximumSize(new Dimension(width,current.getMaximumSize().height));
@@ -359,7 +367,7 @@ public class TipiGridPanel extends TipiPanel {
                 setFixed(count);
             } else {
                 element = element.substring(0,element.length()-1);
-                System.err.println("Starr. reuslt: "+element);                
+//                System.err.println("Starr. reuslt: "+element);                
             }
             int val = new Integer(element).intValue();
 			myWidths.add(new Integer(val));

@@ -7,6 +7,7 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
 import java.awt.*;
+import java.lang.reflect.*;
 
 import javax.swing.*;
 import javax.swing.event.*;
@@ -17,6 +18,7 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 
 public class TipiTabbedQuestionList extends TipiBaseQuestionList {
     private Component lastSelectedTab = null;
+    private JTabbedPane tabbedPane;
 
     protected Object getGroupConstraints(Message groupMessage) {
         // TODO Auto-generated method stub
@@ -35,9 +37,9 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
     public Object createContainer() {
         final TipiComponent me = this;
         final JTabbedPane jt = new JTabbedPane();
-        TipiHelper th = new TipiSwingHelper();
-        th.initHelper(this);
-        addHelper(th);
+//        TipiHelper th = new TipiSwingHelper();
+//        th.initHelper(this);
+//        addHelper(th);
         jt.addChangeListener(new ChangeListener() {
           public void stateChanged(ChangeEvent ce) {
             try {
@@ -53,16 +55,15 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
         });
         return jt;
       }
-    
-    public void addToContainer(final Object c, final Object constraints) {
-        System.err.println("Adding to TipiTabbedQuestionList container:   "+c+" constraints: "+constraints);
-        runSyncInEventThread(new Runnable(){
 
+    public void addToContainer(final Object c, final Object constraints) {
+//        System.err.println("Adding to TipiTabbedQuestionList container:   "+c+" constraints: "+constraints);
+        runSyncInEventThread(new Runnable(){
             public void run() {
-                // TODO Auto-generated method stub
-                JTabbedPane pane = (JTabbedPane) getContainer();
-//                pane.addTab( (String) constraints, new JButton("AAAP"));
-                pane.addTab( (String) constraints, (Component) c);
+                tabbedPane = (JTabbedPane) getContainer();
+                //                pane.addTab( (String) constraints, new JButton("AAAP"));
+                tabbedPane.addTab( (String) constraints, (Component) c);
+//                tabbedPane.setIconAt(tabbedPane.getTabCount()-1,tabbedPane.getTabCount()%2==0?new ImageIcon(getContext().getResourceURL("com/dexels/navajo/tipi/components/swingimpl/swing/ok.gif")):new ImageIcon(getContext().getResourceURL("com/dexels/navajo/tipi/components/swingimpl/swing/cancel.gif")));
           //        pane.setEnabledAt(pane.indexOfComponent( (Component) c), ( (Component) c).isEnabled());
                 if (lastSelectedTab==null) {
                   lastSelectedTab = (Component)c;
@@ -73,6 +74,15 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
     public void removeFromContainer(Object c) {
         // TODO Auto-generated method stub
         super.removeFromContainer(c);
+    }
+    public void setGroupValid(boolean valid, TipiBaseQuestionGroup group) {
+        super.setGroupValid(valid, group);
+        int i = myGroups.indexOf(group);
+        if (i<0) {
+            System.err.println("Sh!34#@$!");
+        }
+        tabbedPane.setIconAt(i,valid?new ImageIcon(getContext().getResourceURL("com/dexels/navajo/tipi/components/swingimpl/swing/ok.gif")):new ImageIcon(getContext().getResourceURL("com/dexels/navajo/tipi/components/swingimpl/swing/cancel.gif")));
+
     }
 
 }

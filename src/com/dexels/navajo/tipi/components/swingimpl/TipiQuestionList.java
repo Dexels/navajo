@@ -18,7 +18,7 @@ import java.awt.print.*;
  * @author not attributable
  * @version 1.0
  */
-public class TipiQuestionList
+public abstract class TipiQuestionList
     extends TipiBaseQuestionList {
 //  private String messagePath = null;
 //  private String questionDefinitionName = null;

@@ -8,6 +8,7 @@ package com.dexels.navajo.tipi.components.swingimpl;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.lang.reflect.*;
 import java.util.*;
 
 import javax.swing.*;
@@ -15,14 +16,18 @@ import javax.swing.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.actions.*;
+import com.dexels.navajo.tipi.components.core.*;
 import com.dexels.navajo.tipi.internal.*;
 
-public abstract class TipiBaseQuestionList extends TipiPanel {
+public abstract class TipiBaseQuestionList extends TipiDataComponentImpl {
     
     protected String messagePath = null;
     protected String questionDefinitionName = null;
     protected String questionGroupDefinitionName = null;
         
+    protected final ArrayList myGroups = new ArrayList();
+    protected final Set myValidGroups = new HashSet();
+    private String subQuestionPath = null;
     protected abstract Object getGroupConstraints(Message groupMessage);
     
     public void setComponentValue(String name, Object object) {
@@ -39,6 +44,12 @@ public abstract class TipiBaseQuestionList extends TipiPanel {
         if (name.equals("questionGroupDefinitionName")) {
           questionGroupDefinitionName = (String) object;
         }
+        if (name.equals("subQuestionPath")) {
+            subQuestionPath  = (String) object;
+            System.err.println("BaseQuestionGroup. GOT subQuestionPAth: "+subQuestionPath);
+            
+          }
+        
         super.setComponentValue(name, object);
       }
 
@@ -119,8 +130,8 @@ public abstract class TipiBaseQuestionList extends TipiPanel {
 
     public void flatten(String serviceName, String server,String username, String password,String pincode,String keystore,String keypass) throws NavajoException,TipiBreakException {
       Navajo input = getNearestNavajo();
-      System.err.println("^^^^^^^^^^^^^^^^^^^^^^^^^^>>> "+input);
-      input.write(System.err);
+//      System.err.println("^^^^^^^^^^^^^^^^^^^^^^^^^^>>> "+input);
+//      input.write(System.err);
       Message questionList = input.getMessage("QuestionList@0");
       Navajo n = NavajoFactory.getInstance().createNavajo();
        Message aap = input.getMessage("ObjectForm");
@@ -219,8 +230,29 @@ public abstract class TipiBaseQuestionList extends TipiPanel {
       answerMessage.addProperty(newValue);
       return answerMessage;
     }
+    
+    public void runSyncInEventThread(Runnable r) {
+        if (SwingUtilities.isEventDispatchThread() ) {
+          r.run();
+        }
+        else {
+          try {
+            SwingUtilities.invokeAndWait(r);
+          }
+          catch (InvocationTargetException ex) {
+            throw new RuntimeException(ex);
+          }
+          catch (InterruptedException ex) {
+            System.err.println("Interrupted");
+          }
+        }
+      }
+    
+    
+    
     public void loadData(final Navajo n, final TipiContext context,final String method) throws TipiException {
         final TipiBaseQuestionList me = this;
+        myGroups.clear();
         runSyncInEventThread(new Runnable(){
 
             public void run() {
@@ -245,13 +277,21 @@ public abstract class TipiBaseQuestionList extends TipiPanel {
                     tc.setPrefix(current.getFullMessageName());
                     tc.setValue("questionDefinitionName",  questionDefinitionName);
                     tc.setValue("questionGroupDefinitionName", questionGroupDefinitionName );
-//                    System.err.println("QUESTION LIST: About to load data");
+                    tc.setValue("subQuestionPath", subQuestionPath );
+                    System.err.println("BaseQuestionList. Setting subQuestionPAth to: "+subQuestionPath);
+
+                    //                    System.err.println("QUESTION LIST: About to load data");
 //                    TipiContext.debugTipiComponentTree(tc, 8);
-                    tc.loadData(n, myContext,method);
                     if (tc instanceof TipiBaseQuestionGroup) {
                         TipiBaseQuestionGroup tqg = (TipiBaseQuestionGroup) tc;
                       tqg.setQuestionList(me);
+                      myGroups.add(tqg);
+                      // subsequent changes will be caught. Assume valid
+                      myValidGroups.add(tqg);
+                    } else {
+                        System.err.println("This is _not_ good");
                     }
+                     tc.loadData(n, myContext,method);
 //                    final JComponent jc = (JComponent)getContainer();
 //                    jc.revalidate();
                 } catch (TipiException e) {
@@ -262,4 +302,40 @@ public abstract class TipiBaseQuestionList extends TipiPanel {
 //            SwingTipiContext.debugSwingTree((Component)getContainer(), 0);
          }});
       }
+
+    public void setGroupValid(boolean valid, TipiBaseQuestionGroup group) {
+        boolean oldvalid = myValidGroups.containsAll(myGroups);
+        if (valid) {
+            if (!myValidGroups.contains(group)) {
+                myValidGroups.add(group);
+            }
+        } else {
+            if (myValidGroups.contains(group)) {
+                myValidGroups.remove(group);
+            }
+        }
+        boolean newvalid = myValidGroups.containsAll(myGroups);
+        if (oldvalid!=newvalid) {
+            updateValidity();
+        }
+
+    }
+    
+    private void updateValidity() {
+        boolean valid = myValidGroups.containsAll(myGroups);
+        Map m = new HashMap();
+        m.put("valid", new Boolean(valid));
+        try {
+            performTipiEvent("onValidationChanged", m, true);
+        } catch (TipiException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateQuestionList() {
+        for (Iterator itt = myGroups.iterator(); itt.hasNext();) {
+            TipiBaseQuestionGroup element = (TipiBaseQuestionGroup) itt.next();
+            element.updateQuestions();
+        }
+    }
 }

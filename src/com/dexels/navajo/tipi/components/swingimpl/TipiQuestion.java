@@ -7,7 +7,7 @@ import java.util.*;
 import com.dexels.navajo.tipi.tipixml.*;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+//import java.awt.event.*;
 
 import com.dexels.navajo.swingclient.components.*;
 import com.dexels.navajo.tipi.actions.*;
@@ -39,6 +39,8 @@ public class TipiQuestion extends TipiPanel {
 
     // private TipiQuestionGroup questionGroupPath = null;
     private TipiBaseQuestionGroup questionGroup = null;
+    
+    private TipiBaseQuestionList myQuestionList = null;
 
     private final ArrayList mySubQuestions = new ArrayList();
 
@@ -52,6 +54,10 @@ public class TipiQuestion extends TipiPanel {
 
     private String myId;
 
+    private PropertyComponent valueComponent = null;
+
+    private String subQuestionPath;
+    
     public TipiQuestion() {
         super();
     }
@@ -71,14 +77,23 @@ public class TipiQuestion extends TipiPanel {
             messagePath = (String) object;
         }
         if (name.equals("questionDefinitionName")) {
-//            System.err.println("questionDefinitionName: >" + object + "<");
             questionDefinitionName = (String) object;
         }
+        if (name.equals("subQuestionPath")) {
+            subQuestionPath = (String) object;
+            System.err.println("TipiQuestion: Got subQuestionPAth: "+subQuestionPath);
+
+        }
+        
+        
         super.setComponentValue(name, object);
     }
 
     public void setQuestionGroup(TipiBaseQuestionGroup tqg) {
         questionGroup = tqg;
+    }
+    public void setQuestionList(TipiBaseQuestionList tql) {
+        myQuestionList = tql;
     }
 
     public void addToContainer(Object c, Object constraints) {
@@ -126,23 +141,24 @@ public class TipiQuestion extends TipiPanel {
 //        System.err.println("******************* "+properties);
         for (int i = 0; i < properties.size(); i++) {
             PropertyComponent o = (PropertyComponent) properties.get(i);
-//            System.err.println("Property found: "+o.getPath());
-//            System.err.println("Property name: "+o.getPropertyName());
             Property pp = m.getProperty(o.getPropertyName());
             JComponent jj = (JComponent)o.getContainer();
              if (pp!=null) {
                 o.setProperty(pp);
-//                System.err.println("Setting property: "+pp.getValue());
-                
             } else {
                 System.err.println("No such property");
             }
-             System.err.println("Property:::: "+jj.getPreferredSize());
+             if ("Value".equals(o.getPropertyName())) {
+                 valueComponent = o;
+            }
             o.addTipiEventListener(new TipiEventListener() {
                 public boolean performTipiEvent(String eventtype, Map source, boolean sync) throws TipiException {
                     runASyncInEventThread(new Runnable() {
                         public void run() {
-                            updateQuestionGroup();
+//                            updateQuestionGroup();
+                            updateQuestionList();
+                            // CHANGED TO FULL UPDATE:
+                            
                         }
                     });
                     return true;
@@ -158,36 +174,45 @@ public class TipiQuestion extends TipiPanel {
 //             System.err.println("Property: "+o);
         }
         // TODO: Change this to a recursive search:
-
         
-        
-/*        
-        TipiDataComponent tdc = (TipiDataComponent) getTipiComponent("SubQuestions");
+        TipiDataComponent tdc = (TipiDataComponent) getTipiComponentByPath(subQuestionPath);
         Message question = m.getMessage("Question");
+        if (tdc==null) {
+            System.err.println("NO SUBQUESTION PANEL");
+        }
+        if (question==null) {
+            System.err.println("No subquestions!");
+        }
         if (question != null && tdc != null) {
             for (int i = 0; i < question.getArraySize(); i++) {
                 Message current = question.getMessage(i);
                 Property idProp = current.getProperty("Id");
                 if (idProp == null) {
                     System.err.println("No id property found. Message: ");
-                    current.write(System.err);
+//                    current.write(System.err);
                     continue;
                 }
+                
+
+
+                
                 myId = idProp.getValue();
                 try {
                     TipiQuestion tc = (TipiQuestion) TipiInstantiateTipi.instantiateByDefinition(tdc, false, myId, questionDefinitionName, null);
                     tc.setValue("messagePath", current.getFullMessageName());
-                    tc.setPrefix(current.getFullMessageName());
+//                    tc.setPrefix(current.getFullMessageName());
                     tc.setValue("questionDefinitionName", questionDefinitionName);
                     tc.loadData(n, myContext);
                     tc.setQuestionGroup(questionGroup);
+                    tc.setQuestionList(myQuestionList);
                     mySubQuestions.add(tc);
                 } catch (TipiException ex) {
                     ex.printStackTrace();
                 }
             }
+            updateSubQuestions();                
         }
-*/
+
 //        ((JPanel) getContainer()).doLayout();
 //        System.err.println("PREFERRED "+((JPanel) getContainer()).getPreferredSize() );
 //        SwingTipiContext.debugSwingTree((Component)getContainer(), 5);
@@ -218,42 +243,40 @@ public class TipiQuestion extends TipiPanel {
         myNavajo = n;
     }
 
-    public void swingDebug(Component c) {
-        System.err.println("DEBUGGING COMPONENT: "+c);
-        System.err.println("Class: "+c.getClass());
-        System.err.println("Visible: "+c.isVisible());
-        if (c instanceof Container) {
-            System.err.println("It is a container");
-            Container cc = (Container)c;
-            for (int i = 0; i < cc.getComponents().length; i++) {
-                swingDebug(cc.getComponents()[i]);
-            }
-            
-        }
-        System.err.println("END OF DEBUG");
-    }
+
     public void updateQuestionGroup() {
         // if (questionGroupPath != null) {
         // Operand o = myContext.evaluate(questionGroupPath, this, null,
         // myMessage);
         // TipiQuestionGroup tqg = (TipiQuestionGroup) o.value;
         if (questionGroup != null) {
-            System.err.println("updatin: " + questionGroup.getPath());
+//            System.err.println("updatin: " + questionGroup.getPath());
             questionGroup.updateQuestions();
         } else {
             System.err.println("Not found");
         }
         // }
     }
-
+    public void updateQuestionList() {
+        // if (questionGroupPath != null) {
+        // Operand o = myContext.evaluate(questionGroupPath, this, null,
+        // myMessage);
+        // TipiQuestionGroup tqg = (TipiQuestionGroup) o.value;
+        if (myQuestionList != null) {
+//            System.err.println("updatin: " + questionGroup.getPath());
+            myQuestionList.updateQuestionList();
+        } else {
+            System.err.println("Not found");
+        }
+        // }
+    }
     public boolean isRelevant() {
-         if (true) {
-         return true;
-         }
+//         if (true) {
+//         return true;
+//         }
         if (visibleCondition != null) {
-            // System.err.println("Evaluating: visibleCondition: " +
-            // visibleCondition);
-            // System.err.println("ID: "+myId);
+            System.err.println("Evaluating: visibleCondition: " + visibleCondition);
+             System.err.println("ID: "+myId);
             Operand o = myContext.evaluate(visibleCondition, this, null, myMessage);
             if (o != null) {
                 return ((Boolean) o.value).booleanValue();
@@ -264,14 +287,15 @@ public class TipiQuestion extends TipiPanel {
     }
 
     public void updateSubQuestions() {
-        if (true) {
-            return;
-            }
+//        if (true) {
+//            return;
+//            }
         if (visibleCondition != null) {
             getSwingContainer().setVisible(isRelevant());
             // ((JComponent)getSwingContainer()).scrollRectToVisible(getSwingContainer().getBounds());
         }
         boolean invalidFound = false;
+        System.err.println("# of subquestions: "+mySubQuestions.size());
         for (int i = 0; i < mySubQuestions.size(); i++) {
             TipiQuestion tq = (TipiQuestion) mySubQuestions.get(i);
             tq.updateSubQuestions();
@@ -292,18 +316,22 @@ public class TipiQuestion extends TipiPanel {
     }
 
     public boolean isRecursiveValid() {
-        if (!isValid()) {
-            return false;
-        }
+//         System.err.println("IS VALID? "+getId());
         if (!isRelevant()) {
+//            System.err.println("DONT CARE! "+getId());
             return true;
         }
-        for (int i = 0; i < mySubQuestions.size(); i++) {
+       if (!isValid()) {
+//            System.err.println("NO! NOT VALID. Questionid: "+getId());
+            return false;
+        }
+         for (int i = 0; i < mySubQuestions.size(); i++) {
             TipiQuestion tq = (TipiQuestion) mySubQuestions.get(i);
             if (tq.isRecursiveValid() == false) {
                 return false;
             }
         }
+//        System.err.println("YES! VALID!");
         return true;
     }
 
@@ -340,13 +368,16 @@ public class TipiQuestion extends TipiPanel {
         // return true;
         //
         if (validationCondition != null) {
-            // System.err.println("validationCondition: " +
-            // validationCondition);
+//            System.err.println("validationCondition: " +validationCondition);
+//            System.err.println("Message: ");
+//            myMessage.write(System.err);
             Operand o = myContext.evaluate(validationCondition, this, null, myMessage);
             if (o != null) {
                 boolean result = ((Boolean) o.value).booleanValue();
+  //              System.err.println("RESULT: "+result);
                 return result;
             } else {
+                System.err.println("No evaluation. Shit.");
                 return true;
             }
         } else {
