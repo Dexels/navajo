@@ -38,7 +38,7 @@ public class TipiScreen
       public void run() {
 
           if (current != null && Window.class.isInstance(current)) {
-            System.err.println("Not null, and window");
+//            System.err.println("Not null, and window");
             ( (Component) current).setVisible(true);
           }
           else {
