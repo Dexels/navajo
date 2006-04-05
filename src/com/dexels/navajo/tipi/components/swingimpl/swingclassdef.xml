@@ -133,6 +133,7 @@
                 <param name="new" type="string"/>
                 <param name="row" type="string"/>
                 <param name="column" type="string"/>
+                <param name="message" type="message"/>
                 <param name="path" type="string"/>
             </event>
         </events>
@@ -312,7 +313,8 @@
         <values>
             <value direction="inout" name="messagePath" type="string"/>
             <value direction="inout" name="questionDefinitionName" type="string"/>
-            <value direction="inout" name="questionGroupPath" type="object"/>
+            <value direction="inout" name="questionGroupPath" type="string"/>
+            <value direction="in" name="subQuestionPath" type="string"/>
         </values>
         <methods>
             <method name="print"/>
@@ -337,6 +339,7 @@
             <value direction="inout" name="subComponent" type="string"/>
             <!-- with the following constraint -->
             <value direction="inout" name="subConstraint" type="string"/>
+            <value direction="in" name="subQuestionPath" type="string"/>
         </values>
     </tipiclass>
     <tipiclass addtocontainer="true" childcount="*" class="TipiScrollQuestionGroup" layoutmanager="true"
@@ -354,6 +357,7 @@
             <value direction="inout" name="questionGroupDefinitionName" type="string"/>
             <value direction="in" name="valid" type="boolean"/>
             <value direction="out" name="description" type="string"/>
+            <value direction="in" name="subQuestionPath" type="string"/>
         </values>
     </tipiclass>
         
@@ -377,6 +381,7 @@
             <value direction="in" name="questionGroupDefinitionName" type="string"/>
             <value direction="in" name="valid" type="boolean"/>
             <value direction="out" name="currentPage" type="integer"/>
+            <value direction="in" name="subQuestionPath" type="string"/>
         </values>
         <methods>
             <method name="flatten">
@@ -418,6 +423,7 @@
             <value direction="in" name="questionGroupDefinitionName" type="string"/>
             <value direction="in" name="valid" type="boolean"/>
             <value direction="out" name="currentPage" type="integer"/>
+            <value direction="in" name="subQuestionPath" type="string"/>
         </values>
         <methods>
             <method name="flatten">
@@ -1171,16 +1177,16 @@
                 <option description="Capitalize all letters" value="upper"/>
                 <option description="Make all letters lowercase" value="lower"/>
             </value>
-            
             <value direction="in" name="checkboxGroupColumnCount" type="integer"/>
             <value direction="in" name="memoRowCount" type="integer"/>
             <value direction="in" name="memoColumnCount" type="integer"/>
-            
+            <value direction="in" name="horizontalScrolls" type="boolean"/>
+            <value direction="in" name="verticalScrolls" type="boolean"/>
         </values>
         <methods/>
     </tipiclass>
 
-
+ 
 
 
     <tipiclass class="TipiGridPanel" name="gridpanel" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="*" layoutmanager="true" addtocontainer="true">
