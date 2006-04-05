@@ -254,6 +254,12 @@ public class TipiProperty
         if("checkboxGroupColumnCount".equals(name)) {
             ( (GenericPropertyComponent) getContainer()).setCheckboxGroupColumnCount( ( (Integer) object).intValue());            
         }
+        if("verticalScrolls".equals(name)) {
+            setVerticalScrolls(((Boolean) object).booleanValue());
+        }
+        if("horizontalScrolls".equals(name)) {
+            setHorizontalScrolls(((Boolean) object).booleanValue());
+        }
       }
     });
     super.setComponentValue(name, object);
