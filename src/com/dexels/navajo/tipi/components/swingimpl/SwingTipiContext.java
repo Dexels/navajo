@@ -119,7 +119,7 @@ public class SwingTipiContext
 
   public final void updateWaiting() {
     if (threadSet==null || threadSet.size()==0) {
-      System.err.println("No waiting threads");
+//      System.err.println("No waiting threads");
       setWaiting(false);
       return;
     }
@@ -155,7 +155,7 @@ public class SwingTipiContext
 
   protected void clearLogFile() {
     File f = new File(System.getProperty("user.home") + "/.tipidebug");
-    System.err.println("Deleting: "+f.getAbsolutePath());
+//    System.err.println("Deleting: "+f.getAbsolutePath());
     f.delete();
   }
 
@@ -182,7 +182,7 @@ public class SwingTipiContext
 
   public void setDebugMode(boolean b) {
     debugMode = b;
-    System.err.println("Debugmode = "+b);
+//    System.err.println("Debugmode = "+b);
     clearLogFile();
   }
 
