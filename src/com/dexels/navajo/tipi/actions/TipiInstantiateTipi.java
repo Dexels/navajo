@@ -81,21 +81,27 @@ public class TipiInstantiateTipi
                                           TipiComponent parent, boolean force, String id,
                                           String className, String definitionName,
                                           Map paramMap, Object constraints) throws TipiException {
-    String componentPath;
-    if (parent != null) {
-      componentPath = parent.getPath("component:/") + "/" + id;
-    }
-    else {
-      componentPath = "component://" + id;
-    }
-    /** @todo Should we allow null events? */
-    Operand op = evaluate("{" + componentPath + "}",null);
 
-    TipiComponent comp = null;
-    if (op!=null) {
-        
-      comp = (TipiComponent)op.value;
-    }
+      
+      TipiComponent comp = parent.getTipiComponentByPath(id);
+
+      // ALTERNATIVE: this complains a lot.
+      
+//      String componentPath;
+//    if (parent != null) {
+//      componentPath = parent.getPath("component:/") + "/" + id;
+//    }
+//    else {
+//      componentPath = "component://" + id;
+//    }
+//    /** @todo Should we allow null events? */
+//    Operand op = evaluate("{" + componentPath + "}",null);
+//
+//    TipiComponent comp = null;
+//    if (op!=null) {
+//        
+//      comp = (TipiComponent)op.value;
+//    }
     if (comp != null) {
         
     if (force) {
