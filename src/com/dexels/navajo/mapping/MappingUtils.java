@@ -197,6 +197,7 @@ public final class MappingUtils {
     		if (type.equals(Property.SELECTION_PROPERTY)) {
     			prop = NavajoFactory.getInstance().createProperty(outputDoc, actualName, "1", description, direction);
     			if ( value instanceof Selection [] ) {
+    				prop.setCardinality("+");
     				prop.setValue((Selection []) value);
     			}
     		} else if (type.equals(Property.BINARY_PROPERTY)) {
@@ -213,6 +214,7 @@ public final class MappingUtils {
     		if (type.equals(Property.SELECTION_PROPERTY)) {
     			prop = NavajoFactory.getInstance().createProperty(tmlDoc, actualName, "1", description, direction);
     			if ( value instanceof Selection [] ) {
+    				prop.setCardinality("+");
     				prop.setValue((Selection []) value);
     			}
     		} else if (type.equals(Property.BINARY_PROPERTY)) {
@@ -236,6 +238,7 @@ public final class MappingUtils {
     			prop.clearValue();
     		}
     	}  else if ( type.equals(Property.SELECTION_PROPERTY) && value != null && value instanceof Selection [] ) {
+    		prop.setCardinality("+");
     		prop.setValue((Selection []) value);
     	} else {
     		if (sValue != null) {

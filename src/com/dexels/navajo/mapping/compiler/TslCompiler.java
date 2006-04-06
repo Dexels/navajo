@@ -1060,6 +1060,8 @@ result.append(printIdent(ident + 4) +
 
     if (isSelection) { // Set selection property stuff.
       result.append(optionItems.toString());
+    }
+    if ( cardinality != null) {
       result.append("p.setCardinality(\"" + cardinality + "\");\n");
     }
 
