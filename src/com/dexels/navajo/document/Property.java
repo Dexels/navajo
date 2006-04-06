@@ -309,6 +309,8 @@ public interface Property
   public void setValue(ClockTime ct);
 
   public void setValue(StopwatchTime swt);
+  
+  public void setValue(Selection [] l);
 
   /**
    * Sets the selected option for a selection type property.

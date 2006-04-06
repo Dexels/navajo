@@ -63,4 +63,9 @@ public interface Selection extends java.io.Serializable, Comparable {
      * @return Object
      */
     public Object getRef();
+    
+    public void setRootDoc(Navajo n);
+     
+    public Navajo getRootDoc();
+ 
 }

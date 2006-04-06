@@ -618,6 +618,22 @@ public final class PropertyImpl
   public final void setValue(String value) {
     setCheckedValue(value);
   }
+  
+  
+  public final void setValue(Selection [] l) {
+	  if ( l == null ) {
+		  return;
+	  }
+	  try {
+		this.removeAllSelections();
+	} catch (NavajoException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	  for (int i = 0; i < l.length; i++) {
+		  this.addSelection(l[i]);
+	  }
+  }
 
   public final String getSubType(String key) {
 //    return PropertyTypeChecker.getInstance().getSubType(getType(), getSubType(), key);

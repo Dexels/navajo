@@ -16,7 +16,8 @@ import org.w3c.dom.*;
 public final class SelectionImpl implements Selection {
 
     public Element ref;
-
+    private Navajo myRootDoc;
+    
     public SelectionImpl(Element e) {
         this.ref = e;
     }
@@ -31,6 +32,7 @@ public final class SelectionImpl implements Selection {
         Element n = (Element) d.createElement(Selection.SELECTION_DEFINITION);
 
         p = new SelectionImpl(n);
+        p.setRootDoc(tb);
         p.setName(name);
         p.setValue(value);
         p.setSelected(selected);
@@ -38,12 +40,21 @@ public final class SelectionImpl implements Selection {
         return p;
     }
 
+   
+    public void setRootDoc(Navajo n) {
+    	this.myRootDoc = n;
+    }
+    
+    public Navajo getRootDoc() {
+    	return myRootDoc;
+    }
+
     /**
      * Create a dummy selection object for easy processing of option that are not present.
      * Selected flag is ALWAYS put to false.
      * (For use see @Property.class).
      */
-
+    
     public static Selection createDummy() {
 
         Selection p = null;

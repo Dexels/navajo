@@ -75,6 +75,7 @@ public final class PropertyImpl implements Property, Comparable {
         Element n = (Element) d.createElement(Property.PROPERTY_DEFINITION);
 
         p = new PropertyImpl(n);
+        p.setRootDoc(tb);
         p.setName(name);
         if (!validType(type))
             p.setType(Property.STRING_PROPERTY);
@@ -116,6 +117,7 @@ public final class PropertyImpl implements Property, Comparable {
         Element n = (Element) d.createElement(Property.PROPERTY_DEFINITION);
 
         p = new PropertyImpl(n);
+        p.setRootDoc(tb);
         if (!(cardinality.equals("+") || cardinality.equals("1")))
             throw new NavajoExceptionImpl("Invalid cardinality specified: " + cardinality);
         p.setCardinality(cardinality);
@@ -561,6 +563,24 @@ public final class PropertyImpl implements Property, Comparable {
    setValue(value+"");
  }
 
+ public final void setValue(Selection [] l) {
+	 if ( l == null ) {
+		 return;
+	 }
+	 try {
+		 this.removeAllSelections();
+	 } catch (NavajoException e) {
+	 }
+	 for (int i = 0; i < l.length; i++) {
+		 try {
+			 Selection s = NavajoFactory.getInstance().createSelection(getRootDoc(), l[i].getName(), l[i].getValue(), l[i].isSelected());
+			 this.addSelection(s);
+		 } catch (NavajoException e) {
+			 // TODO Auto-generated catch block
+			 e.printStackTrace();
+		 }
+	 }
+  }
     /**
      * Get the value of a (string, integer, float, boolean, date or memo) property.
      */
@@ -1077,25 +1097,33 @@ public final class PropertyImpl implements Property, Comparable {
 
 
    public static void main(String [] args) throws Exception {
-     File f = new File("/home/arjen/teams.pdf");
-     int length = (int) f.length();
-     byte [] data = new byte[length];
-     FileInputStream fis = new FileInputStream(f);
-     int read = 0;
-     int index = 0;
-     while ((read = fis.read()) > -1 ) {
-       data[index++] = (byte) read;
-     }
-     Navajo n = NavajoFactory.getInstance().createNavajo();
-     Message m = NavajoFactory.getInstance().createMessage(n, "DataMessage");
-     n.addMessage(m);
-     Property p = NavajoFactory.getInstance().createProperty(n, "File", Property.BINARY_PROPERTY, "", 0, "", Property.DIR_OUT);
-     p.setValue(new Binary(data, Binary.PDF));
-     m.addProperty(p);
-     //n.write(System.err);
-     Binary output = (Binary) p.getTypedValue();
-     FileOutputStream pipo = new FileOutputStream("/home/arjen/pipo.pdf");
-     pipo.write(output.getData(), 0, output.getData().length);
-     pipo.close();
+//     File f = new File("/home/arjen/teams.pdf");
+//     int length = (int) f.length();
+//     byte [] data = new byte[length];
+//     FileInputStream fis = new FileInputStream(f);
+//     int read = 0;
+//     int index = 0;
+//     while ((read = fis.read()) > -1 ) {
+//       data[index++] = (byte) read;
+//     }
+//     Navajo n = NavajoFactory.getInstance().createNavajo();
+//     Message m = NavajoFactory.getInstance().createMessage(n, "DataMessage");
+//     n.addMessage(m);
+//     Property p = NavajoFactory.getInstance().createProperty(n, "File", Property.BINARY_PROPERTY, "", 0, "", Property.DIR_OUT);
+//     p.setValue(new Binary(data, Binary.PDF));
+//     m.addProperty(p);
+//     //n.write(System.err);
+//     Binary output = (Binary) p.getTypedValue();
+//     FileOutputStream pipo = new FileOutputStream("/home/arjen/pipo.pdf");
+//     pipo.write(output.getData(), 0, output.getData().length);
+//     pipo.close();
+	   Navajo n = NavajoFactory.getInstance().createNavajo();
+	   Message m = NavajoFactory.getInstance().createMessage(n, "Test");
+	   Property p = NavajoFactory.getInstance().createProperty(n, "Selectie", "+", "", Property.DIR_OUT);
+	   n.addMessage(m);
+	   m.addProperty(p);
+	   Selection [] sels = new Selection[]{NavajoFactory.getInstance().createSelection(n, "Aap", "0", true),NavajoFactory.getInstance().createSelection(n, "Beep", "1", true)};
+	   p.setValue(sels);
+	   n.write(System.err);
    }
 }
