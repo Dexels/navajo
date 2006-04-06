@@ -73,7 +73,9 @@ public final class MappingUtils {
           return Property.BINARY_PROPERTY;
         else if (o instanceof Memo)
             return Property.MEMO_PROPERTY;
-
+        else if (o instanceof Selection []) {
+        	return Property.SELECTION_PROPERTY;
+        }
         else
           return "unknown";
 
@@ -194,12 +196,15 @@ public final class MappingUtils {
     	if (!parameter) {
     		if (type.equals(Property.SELECTION_PROPERTY)) {
     			prop = NavajoFactory.getInstance().createProperty(outputDoc, actualName, "1", description, direction);
+    			if ( value instanceof Selection [] ) {
+    				prop.setValue((Selection []) value);
+    			}
     		} else if (type.equals(Property.BINARY_PROPERTY)) {
     			prop = NavajoFactory.getInstance().createProperty(outputDoc, actualName, type, "", length, description, direction);
-    			if (value != null && (value instanceof Binary)) {
+    			if (value != null && value instanceof Binary) {
     				prop.setValue( (Binary) value);
     			}
-    		}
+    		} 
     		else {
     			prop = NavajoFactory.getInstance().createProperty(outputDoc, actualName, type, sValue, length, description, direction);
     		}
@@ -207,9 +212,12 @@ public final class MappingUtils {
     	else {
     		if (type.equals(Property.SELECTION_PROPERTY)) {
     			prop = NavajoFactory.getInstance().createProperty(tmlDoc, actualName, "1", description, direction);
+    			if ( value instanceof Selection [] ) {
+    				prop.setValue((Selection []) value);
+    			}
     		} else if (type.equals(Property.BINARY_PROPERTY)) {
     			prop = NavajoFactory.getInstance().createProperty(tmlDoc, actualName, type, "", length, description, direction);
-    			if (value != null && (value instanceof Binary)) {
+    			if (value != null && value instanceof Binary) {
     				prop.setValue( (Binary) value);
     			}
     		}
@@ -220,21 +228,23 @@ public final class MappingUtils {
     	ref.addProperty(prop);
     }
     else {
-      prop.setType(type);
-      if (type.equals(Property.BINARY_PROPERTY)) {
-      	if (value != null && (value instanceof Binary)) {
-			prop.setValue( (Binary) value);
-		} else {
-			 prop.clearValue();
-		}
-      } else {
-	      if (sValue != null) {
-	          prop.setValue(sValue);
-	      }
-	      else {
-	         prop.clearValue();
-	      }
-      }
+    	prop.setType(type);
+    	if (type.equals(Property.BINARY_PROPERTY)) {
+    		if (value != null && (value instanceof Binary)) {
+    			prop.setValue( (Binary) value);
+    		} else {
+    			prop.clearValue();
+    		}
+    	}  else if ( type.equals(Property.SELECTION_PROPERTY) && value != null && value instanceof Selection [] ) {
+    		prop.setValue((Selection []) value);
+    	} else {
+    		if (sValue != null) {
+    			prop.setValue(sValue);
+    		}
+    		else {
+    			prop.clearValue();
+    		}
+    	}
 
       prop.setName(actualName); // Should not matter ;)
     }
