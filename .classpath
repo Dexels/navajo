@@ -14,5 +14,6 @@
 	<classpathentry kind="lib" path="lib/hsqldb.jar"/>
 	<classpathentry exported="true" kind="src" path="/NavajoFunctions"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/DexelsVersionControl"/>
+	<classpathentry kind="lib" path="lib/edtftpj.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
