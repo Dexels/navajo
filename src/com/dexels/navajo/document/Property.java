@@ -66,8 +66,14 @@ public interface Property
 
   //Binary data properties.
   //I am not sure what to do with these. Not supported by the studio
+  /*
+   * @deprecaded. Use binary.
+   */
   public static final String GIF_PROPERTY = "image/gif";
-  public static final String JPEG_PROPERTY = "image/jpeg";
+  /*
+   * @deprecaded. Use binary.
+   */
+ public static final String JPEG_PROPERTY = "image/jpeg";
 
   // Valid direction settings for Navajo properties.
   public static final String DIR_IN = "in";
