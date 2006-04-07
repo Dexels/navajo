@@ -25,20 +25,10 @@
  *
  *  3. This notice may not be removed or altered from any source distribution.
  *****************************************************************************/
-
 package com.dexels.navajo.document.nanoimpl;
 
-import java.io.ByteArrayOutputStream;
-import java.io.CharArrayReader;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Reader;
-import java.io.StringReader;
-import java.io.Writer;
+import java.io.*;
 import java.util.*;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Vector;
 
 /**
  * XMLElement is a representation of an XML object. The object is able to parse
@@ -1028,6 +1018,11 @@ public class XMLElement implements java.io.Serializable {
 
     public int getStartOffset() {
         return this.startOffset;
+    }
+
+
+    public int getStartTagOffset() {
+        return this.startTagOffset;
     }
 
     /**
@@ -2398,6 +2393,7 @@ public class XMLElement implements java.io.Serializable {
     private static final String indentCount = "    ";
 
     private int offset;
+    private int startTagOffset;
 
     private void writeIndent(Writer writer, int indent) throws IOException {
         for (int i = 0; i < indent; i++) {
@@ -2945,6 +2941,7 @@ public class XMLElement implements java.io.Serializable {
         while ((ch != '>') && (ch != '/')) {
             buf.setLength(0);
             this.unreadChar(ch);
+            int toffset = offset;
             this.scanIdentifier(buf);
             String key = buf.toString();
             ch = this.scanWhitespace();
@@ -2954,18 +2951,24 @@ public class XMLElement implements java.io.Serializable {
             this.unreadChar(this.scanWhitespace());
             buf.setLength(0);
             this.scanString(buf);
+            int tend = offset;
+            elt.setAttributeOffset(key, toffset-1);
+            elt.setAttributeEndOffset(key, tend);
             elt.setAttribute(key, buf);
             ch = this.scanWhitespace();
         }
         // set end of start tag
-        if (ch == '/') {
+         if (ch == '/') {
             ch = this.readChar();
             if (ch != '>') {
                 throw this.expectedInput(">");
             }
             // set end of singular tag
-
+            elt.startTagOffset = offset;
             return;
+        } else {
+            // set end of start tag
+            elt.startTagOffset = offset;
         }
         buf.setLength(0);
         ch = this.scanWhitespace(buf);
@@ -3354,12 +3357,81 @@ public class XMLElement implements java.io.Serializable {
     // super.finalize();
     // System.err.println("XMLElement finalized!: "+name);
     // }
-    public static void main(String[] args) {
-        String aap = "<bla>\n\n<aap/><noot node=\"aapstra\nnootstra\">jaa\naaaaaaaaaaa</noot><mies/></bla>";
+
+
+    /**
+     * 
+     */
+//    public int getAttributeOffset(String attributeName) {
+//       Enumeration enumeration = attributes.keys(); 
+//       int myAttributeOffset = getName().length()+2;
+//       while (enumeration.hasMoreElements()) {
+//         String element = (String) enumeration.nextElement();
+//         if (attributeName.equals(element)) {
+//            return myAttributeOffset;
+//         }
+//         System.err.println("skip");
+//         myAttributeOffset+=element.length();
+//         myAttributeOffset+=getStringAttribute(element).length();
+//         myAttributeOffset+=4;
+//      }
+//       return myAttributeOffset;
+//    }
+// 
+//    public int getAttributeOffsetLength(String attributeName) {
+//
+//        String value = getStringAttribute(attributeName);
+//        if (value==null) {
+//            return 0;
+//        }
+//        return value.length()+attributeName.length()+3;
+//     }
+    
+    private final Map startOffsetMap = new HashMap();
+    private final Map endOffsetMap = new HashMap();
+    
+    public void setAttributeOffset(String attributeName, int value) {
+        startOffsetMap.put(attributeName, new Integer(value));
+    }
+  
+    public void setAttributeEndOffset(String attributeName, int value) {
+        endOffsetMap.put(attributeName, new Integer(value));
+    }    
+
+    public int getAttributeOffset(String attributeName) {
+//        return ((Integer)startOffsetMap.get(attributeName)).intValue();
+        Integer ii = ((Integer)startOffsetMap.get(attributeName));
+        if (ii==null) {
+            return 0;
+        }
+        return ii.intValue();
+    }
+  
+    public int getAttributeEndOffset(String attributeName) {
+        Integer ii = ((Integer)endOffsetMap.get(attributeName));
+        if (ii==null) {
+            return 0;
+        }
+        return ii.intValue();
+     }    
+    
+     public static void main(String[] args) {
+        String aap = "<bla noot=\"A\" aap=\"blaat\" mies=\"blabla\"></bla>";
         XMLElement xe = new CaseSensitiveXMLElement();
-        xe.parseString(aap);
-        System.err.println("xe: " + xe.startOffset + " end: " + xe.offset);
-        XMLElement xx = (XMLElement) xe.getChildren().get(1);
-        System.err.println(">>" + xx.getNonNullStringAttribute("node") + "<<");
+        xe.parseString(aap); 
+        StringWriter sw = new StringWriter();
+        try {
+            xe.write(sw);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.err.println("Ser. : "+sw.toString());
+        System.err.println("Total >"+aap+"<");
+        int start = xe.getAttributeOffset("mies");
+        int ennd = xe.getAttributeEndOffset("mies");
+        System.err.println("TEXT: "+aap.substring(start,ennd));
+        System.err.println("TxxT: "+sw.toString().substring(start,ennd));
+        System.err.println("xe: " + xe.startTagOffset + " end: " + xe.offset);
+   
     }
 }
