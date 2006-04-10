@@ -27,5 +27,6 @@
 	<classpathentry kind="lib" path="birt-engine/scriptapi.jar"/>
 	<classpathentry kind="lib" path="birt-engine/Tidy.jar"/>
 	<classpathentry kind="lib" path="birt-engine/wsdl4j-1.5.1.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/DexelsVersionControl"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
