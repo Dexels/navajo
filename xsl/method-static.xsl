@@ -14,18 +14,9 @@
       <xsl:text> name: </xsl:text>
     </font>
     <xsl:element name="a">
-      <xsl:if test="not( contains( @name, '/' ) )">
-        <xsl:attribute name="href">
-          <xsl:value-of select="@name"/>
-          <xsl:text>.html</xsl:text>
-        </xsl:attribute>
-      </xsl:if>
-      <xsl:if test="contains( @name, '/' )">
-        <xsl:attribute name="href">
-          <xsl:value-of select="substring-after( @name, '/' )"/>
-          <xsl:text>.html</xsl:text>
-        </xsl:attribute>
-      </xsl:if>
+      <xsl:attribute name="href">
+          <xsl:value-of select="concat( $documentroot, @name, '.html' )"/>
+      </xsl:attribute>
       <xsl:value-of select="@name"/>
       <xsl:text>( </xsl:text>
       <xsl:apply-templates select="required"/>

@@ -8,7 +8,7 @@
     </font>
     <xsl:element name="a">
       <xsl:attribute name="href">
-        <xsl:value-of select="concat( '../', @script, '.html' )"/>
+        <xsl:value-of select="concat( $documentroot, @script, '.html' )"/>
       </xsl:attribute>
       <xsl:value-of select="@script"/>
     </xsl:element>
