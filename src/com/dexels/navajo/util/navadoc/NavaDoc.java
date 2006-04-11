@@ -8,7 +8,13 @@ package com.dexels.navajo.util.navadoc;
  * @author Matthew Eichler
  * @version $Revision$
  */
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -29,6 +35,7 @@ public class NavaDoc {
   private ServicesList list = null;
   private NavaDocTransformer transformer = null;
   private NavaDocIndexDOM index = null;
+  private File tempStyleSheet = null;
 
   /**
    * Outside mediator object which controls all the
@@ -41,7 +48,7 @@ public class NavaDoc {
    * objects are wrong or don't exist
    */
 
-  public NavaDoc() throws ConfigurationException {
+  public NavaDoc() throws ConfigurationException, FileNotFoundException {
 
     config.configure();
 
@@ -87,29 +94,54 @@ public class NavaDoc {
     return (this.list.size());
   } // public int count()
 
-  public static void main(String[] args) throws ConfigurationException {
+  public static void main(String[] args) throws Exception {
 
     final NavaDoc documenter = new NavaDoc(); 
-
+    if ( documenter.tempStyleSheet != null ) {
+    	documenter.tempStyleSheet.delete();
+    }
   }
 
+  public String replaceString(String input, String oldValue, String newValue){
+	     int index = input.indexOf(oldValue);
+	     if(index > -1){
+	       String head = input.substring(0, index);
+	       String tail = input.substring(index + oldValue.length());
+	       return head + newValue + tail;
+	     }else{
+	       return input;
+	     }
+	   }
   // ----------------------------------------------------------- private methods
 
   private void setTransformer(final DocumentSet dset) throws
-      ConfigurationException {
+      ConfigurationException, FileNotFoundException {
 
-    final File sPath = dset.getPathConfiguration().getPath(NavaDocConstants.
-        SVC_PATH_ELEMENT);
-    final File styleSheet = dset.getPathConfiguration().getPath(
-        NavaDocConstants.STYLE_PATH_ELEMENT);
+	  try {
+    final File sPath = dset.getPathConfiguration().getPath(NavaDocConstants.SVC_PATH_ELEMENT);
+    final File styleSheet = dset.getPathConfiguration().getPath(  NavaDocConstants.STYLE_PATH_ELEMENT);
+    BufferedReader fr = new BufferedReader ( new FileReader( styleSheet ) );
+    
+    StringBuffer fileContent = new StringBuffer( (int) styleSheet.length() );
+    String line = null;
+    while ( ( line = fr.readLine() ) != null ) {
+    	fileContent.append(line);
+    }
+    String replacedContent = replaceString( fileContent.toString(), "[DOCUMENTROOT]", sPath.getAbsolutePath() );
+    tempStyleSheet = File.createTempFile("stylesheet", ".xsl", styleSheet.getParentFile() );
+    BufferedWriter bw = new BufferedWriter ( new FileWriter ( tempStyleSheet ) );
+    bw.write( replacedContent );
+    //System.err.println( replacedContent );
+    bw.close();
+    
     final String indent = (dset.getProperty(NavaDocConstants.INDENT) != null) ?
         dset.getProperty(NavaDocConstants.INDENT) :
         NavaDocConstants.DEFAULT_INDENT_AMOUNT;
     final String cssUri = dset.getProperty("css-uri");
 
-    try {
-      this.transformer = new NavaDocTransformer(
-          styleSheet, sPath, indent);
+   
+      //System.err.println("in setTransformer(), sPath = " + sPath);
+      this.transformer = new NavaDocTransformer( tempStyleSheet, sPath, indent );
       this.list = new ServicesList(sPath);
 
       // set optional parameters, nulls OK
@@ -118,6 +150,7 @@ public class NavaDoc {
 
     }
     catch (Exception e) {
+      e.printStackTrace( System.err );
       throw new ConfigurationException(e.getMessage(), this.config.getConfigUri());
 
     }
@@ -145,11 +178,11 @@ public class NavaDoc {
 
       final String sname = (String) iter.next();
 
-      this.transformer.transformWebService(sname);
-      NavaDocOutputter outputter =
-          new NavaDocOutputter(this.transformer, tPath);
-
-      this.index.addEntry(sname, this.transformer.getNotes());
+      if ( !transformer.up2dateCheck( sname, tPath.getAbsolutePath(), index ) ) {
+    	  this.transformer.transformWebService(sname);
+    	  NavaDocOutputter outputter = new NavaDocOutputter(this.transformer, tPath);
+      }
+ 
     }
 
   } // private void document()

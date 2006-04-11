@@ -54,23 +54,14 @@ public class NavaDocOutputter {
     this.dom = d;
     this.targetPath = p;
     this.init();
+    System.err.println("About to create file: " + targetPath + File.separator + dom.getBaseName() + ".html");
     this.targetFile = new File(
         this.targetPath + File.separator +
         this.dom.getBaseName() + ".html");
+    targetFile.getParentFile().mkdirs();
     this.output();
 
   } // public NavaDocOutputter()
-
-  public NavaDocOutputter(NavaDocBaseDOM d, File p, int i) {
-    this.dom = d;
-    this.targetPath = p;
-    this.indent = new Integer(i);
-    this.init();
-    this.targetFile = new File(
-        this.targetPath + File.separator +
-        this.dom.getBaseName() + ".html");
-    this.output();
-  }
 
   // for writing to servlet output
 

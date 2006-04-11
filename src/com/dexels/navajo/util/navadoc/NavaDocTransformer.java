@@ -168,6 +168,38 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
    * please)
    */
 
+  public boolean up2dateCheck (  final String sname, String outputPath, NavaDocIndexDOM index ) {
+	  long scriptModified = -1;
+	  long docModified = -1;
+	  File sFile = new File(
+		        this.servicesPath  + File.separator + sname + "." + NavaDocConstants.NAVASCRIPT_EXT );
+	  if ( sFile.exists() ) {
+		  scriptModified =  sFile.lastModified();
+	  } 
+	  File docFile = new File( outputPath  + File.separator + sname + ".html" );
+	  if ( docFile.exists() ) {
+		  docModified = docFile.lastModified();
+	  }
+	  //System.err.println("in up2dateCheck(), sFile is " + sFile.getAbsolutePath() + ", docFile is " + docFile.getAbsolutePath());
+	  if ( scriptModified == -1 ) {
+		  System.err.println("Could not find script " + sname + ", deleting doc");
+		  docFile.delete();
+		  return true;
+	  }
+	  if ( docModified == -1 ) {
+		  index.addEntry(sname, getNotes());
+		  return false;
+	  }
+	 
+	  if ( scriptModified > docModified ) {
+		  index.addEntry(sname, getNotes());
+		  return false;
+	  }
+	  index.addEntry(sname, getNotes());
+	  return true;
+	  
+  }
+  
   public void transformWebService( final String sname ) {
 
     this.setOutputProperties();
