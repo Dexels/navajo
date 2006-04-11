@@ -246,10 +246,10 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
   // debugging
   public void dumpProperties() {
     Properties props = this.transformer.getOutputProperties();
-    Enumeration enum = props.propertyNames();
+    Enumeration enm = props.propertyNames();
 
-    while ( enum.hasMoreElements() ) {
-      String s = (String) enum.nextElement();
+    while ( enm.hasMoreElements() ) {
+      String s = (String) enm.nextElement();
 
      
     }
