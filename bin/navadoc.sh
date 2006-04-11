@@ -8,7 +8,7 @@
 export PROJECTHOME="${HOME}/projects/NavaDoc"
 
 # Configuration location as a URI (Xerces is happier getting documents by URI)
-CONFIG="-DconfigUri=file://${PROJECTHOME}/config/navadoc.xml"
+CONFIG="-DconfigUri=file://${PROJECTHOME}/config/navadoc.xml -Dbase=/home/arjen/projecten"
 
 # set this if you want debugging output from the logging facility
 # LOGDEBUG="-Dlog4j.debug=yes"

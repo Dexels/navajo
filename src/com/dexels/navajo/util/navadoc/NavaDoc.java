@@ -120,6 +120,7 @@ public class NavaDoc {
 	  try {
     final File sPath = dset.getPathConfiguration().getPath(NavaDocConstants.SVC_PATH_ELEMENT);
     final File styleSheet = dset.getPathConfiguration().getPath(  NavaDocConstants.STYLE_PATH_ELEMENT);
+    final File tPath = dset.getPathConfiguration().getPath(NavaDocConstants.TARGET_PATH_ELEMENT);
     BufferedReader fr = new BufferedReader ( new FileReader( styleSheet ) );
     
     StringBuffer fileContent = new StringBuffer( (int) styleSheet.length() );
@@ -127,7 +128,7 @@ public class NavaDoc {
     while ( ( line = fr.readLine() ) != null ) {
     	fileContent.append(line);
     }
-    String replacedContent = replaceString( fileContent.toString(), "[DOCUMENTROOT]", sPath.getAbsolutePath() );
+    String replacedContent = replaceString( fileContent.toString(), "[DOCUMENTROOT]", tPath.getAbsolutePath() );
     tempStyleSheet = File.createTempFile("stylesheet", ".xsl", styleSheet.getParentFile() );
     BufferedWriter bw = new BufferedWriter ( new FileWriter ( tempStyleSheet ) );
     bw.write( replacedContent );
@@ -146,7 +147,7 @@ public class NavaDoc {
 
       // set optional parameters, nulls OK
       this.transformer.setProjectName(dset.getName());
-      this.transformer.setCssUri(cssUri);
+      this.transformer.setCssUri(tPath.getAbsolutePath() + "/" + cssUri);
 
     }
     catch (Exception e) {
