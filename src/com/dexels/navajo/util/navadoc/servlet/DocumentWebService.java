@@ -254,8 +254,7 @@ public class DocumentWebService extends HttpServlet {
                 final Iterator iter = list.iterator();
                 while ( iter.hasNext() ) {
                     final String sname = (String) iter.next();
-                    idx.addEntry( sname, transformer.getNotes( sname ), request
-                            .getRequestURI() );
+                    idx.addEntry( sname, transformer.getNotes( sname ), request.getRequestURI() );
                 }
                 this.cacheIndex( dset.getName(), idx );
             } catch ( Exception ex ) {

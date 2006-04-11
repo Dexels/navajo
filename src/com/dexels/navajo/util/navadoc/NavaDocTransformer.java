@@ -121,9 +121,6 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
    * @return String notes/description of web service
    */
 
-  public String getNotes() {
-    return ( this.notes );
-  }
 
   /**
    * used for creating an index on the fly for NavaDocWeb
@@ -132,12 +129,27 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
    * @throws IOException
    * @throws SAXException
    */
+  
   public String getNotes( final String sname ) throws IOException, SAXException {
-    final File sFile = new File(
-        this.servicesPath  + File.separator + sname + "." + NavaDocConstants.NAVASCRIPT_EXT );
-    final Document sDoc = NavaDocTransformer.dBuilder.parse( sFile );
-    final Element root = sDoc.getDocumentElement();
-    return ( root.getAttribute( NavaDocConstants.NOTES_ATTR ) );
+	  
+	  File sFile = new File(
+		        this.servicesPath  + File.separator + sname + "." + NavaDocConstants.NAVASCRIPT_EXT );
+	  
+	    final Document sDoc = NavaDocTransformer.dBuilder.parse( sFile );
+	    final Element root = sDoc.getDocumentElement();
+	    return ( root.getAttribute( NavaDocConstants.NOTES_ATTR ) );
+	  }
+ 
+  
+  public String getNotes( final File sFile ) throws IOException {
+ 
+	try {
+	    final Document sDoc = NavaDocTransformer.dBuilder.parse( sFile );
+	    final Element root = sDoc.getDocumentElement();
+	    return ( root.getAttribute( NavaDocConstants.NOTES_ATTR ) );
+	} catch (SAXException e) {
+		return "";
+	}
   }
 
   /**
@@ -168,7 +180,8 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
    * please)
    */
 
-  public boolean up2dateCheck (  final String sname, String outputPath, NavaDocIndexDOM index ) {
+  public boolean up2dateCheck (  final String sname, String outputPath, NavaDocIndexDOM index ) throws IOException {
+	  
 	  long scriptModified = -1;
 	  long docModified = -1;
 	  File sFile = new File(
@@ -187,15 +200,15 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
 		  return true;
 	  }
 	  if ( docModified == -1 ) {
-		  index.addEntry(sname, getNotes());
+		  index.addEntry(sname, getNotes(sFile));
 		  return false;
 	  }
 	 
 	  if ( scriptModified > docModified ) {
-		  index.addEntry(sname, getNotes());
+		  index.addEntry(sname, getNotes(sFile));
 		  return false;
 	  }
-	  index.addEntry(sname, getNotes());
+	  index.addEntry(sname, getNotes(sFile));
 	  return true;
 	  
   }
