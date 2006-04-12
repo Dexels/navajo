@@ -104,7 +104,7 @@ public class NavaDoc {
     }
   }
 
-  public String replaceString(String input, String oldValue, String newValue){
+  public static String replaceString(String input, String oldValue, String newValue){
 	     int index = input.indexOf(oldValue);
 	     if(index > -1){
 	       String head = input.substring(0, index);
