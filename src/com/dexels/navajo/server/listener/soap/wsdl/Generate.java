@@ -1,10 +1,6 @@
 package com.dexels.navajo.server.listener.soap.wsdl;
 
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 import org.w3c.dom.*;
-import com.dexels.navajo.util.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
 import java.io.*;
