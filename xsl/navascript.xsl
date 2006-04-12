@@ -3,15 +3,13 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <!-- TSL header -->
   <xsl:template match="tsl">
+    <div class="saPanel">
     <xsl:variable name="id" select="@id"/>
     <xsl:if test=" string-length($id) &gt; 0 ">
-      <h1>SportLink Service: <xsl:value-of select="@id"/>
-      </h1>
+      <div class="saHeader"><xsl:value-of select="@id"/></div>
     </xsl:if>
-    <hr/>
-    <h2>NavaScript</h2>
     <xsl:if test=" name( current() ) = 'tsl'">
-      <table>
+      <table class="saTable" cellpadding="3" cellspacing="0">
         <tr>
           <th>Title:</th>
           <td>
@@ -43,8 +41,10 @@
       </table>
     </xsl:if>
     <br/>
-    <xsl:apply-templates select="include|map|property|message|param|comment"/>
+    <xsl:apply-templates select="include|map|property|message|param"/>
     <xsl:apply-templates select="methods"/>
+  </div>
+  <br/>
   </xsl:template>
   <!-- Required Node -->
   <xsl:template match="required">
@@ -65,7 +65,15 @@
   <!-- Map Node -->
   <!-- maps can have properties, params, messages, maps and fields as children -->
   <xsl:template match="map">
-    <p>
+    <div class="saMap">
+      <xsl:if test="string-length( @condition ) &gt; 0">
+        <xsl:call-template name="fmtCondition">
+          <xsl:with-param name="c" select="@condition"/>
+        </xsl:call-template>
+        <font class="condition">
+           <xsl:text> then </xsl:text>
+        </font>
+      </xsl:if>
       <font class="tag">map</font>
       <xsl:if test=" string-length( @object ) &gt; 0 ">
         <font class="attrib">
@@ -94,23 +102,25 @@
           <xsl:value-of select="@filter"/>
         </code>
       </xsl:if>
-      <xsl:call-template name="fmtCondition">
-        <xsl:with-param name="c" select="@condition"/>
-      </xsl:call-template>
-      <xsl:call-template name="fmtComment">
-        <xsl:with-param name="c" select="@comment"/>
-      </xsl:call-template>
       <xsl:if test=" count( ./* ) &gt; 0 ">
         <blockquote>
-          <xsl:apply-templates select="field|message|property|param|map|comment"/>
+          <xsl:apply-templates select="field|message|property|param|map"/>
         </blockquote>
       </xsl:if>
-    </p>
+    </div>
   </xsl:template>
   <!-- Message Node -->
   <!-- messages can have objects, maps, properties, params, and other messages as children -->
   <xsl:template match="message">
-    <p>
+    <div class="saMessage">
+      <xsl:if test="string-length( @condition ) &gt; 0">
+        <xsl:call-template name="fmtCondition">
+          <xsl:with-param name="c" select="@condition"/>
+        </xsl:call-template>
+        <font class="attrib">
+           <xsl:text> then </xsl:text>
+        </font>
+      </xsl:if>
       <font class="tag">message</font>
       <xsl:if test=" string-length( @name ) &gt; 0 ">
         <font class="attrib">
@@ -136,18 +146,12 @@
           <xsl:value-of select="@mode"/>
         </font>
       </xsl:if>
-      <xsl:call-template name="fmtCondition">
-        <xsl:with-param name="c" select="@condition"/>
-      </xsl:call-template>
-      <xsl:call-template name="fmtComment">
-        <xsl:with-param name="c" select="@comment"/>
-      </xsl:call-template>
       <xsl:if test=" count( ./* ) &gt; 0 ">
         <blockquote>
-          <xsl:apply-templates select="property|param|message|map|comment"/>
+          <xsl:apply-templates select="property|param|message|map"/>
         </blockquote>
       </xsl:if>
-    </p>
+    </div>
   </xsl:template>
   <!-- Parameter or Property Node -->
   <!-- properties can have objects and expressions as children -->
@@ -163,7 +167,7 @@
       </xsl:if>
       <xsl:if test=" name( current() ) = 'param' ">
         <font class="tag">
-          <xsl:text> @</xsl:text>
+          <xsl:text>@</xsl:text>
         </font>
       </xsl:if>
       <xsl:if test=" name( current() ) = 'property' ">
@@ -196,27 +200,30 @@
             <xsl:text>)</xsl:text>
           </font>
       </xsl:if>
-        <xsl:if test=" string-length( @value ) &gt; 0 ">
+      <xsl:if test=" string-length( @value ) &gt; 0 ">
           <font class="attrib">
             <xsl:text> = </xsl:text>
           </font>
           <font class="value">
             <xsl:value-of select="@value"/>
           </font>
+      </xsl:if>
+      <xsl:if test=" count( ./* ) = 0 ">
+        <xsl:if test=" string-length( @description ) &gt; 0 ">
+          <font class="comment">
+            <xsl:value-of select="concat(' // ', @description)"/>
+          </font>
         </xsl:if>
+      </xsl:if>
       <xsl:if test=" count( ./* ) &gt; 0 ">
         <xsl:if test=" count( ./option ) &gt; 0 ">
           <blockquote>
             <xsl:apply-templates select="option"/>
           </blockquote>
         </xsl:if>
-        <xsl:apply-templates select="expression|map|comment"/>
+        <font class="attrib"> = </font>
+        <xsl:apply-templates select="expression|map"/>
       </xsl:if>
-      <xsl:if test=" string-length( @description ) &gt; 0 ">
-          <font class="comment">
-            <xsl:value-of select="concat(' // ', @description)"/>
-          </font>
-        </xsl:if>
     </p>
   </xsl:template>
   <!-- Field Node -->
@@ -233,17 +240,19 @@
       </xsl:call-template>
       <xsl:if test=" count( ./* ) &gt; 0 ">
         <font class="attrib"> = </font>
-        <xsl:apply-templates select="expression|map|comment"/>
+        <xsl:apply-templates select="expression|map"/>
       </xsl:if>
-      <xsl:call-template name="fmtComment">
-        <xsl:with-param name="c" select="@comment"/>
-      </xsl:call-template>
     </p>
   </xsl:template>
   <!-- Expression Node -->
   <xsl:template match="expression">
     <xsl:choose>
       <xsl:when test="string-length ( parent::field/@condition ) or (string-length ( parent::property/@condition ) &gt; 0 and count(following-sibling::expression) &gt; 0) or string-length( @condition ) &gt; 0 or string-length( preceding-sibling::expression/@condition ) &gt; 0 or string-length( @value ) &gt; 50 or string-length( preceding-sibling::expression/@value ) &gt; 50 ">
+        <xsl:if test=" string-length( parent::*/@description ) &gt; 0 ">
+          <font class="comment">
+            <xsl:value-of select="concat(' // ', parent::*/@description)"/>
+          </font>
+        </xsl:if>
         <blockquote>
           <xsl:call-template name="fmtCondition">
             <xsl:with-param name="c" select="@condition"/>
@@ -253,13 +262,13 @@
                 <font class="attrib"></font>
             </xsl:if>
             <xsl:if test="count( following-sibling::expression ) = 0 and count ( preceding-sibling::expression ) = 0 and string-length ( @condition) &gt; 0">
-                <font class="tag"> then </font>
+                <font class="condition"> then </font>
             </xsl:if>
             <xsl:if test="count( following-sibling::expression ) = 0 and count ( preceding-sibling::expression ) &gt; 0 ">
-                <font class="tag"> else </font>
+                <font class="condition"> else </font>
             </xsl:if>
             <xsl:if test="count( following-sibling::expression ) &gt; 0 ">
-                <font class="tag"> then </font>
+                <font class="condition"> then </font>
             </xsl:if>
             <xsl:if test="starts-with(@value, '&quot;')">
               <code style="color:purple">
@@ -280,17 +289,11 @@
           <xsl:if test="( string-length( @value ) = 0 ) and ( string-length( current()/text() ) = 0 )">
             <i>[empty]</i>
           </xsl:if>
-          <xsl:call-template name="fmtComment">
-            <xsl:with-param name="c" select="@comment"/>
-          </xsl:call-template>
         </blockquote>
       </xsl:when>
       <xsl:otherwise>
         <xsl:call-template name="fmtCondition">
           <xsl:with-param name="c" select="@condition"/>
-        </xsl:call-template>
-        <xsl:call-template name="fmtComment">
-          <xsl:with-param name="c" select="@comment"/>
         </xsl:call-template>
         <xsl:if test=" string-length( @value ) &gt; 0 ">
             <xsl:if test="starts-with(@value, '&quot;')">
@@ -308,6 +311,11 @@
           <pre>
             <xsl:value-of select="current()/text()"/>
           </pre>
+        </xsl:if>
+        <xsl:if test=" string-length( parent::*/@description ) &gt; 0 ">
+          <font class="comment">
+            <xsl:value-of select="concat(' // ', parent::*/@description)"/>
+          </font>
         </xsl:if>
       </xsl:otherwise>
     </xsl:choose>
@@ -333,7 +341,6 @@
       </xsl:if>
     </p>
   </xsl:template>
-  <!-- Comment attribute -->
   <xsl:template name="fmtComment">
     <xsl:param name="c"/>
     <xsl:if test=" string-length( $c ) &gt; 0 ">
@@ -346,7 +353,7 @@
   <xsl:template name="fmtCondition">
     <xsl:param name="c"/>
     <xsl:if test=" string-length( $c ) &gt; 0 ">
-      <font class="tag">
+      <font class="condition">
         <xsl:text> if </xsl:text>
       </font>
       <code>

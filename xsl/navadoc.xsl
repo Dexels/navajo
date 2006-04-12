@@ -10,15 +10,18 @@
   <xsl:include href="navascript.xsl"/>
   <xsl:include href="method-static.xsl"/>
   <xsl:template match="/">
-    <span class="navajo-body">
+    <div class="saPage">
       <xsl:apply-templates select="tsl"/>
       <xsl:element name="a">
+      <xsl:attribute name="class">
+	<xsl:text>saIndex</xsl:text>
+      </xsl:attribute>
       <xsl:attribute name="href">
         <xsl:value-of select="concat( $documentroot, 'index.html')"/>
       </xsl:attribute>
-      <xsl:text>[ index ]</xsl:text>
-  </xsl:element>
-    </span>
+      <xsl:text>[index]</xsl:text>
+      </xsl:element>
+   </div>
   </xsl:template>
 </xsl:stylesheet>
 <!-- EOF: $RCSfile$ -->
