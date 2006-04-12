@@ -167,7 +167,7 @@ public class NavaDocBaseDOM {
     Comment cvsId = this.dom.createComment(
         " $Id$ ");
 
-    this.root.appendChild(cvsId);
+    //this.root.appendChild(cvsId);
 
     this.root.setAttribute("class", "navadoc");
     this.root.setAttribute("xmlns", "http://www.w3.org/1999/xhtml");

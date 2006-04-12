@@ -270,6 +270,7 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
     	DOMResult domRes = new DOMResult( span );
     	
     	this.errorText = null;
+    	System.err.println("About to generate doc for: " + sname);
     	this.transformer.transform( domSrc, domRes );
     	this.body.appendChild( span );
     	
