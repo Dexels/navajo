@@ -55,6 +55,13 @@
       </xsl:if>
     </font>
   </xsl:template>
+   <!-- Comment node -->
+  <xsl:template match="comment">
+    <xsl:text>Comment: </xsl:text>
+    <font class="comment">
+      <xsl:value-of select="@value"/>
+    </font>
+  </xsl:template>
   <!-- Map Node -->
   <!-- maps can have properties, params, messages, maps and fields as children -->
   <xsl:template match="map">
