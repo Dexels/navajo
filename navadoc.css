@@ -3,7 +3,7 @@
   $Id$ 
 *******************************************************************/
 
-body { font-family: Verdana, Helvetica, sans-serif; font-size: 14px; background-color: #8BAED4; } 
+body { font-family: Courier, Helvetica, sans-serif; font-size: 14px; background-color: #8BAED4; } 
 
 a.saIndex {
 	color:navy;
@@ -18,7 +18,7 @@ div.saHeader {
 	font-family: Verdana, Helvetica;
 	font-size: 19pt;
 	font-weight: bold;
-	color: navy;
+	color: darkred;
 	background-color: white;
 	border: 1px solid #555555;
 	padding-left: 5px;
@@ -26,7 +26,7 @@ div.saHeader {
 
 div.saPanel {
 	padding: 5px;  
-	width: 800px;
+	width: 1000px;
 	background-color: #EEEEEE;
 	border: 1px solid #555555;
 	clear:both;
@@ -36,7 +36,7 @@ div.saPanel {
   color: #777;
   background-color: #fff;
   border: 1px solid #555555;
-  width: 800px;
+  width: 1000px;
   padding: 4px;
   margin-top: 5px;
   }
@@ -80,9 +80,9 @@ div.saMessage {
 	background-color: #f6ffab;
 }
 
-p { font-family: Verdana, Helvetica, sans-serif; font-size: 14px; }
+p { font-family: Courier, Helvetica, sans-serif; font-size: 14px; }
 
-a { font-family: Verdana, Helvetica, sans-serif; font-size: 14px; text-decoration: underline;} 
+a { font-family: Courier, Helvetica, sans-serif; font-size: 14px; text-decoration: underline;} 
 
 a:hover { color: #000000; text-decoration: underline; } 
 
@@ -101,4 +101,13 @@ code { color: #0000FF; }
 blockquote { font-family: Verdana, Helvetica, sans-serif; font-size: 14px; 
              margin-left: 18px }
 
-pre { border-left: thin solid blue; padding-top: 10px; padding-left: 14px }
+pre { 
+	white-space: pre-wrap;       /* css-3 */
+	white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+	white-space: -pre-wrap;      /* Opera 4-6 */
+	white-space: -o-pre-wrap;    /* Opera 7 */
+	word-wrap: break-word;       /* Internet Explorer 5.5+ */
+	border-left: thin solid blue; 
+	padding-top: 5px; 
+	padding-left: 5px; 
+}
