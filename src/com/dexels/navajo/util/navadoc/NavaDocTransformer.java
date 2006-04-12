@@ -286,9 +286,9 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
     	this.setErrorText( body );
     	
     } finally {
-//    	if ( tempsFile != null ) {
-//    		tempsFile.delete();
-//    	}
+    	if ( tempsFile != null ) {
+    		tempsFile.delete();
+    	}
     }
 
 
