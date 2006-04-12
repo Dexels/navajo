@@ -3,37 +3,100 @@
   $Id$ 
 *******************************************************************/
 
-body { font-family: Verdana, Helvetica, sans-serif; font-size: 14px; background-color: #FFFFFF; } 
+body { font-family: Verdana, Helvetica, sans-serif; font-size: 14px; background-color: #8BAED4; } 
+
+a.saIndex {
+	color:navy;
+	font-weight: bold;
+	background-color: white;
+	border: 1px solid #555555;
+	padding: 5px;
+	text-decoration: none;
+}
+
+div.saHeader {
+	font-family: Verdana, Helvetica;
+	font-size: 19pt;
+	font-weight: bold;
+	color: navy;
+	background-color: white;
+	border: 1px solid #555555;
+	padding-left: 5px;
+}
+
+div.saPanel {
+	padding: 5px;  
+	width: 800px;
+	background-color: #EEEEEE;
+	border: 1px solid #555555;
+	clear:both;
+  }
+
+.saPanel table {
+  color: #777;
+  background-color: #fff;
+  border: 1px solid #555555;
+  width: 800px;
+  padding: 4px;
+  margin-top: 5px;
+  }
+
+th {
+	padding-top: 3px;
+	padding-left: 3px;
+	padding-bottom: 3px;
+	padding-right: 3px;
+	margin: 0px;
+	font-family: Verdana, Helvetica;
+	font-size: 10pt;
+	text-align: left;
+	color: navy;
+	width:120px;
+}
+
+td {
+	padding-top: 2px;
+	padding-left: 3px;
+	padding-bottom: 2px;
+	padding-right: 3px;
+	margin: 0px;
+	font-family: Verdana, Helvetica;
+	font-size: 10pt;
+	text-align: left;
+	color:#333333;
+}
+
+div.saMap { 
+	border: dotted 1px #888888; 
+	margin: 3px;
+	padding: 5px;
+	background-color: #fff;
+}
+
+div.saMessage { 
+	border: solid 1px #888888; 
+	margin: 3px;
+	padding: 5px;
+	background-color: #f6ffab;
+}
 
 p { font-family: Verdana, Helvetica, sans-serif; font-size: 14px; }
 
-h1 { font-family: Verdana, Helvetica, sans-serif; font-weight: bold; font-size: 20px; 
-     color: #FFFFFF; background-color: #999999; padding: 5px 5px 2px 25px } 
+a { font-family: Verdana, Helvetica, sans-serif; font-size: 14px; text-decoration: underline;} 
 
-h2 { font-family: Verdana, Helvetica, sans-serif; font-weight: bold; font-size: 14px; } 
+a:hover { color: #000000; text-decoration: underline; } 
 
-h3 { font-family: Verdana, Helvetica, sans-serif; font-weight: bold; font-size: 14px; } 
+font.tag { font-family: Courier, Helvetica, sans-serif; font-size: 14px; font-weight: bold; color: #000080; }
 
-a { font-family: Verdana, Helvetica, sans-serif; font-size: 14px; text-decoration: none; } 
+font.condition { font-family: Courier, Helvetica, sans-serif; font-size: 14px; font-weight: bold; color: purple; }
 
-a:hover { text-decoration: underline; } 
+font.attrib { font-family: Courier, Helvetica, sans-serif; font-size: 14px; color: #ff3600; }
 
-font.tag { font-family: Verdana, Helvetica, sans-serif; font-size: 14px; font-weight: bold; color: #000080; }
-
-font.attrib { font-family: Verdana, Helvetica, sans-serif; font-size: 14px; color: #800000; }
-
-font.value { font-family: Verdana, Helvetica, sans-serif; font-size: 14px; color: #0000FF; }
+font.value { font-family: Courier, Helvetica, sans-serif; font-size: 14px; color: #820000; }
 
 font.comment { font-family: Verdana, Helvetica, sans-serif; font-size: 14px; color: #008000; font-style: italic }
 
 code { color: #0000FF; }
-
-table { border: 2px ridge; }
-
-th { font-family: Verdana, Helvetica, sans-serif; font-size: 14px; vertical-align: top; text-align: left; width: 75px; border: 1px solid; padding: 10px; } 
-
-td { font-family: Verdana, Helvetica, sans-serif; font-size: 14px; 
-     vertical-align: top; width: 525px; border: 1px solid ; padding: 5px;} 
 
 blockquote { font-family: Verdana, Helvetica, sans-serif; font-size: 14px; 
              margin-left: 18px }
