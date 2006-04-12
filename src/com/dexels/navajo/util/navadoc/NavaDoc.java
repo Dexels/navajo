@@ -97,11 +97,15 @@ public class NavaDoc {
   } // public int count()
 
   public static void main(String[] args) throws Exception {
-
-    final NavaDoc documenter = new NavaDoc(); 
-    if ( documenter.tempStyleSheet != null ) {
-    	documenter.tempStyleSheet.delete();
-    }
+	  
+	  NavaDoc documenter = null;
+	  try {
+		  documenter = new NavaDoc(); 
+	  } finally {
+		  if ( documenter.tempStyleSheet != null ) {
+			  documenter.tempStyleSheet.delete();
+		  }
+	  }
   }
 
   public static String replaceString(String input, String oldValue, String newValue){

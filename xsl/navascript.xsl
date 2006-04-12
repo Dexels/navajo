@@ -117,7 +117,7 @@
         <xsl:call-template name="fmtCondition">
           <xsl:with-param name="c" select="@condition"/>
         </xsl:call-template>
-        <font class="attrib">
+        <font class="condition">
            <xsl:text> then </xsl:text>
         </font>
       </xsl:if>
@@ -161,7 +161,7 @@
         <xsl:call-template name="fmtCondition">
           <xsl:with-param name="c" select="@condition"/>
         </xsl:call-template>
-        <font class="attrib">
+        <font class="condition">
            <xsl:text> then </xsl:text>
         </font>
       </xsl:if>
@@ -205,7 +205,9 @@
             <xsl:text> = </xsl:text>
           </font>
           <font class="value">
+            <xsl:text disable-output-escaping="yes">&apos;</xsl:text>
             <xsl:value-of select="@value"/>
+            <xsl:text disable-output-escaping="yes">&apos;</xsl:text>
           </font>
       </xsl:if>
       <xsl:if test=" count( ./* ) = 0 ">
