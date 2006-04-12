@@ -14,16 +14,15 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Properties;
-
-import org.apache.xalan.serialize.Serializer;
-import org.apache.xalan.serialize.SerializerFactory;
-import org.apache.xalan.templates.OutputProperties;
+import org.w3c.dom.Attr;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 public class NavaDocOutputter {
 
-  public static final String vcIdent =
-      "$Id$";
+  public static final String vcIdent = "$Id$";
 
 
   private NavaDocBaseDOM dom = null;
@@ -31,13 +30,6 @@ public class NavaDocOutputter {
   // paths
   private File targetPath = null;
   private File targetFile = null;
-
-  // XML Serialization
-  private Serializer serializer = null;
-  private Properties outputProps = null;
-
-  // indent setting
-  private Integer indent = new Integer(2);
 
   // -------------------------------------------------------------- constructors
 
@@ -53,7 +45,6 @@ public class NavaDocOutputter {
 
     this.dom = d;
     this.targetPath = p;
-    this.init();
     System.err.println("About to create file: " + targetPath + File.separator + dom.getBaseName() + ".html");
     this.targetFile = new File(
         this.targetPath + File.separator +
@@ -67,11 +58,10 @@ public class NavaDocOutputter {
 
   public NavaDocOutputter(final NavaDocBaseDOM d, final PrintWriter out)   {
     this.dom = d;
-    this.init();
     try {
-      this.serializer.setWriter(out);
-      this.serializer.asDOMSerializer().serialize(
-          this.dom.getDocument().getDocumentElement());
+    	String result = toString ( this.dom.getDocument().getDocumentElement() );
+    	out.write( result );
+    	out.close();
     } catch ( Exception ex ) {
       ex.printStackTrace(System.err);
     }
@@ -91,41 +81,57 @@ public class NavaDocOutputter {
   } // public File getTargetFile()
 
   // ----------------------------------------------------------- private methods
+  
+  private static String printElement(Node n) {
 
-  // initializes properties for serializer
-  private void init() {
-    this.outputProps =
-        OutputProperties.getDefaultMethodProperties(NavaDocConstants.
-        OUTPUT_METHOD_VALUE);
-    this.outputProps.setProperty(NavaDocConstants.OUTPUT_METHOD_PROP,
-                                 NavaDocConstants.OUTPUT_METHOD_VALUE);
+      if (n == null)
+          return "";
 
-    // set ident values
-    this.outputProps.setProperty(NavaDocConstants.INDENT,
-                                 (this.indent.intValue() > 0 ? "true" : "false"));
-    this.outputProps.setProperty(NavaDocConstants.INDENT_AMOUNT,
-                                 this.indent.toString());
+      if (n instanceof Element) {
 
-    // get a Xalan XML serializer
-    this.serializer =
-        SerializerFactory.getSerializer(this.outputProps);
-    // this.dumpProperties();
+          StringBuffer result = new StringBuffer();
+          String tagName = n.getNodeName();
+
+          result.append("<" + tagName);
+          NamedNodeMap map = n.getAttributes();
+
+          if (map != null) {
+              for (int i = 0; i < map.getLength(); i++) {
+                  result.append(" ");
+                  Attr attr = (Attr) map.item(i);
+                  String name = attr.getNodeName();
+                  String value = attr.getNodeValue();
+
+                  result.append(name + "=\"" + value + "\"");
+              }
+          }
+          NodeList list = n.getChildNodes();
+
+          if (list.getLength() > 0)
+              result.append(">\n");
+          else
+              result.append("/>\n");
+
+          for (int i = 0; i < list.getLength(); i++) {
+              Node child = list.item(i);
+
+              result.append(printElement(child));
+          }
+          if (list.getLength() > 0)
+              result.append("</" + tagName + ">\n");
+          return result.toString();
+      } else {
+          return n.getNodeValue();
+      }
   }
 
-  // debugging
+  public static String toString(Node n) {
+      StringBuffer result = new StringBuffer();
 
-//  private void dumpProperties() {
-//    Properties props = this.outputProps;
-//    Enumeration enum = props.propertyNames();
-//
-//    while (enum.hasMoreElements()) {
-//      String s = (String) enum.nextElement();
-//
-//      logger.log(Priority.DEBUG, "output property: " +
-//                 s + " = " + props.getProperty(s));
-//    }
-//  } // public void dumpProperties()
-
+      result.append(printElement(n));
+      return result.toString();
+  }
+  
   /**
    * outputs the resulting DOM to a file in the target directory
    */
@@ -137,11 +143,10 @@ public class NavaDocOutputter {
 
     try {
       FileWriter fw = new FileWriter(targetFile);
-
-      this.serializer.setWriter(fw);
-      this.serializer.asDOMSerializer().serialize(
-          this.dom.getDocument().getDocumentElement());
+      String result = toString ( dom.getDocument().getDocumentElement() );
+      fw.write( result );
       fw.close();
+
     }
     catch (IOException ioe) {
       
