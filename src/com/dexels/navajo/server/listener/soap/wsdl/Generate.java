@@ -57,6 +57,7 @@ public class Generate {
           Message newMessage = null;
           if (parent == null) {
             newMessage = result.getMessage(parentName);
+            parent = newMessage;
           }
           else {
             newMessage = parent.getMessage(parentName);
@@ -84,8 +85,8 @@ public class Generate {
             if (allChildren.item(j).getNodeType() == Node.ELEMENT_NODE) {
               Element child = (Element) allChildren.item(j);
               if (child.getTagName().equals("map")) { // Yes.
-                //System.out.println("GOT MAP: object = " + child.getAttribute("object") + ", ref = " +
-                //                  child.getAttribute("ref"));
+//                System.out.println("GOT MAP: object = " + child.getAttribute("object") + ", ref = " +
+//                                  child.getAttribute("ref"));
                 if ((child.getAttribute("ref") != null) && !child.getAttribute("ref").equals("")) {
                   //System.out.println("MULTIPLE MESSAGE!");
                   parent.setName(parentName);
@@ -138,7 +139,12 @@ public class Generate {
       // Construct TML document from request parameters.
 
       if (list.getLength() == 0) {
-          System.out.println("offset = " + offset + ", tagname = " + offset.getNodeName());
+    	  
+    	  if ( parent == null ) {
+    		  return;
+    	  }
+    	  
+          //System.out.println("offset = " + offset + ", tagname = " + offset.getNodeName() + ", parent = " + parent);
           String propertyName = ((Element) offset).getAttribute("name");
           Property prop = parent.getProperty(propertyName);
           if (prop == null) {
@@ -160,12 +166,13 @@ public class Generate {
               //System.out.println("Checking expression value:  " + parameter);
               Matcher matcher = re.matcher(parameter);
 
-              while (matcher.find()) {
+              while (matcher.find() && parameter.indexOf("'") == -1) {
                   String value = matcher.group();
+                  
                   value = value.substring(1, value.length()-1);
-                  //System.err.println("Found message: " + value);
                   if (value.indexOf("__parms__") == -1 && value.indexOf("@") == -1) { // Skip parameters!
-                      System.out.println("Processing input property: " + value);
+                	 
+                	  
                       Message msg = com.dexels.navajo.mapping.MappingUtils.getMessageObject(value,
                                               parent, false, result, false, "", -1);
                       String propName = com.dexels.navajo.mapping.MappingUtils.getStrippedPropertyName(value);
@@ -197,9 +204,9 @@ public class Generate {
                     // Generate property in filter attribute (TODO)
                   }
                   String ref = map.getAttribute("ref");
-                  System.out.println("Parent node of map: " + list.item(i).getParentNode().getNodeName());
+                  //System.out.println("Parent node of map: " + list.item(i).getParentNode().getNodeName());
                   if ((ref != null) && !ref.equals("") && list.item(i).getParentNode().getNodeName().equals("field")) {
-                      System.out.println("REF = " + ref);
+                      //System.out.println("REF = " + ref);
                       StringTokenizer subMsgs = new StringTokenizer(ref, "/");
                       String msgName = "";
                       while (subMsgs.hasMoreTokens()) {
@@ -212,7 +219,7 @@ public class Generate {
                       if (!ref.startsWith(Navajo.MESSAGE_SEPARATOR) && msgName.startsWith(Navajo.MESSAGE_SEPARATOR))
                         msgName = msgName.substring(1);
                       msgName.trim();
-                      System.out.println("De-regular-expressioned: " + msgName);
+                      //System.out.println("De-regular-expressioned: " + msgName);
                       Message sub = com.dexels.navajo.mapping.MappingUtils.getMessageObject(msgName,
                                                                     parent, true, result, true, "", -1);
                       Message sub2 = NavajoFactory.getInstance().createMessage(result, msgName);
@@ -280,6 +287,27 @@ public class Generate {
 	  }
   }
   
+  public Navajo getOutputPart(String scriptName) {
+	  try {
+		  Navajo outputDoc = NavajoFactory.getInstance().createNavajo();
+		  Document script = readXslFile(scriptName);
+		  
+		  HashSet outputMessages = new HashSet();
+		  
+		  NodeList list = script.getElementsByTagName("tsl").item(0).getChildNodes();
+		  for (int i = 0; i < list.getLength(); i++) {
+			  if (list.item(i).getNodeName().equals("message")) {
+				  Element e = (Element) list.item(i);
+				  outputMessages.add(e.getAttribute("name"));
+			  }
+			  generateOutputPart(null, outputDoc, list.item(i));
+		  }
+		  return outputDoc;
+	  } catch (Exception e) {
+		  e.printStackTrace();
+		  return null;
+	  }
+  }
 
   public static void main(String args[]) throws Exception {
 
@@ -295,20 +323,8 @@ public class Generate {
         inputMessages.add(((Message) msgs.get(i)).getName());
       }
 
-      Navajo outputDoc = NavajoFactory.getInstance().createNavajo();
-
-      HashSet outputMessages = new HashSet();
-
-//      list = script.getElementsByTagName("tsl").item(0).getChildNodes();
-//      for (int i = 0; i < list.getLength(); i++) {
-//           if (list.item(i).getNodeName().equals("message")) {
-//             Element e = (Element) list.item(i);
-//             outputMessages.add(e.getAttribute("name"));
-//           }
-//           gen.generateOutputPart(null, outputDoc, list.item(i));
-//      }
-
-      System.out.println("OUTPUT PART");
+      Navajo outputDoc = gen.getOutputPart("/home/arjen/projecten/sportlink-serv/navajo/auxilary/scripts/InitBM");
+     
       System.out.println(outputDoc.toString());
 
       //Document input = (Document) result.getMessageBuffer();
