@@ -52,28 +52,35 @@ public class Generate {
         if (((Element) offset).getTagName().equals(Message.MSG_DEFINITION)) {
           String parentName = ((Element) offset).getAttribute(Message.MSG_NAME);
           String type = ((Element) offset).getAttribute(Message.MSG_TYPE);
-
+          String ignore = ((Element) offset).getAttribute(Message.MSG_MODE);
+          
+          if ( ignore != null && ignore.equals("ignore") ) {
+        	  return;
+          }
+          
           Message newMessage = null;
-          if (parent == null)
+          if (parent == null) {
             newMessage = result.getMessage(parentName);
-          else
+          }
+          else {
             newMessage = parent.getMessage(parentName);
-
-          if (newMessage == null) {
-            newMessage = NavajoFactory.getInstance().createMessage(result, parentName);
-            if (parent != null)
-              parent.addMessage(newMessage);
-            else
-              result.addMessage(newMessage);
           }
 
-          if (type.equals(Message.MSG_TYPE_ARRAY)) {
-            newMessage.setType(Message.MSG_TYPE_ARRAY);
+          System.err.println("FOUND newMessage: " + parentName + ", TYPE is: " + type);
+          if (newMessage == null && type.equals(Message.MSG_TYPE_ARRAY)) {
+        	System.err.println("CREATING ARRAY MESSAGE");
+        	newMessage = NavajoFactory.getInstance().createMessage(result, parentName, Message.MSG_TYPE_ARRAY);
             Message newSubMessage = NavajoFactory.getInstance().createMessage(result, parentName);
             newMessage.addMessage(newSubMessage);
+            if (parent == null) result.addMessage(newMessage); else parent.addMessage(newMessage);
             parent = newSubMessage;
-          } else
+          } else if (newMessage == null) {
+        	newMessage = NavajoFactory.getInstance().createMessage(result, parentName);
+        	if (parent == null) result.addMessage(newMessage); else parent.addMessage(newMessage);
             parent = newMessage;
+          }
+          
+  
 
           // Does message has a "ref" has child, if so possibly multiple occurences.
           NodeList allChildren = offset.getChildNodes();
@@ -86,7 +93,10 @@ public class Generate {
                 if ((child.getAttribute("ref") != null) && !child.getAttribute("ref").equals("")) {
                   //System.out.println("MULTIPLE MESSAGE!");
                   parent.setName(parentName);
-                  parent.setIndex(0);
+                  parent.setType(Message.MSG_TYPE_ARRAY);
+                  Message newSubMessage = NavajoFactory.getInstance().createMessage(result, parentName);
+                  parent.addMessage(newSubMessage);
+                  parent = newSubMessage;
                 }
                 NodeList l = child.getChildNodes();
                 for (int i = 0; i < l.getLength(); i++) {
@@ -128,7 +138,7 @@ public class Generate {
       NodeList list = offset.getChildNodes();
 
 
-      Pattern re = Pattern.compile("\\[.*\\]");
+      Pattern re = Pattern.compile("\\[[A-z,/]*\\]");
       // Construct TML document from request parameters.
 
       if (list.getLength() == 0) {
@@ -143,7 +153,7 @@ public class Generate {
 
       for (int i = 0; i < list.getLength(); i++) {
 
-            System.out.println("list.item("+i+") = " + list.item(i).getNodeName());
+            //System.out.println("list.item("+i+") = " + list.item(i).getNodeName());
 
             if (list.item(i).getNodeName().equals("expression")) {
 
@@ -157,9 +167,9 @@ public class Generate {
               while (matcher.find()) {
                   String value = matcher.group();
                   value = value.substring(1, value.length()-1);
-
-                  if (value.indexOf("__parms__") == -1) { // Skip parameters!
-                      //System.out.println("Processing input property: " + value);
+                  System.err.println("Found message: " + value);
+                  if (value.indexOf("__parms__") == -1 && value.indexOf("@") == -1) { // Skip parameters!
+                      System.out.println("Processing input property: " + value);
                       Message msg = com.dexels.navajo.mapping.MappingUtils.getMessageObject(value,
                                               parent, false, result, false, "", -1);
                       String propName = com.dexels.navajo.mapping.MappingUtils.getStrippedPropertyName(value);
@@ -259,7 +269,7 @@ public class Generate {
 
       Document wsdl = XMLDocumentUtils.createDocument();
       Navajo inputDoc = NavajoFactory.getInstance().createNavajo();
-      Document script = gen.readXslFile("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts/knvbnl/ProcessGetClubTeams");
+      Document script = gen.readXslFile("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts/member/ProcessSearchMembers");
 
       // Find map nodes.
       NodeList list = script.getElementsByTagName("tsl").item(0).getChildNodes();
