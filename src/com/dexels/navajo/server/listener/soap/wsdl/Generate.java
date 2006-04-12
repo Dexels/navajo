@@ -273,6 +273,9 @@ public class Generate {
 		  Document script = readXslFile(scriptName);
 		  
 		  // Find map nodes.
+		  if ( script.getElementsByTagName("tsl").getLength() == 0 ) {
+			  return NavajoFactory.getInstance().createNavajo();
+		  }
 		  NodeList list = script.getElementsByTagName("tsl").item(0).getChildNodes();
 		  
 		  for (int i = 0; i < list.getLength(); i++) {
@@ -283,7 +286,7 @@ public class Generate {
 		  return inputDoc;
 	  } catch (Exception e) {
 		  e.printStackTrace();
-		  return null;
+		    return NavajoFactory.getInstance().createNavajo();
 	  }
   }
   
@@ -294,6 +297,9 @@ public class Generate {
 		  
 		  HashSet outputMessages = new HashSet();
 		  
+		  if ( script.getElementsByTagName("tsl").getLength() == 0 ) {
+			    return NavajoFactory.getInstance().createNavajo();
+		  }
 		  NodeList list = script.getElementsByTagName("tsl").item(0).getChildNodes();
 		  for (int i = 0; i < list.getLength(); i++) {
 			  if (list.item(i).getNodeName().equals("message")) {
@@ -305,7 +311,7 @@ public class Generate {
 		  return outputDoc;
 	  } catch (Exception e) {
 		  e.printStackTrace();
-		  return null;
+		  return NavajoFactory.getInstance().createNavajo();
 	  }
   }
 
