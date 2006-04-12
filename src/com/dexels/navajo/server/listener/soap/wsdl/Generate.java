@@ -62,9 +62,9 @@ public class Generate {
             newMessage = parent.getMessage(parentName);
           }
 
-          System.err.println("FOUND newMessage: " + parentName + ", TYPE is: " + type);
+          //System.err.println("FOUND newMessage: " + parentName + ", TYPE is: " + type);
           if (newMessage == null && type.equals(Message.MSG_TYPE_ARRAY)) {
-        	System.err.println("CREATING ARRAY MESSAGE");
+        	//System.err.println("CREATING ARRAY MESSAGE");
         	newMessage = NavajoFactory.getInstance().createMessage(result, parentName, Message.MSG_TYPE_ARRAY);
             Message newSubMessage = NavajoFactory.getInstance().createMessage(result, parentName);
             newMessage.addMessage(newSubMessage);
@@ -163,7 +163,7 @@ public class Generate {
               while (matcher.find()) {
                   String value = matcher.group();
                   value = value.substring(1, value.length()-1);
-                  System.err.println("Found message: " + value);
+                  //System.err.println("Found message: " + value);
                   if (value.indexOf("__parms__") == -1 && value.indexOf("@") == -1) { // Skip parameters!
                       System.out.println("Processing input property: " + value);
                       Message msg = com.dexels.navajo.mapping.MappingUtils.getMessageObject(value,
@@ -259,26 +259,36 @@ public class Generate {
       }
   }
 
+  public Navajo getInputPart(String scriptName) {
+	  try {
+		  Document wsdl = XMLDocumentUtils.createDocument();
+		  Navajo inputDoc = NavajoFactory.getInstance().createNavajo();
+		  Document script = readXslFile(scriptName);
+		  
+		  // Find map nodes.
+		  NodeList list = script.getElementsByTagName("tsl").item(0).getChildNodes();
+		  
+		  for (int i = 0; i < list.getLength(); i++) {
+			  if (list.item(i).getNodeName().equals("map"))
+				  generateInputPart(null, inputDoc, list.item(i));
+		  }
+		  
+		  return inputDoc;
+	  } catch (Exception e) {
+		  e.printStackTrace();
+		  return null;
+	  }
+  }
+  
+
   public static void main(String args[]) throws Exception {
 
       Generate gen = new Generate();
 
-      Document wsdl = XMLDocumentUtils.createDocument();
-      Navajo inputDoc = NavajoFactory.getInstance().createNavajo();
-      Document script = gen.readXslFile("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts/member/ProcessSearchMembers");
-
-      // Find map nodes.
-      NodeList list = script.getElementsByTagName("tsl").item(0).getChildNodes();
-
-      for (int i = 0; i < list.getLength(); i++) {
-          if (list.item(i).getNodeName().equals("map"))
-            gen.generateInputPart(null, inputDoc, list.item(i));
-      }
-
-      System.out.println("INPUT PART");
-      System.out.println(inputDoc.toString());
+      
 
       // Determine input messages:
+      Navajo inputDoc = gen.getInputPart("/home/arjen/projecten/sportlink-serv/navajo/auxilary/scripts/InitBM");
       ArrayList msgs = inputDoc.getAllMessages();
       HashSet inputMessages = new HashSet();
       for (int i = 0; i < msgs.size(); i++) {
@@ -289,14 +299,14 @@ public class Generate {
 
       HashSet outputMessages = new HashSet();
 
-      list = script.getElementsByTagName("tsl").item(0).getChildNodes();
-      for (int i = 0; i < list.getLength(); i++) {
-           if (list.item(i).getNodeName().equals("message")) {
-             Element e = (Element) list.item(i);
-             outputMessages.add(e.getAttribute("name"));
-           }
-           gen.generateOutputPart(null, outputDoc, list.item(i));
-      }
+//      list = script.getElementsByTagName("tsl").item(0).getChildNodes();
+//      for (int i = 0; i < list.getLength(); i++) {
+//           if (list.item(i).getNodeName().equals("message")) {
+//             Element e = (Element) list.item(i);
+//             outputMessages.add(e.getAttribute("name"));
+//           }
+//           gen.generateOutputPart(null, outputDoc, list.item(i));
+//      }
 
       System.out.println("OUTPUT PART");
       System.out.println(outputDoc.toString());
