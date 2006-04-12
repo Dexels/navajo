@@ -257,7 +257,7 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
     	StringBuffer fileContent = new StringBuffer( (int) sFileOrig.length() );
     	String line = null;
     	while ( ( line = fr.readLine() ) != null ) {
-    		fileContent.append(line);
+    		fileContent.append(line + "\n");
     	}
     	fr.close();
     	String replacedContent = rewriteComment( fileContent.toString() );

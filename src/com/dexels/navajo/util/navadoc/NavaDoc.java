@@ -134,7 +134,7 @@ public class NavaDoc {
     String replacedContent = replaceString( fileContent.toString(), "[DOCUMENTROOT]", tPath.getAbsolutePath() );
     tempStyleSheet = File.createTempFile("stylesheet", ".xsl", styleSheet.getParentFile() );
     BufferedWriter bw = new BufferedWriter ( new FileWriter ( tempStyleSheet ) );
-    bw.write( replacedContent );
+    bw.write( replacedContent + "\n");
     //System.err.println( replacedContent );
     bw.close();
     
