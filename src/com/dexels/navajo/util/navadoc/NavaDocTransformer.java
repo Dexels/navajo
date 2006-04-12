@@ -259,6 +259,7 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
     	while ( ( line = fr.readLine() ) != null ) {
     		fileContent.append(line);
     	}
+    	fr.close();
     	String replacedContent = rewriteComment( fileContent.toString() );
     	tempsFile = new File(sFileOrig.getParentFile(), sname.replace('/','_') + "_temp.xml" );
     	BufferedWriter bw = new BufferedWriter ( new FileWriter ( tempsFile ) );
@@ -285,9 +286,9 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
     	this.setErrorText( body );
     	
     } finally {
-    	if ( tempsFile != null ) {
-    		tempsFile.delete();
-    	}
+//    	if ( tempsFile != null ) {
+//    		tempsFile.delete();
+//    	}
     }
 
 

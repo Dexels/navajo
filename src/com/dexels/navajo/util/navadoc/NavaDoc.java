@@ -130,6 +130,7 @@ public class NavaDoc {
     while ( ( line = fr.readLine() ) != null ) {
     	fileContent.append(line);
     }
+    fr.close();
     String replacedContent = replaceString( fileContent.toString(), "[DOCUMENTROOT]", tPath.getAbsolutePath() );
     tempStyleSheet = File.createTempFile("stylesheet", ".xsl", styleSheet.getParentFile() );
     BufferedWriter bw = new BufferedWriter ( new FileWriter ( tempStyleSheet ) );
