@@ -241,7 +241,7 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
 	commentString = NavaDoc.replaceString( commentString, "<", "&lt;");
 	commentString = NavaDoc.replaceString( commentString, ">", "&gt;");
 	commentString = NavaDoc.replaceString( commentString, "\"", "&quot;");
-	commentString = NavaDoc.replaceString( commentString, "\\", "\\\\");
+	//commentString = NavaDoc.replaceString( commentString, "\\", "\\\\");
 	
 	result.append(in.substring(0, beginIndx));
 	result.append("<comment value=\"");
