@@ -11,7 +11,7 @@
   <xsl:include href="method-static.xsl"/>
   <xsl:template match="/">
     <div class="saPage">
-      <xsl:apply-templates select="tsl"/>
+      <xsl:apply-templates select="tsl|tml"/>
       <xsl:element name="a">
       <xsl:attribute name="class">
 	<xsl:text>saIndex</xsl:text>

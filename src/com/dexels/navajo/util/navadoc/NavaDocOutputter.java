@@ -15,10 +15,15 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+import sun.security.action.GetIntegerAction;
+
+import com.dexels.navajo.server.listener.soap.wsdl.Generate;
 
 public class NavaDocOutputter {
 
@@ -27,9 +32,12 @@ public class NavaDocOutputter {
 
   private NavaDocBaseDOM dom = null;
 
+
   // paths
   private File targetPath = null;
   private File targetFile = null;
+  private File targetFileIn = null;
+  private File targetFileOut = null;
 
   // -------------------------------------------------------------- constructors
 
@@ -47,9 +55,14 @@ public class NavaDocOutputter {
     this.targetPath = p;
     System.err.println("About to create file: " + targetPath + File.separator + dom.getBaseName() + ".html");
     this.targetFile = new File(this.targetPath + File.separator +  this.dom.getBaseName() + ".html");
+    if ( dom.domIn != null ) {
+    	this.targetFileIn = new File(this.targetPath + File.separator +  this.dom.getBaseName() + "_input.html");
+    }
+    if ( dom.domOut != null ) {
+    	this.targetFileOut = new File(this.targetPath + File.separator +  this.dom.getBaseName() + "_output.html");
+    }
     targetFile.getParentFile().mkdirs();
-    this.output();
-
+    this.output();    
   } // public NavaDocOutputter()
 
   // for writing to servlet output
@@ -144,7 +157,20 @@ public class NavaDocOutputter {
       String result = toString ( dom.getDocument().getDocumentElement() );
       fw.write( result );
       fw.close();
-
+      
+      if ( dom.domIn != null ) {
+    	  fw = new FileWriter(targetFileIn);
+          result = toString (  dom.domIn.getDocumentElement() );
+          fw.write( result );
+          fw.close();
+      }
+      
+      if ( dom.domOut != null ) {
+    	  fw = new FileWriter(targetFileOut);
+          result = toString (  dom.domOut.getDocumentElement() );
+          fw.write( result );
+          fw.close();
+      }
     }
     catch (IOException ioe) {
       

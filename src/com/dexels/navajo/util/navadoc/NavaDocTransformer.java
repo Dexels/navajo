@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.StringBufferInputStream;
 import java.util.Enumeration;
 import java.util.Properties;
 
@@ -34,6 +35,10 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
 import org.xml.sax.SAXException;
+
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
+import com.dexels.navajo.server.listener.soap.wsdl.Generate;
 
 
 public class NavaDocTransformer extends NavaDocBaseDOM {
@@ -290,6 +295,10 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
     	bw.close();
     	
     	final Document sDoc = NavaDocTransformer.dBuilder.parse( tempsFile );
+    	Element scriptName = sDoc.createElement("script");
+    	sDoc.getDocumentElement().appendChild(scriptName);
+    	
+    	scriptName.setAttribute("name", NavaDoc.replaceString( sFileOrig.getName(), ".xml", "" ) );
     	DOMSource domSrc = new DOMSource( sDoc );
     	DOMResult domRes = new DOMResult( span );
     	
@@ -300,6 +309,44 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
     	
     	final Element root = sDoc.getDocumentElement();
     	this.notes = root.getAttribute( NavaDocConstants.NOTES_ATTR );
+    	
+    	// Generate INPUT/OUTPUT PARTS:
+    	 
+    	newInputOutputDocuments();
+    	Generate gen = new Generate();
+    	
+    	// Generate input TML:
+    	inDoc = gen.getInputPart( this.servicesPath  + File.separator + sname );
+    	
+    	final Element inputNavajo = this.domIn.createElement( "span" );
+    	this.domIn.getDocumentElement().appendChild( inputNavajo );
+    	
+    	Document inSrc = (Document) inDoc.getMessageBuffer();
+    	Element scriptTag = inSrc.createElement("script");
+    	inSrc.getDocumentElement().appendChild(scriptTag);
+    	scriptTag.setAttribute("name", NavaDoc.replaceString( sFileOrig.getName(), ".xml", "" ) );
+    	scriptTag.setAttribute("type", "in");
+    	
+    	DOMSource domSrcIn = new DOMSource( inSrc.getDocumentElement() );
+    	DOMResult domResIn = new DOMResult( inputNavajo );
+    	this.transformer.transform( domSrcIn, domResIn );
+    	
+    	// Generate output TML:
+    	outDoc = gen.getOutputPart( this.servicesPath  + File.separator + sname );
+    	
+    	final Element outputNavajo = this.domOut.createElement( "span" );
+    	this.domOut.getDocumentElement().appendChild( outputNavajo );
+    	
+    	Document outSrc = (Document) outDoc.getMessageBuffer();
+    	scriptTag = outSrc.createElement("script");
+    	outSrc.getDocumentElement().appendChild(scriptTag);
+    	scriptTag.setAttribute("name", NavaDoc.replaceString( sFileOrig.getName(), ".xml", "" ) );
+    	scriptTag.setAttribute("type", "out");
+    	
+    	DOMSource domSrcOut = new DOMSource( ((Document) outDoc.getMessageBuffer()).getDocumentElement() );
+    	DOMResult domResOut = new DOMResult( outputNavajo );
+    	this.transformer.transform( domSrcOut, domResOut );
+    	
     	
     } catch ( Exception e ) {
     	

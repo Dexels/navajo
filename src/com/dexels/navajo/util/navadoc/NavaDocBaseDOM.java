@@ -21,6 +21,7 @@ import org.w3c.dom.DocumentType;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
 
+import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.util.navadoc.config.DocumentSet;
 
 public class NavaDocBaseDOM {
@@ -31,6 +32,9 @@ public class NavaDocBaseDOM {
   // DOM Document Builder
   protected DocumentBuilder dBuilder = null;
   protected Document dom = null;
+  protected Document domIn = null;
+  protected Document domOut = null;
+  
   protected Element root = null;
   protected Element body = null;
 
@@ -42,6 +46,11 @@ public class NavaDocBaseDOM {
 
   // base name for page
   protected String baseName = "index";
+  
+  // input/output Navajos
+  protected Navajo inDoc;
+  protected Navajo outDoc;
+  
 
   /**
    * Create a new base NavaDoc style DOM with the
@@ -98,6 +107,13 @@ public class NavaDocBaseDOM {
 
   }
 
+  public Navajo getIndoc() {
+		return this.inDoc;  
+	  }
+  
+  public Navajo getOutdoc() {
+	  return this.outDoc;
+  }
   /**
    * set Project Name for the document, this is optional
    *
@@ -150,18 +166,50 @@ public class NavaDocBaseDOM {
     DOMImplementation domImpl = this.dBuilder.getDOMImplementation();
 
     final DocumentType dtype = domImpl.createDocumentType("html",
-        NavaDocConstants.XHTML_PUBLICID,
-        NavaDocConstants.XHTML_SYSTEMID);
+			        NavaDocConstants.XHTML_PUBLICID,
+			        NavaDocConstants.XHTML_SYSTEMID);
     this.dom = domImpl.createDocument(
-        NavaDocConstants.XHTML_NAMESPACE, "html", dtype);
+    				NavaDocConstants.XHTML_NAMESPACE, "html", dtype);
+ 
     this.root = this.dom.getDocumentElement();
   }
 
+  protected void newInputOutputDocuments() {
+	  
+	  DOMImplementation domImpl = this.dBuilder.getDOMImplementation();
+	  
+	  this.domIn = domImpl.createDocument( 	NavaDocConstants.XHTML_NAMESPACE, "html", null );
+	  this.domOut = domImpl.createDocument( 	NavaDocConstants.XHTML_NAMESPACE, "html", null );
+	  
+	  Element headerIn = this.domIn.createElement("head");
+	  domIn.getDocumentElement().appendChild(headerIn);
+	  if ( (this.cssUri != null) && (this.cssUri.length() > 0)) {
+		  Element css = this.domIn.createElement("link");
+		  
+		  css.setAttribute("rel", "stylesheet");
+		  css.setAttribute("type", "text/css");
+		  css.setAttribute("href", this.cssUri);
+		  headerIn.appendChild(css);
+	  }
+	  
+	  Element headerOut = this.domOut.createElement("head");
+	  domOut.getDocumentElement().appendChild(headerOut);
+	  if ( (this.cssUri != null) && (this.cssUri.length() > 0)) {
+		  Element css = this.domOut.createElement("link");
+		  
+		  css.setAttribute("rel", "stylesheet");
+		  css.setAttribute("type", "text/css");
+		  css.setAttribute("href", this.cssUri);
+		  headerOut.appendChild(css);
+	  }
+  }
+  
   /**
    * Set the basic headers for this HTML DOM
    *
    * @param String title of the document to go into the header
    */
+  
   protected void setHeaders(String t) {
 
     Comment cvsId = this.dom.createComment(

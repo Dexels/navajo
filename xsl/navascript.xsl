@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- $Id$ -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+  <!-- TML -->
+  <xsl:template match="tml">
+      <div class="saPanel">
+         <div class="saHeader">
+            <xsl:value-of select="child::script/@name"/>
+            <xsl:value-of select="concat(' (', child::script/@type, ')')"/>
+         </div>
+         <xsl:apply-templates select="property|message"/>
+         <xsl:element name="a">
+            <xsl:attribute name="href">
+               <xsl:value-of select="concat(child::script/@name, '.html')"/>
+            </xsl:attribute>
+            <xsl:value-of select="concat(child::script/@name, ' (script)')"/>
+         </xsl:element>
+      </div>
+  </xsl:template> 
   <!-- TSL header -->
   <xsl:template match="tsl">
     <div class="saPanel">
@@ -41,6 +57,7 @@
       </table>
     </xsl:if>
     <br/>
+    <xsl:apply-templates select="script"/>
     <xsl:apply-templates select="include|map|property|message|param|comment"/>
     <xsl:apply-templates select="methods"/>
   </div>
@@ -65,7 +82,19 @@
   <!-- Map Node -->
   <!-- maps can have properties, params, messages, maps and fields as children -->
   <xsl:template match="map">
-    <div class="saMap">
+    <xsl:element name="div">
+      <xsl:choose>
+        <xsl:when test=" (count( parent::message/*) > 0 or count( parent::property/*) > 0) and string-length(@ref) > 0">
+           <xsl:attribute name="class">
+              <xsl:text>saMessage</xsl:text>
+           </xsl:attribute>
+        </xsl:when>
+        <xsl:otherwise>
+           <xsl:attribute name="class">
+              <xsl:text>saMap</xsl:text>
+           </xsl:attribute>
+        </xsl:otherwise>
+      </xsl:choose>
       <xsl:if test="string-length( @condition ) &gt; 0">
         <xsl:call-template name="fmtCondition">
           <xsl:with-param name="c" select="@condition"/>
@@ -91,8 +120,9 @@
         <font class="attrib">
           <xsl:text> reference: </xsl:text>
         </font>
-        <code>$<xsl:value-of select="@ref"/>
-        </code>
+        <code>
+        <xsl:if test=" count( parent::field/*) = 0">$</xsl:if>
+        <xsl:value-of select="@ref"/></code>
       </xsl:if>
       <xsl:if test=" string-length( @filter ) &gt; 0 ">
         <font class="attrib">
@@ -107,7 +137,7 @@
           <xsl:apply-templates select="field|message|property|param|map|include"/>
         </blockquote>
       </xsl:if>
-    </div>
+    </xsl:element>
   </xsl:template>
   <!-- Message Node -->
   <!-- messages can have objects, maps, properties, params, and other messages as children -->
@@ -180,9 +210,14 @@
           <xsl:value-of select="@name"/>
         </font>
       </xsl:if>
+      <xsl:if test=" string-length( concat( @direction, @type, @cardinality ) ) &gt; 0 ">
+          <font class="value">
+            <xsl:text>(</xsl:text>
+          </font>
+      </xsl:if>
       <xsl:if test=" string-length( @type ) &gt; 0 ">
         <font class="value">
-          <xsl:value-of select="concat(' (', @type)"/>
+          <xsl:value-of select="@type"/>
         </font>
       </xsl:if>
       <xsl:if test=" string-length( @direction ) &gt; 0 ">
@@ -232,14 +267,19 @@
   <!-- fields can have maps and expressions for children -->
   <xsl:template match="field">
     <p>
+      <xsl:if test="string-length( @condition ) &gt; 0">
+        <xsl:call-template name="fmtCondition">
+          <xsl:with-param name="c" select="@condition"/>
+        </xsl:call-template>
+        <font class="condition">
+           <xsl:text> then </xsl:text>
+        </font>
+      </xsl:if>
       <xsl:variable name="name" select="@name"/>
       <font class="tag">$</font>
       <font class="value">
         <xsl:value-of select="@name"/>
       </font>
-      <xsl:call-template name="fmtCondition">
-        <xsl:with-param name="c" select="@condition"/>
-      </xsl:call-template>
       <xsl:if test=" count( ./* ) &gt; 0 ">
         <font class="attrib"> = </font>
         <xsl:apply-templates select="expression|map"/>
@@ -362,6 +402,24 @@
         <xsl:value-of select="$c"/>
       </code>
     </xsl:if>
+  </xsl:template>
+  <!-- Include node -->
+  <xsl:template match="script">
+    <div class="saMap">
+    <xsl:element name="a">
+      <xsl:attribute name="href">
+        <xsl:value-of select="concat( @name, '_input.html' )"/>
+      </xsl:attribute>
+      <xsl:text>input</xsl:text>
+    </xsl:element>
+    <xsl:text> | </xsl:text>
+    <xsl:element name="a">
+      <xsl:attribute name="href">
+        <xsl:value-of select="concat( @name, '_output.html' )"/>
+      </xsl:attribute>
+      <xsl:text>output</xsl:text>
+    </xsl:element>
+    </div>
   </xsl:template>
 </xsl:stylesheet>
 <!-- EOF: $RCSfile$ -->

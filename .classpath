@@ -8,5 +8,7 @@
 	<classpathentry kind="lib" path="lib/xml-apis.jar"/>
 	<classpathentry kind="lib" path="lib/xmlunit0.7.jar"/>
 	<classpathentry kind="lib" path="lib/servlet.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/NavajoListeners"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/NavajoDocument"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

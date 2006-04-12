@@ -23,6 +23,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
+import com.dexels.navajo.server.listener.soap.wsdl.Generate;
 import com.dexels.navajo.util.navadoc.config.ConfigurationException;
 import com.dexels.navajo.util.navadoc.config.DocumentSet;
 import com.dexels.navajo.util.navadoc.config.NavaDocConfigurator;
@@ -76,10 +77,8 @@ public class NavaDoc {
 
       // output index pages
       NavaDocOutputter idxOut =
-          new NavaDocOutputter(this.index,
-                               dset.getPathConfiguration().getPath(
-          NavaDocConstants.
-          TARGET_PATH_ELEMENT));
+          new NavaDocOutputter(this.index,   
+        		               dset.getPathConfiguration().getPath(NavaDocConstants.TARGET_PATH_ELEMENT));
     }
 
   } // public NavaDoc()
@@ -102,10 +101,11 @@ public class NavaDoc {
 	  try {
 		  documenter = new NavaDoc(); 
 	  } finally {
-		  if ( documenter.tempStyleSheet != null ) {
+		  if ( documenter != null && documenter.tempStyleSheet != null ) {
 			  documenter.tempStyleSheet.delete();
 		  }
 	  }
+	  
   }
 
   public static String replaceString(String input, String oldValue, String newValue){
@@ -190,6 +190,7 @@ public class NavaDoc {
       if ( !transformer.up2dateCheck( sname, tPath.getAbsolutePath(), index ) ) {
     	  this.transformer.transformWebService(sname);
     	  NavaDocOutputter outputter = new NavaDocOutputter(this.transformer, tPath);
+    	
       }
  
     }
