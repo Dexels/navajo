@@ -41,7 +41,7 @@
       </table>
     </xsl:if>
     <br/>
-    <xsl:apply-templates select="include|map|property|message|param"/>
+    <xsl:apply-templates select="include|map|property|message|param|comment"/>
     <xsl:apply-templates select="methods"/>
   </div>
   <br/>
@@ -57,10 +57,10 @@
   </xsl:template>
    <!-- Comment node -->
   <xsl:template match="comment">
-    <xsl:text>Comment: </xsl:text>
     <font class="comment">
-      <xsl:value-of select="@value"/>
+      <xsl:value-of select="concat('//', @value)"/>
     </font>
+    <xsl:element name="br"/>
   </xsl:template>
   <!-- Map Node -->
   <!-- maps can have properties, params, messages, maps and fields as children -->
@@ -104,7 +104,7 @@
       </xsl:if>
       <xsl:if test=" count( ./* ) &gt; 0 ">
         <blockquote>
-          <xsl:apply-templates select="field|message|property|param|map"/>
+          <xsl:apply-templates select="field|message|property|param|map|include"/>
         </blockquote>
       </xsl:if>
     </div>
@@ -148,7 +148,7 @@
       </xsl:if>
       <xsl:if test=" count( ./* ) &gt; 0 ">
         <blockquote>
-          <xsl:apply-templates select="property|param|message|map"/>
+          <xsl:apply-templates select="property|param|message|map|include"/>
         </blockquote>
       </xsl:if>
     </div>

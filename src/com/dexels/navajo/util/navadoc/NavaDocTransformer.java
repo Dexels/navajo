@@ -217,17 +217,39 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
 	  
   }
   
-  private static String rewriteComment( String in ) {
+  private static String rewriteComment( String in, int tslBegin, int tslEnd ) {
 	  
-	if ( in.indexOf("<!--") == -1 ) {
-		return in;
-	}
-	
 	StringBuffer result = new StringBuffer ( in.length() );
 	
-	String replacedComment = NavaDoc.replaceString( in, "<!--", "<comment value=\"" );
-	replacedComment = NavaDoc.replaceString( replacedComment, "-->", "\"/>" );
-	return rewriteComment( replacedComment );
+	int beginIndx;
+	int endIndx;
+	if ( (beginIndx = in.indexOf("<!--")) == -1 ) {
+		return in;
+	} else {
+		if ( in.indexOf("$RCSfile", beginIndx) != -1) {
+			return in;
+		}
+		if ( beginIndx < tslBegin || beginIndx > tslEnd ) {
+			return in;
+		}
+	}
+	endIndx = in.indexOf("-->", beginIndx);
+	if ( endIndx < tslBegin || endIndx > tslEnd ) {
+		return in;
+	}
+	String commentString = in.substring(beginIndx+4, endIndx);
+	commentString = NavaDoc.replaceString( commentString, "<", "&lt;");
+	commentString = NavaDoc.replaceString( commentString, ">", "&gt;");
+	commentString = NavaDoc.replaceString( commentString, "\"", "&quot;");
+	commentString = NavaDoc.replaceString( commentString, "\\", "\\\\");
+	
+	result.append(in.substring(0, beginIndx));
+	result.append("<comment value=\"");
+	result.append( commentString );
+	result.append("\"/>");
+	result.append(in.substring(endIndx + 3));
+	
+	return rewriteComment( result.toString(), tslBegin, tslEnd );
 	
   }
   
@@ -260,7 +282,8 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
     		fileContent.append(line + "\n");
     	}
     	fr.close();
-    	String replacedContent = rewriteComment( fileContent.toString() );
+    	String replacedContent = rewriteComment( fileContent.toString(), fileContent.toString().indexOf("<tsl"), 
+    				fileContent.toString().indexOf("/tsl>"));
     	tempsFile = new File(sFileOrig.getParentFile(), sname.replace('/','_') + "_temp.xml" );
     	BufferedWriter bw = new BufferedWriter ( new FileWriter ( tempsFile ) );
     	bw.write( replacedContent );
@@ -271,7 +294,7 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
     	DOMResult domRes = new DOMResult( span );
     	
     	this.errorText = null;
-    	System.err.println("About to generate doc for: " + sname);
+    	//System.err.println("About to generate doc for: " + sname);
     	this.transformer.transform( domSrc, domRes );
     	this.body.appendChild( span );
     	
@@ -280,10 +303,13 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
     	
     } catch ( Exception e ) {
     	
-    	e.printStackTrace( System.err );
     	this.errorText = "unable to transform source '" + sFileOrig + "': " + e;
+    	System.err.println(errorText);
+    	e.printStackTrace( System.err );
     	
     	this.setErrorText( body );
+    	
+    	System.exit(1);
     	
     } finally {
     	if ( tempsFile != null ) {
@@ -349,8 +375,8 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
 
   public static void main ( String [] args ) {
 	  
-	  String ex = "<tsl><message name=\"aap\"><!-- Dit is commentaar --></message></tsl>";
-	  System.err.println( rewriteComment(ex ));
+	  String ex = "<tsl><message name=\"aap\"><!-- <property name=\"aap\"/> Dit is commentaar --></message></tsl>";
+	  System.err.println( rewriteComment(ex , ex.indexOf("<tsl"), ex.indexOf("/tsl>") ));
 	  
   }
 } // public class NavaDocTransformer

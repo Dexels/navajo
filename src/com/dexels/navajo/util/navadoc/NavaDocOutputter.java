@@ -46,9 +46,7 @@ public class NavaDocOutputter {
     this.dom = d;
     this.targetPath = p;
     System.err.println("About to create file: " + targetPath + File.separator + dom.getBaseName() + ".html");
-    this.targetFile = new File(
-        this.targetPath + File.separator +
-        this.dom.getBaseName() + ".html");
+    this.targetFile = new File(this.targetPath + File.separator +  this.dom.getBaseName() + ".html");
     targetFile.getParentFile().mkdirs();
     this.output();
 

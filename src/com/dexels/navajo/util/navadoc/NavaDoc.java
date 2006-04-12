@@ -106,10 +106,11 @@ public class NavaDoc {
 
   public static String replaceString(String input, String oldValue, String newValue){
 	     int index = input.indexOf(oldValue);
+	     
 	     if(index > -1){
 	       String head = input.substring(0, index);
 	       String tail = input.substring(index + oldValue.length());
-	       return head + newValue + tail;
+	       return replaceString( head + newValue + tail, oldValue, newValue );
 	     }else{
 	       return input;
 	     }
