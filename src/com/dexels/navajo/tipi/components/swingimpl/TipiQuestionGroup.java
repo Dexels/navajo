@@ -1,7 +1,9 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
 
+import com.dexels.navajo.tipi.components.*;
 import com.dexels.navajo.tipi.components.core.*;
+import com.dexels.navajo.tipi.components.question.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.document.*;

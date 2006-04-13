@@ -14,6 +14,8 @@ import javax.swing.event.*;
 
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.components.*;
+import com.dexels.navajo.tipi.components.question.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 
 public class TipiTabbedQuestionList extends TipiBaseQuestionList {
@@ -33,6 +35,24 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
         }
         return name.getValue();
           }
+    public void runSyncInEventThread(Runnable r) {
+        if (SwingUtilities.isEventDispatchThread() ) {
+          r.run();
+        }
+        else {
+          try {
+            SwingUtilities.invokeAndWait(r);
+          }
+          catch (InvocationTargetException ex) {
+            throw new RuntimeException(ex);
+          }
+          catch (InterruptedException ex) {
+            System.err.println("Interrupted");
+          }
+        }
+      }
+    
+    
     
     public Object createContainer() {
         final TipiComponent me = this;

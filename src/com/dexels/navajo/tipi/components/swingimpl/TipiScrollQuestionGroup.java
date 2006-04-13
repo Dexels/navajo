@@ -11,6 +11,8 @@ import java.awt.*;
 import javax.swing.*;
 
 import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.components.*;
+import com.dexels.navajo.tipi.components.question.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.internal.*;
 
