@@ -18,6 +18,7 @@ import com.dexels.navajo.document.*;
  * <p>Company: </p>
  * @author not attributable
  * @version 1.0
+ * @deprecated
  */
 public class TipiMultiTable
     extends TipiSwingDataComponentImpl {
