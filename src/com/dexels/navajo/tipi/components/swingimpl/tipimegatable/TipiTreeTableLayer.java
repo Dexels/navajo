@@ -16,7 +16,7 @@ import java.awt.*;
  * @version 1.0
  */
 
-public class TipiTreeTableLayer extends TipiMegaTableLayer {
+public class TipiTreeTableLayer extends TipiTableBaseLayer {
   private final ArrayList columns = new ArrayList();
   private final ArrayList columnSize = new ArrayList();
 

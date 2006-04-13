@@ -24,7 +24,7 @@ import com.dexels.navajo.tipi.*;
  * @version 1.0
  */
 public class TipiTableLayer
-    extends TipiMegaTableLayer {
+    extends TipiTableBaseLayer {
   private final ArrayList columns = new ArrayList();
   private final ArrayList columnSize = new ArrayList();
   private final ArrayList columnName = new ArrayList();

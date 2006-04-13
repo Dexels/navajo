@@ -15,7 +15,7 @@ import java.awt.*;
  * @version 1.0
  */
 
-public class TipiTabLayer extends TipiMegaTableLayer {
+public class TipiTabLayer extends TipiTableBaseLayer {
 
   private int direction = JTabbedPane.TOP;
   private int tabLayout = JTabbedPane.WRAP_TAB_LAYOUT;
@@ -64,7 +64,7 @@ Message nextMessage = null;
     }
     final Message msg = nextMessage;
     final Stack newStack = (Stack)layerStack.clone();
-    final TipiMegaTableLayer nextLayer = (TipiMegaTableLayer)newStack.pop();
+    final TipiTableBaseLayer nextLayer = (TipiTableBaseLayer)newStack.pop();
 //    System.err.println("Tab. My stack: "+layerStack);
     myTable.runASyncInEventThread(new Runnable() {
               public void run() {

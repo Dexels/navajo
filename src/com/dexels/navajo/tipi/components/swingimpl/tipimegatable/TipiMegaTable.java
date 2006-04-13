@@ -44,12 +44,12 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
 
   public Object createContainer() {
     /**@todo Implement this com.dexels.navajo.tipi.components.core.TipiComponentImpl abstract method*/
-    myPanel = new PrintPanel();
+    myPanel = new JPanel();
     myPanel.setLayout(new BorderLayout());
     return myPanel;
   }
 
-  public void addTableInstance(MessageTablePanel mtp,MessageTableFooterRenderer mfr, JComponent remarkPanel, TipiMegaTableLayer tmtl) {
+  public void addTableInstance(MessageTablePanel mtp,MessageTableFooterRenderer mfr, JComponent remarkPanel, TipiTableBaseLayer tmtl) {
     tableInstances.add(mtp);
     footerRendererMap.put(mtp,mfr);
     tableLayerMap.put(mtp,mfr);
@@ -84,7 +84,7 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
     if (myNavajo==null) {
       return;
     }
-    TipiMegaTableLayer tmtl = (TipiMegaTableLayer)layers.peek();
+    TipiTableBaseLayer tmtl = (TipiTableBaseLayer)layers.peek();
     List updates = null;
     if (tmtl!=null) {
       String path = tmtl.getMessagePath();
@@ -141,7 +141,7 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
 
   public void updateLayers() {
     for (int i = layers.size()-1; i >= 0; i--) {
-      TipiMegaTableLayer tmtl = (TipiMegaTableLayer)layers.get(i);
+      TipiTableBaseLayer tmtl = (TipiTableBaseLayer)layers.get(i);
       tmtl.updateLayer();
     }
   }
@@ -150,7 +150,7 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
   public XMLElement store() {
     XMLElement xx = super.store();
     for (int i = layers.size()-1; i >= 0; i--) {
-      TipiMegaTableLayer tmtl = (TipiMegaTableLayer)layers.get(i);
+      TipiTableBaseLayer tmtl = (TipiTableBaseLayer)layers.get(i);
       XMLElement cc = tmtl.store();
       xx.addChild(cc);
     }
@@ -300,7 +300,7 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
      XMLElement child = (XMLElement) children.elementAt(i);
      if (child.getName().equals("layer")) {
        String type = child.getStringAttribute("type");
-       TipiMegaTableLayer tmtl = null;
+       TipiTableBaseLayer tmtl = null;
        if (type.equals("tab")) {
          tmtl = new TipiTabLayer(this);
        }
@@ -364,7 +364,7 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
     tableInstances.clear();
       Stack currentLayers = (Stack)layers.clone();
     Message current = null;
-    TipiMegaTableLayer tmtl = (TipiMegaTableLayer)currentLayers.pop();
+    TipiTableBaseLayer tmtl = (TipiTableBaseLayer)currentLayers.pop();
 
     current = n.getMessage(tmtl.getMessagePath());
     tmtl.loadData(n,null,currentLayers,myPanel);

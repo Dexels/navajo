@@ -14,13 +14,13 @@ import java.util.*;
  * @version 1.0
  */
 
-public abstract class TipiMegaTableLayer {
+public abstract class TipiTableBaseLayer {
 
   protected final TipiMegaTable myTable;
   protected String titleProperty = null;
   protected String messagePath = null;
 
-  public TipiMegaTableLayer(TipiMegaTable tmt) {
+  public TipiTableBaseLayer(TipiMegaTable tmt) {
     myTable = tmt;
   }
   public String toString() {

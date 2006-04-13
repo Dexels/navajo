@@ -15,7 +15,7 @@ import java.awt.*;
  * @version 1.0
  */
 public class TipiScrollLayer
-    extends TipiMegaTableLayer {
+    extends TipiTableBaseLayer {
   private int direction = BoxLayout.Y_AXIS;
   private boolean scroll = false;
   private Font titleFont = null;
@@ -62,11 +62,11 @@ public class TipiScrollLayer
       return;
     }
     final Stack newStack = (Stack) layerStack.clone();
-    final TipiMegaTableLayer nextLayer = (TipiMegaTableLayer) newStack.pop();
+    final TipiTableBaseLayer nextLayer = (TipiTableBaseLayer) newStack.pop();
     final Message msg = nextMessage;
     myTable.runASyncInEventThread(new Runnable() {
       public void run() {
-        PrintPanel jt = new PrintPanel();
+        JPanel jt = new JPanel();
         BoxLayout myLayout = new BoxLayout(jt, direction);
         jt.setLayout(myLayout);
         if (scroll) {
@@ -101,7 +101,7 @@ public class TipiScrollLayer
 //            }
 //          }
 
-          JPanel newPanel = new PrintPanel();
+          JPanel newPanel = new JPanel();
           newPanel.setLayout(new BorderLayout());
           if (titleFont!=null) {
             newPanel.setBorder(BorderFactory.createTitledBorder(newPanel.getBorder(),title,1,1,titleFont));
