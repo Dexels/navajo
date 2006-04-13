@@ -238,13 +238,24 @@ public abstract class TipiContext
     String navajoPassword = (String)attemptGenericEvaluate(config.getStringAttribute("password", ""));
     setSystemProperty("tipi.client.password", navajoPassword, false);
     if (!impl.equals("direct")) {
+        
 //      System.err.println("Using INDIRECT. Username = " + navajoUsername);
-      NavajoClientFactory.createDefaultClient();
-      NavajoClientFactory.getClient().setServerUrl(navajoServer);
-      NavajoClientFactory.getClient().setUsername(navajoUsername);
-      NavajoClientFactory.getClient().setPassword(navajoPassword);
+        if(impl.equals("socket")) {
+            NavajoClientFactory.resetClient();
+            ClientInterface ci =  NavajoClientFactory.createClient("com.dexels.navajo.client.NavajoSocketClient",null);
+            NavajoClientFactory.getClient().setServerUrl(navajoServer);
+            NavajoClientFactory.getClient().setUsername(navajoUsername);
+            NavajoClientFactory.getClient().setPassword(navajoPassword);
+        } else {
+            NavajoClientFactory.resetClient();
+            NavajoClientFactory.createDefaultClient();
+            NavajoClientFactory.getClient().setServerUrl(navajoServer);
+            NavajoClientFactory.getClient().setUsername(navajoUsername);
+            NavajoClientFactory.getClient().setPassword(navajoPassword);
+        }
     }
     else {
+        NavajoClientFactory.resetClient();
       NavajoClientFactory.createClient("com.dexels.navajo.client.impl.DirectClientImpl", getClass().getClassLoader().getResource(cfg));
     }
     if (secure) {
