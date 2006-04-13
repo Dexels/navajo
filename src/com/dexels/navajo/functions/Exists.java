@@ -15,11 +15,11 @@ import com.dexels.navajo.server.*;
  * @version 1.0
  */
 
-public class ForAll extends FunctionInterface {
-	public ForAll() {
+public class Exists extends FunctionInterface {
+	public Exists() {
 	}
 	public String remarks() {
-		return "Evaluates a condition (expression evaluating to a boolean) under all the messages of an array message. It will return a 'AND' of all the results";
+		return "Evaluates a condition (expression evaluating to a boolean) under any the messages of an array message. It will return a 'OR' of all the results";
 	}
 	public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
 		/**@todo Implement this com.dexels.navajo.parser.FunctionInterface abstract method*/
@@ -84,8 +84,8 @@ public class ForAll extends FunctionInterface {
 						
 						
 						boolean res = ((Boolean)result2.value).booleanValue();
-						if (!res) {
-							return new Boolean(false);
+						if (res) {
+							return new Boolean(true);
 						}
 					}
 				} catch (SystemException ex) {
@@ -96,10 +96,10 @@ public class ForAll extends FunctionInterface {
 			throw new TMLExpressionException(this,"Error evaluating message path");
 		}
 		
-		return new Boolean(true);
+		return new Boolean(false);
 	}
 	public String usage() {
-		return "ForAll('ArrayMessage','Expression'[, 'Filter']) *ArrayMessage can be both a path and a message";
+		return "Exists('ArrayMessage','Expression'[, 'Filter']) *ArrayMessage can be both a path and a message";
 	}
 	
 }
