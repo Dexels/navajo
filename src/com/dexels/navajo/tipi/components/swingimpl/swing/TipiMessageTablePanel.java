@@ -16,7 +16,7 @@ public class TipiMessageTablePanel extends MessageTablePanel {
         super(new TipiMessageTable(tc));
     }
     
-    public void setPreferredSize(Dimension d) {
-        // ignore
-    }
+//    public void setPreferredSize(Dimension d) {
+//        // ignore
+//    }
 }

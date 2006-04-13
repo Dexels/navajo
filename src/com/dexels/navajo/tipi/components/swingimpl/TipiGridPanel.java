@@ -135,7 +135,7 @@ public class TipiGridPanel extends TipiPanel {
 		 Integer h = ((Integer)heightStrutComponentMap.get(component));
 		 int height = 0;
 		 if (h==null) {
-			 height = component.getPreferredSize().height;
+			 height = 0;
 		 } else {
 			 height = h.intValue();
 		 }
@@ -153,6 +153,7 @@ public class TipiGridPanel extends TipiPanel {
          if (vertical<=0) {
              vertical = Integer.MAX_VALUE;
          }
+        
 //         System.err.println("UPDATING::::: "+horizontal+" / "+vertical);
 //         System.err.println("PREF: "+component.getPreferredSize().width+" -- "+component.getPreferredSize().height);
 //         System.err.println("min: "+component.getMinimumSize().width+" -- "+component.getMinimumSize().height);
@@ -166,8 +167,8 @@ public class TipiGridPanel extends TipiPanel {
              if (isFixed(currentx)) {
 //                 System.err.println("Harrr. Not good. Bad prefsize.");
 //                component.setPreferredSize(new Dimension(horizontal,5));
-//                 component.setM
             }
+             component.setMaximumSize(new Dimension(horizontal,vertical));
              
 //             component.setPreferredSize(new Dimension(horizontal,vertical));
              	}
@@ -256,6 +257,7 @@ public class TipiGridPanel extends TipiPanel {
                 int height = Integer.parseInt(value);
                 addHeightStrut(currenty, height, current);
                 current.setMaximumSize(new Dimension(current.getMaximumSize().width,height));
+                current.setPreferredSize(new Dimension(current.getMaximumSize().width,height));
             }
 		}
 //        if ("maxheight".equals(key)) {
