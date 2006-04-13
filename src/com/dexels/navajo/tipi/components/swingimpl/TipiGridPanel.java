@@ -164,8 +164,9 @@ public class TipiGridPanel extends TipiPanel {
 //                    component.setMaximumSize(new Dimension(horizontal,vertical));
                     }
              if (isFixed(currentx)) {
-                 System.err.println("Harrr. Not good. Bad prefsize.");
-                component.setPreferredSize(new Dimension(horizontal,5));
+//                 System.err.println("Harrr. Not good. Bad prefsize.");
+//                component.setPreferredSize(new Dimension(horizontal,5));
+//                 component.setM
             }
              
 //             component.setPreferredSize(new Dimension(horizontal,vertical));
