@@ -33,10 +33,17 @@ public class TipiSwingPanel
 
   private String alignment = CENTER;
 
-  private TipiSwingDataComponentImpl me;
+  private final TipiSwingDataComponentImpl myComponent;
+
   public TipiSwingPanel(TipiSwingDataComponentImpl me) {
-    this.me = me;
+    this.myComponent = me;
   }
+
+  public TipiSwingPanel() {
+      this.myComponent = null;
+    }
+  
+  
   private Dimension checkMax(Dimension preferredSize) {
       Dimension maximumSize = getMaximumSize();
       if (maximumSize==null) {
@@ -60,7 +67,10 @@ public class TipiSwingPanel
   }
 public void paintComponent(Graphics g) {
     super.paintComponent(g);
-    TipiGradientPaint myPaint = me.getPaint();
+    if (myComponent==null) {
+        return;
+    }
+    TipiGradientPaint myPaint = myComponent.getPaint();
     if(myPaint != null){
       myPaint.setBounds(this.getBounds());
       Paint p =  myPaint.getPaint();
@@ -102,7 +112,7 @@ public void paintComponent(Graphics g) {
     }
     Color old = g.getColor();
     if (selected) {
-      me.highLight(this, g);
+      myComponent.highLight(this, g);
     }
     g.setColor(old);
   }
