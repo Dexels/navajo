@@ -7,9 +7,7 @@ import nextapp.echo2.app.Extent;
 import nextapp.echo2.app.event.ActionEvent;
 import nextapp.echo2.app.event.ActionListener;
 
-import com.dexels.navajo.document.Message;
-import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.components.echoimpl.impl.MessageTable;
@@ -128,7 +126,16 @@ public class TipiTable extends TipiEchoDataComponentImpl {
 		for (int i = 0; i < children.size(); i++) {
 			XMLElement child = (XMLElement) children.elementAt(i);
 			if (child.getName().equals("column")) {
-				String label = (String) child.getAttribute("label");
+                Operand o = evaluate(child.getStringAttribute("label"),this,null);
+                String label = null;
+                if (o==null) {
+                    label = "";
+                } else {
+                    label = (String) o.value;
+                    if (label==null) {
+                        label="";
+                    }
+                }
 				String name = (String) child.getAttribute("name");
 				String editableString = (String) child.getAttribute("editable");
 				int size = child.getIntAttribute("size",-1);

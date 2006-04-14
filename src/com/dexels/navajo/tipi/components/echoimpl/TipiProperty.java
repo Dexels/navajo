@@ -51,17 +51,8 @@ public class TipiProperty extends TipiEchoComponentImpl implements
 	}
 
 	public void setProperty(Property p) {
-//		try {
-//			System.err.println("Setting property: " + p.getFullPropertyName());
-//		} catch (NavajoException ex1) {
-//			ex1.printStackTrace();
-//		}
 		myProperty = p;
-		try {
 			((EchoPropertyComponent) getContainer()).setProperty(p);
-		} catch (NavajoException ex) {
-			ex.printStackTrace();
-		}
 	}
 
 	public void propertyEventFired(Property p, String eventType) {
@@ -186,6 +177,23 @@ public class TipiProperty extends TipiEchoComponentImpl implements
             boolean val = ((Boolean)object).booleanValue();
            me.setUseCheckBoxes(val);
         }
+        if("memoRowCount".equals(name)) {
+            myPropertyComponent.setMemoRowCount( ( (Integer) object).intValue());            
+        }
+        if("memoColumnCount".equals(name)) {
+            myPropertyComponent.setMemoColumnCount( ( (Integer) object).intValue());            
+        }
+        if("checkboxGroupColumnCount".equals(name)) {
+            myPropertyComponent.setCheckboxGroupColumnCount( ( (Integer) object).intValue());            
+        }
+//        if("verticalScrolls".equals(name)) {
+//            setVerticalScrolls(((Boolean) object).booleanValue());
+//        }
+//        if("horizontalScrolls".equals(name)) {
+//            setHorizontalScrolls(((Boolean) object).booleanValue());
+//        }
+        
+        
        
 		super.setComponentValue(name, object);
 	}

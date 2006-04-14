@@ -15,11 +15,13 @@ import nextapp.echo2.app.event.DocumentListener;
 import nextapp.echo2.app.layout.GridLayoutData;
 import nextapp.echo2.app.list.ListSelectionModel;
 import nextapp.echo2.app.table.TableCellRenderer;
+import nextapp.echo2.app.text.*;
 
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.nanoimpl.PropertyImpl;
+import com.dexels.navajo.document.types.*;
 import com.dexels.navajo.tipi.actions.PropertyEventListener;
 import com.dexels.navajo.tipi.components.echoimpl.impl.BinaryPropertyImage;
 import com.dexels.navajo.tipi.components.echoimpl.impl.MessageTable;
@@ -41,7 +43,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 	Label l = null;
 
 	int label_indent = 100;
-	int value_size = 150;
+	int value_size = 0;
 
     private int selectionMode = SELECTIONMODE_COMBO;
     
@@ -52,6 +54,11 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
     private boolean useCheckBoxes = false;
     protected boolean doUpdateRadioButtons = true;
 
+    
+    private int checkboxGroupColumnCount = 0;
+    private int memoColumnCount = 0;
+    private int memoRowCount = 0;    
+    
 	public EchoPropertyComponent() {
 		super(2);
 	}
@@ -76,7 +83,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 		firePropertyEvents(myProperty, type);
 	}
 
-	public void setProperty(Property p) throws NavajoException {
+	public void setProperty(Property p) {
 		myProperty = p;
 		removeAll();
 		if (p == null) {
@@ -96,73 +103,41 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 			add(l);
 //			System.err.println("SETTING COLUMN WIDTH::: "+label_indent);
 			setColumnWidth(0,new Extent(label_indent,Extent.PX));
-			setColumnWidth(1,new Extent(value_size,Extent.PX));
+            if (value_size==0) {
+                setColumnWidth(1,new Extent(60,Extent.PERCENT));
+            } else {
+                setColumnWidth(1,new Extent(value_size,Extent.PX));
+            }
 			currentComponent = l;
 			
 		}
 
 		String type = p.getType();
 		if (type.equals(Property.SELECTION_PROPERTY)) {
-			if (p.getCardinality().equals("1")) {
-			    switch (selectionMode) {
-                case SELECTIONMODE_COMBO:
-                    createComboBox(p);
-                    break;
-                case SELECTIONMODE_RADIO:
-                    createRadioButtons(p);
-                    break;
-
-                }
-			} else {
-                if (useCheckBoxes ) {
-                    createCheckBoxes(p);
-                } else {
-                    createMultiSelect(p);
-                }
-			}
+			createSelectionProperty(p);
 		}
 		if (type.equals(Property.INTEGER_PROPERTY)
 				|| type.equals(Property.STRING_PROPERTY)
 				|| type.equals(Property.FLOAT_PROPERTY)
 				|| type.equals(Property.DATE_PROPERTY)) {
-			boolean isEdit = p.isDirIn();
-			if (alwaysUseLabel) {
-                createLabel(p);
-            } else {
-                if ((isEdit && !useLabelForReadOnlyProperties)) {
-                    createTextField(p);
-
-                } else {
-                    createLabel(p);
-
-                }
-            }
+			createGenericTextProperty(p);
 		}
-		if (type.equals(Property.BOOLEAN_PROPERTY)) {
-			if (p.isDirIn()) {
-                if (alwaysUseLabel) {
-                    createBooleanLabel(p);
-               } else {
-                   createCheckBox(p);
-               }
-			} else {
-				if (alwaysUseLabel || useLabelForReadOnlyProperties) {
-					createBooleanLabel(p);
-					
-				} else {
-					final TipiEchoTextField tf = new TipiEchoTextField(p.getValue());
-					tf.setWidth(new Extent(value_size));
-					tf.setEnabled(false);
-					tf.setForeground(new Color(90,90,90));
-					boolean res = ((Boolean)p.getTypedValue()).booleanValue();
+        
+        if (type.equals(Property.MONEY_PROPERTY)) {
+            createMoneyProperty(p);
+        }
+        if (type.equals(Property.PERCENTAGE_PROPERTY)) {
+            createPercentageProperty(p);
+        }
+        if (type.equals(Property.CLOCKTIME_PROPERTY)) {
+            createClockTimeProperty(p);
+        }
+        if (type.equals(Property.STOPWATCHTIME_PROPERTY)) {
+            createStopwatchTimeProperty(p);
+        }
 
-					tf.setText(res?"ja":"nee");
-					
-					add(tf);
-					currentComponent = tf;
-				}
-				
-			}
+        if (type.equals(Property.BOOLEAN_PROPERTY)) {
+			createBooleanProperty(p);
 		}
 
 		if (type.equals(Property.MEMO_PROPERTY)) {
@@ -176,10 +151,169 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 		if (type.equals(Property.PASSWORD_PROPERTY)) {
 			createPasswordField(p);
 		}
-		GridLayoutData gld = new GridLayoutData();
-		gld.setAlignment(new Alignment(Alignment.LEADING,Alignment.CENTER));
-		currentComponent.setLayoutData(gld);
+		if (currentComponent!=null) {
+            GridLayoutData gld = new GridLayoutData();
+            System.err.println("");
+            gld.setAlignment(new Alignment(Alignment.LEADING,Alignment.CENTER));
+            currentComponent.setLayoutData(gld);
+        } else {
+            System.err.println("Ayy, strange property: "+myProperty.getType());
+        }
 	}
+
+    private void createSelectionProperty(Property p) {
+        try {
+            if (p.getCardinality().equals("1")) {
+                switch (selectionMode) {
+                case SELECTIONMODE_COMBO:
+                    createComboBox(p);
+                    break;
+                case SELECTIONMODE_RADIO:
+                    createRadioButtons(p);
+                    break;
+
+                }
+            } else {
+                if (useCheckBoxes ) {
+                    createCheckBoxes(p);
+                } else {
+                    createMultiSelect(p);
+                }
+            }
+        } catch (NavajoException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void createGenericTextProperty(Property p) {
+        boolean isEdit = p.isDirIn();
+        System.err.println("CREATING GENERIC TEXT. ISEDIT: "+isEdit+" alwaysLabE: "+alwaysUseLabel);
+        if (alwaysUseLabel) {
+            createLabel(p.getValue());
+        } else {
+            if ((isEdit || !useLabelForReadOnlyProperties)) {
+                System.err.println("My property type: "+p.getType());
+                createTextField(p);
+
+            } else {
+                createLabel(p.getValue());
+
+            }
+        }
+    }
+
+    private void createMoneyProperty(Property p) {
+        boolean isEdit = p.isDirIn();
+        Money m = (Money)p.getTypedValue();
+        if (m==null) {
+            createLabel("-");
+            return;
+        }
+
+        if (alwaysUseLabel) {
+            createLabel(m.formattedString());
+        } else {
+            if ((isEdit || !useLabelForReadOnlyProperties)) {
+                createTextField(p);
+
+            } else {
+                createLabel(m.formattedString());
+
+            }
+        }
+    }
+    
+    private void createPercentageProperty(Property p) {
+        boolean isEdit = p.isDirIn();
+        Percentage m = (Percentage)p.getTypedValue();
+        if (m==null) {
+            createLabel("-");
+            return;
+        }
+
+        if (alwaysUseLabel) {
+            createLabel(m.formattedString());
+        } else {
+            if ((isEdit || !useLabelForReadOnlyProperties)) {
+                createTextField(p);
+
+            } else {
+                createLabel(m.formattedString());
+
+            }
+        }
+    }
+    
+    private void createStopwatchTimeProperty(Property p) {
+        boolean isEdit = p.isDirIn();
+        StopwatchTime m = (StopwatchTime)p.getTypedValue();
+        if (m==null) {
+            createLabel("-");
+            return;
+        }
+
+        if (alwaysUseLabel) {
+            createLabel(m.toString());
+        } else {
+            if ((isEdit || !useLabelForReadOnlyProperties)) {
+                createTextField(p);
+
+            } else {
+                createLabel(m.toString());
+
+            }
+        }
+    }    
+    private void createClockTimeProperty(Property p) {
+        boolean isEdit = p.isDirIn();
+        ClockTime m = (ClockTime)p.getTypedValue();
+        if (m==null) {
+            createLabel("-");
+            return;
+        }
+
+        if (alwaysUseLabel) {
+            createLabel(m.toString());
+        } else {
+            if ((isEdit || !useLabelForReadOnlyProperties)) {
+                createTextField(p);
+
+            } else {
+                createLabel(m.toString());
+
+            }
+        }
+    }    
+    private void createBooleanProperty(Property p) {
+//        StreamImageReference rir = new StreamImageReference();
+        
+        if (p.isDirIn()) {
+            if (alwaysUseLabel) {
+                createBooleanLabel(p);
+           } else {
+               createCheckBox(p);
+           }
+        } else {
+        	if (alwaysUseLabel || useLabelForReadOnlyProperties) {
+        		createBooleanLabel(p);
+        		
+        	} else {
+        		final TipiEchoTextField tf = new TipiEchoTextField(p.getValue());
+                if (value_size!=0) {
+                    tf.setWidth(new Extent(value_size));
+                }
+                tf.setEnabled(false);
+        		tf.setForeground(new Color(90,90,90));
+        		boolean res = ((Boolean)p.getTypedValue()).booleanValue();
+
+        		tf.setText(res?"ja":"nee");
+        		
+        		add(tf);
+        		currentComponent = tf;
+        	}
+        	
+        }
+    }
 
     private void createBooleanLabel(Property p) {
         Label ll = new Label(p.getValue());
@@ -193,8 +327,11 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
     }
 
     private void createPasswordField(Property p) {
+      
         final PasswordField tf = new PasswordField();
-        tf.setWidth(new Extent(value_size));
+        if (value_size!=0) {
+            tf.setWidth(new Extent(value_size));
+        }
         tf.setText(p.getValue());
         add(tf);
         boolean isEdit = p.isDirIn();
@@ -223,11 +360,17 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
     }
 
     private void createMemoProperty(Property p) {
-        final TextArea cb = new TextArea();
-       
-        System.err.println("Creating memo property: "+value_size);
-        cb.setWidth(new Extent(value_size,Extent.PX));
+        int row = memoRowCount==0?5:memoRowCount;
+        int column = memoColumnCount==0?80:memoColumnCount;
+        if (alwaysUseLabel) {
+            createLabel(p.getValue());
+            return;
+        }
+        final TextArea cb = new TextArea(new StringDocument(),"",column,row);
+        System.err.println("Creating memo property: "+column+" row: "+row+" val: "+value_size);
+        cb.setWidth(new Extent(memoColumnCount,Extent.EM));
         cb.setText(p.getValue());
+        
         add(cb);
         cb.setEnabled(p.isDirIn());
         cb.addActionListener(new ActionListener(){
@@ -256,7 +399,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 
     private void createCheckBox(Property p) {
         final CheckBox cb = new CheckBox();
-        cb.setSelected(myProperty.getValue().equals("true"));
+        cb.setSelected("true".equals(myProperty.getValue()));
         add(cb);
         cb.addChangeListener(new ChangeListener(){
 
@@ -272,16 +415,15 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
         	}});
         cb.setEnabled(myProperty.isDirIn());
         currentComponent = cb;
-        boolean res = ((Boolean)p.getTypedValue()).booleanValue();
-        cb.setSelected(res);
+//        boolean res = ((Boolean)p.getTypedValue()).booleanValue();
+//        cb.setSelected(res);
     }
 
-    private void createLabel(Property p) {
-        String value = p.getValue();
+    private void createLabel(String value) {
         if (value==null) {
         	value = "";
         }
-        final Label tf = new Label(p.getValue());
+        final Label tf = new Label(value);
         tf.setTextAlignment(new Alignment(Alignment.LEADING,Alignment.CENTER));
         add(tf);
         GridLayoutData gd = new GridLayoutData();
@@ -292,10 +434,13 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 
     private void createTextField(Property p) {
         final TipiEchoTextField tf = new TipiEchoTextField(p.getValue());
-        tf.setWidth(new Extent(value_size));
+        if (value_size!=0) {
+            tf.setWidth(new Extent(value_size));
+        }
         if (!p.isDirIn()) {
         	tf.setForeground(new Color(90,90,90));
         }
+        System.err.println("Created textfield. Dirin: "+p.isDirIn());
         add(tf);
         tf.setEnabled(p.isDirIn());
         tf.getDocument().addDocumentListener(new DocumentListener() {
@@ -324,7 +469,9 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
         ListBox lb = new ListBox(p.getAllSelections().toArray());
         add(lb);
         lb.setEnabled(p.isDirIn());
-        lb.setWidth(new Extent(value_size));
+        if (value_size!=0) {
+            lb.setWidth(new Extent(value_size));
+        }
         lb.setSelectionMode(ListSelectionModel.MULTIPLE_SELECTION);
         for (int i = 0; i < p.getAllSelections().size(); i++) {
         	Selection current = (Selection) p.getAllSelections().get(i);
@@ -391,7 +538,19 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 //        }
     }
 
+    public void setMemoRowCount(int row) {
+        memoRowCount = row;
+        if (getProperty()!=null) {
+          setProperty(getProperty());
+      }
+    }
 
+    public void setMemoColumnCount(int column) {
+        memoColumnCount = column;
+         if (getProperty()!=null) {
+          setProperty(getProperty());
+      }
+    }
     private void createCheckBoxes(final Property p) throws NavajoException {
         final Component r = new Column();
         final Map buttons = new HashMap();
@@ -463,8 +622,10 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
         	final SelectField lb = new SelectField(p.getAllSelections().toArray());
         	add(lb);
         	lb.setEnabled(p.isDirIn());
-        	lb.setWidth(new Extent(value_size));
-        	PropertyImpl ppp = (PropertyImpl)p;
+            if (value_size!=0) {
+                lb.setWidth(new Extent(value_size));
+            }
+            PropertyImpl ppp = (PropertyImpl)p;
         		ArrayList ss = p.getAllSelections();
         		for (int i = 0; i < ss.size(); i++) {
         			Selection cc = (Selection)ss.get(i);
@@ -504,7 +665,9 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
         
         } else {
         	final TipiEchoTextField tf = new TipiEchoTextField(p.getValue());
-        	tf.setWidth(new Extent(value_size));
+            if (value_size!=0) {
+                tf.setWidth(new Extent(value_size));
+            }
         	tf.setEnabled(false);
         	tf.setForeground(new Color(90,90,90));
         	
@@ -523,7 +686,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 
 	public Component getTableCellRendererComponent(final Table table, final Object value,
 			final int column, final int row) {
-		try {
+//		try {
 			showLabel = false;
 			EchoPropertyComponent epc = new EchoPropertyComponent();
 			epc.setUseLabelForReadOnlyProperties(true);
@@ -544,10 +707,10 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 //			epc.setBackground(null);
 //			epc.currentComponent.setBackground(null);
 			return epc;
-		} catch (NavajoException ex) {
-			ex.printStackTrace();
-		}
-		return null;
+//		} catch (NavajoException ex) {
+//			ex.printStackTrace();
+//		}
+//		return null;
 	}
 
 	public void setLabelVisible(boolean b) {
@@ -622,6 +785,10 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
             setProperty(getProperty());
         }
     
+    }
+
+    public void setCheckboxGroupColumnCount(int i) {
+        // Ignored for now
     }
 
 }

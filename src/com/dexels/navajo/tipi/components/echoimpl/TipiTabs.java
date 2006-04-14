@@ -6,9 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import nextapp.echo2.app.Border;
-import nextapp.echo2.app.Color;
-import nextapp.echo2.app.Component;
+import nextapp.echo2.app.*;
 
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiComponentMethod;
@@ -57,12 +55,30 @@ public class TipiTabs extends TipiEchoDataComponentImpl {
 		final TipiComponent me = this;
 		myTabbedPane = new TabbedPane();
 		defaultTabModel = new DefaultTabModel();
-		myTabbedPane.setTabSpacing(0);
+        defaultTabModel.setSelectedBackground(new Color(204,204,204));
+        defaultTabModel.setSelectedForeground(new Color(0,0,0));
+        defaultTabModel.setForeground(new Color(153,153,153));
+        defaultTabModel.setRolloverForeground(new Color(68,68,68));
+           defaultTabModel.setSelectedRolloverForeground(new Color(68,68,68));
+        defaultTabModel.setSelectedFont(new Font(Font.ARIAL,Font.BOLD,new Extent(10,Extent.PT)));
+        defaultTabModel.setFont(new Font(Font.ARIAL,Font.PLAIN,new Extent(10,Extent.PT)));
+        defaultTabModel.setRolloverFont(new Font(Font.ARIAL,Font.BOLD,new Extent(10,Extent.PT)));
+        
+//        defaultTabModel.setBackground(new Color(204,204,204));
+//        defaultTabModel.setRolloverBackground(new Color(204,204,204));
+//        defaultTabModel.setSelectedRolloverBackground(new Color(204,204,204));
+//        
+        defaultTabModel.setBackground(new Color(255,255,255));
+        defaultTabModel.setRolloverBackground(new Color(255,255,255));
+        defaultTabModel.setSelectedRolloverBackground(new Color(255,255,255));
+        
+        
 //		myTabbedPane.setForeground(new Color(0,0,0));
 		myTabbedPane.setModel(defaultTabModel);
 		TipiHelper th = new EchoTipiHelper();
 		th.initHelper(this);
 		addHelper(th);
+        myTabbedPane.setTabSpacing(0);
 		myTabbedPane.addPropertyChangeListener(new PropertyChangeListener() {
 
 			public void propertyChange(PropertyChangeEvent evt) {
@@ -143,7 +159,7 @@ public class TipiTabs extends TipiEchoDataComponentImpl {
 //		System.err.println("Tab count: "+getChildCount());
 //		ButtonEx notSelected =(ButtonEx)defaultTabModel.getTabAt(getChildCount()-1,false);
 		ButtonEx selected =(ButtonEx)defaultTabModel.getTabAt(getChildCount()-1,true);
-		selected.setBorder(new Border(1,new Color(50,50,50),Border.STYLE_GROOVE));
+        selected.setBorder(new Border(1,new Color(50,50,50),Border.STYLE_GROOVE));
 
 		//		selected.setText("Selected");
 //		notSelected.setText("Not selected");
@@ -153,15 +169,7 @@ public class TipiTabs extends TipiEchoDataComponentImpl {
 //		selected.setBackground(myTabbedPane.getBackground());
 //		notSelected.setForeground(new Color(0,0,0));
 //		notSelected.setBackground(new Color(150,150,150));
-		defaultTabModel.setSelectedBackground(new Color(204,204,204));
-		defaultTabModel.setSelectedForeground(new Color(0,0,0));
-		defaultTabModel.setBackground(new Color(204,204,204));
-		defaultTabModel.setForeground(new Color(153,153,153));
-		defaultTabModel.setRolloverBackground(new Color(204,204,204));
-		defaultTabModel.setRolloverForeground(new Color(68,68,68));
-		defaultTabModel.setSelectedRolloverBackground(new Color(204,204,204));
-		defaultTabModel.setSelectedRolloverForeground(new Color(68,68,68));
-	}
+		     	}
 
 	public void setComponentValue(String name, Object object) {
 		super.setComponentValue(name, object);

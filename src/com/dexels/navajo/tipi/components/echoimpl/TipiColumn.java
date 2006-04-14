@@ -8,21 +8,13 @@ public class TipiColumn extends TipiEchoDataComponentImpl {
 	private Column myColumn;
 
 	public Object createContainer() {
-		ContainerEx myContainer = new ContainerEx();
 		myColumn = new Column();
-		// myColumn.setLayoutData(new ColumnLayoutData());
-		myContainer.add(myColumn);
-		return myContainer;
-	}
+		return myColumn;
+    }
 
 	public void addToContainer(Object c, Object constraints) {
 		Component comp = (Component) c;
 		myColumn.add(comp);
-		System.err.println(">>>>>>>>>|||||||||||||||||| Added to container...");
 	}
-
-	// public Object getActualComponent() {
-	// return myColumn;
-	// }
 
 }

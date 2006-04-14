@@ -39,6 +39,8 @@
             <value direction="inout" name="questionDefinitionName" type="string"/>
             <value direction="inout" name="questionGroupPath" type="object"/>
             <value direction="inout" name="columnWidth" type="string"/>
+            <value direction="in" name="subQuestionPath" type="string"/>
+            <value direction="in" name="background" type="color"/>
         </values>
         <methods>
             <method name="print"/>
@@ -60,7 +62,13 @@
             <value direction="in" name="valid" type="boolean"/>
             <value direction="out" name="description" type="string"/>
             <value direction="inout" name="columnWidth" type="string"/>
-        </values>
+			<!-- The component the actual questions will be added to-->
+            <value direction="inout" name="subComponent" type="string"/>
+            <!-- with the following constraint -->
+            <value direction="inout" name="subConstraint" type="string"/>
+            <value direction="in" name="subQuestionPath" type="string"/>            
+            <value direction="in" name="background" type="color"/>
+    </values>
     </tipiclass>
     <tipiclass addtocontainer="true" childcount="*" class="TipiScrollQuestionGroup" layoutmanager="true"
         module="data" name="tipiscrollquestiongroup" package="com.dexels.navajo.tipi.components.echoimpl"
@@ -77,6 +85,7 @@
             <value direction="inout" name="questionGroupDefinitionName" type="string"/>
             <value direction="in" name="valid" type="boolean"/>
             <value direction="out" name="description" type="string"/>
+            <value direction="in" name="background" type="color"/>
         </values>
     </tipiclass>
         
@@ -100,6 +109,7 @@
             <value direction="in" name="questionGroupDefinitionName" type="string"/>
             <value direction="in" name="valid" type="boolean"/>
             <value direction="out" name="currentPage" type="integer"/>
+    	    <value direction="in" name="background" type="color"/>
         </values>
         <methods>
             <method name="flatten">
@@ -141,6 +151,7 @@
             <value direction="in" name="questionGroupDefinitionName" type="string"/>
             <value direction="in" name="valid" type="boolean"/>
             <value direction="out" name="currentPage" type="integer"/>
+            <value direction="in" name="background" type="color"/>
         </values>
         <methods>
             <method name="flatten">
@@ -199,8 +210,22 @@
             <value direction="in" name="enabled" type="boolean"/>
             <value direction="in" name="visible" type="boolean"/>
             <value direction="inout" name="title" type="string"/>
-            <value direction="in" name="w" type="integer"/>
-            <value direction="in" name="h" type="integer"/>
+            <value direction="in" name="background" type="color"/>
+            <value direction="in" name="foreground" type="color"/>
+            <value direction="in" name="border" type="border"/>
+        </values>
+        <methods/>
+    </tipiclass>
+   <tipiclass class="TipiRow" name="row" package="com.dexels.navajo.tipi.components.echoimpl" type="tipi" childcount="*" layoutmanager="true" addtocontainer="true">
+        <events>
+            <event name="onInstantiate"/>
+            <event name="onLoad"/>
+            <event name="onGeneratedErrors"/>
+        </events>
+        <values>
+            <value direction="in" name="enabled" type="boolean"/>
+            <value direction="in" name="visible" type="boolean"/>
+            <value direction="inout" name="title" type="string"/>
             <value direction="in" name="background" type="color"/>
             <value direction="in" name="foreground" type="color"/>
             <value direction="in" name="border" type="border"/>
@@ -231,7 +256,7 @@
 
   	<tipiclass class="TipiGridLayout" name="grid" package="com.dexels.navajo.tipi.components.echoimpl" type="layout"/>
     
-   <tipiclass class="TipiTable" name="tipitable" package="com.dexels.navajo.tipi.components.echoimpl" type="tipi" childcount="0" layoutmanager="false" addtocontainer="true">
+   <tipiclass class="TipiTable" name="tipitable" package="com.dexels.navajo.tipi.components.echoimpl" type="tipi" childcount="0" layoutmanager="false" addtocontainer="true" customstructure="true">
         <events>
             <event name="onInstantiate"/>
             <event name="onActionPerformed"/>
@@ -239,6 +264,7 @@
             <event name="onLoad"/>
         </events>
         <values>
+            <value direction="inout" name="messagepath" type="string"/>        
             <value direction="inout" name="selectedIndex" type="integer"/>
             <value direction="inout" name="filtersvisible" type="boolean"/>
             <value direction="inout" name="columnsvisible" type="boolean"/>
@@ -625,14 +651,19 @@
             <value direction="inout" name="label_indent" type="integer"/>
             <value direction="inout" name="showlabel" type="boolean" value="true"/>
             <value direction="inout" name="capitalization" type="selection" value="'off'">
-                <option description="No capitalization" value="off"/>
+                <option description="No capitalization'" value="off"/>
                 <option description="Capitalize first letter" value="firstupper"/>
                 <option description="Capitalize all letters" value="upper"/>
                 <option description="Make all letters lowercase" value="lower"/>
             </value>
             <value direction="in" name="useLabelsForReadOnly" type="boolean" value="true"/>
-            <value direction="in" name="alwaysUseLabel" type="boolean" value="true"/>
-           <value direction="in" name="useCheckBoxes" type="boolean" value="true"/>
+            <value direction="in" name="alwaysUseLabel" type="boolean" value="false"/>
+           	<value direction="in" name="useCheckBoxes" type="boolean" value="true"/>
+            <value direction="in" name="checkboxGroupColumnCount" type="integer"/>
+            <value direction="in" name="memoRowCount" type="integer"/>
+            <value direction="in" name="memoColumnCount" type="integer"/>
+            <value direction="in" name="horizontalScrolls" type="boolean"/>
+            <value direction="in" name="verticalScrolls" type="boolean"/>
           
             
         </values>
@@ -721,6 +752,73 @@
             <value direction="in" name="border" type="border"/>
          </values>
         <methods>
+        </methods>
+    </tipiclass>
+    
+    <tipiclass addtocontainer="true" childcount="0" class="TipiMegaTable" layoutmanager="false"
+        module="data" name="tipimegatable"
+        package="com.dexels.navajo.tipi.components.echoimpl.tipimegatable"
+        studio-icon="tipitable.gif" type="tipi" customstructure="true">
+        <events>
+            <event name="onInstantiate"/>
+            <event name="onLoad">
+                <param name="service" type="string"/>
+            </event>
+            <event name="onActionPerformed">
+                <param name="table" type="object"/>
+                <param name="selected" type="message"/>
+				<param name="title" type="string" value="'Edit'"/>
+            </event>
+            <event name="onValueChanged">
+                <param name="name" type="string"/>
+                <param name="old" type="string"/>
+                <param name="new" type="string"/>
+                <param name="path" type="string"/>
+            </event>
+        </events>
+        <values>
+            <value direction="inout" name="useTabs" type="boolean" value="true"/>
+            <value direction="inout" name="innerMessageName" type="string"/>
+            <value direction="inout" name="outerMessageName" type="string"/>
+            <value direction="inout" name="titlePropertyName" type="string"/>
+            <value direction="in" name="rowHeight" type="integer"/>
+            <value direction="in" name="breaks" type="string"/>
+            <value direction="inout" name="columnButtonVisible" type="boolean" value="false"/>
+            <value direction="inout" name="filtersVisible" type="boolean" value="false"/>
+            <value direction="inout" name="useScrollBars" type="boolean" value="true"/>
+            <value direction="inout" name="headerVisible" type="boolean" value="true"/>
+            <value direction="out" name="currentPage" type="integer"/>
+        </values>
+        <methods>
+            <method name="flatten">
+                <param name="serviceName" type="string"/>
+                <param name="hostUrl" type="string"/>
+                <param name="username" type="string"/>
+                <param name="password" type="string"/>
+                <param name="pincode" type="string"/>
+                <param name="keystore" type="string"/>
+                <param name="keypass" type="string"/>
+            </method>
+            <method name="showEditDialog">
+                <param name="table" type="object"/>
+                <param name="title" type="string" value="Edit"/>
+            </method>
+            <method name="refreshRemarks"/>
+            <method name="print">
+                <param name="printJob" type="object"/>
+                <param name="header" type="string"/>
+                <param name="footer" type="string"/>
+            </method>
+            <method name="printpreview">
+                <param name="printJob" type="object"/>
+                <param name="header" type="string"/>
+                <param name="footer" type="string"/>
+            </method>
+            <method name="printpreview"/>
+            <method name="export">
+                <param name="filename" type="string"/>
+                <param name="delimiter" type="string"/>
+            </method>
         </methods>
     </tipiclass>
 

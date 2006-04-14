@@ -1,5 +1,6 @@
 package com.dexels.navajo.tipi.components.echoimpl.impl;
 
+import java.util.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,7 +62,31 @@ public class MessageTableModel extends DefaultSortableTableModel 		implements Me
 	// private boolean lastSortedDirection = true;
 
 //	private List myData;
-
+    /**
+     * Creates a List of Lists based on the data backing this model
+     * in the superclass.
+     */
+    protected List getRows() {
+        List rows = new LinkedList();
+        for (int i=0; i<getRowCount(); i++){
+            List row = new LinkedList();
+            for (int j=0; j<getColumnCount(); j++) {
+                row.add(j,getValueAt(j,i));
+            }
+            // Fix, to make sure the sorting/selecting goes well
+            // I need to be able to find out what message it was originally.
+            Message current = null;
+            if (getColumnCount()>0) {
+                Property p = (Property)getValueAt(0, i);
+                if (p!=null) {
+                    current = p.getParentMessage();
+                }
+            }
+            row.add(current);
+            rows.add(row);
+        }
+        return rows;
+    }
 	public MessageTableModel(MessageTable t, TableColumnModel columnModel) {
 		super(columnModel);
 		this.myTable = t;
@@ -220,7 +245,14 @@ public class MessageTableModel extends DefaultSortableTableModel 		implements Me
 	// }
 
 	public Message getMessageRow(int row) {
-		if (row < 0) {
+        List l = getRows();
+        List rowList = (List)l.get(row);
+        Object last = rowList.get(rowList.size()-1);
+        if (last instanceof Message) {
+            return (Message)last;
+        }
+        System.err.println("Can not retrieve message. Sorry");
+        if (row < 0) {
 			return null;
 		}
 		if (myMessage == null) {

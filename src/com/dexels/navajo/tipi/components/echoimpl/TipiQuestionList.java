@@ -1,6 +1,7 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
 import com.dexels.navajo.tipi.components.core.*;
+import com.dexels.navajo.tipi.components.question.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.actions.*;
@@ -9,6 +10,8 @@ import com.dexels.navajo.tipi.internal.*;
 import java.io.*;
 import java.awt.*;
 import java.awt.print.*;
+
+import nextapp.echo2.app.*;
 
 /**
  * <p>Title: </p>
@@ -38,4 +41,22 @@ public class TipiQuestionList
       removeInstantiatedChildren();
   }
 
+public void runSyncInEventThread(Runnable r) {
+
+    r.run();
+}
+
+public Object createContainer() {
+    // TODO FIX AND TEST
+    return null;
+}
+public void setComponentValue(String name, Object object) {
+    if (name.equals("background")) {
+//        Color background = (Color) object;
+//        myColumn.setBackground(background);
+//         return;
+    }
+    
+    super.setComponentValue(name, object);
+}
  }

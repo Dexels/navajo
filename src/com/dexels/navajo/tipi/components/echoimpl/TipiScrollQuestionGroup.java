@@ -8,6 +8,7 @@ package com.dexels.navajo.tipi.components.echoimpl;
 
 
 import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.components.question.*;
 import com.dexels.navajo.tipi.internal.*;
 
 public class TipiScrollQuestionGroup extends TipiBaseQuestionGroup {
