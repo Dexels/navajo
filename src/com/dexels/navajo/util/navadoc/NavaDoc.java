@@ -175,7 +175,7 @@ public class NavaDoc {
    * has an HTML page generated.
    */
 
-  private void document(final DocumentSet dset) throws IOException, SAXException {
+  private void document(final DocumentSet dset) throws IOException {
 
     final File tPath = dset.getPathConfiguration().getPath(NavaDocConstants.
         TARGET_PATH_ELEMENT);

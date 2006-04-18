@@ -351,12 +351,11 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
     } catch ( Exception e ) {
     	
     	this.errorText = "unable to transform source '" + sFileOrig + "': " + e;
-    	System.err.println(errorText);
-    	e.printStackTrace( System.err );
+    	//System.err.println(errorText);
+    	//e.printStackTrace( System.err );
     	
     	this.setErrorText( body );
     	
-    	System.exit(1);
     	
     } finally {
     	if ( tempsFile != null ) {
