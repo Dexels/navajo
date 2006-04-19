@@ -36,6 +36,7 @@ import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.server.UserException;
 import com.enterprisedt.net.ftp.FTPClient;
+import com.enterprisedt.net.ftp.FTPTransferType;
 
 
 public class FTPMap  implements Mappable {
@@ -90,8 +91,8 @@ public class FTPMap  implements Mappable {
 		
 		try {
 			FTPClient ftpClient = new FTPClient( server );
-			
 			ftpClient.login( username, password );
+			ftpClient.setType(FTPTransferType.BINARY);
 			if ( path != null ) {
 				ftpClient.chdir( path );
 			}
@@ -106,14 +107,20 @@ public class FTPMap  implements Mappable {
 	}
 	
 	public static void main(String [] args) throws Exception {
+		
+		ZipMap zm = new ZipMap();
+		
 		FTPMap f = new FTPMap();
 		Binary b = new Binary(new FileInputStream(new File("/home/arjen/dexels.gif")));
-		f.setContent(b);
-		f.setServer("localhost");
+		zm.setName("dexels_logo.gif");
+		zm.setContent(b);
+		f.setContent(zm.getZipped());
+		
+		f.setServer("spiritus");
 		f.setUsername("arjen");
-		f.setFilename("dexels_logo.gif");
+		f.setFilename("zipped.zip");
 		f.setPassword("xxxxxx");
-		f.setPath("/home/arjen/tmp");
+		//f.setPath("/home/arjen");
 		f.store();
 	}
 

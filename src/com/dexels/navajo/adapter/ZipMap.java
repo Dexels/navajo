@@ -27,6 +27,7 @@ package com.dexels.navajo.adapter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -96,6 +97,9 @@ public class ZipMap implements Mappable {
 		zm.setContent(b);
 		Binary r = zm.getZipped();
 		System.err.println(r.getData().length);
+		FileOutputStream fo = new FileOutputStream(new File("/home/arjen/aap.zip"));
+		fo.write(r.getData());
+		fo.close();
 	}
 
 }
