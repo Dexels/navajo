@@ -49,21 +49,29 @@ public class SocketConnection implements Runnable {
         try {
             while (true) {
 //                Dispatcher.doClearScriptCache();
+                long time1 = System.currentTimeMillis();
                 Dispatcher.doClearCache();
-
+                long time2 = System.currentTimeMillis();
                 Navajo n = NavajoFactory.getInstance().createNavajo(in);
+                long time3 = System.currentTimeMillis();
                 String service = n.getHeader().getRPCName();
                 String username = n.getHeader().getRPCUser();
                 String password = n.getHeader().getRPCPassword();
                 Navajo outNavajo = myClient.doSimpleSend(n, null, service, username, password, -1);
+                long time4 = System.currentTimeMillis();
                 if (n == null) {
                     System.err.println("Read fail or something?");
                     continue;
                 }
                 outNavajo.write(outWriter);
-                outWriter.write("\n");
+               outWriter.write("\n");
                 outWriter.flush();
-//                System.err.println("Socketconnection: " + myName + " not recycling");
+                long time5 = System.currentTimeMillis();
+                System.err.println("Clearing took: "+(time2 - time1));
+                System.err.println("parsing took: "+(time3 - time2));
+                System.err.println("running took: "+(time4 - time3));
+                System.err.println("sending took: "+(time5 - time4));
+                //                System.err.println("Socketconnection: " + myName + " not recycling");
                 return;
             }
         } catch (Throwable e) {
