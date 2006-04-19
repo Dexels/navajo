@@ -28,6 +28,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -47,29 +48,41 @@ public class ZipMap implements Mappable {
 	public Binary content;
 	public Binary zipped;
 	
+	ByteArrayOutputStream baos = null;
+	ZipOutputStream zo = null;
+	
 	public void load(Parameters parms, Navajo inMessage, Access access,
 			NavajoConfig config) throws MappableException, UserException {
-		// TODO Auto-generated method stub
-
+		baos = new ByteArrayOutputStream();
+		zo = new ZipOutputStream(baos);
 	}
 
 	public void setName(String n) {
 		this.name = n;
+		ZipEntry entry = new ZipEntry(name);
+		try {
+			zo.putNextEntry(entry);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public void setContent(Binary b) {
 		this.content = b;
+		try {
+			zo.write( content.getData() );
+			zo.closeEntry();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 	
 	public Binary getZipped() {
 		
 		try {
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			ZipOutputStream zo = new ZipOutputStream(baos);
-			ZipEntry entry = new ZipEntry(name);
-			zo.putNextEntry(entry);
-			zo.write( content.getData() );
-			zo.closeEntry();
 			zo.close();
 			byte [] result = baos.toByteArray();
 			return new Binary(result);
@@ -94,7 +107,14 @@ public class ZipMap implements Mappable {
 		FileInputStream fi = new FileInputStream(new File("/home/arjen/dbvis.license"));
 		Binary b = new Binary(fi);
 		ZipMap zm = new ZipMap();
+		zm.load(null, null, null, null);
+		zm.setName("dbvis.license");
 		zm.setContent(b);
+		fi = new FileInputStream(new File("/home/arjen/INDEX"));
+		b = new Binary(fi);
+		zm.setName("INDEX");
+		zm.setContent(b);
+		
 		Binary r = zm.getZipped();
 		System.err.println(r.getData().length);
 		FileOutputStream fo = new FileOutputStream(new File("/home/arjen/aap.zip"));
