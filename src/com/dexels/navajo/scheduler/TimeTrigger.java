@@ -24,6 +24,7 @@
  */
 package com.dexels.navajo.scheduler;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.StringTokenizer;
 
@@ -32,18 +33,18 @@ public class TimeTrigger extends Trigger {
 	/**
 	 * Specification of a time trigger:
 	 * 
-	 * 1. Minute of the hour (0-59).
-	 * 2. Hour of the day (0-23).
-	 * 3. Day of the month (1-31).
-	 * 4. Month of the year (1-12).
-	 * 5. Day of the week. (SAT,SUN.MON,TUE,WED,FRI).
+	 * 1. Month of the year (1-12).
+	 * 2. Day of the month (1-31).
+	 * 3. Hour of the day (0-23).
+	 * 4. Minute of the hour (0-59).
+	 * 5. Day of the week. (SAT,SUN.MON,TUE,WED,THU,FRI). Comma separated list is possible, e.g. SAT,SUN
 	 * 
 	 */
 	private int month = -1;
 	private int monthday = -1;
 	private int hour = -1;
 	private int minute = -1;
-	private String day = null; /* SAT,SUN.MON,TUE,WED,FRI */
+	private ArrayList day = null; /* SAT,SUN.MON,TUE,WED,FRI */
 	private String description = null;
 	
 	public TimeTrigger(String s) {
@@ -76,13 +77,24 @@ public class TimeTrigger extends Trigger {
 		if (tokens.hasMoreTokens()) {
 			String ms = tokens.nextToken();
 			if (ms != null && !ms.equals("*")) {
-				day = ms;
+				if ( ms.indexOf(",") == -1 ) {
+					day = new ArrayList();
+					day.add(ms);
+				} else {
+					StringTokenizer days = new StringTokenizer(ms, ",");
+					day = new ArrayList();
+					while ( days.hasMoreTokens() ) {
+						day.add(days.nextToken());
+					}
+				}
+			} else {
+				day = null;
 			}
 		}
 		System.err.println(month + "|" + monthday + "|" + hour + "|" + minute + "|" + day);
 	}
 	
-	public TimeTrigger(int month, int monthday, int hour, int minute, String day) throws Exception {
+	public TimeTrigger(int month, int monthday, int hour, int minute, ArrayList day) throws Exception {
 		this.month = month - 1;
 		this.monthday = monthday;
 		this.hour = hour;
@@ -128,31 +140,37 @@ public class TimeTrigger extends Trigger {
 			}
 		}
 		
+		boolean isday = false;
+		
 		if (day != null) {
-			if ( day.equals("SAT") && currentDay != 7 ) {
-				return false;
+			if ( day.contains("SAT") && currentDay == 7 ) {
+				isday = true;
 			}
-			if ( day.equals("SUN") && currentDay != 1 ) {
-				return false;
+			if ( day.contains("SUN") && currentDay == 1 ) {
+				isday = true;
 			}
-			if ( day.equals("MON") && currentDay != 2 ) {
-				return false;
+			if ( day.contains("MON") && currentDay == 2 ) {
+				isday = true;
 			}
-			if ( day.equals("TUE") && currentDay != 3 ) {
-				return false;
+			if ( day.contains("TUE") && currentDay == 3 ) {
+				isday = true;
 			}
-			if ( day.equals("WED") && currentDay != 4 ) {
-				return false;
+			if ( day.contains("WED") && currentDay == 4 ) {
+				isday = true;
 			}
-			if ( day.equals("THU") && currentDay != 5 ) {
-				return false;
+			if ( day.contains("THU") && currentDay == 5 ) {
+				isday = true;
 			}
-			if ( day.equals("FRI") && currentDay != 6 ) {
-				return false;
+			if ( day.contains("FRI") && currentDay == 6 ) {
+				isday = true;
 			}
 		}
 		
-		return true;
+		if ( isday ) {
+			return true;
+		} else {
+			return false;
+		}
 		
 	}
 	
@@ -170,7 +188,7 @@ public class TimeTrigger extends Trigger {
 	
 	public static void main(String [] args) throws Exception {
 		
-		TimeTrigger t = new TimeTrigger("*|*|10|10|*");
+		TimeTrigger t = new TimeTrigger("*|*|10|10|SAT,SUN");
 		
 	}
 
