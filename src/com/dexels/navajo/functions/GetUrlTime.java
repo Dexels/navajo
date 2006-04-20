@@ -43,7 +43,7 @@ public class GetUrlTime extends FunctionInterface {
         InputStream os = null;
         try {
         	URLConnection uc = u.openConnection();
-        	System.err.println(uc.getHeaderFields());
+        	//System.err.println(uc.getHeaderFields());
             Date d = new Date(uc.getDate());
            return d;
         } catch (IOException e) {
