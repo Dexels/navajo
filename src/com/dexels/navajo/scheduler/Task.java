@@ -215,7 +215,7 @@ public class Task implements Runnable {
 				try {	
 					isRunning = true;
 					AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Alarm goes off for task: " + id);
-					
+					java.util.Date now = new java.util.Date();
 					if ( myDispatcher != null ) {
 						Header h = request.getHeader();
 						if (h == null) {
@@ -232,9 +232,9 @@ public class Task implements Runnable {
 						Navajo result = myDispatcher.handle(request);
 						// Log result if error.
 						if ( result != null && result.getMessage("error") != null ) {		
-							TaskRunner.log(this, result, true );
+							TaskRunner.log(this, result, true, now );
 						} else {
-							TaskRunner.log(this, result, false );
+							TaskRunner.log(this, result, false, now );
 						}
 					} else {
 						// Dummy task

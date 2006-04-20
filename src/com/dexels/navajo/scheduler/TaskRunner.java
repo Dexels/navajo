@@ -208,7 +208,7 @@ public class TaskRunner implements Runnable {
 		return null;
 	}
 	
-	public static synchronized void log(Task t, Navajo result, boolean error) {
+	public static synchronized void log(Task t, Navajo result, boolean error, java.util.Date startedat) {
 		File log = new File( Dispatcher.getNavajoConfig().rootPath + "/log/tasks.log" );
 		if ( !log.exists() ) {
 			log.getParentFile().mkdirs();
@@ -218,19 +218,19 @@ public class TaskRunner implements Runnable {
 			fw = new FileWriter( log, true );
 			StringBuffer header = new StringBuffer();
             header.append("---------------------------------------------------------\n");
-            header.append("REPORT LOG\n"); 
-            header.append("task     : " + t.getId() + "\n");
-            header.append("status   : " +  (error ? "error" : "ok") + "\n");
+            header.append("REPORT LOG FOR TASK: " + t.getId() + "\n"); 
             header.append("ws       : " + t.getWebservice() + "\n");
-            header.append("time     : " + (new java.util.Date()) + "\n");
             header.append("trigger  : " + t.getTrigger().getDescription() + "\n");
+            header.append("status   : " +  (error ? "error" : "ok") + "\n");
+            header.append("started @: " + startedat + "\n");
+            header.append("finished@: " + (new java.util.Date()) + "\n");
+            
 			StringWriter sw = new StringWriter();
 			if ( error ) {
 				header.append("error result: \n");
 				result.write(sw);
 			}
-			String footer =  "---------------------------------------------------------\n";
-			String logMsg = header.toString() + sw.toString() + footer;
+			String logMsg = header.toString() + sw.toString();
 			fw.write(logMsg);
 			
 		} catch (Exception e) {
