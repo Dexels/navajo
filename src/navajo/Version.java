@@ -48,6 +48,8 @@ package navajo;
  * 
  * 5.2.1 Change in CompiledScript. Now using outDoc directly from Access object ( getOutDoc() ), 
  *       instead of using local field.
+ *      
+ * 5.2.2 Task Scheduler extended: multiple weekdays, error logging.
  * 
  */
 public class Version extends dexels.Version {

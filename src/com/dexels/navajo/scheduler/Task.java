@@ -25,6 +25,9 @@
 
 package com.dexels.navajo.scheduler;
 
+import java.io.StringWriter;
+import java.util.Date;
+
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
@@ -225,8 +228,14 @@ public class Task implements Runnable {
 							h.setExpirationInterval(-1);
 						}
 						myDispatcher.setUseAuthorisation(true);
+					
 						Navajo result = myDispatcher.handle(request);
-						
+						// Log result if error.
+						if ( result != null && result.getMessage("error") != null ) {		
+							TaskRunner.log(this, result, true );
+						} else {
+							TaskRunner.log(this, result, false );
+						}
 					} else {
 						// Dummy task
 						Thread.sleep(5000);

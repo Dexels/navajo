@@ -24,6 +24,11 @@
  */
 package com.dexels.navajo.scheduler;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -201,6 +206,45 @@ public class TaskRunner implements Runnable {
 			}
 		}
 		return null;
+	}
+	
+	public static synchronized void log(Task t, Navajo result, boolean error) {
+		File log = new File( Dispatcher.getNavajoConfig().rootPath + "/log/tasks.log" );
+		if ( !log.exists() ) {
+			log.getParentFile().mkdirs();
+		}
+		FileWriter fw = null;
+		try {
+			fw = new FileWriter( log, true );
+			StringBuffer header = new StringBuffer();
+            header.append("---------------------------------------------------------\n");
+            header.append("REPORT LOG\n"); 
+            header.append("task     : " + t.getId() + "\n");
+            header.append("status   : " +  (error ? "error" : "ok") + "\n");
+            header.append("ws       : " + t.getWebservice() + "\n");
+            header.append("time     : " + (new java.util.Date()) + "\n");
+            header.append("trigger  : " + t.getTrigger().getDescription() + "\n");
+			StringWriter sw = new StringWriter();
+			if ( error ) {
+				header.append("error result: \n");
+				result.write(sw);
+			}
+			String footer =  "---------------------------------------------------------\n";
+			String logMsg = header.toString() + sw.toString() + footer;
+			fw.write(logMsg);
+			
+		} catch (Exception e) {
+			System.err.println("Error writing tasks log: " + e.getMessage());
+		} finally {
+			try {
+				if ( fw != null ) {
+					fw.close();
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	public synchronized boolean addTask(String id, Task t) {
