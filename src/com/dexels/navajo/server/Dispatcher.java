@@ -882,13 +882,14 @@ public final class Dispatcher {
          */
 
         if (useAuthorisation) {
-          outMessage = dispatch(navajoConfig.getRepository().getServlet(access),
-                                inMessage, access, parms);
+          outMessage = dispatch(navajoConfig.getRepository().getServlet(access), inMessage, access, parms);
         }
         else {
-          if (rpcName.startsWith("navajo")) {
-            outMessage = dispatch(defaultNavajoDispatcher, inMessage, access,
-                                  parms);
+          if (rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_LOGON) || 
+        	  rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_LOGON_SEND) ||
+        	  rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_PING)  
+             ) {
+            outMessage = dispatch(defaultNavajoDispatcher, inMessage, access, parms);
           }
           else {
             outMessage = dispatch(defaultDispatcher, inMessage, access, parms);

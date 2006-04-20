@@ -156,7 +156,10 @@ public void initGlobals(String method, String username, Navajo inMessage, Map ex
 	}
 
 	public String getServlet(Access access) throws SystemException {
-		if (access.rpcName.startsWith("navajo"))
+		if (access.rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_LOGON) || 
+				access.rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_LOGON_SEND) ||
+				access.rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_PING)  
+		)
 			return "com.dexels.navajo.server.MaintainanceHandler";
 		else
 			return "com.dexels.navajo.server.GenericHandler";
