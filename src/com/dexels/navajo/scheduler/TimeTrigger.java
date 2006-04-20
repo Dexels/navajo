@@ -164,6 +164,8 @@ public class TimeTrigger extends Trigger {
 			if ( day.contains("FRI") && currentDay == 6 ) {
 				isday = true;
 			}
+		} else {
+			isday = true;
 		}
 		
 		if ( isday ) {
