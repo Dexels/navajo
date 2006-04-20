@@ -25,53 +25,53 @@ import com.dexels.navajo.tipi.TipiContext;
  */
 
 public class EchoTipiContext extends TipiContext {
-	private ApplicationInstance myServerContext;
+    private ApplicationInstance myServerContext;
 
-	public EchoTipiContext() {
-	}
+    public EchoTipiContext() {
+    }
 
-	public Set getRequiredIncludes() {
-		Set s = super.getRequiredIncludes();
-		s.add("com/dexels/navajo/tipi/components/echoimpl/echoclassdef.xml");
-//		s.add("com/dexels/navajo/tipi/actions/echoactiondef.xml");
-		return s;
-	}
+    public Set getRequiredIncludes() {
+        Set s = super.getRequiredIncludes();
+        s.add("com/dexels/navajo/tipi/components/echoimpl/echoclassdef.xml");
+        // s.add("com/dexels/navajo/tipi/actions/echoactiondef.xml");
+        return s;
+    }
 
-	public void setSplashInfo(String s) {
-		/**
-		 * @todo Implement this com.dexels.navajo.tipi.TipiContext abstract
-		 *       method
-		 */
-	}
+    public void setSplashInfo(String s) {
+        /**
+         * @todo Implement this com.dexels.navajo.tipi.TipiContext abstract
+         *       method
+         */
+    }
 
-	public void setSplashVisible(boolean b) {
-		/**
-		 * @todo Implement this com.dexels.navajo.tipi.TipiContext abstract
-		 *       method
-		 */
-	}
+    public void setSplashVisible(boolean b) {
+        /**
+         * @todo Implement this com.dexels.navajo.tipi.TipiContext abstract
+         *       method
+         */
+    }
 
-	public void setSplash(Object s) {
-		/**
-		 * @todo Implement this com.dexels.navajo.tipi.TipiContext abstract
-		 *       method
-		 */
-	}
+    public void setSplash(Object s) {
+        /**
+         * @todo Implement this com.dexels.navajo.tipi.TipiContext abstract
+         *       method
+         */
+    }
 
-	public void clearTopScreen() {
+    public void clearTopScreen() {
 
-	}
+    }
 
-	public int getPoolSize() {
-		return 0;
-	}
+    public int getPoolSize() {
+        return 0;
+    }
 
-	public void setServerContext(ApplicationInstance sc) {
-		myServerContext = sc;
-	}
+    public void setServerContext(ApplicationInstance sc) {
+        myServerContext = sc;
+    }
 
-	public void exit(String destination) {
-			((TipiEchoInstance)myServerContext).exitToUrl(destination);
-	}
+    public void exit(String destination) {
+        ((TipiEchoInstance) myServerContext).exitToUrl(destination);
+    }
 
 }

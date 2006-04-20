@@ -24,10 +24,10 @@ import com.dexels.navajo.tipi.components.echoimpl.helpers.EchoTipiHelper;
 
 public abstract class TipiEchoComponentImpl extends TipiComponentImpl {
 
-	public TipiEchoComponentImpl() {
-		TipiHelper th = new EchoTipiHelper();
-		th.initHelper(this);
-		addHelper(th);
-	}
+    public TipiEchoComponentImpl() {
+        TipiHelper th = new EchoTipiHelper();
+        th.initHelper(this);
+        addHelper(th);
+    }
 
 }

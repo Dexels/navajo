@@ -24,18 +24,15 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  */
 
 public class TipiEchoShowQuestion extends TipiAction {
-	public TipiEchoShowQuestion() {
-	}
+    public TipiEchoShowQuestion() {
+    }
 
-	protected void execute(TipiEvent e)
-			throws com.dexels.navajo.tipi.TipiBreakException,
-			com.dexels.navajo.tipi.TipiException {
-		Operand text = getEvaluatedParameter("text", e);
-		// TipiScreen s = (TipiScreen) myContext.getDefaultTopLevel();
-		// Window w = (Window) s.getTopLevel();
-		// ContentPane old = w.getContent();
-		TipiOptionPane.showQuestion(myContext, (String) text.value, "Info:",
-				"Yes", "No");
-	}
+    protected void execute(TipiEvent e) throws com.dexels.navajo.tipi.TipiBreakException, com.dexels.navajo.tipi.TipiException {
+        Operand text = getEvaluatedParameter("text", e);
+        // TipiScreen s = (TipiScreen) myContext.getDefaultTopLevel();
+        // Window w = (Window) s.getTopLevel();
+        // ContentPane old = w.getContent();
+        TipiOptionPane.showQuestion(myContext, (String) text.value, "Info:", "Yes", "No");
+    }
 
 }

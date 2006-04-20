@@ -24,62 +24,62 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  * @version 1.0
  */
 public class ExtentParser extends TipiTypeParser {
-	public Object parse(TipiComponent source, String expression, TipiEvent event) {
-		return parseBorder(expression);
-	}
+    public Object parse(TipiComponent source, String expression, TipiEvent event) {
+        return parseBorder(expression);
+    }
 
-	private Object parseBorder(String s) {
-		if (s.endsWith("mm")) {
-			return parseMillis(s.substring(0, s.length() - 2));
-		}
-		if (s.endsWith("%")) {
-			return parsePercent(s.substring(0, s.length() - 2));
-		}
-		return parsePixels(s);
-		// StringTokenizer st = new StringTokenizer(s, "-");
-		// String borderName = st.nextToken();
-		// if ("etched".equals(borderName)) {
-		// return BorderFactory.createEtchedBorder();
-		// }
-		// if ("raised".equals(borderName)) {
-		// return BorderFactory.createRaisedBevelBorder();
-		// }
-		// if ("lowered".equals(borderName)) {
-		// return BorderFactory.createLoweredBevelBorder();
-		// }
-		// if ("titled".equals(borderName)) {
-		// String title = st.nextToken();
-		// return BorderFactory.createTitledBorder(title);
-		// }
-		// if ("indent".equals(borderName)) {
-		// try {
-		// int top = Integer.parseInt(st.nextToken());
-		// int left = Integer.parseInt(st.nextToken());
-		// int bottom = Integer.parseInt(st.nextToken());
-		// int right = Integer.parseInt(st.nextToken());
-		// return BorderFactory.createEmptyBorder(top, left, bottom, right);
-		// }
-		// catch (Exception ex) {
-		// System.err.println("Error while parsing border");
-		// }
-		// }
-		// return BorderFactory.createEmptyBorder();
-		// return null;
-	}
+    private Object parseBorder(String s) {
+        if (s.endsWith("mm")) {
+            return parseMillis(s.substring(0, s.length() - 2));
+        }
+        if (s.endsWith("%")) {
+            return parsePercent(s.substring(0, s.length() - 2));
+        }
+        return parsePixels(s);
+        // StringTokenizer st = new StringTokenizer(s, "-");
+        // String borderName = st.nextToken();
+        // if ("etched".equals(borderName)) {
+        // return BorderFactory.createEtchedBorder();
+        // }
+        // if ("raised".equals(borderName)) {
+        // return BorderFactory.createRaisedBevelBorder();
+        // }
+        // if ("lowered".equals(borderName)) {
+        // return BorderFactory.createLoweredBevelBorder();
+        // }
+        // if ("titled".equals(borderName)) {
+        // String title = st.nextToken();
+        // return BorderFactory.createTitledBorder(title);
+        // }
+        // if ("indent".equals(borderName)) {
+        // try {
+        // int top = Integer.parseInt(st.nextToken());
+        // int left = Integer.parseInt(st.nextToken());
+        // int bottom = Integer.parseInt(st.nextToken());
+        // int right = Integer.parseInt(st.nextToken());
+        // return BorderFactory.createEmptyBorder(top, left, bottom, right);
+        // }
+        // catch (Exception ex) {
+        // System.err.println("Error while parsing border");
+        // }
+        // }
+        // return BorderFactory.createEmptyBorder();
+        // return null;
+    }
 
-	private Object parsePixels(String s) {
-		int px = Integer.parseInt(s);
-		// TODO Auto-generated method stub
-		return new Extent(px, Extent.PX);
-	}
+    private Object parsePixels(String s) {
+        int px = Integer.parseInt(s);
+        // TODO Auto-generated method stub
+        return new Extent(px, Extent.PX);
+    }
 
-	private Object parsePercent(String s) {
-		int pc = Integer.parseInt(s);
-		return new Extent(pc, Extent.PERCENT);
-	}
+    private Object parsePercent(String s) {
+        int pc = Integer.parseInt(s);
+        return new Extent(pc, Extent.PERCENT);
+    }
 
-	private Object parseMillis(String s) {
-		int mm = Integer.parseInt(s);
-		return new Extent(mm, Extent.MM);
-	}
+    private Object parseMillis(String s) {
+        int mm = Integer.parseInt(s);
+        return new Extent(mm, Extent.MM);
+    }
 }

@@ -30,68 +30,69 @@ import echopointng.TabbedPane;
 
 public class TipiSwitchPanel extends TipiEchoDataComponentImpl {
 
-	private Grid myContainer;
+    private Grid myContainer;
 
-	public TipiSwitchPanel() {
-	}
+    public TipiSwitchPanel() {
+    }
 
-	public Object createContainer() {
-		myContainer = new Grid(1);
-		return myContainer;
-	}
+    public Object createContainer() {
+        myContainer = new Grid(1);
+        return myContainer;
+    }
 
-	 public void addToContainer(Object o, Object contraints){
-		Component c = (Component)o;
-		if (getChildCount()>1) {
-			c.setVisible(false);
-		}
-		myContainer.add(c);
-	 }
-	//
-	// public void setContainerLayout(Object l){
-	//
-	// }
+    public void addToContainer(Object o, Object contraints) {
+        Component c = (Component) o;
+        if (getChildCount() > 1) {
+            c.setVisible(false);
+        }
+        myContainer.add(c);
+    }
 
-	private void hideAll() {
-		for (int i = 0; i < getChildCount(); i++) {
-			TipiComponent tc = getTipiComponent(i);
-			Object o = tc.getContainer();
-			if (o!=null && o instanceof Component) {
-				((Component)o).setVisible(false);
-			}
-		}
-	}
-	 
-	public void setComponentValue(String name, Object object) {
-		super.setComponentValue(name, object);
-		if (name.equals("selected")) {
-			hideAll();
-			String sel = (String) object;
-			final TipiComponent tc = getTipiComponent(sel);
-			Object o = tc.getContainer();
-			if (o!=null && o instanceof Component) {
-				((Component)o).setVisible(true);
-			}
-		}
-		if (name.equals("selectedindex")) {
-			final Integer sel = (Integer) object;
-			hideAll();
-			final TipiComponent tc = getTipiComponent(sel.intValue());
-			Object o = tc.getContainer();
-			if (o!=null && o instanceof Component) {
-				((Component)o).setVisible(true);
-			}
-		}
-		
-		if (name.equals("width")) {
-			final Integer sel = (Integer) object;
-			((Grid)myContainer).setWidth(new Extent(sel.intValue(),Extent.PX));
-			((Grid)myContainer).setColumnWidth(0,new Extent(sel.intValue(),Extent.PX));
-		}
-		// if (name.equals("placement")) {
-		// final String sel = (String) object;
-		// setTabPlacement(sel);
-		// }
-		/** @todo Override this com.dexels.navajo.tipi.TipiComponent method */
-	}
+    //
+    // public void setContainerLayout(Object l){
+    //
+    // }
+
+    private void hideAll() {
+        for (int i = 0; i < getChildCount(); i++) {
+            TipiComponent tc = getTipiComponent(i);
+            Object o = tc.getContainer();
+            if (o != null && o instanceof Component) {
+                ((Component) o).setVisible(false);
+            }
+        }
+    }
+
+    public void setComponentValue(String name, Object object) {
+        super.setComponentValue(name, object);
+        if (name.equals("selected")) {
+            hideAll();
+            String sel = (String) object;
+            final TipiComponent tc = getTipiComponent(sel);
+            Object o = tc.getContainer();
+            if (o != null && o instanceof Component) {
+                ((Component) o).setVisible(true);
+            }
+        }
+        if (name.equals("selectedindex")) {
+            final Integer sel = (Integer) object;
+            hideAll();
+            final TipiComponent tc = getTipiComponent(sel.intValue());
+            Object o = tc.getContainer();
+            if (o != null && o instanceof Component) {
+                ((Component) o).setVisible(true);
+            }
+        }
+
+        if (name.equals("width")) {
+            final Integer sel = (Integer) object;
+            ((Grid) myContainer).setWidth(new Extent(sel.intValue(), Extent.PX));
+            ((Grid) myContainer).setColumnWidth(0, new Extent(sel.intValue(), Extent.PX));
+        }
+        // if (name.equals("placement")) {
+        // final String sel = (String) object;
+        // setTabPlacement(sel);
+        // }
+        /** @todo Override this com.dexels.navajo.tipi.TipiComponent method */
+    }
 }

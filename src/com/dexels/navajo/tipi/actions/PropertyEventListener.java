@@ -29,5 +29,5 @@ import com.dexels.navajo.document.Property;
  */
 
 public interface PropertyEventListener {
-	public void propertyEventFired(Property p, String eventType);
+    public void propertyEventFired(Property p, String eventType);
 }

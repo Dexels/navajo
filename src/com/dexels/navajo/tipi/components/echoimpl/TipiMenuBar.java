@@ -21,22 +21,22 @@ import echopointng.MenuBar;
  */
 
 public class TipiMenuBar extends TipiEchoDataComponentImpl {
-	public TipiMenuBar() {
-	}
+    public TipiMenuBar() {
+    }
 
-	public Object createContainer() {
-		MenuBar b = new MenuBar();
-		b.setTopOffset(0);
-	
-		return b;
-	}
+    public Object createContainer() {
+        MenuBar b = new MenuBar();
+        b.setTopOffset(0);
 
-	protected void setComponentValue(String name, Object object) {
-		MenuBar b = (MenuBar) getContainer();
-		if ("text".equals(name)) {
-			b.setText("" + object);
-		}
-		super.setComponentValue(name, object);
-	}
+        return b;
+    }
+
+    protected void setComponentValue(String name, Object object) {
+        MenuBar b = (MenuBar) getContainer();
+        if ("text".equals(name)) {
+            b.setText("" + object);
+        }
+        super.setComponentValue(name, object);
+    }
 
 }

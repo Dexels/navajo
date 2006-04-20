@@ -22,23 +22,23 @@ import echopointng.Menu;
  */
 
 public class TipiMenu extends TipiEchoDataComponentImpl {
-	public TipiMenu() {
-	}
+    public TipiMenu() {
+    }
 
-	public Object createContainer() {
-		Menu b = new Menu();
-		return b;
-	}
+    public Object createContainer() {
+        Menu b = new Menu();
+        return b;
+    }
 
-	protected void setComponentValue(String name, Object object) {
-		Menu b = (Menu) getContainer();
-		if ("text".equals(name)) {
-			b.setText("" + object);
-		}
-		if ("icon".equals(name)) {
-			b.setIcon(new ResourceImageReference(object.toString()));
-		}
-		super.setComponentValue(name, object);
-	}
+    protected void setComponentValue(String name, Object object) {
+        Menu b = (Menu) getContainer();
+        if ("text".equals(name)) {
+            b.setText("" + object);
+        }
+        if ("icon".equals(name)) {
+            b.setIcon(new ResourceImageReference(object.toString()));
+        }
+        super.setComponentValue(name, object);
+    }
 
 }

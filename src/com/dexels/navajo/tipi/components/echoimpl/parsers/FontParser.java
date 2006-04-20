@@ -28,21 +28,21 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  * @version 1.0
  */
 public class FontParser extends TipiTypeParser {
-	public Object parse(TipiComponent source, String expression, TipiEvent event) {
-		return parseFont(expression);
-	}
+    public Object parse(TipiComponent source, String expression, TipiEvent event) {
+        return parseFont(expression);
+    }
 
-	private Font parseFont(String s) {
-		StringTokenizer str = new StringTokenizer(s, "-");
-		String name = str.nextToken();
-		int size = Integer.parseInt(str.nextToken());
-		int style = Integer.parseInt(str.nextToken());
-		// try logical:
-		Font f = new Font(new Typeface(name), style, new Extent(size));
-		if (f != null) {
-			return f;
-		}
-		return null;
-	}
+    private Font parseFont(String s) {
+        StringTokenizer str = new StringTokenizer(s, "-");
+        String name = str.nextToken();
+        int size = Integer.parseInt(str.nextToken());
+        int style = Integer.parseInt(str.nextToken());
+        // try logical:
+        Font f = new Font(new Typeface(name), style, new Extent(size));
+        if (f != null) {
+            return f;
+        }
+        return null;
+    }
 
 }

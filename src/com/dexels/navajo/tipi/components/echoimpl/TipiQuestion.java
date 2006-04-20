@@ -17,54 +17,70 @@ import echopointng.*;
 import echopointng.able.*;
 
 /**
- * <p>Title: </p>
- * <p>Description: </p>
- * <p>Copyright: Copyright (c) 2004</p>
- * <p>Company: </p>
+ * <p>
+ * Title:
+ * </p>
+ * <p>
+ * Description:
+ * </p>
+ * <p>
+ * Copyright: Copyright (c) 2004
+ * </p>
+ * <p>
+ * Company:
+ * </p>
+ * 
  * @author not attributable
  * @version 1.0
  */
-public class TipiQuestion
-    extends TipiBaseQuestion {
-  private String messagePath = null;
-  private String questionDefinitionName = null;
-//  private TipiQuestionGroup questionGroupPath = null;
-  private TipiBaseQuestionGroup questionGroup = null;
+public class TipiQuestion extends TipiBaseQuestion {
+    private String messagePath = null;
 
-  private final ArrayList mySubQuestions = new ArrayList();
-  private String enabledCondition = null;
-  private String visibleCondition = null;
-  private String validationCondition = null;
-  private Message myMessage = null;
+    private String questionDefinitionName = null;
+
+    // private TipiQuestionGroup questionGroupPath = null;
+    private TipiBaseQuestionGroup questionGroup = null;
+
+    private final ArrayList mySubQuestions = new ArrayList();
+
+    private String enabledCondition = null;
+
+    private String visibleCondition = null;
+
+    private String validationCondition = null;
+
+    private Message myMessage = null;
+
     private Column myColumn;
 
-  private String myId;
-  private GroupBox myGroupBox;
+    private String myId;
 
-  public TipiQuestion() {
-  }
-  
+    private GroupBox myGroupBox;
+
+    public TipiQuestion() {
+    }
+
     public Object createContainer() {
         myGroupBox = new GroupBox();
         myColumn = new Column();
         myGroupBox.add(myColumn);
-         return myGroupBox;
+        return myGroupBox;
     }
 
     public void addToContainer(Object c, Object constraints) {
         Component comp = (Component) c;
-      
+
         myColumn.add(comp);
     }
 
     protected void setQuestionBorder(String val) {
         myGroupBox.setTitle(val);
-        
+
     }
 
     public void setQuestionVisible(boolean b) {
         myGroupBox.setVisible(b);
-        
+
     }
 
     public void setComponentValue(String name, Object object) {
@@ -74,14 +90,11 @@ public class TipiQuestion
             myGroupBox.setBackground(background);
             return;
         }
-        
+
         super.setComponentValue(name, object);
     }
-    
-    
+
     public void setValid(boolean b, String msg) {
     }
-  
-
 
 }

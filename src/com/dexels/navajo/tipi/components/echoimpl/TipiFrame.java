@@ -33,7 +33,7 @@ public class TipiFrame extends TipiEchoDataComponentImpl {
 
     private Window myWindow;
 
-//    private ContainerEx innerContainer;
+    // private ContainerEx innerContainer;
 
     private Grid contentPane;
 
@@ -46,17 +46,16 @@ public class TipiFrame extends TipiEchoDataComponentImpl {
 
     public Object createContainer() {
         myWindow = new Window();
-//        innerContainer = new ContainerEx();
+        // innerContainer = new ContainerEx();
         contentPane = new Grid(1);
-              myWindow.getContent().add(contentPane);
-              //        innerContainer.add(contentPane);
+        myWindow.getContent().add(contentPane);
+        // innerContainer.add(contentPane);
         return myWindow;
 
     }
 
-  
     public void setContainerLayout(Object layout) {
-     }
+    }
 
     /**
      * setComponentValue
@@ -90,14 +89,14 @@ public class TipiFrame extends TipiEchoDataComponentImpl {
             m.setWidth(new Extent(100, Extent.PERCENT));
             m.setHeight(new Extent(20, Extent.PX));
             // MEnu geslooopt. kijk ik later naar
-//            innerContainer.add(m);
-//            contentPane.setTop(new Extent(20, Extent.PX));
+            // innerContainer.add(m);
+            // contentPane.setTop(new Extent(20, Extent.PX));
         } else {
             Component child = (Component) c;
             contentPane.add(child);
             if (constraints != null && constraints instanceof LayoutData) {
                 child.setLayoutData((LayoutData) constraints);
-             }
+            }
 
         }
     }
@@ -107,7 +106,7 @@ public class TipiFrame extends TipiEchoDataComponentImpl {
         Component child = (Component) c;
         if (c instanceof MenuBar) {
             // MEnu geslooopt. kijk ik later naar
-//            innerContainer.remove((Component) c);
+            // innerContainer.remove((Component) c);
 
         } else {
             contentPane.remove((Component) c);

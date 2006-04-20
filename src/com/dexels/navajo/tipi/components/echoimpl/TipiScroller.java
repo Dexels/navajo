@@ -19,15 +19,15 @@ package com.dexels.navajo.tipi.components.echoimpl;
  */
 
 public class TipiScroller extends TipiPanel {
-	public TipiScroller() {
-	}
+    public TipiScroller() {
+    }
 
-//	public Object createContainer() {
-//        echopointng.
-//		 TipiEchoScroller scroll = new TipiEchoScroller();
-//		// scroll.setHeight(200);
-//		// return scroll;
-//		return null;
-//	}
+    // public Object createContainer() {
+    // echopointng.
+    // TipiEchoScroller scroll = new TipiEchoScroller();
+    // // scroll.setHeight(200);
+    // // return scroll;
+    // return null;
+    // }
 
 }

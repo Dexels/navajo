@@ -21,16 +21,16 @@ import nextapp.echo2.app.Row;
  */
 
 public class EchoToolbar extends TipiEchoDataComponentImpl {
-	public EchoToolbar() {
-	}
+    public EchoToolbar() {
+    }
 
-	public Object createContainer() {
-		Row p = new Row();
-		return p;
-	}
+    public Object createContainer() {
+        Row p = new Row();
+        return p;
+    }
 
-	public void setContainerLayout(Object l) {
-		// hoei!
-	}
+    public void setContainerLayout(Object l) {
+        // hoei!
+    }
 
 }

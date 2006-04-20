@@ -8,17 +8,18 @@ import com.dexels.navajo.tipi.components.core.TipiLayoutImpl;
 
 public class TipiFlowLayout extends TipiLayoutImpl {
 
-	public void createLayout() throws TipiException {
-		// myComponent.setContainerLayout(new Row());
-		setLayout(new Row());
-	}
+    public void createLayout() throws TipiException {
+        // myComponent.setContainerLayout(new Row());
+        setLayout(new Row());
+    }
 
-	protected void setValue(String name, TipiValue tv) {
-		// TODO Auto-generated method stub
+    protected void setValue(String name, TipiValue tv) {
+        // TODO Auto-generated method stub
 
-	}
-  protected Object parseConstraint(String text, int index) {
-      return null;
-  }
+    }
+
+    protected Object parseConstraint(String text, int index) {
+        return null;
+    }
 
 }

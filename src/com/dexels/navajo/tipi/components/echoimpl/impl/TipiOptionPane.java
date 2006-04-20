@@ -37,94 +37,88 @@ import com.dexels.navajo.tipi.components.echoimpl.TipiScreen;
 
 public class TipiOptionPane {
 
-	public static void showQuestion(TipiContext context, String text,
-			String title, String yes, String no) throws TipiBreakException {
-		TipiScreen s = (TipiScreen) context.getDefaultTopLevel();
-		final Window w = (Window) s.getTopLevel();
-		final WindowPane wp = new WindowPane("?", new Extent(400,
-				Extent.PX), new Extent(300, Extent.PX));
-		w.getContent().add(wp);
-		wp.setTitle(title);
-		wp.setModal(true);
-		
-		
-		wp.setTitleBackground(new Color(232,232,232));
-		wp.setTitleInsets(new Insets(3,2,0,0));
-		wp.setTitleForeground(new Color(0,0,0));
-		wp.setTitleFont(new Font(Font.ARIAL,Font.BOLD,new Extent(11,Extent.PT)));
-		wp.setTitleHeight(new Extent(20,Extent.PX));
-		
-		
-		Column cp = new Column();
+    public static void showQuestion(TipiContext context, String text, String title, String yes, String no) throws TipiBreakException {
+        TipiScreen s = (TipiScreen) context.getDefaultTopLevel();
+        final Window w = (Window) s.getTopLevel();
+        final WindowPane wp = new WindowPane("?", new Extent(400, Extent.PX), new Extent(300, Extent.PX));
+        w.getContent().add(wp);
+        wp.setTitle(title);
+        wp.setModal(true);
 
-		wp.add(cp);
-		cp.add(new nextapp.echo2.app.Label((String) text));
+        wp.setTitleBackground(new Color(232, 232, 232));
+        wp.setTitleInsets(new Insets(3, 2, 0, 0));
+        wp.setTitleForeground(new Color(0, 0, 0));
+        wp.setTitleFont(new Font(Font.ARIAL, Font.BOLD, new Extent(11, Extent.PT)));
+        wp.setTitleHeight(new Extent(20, Extent.PX));
 
-		Row toolbar = new Row();
-		cp.add(toolbar);
+        Column cp = new Column();
 
-		Button yesButton = new Button("Yes");
-		toolbar.add(yesButton);
-		Button noButton = new Button("No");
-		toolbar.add(noButton);
+        wp.add(cp);
+        cp.add(new nextapp.echo2.app.Label((String) text));
 
-		wp.setDefaultCloseOperation(WindowPane.DISPOSE_ON_CLOSE);
+        Row toolbar = new Row();
+        cp.add(toolbar);
 
-		yesButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-				wp.dispose();
-				w.getContent().remove(wp);
-			}
-		});
-		yesButton.setText(yes);
-		noButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-				wp.dispose();
-				w.getContent().remove(wp);
-				// throw new TipiBreakException();
-			}
-		});
-		noButton.setText(no);
-		wp.setVisible(true);
-	}
+        Button yesButton = new Button("Yes");
+        toolbar.add(yesButton);
+        Button noButton = new Button("No");
+        toolbar.add(noButton);
 
-	public static void showInfo(final TipiContext context, final String text,
-			String title, String closeText) {
-		TipiScreen s = (TipiScreen) context.getDefaultTopLevel();
-		final Window w = (Window) s.getTopLevel();
-		final WindowPane wp = new WindowPane(title, new Extent(400, Extent.PX),
-				new Extent(150, Extent.PX));
-		w.getContent().add(wp);
-		wp.setModal(true);
-		
-		wp.setTitleBackground(new Color(232,232,232));
-		wp.setTitleInsets(new Insets(3,2,0,0));
-		wp.setTitleForeground(new Color(0,0,0));
-		wp.setTitleFont(new Font(Font.ARIAL,Font.BOLD,new Extent(11,Extent.PT)));
-		wp.setTitleHeight(new Extent(20,Extent.PX));
-		
-		Column cp = new Column();
+        wp.setDefaultCloseOperation(WindowPane.DISPOSE_ON_CLOSE);
 
-		wp.add(cp);
-		cp.add(new Label((String) text));
+        yesButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                wp.dispose();
+                w.getContent().remove(wp);
+            }
+        });
+        yesButton.setText(yes);
+        noButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                wp.dispose();
+                w.getContent().remove(wp);
+                // throw new TipiBreakException();
+            }
+        });
+        noButton.setText(no);
+        wp.setVisible(true);
+    }
 
-		Row toolbar = new Row();
-		cp.add(toolbar);
-//
-//		Button closeButton = new Button("Ok");
-//		toolbar.add(closeButton);
+    public static void showInfo(final TipiContext context, final String text, String title, String closeText) {
+        TipiScreen s = (TipiScreen) context.getDefaultTopLevel();
+        final Window w = (Window) s.getTopLevel();
+        final WindowPane wp = new WindowPane(title, new Extent(400, Extent.PX), new Extent(150, Extent.PX));
+        w.getContent().add(wp);
+        wp.setModal(true);
 
-		wp.setDefaultCloseOperation(WindowPane.DISPOSE_ON_CLOSE);
+        wp.setTitleBackground(new Color(232, 232, 232));
+        wp.setTitleInsets(new Insets(3, 2, 0, 0));
+        wp.setTitleForeground(new Color(0, 0, 0));
+        wp.setTitleFont(new Font(Font.ARIAL, Font.BOLD, new Extent(11, Extent.PT)));
+        wp.setTitleHeight(new Extent(20, Extent.PX));
 
-//		closeButton.addActionListener(new ActionListener() {
-//			public void actionPerformed(ActionEvent ae) {
-//				System.err.println("ouwe: " + text);
-//				w.getContent().remove(wp);
-//				wp.dispose();
-//			}
-//		});
-//		closeButton.setText(closeText);
-		wp.setVisible(true);
-	}
+        Column cp = new Column();
+
+        wp.add(cp);
+        cp.add(new Label((String) text));
+
+        Row toolbar = new Row();
+        cp.add(toolbar);
+        //
+        // Button closeButton = new Button("Ok");
+        // toolbar.add(closeButton);
+
+        wp.setDefaultCloseOperation(WindowPane.DISPOSE_ON_CLOSE);
+
+        // closeButton.addActionListener(new ActionListener() {
+        // public void actionPerformed(ActionEvent ae) {
+        // System.err.println("ouwe: " + text);
+        // w.getContent().remove(wp);
+        // wp.dispose();
+        // }
+        // });
+        // closeButton.setText(closeText);
+        wp.setVisible(true);
+    }
 
 }

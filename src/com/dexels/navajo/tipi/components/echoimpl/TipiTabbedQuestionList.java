@@ -6,12 +6,10 @@
  */
 package com.dexels.navajo.tipi.components.echoimpl;
 
-
 import java.beans.*;
 import java.net.*;
 
 import javax.swing.*;
-
 
 import nextapp.echo2.app.*;
 
@@ -38,17 +36,16 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
     protected Object getGroupConstraints(Message groupMessage) {
         // TODO Auto-generated method stub
         Property name = groupMessage.getProperty("Name");
-        if (name!=null) {
-            if (name.getValue()==null) {
+        if (name != null) {
+            if (name.getValue() == null) {
                 return "Unknown tab";
             }
         } else {
             return name.getValue();
-            
+
         }
         return name.getValue();
-          }
-    
+    }
 
     public Object createContainer() {
         final TipiComponent me = this;
@@ -57,8 +54,8 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
 
         validImage = new URLImageReference(getClass().getClassLoader().getResource("com/dexels/navajo/tipi/components/echoimpl/ok.gif"));
         inValidImage = new URLImageReference(getClass().getClassLoader().getResource("com/dexels/navajo/tipi/components/echoimpl/cancel.gif"));
-        //        myTabbedPane.setTabSpacing(0);
-//      myTabbedPane.setForeground(new Color(0,0,0));
+        // myTabbedPane.setTabSpacing(0);
+        // myTabbedPane.setForeground(new Color(0,0,0));
         myTabbedPane.setModel(defaultTabModel);
         TipiHelper th = new EchoTipiHelper();
         th.initHelper(this);
@@ -70,62 +67,62 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
         });
         return myTabbedPane;
     }
-    
-    
+
     public void addToContainer(Object c, Object constraints) {
-          defaultTabModel.addTab("" + constraints, (Component) c);
+        defaultTabModel.addTab("" + constraints, (Component) c);
         if (lastSelectedTab == null) {
             lastSelectedTab = (Component) c;
         }
-        ButtonEx selected =(ButtonEx)defaultTabModel.getTabAt(getChildCount()-1,true);
-        if (selected!=null) {
-            selected.setBorder(new Border(1,new Color(50,50,50),Border.STYLE_GROOVE));
+        ButtonEx selected = (ButtonEx) defaultTabModel.getTabAt(getChildCount() - 1, true);
+        if (selected != null) {
+            selected.setBorder(new Border(1, new Color(50, 50, 50), Border.STYLE_GROOVE));
         }
 
-         defaultTabModel.setSelectedBackground(new Color(204,204,204));
-        defaultTabModel.setSelectedForeground(new Color(0,0,0));
-        defaultTabModel.setBackground(new Color(204,204,204));
-        defaultTabModel.setForeground(new Color(153,153,153));
-        defaultTabModel.setRolloverBackground(new Color(204,204,204));
-        defaultTabModel.setRolloverForeground(new Color(68,68,68));
-        defaultTabModel.setSelectedRolloverBackground(new Color(204,204,204));
-        defaultTabModel.setSelectedRolloverForeground(new Color(68,68,68));
+        defaultTabModel.setSelectedBackground(new Color(204, 204, 204));
+        defaultTabModel.setSelectedForeground(new Color(0, 0, 0));
+        defaultTabModel.setBackground(new Color(204, 204, 204));
+        defaultTabModel.setForeground(new Color(153, 153, 153));
+        defaultTabModel.setRolloverBackground(new Color(204, 204, 204));
+        defaultTabModel.setRolloverForeground(new Color(68, 68, 68));
+        defaultTabModel.setSelectedRolloverBackground(new Color(204, 204, 204));
+        defaultTabModel.setSelectedRolloverForeground(new Color(68, 68, 68));
     }
+
     protected void clearQuestions() {
         // TODO Auto-generated method stub
-        
-        if (myTabbedPane!=null) {
-            while (myTabbedPane.getComponentCount()>0) {
+
+        if (myTabbedPane != null) {
+            while (myTabbedPane.getComponentCount() > 0) {
                 myTabbedPane.remove(0);
             }
         }
-        
-        while (defaultTabModel.size()>0) {
+
+        while (defaultTabModel.size() > 0) {
             defaultTabModel.removeTabAt(0);
         }
     }
 
-
     public void runSyncInEventThread(Runnable r) {
         r.run();
     }
+
     public void setGroupValid(boolean valid, TipiBaseQuestionGroup group) {
         super.setGroupValid(valid, group);
         int i = myGroups.indexOf(group);
-        if (i<0) {
+        if (i < 0) {
             System.err.println("Sh!34#@$!");
         }
-        ButtonEx selected =(ButtonEx)defaultTabModel.getTabAt(i,true);
-        selected.setIcon(valid?validImage:inValidImage);
+        ButtonEx selected = (ButtonEx) defaultTabModel.getTabAt(i, true);
+        selected.setIcon(valid ? validImage : inValidImage);
     }
-    
+
     public void setComponentValue(String name, Object object) {
         if (name.equals("background")) {
             Color background = (Color) object;
             myTabbedPane.setBackground(background);
-             return;
+            return;
         }
-        
+
         super.setComponentValue(name, object);
     }
 }

@@ -30,177 +30,178 @@ import echopointng.ContainerEx;
  */
 public final class TipiWindow
 // extends DefaultTipi {
-		extends TipiEchoDataComponentImpl {
-	private WindowPane myWindow;
-	private String myMenuBar = "";
-	private String myTitle;
-	private ContainerEx innerContainer;
+        extends TipiEchoDataComponentImpl {
+    private WindowPane myWindow;
 
-	public void disposeComponent() {
-		myWindow.setVisible(false);
-		myWindow.dispose();
-		super.disposeComponent();
-	}
+    private String myMenuBar = "";
 
-	public Object createContainer() {
-		myWindow = new WindowPane();
-		TipiHelper th = new EchoTipiHelper();
-		th.initHelper(this);
-		addHelper(th);
-		innerContainer = new ContainerEx();
-		myWindow.add(innerContainer);
-		myWindow.addWindowPaneListener(new WindowPaneListener() {
-			public void windowPaneClosing(WindowPaneEvent arg0) {
-				myWindow_internalFrameClosed(arg0);
-			}
-		});
-		myWindow.setDefaultCloseOperation(WindowPane.DO_NOTHING_ON_CLOSE);
-		return myWindow;
-	}
+    private String myTitle;
 
-	public Object getComponentValue(String name) {
-		if ("visible".equals(name)) {
-			return new Boolean(myWindow.isVisible());
-		}
-		// if("title".equals(name)){
-		// return myWindow.getTitle();
-		// }
-		// Rectangle r = myWindow.getBounds();
-		// if (name.equals("x")) {
-		// return new Integer(r.x);
-		// }
-		// if (name.equals("y")) {
-		// return new Integer(r.y);
-		// }
-		// if (name.equals("w")) {
-		// return new Integer(r.width);
-		// }
-		// if (name.equals("h")) {
-		// return new Integer(r.height);
-		// }
-		// if (name.equals("iconifiable")) {
-		// return new Boolean(myWindow.isIconifiable());
-		// }
-		// if (name.equals("maximizable")) {
-		// return new Boolean(myWindow.isMaximizable());
-		// }
-		if (name.equals("closable")) {
-			return new Boolean(myWindow.isClosable());
-		}
-		if (name.equals("resizable")) {
-			return new Boolean(myWindow.isResizable());
-		}
-		if (name.equals("title")) {
-			return myWindow.getTitle();
-		}
+    private ContainerEx innerContainer;
 
-		return super.getComponentValue(name);
-	}
+    public void disposeComponent() {
+        myWindow.setVisible(false);
+        myWindow.dispose();
+        super.disposeComponent();
+    }
 
-	private final void myWindow_internalFrameClosed(WindowPaneEvent arg0) {
-		// myContext.disposeTipi(this);
-	}
+    public Object createContainer() {
+        myWindow = new WindowPane();
+        TipiHelper th = new EchoTipiHelper();
+        th.initHelper(this);
+        addHelper(th);
+        innerContainer = new ContainerEx();
+        myWindow.add(innerContainer);
+        myWindow.addWindowPaneListener(new WindowPaneListener() {
+            public void windowPaneClosing(WindowPaneEvent arg0) {
+                myWindow_internalFrameClosed(arg0);
+            }
+        });
+        myWindow.setDefaultCloseOperation(WindowPane.DO_NOTHING_ON_CLOSE);
+        return myWindow;
+    }
 
-	public void addToContainer(final Object c, final Object constraints) {
-		innerContainer.add((Component) c);
-		if (constraints != null && constraints instanceof LayoutData) {
-			((WindowPane) getContainer())
-					.setLayoutData((LayoutData) constraints);
+    public Object getComponentValue(String name) {
+        if ("visible".equals(name)) {
+            return new Boolean(myWindow.isVisible());
+        }
+        // if("title".equals(name)){
+        // return myWindow.getTitle();
+        // }
+        // Rectangle r = myWindow.getBounds();
+        // if (name.equals("x")) {
+        // return new Integer(r.x);
+        // }
+        // if (name.equals("y")) {
+        // return new Integer(r.y);
+        // }
+        // if (name.equals("w")) {
+        // return new Integer(r.width);
+        // }
+        // if (name.equals("h")) {
+        // return new Integer(r.height);
+        // }
+        // if (name.equals("iconifiable")) {
+        // return new Boolean(myWindow.isIconifiable());
+        // }
+        // if (name.equals("maximizable")) {
+        // return new Boolean(myWindow.isMaximizable());
+        // }
+        if (name.equals("closable")) {
+            return new Boolean(myWindow.isClosable());
+        }
+        if (name.equals("resizable")) {
+            return new Boolean(myWindow.isResizable());
+        }
+        if (name.equals("title")) {
+            return myWindow.getTitle();
+        }
 
-		}
-		// ((SwingTipiContext)myContext).addTopLevel(c);
-		// });
-	}
+        return super.getComponentValue(name);
+    }
 
-	public void removeFromContainer(final Object c) {
-		// runSyncInEventThread(new Runnable() {
-		// public void run() {
-		((WindowPane) getContainer()).remove((Component) c);
-		// ( (JInternalFrame) getContainer()).getContentPane().remove(
-		// (Component) c);
-		// ((SwingTipiContext)myContext).removeTopLevel(c);
-		// }
-		// });
-	}
+    private final void myWindow_internalFrameClosed(WindowPaneEvent arg0) {
+        // myContext.disposeTipi(this);
+    }
 
-	public void setContainerLayout(final Object layout) {
-		// runSyncInEventThread(new Runnable() {
-		// public void run() {
+    public void addToContainer(final Object c, final Object constraints) {
+        innerContainer.add((Component) c);
+        if (constraints != null && constraints instanceof LayoutData) {
+            ((WindowPane) getContainer()).setLayoutData((LayoutData) constraints);
 
-		// eueueuh
-		// ( (JInternalFrame) getContainer()).getContentPane().setLayout(
-		// (LayoutManager) layout);
-		// }
-		// });
-	}
+        }
+        // ((SwingTipiContext)myContext).addTopLevel(c);
+        // });
+    }
 
-	public final void setComponentValue(final String name, final Object object) {
-		super.setComponentValue(name, object);
+    public void removeFromContainer(final Object c) {
+        // runSyncInEventThread(new Runnable() {
+        // public void run() {
+        ((WindowPane) getContainer()).remove((Component) c);
+        // ( (JInternalFrame) getContainer()).getContentPane().remove(
+        // (Component) c);
+        // ((SwingTipiContext)myContext).removeTopLevel(c);
+        // }
+        // });
+    }
 
-		final WindowPane jj = (WindowPane) getContainer();
-		if (name.equals("background")) {
-			jj.setBackground((Color) object);
-		}
-		if (name.equals("closable")) {
-			boolean b = ((Boolean) object).booleanValue();
-			jj.setClosable(b);
-		}
-		if (name.equals("resizable")) {
-			boolean b = ((Boolean) object).booleanValue();
-			jj.setResizable(b);
-		}
-		 if (name.equals("x")) {
-			 jj.setPositionX(new Extent(((Integer) object).intValue(),Extent.PX));
-		 }
-		 if (name.equals("y")) {
-			 jj.setPositionY(new Extent(((Integer) object).intValue(),Extent.PX));
-		 }
-		 if (name.equals("w")) {
-			 jj.setWidth(new Extent(((Integer) object).intValue(),Extent.PX));
-		 }
-		 if (name.equals("h")) {
-			 jj.setHeight(new Extent(((Integer) object).intValue(),Extent.PX));
-		 }
-		 if (name.equals("title")) {
-		 myTitle = object.toString();
-		 setTitle(myTitle);
-		 }
-	}
+    public void setContainerLayout(final Object layout) {
+        // runSyncInEventThread(new Runnable() {
+        // public void run() {
 
-	protected void setTitle(final String s) {
-		myWindow.setTitle(s);
-	}
+        // eueueuh
+        // ( (JInternalFrame) getContainer()).getContentPane().setLayout(
+        // (LayoutManager) layout);
+        // }
+        // });
+    }
 
-	private final void doPerformMethod(String name, TipiComponentMethod compMeth) {
+    public final void setComponentValue(final String name, final Object object) {
+        super.setComponentValue(name, object);
 
-		// TODO THis one may be fixable
-		// if (name.equals("toFront")) {
-		// JInternalFrame jj = (JInternalFrame) getContainer();
-		// TipiSwingDesktop tt = (TipiSwingDesktop) jj.getParent();
-		// if (jj==null || tt==null) {
-		// return;
-		// }
-		// jj.toFront();
-		// if (tt.getDesktopManager()==null) {
-		// return;
-		// }
-		// tt.getDesktopManager().activateFrame(jj);
-		// }
-	}
+        final WindowPane jj = (WindowPane) getContainer();
+        if (name.equals("background")) {
+            jj.setBackground((Color) object);
+        }
+        if (name.equals("closable")) {
+            boolean b = ((Boolean) object).booleanValue();
+            jj.setClosable(b);
+        }
+        if (name.equals("resizable")) {
+            boolean b = ((Boolean) object).booleanValue();
+            jj.setResizable(b);
+        }
+        if (name.equals("x")) {
+            jj.setPositionX(new Extent(((Integer) object).intValue(), Extent.PX));
+        }
+        if (name.equals("y")) {
+            jj.setPositionY(new Extent(((Integer) object).intValue(), Extent.PX));
+        }
+        if (name.equals("w")) {
+            jj.setWidth(new Extent(((Integer) object).intValue(), Extent.PX));
+        }
+        if (name.equals("h")) {
+            jj.setHeight(new Extent(((Integer) object).intValue(), Extent.PX));
+        }
+        if (name.equals("title")) {
+            myTitle = object.toString();
+            setTitle(myTitle);
+        }
+    }
 
-	protected void performComponentMethod(final String name,
-			final TipiComponentMethod compMeth, TipiEvent event) {
-		doPerformMethod(name, compMeth);
-	}
+    protected void setTitle(final String s) {
+        myWindow.setTitle(s);
+    }
 
-	public boolean isReusable() {
-		return true;
-	}
+    private final void doPerformMethod(String name, TipiComponentMethod compMeth) {
 
-	public void reUse() {
-		// if (myParent!=null) {
-		// myParent.addToContainer();
-		// }
-		// myWindow.setVisible(true);
-	}
+        // TODO THis one may be fixable
+        // if (name.equals("toFront")) {
+        // JInternalFrame jj = (JInternalFrame) getContainer();
+        // TipiSwingDesktop tt = (TipiSwingDesktop) jj.getParent();
+        // if (jj==null || tt==null) {
+        // return;
+        // }
+        // jj.toFront();
+        // if (tt.getDesktopManager()==null) {
+        // return;
+        // }
+        // tt.getDesktopManager().activateFrame(jj);
+        // }
+    }
+
+    protected void performComponentMethod(final String name, final TipiComponentMethod compMeth, TipiEvent event) {
+        doPerformMethod(name, compMeth);
+    }
+
+    public boolean isReusable() {
+        return true;
+    }
+
+    public void reUse() {
+        // if (myParent!=null) {
+        // myParent.addToContainer();
+        // }
+        // myWindow.setVisible(true);
+    }
 }

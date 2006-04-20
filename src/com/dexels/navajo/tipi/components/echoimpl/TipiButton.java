@@ -26,65 +26,63 @@ import echopointng.image.URLImageReference;
  */
 
 public class TipiButton extends TipiEchoComponentImpl {
-	private PushButton myButton;
+    private PushButton myButton;
 
-	public TipiButton() {
-	}
+    public TipiButton() {
+    }
 
-	public Object createContainer() {
-//		ContainerEx ex = new ContainerEx();
-		myButton = new PushButton();
-//		ex.add(myButton);
-		// b.setIconTextMargin(new Extent(10));
-		myButton.setTextAlignment(new Alignment(Alignment.CENTER,
-				Alignment.CENTER));
-		
-		return myButton;
-		// return b;
-	}
+    public Object createContainer() {
+        // ContainerEx ex = new ContainerEx();
+        myButton = new PushButton();
+        // ex.add(myButton);
+        // b.setIconTextMargin(new Extent(10));
+        myButton.setTextAlignment(new Alignment(Alignment.CENTER, Alignment.CENTER));
 
-	/**
-	 * getComponentValue
-	 * 
-	 * @param name
-	 *            String
-	 * @return Object
-	 * @todo Implement this
-	 *       com.dexels.navajo.tipi.components.core.TipiComponentImpl method
-	 */
-	protected Object getComponentValue(String name) {
-		return "";
-	}
+        return myButton;
+        // return b;
+    }
 
-	public Object getActualComponent() {
-		return myButton;
-	}
+    /**
+     * getComponentValue
+     * 
+     * @param name
+     *            String
+     * @return Object
+     * @todo Implement this
+     *       com.dexels.navajo.tipi.components.core.TipiComponentImpl method
+     */
+    protected Object getComponentValue(String name) {
+        return "";
+    }
 
-	/**
-	 * setComponentValue
-	 * 
-	 * @param name
-	 *            String
-	 * @param object
-	 *            Object
-	 * @todo Implement this
-	 *       com.dexels.navajo.tipi.components.core.TipiComponentImpl method
-	 */
-	protected void setComponentValue(String name, Object object) {
-		// Button b = (Button) getContainer();
-		if ("text".equals(name)) {
-			myButton.setText("" + object);
-		}
-		if ("icon".equals(name)) {
-				if (object instanceof URL) {
-				URL u = (URL) object;
-				myButton.setIcon(new URLImageReference(u));
-			} else {
-				System.err
-						.println("Can not set button icon: I guess it failed to parse (TipiButton)");
-			}
-		}
-		super.setComponentValue(name, object);
-	}
+    public Object getActualComponent() {
+        return myButton;
+    }
+
+    /**
+     * setComponentValue
+     * 
+     * @param name
+     *            String
+     * @param object
+     *            Object
+     * @todo Implement this
+     *       com.dexels.navajo.tipi.components.core.TipiComponentImpl method
+     */
+    protected void setComponentValue(String name, Object object) {
+        // Button b = (Button) getContainer();
+        if ("text".equals(name)) {
+            myButton.setText("" + object);
+        }
+        if ("icon".equals(name)) {
+            if (object instanceof URL) {
+                URL u = (URL) object;
+                myButton.setIcon(new URLImageReference(u));
+            } else {
+                System.err.println("Can not set button icon: I guess it failed to parse (TipiButton)");
+            }
+        }
+        super.setComponentValue(name, object);
+    }
 
 }

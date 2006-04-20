@@ -29,36 +29,36 @@ import echopointng.able.Expandable;
  * @version 1.0
  */
 public class BorderParser extends TipiTypeParser {
-	public Object parse(TipiComponent source, String expression, TipiEvent event) {
-		return parseBorder(expression);
-	}
+    public Object parse(TipiComponent source, String expression, TipiEvent event) {
+        return parseBorder(expression);
+    }
 
-	private Object parseBorder(String s) {
-//		 if (s.endsWith("mm")) {
-//		 return parseMillis(s.substring(0,s.length()-2));
-//		 }
-//		 if (s.endsWith("%")) {
-//		 return parsePercent(s.substring(0,s.length()-2));
-//		 }
-//		 return parsePixels(s);
-//		System.err.println("PARSING BORDER:::: "+s);
-		 StringTokenizer st = new StringTokenizer(s, "-");
-		 String borderName = st.nextToken();
-		 if ("etched".equals(borderName)) {
-			 return new Border(1,new Color(50,50,50),Border.STYLE_INSET);
-		 }
-		 if ("raised".equals(borderName)) {
-			 return new Border(1,new Color(50,50,50),Border.STYLE_GROOVE);
-		 }
-		 if ("lowered".equals(borderName)) {
-			 return new Border(1,new Color(50,50,50),Border.STYLE_INSET);
-		 }
-		 if ("titled".equals(borderName)) {
-			 return st.nextToken();
-//			 return new Border(1,new Color(0,0,0),Border.STYLE_GROOVE);
-		 }
-//			 return BorderFactory.createEmptyBorder();
-		return null;
-	}
+    private Object parseBorder(String s) {
+        // if (s.endsWith("mm")) {
+        // return parseMillis(s.substring(0,s.length()-2));
+        // }
+        // if (s.endsWith("%")) {
+        // return parsePercent(s.substring(0,s.length()-2));
+        // }
+        // return parsePixels(s);
+        // System.err.println("PARSING BORDER:::: "+s);
+        StringTokenizer st = new StringTokenizer(s, "-");
+        String borderName = st.nextToken();
+        if ("etched".equals(borderName)) {
+            return new Border(1, new Color(50, 50, 50), Border.STYLE_INSET);
+        }
+        if ("raised".equals(borderName)) {
+            return new Border(1, new Color(50, 50, 50), Border.STYLE_GROOVE);
+        }
+        if ("lowered".equals(borderName)) {
+            return new Border(1, new Color(50, 50, 50), Border.STYLE_INSET);
+        }
+        if ("titled".equals(borderName)) {
+            return st.nextToken();
+            // return new Border(1,new Color(0,0,0),Border.STYLE_GROOVE);
+        }
+        // return BorderFactory.createEmptyBorder();
+        return null;
+    }
 
 }

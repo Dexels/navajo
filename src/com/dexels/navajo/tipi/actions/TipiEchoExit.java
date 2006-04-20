@@ -24,13 +24,13 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  */
 
 public class TipiEchoExit extends TipiAction {
-	public TipiEchoExit() {
-	}
+    public TipiEchoExit() {
+    }
 
-	public void execute(TipiEvent e) {
-		Operand destination = getEvaluatedParameter("destination", e);
-	
-		((EchoTipiContext) myContext).exit(""+destination.value);
-	}
+    public void execute(TipiEvent e) {
+        Operand destination = getEvaluatedParameter("destination", e);
+
+        ((EchoTipiContext) myContext).exit("" + destination.value);
+    }
 
 }

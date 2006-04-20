@@ -14,35 +14,36 @@ import nextapp.echo2.app.StreamImageReference;
 
 public class BinaryPropertyImage extends StreamImageReference {
 
-	private byte[] datas;
-	private Property myProperty = null;
-	private static final int BUFFER_SIZE=1000;
-	
-	public BinaryPropertyImage(Property p) {
-		setProperty(p);
-	}
-	
-	public void setProperty(Property p) {
-		Binary b = (Binary)p.getTypedValue();
-		datas = b.getData();
-		myProperty = p;
-	}
-	
-	public String getContentType() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    private byte[] datas;
 
-    public void render(OutputStream out) 
-    throws IOException {
-    	if (datas==null) {
-			System.err.println("Oh dear, bad binary");
-			return;
-		}
+    private Property myProperty = null;
+
+    private static final int BUFFER_SIZE = 1000;
+
+    public BinaryPropertyImage(Property p) {
+        setProperty(p);
+    }
+
+    public void setProperty(Property p) {
+        Binary b = (Binary) p.getTypedValue();
+        datas = b.getData();
+        myProperty = p;
+    }
+
+    public String getContentType() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public void render(OutputStream out) throws IOException {
+        if (datas == null) {
+            System.err.println("Oh dear, bad binary");
+            return;
+        }
         InputStream in = new ByteArrayInputStream(datas);
         byte[] buffer = new byte[BUFFER_SIZE];
         int bytesRead = 0;
-        
+
         try {
             do {
                 bytesRead = in.read(buffer);
@@ -51,16 +52,21 @@ public class BinaryPropertyImage extends StreamImageReference {
                 }
             } while (bytesRead > 0);
         } finally {
-            if (in != null) { try { in.close(); } catch (IOException ex) { } } 
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException ex) {
+                }
+            }
         }
     }
 
-	public String getRenderId() {
-		try {
-			return myProperty.getFullPropertyName();
-		} catch (NavajoException e) {
-			return "unknown_property";
-		}
-	}
+    public String getRenderId() {
+        try {
+            return myProperty.getFullPropertyName();
+        } catch (NavajoException e) {
+            return "unknown_property";
+        }
+    }
 
 }

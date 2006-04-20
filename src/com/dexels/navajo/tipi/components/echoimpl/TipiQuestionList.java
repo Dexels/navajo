@@ -14,49 +14,61 @@ import java.awt.print.*;
 import nextapp.echo2.app.*;
 
 /**
- * <p>Title: </p>
- * <p>Description: </p>
- * <p>Copyright: Copyright (c) 2004</p>
- * <p>Company: </p>
+ * <p>
+ * Title:
+ * </p>
+ * <p>
+ * Description:
+ * </p>
+ * <p>
+ * Copyright: Copyright (c) 2004
+ * </p>
+ * <p>
+ * Company:
+ * </p>
+ * 
  * @author not attributable
  * @version 1.0
  */
-public class TipiQuestionList
-    extends TipiBaseQuestionList {
-//  private String messagePath = null;
-//  private String questionDefinitionName = null;
-//  private String questionGroupDefinitionName = null;
-//  
-  private static final String MODE_TABS = "tabs";
-  private static final String MODE_PANEL = "panel";
-  
-  private String groupMode = MODE_PANEL;
-  public TipiQuestionList() {
-  }
+public class TipiQuestionList extends TipiBaseQuestionList {
+    // private String messagePath = null;
+    // private String questionDefinitionName = null;
+    // private String questionGroupDefinitionName = null;
+    //  
+    private static final String MODE_TABS = "tabs";
 
-  protected Object getGroupConstraints(Message groupMessage) {
-      return null;
-  }
-  protected void clearQuestions() {
-      removeInstantiatedChildren();
-  }
+    private static final String MODE_PANEL = "panel";
 
-public void runSyncInEventThread(Runnable r) {
+    private String groupMode = MODE_PANEL;
 
-    r.run();
-}
-
-public Object createContainer() {
-    // TODO FIX AND TEST
-    return null;
-}
-public void setComponentValue(String name, Object object) {
-    if (name.equals("background")) {
-//        Color background = (Color) object;
-//        myColumn.setBackground(background);
-//         return;
+    public TipiQuestionList() {
     }
-    
-    super.setComponentValue(name, object);
+
+    protected Object getGroupConstraints(Message groupMessage) {
+        return null;
+    }
+
+    protected void clearQuestions() {
+        removeInstantiatedChildren();
+    }
+
+    public void runSyncInEventThread(Runnable r) {
+
+        r.run();
+    }
+
+    public Object createContainer() {
+        // TODO FIX AND TEST
+        return null;
+    }
+
+    public void setComponentValue(String name, Object object) {
+        if (name.equals("background")) {
+            // Color background = (Color) object;
+            // myColumn.setBackground(background);
+            // return;
+        }
+
+        super.setComponentValue(name, object);
+    }
 }
- }

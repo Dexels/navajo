@@ -46,57 +46,58 @@ import nextapp.echo2.app.layout.TableLayoutData;
 import nextapp.echo2.app.table.TableCellRenderer;
 
 /**
- * Default renderer for <code>SortableTableModel</code> backed 
- * Tables.
+ * Default renderer for <code>SortableTableModel</code> backed Tables.
  * 
  * @author Jason Dalton
  */
 public class MessageTableHeaderRenderer implements TableCellRenderer {
-	
-	private static final ImageReference upArrowImage = new ResourceImageReference("/echopointng/resource/images/ArrowUp.gif");
-	private static final ImageReference downArrowImage = new ResourceImageReference("/echopointng/resource/images/ArrowDown.gif");
-    
+
+    private static final ImageReference upArrowImage = new ResourceImageReference("/echopointng/resource/images/ArrowUp.gif");
+
+    private static final ImageReference downArrowImage = new ResourceImageReference("/echopointng/resource/images/ArrowDown.gif");
+
     /**
-     * @see nextapp.echo2.app.table.TableCellRenderer#getTableCellRendererComponent(nextapp.echo2.app.Table, java.lang.Object, int, int)
+     * @see nextapp.echo2.app.table.TableCellRenderer#getTableCellRendererComponent(nextapp.echo2.app.Table,
+     *      java.lang.Object, int, int)
      */
     public Component getTableCellRendererComponent(Table table, Object value, int column, int row) {
-        SortableTableModel model = (SortableTableModel)table.getModel();
-        return getSortButton((String)value,column,(MessageTableModel)model,(MessageTable)table);
+        SortableTableModel model = (SortableTableModel) table.getModel();
+        return getSortButton((String) value, column, (MessageTableModel) model, (MessageTable) table);
     }
-    
-    protected Button getSortButton(String label, int column, MessageTableModel model,MessageTable table) {
-    	PushButton button = new PushButton(label);
-        button.addActionListener(getSortButtonListener(column,model));
+
+    protected Button getSortButton(String label, int column, MessageTableModel model, MessageTable table) {
+        PushButton button = new PushButton(label);
+        button.addActionListener(getSortButtonListener(column, model));
         button.setLayoutData(getLayoutData());
-        button.setInsets(new Insets(0,0,0,0));
+        button.setInsets(new Insets(0, 0, 0, 0));
         button.setTextPosition(new Alignment(Alignment.LEFT, Alignment.DEFAULT));
         button.setWidth(table.getColumnSize(column));
-        button.setHeight(new Extent(22,Extent.PX));
+        button.setHeight(new Extent(22, Extent.PX));
         ImageReference icon = null;
         if (model.getCurrentSortColumn() == column) {
-            if (model.isCurrentSortAscending()){
+            if (model.isCurrentSortAscending()) {
                 icon = upArrowImage;
             } else {
                 icon = downArrowImage;
             }
             button.setIcon(icon);
         }
-        
+
         return button;
     }
-    
+
     protected LayoutData getLayoutData() {
         TableLayoutData data = new TableLayoutData();
-//        data.setBackground(new Color(175,175,239));
+        // data.setBackground(new Color(175,175,239));
         return data;
     }
-    
+
     protected ActionListener getSortButtonListener(final int column, final SortableTableModel model) {
-        return new ActionListener() {            
+        return new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Button button = (Button)e.getSource();
+                Button button = (Button) e.getSource();
                 boolean ascending = model.isCurrentSortAscending();
-                model.sortByColumn(column,!ascending);
+                model.sortByColumn(column, !ascending);
             }
         };
     }

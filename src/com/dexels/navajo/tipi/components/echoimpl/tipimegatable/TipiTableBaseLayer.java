@@ -8,51 +8,61 @@ import nextapp.echo2.app.*;
 import java.util.*;
 
 /**
- * <p>Title: </p>
- * <p>Description: </p>
- * <p>Copyright: Copyright (c) 2004</p>
- * <p>Company: </p>
+ * <p>
+ * Title:
+ * </p>
+ * <p>
+ * Description:
+ * </p>
+ * <p>
+ * Copyright: Copyright (c) 2004
+ * </p>
+ * <p>
+ * Company:
+ * </p>
+ * 
  * @author not attributable
  * @version 1.0
  */
 
 public abstract class TipiTableBaseLayer {
 
-  protected final TipiMegaTable myTable;
-  protected String titleProperty = null;
-  protected String messagePath = null;
+    protected final TipiMegaTable myTable;
 
-  public TipiTableBaseLayer(TipiMegaTable tmt) {
-    myTable = tmt;
-  }
-  public String toString() {
-     return "Class: "+getClass().getName()+" Title: "+titleProperty+" msgpath: "+messagePath;
-   }
+    protected String titleProperty = null;
 
+    protected String messagePath = null;
 
-  public void loadLayer(XMLElement elt) {
-    titleProperty= elt.getStringAttribute("title");
-    messagePath= elt.getStringAttribute("messagePath");
-  }
+    public TipiTableBaseLayer(TipiMegaTable tmt) {
+        myTable = tmt;
+    }
 
-  public void loadData(Navajo n, Message current,Stack layerStack, Component currentPanel) {
-  }
+    public String toString() {
+        return "Class: " + getClass().getName() + " Title: " + titleProperty + " msgpath: " + messagePath;
+    }
 
-  public XMLElement store() {
-    XMLElement xx = new CaseSensitiveXMLElement();
-    xx.setName("layer");
-    xx.setAttribute("messagePath",messagePath);
-    xx.setAttribute("title",titleProperty);
-    return xx;
-  }
+    public void loadLayer(XMLElement elt) {
+        titleProperty = elt.getStringAttribute("title");
+        messagePath = elt.getStringAttribute("messagePath");
+    }
 
-  public void updateLayer() {
+    public void loadData(Navajo n, Message current, Stack layerStack, Component currentPanel) {
+    }
 
-  }
+    public XMLElement store() {
+        XMLElement xx = new CaseSensitiveXMLElement();
+        xx.setName("layer");
+        xx.setAttribute("messagePath", messagePath);
+        xx.setAttribute("title", titleProperty);
+        return xx;
+    }
 
+    public void updateLayer() {
 
-  public String getMessagePath() {
-    return messagePath;
-  }
+    }
+
+    public String getMessagePath() {
+        return messagePath;
+    }
 
 }

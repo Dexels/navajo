@@ -21,46 +21,46 @@ import nextapp.echo2.app.TextArea;
  */
 
 public class TipiTextArea extends TipiEchoComponentImpl {
-	public TipiTextArea() {
-	}
+    public TipiTextArea() {
+    }
 
-	public Object createContainer() {
-		TextArea rta = new TextArea();
-		// rta.setWidth(new Extent(100,100) TextArea.PERCENT_UNITS);
+    public Object createContainer() {
+        TextArea rta = new TextArea();
+        // rta.setWidth(new Extent(100,100) TextArea.PERCENT_UNITS);
 
-		// rta.setColumns(100);
-		// rta.setRows(10);
+        // rta.setColumns(100);
+        // rta.setRows(10);
 
-		return rta;
-	}
+        return rta;
+    }
 
-	public Object getComponentValue(String id) {
-		if ("text".equals(id)) {
-			TextArea t = (TextArea) getContainer();
-			return t.getText().trim();
-		}
-		return super.getComponentValue(id);
-	}
+    public Object getComponentValue(String id) {
+        if ("text".equals(id)) {
+            TextArea t = (TextArea) getContainer();
+            return t.getText().trim();
+        }
+        return super.getComponentValue(id);
+    }
 
-	public void setComponentValue(String id, Object value) {
-		if ("text".equals(id)) {
-			TextArea t = (TextArea) getContainer();
-			t.setText(value.toString());
-			return;
-		}
-		if ("w".equals(id)) {
-			TextArea t = (TextArea) getContainer();
-			int w = ((Integer) value).intValue();
-			// t.setColumns(w);
-			return;
-		}
-		if ("h".equals(id)) {
-			TextArea t = (TextArea) getContainer();
-			int h = ((Integer) value).intValue();
-			// t.setRows(h);
-			return;
-		}
-		super.setComponentValue(id, value);
-	}
+    public void setComponentValue(String id, Object value) {
+        if ("text".equals(id)) {
+            TextArea t = (TextArea) getContainer();
+            t.setText(value.toString());
+            return;
+        }
+        if ("w".equals(id)) {
+            TextArea t = (TextArea) getContainer();
+            int w = ((Integer) value).intValue();
+            // t.setColumns(w);
+            return;
+        }
+        if ("h".equals(id)) {
+            TextArea t = (TextArea) getContainer();
+            int h = ((Integer) value).intValue();
+            // t.setRows(h);
+            return;
+        }
+        super.setComponentValue(id, value);
+    }
 
 }

@@ -23,7 +23,7 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  * @version 1.0
  */
 public class PaintParser extends TipiTypeParser {
-	public Object parse(TipiComponent source, String expression, TipiEvent event) {
-		return null;
-	}
+    public Object parse(TipiComponent source, String expression, TipiEvent event) {
+        return null;
+    }
 }

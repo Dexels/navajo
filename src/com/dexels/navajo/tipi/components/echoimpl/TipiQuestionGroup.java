@@ -1,6 +1,5 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
-
 import nextapp.echo2.app.*;
 
 import com.dexels.navajo.tipi.components.core.*;
@@ -10,12 +9,20 @@ import com.dexels.navajo.document.*;
 
 import com.dexels.navajo.tipi.actions.*;
 
-
 /**
- * <p>Title: </p>
- * <p>Description: </p>
- * <p>Copyright: Copyright (c) 2004</p>
- * <p>Company: </p>
+ * <p>
+ * Title:
+ * </p>
+ * <p>
+ * Description:
+ * </p>
+ * <p>
+ * Copyright: Copyright (c) 2004
+ * </p>
+ * <p>
+ * Company:
+ * </p>
+ * 
  * @author not attributable
  * @version 1.0
  */
@@ -27,21 +34,20 @@ public class TipiQuestionGroup extends TipiBaseQuestionGroup {
         myColumn = new Column();
         return myColumn;
     }
+
     public void setComponentValue(String name, Object object) {
         if (name.equals("background")) {
             Color background = (Color) object;
             myColumn.setBackground(background);
-             return;
+            return;
         }
-        
+
         super.setComponentValue(name, object);
     }
-    
 
     public void addToContainer(Object c, Object constraints) {
         Component comp = (Component) c;
         myColumn.add(comp);
     }
 
- 
 }

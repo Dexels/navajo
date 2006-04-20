@@ -22,33 +22,33 @@ import echopointng.ContainerEx;
 
 public class TipiPanel extends TipiEchoDataComponentImpl {
 
-	public TipiPanel() {
-	}
+    public TipiPanel() {
+    }
 
-	public Object createContainer() {
-		ContainerEx p = new ContainerEx();
-		return p;
-	}
+    public Object createContainer() {
+        ContainerEx p = new ContainerEx();
+        return p;
+    }
 
-	// public void addToContainer(Object o, Object contraints){
-	//
-	// }
-	//
-	// public void setContainerLayout(Object l){
-	//
-	// }
+    // public void addToContainer(Object o, Object contraints){
+    //
+    // }
+    //
+    // public void setContainerLayout(Object l){
+    //
+    // }
 
-	public void setComponentValue(final String name, final Object object) {
+    public void setComponentValue(final String name, final Object object) {
 
-		// if ("w".equals(name)) {
-		// ContentPane cont = (ContentPane) getContainer();
-		// cont.setWidth( ( (Integer) object).intValue());
-		// }
-		// if ("h".equals(name)) {
-		// TipiEchoPanel cont = (TipiEchoPanel) getContainer();
-		// cont.setHeight( ( (Integer) object).intValue());
-		// }
-		super.setComponentValue(name, object);
-	}
+        // if ("w".equals(name)) {
+        // ContentPane cont = (ContentPane) getContainer();
+        // cont.setWidth( ( (Integer) object).intValue());
+        // }
+        // if ("h".equals(name)) {
+        // TipiEchoPanel cont = (TipiEchoPanel) getContainer();
+        // cont.setHeight( ( (Integer) object).intValue());
+        // }
+        super.setComponentValue(name, object);
+    }
 
 }

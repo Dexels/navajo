@@ -25,30 +25,29 @@ import nextapp.echo2.app.ResourceImageReference;
  */
 
 public class TipiLabel extends TipiEchoComponentImpl {
-	public TipiLabel() {
-	}
+    public TipiLabel() {
+    }
 
-	public Object createContainer() {
-		Label b = new Label();
-		return b;
-	}
+    public Object createContainer() {
+        Label b = new Label();
+        return b;
+    }
 
-	protected void setComponentValue(String name, Object object) {
-		Label b = (Label) getContainer();
-		if ("text".equals(name)) {
-			b.setText("" + object);
-		}
+    protected void setComponentValue(String name, Object object) {
+        Label b = (Label) getContainer();
+        if ("text".equals(name)) {
+            b.setText("" + object);
+        }
         if ("icon".equals(name)) {
             if (object instanceof URL) {
-            URL u = (URL) object;
-            System.err.println("Using url for button: "+u);
-            b.setIcon(new URLImageReference(u));
-        } else {
-            System.err
-                    .println("Can not set button icon: I guess it failed to parse (TipiButton)");
+                URL u = (URL) object;
+                System.err.println("Using url for button: " + u);
+                b.setIcon(new URLImageReference(u));
+            } else {
+                System.err.println("Can not set button icon: I guess it failed to parse (TipiButton)");
+            }
         }
+        super.setComponentValue(name, object);
     }
-		super.setComponentValue(name, object);
-	}
 
 }

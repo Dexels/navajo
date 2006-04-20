@@ -28,18 +28,16 @@ import echopointng.command.*;
  */
 
 public class TipiEchoShowInfo extends TipiAction {
-	public TipiEchoShowInfo() {
-	}
+    public TipiEchoShowInfo() {
+    }
 
-	protected void execute(TipiEvent e)
-			throws com.dexels.navajo.tipi.TipiBreakException,
-			com.dexels.navajo.tipi.TipiException {
-		Operand text = getEvaluatedParameter("text", e);
+    protected void execute(TipiEvent e) throws com.dexels.navajo.tipi.TipiBreakException, com.dexels.navajo.tipi.TipiException {
+        Operand text = getEvaluatedParameter("text", e);
 
-//		TipiOptionPane.showInfo(myContext, (String) text.value, "Info:",
-//				"Close");
-        ApplicationInstance.getActive().enqueueCommand(new JavaScriptEval("alert('"+text.value+"')"));
-        
-	}
+        // TipiOptionPane.showInfo(myContext, (String) text.value, "Info:",
+        // "Close");
+        ApplicationInstance.getActive().enqueueCommand(new JavaScriptEval("alert('" + text.value + "')"));
+
+    }
 
 }

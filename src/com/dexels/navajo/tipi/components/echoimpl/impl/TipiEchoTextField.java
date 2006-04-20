@@ -21,13 +21,13 @@ import nextapp.echo2.app.TextField;
  */
 
 public class TipiEchoTextField extends TextField {
-	public TipiEchoTextField() {
-		super();
-	}
+    public TipiEchoTextField() {
+        super();
+    }
 
-	public TipiEchoTextField(String text) {
-		super();
-		setText(text);
-	}
+    public TipiEchoTextField(String text) {
+        super();
+        setText(text);
+    }
 
 }
