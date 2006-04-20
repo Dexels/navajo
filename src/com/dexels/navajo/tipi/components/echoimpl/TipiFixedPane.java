@@ -97,27 +97,11 @@ public final class TipiFixedPane
 		super.setComponentValue(name, object);
 		if (object == null) {
 			System.err.println("Null object. Name = " + name);
-		} else {
-			// System.err.println("Class: "+object.getClass()+" name: "+name);
-		}
-			// runSyncInEventThread(new Runnable() {
-		// public void run() {
-		// if (name.equals("iconifiable")) {
-		// boolean b = ( (Boolean) object).booleanValue();
-		// jj.setIconifiable(b);
-		// }
+		} 
 		if (name.equals("background")) {
 			innerContainer.setBackground((Color) object);
 		}
 
-//		 final Rectangle r = getBounds();
-		
-//		 if (name.equals("w")) {
-//			 jj.setWidth(new Extent(((Integer) object).intValue(),Extent.PX));
-//		 }
-//		 if (name.equals("h")) {
-//			 jj.setHeight(new Extent(((Integer) object).intValue(),Extent.PX));
-//		 }
 	}
 
 	private final void doPerformMethod(String name, TipiComponentMethod compMeth) {

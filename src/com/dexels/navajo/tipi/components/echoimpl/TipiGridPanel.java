@@ -85,11 +85,8 @@ public class TipiGridPanel extends TipiEchoDataComponentImpl {
 		 gridComponent.add(c);
 		 if (constr!=null) {
 			 GridLayoutData cons = parseGridConstraints(constr,c);
-             System.err.println("\n\n:::::::::::: ADDING WITH CONSTRAINT: "+cons);
-            c.setLayoutData(cons);
+             c.setLayoutData(cons);
 		}
-//		myContainer.setWidth(myContainer.getWidth());
-//		myContainer.setHeight(myContainer.getHeight());
 	 }
 	 
 	 public GridLayoutData parseGridConstraints(String txt, Component c) {
@@ -246,7 +243,6 @@ public class TipiGridPanel extends TipiEchoDataComponentImpl {
         Object[] columns = myWidths.toArray();
          gridComponent.setSize(columns.length);
        for (int i = 0; i < columns.length; i++) {
-           System.err.println("Setting column width: "+columns[i]);
            gridComponent.setColumnWidth(i,new Extent(((Integer)columns[i]).intValue(),Extent.PX));
       }
 

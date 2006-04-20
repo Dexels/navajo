@@ -16,8 +16,7 @@ public class TipiRow extends TipiEchoDataComponentImpl {
 	public void addToContainer(Object c, Object constraints) {
 		Component comp = (Component) c;
         myRow.add(comp);
-		System.err.println(">>>>>>>>>|||||||||||||||||| Added to container...");
-	}
+		}
 
 	// public Object getActualComponent() {
 	// return myColumn;

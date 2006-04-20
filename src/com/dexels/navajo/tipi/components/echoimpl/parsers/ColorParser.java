@@ -25,15 +25,11 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  */
 public class ColorParser extends TipiTypeParser {
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
-		System.err.println("Hatsa...");
 		return parseColor(expression);
 	}
 
 	private Color parseColor(String s) {
-		// System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><><><><OUWE>>
-		// PWPPPPWOOOAAARSSE COLLER: " + s);
-		if (!s.startsWith("#")) {
-			System.err.println("Eating runtime..don't snap this color: " + s);
+			if (!s.startsWith("#")) {
 			throw new RuntimeException("BAD COLOR: " + s);
 		}
 		String st = s.substring(1);

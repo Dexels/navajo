@@ -54,11 +54,9 @@ public class TipiFrame extends TipiEchoDataComponentImpl {
 
     }
 
-    // NEARLY IDENTICAL TO PARENT TODO: REFACTOR!
-
+  
     public void setContainerLayout(Object layout) {
-        System.err.println("*************** SETTTING CONTAINER LAYOUT: " + layout);
-    }
+     }
 
     /**
      * setComponentValue
@@ -86,7 +84,6 @@ public class TipiFrame extends TipiEchoDataComponentImpl {
 
     public void addToContainer(Object c, Object constraints) {
         if (c instanceof MenuBar) {
-            System.err.println("Menubar found");
             MenuBar m = (MenuBar) c;
             m.setPosition(Positionable.ABSOLUTE);
             m.setTop(new Extent(0, Extent.PX));

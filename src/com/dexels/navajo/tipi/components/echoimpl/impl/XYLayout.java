@@ -28,7 +28,6 @@ public class XYLayout extends DefaultTipiLayoutManager {
 		// System.err.println("Layout: "+parent.);
 		if (currentChild instanceof Positionable) {
 			Positionable p = (Positionable) currentChild;
-			System.err.println("Laying out, ouwe");
 			if (xyl == null) {
 				System.err.println("No constraint. Skipping");
 				return;
@@ -39,7 +38,6 @@ public class XYLayout extends DefaultTipiLayoutManager {
 		} else {
 			if (currentChild instanceof Insetable) {
 				Insetable p = (Insetable) currentChild;
-				System.err.println("Insetable out, ouwe");
 				if (xyl == null) {
 					System.err.println("No constraint. Skipping");
 					return;

@@ -82,8 +82,7 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
             selected.setBorder(new Border(1,new Color(50,50,50),Border.STYLE_GROOVE));
         }
 
-         System.err.println("Setting up model...");
-        defaultTabModel.setSelectedBackground(new Color(204,204,204));
+         defaultTabModel.setSelectedBackground(new Color(204,204,204));
         defaultTabModel.setSelectedForeground(new Color(0,0,0));
         defaultTabModel.setBackground(new Color(204,204,204));
         defaultTabModel.setForeground(new Color(153,153,153));

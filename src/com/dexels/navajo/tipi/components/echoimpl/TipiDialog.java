@@ -190,7 +190,6 @@ public class TipiDialog extends TipiEchoDataComponentImpl {
 		// System.err.println("Constructing: studio? "+isStudioElement());
 		if (myContext.isStudioMode() && !isStudioElement()) {
 			//
-			System.err.println("studio");
 			studioMode = true;
 		} else {
 			constructStandardDialog();
@@ -240,24 +239,7 @@ public class TipiDialog extends TipiEchoDataComponentImpl {
 		myDialog.setTitleForeground(new Color(0,0,0));
 		myDialog.setTitleFont(new Font(Font.ARIAL,Font.BOLD,new Extent(11,Extent.PT)));
 		myDialog.setTitleHeight(new Extent(20,Extent.PX));
-		// myDialog.setHeight(new Extent(300,Extent.PX));
-		// myDialog.setWidth(new Extent(300,Extent.PX));
-		// myDialog.setPositionX(new Extent(300,Extent.PX));
-		// myDialog.setPositionY(new Extent(300,Extent.PX));
 		myDialog.setVisible(true);
-		System.err.println("Showin!");
-		// myDialog.getContentPane().setLayout(new BorderLayout());
-		// myDialog.getContentPane().add(getSwingContainer(),
-		// BorderLayout.CENTER);
-		// myDialog.pack();
-		// if (myBounds != null) {
-		// myDialog.setBounds(myBounds);
-		// System.err.println("Setting bounds: "+myBounds);
-		// } else {
-		// System.err.println("Null bounds for dialog.");
-		// }
-		//
-		// myDialog.setLocationRelativeTo( (Component) myContext.getTopLevel());
 	}
 
 	protected void helperRegisterEvent(TipiEvent te) {
@@ -269,7 +251,6 @@ public class TipiDialog extends TipiEchoDataComponentImpl {
 	}
 
 	public void addToContainer(Object c, Object constraints) {
-		System.err.println("Adding to dialog: " + c);
 		super.addToContainer(c, constraints);
 	}
 
@@ -282,42 +263,16 @@ public class TipiDialog extends TipiEchoDataComponentImpl {
 		// SwingUtilities.isEventDispatchThread();
 		super.performComponentMethod(name, compMeth, event);
 		if (name.equals("show")) {
-			// runASyncInEventThread(new Runnable() {
-			// public void run() {
-
-			System.err.println("Component method found!");
 			constructDialog();
-			if (myDialog == null) {
-			}
-			if (myDialog != null) {
-				// ( (TipiContext)
-				// myContext).addTopLevel(myDialog.getContentPane()); (
-				// (SwingTipiContext) myContext).dialogShowing(true);
-				// ( (TipiContext) myContext).updateWaiting();
-				// SwingClient.getUserInterface().addDialog(myDialog);
-				if (myContext != null) {
-					// ( (TipiContext) myContext).dialogShowing(false); if
-					// (myDialog != null) {
-					// ( (TipiContext)
-					// myContext).removeTopLevel(myDialog.getContentPane()); (
-					// (SwingTipiContext) myContext).updateWaiting();
-				} else {
-					System.err.println("Null DIALOG, in TipiDialog.");
-				}
-			} else {
-				System.err.println("Null CONTEXT, in TipiDialog.");
-			}
 		}
 		// }
 		// });
 		if (name.equals("hide")) {
-			System.err.println("Hiding dialog!!!\n\n\n\n");
-			if (myDialog != null) {
+				if (myDialog != null) {
 				myDialog.setVisible(false);
 			}
 		}
 		if (name.equals("dispose")) {
-			// System.err.println("Hide dialog: Disposing dialog!");
 			if (myDialog != null) {
 				myDialog.setVisible(false);
 				myDialog = null;
@@ -327,8 +282,6 @@ public class TipiDialog extends TipiEchoDataComponentImpl {
 		}
 	}
 
-	// public void setContainerVisible(boolean b) {
-	// }
 	public void reUse() {
 	}
 }

@@ -89,8 +89,7 @@ public class MessageTable extends SortableTable {
 			getSelectionModel().addChangeListener(new ChangeListener() {
 
 				public void stateChanged(ChangeEvent arg0) {
-					System.err.println("Selection changed!!!");
-				}
+						}
 			});
 		} else {
 			System.err.println("No selection model!");
@@ -98,7 +97,6 @@ public class MessageTable extends SortableTable {
 		addActionListener(new ActionListener(){
 
 			public void actionPerformed(ActionEvent e) {
-				System.err.println("Selection changed!!!");
 				
 			}});
 		setSelectionEnabled(true);

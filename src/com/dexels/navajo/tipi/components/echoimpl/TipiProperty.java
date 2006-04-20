@@ -57,8 +57,7 @@ public class TipiProperty extends TipiEchoComponentImpl implements
 
 	public void propertyEventFired(Property p, String eventType) {
         try {
-	    System.err.println("Property event fired!");
-          Map m = new HashMap();
+	       Map m = new HashMap();
           m.put("propertyName", myProperty.getFullPropertyName());
           m.put("propertyValue", myProperty.getTypedValue());
           m.put("propertyType", myProperty.getType());
@@ -68,7 +67,6 @@ public class TipiProperty extends TipiEchoComponentImpl implements
                 tel.performTipiEvent(eventType, m, true);
             }
 		    if (p == null) {
-		      System.err.println("Trying to fire event from null property!");
 		      return;
 		    }
 		    if (p != myProperty) {
@@ -137,7 +135,6 @@ public class TipiProperty extends TipiEchoComponentImpl implements
 	// }
 	protected void setComponentValue(String name, Object object) {
 		if ("propertyname".equals(name)) {
-			System.err.println("Setting propname to: " + object.toString());
 			myPropertyName = object.toString();
 		}
 		if ("label_indent".equals(name)) {

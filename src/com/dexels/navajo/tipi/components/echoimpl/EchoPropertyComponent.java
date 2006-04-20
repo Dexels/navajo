@@ -153,7 +153,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 		}
 		if (currentComponent!=null) {
             GridLayoutData gld = new GridLayoutData();
-            System.err.println("");
+//            System.err.println("");
             gld.setAlignment(new Alignment(Alignment.LEADING,Alignment.CENTER));
             currentComponent.setLayoutData(gld);
         } else {
@@ -187,12 +187,12 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 
     private void createGenericTextProperty(Property p) {
         boolean isEdit = p.isDirIn();
-        System.err.println("CREATING GENERIC TEXT. ISEDIT: "+isEdit+" alwaysLabE: "+alwaysUseLabel);
+//        System.err.println("CREATING GENERIC TEXT. ISEDIT: "+isEdit+" alwaysLabE: "+alwaysUseLabel);
         if (alwaysUseLabel) {
             createLabel(p.getValue());
         } else {
             if ((isEdit || !useLabelForReadOnlyProperties)) {
-                System.err.println("My property type: "+p.getType());
+//                System.err.println("My property type: "+p.getType());
                 createTextField(p);
 
             } else {
@@ -367,7 +367,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
             return;
         }
         final TextArea cb = new TextArea(new StringDocument(),"",column,row);
-        System.err.println("Creating memo property: "+column+" row: "+row+" val: "+value_size);
+//        System.err.println("Creating memo property: "+column+" row: "+row+" val: "+value_size);
         cb.setWidth(new Extent(memoColumnCount,Extent.EM));
         cb.setText(p.getValue());
         
@@ -376,21 +376,21 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
         cb.addActionListener(new ActionListener(){
 
             public void actionPerformed(ActionEvent arg0) {
-                System.err.println("Memo DIRECT action");
+//                System.err.println("Memo DIRECT action");
                 myProperty.setValue(cb.getText());
                 fireTipiEvent("onValueChanged");
             }});
         cb.getDocument().addDocumentListener(new DocumentListener(){
 
         	public void documentUpdate(DocumentEvent e) {
-        	    System.err.println("Memo activity!");
+//        	    System.err.println("Memo activity!");
                 myProperty.setValue(cb.getText());
                 fireTipiEvent("onValueChanged");
         	}});
         cb.addPropertyChangeListener(new PropertyChangeListener(){
 
             public void propertyChange(PropertyChangeEvent evt) {
-                System.err.println("AAAAAAAAAAAP:"+evt);
+//                System.err.println("AAAAAAAAAAAP:"+evt);
             }});
         currentComponent = cb;
 
@@ -440,12 +440,12 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
         if (!p.isDirIn()) {
         	tf.setForeground(new Color(90,90,90));
         }
-        System.err.println("Created textfield. Dirin: "+p.isDirIn());
+//        System.err.println("Created textfield. Dirin: "+p.isDirIn());
         add(tf);
         tf.setEnabled(p.isDirIn());
         tf.getDocument().addDocumentListener(new DocumentListener() {
         	public void documentUpdate(DocumentEvent e) {
-                System.err.println("Mies: "+e);
+//                System.err.println("Mies: "+e);
                 String text = tf.getText();
         		myProperty.setValue(text);
                 fireTipiEvent("onStateChanged");
@@ -454,7 +454,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
         });
         tf.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        	    System.err.println("Aap: "+e);
+//        	    System.err.println("Aap: "+e);
                 TipiEchoTextField tf = (TipiEchoTextField) e
         				.getSource();
         		String text = tf.getText();
@@ -505,7 +505,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
                     rb.addActionListener(new ActionListener(){
                         public void actionPerformed(ActionEvent arg0) {
                             try {
-                                System.err.println("radiobutton activity: "+rb.getActionCommand());
+//                                System.err.println("radiobutton activity: "+rb.getActionCommand());
                                 if (doUpdateRadioButtons) {
                                     doUpdateRadioButtons = false;
                                     updateRadioButtonList(rb,buttons,p);
@@ -566,10 +566,10 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
                     rb.setActionCommand(cc.getValue());
                     rb.setSelected(cc.isSelected());
                     rb.setEnabled(p.isDirIn());
-                    System.err.println("Created checkbox, actionCommand: "+cc.getValue());
+//                    System.err.println("Created checkbox, actionCommand: "+cc.getValue());
                     rb.addActionListener(new ActionListener(){
                         public void actionPerformed(ActionEvent arg0) {
-                            System.err.println("checkbox activity!");
+//                            System.err.println("checkbox activity!");
                                 try {
                                 updateCheckboxButtonList(rb,buttons,p);
                                 fireTipiEvent("onStateChanged");
@@ -599,11 +599,9 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
                 s.setSelected(element.isSelected());
             }
             if (element==rb) {
-                System.err.println("Setting: "+element.getActionCommand());
-//                element.setSelected(true);
+ //                element.setSelected(true);
             } else {
-                System.err.println("Clearing: "+element.getActionCommand());
-                element.setSelected(false);
+                 element.setSelected(false);
             }
         }
         }    

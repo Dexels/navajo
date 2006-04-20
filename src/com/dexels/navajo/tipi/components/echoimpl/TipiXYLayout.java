@@ -40,7 +40,6 @@ public class TipiXYLayout extends TipiLayoutImpl {
 	}
 
 	public void childAdded(Object c) {
-		System.err.println("Child added. ");
 		((XYLayout) getLayout()).layoutContainer((Component) myComponent
 				.getContainer());
 		// myComponent

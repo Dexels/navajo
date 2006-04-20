@@ -68,7 +68,6 @@ public class EchoTipiHelper implements TipiHelper {
 			c.setFont((Font) object);
 		}
 		if (name.equals("border")) {
-System.err.println("SETTING BORDER!!!!!!!!!!!!!!! "+c);
 			if (c  instanceof Borderable && object instanceof Border) {
 				Borderable b = (Borderable)c;
 				b.setBorder((Border)object);

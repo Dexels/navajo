@@ -27,10 +27,7 @@ public class TipiMenuBar extends TipiEchoDataComponentImpl {
 	public Object createContainer() {
 		MenuBar b = new MenuBar();
 		b.setTopOffset(0);
-		System.err.println("Creating menubar");
-		// b.setLeft(0);
-		// b.setTop(0);
-		// b.setFixedPosition(true);
+	
 		return b;
 	}
 

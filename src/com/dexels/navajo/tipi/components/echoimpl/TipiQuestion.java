@@ -80,10 +80,6 @@ public class TipiQuestion
     
     
     public void setValid(boolean b, String msg) {
-//        myGroupBox.setBorder(new Border());
-        System.err.println("SSSSSSSEEEEEEET VVVVVVAAAAALLLLLLLLIIIIDDDDD: "+b);
-//        myGroupBox.setTitle(b?"":msg);
-//        myColumn.setBackground(b?defaultColor:Color.RED);
     }
   
 

@@ -91,8 +91,6 @@ public class TipiTable extends TipiEchoDataComponentImpl {
 					mm.addColumn(p.getName(), p.getName(), false,-1);
 				}
 			}
-			System.err.println("Loading table. Message size: "
-					+ m.getArraySize());
 			mm.setMessage(m);
 		}
 	}

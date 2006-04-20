@@ -15,6 +15,7 @@ import com.dexels.navajo.tipi.tipixml.*;
  * <p>Company: </p>
  * @author not attributable
  * @version 1.0
+ * @deprecated Will never really work well. Use the gridpanel.
  */
 public class TipiEchoGridBagConstraints
     extends GridLayoutData {
@@ -43,13 +44,11 @@ public class TipiEchoGridBagConstraints
 	  public static final int LAST_LINE_START = 25;
 	  public static final int LAST_LINE_END = 26;
 
-//  private String[] myConstraints = new String[14];
   public TipiEchoGridBagConstraints() {
   }
 
   public static GridLayoutData parse(String cs) {
 //    String cs = elm.getStringAttribute("gridbag");
-	  System.err.println("@@@@@@@@@@@@@@@@@@@@Parsing gbc : "+cs);
     StringTokenizer tok = new StringTokenizer(cs, ", ");
     String[] myConstraints = new String[14];    
     int tokenCount = tok.countTokens();

@@ -42,11 +42,8 @@ public class TipiSwitchPanel extends TipiEchoDataComponentImpl {
 
 	 public void addToContainer(Object o, Object contraints){
 		Component c = (Component)o;
-		System.err.println("My childcount: "+getChildCount());
 		if (getChildCount()>1) {
 			c.setVisible(false);
-		} else {
-			System.err.println("\n\n\n ARRRR FOUNT AN OPJECT! "+o);
 		}
 		myContainer.add(c);
 	 }

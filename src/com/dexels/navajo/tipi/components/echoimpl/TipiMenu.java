@@ -27,7 +27,6 @@ public class TipiMenu extends TipiEchoDataComponentImpl {
 
 	public Object createContainer() {
 		Menu b = new Menu();
-		System.err.println("Creating menu");
 		return b;
 	}
 
@@ -37,7 +36,6 @@ public class TipiMenu extends TipiEchoDataComponentImpl {
 			b.setText("" + object);
 		}
 		if ("icon".equals(name)) {
-			System.err.println("URL: " + object.toString());
 			b.setIcon(new ResourceImageReference(object.toString()));
 		}
 		super.setComponentValue(name, object);

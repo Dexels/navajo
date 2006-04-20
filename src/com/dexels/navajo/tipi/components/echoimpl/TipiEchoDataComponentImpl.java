@@ -69,8 +69,7 @@ public abstract class TipiEchoDataComponentImpl extends TipiDataComponentImpl {
 		if (layoutComponent!=null) {
 			cc = layoutComponent;
 		}
-		System.err.println("addContainer: Adding: " + child + " to " + cc);
-		if (child instanceof WindowPane) {
+			if (child instanceof WindowPane) {
 			TipiScreen s = (TipiScreen) getContext().getDefaultTopLevel();
 			final Window w = (Window) s.getTopLevel();
 			w.getContent().add(child);
@@ -78,7 +77,6 @@ public abstract class TipiEchoDataComponentImpl extends TipiDataComponentImpl {
 			cc.add(child);
 			if (constraints != null && constraints instanceof LayoutData) {
 				child.setLayoutData((LayoutData) constraints);
-				System.err.println(">>>>>>>>>>>" + (LayoutData) constraints);
 			}
 			if (getLayout() != null) {
 				getLayout().childAdded(c);
@@ -88,9 +86,6 @@ public abstract class TipiEchoDataComponentImpl extends TipiDataComponentImpl {
 	}
 
 	public void setContainerLayout(Object layout) {
-		System.err.println("*************** SETTTING CONTAINER LAYOUT: "+layout);
-//		layoutComponent = layout;
-//
 		if (layout instanceof TipiLayoutManager) {
 			/* 'Real layout' */
 			// layoutComponent = (TipiLayoutManager)layout;
@@ -101,7 +96,6 @@ public abstract class TipiEchoDataComponentImpl extends TipiDataComponentImpl {
 					((Sizeable)layoutComponent).setWidth(new Extent(100,Extent.PERCENT));
 					((Sizeable)layoutComponent).setHeight(new Extent(100,Extent.PERCENT));
 				}
-				System.err.println("Component layout found!!");
 				((Component)getContainer()).add(layoutComponent);
 				
 			} else {

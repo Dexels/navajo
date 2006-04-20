@@ -29,7 +29,6 @@ import nextapp.echo2.app.layout.GridLayoutData;
  public class TipiEchoGridBagLayout
  extends TipiLayoutImpl {
  public TipiEchoGridBagLayout() {
-	 System.err.println("CREATED: "+getClass());
  }
 
  protected void setValue(String name, TipiValue tv) {

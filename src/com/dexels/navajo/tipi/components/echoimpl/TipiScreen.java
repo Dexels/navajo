@@ -99,12 +99,10 @@ public class TipiScreen extends TipiEchoDataComponentImpl {
 	public Object getTopLevel() {
 		for (int i = 0; i < getChildCount(); i++) {
 			TipiComponent current = getTipiComponent(i);
-			System.err.println("Checking tipi: " + current.getId());
-			if (current.isTopLevel()) {
+				if (current.isTopLevel()) {
 				return current.getContainer();
 			}
 		}
-		System.err.println("RETURNING NULL. OH DEAR");
 		return null;
 	}
 

@@ -136,25 +136,11 @@ public final class TipiWindow
 
 	public final void setComponentValue(final String name, final Object object) {
 		super.setComponentValue(name, object);
-		if (object == null) {
-			System.err.println("Null object. Name = " + name);
-		} else {
-			// System.err.println("Class: "+object.getClass()+" name: "+name);
-		}
+
 		final WindowPane jj = (WindowPane) getContainer();
-		// runSyncInEventThread(new Runnable() {
-		// public void run() {
-		// if (name.equals("iconifiable")) {
-		// boolean b = ( (Boolean) object).booleanValue();
-		// jj.setIconifiable(b);
-		// }
 		if (name.equals("background")) {
 			jj.setBackground((Color) object);
 		}
-		// if (name.equals("maximizable")) {
-		// boolean b = ( (Boolean) object).booleanValue();
-		// jj.setMaximizable(b);
-		// }
 		if (name.equals("closable")) {
 			boolean b = ((Boolean) object).booleanValue();
 			jj.setClosable(b);
@@ -163,26 +149,6 @@ public final class TipiWindow
 			boolean b = ((Boolean) object).booleanValue();
 			jj.setResizable(b);
 		}
-		// if (name.equals("selected")) {
-		// boolean b = ( (Boolean) object).booleanValue();
-		// try {
-		// jj.setSelected(b);
-		// }
-		// catch (PropertyVetoException ex) {
-		// System.err.println("Tried to select a window, but someone did not
-		// agree");
-		// ex.printStackTrace();
-		// }
-		// if (name.equals("visible")) {
-		// jj.invalidate();
-		// jj.setVisible( ( (Boolean) object).booleanValue());
-		// }
-		// }
-
-		// TODO, fix, as well as the setter
-
-//		 final Rectangle r = getBounds();
-		
 		 if (name.equals("x")) {
 			 jj.setPositionX(new Extent(((Integer) object).intValue(),Extent.PX));
 		 }
@@ -199,39 +165,11 @@ public final class TipiWindow
 		 myTitle = object.toString();
 		 setTitle(myTitle);
 		 }
-		// if (name.equals("icon")) {
-		// if (object instanceof URL) {
-		// setIcon(getIcon( (URL) object));
-		// }
-		// }
-		// setBounds(r);
-		// }
-		// });
 	}
-
-	// private ImageIcon getIcon(final URL u) {
-	// return new ImageIcon(u);
-	// }
 
 	protected void setTitle(final String s) {
 		myWindow.setTitle(s);
 	}
-
-	// protected void setBounds(final Rectangle r) {
-	// myWindow.setBounds(r);
-	// }
-	//
-	// protected Rectangle getBounds() {
-	// return myWindow.getBounds();
-	// }
-
-	// protected void setIcon(final ImageIcon ic) {
-	// myWindow.setFrameIcon(ic);
-	// }
-	//
-	// protected void setJMenuBar(JMenuBar ic) {
-	// myWindow.setJMenuBar(ic);
-	// }
 
 	private final void doPerformMethod(String name, TipiComponentMethod compMeth) {
 

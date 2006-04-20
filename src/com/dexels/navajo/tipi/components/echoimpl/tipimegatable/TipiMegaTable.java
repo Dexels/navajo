@@ -205,12 +205,13 @@ public class TipiMegaTable extends TipiEchoDataComponentImpl {
         super.performComponentMethod(name,compMeth,event);
   }
 
+  /*
+   * Sort of deprecated: Want to refactor this code into the adapter on the server side
+   */
   private final void flatten(Message in, Message out) {
-    System.err.println("Flattening: "+in.getFullMessageName()+" out elements: "+out.getArraySize());
-    Property p = in.getProperty("Code");
+     Property p = in.getProperty("Code");
     if (p!=null && p.getValue()!=null) {
       ArrayList pl = in.getAllProperties();
-      System.err.println("Cat code: "+p.getValue());
       for (int i = 0; i < pl.size(); i++) {
         Property current = (Property)pl.get(i);
         if (!current.getType().equals(Property.EXPRESSION_PROPERTY) && current.isDirIn() && !"".equals(p.getValue())) {

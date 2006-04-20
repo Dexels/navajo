@@ -78,7 +78,6 @@ public class TipiButton extends TipiEchoComponentImpl {
 		if ("icon".equals(name)) {
 				if (object instanceof URL) {
 				URL u = (URL) object;
-				System.err.println("Using url for button: "+u);
 				myButton.setIcon(new URLImageReference(u));
 			} else {
 				System.err

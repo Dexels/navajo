@@ -53,8 +53,7 @@ public class TipiEchoInstance extends ApplicationInstance {
 	}
 	
 	public void exitToUrl(String name) {
-		System.err.println("Entering exit.............");
-	       enqueueCommand(new BrowserRedirectCommand(name));
+		       enqueueCommand(new BrowserRedirectCommand(name));
 	       ContainerContext containerContext = (ContainerContext)getContextProperty(ContainerContext.CONTEXT_PROPERTY_NAME);
 	       final HttpSession session = containerContext.getSession();
 	       //Invalidate session in a different thread
@@ -98,9 +97,7 @@ public class TipiEchoInstance extends ApplicationInstance {
 	public void loadTipi(String fileName) throws IOException, TipiException {
 		File dir = new File(tipiDir);
 		File f = new File(dir, fileName);
-		System.err.println("Loading: "+fileName);
 		context.parseFile(f, false, tipiDir);
-		System.err.println("TipiDir: " + tipiDir);
 	}
 
 	public Window init() {
@@ -137,14 +134,18 @@ public class TipiEchoInstance extends ApplicationInstance {
 			}
 			if ("tipidef".equals(current)) {
 				tipiDef = myServletConfig.getInitParameter(current);
+                continue;
 			}
 			if ("tipidir".equals(current)) {
 				tipiDir = myServletConfig.getInitParameter(current);
+                continue;
 			}
 			if ("resourcedir".equals(current)) {
 				context.setResourceBaseDirectory(new File(myServletConfig
 						.getInitParameter(current)));
+                continue;
 			}
+            System.setProperty(current, myServletConfig.getInitParameter(current));
 		}
 	}
 }

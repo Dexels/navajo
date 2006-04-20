@@ -71,11 +71,7 @@ public class EchoTipiContext extends TipiContext {
 	}
 
 	public void exit(String destination) {
-		// myServerContext. exit();
-		System.err.println("in tipicontiext exit");
-		((TipiEchoInstance)myServerContext).exitToUrl(destination);
-//		System.err
-//				.println("---------------------------------------------------------------------------------------> EXITED");
+			((TipiEchoInstance)myServerContext).exitToUrl(destination);
 	}
 
 }
