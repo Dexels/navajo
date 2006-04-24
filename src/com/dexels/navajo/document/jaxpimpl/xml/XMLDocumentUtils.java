@@ -271,7 +271,7 @@ public class XMLDocumentUtils {
     	
     	try {
 			printElement ( d.getDocumentElement(), w );
-			// w.flush();
+			w.flush();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
