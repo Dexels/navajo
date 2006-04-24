@@ -480,26 +480,22 @@ public final class PropertyImpl implements Property, Comparable {
  
  public final void setValue(Binary b) {
 	  try {
-		  //byte[] data = b.getData();
-		  System.err.println("NEW VERSION OF SETVALUE(BINARY)");
+		 
 		  InputStream datastream = b.getDataAsStream();
-		  //if (data != null && data.lengt h > 0) {
+		  
 		  if ( datastream != null ) {
-			  //sun.misc.BASE64Encoder enc = new sun.misc.BASE64Encoder();
-			  
-			  System.err.println("ABOUT TO ENCODE");
-			  
+			   
 			  final StringWriter sw = new StringWriter();
 			  final OutputStream os = Base64.newEncoder( sw );
-			  System.err.println("DONE");
+			 
 			  copyResource( os, datastream );
-			  System.err.println("COPIED....");
+			
 			  os.close();
 			  datastream.close();
 			  
 			  setValue(sw.toString());
 			  
-			  System.err.println("GOT MYVALUE");
+			 
 			  setSubType("mimetype="+b.getMimeType());
 		  }
 	  }
