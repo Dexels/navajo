@@ -220,6 +220,11 @@ public class XMLDocumentUtils {
         // return false;
     }
 
+    private final static void writeElement( Writer sw, String value ) throws IOException {
+    	sw.write(value);
+    	//System.err.print(value);
+    }
+    
     private static void printElement(Node n, Writer sw) throws IOException {
 
         if (n == null) {
@@ -231,26 +236,26 @@ public class XMLDocumentUtils {
             //StringBuffer result = new StringBuffer();
             String tagName = n.getNodeName();
 
-            sw.write("<" + tagName); 
+            writeElement( sw, "<" + tagName); 
             NamedNodeMap map = n.getAttributes();
 
             if (map != null) {
                 for (int i = 0; i < map.getLength(); i++) {
-                    sw.write(" ");
+                	writeElement( sw, " ");
                     Attr attr = (Attr) map.item(i);
                     String name = attr.getNodeName();
                     String value = attr.getNodeValue();
 
-                    sw.write(name + "=\"" + value + "\"");
+                    writeElement( sw, name + "=\"" + XMLutils.XMLEscape(value) + "\"");
                 }
             }
             NodeList list = n.getChildNodes();
 
             if (list.getLength() > 0) {
-                sw.write(">\n");
+            	writeElement( sw, ">\n");
             }
             else {
-                sw.write("/>\n");
+            	writeElement( sw, "/>\n");
             }
 
             for (int i = 0; i < list.getLength(); i++) {
@@ -259,7 +264,7 @@ public class XMLDocumentUtils {
                 printElement(child, sw);
             }
             if (list.getLength() > 0) {
-                sw.write("</" + tagName + ">\n");
+            	writeElement( sw, "</" + tagName + ">\n");
             }
            
         } else {

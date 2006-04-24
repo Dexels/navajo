@@ -1034,12 +1034,8 @@ public final class NavajoImpl implements Navajo, java.io.Serializable {
     	
     	OutputStreamWriter osw = new OutputStreamWriter( stream );
     	XMLDocumentUtils.write( docBuffer, osw );
-    	try {
-    		osw.close();
-    	} catch (IOException e) {
-    		// TODO Auto-generated catch block
-    		e.printStackTrace();
-    	}
+    	
+    	
     }
 
     public void removeHeader() {
