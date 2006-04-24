@@ -33,6 +33,7 @@
     <jar jarfile="${nano.archive}">
       <fileset dir="${build}">
         <include name="${document.base}/*.class"/>
+        <include name="org/**/*.class"/>
         <include name="${document.base}/nanoimpl/**/*.class"/>
         <include name="${document.base}/lazy/**/*.class"/>
         <include name="${document.base}/typecheck/**/*.class"/>
@@ -54,6 +55,7 @@
     <jar jarfile="${jaxp.archive}">
       <fileset dir="${build}">
         <include name="${document.base}/*.class"/>
+        <include name="org/**/*.class"/>
         <include name="${document.base}/jaxpimpl/**/*.class"/>
         <include name="${document.base}/lazy/**/*.class"/>
         <include name="${document.base}/typecheck/**/*.class"/>
