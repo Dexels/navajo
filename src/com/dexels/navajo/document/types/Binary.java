@@ -34,14 +34,7 @@ public final class Binary extends NavajoType {
     super(Property.BINARY_PROPERTY);
     try {
       int b = -1;
-//      byte[] buffer = new byte[1024];
-//      java.io.ByteArrayOutputStream bos = new java.io.ByteArrayOutputStream();
-//      while ( (b = is.read(buffer, 0, buffer.length)) != -1) {
-//        bos.write(buffer,0, b);
-//      }
-//      bos.close();
-//      is.close();
-//      this.data = bos.toByteArray();
+
       dataFile = File.createTempFile("binary_object", "navajo");
       dataFile.deleteOnExit();
       //System.err.println("Created temp file: " + dataFile.getAbsolutePath());
@@ -114,20 +107,15 @@ public final class Binary extends NavajoType {
 	  if (mimetype != null && !mimetype.equals("")) {
 		  return mimetype;
 	  } else {
-      metadata.FormatDescription description = metadata.FormatIdentification.identify(dataFile);
-//	      if (description != null) {
-//	        System.err.println("guessContentType() = " + description.getShortName() +
-//	                           ", " + description.getMimeType());
-//	      } else {
-//	        System.err.println("UNKOWN content type");
-//	      }
-	      if (description == null) {
-	        return "unknown type";
-	      } else if (description.getMimeType() != null) {
-	        return description.getMimeType();
-	      } else {
-	        return description.getShortName();
-	      }
+		  metadata.FormatDescription description = metadata.FormatIdentification.identify(dataFile);
+		  
+		  if (description == null) {
+			  return "unknown type";
+		  } else if (description.getMimeType() != null) {
+			  return description.getMimeType();
+		  } else {
+			  return description.getShortName();
+		  }
 	  }
   }
 
