@@ -1,6 +1,7 @@
 package com.dexels.navajo.document.types;
 
 import java.io.*;
+
 import com.dexels.navajo.document.*;
 
 /**
@@ -14,8 +15,10 @@ import com.dexels.navajo.document.*;
 
 public final class Binary extends NavajoType {
 
-  private byte [] data;
+  //private byte [] data;
   private String mimetype = "";
+  
+  private File dataFile = null;
 
   public final static String MSEXCEL = "application/msexcel";
   public final static String MSWORD = "application/msword";
@@ -31,14 +34,25 @@ public final class Binary extends NavajoType {
     super(Property.BINARY_PROPERTY);
     try {
       int b = -1;
+//      byte[] buffer = new byte[1024];
+//      java.io.ByteArrayOutputStream bos = new java.io.ByteArrayOutputStream();
+//      while ( (b = is.read(buffer, 0, buffer.length)) != -1) {
+//        bos.write(buffer,0, b);
+//      }
+//      bos.close();
+//      is.close();
+//      this.data = bos.toByteArray();
+      dataFile = File.createTempFile("binary_object", "navajo");
+      dataFile.deleteOnExit();
+      System.err.println("Created temp file: " + dataFile.getAbsolutePath());
+      FileOutputStream fos = new FileOutputStream(dataFile);
       byte[] buffer = new byte[1024];
-      java.io.ByteArrayOutputStream bos = new java.io.ByteArrayOutputStream();
       while ( (b = is.read(buffer, 0, buffer.length)) != -1) {
-        bos.write(buffer,0, b);
+    	  fos.write(buffer,0, b);
       }
-      bos.close();
+      fos.close();
       is.close();
-      this.data = bos.toByteArray();
+      
       this.mimetype = guessContentType();
     } catch (Exception e) {
       e.printStackTrace(System.err);
@@ -50,12 +64,22 @@ public final class Binary extends NavajoType {
    * @param data byte[]
    */
   public Binary(byte [] data) {
-    super(Property.BINARY_PROPERTY);
-    this.data = data;
-    if (data != null) {
-      this.mimetype = guessContentType();
-      System.err.println("** Guessed contenttype: " + mimetype);
-    }
+	  super(Property.BINARY_PROPERTY);
+	  //this.data = data;
+	  try {
+		  dataFile = File.createTempFile("binary_object", "navajo");
+		  dataFile.deleteOnExit();
+		  System.err.println("Created temp file: " + dataFile.getAbsolutePath());
+		  FileOutputStream fos = new FileOutputStream(dataFile);
+		  fos.write(data);
+		  fos.close();
+	  } catch (IOException e) {
+		  e.printStackTrace(System.err);
+	  }
+	  if (data != null) {
+		  this.mimetype = guessContentType();
+		  System.err.println("** Guessed contenttype: " + mimetype);
+	  }
   }
 
   /**
@@ -65,9 +89,20 @@ public final class Binary extends NavajoType {
    */
   public Binary(byte [] data, String subtype) {
     super(Property.BINARY_PROPERTY,subtype);
-    this.data = data;
+    //this.data = data;
+    try {
+		  dataFile = File.createTempFile("binary_object", "navajo");
+		  dataFile.deleteOnExit();
+		  System.err.println("Created temp file: " + dataFile.getAbsolutePath());
+		  FileOutputStream fos = new FileOutputStream(dataFile);
+		  fos.write(data);
+		  fos.close();
+	  } catch (IOException e) {
+		  e.printStackTrace(System.err);
+	  }
     this.mimetype = getSubType("mime");
     this.mimetype = (mimetype == null || mimetype.equals("") ? guessContentType() : mimetype);
+    
   }
 
   /**
@@ -79,7 +114,7 @@ public final class Binary extends NavajoType {
 	  if (mimetype != null && !mimetype.equals("")) {
 		  return mimetype;
 	  } else {
-      metadata.FormatDescription description = metadata.FormatIdentification.identify(data);
+      metadata.FormatDescription description = metadata.FormatIdentification.identify(dataFile);
 	      if (description != null) {
 	        System.err.println("guessContentType() = " + description.getShortName() +
 	                           ", " + description.getMimeType());
@@ -101,9 +136,44 @@ public final class Binary extends NavajoType {
    * @return byte[]
    */
   public final byte [] getData() {
-    return this.data;
+	  //return this.data;
+	  RandomAccessFile in = null;
+	  try {
+		  if ( dataFile != null ) {
+			  in = new RandomAccessFile(dataFile, "r");
+			  byte [] data = new byte[(int) dataFile.length()];
+			  in.readFully(data);
+			  return data;
+		  }
+	  } catch (Exception e) {
+		  e.printStackTrace(System.err);
+	  } finally {
+		  try {
+			  if ( in != null ) {
+				  in.close();
+			  }
+		  } catch (IOException e) {
+			  // TODO Auto-generated catch block
+			  e.printStackTrace();
+		  }
+	  }
+	  return null;
   }
 
+  public final InputStream getDataAsStream() {
+	  if ( dataFile != null ) {
+		  try {
+			  return new FileInputStream(dataFile);
+		  } catch (FileNotFoundException e) {
+			  // TODO Auto-generated catch block
+			  e.printStackTrace(System.err);
+			  return null;
+		  }
+	  } else {
+		  return null;
+	  }
+  }
+  
   /**
    * Get this Binary's mimetype
    * @return String
@@ -125,6 +195,13 @@ public final class Binary extends NavajoType {
      return 0;
   }
   
+  public void finalize() {
+	  System.err.println("In finalize Binary()");
+	  if ( dataFile != null ) {
+		  dataFile.delete();
+	  }
+  }
+  
   /**
    * Returns base64.
    */
@@ -132,7 +209,6 @@ public final class Binary extends NavajoType {
 	  if (getData() != null) {
 	  	sun.misc.BASE64Encoder enc = new sun.misc.BASE64Encoder();	
 		String data = enc.encode(getData());
-		StringBuffer suf = new StringBuffer();
 		data  = data.replaceAll("\n", "\n  ");
 		return data;
 	  } else {

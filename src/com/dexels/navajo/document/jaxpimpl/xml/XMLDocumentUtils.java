@@ -3,6 +3,7 @@ package com.dexels.navajo.document.jaxpimpl.xml;
 import com.dexels.navajo.document.*;
 
 import java.io.*;
+
 import javax.xml.parsers.*;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.*;
@@ -219,54 +220,74 @@ public class XMLDocumentUtils {
         // return false;
     }
 
-    private static String printElement(Node n) {
+    private static void printElement(Node n, Writer sw) throws IOException {
 
-        if (n == null)
-            return "";
+        if (n == null) {
+            return;
+        }
 
         if (n instanceof Element) {
 
-            StringBuffer result = new StringBuffer();
+            //StringBuffer result = new StringBuffer();
             String tagName = n.getNodeName();
 
-            result.append("<" + tagName);
+            sw.write("<" + tagName); 
             NamedNodeMap map = n.getAttributes();
 
             if (map != null) {
                 for (int i = 0; i < map.getLength(); i++) {
-                    result.append(" ");
+                    sw.write(" ");
                     Attr attr = (Attr) map.item(i);
                     String name = attr.getNodeName();
                     String value = attr.getNodeValue();
 
-                    result.append(name + "=\"" + value + "\"");
+                    sw.write(name + "=\"" + value + "\"");
                 }
             }
             NodeList list = n.getChildNodes();
 
-            if (list.getLength() > 0)
-                result.append(">\n");
-            else
-                result.append("/>\n");
+            if (list.getLength() > 0) {
+                sw.write(">\n");
+            }
+            else {
+                sw.write("/>\n");
+            }
 
             for (int i = 0; i < list.getLength(); i++) {
                 Node child = list.item(i);
 
-                result.append(printElement(child));
+                printElement(child, sw);
             }
-            if (list.getLength() > 0)
-                result.append("</" + tagName + ">\n");
-            return result.toString();
+            if (list.getLength() > 0) {
+                sw.write("</" + tagName + ">\n");
+            }
+           
         } else {
-            return "";
+            return;
         }
     }
 
+    public static void write( Document d, Writer w ) {
+    	
+    	try {
+			printElement ( d.getDocumentElement(), w );
+			// w.flush();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
+    
     public static String toString(Node n) {
-        StringBuffer result = new StringBuffer();
+        StringWriter sw = new StringWriter();
 
-        result.append(printElement(n));
-        return result.toString();
+        try {
+			printElement(n, sw);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        return sw.toString();
     }
 
     public static String toString(Document d) {
@@ -274,14 +295,19 @@ public class XMLDocumentUtils {
     }
 
     public static String toString(Document d, boolean skipHeader) {
-        StringBuffer result = new StringBuffer();
+    	StringWriter sw = new StringWriter();
 
         if (!skipHeader)
-          result.append("<?xml version=\"1.0\" encoding=\"" + DEFAULT_ENCODING + "\"?>\n");
+          sw.write("<?xml version=\"1.0\" encoding=\"" + DEFAULT_ENCODING + "\"?>\n");
         Node n = d.getFirstChild();
 
-        result.append(printElement(n));
-        return result.toString();
+        try {
+			printElement(n, sw);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        return sw.toString();
     }
 
     public static void main(String args[]) throws Exception {

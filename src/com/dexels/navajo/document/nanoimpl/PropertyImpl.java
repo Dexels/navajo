@@ -7,6 +7,9 @@ import java.net.*;
 import com.dexels.navajo.document.*;
 
 import javax.swing.tree.TreeNode;
+
+import org.dexels.utils.Base64;
+
 import com.dexels.navajo.document.types.*;
 
 /**
@@ -24,6 +27,7 @@ public final class PropertyImpl
     implements Property, Comparable, TreeNode {
   private String myName;
   private String myValue = null;
+  private Binary myObject = null;
   private ArrayList selectionList = new ArrayList();
   private String type = null;
   private String cardinality = null;
@@ -40,6 +44,7 @@ public final class PropertyImpl
 
   private boolean isListType = false;
 
+  
   public PropertyImpl(Navajo n, String name, String type, String value, int i,
                       String desc, String direction) {
     super(n);
@@ -480,18 +485,47 @@ public final class PropertyImpl
 
   }
 
-  public final void setValue(Binary b) {
-    try {
-      byte[] data = b.getData();
-      if (data != null && data.length > 0) {
-        sun.misc.BASE64Encoder enc = new sun.misc.BASE64Encoder();
-        myValue = enc.encode(data);
-        setSubType("mimetype="+b.getMimeType());
+  private final void copyResource(OutputStream out, InputStream in) throws IOException{
+      BufferedInputStream bin = new BufferedInputStream(in);
+      BufferedOutputStream bout = new BufferedOutputStream(out);
+      byte[] buffer = new byte[1024];
+      int read;
+      while ((read = bin.read(buffer)) > -1) {
+        bout.write(buffer,0,read);
       }
-    }
-    catch (Exception e) {
-      e.printStackTrace();
-    }
+      bin.close();
+      bout.flush();
+      bout.close();
+  }
+
+  public final void setValue(Binary b) {
+	  try {
+		  //byte[] data = b.getData();
+		  System.err.println("NEW VERSION OF SETVALUE(BINARY)");
+		  InputStream datastream = b.getDataAsStream();
+		  //if (data != null && data.lengt h > 0) {
+		  if ( datastream != null ) {
+			  //sun.misc.BASE64Encoder enc = new sun.misc.BASE64Encoder();
+			  
+			  System.err.println("ABOUT TO ENCODE");
+			  
+			  final StringWriter sw = new StringWriter();
+			  final OutputStream os = Base64.newEncoder( sw );
+			  System.err.println("DONE");
+			  copyResource( os, datastream );
+			  System.err.println("COPIED....");
+			  os.close();
+			  datastream.close();
+			  
+			  myValue = sw.toString();
+			  
+			  System.err.println("GOT MYVALUE");
+			  setSubType("mimetype="+b.getMimeType());
+		  }
+	  }
+	  catch (Exception e) {
+		  e.printStackTrace();
+	  }
   }
 
   public final void setValue(URL url) {

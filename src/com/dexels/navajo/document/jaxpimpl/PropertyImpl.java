@@ -14,6 +14,7 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
+import org.dexels.utils.Base64;
 import org.w3c.dom.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.types.*;
@@ -464,21 +465,49 @@ public final class PropertyImpl implements Property, Comparable {
     ref.removeAttribute(Property.PROPERTY_VALUE);
  }
 
- public final void setValue(Binary b){
-   try {
-     byte [] data = b.getData();
-     if (data != null && data.length > 0) {
-       sun.misc.BASE64Encoder enc = new sun.misc.BASE64Encoder();
-       setValue(enc.encode(data));
-       setSubType("mimetype="+b.getMimeType());
+ private final void copyResource(OutputStream out, InputStream in) throws IOException{
+     BufferedInputStream bin = new BufferedInputStream(in);
+     BufferedOutputStream bout = new BufferedOutputStream(out);
+     byte[] buffer = new byte[1024];
+     int read;
+     while ((read = bin.read(buffer)) > -1) {
+       bout.write(buffer,0,read);
      }
-   }
-   catch (Exception e) {
-     e.printStackTrace();
-   }
-
+     bin.close();
+     bout.flush();
+     bout.close();
  }
-
+ 
+ public final void setValue(Binary b) {
+	  try {
+		  //byte[] data = b.getData();
+		  System.err.println("NEW VERSION OF SETVALUE(BINARY)");
+		  InputStream datastream = b.getDataAsStream();
+		  //if (data != null && data.lengt h > 0) {
+		  if ( datastream != null ) {
+			  //sun.misc.BASE64Encoder enc = new sun.misc.BASE64Encoder();
+			  
+			  System.err.println("ABOUT TO ENCODE");
+			  
+			  final StringWriter sw = new StringWriter();
+			  final OutputStream os = Base64.newEncoder( sw );
+			  System.err.println("DONE");
+			  copyResource( os, datastream );
+			  System.err.println("COPIED....");
+			  os.close();
+			  datastream.close();
+			  
+			  setValue(sw.toString());
+			  
+			  System.err.println("GOT MYVALUE");
+			  setSubType("mimetype="+b.getMimeType());
+		  }
+	  }
+	  catch (Exception e) {
+		  e.printStackTrace();
+	  }
+ }
+ 
  public void setValue(URL url) {
    try{
       if(getType().equals(BINARY_PROPERTY)){

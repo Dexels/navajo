@@ -920,15 +920,14 @@ public final class NavajoImpl implements Navajo, java.io.Serializable {
     }
 
     public String toString() {
-        StringWriter writer = new StringWriter();
-        try {
-            XMLDocumentUtils.toXML(docBuffer,null,null, new StreamResult(writer));
-        } catch (NavajoException ne) {
-          ne.printStackTrace();
-        }
-        return writer.toString();
-        //Node body = XMLutils.findNode(docBuffer, myBodyDefinition);
-        //return XMLDocumentUtils.toString(body);
+    	StringWriter writer = new StringWriter();
+    	
+    	//XMLDocumentUtils.toXML(docBuffer,null,null, new StreamResult(writer));
+    	XMLDocumentUtils.write( docBuffer, writer );
+    	
+    	return writer.toString();
+    	//Node body = XMLutils.findNode(docBuffer, myBodyDefinition);
+    	//return XMLDocumentUtils.toString(body);
     }
 
     /**
@@ -1024,11 +1023,23 @@ public final class NavajoImpl implements Navajo, java.io.Serializable {
     }
       
     public void write(java.io.Writer writer, boolean condense, String method) throws NavajoException {
-      XMLDocumentUtils.toXML(docBuffer, null, null, new StreamResult(writer));
+        //XMLDocumentUtils.toXML(docBuffer, null, null, new StreamResult(writer));
+    	
+    	XMLDocumentUtils.write( docBuffer, writer );
+    	
     }
 
-     public void write(java.io.OutputStream stream, boolean condense, String method) throws NavajoException {
-      XMLDocumentUtils.toXML(docBuffer, null, null, new StreamResult(stream));
+    public void write(java.io.OutputStream stream, boolean condense, String method) throws NavajoException {
+    	//XMLDocumentUtils.toXML(docBuffer, null, null, new StreamResult(stream));
+    	
+    	OutputStreamWriter osw = new OutputStreamWriter( stream );
+    	XMLDocumentUtils.write( docBuffer, osw );
+    	try {
+    		osw.close();
+    	} catch (IOException e) {
+    		// TODO Auto-generated catch block
+    		e.printStackTrace();
+    	}
     }
 
     public void removeHeader() {
