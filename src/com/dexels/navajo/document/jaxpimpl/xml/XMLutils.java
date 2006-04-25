@@ -389,9 +389,9 @@ public class XMLutils {
                     result.append("&quot;");
                     break;
 
-                case '\n' :
-                    result.append("\\n");
-                    break;
+//                case '\n' :
+//                    result.append("\\n");
+//                    break;
 
                 default :
                     result.append(substring);
