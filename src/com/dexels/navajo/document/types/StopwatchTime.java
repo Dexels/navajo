@@ -3,6 +3,7 @@ package com.dexels.navajo.document.types;
 import java.util.Date;
 import java.util.StringTokenizer;
 import com.dexels.navajo.document.*;
+import java.util.*;
 
 /**
  * <p>Title: ClockTime class </p>
@@ -45,6 +46,12 @@ public final class StopwatchTime
    */
   public StopwatchTime(String value) {
     this(value, null);
+  }
+
+  public Calendar calendarValue(){
+    Calendar c = Calendar.getInstance();
+    c.setTimeInMillis(myMillis);
+    return c;
   }
 
   /**

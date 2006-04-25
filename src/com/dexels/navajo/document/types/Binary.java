@@ -17,7 +17,7 @@ public final class Binary extends NavajoType {
 
   //private byte [] data;
   private String mimetype = "";
-  
+
   private File dataFile = null;
 
   public final static String MSEXCEL = "application/msexcel";
@@ -52,7 +52,7 @@ public final class Binary extends NavajoType {
       }
       fos.close();
       is.close();
-      
+
       this.mimetype = guessContentType();
     } catch (Exception e) {
       e.printStackTrace(System.err);
@@ -69,7 +69,7 @@ public final class Binary extends NavajoType {
 	  try {
 		  dataFile = File.createTempFile("binary_object", "navajo");
 		  dataFile.deleteOnExit();
-		  //System.err.println("Created temp file: " + dataFile.getAbsolutePath());
+		  System.err.println("Created temp file: " + dataFile.getAbsolutePath());
 		  FileOutputStream fos = new FileOutputStream(dataFile);
 		  fos.write(data);
 		  fos.close();
@@ -100,10 +100,10 @@ public final class Binary extends NavajoType {
 	  } catch (IOException e) {
 		  e.printStackTrace(System.err);
 	  }
-	  
+
     this.mimetype = getSubType("mime");
     this.mimetype = (mimetype == null || mimetype.equals("") ? guessContentType() : mimetype);
-    
+
   }
 
   /**
@@ -142,7 +142,7 @@ public final class Binary extends NavajoType {
 	  try {
 		  if ( dataFile != null ) {
 			  in = new RandomAccessFile(dataFile, "r");
-			  byte [] data = new byte[(int) dataFile.length() + 1 ];
+			  byte [] data = new byte[(int) dataFile.length()];// + 1 ];
 			  in.readFully(data);
 			  return data;
 		  }
@@ -174,7 +174,7 @@ public final class Binary extends NavajoType {
 		  return null;
 	  }
   }
-  
+
   /**
    * Get this Binary's mimetype
    * @return String
@@ -195,20 +195,20 @@ public final class Binary extends NavajoType {
   public final int compareTo(Object o) {
      return 0;
   }
-  
+
   public void finalize() {
 	  System.err.println("In finalize Binary()");
 	  if ( dataFile != null ) {
 		  dataFile.delete();
 	  }
   }
-  
+
   /**
    * Returns base64.
    */
   public final String getBase64() {
 	  if (getData() != null) {
-	  	sun.misc.BASE64Encoder enc = new sun.misc.BASE64Encoder();	
+	  	sun.misc.BASE64Encoder enc = new sun.misc.BASE64Encoder();
 		String data = enc.encode(getData());
 		data  = data.replaceAll("\n", "\n  ");
 		return data;
