@@ -137,201 +137,203 @@ public class XMLutils {
                 tempBuffer.replace(i,i+1,"&quot;");
             }  else if ( tempBuffer.charAt(i)=='\'' ){
                 tempBuffer.replace(i,i+1,"&apos;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='€' ){
                 tempBuffer.replace(i,i+1,"&#x20ac;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='ƒ' ){
                 tempBuffer.replace(i,i+1,"&#x0192;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='¡' ){
                 tempBuffer.replace(i,i+1,"&#x00a1;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='¢' ){
                 tempBuffer.replace(i,i+1,"&#x00a2;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='£' ){
                 tempBuffer.replace(i,i+1,"&#x00a3;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='¤' ){
                 tempBuffer.replace(i,i+1,"&#x00a4;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='¥' ){
                 tempBuffer.replace(i,i+1,"&#x00a5;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='¦' ){
                 tempBuffer.replace(i,i+1,"&#x00a6;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='§' ){
                 tempBuffer.replace(i,i+1,"&#x00a7;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='¨' ){
                 tempBuffer.replace(i,i+1,"&#x00a8;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='©' ){
                 tempBuffer.replace(i,i+1,"&#x00a9;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='ª' ){
                 tempBuffer.replace(i,i+1,"&#x00aa;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='«' ){
                 tempBuffer.replace(i,i+1,"&#x00ab;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='®' ){
                 tempBuffer.replace(i,i+1,"&#x00ae;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='¯' ){
                 tempBuffer.replace(i,i+1,"&#x00af;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='°' ){
                 tempBuffer.replace(i,i+1,"&#x00b0;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='±' ){
                 tempBuffer.replace(i,i+1,"&#x00b1;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='²' ){
                 tempBuffer.replace(i,i+1,"&#x00b2;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='³' ){
                 tempBuffer.replace(i,i+1,"&#x00b3;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='´' ){
                 tempBuffer.replace(i,i+1,"&#x00b4;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='µ' ){
                 tempBuffer.replace(i,i+1,"&#x00b5;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='·' ){
                 tempBuffer.replace(i,i+1,"&#x00b7;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='¸' ){
                 tempBuffer.replace(i,i+1,"&#x00b8;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='¹' ){
                 tempBuffer.replace(i,i+1,"&#x00b9;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='º' ){
                 tempBuffer.replace(i,i+1,"&#x00ba;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='»' ){
                 tempBuffer.replace(i,i+1,"&#x00bb;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='¼' ){
                 tempBuffer.replace(i,i+1,"&#x00bc;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='½' ){
                 tempBuffer.replace(i,i+1,"&#x00bd;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='¾' ){
                 tempBuffer.replace(i,i+1,"&#x00be;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='¿' ){
                 tempBuffer.replace(i,i+1,"&#x00bf;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='À' ){
                 tempBuffer.replace(i,i+1,"&#x00c0;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='Á' ){
                 tempBuffer.replace(i,i+1,"&#x00c1;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='Â' ){
                 tempBuffer.replace(i,i+1,"&#x00c2;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='Ã' ){
                 tempBuffer.replace(i,i+1,"&#x00c3;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='Ä' ){
                 tempBuffer.replace(i,i+1,"&#x00c4;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='Å' ){
                 tempBuffer.replace(i,i+1,"&#x00c5;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='Æ' ){
                 tempBuffer.replace(i,i+1,"&#x00c6;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='Ç' ){
                 tempBuffer.replace(i,i+1,"&#x00c7;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='È' ){
                 tempBuffer.replace(i,i+1,"&#x00c8;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='É' ){
                 tempBuffer.replace(i,i+1,"&#x00c9;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='Ê' ){
                 tempBuffer.replace(i,i+1,"&#x00ca;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='Ë' ){
                 tempBuffer.replace(i,i+1,"&#x00cb;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='Ì' ){
                 tempBuffer.replace(i,i+1,"&#x00cc;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='Í' ){
                 tempBuffer.replace(i,i+1,"&#x00cd;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='Î' ){
                 tempBuffer.replace(i,i+1,"&#x00ce;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='Ï' ){
                 tempBuffer.replace(i,i+1,"&#x00cf;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='Ð' ){
                 tempBuffer.replace(i,i+1,"&#x00d0;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='Ñ' ){
                 tempBuffer.replace(i,i+1,"&#x00d1;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='Ò' ){
                 tempBuffer.replace(i,i+1,"&#x00d2;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='Ó' ){
                 tempBuffer.replace(i,i+1,"&#x00d3;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='Ô' ){
                 tempBuffer.replace(i,i+1,"&#x00d4;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='Õ' ){
                 tempBuffer.replace(i,i+1,"&#x00d5;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='Ö' ){
                 tempBuffer.replace(i,i+1,"&#x00d6;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='×' ){
                 tempBuffer.replace(i,i+1,"&#x00d7;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='Ø' ){
                 tempBuffer.replace(i,i+1,"&#x00d8;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='Ù' ){
                 tempBuffer.replace(i,i+1,"&#x00d9;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='Ú' ){
                 tempBuffer.replace(i,i+1,"&#x00da;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='Û' ){
                 tempBuffer.replace(i,i+1,"&#x00db;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='Ü' ){
                 tempBuffer.replace(i,i+1,"&#x00dc;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='Ý' ){
                 tempBuffer.replace(i,i+1,"&#x00dd;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='Þ' ){
                 tempBuffer.replace(i,i+1,"&#x00de;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='ß' ){
                 tempBuffer.replace(i,i+1,"&#x00df;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='à' ){
                 tempBuffer.replace(i,i+1,"&#x00e0;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='á' ){
                 tempBuffer.replace(i,i+1,"&#x00e1;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='â' ){
                 tempBuffer.replace(i,i+1,"&#x00e2;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='ã' ){
                 tempBuffer.replace(i,i+1,"&#x00e3;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='ä' ){
                 tempBuffer.replace(i,i+1,"&#x00e4;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='å' ){
                 tempBuffer.replace(i,i+1,"&#x00e5;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='æ' ){
                 tempBuffer.replace(i,i+1,"&#x00e6;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='ç' ){
                 tempBuffer.replace(i,i+1,"&#x00e7;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='è' ){
                 tempBuffer.replace(i,i+1,"&#x00e8;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='é' ){
                 tempBuffer.replace(i,i+1,"&#x00e9;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='ê' ){
                 tempBuffer.replace(i,i+1,"&#x00ea;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='ë' ){
                 tempBuffer.replace(i,i+1,"&#x00eb;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='ì' ){
                 tempBuffer.replace(i,i+1,"&#x00ec;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='í' ){
                 tempBuffer.replace(i,i+1,"&#x00ed;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='î' ){
                 tempBuffer.replace(i,i+1,"&#x00ee;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='ï' ){
                 tempBuffer.replace(i,i+1,"&#x00ef;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='ð' ){
                 tempBuffer.replace(i,i+1,"&#x00f0;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='ñ' ){
                 tempBuffer.replace(i,i+1,"&#x00f1;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='ò' ){
                 tempBuffer.replace(i,i+1,"&#x00f2;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='ó' ){
                 tempBuffer.replace(i,i+1,"&#x00f3;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='ô' ){
                 tempBuffer.replace(i,i+1,"&#x00f4;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='õ' ){
                 tempBuffer.replace(i,i+1,"&#x00f5;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='ö' ){
                 tempBuffer.replace(i,i+1,"&#x00f6;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='÷' ){
                 tempBuffer.replace(i,i+1,"&#x00f7;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='ø' ){
                 tempBuffer.replace(i,i+1,"&#x00f8;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='ù' ){
                 tempBuffer.replace(i,i+1,"&#x00f9;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='ú' ){
                 tempBuffer.replace(i,i+1,"&#x00fa;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='û' ){
                 tempBuffer.replace(i,i+1,"&#x00fb;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='ü' ){
                 tempBuffer.replace(i,i+1,"&#x00fc;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='ý' ){
                 tempBuffer.replace(i,i+1,"&#x00fd;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='þ' ){
                 tempBuffer.replace(i,i+1,"&#x00fe;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='ÿ' ){
                 tempBuffer.replace(i,i+1,"&#x00ff;");
-            } else if ( tempBuffer.charAt(i)=='ï¿½' ){
+            } else if ( tempBuffer.charAt(i)=='‰' ){
                 tempBuffer.replace(i,i+1,"&#x2030;");
             }
         }
 
         return tempBuffer.toString();
     }
+
+
 
     /**
      * Replace all occurrences of the characters &, ', ", < and > by the escaped
