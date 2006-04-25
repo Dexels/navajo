@@ -85,19 +85,21 @@ public class ToSecureImage extends FunctionInterface{
         g2.setFont(f);
         g2.drawString(s, (int)Math.floor(bi_width/2), (int)Math.ceil(bi_height*1.5));
 
+        g2.setColor(Color.gray);
+        g2.drawRect(0,0,2*(int)Math.ceil(bi_width)-1,2*(int)Math.ceil(bi_height)-1);
         g.drawImage(bi, xpos, ypos, observer);
         xpos += f.getStringBounds(s, g.getFontRenderContext()).getWidth() + 4;
 
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
       }
 
-      ImageIcon imc = new ImageIcon(getClass().getResource("overlay.gif"));
-      Composite old = g.getComposite();
-      AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f);
-      g.setComposite(ac);
-      g.drawImage(imc.getImage(), 0, 0, observer);
+//      ImageIcon imc = new ImageIcon(getClass().getResource("overlay.gif"));
+//      Composite old = g.getComposite();
+//      AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f);
+//      g.setComposite(ac);
+//      g.drawImage(imc.getImage(), 0, 0, observer);
       g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
-      g.setComposite(old);
+//      g.setComposite(old);
 
       ByteArrayOutputStream bout = new ByteArrayOutputStream();
       ImageIO.write(img, "png", bout);
@@ -123,7 +125,7 @@ public class ToSecureImage extends FunctionInterface{
       Binary b = (Binary) tm.evaluate();
 
       // Using expressions.
-      String expression = "ToSecureImage('NOTEAEP')";
+      String expression = "ToSecureImage('NOTENAEP')";
       Operand o = Expression.evaluate(expression, null);
       System.out.println("o = " + o.value);
       System.out.println("type = " + o.type);
