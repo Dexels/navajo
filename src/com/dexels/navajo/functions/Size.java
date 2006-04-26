@@ -32,7 +32,7 @@ public final class Size extends FunctionInterface {
             return new Integer(((String) arg).length());
         }
         else if (arg instanceof Binary) {
-        	return new Integer(((Binary) arg).getData().length);
+        	return new Integer( (int) ((Binary) arg).getLength());
         } 
         else if (!(arg instanceof ArrayList)) {
             throw new TMLExpressionException("Expected list argument for size() function.");

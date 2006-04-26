@@ -19,8 +19,8 @@ public class FileSize extends FunctionInterface {
 		}
 		
 		Binary binaryFile = (Binary)getOperand(0);
-		byte b[] = binaryFile.getData();
-		return new Integer(b.length);
+		
+		return new Integer( (int) binaryFile.getLength());
     }
 	
 	public String usage() {

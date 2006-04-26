@@ -25,6 +25,8 @@
 package com.dexels.navajo.functions;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -58,19 +60,35 @@ public class Zip extends FunctionInterface {
 		Binary i = (Binary) getOperand(0);
 		String f = (String) getOperand(1);
 		
+		File tempFile = null;
+		
 		try {
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			ZipOutputStream zo = new ZipOutputStream(baos);
+			tempFile = File.createTempFile("zip_function", "navajo");
+			System.err.println("Created tempfile: " + tempFile.getAbsolutePath());
+			FileOutputStream fos = new FileOutputStream( tempFile );
+			//ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			ZipOutputStream zo = new ZipOutputStream( fos );
 			ZipEntry entry = new ZipEntry(f);
 			zo.putNextEntry(entry);
-			zo.write( i.getData() );
+			//zo.write( i.getData() );
+			i.write( zo );
+			fos.flush();
 			zo.closeEntry();
 			zo.close();
-			byte [] result = baos.toByteArray();
-			return new Binary(result);
+			//byte [] result = baos.toByteArray();
+			fos.close();
+			
+			Binary b = new Binary( tempFile );
+			
+			
+			return b;
 		} catch (Exception e) {
 			e.printStackTrace(System.err);
 			throw new TMLExpressionException(this, e.getMessage());
+		} finally {
+			if ( tempFile != null ) {
+				tempFile.delete();
+			}
 		}
 	}
 
