@@ -15,6 +15,7 @@ package com.dexels.navajo.adapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.io.OutputStream;
 import java.sql.*;
 import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.adapter.sqlmap.ResultSetMap;
@@ -222,14 +223,19 @@ public class SPMap extends SQLMap {
                 if (debug) {
                   System.err.println("TRYING TO INSERT A BLOB....");
                 }
-                byte[] data = ( (Binary) param).getData();
-
-                if ( data != null ) {
+               
+                if ( param != null ) {
                   // NOTE: THIS IS ORACLE SPECIFIC!!!!!!!!!!!!!!!!!!
                   oracle.sql.BLOB blob = oracle.sql.BLOB.createTemporary(this.
                       con, false, oracle.sql.BLOB.DURATION_SESSION);
                   blob.open(oracle.sql.BLOB.MODE_READWRITE);
-                  blob.putBytes(1, data);
+                  OutputStream os = blob.getBinaryOutputStream();
+                  try {
+                	  ( (Binary) param).write( os );
+                	  os.close();
+                  } catch (Exception e) {
+                	  e.printStackTrace(System.err);
+                  }        
                   blob.close();
                   callStatement.setBlob(i + 1, blob);
                   //statement.setBytes(i+1, data);

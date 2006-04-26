@@ -19,6 +19,7 @@ import javax.mail.internet.*;
 import com.dexels.navajo.util.*;
 import org.w3c.dom.Document;
 import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.datasource.BinaryDataSource;
 import com.dexels.navajo.datasource.ByteArrayDataSource;
 
 
@@ -150,9 +151,11 @@ public class MailMap implements Mappable {
                     bp.setDataHandler(new DataHandler(fileDatasource));
                   } else if ( content != null ) {
 
-                    ByteArrayDataSource byteArraySource = new ByteArrayDataSource(content.getData(),
-                        ( content.getMimeType().startsWith("unknown") ? "text/plain" : content.getMimeType() ), "");
-                    DataHandler dh = new DataHandler(byteArraySource);
+                	BinaryDataSource bds = new BinaryDataSource(content,"");
+                    DataHandler dh = new DataHandler(bds);
+//                    ByteArrayDataSource byteArraySource = new ByteArrayDataSource(content.getData(),
+//                        ( content.getMimeType().startsWith("unknown") ? "text/plain" : content.getMimeType() ), "");
+//                    DataHandler dh = new DataHandler(byteArraySource);
                     bp.setDataHandler(dh);
 
                     if ( encoding != null ) {

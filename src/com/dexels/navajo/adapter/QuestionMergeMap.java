@@ -114,7 +114,13 @@ public class QuestionMergeMap
       Property p = current.getProperty(definitionPropertyName);
       if (p!=null) {
         Binary b = (Binary)p.getTypedValue();
-        Navajo n = NavajoFactory.getInstance().createNavajo(new ByteArrayInputStream(b.getData()));
+        InputStream is = b.getDataAsStream();
+        Navajo n = NavajoFactory.getInstance().createNavajo(is);
+        try {
+			is.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
         mergeData(n, dataMessage);
 
       }

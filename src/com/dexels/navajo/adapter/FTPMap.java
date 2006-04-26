@@ -26,6 +26,7 @@ package com.dexels.navajo.adapter;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InputStream;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.types.Binary;
@@ -96,7 +97,10 @@ public class FTPMap  implements Mappable {
 			if ( path != null ) {
 				ftpClient.chdir( path );
 			}
-			ftpClient.put( content.getData(), filename );
+			InputStream is = content.getDataAsStream();
+			ftpClient.put( content.getDataAsStream(), filename );
+			is.close();
+			ftpClient.quit();
 		} catch (Exception e) {
 			e.printStackTrace(System.err);
 			throw new UserException( -1, e.getMessage(), e);

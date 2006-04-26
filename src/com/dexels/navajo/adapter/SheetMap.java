@@ -77,12 +77,14 @@ public class SheetMap implements Mappable {
   
   public void setSheet(Binary b) throws UserException {
   	try {
-  	 HSSFWorkbook wb = new HSSFWorkbook( new ByteArrayInputStream( b.getData() ) );
+     InputStream is = b.getDataAsStream();
+  	 HSSFWorkbook wb = new HSSFWorkbook( is );
      int x = wb.getNumberOfSheets();
      if (x > 1) {
      	throw new UserException(-1, "Workbook contains " + x + " sheets, use sheetNumber to set which one to use");
      }
   	 sheet = wb.getSheetAt(sheetNumber);
+  	 is.close();
   	} catch (IOException ioe) {
         throw new UserException(-1, "Error reading spreadsheet from binary object");
     }

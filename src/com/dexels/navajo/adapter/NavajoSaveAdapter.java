@@ -54,9 +54,9 @@ public class NavajoSaveAdapter
 
   public void setData(Binary data) {
     System.err.println("Setting data: "+data);
-    if (data!=null) {
-      System.err.println("Datasize: "+data.getData().length);
-    }
+//    if (data!=null) {
+//      System.err.println("Datasize: "+data.getData().length);
+//    }
     this.data = data;
   }
 
@@ -136,7 +136,8 @@ public class NavajoSaveAdapter
        FileOutputStream fw = null;
       try {
         fw = new FileOutputStream(path);
-        fw.write(data.getData());
+        data.write(fw);
+//        fw.write(data.getData());
         fw.flush();
         fw.close();
       }

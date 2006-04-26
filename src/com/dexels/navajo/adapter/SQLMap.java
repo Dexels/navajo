@@ -28,7 +28,14 @@ import com.dexels.navajo.logger.*;
 import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.document.types.Binary;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.util.Map;
 import java.util.Collections;
 import com.dexels.navajo.document.types.Memo;
@@ -906,11 +913,17 @@ public class SQLMap implements Mappable, LazyArray {
           if (debug) {
             System.err.println("TRYING TO INSERT A BLOB....");
           }
-          byte[] data = ( (Binary) param).getData();
+          //byte[] data = ( (Binary) param).getData();
           // TODO BLOB IS ONLY ORACLE SPECIFIC!!!!!!!!!!!!!!!!!!
           oracle.sql.BLOB blob = oracle.sql.BLOB.createTemporary(this.con, false, oracle.sql.BLOB.DURATION_SESSION);
           blob.open(oracle.sql.BLOB.MODE_READWRITE);
-          blob.putBytes(1, data);
+          OutputStream os = blob.getBinaryOutputStream();
+          try {
+        	  ( (Binary) param).write( os );
+        	  os.close();
+          } catch (Exception e) {
+        	  e.printStackTrace(System.err);
+          }        
           blob.close();
           statement.setBlob(i + 1, blob);
           //statement.setBytes(i+1, data);
@@ -1633,40 +1646,64 @@ public class SQLMap implements Mappable, LazyArray {
    * @return
    */
   public Binary getRecords() throws UserException {
-	  Binary b = null;
-	  ResultSetMap [] rs = getResultSet();
-	  StringBuffer lines = new StringBuffer();
-	  for (int i = 0; i < rs.length; i++) {
-		  StringBuffer line = new StringBuffer();
-		  RecordMap [] records = rs[i].getRecords();
-		  if (i == 0 && showHeader) { // Show headers.
+	  
+	  java.io.File tempFile = null;
+	  
+	  try {
+		  Binary b = null;
+		  ResultSetMap [] rs = getResultSet();
+		  //StringBuffer lines = new StringBuffer();
+		  tempFile = File.createTempFile("sqlmap_records", "navajo");
+		  FileOutputStream fos = new FileOutputStream( tempFile );
+		  OutputStreamWriter fw = new OutputStreamWriter( fos, "UTF-8" );
+		  for (int i = 0; i < rs.length; i++) {
+			  //StringBuffer line = new StringBuffer();
+			  RecordMap [] records = rs[i].getRecords();
+			  if (i == 0 && showHeader) { // Show headers.
+				  for (int j = 0; j < records.length; j++) {
+					  String column = records[j].getRecordName();
+					  if ( j == 0 ) {
+						  fw.write(column);
+					  } else {
+						  fw.write(this.separator + column);
+					  }
+				  }
+				  fw.write("\n");
+				  //fw.write(line.toString());
+				  //line = new StringBuffer();
+			  }
 			  for (int j = 0; j < records.length; j++) {
-				  String column = records[j].getRecordName();
-				  if (line.toString().equals("")) {
-					  line.append(column);
+				  String value = ( records[j].getRecordValue() != null ? records[j].getRecordValue()+"" : "");
+				  if ( j == 0) {
+					  fw.write(value);
 				  } else {
-					  line.append(this.separator + column);
+					  fw.write(this.separator + value);
 				  }
 			  }
-			  line.append("\n");
-			  lines.append(line.toString());
-			  line = new StringBuffer();
+			  fw.write("\n");
+			  //fw.write(line.toString());
 		  }
-		  for (int j = 0; j < records.length; j++) {
-			  String value = ( records[j].getRecordValue() != null ? records[j].getRecordValue()+"" : "");
-			  if (line.toString().equals("")) {
-				  line.append(value);
-			  } else {
-				  line.append(this.separator + value);
+		  fw.flush();
+		  fw.close();
+		
+		  b = new Binary( tempFile );
+		  
+		  if ( fos != null ) {
+			  fos.close();
+		  }
+		  
+		  return b;
+	  } catch ( IOException ioe ) {
+		  throw new UserException( -1, ioe.getMessage(), ioe );
+	  } finally {
+		  if ( tempFile != null ) {
+			  try {
+				  tempFile.delete();
+			  } catch (Exception ioe2 ) {
+				  ioe2.printStackTrace();
 			  }
 		  }
-		  line.append("\n");
-		  lines.append(line.toString());
 	  }
-	  
-	  b = new Binary(lines.toString().getBytes());
-	  
-      return b;
   }
 
   /**

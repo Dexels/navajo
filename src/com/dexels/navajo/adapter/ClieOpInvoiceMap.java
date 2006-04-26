@@ -61,12 +61,12 @@ public class ClieOpInvoiceMap implements Mappable {
 		Binary b = null;
 		generateClieOP();
 		b = new Binary(bos.toByteArray());
-		try {
-			out = new FileOutputStream("clieop.txt");
-			out.write(b.getData());
-		} catch (Exception e) {
-			throw new UserException(-1, e.getMessage());
-		}
+//		try {
+//			out = new FileOutputStream("clieop.txt");
+//			out.write(b.getData());
+//		} catch (Exception e) {
+//			throw new UserException(-1, e.getMessage());
+//		}
 		return b;
 	}
 

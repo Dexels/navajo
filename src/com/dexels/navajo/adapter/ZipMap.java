@@ -71,7 +71,8 @@ public class ZipMap implements Mappable {
 	public void setContent(Binary b) {
 		this.content = b;
 		try {
-			zo.write( content.getData() );
+			//zo.write( content.getData() );
+			content.write( zo );
 			zo.closeEntry();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
