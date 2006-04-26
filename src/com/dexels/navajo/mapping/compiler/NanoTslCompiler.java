@@ -803,12 +803,15 @@ public class NanoTslCompiler {
             //              "access.setCurrentOutMessage(currentOutMsg);\n");
 
             contextClassStack.push(contextClass);
+            Class previousClass = contextClass;
             String subClassName = MappingUtils.getFieldType(contextClass, ref);
             contextClass = null;
             try {
                 contextClass = Class.forName(subClassName, false, loader);
             } catch (Exception e) {
-                throw new TslCompileException(TslCompileException.TSL_UNKNOWN_MAP, "Could not find adapter " + subClassName, nextElt);
+                TslCompileException tsle = new TslCompileException(TslCompileException.TSL_UNKNOWN_MAP, "Could not find adapter " + subClassName, nextElt);
+                tsle.setAttributeProblem("ref", MappingUtils.getAllFields(previousClass),n);
+                throw tsle;
             }
 
             String subObjectName = "mappableObject" + (objectCounter++);
@@ -1138,8 +1141,11 @@ public class NanoTslCompiler {
             try {
                 type = MappingUtils.getFieldType(contextClass, attribute);
             } catch (Exception e) {
-                throw new TslCompileException(TslCompileException.TSL_UNKNOWN_FIELD, "Could not find field: " + attribute + " in adapter "
+                System.err.println("About to throw..............");
+                TslCompileException tce = new TslCompileException(TslCompileException.TSL_UNKNOWN_FIELD, "Could not find field: " + attribute + " in adapter "
                         + className, n.getStartOffset(), n.getOffset());
+                tce.setAttributeProblem("name", MappingUtils.getAllFields(contextClass),n);
+                throw tce;
             }
             if (type.equals("java.lang.String")) {
                 castedValue = "(String) sValue";
@@ -1164,6 +1170,9 @@ public class NanoTslCompiler {
             } else {
                 castedValue = "sValue";
             }
+            // Missing stopwatchtime?!
+            
+            
             //      }
             //      catch (ClassNotFoundException e) {
             //        e.printStackTrace();
@@ -1728,6 +1737,8 @@ public class NanoTslCompiler {
             result.append(debugNode(ident, (XMLElement) n));
         } else if (n.getName().equals("break")) {
             result.append(breakNode(ident, (XMLElement) n));
+        } else {
+            throw new TslCompileException(TslCompileException.TSL_UNKNOWN_TAG,"Unknown tag: "+n.getName(),n);
         }
 
         return result.toString();

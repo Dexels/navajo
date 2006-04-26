@@ -14,8 +14,8 @@ import com.dexels.navajo.server.*;
 import com.dexels.navajo.util.Util;
 import com.dexels.navajo.parser.*;
 
-import java.util.StringTokenizer;
-import java.util.ArrayList;
+import java.lang.reflect.*;
+import java.util.*;
 
 import com.dexels.navajo.document.types.Memo;
 import com.dexels.navajo.document.types.Money;
@@ -447,6 +447,22 @@ public final class MappingUtils {
     }
   }
 
+  public static final Map getAllFields(Class c) {
+      Map ll = new HashMap();
+      Field[] f = c.getFields(); 
+      for (int i = 0; i < f.length; i++) {
+          boolean pblc = Modifier.isPublic(f[i].getModifiers());
+          String type = f[i].getType().getName();
+          if (type.startsWith("[L")) { // We have an array determine member type.
+            type = type.substring(2, type.length() - 1);
+          }
+          if (pblc) {
+              ll.put(f[i].getName(), type);
+          }
+    }
+      return ll;
+  }
+  
   public static final boolean isSelection(Message msg, Navajo doc, String msgName) {
 
     Message ref = null;

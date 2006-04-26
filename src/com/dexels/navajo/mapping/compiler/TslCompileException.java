@@ -6,6 +6,8 @@
  */
 package com.dexels.navajo.mapping.compiler;
 
+import java.util.*;
+
 import com.dexels.navajo.document.nanoimpl.*;
 
 /**
@@ -28,12 +30,16 @@ public class TslCompileException extends Exception {
     public static final int SUB_MAP_ERROR = -13;
     public static final int TSL_MISSING_VALUE = -14;
     public static final int TSL_INAPPROPRIATE_NODE = -15;
+    public static final int TSL_UNKNOWN_TAG = -16;
   
     
     private int startOffset;
     private int endOffset;
     private XMLElement mySource;
     private final int code;
+    private Map solutions = null;
+    private String offendingAttribute = null;
+    
      public TslCompileException(int code, String message, XMLElement x) {
         super(message+" ("+x.getStartOffset()+"-"+x.getOffset()+")");
         this.startOffset = x.getStartOffset();
@@ -71,5 +77,32 @@ public class TslCompileException extends Exception {
     public XMLElement getSource() {
         // TODO Auto-generated method stub
         return mySource;
+    }
+    
+    public void setAttributeProblem(String attributeName, Map alternatives, XMLElement n) {
+        offendingAttribute = attributeName;
+        solutions = alternatives;
+        startOffset = n.getAttributeOffset(attributeName);
+        endOffset = n.getAttributeEndOffset(attributeName);
+        System.err.println("Attribute problem: "+attributeName+" solutions: "+alternatives+" startOffset: "+startOffset+" endOff: "+endOffset);
+    }
+    public void setTagProblem(Map alternatives, XMLElement n) {
+        offendingAttribute = null;
+        solutions = alternatives;
+        startOffset = n.getStartTagOffset()+1;
+        endOffset = startOffset+n.getName().length();
+        System.err.println("Tag problem. solutions: "+alternatives);
+    }
+    
+    public boolean isAttributeProblem() {
+        return offendingAttribute!=null;
+    }
+    
+    public Map getSolutions() {
+        return solutions;
+    }
+    
+    public String getOffendingAttribute() {
+        return offendingAttribute;
     }
  }
