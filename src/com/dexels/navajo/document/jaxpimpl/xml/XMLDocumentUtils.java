@@ -245,7 +245,7 @@ public class XMLDocumentUtils {
                     Attr attr = (Attr) map.item(i);
                     String name = attr.getNodeName();
                     String value = attr.getNodeValue();
-                    String sss = XMLutils.string2unicode( XMLutils.XMLEscape(value));
+                    String sss = XMLutils.XMLEscape(value);
 
                     writeElement( sw, name + "=\"" + sss+ "\"");
                 }

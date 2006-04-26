@@ -1032,8 +1032,15 @@ public final class NavajoImpl implements Navajo, java.io.Serializable {
     public void write(java.io.OutputStream stream, boolean condense, String method) throws NavajoException {
     	//XMLDocumentUtils.toXML(docBuffer, null, null, new StreamResult(stream));
     	
-    	OutputStreamWriter osw = new OutputStreamWriter( stream );
-    	XMLDocumentUtils.write( docBuffer, osw );
+    	OutputStreamWriter osw;
+		try {
+			osw = new OutputStreamWriter( stream, "UTF-8" );
+			XMLDocumentUtils.write( docBuffer, osw );
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
     	
     	
     }

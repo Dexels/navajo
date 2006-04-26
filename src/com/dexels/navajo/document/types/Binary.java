@@ -58,6 +58,10 @@ public final class Binary extends NavajoType {
       e.printStackTrace(System.err);
     }
   }
+  
+  public Binary(File f) throws FileNotFoundException {
+	  this ( new FileInputStream( f ) );
+  }
 
   /**
    * Construct a new Binary object from a byte array
@@ -106,6 +110,14 @@ public final class Binary extends NavajoType {
 
   }
 
+  public long getLength() {
+	  if ( dataFile != null && dataFile.exists() ) {
+		  return dataFile.length();
+	  } else {
+		  return 0;
+	  }
+  }
+  
   /**
    * Gues the internal data's mimetype
    * @return String
@@ -161,6 +173,32 @@ public final class Binary extends NavajoType {
 	  return null;
   }
 
+  private final void copyResource(OutputStream out, InputStream in) throws IOException{
+	     BufferedInputStream bin = new BufferedInputStream(in);
+	     BufferedOutputStream bout = new BufferedOutputStream(out);
+	     byte[] buffer = new byte[1024];
+	     int read;
+	     while ((read = bin.read(buffer)) > -1) {
+	       bout.write(buffer,0,read);
+	     }
+	     bin.close();
+	     bout.flush();
+	     //bout.close();
+  }
+  
+  public final void write( OutputStream to ) throws IOException {
+	  InputStream in = getDataAsStream();
+	  if ( in != null ) {
+		  copyResource ( to, in );
+		  try {
+			  in.close();
+		  } catch (Exception e) {
+			  // Don't care 
+		  }
+	  }
+  } 
+
+  
   public final InputStream getDataAsStream() {
 	  if ( dataFile != null ) {
 		  try {
