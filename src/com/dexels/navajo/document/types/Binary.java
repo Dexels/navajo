@@ -198,8 +198,12 @@ public final class Binary extends NavajoType {
 
   public void finalize() {
 	  System.err.println("In finalize Binary()");
-	  if ( dataFile != null ) {
-		  dataFile.delete();
+	  if ( dataFile != null && dataFile.exists()) {
+            try{
+              dataFile.delete();
+            }catch(Throwable t){
+              t.printStackTrace();
+            }
 	  }
   }
 
