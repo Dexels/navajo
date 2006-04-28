@@ -15,10 +15,8 @@ import com.dexels.navajo.document.*;
 
 public final class Binary extends NavajoType {
 
-  //private byte [] data;
+  private byte [] data;
   private String mimetype = "";
-
-  private File dataFile = null;
 
   public final static String MSEXCEL = "application/msexcel";
   public final static String MSWORD = "application/msword";
@@ -34,33 +32,18 @@ public final class Binary extends NavajoType {
     super(Property.BINARY_PROPERTY);
     try {
       int b = -1;
-//      byte[] buffer = new byte[1024];
-//      java.io.ByteArrayOutputStream bos = new java.io.ByteArrayOutputStream();
-//      while ( (b = is.read(buffer, 0, buffer.length)) != -1) {
-//        bos.write(buffer,0, b);
-//      }
-//      bos.close();
-//      is.close();
-//      this.data = bos.toByteArray();
-      dataFile = File.createTempFile("binary_object", "navajo");
-      dataFile.deleteOnExit();
-      //System.err.println("Created temp file: " + dataFile.getAbsolutePath());
-      FileOutputStream fos = new FileOutputStream(dataFile);
       byte[] buffer = new byte[1024];
+      java.io.ByteArrayOutputStream bos = new java.io.ByteArrayOutputStream();
       while ( (b = is.read(buffer, 0, buffer.length)) != -1) {
-    	  fos.write(buffer,0, b);
+        bos.write(buffer,0, b);
       }
-      fos.close();
+      bos.close();
       is.close();
-
+      this.data = bos.toByteArray();
       this.mimetype = guessContentType();
     } catch (Exception e) {
       e.printStackTrace(System.err);
     }
-  }
-  
-  public Binary(File f) throws FileNotFoundException {
-	  this ( new FileInputStream( f ) );
   }
 
   /**
@@ -68,22 +51,12 @@ public final class Binary extends NavajoType {
    * @param data byte[]
    */
   public Binary(byte [] data) {
-	  super(Property.BINARY_PROPERTY);
-	  //this.data = data;
-	  try {
-		  dataFile = File.createTempFile("binary_object", "navajo");
-		  dataFile.deleteOnExit();
-		  System.err.println("Created temp file: " + dataFile.getAbsolutePath());
-		  FileOutputStream fos = new FileOutputStream(dataFile);
-		  fos.write(data);
-		  fos.close();
-	  } catch (IOException e) {
-		  e.printStackTrace(System.err);
-	  }
-	  if (data != null) {
-		  this.mimetype = guessContentType();
-		  System.err.println("** Guessed contenttype: " + mimetype);
-	  }
+    super(Property.BINARY_PROPERTY);
+    this.data = data;
+    if (data != null) {
+      this.mimetype = guessContentType();
+      System.err.println("** Guessed contenttype: " + mimetype);
+    }
   }
 
   /**
@@ -93,55 +66,35 @@ public final class Binary extends NavajoType {
    */
   public Binary(byte [] data, String subtype) {
     super(Property.BINARY_PROPERTY,subtype);
-    //this.data = data;
-    try {
-		  dataFile = File.createTempFile("binary_object", "navajo");
-		  dataFile.deleteOnExit();
-		  //System.err.println("Created temp file: " + dataFile.getAbsolutePath());
-		  FileOutputStream fos = new FileOutputStream(dataFile);
-		  fos.write(data);
-		  fos.close();
-	  } catch (IOException e) {
-		  e.printStackTrace(System.err);
-	  }
-
+    this.data = data;
     this.mimetype = getSubType("mime");
     this.mimetype = (mimetype == null || mimetype.equals("") ? guessContentType() : mimetype);
-
   }
 
-  public long getLength() {
-	  if ( dataFile != null && dataFile.exists() ) {
-		  return dataFile.length();
-	  } else {
-		  return 0;
-	  }
-  }
-  
   /**
    * Gues the internal data's mimetype
    * @return String
    */
   protected final String guessContentType()
   {
-	  if (mimetype != null && !mimetype.equals("")) {
-		  return mimetype;
-	  } else {
-      metadata.FormatDescription description = metadata.FormatIdentification.identify(dataFile);
-	      if (description != null) {
-	        System.err.println("guessContentType() = " + description.getShortName() +
-	                           ", " + description.getMimeType());
-	      } else {
-	        System.err.println("UNKOWN content type");
-	      }
-	      if (description == null) {
-	        return "unknown type";
-	      } else if (description.getMimeType() != null) {
-	        return description.getMimeType();
-	      } else {
-	        return description.getShortName();
-	      }
-	  }
+      if (mimetype != null && !mimetype.equals("")) {
+          return mimetype;
+      } else {
+      metadata.FormatDescription description = metadata.FormatIdentification.identify(data);
+          if (description != null) {
+            System.err.println("guessContentType() = " + description.getShortName() +
+                               ", " + description.getMimeType());
+          } else {
+            System.err.println("UNKOWN content type");
+          }
+          if (description == null) {
+            return "unknown type";
+          } else if (description.getMimeType() != null) {
+            return description.getMimeType();
+          } else {
+            return description.getShortName();
+          }
+      }
   }
 
   /**
@@ -149,68 +102,7 @@ public final class Binary extends NavajoType {
    * @return byte[]
    */
   public final byte [] getData() {
-	  //return this.data;
-	  RandomAccessFile in = null;
-	  try {
-		  if ( dataFile != null ) {
-			  in = new RandomAccessFile(dataFile, "r");
-			  byte [] data = new byte[(int) dataFile.length()];// + 1 ];
-			  in.readFully(data);
-			  return data;
-		  }
-	  } catch (Exception e) {
-		  e.printStackTrace(System.err);
-	  } finally {
-		  try {
-			  if ( in != null ) {
-				  in.close();
-			  }
-		  } catch (IOException e) {
-			  // TODO Auto-generated catch block
-			  e.printStackTrace();
-		  }
-	  }
-	  return null;
-  }
-
-  private final void copyResource(OutputStream out, InputStream in) throws IOException{
-	     BufferedInputStream bin = new BufferedInputStream(in);
-	     BufferedOutputStream bout = new BufferedOutputStream(out);
-	     byte[] buffer = new byte[1024];
-	     int read;
-	     while ((read = bin.read(buffer)) > -1) {
-	       bout.write(buffer,0,read);
-	     }
-	     bin.close();
-	     bout.flush();
-	     //bout.close();
-  }
-  
-  public final void write( OutputStream to ) throws IOException {
-	  InputStream in = getDataAsStream();
-	  if ( in != null ) {
-		  copyResource ( to, in );
-		  try {
-			  in.close();
-		  } catch (Exception e) {
-			  // Don't care 
-		  }
-	  }
-  } 
-
-  
-  public final InputStream getDataAsStream() {
-	  if ( dataFile != null ) {
-		  try {
-			  return new FileInputStream(dataFile);
-		  } catch (FileNotFoundException e) {
-			  // TODO Auto-generated catch block
-			  e.printStackTrace(System.err);
-			  return null;
-		  }
-	  } else {
-		  return null;
-	  }
+    return this.data;
   }
 
   /**
@@ -233,30 +125,33 @@ public final class Binary extends NavajoType {
   public final int compareTo(Object o) {
      return 0;
   }
-
-  public void finalize() {
-	  System.err.println("In finalize Binary()");
-	  if ( dataFile != null && dataFile.exists()) {
-            try{
-              dataFile.delete();
-            }catch(Throwable t){
-              t.printStackTrace();
-            }
-	  }
-  }
-
+  
   /**
    * Returns base64.
    */
   public final String getBase64() {
-	  if (getData() != null) {
-	  	sun.misc.BASE64Encoder enc = new sun.misc.BASE64Encoder();
-		String data = enc.encode(getData());
-		data  = data.replaceAll("\n", "\n  ");
-		return data;
-	  } else {
-		  return null;
-	  }
+      if (getData() != null) {
+        sun.misc.BASE64Encoder enc = new sun.misc.BASE64Encoder();  
+        String data = enc.encode(getData());
+        StringBuffer suf = new StringBuffer();
+        data  = data.replaceAll("\n", "\n  ");
+        return data;
+      } else {
+          return null;
+      }
   }
 
+public void write(FileOutputStream fo) {
+    try {
+        fo.write(data);
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+}
+
+public InputStream getDataAsStream() {
+    return new ByteArrayInputStream(data);
+}
+
+  
 }
