@@ -47,7 +47,7 @@ public abstract class TipiBaseQuestionList extends TipiDataComponentImpl {
         }
         if (name.equals("subQuestionPath")) {
             subQuestionPath  = (String) object;
-            System.err.println("BaseQuestionGroup. GOT subQuestionPAth: "+subQuestionPath);
+            System.err.println("BaseQuestionList. GOT subQuestionPAth: "+subQuestionPath);
             
           }
         

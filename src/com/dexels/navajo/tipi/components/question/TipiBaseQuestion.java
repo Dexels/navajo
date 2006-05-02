@@ -5,6 +5,7 @@ import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
 
 import java.util.*;
+
 import com.dexels.navajo.tipi.tipixml.*;
 import com.dexels.navajo.tipi.actions.*;
 import com.dexels.navajo.tipi.internal.*;
@@ -38,7 +39,7 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
     
     private TipiBaseQuestionList myQuestionList = null;
 
-    private final ArrayList mySubQuestions = new ArrayList();
+//    private final ArrayList mySubQuestions = new ArrayList();
 
     private String enabledCondition = null;
 
@@ -85,15 +86,22 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
         myQuestionList = tql;
     }
 
-
+    private void recursiveListQuestions(TipiComponent start, ArrayList result) {
+        if (start instanceof TipiBaseQuestion) {
+            result.add(start);
+        } 
+        for (int i = 0; i < start.getChildCount(); i++) {
+                 recursiveListQuestions(start.getTipiComponent(i), result);
+        }
+    }
       
     public void loadData(final Navajo n, final TipiContext context) throws TipiException {
         enabledCondition = null;
         visibleCondition = null;
         validationCondition = null;
         //
-        removeInstantiatedChildren();
-        mySubQuestions.clear();
+//        removeInstantiatedChildren();
+//        mySubQuestions.clear();
         Message m = n.getMessage(messagePath);
         myMessage = m;
         if (m == null) {
@@ -154,10 +162,12 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
         TipiDataComponent tdc = null;
         if (subQuestionPath!=null) {
             tdc = (TipiDataComponent) getTipiComponentByPath(subQuestionPath);
+        } else {
+            System.err.println("NO SUBQUESTION PANEL DEFINED");
         }
         Message question = m.getMessage("Question");
         if (tdc==null) {
-            System.err.println("NO SUBQUESTION PANEL");
+            System.err.println("NULL SUBQUESTION PANEL");
         }
         if (question==null) {
             System.err.println("No subquestions!");
@@ -178,7 +188,7 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
                     tc.loadData(n, myContext);
                     tc.setQuestionGroup(questionGroup);
                     tc.setQuestionList(myQuestionList);
-                    mySubQuestions.add(tc);
+//                    mySubQuestions.add(tc);
                 } catch (TipiException ex) {
                     ex.printStackTrace();
                 }
@@ -250,14 +260,18 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
 
     public abstract void setQuestionVisible(boolean b);
     
+    
+    
     public void updateSubQuestions() {
         if (visibleCondition != null) {
             setQuestionVisible(isRelevant());
          }
         boolean invalidFound = false;
-        System.err.println("# of subquestions: "+mySubQuestions.size());
-        for (int i = 0; i < mySubQuestions.size(); i++) {
-            TipiBaseQuestion tq = (TipiBaseQuestion) mySubQuestions.get(i);
+        ArrayList subQ = getSubQuestionList();
+        
+        System.err.println("# of subquestions: "+subQ.size());
+        for (int i = 0; i < subQ.size(); i++) {
+            TipiBaseQuestion tq = (TipiBaseQuestion) subQ.get(i);
             tq.updateSubQuestions();
             if (tq.isValid() == false) {
                 invalidFound = true;
@@ -275,6 +289,23 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
         }
     }
 
+
+    private ArrayList getSubQuestionList() {
+        ArrayList subQ = new ArrayList();
+        TipiDataComponent tdc = null;
+        if (subQuestionPath!=null) {
+            tdc = (TipiDataComponent) getTipiComponentByPath(subQuestionPath);
+            if (tdc==null) {
+                System.err.println("::: NULL subcomponent");
+            } else {
+                recursiveListQuestions(tdc, subQ);
+            }
+        } else {
+            System.err.println("::: No subcomponent defined");
+        }
+        return subQ;
+    }
+
     public boolean isRecursiveValid() {
         if (!isRelevant()) {
             return true;
@@ -282,9 +313,10 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
        if (!isValid()) {
             return false;
         }
-         for (int i = 0; i < mySubQuestions.size(); i++) {
-            TipiBaseQuestion tq = (TipiBaseQuestion) mySubQuestions.get(i);
-            if (tq.isRecursiveValid() == false) {
+       ArrayList subQ = getSubQuestionList();
+         for (int i = 0; i < subQ.size(); i++) {
+            TipiBaseQuestion tq = (TipiBaseQuestion) subQ.get(i);
+            if (tq.isValid() == false) {
                 return false;
             }
         }

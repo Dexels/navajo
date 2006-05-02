@@ -7,6 +7,7 @@ import com.dexels.navajo.document.*;
 
 import com.dexels.navajo.tipi.actions.*;
 
+import java.io.*;
 import java.util.*;
 
 /**
@@ -128,10 +129,9 @@ public abstract class TipiBaseQuestionGroup extends TipiDataComponentImpl {
     private void recursiveListQuestions(TipiComponent start, ArrayList result) {
         if (start instanceof TipiBaseQuestion) {
             result.add(start);
-        } else {
-            for (int i = 0; i < start.getChildCount(); i++) {
-                     recursiveListQuestions(start.getTipiComponent(i), result);
-            }
+        } 
+        for (int i = 0; i < start.getChildCount(); i++) {
+                 recursiveListQuestions(start.getTipiComponent(i), result);
         }
     }
     
@@ -197,8 +197,8 @@ public abstract class TipiBaseQuestionGroup extends TipiDataComponentImpl {
                 TipiBaseQuestion tc = (TipiBaseQuestion) TipiInstantiateTipi.instantiateByDefinition(currentComponent, false, id, questionDefinitionName, subConstraint);
                 tc.setValue("messagePath", current.getFullMessageName());
                 tc.setValue("questionDefinitionName", questionDefinitionName);
-                System.err.println("BaseQuestionGroup. Setting subQuestionPAth to: "+subQuestionPath);
-                tc.setValue("subQuestionPath", subQuestionPath);
+//                System.err.println("BaseQuestionGroup. Setting subQuestionPAth to: "+subQuestionPath);
+//                tc.setValue("subQuestionPath", subQuestionPath);
 
                 
                 tc.setQuestionGroup(this);
@@ -233,6 +233,7 @@ public abstract class TipiBaseQuestionGroup extends TipiDataComponentImpl {
             TipiBaseQuestion tq = (TipiBaseQuestion) myQuestions.get(i);
             tq.updateSubQuestions();
         }
+
         boolean valid = isValid();
         if (myQuestionList != null) {
             myQuestionList.setGroupValid(valid,this);
