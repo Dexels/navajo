@@ -33,13 +33,17 @@ public class DefaultBrowser {
           if (url.indexOf(' ')!=-1) {
               System.err.println("Warning, spaces in URL, might fail");
           }
-        if(url.indexOf(".doc") >= 0 || url.indexOf(".xls") >= 0 || url.indexOf(".ppt") >= 0 || url.indexOf(".txt") >= 0 || url.indexOf(".rtf") >= 0){
+        if(url.toLowerCase().endsWith(".doc") || url.toLowerCase().endsWith(".xls") ||
+           url.toLowerCase().endsWith(".ppt") || url.toLowerCase().endsWith(".txt") ||
+           url.toLowerCase().endsWith(".rtf")){
           cmd = "ooffice " + url;
-        } else if(url.indexOf(".jpg") >= 0 || url.indexOf(".gif") >= 0 || url.indexOf(".png") >= 0){
+        } else if(url.toLowerCase().endsWith(".jpg") || url.toLowerCase().endsWith(".gif") ||
+                  url.toLowerCase().endsWith(".png") || url.toLowerCase().endsWith(".tif") ||
+                  url.toLowerCase().endsWith(".tiff")){
           cmd = "display " + url;
-        } else if(url.indexOf(".pdf") >= 0){
+        } else if(url.toLowerCase().endsWith(".pdf")){
           cmd = "xpdf " + url;
-        }else if(url.indexOf(".jnlp") >= 0){
+        }else if(url.toLowerCase().endsWith(".jnlp")){
           cmd = "mozilla "+ url;
         }
         
