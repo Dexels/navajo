@@ -102,19 +102,21 @@ public class TipiInstantiateTipi
 //        
 //      comp = (TipiComponent)op.value;
 //    }
+      
+      // All this to check for existing components
     if (comp != null) {
         
-    if (force) {
-//        System.err.println("Calling dispose from instantiate, with force= true");
-//        System.err.println("Component path: "+comp.getPath());
-        myContext.disposeTipiComponent(comp);
-      }
-      else {
-        comp.performTipiEvent("onInstantiate", null, false);
-        comp.reUse();
-        return comp;
-      }
-    } 
+        if (force) {
+    //        System.err.println("Calling dispose from instantiate, with force= true");
+    //        System.err.println("Component path: "+comp.getPath());
+            myContext.disposeTipiComponent(comp);
+          }
+          else {
+            comp.performTipiEvent("onInstantiate", null, false);
+            comp.reUse();
+            return comp;
+          }
+        } 
     XMLElement xe = new CaseSensitiveXMLElement();
     xe.setName("component-instance");
     if (byClass) {
