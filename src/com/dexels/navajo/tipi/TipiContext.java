@@ -755,7 +755,7 @@ public void parseDefinition(XMLElement child) {
     }
     catch (Exception ex) {
       ex.printStackTrace();
-      throw new TipiException("Error instantiating class. Class may not have a public default contructor, or be abstract, or an interface");
+      throw new TipiException("Error instantiating class:"+className+"/"+defname+". Class may not have a public default contructor, or be abstract, or an interface");
     }
     if (TipiComponent.class.isInstance(o)) {
       TipiComponent tc = (TipiComponent) o;
