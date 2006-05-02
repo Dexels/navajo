@@ -42,10 +42,10 @@ public class Version extends dexels.Version {
 
 	public static final int MAJOR          = 8;
 	public static final int MINOR          = 2;
-	public static final int PATCHLEVEL     = 23;
+	public static final int PATCHLEVEL     = 24;
 	public static final String VENDOR      = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Document";
-	public static final String RELEASEDATE = "2006-02-14";
+	public static final String RELEASEDATE = "2006-05-02";
 
 	// Included packages.
 
