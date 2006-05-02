@@ -23,7 +23,8 @@ public final class TipiSetValue extends TipiAction {
     if (evaluated == null) {
       return;
     }
-    if (evaluated.value == null) {
+    if (evaluatedValue == null) {
+        evaluatedValue = new Operand(null,"string",null);
     }
     else {
       if (evaluated.value instanceof Property) {
