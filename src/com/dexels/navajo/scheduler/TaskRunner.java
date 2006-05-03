@@ -117,13 +117,14 @@ public class TaskRunner implements Runnable {
 	    			t.setDispatcher(myDispatcher);
 	    			instance.addTask(id, t);
 	    		}
-	    		setConfigTimeStamp();
     		}
     	} catch (IllegalTrigger i) {
     		AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, i.getMessage());
     	} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			setConfigTimeStamp();
 		}
 	}
 	
@@ -191,15 +192,16 @@ public class TaskRunner implements Runnable {
 						if ( myConfig != null ) {
 							myConfig.writeConfig("tasks.xml", taskDoc);
 						}
-						setConfigTimeStamp();
+						
 					}
 				}
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			setConfigTimeStamp();
 		}
-		
 	}
 	
 	private Message containsTask(Message allTasks, String id) throws Exception {
@@ -310,12 +312,14 @@ public class TaskRunner implements Runnable {
 				if ( myConfig != null ) {
 					myConfig.writeConfig("tasks.xml", taskDoc);
 				}
-				instance.setConfigTimeStamp();
+				
 			}
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			instance.setConfigTimeStamp();
 		}
 		
 		
