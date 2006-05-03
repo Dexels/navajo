@@ -323,7 +323,7 @@ public class TaskRunner implements Runnable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
-			instance.setConfigTimeStamp();
+			// instance.setConfigTimeStamp();
 		}
 		
 		
