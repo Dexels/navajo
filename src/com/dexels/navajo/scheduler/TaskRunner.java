@@ -113,19 +113,23 @@ public class TaskRunner implements Runnable {
 	    			String password = m.getProperty("password").getValue();
 	    			String trigger = m.getProperty("trigger").getValue();
 	    			Access newAcces = new Access(-1, -1, -1, username, webservice, "Taskrunner", "127.0.0.1", "localhost", false, null);
+	    			
+	    			try {
 	    			Task t = new Task(webservice, username, password, newAcces, trigger);
 	    			t.setDispatcher(myDispatcher);
 	    			instance.addTask(id, t);
+	    			} catch (IllegalTrigger it) {
+	    				//it.printStackTrace(System.err);
+	    				AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Problem adding task: " + it.getMessage());
+	    			}
 	    		}
     		}
-    	} catch (IllegalTrigger i) {
-    		AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, i.getMessage());
+    
     	} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			setConfigTimeStamp();
-		}
+    		e.printStackTrace(System.err);
+    	} finally {
+    		setConfigTimeStamp();
+    	}
 	}
 	
 	public static TaskRunner getInstance(NavajoConfig config, Dispatcher myDispatcher) {
