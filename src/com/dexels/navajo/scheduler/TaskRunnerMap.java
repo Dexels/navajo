@@ -90,6 +90,18 @@ public class TaskRunnerMap implements Mappable {
 		tr.removeTask(id);
 	}
 	
+	public void setUpdate(boolean b) throws MappableException, UserException {
+		if ( !b || id == null ) {
+			return;
+		}
+		TaskRunner tr = TaskRunner.getInstance(myConfig);
+		if ( ! tr.getTasks().containsKey(id) ) {
+			return;
+		}
+		Task t = (Task) tr.getTasks().get(id);
+		tr.updateTask(id, t);
+	}
+	
 	public void setStart(boolean b) throws MappableException, UserException {
 		
 		if ( !b || id == null || webservice == null || trigger == null ) {
@@ -99,6 +111,9 @@ public class TaskRunnerMap implements Mappable {
 		try {
 			Task myTask = new Task(webservice, myAccess.rpcUser, myAccess.rpcPwd, myAccess, trigger);
 			TaskRunner tr = TaskRunner.getInstance(myConfig);
+			if ( tr.containsTask( id ) ) {
+				throw new UserException(-1, "Tasks already exists");
+			}
 			tr.addTask(id, myTask);
 		} catch (IllegalTrigger i) {
 			AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, i.getMessage());

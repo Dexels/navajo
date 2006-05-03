@@ -33,6 +33,7 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.Dispatcher;
+import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.util.AuditLog;
 
 /**
@@ -44,9 +45,10 @@ import com.dexels.navajo.util.AuditLog;
  */
 public class Task implements Runnable {
 	
-	private String webservice;
-	private String username;
-	private String password;
+	public String webservice;
+	public String username;
+	public String password;
+	public String trigger;
 	
     private Dispatcher myDispatcher = null;
     private Trigger myTrigger = null;
@@ -102,6 +104,17 @@ public class Task implements Runnable {
 		return myTrigger;
 	}
 	
+	public void setTrigger(String s) throws UserException {
+		try {
+			Trigger t = Trigger.parseTrigger(s);
+			this.myTrigger = t;
+		} catch (IllegalTrigger e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new UserException(-1, e.getMessage(), e);
+		}
+	}
+	
 	/**
 	 * @return the unique task id
 	 */ 
@@ -116,6 +129,10 @@ public class Task implements Runnable {
 		return this.webservice;
 	}
 	
+	public void setWebservice(String s) {
+		this.webservice = s;
+	}
+	
 	/**
 	 * @return the username that is used to run webservice
 	 */
@@ -123,11 +140,19 @@ public class Task implements Runnable {
 		return this.username;
 	}
 	
+	public void setUsername(String s) {
+		this.username = s;
+	}
+	
 	/**
 	 * @return the password that is used to run webservice
 	 */
 	protected String getPassword() {
 		return this.password;
+	}
+	
+	protected void setPassword(String s) {
+		this.password = s;
 	}
 	
 	/**

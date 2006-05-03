@@ -57,6 +57,10 @@ public class TaskRunner implements Runnable {
 		return getInstance(config, null);
 	}
 	
+	protected boolean containsTask(String id) {
+		return tasks.containsKey(id);
+	}
+	
 	private long getConfigTimeStamp() {
 		if ( myConfig != null ) {
 			java.io.File f = new java.io.File(myConfig.getConfigPath() + "/tasks.xml");
@@ -247,6 +251,17 @@ public class TaskRunner implements Runnable {
 		}
 	}
 	
+	public synchronized void updateTask(String id, Task t) {
+		if (! tasks.containsKey(id ))  {
+			return;
+		}
+		AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Updating task: " + id);
+		// Remove first.
+		removeTask(id);
+		// Add later.
+		addTask(id, t);
+	}
+	
 	public synchronized boolean addTask(String id, Task t) {
 		
 		if ( tasks.containsKey(id) ) {
@@ -259,7 +274,7 @@ public class TaskRunner implements Runnable {
 			t.setRemove(true);
 			return false;
 		}
-		AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Addind task: " + id);
+		AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Adding task: " + id);
 		tasks.put(id, t);
 		t.setId(id);
 		Thread thread = new Thread(t);
