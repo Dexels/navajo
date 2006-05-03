@@ -31,6 +31,8 @@ public class TipiTimerImpl
 
   private final void stop() {
     isRunning = false;
+    t.interrupt();
+    t = null;
   }
 
   public Object createContainer() {
@@ -40,7 +42,7 @@ public class TipiTimerImpl
   public void run() {
     while (isRunning) {
       try {
-        this.performTipiEvent("onTimer", null, false);
+        this.performTipiEvent("onTimer", null, true);
         t.sleep(interval);
       }
       catch (Exception e) {
