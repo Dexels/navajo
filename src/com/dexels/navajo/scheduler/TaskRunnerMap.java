@@ -48,6 +48,7 @@ public class TaskRunnerMap implements Mappable {
 	
 	// Actions
 	public boolean start;
+	public boolean update;
 	public boolean remove;
 	public boolean inactive;
 	
