@@ -2,6 +2,7 @@ package com.dexels.navajo.tipi.components.swingimpl.tipimegatable;
 
 import com.dexels.navajo.tipi.components.core.*;
 import java.util.*;
+
 import javax.swing.*;
 import java.awt.*;
 import com.dexels.navajo.tipi.tipixml.*;
@@ -176,21 +177,10 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
       flatten((Message)al.get(i),outResult);
     }
    
-    System.err.println("FLATTENING FINISHED **********************************");
-    out.write(System.err);
-    System.err.println("END OF NAVAJO ****************************************");
-//    try {
-//      FileWriter fw = new FileWriter("c:/flatfile.xml");
-//      out.write(fw);
-//      fw.flush();
-//      fw.close();
-//    }
-//    catch (NavajoException ex) {
-//      ex.printStackTrace();
-//    }
-//    catch (IOException ex) {
-//      ex.printStackTrace();
-//    }
+//    System.err.println("FLATTENING FINISHED **********************************");
+//    out.write(System.err);
+//    System.err.println("END OF NAVAJO ****************************************");
+
     myContext.performTipiMethod(this,out,"*",serviceName,true,null,-1,hostUrl,username,password,keystore,keypass);
   }
 
@@ -323,12 +313,7 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
 
   private final void flattenToCsv(String filename, String delimiter) throws IOException {
       Stack s = (Stack)layers.clone();
-//      
-//      TipiMegaTableLayer last = (TipiMegaTableLayer)s.lastElement();
-//      if (!(last instanceof TipiTableLayer)) {
-//        System.err.println("Only valid when ending in table layer");
-//        return;
-//      }
+
       FileWriter f = new FileWriter(filename);
       for (int i = 0; i < tableInstances.size(); i++) {
           final MessageTablePanel mtp = (MessageTablePanel)tableInstances.get(i);
@@ -355,20 +340,71 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
     return getSwingContainer().getComponent(0);
   }
 
+  private ArrayList createSelectionList() {
+      final ArrayList result = new ArrayList();
+      runSyncInEventThread(new Runnable(){
+
+        public void run() {
+            for (Iterator iter = layers.iterator(); iter.hasNext();) {
+                
+                TipiTableBaseLayer element = (TipiTableBaseLayer) iter.next();
+                int i  = element.getCurrentSelection();
+                result.add(new Integer(i));
+              }
+       }});
+
+      return result;
+  }
+
+  private void processSelectionList(final ArrayList l) {
+      runSyncInEventThread(new Runnable(){
+
+        public void run() {
+            int j = 0;
+            for (Iterator iter = layers.iterator(); iter.hasNext();) {
+              TipiTableBaseLayer element = (TipiTableBaseLayer) iter.next();
+              Integer iii = (Integer)l.get(j);
+              if (iii.intValue()!=-1) {
+                  element.setCurrentSelection(iii.intValue());
+              } else {
+                  System.err.println("Not really a selection, ignoring");
+              }
+              j++;
+            }
+        }});
+   }
 
 
   public void loadData(final Navajo n, TipiContext context, String method) throws
       TipiException {
     myPanel.removeAll();
-    footerRendererMap.clear();
+    footerRendererMap.clear(); 
     tableInstances.clear();
       Stack currentLayers = (Stack)layers.clone();
-    Message current = null;
+      ArrayList selectionList = createSelectionList();
+      System.err.println("SELECTION LIST: "+selectionList);
+      Message current = null;
     TipiTableBaseLayer tmtl = (TipiTableBaseLayer)currentLayers.pop();
 
     current = n.getMessage(tmtl.getMessagePath());
     tmtl.loadData(n,null,currentLayers,myPanel);
 
+    
     super.loadData(n, context, method);
+    processSelectionList(selectionList);
+     }
+  
+  public static void main(String[] args) {
+      Stack s = new Stack();
+      s.push(new Integer(1));
+      s.push(new Integer(2));
+      s.push(new Integer(3));
+      System.err.println("Stack: "+s);
+      int i = 0;
+      for (Iterator iter = s.iterator(); iter.hasNext();) {
+          Integer element = (Integer) iter.next();
+        System.err.println("Element# "+i++);
+        System.err.println("::: "+element);
+    }
   }
 }

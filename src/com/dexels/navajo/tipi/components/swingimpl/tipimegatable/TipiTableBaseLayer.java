@@ -27,6 +27,8 @@ public abstract class TipiTableBaseLayer {
      return "Class: "+getClass().getName()+" Title: "+titleProperty+" msgpath: "+messagePath;
    }
 
+  public abstract int getCurrentSelection();
+  public abstract void setCurrentSelection(int s);
 
   public void loadLayer(XMLElement elt) {
     titleProperty= elt.getStringAttribute("title");

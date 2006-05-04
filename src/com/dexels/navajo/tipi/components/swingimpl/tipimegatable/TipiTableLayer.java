@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.MessageTableFooterRenderer;
 import com.dexels.navajo.swingclient.components.*;
+
 import javax.swing.event.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.parser.*;
@@ -42,6 +43,7 @@ public class TipiTableLayer
   private final Map aggregateMap = new HashMap();
   private final Map columnDividers = new HashMap();
   private final ArrayList conditionalRemarks = new ArrayList();
+private MessageTablePanel myTablePanel;
   public TipiTableLayer(TipiMegaTable tmt) {
     super(tmt);
   }
@@ -139,6 +141,7 @@ public class TipiTableLayer
   public void loadData(final Navajo n, final Message current, Stack layerStack, JComponent currentPanel) {
     final MessageTableFooterRenderer myFooterRenderer = new MessageTableFooterRenderer(myTable);
     final MessageTablePanel mtp = new MessageTablePanel();
+    myTablePanel = mtp;
     JPanel inbetweenPanel = new JPanel();
     inbetweenPanel.setLayout(new BorderLayout());
     currentPanel.add(inbetweenPanel, BorderLayout.CENTER);
@@ -322,5 +325,29 @@ public class TipiTableLayer
     parentPanel.add(remarkPanel, BorderLayout.SOUTH);
     parentPanel.revalidate();
     return remarkPanel;
+  }
+  
+  public int getCurrentSelection() {
+      if (myTablePanel!=null) {
+          System.err.println("Getting selection of a table. Got: "+myTablePanel.getSelectedRow());
+        return myTablePanel.getSelectedRow();
+    }
+      System.err.println("Nothing selected in table.");
+      return -1;
+  }
+
+  public void setCurrentSelection(int s) {
+      if (myTablePanel!=null) {
+          System.err.println("Table layer. Table found. setting to: "+s);
+          if (s!=-1) {
+              myTablePanel.setSelectedRow(s);
+        
+        } else {
+            System.err.println("Ignoring. No row selected");
+        }
+          
+          
+              }
+      
   }
 }

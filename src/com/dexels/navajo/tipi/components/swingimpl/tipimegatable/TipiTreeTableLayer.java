@@ -89,5 +89,11 @@ public class TipiTreeTableLayer extends TipiTableBaseLayer {
     }
     return newElt;
   }
+  public int getCurrentSelection() {
+      return -1;
+  }
 
+  public void setCurrentSelection(int s) {
+  // ignore. Don't even know if this class works.  
+  }
 }

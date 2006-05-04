@@ -132,4 +132,15 @@ public class TipiScrollLayer
     newElt.setAttribute("scroll", scroll ? "true" : "false");
     return newElt;
   }
+
+public int getCurrentSelection() {
+    System.err.println("getSelection in scrolllayer: Nothing selectable.");
+
+    return -1;
+}
+
+public void setCurrentSelection(int s) {
+    // TODO Auto-generated method stub
+    
+}
 }
