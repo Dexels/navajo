@@ -180,49 +180,31 @@ public class TipiGridPanel extends TipiPanel {
     }
 
 	private void updateAvailability(int xstart, int ystart, int xend, int yend) {
-		 // make sure the grid is high enough:
-//		 int maxy = myData.gridy + myData.gridheight;
-		 // double nested loop to flip availability:
 		 for (int y = ystart; y < yend; y++) {
  			 for (int x = xstart; x < xend; x++) {
 				 boolean c = isOccupied(x,y);
 				 if (c) {
 					System.err.println("Oh dear, already occupied!");
 				} 
-//				 row[x] = true;
-//				 System.err.println("Occupying: ["+x+"/"+y+"]");
-//				 System.err.println("=================================\n"+availabilityMatrix+"=================================");
-//				 row.set(x,new Boolean(true));
 				 availabilityMatrix.add(new Coordinate(x,y));
 				 
  			 }
-		}
-		 
+		} 
 	}
 
-//	private void fillRowUntil(ArrayList row, int x) {
-//		while (x>=row.size()) {
-//			row.add(new Boolean(false));
-//		}
-//	}
 
 	private void advance() {
-//		System.err.println("ADVANCING. currentx: "+currentx+"/"+currenty);
 		while (isOccupied(currentx,currenty)) {
 			if (currentx==gridwidth-1) {
-//				System.err.println("New row");
 				currentx = 0;
 				currenty++;
 			} else {
-//				System.err.println("next column");
 				currentx++;
 			}
 		}
 	 }
 
 	 private boolean isOccupied(int x, int y) {
-//			System.err.println("Checking: "+x+"/"+y);
-//			System.err.println("# of availability : "+availabilityMatrix);
 			for (Iterator iter = availabilityMatrix.iterator(); iter.hasNext();) {
 				Coordinate element = (Coordinate) iter.next();
 				if (element.equals(new Coordinate(x,y))) {
@@ -230,8 +212,6 @@ public class TipiGridPanel extends TipiPanel {
 				}
 			}
 			return false;
-			//		 boolean c = availabilityMatrix.contains(new Coordinate(x,y));
-//		 return c;
 	 }
 	 
 	private void setProperty(String key, String value, GridBagConstraints myData, JComponent current) {
@@ -260,14 +240,6 @@ public class TipiGridPanel extends TipiPanel {
                 current.setPreferredSize(new Dimension(current.getMaximumSize().width,height));
             }
 		}
-//        if ("maxheight".equals(key)) {
-//            int height = Integer.parseInt(value);
-//        }
-//        if ("maxwidth".equals(key)) {
-//            int width = Integer.parseInt(value);
-//            current.setMaximumSize(new Dimension(width,current.getMaximumSize().height));
-//            current.setPreferredSize(new Dimension(width,current.getPreferredSize().height));
-//        }
 		 
 	}
 
