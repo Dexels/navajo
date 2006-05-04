@@ -185,9 +185,10 @@ public class TipiDialog
     myDialog.getContentPane().add(getSwingContainer(), BorderLayout.CENTER);
     myDialog.pack();
     // always the case
-    if (myBounds != null) {
-      myDialog.setBounds(myBounds);
-      System.err.println("Setting bounds: "+myBounds);
+    final Rectangle bnds = getDialogBounds();
+    if (bnds != null) {
+      myDialog.setBounds(bnds);
+      System.err.println("Setting bounds: "+bnds);
     } else {
       System.err.println("Null bounds for dialog.");
     }
@@ -195,6 +196,9 @@ public class TipiDialog
     myDialog.setLocationRelativeTo( (Component) myContext.getTopLevel());
   }
 
+  private synchronized Rectangle getDialogBounds() {
+      return myBounds;
+  }
   protected void helperRegisterEvent(TipiEvent te) {
     if (te != null && te.getEventName().equals("onWindowClosed")) {
       //overridden.. should be ok.
@@ -219,7 +223,10 @@ public class TipiDialog
              ( (SwingTipiContext) myContext).addTopLevel(myDialog.getContentPane()); ( (SwingTipiContext) myContext).dialogShowing(true); ( (SwingTipiContext) myContext).
                 updateWaiting();
             SwingClient.getUserInterface().showCenteredDialog(myDialog);
-            myDialog.setSize(myBounds.width,myBounds.height);
+            final Rectangle bnds = getDialogBounds();
+            if (bnds!=null) {
+                myDialog.setSize(bnds.width,bnds.height);
+            }
             //            myDialog.setVisible(true);
             if (myContext != null) {
                ( (SwingTipiContext) myContext).dialogShowing(false); if (myDialog != null) {
