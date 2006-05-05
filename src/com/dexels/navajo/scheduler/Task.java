@@ -95,6 +95,7 @@ public class Task implements Runnable {
 	 */
 	protected void setThread(Thread t) {
 		myThread = t;
+		AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Scheduling task: " + id);
 	}
 	
 	/**
@@ -108,6 +109,7 @@ public class Task implements Runnable {
 		try {
 			Trigger t = Trigger.parseTrigger(s);
 			this.myTrigger = t;
+			System.err.println("Set trigger for task " + getId() + ": " + t.getDescription());
 		} catch (IllegalTrigger e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -219,9 +221,10 @@ public class Task implements Runnable {
 			// Sleep for a while.
 			try {
 				Thread.sleep(1000);
+				//System.err.println("Task " + getId() + " listening for alarm: " + myTrigger.getDescription());
 			} catch (Exception e) {
 				if ( remove ) {
-					AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Terminating task: " + id);
+					AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Terminated task: " + id);
 					return;
 				}
 				e.printStackTrace(System.err);
@@ -277,7 +280,7 @@ public class Task implements Runnable {
 			}
 			
 		}
-		AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Terminating task: " + id);
+		AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Terminated task: " + id);
 	}
 	
 	public static void main(String [] args) throws Exception {
