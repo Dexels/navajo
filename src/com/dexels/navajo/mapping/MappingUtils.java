@@ -280,7 +280,7 @@ public final class MappingUtils {
       existing = doc.getMessage(message);
     }
 
-    if ( mode.equals(Message.MSG_MODE_OVERWRITE ) && ( parent == null || !parent.isArrayMessage() ) ) {
+    if ( mode.equals(Message.MSG_MODE_OVERWRITE ) && existing != null ) {
     	// remove existing message.
     	if ( parent != null ) {
     		parent.removeMessage(existing);
