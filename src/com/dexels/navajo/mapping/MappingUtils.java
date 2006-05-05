@@ -280,6 +280,16 @@ public final class MappingUtils {
       existing = doc.getMessage(message);
     }
 
+    if ( mode.equals(Message.MSG_MODE_OVERWRITE ) && ( parent == null || !parent.isArrayMessage() ) ) {
+    	// remove existing message.
+    	if ( parent != null ) {
+    		parent.removeMessage(existing);
+    	} else {
+    		doc.removeMessage(existing);
+    	}
+    	existing = null;
+    }
+    
     // If there is an existing message withe same name and this message has a parent that is NOT an arrayMessage
     // return this message as a result. If it has an array message parent, it is assumed that the new message
     // is put under the existing array message parent.
@@ -315,20 +325,20 @@ public final class MappingUtils {
       //msg.setType(Message.MSG_TYPE_ARRAY);
       if (!mode.equals(Message.MSG_MODE_IGNORE)) {
           if (parent == null) {
-            msg = doc.addMessage(msg, mode.equals(Message.MSG_MODE_OVERWRITE));
+            msg = doc.addMessage(msg, false);
           }
           else {
-            msg = parent.addMessage(msg, mode.equals(Message.MSG_MODE_OVERWRITE));
+            msg = parent.addMessage(msg, false);
           }
         }
       messages[index++] = msg;
     } else if (count == 1) {
       if (!mode.equals(Message.MSG_MODE_IGNORE)) {
         if (parent == null) {
-          msg = doc.addMessage(msg, mode.equals(Message.MSG_MODE_OVERWRITE));
+          msg = doc.addMessage(msg, false);
         }
         else {
-          msg = parent.addMessage(msg, mode.equals(Message.MSG_MODE_OVERWRITE));
+          msg = parent.addMessage(msg, false);
         }
       }
       messages[index++] = msg;
@@ -343,10 +353,10 @@ public final class MappingUtils {
       extra.setName(message + i);
       extra.setIndex(i);
       if (parent == null) {
-        extra = doc.addMessage(extra, mode.equals(Message.MSG_MODE_OVERWRITE));
+        extra = doc.addMessage(extra, false);
       }
       else {
-        extra = parent.addMessage(extra, mode.equals(Message.MSG_MODE_OVERWRITE));
+        extra = parent.addMessage(extra, false);
       }
       messages[index++] = extra;
     }
