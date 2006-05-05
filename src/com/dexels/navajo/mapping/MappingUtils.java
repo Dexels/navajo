@@ -315,20 +315,20 @@ public final class MappingUtils {
       //msg.setType(Message.MSG_TYPE_ARRAY);
       if (!mode.equals(Message.MSG_MODE_IGNORE)) {
           if (parent == null) {
-            msg = doc.addMessage(msg, false);
+            msg = doc.addMessage(msg, mode.equals(Message.MSG_MODE_OVERWRITE));
           }
           else {
-            msg = parent.addMessage(msg, false);
+            msg = parent.addMessage(msg, mode.equals(Message.MSG_MODE_OVERWRITE));
           }
         }
       messages[index++] = msg;
     } else if (count == 1) {
       if (!mode.equals(Message.MSG_MODE_IGNORE)) {
         if (parent == null) {
-          msg = doc.addMessage(msg, false);
+          msg = doc.addMessage(msg, mode.equals(Message.MSG_MODE_OVERWRITE));
         }
         else {
-          msg = parent.addMessage(msg, false);
+          msg = parent.addMessage(msg, mode.equals(Message.MSG_MODE_OVERWRITE));
         }
       }
       messages[index++] = msg;
@@ -343,10 +343,10 @@ public final class MappingUtils {
       extra.setName(message + i);
       extra.setIndex(i);
       if (parent == null) {
-        extra = doc.addMessage(extra, false);
+        extra = doc.addMessage(extra, mode.equals(Message.MSG_MODE_OVERWRITE));
       }
       else {
-        extra = parent.addMessage(extra, false);
+        extra = parent.addMessage(extra, mode.equals(Message.MSG_MODE_OVERWRITE));
       }
       messages[index++] = extra;
     }
