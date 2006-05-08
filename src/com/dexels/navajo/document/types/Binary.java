@@ -47,6 +47,28 @@ public final class Binary extends NavajoType {
   }
 
   /**
+   * Construct a new Binary object with data from a file
+   * @param f File
+   */
+  public Binary(File f) {
+    super(Property.BINARY_PROPERTY);
+    try {
+      int b = -1;
+      byte[] buffer = new byte[1024];
+      java.io.ByteArrayOutputStream bos = new java.io.ByteArrayOutputStream();
+      FileInputStream is = new FileInputStream(f);
+      while ( (b = is.read(buffer, 0, buffer.length)) != -1) {
+        bos.write(buffer,0, b);
+      }
+      bos.close();
+      is.close();
+      this.data = bos.toByteArray();
+      this.mimetype = guessContentType();
+    } catch (Exception e) {
+      e.printStackTrace(System.err);
+    }
+  }
+  /**
    * Construct a new Binary object from a byte array
    * @param data byte[]
    */
@@ -126,6 +148,12 @@ public final class Binary extends NavajoType {
      return 0;
   }
 
+  public final int getLength() {
+      if (data!=null) {
+        return data.length;
+    }
+      return 0;
+  }
   /**
    * Returns base64.
    */
