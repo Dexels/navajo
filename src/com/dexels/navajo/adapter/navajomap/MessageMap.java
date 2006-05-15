@@ -4,6 +4,7 @@ package com.dexels.navajo.adapter.navajomap;
 import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.document.*;
+
 import java.util.*;
 import java.io.StringWriter;
 import com.dexels.navajo.document.types.Binary;
@@ -63,7 +64,12 @@ public class MessageMap implements Mappable {
 
    private void propertDoesNotExistException(String fullName) throws UserException {
      StringWriter msgContent = new StringWriter();
-     msg.write(msgContent);
+     try {
+        msg.write(msgContent);
+    } catch (NavajoException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+    }
      throw new UserException( -1,
                              "Property " + fullName +
                              " does not exists in response document(" +
