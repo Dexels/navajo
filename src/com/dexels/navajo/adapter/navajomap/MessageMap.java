@@ -64,16 +64,11 @@ public class MessageMap implements Mappable {
 
    private void propertDoesNotExistException(String fullName) throws UserException {
      StringWriter msgContent = new StringWriter();
-     try {
-        msg.write(msgContent);
-    } catch (NavajoException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-    }
+  
      throw new UserException( -1,
                              "Property " + fullName +
                              " does not exists in response document(" +
-                            msg.getName() + "), message content:\n"+msgContent.toString());
+                            msg.getName() + "), message content: [[DISABLED]]\n");
 
    }
 
