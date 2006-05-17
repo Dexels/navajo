@@ -20,6 +20,8 @@ import com.dexels.navajo.document.*;
 
 public final class ClockTime extends NavajoType implements Comparable {
 
+  public final static String VERSION = "$Id$";
+	
   //Set the fixed year constants.
   public static int FIXED_YEAR = 1971;
   public static int FIXED_MONTH = 0;
