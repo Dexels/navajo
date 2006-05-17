@@ -23,8 +23,12 @@ public final class HeaderImpl implements Header {
   private Element ref;
 //  private Map attributeMap = null;
 
+  
   public HeaderImpl(Element ref) {
     this.ref = ref;
+    // Create unique request id.
+    Element transaction = (Element) XMLutils.findNode(ref, "transaction");
+    transaction.setAttribute("requestid", Guid.create() );
   }
 
   public void addLazyMessagePath(String path, int startIndex, int endIndex, int total) {
@@ -365,6 +369,15 @@ public final class HeaderImpl implements Header {
       return false;
     }
 
+	public String getRequestId() {
+		return ref.getAttribute("requestid");
+	}
 
+	public static void main (String [] args) throws Exception {
+		Navajo n = NavajoFactoryImpl.getInstance().createNavajo();
+		Header h = NavajoFactoryImpl.getInstance().createHeader(n , "aap", "noot", "mies", -1 );
+		n.addHeader(h);
+		n.write(System.err);
+	}
 
 }

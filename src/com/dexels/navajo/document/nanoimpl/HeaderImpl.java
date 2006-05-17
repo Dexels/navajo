@@ -12,12 +12,15 @@ package com.dexels.navajo.document.nanoimpl;
 
 import java.util.*;
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl;
+
 import java.io.*;
 
 public final class HeaderImpl
     extends BaseNode
     implements Header {
 
+  private String myRequestId;
   private String myName;
   private String myPassword;
   private String myService;
@@ -38,10 +41,12 @@ public final class HeaderImpl
                     String password, String service) {
     super(n);
     setIdentification(user, password, service);
+    myRequestId = Guid.create();
   }
 
   public HeaderImpl(com.dexels.navajo.document.Navajo n) {
     super(n);
+    myRequestId = Guid.create();
   }
 
   public final void setExpiration(long i) {
@@ -145,7 +150,7 @@ public final class HeaderImpl
       XMLElement header = new CaseSensitiveXMLElement();
 //      System.err.println("MY USERNAME: "+getRPCUser());
       header.setName("header");
-
+     
       XMLElement transaction = new CaseSensitiveXMLElement();
       transaction.setName("transaction");
       if (myService != null) {
@@ -158,6 +163,7 @@ public final class HeaderImpl
         transaction.setAttribute("rpc_pwd", myPassword);
       }
       transaction.setAttribute("expiration_interval", this.expiration + "");
+      transaction.setAttribute("requestid", myRequestId);
       Iterator it = lazyMessageList.values().iterator();
       while (it.hasNext()) {
         LazyMessagePath path = (LazyMessagePath) it.next();
@@ -346,5 +352,18 @@ public final class HeaderImpl
   public boolean isCallBackFinished() {
     return isFinished;
   }
+
+  public String getRequestId() {
+	  return myRequestId;
+  }
+
+  public static void main (String [] args) throws Exception {
+	    System.setProperty("com.dexels.navajo.DocumentImplementation", "com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl");
+		Navajo n = NavajoFactory.getInstance().createNavajo();
+		System.err.println("n = " + n.getClass().getName());
+		Header h = NavajoFactory.getInstance().createHeader(n , "aap", "noot", "mies", -1 );
+		n.addHeader(h);
+		n.write(System.err);
+	}
 
 }

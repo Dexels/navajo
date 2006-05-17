@@ -190,5 +190,12 @@ public interface Header extends java.io.Serializable {
      * @return String
      */
     public String getAttribute(String key);
+    
+    /**
+     * Get the unique request id.
+     * 
+     * @return
+     */
+    public String getRequestId();
 
 }
