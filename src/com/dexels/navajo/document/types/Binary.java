@@ -20,6 +20,8 @@ public final class Binary extends NavajoType {
 
   private File dataFile = null;
 
+  public final static String VERSION = "$Id$";
+  
   public final static String MSEXCEL = "application/msexcel";
   public final static String MSWORD = "application/msword";
   public final static String PDF = "application/pdf";
