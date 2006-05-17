@@ -50,6 +50,7 @@ import com.dexels.navajo.logger.*;
 public final class Dispatcher {
 
   /** Version information **/
+  public static final String VERSION = "$Id$";
   public static final String vendor = "Dexels BV";
   public static final String product = "Navajo Integrator";
   public static final String version = "Navajo Integrator Release 2005.11.10";
