@@ -286,12 +286,8 @@ public final class NavajoImpl implements Navajo {
     return toXml();
   }
   public String persistenceKey() {
-	  Header h = getHeader();
-      if ( h != null ) {
-   	   return h.getRequestId();
-      } else {
-   	   return "";
-      }
+	  String result = this.toString();
+	  return result.hashCode() + "";
   }
   public void removeMessage(String s) {
     rootMessage.removeMessage(s);
