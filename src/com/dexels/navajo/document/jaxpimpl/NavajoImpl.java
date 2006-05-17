@@ -1009,9 +1009,12 @@ public final class NavajoImpl implements Navajo, java.io.Serializable {
      */
 
     public String persistenceKey() {
-        String result = this.toString();
-
-        return result.hashCode() + "";
+       Header h = getHeader();
+       if ( h != null ) {
+    	   return h.getRequestId();
+       } else {
+    	   return "";
+       }
     }
 
     public void write(java.io.Writer writer) throws NavajoException {

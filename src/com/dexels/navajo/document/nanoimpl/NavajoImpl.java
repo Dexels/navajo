@@ -286,9 +286,12 @@ public final class NavajoImpl implements Navajo {
     return toXml();
   }
   public String persistenceKey() {
-      String result = this.toString();
-
-      return result.hashCode() + "";
+	  Header h = getHeader();
+      if ( h != null ) {
+   	   return h.getRequestId();
+      } else {
+   	   return "";
+      }
   }
   public void removeMessage(String s) {
     rootMessage.removeMessage(s);
