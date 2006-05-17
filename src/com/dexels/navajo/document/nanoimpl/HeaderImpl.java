@@ -41,12 +41,10 @@ public final class HeaderImpl
                     String password, String service) {
     super(n);
     setIdentification(user, password, service);
-    myRequestId = Guid.create();
   }
 
   public HeaderImpl(com.dexels.navajo.document.Navajo n) {
     super(n);
-    myRequestId = Guid.create();
   }
 
   public final void setExpiration(long i) {
@@ -109,6 +107,8 @@ public final class HeaderImpl
         setIdentification(child.getStringAttribute("rpc_usr"),
                           child.getStringAttribute("rpc_pwd"),
                           child.getStringAttribute("rpc_name"));
+        // Set request id.
+        myRequestId = child.getStringAttribute("requestid");
         if (child.getStringAttribute("expiration_interval") != null &&
             !child.getStringAttribute("expiration_interval").equals("")) {
           setExpiration(Long.parseLong(child.getStringAttribute(
@@ -163,7 +163,10 @@ public final class HeaderImpl
         transaction.setAttribute("rpc_pwd", myPassword);
       }
       transaction.setAttribute("expiration_interval", this.expiration + "");
-      transaction.setAttribute("requestid", myRequestId);
+      if ( myRequestId != null ) {
+    	  transaction.setAttribute("requestid", myRequestId);
+      }
+      
       Iterator it = lazyMessageList.values().iterator();
       while (it.hasNext()) {
         LazyMessagePath path = (LazyMessagePath) it.next();
@@ -365,5 +368,9 @@ public final class HeaderImpl
 		n.addHeader(h);
 		n.write(System.err);
 	}
+
+  public void setRequestId(String id) {
+	  myRequestId = id;
+  }
 
 }

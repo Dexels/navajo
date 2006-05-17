@@ -165,6 +165,7 @@ public final class NavajoImpl implements Navajo, java.io.Serializable {
         transaction.setAttribute("rpc_name", rpcName);
         transaction.setAttribute("rpc_usr", rpcUser);
         transaction.setAttribute("rpc_pwd", rpcPwd);
+ 
         // Expiration interval is used to indicate when persisted responses should expire.
         transaction.setAttribute("expiration_interval", expirationInterval + "");
 

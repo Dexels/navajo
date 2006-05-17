@@ -26,9 +26,6 @@ public final class HeaderImpl implements Header {
   
   public HeaderImpl(Element ref) {
     this.ref = ref;
-    // Create unique request id.
-    Element transaction = (Element) XMLutils.findNode(ref, "transaction");
-    transaction.setAttribute("requestid", Guid.create() );
   }
 
   public void addLazyMessagePath(String path, int startIndex, int endIndex, int total) {
@@ -370,7 +367,8 @@ public final class HeaderImpl implements Header {
     }
 
 	public String getRequestId() {
-		return ref.getAttribute("requestid");
+		Element transaction = (Element) XMLutils.findNode(ref, "transaction");
+		return transaction.getAttribute("requestid");
 	}
 
 	public static void main (String [] args) throws Exception {
@@ -378,6 +376,11 @@ public final class HeaderImpl implements Header {
 		Header h = NavajoFactoryImpl.getInstance().createHeader(n , "aap", "noot", "mies", -1 );
 		n.addHeader(h);
 		n.write(System.err);
+	}
+
+	public void setRequestId(String id) {
+		Element transaction = (Element) XMLutils.findNode(ref, "transaction");
+		transaction.setAttribute("requestid", id);
 	}
 
 }

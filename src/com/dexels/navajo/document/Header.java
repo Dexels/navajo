@@ -197,5 +197,8 @@ public interface Header extends java.io.Serializable {
      * @return
      */
     public String getRequestId();
+    
+    public void setRequestId(String id);
+    
 
 }

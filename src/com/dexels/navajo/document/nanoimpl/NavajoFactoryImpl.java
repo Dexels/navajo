@@ -85,7 +85,7 @@ public final class NavajoFactoryImpl extends NavajoFactory {
     return mi;
   }
   public Header createHeader(Navajo n, String rpcName, String rpcUser, String rpcPassword, long expiration_interval) {
-    HeaderImpl hi = new HeaderImpl(n,rpcUser,rpcPassword,rpcName);
+    HeaderImpl hi = new HeaderImpl(n,rpcUser,rpcPassword,rpcName );
     hi.setExpiration(expiration_interval);
     return hi;
 //    throw new java.lang.UnsupportedOperationException("Method createHeader() not yet implemented.");
