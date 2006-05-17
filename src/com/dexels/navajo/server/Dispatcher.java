@@ -35,6 +35,7 @@ import java.net.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.scheduler.WebserviceListener;
 import com.dexels.navajo.util.Util;
+import com.dexels.navajo.integrity.Worker;
 import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.loader.NavajoClassSupplier;
 
@@ -318,11 +319,18 @@ public final class Dispatcher {
                                 Parameters parms) throws Exception {
 
     try {
+    	
       Navajo out = null;
       if (access == null) {
         System.err.println("Null access!!!");
       }
 
+      // Check for webservice transaction integrity.
+      out = Worker.getInstance( this ).getResponse(in);
+      if ( out != null ) {
+    	  return out;
+      }
+      
       Class c;
       if (access == null) {
         c = navajoConfig.getClassloader().getClass(handler);
@@ -360,9 +368,14 @@ public final class Dispatcher {
       }
 
       out = (Navajo) navajoConfig.getPersistenceManager().get(sh,
-          access.rpcName + "_" +
-          access.rpcUser + "_" + key, expirationInterval,
-          (expirationInterval != -1));
+    		  access.rpcName + "_" +
+    		  access.rpcUser + "_" + key, 
+    		  expirationInterval,
+    		  (expirationInterval != -1));
+      
+      // Store response for integrity checking.
+      Worker.getInstance( this ).setResponse(in, out);
+      
       return out;
     }
     catch (java.lang.ClassNotFoundException cnfe) {
@@ -740,6 +753,7 @@ public final class Dispatcher {
     String rpcName = "";
     String rpcUser = "";
     String rpcPassword = "";
+    //String requestId = "";
     Exception myException = null;
     
     try {
@@ -760,7 +774,7 @@ public final class Dispatcher {
       rpcName = header.getRPCName();
       rpcUser = header.getRPCUser();
       rpcPassword = header.getRPCPassword();
-
+      
       String userAgent = header.getUserAgent();
       String address = header.getIPAddress();
       String host = header.getHostName();

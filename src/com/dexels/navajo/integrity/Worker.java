@@ -37,10 +37,7 @@ import java.util.Set;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
-import com.dexels.navajo.scheduler.TaskRunner;
-import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.Dispatcher;
-import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.util.AuditLog;
 
 class Job {
@@ -62,6 +59,7 @@ public class Worker implements Runnable {
 	
 	private Set workList = Collections.synchronizedSet(new HashSet());
 	private Map integrityCache = Collections.synchronizedMap(new HashMap());
+	private Set notWrittenFiles = Collections.synchronizedSet(new HashSet());
 	
 	public static Worker getInstance(Dispatcher myDispatcher) {
 		
@@ -75,7 +73,7 @@ public class Worker implements Runnable {
 		thread.setDaemon(true);
 		thread.start();
 		
-		AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "Started task scheduler process $Id$");
+		AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "Started integrity worker $Id$");
 		
 		return instance;
 	}
@@ -86,10 +84,14 @@ public class Worker implements Runnable {
 			File f = File.createTempFile("navajoresponse_" + id, ".xml");
 			f.deleteOnExit();
 			integrityCache.put(id, f.getAbsolutePath());
+			notWrittenFiles.add( f.getAbsolutePath() );
+			// Write file.
 			FileWriter fw = new FileWriter(f);
 			response.write(fw);
 			fw.close();
-			System.err.println("putting in cache for id: " + id + " " + f.getAbsolutePath());
+			notWrittenFiles.remove( f.getAbsolutePath() );
+			
+			//System.err.println("putting in cache for id: " + id + " " + f.getAbsolutePath());
 		
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -107,7 +109,10 @@ public class Worker implements Runnable {
 					Iterator iter = workList.iterator();
 					while (iter.hasNext()) {
 						Job j = (Job) iter.next();
-						writeFile( j.requestid, j.response );
+						if ( j.requestid != null && !j.requestid.trim().equals("") ) {
+							
+							writeFile( j.requestid, j.response );
+						}
 						iter.remove();
 						if (workList.size() > 50) {
 							System.err.println("WARNING: Integrity Worker TODO list size:  " + workList.size());
@@ -116,16 +121,19 @@ public class Worker implements Runnable {
 					}
 				}
 				// Remove garbage.
-				Iterator i = integrityCache.entrySet().iterator();
+				Set s = new HashSet(integrityCache.keySet());
+				Iterator i = s.iterator();
 				long now = System.currentTimeMillis();
 				while ( i.hasNext() ) {
-					String fileName = (String) i.next();
+					String id = (String) i.next();
+					String fileName = (String) integrityCache.get(id);
 					File f = new File( fileName );
 					long birth = f.lastModified();
 					if ( now - birth > 60000 ) {
 						// remove file.
+						integrityCache.remove(id);
 						f.delete();
-						System.err.println("Removed file: " + f.getAbsolutePath());
+						//System.err.println("Removed file: " + f.getAbsolutePath());
 					}
 				}
 			}
@@ -137,6 +145,8 @@ public class Worker implements Runnable {
 	private Navajo readFile(String fileName) {
 		try {
 			System.err.println("reading previous response: " + fileName);
+			// Set modification date to time of last read.
+			new File ( fileName ).setLastModified( System.currentTimeMillis() );
 			FileInputStream fs = new FileInputStream( fileName );
 			Navajo n = NavajoFactory.getInstance().createNavajo(fs);
 			return n;
@@ -154,6 +164,16 @@ public class Worker implements Runnable {
 			return null;
 		}
 		if ( integrityCache.containsKey( request.getHeader().getRequestId() ) ) {
+			String fileName = (String) integrityCache.get( request.getHeader().getRequestId() );
+			while ( notWrittenFiles.contains( fileName )) {
+				System.err.println("Waiting for file " + fileName + " to become written...");
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 			return readFile( (String) integrityCache.get( request.getHeader().getRequestId() ) );
 		} else {
 			return null;

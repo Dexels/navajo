@@ -119,7 +119,7 @@ private String username;
       }
     try {
       Header header = NavajoFactory.getInstance().createHeader(out, method,
-          user, password, expirationInterval);
+          user, password, expirationInterval );
       out.addHeader(header);
       NavajoConfig navajoConfig = Dispatcher.getNavajoConfig();
 
