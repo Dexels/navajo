@@ -29,15 +29,17 @@ package navajoclient;
  * 
  * 2.0.3. -Added more verbose timing information
  * 
+ * 2.1.0. Added support for setting unique request id.
+ * 
  */
 public class Version extends dexels.Version {
 
 	public static final int MAJOR = 2;
-	public static final int MINOR = 0;
-	public static final int PATCHLEVEL = 3;
+	public static final int MINOR = 1;
+	public static final int PATCHLEVEL = 0;
 	public static final String VENDOR = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Client";
-	public static final String RELEASEDATE = "2005-11-08";
+	public static final String RELEASEDATE = "2006-05-17";
 	
 	//Included packages.
 	String [] includes = {"navajodocument.Version"};

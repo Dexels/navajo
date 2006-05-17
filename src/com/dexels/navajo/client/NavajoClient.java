@@ -1408,8 +1408,10 @@ public class NavajoClient implements ClientInterface {
 	  //aap.write(System.err);
 	  
 	  Navajo dummy = NavajoFactory.getInstance().createNavajo();
-	  BufferedInputStream stream = nc.retryTransaction("ficus:3000/sportlink/knvb/servlet/Postman", out, false, 3, 4000, dummy);
-	  Navajo aap2 = NavajoFactory.getInstance().createNavajo(stream);
+	 
+	  BufferedInputStream stream = nc.retryTransaction("ficus:3000/sportlink/knvb/servlet/Postman", out, false, 3, 10, dummy);
+	 
+	  //Navajo aap2 = NavajoFactory.getInstance().createNavajo(stream);
 	  //aap2.write(System.err);
 	  
   }
