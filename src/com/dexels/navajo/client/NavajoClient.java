@@ -603,7 +603,7 @@ public class NavajoClient implements ClientInterface {
     Header header = out.getHeader();
     String callingService = null;
     if (header == null) {
-      header = NavajoFactory.getInstance().createHeader(out, method, user, password, expirationInterval);
+      header = NavajoFactory.getInstance().createHeader(out, method, user, password, expirationInterval );
       out.addHeader(header);
     } else {
       callingService = header.getRPCName();
@@ -612,6 +612,9 @@ public class NavajoClient implements ClientInterface {
       header.setRPCPassword(password);
       header.setExpirationInterval(expirationInterval);
     }
+    // ALWAY SET REQUEST ID AT THIS POINT.
+    header.setRequestId( Guid.create() );
+    
     // ========= Adding globalMessages
     Iterator entries = globalMessages.entrySet().iterator();
     while (entries.hasNext()) {
@@ -1289,12 +1292,6 @@ public class NavajoClient implements ClientInterface {
     }
   }
 
-  public static void main(String[] args) throws Exception {
-    NavajoClient nc = new NavajoClient();
-    nc.setSecure("/home/arjen/BBKY84H.keystore", "kl1p_g31t", true);
-    Navajo aap = nc.doSimpleSend(NavajoFactory.getInstance().createNavajo(), "slwebsvr2.sportlink.enovation.net:10443/sportlink/knvb/servlet/Postman", "InitExternalInsertMember", "BBKY84H", "", -1);
-  }
-
   /**
    * Performs an asynchronous serverside webservice call. These services will be polled by the Started ServerAsyncRunner
    * and pass the status on to the given ServerAsyncListener. This method can be used for large time consuming webservices
@@ -1396,5 +1393,24 @@ public class NavajoClient implements ClientInterface {
 
   public void setCondensed(boolean b) {
     condensed = b;
+  }
+  
+  public static void main(String[] args) throws Exception {
+	  System.setProperty("com.dexels.navajo.DocumentImplementation", "com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl");
+		
+	  NavajoClient nc = new NavajoClient();
+	  //nc.setSecure("/home/arjen/BBKY84H.keystore", "kl1p_g31t", true);
+	  Navajo out = NavajoFactory.getInstance().createNavajo();
+	  
+	  Navajo aap = nc.doSimpleSend(out, "ficus:3000/sportlink/knvb/servlet/Postman", "InitBM", "ROOT", "", -1);
+	  //out.write(System.err);
+	  //System.err.println("RESPONSE:");
+	  //aap.write(System.err);
+	  
+	  Navajo dummy = NavajoFactory.getInstance().createNavajo();
+	  BufferedInputStream stream = nc.retryTransaction("ficus:3000/sportlink/knvb/servlet/Postman", out, false, 3, 4000, dummy);
+	  Navajo aap2 = NavajoFactory.getInstance().createNavajo(stream);
+	  //aap2.write(System.err);
+	  
   }
 }
