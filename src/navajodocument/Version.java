@@ -36,16 +36,19 @@ package navajodocument;
 * 8.2.22 Fixed bug in StopwatchTime type property
 *
 * 8.2.23 ...
+* 
+* 8.2.24 ...
 *
+* 8.2.25 Added request id to header
  */
 public class Version extends dexels.Version {
 
 	public static final int MAJOR          = 8;
 	public static final int MINOR          = 2;
-	public static final int PATCHLEVEL     = 24;
+	public static final int PATCHLEVEL     = 25;
 	public static final String VENDOR      = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Document";
-	public static final String RELEASEDATE = "2006-05-02";
+	public static final String RELEASEDATE = "2006-05-17";
 
 	// Included packages.
 
