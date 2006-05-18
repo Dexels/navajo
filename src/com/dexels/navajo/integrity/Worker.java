@@ -56,7 +56,7 @@ public class Worker implements Runnable, Mappable {
 	public int notWrittenSize;
 	public static int violationCount = 0;
 	
-	private static final String VERSION = "$Id$";
+	public static final String VERSION = "$Id$";
 	
 	private static Worker instance = null;
 	
@@ -256,6 +256,10 @@ public class Worker implements Runnable, Mappable {
 	
 	public int notWrittenSize() {
 		return notWrittenReponses.size();
+	}
+	
+	public String getVERSION() {
+		return this.VERSION;
 	}
 
 }
