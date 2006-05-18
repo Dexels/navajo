@@ -254,7 +254,7 @@ public class Worker implements Runnable, Mappable {
 		return workList.size();
 	}
 	
-	public int notWrittenSize() {
+	public int getNotWrittenSize() {
 		return notWrittenReponses.size();
 	}
 	
