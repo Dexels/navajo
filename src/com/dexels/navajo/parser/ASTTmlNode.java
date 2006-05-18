@@ -168,10 +168,23 @@ public final class ASTTmlNode extends SimpleNode {
                 } else
                     return new Boolean(false);
             }
+              
+              
+              String type = prop.getType();
+         
+              /**
+               * <String> property.getValue() should not be performed on binary properties
+               */
+              if(type.equals(Property.BINARY_PROPERTY)) {
+                  System.err.println("GETTING BINARY PROPERTY....");
+                  Binary data = (Binary) prop.getTypedValue();
+                  resultList.add(data);
+                  continue;
+                }  
+              
             String value = prop.getValue();
             // Determine type
-            String type = prop.getType();
-
+       
 //            System.out.println("in ASTTmlNode(), VALUE FOR " + prop.getName() + " = " + value + " (type = " + type + ")");
 
             if (value == null && !type.equals(Property.SELECTION_PROPERTY)) {  // If value attribute does not exist AND property is not selection property assume null value
@@ -373,10 +386,6 @@ public final class ASTTmlNode extends SimpleNode {
                     }
                   }
                 }
-            } else if(type.equals(Property.BINARY_PROPERTY)) {
-              System.err.println("GETTING BINARY PROPERTY....");
-              Binary data = (Binary) prop.getTypedValue();
-              resultList.add(data);
             } else if(type.equals(Property.EXPRESSION_PROPERTY)) {
               resultList.add(prop.getTypedValue());
             } else {
