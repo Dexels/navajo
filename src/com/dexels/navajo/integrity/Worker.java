@@ -40,17 +40,6 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.util.AuditLog;
 
-class Job {
-	
-	public String requestid;
-	public Navajo response;
-	
-	public Job(String s, Navajo r) {
-		requestid = s;
-		response = r;
-	}
-}
-
 public class Worker implements Runnable {
 
 	private static final String VERSION = "$Id$";
@@ -59,9 +48,12 @@ public class Worker implements Runnable {
 	
 	private Dispatcher myDispatcher;
 	
-	private Set workList = Collections.synchronizedSet(new HashSet());
+	// Worklist containst responses that still need to be written to a file.
+	private Map workList = Collections.synchronizedMap(new HashMap());
+	// Integrity cache contains mapping between unique request id and response file.
 	private Map integrityCache = Collections.synchronizedMap(new HashMap());
-	private Set notWrittenFiles = Collections.synchronizedSet(new HashSet());
+	// Contains all unique request ids that still need to be handled by the worker thread.
+	private Set notWrittenReponses = Collections.synchronizedSet(new HashSet());
 	
 	public static Worker getInstance(Dispatcher myDispatcher) {
 		
@@ -80,18 +72,29 @@ public class Worker implements Runnable {
 		return instance;
 	}
 
+	/**
+	 * Writes a file with a response to a unique file and couple it to it's unique id
+	 * in the integrityCache. The unique id is removed from the notWrittenReponses set to
+	 * indicate that it's ready to be read.
+	 * 
+	 * @param id
+	 * @param response
+	 */
 	private void writeFile(String id, Navajo response) {
 		try {
 			
 			File f = File.createTempFile("navajoresponse_" + id, ".xml");
 			f.deleteOnExit();
+			// Store mapping between unique request id and response filename.
 			integrityCache.put(id, f.getAbsolutePath());
-			notWrittenFiles.add( f.getAbsolutePath() );
+			
 			// Write file.
 			FileWriter fw = new FileWriter(f);
 			response.write(fw);
 			fw.close();
-			notWrittenFiles.remove( f.getAbsolutePath() );
+			
+			// Remove unique request id from notWrittenResponse set to indicate that it's ready to be read.
+			notWrittenReponses.remove( id );
 			
 			//System.err.println("putting in cache for id: " + id + " " + f.getAbsolutePath());
 		
@@ -105,24 +108,24 @@ public class Worker implements Runnable {
 		while (true) {
 			try {
 				Thread.sleep(50);
-				// Check for new access objects.
-				//System.err.println(">> StatisticsRunner TODO list size: " + todo.size());
+				// Check for new access objects in workList.
 				synchronized (workList) {
-					Iterator iter = workList.iterator();
+					
+					Set s = new HashSet(workList.keySet());
+					Iterator iter = s.iterator();
 					while (iter.hasNext()) {
-						Job j = (Job) iter.next();
-						if ( j.requestid != null && !j.requestid.trim().equals("") ) {
-							
-							writeFile( j.requestid, j.response );
+						String id = (String) iter.next();
+						if ( id != null && !id.trim().equals("") ) {
+							writeFile( id, (Navajo) workList.get(id) );
 						}
-						iter.remove();
+						workList.remove(id);
 						if (workList.size() > 50) {
-							System.err.println("WARNING: Integrity Worker TODO list size:  " + workList.size());
+							AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "WARNING: Integrity Worker TODO list size:  " + workList.size());
 						}
 						
 					}
 				}
-				// Remove garbage.
+				// Remove 'old' responses.
 				Set s = new HashSet(integrityCache.keySet());
 				Iterator i = s.iterator();
 				long now = System.currentTimeMillis();
@@ -132,10 +135,10 @@ public class Worker implements Runnable {
 					File f = new File( fileName );
 					long birth = f.lastModified();
 					if ( now - birth > 60000 ) {
-						// remove file.
+						// remove file reference from integrity cache.
 						integrityCache.remove(id);
+						// remove file itself.
 						f.delete();
-						//System.err.println("Removed file: " + f.getAbsolutePath());
 					}
 				}
 			}
@@ -144,13 +147,20 @@ public class Worker implements Runnable {
 		}
 	}
 	
+	/**
+	 * Read a file fileName containing a response XML and returns the corresponding Navajo object.
+	 * 
+	 * @param fileName
+	 * @return
+	 */
 	private Navajo readFile(String fileName) {
 		try {
-			System.err.println("reading previous response: " + fileName);
+			AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "Integrity violation detected, returning previous response from: " + fileName);
 			// Set modification date to time of last read.
 			new File ( fileName ).setLastModified( System.currentTimeMillis() );
 			FileInputStream fs = new FileInputStream( fileName );
 			Navajo n = NavajoFactory.getInstance().createNavajo(fs);
+			
 			return n;
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -159,16 +169,23 @@ public class Worker implements Runnable {
 		}
 	}
 	
+	/**
+	 * Get a possibly stored response from a previously received request.
+	 * 
+	 * @param request
+	 * @return
+	 */
 	public Navajo getResponse(Navajo request) {
 
 		if ( request.getHeader().getRequestId() == null || 
 			 request.getHeader().getRequestId().trim().equals("") ) {
 			return null;
 		}
-		if ( integrityCache.containsKey( request.getHeader().getRequestId() ) ) {
-			String fileName = (String) integrityCache.get( request.getHeader().getRequestId() );
-			while ( notWrittenFiles.contains( fileName )) {
-				System.err.println("Waiting for file " + fileName + " to become written...");
+		// Check if request id is in worklist (still) or integreatyCache (already).
+		if ( workList.containsKey( request.getHeader().getRequestId() ) || integrityCache.containsKey( request.getHeader().getRequestId() ) ) {
+			// Response file write could be still pending, due to a large workList size and/or large responses.
+			while ( notWrittenReponses.contains( request.getHeader().getRequestId() )) {
+				//AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER,"Integrity violation detected: waiting for response file " + fileName + " to become written...");
 				try {
 					Thread.sleep(100);
 				} catch (InterruptedException e) {
@@ -183,13 +200,19 @@ public class Worker implements Runnable {
 	}
 	
 	/**
-	 * Stores a response coupled to a request.
+	 * Adds a task to the workList. The response file is written in the worker thread.
+	 * The request is immediately recorded as being not written.
 	 * 
 	 * @param request
 	 * @param response
 	 */
 	public void setResponse(Navajo request, Navajo response) {
-		workList.add( new Job( request.getHeader().getRequestId(), response) );
+		if ( request.getHeader().getRequestId() != null && !request.getHeader().getRequestId().trim().equals("") ) {
+			// Immediately add request id to notWrittenResponses.
+			notWrittenReponses.add( request.getHeader().getRequestId() );
+			//  Add response to workList.
+			workList.put( request.getHeader().getRequestId(), response );
+		}
 	}
 
 }
