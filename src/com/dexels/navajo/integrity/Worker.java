@@ -110,7 +110,7 @@ public class Worker implements Runnable, Mappable {
 			// Remove unique request id from notWrittenResponse set to indicate that it's ready to be read.
 			notWrittenReponses.remove( id );
 			
-			System.err.println("putting in cache for id: " + id + " " + f.getAbsolutePath() + "cache size is: " + integrityCache.size() );
+			//System.err.println("putting in cache for id: " + id + " " + f.getAbsolutePath() + "cache size is: " + integrityCache.size() );
 		
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
