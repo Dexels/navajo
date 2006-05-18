@@ -37,11 +37,25 @@ import java.util.Set;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.mapping.Mappable;
+import com.dexels.navajo.mapping.MappableException;
+import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.Dispatcher;
+import com.dexels.navajo.server.NavajoConfig;
+import com.dexels.navajo.server.Parameters;
+import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.util.AuditLog;
 
-public class Worker implements Runnable {
+public class Worker implements Runnable, Mappable {
 
+	/**
+	 * Public fields (used as getters for mappable).
+	 */
+	public int cacheSize;
+	public int workSize;
+	public int notWrittenSize;
+	public static int violationCount = 0;
+	
 	private static final String VERSION = "$Id$";
 	
 	private static Worker instance = null;
@@ -156,6 +170,7 @@ public class Worker implements Runnable {
 	private Navajo readFile(String fileName) {
 		try {
 			AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "Integrity violation detected, returning previous response from: " + fileName);
+			violationCount++;
 			// Set modification date to time of last read.
 			new File ( fileName ).setLastModified( System.currentTimeMillis() );
 			FileInputStream fs = new FileInputStream( fileName );
@@ -213,6 +228,34 @@ public class Worker implements Runnable {
 			//  Add response to workList.
 			workList.put( request.getHeader().getRequestId(), response );
 		}
+	}
+
+	public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
+		
+	}
+
+	public void store() throws MappableException, UserException {
+		
+	}
+
+	public void kill() {
+		
+	}
+	
+	public int getViolationCount() {
+		return violationCount;
+	}
+	
+	public int getCacheSize() {
+		return cacheSize;
+	}
+	
+	public int getWorkSize() {
+		return workSize;
+	}
+	
+	public int notWrittenSize() {
+		return notWrittenSize;
 	}
 
 }
