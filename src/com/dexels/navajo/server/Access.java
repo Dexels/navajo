@@ -32,6 +32,8 @@ import com.dexels.navajo.mapping.CompiledScript;
 public final class Access
     implements java.io.Serializable {
 
+  private static final String VERSION = "$Id$";
+	
   public java.util.Date created = new java.util.Date();
   public static int accessCount = 0;
   public int threadCount = 0;

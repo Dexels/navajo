@@ -53,6 +53,8 @@ class Job {
 
 public class Worker implements Runnable {
 
+	private static final String VERSION = "$Id$";
+	
 	private static Worker instance = null;
 	
 	private Dispatcher myDispatcher;

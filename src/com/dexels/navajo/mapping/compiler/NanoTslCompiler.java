@@ -52,6 +52,8 @@ import com.dexels.navajo.loader.*;
 
 public class NanoTslCompiler {
 
+	private static final String VERSION = "$Id$";
+	
     private final ClassLoader loader;
 
     private int messageListCounter = 0;

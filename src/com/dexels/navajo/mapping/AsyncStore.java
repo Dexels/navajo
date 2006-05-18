@@ -34,6 +34,8 @@ import com.dexels.navajo.server.Access;
 public final class AsyncStore
     implements Runnable {
 
+  private static final String VERSION = "$Id$";
+	
   private static AsyncStore instance = null;
   public Map objectStore = null;
   public Map accessStore = null;

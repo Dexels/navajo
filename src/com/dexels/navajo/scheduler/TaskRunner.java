@@ -46,6 +46,8 @@ import com.dexels.navajo.util.AuditLog;
 
 public class TaskRunner implements Runnable {
 
+	private static final String VERSION = "$Id$";
+	
 	private int maxSize = 25;
 	private static TaskRunner instance = null;
 	private final Map tasks = Collections.synchronizedMap(new HashMap());

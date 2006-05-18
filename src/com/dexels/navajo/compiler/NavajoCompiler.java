@@ -33,6 +33,8 @@ import java.io.*;
 
 public class NavajoCompiler
 {
+		private static final String VERSION = "$Id$";
+	
 		public String errors;
 		
         public void compile(Access access, NavajoConfig config, String source) throws Throwable{

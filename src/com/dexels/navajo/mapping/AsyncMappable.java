@@ -77,6 +77,8 @@ import com.dexels.navajo.document.*;
 
 public abstract class AsyncMappable implements Mappable {
 
+  private static final String VERSION = "$Id$";
+	
   public boolean isFinished = false;
   public boolean killOnFinnish = false;
   private Exception caught = null;
