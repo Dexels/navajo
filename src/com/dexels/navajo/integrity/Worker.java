@@ -247,15 +247,15 @@ public class Worker implements Runnable, Mappable {
 	}
 	
 	public int getCacheSize() {
-		return cacheSize;
+		return integrityCache.size();
 	}
 	
 	public int getWorkSize() {
-		return workSize;
+		return workList.size();
 	}
 	
 	public int notWrittenSize() {
-		return notWrittenSize;
+		return notWrittenReponses.size();
 	}
 
 }
