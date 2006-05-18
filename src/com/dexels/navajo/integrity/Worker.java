@@ -63,11 +63,11 @@ public class Worker implements Runnable, Mappable {
 	private Dispatcher myDispatcher;
 	
 	// Worklist containst responses that still need to be written to a file.
-	private Map workList = Collections.synchronizedMap(new HashMap());
+	private static Map workList = Collections.synchronizedMap(new HashMap());
 	// Integrity cache contains mapping between unique request id and response file.
-	private Map integrityCache = Collections.synchronizedMap(new HashMap());
+	private static Map integrityCache = Collections.synchronizedMap(new HashMap());
 	// Contains all unique request ids that still need to be handled by the worker thread.
-	private Set notWrittenReponses = Collections.synchronizedSet(new HashSet());
+	private static Set notWrittenReponses = Collections.synchronizedSet(new HashSet());
 	
 	public static Worker getInstance(Dispatcher myDispatcher) {
 		
@@ -110,7 +110,7 @@ public class Worker implements Runnable, Mappable {
 			// Remove unique request id from notWrittenResponse set to indicate that it's ready to be read.
 			notWrittenReponses.remove( id );
 			
-			//System.err.println("putting in cache for id: " + id + " " + f.getAbsolutePath());
+			System.err.println("putting in cache for id: " + id + " " + f.getAbsolutePath() + "cache size is: " + integrityCache.size() );
 		
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
