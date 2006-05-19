@@ -75,7 +75,7 @@ public final class Binary extends NavajoType {
 	  try {
 		  dataFile = File.createTempFile("binary_object", "navajo");
 		  dataFile.deleteOnExit();
-		  System.err.println("Created temp file: " + dataFile.getAbsolutePath());
+		  //System.err.println("Created temp file: " + dataFile.getAbsolutePath());
 		  FileOutputStream fos = new FileOutputStream(dataFile);
 		  fos.write(data);
 		  fos.close();
@@ -84,7 +84,7 @@ public final class Binary extends NavajoType {
 	  }
 	  if (data != null) {
 		  this.mimetype = guessContentType();
-		  System.err.println("** Guessed contenttype: " + mimetype);
+		  //System.err.println("** Guessed contenttype: " + mimetype);
 	  }
   }
 
@@ -131,8 +131,8 @@ public final class Binary extends NavajoType {
 	  } else {
       metadata.FormatDescription description = metadata.FormatIdentification.identify(dataFile);
 	      if (description != null) {
-	        System.err.println("guessContentType() = " + description.getShortName() +
-	                           ", " + description.getMimeType());
+//	        System.err.println("guessContentType() = " + description.getShortName() +
+//	                           ", " + description.getMimeType());
 	      } else {
 	        System.err.println("UNKOWN content type");
 	      }
