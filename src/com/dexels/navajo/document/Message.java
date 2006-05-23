@@ -296,14 +296,14 @@ public interface Message
    *
    * @param writer
    */
-  public void write(java.io.Writer writer);
+  public void write(java.io.Writer writer) throws NavajoException;
 
   /**
    * Serialize a message as a string to a particular output stream.
    *
    * @param stream
    */
-  public void write(java.io.OutputStream stream);
+  public void write(java.io.OutputStream stream) throws NavajoException;
 
   /**
    * Set the message map for retreiving the right values for 'toString()'
