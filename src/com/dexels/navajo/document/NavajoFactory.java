@@ -2,6 +2,7 @@ package com.dexels.navajo.document;
 
 import java.util.*;
 
+
 /**
  * <p>Title: Navajo Product Project</p>
  * <p>Description: This is the official source for the Navajo server</p>
@@ -14,6 +15,7 @@ import java.util.*;
 public abstract class NavajoFactory {
   protected static NavajoFactory impl = null;
   protected Map defaultSubTypes = new HashMap();
+  protected final ArrayList myBinaryActivityListeners = new ArrayList();
 
   /**
    * Get the default NavajoFactory implementation.
@@ -36,6 +38,10 @@ public abstract class NavajoFactory {
     }
     return impl;
   }
+  
+  public static void resetImplementation() {
+      impl = null;
+  }
 
   /**
    * Get a specific NavajoFactory implementation.
@@ -44,6 +50,14 @@ public abstract class NavajoFactory {
    * @return NavajoFactory instance
    */
   public static NavajoFactory getInstance(String className) {
+      if (impl!=null) {
+        String cls = impl.getClass().getName();
+        if (!(className.equals(cls))) {
+            System.err.println("NavajoFactory Warning: Getting instance, but current instance if different. Use resetImplementation.");
+        }
+        return impl;
+        
+    }
     try {
       return (NavajoFactory) Class.forName(className).newInstance();
     }
@@ -431,5 +445,47 @@ public abstract class NavajoFactory {
    */
   public abstract LazyMessage createLazyMessage(Navajo tb, String name,
                                                 int windowSize);
+
+
+
+  /**
+   * Fires an binary progress event event to all listeners
+   * @param b boolean
+   * @param service String
+   * @param progress long
+   * @param total long
+   */
+  public void fireBinaryProgress(String service, long progress, long total) {
+      System.err.println("Binary: "+service+" prog: "+progress+" total: "+total);
+           for (int i = 0; i < myBinaryActivityListeners.size(); i++) {
+      BinaryProgressListener current = (BinaryProgressListener) myBinaryActivityListeners.get(i);
+      current.fireBinaryProgress(service,progress,total);
+    }
+  }
+
+  /**
+   * Add activitylistener
+   * @param al ActivityListener
+   */
+  public final void addBinaryActivityListener(BinaryProgressListener al) {
+      myBinaryActivityListeners.add(al);
+  }
+
+  /**
+   * Remove activitylistener
+   * @param al ActivityListener
+   */
+  public final void removeBinaryActivityListener(BinaryProgressListener al) {
+      myBinaryActivityListeners.remove(al);
+  }
+
+public void fireBinaryFinished(String message, long expectedLength) {
+    for (int i = 0; i < myBinaryActivityListeners.size(); i++) {
+        BinaryProgressListener current = (BinaryProgressListener) myBinaryActivityListeners.get(i);
+        current.fireBinaryFinished(message,expectedLength);
+      }
+   
+}
+
 
 }
