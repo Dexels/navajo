@@ -80,5 +80,6 @@ public interface Method
    * @return Object
    */
   public Object getRef();
+  public Method copy(Navajo n);
 
 }
