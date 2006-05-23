@@ -30,8 +30,12 @@ package navajoclient;
  * 2.0.3. -Added more verbose timing information
  * 2.1.0. Added support for setting unique request id.
  * 2.2.0. -Support for text nodes within binary properties
+ *        -Support for f#%ckin huge binaries on java 1.5
  *        -HTML client now works with any document version
  *        -HTML client does not waste as much memory as it used to
+ *        -The streaming binaries only work well on 1.5, under 1.4
+ *         the HTTP implentation will store all data in memory before
+ *         sending.
  * 
  */
 public class Version extends dexels.Version {
