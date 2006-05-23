@@ -28,8 +28,10 @@ package navajoclient;
  * VERSION HISTORY
  * 
  * 2.0.3. -Added more verbose timing information
- * 
  * 2.1.0. Added support for setting unique request id.
+ * 2.2.0. -Support for text nodes within binary properties
+ *        -HTML client now works with any document version
+ *        -HTML client does not waste as much memory as it used to
  * 
  */
 public class Version extends dexels.Version {
@@ -39,7 +41,7 @@ public class Version extends dexels.Version {
 	public static final int PATCHLEVEL = 0;
 	public static final String VENDOR = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Client";
-	public static final String RELEASEDATE = "2006-05-17";
+	public static final String RELEASEDATE = "2005-05-23";
 	
 	//Included packages.
 	String [] includes = {"navajodocument.Version"};
