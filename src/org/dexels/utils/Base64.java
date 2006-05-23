@@ -258,9 +258,11 @@ public class Base64 {
 		public void write(int b) throws IOException {
 			oneByte[0] = (byte) b;
 			encoder.write(oneByte, 0, 1);
+//            encoder.flush();
 		}
 		public void write(byte[] pBuffer, int pOffset, int pLen) throws IOException {
 			encoder.write(pBuffer, pOffset, pLen);
+//            encoder.flush();
 		}
 		public void close() throws IOException {
 			encoder.flush();
@@ -297,6 +299,8 @@ public class Base64 {
 		final Encoder encoder = new Encoder(new char[4096], pLineSize, pSeparator){
 			protected void writeBuffer(char[] pBuffer, int pOffset, int pLen) throws IOException {
 				pWriter.write(pBuffer, pOffset, pLen);
+//!!!!  VERY IMPORTANT
+                pWriter.flush();
 			}
 		};
 		return new EncoderOutputStream(encoder);
@@ -416,9 +420,12 @@ public class Base64 {
 		 * method failed.
 		 */
 		public void write(char[] pData, int pOffset, int pLen) throws IOException {
-			for (int i = 0;  i < pLen;  i++) {
+		    boolean finished = false;
+//            System.err.println("WRITE: >"+new String(pData)+"<");
+            for (int i = 0;  i < pLen && !finished;  i++) {
 				char c = pData[pOffset++];
 				if (Character.isWhitespace(c)) {
+//                    System.err.println("Whitespace: >"+c+"<");
 					continue;
 				}
 				if (c == '=') {
@@ -446,7 +453,10 @@ public class Base64 {
 					}
 				} else {
 					if (eofBytes > 0) {
-						throw new DecodingException("Base64 characters after end of stream character (=) detected.");
+//                        Thread.dumpStack();
+//                        return;
+                        throw new Base64DecodingFinishedException(pData,pOffset,pLen);
+                        //						throw new DecodingException("Base64 characters after end of stream character (=) detected.");
 					}
 					int result;
 					if (c >= 0  &&  c < base64ToInt.length) {
@@ -468,7 +478,9 @@ public class Base64 {
 						}
 				    }
 					if (!Character.isWhitespace(c)) {
-						throw new DecodingException("Invalid Base64 character: " + (int) c);
+                        
+                        throw new Base64DecodingFinishedException(pData,pOffset,pLen);
+//						throw new DecodingException("Invalid Base64 character: " + (int) c+" character: "+(char)c);
 					}
 				}
 			}
@@ -497,7 +509,7 @@ public class Base64 {
 	 * @return An output stream, encoding its input in Base64 and writing
 	 * the output to the writer <code>pWriter</code>.
 	 */
-	public Writer newDecoder(final OutputStream pStream) {
+	public static Writer newDecoder(final OutputStream pStream) {
 		return new Writer(){
 			private final Decoder decoder = new Decoder(1024){
 				protected void writeBuffer(byte[] pBytes, int pOffset, int pLen) throws IOException {
@@ -512,7 +524,16 @@ public class Base64 {
 				pStream.flush();
 			}
 			public void write(char[] cbuf, int off, int len) throws IOException {
-				decoder.write(cbuf, off, len);
+				try {
+                    decoder.write(cbuf, off, len);
+                } catch (IOException e) {
+                    if (e instanceof Base64DecodingFinishedException) {
+                        Base64DecodingFinishedException b =  (Base64DecodingFinishedException)e;
+                        pStream.flush();
+
+                    }
+                    throw e;
+                }
 			}
 		};
 	}
