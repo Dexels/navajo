@@ -37,12 +37,17 @@ public class Base64Encode extends FunctionInterface {
 	public String usage() {
 		return "";
 	}
+    
+    // I think this function does not work when you pass a Binary into it.
+    // It is a bit pointless anyway, it is more like a 'clone' then.
 
 	public Object evaluate() throws TMLExpressionException {
 		Object o = getOperand(0);
 		String data = null;
 		if ( o instanceof Binary ) {
 			Binary b = (Binary) o;
+            // HUH?! Why?! Making a string out of 'random' binary data is stupid
+            //
 			data = new String(b.getData());
 		} else if ( o instanceof String ) {
 			data = (String) o;
