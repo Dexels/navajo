@@ -269,6 +269,10 @@ public class XMLDocumentUtils {
             }
 
         } else {
+            if (n instanceof Text) {
+                Text t = (Text)n;
+                sw.write(t.getData());
+            }
             return;
         }
     }
@@ -276,6 +280,7 @@ public class XMLDocumentUtils {
     public static void write( Document d, Writer w ) {
 
     	try {
+            d.getDocumentElement().setAttribute("documentImplementation", "JAXP");
 			printElement ( d.getDocumentElement(), w );
 			w.flush();
 		} catch (IOException e) {
