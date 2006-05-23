@@ -86,12 +86,18 @@ public final class PropertyImpl implements Property, Comparable {
         }
         // throw new NavajoException("Invalid direction indicator specified: " + direction);
         p.setType(type);
-
-        // WHY? WHY ONLY STRING PROPERTIES? WHY NOT EMPTY STRINGS.?
-        if (value != null) {
-           if (type.equals(Property.STRING_PROPERTY) || !value.equals(""))
-              p.setValue(value);
+        if (type.equals(Property.BINARY_PROPERTY)) {
+          
+           Text t= d.createTextNode(value);
+           n.appendChild(t);
+        } else {
+            // WHY? WHY ONLY STRING PROPERTIES? WHY NOT EMPTY STRINGS.?
+            if (value != null) {
+               if (type.equals(Property.STRING_PROPERTY) || !value.equals(""))
+                  p.setValue(value);
+            }
         }
+
 
         if (length != -1)
             p.setLength(length);
@@ -100,10 +106,10 @@ public final class PropertyImpl implements Property, Comparable {
 
         //p.setDirection(direction);
 
-        p.setValue(PropertyTypeChecker.getInstance().verify(p, p.getValue()));
-
-
-        return p;
+        if (!type.equals(Property.BINARY_PROPERTY)) {
+            p.setValue(PropertyTypeChecker.getInstance().verify(p, p.getValue()));
+        }
+         return p;
     }
 
     /**
@@ -492,7 +498,10 @@ public final class PropertyImpl implements Property, Comparable {
 			
 			  os.close();
 			  datastream.close();
-			  
+			  setType(Property.BINARY_PROPERTY);
+              /*
+               * fix this. Not memory efficient
+               */
 			  setValue(sw.toString());
 			  
 			 
@@ -659,7 +668,11 @@ public final class PropertyImpl implements Property, Comparable {
         //  ref.setAttribute(Property.PROPERTY_VALUE, XMLutils.XMLEscape(value));
         //else
         if (value != null) {
-          ref.setAttribute(Property.PROPERTY_VALUE, value); // XMLutils.string2unicode(value));
+            if (Property.BINARY_PROPERTY.equals(getType())) {
+                ref.appendChild(((Document)myRootDoc.getMessageBuffer()).createTextNode(value));
+            } else {
+                ref.setAttribute(Property.PROPERTY_VALUE, value); // XMLutils.string2unicode(value));
+            }
         }
         return value;
       }
