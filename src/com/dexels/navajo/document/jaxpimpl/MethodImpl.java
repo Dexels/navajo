@@ -11,6 +11,7 @@
 package com.dexels.navajo.document.jaxpimpl;
 
 import com.dexels.navajo.document.*;
+
 import org.w3c.dom.*;
 import java.util.*;
 
@@ -151,5 +152,10 @@ public final class MethodImpl implements Method {
 
     public Object getRef() {
       return this.ref;
+    }
+
+    public Method copy(Navajo n) {
+        throw new UnsupportedOperationException("Cannot copy jaxpimpl methods!");
+//        return null;
     }
 }
