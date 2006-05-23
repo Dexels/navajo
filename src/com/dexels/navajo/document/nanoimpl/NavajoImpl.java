@@ -1,7 +1,9 @@
 package com.dexels.navajo.document.nanoimpl;
 import java.util.*;
 import java.io.*;
+
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.base.*;
 
 /**
  * <p>Title: ShellApplet</p>
@@ -14,51 +16,27 @@ import com.dexels.navajo.document.*;
  */
 
 
-public final class NavajoImpl implements Navajo {
+public final class NavajoImpl extends BaseNavajoImpl implements Navajo, NanoElement {
 
-  private MessageImpl rootMessage = null;
-  private HeaderImpl myHeader = null;
-//  private String myName="";
-//  private String myPassword="";
-//  private String myService="";
-  private ArrayList myMethods = new ArrayList();
-  //private boolean doAppendMethods = true;
-  private int expiration = -1;
-  private String myLazyMessagePath = "";
-  private int myErrorNumber;
-  private String myErrorDescription;
 
 //  private Map myDepSet = null;
 
   public NavajoImpl() {
-    rootMessage = (MessageImpl)NavajoFactory.getInstance().createMessage(this,"");
-//    new MessageImpl(this);
-    /** @todo Check.. */
+     /** @todo Check.. */
     myHeader = (HeaderImpl)NavajoFactory.getInstance().createHeader(this,"","","",-1);
   }
 
-  public void setRootMessage(Message r) {
-    rootMessage = (MessageImpl)r;
+  public String getImplementationName() {
+      return "NANO";
   }
-
+  
   public void addHeader(Header h) {
-    if (myHeader == null) {
-      myHeader = (HeaderImpl)h;
-    }
-    myHeader.merge((HeaderImpl)h);
+	super.addHeader(h);
+//    myHeader.merge((HeaderImpl)h);
   }
 
-  public void removeHeader() {
-    myHeader = null;
-    /** @todo Don't really know what I should do here */
-  }
 
-  public void setExpiration(int i) {
-    expiration = i;
-/** @todo Verify this */
-//    myHeader.setExpirationInterval(i);
-  }
-
+// SORT OF DUPLICATE: TODO: CHECK FOR REDUNDANT CODE WITH BASENAVAJOIMPL
   public Navajo copy() {
     Navajo ni = NavajoFactory.getInstance().createNavajo();
     NavajoImpl n = (NavajoImpl)ni;
@@ -70,88 +48,32 @@ public final class NavajoImpl implements Navajo {
       n.addMessage(m2);
     }
 
-    for (int i = 0; i < myMethods.size(); i++) {
-      Method m = (Method)myMethods.get(i);
+    for (int i = 0; i < myMethods.getAllMethods().size(); i++) {
+      Method m = (Method)myMethods.getAllMethods().get(i);
       Method m2 = n.copyMethod(m,n);
       n.addMethod(m2);
     }
     return n;
   }
-  public void addMethod(Method m) {
-    myMethods.add(m);
-  }
- public Message getMessage(String name)  {
-    return rootMessage.getMessage(name);
-  }
 
-//  public Message getMessage(String name, int index) {
-//    return rootMessage.getMessage(name,index);
-//  }
 
-  public Message getRootMessage() {
-    return rootMessage;
-  }
 
-  public void addMap(com.dexels.navajo.document.MapTag map) throws NavajoException {
-    throw new java.lang.UnsupportedOperationException(
-        "Method addMap() not yet implemented.");
-   }
-
-  public Message addMessage(Message m) {
-    rootMessage.addMessage(m);
-    return m;
-  }
-
-  public void setIdentification(String username, String password, String service) {
-    myHeader.setRPCUser(username);
-    myHeader.setRPCPassword(password);
-    myHeader.setRPCName(service);
-//    myHeader.setIdentification(username,password,service);
-  }
-
-//  public void setService(String service) {
-//    myService = service;
-//  }
-
-  public void setMethod() {
-//<method name="navajo_logon_send"> <required message="identification"/> <required message="services"/> </method>
-//    Message m = createMessage(this,"methods");
-//
-//    addMessage(m);
-  }
-
+/**
+ * @deprecated
+ *  (non-Javadoc)
+ * @see com.dexels.navajo.document.Navajo#addLazyMessagePath(java.lang.String, int, int, int)
+ */
   public void addLazyMessagePath(String path, int startIndex, int endIndex, int total) {
 ///** @todo Fix this one */
     myHeader.addLazyMessagePath(path, startIndex, endIndex, total);
   }
 //
 
-  public ArrayList getAllMessages() {
-    return rootMessage.getAllMessages();
-  }
-
-  public ArrayList getMessages(String regexp) throws NavajoException {
-    if (regexp.startsWith(MESSAGE_SEPARATOR)) {
-      return rootMessage.getMessages(regexp.substring(1));
-    }
-//    System.err.println("Getmessages, in Navajo. looking for messagE: "+regexp);
-    return rootMessage.getMessages(regexp);
-  }
-
-//  public Message getByPath(String path) {
-//    return rootMessage.getByPath(path);
-//  }
-
-//<method name="navajo_logon_send"> <required message="identification"/> <required message="services"/> </method>
-
   public static Method createMethod(NavajoImpl n, String name) {
     return new MethodImpl(n,name);
   }
 
-  public Header getHeader() {
-    return myHeader;
-  }
-
+ 
   public XMLElement toXml() {
   	return toXml(false, null);
   }
@@ -167,6 +89,8 @@ public final class NavajoImpl implements Navajo {
   private final void toXmlElement(XMLElement x, boolean condense, String method) {
 //    XMLElement x=  ((MessageImpl)rootMessage).toXml(null);
     x.setName("tml");
+    x.setAttribute("documentImplementation", getImplementationName());
+    
 //    System.err.println("\n\nMY HEADER: "+x);
     if (myHeader != null) {
       x.addChild( ( (HeaderImpl) myHeader).toXml(null));
@@ -183,8 +107,8 @@ public final class NavajoImpl implements Navajo {
     XMLElement methods = new CaseSensitiveXMLElement();
     methods.setName("methods");
     x.addChild(methods);
-    for (int i = 0; i < myMethods.size(); i++) {
-      MethodImpl m = (MethodImpl) myMethods.get(i);
+    for (int i = 0; i < myMethods.getAllMethods().size(); i++) {
+      MethodImpl m = (MethodImpl) myMethods.getAllMethods().get(i);
       XMLElement mx = m.toXml(x);
       methods.addChild(mx);
     }
@@ -192,7 +116,7 @@ public final class NavajoImpl implements Navajo {
 
   public void fromXml(XMLElement e) {
     Vector v = e.getChildren();
-    rootMessage.fromXml(e);
+    ((MessageImpl)rootMessage).fromXml(e);
     for (int i = 0; i < v.size(); i++) {
       XMLElement x = (XMLElement)v.get(i);
       String name = x.getName();
@@ -204,10 +128,6 @@ public final class NavajoImpl implements Navajo {
     }
   }
 
-  public ArrayList getAllMethods() {
-    return (ArrayList)myMethods.clone();
-  }
-
   private final void loadMethods(XMLElement e) {
     myMethods.clear();
     Vector v = e.getChildren();
@@ -216,27 +136,28 @@ public final class NavajoImpl implements Navajo {
       String name = (String)x.getAttribute("name");
       MethodImpl m = (MethodImpl)createMethod(this,name);
       m.fromXml(x);
-      myMethods.add(m);
+      myMethods.addMethod(m);
     }
   }
 
-  public void prune() {
-    ((MessageImpl)getRootMessage()).prune();
-  }
 
 
-  public void importMessage(Message m) {
-    MessageImpl mi = (MessageImpl) m;
-    Message n = mi.copy(this);
-    rootMessage.addMessage(n);
-  }
-
+ /**
+ * @deprecated
+ *  (non-Javadoc)
+ * @see com.dexels.navajo.document.Navajo#getLazyMessagePath(java.lang.String)
+ */
   public LazyMessagePath getLazyMessagePath(String path) {
     return myHeader.getLazyMessagePath(path);
   }
 
   public void write(java.io.Writer writer) throws NavajoException {
-  	write(writer, false, null);
+  	try {
+        write(writer, false, null);
+    } catch (RuntimeException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+    }
   }
 
   public void write(OutputStream o) throws NavajoException {
@@ -285,20 +206,6 @@ public final class NavajoImpl implements Navajo {
   public Object getMessageBuffer() {
     return toXml();
   }
-  public String persistenceKey() {
-	  String result = this.toString();
-	  return result.hashCode() + "";
-  }
-  public void removeMessage(String s) {
-    rootMessage.removeMessage(s);
-  }
-  public void removeMessage(Message m) {
-    rootMessage.removeMessage(m);
-  }
-
-  public Message addMessage(Message m, boolean b) {
-    return rootMessage.addMessage(m,b);
-  }
 
   public Method copyMethod(Method m, Navajo n) {
     MethodImpl mi = (MethodImpl)m;
@@ -311,116 +218,7 @@ public final class NavajoImpl implements Navajo {
     return m2;
   }
 
-  public Message copyMessage(String s, Navajo n) {
-    Message m = getMessage(s);
-    return copyMessage(m,n);
-  }
 
-  public Message copyMessage(Message m, Navajo n) {
-    MessageImpl mc = (MessageImpl)(((MessageImpl)m).copy(n));
-    return mc;
-  }
-
-  public boolean contains(String s) {
-    /** @todo Implement */
-    throw new UnsupportedOperationException();
-  }
-
-  public Selection getSelection(String property) throws NavajoException {
-        Selection sel = null;
-        Property prop = null;
-        StringTokenizer tok = new StringTokenizer(property, Navajo.MESSAGE_SEPARATOR);
-        Message message = null;
-
-        int count = tok.countTokens();
-        int index = 0;
-
-        while (tok.hasMoreElements()) {
-            property = tok.nextToken();
-            // Check if last message/property reached.
-            if (index == (count - 1)) { // Reached property field.
-                if (message != null) {
-                    // Check if name contains ":", which denotes a selection.
-                    if (property.indexOf(":") != -1) {
-                        StringTokenizer tok2 = new StringTokenizer(property, ":");
-                        String propName = tok2.nextToken();
-                        String selName = tok2.nextToken();
-
-                        prop = message.getProperty(propName);
-                        sel = prop.getSelection(selName);
-                    } else {
-                        // Does not contain a selection option.
-                        return null;
-                    }
-                }
-            } else { // Descent message tree.
-                if (index == 0) // First message.
-                    message = this.getMessage(property);
-                else // Subsequent messages.
-                    message = message.getMessage(property);
-                if (message == null)
-                    return null;
-            }
-            index++;
-        }
-
-        return sel;
-  }
-  public Property getProperty(String s) {
-    return rootMessage.getProperty(s);
-  }
-
-  public ArrayList getProperties(String s) throws NavajoException {
-    ArrayList props = new ArrayList();
-        Property prop = null;
-        ArrayList messages = null;
-        ArrayList sub = null;
-        ArrayList sub2 = null;
-        String property = null;
-        Message message = null;
-
-        StringTokenizer tok = new StringTokenizer(s, Navajo.MESSAGE_SEPARATOR);
-        String messageList = "";
-
-        int count = tok.countTokens();
-
-        for (int i = 0; i < count - 1; i++) {
-            property = tok.nextToken();
-            messageList += property;
-            if ((i + 1) < count - 1)
-                messageList += Navajo.MESSAGE_SEPARATOR;
-        }
-        String realProperty = tok.nextToken();
-
-
-        messages = this.getMessages(messageList);
-        for (int i = 0; i < messages.size(); i++) {
-            message = (Message) messages.get(i);
-
-            prop = message.getProperty(realProperty);
-
-            if (prop != null)
-                props.add(prop);
-        }
-        return props;
-
-  }
-
-  public Method getMethod(String s) {
-    for (int i = 0; i < myMethods.size(); i++) {
-      Method m = (Method)myMethods.get(i);
-      if (m.getName().equals(s)) {
-        return m;
-      }
-    }
-    return null;
-  }
-
-  public Vector getRequiredMessages(String s) {
-
-    /** @todo Implement */
-    throw new UnsupportedOperationException();
-  }
 
   /**
    * DEBUGGING: write a specific message (name) to a file (filename).
@@ -444,92 +242,7 @@ public final class NavajoImpl implements Navajo {
      }
   }
 
-  public int getErrorNumber() {
-    return myErrorNumber;
-  }
-  public void setErrorNumber(int i) {
-    myErrorNumber = i;
-  }
 
-  /**
-   * Get the errorDescription class property.
-   */
-
-  public String getErrorDescription() {
-    return myErrorDescription;
-  }
-  public void setErrorDescription(String s) {
-    myErrorDescription = s;
-  }
-
-  public boolean isEqual(Navajo o) {
-     try {
-      Navajo other = (Navajo) o;
-      ArrayList otherMsgs = other.getAllMessages();
-      ArrayList myMsgs = this.getAllMessages();
-
-      System.err.println("-----------------");
-      this.write(System.err);
-      System.err.println("-----------------");
-      o.write(System.err);
-      System.err.println("-----------------");
-
-
-      if (otherMsgs.size() != myMsgs.size()){
-        return false;
-      }
-
-      for (int i = 0; i < otherMsgs.size(); i++) {
-        Message otherMsg = (Message) otherMsgs.get(i);
-        boolean match = false;
-        for (int j = 0; j < myMsgs.size(); j++) {
-          Message myMsg = (Message) myMsgs.get(j);
-          if (myMsg.isEqual(otherMsg, "")) {
-            match = true;
-            j = myMsgs.size() + 1;
-          }
-        }
-        if (!match){
-          return false;
-        }
-      }
-    }
-    catch (Exception e) {
-      e.printStackTrace();
-      return false;
-    }
-    return true;
-  }
-
-
-
-  public synchronized List refreshExpression() throws NavajoException{
-//    ArrayList aa = getAllMessages();
-//    for (int i = 0; i < aa.size(); i++) {
-//      Message current = (Message)aa.get(i);
-//      current.refreshExpression();
-//    }
-    try {
-//      if (myDepSet == null) {
-//        updateDependencySet();
-//      } else {
-//        System.err.println("Reusing depset");
-//      }
-//
-//        System.err.println("REFRESHING EXPRESSION FROM: ");
-//        Thread.dumpStack();
-        Map depSet = NavajoFactory.getInstance().getExpressionEvaluator().createDependencyMap(this);
-        return NavajoFactory.getInstance().getExpressionEvaluator().processRefreshQueue(depSet);
-
-        
-      }
-    catch (NavajoException ex) {
-      ex.printStackTrace();
-      System.err.println("Error refreshing navajo");
-      return null;
-    }
- 
-  }
 
   public void read(java.io.Reader stream) throws NavajoException {
     XMLElement xe = new CaseSensitiveXMLElement();
@@ -563,6 +276,8 @@ public final class NavajoImpl implements Navajo {
   	} else {
   		return true;
   	}
-
+  }
+  public final void writeComponent(Writer w) throws IOException {
+      toXml().write(w);
   }
 }

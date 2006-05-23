@@ -12,31 +12,15 @@ package com.dexels.navajo.document.nanoimpl;
 
 import java.util.*;
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl;
+import com.dexels.navajo.document.base.*;
 
 import java.io.*;
 
 public final class HeaderImpl
-    extends BaseNode
-    implements Header {
+    extends BaseHeaderImpl
+    implements Header, NanoElement {
 
-  private String myRequestId;
-  private String myName;
-  private String myPassword;
-  private String myService;
-  private String myIp;
-  private String myLazyMessage = null;
-  private long expiration = -1;
-  private TreeMap lazyMessageList = new TreeMap();
-
-  private boolean isFinished = false;
-  private String myInterrupt = null;
-  private String myCallbackName = null;
-  private String myCallbackPointer = null;
-  private int percReady = -1;
-
-  private Map attributeMap = null;
-
+    private String myRequestId;
   public HeaderImpl(com.dexels.navajo.document.Navajo n, String user,
                     String password, String service) {
     super(n);
@@ -45,55 +29,6 @@ public final class HeaderImpl
 
   public HeaderImpl(com.dexels.navajo.document.Navajo n) {
     super(n);
-  }
-
-  public final void setExpiration(long i) {
-    expiration = i;
-  }
-
-  public void setAttribute(String key, String value) {
-      if (attributeMap==null) {
-        attributeMap = new HashMap();
-    }
-      attributeMap.put(key, value);
-  }
-
-  public String getAttribute(String key) {
-      if (attributeMap==null) {
-        return null;
-    }
-    return (String)attributeMap.get(key);
-  }
-
-
-  public final void addLazyMessagePath(String path, int startIndex,
-                                       int endIndex, int total) {
-    LazyMessagePath lmp = NavajoFactory.getInstance().createLazyMessagePath(getRootDoc(), path, startIndex, endIndex, total);
-    lazyMessageList.put(path, lmp);
-    /** @todo repair this function*/
-//    throw new UnsupportedOperationException();
-  }
-
-//  public ArrayList getAllLazyMessages() {
-//    return lazyMessageList;
-//  }
-
-  public final void setIdentification(String user, String password,
-                                      String service) {
-    myName = user;
-    myPassword = password;
-    myService = service;
-  }
-
-  public final void setService(String service) {
-    myService = service;
-  }
-
-  public final LazyMessagePath getLazyMessagePath(String path) {
-    /** @todo repair this function*/
-//    throw new UnsupportedOperationException();
-//
-    return (LazyMessagePath) lazyMessageList.get(path);
   }
 
   public final void fromXml(XMLElement e) {
@@ -139,7 +74,10 @@ public final class HeaderImpl
     }
 
   }
-
+  public final XMLElement toXml() {
+      return toXml(null);
+  }
+  
   public final XMLElement toXml(XMLElement parent) {
 
 //    System.err.println("Finished: "+isFinished);
@@ -150,27 +88,21 @@ public final class HeaderImpl
       XMLElement header = new CaseSensitiveXMLElement();
 //      System.err.println("MY USERNAME: "+getRPCUser());
       header.setName("header");
-     
+
       XMLElement transaction = new CaseSensitiveXMLElement();
       transaction.setName("transaction");
-      if (myService != null) {
-        transaction.setAttribute("rpc_name", myService);
+      if (getRPCName() != null) {
+        transaction.setAttribute("rpc_name", getRPCName());
       }
-      if (myName != null) {
-        transaction.setAttribute("rpc_usr", myName);
+      if (getRPCUser() != null) {
+        transaction.setAttribute("rpc_usr", getRPCUser());
       }
-      if (myPassword != null) {
-        transaction.setAttribute("rpc_pwd", myPassword);
+      if (getRPCPassword() != null) {
+        transaction.setAttribute("rpc_pwd", getRPCPassword());
       }
       transaction.setAttribute("expiration_interval", this.expiration + "");
       if ( myRequestId != null ) {
     	  transaction.setAttribute("requestid", myRequestId);
-      }
-      
-      Iterator it = lazyMessageList.values().iterator();
-      while (it.hasNext()) {
-        LazyMessagePath path = (LazyMessagePath) it.next();
-        transaction.addChild( ( (LazyMessagePathImpl) path).toXml(transaction));
       }
 
       header.addChild(transaction);
@@ -217,47 +149,7 @@ public final class HeaderImpl
 
   }
 
-  public final void setRPCName(String s) {
-    myService = s;
-  }
 
-  public final String getIPAddress() {
-    return myIp;
-  }
-
-  public final String getCallBackInterupt(String object) {
-    /**@todo Implement this com.dexels.navajo.document.Header abstract method*/
-    throw new java.lang.UnsupportedOperationException(
-        "Method getCallBackInterupt() not yet implemented.");
-  }
-
-  public final void setRequestData(String ipAddress, String host) {
-    /**@todo Implement this com.dexels.navajo.document.Header abstract method*/
-  }
-
-  public final String getRPCName() {
-    return myService;
-  }
-
-  public final String getRPCPassword() {
-    return myPassword;
-  }
-
-  public final void setRPCUser(String s) {
-    myName = s;
-  }
-
-  public final long getExpirationInterval() {
-    return expiration;
-  }
-
-  public void setExpirationInterval(long l) {
-    expiration = l;
-  }
-
-  public java.util.Map getLazyMessageMap() {
-    return lazyMessageList;
-  }
 
   public final void merge(HeaderImpl n) {
     setExpiration(n.getExpirationInterval());
@@ -289,88 +181,11 @@ public final class HeaderImpl
    }
  }
 
-  public void removeCallBackPointers() {
-    myCallbackPointer = null;
-  }
-
-  public final String getCallBackPointer(String object) {
-    return myCallbackPointer;
-  }
-
-  public final void setRPCPassword(String s) {
-    myPassword = s;
-  }
-
-  public final Object getRef() {
+public Object getRef() {
     return toXml(null);
-  }
+}
 
-  public final String getRPCUser() {
-    return myName;
-  }
-
-  public final void setCallBack(String name, String pointer, int percReady,
-                                boolean isFinished, String interrupt) {
-    this.isFinished = isFinished;
-    this.myInterrupt = interrupt;
-    this.myCallbackName = name;
-    this.myCallbackPointer = pointer;
-    this.percReady = percReady;
-//    System.err.println("Finished: "+isFinished);
-//    System.err.println("PercReady: "+percReady);
-//    System.err.println("Name: "+name);
-//    System.err.println("pointer: "+pointer);
-  }
-
-  public final void setCallBackInterrupt(String interrupt) {
-    this.myInterrupt = interrupt;
-  }
-
-  public final String getUserAgent() {
-    return "MoZiLLa";
-  }
-
-  public final String getHostName() {
-//    try {
-//      InetAddress.getLocalHost().getHostName();
-//    }
-//    catch (UnknownHostException ex) {
-//      ex.printStackTrace();
-//    }
-    return "localhost";
-
-  }
-
-  public com.dexels.navajo.document.LazyMessageImpl getLazyMessages() {
-    return null;
-  }
-
-  public int getCallBackProgress() {
-    return percReady;
-  }
-
-  /**
-   * Returns whether the asynchronous server process has completed
-   */
-  public boolean isCallBackFinished() {
-    return isFinished;
-  }
-
-  public String getRequestId() {
-	  return myRequestId;
-  }
-
-  public static void main (String [] args) throws Exception {
-	    System.setProperty("com.dexels.navajo.DocumentImplementation", "com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl");
-		Navajo n = NavajoFactory.getInstance().createNavajo();
-		System.err.println("n = " + n.getClass().getName());
-		Header h = NavajoFactory.getInstance().createHeader(n , "aap", "noot", "mies", -1 );
-		n.addHeader(h);
-		n.write(System.err);
-	}
-
-  public void setRequestId(String id) {
-	  myRequestId = id;
-  }
-
+public final void writeComponent(Writer w) throws IOException {
+    toXml().write(w);
+}
 }

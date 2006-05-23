@@ -1,8 +1,9 @@
 package com.dexels.navajo.document.nanoimpl;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.Method;
+import com.dexels.navajo.document.base.*;
+
 import java.io.*;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.*;
 /**
  * <p>Title: </p>
@@ -144,7 +145,8 @@ public final class NavajoFactoryImpl extends NavajoFactory {
 //    throw new java.lang.UnsupportedOperationException("Method createNavajoException() not yet implemented.");
   }
   public LazyMessagePath createLazyMessagePath(Navajo tb, String path, int startIndex, int endIndex, int total) {
-    return new LazyMessagePathImpl(tb, path,startIndex,endIndex, total);
+//    return new LazyMessagePathImpl(tb, path,startIndex,endIndex, total);
+      return null;
   }
   public LazyMessage createLazyMessage(Navajo tb, String name, int windowSize) {
     Object instance = null;

@@ -24,6 +24,8 @@
  */
 package com.dexels.navajo.document.nanoimpl;
 
+import java.io.*;
+
 import com.dexels.navajo.document.Required;
 
 /**
@@ -32,7 +34,7 @@ import com.dexels.navajo.document.Required;
  * TODO To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-public class RequiredImpl implements Required {
+public class RequiredImpl implements Required, NanoElement {
 
 	private String message;
 	private String filter;
@@ -81,4 +83,12 @@ public class RequiredImpl implements Required {
 	    }
 	    return x;
 	  }
+
+    public XMLElement toXml() {
+        return toXml(null);
+    }
+
+    public final void writeComponent(Writer w) throws IOException {
+        toXml().write(w);
+    }
 }
