@@ -51,7 +51,7 @@ public interface Header extends java.io.Serializable {
 
     /**
      * Get the defined lazy messages from the control tag.
-     *
+     * @deprecated
      * <transaction rcp_usr="" rpc_pwd="" rpc_name="">
      *   <lazymessage name="/MemberData" startindex="10" endindex="100"/>
      * </transaction>
@@ -158,21 +158,35 @@ public interface Header extends java.io.Serializable {
      */
     public void removeCallBackPointers();
 
-    /**
-    * Serialize a header as a string to a particular writer.
-    *
-    * @param writer
-    */
-   public void write(java.io.Writer writer);
+//    /**
+//    * Serialize a header as a string to a particular writer.
+//    *
+//    * @param writer
+//    */
+//   public void write(java.io.Writer writer);
+//
+//   /**
+//     * Serialize a header as a string to a particular output stream.
+//     *
+//     * @param stream
+//     */
+//   public void write(java.io.OutputStream stream);
 
    /**
-     * Serialize a header as a string to a particular output stream.
-     *
-     * @param stream
-     */
-   public void write(java.io.OutputStream stream);
-
+    * @deprecated
+    * @param path
+    * @return
+    */
     public LazyMessagePath getLazyMessagePath(String path);
+
+    
+    /**
+     * @deprecated
+     * @param path
+     * @param startIndex
+     * @param endIndex
+     * @param total
+     */
     public void addLazyMessagePath(String path, int startIndex, int endIndex, int total);
 
 
