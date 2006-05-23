@@ -89,7 +89,7 @@ public class HTMLClientServlet extends HttpServlet {
     private void aanMelden(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         ArrayList messages = null, actions = null;
-        String result;
+//        String result;
         String command;
         NavajoHTMLClient gc = null;
         Navajo tbMessage = null;
@@ -105,17 +105,26 @@ public class HTMLClientServlet extends HttpServlet {
 
         setNoCache(request, response);
         response.setContentType("text/html");
-        if (useGzipEncoding)
-          response.setHeader("Content-Encoding", "gzip");
-        java.util.zip.GZIPOutputStream gzipout = null;
-        java.io.Writer writer = null;
+        Writer out = null;
+        if (useGzipEncoding) {
+            response.setHeader("Content-Encoding", "gzip");
+            
+            OutputStream os = new java.util.zip.GZIPOutputStream(response.getOutputStream());
+            out = new OutputStreamWriter(os);
 
-        if (useGzipEncoding)
-          gzipout = new java.util.zip.GZIPOutputStream(response.getOutputStream());
-        else
-          writer = response.getWriter();
+        } else {
+            OutputStream os = new BufferedOutputStream(response.getOutputStream());
+            out = new OutputStreamWriter(os);
+            response.setContentType("text/html");
+        }
+//        java.util.zip.GZIPOutputStream gzipout = null;
+//        java.io.Writer writer = null;
 
-        response.setContentType("text/html");
+//        if (useGzipEncoding) {
+//        } else {
+//          writer = response.getWriter();
+//        }
+
 
         // Retrieve Navajo Message
         HttpSession session = request.getSession(true);
@@ -152,7 +161,7 @@ public class HTMLClientServlet extends HttpServlet {
                 //                        false, false, useCompression);
 
                 resultDoc = gc.doSimpleSend(tbMessage, navajoServer, "navajo_logon_send", "ANONYMOUS", "ANONYMOUS", -1, useCompression);
-
+                resultDoc.write(System.err);                
                 Message error = resultDoc.getMessage("error");
 
                 if (error != null) {
@@ -160,13 +169,8 @@ public class HTMLClientServlet extends HttpServlet {
                     int code = Integer.parseInt(error.getProperty("code").getValue());
                     String messageString = error.getProperty("message").getValue();
 
-                    if (useGzipEncoding) {
-                      gzipout.write("NOT AUTHORISED".getBytes());
-                      gzipout.close();
-                    } else {
-                      writer.write("NOT AUTHORISED");
-                      writer.close();
-                    }
+                    out.write("NOT AUTHORISED");
+                    out.close();
                     return;
                 }
             } catch (Exception e) {
@@ -181,7 +185,7 @@ public class HTMLClientServlet extends HttpServlet {
             return;
         } else {
             try {
-                tbMessage = NavajoFactory.getInstance().createNavajo();
+                tbMessage = NavajoFactory.getInstance("com.dexels.navajo.document.jaxpimpl.NavajoFactoryImpl").createNavajo();
 
                 gc = new NavajoHTMLClient(NavajoClient.HTTP_PROTOCOL);
 
@@ -197,17 +201,17 @@ public class HTMLClientServlet extends HttpServlet {
                 actions = resultDoc.getAllMethods();
 
                 // transform TML message to HTML format
-                result = gc.generateHTMLFromMessage(resultDoc, messages, actions, servletName, xslFile);
-
-                if (useGzipEncoding) {
-                  gzipout.write(result.getBytes());
-                  gzipout.close();
-
-                } else {
-                  writer.write(result);
-                  writer.close();
-                }
-
+                
+//                if (useGzipEncoding) {
+                    gc.generateHTMLFromMessage(resultDoc, messages, actions, servletName, xslFile,out);
+                    out.flush();
+                    out.close();
+//                } else {
+//                  
+//                    writer.write(result);
+//                  writer.close();
+//                }
+//
                 session.setAttribute("NAVAJO_MESSAGE", resultDoc);
             } catch (Exception e) {
                 throw new ServletException(e);
@@ -258,16 +262,16 @@ public class HTMLClientServlet extends HttpServlet {
         ident = (Identification) session.getAttribute("IDENT");
         tbMessage = (Navajo) session.getAttribute("NAVAJO_MESSAGE");
         //tbMessage = NavajoFactory.getInstance().createNavajo();
-
-        if ((ident == null) || (request.getParameter("command").equals("navajo_logon_send"))) {
+        if ((ident == null) && request.getParameter("command") == null) {
+            afMelden(request, response);
+            return;
+        }
+        if ((ident == null) || request.getParameter("command") == null ||(request.getParameter("command").equals("navajo_logon_send"))) {
             aanMelden(request, response);
             return;
         }
 
-        if (request.getParameter("command") == null) {
-            afMelden(request, response);
-            return;
-        }
+
 
         if (request.getParameter("command").equals("afmelden")) {
             afMelden(request, response);
@@ -279,21 +283,26 @@ public class HTMLClientServlet extends HttpServlet {
         setNoCache(request, response);
         response.setContentType("text/html");
 
-        if (useGzipEncoding)
+        if (useGzipEncoding) {
           response.setHeader("Content-Encoding", "gzip");
+        }
 
-
-        java.util.zip.GZIPOutputStream gzipout = null;
-        java.io.PrintWriter writer = null;
-
-        if (useGzipEncoding)
-            gzipout = new java.util.zip.GZIPOutputStream(response.getOutputStream());
-        else
-            writer = response.getWriter();
-              //outDoc.write(gzipout);
+//        java.util.zip.GZIPOutputStream gzipout = null;
+//        java.io.PrintWriter writer = null;
+        Writer out = null;
+        
+        if (useGzipEncoding) {
+            OutputStream outs = new java.util.zip.GZIPOutputStream(response.getOutputStream());
+            out = new OutputStreamWriter(outs);
+        } else {
+            OutputStream outs = new BufferedOutputStream(response.getOutputStream());
+            out = new OutputStreamWriter(outs);
+        }
+            //outDoc.write(gzipout);
 
         gc = new NavajoHTMLClient(NavajoClient.HTTP_PROTOCOL);
 
+         
         if (tbMessage == null) {
                 tbMessage = NavajoFactory.getInstance().createNavajo();
         } else {
@@ -304,6 +313,15 @@ public class HTMLClientServlet extends HttpServlet {
                 throw new ServletException(e);
             }
         }
+//        if (tbMessage!=null) {
+//            out.write("out message...");
+//            try {
+//            tbMessage.write(out);
+//            } catch(Exception e) {
+//                e.printStackTrace();
+//            }
+//            out.write("end of out message...");
+//        }
 
         Navajo resultDoc = null;
         if (request.getParameter("command") != null) {
@@ -324,15 +342,14 @@ public class HTMLClientServlet extends HttpServlet {
                 messages = resultDoc.getAllMessages();
                 actions = resultDoc.getAllMethods();
 
+                //
                 tbMessage.appendDocBuffer(resultDoc.getMessageBuffer());
 
                 // transform TML message to HTML format
-                result = gc.generateHTMLFromMessage(resultDoc, messages, actions, servletName, xslFile);
-                if (useGzipEncoding) gzipout.write(result.getBytes()); else writer.write(result);
+                gc.generateHTMLFromMessage(resultDoc, messages, actions, servletName, xslFile,out);
+//                if (useGzipEncoding) gzipout.write(result.getBytes()); else writer.write(result);
                 // put the whole TML message to html for debugging
-                java.io.StringWriter text = new java.io.StringWriter();
-                resultDoc.write(text);
-
+//                java.io.StringWriter text = new java.io.StringWriter();
                 String refreshJavaScriptCode =
                     "<input type='hidden' value='N' name='Refresh'>\n" +
                     "<script language='Javascript'>\n" +
@@ -343,37 +360,26 @@ public class HTMLClientServlet extends HttpServlet {
                     "}\n" +
                     "</script>";
 
-                if (useGzipEncoding) {
-
-                  //gzipout.write(refreshJavaScriptCode.getBytes());
-                  gzipout.write( (
-                      "Copyright(c) 2002 Dexels BV (Use view source to view the TML message)" +
-                      text).getBytes());
-                }
-                else {
-                  //writer.write(refreshJavaScriptCode);
-                  writer.write(
-                      "Copyright(c) 2002 Dexels BV (Use view source to view the TML message)" +
-                      text);
-                }
+                out.write("Copyright(c) 2002 Dexels BV (Use view source to view the TML message)");
+//                resultDoc.write(text);
+//                session.setAttribute("NAVAJO_MESSAGE",tbMessage);
+                
 
             } catch (NavajoException e) {
-
-                if (useGzipEncoding)
-                  gzipout.write(("An error occured: " + e).getBytes());
-                else
-                  writer.write("An error occured: " + e);
+                  out.write(("An error occured: " + e));
             }
 
         } else {
             afMelden(request, response);
         }
-        if (useGzipEncoding)
-          gzipout.close();
-        else
-          writer.close();
-
+        
+        
         // Store Navajo Messsage
         session.setAttribute("NAVAJO_MESSAGE", tbMessage);
+        out.close();
     }
+    
+//    public static void main(String[] args) {
+//        
+//    }
 }

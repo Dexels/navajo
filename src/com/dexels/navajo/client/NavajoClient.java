@@ -17,6 +17,8 @@ import javax.servlet.http.*;
 
 import com.dexels.navajo.client.serverasync.*;
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.saximpl.*;
+import com.dexels.navajo.document.types.*;
 import com.dexels.navajo.client.impl.*;
 
 //import com.dexels.navajo.client.impl.*;
@@ -447,6 +449,8 @@ public class NavajoClient implements ClientInterface {
 
     //timeStamp = System.currentTimeMillis();
 
+//    useCompression = false;
+    
     if (setSecure) {
       url = new URL("https://" + name);
     }
@@ -454,7 +458,7 @@ public class NavajoClient implements ClientInterface {
       url = new URL("http://" + name);
     }
     System.err.println("in doTransaction: opening url: " + url.toString());
-    URLConnection con = null;
+    HttpURLConnection con = null;
     if (sslFactory == null) {
       con = (HttpURLConnection) url.openConnection();
       ( (HttpURLConnection) con).setRequestMethod("POST");
@@ -467,8 +471,12 @@ public class NavajoClient implements ClientInterface {
     con.setDoOutput(true);
     con.setDoInput(true);
     con.setUseCaches(false);
-    con.setRequestProperty("Content-type", "text/xml; charset=UTF-8");
-
+ //    try {
+        con.setRequestProperty("Transfer-Encoding", "chunked" );
+        con.setChunkedStreamingMode(1000);
+//    } catch (Throwable t) {
+//        System.err.println("Streaming binary not successful. Client running in an old Java VM? (Before 1.5)");
+//    }
     // Verstuur bericht
     if (useCompression) {
       con.setRequestProperty("Accept-Encoding", "gzip");
@@ -481,8 +489,13 @@ public class NavajoClient implements ClientInterface {
     }
     else {
       try {
+          con.setRequestProperty("Content-type", "text/xml; charset=UTF-8");
         d.write(con.getOutputStream(), condensed, d.getHeader().getRPCName());
         //long tt = System.currentTimeMillis() - timeStamp;
+        FileOutputStream fos = new FileOutputStream("/tmp/aap.xml");
+        d.write(fos,condensed,d.getHeader().getRPCName());
+        fos.flush();
+        fos.close();
         //System.err.println("Sending request took: " + tt + " millisec");
         //timeStamp = System.currentTimeMillis();
       }
@@ -643,13 +656,14 @@ public class NavajoClient implements ClientInterface {
         	in = doTransaction(server, out, useCompression);
 //            if (n == null) {
                 n = NavajoFactory.getInstance().createNavajo(in);
+                n.write(System.err);
                 if (n.getHeader()!=null) {
                     n.getHeader().setAttribute("sourceScript", callingService);
                     long clientTime = (System.currentTimeMillis()-timeStamp);
                     n.getHeader().setAttribute("clientTime", ""+clientTime);
                     String tot = n.getHeader().getAttribute("serverTime");
                     long totalTime = -1;
-                    if (tot!=null) {
+                    if (tot!=null&& !"".equals(tot)) {
                     	totalTime = Long.parseLong(tot);
                     	n.getHeader().setAttribute("transferTime",""+(clientTime-totalTime));
     				} else {
@@ -813,7 +827,8 @@ public class NavajoClient implements ClientInterface {
       // Find the required messages for the given rpcName
       ArrayList req = null;
       if (checkMethod) {
-        Method dummy = message.getMethod(method);
+          System.err.println("Checking method for required. Don't know if this is working. Beware.");
+          Method dummy = message.getMethod(method);
         if (dummy != null) {
           req = dummy.getRequiredMessages();
         }
@@ -866,6 +881,7 @@ public class NavajoClient implements ClientInterface {
    * @throws NavajoException
    * @throws ClientException
    * @return Navajo
+   * @deprecated
    */
   protected final Navajo doMethod(String method, String user, String password, Navajo message, boolean secure, String keystore, String passphrase, long expirationInterval, HttpServletRequest request, boolean useCompression) throws NavajoException, ClientException {
     return doMethod(method, user, password, message, secure, keystore, passphrase, expirationInterval, request, false, useCompression);
@@ -1277,6 +1293,8 @@ public class NavajoClient implements ClientInterface {
     myActivityListeners.remove(al);
   }
 
+
+  
   /**
    * Fires an activitychange event to all listeners
    * @param b boolean
@@ -1394,25 +1412,46 @@ public class NavajoClient implements ClientInterface {
   public void setCondensed(boolean b) {
     condensed = b;
   }
-  
+
   public static void main(String[] args) throws Exception {
-	  System.setProperty("com.dexels.navajo.DocumentImplementation", "com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl");
-		
-	  NavajoClient nc = new NavajoClient();
-	  //nc.setSecure("/home/arjen/BBKY84H.keystore", "kl1p_g31t", true);
-	  Navajo out = NavajoFactory.getInstance().createNavajo();
-	  
-	  Navajo aap = nc.doSimpleSend(out, "ficus:3000/sportlink/knvb/servlet/Postman", "InitBM", "ROOT", "", -1);
-	  //out.write(System.err);
-	  //System.err.println("RESPONSE:");
-	  //aap.write(System.err);
-	  
-	  Navajo dummy = NavajoFactory.getInstance().createNavajo();
-	 
-	  BufferedInputStream stream = nc.retryTransaction("ficus:3000/sportlink/knvb/servlet/Postman", out, false, 3, 10, dummy);
-	 
-	  //Navajo aap2 = NavajoFactory.getInstance().createNavajo(stream);
-	  //aap2.write(System.err);
-	  
+      System.setProperty(SaxTester.DOC_IMPL, SaxTester.QDSAX);
+      NavajoClientFactory.getClient().setServerUrl("ficus:3000/sportlink/knvb/servlet/Postman");
+      NavajoClientFactory.getClient().setUsername("ROOT");
+      NavajoClientFactory.getClient().setPassword("");
+      
+      Navajo n = NavajoClientFactory.getClient().doSimpleSend("documents/InitUpdateDocument" );
+      Property id = n.getProperty("Document/DocumentId");
+      id.setValue("148040");
+      Navajo m = NavajoClientFactory.getClient().doSimpleSend(n,"documents/ProcessQueryDocument" );
+//      m.write(System.err);
+      Binary qddata = (Binary)m.getProperty("DocumentData/Data").getTypedValue();
+      System.err.println("NAVAJO SAVED: ");
+      
+      System.err.println("Binary size: "+qddata.getLength());
+      FileOutputStream fos = new FileOutputStream("c:/testjpg.jpg");
+      qddata.write(fos);
+      fos.flush();
+      fos.close();
+ 
   }
+  
+//  public static void main(String[] args) throws Exception {
+//	  System.setProperty("com.dexels.navajo.DocumentImplementation", "com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl");
+//		
+//	  NavajoClient nc = new NavajoClient();
+//	  //nc.setSecure("/home/arjen/BBKY84H.keystore", "kl1p_g31t", true);
+//	  Navajo out = NavajoFactory.getInstance().createNavajo();
+//	  
+//	  Navajo aap = nc.doSimpleSend(out, "ficus:3000/sportlink/knvb/servlet/Postman", "InitBM", "ROOT", "", -1);
+//	  //out.write(System.err);
+//	  //System.err.println("RESPONSE:");
+//	  //aap.write(System.err);
+//	  
+//	  Navajo dummy = NavajoFactory.getInstance().createNavajo();
+//	  BufferedInputStream stream = nc.retryTransaction("ficus:3000/sportlink/knvb/servlet/Postman", out, false, 3, 4000, dummy);
+//	  Navajo aap2 = NavajoFactory.getInstance().createNavajo(stream);
+//	  //aap2.write(System.err);
+//	  
+//  }
+
 }

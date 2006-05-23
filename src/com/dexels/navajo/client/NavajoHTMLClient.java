@@ -8,7 +8,7 @@
  */
 package com.dexels.navajo.client;
 
-import java.io.StringWriter;
+import java.io.*;
 import java.util.*;
 import java.io.StringReader;
 
@@ -18,6 +18,7 @@ import javax.xml.transform.*;
 import org.w3c.dom.Document;
 
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.base.*;
 import com.dexels.navajo.client.html.HTMLutils;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.transform.dom.DOMSource;
@@ -42,7 +43,14 @@ public class NavajoHTMLClient extends NavajoClient {
 
     // NOTE: readHTMLForm() ASSUMES THAT ALL PROPERTY NAMES MAP UNIQUELY TO FORM FIELD NAMES!!!!!
     public String readHTMLForm(Navajo tbMessage, HttpServletRequest request) throws NavajoException {
-        return HTMLutils.readHTMLForm(tbMessage, request);
+//        System.err.println("BEFORE READING FORM CREATED FORM--------------------");
+//        tbMessage.write(System.err);
+//        System.err.println("BEFORE READING FORM END OF FORM --------------------");
+        String s =  HTMLutils.readHTMLForm(tbMessage, request);
+//        System.err.println("CREATED FORM--------------------");
+//        tbMessage.write(System.err);
+//        System.err.println("END OF FORM --------------------");
+        return s;
     }
 
     private StringBuffer generateErrorMessage(Message msg) {
@@ -59,16 +67,26 @@ public class NavajoHTMLClient extends NavajoClient {
         return result;
     }
 
-    public String generateHTMLFromMessage(Navajo tbMessage,
+    /**
+     * Write everything to the supplied writer. Don't close it, and don't buffer it.
+     * @param tbMessage
+     * @param messages
+     * @param actions
+     * @param clientName
+     * @param xslFile
+     * @param out
+     * @throws NavajoException
+     */
+    public void generateHTMLFromMessage(Navajo tbMessage,
                                           ArrayList messages,
                                           ArrayList actions,
                                           String clientName,
-                                          String xslFile) throws NavajoException {
+                                          String xslFile, Writer out) throws NavajoException {
 
-        String result = "";
-        StringWriter text = new java.io.StringWriter();
+//        String result = "";
+//        StringWriter text = new java.io.StringWriter();
 
-        tbMessage.write(text);
+         tbMessage.write(out);
 
         Message errMsg = tbMessage.getMessage("error");
 
@@ -92,26 +110,45 @@ public class NavajoHTMLClient extends NavajoClient {
             // if aanvraag is filled, then only process the new TML Message, else
             // process all retrieved TML Messages
             // new StreamSource(new StringReader(elmnt.toString()))
-              StringWriter sw = new StringWriter();
+//              StringWriter sw = new StringWriter();
               Transformer  transformer =  javax.xml.transform.TransformerFactory.newInstance().newTransformer(new StreamSource(xsl));
 
               transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
               if (tbMessage.getMessageBuffer() instanceof Document)
-                transformer.transform(new DOMSource((Document) tbMessage.getMessageBuffer()), new StreamResult(sw));
+                transformer.transform(new DOMSource((Document) tbMessage.getMessageBuffer()), new StreamResult(out));
               else
-                transformer.transform(new StreamSource(new StringReader(tbMessage.toString())), new StreamResult(sw));
+//                  System.err.println("File: "+xslFile);
+//              System.err.println("STR: "+tbMessage.toString());
+//              System.err.println();
+              if (tbMessage instanceof BaseNavajoImpl) {
+                BaseNavajoImpl bni = (BaseNavajoImpl)tbMessage;
+                
+                Reader reader = bni.createReader();
+                transformer.transform(new StreamSource(reader), new StreamResult(out));
+                reader.close();
+              } else {
+                transformer.transform(new StreamSource(new StringReader(tbMessage.toString())), new StreamResult(out));
+            }
+              
 
-              result = sw.toString();
+//              result = sw.toString();
 
 
         } catch (TransformerConfigurationException e) {
+            e.printStackTrace();
             System.out.println(e);
             System.out.println("A TransformerConfigurationException occured: " + e);
         } catch (TransformerException e) {
+            e.printStackTrace();
             System.out.println(e);
             System.out.println("A TransformerException occured: " + e);
-        }
-        return result;
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } 
+        
+  
+//        return result;
     }
 }
 
