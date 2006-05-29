@@ -43,6 +43,7 @@ public abstract class LockStore {
 		return instance;
 	}
 	
+	public abstract void reset();
 	public abstract Lock addLock(Access a, LockDefinition ld) throws LocksExceeded ;
 	public abstract void removeLock(Access a, Lock l);
 	

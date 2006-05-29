@@ -160,6 +160,11 @@ public class MemoryStore extends LockStore {
 	}
 
 	public void removeLock(Access a, Lock l) {
+		
+		if ( l == null ) {
+			return;
+		}
+		
 		synchronized (VERSION) {
 			l.instanceCount--;
 			if ( l.instanceCount == 0 ) {
@@ -191,5 +196,11 @@ public class MemoryStore extends LockStore {
 		MemoryStore ms = new MemoryStore();
 		boolean b = ms.matchRequest(n1, n2, null);
 		System.err.println("b = " + b);
+	}
+
+	public void reset() {
+	
+		store.clear();
+	
 	}
 }

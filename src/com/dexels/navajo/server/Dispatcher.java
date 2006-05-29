@@ -340,7 +340,7 @@ public final class Dispatcher {
 	  try {
 		  locks = lm.grantAccess(access);
 	  } catch (LocksExceeded le) {
-		  return generateErrorMessage(access, "Could not get neccessary lock(s)", -1, -1, le);
+		  return generateErrorMessage(access, "Could not get neccessary lock(s)", SystemException.LOCKS_EXCEEDED, -1, le);
 	  }
 	  
 	  try {
@@ -467,9 +467,11 @@ public final class Dispatcher {
   private final Navajo errorHandler(Access access, Throwable e,
                                     Navajo inMessage) throws FatalException {
 
-    if (access != null) {
+	String message = "";
+    
+	if (access != null) {
       try {
-        String message = e.getClass().toString() + ": " + e.getMessage()
+        message = e.getClass().toString() + ": " + e.getMessage()
             + ", " + e.toString() + ", " + e.getLocalizedMessage();
 
         if (message.equalsIgnoreCase("")) {
@@ -499,7 +501,7 @@ public final class Dispatcher {
     }
 
     try {
-      Navajo out = generateErrorMessage(access, "System error occured", -1, 1, e);
+      Navajo out = generateErrorMessage(access, message, SystemException.SYSTEM_ERROR, 1, e);
 
       return out;
     }

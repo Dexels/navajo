@@ -11,7 +11,7 @@ package com.dexels.navajo.server;
  */
 
 public class FatalException extends Exception {
-
+	
     public FatalException(String s) {
         super(s);
     }

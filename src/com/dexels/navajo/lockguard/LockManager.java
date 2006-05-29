@@ -88,6 +88,7 @@ public class LockManager implements Runnable {
 
 		try {
 			readingDefinitions = true;
+			lockDefinitions.clear();
 			Navajo definition = (myConfig == null ? 
 					NavajoFactory.getInstance().createNavajo( new FileInputStream("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/config/locks.xml") )
 					:
@@ -122,6 +123,7 @@ public class LockManager implements Runnable {
 			AuditLog.log(AuditLog.AUDIT_MESSAGE_LOCK_MANAGER, "Could not read config file");
 		} finally {
 			readingDefinitions = false;
+			LockStore.getStore().reset();
 			setConfigTimeStamp();
 			AuditLog.log(AuditLog.AUDIT_MESSAGE_LOCK_MANAGER, "Read new lock definitions");
 			
@@ -246,7 +248,7 @@ public class LockManager implements Runnable {
 				Thread.sleep(200);
 				//System.err.print(".");
 				if ( isConfigModified() ) {
-					AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Lock definitions are modified, re-initializing");
+					AuditLog.log(AuditLog.AUDIT_MESSAGE_LOCK_MANAGER, "Lock definitions are modified, re-initializing");
 					readDefinitions();
 				}
 				//System.err.print(".");

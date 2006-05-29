@@ -23,7 +23,10 @@ public class SystemException extends Exception {
     public static final int MISSING_MESSAGE = 0x03;
     public static final int MISSING_PROPERTY = 0x04;
     public static final int MISSING_ATTRIBUTE = 0x05;
-    public static final int MISSING_ATTRIBUTE_VALUE = 0x06;
+    public static final int MISSING_ATTRIBUTE_VALUE = 0x06;	
+	public static final int SYSTEM_ERROR = 0xAA;
+	public static final int LOCKS_EXCEEDED = 0xFF;
+    
 
     public int code;
     public String message = "";
