@@ -38,6 +38,9 @@ import com.dexels.navajo.util.Util;
 import com.dexels.navajo.integrity.Worker;
 import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.loader.NavajoClassSupplier;
+import com.dexels.navajo.lockguard.Lock;
+import com.dexels.navajo.lockguard.LockManager;
+import com.dexels.navajo.lockguard.LocksExceeded;
 
 import com.dexels.navajo.logger.*;
 
@@ -317,77 +320,93 @@ public final class Dispatcher {
    * @throws Exception
    */
   private final Navajo dispatch(String handler, Navajo in, Access access,
-                                Parameters parms) throws Exception {
-
-    try {
-    	
-      Navajo out = null;
-      if (access == null) {
-        System.err.println("Null access!!!");
-      }
-
-      // Check for webservice transaction integrity.
-      out = Worker.getInstance( this ).getResponse(in);
-      if ( out != null ) {
-    	  return out;
-      }
-      
-      Class c;
-      if (access == null) {
-        c = navajoConfig.getClassloader().getClass(handler);
-      }
-      else {
-        if (access.betaUser) {
-          c = navajoConfig.getBetaClassLoader().getClass(handler);
-        }
-        else {
-          c = navajoConfig.getClassloader().getClass(handler);
-        }
-      }
-
-      c = (access.betaUser)
-          ? navajoConfig.getBetaClassLoader().getClass(handler)
-          : navajoConfig.getClassloader().getClass(handler);
-      ServiceHandler sh = (ServiceHandler) c.newInstance();
-
-      if (access.betaUser) {
-        sh.setInput(in, access, parms, navajoConfig);
-      }
-      else {
-        sh.setInput(in, access, parms, navajoConfig);
-      }
-      long expirationInterval = in.getHeader().getExpirationInterval();
-
-      // Remove password from in to create password independend persistenceKey.
-      in.getHeader().setRPCPassword("");
-      String key = null;
-      if (expirationInterval == -1) {
-        key = "";
-      }
-      else {
-        key = in.persistenceKey();
-      }
-
-      out = (Navajo) navajoConfig.getPersistenceManager().get(sh,
-    		  access.rpcName + "_" +
-    		  access.rpcUser + "_" + key, 
-    		  expirationInterval,
-    		  (expirationInterval != -1));
-      
-      // Store response for integrity checking.
-      Worker.getInstance( this ).setResponse(in, out);
-      
-      return out;
-    }
-    catch (java.lang.ClassNotFoundException cnfe) {
-      throw new SystemException( -1, cnfe.getMessage(), cnfe);
-    }
-    catch (java.lang.IllegalAccessException iae) {
-      throw new SystemException( -1, iae.getMessage(), iae);
-    }
-    catch (java.lang.InstantiationException ie) {
-      throw new SystemException( -1, ie.getMessage(), ie);
-    }
+		  Parameters parms) throws Exception {
+	  
+	  
+	  Navajo out = null;
+	  if (access == null) {
+		  System.err.println("Null access!!!");
+	  }
+	  
+	  // Check for webservice transaction integrity.
+	  out = Worker.getInstance( this ).getResponse(in);
+	  if ( out != null ) {
+		  return out;
+	  }
+	  
+	  // Check for locks.
+	  LockManager lm = LockManager.getInstance( navajoConfig );
+	  Lock [] locks = null;
+	  try {
+		  locks = lm.grantAccess(access);
+	  } catch (LocksExceeded le) {
+		  return generateErrorMessage(access, "Could not get neccessary lock(s)", -1, -1, le);
+	  }
+	  
+	  try {
+		  
+		  Class c;
+		  if (access == null) {
+			  c = navajoConfig.getClassloader().getClass(handler);
+		  }
+		  else {
+			  if (access.betaUser) {
+				  c = navajoConfig.getBetaClassLoader().getClass(handler);
+			  }
+			  else {
+				  c = navajoConfig.getClassloader().getClass(handler);
+			  }
+		  }
+		  
+		  c = (access.betaUser)
+		  ? navajoConfig.getBetaClassLoader().getClass(handler)
+				  : navajoConfig.getClassloader().getClass(handler);
+		  ServiceHandler sh = (ServiceHandler) c.newInstance();
+		  
+		  if (access.betaUser) {
+			  sh.setInput(in, access, parms, navajoConfig);
+		  }
+		  else {
+			  sh.setInput(in, access, parms, navajoConfig);
+		  }
+		  long expirationInterval = in.getHeader().getExpirationInterval();
+		  
+		  // Remove password from in to create password independend persistenceKey.
+		  in.getHeader().setRPCPassword("");
+		  String key = null;
+		  if (expirationInterval == -1) {
+			  key = "";
+		  }
+		  else {
+			  key = in.persistenceKey();
+		  }
+		  
+		  out = (Navajo) navajoConfig.getPersistenceManager().get(sh,
+				  access.rpcName + "_" +
+				  access.rpcUser + "_" + key, 
+				  expirationInterval,
+				  (expirationInterval != -1));
+		  
+		  return out;
+	  }
+	  catch (java.lang.ClassNotFoundException cnfe) {
+		  throw new SystemException( -1, cnfe.getMessage(), cnfe);
+	  }
+	  catch (java.lang.IllegalAccessException iae) {
+		  throw new SystemException( -1, iae.getMessage(), iae);
+	  }
+	  catch (java.lang.InstantiationException ie) {
+		  throw new SystemException( -1, ie.getMessage(), ie);
+	  } finally {
+		  // Store response for integrity checking.
+		  if ( out != null ) {
+			  Worker.getInstance( this ).setResponse(in, out);
+		  }
+		  // Release locks.
+		  if ( locks != null ) {
+			  lm.removeLocks(access, locks);
+		  }  
+	  }
   }
 
   /**
@@ -480,8 +499,7 @@ public final class Dispatcher {
     }
 
     try {
-      Navajo out = generateErrorMessage(access, "System error occured", -1, 1,
-                                        e);
+      Navajo out = generateErrorMessage(access, "System error occured", -1, 1, e);
 
       return out;
     }

@@ -16,6 +16,7 @@ public final class AuditLog {
 	public final static String AUDIT_MESSAGE_ASYNC_RUNNER = "AUDIT LOG (Async Runner): ";
 	public final static String AUDIT_MESSAGE_STAT_RUNNER = "AUDIT LOG (Statistics Runner): ";
 	public final static String AUDIT_MESSAGE_INTEGRITY_WORKER = "AUDIT LOG (Integrity Worker): ";
+	public final static String AUDIT_MESSAGE_LOCK_MANAGER = "AUDIT LOG (Locking Manager): ";
 
 	public final static void log(String subsystem, String message) {
 		System.err.println(subsystem + message);
