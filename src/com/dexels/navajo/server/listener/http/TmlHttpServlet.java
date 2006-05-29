@@ -4,12 +4,7 @@ import java.io.*;
 import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
-
-import org.apache.log4j.*;
-import org.apache.log4j.xml.*;
-import org.w3c.dom.*;
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.jaxpimpl.xml.*;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.ClientInfo;
@@ -37,7 +32,7 @@ public final class TmlHttpServlet extends HttpServlet {
 
   private String configurationPath = "";
 
-  private final static Logger logger = Logger.getLogger(TmlHttpServlet.class);
+  //private final static Logger logger = Logger.getLogger(TmlHttpServlet.class);
 
   public static int threadCount = 0;
   public static int maxThreadCount = 75;
@@ -99,35 +94,10 @@ public final class TmlHttpServlet extends HttpServlet {
     }
     //System.out.println("configurationPath = " + configurationPath);
 
-    // get logger configuration as DOM
-    Document configDOM = null;
-    try {
-      configDOM = XMLDocumentUtils.createDocument(new java.net.URL(configurationPath).openStream(), false);
-    }
-    catch (Exception e) {
-      throw new ServletException(e);
-    }
-
-    Navajo configFile = new com.dexels.navajo.document.jaxpimpl.NavajoImpl(configDOM);
-    //NavajoFactory.getInstance().createNavajo(configDOM);
-    Message m = configFile.getMessage("server-configuration/parameters");
-
-    Element loggerConfig =
-        (Element) configDOM.getElementsByTagName("log4j:configuration").item(0);
-
-    if (loggerConfig == null) {
-      ServletException e =
-          new ServletException(
-          "logging subsystem log4j is not configured, check server.xml");
-      throw (e);
-    }
-    DOMConfigurator.configure(loggerConfig);
-
-    logger.log(Priority.INFO, "started logging");
   }
 
   public void destroy() {
-    logger.log(Priority.INFO, "In TmlHttpServlet destroy()");
+    System.err.println("In TmlHttpServlet destroy()");
   }
 
   public void finalize() {
@@ -215,7 +185,7 @@ public final class TmlHttpServlet extends HttpServlet {
     System.err.println("in callDirect(): service = " + service + ", username = " + username);
 
     if (service == null) {
-      logger.log(Priority.FATAL, "Empty service specified, request originating from " + request.getRemoteHost());
+      
       System.err.println("Empty service specified, request originating from " + request.getRemoteHost());
       System.err.println("thread = " + Thread.currentThread().hashCode());
       System.err.println("path = " + request.getPathInfo());
@@ -239,7 +209,7 @@ public final class TmlHttpServlet extends HttpServlet {
     }
 
     if (username == null) {
-      logger.log(Priority.FATAL, "Empty service specified, request originating from " + request.getRemoteHost());
+      //logger.log(Priority.FATAL, "Empty service specified, request originating from " + request.getRemoteHost());
       System.err.println("Empty service specified, request originating from " + request.getRemoteHost());
       return;
     }
@@ -287,7 +257,8 @@ public final class TmlHttpServlet extends HttpServlet {
       Navajo resultMessage = dis.handle(tbMessage);
       //System.err.println(resultMessage.toString());
       //resultMessage.write(out);
-      out.write(resultMessage.toString());
+      resultMessage.write(out);
+      
     }
     catch (Exception ce) {
       ce.printStackTrace();
@@ -395,10 +366,10 @@ public final class TmlHttpServlet extends HttpServlet {
       int pT = (int) (stamp - start);
 
       if (in == null) {
-        logger.log(Priority.WARN,
-                   "POSSIBLE SECURITY VIOLATION: INVALID REQUEST FROM " +
-                   request.getRemoteHost() + "(" + request.getRemoteAddr() +
-                   "); " + request.getRemoteUser());
+//        logger.log(Priority.WARN,
+//                   "POSSIBLE SECURITY VIOLATION: INVALID REQUEST FROM " +
+//                   request.getRemoteHost() + "(" + request.getRemoteAddr() +
+//                   "); " + request.getRemoteUser());
         throw new ServletException("Invalid request.");
       }
 
@@ -436,17 +407,17 @@ public final class TmlHttpServlet extends HttpServlet {
 
     }
     catch (FatalException e) {
-      logger.log(Priority.INFO,
-                 "Received request from " + request.getRemoteAddr() +
-                 ": invalid request");
-      logger.log(Priority.FATAL, e.getMessage());
+//      logger.log(Priority.INFO,
+//                 "Received request from " + request.getRemoteAddr() +
+//                 ": invalid request");
+//      logger.log(Priority.FATAL, e.getMessage());
       throw new ServletException(e);
     }
     catch (NavajoException te) {
-      logger.log(Priority.INFO,
-                 "Received request from " + request.getRemoteAddr() +
-                 "): invalid request");
-      logger.log(Priority.ERROR, te.getMessage());
+//      logger.log(Priority.INFO,
+//                 "Received request from " + request.getRemoteAddr() +
+//                 "): invalid request");
+//      logger.log(Priority.ERROR, te.getMessage());
       throw new ServletException(te);
     }
     finally {
