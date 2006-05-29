@@ -40,22 +40,58 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.integrity.Worker;
 import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.util.AuditLog;
 
 public class LockManager implements Runnable {
 
 	public static final String VERSION = "$Id$";
 	
-	static Map lockDefinitions = Collections.synchronizedMap( new HashMap() );
+	Map lockDefinitions = Collections.synchronizedMap( new HashMap() );
 	static LockManager instance = null;
-	static boolean readingDefinitions = true;
+	boolean readingDefinitions = true;
+	private long configTimestamp = -1;
+	private NavajoConfig myConfig;
+	
+	private final static String LOCKS_CONFIG = "locks.xml";
+	
+	private long getConfigTimeStamp() {
+		if ( myConfig != null ) {
+			java.io.File f = new java.io.File(myConfig.getConfigPath() + "/" + LOCKS_CONFIG);
+			if ( f != null && f.exists() ) {
+				return f.lastModified();
+			}
+		} else {
+			java.io.File f = new java.io.File("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/config/locks.xml");
+			if ( f != null && f.exists() ) {
+				return f.lastModified();
+			}
+		}
+		return -1;
+	}
+	
+	private void setConfigTimeStamp() {
+		configTimestamp = getConfigTimeStamp();
+	}
+	
+	private boolean isConfigModified() {
+		if ( configTimestamp != getConfigTimeStamp() && getConfigTimeStamp() != -1 ) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 	
 	private void readDefinitions() {
 
-		System.err.println("Reading lock definitions");
 		try {
 			readingDefinitions = true;
-			Navajo definition = NavajoFactory.getInstance().createNavajo( new FileInputStream("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/config/locks.xml") );
+			Navajo definition = (myConfig == null ? 
+					NavajoFactory.getInstance().createNavajo( new FileInputStream("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/config/locks.xml") )
+					:
+				    NavajoFactory.getInstance().createNavajo( new FileInputStream(myConfig.getConfigPath() + "/" + LOCKS_CONFIG) )
+				    );
+					
 			ArrayList all = definition.getMessage("Locks").getAllMessages();
 			for ( int i = 0; i < all.size(); i++ ) {
 				Message lock = (Message) all.get(i);
@@ -65,7 +101,7 @@ public class LockManager implements Runnable {
 				int maxInstance = ((Integer) lock.getProperty("MaxInstanceCount").getTypedValue()).intValue();
 				int timeOut = ((Integer) lock.getProperty("TimeOut").getTypedValue()).intValue();
 				HashMap excludeMessages = new HashMap();
-				if ( matchRequest ) {
+				if ( matchRequest && lock.getMessage("ExcludedMessages") != null ) {
 					ArrayList excludedMessagesList = lock.getMessage("ExcludedMessages").getAllMessages();
 					for (int j = 0; j < excludedMessagesList.size(); j++) {
 						Message ex = (Message) excludedMessagesList.get(j);
@@ -81,13 +117,17 @@ public class LockManager implements Runnable {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			setConfigTimeStamp();
+			AuditLog.log(AuditLog.AUDIT_MESSAGE_LOCK_MANAGER, "Read new lock definitions");
+			
 		}
-		
 	}
 	
-	public static LockManager getInstance() {
+	public static LockManager getInstance(NavajoConfig config) {
 		if ( instance == null ) {
 			instance = new LockManager();
+			instance.myConfig = config;
 			
 			Thread thread = new Thread(instance);
 			thread.setDaemon(true);
@@ -105,7 +145,7 @@ public class LockManager implements Runnable {
 	 */
 	public Lock [] grantAccess(Access a) throws LocksExceeded {
 		
-		while ( ! readingDefinitions ) {
+		while ( readingDefinitions ) {
 			// Wait
 			try {
 				Thread.sleep(100);
@@ -157,7 +197,7 @@ public class LockManager implements Runnable {
 		m2.addProperty(p2);
 		
 		// Test.
-		LockManager lm = LockManager.getInstance();
+		LockManager lm = LockManager.getInstance(null);
 		Access a = new Access(1, 1, 2, "arjen", "ProcessWhatever", "", "", "", null);
 		a.setInDoc(n1);
 		
@@ -180,20 +220,33 @@ public class LockManager implements Runnable {
 				System.err.println(locks2[i]);
 			}
 		}
+		
+		while ( true ) {
+			Thread.sleep(10000);
+		}
 	}
 
 	public void run() {
 		
 		readDefinitions();
-		AuditLog.log(AuditLog.AUDIT_MESSAGE_LOCK_MANAGER, "Started integrity worker $Id$");
+		AuditLog.log(AuditLog.AUDIT_MESSAGE_LOCK_MANAGER, "Started locking manager $Id$");
 		
 		while ( true ) {
 			try {
-				Thread.sleep(50);
+				Thread.sleep(200);
+				System.err.print(".");
+				if ( isConfigModified() ) {
+					AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Lock definitions are modified, re-initializing");
+					readDefinitions();
+				}
+				System.err.print(".");
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				AuditLog.log(AuditLog.AUDIT_MESSAGE_LOCK_MANAGER, "Stopped locking mananger $Id$");
 			}
 		}
+		
+		
 	}
 }
