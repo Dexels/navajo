@@ -17,6 +17,7 @@ import javax.servlet.http.*;
 
 import com.dexels.navajo.client.serverasync.*;
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.base.BaseHeaderImpl;
 import com.dexels.navajo.document.saximpl.*;
 import com.dexels.navajo.document.types.*;
 import com.dexels.navajo.client.impl.*;
@@ -653,10 +654,11 @@ public class NavajoClient implements ClientInterface {
         Navajo n = null;
         try {
         	long timeStamp = System.currentTimeMillis();
+        	
         	in = doTransaction(server, out, useCompression);
 //            if (n == null) {
                 n = NavajoFactory.getInstance().createNavajo(in);
-                n.write(System.err);
+                
                 if (n.getHeader()!=null) {
                     n.getHeader().setAttribute("sourceScript", callingService);
                     long clientTime = (System.currentTimeMillis()-timeStamp);
