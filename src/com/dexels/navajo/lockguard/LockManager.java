@@ -118,7 +118,8 @@ public class LockManager implements Runnable {
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
+			AuditLog.log(AuditLog.AUDIT_MESSAGE_LOCK_MANAGER, "Could not read config file");
 		} finally {
 			readingDefinitions = false;
 			setConfigTimeStamp();
