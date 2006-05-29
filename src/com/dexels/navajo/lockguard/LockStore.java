@@ -68,7 +68,8 @@ public abstract class LockStore {
 					
 					if ( excludeProperties == null || !excludeProperties.equals("*") ) {
 						if ( otherRequest.getMessage( m.getName() ) == null || 
-								!m.isEqual( otherRequest.getMessage( m.getName() ), excludeProperties ) ) {
+								!m.isEqual( otherRequest.getMessage( m.getName() ), 
+										(excludeProperties != null ? excludeProperties : "") ) ) {
 							return false;
 						}
 					}

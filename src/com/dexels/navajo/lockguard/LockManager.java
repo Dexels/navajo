@@ -50,7 +50,7 @@ public class LockManager {
 		lockDefinitions.put( new Integer(ld.id), ld);
 		HashMap excludeMessages = new HashMap();
 		excludeMessages.put("Aap", "Mies");
-		LockDefinition ld2 = new LockDefinition("ProcessWhatever", true, true, excludeMessages, 0, 1);
+		LockDefinition ld2 = new LockDefinition("ProcessWhatever", false, true, excludeMessages, 0, 1);
 		lockDefinitions.put( new Integer(ld2.id), ld2);
 	}
 	
@@ -125,9 +125,9 @@ public class LockManager {
 		
 		// Simulate another access.
 		System.err.println("ANOTHER REQUEST: \n");
-		Access a2 = new Access(1, 1, 2, "arjen", "ProcessWhatever", "", "", "", null);
-		a.setInDoc(n2);
-		Lock [] locks2 = lm.grantAccess( a );
+		Access a2 = new Access(2, 2, 2, "pipo", "ProcessWhatever", "", "", "", null);
+		a2.setInDoc(n2);
+		Lock [] locks2 = lm.grantAccess( a2 );
 		
 		if ( locks2 != null ) {
 			for (int i = 0 ; i < locks2.length; i++ ) {
