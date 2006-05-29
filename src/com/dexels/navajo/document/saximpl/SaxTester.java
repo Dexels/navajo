@@ -60,6 +60,7 @@ public class SaxTester {
         n.write(System.err);
         fis.close();
         System.err.println("time: "+(System.currentTimeMillis()-current));
+        System.err.flush();
 
     }
 

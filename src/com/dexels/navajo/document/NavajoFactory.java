@@ -456,7 +456,7 @@ public abstract class NavajoFactory {
    * @param total long
    */
   public void fireBinaryProgress(String service, long progress, long total) {
-      System.err.println("Binary: "+service+" prog: "+progress+" total: "+total);
+//      System.err.println("Binary: "+service+" prog: "+progress+" total: "+total);
            for (int i = 0; i < myBinaryActivityListeners.size(); i++) {
       BinaryProgressListener current = (BinaryProgressListener) myBinaryActivityListeners.get(i);
       current.fireBinaryProgress(service,progress,total);

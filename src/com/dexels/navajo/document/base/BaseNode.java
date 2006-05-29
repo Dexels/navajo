@@ -101,9 +101,9 @@ public abstract class BaseNode implements java.io.Serializable{
               child.printElement(sw,indent+INDENT);
           }
           if (hasText) {
-              System.err.println("*******************                                    Text PRESENT");
+//              System.err.println("*******************                                    Text PRESENT");
             writeText(sw);
-            System.err.println("Text written...");
+//            System.err.println("Text written...");
           }
           if (hasText || hasChildren) {
               for (int a = 0; a < indent; a++) {
@@ -126,11 +126,11 @@ public abstract class BaseNode implements java.io.Serializable{
 
   public void write(OutputStream stream) throws NavajoException {
       try {
-          System.err.println("Writing to stream impl: "+stream.getClass());
+//          System.err.println("Writing to stream impl: "+stream.getClass());
            OutputStreamWriter osw = new OutputStreamWriter(stream,"UTF-8");
           printElement(osw,0);
           osw.flush();
-          System.err.println("Writing to stream finished");
+//          System.err.println("Writing to stream finished");
       } catch (IOException e) {
           throw new NavajoExceptionImpl(e);
       }

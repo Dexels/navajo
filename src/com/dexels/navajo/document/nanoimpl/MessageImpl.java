@@ -85,7 +85,7 @@ public class MessageImpl
       }
     }
 
-    Message parent = getParentMessage();
+    Message parent = getArrayParentMessage();
     Message def = null;
     if (parent!=null ) {
       def = parent.getDefinitionMessage();

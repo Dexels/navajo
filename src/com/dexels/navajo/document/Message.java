@@ -60,6 +60,10 @@ public interface Message
   /**
    * Returns the parent of the message, even if it is an array message.
    * in nano it is exactly the same as getParentMessage.
+   * UPDATE:
+   * I changed the behaviour of getParentMessage in SAX/NANO to coincide with JAXP.
+   * I replaced all occurrences of getParentMessage with getArrayParentMessagein client 
+   * code.
    * @return Message,  the parent of this Message, null if no parent is present
    */
   public Message getArrayParentMessage();

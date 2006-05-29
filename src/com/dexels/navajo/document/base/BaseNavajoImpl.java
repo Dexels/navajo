@@ -334,11 +334,11 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
       ArrayList otherMsgs = other.getAllMessages();
       ArrayList myMsgs = this.getAllMessages();
 
-      System.err.println("-----------------");
-      this.write(System.err);
-      System.err.println("-----------------");
-      o.write(System.err);
-      System.err.println("-----------------");
+//      System.err.println("-----------------");
+//      this.write(System.err);
+//      System.err.println("-----------------");
+//      o.write(System.err);
+//      System.err.println("-----------------");
 
 
       if (otherMsgs.size() != myMsgs.size()){
@@ -420,10 +420,11 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
   }
 
 public String writeDocument(String filename) {
-     return null;
+    throw new UnsupportedOperationException("Oh please. writeDocument is SO five years ago");
 }
 
 public void writeMessage(String name, String filename) throws NavajoException {
+    throw new UnsupportedOperationException("Oh please. writeMessage is SO five years ago");
 }
 
 /**

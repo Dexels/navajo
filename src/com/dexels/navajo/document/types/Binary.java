@@ -31,9 +31,9 @@ public final class Binary extends NavajoType {
     private String mimetype = "";
 
     private File dataFile = null;
-
     private File lazySourceFile = null;
-
+    private InputStream lazyInputStream = null;
+    
     public final static String MSEXCEL = "application/msexcel";
 
     public final static String MSWORD = "application/msword";
@@ -54,14 +54,22 @@ public final class Binary extends NavajoType {
      *            InputStream
      */
     public Binary(InputStream is) {
-       super(Property.BINARY_PROPERTY);
-         try {
-            loadBinaryFromStream(is);
-        } catch (Exception e) {
-            e.printStackTrace(System.err);
-        }
+        this(is,false);
     }
 
+    public Binary(InputStream is, boolean lazy) {
+        super(Property.BINARY_PROPERTY);
+        if (lazy) {
+            lazyInputStream = is;
+        } else {
+            try {
+                loadBinaryFromStream(is);
+            } catch (Exception e) {
+                e.printStackTrace(System.err);
+            }
+        }
+     }    
+    
     private void loadBinaryFromStream(InputStream is) throws IOException, FileNotFoundException {
         int b = -1;
         dataFile = File.createTempFile("binary_object", "navajo");
@@ -196,7 +204,7 @@ public final class Binary extends NavajoType {
         while ((read = in.read()) > -1) {
             progress ++;
             iterations++;
-            if (iterations % 1000 == 0) {
+            if (iterations % 100 == 0) {
                 NavajoFactory.getInstance().fireBinaryProgress("Reading data", progress, expectedLength);
             }
              if (read == '<') {
@@ -285,11 +293,11 @@ public final class Binary extends NavajoType {
     }
 
     /**
-     * Gues the internal data's mimetype
+     * Guess the internal data's mimetype
      * 
      * @return String
      */
-    protected final String guessContentType() {
+    public final String guessContentType() {
         if (mimetype != null && !mimetype.equals("")) {
             return mimetype;
         } else {

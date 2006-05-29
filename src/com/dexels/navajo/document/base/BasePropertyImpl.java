@@ -4,6 +4,8 @@ import java.util.*;
 import java.io.*;
 import java.net.*;
 
+import javax.swing.tree.*;
+
 import com.dexels.navajo.document.*;
 
 import org.dexels.utils.Base64;
@@ -22,7 +24,7 @@ import com.dexels.navajo.document.types.*;
 
 public class BasePropertyImpl
     extends BaseNode
-    implements Property, Comparable {
+    implements Property, Comparable, TreeNode {
   protected String myName;
   protected String myValue = null;
   private Binary myObject = null;
@@ -266,7 +268,7 @@ public class BasePropertyImpl
 // This, of course, only works for array message with a definition message present.
 
         if (myParent != null) {
-          Message pp = myParent.getParentMessage();
+          Message pp = myParent.getArrayParentMessage();
           if (pp != null && Message.MSG_TYPE_ARRAY.equals(pp.getType())) {
             Message def = pp.getDefinitionMessage();
             if (def != null) {
@@ -1359,13 +1361,29 @@ public List getChildren() {
 public Object getRef() {
     throw new UnsupportedOperationException("getRef not possible on base type");
 }
+public Property cloneWithoutValue() {
+    if (isListType) {
+        return new BasePropertyImpl(getRootDoc(),getName(),cardinality,getDescription(),getDirection());
+    } else {
+        return new BasePropertyImpl(getRootDoc(),getName(),getType(),null,getLength(), getDescription(),getDirection());
+   }
+ }
 
 public Object clone(String newName) {
-    throw new UnsupportedOperationException("Can not clone properties (yet)");
+    Property p = cloneWithoutValue();
+    p.setName(newName);
+    return p;
 }
 
 public Object clone() {
-    throw new UnsupportedOperationException("Can not clone properties (yet)");
+    Property p = cloneWithoutValue();
+    p.setName(getName());
+    if (BINARY_PROPERTY.equals(p.getType())) {
+        p.setValue(myBinary);
+    } else {
+        p.setValue(getValue());
+    } 
+    return p;
 }
 
 
@@ -1383,5 +1401,18 @@ public void writeText(Writer w) throws IOException {
 public boolean hasTextNode() {
     return myBinary!=null;
 }
+
+public TreeNode getChildAt(int childIndex) {
+    return null;
+}
+
+public TreeNode getParent() {
+    return (TreeNode)getParentMessage();
+}
+
+public int getIndex(TreeNode node) {
+    return 0;
+}
+
 
 }

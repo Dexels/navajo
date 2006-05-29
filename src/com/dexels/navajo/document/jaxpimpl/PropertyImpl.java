@@ -1164,4 +1164,13 @@ public final class PropertyImpl implements Property, Comparable {
 	   p.setValue(sels);
 	   n.write(System.err);
    }
+
+   /**
+    * Not exactly beautiful but it will do for jaxp
+    */
+public Property cloneWithoutValue() {
+    Property p = (Property)clone();
+    p.setValue((String)null);
+    return p;
+}
 }

@@ -484,5 +484,10 @@ public interface Property
    * @param Object value
    */
   public void setAnyValue(Object o);
+/**
+ * Clones the Property, only it ignores the value
+ * @return
+ */
+public Property cloneWithoutValue();
 
 }
