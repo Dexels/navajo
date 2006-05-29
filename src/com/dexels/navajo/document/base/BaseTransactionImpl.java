@@ -31,8 +31,9 @@ protected String myRequestId;
           m.put("rpc_pwd", rpc_pwd);
       }
       if (myRequestId!=null) {
-          m.put("requestId", myRequestId);
+          m.put("requestid", myRequestId);
       }
+      //System.err.println("m = " + m);
       return m;
   }
 

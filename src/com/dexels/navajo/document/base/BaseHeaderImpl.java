@@ -332,6 +332,7 @@ public static void main (String [] args) throws Exception {
 
 public void setRequestId(String id) {
     if (myTransaction!=null) {
+    	//System.err.println("in setRequestId(" + id + ")");
         myTransaction.setRequestId(id);
     }
 }
