@@ -821,7 +821,6 @@ public final class Dispatcher {
             access.compressedSend = clientInfo.isCompressedSend();
             access.contentLength = clientInfo.getContentLength();
             access.created = clientInfo.getCreated();
-            access.threadCount = clientInfo.threadCount;
           }
         }
         catch (AuthorizationException ex) {
@@ -873,7 +872,8 @@ public final class Dispatcher {
                                           startAuth);
         accessSet.add(access);
         access.setMyDispatcher(this);
-
+        access.setThreadCount(accessSet.size());
+        
         // Check for lazy message control.
         access.setLazyMessages(header.getLazyMessages());
 
@@ -1021,7 +1021,7 @@ public final class Dispatcher {
                                   clientInfo.isCompressedSend() : false);
           dummy.contentLength = (clientInfo != null ?
                                  clientInfo.getContentLength() : 0);
-          dummy.threadCount = (clientInfo != null ? clientInfo.threadCount : 0);
+          dummy.threadCount = (clientInfo != null ? accessSet.size() : 0);
           getNavajoConfig().getStatisticsRunner().addAccess(dummy, myException);
         }
       }
