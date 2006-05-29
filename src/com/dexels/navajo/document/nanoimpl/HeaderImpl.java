@@ -188,4 +188,8 @@ public Object getRef() {
 public final void writeComponent(Writer w) throws IOException {
     toXml().write(w);
 }
+
+public void setRequestId(String id) {
+	myRequestId = id;
+}
 }
