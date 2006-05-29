@@ -14,6 +14,7 @@ import java.util.*;
 
 public abstract class NavajoFactory {
   protected static NavajoFactory impl = null;
+  protected static HashMap alternativeFactories = new HashMap();
   protected Map defaultSubTypes = new HashMap();
   protected final ArrayList myBinaryActivityListeners = new ArrayList();
 
@@ -50,21 +51,26 @@ public abstract class NavajoFactory {
    * @return NavajoFactory instance
    */
   public static NavajoFactory getInstance(String className) {
-      if (impl!=null) {
-        String cls = impl.getClass().getName();
-        if (!(className.equals(cls))) {
-            System.err.println("NavajoFactory Warning: Getting instance, but current instance if different. Use resetImplementation.");
-        }
-        return impl;
-        
-    }
-    try {
-      return (NavajoFactory) Class.forName(className).newInstance();
-    }
-    catch (Exception e) {
-      e.printStackTrace();
-      return null;
-    }
+	  if (alternativeFactories.get(className) != null) {
+		  
+		  if ( impl != null ) {
+			  String cls = impl.getClass().getName();
+			  if (!(className.equals(cls))) {
+				  System.err.println("NavajoFactory Warning: Getting instance, but current instance if different. Use resetImplementation.");
+			  }
+		  }
+		  return (NavajoFactory) alternativeFactories.get(className);
+		  
+	  }
+	  try {
+		  NavajoFactory alt = (NavajoFactory) Class.forName(className).newInstance();
+		  alternativeFactories.put(className, alt);
+		  return alt;
+	  }
+	  catch (Exception e) {
+		  e.printStackTrace();
+		  return null;
+	  }
   }
 
   /**
