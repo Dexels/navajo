@@ -115,11 +115,12 @@ public class LockManager implements Runnable {
 				LockDefinition ld = new LockDefinition(ws, matchUsername, matchRequest, excludeMessages, timeOut, maxInstance);
 				lockDefinitions.put( new Integer(ld.id), ld );
 			}
-			readingDefinitions = false;
+			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
+			readingDefinitions = false;
 			setConfigTimeStamp();
 			AuditLog.log(AuditLog.AUDIT_MESSAGE_LOCK_MANAGER, "Read new lock definitions");
 			
