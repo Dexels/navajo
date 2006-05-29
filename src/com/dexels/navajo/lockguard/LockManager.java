@@ -137,6 +137,12 @@ public class LockManager implements Runnable {
 		return instance;
 	}
 	
+	public void removeLocks(Access a, Lock [] allLocks) {
+		for (int i = 0; i < allLocks.length; i++ ) {
+			LockStore.getStore().removeLock(a, allLocks[i]);
+		}
+	}
+	
 	/**
 	 * Return all locks set by this access.
 	 * 

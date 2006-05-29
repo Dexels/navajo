@@ -59,14 +59,16 @@ public class MemoryStore extends LockStore {
 	 */
 	public Lock addLock(Access a, LockDefinition ld) throws LocksExceeded {
 		
-		Lock hl = getLock(a, ld);
-		
-		if ( hl != null ) {
-			if ( hl.instanceCount >= ld.maxInstanceCount ) {
-				throw new LocksExceeded();
-			} else {
-				hl.instanceCount++;
-				return hl;
+		synchronized (VERSION) {
+			Lock hl = getLock(a, ld);
+			
+			if ( hl != null ) {
+				if ( hl.instanceCount >= ld.maxInstanceCount ) {
+					throw new LocksExceeded();
+				} else {
+					hl.instanceCount++;
+					return hl;
+				}
 			}
 		}
 		
@@ -158,12 +160,14 @@ public class MemoryStore extends LockStore {
 	}
 
 	public void removeLock(Access a, Lock l) {
-		l.instanceCount--;
-		if ( l.instanceCount == 0 ) {
-			Set relevantLocks = (Set) store.get( new Integer(l.lockId) );
-			relevantLocks.remove( l );
-			if ( relevantLocks.size() == 0 ) {
-				store.remove(relevantLocks);
+		synchronized (VERSION) {
+			l.instanceCount--;
+			if ( l.instanceCount == 0 ) {
+				Set relevantLocks = (Set) store.get( new Integer(l.lockId) );
+				relevantLocks.remove( l );
+				if ( relevantLocks.size() == 0 ) {
+					store.remove(relevantLocks);
+				}
 			}
 		}
 	}
