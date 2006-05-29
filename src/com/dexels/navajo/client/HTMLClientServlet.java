@@ -161,7 +161,7 @@ public class HTMLClientServlet extends HttpServlet {
                 //                        false, false, useCompression);
 
                 resultDoc = gc.doSimpleSend(tbMessage, navajoServer, "navajo_logon_send", "ANONYMOUS", "ANONYMOUS", -1, useCompression);
-                resultDoc.write(System.err);                
+                //resultDoc.write(System.err);                
                 Message error = resultDoc.getMessage("error");
 
                 if (error != null) {
@@ -185,8 +185,8 @@ public class HTMLClientServlet extends HttpServlet {
             return;
         } else {
             try {
-                tbMessage = NavajoFactory.getInstance("com.dexels.navajo.document.jaxpimpl.NavajoFactoryImpl").createNavajo();
-
+                tbMessage = NavajoFactory.getInstance().createNavajo();
+                
                 gc = new NavajoHTMLClient(NavajoClient.HTTP_PROTOCOL);
 
                 //resultDoc = gc.doMethod("navajo_logon", "ANONYMOUS", "ANONYMOUS", tbMessage, navajoServer, false, "", "", -1, request,
@@ -195,7 +195,7 @@ public class HTMLClientServlet extends HttpServlet {
                 //System.err.println("BEFORE CALLING navajo_logon");
 
                 resultDoc = gc.doSimpleSend(tbMessage, navajoServer, "navajo_logon", "ANONYMOUS", "ANONYMOUS", -1, useCompression);
-
+ 
                 //System.err.println("AFTER CALLING navajo_logon");
                 messages = resultDoc.getAllMessages();
                 actions = resultDoc.getAllMethods();

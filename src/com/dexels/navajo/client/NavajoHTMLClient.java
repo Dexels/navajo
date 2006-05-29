@@ -86,8 +86,9 @@ public class NavajoHTMLClient extends NavajoClient {
 //        String result = "";
 //        StringWriter text = new java.io.StringWriter();
 
-         tbMessage.write(out);
-
+        tbMessage.write(out);
+        
+    	
         Message errMsg = tbMessage.getMessage("error");
 
         if (errMsg != null) {               // Format error message for HTML usage. Replace \n with </BR>
