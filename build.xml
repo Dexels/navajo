@@ -38,6 +38,8 @@
         <include name="${document.base}/lazy/**/*.class"/>
         <include name="${document.base}/typecheck/**/*.class"/>
         <include name="${document.base}/types/**/*.class"/>
+        <include name="${document.base}/base/**/*.class"/>
+        <include name="${document.base}/saximpl/**/*.class"/>
       </fileset>
       <fileset dir="${build}">
         <include name="${navajo.base}/nanoclient/**/*.class"/>
@@ -60,7 +62,8 @@
         <include name="${document.base}/lazy/**/*.class"/>
         <include name="${document.base}/typecheck/**/*.class"/>
         <include name="${document.base}/types/**/*.class"/>
-      </fileset>
+        <include name="${document.base}/base/**/*.class"/>
+     </fileset>
       <fileset dir="${build}">
         <include name="${navajo.base}/nanoclient/**/*.class"/>
       </fileset>
