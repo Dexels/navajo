@@ -60,6 +60,8 @@ public class LockManager implements Runnable {
 			java.io.File f = new java.io.File(myConfig.getConfigPath() + "/" + LOCKS_CONFIG);
 			if ( f != null && f.exists() ) {
 				return f.lastModified();
+			} else {
+				return 0;
 			}
 		} else {
 			java.io.File f = new java.io.File("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/config/locks.xml");
@@ -240,12 +242,12 @@ public class LockManager implements Runnable {
 		while ( true ) {
 			try {
 				Thread.sleep(200);
-				System.err.print(".");
+				//System.err.print(".");
 				if ( isConfigModified() ) {
 					AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Lock definitions are modified, re-initializing");
 					readDefinitions();
 				}
-				System.err.print(".");
+				//System.err.print(".");
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
