@@ -243,7 +243,6 @@ public class LockManager implements Runnable {
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-				AuditLog.log(AuditLog.AUDIT_MESSAGE_LOCK_MANAGER, "Stopped locking mananger $Id$");
 			}
 		}
 		
