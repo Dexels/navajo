@@ -48,6 +48,8 @@ import java.util.StringTokenizer;
  */
 public class LockDefinition {
 	
+	public static final String VERSION = "$Id$";
+	
 	public static int sequence = 0;
 	
 	/**

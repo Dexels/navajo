@@ -42,6 +42,8 @@ import com.dexels.navajo.server.Access;
 
 public class MemoryStore extends LockStore {
 
+	public static final String VERSION = "$Id$";
+	
 	// store contains lock sets per id.
 	// 0: l1, l2, l3
 	// 1: l1

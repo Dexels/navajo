@@ -28,6 +28,8 @@ import com.dexels.navajo.document.Navajo;
 
 public class Lock {
 
+	public static final String VERSION = "$Id$";
+	
 	public int lockId;
 	public int instanceCount;
 	public String username;

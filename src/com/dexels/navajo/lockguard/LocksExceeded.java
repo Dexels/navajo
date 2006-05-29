@@ -25,5 +25,7 @@
 package com.dexels.navajo.lockguard;
 
 public class LocksExceeded extends Exception {
-
+	
+	public static final String VERSION = "$Id$";
+	
 }

@@ -40,6 +40,8 @@ import com.dexels.navajo.server.Access;
 
 public class LockManager {
 
+	public static final String VERSION = "$Id$";
+	
 	static Map lockDefinitions = Collections.synchronizedMap( new HashMap() );
 	static LockManager instance = null;
 	

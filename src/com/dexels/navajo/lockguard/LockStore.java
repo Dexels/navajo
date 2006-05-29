@@ -32,6 +32,8 @@ import com.dexels.navajo.server.Access;
 
 public abstract class LockStore {
 
+	public static final String VERSION = "$Id$";
+	
 	private static LockStore instance = null;
 	
 	public static LockStore getStore() {
