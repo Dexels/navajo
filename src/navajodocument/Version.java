@@ -33,22 +33,35 @@ package navajodocument;
  *
  * 8.2.21 Added StopwatchTime type property
  *
-* 8.2.22 Fixed bug in StopwatchTime type property
-*
-* 8.2.23 ...
-* 
-* 8.2.24 ...
-*
-* 8.2.25 Added request id to header
+ * 8.2.22 Fixed bug in StopwatchTime type property
+ *
+ * 8.2.23 ...
+ * 
+ * 8.2.24 ...
+ *
+ * 8.2.25 Added request id to header
+ * 
+ * 9.0.00 Refactored NANO: split the generic functions and the XML-implementation specific
+ *        functions.
+ *        
+ *        Changed the encoding of binaries. Binary data will be added as text node under a
+ *        property, instead of an attribute. So it is NOT backwards compatible. If you upgrade
+ *        a server, you will need to upgrade the client too.
+ *        
+ *        Added QDSSSax parser implementation (Quick 'n Dirty Stream Sharing SAX) 
+ *        This implementation can handle binaries of any size*
+ *        
+ *        
+ *     * limited only by diskspace
  */
 public class Version extends dexels.Version {
 
-	public static final int MAJOR          = 8;
-	public static final int MINOR          = 2;
-	public static final int PATCHLEVEL     = 25;
+	public static final int MAJOR          = 9;
+	public static final int MINOR          = 0;
+	public static final int PATCHLEVEL     = 0;
 	public static final String VENDOR      = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Document";
-	public static final String RELEASEDATE = "2006-05-17";
+	public static final String RELEASEDATE = "2006-05-02";
 
 	// Included packages.
 
