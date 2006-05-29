@@ -24,6 +24,8 @@
  */
 package com.dexels.navajo.lockguard;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -36,28 +38,61 @@ import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
+import com.dexels.navajo.integrity.Worker;
 import com.dexels.navajo.server.Access;
+import com.dexels.navajo.util.AuditLog;
 
-public class LockManager {
+public class LockManager implements Runnable {
 
 	public static final String VERSION = "$Id$";
 	
 	static Map lockDefinitions = Collections.synchronizedMap( new HashMap() );
 	static LockManager instance = null;
+	static boolean readingDefinitions = true;
 	
 	private void readDefinitions() {
-		LockDefinition ld = new LockDefinition(".*", false, false, null, 0, 75);
-		lockDefinitions.put( new Integer(ld.id), ld);
-		HashMap excludeMessages = new HashMap();
-		excludeMessages.put("Aap", "Mies");
-		LockDefinition ld2 = new LockDefinition("ProcessWhatever", false, true, excludeMessages, 0, 1);
-		lockDefinitions.put( new Integer(ld2.id), ld2);
+
+		System.err.println("Reading lock definitions");
+		try {
+			readingDefinitions = true;
+			Navajo definition = NavajoFactory.getInstance().createNavajo( new FileInputStream("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/config/locks.xml") );
+			ArrayList all = definition.getMessage("Locks").getAllMessages();
+			for ( int i = 0; i < all.size(); i++ ) {
+				Message lock = (Message) all.get(i);
+				String ws = lock.getProperty("WebservicePattern").getValue();
+				boolean matchUsername = ((Boolean) lock.getProperty("MatchUsername").getTypedValue()).booleanValue();
+				boolean matchRequest = ((Boolean) lock.getProperty("MatchRequest").getTypedValue()).booleanValue();
+				int maxInstance = ((Integer) lock.getProperty("MaxInstanceCount").getTypedValue()).intValue();
+				int timeOut = ((Integer) lock.getProperty("TimeOut").getTypedValue()).intValue();
+				HashMap excludeMessages = new HashMap();
+				if ( matchRequest ) {
+					ArrayList excludedMessagesList = lock.getMessage("ExcludedMessages").getAllMessages();
+					for (int j = 0; j < excludedMessagesList.size(); j++) {
+						Message ex = (Message) excludedMessagesList.get(j);
+						String mn = ex.getProperty("MessageName").getValue();
+						String exprops = ex.getProperty("ExcludedProperties").getValue();
+						excludeMessages.put(mn, exprops);
+					}
+				}
+				LockDefinition ld = new LockDefinition(ws, matchUsername, matchRequest, excludeMessages, timeOut, maxInstance);
+				lockDefinitions.put( new Integer(ld.id), ld );
+			}
+			readingDefinitions = false;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 	
 	public static LockManager getInstance() {
 		if ( instance == null ) {
 			instance = new LockManager();
-			instance.readDefinitions();
+			
+			Thread thread = new Thread(instance);
+			thread.setDaemon(true);
+			thread.start();
+			
 		}
 		return instance;
 	}
@@ -69,6 +104,17 @@ public class LockManager {
 	 * @return
 	 */
 	public Lock [] grantAccess(Access a) throws LocksExceeded {
+		
+		while ( ! readingDefinitions ) {
+			// Wait
+			try {
+				Thread.sleep(100);
+				System.err.println("Waiting while definitions are read");
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		
 		ArrayList lockList = new ArrayList();
 		Iterator iter = lockDefinitions.values().iterator();
@@ -125,13 +171,28 @@ public class LockManager {
 		
 		// Simulate another access.
 		System.err.println("ANOTHER REQUEST: \n");
-		Access a2 = new Access(2, 2, 2, "pipo", "ProcessWhatever", "", "", "", null);
+		Access a2 = new Access(2, 2, 2, "arjen", "ProcessWhatever", "", "", "", null);
 		a2.setInDoc(n2);
 		Lock [] locks2 = lm.grantAccess( a2 );
 		
 		if ( locks2 != null ) {
 			for (int i = 0 ; i < locks2.length; i++ ) {
 				System.err.println(locks2[i]);
+			}
+		}
+	}
+
+	public void run() {
+		
+		readDefinitions();
+		AuditLog.log(AuditLog.AUDIT_MESSAGE_LOCK_MANAGER, "Started integrity worker $Id$");
+		
+		while ( true ) {
+			try {
+				Thread.sleep(50);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 	}
