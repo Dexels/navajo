@@ -225,7 +225,12 @@ public class TipiDialog
             SwingClient.getUserInterface().showCenteredDialog(myDialog);
             final Rectangle bnds = getDialogBounds();
             if (bnds!=null) {
-                myDialog.setSize(bnds.width,bnds.height);
+                // JUST TRY TO SET IT.
+                try {
+                    myDialog.setSize(bnds.width,bnds.height);
+                } catch(Throwable t) {
+                    t.printStackTrace();
+                }
             }
             //            myDialog.setVisible(true);
             if (myContext != null) {
