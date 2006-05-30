@@ -36,21 +36,21 @@ public class ClieOp2Post implements Mappable {
 				if(checkBankAccount(accountNumberReceiver)){
 					transactionRecord = getTransactionRecord();
 					paymentCharacteristicRecord = getPaymentCharacteristicRecord();
-					descriptionRecord = getDescriptionRecord();
+					//descriptionRecord = getDescriptionRecord();
 					benaficiaryNameRecord = getBenaficiaryNameRecord();
 				}
 			} else {
 				if(checkBankAccount(accountNumberPayer)){
 					transactionRecord = getTransactionRecord();
 					paymentCharacteristicRecord = getPaymentCharacteristicRecord();
-					descriptionRecord = getDescriptionRecord();
+					//descriptionRecord = getDescriptionRecord();
 					benaficiaryNameRecord = getBenaficiaryNameRecord();
 				}
 			}
 		} else {
 			transactionRecord = getTransactionRecord();
 			paymentCharacteristicRecord = getPaymentCharacteristicRecord();
-			descriptionRecord = getDescriptionRecord();
+			//descriptionRecord = getDescriptionRecord();
 			benaficiaryNameRecord = getPayerNameRecord();
 		}
 	}
@@ -78,26 +78,38 @@ public class ClieOp2Post implements Mappable {
 		}
 		return transactionRecord;
 	}
+	
 	public String getPaymentCharacteristicRecord(){
-		paymentCharacteristicRecord = "0150A"+paymentDescription;
+		paymentCharacteristicRecord = "0150A"+paymentCharacteristicRecord;
 		return paymentCharacteristicRecord;
 	}
+	
 	public String getDescriptionRecord(){
-		descriptionRecord = "0160A";
-		return descriptionRecord;
+		return "0160A" + descriptionRecord;		
 	}
+	
 	public String getBenaficiaryNameRecord(){
 		benaficiaryNameRecord = "0170B"+lastName;
 		return benaficiaryNameRecord;
 	}
+	
 	public String getPayerNameRecord(){
-		payerNameRecord = "0170B"+lastName;
+		payerNameRecord = "0110B"+lastName;
 		return payerNameRecord;
+	}
+	
+	public void setPaymentCharacteristicRecord(String paymentCharacteristicRecord){
+		this.paymentCharacteristicRecord = paymentCharacteristicRecord;
+	}
+	
+	public void setDescriptionRecord(String descriptionRecord){
+		this.descriptionRecord = descriptionRecord;
 	}
 	
 	public void setPaymentDescription(String paymentDescription){
 		this.paymentDescription = paymentDescription;
 	}
+	
 	public void setLastName(String lastName){
 		this.lastName = lastName;
 	}	

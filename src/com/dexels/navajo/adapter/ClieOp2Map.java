@@ -78,32 +78,41 @@ public class ClieOp2Map implements Mappable {
 	}
 
 	private void generateClieOP(){
-		p.print(getFilePreRecord()+"\r\n");
-		p.print(getBatchPreRecord()+"\r\n");
-		p.print(getFixedDescriptionRecord()+"\r\n");
-		p.print(getConstituentRecord()+"\r\n");
+		p.print(padClieOpLine(getFilePreRecord())+"\r\n");
+		p.print(padClieOpLine(getBatchPreRecord())+"\r\n");
+		p.print(padClieOpLine(getFixedDescriptionRecord())+"\r\n");
+		p.print(padClieOpLine(getConstituentRecord())+"\r\n");
 		if (draftPosts != null) {
 			posts = new ClieOp2Post[draftPosts.size()];
 			posts = (ClieOp2Post[]) draftPosts.toArray();
 		}
 		for(int i=0; i<posts.length; i++){
 			if(isPayment){
-				p.print(posts[i].getTransactionRecord()+"\r\n");
-				p.print(posts[i].getPaymentCharacteristicRecord()+"\r\n");
-				p.print(posts[i].getDescriptionRecord()+"\r\n");
-				p.print(posts[i].getBenaficiaryNameRecord()+"\r\n");
+				p.print(padClieOpLine(posts[i].getTransactionRecord())+"\r\n");
+				// p.print(padClieOpLine(posts[i].getPaymentCharacteristicRecord())+"\r\n");
+				p.print(padClieOpLine(posts[i].getDescriptionRecord())+"\r\n");
+				p.print(padClieOpLine(posts[i].getBenaficiaryNameRecord())+"\r\n");
 			} else {
-				p.print(posts[i].getTransactionRecord()+"\r\n");
-				p.print(posts[i].getPayerNameRecord()+"\r\n");
-				p.print(posts[i].getPaymentCharacteristicRecord()+"\r\n");
-				p.print(posts[i].getDescriptionRecord()+"\r\n");
+				p.print(padClieOpLine(posts[i].getTransactionRecord())+"\r\n");
+				p.print(padClieOpLine(posts[i].getPayerNameRecord())+"\r\n");
+				// p.print(padClieOpLine(posts[i].getPaymentCharacteristicRecord())+"\r\n");
+				p.print(padClieOpLine(posts[i].getDescriptionRecord())+"\r\n");
 			}
 		}
-		p.print(getBatchCloseRecord()+"\r\n");
-		p.print(getFileCloseRecord());
+		p.print(padClieOpLine(getBatchCloseRecord())+"\r\n");
+		p.print(padClieOpLine(getFileCloseRecord()));
 		p.close();
 	}
 
+	public String padClieOpLine(String ClieOpLine) {
+		int padSize = 50;
+		int currentLineSize = ClieOpLine.length();
+		for (int i = 0; i < (padSize - currentLineSize); i++) {
+			ClieOpLine = ClieOpLine + " ";
+		}		
+		return ClieOpLine;	
+	}
+	
 	public void store() throws MappableException, UserException {
 
 	}
@@ -113,6 +122,7 @@ public class ClieOp2Map implements Mappable {
 	 *
 	 * @return
 	 */
+
 	public String getFilePreRecord(){
 		Date date = new Date();
 		SimpleDateFormat nowDateFormat = new SimpleDateFormat("ddMMyy");
@@ -234,7 +244,7 @@ public class ClieOp2Map implements Mappable {
           }
           map.setPosts(posts);
           try {
-        	  map.getContent();
+        	  map.getContent().toString();
 		  } catch (UserException e) {
 			  // TODO Auto-generated catch block
 			  System.out.println("foutmelding 01 in main: "+e);
