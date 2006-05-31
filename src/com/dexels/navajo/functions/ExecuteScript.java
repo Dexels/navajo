@@ -1,5 +1,7 @@
 package com.dexels.navajo.functions;
 
+import sun.security.jca.GetInstance;
+
 import com.dexels.navajo.parser.*;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.document.Navajo;
@@ -25,7 +27,7 @@ public class ExecuteScript extends FunctionInterface {
     GenericHandler gh = new GenericHandler();
     String script = (String) getOperand(0);
     Access access = new Access(1, 1, 1, "ANONYMOUS", script, "", "", "", false, null);
-    gh.setInput(this.inMessage, access, null, Dispatcher.getNavajoConfig());
+    gh.setInput(this.inMessage, access, null, Dispatcher.getInstance().getNavajoConfig());
     Navajo result = null;
     try {
       result = gh.doService();
