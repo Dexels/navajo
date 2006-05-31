@@ -2,6 +2,8 @@ package com.dexels.navajo.server.statistics;
 
 import java.util.HashSet;
 import com.dexels.navajo.server.Access;
+import com.dexels.navajo.util.AuditLog;
+
 import java.util.Set;
 import java.util.Iterator;
 import java.util.Map;
@@ -36,8 +38,11 @@ public final class StatisticsRunner implements Runnable {
 
   private static StatisticsRunner instance = null;
   private StoreInterface myStore = null;
-  private static Set todo = Collections.synchronizedSet(new HashSet());
+  private Set todo = Collections.synchronizedSet(new HashSet());
 
+  private boolean killed = false;
+  private Thread thread;
+  
   public final static StatisticsRunner getInstance(String storePath, Map parameters) {
   	return getInstance(storePath, parameters, "com.dexels.navajo.adapter.navajostore.HSQLStore");
   }
@@ -49,10 +54,10 @@ public final class StatisticsRunner implements Runnable {
    *
    * @return
    */
-  public final static StatisticsRunner getInstance(String storePath, Map parameters, String storeClass) {
+  public final synchronized static StatisticsRunner getInstance(String storePath, Map parameters, String storeClass) {
 
     if (instance == null) {
-      synchronized (todo) {
+     
         instance = new StatisticsRunner();
         Class si = null;
         try {
@@ -63,11 +68,11 @@ public final class StatisticsRunner implements Runnable {
         }
         catch (Exception ex) {
         }
-        Thread thread = new Thread(instance);
-        thread.start();
+        instance.thread = new Thread(instance);
+        instance.thread.start();
         System.err.println("Started StatisticsRunner version $Id$ using store: " + instance.myStore.getClass().getName());
       }
-    }
+    
     return instance;
   }
 
@@ -77,7 +82,7 @@ public final class StatisticsRunner implements Runnable {
    */
   public void run() {
 
-    while (true) {
+    while (!killed) {
       try {
         Thread.sleep(2000);
         // Check for new access objects.
@@ -110,6 +115,16 @@ public final class StatisticsRunner implements Runnable {
     todo.add(a);
     // Add to webserviceaccesslistener.
     WebserviceAccessListener.getInstance().addAccess(a, e);
+  }
+  
+  public void kill() {
+	  
+	  if ( thread != null ) {
+		  killed = true;
+		  thread.interrupt();
+		  instance = null;
+		  AuditLog.log(AuditLog.AUDIT_MESSAGE_STAT_RUNNER, "Killed");
+	  }
   }
 
 }

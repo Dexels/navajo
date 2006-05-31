@@ -29,8 +29,11 @@ import com.dexels.navajo.document.*;
  */
 
 import java.util.*;
+
+import com.dexels.navajo.integrity.Worker;
 import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.loader.NavajoClassSupplier;
+import com.dexels.navajo.lockguard.LockManager;
 
 import java.io.*;
 
@@ -54,9 +57,16 @@ public final class NavajoConfig {
     protected NavajoClassLoader betaClassloader;
     protected com.dexels.navajo.server.Repository repository;
     protected Navajo configuration;
-    protected com.dexels.navajo.mapping.AsyncStore asyncStore;
-    protected com.dexels.navajo.server.statistics.StatisticsRunner statisticsRunner;
-    protected TaskRunner taskRunner;
+    
+    /**
+     * Several supporting threads.
+     */
+    protected com.dexels.navajo.mapping.AsyncStore asyncStore = null;
+    protected com.dexels.navajo.server.statistics.StatisticsRunner statisticsRunner = null;
+    protected TaskRunner taskRunner = null;
+    protected Worker integrityWorker = null;
+    protected LockManager lockManager = null;
+    
     public String rootPath;
     private String scriptVersion = "";
     private PersistenceManager persistenceManager;
@@ -247,8 +257,21 @@ public final class NavajoConfig {
     	if ( taskRunner == null ) {
     		taskRunner = TaskRunner.getInstance(this, myDispatcher);
     	}
-    	return taskRunner;
-        
+    	return taskRunner;   
+    }
+    
+    public Worker getIntegrityWorker(Dispatcher myDispatcher) {
+    	if ( integrityWorker == null ) {
+    		integrityWorker = Worker.getInstance(myDispatcher);
+    	}
+    	return integrityWorker;
+    }
+    
+    public LockManager getLockManager() {
+    	if ( lockManager == null ) {
+    		lockManager = LockManager.getInstance(this);
+    	}
+    	return lockManager;
     }
     
     public final boolean isHotCompileEnabled() {

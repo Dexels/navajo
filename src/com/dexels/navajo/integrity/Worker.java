@@ -69,6 +69,9 @@ public class Worker implements Runnable, Mappable {
 	// Contains all unique request ids that still need to be handled by the worker thread.
 	private static Set notWrittenReponses = Collections.synchronizedSet(new HashSet());
 	
+	private boolean killed = false;
+	private Thread thread;
+	
 	public static Worker getInstance(Dispatcher myDispatcher) {
 		
 		if ( instance != null ) {
@@ -77,9 +80,9 @@ public class Worker implements Runnable, Mappable {
 		
 		instance = new Worker();
 		instance.myDispatcher = myDispatcher;
-		Thread thread = new Thread(instance);
-		thread.setDaemon(true);
-		thread.start();
+		instance.thread = new Thread(instance);
+		instance.thread.setDaemon(true);
+		instance.thread.start();
 		
 		AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "Started integrity worker $Id$");
 		
@@ -119,7 +122,7 @@ public class Worker implements Runnable, Mappable {
 	}
 	
 	public void run() {
-		while (true) {
+		while (!killed) {
 			try {
 				Thread.sleep(50);
 				// Check for new access objects in workList.
@@ -239,7 +242,12 @@ public class Worker implements Runnable, Mappable {
 	}
 
 	public void kill() {
-		
+		killed = true;
+		if ( thread != null ) {
+			thread.interrupt();
+		}
+		instance = null;
+		AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "Killed");
 	}
 	
 	public int getViolationCount() {

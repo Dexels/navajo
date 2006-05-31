@@ -2,6 +2,7 @@ package com.dexels.navajo.mapping;
 
 import java.util.*;
 import com.dexels.navajo.server.Access;
+import com.dexels.navajo.util.AuditLog;
 
 /**
  * <p>Title: Navajo Product Project</p>
@@ -42,6 +43,10 @@ public final class AsyncStore
   private float timeout;
   private long threadWait = 20000;
 
+  private boolean killed = false;
+
+private static Thread thread;
+  
   /**
    * Get the singleton AsyncStore object instance.
    *
@@ -66,8 +71,8 @@ public final class AsyncStore
       }
       instance.objectStore = Collections.synchronizedMap(new HashMap());
       instance.accessStore = Collections.synchronizedMap(new HashMap());
-      Thread thread = new Thread(instance);
-      thread.setDaemon(true);
+      thread = new Thread(instance);
+	thread.setDaemon(true);
       thread.start();
     }
     return instance;
@@ -81,7 +86,7 @@ public final class AsyncStore
                        instance.timeout + ", thread wait = " +
                        instance.threadWait);
     long maxAge;
-    while (true) {
+    while ( !killed ) {
       try {
         Thread.sleep(threadWait);
         synchronized (instance) {
@@ -178,6 +183,13 @@ public final class AsyncStore
       }
       o = null;
     }
+  }
+  
+  public void kill() {
+	  killed = true;
+	  thread.interrupt();
+	  instance = null;
+	  AuditLog.log(AuditLog.AUDIT_MESSAGE_ASYNC_RUNNER, "Killed");
   }
 
 }

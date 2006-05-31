@@ -62,6 +62,9 @@ public final class LockManager implements Runnable, Mappable {
 	
 	private final static String LOCKS_CONFIG = "locks.xml";
 	
+	private boolean killed = false;
+	private static Thread thread;
+	
 	private final long getConfigTimeStamp() {
 		if ( myConfig != null ) {
 			java.io.File f = new java.io.File(myConfig.getConfigPath() + "/" + LOCKS_CONFIG);
@@ -142,7 +145,7 @@ public final class LockManager implements Runnable, Mappable {
 			instance = new LockManager();
 			instance.myConfig = config;
 			
-			Thread thread = new Thread(instance);
+			thread = new Thread(instance);
 			thread.setDaemon(true);
 			thread.start();
 			
@@ -250,7 +253,7 @@ public final class LockManager implements Runnable, Mappable {
 		readDefinitions();
 		AuditLog.log(AuditLog.AUDIT_MESSAGE_LOCK_MANAGER, "Started locking manager $Id$");
 		
-		while ( true ) {
+		while ( !killed ) {
 			try {
 				Thread.sleep(200);
 				//System.err.print(".");
@@ -261,7 +264,7 @@ public final class LockManager implements Runnable, Mappable {
 				//System.err.print(".");
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				
 			}
 		}
 		
@@ -274,7 +277,13 @@ public final class LockManager implements Runnable, Mappable {
 	public void store() throws MappableException, UserException {
 	}
 
-	public void kill() {	
+	public void kill() {
+		killed = true;
+		if ( thread != null ) {
+			thread.interrupt();
+		}
+		instance = null;
+		AuditLog.log(AuditLog.AUDIT_MESSAGE_LOCK_MANAGER, "Killed");	
 	}
 	
 	public Lock [] getLocks() {

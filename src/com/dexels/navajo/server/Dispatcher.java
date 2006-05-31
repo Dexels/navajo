@@ -34,6 +34,7 @@ import java.net.*;
 
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.scheduler.WebserviceListener;
+import com.dexels.navajo.util.AuditLog;
 import com.dexels.navajo.util.Util;
 import com.dexels.navajo.integrity.Worker;
 import com.dexels.navajo.loader.NavajoClassLoader;
@@ -334,13 +335,13 @@ public final class Dispatcher {
 	  }
 	  
 	  // Check for webservice transaction integrity.
-	  out = Worker.getInstance( this ).getResponse(in);
+	  out = navajoConfig.getIntegrityWorker( this ).getResponse(in);
 	  if ( out != null ) {
 		  return out;
 	  }
 	  
 	  // Check for locks.
-	  LockManager lm = LockManager.getInstance( navajoConfig );
+	  LockManager lm = navajoConfig.getLockManager( );
 	  Lock [] locks = null;
 	  try {
 		  locks = lm.grantAccess(access);
@@ -1065,7 +1066,28 @@ public final class Dispatcher {
   }
   
   public static void killMe() {
-	  instance = null;
+	  if ( instance != null ) {
+		  // Kill supporting threads.
+		  if ( instance.getNavajoConfig().getLockManager() != null ) {
+			  instance.getNavajoConfig().getLockManager().kill();
+		  }
+		  if ( instance.getNavajoConfig().getStatisticsRunner() != null ) {
+			  instance.getNavajoConfig().getStatisticsRunner().kill();
+		  }
+		  if ( instance.getNavajoConfig().getTaskRunner(instance) != null ) {
+			  instance.getNavajoConfig().getTaskRunner(instance).kill();
+		  }
+		  if ( instance.getNavajoConfig().getAsyncStore() != null ) {
+			  instance.getNavajoConfig().getAsyncStore().kill();
+		  }
+		  if ( instance.getNavajoConfig().getIntegrityWorker(instance)!= null ) {
+			  instance.getNavajoConfig().getIntegrityWorker(instance).kill();
+		  }
+		  
+		  // Finally kill myself.
+		  AuditLog.log(AuditLog.AUDIT_MESSAGE_DISPATCHER, "Navajo Dispatcher terminated.");
+		  instance = null;
+	  }  
   }
 
   public String getServerId() {

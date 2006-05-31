@@ -59,6 +59,10 @@ public class TaskRunner implements Runnable {
 	
 	private Object semaphore = new Object();
 	
+	private boolean killed = false;
+
+	private static Thread thread;
+	
 	public static TaskRunner getInstance(NavajoConfig config) {
 		return getInstance(config, null);
 	}
@@ -149,8 +153,8 @@ public class TaskRunner implements Runnable {
 		instance = new TaskRunner();
 		instance.myConfig = config;
 		instance.myDispatcher = myDispatcher;
-		Thread thread = new Thread(instance);
-	    thread.setDaemon(true);
+		thread = new Thread(instance);
+		thread.setDaemon(true);
 	    thread.start();
 	    
 	    if ( config != null && myDispatcher != null ) {
@@ -162,7 +166,7 @@ public class TaskRunner implements Runnable {
 	}
 	
 	public void run() {
-		while (true) {
+		while ( !killed ) {
 			try {
 				Thread.sleep(1000);
 				// Check whether tasks.xml has gotten updated.
@@ -172,7 +176,7 @@ public class TaskRunner implements Runnable {
 				}
 			}
 			catch (Exception e) {
-				e.printStackTrace(System.err);
+				
 			}
 			
 		}
@@ -346,6 +350,15 @@ public class TaskRunner implements Runnable {
 	
 	public Map getTasks() {
 		return tasks;
+	}
+	
+	public void kill() {
+		killed = true;
+		if ( thread != null ) {
+			thread.interrupt();
+		}
+		instance = null;
+		AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Killed");
 	}
 	
 	public static void main(String [] args)  {
