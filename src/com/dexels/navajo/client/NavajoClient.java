@@ -472,21 +472,16 @@ public class NavajoClient implements ClientInterface {
     con.setDoOutput(true);
     con.setDoInput(true);
     con.setUseCaches(false);
- //    try {
-        
-        try {
-        	java.lang.reflect.Method chunked = con.getClass().getMethod("setChunkedStreamingMode", new Class[]{int.class});
-			chunked.invoke( con, new Object[]{new Integer(1000)});
-			con.setRequestProperty("Transfer-Encoding", "chunked" );
-		} catch (Throwable e) {
-			//e.printStackTrace(System.err);
-			System.err.println("setChunkedStreamingMode does not exist, java 1.4?");
-		}
-		System.err.println("Is this reachable????");
-        //con.setChunkedStreamingMode(1000);
-//    } catch (Throwable t) {
-//        System.err.println("Streaming binary not successful. Client running in an old Java VM? (Before 1.5)");
-//    }
+
+    try {
+    	java.lang.reflect.Method chunked = con.getClass().getMethod("setChunkedStreamingMode", new Class[]{int.class});
+    	chunked.invoke( con, new Object[]{new Integer(1000)});
+    	con.setRequestProperty("Transfer-Encoding", "chunked" );
+    } catch (Throwable e) {
+    	//e.printStackTrace(System.err);
+    	System.err.println("setChunkedStreamingMode does not exist, upgrade to java 1.5+");
+    }
+    
     // Verstuur bericht
     if (useCompression) {
       con.setRequestProperty("Accept-Encoding", "gzip");
