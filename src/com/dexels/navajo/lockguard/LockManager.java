@@ -288,6 +288,6 @@ public final class LockManager implements Runnable, Mappable {
 	}
 	
 	public String getVERSION() {
-		return this.VERSION;
+		return VERSION;
 	}
 }
