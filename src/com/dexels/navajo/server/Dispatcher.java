@@ -1085,9 +1085,14 @@ public final class Dispatcher {
 		  
 		  // Clear all classloaders.
 		  GenericHandler.doClearCache();
-		  // Finally kill myself.
-		  AuditLog.log(AuditLog.AUDIT_MESSAGE_DISPATCHER, "Navajo Dispatcher terminated.");
+		  
+		  // Clear NavajoConfig.
+		  instance.navajoConfig = null;
+		  
+		  // Finally kill myself
 		  instance = null;
+		  AuditLog.log(AuditLog.AUDIT_MESSAGE_DISPATCHER, "Navajo Dispatcher terminated.");
+			 
 	  }  
   }
 
