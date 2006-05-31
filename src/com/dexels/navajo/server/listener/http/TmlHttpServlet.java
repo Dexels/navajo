@@ -32,74 +32,21 @@ public final class TmlHttpServlet extends HttpServlet {
 
   private String configurationPath = "";
 
-  //private final static Logger logger = Logger.getLogger(TmlHttpServlet.class);
-
-  //public static int threadCount = 0;
-  //public static int maxThreadCount = 75;
-
-  //public static Object mutex1 = new Object();
-  //public static HashSet activeWebservice = new HashSet();
-
   public TmlHttpServlet() {}
 
 
-//  private final boolean startServing() throws ServletException {
-//    synchronized (mutex1) {
-//      threadCount++;
-//      if (threadCount > maxThreadCount) {
-//        threadCount--;
-//        System.err.println("REACHED MAXIMUM SIMULTANEOUS REQUEST (" + maxThreadCount + ") IN TmlHttpServlet");
-//        // Dump all active threads:
-//        System.err.println("Access set dump:");
-//        Iterator s = Dispatcher.accessSet.iterator();
-//        while (s.hasNext()) {
-//        	Access a = (Access) s.next();
-//        	System.err.println("----------------------------------------------------------------");
-//        	System.err.println(a.rpcName + "(" + a.rpcUser + "), request: ");
-//        	try {
-//        		a.getCompiledScript().inDoc.write(System.err);
-//        		//a.getInDoc().write(System.err);
-//        	} catch (Throwable t) {
-//        		System.err.println(t.getMessage());
-//        	}
-//        	System.err.println("----------------------------------------------------------------");
-//        }
-//        return false;
-//      }
-//    }
-//    System.err.println("Current TmlHttpServlet thread count: " + threadCount);
-//    return true;
-//  }
-//
-//  private final void finishedServing() {
-//    synchronized (mutex1) {
-//      threadCount--;
-//    }
-//  }
 
   public void init(ServletConfig config) throws ServletException {
     super.init(config);
 
     configurationPath = config.getInitParameter("configuration");
-//    String maxT = config.getInitParameter("maxthreads");
-//    if (maxT != null) {
-//      try {
-//        maxThreadCount = Integer.parseInt(maxT);
-//        System.err.println("MAXIMUM THREAD COUNT IS " + maxThreadCount);
-//      }
-//      catch (Exception e) {
-//        // not a valid integer.
-//        maxThreadCount = 75;
-//      }
-//    }
-    //System.out.println("configurationPath = " + configurationPath);
 
   }
 
   public void destroy() {
     System.err.println("In TmlHttpServlet destroy()");
     // Kill Dispatcher.
-    
+    Dispatcher.killMe();
   }
 
   public void finalize() {
@@ -282,26 +229,9 @@ public final class TmlHttpServlet extends HttpServlet {
    * @throws ServletException
    */
   public final void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-    // Check if request can be served.
-//    if (startServing()) {
-//      try {
+  
         callDirect(request, response);
-//      }
-//      finally {
-//        finishedServing();
-//      }
-//    }
-  }
 
-  private Navajo createTooBusyMessage() {
-      try {
-        return Dispatcher.generateErrorMessage(null, "Server too busy", 999,
-                                               999, null);
-      }
-      catch (FatalException ex) {
-        ex.printStackTrace(System.err);
-        return null;
-      }
   }
 
   /**
@@ -323,33 +253,6 @@ public final class TmlHttpServlet extends HttpServlet {
     boolean useSendCompression = ( (sendEncoding != null) && (sendEncoding.indexOf("zip") != -1));
     boolean useRecvCompression = ( (recvEncoding != null) && (recvEncoding.indexOf("zip") != -1));
 
-    // Check if request can be served.
-    //if (!startServing()) {
-     // Construct server too busy error message.
-//     response.setContentType("text/xml; charset=UTF-8");
-//     Navajo d = createTooBusyMessage();
-//     if (d != null) {
-//      try {
-//        if (useRecvCompression) {
-//          response.setContentType("text/xml; charset=UTF-8");
-//          response.setHeader("Content-Encoding", "gzip");
-//          java.util.zip.GZIPOutputStream gzipout = new java.util.zip.GZIPOutputStream(response.getOutputStream());
-//          d.write(gzipout);
-//          gzipout.close();
-//        } else {
-//          response.setContentType("text/xml; charset=UTF-8");
-//          OutputStream out = (OutputStream) response.getOutputStream();
-//          d.write(out);
-//          out.close();
-//        }
-//      }
-//      catch (NavajoException ex) {
-//        ex.printStackTrace(System.err);
-//      }
-//     }
-//     return;
-    //}
-
     Dispatcher dis = null;
 
     try {
@@ -368,10 +271,6 @@ public final class TmlHttpServlet extends HttpServlet {
       int pT = (int) (stamp - start);
 
       if (in == null) {
-//        logger.log(Priority.WARN,
-//                   "POSSIBLE SECURITY VIOLATION: INVALID REQUEST FROM " +
-//                   request.getRemoteHost() + "(" + request.getRemoteAddr() +
-//                   "); " + request.getRemoteUser());
         throw new ServletException("Invalid request.");
       }
 
