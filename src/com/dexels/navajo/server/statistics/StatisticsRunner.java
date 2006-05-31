@@ -2,6 +2,7 @@ package com.dexels.navajo.server.statistics;
 
 import java.util.HashSet;
 import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.GenericThread;
 import com.dexels.navajo.util.AuditLog;
 
 import java.util.Set;
@@ -34,14 +35,11 @@ import java.util.Collections;
  * ====================================================================
  */
 
-public final class StatisticsRunner implements Runnable {
+public final class StatisticsRunner extends GenericThread {
 
   private static StatisticsRunner instance = null;
   private StoreInterface myStore = null;
   private Set todo = Collections.synchronizedSet(new HashSet());
-
-  private boolean killed = false;
-  private Thread thread;
   
   public final static StatisticsRunner getInstance(String storePath, Map parameters) {
   	return getInstance(storePath, parameters, "com.dexels.navajo.adapter.navajostore.HSQLStore");
@@ -68,8 +66,7 @@ public final class StatisticsRunner implements Runnable {
         }
         catch (Exception ex) {
         }
-        instance.thread = new Thread(instance);
-        instance.thread.start();
+        instance.startThread(instance);
         System.err.println("Started StatisticsRunner version $Id$ using store: " + instance.myStore.getClass().getName());
       }
     
@@ -80,9 +77,8 @@ public final class StatisticsRunner implements Runnable {
    * Main thread. Responsible for persisting queued access objects.
    *
    */
-  public void run() {
+  public final void worker() {
 
-    while (!killed) {
       try {
         Thread.sleep(2000);
         // Check for new access objects.
@@ -103,7 +99,6 @@ public final class StatisticsRunner implements Runnable {
       }
       catch (InterruptedException ex) {
       }
-    }
   }
 
   /**
@@ -117,14 +112,10 @@ public final class StatisticsRunner implements Runnable {
     WebserviceAccessListener.getInstance().addAccess(a, e);
   }
   
-  public void kill() {
-	  
-	  if ( thread != null ) {
-		  killed = true;
-		  thread.interrupt();
-		  instance = null;
-		  AuditLog.log(AuditLog.AUDIT_MESSAGE_STAT_RUNNER, "Killed");
-	  }
+  
+  public void terminate() {
+	  instance = null;
+	  AuditLog.log(AuditLog.AUDIT_MESSAGE_STAT_RUNNER, "Killed");
   }
 
 }

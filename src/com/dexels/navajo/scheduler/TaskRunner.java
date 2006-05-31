@@ -41,10 +41,11 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.Dispatcher;
+import com.dexels.navajo.server.GenericThread;
 import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.util.AuditLog;
 
-public class TaskRunner implements Runnable {
+public class TaskRunner extends GenericThread {
 
 	private static final String VERSION = "$Id$";
 	
@@ -58,10 +59,6 @@ public class TaskRunner implements Runnable {
 	private final static String TASK_CONFIG = "tasks.xml";
 	
 	private Object semaphore = new Object();
-	
-	private boolean killed = false;
-
-	private Thread thread;
 	
 	public static TaskRunner getInstance(NavajoConfig config) {
 		return getInstance(config, null);
@@ -153,9 +150,7 @@ public class TaskRunner implements Runnable {
 		instance = new TaskRunner();
 		instance.myConfig = config;
 		instance.myDispatcher = myDispatcher;
-		instance.thread = new Thread(instance);
-		instance.thread.setDaemon(true);
-		instance.thread.start();
+		instance.startThread(instance);
 	    
 	    if ( config != null && myDispatcher != null ) {
 	    	instance.readConfig();
@@ -165,21 +160,20 @@ public class TaskRunner implements Runnable {
 	    return instance;
 	}
 	
-	public void run() {
-		while ( !killed ) {
-			try {
-				Thread.sleep(1000);
-				// Check whether tasks.xml has gotten updated.
-				if ( isConfigModified() ) {
-					AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Task configuration is modified, re-initializing");
-					readConfig();
-				}
+	public final void worker() {
+		
+		try {
+			Thread.sleep(1000);
+			// Check whether tasks.xml has gotten updated.
+			if ( isConfigModified() ) {
+				AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Task configuration is modified, re-initializing");
+				readConfig();
 			}
-			catch (Exception e) {
-				
-			}
+		}
+		catch (Exception e) {
 			
 		}
+	
 	}
 	
 	public int getTaskListSize() {
@@ -352,15 +346,6 @@ public class TaskRunner implements Runnable {
 		return tasks;
 	}
 	
-	public void kill() {
-		killed = true;
-		if ( thread != null ) {
-			thread.interrupt();
-		}
-		instance = null;
-		AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Killed");
-	}
-	
 	public static void main(String [] args)  {
 		try {
 		TaskRunner tr = TaskRunner.getInstance(null);
@@ -372,5 +357,10 @@ public class TaskRunner implements Runnable {
 		} catch (Exception e ) {
 			System.err.println(e.getMessage());
 		}
+	}
+
+	public void terminate() {
+		instance = null;
+		AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Killed");
 	}
 }

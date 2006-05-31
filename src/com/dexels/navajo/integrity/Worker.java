@@ -41,12 +41,13 @@ import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.Dispatcher;
+import com.dexels.navajo.server.GenericThread;
 import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.util.AuditLog;
 
-public class Worker implements Runnable, Mappable {
+public class Worker extends GenericThread {
 
 	/**
 	 * Public fields (used as getters for mappable).
@@ -69,9 +70,6 @@ public class Worker implements Runnable, Mappable {
 	// Contains all unique request ids that still need to be handled by the worker thread.
 	private Set notWrittenReponses = Collections.synchronizedSet(new HashSet());
 	
-	private boolean killed = false;
-	private Thread thread;
-	
 	public static Worker getInstance(Dispatcher myDispatcher) {
 		
 		if ( instance != null ) {
@@ -80,9 +78,7 @@ public class Worker implements Runnable, Mappable {
 		
 		instance = new Worker();
 		instance.myDispatcher = myDispatcher;
-		instance.thread = new Thread(instance);
-		instance.thread.setDaemon(true);
-		instance.thread.start();
+		instance.startThread(instance);
 		
 		AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "Started integrity worker $Id$");
 		
@@ -121,8 +117,8 @@ public class Worker implements Runnable, Mappable {
 		}
 	}
 	
-	public void run() {
-		while (!killed) {
+	public final void worker() {
+		
 			try {
 				Thread.sleep(50);
 				// Check for new access objects in workList.
@@ -161,7 +157,6 @@ public class Worker implements Runnable, Mappable {
 			}
 			catch (InterruptedException ex) {
 			}
-		}
 	}
 	
 	/**
@@ -232,23 +227,6 @@ public class Worker implements Runnable, Mappable {
 			workList.put( request.getHeader().getRequestId(), response );
 		}
 	}
-
-	public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
-		
-	}
-
-	public void store() throws MappableException, UserException {
-		
-	}
-
-	public void kill() {
-		killed = true;
-		if ( thread != null ) {
-			thread.interrupt();
-		}
-		instance = null;
-		AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "Killed");
-	}
 	
 	public int getViolationCount() {
 		return violationCount;
@@ -268,6 +246,11 @@ public class Worker implements Runnable, Mappable {
 	
 	public String getVERSION() {
 		return this.VERSION;
+	}
+
+	public void terminate() {
+		instance = null;
+		AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "Killed");
 	}
 
 }

@@ -42,12 +42,13 @@ import com.dexels.navajo.integrity.Worker;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.GenericThread;
 import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.util.AuditLog;
 
-public final class LockManager implements Runnable, Mappable {
+public final class LockManager extends GenericThread {
 
 	public LockDefinition [] definitions;
 	public Lock [] locks;
@@ -61,10 +62,7 @@ public final class LockManager implements Runnable, Mappable {
 	private NavajoConfig myConfig;
 	
 	private final static String LOCKS_CONFIG = "locks.xml";
-	
-	private boolean killed = false;
-	private Thread thread;
-	
+
 	private final long getConfigTimeStamp() {
 		if ( myConfig != null ) {
 			java.io.File f = new java.io.File(myConfig.getConfigPath() + "/" + LOCKS_CONFIG);
@@ -144,11 +142,7 @@ public final class LockManager implements Runnable, Mappable {
 		if ( instance == null ) {
 			instance = new LockManager();
 			instance.myConfig = config;
-			
-			instance.thread = new Thread(instance);
-			instance.thread.setDaemon(true);
-			instance.thread.start();
-			
+			instance.startThread(instance);
 		}
 		return instance;
 	}
@@ -248,11 +242,7 @@ public final class LockManager implements Runnable, Mappable {
 		}
 	}
 
-	public void run() {
-		
-		readDefinitions();
-		AuditLog.log(AuditLog.AUDIT_MESSAGE_LOCK_MANAGER, "Started locking manager $Id$");
-		
+	public void worker() {
 		while ( !killed ) {
 			try {
 				Thread.sleep(200);
@@ -268,22 +258,11 @@ public final class LockManager implements Runnable, Mappable {
 			}
 		}
 		
-		
 	}
-
-	public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
-	}
-
-	public void store() throws MappableException, UserException {
-	}
-
-	public void kill() {
-		killed = true;
-		if ( thread != null ) {
-			thread.interrupt();
-		}
-		instance = null;
-		AuditLog.log(AuditLog.AUDIT_MESSAGE_LOCK_MANAGER, "Killed");	
+	
+	public void run() {
+		readDefinitions();
+		AuditLog.log(AuditLog.AUDIT_MESSAGE_LOCK_MANAGER, "Started locking manager $Id$");
 	}
 	
 	public Lock [] getLocks() {
@@ -297,5 +276,10 @@ public final class LockManager implements Runnable, Mappable {
 	
 	public String getVERSION() {
 		return VERSION;
+	}
+
+	public void terminate() {
+		instance = null;
+		AuditLog.log(AuditLog.AUDIT_MESSAGE_LOCK_MANAGER, "Killed");	
 	}
 }

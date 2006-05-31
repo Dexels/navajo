@@ -2,6 +2,7 @@ package com.dexels.navajo.mapping;
 
 import java.util.*;
 import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.GenericThread;
 import com.dexels.navajo.util.AuditLog;
 
 /**
@@ -32,8 +33,7 @@ import com.dexels.navajo.util.AuditLog;
  * ====================================================================
  */
 
-public final class AsyncStore
-    implements Runnable {
+public final class AsyncStore extends GenericThread {
 
   private static final String VERSION = "$Id$";
 	
@@ -42,10 +42,6 @@ public final class AsyncStore
   public Map accessStore = null;
   private float timeout;
   private long threadWait = 20000;
-
-  private boolean killed = false;
-
-  private Thread thread;
   
   /**
    * Get the singleton AsyncStore object instance.
@@ -71,9 +67,7 @@ public final class AsyncStore
       }
       instance.objectStore = Collections.synchronizedMap(new HashMap());
       instance.accessStore = Collections.synchronizedMap(new HashMap());
-      instance.thread = new Thread(instance);
-      instance.thread.setDaemon(true);
-      instance.thread.start();
+      instance.startThread(instance);
     }
     return instance;
   }
@@ -81,12 +75,8 @@ public final class AsyncStore
   /**
    * Start the main AsyncStore loop.
    */
-  public final void run() {
-    System.err.println("Started garbage collect thread for async store version $Id$, timeout = " +
-                       instance.timeout + ", thread wait = " +
-                       instance.threadWait);
-    long maxAge;
-    while ( !killed ) {
+  public final void worker() {
+   
       try {
         Thread.sleep(threadWait);
         synchronized (instance) {
@@ -117,7 +107,6 @@ public final class AsyncStore
       }
       catch (InterruptedException e) {
       }
-    }
   }
 
   /**
@@ -185,9 +174,7 @@ public final class AsyncStore
     }
   }
   
-  public void kill() {
-	  killed = true;
-	  thread.interrupt();
+  public void terminate() {
 	  instance = null;
 	  AuditLog.log(AuditLog.AUDIT_MESSAGE_ASYNC_RUNNER, "Killed");
   }
