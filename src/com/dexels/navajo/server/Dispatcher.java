@@ -325,8 +325,7 @@ public final class Dispatcher {
    * @return
    * @throws Exception
    */
-  private final Navajo dispatch(String handler, Navajo in, Access access,
-		  Parameters parms) throws Exception {
+  private final Navajo dispatch(String handler, Navajo in, Access access, Parameters parms) throws Exception {
 	  
 	  
 	  Navajo out = null;
@@ -1084,6 +1083,8 @@ public final class Dispatcher {
 			  instance.getNavajoConfig().getIntegrityWorker(instance).kill();
 		  }
 		  
+		  // Clear all classloaders.
+		  GenericHandler.doClearCache();
 		  // Finally kill myself.
 		  AuditLog.log(AuditLog.AUDIT_MESSAGE_DISPATCHER, "Navajo Dispatcher terminated.");
 		  instance = null;

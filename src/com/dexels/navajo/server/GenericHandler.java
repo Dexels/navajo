@@ -39,13 +39,10 @@ import com.dexels.navajo.logger.*;
 
 public final class GenericHandler extends ServiceHandler {
 
-    private static String adapterPath = "";
     private static HashMap loadedClasses = null;
 
     private static Object mutex1 = new Object();
     private static Object mutex2 = new Object();
-
-    private final static NavajoLogger logger = NavajoConfig.getNavajoLogger(GenericHandler.class);
 
     public GenericHandler() {
       if (loadedClasses == null)
@@ -157,7 +154,6 @@ public final class GenericHandler extends ServiceHandler {
                 loadedClasses.put(className, newLoader);
             }
 
-            long start = System.currentTimeMillis();
             Class cs = newLoader.getCompiledNavaScript(className);
 
             outDoc = NavajoFactory.getInstance().createNavajo();
