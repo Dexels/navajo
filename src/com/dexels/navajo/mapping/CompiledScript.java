@@ -122,7 +122,7 @@ public abstract class CompiledScript {
     boolean conditionsFailed = false;
     if (conditions != null && conditions.length > 0) {
       Navajo outMessage = access.getOutputDoc();
-      Message[] failed = Dispatcher.checkConditions(conditions, inMessage,
+      Message[] failed = Dispatcher.getInstance().checkConditions(conditions, inMessage,
           outMessage);
       if (failed != null) {
         conditionsFailed = true;

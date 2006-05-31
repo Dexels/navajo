@@ -27,7 +27,7 @@ public class MaintainanceHandler extends ServiceHandler {
 
             Util.debugLog("In MaintainanceHandler doService()");
             MaintainanceRequest maintain = new MaintainanceRequest(properties.getProperties(),
-                                                                   Dispatcher.getRepository());
+                                                                   Dispatcher.getInstance().getRepository());
 
             Util.debugLog("After constructor");
             if (access.rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_PING)) {

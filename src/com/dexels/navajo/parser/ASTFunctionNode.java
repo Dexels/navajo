@@ -4,6 +4,9 @@ package com.dexels.navajo.parser;
 /**
  * $Id$
  * $Log$
+ * Revision 1.20  2006/05/31 14:10:37  arjen
+ * Refactored for new Dispatcher.getInstance() methodology
+ *
  * Revision 1.19  2005/06/02 18:09:36  arjen
  * Removed redundant imports.
  *
@@ -95,10 +98,10 @@ public final class ASTFunctionNode extends SimpleNode {
         try {
 
           Class c;
-          if (Dispatcher.getNavajoClassLoader()==null) {
+          if (Dispatcher.getInstance().getNavajoClassLoader()==null) {
             c = Class.forName("com.dexels.navajo.functions."+functionName);
           } else {
-            c = Dispatcher.getNavajoClassLoader().getClass("com.dexels.navajo.functions."+functionName);
+            c = Dispatcher.getInstance().getNavajoClassLoader().getClass("com.dexels.navajo.functions."+functionName);
           }
 
             FunctionInterface  f = (FunctionInterface) c.newInstance();

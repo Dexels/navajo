@@ -59,45 +59,34 @@ public final class Dispatcher {
   public static final String version = "Navajo Integrator Release 2005.11.10";
   public static String serverId = null;
 
-  private Navajo inMessage = null;
-  protected static boolean matchCN = false;
-  public static Set accessSet = Collections.synchronizedSet(new HashSet());
-  public static boolean useAuthorisation = true;
-  private static final String defaultDispatcher =
+  /**
+   * Unique dispatcher instance.
+   */
+  private static Dispatcher instance = null;
+  
+  //private Navajo inMessage = null;
+  protected  boolean matchCN = false;
+  public  Set accessSet = Collections.synchronizedSet(new HashSet());
+  public  boolean useAuthorisation = true;
+  private  final String defaultDispatcher =
       "com.dexels.navajo.server.GenericHandler";
-  private static final String defaultNavajoDispatcher =
-      "com.dexels.navajo.server.MaintainanceHandler";
+  private static final String defaultNavajoDispatcher = "com.dexels.navajo.server.MaintainanceHandler";
   public static java.util.Date startTime = new java.util.Date();
 
-  public static long requestCount = 0;
-  private static double totalAuthorsationTime = 0.0;
-  private static double totalRuleValidationTime = 0.0;
-  private static double totalDispatchTime = 0.0;
-  private static NavajoConfig navajoConfig = null;
-  private static boolean initialized = false;
+  public  long requestCount = 0;
+  private NavajoConfig navajoConfig = null;
+  private  boolean initialized = false;
 
-  private static NavajoLogger logger = null;
+  private  NavajoLogger logger = null;
 
-  private static boolean debugOn = false;
+  private  boolean debugOn = false;
 
-  private static String keyStore;
-  private static String keyPassword;
+  private  String keyStore;
+  private  String keyPassword;
 
   public static int rateWindowSize = 20;
-  private static long rateWindowStart = 0;
   public static double requestRate = 0.0;
-  private static long[] rateWindow = new long[rateWindowSize];
-
-  private String properDir(String in) {
-    String result = in + (in.endsWith("/") ? "" : "/");
-    return result;
-  }
-
-  private synchronized void init(InputStream in,
-                                 InputStreamReader fileInputStreamReader) throws
-      SystemException {
-    init(in, fileInputStreamReader, null);
-  }
+  private  long[] rateWindow = new long[rateWindowSize];
 
   /**
    * Initialize the Dispatcher.
@@ -138,21 +127,20 @@ public final class Dispatcher {
    * @param fileInputStreamReader
    * @throws NavajoException
    */
-  public Dispatcher(String configurationPath,
-                    InputStreamReader fileInputStreamReader) throws
-      NavajoException {
-    try {
-      if (!initialized) {
-        FileInputStream fis = new FileInputStream(configurationPath);
-        init(fis, fileInputStreamReader);
-        fis.close();
-      }
-    }
-    catch (Exception se) {
-      se.printStackTrace(System.err);
-      throw NavajoFactory.getInstance().createNavajoException(se);
-    }
-  }
+//  private Dispatcher(String configurationPath, InputStreamReader fileInputStreamReader) throws
+//      NavajoException {
+//    try {
+//      if (!initialized) {
+//        FileInputStream fis = new FileInputStream(configurationPath);
+//        init(fis, fileInputStreamReader);
+//        fis.close();
+//      }
+//    }
+//    catch (Exception se) {
+//      se.printStackTrace(System.err);
+//      throw NavajoFactory.getInstance().createNavajoException(se);
+//    }
+//  }
 
   /**
    * Constructor for URL based configuration.
@@ -161,7 +149,7 @@ public final class Dispatcher {
    * @param fileInputStreamReader
    * @throws NavajoException
    */
-  public Dispatcher(URL configurationUrl,
+  private Dispatcher(URL configurationUrl,
                     InputStreamReader fileInputStreamReader,
                     NavajoClassSupplier cl) throws
       NavajoException {
@@ -178,18 +166,35 @@ public final class Dispatcher {
     }
   }
 
-  public Dispatcher(URL configurationUrl,
+  private Dispatcher(URL configurationUrl,
                     InputStreamReader fileInputStreamReader) throws
       NavajoException {
     this(configurationUrl, fileInputStreamReader, null);
   }
 
+  public static Dispatcher getInstance() {
+	  return instance;
+  }
+  
+  public static Dispatcher getInstance(URL configurationUrl,
+          InputStreamReader fileInputStreamReader) throws
+          NavajoException  {
+	  
+	  if ( instance == null ) {
+		  instance = new Dispatcher(configurationUrl, fileInputStreamReader);
+	  }
+	  
+	  return instance;
+	  
+	  
+  }
+  
   /**
    * Set the location of the certificate keystore.
    *
    * @param s
    */
-  public static final void setKeyStore(String s) {
+  public  final void setKeyStore(String s) {
     keyStore = s;
   }
 
@@ -198,7 +203,7 @@ public final class Dispatcher {
    *
    * @param s
    */
-  public static final void setKeyPassword(String s) {
+  public  final void setKeyPassword(String s) {
     keyPassword = s;
   }
 
@@ -207,7 +212,7 @@ public final class Dispatcher {
    *
    * @return
    */
-  public static final String getKeyStore() {
+  public  final String getKeyStore() {
     return keyStore;
   }
 
@@ -216,11 +221,11 @@ public final class Dispatcher {
    *
    * @return
    */
-  public static final String getKeyPassword() {
+  public  final String getKeyPassword() {
     return keyPassword;
   }
 
-  public static float getRequestRate() {
+  public  float getRequestRate() {
     if(rateWindow[0] > 0){
       float time = (float)(rateWindow[rateWindowSize - 1] - rateWindow[0]) / (float)1000.0;
       float avg = (float) rateWindowSize/time;
@@ -233,7 +238,7 @@ public final class Dispatcher {
    * Clears all Navajo classloaders.
    *
    */
-  public synchronized static final void doClearCache() {
+  public synchronized  final void doClearCache() {
     navajoConfig.doClearCache();
     GenericHandler.doClearCache();
     System.runFinalization();
@@ -245,7 +250,7 @@ public final class Dispatcher {
    *
    */
 
-  public synchronized static final void doClearScriptCache() {
+  public synchronized  final void doClearScriptCache() {
       navajoConfig.doClearScriptCache();
       GenericHandler.doClearCache();
 //      System.runFinalization();
@@ -260,7 +265,7 @@ public final class Dispatcher {
    *
    * @throws java.lang.ClassNotFoundException
    */
-  public synchronized static final void updateRepository(String repositoryClass) throws
+  public synchronized  final void updateRepository(String repositoryClass) throws
       java.lang.ClassNotFoundException {
     doClearCache();
     Repository newRepository = RepositoryFactory.getRepository( (
@@ -281,7 +286,7 @@ public final class Dispatcher {
    *
    * @return
    */
-  public static final NavajoConfig getNavajoConfig() {
+  public  final NavajoConfig getNavajoConfig() {
     return navajoConfig;
   }
 
@@ -291,7 +296,7 @@ public final class Dispatcher {
    *
    * @return
    */
-  public static final NavajoClassSupplier getNavajoClassLoader() {
+  public  final NavajoClassSupplier getNavajoClassLoader() {
     if (navajoConfig == null) {
       return null;
     }
@@ -305,7 +310,7 @@ public final class Dispatcher {
    *
    * @return
    */
-  public static final Repository getRepository() {
+  public  final Repository getRepository() {
     return navajoConfig.getRepository();
   }
 
@@ -417,14 +422,14 @@ public final class Dispatcher {
    * @param total
    * @throws SystemException
    */
-  private final void timeSpent(Access access, int part, long total) throws
-      SystemException {
-    if (debugOn) {
-      logger.log(NavajoPriority.DEBUG,
-                 "Time spent in " + part + ": " + (total / 1000.0) + " seconds");
-    }
-    navajoConfig.getRepository().logTiming(access, part, total);
-  }
+//  private final void timeSpent(Access access, int part, long total) throws
+//      SystemException {
+//    if (debugOn) {
+//      logger.log(NavajoPriority.DEBUG,
+//                 "Time spent in " + part + ": " + (total / 1000.0) + " seconds");
+//    }
+//    navajoConfig.getRepository().logTiming(access, part, total);
+//  }
 
   private final void addParameters(Navajo doc, Parameters parms) throws
       NavajoException {
@@ -450,7 +455,7 @@ public final class Dispatcher {
     }
   }
 
-  public static final boolean doMatchCN() {
+  public  final boolean doMatchCN() {
     return matchCN;
   }
 
@@ -553,7 +558,7 @@ public final class Dispatcher {
   /**
    * Generate a Navajo error message and log the error to the Database.
    */
-  public static final Navajo generateErrorMessage(Access access, String message,
+  public  final Navajo generateErrorMessage(Access access, String message,
                                                   int code, int level,
                                                   Throwable t) throws
       FatalException {
@@ -668,7 +673,7 @@ public final class Dispatcher {
    * @throws SystemException
    * @throws UserException
    */
-  public static final Message[] checkConditions(ConditionData[] conditions,
+  public  final Message[] checkConditions(ConditionData[] conditions,
                                                 Navajo inMessage,
                                                 Navajo outMessage) throws
       NavajoException, SystemException, UserException {
@@ -765,8 +770,7 @@ public final class Dispatcher {
    * @return
    * @throws FatalException
    */
-  public final Navajo handle(Navajo inMessage, Object userCertificate,
-                             ClientInfo clientInfo) throws
+  public final Navajo handle(Navajo inMessage, Object userCertificate, ClientInfo clientInfo) throws
       FatalException {
 
     Access access = null;
@@ -778,7 +782,7 @@ public final class Dispatcher {
     Exception myException = null;
     
     try {
-      this.inMessage = inMessage;
+//      this.inMessage = inMessage;
 
       requestCount++;
 
@@ -1058,6 +1062,10 @@ public final class Dispatcher {
 
   public void finalize() {
     //System.err.println("In finalize() Dispatcher object");
+  }
+  
+  public static void killMe() {
+	  instance = null;
   }
 
   public String getServerId() {

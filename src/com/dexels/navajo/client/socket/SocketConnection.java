@@ -50,7 +50,7 @@ public class SocketConnection implements Runnable {
             while (true) {
 //                Dispatcher.doClearScriptCache();
                 long time1 = System.currentTimeMillis();
-                Dispatcher.doClearCache();
+                Dispatcher.getInstance().doClearCache();
                 long time2 = System.currentTimeMillis();
                 Navajo n = NavajoFactory.getInstance().createNavajo(in);
                 long time3 = System.currentTimeMillis();

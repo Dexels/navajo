@@ -65,7 +65,7 @@ public class NavajoRunner {
 			dci.setUsername(username);
 			dci.setPassword(password);
 			dci.init(server.toURL(),NavajoRunner.class.getClassLoader(),System.getProperty("user.dir"));
-		      Dispatcher.getNavajoConfig().setClassloader(new NavajoBasicClassLoader());
+		      Dispatcher.getInstance().getNavajoConfig().setClassloader(new NavajoBasicClassLoader());
 
 //			System.err.println("Classloader: "+NavajoRunner.class.getClassLoader());
 			Navajo n = null;

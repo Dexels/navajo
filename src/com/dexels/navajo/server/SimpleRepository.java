@@ -101,7 +101,7 @@ public void initGlobals(String method, String username, Navajo inMessage, Map ex
 			// Navajo conditions = NavajoFactory.getInstance().createNavajo(new
 			// FileInputStream(config.getRootPath() + "conditions/" +
 			// access.rpcName + ".val"));
-			Navajo conditions = Dispatcher.getNavajoConfig().getConditions(
+			Navajo conditions = Dispatcher.getInstance().getNavajoConfig().getConditions(
 					access.rpcName);
 			if (conditions == null) {
 				// System.out.println("No matching conditions found");

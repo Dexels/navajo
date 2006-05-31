@@ -195,7 +195,7 @@ public final class NavajoConfig {
         if (security != null) {
           Property matchCn = security.getProperty("match_cn");
           if (matchCn != null)
-            Dispatcher.matchCN = matchCn.getValue().equals("true");
+            Dispatcher.getInstance().matchCN = matchCn.getValue().equals("true");
         }
 
         Property s = body.getProperty("parameters/async_timeout");

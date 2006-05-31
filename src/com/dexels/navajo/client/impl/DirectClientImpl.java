@@ -121,7 +121,7 @@ private String username;
       Header header = NavajoFactory.getInstance().createHeader(out, method,
           user, password, expirationInterval );
       out.addHeader(header);
-      NavajoConfig navajoConfig = Dispatcher.getNavajoConfig();
+      NavajoConfig navajoConfig = Dispatcher.getInstance().getNavajoConfig();
 
 // ADDED THIS STUFF:
 //      System.err.println("USER: "+user);
@@ -304,7 +304,7 @@ private String username;
   public void init(URL config) throws ClientException {
     try {
 
-      dispatcher = new Dispatcher(config,
+      dispatcher = Dispatcher.getInstance( config,
                                   new com.dexels.navajo.server.
                                   ClassloaderInputStreamReader());
       dispatcher.setUseAuthorisation(false);
@@ -325,7 +325,7 @@ private String username;
     try {
 
 //    NavajoBasicClassLoader nbcl = new NavajoBasicClassLoader();
-      dispatcher = new Dispatcher(config,new FileInputStreamReader(path),null);
+      dispatcher = Dispatcher.getInstance(config,new FileInputStreamReader(path));
 //      dispatcher.setUseAuthorisation(false);
 //      System.err.println("IN INIT of DCI. classloader: "+dispatcher.getNavajoConfig().getClassloader());
 //      dispatcher.getNavajoConfig().setClassloader(cl);
@@ -338,7 +338,7 @@ private String username;
 
   public void clearClassCache() {
       if (dispatcher!=null) {
-        Dispatcher.doClearCache();
+        Dispatcher.getInstance().doClearCache();
     }
   }
   
@@ -346,7 +346,7 @@ private String username;
       try {
 //          dispatcher = new Dispatcher(config,new FileInputStreamReader(path),new DirectClassLoader(path,path+"/navajo-tester/auxilary/classes"));
 
-        dispatcher = new Dispatcher(config,new FileInputStreamReader(path),null);
+        dispatcher = Dispatcher.getInstance(config,new FileInputStreamReader(path));
       }
       
       catch (NavajoException ex) {

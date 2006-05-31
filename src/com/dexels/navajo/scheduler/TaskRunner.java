@@ -228,7 +228,7 @@ public class TaskRunner implements Runnable {
 	}
 	
 	public static synchronized void log(Task t, Navajo result, boolean error, java.util.Date startedat) {
-		File log = new File( Dispatcher.getNavajoConfig().rootPath + "/log/tasks.log" );
+		File log = new File( Dispatcher.getInstance().getNavajoConfig().rootPath + "/log/tasks.log" );
 		if ( !log.exists() ) {
 			log.getParentFile().mkdirs();
 		}
