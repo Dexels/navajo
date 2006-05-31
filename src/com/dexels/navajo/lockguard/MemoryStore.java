@@ -77,17 +77,15 @@ public class MemoryStore extends LockStore {
 	}
 
 	private Lock getNewLock(Access a, LockDefinition ld) {
-		Lock nl = new Lock(ld);
+		Lock nl = new Lock(ld.id);
 		nl.instanceCount = 0;
 		nl.webservice = a.rpcName;
-		nl.username = a.rpcUser;
-		nl.request = a.getInDoc();
+		nl.username =  (ld.matchUsername ? a.rpcUser : null);
+		nl.request = (ld.matchRequest ? a.getInDoc() : null);
 		return nl;
 	}
 	
 	private Lock getLock(Access a, LockDefinition ld) {
-		
-		//System.err.println("Checking LockDefinition: " + ld.webservice);
 		
 		if ( Pattern.matches( ld.webservice, a.rpcName ) ) {
 			
@@ -108,23 +106,14 @@ public class MemoryStore extends LockStore {
 				
 				Lock l = (Lock) all.next();
 				
-				System.err.println("ld.matchUsername: " + ld.matchUsername);
 				if ( ld.matchUsername && l.username.equals(a.rpcUser) ) {
 					
- 					System.err.println("Usernames match");
-//					System.err.println("Matchrequest: " + ld.matchRequest);
-//					System.err.println("A = " + a.getInDoc());
-//					System.err.println("Stored request: " + l.request);
-					
 					if ( !ld.matchRequest ) { // Don't care about matching request.
-						//System.err.println("Don't care about matching requests.");
 						return l;
 					} else if ( ld.matchRequest && matchRequest( l.request, a.getInDoc(), ld )  ) {
-						//System.err.println("Requests match");
 						return l;
 					} else {
 						// Create new lock for this lock set.
-						//System.err.println("Created fresh lock");
 						Lock nl =  getNewLock(a, ld);
 						relevantLocks.add( nl );
 						return nl;
@@ -133,7 +122,6 @@ public class MemoryStore extends LockStore {
 				} else if ( ld.matchUsername && !l.username.equals(a.rpcUser ) ) {
 					
 					// Create new lock for this lock set.
-					//System.err.println("Created fresh lock");
 					Lock nl =  getNewLock(a, ld);
 					relevantLocks.add( nl );
 					return nl;
@@ -143,11 +131,9 @@ public class MemoryStore extends LockStore {
 					if ( !ld.matchRequest ) { // Don't care about matching request.
 						return l;
 					} else if ( ld.matchRequest && matchRequest( l.request, a.getInDoc(), ld )  ) {
-						System.err.println(">> Requests match");
 						return l;
 					} else {
                         // Create new lock for this lock set.
-						System.err.println(">> Created fresh lock");
 						Lock nl =  getNewLock(a, ld);
 						relevantLocks.add( nl );
 						return nl;

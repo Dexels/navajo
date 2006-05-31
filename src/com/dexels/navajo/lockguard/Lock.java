@@ -30,20 +30,14 @@ public class Lock {
 
 	public static final String VERSION = "$Id$";
 	
-	public LockDefinition myLockDefinition;
 	public int lockId;
 	public int instanceCount;
 	public String username;
 	public String webservice;
 	public Navajo request;
 	
-	public Lock( LockDefinition ld ) {
-		myLockDefinition = ld;
-		lockId = ld.id;
-	}
-	
-	public String toString() {
-		return lockId + "(" + myLockDefinition.webservice + ") " + ": " + instanceCount + " (" + username + ", " + webservice + ")";
+	public Lock( int id ) {
+		lockId = id;
 	}
 
 }
