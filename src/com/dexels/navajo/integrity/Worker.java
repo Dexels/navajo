@@ -63,11 +63,11 @@ public class Worker implements Runnable, Mappable {
 	private Dispatcher myDispatcher;
 	
 	// Worklist containst responses that still need to be written to a file.
-	private static Map workList = Collections.synchronizedMap(new HashMap());
+	private Map workList = Collections.synchronizedMap(new HashMap());
 	// Integrity cache contains mapping between unique request id and response file.
-	private static Map integrityCache = Collections.synchronizedMap(new HashMap());
+	private Map integrityCache = Collections.synchronizedMap(new HashMap());
 	// Contains all unique request ids that still need to be handled by the worker thread.
-	private static Set notWrittenReponses = Collections.synchronizedSet(new HashSet());
+	private Set notWrittenReponses = Collections.synchronizedSet(new HashSet());
 	
 	private boolean killed = false;
 	private Thread thread;

@@ -63,7 +63,7 @@ public final class LockManager implements Runnable, Mappable {
 	private final static String LOCKS_CONFIG = "locks.xml";
 	
 	private boolean killed = false;
-	private static Thread thread;
+	private Thread thread;
 	
 	private final long getConfigTimeStamp() {
 		if ( myConfig != null ) {
@@ -145,9 +145,9 @@ public final class LockManager implements Runnable, Mappable {
 			instance = new LockManager();
 			instance.myConfig = config;
 			
-			thread = new Thread(instance);
-			thread.setDaemon(true);
-			thread.start();
+			instance.thread = new Thread(instance);
+			instance.thread.setDaemon(true);
+			instance.thread.start();
 			
 		}
 		return instance;

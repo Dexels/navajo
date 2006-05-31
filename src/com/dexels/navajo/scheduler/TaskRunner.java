@@ -61,7 +61,7 @@ public class TaskRunner implements Runnable {
 	
 	private boolean killed = false;
 
-	private static Thread thread;
+	private Thread thread;
 	
 	public static TaskRunner getInstance(NavajoConfig config) {
 		return getInstance(config, null);
@@ -153,9 +153,9 @@ public class TaskRunner implements Runnable {
 		instance = new TaskRunner();
 		instance.myConfig = config;
 		instance.myDispatcher = myDispatcher;
-		thread = new Thread(instance);
-		thread.setDaemon(true);
-	    thread.start();
+		instance.thread = new Thread(instance);
+		instance.thread.setDaemon(true);
+		instance.thread.start();
 	    
 	    if ( config != null && myDispatcher != null ) {
 	    	instance.readConfig();

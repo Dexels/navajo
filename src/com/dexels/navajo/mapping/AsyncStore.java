@@ -45,7 +45,7 @@ public final class AsyncStore
 
   private boolean killed = false;
 
-private static Thread thread;
+  private Thread thread;
   
   /**
    * Get the singleton AsyncStore object instance.
@@ -71,9 +71,9 @@ private static Thread thread;
       }
       instance.objectStore = Collections.synchronizedMap(new HashMap());
       instance.accessStore = Collections.synchronizedMap(new HashMap());
-      thread = new Thread(instance);
-	thread.setDaemon(true);
-      thread.start();
+      instance.thread = new Thread(instance);
+      instance.thread.setDaemon(true);
+      instance.thread.start();
     }
     return instance;
   }
