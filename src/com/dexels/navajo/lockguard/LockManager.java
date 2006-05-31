@@ -282,7 +282,7 @@ public final class LockManager implements Runnable, Mappable {
 	}
 	
 	public LockDefinition [] getDefinitions() {
-		System.err.println("LockDefinitions size is " : lockDefinitions.size());
+		System.err.println("LockDefinitions size is " + lockDefinitions.size());
 		definitions = new LockDefinition[lockDefinitions.size()];
 		return (LockDefinition []) lockDefinitions.values().toArray(definitions);
 	}
