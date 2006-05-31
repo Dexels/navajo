@@ -473,8 +473,17 @@ public class NavajoClient implements ClientInterface {
     con.setDoInput(true);
     con.setUseCaches(false);
  //    try {
-        con.setRequestProperty("Transfer-Encoding", "chunked" );
-        con.setChunkedStreamingMode(1000);
+        
+        try {
+        	java.lang.reflect.Method chunked = con.getClass().getMethod("setChunkedStreamingMode", new Class[]{int.class});
+			chunked.invoke( con, new Object[]{new Integer(1000)});
+			con.setRequestProperty("Transfer-Encoding", "chunked" );
+		} catch (Throwable e) {
+			//e.printStackTrace(System.err);
+			System.err.println("setChunkedStreamingMode does not exist, java 1.4?");
+		}
+		System.err.println("Is this reachable????");
+        //con.setChunkedStreamingMode(1000);
 //    } catch (Throwable t) {
 //        System.err.println("Streaming binary not successful. Client running in an old Java VM? (Before 1.5)");
 //    }
@@ -830,7 +839,7 @@ public class NavajoClient implements ClientInterface {
       ArrayList req = null;
       if (checkMethod) {
           System.err.println("Checking method for required. Don't know if this is working. Beware.");
-          Method dummy = message.getMethod(method);
+          com.dexels.navajo.document.Method dummy = message.getMethod(method);
         if (dummy != null) {
           req = dummy.getRequiredMessages();
         }
