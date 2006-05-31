@@ -1686,7 +1686,7 @@ public class SQLMap implements Mappable, LazyArray {
 		  fw.flush();
 		  fw.close();
 		
-		  b = new Binary( tempFile );
+		  b = new Binary( tempFile, false );
 		  
 		  if ( fos != null ) {
 			  fos.close();
