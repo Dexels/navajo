@@ -48,7 +48,7 @@ public final class SessionIdentification {
     if (dbIdentifier.equals("Oracle") && access != null) {
       SQLMap sql = new SQLMap();
       try {
-        sql.load(null, null, access, Dispatcher.getNavajoConfig());
+        sql.load(null, null, access, Dispatcher.getInstance().getNavajoConfig());
         sql.setDatasource(datasource);
         sql.setQuery(oracleSid);
         sql.setParameter(access.accessID);

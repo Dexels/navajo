@@ -79,7 +79,7 @@ public final class OracleStore implements StoreInterface {
 		Connection myConnection = null;
 		
 		try {
-			sqlMap.load(null, null, null, Dispatcher.getNavajoConfig());
+			sqlMap.load(null, null, null, Dispatcher.getInstance().getNavajoConfig());
 			sqlMap.setDatasource("navajostore");
 			myConnection = sqlMap.getConnection();
 			ready = true;
@@ -99,7 +99,7 @@ public final class OracleStore implements StoreInterface {
 	 * @param a
 	 */
 	private final void addAccess(final Access a) {
-		if (Dispatcher.getNavajoConfig().dbPath != null) {
+		if (Dispatcher.getInstance().getNavajoConfig().dbPath != null) {
 			Connection con = createConnection(false, false, false);
 			if (con != null) {
 				try {
@@ -121,7 +121,7 @@ public final class OracleStore implements StoreInterface {
 					ps.executeUpdate();
 					ps.close();
 					// Only log details if exception occured or if full accesslog monitoring is enabled.
-					if (a.getException() != null || Dispatcher.getNavajoConfig().needsFullAccessLog(a) ) {
+					if (a.getException() != null || Dispatcher.getInstance().getNavajoConfig().needsFullAccessLog(a) ) {
 						addLog(con, a);
 					}
 				}

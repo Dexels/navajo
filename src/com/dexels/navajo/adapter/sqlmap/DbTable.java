@@ -82,7 +82,7 @@ public class DbTable implements Mappable {
   protected final void setColumns() throws Exception {
 
     SQLMap sqlMap = new SQLMap();
-    sqlMap.load(null, null, null, Dispatcher.getNavajoConfig());
+    sqlMap.load(null, null, null, Dispatcher.getInstance().getNavajoConfig());
     sqlMap.setDatasource(datasource);
     Connection c = sqlMap.getConnection();
     ArrayList l = new ArrayList();

@@ -61,7 +61,7 @@ public class AdminMap implements Mappable {
   public int requestRateWindowSize;
 
   public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
-    NavajoConfig nc = Dispatcher.getNavajoConfig();
+    NavajoConfig nc = Dispatcher.getInstance().getNavajoConfig();
     scriptPath = nc.getScriptPath();
     configPath = nc.getConfigPath();
     adapterPath = nc.getAdapterPath();
@@ -145,7 +145,7 @@ public class AdminMap implements Mappable {
    }
 
    public int getRequestCount() {
-     return (int) com.dexels.navajo.server.Dispatcher.requestCount;
+     return (int) com.dexels.navajo.server.Dispatcher.getInstance().requestCount;
    }
 
    public AsyncProxy [] getAsyncThreads() {
@@ -181,7 +181,7 @@ public class AdminMap implements Mappable {
    }
 
    public AccessMap [] getUsers() {
-      Set all = com.dexels.navajo.server.Dispatcher.accessSet;
+      Set all = com.dexels.navajo.server.Dispatcher.getInstance().accessSet;
       Iterator iter = all.iterator();
       ArrayList d = new ArrayList();
       while (iter.hasNext()) {
@@ -213,7 +213,7 @@ public class AdminMap implements Mappable {
     return com.dexels.navajo.server.Dispatcher.startTime;
   }
   public float getRequestRate() {
-    return Dispatcher.getRequestRate();
+    return Dispatcher.getInstance().getRequestRate();
 
 //    float timespan =  ( new java.util.Date().getTime() - com.dexels.navajo.server.Dispatcher.startTime.getTime() ) / (float) 1000.0;
 //    return ((float) getRequestCount() / timespan );
@@ -229,8 +229,8 @@ public class AdminMap implements Mappable {
     return com.dexels.navajo.server.Dispatcher.version;
   }
   public String getRepository() {
-    if (com.dexels.navajo.server.Dispatcher.getRepository() != null) {
-      return com.dexels.navajo.server.Dispatcher.getRepository().getClass().
+    if (com.dexels.navajo.server.Dispatcher.getInstance().getRepository() != null) {
+      return com.dexels.navajo.server.Dispatcher.getInstance().getRepository().getClass().
           getName();
     } else {
       return "No repository configured";
@@ -279,7 +279,7 @@ public class AdminMap implements Mappable {
   }
 
   public boolean getMonitorOn() {
-    return Dispatcher.getNavajoConfig().isMonitorOn();
+    return Dispatcher.getInstance().getNavajoConfig().isMonitorOn();
   }
 
   /**
@@ -290,34 +290,34 @@ public class AdminMap implements Mappable {
   public void setMonitorOn(boolean monitorOn) {
     System.err.println("Setting monitor to: " + monitorOn);
     this.monitorOn = monitorOn;
-    Dispatcher.getNavajoConfig().setMonitorOn(monitorOn);
+    Dispatcher.getInstance().getNavajoConfig().setMonitorOn(monitorOn);
   }
 
   public int getMonitorTotaltime() {
-    return Dispatcher.getNavajoConfig().getMonitorExceedTotaltime();
+    return Dispatcher.getInstance().getNavajoConfig().getMonitorExceedTotaltime();
   }
 
   public String getMonitorUsers() {
-    return Dispatcher.getNavajoConfig().getMonitorUsers();
+    return Dispatcher.getInstance().getNavajoConfig().getMonitorUsers();
   }
 
   public String getMonitorWS() {
-    return Dispatcher.getNavajoConfig().getMonitorWebservices();
+    return Dispatcher.getInstance().getNavajoConfig().getMonitorWebservices();
   }
 
   public void setMonitorWS(String monitorWS) {
     this.monitorWS = monitorWS;
-    Dispatcher.getNavajoConfig().setMonitorWebservices(monitorWS);
+    Dispatcher.getInstance().getNavajoConfig().setMonitorWebservices(monitorWS);
   }
 
   public void setMonitorUsers(String monitorUsers) {
     this.monitorUsers = monitorUsers;
-    Dispatcher.getNavajoConfig().setMonitorUsers(monitorUsers);
+    Dispatcher.getInstance().getNavajoConfig().setMonitorUsers(monitorUsers);
   }
 
   public void setMonitorTotaltime(int monitorTotaltime) {
     this.monitorTotaltime = monitorTotaltime;
-    Dispatcher.getNavajoConfig().setMonitorExceedTotaltime(monitorTotaltime);
+    Dispatcher.getInstance().getNavajoConfig().setMonitorExceedTotaltime(monitorTotaltime);
   }
   
   public void setWebservice(String w) {

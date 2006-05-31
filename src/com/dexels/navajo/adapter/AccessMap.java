@@ -135,7 +135,7 @@ public final class AccessMap implements Mappable {
     if (accessId == null) {
       throw new UserException(-1, "Set accessId first");
     }
-    Set all = com.dexels.navajo.server.Dispatcher.accessSet;
+    Set all = com.dexels.navajo.server.Dispatcher.getInstance().accessSet;
     Iterator iter = all.iterator();
     while (iter.hasNext()) {
       Access a = (Access) iter.next();
