@@ -49,6 +49,7 @@ import com.dexels.navajo.util.AuditLog;
 
 public final class LockManager implements Runnable, Mappable {
 
+	public LockDefinition [] definitions;
 	public Lock [] locks;
 	
 	public static final String VERSION = "$Id$";
@@ -278,6 +279,12 @@ public final class LockManager implements Runnable, Mappable {
 	
 	public Lock [] getLocks() {
 		return LockStore.getStore().getAllLocks();
+	}
+	
+	public LockDefinition [] getDefinitions() {
+		System.err.println("LockDefinitions size is " : lockDefinitions.size());
+		definitions = new LockDefinition[lockDefinitions.size()];
+		return (LockDefinition []) lockDefinitions.values().toArray(definitions);
 	}
 	
 	public String getVERSION() {

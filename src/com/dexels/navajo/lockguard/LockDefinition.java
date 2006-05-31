@@ -30,6 +30,14 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.mapping.Mappable;
+import com.dexels.navajo.mapping.MappableException;
+import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.NavajoConfig;
+import com.dexels.navajo.server.Parameters;
+import com.dexels.navajo.server.UserException;
+
 /**
  * LockDefinition is supplied as follows:
  * 
@@ -46,7 +54,7 @@ import java.util.StringTokenizer;
  * @author arjen
  *
  */
-public class LockDefinition {
+public class LockDefinition implements Mappable {
 	
 	public static final String VERSION = "$Id$";
 	
@@ -67,6 +75,26 @@ public class LockDefinition {
 	 */
 	public int maxInstanceCount;
 	
+	public int getId() {
+		return this.id;
+	}
+	
+	public String getWebservice() {
+		return this.webservice;
+	}
+	
+	public boolean getMatchUsername() {
+		return this.matchUsername;
+	}
+	
+	public boolean getMatchRequest() {
+		return this.matchRequest;
+	}
+	
+	public int getMaxInstanceCount() {
+		return this.maxInstanceCount;
+	}
+	
 	public LockDefinition(
 				String webservice,
 				boolean matchUsername,
@@ -83,6 +111,21 @@ public class LockDefinition {
 		this.excludeProperties = excludeProperties;
 		
 		this.maxInstanceCount = maxInstanceCount;
+	}
+
+	public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void store() throws MappableException, UserException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void kill() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	
