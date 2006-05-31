@@ -39,12 +39,18 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.integrity.Worker;
+import com.dexels.navajo.mapping.Mappable;
+import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.NavajoConfig;
+import com.dexels.navajo.server.Parameters;
+import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.util.AuditLog;
 
-public class LockManager implements Runnable {
+public class LockManager implements Runnable, Mappable {
 
+	public Lock [] locks;
+	
 	public static final String VERSION = "$Id$";
 	
 	Map lockDefinitions = Collections.synchronizedMap( new HashMap() );
@@ -259,5 +265,22 @@ public class LockManager implements Runnable {
 		}
 		
 		
+	}
+
+	public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
+	}
+
+	public void store() throws MappableException, UserException {
+	}
+
+	public void kill() {	
+	}
+	
+	public Lock [] getLocks() {
+		return LockStore.getStore().getAllLocks();
+	}
+	
+	public String getVERSION() {
+		return this.VERSION;
 	}
 }

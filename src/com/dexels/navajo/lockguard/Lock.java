@@ -25,19 +25,60 @@
 package com.dexels.navajo.lockguard;
 
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.mapping.Mappable;
+import com.dexels.navajo.mapping.MappableException;
+import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.NavajoConfig;
+import com.dexels.navajo.server.Parameters;
+import com.dexels.navajo.server.UserException;
 
-public class Lock {
+public class Lock implements Mappable {
 
 	public static final String VERSION = "$Id$";
 	
 	public int lockId;
+	public String lockSignature;
 	public int instanceCount;
 	public String username;
 	public String webservice;
 	public Navajo request;
 	
-	public Lock( int id ) {
+	public Lock( int id, String lockSignature ) {
 		lockId = id;
+		this.lockSignature = lockSignature;
+	}
+
+	public int getLockId() {
+		return lockId;
+	}
+	
+	public int getInstanceCount() {
+		return instanceCount;
+	}
+	
+	public String getUsername() {
+		return this.username;
+	}
+	
+	public String getLockSignature() {
+		return this.lockSignature;
+	}
+	
+	public Object clone() {
+		Lock copy = new Lock( this.lockId, this.lockSignature );
+		copy.instanceCount = this.instanceCount;
+		copy.username = this.username;
+		copy.webservice = this.webservice;
+		return copy;
+	}
+	
+	public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
+	}
+	
+	public void store() throws MappableException, UserException {
+	}
+	
+	public void kill() {
 	}
 
 }

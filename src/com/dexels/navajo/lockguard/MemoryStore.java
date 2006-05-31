@@ -26,6 +26,7 @@ package com.dexels.navajo.lockguard;
 
 import java.util.Collections;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -77,7 +78,7 @@ public class MemoryStore extends LockStore {
 	}
 
 	private Lock getNewLock(Access a, LockDefinition ld) {
-		Lock nl = new Lock(ld.id);
+		Lock nl = new Lock(ld.id, "(wspatterd="+ ld.webservice+",matchuser=" + ld.matchUsername + ",matchrequest="+ld.matchRequest+")");
 		nl.instanceCount = 0;
 		nl.webservice = a.rpcName;
 		nl.username =  (ld.matchUsername ? a.rpcUser : null);
@@ -188,5 +189,19 @@ public class MemoryStore extends LockStore {
 	
 		store.clear();
 	
+	}
+
+	public Lock[] getAllLocks() {
+		ArrayList lockList = new ArrayList();
+		Iterator iter = store.values().iterator();
+		while ( iter.hasNext() ) {
+			Iterator relevantLocks = ((HashSet) iter.next()).iterator();
+			while ( relevantLocks.hasNext() ) {
+				Lock l = (Lock) relevantLocks.next();
+				lockList.add(l.clone());
+			}
+		}
+		Lock [] arrayList = new Lock[lockList.size()];
+		return (Lock []) lockList.toArray(arrayList);
 	}
 }
