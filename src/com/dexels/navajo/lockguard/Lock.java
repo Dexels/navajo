@@ -56,6 +56,10 @@ public class Lock implements Mappable {
 		return instanceCount;
 	}
 	
+	public String getWebservice() {
+		return this.webservice;
+	}
+	
 	public String getUsername() {
 		return this.username;
 	}

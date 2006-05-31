@@ -41,7 +41,7 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.server.Access;
 
-public class MemoryStore extends LockStore {
+public final class MemoryStore extends LockStore {
 
 	public static final String VERSION = "$Id$";
 	
@@ -49,7 +49,7 @@ public class MemoryStore extends LockStore {
 	// 0: l1, l2, l3
 	// 1: l1
 	// ..
-	public Map store = Collections.synchronizedMap( new HashMap() );
+	public final Map store = Collections.synchronizedMap( new HashMap() );
 	
 	
 	/**
@@ -58,7 +58,7 @@ public class MemoryStore extends LockStore {
 	 * Returns LocksExceeded if no entry allowed due to too many locks of certain type.
 	 * 
 	 */
-	public Lock addLock(Access a, LockDefinition ld) throws LocksExceeded {
+	public final Lock addLock(Access a, LockDefinition ld) throws LocksExceeded {
 		
 		synchronized (VERSION) {
 			Lock hl = getLock(a, ld);
@@ -77,28 +77,33 @@ public class MemoryStore extends LockStore {
 		
 	}
 
-	private Lock getNewLock(Access a, LockDefinition ld) {
-		Lock nl = new Lock(ld.id, "(wspatterd="+ ld.webservice+",matchuser=" + ld.matchUsername + ",matchrequest="+ld.matchRequest+")");
+	private final Lock getNewLock(Access a, LockDefinition ld) {
+
+		Lock nl = new Lock(ld.id, "(wspatterd="+ ld.webservice+",matchuser=" + ld.matchUsername + ",matchrequest="+ld.matchRequest+",maxinstancecount="+ld.maxInstanceCount+")");
 		nl.instanceCount = 0;
 		nl.webservice = a.rpcName;
 		nl.username =  (ld.matchUsername ? a.rpcUser : null);
 		nl.request = (ld.matchRequest ? a.getInDoc() : null);
 		return nl;
+		
 	}
 	
-	private Lock getLock(Access a, LockDefinition ld) {
+	private final Lock getLock(Access a, LockDefinition ld) {
 		
 		if ( Pattern.matches( ld.webservice, a.rpcName ) ) {
 			
 			Set relevantLocks = (Set) store.get( new Integer(ld.id) );
 			
-			if ( relevantLocks == null ) { // Create new lock set.
+			if ( relevantLocks == null || relevantLocks.size() == 0) { // Create new lock set.
 				Lock nl =  getNewLock(a, ld);
-				relevantLocks = new HashSet();
+				if ( relevantLocks == null ) {
+					relevantLocks = new HashSet();
+				}
 				relevantLocks.add( nl );
 				store.put( new Integer(ld.id), relevantLocks );
 				return nl;
 			}
+			
 			
 			// Username should match.
 			Iterator all = relevantLocks.iterator();
@@ -146,7 +151,7 @@ public class MemoryStore extends LockStore {
 		return null;
 	}
 
-	public void removeLock(Access a, Lock l) {
+	public final void removeLock(Access a, Lock l) {
 		
 		if ( l == null ) {
 			return;
@@ -185,13 +190,13 @@ public class MemoryStore extends LockStore {
 		System.err.println("b = " + b);
 	}
 
-	public void reset() {
+	public final void reset() {
 	
 		store.clear();
 	
 	}
 
-	public Lock[] getAllLocks() {
+	public final Lock[] getAllLocks() {
 		ArrayList lockList = new ArrayList();
 		Iterator iter = store.values().iterator();
 		while ( iter.hasNext() ) {

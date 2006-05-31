@@ -47,13 +47,13 @@ import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.util.AuditLog;
 
-public class LockManager implements Runnable, Mappable {
+public final class LockManager implements Runnable, Mappable {
 
 	public Lock [] locks;
 	
 	public static final String VERSION = "$Id$";
 	
-	Map lockDefinitions = Collections.synchronizedMap( new HashMap() );
+	final Map lockDefinitions = Collections.synchronizedMap( new HashMap() );
 	static LockManager instance = null;
 	boolean readingDefinitions = true;
 	private long configTimestamp = -1;
@@ -61,7 +61,7 @@ public class LockManager implements Runnable, Mappable {
 	
 	private final static String LOCKS_CONFIG = "locks.xml";
 	
-	private long getConfigTimeStamp() {
+	private final long getConfigTimeStamp() {
 		if ( myConfig != null ) {
 			java.io.File f = new java.io.File(myConfig.getConfigPath() + "/" + LOCKS_CONFIG);
 			if ( f != null && f.exists() ) {
@@ -78,11 +78,11 @@ public class LockManager implements Runnable, Mappable {
 		return -1;
 	}
 	
-	private void setConfigTimeStamp() {
+	private final void setConfigTimeStamp() {
 		configTimestamp = getConfigTimeStamp();
 	}
 	
-	private boolean isConfigModified() {
+	private final boolean isConfigModified() {
 		if ( configTimestamp != getConfigTimeStamp() && getConfigTimeStamp() != -1 ) {
 			return true;
 		} else {
@@ -90,7 +90,7 @@ public class LockManager implements Runnable, Mappable {
 		}
 	}
 	
-	private void readDefinitions() {
+	private final void readDefinitions() {
 
 		try {
 			readingDefinitions = true;
@@ -161,7 +161,7 @@ public class LockManager implements Runnable, Mappable {
 	 * @param a
 	 * @return
 	 */
-	public Lock [] grantAccess(Access a) throws LocksExceeded {
+	public final Lock [] grantAccess(Access a) throws LocksExceeded {
 		
 		while ( readingDefinitions ) {
 			// Wait
