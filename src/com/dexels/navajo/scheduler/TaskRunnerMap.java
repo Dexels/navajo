@@ -31,6 +31,7 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.server.UserException;
@@ -54,13 +55,11 @@ public class TaskRunnerMap implements Mappable {
 	
 	private Access myAccess;
 	private Navajo myRequest;
-	private NavajoConfig myConfig;
 	
 	public void load(Parameters parms, Navajo inMessage, Access access,
 			NavajoConfig config) throws MappableException, UserException {
 		myAccess = access;
 		myRequest = inMessage;
-		myConfig = config;
 	}
 
 	public void setTrigger(String s) {
@@ -76,7 +75,7 @@ public class TaskRunnerMap implements Mappable {
 	}
 	
 	public void setInactive(boolean b) {
-		TaskRunner tr = TaskRunner.getInstance(myConfig);
+		TaskRunner tr = TaskRunner.getInstance();
 		Task t = (Task) tr.getTasks().get(id);
 		if ( t != null ) {
 			t.setInactive(b);
@@ -87,7 +86,7 @@ public class TaskRunnerMap implements Mappable {
 		if ( !b || id == null ) {
 			return;
 		}
-		TaskRunner tr = TaskRunner.getInstance(myConfig);
+		TaskRunner tr = TaskRunner.getInstance();
 		tr.removeTask(id);
 	}
 	
@@ -95,7 +94,7 @@ public class TaskRunnerMap implements Mappable {
 		if ( !b || id == null ) {
 			return;
 		}
-		TaskRunner tr = TaskRunner.getInstance(myConfig);
+		TaskRunner tr = TaskRunner.getInstance();
 		if ( ! tr.getTasks().containsKey(id) ) {
 			return;
 		}
@@ -113,7 +112,7 @@ public class TaskRunnerMap implements Mappable {
 		
 		try {
 			Task myTask = new Task(webservice, myAccess.rpcUser, myAccess.rpcPwd, myAccess, trigger);
-			TaskRunner tr = TaskRunner.getInstance(myConfig);
+			TaskRunner tr = TaskRunner.getInstance();
 			if ( tr.containsTask( id ) ) {
 				throw new UserException(-1, "Tasks already exists");
 			}
@@ -126,7 +125,7 @@ public class TaskRunnerMap implements Mappable {
 	}
 	
 	public TaskMap [] getTasks() throws UserException, MappableException {
-		TaskRunner tr = TaskRunner.getInstance(myConfig);
+		TaskRunner tr = TaskRunner.getInstance();
 		Collection all = tr.getTasks().values();
 		TaskMap [] tm = new TaskMap[all.size()];
 		Iterator iter = all.iterator();
@@ -134,7 +133,7 @@ public class TaskRunnerMap implements Mappable {
 		while ( iter.hasNext() ) {
 			Task t = (Task) iter.next();
 			tm[index] = new TaskMap(t);
-			tm[index].load(null, myRequest, myAccess, myConfig);
+			tm[index].load(null, myRequest, myAccess, Dispatcher.getInstance().getNavajoConfig() );
 			index++;
 		}
 		return tm;

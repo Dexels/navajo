@@ -252,17 +252,17 @@ public final class NavajoConfig {
        //System.out.println("COMPILE SCRIPTS: " + compileScripts);
     }
 
-    public TaskRunner getTaskRunner(Dispatcher myDispatcher) {
+    public TaskRunner getTaskRunner() {
     	// Startup task scheduler
     	if ( taskRunner == null ) {
-    		taskRunner = TaskRunner.getInstance(this, myDispatcher);
+    		taskRunner = TaskRunner.getInstance();
     	}
     	return taskRunner;   
     }
     
-    public Worker getIntegrityWorker(Dispatcher myDispatcher) {
+    public Worker getIntegrityWorker() {
     	if ( integrityWorker == null ) {
-    		integrityWorker = Worker.getInstance(myDispatcher);
+    		integrityWorker = Worker.getInstance();
     	}
     	return integrityWorker;
     }

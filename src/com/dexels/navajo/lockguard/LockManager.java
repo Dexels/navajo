@@ -61,6 +61,10 @@ public final class LockManager extends GenericThread {
 	private long configTimestamp = -1;
 	private NavajoConfig myConfig;
 	
+	public LockManager() {
+		super("Navajo LockManager");
+	}
+	
 	private final static String LOCKS_CONFIG = "locks.xml";
 
 	private final long getConfigTimeStamp() {
@@ -243,26 +247,12 @@ public final class LockManager extends GenericThread {
 	}
 
 	public void worker() {
-		while ( !killed ) {
-			try {
-				Thread.sleep(200);
-				//System.err.print(".");
-				if ( isConfigModified() ) {
-					AuditLog.log(AuditLog.AUDIT_MESSAGE_LOCK_MANAGER, "Lock definitions are modified, re-initializing");
-					readDefinitions();
-				}
-				//System.err.print(".");
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				
-			}
+		
+		if ( isConfigModified() ) {
+			AuditLog.log(AuditLog.AUDIT_MESSAGE_LOCK_MANAGER, "Lock definitions are modified, re-initializing");
+			readDefinitions();
 		}
 		
-	}
-	
-	public void run() {
-		readDefinitions();
-		AuditLog.log(AuditLog.AUDIT_MESSAGE_LOCK_MANAGER, "Started locking manager $Id$");
 	}
 	
 	public Lock [] getLocks() {
@@ -279,6 +269,8 @@ public final class LockManager extends GenericThread {
 	}
 
 	public void terminate() {
+		LockStore.getStore().reset();
+		lockDefinitions.clear();
 		instance = null;
 		AuditLog.log(AuditLog.AUDIT_MESSAGE_LOCK_MANAGER, "Killed");	
 	}

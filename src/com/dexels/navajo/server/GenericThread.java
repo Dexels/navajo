@@ -24,35 +24,98 @@
  */
 package com.dexels.navajo.server;
 
+import java.util.HashMap;
+import java.util.Iterator;
+
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 
-public abstract class GenericThread implements Runnable, Mappable {
+public class GenericThread implements Runnable, Mappable {
 
-	public Thread thread = null;
-	protected boolean killed = false;
-
+	public String myId;
+	public boolean killed = false;
+	public GenericThread [] allThreads;
+	public String status = EMBRYO;
+	public long totalWorkTime = 0;
+	public long totalSleepTime = 0;
+	
+	private Thread thread = null;
+	private int sleepTime = 1000;
+	
+	private final static String EMBRYO = "Embryo";
+	private final static String SLEEPING = "Sleeping";
+	private final static String WORKING = "Working";
+	private final static String DEAD = "Zombie";
+	
+	private static HashMap threadPool = new HashMap();
+	
+	public GenericThread() {
+		// dummy.
+	}
+	
+	public GenericThread(String id) {
+		myId = id;
+	}
+	
 	public void startThread(GenericThread instance) {
+		
 		thread = new Thread(instance);
 		thread.setDaemon(true);
 		thread.start();
+		
+		threadPool.put(instance.myId, instance);
+	
+	}
+	
+	public void wakeUp() {
+		if ( thread != null ) {
+			thread.interrupt();
+		}
 	}
 	
 	public void run() {
+
 		while ( !killed ) {
-			worker();
+			try {
+				status = WORKING;
+				long start = System.currentTimeMillis();
+				worker();
+				totalWorkTime += ( System.currentTimeMillis() - start );
+			} catch (Throwable t) {
+				t.printStackTrace(System.err);
+			}
+			// Sleep for a while.
+			try {
+				status = SLEEPING;
+				Thread.sleep(getSleepTime());
+				totalSleepTime += getSleepTime();
+			} catch (InterruptedException e) {
+			}
 		}
+		status = DEAD;
+	}
+	
+	public final void setSleepTime(int i) {
+		sleepTime = i;
+	}
+	
+	public final int getSleepTime() {
+		return sleepTime;
 	}
 	
 	/**
 	 * Implements work.
 	 */
-	public abstract void worker();
+	public void worker() 
+	  { // implement this. 
+	  }
 	/**
 	 * Implements what to do in case of termination.
 	 */
-	public abstract void terminate();
+	public void terminate()
+	  { // implement this. 
+	  }
 	
 	public void kill() {
 		killed = true;
@@ -62,10 +125,55 @@ public abstract class GenericThread implements Runnable, Mappable {
 		terminate();
 	}
 	
+	public static void killAllThreads() {
+		Iterator iter = threadPool.values().iterator();
+		while ( iter.hasNext() ) {
+			GenericThread gt = (GenericThread) iter.next();
+			if ( gt.thread != null ) {
+				try {
+					gt.kill();
+				} catch (Throwable t) {
+					t.printStackTrace(System.err);
+				}
+			}
+		}
+		threadPool.clear();
+	}
+	
 	public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
 	}
 
 	public void store() throws MappableException, UserException {
+	}
+	
+	public void setKilled(boolean b) {
+		if ( b ) {
+			kill();
+		}
+	}
+	
+	public String getStatus() {
+		return this.status;
+	}
+	
+	public String getMyId() {
+		return this.myId;
+	}
+	
+	public GenericThread [] getAllThreads() {
+		if ( threadPool.size() > 0 ) {
+			GenericThread [] all = new GenericThread[threadPool.size()];
+			return (GenericThread []) threadPool.values().toArray(all);
+		}
+		return null;
+	}
+	
+	public long getTotalWorkTime() {
+		return this.totalWorkTime;
+	}
+	
+	public long getTotalSleepTime() {
+		return this.totalSleepTime;
 	}
 
 }

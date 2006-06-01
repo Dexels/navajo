@@ -52,16 +52,14 @@ public class TaskRunner extends GenericThread {
 	private int maxSize = 25;
 	private static TaskRunner instance = null;
 	private final Map tasks = Collections.synchronizedMap(new HashMap());
-	private NavajoConfig myConfig;
-	private Dispatcher myDispatcher;
 	private long configTimestamp = -1;
 		
 	private final static String TASK_CONFIG = "tasks.xml";
 	
 	private Object semaphore = new Object();
 	
-	public static TaskRunner getInstance(NavajoConfig config) {
-		return getInstance(config, null);
+	public TaskRunner() {
+		super("Navajo TaskRunner");
 	}
 	
 	protected boolean containsTask(String id) {
@@ -69,8 +67,8 @@ public class TaskRunner extends GenericThread {
 	}
 	
 	private long getConfigTimeStamp() {
-		if ( myConfig != null ) {
-			java.io.File f = new java.io.File(myConfig.getConfigPath() + "/" + TASK_CONFIG);
+		if ( Dispatcher.getInstance().getNavajoConfig() != null ) {
+			java.io.File f = new java.io.File(Dispatcher.getInstance().getNavajoConfig().getConfigPath() + "/" + TASK_CONFIG);
 			if ( f != null && f.exists() ) {
 				return f.lastModified();
 			}
@@ -104,10 +102,8 @@ public class TaskRunner extends GenericThread {
 		// Read task configuration file to read predefined tasks config/tasks.xml
 		synchronized (semaphore) {
 			try {
-				if ( myConfig == null ) {
-					return;
-				}
-				Navajo taskDoc = myConfig.readConfig(TASK_CONFIG);
+			
+				Navajo taskDoc = Dispatcher.getInstance().getNavajoConfig().readConfig(TASK_CONFIG);
 				
 				if ( taskDoc != null ) {
 					// Remove all previous tasks.
@@ -124,7 +120,6 @@ public class TaskRunner extends GenericThread {
 						
 						try {
 							Task t = new Task(webservice, username, password, newAcces, trigger);
-							t.setDispatcher(myDispatcher);
 							instance.addTask(id, t);
 						} catch (IllegalTrigger it) {
 							//it.printStackTrace(System.err);
@@ -141,39 +136,27 @@ public class TaskRunner extends GenericThread {
 		}
 	}
 	
-	public static TaskRunner getInstance(NavajoConfig config, Dispatcher myDispatcher) {
+	public static TaskRunner getInstance() {
 		
 		if ( instance != null ) {
 			return instance;
 		}
 		
-		instance = new TaskRunner();
-		instance.myConfig = config;
-		instance.myDispatcher = myDispatcher;
+		instance = new TaskRunner();	
 		instance.startThread(instance);
-	    
-	    if ( config != null && myDispatcher != null ) {
-	    	instance.readConfig();
-	    }
+	  	instance.readConfig();
+	 
 	    AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Started task scheduler process $Id$");
 		
 	    return instance;
 	}
 	
 	public final void worker() {
-		
-		try {
-			Thread.sleep(1000);
-			// Check whether tasks.xml has gotten updated.
-			if ( isConfigModified() ) {
-				AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Task configuration is modified, re-initializing");
-				readConfig();
-			}
+		// Check whether tasks.xml has gotten updated.
+		if ( isConfigModified() ) {
+			AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Task configuration is modified, re-initializing");
+			readConfig();
 		}
-		catch (Exception e) {
-			
-		}
-	
 	}
 	
 	public int getTaskListSize() {
@@ -193,17 +176,14 @@ public class TaskRunner extends GenericThread {
 		// Remove task from configuration file config/tasks.xml
 		Navajo taskDoc;
 		try {
-			taskDoc = myConfig.readConfig(TASK_CONFIG);
+			taskDoc = Dispatcher.getInstance().getNavajoConfig().readConfig(TASK_CONFIG);
 			if (taskDoc != null) {
 				Message allTasks = taskDoc.getMessage("tasks");
 				if (allTasks != null) {
 					Message tbr = containsTask(allTasks, id);
 					if ( tbr != null ) {
 						allTasks.removeMessage(tbr);
-						if ( myConfig != null ) {
-							myConfig.writeConfig(TASK_CONFIG, taskDoc);
-						}
-						
+						Dispatcher.getInstance().getNavajoConfig().writeConfig(TASK_CONFIG, taskDoc);
 					}
 				}
 			}
@@ -297,9 +277,9 @@ public class TaskRunner extends GenericThread {
 		
 		Navajo taskDoc = null;
 		try {
-			if ( myConfig != null ) {
-				taskDoc = myConfig.readConfig(TASK_CONFIG);
-			}
+			
+			taskDoc = Dispatcher.getInstance().getNavajoConfig().readConfig(TASK_CONFIG);
+			
 			if (taskDoc == null) {
 				taskDoc = NavajoFactory.getInstance().createNavajo();
 				Message m = NavajoFactory.getInstance().createMessage(taskDoc, "tasks", Message.MSG_TYPE_ARRAY);
@@ -319,16 +299,14 @@ public class TaskRunner extends GenericThread {
 				newTask.addProperty(propPassword);
 				newTask.addProperty(propService);
 				newTask.addProperty(propTrigger);
-				
-				if ( myConfig != null ) {
-					synchronized (semaphore) {
-						myConfig.writeConfig(TASK_CONFIG, taskDoc);
-					}
+
+				synchronized (semaphore) {
+					Dispatcher.getInstance().getNavajoConfig().writeConfig(TASK_CONFIG, taskDoc);
 				}
+				
 				// Re-initialize config.
 				// System.err.println("Re-initializing configuration....");
-				readConfig();
-				
+				readConfig();	
 			}
 			
 		} catch (Exception e) {
@@ -348,7 +326,7 @@ public class TaskRunner extends GenericThread {
 	
 	public static void main(String [] args)  {
 		try {
-		TaskRunner tr = TaskRunner.getInstance(null);
+		TaskRunner tr = TaskRunner.getInstance();
 		Task t1 = new Task("asdfd", null, "", null, "time:*|*|10|10|*");
 		Task t2 = new Task("InitBM", "ROOT", "", null, "webservice:");
 		tr.addTask("myTask", t1);
@@ -360,6 +338,17 @@ public class TaskRunner extends GenericThread {
 	}
 
 	public void terminate() {
+		// Remove all tasks.
+		Iterator iter = tasks.values().iterator();
+		while ( iter.hasNext() ) {
+			Task t = (Task) iter.next();
+			try {
+				t.setRemove(true);
+			} catch (Exception e) {
+				e.printStackTrace(System.err);
+			}
+		}
+		tasks.clear();
 		instance = null;
 		AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Killed");
 	}

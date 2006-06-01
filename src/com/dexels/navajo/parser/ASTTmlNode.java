@@ -176,8 +176,9 @@ public final class ASTTmlNode extends SimpleNode {
                * <String> property.getValue() should not be performed on binary properties
                */
               if(type.equals(Property.BINARY_PROPERTY)) {
-                  System.err.println("GETTING BINARY PROPERTY....");
+                  
                   Binary data = (Binary) prop.getTypedValue();
+                  //System.err.println("GETTING BINARY PROPERTY...., data = " + data);
                   resultList.add(data);
                   continue;
                 }  

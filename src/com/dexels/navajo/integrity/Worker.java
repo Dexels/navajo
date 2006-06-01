@@ -61,8 +61,6 @@ public class Worker extends GenericThread {
 	
 	private static Worker instance = null;
 	
-	private Dispatcher myDispatcher;
-	
 	// Worklist containst responses that still need to be written to a file.
 	private Map workList = Collections.synchronizedMap(new HashMap());
 	// Integrity cache contains mapping between unique request id and response file.
@@ -70,16 +68,20 @@ public class Worker extends GenericThread {
 	// Contains all unique request ids that still need to be handled by the worker thread.
 	private Set notWrittenReponses = Collections.synchronizedSet(new HashSet());
 	
-	public static Worker getInstance(Dispatcher myDispatcher) {
+	public Worker() {
+		super("Navajo Integrity Worker");
+	}
+	
+	public static Worker getInstance() {
 		
 		if ( instance != null ) {
 			return instance;
 		}
 		
 		instance = new Worker();
-		instance.myDispatcher = myDispatcher;
+		instance.setSleepTime(50);
 		instance.startThread(instance);
-		
+
 		AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "Started integrity worker $Id$");
 		
 		return instance;
@@ -119,44 +121,39 @@ public class Worker extends GenericThread {
 	
 	public final void worker() {
 		
-			try {
-				Thread.sleep(50);
-				// Check for new access objects in workList.
-				synchronized (workList) {
-					
-					Set s = new HashSet(workList.keySet());
-					Iterator iter = s.iterator();
-					while (iter.hasNext()) {
-						String id = (String) iter.next();
-						if ( id != null && !id.trim().equals("") ) {
-							writeFile( id, (Navajo) workList.get(id) );
-						}
-						workList.remove(id);
-						if (workList.size() > 50) {
-							AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "WARNING: Integrity Worker TODO list size:  " + workList.size());
-						}
-						
-					}
+		// Check for new access objects in workList.
+		synchronized (workList) {
+			
+			Set s = new HashSet(workList.keySet());
+			Iterator iter = s.iterator();
+			while (iter.hasNext()) {
+				String id = (String) iter.next();
+				if ( id != null && !id.trim().equals("") ) {
+					writeFile( id, (Navajo) workList.get(id) );
 				}
-				// Remove 'old' responses.
-				Set s = new HashSet(integrityCache.keySet());
-				Iterator i = s.iterator();
-				long now = System.currentTimeMillis();
-				while ( i.hasNext() ) {
-					String id = (String) i.next();
-					String fileName = (String) integrityCache.get(id);
-					File f = new File( fileName );
-					long birth = f.lastModified();
-					if ( now - birth > 60000 ) {
-						// remove file reference from integrity cache.
-						integrityCache.remove(id);
-						// remove file itself.
-						f.delete();
-					}
+				workList.remove(id);
+				if (workList.size() > 50) {
+					AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "WARNING: Integrity Worker TODO list size:  " + workList.size());
 				}
+				
 			}
-			catch (InterruptedException ex) {
+		}
+		// Remove 'old' responses.
+		Set s = new HashSet(integrityCache.keySet());
+		Iterator i = s.iterator();
+		long now = System.currentTimeMillis();
+		while ( i.hasNext() ) {
+			String id = (String) i.next();
+			String fileName = (String) integrityCache.get(id);
+			File f = new File( fileName );
+			long birth = f.lastModified();
+			if ( now - birth > 60000 ) {
+				// remove file reference from integrity cache.
+				integrityCache.remove(id);
+				// remove file itself.
+				f.delete();
 			}
+		}
 	}
 	
 	/**
@@ -250,6 +247,9 @@ public class Worker extends GenericThread {
 
 	public void terminate() {
 		instance = null;
+		workList.clear();
+		integrityCache.clear();
+		notWrittenReponses.clear();
 		AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "Killed");
 	}
 

@@ -50,7 +50,6 @@ public class Task implements Runnable {
 	public String password;
 	public String trigger;
 	
-    private Dispatcher myDispatcher = null;
     private Trigger myTrigger = null;
     private boolean remove = false;
     private boolean inactive = false;
@@ -83,9 +82,7 @@ public class Task implements Runnable {
 		this.password = password;
 		this.myTrigger = Trigger.parseTrigger(triggerURL);
 		this.myAccess = a;
-		if ( myAccess != null && myAccess.getDispatcher() != null ) {
-			this.myDispatcher  = myAccess.getDispatcher();
-		}
+	
 	}
 	
 	/**
@@ -167,15 +164,6 @@ public class Task implements Runnable {
 	}
 	
 	/**
-	 * Sets the dispatcher object.
-	 * 
-	 * @param d
-	 */
-	public void setDispatcher(Dispatcher d) {
-		this.myDispatcher = d;
-	}
-	
-	/**
 	 * If set to true, flags the task for removal.
 	 * 
 	 * @param b
@@ -244,7 +232,7 @@ public class Task implements Runnable {
 					isRunning = true;
 					AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Alarm goes off for task: " + id);
 					java.util.Date now = new java.util.Date();
-					if ( myDispatcher != null ) {
+					
 						Header h = request.getHeader();
 						if (h == null) {
 							h = NavajoFactory.getInstance().createHeader(request, webservice, username, password, -1);
@@ -255,19 +243,16 @@ public class Task implements Runnable {
 							h.setRPCUser(username);
 							h.setExpirationInterval(-1);
 						}
-						myDispatcher.setUseAuthorisation(true);
+						Dispatcher.getInstance().setUseAuthorisation(true);
 					
-						Navajo result = myDispatcher.handle(request);
+						Navajo result = Dispatcher.getInstance().handle(request);
 						// Log result if error.
 						if ( result != null && result.getMessage("error") != null ) {		
 							TaskRunner.log(this, result, true, now );
 						} else {
 							TaskRunner.log(this, result, false, now );
 						}
-					} else {
-						// Dummy task
-						Thread.sleep(5000);
-					}
+					
 					isRunning = false;
 				
 					myTrigger.resetAlarm();

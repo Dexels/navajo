@@ -85,7 +85,7 @@ public final class Dispatcher {
   private  String keyStore;
   private  String keyPassword;
 
-  public static int rateWindowSize = 20;
+  public static final int rateWindowSize = 20;
   public static double requestRate = 0.0;
   private  long[] rateWindow = new long[rateWindowSize];
 
@@ -103,15 +103,10 @@ public final class Dispatcher {
     if (!initialized) {
       try {
         // Read configuration file.
-        navajoConfig = new NavajoConfig(in, fileInputStreamReader, ncs);
-        // Startup task runner.
-        navajoConfig.getTaskRunner(this);
-        
+        navajoConfig = new NavajoConfig(in, fileInputStreamReader, ncs); 
         debugOn = navajoConfig.isLogged();
-
         initialized = true;
         logger = NavajoConfig.getNavajoLogger(Dispatcher.class);
-
       }
       catch (Exception e) {
         e.printStackTrace();
@@ -157,9 +152,6 @@ public final class Dispatcher {
     try {
       if (!initialized) {
         init(configurationUrl.openStream(), fileInputStreamReader, cl);
-//        if (cl!=null) {
-//            getNavajoConfig().setClassloader(cl);
-//		}
       }
     }
     catch (Exception se) {
@@ -183,11 +175,11 @@ public final class Dispatcher {
 	  
 	  if ( instance == null ) {
 		  instance = new Dispatcher(configurationUrl, fileInputStreamReader);
+		  // Startup task runner.
+	      instance.navajoConfig.getTaskRunner();
 	  }
 	  
 	  return instance;
-	  
-	  
   }
   
   /**
@@ -334,7 +326,7 @@ public final class Dispatcher {
 	  }
 	  
 	  // Check for webservice transaction integrity.
-	  out = navajoConfig.getIntegrityWorker( this ).getResponse(in);
+	  out = navajoConfig.getIntegrityWorker().getResponse(in);
 	  if ( out != null ) {
 		  return out;
 	  }
@@ -405,7 +397,7 @@ public final class Dispatcher {
 	  } finally {
 		  // Store response for integrity checking.
 		  if ( out != null ) {
-			  Worker.getInstance( this ).setResponse(in, out);
+			  Worker.getInstance().setResponse(in, out);
 		  }
 		  // Release locks.
 		  if ( locks != null ) {
@@ -1066,22 +1058,9 @@ public final class Dispatcher {
   
   public static void killMe() {
 	  if ( instance != null ) {
-		  // Kill supporting threads.
-		  if ( instance.getNavajoConfig().getLockManager() != null ) {
-			  instance.getNavajoConfig().getLockManager().kill();
-		  }
-		  if ( instance.getNavajoConfig().getStatisticsRunner() != null ) {
-			  instance.getNavajoConfig().getStatisticsRunner().kill();
-		  }
-		  if ( instance.getNavajoConfig().getTaskRunner(instance) != null ) {
-			  instance.getNavajoConfig().getTaskRunner(instance).kill();
-		  }
-		  if ( instance.getNavajoConfig().getAsyncStore() != null ) {
-			  instance.getNavajoConfig().getAsyncStore().kill();
-		  }
-		  if ( instance.getNavajoConfig().getIntegrityWorker(instance)!= null ) {
-			  instance.getNavajoConfig().getIntegrityWorker(instance).kill();
-		  }
+		  
+		  // Kill all supporting threads.
+		  GenericThread.killAllThreads();
 		  
 		  // Clear all classloaders.
 		  GenericHandler.doClearCache();

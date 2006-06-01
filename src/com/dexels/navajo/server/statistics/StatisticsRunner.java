@@ -41,6 +41,10 @@ public final class StatisticsRunner extends GenericThread {
   private StoreInterface myStore = null;
   private Set todo = Collections.synchronizedSet(new HashSet());
   
+  public StatisticsRunner() {
+	 super("Navajo StatisticsRunner");
+  }
+  
   public final static StatisticsRunner getInstance(String storePath, Map parameters) {
   	return getInstance(storePath, parameters, "com.dexels.navajo.adapter.navajostore.HSQLStore");
   }
@@ -65,7 +69,9 @@ public final class StatisticsRunner extends GenericThread {
           instance.myStore.setDatabaseUrl(storePath);
         }
         catch (Exception ex) {
+        	ex.printStackTrace(System.err);
         }
+        instance.setSleepTime(2000);
         instance.startThread(instance);
         System.err.println("Started StatisticsRunner version $Id$ using store: " + instance.myStore.getClass().getName());
       }
@@ -78,27 +84,22 @@ public final class StatisticsRunner extends GenericThread {
    *
    */
   public final void worker() {
-
-      try {
-        Thread.sleep(2000);
-        // Check for new access objects.
-        //System.err.println(">> StatisticsRunner TODO list size: " + todo.size());
-        synchronized (todo) {
-          Iterator iter = todo.iterator();
-          while (iter.hasNext()) {
-            Access tb = (Access) iter.next();
-            myStore.storeAccess(tb);
-            iter.remove();
-            tb = null;
-            if (todo.size() > 50) {
-              System.err.println("WARNING: StatisticsRunner TODO list size:  " + todo.size());
-            }
-
-          }
-        }
-      }
-      catch (InterruptedException ex) {
-      }
+	  
+	  // Check for new access objects.
+	  //System.err.println(">> StatisticsRunner TODO list size: " + todo.size());
+	  synchronized (todo) {
+		  Iterator iter = todo.iterator();
+		  while (iter.hasNext()) {
+			  Access tb = (Access) iter.next();
+			  myStore.storeAccess(tb);
+			  iter.remove();
+			  tb = null;
+			  if (todo.size() > 50) {
+				  System.err.println("WARNING: StatisticsRunner TODO list size:  " + todo.size());
+			  }
+		  }
+	  }
+	  
   }
 
   /**
@@ -114,6 +115,7 @@ public final class StatisticsRunner extends GenericThread {
   
   
   public void terminate() {
+	  todo.clear();
 	  instance = null;
 	  AuditLog.log(AuditLog.AUDIT_MESSAGE_STAT_RUNNER, "Killed");
   }

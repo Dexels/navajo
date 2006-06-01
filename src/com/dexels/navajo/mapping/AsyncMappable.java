@@ -137,8 +137,12 @@ public abstract class AsyncMappable implements Mappable {
   public abstract void kill();
 
   public void setKill(boolean b) {
-    if (b)
-      kill();
+	  if ( myRequest != null ) {
+		  myRequest.interrupt();
+	  }
+	  if (b) {
+		  kill();
+	  }
   }
 
   public abstract void store() throws MappableException, UserException;
