@@ -33,7 +33,7 @@ public class BasePropertyImpl
   protected String cardinality = null;
   protected String description = null;
   protected String direction = Property.DIR_IN;
-  protected int length = -1;
+  protected int length = 64;
   private Map subtypeMap = null;
 
   private Binary myBinary = null;
@@ -170,7 +170,7 @@ public class BasePropertyImpl
           Thread.dumpStack();
         return myBinary.getBase64();
     }
-    return myValue;
+    return ( myValue == null ? "" : myValue);
   }
 
   public Object peekEvaluatedValue() {
@@ -919,6 +919,7 @@ public class BasePropertyImpl
             getDescription(), getDirection(), getSubType());
         Object value = getTypedValue();
         cp.setAnyValue(value);
+        cp.setType(getType());
       }
     }
     catch (NavajoException ex) {
@@ -1342,9 +1343,9 @@ public Map getAttributes() {
     if (myName!=null) {
         m.put("name", myName);
     }
-    if (myValue!=null) {
-        m.put("value", myValue);
-    }
+    //if (myValue!=null) {
+        m.put("value", ( myValue == null ? "" : myValue) );
+    //}
     if (type!=null) {
         m.put("type", type);
     }

@@ -888,7 +888,7 @@ public final Message getParentMessage() {
         m.put("name", myName);
         if (myType != null) {
             m.put("type", myType);
-            if (Message.MSG_TYPE_ARRAY.equals(myType)) {
+            if (Message.MSG_TYPE_ARRAY_ELEMENT.equals(myType)) {
                 m.put("index", "" + myIndex);
             }
         }
