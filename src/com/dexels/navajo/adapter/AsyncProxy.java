@@ -91,10 +91,8 @@ public class AsyncProxy implements Mappable {
   }
 
   public void setKill(boolean b) {
-    //System.err.println("..............................CALLING SETKILL ON ASYNCPROXY WITH POINTER: " + this.pointer);
     if (b) {
-      Map all = com.dexels.navajo.mapping.AsyncStore.getInstance().
-          objectStore;
+      Map all = com.dexels.navajo.mapping.AsyncStore.getInstance().objectStore;
       Iterator iter = all.values().iterator();
       AsyncMappable am = null;
       boolean found = false;
