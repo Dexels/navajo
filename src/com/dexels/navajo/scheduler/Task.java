@@ -33,6 +33,7 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.Dispatcher;
+import com.dexels.navajo.server.FatalException;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.util.AuditLog;
 
@@ -55,7 +56,6 @@ public class Task implements Runnable {
     private boolean inactive = false;
     private boolean isRunning = false;
     private String id = null;
-    private Access myAccess = null;
     private Thread myThread = null;
     
 	/**
@@ -81,8 +81,6 @@ public class Task implements Runnable {
 		this.username = username;
 		this.password = password;
 		this.myTrigger = Trigger.parseTrigger(triggerURL);
-		this.myAccess = a;
-	
 	}
 	
 	/**
@@ -212,7 +210,7 @@ public class Task implements Runnable {
 				//System.err.println("Task " + getId() + " listening for alarm: " + myTrigger.getDescription());
 			} catch (Exception e) {
 				if ( remove ) {
-					AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Terminated task: " + id);
+					AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Terminated task while sleeping: " + id);
 					return;
 				}
 				e.printStackTrace(System.err);
@@ -228,40 +226,42 @@ public class Task implements Runnable {
 				if (request == null ) {
 					request = NavajoFactory.getInstance().createNavajo();
 				}
-				try {	
-					isRunning = true;
-					AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Alarm goes off for task: " + id);
-					java.util.Date now = new java.util.Date();
-					
-						Header h = request.getHeader();
-						if (h == null) {
-							h = NavajoFactory.getInstance().createHeader(request, webservice, username, password, -1);
-							request.addHeader(h);
-						} else {
-							h.setRPCName(webservice);
-							h.setRPCPassword(password);
-							h.setRPCUser(username);
-							h.setExpirationInterval(-1);
-						}
-						Dispatcher.getInstance().setUseAuthorisation(true);
-					
-						Navajo result = Dispatcher.getInstance().handle(request);
-						// Log result if error.
-						if ( result != null && result.getMessage("error") != null ) {		
-							TaskRunner.log(this, result, true, now );
-						} else {
-							TaskRunner.log(this, result, false, now );
-						}
-					
-					isRunning = false;
 				
-					myTrigger.resetAlarm();
-					
-					
-				} catch (Exception e) {
-					e.printStackTrace();
-					
+				isRunning = true;
+				AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Alarm goes off for task: " + id);
+				java.util.Date now = new java.util.Date();
+				
+				Header h = request.getHeader();
+				if (h == null) {
+					h = NavajoFactory.getInstance().createHeader(request, webservice, username, password, -1);
+					request.addHeader(h);
+				} else {
+					h.setRPCName(webservice);
+					h.setRPCPassword(password);
+					h.setRPCUser(username);
+					h.setExpirationInterval(-1);
 				}
+				Dispatcher.getInstance().setUseAuthorisation(true);
+				
+				Navajo result = null;
+				
+				try {
+					result = Dispatcher.getInstance().handle(request);
+				} catch (FatalException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					TaskRunner.log(this, null, true, e.getMessage(), now);
+				}
+				
+				// Log result if error.
+				if ( result != null && result.getMessage("error") != null ) {		
+					TaskRunner.log(this, result, true, "", now );
+				} else {
+					TaskRunner.log(this, result, false, "", now );
+				}
+				
+				isRunning = false;		
+				myTrigger.resetAlarm();				
 			}
 			
 		}

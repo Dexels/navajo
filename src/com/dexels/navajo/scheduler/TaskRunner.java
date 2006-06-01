@@ -205,7 +205,7 @@ public class TaskRunner extends GenericThread {
 		return null;
 	}
 	
-	public static synchronized void log(Task t, Navajo result, boolean error, java.util.Date startedat) {
+	public static synchronized void log(Task t, Navajo result, boolean error, String errMsg, java.util.Date startedat) {
 		File log = new File( Dispatcher.getInstance().getNavajoConfig().rootPath + "/log/tasks.log" );
 		if ( !log.exists() ) {
 			log.getParentFile().mkdirs();
@@ -221,6 +221,9 @@ public class TaskRunner extends GenericThread {
             header.append("status   : " +  (error ? "error" : "ok") + "\n");
             header.append("started @: " + startedat + "\n");
             header.append("finished@: " + (new java.util.Date()) + "\n");
+            if ( error ) {
+            	header.append("errmsg   : " + errMsg);
+            }
             
 			StringWriter sw = new StringWriter();
 			if ( error ) {
