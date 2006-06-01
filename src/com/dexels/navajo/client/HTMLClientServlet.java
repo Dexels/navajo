@@ -343,8 +343,9 @@ public class HTMLClientServlet extends HttpServlet {
                 actions = resultDoc.getAllMethods();
 
                 //
-                tbMessage.appendDocBuffer(resultDoc.getMessageBuffer());
-
+                //tbMessage.appendDocBuffer(resultDoc.getMessageBuffer());
+                tbMessage = resultDoc;
+                
                 // transform TML message to HTML format
                 gc.generateHTMLFromMessage(resultDoc, messages, actions, servletName, xslFile,out);
 //                if (useGzipEncoding) gzipout.write(result.getBytes()); else writer.write(result);

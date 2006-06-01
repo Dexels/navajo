@@ -451,6 +451,7 @@ public class NavajoClient implements ClientInterface {
     //timeStamp = System.currentTimeMillis();
 
 //    useCompression = false;
+    d.write(System.err);
     
     if (setSecure) {
       url = new URL("https://" + name);
