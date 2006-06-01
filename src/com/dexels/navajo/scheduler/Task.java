@@ -245,6 +245,11 @@ public class Task implements Runnable {
 				
 				Navajo result = null;
 				
+				// Dispatcher is dead, exit.
+				if ( Dispatcher.getInstance() == null ) {
+					return;
+				}
+				
 				try {
 					result = Dispatcher.getInstance().handle(request);
 				} catch (FatalException e) {
