@@ -163,8 +163,11 @@ public class BaseHeaderImpl
    */
   public final String getCallBackInterupt(String object) {
     /**@todo Implement this com.dexels.navajo.document.Header abstract method*/
-    throw new java.lang.UnsupportedOperationException(
-        "Method getCallBackInterupt() not yet implemented.");
+//    throw new java.lang.UnsupportedOperationException(
+//        "Method getCallBackInterupt() not yet implemented.");
+	
+	  return getCallback().getRef(object);
+	  
   }
 
   /**
@@ -229,6 +232,11 @@ public class BaseHeaderImpl
     this.myCallbackPointer = pointer;
     this.percReady = percReady;
     BaseObjectImpl boi = new BaseObjectImpl(getRootDoc());
+    boi.setName(name);
+    boi.setRef(pointer);
+    boi.setPercReady((double) percReady);
+    boi.setFinished(isFinished);
+    boi.setInterrupt(interrupt);
     myCallback.addObject(boi);
   }
   

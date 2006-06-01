@@ -113,30 +113,19 @@ public class SaxHandler implements DocHandler {
 
 
     private void parseObject(Hashtable h) {
-        BaseCallbackImpl currentCallback2 = currentHeader.getCallback();
-        BaseObjectImpl boi = new BaseObjectImpl(currentDocument);
-        String name = (String)h.get("name");
-        if (name!=null) {
-            boi.setName(name);
-        }
-        String ref = (String) h.get("ref");
-        if (ref!=null) {
-            boi.setRef(ref);
-        }
-        String finishedString = (String)h.get("finished");
-        if (finishedString!=null) {
-            boolean finished = "true".equals(finishedString);
-        }
-        String percReadyString = (String)h.get("perc_ready");
-        if (percReadyString!=null) {
-            double perc_ready = Double.parseDouble(percReadyString);
-            boi.setPercReady(perc_ready);
-        }
-        String interrupt = (String)h.get("interrupt");
-        if (interrupt!=null) {
-            boi.setInterrupt(interrupt);
-        }
-        
+    	
+    	if ( (String) h.get("ref") == null || ((String) h.get("ref")).equals("") ) {
+    		return;
+    	}
+    	
+    	currentHeader.setCallBack(
+    			(String) h.get("name"),
+    			(String) h.get("ref"),
+    			(int) Double.parseDouble((String) h.get("perc_ready")),
+    			((String) h.get("finished")).equals("true"),
+    			(String) h.get("interrupt")
+    	);
+     
     }
 
 
@@ -150,9 +139,7 @@ public class SaxHandler implements DocHandler {
         // TODO: Should use the navajo factory for these functions
         if (currentHeader==null) {
             throw new IllegalArgumentException("Callback tag outside header tag.");
-        }
-//        currentCallback = new BaseCallbackImpl(currentDocument);
-//        currentHeader.setCallBack(currentCallback);
+        }       
     }
 
     private void parseTransaction(Hashtable h) {

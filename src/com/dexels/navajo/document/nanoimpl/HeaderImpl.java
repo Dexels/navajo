@@ -59,7 +59,7 @@ public final class HeaderImpl
 //            System.err.println("Parsing object");
             setCallBack(child2.getStringAttribute("name"),
                         child2.getStringAttribute("ref"),
-                        child2.getIntAttribute("perc_ready"),
+                        (int) child2.getDoubleAttribute("perc_ready"),
                         child2.getBooleanAttribute("finished", "true", "false", false),
                         child2.getStringAttribute("interrupt"));
           }

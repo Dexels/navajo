@@ -385,8 +385,9 @@ public final class PropertyImpl implements Property, Comparable {
 
     public final Object getTypedValue() {
 
-      if (!ref.hasAttribute(Property.PROPERTY_VALUE))
+      if (getValue() == null) { 
         return null;
+      }
 
       if (getType().equals(Property.BOOLEAN_PROPERTY)) {
         if (getValue() == null) {
@@ -622,12 +623,21 @@ public final class PropertyImpl implements Property, Comparable {
       //if (getType().equals(Property.STRING_PROPERTY) || getType().equals(Property.MEMO_PROPERTY) || getType().equals(Property.PASSWORD_PROPERTY))
       //    return XMLutils.XMLUnescape(ref.getAttribute(Property.PROPERTY_VALUE));
       //else
-      if (ref.hasAttribute(Property.PROPERTY_VALUE))
+    	
+      String value = ref.getTextContent();
+      
+      if ( value != null && !value.trim().equals("")) {
+		  return value;
+      }
+      
+      if (ref.hasAttribute(Property.PROPERTY_VALUE)) {
           return ref.getAttribute(Property.PROPERTY_VALUE);
-      else
-          return null;
+      }
+      else {
+    	  return null;
+      }
     }
-
+    
     public final String toString() {
       try{
         String s = ref.getAttribute(Property.PROPERTY_VALUE);

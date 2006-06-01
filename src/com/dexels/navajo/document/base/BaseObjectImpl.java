@@ -45,10 +45,13 @@ public class BaseObjectImpl extends BaseNode {
         myAttributes.put("perc_ready", ""+perc_ready);
     }
     public void setFinished(boolean b) {
-        myAttributes.put("finished", new Boolean(b));
+        myAttributes.put("finished", (b ? "true" : "false"));
     }
     public void setInterrupt(String in) {
         myAttributes.put("interrupt", in);
+    }
+    public String getName() {
+    	return (String)myAttributes.get("name");
     }
     public String getRef() {
         return (String)myAttributes.get("ref");
