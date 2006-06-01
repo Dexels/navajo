@@ -274,10 +274,6 @@ public class AdminMap implements Mappable {
     return Dispatcher.rateWindowSize;
   }
 
-  public void setRequestRateWindowSize(int s){
-    Dispatcher.rateWindowSize = s;
-  }
-
   public boolean getMonitorOn() {
     return Dispatcher.getInstance().getNavajoConfig().isMonitorOn();
   }
