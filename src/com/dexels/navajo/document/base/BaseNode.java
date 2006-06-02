@@ -20,7 +20,7 @@ public abstract class BaseNode implements java.io.Serializable{
   protected Navajo myDocRoot;
   
   public final static String XML_ESCAPE_DELIMITERS = "&'<>\"";
-  
+  //public final static String XML_ESCAPE_DELIMITERS = "";
 
   public abstract Map getAttributes();
   public abstract List getChildren();
@@ -218,7 +218,7 @@ public abstract class BaseNode implements java.io.Serializable{
    * Replace all occurrences of the escaped characters &amp;, &quot;, &apos;,
    * &lt; and &gt; by the unescaped characters &, ', ", < and >.
    */
-  private static String XMLUnescape(String s) {
+  public static String XMLUnescape(String s) {
       if ((s == null) || (s.length() == 0)) {
           return s;
       }

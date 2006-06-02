@@ -457,8 +457,8 @@ public final class PropertyImpl implements Property, Comparable {
         try {
           byte[] data;
           sun.misc.BASE64Decoder dec = new sun.misc.BASE64Decoder();
-          data = dec.decodeBuffer(getValue());
-          return new Binary(data,getSubType());
+          data = dec.decodeBuffer(getValue().trim());
+          return new Binary(data, getSubType());
         }
         catch (Exception e) {
           e.printStackTrace();

@@ -38,6 +38,16 @@ public class SaxHandler implements DocHandler {
     public void startElement(String tag, Hashtable h) throws Exception {
 //        System.err.println("starting element: "+tag+" attrs: "+h);
         currentTag = tag;
+        
+        // Unescape all the shit.
+        Hashtable h2 = new Hashtable();
+        for (Iterator iter = h.keySet().iterator(); iter.hasNext();) {
+			String key = (String) iter.next();
+			String value = (String) h.get(key);
+			value = BaseNode.XMLUnescape(value);
+			h2.put(key, value);
+		}
+        h = h2;
         if (tag.equals("tml")) {
             currentDocument = NavajoFactory.getInstance().createNavajo();
             return;

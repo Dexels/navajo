@@ -663,11 +663,22 @@ public class BasePropertyImpl
   }
 
   public final void setValue(String value) {
-      if (BINARY_PROPERTY.equals(getType())) {
-        Thread.dumpStack();
-    }
-      myBinary = null;
-    setCheckedValue(value);
+	  if (BINARY_PROPERTY.equals(getType())) {
+		  Thread.dumpStack();
+		  try {
+			  if ( value != null ) {
+				  myBinary = new Binary(new StringReader(value));
+			  } else {
+				  myBinary = null;
+			  }
+		  } catch (IOException e) {
+			  // TODO Auto-generated catch block
+			  e.printStackTrace();
+		  }
+		  return;
+	  }
+	  myBinary = null;
+	  setCheckedValue(value);
   }
   
   
