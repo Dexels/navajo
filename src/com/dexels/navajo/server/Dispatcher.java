@@ -75,9 +75,8 @@ public final class Dispatcher {
   public static java.util.Date startTime = new java.util.Date();
 
   public  long requestCount = 0;
-  private NavajoConfig navajoConfig = null;
-  private  boolean initialized = false;
-
+  private final NavajoConfig navajoConfig;
+  
   private  NavajoLogger logger = null;
 
   private  boolean debugOn = false;
@@ -90,55 +89,6 @@ public final class Dispatcher {
   private  long[] rateWindow = new long[rateWindowSize];
 
   /**
-   * Initialize the Dispatcher.
-   *
-   * @param in inputstream containing the NavajoConfig information.
-   * @param fileInputStreamReader specifies the reader to user.
-   * @throws SystemException
-   */
-  private synchronized void init(InputStream in,
-                                 InputStreamReader fileInputStreamReader,
-                                 NavajoClassSupplier ncs) throws
-      SystemException {
-    if (!initialized) {
-      try {
-        // Read configuration file.
-        navajoConfig = new NavajoConfig(in, fileInputStreamReader, ncs); 
-        debugOn = navajoConfig.isLogged();
-        initialized = true;
-        logger = NavajoConfig.getNavajoLogger(Dispatcher.class);
-      }
-      catch (Exception e) {
-        e.printStackTrace();
-        initialized = false;
-      }
-    }
-  }
-
-  /**
-   * Constructor for file based configuration (server.xml).
-   *
-   * @param configurationPath specifies the file location of the configuration file (server.xml).
-   *
-   * @param fileInputStreamReader
-   * @throws NavajoException
-   */
-//  private Dispatcher(String configurationPath, InputStreamReader fileInputStreamReader) throws
-//      NavajoException {
-//    try {
-//      if (!initialized) {
-//        FileInputStream fis = new FileInputStream(configurationPath);
-//        init(fis, fileInputStreamReader);
-//        fis.close();
-//      }
-//    }
-//    catch (Exception se) {
-//      se.printStackTrace(System.err);
-//      throw NavajoFactory.getInstance().createNavajoException(se);
-//    }
-//  }
-
-  /**
    * Constructor for URL based configuration.
    *
    * @param configurationUrl
@@ -146,17 +96,20 @@ public final class Dispatcher {
    * @throws NavajoException
    */
   private Dispatcher(URL configurationUrl,
-                    InputStreamReader fileInputStreamReader,
-                    NavajoClassSupplier cl) throws
-      NavajoException {
-    try {
-      if (!initialized) {
-        init(configurationUrl.openStream(), fileInputStreamReader, cl);
-      }
-    }
-    catch (Exception se) {
-      throw NavajoFactory.getInstance().createNavajoException(se);
-    }
+		  InputStreamReader fileInputStreamReader,
+		  NavajoClassSupplier cl) throws
+		  NavajoException {
+	  
+	  try {
+		  // Read configuration file.
+		  navajoConfig = new NavajoConfig(configurationUrl.openStream(), fileInputStreamReader, cl); 
+		  debugOn = navajoConfig.isLogged();
+		  logger = NavajoConfig.getNavajoLogger(Dispatcher.class);
+	  }
+	  
+	  catch (Exception se) {
+		  throw NavajoFactory.getInstance().createNavajoException(se);
+	  }
   }
 
   private Dispatcher(URL configurationUrl,
@@ -806,6 +759,15 @@ public final class Dispatcher {
 
       if (useAuthorisation) {
         try {
+          if ( navajoConfig == null ) {
+        	  System.err.println("EMPTY NAVAJOCONFIG, INVALID STATE OF DISPATCHER!");
+        	  throw new FatalException("EMPTY NAVAJOCONFIG, INVALID STATE OF DISPATCHER!");
+          }
+          if ( navajoConfig.getRepository() == null ) {
+        	  System.err.println("EMPTY REPOSITORY, INVALID STATE OF DISPATCHER!");
+        	  throw new FatalException("EMPTY REPOSITORY, INVALID STATE OF DISPATCHER!");
+          }
+          
           access = navajoConfig.getRepository().authorizeUser(rpcUser,
               rpcPassword, rpcName, inMessage, userCertificate);
           if (clientInfo != null && access != null) {
@@ -1064,9 +1026,6 @@ public final class Dispatcher {
 		  
 		  // Clear all classloaders.
 		  GenericHandler.doClearCache();
-		  
-		  // Clear NavajoConfig.
-		  instance.navajoConfig = null;
 		  
 		  // Finally kill myself
 		  instance = null;
