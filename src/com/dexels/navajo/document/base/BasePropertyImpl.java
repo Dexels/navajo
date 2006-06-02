@@ -170,7 +170,7 @@ public class BasePropertyImpl
           Thread.dumpStack();
         return myBinary.getBase64();
     }
-    return ( myValue == null ? "" : myValue);
+    return myValue;
   }
 
   public Object peekEvaluatedValue() {
@@ -1343,9 +1343,9 @@ public Map getAttributes() {
     if (myName!=null) {
         m.put("name", myName);
     }
-    //if (myValue!=null) {
-        m.put("value", ( myValue == null ? "" : myValue) );
-    //}
+    if (myValue!=null) {
+        m.put("value", myValue);
+    }
     if (type!=null) {
         m.put("type", type);
     }
