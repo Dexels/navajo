@@ -184,6 +184,49 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode {
             this.removeProperty((Property) propertyMap.get(p.getName()));
             addProperty(q);
         }
+        
+        // Set default values from definition message.
+        BaseMessageImpl parentArrayMessage = (BaseMessageImpl) getParentMessage();
+        if ( parentArrayMessage != null) {
+
+            Property definitionProperty = parentArrayMessage.getPropertyDefinition(myName);
+
+            if (definitionProperty != null) {
+              if (q.getDescription() == null || "".equals(q.getDescription())) {
+            	  q.setDescription(definitionProperty.getDescription());
+              }
+              if (q.getDirection() == null || "".equals(q.getDirection())) {
+                q.setDirection(definitionProperty.getDirection());
+              }
+              if (q.getType() == null || "".equals(q.getType())) {
+            	 q.setType(definitionProperty.getType());
+              }
+//              if (q.getLength() == null) {
+//                length = definitionProperty.getLength();
+//              }
+              if (q.getSubType() == null) {
+                if (definitionProperty.getSubType() != null) {
+                  q.setSubType(definitionProperty.getSubType());
+                }
+                else {
+                	q.setSubType(null);
+                }
+              }
+              else {
+                if (definitionProperty.getSubType() != null) {
+                  /**
+                       * Concatenated subtypes. The if the same key of a subtype is present
+                   * in both the property and the definition property.
+                   */
+                  q.setSubType(definitionProperty.getSubType() + "," + q.getSubType());
+                }
+              }
+
+              if (q.getValue() == null || "".equals(q.getValue())) {
+                q.setValue(definitionProperty.getValue());
+              }
+            }
+          }
     }
 
     public final ArrayList getAllProperties() {
@@ -493,7 +536,11 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode {
     }
 
     public Property getPropertyDefinition(String name) {
-        return definitionMessage.getProperty(name);
+    	if ( definitionMessage != null ) {
+    		return definitionMessage.getProperty(name);
+    	} else {
+    		return null;
+    	}
     }
 
     public int getChildMessageCount() {
@@ -887,6 +934,10 @@ public final Message getParentMessage() {
         return definitionMessage;
     }
 
+    public void setDefinitionMessage(Message m) {
+    	this.definitionMessage = (BaseMessageImpl) m;
+    }
+    
     public Map getAttributes() {
         Map m = new HashMap();
         m.put("name", myName);

@@ -388,5 +388,7 @@ public interface Message
    */
 
   public Message getDefinitionMessage();
+  
+  public void setDefinitionMessage(Message m);
 
 }

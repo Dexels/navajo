@@ -284,7 +284,12 @@ public class SaxHandler implements DocHandler {
 //            System.err.println("Adding to root!");
             currentDocument.addMessage(m);
         } else {
-            ((Message)messageStack.peek()).addMessage(m);
+        	// Don't add definition messages.
+        	if ( !Message.MSG_TYPE_DEFINITION.equals(type) ) {
+        		((Message)messageStack.peek()).addMessage(m);
+        	} else {
+        		((Message)messageStack.peek()).setDefinitionMessage(m);
+        	}
         }
           messageStack.push(m);
 //        System.err.println("Stack: "+messageStack);

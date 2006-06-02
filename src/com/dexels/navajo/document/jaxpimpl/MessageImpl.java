@@ -19,10 +19,13 @@
 package com.dexels.navajo.document.jaxpimpl;
 
 import com.dexels.navajo.document.*;
+
 import org.w3c.dom.*;
 import java.util.ArrayList;
 import java.util.*;
 import java.util.regex.*;
+
+import com.dexels.navajo.document.base.BaseMessageImpl;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
 import javax.xml.transform.stream.StreamResult;
 
@@ -801,6 +804,11 @@ public final class MessageImpl implements Message {
    public Message addMessage() {
      throw new UnsupportedOperationException("Can not add messages in JAXPIMPL");
    }
+   
+   public void setDefinitionMessage(Message m) {
+	   throw new UnsupportedOperationException("Can not set definition message in JAXPIMPL");
+   }
+   
    public Message getDefinitionMessage() {
      Message m = getArrayParentMessage();
      if (m==null) {
