@@ -148,7 +148,9 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode {
          */
         messageMap.put(m.getName(), m);
         if (getType().equals(MSG_TYPE_ARRAY)) {
-            m.setIndex(messageList.size());
+        	if ( !m.getType().equals(MSG_TYPE_DEFINITION) ) {
+        		m.setIndex(messageList.size());
+        	}
             m.setName(getName());
         }
         messageList.add(m);
@@ -711,7 +713,9 @@ public final Message getParentMessage() {
         if (!getType().equals(Message.MSG_TYPE_ARRAY)) {
             throw new IllegalArgumentException("Can not add element to non-array type message!");
         }
-        m.setIndex(getArraySize());
+        if ( !m.getType().equals(MSG_TYPE_DEFINITION )) {
+        	m.setIndex(getArraySize());
+        }
         addMessage(m);
         return m;
     }
@@ -856,28 +860,28 @@ public final Message getParentMessage() {
         return null;
     }
 
-    public Message addMessage(int index) {
-        if (getType().equals(Message.MSG_TYPE_ARRAY)) {
-            throw new IllegalStateException("Can only add empty messages to arraymessages.");
-        }
-        if (definitionMessage == null) {
-            throw new IllegalStateException("Can only add empty messages when definitions present.");
-        }
-        Message newChild = createEmptyMessage();
-        try {
-            addMessage(newChild, index);
-        } catch (NavajoException ex) {
-            ex.printStackTrace();
-        }
-        return newChild;
-    }
+//    public Message addMessage(int index) {
+//        if (getType().equals(Message.MSG_TYPE_ARRAY)) {
+//            throw new IllegalStateException("Can only add empty messages to arraymessages.");
+//        }
+//        if (definitionMessage == null) {
+//            throw new IllegalStateException("Can only add empty messages when definitions present.");
+//        }
+//        Message newChild = createEmptyMessage();
+//        try {
+//            addMessage(newChild, index);
+//        } catch (NavajoException ex) {
+//            ex.printStackTrace();
+//        }
+//        return newChild;
+//    }
 
     /**
      * Add empty message at the end
      */
-    public Message addMessage() {
-        return addMessage(getArraySize());
-    }
+//    public Message addMessage() {
+//        return addMessage(getArraySize());
+//    }
 
     public Message getDefinitionMessage() {
         return definitionMessage;

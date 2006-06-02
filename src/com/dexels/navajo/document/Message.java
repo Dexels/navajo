@@ -374,13 +374,13 @@ public interface Message
    * Add empty message at index
    * @return Inserted message
    */
-  public Message addMessage(int index);
+  //public Message addMessage(int index);
 
   /**
    * Add empty message at the end
    * @return Appended message
    */
-  public Message addMessage();
+  // public Message addMessage();
 
   /**
    * Get the definition message. Definition messages are used in array messages to define the arraymessages' properties for each 'column'

@@ -624,7 +624,12 @@ public final class PropertyImpl implements Property, Comparable {
       //    return XMLutils.XMLUnescape(ref.getAttribute(Property.PROPERTY_VALUE));
       //else
     	
-      String value = ref.getTextContent();
+      String value = null; //ref.getTextContent();
+      
+      // java 1.4 compatible code.
+      if ( ref.getFirstChild() != null && ref.getFirstChild() instanceof Text) {
+    	  value = ((Text) ref.getFirstChild()).getNodeValue();
+      }
       
       if ( value != null && !value.trim().equals("")) {
 		  return value;
