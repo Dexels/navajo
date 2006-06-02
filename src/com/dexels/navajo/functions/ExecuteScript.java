@@ -27,12 +27,14 @@ public class ExecuteScript extends FunctionInterface {
     GenericHandler gh = new GenericHandler();
     String script = (String) getOperand(0);
     Access access = new Access(1, 1, 1, "ANONYMOUS", script, "", "", "", false, null);
+    inMessage.getHeader().setRequestId("");
     gh.setInput(this.inMessage, access, null, Dispatcher.getInstance().getNavajoConfig());
     Navajo result = null;
     try {
       result = gh.doService();
       java.io.ByteArrayOutputStream byteArray = new java.io.ByteArrayOutputStream();
       result.write(byteArray);
+      byteArray.close();
       return new Binary(byteArray.toByteArray());
     }
     catch (Exception ex) {
