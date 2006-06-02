@@ -14,6 +14,7 @@
       <include name="**/*.jar"/>
     </fileset>
     <pathelement location="${NavajoDocument.build}"/>
+    <pathelement location="${DexelsVersionControl.build}"/>
   </path>
   <target name="init">
     <tstamp/>
