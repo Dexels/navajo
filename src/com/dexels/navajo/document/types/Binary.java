@@ -70,12 +70,28 @@ public final class Binary extends NavajoType {
         }
      }    
     
+    public Binary() {
+        super(Property.BINARY_PROPERTY);
+     }    
+    
+    /**
+     * Returns an outputstream. Write the data for this binary to the stream, flush and close it.
+     * @return
+     */
+    public OutputStream getOutputStream() {
+        try {
+            return createTempFileOutputStream();
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new IllegalStateException("Can not create tempfile?!");
+        }
+    }
+        
+    
     private void loadBinaryFromStream(InputStream is) throws IOException, FileNotFoundException {
         int b = -1;
-        dataFile = File.createTempFile("binary_object", "navajo");
-        dataFile.deleteOnExit();
         long fileSize = 0;
-        FileOutputStream fos = new FileOutputStream(dataFile);
+        OutputStream fos = createTempFileOutputStream();
         byte[] buffer = new byte[1024];
         while ((b = is.read(buffer, 0, buffer.length)) != -1) {
             fos.write(buffer, 0, b);
@@ -88,6 +104,13 @@ public final class Binary extends NavajoType {
         this.mimetype = getSubType("mime");
         this.mimetype = (mimetype == null || mimetype.equals("") ? guessContentType() : mimetype);
         
+    }
+
+    private OutputStream createTempFileOutputStream() throws IOException, FileNotFoundException {
+        dataFile = File.createTempFile("binary_object", "navajo");
+        dataFile.deleteOnExit();
+        FileOutputStream fos = new FileOutputStream(dataFile);
+        return fos;
     }
 
     public Binary(File f) throws IOException {
@@ -115,9 +138,7 @@ public final class Binary extends NavajoType {
         super(Property.BINARY_PROPERTY);
         Thread.dumpStack();
         try {
-            dataFile = File.createTempFile("binary_object", "navajo");
-            dataFile.deleteOnExit();
-             FileOutputStream fos = new FileOutputStream(dataFile);
+            OutputStream fos = createTempFileOutputStream();
             fos.write(data);
             fos.close();
         } catch (IOException e) {
@@ -140,9 +161,7 @@ public final class Binary extends NavajoType {
     public Binary(byte[] data, String subtype) {
         super(Property.BINARY_PROPERTY, subtype);
         try {
-            dataFile = File.createTempFile("binary_object", "navajo");
-            dataFile.deleteOnExit();
-            FileOutputStream fos = new FileOutputStream(dataFile);
+            OutputStream fos = createTempFileOutputStream();
             fos.write(data);
             fos.close();
         } catch (IOException e) {
@@ -172,9 +191,7 @@ public final class Binary extends NavajoType {
     }
 
     private void parseFromReader(Reader reader) throws IOException {
-        dataFile = File.createTempFile("binary_object", "navajo");
-        dataFile.deleteOnExit();
-        FileOutputStream fos = new FileOutputStream(dataFile);
+        OutputStream fos = createTempFileOutputStream();
         PushbackReader pr = null;
         if (reader instanceof PushbackReader) {
             pr = (PushbackReader) reader;
