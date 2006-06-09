@@ -1,6 +1,9 @@
 package com.dexels.navajo.document.types;
 
 import java.io.*;
+import java.util.*;
+
+import metadata.*;
 
 import org.dexels.utils.*;
 
@@ -45,6 +48,8 @@ public final class Binary extends NavajoType {
     public final static String TEXT = "plain/text";
 
     private long expectedLength = 0;
+
+    private FormatDescription currentFormatDescription;
     /**
      * Construct a new Binary object with data from an InputStream It does close
      * the stream. I don't like it, but as yet I don't see any situation where
@@ -315,26 +320,47 @@ public final class Binary extends NavajoType {
      * @return String
      */
     public final String guessContentType() {
-        if (mimetype != null && !mimetype.equals("")) {
-            return mimetype;
-        } else {
+//        if (mimetype != null && !mimetype.equals("")) {
+//            return mimetype;
+//        } else {
             File f;
             if (lazySourceFile!=null) {
                 f = lazySourceFile;
             } else {
                 f = dataFile;
             }
-            metadata.FormatDescription description = metadata.FormatIdentification.identify(f);
-            if (description == null) {
+            currentFormatDescription = metadata.FormatIdentification.identify(f);
+            System.err.println("Guessed: "+currentFormatDescription.getMimeType());
+            System.err.println("Guessed: "+currentFormatDescription.getFileExtensions());
+            if (currentFormatDescription == null) {
                 return "unknown type";
-            } else if (description.getMimeType() != null) {
-                return description.getMimeType();
+            } else if (currentFormatDescription.getMimeType() != null) {
+                return currentFormatDescription.getMimeType();
             } else {
-                return description.getShortName();
+                return currentFormatDescription.getShortName();
             }
-        }
+//        }
     }
 
+    
+    public FormatDescription getFormatDescription() {
+        return currentFormatDescription;
+        
+    }
+    
+    public String getExtension() {
+        if(currentFormatDescription==null) {
+            guessContentType();
+        }
+        if (currentFormatDescription!=null) {
+            List exts = currentFormatDescription.getFileExtensions();
+            if (exts!=null && !exts.isEmpty()) {
+                return (String)exts.get(0);
+            }
+        }
+        return "dat";
+    }
+    
     /**
      * Get this Binary's data
      * 
