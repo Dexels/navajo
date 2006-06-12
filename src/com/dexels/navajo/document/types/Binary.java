@@ -330,8 +330,8 @@ public final class Binary extends NavajoType {
                 f = dataFile;
             }
             currentFormatDescription = metadata.FormatIdentification.identify(f);
-            System.err.println("Guessed: "+currentFormatDescription.getMimeType());
-            System.err.println("Guessed: "+currentFormatDescription.getFileExtensions());
+//            System.err.println("Guessed: "+currentFormatDescription.getMimeType());
+//            System.err.println("Guessed: "+currentFormatDescription.getFileExtensions());
             if (currentFormatDescription == null) {
                 return "unknown type";
             } else if (currentFormatDescription.getMimeType() != null) {
