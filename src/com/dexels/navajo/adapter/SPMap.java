@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.io.OutputStream;
 import java.sql.*;
+
 import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.adapter.sqlmap.ResultSetMap;
 import com.dexels.navajo.document.*;
@@ -226,6 +227,7 @@ public class SPMap extends SQLMap {
                
                 if ( param != null ) {
                   // NOTE: THIS IS ORACLE SPECIFIC!!!!!!!!!!!!!!!!!!
+                  // TODO REFACTOR INTO STREAMING VERSION
                   oracle.sql.BLOB blob = oracle.sql.BLOB.createTemporary(this.
                       con, false, oracle.sql.BLOB.DURATION_SESSION);
                   blob.open(oracle.sql.BLOB.MODE_READWRITE);
@@ -340,6 +342,16 @@ public class SPMap extends SQLMap {
                   case Types.BIT:
                     value = new Boolean(rs.getBoolean(i));
                     break;
+
+                  case Types.BLOB:
+                      try {
+                        Blob b = rs.getBlob(i);
+                        value = new Binary(b.getBinaryStream());
+                      }
+                      catch (Throwable e) {
+                        value = null;
+                      }
+                      break;
 
                   default:
                     if (rs.getString(i) != null) {
