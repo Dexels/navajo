@@ -51,10 +51,10 @@ public class BinaryScaler implements Mappable {
         Binary c = new Binary();
         InputStream is = b.getDataAsStream();
         ImageInputStream iis = ImageIO.createImageInputStream(is);
-        FileOutputStream fos = new FileOutputStream("c:/aap/grunka.jpg");
-        b.write(fos);
-        fos.flush();
-        fos.close();
+//        FileOutputStream fos = new FileOutputStream("c:/aap/grunka.jpg");
+//        b.write(fos);
+//        fos.flush();
+//        fos.close();
          
      
         OutputStream os = c.getOutputStream();
