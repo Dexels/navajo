@@ -4,7 +4,7 @@
  * To change the template for this generated file go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-package com.dexels.navajo.adapter.imagescaler;
+package com.dexels.navajo.adapter;
 
 import java.awt.image.*;
 import java.io.*;
@@ -14,6 +14,7 @@ import javax.imageio.stream.*;
 
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.types.*;
+import com.dexels.navajo.functions.scale.*;
 import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.server.*;
 
@@ -40,51 +41,13 @@ public class BinaryScaler implements Mappable {
         
         FileInputStream fis = new FileInputStream("c:/aap/groot.jpg");
         Binary b = new Binary(fis);
-        Binary c = scaleToMax(b,1000,50);
+        Binary c = ImageScaler.scaleToMax(b,1000,50,compressionQuality);
         FileOutputStream fos = new FileOutputStream("c:/aap/klein.jpg");
         c.write(fos);
         fis.close();
     }
     
     
-    private static Binary scale(Binary b, int width, int height, boolean keepAspect) throws IOException {
-        Binary c = new Binary();
-        InputStream is = b.getDataAsStream();
-        ImageInputStream iis = ImageIO.createImageInputStream(is);
-//        FileOutputStream fos = new FileOutputStream("c:/aap/grunka.jpg");
-//        b.write(fos);
-//        fos.flush();
-//        fos.close();
-         
-     
-        OutputStream os = c.getOutputStream();
-        ImageOutputStream ios = ImageIO.createImageOutputStream(os);
-        os.flush();
-//        os.close();
-        ImageScaler.scale(iis, ios, width, height, keepAspect, (float)compressionQuality);
-        ios.flush();
-        ios.close();
-        is.close();
-        return c;
-    }
-
-    public static Binary scaleToMax(Binary b, int width, int height) throws IOException {
-        if (width>height) {
-            height = width;
-        }
-        if (height>width) {
-            width = height;
-        }
-        return scale(b,width,height,true);
-    }
-
-    public static Binary scaleToMin(Binary b, int width, int height) throws IOException {
-        return scale(b,width,height,true);
-    }
-
-    public static Binary scaleFree(Binary b, int width, int height) throws IOException {
-        return scale(b,width,height,false);
-    }
 
 
     
@@ -106,7 +69,7 @@ public class BinaryScaler implements Mappable {
     public final Binary getScaledFree() throws UserException {
         if (source!=null) {
             try {
-                return scaleFree(source, width, height);
+                return ImageScaler.scaleFree(source, width, height,compressionQuality);
             } catch (IOException e) {
                 e.printStackTrace();
                 throw new UserException(-2020,"Error scaling image ", e);
@@ -118,7 +81,7 @@ public class BinaryScaler implements Mappable {
     public final Binary getScaledToMax()  throws UserException{
         if (source!=null) {
             try {
-                return scaleToMax(source, width, height);
+                return ImageScaler.scaleToMax(source, width, height,compressionQuality);
             } catch (IOException e) {
                 e.printStackTrace();
                 throw new UserException(-2020,"Error scaling image ", e);
@@ -130,7 +93,7 @@ public class BinaryScaler implements Mappable {
     public final Binary getScaledToMin()  throws UserException{
         if (source!=null) {
             try {
-                return scaleToMin(source, width, height);
+                return ImageScaler.scaleToMin(source, width, height,compressionQuality);
              } catch (IOException e) {
                  e.printStackTrace();
                 throw new UserException(-2020,"Error scaling image ", e);
