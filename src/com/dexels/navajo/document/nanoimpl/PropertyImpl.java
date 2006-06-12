@@ -310,11 +310,17 @@ public final class PropertyImpl
     if (type == null) {
       type = Property.STRING_PROPERTY;
     }
-    try {
-        setValue(PropertyTypeChecker.getInstance().verify(this, myValue));
-    } catch (PropertyTypeException e1) {
-          e1.printStackTrace();
+    
+    if (BINARY_PROPERTY.equals(type) && e.getContent()!=null && myValue==null) {
+        myValue = e.getContent();
+    } else {
+        try {
+            setValue(PropertyTypeChecker.getInstance().verify(this, myValue));
+        } catch (PropertyTypeException e1) {
+              e1.printStackTrace();
+        } 
     }
+
   }
 
   public final Object getRef() {
