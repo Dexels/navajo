@@ -1,6 +1,9 @@
 package com.dexels.navajo.functions;
 
-//import sun.security.jca.GetInstance;
+import java.io.*;
+import java.io.File;
+
+import sun.security.jca.GetInstance;
 
 import com.dexels.navajo.parser.*;
 import com.dexels.navajo.server.*;
@@ -32,11 +35,21 @@ public class ExecuteScript extends FunctionInterface {
     Navajo result = null;
     try {
       result = gh.doService();
-      java.io.ByteArrayOutputStream byteArray = new java.io.ByteArrayOutputStream();
-      result.write(byteArray);
-      byteArray.close();
-      return new Binary(byteArray.toByteArray());
-    }
+
+//      java.io.ByteArrayOutputStream byteArray = new java.io.ByteArrayOutputStream();
+      Binary bbb = new Binary();
+      OutputStream os = bbb.getOutputStream();
+      result.write(os);
+      os.flush();
+      os.close();
+//      // TODO: REMOVE AGAIN
+//      File f = File.createTempFile("executeScriptDebug",".xml");
+//      FileWriter fw = new FileWriter(f);
+//      result.write(fw);
+//      fw.flush();
+//      fw.close();
+      return bbb;
+      }
     catch (Exception ex) {
       ex.printStackTrace();
       throw new TMLExpressionException(this, "Error while trying to execute script: " + script);
