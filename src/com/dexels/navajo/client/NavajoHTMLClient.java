@@ -86,9 +86,8 @@ public class NavajoHTMLClient extends NavajoClient {
 //        String result = "";
 //        StringWriter text = new java.io.StringWriter();
 
-        tbMessage.write(out);
         
-    	
+
         Message errMsg = tbMessage.getMessage("error");
 
         if (errMsg != null) {               // Format error message for HTML usage. Replace \n with </BR>
@@ -115,22 +114,25 @@ public class NavajoHTMLClient extends NavajoClient {
               Transformer  transformer =  javax.xml.transform.TransformerFactory.newInstance().newTransformer(new StreamSource(xsl));
 
               transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-              if (tbMessage.getMessageBuffer() instanceof Document)
+              if (tbMessage.getMessageBuffer() instanceof Document) {
                 transformer.transform(new DOMSource((Document) tbMessage.getMessageBuffer()), new StreamResult(out));
-              else
-//                  System.err.println("File: "+xslFile);
+                } else {
+//                  System.err.println("File: "+xslFile);10
 //              System.err.println("STR: "+tbMessage.toString());
 //              System.err.println();
-              if (tbMessage instanceof BaseNavajoImpl) {
-                BaseNavajoImpl bni = (BaseNavajoImpl)tbMessage;
-                
-                Reader reader = bni.createReader();
-                transformer.transform(new StreamSource(reader), new StreamResult(out));
-                reader.close();
-              } else {
-                transformer.transform(new StreamSource(new StringReader(tbMessage.toString())), new StreamResult(out));
+                      if (tbMessage instanceof BaseNavajoImpl) {
+                        BaseNavajoImpl bni = (BaseNavajoImpl)tbMessage;
+                        
+                        Reader reader = bni.createReader();
+                        transformer.transform(new StreamSource(reader), new StreamResult(out));
+                        reader.close();
+                      } else {
+                        transformer.transform(new StreamSource(new StringReader(tbMessage.toString())), new StreamResult(out));
+                      }
+                      
             }
               
+              tbMessage.write(out);
 
 //              result = sw.toString();
 

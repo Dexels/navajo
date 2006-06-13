@@ -473,6 +473,7 @@ public class NavajoClient implements ClientInterface {
     con.setDoOutput(true);
     con.setDoInput(true);
     con.setUseCaches(false);
+    con.setRequestProperty("Content-type", "text/xml; charset=UTF-8");
 
     try {
     	java.lang.reflect.Method chunked = con.getClass().getMethod("setChunkedStreamingMode", new Class[]{int.class});
@@ -498,10 +499,10 @@ public class NavajoClient implements ClientInterface {
           con.setRequestProperty("Content-type", "text/xml; charset=UTF-8");
         d.write(con.getOutputStream(), condensed, d.getHeader().getRPCName());
         //long tt = System.currentTimeMillis() - timeStamp;
-        FileOutputStream fos = new FileOutputStream("/tmp/aap.xml");
-        d.write(fos,condensed,d.getHeader().getRPCName());
-        fos.flush();
-        fos.close();
+//        FileOutputStream fos = new FileOutputStream("/tmp/aap.xml");
+//        d.write(fos,condensed,d.getHeader().getRPCName());
+//        fos.flush();
+//        fos.close();
         //System.err.println("Sending request took: " + tt + " millisec");
         //timeStamp = System.currentTimeMillis();
       }
@@ -663,7 +664,6 @@ public class NavajoClient implements ClientInterface {
         	in = doTransaction(server, out, useCompression);
 //            if (n == null) {
                 n = NavajoFactory.getInstance().createNavajo(in);
-                
                 if (n.getHeader()!=null) {
                     n.getHeader().setAttribute("sourceScript", callingService);
                     long clientTime = (System.currentTimeMillis()-timeStamp);
@@ -763,7 +763,11 @@ public class NavajoClient implements ClientInterface {
     BufferedInputStream in = null;
     System.err.println("------------> retrying transaction: " + server + ", attempts left: " + attemptsLeft);
     try {
-      Thread.sleep(interval);
+      try {
+        Thread.sleep(interval);
+    } catch (InterruptedException e) {
+         e.printStackTrace();
+    }
       in = doTransaction(server, out, useCompression);
       System.err.println("It worked!  the inputstream is: " + in);
       return in;
@@ -793,6 +797,8 @@ public class NavajoClient implements ClientInterface {
       else {
           attemptsLeft--;
        System.err.println("---> Got a 500 server exception");
+       System.err.println("Sending: ");
+       out.write(System.err);
         return retryTransaction(server, out, false, attemptsLeft, interval, n);
       }
     }

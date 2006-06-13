@@ -377,6 +377,7 @@ public class HTMLClientServlet extends HttpServlet {
         
         // Store Navajo Messsage
         session.setAttribute("NAVAJO_MESSAGE", tbMessage);
+        out.flush();
         out.close();
     }
     
