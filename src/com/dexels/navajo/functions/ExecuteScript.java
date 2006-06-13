@@ -1,6 +1,6 @@
 package com.dexels.navajo.functions;
 
-import sun.security.jca.GetInstance;
+//import sun.security.jca.GetInstance;
 
 import com.dexels.navajo.parser.*;
 import com.dexels.navajo.server.*;
