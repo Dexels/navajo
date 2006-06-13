@@ -44,7 +44,10 @@ public class ImageScaler {
     
     
     
-    private static Binary scale(Binary b, int width, int height, boolean keepAspect, double compressionQuality) throws IOException {
+    private static Binary scale(Binary b, int width, int height, boolean keepAspect, double compressionQuality, boolean alsoScaleUp) throws IOException {
+        if (b==null || b.getLength()<=0) {
+            return null;
+        }
         Binary c = new Binary();
         InputStream is = b.getDataAsStream();
         ImageInputStream iis = ImageIO.createImageInputStream(is);
@@ -65,15 +68,15 @@ public class ImageScaler {
         if (height>width) {
             width = height;
         }
-        return scale(b,width,height,true,compressionQuality);
+        return scale(b,width,height,true,compressionQuality,false);
     }
 
     public static Binary scaleToMin(Binary b, int width, int height, double compressionQuality) throws IOException {
-        return scale(b,width,height,true,compressionQuality);
+        return scale(b,width,height,true,compressionQuality,true);
     }
 
     public static Binary scaleFree(Binary b, int width, int height, double compressionQuality) throws IOException {
-        return scale(b,width,height,false,compressionQuality);
+        return scale(b,width,height,false,compressionQuality,true);
     }
     
     
@@ -109,6 +112,15 @@ public class ImageScaler {
     
     int originalWidth = original.getWidth();
     int originalHeight = original.getHeight();
+    
+    if (width > originalWidth) {
+        width = originalWidth;
+    }
+    if (height > originalHeight) {
+        height = originalHeight;
+    }
+
+    
     float factorX = (float)originalWidth / width;
     float factorY = (float)originalHeight / height;
     if(keepAspect) {
