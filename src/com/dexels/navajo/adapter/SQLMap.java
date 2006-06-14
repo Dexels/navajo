@@ -146,6 +146,7 @@ public class SQLMap implements Mappable, LazyArray {
   public int transactionIsolation = -1;
   public int rowCount = 0;
   public int lazyTotal = 0;
+  public int totalRows = 0;
   public int viewCount = 0;
   public int updateCount = 0;
   public int remainCount = 0;
@@ -1502,7 +1503,7 @@ public class SQLMap implements Mappable, LazyArray {
    *
    * @return
    */
-  private final int getTotalRows() {
+  public final int getTotalRows() {
 
     //savedQuery = savedQuery.toUpperCase();
     if (debug) { System.err.println("savedQuery is " + savedQuery); }
