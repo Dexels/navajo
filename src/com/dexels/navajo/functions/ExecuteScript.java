@@ -3,8 +3,6 @@ package com.dexels.navajo.functions;
 import java.io.*;
 import java.io.File;
 
-import sun.security.jca.GetInstance;
-
 import com.dexels.navajo.parser.*;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.document.Navajo;
