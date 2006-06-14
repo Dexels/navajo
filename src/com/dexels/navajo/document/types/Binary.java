@@ -539,4 +539,13 @@ public final class Binary extends NavajoType {
 
     }
 
+    public String getTempFileName() {
+    	if (lazySourceFile != null) {
+    		return lazySourceFile.getAbsolutePath();
+    	} else if (dataFile != null) {    		
+    		return dataFile.getAbsolutePath();
+    	} else {
+    		return null;
+    	}
+    }	
 }
