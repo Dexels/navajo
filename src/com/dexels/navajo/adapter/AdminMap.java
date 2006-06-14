@@ -3,6 +3,7 @@ package com.dexels.navajo.adapter;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.NavajoConfig;
@@ -39,6 +40,7 @@ public class AdminMap implements Mappable {
   public String compiledScriptPath;
   public String rootPath;
   public String webservice;
+  public String documentClass;
   public WebserviceAccess webserviceAccess;
   public boolean supportsHotCompile;
   public boolean supportsAsync;
@@ -325,5 +327,16 @@ public class AdminMap implements Mappable {
 		  return null;
 	  }
 	  return WebserviceAccessListener.getInstance().getAccessInfo(webservice);
+  }
+  
+  public String getDocumentClass() {
+	  return NavajoFactory.getInstance().getClass().getName();
+  }
+  
+  public void setDocumentClass(String s) {
+	  System.setProperty("com.dexels.navajo.DocumentImplementation", s);
+	  NavajoFactory.resetImplementation();
+	  NavajoFactory.getInstance();
+	  System.err.println("Document class is now: " + getDocumentClass());
   }
 }
