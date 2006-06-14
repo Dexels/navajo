@@ -333,7 +333,12 @@ public class AdminMap implements Mappable {
 	  return NavajoFactory.getInstance().getClass().getName();
   }
   
-  public void setDocumentClass(String s) {
+  public void setDocumentClass(String s) throws UserException {
+	  try {
+		  Class.forName(s);
+	  } catch (Exception e) {
+		  throw new UserException(-1, "Could not find document implementation: " + s);
+	  }
 	  System.setProperty("com.dexels.navajo.DocumentImplementation", s);
 	  NavajoFactory.resetImplementation();
 	  NavajoFactory.getInstance();
