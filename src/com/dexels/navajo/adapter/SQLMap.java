@@ -1145,16 +1145,13 @@ public class SQLMap implements Mappable, LazyArray {
                       break;
                     case Types.BLOB:
 
-                      //System.err.println("I AM BLOB.............");
-                      try {
-                        Blob b = rs.getBlob(i);
-                        //System.err.println("BLOB length = " + b.length());
-                        byte[] data = b.getBytes( (long) 1, (int) b.length());
-                        value = new Binary(data);
-                      }
-                      catch (Throwable e) {
-                        value = null;
-                      }
+                    	InputStream is2 = rs.getBinaryStream(i);
+                        if (is2 != null) {
+                            value = new Binary(is2);
+                          } else {
+                            value = null;
+                          }
+                    	
                       break;
 
                     case Types.INTEGER:
