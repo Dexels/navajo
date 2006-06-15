@@ -5,8 +5,10 @@ import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.adapter.csvmap.CSVEntryMap;
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.types.Binary;
 
 import java.io.*;
+import java.io.InputStreamReader;
 import java.util.*;
 
 /**
@@ -27,6 +29,7 @@ public class CSVMap implements Mappable {
 
   public CSVEntryMap [] entries;
   public String fileName;
+  public Binary fileContent;
   public String separator;
   public int entryCount;
 
@@ -55,7 +58,13 @@ public class CSVMap implements Mappable {
 
   public CSVEntryMap [] getEntries() throws UserException {
     try {
-        FileReader f = new FileReader(fileName);
+    	Reader f = null;
+    	if ( fileContent != null ) {
+    		f = new InputStreamReader(fileContent.getDataAsStream());
+    	} else {
+    		f = new FileReader( fileName);
+    	}
+        
         if (f != null) {
             BufferedReader buffer = new BufferedReader(f);
             String line = "";
@@ -85,6 +94,10 @@ public class CSVMap implements Mappable {
 
   public void setFileName(String s) throws UserException {
     this.fileName = s;
+  }
+  
+  public void setFileContent(Binary b) throws UserException {
+	  this.fileContent = b;
   }
 
   public void store() throws MappableException, UserException {
@@ -117,5 +130,16 @@ public class CSVMap implements Mappable {
 
   public void kill() {
 
+  }
+  
+  public static void main(String [] args) throws Exception {
+	  Mappable csv = new CSVMap();
+	  ((CSVMap) csv).setSeparator(";");
+	  Binary b = new Binary(new File("/home/arjen/tmp/allmatches.csv"));
+	  ((CSVMap) csv).setFileContent(b);
+	  Mappable [] all = ((CSVMap) csv).getEntries();
+	  for (int i = 0; i < all.length; i++ ) {
+		  System.err.println("a = " + ((CSVEntryMap) all[i]).getEntry(new Integer(0)));
+	  }
   }
 }
