@@ -22,6 +22,10 @@ import com.dexels.navajo.server.*;
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
 public class NavajoSocketLauncher {
+    public  static final String DOC_IMPL = "com.dexels.navajo.DocumentImplementation";
+    public static final String NANO = "com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl";
+    public static final String JAXP = "com.dexels.navajo.document.jaxpimpl.NavajoFactoryImpl";
+    public static final String QDSAX = "com.dexels.navajo.document.base.BaseNavajoFactoryImpl";
 
     public static void main(String[] args) throws Exception {
            int port = 10000;
@@ -53,8 +57,8 @@ public class NavajoSocketLauncher {
                 System.err.println("Can't find server.xml in default location, and none is specified");
             }
         }         
-        System.setProperty("com.dexels.navajo.DocumentImplementation",
-        "com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl");
+
+        System.setProperty(DOC_IMPL,QDSAX);
 
         
         

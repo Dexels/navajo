@@ -1737,6 +1737,8 @@ public class NanoTslCompiler {
             result.append(debugNode(ident, (XMLElement) n));
         } else if (n.getName().equals("break")) {
             result.append(breakNode(ident, (XMLElement) n));
+        } else if (n.getName().equals("validations")) {
+                // --------------- nada
         } else {
             throw new TslCompileException(TslCompileException.TSL_UNKNOWN_TAG,"Unknown tag: "+n.getName(),n);
         }
