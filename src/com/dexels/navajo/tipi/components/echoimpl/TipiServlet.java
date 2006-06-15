@@ -27,7 +27,7 @@ public class TipiServlet extends WebContainerServlet {
         // echopoint.ui.Installer.register();
         // CustomUIComponents.register();
 
-        System.setProperty("com.dexels.navajo.DocumentImplementation", "com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl");
+        System.setProperty("com.dexels.navajo.DocumentImplementation", "com.dexels.navajo.document.base.BaseNavajoFactoryImpl");
 
     }
 

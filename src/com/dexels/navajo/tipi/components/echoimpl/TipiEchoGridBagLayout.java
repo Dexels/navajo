@@ -20,7 +20,7 @@ import nextapp.echo2.app.layout.GridLayoutData;
  * <p>
  * Company:
  * </p>
- * 
+ * @deprecated
  * @author Frank Lyaruu
  * @version 1.0
  */

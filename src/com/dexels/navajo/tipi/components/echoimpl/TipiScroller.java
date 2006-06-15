@@ -1,5 +1,12 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
+import java.awt.*;
+
+import nextapp.echo2.app.*;
+
+import echopointng.*;
+import echopointng.able.*;
+
 /**
  * <p>
  * Title:
@@ -22,12 +29,17 @@ public class TipiScroller extends TipiPanel {
     public TipiScroller() {
     }
 
-    // public Object createContainer() {
-    // echopointng.
-    // TipiEchoScroller scroll = new TipiEchoScroller();
-    // // scroll.setHeight(200);
-    // // return scroll;
-    // return null;
-    // }
+     public void setComponentValue(final String name, final Object object) {
+
+          if ("w".equals(name)) {
+          ContainerEx cont = (ContainerEx) getContainer();
+          cont.setWidth( new Extent(( (Integer) object).intValue(),Extent.PX));
+          }
+          if ("h".equals(name)) {
+          ContainerEx cont = (ContainerEx) getContainer();
+          cont.setHeight(  new Extent(( (Integer) object).intValue(),Extent.PX));
+          }
+         super.setComponentValue(name, object);
+     }
 
 }

@@ -40,6 +40,8 @@ public class MessageTable extends SortableTable {
     private final ArrayList editables = new ArrayList();
 
     private final ArrayList sizes = new ArrayList();
+    
+    private final ArrayList editorListeners = new ArrayList();
 
     private int lastSelectedRow = -1;
 
@@ -101,7 +103,6 @@ public class MessageTable extends SortableTable {
 
             }
         });
-        setSelectionEnabled(true);
         addPropertyChangeListener(new PropertyChangeListener() {
 
             public void propertyChange(PropertyChangeEvent evt) {
@@ -133,6 +134,23 @@ public class MessageTable extends SortableTable {
         editables.clear();
     }
 
+    
+    public void addTableEditorListener(TableEditorListener te) {
+        editorListeners.add(te);
+    }
+
+    public void removeTableEditorListener(TableEditorListener te) {
+        editorListeners.remove(te);
+    }
+    
+    public void fireTableEdited(Property p, int column, int row) {
+        for (int i = 0; i < editorListeners.size(); i++) {
+            TableEditorListener element = (TableEditorListener)editorListeners.get(i);
+            element.propertyChanged(p, "onValueChanged", column, row);
+        }
+    }
+
+    
     public TableCellRenderer getDefaultHeaderRenderer() {
         // System.err.println("DefaultHEaderREnderer CREATED");
         return new SortableTableHeaderRenderer();

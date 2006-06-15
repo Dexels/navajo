@@ -35,7 +35,7 @@ public class TipiFrame extends TipiEchoDataComponentImpl {
 
     // private ContainerEx innerContainer;
 
-    private Grid contentPane;
+    private ContentPane contentPane;
 
     public TipiFrame() {
     }
@@ -47,7 +47,7 @@ public class TipiFrame extends TipiEchoDataComponentImpl {
     public Object createContainer() {
         myWindow = new Window();
         // innerContainer = new ContainerEx();
-        contentPane = new Grid(1);
+        contentPane = new ContentPane();
         myWindow.getContent().add(contentPane);
         // innerContainer.add(contentPane);
         return myWindow;

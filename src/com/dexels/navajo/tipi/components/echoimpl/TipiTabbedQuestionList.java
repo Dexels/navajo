@@ -46,48 +46,79 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
         }
         return name.getValue();
     }
-
+    public void loadData(final Navajo n, final TipiContext context,final String method) throws TipiException {
+        clearQuestions();
+        lastSelectedTab = null;
+        super.loadData(n, context, method);
+    }
+//    public Object createContainer() {
+//        final TipiComponent me = this;
+//        myTabbedPane = new TabbedPane();
+//        defaultTabModel = new DefaultTabModel();
+//
+//        validImage = new URLImageReference(getClass().getClassLoader().getResource("com/dexels/navajo/tipi/components/echoimpl/ok.gif"));
+//        inValidImage = new URLImageReference(getClass().getClassLoader().getResource("com/dexels/navajo/tipi/components/echoimpl/cancel.gif"));
+//        myTabbedPane.setModel(defaultTabModel);
+//        TipiHelper th = new EchoTipiHelper();
+//        th.initHelper(this);
+//        addHelper(th);
+//        return myTabbedPane;
+//    }
+    
     public Object createContainer() {
         final TipiComponent me = this;
         myTabbedPane = new TabbedPane();
         defaultTabModel = new DefaultTabModel();
-
-        validImage = new URLImageReference(getClass().getClassLoader().getResource("com/dexels/navajo/tipi/components/echoimpl/ok.gif"));
-        inValidImage = new URLImageReference(getClass().getClassLoader().getResource("com/dexels/navajo/tipi/components/echoimpl/cancel.gif"));
-        // myTabbedPane.setTabSpacing(0);
-        // myTabbedPane.setForeground(new Color(0,0,0));
+        defaultTabModel.setSelectedBackground(new Color(255, 255, 255));
+        defaultTabModel.setSelectedForeground(new Color(0, 0, 0));
+        defaultTabModel.setForeground(new Color(153, 153, 153));
+        defaultTabModel.setRolloverForeground(new Color(68, 68, 68));
+        defaultTabModel.setSelectedRolloverForeground(new Color(68, 68, 68));
+        defaultTabModel.setSelectedFont(new Font(Font.ARIAL, Font.BOLD, new Extent(10, Extent.PT)));
+        defaultTabModel.setFont(new Font(Font.ARIAL, Font.PLAIN, new Extent(10, Extent.PT)));
+        defaultTabModel.setRolloverFont(new Font(Font.ARIAL, Font.BOLD, new Extent(10, Extent.PT)));
+        defaultTabModel.setBackground(new Color(255, 255, 255));
+        defaultTabModel.setRolloverBackground(new Color(255, 255, 255));
+        defaultTabModel.setSelectedRolloverBackground(new Color(255, 255, 255));
         myTabbedPane.setModel(defaultTabModel);
         TipiHelper th = new EchoTipiHelper();
         th.initHelper(this);
         addHelper(th);
+        myTabbedPane.setTabSpacing(0);
         myTabbedPane.addPropertyChangeListener(new PropertyChangeListener() {
 
             public void propertyChange(PropertyChangeEvent evt) {
-            }
-        });
+              }
+            });
+        validImage = new URLImageReference(getClass().getClassLoader().getResource("com/dexels/navajo/tipi/components/echoimpl/ok.gif"));
+        inValidImage = new URLImageReference(getClass().getClassLoader().getResource("com/dexels/navajo/tipi/components/echoimpl/cancel.gif"));
         return myTabbedPane;
     }
+    
 
     public void addToContainer(Object c, Object constraints) {
         defaultTabModel.addTab("" + constraints, (Component) c);
         if (lastSelectedTab == null) {
             lastSelectedTab = (Component) c;
         }
+        // System.err.println("WIDTH: " + myTabbedPane.getWidth());
+        // System.err.println("HEIGHT: " + myTabbedPane.getWidth());
+        // System.err.println("Tab count: "+getChildCount());
+        // ButtonEx notSelected
+        // =(ButtonEx)defaultTabModel.getTabAt(getChildCount()-1,false);
         ButtonEx selected = (ButtonEx) defaultTabModel.getTabAt(getChildCount() - 1, true);
-        if (selected != null) {
-            selected.setBorder(new Border(1, new Color(50, 50, 50), Border.STYLE_GROOVE));
-        }
+        selected.setBorder(new Border(1, new Color(50, 50, 50), Border.STYLE_GROOVE));
 
-        defaultTabModel.setSelectedBackground(new Color(204, 204, 204));
-        defaultTabModel.setSelectedForeground(new Color(0, 0, 0));
-        defaultTabModel.setBackground(new Color(204, 204, 204));
-        defaultTabModel.setForeground(new Color(153, 153, 153));
-        defaultTabModel.setRolloverBackground(new Color(204, 204, 204));
-        defaultTabModel.setRolloverForeground(new Color(68, 68, 68));
-        defaultTabModel.setSelectedRolloverBackground(new Color(204, 204, 204));
-        defaultTabModel.setSelectedRolloverForeground(new Color(68, 68, 68));
+        // selected.setText("Selected");
+        // notSelected.setText("Not selected");
+        // System.err.println("Sel: "+selected.toString());
+        // System.err.println("NSel: "+notSelected.toString());
+        // selected.setForeground(new Color(0,0,0));
+        // selected.setBackground(myTabbedPane.getBackground());
+        // notSelected.setForeground(new Color(0,0,0));
+        // notSelected.setBackground(new Color(150,150,150));
     }
-
+    
     protected void clearQuestions() {
         // TODO Auto-generated method stub
 
@@ -109,8 +140,12 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
     public void setGroupValid(boolean valid, TipiBaseQuestionGroup group) {
         super.setGroupValid(valid, group);
         int i = myGroups.indexOf(group);
+        if (!myGroups.contains(group)) {
+            return;
+        }
         if (i < 0) {
             System.err.println("Sh!34#@$!");
+            return;
         }
         ButtonEx selected = (ButtonEx) defaultTabModel.getTabAt(i, true);
         selected.setIcon(valid ? validImage : inValidImage);

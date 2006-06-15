@@ -63,17 +63,9 @@ public class TipiTabs extends TipiEchoDataComponentImpl {
         defaultTabModel.setSelectedFont(new Font(Font.ARIAL, Font.BOLD, new Extent(10, Extent.PT)));
         defaultTabModel.setFont(new Font(Font.ARIAL, Font.PLAIN, new Extent(10, Extent.PT)));
         defaultTabModel.setRolloverFont(new Font(Font.ARIAL, Font.BOLD, new Extent(10, Extent.PT)));
-
-        // defaultTabModel.setBackground(new Color(204,204,204));
-        // defaultTabModel.setRolloverBackground(new Color(204,204,204));
-        // defaultTabModel.setSelectedRolloverBackground(new
-        // Color(204,204,204));
-        //        
         defaultTabModel.setBackground(new Color(255, 255, 255));
         defaultTabModel.setRolloverBackground(new Color(255, 255, 255));
         defaultTabModel.setSelectedRolloverBackground(new Color(255, 255, 255));
-
-        // myTabbedPane.setForeground(new Color(0,0,0));
         myTabbedPane.setModel(defaultTabModel);
         TipiHelper th = new EchoTipiHelper();
         th.initHelper(this);
@@ -82,23 +74,7 @@ public class TipiTabs extends TipiEchoDataComponentImpl {
         myTabbedPane.addPropertyChangeListener(new PropertyChangeListener() {
 
             public void propertyChange(PropertyChangeEvent evt) {
-                // TODO Auto-generated method stub
-                // System.err.println("PROPERTY CHANGED!");
-                // System.err.println("!WIDTH: "+myTabbedPane.getWidth());
-                // System.err.println("!HEIGHT: "+myTabbedPane.getWidth());
-
-            }
-            // public void stateChanged(ChangeEvent ce) {
-                // try {
-                // Component childContainer = jt.getSelectedComponent();
-                // me.performTipiEvent("onTabChanged", null, false);
-                // lastSelectedTab = jt.getSelectedComponent();
-                // }
-                // catch (TipiException ex) {
-                // System.err.println("Exception while switching tabs.");
-                // ex.printStackTrace();
-                // }
-                // }
+              }
             });
         return myTabbedPane;
     }

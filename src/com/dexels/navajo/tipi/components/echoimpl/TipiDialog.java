@@ -216,6 +216,7 @@ public class TipiDialog extends TipiEchoDataComponentImpl {
         // myDialog.setUndecorated(!decorated);
         createWindowListener(myDialog);
         myDialog.setTitle(title);
+//        myDialog.
         // myDialog.toFront();
         // if (myBar != null) {
         // myDialog.setJMenuBar(myBar);
@@ -235,7 +236,7 @@ public class TipiDialog extends TipiEchoDataComponentImpl {
         myDialog.setTitleBackground(new Color(232, 232, 232));
         myDialog.setTitleInsets(new Insets(3, 2, 0, 0));
         myDialog.setTitleForeground(new Color(0, 0, 0));
-        myDialog.setTitleFont(new Font(Font.ARIAL, Font.BOLD, new Extent(11, Extent.PT)));
+        myDialog.setTitleFont(new Font(Font.ARIAL, Font.PLAIN, new Extent(10, Extent.PT)));
         myDialog.setTitleHeight(new Extent(20, Extent.PX));
         myDialog.setVisible(true);
     }

@@ -17,6 +17,7 @@ import nextapp.echo2.webcontainer.command.BrowserRedirectCommand;
 
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.components.echoimpl.impl.*;
 
 /**
  * <p>
@@ -74,6 +75,9 @@ public class TipiEchoInstance extends ApplicationInstance {
     public void startup() {
 
         context = new EchoTipiContext();
+
+         ContainerContext containerContext = (ContainerContext)getContextProperty(ContainerContext.CONTEXT_PROPERTY_NAME);
+//containerContext.setServerDelayMessage(new NavajoServerDelayMessage(containerContext,"Effe dimme, ouwe"));
         TipiScreen es = new TipiScreen();
         context.parseRequiredIncludes();
         context.processRequiredIncludes();

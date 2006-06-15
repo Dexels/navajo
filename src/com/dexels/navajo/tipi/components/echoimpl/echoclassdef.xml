@@ -20,6 +20,9 @@
   <tipiaction name="exitsession"  class="TipiEchoExit" package="com.dexels.navajo.tipi.actions">
    <param name="destination" type="string"/>
  </tipiaction>
+  <tipiaction name="servebinary"  class="TipiServeBinary" package="com.dexels.navajo.tipi.actions">
+   <param name="binary" type="string"/>
+ </tipiaction>
 
 
 
@@ -262,6 +265,18 @@
             <event name="onActionPerformed"/>
             <event name="onSelectionChanged"/>
             <event name="onLoad"/>
+
+           <event name="onSelectionChanged"/>
+            <event name="onValueChanged">
+                <param name="name" type="string"/>
+                <!--<param name="old" type="string"/>-->
+                <param name="new" type="string"/>
+                <param name="row" type="string"/>
+                <param name="column" type="string"/>
+                <param name="message" type="message"/>
+                <!--<param name="path" type="string"/>-->
+            </event>
+
         </events>
         <values>
             <value direction="inout" name="messagepath" type="string"/>        
@@ -286,6 +301,8 @@
             <value direction="in" name="columnDefinitionSavePath" type="string"/>
             <value direction="in" name="background" type="color"/>
             <value direction="in" name="foreground" type="color"/>
+             <value direction="inout" name="h" type="integer"/>
+             <value direction="inout" name="v" type="integer"/>
         </values>
         <methods>
             <method name="selectNext"/>
@@ -600,6 +617,9 @@
                 <option description="Always" value="always"/>
                 <option description="Never" value="never"/>
             </value>
+            <value direction="in" name="w" type="integer"/>
+    	    <value direction="in" name="h" type="integer"/>
+    	    
         </values>
         <methods/>
     </tipiclass>

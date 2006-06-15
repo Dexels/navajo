@@ -55,16 +55,16 @@ public class TipiQuestion extends TipiBaseQuestion {
 
     private String myId;
 
-    private GroupBox myGroupBox;
+//    private GroupBox myGroupBox;
 
     public TipiQuestion() {
     }
 
     public Object createContainer() {
-        myGroupBox = new GroupBox();
+//        myGroupBox = new GroupBox();
         myColumn = new Column();
-        myGroupBox.add(myColumn);
-        return myGroupBox;
+//        myGroupBox.add(myColumn);
+        return myColumn;
     }
 
     public void addToContainer(Object c, Object constraints) {
@@ -74,12 +74,12 @@ public class TipiQuestion extends TipiBaseQuestion {
     }
 
     protected void setQuestionBorder(String val) {
-        myGroupBox.setTitle(val);
+//        myGroupBox.setTitle(val);
 
     }
 
     public void setQuestionVisible(boolean b) {
-        myGroupBox.setVisible(b);
+        myColumn.setVisible(b);
 
     }
 
@@ -87,7 +87,7 @@ public class TipiQuestion extends TipiBaseQuestion {
         if (name.equals("background")) {
             Color background = (Color) object;
             myColumn.setBackground(background);
-            myGroupBox.setBackground(background);
+//            myGroupBox.setBackground(background);
             return;
         }
 

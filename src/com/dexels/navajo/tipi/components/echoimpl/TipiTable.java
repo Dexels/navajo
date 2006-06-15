@@ -1,7 +1,6 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
-import java.util.ArrayList;
-import java.util.Vector;
+import java.util.*;
 
 import nextapp.echo2.app.Extent;
 import nextapp.echo2.app.event.ActionEvent;
@@ -10,7 +9,7 @@ import nextapp.echo2.app.event.ActionListener;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiException;
-import com.dexels.navajo.tipi.components.echoimpl.impl.MessageTable;
+import com.dexels.navajo.tipi.components.echoimpl.impl.*;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
 
 import echopointng.ContainerEx;
@@ -46,7 +45,7 @@ public class TipiTable extends TipiEchoDataComponentImpl {
     }
 
     public Object createContainer() {
-        // ContainerEx myContainer = new ContainerEx();
+         ContainerEx myContainer = new ContainerEx();
         myTable = new MessageTable();
 
         myTable.addSelectionListener(new ActionListener() {
@@ -59,8 +58,23 @@ public class TipiTable extends TipiEchoDataComponentImpl {
             }
         });
 
-        // myContainer.add(myTable);
-        return myTable;
+         myTable.addTableEditorListener(new TableEditorListener(){
+
+            public void propertyChanged(Property p, String eventType, int column, int row) {
+                Map event = new HashMap();
+                event.put("column", new Integer(column));
+                event.put("row", new Integer(row));
+                event.put("new", p.getValue());
+                event.put("message", p.getParentMessage());
+                try {
+                    performTipiEvent(eventType, event, true);
+                } catch (TipiException e) {
+                    e.printStackTrace();
+                }
+                
+            }});
+         myContainer.add(myTable);
+        return myContainer;
     }
 
     public Object getActualComponent() {
@@ -109,6 +123,8 @@ public class TipiTable extends TipiEchoDataComponentImpl {
         MessageTable mm = (MessageTable) getActualComponent();
         // TipiSwingColumnAttributeParser cap = new
         // TipiSwingColumnAttributeParser();
+        
+        boolean editableColumnsFound = false;
         messagePath = (String) elm.getAttribute("messagepath");
         if (messagePath != null) {
             if (messagePath.startsWith("'") && messagePath.endsWith("'")) {
@@ -139,6 +155,7 @@ public class TipiTable extends TipiEchoDataComponentImpl {
                 // System.err.println("Adding column " + name + ", editable: " +
                 // editable);
                 mm.addColumn(name, label, editable, size);
+                editableColumnsFound = editableColumnsFound || editable;
                 // mm.messageChanged();
             }
             if (child.getName().equals("column-attribute")) {
@@ -150,11 +167,21 @@ public class TipiTable extends TipiEchoDataComponentImpl {
                 // }
             }
         }
+            mm.setSelectionEnabled(!editableColumnsFound);
         // mm.setColumnAttributes(columnAttributes);
     }
 
-    public void setComponentValue(String id, Object value) {
-        super.setComponentValue(id, value);
-    }
+    public void setComponentValue(final String name, final Object object) {
+
+        if ("w".equals(name)) {
+        ContainerEx cont = (ContainerEx) getContainer();
+        cont.setWidth( new Extent(( (Integer) object).intValue(),Extent.PX));
+        }
+        if ("h".equals(name)) {
+        ContainerEx cont = (ContainerEx) getContainer();
+        cont.setHeight(  new Extent(( (Integer) object).intValue(),Extent.PX));
+        }
+       super.setComponentValue(name, object);
+   }
 
 }

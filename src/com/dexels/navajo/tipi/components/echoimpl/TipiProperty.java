@@ -72,6 +72,7 @@ public class TipiProperty extends TipiEchoComponentImpl implements PropertyCompo
                 System.err.println("Mysterious anomaly: Property of event is not the loaded property");
                 return;
             }
+            System.err.println("PRoperty event firing: "+eventType+" prop: "+p.getFullPropertyName());
             performTipiEvent(eventType, m, false);
             // }
         } catch (Exception ex) {
@@ -147,7 +148,7 @@ public class TipiProperty extends TipiEchoComponentImpl implements PropertyCompo
         }
         if ("showlabel".equals(name)) {
             EchoPropertyComponent me = (EchoPropertyComponent) getContainer();
-            me.setLabelVisible("true".equals(object));
+            me.setLabelVisible(((Boolean)object).booleanValue());
         }
         if ("selectiontype".equals(name)) {
             EchoPropertyComponent me = (EchoPropertyComponent) getContainer();
@@ -187,12 +188,16 @@ public class TipiProperty extends TipiEchoComponentImpl implements PropertyCompo
         // if("horizontalScrolls".equals(name)) {
         // setHorizontalScrolls(((Boolean) object).booleanValue());
         // }
-
+        if ("capitalization".equals(name)) {
+            myPropertyComponent.setCapitalization( (String) object);
+         }
+        
         super.setComponentValue(name, object);
     }
 
     public void checkForConditionErrors(Message m) {
         // err.. implement?
     }
+
 
 }
