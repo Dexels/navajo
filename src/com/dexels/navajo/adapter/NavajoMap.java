@@ -77,11 +77,6 @@ public class NavajoMap implements Mappable {
     this.inMessage = inMessage;
     try {
       outDoc = NavajoFactory.getInstance().createNavajo();
-      // Always copy globals.
-      if ( inMessage.getMessage("__globals__") != null ) {
-		  Message globals = inMessage.getMessage("__globals__").copy(outDoc);
-		  outDoc.addMessage(globals);
-	  }
     } catch (Exception e) {
       throw new UserException(-1, e.getMessage());
     }
@@ -302,6 +297,17 @@ public class NavajoMap implements Mappable {
       if (password == null)
         password = "";
 
+      // Always copy globals.
+      if ( inMessage.getMessage("__globals__") != null ) {
+		  Message globals = inMessage.getMessage("__globals__").copy(outDoc);
+		  try {
+			outDoc.addMessage(globals);
+		} catch (NavajoException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	  }
+      
       if (server != null) {
         NavajoClient nc = new NavajoClient();
         if (keyStore != null) {
