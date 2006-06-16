@@ -164,9 +164,9 @@ public class TipiExportDialog
         for (int j = 0; j < properties.size(); j++) {
           Property current_prop = current.getProperty( (String) properties.get(j));
           String propValue;
-          if (current_prop.getType() == Property.DATE_PROPERTY) {
+          if (current_prop.getType().equals(Property.DATE_PROPERTY)) {
             Date d = (Date) current_prop.getTypedValue();
-            java.text.SimpleDateFormat df = new java.text.SimpleDateFormat("dd-MM-yyyy");
+            java.text.SimpleDateFormat df = new java.text.SimpleDateFormat("yyyy-MM-dd");
             propValue = df.format(d);
           }
           else {
