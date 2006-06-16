@@ -35,6 +35,9 @@ public class TipiSwingLabel
     g.setColor(old);
   }
 
+  public Dimension getMinumumSize() {
+      return getPreferredSize();
+  }
   public void setHighlighted(boolean value) {
     selected = value;
   }

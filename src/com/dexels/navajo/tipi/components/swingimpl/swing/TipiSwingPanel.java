@@ -43,28 +43,28 @@ public class TipiSwingPanel
       this.myComponent = null;
     }
   
-  
-  private Dimension checkMax(Dimension preferredSize) {
-      Dimension maximumSize = getMaximumSize();
-      if (maximumSize==null) {
-          return preferredSize;
-      }
-      return new Dimension(Math.min(preferredSize.width, maximumSize.width),Math.min(preferredSize.height, maximumSize.height));
-  }
-  private Dimension checkMin(Dimension preferredSize) {
-      Dimension minimumSize = getMinimumSize();
-      if (minimumSize==null) {
-          return preferredSize;
-      }
-      return new Dimension(Math.max(preferredSize.width, minimumSize.width),Math.max(preferredSize.height, minimumSize.height));
-  }
-
-  public Dimension checkMaxMin(Dimension d) {
-      return checkMin(checkMax(d));
-  }
-  public Dimension getPreferredSize() {
-      return checkMaxMin(super.getPreferredSize());
-  }
+//  
+//  private Dimension checkMax(Dimension preferredSize) {
+//      Dimension maximumSize = getMaximumSize();
+//      if (maximumSize==null) {
+//          return preferredSize;
+//      }
+//      return new Dimension(Math.min(preferredSize.width, maximumSize.width),Math.min(preferredSize.height, maximumSize.height));
+//  }
+//  private Dimension checkMin(Dimension preferredSize) {
+//      Dimension minimumSize = getMinimumSize();
+//      if (minimumSize==null) {
+//          return preferredSize;
+//      }
+//      return new Dimension(Math.max(preferredSize.width, minimumSize.width),Math.max(preferredSize.height, minimumSize.height));
+//  }
+//
+//  public Dimension checkMaxMin(Dimension d) {
+//      return checkMin(checkMax(d));
+//  }
+//  public Dimension getPreferredSize() {
+//      return checkMaxMin(super.getPreferredSize());
+//  }
 public void paintComponent(Graphics g) {
     super.paintComponent(g);
     if (myComponent==null) {

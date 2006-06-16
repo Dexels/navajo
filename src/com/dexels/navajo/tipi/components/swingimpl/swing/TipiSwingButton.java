@@ -61,4 +61,8 @@ public class TipiSwingButton
   public void setPreferredSize(Dimension d) {
       // ignore.
   }
+  
+  public Dimension getMinimumSize() {
+      return getPreferredSize();
+  }
 }

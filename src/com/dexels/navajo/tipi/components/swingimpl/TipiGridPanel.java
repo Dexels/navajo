@@ -86,9 +86,12 @@ public class TipiGridPanel extends TipiPanel {
          gridComponent.add(c,gc);
 	 }
 	 
-	  public void initBeforeBuildingChildren(XMLElement instance, XMLElement classdef) {
+	  public void initBeforeBuildingChildren(XMLElement instance, XMLElement classdef, XMLElement def) {
 		  String ss = instance.getStringAttribute("columnWidth");
-		  if (ss!=null) {
+		  if (ss==null && def != null) {
+            ss = def.getStringAttribute("columnWidth");
+        }
+          if (ss!=null) {
               parseColumns(ss.substring(1,ss.length()-1));
         } else {
             System.err.println("oh dear, no columnwidth");

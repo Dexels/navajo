@@ -34,6 +34,7 @@ public class TipiLabel
           ( (TipiSwingLabel) getContainer()).setText("" + object);
         }
       });
+      ( (TipiSwingLabel) getContainer()).revalidate();
       return;
     }
     if (name.equals("icon")) {
@@ -42,6 +43,7 @@ public class TipiLabel
           ( (TipiSwingLabel) getContainer()).setIcon(getIcon( (URL) object));
         }
       });
+      ( (TipiSwingLabel) getContainer()).revalidate();
       return;
     }
     super.setComponentValue(name, object);

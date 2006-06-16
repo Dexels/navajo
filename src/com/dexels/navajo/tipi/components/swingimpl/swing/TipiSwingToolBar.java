@@ -1,6 +1,7 @@
 package com.dexels.navajo.tipi.components.swingimpl.swing;
 
 import java.awt.*;
+
 import javax.swing.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.*;
@@ -45,7 +46,9 @@ public class TipiSwingToolBar
     g.setColor(old);
   }
 
-
+  public Dimension getMinimumSize() {
+      return getPreferredSize();
+  }
   public void setHighlighted(boolean value) {
     selected = value;
   }
