@@ -51,12 +51,17 @@ public class TipiOpenBinary extends TipiAction {
         Binary b = (Binary)value.value;
         if (extString==null) {
             String mime = b.getMimeType();
+            if (mime==null || "".equals(mime)) {
+                mime = b.guessContentType();
+            }
             if (mime!=null) {
-                StringTokenizer st = new StringTokenizer(mime,"/");
-                String major = st.nextToken();
-                String minor = st.nextToken();
-                System.err.println("Binary type: "+major+" and minor: "+minor);
-                extString = minor;
+                if (mime.contains("/")) {
+                    StringTokenizer st = new StringTokenizer(mime,"/");
+                    String major = st.nextToken();
+                    String minor = st.nextToken();
+                    System.err.println("Binary type: "+major+" and minor: "+minor);
+                    extString = minor;
+                }
             }
         }
         

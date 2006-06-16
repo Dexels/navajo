@@ -3,6 +3,7 @@ package com.dexels.navajo.tipi.components.swingimpl;
 import java.lang.reflect.*;
 import java.util.*;
 import java.awt.*;
+
 import javax.swing.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.core.*;
@@ -68,6 +69,16 @@ public abstract class TipiSwingDataComponentImpl
   }
 
   public void addToContainer(final Object c, final Object constraints) {
+      if ("true".equals(System.getProperty("com.dexels.navajo.swingclient.NoPreferredSizes"))) {
+          if (getContainer() instanceof JComponent) {
+              JComponent cc = (JComponent)getContainer();
+              LayoutManager m = cc.getLayout();
+              if (m instanceof GridBagLayout) {
+                cc.setPreferredSize(new Dimension(0,0));
+            }
+          }
+      }
+
     getSwingContainer().add( (Component) c, constraints);
   }
 
@@ -204,7 +215,6 @@ public abstract class TipiSwingDataComponentImpl
         throw new RuntimeException(ex);
       }
       catch (InterruptedException ex) {
-        System.err.println("Interrupted");
       }
     }
   }
@@ -496,7 +506,11 @@ public abstract class TipiSwingDataComponentImpl
         myBreaks.add(br);
       }
     }
-    super.setComponentValue(name,object);
+    if (name.equals("visible")) {
+        boolean val = "true".equals(object);
+        getSwingContainer().setVisible(val);
+    }
+        super.setComponentValue(name,object);
   }
   
   public void commitToUi() {

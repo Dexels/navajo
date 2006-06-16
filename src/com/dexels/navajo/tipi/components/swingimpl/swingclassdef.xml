@@ -446,19 +446,7 @@
         </methods>
     </tipiclass>    
     
-    
-    <tipiclass addtocontainer="true" childcount="0" class="TipiQuestionEditor" layoutmanager="false"
-        module="data" name="tipiquestioneditor"
-        package="com.dexels.navajo.tipi.components.swingimpl" studio-icon="tipitable.gif"
-        type="tipi">
-        <events>
-            <event name="onInstantiate"/>
-            <event name="onLoad">
-                <param name="service" type="string"/>
-            </event>
-        </events>
-        <values/>
-    </tipiclass>
+
     <tipiclass addtocontainer="true" childcount="0" class="TipiAdvancedTable" layoutmanager="false"
         module="data" name="advancedtipitable" package="com.dexels.navajo.tipi.components.swingimpl"
         studio-icon="advancedtipitable.gif" type="tipi">
@@ -1135,6 +1123,12 @@
             <event name="onFocusGained"/>
             <event name="onFocusLost"/>
             <event name="onActionPerformed"/>
+            <event name="onKey">
+                <param name="code" type="integer"/>
+                <param name="key" type="string"/>
+                <param name="modifiers" type="string"/>
+                <param name="mode" type="string"/>
+			</event>
         </events>
         <values>
             <value direction="inout" name="propertyname" type="string"/>
@@ -1182,6 +1176,8 @@
             <value direction="in" name="memoColumnCount" type="integer"/>
             <value direction="in" name="horizontalScrolls" type="boolean"/>
             <value direction="in" name="verticalScrolls" type="boolean"/>
+            <value direction="in" name="maxImageWidth" type="integer"/>
+            <value direction="in" name="maxImageHeight" type="integer"/>
         </values>
         <methods/>
     </tipiclass>
