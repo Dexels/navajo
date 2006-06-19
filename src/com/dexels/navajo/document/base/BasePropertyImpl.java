@@ -1347,7 +1347,7 @@ public Map getAttributes() {
     if (myBinary!=null) {
         m.put("length", ""+myBinary.getLength());
     } else {
-        if (length!=0) {
+        if (length>0) {
             m.put("length", ""+length);
         }
     }
