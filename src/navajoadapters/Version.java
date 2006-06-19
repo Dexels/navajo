@@ -57,7 +57,7 @@ public class Version extends dexels.Version {
 	public static final int    PATCHLEVEL  = 5;
 	public static final String VENDOR      = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Adapter Library";
-	public static final String RELEASEDATE = "2006-03-23";
+	public static final String RELEASEDATE = "2006-06-19";
 
 	//	Included packages.
 	String [] includes = {"navajodocument.Version", "navajo.Version", "navajoclient.Version", "navajofunctions.Version"};
