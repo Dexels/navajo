@@ -32,9 +32,9 @@ public class FileMap implements Mappable {
 	public FileLineMap [] lines;
 	public boolean persist = true;
 	public Binary content;
-	
+
 	private ArrayList lineArray = null;
-	
+
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.mapping.Mappable#load(com.dexels.navajo.server.Parameters, com.dexels.navajo.document.Navajo, com.dexels.navajo.server.Access, com.dexels.navajo.server.NavajoConfig)
 	 */
@@ -49,12 +49,12 @@ public class FileMap implements Mappable {
 			FileLineMap flm = (FileLineMap) lineArray.get(i);
 			if (flm.getLine() != null) {
 				baos.write(flm.getLine().getBytes());
-			} 
+			}
 		}
 		baos.close();
 		return baos.toByteArray();
 	}
-	
+
 	public Binary getContent() throws UserException {
 		try {
 			Binary b = new Binary(getBytes());
@@ -65,7 +65,7 @@ public class FileMap implements Mappable {
 			throw new UserException(-1, e.getMessage());
 		}
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.mapping.Mappable#store()
 	 */
@@ -86,7 +86,7 @@ public class FileMap implements Mappable {
 	 * @see com.dexels.navajo.mapping.Mappable#kill()
 	 */
 	public void kill() {
-		
+
 
 	}
 
@@ -98,22 +98,39 @@ public class FileMap implements Mappable {
 			lineArray.add(l[i]);
 		}
 	}
-	
+
 	public void setLine(FileLineMap l) {
 		if (lineArray == null) {
 			lineArray = new ArrayList();
 		}
 		lineArray.add(l);
 	}
-	
+
 	public void setFileName(String f) {
 		this.fileName = f;
 	}
-	
+
+       public void setContent(Binary b) {
+         this.content = b;
+         try {
+           FileOutputStream fo = new FileOutputStream(this.fileName);
+
+           b.write(fo);
+           fo.flush();
+           fo.close();
+
+           this.fileName = null;
+         }
+         catch (Exception e) {
+           // TODO Auto-generated catch block
+           e.printStackTrace();
+         }
+       }
+
 	public void setSeparator(String s) {
 		this.separator = s;
 	}
-	
+
 	public static void main(String[] args) throws Exception {
 		FileMap fm = new FileMap();
 		FileLineMap [] flm = new FileLineMap[2];

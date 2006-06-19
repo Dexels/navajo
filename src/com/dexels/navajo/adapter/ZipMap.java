@@ -3,7 +3,7 @@
  * <p>Description: This is the official source for the Navajo server</p>
  * <p>Copyright: Copyright (c) 2005</p>
  * <p>Company: Dexels BV</p>
- * @author 
+ * @author
  * @version $Id$.
  *
  * DISCLAIMER
@@ -47,10 +47,10 @@ public class ZipMap implements Mappable {
 	public String name = "file.zip";
 	public Binary content;
 	public Binary zipped;
-	
+
 	ByteArrayOutputStream baos = null;
 	ZipOutputStream zo = null;
-	
+
 	public void load(Parameters parms, Navajo inMessage, Access access,
 			NavajoConfig config) throws MappableException, UserException {
 		baos = new ByteArrayOutputStream();
@@ -67,7 +67,7 @@ public class ZipMap implements Mappable {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void setContent(Binary b) {
 		this.content = b;
 		try {
@@ -78,11 +78,11 @@ public class ZipMap implements Mappable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 	}
-	
+
 	public Binary getZipped() {
-		
+
 		try {
 			zo.close();
 			byte [] result = baos.toByteArray();
@@ -90,10 +90,10 @@ public class ZipMap implements Mappable {
 		} catch (Exception e) {
 			e.printStackTrace(System.err);
 		}
-		
+
 		return null;
 	}
-	
+
 	public void store() throws MappableException, UserException {
 		// TODO Auto-generated method stub
 
@@ -103,7 +103,7 @@ public class ZipMap implements Mappable {
 		// TODO Auto-generated method stub
 
 	}
-	
+
 	public static void main(String [] args) throws Exception {
 		FileInputStream fi = new FileInputStream(new File("/home/arjen/dbvis.license"));
 		Binary b = new Binary(fi);
@@ -115,7 +115,7 @@ public class ZipMap implements Mappable {
 		b = new Binary(fi);
 		zm.setName("INDEX");
 		zm.setContent(b);
-		
+
 		Binary r = zm.getZipped();
 		System.err.println(r.getData().length);
 		FileOutputStream fo = new FileOutputStream(new File("/home/arjen/aap.zip"));
