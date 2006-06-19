@@ -7,10 +7,6 @@ import com.dexels.navajo.document.base.*;
 
 public final class MethodImpl extends BaseMethodImpl implements Method, NanoElement {
   private ArrayList myRequiredMessages = new ArrayList();
-  private String myName = "";
-  private Message myParent = null;
-  private String myDescription = null;
-  private String myServer;
 
   public MethodImpl(Navajo n) {
     super(n);

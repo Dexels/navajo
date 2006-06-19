@@ -4,11 +4,11 @@ import java.util.*;
 import com.dexels.navajo.document.*;
 
 public class BaseMethodImpl extends BaseNode implements Method {
-  private ArrayList myRequiredMessages = new ArrayList();
-  private String myName = "";
-  private Message myParent = null;
-  private String myDescription = null;
-  private String myServer;
+    protected ArrayList myRequiredMessages = new ArrayList();
+  protected String myName = "";
+  protected Message myParent = null;
+  protected String myDescription = null;
+  protected String myServer;
 
   public BaseMethodImpl(Navajo n) {
     super(n);
