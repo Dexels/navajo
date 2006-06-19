@@ -53,7 +53,12 @@ public class BaseMethodsImpl extends BaseNode {
       }
 
     public ArrayList getAllMethods() {
-        return (ArrayList)myMethods.clone();
+        ArrayList al = new ArrayList();
+        for (int i = 0; i < myMethods.size(); i++) {
+            Method m = (Method)myMethods.get(i);
+            al.add(m);
+        }
+        return al;
     }
 
     public void clear() {
