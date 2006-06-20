@@ -21,7 +21,7 @@ import com.dexels.navajo.tipi.internal.*;
 
 /**
  * @author Administrator
- * 
+ *
  * To change the template for this generated type comment go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
@@ -29,7 +29,7 @@ public class TipiOpenBinary extends TipiAction {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.dexels.navajo.tipi.internal.TipiAction#execute(com.dexels.navajo.tipi.internal.TipiEvent)
      */
     protected void execute(TipiEvent event) throws TipiBreakException, TipiException {
@@ -55,7 +55,7 @@ public class TipiOpenBinary extends TipiAction {
                 mime = b.guessContentType();
             }
             if (mime!=null) {
-                if (mime.contains("/")) {
+                if (mime.indexOf("/") != -1) {
                     StringTokenizer st = new StringTokenizer(mime,"/");
                     String major = st.nextToken();
                     String minor = st.nextToken();
@@ -64,7 +64,7 @@ public class TipiOpenBinary extends TipiAction {
                 }
             }
         }
-        
+
         try {
             File f = File.createTempFile("tipi_", "."+extString);
             TipiSaveValue.saveFile(b, f);
@@ -81,6 +81,6 @@ public class TipiOpenBinary extends TipiAction {
         File f = File.createTempFile("tipi_", ""+".pdf");
 //        URL u = f.toURL();
         DefaultBrowser.displayURL(f.getAbsolutePath());
- 
+
     }
 }
