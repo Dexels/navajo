@@ -1,6 +1,7 @@
 package com.dexels.navajo.tipi.components.core;
 
 import java.util.*;
+
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.internal.*;
 import java.io.*;
@@ -126,20 +127,27 @@ public class TipiThreadPool {
     myListenerMap.remove(te);
   }
 
-  public synchronized void enqueueExecutable(TipiExecutable exe) throws  TipiException {
+  public void enqueueExecutable(TipiExecutable exe) throws  TipiException {
       if (poolSize==0) {
           // For echo:
           exe.getEvent().performAction(exe.getEvent());
       }
       else {
         myWaitingQueue.add(exe);
-        notify();
+        awaken();
       }
      }
 
   
   
-  public synchronized void performAction(final TipiEvent te, final TipiEventListener listener) throws TipiException {
+  private void awaken() {
+      for (Iterator iter = myThreadCollection.iterator(); iter.hasNext();) {
+        TipiThread element = (TipiThread) iter.next();
+        element.interrupt();
+    }
+}
+
+public void performAction(final TipiEvent te, final TipiEventListener listener) throws TipiException {
     myListenerMap.put(te,listener);
 //    System.err.println(">>>>>>>>> >>>>>>>>>>>>>>>>>>>>>>>>>>>Enqueueing exe, myListenerMap is " + myListenerMap.size()+" thread: "+Thread.currentThread().getName());
     enqueueExecutable(te);

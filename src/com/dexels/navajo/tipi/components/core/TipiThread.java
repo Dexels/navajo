@@ -39,7 +39,7 @@ public class TipiThread
 //             te.performAction(te.getEvent());
 //           System.err.println("Thread: "+myName+" finished");
             }
-            catch (TipiException ex) {
+            catch (Throwable ex) {
               ex.printStackTrace();
             }
             finally {

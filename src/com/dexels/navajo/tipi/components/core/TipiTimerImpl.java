@@ -56,7 +56,12 @@ public class TipiTimerImpl
 
   public void setComponentValue(final String name, final Object object) {
     if (name.equals("interval")) {
-      this.interval = ( (Integer) object).longValue();
+        if (object instanceof Integer) {
+            this.interval = ( (Integer) object).longValue();
+        }
+        if (object!=null) {
+            this.interval = Long.parseLong(object.toString());
+        }
     }
   }
 
