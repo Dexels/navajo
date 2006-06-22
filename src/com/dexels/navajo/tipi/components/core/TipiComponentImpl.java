@@ -473,9 +473,14 @@ public abstract class TipiComponentImpl
     if (id == null || "".equals(id)) {
       id = defname;
     }
+    XMLElement definitionXml = null;
+    if (defname!=null) {
+        definitionXml = myContext.getComponentDefinition(defname);
+    }
+    
     myId = id;
     Vector children = classdef.getChildren();
-    initBeforeBuildingChildren(instance,classdef);
+    initBeforeBuildingChildren(instance,classdef,definitionXml);
     for (int i = 0; i < children.size(); i++) {
       XMLElement xx = (XMLElement) children.get(i);
       if ("events".equals(xx.getName())) {
@@ -498,7 +503,7 @@ public abstract class TipiComponentImpl
    * @param instance
    * @param classdef
    */
-  public void initBeforeBuildingChildren(XMLElement instance, XMLElement classdef) {
+  public void initBeforeBuildingChildren(XMLElement instance, XMLElement classdef, XMLElement definition) {
 }
 
 public void loadStartValues(XMLElement element) {
