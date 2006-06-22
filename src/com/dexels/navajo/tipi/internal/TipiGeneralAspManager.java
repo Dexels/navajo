@@ -63,7 +63,13 @@ public class TipiGeneralAspManager implements TipiStorageManager {
         if (b==null) {
             return null;
         }
-        Navajo response = NavajoFactory.getInstance().createNavajo(new ByteArrayInputStream(b.getData()));
+        InputStream is = b.getDataAsStream();
+        Navajo response = NavajoFactory.getInstance().createNavajo( is );
+        try {
+        	is.close();
+        } catch (Exception e) {
+        	e.printStackTrace(System.err);
+        }
         return response;
     }
 
