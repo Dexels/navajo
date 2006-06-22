@@ -95,12 +95,14 @@ public abstract class TipiBaseQuestionList extends TipiDataComponentImpl {
         Operand pincodeOperand = compMeth.getEvaluatedParameter("pincode", event);
         Operand keystoreOperand = compMeth.getEvaluatedParameter("keystore", event);
         Operand keypassOperand = compMeth.getEvaluatedParameter("keypass", event);
+        Operand isFinalOperand = compMeth.getEvaluatedParameter("final", event);
         String serviceUrl = null;
         String username = null;
         String password = null;
         String pincode = null;
         String keystore = null;
         String keypass = null;
+        boolean isFinal = false;
         if (serviceOperand != null) {
           serviceUrl = (String) serviceOperand.value;
         }
@@ -119,8 +121,12 @@ public abstract class TipiBaseQuestionList extends TipiDataComponentImpl {
         if (keypassOperand != null) {
           keypass = (String) keypassOperand.value;
         }
+        if (isFinalOperand != null) {
+            isFinal = ((Boolean) isFinalOperand.value).booleanValue();
+          }
+
         try {
-          flatten(serviceName, serviceUrl, username, password, pincode, keystore, keypass);
+          flatten(serviceName, serviceUrl, username, password, pincode, keystore, keypass,isFinal);
         }
         catch (NavajoException ex) {
           ex.printStackTrace();
@@ -129,7 +135,7 @@ public abstract class TipiBaseQuestionList extends TipiDataComponentImpl {
       super.performComponentMethod(name,compMeth,event);
     }
 
-    public void flatten(String serviceName, String server,String username, String password,String pincode,String keystore,String keypass) throws NavajoException,TipiBreakException {
+    public void flatten(String serviceName, String server,String username, String password,String pincode,String keystore,String keypass, boolean isFinal) throws NavajoException,TipiBreakException {
       Navajo input = getNearestNavajo();
 //      System.err.println("^^^^^^^^^^^^^^^^^^^^^^^^^^>>> "+input);
 //      input.write(System.err);
@@ -141,7 +147,7 @@ public abstract class TipiBaseQuestionList extends TipiDataComponentImpl {
            m = aap.copy(n);
            n.addMessage(m);
        }
-
+       m.getProperty("Status").setAnyValue(isFinal?"FINAL":"CHANGED");
 
        Message formData = input.getMessage("FormData");
        if (formData!=null) {
@@ -235,12 +241,21 @@ public abstract class TipiBaseQuestionList extends TipiDataComponentImpl {
   
 
     public void loadData(final Navajo n, final TipiContext context,final String method) throws TipiException {
+//        System.err.println("LOADING..........................................");
+//        try {
+//            n.write(System.err);
+//        } catch (NavajoException e1) {
+//            e1.printStackTrace();
+//        }
+//        System.err.println(".................................................");
         final TipiBaseQuestionList me = this;
         myGroups.clear();
+        myValidGroups.clear();
+        removeAllChildren();
         runSyncInEventThread(new Runnable(){
 
             public void run() {
-                removeInstantiatedChildren();
+//                removeInstantiatedChildren();
                 myNavajo = n;
                 Message m = n.getMessage(messagePath);
                 if (m == null) {
