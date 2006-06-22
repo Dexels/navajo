@@ -68,7 +68,7 @@ public class TipiSaveValue extends TipiAction {
             fos = new FileOutputStream(f);
             if (value instanceof Binary) {
                 Binary b = (Binary)value;
-                fos.write(b.getData());
+                b.write( fos );
             } else {
                 fos.write(value.toString().getBytes());
             }
