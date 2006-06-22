@@ -115,7 +115,7 @@ public class TipiEvent
 
      myComponent.getContext().performAction(this,listener);
    }
-    catch (Exception ex) {
+    catch (Throwable ex) {
       ex.printStackTrace();
     }
   }
@@ -157,7 +157,7 @@ public class TipiEvent
 
 
   // Sync, in current thread
-  public void performAction(TipiEventListener listener, Map event) throws TipiException {
+  public void performAction(TipiEventListener listener, Map event) {
 //    eventParameterMap.clear();
 //    eventParameterMap.putAll(event);
 
@@ -179,8 +179,8 @@ public class TipiEvent
         current.performAction(this);
       }
     }
-    catch (TipiBreakException ex) {
-//      System.err.println("Break encountered in event");
+    catch (Throwable ex) {
+        ex.printStackTrace();
     }
     getContext().debugLog("event   ","finished event: "+this.getEventName()+" in component" +myComponent.getPath());
     listener.eventFinished(this, event);

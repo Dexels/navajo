@@ -99,6 +99,8 @@ public class TipiActionBlock implements TipiExecutable {
         throw ex;
     }
     return;
+  } catch(Throwable t) {
+      t.printStackTrace();
   }
   }
 
