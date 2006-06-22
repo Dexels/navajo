@@ -37,7 +37,7 @@ public class BasePropertyImpl
   private Map subtypeMap = null;
 
   private Binary myBinary = null;
-  
+
   protected Property definitionProperty = null;
 
 //  private String myMessageName = null;
@@ -46,14 +46,14 @@ public class BasePropertyImpl
 
   protected boolean isListType = false;
 
-  
+
   public BasePropertyImpl(Navajo n, String name, String type, String value, int i,
                       String desc, String direction) {
     super(n);
     isListType = false;
     myName = name;
     myValue = value;
-    this.type = type; 
+    this.type = type;
     this.length = i;
     this.description = desc;
     this.direction = direction;
@@ -61,7 +61,7 @@ public class BasePropertyImpl
         NavajoFactory.getInstance().getDefaultSubtypeForType(type) != null) {
       setSubType(NavajoFactory.getInstance().getDefaultSubtypeForType(type));
     }
- 
+
 //    dateFormat.pa
   }
 
@@ -375,7 +375,7 @@ public class BasePropertyImpl
           return null;
         }
       }
-    
+
     else if (getType().equals(Property.STRING_PROPERTY)) {
       return getValue();
     }
@@ -511,23 +511,23 @@ public class BasePropertyImpl
       myValue = null;
 //      System.err.println("Argh! This is an evil method! It eats memory!");
 //	  try {
-//		  
+//
 //		  InputStream datastream = b.getDataAsStream();
-//		 
+//
 //		  if ( datastream != null ) {
-//			  
-//			  
+//
+//
 //			  final StringWriter sw = new StringWriter();
 //			  final OutputStream os = Base64.newEncoder( sw );
-//			
+//
 //			  copyResource( os, datastream );
-//			 
+//
 //			  os.close();
 //			  datastream.close();
-//			  
+//
 //			  myValue = sw.toString();
-//			  
-//			 
+//
+//
 //			  setSubType("mimetype="+b.getMimeType());
 //		  }
 //	  }
@@ -541,7 +541,7 @@ public class BasePropertyImpl
    *  (non-Javadoc)
    * @see com.dexels.navajo.document.Property#setValue(java.net.URL)
    */
-  
+
   public final void setValue(URL url) {
     try {
       if (type.equals(BINARY_PROPERTY)) {
@@ -680,8 +680,8 @@ public class BasePropertyImpl
 	  myBinary = null;
 	  setCheckedValue(value);
   }
-  
-  
+
+
   public final void setValue(Selection [] l) {
       myBinary = null;
 	  if ( l == null ) {
@@ -1375,7 +1375,14 @@ public Object getRef() {
 }
 public Property cloneWithoutValue() {
     if (isListType) {
-        return new BasePropertyImpl(getRootDoc(),getName(),cardinality,getDescription(),getDirection());
+        BasePropertyImpl prop = new BasePropertyImpl(getRootDoc(),getName(),cardinality,getDescription(),getDirection());
+        ArrayList ap = getAllSelections();
+        for(int i=0;i<ap.size();i++){
+          Selection s = (Selection)ap.get(i);
+          Selection newS = NavajoFactory.getInstance().createSelection(getRootDoc(), s.getName(), s.getValue(), s.isSelected());
+          prop.addSelection(newS);
+        }
+        return prop;
     } else {
         return new BasePropertyImpl(getRootDoc(),getName(),getType(),null,getLength(), getDescription(),getDirection());
    }
@@ -1394,7 +1401,7 @@ public Object clone() {
         p.setValue(myBinary);
     } else {
         p.setValue(getValue());
-    } 
+    }
     return p;
 }
 
@@ -1407,7 +1414,7 @@ public void writeText(Writer w) throws IOException {
     if (myBinary!=null) {
         myBinary.writeBase64(w);
     }
-    
+
 }
 
 public boolean hasTextNode() {
