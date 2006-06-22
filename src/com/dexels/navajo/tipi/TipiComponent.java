@@ -98,7 +98,7 @@ public interface TipiComponent
 
   public void setLayout(TipiLayout tl);
   
-  public void initBeforeBuildingChildren(XMLElement instance, XMLElement classdef);  
+  public void initBeforeBuildingChildren(XMLElement instance, XMLElement classdef, XMLElement definition);  
 
   public TipiLayout getLayout();
 

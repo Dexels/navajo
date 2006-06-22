@@ -884,7 +884,7 @@ public void parseDefinition(XMLElement child) {
       return new ArrayList(tipiInstanceMap.keySet());
   }
 
-  protected XMLElement getComponentDefinition(String componentName) throws TipiException {
+  public XMLElement getComponentDefinition(String componentName) throws TipiException {
     XMLElement xe = getTipiDefinition(componentName);
     if(xe!=null) {
         return xe;
@@ -1707,12 +1707,17 @@ public void parseDefinition(XMLElement child) {
 
 
 // note that the TipiException will only be thrown in sync mode (== poolsize 0)
-  public void performAction(final TipiEvent te, TipiEventListener listener) throws TipiException {
+ // UPDATE: NOT ANYMORE
+  public void performAction(final TipiEvent te, TipiEventListener listener)  {
     debugLog("event   ","enqueueing async event: "+te.getEventName());
     if (myThreadPool == null) {
       myThreadPool = new TipiThreadPool(this, getPoolSize());
     }
-    myThreadPool.performAction(te, listener);
+    try {
+        myThreadPool.performAction(te, listener);
+    } catch (Throwable e) {
+        e.printStackTrace();
+    }
   }
 
   public void threadStarted(Thread workThread) {
