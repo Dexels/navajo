@@ -20,10 +20,21 @@ public class MainApplication {
     }
     try {
         Locale.setDefault(new Locale("nl","NL"));
-        System.setProperty("com.dexels.navajo.DocumentImplementation",
-                           "com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl");
+        if (System.getProperty("com.dexels.navajo.DocumentImplementation")==null) {
+            System.setProperty("com.dexels.navajo.DocumentImplementation",
+            "com.dexels.navajo.document.base.BaseNavajoFactoryImpl");
+            
+        }
         System.setProperty("com.dexels.navajo.propertyMap", "tipi.propertymap");
-        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());    
+        if (System.getProperty("tipilaf")==null) {
+            System.err.println("No supplied laf. Using default: "+UIManager.getSystemLookAndFeelClassName());
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());    
+//            UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+        } else {
+            System.err.println("Found supplied laf: "+System.getProperty("tipilaf"));
+            UIManager.setLookAndFeel(System.getProperty("tipilaf"));    
+            
+        }
     }
     catch(SecurityException se) {
         System.err.println("Security exception: "+se.getMessage());
