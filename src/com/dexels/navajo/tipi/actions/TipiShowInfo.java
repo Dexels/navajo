@@ -20,27 +20,30 @@ import java.lang.reflect.*;
 public class TipiShowInfo
     extends TipiAction {
   public void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
-    String txt = getParameter("text").getValue();
-    Operand o = null;
-    try {
-      o = evaluate(txt,event);
-    }
-    catch (Exception ex) {
-      System.err.println("Error evaluating[" + txt + "] inserting as plain text only");
+//    String txt = getParameter("text").getValue();
+    final Operand op = getEvaluatedParameter("text", event);
 
-      ex.printStackTrace();
-    }
-
-    final Operand op = o;
-
+    final String txt = ((String)op.value).replaceAll("\n", " ");
+    //    Operand o = null;
+//    try {
+//      o = evaluate(txt,event);
+//    }
+//    catch (Exception ex) {
+//      System.err.println("Error evaluating[" + txt + "] inserting as plain text only");
+//
+//      ex.printStackTrace();
+//    }
+//
+//    final Operand op = o;
+//
     if (SwingUtilities.isEventDispatchThread()) {
-      JOptionPane.showMessageDialog( (Component) myContext.getTopLevel(), o.value, "Info", JOptionPane.PLAIN_MESSAGE);
+      JOptionPane.showMessageDialog( (Component) myContext.getTopLevel(), txt, "Info", JOptionPane.PLAIN_MESSAGE);
     }
     else {
       try {
         SwingUtilities.invokeAndWait(new Runnable() {
           public void run() {
-            JOptionPane.showMessageDialog( (Component) myContext.getTopLevel(), op.value, "Info", JOptionPane.PLAIN_MESSAGE);
+            JOptionPane.showMessageDialog( (Component) myContext.getTopLevel(), txt, "Info", JOptionPane.PLAIN_MESSAGE);
           }
         });
       }
