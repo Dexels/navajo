@@ -1,3 +1,4 @@
+#!/bin/sh
 #
 # Text runner for NavaDoc Test Suite
 #
