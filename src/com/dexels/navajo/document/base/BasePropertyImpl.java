@@ -839,8 +839,7 @@ public class BasePropertyImpl
         if (!getCardinality().equals("+")) {
           clearSelections();
         }
-
-        current.setSelected(true);
+        ((BaseSelectionImpl) current).setSelected(true);
       }
       else {
 //        current.setSelected(false);
@@ -855,6 +854,7 @@ public class BasePropertyImpl
   }
 
   public final void addSelection(Selection s) {
+	  
     int max = selectionList.size();
     boolean selected = s.isSelected();
     for (int i = 0; i < max; i++) {
@@ -867,11 +867,13 @@ public class BasePropertyImpl
       }
 
     }
+    ((BaseSelectionImpl) s).setParent(this);
+    
     if(selected){
       s.setSelected(true);
     }
     selectionList.add(s);
-//    s.setParent(this);
+    
   }
 
   public final void removeSelection(Selection s) {
@@ -1137,6 +1139,7 @@ public class BasePropertyImpl
   public final void addSelectionWithoutReplace(Selection s) throws com.dexels.
       navajo.document.NavajoException {
     selectionList.add(s);
+    ((BaseSelectionImpl) s).setParent(this);
   }
 
   public final void setSelected(ArrayList al) throws com.dexels.navajo.document.
@@ -1179,13 +1182,13 @@ public class BasePropertyImpl
   }
 
   public final void clearSelections() throws com.dexels.navajo.document.
-      NavajoException {
-    ArrayList al = getAllSelections();
-    for (int i = 0; i < al.size(); i++) {
-        BaseSelectionImpl s = (BaseSelectionImpl) al.get(i);
-      s.setSelected(false);
-    }
-
+  NavajoException {
+	  ArrayList al = getAllSelections();
+	  for (int i = 0; i < al.size(); i++) {
+		  BaseSelectionImpl s = (BaseSelectionImpl) al.get(i);
+		  s.setSelected(false);
+	  }
+	  
   }
 
   public final Selection existsSelection(String name) throws com.dexels.navajo.

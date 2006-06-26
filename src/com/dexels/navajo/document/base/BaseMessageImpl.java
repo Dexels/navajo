@@ -15,6 +15,8 @@ import java.util.*;
 // import com.dexels.sportlink.client.swing.*;
 // import com.dexels.navajo.nanoclient.*;
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.nanoimpl.PropertyImpl;
+
 import java.util.regex.*;
 import java.io.*;
 import javax.swing.tree.*;
@@ -936,6 +938,24 @@ public final Message getParentMessage() {
 
     public void setDefinitionMessage(Message m) {
     	this.definitionMessage = (BaseMessageImpl) m;
+//  	Definition message stuff.
+    	if ( m == null ) {
+    		return;
+    	}
+    	
+//  	System.err.println("Ok, searching");
+    	ArrayList myDefinitionList = m.getAllProperties();
+//  	System.err.println("# of properties found in definition: "+myDefinitionList.size());
+    	for (int j = 0; j < myDefinitionList.size(); j++) {
+    		PropertyImpl pq = (PropertyImpl)myDefinitionList.get(j);
+    		String pname = pq.getName();
+    		if (getProperty(pname)==null) {
+    			//System.err.println("\n\nCreating prop: "+pname+" ::: "+getIndex());
+    			PropertyImpl pi = (PropertyImpl)pq.copy(getRootDoc());
+    			addProperty(pi);
+    			//System.err.println("pi::::::::::: "+pi.toXml(null).toString());
+    		}
+    	}
     }
     
     public Map getAttributes() {

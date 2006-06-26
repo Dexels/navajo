@@ -181,11 +181,32 @@ public class SaxHandler implements DocHandler {
     }
 
     private void parseSelection(Hashtable h) throws NavajoException {
-        String name = (String)h.get("name");
-        String value = (String)h.get("value");
-        int selected = Integer.parseInt((String)h.get("selected"));
-        Selection s = NavajoFactory.getInstance().createSelection(currentDocument, name, value, selected!=0);
-        currentProperty.addSelection(s);
+    	String name = (String)h.get("name");
+    	String value = (String)h.get("value");
+    	int selected = Integer.parseInt((String)h.get("selected"));
+    	
+    	Property definitionProperty = null;
+    	
+    	BaseMessageImpl arrayParent = (BaseMessageImpl) currentProperty.getParentMessage().getArrayParentMessage();
+    	
+    	if ( arrayParent != null ) {
+    		definitionProperty = arrayParent.getPropertyDefinition(currentProperty.getName());
+    	}
+    	
+    	if ( definitionProperty == null || 
+    		 definitionProperty.getSelected().getName().equals(Selection.DUMMY_SELECTION) ||
+    		 currentProperty.getParentMessage().getType().equals(Message.MSG_TYPE_DEFINITION) ) {
+    		Selection s = NavajoFactory.getInstance().createSelection(currentDocument, name, value, selected!=0);
+    		currentProperty.addSelection(s);
+    	} else {
+    		if ( currentProperty.getSelectionByValue(value) != null && selected == 1) {
+    		   ((BasePropertyImpl) currentProperty).setSelectedByValue(value);
+    		} else {
+    			Selection s = NavajoFactory.getInstance().createSelection(currentDocument, name, value, selected!=0);
+    			currentProperty.addSelection(s);
+    		}
+    	}
+    	
     }
 
     private void parseProperty(Hashtable h) throws NavajoException {
@@ -215,51 +236,9 @@ public class SaxHandler implements DocHandler {
                              sLength);
         }
 
-        definitionProperty = null;
-
-
+      
         boolean isListType = (type != null && type.equals(Property.SELECTION_PROPERTY));
-        /*       if (isListType) {
-          cardinality = (String) h.get(Property.PROPERTY_CARDINALITY);
-          if (cardinality == null) {
-            cardinality = definitionProperty.getCardinality();
-          }
-          type = Property.SELECTION_PROPERTY;
-          ----------------- HANDLE WITH THE SELECTION
-          try {
-            if (definitionProperty == null || definitionProperty.getAllSelections().size() == 0) {
-              cardinality = (String) e.getAttribute("cardinality");
-              for (int i = 0; i < e.countChildren(); i++) {
-                XMLElement child = (XMLElement) e.getChildren().elementAt(i);
-                SelectionImpl s = (SelectionImpl) NavajoFactory.getInstance().createSelection(myDocRoot, "", "", false);
-                s.fromXml(child);
-                s.setParent(this);
-                this.addSelection(s);
-              }
-            }
-            else { // There is a definition property with defined selections(!)
-              ArrayList l = definitionProperty.getAllSelections();
-              for (int i = 0; i < l.size(); i++) {
-                SelectionImpl s = (SelectionImpl) l.get(i);
-                SelectionImpl s2 = (SelectionImpl) s.copy(getRootDoc());
-                addSelection(s2);
-              }
-              for (int j = 0; j < e.countChildren(); j++) {
-                XMLElement child = (XMLElement) e.getChildren().elementAt(j);
-                String val = (String) child.getAttribute("value");
-                //System.err.println(">>>>>>>>>>>>>>>>>>>>>> Attempting to select value: " + val);
-                if (val != null) {
-                  setSelectedByValue(val);
-                }
-              }
-
-            }
-
-          }
-          catch (NavajoException ex) {
-            ex.printStackTrace();
-          }
-*/
+       
           if (isListType) {
               currentProperty = NavajoFactory.getInstance().createProperty(currentDocument,myName,cardinality,description,direction);
         } else {
@@ -269,15 +248,85 @@ public class SaxHandler implements DocHandler {
           Message current = (Message)messageStack.peek();
 //          System.err.println("Adding property: "+currentProperty.getName()+" to message: "+current.getFullMessageName());
           current.addProperty(currentProperty);
-//        }
-//        if (type == null) {
-//          type = Property.STRING_PROPERTY;
-//        }
-//        try {
-//            setValue(PropertyTypeChecker.getInstance().verify(this, myValue));
-//        } catch (PropertyTypeException e1) {
-//              e1.printStackTrace();
-//        }
+
+          definitionProperty = null;
+
+          BaseMessageImpl arrayParent = (BaseMessageImpl) current.getArrayParentMessage();
+          //System.err.println("current = " + current.getName() + ", type = " + current.getType());
+          if ( arrayParent != null && arrayParent.isArrayMessage() ) {
+
+            definitionProperty = arrayParent.getPropertyDefinition(myName);
+            //System.err.println("definitionProperty = " + definitionProperty + ", for name: " + myName);
+            
+            
+            if (definitionProperty != null) {
+            	    
+              if (description == null || "".equals(description)) {
+                description = definitionProperty.getDescription();
+              }
+              if (direction == null || "".equals(direction)) {
+                direction = definitionProperty.getDirection();
+              }
+              if (type == null || "".equals(type)) {
+                type = definitionProperty.getType();
+              }
+              if (plength == null) {
+                length = definitionProperty.getLength();
+              }
+              if (subType == null) {
+                if (definitionProperty.getSubType() != null) {
+                	currentProperty.setSubType(definitionProperty.getSubType());
+                }
+                else {
+                  subType = null;
+                }
+              }
+              else {
+                if (definitionProperty.getSubType() != null) {
+                  /**
+                       * Concatenated subtypes. The if the same key of a subtype is present
+                   * in both the property and the definition property.
+                   */
+                	currentProperty.setSubType(definitionProperty.getSubType() + "," + subType);
+                }
+              }
+
+              if (myValue == null || "".equals(myValue)) {
+                myValue = definitionProperty.getValue();
+              }
+            }
+          }
+
+          if (subType == null &&
+              NavajoFactory.getInstance().getDefaultSubtypeForType(type) != null) {
+        	  currentProperty.setSubType(NavajoFactory.getInstance().getDefaultSubtypeForType(type));
+          }
+          else {
+        	  currentProperty.setSubType(subType);
+          }
+
+          if (type == null &&  current.isArrayMessage() ) {
+            System.err.println("Found undefined property: " + currentProperty.getName());
+          }
+
+          isListType = (type != null && type.equals(Property.SELECTION_PROPERTY));
+          
+          if (isListType && definitionProperty != null) {
+        	  
+        	  if (cardinality == null) {
+        		  cardinality = definitionProperty.getCardinality();
+        	  }
+        	  type = Property.SELECTION_PROPERTY;
+        	  
+        	  ArrayList l = definitionProperty.getAllSelections();
+        	  for (int i = 0; i < l.size(); i++) {
+        		  BaseSelectionImpl s1 = (BaseSelectionImpl) l.get(i);
+        		  BaseSelectionImpl s2 = (BaseSelectionImpl) s1.copy(currentDocument);
+        		  currentProperty.addSelection(s2);
+        		  //System.err.println("ADDING SELECTION: " + s2);
+        	  }
+          }
+        
       }
     
 

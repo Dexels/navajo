@@ -202,29 +202,11 @@ public class MessageImpl
 
 //            System.err.println("Defparent not present, definitionlist present");
         if (msg.getType().equals(MSG_TYPE_DEFINITION)) {
-          definitionMessage = msg;
+          this.setDefinitionMessage(msg);
         } else {
-        this.addMessage(msg);
+        	this.addMessage(msg);
         }
 //        System.err.println("CONSTRUCTED THE FOLLOWING:");
-      }
-    }
-
-    // Check for missing properties that exist in the definition
-//    System.err.println("Parsing message. Looking for missing properties: ");
-    if (defParent!=null && defParent.getDefinitionMessage()!=null) {
-//      System.err.println("Ok, searching");
-      ArrayList myDefinitionList = defParent.getDefinitionMessage().getAllProperties();
-//      System.err.println("# of properties found in definition: "+myDefinitionList.size());
-      for (int j = 0; j < myDefinitionList.size(); j++) {
-        PropertyImpl pq = (PropertyImpl)myDefinitionList.get(j);
-        String pname = pq.getName();
-        if (getProperty(pname)==null) {
-          //System.err.println("\n\nCreating prop: "+pname+" ::: "+getIndex());
-          PropertyImpl pi = (PropertyImpl)pq.copy(getRootDoc());
-          addProperty(pi);
-          //System.err.println("pi::::::::::: "+pi.toXml(null).toString());
-        }
       }
     }
 

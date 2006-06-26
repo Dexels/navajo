@@ -48,8 +48,9 @@ public class BaseSelectionImpl extends BaseNode implements Selection{
   public boolean isSelected() {
     return ( this.isSelected );
   }
+  
   public void setSelected( boolean selected ) {
-    this.isSelected = selected;
+	  isSelected = selected;
   }
 
   public String toString() {
