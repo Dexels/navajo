@@ -17,7 +17,7 @@ import com.dexels.navajo.document.*;
 public class BaseSelectionImpl extends BaseNode implements Selection{
 
   protected String name ="";
-  protected String value ="";
+  protected String value ="-1";
   protected boolean isSelected = false;
   private Property myProperty = null;
 

@@ -36,12 +36,12 @@ public final class SelectionImpl extends BaseSelectionImpl implements Selection,
     XMLElement x = new CaseSensitiveXMLElement();
     x.setName("option");
     x.setAttribute("name",name);
-    x.setAttribute("value",value==null?"":value);
+    x.setAttribute("value",value==null?"-1":value);
     x.setAttribute("selected",isSelected?"1":"0");
     return x;
   }
 
-  
+
   public Object getRef() {
     return toXml(null);
   }
