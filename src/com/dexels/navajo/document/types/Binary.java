@@ -50,6 +50,9 @@ public final class Binary extends NavajoType {
     private long expectedLength = 0;
 
     private FormatDescription currentFormatDescription;
+    
+    private final static HashMap persistedBinaries = new HashMap();
+    
     /**
      * Construct a new Binary object with data from an InputStream It does close
      * the stream. I don't like it, but as yet I don't see any situation where
@@ -539,13 +542,36 @@ public final class Binary extends NavajoType {
 
     }
 
-    public String getTempFileName() {
+    /**
+     * Get the file reference to a binary.
+     * If persist is set, the binary object is put in a persistent store to
+     * prevent it from being garbage collected.
+     * 
+     * @param persist
+     * @return
+     */
+    public String getTempFileName(boolean persist) {
+    	
+    	String ref = null;
     	if (lazySourceFile != null) {
-    		return lazySourceFile.getAbsolutePath();
+    		ref = lazySourceFile.getAbsolutePath();
     	} else if (dataFile != null) {    		
-    		return dataFile.getAbsolutePath();
-    	} else {
-    		return null;
+    		ref =  dataFile.getAbsolutePath();
+    	} 
+    	
+    	if ( persist && ref != null && !persistedBinaries.containsKey(ref) ) {
+    		persistedBinaries.put(ref, this);
     	}
+    	
+    	return ref;
     }	
+    
+    /**
+     * Remove a persisted binary.
+     * 
+     * @param ref
+     */
+    public static void removeRef(String ref) {
+    	persistedBinaries.remove(ref);
+    }
 }

@@ -177,7 +177,7 @@ public class BasePropertyImpl
     return evaluatedValue;
   }
 
-  public void setAnyValue(Object o) {
+  public final void setAnyValue(Object o) {
 	  if (o==null) {
 		  setType(Property.STRING_PROPERTY);
 		  setValue((String)null);
@@ -237,7 +237,7 @@ public class BasePropertyImpl
 	  setValue(""+o);
   }
 
-  public Object getEvaluatedValue() throws NavajoException {
+  public final Object getEvaluatedValue() throws NavajoException {
 //    System.err.println("Evaluating property: "+getValue());
     Operand o;
     try {
@@ -291,7 +291,7 @@ public class BasePropertyImpl
     }
   }
 
-  public String getEvaluatedType() throws NavajoException {
+  public final String getEvaluatedType() throws NavajoException {
     if (!EXPRESSION_PROPERTY.equals(getType())) {
         return getType();
     }
@@ -312,7 +312,7 @@ public class BasePropertyImpl
   private Object evaluatedValue = null;
   private String evaluatedType = null;
 
-  public void refreshExpression() throws NavajoException {
+  public final void refreshExpression() throws NavajoException {
     if (getType().equals(Property.EXPRESSION_PROPERTY)) {
       // also sets evaluatedType
 //      System.err.println("Entering eval..");

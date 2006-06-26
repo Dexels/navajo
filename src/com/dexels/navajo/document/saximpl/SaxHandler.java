@@ -16,7 +16,7 @@ import com.dexels.navajo.document.nanoimpl.*;
 import com.dexels.navajo.document.saximpl.qdxml.*;
 import com.dexels.navajo.document.types.*;
 
-public class SaxHandler implements DocHandler {
+public final class SaxHandler implements DocHandler {
 
     private Navajo currentDocument=null;
     private final Stack messageStack = new Stack();
@@ -35,7 +35,7 @@ public class SaxHandler implements DocHandler {
     }
 
       
-    public void startElement(String tag, Hashtable h) throws Exception {
+    public final void startElement(String tag, Hashtable h) throws Exception {
 //        System.err.println("starting element: "+tag+" attrs: "+h);
         currentTag = tag;
         
@@ -110,19 +110,19 @@ public class SaxHandler implements DocHandler {
     }
     
     
-    private void parseAgent(Hashtable h) {
+    private final void parseAgent(Hashtable h) {
         // TODO Auto-generated method stub
         
     }
 
 
-    private void parseRequired(Hashtable h) {
+    private final void parseRequired(Hashtable h) {
         // TODO Auto-generated method stub
         currentMethod.addRequired((String)h.get("name"));
     }
 
 
-    private void parseObject(Hashtable h) {
+    private final void parseObject(Hashtable h) {
     	
     	if ( (String) h.get("ref") == null || ((String) h.get("ref")).equals("") ) {
     		return;
@@ -139,20 +139,20 @@ public class SaxHandler implements DocHandler {
     }
 
 
-    private void parseMethods(Hashtable h) {
+    private final void parseMethods(Hashtable h) {
         // TODO Auto-generated method stub
         
     }
 
 
-    private void parseCallback(Hashtable h) {
+    private final void parseCallback(Hashtable h) {
         // TODO: Should use the navajo factory for these functions
         if (currentHeader==null) {
             throw new IllegalArgumentException("Callback tag outside header tag.");
         }       
     }
 
-    private void parseTransaction(Hashtable h) {
+    private final void parseTransaction(Hashtable h) {
         if (currentHeader==null) {
             throw new IllegalArgumentException("Callback tag outside header tag.");
         }
@@ -164,7 +164,7 @@ public class SaxHandler implements DocHandler {
         currentHeader.addTransaction(bci);        
     }
 
-    private void parseHeader(Hashtable h) {
+    private final void parseHeader(Hashtable h) {
         // TODO: Should use the navajo factory for these functions
 //                NavajoFactory.getInstance().createHeader(current, rpcName, rpcUser, rpcPassword, expiration_interval)
         BaseHeaderImpl bhi = new BaseHeaderImpl(currentDocument);
@@ -174,13 +174,13 @@ public class SaxHandler implements DocHandler {
         
     }
 
-    private void parseMethod(Hashtable h) throws NavajoException {
+    private final void parseMethod(Hashtable h) throws NavajoException {
         String name = (String)h.get("name");
         currentMethod = NavajoFactory.getInstance().createMethod(currentDocument, name, null);
         currentDocument.addMethod(currentMethod);
     }
 
-    private void parseSelection(Hashtable h) throws NavajoException {
+    private final void parseSelection(Hashtable h) throws NavajoException {
     	String name = (String)h.get("name");
     	String value = (String)h.get("value");
     	int selected = Integer.parseInt((String)h.get("selected"));
@@ -209,7 +209,7 @@ public class SaxHandler implements DocHandler {
     	
     }
 
-    private void parseProperty(Hashtable h) throws NavajoException {
+    private final void parseProperty(Hashtable h) throws NavajoException {
 //        System.err.println("NAME: "+(String)h.get("name"));
         Message parentArrayMessage = null;
         String sLength = null;
@@ -330,7 +330,7 @@ public class SaxHandler implements DocHandler {
       }
     
 
-    private void parseMessage(Hashtable h) throws NavajoException {
+    private final void parseMessage(Hashtable h) throws NavajoException {
         String name = (String)h.get("name");
         String type = (String)h.get("type");
         Message m = null;
@@ -355,7 +355,7 @@ public class SaxHandler implements DocHandler {
     }
 
 
-    public void endElement(String tag) throws Exception {
+    public final void endElement(String tag) throws Exception {
 //        System.err.println("ending element: "+tag);
         if (tag.equals("tml")) {
          }
@@ -387,17 +387,17 @@ public class SaxHandler implements DocHandler {
     }
 
 
-    public void startDocument() throws Exception {
+    public final void startDocument() throws Exception {
           reset();
     }
 
 
-    public void endDocument() throws Exception {
+    public final void endDocument() throws Exception {
         
     }
 
 
-    public void text(Reader r) throws Exception {
+    public final void text(Reader r) throws Exception {
         if (currentProperty==null) {
             System.err.println("Huh?");
             Thread.dumpStack();
@@ -413,12 +413,12 @@ public class SaxHandler implements DocHandler {
        }
     }
     
-    public Navajo getNavajo() {
+    public final Navajo getNavajo() {
         return currentDocument;
     }
 
 
-    public String quoteStarted(int quoteCharacter, Reader r, String attributeName, String tagName) throws IOException {
+    public final String quoteStarted(int quoteCharacter, Reader r, String attributeName, String tagName) throws IOException {
         int c = 0;
         StringBuffer sb = new StringBuffer();
         while ((c = r.read()) != -1) {

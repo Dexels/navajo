@@ -31,29 +31,29 @@ public class BaseSelectionImpl extends BaseNode implements Selection{
     super(n);
   }
 
-  public String getName() {
+  public final String getName() {
     return ( this.name );
   }
-  public void setName( String newName ) {
+  public final void setName( String newName ) {
     this.name = newName;
   }
 
-  public String getValue() {
+  public final String getValue() {
     return ( this.value );
   }
-  public void setValue( String newVal ) {
+  public final void setValue( String newVal ) {
     this.value = newVal;
   }
 
-  public boolean isSelected() {
+  public final boolean isSelected() {
     return ( this.isSelected );
   }
   
-  public void setSelected( boolean selected ) {
+  public final void setSelected( boolean selected ) {
 	  isSelected = selected;
   }
 
-  public String toString() {
+  public final String toString() {
     //System.err.println("toString(): " + getName().trim());
     if (getName() != null)
       return getName().trim();
@@ -61,20 +61,20 @@ public class BaseSelectionImpl extends BaseNode implements Selection{
       return "";
   }
 
-  public Selection copy(Navajo n) {
+  public final Selection copy(Navajo n) {
       BaseSelectionImpl cp = (BaseSelectionImpl)NavajoFactory.getInstance().createSelection(n,getName(),getValue(),isSelected());
     cp.setRootDoc(n);
     return cp;
   }
-  public Property getParent() {
+  public final Property getParent() {
     return myProperty;
   }
 
-  public void setParent(Property m) {
+  public final void setParent(Property m) {
     myProperty = m;
   }
 
-  public String getPath() {
+  public final String getPath() {
     if (myProperty!=null) {
       try {
         return myProperty.getFullPropertyName() + "/" + getName();
@@ -120,7 +120,7 @@ public Map getAttributes() {
 public List getChildren() {
     return null;
 }
-public String getTagName() {
+public final String getTagName() {
     return Selection.SELECTION_DEFINITION;
 }
 public Object getRef() {
