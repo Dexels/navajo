@@ -952,6 +952,9 @@ public final Message getParentMessage() {
 
     public List getChildren() {
         ArrayList al = new ArrayList(propertyList);
+        if ( getDefinitionMessage() != null ) {
+        	al.add(getDefinitionMessage());
+        }
         al.addAll(messageList);
         return al;
     }
