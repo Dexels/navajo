@@ -630,6 +630,11 @@ public final class PropertyImpl implements Property, Comparable {
       if ( ref.getFirstChild() != null && ref.getFirstChild() instanceof Text) {
     	  value = ((Text) ref.getFirstChild()).getNodeValue();
     	  System.err.println("PROPERTY CONTENT::::::::::::::::"+value);
+          if ("".equals(value)) {
+              System.err.println("RETURNING: "+ref.getAttribute(Property.PROPERTY_VALUE));
+              return ref.getAttribute(Property.PROPERTY_VALUE);
+        }
+
       }
       
       if ( value != null && !value.trim().equals("")) {
