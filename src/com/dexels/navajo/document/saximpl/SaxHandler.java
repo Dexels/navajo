@@ -12,7 +12,6 @@ import java.util.*;
 
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.base.*;
-import com.dexels.navajo.document.nanoimpl.*;
 import com.dexels.navajo.document.saximpl.qdxml.*;
 import com.dexels.navajo.document.types.*;
 
