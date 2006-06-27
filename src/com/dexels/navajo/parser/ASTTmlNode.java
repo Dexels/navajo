@@ -139,7 +139,9 @@ public final class ASTTmlNode extends SimpleNode {
                     // Check type. If integer, float or date type and if is empty
                     String type = prop.getType();
 //                    System.err.println("In ASTTmlNODE found prop with type: "+type);
-                    if (prop.getValue() == null && !type.equals(Property.SELECTION_PROPERTY))
+                    // I changed getValue into getTypedValue, as it resulted in a serialization
+                    // of binary properties. Should be equivalent, and MUCH faster.
+                    if (prop.getTypedValue() == null && !type.equals(Property.SELECTION_PROPERTY))
                         return new Boolean(false);
 
                     if (type.equals(Property.INTEGER_PROPERTY)) {
