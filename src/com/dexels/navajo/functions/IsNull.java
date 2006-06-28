@@ -1,5 +1,6 @@
 package com.dexels.navajo.functions;
 
+import com.dexels.navajo.document.types.*;
 import com.dexels.navajo.parser.*;
 
 
@@ -21,12 +22,14 @@ public class IsNull extends FunctionInterface {
   }
   public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
     Object arg = this.getOperands().get(0);
-//    if (arg==null) {
-//      System.err.println("IsNull returning true!");
-//    } else {
-//      System.err.println("IsNull: Not null, returning false. Object class: "+arg.getClass()+" got: "+arg);
-//    }
-    return new Boolean(arg==null);
+    if (arg==null) {
+        return new Boolean(true);
+    }
+    if (arg instanceof NavajoType) {
+        NavajoType n = (NavajoType)arg;
+        return new Boolean(n.isEmpty());
+    }
+    return new Boolean(false);
   }
   public String usage() {
     return "IsNull( <argument>)";
