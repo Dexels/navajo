@@ -262,4 +262,9 @@ public final class ClockTime extends NavajoType implements Comparable {
     }
   }
 
+public boolean isEmpty() {
+    return calValue==null;
+
+}
+
 }

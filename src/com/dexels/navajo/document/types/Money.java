@@ -249,4 +249,8 @@ public final class Money
     }
   }
 
+public boolean isEmpty() {
+    return value==null;
+}
+
 }

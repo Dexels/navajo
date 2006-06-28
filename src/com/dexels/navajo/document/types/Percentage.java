@@ -187,4 +187,8 @@ public final class Percentage extends NavajoType {
     }
   }
 
+public boolean isEmpty() {
+    return value==null;
+}
+
 }

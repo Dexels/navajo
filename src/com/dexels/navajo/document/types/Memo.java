@@ -34,5 +34,9 @@ public final class Memo
 	}
 		return contents.compareTo(s.toString());
 	}
+
+public boolean isEmpty() {
+    return contents==null || "".equals(contents);
+}
   }
 

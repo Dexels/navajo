@@ -413,4 +413,9 @@ public final class StopwatchTime
     System.err.println("result = " + result);
   }
 
+public boolean isEmpty() {
+    
+    return myMillis!=0;
+}
+
 }

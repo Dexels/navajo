@@ -15,6 +15,7 @@ import java.util.*;
 public abstract class NavajoType implements Comparable {
   private Map subTypeMap = null;
 
+  public abstract boolean isEmpty();
   public NavajoType(String type) {
     String subtype = NavajoFactory.getInstance().getDefaultSubtypeForType(type);
     if (subtype!=null) {

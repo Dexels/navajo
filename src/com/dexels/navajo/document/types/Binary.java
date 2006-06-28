@@ -1,6 +1,7 @@
 package com.dexels.navajo.document.types;
 
 import java.io.*;
+import java.net.*;
 import java.util.*;
 
 import metadata.*;
@@ -82,6 +83,17 @@ public final class Binary extends NavajoType {
         super(Property.BINARY_PROPERTY);
      }    
     
+    
+    public String getHandle() {
+        if (dataFile!=null) {
+            return dataFile.getAbsolutePath();
+        }
+        if (lazySourceFile!=null) {
+            return lazySourceFile.getAbsolutePath();
+        }
+        return "none";
+    }
+    
     /**
      * Returns an outputstream. Write the data for this binary to the stream, flush and close it.
      * @return
@@ -95,6 +107,24 @@ public final class Binary extends NavajoType {
         }
     }
         
+    
+    /**
+     * Some components like a URL to point to their data.
+     * @return
+     * @throws MalformedURLException 
+     */
+    public URL getURL() throws MalformedURLException {
+        if (lazySourceFile != null && lazySourceFile.exists()) {
+            return lazySourceFile.toURL();
+        } else {
+            if (dataFile != null && dataFile.exists()) {
+                return dataFile.toURL();
+            } else {
+                return null;
+            }
+        }
+    }
+	        
     
     private void loadBinaryFromStream(InputStream is) throws IOException, FileNotFoundException {
         int b = -1;
@@ -573,5 +603,12 @@ public final class Binary extends NavajoType {
      */
     public static void removeRef(String ref) {
     	persistedBinaries.remove(ref);
+    }
+
+    public boolean isEmpty() {
+        if (dataFile==null && lazySourceFile==null) {
+            return true;
+        }
+        return false;
     }
 }
