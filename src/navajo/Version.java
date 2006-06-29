@@ -58,15 +58,16 @@ package navajo;
  * 5.4.1 Dispatcher is now true singleton. Implemented kill() methods, should be robuust to servlet engine
  *       destroys now.
  * 
+ * 5.4.2 Some performance improvements in ASTTmlNode.
  */
 public class Version extends dexels.Version {
 
 	public static final int MAJOR = 5;
 	public static final int MINOR = 4;
-	public static final int PATCHLEVEL = 1;
+	public static final int PATCHLEVEL = 2;
 	public static final String VENDOR = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Kernel";
-	public static final String RELEASEDATE = "2006-05-31";
+	public static final String RELEASEDATE = "2006-06-29";
 	
 //	 Included packages.
 	String [] includes = {"navajodocument.Version"};
