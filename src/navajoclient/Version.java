@@ -36,16 +36,16 @@ package navajoclient;
  *        -The streaming binaries only work well on 1.5, under 1.4
  *         the HTTP implentation will store all data in memory before
  *         sending.
- * 
+ * 2.2.1. Added debug data.
  */
 public class Version extends dexels.Version {
 
 	public static final int MAJOR = 2;
-	public static final int MINOR = 1;
-	public static final int PATCHLEVEL = 0;
+	public static final int MINOR = 2;
+	public static final int PATCHLEVEL = 1;
 	public static final String VENDOR = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Client";
-	public static final String RELEASEDATE = "2005-05-23";
+	public static final String RELEASEDATE = "2005-06-29";
 	
 	//Included packages.
 	String [] includes = {"navajodocument.Version"};
