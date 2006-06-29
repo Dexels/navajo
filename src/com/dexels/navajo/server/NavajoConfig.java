@@ -39,6 +39,8 @@ import java.io.*;
 
 import com.dexels.navajo.persistence.*;
 import com.dexels.navajo.scheduler.TaskRunner;
+import com.dexels.navajo.util.AuditLog;
+import com.dexels.navajo.util.Util;
 import com.dexels.navajo.logger.*;
 
 public final class NavajoConfig {
@@ -117,146 +119,158 @@ public final class NavajoConfig {
     }
 
     public void loadConfig(InputStream in)  throws SystemException{
-      //System.err.println("Starting loadconfig... Is inputstream null? "+in==null);
-      configuration = NavajoFactory.getInstance().createNavajo(in);
-      //System.err.println("Navajo configuration created. Is it null?  "+configuration==null);
-    
-      Message body = configuration.getMessage("server-configuration");
-      if (body == null) {
-          throw new SystemException(-1, "Could not read configuration file server.xml");
-      }
-      try {
-		body.write(System.err);
-	} catch (NavajoException e1) {
-		// TODO Auto-generated catch block
-		e1.printStackTrace();
-	}
-      
-      try {
-        rootPath = properDir(body.getProperty("paths/root").getValue());
-        configPath = properDir(rootPath +
-                               body.getProperty("paths/configuration").getValue());
-        adapterPath = properDir(rootPath +
-                                body.getProperty("paths/adapters").getValue());
-        scriptPath = properDir(rootPath +
-                               body.getProperty("paths/scripts").getValue());
-        compiledScriptPath = (body.getProperty("paths/compiled-scripts") != null ?
-                              properDir(rootPath +
-                                        body.getProperty("paths/compiled-scripts").
-                                        getValue()) : "");
-        // Reading deprecated navajostore definition.
-        this.dbPath = (body.getProperty("paths/navajostore") != null ?
-                              rootPath +
-                                        body.getProperty("paths/navajostore").
-                                        getValue() : null);
-        if (dbPath != null) {
-          System.err.println("WARNING: Using DEPRECATED navajostore configuration, use message based configuration instead.");
-        }
-
-        this.hibernatePath = (body.getProperty("paths/hibernate-mappings") != null ?
-                              properDir(rootPath +
-                                        body.getProperty("paths/hibernate-mappings").
-                                        getValue()) : "");
-
-
-        if (body.getProperty("parameters/script_version") != null)
-          scriptVersion = body.getProperty("parameters/script_version").getValue();
-        String persistenceClass = body.getProperty("persistence-manager/class").
-            getValue();
-        persistenceManager = PersistenceManagerFactory.getInstance(persistenceClass, getConfigPath());
-
-        if(classloader==null) {
-            classloader = new NavajoClassLoader(adapterPath, compiledScriptPath);
-        }
-        if(betaClassloader==null) {
-            betaClassloader = new NavajoClassLoader(adapterPath, compiledScriptPath, true);
-        }
-
-        String repositoryClass = body.getProperty("repository/class").getValue();
-        repository = RepositoryFactory.getRepository(repositoryClass, this);
-
-        // Read navajostore parameters.
-        Message navajostore = body.getMessage("navajostore");
-        if (navajostore != null) {
-          dbPath = (navajostore.getProperty("dbpath") != null ? rootPath + navajostore.getProperty("dbpath").getValue() : null);
-          String p = (navajostore.getProperty("dbport") != null ? navajostore.getProperty("dbport").getValue() : null);
-          store = (navajostore.getProperty("store") != null ? navajostore.getProperty("store").getValue() : null);
-          if (p != null) {
-            dbPort = Integer.parseInt(p);
-            System.err.println("SETTING DBPORT TO " + dbPort);
-          }
-        }
-
-        if (this.dbPath != null) {
-         HashMap p = new HashMap();
-         if (dbPort != -1) {
-           System.err.println("PUTTING PORT = " + dbPort + " IN MAP");
-           p.put("port", new Integer(dbPort));
-         }
-         if (store == null) {
-         	statisticsRunner = com.dexels.navajo.server.statistics.StatisticsRunner.getInstance(dbPath, p);
-         } else {
-         	statisticsRunner = com.dexels.navajo.server.statistics.StatisticsRunner.getInstance(dbPath, p, store);
-         }
-       }
-
-        //System.err.println("USing repository = " + repository);
-        Message maintenance = body.getMessage("maintenance-services");
-        ArrayList propertyList = maintenance.getAllProperties();
-        for (int i = 0; i < propertyList.size(); i++) {
-          Property prop = (Property) propertyList.get(i);
-          properties.put(prop.getName(), scriptPath + prop.getValue());
-        }
-
-        Message security = body.getMessage("security");
-        if (security != null) {
-          Property matchCn = security.getProperty("match_cn");
-          if (matchCn != null)
-            Dispatcher.getInstance().matchCN = matchCn.getValue().equals("true");
-        }
-
-        Property s = body.getProperty("parameters/async_timeout");
-        float asyncTimeout = 3600 * 1000; // default 1 hour.
-        if (s != null) {
-          asyncTimeout = Float.parseFloat(s.getValue()) * 1000;
-          System.out.println("SETTING ASYNC TIMEOUT: " + asyncTimeout);
-        }
-
-        enableAsync = (body.getProperty("parameters/enable_async") == null ||
-                       body.getProperty("parameters/enable_async").getValue().
-                       equals("true"));
-        if (enableAsync) {
-          asyncStore = com.dexels.navajo.mapping.AsyncStore.getInstance(asyncTimeout);
-        }
-
-        hotCompile = (body.getProperty("parameters/hot_compile") == null ||
-                      body.getProperty("parameters/hot_compile").getValue().
-                      equals("true"));
-
-        useLog4j = (body.getProperty("parameters/use_log4j") != null &&
-                    body.
-                    getProperty("parameters/use_log4j").getValue().equals("true"));
-
-        try {
-          betaUser = body.getProperty("special-users/beta").getValue();
-        }
-        catch (Exception e) {
-          //System.out.println("No beta user specified");
-        }
-
-        s = body.getProperty("parameters/compile_scripts");
-        if (s != null) {
-          //System.out.println("s.getValue() = " + s.getValue());
-          compileScripts = (s.getValue().equals("true"));
-        }
-        else {
-          compileScripts = false;
-      }
-      } catch (Throwable t) {
-        t.printStackTrace(System.err);
-        throw new SystemException(-1, "Error reading server.xml configuration", t);
-      }
-       //System.out.println("COMPILE SCRIPTS: " + compileScripts);
+    	
+    	configuration = NavajoFactory.getInstance().createNavajo(in);
+    	
+    	Message body = configuration.getMessage("server-configuration");
+    	if (body == null) {
+    		throw new SystemException(-1, "Could not read configuration file server.xml");
+    	}
+    	try {
+    		body.write(System.err);
+    	} catch (NavajoException e1) {
+    		// TODO Auto-generated catch block
+    		e1.printStackTrace();
+    	}
+    	
+    	try {
+    		rootPath = properDir(body.getProperty("paths/root").getValue());
+    		configPath = properDir(rootPath +
+    				body.getProperty("paths/configuration").getValue());
+    		adapterPath = properDir(rootPath +
+    				body.getProperty("paths/adapters").getValue());
+    		scriptPath = properDir(rootPath +
+    				body.getProperty("paths/scripts").getValue());
+    		compiledScriptPath = (body.getProperty("paths/compiled-scripts") != null ?
+    				properDir(rootPath +
+    						body.getProperty("paths/compiled-scripts").
+    						getValue()) : "");
+    		// Reading deprecated navajostore definition.
+    		this.dbPath = (body.getProperty("paths/navajostore") != null ?
+    				rootPath +
+    				body.getProperty("paths/navajostore").
+    				getValue() : null);
+    		if (dbPath != null) {
+    			System.err.println("WARNING: Using DEPRECATED navajostore configuration, use message based configuration instead.");
+    		}
+    		
+    		this.hibernatePath = (body.getProperty("paths/hibernate-mappings") != null ?
+    				properDir(rootPath +
+    						body.getProperty("paths/hibernate-mappings").
+    						getValue()) : "");
+    		
+    		
+    		if (body.getProperty("parameters/script_version") != null)
+    			scriptVersion = body.getProperty("parameters/script_version").getValue();
+    		String persistenceClass = body.getProperty("persistence-manager/class").
+    		getValue();
+    		persistenceManager = PersistenceManagerFactory.getInstance(persistenceClass, getConfigPath());
+    		
+    		if(classloader==null) {
+    			classloader = new NavajoClassLoader(adapterPath, compiledScriptPath);
+    		}
+    		if(betaClassloader==null) {
+    			betaClassloader = new NavajoClassLoader(adapterPath, compiledScriptPath, true);
+    		}
+    		
+    		String repositoryClass = body.getProperty("repository/class").getValue();
+    		repository = RepositoryFactory.getRepository(repositoryClass, this);
+    		
+    		// Read navajostore parameters.
+    		Message navajostore = body.getMessage("navajostore");
+    		if (navajostore != null) {
+    			dbPath = (navajostore.getProperty("dbpath") != null ? rootPath + navajostore.getProperty("dbpath").getValue() : null);
+    			String p = (navajostore.getProperty("dbport") != null ? navajostore.getProperty("dbport").getValue() : null);
+    			store = (navajostore.getProperty("store") != null ? navajostore.getProperty("store").getValue() : null);
+    			if (p != null) {
+    				dbPort = Integer.parseInt(p);
+    				System.err.println("SETTING DBPORT TO " + dbPort);
+    			}
+    		}
+    		
+    		if (this.dbPath != null) {
+    			HashMap p = new HashMap();
+    			if (dbPort != -1) {
+    				System.err.println("PUTTING PORT = " + dbPort + " IN MAP");
+    				p.put("port", new Integer(dbPort));
+    			}
+    			if (store == null) {
+    				statisticsRunner = com.dexels.navajo.server.statistics.StatisticsRunner.getInstance(dbPath, p);
+    			} else {
+    				statisticsRunner = com.dexels.navajo.server.statistics.StatisticsRunner.getInstance(dbPath, p, store);
+    			}
+    		}
+    		
+    		//System.err.println("USing repository = " + repository);
+    		Message maintenance = body.getMessage("maintenance-services");
+    		ArrayList propertyList = maintenance.getAllProperties();
+    		for (int i = 0; i < propertyList.size(); i++) {
+    			Property prop = (Property) propertyList.get(i);
+    			properties.put(prop.getName(), scriptPath + prop.getValue());
+    		}
+    		
+    		Message security = body.getMessage("security");
+    		if (security != null) {
+    			Property matchCn = security.getProperty("match_cn");
+    			if (matchCn != null)
+    				Dispatcher.getInstance().matchCN = matchCn.getValue().equals("true");
+    		}
+    		
+    		Property s = body.getProperty("parameters/async_timeout");
+    		float asyncTimeout = 3600 * 1000; // default 1 hour.
+    		if (s != null) {
+    			asyncTimeout = Float.parseFloat(s.getValue()) * 1000;
+    			System.out.println("SETTING ASYNC TIMEOUT: " + asyncTimeout);
+    		}
+    		
+    		enableAsync = (body.getProperty("parameters/enable_async") == null ||
+    				body.getProperty("parameters/enable_async").getValue().
+    				equals("true"));
+    		if (enableAsync) {
+    			asyncStore = com.dexels.navajo.mapping.AsyncStore.getInstance(asyncTimeout);
+    		}
+    		
+    		hotCompile = (body.getProperty("parameters/hot_compile") == null ||
+    				body.getProperty("parameters/hot_compile").getValue().
+    				equals("true"));
+    		
+    		useLog4j = (body.getProperty("parameters/use_log4j") != null &&
+    				body.
+    				getProperty("parameters/use_log4j").getValue().equals("true"));
+    		
+    		try {
+    			betaUser = body.getProperty("special-users/beta").getValue();
+    		}
+    		catch (Exception e) {
+    			//System.out.println("No beta user specified");
+    		}
+    		
+    		s = body.getProperty("parameters/compile_scripts");
+    		if (s != null) {
+    			//System.out.println("s.getValue() = " + s.getValue());
+    			compileScripts = (s.getValue().equals("true"));
+    		}
+    		else {
+    			compileScripts = false;
+    		}
+    		// Get document class implementation.
+    		String documentClass = ( body.getProperty("documentClass") != null ? 
+    				body.getProperty("documentClass").getValue() : null );
+    		
+    		if ( documentClass != null ) {
+    			
+    			System.setProperty("com.dexels.navajo.DocumentImplementation", documentClass);
+    			NavajoFactory.resetImplementation();
+    			NavajoFactory.getInstance();
+    			AuditLog.log(AuditLog.AUDIT_MESSAGE_DISPATCHER, "Documentclass is now: " + documentClass);
+    			
+    		}
+    		
+    	} catch (Throwable t) {
+    		t.printStackTrace(System.err);
+    		throw new SystemException(-1, "Error reading server.xml configuration", t);
+    	}
+    	//System.out.println("COMPILE SCRIPTS: " + compileScripts);
     }
 
     public TaskRunner getTaskRunner() {
