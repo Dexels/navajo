@@ -48,6 +48,8 @@ package navajoadapters;
  *                      fix of 2.2.3 was applied to version 1.19.
  *                      When CV32 new style is introduced version 1.21 can overwrite version 1.22 of
  *                      the file MailMap.java
+ * 
+ * 2.2.5 Implemented setContent() in FileMap.
  *
  */
 public class Version extends dexels.Version {
@@ -57,7 +59,7 @@ public class Version extends dexels.Version {
 	public static final int    PATCHLEVEL  = 5;
 	public static final String VENDOR      = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Adapter Library";
-	public static final String RELEASEDATE = "2006-06-19";
+	public static final String RELEASEDATE = "2006-06-29";
 
 	//	Included packages.
 	String [] includes = {"navajodocument.Version", "navajo.Version", "navajoclient.Version", "navajofunctions.Version"};
