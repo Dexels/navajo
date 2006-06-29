@@ -1239,7 +1239,7 @@ public class BasePropertyImpl
 //      }
 //    }
 //    return false;
-    System.err.println("Checking isEqual(me = " + this.getName() + ", type: " + this.getType() + ", value: " + this.getValue() +" AND other = " + p.getName() + ", type: " + p.getType() + ", value: " + p.getValue() + ")" );
+    //System.err.println("Checking isEqual(me = " + this.getName() + ", type: " + this.getType() + ", value: " + this.getValue() +" AND other = " + p.getName() + ", type: " + p.getType() + ", value: " + p.getValue() + ")" );
 //    // If property names do not match, properties are not equal.
 
 
