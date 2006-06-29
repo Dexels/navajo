@@ -59,12 +59,14 @@ package navajo;
  *       destroys now.
  * 
  * 5.4.2 Some performance improvements in ASTTmlNode.
+ * 
+ * 5.4.3 Document class can be defined in server.xml
  */
 public class Version extends dexels.Version {
 
 	public static final int MAJOR = 5;
 	public static final int MINOR = 4;
-	public static final int PATCHLEVEL = 2;
+	public static final int PATCHLEVEL = 3;
 	public static final String VENDOR = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Kernel";
 	public static final String RELEASEDATE = "2006-06-29";
