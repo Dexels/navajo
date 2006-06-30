@@ -1,6 +1,5 @@
 package com.dexels.navajo.persistence.impl;
 
-import com.dexels.navajo.persistence.PersistenceManager;
 import com.dexels.navajo.persistence.*;
 import com.dexels.navajo.document.*;
 
@@ -375,6 +374,7 @@ public final class PersistenceManagerImpl implements PersistenceManager {
         if (pc != null)
           return pc;
 
+        FileInputStream input = null;
         try {
             File f = new File(genFileName(key));
 
@@ -383,7 +383,7 @@ public final class PersistenceManagerImpl implements PersistenceManager {
                     f.delete();
                     return null;
                 }
-                FileInputStream input = new FileInputStream(f);
+                input = new FileInputStream(f);
                 pc = NavajoFactory.getInstance().createNavajo(input);
                 if (inMemoryCache.get(key) == null) {
                   memoryOperation(key, pc, expirationInterval, false);
@@ -394,6 +394,14 @@ public final class PersistenceManagerImpl implements PersistenceManager {
         } catch (Exception e) {
             e.printStackTrace();
             return null;
+        } finally {
+        	if ( input != null ) {
+        		try {
+					input.close();
+				} catch (IOException e) {
+					// NOT INTERESTED.
+				}
+        	}
         }
         return pc;
     }
