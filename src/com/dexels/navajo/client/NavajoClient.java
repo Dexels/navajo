@@ -862,9 +862,10 @@ public class NavajoClient implements ClientInterface {
       }
     }
     Navajo docIn = null;
+    BufferedInputStream in = null;
     try {
       if (protocol == HTTP_PROTOCOL) {
-        BufferedInputStream in = doTransaction(server, out, useCompression);
+        in = doTransaction(server, out, useCompression);
         docIn = NavajoFactory.getInstance().createNavajo(in);
       }
       else {
@@ -875,7 +876,15 @@ public class NavajoClient implements ClientInterface {
       e.printStackTrace();
       throw NavajoFactory.getInstance().createNavajoException("An error occured in doMethod(): " + e.getMessage());
     }
-    finally {}
+    finally {
+    	if ( in != null ) {
+    		try {
+				in.close();
+			} catch (IOException e) {
+				// NOT INTERESTED.
+			}
+    	}
+    }
     return docIn;
   }
 
