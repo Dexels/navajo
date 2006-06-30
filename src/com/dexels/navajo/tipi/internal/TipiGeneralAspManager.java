@@ -95,9 +95,18 @@ public class TipiGeneralAspManager implements TipiStorageManager {
 
     private Navajo constructUpdateRequest(String id, Navajo contents) throws NavajoException {
         Navajo n = constructRequest(id);
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        Binary b = new Binary();
+        OutputStream baos = b.getOutputStream();
+//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
         contents.write(baos);
-        Binary b = new Binary(baos.toByteArray());
+        try {
+       baos.flush();
+            baos.close();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+//        Binary b = new Binary(baos.toByteArray());
         Message document = n.getMessage("Document");
         Property contentProp = NavajoFactory.getInstance().createProperty(n, "Data", Property.BINARY_PROPERTY, "", 0, "", Property.DIR_IN, null);
         contentProp.setAnyValue(b);
