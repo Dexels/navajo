@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -163,19 +164,27 @@ public class Worker extends GenericThread {
 	 * @return
 	 */
 	private Navajo readFile(String fileName) {
+		FileInputStream fs = null;
 		try {
 			AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "Integrity violation detected, returning previous response from: " + fileName);
 			violationCount++;
 			// Set modification date to time of last read.
 			new File ( fileName ).setLastModified( System.currentTimeMillis() );
-			FileInputStream fs = new FileInputStream( fileName );
+			fs = new FileInputStream( fileName );
 			Navajo n = NavajoFactory.getInstance().createNavajo(fs);
-			
 			return n;
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
+		} finally {
+			if ( fs != null ) {
+				try {
+					fs.close();
+				} catch (IOException e) {
+					// NOT INTERESTED.
+				}
+			}
 		}
 	}
 	

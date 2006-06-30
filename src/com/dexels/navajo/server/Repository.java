@@ -41,7 +41,7 @@ public interface Repository {
      * Retrieve user/service specific condition rules from the repository. The conditions are returned in an array
      * of ConditionData.
      */
-    public ConditionData[] getConditions(Access access) throws SystemException, UserException;
+    //public ConditionData[] getConditions(Access access) throws SystemException, UserException;
 
     /**
      * Retrieve user/service specific parameters from the repository. The parameters are returned in an array of

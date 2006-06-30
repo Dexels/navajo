@@ -26,6 +26,7 @@ package com.dexels.navajo.lockguard;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -98,15 +99,17 @@ public final class LockManager extends GenericThread {
 	
 	private final void readDefinitions() {
 
+		FileInputStream in = null;
+		
 		try {
 			readingDefinitions = true;
 			lockDefinitions.clear();
-			Navajo definition = (myConfig == null ? 
-					NavajoFactory.getInstance().createNavajo( new FileInputStream("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/config/locks.xml") )
-					:
-				    NavajoFactory.getInstance().createNavajo( new FileInputStream(myConfig.getConfigPath() + "/" + LOCKS_CONFIG) )
-				    );
-					
+			
+			in = (myConfig == null ? new FileInputStream("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/config/locks.xml")
+					: new FileInputStream(myConfig.getConfigPath() + "/" + LOCKS_CONFIG));
+			
+			Navajo definition = NavajoFactory.getInstance().createNavajo( in  );
+								
 			ArrayList all = definition.getMessage("Locks").getAllMessages();
 			for ( int i = 0; i < all.size(); i++ ) {
 				Message lock = (Message) all.get(i);
@@ -138,7 +141,13 @@ public final class LockManager extends GenericThread {
 			LockStore.getStore().reset();
 			setConfigTimeStamp();
 			AuditLog.log(AuditLog.AUDIT_MESSAGE_LOCK_MANAGER, "Read new lock definitions");
-			
+			if (in != null) {
+				try {
+					in.close();
+				} catch (IOException e) {
+					// NOT INTERESTED.
+				}
+			}
 		}
 	}
 	

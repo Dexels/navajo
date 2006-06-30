@@ -100,15 +100,25 @@ public final class Dispatcher {
 		  NavajoClassSupplier cl) throws
 		  NavajoException {
 	  
+	  InputStream is = null; 
 	  try {
 		  // Read configuration file.
-		  navajoConfig = new NavajoConfig(configurationUrl.openStream(), fileInputStreamReader, cl); 
+		  is = configurationUrl.openStream();
+		  navajoConfig = new NavajoConfig(is, fileInputStreamReader, cl); 
 		  debugOn = navajoConfig.isLogged();
 		  logger = NavajoConfig.getNavajoLogger(Dispatcher.class);
 	  }
 	  
 	  catch (Exception se) {
 		  throw NavajoFactory.getInstance().createNavajoException(se);
+	  } finally {
+		  if ( is != null ) {
+			  try {
+				is.close();
+			} catch (IOException e) {
+				// NOT INTERESTED.
+			}
+		  }
 	  }
   }
 
@@ -841,23 +851,23 @@ public final class Dispatcher {
          * Phase III: Check conditions for user/service combination using the 'condition' table in the database and
          * the incoming Navajo document.
          */
-        ConditionData[] conditions = navajoConfig.getRepository().getConditions(
-            access);
-        if (conditions != null) {
-          outMessage = NavajoFactory.getInstance().createNavajo();
-          Message[] failed = checkConditions(conditions, inMessage, outMessage);
-
-          if (failed != null) {
-            Message msg = NavajoFactory.getInstance().createMessage(outMessage,
-                "ConditionErrors");
-            outMessage.addMessage(msg);
-            msg.setType(Message.MSG_TYPE_ARRAY);
-            for (int i = 0; i < failed.length; i++) {
-              msg.addMessage( (Message) failed[i]);
-            }
-            return outMessage;
-          }
-        }
+//        ConditionData[] conditions = navajoConfig.getRepository().getConditions(
+//            access);
+//        if (conditions != null) {
+//          outMessage = NavajoFactory.getInstance().createNavajo();
+//          Message[] failed = checkConditions(conditions, inMessage, outMessage);
+//
+//          if (failed != null) {
+//            Message msg = NavajoFactory.getInstance().createMessage(outMessage,
+//                "ConditionErrors");
+//            outMessage.addMessage(msg);
+//            msg.setType(Message.MSG_TYPE_ARRAY);
+//            for (int i = 0; i < failed.length; i++) {
+//              msg.addMessage( (Message) failed[i]);
+//            }
+//            return outMessage;
+//          }
+//        }
 
         /**
          * Phase IV: Get application specific parameters for user.

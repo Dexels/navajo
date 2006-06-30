@@ -413,12 +413,12 @@ public final class NavajoConfig {
       return getScript(name,false);
     }
 
-    public final Navajo getConditions(String rpcName) throws IOException {
-      InputStream input = inputStreamReader.getResource(getRootPath() + "conditions/" + rpcName + ".val");
-      if (input == null)
-        return null;
-      return NavajoFactory.getInstance().createNavajo(input);
-    }
+//    public final Navajo getConditions(String rpcName) throws IOException {
+//      InputStream input = inputStreamReader.getResource(getRootPath() + "conditions/" + rpcName + ".val");
+//      if (input == null)
+//        return null;
+//      return NavajoFactory.getInstance().createNavajo(input);
+//    }
 
     public final InputStream getScript(String name, boolean useBeta) throws IOException {
       InputStream input;
@@ -494,16 +494,26 @@ public final class NavajoConfig {
     }
 
     public final Navajo readConfig(String name) throws IOException {
-      //System.err.println("inputStreamReader = " + inputStreamReader);
-      //System.err.println("inputStreamReader.getResource(getConfigPath() + name) = " + inputStreamReader.getResource(getConfigPath() + name));
-      InputStream is = inputStreamReader.getResource(getConfigPath() + name);
-      if (is == null) {
-        //Thread.dumpStack();
-        return null;
-//        throw new Exception(is);
-      }
-      return NavajoFactory.getInstance().createNavajo(is);
-      //return NavajoFactory.getInstance().createNavajo(getNavajoStream (getConfigPath() + name));
+    	//System.err.println("inputStreamReader = " + inputStreamReader);
+    	//System.err.println("inputStreamReader.getResource(getConfigPath() + name) = " + inputStreamReader.getResource(getConfigPath() + name));
+    	InputStream is = inputStreamReader.getResource(getConfigPath() + name);
+    	try {
+    		if (is == null) {
+    			//Thread.dumpStack();
+    			return null;
+//  			throw new Exception(is);
+    		}
+    		return NavajoFactory.getInstance().createNavajo(is);
+    	} finally {
+    		if ( is != null ) {
+    			try {
+    				is.close();
+    			} catch (Exception e) {
+    				// NOT INTERESTED.
+    			}
+    		}
+    	}
+    	//return NavajoFactory.getInstance().createNavajo(getNavajoStream (getConfigPath() + name));
     }
 //    public InputStream getConfigScript() {
 //
