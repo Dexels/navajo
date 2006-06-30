@@ -37,15 +37,16 @@ package navajoclient;
  *         the HTTP implentation will store all data in memory before
  *         sending.
  * 2.2.1. Added debug data.
+ * 2.2.2. Closing input stream when creatin Navajo (for SAXP).
  */
 public class Version extends dexels.Version {
 
 	public static final int MAJOR = 2;
 	public static final int MINOR = 2;
-	public static final int PATCHLEVEL = 1;
+	public static final int PATCHLEVEL = 2;
 	public static final String VENDOR = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Client";
-	public static final String RELEASEDATE = "2005-06-29";
+	public static final String RELEASEDATE = "2005-06-30";
 	
 	//Included packages.
 	String [] includes = {"navajodocument.Version"};
