@@ -254,17 +254,19 @@ public final class TmlHttpServlet extends HttpServlet {
     boolean useRecvCompression = ( (recvEncoding != null) && (recvEncoding.indexOf("zip") != -1));
 
     Dispatcher dis = null;
-
+    BufferedInputStream is = null;
     try {
 
       Navajo in = null;
-
+      
       if (useRecvCompression) {
         java.util.zip.GZIPInputStream unzip = new java.util.zip.GZIPInputStream(request.getInputStream());
-        in = NavajoFactory.getInstance().createNavajo(new BufferedInputStream(unzip));
+        is = new BufferedInputStream(unzip);
+        in = NavajoFactory.getInstance().createNavajo(is);
       }
       else {
-        in = NavajoFactory.getInstance().createNavajo(new BufferedInputStream(request.getInputStream()));
+    	is = new BufferedInputStream(request.getInputStream());
+        in = NavajoFactory.getInstance().createNavajo(is);
       }
 
       long stamp = System.currentTimeMillis();
@@ -324,6 +326,13 @@ public final class TmlHttpServlet extends HttpServlet {
     }
     finally {
       dis = null;
+      if ( is != null ) {
+    	  try {
+    		  is.close();
+    	  } catch (Exception e) {
+    		  // NOT INTERESTED.
+    	  }
+      }
       //finishedServing();
     }
   }
