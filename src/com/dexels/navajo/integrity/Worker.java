@@ -158,6 +158,23 @@ public class Worker extends GenericThread {
 	}
 	
 	/**
+	 * Clears the entire integrity cache.
+	 */
+	private void clearCache() {
+		Set s = new HashSet(integrityCache.keySet());
+		Iterator i = s.iterator();
+		while ( i.hasNext() ) {
+			String id = (String) i.next();
+			String fileName = (String) integrityCache.get(id);
+			File f = new File( fileName );
+			// remove file reference from integrity cache.
+			integrityCache.remove(id);
+			// remove file itself.
+			f.delete();			
+		}
+	}
+	
+	/**
 	 * Read a file fileName containing a response XML and returns the corresponding Navajo object.
 	 * 
 	 * @param fileName
@@ -239,15 +256,15 @@ public class Worker extends GenericThread {
 	}
 	
 	public int getCacheSize() {
-		return integrityCache.size();
+		return getInstance().integrityCache.size();
 	}
 	
 	public int getWorkSize() {
-		return workList.size();
+		return getInstance().workList.size();
 	}
 	
 	public int getNotWrittenSize() {
-		return notWrittenReponses.size();
+		return getInstance().notWrittenReponses.size();
 	}
 	
 	public String getVERSION() {
@@ -256,9 +273,9 @@ public class Worker extends GenericThread {
 
 	public void terminate() {
 		instance = null;
-		workList.clear();
-		integrityCache.clear();
-		notWrittenReponses.clear();
+		getInstance().workList.clear();
+		getInstance().clearCache();
+		getInstance().notWrittenReponses.clear();
 		AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "Killed");
 	}
 
