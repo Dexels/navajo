@@ -945,7 +945,7 @@ public final Message getParentMessage() {
     	
 //  	System.err.println("Ok, searching");
     	ArrayList myDefinitionList = m.getAllProperties();
-//  	System.err.println("# of properties found in definition: "+myDefinitionList.size());
+  	System.err.println("# of properties found in definition: "+myDefinitionList.size());
     	for (int j = 0; j < myDefinitionList.size(); j++) {
     		Property pq = (Property)myDefinitionList.get(j);
     		String pname = pq.getName();

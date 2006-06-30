@@ -509,31 +509,9 @@ public class BasePropertyImpl
   public final void setValue(Binary b) {
       myBinary = b;
       myValue = null;
-//      System.err.println("Argh! This is an evil method! It eats memory!");
-//	  try {
-//
-//		  InputStream datastream = b.getDataAsStream();
-//
-//		  if ( datastream != null ) {
-//
-//
-//			  final StringWriter sw = new StringWriter();
-//			  final OutputStream os = Base64.newEncoder( sw );
-//
-//			  copyResource( os, datastream );
-//
-//			  os.close();
-//			  datastream.close();
-//
-//			  myValue = sw.toString();
-//
-//
-//			  setSubType("mimetype="+b.getMimeType());
-//		  }
-//	  }
-//	  catch (Exception e) {
-//		  e.printStackTrace();
-//	  }
+      setType(BINARY_PROPERTY);
+      setSubType("handle="+b.getHandle());
+
   }
 
   /** @deprecated
@@ -1239,7 +1217,7 @@ public class BasePropertyImpl
 //      }
 //    }
 //    return false;
-    //System.err.println("Checking isEqual(me = " + this.getName() + ", type: " + this.getType() + ", value: " + this.getValue() +" AND other = " + p.getName() + ", type: " + p.getType() + ", value: " + p.getValue() + ")" );
+
 //    // If property names do not match, properties are not equal.
 
 
