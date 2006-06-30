@@ -440,4 +440,17 @@ public class TipiProperty
   public void setHorizontalScrolls(boolean b) {
      ( (GenericPropertyComponent) getContainer()).setHorizontalScrolls(b);
   }
+
+  public void updateProperty() {
+      ( (GenericPropertyComponent) getContainer()).updateProperty();
+  }
+
+  protected void performComponentMethod(final String name, final TipiComponentMethod compMeth, TipiEvent event) {
+      runSyncInEventThread(new Runnable() {
+        public void run() {
+            updateProperty();
+        }
+      });
+    }
+
 }

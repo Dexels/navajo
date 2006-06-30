@@ -1179,7 +1179,9 @@
             <value direction="in" name="maxImageWidth" type="integer"/>
             <value direction="in" name="maxImageHeight" type="integer"/>
         </values>
-        <methods/>
+        <methods>
+            <method name="updateProperty"/>
+        </methods>
     </tipiclass>
 
  

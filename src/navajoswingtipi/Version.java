@@ -21,6 +21,7 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * ====================================================================
+ * 4.2.1   Added updateProperty method to TipiProperty
  */
 package navajoswingtipi;
 
@@ -28,7 +29,7 @@ public class Version extends dexels.Version {
 
 	public static final int MAJOR = 4;
 	public static final int MINOR = 2;
-	public static final int PATCHLEVEL = 0;
+	public static final int PATCHLEVEL = 1;
 	public static final String VENDOR = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Swing Tipi";
 	public static final String RELEASEDATE = "2005-10-20";
