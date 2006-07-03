@@ -126,7 +126,7 @@ public class Worker extends GenericThread {
 			f = File.createTempFile("navajoresponse_" + id, ".xml");
 			f.deleteOnExit();
 			// Store mapping between unique request id and response filename.
-			integrityCache.put(id, f.getAbsolutePath());
+			integrityCache.put(id, f );
 			
 			// Write file.
 			fw = new FileWriter(f);
@@ -174,14 +174,13 @@ public class Worker extends GenericThread {
 		long now = System.currentTimeMillis();
 		while ( i.hasNext() ) {
 			String id = (String) i.next();
-			String fileName = (String) integrityCache.get(id);
-			File f = new File( fileName );
+			File f = (File) integrityCache.get(id);
 			long birth = f.lastModified();
 			if ( now - birth > 60000 ) {
 				// remove file reference from integrity cache.
+				f.delete();
 				integrityCache.remove(id);
 				// remove file itself.
-				f.delete();
 			}
 		}
 	}
@@ -194,12 +193,11 @@ public class Worker extends GenericThread {
 		Iterator i = s.iterator();
 		while ( i.hasNext() ) {
 			String id = (String) i.next();
-			String fileName = (String) integrityCache.get(id);
-			File f = new File( fileName );
+			File f = (File) integrityCache.get(id);
 			// remove file reference from integrity cache.
+			f.delete();		
 			integrityCache.remove(id);
 			// remove file itself.
-			f.delete();			
 		}
 	}
 	
@@ -209,14 +207,14 @@ public class Worker extends GenericThread {
 	 * @param fileName
 	 * @return
 	 */
-	private Navajo readFile(String fileName) {
+	private Navajo readFile(File f) {
 		FileInputStream fs = null;
 		try {
-			AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "Integrity violation detected, returning previous response from: " + fileName);
+			AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "Integrity violation detected, returning previous response from: " + f.getName());
 			violationCount++;
 			// Set modification date to time of last read.
-			new File ( fileName ).setLastModified( System.currentTimeMillis() );
-			fs = new FileInputStream( fileName );
+			f.setLastModified( System.currentTimeMillis() );
+			fs = new FileInputStream( f );
 			Navajo n = NavajoFactory.getInstance().createNavajo(fs);
 			return n;
 		} catch (FileNotFoundException e) {
@@ -258,7 +256,7 @@ public class Worker extends GenericThread {
 					e.printStackTrace();
 				}
 			}
-			return readFile( (String) integrityCache.get( request.getHeader().getRequestId() ) );
+			return readFile( (File) integrityCache.get( request.getHeader().getRequestId() ) );
 		} else {
 			return null;
 		}
