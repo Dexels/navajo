@@ -199,7 +199,9 @@ public final class TmlHttpServlet extends HttpServlet {
     Dispatcher dis = null;
 
     try {
-      dis = Dispatcher.getInstance(new java.net.URL(configurationPath), new com.dexels.navajo.server.FileInputStreamReader());
+      dis = Dispatcher.getInstance(new java.net.URL(configurationPath), new com.dexels.navajo.server.FileInputStreamReader(),
+    		  request.getServerName() + request.getRequestURI());
+    		  	  
       tbMessage = constructFromRequest(request);
       Header header = NavajoFactory.getInstance().createHeader(tbMessage,service, username, password,expirationInterval);
       tbMessage.addHeader(header);
@@ -282,8 +284,11 @@ public final class TmlHttpServlet extends HttpServlet {
       }
 
       // Create dispatcher object.
-      dis = Dispatcher.getInstance(new java.net.URL(configurationPath), new com.dexels.navajo.server.FileInputStreamReader());
-      dis.setServerIdentifier(request.getServerName() + request.getRequestURI());
+      dis = Dispatcher.getInstance(new java.net.URL(configurationPath), 
+    		  new com.dexels.navajo.server.FileInputStreamReader(),
+    		  request.getServerName() + request.getRequestURI()
+      );
+     
       // Check for certificate.
       Object certObject = request.getAttribute( "javax.servlet.request.X509Certificate");
 

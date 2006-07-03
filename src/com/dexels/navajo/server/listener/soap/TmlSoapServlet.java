@@ -84,7 +84,7 @@ public class TmlSoapServlet extends HttpServlet {
       navajoIn.getHeader().setRPCName(soapAction);
 
       // Create dispatcher object and handle request.
-      Dispatcher dis = Dispatcher.getInstance(new java.net.URL(configurationPath), new com.dexels.navajo.server.FileInputStreamReader());
+      Dispatcher dis = Dispatcher.getInstance(new java.net.URL(configurationPath), new com.dexels.navajo.server.FileInputStreamReader(), "??");
       Navajo navajoOut = dis.handle(navajoIn);
 
       // Transform TML response to SOAP response.
