@@ -21,13 +21,14 @@ public class BIRTMap implements Mappable {
   public String parameterName;
 
   public Binary getReport(){
-    Binary result = null;
-    try{
-      result = new Binary(executeReport(reportName, parameters, outputFormat));
-    }catch(Exception e){
-      e.printStackTrace();
-    }
-    return result;
+	  
+	  try{
+		  return  executeReport(reportName, parameters, outputFormat);
+	  }catch(Exception e){
+		  e.printStackTrace();
+		  return null;
+	  }
+	  
   }
 
   public void setReportName(String s){
@@ -49,8 +50,10 @@ public class BIRTMap implements Mappable {
     parameters.put(parameterName, o);
   }
 
-  private byte[] executeReport(String reportName, HashMap reportParams, String outputFormat) throws EngineException {
-    ByteArrayOutputStream bout = new ByteArrayOutputStream();
+  private Binary executeReport(String reportName, HashMap reportParams, String outputFormat) throws EngineException {
+    //ByteArrayOutputStream bout = new ByteArrayOutputStream();
+	  
+	Binary result = new Binary();
     //Engine Configuration - set and get temp dir, BIRT home, Servlet context
     EngineConfig config = new EngineConfig();
     config.setEngineHome(engineDir);
@@ -76,21 +79,21 @@ public class BIRTMap implements Mappable {
       //Set rendering options - such as file or stream output,
       //output format, whether it is embeddable, etc
       HTMLRenderOption options = new HTMLRenderOption();
-      options.setOutputStream(bout);
+      options.setOutputStream(result.getOutputStream());
       options.setOutputFormat("html");
       task.setRenderOption(options);
     }
     else {
       RenderOptionBase options = new RenderOptionBase();
       options.setOutputFormat("pdf");
-      options.setOutputStream(bout);
+      options.setOutputStream(result.getOutputStream());
       task.setRenderOption(options);
     }
 
     //run the report and destroy the engine
     task.run();
     engine.destroy();
-    return bout.toByteArray();
+    return result;
   }
 
   /**
