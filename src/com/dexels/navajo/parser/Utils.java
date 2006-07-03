@@ -25,6 +25,8 @@ package com.dexels.navajo.parser;
  * ====================================================================
  */
 import java.util.*;
+
+import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.Percentage;
@@ -321,38 +323,40 @@ public final class Utils extends Exception {
     }
 
     private final static boolean isEqual(Object a, Object b) throws TMLExpressionException {
-        if ((a == null) && (b == null))
-            return true;
-        else if ((a == null) || (b == null))
-            return false;
-        else if (a instanceof Integer && b instanceof Integer)
-            return (((Integer) a).intValue() == ((Integer) b).intValue());
-        else if (a instanceof Integer && b instanceof Double)
-            return (((Integer) a).intValue() == ((Double) b).doubleValue());
-        else if (a instanceof Double && b instanceof Integer)
-            return (((Integer) b).intValue() == ((Double) a).doubleValue());
-        else if (a instanceof Double && b instanceof Double)
-            return (((Double) b).doubleValue() == ((Double) a).doubleValue());
-        else if (a instanceof Boolean && b instanceof Boolean)
-            return (((Boolean) a).booleanValue() == ((Boolean) b).booleanValue());
-        else if (a instanceof String || b instanceof String) {
-            String sA = Utils.getStringValue(a);
-            String sB = Utils.getStringValue(b);
-            return (sA.equals(sB));
-        } else if (a instanceof Date) {
-            return Utils.compareDates(a, b, "==");
-        } else if (a instanceof Money && b instanceof Money) {
-           return (((Money) a).doubleValue() == ((Money) b).doubleValue());
-         } else if (a instanceof Percentage && b instanceof Percentage) {
-            return (((Percentage) a).doubleValue() == ((Percentage) b).doubleValue());
-         }
-         else if (a instanceof ClockTime && b instanceof ClockTime) {
-          return Utils.compareDates(a, b, "==");
-        } else
-          /**
-           * CHANGED BY FRANK: WANTED TO COMPARE IF TWO OBJECTS ARE IDENTICAL:
-           */
-          return a == b;
+    	if ((a == null) && (b == null))
+    		return true;
+    	else if ((a == null) || (b == null))
+    		return false;
+    	else if (a instanceof Integer && b instanceof Integer)
+    		return (((Integer) a).intValue() == ((Integer) b).intValue());
+    	else if (a instanceof Integer && b instanceof Double)
+    		return (((Integer) a).intValue() == ((Double) b).doubleValue());
+    	else if (a instanceof Double && b instanceof Integer)
+    		return (((Integer) b).intValue() == ((Double) a).doubleValue());
+    	else if (a instanceof Double && b instanceof Double)
+    		return (((Double) b).doubleValue() == ((Double) a).doubleValue());
+    	else if (a instanceof Boolean && b instanceof Boolean)
+    		return (((Boolean) a).booleanValue() == ((Boolean) b).booleanValue());
+    	else if (a instanceof String || b instanceof String) {
+    		String sA = Utils.getStringValue(a);
+    		String sB = Utils.getStringValue(b);
+    		return (sA.equals(sB));
+    	} else if (a instanceof Date) {
+    		return Utils.compareDates(a, b, "==");
+    	} else if (a instanceof Money && b instanceof Money) {
+    		return (((Money) a).doubleValue() == ((Money) b).doubleValue());
+    	} else if (a instanceof Percentage && b instanceof Percentage) {
+    		return (((Percentage) a).doubleValue() == ((Percentage) b).doubleValue());
+    	}
+    	else if (a instanceof ClockTime && b instanceof ClockTime) {
+    		return Utils.compareDates(a, b, "==");
+    	} else if ( a instanceof Binary && b instanceof Binary ) {
+    		return ((Binary) a).isEqual( (Binary) b);
+    	} else
+    		/**
+    		 * CHANGED BY FRANK: WANTED TO COMPARE IF TWO OBJECTS ARE IDENTICAL:
+    		 */
+    		return a == b;
     }
 
     /**
