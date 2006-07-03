@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -64,6 +65,7 @@ public class Worker extends GenericThread {
 	public static final String VERSION = "$Id$";
 	
 	private static Worker instance = null;
+	private static String responseDir = null;
 	
 	// Worklist containst responses that still need to be written to a file.
 	private Map workList = Collections.synchronizedMap(new HashMap());
@@ -90,14 +92,14 @@ public class Worker extends GenericThread {
 		// remove all previously stored response files.
 		File f = null;
 		try {
-			f = File.createTempFile(RESPONSE_PREFIX, ".xml");
+			f = Dispatcher.getInstance().createTempFile(RESPONSE_PREFIX, ".xml");
 			File dir = f.getParentFile();
 			File [] allResponses = dir.listFiles();
 			for (int i = 0; i < allResponses.length; i++) {
 				File pr = allResponses[i];
 				if ( pr.getName().startsWith(RESPONSE_PREFIX) ) {
 					if ( !pr.delete() ) {
-						AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "Could not delete response file: " + pr.getName());
+						AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "getInstance(), Could not delete response file: " + pr.getName());
 					}
 				}
 			}
@@ -127,7 +129,7 @@ public class Worker extends GenericThread {
 		FileWriter fw = null;
 		try {
 			
-			f = File.createTempFile(RESPONSE_PREFIX + id, ".xml");
+			f = Dispatcher.getInstance().createTempFile(RESPONSE_PREFIX + id, ".xml");
 			f.deleteOnExit();
 			// Store mapping between unique request id and response filename.
 			integrityCache.put(id, f );
@@ -183,10 +185,10 @@ public class Worker extends GenericThread {
 			if ( now - birth > 60000 ) {
 				// remove file reference from integrity cache.
 				if ( !f.delete() ) {
-					AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "Could not response file: " + f.getName());
+					AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "worker(): Could not delete response file: " + f.getName());
+				} else {
+					integrityCache.remove(id);
 				}
-				integrityCache.remove(id);
-				// remove file itself.
 			}
 		}
 	}
@@ -202,7 +204,7 @@ public class Worker extends GenericThread {
 			File f = (File) integrityCache.get(id);
 			// remove file reference from integrity cache.
 			if ( !f.delete() ) {
-				AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "Could not response file: " + f.getName());
+				AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "clearCache(): Could not delete response file: " + f.getName());
 			}
 			integrityCache.remove(id);
 			// remove file itself.
@@ -318,4 +320,23 @@ public class Worker extends GenericThread {
 		AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "Killed");
 	}
 
+	public static void main(String [] args) {
+		String aap = "slwebsvr4.sportlink.enovation.net/sportlink/knvb/servlet/Postman";
+		aap = aap.substring(aap.indexOf("/")+1, aap.length());
+		aap = aap.replace('/', '_');
+		try {
+			File tempDir = new File(System.getProperty("java.io.tmpdir") + "/" + aap);
+			tempDir.mkdirs();
+			File f = Dispatcher.getInstance().createTempFile("tijdelijk", ".xml");
+			FileWriter fw = new FileWriter(f);
+			fw.write("apenoot");
+			fw.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		System.err.println(aap);
+		System.getProperties().list(System.err);
+	}
 }
