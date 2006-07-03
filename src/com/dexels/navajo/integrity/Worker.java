@@ -72,6 +72,8 @@ public class Worker extends GenericThread {
 	// Contains all unique request ids that still need to be handled by the worker thread.
 	private Set notWrittenReponses = Collections.synchronizedSet(new HashSet());
 	
+	private final static String RESPONSE_PREFIX = "navajoresponse_";
+	
 	public Worker() {
 		super("Navajo Integrity Worker");
 	}
@@ -88,13 +90,15 @@ public class Worker extends GenericThread {
 		// remove all previously stored response files.
 		File f = null;
 		try {
-			f = File.createTempFile("navajoresponse_", ".xml");
+			f = File.createTempFile(RESPONSE_PREFIX, ".xml");
 			File dir = f.getParentFile();
 			File [] allResponses = dir.listFiles();
 			for (int i = 0; i < allResponses.length; i++) {
 				File pr = allResponses[i];
-				if ( pr.getName().startsWith("navajoresponse_") ) {
+				System.err.println("Checking file: " + pr.getName());
+				if ( pr.getName().startsWith(RESPONSE_PREFIX) ) {
 					pr.delete();
+					System.err.println("Deleted");
 				}
 			}
 		} catch (IOException e) {
@@ -123,7 +127,7 @@ public class Worker extends GenericThread {
 		FileWriter fw = null;
 		try {
 			
-			f = File.createTempFile("navajoresponse_" + id, ".xml");
+			f = File.createTempFile(RESPONSE_PREFIX + id, ".xml");
 			f.deleteOnExit();
 			// Store mapping between unique request id and response filename.
 			integrityCache.put(id, f );
