@@ -97,7 +97,7 @@ public class Worker extends GenericThread {
 				File pr = allResponses[i];
 				if ( pr.getName().startsWith(RESPONSE_PREFIX) ) {
 					if ( !pr.delete() ) {
-						AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "Could not response file: " + pr.getName());
+						AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "Could not delete response file: " + pr.getName());
 					}
 				}
 			}
