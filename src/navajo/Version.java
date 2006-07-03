@@ -70,10 +70,10 @@ public class Version extends dexels.Version {
 
 	public static final int MAJOR = 5;
 	public static final int MINOR = 4;
-	public static final int PATCHLEVEL = 4;
+	public static final int PATCHLEVEL = 5;
 	public static final String VENDOR = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Kernel";
-	public static final String RELEASEDATE = "2006-06-30";
+	public static final String RELEASEDATE = "2006-07-03";
 	
 //	 Included packages.
 	String [] includes = {"navajodocument.Version"};
