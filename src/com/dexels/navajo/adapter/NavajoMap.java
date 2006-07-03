@@ -240,10 +240,12 @@ public class NavajoMap implements Mappable {
   public final void setBinaryProperty(Binary d) throws UserException {
     //System.out.println("setBinaryProperty() = " + d);
     currentProperty.setType(Property.BINARY_PROPERTY);
-    if (d != null)
+    if (d != null) {
       currentProperty.setValue(d);
-    else
-      currentProperty.setValue("");
+    }
+    else {
+      currentProperty.setValue((Binary) null);
+    }
     addProperty(currentFullName, currentProperty);
   }
 
