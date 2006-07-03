@@ -58,7 +58,8 @@ public final class Dispatcher {
   public static final String vendor = "Dexels BV";
   public static final String product = "Navajo Integrator";
   public static final String version = "Navajo Integrator Release 2005.11.10";
-  public static String serverId = null;
+  public String serverId = null;
+  public String applicationId = null;
 
   /**
    * Unique dispatcher instance.
@@ -1045,10 +1046,28 @@ public final class Dispatcher {
   }
 
   public String getServerId() {
-    return serverId;
+	String serverPart = serverId.substring(0, serverId.indexOf("/"));
+	serverPart = serverPart.replace('/', '_');
+    return serverPart;
   }
 
-  public void setServerId(String x) {
+  public String getApplicationId() {
+	  applicationId = serverId.substring(serverId.indexOf("/")+1, serverId.length());
+	  applicationId = applicationId.replace('/', '_');
+	  return applicationId;
+  }
+  
+  public File getTempDir() {
+	  File tempDir = new File(System.getProperty("java.io.tmpdir") + "/" + getApplicationId());
+	  tempDir.mkdirs();
+	  return tempDir;
+  }
+  
+  public File createTempFile(String prefix, String suffix) throws IOException {  
+	  return File.createTempFile(prefix, suffix, getTempDir());
+  }
+  
+  public void setServerIdentifier(String x) {
     if (serverId == null) {
       serverId = x;
     }
