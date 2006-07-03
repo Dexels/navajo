@@ -1,5 +1,6 @@
 package com.dexels.navajo.document;
 
+import java.io.File;
 import java.util.*;
 
 
@@ -14,6 +15,7 @@ import java.util.*;
 
 public abstract class NavajoFactory {
   protected static NavajoFactory impl = null;
+  protected File tempDir = null;
   protected static HashMap alternativeFactories = new HashMap();
   protected Map defaultSubTypes = new HashMap();
   protected final ArrayList myBinaryActivityListeners = new ArrayList();
@@ -189,6 +191,17 @@ public abstract class NavajoFactory {
     return Property.STRING_PROPERTY;
   }
 
+  public void setTempDir(File f) {
+	  tempDir = f;
+  }
+  
+  public File getTempDir() {
+	  if ( tempDir != null ) {
+		  return tempDir;
+	  } else {
+		  return new File(System.getProperty("java.io.tmpdir"));
+	  }
+  }
   /**
    * Create a NavajoException object with a given message (text)
    * @param message String
