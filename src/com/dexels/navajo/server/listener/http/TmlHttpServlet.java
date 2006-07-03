@@ -283,7 +283,7 @@ public final class TmlHttpServlet extends HttpServlet {
 
       // Create dispatcher object.
       dis = Dispatcher.getInstance(new java.net.URL(configurationPath), new com.dexels.navajo.server.FileInputStreamReader());
-      dis.setServerId(request.getServerName() + request.getRequestURI());
+      dis.setServerIdentifier(request.getServerName() + request.getRequestURI());
       // Check for certificate.
       Object certObject = request.getAttribute( "javax.servlet.request.X509Certificate");
 
