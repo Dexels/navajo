@@ -139,6 +139,7 @@ public final class Dispatcher {
 	  
 	  if ( instance == null ) {
 		  instance = new Dispatcher(configurationUrl, fileInputStreamReader);
+		  NavajoFactory.getInstance().setTempDir(instance.getTempDir());
 		  // Startup task runner.
 	      instance.navajoConfig.getTaskRunner();
 	  }

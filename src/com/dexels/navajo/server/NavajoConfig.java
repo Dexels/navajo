@@ -260,11 +260,9 @@ public final class NavajoConfig {
     		if ( documentClass != null ) {
     			System.setProperty("com.dexels.navajo.DocumentImplementation", documentClass);
     			NavajoFactory.resetImplementation();
-    			NavajoFactory.getInstance().setTempDir(Dispatcher.getInstance().getTempDir());
+    			NavajoFactory.getInstance();
     			AuditLog.log(AuditLog.AUDIT_MESSAGE_DISPATCHER, "Documentclass is now: " + documentClass);
-    		} else {
-    			NavajoFactory.getInstance().setTempDir(Dispatcher.getInstance().getTempDir());
-    		}
+    		} 
     		
     	} catch (Throwable t) {
     		t.printStackTrace(System.err);
