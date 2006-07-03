@@ -307,10 +307,6 @@ public class Worker extends GenericThread {
 	public String getVERSION() {
 		return this.VERSION;
 	}
-
-	public void finalize() {
-		//terminate();
-	}
 	
 	public void terminate() {
 		getInstance().workList.clear();
