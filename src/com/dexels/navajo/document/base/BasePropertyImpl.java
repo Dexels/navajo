@@ -28,7 +28,7 @@ public class BasePropertyImpl
     implements Property, Comparable, TreeNode {
   protected String myName;
   protected String myValue = null;
-  private Binary myObject = null;
+  
   protected ArrayList selectionList = new ArrayList();
   protected String type = null;
   protected String cardinality = null;
@@ -37,7 +37,7 @@ public class BasePropertyImpl
   protected int length = 64;
   private Map subtypeMap = null;
 
-  private Binary myBinary = null;
+  protected Binary myBinary = null;
 
   protected Property definitionProperty = null;
 

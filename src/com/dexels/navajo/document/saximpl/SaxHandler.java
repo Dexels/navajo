@@ -102,7 +102,7 @@ public final class SaxHandler implements DocHandler {
             return;
         }
         
-        System.err.println("Unknown tag: "+tag+" attrs: "+h);
+        //System.err.println("Unknown tag: "+tag+" attrs: "+h);
                  
 //        throw new IllegalArgumentException("Unknown tag: "+tag+" attrs: "+h);
         
