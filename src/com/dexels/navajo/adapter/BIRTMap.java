@@ -101,7 +101,7 @@ public class BIRTMap implements Mappable {
 
     //run the report and destroy the engine
     task.run();
-    engine.destroy();
+    //  engine.destroy();
     return result;
   }
 
