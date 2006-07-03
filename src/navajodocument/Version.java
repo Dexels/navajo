@@ -51,6 +51,7 @@ package navajodocument;
  *        Added QDSSSax parser implementation (Quick 'n Dirty Stream Sharing SAX) 
  *        This implementation can handle binaries of any size*
  *        
+ * 9.0.1 Binary now supports proper compare function.
  *        
  *     * limited only by diskspace
  */
@@ -58,10 +59,10 @@ public class Version extends dexels.Version {
 
 	public static final int MAJOR          = 9;
 	public static final int MINOR          = 0;
-	public static final int PATCHLEVEL     = 0;
+	public static final int PATCHLEVEL     = 1;
 	public static final String VENDOR      = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Document";
-	public static final String RELEASEDATE = "2006-05-02";
+	public static final String RELEASEDATE = "2006-07-03";
 
 	// Included packages.
 
