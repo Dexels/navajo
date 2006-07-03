@@ -134,11 +134,12 @@ public final class Dispatcher {
   }
   
   public static Dispatcher getInstance(URL configurationUrl,
-          InputStreamReader fileInputStreamReader) throws
+          InputStreamReader fileInputStreamReader, String serverIdentification) throws
           NavajoException  {
 	  
 	  if ( instance == null ) {
 		  instance = new Dispatcher(configurationUrl, fileInputStreamReader);
+		  instance.setServerIdentifier(serverIdentification);
 		  NavajoFactory.getInstance().setTempDir(instance.getTempDir());
 		  // Startup task runner.
 	      instance.navajoConfig.getTaskRunner();

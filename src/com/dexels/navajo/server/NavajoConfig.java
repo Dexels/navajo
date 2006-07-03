@@ -126,12 +126,6 @@ public final class NavajoConfig {
     	if (body == null) {
     		throw new SystemException(-1, "Could not read configuration file server.xml");
     	}
-    	try {
-    		body.write(System.err);
-    	} catch (NavajoException e1) {
-    		// TODO Auto-generated catch block
-    		e1.printStackTrace();
-    	}
     	
     	try {
     		rootPath = properDir(body.getProperty("paths/root").getValue());

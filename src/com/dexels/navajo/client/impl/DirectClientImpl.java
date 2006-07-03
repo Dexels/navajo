@@ -306,7 +306,7 @@ private String username;
 
       dispatcher = Dispatcher.getInstance( config,
                                   new com.dexels.navajo.server.
-                                  ClassloaderInputStreamReader());
+                                  ClassloaderInputStreamReader(), null);
       dispatcher.setUseAuthorisation(false);
     }
     catch (NavajoException ex) {
@@ -325,7 +325,7 @@ private String username;
     try {
 
 //    NavajoBasicClassLoader nbcl = new NavajoBasicClassLoader();
-      dispatcher = Dispatcher.getInstance(config,new FileInputStreamReader(path));
+      dispatcher = Dispatcher.getInstance(config,new FileInputStreamReader(path),null);
 //      dispatcher.setUseAuthorisation(false);
 //      System.err.println("IN INIT of DCI. classloader: "+dispatcher.getNavajoConfig().getClassloader());
 //      dispatcher.getNavajoConfig().setClassloader(cl);
@@ -346,7 +346,7 @@ private String username;
       try {
 //          dispatcher = new Dispatcher(config,new FileInputStreamReader(path),new DirectClassLoader(path,path+"/navajo-tester/auxilary/classes"));
 
-        dispatcher = Dispatcher.getInstance(config,new FileInputStreamReader(path));
+        dispatcher = Dispatcher.getInstance(config,new FileInputStreamReader(path),null);
       }
       
       catch (NavajoException ex) {
