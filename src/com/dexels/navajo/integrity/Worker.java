@@ -25,10 +25,13 @@
 package com.dexels.navajo.integrity;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
+import java.io.FilenameFilter;
 import java.io.IOException;
+import java.net.FileNameMap;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -82,7 +85,26 @@ public class Worker extends GenericThread {
 		instance = new Worker();
 		instance.setSleepTime(50);
 		instance.startThread(instance);
-
+		// remove all previously stored response files.
+		File f = null;
+		try {
+			f = File.createTempFile("navajoresponse_", ".xml");
+			File dir = f.getParentFile();
+			File [] allResponses = dir.listFiles();
+			for (int i = 0; i < allResponses.length; i++) {
+				File pr = allResponses[i];
+				if ( pr.getName().startsWith("navajoresponse_") ) {
+					pr.delete();
+				}
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			if ( f != null ) {
+				f.delete();
+			}
+			e.printStackTrace();
+		}
+		
 		AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "Started integrity worker $Id$");
 		
 		return instance;
@@ -97,15 +119,17 @@ public class Worker extends GenericThread {
 	 * @param response
 	 */
 	private void writeFile(String id, Navajo response) {
+		File f = null;
+		FileWriter fw = null;
 		try {
 			
-			File f = File.createTempFile("navajoresponse_" + id, ".xml");
+			f = File.createTempFile("navajoresponse_" + id, ".xml");
 			f.deleteOnExit();
 			// Store mapping between unique request id and response filename.
 			integrityCache.put(id, f.getAbsolutePath());
 			
 			// Write file.
-			FileWriter fw = new FileWriter(f);
+			fw = new FileWriter(f);
 			response.write(fw);
 			fw.close();
 			
@@ -116,8 +140,13 @@ public class Worker extends GenericThread {
 		
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
+		
+			if ( f != null ) {
+				f.delete();
+			}
+			integrityCache.remove(id);
 			e.printStackTrace();
-		}
+		} 
 	}
 	
 	public final void worker() {
@@ -271,11 +300,15 @@ public class Worker extends GenericThread {
 		return this.VERSION;
 	}
 
+	public void finalize() {
+		terminate();
+	}
+	
 	public void terminate() {
-		instance = null;
 		getInstance().workList.clear();
 		getInstance().clearCache();
 		getInstance().notWrittenReponses.clear();
+		instance = null;
 		AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "Killed");
 	}
 
