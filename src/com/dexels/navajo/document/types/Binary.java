@@ -473,6 +473,14 @@ public final class Binary extends NavajoType {
         }
     }
 
+    public File getFile() {
+    	if (lazySourceFile != null) {
+    		return lazySourceFile;
+    	} else {
+    		return dataFile;
+    	}
+    }
+    
     public final InputStream getDataAsStream() {
         if (lazySourceFile != null) {
             try {
@@ -610,5 +618,78 @@ public final class Binary extends NavajoType {
             return true;
         }
         return false;
+    }
+    
+    public boolean isEqual(Binary other ) {
+    	
+    	if ( other == null ) {
+    		return false;
+    	}
+    	
+    	if ( getLength() != other.getLength() ) {
+    		return false;
+    	}
+    	
+    	// compare byte by byte.
+    	RandomAccessFile otherFile = null;
+    	RandomAccessFile myFile = null;
+    	try {
+    		otherFile = new RandomAccessFile( other.getFile(), "r");
+    		myFile = new RandomAccessFile( getFile(), "r" );
+    		byte [] otherBuffer = new byte[1024];
+    		byte [] myBuffer = new byte[1024];
+    		
+    		for (int i = 0; i < ( other.getLength() / 1024 ); i++) {
+    			otherFile.readFully(otherBuffer);
+    			myFile.readFully(myBuffer);
+    			// compare buffers.
+    			for (int j = 0; j < otherBuffer.length; j++) {
+    				if ( otherBuffer[j] != myBuffer[j]) {
+    					return false;
+    				}
+    			}
+    		}
+    		
+    		long otherP = otherFile.getFilePointer();
+    		long myP = myFile.getFilePointer();
+    		
+    		otherFile.readFully( otherBuffer, 0, (int) (other.getLength() - otherP) );
+    		myFile.readFully( myBuffer, 0, (int) (getLength() - myP) );
+    		
+    		for (int j = 0; j < (other.getLength() - otherP); j++) {
+				if ( otherBuffer[j] != myBuffer[j]) {
+					return false;
+				}
+			}
+    		
+    		return true;
+    		
+    	} catch (Exception e) {
+    		e.printStackTrace(System.err);
+    		return false;
+    	} finally {
+    		if ( otherFile != null ) {
+    			try {
+    				otherFile.close();
+    			} catch (IOException e) {
+    				
+    			}
+    		}
+    		if ( myFile != null ) {
+    			try {
+    				myFile.close();
+    			} catch (IOException e) {
+    				
+    			}
+    		}
+    	}
+    }
+    
+    public static void main(String [] args) throws Exception {
+    	Binary b1 = new Binary( new File("/home/arjen/menu_kop.jpg" ) );
+    	Binary b2 = new Binary( new File("/home/arjen/menu_kop.jpg" ) );
+    	
+    	System.err.println("equals: " + b1.isEqual(b2) );
+    	
     }
 }

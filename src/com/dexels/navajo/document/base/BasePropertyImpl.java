@@ -10,6 +10,7 @@ import com.dexels.navajo.document.*;
 
 import org.dexels.utils.Base64;
 
+import com.dexels.navajo.document.nanoimpl.PropertyImpl;
 import com.dexels.navajo.document.types.*;
 
 /**
@@ -1209,18 +1210,11 @@ public class BasePropertyImpl
   }
 
   public final boolean isEqual(Property p) {
-//    if(getValue() != null){
-//      return getValue().equals(p.getValue());
-//    }else{
-//      if(p.getValue() == null){
-//        return true;
-//      }
-//    }
-//    return false;
 
-//    // If property names do not match, properties are not equal.
-
-
+	if ( this.getType() != p.getType() ) {
+		return false;
+	}
+	
     if (!getName().equals(p.getName())) {
       return false;
     }
@@ -1278,6 +1272,8 @@ public class BasePropertyImpl
         e.printStackTrace();
         return false;
       }
+    } else if (p.getType().equals(Property.BINARY_PROPERTY)) {
+    	return ((Binary) this.getTypedValue()).isEqual( (Binary) p.getTypedValue() );
     }
     // Else I am some other property.
     else {
