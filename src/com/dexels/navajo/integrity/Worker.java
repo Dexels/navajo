@@ -95,10 +95,10 @@ public class Worker extends GenericThread {
 			File [] allResponses = dir.listFiles();
 			for (int i = 0; i < allResponses.length; i++) {
 				File pr = allResponses[i];
-				System.err.println("Checking file: " + pr.getName());
 				if ( pr.getName().startsWith(RESPONSE_PREFIX) ) {
-					pr.delete();
-					System.err.println("Deleted");
+					if ( !pr.delete() ) {
+						AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "Could not response file: " + pr.getName());
+					}
 				}
 			}
 		} catch (IOException e) {
@@ -182,7 +182,9 @@ public class Worker extends GenericThread {
 			long birth = f.lastModified();
 			if ( now - birth > 60000 ) {
 				// remove file reference from integrity cache.
-				f.delete();
+				if ( !f.delete() ) {
+					AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "Could not response file: " + f.getName());
+				}
 				integrityCache.remove(id);
 				// remove file itself.
 			}
@@ -199,7 +201,9 @@ public class Worker extends GenericThread {
 			String id = (String) i.next();
 			File f = (File) integrityCache.get(id);
 			// remove file reference from integrity cache.
-			f.delete();		
+			if ( !f.delete() ) {
+				AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "Could not response file: " + f.getName());
+			}
 			integrityCache.remove(id);
 			// remove file itself.
 		}
