@@ -17,6 +17,8 @@ import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.ArrayList;
 import com.dexels.navajo.mapping.AsyncMappable;
+import com.inet.pool.a;
+
 import java.util.Date;
 import java.util.Map;
 import java.util.Set;
@@ -73,7 +75,7 @@ public class AdminMap implements Mappable {
     supportsAsync = nc.isAsyncEnabled();
     supportsStore = ( nc.getAsyncStore() != null );
     storeLocation = nc.dbPath;
-    serverId = Dispatcher.serverId;
+    serverId = Dispatcher.getInstance().getApplicationId();
   }
 
   /**

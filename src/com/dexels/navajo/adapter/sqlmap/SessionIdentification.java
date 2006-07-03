@@ -74,7 +74,7 @@ public final class SessionIdentification {
       try {
         CallableStatement cstmt = con.prepareCall(
             "Call DBMS_APPLICATION_INFO.SET_MODULE(?, ?)");
-        cstmt.setString(1, Dispatcher.serverId);
+        cstmt.setString(1, Dispatcher.getInstance().getServerId() + "/" + Dispatcher.getInstance().getApplicationId());
         cstmt.setString(2, access.rpcUser + "@" + access.rpcName);
         cstmt.executeUpdate();
         cstmt.close();
