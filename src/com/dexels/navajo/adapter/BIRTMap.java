@@ -20,6 +20,8 @@ public class BIRTMap implements Mappable {
   public Object parameterValue;
   public String parameterName;
 
+  private static ReportEngine myBirt = null;
+  
   public Binary getReport(){
 	  
 	  try{
@@ -31,6 +33,16 @@ public class BIRTMap implements Mappable {
 	  
   }
 
+  private ReportEngine getReportEngine() {
+	  if ( myBirt == null ) {
+		  EngineConfig config = new EngineConfig();
+		  config.setEngineHome(engineDir);
+		  //Create the report engine
+		  myBirt = new ReportEngine(config);
+	  }
+	  return myBirt;
+  }
+  
   public void setReportName(String s){
     this.reportName = s;
   }
@@ -55,12 +67,9 @@ public class BIRTMap implements Mappable {
 	  
 	Binary result = new Binary();
     //Engine Configuration - set and get temp dir, BIRT home, Servlet context
-    EngineConfig config = new EngineConfig();
-    config.setEngineHome(engineDir);
-
-    //Create the report engine
-    ReportEngine engine = new ReportEngine(config);
-
+ 
+	ReportEngine engine = getReportEngine();
+	
     //Open a report design - use design to modify design, retrieve embedded images etc.
     IReportRunnable design = engine.openReportDesign(reportDir + reportName + ".rptdesign");
 
