@@ -309,7 +309,7 @@ public class Worker extends GenericThread {
 	}
 
 	public void finalize() {
-		terminate();
+		//terminate();
 	}
 	
 	public void terminate() {
