@@ -63,6 +63,8 @@ package navajo;
  * 5.4.3 Document class can be defined in server.xml
  * 
  * 5.4.4 Closing inputstreams when creating new Navajo object (for SAXP).
+ * 
+ * 5.4.5 Added AdminServlet again. Comparing binaries correctly.
  */
 public class Version extends dexels.Version {
 
