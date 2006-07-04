@@ -96,7 +96,6 @@ public class Worker extends GenericThread {
 		File f = null;
 		try {
 			f = Dispatcher.getInstance().createTempFile(RESPONSE_PREFIX, ".xml");
-			instance.fileCount++;
 			File dir = f.getParentFile();
 			File [] allResponses = dir.listFiles();
 			for (int i = 0; i < allResponses.length; i++) {
@@ -113,7 +112,7 @@ public class Worker extends GenericThread {
 		} finally {
 			if ( f != null ) {
 				if ( f.delete() ) {
-					instance.fileCount--;
+				  // 
 				}
 			}
 		}
