@@ -581,7 +581,12 @@ public class TslCompiler {
           //System.out.println("in MessageNode(), REF = " + ref);
           ////System.out.println("filter = " + filter);
           //System.out.println("in MessageNode(), current contextClass = " + contextClass);
-          contextClassStack.push(contextClass);
+          if (contextClass==null) {
+              System.err.println("NO CONTEXT CLASS (YET)");
+            } else {
+                System.err.println("LINE 587: PUSHING CLASS: "+contextClass);
+                contextClassStack.push(contextClass);
+           }
           contextClass = null;
           try {
           	contextClass = Class.forName(className, false, loader);
@@ -1079,16 +1084,37 @@ result.append(printIdent(ident + 4) +
 
     StringBuffer result = new StringBuffer();
 
-    String attribute = n.getAttribute("name");
+    String attributeOriginal = n.getAttribute("name");
     String condition = n.getAttribute("condition");
+    String attribute = null;
+    
+    String mapPath = null;
+    
+    if (attributeOriginal.indexOf("/")!=-1) {
+        attribute = attributeOriginal.substring(attributeOriginal.lastIndexOf('/')+1, attributeOriginal.length());
+        mapPath = attributeOriginal.substring(0,attributeOriginal.lastIndexOf('/'));
+   } else {
+        attribute = attributeOriginal;
+     }
 
     if (attribute == null || attribute.equals(""))
       throw new Exception("Name attribute is required for field tags");
 
     condition = (condition == null) ? "" : condition;
 
-    String methodName = "set" + (attribute.charAt(0) + "").toUpperCase()
+    String totalMethodName = "set" + (attribute.charAt(0) + "").toUpperCase()
         + attribute.substring(1, attribute.length());
+    
+    String methodName = null;
+    // TODO Strip methodName
+    if (totalMethodName.indexOf("/")!=-1) {
+        methodName = totalMethodName.substring(totalMethodName.lastIndexOf('/')+1, totalMethodName.length());
+     } else {
+        methodName = totalMethodName;
+    }
+    
+    
+    
     NodeList children = n.getChildNodes();
 
     if (!condition.equals("")) {
@@ -1121,12 +1147,17 @@ result.append(printIdent(ident + 4) +
       try {
         Class contextClass = null;
 		try {
-		 contextClass = Class.forName(className, false, loader);
-		} catch (Exception e) { throw new Exception("Could not find adapter: " + className); }
+            if (mapPath!=null) {
+                contextClass = locateContextClass(mapPath);
+            } else {
+                contextClass = Class.forName(className, false, loader);
+            }
+           // contextClassStack.push(contextClass);
+          } catch (Exception e) { throw new Exception("Could not find adapter: " + className); }
         String type = null;
         try {
         	type = MappingUtils.getFieldType(contextClass, attribute);
-        } catch (Exception e) { throw new Exception("Could not find field: " + attribute + " in adapter " + className); }
+        } catch (Exception e) { throw new Exception("Could not find field: " + attribute + " in adapter " + contextClass.getName()); }
         if (type.equals("java.lang.String")) {
           castedValue = "(String) sValue";
         } else if (type.equals("com.dexels.navajo.document.types.ClockTime")) {
@@ -1164,8 +1195,14 @@ result.append(printIdent(ident + 4) +
         e.printStackTrace();
         throw new UserException(-1, "Error in script: could not find mappable object: " + className);
       }
-      result.append(printIdent(ident + 2) + objectName + "." + methodName + "(" +
-                    castedValue + ");\n");
+      
+      if (mapPath!=null) {
+          result.append(printIdent(ident + 2) + "(("+locateContextClass(mapPath).getName()+")findMapByPath(\""+mapPath+"\"))." + methodName + "(" +
+                  castedValue + ");\n");        
+      } else {
+          result.append(printIdent(ident + 2) + objectName + "." + methodName + "(" +
+                  castedValue + ");\n");        
+      }
     }
     else { // Field with ref: indicates that a message or set of messages is mapped to attribute (either Array Mappable or singular Mappable)
       String ref = mapNode.getAttribute("ref");
@@ -1362,6 +1399,30 @@ result.append(printIdent(ident + 4) +
     return result.toString();
   }
 
+  private Class locateContextClass(String mapPath) {
+//      System.err.println("finaMapByPath: "+mapPath);
+      StringTokenizer st = new StringTokenizer(mapPath,"/");
+      System.err.println("STACK: "+contextClassStack);
+      System.err.println("CONTEXT"+contextClass);
+      
+      int count = 0;
+      while (st.hasMoreTokens()) {
+        String element = st.nextToken();
+        if (!"..".equals(element)) {
+            System.err.println("Huh? : "+element);
+        }
+        count++;
+      }
+      if (count==0) {
+        return contextClass;
+    }
+//      System.err.println("Count element: "+count);
+      System.err.println("STACK: "+contextClassStack);
+      Class m = (Class)contextClassStack.get(contextClassStack.size()-( count+1));
+//      System.err.println("Mappable: "+m);
+      return m;
+}
+
   public String breakNode(int ident, Element n) throws Exception {
 
     StringBuffer result = new StringBuffer();
@@ -1428,14 +1489,17 @@ result.append(printIdent(ident + 4) +
     }
 
     String className = object;
+    if (contextClass!=null) {
+        contextClassStack.push(contextClass);
+    } 
+     try {
+         contextClass = Class.forName(className, false, loader);
+           } catch (Exception e) { throw new Exception("Could not find adapter: " + className); }
 
     if (!name.equals("")) { // We have a potential async mappable object.
       ////System.out.println("POTENTIAL MAPPABLE OBJECT " + className);
-      Class contextClass = null;
-      try {
-      	contextClass = Class.forName(className, false, loader);
-      } catch (Exception e) { throw new Exception("Could not find adapter: " + className); }
-      if (contextClass.getSuperclass().getName().equals(
+    //  Class contextClass = null;
+       if (contextClass.getSuperclass().getName().equals(
           "com.dexels.navajo.mapping.AsyncMappable")) {
         asyncMap = true;
 
@@ -1650,7 +1714,12 @@ result.append(printIdent(ident + 4) +
       ident -= 2;
       result.append(printIdent(ident) + "} // EOF map condition \n");
     }
-
+    if (!contextClassStack.isEmpty()) {
+        contextClass = (Class)contextClassStack.pop();
+    } else {
+        contextClass = null;
+    }
+// TODO NOOT
     return result.toString();
   }
 

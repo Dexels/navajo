@@ -28,8 +28,8 @@ package com.dexels.navajo.mapping;
 import com.dexels.navajo.loader.NavajoClassSupplier;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.document.*;
-import java.util.HashMap;
-import java.util.Stack;
+import java.util.*;
+
 import com.dexels.navajo.parser.Condition;
 import java.util.ArrayList;
 
@@ -205,6 +205,36 @@ public abstract class CompiledScript {
 
   public void finalize() {
     functions.clear();
+  }
+  
+  public final Mappable findMapByPath(String path) {
+      System.err.println("finaMapByPath: "+path);
+      StringTokenizer st = new StringTokenizer(path,"/");
+      int count = 0;
+      while (st.hasMoreTokens()) {
+        String element = st.nextToken();
+        if (!"..".equals(element)) {
+            System.err.println("Huh? : "+element);
+        }
+        count++;
+      }
+      
+      System.err.println("TreeNodeStack: "+treeNodeStack);
+    for (int i = 0; i < treeNodeStack.size(); i++) {
+        MappableTreeNode mt = ((MappableTreeNode)treeNodeStack.get(i));
+        System.err.println("treeNode # "+i+ mt);
+        if (mt!=null) {
+            System.err.println("Map found: "+mt.getMyMap());
+        }
+}
+      
+//     
+//      for (int i = 0; i < treeNodeStack.size(); i++) {
+//        System.err.println("treeNode # "+i+ ((MappableTreeNode)treeNodeStack.get(i)).getMyMap());
+//    }
+      Mappable m = ((MappableTreeNode)treeNodeStack.get(treeNodeStack.size()-count)).getMyMap();
+      System.err.println("Mappable: "+m);
+      return m;
   }
 
 }
