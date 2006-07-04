@@ -343,7 +343,7 @@ public class AdminMap implements Mappable {
 	  }
 	  System.setProperty("com.dexels.navajo.DocumentImplementation", s);
 	  NavajoFactory.resetImplementation();
-	  NavajoFactory.getInstance();
+	  NavajoFactory.getInstance().setTempDir(Dispatcher.getInstance().getTempDir());
 	  System.err.println("Document class is now: " + getDocumentClass());
   }
 }
