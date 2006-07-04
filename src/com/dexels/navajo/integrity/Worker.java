@@ -60,12 +60,15 @@ public class Worker extends GenericThread {
 	public int cacheSize;
 	public int workSize;
 	public int notWrittenSize;
-	public static int violationCount = 0;
+	private int fileCount = 0;
+	public int violationCount = 0;
 	
 	public static final String VERSION = "$Id$";
 	
 	private static Worker instance = null;
 	private static String responseDir = null;
+	
+	
 	
 	// Worklist containst responses that still need to be written to a file.
 	private Map workList = Collections.synchronizedMap(new HashMap());
@@ -93,6 +96,7 @@ public class Worker extends GenericThread {
 		File f = null;
 		try {
 			f = Dispatcher.getInstance().createTempFile(RESPONSE_PREFIX, ".xml");
+			instance.fileCount++;
 			File dir = f.getParentFile();
 			File [] allResponses = dir.listFiles();
 			for (int i = 0; i < allResponses.length; i++) {
@@ -106,7 +110,9 @@ public class Worker extends GenericThread {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			if ( f != null ) {
-				f.delete();
+				if ( f.delete() ) {
+					instance.fileCount--;
+				}
 			}
 			e.printStackTrace();
 		}
@@ -130,6 +136,7 @@ public class Worker extends GenericThread {
 		try {
 			
 			f = Dispatcher.getInstance().createTempFile(RESPONSE_PREFIX + id, ".xml");
+			fileCount++;
 			f.deleteOnExit();
 			// Store mapping between unique request id and response filename.
 			integrityCache.put(id, f );
@@ -148,7 +155,9 @@ public class Worker extends GenericThread {
 			// TODO Auto-generated catch block
 		
 			if ( f != null ) {
-				f.delete();
+				if ( f.delete() ) {
+					fileCount--;
+				}
 			}
 			integrityCache.remove(id);
 			e.printStackTrace();
@@ -187,6 +196,7 @@ public class Worker extends GenericThread {
 				if ( !f.delete() ) {
 					AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "worker(): Could not delete response file: " + f.getName());
 				} else {
+					fileCount--;
 					integrityCache.remove(id);
 				}
 			}
@@ -205,8 +215,10 @@ public class Worker extends GenericThread {
 			// remove file reference from integrity cache.
 			if ( !f.delete() ) {
 				AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "clearCache(): Could not delete response file: " + f.getName());
+			} else {
+				fileCount--;
+				integrityCache.remove(id);
 			}
-			integrityCache.remove(id);
 			// remove file itself.
 		}
 	}
@@ -289,7 +301,7 @@ public class Worker extends GenericThread {
 	}
 	
 	public int getViolationCount() {
-		return violationCount;
+		return getInstance().violationCount;
 	}
 	
 	public int getCacheSize() {
@@ -306,6 +318,10 @@ public class Worker extends GenericThread {
 	
 	public String getVERSION() {
 		return this.VERSION;
+	}
+	
+	public int getFileCount() {
+		return getInstance().fileCount;
 	}
 	
 	public void terminate() {
