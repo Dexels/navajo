@@ -17,7 +17,6 @@ import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.ArrayList;
 import com.dexels.navajo.mapping.AsyncMappable;
-import com.inet.pool.a;
 
 import java.util.Date;
 import java.util.Map;
@@ -319,22 +318,22 @@ public class AdminMap implements Mappable {
     this.monitorTotaltime = monitorTotaltime;
     Dispatcher.getInstance().getNavajoConfig().setMonitorExceedTotaltime(monitorTotaltime);
   }
-  
+
   public void setWebservice(String w) {
 	  this.webservice = w;
   }
-  
+
   public WebserviceAccess getWebserviceAccess() {
 	  if ( webservice == null ) {
 		  return null;
 	  }
 	  return WebserviceAccessListener.getInstance().getAccessInfo(webservice);
   }
-  
+
   public String getDocumentClass() {
 	  return NavajoFactory.getInstance().getClass().getName();
   }
-  
+
   public void setDocumentClass(String s) throws UserException {
 	  try {
 		  Class.forName(s);
