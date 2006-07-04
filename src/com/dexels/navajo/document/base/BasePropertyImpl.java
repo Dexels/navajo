@@ -511,7 +511,9 @@ public class BasePropertyImpl
       myBinary = b;
       myValue = null;
       setType(BINARY_PROPERTY);
-      setSubType("handle="+b.getHandle());
+      if ( b != null ) {
+    	  setSubType("handle="+b.getHandle());
+      }
 
   }
 
