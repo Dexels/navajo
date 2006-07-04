@@ -292,8 +292,10 @@ public final class Dispatcher {
 	  }
 	  
 	  // Check for webservice transaction integrity.
+	  boolean integrityViolation = false;
 	  out = navajoConfig.getIntegrityWorker().getResponse(in);
 	  if ( out != null ) {
+		  integrityViolation = true;
 		  return out;
 	  }
 	  
@@ -362,7 +364,7 @@ public final class Dispatcher {
 		  throw new SystemException( -1, ie.getMessage(), ie);
 	  } finally {
 		  // Store response for integrity checking.
-		  if ( out != null ) {
+		  if ( out != null && !integrityViolation ) {
 			  Worker.getInstance().setResponse(in, out);
 		  }
 		  // Release locks.
@@ -1066,7 +1068,9 @@ public final class Dispatcher {
   }
   
   public File createTempFile(String prefix, String suffix) throws IOException {  
-	  return File.createTempFile(prefix, suffix, getTempDir());
+	  File f = File.createTempFile(prefix, suffix, getTempDir());
+	  f.deleteOnExit();
+	  return f;
   }
   
   public void setServerIdentifier(String x) {

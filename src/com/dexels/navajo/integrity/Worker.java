@@ -161,6 +161,7 @@ public class Worker extends GenericThread {
 				}
 			}
 			integrityCache.remove(id);
+			notWrittenReponses.remove( id );
 			e.printStackTrace();
 		} 
 	}
