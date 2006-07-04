@@ -108,13 +108,14 @@ public class Worker extends GenericThread {
 				}
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			// TODO Auto-generated catch block	
+			e.printStackTrace();
+		} finally {
 			if ( f != null ) {
 				if ( f.delete() ) {
 					instance.fileCount--;
 				}
 			}
-			e.printStackTrace();
 		}
 		
 		AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "Started integrity worker $Id$");
