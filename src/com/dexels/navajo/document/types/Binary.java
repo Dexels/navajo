@@ -411,7 +411,7 @@ public final class Binary extends NavajoType {
             file = dataFile;
         }
         try {
-            if (dataFile != null) {
+            if (file != null) {
                 in = new RandomAccessFile(file, "r");
                 byte[] data = new byte[(int) file.length()];// + 1 ];
                 in.readFully(data);
