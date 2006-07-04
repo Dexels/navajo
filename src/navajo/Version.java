@@ -57,6 +57,8 @@ package navajo;
  * 
  * 5.4.1 Dispatcher is now true singleton. Implemented kill() methods, should be robuust to servlet engine
  *       destroys now.
+ * 5.4.2 Field tags can now address parent maps
+ * 5.4.3 Bug fix in the compiler
  * 
  * 5.4.2 Some performance improvements in ASTTmlNode.
  * 
