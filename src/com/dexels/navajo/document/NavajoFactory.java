@@ -28,7 +28,6 @@ public abstract class NavajoFactory {
   public static NavajoFactory getInstance() {
     if (impl == null) {
     	
-      System.err.println("CREATING NEW NAVAJOFACTORY INSTANCE!!!");
       String name = System.getProperty(
           "com.dexels.navajo.DocumentImplementation");
       if (name == null) {
@@ -45,7 +44,6 @@ public abstract class NavajoFactory {
   }
   
   public static void resetImplementation() {
-	  System.err.println("RESETTING NAVAJOFACTORY INSTANCE!!!");
       impl = null;
   }
 
@@ -195,12 +193,10 @@ public abstract class NavajoFactory {
   }
 
   public void setTempDir(File f) {
-	  System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Setting temp dir to " + f);
 	  tempDir = f;
   }
   
   public File getTempDir() {
-	  System.err.println("tempDir = " + tempDir);
 	  if ( tempDir != null ) {
 		  return tempDir;
 	  } else {
