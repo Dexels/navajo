@@ -32,7 +32,7 @@ import com.dexels.navajo.document.saximpl.qdxml.*;
 public final class Binary extends NavajoType {
 
     // private byte [] data;
-    private String mimetype = "";
+    private String mimetype = "text/plain";
 
     private File dataFile = null;
     private File lazySourceFile = null;
@@ -77,6 +77,7 @@ public final class Binary extends NavajoType {
                 e.printStackTrace(System.err);
             }
         }
+        this.mimetype = guessContentType();
      }    
     
     public Binary() {
@@ -164,6 +165,7 @@ public final class Binary extends NavajoType {
         } else {
             loadBinaryFromStream(new FileInputStream(f));
         }
+        this.mimetype = guessContentType();
     }
 
     /**
@@ -245,6 +247,8 @@ public final class Binary extends NavajoType {
         }
         w.flush();
         fos.close();
+        this.mimetype = getSubType("mime");
+        this.mimetype = (mimetype == null || mimetype.equals("") ? guessContentType() : mimetype);
     }
 
     /**
@@ -363,11 +367,13 @@ public final class Binary extends NavajoType {
             } else {
                 f = dataFile;
             }
-            currentFormatDescription = metadata.FormatIdentification.identify(f);
+            if ( f != null ) {
+            	currentFormatDescription = metadata.FormatIdentification.identify(f);
+            }
 //            System.err.println("Guessed: "+currentFormatDescription.getMimeType());
 //            System.err.println("Guessed: "+currentFormatDescription.getFileExtensions());
             if (currentFormatDescription == null) {
-                return "unknown type";
+                return "text/plain";
             } else if (currentFormatDescription.getMimeType() != null) {
                 return currentFormatDescription.getMimeType();
             } else {

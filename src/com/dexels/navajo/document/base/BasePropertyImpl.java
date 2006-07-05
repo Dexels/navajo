@@ -458,14 +458,14 @@ public class BasePropertyImpl
     }
     else if (getType().equals(Property.BINARY_PROPERTY)) {
       try {
-          if (myBinary!=null) {
+          //if (myBinary!=null) {
             return myBinary;
-        }
-          if (myValue==null) {
-            return null;
-        }
-          // This is weird, should not happen.
-          return new Binary(new StringReader(getValue()));
+//        }
+//          if (myValue==null) {
+//            return null;
+//        }
+//          // This is weird, should not happen.
+//          return new Binary(new StringReader(getValue()));
       }
       catch (Exception e) {
         e.printStackTrace();
