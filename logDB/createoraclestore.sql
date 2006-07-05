@@ -40,4 +40,14 @@ CREATE INDEX navajoaccess_indx ON navajoaccess (
 )
 /
 
+CREATE INDEX NAVAJOACCCESS_INDX_WS ON navajoaccess (
+  WEBSERVICE
+)
+/
+
+CREATE INDEX NAVAJOACCCESS_INDX_US ON navajoaccess (
+  USERNAME
+)
+/
+
 QUIT
