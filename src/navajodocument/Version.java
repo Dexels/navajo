@@ -54,15 +54,18 @@ package navajodocument;
  * 9.0.1 Binary now supports proper compare function.
  *        
  *     * limited only by diskspace
+ * 
+ * 9.0.2 Fixed problem with not setting mimetype in Binary when using reader.
+ * 
  */
 public class Version extends dexels.Version {
 
 	public static final int MAJOR          = 9;
 	public static final int MINOR          = 0;
-	public static final int PATCHLEVEL     = 1;
+	public static final int PATCHLEVEL     = 2;
 	public static final String VENDOR      = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Document";
-	public static final String RELEASEDATE = "2006-07-03";
+	public static final String RELEASEDATE = "2006-07-05";
 
 	// Included packages.
 
