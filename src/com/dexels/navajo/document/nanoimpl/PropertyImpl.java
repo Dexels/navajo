@@ -107,8 +107,7 @@ public final class PropertyImpl
     try {
 // Always set type:
         x.setAttribute("type", type);
-        System.err.println("type " + type);
-        System.err.println("BINARY " + myBinary);
+       
         if (myBinary != null) {
         	x.setContent( myBinary.getBase64() );
         }
