@@ -173,11 +173,11 @@ public final class Binary extends NavajoType {
      * 
      * @param data
      *            byte[]
-     *            @deprecated
+     *           
      */
     public Binary(byte[] data) {
         super(Property.BINARY_PROPERTY);
-        Thread.dumpStack();
+        //Thread.dumpStack();
         try {
             OutputStream fos = createTempFileOutputStream();
             fos.write(data);
