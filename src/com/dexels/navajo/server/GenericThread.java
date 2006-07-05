@@ -168,16 +168,12 @@ public class GenericThread implements Runnable, Mappable {
 		return null;
 	}
 	
-	/**
-	 * Return Long object for 1.4 compliance.
-	 * @return
-	 */
-	public Long getTotalWorkTime() {
-		return new Long(this.totalWorkTime);
+	public long getTotalWorkTime() {
+		return this.totalWorkTime;
 	}
 	
-	public Long getTotalSleepTime() {
-		return new Long(this.totalSleepTime);
+	public long getTotalSleepTime() {
+		return this.totalSleepTime;
 	}
 
 }
