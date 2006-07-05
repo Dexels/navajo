@@ -70,7 +70,7 @@ package navajo;
  * 
  * 5.4.5 Added AdminServlet again. Comparing binaries correctly.
  * 
- * 5.4.5 Support for long in TslCompiler.
+ * 5.4.5 Support for long in TslCompiler/NanoTslCompiler.
  */
 
 public class Version extends dexels.Version {
