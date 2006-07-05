@@ -1056,6 +1056,9 @@ public final class Dispatcher {
   }
 
   public String getApplicationId() {
+	  if ( serverId == null ) {
+		  return "unknown application id";
+	  }
 	  applicationId = serverId.substring(serverId.indexOf("/")+1, serverId.length());
 	  applicationId = applicationId.replace('/', '_');
 	  return applicationId;
