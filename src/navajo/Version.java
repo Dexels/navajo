@@ -57,7 +57,9 @@ package navajo;
  * 
  * 5.4.1 Dispatcher is now true singleton. Implemented kill() methods, should be robuust to servlet engine
  *       destroys now.
+ *       
  * 5.4.2 Field tags can now address parent maps
+ * 
  * 5.4.3 Bug fix in the compiler
  * 
  * 5.4.2 Some performance improvements in ASTTmlNode.
@@ -67,7 +69,10 @@ package navajo;
  * 5.4.4 Closing inputstreams when creating new Navajo object (for SAXP).
  * 
  * 5.4.5 Added AdminServlet again. Comparing binaries correctly.
+ * 
+ * 5.4.5 Support for long in TslCompiler.
  */
+
 public class Version extends dexels.Version {
 
 	public static final int MAJOR = 5;
@@ -75,7 +80,7 @@ public class Version extends dexels.Version {
 	public static final int PATCHLEVEL = 5;
 	public static final String VENDOR = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Kernel";
-	public static final String RELEASEDATE = "2006-07-03";
+	public static final String RELEASEDATE = "2006-07-05";
 	
 //	 Included packages.
 	String [] includes = {"navajodocument.Version"};
