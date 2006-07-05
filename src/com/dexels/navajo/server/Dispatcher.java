@@ -1050,6 +1050,9 @@ public final class Dispatcher {
   }
 
   public String getServerId() {
+	if ( serverId == null ) {
+		return "unknown_server_id";
+	}
 	String serverPart = serverId.substring(0, serverId.indexOf("/"));
 	serverPart = serverPart.replace('/', '_');
     return serverPart;
@@ -1057,7 +1060,7 @@ public final class Dispatcher {
 
   public String getApplicationId() {
 	  if ( serverId == null ) {
-		  return "unknown application id";
+		  return "unknown_application_id";
 	  }
 	  applicationId = serverId.substring(serverId.indexOf("/")+1, serverId.length());
 	  applicationId = applicationId.replace('/', '_');
