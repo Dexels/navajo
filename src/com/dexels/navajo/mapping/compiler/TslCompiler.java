@@ -286,6 +286,9 @@ public class TslCompiler {
               else if (v instanceof Integer) {
                 objectizedParams.append("new Integer(" + v + ")");
               }
+              else if (v instanceof Long) {
+            	  objectizedParams.append("new Long(" + v + ")");
+              }
               else if (v instanceof Float) {
                 objectizedParams.append("new Float(" + v + ")");
               }
@@ -331,6 +334,8 @@ public class TslCompiler {
             }
             else if (attrType.equals("boolean")) {
               call = "new Boolean(" + call + ")";
+            } else   if (attrType.equals("long")) {
+            	call = "new Long(" + call + ")";
             }
           }
           catch (ClassNotFoundException cnfe) {
@@ -368,6 +373,9 @@ public class TslCompiler {
         }
         else if (v instanceof Integer) {
           call = "new Integer(" + v + ")";
+        }
+        else if (v instanceof Long) {
+        	call = "new Long(" + v + ")";
         }
         else if (v instanceof Float) {
           call = "new Float(" + v + ")";
