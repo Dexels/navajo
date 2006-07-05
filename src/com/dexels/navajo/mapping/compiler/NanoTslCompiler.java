@@ -319,6 +319,8 @@ public class NanoTslCompiler {
                                 objectizedParams.append("\"" + v + "\"");
                             } else if (v instanceof Integer) {
                                 objectizedParams.append("new Integer(" + v + ")");
+                            } else if (v instanceof Long) {
+                                objectizedParams.append("new Long(" + v + ")");
                             } else if (v instanceof Float) {
                                 objectizedParams.append("new Float(" + v + ")");
                             } else if (v instanceof Boolean) {
@@ -361,6 +363,8 @@ public class NanoTslCompiler {
                             call = "new Double(" + call + ")";
                         } else if (attrType.equals("boolean")) {
                             call = "new Boolean(" + call + ")";
+                        } else if (attrType.equals("long")) {
+                            call = "new Long(" + call + ")";
                         }
                     } catch (ClassNotFoundException cnfe) {
                         if (contextClass == null) {
@@ -389,6 +393,8 @@ public class NanoTslCompiler {
                     call = "\"" + v + "\"";
                 } else if (v instanceof Integer) {
                     call = "new Integer(" + v + ")";
+                } else if (v instanceof Long) {
+                    call = "new Long(" + v + ")";
                 } else if (v instanceof Float) {
                     call = "new Float(" + v + ")";
                 } else if (v instanceof Boolean) {
