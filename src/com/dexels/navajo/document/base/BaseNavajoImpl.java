@@ -187,6 +187,17 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
   }
 
 
+  public String toString() {
+	  StringWriter sw = new StringWriter();
+	  try {
+		this.write(sw);
+	} catch (NavajoException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	  return sw.toString();
+  }
+  
   public String persistenceKey() {
       String result = this.toString();
 
