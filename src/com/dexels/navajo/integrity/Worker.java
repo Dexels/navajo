@@ -133,36 +133,34 @@ public class Worker extends GenericThread {
 	private void writeFile(String id, Navajo response) {
 		File f = null;
 		FileWriter fw = null;
+		fileCount++;
 		try {
 			
 			f = Dispatcher.getInstance().createTempFile(RESPONSE_PREFIX + id, ".xml");
-			fileCount++;
-			f.deleteOnExit();
-			// Store mapping between unique request id and response filename.
-			integrityCache.put(id, f );
 			
-			// Write file.
+			if ( f == null ) {
+				AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "Could not create temp file");
+				return;
+			}
+			f.deleteOnExit();
+			
 			fw = new FileWriter(f);
 			response.write(fw);
 			fw.close();
-			
-			// Remove unique request id from notWrittenResponse set to indicate that it's ready to be read.
-			notWrittenReponses.remove( id );
-			
-			//System.err.println("putting in cache for id: " + id + " " + f.getAbsolutePath() + "cache size is: " + integrityCache.size() );
+			integrityCache.put(id, f );
 		
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-		
 			if ( f != null ) {
-				if ( f.delete() ) {
-					fileCount--;
-				}
+				f.delete();
 			}
+			fileCount--;
 			integrityCache.remove(id);
-			notWrittenReponses.remove( id );
 			e.printStackTrace();
-		} 
+		} finally {
+            // Remove unique request id from notWrittenResponse set to indicate that it's ready to be read.
+			notWrittenReponses.remove( id );
+		}
 	}
 	
 	public final void worker() {
@@ -191,15 +189,20 @@ public class Worker extends GenericThread {
 		while ( i.hasNext() ) {
 			String id = (String) i.next();
 			File f = (File) integrityCache.get(id);
-			long birth = f.lastModified();
-			if ( now - birth > 60000 ) {
-				// remove file reference from integrity cache.
-				if ( !f.delete() ) {
-					AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "worker(): Could not delete response file: " + f.getName());
-				} else {
-					fileCount--;
-					integrityCache.remove(id);
+			if ( f != null ) {
+				long birth = f.lastModified();
+				if ( now - birth > 60000 ) {
+					// remove file reference from integrity cache.
+					if ( !f.delete() ) {
+						AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "worker(): Could not delete response file: " + f.getName());
+					} else {
+						fileCount--;
+						integrityCache.remove(id);
+					}
 				}
+			} else {
+				fileCount--;
+				integrityCache.remove(id);
 			}
 		}
 	}
