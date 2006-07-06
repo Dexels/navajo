@@ -81,7 +81,7 @@ public abstract class AsyncMappable implements Mappable {
 	
   public boolean isFinished = false;
   public boolean killOnFinnish = false;
-  private Exception caught = null;
+  private Throwable caught = null;
   public long startTime = System.currentTimeMillis();
   public long lastAccess = System.currentTimeMillis();
   public String name;
@@ -118,7 +118,7 @@ public abstract class AsyncMappable implements Mappable {
     public void run() {
       try {
         parent.run();
-      } catch (Exception e) {
+      } catch (Throwable e) {
         e.printStackTrace();
         parent.setException(e);
       }
@@ -231,7 +231,7 @@ public abstract class AsyncMappable implements Mappable {
    *
    * @param e
    */
-  protected void setException(Exception e) {
+  protected void setException(Throwable e) {
     caught = e;
   }
 
@@ -300,8 +300,9 @@ public abstract class AsyncMappable implements Mappable {
     System.out.println(inMessage.toString());
     if (isFinished) {
       System.err.println("THREAD IS FINISHED...");
-      if (caught != null)
-        throw caught;
+      if (caught != null) {
+        throw new UserException(-1, caught.getMessage());
+      }
       h.setCallBack(this.name, this.pointer, getPercReady(), true, "");
     } else
       h.setCallBack(this.name, this.pointer, getPercReady(), false, "");
