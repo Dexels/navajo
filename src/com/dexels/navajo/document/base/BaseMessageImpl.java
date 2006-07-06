@@ -691,7 +691,18 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode {
         if (slash < 0) {
             // System.err.println("No slashes left. Getting property: "+path);
 
-            return (Property) propertyMap.get(path);
+            Property pp =  (Property) propertyMap.get(path);
+            if (pp==null) {
+                // check for definition messages
+                Message arrayP = getArrayParentMessage();
+                if (arrayP!=null) {
+                    Message def = arrayP.getDefinitionMessage();
+                    if (def!=null) {
+                        return def.getProperty(path).copy(getRootDoc());
+                    }
+                }
+            }
+            return pp;
             // return getProperty(path);
         } else {
             String msgname = path.substring(0, slash);
