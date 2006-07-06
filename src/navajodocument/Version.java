@@ -57,15 +57,17 @@ package navajodocument;
  * 
  * 9.0.2 Fixed problem with not setting mimetype in Binary when using reader.
  * 
+ * 9.0.3 Fixed problem with getting not existing array message child by index in SAXP/NANO.
+ * 
  */
 public class Version extends dexels.Version {
 
 	public static final int MAJOR          = 9;
 	public static final int MINOR          = 0;
-	public static final int PATCHLEVEL     = 2;
+	public static final int PATCHLEVEL     = 3;
 	public static final String VENDOR      = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Document";
-	public static final String RELEASEDATE = "2006-07-05";
+	public static final String RELEASEDATE = "2006-07-06";
 
 	// Included packages.
 
