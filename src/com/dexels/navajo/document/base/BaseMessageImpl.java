@@ -501,8 +501,8 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode {
         // if (myDefinitionList!=null) {
         // return buildMessageForRow(i);
         // }
-        if (getAllMessages().size() == 0) {
-            return this;
+        if ( i >= getAllMessages().size() ) {
+            return null;
         }
         return (Message) getAllMessages().get(i);
     }
