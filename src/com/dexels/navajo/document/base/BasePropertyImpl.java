@@ -1276,6 +1276,17 @@ public class BasePropertyImpl
         return false;
       }
     } else if (p.getType().equals(Property.BINARY_PROPERTY)) {
+    	
+    	// If both values are null they're equal.
+    	if (p.getTypedValue() == null && this.getTypedValue() == null) {
+    		return true;
+    	}
+    	
+    	// If only one of them is null they're not equal.
+    	if (p.getTypedValue() == null || this.getTypedValue() == null) {
+    		return false;
+    	}
+        
     	return ((Binary) this.getTypedValue()).isEqual( (Binary) p.getTypedValue() );
     }
     // Else I am some other property.
