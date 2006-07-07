@@ -4,6 +4,7 @@ import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.base.BaseNode;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.NavajoConfig;
@@ -16,6 +17,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.ArrayList;
+import java.util.HashMap;
 import com.dexels.navajo.mapping.AsyncMappable;
 
 import java.util.Date;
@@ -31,6 +33,7 @@ public class AdminMap implements Mappable {
   public String scriptPath;
   public AccessMap [] users;
   public AsyncProxy [] asyncThreads;
+  public ClassCount [] classCounts;
   public String accessId;
   public String vendor;
   public String productName;
@@ -77,6 +80,22 @@ public class AdminMap implements Mappable {
     serverId = Dispatcher.getInstance().getApplicationId();
   }
 
+  public ClassCount [] getClassCounts() {
+	  Map objectCountMap = BaseNode.getObjectCountMap();
+	  ClassCount [] array = new ClassCount[objectCountMap.size()];
+	  Iterator iter = objectCountMap.keySet().iterator();
+	  int i = 0;
+	  while ( iter.hasNext() ) {
+		  String className =  (String) iter.next();
+		  Integer count = (Integer) objectCountMap.get(className);
+		  array[i] = new ClassCount();
+		  array[i].className = className;
+		  array[i].count = count.intValue();
+		  i++;
+	  }
+	  return array;
+  }
+  
   /**
     * Some admin functions.
     *
