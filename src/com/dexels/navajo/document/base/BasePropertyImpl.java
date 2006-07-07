@@ -1216,8 +1216,8 @@ public class BasePropertyImpl
     if (!getName().equals(p.getName())) {
       return false;
     }
-
-    if ( !this.getType().equals(p.getType()) ) {
+ 
+    if ( ( this.getType() != null && p.getType() != null )  && !this.getType().equals(p.getType()) ) {
     	System.err.println("isEqual() property, types are not equal");
 		return false;
 	}
