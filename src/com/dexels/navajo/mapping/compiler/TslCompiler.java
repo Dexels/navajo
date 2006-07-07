@@ -590,9 +590,9 @@ public class TslCompiler {
           ////System.out.println("filter = " + filter);
           //System.out.println("in MessageNode(), current contextClass = " + contextClass);
           if (contextClass==null) {
-              System.err.println("NO CONTEXT CLASS (YET)");
+              //System.err.println("NO CONTEXT CLASS (YET)");
             } else {
-                System.err.println("LINE 587: PUSHING CLASS: "+contextClass);
+                //System.err.println("LINE 587: PUSHING CLASS: "+contextClass);
                 contextClassStack.push(contextClass);
            }
           contextClass = null;
@@ -1410,8 +1410,8 @@ result.append(printIdent(ident + 4) +
   private Class locateContextClass(String mapPath) {
 //      System.err.println("finaMapByPath: "+mapPath);
       StringTokenizer st = new StringTokenizer(mapPath,"/");
-      System.err.println("STACK: "+contextClassStack);
-      System.err.println("CONTEXT"+contextClass);
+      //System.err.println("STACK: "+contextClassStack);
+      //System.err.println("CONTEXT"+contextClass);
       
       int count = 0;
       while (st.hasMoreTokens()) {
@@ -1425,7 +1425,7 @@ result.append(printIdent(ident + 4) +
         return contextClass;
     }
 //      System.err.println("Count element: "+count);
-      System.err.println("STACK: "+contextClassStack);
+      //System.err.println("STACK: "+contextClassStack);
       Class m = (Class)contextClassStack.get(contextClassStack.size()-( count+1));
 //      System.err.println("Mappable: "+m);
       return m;
