@@ -133,8 +133,16 @@ public class Worker extends GenericThread {
 	private void writeFile(String id, Navajo response) {
 		File f = null;
 		FileWriter fw = null;
-		fileCount++;
+		
 		try {
+			
+			if ( integrityCache.containsKey(id) ) {
+				AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "Response id " + id + " already cached!");
+				return;
+			}
+			
+			fileCount++;
+		
 			
 			f = Dispatcher.getInstance().createTempFile(RESPONSE_PREFIX + id, ".xml");
 			
