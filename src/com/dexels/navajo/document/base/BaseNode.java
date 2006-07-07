@@ -25,14 +25,37 @@ public abstract class BaseNode implements java.io.Serializable{
   public abstract Map getAttributes();
   public abstract List getChildren();
   public abstract String getTagName();
-   private static final int INDENT = 3;
+  private static final int INDENT = 3;
+  
+  private static HashMap objectCountMap = new HashMap();
+  
+  private final void countObjects() {
+	  
+	  synchronized ( objectCountMap ) {
+		  Integer objectCount = (Integer) objectCountMap.get(this.getClass().getName());
+		
+		  if ( objectCount == null ) {
+			  objectCount = new Integer(1);
+		  } else {
+			  objectCount = new Integer(objectCount.intValue() + 1);
+		  }
+		  //System.err.println( this.getClass().getName() + " count is: " + objectCount.intValue() );
+		  objectCountMap.put(this.getClass().getName(), objectCount);
+	  }
+  }
+  
+  public final static Map getObjectCountMap() {
+	  return (HashMap) objectCountMap.clone();
+  }
   
   public BaseNode(){
     myDocRoot = null;
+    countObjects();
   }
 
   public BaseNode(Navajo n) {
     myDocRoot = n;
+    countObjects();
   }
 
   public Navajo getRootDoc() {
@@ -310,5 +333,21 @@ public abstract class BaseNode implements java.io.Serializable{
       result += s.substring(offset, s.length());    // characters after last newline
 
       return result;
+  }
+  
+  public void finalize() {
+	  synchronized ( objectCountMap ) {
+		  Integer objectCount = (Integer) objectCountMap.get(this.getClass().getName());
+		  if ( objectCount == null ) {
+			  objectCount = new Integer(0);
+		  } else {
+			  int newCount =  objectCount.intValue() - 1;
+			  if ( newCount < 0 ) {
+				  newCount = 0;
+			  }
+			  objectCount = new Integer(newCount);
+		  }
+		  objectCountMap.put(this.getClass().getName(), objectCount);
+	  }
   }
 }
