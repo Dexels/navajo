@@ -893,6 +893,7 @@ public final Message getParentMessage() {
         if (allOtherProps.size() != allMyProps.size()) {
             return false;
         }
+        
         for (int i = 0; i < allOtherProps.size(); i++) {
             Property otherProp = (Property) allOtherProps.get(i);
             boolean match = false;
@@ -908,9 +909,18 @@ public final Message getParentMessage() {
                     }
                 }
             }
-            System.err.println("Isequal property " + otherProp.getName() + ": " + match);
+            
             if (!match) {
-                return false;
+//            	System.err.println("Is NOT equal property");
+//            	System.err.println("other: " + otherProp.getName() + ", " + otherProp.getType() + ", >" + otherProp.getValue() + "<");
+//                if ( this.getProperty(otherProp.getName()) != null ) {
+//                	Property p = this.getProperty(otherProp.getName());
+//                	System.err.println("my: " + p.getName() + ", " + p.getType() + ", >" + p.getValue() + "<");
+//                    
+//                } else {
+//                	System.err.println("I do not have this property");
+//                }
+            	return false;
             }
         }
         return true;

@@ -1213,14 +1213,15 @@ public class BasePropertyImpl
 
   public final boolean isEqual(Property p) {
 
-	if ( this.getType() != p.getType() ) {
-		return false;
-	}
-	
     if (!getName().equals(p.getName())) {
       return false;
     }
 
+    if ( !this.getType().equals(p.getType()) ) {
+    	System.err.println("isEqual() property, types are not equal");
+		return false;
+	}
+    
     // Check for date properties.
     if (p.getType().equals(Property.DATE_PROPERTY)) {
 
@@ -1300,6 +1301,9 @@ public class BasePropertyImpl
       // We are only equal if our values match exactly..
 
       boolean result = p.getValue().equals(this.getValue());
+      if ( ! result ) {
+    	  System.err.println("isEqual() property, values are not equal");
+      }
       return result;
     }
 
@@ -1412,5 +1416,25 @@ public int getIndex(TreeNode node) {
     return 0;
 }
 
+public static void main(String [] args) {
+	
+	System.setProperty("com.dexels.navajo.DocumentImplementation", "com.dexels.navajo.document.base.BaseNavajoFactoryImpl");
+    
+	BaseNavajoImpl n = new BaseNavajoImpl();
+	BaseMessageImpl m = new BaseMessageImpl(n, "Aap");
+	BasePropertyImpl p1 = new BasePropertyImpl(n , "Noot");
+	m.addProperty(p1);
+	p1.setType("string");
+	p1.setValue("CHGP12Y");
+	
+	BaseNavajoImpl n2 = new BaseNavajoImpl();
+	BaseMessageImpl m2 = new BaseMessageImpl(n2, "Aap");
+	BasePropertyImpl p2 = new BasePropertyImpl(n2 , "Noot");
+	m2.addProperty(p2);
+	p2.setType("string");
+	p2.setValue("CHGP12Y");
+	
+	System.err.println(m.isEqual(m2));
+}
 
 }
