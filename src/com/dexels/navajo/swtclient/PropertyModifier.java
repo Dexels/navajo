@@ -36,7 +36,6 @@ public class PropertyModifier implements ICellModifier {
         super();
         //        this.myEditor = myEditor;
         this.myViewer = myViewer;
-        System.err.println("PROPERTYMODIFIER!!!!!!!!!!!!!!!!!");
         // TODO Auto-generated constructor stub
     }
 
@@ -47,8 +46,7 @@ public class PropertyModifier implements ICellModifier {
      *      java.lang.String)
      */
     public boolean canModify(Object element, String property) {
-        System.err.println("Element type: " + element.getClass());
-        if (element instanceof Property) {
+         if (element instanceof Property) {
             Property p = (Property) element;
             if (!p.isDirIn()) {
                 return false;
@@ -56,13 +54,10 @@ public class PropertyModifier implements ICellModifier {
             if (myViewer  instanceof TableViewer) {
                 TableViewer tv = (TableViewer)myViewer;
                 CellEditor[] ice = tv.getCellEditors();
-                System.err.println("# of editors: "+ice.length);
-                System.err.println("# of columns: "+tv.getTable().getColumns().length);
-                for (int i = 0; i < ice.length; i++) {
+                  for (int i = 0; i < ice.length; i++) {
                     String propName = tv.getTable().getColumn(i).getText();
                     if (p.getName().equals(propName)) {
-                        System.err.println("Property found!");
-                        CellEditor cc = SwtFactory.getInstance().createTableEditor(tv.getTable(), p);
+                         CellEditor cc = SwtFactory.getInstance().createTableEditor(tv.getTable(), p);
                         ice[i] = cc;
                         tv.setCellEditors(ice);
                     }
@@ -76,18 +71,14 @@ public class PropertyModifier implements ICellModifier {
             Message mm = (Message) element;
             Property p = mm.getProperty(property);
             if (p!=null) {
-                System.err.println("Property type: "+p.getType());
-                
+                 
                 if (myViewer  instanceof TableViewer) {
                     TableViewer tv = (TableViewer)myViewer;
                     CellEditor[] ice = tv.getCellEditors();
-                    System.err.println("# of editors: "+ice.length);
-                    System.err.println("# of columns: "+tv.getTable().getColumns().length);
-                    for (int i = 0; i < ice.length; i++) {
+                      for (int i = 0; i < ice.length; i++) {
                         String propName = tv.getTable().getColumn(i).getText();
                         if (p.getName().equals(propName)) {
-                            System.err.println("Property found!");
-                            CellEditor cc = SwtFactory.getInstance().createTableEditor(tv.getTable(), p);
+                             CellEditor cc = SwtFactory.getInstance().createTableEditor(tv.getTable(), p);
                             ice[i] = cc;
                             tv.setCellEditors(ice);
                         }
@@ -97,9 +88,7 @@ public class PropertyModifier implements ICellModifier {
                 
                 
                 return p.isDirIn();
-            } else {
-                System.err.println("Not found");
-            }
+            } 
             return false;
         }
 
@@ -115,8 +104,7 @@ public class PropertyModifier implements ICellModifier {
      */
     public Object getValue(Object element, String property) {
         // TODO Auto-generated method stub
-        System.err.println("property: " + property + " type: " + element.getClass());
-        Message mm = (Message) element;
+           Message mm = (Message) element;
         Property p = mm.getProperty(property);
         if (Property.SELECTION_PROPERTY.equals(p.getType())) {
             if (!Property.CARDINALITY_SINGLE.equals(p.getCardinality())) {
@@ -124,11 +112,11 @@ public class PropertyModifier implements ICellModifier {
             }
             try {
                 ArrayList al = p.getAllSelections();
-                for (int i = 0; i < al.size(); i++) {
-                    Selection current =  (Selection)al.get(i);
-                    System.err.println("NAME: "+current.getName());
-                    System.err.println("VALUE:"+current.getValue());
-                }
+//                for (int i = 0; i < al.size(); i++) {
+//                    Selection current =  (Selection)al.get(i);
+//                    System.err.println("NAME: "+current.getName());
+//                    System.err.println("VALUE:"+current.getValue());
+//                }
                for (int i = 0; i < al.size(); i++) {
                     Selection current =  (Selection)al.get(i);
                     if (current.isSelected()) {
@@ -181,18 +169,13 @@ public class PropertyModifier implements ICellModifier {
         if (element instanceof Item) {
             element = ((Item) element).getData();
         }
-        System.err.println("Element type:" + element.getClass());
-        if (value==null) {
-            System.err.println("Null value!");
-        } else {
-            System.err.println("Value type:" + value.getClass());
-        }
+  
         Message mm = (Message) element;
         Property p = mm.getProperty(property);
 
 
         if (Property.SELECTION_PROPERTY.equals(p.getType())) {
-            System.err.println("Setting selection property");
+          
             if (!Property.CARDINALITY_SINGLE.equals(p.getCardinality())) {
                 System.err.println("I DONT SUPPORT CARDINALITY PLUS IN TABLES DAMMIT");
             }
@@ -206,8 +189,7 @@ public class PropertyModifier implements ICellModifier {
                     } else {
                         Selection s = (Selection)al.get(index-1);
                         p.setSelected(s);
-                        System.err.println("Index: "+index+" s: "+s.getName()+" val: "+s.getValue());
-                  }
+                    }
                  } catch (NavajoException e) {
                       e.printStackTrace();
                 }

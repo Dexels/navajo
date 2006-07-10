@@ -402,6 +402,8 @@ public class TmlBrowser extends BaseNavajoView implements INavajoScriptListener,
             return;
         }
         historyList.push(name);
+        setNavajo(n, name);
+        
         updateNavigationButtons();
     }
 

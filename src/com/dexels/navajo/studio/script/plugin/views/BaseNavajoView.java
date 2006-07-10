@@ -6,6 +6,7 @@
  */
 package com.dexels.navajo.studio.script.plugin.views;
 
+import org.eclipse.core.runtime.*;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.*;
 import org.eclipse.ui.contexts.*;
@@ -29,8 +30,9 @@ public abstract class BaseNavajoView extends ViewPart {
          NavajoScriptPluginPlugin.getDefaultWorkbench().getDisplay().syncExec(new Runnable(){
 
             public void run() {
-                NavajoScriptPluginPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().addPartListener(new IPartListener(){
-
+                
+                NavajoScriptPluginPlugin.getDefaultWorkbench().getActiveWorkbenchWindow().getActivePage().addPartListener(new IPartListener(){
+//                NavajoScriptPluginPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().addPartListener(new IPartListener(){
                     public void partActivated(IWorkbenchPart part) {
                         if (part==me) {
                             System.err.println("Activated");

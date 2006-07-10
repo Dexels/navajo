@@ -222,8 +222,16 @@ public class TmlFormComposite extends Composite {
 //            System.err.println("ELEMENT: "+element);
 //            System.err.println("ELEMENT: "+element.getClass());
             
+            // If there is a binary property, don't put it in a table
+            ArrayList al = element.getAllProperties();
             if (element.getAllMessages().size()>0) {
                 return false;
+            }
+            for (int j = 0; j < al.size(); j++) {
+                Property p = (Property)al.get(j);
+                if (Property.BINARY_PROPERTY.equals(p.getType())) {
+                    return false;
+                }
             }
         }
         return true;
@@ -330,7 +338,7 @@ public class TmlFormComposite extends Composite {
     private void addFormProperty(Property prop, Composite spb) {
         Label l = getKit().createLabel(spb, prop.getName());
         l.setLayoutData(new TableWrapData(TableWrapData.LEFT, TableWrapData.TOP));
-        GenericPropertyComponent gpc = SwtFactory.getInstance().createProperty(spb);
+        GenericPropertyComponent gpc = SwtFactory.getInstance().createProperty(spb,myForm);
         gpc.showLabels(false);
         gpc.setProperty(prop);
         gpc.adapt(getKit());

@@ -14,6 +14,7 @@ import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
+import org.eclipse.ui.forms.widgets.*;
 import org.eclipse.ui.internal.*;
 
 import com.dexels.navajo.document.*;
@@ -53,7 +54,6 @@ public class SwtFactory {
                     ss[i+1] = s.getName();
                 }
                 final ComboBoxCellEditor cb = new ComboBoxCellEditor(tv, ss);
-System.err.println("control:  "+cb.getControl().getClass());
 //                cb.getControl()
 //                cb.create(tv);
 //                ((Combo)cb.getControl()).addSelectionListener(new SelectionListener(){
@@ -76,8 +76,7 @@ System.err.println("control:  "+cb.getControl().getClass());
 
                     public void applyEditorValue() {
                         // TODO Auto-generated method stub
-                        System.err.println("Applying...");
-                       
+                        
                         
                     }
 
@@ -88,17 +87,14 @@ System.err.println("control:  "+cb.getControl().getClass());
 
                     public void editorValueChanged(boolean oldValidState, boolean newValidState) {
                         // TODO Auto-generated method stub
-                        System.err.println("Value changed");
-                        
+                       
                     }});
-                System.err.println("CHECKBOX EDITOR!");
                return cb;
             }
             if (elt.getType().equals(Property.BOOLEAN_PROPERTY)) {
                 CheckboxCellEditor cce = null;
                 cce = new CheckboxCellEditor(tv);
 //                cce.create(tv);
-                System.err.println("CHECKBOX EDITOR!");
                 return cce;
             }
             if (elt.getType().equals(Property.INTEGER_PROPERTY)) {
@@ -158,7 +154,6 @@ System.err.println("control:  "+cb.getControl().getClass());
         //      Set up the table layout
         TableLayout layout = new TableLayout();
         if (element.getArraySize() == 0) {
-//            System.err.println("Empty table");
             return tv;
         }
         // TODO Add definition message support
@@ -173,13 +168,12 @@ System.err.println("control:  "+cb.getControl().getClass());
             //            layout.addColumnData(new ColumnWeightData(33, 75, true));
             TableColumn tc = new TableColumn(tv.getTable(), SWT.LEFT);
             tc.setText(elt.getName());
-//            System.err.println("Added column: " + elt.getName());
             colNames[count] = elt.getName();
             editors[count] = SwtFactory.getInstance().createTableEditor(tv.getTable(), elt);
             tc.addSelectionListener(new SelectionAdapter() {
                 public void widgetSelected(SelectionEvent e) {
-                    System.err.println("Sort hit: " + elt.getName());
                     ((PropertySorter) tv.getSorter()).setPropertyName(elt.getName());
+                    
                     tv.getSorter().sort(tv, mc.getElements(element));
                     tv.refresh();
                 }
@@ -250,6 +244,14 @@ System.err.println("control:  "+cb.getControl().getClass());
 
     public GenericPropertyComponent createProperty(Composite spb) {
         GenericPropertyComponent gpc = new GenericPropertyComponent(spb);
+        //        gpc.getComposite().setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
+        // true, false));
+        //        spb.layout();
+        return gpc;
+        //        gpc.getComposite().setBackground(new Color(null,200,100,100));
+    }
+    public GenericPropertyComponent createProperty(Composite spb, ScrolledForm f) {
+        GenericPropertyComponent gpc = new GenericPropertyComponent(spb,f);
         //        gpc.getComposite().setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
         // true, false));
         //        spb.layout();

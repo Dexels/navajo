@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
-<plugin id="com.dexels.plugin" name="NavajoScriptPlugin Plug-in" version="0.93.0"
+<plugin id="com.dexels.plugin" name="NavajoScriptPlugin Plug-in" version="0.98.1"
    provider-name="dexels" class="com.dexels.navajo.studio.script.plugin.NavajoScriptPluginPlugin">
    <runtime>
       <library name="bin/">
@@ -369,19 +369,32 @@
                id="com.dexels.plugin.showXml"/>
       </objectContribution>
    </extension>
-
+<!--
+<extension point="org.eclipse.ui.ide.markerResolution" id="tslFix">
+	<markerResolutionGenerator class="com.dexels.navajo.studio.eclipse.quickfix.TslFixGenerator" markerType="org.eclipse.core.resources.problemmarker">
+		<attribute name="aap" value="noot"/>
+	</markerResolutionGenerator>
+</extension>
+-->
    
-    <extension point="org.eclipse.ui.ide.markerResolution">
-      <markerResolutionGenerator markerType="com.dexels.plugin.tslproblemmarker" class="com.dexels.navajo.studio.eclipse.quickfix.TslFixGenerator"/>
-   </extension>
-   
-    <extension id="tslproblemmarker" point="org.eclipse.core.resources.markers">
+  
+    <extension id="TslMarker" point="org.eclipse.core.resources.markers">
       <super type="org.eclipse.core.resources.problemmarker"/>
   		<super type="org.eclipse.core.resources.textmarker"/> 
           <attribute name="code" />
+          <attribute name="tslCompileException" />
       <persistent value="true" />
    </extension>
    
+  <!--   <extension id="aap" point="org.eclipse.core.resources.markers">
+      <super type="org.eclipse.core.resources.problemmarker"/>
+  		<super type="org.eclipse.core.resources.textmarker"/> 
+      <persistent value="true"/>
+   </extension> 
+  <extension point="org.eclipse.ui.ide.markerResolution" id="aapFix">
+	  <markerResolutionGenerator class="com.dexels.navajo.studio.eclipse.quickfix.TslFixGenerator" markerType="com.dexels.plugin.TslMarker"/>
+	</extension> -->
+
 <!--   <extension point="org.eclipse.ui.commands">
 	   <keyConfiguration
 	      name="Navajo Configuration"

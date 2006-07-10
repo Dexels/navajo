@@ -176,7 +176,7 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
     public NavajoScriptPluginPlugin() {
         super();
          System.err.println("Started NavajoScriptPlugin at: " + new Date());
-        System.setProperty("com.dexels.navajo.DocumentImplementation", "com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl");
+        System.setProperty("com.dexels.navajo.DocumentImplementation", "com.dexels.navajo.document.base.BaseNavajoFactoryImpl");
         System.setProperty("com.dexels.navajo.propertyMap", "com.dexels.navajo.studio.script.plugin.propertymap");
         plugin = this;
         }
@@ -1498,17 +1498,26 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
         return dd.exists();
     }
 
-    public void reportProblem(final String msg, final IResource loc, final int start, final int end, final TslCompileException tce) throws CoreException {
+     public void reportProblem(final String msg, final IResource loc, final int start, final int end, final TslCompileException tce) throws CoreException {
         Map m = new HashMap();
-        MarkerUtilities.setCharStart(m, start);
-        MarkerUtilities.setCharEnd(m, end);
+        if (tce!=null) {
+            m.put("tslCompileException", tce);
+        }
+//        m.put("aap", "noot");
         MarkerUtilities.setMessage(m,  msg + ": ");
         m.put(IMarker.SEVERITY, new Integer( IMarker.SEVERITY_ERROR ));
         if (tce!=null) {
+            MarkerUtilities.setCharStart(m, tce.getStartOffset());
+            MarkerUtilities.setCharEnd(m, tce.getEndOffset());
+            
             m.put("code", new Integer(tce.getCode()));
         }
-        MarkerUtilities.createMarker(loc, m, "com.dexels.plugin.tslproblemmarker");
-      }
+//        MarkerUtilities.createMarker(loc, m, "com.dexels.plugin.tslproblemmarker");
+        MarkerUtilities.createMarker(loc, m, "com.dexels.plugin.TslMarker");
+
+//        IMarker[] imm =  loc.findMarkers("com.dexels.plugin.tslproblemmarker", false, IResource.DEPTH_INFINITE);
+//        System.err.println("immsize: "+imm.length+"imm::: "+imm[0].getAttributes());
+             }
 
     public void setTmlViewer(TmlViewer tv) {
         currentTmlViewer = tv;
@@ -1738,13 +1747,17 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
                     in = loadNavajo(sourceTml);
 //                    in = NavajoFactory.getInstance().createNavajo(sourceTml.getContents());
                 } else {
-                    System.err.println("Running init script with empty navajo...");
+//                    System.err.println("Running init script with empty navajo...");
                     in = NavajoFactory.getInstance().createNavajo();
                 }
                 Navajo result = NavajoClientFactory.getClient().doSimpleSend(in, getRemoteServer(),scriptName,getRemoteUsername(),getRemotePassword(),-1,false);
                 if (sourceName!=null&& !"".equals(sourceName)) {
                     result.getHeader().setAttribute("sourceScript", sourceName);
                 }
+                if (currentTmlViewer != null) {
+                    currentTmlViewer.setListeningForResourceChanges(false);
+                }
+                
                 IFile tml = getTmlFile(ipp, scriptName);
                 if (tml==null) {
                     System.err.println("TmlFile not locatable for script: "+scriptName);

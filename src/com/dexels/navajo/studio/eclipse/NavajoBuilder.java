@@ -527,9 +527,9 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
                 ArrayList compiledFiles = new ArrayList();
                 NanoTslCompiler navajoCompiler = NavajoScriptPluginPlugin.getDefault().getNavajoCompiler(getProject());
                 ClassProvider cp = NavajoScriptPluginPlugin.getDefault().getClassProvider(getProject(), false);
-                System.err.println("ClassPro: "+cp.toString());
-                System.err.println("navavcomp: "+navajoCompiler.toString());
-                System.err.println("Navacomp cl: "+navajoCompiler.getClass().getClassLoader());
+//                System.err.println("ClassPro: "+cp.toString());
+//                System.err.println("navavcomp: "+navajoCompiler.toString());
+//                System.err.println("Navacomp cl: "+navajoCompiler.getClass().getClassLoader());
                 
                 for (int i = 0; i < compilationList.size(); i++) {
                     if (monitor.isCanceled()) {
@@ -563,9 +563,21 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
                             int start = 0;
                             int end = 5;
                             if (e instanceof TslCompileException) {
+                                TslCompileException tce = (TslCompileException)e;
                                 System.err.println("TCE detected!");
-                                start = ((TslCompileException) e).getStartOffset();
-                                end = ((TslCompileException) e).getEndOffset();
+                                if (tce.isAttributeProblem()) {
+                                    System.err.println("ATTRIBUTEPROBLEM::: "+tce.getOffendingAttribute());
+                                    System.err.println("ALTERNATIVES: "+tce.getSolutions());
+//                                    start = tce.getStartOffset();
+                                    start = 10;
+                                    end = 20;
+                                } else {
+                                    System.err.println("TagPROBLEM!");
+                                    System.err.println("ALTERNATIVES: "+tce.getSolutions());
+                                    start = ((TslCompileException) e).getStartOffset();
+                                    end = ((TslCompileException) e).getEndOffset();
+                               }
+                                
                                 try {
                                     NavajoScriptPluginPlugin.getDefault().reportProblem(e.getMessage(), ifi, start, end + 1, (TslCompileException) e);
                                     

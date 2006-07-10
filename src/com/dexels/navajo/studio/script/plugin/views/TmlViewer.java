@@ -135,10 +135,11 @@ public class TmlViewer extends BaseNavajoView implements IResourceChangeListener
                 myCurrentFile = myFile;
                 myCurrentNavajo = n;
                 currentService = scriptName;
-                System.err.println(">>>>>>>>>>>>>>>>>>>>>> SETTING NAVAJO IN TML VIEWER");
+//                System.err.println(">>>>>>>>>>>>>>>>>>>>>> SETTING NAVAJO IN TML VIEWER");
                 if (formComposite != null) {
                     formComposite.setNavajo(n, myCurrentFile,scriptName);
                     formComposite.reflow();
+                    setListeningForResourceChanges(true);
                 } else {
                     System.err.println("hmmm. No formComposite");
                 }
