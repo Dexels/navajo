@@ -82,11 +82,7 @@ public final class ASTTmlNode extends SimpleNode {
         	isParam = true;
         	val = val.substring(2);
         }
-
-//        System.err.println("isParam = " + isParam);
-//        System.err.println("val = " + val);
-//        System.err.println("parentParamMsg = " + parentParamMsg);
-        
+    
         if (Util.isRegularExpression(val))
             singleMatch = false;
         else
