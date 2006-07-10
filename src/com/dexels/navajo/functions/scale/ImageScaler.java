@@ -30,6 +30,7 @@ import javax.imageio.spi.*;
 import javax.imageio.stream.*;
 
 import com.dexels.navajo.document.types.*;
+import com.dexels.navajo.server.UserException;
 
 /**
  * Class to demonstrate a way to scale an image without the
@@ -44,24 +45,61 @@ public class ImageScaler {
     
     
     
-    private static Binary scale(Binary b, int width, int height, boolean keepAspect, double compressionQuality, boolean alsoScaleUp) throws IOException {
+    private static Binary scale(Binary b, int width, int height, boolean keepAspect, double compressionQuality, boolean alsoScaleUp) throws UserException {
         if (b==null || b.getLength()<=0) {
             return null;
         }
-        Binary c = new Binary();
-        InputStream is = b.getDataAsStream();
-        ImageInputStream iis = ImageIO.createImageInputStream(is);
-       OutputStream os = c.getOutputStream();
-        ImageOutputStream ios = ImageIO.createImageOutputStream(os);
-        os.flush();
-        ImageScaler.scale(iis, ios, width, height, keepAspect, (float)compressionQuality);
-        ios.flush();
-        ios.close();
-        is.close();
-        return c;
+        InputStream is = null;
+        ImageInputStream iis = null;
+        OutputStream os = null;
+        ImageOutputStream ios = null;
+        try {
+        	Binary c = new Binary();
+        	is = b.getDataAsStream();
+        	iis = ImageIO.createImageInputStream(is);
+        	os = c.getOutputStream();
+        	ios = ImageIO.createImageOutputStream(os);
+        	os.flush();
+        	ImageScaler.scale(iis, ios, width, height, keepAspect, (float)compressionQuality);
+        	ios.flush();
+        	ios.close();
+        	return c;
+        } catch (IOException e) {
+        	e.printStackTrace(System.err);
+        	throw new UserException(-1, e.getMessage());
+        } finally {
+        	if ( is != null ) {
+        		try {
+        			is.close();
+        		} catch (IOException e) {
+        			
+        		}
+        	}
+        	if ( iis != null ) {
+        		try {
+        			iis.close();
+        		} catch (IOException e) {
+        			
+        		}
+        	}
+        	if ( os != null ) {
+        		try {
+        			os.close();
+        		} catch (IOException e) {
+        			
+        		}
+        	}
+        	if ( ios != null ) {
+        		try {
+        			ios.close();
+        		} catch (IOException e) {
+        			
+        		}
+        	}
+        }
     }
 
-    public static Binary scaleToMax(Binary b, int width, int height, double compressionQuality) throws IOException {
+    public static Binary scaleToMax(Binary b, int width, int height, double compressionQuality) throws UserException {
         if (width>height) {
             height = width;
         }
@@ -71,18 +109,13 @@ public class ImageScaler {
         return scale(b,width,height,true,compressionQuality,false);
     }
 
-    public static Binary scaleToMin(Binary b, int width, int height, double compressionQuality) throws IOException {
+    public static Binary scaleToMin(Binary b, int width, int height, double compressionQuality) throws UserException {
         return scale(b,width,height,true,compressionQuality,true);
     }
 
-    public static Binary scaleFree(Binary b, int width, int height, double compressionQuality) throws IOException {
+    public static Binary scaleFree(Binary b, int width, int height, double compressionQuality) throws UserException {
         return scale(b,width,height,false,compressionQuality,true);
     }
-    
-    
-    
-    
-    
   
   /**
    * Reads an image of format GIF, JPEG or PNG, scales and saves it
@@ -149,7 +182,8 @@ public class ImageScaler {
     java.util.Iterator it = ImageIO.getImageWritersBySuffix("jpg");
     ImageWriter writer = (ImageWriter)it.next();
     writer.setOutput(outfile);
-    writer.write(null, new IIOImage(scaled, null, null), param);
+    IIOImage iioi = new IIOImage(scaled, null, null); 
+    writer.write(null, iioi , param);
     writer.dispose();
   }
   

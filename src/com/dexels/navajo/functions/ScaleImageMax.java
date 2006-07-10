@@ -10,6 +10,7 @@ import com.dexels.navajo.document.types.*;
 import com.dexels.navajo.functions.scale.*;
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
+import com.dexels.navajo.server.UserException;
 
 /**
  * @author arjen
@@ -47,7 +48,7 @@ public class ScaleImageMax extends FunctionInterface {
         try {
             Binary res =ImageScaler.scaleToMax(b, width.intValue(), height.intValue(), DEFAULT_COMPRESSION);
             return res;
-        } catch (IOException e) {
+        } catch (UserException e) {
            e.printStackTrace();
            throw new TMLExpressionException(this, "Error scaling image!");
         }
