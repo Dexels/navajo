@@ -78,10 +78,12 @@ public final class ASTForAllNode extends SimpleNode {
         try {
                 ArrayList list = null;
 
-                if (parentMsg == null)
+                if (parentMsg == null) {
                   list = doc.getMessages(msgList);
-                else
+                }
+                else {
                   list = parentMsg.getMessages(msgList);
+                }
 
                 for (int i = 0; i < list.size(); i++) {
                     Object o = list.get(i);
