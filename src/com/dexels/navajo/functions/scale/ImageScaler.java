@@ -143,48 +143,55 @@ public class ImageScaler {
       throw new IOException("Unsupported file format!");
     }
     
-    int originalWidth = original.getWidth();
-    int originalHeight = original.getHeight();
-    
-    if (width > originalWidth) {
-        width = originalWidth;
+    ImageWriter writer =  null;
+    try {
+    	int originalWidth = original.getWidth();
+    	int originalHeight = original.getHeight();
+    	
+    	if (width > originalWidth) {
+    		width = originalWidth;
+    	}
+    	if (height > originalHeight) {
+    		height = originalHeight;
+    	}
+    	
+    	
+    	float factorX = (float)originalWidth / width;
+    	float factorY = (float)originalHeight / height;
+    	if(keepAspect) {
+    		factorX = Math.max(factorX, factorY);
+    		factorY = factorX;
+    	}
+    	
+    	// The scaling will be nice smooth with this filter
+    	AreaAveragingScaleFilter scaleFilter =
+    		new AreaAveragingScaleFilter(Math.round(originalWidth / factorX),
+    				Math.round(originalHeight / factorY));
+    	ImageProducer producer = new FilteredImageSource(original.getSource(),
+    			scaleFilter);
+    	ImageGenerator generator = new ImageGenerator();
+    	producer.startProduction(generator);
+    	BufferedImage scaled = generator.getImage();
+    	
+    	// Write the scaled image to a file
+    	// ImageIO.write(scaled, "jpg", outfile);
+    	
+    	// Alternatively set the compression quality and then write
+    	// the image to a file
+    	JPEGImageWriteParam param = new JPEGImageWriteParam(null);
+    	param.setCompressionMode(JPEGImageWriteParam.MODE_EXPLICIT);
+    	param.setCompressionQuality(quality);
+    	java.util.Iterator it = ImageIO.getImageWritersBySuffix("jpg");
+    	writer = (ImageWriter)it.next();
+    	writer.setOutput(outfile);
+    	IIOImage iioi = new IIOImage(scaled, null, null); 
+    	writer.write(null, iioi , param);
+    	writer.dispose();
+    } finally {
+    	if ( writer != null  ) {
+    		writer.dispose();
+    	}
     }
-    if (height > originalHeight) {
-        height = originalHeight;
-    }
-
-    
-    float factorX = (float)originalWidth / width;
-    float factorY = (float)originalHeight / height;
-    if(keepAspect) {
-      factorX = Math.max(factorX, factorY);
-      factorY = factorX;
-    }
-    
-    // The scaling will be nice smooth with this filter
-    AreaAveragingScaleFilter scaleFilter =
-      new AreaAveragingScaleFilter(Math.round(originalWidth / factorX),
-                                   Math.round(originalHeight / factorY));
-    ImageProducer producer = new FilteredImageSource(original.getSource(),
-                                                     scaleFilter);
-    ImageGenerator generator = new ImageGenerator();
-    producer.startProduction(generator);
-    BufferedImage scaled = generator.getImage();
-    
-    // Write the scaled image to a file
-    // ImageIO.write(scaled, "jpg", outfile);
-
-    // Alternatively set the compression quality and then write
-    // the image to a file
-    JPEGImageWriteParam param = new JPEGImageWriteParam(null);
-    param.setCompressionMode(JPEGImageWriteParam.MODE_EXPLICIT);
-    param.setCompressionQuality(quality);
-    java.util.Iterator it = ImageIO.getImageWritersBySuffix("jpg");
-    ImageWriter writer = (ImageWriter)it.next();
-    writer.setOutput(outfile);
-    IIOImage iioi = new IIOImage(scaled, null, null); 
-    writer.write(null, iioi , param);
-    writer.dispose();
   }
   
   /**
