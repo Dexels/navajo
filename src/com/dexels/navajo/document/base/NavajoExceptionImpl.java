@@ -13,20 +13,14 @@ import com.dexels.navajo.document.*;
  */
 
 public final class NavajoExceptionImpl extends NavajoException {
-  private Exception rootCause = null;
+  
   public NavajoExceptionImpl() {
   }
   public NavajoExceptionImpl(String message) {
     super(message);
   }
   public NavajoExceptionImpl(Exception root) {
-    rootCause = root;
+	super(root);
   }
-  public Exception getRootCause() {
-    return rootCause;
-  }
-  public Exception getException() {
-    return rootCause;
-  }
-
+  
 }

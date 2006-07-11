@@ -11,6 +11,10 @@ package com.dexels.navajo.document;
 
 public abstract class NavajoException extends Exception {
 
+	public NavajoException(Exception e) {
+		super(e);
+	}
+	
   /**
    * Default constructor, calls superclass
    */
@@ -31,13 +35,5 @@ public abstract class NavajoException extends Exception {
      *
      * @return the wrapped exception.
      */
-    public abstract Exception getException();
-
-
-    /**
-     * Retrieves (recursively) the root cause exception.
-     *
-     * @return the root cause exception.
-     */
-    public abstract Exception getRootCause();
+   
 }

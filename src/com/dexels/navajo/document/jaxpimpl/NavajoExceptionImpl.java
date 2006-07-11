@@ -59,16 +59,6 @@ public final class NavajoExceptionImpl extends NavajoException {
         return exception;
     }
 
-    /**
-     * Retrieves (recursively) the root cause exception.
-     *
-     * @return the root cause exception.
-     */
-    public Exception getRootCause() {
-        if (exception instanceof NavajoException) {
-            return ((NavajoException) exception).getRootCause();
-        }
-        return exception == null ? this : exception;
-    }
+    
 
 }
