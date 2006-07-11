@@ -148,15 +148,15 @@ public abstract class BaseNode implements java.io.Serializable{
  
 
   public void write(OutputStream stream) throws NavajoException {
-      try {
-//          System.err.println("Writing to stream impl: "+stream.getClass());
-           OutputStreamWriter osw = new OutputStreamWriter(stream,"UTF-8");
-          printElement(osw,0);
-          osw.flush();
-//          System.err.println("Writing to stream finished");
-      } catch (IOException e) {
-          throw new NavajoExceptionImpl(e);
-      }
+	  try {
+//		  System.err.println("Writing to stream impl: "+stream.getClass());
+		  OutputStreamWriter osw = new OutputStreamWriter(stream,"UTF-8");
+		  printElement(osw,0);
+		  osw.flush();
+//		  System.err.println("Writing to stream finished");
+	  } catch (IOException e) {
+		  throw new NavajoExceptionImpl(e);
+	  }
    }  
    
   public boolean hasTextNode() {
