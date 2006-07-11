@@ -142,34 +142,40 @@ public class NavajoClassLoader extends MultiClassLoader {
 
       synchronized (mutex1) {
 
-          try {
-            script = script.replaceAll("\\.", "/");
-            String classFileName = this.compiledScriptPath + "/" + script + ".class";
-            File fi = new File(classFileName);
-            FileInputStream fis = new FileInputStream(fi);
-            int size = (int) fi.length();
-            byte[] b = new byte[ (int) size];
-            int rb = 0;
-            int chunk = 0;
-
-            while ( ( (int) size - rb) > 0) {
-              chunk = fis.read(b, rb, (int) size - rb);
-              if (chunk == -1) {
-                break;
-              }
-              rb += chunk;
-            }
-
-            fis.close();
-
-            c = loadClass(b, className, true, false);
-
-            return c;
-          }
-          catch (Exception e) {
-            e.printStackTrace();
-            throw new ClassNotFoundException(script);
-          }
+    	  FileInputStream fis = null;
+    	  
+    	  try {
+    		  script = script.replaceAll("\\.", "/");
+    		  String classFileName = this.compiledScriptPath + "/" + script + ".class";
+    		  File fi = new File(classFileName);
+    		  fis = new FileInputStream(fi);
+    		  int size = (int) fi.length();
+    		  byte[] b = new byte[ (int) size];
+    		  int rb = 0;
+    		  int chunk = 0;
+    		  
+    		  while ( ( (int) size - rb) > 0) {
+    			  chunk = fis.read(b, rb, (int) size - rb);
+    			  if (chunk == -1) {
+    				  break;
+    			  }
+    			  rb += chunk;
+    		  }
+    		  
+    		  c = loadClass(b, className, true, false);
+    		  
+    		  return c;
+    	  }
+    	  catch (Exception e) {
+    		  e.printStackTrace();
+    		  throw new ClassNotFoundException(script);
+    	  } finally {
+    		  if ( fis != null ) {
+    			  try {
+    				  fis.close();
+    			  } catch (IOException e) { }
+    		  }
+    	  }
       }
     }
 
