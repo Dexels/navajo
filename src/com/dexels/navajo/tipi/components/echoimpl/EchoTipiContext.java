@@ -96,16 +96,16 @@ public class EchoTipiContext extends TipiContext {
             String element = (String) iter.nextElement();
             System.err.println("Attribute: "+element);
         }
-        URL rootURL =  new URL(u.getProtocol(),u.getHost(),u.getPort(),getServletContext().getServletContextName());
-        System.err.println("Assembled rootURL: "+rootURL.toString());
-        URL u2 = new URL(rootURL,"dynamic");
-        System.err.println("Returing: "+u2.toString());
-        return u2;
+        URL rootURL =  new URL(u.getProtocol(),u.getHost(),u.getPort(),"/sportlink/knvb/official-evaluation/dynamic");
+//        System.err.println("Assembled rootURL: "+rootURL.toString());
+//        URL u2 = new URL(rootURL,"dynamic");
+//        System.err.println("Returing: "+u2.toString());
+        return rootURL;
         
     }
 
     public File getDynamicResourceBaseDir() {
-        File ff = new File(getServletContext().getRealPath("dynamic"));
+        File ff = new File(getServletContext().getRealPath("/dynamic"));
         System.err.println("My context name: "+getServletContext().getServletContextName());
         System.err.println("USING DIR: "+ff);
         if (!ff.exists()) {

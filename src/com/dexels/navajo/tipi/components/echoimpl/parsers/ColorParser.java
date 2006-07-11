@@ -28,7 +28,16 @@ public class ColorParser extends TipiTypeParser {
         return parseColor(expression);
     }
 
-    private Color parseColor(String s) {
+    /**
+     * 
+     * Parses the color to a echo color. Nulls allowed, will be ignored. Otherwise, the string should start with '#' followed by a hexcode
+     * @param s
+     * @return
+     */
+    public static Color parseColor(String s) {
+        if (s==null) {
+            return null;
+        }
         if (!s.startsWith("#")) {
             throw new RuntimeException("BAD COLOR: " + s);
         }

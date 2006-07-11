@@ -21,6 +21,7 @@ import nextapp.echo2.app.table.TableColumnModel;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.tipi.components.echoimpl.EchoPropertyComponent;
+import com.dexels.navajo.tipi.components.echoimpl.parsers.*;
 
 import echopointng.PushButton;
 import echopointng.table.PageableSortableTable;
@@ -46,6 +47,20 @@ public class MessageTable extends SortableTable {
     private int lastSelectedRow = -1;
 
     private int currentSelectedRow = -1;
+
+    private Color headerForeground = null;
+
+    private Color headerBackground = null;
+
+    private Color headerRolloverForeground = null;
+
+    private Color headerRolloverBackground = null;
+
+    private Color headerPressedBackground = null;
+
+    private Color headerPressedForeground = null;
+
+    private int headerHeight = 20;
 
     public MessageTable() {
         super.addActionListener(new ActionListener() {
@@ -253,5 +268,52 @@ public class MessageTable extends SortableTable {
         }
         return tcm;
     }
+     public Color getHeaderForeground() {
+        return headerForeground;
+    }
 
+    public Color getHeaderBackground() {
+        return headerBackground;
+    }
+    
+    public Color getHeaderRolloverForeground() {
+        return headerRolloverForeground;
+    }
+
+    public Color getHeaderRolloverBackground() {
+        return headerRolloverBackground;
+    }
+
+    public Color getHeaderPressedBackground() {
+        return headerPressedBackground;
+    }
+    public Color getHeaderPressedForeground() {
+        return headerPressedForeground;
+    }
+
+    public final void setHeaderForeground(Color headerForeground) {
+        this.headerForeground = headerForeground;
+    }
+
+    public final void setHeaderPressedBackground(Color headerPressedBackground) {
+        this.headerPressedBackground = headerPressedBackground;
+    }
+
+    public final void setHeaderPressedForeground(Color headerPressedForeground) {
+        this.headerPressedForeground = headerPressedForeground;
+    }
+
+    public final void setHeaderRolloverBackground(Color headerRolloverBackground) {
+        this.headerRolloverBackground = headerRolloverBackground;
+    }
+
+    public final void setHeaderRolloverForeground(Color headerRolloverForeground) {
+        this.headerRolloverForeground = headerRolloverForeground;
+    }
+    public final void setHeaderHeight(int headerHeight) {
+        this.headerHeight = headerHeight;
+    }
+    public int getHeaderHeight() {
+        return this.headerHeight;
+    }
 }

@@ -25,10 +25,13 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  */
 public class ExtentParser extends TipiTypeParser {
     public Object parse(TipiComponent source, String expression, TipiEvent event) {
-        return parseBorder(expression);
+        return parseExtent(expression);
     }
 
-    private Object parseBorder(String s) {
+    public static Extent parseExtent(String s) {
+        if(s==null) {
+            return null;
+        }
         if (s.endsWith("mm")) {
             return parseMillis(s.substring(0, s.length() - 2));
         }
@@ -67,18 +70,18 @@ public class ExtentParser extends TipiTypeParser {
         // return null;
     }
 
-    private Object parsePixels(String s) {
+    private static Extent parsePixels(String s) {
         int px = Integer.parseInt(s);
         // TODO Auto-generated method stub
         return new Extent(px, Extent.PX);
     }
 
-    private Object parsePercent(String s) {
+    private static Extent parsePercent(String s) {
         int pc = Integer.parseInt(s);
         return new Extent(pc, Extent.PERCENT);
     }
 
-    private Object parseMillis(String s) {
+    private static Extent parseMillis(String s) {
         int mm = Integer.parseInt(s);
         return new Extent(mm, Extent.MM);
     }

@@ -1,14 +1,7 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
 import sun.security.krb5.internal.n;
-import nextapp.echo2.app.Color;
-import nextapp.echo2.app.Component;
-import nextapp.echo2.app.Extent;
-import nextapp.echo2.app.Font;
-import nextapp.echo2.app.Insets;
-import nextapp.echo2.app.Row;
-import nextapp.echo2.app.Window;
-import nextapp.echo2.app.WindowPane;
+import nextapp.echo2.app.*;
 import nextapp.echo2.app.Font.Typeface;
 import nextapp.echo2.app.event.WindowPaneEvent;
 import nextapp.echo2.app.event.WindowPaneListener;
@@ -19,6 +12,7 @@ import com.dexels.navajo.tipi.TipiComponentMethod;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.TipiHelper;
 import com.dexels.navajo.tipi.components.echoimpl.helpers.EchoTipiHelper;
+import com.dexels.navajo.tipi.components.echoimpl.parsers.*;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 
 /**
@@ -60,6 +54,23 @@ public class TipiDialog extends TipiEchoDataComponentImpl {
 
     private boolean resizable = true;
 
+    private int headerheight = 25;
+    private int leftheaderinset = 0;
+    private int topheaderinset = 0;
+    private int rightheaderinset = 0;
+    private int bottomheaderinset = 0;
+    
+    private Color headerforeground = null;
+    private Color headerbackground = null;
+    private Font headerfont = null;
+
+    // headerheight leftheaderinset topheaderinset rightheaderinset bottomheaderinset
+    
+    // headerfont headerforeground headerbackground
+
+    
+    
+    
     public TipiDialog() {
     }
 
@@ -214,6 +225,8 @@ public class TipiDialog extends TipiEchoDataComponentImpl {
         myDialog = new WindowPane(title, new Extent(w, Extent.PX), new Extent(h, Extent.PX));
         myDialog.setDefaultCloseOperation(WindowPane.DISPOSE_ON_CLOSE);
         // myDialog.setUndecorated(!decorated);
+        FillImageBorder fib = new FillImageBorder(new Color(100,100,100),new Insets(new Extent(1,Extent.PX)),new Insets(new Extent(1,Extent.PX)));
+        myDialog.setBorder(fib);
         createWindowListener(myDialog);
         myDialog.setTitle(title);
 //        myDialog.
@@ -233,14 +246,67 @@ public class TipiDialog extends TipiEchoDataComponentImpl {
         // ARRRRRRRGGGGHHHHH
         myDialog.setClosable(closable);
 
-        myDialog.setTitleBackground(new Color(232, 232, 232));
-        myDialog.setTitleInsets(new Insets(3, 2, 0, 0));
-        myDialog.setTitleForeground(new Color(0, 0, 0));
-        myDialog.setTitleFont(new Font(Font.ARIAL, Font.PLAIN, new Extent(10, Extent.PT)));
-        myDialog.setTitleHeight(new Extent(20, Extent.PX));
+        if (headerbackground!=null) {
+            myDialog.setTitleBackground(headerbackground);
+        }
+        if (headerforeground!=null) {
+            myDialog.setTitleForeground(headerforeground);
+        }
+        
+//        myDialog.setTitleBackground(new Color(232, 232, 232));
+        myDialog.setTitleInsets(new Insets(leftheaderinset, topheaderinset, rightheaderinset, bottomheaderinset));
+//        myDialog.setTitleForeground(new Color(0, 0, 0));
+//        myDialog.setTitleFont(new Font(Font.ARIAL, Font.PLAIN, new Extent(10, Extent.PT)));
+        if (headerheight!=0) {
+            myDialog.setTitleHeight(new Extent(headerheight, Extent.PX));
+        }
         myDialog.setVisible(true);
     }
+    public void processStyles() {
+        System.err.println("Processing styles.... "+styleHintMap);
+        super.processStyles();
+        
+        String s = getStyle("headerheight");
+        if (s!=null) {
+            headerheight = Integer.parseInt(s);
+        }
+        s = getStyle("leftheaderinset");
+        if (s!=null) {
+            leftheaderinset = Integer.parseInt(s);
+        }
+        s = getStyle("topheaderinset");
+        if (s!=null) {
+            topheaderinset = Integer.parseInt(s);
+        }
+        s = getStyle("rightheaderinset");
+        if (s!=null) {
+            rightheaderinset = Integer.parseInt(s);
+        }
+        s = getStyle("bottomheaderinset");
+        if (s!=null) {
+            bottomheaderinset = Integer.parseInt(s);
+        }
+        
+        // headerheight leftheaderinset topheaderinset rightheaderinset bottomheaderinset
+        
+        // headerfont headerforeground headerbackground
 
+        
+        Color c = ColorParser.parseColor(getStyle("foreground"));
+        if (c!=null) {
+            headerforeground = c;
+        }
+        c = ColorParser.parseColor(getStyle("background"));
+        if (c!=null) {
+            headerbackground = c;
+        }
+        s = getStyle("headerfont");
+        Font f= FontParser.parseFont(s);
+        if (s!=null) {
+            headerfont = f;
+        }
+    }
+    
     protected void helperRegisterEvent(TipiEvent te) {
         if (te != null && te.getEventName().equals("onWindowClosed")) {
             // overridden.. should be ok.

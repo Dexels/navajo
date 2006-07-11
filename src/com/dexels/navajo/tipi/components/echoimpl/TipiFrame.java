@@ -3,6 +3,7 @@ package com.dexels.navajo.tipi.components.echoimpl;
 import nextapp.echo2.app.*;
 
 import com.dexels.navajo.tipi.components.echoimpl.impl.TipiLayoutManager;
+import com.dexels.navajo.tipi.components.echoimpl.parsers.*;
 
 import echopointng.ContainerEx;
 import echopointng.MenuBar;
@@ -37,6 +38,8 @@ public class TipiFrame extends TipiEchoDataComponentImpl {
 
     private ContentPane contentPane;
 
+    private ContainerEx realContent;
+
     public TipiFrame() {
     }
 
@@ -46,14 +49,38 @@ public class TipiFrame extends TipiEchoDataComponentImpl {
 
     public Object createContainer() {
         myWindow = new Window();
+        myWindow.setBackground(new Color(80,80,240));
         // innerContainer = new ContainerEx();
         contentPane = new ContentPane();
-        myWindow.getContent().add(contentPane);
+        contentPane.setBackground(new Color(80,240,240));
+        myWindow.setContent(contentPane);
+        realContent = new ContainerEx();
+        realContent.setPosition(Positionable.ABSOLUTE);
+//        realContent.setLeft(new Extent(50,Extent.PX));
+//        realContent.setTop(new Extent(50,Extent.PX));
+//        realContent.setWidth(new Extent(800,Extent.PX));
+//        realContent.setHeight(new Extent(600,Extent.PX));
         // innerContainer.add(contentPane);
+        contentPane.add(realContent);
         return myWindow;
 
     }
 
+    public void processStyles() {
+        super.processStyles();
+        String x =  getStyle("xindent");
+        if (x!=null) {
+            int xoff = Integer.parseInt(x);
+            realContent.setLeft(new Extent(xoff,Extent.PX));
+        }
+        String y =  getStyle("yindent");
+        if (y!=null) {
+            int yoff = Integer.parseInt(y);
+            realContent.setTop(new Extent(yoff,Extent.PX));
+        }
+   }    
+    
+    
     public void setContainerLayout(Object layout) {
     }
 
@@ -93,7 +120,8 @@ public class TipiFrame extends TipiEchoDataComponentImpl {
             // contentPane.setTop(new Extent(20, Extent.PX));
         } else {
             Component child = (Component) c;
-            contentPane.add(child);
+            realContent.add(child);
+//            contentPane.add(child);
             if (constraints != null && constraints instanceof LayoutData) {
                 child.setLayoutData((LayoutData) constraints);
             }

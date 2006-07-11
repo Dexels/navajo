@@ -28,7 +28,7 @@
  */
 package com.dexels.navajo.tipi.components.echoimpl.impl;
 
-import echopointng.PushButton;
+import echopointng.*;
 import echopointng.table.SortableTableModel;
 import nextapp.echo2.app.Alignment;
 import nextapp.echo2.app.Button;
@@ -62,17 +62,44 @@ public class MessageTableHeaderRenderer implements TableCellRenderer {
      */
     public Component getTableCellRendererComponent(Table table, Object value, int column, int row) {
         SortableTableModel model = (SortableTableModel) table.getModel();
-        return getSortButton((String) value, column, (MessageTableModel) model, (MessageTable) table);
+        MessageTable mt = (MessageTable)table;
+        return getSortButton(mt,(String) value, column, (MessageTableModel) model, (MessageTable) table);
     }
 
-    protected Button getSortButton(String label, int column, MessageTableModel model, MessageTable table) {
-        PushButton button = new PushButton(label);
+    protected Button getSortButton(MessageTable mt, String label, int column, MessageTableModel model, MessageTable table) {
+        ButtonEx button = new ButtonEx(label);
+        Color color = mt.getHeaderForeground();
+        if (color!=null) {
+            button.setForeground(color);
+        }
+        color = mt.getHeaderBackground();
+        if (color!=null) {
+            button.setForeground(color);
+        }
+        color = mt.getHeaderPressedBackground();
+        if (color!=null) {
+            button.setPressedBackground(color);
+        }
+        color = mt.getHeaderPressedForeground();
+        if (color!=null) {
+            button.setPressedForeground(color);
+        }
+        color = mt.getHeaderRolloverBackground();
+        if (color!=null) {
+            button.setRolloverBackground(color);
+        }
+        color = mt.getHeaderRolloverForeground();
+        if (color!=null) {
+            button.setRolloverForeground(color);
+        }
+        
         button.addActionListener(getSortButtonListener(column, model));
         button.setLayoutData(getLayoutData());
         button.setInsets(new Insets(0, 0, 0, 0));
         button.setTextPosition(new Alignment(Alignment.LEFT, Alignment.DEFAULT));
-        button.setWidth(table.getColumnSize(column));
-        button.setHeight(new Extent(22, Extent.PX));
+        int colsize = table.getColumnSize(column).getValue()-4;
+        button.setWidth(new Extent(colsize, Extent.PX));
+        button.setHeight(new Extent(mt.getHeaderHeight(), Extent.PX));
         ImageReference icon = null;
         if (model.getCurrentSortColumn() == column) {
             if (model.isCurrentSortAscending()) {
@@ -97,6 +124,7 @@ public class MessageTableHeaderRenderer implements TableCellRenderer {
             public void actionPerformed(ActionEvent e) {
                 Button button = (Button) e.getSource();
                 boolean ascending = model.isCurrentSortAscending();
+                ascending = model.getCurrentSortColumn() == column?!ascending:ascending;
                 model.sortByColumn(column, !ascending);
             }
         };

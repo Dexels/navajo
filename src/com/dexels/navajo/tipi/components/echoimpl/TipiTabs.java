@@ -12,7 +12,7 @@ import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiComponentMethod;
 import com.dexels.navajo.tipi.TipiHelper;
 import com.dexels.navajo.tipi.components.echoimpl.helpers.EchoTipiHelper;
-import com.dexels.navajo.tipi.components.echoimpl.parsers.BorderParser;
+import com.dexels.navajo.tipi.components.echoimpl.parsers.*;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 
 import echopointng.ButtonEx;
@@ -79,6 +79,49 @@ public class TipiTabs extends TipiEchoDataComponentImpl {
         return myTabbedPane;
     }
 
+    public void processStyles() {
+        System.err.println("Processing styles.... "+styleHintMap);
+        super.processStyles();
+        Color c = ColorParser.parseColor(getStyle("foreground"));
+        if (c!=null) {
+            defaultTabModel.setForeground(c);
+        }
+        c = ColorParser.parseColor(getStyle("background"));
+        if (c!=null) {
+            defaultTabModel.setBackground(c);
+        }
+        c = ColorParser.parseColor(getStyle("selectedforeground"));
+        if (c!=null) {
+            defaultTabModel.setSelectedForeground(c);
+        }
+        c = ColorParser.parseColor(getStyle("selectedbackground"));
+        if (c!=null) {
+            System.err.println("Selectedbackground: "+c.toString());
+            defaultTabModel.setSelectedBackground(c);
+        }
+        c = ColorParser.parseColor(getStyle("rolloverbackground"));
+        if (c!=null) {
+            defaultTabModel.setRolloverBackground(c);
+        }
+        c = ColorParser.parseColor(getStyle("rolloverforeground"));
+        if (c!=null) {
+            defaultTabModel.setRolloverForeground(c);
+        }
+        c = ColorParser.parseColor(getStyle("selectedrolloverbackground"));
+        if (c!=null) {
+            defaultTabModel.setSelectedRolloverBackground(c);
+        }
+        c = ColorParser.parseColor(getStyle("selectedrolloverforeground"));
+        if (c!=null) {
+            defaultTabModel.setSelectedRolloverForeground(c);
+        }
+        String s = getStyle("tabspacing");
+        if (s!=null) {
+            int ii = Integer.parseInt(s);
+            myTabbedPane.setTabSpacing(ii);
+        }
+    }
+    
     protected void performComponentMethod(String name, TipiComponentMethod compMeth, TipiEvent event) {
         // if (name.equals("enableTab")) {
         // Operand path = compMeth.getEvaluatedParameter("tabname",event);

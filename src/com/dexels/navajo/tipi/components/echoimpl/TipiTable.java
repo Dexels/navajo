@@ -2,6 +2,7 @@ package com.dexels.navajo.tipi.components.echoimpl;
 
 import java.util.*;
 
+import nextapp.echo2.app.*;
 import nextapp.echo2.app.Extent;
 import nextapp.echo2.app.event.ActionEvent;
 import nextapp.echo2.app.event.ActionListener;
@@ -10,6 +11,7 @@ import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.components.echoimpl.impl.*;
+import com.dexels.navajo.tipi.components.echoimpl.parsers.*;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
 
 import echopointng.ContainerEx;
@@ -184,4 +186,41 @@ public class TipiTable extends TipiEchoDataComponentImpl {
        super.setComponentValue(name, object);
    }
 
+    
+    public void processStyles() {
+         super.processStyles();
+        Color c = ColorParser.parseColor(getStyle("foreground"));
+        if (c!=null) {
+            myTable.setForeground(c);
+        }
+        c = ColorParser.parseColor(getStyle("background"));
+        if (c!=null) {
+            myTable.setBackground(c);
+        }
+        c = ColorParser.parseColor(getStyle("pressedforeground"));
+        if (c!=null) {
+            myTable.setHeaderPressedForeground(c);
+        }
+        c = ColorParser.parseColor(getStyle("pressedbackground"));
+        if (c!=null) {
+            myTable.setHeaderPressedBackground(c);
+        }
+        c = ColorParser.parseColor(getStyle("rolloverbackground"));
+        if (c!=null) {
+            myTable.setHeaderRolloverBackground(c);
+        }
+        c = ColorParser.parseColor(getStyle("rolloverforeground"));
+        if (c!=null) {
+            myTable.setHeaderRolloverForeground(c);
+        }
+        String headHeight = getStyle("headerheight");
+        if (headHeight!=null) {
+            int hh = Integer.parseInt(headHeight);
+                myTable.setHeaderHeight(hh);
+        }
+      
+    }    
+    
+    
+    
 }

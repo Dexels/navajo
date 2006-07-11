@@ -32,7 +32,10 @@ public class FontParser extends TipiTypeParser {
         return parseFont(expression);
     }
 
-    private Font parseFont(String s) {
+    public static Font parseFont(String s) {
+        if(s==null) {
+            return null;
+        }
         StringTokenizer str = new StringTokenizer(s, "-");
         String name = str.nextToken();
         int size = Integer.parseInt(str.nextToken());

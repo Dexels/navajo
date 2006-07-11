@@ -32,8 +32,15 @@ public class BorderParser extends TipiTypeParser {
     public Object parse(TipiComponent source, String expression, TipiEvent event) {
         return parseBorder(expression);
     }
+//    private Object parseBorder(String s) {
+//        return parseBorder(s);
+//    }
 
-    private Object parseBorder(String s) {
+    public static Object parseBorder(String s) {
+        if(s==null) {
+            return null;
+        }
+        Color c = new Color(50, 50, 50);
         // if (s.endsWith("mm")) {
         // return parseMillis(s.substring(0,s.length()-2));
         // }
@@ -42,19 +49,29 @@ public class BorderParser extends TipiTypeParser {
         // }
         // return parsePixels(s);
         // System.err.println("PARSING BORDER:::: "+s);
+        int size = 1;
         StringTokenizer st = new StringTokenizer(s, "-");
         String borderName = st.nextToken();
+        if (st.hasMoreTokens()) {
+            String sizeString = st.nextToken();
+            size = Integer.parseInt(sizeString);
+        }
+        if (st.hasMoreTokens()) {
+            String colorString = st.nextToken();
+            c = ColorParser.parseColor(colorString);
+        }
+
         if ("etched".equals(borderName)) {
-            return new Border(1, new Color(50, 50, 50), Border.STYLE_INSET);
+            return new Border(size, c, Border.STYLE_RIDGE);
         }
         if ("raised".equals(borderName)) {
-            return new Border(1, new Color(50, 50, 50), Border.STYLE_GROOVE);
+            return new Border(size, c, Border.STYLE_GROOVE);
         }
         if ("lowered".equals(borderName)) {
-            return new Border(1, new Color(50, 50, 50), Border.STYLE_INSET);
+            return new Border(size, c, Border.STYLE_INSET);
         }
         if ("titled".equals(borderName)) {
-            return st.nextToken();
+//            return st.nextToken();
             // return new Border(1,new Color(0,0,0),Border.STYLE_GROOVE);
         }
         // return BorderFactory.createEmptyBorder();

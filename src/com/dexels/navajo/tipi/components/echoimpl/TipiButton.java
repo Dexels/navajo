@@ -2,9 +2,10 @@ package com.dexels.navajo.tipi.components.echoimpl;
 
 import java.net.URL;
 
-import nextapp.echo2.app.Alignment;
-import echopointng.ContainerEx;
-import echopointng.PushButton;
+import com.dexels.navajo.tipi.components.echoimpl.parsers.*;
+
+import nextapp.echo2.app.*;
+import echopointng.*;
 import echopointng.image.URLImageReference;
 
 /**
@@ -26,22 +27,51 @@ import echopointng.image.URLImageReference;
  */
 
 public class TipiButton extends TipiEchoComponentImpl {
-    private PushButton myButton;
+    private Button myButton;
 
     public TipiButton() {
     }
 
     public Object createContainer() {
         // ContainerEx ex = new ContainerEx();
-        myButton = new PushButton();
+        myButton = new ButtonEx();
         // ex.add(myButton);
         // b.setIconTextMargin(new Extent(10));
         myButton.setTextAlignment(new Alignment(Alignment.CENTER, Alignment.CENTER));
-
+        myButton.setAlignment(new Alignment(Alignment.CENTER,Alignment.CENTER));
+        myButton.setBorder(new Border(1,new Color(20,20,20),Border.STYLE_SOLID));
         return myButton;
         // return b;
     }
-
+    public void processStyles() {
+        System.err.println("Processing styles.... "+styleHintMap);
+        super.processStyles();
+        Color c = ColorParser.parseColor(getStyle("foreground"));
+        if (c!=null) {
+            myButton.setForeground(c);
+        }
+        c = ColorParser.parseColor(getStyle("background"));
+        if (c!=null) {
+            myButton.setBackground(c);
+        }
+        c = ColorParser.parseColor(getStyle("pressedforeground"));
+        if (c!=null) {
+            myButton.setPressedForeground(c);
+        }
+        c = ColorParser.parseColor(getStyle("pressedbackground"));
+        if (c!=null) {
+            myButton.setPressedBackground(c);
+        }
+        c = ColorParser.parseColor(getStyle("rolloverbackground"));
+        if (c!=null) {
+            myButton.setRolloverBackground(c);
+        }
+        c = ColorParser.parseColor(getStyle("rolloverforeground"));
+        if (c!=null) {
+            myButton.setRolloverForeground(c);
+        }
+      
+    }
     /**
      * getComponentValue
      * 
@@ -82,6 +112,8 @@ public class TipiButton extends TipiEchoComponentImpl {
                 System.err.println("Can not set button icon: I guess it failed to parse (TipiButton)");
             }
         }
+        myButton.setTextAlignment(new Alignment(Alignment.CENTER, Alignment.CENTER));
+        myButton.setAlignment(new Alignment(Alignment.CENTER,Alignment.CENTER));
         super.setComponentValue(name, object);
     }
 

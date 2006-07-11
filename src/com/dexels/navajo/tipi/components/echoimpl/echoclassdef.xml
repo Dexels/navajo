@@ -15,7 +15,25 @@
   <tipiaction name="showQuestion"  class="TipiEchoShowQuestion" package="com.dexels.navajo.tipi.actions">
     <param name="text" type="string"/>
   </tipiaction>
+  
+  <!-- NOT IMPLEMENTED YET, USES SHOWQUESTION> -->
+    <tipiaction name="askValue" class="TipiEchoShowQuestion"
+        package="com.dexels.navajo.tipi.actions">
+        <param name="text" type="string"/>
+        <param name="value" type="string"/>
+        <param name="initialValue" type="string"/>
+    </tipiaction>
 
+<!--
+    <tipiaction name="askFile" class="TipiEchoShowQuestion"
+        package="com.dexels.navajo.tipi.actions">
+        <param name="value" type="string"/>
+    </tipiaction>
+    <tipiaction name="saveValue" class="TipiSaveValue"
+        package="com.dexels.navajo.tipi.actions">
+        <param name="value" type="string"/>
+    </tipiaction>
+-->
 
   <tipiaction name="exitsession"  class="TipiEchoExit" package="com.dexels.navajo.tipi.actions">
    <param name="destination" type="string"/>
@@ -375,6 +393,7 @@
             <value direction="in" name="enabled" type="boolean"/>
             <value direction="in" name="background" type="color"/>
             <value direction="in" name="foreground" type="color"/>
+            <value direction="in" name="border" type="border"/>
         </values>
         <methods/>
     </tipiclass>
@@ -637,6 +656,14 @@
             <event name="onFocusGained"/>
             <event name="onFocusLost"/>
             <event name="onActionPerformed"/>
+ 
+ 			<!-- only included for compatibility reasons. Not implement. -->
+            <event name="onKey">
+                <param name="code" type="integer"/>
+                <param name="key" type="string"/>
+                <param name="modifiers" type="string"/>
+                <param name="mode" type="string"/>
+			</event>
         </events>
         <values>
             <value direction="inout" name="propertyname" type="string"/>

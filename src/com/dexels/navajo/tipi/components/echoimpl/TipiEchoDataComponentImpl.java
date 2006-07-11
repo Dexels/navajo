@@ -1,5 +1,6 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
+import nextapp.echo2.app.*;
 import nextapp.echo2.app.Component;
 import nextapp.echo2.app.Extent;
 import nextapp.echo2.app.LayoutData;
@@ -14,9 +15,11 @@ import com.dexels.navajo.tipi.components.core.TipiDataComponentImpl;
 import com.dexels.navajo.tipi.components.core.TipiLayoutImpl;
 import com.dexels.navajo.tipi.components.echoimpl.helpers.EchoTipiHelper;
 import com.dexels.navajo.tipi.components.echoimpl.impl.TipiLayoutManager;
+import com.dexels.navajo.tipi.components.echoimpl.parsers.*;
 import com.dexels.navajo.tipi.internal.TipiLayout;
 
 import echopointng.ExtentEx;
+import echopointng.able.*;
 import echopointng.able.Sizeable;
 
 /**
@@ -117,5 +120,35 @@ public abstract class TipiEchoDataComponentImpl extends TipiDataComponentImpl {
     public void loadData(Navajo n, TipiContext context, String method) throws TipiException {
         super.loadData(n, context, method);
     }
+    
+    public void processStyles() {
+        super.processStyles();
+        if (getContainer()!=null && getContainer() instanceof Positionable) {
+            Positionable pos = (Positionable)getContainer();
+            String s = getStyle("x");
+            if (s!=null) {
+                 pos.setLeft(ExtentParser.parseExtent(s));
+                 pos.setPosition(Positionable.ABSOLUTE);
+            }
+            s = getStyle("y");
+            if (s!=null) {
+                 pos.setTop(ExtentParser.parseExtent(s));
+                 pos.setPosition(Positionable.ABSOLUTE);
+            }
+         }
+        if (getContainer()!=null && getContainer() instanceof Sizeable) {
+            Sizeable pos = (Sizeable)getContainer();
+            String s = getStyle("w");
+            if (s!=null) {
+                 pos.setWidth(ExtentParser.parseExtent(s));
+             }
+            s = getStyle("h");
+            if (s!=null) {
+                 pos.setHeight(ExtentParser.parseExtent(s));
+            }
+         }
+   
+    }
+    
 
 }

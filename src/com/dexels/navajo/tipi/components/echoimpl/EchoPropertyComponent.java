@@ -189,6 +189,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
         if (type.equals(Property.PASSWORD_PROPERTY)) {
             createPasswordField(p);
         }
+        setLabelIndent(label_indent);
         if (currentComponent != null) {
             GridLayoutData gld = new GridLayoutData();
             // System.err.println("");
@@ -311,13 +312,11 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
             createLabel("-");
             return;
         }
-
         if (alwaysUseLabel) {
             createLabel(m.toString());
         } else {
             if ((isEdit || !useLabelForReadOnlyProperties)) {
-                createTextField(p);
-
+                createClocktimeField(p);
             } else {
                 createLabel(m.toString());
 
@@ -384,9 +383,10 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
         });
         tf.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                TipiEchoTextField tf = (TipiEchoTextField) e.getSource();
+                PasswordField tf = (PasswordField) e.getSource();
                 String text = tf.getText();
                 myProperty.setValue(text);
+                fireTipiEvent("onValueChanged");
             }
         });
         currentComponent = tf;
@@ -549,6 +549,64 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
         tf.setLayoutData(gd);
     }
 
+
+    
+    
+
+    private void createClocktimeField(final Property p) {
+        final TipiEchoTextField tf = new TipiEchoTextField(p.getValue());
+        if (value_size != 0) {
+            tf.setWidth(new Extent(value_size));
+        }
+        if (!p.isDirIn()) {
+            tf.setForeground(new Color(90, 90, 90));
+        }
+         addPropertyComponent(tf);
+        tf.setEnabled(p.isDirIn());
+        tf.getDocument().addDocumentListener(new DocumentListener() {
+            public void documentUpdate(DocumentEvent e) {
+                String text = tf.getText();
+                ClockTime ct = new ClockTime(text);
+                String oldVal = p.getValue();
+                String ser = ct.toString();
+                if (!text.equals(ser)) {
+                    tf.setText(ser);
+                }
+                myProperty.setAnyValue(ct);
+                fireTipiEvent("onValueChanged");
+
+            }
+        });
+        tf.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String text = tf.getText();
+                ClockTime ct = new ClockTime(text);
+                String oldVal = p.getValue();
+                String ser = ct.toString();
+                if (!text.equals(ser)) {
+                    tf.setText(ser);
+                }
+                myProperty.setAnyValue(ct);
+                fireTipiEvent("onValueChanged");
+
+            }
+        });
+        currentComponent = tf;
+        GridLayoutData gd = new GridLayoutData();
+        gd.setBackground(new Color(255,0,0));
+        tf.setLayoutData(gd);
+    }
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     private void createMultiSelect(Property p) throws NavajoException {
         ListBox lb = new ListBox(p.getAllSelections().toArray());
         addPropertyComponent(lb);
@@ -796,12 +854,13 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
         // System.err.println("Table RENDERER EVENT: "+value+" ->
         // "+column+"/"+row+" width: "+w);
         // }});
-        epc.setWidth(tableColumnwidth);
+        int widthVal = tableColumnwidth.getValue();
+        epc.setWidth(new Extent(widthVal-4,Extent.PX));
         if (epc.currentComponent instanceof TextComponent) {
-            ((TextComponent)(epc.currentComponent)).setWidth(tableColumnwidth);
+            ((TextComponent)(epc.currentComponent)).setWidth(new Extent(widthVal-4,Extent.PX));
         } 
         if (epc.currentComponent instanceof SelectField) {
-            ((SelectField)(epc.currentComponent)).setWidth(tableColumnwidth);
+            ((SelectField)(epc.currentComponent)).setWidth(new Extent(widthVal,Extent.PX));
         } 
         
         epc.setZebra(column, row, false);

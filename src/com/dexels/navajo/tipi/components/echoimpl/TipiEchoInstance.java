@@ -72,12 +72,10 @@ public class TipiEchoInstance extends ApplicationInstance {
         thread.start();
     }
 
-    public void startup() {
+    private void startup() {
 
         context = new EchoTipiContext();
 
-         ContainerContext containerContext = (ContainerContext)getContextProperty(ContainerContext.CONTEXT_PROPERTY_NAME);
-//containerContext.setServerDelayMessage(new NavajoServerDelayMessage(containerContext,"Effe dimme, ouwe"));
         TipiScreen es = new TipiScreen();
         context.parseRequiredIncludes();
         context.processRequiredIncludes();
@@ -106,6 +104,9 @@ public class TipiEchoInstance extends ApplicationInstance {
     public Window init() {
         TipiScreen echo = (TipiScreen) context.getDefaultTopLevel();
         TipiFrame w = (TipiFrame) echo.getTipiComponent("init");
+        ContainerContext containerContext = (ContainerContext)getContextProperty(ContainerContext.CONTEXT_PROPERTY_NAME);
+        containerContext.setServerDelayMessage(new NavajoServerDelayMessage(containerContext,"Moment.."));
+        
         return w.getWindow();
     }
 

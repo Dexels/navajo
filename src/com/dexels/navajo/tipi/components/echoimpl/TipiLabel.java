@@ -2,6 +2,7 @@ package com.dexels.navajo.tipi.components.echoimpl;
 
 import java.net.*;
 
+import echopointng.*;
 import echopointng.image.*;
 import nextapp.echo2.app.Label;
 import nextapp.echo2.app.ResourceImageReference;
@@ -29,7 +30,8 @@ public class TipiLabel extends TipiEchoComponentImpl {
     }
 
     public Object createContainer() {
-        Label b = new Label();
+        Label b = new LabelEx();
+        
         return b;
     }
 
