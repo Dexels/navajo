@@ -23,8 +23,8 @@ public class BinaryScaler implements Mappable {
     // Static stuff
     private final static double DEFAULT_COMPRESSION = 0.8;
     private static double compressionQuality = DEFAULT_COMPRESSION;
-    
-    
+
+
     // Mappable stuff
     public int width = 1;
     public int height = 1;
@@ -32,13 +32,13 @@ public class BinaryScaler implements Mappable {
     public Binary scaledToMax = null;
     public Binary scaledToMin = null;
     public Binary scaledFree = null;
-    
+
     public static void setCompressionQuality(double d) {
         compressionQuality = d;
     }
 
     public static void main(String[] args) throws Exception {
-        
+
         FileInputStream fis = new FileInputStream("c:/aap/groot.jpg");
         Binary b = new Binary(fis);
         Binary c = ImageScaler.scaleToMax(b,1000,50,compressionQuality);
@@ -46,31 +46,31 @@ public class BinaryScaler implements Mappable {
         c.write(fos);
         fis.close();
     }
-    
-    
 
 
-    
+
+
+
     public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
         // TODO Auto-generated method stub
-        
+
     }
 
     public void store() throws MappableException, UserException {
         // TODO Auto-generated method stub
-        
+
     }
 
     public void kill() {
         // TODO Auto-generated method stub
-        
+
     }
 
     public final Binary getScaledFree() throws UserException {
         if (source!=null) {
             try {
                 return ImageScaler.scaleFree(source, width, height,compressionQuality);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 throw new UserException(-2020,"Error scaling image ", e);
             }
@@ -82,7 +82,7 @@ public class BinaryScaler implements Mappable {
         if (source!=null) {
             try {
                 return ImageScaler.scaleToMax(source, width, height,compressionQuality);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 throw new UserException(-2020,"Error scaling image ", e);
             }
@@ -94,7 +94,7 @@ public class BinaryScaler implements Mappable {
         if (source!=null) {
             try {
                 return ImageScaler.scaleToMin(source, width, height,compressionQuality);
-             } catch (IOException e) {
+             } catch (Exception e) {
                  e.printStackTrace();
                 throw new UserException(-2020,"Error scaling image ", e);
             }
@@ -118,6 +118,6 @@ public class BinaryScaler implements Mappable {
         this.source = source;
     }
 
-    
+
 
 }
