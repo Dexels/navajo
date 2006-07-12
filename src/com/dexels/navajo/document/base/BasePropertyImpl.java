@@ -365,7 +365,7 @@ public class BasePropertyImpl
         return new Boolean( ( (String) getValue()).equals("true"));
       }
       else {
-        return new Boolean( ( (String) getValue()).equals("false"));
+        return new Boolean(false);
       }
     }
     if (getType().equals(Property.PERCENTAGE_PROPERTY)) {
