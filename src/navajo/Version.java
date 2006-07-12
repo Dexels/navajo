@@ -73,16 +73,18 @@ package navajo;
  * 5.4.5 Support for long in TslCompiler/NanoTslCompiler.
  * 
  * 5.4.6 Some minor changes in Worker.
+ * 
+ * 5.4.7 Added support for logging AsyncMappable object access when finished or killed
  */
 
 public class Version extends dexels.Version {
 
 	public static final int MAJOR = 5;
 	public static final int MINOR = 4;
-	public static final int PATCHLEVEL = 6;
+	public static final int PATCHLEVEL = 7;
 	public static final String VENDOR = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Kernel";
-	public static final String RELEASEDATE = "2006-07-06";
+	public static final String RELEASEDATE = "2006-07-12";
 	
 //	 Included packages.
 	String [] includes = {"navajodocument.Version"};
