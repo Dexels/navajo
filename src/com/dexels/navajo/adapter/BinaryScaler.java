@@ -47,13 +47,8 @@ public class BinaryScaler implements Mappable {
         fis.close();
     }
 
-
-
-
-
     public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
         // TODO Auto-generated method stub
-
     }
 
     public void store() throws MappableException, UserException {
@@ -68,38 +63,28 @@ public class BinaryScaler implements Mappable {
 
     public final Binary getScaledFree() throws UserException {
         if (source!=null) {
-            try {
+            
                 return ImageScaler.scaleFree(source, width, height,compressionQuality);
-            } catch (Exception e) {
-                e.printStackTrace();
-                throw new UserException(-2020,"Error scaling image ", e);
-            }
+
         }
         throw new UserException(-1010,"No image source defined");
     }
 
     public final Binary getScaledToMax()  throws UserException{
-        if (source!=null) {
-            try {
-                return ImageScaler.scaleToMax(source, width, height,compressionQuality);
-            } catch (Exception e) {
-                e.printStackTrace();
-                throw new UserException(-2020,"Error scaling image ", e);
-            }
-        }
-        throw new UserException(-1010,"No image source defined");
+    	if (source!=null) {
+    		
+    		return ImageScaler.scaleToMax(source, width, height,compressionQuality);
+    	}
+    	throw new UserException(-1010,"No image source defined");
     }
 
     public final Binary getScaledToMin()  throws UserException{
-        if (source!=null) {
-            try {
-                return ImageScaler.scaleToMin(source, width, height,compressionQuality);
-             } catch (Exception e) {
-                 e.printStackTrace();
-                throw new UserException(-2020,"Error scaling image ", e);
-            }
-        }
-        throw new UserException(-1010,"No image source defined");
+    	if (source!=null) {
+    		
+    		return ImageScaler.scaleToMin(source, width, height,compressionQuality);
+    		
+    	}
+    	throw new UserException(-1010,"No image source defined");
     }
 
     public final void setHeight(int height) {
