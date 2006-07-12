@@ -1,6 +1,8 @@
 package com.dexels.navajo.server.statistics;
 
 import java.util.HashSet;
+
+import com.dexels.navajo.mapping.AsyncMappable;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.GenericThread;
 import com.dexels.navajo.util.AuditLog;
@@ -9,6 +11,8 @@ import java.util.Set;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Collections;
+
+import org.apache.log4j.AsyncAppender;
 
 /**
  * <p>Title: Navajo Product Project</p>
@@ -34,6 +38,17 @@ import java.util.Collections;
  * SUCH DAMAGE.
  * ====================================================================
  */
+
+class TodoItem {
+	
+	public TodoItem(Access a, AsyncMappable am) {
+		access = a;
+		asyncobject = am;
+	}
+	
+	Access access;
+	AsyncMappable asyncobject;
+}
 
 public final class StatisticsRunner extends GenericThread {
 
@@ -90,10 +105,10 @@ public final class StatisticsRunner extends GenericThread {
 	  synchronized (todo) {
 		  Iterator iter = todo.iterator();
 		  while (iter.hasNext()) {
-			  Access tb = (Access) iter.next();
-			  myStore.storeAccess(tb);
+			  TodoItem ti = (TodoItem) iter.next();
+			  myStore.storeAccess(ti.access, ti.asyncobject);
 			  iter.remove();
-			  tb = null;
+			  ti = null;
 			  if (todo.size() > 50) {
 				  System.err.println("WARNING: StatisticsRunner TODO list size:  " + todo.size());
 			  }
@@ -107,8 +122,8 @@ public final class StatisticsRunner extends GenericThread {
    *
    * @param a
    */
-  public final void addAccess(final Access a, final Exception e) {
-    todo.add(a);
+  public final void addAccess(final Access a, final Exception e, AsyncMappable am) {
+    todo.add( new TodoItem(a, am) );
     // Add to webserviceaccesslistener.
     WebserviceAccessListener.getInstance().addAccess(a, e);
   }

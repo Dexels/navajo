@@ -1,5 +1,6 @@
 package com.dexels.navajo.server.statistics;
 
+import com.dexels.navajo.mapping.AsyncMappable;
 import com.dexels.navajo.server.Access;
 import java.util.Map;
 
@@ -35,7 +36,7 @@ public interface StoreInterface {
    *
    * @param a
    */
-  public void storeAccess(final Access a);
+  public void storeAccess(final Access a, final AsyncMappable am);
 
   /**
    * Set the url for the database.

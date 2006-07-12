@@ -970,7 +970,7 @@ public final class Dispatcher {
         // Store access if navajostore is enabled and if webservice is not in list of special webservices.
         if (getNavajoConfig().getStatisticsRunner() != null && !isSpecialwebservice(access.rpcName)) {
           // Give asynchronous statistics runner a new access object to persist.
-          getNavajoConfig().getStatisticsRunner().addAccess(access, myException);
+          getNavajoConfig().getStatisticsRunner().addAccess(access, myException, null);
         }
       }
       else if (getNavajoConfig().monitorOn) { // Also monitor requests without access objects if monitor is on.
@@ -995,7 +995,7 @@ public final class Dispatcher {
           dummy.contentLength = (clientInfo != null ?
                                  clientInfo.getContentLength() : 0);
           dummy.threadCount = (clientInfo != null ? accessSet.size() : 0);
-          getNavajoConfig().getStatisticsRunner().addAccess(dummy, myException);
+          getNavajoConfig().getStatisticsRunner().addAccess(dummy, myException, null);
         }
       }
     }

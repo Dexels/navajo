@@ -99,6 +99,7 @@ public abstract class AsyncMappable implements Mappable {
   private boolean stop = false;
   public boolean interrupt = false;
   private boolean resume = false;
+  private boolean logged = false;
 
   /**
    * This class implements the asynchronous thread.
@@ -120,9 +121,10 @@ public abstract class AsyncMappable implements Mappable {
         parent.run();
       } catch (Throwable e) {
         e.printStackTrace();
+        kill = true;
         parent.setException(e);
       } finally {
-    	System.err.println("Calling setIsFinished()");
+    	System.err.println(">> Calling setIsFinished()");
     	parent.setIsFinished();
       }
     }
@@ -137,8 +139,9 @@ public abstract class AsyncMappable implements Mappable {
    */
   public abstract void kill();
 
-  public void setKill(boolean b) {
+  public void setKill(boolean b) { 
 	  if ( myRequest != null ) {
+		  kill = true;
 		  myRequest.interrupt();
 	  }
 	  if (b) {
@@ -208,6 +211,7 @@ public abstract class AsyncMappable implements Mappable {
   public void stop() {
     System.out.println("stop() called...waiting for thread to terminate...");
     stop = true;
+    kill = true;
     try {
       if (myRequest != null) {
         myRequest.join(1000);
@@ -312,22 +316,28 @@ public abstract class AsyncMappable implements Mappable {
   }
 
   protected boolean isKilled() {
-	// Log finalization.
-	log(true);
     return kill;
   }
 
-  private final void log(boolean killed) {
+  private final void log() {
 	// TODO IMPLEMENT LOG FOR ASYNC MAPPABLE.
-//	  if (Dispatcher.getInstance().getNavajoConfig().getStatisticsRunner() != null ) {
-//		  Access a = AsyncStore.getInstance().getAccessObject(this.pointer);
-//		  UserException ue = null;
-//		  if ( killed) {
-//			  ue = new UserException(-1, "Killed by client");
-//			  a.setException(ue);
-//		  }
-//		  Dispatcher.getInstance().getNavajoConfig().getStatisticsRunner().addAccess(a, ue, this);
-//	  }
+	  if ( Dispatcher.getInstance().getNavajoConfig().getStatisticsRunner() != null && !logged ) {
+		  Access a = AsyncStore.getInstance().getAccessObject(this.pointer);
+		  // determine total time.
+		  a.setFinished();
+		  UserException ue = null;
+		  if ( isKilled() ) {		 
+			  ue = new UserException(-1, "Killed by client");
+			  if ( caught != null ) {
+				  a.setException(caught);
+			  } else {
+				  a.setException(ue);
+			  }
+			  System.err.println("Creating exception: " + a.getException() );
+		  }
+		  logged = true;
+		  Dispatcher.getInstance().getNavajoConfig().getStatisticsRunner().addAccess(a, ue, this);
+	  } 
   }
   
   /**
@@ -339,7 +349,7 @@ public abstract class AsyncMappable implements Mappable {
     // Check whether killOnFinnish flag is set. If so, kill thread.
     
     // Log finalization.
-    log(false);
+    log();
     
     if (this.killOnFinnish) {
       kill = true;
