@@ -166,7 +166,11 @@ public class BaseHeaderImpl
 //    throw new java.lang.UnsupportedOperationException(
 //        "Method getCallBackInterupt() not yet implemented.");
 	
-	  return getCallback().getRef(object);
+	  if ( getCallback().getRef(object) == null ) {
+		  System.err.println("UNKNOWN CALLBACK OBJECT: " + object);
+		  return "";
+	  }
+	  return getCallback().getRef(object).getInterrupt();
 	  
   }
 

@@ -38,11 +38,11 @@ public class BaseCallbackImpl extends BaseNode {
         myObjects.add(boi);
     }
     
-    public String getRef(String name) {
+    public BaseObjectImpl getRef(String name) {
     	for (int i = 0; i < myObjects.size(); i++ ) {
     		BaseObjectImpl obj = (BaseObjectImpl) myObjects.get(i);
     		if ( obj.getName().equals(name) ) {
-    			return obj.getRef();
+    			return obj;
     		}
     	}
     	return null;
