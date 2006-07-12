@@ -1,5 +1,6 @@
 package com.dexels.navajo.adapter.navajostore;
 
+import com.dexels.navajo.mapping.AsyncMappable;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.Dispatcher;
 import java.sql.*;
@@ -186,7 +187,7 @@ public final class HSQLStore implements StoreInterface {
    *
    * @param a
    */
-  protected void addAccess(final Access a) {
+  protected void addAccess(final Access a, final AsyncMappable am) {
     if (Dispatcher.getInstance().getNavajoConfig().dbPath != null) {
       Connection con = createConnection(false, false, false);
       if (con != null) {
@@ -272,8 +273,8 @@ public final class HSQLStore implements StoreInterface {
    *
    * @param a
    */
-  public synchronized void storeAccess(Access a) {
-    addAccess(a);
+  public synchronized void storeAccess(Access a, AsyncMappable am) {
+    addAccess(a, am);
   }
 
 }

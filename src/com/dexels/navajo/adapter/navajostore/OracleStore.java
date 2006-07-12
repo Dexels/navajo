@@ -1,5 +1,6 @@
 package com.dexels.navajo.adapter.navajostore;
 
+import com.dexels.navajo.mapping.AsyncMappable;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.Dispatcher;
 import java.sql.*;
@@ -53,6 +54,9 @@ public final class OracleStore implements StoreInterface {
 	private static String insertLog =
 		"insert into navajolog (access_id, exception, navajoin, navajoout) values (?, ?, ?, ?)";
 
+	private static String insertAsyncLog =
+		"insert into navajoasync ( access_id, ref_id, asyncmap, totaltime, exception, created ) values (?, ?, ?, ?, ?, ?)";
+
 	/**
 	 * Set the database url (only for databases which are started by Navajo, e.g. HSQL).
 	 * Required by StoreInterface
@@ -93,6 +97,36 @@ public final class OracleStore implements StoreInterface {
 		return myConnection;
 	}
 	
+	private final void addAsync(final Access a, final AsyncMappable am) {
+		if (Dispatcher.getInstance().getNavajoConfig().dbPath != null) {
+			Connection con = createConnection(false, false, false);
+			if (con != null) {
+				try {
+					PreparedStatement ps = con.prepareStatement(insertAsyncLog);
+					ps.setString(1, a.accessID);
+					ps.setString(2, am.pointer);
+					ps.setString(3, am.getClass().getName());
+					ps.setInt(4, a.getTotaltime());
+					ps.setString(5, ( a.getException() != null ? a.getException().getMessage() : "" ) );
+					ps.setTimestamp(6, new java.sql.Timestamp(a.created.getTime()));
+					ps.executeUpdate();
+					ps.close();
+				} catch (SQLException ex) {
+					ex.printStackTrace(System.err);
+				} finally {
+					if (con != null) {
+						try {
+							sqlMap.store();
+						}
+						catch (Exception ex1) {
+							ex1.printStackTrace(System.err);
+						}
+					}
+				}
+			}
+		}
+	}
+	
 	/**
 	 * Add a new access object to the persistent Navajo store.
 	 *
@@ -124,6 +158,7 @@ public final class OracleStore implements StoreInterface {
 					if (a.getException() != null || Dispatcher.getInstance().getNavajoConfig().needsFullAccessLog(a) ) {
 						addLog(con, a);
 					}
+				
 				}
 				catch (SQLException ex) {
 					ex.printStackTrace(System.err);
@@ -183,7 +218,11 @@ public final class OracleStore implements StoreInterface {
 	   *
 	   * @param a
 	   */
-	  public final synchronized void storeAccess(Access a) {
-	    addAccess(a);
+	  public final synchronized void storeAccess(Access a, AsyncMappable am) {
+		if ( am == null ) {
+			addAccess(a);
+		} else {
+			addAsync(a, am);
+		}
 	  }
 }
