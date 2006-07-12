@@ -784,7 +784,7 @@ public class NavajoClient implements ClientInterface {
     catch (java.net.SocketException uhe) {
       attemptsLeft--;
       if (attemptsLeft == 0) {
-        generateConnectionError(n, 4444, "Server down?: " + uhe.getMessage());
+        generateConnectionError(n, 4444, "Could not connect to server (network problem?) " + uhe.getMessage());
       }
       else {
         return retryTransaction(server, out, useCompression, attemptsLeft, interval, n);
@@ -792,7 +792,7 @@ public class NavajoClient implements ClientInterface {
     }
     catch (IOException uhe) {
       if (attemptsLeft == 0) {
-        generateConnectionError(n, 4444, "Server down?: " + uhe.getMessage());
+        generateConnectionError(n, 4444, "Could not connect to server (network problem?) " + uhe.getMessage());
       }
       else {
           attemptsLeft--;
