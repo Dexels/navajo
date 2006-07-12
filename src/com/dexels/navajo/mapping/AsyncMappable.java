@@ -312,9 +312,24 @@ public abstract class AsyncMappable implements Mappable {
   }
 
   protected boolean isKilled() {
+	// Log finalization.
+	log(true);
     return kill;
   }
 
+  private final void log(boolean killed) {
+	// TODO IMPLEMENT LOG FOR ASYNC MAPPABLE.
+//	  if (Dispatcher.getInstance().getNavajoConfig().getStatisticsRunner() != null ) {
+//		  Access a = AsyncStore.getInstance().getAccessObject(this.pointer);
+//		  UserException ue = null;
+//		  if ( killed) {
+//			  ue = new UserException(-1, "Killed by client");
+//			  a.setException(ue);
+//		  }
+//		  Dispatcher.getInstance().getNavajoConfig().getStatisticsRunner().addAccess(a, ue, this);
+//	  }
+  }
+  
   /**
    * Used by the thread to indicate that is has finished it's parent's run() method.
    *
@@ -322,6 +337,10 @@ public abstract class AsyncMappable implements Mappable {
   protected void setIsFinished() {
     isFinished = true;
     // Check whether killOnFinnish flag is set. If so, kill thread.
+    
+    // Log finalization.
+    log(false);
+    
     if (this.killOnFinnish) {
       kill = true;
       AsyncStore.getInstance().removeInstance(this.pointer);
