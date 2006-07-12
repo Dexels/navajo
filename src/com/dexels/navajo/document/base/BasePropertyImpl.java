@@ -361,11 +361,11 @@ public class BasePropertyImpl
     }
 
     if (getType().equals(Property.BOOLEAN_PROPERTY)) {
-      if (getValue() != null) {
+      if (getValue() != null || getValue().equals("") ) {
         return new Boolean( ( (String) getValue()).equals("true"));
       }
       else {
-        return new Boolean(false);
+        return null;
       }
     }
     if (getType().equals(Property.PERCENTAGE_PROPERTY)) {
