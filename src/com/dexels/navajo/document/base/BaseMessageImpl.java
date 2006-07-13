@@ -697,7 +697,7 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode {
                 Message arrayP = getArrayParentMessage();
                 if (arrayP!=null) {
                     Message def = arrayP.getDefinitionMessage();
-                    if (def!=null) {
+                    if (def!=null && def.getProperty(path) != null) {
                         return def.getProperty(path).copy(getRootDoc());
                     }
                 }
