@@ -38,6 +38,7 @@ public class BIRTMap implements Mappable {
 		  EngineConfig config = new EngineConfig();
 		  config.setEngineHome(engineDir);
 		  //Create the report engine
+		  System.err.println("CREATING NEW BIRT ENGINE");
 		  myBirt = new ReportEngine(config);
 	  }
 	  return myBirt;
