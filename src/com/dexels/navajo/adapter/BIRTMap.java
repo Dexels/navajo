@@ -167,5 +167,11 @@ public class BIRTMap implements Mappable {
    */
   public void kill() {
   }
+  
+  public void finalize() {
+	  if ( myBirt != null ) {
+		  myBirt.destroy();
+	  }
+  }
 
 }
