@@ -10,18 +10,17 @@ import java.util.*;
 import java.io.*;
  
 public class BIRTMap implements Mappable {
-  private HashMap parameters;
-  private  String reportDir = "reports/";
-  private String engineDir = "birt-engine/";
+	private HashMap parameters;
+	private  String reportDir = "reports/";
+	private String engineDir = "birt-engine/";
 
-  public Binary report;
-  public String reportName;
-  public String outputFormat;
-  public Object parameterValue;
-  public String parameterName;
+	public Binary report;
+	public String reportName;
+	public String outputFormat;
+	public Object parameterValue;
+	public String parameterName;
 
-  private static ReportEngine myBirt = null;
-  
+ 
   public Binary getReport(){
 	  
 	  try{
@@ -31,17 +30,6 @@ public class BIRTMap implements Mappable {
 		  return null;
 	  }
 	  
-  }
-
-  private ReportEngine getReportEngine() {
-	  if ( myBirt == null ) {
-		  EngineConfig config = new EngineConfig();
-		  config.setEngineHome(engineDir);
-		  //Create the report engine
-		  System.err.println("CREATING NEW BIRT ENGINE");
-		  myBirt = new ReportEngine(config);
-	  }
-	  return myBirt;
   }
   
   public void setReportName(String s){
@@ -64,46 +52,56 @@ public class BIRTMap implements Mappable {
   }
 
   private Binary executeReport(String reportName, HashMap reportParams, String outputFormat) throws EngineException {
-    //ByteArrayOutputStream bout = new ByteArrayOutputStream();
+	  //ByteArrayOutputStream bout = new ByteArrayOutputStream();
 	  
-	Binary result = new Binary();
-    //Engine Configuration - set and get temp dir, BIRT home, Servlet context
- 
-	ReportEngine engine = getReportEngine();
-	
-    //Open a report design - use design to modify design, retrieve embedded images etc.
-    IReportRunnable design = engine.openReportDesign(reportDir + reportName + ".rptdesign");
-
-    //Create task to run the report - use the task to execute and run the report,
-    IRunAndRenderTask task = engine.createRunAndRenderTask(design);
-    task.setParameterValues(reportParams);
-
-    //Set render context to handle url and image locataions
-    if (outputFormat == "html") {
-      HTMLRenderContext renderContextHTML = new HTMLRenderContext();
-      renderContextHTML.setImageDirectory("image");
-      HashMap contextMap = new HashMap();
-      contextMap.put(EngineConstants.APPCONTEXT_HTML_RENDER_CONTEXT, renderContextHTML);
-      task.setAppContext(contextMap);
-
-      //Set rendering options - such as file or stream output,
-      //output format, whether it is embeddable, etc
-      HTMLRenderOption options = new HTMLRenderOption();
-      options.setOutputStream(result.getOutputStream());
-      options.setOutputFormat("html");
-      task.setRenderOption(options);
-    }
-    else {
-      RenderOptionBase options = new RenderOptionBase();
-      options.setOutputFormat("pdf");
-      options.setOutputStream(result.getOutputStream());
-      task.setRenderOption(options);
-    }
-
-    //run the report and destroy the engine
-    task.run();
-    // engine.destroy();
-    return result;
+	  ReportEngine engine = null;
+	  
+	  try {
+		  Binary result = new Binary();
+		  //Engine Configuration - set and get temp dir, BIRT home, Servlet context
+		  
+		  EngineConfig config = new EngineConfig();
+		  config.setEngineHome(engineDir);
+		  engine = new ReportEngine(config);
+		  
+		  //Open a report design - use design to modify design, retrieve embedded images etc.
+		  IReportRunnable design = engine.openReportDesign(reportDir + reportName + ".rptdesign");
+		  
+		  //Create task to run the report - use the task to execute and run the report,
+		  IRunAndRenderTask task = engine.createRunAndRenderTask(design);
+		  task.setParameterValues(reportParams);
+		  
+		  //Set render context to handle url and image locataions
+		  if (outputFormat == "html") {
+			  HTMLRenderContext renderContextHTML = new HTMLRenderContext();
+			  renderContextHTML.setImageDirectory("image");
+			  HashMap contextMap = new HashMap();
+			  contextMap.put(EngineConstants.APPCONTEXT_HTML_RENDER_CONTEXT, renderContextHTML);
+			  task.setAppContext(contextMap);
+			  
+			  //Set rendering options - such as file or stream output,
+			  //output format, whether it is embeddable, etc
+			  HTMLRenderOption options = new HTMLRenderOption();
+			  options.setOutputStream(result.getOutputStream());
+			  options.setOutputFormat("html");
+			  task.setRenderOption(options);
+		  }
+		  else {
+			  RenderOptionBase options = new RenderOptionBase();
+			  options.setOutputFormat("pdf");
+			  options.setOutputStream(result.getOutputStream());
+			  task.setRenderOption(options);
+		  }
+		  
+		  //run the report and destroy the engine
+		  task.run();
+		  // engine.destroy();
+		  return result;
+	  } finally {
+		  if ( engine != null ) {
+			  engine.destroy();
+		  }
+	  }
   }
 
   /**
@@ -168,10 +166,4 @@ public class BIRTMap implements Mappable {
   public void kill() {
   }
   
-  public void finalize() {
-	  if ( myBirt != null ) {
-		  myBirt.destroy();
-	  }
-  }
-
 }
