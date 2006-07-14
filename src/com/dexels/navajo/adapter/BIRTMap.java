@@ -65,6 +65,7 @@ public class BIRTMap implements Mappable {
 		  engine = new ReportEngine(config);
 		  
 		  //Open a report design - use design to modify design, retrieve embedded images etc.
+		  System.err.println("About to open report design: " + reportDir + reportName + ".rptdesign");
 		  IReportRunnable design = engine.openReportDesign(reportDir + reportName + ".rptdesign");
 		  
 		  //Create task to run the report - use the task to execute and run the report,
