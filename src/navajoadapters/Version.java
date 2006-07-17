@@ -50,16 +50,18 @@ package navajoadapters;
  *                      the file MailMap.java
  * 
  * 2.2.5 Implemented setContent() in FileMap.
+ * 
+ * 2.2.6 Supports kill (due to time-out) connection brokers and reviving those.
  *
  */
 public class Version extends dexels.Version {
 
 	public static final int    MAJOR       = 2;
 	public static final int    MINOR       = 2;
-	public static final int    PATCHLEVEL  = 5;
+	public static final int    PATCHLEVEL  = 6;
 	public static final String VENDOR      = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Adapter Library";
-	public static final String RELEASEDATE = "2006-06-29";
+	public static final String RELEASEDATE = "2006-07-17";
 
 	//	Included packages.
 	String [] includes = {"navajodocument.Version", "navajo.Version", "navajoclient.Version", "navajofunctions.Version"};
