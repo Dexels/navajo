@@ -191,6 +191,8 @@ public class SQLMap implements Mappable, LazyArray {
 
   private static int openResultSets = 0;
   private Access myAccess;
+  
+  public int instances;
 
   private void createDataSource(Message body, NavajoConfig config) throws Throwable {
 
@@ -261,6 +263,10 @@ public class SQLMap implements Mappable, LazyArray {
     //System.out.println(this.getClass() + ": " + logOutput);
   }
 
+  public int getInstances() {
+	  return ConnectionBrokerManager.getInstances();
+  }
+  
   public synchronized void setDeleteDatasource(String datasourceName) throws
       MappableException, UserException {
     logger.log(NavajoPriority.INFO,
