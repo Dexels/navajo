@@ -38,12 +38,9 @@ import java.util.Map;
  */
 
 public final class OracleStore implements StoreInterface {
-
-	private static boolean ready = false;
-	private static boolean restartInProgress = false;
-	private SQLMap sqlMap = null;
+	
 	private static String version = "$Id$";
-	  
+	
 	/**
 	 * Navajo store SQL queries.
 	 */
@@ -53,24 +50,24 @@ public final class OracleStore implements StoreInterface {
 	
 	private static String insertLog =
 		"insert into navajolog (access_id, exception, navajoin, navajoout) values (?, ?, ?, ?)";
-
+	
 	private static String insertAsyncLog =
 		"insert into navajoasync ( access_id, ref_id, asyncmap, totaltime, exception, created ) values (?, ?, ?, ?, ?, ?)";
-
+	
 	/**
 	 * Set the database url (only for databases which are started by Navajo, e.g. HSQL).
 	 * Required by StoreInterface
 	 */
 	public void setDatabaseUrl(String path) {
-	    sqlMap = new SQLMap();
-	  }
-
+		//sqlMap = new SQLMap();
+	}
+	
 	/**
 	 * Required by StoreInterface.
 	 */
-	 public void setDatabaseParameters(Map p) {
-	  }
-	 
+	public void setDatabaseParameters(Map p) {
+	}
+	
 	/**
 	 * Create a connection to the Oracle store.
 	 *
@@ -78,31 +75,34 @@ public final class OracleStore implements StoreInterface {
 	 * @param norestart set if restart is not allowed (when initializing!)
 	 * @return
 	 */
-	private final Connection createConnection(boolean nowait, boolean norestart, boolean init) {
-	
-		Connection myConnection = null;
+	private final SQLMap createConnection(boolean nowait, boolean norestart, boolean init) {
 		
+		SQLMap sqlMap = new SQLMap();
 		try {
 			sqlMap.load(null, null, null, Dispatcher.getInstance().getNavajoConfig());
 			sqlMap.setDatasource("navajostore");
-			myConnection = sqlMap.getConnection();
-			ready = true;
 		}
 		catch (Exception ex) {
 			ex.printStackTrace(System.err);
-			ready = false;
 			return null;
 		}
 		
-		return myConnection;
+		return sqlMap;
 	}
 	
 	private final void addAsync(final Access a, final AsyncMappable am) {
 		if (Dispatcher.getInstance().getNavajoConfig().dbPath != null) {
-			Connection con = createConnection(false, false, false);
+			SQLMap sqlMap = createConnection(false, false, false);
+			Connection con = null;
+			try {
+				con = sqlMap.getConnection();
+			} catch (SQLException e) {
+				e.printStackTrace(System.err);
+			}
 			if (con != null) {
+				PreparedStatement ps = null;
 				try {
-					PreparedStatement ps = con.prepareStatement(insertAsyncLog);
+					ps = con.prepareStatement(insertAsyncLog);
 					ps.setString(1, a.accessID);
 					ps.setString(2, am.pointer);
 					ps.setString(3, am.getClass().getName());
@@ -114,6 +114,12 @@ public final class OracleStore implements StoreInterface {
 				} catch (SQLException ex) {
 					ex.printStackTrace(System.err);
 				} finally {
+					if (ps != null) {
+						try {
+							ps.close();
+						} catch (SQLException e) {
+						}
+					}
 					if (con != null) {
 						try {
 							sqlMap.store();
@@ -134,10 +140,17 @@ public final class OracleStore implements StoreInterface {
 	 */
 	private final void addAccess(final Access a) {
 		if (Dispatcher.getInstance().getNavajoConfig().dbPath != null) {
-			Connection con = createConnection(false, false, false);
+			SQLMap sqlMap = createConnection(false, false, false);
+			Connection con = null;
+			try {
+				con = sqlMap.getConnection();
+			} catch (SQLException e) {
+				e.printStackTrace(System.err);
+			}
 			if (con != null) {
+				PreparedStatement ps = null;
 				try {
-					PreparedStatement ps = con.prepareStatement(insertAccessSQL);
+					ps = con.prepareStatement(insertAccessSQL);
 					ps.setString(1, a.accessID);
 					ps.setString(2, a.rpcName);
 					ps.setString(3, a.rpcUser);
@@ -158,11 +171,17 @@ public final class OracleStore implements StoreInterface {
 					if (a.getException() != null || Dispatcher.getInstance().getNavajoConfig().needsFullAccessLog(a) ) {
 						addLog(con, a);
 					}
-				
+					
 				}
 				catch (SQLException ex) {
 					ex.printStackTrace(System.err);
 				} finally {
+					if (ps != null) {
+						try {
+							ps.close();
+						} catch (SQLException e) {
+						}
+					}
 					if (con != null) {
 						try {
 							sqlMap.store();
@@ -174,55 +193,55 @@ public final class OracleStore implements StoreInterface {
 				}
 			}
 		}
-	  }
-
-	  /**
-	   * Add access log detail: exception, navajo request, navajo response.
-	   *
-	   * @param a
-	   */
-	  private final void addLog(Connection con, Access a) {
-	    try {
-	      PreparedStatement ps = con.prepareStatement(insertLog);
-	      ps.setString(1, a.accessID);
-	      StringWriter w = new StringWriter();
-	      if (a.getException() != null) {
-	        PrintWriter pw = new PrintWriter(w);
-	        a.getException().printStackTrace(pw);
-	      }
-	      ps.setString(2, (w != null && w.toString().length() > 1 ? w.toString() : "No Exception"));
-	      java.io.ByteArrayOutputStream bosIn = new java.io.ByteArrayOutputStream();
-	      java.io.ByteArrayOutputStream bosOut = new java.io.ByteArrayOutputStream();
-	      Navajo inDoc = (a.getInDoc() != null ? a.getInDoc() : null);
-	      Navajo outDoc = a.getOutputDoc();
-	      if (inDoc != null) {
-	        inDoc.write(bosIn);
-	        bosIn.close();
-	      }
-	      if (outDoc != null) {
-	        outDoc.write(bosOut);
-	        bosOut.close();
-	      }
-	      ps.setBytes(3, (bosIn != null ? bosIn.toByteArray() : null));
-	      ps.setBytes(4, (bosOut != null ? bosOut.toByteArray() : null));
-	      ps.executeUpdate();
-	      ps.close();
-	    }
-	    catch (Exception e) {
-	      e.printStackTrace(System.err);
-	    }
-	  }
-
-	  /**
-	   * Interface method to persist an Access object.
-	   *
-	   * @param a
-	   */
-	  public final synchronized void storeAccess(Access a, AsyncMappable am) {
+	}
+	
+	/**
+	 * Add access log detail: exception, navajo request, navajo response.
+	 *
+	 * @param a
+	 */
+	private final void addLog(Connection con, Access a) {
+		try {
+			PreparedStatement ps = con.prepareStatement(insertLog);
+			ps.setString(1, a.accessID);
+			StringWriter w = new StringWriter();
+			if (a.getException() != null) {
+				PrintWriter pw = new PrintWriter(w);
+				a.getException().printStackTrace(pw);
+			}
+			ps.setString(2, (w != null && w.toString().length() > 1 ? w.toString() : "No Exception"));
+			java.io.ByteArrayOutputStream bosIn = new java.io.ByteArrayOutputStream();
+			java.io.ByteArrayOutputStream bosOut = new java.io.ByteArrayOutputStream();
+			Navajo inDoc = (a.getInDoc() != null ? a.getInDoc() : null);
+			Navajo outDoc = a.getOutputDoc();
+			if (inDoc != null) {
+				inDoc.write(bosIn);
+				bosIn.close();
+			}
+			if (outDoc != null) {
+				outDoc.write(bosOut);
+				bosOut.close();
+			}
+			ps.setBytes(3, (bosIn != null ? bosIn.toByteArray() : null));
+			ps.setBytes(4, (bosOut != null ? bosOut.toByteArray() : null));
+			ps.executeUpdate();
+			ps.close();
+		}
+		catch (Exception e) {
+			e.printStackTrace(System.err);
+		}
+	}
+	
+	/**
+	 * Interface method to persist an Access object.
+	 *
+	 * @param a
+	 */
+	public final synchronized void storeAccess(Access a, AsyncMappable am) {
 		if ( am == null ) {
 			addAccess(a);
 		} else {
 			addAsync(a, am);
 		}
-	  }
+	}
 }
