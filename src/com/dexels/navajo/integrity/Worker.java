@@ -189,28 +189,29 @@ public class Worker extends GenericThread {
 				}
 				
 			}
-		}
-		// Remove 'old' responses.
-		Set s = new HashSet(integrityCache.keySet());
-		Iterator i = s.iterator();
-		long now = System.currentTimeMillis();
-		while ( i.hasNext() ) {
-			String id = (String) i.next();
-			File f = (File) integrityCache.get(id);
-			if ( f != null ) {
-				long birth = f.lastModified();
-				if ( now - birth > 60000 ) {
-					// remove file reference from integrity cache.
-					if ( !f.delete() ) {
-						AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "worker(): Could not delete response file: " + f.getName());
-					} else {
-						fileCount--;
-						integrityCache.remove(id);
+			
+			// Remove 'old' responses.
+			Set s2 = new HashSet(integrityCache.keySet());
+			Iterator i = s2.iterator();
+			long now = System.currentTimeMillis();
+			while ( i.hasNext() ) {
+				String id = (String) i.next();
+				File f = (File) integrityCache.get(id);
+				if ( f != null ) {
+					long birth = f.lastModified();
+					if ( now - birth > 60000 ) {
+						// remove file reference from integrity cache.
+						if ( !f.delete() ) {
+							AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "worker(): Could not delete response file: " + f.getName());
+						} else {
+							fileCount--;
+							integrityCache.remove(id);
+						}
 					}
+				} else {
+					fileCount--;
+					integrityCache.remove(id);
 				}
-			} else {
-				fileCount--;
-				integrityCache.remove(id);
 			}
 		}
 	}
@@ -308,7 +309,9 @@ public class Worker extends GenericThread {
 			// Immediately add request id to notWrittenResponses.
 			notWrittenReponses.add( request.getHeader().getRequestId() );
 			//  Add response to workList.
-			workList.put( request.getHeader().getRequestId(), response );
+			synchronized ( workList ) {
+				workList.put( request.getHeader().getRequestId(), response );
+			}
 		}
 	}
 	
