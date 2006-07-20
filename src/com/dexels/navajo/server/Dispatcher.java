@@ -352,6 +352,11 @@ public final class Dispatcher {
 				  expirationInterval,
 				  (expirationInterval != -1));
 		  
+		  // Store response for integrity checking.
+		  if ( out != null && !integrityViolation ) {
+			  Worker.getInstance().setResponse(in, out);
+		  }
+		  
 		  return out;
 	  }
 	  catch (java.lang.ClassNotFoundException cnfe) {
@@ -363,10 +368,6 @@ public final class Dispatcher {
 	  catch (java.lang.InstantiationException ie) {
 		  throw new SystemException( -1, ie.getMessage(), ie);
 	  } finally {
-		  // Store response for integrity checking.
-		  if ( out != null && !integrityViolation ) {
-			  Worker.getInstance().setResponse(in, out);
-		  }
 		  // Release locks.
 		  if ( locks != null ) {
 			  lm.removeLocks(access, locks);
