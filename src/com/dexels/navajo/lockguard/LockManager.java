@@ -62,6 +62,8 @@ public final class LockManager extends GenericThread {
 	private long configTimestamp = -1;
 	private NavajoConfig myConfig;
 	
+	private static Object semaphore = new Object();
+	
 	public LockManager() {
 		super("Navajo LockManager");
 	}
@@ -152,10 +154,12 @@ public final class LockManager extends GenericThread {
 	}
 	
 	public static LockManager getInstance(NavajoConfig config) {
-		if ( instance == null ) {
-			instance = new LockManager();
-			instance.myConfig = config;
-			instance.startThread(instance);
+		synchronized ( semaphore ) {
+			if ( instance == null ) {
+				instance = new LockManager();
+				instance.myConfig = config;
+				instance.startThread(instance);
+			}
 		}
 		return instance;
 	}

@@ -56,7 +56,7 @@ public class TaskRunner extends GenericThread {
 		
 	private final static String TASK_CONFIG = "tasks.xml";
 	
-	private Object semaphore = new Object();
+	private static Object semaphore = new Object();
 	
 	public TaskRunner() {
 		super("Navajo TaskRunner");
@@ -138,17 +138,18 @@ public class TaskRunner extends GenericThread {
 	
 	public static TaskRunner getInstance() {
 		
-		if ( instance != null ) {
-			return instance;
+		synchronized (semaphore) {
+			if ( instance != null ) {
+				return instance;
+			}
+			
+			instance = new TaskRunner();	
+			instance.startThread(instance);
+			instance.readConfig();
+			
+			AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Started task scheduler process $Id$");
 		}
-		
-		instance = new TaskRunner();	
-		instance.startThread(instance);
-	  	instance.readConfig();
-	 
-	    AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Started task scheduler process $Id$");
-		
-	    return instance;
+		return instance;
 	}
 	
 	public final void worker() {

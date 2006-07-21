@@ -56,6 +56,8 @@ public final class StatisticsRunner extends GenericThread {
   private StoreInterface myStore = null;
   private Set todo = Collections.synchronizedSet(new HashSet());
   
+  private static Object semaphore = new Object();
+  
   public StatisticsRunner() {
 	 super("Navajo StatisticsRunner");
   }
@@ -72,26 +74,27 @@ public final class StatisticsRunner extends GenericThread {
    * @return
    */
   public final synchronized static StatisticsRunner getInstance(String storePath, Map parameters, String storeClass) {
-
-    if (instance == null) {
-     
-        instance = new StatisticsRunner();
-        Class si = null;
-        try {
-          si = Class.forName(storeClass);
-          instance.myStore = (StoreInterface) si.newInstance();
-          instance.myStore.setDatabaseParameters(parameters);
-          instance.myStore.setDatabaseUrl(storePath);
-        }
-        catch (Exception ex) {
-        	ex.printStackTrace(System.err);
-        }
-        instance.setSleepTime(2000);
-        instance.startThread(instance);
-        System.err.println("Started StatisticsRunner version $Id$ using store: " + instance.myStore.getClass().getName());
-      }
-    
-    return instance;
+	  
+	  synchronized (semaphore) {
+		  if (instance == null) {
+			  
+			  instance = new StatisticsRunner();
+			  Class si = null;
+			  try {
+				  si = Class.forName(storeClass);
+				  instance.myStore = (StoreInterface) si.newInstance();
+				  instance.myStore.setDatabaseParameters(parameters);
+				  instance.myStore.setDatabaseUrl(storePath);
+			  }
+			  catch (Exception ex) {
+				  ex.printStackTrace(System.err);
+			  }
+			  instance.setSleepTime(2000);
+			  instance.startThread(instance);
+			  System.err.println("Started StatisticsRunner version $Id$ using store: " + instance.myStore.getClass().getName());
+		  }
+	  }
+	  return instance;
   }
 
   /**

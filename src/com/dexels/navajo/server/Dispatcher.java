@@ -88,6 +88,8 @@ public final class Dispatcher {
   public static final int rateWindowSize = 20;
   public static double requestRate = 0.0;
   private  long[] rateWindow = new long[rateWindowSize];
+  
+  private static Object semaphore = new Object();
 
   /**
    * Constructor for URL based configuration.
@@ -134,17 +136,18 @@ public final class Dispatcher {
   }
   
   public static Dispatcher getInstance(URL configurationUrl,
-          InputStreamReader fileInputStreamReader, String serverIdentification) throws
-          NavajoException  {
+		  InputStreamReader fileInputStreamReader, String serverIdentification) throws
+		  NavajoException  {
 	  
-	  if ( instance == null ) {
-		  instance = new Dispatcher(configurationUrl, fileInputStreamReader);
-		  instance.setServerIdentifier(serverIdentification);
-		  NavajoFactory.getInstance().setTempDir(instance.getTempDir());
-		  // Startup task runner.
-	      instance.navajoConfig.getTaskRunner();
+	  synchronized (semaphore) {
+		  if ( instance == null ) {
+			  instance = new Dispatcher(configurationUrl, fileInputStreamReader);
+			  instance.setServerIdentifier(serverIdentification);
+			  NavajoFactory.getInstance().setTempDir(instance.getTempDir());
+			  // Startup task runner.
+			  instance.navajoConfig.getTaskRunner();
+		  }
 	  }
-	  
 	  return instance;
   }
   

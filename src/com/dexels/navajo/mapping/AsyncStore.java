@@ -44,6 +44,8 @@ public final class AsyncStore extends GenericThread {
   private float timeout;
   private static int threadWait = 2000;
   
+  private static Object semaphore = new Object();
+  
   public AsyncStore() {
 		super("Navajo AsyncStore");
   }
@@ -58,20 +60,24 @@ public final class AsyncStore extends GenericThread {
   }
 
   /**
-       * Get the singleton AsyncStore object instance given an async inactive timeout.
+   * Get the singleton AsyncStore object instance given an async inactive timeout.
    *
    * @param timeout
    * @return
    */
   public final static AsyncStore getInstance(float timeout) {
-    if (instance == null) {
-      instance = new AsyncStore();
-      instance.timeout = timeout;
-      instance.objectStore = Collections.synchronizedMap(new HashMap());
-      instance.accessStore = Collections.synchronizedMap(new HashMap());
-      instance.setSleepTime(threadWait);
-      instance.startThread(instance);
-    }
+	
+	  /** Make sure new instance determination is thread safe */
+	  synchronized ( semaphore ) {
+		  if (instance == null) {
+			  instance = new AsyncStore();
+			  instance.timeout = timeout;
+			  instance.objectStore = Collections.synchronizedMap(new HashMap());
+			  instance.accessStore = Collections.synchronizedMap(new HashMap());
+			  instance.setSleepTime(threadWait);
+			  instance.startThread(instance);
+		  }
+	  }
     return instance;
   }
 
