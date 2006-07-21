@@ -20,27 +20,32 @@ public abstract class NavajoFactory {
   protected Map defaultSubTypes = new HashMap();
   protected final ArrayList myBinaryActivityListeners = new ArrayList();
 
+  private static Object semaphore = new Object();
+  
   /**
    * Get the default NavajoFactory implementation.
    *
    * @return NavajoFactory instance
    */
   public static NavajoFactory getInstance() {
-    if (impl == null) {
-    	
-      String name = System.getProperty(
-          "com.dexels.navajo.DocumentImplementation");
-      if (name == null) {
-        name = "com.dexels.navajo.document.jaxpimpl.NavajoFactoryImpl";
-      }
-      try {
-        impl = (NavajoFactory) Class.forName(name).newInstance();
-      }
-      catch (Exception e) {
-        e.printStackTrace();
-      }
-    }
-    return impl;
+	  
+	  synchronized ( semaphore ) {
+		  if (impl == null) {
+			  
+			  String name = System.getProperty(
+			  "com.dexels.navajo.DocumentImplementation");
+			  if (name == null) {
+				  name = "com.dexels.navajo.document.jaxpimpl.NavajoFactoryImpl";
+			  }
+			  try {
+				  impl = (NavajoFactory) Class.forName(name).newInstance();
+			  }
+			  catch (Exception e) {
+				  e.printStackTrace();
+			  }
+		  }
+	  }
+	  return impl;
   }
   
   public static void resetImplementation() {
@@ -54,25 +59,28 @@ public abstract class NavajoFactory {
    * @return NavajoFactory instance
    */
   public static NavajoFactory getInstance(String className) {
-	  if (alternativeFactories.get(className) != null) {
-		  
-		  if ( impl != null ) {
-			  String cls = impl.getClass().getName();
-			  if (!(className.equals(cls))) {
-				  System.err.println("NavajoFactory Warning: Getting instance, but current instance if different. Use resetImplementation.");
+	  
+	  synchronized ( semaphore ) {
+		  if (alternativeFactories.get(className) != null) {
+			  
+			  if ( impl != null ) {
+				  String cls = impl.getClass().getName();
+				  if (!(className.equals(cls))) {
+					  System.err.println("NavajoFactory Warning: Getting instance, but current instance if different. Use resetImplementation.");
+				  }
 			  }
+			  return (NavajoFactory) alternativeFactories.get(className);
+			  
 		  }
-		  return (NavajoFactory) alternativeFactories.get(className);
-		  
-	  }
-	  try {
-		  NavajoFactory alt = (NavajoFactory) Class.forName(className).newInstance();
-		  alternativeFactories.put(className, alt);
-		  return alt;
-	  }
-	  catch (Exception e) {
-		  e.printStackTrace();
-		  return null;
+		  try {
+			  NavajoFactory alt = (NavajoFactory) Class.forName(className).newInstance();
+			  alternativeFactories.put(className, alt);
+			  return alt;
+		  }
+		  catch (Exception e) {
+			  e.printStackTrace();
+			  return null;
+		  }
 	  }
   }
 
