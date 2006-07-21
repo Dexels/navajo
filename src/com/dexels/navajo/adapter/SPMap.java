@@ -45,23 +45,27 @@ public class SPMap extends SQLMap {
 
   protected CallableStatement callStatement = null;
 
+  private static Object semaphore = new Object();
+  
   public void load(Parameters parms, Navajo inMessage, Access access,
-                   NavajoConfig config) throws com.dexels.navajo.server.
-      UserException, com.dexels.navajo.mapping.MappableException {
-
-    super.load(parms, inMessage, access, config);
-    if (lookupTable == null) {
-      lookupTable = new HashMap();
-      lookupTable.put("VARCHAR", new Integer(java.sql.Types.VARCHAR));
-      lookupTable.put("DOUBLE", new Integer(java.sql.Types.DOUBLE));
-      lookupTable.put("BIT", new Integer(java.sql.Types.BIT));
-      lookupTable.put("INTEGER", new Integer(java.sql.Types.INTEGER));
-      lookupTable.put("TINYINT", new Integer(java.sql.Types.TINYINT));
-      lookupTable.put("DATE", new Integer(java.sql.Types.TIMESTAMP));
-      lookupTable.put("SMALLINT", new Integer(java.sql.Types.SMALLINT));
-      lookupTable.put("NUMBER", new Integer(java.sql.Types.NUMERIC));
-    }
-    // System.out.println("lookupTable = " + lookupTable);
+		  NavajoConfig config) throws com.dexels.navajo.server.
+		  UserException, com.dexels.navajo.mapping.MappableException {
+	  
+	  super.load(parms, inMessage, access, config);
+	  synchronized ( semaphore  ) {
+		  if (lookupTable == null) {
+			  lookupTable = new HashMap();
+			  lookupTable.put("VARCHAR", new Integer(java.sql.Types.VARCHAR));
+			  lookupTable.put("DOUBLE", new Integer(java.sql.Types.DOUBLE));
+			  lookupTable.put("BIT", new Integer(java.sql.Types.BIT));
+			  lookupTable.put("INTEGER", new Integer(java.sql.Types.INTEGER));
+			  lookupTable.put("TINYINT", new Integer(java.sql.Types.TINYINT));
+			  lookupTable.put("DATE", new Integer(java.sql.Types.TIMESTAMP));
+			  lookupTable.put("SMALLINT", new Integer(java.sql.Types.SMALLINT));
+			  lookupTable.put("NUMBER", new Integer(java.sql.Types.NUMERIC));
+		  }
+	  }
+	  // System.out.println("lookupTable = " + lookupTable);
   }
 
   /**

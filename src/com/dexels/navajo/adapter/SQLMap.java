@@ -193,7 +193,9 @@ public class SQLMap implements Mappable, LazyArray {
   private Access myAccess;
   
   public int instances;
-
+  
+  private static Object semaphore = new Object();
+  
   private void createDataSource(Message body, NavajoConfig config) throws Throwable {
 
     String dataSourceName = body.getName();
@@ -209,10 +211,6 @@ public class SQLMap implements Mappable, LazyArray {
         NavajoUtils.getPropertyValue(body, "username", true);
     final String password = (this.password != null) ? this.password :
         NavajoUtils.getPropertyValue(body, "password", true);
-        //System.out.println(this.getClass() + ": user name set to '" +
-        //                   username + "'");
-        //System.out.println(this.getClass() + ": password set to '" +
-        //                   password + "'");
 
     String logFile = config.getRootPath() + "/log/"
         + NavajoUtils.getPropertyValue(body, "logfile", true);
@@ -259,8 +257,6 @@ public class SQLMap implements Mappable, LazyArray {
         "Maximum connections = " + max + "\n" +
         "Autocommit = " + ac + "\n";
 
-    //logger.log(NavajoPriority.DEBUG, logOutput);
-    //System.out.println(this.getClass() + ": " + logOutput);
   }
 
   public int getInstances() {
@@ -280,62 +276,63 @@ public class SQLMap implements Mappable, LazyArray {
    *
    * @param reload
    */
-  public synchronized void setReload(String datasourceName) throws
-      MappableException, UserException {
-
-    if (debug) {
-      System.out.println("SQLMAP setReload(" + datasourceName + ") called!");
-    }
-
-    try {
-
-      if (transactionContextMap == null || !datasourceName.equals("")) {
-        transactionContextMap = Collections.synchronizedMap(new HashMap());
-      }
-
-      if (autoCommitMap == null || !datasourceName.equals("")) {
-        autoCommitMap = Collections.synchronizedMap(new HashMap());
-      }
-
-      if (configFile == null || !datasourceName.equals("")) {
-
-        configFile = navajoConfig.readConfig("sqlmap.xml");
-
-        // If propery file exists create a static connectionbroker that can be accessed by multiple instances of
-        // SQLMap!!!
-        if (fixedBroker == null && datasourceName.equals("")) { // Only re-create entire HashMap at initialization!
-          fixedBroker = new ConnectionBrokerManager(this.debug);
-        }
-
-        if (datasourceName.equals("")) {
-          // Get other data sources.
-          ArrayList all = configFile.getMessages("/datasources/.*");
-          for (int i = 0; i < all.size(); i++) {
-            Message body = (Message) all.get(i);
-            createDataSource(body, navajoConfig);
-          }
-        }
-        else {
-          createDataSource(configFile.getMessage("/datasources/" +
-                                                 datasourceName), navajoConfig);
-        }
-        this.checkDefaultDatasource();
-      }
-      rowCount = 0;
-    }
-    catch (NavajoException ne) {
-      logger.log(NavajoPriority.ERROR, ne.getMessage(), ne);
-      throw new MappableException(ne.getMessage());
-    }
-    catch (java.io.IOException fnfe) {
-      logger.log(NavajoPriority.ERROR, fnfe.getMessage(), fnfe);
-      throw new MappableException(
-          "Could not load configuration file for SQLMap object: " +
-          fnfe.getMessage());
-    } catch (Throwable t) {
-    	logger.log(NavajoPriority.ERROR, t.getMessage(), t);
-        throw new MappableException(t.getMessage());
-    }
+  public synchronized void setReload(String datasourceName) throws MappableException, UserException {
+	  
+	  synchronized ( semaphore ) {
+		  if (debug) {
+			  System.out.println("SQLMAP setReload(" + datasourceName + ") called!");
+		  }
+		  
+		  try {
+			  
+			  if (transactionContextMap == null || !datasourceName.equals("")) {
+				  transactionContextMap = Collections.synchronizedMap(new HashMap());
+			  }
+			  
+			  if (autoCommitMap == null || !datasourceName.equals("")) {
+				  autoCommitMap = Collections.synchronizedMap(new HashMap());
+			  }
+			  
+			  if (configFile == null || !datasourceName.equals("")) {
+				  
+				  configFile = navajoConfig.readConfig("sqlmap.xml");
+				  
+				  // If propery file exists create a static connectionbroker that can be accessed by multiple instances of
+				  // SQLMap!!!
+				  if (fixedBroker == null && datasourceName.equals("")) { // Only re-create entire HashMap at initialization!
+					  fixedBroker = new ConnectionBrokerManager(this.debug);
+				  }
+				  
+				  if (datasourceName.equals("")) {
+					  // Get other data sources.
+					  ArrayList all = configFile.getMessages("/datasources/.*");
+					  for (int i = 0; i < all.size(); i++) {
+						  Message body = (Message) all.get(i);
+						  createDataSource(body, navajoConfig);
+					  }
+				  }
+				  else {
+					  createDataSource(configFile.getMessage("/datasources/" +
+							  datasourceName), navajoConfig);
+				  }
+				  this.checkDefaultDatasource();
+			  }
+			  rowCount = 0;
+		  }
+		  catch (NavajoException ne) {
+			  logger.log(NavajoPriority.ERROR, ne.getMessage(), ne);
+			  throw new MappableException(ne.getMessage());
+		  }
+		  catch (java.io.IOException fnfe) {
+			  logger.log(NavajoPriority.ERROR, fnfe.getMessage(), fnfe);
+			  throw new MappableException(
+					  "Could not load configuration file for SQLMap object: " +
+					  fnfe.getMessage());
+		  } catch (Throwable t) {
+			  logger.log(NavajoPriority.ERROR, t.getMessage(), t);
+			  throw new MappableException(t.getMessage());
+		  }
+	  }
   }
 
   public void setDebug(boolean b) {
@@ -810,8 +807,7 @@ public class SQLMap implements Mappable, LazyArray {
 
       if (con == null) {
         logger.log(NavajoPriority.WARN,
-                   "Could not connect to database: " + datasource +
-                   ", one more try with fresh broker....");
+                   "Could not connect to database: " + datasource +  ", one more try with fresh broker....");
         Message msg = configFile.getMessage("/datasources/" + datasource);
         try {
           createDataSource(msg, navajoConfig);

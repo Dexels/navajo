@@ -33,6 +33,8 @@ public class ConnectionBrokerManager extends Object {
   private Map brokerMap = new HashMap();
   private boolean debug = false;
 
+  private static Object semaphore = new Object();
+  
   public ConnectionBrokerManager() {
     super();
   }
@@ -45,78 +47,80 @@ public class ConnectionBrokerManager extends Object {
   // ------------------------------------------------------------ public methods
 
   public final void put(final String dsrc,
-                  final String drv, final String url,
-                  final String usr,
-                  final String pwd, final int minconn,
-                  final int maxconn,
-                  final String lfile, final double rfrsh,
-                  final Boolean ac
-                  ) throws ClassNotFoundException {
-    SQLMapBroker broker = this.haveExistingBroker(dsrc, usr);
-    if (broker != null) {
-      if (this.debug) {
-        System.out.println(this.getClass() +
-                           ": already have a broker for data source '"
-                           + dsrc + "', user name '" + usr + "'");
-      }
-      return;
-    }
-    SQLMapBroker similar = this.seekSimilarBroker(dsrc);
-    if (similar != null) {
-      if (this.debug) {
-        System.out.println(this.getClass() +
-                           ": have a similar broker for data source '"
-                           + dsrc + "'");
-      }
-      broker = (SQLMapBroker) similar.clone();
-      broker.username = usr;
-      broker.password = pwd;
-
-    }
-    else {
-      broker = new SQLMapBroker(dsrc, drv, url, usr, pwd, minconn, maxconn, lfile, rfrsh, ac);
-    }
-    broker.createBroker();
-    final String key = dsrc + this.SRCUSERDELIMITER + usr;
-    this.brokerMap.put(key, broker);
-    if (this.debug) {
-      System.out.println(this.getClass() +
-                         ": putting new broker with identifier '" +
-                         key + "'");
-    }
-
+		  final String drv, final String url,
+		  final String usr,
+		  final String pwd, final int minconn,
+		  final int maxconn,
+		  final String lfile, final double rfrsh,
+		  final Boolean ac
+  ) throws ClassNotFoundException {
+	  synchronized ( semaphore ) {
+		  SQLMapBroker broker = this.haveExistingBroker(dsrc, usr);
+		  if (broker != null) {
+			  if (this.debug) {
+				  System.out.println(this.getClass() +
+						  ": already have a broker for data source '"
+						  + dsrc + "', user name '" + usr + "'");
+			  }
+			  return;
+		  }
+		  SQLMapBroker similar = this.seekSimilarBroker(dsrc);
+		  if (similar != null) {
+			  if (this.debug) {
+				  System.out.println(this.getClass() +
+						  ": have a similar broker for data source '"
+						  + dsrc + "'");
+			  }
+			  broker = (SQLMapBroker) similar.clone();
+			  broker.username = usr;
+			  broker.password = pwd;
+			  
+		  }
+		  else {
+			  broker = new SQLMapBroker(dsrc, drv, url, usr, pwd, minconn, maxconn, lfile, rfrsh, ac);
+		  }
+		  broker.createBroker();
+		  final String key = dsrc + this.SRCUSERDELIMITER + usr;
+		  this.brokerMap.put(key, broker);
+		  if (this.debug) {
+			  System.out.println(this.getClass() +
+					  ": putting new broker with identifier '" +
+					  key + "'");
+		  }
+	  }
   }
 
   public final void put(final String datasource, final String username, final String password) throws
-      UserException,
-      ClassNotFoundException {
-    SQLMapBroker broker = this.haveExistingBroker(datasource, username);
-    if (broker != null) {
-      if (this.debug) {
-        System.out.println(this.getClass() +
-                           ": already have a broker for data source '"
-                           + datasource + "', user name '" + username + "'");
-      }
-      return;
-    }
-
-    broker = this.seekSimilarBroker(datasource);
-    if (broker == null) {
-      throw new UserException( -1, "data source for '" + datasource +
-                              "' not configured");
-    }
-
-    final SQLMapBroker newbroker = (SQLMapBroker) broker.clone();
-    newbroker.username = username;
-    newbroker.password = password;
-    newbroker.createBroker();
-    final String key = datasource + this.SRCUSERDELIMITER + username;
-    this.brokerMap.put(key, newbroker);
-    if (this.debug) {
-      System.out.println(this.getClass() + ": created a new broker '" + key +
-                         "' using a clone");
-    }
-
+  UserException,
+  ClassNotFoundException {
+	  synchronized ( semaphore ) {
+		  SQLMapBroker broker = this.haveExistingBroker(datasource, username);
+		  if (broker != null) {
+			  if (this.debug) {
+				  System.out.println(this.getClass() +
+						  ": already have a broker for data source '"
+						  + datasource + "', user name '" + username + "'");
+			  }
+			  return;
+		  }
+		  
+		  broker = this.seekSimilarBroker(datasource);
+		  if (broker == null) {
+			  throw new UserException( -1, "data source for '" + datasource +
+			  "' not configured");
+		  }
+		  
+		  final SQLMapBroker newbroker = (SQLMapBroker) broker.clone();
+		  newbroker.username = username;
+		  newbroker.password = password;
+		  newbroker.createBroker();
+		  final String key = datasource + this.SRCUSERDELIMITER + username;
+		  this.brokerMap.put(key, newbroker);
+		  if (this.debug) {
+			  System.out.println(this.getClass() + ": created a new broker '" + key +
+			  "' using a clone");
+		  }
+	  }
   }
 
   public final DatabaseInfo getMetaData(final String dsrc, final String usr, final String pwd) {
