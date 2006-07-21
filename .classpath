@@ -5,8 +5,8 @@
 	<classpathentry exported="true" kind="src" path="/NavajoDocument"/>
 	<classpathentry excluding="**/CVS/*" kind="src" path="src"/>
 	<classpathentry exported="true" kind="lib" path="lib/ftp.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/Grus.jar"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/DexelsVersionControl"/>
+	<classpathentry kind="lib" path="/sportlink-adapters/lib/servlet.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
