@@ -2,12 +2,11 @@ package com.dexels.navajo.server.listener.http;
 
 import java.io.*;
 import java.util.*;
+
 import javax.servlet.*;
 import javax.servlet.http.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.server.*;
-import com.dexels.navajo.server.Dispatcher;
-import com.dexels.navajo.server.ClientInfo;
 
 /**
  * Title:        Navajo
@@ -148,9 +147,9 @@ public final class TmlHttpServlet extends HttpServlet {
       System.err.println("server = " + request.getServerName());
       System.err.println("port = " + request.getServerPort());
       System.err.println("contentlength = " + request.getContentLength());
-      Enumeration enum = request.getHeaderNames();
-      while (enum.hasMoreElements()) {
-        String key = (String) enum.nextElement();
+      Enumeration enm = request.getHeaderNames();
+      while (enm.hasMoreElements()) {
+        String key = (String) enm.nextElement();
         String header = request.getHeader(key);
         System.err.println(">>" + key + "=" + header);
       }
