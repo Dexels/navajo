@@ -13,6 +13,13 @@ import com.dexels.navajo.tipi.internal.*;
 public abstract class TipiTypeParser {
   private Class myReturnType = null;
   
+  /**
+   * Note to implementers: EXPRESSION CAN BE NULL. Deal with it.
+   * @param source
+   * @param expression
+   * @param event
+   * @return
+   */
   public abstract Object parse(TipiComponent source, String expression, TipiEvent event);
 
   protected TipiContext myContext;

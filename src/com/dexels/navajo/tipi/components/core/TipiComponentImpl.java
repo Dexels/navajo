@@ -51,6 +51,8 @@ public abstract class TipiComponentImpl
   private final Set valuesSet = new HashSet();
   private final ArrayList myHelpers = new ArrayList();
 
+  protected final Map styleHintMap = new HashMap();
+  
   private boolean hadConditionErrors = false;
   private XMLElement myClassDef = null;
 //  private ImageIcon mySelectedIcon;
@@ -341,6 +343,38 @@ public abstract class TipiComponentImpl
    return null;
   }
 
+  public void parseStyle(String style) {
+      if (style==null) {
+        return;
+    }
+      StringTokenizer st = new StringTokenizer(style,";");
+      while (st.hasMoreTokens()) {
+        try {
+            String n = st.nextToken();
+            System.err.println("Parsing style pair: "+n);
+            StringTokenizer element = new StringTokenizer(n,":");
+            String key = element.nextToken();
+            String value = element.nextToken();
+            styleHintMap.put(key, value);
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+    }
+  }
+  
+  public void addStyle(String key, String value) {
+      styleHintMap.put(key, value);
+  }
+  
+  public String getStyle(String key) {
+      System.err.println("Getting style: "+key);
+      return (String)styleHintMap.get(key);
+  }
+  
+  public void processStyles() {
+      System.err.println("In processStyles of class: "+getClass());
+      // Do nothing by default. Override to use.
+  }
 
   public void loadMethodDefinitions(TipiContext context, XMLElement definition, XMLElement classDef) throws TipiException {
     Vector defChildren = definition.getChildren();
@@ -371,6 +405,12 @@ public abstract class TipiComponentImpl
     else {
       myId = id;
     }
+    parseStyle(def.getStringAttribute("style"));
+    if (instance!=def) {
+        parseStyle(instance.getStringAttribute("style"));
+    }
+
+    processStyles();
   }
 
   public void setId(String id) {

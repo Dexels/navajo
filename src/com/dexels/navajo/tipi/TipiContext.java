@@ -694,12 +694,15 @@ public void parseDefinition(XMLElement child) {
       XMLElement xx = getComponentDefinition(name);
       if (xx==null) {
         throw new TipiException("Definition based instance, but no definition found. Definition: "+name);
-    }
+      }
       tc = instantiateComponentByDefinition(xx, instance);
+
     }
     else {
       tc = (TipiComponent) instantiateClass(clas, name, instance);
     }
+    tc.parseStyle(instance.getStringAttribute("style"));
+    tc.processStyles();
     if (tc.getContainer() != null) {
 //      if (RootPaneContainer.class.isInstance(tc.getContainer())) {
       if (tc.isTopLevel()) {

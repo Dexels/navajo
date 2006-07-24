@@ -35,6 +35,10 @@ public interface TipiComponent
 //
 //  public void paintGrid(Component c, Graphics g);
   public TipiContext getContext();
+  public void parseStyle(String style);
+  public void addStyle(String key, String value);
+  public String getStyle(String key);
+  public void processStyles();
 
   public void initContainer();
 
