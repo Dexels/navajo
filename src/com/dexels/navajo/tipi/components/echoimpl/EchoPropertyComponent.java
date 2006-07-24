@@ -316,7 +316,8 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
             createLabel(m.toString());
         } else {
             if ((isEdit || !useLabelForReadOnlyProperties)) {
-                createClocktimeField(p);
+                 createTextField(p);
+      //          createClocktimeField(p);
             } else {
                 createLabel(m.toString());
 
@@ -862,7 +863,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
         if (epc.currentComponent instanceof SelectField) {
             ((SelectField)(epc.currentComponent)).setWidth(new Extent(widthVal,Extent.PX));
         } 
-        
+        epc.setColumnWidth(0, new Extent(2,Extent.PX));
         epc.setZebra(column, row, false);
         // TODO FIX DISABLED ZEBRA
         // epc.setBackground(null);

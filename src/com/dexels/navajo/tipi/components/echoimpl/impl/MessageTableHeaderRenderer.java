@@ -67,7 +67,7 @@ public class MessageTableHeaderRenderer implements TableCellRenderer {
     }
 
     protected Button getSortButton(MessageTable mt, String label, int column, MessageTableModel model, MessageTable table) {
-        ButtonEx button = new ButtonEx(label);
+        ButtonEx button = new ButtonImpl(label);
         Color color = mt.getHeaderForeground();
         if (color!=null) {
             button.setForeground(color);
@@ -95,9 +95,10 @@ public class MessageTableHeaderRenderer implements TableCellRenderer {
         
         button.addActionListener(getSortButtonListener(column, model));
         button.setLayoutData(getLayoutData());
-        button.setInsets(new Insets(0, 0, 0, 0));
-        button.setTextPosition(new Alignment(Alignment.LEFT, Alignment.DEFAULT));
-        int colsize = table.getColumnSize(column).getValue()-4;
+        button.setInsets(new Insets(2, 0, 0, 0));
+        
+        button.setTextPosition(new Alignment(Alignment.CENTER, Alignment.DEFAULT));
+        int colsize = table.getColumnSize(column).getValue()-2;
         button.setWidth(new Extent(colsize, Extent.PX));
         button.setHeight(new Extent(mt.getHeaderHeight(), Extent.PX));
         ImageReference icon = null;

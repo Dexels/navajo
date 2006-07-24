@@ -2,6 +2,7 @@ package com.dexels.navajo.tipi.components.echoimpl;
 
 import java.net.URL;
 
+import com.dexels.navajo.tipi.components.echoimpl.impl.*;
 import com.dexels.navajo.tipi.components.echoimpl.parsers.*;
 
 import nextapp.echo2.app.*;
@@ -34,12 +35,9 @@ public class TipiButton extends TipiEchoComponentImpl {
 
     public Object createContainer() {
         // ContainerEx ex = new ContainerEx();
-        myButton = new ButtonEx();
+        myButton = new ButtonImpl();
         // ex.add(myButton);
         // b.setIconTextMargin(new Extent(10));
-        myButton.setTextAlignment(new Alignment(Alignment.CENTER, Alignment.CENTER));
-        myButton.setAlignment(new Alignment(Alignment.CENTER,Alignment.CENTER));
-        myButton.setBorder(new Border(1,new Color(20,20,20),Border.STYLE_SOLID));
         return myButton;
         // return b;
     }

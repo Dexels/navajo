@@ -61,7 +61,7 @@ public class TipiTabs extends TipiEchoDataComponentImpl {
         defaultTabModel.setRolloverForeground(new Color(68, 68, 68));
         defaultTabModel.setSelectedRolloverForeground(new Color(68, 68, 68));
         defaultTabModel.setSelectedFont(new Font(Font.ARIAL, Font.BOLD, new Extent(10, Extent.PT)));
-        defaultTabModel.setFont(new Font(Font.ARIAL, Font.PLAIN, new Extent(10, Extent.PT)));
+        defaultTabModel.setFont(new Font(Font.ARIAL, Font.BOLD, new Extent(10, Extent.PT)));
         defaultTabModel.setRolloverFont(new Font(Font.ARIAL, Font.BOLD, new Extent(10, Extent.PT)));
         defaultTabModel.setBackground(new Color(255, 255, 255));
         defaultTabModel.setRolloverBackground(new Color(255, 255, 255));

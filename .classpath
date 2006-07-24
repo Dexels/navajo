@@ -7,6 +7,6 @@
 	<classpathentry sourcepath="/EchoSource/src/app/java" kind="lib" path="lib/Echo2_App.jar"/>
 	<classpathentry kind="lib" path="lib/Echo2_WebContainer.jar"/>
 	<classpathentry kind="lib" path="lib/Echo2_WebRender.jar"/>
-	<classpathentry sourcepath="/echopointng/projects/jar/src" kind="lib" path="lib/echopointng-2.0a5.jar"/>
+	<classpathentry kind="lib" path="lib/echopointng_for_echo_2.1.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
