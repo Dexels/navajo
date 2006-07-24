@@ -343,10 +343,13 @@ public final class SaxHandler implements DocHandler {
             currentDocument.addMessage(m);
         } else {
         	// Don't add definition messages.
-        	if ( !Message.MSG_TYPE_DEFINITION.equals(type) ) {
-        		((Message)messageStack.peek()).addMessage(m);
+        	Message parentMessage = (Message)messageStack.peek();
+            if ( !Message.MSG_TYPE_DEFINITION.equals(type) ) {
+        		parentMessage.addMessage(m);
         	} else {
-        		((Message)messageStack.peek()).setDefinitionMessage(m);
+                System.err.println("SETTING DEFINITION MESSAGE. Parent: "+parentMessage.getFullMessageName()+" hash: "+parentMessage.hashCode());
+        		parentMessage.setDefinitionMessage(m);
+                
         	}
         }
           messageStack.push(m);
@@ -354,11 +357,42 @@ public final class SaxHandler implements DocHandler {
     }
 
 
+    private void mergeDefinitionMessage() {
+
+        Message currentMessage = (Message)messageStack.peek();
+        if (currentMessage==null) {
+            return;
+        }
+        Message parentMessage = currentMessage.getParentMessage();
+        if (parentMessage==null) {
+            return;
+        }
+        Message def = parentMessage.getDefinitionMessage();
+        if (def==null) {
+            return;
+        }
+        ArrayList props = def.getAllProperties();
+        for (int i = 0; i < props.size(); i++) {
+            Property src = (Property)props.get(i);
+            Property dest = currentMessage.getProperty(src.getName());
+            if (dest==null) {
+                dest = src.copy(currentDocument);
+                currentMessage.addProperty(dest);
+            }
+        }
+    }
+
+//    private void mergeMissingDefinitionProperties() {
+//        // TODO Auto-generated method stub
+//        
+//    }
+
     public final void endElement(String tag) throws Exception {
 //        System.err.println("ending element: "+tag);
         if (tag.equals("tml")) {
          }
         if (tag.equals("message")) {
+            mergeDefinitionMessage();
             Message m = (Message)messageStack.pop();
         }
         if (tag.equals("property")) {
@@ -385,6 +419,8 @@ public final class SaxHandler implements DocHandler {
         currentTag = null;
     }
 
+
+  
 
     public final void startDocument() throws Exception {
           reset();
