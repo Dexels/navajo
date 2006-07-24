@@ -166,8 +166,12 @@ public class TipiExportDialog
           String propValue;
           if (current_prop.getType().equals(Property.DATE_PROPERTY)) {
             Date d = (Date) current_prop.getTypedValue();
-            java.text.SimpleDateFormat df = new java.text.SimpleDateFormat("yyyy-MM-dd");
-            propValue = df.format(d);
+            if (d==null) {
+                propValue = "";
+            } else {
+                java.text.SimpleDateFormat df = new java.text.SimpleDateFormat("yyyy-MM-dd");
+                propValue = df.format(d);
+            }
           }
           else {
             propValue = (current_prop.getValue() == null)?"":current_prop.getValue();            
