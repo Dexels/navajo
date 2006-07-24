@@ -25,7 +25,6 @@ import com.dexels.navajo.tipi.actions.PropertyEventListener;
 import com.dexels.navajo.tipi.components.echoimpl.impl.BinaryPropertyImage;
 import com.dexels.navajo.tipi.components.echoimpl.impl.MessageTable;
 import com.dexels.navajo.tipi.components.echoimpl.impl.TipiEchoTextField;
-import com.sun.org.apache.bcel.internal.generic.*;
 
 import echopointng.ComboBox;
 import echopointng.able.Sizeable;
