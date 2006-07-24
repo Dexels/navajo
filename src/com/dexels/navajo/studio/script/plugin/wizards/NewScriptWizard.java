@@ -36,8 +36,7 @@ public class NewScriptWizard extends Wizard implements INewWizard {
 
     protected IResource selectedFile = null;
 
-    ICapabilityInstallWizard rcw;
-
+  
     /**
      * Constructor for NewScriptWizard.
      */
