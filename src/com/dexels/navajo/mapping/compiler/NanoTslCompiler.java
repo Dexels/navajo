@@ -1101,8 +1101,18 @@ public class NanoTslCompiler {
 
         StringBuffer result = new StringBuffer();
 
-        String attribute = n.getNonNullStringAttribute("name");
-        String condition = n.getNonNullStringAttribute("condition");
+        String attributeOriginal = n.getStringAttribute("name");
+        String condition = n.getStringAttribute("condition");
+        String attribute = null;
+        
+        String mapPath = null;
+        
+        if (attributeOriginal.indexOf("/")!=-1) {
+            attribute = attributeOriginal.substring(attributeOriginal.lastIndexOf('/')+1, attributeOriginal.length());
+            mapPath = attributeOriginal.substring(0,attributeOriginal.lastIndexOf('/'));
+       } else {
+            attribute = attributeOriginal;
+         }
 
         if (attribute == null || attribute.equals(""))
             throw new TslCompileException(TslCompileException.TSL_MISSING_FIELD_NAME, "Name attribute is required for field tags", n);
@@ -1138,8 +1148,16 @@ public class NanoTslCompiler {
             //      try {
             Class contextClass = null;
             try {
-                contextClass = Class.forName(className, false, loader);
+//                System.err.println("MAPPATH: "+mapPath);
+                if (mapPath!=null) {
+                    contextClass = locateContextClass(mapPath);
+                } else {
+                    contextClass = Class.forName(className, false, loader);
+                }
+               // contextClassStack.push(contextClass);
             } catch (Exception e) {
+                System.err.println("Source exception: "+e);
+                e.printStackTrace();
                 throw new TslCompileException(TslCompileException.TSL_UNKNOWN_MAP, "Could not find adapter: " + className, n.getParent()
                         .getStartOffset(), n.getOffset());
             }
@@ -1148,6 +1166,10 @@ public class NanoTslCompiler {
                 type = MappingUtils.getFieldType(contextClass, attribute);
             } catch (Exception e) {
                 System.err.println("About to throw..............");
+                System.err.println("Context stack: "+contextClassStack);
+                e.printStackTrace();
+                System.err.println("Source exception: "+e);
+                
                 TslCompileException tce = new TslCompileException(TslCompileException.TSL_UNKNOWN_FIELD, "Could not find field: " + attribute + " in adapter "
                         + className, n.getStartOffset(), n.getOffset());
                 tce.setAttributeProblem("name", MappingUtils.getAllFields(contextClass),n);
@@ -1185,7 +1207,16 @@ public class NanoTslCompiler {
             //        throw new UserException(-1, "Error in script: could not find
             // mappable object: " + className);
             //      }
-            result.append(printIdent(ident + 2) + objectName + "." + methodName + "(" + castedValue + ");\n");
+//            result.append(printIdent(ident + 2) + objectName + "." + methodName + "(" + castedValue + ");\n");
+            
+            if (mapPath!=null) {
+                result.append(printIdent(ident + 2) + "(("+locateContextClass(mapPath).getName()+")findMapByPath(\""+mapPath+"\"))." + methodName + "(" +
+                        castedValue + ");\n");        
+            } else {
+                result.append(printIdent(ident + 2) + objectName + "." + methodName + "(" +
+                        castedValue + ");\n");        
+            }
+            
         } else { // Field with ref: indicates that a message or set of messages
                  // is mapped to attribute (either Array Mappable or singular
                  // Mappable)
@@ -1390,6 +1421,26 @@ public class NanoTslCompiler {
 
         return result.toString();
     }
+    
+    private Class locateContextClass(String mapPath) {
+        System.err.println("finaMapByPath: "+mapPath);
+        StringTokenizer st = new StringTokenizer(mapPath,"/");
+        int count = 0;
+        while (st.hasMoreTokens()) {
+          String element = st.nextToken();
+          if (!"..".equals(element)) {
+              System.err.println("Huh? : "+element);
+          }
+          count++;
+        }
+        if (count==0) {
+            return contextClass;
+        }
+        System.err.println("Count element: "+count);
+        Class m = (Class)contextClassStack.get(count-1);
+        System.err.println("Mappable: "+m);
+        return m;
+  }
 
     public String debugNode(int ident, XMLElement n) throws Exception {
         StringBuffer result = new StringBuffer();
@@ -1446,9 +1497,13 @@ public class NanoTslCompiler {
 
         if (!name.equals("")) { // We have a potential async mappable object.
             ////System.out.println("POTENTIAL MAPPABLE OBJECT " + className);
-            Class contextClass = null;
+//            Class contextClass = null;
             try {
+                if (contextClass!=null) {
+                    contextClassStack.push(contextClass);
+                }
                 contextClass = Class.forName(className, false, loader);
+                
             } catch (Exception e) {
                 throw new TslCompileException(TslCompileException.TSL_UNKNOWN_MAP, "Could not find adapter: " + className, n);
             }
@@ -1633,7 +1688,9 @@ public class NanoTslCompiler {
             ident -= 2;
             result.append(printIdent(ident) + "} // EOF map condition \n");
         }
-
+        if (!name.equals("")) { // Same condition as the push, to ensure that the stack doesn't underflow
+            contextClassStack.pop();
+        }
         return result.toString();
     }
 
