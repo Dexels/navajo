@@ -24,7 +24,7 @@ public class ToBinary extends FunctionInterface {
    Object o = getOperand(0);
   
    if (o == null) {
-     return new Binary((byte[]) null);
+     return new Binary();
    } else if ( o instanceof Binary ) { 	 
    	 return o;
    } else {
