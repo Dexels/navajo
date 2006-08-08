@@ -17,7 +17,7 @@ import com.dexels.navajo.tipi.components.swingimpl.parsers.*;
  */
 public class TipiSwingPanel
     extends JPanel
-    implements TipiDesignable {
+    implements TipiDesignable, Scrollable {
   private boolean gridFlag = false;
   private boolean selected = false;
   private ImageIcon myImage = null;
@@ -147,4 +147,26 @@ public void paintComponent(Graphics g) {
   public boolean isGridShowing() {
     return gridFlag;
   }
+
+public Dimension getPreferredScrollableViewportSize() {
+	// TODO Auto-generated method stub
+	return getPreferredSize();
+}
+
+public int getScrollableBlockIncrement(Rectangle arg0, int arg1, int arg2) {
+	// TODO Auto-generated method stub
+	return 40;
+}
+
+public boolean getScrollableTracksViewportHeight() {
+	return false;
+}
+
+public boolean getScrollableTracksViewportWidth() {
+	return false;
+}
+
+public int getScrollableUnitIncrement(Rectangle arg0, int arg1, int arg2) {
+	return 20;
+}
 }

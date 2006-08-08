@@ -123,8 +123,8 @@ public class TipiProperty
     });
   }
 
-  public void setPropertyWidth(int width) {
-  }
+//  public void setPropertyWidth(int width) {
+//  }
 
   public void addTipiEvent(TipiEvent te) {
     myEventList.add(te);
@@ -453,4 +453,20 @@ public class TipiProperty
       });
     }
 
+  public void processStyles() {
+	  GenericPropertyComponent gp = (GenericPropertyComponent)getContainer();
+	  String forceFieldAlignment = getStyle("forceFieldAlignment");
+	  String limitFieldWidth = getStyle("limitFieldWidth");
+	if (limitFieldWidth!=null) {
+		System.err.println("Encountered a limitFieldWidth: "+limitFieldWidth);
+		gp.limitFieldWidth(Integer.parseInt(limitFieldWidth));
+		
+	}
+	if (forceFieldAlignment!=null) {
+		System.err.println("Encountered a forceFieldAlignment: "+forceFieldAlignment);
+		gp.forceFieldAlignment(forceFieldAlignment);
+		
+	}
+	  
+  }
 }
