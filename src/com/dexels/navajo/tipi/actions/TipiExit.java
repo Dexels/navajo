@@ -13,6 +13,7 @@ import com.dexels.navajo.tipi.internal.*;
 public class TipiExit
     extends TipiAction {
   public void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
-    System.exit(0);
+	  myContext.exit();
+//	  System.exit(0);
   }
 }
