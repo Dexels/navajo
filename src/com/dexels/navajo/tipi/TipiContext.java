@@ -31,6 +31,8 @@ public abstract class TipiContext
   protected final Map tipiClassDefMap = new HashMap();
   protected final Map tipiActionDefMap = new HashMap();
   
+  private boolean contextShutdown = false;
+  
   protected final Map lazyMap = new HashMap();
   protected final ArrayList includeList = new ArrayList();
   protected TipiErrorHandler eHandler;
@@ -74,7 +76,8 @@ public abstract class TipiContext
   private boolean isSwitching = false;
   private ClassLoader tipiClassLoader = null;
   private ClassLoader resourceClassLoader = null;
- 
+  private final ArrayList shutdownListeners = new ArrayList();
+
   public TipiContext() {
 //    myThreadPool = new TipiThreadPool(this);
     NavajoFactory.getInstance().setExpressionEvaluator(new DefaultExpressionEvaluator());
@@ -277,11 +280,6 @@ public abstract class TipiContext
     }
   }
 
-  public void shutdown() {
-    if (myThreadPool!=null) {
-      myThreadPool.shutdown();
-    }
-  }
 
   public void parseStream(InputStream in, String sourceName, boolean studioMode) throws IOException, XMLParseException, TipiException {
     parseStream(in, sourceName,"init",studioMode);
@@ -1890,6 +1888,33 @@ protected static void printIndent(int indent, String text) {
       System.err.print(" ");
   }
     System.err.println(text);
+}
+
+public void exit() {
+	System.exit(0); 
+}
+
+public void addShutdownListener(ShutdownListener sl) {
+	  shutdownListeners.add(sl);
+}
+
+public void removeShutdownListener(ShutdownListener sl) {
+	  shutdownListeners.remove(sl);
+}
+
+public void shutdown() {
+	// prevent multishutdown
+	if (contextShutdown) {
+		return;
+	}
+    if (myThreadPool!=null) {
+        myThreadPool.shutdown();
+      }
+	  for (int i = 0; i < shutdownListeners.size(); i++) {
+		ShutdownListener s = (ShutdownListener)shutdownListeners.get(i);
+		s.contextShutdown();
+	}
+	  contextShutdown = true;
 }
 
 }
