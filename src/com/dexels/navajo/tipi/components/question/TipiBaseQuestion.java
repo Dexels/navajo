@@ -71,8 +71,7 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
         }
         if (name.equals("subQuestionPath")) {
             subQuestionPath = (String) object;
-            System.err.println("TipiQuestion: Got subQuestionPAth: "+subQuestionPath);
-
+     
         }
         
         
@@ -166,12 +165,7 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
             System.err.println("NO SUBQUESTION PANEL DEFINED");
         }
         Message question = m.getMessage("Question");
-        if (tdc==null) {
-            System.err.println("NULL SUBQUESTION PANEL");
-        }
-        if (question==null) {
-            System.err.println("No subquestions!");
-        }
+
         if (question != null && tdc != null) {
             for (int i = 0; i < question.getArraySize(); i++) {
                 Message current = question.getMessage(i);
@@ -247,8 +241,6 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
 //         return true;
 //         }
         if (visibleCondition != null) {
-            System.err.println("Evaluating: visibleCondition: " + visibleCondition);
-             System.err.println("ID: "+myId);
             Operand o = myContext.evaluate(visibleCondition, this, null, myMessage);
             if (o != null) {
                 return ((Boolean) o.value).booleanValue();
@@ -268,8 +260,6 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
          }
         boolean invalidFound = false;
         ArrayList subQ = getSubQuestionList();
-        
-        System.err.println("# of subquestions: "+subQ.size());
         for (int i = 0; i < subQ.size(); i++) {
             TipiBaseQuestion tq = (TipiBaseQuestion) subQ.get(i);
             tq.updateSubQuestions();
@@ -301,7 +291,6 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
                 recursiveListQuestions(tdc, subQ);
             }
         } else {
-            System.err.println("::: No subcomponent defined");
         }
         return subQ;
     }

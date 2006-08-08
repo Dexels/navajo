@@ -64,7 +64,8 @@ public abstract class TipiComponentImpl
   public boolean isTransient=false;
 
   public void removeFromContainer(Object c) {
-    throw new UnsupportedOperationException("Can not remove from container of class: " + getClass());
+	  System.err.println("REMOVE FROM CONTAINER IGNORED: NOT IMPLEMENTED. CLASS: "+getClass());
+//    throw new UnsupportedOperationException("Can not remove from container of class: " + getClass());
   }
 
   public void addToContainer(Object c, Object constraints) {
@@ -351,7 +352,7 @@ public abstract class TipiComponentImpl
       while (st.hasMoreTokens()) {
         try {
             String n = st.nextToken();
-            System.err.println("Parsing style pair: "+n);
+//            System.err.println("Parsing style pair: "+n);
             StringTokenizer element = new StringTokenizer(n,":");
             String key = element.nextToken();
             String value = element.nextToken();
@@ -367,13 +368,20 @@ public abstract class TipiComponentImpl
   }
   
   public String getStyle(String key) {
-      System.err.println("Getting style: "+key);
+//      System.err.println("Getting style: "+key);
       return (String)styleHintMap.get(key);
   }
   
+  /**
+   * Should process all the styles. The styles are unrelated to the classdef.
+   * Get a style (A style is always a string) using getStyle(String name)
+   * then do what you want. Note: This function is called AFTER createContainer,
+   * so you can assume the container is there (unless it is containerless, of course)
+   */
   public void processStyles() {
-      System.err.println("In processStyles of class: "+getClass());
+//      System.err.println("In processStyles of class: "+getClass());
       // Do nothing by default. Override to use.
+      
   }
 
   public void loadMethodDefinitions(TipiContext context, XMLElement definition, XMLElement classDef) throws TipiException {
@@ -922,8 +930,10 @@ public void loadStartValues(XMLElement element) {
 
   public boolean performTipiEvent(String type, Map event, boolean sync) throws TipiException {
     boolean hasEventType = false;
+    System.err.println("# of events: "+myEventList.size());
     for (int i = 0; i < myEventList.size(); i++) {
       TipiEvent te = (TipiEvent) myEventList.get(i);
+      System.err.println("Current event: "+te.getEventName()+" "+getId()+" cc "+te.getExecutableChildCount());
       if (te.isTrigger(type, myService)) {
         hasEventType = true;
 //        te.performAction(event);

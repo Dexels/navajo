@@ -178,11 +178,9 @@ public abstract class TipiBaseQuestionGroup extends TipiDataComponentImpl {
         ArrayList localprops = getRecursiveProperties();
 
 //        TipiContext.debugTipiComponentTree(this, 5);
-        System.err.println("Property count: "+localprops.size());
         for (int i = 0; i < localprops.size(); i++) {
             PropertyComponent o = (PropertyComponent) localprops.get(i);
             Property pp = m.getProperty(o.getPropertyName());
-            System.err.println("Current: "+o.getPropertyName());
             if (pp!=null) {
                 o.setProperty(pp);
                 
@@ -228,7 +226,6 @@ public abstract class TipiBaseQuestionGroup extends TipiDataComponentImpl {
     }
 
     public void updateQuestions() {
-        System.err.println("Update questions. Count: "+myQuestions.size());
         for (int i = 0; i < myQuestions.size(); i++) {
             TipiBaseQuestion tq = (TipiBaseQuestion) myQuestions.get(i);
             tq.updateSubQuestions();

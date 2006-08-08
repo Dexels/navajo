@@ -47,8 +47,7 @@ public abstract class TipiBaseQuestionList extends TipiDataComponentImpl {
         }
         if (name.equals("subQuestionPath")) {
             subQuestionPath  = (String) object;
-            System.err.println("BaseQuestionList. GOT subQuestionPAth: "+subQuestionPath);
-            
+              
           }
         
         super.setComponentValue(name, object);
@@ -66,12 +65,10 @@ public abstract class TipiBaseQuestionList extends TipiDataComponentImpl {
       for (int i = 0; i < getChildCount(); i++) {
         TipiDataComponent tc = (TipiDataComponent) getTipiComponent(i);
         Boolean b = (Boolean) tc.getValue("valid");
-        System.err.println("checked group: " + tc.getId() + " returned: " + b.toString());
-        if (!b.booleanValue()) {
+          if (!b.booleanValue()) {
           return false;
         }
       }
-      System.err.println("No invalid groups found. List is valid.");
       return true;
     }
 
@@ -277,8 +274,7 @@ public abstract class TipiBaseQuestionList extends TipiDataComponentImpl {
                     tc.setValue("questionDefinitionName",  questionDefinitionName);
                     tc.setValue("questionGroupDefinitionName", questionGroupDefinitionName );
                     tc.setValue("subQuestionPath", subQuestionPath );
-                    System.err.println("BaseQuestionList. Setting subQuestionPAth to: "+subQuestionPath);
-                    if (tc instanceof TipiBaseQuestionGroup) {
+                     if (tc instanceof TipiBaseQuestionGroup) {
                         TipiBaseQuestionGroup tqg = (TipiBaseQuestionGroup) tc;
                       tqg.setQuestionList(me);
                       myGroups.add(tqg);
@@ -329,7 +325,6 @@ public abstract class TipiBaseQuestionList extends TipiDataComponentImpl {
     public void updateQuestionList() {
         for (Iterator itt = myGroups.iterator(); itt.hasNext();) {
             TipiBaseQuestionGroup element = (TipiBaseQuestionGroup) itt.next();
-            System.err.println("Updating group: "+element.getId());
             element.updateQuestions();
         }
     }
