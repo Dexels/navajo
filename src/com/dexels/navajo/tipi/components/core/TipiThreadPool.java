@@ -115,9 +115,6 @@ public class TipiThreadPool {
 //    }
 //   }
 
-  public void init(int maxpoolSize) {
-    poolSize = maxpoolSize;
-  }
 
   public TipiEventListener getEventListener(TipiExecutable te) {
     return (TipiEventListener)myListenerMap.get(te);
@@ -128,7 +125,7 @@ public class TipiThreadPool {
   }
 
   public void enqueueExecutable(TipiExecutable exe) throws  TipiException {
-      if (poolSize==0) {
+	  if (poolSize==0) {
           // For echo:
           exe.getEvent().performAction(exe.getEvent());
       }
@@ -150,6 +147,7 @@ public class TipiThreadPool {
 public void performAction(final TipiEvent te, final TipiEventListener listener) throws TipiException {
     myListenerMap.put(te,listener);
 //    System.err.println(">>>>>>>>> >>>>>>>>>>>>>>>>>>>>>>>>>>>Enqueueing exe, myListenerMap is " + myListenerMap.size()+" thread: "+Thread.currentThread().getName());
+
     enqueueExecutable(te);
   }
 //  public synchronized Thread performAction(final TipiEvent te) {
