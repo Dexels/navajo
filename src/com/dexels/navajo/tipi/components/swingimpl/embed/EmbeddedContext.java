@@ -7,7 +7,6 @@ import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.studio.*;
 import com.dexels.navajo.tipi.tipixml.XMLParseException;
 import java.io.*;
-import java.io.IOException;
 import java.util.*;
 
 /**
@@ -80,5 +79,8 @@ public class EmbeddedContext extends SwingTipiContext {
     top.removeAllChildren();
   }
 
+  public void exit() {
+	  shutdown();
+  }
 
 }
