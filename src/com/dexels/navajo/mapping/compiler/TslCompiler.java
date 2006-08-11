@@ -440,8 +440,17 @@ public class TslCompiler {
     return result.toString();
   }
 
-  public String expressionNode(int ident, Element exprElmnt, int leftOver,
-                               String className, String objectName) throws
+  private String getCDATAContent(Node n) {
+	  NodeList nl = n.getChildNodes();
+	  for (int j = 0; j < nl.getLength(); j++) {
+		  if ( nl.item(j).getNodeType() == Node.CDATA_SECTION_NODE ) {
+			  return nl.item(j).getNodeValue();
+		  }
+	  }
+	  return null;
+  }
+  
+  public String expressionNode(int ident, Element exprElmnt, int leftOver,  String className, String objectName) throws
       Exception {
     StringBuffer result = new StringBuffer();
     boolean isStringOperand = false;
@@ -451,16 +460,20 @@ public class TslCompiler {
 
     // Check if operand is given as text node between <expression> tags.
     if (value == null || value.equals("")) {
-      Node child = exprElmnt.getFirstChild();
-      if (child != null) {
-        isStringOperand = true;
-        value = child.getNodeValue();
-      }
-      else {
-        throw new Exception("Error @" +
-                            (exprElmnt.getParentNode() + "/" + exprElmnt) + ": <expression> node should either contain a value attribute or a text child node: >" +
-                            value + "<");
-      }
+    	Node child = exprElmnt.getFirstChild();
+    	String cdata = getCDATAContent(exprElmnt);
+    	if ( cdata != null ) {
+    		isStringOperand = true;
+    		value = cdata;
+    	} else if (child != null) {
+    		isStringOperand = true;
+    		value = child.getNodeValue();
+    	}
+    	else {
+    		throw new Exception("Error @" +
+    				(exprElmnt.getParentNode() + "/" + exprElmnt) + ": <expression> node should either contain a value attribute or a text child node: >" +
+    				value + "<");
+    	}
     }
 
         if (!condition.equals("")) {
