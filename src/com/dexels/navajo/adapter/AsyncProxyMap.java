@@ -28,6 +28,7 @@ public class AsyncProxyMap extends AsyncMappable {
     password = access.rpcPwd;
     this.access = access;
     outDoc = inMessage;
+    killOnFinnish = true;
   }
 
   public void setMethod(String name) {
@@ -68,16 +69,17 @@ public class AsyncProxyMap extends AsyncMappable {
           h.setRPCPassword(password);
           h.setRPCUser(username);
     }
-
+    // Clear request id.
+    h.setRequestId(null);
     try {
-      System.err.println("Calling method: " + method);
-      outDoc.write(System.err);
       inDoc = access.getDispatcher().handle(outDoc);
     } catch (Exception e) {
       e.printStackTrace();
       throw new UserException(-1, e.getMessage());
+    } finally {
+    	System.err.println("Setting set is finished.");
+    	setIsFinished();
     }
-    setIsFinished();
   }
 
   public void afterRequest() throws UserException {

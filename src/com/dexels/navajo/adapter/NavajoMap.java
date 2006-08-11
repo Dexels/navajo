@@ -327,6 +327,8 @@ public class NavajoMap implements Mappable {
           h.setRPCPassword(password);
           h.setRPCUser(username);
           h.setExpirationInterval(-1);
+          // Clear request id.
+          h.setRequestId(null);
         }
         inDoc = access.getDispatcher().handle(outDoc, access.getUserCertificate());
       }
