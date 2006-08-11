@@ -70,11 +70,14 @@ public class AsyncProxyMap extends AsyncMappable {
     }
 
     try {
+      System.err.println("Calling method: " + method);
+      outDoc.write(System.err);
       inDoc = access.getDispatcher().handle(outDoc);
     } catch (Exception e) {
       e.printStackTrace();
       throw new UserException(-1, e.getMessage());
     }
+    setIsFinished();
   }
 
   public void afterRequest() throws UserException {
