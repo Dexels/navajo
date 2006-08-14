@@ -15,6 +15,7 @@ import com.dexels.navajo.adapter.sqlmap.DatabaseInfo;
  */
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.Iterator;
 import java.util.Map;
@@ -252,22 +253,10 @@ public class ConnectionBrokerManager extends Object {
 		  }
 	  } 
 	  return broker;
-    
-    
-//    final Set keys = this.brokerMap.keySet();
-//    final Iterator iter = keys.iterator();
-//    while (iter.hasNext()) {
-//      final String key = (String) iter.next();
-//      if (key.equals(target)) {
-//        return ( (SQLMapBroker)this.brokerMap.get(key));
-//      }
-//    }
-//
-//    return (null);
   }
-
-  private final SQLMapBroker seekSimilarBroker(final String datasource) {
-	  final Set keys = this.brokerMap.keySet();
+    
+  private final synchronized SQLMapBroker seekSimilarBroker(final String datasource) {
+	  final Set keys = new HashSet(this.brokerMap.keySet());
 	  final Iterator iter = keys.iterator();
 	  while (iter.hasNext()) {
 		  final String key = (String) iter.next();
@@ -295,7 +284,7 @@ public class ConnectionBrokerManager extends Object {
   }
 
   private final void destroySimilarBroker(final String datasource) {
-    final Set keys = this.brokerMap.keySet();
+    final Set keys = new HashSet(this.brokerMap.keySet());
     final Iterator iter = keys.iterator();
     while (iter.hasNext()) {
       final String key = (String) iter.next();
