@@ -14,6 +14,7 @@ import com.dexels.navajo.adapter.sqlmap.DatabaseInfo;
  * @version $Id$
  */
 
+import java.util.Collections;
 import java.util.Set;
 import java.util.Iterator;
 import java.util.Map;
@@ -22,15 +23,13 @@ import java.util.HashMap;
 import com.dexels.navajo.server.UserException;
 
 import org.dexels.grus.DbConnectionBroker;
-import java.sql.DatabaseMetaData;
-import java.sql.Connection;
 import java.sql.*;
 
 public class ConnectionBrokerManager extends Object {
 
   public final String SRCUSERDELIMITER = ":";
 
-  private Map brokerMap = new HashMap();
+  private Map brokerMap = Collections.synchronizedMap(new HashMap());
   private boolean debug = false;
 
   private static Object semaphore = new Object();
@@ -46,7 +45,7 @@ public class ConnectionBrokerManager extends Object {
 
   // ------------------------------------------------------------ public methods
 
-  public final void put(final String dsrc,
+  public final synchronized void put(final String dsrc,
 		  final String drv, final String url,
 		  final String usr,
 		  final String pwd, final int minconn,
@@ -81,16 +80,18 @@ public class ConnectionBrokerManager extends Object {
 		  }
 		  broker.createBroker();
 		  final String key = dsrc + this.SRCUSERDELIMITER + usr;
+		  
 		  this.brokerMap.put(key, broker);
 		  if (this.debug) {
 			  System.out.println(this.getClass() +
 					  ": putting new broker with identifier '" +
 					  key + "'");
 		  }
+		  
 	  }
   }
 
-  public final void put(final String datasource, final String username, final String password) throws
+  public final synchronized void put(final String datasource, final String username, final String password) throws
   UserException,
   ClassNotFoundException {
 	  synchronized ( semaphore ) {
@@ -153,7 +154,7 @@ public class ConnectionBrokerManager extends Object {
     }
   }
 
-  public final DbConnectionBroker get(final String dsrc, final String usr, final String pwd) {
+  public final synchronized DbConnectionBroker get(final String dsrc, final String usr, final String pwd) {
     SQLMapBroker broker;
     if (usr == null) {
       if (this.debug) {
@@ -186,7 +187,7 @@ public class ConnectionBrokerManager extends Object {
 
   }
 
-  public final boolean haveSimilarBroker(final String dsrc) {
+  public final synchronized boolean haveSimilarBroker(final String dsrc) {
     final SQLMapBroker broker = this.seekSimilarBroker(dsrc);
     return (broker != null);
   }
@@ -236,7 +237,7 @@ public class ConnectionBrokerManager extends Object {
 	  
 	  SQLMapBroker broker = ( (SQLMapBroker)this.brokerMap.get(target));
 	  
-	  if ( broker != null && broker.broker.isDead() ) {
+	  if ( ( broker != null && broker.refresh == 0 ) || ( broker != null && broker.broker.isDead() ) ) {
 		  //System.err.println("Detected dead broker, removing it and creating new one");
 		  brokerMap.remove(target);
 		  // Create new broker.
@@ -273,7 +274,7 @@ public class ConnectionBrokerManager extends Object {
 		  SQLMapBroker broker = (SQLMapBroker)this.brokerMap.get(key);
 		  if (broker.datasource.equals(datasource)) {
 			  //return (broker);
-			  if ( broker != null && broker.broker.isDead()) {
+			  if ( broker.refresh == 0 || ( broker != null && broker.broker.isDead()) ) {
 				  //System.err.println("Detected dead broker, removing it and creating new one");
 				  brokerMap.remove(key);
 				  // Create new broker.
@@ -356,30 +357,30 @@ public class ConnectionBrokerManager extends Object {
     }
 
     public void createBroker() throws ClassNotFoundException {
-      this.broker = new DbConnectionBroker(this.driver, this.url, this.username,
-                                           this.password,
-                                           this.minconnections,
-                                           this.maxconnections, this.logFile,
-                                           this.refresh);
-      // Only get metadata if started in 'broker' mode (i.e. refresh > 0 )
-      if (this.broker != null && refresh > 0) {
-      Connection c = this.broker.getConnection();
-      if (c != null) {
-        try {
-          System.err.print("GETTING METADATA FOR " + url + "...");
-          DatabaseMetaData dbmd = c.getMetaData();
-          dbInfo = new DatabaseInfo(dbmd, this.datasource);
-          System.err.println("...GOT IT!");
-        }
-        catch (SQLException ex) {
-          ex.printStackTrace(System.err);
-        }
-        finally {
-          this.broker.freeConnection(c);
-        }
-      }
-    }
-
+    	this.broker = new DbConnectionBroker(this.driver, this.url, this.username,
+    			this.password,
+    			this.minconnections,
+    			this.maxconnections, this.logFile,
+    			this.refresh);
+    	// Only get metadata if started in 'broker' mode (i.e. refresh > 0 )
+    	if (this.broker != null && refresh > 0) {
+    		Connection c = this.broker.getConnection();
+    		if (c != null) {
+    			try {
+    				System.err.print("GETTING METADATA FOR " + url + "...");
+    				DatabaseMetaData dbmd = c.getMetaData();
+    				dbInfo = new DatabaseInfo(dbmd, this.datasource);
+    				System.err.println("...GOT IT!");
+    			}
+    			catch (SQLException ex) {
+    				ex.printStackTrace(System.err);
+    			}
+    			finally {
+    				this.broker.freeConnection(c);
+    			}
+    		}
+    	}
+    	
     }
 
     public Object clone() {
