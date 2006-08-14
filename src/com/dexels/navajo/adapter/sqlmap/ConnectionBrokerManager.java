@@ -366,10 +366,10 @@ public class ConnectionBrokerManager extends Object {
     		Connection c = this.broker.getConnection();
     		if (c != null) {
     			try {
-    				System.err.print("GETTING METADATA FOR " + url + "...");
+    				//System.err.print("GETTING METADATA FOR " + url + "...");
     				DatabaseMetaData dbmd = c.getMetaData();
     				dbInfo = new DatabaseInfo(dbmd, this.datasource);
-    				System.err.println("...GOT IT!");
+    				//System.err.println("...GOT IT!");
     			}
     			catch (SQLException ex) {
     				ex.printStackTrace(System.err);
