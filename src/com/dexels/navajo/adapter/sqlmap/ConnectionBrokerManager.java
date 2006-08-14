@@ -237,25 +237,28 @@ public class ConnectionBrokerManager extends Object {
 
   private final SQLMapBroker haveExistingBroker(final String datasource,
 		  final String usr) {
-	  final String target = datasource + this.SRCUSERDELIMITER + usr;
 	  
-	  SQLMapBroker broker = ( (SQLMapBroker)this.brokerMap.get(target));
-	  
-	  if ( ( broker != null && broker.refresh == 0 ) || ( broker != null && broker.broker.isDead() ) ) {
-		  //System.err.println("Detected dead broker, removing it and creating new one");
-		  brokerMap.remove(target);
-		  // Create new broker.
-		  try { 
-			  this.put(broker.datasource, broker.driver, broker.url, broker.username, broker.password,
-					  broker.minconnections, broker.maxconnections, broker.logFile,
-					  broker.refresh, broker.autocommit);
-			  broker = ( (SQLMapBroker)this.brokerMap.get(target));
-		  } catch (Exception e) {
-			  e.printStackTrace(System.err);
-			  return null;
-		  }
-	  } 
-	  return broker;
+	  synchronized ( semaphore ) {
+		  final String target = datasource + this.SRCUSERDELIMITER + usr;
+		  
+		  SQLMapBroker broker = ( (SQLMapBroker)this.brokerMap.get(target));
+		  
+		  if ( ( broker != null && broker.refresh == 0 ) || ( broker != null && broker.broker.isDead() ) ) {
+			  //System.err.println("Detected dead broker, removing it and creating new one");
+			  brokerMap.remove(target);
+			  // Create new broker.
+			  try { 
+				  this.put(broker.datasource, broker.driver, broker.url, broker.username, broker.password,
+						  broker.minconnections, broker.maxconnections, broker.logFile,
+						  broker.refresh, broker.autocommit);
+				  broker = ( (SQLMapBroker)this.brokerMap.get(target));
+			  } catch (Exception e) {
+				  e.printStackTrace(System.err);
+				  return null;
+			  }
+		  } 
+		  return broker;
+	  }
   }
     
   private final SQLMapBroker seekSimilarBroker(final String datasource) {
