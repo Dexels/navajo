@@ -320,15 +320,18 @@ public class SQLMap implements Mappable, LazyArray {
 			  rowCount = 0;
 		  }
 		  catch (NavajoException ne) {
+			  ne.printStackTrace(System.err);
 			  logger.log(NavajoPriority.ERROR, ne.getMessage(), ne);
 			  throw new MappableException(ne.getMessage());
 		  }
 		  catch (java.io.IOException fnfe) {
+			  fnfe.printStackTrace(System.err);
 			  logger.log(NavajoPriority.ERROR, fnfe.getMessage(), fnfe);
 			  throw new MappableException(
 					  "Could not load configuration file for SQLMap object: " +
 					  fnfe.getMessage());
 		  } catch (Throwable t) {
+			  t.printStackTrace(System.err);
 			  logger.log(NavajoPriority.ERROR, t.getMessage(), t);
 			  throw new MappableException(t.getMessage());
 		  }

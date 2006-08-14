@@ -237,7 +237,7 @@ public class ConnectionBrokerManager extends Object {
 	  SQLMapBroker broker = ( (SQLMapBroker)this.brokerMap.get(target));
 	  
 	  if ( broker != null && broker.broker.isDead() ) {
-		  System.err.println("Detected dead broker, removing it and creating new one");
+		  //System.err.println("Detected dead broker, removing it and creating new one");
 		  brokerMap.remove(target);
 		  // Create new broker.
 		  try { 
@@ -274,7 +274,7 @@ public class ConnectionBrokerManager extends Object {
 		  if (broker.datasource.equals(datasource)) {
 			  //return (broker);
 			  if ( broker != null && broker.broker.isDead()) {
-				  System.err.println("Detected dead broker, removing it and creating new one");
+				  //System.err.println("Detected dead broker, removing it and creating new one");
 				  brokerMap.remove(key);
 				  // Create new broker.
 				  try { 
@@ -361,7 +361,8 @@ public class ConnectionBrokerManager extends Object {
                                            this.minconnections,
                                            this.maxconnections, this.logFile,
                                            this.refresh);
-      if (this.broker != null) {
+      // Only get metadata if started in 'broker' mode (i.e. refresh > 0 )
+      if (this.broker != null && refresh > 0) {
       Connection c = this.broker.getConnection();
       if (c != null) {
         try {
