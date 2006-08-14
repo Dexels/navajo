@@ -44,8 +44,6 @@ public class ConnectionBrokerManager extends Object {
     this.debug = b;
   }
 
-  // ------------------------------------------------------------ public methods
-
   public final void put(final String dsrc,
 		  final String drv, final String url,
 		  final String usr,
