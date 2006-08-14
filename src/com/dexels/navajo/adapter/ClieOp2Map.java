@@ -69,13 +69,13 @@ public class ClieOp2Map implements Mappable {
 	public Binary getContent() throws UserException {
 		Binary b = null;
 		generateClieOP();
-		b = new Binary(bos.toByteArray());
-//		try {
-//			out = new FileOutputStream("clieop.txt");
-//			b.write(out);
-//		} catch (Exception e) {
-//			throw new UserException(-1, e.getMessage());
-//		}
+		byte[] data = bos.toByteArray();
+		for (int i = 0; i < data.length; i++) {
+			if (data[i]=='?') {
+				data[i]='*';
+			}
+		}
+		b = new Binary(data);
 		return b;
 	}
 
