@@ -52,16 +52,18 @@ package navajoadapters;
  * 2.2.5 Implemented setContent() in FileMap.
  * 
  * 2.2.6 Supports kill (due to time-out) connection brokers and reviving those.
+ * 
+ * 2.2.7 Added support for non-broker mode of SQLMap.
  *
  */
 public class Version extends dexels.Version {
 
 	public static final int    MAJOR       = 2;
 	public static final int    MINOR       = 2;
-	public static final int    PATCHLEVEL  = 6;
+	public static final int    PATCHLEVEL  = 7;
 	public static final String VENDOR      = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Adapter Library";
-	public static final String RELEASEDATE = "2006-07-17";
+	public static final String RELEASEDATE = "2006-08-14";
 
 	//	Included packages.
 	String [] includes = {"navajodocument.Version", "navajo.Version", "navajoclient.Version", "navajofunctions.Version"};
