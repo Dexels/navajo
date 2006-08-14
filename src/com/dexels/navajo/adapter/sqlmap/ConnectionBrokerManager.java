@@ -46,7 +46,7 @@ public class ConnectionBrokerManager extends Object {
 
   // ------------------------------------------------------------ public methods
 
-  public final synchronized void put(final String dsrc,
+  public final void put(final String dsrc,
 		  final String drv, final String url,
 		  final String usr,
 		  final String pwd, final int minconn,
@@ -92,7 +92,7 @@ public class ConnectionBrokerManager extends Object {
 	  }
   }
 
-  public final synchronized void put(final String datasource, final String username, final String password) throws
+  public final void put(final String datasource, final String username, final String password) throws
   UserException,
   ClassNotFoundException {
 	  synchronized ( semaphore ) {
@@ -155,7 +155,7 @@ public class ConnectionBrokerManager extends Object {
     }
   }
 
-  public final synchronized DbConnectionBroker get(final String dsrc, final String usr, final String pwd) {
+  public final DbConnectionBroker get(final String dsrc, final String usr, final String pwd) {
     SQLMapBroker broker;
     if (usr == null) {
       if (this.debug) {
@@ -188,7 +188,7 @@ public class ConnectionBrokerManager extends Object {
 
   }
 
-  public final synchronized boolean haveSimilarBroker(final String dsrc) {
+  public final boolean haveSimilarBroker(final String dsrc) {
     final SQLMapBroker broker = this.seekSimilarBroker(dsrc);
     return (broker != null);
   }
@@ -255,7 +255,7 @@ public class ConnectionBrokerManager extends Object {
 	  return broker;
   }
     
-  private final synchronized SQLMapBroker seekSimilarBroker(final String datasource) {
+  private final SQLMapBroker seekSimilarBroker(final String datasource) {
 	  final Set keys = new HashSet(this.brokerMap.keySet());
 	  final Iterator iter = keys.iterator();
 	  while (iter.hasNext()) {
