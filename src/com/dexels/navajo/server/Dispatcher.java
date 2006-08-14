@@ -296,21 +296,26 @@ public final class Dispatcher {
 	  
 	  // Check for webservice transaction integrity.
 	  boolean integrityViolation = false;
-	  out = navajoConfig.getIntegrityWorker().getResponse(in);
-	  if ( out != null ) {
-		  integrityViolation = true;
-		  return out;
+	  Worker integ = navajoConfig.getIntegrityWorker();
+	  if ( integ != null ) {
+		  out = integ.getResponse(in);
+		  if ( out != null ) {
+			  integrityViolation = true;
+			  return out;
+		  }
 	  }
 	  
 	  // Check for locks.
 	  LockManager lm = navajoConfig.getLockManager( );
 	  Lock [] locks = null;
-	  try {
-		  locks = lm.grantAccess(access);
-	  } catch (LocksExceeded le) {
-		  return generateErrorMessage(access, "Could not get neccessary lock(s)", SystemException.LOCKS_EXCEEDED, -1, le);
+	  if ( lm != null ) {
+		  try {
+			  locks = lm.grantAccess(access);
+		  } catch (LocksExceeded le) {
+			  return generateErrorMessage(access, "Could not get neccessary lock(s)", SystemException.LOCKS_EXCEEDED, -1, le);
+		  }
 	  }
-	  
+  
 	  try {
 		  
 		  Class c;
@@ -372,7 +377,7 @@ public final class Dispatcher {
 		  throw new SystemException( -1, ie.getMessage(), ie);
 	  } finally {
 		  // Release locks.
-		  if ( locks != null ) {
+		  if ( lm != null && locks != null ) {
 			  lm.removeLocks(access, locks);
 		  }  
 	  }

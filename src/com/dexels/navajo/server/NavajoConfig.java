@@ -77,6 +77,8 @@ public final class NavajoConfig {
     private String classPath = "";
     private boolean enableAsync = true;
     private boolean hotCompile = true;
+    private boolean enableIntegrityWorker = true;
+    private boolean enableLockManager = true;
     private static boolean useLog4j = false;
     protected NavajoLogger navajoLogger = null;
 
@@ -224,6 +226,12 @@ public final class NavajoConfig {
     			asyncStore = com.dexels.navajo.mapping.AsyncStore.getInstance(asyncTimeout);
     		}
     		
+    		enableIntegrityWorker = (body.getProperty("parameters/enable_integrity") == null ||
+    				body.getProperty("parameters/enable_integrity").getValue().equals("true"));
+    		
+    		enableLockManager = (body.getProperty("parameters/enable_locks") == null ||
+    				body.getProperty("parameters/enable_locks").getValue().equals("true"));
+    		
     		hotCompile = (body.getProperty("parameters/hot_compile") == null ||
     				body.getProperty("parameters/hot_compile").getValue().
     				equals("true"));
@@ -274,6 +282,11 @@ public final class NavajoConfig {
     }
     
     public Worker getIntegrityWorker() {
+    	
+    	if ( !enableIntegrityWorker ) {
+    		return null;
+    	}
+    	
     	if ( integrityWorker == null ) {
     		integrityWorker = Worker.getInstance();
     	}
@@ -281,6 +294,11 @@ public final class NavajoConfig {
     }
     
     public LockManager getLockManager() {
+    	
+    	if ( !enableLockManager ) {
+    		return null;
+    	}
+    	
     	if ( lockManager == null ) {
     		lockManager = LockManager.getInstance(this);
     	}
