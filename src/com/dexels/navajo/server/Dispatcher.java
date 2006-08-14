@@ -361,8 +361,8 @@ public final class Dispatcher {
 				  (expirationInterval != -1));
 		  
 		  // Store response for integrity checking.
-		  if ( out != null && !integrityViolation ) {
-			  Worker.getInstance().setResponse(in, out);
+		  if ( integ != null && out != null && !integrityViolation ) {
+			  integ.setResponse(in, out);
 		  }
 		  
 		  return out;
