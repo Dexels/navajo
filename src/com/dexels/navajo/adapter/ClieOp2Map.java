@@ -2,7 +2,9 @@ package com.dexels.navajo.adapter;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -46,12 +48,12 @@ public class ClieOp2Map implements Mappable {
 	public Binary content;
 	FileOutputStream out;
 	ByteArrayOutputStream bos;
-	PrintStream p;
+	PrintWriter p;
 
 	public ClieOp2Map(){
 		try {
 			bos = new ByteArrayOutputStream();
-			p = new PrintStream(bos);
+			p = new PrintWriter(new OutputStreamWriter(bos,"US-ASCII"));
 		} catch (Exception e) {
 			System.out.println("error in constructor: "+e);
 		}
