@@ -168,6 +168,7 @@ public class SQLMap implements Mappable, LazyArray {
   protected ArrayList parameters = null;
 
   protected static ConnectionBrokerManager fixedBroker = null;
+  protected DbConnectionBroker myConnectionBroker = null;
   public String datasource = this.DEFAULTSRCNAME;
   public String databaseProductName;
   public String databaseVersion;
@@ -388,7 +389,7 @@ public class SQLMap implements Mappable, LazyArray {
           catch (UserException ex) {
           }
           // Free connection.
-          ( (DbConnectionBroker) fixedBroker.get(this.datasource, this.username, password)).freeConnection(con);
+          myConnectionBroker.freeConnection(con);
           con = null;
         }
       }
@@ -433,7 +434,7 @@ public class SQLMap implements Mappable, LazyArray {
         if (fixedBroker != null) {
           SessionIdentification.clearSessionId(getMetaData() != null ? getMetaData().getVendor() : "", con);
           // Free connection.
-          ( (DbConnectionBroker) fixedBroker.get(this.datasource, this.username, password)).freeConnection(con);
+          myConnectionBroker.freeConnection(con);
           con = null;
         }
       }
@@ -806,7 +807,8 @@ public class SQLMap implements Mappable, LazyArray {
                                 this.username);
       }
 
-      con = fixedBroker.get(this.datasource, this.username, this.password).getConnection();
+      myConnectionBroker = fixedBroker.get(this.datasource, this.username, this.password);
+      con = myConnectionBroker.getConnection();
 
       if (con == null) {
         logger.log(NavajoPriority.WARN,
@@ -822,8 +824,8 @@ public class SQLMap implements Mappable, LazyArray {
           logger.log(NavajoPriority.ERROR, t.getMessage(), t);
           throw new UserException( -1, t.getMessage());
         }
-        con = fixedBroker.get(this.datasource, this.username, this.password).
-            getConnection();
+        myConnectionBroker = fixedBroker.get(this.datasource, this.username, this.password);
+        con = myConnectionBroker.getConnection();
         if (con == null) {
           logger.log(NavajoPriority.ERROR,
                      "Could (still) not connect to database: " + datasource +
@@ -1364,7 +1366,7 @@ public class SQLMap implements Mappable, LazyArray {
   }
 
   private final DatabaseInfo getMetaData() throws UserException {
-    if (fixedBroker == null || fixedBroker.get(this.datasource, this.username, this.password) == null) {
+    if (fixedBroker == null || myConnectionBroker == null) {
       throw new UserException( -1,
                               "Could not create connection to datasource " +
                               this.datasource + ", using username " +
@@ -1475,8 +1477,8 @@ public class SQLMap implements Mappable, LazyArray {
     catch (ClassNotFoundException e) {
       throw new UserException( -1, e.toString());
     }
-    this.con = (fixedBroker.get(this.datasource, this.username, password)).
-        getConnection();
+    myConnectionBroker = fixedBroker.get(this.datasource, this.username, password);
+    this.con = myConnectionBroker.getConnection();
   }
 
   public String getUsername() {
