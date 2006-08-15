@@ -178,14 +178,15 @@ public final class Binary extends NavajoType {
     public Binary(byte[] data) {
         super(Property.BINARY_PROPERTY);
         //Thread.dumpStack();
-        try {
-            OutputStream fos = createTempFileOutputStream();
-            fos.write(data);
-            fos.close();
-        } catch (IOException e) {
-            e.printStackTrace(System.err);
-        }
+
         if (data != null) {
+            try {
+                OutputStream fos = createTempFileOutputStream();
+                fos.write(data);
+                fos.close();
+            } catch (IOException e) {
+                e.printStackTrace(System.err);
+            }
             this.mimetype = guessContentType();
          }
     }
