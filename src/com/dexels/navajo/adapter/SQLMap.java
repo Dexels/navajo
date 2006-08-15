@@ -241,9 +241,9 @@ public class SQLMap implements Mappable, LazyArray {
       }
     }
     try {
-      fixedBroker.put(dataSourceName, driver, url, username, password,
-                           minConnections, maxConnections, logFile,
-                           refresh, new Boolean(ac));
+    	fixedBroker.put(dataSourceName, driver, url, username, password,
+    			minConnections, maxConnections, logFile,
+    			refresh, new Boolean(ac), false);
     }
     catch (ClassNotFoundException e) {
       throw new UserException( -1, e.toString());

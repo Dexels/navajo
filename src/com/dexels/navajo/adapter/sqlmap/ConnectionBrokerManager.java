@@ -44,39 +44,69 @@ public class ConnectionBrokerManager extends Object {
     this.debug = b;
   }
 
+  /**
+   * 
+   * @param dsrc, datasource name
+   * @param drv, JDBC driver name
+   * @param url, JDBC url
+   * @param usr, database username
+   * @param pwd, database password
+   * @param minconn, minimum number of connections
+   * @param maxconn, maximum number of connections
+   * @param lfile, log file name
+   * @param rfrsh, refresh rate; if set to 0, set non-broker mode
+   * @param ac, autocommit flag
+   * @param forcecreation, if set to true don't search for exact or similar brokers, just create new one.
+   * 
+   * @throws ClassNotFoundException
+   */
   public final void put(final String dsrc,
 		  final String drv, final String url,
 		  final String usr,
 		  final String pwd, final int minconn,
 		  final int maxconn,
 		  final String lfile, final double rfrsh,
-		  final Boolean ac
+		  final Boolean ac, final boolean forcecreation
   ) throws ClassNotFoundException {
 	  synchronized ( semaphore ) {
-		  SQLMapBroker broker = this.haveExistingBroker(dsrc, usr);
-		  if (broker != null) {
-			  if (this.debug) {
-				  System.out.println(this.getClass() +
-						  ": already have a broker for data source '"
-						  + dsrc + "', user name '" + usr + "'");
+		  SQLMapBroker broker = null;
+		  
+		  if ( !forcecreation ) {
+			  broker =this.haveExistingBroker(dsrc, usr);
+			  if (broker != null) {
+				  // Found an existing broker, returning this one.
+				  if (this.debug) {
+					  System.out.println(this.getClass() +
+							  ": already have a broker for data source '"
+							  + dsrc + "', user name '" + usr + "'");
+				  }
+				  return;
 			  }
-			  return;
 		  }
-		  SQLMapBroker similar = this.seekSimilarBroker(dsrc);
+		  
+		  SQLMapBroker similar = null;
+		  if ( !forcecreation ) {
+			  similar = this.seekSimilarBroker(dsrc, true);
+		  }
+		  
 		  if (similar != null) {
 			  if (this.debug) {
 				  System.out.println(this.getClass() +
 						  ": have a similar broker for data source '"
 						  + dsrc + "'");
 			  }
+			  // Clone an existing broker.
 			  broker = (SQLMapBroker) similar.clone();
 			  broker.username = usr;
 			  broker.password = pwd;
 			  
 		  }
 		  else {
+			  // Create new broker.
 			  broker = new SQLMapBroker(dsrc, drv, url, usr, pwd, minconn, maxconn, lfile, rfrsh, ac);
 		  }
+		  
+		  // Create a new broker.
 		  broker.createBroker();
 		  final String key = dsrc + this.SRCUSERDELIMITER + usr;
 		  
@@ -104,7 +134,7 @@ public class ConnectionBrokerManager extends Object {
 			  return;
 		  }
 		  
-		  broker = this.seekSimilarBroker(datasource);
+		  broker = this.seekSimilarBroker(datasource, true);
 		  if (broker == null) {
 			  throw new UserException( -1, "data source for '" + datasource +
 			  "' not configured");
@@ -131,7 +161,7 @@ public class ConnectionBrokerManager extends Object {
             ": user name is null, returning a similar broker for datasource '"
             + dsrc + "'");
       }
-      broker = this.seekSimilarBroker(dsrc);
+      broker = this.seekSimilarBroker(dsrc, false);
     }
     else {
       broker = this.haveExistingBroker(dsrc, usr);
@@ -161,7 +191,7 @@ public class ConnectionBrokerManager extends Object {
             ": user name is null, returning a similar broker for datasource '"
             + dsrc + "'");
       }
-      broker = this.seekSimilarBroker(dsrc);
+      broker = this.seekSimilarBroker(dsrc, false);
 
     }
     else {
@@ -187,12 +217,12 @@ public class ConnectionBrokerManager extends Object {
   }
 
   public final boolean haveSimilarBroker(final String dsrc) {
-    final SQLMapBroker broker = this.seekSimilarBroker(dsrc);
+    final SQLMapBroker broker = this.seekSimilarBroker(dsrc, true);
     return (broker != null);
   }
 
   public final Boolean getAutoCommit(final String dsrc) {
-    final SQLMapBroker broker = this.seekSimilarBroker(dsrc);
+    final SQLMapBroker broker = this.seekSimilarBroker(dsrc, true);
     if (broker != null) {
       return (broker.autocommit);
     }
@@ -235,8 +265,7 @@ public class ConnectionBrokerManager extends Object {
 
   // ----------------------------------------------------------- private methods
 
-  private final SQLMapBroker haveExistingBroker(final String datasource,
-		  final String usr) {
+  private final SQLMapBroker haveExistingBroker(final String datasource, final String usr) {
 	  
 	  synchronized ( semaphore ) {
 		  final String target = datasource + this.SRCUSERDELIMITER + usr;
@@ -250,7 +279,7 @@ public class ConnectionBrokerManager extends Object {
 			  try { 
 				  this.put(broker.datasource, broker.driver, broker.url, broker.username, broker.password,
 						  broker.minconnections, broker.maxconnections, broker.logFile,
-						  broker.refresh, broker.autocommit);
+						  broker.refresh, broker.autocommit, true);
 				  broker = ( (SQLMapBroker)this.brokerMap.get(target));
 			  } catch (Exception e) {
 				  e.printStackTrace(System.err);
@@ -260,8 +289,15 @@ public class ConnectionBrokerManager extends Object {
 		  return broker;
 	  }
   }
-    
-  private final SQLMapBroker seekSimilarBroker(final String datasource) {
+   
+  /**
+   * 
+   * @param datasource, name of the datasource that is searched.
+   * @param donotremove, if set to true do not remove a found broker, even if it is dead or refresh is 0; use this
+   * flag if broker is simply used for template for creating new broker.
+   * @return
+   */
+  private final SQLMapBroker seekSimilarBroker(final String datasource, boolean donotremove) {
 	  
 	  synchronized ( semaphore ) {
 		  
@@ -272,14 +308,14 @@ public class ConnectionBrokerManager extends Object {
 			  SQLMapBroker broker = (SQLMapBroker)this.brokerMap.get(key);
 			  if (broker.datasource.equals(datasource)) {
 				  //return (broker);
-				  if ( broker.refresh == 0 || ( broker != null && broker.broker.isDead()) ) {
+				  if ( !donotremove && ( broker.refresh == 0 || ( broker != null && broker.broker.isDead()) ) ) {
 					  //System.err.println("Detected dead broker, removing it and creating new one");
 					  brokerMap.remove(key);
 					  // Create new broker.
 					  try { 
 						  this.put(broker.datasource, broker.driver, broker.url, broker.username, broker.password,
 								  broker.minconnections, broker.maxconnections, broker.logFile,
-								  broker.refresh, broker.autocommit);
+								  broker.refresh, broker.autocommit, true);
 						  broker = ( (SQLMapBroker)this.brokerMap.get(key));
 					  } catch (Exception e) {
 						  e.printStackTrace(System.err);
