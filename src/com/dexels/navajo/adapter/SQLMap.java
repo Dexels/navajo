@@ -828,11 +828,11 @@ public class SQLMap implements Mappable, LazyArray {
         con = myConnectionBroker.getConnection();
         if (con == null) {
           logger.log(NavajoPriority.ERROR,
-                     "Could (still) not connect to database: " + datasource +
+                     "Could (still) not connect to database: " + datasource + " (" + this.username + ")" +
                      ", check your connection");
           throw new UserException( -1,
                                   "Could not connect to database: " +
-                                  datasource +
+                                  datasource + " (" + this.username + ")" +
                                   ", check your connection");
         }
       }
