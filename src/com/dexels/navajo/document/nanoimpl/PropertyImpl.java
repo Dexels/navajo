@@ -315,8 +315,29 @@ public final class PropertyImpl
       type = Property.STRING_PROPERTY;
     }
     
-    if (BINARY_PROPERTY.equals(type) && e.getContent()!=null && myValue==null) {
-        myValue = e.getContent();
+    if (BINARY_PROPERTY.equals(type) ) {
+    	if (myValue==null) {
+    		String content = e.getContent();
+			if (content!=null ) {
+            	try {
+            		System.err.println("Nano. Parsing content. size: "+content.length());
+        			myBinary = new Binary(new StringReader(content));
+        			
+            	} catch (IOException e1) {
+        			e1.printStackTrace();
+        		}
+			} else {
+				System.err.println("NULL binary!");
+			}
+		} else {  
+	    	try {
+        		System.err.println("Nano. Parsing binary value attribute. size: "+myValue.length());
+				myBinary = new Binary(new StringReader(myValue));
+				myValue = null;
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+		}
     } else {
         try {
             setValue(PropertyTypeChecker.getInstance().verify(this, myValue));
