@@ -34,12 +34,11 @@ import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.server.SystemException;
 
 import org.apache.jasper.compiler.*;
+import org.w3c.dom.Node;
 
 import java.io.*;
 //import org.w3c.dom.*;
 import java.util.*;
-import java.util.Stack;
-import java.util.StringTokenizer;
 
 import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.parser.Expression;
@@ -457,6 +456,21 @@ public class NanoTslCompiler {
         String value = XMLUnescape(exprElmnt.getNonNullStringAttribute("value"));
 
         // Check if operand is given as text node between <expression> tags.
+        
+        if (value == null || value.equals("")) {
+        	
+        	String cdata = exprElmnt.getContent();
+        	if ( cdata != null ) {
+        		isStringOperand = true;
+        		value = cdata;
+        	} 
+        	else {
+        		throw new Exception("Error @" +
+        				(exprElmnt.getParent().getName() + "/" + exprElmnt) + ": <expression> node should either contain a value attribute or a text child node: >" +
+        				value + "<");
+        	}
+        }
+
         if (value == null || value.equals("")) {
             //      XMLElement child = exprElmnt.getFirstChild();
             value = exprElmnt.getContent();
@@ -861,6 +875,7 @@ public class NanoTslCompiler {
         }
 
         if (isSubMapped) {
+        	
             contextClass = (Class) contextClassStack.pop();
         }
 
@@ -1422,25 +1437,29 @@ public class NanoTslCompiler {
         return result.toString();
     }
     
-    private Class locateContextClass(String mapPath) {
-        System.err.println("finaMapByPath: "+mapPath);
-        StringTokenizer st = new StringTokenizer(mapPath,"/");
-        int count = 0;
-        while (st.hasMoreTokens()) {
-          String element = st.nextToken();
-          if (!"..".equals(element)) {
-              System.err.println("Huh? : "+element);
-          }
-          count++;
+     private Class locateContextClass(String mapPath) {
+//      System.err.println("finaMapByPath: "+mapPath);
+      StringTokenizer st = new StringTokenizer(mapPath,"/");
+      //System.err.println("STACK: "+contextClassStack);
+      //System.err.println("CONTEXT"+contextClass);
+      
+      int count = 0;
+      while (st.hasMoreTokens()) {
+        String element = st.nextToken();
+        if (!"..".equals(element)) {
+            System.err.println("Huh? : "+element);
         }
-        if (count==0) {
-            return contextClass;
-        }
-        System.err.println("Count element: "+count);
-        Class m = (Class)contextClassStack.get(count-1);
-        System.err.println("Mappable: "+m);
-        return m;
-  }
+        count++;
+      }
+      if (count==0) {
+        return contextClass;
+    }
+//      System.err.println("Count element: "+count);
+      //System.err.println("STACK: "+contextClassStack);
+      Class m = (Class)contextClassStack.get(contextClassStack.size()-( count+1));
+//      System.err.println("Mappable: "+m);
+      return m;
+}
 
     public String debugNode(int ident, XMLElement n) throws Exception {
         StringBuffer result = new StringBuffer();
@@ -1688,9 +1707,14 @@ public class NanoTslCompiler {
             ident -= 2;
             result.append(printIdent(ident) + "} // EOF map condition \n");
         }
-        if (!name.equals("")) { // Same condition as the push, to ensure that the stack doesn't underflow
-            contextClassStack.pop();
-        }
+//        if (!name.equals("")) { // Same condition as the push, to ensure that the stack doesn't underflow
+            if (!contextClassStack.isEmpty()) {
+                contextClass = (Class)contextClassStack.pop();
+            } else {
+                contextClass = null;
+            }
+//            contextClassStack.pop();
+//        }
         return result.toString();
     }
 
@@ -1802,7 +1826,13 @@ public class NanoTslCompiler {
             result.append(breakNode(ident, (XMLElement) n));
         } else if (n.getName().equals("validations")) {
                 // --------------- nada
-        } else {
+        } else if (n.getName().equals("comment")) {
+                // --------------- nada
+        } else if (n.getName().equals("finally")) {
+                // Nada, will be sought out using get elements by tagname
+        } else if (n.getName().equals("include")) {
+            // Nada, will be sought out using get elements by tagname
+        }else {
             throw new TslCompileException(TslCompileException.TSL_UNKNOWN_TAG,"Unknown tag: "+n.getName(),n);
         }
 
