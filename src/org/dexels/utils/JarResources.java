@@ -138,10 +138,12 @@ public final class JarResources {
 
         // extract resources and put them into the hashtable.
         FileInputStream fis = null;
+        BufferedInputStream bis = null;
+        ZipInputStream zis = null;
         try {
             fis = new FileInputStream(jarFile);
-            BufferedInputStream bis = new BufferedInputStream(fis);
-            ZipInputStream zis = new ZipInputStream(bis);
+            bis = new BufferedInputStream(fis);
+            zis = new ZipInputStream(bis);
             ZipEntry ze = null;
 
             while ((ze = zis.getNextEntry()) != null) {
@@ -179,9 +181,22 @@ public final class JarResources {
             ennn.printStackTrace(System.err);
         } finally {
             if (fis != null) {
-
                 try {
                     fis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (bis != null) {
+                try {
+                    bis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (zis != null) {
+                try {
+                    zis.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
