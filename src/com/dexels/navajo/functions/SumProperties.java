@@ -79,12 +79,23 @@ public class SumProperties
             if ( (o != null) &&
                 ! (o instanceof Integer || o instanceof Double ||
                    o instanceof Float || o instanceof Money ||
-                   o instanceof Percentage || o instanceof Boolean)) {
+                   o instanceof Percentage || o instanceof Boolean || o instanceof String)) {
               throw new TMLExpressionException(this,
                   "Only numbers are supported a sum. Not: " +
                                                (o == null ? "null" :
                                                 o.getClass().toString()));
             }
+            if (o instanceof String) {
+            	if ("".equals(o)) {
+					// ignore
+				} else {
+		              throw new TMLExpressionException(this,
+		                      "Only numbers are supported a sum. Not strings. Value:  "+o +
+		                                                   (o == null ? "null" :
+		                                                    o.getClass().toString()));
+
+				}
+              }
             if (o instanceof Integer) {
               sumType = "int";
               sum += ( (Integer) o).doubleValue();
