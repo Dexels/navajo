@@ -367,6 +367,9 @@ private String username;
   public String getServerUrl() {
     return "directclient";
   }
+  public Message getGlobalMessage(String name) {
+	  return (Message)globalMessages.get(name);
+  }
 
   public void addGlobalMessage(Message m){
     globalMessages.remove(m.getName());
