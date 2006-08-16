@@ -275,6 +275,15 @@ public class NavajoClient implements ClientInterface {
     return globalMessages.remove(m.getName()) != null;
   }
 
+  /***
+   * Returns a global message, addressed by name
+   * @param name
+   * @return
+   */
+  public Message getGlobalMessage(String name) {
+	  return (Message)globalMessages.get(name);
+  }
+  
   /**
    * Perform a synchronous webservice call
    * @param n Navajo

@@ -9,6 +9,7 @@ package com.dexels.navajo.client;
  * @version 1.0
  */
 import com.dexels.navajo.document.*;
+
 import java.net.URL;
 import java.io.InputStream;
 import java.util.*;
@@ -68,7 +69,14 @@ public interface ClientInterface {
   public void setServerUrl(String url);
 
   public void addGlobalMessage(Message m);
-
+  
+  /***
+   * Returns a global message, addressed by name
+   * @param name
+   * @return
+   */
+  public Message getGlobalMessage(String name);
+  
   public void setRetryAttempts(int noOfAttempts);
 
   public void setRetryInterval(long interval);
