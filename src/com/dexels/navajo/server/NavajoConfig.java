@@ -281,9 +281,18 @@ public final class NavajoConfig {
     	return taskRunner;   
     }
     
+    public boolean isIntegrityWorkerEnabled() {
+    	return enableIntegrityWorker;
+    }
+    
+    public boolean isLockManagerEnabled() {
+    	return enableLockManager;
+    }
+    
     public Worker getIntegrityWorker() {
     	
     	if ( !enableIntegrityWorker ) {
+    		
     		return null;
     	}
     	

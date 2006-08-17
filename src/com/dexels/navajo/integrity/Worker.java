@@ -68,6 +68,8 @@ public class Worker extends GenericThread {
 	private static Worker instance = null;
 	private static String responseDir = null;
 	
+	
+	
 	private static Object semaphore = new Object();
 	
 	// Worklist containst responses that still need to be written to a file.
@@ -83,6 +85,11 @@ public class Worker extends GenericThread {
 		super("Navajo Integrity Worker");
 	}
 	
+	/**
+	 * Beware, this functions should only be called from the authorized class that can enable this thread(!).
+	 * 
+	 * @return
+	 */
 	public static Worker getInstance() {
 		
 		synchronized ( semaphore ) {
@@ -318,19 +325,31 @@ public class Worker extends GenericThread {
 	}
 	
 	public int getViolationCount() {
-		return getInstance().violationCount;
+		if ( instance == null ) {
+			return 0;
+		}
+		return instance.violationCount;
 	}
 	
 	public int getCacheSize() {
-		return getInstance().integrityCache.size();
+		if ( instance == null ) {
+			return 0;
+		}
+		return instance.integrityCache.size();
 	}
 	
 	public int getWorkSize() {
-		return getInstance().workList.size();
+		if ( instance == null ) {
+			return 0;
+		}
+		return instance.workList.size();
 	}
 	
 	public int getNotWrittenSize() {
-		return getInstance().notWrittenReponses.size();
+		if ( instance == null ) {
+			return 0;
+		}
+		return instance.notWrittenReponses.size();
 	}
 	
 	public String getVERSION() {
@@ -338,15 +357,20 @@ public class Worker extends GenericThread {
 	}
 	
 	public int getFileCount() {
-		return getInstance().fileCount;
+		if ( instance == null ) {
+			return 0;
+		}
+		return instance.fileCount;
 	}
 	
 	public void terminate() {
-		getInstance().workList.clear();
-		getInstance().clearCache();
-		getInstance().notWrittenReponses.clear();
-		instance = null;
-		AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "Killed");
+		if ( instance != null ) {
+			instance.workList.clear();
+			instance.clearCache();
+			instance.notWrittenReponses.clear();
+			instance = null;
+			AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "Killed");
+		}
 	}
 
 	public static void main(String [] args) {

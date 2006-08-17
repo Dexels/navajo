@@ -47,15 +47,18 @@ public class GenericThread implements Runnable, Mappable {
 	private final static String SLEEPING = "Sleeping";
 	private final static String WORKING = "Working";
 	private final static String DEAD = "Zombie";
+	private final static String NOTSTARTED = "Not running";
 	
 	private static HashMap threadPool = new HashMap();
 	
 	public GenericThread() {
 		// dummy.
+		status = NOTSTARTED;
 	}
 	
 	public GenericThread(String id) {
 		myId = id;
+		status = NOTSTARTED;
 	}
 	
 	public void startThread(GenericThread instance) {
