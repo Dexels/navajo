@@ -1343,6 +1343,8 @@ public Map getAttributes() {
     } else {
         if (length>0) {
             m.put("length", ""+length);
+        } else {
+        	m.put("length", "");
         }
     }
     if (myName!=null) {
