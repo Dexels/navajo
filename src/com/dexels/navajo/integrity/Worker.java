@@ -159,7 +159,6 @@ public class Worker extends GenericThread {
 				AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "Could not create temp file");
 				return;
 			}
-			f.deleteOnExit();
 			
 			fw = new FileWriter(f);
 			response.write(fw);

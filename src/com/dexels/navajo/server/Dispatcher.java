@@ -1084,7 +1084,8 @@ public final class Dispatcher {
   
   public File createTempFile(String prefix, String suffix) throws IOException {  
 	  File f = File.createTempFile(prefix, suffix, getTempDir());
-	  f.deleteOnExit();
+	  // Don't use deleteOnExit until Java 1.6, lower version contain memory leak (approx. 1K per call!).
+	  //f.deleteOnExit();
 	  return f;
   }
   
