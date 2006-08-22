@@ -155,7 +155,7 @@ public final class DefaultExpressionEvaluator
     List refreshQueue = null;
     for (int i = 0; i < queue.size(); i++) {
       Property current = (Property) queue.get(i);
-      o = ( (com.dexels.navajo.document.nanoimpl.PropertyImpl) current).
+      o = ( (com.dexels.navajo.document.base.BasePropertyImpl) current).
           peekEvaluatedValue();
       try {
         current.refreshExpression();
@@ -163,7 +163,7 @@ public final class DefaultExpressionEvaluator
         System.err.println("Expression failed: "+current.getValue());
 
     }
-      p = ( (com.dexels.navajo.document.nanoimpl.PropertyImpl) current).
+      p = ( (com.dexels.navajo.document.base.BasePropertyImpl) current).
           peekEvaluatedValue();
       if (o == null && p == null) {
         continue;
