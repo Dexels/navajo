@@ -3246,6 +3246,21 @@ public class XMLElement implements java.io.Serializable {
         String msg = "Unknown or invalid entity: &" + name + ";";
         return new XMLParseException(this, msg);
     }
+    public XMLElement getElementByTagName(String tag) {
+        Vector al = new Vector();
+        
+        for (Iterator iter = children.iterator(); iter.hasNext();) {
+            XMLElement element = (XMLElement) iter.next();
+            if (tag.equals(element.getName())) {
+                al.add(element);
+            }
+            al.addAll(element.getElementsByTagName(tag));
+        }
+        if (al.size()==0) {
+        	return null;
+        }
+        return (XMLElement)al.get(0);
+    }
 
     public Vector getElementsByTagName(String tag) {
         Vector al = new Vector();
