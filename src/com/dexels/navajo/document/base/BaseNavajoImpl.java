@@ -501,7 +501,7 @@ public void read(Reader stream) throws NavajoException {
 
 public Reader createReader() throws NavajoException, IOException{
     final File f = File.createTempFile("navajoHTML", ".tml");
-    f.deleteOnExit();
+    //f.deleteOnExit();
     FileWriter fw = new FileWriter(f);
     write(fw);
     fw.flush();

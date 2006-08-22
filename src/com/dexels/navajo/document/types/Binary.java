@@ -148,7 +148,7 @@ public final class Binary extends NavajoType {
     private OutputStream createTempFileOutputStream() throws IOException, FileNotFoundException {
     	
         dataFile = File.createTempFile("binary_object", "navajo", NavajoFactory.getInstance().getTempDir());
-        dataFile.deleteOnExit();
+        //dataFile.deleteOnExit();
         FileOutputStream fos = new FileOutputStream(dataFile);
         return fos;
     }
