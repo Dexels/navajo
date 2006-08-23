@@ -15,16 +15,20 @@ import com.dexels.navajo.client.ClientException;
  * @version 1.0
  */
 
-public class ClientQueueImpl
-    extends NavajoClient {
+public class ClientQueueImpl extends NavajoClient {
 
-  private final ThreadPool myPool = new ThreadPool(this);
+  private ThreadPool myPool = null;
 
   public ClientQueueImpl() {
   }
 
   public void doAsyncSend(final Navajo in, final String method, final ResponseListener response, final String responseId,
                           final ConditionErrorHandler v) throws ClientException {
+	  
+	if ( myPool == null ) {
+		myPool = new ThreadPool(this);
+	}
+	
     Runnable r = new Runnable() {
 
       final Navajo nc = in.copy();
@@ -59,15 +63,25 @@ public class ClientQueueImpl
   }
 
   public int getQueueSize(){
-    return myPool.getQueueSize();
+	  if ( myPool != null ) {
+		  return myPool.getQueueSize();
+	  } else {
+		  return 0;
+	  }
   }
-
+  
   public int getActiveThreads(){
-    return myPool.getActiveThreads();
+	  if ( myPool != null ) {
+		  return myPool.getActiveThreads();
+	  } else {
+		  return 0;
+	  }
   }
-
+  
   public void destroy() {
-	  myPool.destroy();
+	  if ( myPool != null ) {
+		  myPool.destroy();
+	  }
   }
   
 }
