@@ -34,7 +34,7 @@ public class BasePropertyImpl
   protected String cardinality = null;
   protected String description = null;
   protected String direction = Property.DIR_IN;
-  protected int length = 64;
+  protected int length = -1;
   private Map subtypeMap = null;
 
   protected Binary myBinary = null;
