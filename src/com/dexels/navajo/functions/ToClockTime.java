@@ -48,12 +48,14 @@ public final class ToClockTime extends FunctionInterface {
       } catch (Exception e) {
         throw new TMLExpressionException("Invalid clocktime: " + o);
       }
+    } else if (o instanceof ClockTime) {
+    	return o;
     } else
       throw new TMLExpressionException("Invalid clocktime: " + o);
   }
 
   public String usage() {
-    return "ToClockTime(Date/String): ClockTime";
+    return "ToClockTime(Date/String/ClockTime): ClockTime";
   }
 
   public static void main(String [] args) throws Exception {
