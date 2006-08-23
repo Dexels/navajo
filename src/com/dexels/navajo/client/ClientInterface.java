@@ -138,4 +138,6 @@ public interface ClientInterface {
   public void finalizeAsyncRunners();
 
   public void setCondensed(boolean b);
+
+public void destroy();
 }

@@ -66,5 +66,8 @@ public class ClientQueueImpl
     return myPool.getActiveThreads();
   }
 
-
+  public void destroy() {
+	  myPool.destroy();
+  }
+  
 }

@@ -1465,6 +1465,11 @@ public class NavajoClient implements ClientInterface {
       fos.close();
  
   }
+
+public void destroy() {
+	// TODO Auto-generated method stub
+	
+}
   
 //  public static void main(String[] args) throws Exception {
 //	  System.setProperty("com.dexels.navajo.DocumentImplementation", "com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl");

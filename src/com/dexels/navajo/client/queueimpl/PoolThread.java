@@ -12,6 +12,8 @@ package com.dexels.navajo.client.queueimpl;
 public class PoolThread
     extends Thread {
   private final ThreadPool myPool;
+  
+  boolean running = true;
   public PoolThread(String name, ThreadGroup group, ThreadPool tp) {
     super(group, name);
     setDaemon(true);
@@ -19,7 +21,7 @@ public class PoolThread
   }
 
   public void run() {
-    while (true) {
+    while (running) {
       try {
         Runnable te = myPool.blockingGetExecutable();
         te.run();
@@ -33,5 +35,12 @@ public class PoolThread
         System.err.println("Reviving dying thread...");
       }
     }
+    System.err.println("Thread: " + getName()+" is dying! Goodbye!!!!!");
   }
+  
+  public void stopPoolThread() {
+	  running = false;
+	  interrupt();
+  }
+  
 }

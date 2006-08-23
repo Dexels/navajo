@@ -27,7 +27,7 @@ public class ThreadPool {
     this.client = client;
      for (int i = 0; i < THREAD_COUNT; i++) {
       PoolThread p = new PoolThread("navajoThread_" + i, tg, this);
-      myThreadCollection.add(myThreadCollection);
+      myThreadCollection.add(p);
       p.start();
     }
   }
@@ -83,5 +83,10 @@ public class ThreadPool {
     return activeThreadSet.size();
   }
 
-
+  public void destroy() {
+	  for (Iterator iter = myThreadCollection.iterator(); iter.hasNext();) {
+		PoolThread element = (PoolThread) iter.next();
+		element.stopPoolThread();
+	}
+  }
 }
