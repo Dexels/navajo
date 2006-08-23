@@ -79,7 +79,7 @@ public class XMLMap extends TagMap implements Mappable {
 	public Binary getContent() {
 		String r = getString();
 		Binary b = new Binary(r.getBytes());
-		System.err.println(new String(b.getData()));
+		//System.err.println(new String(b.getData()));
 		return b;
 	}
 	

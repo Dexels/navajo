@@ -677,7 +677,7 @@ public class NavajoMap implements Mappable {
    * @param breakOnConditionError
    */
   public void setBreakOnConditionError(boolean b) {
-	System.err.println("IN setBreakOnConditionError(" + b + ")");
+	//System.err.println("IN setBreakOnConditionError(" + b + ")");
     this.breakOnConditionError = b;
   }
 
