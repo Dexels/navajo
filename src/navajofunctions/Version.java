@@ -32,15 +32,17 @@ package navajofunctions;
  * 1.1.0. Added various new functions (GetProperty, FromSeconds, ToSeconds, Base64Encode).
  * 
  * 1.1.1. Added IsNull function.
+ * 
+ * 1.1.2. Fix in ToClockTime
  */
 public class Version extends dexels.Version {
 
 	public static final int MAJOR = 1;
 	public static final int MINOR = 1;
-	public static final int PATCHLEVEL = 1;
+	public static final int PATCHLEVEL = 2;
 	public static final String VENDOR = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Functions";
-	public static final String RELEASEDATE = "2006-06-29";
+	public static final String RELEASEDATE = "2006-08-23";
 	
 	//Included packages.
 	String [] includes = {"navajodocument.Version", "navajo.Version"};
