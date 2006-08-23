@@ -20,9 +20,9 @@ public class XYLayout extends DefaultTipiLayoutManager {
 
     private void layoutChild(Component parent, Component currentChild, LayoutData l) {
         XYLayoutConstraint xyl = (XYLayoutConstraint) l;
-        if (parent instanceof Sizeable) {
-            System.err.println("Size: " + ((Sizeable) parent).getWidth() + " / " + ((Sizeable) parent).getHeight());
-        }
+//        if (parent instanceof Sizeable) {
+//            System.err.println("Size: " + ((Sizeable) parent).getWidth() + " / " + ((Sizeable) parent).getHeight());
+//        }
         // System.err.println("Layout: "+parent.);
         if (currentChild instanceof Positionable) {
             Positionable p = (Positionable) currentChild;
@@ -47,7 +47,7 @@ public class XYLayout extends DefaultTipiLayoutManager {
 
         }
         if (currentChild instanceof Sizeable) {
-            System.err.println("Hij is sizeable, ouwe");
+//            System.err.println("Hij is sizeable, ouwe");
             Sizeable s = (Sizeable) currentChild;
             if (xyl != null && xyl.getW() != -1 && xyl.getH() != -1) {
                 s.setWidth(new Extent(xyl.getW(), Extent.PX));

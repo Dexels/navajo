@@ -1,6 +1,7 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
 import nextapp.echo2.app.*;
+import nextapp.echo2.app.layout.GridLayoutData;
 
 import com.dexels.navajo.tipi.components.echoimpl.impl.TipiLayoutManager;
 import com.dexels.navajo.tipi.components.echoimpl.parsers.*;
@@ -39,6 +40,12 @@ public class TipiFrame extends TipiEchoDataComponentImpl {
     private ContentPane contentPane;
 
     private ContainerEx realContent;
+//
+//	private ContainerEx topPlaceHolder;
+//
+//	private ContainerEx leftPlaceHolder;
+
+//	private Grid myWindowGrid;
 
     public TipiFrame() {
     }
@@ -49,41 +56,77 @@ public class TipiFrame extends TipiEchoDataComponentImpl {
 
     public Object createContainer() {
         myWindow = new Window();
-        myWindow.setBackground(new Color(80,80,240));
-        // innerContainer = new ContainerEx();
         contentPane = new ContentPane();
-        contentPane.setBackground(new Color(80,240,240));
+        contentPane.setInsets(new Insets(10,10,10,10));
         myWindow.setContent(contentPane);
         realContent = new ContainerEx();
-        realContent.setPosition(Positionable.ABSOLUTE);
-//        realContent.setLeft(new Extent(50,Extent.PX));
-//        realContent.setTop(new Extent(50,Extent.PX));
-//        realContent.setWidth(new Extent(800,Extent.PX));
-//        realContent.setHeight(new Extent(600,Extent.PX));
-        // innerContainer.add(contentPane);
+//        myWindowGrid = new Grid(3);
+//		topPlaceHolder = new ContainerEx();
+//		myWindowGrid.add(topPlaceHolder);
+//        GridLayoutData gd = new GridLayoutData();
+//        gd.setColumnSpan(3);
+//        topPlaceHolder.setLayoutData(gd);
+//        leftPlaceHolder = new ContainerEx();
+//        myWindowGrid.add(leftPlaceHolder);
+//        GridLayoutData gd2 = new GridLayoutData();
+//        leftPlaceHolder.setLayoutData(gd2);
+//        myWindowGrid.setRowHeight(0, new Extent(15,Extent.PX));
+//        myWindowGrid.setColumnWidth(0, new Extent(10,Extent.PX));
+//        myWindowGrid.setColumnWidth(1, new Extent(780,Extent.PX));
+//        myWindowGrid.setRowHeight(1, new Extent(560 ,Extent.PX));
+//        myWindowGrid.add(realContent);
         contentPane.add(realContent);
+//         contentPane.add(myWindowGrid);
         return myWindow;
 
     }
 
     public void processStyles() {
-        super.processStyles();
         String x =  getStyle("xindent");
         if (x!=null) {
             int xoff = Integer.parseInt(x);
-            realContent.setLeft(new Extent(xoff,Extent.PX));
+//            myWindowGrid.setColumnWidth(0,new Extent(xoff, Extent.PX));
+//            leftPlaceHolder.setWidth(new Extent(xoff, Extent.PX));
+//            realContent.setLeft(new Extent(xoff,Extent.PX));
+            return;
         }
         String y =  getStyle("yindent");
         if (y!=null) {
             int yoff = Integer.parseInt(y);
-            realContent.setTop(new Extent(yoff,Extent.PX));
+//            myWindowGrid.setRowHeight(0,new Extent(yoff, Extent.PX));
+//            topPlaceHolder.setHeight(new Extent(yoff, Extent.PX));
+//           realContent.setTop(new Extent(yoff,Extent.PX));
+            return;
         }
-   }    
+
+        String widthS =  getStyle("width");
+        if (widthS!=null) {
+            int width = Integer.parseInt(widthS);
+//            myWindowGrid.setColumnWidth(1,new Extent(width, Extent.PX));
+//            realContent.setWidth(new Extent(width, Extent.PX));
+            //       realContent.setLeft(new Extent(xoff,Extent.PX));
+            return;
+        }
+        String heightS =  getStyle("height");
+        if (heightS!=null) {
+            int height = Integer.parseInt(heightS);
+//            myWindowGrid.setRowHeight(1,new Extent(height, Extent.PX));
+//            realContent.setHeight(new Extent(height, Extent.PX));
+                 //       realContent.setLeft(new Extent(xoff,Extent.PX));
+            return;
+        }
+        
+        super.processStyles();
+
+    }    
     
     
     public void setContainerLayout(Object layout) {
+  
     }
 
+    
+    
     /**
      * setComponentValue
      * 
@@ -101,8 +144,11 @@ public class TipiFrame extends TipiEchoDataComponentImpl {
         if ("background".equals(name)) {
             if (object instanceof Color) {
                 contentPane.setBackground((Color) object);
+                realContent.setBackground((Color) object);
                 myWindow.setBackground((Color) object);
-            }
+//                topPlaceHolder.setBackground((Color) object);
+//                leftPlaceHolder.setBackground((Color) object);
+                         }
         }
         super.setComponentValue(name, object);
 

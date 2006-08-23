@@ -199,5 +199,11 @@ public class TipiProperty extends TipiEchoComponentImpl implements PropertyCompo
         // err.. implement?
     }
 
+	public void processStyles() {
+		// TODO Auto-generated method stub
+		super.processStyles();
+
+	}
+
 
 }

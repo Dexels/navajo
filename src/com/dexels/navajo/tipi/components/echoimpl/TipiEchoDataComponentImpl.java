@@ -74,6 +74,7 @@ public abstract class TipiEchoDataComponentImpl extends TipiDataComponentImpl {
         }
         if (child instanceof WindowPane) {
             TipiScreen s = (TipiScreen) getContext().getDefaultTopLevel();
+            // Watch this.
             final Window w = (Window) s.getTopLevel();
             w.getContent().add(child);
         } else {
@@ -94,6 +95,7 @@ public abstract class TipiEchoDataComponentImpl extends TipiDataComponentImpl {
             // layoutComponent = (TipiLayoutManager)layout;
         } else {
             if (layout instanceof Component) {
+            	System.err.println("Deprecated layout usage IN TipiEchoDataComponent");
                 layoutComponent = (Component) layout;
                 if (layoutComponent instanceof Sizeable) {
                     ((Sizeable) layoutComponent).setWidth(new Extent(100, Extent.PERCENT));
@@ -127,13 +129,13 @@ public abstract class TipiEchoDataComponentImpl extends TipiDataComponentImpl {
             Positionable pos = (Positionable)getContainer();
             String s = getStyle("x");
             if (s!=null) {
-                 pos.setLeft(ExtentParser.parseExtent(s));
-                 pos.setPosition(Positionable.ABSOLUTE);
+//                 pos.setLeft(ExtentParser.parseExtent(s));
+//                 pos.setPosition(Positionable.ABSOLUTE);
             }
             s = getStyle("y");
             if (s!=null) {
-                 pos.setTop(ExtentParser.parseExtent(s));
-                 pos.setPosition(Positionable.ABSOLUTE);
+//                 pos.setTop(ExtentParser.parseExtent(s));
+//                 pos.setPosition(Positionable.ABSOLUTE);
             }
          }
         if (getContainer()!=null && getContainer() instanceof Sizeable) {

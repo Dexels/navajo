@@ -148,9 +148,9 @@ public class TipiMegaTable extends TipiEchoDataComponentImpl {
             flatten((Message) al.get(i), outResult);
         }
 
-        System.err.println("FLATTENING FINISHED **********************************");
+//        System.err.println("FLATTENING FINISHED **********************************");
         out.write(System.err);
-        System.err.println("END OF NAVAJO ****************************************");
+//        System.err.println("END OF NAVAJO ****************************************");
         myContext.performTipiMethod(this, out, "*", serviceName, true, null, -1, hostUrl, username, password, keystore, keypass);
     }
 

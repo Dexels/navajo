@@ -3,7 +3,6 @@ package com.dexels.navajo.tipi.components.echoimpl;
 import java.util.*;
 
 import nextapp.echo2.app.*;
-import nextapp.echo2.app.Extent;
 import nextapp.echo2.app.event.ActionEvent;
 import nextapp.echo2.app.event.ActionListener;
 
@@ -15,6 +14,7 @@ import com.dexels.navajo.tipi.components.echoimpl.parsers.*;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
 
 import echopointng.ContainerEx;
+import echopointng.able.Positionable;
 import echopointng.table.PageableTableNavigation;
 
 /**
@@ -49,7 +49,7 @@ public class TipiTable extends TipiEchoDataComponentImpl {
     public Object createContainer() {
          ContainerEx myContainer = new ContainerEx();
         myTable = new MessageTable();
-
+        myContainer.setPosition(Positionable.STATIC);
         myTable.addSelectionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
@@ -63,11 +63,13 @@ public class TipiTable extends TipiEchoDataComponentImpl {
          myTable.addTableEditorListener(new TableEditorListener(){
 
             public void propertyChanged(Property p, String eventType, int column, int row) {
-                Map event = new HashMap();
+//            	System.err.println("FIRINGGGGGGGGGG!!!!!!!!!!!");
+            	Map event = new HashMap();
                 event.put("column", new Integer(column));
                 event.put("row", new Integer(row));
                 event.put("new", p.getValue());
                 event.put("message", p.getParentMessage());
+                event.put("name", p.getName());
                 try {
                     performTipiEvent(eventType, event, true);
                 } catch (TipiException e) {
@@ -76,7 +78,9 @@ public class TipiTable extends TipiEchoDataComponentImpl {
                 
             }});
          myContainer.add(myTable);
-        return myContainer;
+//         myContainer.setBackground(new Color(255,0,0));
+    return myContainer;
+//         return myTable;
     }
 
     public Object getActualComponent() {
@@ -85,6 +89,8 @@ public class TipiTable extends TipiEchoDataComponentImpl {
 
     public void loadData(Navajo n, TipiContext context, String method) throws TipiException {
         super.loadData(n, context, method);
+//        ((ContainerEx)getContainer()).setzIndex(0);
+        
         MessageTable mm = (MessageTable) getActualComponent();
         // System.err.println("Navajo: ");
         // try {
@@ -173,18 +179,18 @@ public class TipiTable extends TipiEchoDataComponentImpl {
         // mm.setColumnAttributes(columnAttributes);
     }
 
-    public void setComponentValue(final String name, final Object object) {
-
-        if ("w".equals(name)) {
-        ContainerEx cont = (ContainerEx) getContainer();
-        cont.setWidth( new Extent(( (Integer) object).intValue(),Extent.PX));
-        }
-        if ("h".equals(name)) {
-        ContainerEx cont = (ContainerEx) getContainer();
-        cont.setHeight(  new Extent(( (Integer) object).intValue(),Extent.PX));
-        }
-       super.setComponentValue(name, object);
-   }
+//    public void setComponentValue(final String name, final Object object) {
+//
+//        if ("w".equals(name)) {
+//        ContainerEx cont = (ContainerEx) getContainer();
+//        cont.setWidth( new Extent(( (Integer) object).intValue(),Extent.PX));
+//        }
+//        if ("h".equals(name)) {
+//        ContainerEx cont = (ContainerEx) getContainer();
+//        cont.setHeight(  new Extent(( (Integer) object).intValue(),Extent.PX));
+//        }
+//       super.setComponentValue(name, object);
+//   }
 
     
     public void processStyles() {

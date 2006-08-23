@@ -38,9 +38,11 @@ public class TipiServeBinary extends TipiAction {
     }
     public void execute(TipiEvent e) {
         try {
-            URL baseUrl = ((EchoTipiContext)myContext).getDynamicResourceBaseUrl();
-            File baseDir = ((EchoTipiContext)myContext).getDynamicResourceBaseDir();
+              File baseDir = ((EchoTipiContext)myContext).getDynamicResourceBaseDir();
             Operand binary = getEvaluatedParameter("binary", e);
+            Operand baseUrlOperand = getEvaluatedParameter("baseUrl", e);
+            URL baseUrl = new URL((String)baseUrlOperand.value);
+            System.err.println(">>>>>>>>>> BASEURL::"+baseUrl);
             Binary b = (Binary)binary.value;
 //            System.err.println("baseUrl: "+baseUrl);
 //            System.err.println("baseDir: "+baseDir);
@@ -52,7 +54,7 @@ public class TipiServeBinary extends TipiAction {
             fos.flush();
             fos.close();
             URL result = new URL(baseUrl.toString()+"/binary"+random+"."+extension);
-//            System.err.println("ResultURL: "+result.toString());
+            System.err.println("ResultURL: "+result.toString());
             Command brc = new BrowserOpenWindowCommand(result.toString(),"reports"+random,null);
             ((EchoTipiContext)myContext).getServerContext().enqueueCommand(brc);
         } catch (MalformedURLException e1) {

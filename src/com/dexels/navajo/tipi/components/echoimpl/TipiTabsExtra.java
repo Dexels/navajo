@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import nextapp.echo2.app.*;
+import nextapp.echo2.extras.app.TabPane;
+import nextapp.echo2.extras.app.layout.TabPaneLayoutData;
 
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiComponentMethod;
@@ -15,11 +17,11 @@ import com.dexels.navajo.tipi.components.echoimpl.helpers.EchoTipiHelper;
 import com.dexels.navajo.tipi.components.echoimpl.parsers.*;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 
-import echopointng.ButtonEx;
-import echopointng.ContainerEx;
-import echopointng.TabbedPane;
-import echopointng.able.Positionable;
-import echopointng.tabbedpane.DefaultTabModel;
+//import echopointng.ButtonEx;
+//import echopointng.ContainerEx;
+//import echopointng.TabbedPane;
+//import echopointng.able.Positionable;
+//import echopointng.tabbedpane.DefaultTabModel;
 
 /**
  * <p>
@@ -38,7 +40,7 @@ import echopointng.tabbedpane.DefaultTabModel;
  * @author not attributable
  * @version 1.0
  */
-public class TipiTabs extends TipiEchoDataComponentImpl {
+public class TipiTabsExtra extends TipiEchoDataComponentImpl {
     private ArrayList tipiList = new ArrayList();
 
     private ArrayList methodList = new ArrayList();
@@ -49,32 +51,17 @@ public class TipiTabs extends TipiEchoDataComponentImpl {
 
     private Component lastSelectedTab = null;
 
-    private DefaultTabModel defaultTabModel = null;
+//    private DefaultTabModel defaultTabModel = null;
 
-    private TabbedPane myTabbedPane;
+    private TabPane myTabbedPane;
 
     public Object createContainer() {
         final TipiComponent me = this;
-        myTabbedPane = new TabbedPane();
-        defaultTabModel = new DefaultTabModel();
-        defaultTabModel.setSelectedBackground(new Color(255, 255, 255));
-        defaultTabModel.setSelectedForeground(new Color(0, 0, 0));
-        defaultTabModel.setForeground(new Color(153, 153, 153));
-        defaultTabModel.setRolloverForeground(new Color(68, 68, 68));
-        defaultTabModel.setSelectedRolloverForeground(new Color(68, 68, 68));
-        defaultTabModel.setSelectedFont(new Font(Font.ARIAL, Font.BOLD, new Extent(10, Extent.PT)));
-        defaultTabModel.setSelectedRolloverFont(new Font(Font.ARIAL, Font.BOLD, new Extent(10, Extent.PT)));
-        defaultTabModel.setFont(new Font(Font.ARIAL, Font.PLAIN, new Extent(10, Extent.PT)));
-//        defaultTabModel.setRolloverFont(new Font(Font.ARIAL, Font.PLAIN, new Extent(10, Extent.PT)));
-       
-        defaultTabModel.setBackground(new Color(255, 255, 255));
-//        defaultTabModel.setRolloverBackground(new Color(255, 255, 255));
-//        defaultTabModel.setSelectedRolloverBackground(new Color(255, 255, 255));
-        myTabbedPane.setModel(defaultTabModel);
+        myTabbedPane = new TabPane();
         TipiHelper th = new EchoTipiHelper();
         th.initHelper(this);
         addHelper(th);
-        myTabbedPane.setTabSpacing(0);
+//        myTabbedPane.setTabSpacing(0);
 //        myTabbedPane.set
         myTabbedPane.addPropertyChangeListener(new PropertyChangeListener() {
 
@@ -86,45 +73,45 @@ public class TipiTabs extends TipiEchoDataComponentImpl {
 
     public void processStyles() {
 //        System.err.println("Processing styles.... "+styleHintMap);
-        super.processStyles();
-        Color c = ColorParser.parseColor(getStyle("foreground"));
-        if (c!=null) {
-            defaultTabModel.setForeground(c);
-        }
-        c = ColorParser.parseColor(getStyle("background"));
-        if (c!=null) {
-            defaultTabModel.setBackground(c);
-        }
-        c = ColorParser.parseColor(getStyle("selectedforeground"));
-        if (c!=null) {
-            defaultTabModel.setSelectedForeground(c);
-        }
-        c = ColorParser.parseColor(getStyle("selectedbackground"));
-        if (c!=null) {
+//        super.processStyles();
+//        Color c = ColorParser.parseColor(getStyle("foreground"));
+//        if (c!=null) {
+//            defaultTabModel.setForeground(c);
+//        }
+//        c = ColorParser.parseColor(getStyle("background"));
+//        if (c!=null) {
+//            defaultTabModel.setBackground(c);
+//        }
+//        c = ColorParser.parseColor(getStyle("selectedforeground"));
+//        if (c!=null) {
+//            defaultTabModel.setSelectedForeground(c);
+//        }
+//        c = ColorParser.parseColor(getStyle("selectedbackground"));
+//        if (c!=null) {
 //            System.err.println("Selectedbackground: "+c.toString());
-            defaultTabModel.setSelectedBackground(c);
-        }
-        c = ColorParser.parseColor(getStyle("rolloverbackground"));
-        if (c!=null) {
-            defaultTabModel.setRolloverBackground(c);
-        }
-        c = ColorParser.parseColor(getStyle("rolloverforeground"));
-        if (c!=null) {
-            defaultTabModel.setRolloverForeground(c);
-        }
-        c = ColorParser.parseColor(getStyle("selectedrolloverbackground"));
-        if (c!=null) {
-            defaultTabModel.setSelectedRolloverBackground(c);
-        }
-        c = ColorParser.parseColor(getStyle("selectedrolloverforeground"));
-        if (c!=null) {
-            defaultTabModel.setSelectedRolloverForeground(c);
-        }
-        String s = getStyle("tabspacing");
-        if (s!=null) {
-            int ii = Integer.parseInt(s);
-            myTabbedPane.setTabSpacing(ii);
-        }
+//            defaultTabModel.setSelectedBackground(c);
+//        }
+//        c = ColorParser.parseColor(getStyle("rolloverbackground"));
+//        if (c!=null) {
+//            defaultTabModel.setRolloverBackground(c);
+//        }
+//        c = ColorParser.parseColor(getStyle("rolloverforeground"));
+//        if (c!=null) {
+//            defaultTabModel.setRolloverForeground(c);
+//        }
+//        c = ColorParser.parseColor(getStyle("selectedrolloverbackground"));
+//        if (c!=null) {
+//            defaultTabModel.setSelectedRolloverBackground(c);
+//        }
+//        c = ColorParser.parseColor(getStyle("selectedrolloverforeground"));
+//        if (c!=null) {
+//            defaultTabModel.setSelectedRolloverForeground(c);
+//        }
+//        String s = getStyle("tabspacing");
+//        if (s!=null) {
+//            int ii = Integer.parseInt(s);
+//            myTabbedPane.setTabSpacing(ii);
+//        }
     }
     
     protected void performComponentMethod(String name, TipiComponentMethod compMeth, TipiEvent event) {
@@ -171,54 +158,18 @@ public class TipiTabs extends TipiEchoDataComponentImpl {
     // }
     // }
     // }
-	public void removeFromContainer(Object c) {
-		// TODO Auto-generated method stub
-//		System.err.println("Removing object: "+c+" class: "+c.getClass()+" hash: "+c.hashCode());
-		int tab = -1;
-		for (int i = 0; i < defaultTabModel.size(); i++) {
-			Component current = defaultTabModel.getTabContentAt(i);
-			if (current==c) {
-				tab = i;
-			}
-		}
-//		int tab = defaultTabModel.indexOfTab((Component)c);
 
-		if (tab>=0) {
-			defaultTabModel.removeTabAt(tab);
-		} else {
-			System.err.println("oops: "+tab);
-		}
-		super.removeFromContainer(c);
-	}
     public void addToContainer(Object c, Object constraints) {
-//    	if (c instanceof ContainerEx) {
-//			((ContainerEx)c).setzIndex(Integer.MAX_VALUE);
-//			((ContainerEx)c).setVisible(true);
-//			((ContainerEx)c).setPosition(Positionable.ABSOLUTE);
-//			
-//		}
-//		System.err.println("Adding object: "+c+" class: "+c.getClass()+" hash: "+c.hashCode());
-    	
-        defaultTabModel.addTab("" + constraints, (Component) c);
-        if (lastSelectedTab == null) {
-            lastSelectedTab = (Component) c;
-        }
-        // System.err.println("WIDTH: " + myTabbedPane.getWidth());
-        // System.err.println("HEIGHT: " + myTabbedPane.getWidth());
-        // System.err.println("Tab count: "+getChildCount());
-        // ButtonEx notSelected
-        // =(ButtonEx)defaultTabModel.getTabAt(getChildCount()-1,false);
+//        defaultTabModel.addTab("" + constraints, (Component) c);
+//        if (lastSelectedTab == null) {
+//            lastSelectedTab = (Component) c;
+//        }
 //        ButtonEx selected = (ButtonEx) defaultTabModel.getTabAt(getChildCount() - 1, true);
 //        selected.setBorder(new Border(1, new Color(50, 50, 50), Border.STYLE_GROOVE));
-
-        // selected.setText("Selected");
-        // notSelected.setText("Not selected");
-        // System.err.println("Sel: "+selected.toString());
-        // System.err.println("NSel: "+notSelected.toString());
-        // selected.setForeground(new Color(0,0,0));
-        // selected.setBackground(myTabbedPane.getBackground());
-        // notSelected.setForeground(new Color(0,0,0));
-        // notSelected.setBackground(new Color(150,150,150));
+    	myTabbedPane.add((Component)c);
+    	TabPaneLayoutData tabPaneLayoutData = new TabPaneLayoutData();
+    	tabPaneLayoutData.setTitle(""+constraints);
+    	((Component)c).setLayoutData(tabPaneLayoutData);
     }
 
     public void setComponentValue(String name, Object object) {
@@ -226,15 +177,15 @@ public class TipiTabs extends TipiEchoDataComponentImpl {
         if (name.equals("selected")) {
             String sel = (String) object;
             final TipiComponent tc = getTipiComponent(sel);
-            int ii = ((TabbedPane) getContainer()).indexOf((Component) (tc.getContainer()));
+            int ii = myTabbedPane.indexOf((Component) (tc.getContainer()));
             if (ii >= 0) {
-                ((TabbedPane) getContainer()).setSelectedIndex(ii);
+                myTabbedPane.setActiveTabIndex(ii);
             }
         }
         if (name.equals("selectedindex")) {
             final Integer sel = (Integer) object;
-            ((TabbedPane) getContainer()).setSelectedIndex(sel.intValue());
-        }
+            myTabbedPane.setActiveTabIndex(sel.intValue());
+               }
         // if (name.equals("placement")) {
         // final String sel = (String) object;
         // setTabPlacement(sel);
@@ -263,9 +214,9 @@ public class TipiTabs extends TipiEchoDataComponentImpl {
         /** @todo Override this com.dexels.navajo.tipi.TipiComponent method */
         if (name.equals("selected")) {
 
-            int ic = ((TabbedPane) getContainer()).getSelectedIndex();
+            int ic = myTabbedPane.getActiveTabIndex();
             if (ic >= 0) {
-                Component c = ((TabbedPane) getContainer()).getComponent(ic);
+                Component c = myTabbedPane.getComponent(ic);
                 TipiComponent tc = getChildByContainer(c);
                 return tc;
             } else {
@@ -277,7 +228,7 @@ public class TipiTabs extends TipiEchoDataComponentImpl {
             return tc;
         }
         if (name.equals("selectedindex")) {
-            return new Integer(((TabbedPane) getContainer()).getSelectedIndex());
+            return new Integer(myTabbedPane.getActiveTabIndex());
         }
         if (name.equals("lastselectedindex")) {
             TipiComponent tc = getChildByContainer(lastSelectedTab);
@@ -288,9 +239,6 @@ public class TipiTabs extends TipiEchoDataComponentImpl {
     }
 
     private int getIndexOfTab(Component c) {
-        TabbedPane pane = (TabbedPane) getContainer();
-        return pane.indexOf(c);
+        return myTabbedPane.indexOf(c);
     }
-
-
 }

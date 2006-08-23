@@ -8,5 +8,7 @@
 	<classpathentry kind="lib" path="lib/Echo2_WebContainer.jar"/>
 	<classpathentry kind="lib" path="lib/Echo2_WebRender.jar"/>
 	<classpathentry kind="lib" path="lib/echopointng_for_echo_2.1.jar"/>
+	<classpathentry kind="lib" path="lib/Echo2_Extras_App.jar"/>
+	<classpathentry kind="lib" path="lib/Echo2_Extras_WebContainer.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

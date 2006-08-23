@@ -62,7 +62,11 @@ public class MessageTable extends SortableTable {
 
     private int headerHeight = 20;
 
+	private SortableTableHeaderRenderer sortableTableHeaderRenderer = new SortableTableHeaderRenderer();
+	;
+
     public MessageTable() {
+    	
         super.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
@@ -159,6 +163,8 @@ public class MessageTable extends SortableTable {
     }
     
     public void fireTableEdited(Property p, int column, int row) {
+//    	System.err.println("Edited: "+column+" / "+row+" value: "+p.getValue()+" listeners: "+editorListeners.size());
+    	
         for (int i = 0; i < editorListeners.size(); i++) {
             TableEditorListener element = (TableEditorListener)editorListeners.get(i);
             element.propertyChanged(p, "onValueChanged", column, row);
@@ -168,7 +174,7 @@ public class MessageTable extends SortableTable {
     
     public TableCellRenderer getDefaultHeaderRenderer() {
         // System.err.println("DefaultHEaderREnderer CREATED");
-        return new SortableTableHeaderRenderer();
+        return sortableTableHeaderRenderer;
     }
 
     public MessageTableModel getMessageTableModel() {

@@ -148,7 +148,7 @@ public class MessageTableModel extends DefaultSortableTableModel implements Mess
 
         for (int i = 0; i < m.getArraySize(); i++) {
             ArrayList c = createListFromRow(myMessage.getMessage(i));
-            System.err.println();
+//            System.err.println();
             addRow(c.toArray());
         }
     }

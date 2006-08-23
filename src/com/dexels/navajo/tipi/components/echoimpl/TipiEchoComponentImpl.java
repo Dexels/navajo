@@ -40,13 +40,13 @@ public abstract class TipiEchoComponentImpl extends TipiComponentImpl {
             Positionable pos = (Positionable)getContainer();
             String s = getStyle("x");
             if (s!=null) {
-                 pos.setLeft(ExtentParser.parseExtent(s));
-                 pos.setPosition(Positionable.ABSOLUTE);
+//                 pos.setLeft(ExtentParser.parseExtent(s));
+//                 pos.setPosition(Positionable.ABSOLUTE);
             }
             s = getStyle("y");
             if (s!=null) {
-                 pos.setTop(ExtentParser.parseExtent(s));
-                 pos.setPosition(Positionable.ABSOLUTE);
+//                 pos.setTop(ExtentParser.parseExtent(s));
+//                 pos.setPosition(Positionable.ABSOLUTE);
             }
          }
         if (getContainer()!=null && getContainer() instanceof Sizeable) {

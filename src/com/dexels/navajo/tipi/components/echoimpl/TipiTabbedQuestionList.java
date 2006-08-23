@@ -23,7 +23,7 @@ import echopointng.image.*;
 import echopointng.tabbedpane.*;
 
 public class TipiTabbedQuestionList extends TipiBaseQuestionList {
-    private Component lastSelectedTab = null;
+//    private Component lastSelectedTab = null;
 
     private DefaultTabModel defaultTabModel = null;
 
@@ -48,8 +48,11 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
     }
     public void loadData(final Navajo n, final TipiContext context,final String method) throws TipiException {
         clearQuestions();
-        lastSelectedTab = null;
+//        lastSelectedTab = null;
         super.loadData(n, context, method);
+        if(defaultTabModel.size()>0) {
+        	myTabbedPane.setSelectedIndex(0);
+        }
     }
 //    public Object createContainer() {
 //        final TipiComponent me = this;
@@ -76,7 +79,7 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
         defaultTabModel.setSelectedRolloverForeground(new Color(68, 68, 68));
         defaultTabModel.setSelectedFont(new Font(Font.ARIAL, Font.BOLD, new Extent(10, Extent.PT)));
         defaultTabModel.setFont(new Font(Font.ARIAL, Font.PLAIN, new Extent(10, Extent.PT)));
-        defaultTabModel.setRolloverFont(new Font(Font.ARIAL, Font.BOLD, new Extent(10, Extent.PT)));
+//        defaultTabModel.setRolloverFont(new Font(Font.ARIAL, Font.BOLD, new Extent(10, Extent.PT)));
         defaultTabModel.setBackground(new Color(255, 255, 255));
         defaultTabModel.setRolloverBackground(new Color(255, 255, 255));
         defaultTabModel.setSelectedRolloverBackground(new Color(255, 255, 255));
@@ -85,11 +88,13 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
         th.initHelper(this);
         addHelper(th);
         myTabbedPane.setTabSpacing(0);
-        myTabbedPane.addPropertyChangeListener(new PropertyChangeListener() {
-
-            public void propertyChange(PropertyChangeEvent evt) {
-              }
-            });
+//        myTabbedPane.addPropertyChangeListener(new PropertyChangeListener() {
+//
+//            public void propertyChange(PropertyChangeEvent evt) {
+//            	System.err.println("Boioioiong");
+//            	System.err.println("EVT: old: "+evt.getOldValue()+" new: "+evt.getNewValue());
+//            }
+//            });
         validImage = new URLImageReference(getClass().getClassLoader().getResource("com/dexels/navajo/tipi/components/echoimpl/ok.gif"));
         inValidImage = new URLImageReference(getClass().getClassLoader().getResource("com/dexels/navajo/tipi/components/echoimpl/cancel.gif"));
         return myTabbedPane;
@@ -97,17 +102,20 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
     
 
     public void addToContainer(Object c, Object constraints) {
-        defaultTabModel.addTab("" + constraints, (Component) c);
-        if (lastSelectedTab == null) {
-            lastSelectedTab = (Component) c;
-        }
+    	String tabName = ""+constraints;
+//    	PushButton pb = new PushButton(tabName);
+        defaultTabModel.addTab(tabName, (Component) c);
+//        if (lastSelectedTab == null) {
+//            lastSelectedTab = (Component) c;
+//        }
         // System.err.println("WIDTH: " + myTabbedPane.getWidth());
         // System.err.println("HEIGHT: " + myTabbedPane.getWidth());
         // System.err.println("Tab count: "+getChildCount());
         // ButtonEx notSelected
         // =(ButtonEx)defaultTabModel.getTabAt(getChildCount()-1,false);
-        ButtonEx selected = (ButtonEx) defaultTabModel.getTabAt(getChildCount() - 1, true);
-        selected.setBorder(new Border(1, new Color(50, 50, 50), Border.STYLE_GROOVE));
+        
+//        ButtonEx selected = (ButtonEx) defaultTabModel.getTabAt(getChildCount() - 1, true);
+//        selected.setBorder(new Border(1, new Color(50, 50, 50), Border.STYLE_GROOVE));
 
         // selected.setText("Selected");
         // notSelected.setText("Not selected");
@@ -122,11 +130,11 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
     protected void clearQuestions() {
         // TODO Auto-generated method stub
 
-        if (myTabbedPane != null) {
-            while (myTabbedPane.getComponentCount() > 0) {
-                myTabbedPane.remove(0);
-            }
-        }
+//        if (myTabbedPane != null) {
+//            while (myTabbedPane.getComponentCount() > 0) {
+//                myTabbedPane.remove(0);
+//            }
+//        }
 
         while (defaultTabModel.size() > 0) {
             defaultTabModel.removeTabAt(0);
@@ -137,7 +145,13 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
         r.run();
     }
 
-    public void setGroupValid(boolean valid, TipiBaseQuestionGroup group) {
+    
+    
+    public void removeFromContainer(Object c) {
+		// TODO Auto-generated method stub
+		super.removeFromContainer(c);
+	}
+	public void setGroupValid(boolean valid, TipiBaseQuestionGroup group) {
         super.setGroupValid(valid, group);
         int i = myGroups.indexOf(group);
         if (!myGroups.contains(group)) {

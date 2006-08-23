@@ -1,8 +1,6 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
 import java.util.*;
-import java.util.ArrayList;
-import java.util.StringTokenizer;
 
 import com.dexels.navajo.tipi.tipixml.*;
 
@@ -16,6 +14,7 @@ import nextapp.echo2.app.Insets;
 import nextapp.echo2.app.layout.GridLayoutData;
 import echopointng.ContainerEx;
 import echopointng.GroupBox;
+import echopointng.able.Sizeable;
 
 /**
  * <p>
@@ -56,6 +55,8 @@ public class TipiGridPanel extends TipiEchoDataComponentImpl {
     public Object createContainer() {
         // myContainer = new GroupBox((String)null);
         gridComponent = new Grid();
+        
+        
         // myContainer.setBorder(null);
         // gridComponent = myContainer;
         // myContainer.setBorder(null);
@@ -82,6 +83,11 @@ public class TipiGridPanel extends TipiEchoDataComponentImpl {
             System.err.println("Warning: Adding null component to tipicomponent: " + getPath());
             return;
         }
+        if (!(c instanceof Component)) {
+            System.err.println("Warning: Adding non-component to tipicomponent: " + getPath()+ " class: "+c.getClass());
+            return;
+        }
+        
         gridComponent.add(c);
         if (constr != null) {
             GridLayoutData cons = parseGridConstraints(constr, c);
@@ -92,14 +98,18 @@ public class TipiGridPanel extends TipiEchoDataComponentImpl {
     public GridLayoutData parseGridConstraints(String txt, Component c) {
         StringTokenizer st = new StringTokenizer(txt, ";");
         GridLayoutData myData = new GridLayoutData();
-        while (st.hasMoreTokens()) {
-            String next = st.nextToken();
-            // System.err.println("NEEXT: "+next);
-            StringTokenizer current = new StringTokenizer(next, ":");
-            String key = current.nextToken();
-            String value = current.nextToken();
-            setProperty(key, value, myData, c);
-        }
+        try {
+			while (st.hasMoreTokens()) {
+			    String next = st.nextToken();
+			    // System.err.println("NEEXT: "+next);
+			    StringTokenizer current = new StringTokenizer(next, ":");
+			    String key = current.nextToken();
+			    String value = current.nextToken();
+			    setProperty(key, value, myData, c);
+			}
+		} catch (NoSuchElementException e) {
+			throw new NoSuchElementException("Error parsing constraint for child of: "+getPath()+" Parsing: "+txt);
+		} 
         updateAvailability(currentx, currenty, currentx + myData.getColumnSpan(), currenty + myData.getRowSpan());
         advance();
 
@@ -108,6 +118,7 @@ public class TipiGridPanel extends TipiEchoDataComponentImpl {
 
     private void setProperty(String key, String value, GridLayoutData myData, Component c) {
         if ("align".equals(key)) {
+//        	System.err.println("Alignment: "+value);
             myData.setAlignment(parseAlignment(value));
         }
         if ("padding".equals(key)) {
@@ -126,6 +137,10 @@ public class TipiGridPanel extends TipiEchoDataComponentImpl {
             }
             // Not used anyway for now
             height = Integer.parseInt(value);
+            if (c instanceof Sizeable) {
+				Sizeable s = (Sizeable)c;
+				s.setHeight(new Extent(height,Extent.PX));
+			}
             gridComponent.setRowHeight(currenty, new Extent(height, Extent.PX));
             // GridLayoutData gd = new GridLayoutData();
             // addHeightStrut(myD, height, c);

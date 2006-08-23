@@ -11,9 +11,11 @@ import nextapp.echo2.app.event.WindowPaneListener;
 import com.dexels.navajo.tipi.TipiComponentMethod;
 import com.dexels.navajo.tipi.TipiHelper;
 import com.dexels.navajo.tipi.components.echoimpl.helpers.EchoTipiHelper;
+import com.dexels.navajo.tipi.components.echoimpl.parsers.ColorParser;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 
 import echopointng.ContainerEx;
+import echopointng.LabelEx;
 
 /**
  * <p>Title: </p>
@@ -136,6 +138,17 @@ public final class TipiWindow
         // });
     }
 
+    public void processStyles() {
+//      System.err.println("Processing styles.... "+styleHintMap);
+      super.processStyles();
+      final WindowPane jj = (WindowPane) getContainer();
+      Color c = ColorParser.parseColor(getStyle("titlebackground"));
+      if (c!=null) {
+          jj.setTitleBackground(c);
+      }
+     
+       }
+    
     public final void setComponentValue(final String name, final Object object) {
         super.setComponentValue(name, object);
 

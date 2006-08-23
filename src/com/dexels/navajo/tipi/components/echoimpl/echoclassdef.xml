@@ -40,7 +40,8 @@
  </tipiaction>
   <tipiaction name="servebinary"  class="TipiServeBinary" package="com.dexels.navajo.tipi.actions">
    <param name="binary" type="string"/>
- </tipiaction>
+   <param name="string" type="baseUrl"/>
+  </tipiaction>
 
 
 
@@ -390,6 +391,7 @@
         <values>
             <value direction="in" name="icon" type="resource"/>
             <value direction="inout" name="text" type="string"/>
+            <value direction="in" name="tooltip" type="string"/>
             <value direction="in" name="enabled" type="boolean"/>
             <value direction="in" name="background" type="color"/>
             <value direction="in" name="foreground" type="color"/>
@@ -731,8 +733,8 @@
             <value direction="in" name="w" type="integer"/>
             <value direction="in" name="modal" type="boolean"/>
             <value direction="in" name="background" type="color"/>
-           <value direction="in" name="closable" type="color"/>
-            <value direction="in" name="resizable" type="color"/>
+           <value direction="in" name="closable" type="boolean"/>
+            <value direction="in" name="resizable" type="boolean"/>
             <value direction="inout" name="tooltip" type="string"/>
         </values>
         <methods>
@@ -802,6 +804,29 @@
         </methods>
     </tipiclass>
     
+   <tipiclass addtocontainer="true" childcount="*" class="TipiTest" layoutmanager="false"
+        module="container" name="testcontainer" package="com.dexels.navajo.tipi.components.echoimpl"
+        studio-icon="tabs.gif" type="tipi">
+        <events>
+         <!--   <event name="onInstantiate"/>
+            <event name="onTabChanged"/>
+            <event name="onLoad">
+                <param name="service" type="string"/>
+            </event>
+          -->
+        </events>
+        <values>
+        	<!--
+            <value direction="inout" name="selectedindex" type="integer"/>
+            <value direction="out" name="lastselectedindex" type="integer"/>
+            <value direction="out" name="selectedMessage" type="message"/>
+            <value direction="in" name="background" type="color"/>
+            <value direction="in" name="foreground" type="color"/>
+            <value direction="in" name="border" type="border"/>-->
+         </values>
+        <methods>
+        </methods>
+    </tipiclass>    
     <tipiclass addtocontainer="true" childcount="0" class="TipiMegaTable" layoutmanager="false"
         module="data" name="tipimegatable"
         package="com.dexels.navajo.tipi.components.echoimpl.tipimegatable"

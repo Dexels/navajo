@@ -150,4 +150,10 @@ public class TipiEchoInstance extends ApplicationInstance {
             System.setProperty(current, myServletConfig.getInitParameter(current));
         }
     }
+
+	public void finalize() {
+		if (context!=null) {
+			context.exit();
+		}
+	}
 }

@@ -36,13 +36,15 @@ public class TipiButton extends TipiEchoComponentImpl {
     public Object createContainer() {
         // ContainerEx ex = new ContainerEx();
         myButton = new ButtonImpl();
+        myButton.setTextAlignment(new Alignment(Alignment.CENTER, Alignment.DEFAULT));
+        myButton.setAlignment(new Alignment(Alignment.CENTER, Alignment.DEFAULT));
         // ex.add(myButton);
         // b.setIconTextMargin(new Extent(10));
         return myButton;
         // return b;
     }
     public void processStyles() {
-        System.err.println("Processing styles.... "+styleHintMap);
+//        System.err.println("Processing styles.... "+styleHintMap);
         super.processStyles();
         Color c = ColorParser.parseColor(getStyle("foreground"));
         if (c!=null) {
@@ -102,6 +104,9 @@ public class TipiButton extends TipiEchoComponentImpl {
         if ("text".equals(name)) {
             myButton.setText("" + object);
         }
+        if ("tooptip".equals(name)) {
+            myButton.setToolTipText("" + object);
+        }
         if ("icon".equals(name)) {
             if (object instanceof URL) {
                 URL u = (URL) object;
@@ -110,9 +115,7 @@ public class TipiButton extends TipiEchoComponentImpl {
                 System.err.println("Can not set button icon: I guess it failed to parse (TipiButton)");
             }
         }
-        myButton.setTextAlignment(new Alignment(Alignment.CENTER, Alignment.CENTER));
-        myButton.setAlignment(new Alignment(Alignment.CENTER,Alignment.CENTER));
-        super.setComponentValue(name, object);
+         super.setComponentValue(name, object);
     }
 
 }

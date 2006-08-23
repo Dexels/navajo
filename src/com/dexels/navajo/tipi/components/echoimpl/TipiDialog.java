@@ -1,6 +1,5 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
-import sun.security.krb5.internal.n;
 import nextapp.echo2.app.*;
 import nextapp.echo2.app.Font.Typeface;
 import nextapp.echo2.app.event.WindowPaneEvent;
@@ -50,7 +49,7 @@ public class TipiDialog extends TipiEchoDataComponentImpl {
     // private Rectangle myBounds = new Rectangle(0, 0, 0, 0);
     private boolean studioMode = false;
 
-    private boolean closable = true;
+    private boolean closable = false;
 
     private boolean resizable = true;
 
@@ -225,7 +224,7 @@ public class TipiDialog extends TipiEchoDataComponentImpl {
         myDialog = new WindowPane(title, new Extent(w, Extent.PX), new Extent(h, Extent.PX));
         myDialog.setDefaultCloseOperation(WindowPane.DISPOSE_ON_CLOSE);
         // myDialog.setUndecorated(!decorated);
-        FillImageBorder fib = new FillImageBorder(new Color(100,100,100),new Insets(new Extent(1,Extent.PX)),new Insets(new Extent(1,Extent.PX)));
+        FillImageBorder fib = new FillImageBorder(new Color(100,100,100),new Insets(new Extent(1,Extent.PX)),new Insets(new Extent(2,Extent.PX)));
         myDialog.setBorder(fib);
         createWindowListener(myDialog);
         myDialog.setTitle(title);
@@ -242,7 +241,6 @@ public class TipiDialog extends TipiEchoDataComponentImpl {
         myDialog.setPositionY(new Extent(y, Extent.PX));
         myDialog.setModal(modal);
         myDialog.setResizable(resizable);
-
         // ARRRRRRRGGGGHHHHH
         myDialog.setClosable(closable);
 
@@ -263,7 +261,7 @@ public class TipiDialog extends TipiEchoDataComponentImpl {
         myDialog.setVisible(true);
     }
     public void processStyles() {
-        System.err.println("Processing styles.... "+styleHintMap);
+//        System.err.println("Processing styles.... "+styleHintMap);
         super.processStyles();
         
         String s = getStyle("headerheight");
