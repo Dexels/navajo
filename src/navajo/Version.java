@@ -77,16 +77,18 @@ package navajo;
  * 5.4.7 Added support for logging AsyncMappable object access when finished or killed
  * 
  * 5.4.8 Added support in JAXP TslCompiler for CDATA section under <expression> tag
+ * 
+ * 5.4.9 Fixed match request functionality for Locks and improved lock error messages.
  */
 
 public class Version extends dexels.Version {
 
 	public static final int MAJOR = 5;
 	public static final int MINOR = 4;
-	public static final int PATCHLEVEL = 8;
+	public static final int PATCHLEVEL = 9;
 	public static final String VENDOR = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Kernel";
-	public static final String RELEASEDATE = "2006-08-11";
+	public static final String RELEASEDATE = "2006-08-24";
 	
 //	 Included packages.
 	String [] includes = {"navajodocument.Version"};
