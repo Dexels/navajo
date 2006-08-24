@@ -191,6 +191,9 @@ public class Worker extends GenericThread {
 				if ( id != null && !id.trim().equals("") ) {
 					writeFile( id, (Navajo) workList.get(id) );
 				}
+				if ( id != null ) {
+					notWrittenReponses.remove( id );
+				}
 				workList.remove(id);
 				if (workList.size() > 50) {
 					AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "WARNING: Integrity Worker TODO list size:  " + workList.size());
