@@ -80,6 +80,7 @@ public abstract class LockStore {
 			return true;
 			
 		} catch (Exception e) {
+			
 			return false;
 		}
 	}

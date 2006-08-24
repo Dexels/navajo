@@ -40,6 +40,7 @@ import com.dexels.navajo.integrity.Worker;
 import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.loader.NavajoClassSupplier;
 import com.dexels.navajo.lockguard.Lock;
+import com.dexels.navajo.lockguard.LockDefinition;
 import com.dexels.navajo.lockguard.LockManager;
 import com.dexels.navajo.lockguard.LocksExceeded;
 
@@ -294,6 +295,8 @@ public final class Dispatcher {
 		  System.err.println("Null access!!!");
 	  }
 	  
+	  access.setInDoc(in);
+	  
 	  // Check for webservice transaction integrity.
 	  boolean integrityViolation = false;
 	  Worker integ = navajoConfig.getIntegrityWorker();
@@ -312,7 +315,8 @@ public final class Dispatcher {
 		  try {
 			  locks = lm.grantAccess(access);
 		  } catch (LocksExceeded le) {
-			  return generateErrorMessage(access, "Could not get neccessary lock(s)", SystemException.LOCKS_EXCEEDED, -1, le);
+			  LockDefinition ld = le.getLockDefinition();
+			  return generateErrorMessage(access, "Could not get neccessary lock(s) for service: " + access.rpcName + " (wspattern="+ ld.webservice+",matchuser=" + ld.matchUsername + ",matchrequest="+ld.matchRequest+",maxinstancecount="+ld.maxInstanceCount+")", SystemException.LOCKS_EXCEEDED, -1, le);
 		  }
 	  }
   
@@ -596,6 +600,42 @@ public final class Dispatcher {
         access.setException(t);
       }
 
+      if ( t != null && t instanceof LocksExceeded ) {
+    	  
+    	  LocksExceeded ld = (LocksExceeded) t;
+    	  
+    	  Message locksExceeded = NavajoFactory.getInstance().createMessage(
+    	          outMessage, "LocksExceeded");
+    	  outMessage.addMessage(locksExceeded);
+    	  Property w = NavajoFactory.getInstance().createProperty(outMessage,
+    	          "Webservice", Property.STRING_PROPERTY,
+    	          access.rpcName, 200, "Webservice", Property.DIR_OUT);
+    	  locksExceeded.addProperty(w);
+    	  Property u = NavajoFactory.getInstance().createProperty(outMessage,
+    	          "Username", Property.STRING_PROPERTY,
+    	          access.rpcUser, 200, "Username", Property.DIR_OUT);
+    	  locksExceeded.addProperty(u);
+    	  Property ws = NavajoFactory.getInstance().createProperty(outMessage,
+    	          "WebservicePattern", Property.STRING_PROPERTY,
+    	          ld.getLockDefinition().getWebservice(), 200, "Webservice pattern", Property.DIR_OUT);
+    	  locksExceeded.addProperty(ws);
+    	  Property mu = NavajoFactory.getInstance().createProperty(outMessage,
+    	          "MatchUsername", Property.STRING_PROPERTY,
+    	          ld.getLockDefinition().getMatchUsername() + "", 200, "Match username", Property.DIR_OUT);
+    	  locksExceeded.addProperty(mu);
+    	  Property mr = NavajoFactory.getInstance().createProperty(outMessage,
+    	          "MatchRequest", Property.STRING_PROPERTY,
+    	          ld.getLockDefinition().getMatchRequest() + "", 200, "Match request", Property.DIR_OUT);
+    	  locksExceeded.addProperty(mr);
+    	  Property mi = NavajoFactory.getInstance().createProperty(outMessage,
+    	          "MaxInstanceCount", Property.STRING_PROPERTY,
+    	          ld.getLockDefinition().getMaxInstanceCount() + "", 200, "Maximum number of instances", Property.DIR_OUT);
+    	  locksExceeded.addProperty(mi);
+    	  
+    	  
+    	  outMessage.addMessage(locksExceeded);
+      }
+      
       return outMessage;
     }
     catch (Exception e) {

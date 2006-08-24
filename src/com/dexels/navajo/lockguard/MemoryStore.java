@@ -65,7 +65,7 @@ public final class MemoryStore extends LockStore {
 			
 			if ( hl != null ) {
 				if ( hl.instanceCount >= ld.maxInstanceCount ) {
-					throw new LocksExceeded();
+					throw new LocksExceeded(ld);
 				} else {
 					hl.instanceCount++;
 					return hl;
@@ -113,7 +113,7 @@ public final class MemoryStore extends LockStore {
 				Lock l = (Lock) all.next();
 				
 				if ( ld.matchUsername && l.username.equals(a.rpcUser) ) {
-					
+									
 					if ( !ld.matchRequest ) { // Don't care about matching request.
 						return l;
 					} else if ( ld.matchRequest && matchRequest( l.request, a.getInDoc(), ld )  ) {
