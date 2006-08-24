@@ -47,6 +47,7 @@ public class TagMap implements Mappable {
 	public TagMap [] children;
 	public TagMap child;
 	public String childName;
+	public String childValue;
 	public boolean exists;
 	
 	protected HashMap tags = null;
@@ -97,6 +98,11 @@ public class TagMap implements Mappable {
 		} else {
 			return null;
 		}
+	}
+	
+	public void setChildText(String s) {
+		TagMap t = getChild();
+		t.setText(s);
 	}
 	
 	public TagMap getChild() {
