@@ -45,6 +45,7 @@ public class XMLMap extends TagMap implements Mappable {
 	public String start = null;
 	public Binary content = null;
 	public String stringContent = null;
+	public boolean debug = false;
 	
 	public void load(Parameters parms, Navajo inMessage, Access access,
 			NavajoConfig config) throws MappableException, UserException {
@@ -56,6 +57,10 @@ public class XMLMap extends TagMap implements Mappable {
 	public void kill() {
 	}
 
+	public void setDebug(boolean b) {
+		debug = b;
+	}
+	
 	public void setStart(String name) {
 		this.name = name;
 	}
@@ -79,7 +84,9 @@ public class XMLMap extends TagMap implements Mappable {
 	public Binary getContent() {
 		String r = getString();
 		Binary b = new Binary(r.getBytes());
-		//System.err.println(new String(b.getData()));
+		if ( debug ) {
+			System.err.println(new String(b.getData()));
+		}
 		return b;
 	}
 	
