@@ -509,4 +509,9 @@ private String username;
   public void addComparedServices(String serviceQuery, String serviceUpdate){
     throw new java.lang.UnsupportedOperationException("Method addComparedServices(String serviceQuery, String serviceUpdate) not yet implemented.");
   }
+
+public void destroy() {
+	// TODO Auto-generated method stub
+	
+}
 }
