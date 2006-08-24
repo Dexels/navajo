@@ -997,56 +997,56 @@ public final class Dispatcher {
     }
     finally {
     	
-      // Register webservice call to WebserviceListener.
-      if ( access != null ) {
-    	  WebserviceListener listener = WebserviceListener.getInstance();
-    	  access.setInDoc(inMessage);
-    	  listener.invocation(rpcName, access);
-      }
-        
-      if (access != null) {
-        // Remove access object from set of active webservices first.
-        accessSet.remove(access);
-        //System.err.println("AccessSet size: " + accessSet.size());
-        // Set access to finished state.
-        access.setFinished();
-        Header h = outMessage.getHeader();
-        if (h==null) {
-            h = NavajoFactory.getInstance().createHeader(outMessage,rpcName,rpcUser,rpcPassword,-1);
-            outMessage.addHeader(h);
-        }
-         access.storeStatistics(h);
-        // Store access if navajostore is enabled and if webservice is not in list of special webservices.
-        if (getNavajoConfig().getStatisticsRunner() != null && !isSpecialwebservice(access.rpcName)) {
-          // Give asynchronous statistics runner a new access object to persist.
-          getNavajoConfig().getStatisticsRunner().addAccess(access, myException, null);
-        }
-      }
-      else if (getNavajoConfig().monitorOn) { // Also monitor requests without access objects if monitor is on.
-        Access dummy = new Access( -1, -1, -1, rpcUser, rpcName, null,
-                                  (clientInfo != null ? clientInfo.getIP() :
-                                   "Internal request"),
-                                  (clientInfo != null ? clientInfo.getHost() :
-                                   "via NavajoMap"),
-                                  false, userCertificate);
-        if (getNavajoConfig().getStatisticsRunner() != null &&
-            !isSpecialwebservice(rpcName)) {
-          // Give asynchronous statistics runner a new access object to persist.
-          dummy.setInDoc(inMessage);
-          dummy.parseTime = (clientInfo != null ? clientInfo.getParseTime() :
-                             -1);
-          dummy.requestEncoding = (clientInfo != null ? clientInfo.getEncoding() :
-                                   "");
-          dummy.compressedReceive = (clientInfo != null ?
-                                     clientInfo.isCompressedRecv() : false);
-          dummy.compressedSend = (clientInfo != null ?
-                                  clientInfo.isCompressedSend() : false);
-          dummy.contentLength = (clientInfo != null ?
-                                 clientInfo.getContentLength() : 0);
-          dummy.threadCount = (clientInfo != null ? accessSet.size() : 0);
-          getNavajoConfig().getStatisticsRunner().addAccess(dummy, myException, null);
-        }
-      }
+    	// Register webservice call to WebserviceListener.
+    	if ( access != null ) {
+    		WebserviceListener listener = WebserviceListener.getInstance();
+    		access.setInDoc(inMessage);
+    		listener.invocation(rpcName, access);
+    	}
+    	
+    	if (access != null) {
+    		// Remove access object from set of active webservices first.
+    		accessSet.remove(access);
+    		//System.err.println("AccessSet size: " + accessSet.size());
+    		// Set access to finished state.
+    		access.setFinished();
+    		Header h = outMessage.getHeader();
+    		if (h==null) {
+    			h = NavajoFactory.getInstance().createHeader(outMessage,rpcName,rpcUser,rpcPassword,-1);
+    			outMessage.addHeader(h);
+    		}
+    		access.storeStatistics(h);
+    		// Store access if navajostore is enabled and if webservice is not in list of special webservices.
+    		if (getNavajoConfig().getStatisticsRunner() != null && !isSpecialwebservice(access.rpcName)) {
+    			// Give asynchronous statistics runner a new access object to persist.
+    			getNavajoConfig().getStatisticsRunner().addAccess(access, myException, null);
+    		}
+    	}
+    	else if (getNavajoConfig().monitorOn) { // Also monitor requests without access objects if monitor is on.
+    		Access dummy = new Access( -1, -1, -1, rpcUser, rpcName, null,
+    				(clientInfo != null ? clientInfo.getIP() :
+    				"Internal request"),
+    				(clientInfo != null ? clientInfo.getHost() :
+    				"via NavajoMap"),
+    				false, userCertificate);
+    		if (getNavajoConfig().getStatisticsRunner() != null &&
+    				!isSpecialwebservice(rpcName)) {
+    			// Give asynchronous statistics runner a new access object to persist.
+    			dummy.setInDoc(inMessage);
+    			dummy.parseTime = (clientInfo != null ? clientInfo.getParseTime() :
+    				-1);
+    			dummy.requestEncoding = (clientInfo != null ? clientInfo.getEncoding() :
+    			"");
+    			dummy.compressedReceive = (clientInfo != null ?
+    					clientInfo.isCompressedRecv() : false);
+    			dummy.compressedSend = (clientInfo != null ?
+    					clientInfo.isCompressedSend() : false);
+    			dummy.contentLength = (clientInfo != null ?
+    					clientInfo.getContentLength() : 0);
+    			dummy.threadCount = (clientInfo != null ? accessSet.size() : 0);
+    			getNavajoConfig().getStatisticsRunner().addAccess(dummy, myException, null);
+    		}
+    	}
     }
   }
 

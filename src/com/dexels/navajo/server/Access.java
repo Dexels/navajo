@@ -192,10 +192,10 @@ public final class Access
     this.threadCount = threadCount;
   }
 
-public void storeStatistics(Header h) {
-	if (h!=null) {
-		h.setAttribute("serverTime",""+getTotaltime());
-	}
-	
-}
+  public void storeStatistics(Header h) {
+	  if (h!=null) {
+		  h.setAttribute("serverTime",""+getTotaltime());
+		  h.setAttribute("accessId", this.accessID);
+	  }
+  }
 }
