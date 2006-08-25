@@ -231,8 +231,8 @@ public final class SaxHandler implements DocHandler {
           }
         }
         catch (Exception e1) {
-          System.err.println("ILLEGAL LENGTH IN PROPERTY " + myName + ": " +
-                             sLength);
+//          System.err.println("ILLEGAL LENGTH IN PROPERTY " + myName + ": " +
+//                             sLength);
         }
 
       

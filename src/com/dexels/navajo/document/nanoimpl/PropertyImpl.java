@@ -210,8 +210,8 @@ public final class PropertyImpl
       }
     }
     catch (Exception e1) {
-      System.err.println("ILLEGAL LENGTH IN PROPERTY " + myName + ": " +
-                         sLength);
+//      System.err.println("ILLEGAL LENGTH IN PROPERTY " + myName + ": " +
+//                         sLength);
     }
 
     definitionProperty = null;
