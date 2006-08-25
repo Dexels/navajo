@@ -560,13 +560,28 @@ public final class NavajoConfig {
         
     
     public final synchronized void doClearScriptCache() {
+       	HashSet currentJar = null;
+       	if (classloader instanceof NavajoClassLoader) {
+     
+        	if (classloader != null) {
+        		currentJar = ((NavajoClassLoader)classloader).getJarResources();
+        	}
+        }
+
+        classloader = new NavajoClassLoader(adapterPath, compiledScriptPath);
+        betaClassloader = new NavajoClassLoader(adapterPath, compiledScriptPath, true);
+        if (currentJar!=null) {
+            ((NavajoClassLoader)classloader).setJarResources(currentJar);       
+		}
+    }
+
+    public final synchronized void setNoScriptCaching() {
         if (classloader instanceof NavajoClassLoader) {
             if (classloader != null)
-                ((NavajoClassLoader) classloader).clearScriptCache();
+                ((NavajoClassLoader) classloader).setNoCaching();
         }
   
     }
-
     
     /**
      *
