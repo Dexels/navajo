@@ -112,12 +112,18 @@ public class NanoTslCompiler {
 
         StringBuffer result = new StringBuffer(str.length());
         for (int i = 0; i < str.length(); i++) {
-            char c = str.charAt(i);
-            if (c == '"') {
+
+        	char c = str.charAt(i);
+            
+        	if (c == '"') {
                 result.append("\\\"");
             } else {
-                result.append(c);
-            }
+            	if (c=='\n') {
+					result.append(" ");
+				} else {
+					result.append(c);
+				}
+				}
         }
         return result.toString();
     }
@@ -623,8 +629,12 @@ public class NanoTslCompiler {
             ////System.out.println("filter = " + filter);
             //System.out.println("in MessageNode(), current contextClass = " +
             // contextClass);
-            contextClassStack.push(contextClass);
-            contextClass = null;
+            if (contextClass==null) {
+                //System.err.println("NO CONTEXT CLASS (YET)");
+              } else {
+                  //System.err.println("LINE 587: PUSHING CLASS: "+contextClass);
+                  contextClassStack.push(contextClass);
+             }
             try {
                 contextClass = Class.forName(className, false, loader);
             } catch (Exception e) {
@@ -784,12 +794,17 @@ public class NanoTslCompiler {
 
             String objectDefinition = subClassName + " " + subObjectName + " = null;\n";
             variableClipboard.add(objectDefinition);
-
+            System.err.println("BEFORE: "+contextClassStack.size()+" -> "+contextClassStack);
+            
             for (int i = 0; i < children.size(); i++) {
                 if (children.get(i) instanceof XMLElement) {
-                    result.append(compile(ident + 4, ((XMLElement) children.get(i)), subClassName, subObjectName));
+                    XMLElement element = (XMLElement) children.get(i);
+                    System.err.println("Compiling element: "+element.getName()+"\n"+element);
+					result.append(compile(ident + 4, (element), subClassName, subObjectName));
                 }
+                System.err.println("AFTER->"+i+" "+contextClassStack.size()+" -> "+contextClassStack);
             }
+            System.err.println("AFTER: "+contextClassStack.size()+" -> "+contextClassStack);
 
             contextClass = (Class) contextClassStack.pop();
 
@@ -875,8 +890,12 @@ public class NanoTslCompiler {
         }
 
         if (isSubMapped) {
-        	
-            contextClass = (Class) contextClassStack.pop();
+        	if (!contextClassStack.isEmpty()) {
+                contextClass = (Class) contextClassStack.pop();
+			} else {
+				System.err.println("Warning: Empty stack");
+				System.err.println("Current class: "+contextClass);
+			}
         }
 
         return result.toString();
@@ -1116,8 +1135,8 @@ public class NanoTslCompiler {
 
         StringBuffer result = new StringBuffer();
 
-        String attributeOriginal = n.getStringAttribute("name");
-        String condition = n.getStringAttribute("condition");
+        String attributeOriginal = n.getNonNullStringAttribute("name");
+        String condition = n.getNonNullStringAttribute("condition");
         String attribute = null;
         
         String mapPath = null;
@@ -1505,14 +1524,21 @@ public class NanoTslCompiler {
         }
 
         String className = object;
-        String reff = n.getNonNullStringAttribute("ref");
-//        System.err.println("Ref found: "+n.toString());
-        if (!"".equals(className)) {
+        if (contextClass!=null) {
+            contextClassStack.push(contextClass);
+        } 
+         try {
+             contextClass = Class.forName(className, false, loader);
+               } catch (Exception e) { throw new Exception("Could not find adapter: " + className); }
+
+       if (!"".equals(className)) {
             addScriptUsesAdapter(currentScript, className);
         } else {
             System.err.println("whee!");
             addScriptUsesAdapter(currentScript, "Referenced adapter"+n.getNonNullStringAttribute("ref"));
         }
+       
+       
 
         if (!name.equals("")) { // We have a potential async mappable object.
             ////System.out.println("POTENTIAL MAPPABLE OBJECT " + className);
