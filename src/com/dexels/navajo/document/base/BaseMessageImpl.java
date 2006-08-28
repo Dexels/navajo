@@ -186,9 +186,13 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode {
             this.removeProperty((Property) propertyMap.get(p.getName()));
             addProperty(q);
         }
-        
-        // Set default values from definition message.
-        BaseMessageImpl parentArrayMessage = (BaseMessageImpl) getParentMessage();
+        initPropertyFromDefinition(q);
+    }
+
+    
+	private void initPropertyFromDefinition(Property q) {
+		// Set default values from definition message.
+        BaseMessageImpl parentArrayMessage = (BaseMessageImpl) getArrayParentMessage();
         if ( parentArrayMessage != null) {
 
             Property definitionProperty = parentArrayMessage.getPropertyDefinition(myName);
@@ -229,13 +233,54 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode {
               }
             }
           }
-    }
+	}
 
     public final ArrayList getAllProperties() {
-        return propertyList;
+        return getTotalPropertyList();
+    }
+    
+    private final ArrayList getTotalPropertyList() {
+    	if (getArrayParentMessage()==null) {
+			return propertyList;
+		}
+    	if (getArrayParentMessage().getDefinitionMessage()==null) {
+    		return propertyList;
+    	}
+    	ArrayList resList = new ArrayList();
+//    	resList.addAll(propertyList);
+    	for (Iterator iter = getArrayParentMessage().getDefinitionMessage().getAllProperties().iterator(); iter.hasNext();) {
+			Property element = (Property) iter.next();
+			if (element!=null) {
+				Property local = (Property)propertyMap.get(element.getName());
+				if (local!=null) {
+					mergeProperty(local,element);
+				}
+			}
+			resList.add(getProperty(element.getName()));
+		}
+    	return resList;
     }
 
-    public final ArrayList getProperties(String regularExpression) throws NavajoException {
+    private void mergeProperty(Property local, Property definition) {
+    	if (local.getDescription()==null) {
+			local.setDescription(definition.getDescription());
+		}
+    	if (local.getCardinality()==null) {
+			local.setCardinality(definition.getCardinality());
+		}
+    	if (local.getDirection()==null) {
+			local.setDirection(definition.getDirection());
+		}
+       	if (local.getType()==null) {
+			local.setType(definition.getType());
+		}
+       	if (local.getValue()==null || "".equals(local.getValue())) {
+			local.setValue(definition.getValue());
+		}
+    	
+	}
+
+	public final ArrayList getProperties(String regularExpression) throws NavajoException {
 
         if (regularExpression.startsWith(Navajo.PARENT_MESSAGE + Navajo.MESSAGE_SEPARATOR)) {
             regularExpression = regularExpression.substring((Navajo.PARENT_MESSAGE + Navajo.MESSAGE_SEPARATOR).length());
@@ -691,14 +736,24 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode {
         if (slash < 0) {
             // System.err.println("No slashes left. Getting property: "+path);
 
+        	if (propertyList.size()!=propertyMap.size()) {
+				System.err.println("Warning: Propertymap sizE: "+propertyMap.size()+" listsize: "+propertyList.size());
+			}
+        	
             Property pp =  (Property) propertyMap.get(path);
             if (pp==null) {
                 // check for definition messages
                 Message arrayP = getArrayParentMessage();
                 if (arrayP!=null) {
                     Message def = arrayP.getDefinitionMessage();
+                    if (def!=null){
+                        System.err.println("FOUND DEFINITIONMESSAGE: "+def.getFullMessageName());
+                    }
                     if (def!=null && def.getProperty(path) != null) {
-                        return def.getProperty(path).copy(getRootDoc());
+                    	Property res = def.getProperty(path).copy(getRootDoc());
+                    	addProperty(res);
+                    	System.err.println("Duplicated property: "+res.getName());
+                    	return res;
                     }
                 }
             }

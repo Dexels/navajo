@@ -36,6 +36,12 @@ public final class HeaderImpl implements Header {
     return ref;
   }
 
+
+  public Map getAttributes() {
+      return null;
+  }
+  
+  
        /**
      * Get the name of the user_agent from a Navajo message.
      */
@@ -381,6 +387,20 @@ public final class HeaderImpl implements Header {
 	public void setRequestId(String id) {
 		Element transaction = (Element) XMLutils.findNode(ref, "transaction");
 		transaction.setAttribute("requestid", id);
+	}
+
+	public void addPiggyBackData(Map element) {
+	      throw new UnsupportedOperationException("Sorry, addPiggyBackData is not supported in JaxpImpl!");
+		
+	}
+
+	public void clearPiggybackData() {
+	      throw new UnsupportedOperationException("Sorry, clearPiggyBackData is not supported in JaxpImpl!");
+		
+	}
+
+	public Set getPiggybackData() {
+	      throw new UnsupportedOperationException("Sorry, getPiggyBackData is not supported in JaxpImpl!");
 	}
 
 }

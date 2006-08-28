@@ -50,10 +50,10 @@ public class SaxTester {
 //        readWriteTest("c:/FormNumber2.xml",ITERATIONS,QDSAX);
 
         System.setProperty(DOC_IMPL,QDSAX);
-        FileInputStream fis = new FileInputStream("c:/qdimplsave_text.xml");
+        FileInputStream fis = new FileInputStream("c:/aap.xml");
         Navajo n = NavajoFactory.getInstance().createNavajo(fis);
-        Binary b = (Binary)n.getProperty("DocumentData/Data").getTypedValue();
-        FileOutputStream fos = new FileOutputStream("c:/dexxx.gif");
+        Binary b = (Binary)n.getProperty("FormDefinition/Definition").getTypedValue();
+        FileOutputStream fos = new FileOutputStream("c:/dexxx.xml");
         b.write(fos);
         fos.flush();
         fos.close();

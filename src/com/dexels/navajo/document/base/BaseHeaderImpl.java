@@ -25,7 +25,8 @@ public class BaseHeaderImpl
     
   protected final BaseClientImpl myClientImpl;
   protected String myIp;
-
+  
+  private Set piggyBackData = null;
   
   
   /**
@@ -312,6 +313,15 @@ public List getChildren() {
     }
     al.add(myCallback);
     al.add(myClientImpl);
+    System.err.println("Serializing header.");
+    if (piggyBackData!=null) {
+//    	System.err.println(":::::::::: ADDING PIGGYBACKDATA ::::::: count:  "+piggyBackData.size());
+		for (Iterator iter = piggyBackData.iterator(); iter.hasNext();) {
+			Map element = (Map) iter.next();
+			BasePiggybackImpl bpi  = new BasePiggybackImpl(element);
+			al.add(bpi);
+		}
+	}
     return al;
 }
 
@@ -353,5 +363,25 @@ public BaseCallbackImpl getCallback() {
     return myCallback;
 }
 
+public void addPiggyBackData(Map element) {
+	if (piggyBackData==null) {
+//		System.err.println("Lazy create of piggyback data");
+		piggyBackData = new HashSet();
+	}
+	piggyBackData.add(element);
+//	System.err.println("piggyback size: "+piggyBackData.size());
+}
+
+/**
+ * Returns a set of maps
+ * @return
+ */
+public Set getPiggybackData() {
+	return  piggyBackData;
+}
+
+public void clearPiggybackData() {
+	piggyBackData.clear();
+}
 
 }

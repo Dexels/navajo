@@ -101,6 +101,10 @@ public final class SaxHandler implements DocHandler {
             parseObject(h);
             return;
         }
+        if (tag.equals("piggyback")) {
+            parsePiggyback(h);
+            return;
+        }        
         
         //System.err.println("Unknown tag: "+tag+" attrs: "+h);
                  
@@ -163,11 +167,33 @@ public final class SaxHandler implements DocHandler {
         currentHeader.addTransaction(bci);        
     }
 
+    private final void parsePiggyback(Hashtable h) {
+        if (currentHeader==null) {
+            throw new IllegalArgumentException("Piggyback tag outside header tag.");
+        }
+        Map m = new HashMap();
+        for (Iterator iter = h.keySet().iterator(); iter.hasNext();) {
+			String  key = (String ) iter.next();
+			String value = (String )h.get(key);
+			m.put(key, value);
+		}
+        
+        
+        
+        currentHeader.addPiggyBackData(m);        
+    }
+    
+    
     private final void parseHeader(Hashtable h) {
         // TODO: Should use the navajo factory for these functions
 //                NavajoFactory.getInstance().createHeader(current, rpcName, rpcUser, rpcPassword, expiration_interval)
         BaseHeaderImpl bhi = new BaseHeaderImpl(currentDocument);
         currentHeader = bhi;
+        for (Iterator iter = h.keySet().iterator(); iter.hasNext();) {
+			String element = (String) iter.next();
+			String value = (String) h.get(element);
+			bhi.setAttribute(element, value);
+        }
         currentDocument.addHeader(bhi);
         // TODO Auto-generated method stub
         

@@ -36,9 +36,9 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
   }
   
   public void addHeader(Header h) {
-    if (myHeader == null) {
+//    if (myHeader == null) {
       myHeader = (BaseHeaderImpl)h;
-    }
+//    }
 //    myHeader.merge((BaseHeaderImpl)h);
   }
 

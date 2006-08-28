@@ -1,5 +1,9 @@
 package com.dexels.navajo.document;
 
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 /**
  * <p>Title: Navajo Product Project</p>
  * <p>Description: This is the official source for the Navajo server</p>
@@ -212,7 +216,14 @@ public interface Header extends java.io.Serializable {
      */
     public String getRequestId();
     
-    public void setRequestId(String id);
+    public Map getAttributes();
     
+    public void setRequestId(String id);
+
+	public void addPiggyBackData(Map element);
+
+	public Set getPiggybackData();
+	
+	public void clearPiggybackData();
 
 }
