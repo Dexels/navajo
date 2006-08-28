@@ -185,8 +185,8 @@ public final class NavajoConfig {
     			}
     		}
     		
-    		enableStatisticsRunner = (body.getProperty("parameters/statistics_runner") == null ||
-    				body.getProperty("parameters/statistics_runner").getValue().equals("true"));
+    		enableStatisticsRunner = (body.getProperty("parameters/enable_statistics") == null ||
+    				body.getProperty("parameters/enable_statistics").getValue().equals("true"));
     		
     		if (enableStatisticsRunner) {
     			HashMap p = new HashMap();
