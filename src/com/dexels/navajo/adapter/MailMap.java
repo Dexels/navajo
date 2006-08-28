@@ -10,6 +10,8 @@ import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.*;
@@ -121,7 +123,13 @@ public class MailMap implements Mappable {
             // Use stylesheet if specified.
             if (!xslFile.equals("")) {
                 java.io.File xsl = new java.io.File(xslFile);
-                result = XMLDocumentUtils.transform((Document) doc.getMessageBuffer(), xsl);
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                doc.write(bos);
+                bos.close();
+                ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
+                Document doc = XMLDocumentUtils.createDocument(bis, false);
+                bis.close();
+                result = XMLDocumentUtils.transform(doc, xsl);
             }
 
             if (attachments == null && contentType.equals("text/plain")) {
