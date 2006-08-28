@@ -297,6 +297,20 @@ public final class Dispatcher {
 	  
 	  access.setInDoc(in);
 	  
+	  if (in!=null) {
+		Header h = in.getHeader();
+		if (h!=null) {
+			Set s = h.getPiggybackData();
+			if (s!=null ) {
+				for (Iterator iter = s.iterator(); iter.hasNext();) {
+					Map element = (Map) iter.next();
+					processPiggybackData(element);
+				}
+			}
+		}
+	}
+	  
+	  
 	  // Check for webservice transaction integrity.
 	  boolean integrityViolation = false;
 	  Worker integ = navajoConfig.getIntegrityWorker();
@@ -387,7 +401,12 @@ public final class Dispatcher {
 	  }
   }
 
-  /**
+  private void processPiggybackData(Map element) {
+	  System.err.println("Processing piggyback: "+element);
+	  
+}
+
+/**
    * Somewhat deprecated method to log timings. Use navajo store for proper statistics.
    *
    * @param access
