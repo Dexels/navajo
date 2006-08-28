@@ -196,6 +196,7 @@ public final class Access
 	  if (h!=null) {
 		  h.setAttribute("serverTime",""+getTotaltime());
 		  h.setAttribute("accessId", this.accessID);
+		  h.setAttribute("requestParseTime",""+parseTime);
 	  }
   }
 }
