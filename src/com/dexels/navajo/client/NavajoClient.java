@@ -69,6 +69,8 @@ public class NavajoClient implements ClientInterface {
   private long retryInterval = 1000; // default retry interval is 1000 milliseconds
   private int retryAttempts = 3; // default three retry attempts
   
+  private static int instances = 0;
+  
   // Warning: Not thread safe!
   private final HashMap storedNavajoComparisonMap = new HashMap();
   private final HashMap comparedServicesQueryToUpdateMap = new HashMap();
@@ -78,7 +80,8 @@ public class NavajoClient implements ClientInterface {
    * Initialize a NavajoClient object with an empty XML message buffer.
    */
   public NavajoClient(String dtdFile) {
-    this.DTD_FILE = "file:" + dtdFile;
+	  this();
+	  this.DTD_FILE = "file:" + dtdFile;
   }
 
   public void addComparedServices(String serviceQuery, String serviceUpdate) {
@@ -137,16 +140,24 @@ public class NavajoClient implements ClientInterface {
   /**
    * Default constructor
    */
-  public NavajoClient() {}
+  public NavajoClient() {
+	  instances++;
+	  System.err.println("NavajoClient instances: " + instances);
+  }
 
   /**
    * Construct a NavajoClient with a given protocol
    * @param protocol int
    */
   public NavajoClient(int protocol) {
+	this();
     this.protocol = protocol;
   }
 
+  public void finalize() {
+	  instances--;
+  }
+  
   /**
    * Not used
    * @param config URL
