@@ -64,8 +64,9 @@ public class NavajoClassLoader extends MultiClassLoader {
     private String compiledScriptPath = "";
     private static Object mutex1 = new Object();
     private static Object mutex2 = new Object();
-    private static HashSet jarResources = null;
+    private HashSet jarResources = null;
 
+    private boolean noCaching = false;
     /**
      * beta flag denotes whether beta versions of jar files should be used (if present).
      */
@@ -83,6 +84,10 @@ public class NavajoClassLoader extends MultiClassLoader {
         this.compiledScriptPath = compiledScriptPath;
     }
 
+    public void setNoCaching() {
+    	noCaching = true;
+    }
+    
     public synchronized void clearCache(String className) {
       Class c = (Class) classes.get(className);
       if (c != null) {
@@ -163,7 +168,7 @@ public class NavajoClassLoader extends MultiClassLoader {
     		  }
     		  
     		  c = loadClass(b, className, true, false);
-    		  
+				
     		  return c;
     	  }
     	  catch (Exception e) {
@@ -322,5 +327,13 @@ public class NavajoClassLoader extends MultiClassLoader {
     public void finalize() {
         //System.out.println("In NavajoClassLoader finalize(): Killing class loader");
     }
+
+	public HashSet getJarResources() {
+		return jarResources;
+	}
+
+	public void setJarResources(HashSet jarResources) {
+		this.jarResources = jarResources;
+	}
 
 }
