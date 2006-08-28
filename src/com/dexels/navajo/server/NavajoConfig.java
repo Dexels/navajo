@@ -79,6 +79,7 @@ public final class NavajoConfig {
     private boolean hotCompile = true;
     private boolean enableIntegrityWorker = true;
     private boolean enableLockManager = true;
+    private boolean enableStatisticsRunner = true;
     private static boolean useLog4j = false;
     protected NavajoLogger navajoLogger = null;
 
@@ -184,7 +185,10 @@ public final class NavajoConfig {
     			}
     		}
     		
-    		if (this.dbPath != null) {
+    		enableStatisticsRunner = (body.getProperty("parameters/statistics_runner") == null ||
+    				body.getProperty("parameters/statistics_runner").getValue().equals("true"));
+    		
+    		if (enableStatisticsRunner) {
     			HashMap p = new HashMap();
     			if (dbPort != -1) {
     				System.err.println("PUTTING PORT = " + dbPort + " IN MAP");
@@ -232,6 +236,8 @@ public final class NavajoConfig {
     		enableLockManager = (body.getProperty("parameters/enable_locks") == null ||
     				body.getProperty("parameters/enable_locks").getValue().equals("true"));
     		
+    		
+    			
     		hotCompile = (body.getProperty("parameters/hot_compile") == null ||
     				body.getProperty("parameters/hot_compile").getValue().
     				equals("true"));
