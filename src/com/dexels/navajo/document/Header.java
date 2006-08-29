@@ -1,5 +1,7 @@
 package com.dexels.navajo.document;
 
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -225,5 +227,7 @@ public interface Header extends java.io.Serializable {
 	public Set getPiggybackData();
 	
 	public void clearPiggybackData();
+
+	public void write(OutputStream err) throws NavajoException;
 
 }
