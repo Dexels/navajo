@@ -9,7 +9,10 @@ import java.io.PrintWriter;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.server.statistics.StoreInterface;
 import com.dexels.navajo.adapter.SQLMap;
+
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 
 /**
@@ -54,6 +57,10 @@ public final class OracleStore implements StoreInterface {
 	private static String insertAsyncLog =
 		"insert into navajoasync ( access_id, ref_id, asyncmap, totaltime, exception, created ) values (?, ?, ?, ?, ?, ?)";
 	
+
+	private static String updateAccessSQL = "update navajoaccess " +
+	"set clienttime = ? where access_id = ?";
+		
 	/**
 	 * Set the database url (only for databases which are started by Navajo, e.g. HSQL).
 	 * Required by StoreInterface
@@ -240,8 +247,76 @@ public final class OracleStore implements StoreInterface {
 	public final synchronized void storeAccess(Access a, AsyncMappable am) {
 		if ( am == null ) {
 			addAccess(a);
+			if (a.getPiggybackData()!=null) {
+				updatePiggybackData(a.getPiggybackData());
+			}
 		} else {
 			addAsync(a, am);
 		}
 	}
+
+	private void updatePiggybackData(Set piggybackData) {
+		for (Iterator iter = piggybackData.iterator(); iter.hasNext();) {
+			Map element = (Map) iter.next();
+			String type = (String)element.get("type");
+			if ("performanceStats".equals(type)) {
+				addPerformanceStats(element);
+			}
+		}
+	}
+
+	private void addPerformanceStats(Map element) {
+		System.err.println("OracleStore: storing: "+element);
+		String accessId = (String)element.get("accessId");
+		String clnt = (String)element.get("clientTime");
+		if (accessId==null || clnt==null) {
+			return;
+		}
+		int clientTime = Integer.parseInt(clnt);
+		updatePerformanceStats(accessId, clientTime);
+		
+	}
+
+	private final void updatePerformanceStats(String accessId, int clientTime) {
+		if (Dispatcher.getInstance().getNavajoConfig().dbPath != null) {
+			SQLMap sqlMap = createConnection(false, false, false);
+			Connection con = null;
+			try {
+				con = sqlMap.getConnection();
+			} catch (SQLException e) {
+				e.printStackTrace(System.err);
+			}
+			if (con != null) {
+				PreparedStatement ps = null;
+				try {
+					ps = con.prepareStatement(updateAccessSQL);
+					ps.setInt(1, clientTime);		
+					ps.setString(2, accessId);
+					ps.executeUpdate();
+					ps.close();
+				}
+				catch (SQLException ex) {
+					ex.printStackTrace(System.err);
+				} finally {
+					if (ps != null) {
+						try {
+							ps.close();
+						} catch (SQLException e) {
+						}
+					}
+					if (con != null) {
+						try {
+							sqlMap.store();
+						}
+						catch (Exception ex1) {
+							ex1.printStackTrace(System.err);
+						}
+					}
+				}
+			}
+		}
+	}
+	
+
+
 }
