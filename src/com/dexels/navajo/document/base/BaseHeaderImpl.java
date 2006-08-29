@@ -313,7 +313,7 @@ public List getChildren() {
     }
     al.add(myCallback);
     al.add(myClientImpl);
-    System.err.println("Serializing header.");
+    //System.err.println("Serializing header.");
     if (piggyBackData!=null) {
 //    	System.err.println(":::::::::: ADDING PIGGYBACKDATA ::::::: count:  "+piggyBackData.size());
 		for (Iterator iter = piggyBackData.iterator(); iter.hasNext();) {
