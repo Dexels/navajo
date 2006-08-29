@@ -304,7 +304,7 @@ public final class Dispatcher {
 			if (s!=null ) {
 				for (Iterator iter = s.iterator(); iter.hasNext();) {
 					Map element = (Map) iter.next();
-					processPiggybackData(element);
+					access.addPiggybackData(element);
 				}
 			}
 		}
@@ -400,11 +400,6 @@ public final class Dispatcher {
 		  }  
 	  }
   }
-
-  private void processPiggybackData(Map element) {
-	  System.err.println("Processing piggyback: "+element);
-	  
-}
 
 /**
    * Somewhat deprecated method to log timings. Use navajo store for proper statistics.

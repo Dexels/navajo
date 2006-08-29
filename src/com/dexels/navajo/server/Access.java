@@ -26,6 +26,10 @@
 package com.dexels.navajo.server;
 
 
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.mapping.CompiledScript;
 
@@ -65,7 +69,8 @@ public final class Access
   private Message currentOutMessage;
   private Object userCertificate;
   private static Object mutex = new Object();
-
+  private Set piggyBackData = null;
+  
   public Navajo getOutputDoc() {
     return outputDoc;
   }
@@ -199,4 +204,17 @@ public final class Access
 		  h.setAttribute("requestParseTime",""+parseTime);
 	  }
   }
+
+public void addPiggybackData(Map element) {
+	if (piggyBackData==null) {
+		piggyBackData = new HashSet();
+	}
+	piggyBackData.add(element);
+}
+
+public Set getPiggybackData() {
+	return piggyBackData;
+}
+
+
 }
