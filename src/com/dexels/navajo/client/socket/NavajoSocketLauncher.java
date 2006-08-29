@@ -59,10 +59,12 @@ public class NavajoSocketLauncher {
         }         
 
         System.setProperty(DOC_IMPL,QDSAX);
+        NavajoFactory.resetImplementation();
+        
 
-        
-        
-        
+
+
+
 //        final String dir = "c:/toy-workspace/sportlink-serv/navajo-tester";
         String dir = System.getProperty("user.dir");
       DirectClientImpl dci = new DirectClientImpl();

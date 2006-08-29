@@ -30,8 +30,8 @@ public class NavajoSocketListener implements Runnable {
     private final String myDir;
     private final URL myConfig;
     public NavajoSocketListener(DirectClientImpl ci, int port, String dir, URL config) throws IOException {
-        System.setProperty("com.dexels.navajo.DocumentImplementation",
-        "com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl");
+//        System.setProperty("com.dexels.navajo.DocumentImplementation",
+//        "com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl");
         this.myDir = dir;
         this.port = port;
         myConfig = config;
