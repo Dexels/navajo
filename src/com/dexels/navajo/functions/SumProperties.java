@@ -89,10 +89,11 @@ public class SumProperties
             	if ("".equals(o)) {
 					// ignore
 				} else {
-		              throw new TMLExpressionException(this,
-		                      "Only numbers are supported a sum. Not strings. Value:  "+o +
-		                                                   (o == null ? "null" :
-		                                                    o.getClass().toString()));
+					System.err.println("Only numbers are supported a sum. Not strings. Value:  "+o);
+//		              throw new TMLExpressionException(this,
+//		                      "Only numbers are supported a sum. Not strings. Value:  "+o +
+//		                                                   (o == null ? "null" :
+//		                                                    o.getClass().toString()));
 
 				}
               }
