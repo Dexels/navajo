@@ -12,6 +12,7 @@ import java.io.*;
 import java.net.*;
 import java.security.*;
 import java.util.*;
+
 import javax.net.ssl.*;
 import javax.servlet.http.*;
 
@@ -76,6 +77,8 @@ public class NavajoClient implements ClientInterface {
   private final HashMap comparedServicesQueryToUpdateMap = new HashMap();
   private final HashMap comparedServicesUpdateToQueryMap = new HashMap();
 
+  private final Set piggyBackData = new HashSet();
+  
   /**
    * Initialize a NavajoClient object with an empty XML message buffer.
    */
@@ -669,11 +672,16 @@ public class NavajoClient implements ClientInterface {
       }
     }
 
+    long clientTime = 0;
     try {
 
       if (protocol == HTTP_PROTOCOL) {
-//        Header h = out.getHeader();
-
+        Header h = out.getHeader();
+    	 if (out.getHeader()==null) {
+		} else {
+			processPiggybackData(out.getHeader());
+		}
+    
         //==================================================================
 
         BufferedInputStream in = null;
@@ -686,17 +694,22 @@ public class NavajoClient implements ClientInterface {
                 n = NavajoFactory.getInstance().createNavajo(in);
                 if (n.getHeader()!=null) {
                     n.getHeader().setAttribute("sourceScript", callingService);
-                    long clientTime = (System.currentTimeMillis()-timeStamp);
+                    clientTime = (System.currentTimeMillis()-timeStamp);
                     n.getHeader().setAttribute("clientTime", ""+clientTime);
                     String tot = n.getHeader().getAttribute("serverTime");
                     long totalTime = -1;
                     if (tot!=null&& !"".equals(tot)) {
                     	totalTime = Long.parseLong(tot);
                     	n.getHeader().setAttribute("transferTime",""+(clientTime-totalTime));
-    				} else {
-    					//System.err.println("No totaltime");
-    				}
-                    System.err.println(method+": totaltime = " + ( clientTime / 1000.0 )+ ", servertime = " + ( totalTime / 1000.0 )); 
+    				} 
+                    Map headerAttributes = n.getHeader().getAttributes();
+                    Map pbd = new HashMap(headerAttributes);
+                    pbd.put("type","performanceStats");
+                    pbd.put("service",method);
+					piggyBackData.add(pbd);
+                    System.err.println(method+": totaltime = " + ( clientTime / 1000.0 )+ ", servertime = " + ( totalTime / 1000.0 )+" transfertime = "+((clientTime-totalTime)/1000)+" piggybackdata: "+piggyBackData.size()); 
+				} else {
+					System.err.println("Null header in input message");
 				}
         }
         catch (javax.net.ssl.SSLException ex) {
@@ -779,7 +792,17 @@ public class NavajoClient implements ClientInterface {
     }
   }
 
-  private BufferedInputStream retryTransaction(String server, Navajo out, boolean useCompression, int attemptsLeft, long interval, Navajo n) throws Exception {
+
+
+private void processPiggybackData(Header header) {
+	for (Iterator iter = piggyBackData.iterator(); iter.hasNext();) {
+		Map element = (Map) iter.next();
+		header.addPiggyBackData(element);
+	}
+	
+}
+
+private BufferedInputStream retryTransaction(String server, Navajo out, boolean useCompression, int attemptsLeft, long interval, Navajo n) throws Exception {
     BufferedInputStream in = null;
     System.err.println("------------> retrying transaction: " + server + ", attempts left: " + attemptsLeft);
     try {
