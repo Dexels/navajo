@@ -70,7 +70,7 @@ public class NavajoClient implements ClientInterface {
   private long retryInterval = 1000; // default retry interval is 1000 milliseconds
   private int retryAttempts = 3; // default three retry attempts
   
-  private static int instances = 0;
+  //private static int instances = 0;
   
   // Warning: Not thread safe!
   private final HashMap storedNavajoComparisonMap = new HashMap();
@@ -144,8 +144,8 @@ public class NavajoClient implements ClientInterface {
    * Default constructor
    */
   public NavajoClient() {
-	  instances++;
-	  System.err.println("NavajoClient instances: " + instances);
+	  //instances++;
+	  //System.err.println("NavajoClient instances: " + instances);
   }
 
   /**
@@ -158,7 +158,7 @@ public class NavajoClient implements ClientInterface {
   }
 
   public void finalize() {
-	  instances--;
+	  
   }
   
   /**
