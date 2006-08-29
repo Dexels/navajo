@@ -706,7 +706,9 @@ public class NavajoClient implements ClientInterface {
                     Map pbd = new HashMap(headerAttributes);
                     pbd.put("type","performanceStats");
                     pbd.put("service",method);
-					piggyBackData.add(pbd);
+                    synchronized (piggyBackData) {
+                    	piggyBackData.add(pbd);
+					}
                     System.err.println(method+": totaltime = " + ( clientTime / 1000.0 )+ ", servertime = " + ( totalTime / 1000.0 )+" transfertime = "+((clientTime-totalTime)/1000)+" piggybackdata: "+piggyBackData.size()); 
 				} else {
 					System.err.println("Null header in input message");
@@ -794,13 +796,22 @@ public class NavajoClient implements ClientInterface {
 
 
 
-private void processPiggybackData(Header header) {
-	for (Iterator iter = piggyBackData.iterator(); iter.hasNext();) {
-		Map element = (Map) iter.next();
-		header.addPiggyBackData(element);
-	}
-	
-}
+  /**
+   * Add piggyback data to header.
+   * @param header
+   */
+  private void processPiggybackData(Header header) {
+	  
+	  synchronized (piggyBackData) {
+		  for (Iterator iter = piggyBackData.iterator(); iter.hasNext();) {
+			  Map element = (Map) iter.next();
+			  header.addPiggyBackData(element);
+		  }
+		  // remove piggyback data.
+		  piggyBackData.clear();
+	  }
+	  
+  }
 
 private BufferedInputStream retryTransaction(String server, Navajo out, boolean useCompression, int attemptsLeft, long interval, Navajo n) throws Exception {
     BufferedInputStream in = null;
