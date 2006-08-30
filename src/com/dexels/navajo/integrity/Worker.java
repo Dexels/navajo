@@ -286,14 +286,15 @@ public class Worker extends GenericThread {
 	 */
 	public Navajo getResponse(Navajo request) {
 
-		if ( request.getHeader().getRequestId() == null || 
-			 request.getHeader().getRequestId().trim().equals("") ) {
+		String id  = request.getHeader().getRequestId();
+		if ( id == null || id.trim().equals("") ) {
 			return null;
 		}
+		
 		// Check if request id is in worklist (still) or integreatyCache (already).
-		if ( workList.containsKey( request.getHeader().getRequestId() ) || integrityCache.containsKey( request.getHeader().getRequestId() ) ) {
+		if ( notWrittenReponses.contains( id ) || workList.containsKey( id ) || integrityCache.containsKey( id ) ) {
 			// Response file write could be still pending, due to a large workList size and/or large responses.
-			while ( notWrittenReponses.contains( request.getHeader().getRequestId() )) {
+			while ( notWrittenReponses.contains( id ) ) {
 				//AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER,"Integrity violation detected: waiting for response file " + fileName + " to become written...");
 				try {
 					Thread.sleep(100);
@@ -302,7 +303,7 @@ public class Worker extends GenericThread {
 					e.printStackTrace();
 				}
 			}
-			return readFile( (File) integrityCache.get( request.getHeader().getRequestId() ) );
+			return readFile( (File) integrityCache.get( id ) );
 		} else {
 			return null;
 		}
@@ -316,12 +317,19 @@ public class Worker extends GenericThread {
 	 * @param response
 	 */
 	public void setResponse(Navajo request, Navajo response) {
-		if ( request.getHeader().getRequestId() != null && !request.getHeader().getRequestId().trim().equals("") ) {
+		String id  = request.getHeader().getRequestId();
+		if ( id != null && !id.trim().equals("") ) {
 			// Immediately add request id to notWrittenResponses.
-			notWrittenReponses.add( request.getHeader().getRequestId() );
+			notWrittenReponses.add( id );
 			//  Add response to workList.
-			synchronized ( workList ) {
-				workList.put( request.getHeader().getRequestId(), response );
+			try {
+				synchronized ( workList ) {
+					workList.put( id, response );
+				}
+			} catch (Throwable t) {
+				notWrittenReponses.remove( id );
+				System.err.println("COULD NOT ADD TO WORKLIST");
+				t.printStackTrace(System.err);	
 			}
 		}
 	}
