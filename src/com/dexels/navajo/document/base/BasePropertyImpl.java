@@ -72,7 +72,11 @@ public class BasePropertyImpl
     isListType = false;
     myName = name;
     myValue = value;
+//    if (type==null || "".equals(type)) {
+//		type = STRING_PROPERTY;
+//	}
     this.type = type;
+
     this.length = i;
     this.description = desc;
     this.direction = direction;
@@ -255,14 +259,17 @@ public class BasePropertyImpl
         } catch (NullPointerException e) {
             // TODO Auto-generated catch block
             System.err.println("Exception while evaluating property: "+getFullPropertyName());
-            throw(e);
-//            e.printStackTrace();
+            
+//            throw(e);
+                        e.printStackTrace();
+                        return null;
         }
 
         }
       catch (NavajoException ex) {
 //      System.err.println("value problem: "+ex.getMessage());
 
+    	  ex.printStackTrace();
 // The expression could not be evaluated. This happens sometimes, but
 // some ui components still want to know the type. This elaborate construction
 // will try to retrieve the type from a definition message in an array message.
@@ -901,7 +908,10 @@ public class BasePropertyImpl
   public final Property copy(Navajo n) {
       BasePropertyImpl cp;
     try {
-      if (isListType) {
+    	if (getType()==null || "".equals(getType())) {
+			throw new IllegalStateException("Property without type!");
+		}
+      if (SELECTION_PROPERTY.equals(getType())) {
 
         cp = (BasePropertyImpl) NavajoFactory.getInstance().createProperty(n,
             getName(), getCardinality(), getDescription(), getDirection());

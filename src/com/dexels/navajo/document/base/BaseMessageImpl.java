@@ -746,13 +746,18 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode {
                 Message arrayP = getArrayParentMessage();
                 if (arrayP!=null) {
                     Message def = arrayP.getDefinitionMessage();
-                    if (def!=null){
-                        System.err.println("FOUND DEFINITIONMESSAGE: "+def.getFullMessageName());
-                    }
+//                    if (def!=null){
+//                        System.err.println("FOUND DEFINITIONMESSAGE: "+def.getFullMessageName());
+//                    }
                     if (def!=null && def.getProperty(path) != null) {
                     	Property res = def.getProperty(path).copy(getRootDoc());
+                    	if (def.getType()==null || "".equals(def.getType())) {
+							throw new IllegalStateException("DEFINITION PROPERTY FOUND WITHOUT TYPE!");
+						}
+                    	res.setType(res.getType());
+                    	
                     	addProperty(res);
-                    	System.err.println("Duplicated property: "+res.getName());
+//                    	System.err.println("Duplicated property: "+res.getName());
                     	return res;
                     }
                 }
