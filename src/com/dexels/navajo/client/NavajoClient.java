@@ -41,11 +41,14 @@ public class NavajoClient implements ClientInterface {
 
   public static final int DIRECT_PROTOCOL = 0;
   public static final int HTTP_PROTOCOL = 1;
-  private String host = null;
+//  private String host = null;
   private String username = null;
   private String password = null;
   protected boolean condensed = true;
 
+  private String[] serverUrls;
+  
+  
   // Threadsafe collections:
   private Map globalMessages = new HashMap();
   private Map serviceCache = Collections.synchronizedMap(new HashMap());
@@ -68,7 +71,10 @@ public class NavajoClient implements ClientInterface {
   private SSLSocketFactory sslFactory = null;
   private String keystore, passphrase;
   private long retryInterval = 1000; // default retry interval is 1000 milliseconds
-  private int retryAttempts = 3; // default three retry attempts
+  private int retryAttempts = 10; // default three retry attempts
+  private int switchServerAfterRetries = 2;
+  
+  private int currentServerIndex;
   
   //private static int instances = 0;
   
@@ -78,6 +84,12 @@ public class NavajoClient implements ClientInterface {
   private final HashMap comparedServicesUpdateToQueryMap = new HashMap();
 
   private final Set piggyBackData = new HashSet();
+  private final String mySessionToken;
+  
+  private final HashMap disabledServers = new HashMap();
+  
+  // Disable for one minute. Bit short, should be maybe an hour, but better for debugging.
+  private static final long serverDisableTimeout = 60000;
   
   /**
    * Initialize a NavajoClient object with an empty XML message buffer.
@@ -144,6 +156,20 @@ public class NavajoClient implements ClientInterface {
    * Default constructor
    */
   public NavajoClient() {
+	  String token = null;
+	  try {
+		token = NavajoClient.createSessionToken();
+	} catch (UnknownHostException e) {
+	
+		e.printStackTrace();
+	}
+	if (token!=null) {
+		mySessionToken = token;
+	} else {
+		mySessionToken = "OHDEAR|OHDEAR|OHDEAR|OHDEAR|OHDEAR";		
+	}
+
+	
 	  //instances++;
 	  //System.err.println("NavajoClient instances: " + instances);
   }
@@ -157,8 +183,15 @@ public class NavajoClient implements ClientInterface {
     this.protocol = protocol;
   }
 
+  
+  
   public void finalize() {
 	  
+  }
+  
+  
+  public String getSessionToken() {
+	  return mySessionToken;
   }
   
   /**
@@ -192,7 +225,7 @@ public class NavajoClient implements ClientInterface {
    * @return String
    */
   public String getServerUrl() {
-    return host;
+    return getCurrentHost();
   }
 
   /**
@@ -206,9 +239,13 @@ public class NavajoClient implements ClientInterface {
   /**
    * Set the server URL
    * @param url String
+   * @deprecated
+   * USE SET SERVERURLS
    */
   public final void setServerUrl(String url) {
-    host = url;
+//    host = url;
+	  System.err.println("Warning: setServerURL is deprecated!");
+	  serverUrls = new String[]{url};
   }
 
   /**
@@ -358,7 +395,7 @@ public class NavajoClient implements ClientInterface {
     if (password == null) {
       throw new ClientException(1, 1, "No password set!");
     }
-    if (host == null) {
+    if (getCurrentHost() == null) {
       throw new ClientException(1, 1, "No host set!");
     }
 
@@ -370,7 +407,7 @@ public class NavajoClient implements ClientInterface {
 //    catch (NavajoException ex) {
 //      ex.printStackTrace();
 //    }
-    return doSimpleSend(out, host, method, username, password, expirationInterval, true);
+    return doSimpleSend(out, getCurrentHost(), method, username, password, expirationInterval, true);
   }
 
   /**
@@ -657,7 +694,7 @@ public class NavajoClient implements ClientInterface {
     }
     // ALWAY SET REQUEST ID AT THIS POINT.
     header.setRequestId( Guid.create() );
-    
+    header.setAttribute("clientToken", getSessionToken());
     // ========= Adding globalMessages
     Iterator entries = globalMessages.entrySet().iterator();
     while (entries.hasNext()) {
@@ -781,6 +818,10 @@ public class NavajoClient implements ClientInterface {
           serviceCache.put(cacheKey, n);
         }
         checkForComparedServices(method, n);
+        
+        // ROUND ROBIN FOR NOW:
+        switchServer(currentServerIndex,false);
+        
         return n;
       }
       else {
@@ -816,6 +857,18 @@ public class NavajoClient implements ClientInterface {
 private BufferedInputStream retryTransaction(String server, Navajo out, boolean useCompression, int attemptsLeft, long interval, Navajo n) throws Exception {
     BufferedInputStream in = null;
     System.err.println("------------> retrying transaction: " + server + ", attempts left: " + attemptsLeft);
+    
+    int pastAttempts = retryAttempts-attemptsLeft;
+    System.err.println("Past retries: "+pastAttempts);
+    // only switch if there is more than one server
+    if (pastAttempts>=(switchServerAfterRetries-1) && serverUrls.length>1) {
+    	System.err.println("Did: "+pastAttempts+" retries. Switching server");
+    	disabledServers.put(getCurrentHost(), new Long(System.currentTimeMillis()));
+    	System.err.println("Disabled server: "+getCurrentHost()+" for "+serverDisableTimeout+" millis." );
+    	switchServer(currentServerIndex,true);
+    	server = getCurrentHost();
+	}
+    
     try {
       try {
         Thread.sleep(interval);
@@ -1489,7 +1542,14 @@ private BufferedInputStream retryTransaction(String server, Navajo out, boolean 
     condensed = b;
   }
 
+  public static String createSessionToken() throws UnknownHostException {
+	  return System.getProperty("user.name")+"|"+(InetAddress.getLocalHost().getHostAddress())+"|"+(InetAddress.getLocalHost().getHostName())+"|"+(System.currentTimeMillis());
+  }
+  
   public static void main(String[] args) throws Exception {
+	  System.err.println(createSessionToken());
+	  System.err.println(InetAddress.getLocalHost().getHostName());
+	  System.getProperties().list(System.err);
       System.setProperty(SaxTester.DOC_IMPL, SaxTester.QDSAX);
       NavajoClientFactory.getClient().setServerUrl("ficus:3000/sportlink/knvb/servlet/Postman");
       NavajoClientFactory.getClient().setUsername("ROOT");
@@ -1515,7 +1575,56 @@ public void destroy() {
 	// TODO Auto-generated method stub
 	
 }
-  
+
+public void setServers(String[] servers) {
+	serverUrls = servers;
+}
+
+public String getCurrentHost() {
+	if (serverUrls!=null && serverUrls.length>0) {
+		return serverUrls[currentServerIndex];
+	}
+	return null;
+}
+
+public void switchServer(int startIndex, boolean forceChange) {
+	if (serverUrls==null || serverUrls.length==0) {
+		throw new IllegalStateException("Can not switch server: Not defined");
+	}
+	if (serverUrls.length==1) {
+		// Nothing to switch
+		return;
+	}
+	
+	
+	if (currentServerIndex==(serverUrls.length-1)) {
+		currentServerIndex = 0;
+	} else {
+		currentServerIndex++;
+	}
+	if (startIndex == currentServerIndex) {
+		System.err.println("BACK AT THE ORIGINAL SERVER!!!!");
+		if (!forceChange) {
+			return;
+		}
+		throw new RuntimeException("No enabled servers left!");
+	}
+	String nextServer = serverUrls[currentServerIndex];
+	if (disabledServers.containsKey(nextServer)) {
+		Long timeout = (Long)disabledServers.get(nextServer);
+		long t = timeout.longValue();
+		if (t+serverDisableTimeout<System.currentTimeMillis()) {
+			// The disabling time has passed.
+			System.err.println("Reinstating server: "+ nextServer+" its timeout has passed.");
+			disabledServers.remove(nextServer);
+			return;
+		} else {
+			switchServer(startIndex,forceChange);
+		}
+	}
+	
+}
+
 //  public static void main(String[] args) throws Exception {
 //	  System.setProperty("com.dexels.navajo.DocumentImplementation", "com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl");
 //		

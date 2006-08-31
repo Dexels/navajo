@@ -140,4 +140,6 @@ public interface ClientInterface {
   public void setCondensed(boolean b);
 
 public void destroy();
+
+public void setServers(String[] servers);
 }
