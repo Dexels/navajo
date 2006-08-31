@@ -1078,7 +1078,7 @@ public final class Dispatcher {
 	  if (name == null) {
 		  return false;
 	  }
-	  if ( name.startsWith("navajo") ||name.equals("InitNavajoStatus") || name.equals("navajo_logon") ) {
+	  if ( name.startsWith("navajo") || name.equals("InitNavajoStatus") || name.equals("navajo_logon") ) {
 		  return true;
 	  }
 	  else {
