@@ -93,7 +93,7 @@ public class AdminMap implements Mappable {
 
   public ClassCount [] getClassCounts() {
 	  Map objectCountMap = BaseNode.getObjectCountMap();
-	  ClassCount [] array = new ClassCount[objectCountMap.size()];
+	  ClassCount [] array = new ClassCount[objectCountMap.size() + 1];
 	  Iterator iter = objectCountMap.keySet().iterator();
 	  int i = 0;
 	  while ( iter.hasNext() ) {
@@ -104,6 +104,17 @@ public class AdminMap implements Mappable {
 		  array[i].count = count.intValue();
 		  i++;
 	  }
+	  // Add some other interesting classes.
+	  array[i] = new ClassCount();
+	  array[i].className = "com.dexels.navajo.server.Access";
+	  array[i].count = Access.instances;
+	  i++;
+	  
+	  array[i] = new ClassCount();
+	  array[i].className = "com.dexels.navajo.server.Dispatcher";
+	  array[i].count = Dispatcher.instances;
+	  i++;
+	  
 	  return array;
   }
   
