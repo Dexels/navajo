@@ -295,6 +295,10 @@ public final class NavajoConfig {
     	return enableLockManager;
     }
     
+    public boolean isStatisticsRunnerEnabled() {
+    	return enableStatisticsRunner;
+    }
+    
     public Worker getIntegrityWorker() {
     	
     	if ( !enableIntegrityWorker ) {
