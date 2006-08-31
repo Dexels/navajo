@@ -303,6 +303,13 @@ public final class Dispatcher {
 	  if (in!=null) {
 		Header h = in.getHeader();
 		if (h!=null) {
+			// Process client token:
+			String clientToken = h.getAttribute("clientToken");
+			if (clientToken!=null) {
+				access.setClientToken(clientToken);
+			}
+			
+			// Process piggyback data:
 			Set s = h.getPiggybackData();
 			if (s!=null ) {
 				for (Iterator iter = s.iterator(); iter.hasNext();) {
