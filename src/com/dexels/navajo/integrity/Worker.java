@@ -334,11 +334,11 @@ public class Worker extends GenericThread {
 			notWrittenReponses.add( id );
 			//  Add response to workList.
 			try {
-				System.err.println("Before synchronized in Worker.setResponse(): " + id );
+				//ystem.err.println("Before synchronized in Worker.setResponse(): " + id );
 				synchronized ( workList ) {
 					workList.put( id, response );
 				}
-				System.err.println("After synchronized in Worker.setResponse(): " + id);
+				//System.err.println("After synchronized in Worker.setResponse(): " + id);
 			} catch (Throwable t) {
 				notWrittenReponses.remove( id );
 				System.err.println("COULD NOT ADD TO WORKLIST");
