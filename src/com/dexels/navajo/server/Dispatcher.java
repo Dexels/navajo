@@ -838,7 +838,7 @@ public final class Dispatcher {
 
       long startAuth = System.currentTimeMillis();
 
-      if (useAuthorisation) {
+      if ( useAuthorisation && !(isSpecialwebservice(rpcName) && rpcUser.equals("NAVAJO") ) ) {
         try {
           if ( navajoConfig == null ) {
         	  System.err.println("EMPTY NAVAJOCONFIG, INVALID STATE OF DISPATCHER!");
@@ -874,7 +874,7 @@ public final class Dispatcher {
                                             new Exception("NOT AUTHORISED"));
           return outMessage;
         }
-      }
+      } 
       else {
         if (debugOn) {
           logger.log(NavajoPriority.WARN, "Switched off authorisation mode");
@@ -1074,25 +1074,16 @@ public final class Dispatcher {
    * @return
    */
   private final boolean isSpecialwebservice(String name) {
-
-    if (name == null) {
-      return false;
-    }
-    if (
-        name.equals("InitGetAccessLogOverview") ||
-        name.equals("ProcessGetAccessDetail") ||
-        name.equals("InitGetAccessLog") ||
-        name.equals("ProcessGetAccessLog") ||
-        name.equals("InitGetAccessStatistics") ||
-        name.equals("ProcessGetAccessStatistics") ||
-        name.equals("InitNavajoStatus") ||
-        name.equals("ProcessNavajoStatus") ||
-        name.equals("ProcessQueryDatasource")) {
-      return true;
-    }
-    else {
-      return false;
-    }
+	  
+	  if (name == null) {
+		  return false;
+	  }
+	  if ( name.startsWith("navajo") ||name.equals("InitNavajoStatus") ) {
+		  return true;
+	  }
+	  else {
+		  return false;
+	  }
   }
 
   public void finalize() {
