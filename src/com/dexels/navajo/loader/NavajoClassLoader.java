@@ -331,6 +331,7 @@ public class NavajoClassLoader extends MultiClassLoader {
 
     public void finalize() {
         //System.out.println("In NavajoClassLoader finalize(): Killing class loader");
+    	instances--;
     }
 
 	public HashSet getJarResources() {
