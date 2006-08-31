@@ -8,6 +8,7 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.base.BaseNode;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.Dispatcher;
+import com.dexels.navajo.server.GenericHandler;
 import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.server.statistics.WebserviceAccess;
@@ -62,6 +63,7 @@ public class AdminMap implements Mappable {
 
   public String storeLocation;
   public int classLoaderInstances;
+  public int scriptClassInstances;
   public String serverId;
 
   // RequestRate windowSize
@@ -288,6 +290,9 @@ public class AdminMap implements Mappable {
   }
   public int getClassLoaderInstances() {
     return NavajoClassLoader.instances;
+  }
+  public int getScriptClassInstances() {
+	return GenericHandler.getLoadedClassesSize();
   }
   public String getServerId() {
     return serverId;
