@@ -581,8 +581,10 @@ public final class Binary extends NavajoType {
      */
     public final void writeBase64(Writer sw) throws IOException {
         final OutputStream os = Base64.newEncoder(sw);
-//        System.err.println("Encoder created, my length: "+getLength());
-        copyResource("Writing data",os, getDataAsStream(),getLength());
+        InputStream dataInStream = getDataAsStream();
+        if (dataInStream!=null) {
+        	copyResource("Writing data",os, dataInStream,getLength());
+		}
 //        System.err.println("Copied to stream");
         os.close();
 
