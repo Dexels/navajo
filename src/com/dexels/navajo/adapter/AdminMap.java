@@ -51,6 +51,9 @@ public class AdminMap implements Mappable {
   public boolean supportsHotCompile;
   public boolean supportsAsync;
   public boolean supportsStore;
+  public boolean supportsIntegrity;
+  public boolean supportsStatistics;
+  public boolean supportsLocks;
   public boolean aliveConnection;
 
   /**
@@ -76,9 +79,14 @@ public class AdminMap implements Mappable {
     adapterPath = nc.getAdapterPath();
     compiledScriptPath = nc.getCompiledScriptPath();
     rootPath = nc.getRootPath();
+    
     supportsHotCompile = nc.isHotCompileEnabled();
     supportsAsync = nc.isAsyncEnabled();
     supportsStore = ( nc.getAsyncStore() != null );
+    supportsIntegrity = nc.isIntegrityWorkerEnabled();
+    supportsStatistics = nc.isStatisticsRunnerEnabled();
+    supportsLocks = nc.isLockManagerEnabled();
+    
     storeLocation = nc.dbPath;
     serverId = Dispatcher.getInstance().getApplicationId();
   }
@@ -278,6 +286,15 @@ public class AdminMap implements Mappable {
   }
   public boolean getSupportsAsync() {
     return supportsAsync;
+  }
+  public boolean getSupportsIntegrity() {
+	  return supportsIntegrity;
+  }
+  public boolean getSupportsStatistics() {
+	  return supportsStatistics;
+  }
+  public boolean getSupportsLocks() {
+	  return supportsLocks;
   }
   public boolean getSupportsHotCompile() {
     return supportsHotCompile;
