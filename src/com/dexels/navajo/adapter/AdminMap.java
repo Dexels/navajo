@@ -55,6 +55,7 @@ public class AdminMap implements Mappable {
   public boolean supportsStatistics;
   public boolean supportsLocks;
   public boolean aliveConnection;
+  public boolean collectGarbage;
 
   /**
    * Monitor parameters.
@@ -93,7 +94,7 @@ public class AdminMap implements Mappable {
 
   public ClassCount [] getClassCounts() {
 	  Map objectCountMap = BaseNode.getObjectCountMap();
-	  ClassCount [] array = new ClassCount[objectCountMap.size() + 1];
+	  ClassCount [] array = new ClassCount[objectCountMap.size() + 2];
 	  Iterator iter = objectCountMap.keySet().iterator();
 	  int i = 0;
 	  while ( iter.hasNext() ) {
@@ -397,5 +398,11 @@ public class AdminMap implements Mappable {
 	  NavajoFactory.resetImplementation();
 	  NavajoFactory.getInstance().setTempDir(Dispatcher.getInstance().getTempDir());
 	  System.err.println("Document class is now: " + getDocumentClass());
+  }
+  
+  public void setCollectGarbage(boolean b) {
+	  System.err.println("Calling garbage collect");
+	  System.gc();
+	  System.err.println("Finished collecting garbage");
   }
 }
