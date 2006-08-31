@@ -54,6 +54,8 @@ import com.dexels.navajo.logger.*;
 
 public final class Dispatcher {
 
+  public static int instances = 0;
+  
   /** Version information **/
   public static final String VERSION = "$Id$";
   public static final String vendor = "Dexels BV";
@@ -104,6 +106,7 @@ public final class Dispatcher {
 		  NavajoClassSupplier cl) throws
 		  NavajoException {
 	  
+	  instances++;
 	  InputStream is = null; 
 	  try {
 		  // Read configuration file.
@@ -1093,7 +1096,8 @@ public final class Dispatcher {
   }
 
   public void finalize() {
-    //System.err.println("In finalize() Dispatcher object");
+	  //System.err.println("In finalize() Dispatcher object");
+	  instances--;
   }
   
   public static void killMe() {
