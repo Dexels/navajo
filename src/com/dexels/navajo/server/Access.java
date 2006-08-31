@@ -38,6 +38,8 @@ public final class Access
 
   private static final String VERSION = "$Id$";
 	
+  public static int instances = 0;
+  
   public java.util.Date created = new java.util.Date();
   public static int accessCount = 0;
   public int threadCount = 0;
@@ -70,7 +72,6 @@ public final class Access
   private Object userCertificate;
   private static Object mutex = new Object();
   private Set piggyBackData = null;
-  
   private String clientToken = null;
   
   public Navajo getOutputDoc() {
@@ -106,6 +107,8 @@ public final class Access
                 String hostName,
                 boolean betaUser, Object certificate) {
 
+	  instances++;
+	  
     synchronized (mutex) {
       accessCount++;
       this.accessID = System.currentTimeMillis() + "-" + accessCount;
@@ -126,6 +129,9 @@ public final class Access
   public Access(int accessID, int userID, int serviceID, String rpcUser,
                 String rpcName, String userAgent, String ipAddress,
                 String hostName, Object certificate) {
+	  
+	  instances++;
+	  
     synchronized (mutex) {
       accessCount++;
       this.accessID = System.currentTimeMillis() + "-" + accessCount;
@@ -218,17 +224,14 @@ public Set getPiggybackData() {
 	return piggyBackData;
 }
 
+public void finalize() {
+	instances--;
+}
 public String getClientToken() {
-	return clientToken;
+	return clientToken ;
 }
 
 public void setClientToken(String clientToken) {
 	this.clientToken = clientToken;
 }
-
-public void finalize() {
-	instances--;
-}
-
-
 }
