@@ -162,8 +162,9 @@ public class Worker extends GenericThread {
 			
 			fw = new FileWriter(f);
 			response.write(fw);
-			fw.close();
+			
 			integrityCache.put(id, f );
+			
 		
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -175,6 +176,14 @@ public class Worker extends GenericThread {
 			e.printStackTrace();
 		} finally {
             // Remove unique request id from notWrittenResponse set to indicate that it's ready to be read.
+			try {
+				if ( fw != null ) {
+					fw.close();
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			notWrittenReponses.remove( id );
 		}
 	}
@@ -182,49 +191,51 @@ public class Worker extends GenericThread {
 	public final void worker() {
 		
 		// Check for new access objects in workList.
+		Set s = null;
 		synchronized (workList) {
-			
-			Set s = new HashSet(workList.keySet());
-			Iterator iter = s.iterator();
-			while (iter.hasNext()) {
-				String id = (String) iter.next();
-				if ( id != null && !id.trim().equals("") ) {
-					writeFile( id, (Navajo) workList.get(id) );
-				}
-				if ( id != null ) {
-					notWrittenReponses.remove( id );
-				}
-				workList.remove(id);
-				if (workList.size() > 50) {
-					AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "WARNING: Integrity Worker TODO list size:  " + workList.size());
-				}
-				
+			s = new HashSet(workList.keySet());
+		}
+		Iterator iter = s.iterator();
+		while (iter.hasNext()) {
+			String id = (String) iter.next();
+			if ( id != null && !id.trim().equals("") ) {
+				writeFile( id, (Navajo) workList.get(id) );
+			}
+			if ( id != null ) {
+				notWrittenReponses.remove( id );
+			}
+			workList.remove(id);
+			if (workList.size() > 50) {
+				AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "WARNING: Integrity Worker TODO list size:  " + workList.size());
 			}
 			
-			// Remove 'old' responses.
-			Set s2 = new HashSet(integrityCache.keySet());
-			Iterator i = s2.iterator();
-			long now = System.currentTimeMillis();
-			while ( i.hasNext() ) {
-				String id = (String) i.next();
-				File f = (File) integrityCache.get(id);
-				if ( f != null ) {
-					long birth = f.lastModified();
-					if ( now - birth > 60000 ) {
-						// remove file reference from integrity cache.
-						if ( !f.delete() ) {
-							AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "worker(): Could not delete response file: " + f.getName());
-						} else {
-							fileCount--;
-							integrityCache.remove(id);
-						}
+		}
+		
+		// Remove 'old' responses.
+		Set s2 = new HashSet(integrityCache.keySet());
+		Iterator i = s2.iterator();
+		long now = System.currentTimeMillis();
+		while ( i.hasNext() ) {
+			String id = (String) i.next();
+			File f = (File) integrityCache.get(id);
+			if ( f != null ) {
+				long birth = f.lastModified();
+				if ( now - birth > 60000 ) {
+					// remove file reference from integrity cache.
+					if ( !f.delete() ) {
+						AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "worker(): Could not delete response file: " + f.getName());
+					} else {
+						f = null;
+						fileCount--;
+						integrityCache.remove(id);
 					}
-				} else {
-					fileCount--;
-					integrityCache.remove(id);
 				}
+			} else {
+				fileCount--;
+				integrityCache.remove(id);
 			}
 		}
+		
 	}
 	
 	/**
@@ -323,9 +334,11 @@ public class Worker extends GenericThread {
 			notWrittenReponses.add( id );
 			//  Add response to workList.
 			try {
+				System.err.println("Before synchronized in Worker.setResponse(): " + id );
 				synchronized ( workList ) {
 					workList.put( id, response );
 				}
+				System.err.println("After synchronized in Worker.setResponse(): " + id);
 			} catch (Throwable t) {
 				notWrittenReponses.remove( id );
 				System.err.println("COULD NOT ADD TO WORKLIST");

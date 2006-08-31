@@ -67,6 +67,9 @@ public class NavajoClassLoader extends MultiClassLoader {
     private HashSet jarResources = null;
 
     private boolean noCaching = false;
+    
+    public static int instances = 0;
+    
     /**
      * beta flag denotes whether beta versions of jar files should be used (if present).
      */
@@ -76,12 +79,14 @@ public class NavajoClassLoader extends MultiClassLoader {
         this.adapterPath = adapterPath;
         this.beta = beta;
         this.compiledScriptPath = compiledScriptPath;
+        instances++;
     }
 
     public NavajoClassLoader(String adapterPath, String compiledScriptPath) {
         this.adapterPath = adapterPath;
         this.beta = false;
         this.compiledScriptPath = compiledScriptPath;
+        instances++;
     }
 
     public void setNoCaching() {
