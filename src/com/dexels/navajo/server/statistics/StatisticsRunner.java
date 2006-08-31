@@ -52,6 +52,10 @@ class TodoItem {
 
 public final class StatisticsRunner extends GenericThread {
 
+  public int todoCount;
+  public String storeClass;
+  public static final String VERSION = "$Id$";
+  
   private static StatisticsRunner instance = null;
   private StoreInterface myStore = null;
   private Set todo = Collections.synchronizedSet(new HashSet());
@@ -60,6 +64,10 @@ public final class StatisticsRunner extends GenericThread {
   
   public StatisticsRunner() {
 	 super("Navajo StatisticsRunner");
+  }
+  
+  public final static StatisticsRunner getInstance() {
+	  return instance;
   }
   
   public final static StatisticsRunner getInstance(String storePath, Map parameters) {
@@ -85,6 +93,7 @@ public final class StatisticsRunner extends GenericThread {
 				  instance.myStore = (StoreInterface) si.newInstance();
 				  instance.myStore.setDatabaseParameters(parameters);
 				  instance.myStore.setDatabaseUrl(storePath);
+				  instance.storeClass = storeClass;
 			  }
 			  catch (Exception ex) {
 				  ex.printStackTrace(System.err);
@@ -131,6 +140,25 @@ public final class StatisticsRunner extends GenericThread {
     WebserviceAccessListener.getInstance().addAccess(a, e);
   }
   
+  public int getTodoCount() {
+	  if ( getInstance() != null ) {
+		  return getInstance().todo.size();
+	  } else {
+		  return 0;
+	  }
+  }
+  
+  public String getStoreClass() {
+	  if ( getInstance() != null ) {
+		  return getInstance().storeClass;
+	  } else {
+		  return null;
+	  }
+  }
+  
+  public String getVERSION() {
+	  return VERSION;
+  }
   
   public void terminate() {
 	  todo.clear();
