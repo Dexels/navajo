@@ -44,6 +44,7 @@ import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.server.UserException;
+import com.dexels.navajo.util.AuditLog;
 
 public class HTTPMap implements Mappable {
 
@@ -55,6 +56,8 @@ public class HTTPMap implements Mappable {
 	public boolean doSend = false;
 	public Binary result = null;
 	public String textResult = null;
+	
+	private static int instances = 0;
 	
 	public void load(Parameters parms, Navajo inMessage, Access access,
 			NavajoConfig config) throws MappableException, UserException {
@@ -77,7 +80,12 @@ public class HTTPMap implements Mappable {
 	}
 	
 	public void setDoSend(boolean b) throws UserException {
-		 try {
+		instances++;
+		
+		if ( instances > 100 ) {
+			AuditLog.log("HTTPMap", "WARNING: More than 100 waiting HTTP requests");
+		}
+		try {
 			URL u = new URL("http://" + url);
 			HttpURLConnection con = null;
 			con = (HttpURLConnection) u.openConnection();
@@ -122,11 +130,13 @@ public class HTTPMap implements Mappable {
 				}
 			}
 			
-		
+			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw new UserException(-1, e.getMessage(), e);
+		} finally {
+			instances--;
 		}
 		
 		

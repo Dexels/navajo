@@ -8,6 +8,7 @@ import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import com.dexels.navajo.document.Navajo;
@@ -72,12 +73,21 @@ public class FileMap implements Mappable {
 	public void store() throws MappableException, UserException {
 		if (persist && fileName != null) {
 			File f = new File(fileName);
+			BufferedOutputStream bos = null;
 			try {
-				BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(f));
+				bos = new BufferedOutputStream(new FileOutputStream(f));
 				bos.write(getBytes());
-				bos.close();
 			} catch (Exception e) {
 				throw new UserException(-1, e.getMessage());
+			} finally {
+				if ( bos != null ) {
+					try {
+						bos.close();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
 			}
 		}
 	}
