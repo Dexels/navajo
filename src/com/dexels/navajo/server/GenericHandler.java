@@ -45,8 +45,10 @@ public final class GenericHandler extends ServiceHandler {
     private static Object mutex2 = new Object();
 
     public GenericHandler() {
-      if (loadedClasses == null)
-        loadedClasses = new HashMap();
+    	synchronized ( mutex1 ) {
+    		if (loadedClasses == null)
+    			loadedClasses = new HashMap();
+    	}
     }
 
     protected static void doClearCache() {
@@ -182,5 +184,13 @@ public final class GenericHandler extends ServiceHandler {
             }
           }
         }
+    
+    public static int getLoadedClassesSize() {
+    	if ( loadedClasses != null ) {
+    		return loadedClasses.size();
+    	} else {
+    		return 0;
+    	}
+    }
 
 }
