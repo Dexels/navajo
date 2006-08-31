@@ -53,6 +53,7 @@ public final class LockManager extends GenericThread {
 
 	public LockDefinition [] definitions;
 	public Lock [] locks;
+	public int lockCount;
 	
 	public static final String VERSION = "$Id$";
 	
@@ -266,6 +267,14 @@ public final class LockManager extends GenericThread {
 			readDefinitions();
 		}
 		
+	}
+	
+	public int getLockCount() {
+		if ( LockStore.getStore() != null ) {
+			return LockStore.getStore().getStoreSize();
+		} else {
+			return 0;
+		}
 	}
 	
 	public Lock [] getLocks() {

@@ -209,4 +209,8 @@ public final class MemoryStore extends LockStore {
 		Lock [] arrayList = new Lock[lockList.size()];
 		return (Lock []) lockList.toArray(arrayList);
 	}
+
+	public int getStoreSize() {
+		return store.size();
+	}
 }
