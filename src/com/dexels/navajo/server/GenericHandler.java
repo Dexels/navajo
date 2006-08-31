@@ -185,6 +185,10 @@ public final class GenericHandler extends ServiceHandler {
           }
         }
     
+    /**
+     * Return load script class count.
+     * @return
+     */
     public static int getLoadedClassesSize() {
     	if ( loadedClasses != null ) {
     		return loadedClasses.size();
