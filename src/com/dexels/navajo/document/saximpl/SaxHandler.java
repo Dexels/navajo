@@ -351,7 +351,14 @@ public final class SaxHandler implements DocHandler {
         		  //System.err.println("ADDING SELECTION: " + s2);
         	  }
           }
-        
+              currentProperty.setType(type);
+              currentProperty.setDescription(description);
+              currentProperty.setDirection(direction);
+              currentProperty.setCardinality(cardinality);
+              currentProperty.setLength(length);
+//              createProperty(currentDocument,myName,cardinality,description,direction);
+
+
       }
     
 
