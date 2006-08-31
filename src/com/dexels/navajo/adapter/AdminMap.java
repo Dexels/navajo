@@ -1,5 +1,6 @@
 package com.dexels.navajo.adapter;
 
+import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.document.Navajo;
@@ -286,7 +287,7 @@ public class AdminMap implements Mappable {
     return storeLocation;
   }
   public int getClassLoaderInstances() {
-    return classLoaderInstances;
+    return NavajoClassLoader.instances;
   }
   public String getServerId() {
     return serverId;

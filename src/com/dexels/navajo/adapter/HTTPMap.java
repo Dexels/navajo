@@ -89,20 +89,38 @@ public class HTTPMap implements Mappable {
 				con.setRequestProperty("Content-type", contentType);
 			}
 			if ( textContent != null ) {
-				OutputStreamWriter osw = new OutputStreamWriter(con.getOutputStream());
-				osw.write(textContent);
-				osw.close();
+				OutputStreamWriter osw = null;
+				osw = new OutputStreamWriter(con.getOutputStream());
+				try {
+					osw.write(textContent);
+				} finally {
+					if ( osw != null ) {
+						osw.close();
+					}
+				}
 			} else if ( content != null ) {
-				OutputStream os = con.getOutputStream();
-				content.write(os);
-				os.close();
+				OutputStream os = null;
+				os = con.getOutputStream();
+				try {
+					content.write(os);
+				} finally {
+					if ( os != null ) {
+						os.close();
+					}
+				}
 			} else {
 				throw new UserException(-1, "Empty content.");
 			}
 			
-			InputStream is = con.getInputStream();
-			result = new Binary(is);
-			is.close();
+			InputStream is = null;
+			is = con.getInputStream();
+			try {
+				result = new Binary(is);
+			} finally {
+				if ( is != null ) {
+					is.close();
+				}
+			}
 			
 		
 		} catch (Exception e) {

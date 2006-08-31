@@ -47,9 +47,20 @@ public final class OracleStore implements StoreInterface {
 	/**
 	 * Navajo store SQL queries.
 	 */
+	private static String existsAccessSQL = "select count(*) from navajoaccess where access_id = ?";
+	
 	private static String insertAccessSQL = "insert into navajoaccess " +
 	"(access_id, webservice, username, threadcount, totaltime, parsetime, authorisationtime, requestsize, requestencoding, compressedrecv, compressedsnd, ip_address, hostname, created) " +
 	"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	
+	private static String updateEmbryoAccessSQL = "update navajoaccess " +
+	"set webservice = ?, set username = ?, set threadcount = ?, set totaltime = ?,set parsetime = ?" + 
+	",set authorisationtime = ?, set requestsize = ?, set requestencoding = ?, " + 
+	" set compressedrecv = ?, set compressedsnd = ?, set ip_address = ?, set hostname = ?" + 
+	",set created = ? where access_id = ? ";
+	
+	private static String insertEmbryoAccessSQL = "insert into navajoaccess " +
+	"(access_id, clienttime) values (?, ?)";
 	
 	private static String insertLog =
 		"insert into navajolog (access_id, exception, navajoin, navajoout) values (?, ?, ?, ?)";
