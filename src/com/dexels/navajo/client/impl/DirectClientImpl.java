@@ -514,4 +514,8 @@ public void destroy() {
 	// TODO Auto-generated method stub
 	
 }
+
+public void setServers(String[] servers) {
+	// NOT INTERESTED
+}
 }
