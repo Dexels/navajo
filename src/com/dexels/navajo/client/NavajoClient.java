@@ -18,12 +18,9 @@ import javax.servlet.http.*;
 
 import com.dexels.navajo.client.serverasync.*;
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.base.BaseHeaderImpl;
 import com.dexels.navajo.document.saximpl.*;
 import com.dexels.navajo.document.types.*;
 import com.dexels.navajo.client.impl.*;
-
-//import com.dexels.navajo.client.impl.*;
 
 class MyX509TrustManager implements X509TrustManager {
   public java.security.cert.X509Certificate[] getAcceptedIssuers() {
@@ -41,13 +38,11 @@ public class NavajoClient implements ClientInterface {
 
   public static final int DIRECT_PROTOCOL = 0;
   public static final int HTTP_PROTOCOL = 1;
-//  private String host = null;
   private String username = null;
   private String password = null;
   protected boolean condensed = true;
 
   private String[] serverUrls;
-  
   
   // Threadsafe collections:
   private Map globalMessages = new HashMap();
@@ -57,19 +52,13 @@ public class NavajoClient implements ClientInterface {
   private Map propertyMap = Collections.synchronizedMap(new HashMap());
   private List myActivityListeners = Collections.synchronizedList(new ArrayList());
 
-  private long timeStamp = 0;
-
-  // docOut contains the outgoing Xml document
-  //private Document docOut;
-  private String DTD_FILE = "file:/home/arjen/projecten/Navajo/dtd/tml.dtd";
-
   // Standard option: use HTTP protocol.
   private int protocol = HTTP_PROTOCOL;
   private boolean useLazyMessaging = true;
   private ErrorResponder myResponder;
   private boolean setSecure = false;
   private SSLSocketFactory sslFactory = null;
-  private String keystore, passphrase;
+  
   private long retryInterval = 1000; // default retry interval is 1000 milliseconds
   private int retryAttempts = 10; // default three retry attempts
   private int switchServerAfterRetries = 2;
@@ -96,7 +85,6 @@ public class NavajoClient implements ClientInterface {
    */
   public NavajoClient(String dtdFile) {
 	  this();
-	  this.DTD_FILE = "file:" + dtdFile;
   }
 
   public void addComparedServices(String serviceQuery, String serviceUpdate) {
@@ -439,7 +427,7 @@ public class NavajoClient implements ClientInterface {
    */
   public final void setSecure(InputStream keystore, String passphrase, boolean useSecurity) throws ClientException {
     setSecure = useSecurity;
-    System.err.println("------------------------------------------------>>>>>> Calling latest VERSION OF setScure!?");
+    
     if (sslFactory == null) {
 
       try {
@@ -460,40 +448,10 @@ public class NavajoClient implements ClientInterface {
         e.printStackTrace(System.err);
         // throw new ClientException(-1, -1, e.getMessage());
       }
-      this.passphrase = passphrase;
     }
   }
 
-  /**
-   * Internal function for creating a URLConnection based on this Client's security settings
-   * @param url URL
-   * @throws IOException
-   * @return URLConnection
-   */
-  public URLConnection createUrlConnection(URL url) throws IOException {
-//    URL url;
-//    if (setSecure) {
-//      url = new URL("https://" + name);
-//    }
-//    else {
-//      url = new URL("http://" + name);
-//    }
-    //System.err.println("in doTransaction: opening url: " + url.toString());
-    URLConnection con = null;
-    if (sslFactory == null) {
-      con = (HttpURLConnection) url.openConnection();
-    }
-    else {
-      HttpsURLConnection urlcon = (HttpsURLConnection) url.openConnection();
-      urlcon.setSSLSocketFactory(sslFactory);
-      con = urlcon;
-    }
-    con.setDoOutput(true);
-    con.setDoInput(true);
-    con.setUseCaches(false);
-    con.setRequestProperty("Content-type", "text/xml; charset=UTF-8");
-    return con;
-  }
+
 
   /**
    * Do a transation with the Navajo Server (name) using
@@ -505,13 +463,8 @@ public class NavajoClient implements ClientInterface {
   
   
   // TODO: Are all streams closed? I am not sure how URLConnections handle it
-  public BufferedInputStream doTransaction(String name, Navajo d, boolean useCompression) throws IOException, ClientException, NavajoException, javax.net.ssl.SSLHandshakeException {
+  private final BufferedInputStream doTransaction(String name, Navajo d, boolean useCompression) throws IOException, ClientException, NavajoException, javax.net.ssl.SSLHandshakeException {
     URL url;
-
-    //timeStamp = System.currentTimeMillis();
-
-//    useCompression = false;
-    //d.write(System.err);
     
     if (setSecure) {
       url = new URL("https://" + name);
@@ -546,38 +499,44 @@ public class NavajoClient implements ClientInterface {
     
     // Verstuur bericht
     if (useCompression) {
-      con.setRequestProperty("Accept-Encoding", "gzip");
-      con.setRequestProperty("Content-Encoding", "gzip");
-      java.util.zip.GZIPOutputStream out = new java.util.zip.GZIPOutputStream(con.getOutputStream());
-      d.write(out, condensed, d.getHeader().getRPCName());
-      out.close();
-      //long tt = System.currentTimeMillis() - timeStamp;
-      //System.err.println("Sending request took: " + tt + " millisec");
+    	con.setRequestProperty("Accept-Encoding", "gzip");
+    	con.setRequestProperty("Content-Encoding", "gzip");
+    	OutputStream os = null;
+    	java.util.zip.GZIPOutputStream out = null;
+    	try {
+    		os = con.getOutputStream();
+    		out = new java.util.zip.GZIPOutputStream(os);
+    		d.write(out, condensed, d.getHeader().getRPCName());
+    	} finally  {
+    		if ( os != null ) {
+    			os.close();
+    		}
+    		if ( out != null ) {
+    			out.close();
+    		}
+    	}
     }
     else {
-      try {
-          con.setRequestProperty("Content-type", "text/xml; charset=UTF-8");
-        d.write(con.getOutputStream(), condensed, d.getHeader().getRPCName());
-        //long tt = System.currentTimeMillis() - timeStamp;
-//        FileOutputStream fos = new FileOutputStream("/tmp/aap.xml");
-//        d.write(fos,condensed,d.getHeader().getRPCName());
-//        fos.flush();
-//        fos.close();
-        //System.err.println("Sending request took: " + tt + " millisec");
-        //timeStamp = System.currentTimeMillis();
-      }
-      catch (java.net.NoRouteToHostException nrthe) {
-        throw new ClientException( -1, 20, "Could not connect to URI: " + name + ", check your connection");
-      }
-      catch (java.net.SocketException se) {
-        se.printStackTrace();
-        throw new ClientException( -1, 21, "Could not connect to network, check your connection");
-      }
+    	OutputStream os = null;
+    	try {
+    		con.setRequestProperty("Content-type", "text/xml; charset=UTF-8");
+    		os = con.getOutputStream();
+    		d.write(os, condensed, d.getHeader().getRPCName());
+    	}
+    	catch (java.net.NoRouteToHostException nrthe) {
+    		throw new ClientException( -1, 20, "Could not connect to URI: " + name + ", check your connection");
+    	}
+    	catch (java.net.SocketException se) {
+    		se.printStackTrace();
+    		throw new ClientException( -1, 21, "Could not connect to network, check your connection");
+    	} finally {
+    		if ( os != null ) {
+    			os.close();
+    		}
+    	}
     }
     // Lees bericht
     BufferedInputStream in = null;
-    //System.err.println("content type = " + con.getContentType()+" using compression: "+useCompression);
-    //System.err.println("content encoding = " + con.getContentEncoding());
     if (useCompression) {
       java.util.zip.GZIPInputStream unzip = new java.util.zip.GZIPInputStream(con.getInputStream());
       in = new BufferedInputStream(unzip);
@@ -585,10 +544,7 @@ public class NavajoClient implements ClientInterface {
     else {
       in = new BufferedInputStream(con.getInputStream());
     }
-    //long tt = System.currentTimeMillis() - timeStamp;
-    //System.err.println("Executing script took: " + tt + " millisec");
-    //timeStamp = System.currentTimeMillis();
-
+ 
     return in;
   }
 
@@ -798,14 +754,6 @@ public class NavajoClient implements ClientInterface {
                 }
             }
         }
- 
-        //StringWriter sw = new StringWriter();
-        //n.write(sw);
-        //System.err.println(method + "("+ Thread.currentThread().toString() +" : " + sw.toString().substring(0,Math.min(sw.toString().length(), 800)));
-
-        //===================================================================
-        long tt = System.currentTimeMillis() - timeStamp;
-        timeStamp = System.currentTimeMillis();
 
         if (myResponder != null) {
           myResponder.check(n);
@@ -841,7 +789,7 @@ public class NavajoClient implements ClientInterface {
    * Add piggyback data to header.
    * @param header
    */
-  private void processPiggybackData(Header header) {
+  private final void processPiggybackData(Header header) {
 	  
 	  synchronized (piggyBackData) {
 		  for (Iterator iter = piggyBackData.iterator(); iter.hasNext();) {
@@ -854,7 +802,7 @@ public class NavajoClient implements ClientInterface {
 	  
   }
 
-private BufferedInputStream retryTransaction(String server, Navajo out, boolean useCompression, int attemptsLeft, long interval, Navajo n) throws Exception {
+private final BufferedInputStream retryTransaction(String server, Navajo out, boolean useCompression, int attemptsLeft, long interval, Navajo n) throws Exception {
     BufferedInputStream in = null;
     System.err.println("------------> retrying transaction: " + server + ", attempts left: " + attemptsLeft);
     
@@ -1103,50 +1051,41 @@ private BufferedInputStream retryTransaction(String server, Navajo out, boolean 
    * @throws ClientException
    */
   public void doAsyncSend(final Navajo in, final String method, final ResponseListener response, final String responseId, final ConditionErrorHandler v) throws ClientException {
-//    System.err.println("Making new asyncsend METHOD: " + method + ", ID: " +
-//                       responseId + ", LISTENER: " + response.getIdentifier());
-    Thread t = new Thread(new Runnable() {
-
-      final Navajo nc = in;
-      final ResponseListener rc = response;
-      final String mc = method;
-      final String ic = responseId;
-
-      public final void run() {
-//        System.err.println("Starting new asyncsend METHOD: " + method +
-//                           ", ID: " + responseId + ", LISTENER: " +
-//                           response.getIdentifier());
-        try {
-          final Navajo n;
-          if (v == null) {
-            n = doSimpleSend(nc, mc);
-          }
-          else {
-            n = doSimpleSend(nc, mc, v);
-          }
-          //StringWriter sw = new StringWriter();
-//          n.write(System.err);
-          //System.err.println("ASYNCDSS ("+ Thread.currentThread().toString() +")returned: " + sw.toString().substring(0,Math.min(sw.toString().length(), 800)) + " for mc: " + mc + ", " + method);
-
-          if (response != null) {
-            rc.receive(n, mc, ic);
-          }
-        }
-        catch (Throwable ex) {
-          ex.printStackTrace();
-          if (rc != null) {
-            rc.setWaiting(false);
-            rc.handleException( (Exception) ex);
-          }
-        }
-      }
-    });
-//    t.run();
-    t.start();
+	  
+	  Thread t = new Thread(new Runnable() {
+		  
+		  final Navajo nc = in;
+		  final ResponseListener rc = response;
+		  final String mc = method;
+		  final String ic = responseId;
+		  
+		  public final void run() {
+			  
+			  try {
+				  final Navajo n;
+				  if (v == null) {
+					  n = doSimpleSend(nc, mc);
+				  }
+				  else {
+					  n = doSimpleSend(nc, mc, v);
+				  }
+				  
+				  if (response != null) {
+					  rc.receive(n, mc, ic);
+				  }
+			  }
+			  catch (Throwable ex) {
+				  ex.printStackTrace();
+				  if (rc != null) {
+					  rc.setWaiting(false);
+					  rc.handleException( (Exception) ex);
+				  }
+			  }
+		  }
+	  });
+	
+	  t.start();
   }
-
-//  public final void doAsyncSend(Navajo in, String method, ResponseListener response, ConditionErrorHandler v) throws ClientException;
-//  public final void doAsyncSend(Navajo in, String method, ResponseListener response, String responseId, ConditionErrorHandler v) throws ClientException;
 
   /**
    * Dummy function, will return 0
@@ -1172,11 +1111,6 @@ private BufferedInputStream retryTransaction(String server, Navajo out, boolean 
     throw new UnsupportedOperationException("Lazy message are not yet supported in the implementation!");
   }
 
-//  public LazyMessage doLazySend(Navajo request, String service, String responseMsgName, int startIndex, int endIndex) {
-//    throw new UnsupportedOperationException("Lazy message are not yet supported in the implementation!");
-//  }
-//  public LazyMessage doLazySend(Navajo request, String service, String responseMsgName, int startIndex, int endIndex) throws ClientException;
-
   /**
    * Not supported
    * @param n Navajo
@@ -1189,23 +1123,12 @@ private BufferedInputStream retryTransaction(String server, Navajo out, boolean 
    * @return LazyMessage
    */
   public final LazyMessage doLazySend(Navajo n, String service, String lazyMessageName, int startIndex, int endIndex, int total) throws ClientException {
-//    System.err.println("Entering lazy send: " + service);
-//    System.err.println("Entering path: " + lazyMessageName);
-//    System.err.println("Start index: " + startIndex);
-//    System.err.println("Start end: " + endIndex);
 
     n.addLazyMessagePath(lazyMessageName, startIndex, endIndex, total);
     Navajo reply = doSimpleSend(n, service);
-//    System.err.println("Navajo returned: ");
-//    try {
-//      reply.write(System.err);
-//    }
-//    catch (NavajoException ex) {
-//      ex.printStackTrace();
-//    }
+
     Message m = reply.getMessage(lazyMessageName);
     if (m == null) {
-//      System.err.println(n.toXml().toString());
       return null;
     }
     if (!LazyMessage.class.isInstance(m)) {
@@ -1214,7 +1137,6 @@ private BufferedInputStream retryTransaction(String server, Navajo out, boolean 
     }
     else {
       LazyMessage l = (LazyMessage) m;
-//      System.err.println("My totals are: "+l.getTotal());
       l.setResponseMessageName(lazyMessageName);
       l.setRequest(service, n);
       return l;
