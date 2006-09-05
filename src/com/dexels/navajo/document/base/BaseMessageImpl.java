@@ -258,6 +258,13 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode {
 			}
 			resList.add(getProperty(element.getName()));
 		}
+    	for (Iterator iter = propertyList.iterator(); iter.hasNext();) {
+			Property element = (Property) iter.next();
+			if (!resList.contains(element)) {
+//				System.err.println("Warning: Data property found, but not in definition");
+				resList.add(element);
+			}
+		}
     	return resList;
     }
 
