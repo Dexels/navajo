@@ -25,6 +25,7 @@
 	<property name="DexelsVersionControl.build" value="${PROJECTHOME}/DexelsVersionControl/classes"/>
 	<available file="${Navajo}" type="dir" property="Navajo.present"/>
 	<path id="depend">
+		<pathelement location="${DexelsVersionControl.build}"/>
 		<pathelement location="${NavajoClient.build}"/>
 		<pathelement location="${NavajoDocument.build}"/>
 		<pathelement location="${NavajoLogger.build}"/>
