@@ -71,6 +71,7 @@ public abstract class TipiContext
   protected final long startTime = System.currentTimeMillis();
   
   protected File resourceBaseDirectory = null;
+  protected File tipiBaseDirectory = null;
   
   protected boolean allowLazyIncludes = true;
   private boolean isSwitching = false;
@@ -94,7 +95,12 @@ public abstract class TipiContext
       resourceBaseDirectory = f;
   }
   
-   public void debugLog(String category, String event) {
+  public void setTipiBaseDirectory(File f) {
+	  tipiBaseDirectory = f;
+  }
+
+  
+  public void debugLog(String category, String event) {
    }
 
   public void handleException(Exception e) {
@@ -165,9 +171,9 @@ public abstract class TipiContext
     return tipiClassDefMap;
   }
 
-  public Map getTipiDefinitionMap() {
-    return tipiComponentMap;
-  }
+//  public Map getTipiDefinitionMap() {
+//    return tipiComponentMap;
+//  }
 
   protected void clearResources() {
     tipiInstanceMap.clear();
@@ -420,11 +426,16 @@ public abstract class TipiContext
       }
       
   }
-public void parseDefinition(XMLElement child) {
+public void parseDefinition(XMLElement child) throws TipiException {
     String childName = child.getName();
     if (childName.equals("tipi") || childName.equals("component")) {
-      testDefinition(child);
-      addComponentDefinition(child);
+      if (getTipiDefinition(childName)!=null) {
+		System.err.println(">>>>>>>>>>>>>>>>> SKIPPING ALREADY DEFINED: "+childName);
+	} else {
+	      testDefinition(child);
+	      addComponentDefinition(child);
+
+	}
     }
   }
 
@@ -442,11 +453,10 @@ public void parseDefinition(XMLElement child) {
   }  
   
   public URL getResourceURL(String location, ClassLoader cl) {
-//      System.err.println("CLASSLOADER: "+System.getProperty("java.class.path"));
-//      System.err.println("Getting URL from loader: "+cl+" location: "+location);
-      if (cl==null) {
+	  // Try the classloader first, the 
+	  
+	  if (cl==null) {
           cl = getClass().getClassLoader();
-//          System.err.println("No classloader supplied getting default: "+cl);
       }
       URL u = cl.getResource(location);
     if (u==null) {
@@ -459,15 +469,43 @@ public void parseDefinition(XMLElement child) {
 //        System.err.println("ResourceDir found: "+resourceBaseDirectory.getAbsolutePath());
         File locationFile = new File(resourceBaseDirectory.getAbsolutePath()+"/"+location);
         if (!locationFile.exists()) {
-            System.err.println(".. but it did not exist");
-        }
-        try {
-            return locationFile.toURL();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
+            System.err.println(".. but it did not exist: "+locationFile);
+        } else {
+	        try {
+	            return locationFile.toURL();
+	        } catch (MalformedURLException e) {
+	            e.printStackTrace();
+	        }
         }
     }
-    return u;
+    if (tipiBaseDirectory!=null) {
+//      System.err.println("ResourceDir found: "+resourceBaseDirectory.getAbsolutePath());
+      File locationFile = new File(tipiBaseDirectory.getAbsolutePath()+"/"+location);
+      if (!locationFile.exists()) {
+          System.err.println(".. but it did not exist either: "+locationFile);
+      } else {
+	        try {
+	            return locationFile.toURL();
+	        } catch (MalformedURLException e) {
+	            e.printStackTrace();
+	        }
+      }
+  }
+  //      System.err.println("ResourceDir found: "+resourceBaseDirectory.getAbsolutePath());
+    // Finally, try the working dir
+      File locationFile = new File(location);
+      System.err.println("Abs: "+locationFile.getAbsolutePath());
+      if (!locationFile.exists()) {
+          System.err.println(".. but it did not exist either: "+locationFile);
+      } else {
+	        try {
+	            return locationFile.toURL();
+	        } catch (MalformedURLException e) {
+	            e.printStackTrace();
+	        }
+      }
+
+    return null;
   }
 
   
@@ -475,12 +513,20 @@ public void parseDefinition(XMLElement child) {
     parseLibrary(location,false,null,null,false);
   }
 
-  private final void parseLibrary(XMLElement lib,  String dir) {
+  private final void parseLibrary(XMLElement lib,  String dir) throws TipiException {
 
       String location = (String) lib.getAttribute("location");
        String lazy = (String) lib.getAttribute("lazy");
     boolean isLazy = "true".equals(lazy);
     String componentName = (String)lib.getAttribute("definition");
+    if (componentName==null && isLazy) {
+        throw new IllegalArgumentException("Lazy include, but no definition found. Location: "+location);
+    }
+    if (isLazy && getTipiDefinition(componentName)!=null) {
+    	// already present.
+    	System.err.println("Not reparsing lazy: "+componentName);
+    	return;
+	}
     parseLibrary(location,true,dir,componentName,isLazy);
   }
 
@@ -514,6 +560,7 @@ public void parseDefinition(XMLElement child) {
           System.err.println("Could not resolve: "+location);
           return;
         }
+        System.err.println("=============================\nPARSING LIBRARY: "+location+"\n=============================");
         XMLElement doc = new CaseSensitiveXMLElement();
         try {
           InputStreamReader isr = new InputStreamReader(in, "UTF-8");
@@ -559,6 +606,15 @@ public void parseDefinition(XMLElement child) {
       FileInputStream fis = new FileInputStream(ff);
       return fis;
     }
+    
+    // now try it without the dir:
+    
+    ff = new File(location);
+    if (ff.exists()) {
+        FileInputStream fis = new FileInputStream(ff);
+        return fis;
+	}
+    
     // finally, try the project directory:
     if (tipiDir == null) {
       String td = System.getProperty("tipi.project.dir");
@@ -888,18 +944,18 @@ public void parseDefinition(XMLElement child) {
   public XMLElement getComponentDefinition(String componentName) throws TipiException {
     XMLElement xe = getTipiDefinition(componentName);
     if(xe!=null) {
+    	System.err.println("No definition found.");
         return xe;
     }
     String location = (String)lazyMap.get(componentName);
     if (location==null) {
-        return null;
+    	System.err.println("No lazy location found: "+componentName);
+    	return null;
     }
+    System.err.println("Parsing lib location: "+location);
     parseLibrary(location, true,"dir", componentName, false);
     xe = getTipiDefinition(componentName);
-//    if (xe == null) {
-//      System.err.println("Trouble finding component definition. Components: " + tipiComponentMap.keySet());
-//      throw new TipiException("Component definition for: " + componentName + " not found!");
-//    }
+
     return xe;
   }
 
@@ -1045,36 +1101,9 @@ public void parseDefinition(XMLElement child) {
   }
 
   public Navajo doSimpleSend(Navajo n, String service, ConditionErrorHandler ch, long expirtationInterval, String hosturl, String username, String password,String keystore,String keypass, boolean breakOnError) throws TipiBreakException {
-
-      // TODO BEWARE:
-      boolean useThreadLimiter = false;
-
       Navajo reply = null;
-    if (!TipiThread.class.isInstance(Thread.currentThread())) {
-      // if this function is called from an 'ordinary' thread, like main or the event thread,
-      // let it through
-      useThreadLimiter = false;
-    }
     if (myThreadPool == null) {
       myThreadPool = new TipiThreadPool(this, getPoolSize());
-    }
-    if (useThreadLimiter) {
-      synchronized (this) {
-        debugLog("data","entering critical section 1 for service :"+service);
-        while (myThreadsToServer.size() >= maxToServer) {
-          try {
-            // wait with timeout to be on the save side.
-            wait(10000);
-          }
-          catch (InterruptedException ex1) {
-            System.err.println("Thread interrupted: " + Thread.currentThread().toString());
-          }
-          System.err.println("Thread resuming after waiting for serverconnection");
-        }
-        myThreadsToServer.add(Thread.currentThread());
-        debugLog("data","exiting critical section 1 for service :"+service);
-
-      }
     }
     try {
       String oldhost = null;
@@ -1104,14 +1133,9 @@ public void parseDefinition(XMLElement child) {
         }
 
       } else {
-//          System.err.println("SENDING......: "+service);
-//          Thread.dumpStack();
         reply = NavajoClientFactory.getClient().doSimpleSend(n, service, ch, expirtationInterval);
         debugLog("data","simpleSend client: "+NavajoClientFactory.getClient().getClientName()+" method: "+service);
       }
-//      if (hosturl!=null && oldhost!=null) {
-//        NavajoClientFactory.getClient().setServerUrl(oldhost);
-//      }
     }
     catch (Throwable ex) {
       if (eHandler != null && Exception.class.isInstance(ex)) {
@@ -1122,23 +1146,6 @@ public void parseDefinition(XMLElement child) {
         }
       }
       ex.printStackTrace();
-    }
-    finally {
-      if (useThreadLimiter) {
-        synchronized (this) {
-          myThreadsToServer.remove(Thread.currentThread());
-          debugLog("data","entering critical section 2 for service :"+service);
-
-//          System.err.println("Removed. Now: #  in queue: "+myThreadsToServer.size());
-          notify();
-          for (int i = 0; i < myThreadsToServer.size(); i++) {
-            Thread t = (Thread) myThreadsToServer.get(i);
-            t.interrupt();
-          }
-          debugLog("data","exiting critical section 2 for service :"+service);
-
-        }
-      }
     }
     if (reply == null) {
       reply = NavajoFactory.getInstance().createNavajo();
@@ -1259,49 +1266,6 @@ public void parseDefinition(XMLElement child) {
       }
     }
   }
-
-//  public void receive(Navajo reply, String service, String tipiDestinationPath,boolean breakOnError, TipiEvent event) throws TipiBreakException {
-//    if (eHandler != null) {
-//      if (eHandler.hasErrors(reply)) {
-//        boolean hasUserDefinedErrorHandler = false;
-//        try {
-//          ArrayList tipis = getTipiInstancesByService(service);
-//          if (tipis != null) {
-//            for (int i = 0; i < tipis.size(); i++) {
-//              TipiDataComponent current = (TipiDataComponent) tipis.get(i);
-//              if (current.hasPath(tipiDestinationPath,event)) {
-//                boolean hasHandler = false;
-//                hasHandler = current.loadErrors(reply);
-//                if (hasHandler) {
-//                  hasUserDefinedErrorHandler = true;
-//                }
-//                 }
-//            }
-//          }
-//        }
-//        catch (TipiException ex1) {
-//          ex1.printStackTrace();
-//        }
-//        if (!hasUserDefinedErrorHandler) {
-//          eHandler.showError();
-//        }
-//        if (breakOnError) {
-//             throw new TipiBreakException(-1);
-//           }
-//        return;
-//      }
-//    }
-//    try {
-//      if (studioMode) {
-//        storeTemplateNavajo(service, reply);
-//        fireNavajoLoaded(service, reply);
-//      }
-//      loadTipiMethod(reply, tipiDestinationPath, service);
-//    }
-//    catch (TipiException ex) {
-//      ex.printStackTrace();
-//    }
-//  }
 
 
   protected Object attemptGenericEvaluate(String expression) {
@@ -1561,12 +1525,17 @@ public void parseDefinition(XMLElement child) {
 
   public boolean isDefined(TipiComponent comp) {
     if (comp != null) {
-      if (tipiComponentMap.get(comp.getName()) != null) {
-        return true;
-      }
-      else {
-        return false;
-      }
+      try {
+		if (getTipiDefinition(comp.getName()) != null) {
+		    return true;
+		  }
+		  else {
+		    return false;
+		  }
+	} catch (TipiException e) {
+		e.printStackTrace();
+		return false;
+	}
     }
     else {
       return true;
