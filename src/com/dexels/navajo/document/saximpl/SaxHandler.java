@@ -380,7 +380,6 @@ public final class SaxHandler implements DocHandler {
             if ( !Message.MSG_TYPE_DEFINITION.equals(type) ) {
         		parentMessage.addMessage(m);
         	} else {
-                System.err.println("SETTING DEFINITION MESSAGE. Parent: "+parentMessage.getFullMessageName()+" hash: "+parentMessage.hashCode());
         		parentMessage.setDefinitionMessage(m);
                 
         	}
