@@ -638,7 +638,6 @@ public class BasePropertyImpl
 
   public final void setValue(float value) {
     String floatString = "" + value;
-    //System.err.println("FLOATSTRING: " + floatString);
     setValue(floatString);
   }
 
@@ -678,7 +677,6 @@ public class BasePropertyImpl
 	  try {
 		this.removeAllSelections();
 	} catch (NavajoException e) {
-		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
 	  for (int i = 0; i < l.length; i++) {
@@ -687,7 +685,6 @@ public class BasePropertyImpl
   }
 
   public final String getSubType(String key) {
-//    return PropertyTypeChecker.getInstance().getSubType(getType(), getSubType(), key);
     if (subtypeMap != null) {
       return (String) subtypeMap.get(key);
     }
@@ -766,9 +763,33 @@ public class BasePropertyImpl
     myName = name;
   }
 
-  public final String getType() {
-    return (this.type);
+
+
+  public Property getDefinitionProperty() {
+	if (getParentMessage()==null) {
+		return null;
+	}
+	Message arrayParent = getParentMessage().getArrayParentMessage();
+	if (arrayParent==null) {
+		return null;
+	}
+	return arrayParent.getPathProperty(getName());
+	
   }
+  
+  public final String getType() {
+	  if (this.type==null || "".equals(this.type)) {
+		Property def = getDefinitionProperty();
+		if (def!=null) {
+			return def.getType();
+		} else {
+			System.err.println("Warning: Property without type. Reverting to String type");
+			return STRING_PROPERTY;
+		}
+	} else {
+		return (this.type);
+	}
+}
 
   public final void setType(String t) {
     type = t;
@@ -909,7 +930,7 @@ public class BasePropertyImpl
       BasePropertyImpl cp;
     try {
     	if (getType()==null || "".equals(getType())) {
-			throw new IllegalStateException("Property without type!");
+			throw new IllegalStateException("Can not copy property without type: "+getFullPropertyName());
 		}
       if (SELECTION_PROPERTY.equals(getType())) {
 
