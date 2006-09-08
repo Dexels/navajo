@@ -546,11 +546,20 @@ public class NavajoClient implements ClientInterface {
     		out = new java.util.zip.GZIPOutputStream(os);
     		d.write(out, condensed, d.getHeader().getRPCName());
     	} finally  {
-    		if ( os != null ) {
-    			os.close();
-    		}
+//    		if ( os != null ) {
+//    			try {
+//					os.close();
+//				} catch (IOException e) {
+//					e.printStackTrace();
+//				}
+//    		}
     		if ( out != null ) {
-    			out.close();
+    			try {
+    				out.flush();
+    				out.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
     		}
     	}
     }
@@ -771,6 +780,7 @@ public class NavajoClient implements ClientInterface {
           }
         }
         catch (IOException uhe) {
+        	uhe.printStackTrace();
           System.err.println("Generic IOException: "+uhe.getMessage()+". Retrying without compression...");
           n = NavajoFactory.getInstance().createNavajo();
           in = retryTransaction(server, out, false, retryAttempts, retryInterval, n); // lees uit resource
