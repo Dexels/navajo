@@ -18,9 +18,12 @@ import javax.servlet.http.*;
 
 import com.dexels.navajo.client.serverasync.*;
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.base.BaseHeaderImpl;
 import com.dexels.navajo.document.saximpl.*;
 import com.dexels.navajo.document.types.*;
 import com.dexels.navajo.client.impl.*;
+
+//import com.dexels.navajo.client.impl.*;
 
 class MyX509TrustManager implements X509TrustManager {
   public java.security.cert.X509Certificate[] getAcceptedIssuers() {
@@ -38,11 +41,13 @@ public class NavajoClient implements ClientInterface {
 
   public static final int DIRECT_PROTOCOL = 0;
   public static final int HTTP_PROTOCOL = 1;
+//  private String host = null;
   private String username = null;
   private String password = null;
   protected boolean condensed = true;
 
   private String[] serverUrls;
+  
   
   // Threadsafe collections:
   private Map globalMessages = new HashMap();
@@ -51,14 +56,17 @@ public class NavajoClient implements ClientInterface {
   private Map asyncRunnerMap = Collections.synchronizedMap(new HashMap());
   private Map propertyMap = Collections.synchronizedMap(new HashMap());
   private List myActivityListeners = Collections.synchronizedList(new ArrayList());
-
+  
+  private final List broadcastListeners = Collections.synchronizedList(new ArrayList());
+  
+  private long timeStamp = 0;
   // Standard option: use HTTP protocol.
   private int protocol = HTTP_PROTOCOL;
   private boolean useLazyMessaging = true;
   private ErrorResponder myResponder;
   private boolean setSecure = false;
   private SSLSocketFactory sslFactory = null;
-  
+  private String keystore, passphrase;
   private long retryInterval = 1000; // default retry interval is 1000 milliseconds
   private int retryAttempts = 10; // default three retry attempts
   private int switchServerAfterRetries = 2;
@@ -427,7 +435,7 @@ public class NavajoClient implements ClientInterface {
    */
   public final void setSecure(InputStream keystore, String passphrase, boolean useSecurity) throws ClientException {
     setSecure = useSecurity;
-    
+    System.err.println("------------------------------------------------>>>>>> Calling latest VERSION OF setScure!?");
     if (sslFactory == null) {
 
       try {
@@ -448,10 +456,40 @@ public class NavajoClient implements ClientInterface {
         e.printStackTrace(System.err);
         // throw new ClientException(-1, -1, e.getMessage());
       }
+      this.passphrase = passphrase;
     }
   }
 
-
+  /**
+   * Internal function for creating a URLConnection based on this Client's security settings
+   * @param url URL
+   * @throws IOException
+   * @return URLConnection
+   */
+  public URLConnection createUrlConnection(URL url) throws IOException {
+//    URL url;
+//    if (setSecure) {
+//      url = new URL("https://" + name);
+//    }
+//    else {
+//      url = new URL("http://" + name);
+//    }
+    //System.err.println("in doTransaction: opening url: " + url.toString());
+    URLConnection con = null;
+    if (sslFactory == null) {
+      con = (HttpURLConnection) url.openConnection();
+    }
+    else {
+      HttpsURLConnection urlcon = (HttpsURLConnection) url.openConnection();
+      urlcon.setSSLSocketFactory(sslFactory);
+      con = urlcon;
+    }
+    con.setDoOutput(true);
+    con.setDoInput(true);
+    con.setUseCaches(false);
+    con.setRequestProperty("Content-type", "text/xml; charset=UTF-8");
+    return con;
+  }
 
   /**
    * Do a transation with the Navajo Server (name) using
@@ -767,6 +805,9 @@ public class NavajoClient implements ClientInterface {
         }
         checkForComparedServices(method, n);
         
+        // Process broadcasts
+        fireBroadcastEvents(n);
+        
         // ROUND ROBIN FOR NOW:
         switchServer(currentServerIndex,false);
         
@@ -785,7 +826,33 @@ public class NavajoClient implements ClientInterface {
 
 
 
-  /**
+  private void fireBroadcastEvents(Navajo n) {
+	  Header h = n.getHeader();
+	  
+	  
+	  if (h==null) {
+			// no headers, don't know why. So no broadcasting.
+		  return;
+	  }
+	  Set s = h.getPiggybackData();
+	  if (s==null) {
+		return;
+	}
+	  for (Iterator iter = s.iterator(); iter.hasNext();) {
+		Map element = (Map) iter.next();
+		if ("broadcast".equals(element.get("type"))) {
+			String message = (String)element.get("message");
+			for (int i = 0; i < broadcastListeners.size(); i++) {
+				      BroadcastListener current = (BroadcastListener) broadcastListeners.get(i);
+				      current.broadcast(message,element);
+			   }
+		}
+		
+	}
+	
+}
+
+/**
    * Add piggyback data to header.
    * @param header
    */
@@ -1362,6 +1429,26 @@ private final BufferedInputStream retryTransaction(String server, Navajo out, bo
   }
 
   /**
+   * Add broadcastlistener
+   * @param al ActivityListener
+   */
+  public final void addBroadcastListener(BroadcastListener al) {
+    broadcastListeners.add(al);
+  }
+
+  /**
+   * Remove broadcastlistener
+   * @param al ActivityListener
+   */
+  public final void removeBroadcastListener(BroadcastListener al) {
+	  broadcastListeners.remove(al);
+  }
+
+
+
+  
+  
+  /**
    * Performs an asynchronous serverside webservice call. These services will be polled by the Started ServerAsyncRunner
    * and pass the status on to the given ServerAsyncListener. This method can be used for large time consuming webservices
    * @param in Navajo
@@ -1511,7 +1598,7 @@ public String getCurrentHost() {
 
 public void switchServer(int startIndex, boolean forceChange) {
 	if (serverUrls==null || serverUrls.length==0) {
-		throw new IllegalStateException("Can not switch server: Not defined");
+		return;
 	}
 	if (serverUrls.length==1) {
 		// Nothing to switch

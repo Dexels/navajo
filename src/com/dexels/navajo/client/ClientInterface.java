@@ -142,4 +142,18 @@ public interface ClientInterface {
 public void destroy();
 
 public void setServers(String[] servers);
+
+
+/**
+ * Add broadcastlistener
+ * @param al ActivityListener
+ */
+public void addBroadcastListener(BroadcastListener al);
+
+/**
+ * Remove broadcastlistener
+ * @param al ActivityListener
+ */
+public void removeBroadcastListener(BroadcastListener al);
+
 }
