@@ -261,7 +261,6 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode {
     	for (Iterator iter = propertyList.iterator(); iter.hasNext();) {
 			Property element = (Property) iter.next();
 			if (!resList.contains(element)) {
-//				System.err.println("Warning: Data property found, but not in definition");
 				resList.add(element);
 			}
 		}
@@ -364,8 +363,6 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode {
     }
 
     public Message getMessage(String name) {
-
-        // System.err.println("in getMessage("+name+")");
         if (name.startsWith("../")) {
             return getParentMessage().getMessage(name.substring(3));
         }
@@ -378,8 +375,6 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode {
         }
 
         if (name.indexOf("@") >= 0) {
-            // System.err.println("Found reference to Array element message:
-            // "+name);
             StringTokenizer arEl = new StringTokenizer(name, "@");
             String realName = arEl.nextToken();
             Message array = getMessage(realName);
@@ -520,10 +515,6 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode {
     }
 
     public final Property getProperty(String s) {
-        // return (Property) propertyMap.get(s);
-        // System.err.println("Getting property: "+s+" my path:
-        // "+getFullMessageName());
-
         if (s.startsWith("/")) {
             return getRootDoc().getProperty(s.substring(1));
         }
@@ -546,13 +537,6 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode {
     }
 
     public Message getMessage(int i) {
-
-        if (i >= getChildMessageCount()) {
-            // System.err.println("Message index out of range");
-        }
-        // if (myDefinitionList!=null) {
-        // return buildMessageForRow(i);
-        // }
         if ( i >= getAllMessages().size() ) {
             return null;
         }
@@ -563,9 +547,7 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode {
     public Message getMessage(String name, int index) {
         Message m = getMessage(name);
         if (m == null) {
-            // System.err.println("No such message: " + name);
-            // Thread.dumpStack();
-            return null;
+             return null;
         }
         if (!m.getType().equals(Message.MSG_TYPE_ARRAY)) {
             System.err.println("Found a non array message, when querying for an array element");
@@ -686,17 +668,10 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode {
             // parent.... Bad idea\n\n\n");
             return;
         }
-        // System.err.println("Setting parent to "+m.getName());
-        // System.err.println("Full: "+m.getFullMessageName()+" type:
-        // "+m.getType());
         myParent = (BaseMessageImpl) m;
     }
 
-    // public final Message getParent() {
-    // return myParent;
-    // }
-
-    public Message getByPath(String path) {
+      public Message getByPath(String path) {
         /** @todo ARRAY SUPPORT */
         if (path.startsWith("../")) {
             Message m = getParentMessage().getMessage(path.substring(3));
@@ -710,9 +685,7 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode {
         if (slash < 0) {
             return getMessage(path);
         } else {
-            // System.err.println("Index: " + slash + " of: " + path);
             String messagename = path.substring(0, slash);
-            // System.err.println("Sumbessage: " + messagename);
             Message m = getMessage(messagename);
             if (m != null) {
                 return m.getMessage(path.substring(slash + 1));
@@ -723,12 +696,9 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode {
     }
 
     public final Property getPropertyByPath(String pth) {
-        /** @todo ARRAY SUPPORT */
-        // System.err.println("PARSING PATH: "+pth);
         String path = null;
         if (pth.startsWith("/")) {
-            // System.err.println("PATH STARTED WITH SLASH. STRIPPING /");
-            path = pth.substring(1);
+             path = pth.substring(1);
         } else {
             path = pth;
         }
@@ -741,8 +711,6 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode {
 
         int slash = path.indexOf("/");
         if (slash < 0) {
-            // System.err.println("No slashes left. Getting property: "+path);
-
         	if (propertyList.size()!=propertyMap.size()) {
 				System.err.println("Warning: Propertymap sizE: "+propertyMap.size()+" listsize: "+propertyList.size());
 			}
@@ -753,9 +721,6 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode {
                 Message arrayP = getArrayParentMessage();
                 if (arrayP!=null) {
                     Message def = arrayP.getDefinitionMessage();
-//                    if (def!=null){
-//                        System.err.println("FOUND DEFINITIONMESSAGE: "+def.getFullMessageName());
-//                    }
                     if (def!=null && def.getProperty(path) != null) {
                     	Property res = def.getProperty(path).copy(getRootDoc());
                     	if (def.getType()==null || "".equals(def.getType())) {
@@ -764,7 +729,6 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode {
                     	res.setType(res.getType());
                     	
                     	addProperty(res);
-//                    	System.err.println("Duplicated property: "+res.getName());
                     	return res;
                     }
                 }
@@ -774,15 +738,12 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode {
         } else {
             String msgname = path.substring(0, slash);
             String propname = path.substring(slash, path.length());
-            // System.err.println("Getting message: "+msgname);
             BaseMessageImpl ms = (BaseMessageImpl) getMessage(msgname);
             if (ms != null) {
                 return ms.getPropertyByPath(propname);
             } else {
                 // Thread.dumpStack();
             }
-
-            // System.err.println("SubProperty: "+propname);
             return null;
         }
     }
@@ -927,8 +888,6 @@ public final Message getParentMessage() {
     }
 
     public boolean isEqual(Message o, String skipProperties) {
-
-        System.err.println("in Message.isEqual(), my name is " + getName() + ", other is " + getName() + ", skipProperties = " + skipProperties);
         Message other = (Message) o;
         if (!other.getName().equals(this.getName())) {
             return false;
@@ -936,7 +895,6 @@ public final Message getParentMessage() {
         // Check sub message structure.
         ArrayList allOther = other.getAllMessages();
         ArrayList allMe = this.getAllMessages();
-        System.err.println("my msg size is " + allMe.size() + ", other msg size is " + allOther.size());
         if (allOther.size() != allMe.size()) {
             return false;
         }
@@ -978,15 +936,6 @@ public final Message getParentMessage() {
             }
             
             if (!match) {
-//            	System.err.println("Is NOT equal property");
-//            	System.err.println("other: " + otherProp.getName() + ", " + otherProp.getType() + ", >" + otherProp.getValue() + "<");
-//                if ( this.getProperty(otherProp.getName()) != null ) {
-//                	Property p = this.getProperty(otherProp.getName());
-//                	System.err.println("my: " + p.getName() + ", " + p.getType() + ", >" + p.getValue() + "<");
-//                    
-//                } else {
-//                	System.err.println("I do not have this property");
-//                }
             	return false;
             }
         }
@@ -997,28 +946,6 @@ public final Message getParentMessage() {
         return null;
     }
 
-//    public Message addMessage(int index) {
-//        if (getType().equals(Message.MSG_TYPE_ARRAY)) {
-//            throw new IllegalStateException("Can only add empty messages to arraymessages.");
-//        }
-//        if (definitionMessage == null) {
-//            throw new IllegalStateException("Can only add empty messages when definitions present.");
-//        }
-//        Message newChild = createEmptyMessage();
-//        try {
-//            addMessage(newChild, index);
-//        } catch (NavajoException ex) {
-//            ex.printStackTrace();
-//        }
-//        return newChild;
-//    }
-
-    /**
-     * Add empty message at the end
-     */
-//    public Message addMessage() {
-//        return addMessage(getArraySize());
-//    }
 
     public Message getDefinitionMessage() {
         return definitionMessage;
@@ -1026,22 +953,16 @@ public final Message getParentMessage() {
 
     public void setDefinitionMessage(Message m) {
     	this.definitionMessage = (BaseMessageImpl) m;
-//  	Definition message stuff.
     	if ( m == null ) {
     		return;
     	}
-    	
-//  	System.err.println("Ok, searching");
     	ArrayList myDefinitionList = m.getAllProperties();
-  	System.err.println("# of properties found in definition: "+myDefinitionList.size());
     	for (int j = 0; j < myDefinitionList.size(); j++) {
     		Property pq = (Property)myDefinitionList.get(j);
     		String pname = pq.getName();
     		if (getProperty(pname)==null) {
-    			//System.err.println("\n\nCreating prop: "+pname+" ::: "+getIndex());
     			Property pi = (Property)pq.copy(getRootDoc());
     			addProperty(pi);
-    			//System.err.println("pi::::::::::: "+pi.toXml(null).toString());
     		}
     	}
     }
