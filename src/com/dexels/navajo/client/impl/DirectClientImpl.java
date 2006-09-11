@@ -518,4 +518,14 @@ public void destroy() {
 public void setServers(String[] servers) {
 	// NOT INTERESTED
 }
+
+public void addBroadcastListener(BroadcastListener al) {
+	// TODO Auto-generated method stub
+	
+}
+
+public void removeBroadcastListener(BroadcastListener al) {
+	// TODO Auto-generated method stub
+	
+}
 }

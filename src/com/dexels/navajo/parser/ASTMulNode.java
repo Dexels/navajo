@@ -33,7 +33,8 @@ public final class ASTMulNode extends SimpleNode {
           else if (a instanceof Percentage || b instanceof Percentage)
               return new Money(Utils.getDoubleValue(a) * Utils.getDoubleValue(b));
         else
-            throw new TMLExpressionException("Unknown type");
+//            throw new TMLExpressionException("Unknown type");
+        	return null;
     }
 
 }

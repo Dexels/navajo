@@ -155,6 +155,9 @@ public final class DefaultExpressionEvaluator
     List refreshQueue = null;
     for (int i = 0; i < queue.size(); i++) {
       Property current = (Property) queue.get(i);
+      if (!(current instanceof com.dexels.navajo.document.base.BasePropertyImpl)) {
+		System.err.println("WTF??! "+current.getClass());
+	}
       o = ( (com.dexels.navajo.document.base.BasePropertyImpl) current).
           peekEvaluatedValue();
       try {

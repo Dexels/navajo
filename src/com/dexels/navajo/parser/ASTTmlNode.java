@@ -127,7 +127,11 @@ public final class ASTTmlNode extends SimpleNode {
          for (int j = 0; j < match.size(); j++) {
             prop = (Property) match.get(j);
               if (!exists && (prop == null))
-                throw new TMLExpressionException("TML property does not exist: " + val);
+            	  if (parentMsg!=null) {
+                      throw new TMLExpressionException("TML property does not exist: " + val+" parent message: "+parentMsg.getFullMessageName());
+				} else {
+	                throw new TMLExpressionException("TML property does not exist: " + val);
+				}
             else if (exists) { // Check for existence and datatype validity.
                 boolean b = false;
 

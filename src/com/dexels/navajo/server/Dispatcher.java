@@ -32,6 +32,7 @@ import java.net.*;
 
 //import org.dexels.grus.DbConnectionBroker;
 
+import com.dexels.navajo.broadcast.BroadcastMessage;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.scheduler.WebserviceListener;
 import com.dexels.navajo.util.AuditLog;
@@ -94,6 +95,9 @@ public final class Dispatcher {
   
   private static Object semaphore = new Object();
 
+  
+  private static final Set broadcastMessage = Collections.synchronizedSet(new HashSet());
+  
   /**
    * Constructor for URL based configuration.
    *
@@ -1045,6 +1049,8 @@ public final class Dispatcher {
     			// Give asynchronous statistics runner a new access object to persist.
     			getNavajoConfig().getStatisticsRunner().addAccess(access, myException, null);
     		}
+    		
+    		appendServerBroadCast(access, inMessage,h);
     	}
     	else if (getNavajoConfig().monitorOn) { // Also monitor requests without access objects if monitor is on.
     		Access dummy = new Access( -1, -1, -1, rpcUser, rpcName, null,
@@ -1074,7 +1080,42 @@ public final class Dispatcher {
     }
   }
 
-  /**
+  private void appendServerBroadCast(Access a, Navajo in, Header h) {
+	  Set toBeRemoved = null;
+	  for (Iterator iter = broadcastMessage.iterator(); iter.hasNext();) {
+		  
+		  Object element = (Object) iter.next();
+		if (element instanceof BroadcastMessage) {
+			BroadcastMessage bm = (BroadcastMessage)element;
+			if (bm.isExpired()) {
+				if (toBeRemoved==null) {
+					toBeRemoved = new HashSet();
+				}
+				toBeRemoved.add(element);
+			}
+			if (!bm.validRecipient(a)) {
+				continue;
+			}
+			if (bm.hasBeenSent(a)) {
+				continue;
+			}
+			h.addPiggyBackData(bm.createMap());
+			bm.addSentToClientId(a);
+		} else {
+			if (element==null) {
+				System.err.println("Strange object found: NULL!");
+			} else {
+				System.err.println("Strange object found: "+element.getClass());
+			}
+		}
+	  }
+	  if (toBeRemoved!=null) {
+		broadcastMessage.removeAll(toBeRemoved);
+    	}
+
+}
+
+/**
    * Determine if WS is reserved Navajo webservice.
    *
    * @param name
@@ -1167,4 +1208,10 @@ public final class Dispatcher {
     }
 
   }
+
+public void setBroadcast(String message, int timeToLive, String recipientExpression) {
+	BroadcastMessage bm = new BroadcastMessage(message,timeToLive,recipientExpression);
+	broadcastMessage.add(bm);
+	
+}
 }
