@@ -574,14 +574,14 @@ public final class NavajoConfig {
        	if (classloader instanceof NavajoClassLoader) {
      
         	if (classloader != null) {
-        		currentJar = ((NavajoClassLoader)classloader).getJarResources();
+        		currentJar = Dispatcher.getInstance().getJarResources();
         	}
         }
 
         classloader = new NavajoClassLoader(adapterPath, compiledScriptPath);
         betaClassloader = new NavajoClassLoader(adapterPath, compiledScriptPath, true);
         if (currentJar!=null) {
-            ((NavajoClassLoader)classloader).setJarResources(currentJar);       
+        	Dispatcher.getInstance().setJarResources(currentJar);       
 		}
     }
 

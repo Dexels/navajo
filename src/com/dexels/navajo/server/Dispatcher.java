@@ -30,6 +30,8 @@ import java.io.*;
 import java.util.*;
 import java.net.*;
 
+import org.dexels.utils.JarResources;
+
 //import org.dexels.grus.DbConnectionBroker;
 
 import com.dexels.navajo.broadcast.BroadcastMessage;
@@ -81,6 +83,7 @@ public final class Dispatcher {
 
   public  long requestCount = 0;
   private final NavajoConfig navajoConfig;
+  private HashSet myJarResources = null;
   
   private  NavajoLogger logger = null;
 
@@ -157,6 +160,14 @@ public final class Dispatcher {
 		  }
 	  }
 	  return instance;
+  }
+  
+  public final void setJarResources(HashSet jr) {
+	  myJarResources = jr;
+  }
+  
+  public final HashSet getJarResources() {
+	  return myJarResources;
   }
   
   /**

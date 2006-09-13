@@ -29,6 +29,9 @@ package com.dexels.navajo.loader;
  */
 
 import org.dexels.utils.*;
+
+import com.dexels.navajo.server.Dispatcher;
+
 import java.io.*;
 import java.util.*;
 
@@ -64,7 +67,7 @@ public class NavajoClassLoader extends MultiClassLoader {
     private String compiledScriptPath = "";
     private static Object mutex1 = new Object();
     private static Object mutex2 = new Object();
-    private HashSet jarResources = null;
+    //private HashSet jarResources = null;
 
     private boolean noCaching = false;
     
@@ -80,6 +83,7 @@ public class NavajoClassLoader extends MultiClassLoader {
         this.beta = beta;
         this.compiledScriptPath = compiledScriptPath;
         instances++;
+        initializeJarResources();
     }
 
     public NavajoClassLoader(String adapterPath, String compiledScriptPath) {
@@ -87,6 +91,7 @@ public class NavajoClassLoader extends MultiClassLoader {
         this.beta = false;
         this.compiledScriptPath = compiledScriptPath;
         instances++;
+        initializeJarResources();
     }
 
     public void setNoCaching() {
@@ -101,17 +106,17 @@ public class NavajoClassLoader extends MultiClassLoader {
     }
 
     public final void clearJarResources() {
-        jarResources = null;
-       
+    	Dispatcher.getInstance().setJarResources(null);
     }
     
     /**
      * Use clearCache() to clear the Class cache, allowing a re-load of new jar files.
      */
     public final void clearCache() {
-        clearJarResources();
-      super.clearCache();
-      System.err.println("MESSAGE: clearCache() called in NavajoClassLoader");
+    	clearJarResources();
+    	super.clearCache();
+    	initializeJarResources();
+    	System.err.println("MESSAGE: clearCache() called in NavajoClassLoader");
     }
 
     /**
@@ -207,33 +212,43 @@ public class NavajoClassLoader extends MultiClassLoader {
         return files;
     }
 
-    public final void initializeJarResources() {
-      if (jarResources == null) {
+    private final void initializeJarResources() {
 
-    	System.err.println("MESSAGE: INITIALIZING ADAPTER JAR RESOURCES............");
-        File[] files = getJarFiles(adapterPath, beta);
-        if (files == null) {
-          jarResources = null;
-          return;
-        }
+    	synchronized (mutex2) {
 
-        synchronized (mutex2) {
-          if (jarResources == null) {
-            jarResources = new HashSet();
-            for (int i = 0; i < files.length; i++) {
-              JarResources d = new JarResources(files[i]);
-              jarResources.add(d);
-            }
-          }
-        }
-      }
+    		HashSet jarResources = Dispatcher.getInstance().getJarResources();
+
+    		if (jarResources == null) {
+
+    			System.err.println("MESSAGE: INITIALIZING ADAPTER JAR RESOURCES............");
+    			File[] files = getJarFiles(adapterPath, beta);
+    			if (files == null) {
+    				jarResources = null;
+    				return;
+    			}
+
+
+    			if (jarResources == null) {
+    				jarResources = new HashSet();
+    				for (int i = 0; i < files.length; i++) {
+    					JarResources d = new JarResources(files[i]);
+    					jarResources.add(d);
+    				}
+    			}
+    			Dispatcher.getInstance().setJarResources(jarResources);
+    		}
+
+    	}
 
     }
 
     public InputStream getResourceAsStream(String name) {
 
       //System.err.println("in NavajoClassLoader (v2). getResourceAsStream(" + name + ")");
-      initializeJarResources();
+      //initializeJarResources();
+    	
+      HashSet jarResources = Dispatcher.getInstance().getJarResources();
+    	
       if (jarResources == null) {
         return getSystemClassLoader().getResourceAsStream(name);
       }
@@ -273,8 +288,10 @@ public class NavajoClassLoader extends MultiClassLoader {
         className = formatClassName(className);
         byte[] resource = null;
 
-        initializeJarResources();
+        //initializeJarResources();
 
+        HashSet jarResources = Dispatcher.getInstance().getJarResources();
+        
         if (jarResources == null) {
           return null;
         }
@@ -333,13 +350,5 @@ public class NavajoClassLoader extends MultiClassLoader {
         //System.out.println("In NavajoClassLoader finalize(): Killing class loader");
     	instances--;
     }
-
-	public HashSet getJarResources() {
-		return jarResources;
-	}
-
-	public void setJarResources(HashSet jarResources) {
-		this.jarResources = jarResources;
-	}
 
 }
