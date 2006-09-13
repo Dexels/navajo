@@ -59,6 +59,8 @@ public final class NavajoConfig {
     protected NavajoClassLoader betaClassloader;
     protected com.dexels.navajo.server.Repository repository;
     protected Navajo configuration;
+    private HashSet myJarResources = null;
+    
     
     /**
      * Several supporting threads.
@@ -90,21 +92,28 @@ public final class NavajoConfig {
     public String [] monitorWebservicesList = null;
     public int monitorExceedTotaltime = -1;
 
-    public NavajoConfig(InputStream in, InputStreamReader inputStreamReader, NavajoClassSupplier ncs)  throws SystemException {
+    private static NavajoConfig instance = null;
+    
+    public NavajoConfig(InputStreamReader inputStreamReader, NavajoClassSupplier ncs)  throws SystemException {
 
       this.inputStreamReader = inputStreamReader;
       classPath = System.getProperty("java.class.path");
       classloader = ncs;
-      loadConfig(in);
+      instance = this;
+      //loadConfig(in);
      }
     
-    public NavajoConfig(InputStream in, InputStreamReader inputStreamReader)  throws SystemException {
-
-        this.inputStreamReader = inputStreamReader;
-        classPath = System.getProperty("java.class.path");
-        loadConfig(in);
-
-      }
+     public static NavajoConfig getInstance() {
+    	 return instance;
+     }
+     
+//    public NavajoConfig(InputStream in, InputStreamReader inputStreamReader)  throws SystemException {
+//
+//    	this.inputStreamReader = inputStreamReader;
+//    	classPath = System.getProperty("java.class.path");
+//    	loadConfig(in);
+//
+//    }
  
     public final boolean isLogged() {
       return useLog4j;
@@ -568,20 +577,26 @@ public final class NavajoConfig {
     }
 
         
+    public final void setJarResources(HashSet jr) {
+  	  myJarResources = jr;
+    }
+    
+    public final HashSet getJarResources() {
+  	  return myJarResources;
+    }
     
     public final synchronized void doClearScriptCache() {
        	HashSet currentJar = null;
        	if (classloader instanceof NavajoClassLoader) {
-     
         	if (classloader != null) {
-        		currentJar = Dispatcher.getInstance().getJarResources();
+        		currentJar = getJarResources();
         	}
         }
 
         classloader = new NavajoClassLoader(adapterPath, compiledScriptPath);
         betaClassloader = new NavajoClassLoader(adapterPath, compiledScriptPath, true);
         if (currentJar!=null) {
-        	Dispatcher.getInstance().setJarResources(currentJar);       
+        	setJarResources(currentJar);       
 		}
     }
 

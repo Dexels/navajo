@@ -31,6 +31,7 @@ package com.dexels.navajo.loader;
 import org.dexels.utils.*;
 
 import com.dexels.navajo.server.Dispatcher;
+import com.dexels.navajo.server.NavajoConfig;
 
 import java.io.*;
 import java.util.*;
@@ -105,8 +106,8 @@ public class NavajoClassLoader extends MultiClassLoader {
       }
     }
 
-    public final void clearJarResources() {
-    	Dispatcher.getInstance().setJarResources(null);
+    private final void clearJarResources() {
+    	NavajoConfig.getInstance().setJarResources(null);
     }
     
     /**
@@ -216,7 +217,12 @@ public class NavajoClassLoader extends MultiClassLoader {
 
     	synchronized (mutex2) {
 
-    		HashSet jarResources = Dispatcher.getInstance().getJarResources();
+    		// Do nothing if there is no dispatcher available.
+    		if ( NavajoConfig.getInstance() == null ) {
+    			return;
+    		}
+    		
+    		HashSet jarResources = NavajoConfig.getInstance().getJarResources();
 
     		if (jarResources == null) {
 
@@ -235,7 +241,7 @@ public class NavajoClassLoader extends MultiClassLoader {
     					jarResources.add(d);
     				}
     			}
-    			Dispatcher.getInstance().setJarResources(jarResources);
+    			NavajoConfig.getInstance().setJarResources(jarResources);
     		}
 
     	}
@@ -247,7 +253,7 @@ public class NavajoClassLoader extends MultiClassLoader {
       //System.err.println("in NavajoClassLoader (v2). getResourceAsStream(" + name + ")");
       //initializeJarResources();
     	
-      HashSet jarResources = Dispatcher.getInstance().getJarResources();
+      HashSet jarResources = NavajoConfig.getInstance().getJarResources();
     	
       if (jarResources == null) {
         return getSystemClassLoader().getResourceAsStream(name);
@@ -290,7 +296,7 @@ public class NavajoClassLoader extends MultiClassLoader {
 
         //initializeJarResources();
 
-        HashSet jarResources = Dispatcher.getInstance().getJarResources();
+        HashSet jarResources = NavajoConfig.getInstance().getJarResources();
         
         if (jarResources == null) {
           return null;

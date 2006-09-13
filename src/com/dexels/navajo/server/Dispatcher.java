@@ -83,8 +83,7 @@ public final class Dispatcher {
 
   public  long requestCount = 0;
   private final NavajoConfig navajoConfig;
-  private HashSet myJarResources = null;
-  
+ 
   private  NavajoLogger logger = null;
 
   private  boolean debugOn = false;
@@ -118,7 +117,8 @@ public final class Dispatcher {
 	  try {
 		  // Read configuration file.
 		  is = configurationUrl.openStream();
-		  navajoConfig = new NavajoConfig(is, fileInputStreamReader, cl); 
+		  navajoConfig = new NavajoConfig(fileInputStreamReader, cl); 
+		  navajoConfig.loadConfig(is);
 		  debugOn = navajoConfig.isLogged();
 		  logger = NavajoConfig.getNavajoLogger(Dispatcher.class);
 	  }
@@ -161,15 +161,7 @@ public final class Dispatcher {
 	  }
 	  return instance;
   }
-  
-  public final void setJarResources(HashSet jr) {
-	  myJarResources = jr;
-  }
-  
-  public final HashSet getJarResources() {
-	  return myJarResources;
-  }
-  
+   
   /**
    * Set the location of the certificate keystore.
    *
