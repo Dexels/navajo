@@ -81,16 +81,18 @@ package navajo;
  * 5.4.9 Fixed match request functionality for Locks and improved lock error messages.
  * 
  * 5.5.0 Added clienttokens.
+ * 
+ * 5.5.1 Better memory usage for adapter jars
  */
 
 public class Version extends dexels.Version {
 
 	public static final int MAJOR = 5;
 	public static final int MINOR = 5;
-	public static final int PATCHLEVEL = 0;
+	public static final int PATCHLEVEL = 1;
 	public static final String VENDOR = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Kernel";
-	public static final String RELEASEDATE = "2006-08-24";
+	public static final String RELEASEDATE = "2006-09-13";
 	
 //	 Included packages.
 	String [] includes = {"navajodocument.Version"};
