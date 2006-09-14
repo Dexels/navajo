@@ -1,6 +1,7 @@
 package com.dexels.navajo.mapping;
 
 import com.dexels.navajo.server.*;
+import com.dexels.navajo.util.AuditLog;
 import com.dexels.navajo.document.*;
 
 /**
@@ -320,23 +321,27 @@ public abstract class AsyncMappable implements Mappable {
   }
 
   private final void log() {
-	// TODO IMPLEMENT LOG FOR ASYNC MAPPABLE.
+	  // TODO IMPLEMENT LOG FOR ASYNC MAPPABLE.
 	  if ( Dispatcher.getInstance().getNavajoConfig().getStatisticsRunner() != null && !logged ) {
 		  Access a = AsyncStore.getInstance().getAccessObject(this.pointer);
-		  // determine total time.
-		  a.setFinished();
-		  UserException ue = null;
-		  if ( isKilled() ) {		 
-			  ue = new UserException(-1, "Killed by client");
-			  if ( caught != null ) {
-				  a.setException(caught);
-			  } else {
-				  a.setException(ue);
+		  if ( a != null ) {
+			  // determine total time.
+			  a.setFinished();
+			  UserException ue = null;
+			  if ( isKilled() ) {		 
+				  ue = new UserException(-1, "Killed by client");
+				  if ( caught != null ) {
+					  a.setException(caught);
+				  } else {
+					  a.setException(ue);
+				  }
+				  System.err.println("Creating exception: " + a.getException() );
 			  }
-			  System.err.println("Creating exception: " + a.getException() );
+			  logged = true;
+			  Dispatcher.getInstance().getNavajoConfig().getStatisticsRunner().addAccess(a, ue, this);
+		  } else {
+			  AuditLog.log(AuditLog.AUDIT_MESSAGE_ASYNC_RUNNER, "Warning: could not log async access due to missing access object!");
 		  }
-		  logged = true;
-		  Dispatcher.getInstance().getNavajoConfig().getStatisticsRunner().addAccess(a, ue, this);
 	  } 
   }
   
@@ -351,7 +356,7 @@ public abstract class AsyncMappable implements Mappable {
     // Log finalization.
     log();
     
-    if (this.killOnFinnish) {
+    if ( this.killOnFinnish || kill == true ) {
       kill = true;
       AsyncStore.getInstance().removeInstance(this.pointer);
     }
