@@ -277,7 +277,7 @@ public final class OracleStore implements StoreInterface {
 	}
 
 	private void addPerformanceStats(Map element) {
-		System.err.println("OracleStore: storing: "+element);
+		//System.err.println("OracleStore: storing: "+element);
 		String accessId = (String)element.get("accessId");
 		String clnt = (String)element.get("clientTime");
 		if (accessId==null || clnt==null) {
