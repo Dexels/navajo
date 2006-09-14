@@ -26,12 +26,22 @@
 package com.dexels.navajo.server;
 
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.mapping.CompiledScript;
+
+class MapStatistics {
+	public int levelId;
+	public String mapName;
+	public boolean isArrayElement;
+	public int elementCount;
+	public long totalTime;
+}
 
 public final class Access
     implements java.io.Serializable {
@@ -73,6 +83,26 @@ public final class Access
   private static Object mutex = new Object();
   private Set piggyBackData = null;
   private String clientToken = null;
+  
+  private HashMap mapStatistics = null;
+  
+  public void addStatistics(int levelId, String mapName, long totalTime, int elementCount, boolean isArrayElement) {
+	  
+	  MapStatistics ms = new MapStatistics();
+	  ms.levelId = levelId;
+	  ms.mapName = mapName;
+	  ms.elementCount = elementCount;
+	  ms.totalTime = totalTime;
+	  ms.isArrayElement = isArrayElement;
+	 
+	  if ( mapStatistics == null ) { // First map.
+		  mapStatistics = new HashMap();
+	  }
+	  
+	  Integer count = new Integer(mapStatistics.size());
+	  mapStatistics.put(count, ms);
+	 
+  }
   
   public Navajo getOutputDoc() {
     return outputDoc;
@@ -210,6 +240,16 @@ public final class Access
 		  h.setAttribute("serverTime",""+getTotaltime());
 		  h.setAttribute("accessId", this.accessID);
 		  h.setAttribute("requestParseTime",""+parseTime);
+	  }
+	  if ( mapStatistics != null ) {
+		  // Write stats.
+		  for (Iterator iter = mapStatistics.keySet().iterator(); iter.hasNext();) {
+			  Integer id = (Integer) iter.next();
+			  MapStatistics ms = (MapStatistics) mapStatistics.get(id);
+//			  System.err.println("id: " + id.intValue() + ", levelId: " + ms.levelId + ", mapName: " + ms.mapName + ", isarrayelt: " +
+//					  ms.isArrayElement + ", eltCount: " + ms.elementCount + ", totalTime: " + ms.totalTime);
+
+		  }
 	  }
   }
 

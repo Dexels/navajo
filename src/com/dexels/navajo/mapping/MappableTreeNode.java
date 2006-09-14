@@ -10,12 +10,18 @@ package com.dexels.navajo.mapping;
  */
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.lang.reflect.*;
 import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.UserException;
+
+class ArrayChildStatistics {
+	public int elementCount;
+	public long totalTime;
+}
 
 public class MappableTreeNode implements Mappable {
 
@@ -30,12 +36,30 @@ public class MappableTreeNode implements Mappable {
 
         // HashMap to cache method references.
         private HashMap methods;
+        private int id = 0;
+        private HashMap elementCount = null;
+        private Access myAccess = null;
+        private boolean arrayElement = false;
 
         public MappableTreeNode(MappableTreeNode parent, Object o) {
+        	this(null, parent, o, false);
+        }
+        
+        public MappableTreeNode(Access a, MappableTreeNode parent, Object o, boolean isArrayElement) {
             this.parent = parent;
             this.myObject = o;
             methods = new HashMap();
             starttime = System.currentTimeMillis();
+            myAccess = a;
+            arrayElement = isArrayElement;
+            if ( parent == null ) {	
+            	id = 0;
+            } else {
+            	id = parent.getId() + 1;
+            	if ( isArrayElement ) {
+            		parent.incrementElementCount(o.getClass().getName());
+            	}
+            }
         }
 
         public Mappable getMyMap() {
@@ -46,12 +70,81 @@ public class MappableTreeNode implements Mappable {
           }
         }
 
+        private boolean hasArrayParent() {
+        	if ( getParent() == null ) {
+        		return false;
+        	}
+        	if ( getParent().arrayElement ) {
+        		return true;
+        	} 
+        	return getParent().hasArrayParent();
+        }
+        
+        public ArrayChildStatistics getArrayChildStatistics(String mapName) {
+        	if ( elementCount == null ) {
+        		return null;
+        	}
+        	return (ArrayChildStatistics) elementCount.get(mapName);
+        }
+        
+        public void incrementElementCount(String mapName) {
+        	if ( elementCount == null ) {
+        		elementCount = new HashMap();
+        	}
+        	ArrayChildStatistics c = (ArrayChildStatistics) elementCount.get(mapName);
+        	if ( c == null ) {
+        		c = new ArrayChildStatistics();
+        		c.elementCount = 1;
+        	} else {
+        		c.elementCount++;
+        	}
+        	elementCount.put(mapName, c);
+        }
+        
+        public int getId() {
+        	return id;
+        }
+        
         public MappableTreeNode getParent() {
           return parent;
         }
 
+        /**
+         * end time is called when finished with map.
+         *
+         */
         public void setEndtime() {
-          endtime = System.currentTimeMillis();
+        	endtime = System.currentTimeMillis();
+        	if ( myAccess != null && !arrayElement && !hasArrayParent() ) {
+        		
+        		// Add to log.
+//        		System.err.print(myAccess.rpcName + ", map: " + myObject.getClass().getName() + ", id = " + getId() + ", totaltime: " + getTotaltime());
+//        		if ( getParent() != null ) {
+//        			System.err.println(", parent: " + getParent().myObject.getClass().getName() + "; id = " + getParent().getId() );
+//        		} else {
+//        			System.err.println("");
+//        		}
+        		myAccess.addStatistics(id, myObject.getClass().getName(), getTotaltime(), 0, false);
+        		// Sum array children.
+        		if ( elementCount != null ) {
+        			int childId = id + 1;
+        			for (Iterator iter = elementCount.keySet().iterator(); iter.hasNext();) {
+						String mapName = (String) iter.next();
+						ArrayChildStatistics acs = (ArrayChildStatistics) elementCount.get(mapName);
+						//System.err.println("array child time: " + mapName + ", count " + acs.elementCount + ", totaltime: " + acs.totalTime );
+						myAccess.addStatistics(childId, mapName, acs.totalTime, acs.elementCount, true);
+					}
+        		}
+        	} else { // I am array child element.
+        		if ( getParent() != null ) {
+        			if ( myObject != null ) {
+        				ArrayChildStatistics acs = getParent().getArrayChildStatistics(myObject.getClass().getName());
+        				if ( acs != null ) {
+        					acs.totalTime += getTotaltime();
+        				}
+        			}
+        		}
+        	}
         }
 
         public int getTotaltime() {

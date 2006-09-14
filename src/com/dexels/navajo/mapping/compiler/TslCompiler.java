@@ -733,7 +733,7 @@ public class TslCompiler {
 
       result.append(printIdent(ident + 4) + "treeNodeStack.push(currentMap);\n");
       result.append(printIdent(ident + 4) +
-                    "currentMap = new MappableTreeNode(currentMap, " + mappableArrayName + "[i" + (ident + 2) + "]);\n");
+                    "currentMap = new MappableTreeNode(access, currentMap, " + mappableArrayName + "[i" + (ident + 2) + "], true);\n");
 
       // If filter is specified, evaluate filter first:
       if (!filter.equals("")) {
@@ -808,7 +808,7 @@ result.append(printIdent(ident + 4) +
 
       result.append(printIdent(ident + 2) + "treeNodeStack.push(currentMap);\n");
       result.append(printIdent(ident + 2) +
-                    "currentMap = new MappableTreeNode(currentMap, ((" +
+                    "currentMap = new MappableTreeNode(access, currentMap, ((" +
                     className + ") currentMap.myObject).get" +
                     ( (ref.charAt(0) + "").toUpperCase() + ref.substring(1)) +
                     "());\n");
@@ -1020,8 +1020,8 @@ result.append(printIdent(ident + 4) +
                     (ident + 2) + "++) {\n if (!kill) {\n");
       result.append(printIdent(ident + 4) + "treeNodeStack.push(currentMap);\n");
       result.append(printIdent(ident + 4) +
-                    "currentMap = new MappableTreeNode(currentMap, " +
-                    mappableArrayName + "[i" + (ident + 2) + "]);\n");
+                    "currentMap = new MappableTreeNode(access, currentMap, " +
+                    mappableArrayName + "[i" + (ident + 2) + "], true);\n");
       result.append(printIdent(ident + 4) + "String optionName = \"\";\n");
       result.append(printIdent(ident + 4) + "String optionValue = \"\";\n");
       result.append(printIdent(ident + 4) + "boolean optionSelected = false;\n");
@@ -1301,8 +1301,8 @@ result.append(printIdent(ident + 4) +
 
 
         result.append(printIdent(ident) + "treeNodeStack.push(currentMap);\n");
-        result.append(printIdent(ident) + "currentMap = new MappableTreeNode(currentMap, (Mappable) classLoader.getClass(\"" +
-                      type + "\").newInstance());\n");
+        result.append(printIdent(ident) + "currentMap = new MappableTreeNode(access, currentMap, (Mappable) classLoader.getClass(\"" +
+                      type + "\").newInstance(), false);\n");
 
         result.append(printIdent(ident) +
             "((Mappable) currentMap.myObject).load(parms, inMessage, access, config);\n");
@@ -1355,7 +1355,7 @@ result.append(printIdent(ident + 4) +
         
         // Create instance of object.
         result.append(printIdent(ident) + 
-        		"currentMap = new MappableTreeNode(currentMap, (Mappable) classLoader.getClass(\"" +  type + "\").newInstance());\n");     
+        		"currentMap = new MappableTreeNode(access, currentMap, (Mappable) classLoader.getClass(\"" +  type + "\").newInstance(), false);\n");     
         
         // Create local variable to address new object.
         String subObjectsName = "subObject" + subObjectCounter;        
@@ -1590,8 +1590,8 @@ result.append(printIdent(ident + 4) +
 
       result.append(printIdent(ident) + "treeNodeStack.push(currentMap);\n");
       result.append(printIdent(ident) +
-                    "currentMap = new MappableTreeNode(currentMap, " + aoName +
-                    ");\n");
+                    "currentMap = new MappableTreeNode(access, currentMap, " + aoName +
+                    ", false);\n");
 
       result.append(printIdent(ident) + "currentMap.name = \"" + name + "\";\n");
       result.append(printIdent(ident) + "currentMap.ref = " + callbackRefName +
@@ -1701,8 +1701,8 @@ result.append(printIdent(ident + 4) +
     else {
 
       result.append(printIdent(ident) + "treeNodeStack.push(currentMap);\n");
-      result.append(printIdent(ident) + "currentMap = new MappableTreeNode(currentMap, (Mappable) classLoader.getClass(\"" +
-                    object + "\").newInstance());\n");
+      result.append(printIdent(ident) + "currentMap = new MappableTreeNode(access, currentMap, (Mappable) classLoader.getClass(\"" +
+                    object + "\").newInstance(), false);\n");
       String objectName = "mappableObject" + (objectCounter++);
       result.append(printIdent(ident) + objectName + " = (" +
                     className + ") currentMap.myObject;\n");
