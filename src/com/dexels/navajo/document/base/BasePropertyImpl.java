@@ -783,7 +783,7 @@ public class BasePropertyImpl
 		if (def!=null) {
 			return def.getType();
 		} else {
-			System.err.println("Warning: Property without type. Reverting to String type");
+			//System.err.println("Warning: Property without type. Reverting to String type");
 			return STRING_PROPERTY;
 		}
 	} else {
