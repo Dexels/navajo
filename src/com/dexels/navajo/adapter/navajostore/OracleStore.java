@@ -3,6 +3,8 @@ package com.dexels.navajo.adapter.navajostore;
 import com.dexels.navajo.mapping.AsyncMappable;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.Dispatcher;
+
+import java.net.InetAddress;
 import java.sql.*;
 import java.io.StringWriter;
 import java.io.PrintWriter;
@@ -50,8 +52,8 @@ public final class OracleStore implements StoreInterface {
 	private static String existsAccessSQL = "select count(*) from navajoaccess where access_id = ?";
 	
 	private static String insertAccessSQL = "insert into navajoaccess " +
-	"(access_id, webservice, username, threadcount, totaltime, parsetime, authorisationtime, requestsize, requestencoding, compressedrecv, compressedsnd, ip_address, hostname, created) " +
-	"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	"(access_id, webservice, username, threadcount, totaltime, parsetime, authorisationtime, requestsize, requestencoding, compressedrecv, compressedsnd, ip_address, hostname, created, clientid) " +
+	"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	
 	private static String updateEmbryoAccessSQL = "update navajoaccess " +
 	"set webservice = ?, set username = ?, set threadcount = ?, set totaltime = ?,set parsetime = ?" + 
@@ -168,6 +170,7 @@ public final class OracleStore implements StoreInterface {
 			if (con != null) {
 				PreparedStatement ps = null;
 				try {
+					String hostName = InetAddress.getLocalHost().getHostName();
 					ps = con.prepareStatement(insertAccessSQL);
 					ps.setString(1, a.accessID);
 					ps.setString(2, a.rpcName);
@@ -181,8 +184,9 @@ public final class OracleStore implements StoreInterface {
 					ps.setBoolean(10, a.compressedReceive);
 					ps.setBoolean(11, a.compressedSend);
 					ps.setString(12, a.ipAddress);
-					ps.setString(13, a.hostName);
+					ps.setString(13, hostName);
 					ps.setTimestamp(14, new java.sql.Timestamp(a.created.getTime()));
+					ps.setString(15, a.getClientToken());
 					ps.executeUpdate();
 					ps.close();
 					// Only log details if exception occured or if full accesslog monitoring is enabled.
@@ -191,7 +195,7 @@ public final class OracleStore implements StoreInterface {
 					}
 					
 				}
-				catch (SQLException ex) {
+				catch (Exception ex) {
 					ex.printStackTrace(System.err);
 				} finally {
 					if (ps != null) {
