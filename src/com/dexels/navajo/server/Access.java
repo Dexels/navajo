@@ -34,14 +34,7 @@ import java.util.Set;
 
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.mapping.CompiledScript;
-
-class MapStatistics {
-	public int levelId;
-	public String mapName;
-	public boolean isArrayElement;
-	public int elementCount;
-	public long totalTime;
-}
+import com.dexels.navajo.server.statistics.MapStatistics;
 
 public final class Access
     implements java.io.Serializable {
@@ -246,13 +239,17 @@ public final class Access
 		  for (Iterator iter = mapStatistics.keySet().iterator(); iter.hasNext();) {
 			  Integer id = (Integer) iter.next();
 			  MapStatistics ms = (MapStatistics) mapStatistics.get(id);
-//			  System.err.println("id: " + id.intValue() + ", levelId: " + ms.levelId + ", mapName: " + ms.mapName + ", isarrayelt: " +
-//					  ms.isArrayElement + ", eltCount: " + ms.elementCount + ", totalTime: " + ms.totalTime);
+			  System.err.println("id: " + id.intValue() + ", levelId: " + ms.levelId + ", mapName: " + ms.mapName + ", isarrayelt: " +
+					  ms.isArrayElement + ", eltCount: " + ms.elementCount + ", totalTime: " + ms.totalTime);
 
 		  }
 	  }
   }
 
+  public HashMap getMapStatistics() {
+	  return mapStatistics;
+  }
+  
 public void addPiggybackData(Map element) {
 	if (piggyBackData==null) {
 		piggyBackData = new HashSet();
