@@ -125,7 +125,7 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode {
         }
         // System.err.println("SETTING PARENT OF MESSAGE: "+m.getName()+" type:
         // "+m.getType()+" I am: "+getName()+" my type: "+getType());
-        m.setParent(this);
+       
         if (this.getType().equals(Message.MSG_TYPE_ARRAY)) {
             return addMessage(m, false);
         } else {
@@ -136,6 +136,9 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode {
     }
 
     public final Message addMessage(Message m, boolean overwrite) {
+    	
+    	m.setParent(this);
+    	 
         String name = m.getName();
 
         if (getMessage(name) != null && !overwrite && !this.getType().equals(Message.MSG_TYPE_ARRAY)) {
