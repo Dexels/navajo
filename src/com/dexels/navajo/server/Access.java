@@ -79,21 +79,24 @@ public final class Access
   
   private HashMap mapStatistics = null;
   
-  public void addStatistics(int levelId, String mapName, long totalTime, int elementCount, boolean isArrayElement) {
-	  
+  public MapStatistics createStatistics() {
 	  MapStatistics ms = new MapStatistics();
+	  if ( mapStatistics == null ) { // First map.
+		  mapStatistics = new HashMap();
+	  }
+	  Integer count = new Integer(mapStatistics.size());
+	  mapStatistics.put(count, ms);
+	  
+	  return ms;
+  }
+  
+  public void updateStatistics(MapStatistics ms, int levelId, String mapName, long totalTime, int elementCount, boolean isArrayElement) {
+	  
 	  ms.levelId = levelId;
 	  ms.mapName = mapName;
 	  ms.elementCount = elementCount;
 	  ms.totalTime = totalTime;
 	  ms.isArrayElement = isArrayElement;
-	 
-	  if ( mapStatistics == null ) { // First map.
-		  mapStatistics = new HashMap();
-	  }
-	  
-	  Integer count = new Integer(mapStatistics.size());
-	  mapStatistics.put(count, ms);
 	 
   }
   
@@ -233,16 +236,6 @@ public final class Access
 		  h.setAttribute("serverTime",""+getTotaltime());
 		  h.setAttribute("accessId", this.accessID);
 		  h.setAttribute("requestParseTime",""+parseTime);
-	  }
-	  if ( mapStatistics != null ) {
-		  // Write stats.
-		  for (Iterator iter = mapStatistics.keySet().iterator(); iter.hasNext();) {
-			  Integer id = (Integer) iter.next();
-			  MapStatistics ms = (MapStatistics) mapStatistics.get(id);
-			  System.err.println("id: " + id.intValue() + ", levelId: " + ms.levelId + ", mapName: " + ms.mapName + ", isarrayelt: " +
-					  ms.isArrayElement + ", eltCount: " + ms.elementCount + ", totalTime: " + ms.totalTime);
-
-		  }
 	  }
   }
 

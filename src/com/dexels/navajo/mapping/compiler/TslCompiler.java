@@ -811,7 +811,7 @@ result.append(printIdent(ident + 4) +
                     "currentMap = new MappableTreeNode(access, currentMap, ((" +
                     className + ") currentMap.myObject).get" +
                     ( (ref.charAt(0) + "").toUpperCase() + ref.substring(1)) +
-                    "());\n");
+                    "(), false);\n");
       result.append(printIdent(ident + 2) +
                     "if (currentMap.myObject != null) {\n");
       //result.append(printIdent(ident + 4) +

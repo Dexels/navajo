@@ -17,6 +17,7 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.UserException;
+import com.dexels.navajo.server.statistics.MapStatistics;
 
 class ArrayChildStatistics {
 	public int elementCount;
@@ -41,6 +42,8 @@ public class MappableTreeNode implements Mappable {
         private Access myAccess = null;
         private boolean arrayElement = false;
 
+        private MapStatistics myStatistics;
+        
         public MappableTreeNode(MappableTreeNode parent, Object o) {
         	this(null, parent, o, false);
         }
@@ -59,6 +62,9 @@ public class MappableTreeNode implements Mappable {
             	if ( isArrayElement ) {
             		parent.incrementElementCount(o.getClass().getName());
             	}
+            }
+            if ( myAccess != null && !arrayElement && !hasArrayParent() ) {
+            	myStatistics = a.createStatistics();
             }
         }
 
@@ -117,14 +123,7 @@ public class MappableTreeNode implements Mappable {
         	endtime = System.currentTimeMillis();
         	if ( myAccess != null && !arrayElement && !hasArrayParent() ) {
         		
-        		// Add to log.
-//        		System.err.print(myAccess.rpcName + ", map: " + myObject.getClass().getName() + ", id = " + getId() + ", totaltime: " + getTotaltime());
-//        		if ( getParent() != null ) {
-//        			System.err.println(", parent: " + getParent().myObject.getClass().getName() + "; id = " + getParent().getId() );
-//        		} else {
-//        			System.err.println("");
-//        		}
-        		myAccess.addStatistics(id, myObject.getClass().getName(), getTotaltime(), 0, false);
+        		myAccess.updateStatistics(myStatistics, id, myObject.getClass().getName(), getTotaltime(), 0, false);
         		// Sum array children.
         		if ( elementCount != null ) {
         			int childId = id + 1;
@@ -132,7 +131,8 @@ public class MappableTreeNode implements Mappable {
 						String mapName = (String) iter.next();
 						ArrayChildStatistics acs = (ArrayChildStatistics) elementCount.get(mapName);
 						//System.err.println("array child time: " + mapName + ", count " + acs.elementCount + ", totaltime: " + acs.totalTime );
-						myAccess.addStatistics(childId, mapName, acs.totalTime, acs.elementCount, true);
+						MapStatistics childStatistics = myAccess.createStatistics();
+						myAccess.updateStatistics(childStatistics, childId, mapName, acs.totalTime, acs.elementCount, true);
 					}
         		}
         	} else { // I am array child element.
