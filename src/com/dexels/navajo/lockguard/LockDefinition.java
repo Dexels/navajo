@@ -109,7 +109,7 @@ public class LockDefinition implements Mappable {
 		this.matchUsername = matchUsername;
 		this.matchRequest = matchRequest;
 		this.excludeProperties = excludeProperties;
-		
+		this.timeOut = timeOut;
 		this.maxInstanceCount = maxInstanceCount;
 	}
 
