@@ -350,16 +350,25 @@ public abstract class AsyncMappable implements Mappable {
    *
    */
   protected void setIsFinished() {
-    isFinished = true;
-    // Check whether killOnFinnish flag is set. If so, kill thread.
-    
-    // Log finalization.
-    log();
-    
-    if ( this.killOnFinnish || kill == true ) {
-      kill = true;
-      AsyncStore.getInstance().removeInstance(this.pointer);
-    }
+	  isFinished = true;
+	  // Check whether killOnFinnish flag is set. If so, kill thread.
+
+	  // Log finalization.
+	  log();
+
+	  if ( this.killOnFinnish  ) {
+		  kill = true;
+		  try {
+			  store();
+		  } catch (MappableException e) {
+			  // TODO Auto-generated catch block
+			  e.printStackTrace();
+		  } catch (UserException e) {
+			  // TODO Auto-generated catch block
+			  e.printStackTrace();
+		  }
+		  AsyncStore.getInstance().removeInstance(this.pointer);
+	  }
   }
 
   /**
