@@ -51,6 +51,12 @@ BEGIN
                     DELETE FROM navajolog
                     WHERE      access_id = accessid_list(i);
 
+                    DELETE FROM navajoasync
+                    WHERE      access_id = accessid_list(i);
+
+                    DELETE FROM navajomap
+                    WHERE      access_id = accessid_list(i);
+
                     DELETE FROM navajoaccess
                     WHERE      access_id = accessid_list(i);
                     
