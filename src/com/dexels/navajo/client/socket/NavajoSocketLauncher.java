@@ -13,6 +13,7 @@ import com.dexels.navajo.client.*;
 import com.dexels.navajo.client.impl.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.loader.*;
+import com.dexels.navajo.parser.DefaultExpressionEvaluator;
 import com.dexels.navajo.server.*;
 
 /**
@@ -60,7 +61,8 @@ public class NavajoSocketLauncher {
 
         System.setProperty(DOC_IMPL,QDSAX);
         NavajoFactory.resetImplementation();
-        
+		NavajoFactory.getInstance().setExpressionEvaluator(new DefaultExpressionEvaluator());
+       
 
 
 
