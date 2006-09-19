@@ -528,4 +528,9 @@ public void removeBroadcastListener(BroadcastListener al) {
 	// TODO Auto-generated method stub
 	
 }
+
+public void setKeepAlive(int millis) throws ClientException {
+	// TODO Auto-generated method stub
+	
+}
 }
