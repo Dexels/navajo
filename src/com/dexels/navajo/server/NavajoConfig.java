@@ -37,6 +37,7 @@ import com.dexels.navajo.lockguard.LockManager;
 
 import java.io.*;
 
+import com.dexels.navajo.parser.DefaultExpressionEvaluator;
 import com.dexels.navajo.persistence.*;
 import com.dexels.navajo.scheduler.TaskRunner;
 import com.dexels.navajo.util.AuditLog;
@@ -278,6 +279,7 @@ public final class NavajoConfig {
     			System.setProperty("com.dexels.navajo.DocumentImplementation", documentClass);
     			NavajoFactory.resetImplementation();
     			NavajoFactory.getInstance();
+    			NavajoFactory.getInstance().setExpressionEvaluator(new DefaultExpressionEvaluator());
     			AuditLog.log(AuditLog.AUDIT_MESSAGE_DISPATCHER, "Documentclass is now: " + documentClass);
     		} 
     		
