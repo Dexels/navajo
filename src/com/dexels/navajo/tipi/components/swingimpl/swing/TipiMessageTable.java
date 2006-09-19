@@ -46,6 +46,12 @@ public class TipiMessageTable extends MessageTable {
         }
         if (n!=null) {
             System.err.println("IN LOADCOLUMNSNAVAJO! ");
+            try {
+				n.write(System.err);
+			} catch (NavajoException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
             loadColumnsNavajo(n);
         }
     }
