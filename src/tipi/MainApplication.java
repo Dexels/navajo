@@ -27,7 +27,7 @@ public class MainApplication {
         }
         System.setProperty("com.dexels.navajo.propertyMap", "tipi.propertymap");
         if (System.getProperty("tipilaf")==null) {
-            System.err.println("No supplied laf. Using default: "+UIManager.getSystemLookAndFeelClassName());
+//            System.err.println("No supplied laf. Using default: "+UIManager.getSystemLookAndFeelClassName());
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());    
 //            UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
         } else {
@@ -56,27 +56,14 @@ public class MainApplication {
         se.printStackTrace();
     }    
     TipiContext context = null;
-//    if (studiomode || classicstudiomode) {
-//      Class c = Class.forName("com.dexels.navajo.tipi.studio.StudioTipiContext");
-//      context = (TipiContext)c.newInstance();
-//
-//
-//       context.setStudioMode(true);
-//      TipiSwingSplash dts = new TipiSwingSplash(
-//          "com/dexels/navajo/tipi/studio/images/studio-splash.png");
-//      dts.setVisible(true);
-//      System.setProperty("com.dexels.navajo.propertyMap",
-//                         "com.dexels.navajo.tipi.studio.propertymap");
-//
-//      ((SwingTipiContext)context).setDebugMode(debugMode);
-//      context.parseStudio();
-//      dts.setVisible(false);
-//    }
-//    else {
+
+    
       context = new SwingTipiContext();
       SwingTipiUserInterface stui = new SwingTipiUserInterface((SwingTipiContext)context);
       SwingClient.setUserInterface(stui);
 
+      context.setResourceBaseDirectory(new File("resource"));
+      
       context.setDefaultTopLevel(new TipiScreen());
       context.getDefaultTopLevel().setContext(context);
       ((SwingTipiContext)context).setDebugMode(debugMode);
