@@ -79,7 +79,12 @@ public abstract class TipiSwingDataComponentImpl
           }
       }
 
-    getSwingContainer().add( (Component) c, constraints);
+    try {
+		getSwingContainer().add( (Component) c, constraints);
+	} catch (Throwable e) {
+		throw new RuntimeException("Illegal constraint while adding object: "+c+" to component: "+
+				getPath()+" with constraint: "+constraints);
+	}
   }
 
   public void removeFromContainer(final Object c) {
