@@ -15,22 +15,28 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.*;
  */
 public class TipiScroller extends TipiPanel {
   private JScrollPane jp;
+  private JPanel pp = null;
 
   public Object createContainer() {
     jp = new TipiSwingScrollPane();
+    pp = new JPanel();
+    pp.setLayout(new BorderLayout());
     jp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
     jp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     TipiHelper th = new TipiSwingHelper();
     th.initHelper(this);
     addHelper(th);
+    jp.getViewport().add(pp);
     return jp;
   }
 
   public void addToContainer(Object c, Object constraints) {
-    jp.getViewport().add((Component)c);
+//    jp.getViewport().add((Component)c);
+	  pp.add((Component)c,BorderLayout.CENTER);
   }
   public void removeFromContainer(Object c) {
-    jp.getViewport().remove((Component)c);
+//    jp.getViewport().remove((Component)c);
+	  pp.remove((Component)c);
   }
   
 //  public TipiComponent getTipiComponentByPath(String path) {
