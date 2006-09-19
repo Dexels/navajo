@@ -7,6 +7,9 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 
 import javax.swing.*;
 
@@ -16,7 +19,7 @@ import com.dexels.navajo.tipi.components.question.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.internal.*;
 
-public class TipiScrollQuestionGroup extends TipiBaseQuestionGroup {
+public class TipiScrollQuestionGroup extends TipiBaseQuestionGroup implements TipiSwingComponent {
     private JScrollPane jp;
     private JPanel jpanel;
 
@@ -44,6 +47,87 @@ public class TipiScrollQuestionGroup extends TipiBaseQuestionGroup {
     public void setContainerLayout(Object layout) {
          jpanel.setLayout((LayoutManager)layout);
     }
+
+
+	public void highLight(Component c, Graphics g) {
+	
+		
+	}
+
+
+	
+
+	  public Container getSwingContainer() {
+	    return (Container) getContainer();
+	  }
+
+	  public void refreshLayout() {
+	    ArrayList elementList = new ArrayList();
+	    for (int i = 0; i < getChildCount(); i++) {
+	      TipiComponent current = (TipiComponent) getTipiComponent(i);
+	      if (current.isVisibleElement()) {
+	        removeFromContainer(current.getContainer());
+	      }
+	      elementList.add(current);
+	    }
+	    for (int i = 0; i < elementList.size(); i++) {
+	      final TipiComponent current = (TipiComponent) elementList.get(i);
+	      if (current.isVisibleElement()) {
+	        runSyncInEventThread(new Runnable() {
+	          public void run() {
+	            addToContainer(current.getContainer(), current.getConstraints());
+	          }
+	        });
+	      }
+	    }
+	  }
+
+	  public void runSyncInEventThread(Runnable r) {
+	    if (SwingUtilities.isEventDispatchThread()) {
+	      r.run();
+	    }
+	    else {
+	      try {
+	        SwingUtilities.invokeAndWait(r);
+	      }
+	      catch (InvocationTargetException ex) {
+	        throw new RuntimeException(ex);
+	      }
+	      catch (InterruptedException ex) {
+	      }
+	    }
+	  }
+
+	  public void runASyncInEventThread(Runnable r) {
+	    if (SwingUtilities.isEventDispatchThread()) {
+	      r.run();
+	    }
+	    else {
+	      SwingUtilities.invokeLater(r);
+	    }
+	  }
+	
+	
+	
+	public void setCursor(Cursor c) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void setPaint(Paint p) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void setWaitCursor(boolean b) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void showPopup(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
 
     
 }

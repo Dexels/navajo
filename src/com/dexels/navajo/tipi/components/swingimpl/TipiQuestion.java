@@ -7,6 +7,7 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
 import java.awt.*;
+import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.*;
 import javax.swing.border.*;
@@ -42,9 +43,23 @@ public class TipiQuestion extends TipiBaseQuestion {
 
   public void addToContainer(Object c, Object constraints) {
 
-          myPanel.add((Component)c, new GridBagConstraints(0,0,1,1,1,1,GridBagConstraints.CENTER,GridBagConstraints.BOTH,new Insets(0,0,0,0),0,0));
+          myPanel.add((Component)c, constraints);
   }
+  public void removeFromContainer(final Object c) {
+	    runSyncInEventThread(new Runnable() {
+	      public void run() {
+	        ((Container)getContainer()).remove( (Component) c);
+	      }
+	    });
+	  }
 
+	  public void setContainerLayout(final Object layout) {
+	    runSyncInEventThread(new Runnable() {
+	      public void run() {
+	         ( (Container) getContainer()).setLayout( (LayoutManager) layout);
+	      }
+	    });
+	  }
   protected void setQuestionBorder(String val) {
       if (val==null) {
           ((JPanel) getContainer()).setBorder(BorderFactory.createTitledBorder("" + val));
@@ -53,14 +68,32 @@ public class TipiQuestion extends TipiBaseQuestion {
       }        
   }
   
-  public void runASyncInEventThread(Runnable r) {
-      if (SwingUtilities.isEventDispatchThread()) {
-        r.run();
+
+  public void runSyncInEventThread(Runnable r) {
+    if (SwingUtilities.isEventDispatchThread() ) {
+      r.run();
+    }
+    else {
+      try {
+        SwingUtilities.invokeAndWait(r);
       }
-      else {
-        SwingUtilities.invokeLater(r);
+      catch (InvocationTargetException ex) {
+        throw new RuntimeException(ex);
+      }
+      catch (InterruptedException ex) {
       }
     }
+  }
+
+  public void runASyncInEventThread(Runnable r) {
+    if (SwingUtilities.isEventDispatchThread() ) {
+      r.run();
+    }
+    else {
+      SwingUtilities.invokeLater(r);
+    }
+  }
+
 public void setQuestionVisible(boolean b) {
     ((JComponent)getContainer()).setVisible(isRelevant());
     
