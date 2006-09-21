@@ -62,6 +62,7 @@ public abstract class TipiEchoDataComponentImpl extends TipiDataComponentImpl {
     public void removeFromContainer(Object c) {
         Component cc = (Component) getContainer();
         Component child = (Component) c;
+        child.dispose();
         cc.remove(child);
     }
 

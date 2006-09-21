@@ -110,16 +110,12 @@ public class TipiEchoInstance extends ApplicationInstance {
         return w.getWindow();
     }
 
-    public void initServlet(Enumeration args) throws Exception {
-        System.setProperty("com.dexels.navajo.DocumentImplementation", "com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl");
+    private void initServlet(Enumeration args) throws Exception {
         System.setProperty("com.dexels.navajo.propertyMap", "tipi.propertymap");
         checkForProperties(args);
         context.setStudioMode(false);
         loadTipi(tipiDef);
-        // ServerContext scont = (ServerContext)
-        // getAttribute(ServerContext.ATTRIBUTE_NAME);
-        ((EchoTipiContext) context).setServerContext(this);
-    }
+        }
 
     private void checkForProperties(Enumeration e) {
         while (e.hasMoreElements()) {
@@ -140,6 +136,7 @@ public class TipiEchoInstance extends ApplicationInstance {
                 continue;
             }
             if ("tipidir".equals(current)) {
+                context.setTipiBaseDirectory(new File(myServletConfig.getInitParameter(current)));
                 tipiDir = myServletConfig.getInitParameter(current);
                 continue;
             }

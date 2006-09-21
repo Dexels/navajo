@@ -30,6 +30,7 @@ import com.dexels.navajo.tipi.components.echoimpl.impl.TipiEchoTextField;
 
 import echopointng.ComboBox;
 import echopointng.LabelEx;
+import echopointng.SelectFieldEx;
 import echopointng.able.Sizeable;
 
 public class EchoPropertyComponent extends Grid implements TableCellRenderer {
@@ -288,7 +289,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 		Date m = (Date) p.getTypedValue();
 		SimpleDateFormat sd = new SimpleDateFormat("dd-MM-yyyy");
 
-		if (m == null) {
+		if (m == null && !isEdit || alwaysUseLabel) {
 			createLabel("-");
 			return;
 		}
@@ -846,8 +847,10 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 
 	private void createComboBox(Property p) throws NavajoException {
 		if (p.isDirIn()) {
-			final SelectField lb = new SelectField(p.getAllSelections()
+			final SelectFieldEx lb = new SelectFieldEx(p.getAllSelections()
 					.toArray());
+			
+			
 			add(lb);
 			lb.setEnabled(p.isDirIn());
 			if (value_size != 0) {
@@ -861,7 +864,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 					lb.setSelectedIndex(i);
 					break;
 				}
-			}
+			} 
 			if (p.getAllSelectedSelections().size() == 0) {
 				p.setSelected((Selection) ss.get(0));
 			}

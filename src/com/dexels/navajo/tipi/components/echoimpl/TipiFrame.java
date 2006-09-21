@@ -59,7 +59,7 @@ public class TipiFrame extends TipiEchoDataComponentImpl {
         contentPane = new ContentPane();
         contentPane.setInsets(new Insets(10,10,10,10));
         myWindow.setContent(contentPane);
-        realContent = new ContainerEx();
+//        realContent = new ContainerEx();
 //        myWindowGrid = new Grid(3);
 //		topPlaceHolder = new ContainerEx();
 //		myWindowGrid.add(topPlaceHolder);
@@ -75,7 +75,7 @@ public class TipiFrame extends TipiEchoDataComponentImpl {
 //        myWindowGrid.setColumnWidth(1, new Extent(780,Extent.PX));
 //        myWindowGrid.setRowHeight(1, new Extent(560 ,Extent.PX));
 //        myWindowGrid.add(realContent);
-        contentPane.add(realContent);
+//        contentPane.add(realContent);
 //         contentPane.add(myWindowGrid);
         return myWindow;
 
@@ -144,7 +144,9 @@ public class TipiFrame extends TipiEchoDataComponentImpl {
         if ("background".equals(name)) {
             if (object instanceof Color) {
                 contentPane.setBackground((Color) object);
-                realContent.setBackground((Color) object);
+                if (realContent!=null) {
+                    realContent.setBackground((Color) object);
+				}
                 myWindow.setBackground((Color) object);
 //                topPlaceHolder.setBackground((Color) object);
 //                leftPlaceHolder.setBackground((Color) object);
@@ -166,8 +168,8 @@ public class TipiFrame extends TipiEchoDataComponentImpl {
             // contentPane.setTop(new Extent(20, Extent.PX));
         } else {
             Component child = (Component) c;
-            realContent.add(child);
-//            contentPane.add(child);
+//            realContent.add(child);
+            contentPane.add(child);
             if (constraints != null && constraints instanceof LayoutData) {
                 child.setLayoutData((LayoutData) constraints);
             }
