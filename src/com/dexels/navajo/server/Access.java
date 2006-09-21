@@ -212,7 +212,7 @@ public final class Access
   }
 
   public int getTotaltime() {
-    return totaltime + parseTime;
+    return totaltime;
   }
 
   public Navajo getInDoc() {
