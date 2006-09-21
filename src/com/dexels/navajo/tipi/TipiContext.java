@@ -469,7 +469,8 @@ public void parseDefinition(XMLElement child) throws TipiException {
 //        System.err.println("ResourceDir found: "+resourceBaseDirectory.getAbsolutePath());
         File locationFile = new File(resourceBaseDirectory.getAbsolutePath()+"/"+location);
         if (!locationFile.exists()) {
-            System.err.println(".. but it did not exist: "+locationFile);
+           // System.err.println(".. but it did not exist: "+locationFile);
+        	// ignore and continue
         } else {
 	        try {
 	            return locationFile.toURL();
@@ -494,7 +495,7 @@ public void parseDefinition(XMLElement child) throws TipiException {
   //      System.err.println("ResourceDir found: "+resourceBaseDirectory.getAbsolutePath());
     // Finally, try the working dir
       File locationFile = new File(location);
-      System.err.println("Abs: "+locationFile.getAbsolutePath());
+//      System.err.println("Abs: "+locationFile.getAbsolutePath());
       if (!locationFile.exists()) {
           System.err.println(".. but it did not exist either: "+locationFile);
       } else {
@@ -560,7 +561,7 @@ public void parseDefinition(XMLElement child) throws TipiException {
           System.err.println("Could not resolve: "+location);
           return;
         }
-        System.err.println("=============================\nPARSING LIBRARY: "+location+"\n=============================");
+//        System.err.println("=============================\nPARSING LIBRARY: "+location+"\n=============================");
         XMLElement doc = new CaseSensitiveXMLElement();
         try {
           InputStreamReader isr = new InputStreamReader(in, "UTF-8");
@@ -690,6 +691,9 @@ public void parseDefinition(XMLElement child) throws TipiException {
   protected TipiComponent instantiateComponentByDefinition(XMLElement definition, XMLElement instance) throws TipiException {
     String clas = definition.getStringAttribute("class", "");
     String name = instance.getStringAttribute("name");
+    if (name==null) {
+		System.err.println("Error instantiating component: "+clas+". No name supplied. instance: "+instance);
+	}
     if (!clas.equals("")) {
       Class cc = getTipiClass(clas);
       TipiComponent tc = (TipiComponent) instantiateClass(clas, name, instance);
@@ -745,6 +749,7 @@ public void parseDefinition(XMLElement child) throws TipiException {
     String clas = instance.getStringAttribute("class", "");
     TipiComponent tc = null;
     if (clas.equals("") && name!=null && !"".equals(name)) {
+      // No class provided. Must be instantiating from a definition.
       XMLElement xx = getComponentDefinition(name);
       if (xx==null) {
         throw new TipiException("Definition based instance, but no definition found. Definition: "+name);
@@ -753,7 +758,8 @@ public void parseDefinition(XMLElement child) throws TipiException {
 
     }
     else {
-      tc = (TipiComponent) instantiateClass(clas, name, instance);
+        // Class provided. Not instantiating from a definition, name is irrelevant.
+      tc = (TipiComponent) instantiateClass(clas, null, instance);
     }
     tc.parseStyle(instance.getStringAttribute("style"));
     tc.processStyles();
@@ -800,7 +806,9 @@ public void parseDefinition(XMLElement child) throws TipiException {
 //    System.err.println("Instantiating class: " + className);
     XMLElement tipiDefinition = null;
     Class c = getTipiClass(className);
-    tipiDefinition = getComponentDefinition(defname);
+    if (defname!=null) {
+        tipiDefinition = getComponentDefinition(defname);
+	}
     XMLElement classDef = (XMLElement) tipiClassDefMap.get(className);
 //    System.err.println("Classes in map: "+tipiClassDefMap.size());
     if (c == null) {
@@ -944,12 +952,12 @@ public void parseDefinition(XMLElement child) throws TipiException {
   public XMLElement getComponentDefinition(String componentName) throws TipiException {
     XMLElement xe = getTipiDefinition(componentName);
     if(xe!=null) {
-    	System.err.println("No definition found.");
         return xe;
     }
     String location = (String)lazyMap.get(componentName);
     if (location==null) {
     	System.err.println("No lazy location found: "+componentName);
+//    	Thread.dumpStack();
     	return null;
     }
     System.err.println("Parsing lib location: "+location);
@@ -1818,6 +1826,7 @@ public void setStorageManager(TipiStorageManager tsm) {
     if (tsm==null) {
         throw new IllegalArgumentException("setStorageManager: Can not be null");
     }
+    System.err.println("Storage manager class: "+tsm.getClass());
     myStorageManager = tsm;
 }
 
