@@ -9,9 +9,11 @@ import java.sql.*;
 import java.io.StringWriter;
 import java.io.PrintWriter;
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.server.statistics.MapStatistics;
 import com.dexels.navajo.server.statistics.StoreInterface;
 import com.dexels.navajo.adapter.SQLMap;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -70,6 +72,9 @@ public final class OracleStore implements StoreInterface {
 	private static String insertAsyncLog =
 		"insert into navajoasync ( access_id, ref_id, asyncmap, totaltime, exception, created ) values (?, ?, ?, ?, ?, ?)";
 	
+	private static String insertMapLog = 
+		"insert into navajomap ( access_id, sequence_id, level_id, mapname, array, instancecount, totaltime, created) values " +
+		"( ?, ?, ?, ?, ?, ?, ?, ?)";
 
 	private static String updateAccessSQL = "update navajoaccess " +
 	"set clienttime = ? where access_id = ?";
@@ -103,11 +108,56 @@ public final class OracleStore implements StoreInterface {
 			sqlMap.setDatasource("navajostore");
 		}
 		catch (Exception ex) {
-			ex.printStackTrace(System.err);
+			//ex.printStackTrace(System.err);
 			return null;
 		}
 		
 		return sqlMap;
+	}
+	
+	
+	/**
+	 * access_id, sequence_id, level_id, mapname, array, instancecount, totaltime, created
+	 * @param a
+	 */
+	private final void addMapLog(final Connection con, final Access a) {
+		if (Dispatcher.getInstance().getNavajoConfig().dbPath != null) {
+			if (con != null) {
+				PreparedStatement ps = null;
+				try {
+					ps = con.prepareStatement(insertMapLog);
+					HashMap mapLogs = a.getMapStatistics();
+					if ( mapLogs != null ) {
+						// Loop over all map log.
+						Iterator iter = mapLogs.keySet().iterator();
+						while ( iter.hasNext() ) {
+							Integer id = (Integer) iter.next();
+							MapStatistics ms = (MapStatistics) mapLogs.get(id);
+							ps.setString(1, a.accessID);
+							ps.setInt(2, id.intValue());
+							ps.setInt(3, ms.levelId);
+							ps.setString(4, ( ms.mapName != null ? ms.mapName : "empty" ) );
+							ps.setString(5, ( ms.isArrayElement ? "1" : "0" ) );
+							ps.setInt(6, ms.elementCount);
+							ps.setString(7, ms.totalTime+"");
+							ps.setTimestamp(8, new java.sql.Timestamp(a.created.getTime()));
+							ps.executeUpdate();
+						}
+					}
+					ps.close();
+					ps = null;
+				} catch (SQLException ex) {
+					ex.printStackTrace(System.err);
+				} finally {
+					if (ps != null) {
+						try {
+							ps.close();
+						} catch (SQLException e) {
+						}
+					}
+				}
+			}
+		}
 	}
 	
 	private final void addAsync(final Access a, final AsyncMappable am) {
@@ -131,6 +181,7 @@ public final class OracleStore implements StoreInterface {
 					ps.setTimestamp(6, new java.sql.Timestamp(a.created.getTime()));
 					ps.executeUpdate();
 					ps.close();
+					ps = null;
 				} catch (SQLException ex) {
 					ex.printStackTrace(System.err);
 				} finally {
@@ -189,9 +240,13 @@ public final class OracleStore implements StoreInterface {
 					ps.setString(15, a.getClientToken());
 					ps.executeUpdate();
 					ps.close();
+					ps = null;
 					// Only log details if exception occured or if full accesslog monitoring is enabled.
 					if (a.getException() != null || Dispatcher.getInstance().getNavajoConfig().needsFullAccessLog(a) ) {
 						addLog(con, a);
+					}
+					if (a.getMapStatistics() != null) {
+						addMapLog(con, a);
 					}
 					
 				}
@@ -223,8 +278,9 @@ public final class OracleStore implements StoreInterface {
 	 * @param a
 	 */
 	private final void addLog(Connection con, Access a) {
+		PreparedStatement ps = null;
 		try {
-			PreparedStatement ps = con.prepareStatement(insertLog);
+			ps = con.prepareStatement(insertLog);
 			ps.setString(1, a.accessID);
 			StringWriter w = new StringWriter();
 			if (a.getException() != null) {
@@ -248,9 +304,17 @@ public final class OracleStore implements StoreInterface {
 			ps.setBytes(4, (bosOut != null ? bosOut.toByteArray() : null));
 			ps.executeUpdate();
 			ps.close();
+			ps = null;
 		}
 		catch (Exception e) {
 			e.printStackTrace(System.err);
+		} finally {
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+				}
+			}
 		}
 	}
 	
