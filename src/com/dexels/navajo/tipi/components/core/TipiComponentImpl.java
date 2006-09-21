@@ -930,11 +930,9 @@ public void loadStartValues(XMLElement element) {
 
   public boolean performTipiEvent(String type, Map event, boolean sync) throws TipiException {
     boolean hasEventType = false;
-    System.err.println("# of events: "+myEventList.size());
-    for (int i = 0; i < myEventList.size(); i++) {
+     for (int i = 0; i < myEventList.size(); i++) {
       TipiEvent te = (TipiEvent) myEventList.get(i);
-      System.err.println("Current event: "+te.getEventName()+" "+getId()+" cc "+te.getExecutableChildCount());
-      if (te.isTrigger(type, myService)) {
+       if (te.isTrigger(type, myService)) {
         hasEventType = true;
 //        te.performAction(event);
 //        System.err.println("MAAAP: "+event);
