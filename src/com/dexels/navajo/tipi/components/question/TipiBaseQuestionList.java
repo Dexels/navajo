@@ -139,6 +139,10 @@ public abstract class TipiBaseQuestionList extends TipiDataComponentImpl {
       Message questionList = input.getMessage("QuestionList@0");
       Navajo n = NavajoFactory.getInstance().createNavajo();
        Message aap = input.getMessage("ObjectForm");
+       if (aap==null) {
+		// hmm no aap.
+    	aap = input.getMessage("FormData");
+	}
        Message m = null;
        if (aap!=null) {
            m = aap.copy(n);
