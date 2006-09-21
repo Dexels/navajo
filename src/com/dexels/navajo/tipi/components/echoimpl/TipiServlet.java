@@ -1,7 +1,10 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
+import javax.servlet.http.HttpSessionListener;
+
 import nextapp.echo2.app.ApplicationInstance;
 import nextapp.echo2.webcontainer.WebContainerServlet;
+import nextapp.echo2.webrender.service.SessionExpiredService;
 
 /**
  * <p>
@@ -28,16 +31,18 @@ public class TipiServlet extends WebContainerServlet {
         // CustomUIComponents.register();
 
         System.setProperty("com.dexels.navajo.DocumentImplementation", "com.dexels.navajo.document.base.BaseNavajoFactoryImpl");
-
+        
     }
 
     public void destroy() {
+    	System.err.println("IN SERVLET DESTROY!");
+    	super.destroy();
     }
 
     public ApplicationInstance newApplicationInstance() {
-        TipiEchoInstance tp = null;
+      	TipiEchoInstance tp = null;
         try {
-            tp = new TipiEchoInstance(getServletConfig());
+         	tp = new TipiEchoInstance(getServletConfig());
         } catch (Throwable ex) {
             ex.printStackTrace();
             throw new RuntimeException(ex);
