@@ -44,7 +44,9 @@ public class GetUrlMimeType extends FunctionInterface {
         try {
         	URLConnection uc = u.openConnection();
             String type = uc.getContentType();
-            os = uc.getInputStream();
+            try {
+            	os = uc.getInputStream();
+            } catch (Throwable t) {}
            return type;
         } catch (IOException e) {
            return null;
