@@ -256,12 +256,12 @@ public class BasePropertyImpl
                 getValue(), getRootDoc(), null, getParentMessage());
             evaluatedType = o.type;
             return o.value;
-        } catch (NullPointerException e) {
+        } catch (Throwable e) {
             // TODO Auto-generated catch block
-            System.err.println("Exception while evaluating property: "+getFullPropertyName());
+            System.err.println("Exception while evaluating property: "+getFullPropertyName()+" expression: "+getValue());
             
 //            throw(e);
-                        e.printStackTrace();
+//                        e.printStackTrace();
                         return null;
         }
 
