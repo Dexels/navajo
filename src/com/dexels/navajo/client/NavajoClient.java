@@ -72,7 +72,7 @@ public class NavajoClient implements ClientInterface {
   private int switchServerAfterRetries = 2;
   
   private int currentServerIndex;
-  
+  private Thread keepAliveThread = null;
   //private static int instances = 0;
   
   // Warning: Not thread safe!
@@ -84,6 +84,8 @@ public class NavajoClient implements ClientInterface {
   private final String mySessionToken;
   
   private final HashMap disabledServers = new HashMap();
+private long lastActivity;
+private int keepAliveDelay;
   
   // Disable for one minute. Bit short, should be maybe an hour, but better for debugging.
   private static final long serverDisableTimeout = 60000;
@@ -591,7 +593,7 @@ public class NavajoClient implements ClientInterface {
     else {
       in = new BufferedInputStream(con.getInputStream());
     }
- 
+    lastActivity = System.currentTimeMillis();
     return in;
   }
 
@@ -1663,4 +1665,48 @@ public void switchServer(int startIndex, boolean forceChange) {
 //	  
 //  }
 
+	private void checkKeepalive() throws ClientException {
+		if (keepAliveDelay>0) {
+			if (System.currentTimeMillis()-keepAliveDelay>lastActivity) {
+				doSimpleSend("navajo/InitKeepAlive");
+			}
+		}
+	}
+	/** sets the keepalive frequency. It will send a keepalive event (single threaded) after millis
+	 *  milliseconds of inactivity.
+	 * @throws ClientException 
+	 * @throws ClientException 
+	 */
+
+	public void setKeepAlive(int millis) throws ClientException {
+		if (keepAliveDelay>0 && keepAliveDelay < 5000) {
+			throw new IllegalArgumentException("setKeepAlive: ");
+		}
+		keepAliveDelay = millis;
+//		checkKeepalive();
+		if (keepAliveThread==null) {
+			keepAliveThread = new Thread(new Runnable(){
+				public void run() {
+					try {
+						Thread.sleep(5000);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					while (keepAliveDelay>0) {
+						try {
+							checkKeepalive();
+							Thread.sleep(keepAliveDelay);
+						} catch(Throwable t) {
+							t.printStackTrace();
+						}
+					
+					}
+					keepAliveThread = null;
+				}},"KeepAliveThread");
+			keepAliveThread.setDaemon(true);
+			keepAliveThread.start();
+		}
+		
+	}
 }

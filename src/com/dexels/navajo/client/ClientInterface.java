@@ -156,4 +156,6 @@ public void addBroadcastListener(BroadcastListener al);
  */
 public void removeBroadcastListener(BroadcastListener al);
 
+public void setKeepAlive(int millis) throws ClientException;
+
 }
