@@ -24,18 +24,6 @@ public class TipiShowInfo
     final Operand op = getEvaluatedParameter("text", event);
 
     final String txt = ((String)op.value).replaceAll("\n", " ");
-    //    Operand o = null;
-//    try {
-//      o = evaluate(txt,event);
-//    }
-//    catch (Exception ex) {
-//      System.err.println("Error evaluating[" + txt + "] inserting as plain text only");
-//
-//      ex.printStackTrace();
-//    }
-//
-//    final Operand op = o;
-//
     if (SwingUtilities.isEventDispatchThread()) {
       JOptionPane.showMessageDialog( (Component) myContext.getTopLevel(), txt, "Info", JOptionPane.PLAIN_MESSAGE);
     }
@@ -51,7 +39,6 @@ public class TipiShowInfo
         ex1.printStackTrace();
       }
       catch (InterruptedException ex1) {
-        ex1.printStackTrace();
       }
     }
   }
