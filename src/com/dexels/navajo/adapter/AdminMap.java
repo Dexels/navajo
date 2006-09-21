@@ -21,6 +21,7 @@ import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.HashMap;
 import com.dexels.navajo.mapping.AsyncMappable;
+import com.dexels.navajo.parser.DefaultExpressionEvaluator;
 
 import java.util.Date;
 import java.util.Map;
@@ -397,6 +398,7 @@ public class AdminMap implements Mappable {
 	  System.setProperty("com.dexels.navajo.DocumentImplementation", s);
 	  NavajoFactory.resetImplementation();
 	  NavajoFactory.getInstance().setTempDir(Dispatcher.getInstance().getTempDir());
+		NavajoFactory.getInstance().setExpressionEvaluator(new DefaultExpressionEvaluator());
 	  System.err.println("Document class is now: " + getDocumentClass());
   }
   
