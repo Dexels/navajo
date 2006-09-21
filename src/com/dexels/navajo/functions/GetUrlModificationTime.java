@@ -43,6 +43,7 @@ public class GetUrlModificationTime extends FunctionInterface {
         InputStream os = null;
         try {
         	URLConnection uc = u.openConnection();
+        	os = uc.getInputStream();
 //        	System.err.println(uc.getHeaderFields());
             Date d = new Date(uc.getLastModified());
            return d;

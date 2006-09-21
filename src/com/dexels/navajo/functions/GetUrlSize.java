@@ -43,6 +43,7 @@ public class GetUrlSize extends FunctionInterface {
         InputStream os = null;
         try {
         	URLConnection uc = u.openConnection();
+        	os = uc.getInputStream();
 //        	System.err.println(uc.getHeaderFields());
             int d = uc.getContentLength();
            return d;
