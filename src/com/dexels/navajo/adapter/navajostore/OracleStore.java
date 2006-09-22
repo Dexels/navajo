@@ -221,7 +221,8 @@ public final class OracleStore implements StoreInterface {
 			if (con != null) {
 				PreparedStatement ps = null;
 				try {
-					String hostName = InetAddress.getLocalHost().getHostName();
+					
+					String hostName = InetAddress.getLocalHost().getHostName()+" - "+Dispatcher.getInstance().getNavajoConfig().getInstanceName();
 					ps = con.prepareStatement(insertAccessSQL);
 					ps.setString(1, a.accessID);
 					ps.setString(2, a.rpcName);
