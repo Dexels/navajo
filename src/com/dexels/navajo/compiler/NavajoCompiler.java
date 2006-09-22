@@ -39,13 +39,38 @@ public class NavajoCompiler
 		
         public void compile(Access access, NavajoConfig config, String source) throws Throwable{
 
-            String classPath = config.getClassPath();
+        	
+//            String classPath = config.getClassPath();
             String sep = System.getProperty("path.separator");
 
             String adapterPath = config.getAdapterPath();
             String outputPath = config.getCompiledScriptPath();
 
+            File jarFolder = config.getJarFolder();
+            
+            System.err.println("JARFOLDER: "+jarFolder);
+            
+            StringBuffer mainCp = new StringBuffer();
             // Find all jar's in adapter path.
+            if (jarFolder!=null && jarFolder.exists()) {
+				File[] jars = jarFolder.listFiles(new FilenameFilter(){
+					public boolean accept(File dir, String name) {
+						return name.endsWith(".jar");
+					}});
+				for (int i = 0; i < jars.length; i++) {
+					if (!jars[i].exists()) {
+						System.err.println("JAR: "+jars[i]+" does not exist!");
+					} else {
+						if (i!=0) {
+							mainCp.append(sep);
+						}
+						mainCp.append(jars[i].getAbsolutePath());
+					}
+				}
+			}
+            
+            
+            
             File [] files = config.getClassloader().getJarFiles(adapterPath, access.betaUser);
             StringBuffer additional = new StringBuffer();
             if (files != null) {
@@ -53,11 +78,12 @@ public class NavajoCompiler
                 additional.append(sep + files[i].getAbsolutePath());
               }
             }
+          String classPath = mainCp.toString();
 
             classPath += additional.toString();
 
-            //System.out.println("in NavajoCompiler(): new classPath = " + classPath);
-
+//            System.out.println("in NavajoCompiler(): new classPath = " + classPath);
+            
             SunJavaCompiler compiler = new SunJavaCompiler();
 
             compiler.setClasspath(classPath);

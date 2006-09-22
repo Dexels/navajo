@@ -92,8 +92,11 @@ public final class NavajoConfig {
     public String monitorWebservices = null;
     public String [] monitorWebservicesList = null;
     public int monitorExceedTotaltime = -1;
+	private File rootFile;
 
     private static NavajoConfig instance = null;
+	private File jarFolder;
+	private String instanceName;
     
     public NavajoConfig(InputStreamReader inputStreamReader, NavajoClassSupplier ncs)  throws SystemException {
 
@@ -104,7 +107,7 @@ public final class NavajoConfig {
       //loadConfig(in);
      }
     
-     public static NavajoConfig getInstance() {
+	public static NavajoConfig getInstance() {
     	 return instance;
      }
      
@@ -142,6 +145,11 @@ public final class NavajoConfig {
     	
     	try {
     		rootPath = properDir(body.getProperty("paths/root").getValue());
+    		
+    		rootFile = new File(rootPath);
+    		if (!rootFile.exists()) {
+				throw new IllegalArgumentException("Rootpath defined in server.xml not found.");
+			}
     		configPath = properDir(rootPath +
     				body.getProperty("paths/configuration").getValue());
     		adapterPath = properDir(rootPath +
@@ -247,6 +255,29 @@ public final class NavajoConfig {
     				body.getProperty("parameters/enable_locks").getValue().equals("true"));
     		
     		
+    		if (body.getProperty("paths/jar_folder") != null) {
+				Property fold = body.getProperty("paths/jar_folder");
+				if (fold!=null) {
+					String ss = fold.getValue();
+					System.err.println("Supplied value: "+ss);
+					if (ss!=null) {
+						if (rootFile!=null) {
+							jarFolder = new File(rootFile,ss);
+						} else {
+							jarFolder = new File(ss);
+						}
+					} else {
+						jarFolder = null;
+					}
+				}
+			} else {
+				System.err.println("No jar path found");
+	    		jarFolder = null;				
+			}
+//    		classPath = (body.getProperty("parameters/classpathdir") == null ? System.getProperty("java.class.path"):
+//    				body.getProperty("parameters/classpath").getValue());
+//    		
+    		
     			
     		hotCompile = (body.getProperty("parameters/hot_compile") == null ||
     				body.getProperty("parameters/hot_compile").getValue().
@@ -282,6 +313,11 @@ public final class NavajoConfig {
     			NavajoFactory.getInstance().setExpressionEvaluator(new DefaultExpressionEvaluator());
     			AuditLog.log(AuditLog.AUDIT_MESSAGE_DISPATCHER, "Documentclass is now: " + documentClass);
     		} 
+
+    		// Get the instance name.
+    		instanceName = ( body.getProperty("instance_name") != null ? 
+    				body.getProperty("instance_name").getValue() : null );
+    			
     		
     	} catch (Throwable t) {
     		t.printStackTrace(System.err);
@@ -762,4 +798,13 @@ public final class NavajoConfig {
 	public void setClassloader(NavajoClassSupplier classloader) {
 		this.classloader = classloader;
 	}
+	
+	public File getJarFolder() {
+		return jarFolder;
+	}
+
+	public String getInstanceName() {
+		return instanceName;
+	}
+	
 }
