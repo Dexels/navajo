@@ -26,7 +26,12 @@
     <param name="id" type="string" required="true"/>
   </tipiaction>
 
-
+  <tipiaction name="setPostman"  class="TipiSetPostman" package="com.dexels.navajo.tipi.actions">
+    <param name="server" type="string"/>
+    <param name="username" type="string"/>
+    <param name="password" type="string"/>
+  </tipiaction>
+  
   <tipiaction name="execute"  class="TipiRuntime" package="com.dexels.navajo.tipi.actions">
     <param name="command" type="string"/>
   </tipiaction>
