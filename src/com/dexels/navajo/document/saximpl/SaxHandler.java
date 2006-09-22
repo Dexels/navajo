@@ -130,15 +130,22 @@ public final class SaxHandler implements DocHandler {
     	if ( (String) h.get("ref") == null || ((String) h.get("ref")).equals("") ) {
     		return;
     	}
+    	BaseObjectImpl baseObjectImpl = new BaseObjectImpl(currentDocument);
+    	baseObjectImpl.setName((String) h.get("name"));
+    	baseObjectImpl.setRef((String) h.get("ref"));
+    	baseObjectImpl.setPercReady((int) Double.parseDouble((String) h.get("perc_ready")));
+    	baseObjectImpl.setInterrupt((String) h.get("interrupt"));
     	
-    	currentHeader.setCallBack(
-    			(String) h.get("name"),
-    			(String) h.get("ref"),
-    			(int) Double.parseDouble((String) h.get("perc_ready")),
-    			((String) h.get("finished")).equals("true"),
-    			(String) h.get("interrupt")
-    	);
-     
+    	currentHeader.getCallback().addObject(baseObjectImpl);
+    	
+//    	currentHeader.setCallBack(
+//    			(String) h.get("name"),
+//    			(String) h.get("ref"),
+//    			(int) Double.parseDouble((String) h.get("perc_ready")),
+//    			((String) h.get("finished")).equals("true"),
+//    			(String) h.get("interrupt")
+//    	);
+//     
     }
 
 

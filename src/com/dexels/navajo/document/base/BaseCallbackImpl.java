@@ -47,6 +47,10 @@ public class BaseCallbackImpl extends BaseNode {
     	}
     	return null;
     }
+    
+    public ArrayList getObjects() {
+    	return myObjects;
+    }
 }
 
 // EOF $RCSfile$ //

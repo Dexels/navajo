@@ -21,6 +21,12 @@ public final class HeaderImpl
     implements Header, NanoElement {
 
     private String myRequestId;
+    
+    /**
+     * @deprecated
+     */
+   protected String myInterrupt = null;
+   
   public HeaderImpl(com.dexels.navajo.document.Navajo n, String user,
                     String password, String service) {
     super(n);

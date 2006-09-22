@@ -40,11 +40,7 @@ public class BaseHeaderImpl
  protected TreeMap lazyMessageList = new TreeMap();
 
   protected boolean isFinished = false;
-  /**
-   * @deprecated
-   */
- protected String myInterrupt = null;
- /**
+/**
   * @deprecated
   */
  protected String myCallbackName = null;
@@ -159,9 +155,6 @@ public class BaseHeaderImpl
       return myClientImpl.getAddress();
   }
   
-  /**
-   * @deprecated
-   */
   public final String getCallBackInterupt(String object) {
     /**@todo Implement this com.dexels.navajo.document.Header abstract method*/
 //    throw new java.lang.UnsupportedOperationException(
@@ -232,7 +225,7 @@ public class BaseHeaderImpl
   public final void setCallBack(String name, String pointer, int percReady,
                                 boolean isFinished, String interrupt) {
     this.isFinished = isFinished;
-    this.myInterrupt = interrupt;
+//    this.myInterrupt = interrupt;
     this.myCallbackName = name;
     this.myCallbackPointer = pointer;
     this.percReady = percReady;
@@ -259,7 +252,17 @@ public class BaseHeaderImpl
    */
 
   public final void setCallBackInterrupt(String interrupt) {
-    this.myInterrupt = interrupt;
+	  ArrayList objects = getCallback().getObjects();
+	  if(objects!=null && objects.size()>0) {
+		  BaseObjectImpl boi = (BaseObjectImpl)objects.get(0);
+		  boi.setInterrupt(interrupt);
+	  }
+	  if (objects==null && objects.size()>1) {
+		System.err.println("Warning: Multible references found. Ambiguous kill detected");
+  	}
+	  if (objects==null) {
+		System.err.println("Problem setting setCallBackInterrupt, no object found.");
+	}
   }
   /**
    * @deprecated
