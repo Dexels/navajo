@@ -40,16 +40,13 @@ public class NavajoCompiler
         public void compile(Access access, NavajoConfig config, String source) throws Throwable{
 
         	
-//            String classPath = config.getClassPath();
+            String classPath = null;
+
             String sep = System.getProperty("path.separator");
 
             String adapterPath = config.getAdapterPath();
             String outputPath = config.getCompiledScriptPath();
-
             File jarFolder = config.getJarFolder();
-            
-            System.err.println("JARFOLDER: "+jarFolder);
-            
             StringBuffer mainCp = new StringBuffer();
             // Find all jar's in adapter path.
             if (jarFolder!=null && jarFolder.exists()) {
@@ -67,6 +64,10 @@ public class NavajoCompiler
 						mainCp.append(jars[i].getAbsolutePath());
 					}
 				}
+				classPath = mainCp.toString();
+			} else {
+				 classPath = config.getClassPath();
+		           
 			}
             
             
@@ -78,8 +79,7 @@ public class NavajoCompiler
                 additional.append(sep + files[i].getAbsolutePath());
               }
             }
-          String classPath = mainCp.toString();
-
+      
             classPath += additional.toString();
 
 //            System.out.println("in NavajoCompiler(): new classPath = " + classPath);
