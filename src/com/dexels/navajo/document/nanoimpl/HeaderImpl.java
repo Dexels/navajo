@@ -27,6 +27,11 @@ public final class HeaderImpl
      */
    protected String myInterrupt = null;
    
+   protected boolean isFinished = false;
+   protected String myCallbackName = null;
+   protected String myCallbackPointer = null;
+   protected int percReady = -1;
+   
   public HeaderImpl(com.dexels.navajo.document.Navajo n, String user,
                     String password, String service) {
     super(n);

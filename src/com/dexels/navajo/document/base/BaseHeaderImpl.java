@@ -39,16 +39,16 @@ public class BaseHeaderImpl
    */
  protected TreeMap lazyMessageList = new TreeMap();
 
-  protected boolean isFinished = false;
-/**
-  * @deprecated
-  */
- protected String myCallbackName = null;
- /**
-  * @deprecated
-  */
- protected String myCallbackPointer = null;
-  protected int percReady = -1;
+  //protected boolean isFinished = false;
+///**
+//  * @deprecated
+//  */
+// //protected String myCallbackName = null;
+// /**
+//  * @deprecated
+//  */
+// //protected String myCallbackPointer = null;
+// //protected int percReady = -1;
   
 
   protected Map attributeMap = null;
@@ -203,11 +203,21 @@ public class BaseHeaderImpl
 
  
   public void removeCallBackPointers() {
-    myCallbackPointer = null;
+	  if ( myCallback != null && myCallback.getObjects() != null ) {
+		  myCallback.getObjects().clear();
+	  }
   }
 
   public final String getCallBackPointer(String object) {
-    return myCallbackPointer;
+	  if ( myCallback != null && myCallback.getObjects() != null ) {
+		  for (int i = 0; i < myCallback.getObjects().size(); i++ ) {
+			  BaseObjectImpl boi = (BaseObjectImpl) myCallback.getObjects().get(i);
+			  if ( boi.getName() != null && boi.getName().equals(object ) ) {
+				  return boi.getRef();
+			  }
+		  }
+	  }
+	  return null;
   }
 
   public final void setRPCPassword(String s) {
@@ -224,11 +234,11 @@ public class BaseHeaderImpl
    */
   public final void setCallBack(String name, String pointer, int percReady,
                                 boolean isFinished, String interrupt) {
-    this.isFinished = isFinished;
+    //this.isFinished = isFinished;
 //    this.myInterrupt = interrupt;
-    this.myCallbackName = name;
-    this.myCallbackPointer = pointer;
-    this.percReady = percReady;
+//    this.myCallbackName = name;
+//    this.myCallbackPointer = pointer;
+    //this.percReady = percReady;
     BaseObjectImpl boi = new BaseObjectImpl(getRootDoc());
     boi.setName(name);
     boi.setRef(pointer);
@@ -289,19 +299,34 @@ public class BaseHeaderImpl
   public com.dexels.navajo.document.LazyMessageImpl getLazyMessages() {
     return null;
   }
+  
   /**
    * @deprecated
+   * TODO: Add object ref for supporting multiple async objects!
    */
 
   public int getCallBackProgress() {
-    return percReady;
+	  if ( myCallback != null && myCallback.getObjects() != null && !myCallback.getObjects().isEmpty() ) {
+		  String pr = ( (BaseObjectImpl) myCallback.getObjects().get(0) ).getPercReady();
+		  if ( pr != null ) {
+			  return (int) Double.parseDouble(pr);
+		  } else {
+			  return 0;
+		  }
+	  }
+	  return 0;
   }
 
   /**
    * Returns whether the asynchronous server process has completed
+   * TODO: Add object ref for supporting multiple async objects!
    */
   public boolean isCallBackFinished() {
-    return isFinished;
+	  if ( myCallback != null && myCallback.getObjects() != null && !myCallback.getObjects().isEmpty() ) {
+		  BaseObjectImpl boi = (BaseObjectImpl) myCallback.getObjects().get(0);
+		  return boi.isFinished();
+	  }
+	  return false;
   }
 
 public Map getAttributes() {

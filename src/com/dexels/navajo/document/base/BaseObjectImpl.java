@@ -60,7 +60,7 @@ public class BaseObjectImpl extends BaseNode {
         return (String)myAttributes.get("perc_ready");
     }
     public boolean isFinished() {
-        return ((Boolean)myAttributes.get("finished")).booleanValue();
+        return "true".equals(myAttributes.get("finished"));
     }
     public String getInterrupt() {
         return (String)myAttributes.get("interrupt");
