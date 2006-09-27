@@ -59,15 +59,17 @@ package navajodocument;
  * 
  * 9.0.3 Fixed problem with getting not existing array message child by index in SAXP/NANO.
  * 
+ * 9.0.4 Fixed problem with async webservice callback.
+ * 
  */
 public class Version extends dexels.Version {
 
 	public static final int MAJOR          = 9;
 	public static final int MINOR          = 0;
-	public static final int PATCHLEVEL     = 3;
+	public static final int PATCHLEVEL     = 4;
 	public static final String VENDOR      = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Document";
-	public static final String RELEASEDATE = "2006-07-06";
+	public static final String RELEASEDATE = "2006-09-27";
 
 	// Included packages.
 
