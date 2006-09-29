@@ -122,8 +122,9 @@ public class MappableTreeNode implements Mappable {
         public void setEndtime() {
         	endtime = System.currentTimeMillis();
         	if ( myAccess != null && !arrayElement && !hasArrayParent() ) {
-        		
+        	  if ( myObject != null ) {
         		myAccess.updateStatistics(myStatistics, id, myObject.getClass().getName(), getTotaltime(), 0, false);
+        	  }
         		// Sum array children.
         		if ( elementCount != null ) {
         			int childId = id + 1;
