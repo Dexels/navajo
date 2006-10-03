@@ -7,7 +7,7 @@ import java.util.Date;
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
 
-public class GetUrlSize extends FunctionInterface {
+public class GetUrlSize extends GetUrlBase {
 
 	public String remarks() {
 		return "Get the length of URL content";
@@ -38,28 +38,6 @@ public class GetUrlSize extends FunctionInterface {
 
 		return new Integer(getUrlLength(u));
 	}
-	
-    private int getUrlLength(URL u) {
-        InputStream os = null;
-        try {
-        	URLConnection uc = u.openConnection();
-        	 try {
-             	os = uc.getInputStream();
-             } catch (Throwable t) {}
-//        	System.err.println(uc.getHeaderFields());
-            int d = uc.getContentLength();
-           return d;
-        } catch (IOException e) {
-           return 0;
-        } finally {
-            if (os!=null) {
-               try {
-                   os.close();
-               } catch (IOException e) {
-                     e.printStackTrace();
-               }
-           }
-        }
-    }
+
 
 }

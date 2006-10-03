@@ -7,7 +7,7 @@ import java.util.Date;
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
 
-public class GetUrlTime extends FunctionInterface {
+public class GetUrlTime extends GetUrlBase {
 
 	public String remarks() {
 		return "Check the date of an url. This is not the modification date, this is the time the header was sent. Effectively the current time of the webserver.";
@@ -39,27 +39,4 @@ public class GetUrlTime extends FunctionInterface {
 		return getUrlDate(u);
 	}
 	
-    private Date getUrlDate(URL u) {
-        InputStream os = null;
-        try {
-        	URLConnection uc = u.openConnection();
-        	 try {
-             	os = uc.getInputStream();
-             } catch (Throwable t) {}
-        	//System.err.println(uc.getHeaderFields());
-            Date d = new Date(uc.getDate());
-           return d;
-        } catch (IOException e) {
-           return null;
-        } finally {
-            if (os!=null) {
-               try {
-                   os.close();
-               } catch (IOException e) {
-                     e.printStackTrace();
-               }
-           }
-        }
-    }
-
 }

@@ -7,7 +7,7 @@ import java.util.Date;
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
 
-public class GetUrlModificationTime extends FunctionInterface {
+public class GetUrlModificationTime extends GetUrlBase {
 
 	public String remarks() {
 		return "Check the modification date of an url.";
@@ -39,27 +39,4 @@ public class GetUrlModificationTime extends FunctionInterface {
 		return getUrlDate(u);
 	}
 	
-    private Date getUrlDate(URL u) {
-        InputStream os = null;
-        try {
-        	URLConnection uc = u.openConnection();
-        	 try {
-             	os = uc.getInputStream();
-             } catch (Throwable t) {}
-//        	System.err.println(uc.getHeaderFields());
-            Date d = new Date(uc.getLastModified());
-           return d;
-        } catch (IOException e) {
-           return null;
-        } finally {
-            if (os!=null) {
-               try {
-                   os.close();
-               } catch (IOException e) {
-                     e.printStackTrace();
-               }
-           }
-        }
-    }
-
 }
