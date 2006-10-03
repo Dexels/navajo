@@ -27,7 +27,7 @@ public class AsyncProxyMap extends AsyncMappable {
     username = access.rpcUser;
     password = access.rpcPwd;
     this.access = access;
-    outDoc = inMessage;
+    outDoc = inMessage.copy();
     killOnFinnish = true;
   }
 
@@ -60,6 +60,7 @@ public class AsyncProxyMap extends AsyncMappable {
   }
 
   public void run() throws com.dexels.navajo.server.UserException {
+	  
      Header h = outDoc.getHeader();
      if (h == null) {
           h = NavajoFactory.getInstance().createHeader(outDoc, method, username, password, -1);
@@ -80,6 +81,7 @@ public class AsyncProxyMap extends AsyncMappable {
     	System.err.println("Setting set is finished.");
     	setIsFinished();
     }
+    
   }
 
   public void afterRequest() throws UserException {
