@@ -86,6 +86,7 @@ public class NavajoClient implements ClientInterface {
   private final HashMap disabledServers = new HashMap();
 private long lastActivity;
 private int keepAliveDelay;
+private int globalRetryCounter = 0;
   
   // Disable for one minute. Bit short, should be maybe an hour, but better for debugging.
   private static final long serverDisableTimeout = 60000;
@@ -883,7 +884,9 @@ private int keepAliveDelay;
 
 private final BufferedInputStream retryTransaction(String server, Navajo out, boolean useCompression, int attemptsLeft, long interval, Navajo n) throws Exception {
     BufferedInputStream in = null;
-    System.err.println("------------> retrying transaction: " + server + ", attempts left: " + attemptsLeft);
+    
+    globalRetryCounter++;
+    System.err.println("------------> retrying transaction: " + server + ", attempts left: " + attemptsLeft+" total retries: "+globalRetryCounter);
     
     int pastAttempts = retryAttempts-attemptsLeft;
     System.err.println("Past retries: "+pastAttempts);
