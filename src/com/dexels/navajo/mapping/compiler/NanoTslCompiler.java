@@ -585,6 +585,7 @@ public class NanoTslCompiler {
         String mode = n.getNonNullStringAttribute("mode");
         String count = n.getNonNullStringAttribute("count");
         String start_index = n.getNonNullStringAttribute("start_index");
+        String orderby = n.getNonNullStringAttribute("orderby");
 
         ////System.out.println("COUNT = " + count);
         type = (type == null) ? "" : type;
@@ -674,8 +675,10 @@ public class NanoTslCompiler {
         result.append(printIdent(ident) + "Message [] " + messageList + " = null;\n");
 
         if (n.getName().equals("message")) {
-            result.append(printIdent(ident) + messageList + " = MappingUtils.addMessage(access.getOutputDoc(), currentOutMsg, \"" + messageName
-                    + "\", \"\", count, \"" + type + "\", \"" + mode + "\");\n");
+          result.append(printIdent(ident) + messageList +
+              " = MappingUtils.addMessage(access.getOutputDoc(), currentOutMsg, \"" +
+              messageName + "\", \"\", count, \"" + type + "\", \"" + mode +
+              "\", \"" + orderby + "\");\n");
         } else { // must be parammessage.
 
             result.append(printIdent(ident) + messageList + " = MappingUtils.addMessage(inMessage, currentParamMsg, \"" + messageName
