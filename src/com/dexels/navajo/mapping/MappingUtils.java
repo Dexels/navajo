@@ -258,6 +258,18 @@ public final class MappingUtils {
     }
     return prop;
   }
+   
+   public static final Message[] addMessage(Navajo doc, Message parent, String message,
+       String template, int count,
+       String type, String mode, String orderby) throws java.io.IOException, NavajoException,
+       org.xml.sax.SAXException, MappingException {
+	 
+	 Message[] msgs = addMessage(doc, parent, message, template, count, type, mode);
+	 for(int i=0;i<msgs.length;i++){
+	   msgs[i].setOrderBy(orderby);
+	 }	 
+	 return msgs;
+   }
 
    public static final Message[] addMessage(Navajo doc, Message parent, String message,
                                       String template, int count,

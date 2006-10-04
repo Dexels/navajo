@@ -557,7 +557,8 @@ public class TslCompiler {
     String mode = n.getAttribute("mode");
     String count = n.getAttribute("count");
     String start_index = n.getAttribute("start_index");
-
+    String orderby = n.getAttribute("orderby");
+    
     ////System.out.println("COUNT = " + count);
     type = (type == null) ? "" : type;
     mode = (mode == null) ? "" : mode;
@@ -655,7 +656,8 @@ public class TslCompiler {
 	    result.append(printIdent(ident) + messageList +
 	                  " = MappingUtils.addMessage(access.getOutputDoc(), currentOutMsg, \"" +
 	                  messageName + "\", \"\", count, \"" + type + "\", \"" + mode +
-	                  "\");\n");
+	                  "\", \"" + orderby + "\");\n");
+	    result.append("");
     } else { // must be parammessage.
     	 
     	 result.append(printIdent(ident) + messageList +
