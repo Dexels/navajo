@@ -21,7 +21,7 @@ import java.util.regex.*;
 import java.io.*;
 import javax.swing.tree.*;
 
-public class BaseMessageImpl extends BaseNode implements Message, TreeNode {
+public class BaseMessageImpl extends BaseNode implements Message, TreeNode, Comparable {
     protected String myName = "";
 
     private String myType = "";
@@ -49,6 +49,8 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode {
     private int endIndex = -1;
 
     private boolean isRootMessage = false;
+    
+    private String orderBy = "";
 
     // private List myDefinitionList = null;
     // private Map myDefinitionMap = null;
@@ -73,9 +75,17 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode {
     public final String getType() {
         return myType;
     }
-
+    
     public final void setType(String type) {
         myType = type;
+    }
+    
+    public final String getOrderBy(){
+      return orderBy;
+    }
+    
+    public final void setOrderBy(String order){
+      orderBy = order;
     }
 
     public final String getName() {
@@ -153,12 +163,35 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode {
          */
         messageMap.put(m.getName(), m);
         if (getType().equals(MSG_TYPE_ARRAY)) {
+          if(!"".equals(orderBy)){
+        	
+        	// Add message at the right place
+        	for(int i=0;i<messageList.size();i++){
+        	  Message cur = (Message)messageList.get(i);
+              if(cur.compareTo(m) > 0){
+            	continue;
+              }
+              m.setName(getName());
+              messageList.add(i, m);
+              break;
+        	}
+        	// reset indeces
+        	for(int j=0;j<messageList.size();j++){
+        	  Message mes = (Message)messageList.get(j);
+        	  mes.setIndex(j);
+        	}
+        	
+        	
+          }else{          
         	if ( !m.getType().equals(MSG_TYPE_DEFINITION) ) {
         		m.setIndex(messageList.size());
         	}
             m.setName(getName());
+            messageList.add(m);
+          }
+        }else{
+          messageList.add(m);
         }
-        messageList.add(m);
 
         return m;
     }
@@ -973,6 +1006,9 @@ public final Message getParentMessage() {
     public Map getAttributes() {
         Map m = new HashMap();
         m.put("name", myName);
+        if(!"".equals(orderBy)){
+          m.put("orderby", orderBy);
+        }
         if (myType != null) {
             m.put("type", myType);
             if (Message.MSG_TYPE_ARRAY_ELEMENT.equals(myType)) {
@@ -1051,5 +1087,51 @@ public final Message getParentMessage() {
     public TreeNode getParent() {
       return (TreeNode) getArrayParentMessage();
     }
+
+	public int compareTo(Object o) {
+	  if(o instanceof Message){
+		Message m = (Message)o;
+		if(getType().equals(Message.MSG_TYPE_ARRAY_ELEMENT)){
+		  if(getParent() != null){
+			String order = getParentMessage().getOrderBy();
+			if(!"".equals(order)){
+			  
+			  // Parse the orderby attribute
+			  // Put them in a set
+			  StringTokenizer tok = new StringTokenizer(order, ",");
+			  Set orderValues = new HashSet();
+			  while(tok.hasMoreTokens()){
+				String token = tok.nextToken();
+				orderValues.add(token);
+			  }
+			  
+			  // while messages are equal and there are more orderValues keep ordering
+			  int compare = 0;
+			  Iterator it = orderValues.iterator();
+			  while(it.hasNext() && compare == 0){
+				String oV = (String)it.next();
+				
+				// If DESC we flip the direction
+				int desc = 1;
+				if(oV.indexOf(" ") > 0){
+				  String sort = oV.substring(oV.indexOf(" ") + 1);
+				  oV = oV.substring(0, oV.indexOf(" "));
+				  if("DESC".equals(sort.toUpperCase())){
+					desc = -1;
+				  }				  
+				}
+				// Now we assume oV is an existing property in both messages
+				
+				Property myOvProp = getProperty(oV);
+				Property compOvProp = m.getProperty(oV);
+				compare = desc * compOvProp.compareTo(myOvProp);
+			  }
+			  return compare;			  
+			}
+		  }
+		}
+	  }
+	  return 0;
+	}
 
 }

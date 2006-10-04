@@ -376,11 +376,15 @@ public final class SaxHandler implements DocHandler {
     private final void parseMessage(Hashtable h) throws NavajoException {
         String name = (String)h.get("name");
         String type = (String)h.get("type");
+        String orderby = (String)h.get("orderby");
         Message m = null;
         if (type!=null) {
             m = NavajoFactory.getInstance().createMessage(currentDocument, name,type);
         } else {
             m = NavajoFactory.getInstance().createMessage(currentDocument, name);
+        }
+        if(orderby != null && !"".equals(orderby)){
+          m.setOrderBy(orderby);
         }
         if (messageStack.isEmpty()) {
 //            System.err.println("Adding to root!");

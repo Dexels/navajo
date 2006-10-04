@@ -21,7 +21,6 @@ package com.dexels.navajo.document.jaxpimpl;
 import com.dexels.navajo.document.*;
 
 import org.w3c.dom.*;
-import java.util.ArrayList;
 import java.util.*;
 import java.util.regex.*;
 
@@ -825,4 +824,19 @@ public final class MessageImpl implements Message {
      return null;
 //     throw new UnsupportedOperationException("Can not get definition message in JAXPIMPL");
    }
+
+  public String getOrderBy() {
+	// TODO Auto-generated method stub
+	return null;
+  }
+
+  public void setOrderBy(String s) {
+	// TODO Auto-generated method stub
+	
+  }
+
+  public int compareTo(Object o) {
+	// TODO Auto-generated method stub
+	return 0;
+  }
 }
