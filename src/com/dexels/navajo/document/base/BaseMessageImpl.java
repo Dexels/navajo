@@ -146,58 +146,33 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode, Comp
     }
 
     public final Message addMessage(Message m, boolean overwrite) {
-    	
-    	m.setParent(this);
-    	 
-        String name = m.getName();
+  	
+  	m.setParent(this);
+  	 
+      String name = m.getName();
 
-        if (getMessage(name) != null && !overwrite && !this.getType().equals(Message.MSG_TYPE_ARRAY)) {
-            return getMessage(name);
-        }
+      if (getMessage(name) != null && !overwrite && !this.getType().equals(Message.MSG_TYPE_ARRAY)) {
+          return getMessage(name);
+      }
 
-        if (getMessage(name) != null && overwrite) {
-            removeChildMessage(getMessage(m.getName()));
-        }
-        /**
-         * If message is array type, insert new message as "element".
-         */
-        
-        messageMap.put(m.getName(), m);
-        if (getType().equals(MSG_TYPE_ARRAY)) {
-          if(!"".equals(orderBy) && messageList.size() > 0){
-        	// Add message at the right place
-        	int index = 0;
-        	for(int i=0;i<messageList.size();i++){
-        	  Message cur = (Message)messageList.get(i);
-              if(cur.compareTo(m) > 0){
-            	index++;
-            	continue;
-              } else{
-            	break;
-              }  
-        	}
-   
-        	messageList.add(index, m);
-        	m.setName(getName());
-        	// reset indeces
-        	for(int j=0;j<messageList.size();j++){
-        	  Message mes = (Message)messageList.get(j);
-        	  mes.setIndex(j);
-        	}
-        	
-          }else{          
-        	if ( !m.getType().equals(MSG_TYPE_DEFINITION) ) {
-        		m.setIndex(messageList.size());
-        	}
-            m.setName(getName());
-            messageList.add(m);
-          }
-        }else{
-          messageList.add(m);
-        }
+      if (getMessage(name) != null && overwrite) {
+          removeChildMessage(getMessage(m.getName()));
+      }
+      /**
+       * If message is array type, insert new message as "element".
+       */
+      messageMap.put(m.getName(), m);
+      if (getType().equals(MSG_TYPE_ARRAY)) {
+      	if ( !m.getType().equals(MSG_TYPE_DEFINITION) ) {
+      		m.setIndex(messageList.size());
+      	}
+          m.setName(getName());
+      }
+      messageList.add(m);
 
-        return m;
-    }
+      return m;
+  }
+
 
     public final void addMessage(Message m, int index) throws NavajoException {
         if (!getType().equals(Message.MSG_TYPE_ARRAY)) {
@@ -1026,6 +1001,9 @@ public final Message getParentMessage() {
         if ( getDefinitionMessage() != null ) {
         	al.add(getDefinitionMessage());
         }
+        if(!"".equals(orderBy) && getType().equals(Message.MSG_TYPE_ARRAY)){
+          Collections.sort(messageList);
+        }
         al.addAll(messageList);
         return al;
     }
@@ -1097,13 +1075,13 @@ public final Message getParentMessage() {
 		if(getType().equals(Message.MSG_TYPE_ARRAY_ELEMENT)){
 		  if(getArrayParentMessage() != null){
 			String order = this.getArrayParentMessage().getOrderBy();
-			System.err.println("Comparing with: " + order);
+
 			if(!"".equals(order)){
 			  
 			  // Parse the orderby attribute
 			  // Put them in a set
 			  StringTokenizer tok = new StringTokenizer(order, ",");
-			  Set orderValues = new HashSet();
+			  List orderValues = new LinkedList();
 			  while(tok.hasMoreTokens()){
 				String token = tok.nextToken();
 				orderValues.add(token.trim());
@@ -1115,23 +1093,22 @@ public final Message getParentMessage() {
 			  while(it.hasNext() && compare == 0){
 				String oV = (String)it.next();
 				
-				System.err.println("TOKEN: " + oV);
-				
 				// If DESC we flip the direction
-				int desc = 1;
+				int desc = -1;
 				if(oV.indexOf(" ") > 0){
 				  String sort = oV.substring(oV.indexOf(" ") + 1);
 				  oV = oV.substring(0, oV.indexOf(" "));
 				  if("DESC".equals(sort.toUpperCase())){
-					desc = -1;
+					desc = 1;
 				  }				  
 				}
 				// Now we assume oV is an existing property in both messages
 				
+				//System.err.println("Getting property compare: '" + oV + "',  descending? " + desc );
 				Property myOvProp = getProperty(oV);
 				Property compOvProp = m.getProperty(oV);
 				compare = desc * compOvProp.compareTo(myOvProp);
-				System.err.println("Compared value: " + compare);
+				//System.err.println("Compared value: " + compare);
 			  }
 			  return compare;			  
 			}
