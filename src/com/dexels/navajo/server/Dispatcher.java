@@ -833,7 +833,7 @@ public final class Dispatcher {
           rateWindow = new long[rateWindowSize];
         }
       }
-      rateWindow[rateWindowSize - 1] = System.currentTimeMillis();
+      rateWindow[rateWindowSize - 1] = clientInfo.created.getTime();
 
       Header header = inMessage.getHeader();
       rpcName = header.getRPCName();
