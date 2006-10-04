@@ -161,26 +161,29 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode, Comp
         /**
          * If message is array type, insert new message as "element".
          */
+        
         messageMap.put(m.getName(), m);
         if (getType().equals(MSG_TYPE_ARRAY)) {
-          if(!"".equals(orderBy)){
-        	
+          if(!"".equals(orderBy) && messageList.size() > 0){
         	// Add message at the right place
+        	int index = 0;
         	for(int i=0;i<messageList.size();i++){
         	  Message cur = (Message)messageList.get(i);
               if(cur.compareTo(m) > 0){
+            	index++;
             	continue;
-              }
-              m.setName(getName());
-              messageList.add(i, m);
-              break;
+              } else{
+            	break;
+              }  
         	}
+   
+        	messageList.add(index, m);
+        	m.setName(getName());
         	// reset indeces
         	for(int j=0;j<messageList.size();j++){
         	  Message mes = (Message)messageList.get(j);
         	  mes.setIndex(j);
         	}
-        	
         	
           }else{          
         	if ( !m.getType().equals(MSG_TYPE_DEFINITION) ) {
@@ -1092,8 +1095,9 @@ public final Message getParentMessage() {
 	  if(o instanceof Message){
 		Message m = (Message)o;
 		if(getType().equals(Message.MSG_TYPE_ARRAY_ELEMENT)){
-		  if(getParent() != null){
-			String order = getParentMessage().getOrderBy();
+		  if(getArrayParentMessage() != null){
+			String order = this.getArrayParentMessage().getOrderBy();
+			System.err.println("Comparing with: " + order);
 			if(!"".equals(order)){
 			  
 			  // Parse the orderby attribute
@@ -1102,7 +1106,7 @@ public final Message getParentMessage() {
 			  Set orderValues = new HashSet();
 			  while(tok.hasMoreTokens()){
 				String token = tok.nextToken();
-				orderValues.add(token);
+				orderValues.add(token.trim());
 			  }
 			  
 			  // while messages are equal and there are more orderValues keep ordering
@@ -1110,6 +1114,8 @@ public final Message getParentMessage() {
 			  Iterator it = orderValues.iterator();
 			  while(it.hasNext() && compare == 0){
 				String oV = (String)it.next();
+				
+				System.err.println("TOKEN: " + oV);
 				
 				// If DESC we flip the direction
 				int desc = 1;
@@ -1125,6 +1131,7 @@ public final Message getParentMessage() {
 				Property myOvProp = getProperty(oV);
 				Property compOvProp = m.getProperty(oV);
 				compare = desc * compOvProp.compareTo(myOvProp);
+				System.err.println("Compared value: " + compare);
 			  }
 			  return compare;			  
 			}
