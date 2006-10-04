@@ -15,7 +15,7 @@ import java.util.*;
  */
 
 public interface Message
-    extends java.io.Serializable {
+    extends java.io.Serializable, java.lang.Comparable {
 
   /**
    * Message attributes/constants.
@@ -92,6 +92,20 @@ public interface Message
    * MSG_TYPE_SIMPLE, MSG_TYPE_ARRAY, MSG_TYPE_ARRAY_ELEMENT, MSG_TYPE_DEFINITION, MSG_TYPE_TABLE
    */
   public String getType();
+  
+  /**
+   * Set the orderby of a message.
+   * Default "" other value: "[PropertyName1], [PropertyName2]".
+   * @param s
+   */
+  public void setOrderBy(String s);
+
+  /**
+   * Get the type of a message.
+   *
+   * @return Orderby of the message, empty String if type is not specified.
+   */
+  public String getOrderBy();
 
   /**
    * Check if message is of type Array
