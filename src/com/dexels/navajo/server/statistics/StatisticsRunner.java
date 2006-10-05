@@ -58,7 +58,7 @@ public final class StatisticsRunner extends GenericThread {
   
   private static StatisticsRunner instance = null;
   private StoreInterface myStore = null;
-  private Set todo = Collections.synchronizedSet(new HashSet());
+  private Set todo = new HashSet();
   
   private static Object semaphore = new Object();
   
@@ -111,22 +111,29 @@ public final class StatisticsRunner extends GenericThread {
    *
    */
   public final void worker() {
-	  
+
 	  // Check for new access objects.
 	  //System.err.println(">> StatisticsRunner TODO list size: " + todo.size());
-	  synchronized (todo) {
-		  Iterator iter = todo.iterator();
-		  while (iter.hasNext()) {
-			  TodoItem ti = (TodoItem) iter.next();
-			  myStore.storeAccess(ti.access, ti.asyncobject);
-			  iter.remove();
-			  ti = null;
-			  if (todo.size() > 50) {
-				  System.err.println("WARNING: StatisticsRunner TODO list size:  " + todo.size());
-			  }
-		  }
+	  //synchronized (todo) {
+
+	  HashSet copyOfTodo = null;
+	  synchronized ( semaphore ) {
+		  copyOfTodo = new HashSet(todo);
+		  todo.clear();
 	  }
-	  
+
+	  Iterator iter = copyOfTodo.iterator();
+
+	  while (iter.hasNext()) {
+		  TodoItem ti = (TodoItem) iter.next();
+		  myStore.storeAccess(ti.access, ti.asyncobject);
+		  ti = null;
+//		  if (todo.size() > 50) {
+//			  System.err.println("WARNING: StatisticsRunner TODO list size:  " + todo.size());
+//		  }
+	  }
+	  //}
+
   }
 
   /**
@@ -135,9 +142,11 @@ public final class StatisticsRunner extends GenericThread {
    * @param a
    */
   public final void addAccess(final Access a, final Exception e, AsyncMappable am) {
-    todo.add( new TodoItem(a, am) );
-    // Add to webserviceaccesslistener.
-    WebserviceAccessListener.getInstance().addAccess(a, e);
+	  synchronized ( semaphore ) {
+		  todo.add( new TodoItem(a, am) );
+	  }
+	  // Add to webserviceaccesslistener.
+	  WebserviceAccessListener.getInstance().addAccess(a, e);
   }
   
   public int getTodoCount() {

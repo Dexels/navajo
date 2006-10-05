@@ -73,9 +73,9 @@ public class Worker extends GenericThread {
 	private static Object semaphore = new Object();
 	
 	// Worklist containst responses that still need to be written to a file.
-	private Map workList = Collections.synchronizedMap(new HashMap());
+	private Map workList = new HashMap();
 	// Integrity cache contains mapping between unique request id and response file.
-	private Map integrityCache = Collections.synchronizedMap(new HashMap());
+	private Map integrityCache = new HashMap();
 	// Contains all unique request ids that still need to be handled by the worker thread.
 	private Set notWrittenReponses = Collections.synchronizedSet(new HashSet());
 	
@@ -191,23 +191,26 @@ public class Worker extends GenericThread {
 	public final void worker() {
 		
 		// Check for new access objects in workList.
+		HashMap copyOfWorkList = null;
 		Set s = null;
 		synchronized (workList) {
-			s = new HashSet(workList.keySet());
+			copyOfWorkList = new HashMap(workList);
+			s = new HashSet(copyOfWorkList.keySet());
+			workList.clear();
 		}
 		Iterator iter = s.iterator();
 		while (iter.hasNext()) {
 			String id = (String) iter.next();
 			if ( id != null && !id.trim().equals("") ) {
-				writeFile( id, (Navajo) workList.get(id) );
+				writeFile( id, (Navajo) copyOfWorkList.get(id) );
 			}
 			if ( id != null ) {
 				notWrittenReponses.remove( id );
 			}
-			workList.remove(id);
-			if (workList.size() > 50) {
-				AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "WARNING: Integrity Worker TODO list size:  " + workList.size());
-			}
+			//workList.remove(id);
+//			if (workList.size() > 50) {
+//				AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "WARNING: Integrity Worker TODO list size:  " + workList.size());
+//			}
 			
 		}
 		
