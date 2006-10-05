@@ -61,15 +61,17 @@ package navajodocument;
  * 
  * 9.0.4 Fixed problem with async webservice callback.
  * 
+ * 9.1.0 Support for orderby construct in array messages. Message implements Comparable now.
+ * 
  */
 public class Version extends dexels.Version {
 
 	public static final int MAJOR          = 9;
-	public static final int MINOR          = 0;
-	public static final int PATCHLEVEL     = 4;
+	public static final int MINOR          = 1;
+	public static final int PATCHLEVEL     = 0;
 	public static final String VENDOR      = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Document";
-	public static final String RELEASEDATE = "2006-09-27";
+	public static final String RELEASEDATE = "2006-10-05";
 
 	// Included packages.
 
