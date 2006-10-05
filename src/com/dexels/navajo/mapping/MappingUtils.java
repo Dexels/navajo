@@ -265,9 +265,13 @@ public final class MappingUtils {
        org.xml.sax.SAXException, MappingException {
 	 
 	 Message[] msgs = addMessage(doc, parent, message, template, count, type, mode);
-	 for(int i=0;i<msgs.length;i++){
-	   msgs[i].setOrderBy(orderby);
-	 }	 
+	 
+	 if ( orderby != null && !orderby.equals("")) {
+		 for(int i=0;i<msgs.length;i++){
+			 msgs[i].setOrderBy(orderby);
+		 }	 
+	 }
+	 
 	 return msgs;
    }
 
