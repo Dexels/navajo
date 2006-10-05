@@ -425,8 +425,8 @@ public class BasePropertyImpl
           return d;
         }
         catch (Exception ex2) {
-          System.err.println("Sorry I really can't parse that date..");
-          ex2.printStackTrace();
+          System.err.println("Sorry I really can't parse that date: " + getValue().toString() );
+          //ex2.printStackTrace();
         }
       }
     }
