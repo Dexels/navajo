@@ -1036,91 +1036,97 @@ public class BasePropertyImpl
 //    return ob1.compareTo(ob2);
 //  }
   public final int compareTo(Object p) {
-    if (p == null) {
-      return 0;
-    }
-    Comparable ob1;
-    Comparable ob2;
 
-    if (getType().equals(Property.BOOLEAN_PROPERTY)) {
-      Boolean bool1 = (Boolean) getTypedValue();
-      boolean b1 = bool1.booleanValue();
-      Boolean bool2 = (Boolean) ( (Property) p).getTypedValue();
-      boolean b2 = bool2.booleanValue();
-      if (b1 == b2) {
-        return 0;
-      }
-      else if (b1) { // Define false < true
-        return 1;
-      }
-      else {
-        return -1;
-      }
-    }
+	  try {
+		  if (p == null) {
+			  return 0;
+		  }
+		  Comparable ob1;
+		  Comparable ob2;
 
-    // Get first argument.
-    if (getType().equals(Property.SELECTION_PROPERTY)) {
-      if (getSubType("name") != null && getSubType("name").equals("integer")) {
-        ob1 = (Comparable) new Integer(getSelected().getName());
-      } else {
-        ob1 = (Comparable) getSelected().getName();
-      }
-    }
-    else {
-      ob1 = (Comparable) getTypedValue();
-    }
+		  if (getType().equals(Property.BOOLEAN_PROPERTY)) {
+			  Boolean bool1 = (Boolean) getTypedValue();
+			  boolean b1 = bool1.booleanValue();
+			  Boolean bool2 = (Boolean) ( (Property) p).getTypedValue();
+			  boolean b2 = bool2.booleanValue();
+			  if (b1 == b2) {
+				  return 0;
+			  }
+			  else if (b1) { // Define false < true
+				  return 1;
+			  }
+			  else {
+				  return -1;
+			  }
+		  }
 
-    // Get second argument.
-    if ( ( (BasePropertyImpl) p).getType().equals(Property.SELECTION_PROPERTY)) {
-        BasePropertyImpl cp = (BasePropertyImpl) p;
-      if (getSubType("name") != null && cp.getSubType("name").equals("integer")) {
-        ob2 = (Comparable) new Integer(cp.getSelected().getName());
-      } else {
-        ob2 = (Comparable) ( (BasePropertyImpl) p).getSelected().getName();
-      }
-    }
-    else {
-      ob2 = (Comparable) ( (BasePropertyImpl) p).getTypedValue();
-    }
+		  // Get first argument.
+		  if (getType().equals(Property.SELECTION_PROPERTY)) {
+			  if (getSubType("name") != null && getSubType("name").equals("integer")) {
+				  ob1 = (Comparable) new Integer(getSelected().getName());
+			  } else {
+				  ob1 = (Comparable) getSelected().getName();
+			  }
+		  }
+		  else {
+			  ob1 = (Comparable) getTypedValue();
+		  }
 
-//    Comparable ob1 = (Comparable)getAlternativeTypedValue();
-//    Comparable ob2 = (Comparable)((PropertyImpl)p).getAlternativeTypedValue();
+		  // Get second argument.
+		  if ( ( (BasePropertyImpl) p).getType().equals(Property.SELECTION_PROPERTY)) {
+			  BasePropertyImpl cp = (BasePropertyImpl) p;
+			  if (getSubType("name") != null && cp.getSubType("name").equals("integer")) {
+				  ob2 = (Comparable) new Integer(cp.getSelected().getName());
+			  } else {
+				  ob2 = (Comparable) ( (BasePropertyImpl) p).getSelected().getName();
+			  }
+		  }
+		  else {
+			  ob2 = (Comparable) ( (BasePropertyImpl) p).getTypedValue();
+		  }
 
-//    System.err.println("Comparing: " + ob1 + ", " + ob2);
+//		  Comparable ob1 = (Comparable)getAlternativeTypedValue();
+//		  Comparable ob2 = (Comparable)((PropertyImpl)p).getAlternativeTypedValue();
 
-
-    // now null values will be compared too.
-    if (ob1 == null && ob2 == null) {
-      return 0;
-    }
-
-    if(ob1 == null && ob2 != null){
-      return -1;
-    }
-
-    if(ob2 == null && ob1 != null){
-      return 1;
-    }
+//		  System.err.println("Comparing: " + ob1 + ", " + ob2);
 
 
+		  // now null values will be compared too.
+		  if (ob1 == null && ob2 == null) {
+			  return 0;
+		  }
 
-    if (ob1.getClass() != ob2.getClass()) {
-      //System.err.println("My name is: "+getName());
-      //System.err.println("The other name is: "+((Property)p).getName()+" the type: "+getType()+" - "+((Property)p).getType());
-      //System.err.println("Compared "+ob1+" with "+ob2+" class: "+ob1.getClass()+" - "+ob2.getClass());
-    }
+		  if(ob1 == null && ob2 != null){
+			  return -1;
+		  }
 
-    if (!Property.class.isInstance(p)) {
-      return 0;
-    }
+		  if(ob2 == null && ob1 != null){
+			  return 1;
+		  }
 
-    try {
-      int i = ob1.compareTo(ob2);
-      return i;
-    }
-    catch (Throwable t) {
-      return 0;
-    }
+
+
+		  if (ob1.getClass() != ob2.getClass()) {
+			  //System.err.println("My name is: "+getName());
+			  //System.err.println("The other name is: "+((Property)p).getName()+" the type: "+getType()+" - "+((Property)p).getType());
+			  //System.err.println("Compared "+ob1+" with "+ob2+" class: "+ob1.getClass()+" - "+ob2.getClass());
+		  }
+
+		  if (!Property.class.isInstance(p)) {
+			  return 0;
+		  }
+
+		  try {
+			  int i = ob1.compareTo(ob2);
+			  return i;
+		  }
+		  catch (Throwable t) {
+			  return 0;
+		  }
+
+	  } catch (Throwable t2) {
+		  return 0;
+	  }
 
   }
 
