@@ -513,7 +513,7 @@ private int globalRetryCounter = 0;
     else {
       url = new URL("http://" + name);
     }
-    Thread.dumpStack();
+//    Thread.dumpStack();
     System.err.println("in doTransaction: opening url: " + url.toString()+" global retries: "+globalRetryCounter);
     HttpURLConnection con = null;
     if (sslFactory == null) {
