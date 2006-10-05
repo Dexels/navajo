@@ -85,16 +85,18 @@ package navajo;
  * 5.5.1 Better memory usage for adapter jars
  * 
  * 5.5.2 Support for mappable adapter statistics
+ * 
+ * 5.5.3 Support for orderby construct in array messages.
  */
 
 public class Version extends dexels.Version {
 
 	public static final int MAJOR = 5;
 	public static final int MINOR = 5;
-	public static final int PATCHLEVEL = 2;
+	public static final int PATCHLEVEL = 3;
 	public static final String VENDOR = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Kernel";
-	public static final String RELEASEDATE = "2006-09-18";
+	public static final String RELEASEDATE = "2006-10-05";
 	
 //	 Included packages.
 	String [] includes = {"navajodocument.Version"};
