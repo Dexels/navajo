@@ -13,14 +13,16 @@ import com.dexels.navajo.parser.TMLExpressionException;
 
 public abstract class GetUrlBase extends FunctionInterface {
 
+
 	
-    protected Date getUrlDate(URL u) {
+    protected static Date getUrlDate(URL u) {
         InputStream os = null;
         try {
-        	URLConnection uc = u.openConnection();
+        	HttpURLConnection uc = (HttpURLConnection)u.openConnection();
 //        	System.err.println(uc.getHeaderFields());
+        	uc.setRequestMethod("HEAD");
             Date d = new Date(uc.getLastModified());
-			flushConnection(uc);
+//			flushConnection(uc);
            return d;
         } catch (IOException e) {
            return null;
@@ -35,14 +37,37 @@ public abstract class GetUrlBase extends FunctionInterface {
         }
     }
 
-	
-    protected int getUrlLength(URL u) {
+    protected static Date getUrlTime(URL u) {
         InputStream os = null;
         try {
-        	URLConnection uc = u.openConnection();
+        	HttpURLConnection uc = (HttpURLConnection)u.openConnection();
+//        	System.err.println(uc.getHeaderFields());
+        	uc.setRequestMethod("HEAD");
+            Date d = new Date(uc.getDate());
+//			flushConnection(uc);
+            return d;
+        } catch (IOException e) {
+           return null;
+        } finally {
+            if (os!=null) {
+               try {
+                   os.close();
+               } catch (IOException e) {
+                     e.printStackTrace();
+               }
+           }
+        }
+    }
+	
+    protected static int getUrlLength(URL u) {
+        InputStream os = null;
+        try {
+        	HttpURLConnection uc = (HttpURLConnection)u.openConnection();
+//        	System.err.println(uc.getHeaderFields());
+        	uc.setRequestMethod("HEAD");
 //        	System.err.println(uc.getHeaderFields());
             int d = uc.getContentLength();
-			flushConnection(uc);
+//			flushConnection(uc);
            return d;
         } catch (IOException e) {
            return 0;
@@ -56,12 +81,14 @@ public abstract class GetUrlBase extends FunctionInterface {
            }
         }
     }
-    protected String getUrlType(URL u) {
+    protected static String getUrlType(URL u) {
 		InputStream os = null;
 		try {
-			URLConnection openConnection = u.openConnection();
-			String type = openConnection.getContentType();
-			flushConnection(openConnection);
+        	HttpURLConnection uc = (HttpURLConnection)u.openConnection();
+//        	System.err.println(uc.getHeaderFields());
+        	uc.setRequestMethod("HEAD");
+			String type = uc.getContentType();
+//			flushConnection(openConnection);
 
 			return type;
 		} catch (IOException e) {
@@ -77,28 +104,33 @@ public abstract class GetUrlBase extends FunctionInterface {
 		}
 	}
 
-    protected void flushConnection(URLConnection openConnection)
-			throws IOException {
-		InputStream iss = openConnection.getInputStream();
-		copyResource(new OutputStream(){
-			public void write(int b) throws IOException {
-				// do absolutely nothing
-			}}, iss);
-		iss.close();
-	}
+//    protected static void flushConnection(URLConnection openConnection)
+//			 {
+//		InputStream iss;
+//		try {
+//			iss = openConnection.getInputStream();
+//			copyResource(new OutputStream(){
+//				public void write(int b) throws IOException {
+//					// do absolutely nothing
+//				}}, iss);
+//			iss.close();
+//		} catch (Throwable e) {
+//			e.printStackTrace();
+//		}
+//	}
 
-    protected static final void copyResource(OutputStream out, InputStream in)
-			throws IOException {
-		BufferedInputStream bin = new BufferedInputStream(in);
-		BufferedOutputStream bout = new BufferedOutputStream(out);
-		byte[] buffer = new byte[1024];
-		int read;
-		while ((read = bin.read(buffer)) > -1) {
-			bout.write(buffer, 0, read);
-		}
-		bin.close();
-		bout.flush();
-		// bout.close();
-	}
+//    protected static final void copyResource(OutputStream out, InputStream in)
+//			throws IOException {
+//		BufferedInputStream bin = new BufferedInputStream(in);
+//		BufferedOutputStream bout = new BufferedOutputStream(out);
+//		byte[] buffer = new byte[1024];
+//		int read;
+//		while ((read = bin.read(buffer)) > -1) {
+//			bout.write(buffer, 0, read);
+//		}
+//		bin.close();
+//		bout.flush();
+//		// bout.close();
+//	}
 
 }

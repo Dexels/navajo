@@ -36,7 +36,8 @@ public class GetUrlTime extends GetUrlBase {
 			throw new TMLExpressionException("CheckUrl: bad url: "+a);
 		}
 
-		return getUrlDate(u);
+		return getUrlTime(u);
 	}
 	
+
 }
