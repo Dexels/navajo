@@ -31,7 +31,7 @@ public class NavajoSocketClient extends ClientQueueImpl {
         inoutCount--;
     }
 
-    public BufferedInputStream doTransaction(String name, Navajo d, boolean useCompression) throws IOException, ClientException, NavajoException, javax.net.ssl.SSLHandshakeException {
+   public BufferedInputStream doTransaction(String name, Navajo d, boolean useCompression) throws IOException, ClientException, NavajoException, javax.net.ssl.SSLHandshakeException {
         Socket connection = null;
          if (connection==null) {
             connection = initialize();

@@ -504,7 +504,7 @@ private int globalRetryCounter = 0;
   
   
   // TODO: Are all streams closed? I am not sure how URLConnections handle it
-  private final BufferedInputStream doTransaction(String name, Navajo d, boolean useCompression) throws IOException, ClientException, NavajoException, javax.net.ssl.SSLHandshakeException {
+  protected BufferedInputStream doTransaction(String name, Navajo d, boolean useCompression) throws IOException, ClientException, NavajoException, javax.net.ssl.SSLHandshakeException {
     URL url;
     
     if (setSecure) {
@@ -513,6 +513,7 @@ private int globalRetryCounter = 0;
     else {
       url = new URL("http://" + name);
     }
+    Thread.dumpStack();
     System.err.println("in doTransaction: opening url: " + url.toString()+" global retries: "+globalRetryCounter);
     HttpURLConnection con = null;
     if (sslFactory == null) {
