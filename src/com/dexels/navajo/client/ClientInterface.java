@@ -158,4 +158,11 @@ public void removeBroadcastListener(BroadcastListener al);
 
 public void setKeepAlive(int millis) throws ClientException;
 
+/*
+ * Do simple send to a specific server
+ */
+public Navajo doSpecificSend(Navajo out, String method, int serverIndex)  throws ClientException;
+
+public int getAsyncServerIndex();
+	
 }

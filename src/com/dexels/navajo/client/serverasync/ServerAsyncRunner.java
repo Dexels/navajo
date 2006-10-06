@@ -25,6 +25,7 @@ public class ServerAsyncRunner
   private boolean kill = false;
   int prev_progress = 0;
   long prev_time = 0;
+  private int serverIndex = 0;
   private final static int MAX_POLLING_INTERVAL = 30000;
 
 
@@ -44,13 +45,14 @@ public class ServerAsyncRunner
     myListener = listener;
     myClientId = clientId;
     myPollingInterval = pollingInterval;
+    serverIndex = client.getAsyncServerIndex();
     if (in.getHeader() != null) {
       in.getHeader().removeCallBackPointers();
     }
   }
 
   private Navajo doSimpleSend(Navajo n, String method) throws ClientException {
-    return myClientInterface.doSimpleSend(n, method);
+    return myClientInterface.doSpecificSend(n, method,serverIndex);
   }
 
   /**
@@ -177,7 +179,7 @@ public class ServerAsyncRunner
       myNavajo.removeHeader();
     }
 
-    myResult = myClientInterface.doSimpleSend(myNavajo, myMethod);
+    myResult = doSimpleSend(myNavajo, myMethod);
     Header resultHead = myResult.getHeader();
     if (resultHead != null) {
       if (myListener != null) {
