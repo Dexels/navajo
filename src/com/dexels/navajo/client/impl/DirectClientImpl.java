@@ -2,6 +2,7 @@ package com.dexels.navajo.client.impl;
 
 import java.io.InputStream;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.*;
 
 import com.dexels.navajo.client.*;
@@ -46,6 +47,18 @@ public class DirectClientImpl
   	  	myRunner = new NavajoAsyncRunner(this);
   	    myRunner.start();
 	}
+	  String token = null;
+	  try {
+		token = NavajoClient.createSessionToken();
+	} catch (UnknownHostException e) {
+	
+		e.printStackTrace();
+	}
+	if (token!=null) {
+		mySessionToken = token;
+	} else {
+		mySessionToken = "OHDEAR|OHDEAR|OHDEAR|OHDEAR|OHDEAR";		
+	}
   }
 
   private final Map propertyMap = new HashMap();
@@ -57,6 +70,10 @@ public class DirectClientImpl
   private final Map globalMessages = new HashMap();
 private String password;
 private String username;
+
+
+private final String mySessionToken;
+
 //   public DirectNavajoClient(String configurationPath) throws NavajoException {
 //     dispatcher = new Dispatcher(configurationPath);
 //   }
@@ -80,7 +97,10 @@ private String username;
   public void setRetryInterval(long l) {
     // Not applicable.
   }
-
+  
+  public String getSessionToken() {
+	  return mySessionToken;
+  }
   public void setRetryAttempts(int i) {
     // Not applicable.
   }
@@ -118,9 +138,21 @@ private String username;
         return reply;
       }
     try {
-      Header header = NavajoFactory.getInstance().createHeader(out, method,
-          user, password, expirationInterval );
-      out.addHeader(header);
+    	if (out.getHeader()==null) {
+    	      Header header = NavajoFactory.getInstance().createHeader(out, method,
+    	              user, password, expirationInterval );
+    	          out.addHeader(header);
+			
+		} else {
+//			System.err.println("Header present.");
+//			try {
+//				out.getHeader().write(System.err);
+//			} catch (NavajoException e) {
+//				e.printStackTrace();
+//			}
+		}
+    	
+    	
       NavajoConfig navajoConfig = Dispatcher.getInstance().getNavajoConfig();
 
 // ADDED THIS STUFF:
@@ -532,5 +564,15 @@ public void removeBroadcastListener(BroadcastListener al) {
 public void setKeepAlive(int millis) throws ClientException {
 	// TODO Auto-generated method stub
 	
+}
+
+public Navajo doSpecificSend(Navajo n, String method, int serverIndex) {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+public int getAsyncServerIndex() {
+	// TODO Auto-generated method stub
+	return 0;
 }
 }
