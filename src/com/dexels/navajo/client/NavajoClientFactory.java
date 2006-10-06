@@ -48,6 +48,23 @@ public class NavajoClientFactory {
     client.setServerUrl("");
     return client;
   }
+  
+  public static ClientInterface createDefaultClientForServerlist(String[] servers) {
+	     if (servers!=null && servers.length>0) {
+	 		String serv = servers[0];
+	 		if (serv.indexOf('/')==-1) {
+	 			System.err.println("Socket implementation found!");
+	 			NavajoClientFactory.resetClient();
+	 			NavajoClientFactory.createSocketClient();
+	 		} else {
+	 			NavajoClientFactory.resetClient();
+	 			NavajoClientFactory.createDefaultClient();
+	 		}
+	 	}
+	     ClientInterface ci = getClient();
+	     ci.setServers(servers);
+	     return ci;
+  }
 
   /**
    * Clear current client
@@ -131,5 +148,6 @@ public class NavajoClientFactory {
   public static void setCurrentClient(ClientInterface ci) {
     myClient = ci;
   }
+  
 
 }
