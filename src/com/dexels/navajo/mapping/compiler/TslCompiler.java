@@ -652,11 +652,16 @@ public class TslCompiler {
     result.append(printIdent(ident) + "Message [] " + messageList +
                   " = null;\n");
     
+    
+    String orderbyExpression =  ("".equals(orderby) ? "\"\"" :
+                "(String) Expression.evaluate(\"" + orderby + "\", inMessage, currentMap, currentInMsg, currentParamMsg).value"
+    );
+    
     if (n.getNodeName().equals("message")) {
 	    result.append(printIdent(ident) + messageList +
 	                  " = MappingUtils.addMessage(access.getOutputDoc(), currentOutMsg, \"" +
 	                  messageName + "\", \"\", count, \"" + type + "\", \"" + mode +
-	                  "\", \"" + orderby + "\");\n");
+	                  "\", " + orderbyExpression + ");\n");
 	    result.append("");
     } else { // must be parammessage.
     	 

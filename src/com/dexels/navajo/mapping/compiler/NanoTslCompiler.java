@@ -674,11 +674,15 @@ public class NanoTslCompiler {
         String messageList = "messageList" + (messageListCounter++);
         result.append(printIdent(ident) + "Message [] " + messageList + " = null;\n");
 
+        String orderbyExpression =  ("".equals(orderby) ? "\"\"" :
+        	"(String) Expression.evaluate(\"" + orderby + "\", inMessage, currentMap, currentInMsg, currentParamMsg).value"
+        );
+
         if (n.getName().equals("message")) {
           result.append(printIdent(ident) + messageList +
               " = MappingUtils.addMessage(access.getOutputDoc(), currentOutMsg, \"" +
               messageName + "\", \"\", count, \"" + type + "\", \"" + mode +
-              "\", \"" + orderby + "\");\n");
+              "\", " + orderbyExpression + ");\n");
         } else { // must be parammessage.
 
             result.append(printIdent(ident) + messageList + " = MappingUtils.addMessage(inMessage, currentParamMsg, \"" + messageName
