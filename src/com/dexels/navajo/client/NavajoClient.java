@@ -48,7 +48,7 @@ public class NavajoClient implements ClientInterface {
 
   private String[] serverUrls;
   
-  
+  private final static Random randomize = new Random(System.currentTimeMillis());
   // Threadsafe collections:
   private Map globalMessages = new HashMap();
   private Map serviceCache = Collections.synchronizedMap(new HashMap());
@@ -528,6 +528,7 @@ private int globalRetryCounter = 0;
     con.setDoOutput(true);
     con.setDoInput(true);
     con.setUseCaches(false);
+    con.setRequestProperty("Connection", "keep-alive");
     con.setRequestProperty("Content-type", "text/xml; charset=UTF-8");
 
     try {
@@ -1603,6 +1604,11 @@ public void destroy() {
 
 public void setServers(String[] servers) {
 	serverUrls = servers;
+	if (servers.length>0) {
+		currentServerIndex = randomize.nextInt(servers.length);
+		System.err.println("Starting at server # "+currentServerIndex);
+	}
+	
 }
 
 public String getCurrentHost() {
@@ -1610,6 +1616,10 @@ public String getCurrentHost() {
 		return serverUrls[currentServerIndex];
 	}
 	return null;
+}
+
+public String getCurrentHost(int serverIndex) {
+		return serverUrls[serverIndex];
 }
 
 public void switchServer(int startIndex, boolean forceChange) {
@@ -1629,12 +1639,14 @@ public void switchServer(int startIndex, boolean forceChange) {
 	}
 	if (startIndex == currentServerIndex) {
 		System.err.println("BACK AT THE ORIGINAL SERVER!!!!");
-		if (!forceChange) {
+//		if (!forceChange) {
 			return;
-		}
-		throw new RuntimeException("No enabled servers left!");
+//		}
+//		throw new RuntimeException("No enabled servers left!");
 	}
 	String nextServer = serverUrls[currentServerIndex];
+	System.err.println("Current Server now: "+nextServer);
+
 	if (disabledServers.containsKey(nextServer)) {
 		Long timeout = (Long)disabledServers.get(nextServer);
 		long t = timeout.longValue();
@@ -1712,5 +1724,31 @@ public void switchServer(int startIndex, boolean forceChange) {
 			keepAliveThread.start();
 		}
 		
+	}
+
+	public Navajo doSpecificSend(Navajo out, String method, int serverIndex)  throws ClientException{
+			    if (username == null) {
+			      throw new ClientException(1, 1, "No username set!");
+			    }
+			    if (password == null) {
+			      throw new ClientException(1, 1, "No password set!");
+			    }
+			    if (getCurrentHost() == null) {
+			      throw new ClientException(1, 1, "No host set!");
+			    }
+
+			    //System.err.println("------> Calling service: " + method);
+
+//			    try {
+//			      out.write(System.err);
+//			    }
+//			    catch (NavajoException ex) {
+//			      ex.printStackTrace();
+//			    }
+			    return doSimpleSend(out, getCurrentHost(serverIndex), method, username, password, -1, true);
+		}
+
+	public int getAsyncServerIndex() {
+		return currentServerIndex;
 	}
 }
