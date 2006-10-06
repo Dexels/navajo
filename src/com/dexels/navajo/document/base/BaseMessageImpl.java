@@ -1069,7 +1069,7 @@ public final Message getParentMessage() {
       return (TreeNode) getArrayParentMessage();
     }
 
-	public int compareTo(Object o) {
+	public int compareTo(Object o)  {
 	  if(o instanceof Message){
 		Message m = (Message)o;
 		if(getType().equals(Message.MSG_TYPE_ARRAY_ELEMENT)){
@@ -1106,6 +1106,10 @@ public final Message getParentMessage() {
 				
 				//System.err.println("Getting property compare: '" + oV + "',  descending? " + desc );
 				Property myOvProp = getProperty(oV);
+				if ( myOvProp == null ) {
+					System.err.println("WARNING: error while sorting message. Could not sort property named: " + oV);
+					return 0;
+				}
 				Property compOvProp = m.getProperty(oV);
 				compare = desc * compOvProp.compareTo(myOvProp);
 				//System.err.println("Compared value: " + compare);
