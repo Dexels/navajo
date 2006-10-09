@@ -39,8 +39,27 @@ public class SwingTipiUserInterface extends DummyUserInterface{
     showCenteredDialog(d);
   }
 
+  public void showDialogAt(JDialog dlg, int x, int y) {
+	    Dimension dlgSize = dlg.getPreferredSize();
+	    dlg.setLocation(x, y);
+
+	    if (dlgSize.height>(Toolkit.getDefaultToolkit().getScreenSize().height-startBarHeight)) {
+	      dlgSize.height = Toolkit.getDefaultToolkit().getScreenSize().height-startBarHeight;
+	      dlg.setSize(dlgSize);
+	    }
+
+	    if (dlgSize.width>Toolkit.getDefaultToolkit().getScreenSize().width) {
+	      dlgSize.width = Toolkit.getDefaultToolkit().getScreenSize().width;
+	      dlg.setSize(dlgSize);
+	   }
+
+	    dlg.setModal(true);
+	    dlg.setVisible(true);
+
+  }
+  
   public void showCenteredDialog(JDialog dlg) {
-    Dimension dlgSize = dlg.getPreferredSize();
+    Dimension dlgSize = dlg.getBounds().getSize();
     Rectangle r = getMainFrame().getBounds();
     Dimension frmSize = new Dimension(r.width, r.height);
     Point loc = getMainFrame().getLocation();

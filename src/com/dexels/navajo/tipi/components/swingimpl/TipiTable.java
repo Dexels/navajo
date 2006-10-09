@@ -289,10 +289,11 @@ public class TipiTable
     }
   }
 
-  public void loadData(final Navajo n, TipiContext tc,String method) throws TipiException {
-    super.loadData(n, tc,method);
+  public void loadData(final Navajo n, TipiContext tc,String method,String server) throws TipiException, TipiBreakException {
     //Thread.currentThread().dumpStack();
-    flushAggregateValues();
+	    super.loadData(n, tc,method,server);
+
+	  flushAggregateValues();
     updateConditionalRemarks();
     final MessageTablePanel mtp = (MessageTablePanel) getContainer();
     if (messagePath != null && n != null) {
@@ -310,16 +311,25 @@ public class TipiTable
             Dimension d = mtp.getPreferredSize();
             mtp.setMessage(m);
             mtp.setPreferredSize(d);
-            //            System.err.println("MEssage set in TitiTable");
-            updateTableColumns(mtp);
             mtp.revalidate();
-//            mtp.dispatchEvent(new ComponentEvent(mtp,ComponentEvent.COMPONENT_RESIZED));
           }
         });
       }
     }
+	Map m = new HashMap();
+    m.put("service", method);
+    performTipiEvent("onLoad", m, true);
+
   }
 
+  /*
+   * Overridden, to pervent automatically call perform the onload event.
+   * (non-Javadoc)
+   * @see com.dexels.navajo.tipi.components.core.TipiDataComponentImpl#doPerformOnLoad(java.lang.String)
+   */
+  protected void doPerformOnLoad(String method) throws TipiException {
+	}  
+  
   public void setComponentValue(final String name, final Object object) {
     if (name.equals("filtersvisible")) {
       setFiltersVisible(Boolean.valueOf(object.toString()).booleanValue());
@@ -372,7 +382,8 @@ public class TipiTable
       }
     }
     if (name.equals("columnDefinitionSavePath")) {
-        runSyncInEventThread(new Runnable(){
+    	
+    	runSyncInEventThread(new Runnable(){
             public void run() {
                 System.err.println("SETTING SAVE PATH: "+object.toString());
                 setColumnDefinitionSavePath(object.toString());
@@ -560,6 +571,23 @@ public class TipiTable
              e.printStackTrace();
         }
     }
+    
+    if ("doEmail".equals(name)) {
+        mm.doEmail();
+      }
+    if ("doWord".equals(name)) {
+        mm.doWord();
+      }
+    if ("doExcel".equals(name)) {
+        mm.doExcel();
+      }
+    if ("doSaveColumns".equals(name)) {
+        mm.doSaveColumns();
+      }
+
+    if ("doChooseColumns".equals(name)) {
+        mm.doChooseColumns();
+      }   
   }
 
   public void setColumnDefinitionSavePath(String path) {
@@ -681,5 +709,22 @@ public class TipiTable
 //    mm.add(remarkPanel, BorderLayout.SOUTH);
     mm.add(remarkPanel, new GridBagConstraints(0, 2, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(2, 2, 2, 2), 0, 0));
    mm.revalidate();
+  }
+
+
+  public void doEmail() {
+	  mm.doEmail();
+  }
+  public void doWord() {
+	  mm.doWord();
+  }
+  public void doExcel() {
+	  mm.doExcel();
+  }
+  public void doSaveColumns() {
+	  mm.doSaveColumns();
+  }
+  public void doChooseColumns() {
+	  mm.doChooseColumns();
   }
 }

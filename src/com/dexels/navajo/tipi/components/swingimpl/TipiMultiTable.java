@@ -3,6 +3,7 @@ package com.dexels.navajo.tipi.components.swingimpl;
 import com.dexels.navajo.tipi.components.core.*;
 import javax.swing.*;
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.tipixml.*;
@@ -79,7 +80,7 @@ public class TipiMultiTable
     try {
       if (myNavajo != null) {
           // todo: replace with real 
-        loadData(getNavajo(), myContext, null);
+        loadData(getNavajo(), myContext, null,null);
       }
       else {
         System.err.println("Can not reload, no navajo!");
@@ -87,7 +88,9 @@ public class TipiMultiTable
     }
     catch (TipiException ex) {
       ex.printStackTrace();
-    }
+    } catch (TipiBreakException e) {
+		e.printStackTrace();
+	}
   }
 
   public Object getComponentValue(String name) {
@@ -271,8 +274,8 @@ public class TipiMultiTable
     }
   }
 
-  public void loadData(final Navajo n, TipiContext context, String method) throws
-      TipiException {
+  public void loadData(final Navajo n, TipiContext context, String method,String server) throws
+      TipiException, TipiBreakException {
     if (outerMessageName == null) {
       System.err.println("No outermessage");
       return;
@@ -311,6 +314,6 @@ public class TipiMultiTable
     else {
       System.err.println("Not loading outer message null!");
     }
-    super.loadData(n, context, method);
+    super.loadData(n, context, method, server);
   }
 }

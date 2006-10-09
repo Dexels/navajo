@@ -21,12 +21,13 @@ public class TipiMessageTable extends MessageTable {
     }
     
     public synchronized void setMessage(Message m) {
-        setSavePathJustChanged(true);
-        if (columnPathString!=null) {
+       setSavePathJustChanged(true);
+       if (columnPathString!=null) {
             loadColumnsNavajo();
         } 
+       super.setMessage(m);
         
-        super.setMessage(m);
+
     }
     
     public void loadColumnsNavajo() {
@@ -53,6 +54,8 @@ public class TipiMessageTable extends MessageTable {
 				e.printStackTrace();
 			}
             loadColumnsNavajo(n);
+//            refreshColumnSizes();
+            
         }
     }
 

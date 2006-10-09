@@ -255,7 +255,7 @@ public class TipiAdvancedTable
       if (initMethod != null) {
         try {
           loadData(context.doSimpleSend(initMessage.getRootDoc(), initMethod, this, false),
-                   context, initMethod);
+                   context, initMethod,null);
         }
         catch (TipiBreakException ex1) {
           // will never happen. breakOnError is false. This is fine.
@@ -267,7 +267,7 @@ public class TipiAdvancedTable
       try {
         if (initMethod != null) {
           loadData(NavajoClientFactory.getClient().doSimpleSend(initMethod),
-                   context, initMethod);
+                   context, initMethod,null);
         }
       }
       catch (Exception ex) {
@@ -301,8 +301,8 @@ public class TipiAdvancedTable
     }
   }
 
-  public void loadData(Navajo n, TipiContext tc, String method) throws TipiException {
-    super.loadData(n, tc, method);
+  public void loadData(Navajo n, TipiContext tc, String method,String server) throws TipiException, TipiBreakException {
+    super.loadData(n, tc, method,server);
     MessageTablePanel mtp = (MessageTablePanel) getContainer();
     if (dataMessagePath != null && n != null) {
       Message m = n.getMessage(dataMessagePath);

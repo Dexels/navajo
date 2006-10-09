@@ -3,6 +3,7 @@ package com.dexels.navajo.tipi.components.swingimpl;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.internal.*;
@@ -25,7 +26,7 @@ public class TipiDialog
   private boolean showing = false;
   private String title = "";
   private JMenuBar myBar = null;
-  private Rectangle myBounds = new Rectangle(0, 0, 0, 0);
+  private Rectangle myBounds = new Rectangle(-1, -1, -1, -1);
   private boolean studioMode = false;
   public TipiDialog() {
   }
@@ -186,14 +187,16 @@ public class TipiDialog
     myDialog.pack();
     // always the case
     final Rectangle bnds = getDialogBounds();
+    myDialog.setLocationRelativeTo( (Component) myContext.getTopLevel());
     if (bnds != null) {
+    	
       myDialog.setBounds(bnds);
       System.err.println("Setting bounds: "+bnds);
     } else {
       System.err.println("Null bounds for dialog.");
     }
 
-    myDialog.setLocationRelativeTo( (Component) myContext.getTopLevel());
+
   }
 
   private synchronized Rectangle getDialogBounds() {
@@ -222,9 +225,17 @@ public class TipiDialog
           if (myDialog != null) {
              ( (SwingTipiContext) myContext).addTopLevel(myDialog.getContentPane()); ( (SwingTipiContext) myContext).dialogShowing(true); ( (SwingTipiContext) myContext).
                 updateWaiting();
-            SwingClient.getUserInterface().showCenteredDialog(myDialog);
+//             System.err.println("Using bounds: "+myBounds);
+             if (myBounds.x >= 0 && myBounds.y >= 0) {
+							SwingClient.getUserInterface().showDialogAt(
+									myDialog,myBounds.x,myBounds.y);
+						} else {
+//							System.err.println("Centering...");
+							SwingClient.getUserInterface().showCenteredDialog(
+									myDialog);
+						}
             final Rectangle bnds = getDialogBounds();
-            if (bnds!=null) {
+            if (bnds!=null && myDialog!=null) {
                 // JUST TRY TO SET IT.
                 try {
                     myDialog.setSize(bnds.width,bnds.height);
@@ -274,6 +285,24 @@ public class TipiDialog
     }
   }
 
+  
+//
+//  private void centerDialog(JDialog dlg, JFrame toplevel) {
+//    Dimension dlgSize = dlg.getPreferredSize();
+//    Rectangle r = toplevel.getBounds();
+//    Dimension frmSize = new Dimension(r.width, r.height);
+//    Point loc = toplevel.`getLocation();
+//    int x_loc = (frmSize.width - dlgSize.width) / 2 + loc.x + r.x;
+//    int y_loc = (frmSize.height - dlgSize.height) / 2 + loc.y + r.y;
+//    System.err.println("Adding at: " + x_loc + ", " + y_loc);
+//    if(y_loc < 0) {
+//      y_loc = 0;
+//    }
+//    dlg.setLocation(x_loc, y_loc);
+//    dlg.setModal(true);
+//    dlg.show();
+//  }
+  
 //  public void setContainerVisible(boolean b) {
 //  }
   public void reUse() {

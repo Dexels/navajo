@@ -209,6 +209,11 @@
                 <param name="propertyName" type="string"/>
                 <param name="value" type="object"/>
             </method>
+            <method name="doEmail"/>
+            <method name="doWord"/>
+            <method name="doExcel"/>
+            <method name="doSaveColumns"/>
+            <method name="doChooseColumns"/>       
         </methods>
     </tipiclass>
     <tipiclass addtocontainer="true" childcount="0" class="TipiMegaTable" layoutmanager="false"

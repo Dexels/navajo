@@ -81,7 +81,7 @@ public class TipiStandaloneContainer implements TipiStandaloneToplevelContainer 
   }
 
   public void loadNavajo(Navajo nav,String method)  throws TipiException, TipiBreakException {
-    embeddedContext.loadNavajo(nav,method);
+    embeddedContext.loadNavajo(nav,method,null);
   }
 
   public TipiContext getContext() {
