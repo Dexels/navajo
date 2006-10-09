@@ -45,7 +45,7 @@ public abstract class TipiContext
   protected final List myActivityListeners = new ArrayList();
   private final ArrayList activityListenerList = new ArrayList();
 
-  protected XMLElement clientConfig = null;
+  protected final HashMap clientConfigMap = new HashMap();
   protected boolean studioMode = false;
   protected TipiThreadPool myThreadPool;
   protected TipiComponent topScreen = null;
@@ -226,7 +226,8 @@ public abstract class TipiContext
 //    System.err.println("**************CREATING CLIENT:***************************");
 //    System.err.println(config.toString());
 //    System.err.println("*********************************************************");
-    clientConfig = config;
+	  String name = config.getStringAttribute("name");
+//    clientConfig = config;
     String impl = (String)attemptGenericEvaluate(config.getStringAttribute("impl", "'indirect'"));
     setSystemProperty("tipi.client.impl", impl, false);
     String cfg = (String)attemptGenericEvaluate(config.getStringAttribute("config", "'server.xml'"));
@@ -262,6 +263,9 @@ public abstract class TipiContext
             NavajoClientFactory.getClient().setUsername(navajoUsername);
             NavajoClientFactory.getClient().setPassword(navajoPassword);
         }
+        if (name!=null) {
+			clientConfigMap.put(name, NavajoClientFactory.getClient());
+		}
     }
     else {
         NavajoClientFactory.resetClient();
@@ -806,7 +810,7 @@ public void parseDefinition(XMLElement child) throws TipiException {
 //    System.err.println("Instantiating class: " + className);
     XMLElement tipiDefinition = null;
     Class c = getTipiClass(className);
-    if (defname!=null) {
+    if (defname!=null && className==null) {
         tipiDefinition = getComponentDefinition(defname);
 	}
     XMLElement classDef = (XMLElement) tipiClassDefMap.get(className);
@@ -1086,16 +1090,16 @@ public void parseDefinition(XMLElement child) throws TipiException {
   }
 
 
-  public Navajo doSimpleSend(Navajo n, String service, ConditionErrorHandler ch)  {
-    try {
-      return doSimpleSend(n, service, ch, -1, false);
-    }
-    catch (TipiBreakException ex) {
-      // will not happen.
-      ex.printStackTrace();
-      return null;
-    }
-  }
+//  public Navajo doSimpleSend(Navajo n, String service, ConditionErrorHandler ch)  {
+//    try {
+//      return doSimpleSend(n, service, ch, -1, false);
+//    }
+//    catch (TipiBreakException ex) {
+//      // will not happen.
+//      ex.printStackTrace();
+//      return null;
+//    }
+//  }
 
   public Navajo doSimpleSend(Navajo n, String service, ConditionErrorHandler ch, boolean breakOnError) throws TipiBreakException {
     return doSimpleSend(n, service, ch, -1, breakOnError);
@@ -1108,7 +1112,15 @@ public void parseDefinition(XMLElement child) throws TipiException {
     return doSimpleSend(n,service,ch,expirtationInterval,hosturl,username,password,null,null,breakOnError);
   }
 
+//  public Navajo doSimpleSend(Navajo n, String service, ConditionErrorHandler ch, String clientName, boolean breakOnError) throws TipiBreakException {
+//	return doSimpleSend(n, service, ch, -1, null,null,null, null, null, breakOnError);
+//  }
+
   public Navajo doSimpleSend(Navajo n, String service, ConditionErrorHandler ch, long expirtationInterval, String hosturl, String username, String password,String keystore,String keypass, boolean breakOnError) throws TipiBreakException {
+	    return doSimpleSend(n,service,ch,expirtationInterval,hosturl,username,password,null,null,breakOnError,null);
+ }
+  
+  private Navajo doSimpleSend(Navajo n, String service, ConditionErrorHandler ch, long expirtationInterval, String hosturl, String username, String password,String keystore,String keypass, boolean breakOnError, String clientName) throws TipiBreakException {
       Navajo reply = null;
     if (myThreadPool == null) {
       myThreadPool = new TipiThreadPool(this, getPoolSize());
@@ -1165,25 +1177,27 @@ public void parseDefinition(XMLElement child) throws TipiException {
     performTipiMethod(t,n,tipiDestinationPath,method,breakOnError,event,expirationInterval,hosturl,username,password,null,null);
   }
 
-
-
   public void performTipiMethod(TipiDataComponent t, Navajo n, String tipiDestinationPath, String method, boolean breakOnError, TipiEvent event, long expirationInterval, String hosturl, String username, String password, String keystore, String keypass) throws TipiException, TipiBreakException {
+	    performTipiMethod(t,n,tipiDestinationPath,method,breakOnError,event,expirationInterval,hosturl,username,password,keystore,keypass,null);
+  }
+
+  public void performTipiMethod(TipiDataComponent t, Navajo n, String tipiDestinationPath, String method, boolean breakOnError, TipiEvent event, long expirationInterval, String hosturl, String username, String password, String keystore, String keypass, String server) throws TipiException, TipiBreakException {
 
      ConditionErrorHandler ch = t;
 
     Navajo reply = doSimpleSend(n, method, ch, expirationInterval,hosturl,username,password,keystore,keypass,breakOnError);
-    loadNavajo(reply,method,tipiDestinationPath,event,breakOnError);
+    loadNavajo(reply,method,tipiDestinationPath,event,breakOnError,server);
 
 //    long x2 = System.currentTimeMillis() - xx;
 //    logServicePerformance(method, x2);
   }
 
-  public void loadNavajo(Navajo reply, String method)  throws TipiException, TipiBreakException {
-    loadNavajo(reply,method,"8",null,false);
+  public void loadNavajo(Navajo reply, String method, String server)  throws TipiException, TipiBreakException {
+    loadNavajo(reply,method,"*",null,false,server);
   }
 
 
-  public void loadNavajo(Navajo reply, String method, String tipiDestinationPath, TipiEvent event, boolean breakOnError) throws TipiException, TipiBreakException  {
+  public void loadNavajo(Navajo reply, String method, String tipiDestinationPath, TipiEvent event, boolean breakOnError, String server) throws TipiException, TipiBreakException  {
     if (reply != null) {
    if (eHandler != null) {
      if (eHandler.hasErrors(reply)) {
@@ -1229,7 +1243,7 @@ public void parseDefinition(XMLElement child) throws TipiException {
        storeTemplateNavajo(method, reply);
        fireNavajoLoaded(method, reply);
      }
-     loadTipiMethod(reply, tipiDestinationPath, method);
+     loadTipiMethod(reply, tipiDestinationPath, method,server);
    }
    catch (TipiException ex) {
      ex.printStackTrace();
@@ -1253,7 +1267,7 @@ public void parseDefinition(XMLElement child) throws TipiException {
    }
 
 
-  protected final void loadTipiMethod(Navajo reply, String tipiDestinationPath, String method) throws TipiException {
+  protected final void loadTipiMethod(Navajo reply, String tipiDestinationPath, String method,String server) throws TipiException {
     TipiDataComponent tt;
     ArrayList tipiList;
     //System.err.println("Loading method");
@@ -1268,7 +1282,11 @@ public void parseDefinition(XMLElement child) throws TipiException {
     for (int i = 0; i < tipiList.size(); i++) {
       TipiDataComponent t = (TipiDataComponent) tipiList.get(i);
       debugLog("data    ","delivering data from method: "+method+" to tipi: "+t.getId());
-      t.loadData(reply, this, method);
+      try {
+		t.loadData(reply, this, method,server);
+	} catch (TipiBreakException e) {
+		System.err.println("Data refused by component");
+	}
       if (t.getContainer() != null) {
         t.tipiLoaded();
       }
@@ -1568,9 +1586,9 @@ public void parseDefinition(XMLElement child) throws TipiException {
         inc.setAttribute("location", location);
         root.addChild(inc);
       }
-      if (clientConfig != null) {
-        root.addChild(clientConfig);
-      }
+//      if (clientConfig != null) {
+//        root.addChild(clientConfig);
+//      }
       Iterator it = tipiComponentMap.keySet().iterator();
       while (it.hasNext()) {
         String name = (String) it.next();

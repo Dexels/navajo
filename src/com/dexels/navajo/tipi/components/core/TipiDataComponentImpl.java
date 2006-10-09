@@ -1,6 +1,8 @@
 package com.dexels.navajo.tipi.components.core;
 
 import java.util.*;
+
+import javax.swing.JScrollPane;
 //import javax.swing.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
@@ -23,6 +25,7 @@ public abstract class TipiDataComponentImpl
 //  private String autoLoad = null;
 //  private String autoLoadDestination = null;
 protected String myMethod;
+private String myServer;
   public TipiDataComponentImpl() {
   }
 
@@ -62,7 +65,17 @@ protected String myMethod;
       }
     }
   }
-
+  protected Object getComponentValue(String name) {
+	  if ("server".equals(name)) {
+		  return myServer;
+	}
+	return super.getComponentValue(name);
+  }
+  
+  public String getServer() {
+	  return myServer;
+  }
+  
   public void load(XMLElement definition, XMLElement instance, TipiContext context) throws TipiException {
     super.load(definition, instance, context);
 //    System.err.println("Loading class: "+instance.getAttribute("id"));
@@ -147,30 +160,30 @@ protected String myMethod;
     }
   }
   
-  /**
-   * @deprecated
-   */
-
-  public void performServiceList(String list, String tipiPath, TipiContext context, TipiEvent event) throws TipiException {
-    if (list.indexOf(";") < 0) {
-      try {
-        performService(context, tipiPath, list, false, event, -1, null, null, null, null, null);
-      }
-      catch (TipiBreakException ex) {
-        System.err.println("Error calling autoload service. " + list + " continuing.");
-      }
-      return;
-    }
-    StringTokenizer st = new StringTokenizer(list, ";");
-    while (st.hasMoreTokens()) {
-      try {
-        performService(context, tipiPath, st.nextToken(), false, event, -1, null, null, null, null, null);
-      }
-      catch (TipiBreakException ex) {
-        System.err.println("Error calling autoload service. " + list + " continuing.");
-      }
-    }
-  }
+//  /**
+//   * @deprecated
+//   */
+//
+//  public void performServiceList(String list, String tipiPath, TipiContext context, TipiEvent event) throws TipiException {
+//    if (list.indexOf(";") < 0) {
+//      try {
+//        performService(context, tipiPath, list, false, event, -1, null, null, null, null, null);
+//      }
+//      catch (TipiBreakException ex) {
+//        System.err.println("Error calling autoload service. " + list + " continuing.");
+//      }
+//      return;
+//    }
+//    StringTokenizer st = new StringTokenizer(list, ";");
+//    while (st.hasMoreTokens()) {
+//      try {
+//        performService(context, tipiPath, st.nextToken(), false, event, -1, null, null, null, null, null);
+//      }
+//      catch (TipiBreakException ex) {
+//        System.err.println("Error calling autoload service. " + list + " continuing.");
+//      }
+//    }
+//  }
 
   public ArrayList getServices() {
     return myServices;
@@ -184,9 +197,9 @@ protected String myMethod;
     myServices.remove(service);
   }
 
-  /**
-   * @deprecated
-   */
+//  /**
+//   * @deprecated
+//   */
   public void performService(TipiContext context, String service, TipiEvent event) throws TipiException, TipiBreakException {
     performService(context, "*", service, false, event, -1, null, null, null, null, null);
   }
@@ -214,11 +227,16 @@ protected String myMethod;
       return myMethod;
   }
   
-  public void loadData(Navajo n, TipiContext tc, String method) throws TipiException {
+  public void loadData(Navajo n, TipiContext tc, String method, String server) throws TipiException, TipiBreakException {
     myMethod = method;  
     if (n == null) {
       throw new TipiException("Loading with null Navajo! ");
     }
+    if (server!=null) {
+		if (!server.equals(myServer)) {
+			throw new TipiBreakException(TipiBreakException.BREAK_BLOCK);
+		}
+	}
     for (int i = 0; i < properties.size(); i++) {
       PropertyComponent current = (PropertyComponent) properties.get(i);
       Property p;
@@ -265,15 +283,20 @@ protected String myMethod;
       TipiComponent tcomp = getTipiComponent(i);
       if (TipiDataComponent.class.isInstance(tcomp)) {
         TipiDataComponent current = (TipiDataComponent) tcomp;
-        current.loadData(n, tc, method);
+        current.loadData(n, tc, method,server);
       }
     }
-    Map m = new HashMap();
-    m.put("service", method);
-    performTipiEvent("onLoad", m, false);
+    doPerformOnLoad(method);
     doLayout();
   }
 
+protected void doPerformOnLoad(String method) throws TipiException {
+	Map m = new HashMap();
+    m.put("service", method);
+    performTipiEvent("onLoad", m, true);
+}
+
+  
   protected void doLayout() {
   }
 

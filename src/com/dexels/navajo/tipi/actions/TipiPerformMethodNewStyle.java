@@ -14,7 +14,7 @@ import com.dexels.navajo.tipi.internal.*;
  * @author not attributable
  * @version 1.0
  */
-public class TipiPerformMethod
+public class TipiPerformMethodNewStyle
     extends TipiAction {
   public void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
 //    TipiValue dest = getParameter("destination");
@@ -27,6 +27,8 @@ public class TipiPerformMethod
     String password = null;
     String keystore = null;
     String keypass = null;
+    
+    String clientInstance = null;
     boolean condenseCheck = true;
 //    System.err.println("PERFORMING METHOD::::::::::::::::::::::::::::::::::");
 //    System.err.println("CURRENT THREAD: "+Thread.currentThread().getName());
@@ -43,6 +45,7 @@ public class TipiPerformMethod
       Operand passwordValue = getEvaluatedParameter("password",event);
       Operand keyStoreOperand = getEvaluatedParameter("keystore",event);
       Operand keyPassOperand = getEvaluatedParameter("keypass",event);
+      Operand clientInstanceOperand = getEvaluatedParameter("clientName",event);
 
     if (hostUrlValue!=null) {
 
@@ -67,7 +70,10 @@ public class TipiPerformMethod
       Object o = keyPassOperand.value;
       keypass = o==null?null:o.toString();
     }
-
+    if (clientInstanceOperand!=null) {
+        Object o = clientInstanceOperand.value;
+        clientInstance = o==null?null:o.toString();
+      }    
 //    System.err.println("Keystore:::: "+keystore);
 //    System.err.println("Keypass:::: "+keypass);
     String destination = "*";
@@ -116,36 +122,48 @@ public class TipiPerformMethod
     }
     
     
-//    System.err.println("\nPerformMethod. to service "+method.value+" my event: "+event.toString()+"\n**********************************************\n");
-    
-    // if no sending tipi has been specified:
-//    if (sourceTipi == null || "".equals(sourceTipi)) {
-//      // If it can not even find a suitable Navajo, just create a blank one
-//      if (myComponent.getNearestNavajo() != null) {
-//        myContext.performTipiMethod(null, myComponent.getNearestNavajo(), destination, method.value.toString(),breakOnError,event,expirationInterval, hostUrl,username,password,keystore,keypass);
-//      }
-//      // use the closest navajo
-//      else {
-//        myContext.performTipiMethod(null, NavajoFactory.getInstance().createNavajo(), destination, method.value.toString(),breakOnError,event,expirationInterval, hostUrl,username,password,keystore,keypass );
-//      }
-//      return;
-//    }
+
     // If it can not find the 'sending' tipi:
     if (evalTipi == null) {
       if (myComponent.getNearestNavajo() != null) {
         Navajo n = myComponent.getNearestNavajo();
 //        System.err.println("Not a blank NAvajo!!!");
-         myContext.performTipiMethod(null, n, destination, method.value.toString(),breakOnError,event,expirationInterval,hostUrl,username,password,keystore,keypass);
+		System.err.println("NAVAJO, no eval.: ");
+		try {
+			n.write(System.err);
+		} catch (NavajoException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+         myContext.performTipiMethod(null, n, destination, method.value.toString(),breakOnError,event,expirationInterval,hostUrl,username,password,keystore,keypass,clientInstance);
       }
       else {
+  		System.err.println("NAVAJO: empty navajo");
+		
 //        System.err.println("Could not evaluate tipi. Calling service with blank navajo");
-        myContext.performTipiMethod(null, NavajoFactory.getInstance().createNavajo(), destination, method.value.toString(),breakOnError,event,expirationInterval, hostUrl,username,password,keystore,keypass);
+        myContext.performTipiMethod(null, NavajoFactory.getInstance().createNavajo(), destination, method.value.toString(),breakOnError,event,expirationInterval, hostUrl,username,password,keystore,keypass,clientInstance);
       }
       return;
     }
     // When there is a sending tipi, just perform it:
-//    evalTipi.performService(myContext, destination, method.value.toString(),breakOnError,event,expirationInterval,hostUrl,username,password,keystore,keypass,null);
-    evalTipi.performService(myContext, destination, method.value.toString(),breakOnError,event,expirationInterval,hostUrl,username,password,keystore,keypass);
-
+//    evalTipi.performService(myContext, destination, method.value.toString(),breakOnError,event,expirationInterval,hostUrl,username,password,keystore,keypass);
+    Navajo n = myComponent.getNearestNavajo();
+	System.err.println("FOUND NAVAJO: ");
+	try {
+		if (n==null) {
+			System.err.println("No navajo?: "+getParameter("tipipath"));
+		} else {
+			n.write(System.err);
+		}
+	} catch (NavajoException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	
+    if (n == null) {
+      n = NavajoFactory.getInstance().createNavajo();
+    }
+    myContext.performTipiMethod(evalTipi, n, destination, method.value.toString(),breakOnError,event,expirationInterval,hostUrl,username,password,keystore,keypass,clientInstance);
   }
 }

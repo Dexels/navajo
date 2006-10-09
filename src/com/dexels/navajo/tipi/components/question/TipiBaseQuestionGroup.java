@@ -149,9 +149,11 @@ public abstract class TipiBaseQuestionGroup extends TipiDataComponentImpl {
         return true;
     }
 
-    public void loadData(Navajo n, TipiContext context, String method) throws TipiException {
+    public void loadData(Navajo n, TipiContext context, String method,String server) throws TipiException {
 //        removeInstantiatedChildren();
-        myQuestions.clear();
+        
+    	// NO Super.loaddata?!
+    	myQuestions.clear();
         
         TipiComponent currentComponent = this;
 

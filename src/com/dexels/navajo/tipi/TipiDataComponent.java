@@ -16,7 +16,7 @@ public interface TipiDataComponent
     extends TipiComponent {
   public Navajo getNavajo();
 
-  public void loadData(Navajo n, TipiContext context, String method) throws TipiException;
+  public void loadData(Navajo n, TipiContext context, String method, String server) throws TipiException, TipiBreakException;
 
   public String getCurrentMethod();
   
@@ -51,5 +51,7 @@ public interface TipiDataComponent
 
   public void setPrefix(String pr);
   public String getPrefix();
+
+  public String getServer();
 
 }

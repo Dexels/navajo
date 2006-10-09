@@ -73,7 +73,7 @@ public class TipiConditionChecker extends TipiDataComponentImpl {
     }
   }
 
-  public void loadData(Navajo n, TipiContext context, String method) throws TipiException {
+  public void loadData(Navajo n, TipiContext context, String method,String server) throws TipiException {
     if (messagePath==null) {
       return;
     }
