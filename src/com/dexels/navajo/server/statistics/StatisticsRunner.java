@@ -7,6 +7,7 @@ import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.GenericThread;
 import com.dexels.navajo.util.AuditLog;
 
+import java.util.HashMap;
 import java.util.Set;
 import java.util.Iterator;
 import java.util.Map;
@@ -91,7 +92,7 @@ public final class StatisticsRunner extends GenericThread {
 			  try {
 				  si = Class.forName(storeClass);
 				  instance.myStore = (StoreInterface) si.newInstance();
-				  instance.myStore.setDatabaseParameters(parameters);
+				  instance.myStore.setDatabaseParameters((parameters == null ? new HashMap() : parameters));
 				  instance.myStore.setDatabaseUrl(storePath);
 				  instance.storeClass = storeClass;
 			  }

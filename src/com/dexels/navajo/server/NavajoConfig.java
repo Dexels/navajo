@@ -342,6 +342,23 @@ public final class NavajoConfig {
     	return enableLockManager;
     }
     
+    /**
+     * Function to enable/disable statisticsrunner on the fly.
+     * 
+     * @param b
+     */
+    public synchronized void setStatisticsRunnerEnabled(boolean b) {
+    	if ( b ) {
+    		if (store == null) {
+    			statisticsRunner = com.dexels.navajo.server.statistics.StatisticsRunner.getInstance(dbPath, null);
+    		} else {
+    			statisticsRunner = com.dexels.navajo.server.statistics.StatisticsRunner.getInstance(dbPath, null, store);
+    		}
+    	} else {
+    		statisticsRunner = null;
+    	}
+    }
+    
     public boolean isStatisticsRunnerEnabled() {
     	return enableStatisticsRunner;
     }
