@@ -306,6 +306,9 @@ public class AdminMap implements Mappable {
   public boolean getSupportsStatistics() {
 	  return supportsStatistics;
   }
+  public void setSupportsStatistics(boolean b) {
+		  Dispatcher.getInstance().getNavajoConfig().setStatisticsRunnerEnabled(b);
+  }
   public boolean getSupportsLocks() {
 	  return supportsLocks;
   }
