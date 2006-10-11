@@ -354,8 +354,10 @@ public final class NavajoConfig {
     		} else {
     			statisticsRunner = com.dexels.navajo.server.statistics.StatisticsRunner.getInstance(dbPath, null, store);
     		}
+    		enableStatisticsRunner = true;
     	} else {
     		statisticsRunner = null;
+    		enableStatisticsRunner = false;
     	}
     }
     
