@@ -690,7 +690,7 @@ public void loadStartValues(XMLElement element) {
 //      System.err.println("First part getting: "+name);
       TipiComponent t = getTipiComponent(name);
       if (t == null) {
-        throw new NullPointerException("Did not find Tipi: " + name);
+        throw new NullPointerException("Did not find Tipi: " + name+". I am: "+getPath()+" with children: "+getChildComponentIdList()+"classname: "+getClass());
       }
       return t.getTipiComponentByPath(rest);
     }
