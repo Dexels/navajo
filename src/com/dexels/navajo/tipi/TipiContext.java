@@ -810,7 +810,8 @@ public void parseDefinition(XMLElement child) throws TipiException {
 //    System.err.println("Instantiating class: " + className);
     XMLElement tipiDefinition = null;
     Class c = getTipiClass(className);
-    if (defname!=null && className==null) {
+    // AAAAAAP
+    if (defname!=null ) {
         tipiDefinition = getComponentDefinition(defname);
 	}
     XMLElement classDef = (XMLElement) tipiClassDefMap.get(className);
