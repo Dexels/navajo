@@ -1098,7 +1098,10 @@ public final class Dispatcher {
 	  if (toBeRemoved!=null) {
 		broadcastMessage.removeAll(toBeRemoved);
     	}
-
+	  HashMap m = new HashMap();
+	  m.put("requestRate", ""+getRequestRate());
+	  m.put("serverId", ""+serverId);
+	  h.addPiggyBackData(m);
 }
 
 /**
