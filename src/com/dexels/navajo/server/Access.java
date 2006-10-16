@@ -61,6 +61,7 @@ public final class Access
   private int totaltime;
   public int parseTime;
   public int authorisationTime;
+  public int clientTime;
   //public int processingTime;
   public String requestEncoding;
   public boolean compressedReceive = false;

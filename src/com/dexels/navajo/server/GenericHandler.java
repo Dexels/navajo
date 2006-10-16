@@ -152,7 +152,7 @@ public final class GenericHandler extends ServiceHandler {
             }
             
             if (newLoader == null &&  properties.isHotCompileEnabled()) {
-                newLoader = new NavajoClassLoader(properties.getAdapterPath(), properties.getCompiledScriptPath());
+                newLoader = new NavajoClassLoader(properties.getAdapterPath(),properties.getCompiledScriptPath(), NavajoConfig.getInstance().adapterClassloader);
                 loadedClasses.put(className, newLoader);
             }
 

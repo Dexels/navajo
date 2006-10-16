@@ -12,6 +12,9 @@ import java.io.File;
  */
 public class NavajoBasicClassLoader extends NavajoClassSupplier {
 
+	public NavajoBasicClassLoader(ClassLoader parent) {
+		super(parent);
+	}
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.loader.NavajoClassSupplier#getClass(java.lang.String)
 	 */

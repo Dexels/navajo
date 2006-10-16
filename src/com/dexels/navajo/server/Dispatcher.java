@@ -354,29 +354,27 @@ public final class Dispatcher {
 	  try {
 		  
 		  Class c;
-		  if (access == null) {
-			  c = navajoConfig.getClassloader().getClass(handler);
-		  }
-		  else {
-			  if (access.betaUser) {
-				  c = navajoConfig.getBetaClassLoader().getClass(handler);
-			  }
-			  else {
-				  c = navajoConfig.getClassloader().getClass(handler);
-			  }
-		  }
+//		  if (access == null) {
+//			  c = navajoConfig.getClassloader().getClass(handler);
+//		  }
+//		  else {
+////			  if (access.betaUser) {
+////				  c = navajoConfig.getBetaClassLoader().getClass(handler);
+////			  }
+////			  else {
+//				  c = navajoConfig.getClassloader().getClass(handler);
+//			//  }
+//		  }
 		  
-		  c = (access.betaUser)
-		  ? navajoConfig.getBetaClassLoader().getClass(handler)
-				  : navajoConfig.getClassloader().getClass(handler);
+		  c = navajoConfig.getClassloader().getClass(handler);
 		  ServiceHandler sh = (ServiceHandler) c.newInstance();
 		  
-		  if (access.betaUser) {
+//		  if (access.betaUser) {
+//			  sh.setInput(in, access, parms, navajoConfig);
+//		  }
+//		  else {
 			  sh.setInput(in, access, parms, navajoConfig);
-		  }
-		  else {
-			  sh.setInput(in, access, parms, navajoConfig);
-		  }
+		  //}
 		  long expirationInterval = in.getHeader().getExpirationInterval();
 		  
 		  // Remove password from in to create password independend persistenceKey.

@@ -68,7 +68,7 @@ public class NavajoClassLoader extends MultiClassLoader {
     private String compiledScriptPath = "";
     private static Object mutex1 = new Object();
     private static Object mutex2 = new Object();
-    //private HashSet jarResources = null;
+    private HashSet jarResources = null;
 
     private boolean noCaching = false;
     
@@ -79,7 +79,8 @@ public class NavajoClassLoader extends MultiClassLoader {
      */
     private boolean beta;
 
-    public NavajoClassLoader(String adapterPath, String compiledScriptPath, boolean beta) {
+    public NavajoClassLoader(String adapterPath, String compiledScriptPath, boolean beta, ClassLoader parent) {
+    	super(parent);
         this.adapterPath = adapterPath;
         this.beta = beta;
         this.compiledScriptPath = compiledScriptPath;
@@ -87,7 +88,8 @@ public class NavajoClassLoader extends MultiClassLoader {
         initializeJarResources();
     }
 
-    public NavajoClassLoader(String adapterPath, String compiledScriptPath) {
+    public NavajoClassLoader(String adapterPath, String compiledScriptPath, ClassLoader parent) {
+    	super(parent);
         this.adapterPath = adapterPath;
         this.beta = false;
         this.compiledScriptPath = compiledScriptPath;
@@ -100,32 +102,10 @@ public class NavajoClassLoader extends MultiClassLoader {
     }
     
     public synchronized void clearCache(String className) {
-      Class c = (Class) classes.get(className);
-      if (c != null) {
-        classes.remove(className);
-      }
-    }
-
-    private final void clearJarResources() {
-    	NavajoConfig.getInstance().setJarResources(null);
-    }
-    
-    /**
-     * Use clearCache() to clear the Class cache, allowing a re-load of new jar files.
-     */
-    public final void clearCache() {
-    	clearJarResources();
-    	super.clearCache();
-    	initializeJarResources();
-    	System.err.println("MESSAGE: clearCache() called in NavajoClassLoader");
-    }
-
-    /**
-     * Use clearScriptCache() to clear the Class cache, but does not reload jar files
-     */
-    public final void clearScriptCache() {
-       super.clearCache();
-      System.err.println("MESSAGE: clearScriptCache() called in NavajoClassLoader");
+//      Class c = (Class) classes.get(className);
+//      if (c != null) {
+//        classes.remove(className);
+//      }
     }
     
     
@@ -144,18 +124,27 @@ public class NavajoClassLoader extends MultiClassLoader {
      */
     public final Class getCompiledNavaScript(String script) throws ClassNotFoundException {
 
+      
       String className = script;
-
       Class c = null;
+//       c = (Class) classes.get(className);
+//      if ( c != null ) {
+//    	  System.err.println("Found " + className + " in cache!!!!!!!!!!");
+//    	  return c;
+//      }
       try {
         c = Class.forName(className, false, this);
+        //System.err.println("Found " + script);
         return c;
       }
       catch (Exception cnfe) {
-        // Class not found using classloader, try compiled scripts directory.
+//        // Class not found using classloader, try compiled scripts directory.
         c = null;
       }
 
+      if ( compiledScriptPath == null ) {
+    	  throw new ClassNotFoundException("Script path not set!");
+      }
       synchronized (mutex1) {
 
     	  FileInputStream fis = null;
@@ -179,7 +168,7 @@ public class NavajoClassLoader extends MultiClassLoader {
     		  }
     		  
     		  c = loadClass(b, className, true, false);
-				
+			 
     		  return c;
     	  }
     	  catch (Exception e) {
@@ -204,6 +193,16 @@ public class NavajoClassLoader extends MultiClassLoader {
     }
 
     public File [] getJarFiles(String path, boolean beta) {
+    	
+    	 if ( adapterPath == null ) {
+    		 // Try my parent.
+    		 if ( getParent() instanceof NavajoClassLoader ) {
+    			 return  ( (NavajoClassLoader) getParent() ).getJarFiles(path, beta);
+    		 } else {
+    			 System.err.println("Cound not find Jars ");
+    			 return null;
+    		 }
+    	 }
          File f = new File(adapterPath);
          File [] files = null;
          if (beta)
@@ -215,6 +214,10 @@ public class NavajoClassLoader extends MultiClassLoader {
 
     private final void initializeJarResources() {
 
+    	if ( adapterPath == null || !new File(adapterPath).exists() ) {
+    		return;
+    	}
+    	
     	synchronized (mutex2) {
 
     		// Do nothing if there is no dispatcher available.
@@ -222,7 +225,7 @@ public class NavajoClassLoader extends MultiClassLoader {
     			return;
     		}
     		
-    		HashSet jarResources = NavajoConfig.getInstance().getJarResources();
+    		//HashSet jarResources = NavajoConfig.getInstance().getJarResources();
 
     		if (jarResources == null) {
 
@@ -241,7 +244,7 @@ public class NavajoClassLoader extends MultiClassLoader {
     					jarResources.add(d);
     				}
     			}
-    			NavajoConfig.getInstance().setJarResources(jarResources);
+    			//NavajoConfig.getInstance().setJarResources(jarResources);
     		}
 
     	}
@@ -251,12 +254,12 @@ public class NavajoClassLoader extends MultiClassLoader {
     public InputStream getResourceAsStream(String name) {
 
       //System.err.println("in NavajoClassLoader (v2). getResourceAsStream(" + name + ")");
-      //initializeJarResources();
-    	
-      HashSet jarResources = NavajoConfig.getInstance().getJarResources();
-    	
+      if ( jarResources == null ) {
+    	initializeJarResources();
+      }
+    	 	
       if (jarResources == null) {
-        return getSystemClassLoader().getResourceAsStream(name);
+        return getParent().getResourceAsStream(name);
       }
 
       Iterator allResources = jarResources.iterator();
@@ -296,7 +299,11 @@ public class NavajoClassLoader extends MultiClassLoader {
 
         //initializeJarResources();
 
-        HashSet jarResources = NavajoConfig.getInstance().getJarResources();
+        if ( NavajoConfig.getInstance() == null ) {
+        	return null;
+        }
+        
+        //HashSet jarResources = NavajoConfig.getInstance().getJarResources();
         
         if (jarResources == null) {
           return null;
@@ -357,4 +364,33 @@ public class NavajoClassLoader extends MultiClassLoader {
     	instances--;
     }
 
+    public static void main(String [] args) throws Exception {
+    	
+    	int total = 2;
+    	if ( args.length > 0 ) {
+    		 total = Integer.parseInt(args[0]);
+    	}
+    	
+    	NavajoConfig nc = new NavajoConfig(null, null);
+    	
+    	NavajoClassLoader [] ncl = new NavajoClassLoader[total];
+    	NavajoClassLoader parent = new NavajoClassLoader("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/adapters", "/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/classes", nc.getClass().getClassLoader());
+    	
+    	
+    	for (int i = 0; i < total; i++) {
+    		
+    		
+    		ncl[i] = new NavajoClassLoader(null, "/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/classes", parent);
+    		System.err.println("ncl["+i+"] = " + ncl[i].hashCode());
+    		Class c3 = Class.forName("com.dexels.navajo.functions.ParseDouble", true, ncl[i]);
+    		
+    		Class c = ncl[i].getCompiledNavaScript("club.InitUpdateClub");
+    		Class c2 = Class.forName("java.lang.String", true, ncl[i]);
+    		System.err.println(i + ": club.InitUpdateClub = " + c.hashCode() + ", java.lang.String = " + c2.hashCode() + ", ParseDouble = " + c3.hashCode());
+    		Class c5 = ncl[i].getCompiledNavaScript("club.InitUpdateClub");
+    		Class c6 = Class.forName("com.dexels.navajo.functions.ParseDouble", true, ncl[i]);
+    	}
+    	
+    	
+    }
 }

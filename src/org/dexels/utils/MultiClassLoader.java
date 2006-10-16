@@ -28,21 +28,22 @@ public abstract class MultiClassLoader extends NavajoClassSupplier {
     // ---------- Fields --------------------------------------
 
     private static int instances = 0;
-    public Hashtable classes = new Hashtable();
+    //public Hashtable classes = new Hashtable();
     private char      classNameReplacementChar;
     protected boolean   monitorOn = false;
     protected boolean   sourceMonitorOn = true;
     // ---------- Initialization ------------------------------
 
-    public MultiClassLoader() {
-      instances++;
+    public MultiClassLoader(ClassLoader parent) {
+    	super(parent);
+    	instances++;
     }
 
     public void clearCache() {
-        if (classes != null) {
-            classes.clear();
-            classes = new Hashtable();
-        }
+//        if (classes != null) {
+//            classes.clear();
+//            classes = new Hashtable();
+//        }
     }
 
     // ---------- Superclass Overrides ------------------------
@@ -70,12 +71,13 @@ public abstract class MultiClassLoader extends NavajoClassSupplier {
         // ----- Try to load it from preferred source
         // Note loadClassBytes() is an abstract method
 
-        Class   result;
+       Class   result;
 
-       result = (Class) classes.get(className);
-       if (result != null) {
-         return result;
-       }
+//       result = (Class) classes.get(className);
+//       if (result != null) {
+//    	   System.err.println(this.hashCode() + ": Found " + className + " in cache!!!!!!!!");
+//         return result;
+//       }
 
         classBytes = loadClassBytes(className);
         return loadClass(classBytes, className, resolveIt, useCache);
@@ -86,28 +88,32 @@ public abstract class MultiClassLoader extends NavajoClassSupplier {
 
         Class   result;
  
-        result = (Class) classes.get(className);
-        if (result != null) {
-          return result;
-        }
+        //System.err.println(this.hashCode() + ": in loadClass(), className " + className);
+       
+//        result = (Class) classes.get(className);
+//        if (result != null) {
+//        	System.err.println(this.hashCode() + ": Found " + className + " in cache!");
+//          return result;
+//        }
 
         if (classBytes == null) {
 
             // --- Try with Class.forName
-            try {
-                result = Class.forName(className);
-                classes.put(className, result);
-                return result;
-            } catch (ClassNotFoundException e) {
-                //System.out.println("Not found with Class.forName");
-            }
+//            try {
+//            	System.err.println(this.hashCode() + ": Try with Class.forname: " + getParent().hashCode());
+//                result = Class.forName(className);
+//                //classes.put(className, result);
+//                return result;
+//            } catch (ClassNotFoundException e) {
+//                //System.out.println("Not found with Class.forName");
+//            }
 
             // ----- Check with the primordial class loader
 
             try {
-              // System.err.println("Attempting to load class "+className+" from system classloader");
-                result = super.findSystemClass(className);
-                classes.put(className, result);
+                //System.err.println(this.hashCode() + ":Attempting to load class "+className+" from parent classloader");
+                result = Class.forName(className, true, getParent()); //super.findSystemClass(className);
+                //classes.put(className, result);
                 //monitor(">> returning system class (in CLASSPATH).");
 
                 return result;
@@ -136,7 +142,8 @@ public abstract class MultiClassLoader extends NavajoClassSupplier {
         //monitor("resolved class");
 
         // Done
-        classes.put(className, result);
+//        classes.put(className, result);
+//        System.err.println("Putting " + className + " in cache!!!");
         //monitor(">> Returning newly loaded class.");
 
         return result;
@@ -144,9 +151,9 @@ public abstract class MultiClassLoader extends NavajoClassSupplier {
     }
 
 
-    protected Class getCachedClass(String name) {
-    	return (Class)classes.get(name);
-    }
+//    protected Class getCachedClass(String name) {
+//    	return (Class)classes.get(name);
+//    }
     
 
     // ---------- Public Methods ------------------------------

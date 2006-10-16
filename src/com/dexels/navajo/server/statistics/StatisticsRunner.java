@@ -40,17 +40,6 @@ import org.apache.log4j.AsyncAppender;
  * ====================================================================
  */
 
-class TodoItem {
-	
-	public TodoItem(Access a, AsyncMappable am) {
-		access = a;
-		asyncobject = am;
-	}
-	
-	Access access;
-	AsyncMappable asyncobject;
-}
-
 public final class StatisticsRunner extends GenericThread {
 
   public int todoCount;
@@ -59,7 +48,7 @@ public final class StatisticsRunner extends GenericThread {
   
   private static StatisticsRunner instance = null;
   private StoreInterface myStore = null;
-  private Set todo = new HashSet();
+  private Map todo = new HashMap();
   
   private static Object semaphore = new Object();
   
@@ -99,7 +88,7 @@ public final class StatisticsRunner extends GenericThread {
 			  catch (Exception ex) {
 				  ex.printStackTrace(System.err);
 			  }
-			  instance.setSleepTime(2000);
+			  instance.setSleepTime(20000);
 			  instance.startThread(instance);
 			  System.err.println("Started StatisticsRunner version $Id$ using store: " + instance.myStore.getClass().getName());
 		  }
@@ -113,28 +102,14 @@ public final class StatisticsRunner extends GenericThread {
    */
   public final void worker() {
 
-	  // Check for new access objects.
-	  //System.err.println(">> StatisticsRunner TODO list size: " + todo.size());
-	  //synchronized (todo) {
-
-	  HashSet copyOfTodo = null;
+	  HashMap copyOfTodo = null;
 	  synchronized ( semaphore ) {
-		  copyOfTodo = new HashSet(todo);
+		  copyOfTodo = new HashMap(todo);
 		  todo.clear();
 	  }
 
-	  Iterator iter = copyOfTodo.iterator();
-
-	  while (iter.hasNext()) {
-		  TodoItem ti = (TodoItem) iter.next();
-		  myStore.storeAccess(ti.access, ti.asyncobject);
-		  ti = null;
-//		  if (todo.size() > 50) {
-//			  System.err.println("WARNING: StatisticsRunner TODO list size:  " + todo.size());
-//		  }
-	  }
-	  //}
-
+	  myStore.storeAccess(copyOfTodo);
+	  
   }
 
   /**
@@ -144,7 +119,7 @@ public final class StatisticsRunner extends GenericThread {
    */
   public final void addAccess(final Access a, final Exception e, AsyncMappable am) {
 	  synchronized ( semaphore ) {
-		  todo.add( new TodoItem(a, am) );
+		  todo.put( a.accessID, new TodoItem(a, am) );
 	  }
 	  // Add to webserviceaccesslistener.
 	  WebserviceAccessListener.getInstance().addAccess(a, e);

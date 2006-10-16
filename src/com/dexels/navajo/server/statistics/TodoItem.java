@@ -1,17 +1,10 @@
-package com.dexels.navajo.server.statistics;
-
-import com.dexels.navajo.mapping.AsyncMappable;
-import com.dexels.navajo.server.Access;
-import java.util.Set;
-import java.util.Map;
-
 /**
  * <p>Title: Navajo Product Project</p>
  * <p>Description: This is the official source for the Navajo server</p>
- * <p>Copyright: Copyright (c) 2002</p>
+ * <p>Copyright: Copyright (c) 2005</p>
  * <p>Company: Dexels BV</p>
- * @author Arjen Schoneveld
- * @version $Id$
+ * @author 
+ * @version $Id$.
  *
  * DISCLAIMER
  *
@@ -29,34 +22,18 @@ import java.util.Map;
  * SUCH DAMAGE.
  * ====================================================================
  */
+package com.dexels.navajo.server.statistics;
 
-public interface StoreInterface {
+import com.dexels.navajo.mapping.AsyncMappable;
+import com.dexels.navajo.server.Access;
 
-  /**
-   * Method to store an access object in the (persistent) Navajo store.
-   *
-   * @param a
-   */
-  public void storeAccess(final Access a, final AsyncMappable am);
-  
-  /**
-   * Method to store multiple access objects in the (persistent) Navajo store.
-   *
-   * @param a
-   */
-  public void storeAccess(final Map accessMap);
-
-  /**
-   * Set the url for the database.
-   *
-   * @param url
-   */
-  public void setDatabaseUrl(String url);
-
-  /**
-   * Pass database specific parameters in a map object.
-   *
-   * @param m
-   */
-  public void setDatabaseParameters(Map m);
+public final class TodoItem {
+	
+	public TodoItem(final Access a, final AsyncMappable am) {
+		access = a;
+		asyncobject = am;
+	}
+	
+	public final Access access;
+	public final AsyncMappable asyncobject;
 }

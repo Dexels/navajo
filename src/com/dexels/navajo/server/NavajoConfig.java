@@ -56,11 +56,12 @@ public final class NavajoConfig {
     public boolean compileScripts = false;
     protected HashMap properties = new HashMap();
     private String configPath;
-    protected NavajoClassSupplier classloader;
-    protected NavajoClassLoader betaClassloader;
+//    protected NavajoClassSupplier classloader;
+//    protected NavajoClassLoader betaClassloader;
+    protected NavajoClassSupplier adapterClassloader;
     protected com.dexels.navajo.server.Repository repository;
     protected Navajo configuration;
-    private HashSet myJarResources = null;
+    //private HashSet myJarResources = null;
     
     
     /**
@@ -102,7 +103,7 @@ public final class NavajoConfig {
 
       this.inputStreamReader = inputStreamReader;
       classPath = System.getProperty("java.class.path");
-      classloader = ncs;
+      adapterClassloader = ncs;
       instance = this;
       //loadConfig(in);
      }
@@ -181,12 +182,16 @@ public final class NavajoConfig {
     		getValue();
     		persistenceManager = PersistenceManagerFactory.getInstance(persistenceClass, getConfigPath());
     		
-    		if(classloader==null) {
-    			classloader = new NavajoClassLoader(adapterPath, compiledScriptPath);
+    		if(adapterClassloader == null) {
+    			adapterClassloader = new NavajoClassLoader(adapterPath, compiledScriptPath, getClass().getClassLoader());
     		}
-    		if(betaClassloader==null) {
-    			betaClassloader = new NavajoClassLoader(adapterPath, compiledScriptPath, true);
-    		}
+//    		if(classloader==null) {
+//    			classloader = new NavajoClassLoader(null, compiledScriptPath, adapterClassloader);
+//    		}
+//    		if(betaClassloader==null) {
+//    			betaClassloader = new NavajoClassLoader(null, compiledScriptPath, true, adapterClassloader);
+//    		}
+    		
     		
     		String repositoryClass = body.getProperty("repository/class").getValue();
     		repository = RepositoryFactory.getRepository(repositoryClass, this);
@@ -435,14 +440,14 @@ public final class NavajoConfig {
         return configPath;
     }
 
-    public final NavajoClassLoader getBetaClassLoader() {
-      return betaClassloader;
-    }
+//    public final NavajoClassLoader getBetaClassLoader() {
+//      return betaClassloader;
+//    }
 
     // Added a cast, because I changed the type of classloader to generic class loader, so I can just use the system class loader as well...
     public final NavajoClassSupplier getClassloader() {
 //    	if (classloader instanceof NavajoClassSupplier) {
-        	return (NavajoClassSupplier)classloader;
+        	return (NavajoClassSupplier) adapterClassloader;
 //		}
   //  	return null;
     }
@@ -622,45 +627,26 @@ public final class NavajoConfig {
     }
 
     public final synchronized void doClearCache() {
-    	if (classloader instanceof NavajoClassLoader) {
-    	      if (classloader != null)
-    	          ((NavajoClassLoader)classloader).clearCache();
-		}
-          if (betaClassloader != null)
-          betaClassloader.clearCache();
-
-        classloader = new NavajoClassLoader(adapterPath, compiledScriptPath);
-        betaClassloader = new NavajoClassLoader(adapterPath, compiledScriptPath, true);
-    }
-
+    	
+        adapterClassloader = new NavajoClassLoader(adapterPath, null, getClass().getClassLoader());
+//        classloader = new NavajoClassLoader(null, compiledScriptPath, adapterClassloader);
+//        betaClassloader = new NavajoClassLoader(null, compiledScriptPath, true, adapterClassloader);
+        GenericHandler.doClearCache();
         
-    public final void setJarResources(HashSet jr) {
-  	  myJarResources = jr;
-    }
-    
-    public final HashSet getJarResources() {
-  	  return myJarResources;
     }
     
     public final synchronized void doClearScriptCache() {
-       	HashSet currentJar = null;
-       	if (classloader instanceof NavajoClassLoader) {
-        	if (classloader != null) {
-        		currentJar = getJarResources();
-        	}
-        }
-
-        classloader = new NavajoClassLoader(adapterPath, compiledScriptPath);
-        betaClassloader = new NavajoClassLoader(adapterPath, compiledScriptPath, true);
-        if (currentJar!=null) {
-        	setJarResources(currentJar);       
-		}
+       
+//        classloader = new NavajoClassLoader(null, compiledScriptPath, adapterClassloader);
+//        betaClassloader = new NavajoClassLoader(null, compiledScriptPath, true, adapterClassloader);
+        GenericHandler.doClearCache();
+        
     }
 
     public final synchronized void setNoScriptCaching() {
-        if (classloader instanceof NavajoClassLoader) {
-            if (classloader != null)
-                ((NavajoClassLoader) classloader).setNoCaching();
+        if (adapterClassloader instanceof NavajoClassLoader) {
+            if (adapterClassloader != null)
+                ((NavajoClassLoader) adapterClassloader).setNoCaching();
         }
   
     }
@@ -815,7 +801,7 @@ public final class NavajoConfig {
 	 * @param classloader The classloader to set.
 	 */
 	public void setClassloader(NavajoClassSupplier classloader) {
-		this.classloader = classloader;
+		this.adapterClassloader = classloader;
 	}
 	
 	public File getJarFolder() {
