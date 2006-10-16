@@ -277,4 +277,9 @@ public final class HSQLStore implements StoreInterface {
     addAccess(a, am);
   }
 
+public void storeAccess(Map accessMap) {
+	// TODO Auto-generated method stub
+	
+}
+
 }

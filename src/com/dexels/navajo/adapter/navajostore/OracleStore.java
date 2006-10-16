@@ -11,6 +11,7 @@ import java.io.PrintWriter;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.server.statistics.MapStatistics;
 import com.dexels.navajo.server.statistics.StoreInterface;
+import com.dexels.navajo.server.statistics.TodoItem;
 import com.dexels.navajo.adapter.SQLMap;
 
 import java.util.HashMap;
@@ -54,8 +55,8 @@ public final class OracleStore implements StoreInterface {
 	private static String existsAccessSQL = "select count(*) from navajoaccess where access_id = ?";
 	
 	private static String insertAccessSQL = "insert into navajoaccess " +
-	"(access_id, webservice, username, threadcount, totaltime, parsetime, authorisationtime, requestsize, requestencoding, compressedrecv, compressedsnd, ip_address, hostname, created, clientid) " +
-	"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	"(access_id, webservice, username, threadcount, totaltime, parsetime, authorisationtime, clienttime, requestsize, requestencoding, compressedrecv, compressedsnd, ip_address, hostname, created, clientid) " +
+	"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	
 	private static String updateEmbryoAccessSQL = "update navajoaccess " +
 	"set webservice = ?, set username = ?, set threadcount = ?, set totaltime = ?,set parsetime = ?" + 
@@ -75,9 +76,6 @@ public final class OracleStore implements StoreInterface {
 	private static String insertMapLog = 
 		"insert into navajomap ( access_id, sequence_id, level_id, mapname, array, instancecount, totaltime, created) values " +
 		"( ?, ?, ?, ?, ?, ?, ?, ?)";
-
-	private static String updateAccessSQL = "update navajoaccess " +
-	"set clienttime = ? where access_id = ?";
 		
 	/**
 	 * Set the database url (only for databases which are started by Navajo, e.g. HSQL).
@@ -160,117 +158,13 @@ public final class OracleStore implements StoreInterface {
 		}
 	}
 	
-	private final void addAsync(final Access a, final AsyncMappable am) {
-		if (Dispatcher.getInstance().getNavajoConfig().dbPath != null) {
-			SQLMap sqlMap = createConnection(false, false, false);
-			Connection con = null;
-			try {
-				con = sqlMap.getConnection();
-			} catch (SQLException e) {
-				e.printStackTrace(System.err);
-			}
-			if (con != null) {
-				PreparedStatement ps = null;
-				try {
-					ps = con.prepareStatement(insertAsyncLog);
-					ps.setString(1, a.accessID);
-					ps.setString(2, am.pointer);
-					ps.setString(3, am.getClass().getName());
-					ps.setInt(4, a.getTotaltime());
-					ps.setString(5, ( a.getException() != null ? a.getException().getMessage() : "" ) );
-					ps.setTimestamp(6, new java.sql.Timestamp(a.created.getTime()));
-					ps.executeUpdate();
-					ps.close();
-					ps = null;
-				} catch (SQLException ex) {
-					ex.printStackTrace(System.err);
-				} finally {
-					if (ps != null) {
-						try {
-							ps.close();
-						} catch (SQLException e) {
-						}
-					}
-					if (con != null) {
-						try {
-							sqlMap.store();
-						}
-						catch (Exception ex1) {
-							ex1.printStackTrace(System.err);
-						}
-					}
-				}
-			}
-		}
-	}
-	
 	/**
 	 * Add a new access object to the persistent Navajo store.
 	 *
 	 * @param a
 	 */
 	private final void addAccess(final Access a) {
-		if (Dispatcher.getInstance().getNavajoConfig().dbPath != null) {
-			SQLMap sqlMap = createConnection(false, false, false);
-			Connection con = null;
-			try {
-				con = sqlMap.getConnection();
-			} catch (SQLException e) {
-				e.printStackTrace(System.err);
-			}
-			if (con != null) {
-				PreparedStatement ps = null;
-				try {
-					
-					String hostName = InetAddress.getLocalHost().getHostName()+" - "+Dispatcher.getInstance().getNavajoConfig().getInstanceName();
-					ps = con.prepareStatement(insertAccessSQL);
-					ps.setString(1, a.accessID);
-					ps.setString(2, a.rpcName);
-					ps.setString(3, a.rpcUser);
-					ps.setInt(4, a.getThreadCount());
-					ps.setInt(5, a.getTotaltime());
-					ps.setInt(6, a.parseTime);
-					ps.setInt(7, a.authorisationTime);
-					ps.setInt(8, a.contentLength);
-					ps.setString(9, a.requestEncoding);
-					ps.setBoolean(10, a.compressedReceive);
-					ps.setBoolean(11, a.compressedSend);
-					ps.setString(12, a.ipAddress);
-					ps.setString(13, hostName);
-					ps.setTimestamp(14, new java.sql.Timestamp(a.created.getTime()));
-					ps.setString(15, a.getClientToken());
-					ps.executeUpdate();
-					ps.close();
-					ps = null;
-					// Only log details if exception occured or if full accesslog monitoring is enabled.
-					if (a.getException() != null || Dispatcher.getInstance().getNavajoConfig().needsFullAccessLog(a) ) {
-						addLog(con, a);
-					}
-					if (a.getMapStatistics() != null) {
-						addMapLog(con, a);
-					}
-					
-				}
-				catch (Exception ex) {
-					ex.printStackTrace(System.err);
-				} finally {
-					if (ps != null) {
-						try {
-							ps.close();
-						} catch (SQLException e) {
-						}
-					}
-					if (con != null) {
-						try {
-							sqlMap.store();
-						}
-						catch (Exception ex1) {
-							ex1.printStackTrace(System.err);
-						}
-					}
-				}
-			}
-		}
+		 throw new UnsupportedOperationException();
 	}
 	
 	/**
@@ -325,27 +219,20 @@ public final class OracleStore implements StoreInterface {
 	 * @param a
 	 */
 	public final synchronized void storeAccess(Access a, AsyncMappable am) {
-		if ( am == null ) {
-			addAccess(a);
-			if (a.getPiggybackData()!=null) {
-				updatePiggybackData(a.getPiggybackData());
-			}
-		} else {
-			addAsync(a, am);
-		}
+		throw new UnsupportedOperationException();
 	}
 
-	private void updatePiggybackData(Set piggybackData) {
+	private void updatePiggybackData(Set piggybackData, Map accessMap) {
 		for (Iterator iter = piggybackData.iterator(); iter.hasNext();) {
 			Map element = (Map) iter.next();
 			String type = (String)element.get("type");
 			if ("performanceStats".equals(type)) {
-				addPerformanceStats(element);
+				addPerformanceStats(element, accessMap);
 			}
 		}
 	}
 
-	private void addPerformanceStats(Map element) {
+	private void addPerformanceStats(Map element, Map accessMap) {
 		//System.err.println("OracleStore: storing: "+element);
 		String accessId = (String)element.get("accessId");
 		String clnt = (String)element.get("clientTime");
@@ -353,12 +240,36 @@ public final class OracleStore implements StoreInterface {
 			return;
 		}
 		int clientTime = Integer.parseInt(clnt);
-		updatePerformanceStats(accessId, clientTime);
+		System.err.println("Found clienttime " + clientTime + " for access " + accessId);
+		TodoItem ti = (TodoItem) accessMap.get(accessId);
+		if ( ti != null ) {
+			System.err.println("Found Access in map!");
+			if ( ti.access != null ) {
+				ti.access.clientTime = clientTime;
+			}
+		}
 		
 	}
 
-	private final void updatePerformanceStats(String accessId, int clientTime) {
+	public void storeAccess(Map accessMap) {
+	
+		if ( accessMap == null || accessMap.isEmpty() ) {
+			return;
+		}
+		
 		if (Dispatcher.getInstance().getNavajoConfig().dbPath != null) {
+			
+			// Check for piggy back data.
+			Iterator iter = accessMap.values().iterator();
+			
+			while ( iter.hasNext() ) { 
+				TodoItem ti = (TodoItem) iter.next();
+				Access a = ti.access;
+				if ( a.getPiggybackData() != null ) {
+					updatePiggybackData(a.getPiggybackData(), accessMap);
+				}
+			}
+			
 			SQLMap sqlMap = createConnection(false, false, false);
 			Connection con = null;
 			try {
@@ -368,19 +279,81 @@ public final class OracleStore implements StoreInterface {
 			}
 			if (con != null) {
 				PreparedStatement ps = null;
+				PreparedStatement asyncps = null;
 				try {
-					ps = con.prepareStatement(updateAccessSQL);
-					ps.setInt(1, clientTime);		
-					ps.setString(2, accessId);
-					ps.executeUpdate();
-					ps.close();
+					
+					String hostName = InetAddress.getLocalHost().getHostName()+" - "+Dispatcher.getInstance().getNavajoConfig().getInstanceName();
+					
+					ps = con.prepareStatement(insertAccessSQL);
+					asyncps = null; 
+					
+					iter = accessMap.values().iterator();
+					
+					while ( iter.hasNext() ) { 
+						TodoItem ti = (TodoItem) iter.next();
+						Access a = ti.access;
+
+						if ( ti.asyncobject == null ) {
+							
+							ps.setString(1, a.accessID);
+							ps.setString(2, a.rpcName);
+							ps.setString(3, a.rpcUser);
+							ps.setInt(4, a.getThreadCount());
+							ps.setInt(5, a.getTotaltime());
+							ps.setInt(6, a.parseTime);
+							ps.setInt(7, a.authorisationTime);
+							ps.setInt(8, a.clientTime);
+							ps.setInt(9, a.contentLength);
+							ps.setString(10, a.requestEncoding);
+							ps.setBoolean(11, a.compressedReceive);
+							ps.setBoolean(12, a.compressedSend);
+							ps.setString(13, a.ipAddress);
+							ps.setString(14, hostName);
+							ps.setTimestamp(15, new java.sql.Timestamp(a.created.getTime()));
+							ps.setString(16, a.getClientToken());
+							ps.executeUpdate();
+							
+//							 Only log details if exception occured or if full accesslog monitoring is enabled.
+							if (a.getException() != null || Dispatcher.getInstance().getNavajoConfig().needsFullAccessLog(a) ) {
+								addLog(con, a);
+							}
+							
+						} else {
+							
+							if ( asyncps == null ) {
+								asyncps = con.prepareStatement(insertAsyncLog);
+							}
+							
+							AsyncMappable am = ti.asyncobject;
+							
+							asyncps.setString(1, a.accessID);
+							asyncps.setString(2, am.pointer);
+							asyncps.setString(3, am.getClass().getName());
+							asyncps.setInt(4, a.getTotaltime());
+							asyncps.setString(5, ( a.getException() != null ? a.getException().getMessage() : "" ) );
+							asyncps.setTimestamp(6, new java.sql.Timestamp(a.created.getTime()));
+							asyncps.executeUpdate();
+							
+						}
+						
+//						if (a.getMapStatistics() != null) {
+//							addMapLog(con, a);
+//						}
+					}
+					
 				}
-				catch (SQLException ex) {
+				catch (Exception ex) {
 					ex.printStackTrace(System.err);
 				} finally {
 					if (ps != null) {
 						try {
 							ps.close();
+						} catch (SQLException e) {
+						}
+					}
+					if (asyncps != null) {
+						try {
+							asyncps.close();
 						} catch (SQLException e) {
 						}
 					}
