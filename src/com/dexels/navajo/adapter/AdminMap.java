@@ -57,6 +57,7 @@ public class AdminMap implements Mappable {
   public boolean supportsLocks;
   public boolean aliveConnection;
   public boolean collectGarbage;
+  public boolean resetAdapters;
 
   /**
    * Monitor parameters.
@@ -392,6 +393,14 @@ public class AdminMap implements Mappable {
 	  return NavajoFactory.getInstance().getClass().getName();
   }
 
+  public void setResetAdapters(boolean b) {
+	  this.resetAdapters = b;
+	  if ( resetAdapters ) {
+		  System.err.println("Resetting adapters...");
+		  NavajoConfig.getInstance().doClearCache();
+	  }
+  }
+  
   public void setDocumentClass(String s) throws UserException {
 	  try {
 		  Class.forName(s);
