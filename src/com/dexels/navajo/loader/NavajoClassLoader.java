@@ -32,6 +32,7 @@ import org.dexels.utils.*;
 
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.NavajoConfig;
+import com.dexels.navajo.util.AuditLog;
 
 import java.io.*;
 import java.util.*;
@@ -127,11 +128,7 @@ public class NavajoClassLoader extends MultiClassLoader {
       
       String className = script;
       Class c = null;
-//       c = (Class) classes.get(className);
-//      if ( c != null ) {
-//    	  System.err.println("Found " + className + " in cache!!!!!!!!!!");
-//    	  return c;
-//      }
+
       try {
         c = Class.forName(className, false, this);
         //System.err.println("Found " + script);
@@ -225,11 +222,11 @@ public class NavajoClassLoader extends MultiClassLoader {
     			return;
     		}
     		
-    		//HashSet jarResources = NavajoConfig.getInstance().getJarResources();
-
+    	
     		if (jarResources == null) {
 
-    			System.err.println("MESSAGE: INITIALIZING ADAPTER JAR RESOURCES............");
+    			AuditLog.log(AuditLog.AUDIT_MESSAGE_DISPATCHER, "Initializing adapter resources");
+    			
     			File[] files = getJarFiles(adapterPath, beta);
     			if (files == null) {
     				jarResources = null;
@@ -244,7 +241,7 @@ public class NavajoClassLoader extends MultiClassLoader {
     					jarResources.add(d);
     				}
     			}
-    			//NavajoConfig.getInstance().setJarResources(jarResources);
+    			
     		}
 
     	}
