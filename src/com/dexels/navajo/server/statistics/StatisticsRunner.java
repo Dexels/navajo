@@ -88,7 +88,7 @@ public final class StatisticsRunner extends GenericThread {
 			  catch (Exception ex) {
 				  ex.printStackTrace(System.err);
 			  }
-			  instance.setSleepTime(20000);
+			  instance.setSleepTime(1000);
 			  instance.startThread(instance);
 			  System.err.println("Started StatisticsRunner version $Id$ using store: " + instance.myStore.getClass().getName());
 		  }
