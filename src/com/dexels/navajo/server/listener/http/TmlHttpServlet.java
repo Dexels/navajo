@@ -261,13 +261,14 @@ public final class TmlHttpServlet extends HttpServlet {
       Navajo in = null;
       
       if (useRecvCompression) {
-        java.util.zip.GZIPInputStream unzip = new java.util.zip.GZIPInputStream(request.getInputStream());
-        is = new BufferedInputStream(unzip);
+        is = new BufferedInputStream(new java.util.zip.GZIPInputStream(request.getInputStream()));
         in = NavajoFactory.getInstance().createNavajo(is);
+        is.close();
       }
       else {
     	is = new BufferedInputStream(request.getInputStream());
         in = NavajoFactory.getInstance().createNavajo(is);
+        is.close();
       }
 
       long stamp = System.currentTimeMillis();
@@ -312,7 +313,7 @@ public final class TmlHttpServlet extends HttpServlet {
       }
       
 //    Show interesting log
-      System.err.println( dis.getApplicationId() + " - " + request.getRemoteHost() + " - " + created + " - " + header.getRPCName() + " - " + header.getRequestId() + " - " + request.getContentLength() + " - " + dis.accessSet.size() + " - " + ( System.currentTimeMillis() - start ) );
+     // System.err.println( dis.getApplicationId() + " - " + request.getRemoteHost() + " - " + created + " - " + header.getRPCName() + " - " + header.getRequestId() + " - " + request.getContentLength() + " - " + dis.accessSet.size() + " - " + ( System.currentTimeMillis() - start ) );
       
 //      System.err.println("Sending response for " + in.getHeader().getRPCName() + " took " + 
 //    		  (System.currentTimeMillis() - sendStart)/1000.0 + " secs.");
