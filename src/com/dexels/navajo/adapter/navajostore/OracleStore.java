@@ -5,6 +5,7 @@ import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.Dispatcher;
 
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.sql.*;
 import java.io.StringWriter;
 import java.io.PrintWriter;
@@ -77,6 +78,18 @@ public final class OracleStore implements StoreInterface {
 		"insert into navajomap ( access_id, sequence_id, level_id, mapname, array, instancecount, totaltime, created) values " +
 		"( ?, ?, ?, ?, ?, ?, ?, ?)";
 		
+	private String hostName = "unknown";
+	
+	public OracleStore() {
+		try {
+			hostName = InetAddress.getLocalHost().getHostName()+" - "+Dispatcher.getInstance().getNavajoConfig().getInstanceName();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+	}
+	
+	
 	/**
 	 * Set the database url (only for databases which are started by Navajo, e.g. HSQL).
 	 * Required by StoreInterface
@@ -240,10 +253,10 @@ public final class OracleStore implements StoreInterface {
 			return;
 		}
 		int clientTime = Integer.parseInt(clnt);
-		System.err.println("Found clienttime " + clientTime + " for access " + accessId);
+		//System.err.println("Found clienttime " + clientTime + " for access " + accessId);
 		TodoItem ti = (TodoItem) accessMap.get(accessId);
 		if ( ti != null ) {
-			System.err.println("Found Access in map!");
+			//System.err.println("Found Access in map!");
 			if ( ti.access != null ) {
 				ti.access.clientTime = clientTime;
 			}
@@ -282,8 +295,6 @@ public final class OracleStore implements StoreInterface {
 				PreparedStatement asyncps = null;
 				try {
 					
-					String hostName = InetAddress.getLocalHost().getHostName()+" - "+Dispatcher.getInstance().getNavajoConfig().getInstanceName();
-					
 					ps = con.prepareStatement(insertAccessSQL);
 					asyncps = null; 
 					
@@ -298,12 +309,12 @@ public final class OracleStore implements StoreInterface {
 							ps.setString(1, a.accessID);
 							ps.setString(2, a.rpcName);
 							ps.setString(3, a.rpcUser);
-							ps.setInt(4, a.getThreadCount());
-							ps.setInt(5, a.getTotaltime());
-							ps.setInt(6, a.parseTime);
-							ps.setInt(7, a.authorisationTime);
-							ps.setInt(8, a.clientTime);
-							ps.setInt(9, a.contentLength);
+							ps.setInt(4,    a.getThreadCount());
+							ps.setInt(5,    a.getTotaltime());
+							ps.setInt(6,    a.parseTime);
+							ps.setInt(7,    a.authorisationTime);
+							ps.setInt(8,    a.clientTime);
+							ps.setInt(9,    a.contentLength);
 							ps.setString(10, a.requestEncoding);
 							ps.setBoolean(11, a.compressedReceive);
 							ps.setBoolean(12, a.compressedSend);
