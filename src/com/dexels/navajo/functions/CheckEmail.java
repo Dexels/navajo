@@ -38,7 +38,8 @@ public class CheckEmail extends FunctionInterface {
 
     Object o = getOperand(0);
     if (!(o instanceof String)) {
-      throw new TMLExpressionException(this, "Invalid email address, string expected");
+    	return new Boolean(false);
+      //throw new TMLExpressionException(this, "Invalid email address, string expected");
     }
 
     String email = (String) o;
@@ -63,7 +64,7 @@ public class CheckEmail extends FunctionInterface {
   public static void main(String [] args ) throws TMLExpressionException {
     CheckEmail ce = new CheckEmail();
     ce.reset();
-    ce.insertOperand("Carlo.tiecken@dexels.nl.navajo.");
+    ce.insertOperand((String)null);
     Boolean b = (Boolean) ce.evaluate();
     System.err.println("result = " + b);
   }
