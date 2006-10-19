@@ -78,16 +78,7 @@ public final class OracleStore implements StoreInterface {
 		"insert into navajomap ( access_id, sequence_id, level_id, mapname, array, instancecount, totaltime, created) values " +
 		"( ?, ?, ?, ?, ?, ?, ?, ?)";
 		
-	private String hostName = "unknown";
-	
-	public OracleStore() {
-		try {
-			hostName = InetAddress.getLocalHost().getHostName()+" - "+Dispatcher.getInstance().getNavajoConfig().getInstanceName();
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}	
-	}
+	private String hostName = null;
 	
 	
 	/**
@@ -269,6 +260,15 @@ public final class OracleStore implements StoreInterface {
 	
 		if ( accessMap == null || accessMap.isEmpty() ) {
 			return;
+		}
+		
+		if ( hostName == null ) {
+			try {
+				hostName = InetAddress.getLocalHost().getHostName()+" - "+Dispatcher.getInstance().getNavajoConfig().getInstanceName();
+			} catch (UnknownHostException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}	
 		}
 		
 		if (Dispatcher.getInstance().getNavajoConfig().dbPath != null) {
