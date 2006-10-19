@@ -63,7 +63,7 @@ public class GenericThread implements Runnable, Mappable {
 	
 	public void startThread(GenericThread instance) {
 		
-		thread = new Thread(instance);
+		thread = new Thread(instance,myId);
 		thread.setDaemon(true);
 		thread.start();
 		
