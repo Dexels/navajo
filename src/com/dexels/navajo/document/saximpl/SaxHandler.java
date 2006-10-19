@@ -39,14 +39,6 @@ public final class SaxHandler implements DocHandler {
         currentTag = tag;
         
         // Unescape all the shit.
-        Hashtable h2 = new Hashtable();
-        for (Iterator iter = h.keySet().iterator(); iter.hasNext();) {
-			String key = (String) iter.next();
-			String value = (String) h.get(key);
-			value = BaseNode.XMLUnescape(value);
-			h2.put(key, value);
-		}
-        h = h2;
         if (tag.equals("tml")) {
             currentDocument = NavajoFactory.getInstance().createNavajo();
             return;
@@ -56,7 +48,24 @@ public final class SaxHandler implements DocHandler {
             return;
         }
         if (tag.equals("property")) {
-            parseProperty(h);
+            String val = (String)h.get("value");
+            if (val!=null) {
+                Hashtable h2 = new Hashtable(h);
+    			val = BaseNode.XMLUnescape(val);
+    			h2.put("value", val);
+                parseProperty(h);
+			} else {
+                parseProperty(h);
+				
+			}
+//            for (Iterator iter = h.keySet().iterator(); iter.hasNext();) {
+//    			String key = (String) iter.next();
+//    			String value = (String) h.get(key);
+//    			value = BaseNode.XMLUnescape(value);
+//    			h2.put(key, value);
+//    		}
+//            h = h2;
+        	
             return;
         }
         if (tag.equals("option")) {
@@ -489,7 +498,11 @@ public final class SaxHandler implements DocHandler {
         int length = currentProperty.getLength();
         if (Property.BINARY_PROPERTY.equals(currentProperty.getType())) {
             Binary b = new Binary(r,length);
+            String sub = currentProperty.getSubType();
             currentProperty.setValue(b);
+            // Preserve the subtype. This will cause the handle to refer to the server
+            // handle, not the client side
+            currentProperty.setSubType(sub);
         } else {
             throw new IllegalArgumentException("uuuh?");
        }
