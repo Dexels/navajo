@@ -204,6 +204,10 @@ public class SQLMap implements Mappable, LazyArray {
     if (debug) {
       System.err.println("Creating new datasource: " + dataSourceName);
     }
+    
+    if (autoCommitMap==null) {
+		autoCommitMap = Collections.synchronizedMap(new HashMap());
+	}
 
     driver = NavajoUtils.getPropertyValue(body, "driver", true);
     url = NavajoUtils.getPropertyValue(body, "url", true);
@@ -1081,6 +1085,7 @@ public class SQLMap implements Mappable, LazyArray {
       return this.con;
     }
     catch (com.dexels.navajo.server.UserException ue) {
+    	ue.printStackTrace();
       return null;
     }
   }
