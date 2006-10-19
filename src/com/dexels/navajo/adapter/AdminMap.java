@@ -17,6 +17,7 @@ import com.dexels.navajo.mapping.MappableException;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -94,32 +95,6 @@ public class AdminMap implements Mappable {
     serverId = Dispatcher.getInstance().getApplicationId();
   }
 
-  public ClassCount [] getClassCounts() {
-	  Map objectCountMap = BaseNode.getObjectCountMap();
-	  ClassCount [] array = new ClassCount[objectCountMap.size() + 2];
-	  Iterator iter = objectCountMap.keySet().iterator();
-	  int i = 0;
-	  while ( iter.hasNext() ) {
-		  String className =  (String) iter.next();
-		  Integer count = (Integer) objectCountMap.get(className);
-		  array[i] = new ClassCount();
-		  array[i].className = className;
-		  array[i].count = count.intValue();
-		  i++;
-	  }
-	  // Add some other interesting classes.
-	  array[i] = new ClassCount();
-	  array[i].className = "com.dexels.navajo.server.Access";
-	  array[i].count = Access.instances;
-	  i++;
-	  
-	  array[i] = new ClassCount();
-	  array[i].className = "com.dexels.navajo.server.Dispatcher";
-	  array[i].count = Dispatcher.instances;
-	  i++;
-	  
-	  return array;
-  }
   
   /**
     * Some admin functions.
@@ -228,7 +203,7 @@ public class AdminMap implements Mappable {
    }
 
    public AccessMap [] getUsers() {
-      Set all = com.dexels.navajo.server.Dispatcher.getInstance().accessSet;
+      Set all = new HashSet(com.dexels.navajo.server.Dispatcher.getInstance().accessSet);
       Iterator iter = all.iterator();
       ArrayList d = new ArrayList();
       while (iter.hasNext()) {
