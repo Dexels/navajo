@@ -33,12 +33,16 @@ public final class TmlHttpServlet extends HttpServlet {
 
   public TmlHttpServlet() {}
 
-
+  public  static final String DOC_IMPL = "com.dexels.navajo.DocumentImplementation";
+  public static final String NANO = "com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl";
+  public static final String JAXP = "com.dexels.navajo.document.jaxpimpl.NavajoFactoryImpl";
+  public static final String QDSAX = "com.dexels.navajo.document.base.BaseNavajoFactoryImpl";
 
   public void init(ServletConfig config) throws ServletException {
     super.init(config);
 
     configurationPath = config.getInitParameter("configuration");
+    System.setProperty(DOC_IMPL,QDSAX);
 
   }
 
@@ -256,19 +260,22 @@ public final class TmlHttpServlet extends HttpServlet {
 
     Dispatcher dis = null;
     BufferedInputStream is = null;
+    Reader r = null;
     try {
 
       Navajo in = null;
       
       if (useRecvCompression) {
-        is = new BufferedInputStream(new java.util.zip.GZIPInputStream(request.getInputStream()));
+        java.util.zip.GZIPInputStream unzip = new java.util.zip.GZIPInputStream(request.getInputStream());
+        is = new BufferedInputStream(unzip);
         in = NavajoFactory.getInstance().createNavajo(is);
-        is.close();
       }
       else {
-    	is = new BufferedInputStream(request.getInputStream());
-        in = NavajoFactory.getInstance().createNavajo(is);
-        is.close();
+//    	is = new BufferedInputStream(request.getInputStream());
+    	r = request.getReader();
+        in = NavajoFactory.getInstance().createNavajo(r);
+		r.close();
+		
       }
 
       long stamp = System.currentTimeMillis();
@@ -307,13 +314,13 @@ public final class TmlHttpServlet extends HttpServlet {
       }
       else {
         response.setContentType("text/xml; charset=UTF-8");
-        OutputStream out = (OutputStream) response.getOutputStream();
+        Writer out = (Writer) response.getWriter();
         outDoc.write(out);
         out.close();
       }
       
 //    Show interesting log
-     // System.err.println( dis.getApplicationId() + " - " + request.getRemoteHost() + " - " + created + " - " + header.getRPCName() + " - " + header.getRequestId() + " - " + request.getContentLength() + " - " + dis.accessSet.size() + " - " + ( System.currentTimeMillis() - start ) );
+      System.err.println( dis.getApplicationId() + " - " + request.getRemoteHost() + " - " + created + " - " + header.getRPCName() + " - " + header.getRequestId() + " - " + request.getContentLength() + " - " + dis.accessSet.size() + " - " + ( System.currentTimeMillis() - start ) );
       
 //      System.err.println("Sending response for " + in.getHeader().getRPCName() + " took " + 
 //    		  (System.currentTimeMillis() - sendStart)/1000.0 + " secs.");
@@ -342,6 +349,9 @@ public final class TmlHttpServlet extends HttpServlet {
     		  // NOT INTERESTED.
     	  }
       }
+      if (r!=null) {
+		r.close();
+	}
       //finishedServing();
     }
   }
