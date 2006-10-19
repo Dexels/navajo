@@ -1,7 +1,11 @@
 package com.dexels.navajo.document;
 
 import java.io.File;
+import java.io.Reader;
 import java.util.*;
+
+import com.dexels.navajo.document.saximpl.SaxHandler;
+import com.dexels.navajo.document.saximpl.qdxml.QDParser;
 
 
 /**
@@ -28,7 +32,9 @@ public abstract class NavajoFactory {
    * @return NavajoFactory instance
    */
   public static NavajoFactory getInstance() {
-	  
+	  if (impl!=null) {
+		return impl;
+	}
 	  synchronized ( semaphore ) {
 		  if (impl == null) {
 			  
@@ -93,7 +99,7 @@ public abstract class NavajoFactory {
   public Map parseSubTypes(String subType) {
     Map m = new HashMap();
     if (subType == null || "".equals(subType)) {
-      return null;
+      return m;
     }
     StringTokenizer st = new StringTokenizer(subType, ",");
     while (st.hasMoreTokens()) {
@@ -231,6 +237,14 @@ public abstract class NavajoFactory {
    */
   public abstract Navajo createNavajo(java.io.InputStream stream);
 
+  /**
+   * creates a Navajo object directly from a reader
+   * @param r
+   * @return
+   */
+  
+  public abstract Navajo createNavajo(Reader r);
+	 
   /**
    * Create a Navajo object from a given Object
    * @param representation Object

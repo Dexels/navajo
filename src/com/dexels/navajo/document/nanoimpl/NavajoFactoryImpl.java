@@ -95,6 +95,7 @@ public final class NavajoFactoryImpl extends NavajoFactory {
   public NavajoException createNavajoException(Exception e) {
     return new NavajoExceptionImpl(e);
   }
+
   public Navajo createNavajo(InputStream stream) {
     NavajoImpl n = new NavajoImpl();
     XMLElement xe = new CaseSensitiveXMLElement();
@@ -110,6 +111,25 @@ public final class NavajoFactoryImpl extends NavajoFactory {
     n.fromXml(xe);
     return n;
   }
+  
+  public Navajo createNavajo(Reader r) {
+	    NavajoImpl n = new NavajoImpl();
+	    XMLElement xe = new CaseSensitiveXMLElement();
+	    try {
+	      xe.parseFromReader(r);
+	    }
+	    catch (IOException ex) {
+	      ex.printStackTrace();
+	    }
+	    catch (XMLParseException ex) {
+	      ex.printStackTrace();
+	    }
+	    n.fromXml(xe);
+	    return n;
+	  }
+	  
+  
+  
   public Selection createDummySelection() {
     return new SelectionImpl(null,Selection.DUMMY_SELECTION,Selection.DUMMY_ELEMENT,true);
   }
