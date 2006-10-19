@@ -26,36 +26,12 @@ public abstract class BaseNode implements java.io.Serializable{
   public abstract List getChildren();
   public abstract String getTagName();
   private static final int INDENT = 3;
-  
-  private static HashMap objectCountMap = new HashMap();
-  
-  private final void countObjects() {
-	  
-	  synchronized ( objectCountMap ) {
-		  Integer objectCount = (Integer) objectCountMap.get(this.getClass().getName());
-		
-		  if ( objectCount == null ) {
-			  objectCount = new Integer(1);
-		  } else {
-			  objectCount = new Integer(objectCount.intValue() + 1);
-		  }
-		  //System.err.println( this.getClass().getName() + " count is: " + objectCount.intValue() );
-		  objectCountMap.put(this.getClass().getName(), objectCount);
-	  }
-  }
-  
-  public final static Map getObjectCountMap() {
-	  return (HashMap) objectCountMap.clone();
-  }
-  
-  public BaseNode(){
+   public BaseNode(){
     myDocRoot = null;
-    countObjects();
   }
 
   public BaseNode(Navajo n) {
     myDocRoot = n;
-    countObjects();
   }
 
   public Navajo getRootDoc() {
@@ -78,7 +54,8 @@ public abstract class BaseNode implements java.io.Serializable{
           for (int a = 0; a < indent; a++) {
             sw.write(" ");
         }
-          writeElement( sw, "<" + tagName);
+          writeElement( sw, "<");
+          writeElement( sw, tagName);
           Map map = getAttributes();
 
           if (map != null) {
@@ -89,9 +66,23 @@ public abstract class BaseNode implements java.io.Serializable{
                  * Todo: stream!
                  */
                 if (value!=null) {
+                	// optimization: Only escape properties:
+                	if (getTagName().equals("property") && "value".equals(element)) {
+                        String sss = XMLEscape(value);
+                        writeElement( sw," ");
+                        writeElement( sw, element);
+                        writeElement( sw, "=\"");
+                        writeElement( sw, sss);
+                        writeElement( sw, "\"");
+					} else {
+	                       writeElement( sw," ");
+	                        writeElement( sw, element);
+	                        writeElement( sw, "=\"");
+	                        writeElement( sw, value);
+	                        writeElement( sw, "\"");
+
+					}
 //                    System.err.println("||"+value+"||");
-                    String sss = XMLEscape(value);
-                    writeElement( sw," "+ element + "=\"" + sss+ "\"");
                 }
             }
           }
@@ -132,7 +123,9 @@ public abstract class BaseNode implements java.io.Serializable{
               for (int a = 0; a < indent; a++) {
                   sw.write(" ");
               }
-            writeElement( sw, "</" + tagName + ">\n");
+            writeElement( sw, "</");
+            writeElement( sw,tagName);
+            writeElement( sw,">\n");
           }
 
       
@@ -335,19 +328,5 @@ public abstract class BaseNode implements java.io.Serializable{
       return result;
   }
   
-  public void finalize() {
-	  synchronized ( objectCountMap ) {
-		  Integer objectCount = (Integer) objectCountMap.get(this.getClass().getName());
-		  if ( objectCount == null ) {
-			  objectCount = new Integer(0);
-		  } else {
-			  int newCount =  objectCount.intValue() - 1;
-			  if ( newCount < 0 ) {
-				  newCount = 0;
-			  }
-			  objectCount = new Integer(newCount);
-		  }
-		  objectCountMap.put(this.getClass().getName(), objectCount);
-	  }
-  }
+
 }
