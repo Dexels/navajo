@@ -89,13 +89,15 @@ package navajo;
  * 5.5.3 Support for orderby construct in array messages.
  * 
  * 5.6.0 Restructured Navajo Classloader.
+ * 
+ * 5.6.1 Removed some possibly harmfull synchronized waiting blocks
  */
 
 public class Version extends dexels.Version {
 
 	public static final int MAJOR = 5;
 	public static final int MINOR = 6;
-	public static final int PATCHLEVEL = 0;
+	public static final int PATCHLEVEL = 1;
 	public static final String VENDOR = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Kernel";
 	public static final String RELEASEDATE = "2006-10-16";
