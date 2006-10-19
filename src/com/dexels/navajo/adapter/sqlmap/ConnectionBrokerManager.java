@@ -306,7 +306,7 @@ public class ConnectionBrokerManager extends Object {
 		  while (iter.hasNext()) {
 			  final String key = (String) iter.next();
 			  SQLMapBroker broker = (SQLMapBroker)this.brokerMap.get(key);
-			  System.err.println("Checking broker:");
+			
 			  if (broker.datasource.equals(datasource)) {
 				  if (debug) {
 					System.err.println(" Found a broker with the same datasource");
