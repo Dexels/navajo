@@ -76,28 +76,28 @@ public final class Access
   private Set piggyBackData = null;
   private String clientToken = null;
   
-  private HashMap mapStatistics = null;
+  //private HashMap mapStatistics = null;
   
-  public MapStatistics createStatistics() {
-	  MapStatistics ms = new MapStatistics();
-	  if ( mapStatistics == null ) { // First map.
-		  mapStatistics = new HashMap();
-	  }
-	  Integer count = new Integer(mapStatistics.size());
-	  mapStatistics.put(count, ms);
-	  
-	  return ms;
-  }
-  
-  public void updateStatistics(MapStatistics ms, int levelId, String mapName, long totalTime, int elementCount, boolean isArrayElement) {
-	  
-	  ms.levelId = levelId;
-	  ms.mapName = mapName;
-	  ms.elementCount = elementCount;
-	  ms.totalTime = totalTime;
-	  ms.isArrayElement = isArrayElement;
-	 
-  }
+//  public MapStatistics createStatistics() {
+//	  MapStatistics ms = new MapStatistics();
+//	  if ( mapStatistics == null ) { // First map.
+//		  mapStatistics = new HashMap();
+//	  }
+//	  Integer count = new Integer(mapStatistics.size());
+//	  mapStatistics.put(count, ms);
+//	  
+//	  return ms;
+//  }
+//  
+//  public void updateStatistics(MapStatistics ms, int levelId, String mapName, long totalTime, int elementCount, boolean isArrayElement) {
+//	  
+//	  ms.levelId = levelId;
+//	  ms.mapName = mapName;
+//	  ms.elementCount = elementCount;
+//	  ms.totalTime = totalTime;
+//	  ms.isArrayElement = isArrayElement;
+//	 
+//  }
   
   public Navajo getOutputDoc() {
     return outputDoc;
@@ -236,9 +236,9 @@ public final class Access
 	  }
   }
 
-  public HashMap getMapStatistics() {
-	  return mapStatistics;
-  }
+//  public HashMap getMapStatistics() {
+//	  return mapStatistics;
+//  }
   
 public void addPiggybackData(Map element) {
 	if (piggyBackData==null) {
