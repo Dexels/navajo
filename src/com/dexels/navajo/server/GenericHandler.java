@@ -45,10 +45,13 @@ public final class GenericHandler extends ServiceHandler {
     private static Object mutex2 = new Object();
 
     public GenericHandler() {
-    	synchronized ( mutex1 ) {
-    		if (loadedClasses == null)
-    			loadedClasses = new HashMap();
-    	}
+
+    	if (loadedClasses == null)
+    		synchronized ( mutex1 ) {
+    			if ( loadedClasses == null ) {
+    				loadedClasses = new HashMap();
+    			}
+    		}
     }
 
     protected static void doClearCache() {
@@ -101,8 +104,7 @@ public final class GenericHandler extends ServiceHandler {
             		
             		synchronized (mutex1) { // Check for outdated compiled script Java source.
             			sourceFile = new File(sourceFileName);
-            			if (!sourceFile.exists() ||
-            					(scriptFile.lastModified() > sourceFile.lastModified())) {
+            			if (!sourceFile.exists() || (scriptFile.lastModified() > sourceFile.lastModified())) {
             				com.dexels.navajo.mapping.compiler.TslCompiler tslCompiler = new
 							com.dexels.navajo.mapping.compiler.TslCompiler(properties.getClassloader());
             				try {
@@ -121,30 +123,34 @@ public final class GenericHandler extends ServiceHandler {
             		String classFileName = properties.getCompiledScriptPath() + "/" + pathPrefix + serviceName + ".class";
             		File targetFile = null;
             		
-            		synchronized(mutex2) { // Check for outdated class file.
+            		//synchronized(mutex2) { // Check for outdated class file.
             			targetFile = new File(classFileName);
             			
-            			if (!targetFile.exists() ||
-            					(sourceFile.lastModified() > targetFile.lastModified())) { // Create class file
-            				
-            				if (properties.isHotCompileEnabled()) {
-            					if (newLoader != null) {
-            						loadedClasses.remove(className);
-            						newLoader = null;
-            						System.gc();
+            			if (!targetFile.exists() || (sourceFile.lastModified() > targetFile.lastModified())) { // Create class file
+
+            				synchronized(mutex2) {
+            					
+            					if (!targetFile.exists() || (sourceFile.lastModified() > targetFile.lastModified())) {
+            						if (properties.isHotCompileEnabled()) {
+            							if (newLoader != null) {
+            								loadedClasses.remove(className);
+            								newLoader = null;
+            								System.gc();
+            							}
+            						}
+            						com.dexels.navajo.compiler.NavajoCompiler compiler = new com.dexels.navajo.compiler.NavajoCompiler();
+            						try {
+            							compiler.compile(access, properties, sourceFileName);
+            							compilerErrors = compiler.errors;
+            						}
+            						catch (Throwable t) {
+            							t.printStackTrace();
+            							throw new UserException(-1, "Could not compile Java file: " + sourceFileName + " (" + t.getMessage() + ")");
+            						}
             					}
             				}
-            				com.dexels.navajo.compiler.NavajoCompiler compiler = new com.dexels.navajo.compiler.NavajoCompiler();
-            				try {
-            					compiler.compile(access, properties, sourceFileName);
-            					compilerErrors = compiler.errors;
-            				}
-            				catch (Throwable t) {
-            					t.printStackTrace();
-            					throw new UserException(-1, "Could not compile Java file: " + sourceFileName + " (" + t.getMessage() + ")");
-            				}
             			}
-            		}
+            		//}
             		
             	} else {
             		//System.out.println("SCRIPT FILE DOES NOT EXISTS, I WILL TRY TO LOAD THE CLASS FILE ANYWAY....");
