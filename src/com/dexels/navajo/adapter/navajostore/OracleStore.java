@@ -114,12 +114,13 @@ public final class OracleStore implements StoreInterface {
 	private final SQLMap createConnection(boolean nowait, boolean norestart, boolean init) {
 		
 		SQLMap sqlMap = new SQLMap();
+		sqlMap.debug = true;
 		try {
 			sqlMap.load(null, null, null, Dispatcher.getInstance().getNavajoConfig());
 			sqlMap.setDatasource("navajostore");
 		}
 		catch (Exception ex) {
-			//ex.printStackTrace(System.err);
+			ex.printStackTrace(System.err);
 			return null;
 		}
 		
@@ -278,18 +279,22 @@ public final class OracleStore implements StoreInterface {
 			while ( iter.hasNext() ) { 
 				TodoItem ti = (TodoItem) iter.next();
 				Access a = ti.access;
+				  System.err.println("Checking piggyback: "+a.accessID);
+
 				if ( a.getPiggybackData() != null ) {
 					updatePiggybackData(a.getPiggybackData(), accessMap);
 				}
 			}
 			
 			SQLMap sqlMap = createConnection(false, false, false);
+			sqlMap.debug = true;
 			Connection con = null;
 			try {
 				con = sqlMap.getConnection();
 			} catch (SQLException e) {
 				e.printStackTrace(System.err);
 			}
+			System.err.println("I got a connection: "+con);
 			if (con != null) {
 				PreparedStatement ps = null;
 				PreparedStatement asyncps = null;
