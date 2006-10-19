@@ -112,7 +112,18 @@ public class BasePropertyImpl
     this.subType = subType;
     subtypeMap = NavajoFactory.getInstance().parseSubTypes(subType);
   }
-
+  private void addSubType(String extra) {
+	  if (subtypeMap==null) {
+		    subtypeMap = NavajoFactory.getInstance().parseSubTypes(subType);
+	  }
+	  StringTokenizer st = new StringTokenizer(extra,"=");
+	  String key = st.nextToken();
+	  String value = st.nextToken();
+	  subtypeMap.put(key,value);
+	  subType = serializeSubtypes();
+		// TODO Auto-generated method stub
+		
+	}
   public String getSubType() {
     return subType;
   }
@@ -519,12 +530,17 @@ public class BasePropertyImpl
       myValue = null;
       setType(BINARY_PROPERTY);
       if ( b != null ) {
-    	  setSubType("handle="+b.getHandle());
+    	  addSubType("handle="+b.getHandle());
+    	  addSubType("mime="+b.getMimeType());
+    	  addSubType("extension="+b.getExtension());    	  
       }
+      
 
   }
 
-  /** @deprecated
+
+
+/** @deprecated
    * Not really deprecated but needs a less memory intensive rewrite. TODO
    *  (non-Javadoc)
    * @see com.dexels.navajo.document.Property#setValue(java.net.URL)
