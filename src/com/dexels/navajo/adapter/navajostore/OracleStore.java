@@ -105,7 +105,7 @@ public final class OracleStore implements StoreInterface {
 	private final SQLMap createConnection(boolean nowait, boolean norestart, boolean init) {
 		
 		SQLMap sqlMap = new SQLMap();
-		sqlMap.debug = true;
+		//sqlMap.debug = true;
 		try {
 			sqlMap.load(null, null, null, Dispatcher.getInstance().getNavajoConfig());
 			sqlMap.setDatasource("navajostore");
@@ -123,45 +123,45 @@ public final class OracleStore implements StoreInterface {
 	 * access_id, sequence_id, level_id, mapname, array, instancecount, totaltime, created
 	 * @param a
 	 */
-	private final void addMapLog(final Connection con, final Access a) {
-		if (Dispatcher.getInstance().getNavajoConfig().dbPath != null) {
-			if (con != null) {
-				PreparedStatement ps = null;
-				try {
-					ps = con.prepareStatement(insertMapLog);
-					HashMap mapLogs = a.getMapStatistics();
-					if ( mapLogs != null ) {
-						// Loop over all map log.
-						Iterator iter = mapLogs.keySet().iterator();
-						while ( iter.hasNext() ) {
-							Integer id = (Integer) iter.next();
-							MapStatistics ms = (MapStatistics) mapLogs.get(id);
-							ps.setString(1, a.accessID);
-							ps.setInt(2, id.intValue());
-							ps.setInt(3, ms.levelId);
-							ps.setString(4, ( ms.mapName != null ? ms.mapName : "empty" ) );
-							ps.setString(5, ( ms.isArrayElement ? "1" : "0" ) );
-							ps.setInt(6, ms.elementCount);
-							ps.setString(7, ms.totalTime+"");
-							ps.setTimestamp(8, new java.sql.Timestamp(a.created.getTime()));
-							ps.executeUpdate();
-						}
-					}
-					ps.close();
-					ps = null;
-				} catch (SQLException ex) {
-					ex.printStackTrace(System.err);
-				} finally {
-					if (ps != null) {
-						try {
-							ps.close();
-						} catch (SQLException e) {
-						}
-					}
-				}
-			}
-		}
-	}
+//	private final void addMapLog(final Connection con, final Access a) {
+//		if (Dispatcher.getInstance().getNavajoConfig().dbPath != null) {
+//			if (con != null) {
+//				PreparedStatement ps = null;
+//				try {
+//					ps = con.prepareStatement(insertMapLog);
+//					HashMap mapLogs = a.getMapStatistics();
+//					if ( mapLogs != null ) {
+//						// Loop over all map log.
+//						Iterator iter = mapLogs.keySet().iterator();
+//						while ( iter.hasNext() ) {
+//							Integer id = (Integer) iter.next();
+//							MapStatistics ms = (MapStatistics) mapLogs.get(id);
+//							ps.setString(1, a.accessID);
+//							ps.setInt(2, id.intValue());
+//							ps.setInt(3, ms.levelId);
+//							ps.setString(4, ( ms.mapName != null ? ms.mapName : "empty" ) );
+//							ps.setString(5, ( ms.isArrayElement ? "1" : "0" ) );
+//							ps.setInt(6, ms.elementCount);
+//							ps.setString(7, ms.totalTime+"");
+//							ps.setTimestamp(8, new java.sql.Timestamp(a.created.getTime()));
+//							ps.executeUpdate();
+//						}
+//					}
+//					ps.close();
+//					ps = null;
+//				} catch (SQLException ex) {
+//					ex.printStackTrace(System.err);
+//				} finally {
+//					if (ps != null) {
+//						try {
+//							ps.close();
+//						} catch (SQLException e) {
+//						}
+//					}
+//				}
+//			}
+//		}
+//	}
 	
 	/**
 	 * Add a new access object to the persistent Navajo store.
@@ -258,6 +258,7 @@ public final class OracleStore implements StoreInterface {
 
 	public void storeAccess(Map accessMap) {
 	
+		
 		if ( accessMap == null || accessMap.isEmpty() ) {
 			return;
 		}
@@ -279,7 +280,7 @@ public final class OracleStore implements StoreInterface {
 			while ( iter.hasNext() ) { 
 				TodoItem ti = (TodoItem) iter.next();
 				Access a = ti.access;
-				  System.err.println("Checking piggyback: "+a.accessID);
+				  //System.err.println("Checking piggyback: "+a.accessID);
 
 				if ( a.getPiggybackData() != null ) {
 					updatePiggybackData(a.getPiggybackData(), accessMap);
@@ -287,14 +288,15 @@ public final class OracleStore implements StoreInterface {
 			}
 			
 			SQLMap sqlMap = createConnection(false, false, false);
-			sqlMap.debug = true;
+			//sqlMap.debug = true;
 			Connection con = null;
 			try {
 				con = sqlMap.getConnection();
+				System.err.println("In OracleStore, connection is " + con.hashCode() );
 			} catch (SQLException e) {
 				e.printStackTrace(System.err);
 			}
-			System.err.println("I got a connection: "+con);
+			//System.err.println("I got a connection: "+con);
 			if (con != null) {
 				PreparedStatement ps = null;
 				PreparedStatement asyncps = null;
