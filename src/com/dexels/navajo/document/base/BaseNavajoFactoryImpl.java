@@ -214,6 +214,18 @@ public Navajo createNavajo(InputStream stream) {
     }  
 }
 
+public Navajo createNavajo(Reader r) {
+    try {
+        SaxHandler sax = new SaxHandler();
+         QDParser.parse(sax,r);
+        return  sax.getNavajo();
+    } catch (Exception e) {
+        e.printStackTrace();
+        return null;
+    }  
+}
+
+
 public Navajo createNavajo(Object representation) {
     // TODO Auto-generated method stub
     return null;
