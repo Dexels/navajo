@@ -137,7 +137,9 @@ public class TaskRunner extends GenericThread {
 	}
 	
 	public static TaskRunner getInstance() {
-		
+		if (instance!=null) {
+			return instance;
+		}
 		synchronized (semaphore) {
 			if ( instance != null ) {
 				return instance;
@@ -148,8 +150,8 @@ public class TaskRunner extends GenericThread {
 			instance.readConfig();
 			
 			AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Started task scheduler process $Id$");
+			return instance;
 		}
-		return instance;
 	}
 	
 	public final void worker() {
