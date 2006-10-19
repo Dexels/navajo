@@ -31,7 +31,7 @@ public class ConnectionBrokerManager extends Object {
   public final String SRCUSERDELIMITER = ":";
 
   private Map brokerMap = Collections.synchronizedMap(new HashMap());
-  private boolean debug = false;
+  private boolean debug = true;
 
   private static Object semaphore = new Object();
   
@@ -306,7 +306,11 @@ public class ConnectionBrokerManager extends Object {
 		  while (iter.hasNext()) {
 			  final String key = (String) iter.next();
 			  SQLMapBroker broker = (SQLMapBroker)this.brokerMap.get(key);
+			  System.err.println("Checking broker:");
 			  if (broker.datasource.equals(datasource)) {
+				  if (debug) {
+					System.err.println(" Found a broker with the same datasource");
+				}
 				  //return (broker);
 				  if ( !donotremove && ( broker.refresh == 0 || ( broker != null && broker.broker.isDead()) ) ) {
 					  //System.err.println("Detected dead broker, removing it and creating new one");
