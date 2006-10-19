@@ -277,9 +277,9 @@ public class SQLMap implements Mappable, LazyArray {
    *
    * @param reload
    */
-  public synchronized void setReload(String datasourceName) throws MappableException, UserException {
+  public void setReload(String datasourceName) throws MappableException, UserException {
 	  
-	  synchronized ( semaphore ) {
+	  //synchronized ( semaphore ) {
 		  if (debug) {
 			  System.out.println("SQLMAP setReload(" + datasourceName + ") called!");
 		  }
@@ -287,36 +287,49 @@ public class SQLMap implements Mappable, LazyArray {
 		  try {
 			  
 			  if (transactionContextMap == null || !datasourceName.equals("")) {
-				  transactionContextMap = Collections.synchronizedMap(new HashMap());
+				  synchronized ( semaphore ) {
+					  if ( transactionContextMap == null ) {
+						  transactionContextMap = Collections.synchronizedMap(new HashMap());
+					  }
+				  }
 			  }
 			  
 			  if (autoCommitMap == null || !datasourceName.equals("")) {
-				  autoCommitMap = Collections.synchronizedMap(new HashMap());
+				  synchronized ( semaphore ) {
+					  if ( transactionContextMap == null ) {
+						  autoCommitMap = Collections.synchronizedMap(new HashMap());
+					  }
+				  }
 			  }
 			  
 			  if (configFile == null || !datasourceName.equals("")) {
-				  
-				  configFile = navajoConfig.readConfig("sqlmap.xml");
-				  
-				  // If propery file exists create a static connectionbroker that can be accessed by multiple instances of
-				  // SQLMap!!!
-				  if (fixedBroker == null && datasourceName.equals("")) { // Only re-create entire HashMap at initialization!
-					  fixedBroker = new ConnectionBrokerManager(this.debug);
-				  }
-				  
-				  if (datasourceName.equals("")) {
-					  // Get other data sources.
-					  ArrayList all = configFile.getMessages("/datasources/.*");
-					  for (int i = 0; i < all.size(); i++) {
-						  Message body = (Message) all.get(i);
-						  createDataSource(body, navajoConfig);
+
+				  synchronized ( semaphore ) {
+
+					  if ( configFile == null ) {
+						  configFile = navajoConfig.readConfig("sqlmap.xml");
+
+						  // If propery file exists create a static connectionbroker that can be accessed by multiple instances of
+						  // SQLMap!!!
+						  if (fixedBroker == null && datasourceName.equals("")) { // Only re-create entire HashMap at initialization!
+							  fixedBroker = new ConnectionBrokerManager(this.debug);
+						  }
+
+						  if (datasourceName.equals("")) {
+							  // Get other data sources.
+							  ArrayList all = configFile.getMessages("/datasources/.*");
+							  for (int i = 0; i < all.size(); i++) {
+								  Message body = (Message) all.get(i);
+								  createDataSource(body, navajoConfig);
+							  }
+						  }
+						  else {
+							  createDataSource(configFile.getMessage("/datasources/" +
+									  datasourceName), navajoConfig);
+						  }
+						  this.checkDefaultDatasource();
 					  }
 				  }
-				  else {
-					  createDataSource(configFile.getMessage("/datasources/" +
-							  datasourceName), navajoConfig);
-				  }
-				  this.checkDefaultDatasource();
 			  }
 			  rowCount = 0;
 		  }
@@ -336,7 +349,7 @@ public class SQLMap implements Mappable, LazyArray {
 			  logger.log(NavajoPriority.ERROR, t.getMessage(), t);
 			  throw new MappableException(t.getMessage());
 		  }
-	  }
+	  //}
   }
 
   public void setDebug(boolean b) {
