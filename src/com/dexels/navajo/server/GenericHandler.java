@@ -101,21 +101,26 @@ public final class GenericHandler extends ServiceHandler {
             		
             		String sourceFileName = properties.getCompiledScriptPath() + "/" + pathPrefix + serviceName + ".java";
             		File sourceFile = null;
+            		sourceFile = new File(sourceFileName);
             		
-            		synchronized (mutex1) { // Check for outdated compiled script Java source.
-            			sourceFile = new File(sourceFileName);
-            			if (!sourceFile.exists() || (scriptFile.lastModified() > sourceFile.lastModified())) {
-            				com.dexels.navajo.mapping.compiler.TslCompiler tslCompiler = new
-							com.dexels.navajo.mapping.compiler.TslCompiler(properties.getClassloader());
-            				try {
-            					tslCompiler.compileScript(serviceName, scriptPath,
-            							properties.
-										getCompiledScriptPath(),
-										pathPrefix);
-            				}
-            				catch (SystemException ex) {
-            					sourceFile.delete();
-            					throw ex;
+            		// Use if-synchronized-if construction.
+            		if (!sourceFile.exists() || (scriptFile.lastModified() > sourceFile.lastModified())) {
+            		
+            			synchronized (mutex1) { // Check for outdated compiled script Java source.
+
+            				if (!sourceFile.exists() || (scriptFile.lastModified() > sourceFile.lastModified())) {
+            					com.dexels.navajo.mapping.compiler.TslCompiler tslCompiler = new
+            					com.dexels.navajo.mapping.compiler.TslCompiler(properties.getClassloader());
+            					try {
+            						tslCompiler.compileScript(serviceName, scriptPath,
+            								properties.
+            								getCompiledScriptPath(),
+            								pathPrefix);
+            					}
+            					catch (SystemException ex) {
+            						sourceFile.delete();
+            						throw ex;
+            					}
             				}
             			}
             		}
