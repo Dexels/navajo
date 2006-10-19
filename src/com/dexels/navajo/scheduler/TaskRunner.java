@@ -137,9 +137,11 @@ public class TaskRunner extends GenericThread {
 	}
 	
 	public static TaskRunner getInstance() {
+		
 		if (instance!=null) {
 			return instance;
 		}
+		
 		synchronized (semaphore) {
 			if ( instance != null ) {
 				return instance;

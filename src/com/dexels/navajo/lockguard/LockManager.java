@@ -155,6 +155,11 @@ public final class LockManager extends GenericThread {
 	}
 	
 	public static LockManager getInstance(NavajoConfig config) {
+		
+		if ( instance != null ) {
+			return instance;
+		}
+		
 		synchronized ( semaphore ) {
 			if ( instance == null ) {
 				instance = new LockManager();

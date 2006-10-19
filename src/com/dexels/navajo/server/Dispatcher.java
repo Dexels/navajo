@@ -151,7 +151,11 @@ public final class Dispatcher {
   public static Dispatcher getInstance(URL configurationUrl,
 		  InputStreamReader fileInputStreamReader, String serverIdentification) throws
 		  NavajoException  {
-	  
+
+	  if ( instance != null ) {
+		  return instance;
+	  }
+
 	  synchronized (semaphore) {
 		  if ( instance == null ) {
 			  instance = new Dispatcher(configurationUrl, fileInputStreamReader);

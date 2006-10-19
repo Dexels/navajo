@@ -92,6 +92,10 @@ public class Worker extends GenericThread {
 	 */
 	public static Worker getInstance() {
 		
+		if ( instance != null ) {
+			return instance;
+		}
+		
 		synchronized ( semaphore ) {
 			
 			if ( instance != null ) {

@@ -73,6 +73,10 @@ public final class StatisticsRunner extends GenericThread {
    */
   public final synchronized static StatisticsRunner getInstance(String storePath, Map parameters, String storeClass) {
 	  
+	  if ( instance != null ) {
+		  return instance;
+	  }
+	  
 	  synchronized (semaphore) {
 		  if (instance == null) {
 			  
