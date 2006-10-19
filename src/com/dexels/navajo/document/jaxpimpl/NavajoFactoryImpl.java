@@ -11,6 +11,9 @@ package com.dexels.navajo.document.jaxpimpl;
 
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
+import com.dexels.navajo.document.saximpl.SaxHandler;
+import com.dexels.navajo.document.saximpl.qdxml.QDParser;
+
 import org.w3c.dom.*;
 import java.io.*;
 
@@ -36,6 +39,10 @@ public final class NavajoFactoryImpl extends NavajoFactory {
       }
   }
 
+  public Navajo createNavajo(Reader r) {
+	  throw new UnsupportedOperationException("Did not implement this function. Sorry.");
+	}
+  
   public Navajo createNavajo(Object representation) {
     return new NavajoImpl((Document) representation);
   }
