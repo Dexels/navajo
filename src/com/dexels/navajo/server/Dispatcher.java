@@ -74,7 +74,9 @@ public final class Dispatcher {
   
   //private Navajo inMessage = null;
   protected  boolean matchCN = false;
-  public  Set accessSet = Collections.synchronizedSet(new HashSet());
+//  public  Set accessSet = Collections.synchronizedSet(new HashSet());
+  public final Set accessSet = new HashSet();
+
   public  boolean useAuthorisation = true;
   private  final String defaultDispatcher =
       "com.dexels.navajo.server.GenericHandler";
