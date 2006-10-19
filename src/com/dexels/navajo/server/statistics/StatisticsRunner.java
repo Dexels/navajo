@@ -92,7 +92,7 @@ public final class StatisticsRunner extends GenericThread {
 			  catch (Exception ex) {
 				  ex.printStackTrace(System.err);
 			  }
-			  instance.setSleepTime(1000);
+			  instance.setSleepTime(100);
 			  instance.startThread(instance);
 			  System.err.println("Started StatisticsRunner version $Id$ using store: " + instance.myStore.getClass().getName());
 		  }
@@ -105,9 +105,12 @@ public final class StatisticsRunner extends GenericThread {
    *
    */
   public final void worker() {
-
+  
 	  HashMap copyOfTodo = null;
 	  synchronized ( semaphore ) {
+		  if ( todo.size() == 0 ) {
+			  return;
+		  }
 		  copyOfTodo = new HashMap(todo);
 		  todo.clear();
 	  }
