@@ -41,8 +41,6 @@ public final class Access
 
   private static final String VERSION = "$Id$";
 	
-  public static int instances = 0;
-  
   public java.util.Date created = new java.util.Date();
   public static int accessCount = 0;
   public int threadCount = 0;
@@ -134,11 +132,10 @@ public final class Access
                 String hostName,
                 boolean betaUser, Object certificate) {
 
-	  instances++;
 	  
     synchronized (mutex) {
       accessCount++;
-      this.accessID = System.currentTimeMillis() + "-" + accessCount;
+      this.accessID = created.getTime() + "-" + accessCount;
       //System.err.println("accessID " + this.accessID + ", WS = " + rpcName + ", USER = " + rpcUser);
     }
     this.userID = userID;
@@ -157,11 +154,10 @@ public final class Access
                 String rpcName, String userAgent, String ipAddress,
                 String hostName, Object certificate) {
 	  
-	  instances++;
 	  
     synchronized (mutex) {
       accessCount++;
-      this.accessID = System.currentTimeMillis() + "-" + accessCount;
+      this.accessID = created.getTime() + "-" + accessCount;
       //System.err.println("accessID " + this.accessID + ", WS = " + rpcName + ", USER = " + rpcUser);
     }
     this.userID = userID;
@@ -255,9 +251,6 @@ public Set getPiggybackData() {
 	return piggyBackData;
 }
 
-public void finalize() {
-	instances--;
-}
 public String getClientToken() {
 	return clientToken ;
 }
