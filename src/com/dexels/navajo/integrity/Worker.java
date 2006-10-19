@@ -195,9 +195,9 @@ public class Worker extends GenericThread {
 		Set s = null;
 		synchronized (workList) {
 			copyOfWorkList = new HashMap(workList);
-			s = new HashSet(copyOfWorkList.keySet());
 			workList.clear();
 		}
+		s = new HashSet(copyOfWorkList.keySet());
 		Iterator iter = s.iterator();
 		while (iter.hasNext()) {
 			String id = (String) iter.next();
