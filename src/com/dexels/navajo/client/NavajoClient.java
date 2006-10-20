@@ -51,7 +51,10 @@ public class NavajoClient implements ClientInterface {
   private final static Random randomize = new Random(System.currentTimeMillis());
   // Threadsafe collections:
   private Map globalMessages = new HashMap();
-  private Map serviceCache = Collections.synchronizedMap(new HashMap());
+  private Map serviceCache = new HashMap();
+
+  private Object serviceCacheMutex = new Object();
+  
   private Map cachedServiceNameMap = new HashMap();
   private Map asyncRunnerMap = Collections.synchronizedMap(new HashMap());
   private Map propertyMap = Collections.synchronizedMap(new HashMap());
@@ -87,6 +90,7 @@ public class NavajoClient implements ClientInterface {
 private long lastActivity;
 private int keepAliveDelay;
 private int globalRetryCounter = 0;
+private static boolean silent = true;
   
   // Disable for one minute. Bit short, should be maybe an hour, but better for debugging.
   private static final long serverDisableTimeout = 60000;
@@ -97,6 +101,7 @@ private int globalRetryCounter = 0;
   public NavajoClient(String dtdFile) {
 	  this();
   }
+
 
   public void addComparedServices(String serviceQuery, String serviceUpdate) {
     //single query support!!
@@ -273,44 +278,62 @@ private int globalRetryCounter = 0;
   }
 
   /**
-   * Add a webservice (by name) to the NavajoClient cache mechanism. This provides a way to store frequenly used webservices
-   * in the NavajoClient and thus preventing a server roundtrip.
-   * @param service String
-   */
-  public final void addCachedService(String service) {
-    cachedServiceNameMap.put(service, service);
-  }
+	 * Add a webservice (by name) to the NavajoClient cache mechanism. This
+	 * provides a way to store frequenly used webservices in the NavajoClient
+	 * and thus preventing a server roundtrip.
+	 * 
+	 * @param service
+	 *            String
+	 */
+	public final void addCachedService(String service) {
+		cachedServiceNameMap.put(service, service);
+	}
 
-  /**
-   * Remove (by name) a specific webservice from the NavajoClient's cache mechanism
-   * @param service String
-   */
-  public final void removeCachedService(String service) {
-    cachedServiceNameMap.remove(service);
-    serviceCache.remove(service);
-  }
+	/**
+	 * Remove (by name) a specific webservice from the NavajoClient's cache
+	 * mechanism
+	 * 
+	 * @param service
+	 *            String
+	 */
+	public final void removeCachedService(String service) {
+		synchronized (serviceCacheMutex) {
+			cachedServiceNameMap.remove(service);
+			serviceCache.remove(service);
+		}
+	}
 
-  /**
-   * Remove all webservices from the NavajoClient's cache
-   */
-  public final void clearCache() {
-    serviceCache.clear();
-  }
+	/**
+	 * Remove all webservices from the NavajoClient's cache
+	 */
+	public final void clearCache() {
+		synchronized (serviceCacheMutex) {
+			serviceCache.clear();
+		}
+	}
 
-  /**
-   * This method removes the cached instance of the given webservice, but will continue to cache it when this
-   * service is called upon again.
-   * @param service String
-   */
-  public final void clearCache(String service) {
-    serviceCache.remove(service);
-  }
+	/**
+	 * This method removes the cached instance of the given webservice, but will
+	 * continue to cache it when this service is called upon again.
+	 * 
+	 * @param service
+	 *            String
+	 */
+	public final void clearCache(String service) {
+		synchronized (serviceCacheMutex) {
+			serviceCache.remove(service);
+		}
+	}
 
-  /**
-   * Add a global message to this NavajoClient. Global messages are messages that will ALWAYS be put in ALL requests
-   * made by the NavajoClient instance. This way we can provide global information we want to use for every webservice.
-   * @param m Message
-   */
+	/**
+	 * Add a global message to this NavajoClient. Global messages are messages
+	 * that will ALWAYS be put in ALL requests made by the NavajoClient
+	 * instance. This way we can provide global information we want to use for
+	 * every webservice.
+	 * 
+	 * @param m
+	 *            Message
+	 */
   public final void addGlobalMessage(Message m) {
     globalMessages.remove(m.getName());
     globalMessages.put(m.getName(), m);
@@ -528,7 +551,7 @@ private int globalRetryCounter = 0;
     con.setDoOutput(true);
     con.setDoInput(true);
     con.setUseCaches(false);
-    con.setRequestProperty("Connection", "keep-alive");
+//    con.setRequestProperty("Connection", "keep-alive");
     con.setRequestProperty("Content-type", "text/xml; charset=UTF-8");
 
     try {
@@ -536,8 +559,7 @@ private int globalRetryCounter = 0;
     	chunked.invoke( con, new Object[]{new Integer(1000)});
     	con.setRequestProperty("Transfer-Encoding", "chunked" );
     } catch (Throwable e) {
-    	//e.printStackTrace(System.err);
-    	System.err.println("setChunkedStreamingMode does not exist, upgrade to java 1.5+");
+     	System.err.println("setChunkedStreamingMode does not exist, upgrade to java 1.5+");
     }
     
     // Verstuur bericht
@@ -1751,4 +1773,6 @@ public void switchServer(int startIndex, boolean forceChange) {
 	public int getAsyncServerIndex() {
 		return currentServerIndex;
 	}
+	
+
 }
