@@ -930,9 +930,11 @@ public final class Dispatcher {
       }
       else { // ACCESS GRANTED.
 
-        access.authorisationTime = (int) (System.currentTimeMillis() -
-                                          startAuth);
-        accessSet.add(access);
+        access.authorisationTime = (int) (System.currentTimeMillis() - startAuth);
+        synchronized ( accessSet ) {
+        	accessSet.add(access);
+        }
+        
         access.setMyDispatcher(this);
         access.setThreadCount(accessSet.size());
         
@@ -1024,7 +1026,9 @@ public final class Dispatcher {
     	
     	if (access != null) {
     		// Remove access object from set of active webservices first.
-    		accessSet.remove(access);
+    		synchronized ( accessSet ) {
+    			accessSet.remove(access);
+			}
     		//System.err.println("AccessSet size: " + accessSet.size());
     		// Set access to finished state.
     		access.setFinished();
