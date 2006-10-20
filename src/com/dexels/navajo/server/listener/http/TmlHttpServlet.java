@@ -249,110 +249,90 @@ public final class TmlHttpServlet extends HttpServlet {
    */
   public final void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
-    Date created = new java.util.Date();
-    long start = created.getTime();
+	  Date created = new java.util.Date();
+	  long start = created.getTime();
 
-    //System.err.println("in doPost() thread = " + Thread.currentThread().hashCode() + ", " + request.getContentType() + ", " + request.getContentLength() + ", " + request.getMethod() + ", " + request.getRemoteUser());
-    String sendEncoding = request.getHeader("Accept-Encoding");
-    String recvEncoding = request.getHeader("Content-Encoding");
-    boolean useSendCompression = ( (sendEncoding != null) && (sendEncoding.indexOf("zip") != -1));
-    boolean useRecvCompression = ( (recvEncoding != null) && (recvEncoding.indexOf("zip") != -1));
+	  String sendEncoding = request.getHeader("Accept-Encoding");
+	  String recvEncoding = request.getHeader("Content-Encoding");
+	  boolean useSendCompression = ( (sendEncoding != null) && (sendEncoding.indexOf("zip") != -1));
+	  boolean useRecvCompression = ( (recvEncoding != null) && (recvEncoding.indexOf("zip") != -1));
 
-    Dispatcher dis = null;
-    BufferedInputStream is = null;
-    Reader r = null;
-    try {
+	  Dispatcher dis = null;
+	  BufferedInputStream is = null;
+	  Reader r = null;
+	  try {
 
-      Navajo in = null;
-      
-      if (useRecvCompression) {
-        java.util.zip.GZIPInputStream unzip = new java.util.zip.GZIPInputStream(request.getInputStream());
-        is = new BufferedInputStream(unzip);
-        in = NavajoFactory.getInstance().createNavajo(is);
-      }
-      else {
-//    	is = new BufferedInputStream(request.getInputStream());
-    	r = request.getReader();
-        in = NavajoFactory.getInstance().createNavajo(r);
-		r.close();
-		
-      }
+		  Navajo in = null;
 
-      long stamp = System.currentTimeMillis();
-      int pT = (int) (stamp - start);
+		  if (useRecvCompression) {
+			  java.util.zip.GZIPInputStream unzip = new java.util.zip.GZIPInputStream(request.getInputStream());
+			  is = new BufferedInputStream(unzip);
+			  in = NavajoFactory.getInstance().createNavajo(is);
+		  }
+		  else {
+			  r = request.getReader();
+			  in = NavajoFactory.getInstance().createNavajo(r);
+			  r.close();
+		  }
 
-      if (in == null) {
-        throw new ServletException("Invalid request.");
-      }
+		  long stamp = System.currentTimeMillis();
+		  int pT = (int) (stamp - start);
 
-      Header header = in.getHeader();
-      if (header == null) {
-        throw new ServletException("Empty Navajo header.");
-      }
+		  if (in == null) {
+			  throw new ServletException("Invalid request.");
+		  }
 
-      // Create dispatcher object.
-      dis = Dispatcher.getInstance(new java.net.URL(configurationPath), 
-    		  new com.dexels.navajo.server.FileInputStreamReader(),
-    		  request.getServerName() + request.getRequestURI()
-      );
-     
-      // Check for certificate.
-      Object certObject = request.getAttribute( "javax.servlet.request.X509Certificate");
+		  Header header = in.getHeader();
+		  if (header == null) {
+			  throw new ServletException("Empty Navajo header.");
+		  }
 
-      // Call Dispatcher with parsed TML document as argument.
-      Navajo outDoc = dis.handle(in, certObject, 
-    		  new ClientInfo(request.getRemoteAddr(), request.getRemoteHost(),
-          recvEncoding, pT, useRecvCompression, useSendCompression, request.getContentLength(), created));
+		  // Create dispatcher object.
+		  dis = Dispatcher.getInstance(new java.net.URL(configurationPath), 
+				  new com.dexels.navajo.server.FileInputStreamReader(),
+				  request.getServerName() + request.getRequestURI()
+		  );
 
-      //long sendStart = System.currentTimeMillis();
-      if (useSendCompression) {
-        response.setContentType("text/xml; charset=UTF-8");
-        response.setHeader("Content-Encoding", "gzip");
-        java.util.zip.GZIPOutputStream gzipout = new java.util.zip.GZIPOutputStream(response.getOutputStream());
-        outDoc.write(gzipout);
-        gzipout.close();
-      }
-      else {
-        response.setContentType("text/xml; charset=UTF-8");
-        Writer out = (Writer) response.getWriter();
-        outDoc.write(out);
-        out.close();
-      }
-      
-//    Show interesting log
-//      System.err.println( dis.getApplicationId() + " - " + request.getRemoteHost() + " - " + created + " - " + header.getRPCName() + " - " + header.getRequestId() + " - " + request.getContentLength() + " - " + dis.accessSet.size() + " - " + ( System.currentTimeMillis() - start ) );
-      
-//      System.err.println("Sending response for " + in.getHeader().getRPCName() + " took " + 
-//    		  (System.currentTimeMillis() - sendStart)/1000.0 + " secs.");
+		  // Check for certificate.
+		  Object certObject = request.getAttribute( "javax.servlet.request.X509Certificate");
 
-    }
-    catch (FatalException e) {
-//      logger.log(Priority.INFO,
-//                 "Received request from " + request.getRemoteAddr() +
-//                 ": invalid request");
-//      logger.log(Priority.FATAL, e.getMessage());
-      throw new ServletException(e);
-    }
-    catch (NavajoException te) {
-//      logger.log(Priority.INFO,
-//                 "Received request from " + request.getRemoteAddr() +
-//                 "): invalid request");
-//      logger.log(Priority.ERROR, te.getMessage());
-      throw new ServletException(te);
-    }
-    finally {
-      dis = null;
-      if ( is != null ) {
-    	  try {
-    		  is.close();
-    	  } catch (Exception e) {
-    		  // NOT INTERESTED.
-    	  }
-      }
-      if (r!=null) {
-		r.close();
-	}
-      //finishedServing();
-    }
+		  // Call Dispatcher with parsed TML document as argument.
+		  Navajo outDoc = dis.handle(in, certObject, 
+				  new ClientInfo(request.getRemoteAddr(), request.getRemoteHost(),
+						  recvEncoding, pT, useRecvCompression, useSendCompression, request.getContentLength(), created));
+
+		  if (useSendCompression) {
+			  response.setContentType("text/xml; charset=UTF-8");
+			  response.setHeader("Content-Encoding", "gzip");
+			  java.util.zip.GZIPOutputStream gzipout = new java.util.zip.GZIPOutputStream(response.getOutputStream());
+			  outDoc.write(gzipout);
+			  gzipout.close();
+		  }
+		  else {
+			  response.setContentType("text/xml; charset=UTF-8");
+			  Writer out = (Writer) response.getWriter();
+			  outDoc.write(out);
+			  out.close();
+		  }
+	  }
+	  catch (FatalException e) {
+		  throw new ServletException(e);
+	  }
+	  catch (NavajoException te) {
+		  throw new ServletException(te);
+	  }
+	  finally {
+		  dis = null;
+		  if ( is != null ) {
+			  try {
+				  is.close();
+			  } catch (Exception e) {
+				  // NOT INTERESTED.
+			  }
+		  }
+		  if (r!=null) {
+			  r.close();
+		  }
+	  }
   }
 }
