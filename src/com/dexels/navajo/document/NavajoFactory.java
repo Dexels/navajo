@@ -41,7 +41,7 @@ public abstract class NavajoFactory {
 			  String name = System.getProperty(
 			  "com.dexels.navajo.DocumentImplementation");
 			  if (name == null) {
-				  name = "com.dexels.navajo.document.jaxpimpl.NavajoFactoryImpl";
+				  name = "com.dexels.navajo.document.base.BaseNavajoFactoryImpl";
 			  }
 			  try {
 				  impl = (NavajoFactory) Class.forName(name).newInstance();
