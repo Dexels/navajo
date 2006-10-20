@@ -39,15 +39,16 @@ package navajoclient;
  * 2.2.1. Added debug data.
  * 2.2.2. Closing input stream when creatin Navajo (for SAXP).
  * 2.2.3. Added support for piggybacking of data.
+ * 2.2.4. Removed evil keep-alive
  */
 public class Version extends dexels.Version {
 
 	public static final int MAJOR = 2;
 	public static final int MINOR = 2;
-	public static final int PATCHLEVEL = 3;
+	public static final int PATCHLEVEL = 4;
 	public static final String VENDOR = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Client";
-	public static final String RELEASEDATE = "2006-08-29";
+	public static final String RELEASEDATE = "2006-10-20";
 	
 	//Included packages.
 	String [] includes = {"navajodocument.Version"};
