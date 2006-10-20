@@ -320,7 +320,7 @@ public final class TmlHttpServlet extends HttpServlet {
       }
       
 //    Show interesting log
-      System.err.println( dis.getApplicationId() + " - " + request.getRemoteHost() + " - " + created + " - " + header.getRPCName() + " - " + header.getRequestId() + " - " + request.getContentLength() + " - " + dis.accessSet.size() + " - " + ( System.currentTimeMillis() - start ) );
+//      System.err.println( dis.getApplicationId() + " - " + request.getRemoteHost() + " - " + created + " - " + header.getRPCName() + " - " + header.getRequestId() + " - " + request.getContentLength() + " - " + dis.accessSet.size() + " - " + ( System.currentTimeMillis() - start ) );
       
 //      System.err.println("Sending response for " + in.getHeader().getRPCName() + " took " + 
 //    		  (System.currentTimeMillis() - sendStart)/1000.0 + " secs.");
