@@ -144,6 +144,7 @@ public class NavajoClassLoader extends MultiClassLoader {
       }
       synchronized (mutex1) {
 
+    	  // What if class has been defined in the mean time??????? and second thread waiting comes in????
     	  FileInputStream fis = null;
     	  
     	  try {
