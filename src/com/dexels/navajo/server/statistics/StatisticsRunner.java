@@ -135,6 +135,8 @@ public final class StatisticsRunner extends GenericThread {
   public final void addAccess(final Access a, final Exception e, AsyncMappable am) {
 	  synchronized ( semaphore ) {
 		  todo.put( a.accessID, new TodoItem(a, am) );
+	  }
+	  synchronized (this ) {
 		  if ( todo.size() > 10 ) {
 			  notifyAll();
 		  }

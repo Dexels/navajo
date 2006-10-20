@@ -77,6 +77,15 @@ public class GenericThread implements Runnable, Mappable {
 		}
 	}
 	
+	public void inactive() {
+		// Sleep for a while.
+		try {
+			Thread.sleep(getSleepTime());
+			totalSleepTime += getSleepTime();
+		} catch (InterruptedException e) {
+		}
+	}
+	
 	public void run() {
 
 		while ( !killed ) {
@@ -88,13 +97,8 @@ public class GenericThread implements Runnable, Mappable {
 			} catch (Throwable t) {
 				t.printStackTrace(System.err);
 			}
-			// Sleep for a while.
-			try {
-				status = SLEEPING;
-				Thread.sleep(getSleepTime());
-				totalSleepTime += getSleepTime();
-			} catch (InterruptedException e) {
-			}
+			status = SLEEPING;
+			inactive();
 		}
 		status = DEAD;
 	}
