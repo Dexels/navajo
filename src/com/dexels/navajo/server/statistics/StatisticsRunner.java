@@ -100,6 +100,14 @@ public final class StatisticsRunner extends GenericThread {
 	  return instance;
   }
 
+  public synchronized void inactive() {
+	  try {
+		wait(60000);
+	} catch (InterruptedException e) {
+		
+	}
+  }
+  
   /**
    * Main thread. Responsible for persisting queued access objects.
    *
@@ -127,6 +135,9 @@ public final class StatisticsRunner extends GenericThread {
   public final void addAccess(final Access a, final Exception e, AsyncMappable am) {
 	  synchronized ( semaphore ) {
 		  todo.put( a.accessID, new TodoItem(a, am) );
+		  if ( todo.size() > 10 ) {
+			  notifyAll();
+		  }
 	  }
 	  // Add to webserviceaccesslistener.
 	  WebserviceAccessListener.getInstance().addAccess(a, e);
