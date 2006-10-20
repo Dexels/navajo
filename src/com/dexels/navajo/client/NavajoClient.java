@@ -105,7 +105,7 @@ private static boolean silent = true;
 
   public void addComparedServices(String serviceQuery, String serviceUpdate) {
     //single query support!!
-    System.err.println("Added comparedservices: " + serviceQuery + ".." + serviceUpdate);
+    //System.err.println("Added comparedservices: " + serviceQuery + ".." + serviceUpdate);
     comparedServicesQueryToUpdateMap.put(serviceQuery, serviceUpdate);
     comparedServicesUpdateToQueryMap.put(serviceUpdate, serviceQuery);
   }
@@ -114,7 +114,7 @@ private static boolean silent = true;
     try {
       String s = (String) comparedServicesQueryToUpdateMap.get(queryService);
       if (s != null) {
-        System.err.println("Storing Navajo object for service: " + queryService);
+        //System.err.println("Storing Navajo object for service: " + queryService);
         storedNavajoComparisonMap.put(s, n.copy());
       }
     }
@@ -461,7 +461,7 @@ private static boolean silent = true;
    */
   public final void setSecure(InputStream keystore, String passphrase, boolean useSecurity) throws ClientException {
     setSecure = useSecurity;
-    System.err.println("------------------------------------------------>>>>>> Calling latest VERSION OF setScure!?");
+    //System.err.println("------------------------------------------------>>>>>> Calling latest VERSION OF setScure!?");
     if (sslFactory == null) {
 
       try {
@@ -525,8 +525,6 @@ private static boolean silent = true;
    * @param useCompression boolean
    */
   
-  
-  // TODO: Are all streams closed? I am not sure how URLConnections handle it
   protected BufferedInputStream doTransaction(String name, Navajo d, boolean useCompression) throws IOException, ClientException, NavajoException, javax.net.ssl.SSLHandshakeException {
     URL url;
     
@@ -536,8 +534,7 @@ private static boolean silent = true;
     else {
       url = new URL("http://" + name);
     }
-//    Thread.dumpStack();
-//    System.err.println("in doTransaction: opening url: " + url.toString()+" global retries: "+globalRetryCounter);
+
     HttpURLConnection con = null;
     if (sslFactory == null) {
       con = (HttpURLConnection) url.openConnection();
@@ -551,7 +548,7 @@ private static boolean silent = true;
     con.setDoOutput(true);
     con.setDoInput(true);
     con.setUseCaches(false);
-//    con.setRequestProperty("Connection", "keep-alive");
+//  con.setRequestProperty("Connection", "keep-alive");
     con.setRequestProperty("Content-type", "text/xml; charset=UTF-8");
 
     try {
@@ -562,7 +559,7 @@ private static boolean silent = true;
      	System.err.println("setChunkedStreamingMode does not exist, upgrade to java 1.5+");
     }
     
-    // Verstuur bericht
+    // Send message
     if (useCompression) {
     	con.setRequestProperty("Accept-Encoding", "gzip");
     	con.setRequestProperty("Content-Encoding", "gzip");
@@ -573,13 +570,6 @@ private static boolean silent = true;
     		out = new java.util.zip.GZIPOutputStream(os);
     		d.write(out, condensed, d.getHeader().getRPCName());
     	} finally  {
-//    		if ( os != null ) {
-//    			try {
-//					os.close();
-//				} catch (IOException e) {
-//					e.printStackTrace();
-//				}
-//    		}
     		if ( out != null ) {
     			try {
     				out.flush();
@@ -593,7 +583,6 @@ private static boolean silent = true;
     else {
     	OutputStream os = null;
     	try {
-    		con.setRequestProperty("Content-type", "text/xml; charset=UTF-8");
     		os = con.getOutputStream();
     		d.write(os, condensed, d.getHeader().getRPCName());
     	}
@@ -618,7 +607,7 @@ private static boolean silent = true;
     else {
       in = new BufferedInputStream(con.getInputStream());
     }
-    lastActivity = System.currentTimeMillis();
+    
     return in;
   }
 
