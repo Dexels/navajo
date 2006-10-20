@@ -304,7 +304,7 @@ public final class TmlHttpServlet extends HttpServlet {
     		  new ClientInfo(request.getRemoteAddr(), request.getRemoteHost(),
           recvEncoding, pT, useRecvCompression, useSendCompression, request.getContentLength(), created));
 
-      long sendStart = System.currentTimeMillis();
+      //long sendStart = System.currentTimeMillis();
       if (useSendCompression) {
         response.setContentType("text/xml; charset=UTF-8");
         response.setHeader("Content-Encoding", "gzip");
