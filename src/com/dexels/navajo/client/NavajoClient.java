@@ -537,7 +537,7 @@ private static boolean silent = true;
       url = new URL("http://" + name);
     }
 //    Thread.dumpStack();
-    System.err.println("in doTransaction: opening url: " + url.toString()+" global retries: "+globalRetryCounter);
+//    System.err.println("in doTransaction: opening url: " + url.toString()+" global retries: "+globalRetryCounter);
     HttpURLConnection con = null;
     if (sslFactory == null) {
       con = (HttpURLConnection) url.openConnection();
@@ -776,7 +776,7 @@ private static boolean silent = true;
                     synchronized (piggyBackData) {
                     	piggyBackData.add(pbd);
 					}
-                    System.err.println(method+": totaltime = " + ( clientTime / 1000.0 )+ ", servertime = " + ( totalTime / 1000.0 )+" transfertime = "+((clientTime-totalTime)/1000)+" piggybackdata: "+piggyBackData.size()); 
+//                    System.err.println(method+": totaltime = " + ( clientTime / 1000.0 )+ ", servertime = " + ( totalTime / 1000.0 )+" transfertime = "+((clientTime-totalTime)/1000)+" piggybackdata: "+piggyBackData.size()); 
 				} else {
 					System.err.println("Null header in input message");
 				}
