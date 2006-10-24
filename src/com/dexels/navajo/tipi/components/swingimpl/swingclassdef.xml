@@ -1136,6 +1136,7 @@
 			</event>
         </events>
         <values>
+            <value direction="out" name="selectionIndex" type="insteger"/>
             <value direction="inout" name="propertyname" type="string"/>
             <value direction="inout" name="background" type="color"/>
             <value direction="inout" name="foreground" type="color"/>
@@ -1146,6 +1147,11 @@
             <value direction="inout" name="enabled" type="boolean"/>
             <value direction="inout" name="visible" type="boolean"/>
             <value direction="inout" name="use_checkbox" type="boolean"/>
+            <!-- Sets whether the property will still be able to get focus,
+            even when it is direction out (defaults to true) if set to false
+            it will not be able for example to copy text -->
+            <value direction="inout" name="focusable" type="boolean"/>
+            
             <value direction="in" name="visibleRowCount" type="integer"/>
             <value direction="inout" name="selectiontype" type="selection">
                 <option description="checkbox" value="checkbox"/>
@@ -1183,6 +1189,8 @@
             <value direction="in" name="verticalScrolls" type="boolean"/>
             <value direction="in" name="maxImageWidth" type="integer"/>
             <value direction="in" name="maxImageHeight" type="integer"/>
+            <value direction="in" name="maxWidth" type="integer"/>
+            
         </values>
         <methods>
             <method name="updateProperty"/>

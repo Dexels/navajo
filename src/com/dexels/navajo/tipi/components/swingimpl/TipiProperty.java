@@ -314,6 +314,12 @@ public class TipiProperty
         if("horizontalScrolls".equals(name)) {
             setHorizontalScrolls(((Boolean) object).booleanValue());
         }
+        if("focusable".equals(name)) {
+        	( (GenericPropertyComponent) getContainer()).setFocusable(((Boolean) object).booleanValue());
+        }
+        if("maxWidth".equals(name)) {
+        	( (GenericPropertyComponent) getContainer()).setMaxWidth(( (Integer) object).intValue());
+        }
       }
     });
     super.setComponentValue(name, object);
