@@ -256,13 +256,17 @@ public class BasePropertyImpl
   public final Object getEvaluatedValue() throws NavajoException {
 //    System.err.println("Evaluating property: "+getValue());
     Operand o;
+    // No evaluator present.
+    if (NavajoFactory.getInstance().getExpressionEvaluator()==null) {
+		return null;
+	}
     try {
       try {
         if (!EXPRESSION_PROPERTY.equals(getType())) {
           throw NavajoFactory.getInstance().createNavajoException(
               "Can only evaluate expression type properties!");
         }
-        try {
+        try {	
             o = NavajoFactory.getInstance().getExpressionEvaluator().evaluate(
                 getValue(), getRootDoc(), null, getParentMessage());
             evaluatedType = o.type;
@@ -831,11 +835,17 @@ public class BasePropertyImpl
   }
 
   public final ArrayList getAllSelections() {
+	if (selectionList==null) {
+		return new ArrayList();
+	}
     ArrayList l = new ArrayList(selectionList);
     return l;
   }
 
   public final void setSelected(Selection s) {
+	if (selectionList==null) {
+		return;
+	}
     for (int i = 0; i < selectionList.size(); i++) {
       Selection current = (Selection) selectionList.get(i);
       if (current == s) {
@@ -848,6 +858,9 @@ public class BasePropertyImpl
   }
 
   public final void setAllSelected(boolean b) {
+	if (selectionList==null) {
+		return;
+	}
     for (int i = 0; i < selectionList.size(); i++) {
       Selection current = (Selection) selectionList.get(i);
       current.setSelected(b);
@@ -855,6 +868,9 @@ public class BasePropertyImpl
   }
 
   public final void setSelectedByValue(Object value) throws NavajoException {
+	if (selectionList==null) {
+		return;
+	}
     for (int i = 0; i < selectionList.size(); i++) {
       Selection current = (Selection) selectionList.get(i);
       if (current.getValue() == null) {
@@ -879,7 +895,10 @@ public class BasePropertyImpl
   }
 
   public final void addSelection(Selection s) {
-	  
+	if (selectionList==null) {
+		selectionList = new ArrayList();
+	}
+
     int max = selectionList.size();
     boolean selected = s.isSelected();
     for (int i = 0; i < max; i++) {
@@ -902,14 +921,23 @@ public class BasePropertyImpl
   }
 
   public final void removeSelection(Selection s) {
+	if (selectionList==null) {
+		return;
+	}
     selectionList.remove(s);
   }
 
   public final void removeAllSelections() throws NavajoException {
+	if (selectionList==null) {
+		return;
+	}
     selectionList = new ArrayList();
   }
 
   public final Selection getSelection(String name) {
+	if (selectionList==null) {
+	    return NavajoFactory.getInstance().createDummySelection();
+	}
     for (int i = 0; i < selectionList.size(); i++) {
       Selection current = (Selection) selectionList.get(i);
       if (current.getName().equals(name)) {
@@ -920,6 +948,9 @@ public class BasePropertyImpl
   }
 
   public final Selection getSelectionByValue(String value) {
+	if (selectionList==null) {
+	    return NavajoFactory.getInstance().createDummySelection();
+	}	  
     for (int i = 0; i < selectionList.size(); i++) {
       Selection current = (Selection) selectionList.get(i);
       if (current != null && current.getValue().equals(value)) {
@@ -931,14 +962,17 @@ public class BasePropertyImpl
   }
 
   public final Selection getSelected() {
-    for (int i = 0; i < selectionList.size(); i++) {
-      Selection current = (Selection) selectionList.get(i);
-//      System.err.println("CHECKING:::: "+current);
-      if (current != null && current.isSelected()) {
-        return current;
-      }
-    }
-//    return null;
+		if (selectionList == null) {
+			return NavajoFactory.getInstance().createDummySelection();
+		}
+		for (int i = 0; i < selectionList.size(); i++) {
+			Selection current = (Selection) selectionList.get(i);
+			// System.err.println("CHECKING:::: "+current);
+			if (current != null && current.isSelected()) {
+				return current;
+			}
+		}
+// return null;
     return NavajoFactory.getInstance().createDummySelection();
   }
 
@@ -1170,11 +1204,15 @@ public class BasePropertyImpl
 
   }
 
-  public final void addSelectionWithoutReplace(Selection s) throws com.dexels.
-      navajo.document.NavajoException {
-    selectionList.add(s);
-    ((BaseSelectionImpl) s).setParent(this);
-  }
+  public final void addSelectionWithoutReplace(Selection s)
+			throws com.dexels.navajo.document.NavajoException {
+		if (selectionList == null) {
+			selectionList = new ArrayList();
+		}
+
+		selectionList.add(s);
+		((BaseSelectionImpl) s).setParent(this);
+	}
 
   public final void setSelected(ArrayList al) throws com.dexels.navajo.document.
       NavajoException {
