@@ -87,7 +87,7 @@ public final class Binary extends NavajoType {
     
     public String getHandle() {
         if (dataFile!=null) {
-            return dataFile.getName();
+            return dataFile.getAbsolutePath();
         }
         if (lazySourceFile!=null) {
             return lazySourceFile.getAbsolutePath();
@@ -142,16 +142,13 @@ public final class Binary extends NavajoType {
 
         this.mimetype = getSubType("mime");
         this.mimetype = (mimetype == null || mimetype.equals("") ? guessContentType() : mimetype);
-        String ext = getExtension();
-        if (ext!=null) {
-			dataFile.renameTo(new File(dataFile.getName()+"."+ext));
-		}
+
     }
 
     private OutputStream createTempFileOutputStream() throws IOException, FileNotFoundException {
     	
         dataFile = File.createTempFile("binary_object", "navajo", NavajoFactory.getInstance().getTempDir());
-        //dataFile.deleteOnExit();
+      
         FileOutputStream fos = new FileOutputStream(dataFile);
         return fos;
     }
@@ -540,6 +537,7 @@ public final class Binary extends NavajoType {
     }
 
     public void finalize() {
+    
         if (dataFile != null && dataFile.exists()) {
             try {
                 dataFile.delete();
