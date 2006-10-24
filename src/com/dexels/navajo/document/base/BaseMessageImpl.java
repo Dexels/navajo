@@ -109,6 +109,9 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode, Comp
     }
 
     public final void clearAllSelections() throws NavajoException {
+    	if ( propertyList == null ) {
+    		return;
+    	}
         for (int i = 0; i < propertyList.size(); i++) {
             Property p = (Property) propertyList.get(i);
             p.clearSelections();
