@@ -143,7 +143,16 @@ public class NavajoClassLoader extends MultiClassLoader {
     	  throw new ClassNotFoundException("Script path not set!");
       }
       synchronized (mutex1) {
-
+    	  // Check for the class again. Following the if-sync-if protocol.
+          try {
+              c = Class.forName(className, false, this);
+              //System.err.println("Found " + script);
+              return c;
+            }
+            catch (Exception cnfe) {
+//              // Class not found using classloader, try compiled scripts directory.
+              c = null;
+            }
     	  // What if class has been defined in the mean time??????? and second thread waiting comes in????
     	  FileInputStream fis = null;
     	  
