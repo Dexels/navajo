@@ -15,8 +15,8 @@ import com.dexels.navajo.tipi.*;
 
 public class TipiGeneralAspManager implements TipiStorageManager {
     
-    public static final String STORAGE_UPDATE_SERVICE = "ProcessUpdateDocument";
-    public static final String STORAGE_QUERY_SERVICE = "ProcessQueryDocument";
+    public static final String STORAGE_UPDATE_SERVICE = "ProcessUpdateBinary";
+    public static final String STORAGE_QUERY_SERVICE = "ProcessQueryBinary";
     public final String scriptPrefix;    
 //    public final String authorId;
     private String instanceId;    
@@ -115,7 +115,8 @@ public class TipiGeneralAspManager implements TipiStorageManager {
     }
     
     private Navajo constructRequest(String id) throws NavajoException {
-        Navajo n = NavajoFactory.getInstance().createNavajo();
+    // TODO Clean up a bit. Only ObjectId and ClubIdentifier needed
+    	Navajo n = NavajoFactory.getInstance().createNavajo();
         Message document = NavajoFactory.getInstance().createMessage(n, "Document");
         n.addMessage(document);
         Property authorId = NavajoFactory.getInstance().createProperty(n, "AuthorId", Property.STRING_PROPERTY, this.instanceId, 0, "", Property.DIR_IN, null);
