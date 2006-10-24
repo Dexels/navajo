@@ -961,7 +961,7 @@ public void parseDefinition(XMLElement child) throws TipiException {
     }
     String location = (String)lazyMap.get(componentName);
     if (location==null) {
-    	System.err.println("No lazy location found: "+componentName);
+//    	System.err.println("No lazy location found: "+componentName);
 //    	Thread.dumpStack();
     	return null;
     }

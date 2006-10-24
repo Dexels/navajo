@@ -705,18 +705,15 @@ public void loadStartValues(XMLElement element) {
   }
 
   public TipiComponent getTipiComponent(String s) {
-//      System.err.println("Getting component: "+s+" children: "+tipiComponentMap.keySet());
-    if (tipiComponentMap.size()!=tipiComponentList.size()) {
-      System.err.println("PROBLEMS: Mapsize: "+tipiComponentMap.size()+" LIST: "+tipiComponentList.size()+" component: "+getPath());
-    }
-//    System.err.println("getting component. # of components: "+tipiComponentMap.size());
+//    if (tipiComponentMap.size()!=tipiComponentList.size()) {
+//      System.err.println("PROBLEMS: Mapsize: "+tipiComponentMap.size()+" LIST: "+tipiComponentList.size()+" component: "+getPath());
+//    }
     return (TipiComponent) tipiComponentMap.get(s);
   }
 
   public TipiComponent getTipiComponent(int i) {
-    if (tipiComponentMap.size()!=tipiComponentList.size()) {
-     System.err.println("PROBLEMS: Mapsize: "+tipiComponentMap.size()+" LIST: "+tipiComponentList.size()+" component: "+getPath());
-    }
+//    if (tipiComponentMap.size()!=tipiComponentList.size()) {
+//      }
     return (TipiComponent) tipiComponentList.get(i);
   }
 
@@ -840,22 +837,13 @@ public void loadStartValues(XMLElement element) {
     /** @todo Fix following scenario:
      * What should happen when a component is added with the same id? */
     if (tipiComponentMap.containsKey(c.getId())) {
-      System.err.println("===================================\n   WARNING: Adding component which is already present.\n   =========================================");
-      System.err.println("id: "+c.getId());
+      System.err.println("   ===================================\n   WARNING: Adding component which is already present. ID: "+c.getId()+" parent: "+getPath()+"\n   =========================================");
     }
     addChildComponent(c);
-//    tipiComponentMap.put(c.getId(), c);
-//    if (index<0) {
-//      tipiComponentList.add(c);
-//    } else {
-//      tipiComponentList.add(index,c);
-//    }
     c.setParent(this);
-//    if (c.getContainer() != null && !java.awt.Window.class.isInstance(c.getContainer())) {
-//    if (getContainer()!=null && c.getContainer()!=null ) {
-    if (getContainer() == null && c.isVisibleElement()) {
-      System.err.println("THIS IS WEIRD: COMPONENT: " + c.getPath() + " has no container, but it is visible.");
-    }
+//    if (getContainer() == null && c.isVisibleElement()) {
+//      System.err.println("THIS IS WEIRD: COMPONENT: " + c.getPath() + " has no container, but it is visible.");
+//    }
     if (getContainer() != null && c.isVisibleElement()) {
       addToContainer(c.getContainer(), td);
       addedToParent();
