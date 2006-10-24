@@ -191,7 +191,7 @@ public class TipiDialog
     if (bnds != null) {
     	
       myDialog.setBounds(bnds);
-      System.err.println("Setting bounds: "+bnds);
+//      System.err.println("Setting bounds: "+bnds);
     } else {
       System.err.println("Null bounds for dialog.");
     }

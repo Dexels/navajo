@@ -45,7 +45,7 @@ public class TipiQuestionGroup extends TipiBaseQuestionGroup {
             throw new RuntimeException(ex);
           }
           catch (InterruptedException ex) {
-            System.err.println("Interrupted");
+//            System.err.println("Interrupted");
           }
         }
       }
