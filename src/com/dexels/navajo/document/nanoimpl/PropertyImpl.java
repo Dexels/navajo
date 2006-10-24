@@ -129,30 +129,33 @@ public final class PropertyImpl
         x.setAttribute("description", description);
       }
 
-      if (length != -1 && !condense) {
-        x.setAttribute("length", length + "");
+	if (length != -1 && !condense) {
+					x.setAttribute("length", length + "");
+	
+		}
+	
+		if (cardinality != null) {
+			x.setAttribute("cardinality", cardinality);
+		}
+	
+		if (selectionList != null) {
+			for (int i = 0; i < selectionList.size(); i++) {
+				SelectionImpl s = (SelectionImpl) selectionList.get(i);
+				if (!condense || s.isSelected()) {
+					x.addChild(s.toXml(x));
+				}
+			}
+	
+		}
+	} else {
 
-      }
-
-      if (cardinality != null) {
-        x.setAttribute("cardinality", cardinality);
-      }
-
-      for (int i = 0; i < selectionList.size(); i++) {
-        SelectionImpl s = (SelectionImpl) selectionList.get(i);
-        if (!condense || s.isSelected()) {
-        	x.addChild(s.toXml(x));
-        }
-      }
-
-    }
-    else {
-
-      /** @todo Watch out here. Just because there is a definition message,
-       * it seems to assume that a definitionProperty is present. This is
-       * very likely, but it results in a null pointer exception when it is
-       * not. I am not sure if a silent ignore is wise, maybe just throw a
-       * clearer runtime exception. */
+      /**
+		 * @todo Watch out here. Just because there is a definition message, it
+		 *       seems to assume that a definitionProperty is present. This is
+		 *       very likely, but it results in a null pointer exception when it
+		 *       is not. I am not sure if a silent ignore is wise, maybe just
+		 *       throw a clearer runtime exception.
+		 */
 
 //      System.err.println("Serializing property. With definition");
       if (myValue != null) {

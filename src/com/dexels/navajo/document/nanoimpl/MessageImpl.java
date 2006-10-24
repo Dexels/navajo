@@ -91,11 +91,13 @@ public class MessageImpl
       def = parent.getDefinitionMessage();
     }
 
-       Iterator props = propertyList.iterator();
-      while (props.hasNext()) {
-        PropertyImpl p = (PropertyImpl) props.next();
-        m.addChild(p.toXml(m, condense, method));
-      }
+    if (propertyList!=null) {
+        Iterator props = propertyList.iterator();
+        while (props.hasNext()) {
+          PropertyImpl p = (PropertyImpl) props.next();
+          m.addChild(p.toXml(m, condense, method));
+        }
+	}
 
   }
 
