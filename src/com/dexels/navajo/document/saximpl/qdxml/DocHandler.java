@@ -9,5 +9,5 @@ public interface DocHandler {
   public void startDocument() throws Exception;
   public void endDocument() throws Exception;
   public void text(Reader r) throws Exception;
-  public String quoteStarted(int quoteCharacter, Reader r, String attributeName,String tagName) throws IOException ;
+  public String quoteStarted(int quoteCharacter, Reader r, String attributeName,String tagName, StringBuffer buffer) throws IOException ;
 }

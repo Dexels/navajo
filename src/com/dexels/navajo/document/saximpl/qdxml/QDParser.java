@@ -9,7 +9,7 @@ import java.util.*;
  */
 public class QDParser {
     
-    public static int PUSHBACK_SIZE = 64000;
+    public static int PUSHBACK_SIZE = 2000;
     
     private static int popMode(Stack st) {
         if (!st.empty())
@@ -22,7 +22,8 @@ public class QDParser {
             ATTRIBUTE_RVALUE = 10, QUOTE = 7, IN_TAG = 8, SINGLE_TAG = 12, COMMENT = 13, DONE = 11, DOCTYPE = 14, PRE = 15, CDATA = 16;
 
     public static void parse(DocHandler doc, Reader re) throws Exception {
-        PushbackReader r = new PushbackReader(re, PUSHBACK_SIZE);
+        PushbackReader r = new PushbackReader(new BufferedReader(re), PUSHBACK_SIZE);
+        StringBuffer attributeBuffer = new StringBuffer(50);
         Stack st = new Stack();
         int depth = 0;
         int mode = PRE;
@@ -261,7 +262,7 @@ public class QDParser {
             } else if (mode == ATTRIBUTE_RVALUE) {
                 if (c == '"' || c == '\'') {
                     quotec = c;
-                    rvalue = doc.quoteStarted(quotec, r, lvalue, tagName);
+                    rvalue = doc.quoteStarted(quotec, r, lvalue, tagName,attributeBuffer);
                     if (rvalue != null) {
                         attrs.put(lvalue, rvalue);
                     }

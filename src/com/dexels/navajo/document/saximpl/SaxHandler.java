@@ -50,10 +50,12 @@ public final class SaxHandler implements DocHandler {
         if (tag.equals("property")) {
             String val = (String)h.get("value");
             if (val!=null) {
-                Hashtable h2 = new Hashtable(h);
+
+            	// Dit kan NOG strakker. Niet alle types hoeven geunescaped worder
+            	Hashtable h2 = new Hashtable(h);
     			val = BaseNode.XMLUnescape(val);
     			h2.put("value", val);
-                parseProperty(h);
+                parseProperty(h2);
 			} else {
                 parseProperty(h);
 				
@@ -469,9 +471,7 @@ public final class SaxHandler implements DocHandler {
         }
         if (tag.equals("callback")) {
             currentCallback = null;
-        }       
-        if (tag.equals("callback")) {
-          }       
+        }
         currentTag = null;
     }
 
@@ -513,17 +513,17 @@ public final class SaxHandler implements DocHandler {
     }
 
 
-    public final String quoteStarted(int quoteCharacter, Reader r, String attributeName, String tagName) throws IOException {
+    public final String quoteStarted(int quoteCharacter, Reader r, String attributeName, String tagName,StringBuffer attributeBuffer) throws IOException {
         int c = 0;
-        StringBuffer sb = new StringBuffer();
+        attributeBuffer.delete(0, attributeBuffer.length());
         while ((c = r.read()) != -1) {
             if (c==quoteCharacter) {
 //                String s = sb.toString();
 //                System.err.println(">> "+s);
-                return sb.toString();
+                return attributeBuffer.toString();
             } else {
 //                System.err.println("parsing char:"+(char)c);
-                sb.append((char)c);
+            	attributeBuffer.append((char)c);
 //                return sb.toString();
             }
         }        
