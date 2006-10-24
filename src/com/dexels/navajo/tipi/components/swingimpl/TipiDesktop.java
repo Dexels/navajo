@@ -71,7 +71,11 @@ public class TipiDesktop
                 getSwingContainer().repaint();
                 
             } else {
-                System.err.println("Ignoring strange resource");
+            	if (value==null) {
+					System.err.println("Null-type resource ignored");
+				} else {
+	                System.err.println("Ignoring strange resource: "+value.getClass());
+				}
             }
           }
         }
