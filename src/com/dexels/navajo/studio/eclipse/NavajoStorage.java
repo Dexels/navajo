@@ -31,7 +31,7 @@ public class NavajoStorage extends PlatformObject implements IStorage {
             StringWriter sw = new StringWriter();
             myNavajo.write(sw);
             String ss = sw.toString();
-            System.err.println("Navajo: "+ss);
+//            System.err.println("Navajo: "+ss);
              bais = new ByteArrayInputStream(ss.getBytes());
             return bais;
         } catch (NavajoException e) {

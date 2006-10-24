@@ -128,11 +128,11 @@ public class MessageContentProvider extends LabelProvider implements IStructured
                 return "-";
             } 
         }
-        String value = pp.getValue();
+        Object value = pp.getTypedValue();
         if (value==null) {
             return ">null<";
         }
-        return value;
+        return ""+value;
     }
 
     /*

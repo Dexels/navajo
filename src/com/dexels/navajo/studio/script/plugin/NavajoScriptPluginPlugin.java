@@ -37,6 +37,7 @@ import com.dexels.navajo.document.nanoimpl.*;
 import com.dexels.navajo.functions.*;
 import com.dexels.navajo.mapping.compiler.*;
 import com.dexels.navajo.mapping.compiler.meta.*;
+import com.dexels.navajo.parser.DefaultExpressionEvaluator;
 import com.dexels.navajo.studio.eclipse.*;
 import com.dexels.navajo.studio.eclipse.prefs.*;
 import com.dexels.navajo.studio.script.plugin.editors.*;
@@ -169,6 +170,14 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
 
     private final Map serverXmlNavajoMap = new HashMap();
     
+    public  static final String DOC_IMPL = "com.dexels.navajo.DocumentImplementation";
+    public static final String NANO = "com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl";
+    public static final String JAXP = "com.dexels.navajo.document.jaxpimpl.NavajoFactoryImpl";
+    public static final String QDSAX = "com.dexels.navajo.document.base.BaseNavajoFactoryImpl";
+    
+    
+    
+    
     
     /**
      * The constructor.
@@ -177,6 +186,9 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
         super();
          System.err.println("Started NavajoScriptPlugin at: " + new Date());
         System.setProperty("com.dexels.navajo.DocumentImplementation", "com.dexels.navajo.document.base.BaseNavajoFactoryImpl");
+//        System.setProperty("com.dexels.navajo.DocumentImplementation", "com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl");
+        NavajoFactory.getInstance().setExpressionEvaluator(new DefaultExpressionEvaluator());
+
         System.setProperty("com.dexels.navajo.propertyMap", "com.dexels.navajo.studio.script.plugin.propertymap");
         plugin = this;
         }
@@ -1737,7 +1749,9 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
                  }  
                 
                 NavajoClientFactory.resetClient();
-                
+                System.setProperty(DOC_IMPL,QDSAX);
+                NavajoFactory.resetImplementation();
+                NavajoFactory.getInstance().setExpressionEvaluator(new DefaultExpressionEvaluator());
                 NavajoClientFactory.createClient("com.dexels.navajo.client.NavajoSocketClient", null);
                 NavajoClientFactory.getClient().setServerUrl(getRemoteServer());
                 NavajoClientFactory.getClient().setUsername(getRemoteUsername());
@@ -1908,13 +1922,14 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
            }
 
        }
-       public void addServerEntry(String name, String protocol, String server, String username, String password) {
+       public int addServerEntry(String name, String protocol, String server, String username, String password) {
            ServerEntry se = new ServerEntry(name,protocol,server,username,password);
            if (myServerEntries==null) {
             myServerEntries = parseServerEntries();
         }
            myServerEntries.add(se);
            serverEntriyChanged(myServerEntries.size()-1);
+           return myServerEntries.size();
        }
 
        public void deleteServerEntry(int index) {
@@ -2134,7 +2149,7 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
             if ( p.hasNature(NavajoScriptPluginPlugin.NAVAJO_NATURE)) {
                 IFolder adapters = NavajoScriptPluginPlugin.getDefault().getAdaptersFolder( p);
                 IFolder classes = NavajoScriptPluginPlugin.getDefault().getCompiledScriptFolder( p);
-                ClassProvider classp = new ClassProvider( adapters.getLocation().toString(), classes.getLocation().toString(), false, (IProject) p);
+                ClassProvider classp = new ClassProvider( adapters.getLocation().toString(), classes.getLocation().toString(), false, (IProject) p,getClass().getClassLoader());
                 return classp;
             }
         } catch (CoreException e) {
@@ -2155,6 +2170,7 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
         Launch lll = null;
         
         try {
+        	System.err.println("Starting navajo runner. Port: "+getRemotePort()+" server.xml : "+getServerXml(p).getLocation().toOSString());
 //             logMessage("Navajo Integrator Launched at: "+new Date());
             lll = runNavajoBootStrap("com.dexels.navajo.client.socket.NavajoSocketLauncher", true, p,
                     "", "", null,null, new String[]{""+getRemotePort(),getServerXml(p).getLocation().toOSString()});

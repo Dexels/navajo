@@ -37,8 +37,8 @@ public class ClassProvider extends DynamicClassLoader {
     private final Map jarResourceMap = new HashMap();
 
     private ArrayList classPathRes = new ArrayList();
-    public ClassProvider(String adapterPath, String compiledScriptPath, boolean beta, IProject project) {
-        super(adapterPath, compiledScriptPath, beta);
+    public ClassProvider(String adapterPath, String compiledScriptPath, boolean beta, IProject project,ClassLoader cl) {
+        super(adapterPath, compiledScriptPath, beta,cl);
         if (project != null) {
             setProject(project);
         }
@@ -46,7 +46,7 @@ public class ClassProvider extends DynamicClassLoader {
     }
 
     public void setProject(IProject p) {
-        javaproject = JavaCore.getJavaCore().create(p);
+        javaproject = JavaCore.create(p);
 
         try {
             classPathRes.clear();
@@ -55,12 +55,6 @@ public class ClassProvider extends DynamicClassLoader {
             NavajoScriptPluginPlugin.getDefault().log("Setting project of ClassProvider. Weird.", e);
         }
 
-    }
-
-   
-    protected Class findClass(String name) throws ClassNotFoundException {
-        System.err.println("Looking for class: "+name);
-        return super.findClass(name);
     }
 
     protected final byte[] loadClassBytes(String className) {
@@ -201,7 +195,7 @@ public class ClassProvider extends DynamicClassLoader {
      * @return
      */
     public int getCacheSize() {
-        return classes.size();
+        return -1;
     }
 
     public int getAmountOfLoads() {

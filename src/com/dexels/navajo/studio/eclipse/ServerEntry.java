@@ -65,6 +65,9 @@ public class ServerEntry {
     }
 
     public Navajo runInit(String scriptName) throws ClientException {
+        NavajoClientFactory.resetClient();
+        System.setProperty(NavajoScriptPluginPlugin.DOC_IMPL,NavajoScriptPluginPlugin.QDSAX);
+        NavajoFactory.resetImplementation();
         Navajo input = NavajoFactory.getInstance().createNavajo();
         return runProcess(scriptName, input);
     }
@@ -74,7 +77,9 @@ public class ServerEntry {
     }
     public Navajo runProcess(String scriptName, Navajo input) throws ClientException {
         ClientInterface nc = null;
-        System.err.println("Running process: "+scriptName+" >>> "+toDebug());
+        System.setProperty(NavajoScriptPluginPlugin.DOC_IMPL,NavajoScriptPluginPlugin.QDSAX);
+        NavajoFactory.resetImplementation();
+       System.err.println("Running process: "+scriptName+" >>> "+toDebug());
         System.err.println("username: "+username+" pass: "+password);
         NavajoClientFactory.resetClient();
         if ("http".equals(protocol)) {

@@ -344,7 +344,8 @@ public class TmlFormComposite extends Composite {
         gpc.adapt(getKit());
         setupMenuListener(gpc.getComposite());
 
-        gpc.getComposite().setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB, TableWrapData.TOP));
+        TableWrapData tableWrapData = new TableWrapData(TableWrapData.FILL_GRAB, TableWrapData.TOP);
+        gpc.getComposite().setLayoutData(tableWrapData);
     }
 
     /**

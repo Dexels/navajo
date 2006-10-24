@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
-<plugin id="com.dexels.plugin" name="NavajoScriptPlugin Plug-in" version="0.98.1"
+<plugin id="com.dexels.plugin" name="NavajoScriptPlugin Plug-in" version="0.98.5"
    provider-name="dexels" class="com.dexels.navajo.studio.script.plugin.NavajoScriptPluginPlugin">
    <runtime>
       <library name="bin/">
@@ -410,7 +410,7 @@
 	   </keyBinding>
    </extension>   
 -->
-
+<!--
 <extension point = "org.eclipse.ui.editorActions">
       <editorContribution 
          id="com.dexels.runEditor" targetID="org.eclipse.ui.examples.readmetool.ReadmeEditor">        
@@ -423,7 +423,7 @@
               /> 
       </editorContribution>
  </extension>
-
+-->
 	<extension point="org.eclipse.ui.contexts">
 		<context name="Navajo context" description="Navajo context description" id="com.dexels.navajoContext" parentId="org.eclipse.ui.contexts.window"/>
 	</extension>

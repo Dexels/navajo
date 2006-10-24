@@ -75,23 +75,21 @@ public class DynamicClassLoader extends MultiClassLoader {
      */
     private boolean beta;
 
-    public DynamicClassLoader(String adapterPath, String compiledScriptPath, boolean beta) {
-        this.adapterPath = adapterPath;
+    public DynamicClassLoader(String adapterPath, String compiledScriptPath, boolean beta,ClassLoader cl) {
+    	super(cl);
+    	this.adapterPath = adapterPath;
         this.beta = beta;
         this.compiledScriptPath = compiledScriptPath;
     }
 
-    public DynamicClassLoader(String adapterPath, String compiledScriptPath) {
+    public DynamicClassLoader(String adapterPath, String compiledScriptPath,ClassLoader cl) {
+    	super(cl);
         this.adapterPath = adapterPath;
         this.beta = false;
         this.compiledScriptPath = compiledScriptPath;
     }
 
     public synchronized void clearCache(String className) {
-      Class c = (Class) classes.get(className);
-      if (c != null) {
-        classes.remove(className);
-      }
     }
 
     public final void clearJarResources() {

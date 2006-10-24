@@ -160,6 +160,8 @@ public class SwtFactory {
         tv.getTable().setLayout(layout);
         Message m = element.getMessage(0);
         ArrayList al = m.getAllProperties();
+        System.err.println("Got properties for table. Count: "+al.size());
+        System.err.println("AL: "+al);
         CellEditor[] editors = new CellEditor[al.size()];
         String[] colNames = new String[al.size()];
         int count = 0;

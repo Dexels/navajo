@@ -27,6 +27,7 @@ import org.eclipse.ui.part.*;
 
 import com.dexels.navajo.client.*;
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.parser.DefaultExpressionEvaluator;
 import com.dexels.navajo.studio.eclipse.*;
 import com.dexels.navajo.studio.script.plugin.*;
 import com.dexels.navajo.studio.script.plugin.editors.*;
@@ -62,6 +63,8 @@ public class TmlBrowser extends BaseNavajoView implements INavajoScriptListener,
     
   
     public void createPartControl(Composite parent) {
+    	
+    	
         myParent = parent;
         NavajoScriptPluginPlugin.getDefault().setTmlBrowser(this);
         Control[] c = parent.getChildren();
@@ -219,6 +222,9 @@ public class TmlBrowser extends BaseNavajoView implements INavajoScriptListener,
 
     private void refreshFromPrefs() {
         ArrayList arr = NavajoScriptPluginPlugin.getDefault().getServerEntries();
+        while(selector.getElementAt(0)!=null) {
+        	selector.remove(selector.getElementAt(0));
+        }
         for (int i = 0; i < arr.size(); i++) {
             selector.add(arr.get(i));
         }
@@ -363,6 +369,12 @@ public class TmlBrowser extends BaseNavajoView implements INavajoScriptListener,
         d.syncExec(new Runnable() {
             public void run() {
                 currentService = scriptName;
+                if (NavajoFactory.getInstance().getExpressionEvaluator()==null) {
+                    DefaultExpressionEvaluator dee = new DefaultExpressionEvaluator();
+                    NavajoFactory.getInstance().setExpressionEvaluator(dee);
+
+                }
+                
                 System.err.println("Setting NAVAJO TO SCRIPT: "+currentService);
                    myCurrentNavajo = n;
                    sourceButton.setEnabled(true);

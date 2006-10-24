@@ -22,7 +22,7 @@ public abstract class BaseNavajoView extends ViewPart {
     private IContextActivation currentActivation = null;
     
 
-    public void init(IViewSite site) throws PartInitException {
+    public void init(final IViewSite site) throws PartInitException {
         super.init(site);
         final BaseNavajoView me = this;
         final IContextService ics = (IContextService)NavajoScriptPluginPlugin.getDefault().getWorkbench().getAdapter(IContextService.class);
@@ -30,9 +30,12 @@ public abstract class BaseNavajoView extends ViewPart {
          NavajoScriptPluginPlugin.getDefaultWorkbench().getDisplay().syncExec(new Runnable(){
 
             public void run() {
-                
-                NavajoScriptPluginPlugin.getDefaultWorkbench().getActiveWorkbenchWindow().getActivePage().addPartListener(new IPartListener(){
-//                NavajoScriptPluginPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().addPartListener(new IPartListener(){
+            	
+                IWorkbenchPage[] pages = site.getWorkbenchWindow().getPages();
+
+                IPartListener ip = new IPartListener(){
+                	
+                	//                NavajoScriptPluginPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().addPartListener(new IPartListener(){
                     public void partActivated(IWorkbenchPart part) {
                         if (part==me) {
                             System.err.println("Activated");
@@ -61,7 +64,15 @@ public abstract class BaseNavajoView extends ViewPart {
                     }
 
                     public void partOpened(IWorkbenchPart part) {}
-                });
+                };
+                
+                for (int i = 0; i < pages.length; i++) {
+					pages[i].addPartListener(ip);
+				}
+                if (getContextId()!=null && ics!=null) {
+                    currentActivation = ics.activateContext(getContextId());
+                }
+
             }});
      }
 

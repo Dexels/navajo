@@ -168,6 +168,11 @@ public class GenericPropertyComponent {
             createBinaryProperty();
             return;
         }
+        if (Property.EXPRESSION_PROPERTY.equals(myProperty.getType())) {
+            createExpressionProperty();
+            return;
+        }
+        
         createOtherProperty(false);
         if (currentControl != null) {
             // GridData gf = new GridData(GridData.FILL_BOTH);
@@ -234,7 +239,7 @@ public class GenericPropertyComponent {
         Object o = myProperty.getTypedValue();
         if (o != null && (o instanceof Binary)) {
             bin = (Binary) o;
-            mimeLabel.setText(bin.getMimeType());
+            mimeLabel.setText(bin.getMimeType()+" ("+bin.getLength()+" bytes)");
         } else {
             bin = null;
         }
@@ -323,9 +328,31 @@ public class GenericPropertyComponent {
         }
     }
 
-    /**
-     * 
-     */
+
+
+        
+    private void createExpressionProperty() {
+        String value = ""+myProperty.getTypedValue();
+        if (value == null) {
+            value = "";
+        }
+        final Text ttt = new Text(currentComposite, SWT.BORDER | SWT.SINGLE);
+        // toolkit.adapt(ttt,true,true);
+        currentControl = ttt;
+//        if (myProperty.getLength() > 0 && useLength) {
+//            ttt.setTextLimit(myProperty.getLength());
+//            if (value.length() > myProperty.getLength()) {
+//                value = value.substring(0, myProperty.getLength());
+//            }
+//
+//        }
+        ttt.setSize(100, 20);
+        ttt.setEnabled(false);
+        ttt.setText(value);
+        ttt.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL));
+        // toolkit.create
+    }
+    
     private void createOtherProperty(boolean useLength) {
         String value = myProperty.getValue();
         if (value == null) {
@@ -376,18 +403,23 @@ public class GenericPropertyComponent {
         if (value == null) {
             value = "";
         }
-        final Text ttt = new Text(currentComposite, SWT.BORDER | SWT.SINGLE);
+        final Composite subComponent =  new Composite(currentComposite,SWT.NONE);
+        subComponent.setBackground(new Color(Display.getDefault(), 255, 255, 255));
+        subComponent.setLayout(new GridLayout(2,true));
+        subComponent.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL));
+        
+        final Text ttt = new Text(subComponent, SWT.BORDER | SWT.SINGLE);
         // toolkit.adapt(ttt,true,true);
         currentControl = ttt;
         ttt.setSize(100, 20);
         ttt.setEnabled(myProperty.isDirIn());
         ttt.setText(value);
-        final DatePickerCombo dp = new DatePickerCombo(currentComposite, SWT.BORDER | SWT.SINGLE);
+        final DatePickerCombo dp = new DatePickerCombo(subComponent, SWT.BORDER | SWT.SINGLE);
+        ttt.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL));
+        dp.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL));
+        
         ttt.addFocusListener(new FocusListener() {
-
             public void focusGained(FocusEvent e) {
-                // TODO Auto-generated method stub
-
             }
 
             public void focusLost(FocusEvent e) {
@@ -416,7 +448,7 @@ public class GenericPropertyComponent {
                 ttt.setText(st);
             }
         });
-        currentControl = dp;
+        currentControl = null;
         dp.setSize(150, 20);
         dp.setEnabled(myProperty.isDirIn());
         dp.setDate((Date) myProperty.getTypedValue());
@@ -484,7 +516,7 @@ public class GenericPropertyComponent {
         // toolkit.adapt(ttt,true,true);
         try {
             final ArrayList al = myProperty.getAllSelections();
-            ttt.add("-");
+//            ttt.add("-");
             for (Iterator iter = al.iterator(); iter.hasNext();) {
                 Selection element = (Selection) iter.next();
                 ttt.add(element.getName());
@@ -581,6 +613,7 @@ public class GenericPropertyComponent {
             mime = b.guessContentType();
         }
         System.err.println("Mime: " + mime);
+        System.err.println("Size: "+b.getLength());
         FormatDescription fd = b.getFormatDescription();
         String extension = "dat";
         if (fd!=null) {

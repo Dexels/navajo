@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="com.dexels.plugin" default="build.jars" basedir=".">
+
+	<property name="basews" value="${ws}"/>
+	<property name="baseos" value="${os}"/>
+	<property name="basearch" value="${arch}"/>
+	<property name="basenl" value="${nl}"/>
+
+	<!-- Compiler settings. -->
+	<property name="javacFailOnError" value="false"/>
+	<property name="javacDebugInfo" value="on"/>
+	<property name="javacVerbose" value="false"/>
+	<property name="logExtension" value=".log"/>
+	<property name="compilerArg" value=""/>
+	<property name="javacSource" value="1.3"/>
+	<property name="javacTarget" value="1.2"/>
+	<path id="path_bootclasspath">
+		<fileset dir="${java.home}/lib">
+			<include name="*.jar"/>
+		</fileset>
+	</path>
+	<property name="bootclasspath" refid="path_bootclasspath"/>
+	<property name="bundleJavacSource" value="${javacSource}"/>
+	<property name="bundleJavacTarget" value="${javacTarget}"/>
+	<property name="bundleBootClasspath" value="${bootclasspath}"/>
+
+	<target name="init" depends="properties">
+		<condition property="pluginTemp" value="${buildTempFolder}/plugins">
+			<isset property="buildTempFolder"/>
+		</condition>
+		<property name="pluginTemp" value="${basedir}"/>
+		<condition property="build.result.folder" value="${pluginTemp}/NavajoScriptPlugin">
+			<isset property="buildTempFolder"/>
+		</condition>
+		<property name="build.result.folder" value="${basedir}"/>
+		<property name="temp.folder" value="${basedir}/temp.folder"/>
+		<property name="plugin.destination" value="${basedir}"/>
+	</target>
+
+	<target name="properties" if="eclipse.running">
+		<property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
+
+	</target>
+
+	<target name="build.update.jar" depends="init" description="Build the plug-in: com.dexels.plugin for an update site.">
+		<delete dir="${temp.folder}"/>
+		<mkdir dir="${temp.folder}"/>
+		<antcall target="build.jars"/>
+		<antcall target="gather.bin.parts">
+			<param name="destination.temp.folder" value="${temp.folder}/"/>
+		</antcall>
+		<zip destfile="${plugin.destination}/com.dexels.plugin_0.98.5.jar" basedir="${temp.folder}/com.dexels.plugin_0.98.5" filesonly="false" whenempty="skip" update="false"/>
+		<delete dir="${temp.folder}"/>
+	</target>
+
+	<target name="bin/" depends="init" unless="bin/" description="Create jar: com.dexels.plugin bin/.">
+		<delete dir="${temp.folder}/bin/.bin"/>
+		<mkdir dir="${temp.folder}/bin/.bin"/>
+		<path id="bin/.classpath">
+			<pathelement path="../../eclipse/plugins/org.eclipse.jdt_3.2.0.v20060605-1400.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.ui.intro_3.2.0.v20060601.jar"/>
+			<pathelement path="../../eclipse/plugins/org.apache.xerces_2.8.0.v200606131651/resolver.jar"/>
+			<pathelement path="../../eclipse/plugins/org.apache.xerces_2.8.0.v200606131651/xercesImpl.jar"/>
+			<pathelement path="../../eclipse/plugins/org.apache.xerces_2.8.0.v200606131651/xml-apis.jar"/>
+			<pathelement path="../../eclipse/plugins/org.apache.lucene_1.4.103.v20060601/lucene-1.4.3.jar"/>
+			<pathelement path="../../eclipse/plugins/org.apache.lucene_1.4.103.v20060601/parser.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.core.runtime_3.2.0.v20060603.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.osgi_3.2.0.v20060601.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.equinox.common_3.2.0.v20060603.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.core.jobs_3.2.0.v20060603.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.core.runtime.compatibility.registry_3.2.0.v20060603/runtime_registry_compatibility.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.core.runtime.compatibility.registry_3.2.0.v20060603/@dot"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.equinox.registry_3.2.0.v20060601.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.equinox.preferences_3.2.0.v20060601.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.core.contenttype_3.2.0.v20060603.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.core.runtime.compatibility.auth_3.2.0.v20060601.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.help_3.2.0.v20060602.jar"/>
+			<pathelement path="../../eclipse/plugins/com.ibm.icu_3.4.4.1.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.help.base_3.2.0.v20060601.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.help.appserver_3.1.100.v20060602.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.ant.core_3.1.100.v20060531.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.core.variables_3.1.100.v20060605.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.ui_3.2.0.I20060605-1400.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.swt_3.2.0.v3232o.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.swt.win32.win32.x86_3.2.0.v3232m.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.jface_3.2.0.I20060605-1400.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.core.commands_3.2.0.I20060605-1400.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.ui.workbench_3.2.0.I20060605-1400.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.ui.workbench.compatibility_3.2.0.I20060605-1400/@dot"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.ui.workbench.compatibility_3.2.0.I20060605-1400/compatibility.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.core.expressions_3.2.0.v20060605-1400.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.core.resources_3.2.0.v20060603.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.core.resources.compatibility_3.2.0.v20060603.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.core.resources.win32_3.2.0.v20060603.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.core.runtime.compatibility_3.1.100.v20060603.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.update.configurator_3.2.0.v20060605.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.core.filesystem_1.0.0.v20060603.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.core.filesystem.win32.x86_1.0.0.v20060603.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.ui.forms_3.2.0.v20060602.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.ui.cheatsheets_3.2.0.v20060602.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.help.ui_3.2.0.v20060602.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.ui.ide_3.2.0.I20060605-1400.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.ui.win32_3.2.0.I20060605-1400.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.ui.views_3.2.0.I20060605-1400.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.update.core_3.2.0.v20060605.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.update.core.win32_3.2.0.v20060605.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.update.ui_3.2.0.v20060605.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.jdt.launching_3.2.0.v20060605.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.jdt.core_3.2.0.v_671.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.text_3.2.0.v20060605-1400.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.team.core_3.2.0.I200606051140.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.debug.core_3.2.0.v20060605.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.jdt.debug_3.2.0.v20060605/jdi.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.jdt.debug_3.2.0.v20060605/jdimodel.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.jdt.debug_3.2.0.v20060605/tools.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.jdt.debug.ui_3.2.0.v20060605.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.jface.text_3.2.0.v20060605-1400.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.ui.workbench.texteditor_3.2.0.v20060605-1400.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.ui.editors_3.2.0.v20060605-1400.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.core.filebuffers_3.2.0.v20060605-1400.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.debug.ui_3.2.0.v20060605.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.ui.console_3.1.100.v20060605.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.jdt.ui_3.2.0.v20060605-1400.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.search_3.2.0.v20060605-1400.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.compare_3.2.0.v20060605.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.team.ui_3.2.0.I200606051140.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.ui.navigator_3.2.0.I20060605-1400.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.ui.navigator.resources_3.2.0.I20060605-1400.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.ui.views.properties.tabbed_3.2.0.I20060605-1400.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.ltk.core.refactoring_3.2.0.v20060605-1400.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.ltk.ui.refactoring_3.2.0.v20060605-1400.jar"/>
+			<pathelement path="../../eclipse/plugins/org.eclipse.jdt.core.manipulation_1.0.0.v20060605-1400.jar"/>
+			<pathelement path="${build.result.folder}/../NavajoPluginLibraries/lib/metadata.jar"/>
+			<pathelement path="${build.result.folder}/../NavajoPluginLibraries/lib/NanoImpl.jar"/>
+			<pathelement path="${build.result.folder}/../NavajoPluginLibraries/lib/Navajo.jar"/>
+			<pathelement path="${build.result.folder}/../NavajoPluginLibraries/lib/NavajoClient.jar"/>
+			<pathelement path="${build.result.folder}/../NavajoPluginLibraries/lib/NavajoFunctions.jar"/>
+			<pathelement path="${build.result.folder}/../NavajoPluginLibraries/lib/gface_0.8.9.jar"/>
+			<pathelement path="../NavajoPluginLibraries/lib/metadata.jar"/>
+			<pathelement path="../NavajoPluginLibraries/lib/NanoImpl.jar"/>
+			<pathelement path="../NavajoPluginLibraries/lib/Navajo.jar"/>
+			<pathelement path="../NavajoPluginLibraries/lib/NavajoClient.jar"/>
+			<pathelement path="../NavajoPluginLibraries/lib/NavajoFunctions.jar"/>
+			<pathelement path="../NavajoPluginLibraries/lib/gface_0.8.9.jar"/>
+			<pathelement path="${build.result.folder}/bin"/>
+			<pathelement path="${build.result.folder}/../com.dexels.plugin/bin"/>
+			<pathelement path="lib/NavajoClient.jar"/>
+			<pathelement path="${build.result.folder}/../com.dexels.plugin/lib/NavajoClient.jar"/>
+			<pathelement path="lib/NanoImpl.jar"/>
+			<pathelement path="${build.result.folder}/../com.dexels.plugin/lib/NanoImpl.jar"/>
+			<pathelement path="jars.extra.classpath = ../Navajo/Navajo.jar"/>
+			<pathelement path="${build.result.folder}/../com.dexels.plugin/jars.extra.classpath = ../Navajo/Navajo.jar"/>
+			<pathelement path="../NavajoDocument/NanoImpl.jar"/>
+			<pathelement path="${build.result.folder}/../com.dexels.plugin/../NavajoDocument/NanoImpl.jar"/>
+			<pathelement path="../Grus/Grus.jar"/>
+			<pathelement path="${build.result.folder}/../com.dexels.plugin/../Grus/Grus.jar"/>
+			<pathelement path="../NavajoAdapters/NavajoAdapters.jar"/>
+			<pathelement path="${build.result.folder}/../com.dexels.plugin/../NavajoAdapters/NavajoAdapters.jar"/>
+		</path>
+		<!-- compile the source code -->
+		<javac destdir="${temp.folder}/bin/.bin" failonerror="${javacFailOnError}" verbose="${javacVerbose}" debug="${javacDebugInfo}" includeAntRuntime="no" bootclasspath="${bundleBootClasspath}" source="${bundleJavacSource}" target="${bundleJavacTarget}"		>
+			<compilerarg line="${compilerArg}" compiler="${build.compiler}"/>
+			<classpath refid="bin/.classpath" />
+			<src path="src/"			/>
+			<compilerarg value="@${basedir}/javaCompiler.bin_.args" compiler="org.eclipse.jdt.core.JDTCompilerAdapter"/>
+			<compilerarg line="-log '${temp.folder}/bin/.bin${logExtension}'" compiler="org.eclipse.jdt.core.JDTCompilerAdapter"/>
+		</javac>
+		<!-- Copy necessary resources -->
+		<copy todir="${temp.folder}/bin/.bin" failonerror="true" overwrite="false">
+			<fileset dir="src/" excludes="**/*.java, **/package.htm*"			/>
+		</copy>
+		<mkdir dir="${build.result.folder}/"/>
+		<copy todir="${build.result.folder}/bin/" failonerror="true" overwrite="false">
+			<fileset dir="${temp.folder}/bin/.bin"			/>
+		</copy>
+		<delete dir="${temp.folder}/bin/.bin"/>
+	</target>
+
+	<target name="bin.src.zip" depends="init" unless="bin.src.zip">
+		<mkdir dir="${build.result.folder}"/>
+		<zip destfile="${build.result.folder}/bin.src.zip" filesonly="false" whenempty="skip" update="false">
+			<fileset dir="src/" includes="**/*.java"			/>
+		</zip>
+	</target>
+
+	<target name="build.jars" depends="init" description="Build all the jars for the plug-in: com.dexels.plugin.">
+		<available property="bin/" file="${build.result.folder}/bin/"/>
+		<antcall target="bin/"/>
+	</target>
+
+	<target name="build.sources" depends="init">
+		<available property="bin.src.zip" file="${build.result.folder}/bin.src.zip"/>
+		<antcall target="bin.src.zip"/>
+	</target>
+
+	<target name="gather.bin.parts" depends="init" if="destination.temp.folder">
+		<mkdir dir="${destination.temp.folder}/com.dexels.plugin_0.98.5"/>
+		<copy todir="${destination.temp.folder}/com.dexels.plugin_0.98.5" failonerror="true" overwrite="false">
+			<fileset dir="${build.result.folder}" includes="bin//"			/>
+		</copy>
+		<copy todir="${destination.temp.folder}/com.dexels.plugin_0.98.5" failonerror="true" overwrite="false">
+			<fileset dir="${basedir}" includes="plugin.xml,icons/,lib/,build.properties,bin/"			/>
+		</copy>
+	</target>
+
+	<target name="build.zips" depends="init">
+	</target>
+
+	<target name="gather.sources" depends="init" if="destination.temp.folder">
+		<mkdir dir="${destination.temp.folder}/com.dexels.plugin_0.98.5/"/>
+		<copy file="${build.result.folder}/bin.src.zip" todir="${destination.temp.folder}/com.dexels.plugin_0.98.5/" failonerror="false" overwrite="false"/>
+		<copy todir="${destination.temp.folder}/com.dexels.plugin_0.98.5" failonerror="false" overwrite="false">
+			<fileset dir="${basedir}" includes="src/,bin/"			/>
+		</copy>
+	</target>
+
+	<target name="gather.logs" depends="init" if="destination.temp.folder">
+		<mkdir dir="${destination.temp.folder}/com.dexels.plugin_0.98.5/"/>
+		<copy file="${temp.folder}/bin/.bin${logExtension}" todir="${destination.temp.folder}/com.dexels.plugin_0.98.5/" failonerror="false" overwrite="false"/>
+	</target>
+
+	<target name="clean" depends="init" description="Clean the plug-in: com.dexels.plugin of all the zips, jars and logs created.">
+		<delete dir="${build.result.folder}/bin/"/>
+		<delete file="${build.result.folder}/bin.src.zip"/>
+		<delete file="${plugin.destination}/com.dexels.plugin_0.98.5.jar"/>
+		<delete file="${plugin.destination}/com.dexels.plugin_0.98.5.zip"/>
+		<delete dir="${temp.folder}"/>
+	</target>
+
+	<target name="refresh" depends="init" if="eclipse.running" description="Refresh this folder.">
+		<eclipse.convertPath fileSystemPath="C:/projecten/NavajoScriptPlugin" property="resourcePath"/>
+		<eclipse.refreshLocal resource="${resourcePath}" depth="infinite"/>
+	</target>
+
+	<target name="zip.plugin" depends="init" description="Create a zip containing all the elements for the plug-in: com.dexels.plugin.">
+		<delete dir="${temp.folder}"/>
+		<mkdir dir="${temp.folder}"/>
+		<antcall target="build.jars"/>
+		<antcall target="build.sources"/>
+		<antcall target="gather.bin.parts">
+			<param name="destination.temp.folder" value="${temp.folder}/"/>
+		</antcall>
+		<antcall target="gather.sources">
+			<param name="destination.temp.folder" value="${temp.folder}/"/>
+		</antcall>
+		<delete>
+			<fileset dir="${temp.folder}" includes="**/*.bin${logExtension}"			/>
+		</delete>
+		<zip destfile="${plugin.destination}/com.dexels.plugin_0.98.5.zip" basedir="${temp.folder}" filesonly="true" whenempty="skip" update="false"/>
+		<delete dir="${temp.folder}"/>
+	</target>
+
+</project>

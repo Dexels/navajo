@@ -18,7 +18,7 @@ public class NavajoInput extends PlatformObject implements IStorageEditorInput {
     private final NavajoStorage myStorage;
     
     public NavajoInput(String name,Navajo n) {
-        myStorage = new NavajoStorage(name,n);
+         myStorage = new NavajoStorage(name,n);
     }
     public IStorage getStorage() throws CoreException {
         return myStorage;
@@ -37,8 +37,7 @@ public class NavajoInput extends PlatformObject implements IStorageEditorInput {
     }
 
     public IPersistableElement getPersistable() {
-        System.err.println("Returning null persistable");
-        return null;
+           return null;
     }
 
     public String getToolTipText() {

@@ -101,7 +101,7 @@ public class NavajoStudioPropertyPage extends PropertyPage implements IWorkbench
                     public void run() {
                         repositorySelector.setInput(repositories);
                         int index = searchProvider.getIndexOfLabel(repositoryProperty.getValue());
-                        System.err.println("Index::: " + index);
+//                        System.err.println("Index::: " + index);
                         if (index > 0) {
                             repositorySelector.getCombo().select(index);
                         }

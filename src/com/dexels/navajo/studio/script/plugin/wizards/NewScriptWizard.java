@@ -212,7 +212,7 @@ public class NewScriptWizard extends Wizard implements INewWizard {
             return;
         }
         selectedFile = (IResource) oss;
-        System.err.println("FILE::: " + selectedFile);
+//        System.err.println("FILE::: " + selectedFile);
     }
 
 }
