@@ -32,13 +32,13 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode, Comp
 
     private int myIndex = -1;
 
-    protected final TreeMap propertyMap = new TreeMap();
+    protected TreeMap propertyMap = null;
 
-    protected final ArrayList propertyList = new ArrayList();
+    protected ArrayList propertyList = null;
 
-    protected final TreeMap messageMap = new TreeMap();
+    private TreeMap messageMap = null;
 
-    protected final List messageList = new ArrayList();
+    private List messageList = null;
 
     private BaseMessageImpl myParent = null;
 
@@ -113,10 +113,12 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode, Comp
             Property p = (Property) propertyList.get(i);
             p.clearSelections();
         }
-        for (int i = 0; i < messageList.size(); i++) {
-            BaseMessageImpl p = (BaseMessageImpl) messageList.get(i);
-            p.clearAllSelections();
-        }
+        if (messageList!=null) {
+            for (int i = 0; i < messageList.size(); i++) {
+                BaseMessageImpl p = (BaseMessageImpl) messageList.get(i);
+                p.clearAllSelections();
+            }
+		}
 
     }
 
@@ -146,8 +148,14 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode, Comp
     }
 
     public final Message addMessage(Message m, boolean overwrite) {
-  	
-  	m.setParent(this);
+    	if (messageList==null) {
+			messageList = new ArrayList();
+		}
+    	if (messageMap==null) {
+    		messageMap = new TreeMap();
+		}
+    	
+    	m.setParent(this);
   	 
       String name = m.getName();
 
@@ -175,9 +183,17 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode, Comp
 
 
     public final void addMessage(Message m, int index) throws NavajoException {
+       	if (messageList==null) {
+			messageList = new ArrayList();
+		}
+    	if (messageMap==null) {
+    		messageMap = new TreeMap();
+		}
+    	
         if (!getType().equals(Message.MSG_TYPE_ARRAY)) {
             throw new NavajoExceptionImpl("Can not add to with index to messages, if it is not an array message. Is that clear?");
         }
+        
         messageList.add(index, m);
         messageMap.put(m.getName(), m);
         m.setIndex(index);
@@ -186,11 +202,20 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode, Comp
     }
 
     public ArrayList getAllMessages() {
+    	if (messageList==null) {
+			return new ArrayList();
+		}
         return new ArrayList(messageList);
     }
 
     public final void addProperty(Property q) {
-
+    	if (propertyMap==null) {
+			propertyMap = new TreeMap();
+		}
+    	if (propertyList==null) {
+    		propertyList = new ArrayList();
+		}
+    	
         BasePropertyImpl p = (BasePropertyImpl) q;
         if (propertyMap.get(p.getName()) == null) {
             propertyList.add(q);
@@ -254,6 +279,12 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode, Comp
     }
     
     private final ArrayList getTotalPropertyList() {
+    	if (propertyList==null) {
+			propertyList = new ArrayList();
+		}
+    	if (propertyMap==null) {
+			propertyMap = new TreeMap();
+		}
     	if (getArrayParentMessage()==null) {
 			return propertyList;
 		}
@@ -407,7 +438,9 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode, Comp
                 }
             }
         }
-
+        if (messageMap==null) {
+			return null;
+		}
         return (Message) messageMap.get(name);
     }
 
@@ -551,6 +584,9 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode, Comp
     }
 
     public Message getMessage(int i) {
+    	if (messageMap==null || messageList==null) {
+			return null;
+		}
         if ( i >= getAllMessages().size() ) {
             return null;
         }
@@ -571,6 +607,9 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode, Comp
     }
 
     public final void removeChildMessage(Message msg) {
+       	if (messageList==null || messageMap== null) {
+       		return;
+       	}
         messageList.remove(msg);
         messageMap.remove(msg.getName());
     }
@@ -594,6 +633,9 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode, Comp
     }
 
     public int getChildMessageCount() {
+    	if (messageList==null) {
+			return 0;
+		}
         return getAllMessages().size();
     }
 
@@ -725,6 +767,9 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode, Comp
 
         int slash = path.indexOf("/");
         if (slash < 0) {
+        	if (propertyList==null || propertyMap==null) {
+				return null;
+			}
         	if (propertyList.size()!=propertyMap.size()) {
 				System.err.println("Warning: Propertymap sizE: "+propertyMap.size()+" listsize: "+propertyList.size());
 			}
@@ -823,6 +868,9 @@ public final Message getParentMessage() {
     }
 
     public int getArraySize() {
+    	if (messageList==null || messageMap==null) {
+			return 0;
+		}
         return messageList.size();
     }
 
@@ -851,8 +899,12 @@ public final Message getParentMessage() {
     }
 
     public final void removeProperty(Property p) {
-        propertyList.remove(p);
-        propertyMap.remove(p.getName());
+    	if (propertyList!=null) {
+            propertyList.remove(p);
+		}
+    	if (propertyMap!=null) {
+            propertyMap.remove(p.getName());
+		}
         /**
          * @todo Implement this com.dexels.navajo.document.Message abstract
          *       method
@@ -997,14 +1049,21 @@ public final Message getParentMessage() {
     }
 
     public List getChildren() {
-        ArrayList al = new ArrayList(propertyList);
-        if ( getDefinitionMessage() != null ) {
+    	ArrayList al = null;
+    	if (propertyList==null) {
+			al = new ArrayList();
+		} else {
+    	    al = new ArrayList(propertyList);
+		}	
+    	if ( getDefinitionMessage() != null ) {
         	al.add(getDefinitionMessage());
         }
-        if(!"".equals(orderBy) && getType().equals(Message.MSG_TYPE_ARRAY)){
-          Collections.sort(messageList);
-        }
-        al.addAll(messageList);
+        if (messageList!=null) {
+            if(!"".equals(orderBy) && getType().equals(Message.MSG_TYPE_ARRAY)){
+                Collections.sort(messageList);
+              }
+              al.addAll(messageList);
+		}
         return al;
     }
 
@@ -1058,7 +1117,10 @@ public final Message getParentMessage() {
     }
 
     public boolean isLeaf() {
-      return messageList.size() == 0;
+		if (messageList==null) {
+			return true;
+		}
+		return messageList.size() == 0;
     }
 
     public boolean getAllowsChildren() {
