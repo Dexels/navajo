@@ -94,7 +94,7 @@ public class TipiThreadPool {
           wait();
         }
         catch (InterruptedException ex) {
-          System.err.println("interrupted");
+//          System.err.println("interrupted");
         }
       }
       else {
@@ -137,11 +137,12 @@ public class TipiThreadPool {
 
   
   
-  private void awaken() {
-      for (Iterator iter = myThreadCollection.iterator(); iter.hasNext();) {
-        TipiThread element = (TipiThread) iter.next();
-        element.interrupt();
-    }
+  private synchronized void awaken() {
+//      for (Iterator iter = myThreadCollection.iterator(); iter.hasNext();) {
+//        TipiThread element = (TipiThread) iter.next();
+//        element.interrupt();
+//    }
+	  notifyAll();
 }
 
 public void performAction(final TipiEvent te, final TipiEventListener listener) throws TipiException {
