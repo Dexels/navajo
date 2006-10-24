@@ -37,6 +37,7 @@ public class TipiQuestion extends TipiBaseQuestion {
 //      th.initHelper(this);
 //      addHelper(th);
       myPanel.setLayout(new GridBagLayout());
+      myPanel.setFocusable(false);
 //      ((Container)object).setPreferredSize(new Dimension(800,100));
        return myPanel;
   }
