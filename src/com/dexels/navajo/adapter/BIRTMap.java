@@ -1,12 +1,18 @@
 package com.dexels.navajo.adapter;
 
+import org.eclipse.birt.core.exception.BirtException;
+import org.eclipse.birt.core.framework.Platform;
 import org.eclipse.birt.report.engine.api.*;
 import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.mapping.*;
+import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
+import com.dexels.navajo.document.nanoimpl.XMLElement;
+import com.dexels.navajo.document.nanoimpl.XMLParseException;
 import com.dexels.navajo.document.types.*;
 import java.util.*;
+import java.util.logging.Level;
 import java.io.*;
  
 public class BIRTMap implements Mappable {
@@ -20,6 +26,7 @@ public class BIRTMap implements Mappable {
 	public Object parameterValue;
 	public String parameterName;
 
+	private static IReportEngine myEngine = null;
  
   public Binary getReport(){
 	  
@@ -51,25 +58,101 @@ public class BIRTMap implements Mappable {
     parameters.put(parameterName, o);
   }
 
-  private Binary executeReport(String reportName, HashMap reportParams, String outputFormat) throws EngineException {
+  private File debugRaportDatasource(String reportName, String dataUrl, String username, String password) throws XMLParseException, IOException {
+	  File reportFile = new File(reportDir+reportName+ ".rptdesign");
+	  System.err.println("ReportFile: "+reportFile.getAbsolutePath());
+	  FileReader fw = new FileReader(reportFile);
+	  XMLElement xe = new CaseSensitiveXMLElement();
+	  xe.parseFromReader(fw);
+	  System.err.println("Toplevel tagname: "+xe.getName());
+	  fw.close();
+	  XMLElement dataSources =  xe.getElementByTagName("data-sources");
+	  if (dataSources==null) {
+		System.err.println("No datasources found"); 
+		return null;
+	  }
+	  XMLElement dataSource = dataSources.getElementByTagName("oda-data-source");
+	  System.err.println(dataSources);
+	  if (dataSource==null) {
+			System.err.println("No datasource found"); 
+			return null;
+	  }
+	  Vector children = dataSource.getChildren();
+	  for (int i = 0; i < children.size(); i++) {
+		XMLElement current = (XMLElement)children.get(i);
+		String name = current.getStringAttribute("name");
+		if ("odaURL".equals(name)) {
+			current.setContent(dataUrl);
+		}
+		if ("odaUser".equals(name)) {
+			current.setContent(username);
+		}
+		if ("odaPassword".equals(name)) {
+			current.setContent(password);
+		}
+	}
+	  File temp = File.createTempFile("tempReport", "rpt");
+	  FileWriter ffw = new FileWriter(temp);
+	  xe.write(ffw);
+	  ffw.flush();
+	  fw.close();
+	  return temp;
+  }
+  
+  private Binary executeReport(String reportName, HashMap reportParams, String outputFormat) throws EngineException, FileNotFoundException {
 	  //ByteArrayOutputStream bout = new ByteArrayOutputStream();
 	  
-	  ReportEngine engine = null;
-	  
-	  try {
-		  Binary result = new Binary();
+//	  IReportEngine engine = null;
+	  Binary result = new Binary();
+		  
 		  //Engine Configuration - set and get temp dir, BIRT home, Servlet context
-		  
-		  EngineConfig config = new EngineConfig();
-		  config.setEngineHome(engineDir);
-		  engine = new ReportEngine(config);
-		  
+		  if (myEngine==null) {
+			  EngineConfig config = new EngineConfig();
+			  config.setEngineHome(engineDir);
+			  System.err.println(">>> "+System.getProperty("java.io.tmpdir"));
+//			  File f = File.createTempFile(System.getProperty("java.io.tmpdir"), ".txt").getParentFile();
+			  config.setLogConfig(System.getProperty("java.io.tmpdir"), Level.SEVERE);
+				
+			  try {
+				Platform.startup(config);
+			} catch (BirtException e) {
+				e.printStackTrace();
+			}
+			  IReportEngineFactory factory = (IReportEngineFactory) Platform
+				.createFactoryObject( IReportEngineFactory.EXTENSION_REPORT_ENGINE_FACTORY );
+			  myEngine = factory.createReportEngine( config );
+			  			
+		}
+
 		  //Open a report design - use design to modify design, retrieve embedded images etc.
 		  System.err.println("About to open report design: " + reportDir + reportName + ".rptdesign");
-		  IReportRunnable design = engine.openReportDesign(reportDir + reportName + ".rptdesign");
-		  
+		  File f = null;
+		  try {
+			f = debugRaportDatasource(reportName,"database","username","password");
+		} catch (XMLParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		IReportRunnable design = null;
+		FileInputStream fis = null;
+		if (f==null) {
+			  design = myEngine.openReportDesign(reportDir + reportName + ".rptdesign");
+		} else {
+			fis = new FileInputStream(f);
+
+// TODO close with finally...			
+			design = myEngine.openReportDesign(fis);
+			try {
+				fis.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 		  //Create task to run the report - use the task to execute and run the report,
-		  IRunAndRenderTask task = engine.createRunAndRenderTask(design);
+		  IRunAndRenderTask task = myEngine.createRunAndRenderTask(design);
 		  task.setParameterValues(reportParams);
 		  
 		  //Set render context to handle url and image locataions
@@ -98,10 +181,13 @@ public class BIRTMap implements Mappable {
 		  task.run();
 		  // engine.destroy();
 		  return result;
-	  } finally {
-		  if ( engine != null ) {
-			  engine.destroy();
-		  }
+	
+  }
+  
+  public void finalize() {
+	  if(myEngine!=null) {
+		  myEngine.shutdown();
+		  
 	  }
   }
 
@@ -112,7 +198,9 @@ public class BIRTMap implements Mappable {
 	  System.err.println("User dir: "+System.getProperty("user.dir"));
 	  BIRTMap bm = new BIRTMap();
 
-    bm.setReportName("ProcessQueryInvoice");
+	  bm.reportDir = System.getProperty("user.dir")+"/reports/";
+//	  bm.setReportName("ProcessQueryInvoice");
+	  bm.setReportName("DataTest");
     bm.setOutputFormat("pdf");
     bm.setParameterName("ClubIdentifier");
     bm.setParameterValue("BBKY84H");
@@ -122,6 +210,10 @@ public class BIRTMap implements Mappable {
     try {
       Binary b = bm.getReport();
       System.err.println(b.getBase64());
+      FileOutputStream fos = new FileOutputStream("c:/noot.pdf");
+      b.write(fos);
+      fos.flush();
+      fos.close();
     }
     catch (Exception e) {
       e.printStackTrace();
