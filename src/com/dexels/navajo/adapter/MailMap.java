@@ -63,6 +63,8 @@ public class MailMap implements Mappable {
     private Navajo doc = null;
     private String failure = "";
 
+    private static Object semaphore = new Object();
+    
     public MailMap() {}
 
     public void kill() {}
@@ -75,126 +77,130 @@ public class MailMap implements Mappable {
 
 
     public void store() throws MappableException, UserException {
-        try {
-            String result = "";
-         
-            result = text;
 
-            Properties props = System.getProperties();
+    	/**
+    	 * Use synchronized block because we suspect that Session.getDefaultInstance() is NOT
+    	 * thread-safe.
+    	 */
+    	synchronized ( semaphore ) {
+    		try {
+    			String result = "";
 
-            props.put("mail.smtp.host", mailServer);
-            Session session = Session.getDefaultInstance(props);
-            javax.mail.Message msg = new MimeMessage(session);
+    			result = text;
 
-            //System.err.println("Created mime message: " + msg);
+    			Properties props = System.getProperties();
 
-            msg.setFrom(new InternetAddress(sender));
+    			props.put("mail.smtp.host", mailServer);
+    			Session session = Session.getDefaultInstance(props);
+    			javax.mail.Message msg = new MimeMessage(session);
 
-            InternetAddress[] addresses = new InternetAddress[this.recipientArray.length];
+    			//System.err.println("Created mime message: " + msg);
 
-            for (int i = 0; i < this.recipientArray.length; i++) {
-                addresses[i] = new InternetAddress(this.recipientArray[i]);
-                System.err.println("Set recipient " + i + ": " + this.recipientArray[i]);
-            }
+    			msg.setFrom(new InternetAddress(sender));
 
-            msg.setRecipients(javax.mail.Message.RecipientType.TO, addresses);
+    			InternetAddress[] addresses = new InternetAddress[this.recipientArray.length];
 
-            if (ccArray != null) {
-              InternetAddress[] extra = new InternetAddress[this.ccArray.length];
-              for (int i = 0; i < this.ccArray.length; i++) {
-                extra[i] = new InternetAddress(this.ccArray[i]);
-                System.err.println("Set cc " + i + ": " + this.ccArray[i]);
-              }
-              msg.setRecipients(javax.mail.Message.RecipientType.CC, extra);
-            }
+    			for (int i = 0; i < this.recipientArray.length; i++) {
+    				addresses[i] = new InternetAddress(this.recipientArray[i]);
+    				System.err.println("Set recipient " + i + ": " + this.recipientArray[i]);
+    			}
 
-            if (bccArray != null) {
-              InternetAddress[] extra = new InternetAddress[this.bccArray.length];
-              for (int i = 0; i < this.bccArray.length; i++) {
-                extra[i] = new InternetAddress(this.bccArray[i]);
-                System.err.println("Set cc " + i + ": " + this.bccArray[i]);
-              }
-              msg.setRecipients(javax.mail.Message.RecipientType.BCC, extra);
-            }
+    			msg.setRecipients(javax.mail.Message.RecipientType.TO, addresses);
 
-            msg.setSubject(subject);
-            msg.setSentDate(new java.util.Date());
+    			if (ccArray != null) {
+    				InternetAddress[] extra = new InternetAddress[this.ccArray.length];
+    				for (int i = 0; i < this.ccArray.length; i++) {
+    					extra[i] = new InternetAddress(this.ccArray[i]);
+    					System.err.println("Set cc " + i + ": " + this.ccArray[i]);
+    				}
+    				msg.setRecipients(javax.mail.Message.RecipientType.CC, extra);
+    			}
 
-            // Use stylesheet if specified.
-            if (!xslFile.equals("")) {
-                java.io.File xsl = new java.io.File(xslFile);
-                ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                doc.write(bos);
-                bos.close();
-                ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
-                Document doc = XMLDocumentUtils.createDocument(bis, false);
-                bis.close();
-                result = XMLDocumentUtils.transform(doc, xsl);
-            }
+    			if (bccArray != null) {
+    				InternetAddress[] extra = new InternetAddress[this.bccArray.length];
+    				for (int i = 0; i < this.bccArray.length; i++) {
+    					extra[i] = new InternetAddress(this.bccArray[i]);
+    					System.err.println("Set cc " + i + ": " + this.bccArray[i]);
+    				}
+    				msg.setRecipients(javax.mail.Message.RecipientType.BCC, extra);
+    			}
 
-            if (attachments == null && contentType.equals("text/plain")) {
-              msg.setText(result);
-            }
-            else {
-              Multipart multipart = (relatedMultipart ? new MimeMultipart( "related") : new MimeMultipart() );
-              BodyPart textBody = new MimeBodyPart();
-              textBody.setContent(result, contentType);
+    			msg.setSubject(subject);
+    			msg.setSentDate(new java.util.Date());
 
-              multipart.addBodyPart(textBody);
+    			// Use stylesheet if specified.
+    			if (!xslFile.equals("")) {
+    				java.io.File xsl = new java.io.File(xslFile);
+    				ByteArrayOutputStream bos = new ByteArrayOutputStream();
+    				doc.write(bos);
+    				bos.close();
+    				ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
+    				Document doc = XMLDocumentUtils.createDocument(bis, false);
+    				bis.close();
+    				result = XMLDocumentUtils.transform(doc, xsl);
+    			}
 
-              if (attachments != null) {
-                for (int i = 0; i < attachments.size(); i++) {
-                  AttachementMap am = (AttachementMap) attachments.get(i);
-                  String file = am.getAttachFile();
-                  String userFileName = am.getAttachFileName();
-                  Binary content = am.getAttachFileContent();
-                  String encoding = am.getEncoding();
-                  BodyPart bp = new MimeBodyPart();
+    			if (attachments == null && contentType.equals("text/plain")) {
+    				msg.setText(result);
+    			}
+    			else {
+    				Multipart multipart = (relatedMultipart ? new MimeMultipart( "related") : new MimeMultipart() );
+    				BodyPart textBody = new MimeBodyPart();
+    				textBody.setContent(result, contentType);
 
-                  if (file != null) {
-                    if ( userFileName  == null ) {
-                    	userFileName = file;
-                    }
-                    FileDataSource fileDatasource = new FileDataSource(file);
-                    bp.setDataHandler(new DataHandler(fileDatasource));
-                  } else if ( content != null ) {
+    				multipart.addBodyPart(textBody);
 
-                	BinaryDataSource bds = new BinaryDataSource(content,"");
-                    DataHandler dh = new DataHandler(bds);
-//                    ByteArrayDataSource byteArraySource = new ByteArrayDataSource(content.getData(),
-//                        ( content.getMimeType().startsWith("unknown") ? "text/plain" : content.getMimeType() ), "");
-//                    DataHandler dh = new DataHandler(byteArraySource);
-                    bp.setDataHandler(dh);
+    				if (attachments != null) {
+    					for (int i = 0; i < attachments.size(); i++) {
+    						AttachementMap am = (AttachementMap) attachments.get(i);
+    						String file = am.getAttachFile();
+    						String userFileName = am.getAttachFileName();
+    						Binary content = am.getAttachFileContent();
+    						String encoding = am.getEncoding();
+    						BodyPart bp = new MimeBodyPart();
 
-                    if ( encoding != null ) {
-                    	bp.setHeader("Content-Transfer-Encoding", encoding);
-                    	encoding = null;
-                    }
+    						if (file != null) {
+    							if ( userFileName  == null ) {
+    								userFileName = file;
+    							}
+    							FileDataSource fileDatasource = new FileDataSource(file);
+    							bp.setDataHandler(new DataHandler(fileDatasource));
+    						} else if ( content != null ) {
 
-                  }
+    							BinaryDataSource bds = new BinaryDataSource(content,"");
+    							DataHandler dh = new DataHandler(bds);
+    							bp.setDataHandler(dh);
 
-                  bp.setFileName(userFileName);
-                  if (relatedMultipart) {
-                  	bp.setHeader("Content-ID", "<attach-nr-"+i+">");
-                  }
-                  multipart.addBodyPart(bp);
-                }
-              }
+    							if ( encoding != null ) {
+    								bp.setHeader("Content-Transfer-Encoding", encoding);
+    								encoding = null;
+    							}
 
-              msg.setContent(multipart);
+    						}
 
-            }
-            Transport.send(msg);
+    						bp.setFileName(userFileName);
+    						if (relatedMultipart) {
+    							bp.setHeader("Content-ID", "<attach-nr-"+i+">");
+    						}
+    						multipart.addBodyPart(bp);
+    					}
+    				}
 
-        } catch (Exception e) {
-          if(ignoreFailures){
-            System.err.println("MailMap: Failure logged: " + e.getMessage());
-            failure = e.getMessage();
-          }else{
-            e.printStackTrace();
-            throw new UserException( -1, e.getMessage());
-          }
-        }
+    				msg.setContent(multipart);
+
+    			}
+    			Transport.send(msg);
+
+    		} catch (Exception e) {
+    			if(ignoreFailures){
+    				System.err.println("MailMap: Failure logged: " + e.getMessage());
+    				failure = e.getMessage();
+    			}else{
+    				e.printStackTrace();
+    				throw new UserException( -1, e.getMessage());
+    			}
+    		}
+    	}
     }
 
     public String getFailure(){
