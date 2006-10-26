@@ -4,21 +4,17 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/NavajoAdapters"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/DexelsVersionControl"/>
-	<classpathentry kind="lib" path="birt-engine/plugins/org.eclipse.birt.core_2.1.0.N20060628-1351.jar"/>
-	<classpathentry kind="lib" path="birt-engine/plugins/org.eclipse.birt.data_2.1.0.N20060628-1351.jar"/>
-	<classpathentry kind="lib" path="birt-engine/plugins/org.eclipse.core.runtime_3.2.0.v20060601b.jar"/>
-	<classpathentry kind="lib" path="birt-engine/plugins/org.eclipse.osgi_3.2.0.v20060601.jar"/>
-	<classpathentry kind="lib" path="birt-engine/lib/coreapi.jar"/>
-	<classpathentry kind="lib" path="birt-engine/lib/engineapi.jar"/>
-	<classpathentry kind="lib" path="birt-engine/lib/modelapi.jar"/>
 	<classpathentry kind="lib" path="birt-engine/lib/chartengineapi.jar"/>
 	<classpathentry kind="lib" path="birt-engine/lib/com.ibm.icu_3.4.4.1.jar"/>
 	<classpathentry kind="lib" path="birt-engine/lib/commons-cli-1.0.jar"/>
 	<classpathentry kind="lib" path="birt-engine/lib/commons-codec-1.3.jar"/>
+	<classpathentry kind="lib" path="birt-engine/lib/coreapi.jar"/>
 	<classpathentry kind="lib" path="birt-engine/lib/dataadapterapi.jar"/>
 	<classpathentry kind="lib" path="birt-engine/lib/dteapi.jar"/>
+	<classpathentry kind="lib" path="birt-engine/lib/engineapi.jar"/>
 	<classpathentry kind="lib" path="birt-engine/lib/flute.jar"/>
 	<classpathentry kind="lib" path="birt-engine/lib/js.jar"/>
+	<classpathentry kind="lib" path="birt-engine/lib/modelapi.jar"/>
 	<classpathentry kind="lib" path="birt-engine/lib/org.eclipse.emf.common_2.2.0.v200606051102.jar"/>
 	<classpathentry kind="lib" path="birt-engine/lib/org.eclipse.emf.ecore_2.2.0.v200606051102.jar"/>
 	<classpathentry kind="lib" path="birt-engine/lib/org.eclipse.emf.ecore.xmi_2.2.0.v200606051102.jar"/>
