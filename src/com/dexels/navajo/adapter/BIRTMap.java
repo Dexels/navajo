@@ -19,6 +19,7 @@ public class BIRTMap implements Mappable {
 	private HashMap parameters;
 	private  String reportDir = "reports/";
 	private String engineDir = "birt-engine/";
+	private String directFile = null; //"c:/projects/sportlink-serv/navajo-tester/auxilary/reports/tempReport51567.rptdesign";
 
 	public Binary report;
 	public String reportName;
@@ -58,9 +59,9 @@ public class BIRTMap implements Mappable {
     parameters.put(parameterName, o);
   }
 
-  private File debugRaportDatasource(String reportName, String dataUrl, String username, String password) throws XMLParseException, IOException {
+  private File getFixedReport(String reportName, String dataUrl, String username, String password) throws XMLParseException, IOException {
 	  File reportFile = new File(reportDir+reportName+ ".rptdesign");
-	  System.err.println("ReportFile: "+reportFile.getAbsolutePath());
+	  System.err.println("ReportFile: "+reportFile.getAbsolutePath()+" dataURL: "+dataUrl);
 	  FileReader fw = new FileReader(reportFile);
 	  XMLElement xe = new CaseSensitiveXMLElement();
 	  xe.parseFromReader(fw);
@@ -91,8 +92,11 @@ public class BIRTMap implements Mappable {
 			current.setContent(password);
 		}
 	}
-	  File temp = File.createTempFile("tempReport", "rpt");
+	  File temp = File.createTempFile("tempReport", ".rptdesign");
 	  FileWriter ffw = new FileWriter(temp);
+	  ffw.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+	  ffw.write("<!-- Written by NavajoBIRTAdapter  -->\n");
+
 	  xe.write(ffw);
 	  ffw.flush();
 	  fw.close();
@@ -120,6 +124,11 @@ public class BIRTMap implements Mappable {
 			}
 			  IReportEngineFactory factory = (IReportEngineFactory) Platform
 				.createFactoryObject( IReportEngineFactory.EXTENSION_REPORT_ENGINE_FACTORY );
+			  if (factory==null) {
+				System.err.println("SHIT!");
+			}
+			  System.err.println("After create factory...:: "+(factory!=null));
+			  System.err.println("Confit: "+factory);
 			  myEngine = factory.createReportEngine( config );
 			  			
 		}
@@ -127,23 +136,31 @@ public class BIRTMap implements Mappable {
 		  //Open a report design - use design to modify design, retrieve embedded images etc.
 		  System.err.println("About to open report design: " + reportDir + reportName + ".rptdesign");
 		  File f = null;
-		  try {
-			f = debugRaportDatasource(reportName,"database","username","password");
-		} catch (XMLParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+		if (directFile != null) {
+			  f = new File(directFile);
+		} else {
+			try {
+				f = getFixedReport(reportName, "database", "username",
+						"password");
+			} catch (XMLParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		IReportRunnable design = null;
 		FileInputStream fis = null;
 		if (f==null) {
-			  design = myEngine.openReportDesign(reportDir + reportName + ".rptdesign");
+			System.err.println("Opening (unaltered) design: "+reportDir + reportName + ".rptdesign");
+			design = myEngine.openReportDesign(reportDir + reportName + ".rptdesign");
 		} else {
+			System.err.println("PATH: "+f.getAbsolutePath());
 			fis = new FileInputStream(f);
 
-// TODO close with finally...			
+// TODO close with finally...	
 			design = myEngine.openReportDesign(fis);
 			try {
 				fis.close();
@@ -180,6 +197,9 @@ public class BIRTMap implements Mappable {
 		  //run the report and destroy the engine
 		  task.run();
 		  // engine.destroy();
+		  
+		  // TODO don't forget to delete the altered temp file!
+		  
 		  return result;
 	
   }
@@ -203,7 +223,7 @@ public class BIRTMap implements Mappable {
 	  bm.setReportName("DataTest");
     bm.setOutputFormat("pdf");
     bm.setParameterName("ClubIdentifier");
-    bm.setParameterValue("BBKY84H");
+    bm.setParameterValue("BBFW63X");
     bm.setParameterName("InvoiceId");
     bm.setParameterValue("1758");
 
