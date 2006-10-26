@@ -801,17 +801,17 @@ public class NanoTslCompiler {
 
             String objectDefinition = subClassName + " " + subObjectName + " = null;\n";
             variableClipboard.add(objectDefinition);
-            System.err.println("BEFORE: "+contextClassStack.size()+" -> "+contextClassStack);
+//            System.err.println("BEFORE: "+contextClassStack.size()+" -> "+contextClassStack);
             
             for (int i = 0; i < children.size(); i++) {
                 if (children.get(i) instanceof XMLElement) {
                     XMLElement element = (XMLElement) children.get(i);
-                    System.err.println("Compiling element: "+element.getName()+"\n"+element);
+//                    System.err.println("Compiling element: "+element.getName()+"\n"+element);
 					result.append(compile(ident + 4, (element), subClassName, subObjectName));
                 }
-                System.err.println("AFTER->"+i+" "+contextClassStack.size()+" -> "+contextClassStack);
+//                System.err.println("AFTER->"+i+" "+contextClassStack.size()+" -> "+contextClassStack);
             }
-            System.err.println("AFTER: "+contextClassStack.size()+" -> "+contextClassStack);
+//            System.err.println("AFTER: "+contextClassStack.size()+" -> "+contextClassStack);
 
             contextClass = (Class) contextClassStack.pop();
 
@@ -1541,7 +1541,7 @@ public class NanoTslCompiler {
        if (!"".equals(className)) {
             addScriptUsesAdapter(currentScript, className);
         } else {
-            System.err.println("whee!");
+//            System.err.println("whee!");
             addScriptUsesAdapter(currentScript, "Referenced adapter"+n.getNonNullStringAttribute("ref"));
         }
        
@@ -2188,6 +2188,7 @@ public class NanoTslCompiler {
             String javaFile = output + "/" + script + ".java";
             System.err.println("Error compiling script: " + script + " ex: " + ex.getMessage() + " cl: " + ex.getClass());
             System.err.println("delete javaFile: " + javaFile.toString());
+            ex.printStackTrace();
             File f = new File(javaFile);
             if (f.exists()) {
                 f.delete();
@@ -2284,13 +2285,13 @@ public class NanoTslCompiler {
     
     public void compileTslToJava(String script, String input, String output, String packagePath)  throws Exception {
         long cc = System.currentTimeMillis();
-        	System.err.println("compileTslToJava: "+script+" inp: "+input+" out: "+output+" packpath: "+packagePath);
+//        	System.err.println("compileTslToJava: "+script+" inp: "+input+" out: "+output+" packpath: "+packagePath);
  
         StringWriter sw = new StringWriter();
         compiler.setOutputWriter(sw);
         compiler.compile(output + "/" + script + ".java");
-        System.err.println("Compile took: "+(System.currentTimeMillis()-cc)+" millis.");
-        System.err.println("Output: "+sw.toString());
+//        System.err.println("Compile took: "+(System.currentTimeMillis()-cc)+" millis.");
+//        System.err.println("Output: "+sw.toString());
     }
     public void compileAllTslToJava(ArrayList elements)  throws Exception {
           removeDuplicates(elements);
@@ -2327,7 +2328,7 @@ public class NanoTslCompiler {
     }
 
     public static ArrayList compileDirectoryToJava(File currentDir, File outputPath, String offsetPath, NavajoClassLoader classLoader) {
-        System.err.println("Entering compiledirectory: " + currentDir + " output: " + outputPath + " offset: " + offsetPath);
+//        System.err.println("Entering compiledirectory: " + currentDir + " output: " + outputPath + " offset: " + offsetPath);
         ArrayList files = new ArrayList();
         File[] scripts = null;
         File f = new File(currentDir, offsetPath);
@@ -2336,7 +2337,7 @@ public class NanoTslCompiler {
             for (int i = 0; i < scripts.length; i++) {
                 File current = scripts[i];
                 if (current.isDirectory()) {
-                    System.err.println("Entering directory: " + current.getName());
+//                    System.err.println("Entering directory: " + current.getName());
                     ArrayList subDir = compileDirectoryToJava(currentDir, outputPath, offsetPath.equals("") ? current.getName()
                             : (offsetPath + "/" + current.getName()), classLoader);
                     files.addAll(subDir);
@@ -2346,7 +2347,7 @@ public class NanoTslCompiler {
                         //            System.err.println("Compiling: "+name+" dir: "+ new
                         // File(currentDir,offsetPath).toString()+" outdir:
                         // "+new File(outputPath,offsetPath));
-                        System.err.println("Compiling: " + name);
+//                        System.err.println("Compiling: " + name);
                         File outp = new File(outputPath, offsetPath);
                         if (!outp.exists()) {
                             outp.mkdirs();
@@ -2386,7 +2387,7 @@ public class NanoTslCompiler {
         }
 
         ArrayList javaFiles = compileDirectoryToJava(currentDir, outputPath, offsetPath, classLoader);
-        System.err.println("javaFiles: " + javaFiles);
+//        System.err.println("javaFiles: " + javaFiles);
         JavaCompiler compiler = new SunJavaCompiler();
         //    StringBuffer javaBuffer = new StringBuffer();
 
@@ -2398,19 +2399,19 @@ public class NanoTslCompiler {
         compiler.setMsgOutput(System.out);
         StringWriter myWriter = new StringWriter();
         compiler.setOutputWriter(myWriter);
-        System.err.println("\n\nCLASSPATH: " + classPath.toString());
+//        System.err.println("\n\nCLASSPATH: " + classPath.toString());
         for (int i = 0; i < javaFiles.size(); i++) {
             compiler.compile((String) javaFiles.get(i));
-            System.err.println("Compiled: " + javaFiles.get(i));
+//            System.err.println("Compiled: " + javaFiles.get(i));
             //      javaBuffer.append((String)javaFiles.get(i));
             //      javaBuffer.append(" ");
-            System.err.println("output: "+myWriter.toString());
+//            System.err.println("output: "+myWriter.toString());
         }
 
     }
 
     public static void compileDirectory(File currentDir, File outputPath, String offsetPath, String[] classpath) {
-        System.err.println("Entering compiledirectory: " + currentDir + " output: " + outputPath + " offset: " + offsetPath);
+//        System.err.println("Entering compiledirectory: " + currentDir + " output: " + outputPath + " offset: " + offsetPath);
 
         File[] scripts = null;
         File f = new File(currentDir, offsetPath);
@@ -2419,7 +2420,7 @@ public class NanoTslCompiler {
             for (int i = 0; i < scripts.length; i++) {
                 File current = scripts[i];
                 if (current.isDirectory()) {
-                    System.err.println("Entering directory: " + current.getName());
+//                    System.err.println("Entering directory: " + current.getName());
                     compileDirectory(currentDir, outputPath, offsetPath.equals("") ? current.getName() : (offsetPath + "/" + current.getName()),
                             classpath);
                 } else {
@@ -2428,7 +2429,7 @@ public class NanoTslCompiler {
                         //            System.err.println("Compiling: "+name+" dir: "+ new
                         // File(currentDir,offsetPath).toString()+" outdir:
                         // "+new File(outputPath,offsetPath));
-                        System.err.println("Compiling: " + name);
+//                        System.err.println("Compiling: " + name);
                         File outp = new File(outputPath, offsetPath);
                         if (!outp.exists()) {
                             outp.mkdirs();
