@@ -112,11 +112,22 @@ public class BIRTMap implements Mappable {
 		  //Engine Configuration - set and get temp dir, BIRT home, Servlet context
 		  if (myEngine==null) {
 			  EngineConfig config = new EngineConfig();
+			  System.err.println("Using engine dir: "+engineDir);
 			  config.setEngineHome(engineDir);
 			  System.err.println(">>> "+System.getProperty("java.io.tmpdir"));
 //			  File f = File.createTempFile(System.getProperty("java.io.tmpdir"), ".txt").getParentFile();
 			  config.setLogConfig(System.getProperty("java.io.tmpdir"), Level.SEVERE);
-				
+			  System.err.println("System home: " +config.getBIRTHome());  
+			  System.err.println(config.getLogDirectory());
+			  System.err.println(config.getMaxRowsPerQuery());
+			  String[] aa = config.getOSGiArguments();
+			  for (int i = 0; i < aa.length; i++) {
+				System.err.println(">"+aa[i]);
+			}
+//			  String[] aa = config.getOSGiArguments();
+//			  for (int i = 0; i < aa.length; i++) {
+//				System.err.println(">"+aa[i]);
+//			}
 			  try {
 				Platform.startup(config);
 			} catch (BirtException e) {
@@ -256,6 +267,7 @@ public class BIRTMap implements Mappable {
     reportDir = inMessage.getMessage("__globals__").getProperty("BIRTReportDir").getValue();
     engineDir = inMessage.getMessage("__globals__").getProperty("BIRTEngineDir").getValue();
 
+    
     System.err.println("BIRTReportDir: " + reportDir);
     System.err.println("BIRTEngineDir: " + engineDir);
 

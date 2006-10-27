@@ -20,5 +20,6 @@
 	<classpathentry kind="lib" path="birt-engine/lib/org.eclipse.emf.ecore.xmi_2.2.0.v200606051102.jar"/>
 	<classpathentry kind="lib" path="birt-engine/lib/sac.jar"/>
 	<classpathentry kind="lib" path="birt-engine/lib/scriptapi.jar"/>
+	<classpathentry kind="lib" path="birt-engine/lib/itext-1.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
