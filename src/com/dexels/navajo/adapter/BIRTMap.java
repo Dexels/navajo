@@ -108,7 +108,6 @@ public class BIRTMap implements Mappable {
 	  
 //	  IReportEngine engine = null;
 	  Binary result = new Binary();
-		  
 		  //Engine Configuration - set and get temp dir, BIRT home, Servlet context
 		  if (myEngine==null) {
 			  EngineConfig config = new EngineConfig();
@@ -121,9 +120,9 @@ public class BIRTMap implements Mappable {
 			  System.err.println(config.getLogDirectory());
 			  System.err.println(config.getMaxRowsPerQuery());
 			  String[] aa = config.getOSGiArguments();
-			  for (int i = 0; i < aa.length; i++) {
-				System.err.println(">"+aa[i]);
-			}
+//			  for (int i = 0; i < aa.length; i++) {
+//				System.err.println(">"+aa[i]);
+//			}
 //			  String[] aa = config.getOSGiArguments();
 //			  for (int i = 0; i < aa.length; i++) {
 //				System.err.println(">"+aa[i]);
