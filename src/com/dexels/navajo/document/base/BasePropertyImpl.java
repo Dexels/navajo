@@ -409,12 +409,15 @@ public class BasePropertyImpl
       return new Money(Double.parseDouble(getValue()), getSubType());
     }
     else if (getType().equals(Property.CLOCKTIME_PROPERTY)) {
-      try {
-        return new ClockTime(getValue(), getSubType());
-      }
-      catch (Exception e) {
-        e.printStackTrace(System.err);
-      }
+    	if (getValue() == null || getValue().equals("")) {
+    		return null;
+    	}
+    	try {
+    		return new ClockTime(getValue(), getSubType());
+    	}
+    	catch (Exception e) {
+    		e.printStackTrace(System.err);
+    	}
     }
     else if (getType().equals(Property.STOPWATCHTIME_PROPERTY)) {
       try {
