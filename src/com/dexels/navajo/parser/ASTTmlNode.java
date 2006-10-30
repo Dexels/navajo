@@ -138,11 +138,12 @@ public final class ASTTmlNode extends SimpleNode {
                 if (prop != null) {
                     // Check type. If integer, float or date type and if is empty
                     String type = prop.getType();
-//                    System.err.println("In ASTTmlNODE found prop with type: "+type);
+                   
                     // I changed getValue into getTypedValue, as it resulted in a serialization
                     // of binary properties. Should be equivalent, and MUCH faster.
-                    if (prop.getTypedValue() == null && !type.equals(Property.SELECTION_PROPERTY))
+                    if (prop.getTypedValue() == null && !type.equals(Property.SELECTION_PROPERTY)) {
                         return new Boolean(false);
+                    }
 
                     if (type.equals(Property.INTEGER_PROPERTY)) {
                        try {
@@ -165,6 +166,16 @@ public final class ASTTmlNode extends SimpleNode {
                        } catch (Exception e) {
                           return new Boolean(false);
                        }
+                    } else if ( type.equals(Property.CLOCKTIME_PROPERTY)) {
+                    	try {
+                            ClockTime ct = new ClockTime(prop.getValue());
+                            if ( ct != null && ct.calendarValue() == null ) {
+                            	return new Boolean(false);
+                            }
+                            return new Boolean(true);
+                         } catch (Exception e) {
+                            return new Boolean(false);
+                         }
                     } else
                         return new Boolean(true);
                 } else
