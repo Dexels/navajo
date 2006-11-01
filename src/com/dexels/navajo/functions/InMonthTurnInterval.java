@@ -1,5 +1,6 @@
 package com.dexels.navajo.functions;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.dexels.navajo.parser.FunctionInterface;
@@ -28,13 +29,12 @@ public class InMonthTurnInterval extends FunctionInterface {
     if (days instanceof Integer){
     	ds = ((Integer)days).intValue();	
     }else{
-    	throw new TMLExpressionException("Illegal argument type for date InMonthTurnInterval(): " + date.getClass().getName());
+    	throw new TMLExpressionException("Illegal argument type for days InMonthTurnInterval(): " + days.getClass().getName());
     }
-    if (date instanceof Boolean){
-    	fw = ((Boolean)forward).booleanValue();
-    	
+    if (forward instanceof java.lang.Boolean){
+    	fw = ((java.lang.Boolean)forward).booleanValue();	
     }else{
-    	throw new TMLExpressionException("Illegal argument type for date InMonthTurnInterval(): " + date.getClass().getName());
+    	throw new TMLExpressionException("Illegal argument type for first InMonthTurnInterval(): " + forward.getClass().getName());
     }
     
     Calendar c = Calendar.getInstance();
@@ -43,14 +43,16 @@ public class InMonthTurnInterval extends FunctionInterface {
     
     if(fw){	
     	if(dim <= ds){
-    		return new Boolean(true);
+    		return new java.lang.Boolean(true);
     	}
-    	return new Boolean(false);
+    	return new java.lang.Boolean(false);
     }else{
-    	if(dim >= ds){
-    		return new Boolean(true);
+    	int max = c.getMaximum(Calendar.DAY_OF_MONTH) - ds;
+    	
+    	if(dim > max){
+    		return new java.lang.Boolean(true);
     	}
-    	return new Boolean(false);
+    	return new java.lang.Boolean(false);
     }
 	}
 
@@ -61,7 +63,28 @@ public class InMonthTurnInterval extends FunctionInterface {
 
 
 	public String usage() {
-		return "Usage: InMonthTurnInterval([(Date)date], [(Integer)days], [(Boolean)forward]) ";
+		return "Usage: InMonthTurnInterval([(Date)date], [(Integer)days], [(Boolean)first]) ";
+	}
+	
+	public static void main(String[] args){
+		try{
+			InMonthTurnInterval function = new InMonthTurnInterval();
+			function.reset();
+			SimpleDateFormat sdf = new SimpleDateFormat("ddmmyyyy");
+			java.util.Date d = sdf.parse("21122006");
+			Calendar c = Calendar.getInstance();
+			c.setTime(d);
+			function.insertOperand(c.getTime());
+			function.insertOperand(new Integer(22));
+			function.insertOperand(new java.lang.Boolean(true));
+		
+			Object result = function.evaluate();
+			if(result instanceof java.lang.Boolean){
+				System.err.println("Result: " + ((java.lang.Boolean)result).booleanValue());
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 
 }
