@@ -67,21 +67,22 @@ public abstract class BaseNode implements java.io.Serializable{
                  */
                 if (value!=null) {
                 	// optimization: Only escape properties:
-                	if (getTagName().equals("property") && "value".equals(element)) {
-                        String sss = XMLEscape(value);
+                	String sss = element;
+                	if (getTagName().equals("property")) {
+                		if (element.equals("value")) {
+                            sss = XMLEscape(value);
+						}
+                	}
+                	if (getTagName().equals("option")) {
+                        sss = XMLEscape(value);
+                	}
+
+                        sss = XMLEscape(value);
                         writeElement( sw," ");
                         writeElement( sw, element);
                         writeElement( sw, "=\"");
                         writeElement( sw, sss);
                         writeElement( sw, "\"");
-					} else {
-	                       writeElement( sw," ");
-	                        writeElement( sw, element);
-	                        writeElement( sw, "=\"");
-	                        writeElement( sw, value);
-	                        writeElement( sw, "\"");
-
-					}
 //                    System.err.println("||"+value+"||");
                 }
             }
