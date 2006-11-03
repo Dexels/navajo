@@ -75,7 +75,7 @@ public final class SaxHandler implements DocHandler {
             String name = (String)h.get("name");
             Hashtable h2 = new Hashtable(h);
     		val = BaseNode.XMLUnescape(val);
-    		name = BaseNode.XMLUnescape(val);
+    		name = BaseNode.XMLUnescape(name);
     		h2.put("value", val);
     		h2.put("name", name);
     			
