@@ -60,6 +60,8 @@ public class TslCompiler {
   private Stack contextClassStack = new Stack();
   private Class contextClass = null;
 
+  private static String hostname = null;
+  
   private static String VERSION = "$Id$";
 
   public TslCompiler(ClassLoader loader) {
@@ -2297,40 +2299,51 @@ result.append(printIdent(ident + 4) +
         }
       }
     }
-
-
-//    for (int i = 0; i < scripts.length; i++) {
-//      if (scripts[i].getName().indexOf(".xsl") != -1) {
-//        String script = scripts[i].getName().substring(0,
-//            scripts[i].getName().indexOf(".xsl"));
-//        compileStandAlone(all, script, input, output);
-//      }
-//    }
-//
-//    scripts = new File[1];
-//    scripts[0] = new File(input + "/" + service);
-
 }
 
   private String getHostName() throws SocketException {
-     ArrayList list = new ArrayList();
-     Enumeration all = java.net.NetworkInterface.getNetworkInterfaces();
+	  
+	 if ( hostname != null ) {
+		 return hostname; 
+	 }
+	 
+	 synchronized (VERSION) {
 
-     while (all.hasMoreElements()) {
-       java.net.NetworkInterface nic = (java.net.NetworkInterface) all.nextElement();
-       Enumeration ipaddresses = nic.getInetAddresses();
-       while (ipaddresses.hasMoreElements()) {
-         InetAddress ip = (InetAddress) ipaddresses.nextElement();
-         return ip.getCanonicalHostName();
-//         System.err.println("\t\tCanonical hostname: " + ip.getCanonicalHostName());
-//         System.err.println("\t\tHost address: " + ip.getHostAddress());
-//         System.err.println("\t\tisMCGlobal: " + ip.isMCGlobal());
-//         System.err.println("\t\tisLinkLocalAddress: " + ip.isLinkLocalAddress());
-//         System.err.println("\t\t"+ip.toString());
+		 if ( hostname != null ) {
+			 ArrayList list = new ArrayList();
+			 
+			 hostname = "unknown host";
+			 long start = System.currentTimeMillis();
 
-       }
-     }
-     return "unkown host";
+			 Enumeration all = java.net.NetworkInterface.getNetworkInterfaces();
+
+			 while (all.hasMoreElements()) {
+				 java.net.NetworkInterface nic = (java.net.NetworkInterface) all.nextElement();
+				 Enumeration ipaddresses = nic.getInetAddresses();
+				 while (ipaddresses.hasMoreElements()) {
+
+					 start = System.currentTimeMillis();
+
+					 InetAddress ip = (InetAddress) ipaddresses.nextElement();
+
+					 System.err.println("\t\tCanonical hostname: " + ip.getCanonicalHostName());
+					 System.err.println("\t\tHost address: " + ip.getHostAddress());
+					 System.err.println("\t\tisMCGlobal: " + ip.isMCGlobal());
+					 System.err.println("\t\tisLinkLocalAddress: " + ip.isLinkLocalAddress());
+					 System.err.println("\t\t"+ip.toString());
+
+					 System.err.println("Getting hostname took: " + ( System.currentTimeMillis() - start ) ) ;
+					 
+					 if ( hostname != null ) {
+						 hostname =  ip.getCanonicalHostName();
+					 }
+				 }
+			 }
+		 }
+		
+	 }
+	 
+     return hostname;
 
     }
 
