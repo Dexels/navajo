@@ -2309,7 +2309,7 @@ result.append(printIdent(ident + 4) +
 	 
 	 synchronized (VERSION) {
 
-		 if ( hostname != null ) {
+		 if ( hostname == null ) {
 			 ArrayList list = new ArrayList();
 			 
 			 hostname = "unknown host";
