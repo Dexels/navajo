@@ -77,7 +77,7 @@ public final class SaxHandler implements DocHandler {
     		val = BaseNode.XMLUnescape(val);
     		name = BaseNode.XMLUnescape(val);
     		h2.put("value", val);
-    		h2.put("name", val);
+    		h2.put("name", name);
     			
     			parseSelection(h2);
             return;
