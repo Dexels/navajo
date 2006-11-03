@@ -38,7 +38,7 @@ public class BIRTMap implements Mappable {
 	  
 	  try{
 		  return  executeReport(reportName, parameters, outputFormat);
-	  }catch(Exception e){
+	  }catch(Throwable e){
 		  e.printStackTrace();
 		  return null;
 	  }
@@ -115,7 +115,7 @@ public class BIRTMap implements Mappable {
 		  if (myEngine==null) {
 			  EngineConfig config = new EngineConfig();
 			  config.setEngineHome(engineDir);
-			  config.setLogConfig(System.getProperty("java.io.tmpdir"), Level.SEVERE);
+			  config.setLogConfig(System.getProperty("java.io.tmpdir"), Level.ALL);
 			  try {
 				Platform.startup(config);
 			} catch (BirtException e) {
@@ -124,11 +124,14 @@ public class BIRTMap implements Mappable {
 			  IReportEngineFactory factory = (IReportEngineFactory) Platform
 				.createFactoryObject( IReportEngineFactory.EXTENSION_REPORT_ENGINE_FACTORY );
 			  if (factory==null) {
-				System.err.println("SHIT!");
+				System.err.println("WTF?! No factory.");
+			} else {
+				System.err.println("Factory created.");
+
 			}
 			  myEngine = factory.createReportEngine( config );
 			  			
-		}
+		  }
 
 		  //Open a report design - use design to modify design, retrieve embedded images etc.
 		  File f = null;
@@ -151,6 +154,7 @@ public class BIRTMap implements Mappable {
 		if (f==null) {
 			design = myEngine.openReportDesign(reportDir + reportName + ".rptdesign");
 		} else {
+			System.err.println("Opening fixed file: "+f);
 			fis = new FileInputStream(f);
 
 // TODO close with finally...	
@@ -164,8 +168,9 @@ public class BIRTMap implements Mappable {
 		  //Create task to run the report - use the task to execute and run the report,
 		  IRunAndRenderTask task = myEngine.createRunAndRenderTask(design);
 		  task.setParameterValues(reportParams);
-		  
-		  //Set render context to handle url and image locataions
+		  System.err.println("Running for outputFormat: "+outputFormat);
+		  OutputStream out = result.getOutputStream();
+		//Set render context to handle url and image locataions
 		  if (outputFormat == "html") {
 			  HTMLRenderContext renderContextHTML = new HTMLRenderContext();
 			  renderContextHTML.setImageDirectory("image");
@@ -176,24 +181,43 @@ public class BIRTMap implements Mappable {
 			  //Set rendering options - such as file or stream output,
 			  //output format, whether it is embeddable, etc
 			  HTMLRenderOption options = new HTMLRenderOption();
-			  options.setOutputStream(result.getOutputStream());
+			  options.setOutputStream(out);
 			  options.setOutputFormat("html");
 			  task.setRenderOption(options);
+			  System.err.println("Running task");
+				task.run();
+				  System.err.println("Finished task");
 		  }
 		  else {
 			  RenderOptionBase options = new RenderOptionBase();
 			  options.setOutputFormat("pdf");
-			  options.setOutputStream(result.getOutputStream());
+			  options.setOutputStream(out);
+//			  File ff;
+//			try {
+//				ff = File.createTempFile("report", "aap.pdf");
+//				options.setOutputFileName(ff.getAbsolutePath());
+//				 System.err.println("Saving to file: "+ff.getAbsolutePath());
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
 			  task.setRenderOption(options);
+			  System.err.println("Render options set.");
+			  System.err.println("Running task");
+			  task.run();
+			  System.err.println("Finished task");
 		  }
-		  
-		  //run the report and destroy the engine
-		  task.run();
-		  // engine.destroy();
-		  
-		  // TODO don't forget to delete the altered temp file!
-		  
-		  return result;
+
+	
+		  if (out!=null) {
+				try {
+					out.flush();
+					out.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+	return result;
 	
   }
   
@@ -210,7 +234,7 @@ public class BIRTMap implements Mappable {
   public static void main(String[] args) {
 	  System.err.println("User dir: "+System.getProperty("user.dir"));
 	  BIRTMap bm = new BIRTMap();
-
+	  bm.engineDir = "c:/projecten/NavajoBirt/birt-engine";
 	  bm.reportDir = System.getProperty("user.dir")+"/reports/";
 //	  bm.setReportName("ProcessQueryInvoice");
 	  bm.setReportName("DataTest");
