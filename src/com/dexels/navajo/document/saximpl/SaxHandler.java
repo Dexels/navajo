@@ -71,7 +71,15 @@ public final class SaxHandler implements DocHandler {
             return;
         }
         if (tag.equals("option")) {
-            parseSelection(h);
+            String val = (String)h.get("value");
+            String name = (String)h.get("name");
+            Hashtable h2 = new Hashtable(h);
+    		val = BaseNode.XMLUnescape(val);
+    		name = BaseNode.XMLUnescape(val);
+    		h2.put("value", val);
+    		h2.put("name", val);
+    			
+    			parseSelection(h2);
             return;
         }
         if (tag.equals("method")) {
