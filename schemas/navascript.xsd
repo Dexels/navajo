@@ -100,6 +100,7 @@
                         <xs:enumeration value="com.dexels.navajo.adapter.SequencedInsertMap"/>
                         <xs:enumeration value="com.dexels.sportlink.adapters.DropdownList"/>
                         <xs:enumeration value="com.dexels.sportlink.adapters.CodeDropdownList"/>
+                        <xs:enumeration value="com.dexels.navajo.adapter.MailMap"/>
                         <xs:enumeration value="com.dexels.sportlink.adapters.TemplateMap"/>
                         <xs:enumeration value="com.dexels.navajo.adapter.AdminMap"/>
                     </xs:restriction>
