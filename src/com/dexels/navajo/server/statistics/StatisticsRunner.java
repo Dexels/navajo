@@ -13,8 +13,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Collections;
 
-import org.apache.log4j.AsyncAppender;
-
 /**
  * <p>Title: Navajo Product Project</p>
  * <p>Description: This is the official source for the Navajo server</p>
