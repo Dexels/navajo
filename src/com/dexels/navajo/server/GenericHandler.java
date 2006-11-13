@@ -47,10 +47,13 @@ public final class GenericHandler extends ServiceHandler {
 
     public GenericHandler() {
 
+    	boolean finishedSync = false;
+    	
     	if (loadedClasses == null)
     		synchronized ( mutex1 ) {
-    			if ( loadedClasses == null ) {
+    			if ( !finishedSync ) {
     				loadedClasses = new HashMap();
+    				finishedSync = true;
     			}
     		}
     }
@@ -109,15 +112,15 @@ public final class GenericHandler extends ServiceHandler {
             		// if can evaluate to true even before the entire work done in the
             		// sync block is finished.
             		
-            		synchronized (mutex1) {
+            		//synchronized (mutex1) {
             			
             			sourceFile = new File(sourceFileName);
             			
             			if (!sourceFile.exists() || (scriptFile.lastModified() > sourceFile.lastModified())) {
 
-            				//synchronized (mutex1) { // Check for outdated compiled script Java source.
+            				synchronized (mutex1) { // Check for outdated compiled script Java source.
 
-//            				if (!sourceFile.exists() || (scriptFile.lastModified() > sourceFile.lastModified())) {
+            				if (!sourceFile.exists() || (scriptFile.lastModified() > sourceFile.lastModified())) {
             					com.dexels.navajo.mapping.compiler.TslCompiler tslCompiler = new
             					com.dexels.navajo.mapping.compiler.TslCompiler(properties.getClassloader());
             					try {
@@ -130,7 +133,7 @@ public final class GenericHandler extends ServiceHandler {
             						sourceFile.delete();
             						throw ex;
             					}
-            				//}
+            				}
             			}
             		} // end of sync block.
             		
@@ -140,14 +143,14 @@ public final class GenericHandler extends ServiceHandler {
 //            		// 12/11/2006: If-sync-if does NOT work here for obvious reasons. The second
             		// if can evaluate to true even before the entire work done in the
             		// sync block is finished.
-            		synchronized(mutex2) { // Check for outdated class file.
+            		//synchronized(mutex2) { // Check for outdated class file.
             			targetFile = new File(classFileName);
             			
             			if (!targetFile.exists() || (sourceFile.lastModified() > targetFile.lastModified())) { // Create class file
 
-            		//		synchronized(mutex2) {
+            				synchronized(mutex2) {
             					
-            					//if (!targetFile.exists() || (sourceFile.lastModified() > targetFile.lastModified())) {
+            					if (!targetFile.exists() || (sourceFile.lastModified() > targetFile.lastModified())) {
             						if (properties.isHotCompileEnabled()) {
             							if (newLoader != null) {
             								loadedClasses.remove(className);
@@ -164,7 +167,7 @@ public final class GenericHandler extends ServiceHandler {
             							t.printStackTrace();
             							throw new UserException(-1, "Could not compile Java file: " + sourceFileName + " (" + t.getMessage() + ")");
             						}
-            					//}
+            					}
             				}
             			} // end of sync block.
             		//}
@@ -175,13 +178,14 @@ public final class GenericHandler extends ServiceHandler {
             }
             
             // Synchronized check for classloader of this script.
-            synchronized (mutex3) {
+            //synchronized (mutex3) {
             	newLoader = (NavajoClassLoader) loadedClasses.get(className);
             	if (newLoader == null &&  properties.isHotCompileEnabled()) {
             		newLoader = new NavajoClassLoader(null, properties.getCompiledScriptPath(), NavajoConfig.getInstance().adapterClassloader);
+            		System.err.println(className + ", loader: " + newLoader.hashCode() + ", adapterLoader: " + NavajoConfig.getInstance().adapterClassloader.hashCode());
             		loadedClasses.put(className, newLoader);
             	}
-            }
+            //}
 
             // Should method getCompiledNavaScript be fully synced???
             Class cs = newLoader.getCompiledNavaScript(className);
