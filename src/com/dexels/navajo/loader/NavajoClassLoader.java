@@ -75,6 +75,8 @@ public class NavajoClassLoader extends MultiClassLoader {
     
     public static int instances = 0;
     
+    private Class myScriptClass = null;
+    
     /**
      * beta flag denotes whether beta versions of jar files should be used (if present).
      */
@@ -125,36 +127,23 @@ public class NavajoClassLoader extends MultiClassLoader {
      */
     public final Class getCompiledNavaScript(String script) throws ClassNotFoundException {
 
+      if ( myScriptClass != null ) {
+    	  return myScriptClass;
+      }
       
-      String className = script;
-      Class c = null;
-
-      try {
-        c = Class.forName(className, false, this);
-        //System.err.println("Found " + script);
-        return c;
-      }
-      catch (Exception cnfe) {
-//        // Class not found using classloader, try compiled scripts directory.
-        c = null;
-      }
-
       if ( compiledScriptPath == null ) {
     	  throw new ClassNotFoundException("Script path not set!");
       }
+      
       synchronized (mutex1) {
-    	  // Check for the class again. Following the if-sync-if protocol.
-          try {
-              c = Class.forName(className, false, this);
-              //System.err.println("Found " + script);
-              return c;
-            }
-            catch (Exception cnfe) {
-//              // Class not found using classloader, try compiled scripts directory.
-              c = null;
-            }
+    	
+    	  if ( myScriptClass != null ) {
+    		  return myScriptClass;
+    	  }
+    	  
     	  // What if class has been defined in the mean time??????? and second thread waiting comes in????
     	  FileInputStream fis = null;
+    	  String className = script;
     	  
     	  try {
     		  script = script.replaceAll("\\.", "/");
@@ -174,9 +163,11 @@ public class NavajoClassLoader extends MultiClassLoader {
     			  rb += chunk;
     		  }
     		  
-    		  c = loadClass(b, className, true, false);
+    		  Class c = loadClass(b, className, true, false);
 			 
-    		  return c;
+    		  myScriptClass = c;
+    		  
+    		  return myScriptClass;
     	  }
     	  catch (Exception e) {
     		  e.printStackTrace();
@@ -206,7 +197,7 @@ public class NavajoClassLoader extends MultiClassLoader {
     		 if ( getParent() instanceof NavajoClassLoader ) {
     			 return  ( (NavajoClassLoader) getParent() ).getJarFiles(path, beta);
     		 } else {
-    			 System.err.println("Cound not find Jars ");
+    			 //System.err.println("Cound not find Jars ");
     			 return null;
     		 }
     	 }
@@ -299,7 +290,8 @@ public class NavajoClassLoader extends MultiClassLoader {
      */
     protected byte[] loadClassBytes(String className) {
 
-        //System.err.println("NavajoClassLoader: in loadClassBytes(), className = " + className);
+        //System.err.print("NavajoClassLoader " + ( this.hashCode() ) + ": in loadClassBytes(), className = " + className);
+        
         // Support the MultiClassLoader's class name munging facility.
         className = formatClassName(className);
         byte[] resource = null;
@@ -307,13 +299,15 @@ public class NavajoClassLoader extends MultiClassLoader {
         //initializeJarResources();
 
         if ( NavajoConfig.getInstance() == null ) {
+        	//System.err.println("... NavajoConfig.getInstance() is null, not found!");
         	return null;
         }
         
         //HashSet jarResources = NavajoConfig.getInstance().getJarResources();
         
         if (jarResources == null) {
-          return null;
+        	//System.err.println("... jarResources is null, not found!");
+        	return null;
         }
 
         // If beta flag is on first check beta versions of jar files before other jars.
@@ -362,6 +356,7 @@ public class NavajoClassLoader extends MultiClassLoader {
 
         //System.err.println("NavajoClassLoader: resource = " + resource);
 
+     
         return resource;
 
     }
