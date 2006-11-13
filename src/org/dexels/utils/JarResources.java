@@ -22,6 +22,8 @@ public final class JarResources {
 
     // a jar file
     private File jarFile;
+    
+    private int totalSize = 0;
 
     /**
      * creates a JarResources. It extracts all resources from a Jar into an
@@ -157,6 +159,9 @@ public final class JarResources {
                     size = ((Integer) htSizes.get(ze.getName())).intValue();
                 }
                 byte[] b = new byte[(int) size];
+                
+                totalSize += size;
+                
                 int rb = 0;
                 int chunk = 0;
 
@@ -204,6 +209,8 @@ public final class JarResources {
 
         }
 
+        System.err.println("Size of JarResources " + jarFile.getAbsolutePath() + " : " + totalSize);
+        
     }
 
     /**
