@@ -116,7 +116,7 @@ public final class GenericHandler extends ServiceHandler {
             			
             			sourceFile = new File(sourceFileName);
             			
-            			if (!sourceFile.exists() || (scriptFile.lastModified() > sourceFile.lastModified())) {
+            			if (!sourceFile.exists() || (scriptFile.lastModified() > sourceFile.lastModified()) || sourceFile.length() == 0 ) {
 
             				synchronized (mutex1) { // Check for outdated compiled script Java source.
 
