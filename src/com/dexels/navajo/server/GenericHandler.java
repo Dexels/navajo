@@ -120,7 +120,7 @@ public final class GenericHandler extends ServiceHandler {
 
             				synchronized (mutex1) { // Check for outdated compiled script Java source.
 
-            				if (!sourceFile.exists() || (scriptFile.lastModified() > sourceFile.lastModified())) {
+            				if (!sourceFile.exists() || (scriptFile.lastModified() > sourceFile.lastModified()) || sourceFile.length() == 0  ) {
             					com.dexels.navajo.mapping.compiler.TslCompiler tslCompiler = new
             					com.dexels.navajo.mapping.compiler.TslCompiler(properties.getClassloader());
             					try {
