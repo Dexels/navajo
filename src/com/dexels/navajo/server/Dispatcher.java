@@ -533,7 +533,7 @@ public final class Dispatcher {
    * @throws FatalException
    */
   private final Navajo generateAuthorizationErrorMessage(Access access,
-      AuthorizationException ae) throws FatalException {
+      AuthorizationException ae, String rpcName) throws FatalException {
 
     try {
       Navajo outMessage = NavajoFactory.getInstance().createNavajo();
@@ -552,6 +552,12 @@ public final class Dispatcher {
           Property.STRING_PROPERTY, ae.getUser(), 0, "User", Property.DIR_OUT);
 
       errorMessage.addProperty(prop);
+      
+      prop = NavajoFactory.getInstance().createProperty(outMessage, "Webservice",
+              Property.STRING_PROPERTY, rpcName, 0, "User", Property.DIR_OUT);
+
+      errorMessage.addProperty(prop);
+          
       if (access != null) {
         access.setException(ae);
       }
@@ -887,7 +893,7 @@ public final class Dispatcher {
         }
         catch (AuthorizationException ex) {
           //System.err.println("IN LINE 487 OF DISPATCHER, CAUGHT AUTHORIZATIONEXCEPTION");
-          outMessage = generateAuthorizationErrorMessage(access, ex);
+          outMessage = generateAuthorizationErrorMessage(access, ex, rpcName);
           outMessage.write(System.err);
           return outMessage;
         }
@@ -977,7 +983,7 @@ public final class Dispatcher {
       }
     }
     catch (AuthorizationException aee) {
-      outMessage = generateAuthorizationErrorMessage(access, aee);
+      outMessage = generateAuthorizationErrorMessage(access, aee, rpcName);
       return outMessage;
     }
     catch (UserException ue) {
