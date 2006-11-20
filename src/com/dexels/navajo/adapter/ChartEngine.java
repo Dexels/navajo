@@ -55,7 +55,11 @@ public class ChartEngine {
 		myChart = ChartWithAxesImpl.create();
 		ChartWithAxes cwa = (ChartWithAxes) myChart;
 
-		cwa.getTitle().getLabel().getCaption().setValue(title);
+		if(title != null && !"".equals(title)){
+			cwa.getTitle().getLabel().getCaption().setValue(title);
+		}else{
+			cwa.getTitle().setVisible(false);
+		}
 		cwa.getPlot().getClientArea().setBackground(ColorDefinitionImpl.WHITE());
 		cwa.getPlot().getClientArea().getOutline().setVisible(true);
 		cwa.setDimension(ChartDimension.TWO_DIMENSIONAL_LITERAL);
@@ -196,9 +200,7 @@ public class ChartEngine {
 
 	public static void main(String[] args) {
 		ChartEngine ce = new ChartEngine();
-
 		try {
-
 			System.setProperty("com.dexels.navajo.DocumentImplementation", "com.dexels.navajo.document.base.BaseNavajoFactoryImpl");
 			NavajoFactory.getInstance().setExpressionEvaluator(new DefaultExpressionEvaluator());
 			NavajoClientFactory.getClient().setServerUrl("ficus:3000/sportlink/knvb/servlet/Postman");
@@ -209,23 +211,22 @@ public class ChartEngine {
 		  Message init = in.getMessage("StoredGlobals");
 			
 			if (init != null) {
-				init.getProperty("Module").setValue("YELLOWCOUNT");
+				init.getProperty("Module").setValue("REDCOUNT");
 				init.getProperty("SeasonId").setValue("2005");
 				Message result = NavajoClientFactory.getClient().doSimpleSend(init.getRootDoc(), "statistics/ProcessGetStoredStatistics", "Result");
-				init.getProperty("Module").setValue("REDCOUNT");
+				init.getProperty("Module").setValue("YELLOWCOUNT");
 				Message women = NavajoClientFactory.getClient().doSimpleSend(init.getRootDoc(), "statistics/ProcessGetStoredStatistics", "Result");
 				if (result != null) {
 
-					ce.setTitle("Business Intelligence Portal");
+					ce.setTitle("");
 					ce.setXAxisProperty("Week", "Week");
 					ce.setYAxisProperty("Value", "Value");
-					ce.addData(result, ChartEngine.TYPE_AREA, "Gele kaarten");
-					ce.addData(women, ChartEngine.TYPE_AREA, "Rode kaarten");
+					ce.addData(result, ChartEngine.TYPE_AREA, "Rode kaarten");
+					ce.addData(women, ChartEngine.TYPE_LINE, "Gele kaarten");
 					ce.setChartSize(800, 300);
-				
 
 					Chart c = ce.createChart();
-					ce.saveChart("/home/aphilip/engineered.png");
+					ce.saveChart("/home/aphilip/rymix.png");
 				}
 			}
 
