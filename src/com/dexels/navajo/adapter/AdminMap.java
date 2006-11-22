@@ -389,6 +389,13 @@ public class AdminMap implements Mappable {
 	  System.err.println("Document class is now: " + getDocumentClass());
   }
   
+  public ClassCount [] getClassCounts() {
+	  ClassCount [] cc = new ClassCount[1];
+	  cc[0].className = "not supported";
+	  cc[0].count = -1;
+	  return cc;
+  }
+  
   public void setCollectGarbage(boolean b) {
 	  System.err.println("Calling garbage collect");
 	  System.gc();
