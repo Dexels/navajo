@@ -166,6 +166,14 @@ public class TipiProperty
         currentType = p.getType();
         setPropFlag = true;
           ( (GenericPropertyComponent) getContainer()).setProperty(p);
+          
+          // Based on 'legacy behaviour' Removed this behaviour from swingclient, but would require
+          // a lot of fixes in tipi code, so replaced it here.
+          if (p.getValue()!=null) {
+              ( (GenericPropertyComponent) getContainer()).setTextFieldColumns(p.getValue().length());
+          } else {
+              ( (GenericPropertyComponent) getContainer()).setTextFieldColumns(3);
+          } 
          if (myEnableState!=null) {
              ( (GenericPropertyComponent) getContainer()).setHardEnabled(myEnableState.booleanValue());
         }
