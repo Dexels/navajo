@@ -235,6 +235,8 @@ public abstract class TipiContext
     boolean secure = ((Boolean)attemptGenericEvaluate(config.getStringAttribute("secure", "false"))).booleanValue();
     setSystemProperty("tipi.client.secure", ""+secure, false);
 
+    String locale = (String)attemptGenericEvaluate(config.getStringAttribute("locale", "'en'"));
+    setSystemProperty("tipi.client.locale", cfg, false);
 
     Object keystore = attemptGenericEvaluate(config.getStringAttribute("keystore", ""));
 
@@ -271,6 +273,8 @@ public abstract class TipiContext
         NavajoClientFactory.resetClient();
       NavajoClientFactory.createClient("com.dexels.navajo.client.impl.DirectClientImpl", getClass().getClassLoader().getResource(cfg));
     }
+    
+    NavajoClientFactory.getClient().setLocaleCode(locale);
     if (secure) {
       if (storepass != null && keystore != null) {
         try {
@@ -458,17 +462,31 @@ public void parseDefinition(XMLElement child) throws TipiException {
   
   public URL getResourceURL(String location, ClassLoader cl) {
 	  // Try the classloader first, the 
-	  
+//	  System.err.println("Classloader: "+cl);
 	  if (cl==null) {
           cl = getClass().getClassLoader();
       }
       URL u = cl.getResource(location);
     if (u==null) {
-//      System.err.println("getResourceURL: "+location+" not found in classpath, continuing");
+   //   System.err.println("getResourceURL: "+location+" not found in classpath, continuing");
+    } else {
+    	return u;
     }
-    if (u!=null) {
-        return u;
-    }
+    // case 2: strip the path, keep only the filename:
+    if (location.startsWith("tipi/")) {
+		location = location.substring(5);
+	} else {
+	    if (location.startsWith("resource/")) {
+			location = location.substring(9);
+		}
+	}
+    u = cl.getResource(location);
+    if (u==null) {
+        System.err.println("getResourceURL: "+location+" not found in classpath, continuing");
+      } else {
+      	return u;
+      }
+    
     if (resourceBaseDirectory!=null) {
 //        System.err.println("ResourceDir found: "+resourceBaseDirectory.getAbsolutePath());
         File locationFile = new File(resourceBaseDirectory.getAbsolutePath()+"/"+location);
