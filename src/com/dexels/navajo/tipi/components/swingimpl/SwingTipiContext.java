@@ -181,8 +181,13 @@ public class SwingTipiContext
   }
 
   public void setDebugMode(boolean b) {
-    debugMode = b;
+    if (System.getSecurityManager()!=null) {
+		System.err.println("No debugging. Securitymanager found.");
+		debugMode = false;
+		return;
+    }
 //    System.err.println("Debugmode = "+b);
+    debugMode = b;
     clearLogFile();
   }
 
