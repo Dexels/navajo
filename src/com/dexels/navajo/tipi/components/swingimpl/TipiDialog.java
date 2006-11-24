@@ -28,6 +28,8 @@ public class TipiDialog
   private JMenuBar myBar = null;
   private Rectangle myBounds = new Rectangle(-1, -1, -1, -1);
   private boolean studioMode = false;
+  private boolean ignoreClose = false;
+
   public TipiDialog() {
   }
 
@@ -43,17 +45,19 @@ public class TipiDialog
   private final void dialog_windowClosing(WindowEvent e) {
     JDialog d = (JDialog) e.getSource();
     try {
-      performTipiEvent("onWindowClosed", null, true);
-    }
+    	if (!ignoreClose) {
+    	    performTipiEvent("onWindowClosed", null, true);
+		}
+     }
     catch (TipiException ex) {
       ex.printStackTrace();
     }
-    myContext.disposeTipiComponent(this);
+//    myContext.disposeTipiComponent(this);
     disposed = true;
   }
 
   protected void createWindowListener(JDialog d) {
-    d.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+//    d.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
     d.addWindowListener(new WindowAdapter() {
       public void windowClosing(WindowEvent e) {
         dialog_windowClosing(e);
@@ -153,9 +157,12 @@ public class TipiDialog
     Object rootObject =  getContext().getTopLevel();
     RootPaneContainer r = null;
 //    JDialog d = null;
+    ignoreClose = false;
     if (rootObject == null) {
       System.err.println("Null root. Bad, bad, bad.");
       myDialog = new JDialog(new JFrame());
+      myDialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+
     }
     else {
       if (rootObject instanceof RootPaneContainer ) {
@@ -167,11 +174,13 @@ public class TipiDialog
         else {
           System.err.println("Creating with dialog root. This is quite surpising, actually.");
           myDialog = new JDialog( (Dialog) r);
+          myDialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         }
       }
       else {
         System.err.println("R is strange... a: "+rootObject.getClass());
         myDialog = new JDialog( ((SwingTipiContext)myContext).getUserInterface().getMainFrame());
+        myDialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
       }
     }
     myDialog.setUndecorated(!decorated);
@@ -265,17 +274,23 @@ public class TipiDialog
         public void run() {
 //          System.err.println("Hiding dialog!!!\n\n\n\n");
           if (myDialog != null) {
+        	ignoreClose = true;
             myDialog.setVisible(false);
-          }
+            myDialog.dispose();
+            myDialog = null;
+         }
         }
       });
     }
     if (name.equals("dispose")) {
       runSyncInEventThread(new Runnable() {
-        public void run() {
+
+		public void run() {
 //          System.err.println("Hide dialog: Disposing dialog!");
           if (myDialog != null) {
+          	ignoreClose = true;
             myDialog.setVisible(false);
+            myDialog.dispose();
             myDialog = null;
           }
           myContext.disposeTipiComponent(me);
