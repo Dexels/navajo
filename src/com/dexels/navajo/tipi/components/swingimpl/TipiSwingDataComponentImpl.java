@@ -69,7 +69,14 @@ public abstract class TipiSwingDataComponentImpl
   }
 
   public void addToContainer(final Object c, final Object constraints) {
-      if ("true".equals(System.getProperty("com.dexels.navajo.swingclient.NoPreferredSizes"))) {
+      boolean noPrefSizes = false;
+	try {
+		noPrefSizes = "true".equals(System
+				.getProperty("com.dexels.navajo.swingclient.NoPreferredSizes"));
+	} catch (SecurityException e) {
+		// assume false;
+	}      
+	if (noPrefSizes) {
           if (getContainer() instanceof JComponent) {
               JComponent cc = (JComponent)getContainer();
               LayoutManager m = cc.getLayout();
