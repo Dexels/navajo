@@ -1280,17 +1280,11 @@ result.append(printIdent(ident + 4) +
          " = MappingUtils.getSelectedItems(currentInMsg, inMessage, \"" + ref + "\");\n");
 
       Class contextClass = null;
-      
       try {
-    	  if (mapPath!=null) {
-    		  contextClass = locateContextClass(mapPath);
-    	  } else {
-    		  contextClass = Class.forName(className, false, loader);
-    	  }
+      	contextClass = Class.forName(className, false, loader);
       } catch (Exception e) {
     	  throw new Exception("Could not find adapter: " + className);
       }
-   
       String type = MappingUtils.getFieldType(contextClass, attribute);
       boolean isArray = MappingUtils.isArrayAttribute(contextClass, attribute);
       
