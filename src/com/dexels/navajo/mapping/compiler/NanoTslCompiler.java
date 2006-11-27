@@ -615,12 +615,20 @@ public class NanoTslCompiler {
         boolean isArrayAttr = false;
         boolean isSubMapped = false;
         boolean isParam = false;
+        String mapPath = null;
         //Class contextClass = null;
 
         // Check if <message> is mapped to an object attribute:
         if (nextElt != null && nextElt.getName().equals("map") && nextElt.getNonNullStringAttribute("ref") != null
                 && !nextElt.getNonNullStringAttribute("ref").equals("")) {
-            ref = nextElt.getNonNullStringAttribute("ref");
+        	  String refOriginal = nextElt.getNonNullStringAttribute("ref");
+              
+              if (refOriginal.indexOf("/")!=-1) {
+            	  ref = refOriginal.substring(refOriginal.lastIndexOf('/')+1, refOriginal.length());
+                  mapPath = refOriginal.substring(0,refOriginal.lastIndexOf('/'));
+             } else {
+            	 ref = refOriginal;
+               }
             filter = nextElt.getNonNullStringAttribute("filter");
             startElement = nextElt.getNonNullStringAttribute("start_element");
             elementOffset = nextElt.getNonNullStringAttribute("element_offset");
@@ -637,9 +645,14 @@ public class NanoTslCompiler {
                   contextClassStack.push(contextClass);
              }
             try {
-                contextClass = Class.forName(className, false, loader);
+          	  if (mapPath!=null) {
+          		  contextClass = locateContextClass(mapPath);
+          		  className = contextClass.getName();
+          	  } else {
+          		  contextClass = Class.forName(className, false, loader);
+          	  }
             } catch (Exception e) {
-                throw new TslCompileException(TslCompileException.TSL_UNKNOWN_MAP, "Could not find adapter: " + className, nextElt);
+          	  throw new Exception("Could not find adapter: " + className);
             }
             //System.out.println("in MessageNode(), new contextClass = " +
             // contextClass);
@@ -720,9 +733,16 @@ public class NanoTslCompiler {
              * Changes 24/10
              */
             String mappableArrayName = "mappableObject" + (objectCounter++);
-            result.append(printIdent(ident + 2) + mappableArrayName +
-          		  " = ((" + className + ") currentMap.myObject).get" +
-                    ( (ref.charAt(0) + "").toUpperCase() + ref.substring(1)) + "();\n");
+            
+            if ( mapPath == null ) {
+          	  result.append(printIdent(ident + 2) + mappableArrayName +
+          			  " = ((" + className + ") currentMap.myObject).get" +
+          			  ( (ref.charAt(0) + "").toUpperCase() + ref.substring(1)) + "();\n");
+            } else {
+          	  result.append(printIdent(ident + 2) + mappableArrayName +
+          			  " = ((" + className + ") findMapByPath( \"" + mapPath + "\")).get" +
+          			  ( (ref.charAt(0) + "").toUpperCase() + ref.substring(1)) + "();\n");
+            }
 
             String mappableArrayDefinition = "Mappable [] " + mappableArrayName + " = null;\n";
             variableClipboard.add(mappableArrayDefinition);

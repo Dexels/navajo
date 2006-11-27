@@ -590,13 +590,22 @@ public class TslCompiler {
     boolean isArrayAttr = false;
     boolean isSubMapped = false;
     boolean isParam = false;
+    String mapPath = null;
     //Class contextClass = null;
 
     // Check if <message> is mapped to an object attribute:
     if (nextElt != null && nextElt.getNodeName().equals("map") &&
         nextElt.getAttribute("ref") != null &&
         !nextElt.getAttribute("ref").equals("")) {
-          ref = nextElt.getAttribute("ref");
+          String refOriginal = nextElt.getAttribute("ref");
+          
+          if (refOriginal.indexOf("/")!=-1) {
+        	  ref = refOriginal.substring(refOriginal.lastIndexOf('/')+1, refOriginal.length());
+              mapPath = refOriginal.substring(0,refOriginal.lastIndexOf('/'));
+         } else {
+        	 ref = refOriginal;
+           }
+          
           filter = nextElt.getAttribute("filter");
           startElement = nextElt.getAttribute("start_element");
           elementOffset = nextElt.getAttribute("element_offset");
@@ -612,11 +621,18 @@ public class TslCompiler {
                 contextClassStack.push(contextClass);
            }
           contextClass = null;
+        
           try {
-          	contextClass = Class.forName(className, false, loader);
+        	  if (mapPath!=null) {
+        		  contextClass = locateContextClass(mapPath);
+        		  className = contextClass.getName();
+        	  } else {
+        		  contextClass = Class.forName(className, false, loader);
+        	  }
           } catch (Exception e) {
-          	throw new Exception("Could not find adapter: " + className);
+        	  throw new Exception("Could not find adapter: " + className);
           }
+          
           //System.out.println("in MessageNode(), new contextClass = " + contextClass);
           String attrType = MappingUtils.getFieldType(contextClass, ref);
           isArrayAttr = MappingUtils.isArrayAttribute(contextClass, ref);
@@ -711,9 +727,16 @@ public class TslCompiler {
       
       
       String mappableArrayName = "mappableObject" + (objectCounter++);
-      result.append(printIdent(ident + 2) + mappableArrayName +
-    		  " = ((" + className + ") currentMap.myObject).get" +
-              ( (ref.charAt(0) + "").toUpperCase() + ref.substring(1)) + "();\n");
+      
+      if ( mapPath == null ) {
+    	  result.append(printIdent(ident + 2) + mappableArrayName +
+    			  " = ((" + className + ") currentMap.myObject).get" +
+    			  ( (ref.charAt(0) + "").toUpperCase() + ref.substring(1)) + "();\n");
+      } else {
+    	  result.append(printIdent(ident + 2) + mappableArrayName +
+    			  " = ((" + className + ") findMapByPath( \"" + mapPath + "\")).get" +
+    			  ( (ref.charAt(0) + "").toUpperCase() + ref.substring(1)) + "();\n");
+      }
 
       String mappableArrayDefinition = "Mappable [] " + mappableArrayName + " = null;\n";
       variableClipboard.add(mappableArrayDefinition);
@@ -1257,11 +1280,17 @@ result.append(printIdent(ident + 4) +
          " = MappingUtils.getSelectedItems(currentInMsg, inMessage, \"" + ref + "\");\n");
 
       Class contextClass = null;
+      
       try {
-      	contextClass = Class.forName(className, false, loader);
+    	  if (mapPath!=null) {
+    		  contextClass = locateContextClass(mapPath);
+    	  } else {
+    		  contextClass = Class.forName(className, false, loader);
+    	  }
       } catch (Exception e) {
-      	throw new Exception("Could not find adapter: " + className);
+    	  throw new Exception("Could not find adapter: " + className);
       }
+   
       String type = MappingUtils.getFieldType(contextClass, attribute);
       boolean isArray = MappingUtils.isArrayAttribute(contextClass, attribute);
       
