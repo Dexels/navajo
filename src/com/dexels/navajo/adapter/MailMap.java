@@ -78,11 +78,7 @@ public class MailMap implements Mappable {
 
     public void store() throws MappableException, UserException {
 
-    	/**
-    	 * Use synchronized block because we suspect that Session.getDefaultInstance() is NOT
-    	 * thread-safe.
-    	 */
-    	synchronized ( semaphore ) {
+    	
     		try {
     			String result = "";
 
@@ -91,7 +87,8 @@ public class MailMap implements Mappable {
     			Properties props = System.getProperties();
 
     			props.put("mail.smtp.host", mailServer);
-    			Session session = Session.getDefaultInstance(props);
+    			Session session = Session.getInstance(props);
+    			
     			javax.mail.Message msg = new MimeMessage(session);
 
     			//System.err.println("Created mime message: " + msg);
@@ -200,7 +197,7 @@ public class MailMap implements Mappable {
     				throw new UserException( -1, e.getMessage());
     			}
     		}
-    	}
+    	
     }
 
     public String getFailure(){
