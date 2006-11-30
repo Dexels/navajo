@@ -164,5 +164,10 @@ public void setKeepAlive(int millis) throws ClientException;
 public Navajo doSpecificSend(Navajo out, String method, int serverIndex)  throws ClientException;
 
 public int getAsyncServerIndex();
+
+/*
+ * sets the locale for the client, it will be appended to the header
+ */
+public void setLocaleCode(String locale);
 	
 }

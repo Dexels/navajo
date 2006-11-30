@@ -87,11 +87,12 @@ public class NavajoClient implements ClientInterface {
   private final String mySessionToken;
   
   private final HashMap disabledServers = new HashMap();
-private long lastActivity;
-private int keepAliveDelay;
-private int globalRetryCounter = 0;
-private static boolean silent = true;
-  
+	private long lastActivity;
+	private int keepAliveDelay;
+	private int globalRetryCounter = 0;
+	private String locale = null;
+	private static boolean silent = true;
+	  
   // Disable for one minute. Bit short, should be maybe an hour, but better for debugging.
   private static final long serverDisableTimeout = 60000;
   
@@ -739,7 +740,13 @@ private static boolean silent = true;
 		}
     
         //==================================================================
-
+    	// set the locale
+    	// ==============================================
+    	 if (locale!=null) {
+        	 out.getHeader().setAttribute("locale", locale);
+		}
+    	 
+    	 
         BufferedInputStream in = null;
         Navajo n = null;
         try {
@@ -1580,8 +1587,17 @@ private final BufferedInputStream retryTransaction(String server, Navajo out, bo
   }
 
   public static String createSessionToken() throws UnknownHostException {
-	  return System.getProperty("user.name")+"|"+(InetAddress.getLocalHost().getHostAddress())+"|"+(InetAddress.getLocalHost().getHostName())+"|"+(System.currentTimeMillis());
-  }
+		String userName = null;
+		try {
+			userName = System.getProperty("user.name");
+		} catch (SecurityException e) {
+			userName = "UnknownUser";
+		}
+
+		return userName + "|" + (InetAddress.getLocalHost().getHostAddress())
+				+ "|" + (InetAddress.getLocalHost().getHostName()) + "|"
+				+ (System.currentTimeMillis());
+	}
   
   public static void main(String[] args) throws Exception {
 	  System.err.println(createSessionToken());
@@ -1761,6 +1777,11 @@ public void switchServer(int startIndex, boolean forceChange) {
 
 	public int getAsyncServerIndex() {
 		return currentServerIndex;
+	}
+
+
+	public void setLocaleCode(String locale) {
+		this.locale  = locale;
 	}
 	
 
