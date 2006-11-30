@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/NavajoAdapters"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/DexelsVersionControl"/>
-	<classpathentry kind="lib" path="birt-engine/lib/chartengineapi.jar"/>
-	<classpathentry kind="lib" path="birt-engine/lib/coreapi.jar"/>
-	<classpathentry kind="lib" path="birt-engine/lib/dataadapterapi.jar"/>
-	<classpathentry kind="lib" path="birt-engine/lib/dteapi.jar"/>
-	<classpathentry kind="lib" path="birt-engine/lib/engineapi.jar"/>
-	<classpathentry kind="lib" path="birt-engine/lib/modelapi.jar"/>
-	<classpathentry kind="lib" path="birt-engine/lib/scriptapi.jar"/>
-	<classpathentry kind="lib" path="birt-engine/lib/commons-codec-1.3.jar"/>
-	<classpathentry kind="lib" path="birt-engine/lib/com.ibm.icu_3.4.4.1.jar"/>
-	<classpathentry kind="lib" path="birt-engine/lib/js.jar"/>
-	<classpathentry kind="lib" path="birt-engine/lib/itext-1.3.jar"/>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry path="src" kind="src"/>
+	<classpathentry path="org.eclipse.jdt.launching.JRE_CONTAINER" kind="con"/>
+	<classpathentry path="/NavajoAdapters" combineaccessrules="false" kind="src"/>
+	<classpathentry path="/DexelsVersionControl" combineaccessrules="false" kind="src"/>
+	<classpathentry path="birt-engine/lib/chartengineapi.jar" kind="lib"/>
+	<classpathentry path="birt-engine/lib/coreapi.jar" kind="lib"/>
+	<classpathentry path="birt-engine/lib/dataadapterapi.jar" kind="lib"/>
+	<classpathentry path="birt-engine/lib/dteapi.jar" kind="lib"/>
+	<classpathentry path="birt-engine/lib/engineapi.jar" kind="lib"/>
+	<classpathentry path="birt-engine/lib/modelapi.jar" kind="lib"/>
+	<classpathentry path="birt-engine/lib/scriptapi.jar" kind="lib"/>
+	<classpathentry path="birt-engine/lib/commons-codec-1.3.jar" kind="lib"/>
+	<classpathentry path="birt-engine/lib/com.ibm.icu_3.4.4.1.jar" kind="lib"/>
+	<classpathentry path="birt-engine/lib/js.jar" kind="lib"/>
+	<classpathentry path="birt-engine/lib/itext-1.3.jar" kind="lib"/>
+	<classpathentry path="bin" kind="output"/>
 </classpath>
