@@ -11,23 +11,14 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.w3c.dom.*;
 
-
-import org.apache.log4j.PropertyConfigurator;
-import org.apache.log4j.xml.DOMConfigurator;
-import org.apache.log4j.Logger;
-import org.apache.log4j.Priority;
-
 import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.logger.*;
 import com.dexels.navajo.server.Dispatcher;
 
 public class TmlSoapServlet extends HttpServlet {
 
 
-  private String configurationPath = "";
-
-   private static Logger logger = Logger.getLogger( TmlSoapServlet.class );
+	private String configurationPath = "";
 
    public TmlSoapServlet() {}
 
@@ -46,17 +37,8 @@ public class TmlSoapServlet extends HttpServlet {
        Navajo configFile = new com.dexels.navajo.document.jaxpimpl.NavajoImpl(configDOM);
        Message m = configFile.getMessage("server-configuration/parameters");
 
-       Element loggerConfig =
-             (Element) configDOM.getElementsByTagName( "log4j:configuration" ).item( 0 );
-
-       if ( loggerConfig == null ) {
-           ServletException e =
-             new ServletException( "logging subsystem log4j is not configured, check server.xml");
-               throw ( e );
-       }
-       DOMConfigurator.configure( loggerConfig );
-
-       logger.log( Priority.INFO, "started logging" );
+      
+      
    }
 
   public void doGet(HttpServletRequest request,
