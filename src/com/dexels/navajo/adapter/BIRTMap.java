@@ -115,7 +115,7 @@ public class BIRTMap implements Mappable {
 		  if (myEngine==null) {
 			  EngineConfig config = new EngineConfig();
 			  config.setEngineHome(engineDir);
-			  config.setLogConfig(System.getProperty("java.io.tmpdir"), Level.ALL);
+			  config.setLogConfig(null, Level.SEVERE);
 			  try {
 				Platform.startup(config);
 			} catch (BirtException e) {
@@ -217,6 +217,10 @@ public class BIRTMap implements Mappable {
 					e.printStackTrace();
 				}
 			}
+		  if (directFile==null && f!=null) {
+			f.delete();
+			
+		}
 	return result;
 	
   }
