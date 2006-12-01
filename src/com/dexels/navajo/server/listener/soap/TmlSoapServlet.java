@@ -50,12 +50,16 @@ public class TmlSoapServlet extends HttpServlet {
 
      Document docIn = null;
 
+     System.err.println("in SOAPServlet doPost()");
      try {
 
       String soapAction = request.getParameter("SOAPAction");
-      if (soapAction == null)
+      if (soapAction == null) {
         soapAction = "";
-
+      }
+      
+      System.err.println("SOAPAction is " + soapAction );
+      
       // Parse incoming SOAP request.
       docIn = XMLDocumentUtils.createDocument(request.getInputStream(), false);
       docIn.getDocumentElement().normalize();

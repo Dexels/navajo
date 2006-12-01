@@ -2,6 +2,7 @@ package com.dexels.navajo.server.listener.soap;
 
 import java.io.*;
 
+import javax.xml.messaging.Endpoint;
 import javax.xml.soap.*;
 import java.net.URL;
 import javax.mail.internet.*;
@@ -29,7 +30,9 @@ public class SOAPClient {
         try {
 
             URL endpoint=new URL(SIMPLE_SAMPLE_URI);
-
+            
+            Endpoint ep = new Endpoint(SIMPLE_SAMPLE_URI);
+            
             SOAPConnectionFactory scf = SOAPConnectionFactory.newInstance();
             SOAPConnection connection = scf.createConnection();
 
@@ -57,8 +60,7 @@ public class SOAPClient {
  * Temporarily removed by Frank.
  */
 
-//            SOAPMessage reply = connection.call(msg, endpoint);
-SOAPMessage reply = msg;
+            SOAPMessage reply = connection.call(msg, ep);
 
             System.err.println("Sent message is logged in \"sent.msg\"");
 
