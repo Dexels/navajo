@@ -6,9 +6,7 @@
 	<classpathentry kind="src" path="/Navajo"/>
 	<classpathentry kind="src" path="/SmtpServlet"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/DexelsVersionControl"/>
-	<classpathentry kind="lib" path="lib/jaxm-api.jar"/>
-	<classpathentry kind="lib" path="lib/jaxm-client.jar"/>
-	<classpathentry kind="lib" path="lib/servlet.jar"/>
-	<classpathentry kind="lib" path="lib/soap.jar"/>
+	<classpathentry kind="lib" path="lib/saaj-api.jar"/>
+	<classpathentry kind="lib" path="lib/saaj-impl.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
