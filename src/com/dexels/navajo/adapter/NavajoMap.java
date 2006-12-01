@@ -6,6 +6,8 @@ import com.dexels.navajo.document.*;
 import com.dexels.navajo.adapter.navajomap.MessageMap;
 import com.dexels.navajo.client.*;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.*;
 import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.Binary;
@@ -60,6 +62,7 @@ public class NavajoMap implements Mappable {
   public String compare = "";
   public String skipProperties = "";
   public boolean isEqual = false;
+  public boolean performOrderBy = false;
 
   private Navajo inDoc;
   private Navajo outDoc;
@@ -333,6 +336,19 @@ public class NavajoMap implements Mappable {
         inDoc = access.getDispatcher().handle(outDoc, access.getUserCertificate());
       }
 
+      // Call sorted.
+      if ( performOrderBy ) {
+    	  OutputStream os = new OutputStream(){
+    		  public void write(int b) throws IOException {
+    			  // do nothing
+    		  } 
+    	  };
+    	  try {
+    		  inDoc.write(os);
+    	  } catch (NavajoException e) {
+    	  }
+      }
+      
       Message error = inDoc.getMessage("error");
       if (error != null) {
           String errMsg = error.getProperty("message").getValue();
@@ -696,5 +712,9 @@ public class NavajoMap implements Mappable {
 			  outDoc.addMessage(params);
 		  }
 	  }
+  }
+  
+  public void setPerformOrderBy(boolean b) {
+	  performOrderBy = b;
   }
 }
