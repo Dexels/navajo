@@ -1,16 +1,20 @@
 package com.dexels.navajo.server.listener.soap;
 
 import java.io.*;
-
-import javax.xml.messaging.Endpoint;
-import javax.xml.soap.*;
 import java.net.URL;
-import javax.mail.internet.*;
-import javax.xml.transform.*;
-import javax.xml.transform.stream.*;
 
-//import org.dom4j.*;
-//import javax.xml.messaging.Endpoint;
+import javax.xml.soap.MessageFactory;
+import javax.xml.soap.SOAPBody;
+import javax.xml.soap.SOAPConnection;
+import javax.xml.soap.SOAPConnectionFactory;
+import javax.xml.soap.SOAPEnvelope;
+import javax.xml.soap.SOAPHeader;
+import javax.xml.soap.SOAPMessage;
+import javax.xml.soap.SOAPPart;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamResult;
 
 /**
  * <p>Title: Navajo Product Project</p>
@@ -23,7 +27,7 @@ import javax.xml.transform.stream.*;
 
 public class SOAPClient {
 
-   static final String SIMPLE_SAMPLE_URI = "http://localhost/sport-tester/servlet/SOAPMan/" ;
+   static final String SIMPLE_SAMPLE_URI = "http://ficus:3000/sportlink/knvb/servlet/SOAPMan" ;
 
     public static void main(String args[]) {
 
@@ -31,7 +35,7 @@ public class SOAPClient {
 
             URL endpoint=new URL(SIMPLE_SAMPLE_URI);
             
-            Endpoint ep = new Endpoint(SIMPLE_SAMPLE_URI);
+            //Endpoint ep = new Endpoint(SIMPLE_SAMPLE_URI);
             
             SOAPConnectionFactory scf = SOAPConnectionFactory.newInstance();
             SOAPConnection connection = scf.createConnection();
@@ -41,26 +45,33 @@ public class SOAPClient {
             // Create a message from the message factory.
             SOAPMessage msg = mf.createMessage();
 
-            SOAPPart soapPart=msg.getSOAPPart();
+            SOAPPart soapPart= msg.getSOAPPart();
             SOAPEnvelope envelope = soapPart.getEnvelope();
 
 
             // create dummy message
             SOAPBody body = envelope.getBody();
 
-            body.addChildElement(envelope.createName("GetReply" , "jaxm",
-            "http://sun.com/jaxm/someuri/")).addChildElement("name").addTextNode("sampletest");
+            body.addChildElement("Club").addChildElement("ClubIdentifier").addTextNode("BBFW63X");
 
+            SOAPHeader h = msg.getSOAPHeader();
+        
+            h.addChildElement(envelope.createName("webservice", "navajo", "http://www.dexels.com/navajo"))
+            	.addTextNode("club/ProcessQueryClub");
+            
             msg.setContentDescription("text/xml");
             msg.saveChanges();
 
+            
+            msg.writeTo(System.err);
+            
             System.err.println("Sending message to URL: "+ endpoint);
 
 /**
  * Temporarily removed by Frank.
  */
 
-            SOAPMessage reply = connection.call(msg, ep);
+            SOAPMessage reply = connection.call(msg, endpoint);
 
             System.err.println("Sent message is logged in \"sent.msg\"");
 
@@ -77,10 +88,10 @@ public class SOAPClient {
                 System.out.println("Result:");
                 TransformerFactory tFact=TransformerFactory.newInstance();
                 Transformer transformer = tFact.newTransformer();
-                //Source src=reply.getSOAPPart().getContent();
-                //StreamResult result=new StreamResult( System.out );
-                //transformer.transform(src, result);
-                //System.out.println();
+                Source src=reply.getSOAPPart().getContent();
+                StreamResult result=new StreamResult( System.out );
+                transformer.transform(src, result);
+                System.out.println();
             }
 
             connection.close();

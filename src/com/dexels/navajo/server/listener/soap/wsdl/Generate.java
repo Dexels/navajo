@@ -1,11 +1,15 @@
 package com.dexels.navajo.server.listener.soap.wsdl;
 
 import org.w3c.dom.*;
+import org.xml.sax.InputSource;
+
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
 import java.io.*;
 import java.util.*;
 import java.util.regex.*;
+
+import javax.xml.parsers.DocumentBuilderFactory;
 
 /**
  *
@@ -322,14 +326,14 @@ public class Generate {
       
 
       // Determine input messages:
-      Navajo inputDoc = gen.getInputPart("/home/arjen/projecten/sportlink-serv/navajo/auxilary/scripts/InitBM");
+      Navajo inputDoc = gen.getInputPart("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts/club/ProcessQueryClub");
       ArrayList msgs = inputDoc.getAllMessages();
       HashSet inputMessages = new HashSet();
       for (int i = 0; i < msgs.size(); i++) {
         inputMessages.add(((Message) msgs.get(i)).getName());
       }
 
-      Navajo outputDoc = gen.getOutputPart("/home/arjen/projecten/sportlink-serv/navajo/auxilary/scripts/InitBM");
+      Navajo outputDoc = gen.getOutputPart("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts/club/ProcessQueryClub");
      
       System.out.println(outputDoc.toString());
 
@@ -339,9 +343,16 @@ public class Generate {
       //String outputMessage = "get"+"ProcessInsertKernMember"+"Out";
       //gen.createMessageDefinition(input, outputMessage, outputMessages);
 
-      String xmlInput = XMLDocumentUtils.transform((Document) inputDoc.getMessageBuffer(),
+      javax.xml.parsers.DocumentBuilderFactory builderFactory  = DocumentBuilderFactory.newInstance();
+      javax.xml.parsers.DocumentBuilder builder = builderFactory.newDocumentBuilder();
+      
+      Document dIn = builder.parse(new StringBufferInputStream(inputDoc.toString()));
+      
+      Document dOut = builder.parse(new StringBufferInputStream(outputDoc.toString()));
+      
+      String xmlInput = XMLDocumentUtils.transform(dIn,
                     new File("/home/arjen/projecten/Navajo/soap/tml2xml.xsl"));
-      String xmlOutput = XMLDocumentUtils.transform((Document) outputDoc.getMessageBuffer(),
+      String xmlOutput = XMLDocumentUtils.transform(dOut,
                     new File("/home/arjen/projecten/Navajo/soap/tml2xml.xsl"));
 
       System.out.println("XML INPUT:");
