@@ -26,6 +26,7 @@ package com.dexels.navajo.adapter.xmlmap;
 
 import java.io.StringWriter;
 import java.util.Collection;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.StringTokenizer;
@@ -42,6 +43,8 @@ import com.dexels.navajo.server.UserException;
 
 public class TagMap implements Mappable {
 
+	public final int DEFAULT_INDENT = 2;
+	
 	public String name;
 	public String text;
 	public TagMap [] children;
@@ -49,7 +52,8 @@ public class TagMap implements Mappable {
 	public String childName;
 	public String childText;
 	public boolean exists;
-	
+	public int indent = DEFAULT_INDENT;
+		
 	protected HashMap tags = null;
 	protected HashMap attributes = null;
 	
@@ -92,6 +96,10 @@ public class TagMap implements Mappable {
 		childName = s;
 	}
 	
+	public void setIndent(int indent) {
+		this.indent = ( indent > 0 ) ? indent : this.DEFAULT_INDENT;
+	}
+
 	protected TagMap getChildTag(String s) {
 		if ( tags != null ) {
 			return (TagMap) tags.get(s);
@@ -138,19 +146,32 @@ public class TagMap implements Mappable {
 		return sw.toString();
 	}
 	
-	public String getString(int indent) {
+	public String getString(int indent, int tabsize) {
 		StringWriter sw = new StringWriter();
-		sw.write(getSpaces(indent) + "<" + name + ">\n");
+		sw.write(getSpaces(indent) + "<" + name);
+
+		if ( attributes != null ) {
+			Iterator attrib_keys = attributes.keySet().iterator();
+			
+			while ( attrib_keys.hasNext() ) {
+				String key = (String) attrib_keys.next();
+				String value = (String) attributes.get( key );
+				sw.write( " " + key + "=\"" + value + "\"" );
+			}
+		}
+		
+		sw.write(">\n");
+		
 		if ( tags != null ) {
 			Iterator all = tags.values().iterator();
 			while ( all.hasNext() ) {
 				TagMap c = (TagMap) all.next();
-				String s = c.getString(indent + 2);
+				String s = c.getString(indent + tabsize, tabsize);
 				sw.write(s);
 			}
 		} else {
 			if ( text != null ) {
-				sw.write( getSpaces(indent + 2) + text + "\n");
+				sw.write( getSpaces(indent + tabsize) + text + "\n");
 			}
 		}
 		sw.write(getSpaces(indent) + "</" + name + ">\n");
@@ -164,10 +185,22 @@ public class TagMap implements Mappable {
 		String startName = e.getName();
 		t.setName(startName);
 		
-		// parse children.
+		// parse attributes
+        Enumeration attrib_enum = e.enumerateAttributeNames();
+        while ( attrib_enum.hasMoreElements() ) {
+            String key = (String) attrib_enum.nextElement();
+            String value = e.getStringAttribute(key);
+			if ( t.attributes == null ) {
+				t.attributes = new HashMap ();
+			}
+			t.attributes.put( key, value );
+        }
+
+		// parse children
 		Vector v = e.getChildren();
 		for (int i = 0; i < v.size(); i++) {
 			XMLElement child = (XMLElement) v.get(i);
+			
 			TagMap childTag = parseXMLElement(child);
 			t.setChild(childTag);
 		}

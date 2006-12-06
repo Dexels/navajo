@@ -26,6 +26,8 @@ package com.dexels.navajo.adapter;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Vector;
 
 import com.dexels.navajo.adapter.xmlmap.TagMap;
@@ -67,7 +69,7 @@ public class XMLMap extends TagMap implements Mappable {
 	
 	public String getString() {
 		if ( this.name != null ) {
-			return getString(0);
+			return getString( 0, this.indent );
 		} else {
 			return null;
 		}
@@ -94,11 +96,23 @@ public class XMLMap extends TagMap implements Mappable {
 		
 		String startName = e.getName();
 		this.setName(startName);
-		
+
+		// parse attributes
+        Enumeration attrib_enum = e.enumerateAttributeNames();
+        while ( attrib_enum.hasMoreElements() ) {
+            String key = (String) attrib_enum.nextElement();
+            String value = e.getStringAttribute(key);
+			if ( this.attributes == null ) {
+				this.attributes = new HashMap ();
+			}
+			this.attributes.put( key, value );
+        }
+        
 		// parse children.
 		Vector v = e.getChildren();
 		for (int i = 0; i < v.size(); i++) {
 			XMLElement child = (XMLElement) v.get(i);
+			
 			TagMap childTag = TagMap.parseXMLElement(child);
 			this.setChild(childTag);
 		}
@@ -107,8 +121,6 @@ public class XMLMap extends TagMap implements Mappable {
 		if ( e.getContent() != null && !e.getContent().equals("")) {
 			this.setText(e.getContent());
 		}
-		
-		
 	}
 
 	private void parseString(String s) throws UserException {
