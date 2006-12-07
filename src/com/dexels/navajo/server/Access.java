@@ -77,6 +77,9 @@ public final class Access
   private Set piggyBackData = null;
   private String clientToken = null;
   
+  private String waitingForPreviousRequest = null;
+  
+  
   //private HashMap mapStatistics = null;
   
 //  public MapStatistics createStatistics() {
@@ -112,6 +115,14 @@ public final class Access
     outputDoc = n;
   }
 
+  public void setWaitingForPreviousResponse(String id) {
+	  this.waitingForPreviousRequest = id;
+  }
+  
+  public String getWaitingForPreviousResponse() {
+	  return this.waitingForPreviousRequest;
+  }
+  
   public void setCompiledScript(CompiledScript cs) {
     this.myScript = cs;
   }

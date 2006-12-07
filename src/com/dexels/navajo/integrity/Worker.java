@@ -324,6 +324,7 @@ public class Worker extends GenericThread {
 			try {
 				// Wait until running request is ready.
 				System.err.println("DID find request id " + id + " in running request list, wait until ready...");
+				a.setWaitingForPreviousResponse(r.accessID);
 				while ( !r.isFinished() ) {
 					try {
 						Thread.sleep(2000);
