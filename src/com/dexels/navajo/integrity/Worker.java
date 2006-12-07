@@ -316,14 +316,14 @@ public class Worker extends GenericThread {
 		Access r = (Access) runningRequestIds.get(id);
 		
 		if ( r == null ) {
-			System.err.println("Did not find request id " + id + " in running request list");
+			// System.err.println("Did not find request id " + id + " in running request list");
 			runningRequestIds.put(id, a);
 			return false;
 		} else {
 			
 			try {
 				// Wait until running request is ready.
-				System.err.println("DID find request id " + id + " in running request list, wait until ready...");
+				// System.err.println("DID find request id " + id + " in running request list, wait until ready...");
 				a.setWaitingForPreviousResponse(r.accessID);
 				while ( !r.isFinished() ) {
 					try {
