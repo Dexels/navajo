@@ -314,6 +314,7 @@ public class Worker extends GenericThread {
 		}
 		
 		Access r = (Access) runningRequestIds.get(id);
+		//System.err.println("Size of runningRequestIds: " + runningRequestIds.size());
 		
 		if ( r == null ) {
 			// System.err.println("Did not find request id " + id + " in running request list");
@@ -413,6 +414,18 @@ public class Worker extends GenericThread {
 			}
 		} finally {
 			// Return from running request id set.
+			runningRequestIds.remove(id);
+		}
+	}
+	
+	/**
+	 * Explicitly remove access object from running requests list based upon client request id.
+	 * 
+	 * @param request
+	 */
+	public void removeFromRunningRequestsList(Navajo request) {
+		String id  = request.getHeader().getRequestId();
+		if ( id != null ) {
 			runningRequestIds.remove(id);
 		}
 	}

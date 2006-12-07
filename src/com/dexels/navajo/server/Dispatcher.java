@@ -305,7 +305,7 @@ public final class Dispatcher {
    */
   private final Navajo dispatch(String handler, Navajo in, Access access, Parameters parms) throws Exception {
 	  
-	  
+	  Worker integ = null;
 	  Navajo out = null;
 	  if (access == null) {
 		  System.err.println("Null access!!!");
@@ -336,7 +336,7 @@ public final class Dispatcher {
 	  
 	  // Check for webservice transaction integrity.
 	  boolean integrityViolation = false;
-	  Worker integ = navajoConfig.getIntegrityWorker();
+	  integ = navajoConfig.getIntegrityWorker();
 	  if ( integ != null ) {
 		  // Check for stored response or webservice that is still running.
 		  out = integ.getResponse(access, in);
@@ -420,6 +420,10 @@ public final class Dispatcher {
 		  if ( lm != null && locks != null ) {
 			  lm.removeLocks(access, locks);
 		  }  
+		  // Remove stored access from worker request list.
+		  if ( integ != null ) {
+			  integ.removeFromRunningRequestsList(in);
+		  }
 	  }
   }
 
