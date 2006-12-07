@@ -26,6 +26,8 @@ public final class AccessMap implements Mappable {
   public String requestNavajo = null;
   public String responseNavajo = null;
   public boolean killed = false;
+  public boolean waiting = false;
+  public String waitingFor = null;
 
   /* Private vars */
   private boolean showDetails = false;
@@ -154,6 +156,14 @@ public final class AccessMap implements Mappable {
         isAsync = true;
       }
     }
+  }
+
+  public boolean getWaiting() {
+	  return ( myAccess.getWaitingForPreviousResponse() != null );
+  }
+  
+  public String getWaitingFor() {
+	  return myAccess.getWaitingForPreviousResponse();
   }
 
   public String getAccessId() {
