@@ -338,10 +338,20 @@ public final class Dispatcher {
 	  boolean integrityViolation = false;
 	  Worker integ = navajoConfig.getIntegrityWorker();
 	  if ( integ != null ) {
-		  out = integ.getResponse(in);
-		  if ( out != null ) {
-			  integrityViolation = true;
-			  return out;
+
+		  integrityViolation = integ.waitedForRunningRequest(access, in);
+
+		  if ( integrityViolation ) {
+			  // Integrity violation detected while process was still runnning..
+			  return access.getOutputDoc();
+		  } else {
+			  // Check for stored response...
+			  out = integ.getResponse(in);
+			  if ( out != null ) {
+				  integrityViolation = true;
+				  return out;
+			  }
+
 		  }
 	  }
 	  

@@ -78,6 +78,8 @@ public class Worker extends GenericThread {
 	private Map integrityCache = new HashMap();
 	// Contains all unique request ids that still need to be handled by the worker thread.
 	private Set notWrittenReponses = Collections.synchronizedSet(new HashSet());
+	// Contains all currently running request ids.
+	private Map runningRequestIds = Collections.synchronizedMap(new HashMap());
 	
 	private final static String RESPONSE_PREFIX = "navajoresponse_";
 	
@@ -295,6 +297,47 @@ public class Worker extends GenericThread {
 			}
 		}
 	}
+
+	/**
+	 * Check if there is a running request id.
+	 * If so, return Access object of already running request.
+	 * 
+	 * @param a
+	 * @param request
+	 * @return
+	 */
+	public boolean waitedForRunningRequest(Access a, Navajo request) {
+		
+		String id  = request.getHeader().getRequestId();
+		if ( id == null || id.trim().equals("") ) {
+			return false;
+		}
+		
+		Access r = (Access) runningRequestIds.get(id);
+		
+		if ( r == null ) {
+			System.err.println("Did not find request id " + id + " in running request list");
+			runningRequestIds.put(id, a);
+			return false;
+		} else {
+			// Wait until running request is ready.
+			System.err.println("DID find request id " + id + " in running request list, wait until ready...");
+			while ( !r.isFinished() ) {
+				try {
+					Thread.sleep(500);
+					System.err.println("Waiting for currently running access set to become ready.");
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			runningRequestIds.remove(id);
+			a.setOutputDoc(r.getOutputDoc());
+		}
+		
+		return true;
+		
+	}
 	
 	/**
 	 * Get a possibly stored response from a previously received request.
@@ -335,22 +378,30 @@ public class Worker extends GenericThread {
 	 * @param response
 	 */
 	public void setResponse(Navajo request, Navajo response) {
+		
 		String id  = request.getHeader().getRequestId();
-		if ( id != null && !id.trim().equals("") ) {
-			// Immediately add request id to notWrittenResponses.
-			notWrittenReponses.add( id );
-			//  Add response to workList.
-			try {
-				//ystem.err.println("Before synchronized in Worker.setResponse(): " + id );
-				synchronized ( workList ) {
-					workList.put( id, response );
+
+		try {
+
+			if ( id != null && !id.trim().equals("") ) {
+				// Immediately add request id to notWrittenResponses.
+				notWrittenReponses.add( id );
+				//  Add response to workList.
+				try {
+					//ystem.err.println("Before synchronized in Worker.setResponse(): " + id );
+					synchronized ( workList ) {
+						workList.put( id, response );
+					}
+					//System.err.println("After synchronized in Worker.setResponse(): " + id);
+				} catch (Throwable t) {
+					notWrittenReponses.remove( id );
+					System.err.println("COULD NOT ADD TO WORKLIST");
+					t.printStackTrace(System.err);	
 				}
-				//System.err.println("After synchronized in Worker.setResponse(): " + id);
-			} catch (Throwable t) {
-				notWrittenReponses.remove( id );
-				System.err.println("COULD NOT ADD TO WORKLIST");
-				t.printStackTrace(System.err);	
 			}
+		} finally {
+			// Return from running request id set.
+			runningRequestIds.remove(id);
 		}
 	}
 	

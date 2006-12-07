@@ -64,6 +64,7 @@ public final class Access
   public String requestEncoding;
   public boolean compressedReceive = false;
   public boolean compressedSend = false;
+  public boolean isFinished = false;
   public int contentLength;
 
   private Throwable myException;
@@ -205,7 +206,12 @@ public final class Access
   }
 
   public final void setFinished() {
-    totaltime = (int) (System.currentTimeMillis() - created.getTime());
+	  isFinished = true;
+	  totaltime = (int) (System.currentTimeMillis() - created.getTime());
+  }
+  
+  public final boolean isFinished() {
+	  return isFinished;
   }
 
   public int getTotaltime() {
