@@ -306,7 +306,7 @@ public class Worker extends GenericThread {
 	 * @param request
 	 * @return
 	 */
-	public boolean waitedForRunningRequest(Access a, Navajo request) {
+	private final boolean waitedForRunningRequest(Access a, Navajo request) {
 		
 		String id  = request.getHeader().getRequestId();
 		if ( id == null || id.trim().equals("") ) {
@@ -320,18 +320,23 @@ public class Worker extends GenericThread {
 			runningRequestIds.put(id, a);
 			return false;
 		} else {
-			// Wait until running request is ready.
-			System.err.println("DID find request id " + id + " in running request list, wait until ready...");
-			while ( !r.isFinished() ) {
-				try {
-					Thread.sleep(500);
-					System.err.println("Waiting for currently running access set to become ready.");
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+			
+			try {
+				// Wait until running request is ready.
+				System.err.println("DID find request id " + id + " in running request list, wait until ready...");
+				while ( !r.isFinished() ) {
+					try {
+						Thread.sleep(2000);
+						System.err.println(a.accessID + ": Waiting for currently running access set to become ready.");
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
+			} finally {
+				runningRequestIds.remove(id);
 			}
-			runningRequestIds.remove(id);
+			
 			a.setOutputDoc(r.getOutputDoc());
 		}
 		
@@ -345,28 +350,34 @@ public class Worker extends GenericThread {
 	 * @param request
 	 * @return
 	 */
-	public Navajo getResponse(Navajo request) {
+	public Navajo getResponse(Access a, Navajo request) {
 
 		String id  = request.getHeader().getRequestId();
 		if ( id == null || id.trim().equals("") ) {
 			return null;
 		}
-		
-		// Check if request id is in worklist (still) or integreatyCache (already).
-		if ( notWrittenReponses.contains( id ) || workList.containsKey( id ) || integrityCache.containsKey( id ) ) {
-			// Response file write could be still pending, due to a large workList size and/or large responses.
-			while ( notWrittenReponses.contains( id ) ) {
-				//AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER,"Integrity violation detected: waiting for response file " + fileName + " to become written...");
-				try {
-					Thread.sleep(100);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+
+		// Check for running request first.
+		if ( !waitedForRunningRequest(a, request) ) {
+			// Check if request id is in worklist (still) or integreatyCache (already).
+			if ( notWrittenReponses.contains( id ) || workList.containsKey( id ) || integrityCache.containsKey( id ) ) {
+				// Response file write could be still pending, due to a large workList size and/or large responses.
+				while ( notWrittenReponses.contains( id ) ) {
+					//AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER,"Integrity violation detected: waiting for response file " + fileName + " to become written...");
+					try {
+						Thread.sleep(100);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
+				return readFile( (File) integrityCache.get( id ) );
+			} else {
+				return null;
 			}
-			return readFile( (File) integrityCache.get( id ) );
 		} else {
-			return null;
+			// Return response from previously running request.
+			return a.getOutputDoc();
 		}
 	}
 	
