@@ -169,11 +169,13 @@ public class TipiProperty
           
           // Based on 'legacy behaviour' Removed this behaviour from swingclient, but would require
           // a lot of fixes in tipi code, so replaced it here.
-          if (p.getValue()!=null) {
-              ( (GenericPropertyComponent) getContainer()).setTextFieldColumns(p.getValue().length());
-          } else {
-              ( (GenericPropertyComponent) getContainer()).setTextFieldColumns(3);
-          } 
+
+          // Extra fix for binaries: getValue() causes the binary to serialize to an in memory string
+//          if (!Property.BINARY_PROPERTY.equals(p.getType()) && p.getValue()!=null) {
+//              ( (GenericPropertyComponent) getContainer()).setTextFieldColumns(p.getValue().length());
+//          } else {
+//              ( (GenericPropertyComponent) getContainer()).setTextFieldColumns(3);
+//          } 
          if (myEnableState!=null) {
              ( (GenericPropertyComponent) getContainer()).setHardEnabled(myEnableState.booleanValue());
         }
