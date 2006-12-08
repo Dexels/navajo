@@ -35,7 +35,7 @@ public class TipiDesktop
     runSyncInEventThread(new Runnable() {
       public void run() {
         getSwingContainer().add( (Component) c, constraints);
-        TipiSwingWindow tw = (TipiSwingWindow) c;
+        JInternalFrame tw = (JInternalFrame) c;
         tw.toFront();
         getSwingContainer().repaint();
       }
@@ -48,7 +48,11 @@ public class TipiDesktop
     }
     runSyncInEventThread(new Runnable() {
       public void run() {
-        getSwingContainer().remove( (Component) c);
+    	  if (c instanceof JInternalFrame) {
+			System.err.println("Internal frame found!");
+			((JInternalFrame)c).dispose();
+    	  }
+    	  getSwingContainer().remove( (Component) c);
         getSwingContainer().repaint();
       }
     });
