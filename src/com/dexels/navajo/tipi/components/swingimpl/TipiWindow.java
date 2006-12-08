@@ -3,8 +3,10 @@ package com.dexels.navajo.tipi.components.swingimpl;
 import java.beans.*;
 import java.net.*;
 import java.awt.*;
+
 import javax.swing.*;
 import javax.swing.event.*;
+
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.tipixml.*;
@@ -23,25 +25,91 @@ import com.dexels.navajo.tipi.internal.*;
 public final class TipiWindow
 //    extends DefaultTipi {
     extends TipiSwingDataComponentImpl {
-  private TipiSwingWindow myWindow;
+  private JInternalFrame myWindow;
   private String myMenuBar = "";
   private String myTitle;
+  
+  private boolean iconifiable = false;
+  private boolean closable = false;
+  private boolean visible = false;
+  private boolean maximizable = false;
+  private boolean resizable = false;
+  private String title = "";
+  private Color backgroundColor = null;
+  private Rectangle myBounds;
+
+  private boolean isDisposing = false;
+  
+  private JInternalFrame constructWindow() {
+	  	isDisposing = false;
+	  	clearContainer();
+	    myWindow = new JInternalFrame();
+	    TipiHelper th = new TipiSwingHelper();
+	    th.initHelper(this);
+	    addHelper(th);
+  	  	System.err.println("INSTANTIATING WINDOW!");
+//  	  	myWindow.addInternalFrameListener(new InternalFrameAdapter() {
+//	      public void internalFrameClosing(InternalFrameEvent l) {
+//	      }
+//
+//		public void internalFrameClosed(InternalFrameEvent e) {
+//			System.err.println("Shobiedoewa! ");
+//
+//	    	  JInternalFrame jjj = (JInternalFrame) e.getSource();
+//
+//	    	  JInternalFrame jj = (JInternalFrame) getContainer();
+//	    	      if (jjj!=null) {
+//	    	    	  System.err.println("Source found. Disposing");
+//	    	    	  Container parent = jjj.getParent();
+//	    	    	  if (parent!=null) {
+//	    	        	  parent.remove(jjj);
+//	    	    	  }
+//	    	    	  if (!isDisposing) {
+//		    	    	  isDisposing = true;
+//		    	    	  System.err.println("DISPOSING!");
+//		    	    	  try {
+//							jjj.setClosed(true);
+//						} catch (PropertyVetoException e1) {
+//								e1.printStackTrace();
+//						}
+//		    	    	  jjj.dispose();
+//	    	    	  }
+//	    	      }	 else {
+//	    	    	  System.err.println("No source, but container found");
+//	    	      }
+//	    	      myWindow = null;
+//	    	      clearContainer();
+//			super.internalFrameClosed(e);
+//		}
+//	    });
+	    myWindow.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);  
+//	    if (myBounds!=null) {
+//	    	myWindow.setBounds(myBounds);
+//		}
+//	    if (backgroundColor!=null) {
+//			myWindow.setBackground(backgroundColor);
+//		}
+//	    myWindow.setIconifiable(iconifiable);
+//	    myWindow.setClosable(closable);
+//	    myWindow.setMaximizable(maximizable);
+//	    myWindow.setResizable(resizable);
+//	    if (getTipiParent()!=null) {
+//		    getTipiParent().addToContainer(myWindow, null);
+//		}
+//	    clearContainer();
+	    myWindow.setVisible(true);
+	    return myWindow;
+  }
+  
   public Object createContainer() {
-    myWindow = new TipiSwingWindow(this);
-    TipiHelper th = new TipiSwingHelper();
-    th.initHelper(this);
-    addHelper(th);
-    myWindow.addInternalFrameListener(new InternalFrameAdapter() {
-      public void internalFrameClosing(InternalFrameEvent l) {
-        myWindow_internalFrameClosed(l);
-      }
-    });
-    myWindow.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
-    return myWindow;
+	  return constructWindow();
   }
 
   public Object getComponentValue(String name) {
     if ("visible".equals(name)) {
+    	if (myWindow==null) {
+			return new Boolean(false);
+		}
       return new Boolean(myWindow.isVisible());
     }
 //    if("title".equals(name)){
@@ -79,15 +147,18 @@ public final class TipiWindow
     return super.getComponentValue(name);
   }
 
-  private final void myWindow_internalFrameClosed(InternalFrameEvent l) {
-//    myContext.disposeTipi(this);
-  }
+
+//  private final void myWindow_internalFrameClosed(InternalFrameEvent l) {
+//
+//	  myWindow = null;
+//	  clearContainer();
+//  }
 
   public void addToContainer(final Object c, final Object constraints) {
     runSyncInEventThread(new Runnable() {
       public void run() {
         ( (JInternalFrame) getContainer()).getContentPane().add( (Component) c, constraints);
-        ((SwingTipiContext)myContext).addTopLevel(c);
+//        ((SwingTipiContext)myContext).addTopLevel(c);
       }
     });
   }
@@ -96,7 +167,7 @@ public final class TipiWindow
     runSyncInEventThread(new Runnable() {
       public void run() {
         ( (JInternalFrame) getContainer()).getContentPane().remove( (Component) c);
-        ((SwingTipiContext)myContext).removeTopLevel(c);
+//        ((SwingTipiContext)myContext).removeTopLevel(c);
       }
     });
   }
@@ -104,6 +175,7 @@ public final class TipiWindow
   public void setContainerLayout(final Object layout) {
     runSyncInEventThread(new Runnable() {
       public void run() {
+    	  checkContainerInstance();
         ( (JInternalFrame) getContainer()).getContentPane().setLayout( (LayoutManager) layout);
       }
     });
@@ -116,40 +188,53 @@ public final class TipiWindow
     } else {
       //System.err.println("Class: "+object.getClass()+" name: "+name);
     }
-    final JInternalFrame jj = (JInternalFrame) getContainer();
+//    final JInternalFrame jj = (JInternalFrame) getContainer();
+ 	  checkContainerInstance();
+ 	 
     runSyncInEventThread(new Runnable() {
-      public void run() {
+ 
+	public void run() {
         if (name.equals("iconifiable")) {
+      	  checkContainerInstance();
           boolean b = ( (Boolean) object).booleanValue();
-          jj.setIconifiable(b);
+          iconifiable = b;
+          ((JInternalFrame) getContainer()).setIconifiable(b);
         }
         if (name.equals("background")) {
-          jj.setBackground( (Color) object);
+      	  checkContainerInstance();
+        	backgroundColor = (Color) object;
+        	((JInternalFrame) getContainer()).setBackground(backgroundColor );
         }
         if (name.equals("maximizable")) {
-          boolean b = ( (Boolean) object).booleanValue();
-          jj.setMaximizable(b);
+      	  checkContainerInstance();
+          maximizable = ( (Boolean) object).booleanValue();
+          ((JInternalFrame) getContainer()).setMaximizable(maximizable);
         }
         if (name.equals("closable")) {
-          boolean b = ( (Boolean) object).booleanValue();
-          jj.setClosable(b);
+      	  checkContainerInstance();
+          closable = ( (Boolean) object).booleanValue();
+          ((JInternalFrame) getContainer()).setClosable(closable);
         }
         if (name.equals("resizable")) {
-          boolean b = ( (Boolean) object).booleanValue();
-          jj.setResizable(b);
+      	  checkContainerInstance();
+          resizable = ( (Boolean) object).booleanValue();
+          ((JInternalFrame) getContainer()).setResizable(resizable);
         }
         if (name.equals("selected")) {
           boolean b = ( (Boolean) object).booleanValue();
           try {
-            jj.setSelected(b);
+        	  checkContainerInstance();
+        	  ((JInternalFrame) getContainer()).setSelected(b);
           }
           catch (PropertyVetoException ex) {
             System.err.println("Tried to select a window, but someone did not agree");
             ex.printStackTrace();
           }
+          // hihihiihi
           if (name.equals("visible")) {
-            jj.invalidate();
-            jj.setVisible( ( (Boolean) object).booleanValue());
+        	  ((JInternalFrame) getContainer()).invalidate();
+        	  checkContainerInstance();
+        	  ((JInternalFrame) getContainer()).setVisible( ( (Boolean) object).booleanValue());
           }
         }
         final Rectangle r = getBounds();
@@ -175,11 +260,22 @@ public final class TipiWindow
                 setIcon(getIcon( (URL) object));
             }
         }
+        myBounds = r;
         setBounds(r);
       }
     });
   }
-
+  
+  public Container getSwingContainer() {
+	  checkContainerInstance();
+	  return super.getSwingContainer();
+}
+  private void checkContainerInstance() {
+	  if (getContainer()==null) {
+		setContainer(constructWindow());
+	}
+  }
+  
   private ImageIcon getIcon(final URL u) {
     return new ImageIcon(u);
   }
@@ -205,8 +301,12 @@ public final class TipiWindow
   }
 
   private final void doPerformMethod(String name, TipiComponentMethod compMeth) {
+	  
+		
     if (name.equals("iconify")) {
-      try {
+     	  checkContainerInstance();
+     	 
+    	try {
 //        myWindow.setIcon(true);
         JInternalFrame jj = (JInternalFrame) getContainer();
         TipiSwingDesktop tt = (TipiSwingDesktop) jj.getParent();
@@ -218,6 +318,8 @@ public final class TipiWindow
       }
     }
     if (name.equals("maximize")) {
+     	  checkContainerInstance();
+     	 
       JInternalFrame jj = (JInternalFrame) getContainer();
       if (jj.isMaximum()) {
         System.err.println("Ignoring: Nothing to maximize");
@@ -236,7 +338,8 @@ public final class TipiWindow
       }
     }
     if (name.equals("restore")) {
-      JInternalFrame jj = (JInternalFrame) getContainer();
+     	  checkContainerInstance();
+     	       JInternalFrame jj = (JInternalFrame) getContainer();
       if (!jj.isMaximum()) {
         System.err.println("Ignoring: Nothing to restore");
         return;
@@ -252,7 +355,9 @@ public final class TipiWindow
       }
     }
     if (name.equals("toFront")) {
-      JInternalFrame jj = (JInternalFrame) getContainer();
+     	  checkContainerInstance();
+     	 
+     JInternalFrame jj = (JInternalFrame) getContainer();
       TipiSwingDesktop tt = (TipiSwingDesktop) jj.getParent();
       if (jj==null || tt==null) {
         return;
@@ -277,7 +382,26 @@ public final class TipiWindow
     return true;
   }
 
-  public void reUse() {
+  
+  
+  public void disposeComponent() {
+	  System.err.println("Disposing tipi window:");
+      JInternalFrame jj = (JInternalFrame) getContainer();
+      if (jj!=null) {
+    	  System.err.println("Internal frame found. Disposing....");
+       	  jj.dispose();
+       	 Container parent = jj.getParent();
+    	  if (parent!=null) {
+        	  parent.remove(jj);
+    	  }
+      }
+      
+      clearContainer();
+      myWindow = null;
+	 super.disposeComponent();
+}
+
+public void reUse() {
 //    if (myParent!=null) {
 //      myParent.addToContainer();
 //    }
