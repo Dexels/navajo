@@ -24,6 +24,8 @@
  */
 package com.dexels.navajo.adapter.xmlmap;
 
+import java.io.IOException;
+import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -33,7 +35,9 @@ import java.util.StringTokenizer;
 import java.util.Vector;
 
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
+import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.Access;
@@ -43,10 +47,13 @@ import com.dexels.navajo.server.UserException;
 
 public class TagMap implements Mappable {
 
-	public final int DEFAULT_INDENT = 2;
+	public final String PREFIX_PATTERN   = "^[0-9]+";
+	public final String PREFIX_SEPARATOR = "@";
+	public final int    DEFAULT_INDENT   = 2;
 	
 	public String name;
 	public String text;
+	public Binary insert;
 	public TagMap [] children;
 	public TagMap child;
 	public String childName;
@@ -69,6 +76,22 @@ public class TagMap implements Mappable {
 		name = s;
 	}
 	
+	public void setInsert(Binary b) throws UserException {
+		insert = b;
+		
+		String insertChild = new String( b.getData() );
+
+		XMLElement xe = new CaseSensitiveXMLElement();
+		try {
+			xe.parseFromReader( new StringReader( insertChild ) );
+		}
+		catch (IOException ex) {
+			ex.printStackTrace();
+		}
+		
+		this.setChild( TagMap.parseXMLElement( xe ) );
+	}
+	
 	public String getName() {
 		return name;
 	}
@@ -81,15 +104,26 @@ public class TagMap implements Mappable {
 		if ( tags == null ) {
 			tags = new HashMap();
 		}
-		tags.put(t.getName(), t);
+		
+		tags.put( ( 1 + tags.size() ) + this.PREFIX_SEPARATOR + t.getName(), t);
 	}
 	
 	public boolean getExists(String name) {
 		if ( tags != null ) {
-			return tags.containsKey(name);
+			Iterator keys = tags.keySet().iterator();
+			
+			while ( keys.hasNext() ) {
+				String key = (String) keys.next();
+				
+				if ( name.equals( key.replaceFirst( this.PREFIX_PATTERN + this.PREFIX_SEPARATOR, "" ) ) ) {
+					return true;
+				}
+			}
 		} else {
 			return false;
 		}
+		
+		return false;
 	}
 	
 	public void setChildName(String s) {
@@ -101,8 +135,19 @@ public class TagMap implements Mappable {
 	}
 
 	protected TagMap getChildTag(String s) {
+
 		if ( tags != null ) {
-			return (TagMap) tags.get(s);
+			Iterator keys = tags.keySet().iterator();
+			
+			while ( keys.hasNext() ) {
+				String key = (String) keys.next();
+				
+				if ( s.equals( key.replaceFirst( this.PREFIX_PATTERN + this.PREFIX_SEPARATOR, "" ) ) ) {
+					return (TagMap) tags.get( key );
+				}
+			}
+
+			return null;
 		} else {
 			return null;
 		}
