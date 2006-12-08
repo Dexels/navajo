@@ -26,6 +26,9 @@ public class ToMilliseconds extends FunctionInterface{
         	return new Integer((int) ( (StopwatchTime) o).getMillis());
         }
         if(o instanceof ClockTime){
+        	if (((ClockTime) o).calendarValue()==null) {
+				return new Long(0);
+			}
         	return new Long(((ClockTime) o).calendarValue().getTimeInMillis());
         }
 
