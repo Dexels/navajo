@@ -28,20 +28,19 @@ public class TipiFrame
 
   public Object createContainer() {
      boolean internal = getContext() instanceof EmbeddedContext;
-    if (internal) {
-      TipiSwingFrameStudioImpl myFrame;
-      myFrame = new TipiSwingFrameStudioImpl(this);
-      myFrame.setClosable(true);
-//      myFrame.setVisible(true);
-      myFrame.setResizable(true);
-      myFrame.setIconifiable(true);
-      myFrame.setMaximizable(true);
-      TipiHelper th = new TipiSwingHelper();
-      th.initHelper(this);
-      addHelper(th);
-      return (Container) myFrame;
-    }
-    else {
+//    if (internal) {
+//      TipiSwingFrameStudioImpl myFrame;
+//      myFrame = new TipiSwingFrameStudioImpl(this);
+//      myFrame.setClosable(true);
+//      myFrame.setResizable(true);
+//      myFrame.setIconifiable(true);
+//      myFrame.setMaximizable(true);
+//      TipiHelper th = new TipiSwingHelper();
+//      th.initHelper(this);
+//      addHelper(th);
+//      return (Container) myFrame;
+//    }
+//    else {
       TipiSwingFrameImpl myFrame;
       myFrame = new TipiSwingFrameImpl(this);
       TipiHelper th = new TipiSwingHelper();
@@ -49,7 +48,7 @@ public class TipiFrame
       addHelper(th);
 //        myContext.setToplevel(myFrame);
       return (Container) myFrame;
-    }
+//    }
   }
 
   public void addToContainer(final Object c, final Object constraints) {
