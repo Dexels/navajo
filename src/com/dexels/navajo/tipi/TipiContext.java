@@ -785,12 +785,12 @@ public void parseDefinition(XMLElement child) throws TipiException {
     }
     tc.parseStyle(instance.getStringAttribute("style"));
     tc.processStyles();
-    if (tc.getContainer() != null) {
+//    if (tc.getContainer() != null) {
 //      if (RootPaneContainer.class.isInstance(tc.getContainer())) {
-      if (tc.isTopLevel()) {
-        rootPaneList.add(tc);
-      }
-    }
+//      if (tc.isTopLevel()) {
+//        rootPaneList.add(tc);
+//      }
+//    }
     tc.loadStartValues(instance);
 //    fireTipiStructureChanged(tc);
      tc.componentInstantiated();
