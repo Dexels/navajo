@@ -971,6 +971,10 @@ public void loadStartValues(XMLElement element) {
       replaceContainer(c);
     }
   }
+  
+  public void clearContainer() {
+	  myContainer = null;
+  }
 
   protected void setComponentValue(String name, Object object) {
     valuesSet.add(name);
