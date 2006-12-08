@@ -89,7 +89,10 @@ public class TagMap implements Mappable {
 			ex.printStackTrace();
 		}
 		
-		this.setChild( TagMap.parseXMLElement( xe ) );
+		// get child based on childName set
+		TagMap child = getChild();
+		
+		child.setChild( TagMap.parseXMLElement( xe ) );
 	}
 	
 	public String getName() {
