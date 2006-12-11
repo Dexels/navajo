@@ -37,6 +37,8 @@ import org.dexels.utils.JarResources;
 import com.dexels.navajo.broadcast.BroadcastMessage;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.scheduler.WebserviceListener;
+import com.dexels.navajo.server.descriptionprovider.DescriptionProvider;
+import com.dexels.navajo.server.descriptionprovider.NullDescriptionProvider;
 import com.dexels.navajo.util.AuditLog;
 import com.dexels.navajo.util.Util;
 import com.dexels.navajo.integrity.Worker;
@@ -983,12 +985,13 @@ public final class Dispatcher {
             outMessage = dispatch(defaultDispatcher, inMessage, access, parms);
           }
         }
-
+        updatePropertyDescriptions(inMessage,outMessage);
         return outMessage;
       }
     }
     catch (AuthorizationException aee) {
-      outMessage = generateAuthorizationErrorMessage(access, aee, rpcName);
+     outMessage = generateAuthorizationErrorMessage(access, aee, rpcName);
+      updatePropertyDescriptions(inMessage,outMessage);
       return outMessage;
     }
     catch (UserException ue) {
@@ -996,6 +999,7 @@ public final class Dispatcher {
         outMessage = generateErrorMessage(access, ue.getMessage(), ue.code, 1,
                                           (ue.t != null ? ue.t : ue));
         myException = ue;
+        updatePropertyDescriptions(inMessage,outMessage);
         return outMessage;
       }
       catch (Exception ee) {
@@ -1012,6 +1016,7 @@ public final class Dispatcher {
       try {
         outMessage = generateErrorMessage(access, se.getMessage(), se.code, 1,
                                           (se.t != null ? se.t : se));
+        updatePropertyDescriptions(inMessage,outMessage);
         return outMessage;
       }
       catch (Exception ee) {
@@ -1085,7 +1090,18 @@ public final class Dispatcher {
     }
   }
 
-  private void appendServerBroadCast(Access a, Navajo in, Header h) {
+  private void updatePropertyDescriptions(Navajo inMessage, Navajo outMessage) {
+		if (navajoConfig.getDescriptionProvider() == null) {
+			return;
+		}
+		try {
+			navajoConfig.getDescriptionProvider().updatePropertyDescriptions(inMessage, outMessage);
+		} catch (NavajoException e) {
+			e.printStackTrace();
+		}
+	}
+
+private void appendServerBroadCast(Access a, Navajo in, Header h) {
 	  Set toBeRemoved = null;
 	  for (Iterator iter = broadcastMessage.iterator(); iter.hasNext();) {
 		  

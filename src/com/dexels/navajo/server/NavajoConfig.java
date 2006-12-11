@@ -40,6 +40,7 @@ import java.io.*;
 import com.dexels.navajo.parser.DefaultExpressionEvaluator;
 import com.dexels.navajo.persistence.*;
 import com.dexels.navajo.scheduler.TaskRunner;
+import com.dexels.navajo.server.descriptionprovider.DescriptionProvider;
 import com.dexels.navajo.util.AuditLog;
 import com.dexels.navajo.util.Util;
 import com.dexels.navajo.logger.*;
@@ -72,6 +73,9 @@ public final class NavajoConfig {
     protected TaskRunner taskRunner = null;
     protected Worker integrityWorker = null;
     protected LockManager lockManager = null;
+    protected DescriptionProvider myDescriptionProvider = null;
+        
+    
     
     public String rootPath;
     private String scriptVersion = "";
@@ -191,6 +195,20 @@ public final class NavajoConfig {
 //    		if(betaClassloader==null) {
 //    			betaClassloader = new NavajoClassLoader(null, compiledScriptPath, true, adapterClassloader);
 //    		}
+    		
+    		Property descriptionProviderProperty = body.getProperty("description-provider/class");
+			String descriptionProviderClass = null;
+			if (descriptionProviderProperty!=null) {
+				descriptionProviderClass = descriptionProviderProperty.getValue();
+				if (descriptionProviderClass!=null) {
+					Class cc = Class.forName(descriptionProviderClass);
+					if (cc!=null) {
+						myDescriptionProvider = (DescriptionProvider)cc.newInstance();
+					}
+				}
+			} 
+			
+
     		
     		
     		String repositoryClass = body.getProperty("repository/class").getValue();
@@ -810,6 +828,10 @@ public final class NavajoConfig {
 
 	public String getInstanceName() {
 		return instanceName;
+	}
+
+	public DescriptionProvider getDescriptionProvider() {
+		return myDescriptionProvider;
 	}
 	
 }
