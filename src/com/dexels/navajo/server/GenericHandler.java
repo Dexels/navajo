@@ -103,7 +103,7 @@ public final class GenericHandler extends ServiceHandler {
             
             String className = (pathPrefix.equals("") ? serviceName : MappingUtils.createPackageName(pathPrefix) + "." + serviceName);
 
-            System.err.println("scriptFile is " + scriptFile.getName());
+            //System.err.println("scriptFile is " + scriptFile.getName());
             
             if (properties.isHotCompileEnabled()) {
               newLoader = (NavajoClassLoader) loadedClasses.get(className);
