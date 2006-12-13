@@ -72,7 +72,7 @@ public class NavajoCompiler
             
             
             
-            File [] files = config.getClassloader().getJarFiles(adapterPath, access.betaUser);
+            File [] files = config.getClassloader().getJarFiles(adapterPath, false);
             StringBuffer additional = new StringBuffer();
             if (files != null) {
               for (int i = 0; i < files.length; i++) {

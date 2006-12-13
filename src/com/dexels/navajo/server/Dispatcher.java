@@ -375,7 +375,11 @@ public final class Dispatcher {
 //			//  }
 //		  }
 		  
-		  c = navajoConfig.getClassloader().getClass(handler);
+		  if ( access.betaUser ) {
+			  c = navajoConfig.getBetaClassLoader().getClass(handler);
+		  } else {
+			  c = navajoConfig.getClassloader().getClass(handler);
+		  }
 		  ServiceHandler sh = (ServiceHandler) c.newInstance();
 		  
 //		  if (access.betaUser) {
@@ -918,8 +922,9 @@ public final class Dispatcher {
         access = new Access(0, 0, 0, rpcUser, rpcName, "", "", "", null);
       }
 
-      if (rpcUser.equalsIgnoreCase(navajoConfig.getBetaUser())) {
+      if ( rpcUser.endsWith(navajoConfig.getBetaUser()) ) {
         access.betaUser = true;
+        System.err.println("We have a beta user: " + rpcUser );
         if (debugOn) {
           logger.log(NavajoPriority.INFO, "BETA USER ACCESS!");
         }

@@ -70,7 +70,8 @@ public class NavajoClassLoader extends MultiClassLoader {
     private static Object mutex1 = new Object();
     private static Object mutex2 = new Object();
     private HashSet jarResources = null;
-
+    private HashSet betaJarResources = null;
+    
     private boolean noCaching = false;
     
     public static int instances = 0;
@@ -190,7 +191,7 @@ public class NavajoClassLoader extends MultiClassLoader {
         return Class.forName(className, false, this);
     }
 
-    public File [] getJarFiles(String path, boolean beta) {
+    public final File [] getJarFiles(String path, boolean beta) {
     	
     	 if ( adapterPath == null ) {
     		 // Try my parent.
@@ -228,7 +229,7 @@ public class NavajoClassLoader extends MultiClassLoader {
 
     			AuditLog.log(AuditLog.AUDIT_MESSAGE_DISPATCHER, "Initializing adapter resources");
     			
-    			File[] files = getJarFiles(adapterPath, beta);
+    			File[] files = getJarFiles(adapterPath, false);
     			if (files == null) {
     				jarResources = null;
     				return;
@@ -244,6 +245,24 @@ public class NavajoClassLoader extends MultiClassLoader {
     			}
     			
     		}
+    		
+    		if ( betaJarResources == null ) {
+    			
+    			File[] files = getJarFiles(adapterPath, true);
+    			if (files == null) {
+    				betaJarResources = null;
+    				return;
+    			}
+
+
+    			if (betaJarResources == null) {
+    				betaJarResources = new HashSet();
+    				for (int i = 0; i < files.length; i++) {
+    					JarResources d = new JarResources(files[i]);
+    					betaJarResources.add(d);
+    				}
+    			}
+    		}
 
     	}
 
@@ -252,7 +271,7 @@ public class NavajoClassLoader extends MultiClassLoader {
     public InputStream getResourceAsStream(String name) {
 
       //System.err.println("in NavajoClassLoader (v2). getResourceAsStream(" + name + ")");
-      if ( jarResources == null ) {
+      if ( jarResources == null || betaJarResources == null ) {
     	initializeJarResources();
       }
     	 	
@@ -260,24 +279,49 @@ public class NavajoClassLoader extends MultiClassLoader {
         return getParent().getResourceAsStream(name);
       }
 
+      // If beta classloader first try betaJarResources.
+      if ( beta ) {
+    	  Iterator allResources = betaJarResources.iterator();
+          /// for (int i = 0; i < files.length; i++) {
+          //System.err.println("NavajoClassLoader: Locating " + name + " in jar file");
+          while (allResources.hasNext()) {
+
+        	  JarResources d = (JarResources) allResources.next();
+
+        	  try {
+
+        		  //JarResources d = new JarResources(files[i]);
+        		  byte [] resource = d.getResource(name);
+        		  if (resource != null) {
+        			  return new java.io.ByteArrayInputStream(resource);
+        		  }
+        	  }
+        	  catch (Exception e) {
+        	  }
+          }
+
+          //System.err.println("Did not find resource, trying parent classloader....: " + this.getClass().getClassLoader() );
+          return this.getClass().getClassLoader().getResourceAsStream(name);
+      }
+      
       Iterator allResources = jarResources.iterator();
-           /// for (int i = 0; i < files.length; i++) {
-      	   //System.err.println("NavajoClassLoader: Locating " + name + " in jar file");
-           while (allResources.hasNext()) {
+      /// for (int i = 0; i < files.length; i++) {
+      //System.err.println("NavajoClassLoader: Locating " + name + " in jar file");
+      while (allResources.hasNext()) {
 
-             JarResources d = (JarResources) allResources.next();
+    	  JarResources d = (JarResources) allResources.next();
 
-             try {
-             
-               //JarResources d = new JarResources(files[i]);
-               byte [] resource = d.getResource(name);
-               if (resource != null) {
-                 return new java.io.ByteArrayInputStream(resource);
-               }
-             }
-             catch (Exception e) {
-             }
-           }
+    	  try {
+
+    		  //JarResources d = new JarResources(files[i]);
+    		  byte [] resource = d.getResource(name);
+    		  if (resource != null) {
+    			  return new java.io.ByteArrayInputStream(resource);
+    		  }
+    	  }
+    	  catch (Exception e) {
+    	  }
+      }
 
       //System.err.println("Did not find resource, trying parent classloader....: " + this.getClass().getClassLoader() );
       return this.getClass().getClassLoader().getResourceAsStream(name);
@@ -311,23 +355,30 @@ public class NavajoClassLoader extends MultiClassLoader {
         }
 
         // If beta flag is on first check beta versions of jar files before other jars.
-//        if (beta) {
-//
-//
-//            for (int i = 0; i < files.length; i++) {
-//                try {
-//                    //System.err.println("NavajoClassLoader: Locating " + className + " in jar file: " + files[i].getName());
-//                    JarResources d = new JarResources(files[i]);
-//
-//                    resource = d.getResource(className);
-//                    if (resource != null) {
-//                        break;
-//                    }
-//                } catch (Exception e) {
-//                    //System.err.println("ERROR: " + e.getMessage());
-//                }
-//            }
-//        }
+        if ( beta && betaJarResources != null ) {
+
+        	   Iterator allResources = betaJarResources.iterator();
+               /// for (int i = 0; i < files.length; i++) {
+               
+               //System.err.println("Message: NavajoClassLoader: Locating " + className + " in jar file");
+               while (allResources.hasNext()) {
+
+                  JarResources d = (JarResources) allResources.next();
+
+                    try {
+                        
+                        //JarResources d = new JarResources(files[i]);
+                        resource = d.getResource(className);
+
+                        if (resource != null) {
+                           return resource;
+                        }
+                    } catch (Exception e) {
+                        //System.err.println("ERROR: " + e.getMessage());
+                    }
+                }
+               
+        }
 
 
         if (resource == null) {

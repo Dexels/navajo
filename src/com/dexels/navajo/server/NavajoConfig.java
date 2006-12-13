@@ -58,7 +58,7 @@ public final class NavajoConfig {
     protected HashMap properties = new HashMap();
     private String configPath;
 //    protected NavajoClassSupplier classloader;
-//    protected NavajoClassLoader betaClassloader;
+    protected NavajoClassLoader betaClassloader;
     protected NavajoClassSupplier adapterClassloader;
     protected com.dexels.navajo.server.Repository repository;
     protected Navajo configuration;
@@ -192,9 +192,9 @@ public final class NavajoConfig {
 //    		if(classloader==null) {
 //    			classloader = new NavajoClassLoader(null, compiledScriptPath, adapterClassloader);
 //    		}
-//    		if(betaClassloader==null) {
-//    			betaClassloader = new NavajoClassLoader(null, compiledScriptPath, true, adapterClassloader);
-//    		}
+    		if(betaClassloader==null) {
+    			betaClassloader = new NavajoClassLoader(adapterPath, compiledScriptPath, true, getClass().getClassLoader());
+    		}
     		
     		Property descriptionProviderProperty = body.getProperty("description-provider/class");
 			String descriptionProviderClass = null;
@@ -312,10 +312,15 @@ public final class NavajoConfig {
     		
     		try {
     			betaUser = body.getProperty("special-users/beta").getValue();
+    			if ( betaUser == null || betaUser.equals("") ) {
+    				betaUser = "_beta";
+    			}
     		}
-    		catch (Exception e) {
+    		catch (Throwable e) {
     			//System.out.println("No beta user specified");
+    			betaUser = "_beta";
     		}
+    		System.err.println("Betauser suffix is: " + betaUser);
     		
     		s = body.getProperty("parameters/compile_scripts");
     		if (s != null) {
@@ -458,9 +463,9 @@ public final class NavajoConfig {
         return configPath;
     }
 
-//    public final NavajoClassLoader getBetaClassLoader() {
-//      return betaClassloader;
-//    }
+    public final NavajoClassLoader getBetaClassLoader() {
+    	return betaClassloader;
+    }
 
     // Added a cast, because I changed the type of classloader to generic class loader, so I can just use the system class loader as well...
     public final NavajoClassSupplier getClassloader() {
@@ -471,7 +476,7 @@ public final class NavajoConfig {
     }
 
     public final String getBetaUser() {
-      return betaUser;
+    	return betaUser;
     }
 
     public final void setRepository(com.dexels.navajo.server.Repository newRepository) {
@@ -648,7 +653,7 @@ public final class NavajoConfig {
     	
         adapterClassloader = new NavajoClassLoader(adapterPath, null, getClass().getClassLoader());
 //        classloader = new NavajoClassLoader(null, compiledScriptPath, adapterClassloader);
-//        betaClassloader = new NavajoClassLoader(null, compiledScriptPath, true, adapterClassloader);
+       betaClassloader = new NavajoClassLoader(adapterPath, null, true, getClass().getClassLoader());
         GenericHandler.doClearCache();
         
     }
