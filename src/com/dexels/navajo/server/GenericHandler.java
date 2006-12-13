@@ -91,11 +91,20 @@ public final class GenericHandler extends ServiceHandler {
               serviceName = access.rpcName.substring(strip+1);
               pathPrefix = access.rpcName.substring(0, strip) + "/";
             }
-
+      
+            File scriptFile = new File(scriptPath + "/" + access.rpcName + ( access.betaUser ? "_beta" : "" ) + ".xml" );
+            
+            if ( access.betaUser && !scriptFile.exists() ) {
+            	// Try normal webservice.
+            	scriptFile = new File(scriptPath + "/" + access.rpcName + ".xml" );
+            } else if ( access.betaUser ) {
+            	serviceName += "_beta";
+            } 
+            
             String className = (pathPrefix.equals("") ? serviceName : MappingUtils.createPackageName(pathPrefix) + "." + serviceName);
 
-            File scriptFile = new File(scriptPath + "/" + access.rpcName + ".xml");
-
+            System.err.println("scriptFile is " + scriptFile.getName());
+            
             if (properties.isHotCompileEnabled()) {
               newLoader = (NavajoClassLoader) loadedClasses.get(className);
             }
@@ -179,14 +188,18 @@ public final class GenericHandler extends ServiceHandler {
             
             // Synchronized check for classloader of this script.
             //synchronized (mutex3) {
-            	newLoader = (NavajoClassLoader) loadedClasses.get(className);
-            	if (newLoader == null &&  properties.isHotCompileEnabled()) {
-            		newLoader = new NavajoClassLoader(null, properties.getCompiledScriptPath(), NavajoConfig.getInstance().adapterClassloader);
-            		System.err.println(className + ", loader: " + newLoader.hashCode() + ", adapterLoader: " + NavajoConfig.getInstance().adapterClassloader.hashCode());
-            		loadedClasses.put(className, newLoader);
-            	}
+            newLoader = (NavajoClassLoader) loadedClasses.get(className);
+            if (newLoader == null &&  properties.isHotCompileEnabled()) {
+            	newLoader = new NavajoClassLoader(null, properties.getCompiledScriptPath(), 
+            			( access.betaUser ? NavajoConfig.getInstance().getBetaClassLoader() : 
+            				NavajoConfig.getInstance().adapterClassloader) );
+            	System.err.println(className + ", loader: " + newLoader.hashCode() + ", adapterLoader: " +
+            			( access.betaUser ? NavajoConfig.getInstance().getBetaClassLoader().hashCode() : 
+            				NavajoConfig.getInstance().adapterClassloader.hashCode()));
+            	loadedClasses.put(className, newLoader);
+            }
             //}
-
+            
             // Should method getCompiledNavaScript be fully synced???
             Class cs = newLoader.getCompiledNavaScript(className);
 

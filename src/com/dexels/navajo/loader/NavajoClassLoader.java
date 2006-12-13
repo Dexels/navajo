@@ -283,7 +283,7 @@ public class NavajoClassLoader extends MultiClassLoader {
       if ( beta ) {
     	  Iterator allResources = betaJarResources.iterator();
           /// for (int i = 0; i < files.length; i++) {
-          //System.err.println("NavajoClassLoader: Locating " + name + " in jar file");
+          //System.err.println("NavajoClassLoader: Locating " + name + " in beta jar file");
           while (allResources.hasNext()) {
 
         	  JarResources d = (JarResources) allResources.next();
@@ -306,7 +306,7 @@ public class NavajoClassLoader extends MultiClassLoader {
       
       Iterator allResources = jarResources.iterator();
       /// for (int i = 0; i < files.length; i++) {
-      //System.err.println("NavajoClassLoader: Locating " + name + " in jar file");
+      //System.err.println("NavajoClassLoader: Locating " + name + " in normal jar file");
       while (allResources.hasNext()) {
 
     	  JarResources d = (JarResources) allResources.next();
@@ -360,7 +360,7 @@ public class NavajoClassLoader extends MultiClassLoader {
         	   Iterator allResources = betaJarResources.iterator();
                /// for (int i = 0; i < files.length; i++) {
                
-               //System.err.println("Message: NavajoClassLoader: Locating " + className + " in jar file");
+               //System.err.println("Message: NavajoClassLoader: Locating " + className + " in beta jar file");
                while (allResources.hasNext()) {
 
                   JarResources d = (JarResources) allResources.next();
@@ -386,7 +386,7 @@ public class NavajoClassLoader extends MultiClassLoader {
            Iterator allResources = jarResources.iterator();
            /// for (int i = 0; i < files.length; i++) {
            
-           //System.err.println("Message: NavajoClassLoader: Locating " + className + " in jar file");
+           //System.err.println("Message: NavajoClassLoader: Locating " + className + " in normal jar file");
            while (allResources.hasNext()) {
 
               JarResources d = (JarResources) allResources.next();

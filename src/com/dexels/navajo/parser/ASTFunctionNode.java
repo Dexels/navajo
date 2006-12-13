@@ -4,6 +4,9 @@ package com.dexels.navajo.parser;
 /**
  * $Id$
  * $Log$
+ * Revision 1.22  2006/12/13 17:16:14  arjen
+ * Beta functionality also works again for adapters.
+ *
  * Revision 1.21  2006/06/27 16:00:26  frank
  * Did not run in a dispatcherless environment (e.g. tipi)
  *
@@ -80,53 +83,58 @@ package com.dexels.navajo.parser;
  */
 
 import com.dexels.navajo.server.Dispatcher;
+import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.document.*;
 
 public final class ASTFunctionNode extends SimpleNode {
 
-    String functionName;
-    int args = 0;
-    Navajo doc;
-    Message parentMsg;
-    Message parentParamMsg;
-    Selection parentSel;
-    //Access access;
+	String functionName;
+	int args = 0;
+	Navajo doc;
+	Message parentMsg;
+	Message parentParamMsg;
+	Selection parentSel;
+	//Access access;
 
-    public ASTFunctionNode(int id) {
-        super(id);
-    }
+	public ASTFunctionNode(int id) {
+		super(id);
+	}
 
-    public final Object interpret() throws TMLExpressionException {
+	public final Object interpret() throws TMLExpressionException {
 
-        try {
+		try {
 
-          Class c;
-          if (Dispatcher.getInstance()==null || Dispatcher.getInstance().getNavajoClassLoader()==null) {
-            c = Class.forName("com.dexels.navajo.functions."+functionName);
-          } else {
-            c = Dispatcher.getInstance().getNavajoClassLoader().getClass("com.dexels.navajo.functions."+functionName);
-          }
+			Class c;
+			if (Dispatcher.getInstance()==null) {
+				c = Class.forName("com.dexels.navajo.functions."+functionName);
+			} else {
+				if ( !doc.getHeader().getRPCUser().endsWith(NavajoConfig.getInstance().getBetaUser())) {
+					c = NavajoConfig.getInstance().getClassloader().getClass("com.dexels.navajo.functions."+functionName);
+				} else {
+					c = NavajoConfig.getInstance().getBetaClassLoader().getClass("com.dexels.navajo.functions."+functionName);
+				}
+			}
 
-            FunctionInterface  f = (FunctionInterface) c.newInstance();
-            f.inMessage = doc;
-            f.currentMessage = parentMsg;
-            f.reset();
+			FunctionInterface  f = (FunctionInterface) c.newInstance();
+			f.inMessage = doc;
+			f.currentMessage = parentMsg;
+			f.reset();
 
-            for (int i = 0; i < args; i++) {
-                Object a = (Object) jjtGetChild(i).interpret();
-                f.insertOperand(a);
-            }
+			for (int i = 0; i < args; i++) {
+				Object a = (Object) jjtGetChild(i).interpret();
+				f.insertOperand(a);
+			}
 
-            Object result = f.evaluate();
+			Object result = f.evaluate();
 
-            return result;
-        } catch (ClassNotFoundException cnfe) {
-            throw new TMLExpressionException("Function not implemented: " + functionName);
-        } catch (IllegalAccessException iae) {
-            throw new TMLExpressionException(iae.getMessage());
-        } catch (InstantiationException ie) {
-            throw new TMLExpressionException(ie.getMessage());
-        }
-    }
+			return result;
+		} catch (ClassNotFoundException cnfe) {
+			throw new TMLExpressionException("Function not implemented: " + functionName);
+		} catch (IllegalAccessException iae) {
+			throw new TMLExpressionException(iae.getMessage());
+		} catch (InstantiationException ie) {
+			throw new TMLExpressionException(ie.getMessage());
+		}
+	}
 
 }

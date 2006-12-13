@@ -549,7 +549,7 @@ public final class NavajoConfig {
         //try {
           //input = getNavajoStream(getScriptPath() + name + ".xsl_beta");
           //input = new FileInputStream(new File(getScriptPath() + "/" + name + ".xsl_beta"));
-          input = inputStreamReader.getResource(getScriptPath() + name + ".xml_beta");
+          input = inputStreamReader.getResource(getScriptPath() + name + "_beta.xml");
         //}
         //catch (IOException ex) {
         //  ex.printStackTrace();
@@ -576,7 +576,7 @@ public final class NavajoConfig {
         //try {
           //input = new FileInputStream(new File(getScriptPath() + "/" + name + ".tml_beta"));
           //input = getNavajoStream(getScriptPath() +  name + ".tml_beta");
-          input = inputStreamReader.getResource(getScriptPath() +  name + ".tml_beta");
+          input = inputStreamReader.getResource(getScriptPath() +  name + "_beta.tml");
           if (input == null)
             return getTmlScript(name, false);
         //}
