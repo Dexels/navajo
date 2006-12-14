@@ -74,6 +74,10 @@ public class FileMap implements Mappable {
 	public void store() throws MappableException, UserException {
 		if (persist && fileName != null) {
 			File f = new File(fileName);
+			if ( f.exists() ) {
+				System.err.println("Deleting existing file");
+				f.delete();
+			}
 			BufferedOutputStream bos = null;
 			try {
 				bos = new BufferedOutputStream(new FileOutputStream(f));
