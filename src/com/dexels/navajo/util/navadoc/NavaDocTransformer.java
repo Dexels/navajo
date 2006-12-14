@@ -29,6 +29,7 @@ import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import org.w3c.dom.Document;
@@ -80,8 +81,10 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
     this.servicesPath = svcPath;
 
     // get an XSLT transformer for our style sheet
+    System.err.println("stylesheetpath: " + this.styleSheetPath);
     this.transformer =
         tFactory.newTransformer( new StreamSource( this.styleSheetPath ) );
+   
     this.dumpProperties();
 
   } // public NavaDocTransformer
@@ -103,6 +106,7 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
     this.setIndent( ind );
 
     // get an XSLT transformer for our style sheet
+    System.err.println("stylesheetpath: " + this.styleSheetPath);
     this.transformer =
         tFactory.newTransformer( new StreamSource( this.styleSheetPath ) );
 
@@ -274,6 +278,8 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
     span.setAttribute( "class", "navascript" );
 
     final File sFileOrig = new File( this.servicesPath  + File.separator + sname + "." + NavaDocConstants.NAVASCRIPT_EXT );
+    
+    System.err.println("sFileOrig: "  + sFileOrig.getAbsolutePath());
     File tempsFile = null;
   
     
@@ -298,12 +304,18 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
     	Element scriptName = sDoc.createElement("script");
     	sDoc.getDocumentElement().appendChild(scriptName);
     	
+    	
     	scriptName.setAttribute("name", NavaDoc.replaceString( sFileOrig.getName(), ".xml", "" ) );
     	DOMSource domSrc = new DOMSource( sDoc );
+    	//TransformerFactory.newInstance().newTransformer().transform( domSrc, new StreamResult(System.err));
+    	
+    	
     	DOMResult domRes = new DOMResult( span );
+    	//StreamResult sr = new StreamResult(new File("/home/arjen/aap"));
     	
     	this.errorText = null;
     	//System.err.println("About to generate doc for: " + sname);
+    	
     	this.transformer.transform( domSrc, domRes );
     	this.body.appendChild( span );
     	
@@ -352,7 +364,7 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
     	
     	this.errorText = "unable to transform source '" + sFileOrig + "': " + e;
     	//System.err.println(errorText);
-    	//e.printStackTrace( System.err );
+    	e.printStackTrace( System.err );
     	
     	this.setErrorText( body );
     	
@@ -408,14 +420,14 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
 
   // sets all necessary output parameters
   private void setOutputProperties() {
-    this.transformer.setOutputProperty(
-      NavaDocConstants.OUTPUT_METHOD_PROP, NavaDocConstants.OUTPUT_METHOD_VALUE );
-
-    // set ident values
-    this.transformer.setOutputProperty( NavaDocConstants.INDENT,
-      ( this.indent.intValue() > 0 ? "true" : "false" ) );
-    this.transformer.setOutputProperty( NavaDocConstants.INDENT_AMOUNT,
-       this.indent.toString() );
+//    this.transformer.setOutputProperty(
+//      NavaDocConstants.OUTPUT_METHOD_PROP, NavaDocConstants.OUTPUT_METHOD_VALUE );
+//
+//    // set ident values
+//    this.transformer.setOutputProperty( NavaDocConstants.INDENT,
+//      ( this.indent.intValue() > 0 ? "true" : "false" ) );
+//    this.transformer.setOutputProperty( NavaDocConstants.INDENT_AMOUNT,
+//       this.indent.toString() );
     // this.dumpProperties();
   }
 

@@ -76,6 +76,7 @@ public class NavaDoc {
       this.document(dset);
 
       // output index pages
+     System.err.println("Ouput: " + dset.getPathConfiguration().getPath(NavaDocConstants.TARGET_PATH_ELEMENT) );
       NavaDocOutputter idxOut =
           new NavaDocOutputter(this.index,   
         		               dset.getPathConfiguration().getPath(NavaDocConstants.TARGET_PATH_ELEMENT));
@@ -98,6 +99,7 @@ public class NavaDoc {
   public static void main(String[] args) throws Exception {
 	  
 	  NavaDoc documenter = null;
+	  System.setProperty("com.dexels.navajo.DocumentImplementation", "com.dexels.navajo.document.jaxpimpl.NavajoFactoryImpl"); 
 	  try {
 		  documenter = new NavaDoc(); 
 	  } finally {
