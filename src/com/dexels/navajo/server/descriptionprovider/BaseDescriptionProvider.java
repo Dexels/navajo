@@ -20,6 +20,9 @@ public abstract class BaseDescriptionProvider implements DescriptionProvider{
 		if (locale==null) {
 //			return;
 		}
+//		System.err.println("Updating navajo. Locale: "+locale);
+//		System.err.println("user: "+in.getHeader().getRPCUser());
+
 		ArrayList a = out.getAllMessages();
 		for (Iterator iter = a.iterator(); iter.hasNext();) {
 			Message element = (Message) iter.next();

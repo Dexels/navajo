@@ -1,6 +1,8 @@
 package com.dexels.navajo.server.descriptionprovider;
 
+import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Property;
 
 public class NullDescriptionProvider extends BaseDescriptionProvider {
@@ -17,6 +19,11 @@ public class NullDescriptionProvider extends BaseDescriptionProvider {
 	public int getCacheSize() {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	public Message dumpCacheMessage(Navajo n) throws NavajoException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
