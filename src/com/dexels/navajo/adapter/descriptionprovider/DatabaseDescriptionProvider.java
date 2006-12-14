@@ -25,8 +25,9 @@ public class DatabaseDescriptionProvider extends CachedDescriptionProvider {
 	private static String selectWithService =
 		"select description from propertydescription where locale= ? and name= ? and webservice = ?";
 	private static String selectWithServiceAndUser =
-		"select description from propertydescription where locale= ? and name= ? and webservice = ? and username = ?";
-		
+		"select description from propertydescription where locale= ? and name= ? and webservice = ? and objectid = ?";
+	private static String selectWithUser =
+		"select description from propertydescription where locale= ? and name= ? and objectid = ?";		
 	
 	public void updateProperty(Navajo in, Property element, String locale) {
 		if (locale==null) {
@@ -40,6 +41,7 @@ public class DatabaseDescriptionProvider extends CachedDescriptionProvider {
 		if (desc!=null) {
 			element.setDescription(desc);
 		} 
+//		System.err.println("Final result: "+desc);
 	}
 	
 	private synchronized void increment() {
@@ -47,24 +49,137 @@ public class DatabaseDescriptionProvider extends CachedDescriptionProvider {
 	}
 	
 	protected String retrieveDescription(String locale, String username, String webservice, String propertyName) {
-// System.err.println("Retrieving: "+username+"|"+webservice+"|"+propertyName);
-// dumpStack();
-// return username+"|"+webservice+"|"+propertyName;
-// increment();
-		return null;
-	}
-
-
-
-	protected String retrieveDescription(String locale, String webservice, String propertyName) {
-//		System.err.println("(w)Retrieving: "+propertyName);
+// System.err.println("Retrievin
 		SQLMap sqlMap = createConnection();
-		sqlMap.debug = true;
+//		sqlMap.debug = true;
 		// sqlMap.debug = true;
 		Connection con = null;
 		try {
 			con = sqlMap.getConnection();
-			System.err.println("In OracleStore, connection is " + con.hashCode() );
+//			System.err.println("In OracleStore, connection is " + con.hashCode() );
+		} catch (SQLException e) {
+			e.printStackTrace(System.err);
+		}
+		// System.err.println("I got a connection: "+con);
+		if (con != null) {
+			PreparedStatement ps = null;
+			try {
+				ps = con.prepareStatement(selectWithServiceAndUser);
+				ps.setString(1, locale);
+				ps.setString(2, propertyName);
+				ps.setString(3, webservice);
+				ps.setString(4, username);
+				ResultSet r = ps.executeQuery();
+			       if (r.next()) {
+						String desc = r.getString("description");
+						System.err.println("Found description: "+desc);
+						return desc;
+					}
+				
+				return null;
+			}
+			catch (Exception ex) {
+				ex.printStackTrace(System.err);
+			} finally {
+				if (ps != null) {
+					try {
+						ps.close();
+					} catch (SQLException e) {
+					}
+				}
+
+				if (con != null) {
+					try {
+						sqlMap.store();
+					}
+					catch (Exception ex1) {
+						ex1.printStackTrace(System.err);
+					}
+				}
+			}
+		}
+		return null;
+
+	}
+
+
+	
+	
+	
+	
+	protected String retrieveDescriptionWithUsernameWithoutService(String locale, String username, String propertyName) {
+//		 System.err.println("Retrievin
+				SQLMap sqlMap = createConnection();
+				sqlMap.debug = true;
+				// sqlMap.debug = true;
+				Connection con = null;
+				try {
+					con = sqlMap.getConnection();
+//					System.err.println("In OracleStore, connection is " + con.hashCode() );
+				} catch (SQLException e) {
+					e.printStackTrace(System.err);
+				}
+				// System.err.println("I got a connection: "+con);
+				if (con != null) {
+					PreparedStatement ps = null;
+					try {
+						ps = con.prepareStatement(selectWithUser);
+						ps.setString(1, locale);
+						ps.setString(2, propertyName);
+						ps.setString(3, username);
+						ResultSet r = ps.executeQuery();
+					       if (r.next()) {
+								String desc = r.getString("description");
+//								System.err.println("Found description: "+desc);
+								return desc;
+							}
+						
+						return null;
+					}
+					catch (Exception ex) {
+						ex.printStackTrace(System.err);
+					} finally {
+						if (ps != null) {
+							try {
+								ps.close();
+							} catch (SQLException e) {
+							}
+						}
+
+						if (con != null) {
+							try {
+								sqlMap.store();
+							}
+							catch (Exception ex1) {
+								ex1.printStackTrace(System.err);
+							}
+						}
+					}
+				}
+				return null;
+
+			}
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	protected String retrieveDescription(String locale, String webservice, String propertyName) {
+//		System.err.println("(w)Retrieving: "+propertyName);
+		SQLMap sqlMap = createConnection();
+//		sqlMap.debug = true;
+		// sqlMap.debug = true;
+		Connection con = null;
+		try {
+			con = sqlMap.getConnection();
+//			System.err.println("In OracleStore, connection is " + con.hashCode() );
 		} catch (SQLException e) {
 			e.printStackTrace(System.err);
 		}
@@ -134,13 +249,13 @@ public class DatabaseDescriptionProvider extends CachedDescriptionProvider {
 	}
 	
 	protected String retrieveDescription(String locale, String propertyName) {
-		System.err.println("Retrieving: "+propertyName);
+//		System.err.println("Retrieving: "+propertyName);
 		SQLMap sqlMap = createConnection();
 		// sqlMap.debug = true;
 		Connection con = null;
 		try {
 			con = sqlMap.getConnection();
-			System.err.println("In OracleStore, connection is " + con.hashCode() );
+//			System.err.println("In OracleStore, connection is " + con.hashCode() );
 		} catch (SQLException e) {
 			e.printStackTrace(System.err);
 		}
@@ -182,6 +297,8 @@ public class DatabaseDescriptionProvider extends CachedDescriptionProvider {
 		}
 		return null;
 	}
+
+
 }
 
 	
