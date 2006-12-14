@@ -32,6 +32,7 @@ public class FileMap implements Mappable {
 	public FileLineMap line;
 	public FileLineMap [] lines;
 	public boolean persist = true;
+	public boolean exists = false;
 	public Binary content;
 
 	private ArrayList lineArray = null;
@@ -149,6 +150,10 @@ public class FileMap implements Mappable {
 		this.separator = s;
 	}
 
+	public boolean getExists() {
+		return new File(fileName).exists();
+	}
+	
 	public static void main(String[] args) throws Exception {
 		FileMap fm = new FileMap();
 		FileLineMap [] flm = new FileLineMap[2];
