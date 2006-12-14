@@ -1097,6 +1097,7 @@ public final class Dispatcher {
 
   private void updatePropertyDescriptions(Navajo inMessage, Navajo outMessage) {
 		if (navajoConfig.getDescriptionProvider() == null) {
+			System.err.println("No description provider");
 			return;
 		}
 		try {
