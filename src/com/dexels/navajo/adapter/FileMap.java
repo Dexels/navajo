@@ -125,7 +125,7 @@ public class FileMap implements Mappable {
     	 if ( fileName == null ) {
     		 throw new UserException(-1, "Set filename before setting content");
     	 }
-    	 if ( content == null ) {
+    	 if ( b == null ) {
     		 throw new UserException(-1, "No or empty content specified");
     	 }
     	 
