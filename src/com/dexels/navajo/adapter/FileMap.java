@@ -120,7 +120,15 @@ public class FileMap implements Mappable {
 		this.fileName = f;
 	}
 
-       public void setContent(Binary b) {
+       public void setContent(Binary b) throws UserException {
+    	  
+    	 if ( fileName == null ) {
+    		 throw new UserException(-1, "Set filename before setting content");
+    	 }
+    	 if ( content == null ) {
+    		 throw new UserException(-1, "No or empty content specified");
+    	 }
+    	 
          this.content = b;
          try {
            FileOutputStream fo = new FileOutputStream(this.fileName);
