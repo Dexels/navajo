@@ -2,6 +2,7 @@ package com.dexels.navajo.adapter.descriptionprovider;
 
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -28,6 +29,11 @@ public class DatabaseDescriptionProvider extends CachedDescriptionProvider {
 		"select description from propertydescription where locale= ? and name= ? and webservice = ? and objectid = ?";
 	private static String selectWithUser =
 		"select description from propertydescription where locale= ? and name= ? and objectid = ?";		
+	
+	private static String insertPropertyDescription = "INSERT INTO propertydescription ( descriptionid, locale, name, webservice, objectid, objecttype, description, lastupdate, updateby) VALUES ( propertydescription_seq.nextval, ?, ?, ?, ?, ?, ?, ?, ?)";                      
+
+	private static String deleteUnbound =
+		"delete from propertydescription where locale = ? and webservice = ? and objectid is null ";
 	
 	public void updateProperty(Navajo in, Property element, String locale) {
 		if (locale==null) {
@@ -299,6 +305,107 @@ public class DatabaseDescriptionProvider extends CachedDescriptionProvider {
 	}
 
 
+	public void deletePropertyContext(String locale, String context) {
+		SQLMap sqlMap = createConnection();
+		Connection con = null;
+		try {
+			con = sqlMap.getConnection();
+		} catch (SQLException e) {
+			e.printStackTrace(System.err);
+		}
+		if (con != null) {
+			PreparedStatement ps = null;
+			try {
+
+//private static String insertPropertyDescription = "INSERT INTO propertydescription ( descriptionid, locale, name, webservice, objectid, objecttype, description, lastupdate, updateby VALUES ( propertydescription_seq.nextval, ?, ?, ?, ?, ?, ?, ?, ?)";                      
+				
+				
+				ps = con.prepareStatement(deleteUnbound);
+				ps.setString(1, locale);
+				ps.setString(2, context);
+				
+				int r = ps.executeUpdate();
+			}
+			catch (Exception ex) {
+				ex.printStackTrace(System.err);
+			} finally {
+				if (ps != null) {
+					try {
+						ps.close();
+					} catch (SQLException e) {
+					}
+				}
+
+				if (con != null) {
+					try {
+						sqlMap.store();
+					}
+					catch (Exception ex1) {
+						ex1.printStackTrace(System.err);
+					}
+				}
+			}
+		}
+	}
+	
+	public void insertPropertyDescription(String name, String locale, String description, String context, String username) {
+		SQLMap sqlMap = createConnection();
+		Connection con = null;
+		try {
+			con = sqlMap.getConnection();
+		} catch (SQLException e) {
+			e.printStackTrace(System.err);
+		}
+		if (con != null) {
+			PreparedStatement ps = null;
+			try {
+
+//private static String insertPropertyDescription = "INSERT INTO propertydescription ( descriptionid, locale, name, webservice, objectid, objecttype, description, lastupdate, updateby VALUES ( propertydescription_seq.nextval, ?, ?, ?, ?, ?, ?, ?, ?)";                      
+				
+				
+				ps = con.prepareStatement(insertPropertyDescription);
+				ps.setString(1, locale);
+				ps.setString(2, name);
+				ps.setString(3, context);
+				ps.setString(4, null);
+				ps.setString(5, null);
+				ps.setString(6, description);
+				ps.setDate(7, new Date(System.currentTimeMillis()));
+				ps.setString(8, username);
+				int r = ps.executeUpdate();
+			}
+			catch (Exception ex) {
+				ex.printStackTrace(System.err);
+			} finally {
+				if (ps != null) {
+					try {
+						ps.close();
+					} catch (SQLException e) {
+					}
+				}
+
+				if (con != null) {
+					try {
+						sqlMap.store();
+					}
+					catch (Exception ex1) {
+						ex1.printStackTrace(System.err);
+					}
+				}
+			}
+		}
+
+	}
+
+	private void deleteUnboundContext(String context) {
+		
+	}
+	
+	public void updateDescription(String locale, String name, String description, String context, String username) {
+		// TODO Auto-generated method stub
+		insertPropertyDescription(name, locale, description, context,username);
+	}	
+	
 }
 
 	
