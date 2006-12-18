@@ -53,7 +53,8 @@ public final class NavajoConfig {
     public String scriptPath;
     public String dbPath;
     public String store;
-    public int dbPort = -1;
+	private String resourcePath;
+   public int dbPort = -1;
     public boolean compileScripts = false;
     protected HashMap properties = new HashMap();
     private String configPath;
@@ -161,6 +162,9 @@ public final class NavajoConfig {
     				body.getProperty("paths/adapters").getValue());
     		scriptPath = properDir(rootPath +
     				body.getProperty("paths/scripts").getValue());
+    		resourcePath = properDir(rootPath +
+    				body.getProperty("paths/resource").getValue());
+
     		compiledScriptPath = (body.getProperty("paths/compiled-scripts") != null ?
     				properDir(rootPath +
     						body.getProperty("paths/compiled-scripts").
@@ -203,7 +207,12 @@ public final class NavajoConfig {
 				if (descriptionProviderClass!=null) {
 					Class cc = Class.forName(descriptionProviderClass);
 					if (cc!=null) {
-						myDescriptionProvider = (DescriptionProvider)cc.newInstance();
+//						System.err.println("Setting description provider. config hash: "+hashCode());
+						if (myDescriptionProvider==null) {
+							myDescriptionProvider = (DescriptionProvider)cc.newInstance();
+						} else {
+							System.err.println("Warning: Resetting description provider.");
+						}
 					}
 				}
 			} 
@@ -455,6 +464,10 @@ public final class NavajoConfig {
         return scriptPath;
     }
 
+    public final String getResourcePath() {
+        return resourcePath;
+    }
+    
     public final HashMap getProperties() {
         return properties;
     }
@@ -836,6 +849,7 @@ public final class NavajoConfig {
 	}
 
 	public DescriptionProvider getDescriptionProvider() {
+//		System.err.println("Getting description provider. Config hash: "+hashCode());
 		return myDescriptionProvider;
 	}
 	

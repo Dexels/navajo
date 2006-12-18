@@ -26,4 +26,24 @@ public class NullDescriptionProvider extends BaseDescriptionProvider {
 		return null;
 	}
 
+	public void flushUserCache(String user) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void updateDescription(String locale, String name, String description, String context) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void deletePropertyContext(String locale, String context) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void updateDescription(String locale, String name, String description, String context, String username) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

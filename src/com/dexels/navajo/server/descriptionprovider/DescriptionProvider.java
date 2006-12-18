@@ -10,4 +10,6 @@ public interface DescriptionProvider {
 	public int getCacheSize();
 	public void flushCache();
 	public void flushUserCache(String user);
+	public void updateDescription(String locale, String name, String description, String context, String username);
+	public void deletePropertyContext(String locale, String context);
 }
