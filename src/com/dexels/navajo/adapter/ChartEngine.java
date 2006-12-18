@@ -99,13 +99,13 @@ public class ChartEngine {
 			Message current = (Message) myData.get(i);
 			int type = ((Integer) myTypes.get(i)).intValue();
 			String name = (String) mySerieIds.get(i);
-			sdY.getSeries().add(createSeries(current, type, name));
+			sdY.getSeries().add(createSeries(current, type, name, true));
 		}
 
 		return myChart;
 	}
 
-	private DataSet createDataSet(Message data, String pName) {
+	private DataSet createDataSet(Message data, String pName, boolean asdouble) {
 		ArrayList d = new ArrayList();
 		if (data.getArraySize() > 0) {
 			Property dProperty = data.getMessage(0).getProperty(pName);
@@ -116,7 +116,11 @@ public class ChartEngine {
 					if (value == null) {
 						value = "0";
 					}
-					d.add(new Double(value));
+					if(asdouble){
+						d.add(new Double(value));
+					}else{
+						d.add(value);
+					}
 				}
 			}
 		}
@@ -124,8 +128,8 @@ public class ChartEngine {
 		return nds;
 	}
 
-	private Series createSeries(Message data, int type, String name) {
-		DataSet ds = createDataSet(data, yProp);
+	private Series createSeries(Message data, int type, String name, boolean asdouble) {
+		DataSet ds = createDataSet(data, yProp, asdouble);
 		Series s;
 		switch (type) {
 		case TYPE_AREA:
@@ -151,7 +155,7 @@ public class ChartEngine {
 
 	private Series createXAxisSeries(Message data) {
 		Series sX = SeriesImpl.create();
-		sX.setDataSet(createDataSet(data, xProp));
+		sX.setDataSet(createDataSet(data, xProp, false));
 		return sX;
 	}
 
@@ -210,22 +214,22 @@ public class ChartEngine {
 		  Message init = in.getMessage("StoredGlobals");
 			
 			if (init != null) {
-				init.getProperty("Module").setValue("REDCOUNT");
-				init.getProperty("SeasonId").setValue("2005");
+				init.getProperty("Module").setValue("MEMBERCOUNT");
+				init.getProperty("SeasonId").setValue("2006");
 				Message result = NavajoClientFactory.getClient().doSimpleSend(init.getRootDoc(), "statistics/ProcessGetStoredStatistics", "Result");
-				init.getProperty("Module").setValue("YELLOWCOUNT");
+				init.getProperty("Module").setValue("WOMENCOUNT");
 				Message women = NavajoClientFactory.getClient().doSimpleSend(init.getRootDoc(), "statistics/ProcessGetStoredStatistics", "Result");
 				if (result != null) {
 
 					ce.setTitle("");
 					ce.setXAxisProperty("Week", "Week");
 					ce.setYAxisProperty("Value", "Value");
-					ce.addData(result, ChartEngine.TYPE_AREA, "Rode kaarten");
-					ce.addData(women, ChartEngine.TYPE_LINE, "Gele kaarten");
+					ce.addData(result, ChartEngine.TYPE_BAR, "Rode kaarten");
+					ce.addData(women, ChartEngine.TYPE_AREA, "Gele kaarten");
 					ce.setChartSize(800, 300);
 
 					Chart c = ce.createChart();
-					ce.saveChart("/home/aphilip/rymix.png");
+					ce.saveChart("/home/aphilip/good.png");
 				}
 			}
 
