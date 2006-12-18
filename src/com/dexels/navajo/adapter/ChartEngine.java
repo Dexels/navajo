@@ -42,7 +42,6 @@ public class ChartEngine {
 	private int height = 300;
 
 	public ChartEngine() {
-
 	}
 
 	public void addData(Message data, int chartType, String seriesLabel) {
