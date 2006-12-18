@@ -39,6 +39,12 @@ public class NavajoCompiler
 		
         public void compile(Access access, NavajoConfig config, String source) throws Throwable{
 
+        	try {
+				Class cc = Class.forName("com.sun.tools.javac.Main");
+			} catch (ClassNotFoundException e) {
+				System.err.println("No sun compiler.");
+				return;
+			}
         	
             String classPath = null;
 
