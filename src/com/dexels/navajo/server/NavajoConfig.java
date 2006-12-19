@@ -162,8 +162,15 @@ public final class NavajoConfig {
     				body.getProperty("paths/adapters").getValue());
     		scriptPath = properDir(rootPath +
     				body.getProperty("paths/scripts").getValue());
-    		resourcePath = properDir(rootPath +
-    				body.getProperty("paths/resource").getValue());
+    		
+    		// changed to more defensive behaviour
+    		Property resourceProperty = body.getProperty("paths/resource");
+    		if (resourceProperty!=null) {
+        		resourcePath = properDir(rootPath +
+        				resourceProperty.getValue());				
+			} else {
+				System.err.println("Warning: No resources defined.");
+			}
 
     		compiledScriptPath = (body.getProperty("paths/compiled-scripts") != null ?
     				properDir(rootPath +
