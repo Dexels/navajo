@@ -127,7 +127,9 @@ public abstract class CachedDescriptionProvider extends BaseDescriptionProvider 
 
 	private String getDescriptionUser(String locale, String username, String webservice, String propertyName) {
 		String key = "|"+locale+"|"+username+"|"+propertyName;
-		System.err.println("Getting level2b: "+key);
+		if (debug) {
+			System.err.println("Getting level2b: "+key);
+		}
 		String value = (String)cache.get(key);
 		if (value!=null) {
 			if (!"%".equals(value)) {
@@ -180,7 +182,9 @@ public abstract class CachedDescriptionProvider extends BaseDescriptionProvider 
 
 	protected String getDescription(String locale, String propertyName){
 		String key = locale+"|"+propertyName;
-		System.err.println("Getting level3: "+key);
+		if (debug) {
+			System.err.println("Getting level3: "+key);
+		}
 		String value = (String)cache.get(key);
 		if ("%".equals(value)) {
 			if (debug) {
