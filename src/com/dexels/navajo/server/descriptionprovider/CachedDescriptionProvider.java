@@ -15,7 +15,7 @@ public abstract class CachedDescriptionProvider extends BaseDescriptionProvider 
 
 	protected final Map cache = new HashMap();
 
-	protected boolean debug = true;
+	protected boolean debug = false;
 	public Message dumpCacheMessage(Navajo n) throws NavajoException {
 		Message m = NavajoFactory.getInstance().createMessage(n,"Cache",Message.MSG_TYPE_ARRAY);
 		for (Iterator iter = cache.keySet().iterator(); iter.hasNext();) {
