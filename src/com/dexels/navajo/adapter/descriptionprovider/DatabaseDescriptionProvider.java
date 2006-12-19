@@ -24,16 +24,16 @@ public class DatabaseDescriptionProvider extends CachedDescriptionProvider {
 	private static String selectGeneric =
 		"select description from propertydescription where locale= ? and name= ?";
 	private static String selectWithService =
-		"select description from propertydescription where locale= ? and name= ? and webservice = ?";
+		"select description from propertydescription where locale= ? and name= ? and context = ?";
 	private static String selectWithServiceAndUser =
-		"select description from propertydescription where locale= ? and name= ? and webservice = ? and objectid = ?";
+		"select description from propertydescription where locale= ? and name= ? and context = ? and objectid = ?";
 	private static String selectWithUser =
 		"select description from propertydescription where locale= ? and name= ? and objectid = ?";		
 	
-	private static String insertPropertyDescription = "INSERT INTO propertydescription ( descriptionid, locale, name, webservice, objectid, objecttype, description, lastupdate, updateby) VALUES ( propertydescription_seq.nextval, ?, ?, ?, ?, ?, ?, ?, ?)";                      
+	private static String insertPropertyDescription = "INSERT INTO propertydescription ( descriptionid, locale, name, context, objectid, objecttype, description, lastupdate, updateby) VALUES ( propertydescription_seq.nextval, ?, ?, ?, ?, ?, ?, ?, ?)";                      
 
 	private static String deleteUnbound =
-		"delete from propertydescription where locale = ? and webservice = ? and objectid is null ";
+		"delete from propertydescription where locale = ? and context = ? and objectid is null ";
 	
 	public void updateProperty(Navajo in, Property element, String locale) {
 		if (locale==null) {
@@ -116,7 +116,7 @@ public class DatabaseDescriptionProvider extends CachedDescriptionProvider {
 	protected String retrieveDescriptionWithUsernameWithoutService(String locale, String username, String propertyName) {
 //		 System.err.println("Retrievin
 				SQLMap sqlMap = createConnection();
-				sqlMap.debug = true;
+//				sqlMap.debug = true;
 				// sqlMap.debug = true;
 				Connection con = null;
 				try {
