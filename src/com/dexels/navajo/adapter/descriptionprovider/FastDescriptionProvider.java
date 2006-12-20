@@ -15,7 +15,7 @@ import com.dexels.navajo.server.UserException;
  * @author Arjen Schoneveld.
  *
  */
-public class PropertyDescriptionCache {
+public class FastDescriptionProvider {
 
 	private String queryLocales = "SELECT DISTINCT locale FROM propertydescription WHERE name = ?";
 	
@@ -228,7 +228,7 @@ public class PropertyDescriptionCache {
 	}
 	
 	public static void main(String [] args) {
-		PropertyDescriptionCache pdc = new PropertyDescriptionCache();
+		FastDescriptionProvider pdc = new FastDescriptionProvider();
 		String value = pdc.getTranslation("BusinessRegistrationNumber3", "apenoot", "nl", null, "PIET", "ProcessNoot");
 		System.err.println("value = " + value);
 		value = pdc.getTranslation("BusinessRegistrationNumber", "apenoot", "nl", null, "PIET", "ProcessApenoot");
