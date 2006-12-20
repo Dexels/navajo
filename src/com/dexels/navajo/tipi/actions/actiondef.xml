@@ -32,6 +32,31 @@
     <param name="password" type="string"/>
   </tipiaction>
   
+  
+  <tipiaction name="setUsername"  class="TipiSetUsername" package="com.dexels.navajo.tipi.actions">
+    <param name="username" type="string"/>
+  </tipiaction>
+
+  
+  <tipiaction name="setPassword"  class="TipiSetPassword" package="com.dexels.navajo.tipi.actions">
+    <param name="password" type="string"/>
+  </tipiaction>
+  
+  <tipiaction name="setLocale"  class="TipiSetLocale" package="com.dexels.navajo.tipi.actions">
+    <param name="locale" type="string"/>
+    <!--<param name="context" type="string"/>-->
+  </tipiaction>
+
+  <tipiaction name="setSubLocale"  class="TipiSetSubLocale" package="com.dexels.navajo.tipi.actions">
+    <param name="locale" type="string"/>
+  </tipiaction>
+  
+  <tipiaction name="setHTTPS"  class="TipiSetHTTPS" package="com.dexels.navajo.tipi.actions">
+    <param name="keystore" type="binary"/>
+    <param name="passphrase" type="string"/>
+  </tipiaction>
+  
+  
   <tipiaction name="execute"  class="TipiRuntime" package="com.dexels.navajo.tipi.actions">
     <param name="command" type="string"/>
   </tipiaction>
