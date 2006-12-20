@@ -213,6 +213,7 @@ public final class NavajoConfig {
 				descriptionProviderClass = descriptionProviderProperty.getValue();
 				if (descriptionProviderClass!=null) {
 					Class cc = Class.forName(descriptionProviderClass);
+					System.err.println("Descriptionprovider is: " + descriptionProviderClass);
 					if (cc!=null) {
 //						System.err.println("Setting description provider. config hash: "+hashCode());
 						if (myDescriptionProvider==null) {

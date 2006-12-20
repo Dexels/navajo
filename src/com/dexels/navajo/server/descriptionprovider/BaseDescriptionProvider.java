@@ -18,7 +18,7 @@ public abstract class BaseDescriptionProvider implements DescriptionProvider{
 	public void updatePropertyDescriptions(Navajo in, Navajo out) throws NavajoException {
 		String locale = in.getHeader().getAttribute("locale");
 		if (locale==null) {
-//			return;
+			return;
 		}
 //		System.err.println("Updating navajo. Locale: "+locale);
 //		System.err.println("user: "+in.getHeader().getRPCUser());

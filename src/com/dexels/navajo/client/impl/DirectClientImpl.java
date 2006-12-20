@@ -579,4 +579,9 @@ public int getAsyncServerIndex() {
 public void setLocaleCode(String locale) {
 	// TODO Wha'ever
 }
+
+public void setSubLocaleCode(String locale) {
+	// TODO Auto-generated method stub
+	
+}
 }
