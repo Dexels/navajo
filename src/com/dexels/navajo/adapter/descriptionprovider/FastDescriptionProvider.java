@@ -46,7 +46,7 @@ public class FastDescriptionProvider extends BaseDescriptionProvider {
 				if ( properties.get(propertyName) == null ) {
 
 					SQLMap sql = createConnection();
-
+					;
 					try {
 						sql.setQuery(queryLocales);
 						sql.setParameter(propertyName);
@@ -57,6 +57,7 @@ public class FastDescriptionProvider extends BaseDescriptionProvider {
 						//System.err.println("Found locales: " + results.length);
 						
 						if ( results.length == 0 ) {
+							//System.err.println("Putting " + propertyName + " as null translation");
 							properties.put(propertyName, propertyName);
 							return;
 						}
@@ -152,6 +153,9 @@ public class FastDescriptionProvider extends BaseDescriptionProvider {
 		
 		HashMap users = null;
 		// Check if there are non-generic sublocales.
+		if ( locales.get(locale) == null ) {
+			return defaultDescription;
+		}
 		if ( ((HashMap) locales.get(locale)).size() > 1 ) {
 			users = (HashMap) ((HashMap) locales.get(locale)).get(subLocale);
 		}
@@ -194,7 +198,7 @@ public class FastDescriptionProvider extends BaseDescriptionProvider {
 
 		
 		try {
-		
+			//System.err.println("Getting description for: " + propertyName + ", locale: " + locale + ", sublocale: " + subLocale + ", user: " + user + ", webservice: " + webservice);
 			initializeCache(propertyName);
 			return getLocaleTranslation(propertyName, defaultDescription, locale, subLocale, user, webservice);
 
@@ -234,22 +238,22 @@ public class FastDescriptionProvider extends BaseDescriptionProvider {
 	
 	public static void main(String [] args) {
 		FastDescriptionProvider pdc = new FastDescriptionProvider();
-		String value = pdc.getTranslation("BusinessRegistrationNumber3", "apenoot", "nl", null, "PIET", "ProcessNoot");
+		String value = pdc.getTranslation("kibasd", "apenoot", "nl", null, "PIET", "ProcessNoot");
 		System.err.println("value = " + value);
-		value = pdc.getTranslation("BusinessRegistrationNumber", "apenoot", "nl", null, "PIET", "ProcessApenoot");
-		System.err.println("value2 = " + value);
-		value = pdc.getTranslation("BusinessRegistrationNumber", "apenoot", "nl", null, "WILLEM", "ProcessAap");
-		System.err.println("value2 = " + value);
-		value = pdc.getTranslation("BusinessRegistrationNumber", "apenoot", "nl", null, "HENK", "ProcessNoot");
-		System.err.println("value2 = " + value);
-		value = pdc.getTranslation("BusinessRegistrationNumber", "apenoot", "nl", null, "HENK", "ProcessKibbeling");
-		System.err.println("value2 = " + value);
-		long start = System.currentTimeMillis();
-		for ( int i = 0; i < 10000; i++ ) {
-			value = pdc.getTranslation("BusinessRegistrationNumber", "apenoot", "nl", "KNHB", "HENK", "ProcessKibbeling");
-		}
-		System.err.println("10000 iterations took: " + ( System.currentTimeMillis() - start ) / 10000.0 + " millis / iteration");
-		System.err.println("value2 = " + value);
+//		value = pdc.getTranslation("BusinessRegistrationNumber", "apenoot", "nl", null, "PIET", "ProcessApenoot");
+//		System.err.println("value2 = " + value);
+//		value = pdc.getTranslation("BusinessRegistrationNumber", "apenoot", "nl", null, "WILLEM", "ProcessAap");
+//		System.err.println("value2 = " + value);
+//		value = pdc.getTranslation("BusinessRegistrationNumber", "apenoot", "nl", null, "HENK", "ProcessNoot");
+//		System.err.println("value2 = " + value);
+//		value = pdc.getTranslation("BusinessRegistrationNumber", "apenoot", "nl", null, "HENK", "ProcessKibbeling");
+//		System.err.println("value2 = " + value);
+//		long start = System.currentTimeMillis();
+//		for ( int i = 0; i < 10000; i++ ) {
+//			value = pdc.getTranslation("BusinessRegistrationNumber", "apenoot", "nl", "KNHB", "HENK", "ProcessKibbeling");
+//		}
+//		System.err.println("10000 iterations took: " + ( System.currentTimeMillis() - start ) / 10000.0 + " millis / iteration");
+//		System.err.println("value2 = " + value);
 	}
 
 	public void updateProperty(Navajo in, Property element, String locale) {
