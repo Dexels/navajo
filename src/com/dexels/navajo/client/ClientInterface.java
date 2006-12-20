@@ -9,6 +9,7 @@ package com.dexels.navajo.client;
  * @version 1.0
  */
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.types.Binary;
 
 import java.net.URL;
 import java.io.InputStream;
@@ -169,5 +170,8 @@ public int getAsyncServerIndex();
  * sets the locale for the client, it will be appended to the header
  */
 public void setLocaleCode(String locale);
-	
+
+public void setSubLocaleCode(String locale);
+
+
 }

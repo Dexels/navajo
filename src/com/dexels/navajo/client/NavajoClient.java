@@ -91,6 +91,7 @@ public class NavajoClient implements ClientInterface {
 	private int keepAliveDelay;
 	private int globalRetryCounter = 0;
 	private String locale = null;
+	private String subLocale;
 	private static boolean silent = true;
 	  
   // Disable for one minute. Bit short, should be maybe an hour, but better for debugging.
@@ -745,6 +746,13 @@ public class NavajoClient implements ClientInterface {
     	 if (locale!=null) {
         	 out.getHeader().setAttribute("locale", locale);
 		}
+         //==================================================================
+     	// set the sublocale
+     	// ==============================================
+     	 if (subLocale!=null) {
+         	 out.getHeader().setAttribute("sublocale", subLocale);
+ 		}
+     	 
     	 
     	 
         BufferedInputStream in = null;
@@ -1782,6 +1790,12 @@ public void switchServer(int startIndex, boolean forceChange) {
 
 	public void setLocaleCode(String locale) {
 		this.locale  = locale;
+	}
+
+
+
+	public void setSubLocaleCode(String locale) {
+		this.subLocale = locale;
 	}
 	
 
