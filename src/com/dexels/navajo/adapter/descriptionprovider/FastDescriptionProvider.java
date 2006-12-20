@@ -4,10 +4,15 @@ import java.util.HashMap;
 
 import com.dexels.navajo.adapter.SQLMap;
 import com.dexels.navajo.adapter.sqlmap.ResultSetMap;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.Property;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.UserException;
+import com.dexels.navajo.server.descriptionprovider.BaseDescriptionProvider;
 
 /**
  * This class reads the propertydescription table into a Java datastructure.
@@ -15,7 +20,7 @@ import com.dexels.navajo.server.UserException;
  * @author Arjen Schoneveld.
  *
  */
-public class FastDescriptionProvider {
+public class FastDescriptionProvider extends BaseDescriptionProvider {
 
 	private String queryLocales = "SELECT DISTINCT locale FROM propertydescription WHERE name = ?";
 	
@@ -245,6 +250,44 @@ public class FastDescriptionProvider {
 		}
 		System.err.println("10000 iterations took: " + ( System.currentTimeMillis() - start ) / 10000.0 + " millis / iteration");
 		System.err.println("value2 = " + value);
+	}
+
+	public void updateProperty(Navajo in, Property element, String locale) {
+		String translation = 
+			getTranslation(element.getName(), element.getDescription(), 
+					locale, in.getHeader().getAttribute("sublocale"), 
+					in.getHeader().getRPCUser(), in.getHeader().getRPCName());
+		element.setDescription(translation);
+	}
+
+	public void deletePropertyContext(String locale, String context) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public Message dumpCacheMessage(Navajo n) throws NavajoException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void flushCache() {
+		synchronized ( semaphore ) {
+			properties.clear();
+		}
+	}
+
+	public void flushUserCache(String user) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public int getCacheSize() {
+		return properties.size();
+	}
+
+	public void updateDescription(String locale, String name, String description, String context, String username) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }
