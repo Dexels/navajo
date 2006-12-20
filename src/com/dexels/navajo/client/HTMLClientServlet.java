@@ -156,7 +156,8 @@ public class HTMLClientServlet extends HttpServlet {
                     tbMessage.getMessage("services").getProperty("service").setValue(service);
 
                 gc = new NavajoHTMLClient(NavajoClient.HTTP_PROTOCOL);
-
+                gc.setLocaleCode("nl");
+                
                 //resultDoc = gc.doMethod("navajo_logon_send", "ANONYMOUS", "ANONYMOUS", tbMessage, navajoServer, false, "", "", -1, request,
                 //                        false, false, useCompression);
 
@@ -188,7 +189,8 @@ public class HTMLClientServlet extends HttpServlet {
                 tbMessage = NavajoFactory.getInstance().createNavajo();
                 
                 gc = new NavajoHTMLClient(NavajoClient.HTTP_PROTOCOL);
-
+                gc.setLocaleCode("nl");
+                
                 //resultDoc = gc.doMethod("navajo_logon", "ANONYMOUS", "ANONYMOUS", tbMessage, navajoServer, false, "", "", -1, request,
                 //                        false, false, useCompression);
 
@@ -301,7 +303,7 @@ public class HTMLClientServlet extends HttpServlet {
             //outDoc.write(gzipout);
 
         gc = new NavajoHTMLClient(NavajoClient.HTTP_PROTOCOL);
-
+        gc.setLocaleCode("nl");
          
         if (tbMessage == null) {
                 tbMessage = NavajoFactory.getInstance().createNavajo();
