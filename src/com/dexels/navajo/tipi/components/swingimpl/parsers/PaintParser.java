@@ -38,4 +38,8 @@ public class PaintParser extends TipiTypeParser {
     }
     return p;
   }
+  
+  public static TipiGradientPaint parse(String s) {
+	  return new PaintParser().parsePaint(s);
+  }
 }
