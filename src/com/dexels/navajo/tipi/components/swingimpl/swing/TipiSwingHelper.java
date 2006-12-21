@@ -58,7 +58,11 @@ public class TipiSwingHelper
       c.setVisible( ( (Boolean) object).booleanValue());
     }
     if (name.equals("enabled")) {
-      c.setEnabled( ( (Boolean) object).booleanValue());
+    	if (object instanceof String) {
+    	      c.setEnabled( object.equals("true"));
+		} else {
+		      c.setEnabled( ( (Boolean) object).booleanValue());
+		}
     }
     // SHOULD CALL myCOmponent.setComponentValue, I guess.
   }
