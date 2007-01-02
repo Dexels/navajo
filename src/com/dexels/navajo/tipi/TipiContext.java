@@ -7,6 +7,7 @@ import java.util.*;
 
 import com.dexels.navajo.client.*;
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.parser.*;
 import com.dexels.navajo.tipi.components.core.*;
 import com.dexels.navajo.tipi.internal.*;
@@ -66,6 +67,8 @@ public abstract class TipiContext
 //  private final List packageReferenceList = new ArrayList();
 //  private final Map packageReferenceMap = new HashMap();
 
+  protected DescriptionProvider myDescriptionProvider = null;
+  
   private final Map globalMap = new HashMap();
 
   protected final long startTime = System.currentTimeMillis();
@@ -238,6 +241,9 @@ public abstract class TipiContext
     String locale = (String)attemptGenericEvaluate(config.getStringAttribute("locale", "'en'"));
     setSystemProperty("tipi.client.locale", cfg, false);
 
+    String sublocale = (String)attemptGenericEvaluate(config.getStringAttribute("sublocale", "''"));
+    setSystemProperty("tipi.client.sublocale", cfg, false);
+
     Object keystore = attemptGenericEvaluate(config.getStringAttribute("keystore", ""));
 
 
@@ -249,22 +255,21 @@ public abstract class TipiContext
     setSystemProperty("tipi.client.username", navajoUsername, false);
     String navajoPassword = (String)attemptGenericEvaluate(config.getStringAttribute("password", ""));
     setSystemProperty("tipi.client.password", navajoPassword, false);
+    
+    
     if (!impl.equals("direct")) {
         
 //      System.err.println("Using INDIRECT. Username = " + navajoUsername);
         if(impl.equals("socket")) {
             NavajoClientFactory.resetClient();
             ClientInterface ci =  NavajoClientFactory.createClient("com.dexels.navajo.client.NavajoSocketClient",null);
-            NavajoClientFactory.getClient().setServerUrl(navajoServer);
-            NavajoClientFactory.getClient().setUsername(navajoUsername);
-            NavajoClientFactory.getClient().setPassword(navajoPassword);
         } else {
             NavajoClientFactory.resetClient();
             NavajoClientFactory.createDefaultClient();
-            NavajoClientFactory.getClient().setServerUrl(navajoServer);
-            NavajoClientFactory.getClient().setUsername(navajoUsername);
-            NavajoClientFactory.getClient().setPassword(navajoPassword);
         }
+        NavajoClientFactory.getClient().setServerUrl(navajoServer);
+        NavajoClientFactory.getClient().setUsername(navajoUsername);
+        NavajoClientFactory.getClient().setPassword(navajoPassword);
         if (name!=null) {
 			clientConfigMap.put(name, NavajoClientFactory.getClient());
 		}
@@ -275,6 +280,7 @@ public abstract class TipiContext
     }
     
     NavajoClientFactory.getClient().setLocaleCode(locale);
+    NavajoClientFactory.getClient().setSubLocaleCode(sublocale);
     if (secure) {
       if (storepass != null && keystore != null) {
         try {
@@ -1139,6 +1145,11 @@ public void parseDefinition(XMLElement child) throws TipiException {
 	    return doSimpleSend(n,service,ch,expirtationInterval,hosturl,username,password,null,null,breakOnError,null);
  }
   
+  public void setHTTPS(String passphrase, Binary keystore) throws ClientException {
+	  NavajoClientFactory.getClient().setSecure(keystore.getDataAsStream(), passphrase, true);
+  }
+  
+  
   private Navajo doSimpleSend(Navajo n, String service, ConditionErrorHandler ch, long expirtationInterval, String hosturl, String username, String password,String keystore,String keypass, boolean breakOnError, String clientName) throws TipiBreakException {
       Navajo reply = null;
     if (myThreadPool == null) {
@@ -1930,6 +1941,28 @@ public void shutdown() {
 		s.contextShutdown();
 	}
 	  contextShutdown = true;
+}
+
+public DescriptionProvider getDescriptionProvider() {
+	return myDescriptionProvider;
+}
+
+
+public void initRemoteDescriptionProvider(String context, String locale) throws NavajoException, ClientException {
+	   Navajo n = NavajoFactory.getInstance().createNavajo();
+	   Message m = NavajoFactory.getInstance().createMessage(n, "Description");
+	   n.addMessage(m);
+	   Property w = NavajoFactory.getInstance().createProperty(n, "Webservice", Property.STRING_PROPERTY,context, 99,"", Property.DIR_IN);
+	   m.addProperty(w);
+	   Property l = NavajoFactory.getInstance().createProperty(n, "Locale", Property.STRING_PROPERTY,locale, 99,"", Property.DIR_IN);
+	   m.addProperty(l);
+//	   n.write(System.err);
+	   Navajo res = NavajoClientFactory.getClient().doSimpleSend(n, "navajo/description/ProcessGetContextResources");
+//	   res.write(System.err);
+	   Message descr = res.getMessage("Descriptions");
+	   myDescriptionProvider = new RemoteDescriptionProvider(this);
+//	   myDescriptionProvider.init(locale, context);
+	   ((RemoteDescriptionProvider)myDescriptionProvider).setMessage(descr);		
 }
 
 }

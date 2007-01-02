@@ -133,9 +133,9 @@ public class TipiGeneralAspManager implements TipiStorageManager {
         document.addProperty(objectType);
         document.addProperty(description);
         document.addProperty(mime);
-        Message club = NavajoFactory.getInstance().createMessage(n, "Club");
+        Message club = NavajoFactory.getInstance().createMessage(n, "Storage");
         n.addMessage(club);
-        Property clubId = NavajoFactory.getInstance().createProperty(n, "ClubIdentifier", Property.STRING_PROPERTY, this.instanceId, 0, "", Property.DIR_IN, null);
+        Property clubId = NavajoFactory.getInstance().createProperty(n, "DbIdentifier", Property.STRING_PROPERTY, this.instanceId, 0, "", Property.DIR_IN, null);
         club.addProperty(clubId);
         return n;
     }

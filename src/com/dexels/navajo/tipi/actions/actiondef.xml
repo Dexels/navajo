@@ -50,6 +50,11 @@
   <tipiaction name="setSubLocale"  class="TipiSetSubLocale" package="com.dexels.navajo.tipi.actions">
     <param name="locale" type="string"/>
   </tipiaction>
+
+  <tipiaction name="setClientLocale"  class="TipiSetClientLocale" package="com.dexels.navajo.tipi.actions">
+    <param name="locale" type="string"/>
+    <param name="context" type="string"/>
+  </tipiaction>
   
   <tipiaction name="setHTTPS"  class="TipiSetHTTPS" package="com.dexels.navajo.tipi.actions">
     <param name="keystore" type="binary"/>
@@ -86,6 +91,7 @@
     <param name="id" type="string" required="true"/>
     <param name="location" type="tipi" required="true"/>
     <param name="force" type="boolean" default="false"/>
+    <param name="constraint" type="string" required="false"/>
   </tipiaction>
 
   <tipiaction name="instantiateClass"  class="TipiInstantiateTipiClass" package="com.dexels.navajo.tipi.actions">
