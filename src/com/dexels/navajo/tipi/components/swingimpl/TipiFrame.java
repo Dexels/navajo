@@ -2,6 +2,8 @@ package com.dexels.navajo.tipi.components.swingimpl;
 
 import java.net.*;
 import java.awt.*;
+import java.awt.event.ComponentEvent;
+
 import javax.swing.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.embed.*;
@@ -61,9 +63,14 @@ public class TipiFrame
       });
     }
     else {
-      runSyncInEventThread(new Runnable() {
+      runASyncInEventThread(new Runnable() {
         public void run() {
+//        	System.err.println("Constraints: "+constraints);
+//        	if (constraints!=null) {
+//				System.err.println("constraints: "+constraints.getClass());
+//			}
           myFrame.getContentPane().add( (Component) c, constraints);
+//          myFrame.getContentPane().dispatchEvent(new ComponentEvent(myFrame.getContentPane(),ComponentEvent.COMPONENT_RESIZED));
         }
       });
     }
