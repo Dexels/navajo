@@ -88,7 +88,12 @@ public class TipiMenuItem
   }
     if (name.equals("enabled")) {
       // Just for the record.
-      iAmEnabled = ((Boolean)object).booleanValue();
+    	if (object instanceof String) {
+    	    iAmEnabled = "true".equals(object);
+    	    myItem.setEnabled(iAmEnabled);
+    	} else {
+    	      iAmEnabled = ((Boolean)object).booleanValue();
+    	}
     }
   }
   
