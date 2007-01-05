@@ -40,8 +40,6 @@ import com.dexels.navajo.server.*;
 
 public final class TmlHttpLaszloServlet extends TmlHttpServlet {
 
-	private String configurationPath = "";
-
 	public TmlHttpLaszloServlet() {
 	}
 
@@ -101,14 +99,15 @@ public final class TmlHttpLaszloServlet extends TmlHttpServlet {
 			Object certObject = request.getAttribute("javax.servlet.request.X509Certificate");
 
 			// Call Dispatcher with parsed TML document as argument.
+//			System.err.println("Dispatching now!");
 			Navajo outDoc = dis.handle(in, certObject, new ClientInfo(request.getRemoteAddr(), request.getRemoteHost(), recvEncoding, pT, useRecvCompression, useSendCompression, request.getContentLength(), created));
-
+//			outDoc.write(System.err);
 			long sendStart = System.currentTimeMillis();
 			if (useSendCompression) {
 				response.setContentType("text/xml; charset=UTF-8");
 				response.setHeader("Content-Encoding", "gzip");
 				java.util.zip.GZIPOutputStream gzipout = new java.util.zip.GZIPOutputStream(response.getOutputStream());
-				
+
 				Document laszlo = createLaszloFromNavajo(outDoc);
 				XMLDocumentUtils.write(laszlo, new OutputStreamWriter(gzipout));
 				gzipout.close();
@@ -119,20 +118,9 @@ public final class TmlHttpLaszloServlet extends TmlHttpServlet {
 				XMLDocumentUtils.write(laszlo, new OutputStreamWriter(out));
 				out.close();
 			}
-		} catch (FatalException e) {
+		} catch (Throwable e) {
+			e.printStackTrace();
 			throw new ServletException(e);
-		} catch (NavajoException te) {
-			throw new ServletException(te);
-		} finally {
-			dis = null;
-			if (is != null) {
-				try {
-					is.close();
-				} catch (Exception e) {
-					// NOT INTERESTED.
-				}
-			}
-			// finishedServing();
 		}
 	}
 
@@ -140,25 +128,30 @@ public final class TmlHttpLaszloServlet extends TmlHttpServlet {
 		Navajo n = null;
 		try {
 			Document doc = XMLDocumentUtils.createDocument(is, false);
+
+//			System.err.println("Received: " + XMLDocumentUtils.toString(doc));
+
 			Node root = doc.getFirstChild();
 			n = NavajoFactory.getInstance().createNavajo();
 			if (root != null) {
-				String rpc_name = root.getNodeName();
-				rpc_name = rpc_name.replaceAll("_", "/");
+
 				Node tml = root.getFirstChild();
-				
-				String rpc_usr = ((Element)tml).getAttribute("rpc_usr");
-				String rpc_pwd = ((Element)tml).getAttribute("rpc_pwd");
-				
-				Header h =NavajoFactory.getInstance().createHeader(n, rpc_name, rpc_usr, rpc_pwd, -1);
-				n.addHeader(h);			
+
+				String rpc_name = ((Element) tml).getAttribute("rpc_name");
+				rpc_name = rpc_name.replaceAll("_", "/");
+				String rpc_usr = ((Element) tml).getAttribute("rpc_usr");
+				String rpc_pwd = ((Element) tml).getAttribute("rpc_pwd");
+
+				Header h = NavajoFactory.getInstance().createHeader(n, rpc_name, rpc_usr, rpc_pwd, -1);
+				n.addHeader(h);
 				NodeList children = tml.getChildNodes();
 				for (int i = 0; i < children.getLength(); i++) {
 					Node noot = children.item(i);
 					createMessageFromLaszlo(noot, n, null);
 				}
 			}
-
+//			System.err.println("Created navajo: ");
+//			n.write(System.err);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -168,12 +161,15 @@ public final class TmlHttpLaszloServlet extends TmlHttpServlet {
 	private Document createLaszloFromNavajo(Navajo in) {
 		Document doc = XMLDocumentUtils.createDocument();
 		try {
+//			System.err.println("Creating laszlo for:");
+//			in.write(System.err);
+
 			String nodeName = in.getHeader().getRPCName();
 			nodeName = nodeName.replaceAll("/", "_");
 			Element root = doc.createElement(nodeName);
 			doc.appendChild(root);
 			Element tml = doc.createElement("tml");
-			tml.setAttribute("rpc_usr", in.getHeader().getRPCUser());			
+			tml.setAttribute("rpc_usr", in.getHeader().getRPCUser());
 			tml.setAttribute("rpc_pwd", in.getHeader().getRPCPassword());
 			tml.setAttribute("rpc_name", in.getHeader().getRPCName());
 			root.appendChild(tml);
@@ -181,6 +177,7 @@ public final class TmlHttpLaszloServlet extends TmlHttpServlet {
 			for (int i = 0; i < l.size(); i++) {
 				appendMessage((Message) l.get(i), tml, doc);
 			}
+//			System.err.println("Created doc: " + XMLDocumentUtils.toString(doc));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -188,12 +185,26 @@ public final class TmlHttpLaszloServlet extends TmlHttpServlet {
 	}
 
 	private void appendMessage(Message m, Element e, Document d) {
+		try{
 		if (m.getType().equals(Message.MSG_TYPE_ARRAY_ELEMENT)) {
 			Element row = d.createElement("row");
 			ArrayList allProp = m.getAllProperties();
 			for (int j = 0; j < allProp.size(); j++) {
 				Property cp = (Property) allProp.get(j);
-				row.setAttribute(cp.getName().toLowerCase(), cp.getValue());
+				if(cp.getType().equals(Property.SELECTION_PROPERTY)){
+					Element prop = d.createElement(cp.getName());
+					ArrayList sel = cp.getAllSelections();
+					for(int k=0;k<sel.size();k++){
+						Selection s = (Selection)sel.get(k); 
+						Element option = d.createElement("option");
+						option.setAttribute("value", s.getValue());
+						option.setAttribute("name", s.getName());
+						option.setAttribute("selected", ""+s.isSelected());
+						prop.appendChild(option);
+					}
+					row.appendChild(prop);
+				}
+				row.setAttribute(cp.getName(), cp.getValue());
 			}
 			e.appendChild(row);
 		}
@@ -215,6 +226,9 @@ public final class TmlHttpLaszloServlet extends TmlHttpServlet {
 			appendProperties(m, mes, d);
 			e.appendChild(mes);
 		}
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
 	}
 
 	private void createMessageFromLaszlo(Node node, Navajo n, Message msg) {
@@ -225,22 +239,22 @@ public final class TmlHttpLaszloServlet extends TmlHttpServlet {
 				type = Message.MSG_TYPE_ARRAY;
 			}
 			Message m = NavajoFactory.getInstance().createMessage(n, name, type);
-			
+
 			NodeList nl = node.getChildNodes();
-			for(int i=0;i<nl.getLength();i++){
+			for (int i = 0; i < nl.getLength(); i++) {
 				Node cn = nl.item(i);
-				if(cn.getNodeName().startsWith("p_")){
-					createPropertyFromLaszlo(cn,n,m);					
-				}else if(cn.getNodeName().startsWith("m_") || cn.getNodeName().startsWith("a_")){
+				if (cn.getNodeName().startsWith("p_")) {
+					createPropertyFromLaszlo(cn, n, m);
+				} else if (cn.getNodeName().startsWith("m_") || cn.getNodeName().startsWith("a_")) {
 					createMessageFromLaszlo(cn, n, m);
-				}else if(cn.getNodeName().equals("row")){
+				} else if (cn.getNodeName().equals("row")) {
 					createMessageFromRow(cn, n, m);
 				}
 			}
-			
+
 			if (msg == null) {
 				n.addMessage(m);
-			}else{
+			} else {
 				msg.addMessage(m);
 			}
 		} catch (Exception e) {
@@ -248,8 +262,21 @@ public final class TmlHttpLaszloServlet extends TmlHttpServlet {
 		}
 	}
 
-	private void createPropertyFromLaszlo(Node cn, Navajo n, Message m) {
+	private void createSelectionFromLaszlo(Element cn, Navajo n, Property p){
 		try{
+		String name = cn.getAttribute("name");
+		String value = cn.getAttribute("value");
+		String selected = cn.getAttribute("selected");
+		Selection s = NavajoFactory.getInstance().createSelection(n, name, value, "true".equals(selected));
+		p.addSelection(s);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	
+	private void createPropertyFromLaszlo(Node cn, Navajo n, Message m) {
+		try {
 			Element elm = (Element) cn;
 			String name = elm.getNodeName().substring(2);
 			String length = elm.getAttribute("length");
@@ -257,48 +284,96 @@ public final class TmlHttpLaszloServlet extends TmlHttpServlet {
 			String direction = elm.getAttribute("direction");
 			String value = elm.getAttribute("value");
 			String description = elm.getAttribute("description");
-			
+
 			int l = 0;
-			try{
-				l = Integer.parseInt(length); 
-			}catch(Exception e){}
+			try {
+				l = Integer.parseInt(length);
+			} catch (Exception e) {
+			}
+			if(type.equals(Property.SELECTION_PROPERTY)){
+				Property p = NavajoFactory.getInstance().createProperty(n, name, "1", description, direction);
+				NodeList options = elm.getChildNodes();
+				for (int i = 0; i < options.getLength(); i++) {
+					Node option = (Element)options.item(i);
+					if(option.getNodeName().startsWith("option")){
+						createSelectionFromLaszlo((Element)option, n, p);
+					}
+				}
+				m.addProperty(p);
+			}else{
+				Property p = NavajoFactory.getInstance().createProperty(n, name, type, value, l, description, direction);
+				m.addProperty(p);
+			}
 			
-			Property p = NavajoFactory.getInstance().createProperty(n, name, type, value, l, description, direction);
-			m.addProperty(p); 			
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
-		}		
+		}
 	}
 
 	private void createMessageFromRow(Node cn, Navajo n, Message m) {
-		try{
+		try {
 			Message row = NavajoFactory.getInstance().createMessage(n, m.getName(), Message.MSG_TYPE_ARRAY_ELEMENT);
-			Element elm = (Element)cn;
+			Element elm = (Element) cn;
 			NamedNodeMap properties = elm.getAttributes();
-			for(int i=0;i<properties.getLength();i++){
+			for (int i = 0; i < properties.getLength(); i++) {
 				Node prop = properties.item(i);
 				String name = prop.getNodeName();
 				String value = prop.getNodeValue();
 				Property p = NavajoFactory.getInstance().createProperty(n, name, Property.STRING_PROPERTY, value, 0, "", "in");
 				row.addProperty(p);
 			}
+			
+			NodeList selProps = elm.getChildNodes();
+			for(int j = 0;j < selProps.getLength(); j++){
+				Element prop = (Element)selProps.item(j);
+				String name = prop.getNodeName();
+				Property p = NavajoFactory.getInstance().createProperty(n, name, "1", "", "in");
+				
+				NodeList options = prop.getChildNodes();
+				for(int k = 0; k < options.getLength(); k++){
+					Element op = (Element)options.item(k);
+					String op_name = op.getAttribute("name");
+					String op_value = op.getAttribute("value");
+					String op_selected = op.getAttribute("selected");
+					Selection s = NavajoFactory.getInstance().createSelection(n, op_name, op_value, "true".equals(op_selected));
+					p.addSelection(s);
+				}
+				row.addProperty(p);
+			}
 			m.addMessage(row);
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
-		}		
+		}
 	}
 
 	private void appendProperties(Message m, Element e, Document d) {
-		ArrayList allProp = m.getAllProperties();
-		for (int i = 0; i < allProp.size(); i++) {
-			Property current = (Property) allProp.get(i);
-			Element prop = d.createElement("p_" + current.getName());
-			prop.setAttribute("value", current.getValue());
-			prop.setAttribute("description", current.getDescription());
-			prop.setAttribute("direction", current.getDirection());
-			prop.setAttribute("type", current.getType());
-			prop.setAttribute("length", ""+current.getLength());
-			e.appendChild(prop);
+		try {
+			ArrayList allProp = m.getAllProperties();
+			for (int i = 0; i < allProp.size(); i++) {
+				Property current = (Property) allProp.get(i);
+
+				Element prop = d.createElement("p_" + current.getName());
+				prop.setAttribute("value", current.getValue());
+				prop.setAttribute("description", current.getDescription());
+				prop.setAttribute("direction", current.getDirection());
+				prop.setAttribute("type", current.getType());
+				prop.setAttribute("length", "" + current.getLength());
+
+				if (current.getType().equals(Property.SELECTION_PROPERTY)) {
+					ArrayList sel = current.getAllSelections();
+					for(int j=0;j<sel.size();j++){
+						Selection s = (Selection)sel.get(j); 
+						Element option = d.createElement("option");
+						option.setAttribute("value", s.getValue());
+						option.setAttribute("name", s.getName());
+						option.setAttribute("selected", ""+s.isSelected());
+						prop.appendChild(option);
+					}
+				}
+				e.appendChild(prop);
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
 		}
 	}
 
@@ -309,10 +384,11 @@ public final class TmlHttpLaszloServlet extends TmlHttpServlet {
 		NavajoClientFactory.getClient().setUsername("ROOT");
 		NavajoClientFactory.getClient().setPassword("");
 		try {
-			Message init = NavajoClientFactory.getClient().doSimpleSend("club/InitSearchClubs", "ClubSearch");
-			init.getProperty("ClubName").setValue("hol");
-			Navajo n = NavajoClientFactory.getClient().doSimpleSend(init.getRootDoc(), "club/ProcessSearchClubs");
-			
+			Message init = NavajoClientFactory.getClient().doSimpleSend("matchform/InitGetCurrentMatches", "User");
+			init.getProperty("UserId").setValue("BBFW63X");
+			init.getProperty("PinCode").setValue("8567");
+			Navajo n = NavajoClientFactory.getClient().doSimpleSend(init.getRootDoc(), "matchform/ProcessQueryCurrentMatches");
+
 			// n.write(System.err);
 			TmlHttpLaszloServlet t = new TmlHttpLaszloServlet();
 			Document d = t.createLaszloFromNavajo(n);
@@ -328,13 +404,13 @@ public final class TmlHttpLaszloServlet extends TmlHttpServlet {
 				String rpc_name = root.getNodeName();
 				rpc_name = rpc_name.replaceAll("_", "/");
 				Node tml = root.getFirstChild();
-				
-				String rpc_usr = ((Element)tml).getAttribute("rpc_usr");
-				String rpc_pwd = ((Element)tml).getAttribute("rpc_pwd");
-				
-				Header h =NavajoFactory.getInstance().createHeader(nav, rpc_name, rpc_usr, rpc_pwd, -1);
+
+				String rpc_usr = ((Element) tml).getAttribute("rpc_usr");
+				String rpc_pwd = ((Element) tml).getAttribute("rpc_pwd");
+
+				Header h = NavajoFactory.getInstance().createHeader(nav, rpc_name, rpc_usr, rpc_pwd, -1);
 				nav.addHeader(h);
-				
+
 				NodeList children = tml.getChildNodes();
 				for (int i = 0; i < children.getLength(); i++) {
 					Node noot = children.item(i);
