@@ -29,7 +29,7 @@ import com.dexels.navajo.server.*;
 
 public class TmlHttpServlet extends HttpServlet {
 
-  private String configurationPath = "";
+  protected String configurationPath = "";
 
   public TmlHttpServlet() {}
 
@@ -247,7 +247,7 @@ public class TmlHttpServlet extends HttpServlet {
    * @throws IOException
    * @throws ServletException
    */
-  public final void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
 	  Date created = new java.util.Date();
 	  long start = created.getTime();
