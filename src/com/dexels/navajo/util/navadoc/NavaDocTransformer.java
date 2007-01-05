@@ -14,6 +14,7 @@ package com.dexels.navajo.util.navadoc;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -39,7 +40,8 @@ import org.xml.sax.SAXException;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
-import com.dexels.navajo.server.listener.soap.wsdl.Generate;
+//import com.dexels.navajo.server.listener.soap.wsdl.Generate;
+import com.dexels.navajo.util.Generate;
 
 
 public class NavaDocTransformer extends NavaDocBaseDOM {
@@ -328,7 +330,9 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
     	Generate gen = new Generate();
     	
     	// Generate input TML:
-    	inDoc = gen.getInputPart( this.servicesPath  + File.separator + sname );
+    	FileInputStream fis = new FileInputStream(this.servicesPath  + File.separator + sname);
+    	inDoc = gen.getInputPart(  fis );
+    	fis.close();
     	
     	final Element inputNavajo = this.domIn.createElement( "span" );
     	this.domIn.getDocumentElement().appendChild( inputNavajo );
@@ -344,7 +348,9 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
     	this.transformer.transform( domSrcIn, domResIn );
     	
     	// Generate output TML:
-    	outDoc = gen.getOutputPart( this.servicesPath  + File.separator + sname );
+    	fis = new FileInputStream(this.servicesPath  + File.separator + sname);
+    	outDoc = gen.getOutputPart( fis );
+    	fis.close();
     	
     	final Element outputNavajo = this.domOut.createElement( "span" );
     	this.domOut.getDocumentElement().appendChild( outputNavajo );
