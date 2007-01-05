@@ -27,7 +27,7 @@ import com.dexels.navajo.server.*;
  *
  */
 
-public final class TmlHttpServlet extends HttpServlet {
+public class TmlHttpServlet extends HttpServlet {
 
   private String configurationPath = "";
 
