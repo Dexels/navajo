@@ -25,7 +25,26 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 public class Generate {
 
-  public static  void generateOutputPart(Message parent, Navajo result, Node offset) throws NavajoException {
+  public Navajo generateNavajoOutput(String file) throws Exception {
+
+      Navajo result = NavajoFactory.getInstance().createNavajo();
+
+      Document d = XMLDocumentUtils.createDocument();
+      FileInputStream input = new FileInputStream(new File(file));
+      d = XMLDocumentUtils.createDocument(input, false);
+      d.getDocumentElement().normalize();
+
+      // Find map nodes.
+      Element body = (Element) d.getElementsByTagName("tsl").item(0);
+      NodeList list = body.getChildNodes();
+      for (int i = 0; i < list.getLength(); i++) {
+        generateOutputPart(null, result, list.item(i));
+      }
+
+      return result;
+  }
+
+  public void generateOutputPart(Message parent, Navajo result, Node offset) throws NavajoException {
 
       // Create message.
       if (offset.getNodeType() == Node.ELEMENT_NODE) {
@@ -110,7 +129,7 @@ public class Generate {
       }
   }
 
-  public static void generateInputPart(Message parent, Navajo result, Node offset) throws NavajoException {
+  public void generateInputPart(Message parent, Navajo result, Node offset) throws NavajoException {
 
 
       if (!(offset instanceof Element))
@@ -236,7 +255,7 @@ public class Generate {
           return d;
   }
 
-  public static void createMessageDefinition(Document d, String name, HashSet parts) {
+  public void createMessageDefinition(Document d, String name, HashSet parts) {
       Element e = d.createElement("wsdl_message");
       d.appendChild(e);
       e.setAttribute("name", name);
@@ -250,9 +269,9 @@ public class Generate {
       }
   }
 
-  public static Navajo getInputPart(InputStream is) {
+  public Navajo getInputPart(InputStream is) {
 	  try {
-		  Document wsdl = XMLDocumentUtils.createDocument();
+		  //Document wsdl = XMLDocumentUtils.createDocument();
 		  Navajo inputDoc = NavajoFactory.getInstance().createNavajo();
 		  Document script = createDocument(is);
 		  
@@ -274,42 +293,77 @@ public class Generate {
 	  }
   }
   
-//
-//  public static void main(String args[]) throws Exception {
-//
-//      Generate gen = new Generate();
-//
-//      
-//
-//      // Determine input messages:
-//      Navajo inputDoc = gen.getInputPart("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts/club/ProcessQueryClub");
-//      ArrayList msgs = inputDoc.getAllMessages();
-//      HashSet inputMessages = new HashSet();
-//      for (int i = 0; i < msgs.size(); i++) {
-//        inputMessages.add(((Message) msgs.get(i)).getName());
-//      }
-//
-//      Navajo outputDoc = gen.getOutputPart("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts/club/ProcessQueryClub");
-//     
-//      System.out.println(outputDoc.toString());
-//
-//      javax.xml.parsers.DocumentBuilderFactory builderFactory  = DocumentBuilderFactory.newInstance();
-//      javax.xml.parsers.DocumentBuilder builder = builderFactory.newDocumentBuilder();
-//      
-//      Document dIn = builder.parse(new StringBufferInputStream(inputDoc.toString()));
-//      
-//      Document dOut = builder.parse(new StringBufferInputStream(outputDoc.toString()));
-//      
-//      String xmlInput = XMLDocumentUtils.transform(dIn,
-//                    new File("/home/arjen/projecten/Navajo/soap/tml2xml.xsl"));
-//      String xmlOutput = XMLDocumentUtils.transform(dOut,
-//                    new File("/home/arjen/projecten/Navajo/soap/tml2xml.xsl"));
-//
-//      System.out.println("XML INPUT:");
-//      System.out.println(xmlInput);
-//
-//      System.out.println("XML OUTPUT:");
-//
-//      System.out.println(xmlOutput);
-//  }
+  public Navajo getOutputPart(InputStream is) {
+	
+	  try {
+		  Navajo outputDoc = NavajoFactory.getInstance().createNavajo();
+		  Document script = createDocument(is);
+		  
+		  HashSet outputMessages = new HashSet();
+		  
+		  if ( script.getElementsByTagName("tsl").getLength() == 0 ) {
+			    return NavajoFactory.getInstance().createNavajo();
+		  }
+		  NodeList list = script.getElementsByTagName("tsl").item(0).getChildNodes();
+		  for (int i = 0; i < list.getLength(); i++) {
+			  if (list.item(i).getNodeName().equals("message")) {
+				  Element e = (Element) list.item(i);
+				  outputMessages.add(e.getAttribute("name"));
+			  }
+			  generateOutputPart(null, outputDoc, list.item(i));
+		  }
+		  return outputDoc;
+	  } catch (Exception e) {
+		  e.printStackTrace();
+		  return NavajoFactory.getInstance().createNavajo();
+	  }
+  }
+
+  public static void main(String args[]) throws Exception {
+
+      Generate gen = new Generate();
+
+      
+
+      // Determine input messages:
+      FileInputStream fis = new FileInputStream("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts/match/ProcessQueryMatch.xml");
+      Navajo inputDoc = gen.getInputPart(fis);
+      fis.close();
+      ArrayList msgs = inputDoc.getAllMessages();
+      HashSet inputMessages = new HashSet();
+      for (int i = 0; i < msgs.size(); i++) {
+        inputMessages.add(((Message) msgs.get(i)).getName());
+      }
+      fis = new FileInputStream("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts/match/ProcessQueryMatch.xml");
+      Navajo outputDoc = gen.getOutputPart(fis);
+      fis.close();
+     
+      System.out.println(outputDoc.toString());
+
+      //Document input = (Document) result.getMessageBuffer();
+      //String inputMessage = "get"+"ProcessInsertKernMember"+"In";
+      //gen.createMessageDefinition(input, inputMessage, inputMessages);
+      //String outputMessage = "get"+"ProcessInsertKernMember"+"Out";
+      //gen.createMessageDefinition(input, outputMessage, outputMessages);
+
+      javax.xml.parsers.DocumentBuilderFactory builderFactory  = DocumentBuilderFactory.newInstance();
+      javax.xml.parsers.DocumentBuilder builder = builderFactory.newDocumentBuilder();
+      
+      Document dIn = builder.parse(new StringBufferInputStream(inputDoc.toString()));
+      
+      Document dOut = builder.parse(new StringBufferInputStream(outputDoc.toString()));
+      
+      System.err.println("INPUT XML:");
+      inputDoc.write(System.err);
+      
+      String xmlInput = XMLDocumentUtils.transform(dIn, new File("/home/arjen/projecten/Navajo/soap/tml2xml.xsl"));
+      String xmlOutput = XMLDocumentUtils.transform(dOut, new File("/home/arjen/projecten/Navajo/soap/tml2xml.xsl"));
+
+      System.err.println("XML INPUT:");
+      System.err.println(xmlInput);
+
+      System.err.println("XML OUTPUT:");
+
+      System.err.println(xmlOutput);
+  }
 }
