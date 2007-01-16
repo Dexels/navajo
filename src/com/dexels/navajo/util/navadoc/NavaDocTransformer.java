@@ -331,7 +331,7 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
     	
     	// Generate input TML:
     	FileInputStream fis = new FileInputStream(this.servicesPath  + File.separator + sname);
-    	inDoc = gen.getInputPart(  fis );
+    	inDoc = gen.getInputPart( null,  fis );
     	fis.close();
     	
     	final Element inputNavajo = this.domIn.createElement( "span" );
