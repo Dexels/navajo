@@ -1,4 +1,4 @@
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:nav="http://www.dexels.com/xsd/navajo" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope">
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:nav="http://www.dexels.com/xsd/navajo" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
 
   <xsl:output method="xml"/>
   <xsl:output indent="yes"/>
@@ -13,7 +13,7 @@
   </xsl:template>
 
   <xsl:template match="message">
-    <xsl:variable name="messageName" select="substring-after(@name, ':')"/>
+    <xsl:variable name="messageName" select="@name"/>
     <xsl:element name="{$messageName}">
       <xsl:if test="@type='array'">
         <xsl:attribute name="soapenc:arrayType">

@@ -11,7 +11,7 @@
 
 <xsl:template match="/">
   <xsl:element name="tml">
-      <xsl:apply-templates select="./body/*"/>
+      <xsl:apply-templates select="./Envelope/Body/*"/>
   </xsl:element>
 </xsl:template>
 
@@ -50,7 +50,14 @@
            <xsl:attribute name="type"><xsl:value-of select="'array'"/></xsl:attribute>
         </xsl:if>
         <xsl:attribute name="name">
-          <xsl:value-of select="name(.)"/>
+          <xsl:choose>
+             <xsl:when test="contains(name(.), ':')">
+               <xsl:value-of select="substring-after(name(.), ':')"/>
+             </xsl:when>
+             <xsl:otherwise>
+                <xsl:value-of select="name(.)"/>
+             </xsl:otherwise>
+           </xsl:choose>
         </xsl:attribute>
         <xsl:apply-templates select="child::*"/>
       </xsl:element>
