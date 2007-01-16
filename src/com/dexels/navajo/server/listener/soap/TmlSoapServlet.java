@@ -47,10 +47,12 @@ public class TmlSoapServlet extends HttpServlet {
      System.err.println("in SOAPServlet doPost()");
      try {
 
-      String soapAction = request.getParameter("SOAPAction");
+    	
+      String soapAction = request.getHeader("SOAPAction");
       if (soapAction == null) {
         soapAction = "";
       }
+      soapAction = soapAction.replaceAll("\"", "");
       
       System.err.println("SOAPAction is " + soapAction );
       
@@ -58,25 +60,28 @@ public class TmlSoapServlet extends HttpServlet {
       docIn = XMLDocumentUtils.createDocument(request.getInputStream(), false);
       docIn.getDocumentElement().normalize();
       
-      NodeList l = docIn.getElementsByTagName("SOAP-ENV:Header");
-      if ( l == null || l.getLength() == 0) {
-    	  return;
-      }
+      System.err.println("Request");
+      XMLDocumentUtils.write(docIn, new OutputStreamWriter(System.err), false);
       
-      Element header = (Element) l.item(0);
-      System.err.println("header = " + header.getTextContent());
-      soapAction = header.getTextContent();
+//      NodeList l = docIn.getElementsByTagName("SOAP-ENV:Header");
+//      if ( l == null || l.getLength() == 0) {
+//    	  return;
+//      }
+      
+     // Element header = (Element) l.item(0);
+      //System.err.println("header = " + header.getTextContent());
+      //soapAction = header.getTextContent();
       
       // Transform to TML.
       System.err.println("Original XML:");
       StringWriter w = new StringWriter();
-      XMLDocumentUtils.write(docIn, w);
+      XMLDocumentUtils.write(docIn, w, false);
       System.err.println(w.toString());
       
       Document tmlIn = XMLDocumentUtils.transformToDocument(docIn, new File("/home/orion/projects/Navajo/soap/xml2tml.xsl"));
       System.err.println("Transformed XML");
       w = new StringWriter();
-      XMLDocumentUtils.write(tmlIn, w);
+      XMLDocumentUtils.write(tmlIn, w, false);
       System.err.println(w.toString());
       
       Navajo navajoIn = NavajoFactory.getInstance().createNavajo(new java.io.StringReader(w.toString()));
