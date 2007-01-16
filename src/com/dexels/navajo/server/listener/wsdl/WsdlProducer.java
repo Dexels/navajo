@@ -18,6 +18,7 @@ import org.apache.axis.utils.XMLUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -56,12 +57,18 @@ public class WsdlProducer extends HttpServlet {
 	}
 
 	private boolean existsTypeDefinition(Node schemaNode, String type) {
-		Node node = XMLutils.findNode(schemaNode, type);
-		if ( node != null ) {
-			return true;
-		} else {
-			return false;
+		NodeList nodes = schemaNode.getChildNodes();
+		
+		for (int i = 0; i < nodes.getLength(); i++) {
+			if ( nodes.item(i) instanceof Element ) {
+				Element e = (Element) nodes.item(i);
+				if ( e.getAttribute("name").equals(type) ) {
+					return true;
+				}
+			}
 		}
+		
+		return false;
 	}
 	
 	private Element findTypesNode(Document d) {
@@ -145,7 +152,7 @@ public class WsdlProducer extends HttpServlet {
 			Generate gen = new Generate();
 
 			// Get input message.
-			Navajo input = gen.getInputPart(is);
+			Navajo input = gen.getInputPart(null, is);
 			Message g = input.getMessage("__globals__");
 			if ( g != null ) {
 				input.removeMessage("__globals__");
