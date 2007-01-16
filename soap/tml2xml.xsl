@@ -13,7 +13,7 @@
   </xsl:template>
 
   <xsl:template match="message">
-    <xsl:variable name="messageName" select="@name"/>
+    <xsl:variable name="messageName" select="substring-after(@name, ':')"/>
     <xsl:element name="{$messageName}">
       <xsl:if test="@type='array'">
         <xsl:attribute name="soapenc:arrayType">
