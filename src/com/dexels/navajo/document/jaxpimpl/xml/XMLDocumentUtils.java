@@ -277,7 +277,7 @@ public class XMLDocumentUtils {
         }
     }
 
-    public static void write( Document d, Writer w ) {
+    public static void write( Document d, Writer w, boolean showImplementationAttribute ) {
 
     	try {
             d.getDocumentElement().setAttribute("documentImplementation", "JAXP");

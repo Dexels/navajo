@@ -924,7 +924,7 @@ public final class NavajoImpl implements Navajo, java.io.Serializable {
     	StringWriter writer = new StringWriter();
     	
     	//XMLDocumentUtils.toXML(docBuffer,null,null, new StreamResult(writer));
-    	XMLDocumentUtils.write( docBuffer, writer );
+    	XMLDocumentUtils.write( docBuffer, writer, true );
     	
     	return writer.toString();
     	//Node body = XMLutils.findNode(docBuffer, myBodyDefinition);
@@ -1025,7 +1025,7 @@ public final class NavajoImpl implements Navajo, java.io.Serializable {
     public void write(java.io.Writer writer, boolean condense, String method) throws NavajoException {
         //XMLDocumentUtils.toXML(docBuffer, null, null, new StreamResult(writer));
     	
-    	XMLDocumentUtils.write( docBuffer, writer );
+    	XMLDocumentUtils.write( docBuffer, writer, true );
     	
     }
 
@@ -1035,7 +1035,7 @@ public final class NavajoImpl implements Navajo, java.io.Serializable {
     	OutputStreamWriter osw;
 		try {
 			osw = new OutputStreamWriter( stream, "UTF-8" );
-			XMLDocumentUtils.write( docBuffer, osw );
+			XMLDocumentUtils.write( docBuffer, osw, true );
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
