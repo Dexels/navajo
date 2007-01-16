@@ -5,14 +5,18 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:nav="http://www.dexels.com/xsd/navajo"
   xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding"
+  xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope"
   >
 
 <xsl:output method="xml"/>
+<xsl:output indent="yes"/>
 
 <xsl:template match="tml">
-  <xsl:element name="body">
-      <xsl:apply-templates select="message"/>
-  </xsl:element>
+  <xsl:element name="SOAP-ENV:Envelope">
+    <xsl:element name="SOAP-ENV:Body">
+        <xsl:apply-templates select="message"/>
+    </xsl:element>
+    </xsl:element>
 </xsl:template>
 
 <xsl:template match="message">
