@@ -14,8 +14,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.axis.utils.XMLUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -53,6 +55,15 @@ public class WsdlProducer extends HttpServlet {
 		doPost(request, response);
 	}
 
+	private boolean existsTypeDefinition(Node schemaNode, String type) {
+		Node node = XMLutils.findNode(schemaNode, type);
+		if ( node != null ) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
 	private Element findTypesNode(Document d) {
 		Element types = (Element) XMLutils.findNode(d, "types");
 
@@ -77,42 +88,36 @@ public class WsdlProducer extends HttpServlet {
 
 		Element types = findTypesNode(d);
 
-//		Element element = d.createElementNS(XMLSCHEMA, "xsd:element");
-//		types.appendChild(element);
-//		element.setAttribute("name", (input ? "ProcessRequest" : "ProcessResponse"));
-//		Element complexTypeRoot = d.createElementNS(XMLSCHEMA, "xsd:complexType");
-//		element.appendChild(complexTypeRoot);
-//		Element sequenceRoot = d.createElementNS(XMLSCHEMA, "xsd:sequence");
-//		complexTypeRoot.appendChild(sequenceRoot);
-
 		ArrayList messages = n.getAllMessages();
 		for (int i = 0; i < messages.size(); i++ ) {
 			Message m = (Message) messages.get(i);
 
+			if ( !existsTypeDefinition(types, m.getName()) ) {
+				
+				Element complexType = d.createElementNS(XMLSCHEMA, "xsd:complexType");
+				complexType.setAttribute("name", m.getName());
+				types.appendChild(complexType);
 
-			Element complexType = d.createElementNS(XMLSCHEMA, "xsd:complexType");
-			complexType.setAttribute("name", m.getName());
-			types.appendChild(complexType);
+				Element sequence = d.createElementNS(XMLSCHEMA, "xsd:sequence");
+				complexType.appendChild(sequence);
 
-			Element sequence = d.createElementNS(XMLSCHEMA, "xsd:sequence");
-			complexType.appendChild(sequence);
-
-			ArrayList properties = m.getAllProperties();
-			for (int j = 0; j < properties.size(); j++) {
-				Property p = (Property) properties.get(j);
-				Element part = d.createElementNS(XMLSCHEMA, "xsd:element");
-				sequence.appendChild(part);
-				part.setAttribute("name", p.getName());
-				if ( p.getType().equals(Property.STRING_PROPERTY) ) {
-					part.setAttributeNS(XMLSCHEMA, "type", "xsd:string");
-				} else if ( p.getType().equals(Property.INTEGER_PROPERTY) ) {
-					part.setAttributeNS(XMLSCHEMA, "type", "xsd:string");
-				} else if ( p.getType().equals(Property.DATE_PROPERTY) ) {
-					part.setAttributeNS(XMLSCHEMA, "type", "xsd:string");
-				} else if ( p.getType().equals(Property.BOOLEAN_PROPERTY) ) {
-					part.setAttributeNS(XMLSCHEMA, "type", "xsd:boolean");
-				} else {
-					part.setAttributeNS(XMLSCHEMA, "type", "xsd:string");
+				ArrayList properties = m.getAllProperties();
+				for (int j = 0; j < properties.size(); j++) {
+					Property p = (Property) properties.get(j);
+					Element part = d.createElementNS(XMLSCHEMA, "xsd:element");
+					sequence.appendChild(part);
+					part.setAttribute("name", p.getName());
+					if ( p.getType().equals(Property.STRING_PROPERTY) ) {
+						part.setAttributeNS(XMLSCHEMA, "type", "xsd:string");
+					} else if ( p.getType().equals(Property.INTEGER_PROPERTY) ) {
+						part.setAttributeNS(XMLSCHEMA, "type", "xsd:string");
+					} else if ( p.getType().equals(Property.DATE_PROPERTY) ) {
+						part.setAttributeNS(XMLSCHEMA, "type", "xsd:string");
+					} else if ( p.getType().equals(Property.BOOLEAN_PROPERTY) ) {
+						part.setAttributeNS(XMLSCHEMA, "type", "xsd:boolean");
+					} else {
+						part.setAttributeNS(XMLSCHEMA, "type", "xsd:string");
+					}
 				}
 			}
 		}

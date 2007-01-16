@@ -1,63 +1,42 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<definitions targetNamespace="http://www.dexels.nl/navajo/" 
-             xmlns="http://schemas.xmlsoap.org/wsdl/" 
-             xmlns:esns="http://www.dexels.nl/navajo/schemas/" 
-             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
-             xmlns:tns="http://www.dexels.nl/navajo/" 
-             xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-<types>
-    <xsd:schema targetNamespace="http://www.dexels.nl/navajo/schemas/">
-        <xsd:complexType name="ZipcodeDistance">
-            <xsd:sequence>
-                <xsd:element name="FromZipcode" type="xsd:string"/>
-                <xsd:element name="FromCity" type="xsd:string"/>
-                <xsd:element name="FromStreet" type="xsd:string"/>
-                <xsd:element name="ToZipcode" type="xsd:string"/>
-                <xsd:element name="ToCity" type="xsd:string"/>
-                <xsd:element name="ToStreet" type="xsd:string"/>
-                <xsd:element name="FromCountryId" type="xsd:string"/>
-                <xsd:element name="ToCountryId" type="xsd:string"/>
-            </xsd:sequence>
-        </xsd:complexType>
-        <xsd:complexType name="Result">
-            <xsd:sequence>
-                <xsd:element name="FromCountryId" type="xsd:string"/>
-                <xsd:element name="ToCountryId" type="xsd:string"/>
-                <xsd:element name="Distance" type="xsd:string"/>
-                <xsd:element name="DistanceKm" type="xsd:string"/>
-            </xsd:sequence>
-        </xsd:complexType>
-    </xsd:schema>
-</types>
-<message name="ProcessRequest">
-    <part name="ZipcodeDistance" type="esns:ZipcodeDistance"/>
-</message>
-<message name="ProcessResponse">
-    <part name="Result" type="esns:Result"/>
-</message>
-<portType name="utils_ProcessGetZipcodeDistance_PortType">
-    <operation name="Process">
-        <input message="tns:ProcessRequest" name="ProcessRequest"/>
-        <output message="tns:ProcessResponse" name="ProcessResponse"/>
-    </operation>
-</portType>
-<binding name="utils_ProcessGetZipcodeDistance_Binding" type="tns:utils_ProcessGetZipcodeDistance_PortType">
-    <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
-    <operation name="Process">
-        <soap:operation soapAction="utils/ProcessGetZipcodeDistance"/>
-        <input name="ProcessRequest">
-            <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:dexels-navajo" use="encoded"/>
-        </input>
-        <output name="ProcessResponse">
-            <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:dexels-navajo" use="encoded"/>
-        </output>
-    </operation>
-</binding>
-<service name="utils_ProcessGetZipcodeDistance">
-    <documentation>
-        Dit is de documentatie</documentation>
-    <port binding="tns:utils_ProcessGetZipcodeDistance_Binding" name="utils_ProcessGetZipcodeDistance_Port">
-        <soap:address location="http://ficus:3000/sportlink/knvb/servlet/SOAPMan"/>
-    </port>
-</service>
+<definitions targetNamespace="http://www.dexels.nl/navajo/" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:esns="http://www.dexels.nl/navajo/schemas/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://www.dexels.nl/navajo/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <types>
+        <xsd:schema targetNamespace="http://www.dexels.nl/navajo/schemas/">
+            <xsd:complexType name="PoolData">
+                <xsd:sequence>
+                    <xsd:element name="DistrictId" type="xsd:string"/>
+                    <xsd:element name="CompetitionTypeId" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:schema>
+    </types>
+    <message name="ProcessRequest">
+        <part name="PoolData" type="esns:PoolData"/>
+    </message>
+    <message name="ProcessResponse">
+        <part name="PoolData" type="esns:PoolData"/>
+    </message>
+    <portType name="competition_knvbnl_InitQueryClassSeason_PortType">
+        <operation name="Process">
+            <input message="tns:ProcessRequest" name="ProcessRequest"/>
+            <output message="tns:ProcessResponse" name="ProcessResponse"/>
+        </operation>
+    </portType>
+    <binding name="competition_knvbnl_InitQueryClassSeason_Binding" type="tns:competition_knvbnl_InitQueryClassSeason_PortType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="Process">
+            <soap:operation soapAction="competition/knvbnl/InitQueryClassSeason"/>
+            <input name="ProcessRequest">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:dexels-navajo" use="encoded"/>
+            </input>
+            <output name="ProcessResponse">
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:dexels-navajo" use="encoded"/>
+            </output>
+        </operation>
+    </binding>
+    <service name="competition_knvbnl_InitQueryClassSeason">
+        <documentation> Dit is de documentatie</documentation>
+        <port binding="tns:competition_knvbnl_InitQueryClassSeason_Binding" name="competition_knvbnl_InitQueryClassSeason_Port">
+            <soap:address location="http://ficus:3000/sportlink/knvb/servlet/SOAPMan"/>
+        </port>
+    </service>
 </definitions>
