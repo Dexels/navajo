@@ -15,11 +15,11 @@
             </xsd:complexType>
             <xsd:complexType name="SelectedGlobals">
                 <xsd:sequence>
-                    <xsd:element name="DistrictId" type="xsd:string"/>
-                    <xsd:element name="SeasonId" type="xsd:string"/>
                     <xsd:element name="SportId" type="xsd:string"/>
-                    <xsd:element name="CompetitionKind" type="xsd:string"/>
                     <xsd:element name="Series" type="xsd:string"/>
+                    <xsd:element name="CompetitionKind" type="xsd:string"/>
+                    <xsd:element name="SeasonId" type="xsd:string"/>
+                    <xsd:element name="DistrictId" type="xsd:string"/>
                     <xsd:element name="CompetitionType" type="xsd:string"/>
                     <xsd:element name="ClassId" type="xsd:string"/>
                     <xsd:element name="PoolId" type="xsd:string"/>
@@ -35,89 +35,29 @@
                     <xsd:element name="Series" type="xsd:string"/>
                 </xsd:sequence>
             </xsd:complexType>
-            <xsd:complexType name="Match">
+            <xsd:complexType name="Range">
                 <xsd:sequence>
-                    <xsd:element name="ExternalMatchId" type="xsd:string"/>
-                    <xsd:element name="DistrictId" type="xsd:string"/>
-                    <xsd:element name="MatchId" type="xsd:string"/>
+                    <xsd:element name="HomeTeamId" type="xsd:string"/>
+                    <xsd:element name="OrganizationId" type="xsd:string"/>
+                    <xsd:element name="FacilityId" type="xsd:string"/>
+                    <xsd:element name="FromDate" type="xsd:string"/>
+                    <xsd:element name="ToDate" type="xsd:string"/>
+                    <xsd:element name="FromRound" type="xsd:string"/>
+                    <xsd:element name="ToRound" type="xsd:string"/>
                 </xsd:sequence>
             </xsd:complexType>
-            <xsd:complexType name="Person">
+            <xsd:complexType name="Member">
                 <xsd:sequence>
                     <xsd:element name="PersonId" type="xsd:string"/>
-                    <xsd:element name="RoleId" type="xsd:string"/>
                 </xsd:sequence>
             </xsd:complexType>
-            <xsd:complexType name="NoReturnMatch">
+            <xsd:complexType name="Selection">
                 <xsd:sequence>
-                    <xsd:element name="NoReturn" type="xsd:boolean"/>
+                    <xsd:element name="Title" type="xsd:string"/>
                 </xsd:sequence>
             </xsd:complexType>
-            <xsd:complexType name="MatchData">
-                <xsd:sequence>
-                    <xsd:element name="Force" type="xsd:boolean"/>
-                    <xsd:element name="FieldSize" type="xsd:string"/>
-                    <xsd:element name="Info" type="xsd:string"/>
-                    <xsd:element name="MatchId" type="xsd:string"/>
-                    <xsd:element name="ExternalMatchId" type="xsd:string"/>
-                    <xsd:element name="PreviousStatus" type="xsd:string"/>
-                    <xsd:element name="PreviousDisciplineStatus" type="xsd:string"/>
-                    <xsd:element name="Round" type="xsd:string"/>
-                    <xsd:element name="Period" type="xsd:string"/>
-                    <xsd:element name="CalendarDayId" type="xsd:string"/>
-                    <xsd:element name="PreviousCalendarDate" type="xsd:string"/>
-                    <xsd:element name="CalendarDate" type="xsd:string"/>
-                    <xsd:element name="PreviousStartTime" type="xsd:string"/>
-                    <xsd:element name="StartTime" type="xsd:string"/>
-                    <xsd:element name="EndTime" type="xsd:string"/>
-                    <xsd:element name="Duration" type="xsd:string"/>
-                    <xsd:element name="PreviousFacilityId" type="xsd:string"/>
-                    <xsd:element name="FacilityId" type="xsd:string"/>
-                    <xsd:element name="FacilityType" type="xsd:string"/>
-                    <xsd:element name="FacilityName" type="xsd:string"/>
-                    <xsd:element name="PreviousSubFacilityId" type="xsd:string"/>
-                    <xsd:element name="HomeTeamId" type="xsd:string"/>
-                    <xsd:element name="HomeTeamName" type="xsd:string"/>
-                    <xsd:element name="HomeTeamOrgId" type="xsd:string"/>
-                    <xsd:element name="HomeTeamOrgName" type="xsd:string"/>
-                    <xsd:element name="HomeTeamResult" type="xsd:string"/>
-                    <xsd:element name="HomeTeamPenalty" type="xsd:string"/>
-                    <xsd:element name="AwayTeamId" type="xsd:string"/>
-                    <xsd:element name="AwayTeamName" type="xsd:string"/>
-                    <xsd:element name="AwayTeamOrgId" type="xsd:string"/>
-                    <xsd:element name="AwayTeamOrgName" type="xsd:string"/>
-                    <xsd:element name="AwayTeamResult" type="xsd:string"/>
-                    <xsd:element name="AwayTeamPenalty" type="xsd:string"/>
-                    <xsd:element name="SportId" type="xsd:string"/>
-                    <xsd:element name="Series" type="xsd:string"/>
-                    <xsd:element name="CompetitionKind" type="xsd:string"/>
-                    <xsd:element name="SeasonId" type="xsd:string"/>
-                    <xsd:element name="CompetitionTypeId" type="xsd:string"/>
-                    <xsd:element name="CompetitionTypeName" type="xsd:string"/>
-                    <xsd:element name="CompetitionTypeLabel" type="xsd:string"/>
-                    <xsd:element name="ClassId" type="xsd:string"/>
-                    <xsd:element name="ClassName" type="xsd:string"/>
-                    <xsd:element name="PoolName" type="xsd:string"/>
-                    <xsd:element name="PoolId" type="xsd:string"/>
-                    <xsd:element name="OrganizingDistrictId" type="xsd:string"/>
-                    <xsd:element name="OrganizingDistrictName" type="xsd:string"/>
-                    <xsd:element name="FollowUpMatchId" type="xsd:string"/>
-                    <xsd:element name="PrecedingMatchId" type="xsd:string"/>
-                    <xsd:element name="MatchChargeMethodAttributeId" type="xsd:string"/>
-                    <xsd:element name="MatchChargeOrganizationId" type="xsd:string"/>
-                    <xsd:element name="MatchChargeOrganization" type="xsd:string"/>
-                    <xsd:element name="MatchChargeOrganizationName" type="xsd:string"/>
-                    <xsd:element name="MatchDescription" type="xsd:string"/>
-                    <xsd:element name="HasDocuments" type="xsd:boolean"/>
-                    <xsd:element name="WinnerId" type="xsd:string"/>
-                    <xsd:element name="WinnerStatus" type="xsd:string"/>
-                    <xsd:element name="MatchStatusId" type="xsd:string"/>
-                    <xsd:element name="MatchStatus" type="xsd:string"/>
-                    <xsd:element name="StartedAt" type="xsd:string"/>
-                    <xsd:element name="ClockRunning" type="xsd:boolean"/>
-                    <xsd:element name="ShowFines" type="xsd:boolean"/>
-                    <xsd:element name="DisciplineRelocate" type="xsd:boolean"/>
-                </xsd:sequence>
+            <xsd:complexType name="Matches">
+                <xsd:sequence/>
             </xsd:complexType>
         </xsd:schema>
     </types>
@@ -126,25 +66,25 @@
         <part name="SelectedGlobals" type="esns:SelectedGlobals"/>
         <part name="PreferredSeason" type="esns:PreferredSeason"/>
         <part name="PreferredSeries" type="esns:PreferredSeries"/>
-        <part name="Match" type="esns:Match"/>
+        <part name="Range" type="esns:Range"/>
+        <part name="Member" type="esns:Member"/>
     </message>
     <message name="ProcessResponse">
-        <part name="PreferredSeason" type="esns:PreferredSeason"/>
-        <part name="Person" type="esns:Person"/>
-        <part name="NoReturnMatch" type="esns:NoReturnMatch"/>
-        <part name="Match" type="esns:Match"/>
-        <part name="MatchData" type="esns:MatchData"/>
+        <part name="Range" type="esns:Range"/>
+        <part name="SelectedGlobals" type="esns:SelectedGlobals"/>
+        <part name="Selection" type="esns:Selection"/>
+        <part name="Matches" type="esns:Matches"/>
     </message>
-    <portType name="match_ProcessQueryMatch_PortType">
+    <portType name="match_ProcessQueryMatches_PortType">
         <operation name="Process">
             <input message="tns:ProcessRequest" name="ProcessRequest"/>
             <output message="tns:ProcessResponse" name="ProcessResponse"/>
         </operation>
     </portType>
-    <binding name="match_ProcessQueryMatch_Binding" type="tns:match_ProcessQueryMatch_PortType">
+    <binding name="match_ProcessQueryMatches_Binding" type="tns:match_ProcessQueryMatches_PortType">
         <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
         <operation name="Process">
-            <soap:operation soapAction="match/ProcessQueryMatch"/>
+            <soap:operation soapAction="match/ProcessQueryMatches"/>
             <input name="ProcessRequest">
                 <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:dexels-navajo" use="encoded"/>
             </input>
@@ -153,10 +93,10 @@
             </output>
         </operation>
     </binding>
-    <service name="match_ProcessQueryMatch">
+    <service name="match_ProcessQueryMatches">
         <documentation>
             Dit is de documentatie</documentation>
-        <port binding="tns:match_ProcessQueryMatch_Binding" name="match_ProcessQueryMatch_Port">
+        <port binding="tns:match_ProcessQueryMatches_Binding" name="match_ProcessQueryMatches_Port">
             <soap:address location="http://ficus:3000/sportlink/knvb/servlet/SOAPMan"/>
         </port>
     </service>
