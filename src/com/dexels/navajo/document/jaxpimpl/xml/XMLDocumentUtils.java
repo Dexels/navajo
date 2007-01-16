@@ -280,13 +280,15 @@ public class XMLDocumentUtils {
     public static void write( Document d, Writer w, boolean showImplementationAttribute ) {
 
     	try {
-            d.getDocumentElement().setAttribute("documentImplementation", "JAXP");
-			printElement ( d.getDocumentElement(), w );
-			w.flush();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+    		if ( showImplementationAttribute ) {
+    			d.getDocumentElement().setAttribute("documentImplementation", "JAXP");
+    		}
+    		printElement ( d.getDocumentElement(), w );
+    		w.flush();
+    	} catch (IOException e) {
+    		// TODO Auto-generated catch block
+    		e.printStackTrace();
+    	}
     }
 
     public static String toString(Node n) {
