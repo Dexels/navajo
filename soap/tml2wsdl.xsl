@@ -4,6 +4,7 @@
   xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 
 <xsl:output method="xml"/>
+<xsl:output indent="yes"/>
 
 <xsl:template match="tml">
   <definitions>
