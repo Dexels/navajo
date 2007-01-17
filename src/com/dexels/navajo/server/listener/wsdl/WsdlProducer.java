@@ -43,6 +43,7 @@ public class WsdlProducer extends HttpServlet {
 	private static final String ENCODING = "http://schemas.xmlsoap.org/soap/encoding/";
 	private static final String MYNAMESPACE = "http://www.dexels.nl/navajo/";
 	private static final String MYSCHEMAS = "http://www.dexels.nl/navajo/schemas/";
+	private static final String NAVAJOTYPES ="http://www.dexels.com/xsd/navajo";
 
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
@@ -87,6 +88,10 @@ public class WsdlProducer extends HttpServlet {
 			schema.setAttribute("targetNamespace", MYSCHEMAS);
 			types.appendChild(schema);
 			System.err.println("Create schema: " + schema);
+			Element namespace = d.createElementNS(XMLSCHEMA, "xsd:import");
+			namespace.setAttribute("namespace", NAVAJOTYPES);
+			namespace.setAttribute("schemaLocation", "");
+			schema.appendChild(namespace);
 		}
 		return schema;
 	}
@@ -122,6 +127,8 @@ public class WsdlProducer extends HttpServlet {
 						part.setAttributeNS(XMLSCHEMA, "type", "xsd:string");
 					} else if ( p.getType().equals(Property.BOOLEAN_PROPERTY) ) {
 						part.setAttributeNS(XMLSCHEMA, "type", "xsd:boolean");
+					} else if ( p.getType().equals(Property.SELECTION_PROPERTY)) {
+						part.setAttributeNS(NAVAJOTYPES, "type", "nav:option");
 					} else {
 						part.setAttributeNS(XMLSCHEMA, "type", "xsd:string");
 					}
@@ -167,6 +174,7 @@ public class WsdlProducer extends HttpServlet {
 			definitions.setAttribute("targetNamespace", MYNAMESPACE);
 			definitions.setAttribute("xmlns:tns", MYNAMESPACE);
 			definitions.setAttribute("xmlns:esns", MYSCHEMAS);
+			definitions.setAttribute("xmlns:nav", NAVAJOTYPES);
 
 			doc.appendChild(definitions);
 			// Get input message.

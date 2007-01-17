@@ -1,90 +1,35 @@
-<definitions targetNamespace="http://www.dexels.nl/navajo/" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:esns="http://www.dexels.nl/navajo/schemas/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://www.dexels.nl/navajo/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<definitions targetNamespace="http://www.dexels.nl/navajo/" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:esns="http://www.dexels.nl/navajo/schemas/" xmlns:nav="http://www.dexels.com/xsd/navajo" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://www.dexels.nl/navajo/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
     <types>
         <xsd:schema targetNamespace="http://www.dexels.nl/navajo/schemas/">
-            <xsd:complexType name="SelectGlobals">
+            <xsd:import namespace="http://www.dexels.com/xsd/navajo" schemaLocation=""/>
+            <xsd:complexType name="Ideal">
                 <xsd:sequence>
-                    <xsd:element name="DistrictId" type="xsd:string"/>
-                    <xsd:element name="SeasonId" type="xsd:string"/>
-                    <xsd:element name="SportId" type="xsd:string"/>
-                    <xsd:element name="CompetitionKind" type="xsd:string"/>
-                    <xsd:element name="Series" type="xsd:string"/>
-                    <xsd:element name="CompetitionType" type="xsd:string"/>
-                    <xsd:element name="ClassId" type="xsd:string"/>
-                    <xsd:element name="PoolId" type="xsd:string"/>
+                    <xsd:element name="MerchantId" type="xsd:string"/>
                 </xsd:sequence>
             </xsd:complexType>
-            <xsd:complexType name="SelectedGlobals">
+            <xsd:complexType name="Issuers">
                 <xsd:sequence>
-                    <xsd:element name="SportId" type="xsd:string"/>
-                    <xsd:element name="Series" type="xsd:string"/>
-                    <xsd:element name="CompetitionKind" type="xsd:string"/>
-                    <xsd:element name="SeasonId" type="xsd:string"/>
-                    <xsd:element name="DistrictId" type="xsd:string"/>
-                    <xsd:element name="CompetitionType" type="xsd:string"/>
-                    <xsd:element name="ClassId" type="xsd:string"/>
-                    <xsd:element name="PoolId" type="xsd:string"/>
+                    <xsd:element name="List" type="nav:option"/>
                 </xsd:sequence>
-            </xsd:complexType>
-            <xsd:complexType name="PreferredSeason">
-                <xsd:sequence>
-                    <xsd:element name="SeasonId" type="xsd:string"/>
-                </xsd:sequence>
-            </xsd:complexType>
-            <xsd:complexType name="PreferredSeries">
-                <xsd:sequence>
-                    <xsd:element name="Series" type="xsd:string"/>
-                </xsd:sequence>
-            </xsd:complexType>
-            <xsd:complexType name="Range">
-                <xsd:sequence>
-                    <xsd:element name="HomeTeamId" type="xsd:string"/>
-                    <xsd:element name="OrganizationId" type="xsd:string"/>
-                    <xsd:element name="FacilityId" type="xsd:string"/>
-                    <xsd:element name="FromDate" type="xsd:string"/>
-                    <xsd:element name="ToDate" type="xsd:string"/>
-                    <xsd:element name="FromRound" type="xsd:string"/>
-                    <xsd:element name="ToRound" type="xsd:string"/>
-                </xsd:sequence>
-            </xsd:complexType>
-            <xsd:complexType name="Member">
-                <xsd:sequence>
-                    <xsd:element name="PersonId" type="xsd:string"/>
-                </xsd:sequence>
-            </xsd:complexType>
-            <xsd:complexType name="Selection">
-                <xsd:sequence>
-                    <xsd:element name="Title" type="xsd:string"/>
-                </xsd:sequence>
-            </xsd:complexType>
-            <xsd:complexType name="Matches">
-                <xsd:sequence/>
             </xsd:complexType>
         </xsd:schema>
     </types>
     <message name="ProcessRequest">
-        <part name="SelectGlobals" type="esns:SelectGlobals"/>
-        <part name="SelectedGlobals" type="esns:SelectedGlobals"/>
-        <part name="PreferredSeason" type="esns:PreferredSeason"/>
-        <part name="PreferredSeries" type="esns:PreferredSeries"/>
-        <part name="Range" type="esns:Range"/>
-        <part name="Member" type="esns:Member"/>
+        <part name="Ideal" type="esns:Ideal"/>
     </message>
     <message name="ProcessResponse">
-        <part name="Range" type="esns:Range"/>
-        <part name="SelectedGlobals" type="esns:SelectedGlobals"/>
-        <part name="Selection" type="esns:Selection"/>
-        <part name="Matches" type="esns:Matches"/>
+        <part name="Issuers" type="esns:Issuers"/>
     </message>
-    <portType name="match_ProcessQueryMatches_PortType">
+    <portType name="ideal_ProcessGetBanks_PortType">
         <operation name="Process">
             <input message="tns:ProcessRequest" name="ProcessRequest"/>
             <output message="tns:ProcessResponse" name="ProcessResponse"/>
         </operation>
     </portType>
-    <binding name="match_ProcessQueryMatches_Binding" type="tns:match_ProcessQueryMatches_PortType">
+    <binding name="ideal_ProcessGetBanks_Binding" type="tns:ideal_ProcessGetBanks_PortType">
         <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
         <operation name="Process">
-            <soap:operation soapAction="match/ProcessQueryMatches"/>
+            <soap:operation soapAction="ideal/ProcessGetBanks"/>
             <input name="ProcessRequest">
                 <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:dexels-navajo" use="encoded"/>
             </input>
@@ -93,10 +38,10 @@
             </output>
         </operation>
     </binding>
-    <service name="match_ProcessQueryMatches">
+    <service name="ideal_ProcessGetBanks">
         <documentation>
             Dit is de documentatie</documentation>
-        <port binding="tns:match_ProcessQueryMatches_Binding" name="match_ProcessQueryMatches_Port">
+        <port binding="tns:ideal_ProcessGetBanks_Binding" name="ideal_ProcessGetBanks_Port">
             <soap:address location="http://ficus:3000/sportlink/knvb/servlet/SOAPMan"/>
         </port>
     </service>
