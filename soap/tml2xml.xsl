@@ -15,7 +15,7 @@
 
   <xsl:template match="message">
     <xsl:variable name="messageName" select="@name"/>
-    <xsl:element name="esns:{$messageName}">
+    <xsl:element name="tns:{$messageName}">
       <xsl:if test="@type='array'">
         <xsl:attribute name="soapenc:arrayType">
           <xsl:value-of select="concat(child::*[position()=1]/@name,'[',count(child::*),']')"/>
@@ -27,7 +27,7 @@
   </xsl:template>
 
   <xsl:template match="option">
-    <xsl:element name="esns:option">
+    <xsl:element name="tns:option">
       <xsl:attribute name="name">
         <xsl:value-of select="@name"/>
       </xsl:attribute>
@@ -42,7 +42,7 @@
 
   <xsl:template match="property">
     <xsl:variable name="propertyName" select="@name"/>
-    <xsl:element name="esns:{$propertyName}">
+    <xsl:element name="tns:{$propertyName}">
       <xsl:attribute name="xsi:type">
         <xsl:choose>
           <xsl:when test="@type='string'">
@@ -52,7 +52,7 @@
             <xsl:value-of select="'xsd:integer'"/>
           </xsl:when>
           <xsl:when test="@type='selection'">
-            <xsl:value-of select="'esns:selection'"/>
+            <xsl:value-of select="'tns:selection'"/>
           </xsl:when>
           <xsl:when test="@type='boolean'">
             <xsl:value-of select="'xsd:boolean'"/>
