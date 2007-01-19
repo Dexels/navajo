@@ -1,4 +1,4 @@
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:esns="navajo:webservice:types" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:esns="navajo:webservice:types" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tns="http://www.dexels.nl/navajo/">
 
   <xsl:output method="xml"/>
   <xsl:output indent="yes"/>
@@ -6,8 +6,7 @@
   <xsl:template match="tml">
     <xsl:element name="soapenv:Envelope">
       <xsl:element name="soapenv:Body">
-        <xsl:element name="esns:Process">
-          <xsl:attribute name="soapenv:encodingStyle">http://schemas.xmlsoap.org/soap/encoding/</xsl:attribute>
+        <xsl:element name="tns:Process">
           <xsl:apply-templates select="message"/>
         </xsl:element>
       </xsl:element>
