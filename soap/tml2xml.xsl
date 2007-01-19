@@ -51,7 +51,7 @@
             <xsl:value-of select="'xsd:int'"/>
           </xsl:when>
           <xsl:when test="@type='selection'">
-            <xsl:value-of select="'nav:option'"/>
+            <xsl:value-of select="'navajo:selection'"/>
           </xsl:when>
           <xsl:when test="@type='boolean'">
             <xsl:value-of select="'xsd:boolean'"/>
