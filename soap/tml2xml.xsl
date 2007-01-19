@@ -6,8 +6,10 @@
   <xsl:template match="tml">
     <xsl:element name="soapenv:Envelope">
       <xsl:element name="soapenv:Body">
-        <xsl:attribute name="soapenv:encodingStyle">http://schemas.xmlsoap.org/soap/encoding/</xsl:attribute>
-        <xsl:apply-templates select="message"/>
+        <xsl:element name="oxy:Process">
+          <xsl:attribute name="soapenv:encodingStyle">http://schemas.xmlsoap.org/soap/encoding/</xsl:attribute>
+          <xsl:apply-templates select="message"/>
+        </xsl:element>
       </xsl:element>
     </xsl:element>
   </xsl:template>

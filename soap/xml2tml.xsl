@@ -11,7 +11,7 @@
 
 <xsl:template match="/">
   <xsl:element name="tml">
-      <xsl:apply-templates select="./Envelope/Body/*"/>
+      <xsl:apply-templates select="./Envelope/Body/Process/*"/>
   </xsl:element>
 </xsl:template>
 
