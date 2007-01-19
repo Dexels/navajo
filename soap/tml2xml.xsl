@@ -48,7 +48,7 @@
             <xsl:value-of select="'xsd:string'"/>
           </xsl:when>
           <xsl:when test="@type='integer'">
-            <xsl:value-of select="'xsd:int'"/>
+            <xsl:value-of select="'xsd:integer'"/>
           </xsl:when>
           <xsl:when test="@type='selection'">
             <xsl:value-of select="'navajo:selection'"/>
