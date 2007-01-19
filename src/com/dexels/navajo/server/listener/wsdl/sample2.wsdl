@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions targetNamespace="http://www.dexels.nl/navajo.wsdl" xmlns:tns="http://www.dexels.nl/navajo.wsdl" xmlns:esns="http://www.dexels.nl/navajo.xsd" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <types>
+        <xsd:schema targetNamespace="http://www.dexels.nl/navajo.xsd">
+            <xsd:simpleType name="selectedoption">
+                <xsd:restriction base="xsd:string">
+                    <xsd:enumeration value="0"/>
+                    <xsd:enumeration value="1"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+            <xsd:complexType name="selection">
+                <xsd:sequence>
+                    <xsd:element maxOccurs="unbounded" minOccurs="0" name="option">
+                        <xsd:complexType>
+                            <xsd:attribute name="name" type="xsd:string"/>
+                            <xsd:attribute name="value" type="xsd:string"/>
+                            <xsd:attribute name="selected" type="esns:selectedoption"/>
+                        </xsd:complexType>
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:element name="ZipcodeDistance">
+                <xsd:complexType>
+                    <xsd:all>
+                        <xsd:element name="FromZipcode" type="xsd:string"/>
+                        <xsd:element name="FromCity" type="xsd:string"/>
+                        <xsd:element name="FromStreet" type="xsd:string"/>
+                        <xsd:element name="ToZipcode" type="xsd:string"/>
+                        <xsd:element name="ToCity" type="xsd:string"/>
+                        <xsd:element name="ToStreet" type="xsd:string"/>
+                        <xsd:element name="FromCountryId" type="xsd:string"/>
+                        <xsd:element name="ToCountryId" type="xsd:string"/>
+                    </xsd:all>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="Result">
+                <xsd:complexType>
+                    <xsd:all>
+                        <xsd:element name="FromCountryId" type="xsd:string"/>
+                        <xsd:element name="ToCountryId" type="xsd:string"/>
+                        <xsd:element name="Distance" type="xsd:integer"/>
+                        <xsd:element name="DistanceKm" type="xsd:integer"/>
+                    </xsd:all>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:schema>
+    </types>
+
+    <message name="ProcessReq">
+        <part name="body" element="esns:ZipcodeDistance"/>
+    </message>
+    <message name="ProcessRes">
+        <part name="body" element="esns:Result"/>
+    </message>
+
+    <portType name="utils_ProcessGetZipcodeDistance_PortType">
+        <operation name="Process">
+            <input message="tns:ProcessReq"/>
+            <output message="tns:ProcessRes"/>
+        </operation>
+    </portType>
+
+    <binding name="utils_ProcessGetZipcodeDistance_Binding" type="tns:utils_ProcessGetZipcodeDistance_PortType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="Process">
+            <soap:operation soapAction="utils/ProcessGetZipcodeDistance"/>
+            <input name="ProcessReq">
+                <soap:body use="literal"/>
+            </input>
+            <output name="ProcessRes">
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+    </binding>
+    <service name="utils_ProcessGetZipcodeDistance">
+        <documentation> Dit is de documentatie</documentation>
+        <port binding="tns:utils_ProcessGetZipcodeDistance_Binding" name="utils_ProcessGetZipcodeDistance_Port">
+            <soap:address location="http://ficus:3000/sportlink/knvb/servlet/SOAPMan"/>
+        </port>
+    </service>
+</definitions>

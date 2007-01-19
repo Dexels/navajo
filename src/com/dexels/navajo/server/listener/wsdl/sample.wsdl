@@ -1,48 +1,64 @@
-<definitions targetNamespace="http://www.dexels.nl/navajo/" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:esns="http://www.dexels.nl/navajo/schemas/" xmlns:nav="http://www.dexels.com/xsd/navajo" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://www.dexels.nl/navajo/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<?xml version="1.0"?>
+<definitions name="StockQuote"
+    targetNamespace="http://example.com/stockquote.wsdl"
+    xmlns:tns="http://example.com/stockquote.wsdl"
+    xmlns:xsd1="http://example.com/stockquote.xsd"
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+    xmlns="http://schemas.xmlsoap.org/wsdl/">
+    
     <types>
-        <xsd:schema targetNamespace="http://www.dexels.nl/navajo/schemas/">
-            <xsd:import namespace="http://www.dexels.com/xsd/navajo" schemaLocation=""/>
-            <xsd:complexType name="Ideal">
-                <xsd:sequence>
-                    <xsd:element name="MerchantId" type="xsd:string"/>
-                </xsd:sequence>
-            </xsd:complexType>
-            <xsd:complexType name="Issuers">
-                <xsd:sequence>
-                    <xsd:element name="List" type="nav:option"/>
-                </xsd:sequence>
-            </xsd:complexType>
-        </xsd:schema>
+        <schema targetNamespace="http://example.com/stockquote.xsd"
+            xmlns="http://www.w3.org/2000/10/XMLSchema">
+            <element name="TradePriceRequest">
+                <complexType>
+                    <all>
+                        <element name="tickerSymbol" type="string"/>
+                    </all>
+                </complexType>
+            </element>
+            <element name="TradePrice">
+                <complexType>
+                    <all>
+                        <element name="price" type="float"/>
+                    </all>
+                </complexType>
+            </element>
+        </schema>
     </types>
-    <message name="ProcessRequest">
-        <part name="Ideal" type="esns:Ideal"/>
+    
+    <message name="GetLastTradePriceInput">
+        <part name="body" element="xsd1:TradePriceRequest"/>
     </message>
-    <message name="ProcessResponse">
-        <part name="Issuers" type="esns:Issuers"/>
+    
+    <message name="GetLastTradePriceOutput">
+        <part name="body" element="xsd1:TradePrice"/>
     </message>
-    <portType name="ideal_ProcessGetBanks_PortType">
-        <operation name="Process">
-            <input message="tns:ProcessRequest" name="ProcessRequest"/>
-            <output message="tns:ProcessResponse" name="ProcessResponse"/>
+    
+    <portType name="StockQuotePortType">
+        <operation name="GetLastTradePrice">
+            <input message="tns:GetLastTradePriceInput"/>
+            <output message="tns:GetLastTradePriceOutput"/>
         </operation>
     </portType>
-    <binding name="ideal_ProcessGetBanks_Binding" type="tns:ideal_ProcessGetBanks_PortType">
+    
+    <binding name="StockQuoteSoapBinding" type="tns:StockQuotePortType">
         <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
-        <operation name="Process">
-            <soap:operation soapAction="ideal/ProcessGetBanks"/>
-            <input name="ProcessRequest">
-                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:dexels-navajo" use="encoded"/>
+        <operation name="GetLastTradePrice">
+            <soap:operation soapAction="http://example.com/GetLastTradePrice"/>
+            <input>
+                <soap:body use="literal"/>
             </input>
-            <output name="ProcessResponse">
-                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:dexels-navajo" use="encoded"/>
+            <output>
+                <soap:body use="literal"/>
             </output>
         </operation>
     </binding>
-    <service name="ideal_ProcessGetBanks">
-        <documentation>
-            Dit is de documentatie</documentation>
-        <port binding="tns:ideal_ProcessGetBanks_Binding" name="ideal_ProcessGetBanks_Port">
-            <soap:address location="http://ficus:3000/sportlink/knvb/servlet/SOAPMan"/>
+    
+    <service name="StockQuoteService">
+        <documentation>My first service</documentation>
+        <port name="StockQuotePort" binding="tns:StockQuoteSoapBinding">
+            <soap:address location="http://example.com/stockquote"/>
         </port>
     </service>
+    
 </definitions>

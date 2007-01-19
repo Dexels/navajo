@@ -38,13 +38,11 @@ public class WsdlProducer extends HttpServlet {
 
 	private static final String WSDL = "http://schemas.xmlsoap.org/wsdl/";
 	private static final String XMLSCHEMA = "http://www.w3.org/2001/XMLSchema";
-
 	private static final String SOAP = "http://schemas.xmlsoap.org/wsdl/soap/";
-	private static final String ENCODING = "http://schemas.xmlsoap.org/soap/encoding/";
-	private static final String MYNAMESPACE = "http://www.dexels.nl/navajo/";
-	private static final String MYSCHEMAS = "http://www.dexels.nl/navajo/schemas/";
-	private static final String NAVAJOTYPES ="http://www.dexels.com/xsd/navajo";
-
+	
+	private static final String MYNAMESPACE = "http://www.dexels.nl/navajo/webservice.xsd";
+	private static final String MYSCHEMAS = "navajo:webservice:types";
+	
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 
@@ -72,6 +70,52 @@ public class WsdlProducer extends HttpServlet {
 		return false;
 	}
 	
+	private void addSpecialNavajoTypes(Document d, Node schemaNode) {
+		
+		// selectedoption
+		Element n1 = d.createElement("xsd:simpleType");
+		n1.setAttribute("name", "selectedoption");
+		schemaNode.appendChild(n1);
+		Element n2 =  d.createElement("xsd:restriction");
+		n2.setAttribute("base", "xsd:string");
+		n1.appendChild(n2);
+		Element enum1 = d.createElement("xsd:enumeration");
+		enum1.setAttribute("value", "0");
+		Element enum2 = d.createElement("xsd:enumeration");
+		enum2.setAttribute("value", "1");
+		n2.appendChild(enum1);
+		n2.appendChild(enum2);
+		
+		// selection
+		Element n3 = d.createElement("xsd:complexType");
+		n3.setAttribute("name", "selection");
+		schemaNode.appendChild(n3);
+		Element n4 = d.createElement("xsd:sequence");
+		n3.appendChild(n4);
+		Element n5 = d.createElement("xsd:element");
+		n5.setAttribute("name", "option");
+		n5.setAttribute("minOccurs", "0");
+		n5.setAttribute("maxOccurs", "unbounded");
+		n4.appendChild(n5);
+		
+		Element n6 = d.createElement("xsd:complexType");
+		n5.appendChild(n6);
+		
+		Element nameAttr = d.createElement("xsd:attribute");
+		nameAttr.setAttribute("name", "name");
+		nameAttr.setAttribute("type", "xsd:string");
+		Element valueAttr = d.createElement("xsd:attribute");
+		valueAttr.setAttribute("name", "value");
+		valueAttr.setAttribute("type", "xsd:string");
+		Element selectedAttr = d.createElement("xsd:attribute");
+		selectedAttr.setAttribute("name", "selected");
+		selectedAttr.setAttribute("type", "tns:selectedoption");
+		n6.appendChild(nameAttr);
+		n6.appendChild(valueAttr);
+		n6.appendChild(selectedAttr);
+		
+	}
+	
 	private Element findTypesNode(Document d) {
 		Element types = (Element) XMLutils.findNode(d, "types");
 
@@ -85,13 +129,9 @@ public class WsdlProducer extends HttpServlet {
 		Element schema = (Element) XMLutils.findNode(types, "xsd:schema");
 		if ( schema == null) {
 			schema = d.createElementNS(XMLSCHEMA, "xsd:schema");
-			schema.setAttribute("targetNamespace", MYSCHEMAS);
+			schema.setAttribute("targetNamespace", MYNAMESPACE);
 			types.appendChild(schema);
-			System.err.println("Create schema: " + schema);
-			Element namespace = d.createElementNS(XMLSCHEMA, "xsd:import");
-			namespace.setAttribute("namespace", NAVAJOTYPES);
-			namespace.setAttribute("schemaLocation", "");
-			schema.appendChild(namespace);
+			addSpecialNavajoTypes(d, schema);
 		}
 		return schema;
 	}
@@ -122,13 +162,15 @@ public class WsdlProducer extends HttpServlet {
 					if ( p.getType().equals(Property.STRING_PROPERTY) ) {
 						part.setAttributeNS(XMLSCHEMA, "type", "xsd:string");
 					} else if ( p.getType().equals(Property.INTEGER_PROPERTY) ) {
-						part.setAttributeNS(XMLSCHEMA, "type", "xsd:string");
-					} else if ( p.getType().equals(Property.DATE_PROPERTY) ) {
-						part.setAttributeNS(XMLSCHEMA, "type", "xsd:string");
+						part.setAttributeNS(XMLSCHEMA, "type", "xsd:integer");
+					} else if ( p.getType().equals(Property.FLOAT_PROPERTY) ) {
+						part.setAttributeNS(XMLSCHEMA, "type", "xsd:float");
+					}  else if ( p.getType().equals(Property.DATE_PROPERTY) ) {
+						part.setAttributeNS(XMLSCHEMA, "type", "xsd:date");
 					} else if ( p.getType().equals(Property.BOOLEAN_PROPERTY) ) {
 						part.setAttributeNS(XMLSCHEMA, "type", "xsd:boolean");
 					} else if ( p.getType().equals(Property.SELECTION_PROPERTY)) {
-						part.setAttributeNS(NAVAJOTYPES, "type", "nav:option");
+						part.setAttributeNS(MYSCHEMAS, "type", "tns:selection");
 					} else {
 						part.setAttributeNS(XMLSCHEMA, "type", "xsd:string");
 					}
@@ -174,20 +216,19 @@ public class WsdlProducer extends HttpServlet {
 			definitions.setAttribute("targetNamespace", MYNAMESPACE);
 			definitions.setAttribute("xmlns:tns", MYNAMESPACE);
 			definitions.setAttribute("xmlns:esns", MYSCHEMAS);
-			definitions.setAttribute("xmlns:nav", NAVAJOTYPES);
-
+			
 			doc.appendChild(definitions);
 			// Get input message.
 			ArrayList inputMessages = addMessageDef(doc, definitions, input, true);
 			Element inputMessage = doc.createElement("message");
-			inputMessage.setAttribute("name", "ProcessRequest");
+			inputMessage.setAttribute("name", "ProcessReq");
 			definitions.appendChild(inputMessage);
 
 			for (int i = 0 ; i < inputMessages.size(); i++ ) {
 				Message m = (Message) inputMessages.get(i);
 				Element inputBody = doc.createElement("part");
 				inputBody.setAttribute("name", m.getName());
-				inputBody.setAttribute("type", "esns:"+m.getName());
+				inputBody.setAttribute("type", "tns:"+m.getName());
 				inputMessage.appendChild(inputBody);
 			}
 
@@ -200,13 +241,13 @@ public class WsdlProducer extends HttpServlet {
 			}
 			ArrayList outputMessages = addMessageDef(doc, definitions, output, false);
 			Element outputMessage = doc.createElement("message");
-			outputMessage.setAttribute("name", "ProcessResponse");
+			outputMessage.setAttribute("name", "ProcessRes");
 			definitions.appendChild(outputMessage);
 			for (int i = 0 ; i < outputMessages.size(); i++ ) {
 				Message m = (Message) outputMessages.get(i);
 				Element outputBody = doc.createElement("part");
 				outputBody.setAttribute("name", m.getName());
-				outputBody.setAttribute("type", "esns:"+m.getName());
+				outputBody.setAttribute("type", "tns:"+m.getName());
 				outputMessage.appendChild(outputBody);
 			}
 
@@ -225,16 +266,16 @@ public class WsdlProducer extends HttpServlet {
 			// Add input message.
 			Element inputMsg = doc.createElement("input");
 			operation.appendChild(inputMsg);
-			inputMsg.setAttribute("message", "tns:ProcessRequest");
-			inputMsg.setAttribute("name", "ProcessRequest");
+			inputMsg.setAttribute("message", "tns:ProcessReq");
+			inputMsg.setAttribute("name", "ProcessReq");
 
 
 			// Add output message.
 
 			Element outputMsg = doc.createElement("output");
 			operation.appendChild(outputMsg);
-			outputMsg.setAttribute("message", "tns:ProcessResponse");
-			outputMsg.setAttribute("name", "ProcessResponse");
+			outputMsg.setAttribute("message", "tns:ProcessRes");
+			outputMsg.setAttribute("name", "ProcessRes");
 
 
 			/**
@@ -245,7 +286,7 @@ public class WsdlProducer extends HttpServlet {
 			binding.setAttribute("type", "tns:" + webservice.replaceAll("/", "_") + "_PortType");
 			definitions.appendChild(binding);
 			Element soap = doc.createElementNS(SOAP, "soap:binding");
-			soap.setAttribute("style", "document");
+			soap.setAttribute("style", "rpc");
 			soap.setAttribute("transport", "http://schemas.xmlsoap.org/soap/http");
 			binding.appendChild(soap);
 			Element operation_b = doc.createElement("operation");
@@ -256,22 +297,22 @@ public class WsdlProducer extends HttpServlet {
 			operation_b.appendChild(soap_o);
 			// Input
 			Element operation_input = doc.createElement("input");
-			operation_input.setAttribute("name", "ProcessRequest");
+			operation_input.setAttribute("name", "ProcessReq");
 			operation_b.appendChild(operation_input);
 			Element soap_input_body =  doc.createElementNS(SOAP, "soap:body");
 			operation_input.appendChild(soap_input_body);
-			soap_input_body.setAttribute("encodingStyle", ENCODING);
-			soap_input_body.setAttribute("use", "encoded");
-			soap_input_body.setAttribute("namespace", "urn:dexels-navajo");
+			//soap_input_body.setAttribute("encodingStyle", ENCODING);
+			soap_input_body.setAttribute("use", "literal");
+			soap_input_body.setAttribute("namespace", MYNAMESPACE);
 			// Output
 			Element operation_output = doc.createElement("output");
-			operation_output.setAttribute("name", "ProcessResponse");
+			operation_output.setAttribute("name", "ProcessRes");
 			operation_b.appendChild(operation_output);
 			Element soap_output_body =  doc.createElementNS(SOAP, "soap:body");
 			operation_output.appendChild(soap_output_body);
-			soap_output_body.setAttribute("encodingStyle", ENCODING);
-			soap_output_body.setAttribute("use", "encoded");
-			soap_output_body.setAttribute("namespace", "urn:dexels-navajo");
+			//soap_output_body.setAttribute("encodingStyle", ENCODING);
+			soap_output_body.setAttribute("use", "literal");
+			soap_output_body.setAttribute("namespace", MYNAMESPACE);
 
 			/**
 			 * Service part.
