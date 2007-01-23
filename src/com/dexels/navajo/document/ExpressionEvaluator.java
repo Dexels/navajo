@@ -17,4 +17,5 @@ public interface ExpressionEvaluator {
   public Message match(String matchString, Navajo inMessage, Object mappableTreeNode, Message parent) throws NavajoException;
   public Map createDependencyMap(Navajo n) throws NavajoException;
   public List processRefreshQueue(Map depMap) throws NavajoException;
+  public ClassLoader getScriptClassLoader();
 }

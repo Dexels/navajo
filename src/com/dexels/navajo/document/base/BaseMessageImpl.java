@@ -21,6 +21,8 @@ import java.util.regex.*;
 import java.io.*;
 import javax.swing.tree.*;
 
+import sun.rmi.server.Dispatcher;
+
 public class BaseMessageImpl extends BaseNode implements Message, TreeNode, Comparable {
     protected String myName = "";
 
@@ -1167,16 +1169,41 @@ public final Message getParentMessage() {
 					desc = 1;
 				  }				  
 				}
-				// Now we assume oV is an existing property in both messages
 				
-				//System.err.println("Getting property compare: '" + oV + "',  descending? " + desc );
-				Property myOvProp = getProperty(oV);
-				if ( myOvProp == null ) {
-					System.err.println("WARNING: error while sorting message. Could not sort property named: " + oV);
-					return 0;
+				// Check whether oV is a function instead of a property.
+				if ( oV.indexOf("(") != -1 ) {
+					// It is a function.
+
+					String compareFunction = oV.substring(0, oV.indexOf("("));
+					Comparator c = null;
+					try {
+						Class compareClass = null;
+						System.err.println("Instantiating function " + compareFunction);
+						ExpressionEvaluator ee = NavajoFactory.getInstance().getExpressionEvaluator();
+						ClassLoader cl = ee.getScriptClassLoader();
+						System.err.println("Classloader is " + cl);
+						compareClass = Class.forName(compareFunction, true, cl);
+						c =  (Comparator) compareClass.newInstance();
+						compare = c.compare(this, o);	
+					} catch (Exception e) {
+						e.printStackTrace(System.err);
+						compare = 0;
+					}
+					
+				} else {
+					// Now we assume oV is an existing property in both messages
+
+
+					//System.err.println("Getting property compare: '" + oV + "',  descending? " + desc );
+					Property myOvProp = getProperty(oV);
+					if ( myOvProp == null ) {
+						System.err.println("WARNING: error while sorting message. Could not sort property named: " + oV);
+						return 0;
+					}
+					Property compOvProp = m.getProperty(oV);
+					compare = desc * compOvProp.compareTo(myOvProp);
 				}
-				Property compOvProp = m.getProperty(oV);
-				compare = desc * compOvProp.compareTo(myOvProp);
+				
 				//System.err.println("Compared value: " + compare);
 			  }
 			  return compare;			  
