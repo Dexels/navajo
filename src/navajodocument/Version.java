@@ -63,15 +63,17 @@ package navajodocument;
  * 
  * 9.1.0 Support for orderby construct in array messages. Message implements Comparable now.
  * 
+ * 9.1.1 Order by of messages now support java comparator functions
+ * 
  */
 public class Version extends dexels.Version {
 
 	public static final int MAJOR          = 9;
 	public static final int MINOR          = 1;
-	public static final int PATCHLEVEL     = 0;
+	public static final int PATCHLEVEL     = 1;
 	public static final String VENDOR      = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Document";
-	public static final String RELEASEDATE = "2006-10-05";
+	public static final String RELEASEDATE = "2007-01-23";
 
 	// Included packages.
 

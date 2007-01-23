@@ -1178,10 +1178,10 @@ public final Message getParentMessage() {
 					Comparator c = null;
 					try {
 						Class compareClass = null;
-						System.err.println("Instantiating function " + compareFunction);
+						//System.err.println("Instantiating function " + compareFunction);
 						ExpressionEvaluator ee = NavajoFactory.getInstance().getExpressionEvaluator();
 						ClassLoader cl = ee.getScriptClassLoader();
-						System.err.println("Classloader is " + cl);
+						//System.err.println("Classloader is " + cl);
 						compareClass = Class.forName(compareFunction, true, cl);
 						c =  (Comparator) compareClass.newInstance();
 						compare = c.compare(this, o);	
