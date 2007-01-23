@@ -47,10 +47,13 @@ public final class StringFunction extends FunctionInterface {
       classTypes = new Class[parameters.size()];
       for (int i = 0; i < parameters.size(); i++) {
         Class c = parameters.get(i).getClass();
-        //System.err.println(i + " c = " + c.getName());
+        System.err.println(i + " c = " + c.getName());
         if (c.getName().equals("java.lang.Integer")) {
           c = java.lang.Integer.TYPE;
         }
+        if (c.getName().equals("java.lang.Character")) {
+            c = java.lang.Character.TYPE;
+          }
         classTypes[i] = c;
       }
     }
@@ -96,14 +99,17 @@ public final class StringFunction extends FunctionInterface {
     f.insertOperand(new Integer(0));
     f.insertOperand(new Integer(2));
     //f.insertOperand(new Integer(4));
+ 
     Object o = f.evaluate();
     System.out.println("o = " + o + ", type = " + o.getClass().getName());
     
     String noot = "BBFW63X@aap.nl";
     f.reset();
-    f.insertOperand("indexOf");
+    
+    f.insertOperand("replaceAll");
     f.insertOperand(noot);
     f.insertOperand("@");
+    f.insertOperand("%");
     o = f.evaluate();
     System.out.println("o = " + o + ", type = " + o.getClass().getName());
     
