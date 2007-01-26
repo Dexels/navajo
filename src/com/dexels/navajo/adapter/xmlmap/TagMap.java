@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 import java.util.Vector;
+import java.util.regex.Pattern;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
@@ -58,6 +59,7 @@ public class TagMap implements Mappable {
 	public TagMap child;
 	public String childName;
 	public String childText;
+	public String childAttribute;
 	public boolean exists;
 	public int indent = DEFAULT_INDENT;
 		
@@ -137,7 +139,7 @@ public class TagMap implements Mappable {
 		this.indent = ( indent > 0 ) ? indent : this.DEFAULT_INDENT;
 	}
 
-	protected TagMap getChildTag(String s) {
+	protected TagMap getChildTag(String s, int index) {
 
 		if ( tags != null ) {
 			Iterator keys = tags.keySet().iterator();
@@ -145,8 +147,12 @@ public class TagMap implements Mappable {
 			while ( keys.hasNext() ) {
 				String key = (String) keys.next();
 				
-				if ( s.equals( key.replaceFirst( this.PREFIX_PATTERN + this.PREFIX_SEPARATOR, "" ) ) ) {
+				Pattern pattern = Pattern.compile(s);
+				int count = 0;
+				if (  pattern.matcher(key.replaceFirst( this.PREFIX_PATTERN + this.PREFIX_SEPARATOR, "" )).matches()  && count == index ) {
 					return (TagMap) tags.get( key );
+				} else if ( s.equals( key.replaceFirst( this.PREFIX_PATTERN + this.PREFIX_SEPARATOR, "" ) ) ) {
+					count++;
 				}
 			}
 
@@ -161,9 +167,32 @@ public class TagMap implements Mappable {
 		t.setText(s);
 	}
 	
+	public String getAttribute(String a) {
+		if ( attributes.get(a) != null ) {
+			return (String) attributes.get(a);
+		}
+		return null;
+	}
+	
+	public String getChildAttribute(String a) {
+		TagMap t = getChild();
+		return t.getAttribute(a);
+	}
+	
+	public String getChildAttribute(String child, String a) {
+		setChildName(child);
+		TagMap t = getChild();
+		return t.getAttribute(a);
+	}
+	
 	public String getChildText() {
 		TagMap t = getChild();
 		return t.getText();
+	}
+	
+	public String getChildText(String child) {
+		setChildName(child);
+		return getChildText();
 	}
 	
 	public TagMap getChild() {
@@ -173,7 +202,16 @@ public class TagMap implements Mappable {
 		
 		while (childList.hasMoreTokens()) {
 			String subChildName = childList.nextToken();
-			child = (TagMap) child.getChildTag(subChildName);
+			StringTokenizer indexSpecifier = new StringTokenizer(subChildName, "@");
+			int index = 0;
+			if ( indexSpecifier.hasMoreTokens() ) {
+				subChildName = indexSpecifier.nextToken();
+			}
+			if ( indexSpecifier.hasMoreTokens() ) {
+				index = Integer.parseInt(indexSpecifier.nextToken());
+			}
+			
+			child = (TagMap) child.getChildTag(subChildName, index);
 		}
 		
 		return child;
@@ -255,6 +293,7 @@ public class TagMap implements Mappable {
 		
 		// Check for text node.
 		if ( e.getContent() != null && !e.getContent().equals("")) {
+			//System.err.println("Setting content: " + e.getContent() + " for tag " + t );
 			t.setText(e.getContent());
 		}
 		

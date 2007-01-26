@@ -26,6 +26,7 @@ package com.dexels.navajo.adapter;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Vector;
@@ -132,7 +133,6 @@ public class XMLMap extends TagMap implements Mappable {
 		catch (IOException ex) {
 			ex.printStackTrace();
 		}
-		
 		this.name = xe.getName();
 		
 		parseXML(xe);
@@ -154,7 +154,7 @@ public class XMLMap extends TagMap implements Mappable {
 		district.setName("district");
 		xml.setChild(district);
 		
-		System.err.println("child = " + xml.getChildTag("district"));
+		System.err.println("child = " + xml.getChildTag("district", 0));
 		
 		TagMap n = new TagMap();
 		n.setName("apenoot");
