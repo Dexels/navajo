@@ -281,7 +281,9 @@ public class Browser {
 		try {
 			r = new BufferedReader( new InputStreamReader( urlcon.getInputStream(), encoding ) );
 		} catch (Exception e) {
-			r = new BufferedReader( new InputStreamReader( urlcon.getInputStream() ) );
+			e.printStackTrace(System.err);
+			System.err.println("unknown encoding: " + encoding);
+			r = new BufferedReader( new InputStreamReader( urlcon.getInputStream(), "8859_1" ) );
 		}
 		System.err.println("DONE");
 		String line;
@@ -345,6 +347,8 @@ public class Browser {
 		tidiedStringContent = tidiedStringContent.replaceAll("&quot;", "");
 		tidiedStringContent = tidiedStringContent.replaceAll("&apos;", "");
 		tidiedStringContent = tidiedStringContent.replaceAll("&[A-z]*;", "");
+		//&#0;
+		tidiedStringContent = tidiedStringContent.replaceAll("&#0;", "");
 //		tidiedStringContent = tidiedStringContent.replaceAll("<b.*>", "");
 //		tidiedStringContent = tidiedStringContent.replaceAll("</b>", "");
 //		tidiedStringContent = tidiedStringContent.replaceAll("<p.*>", "");
@@ -370,14 +374,15 @@ public class Browser {
 		
 		
 		HashMap parameters = b.getFormParameters();
-		parameters.put("trtext", "Soup spoon");
-		parameters.put("lp", "en_nl");
+		parameters.put("trtext", "Coffee");
+		parameters.put("lp", "en_el");
 		
 		// next action, login and post to /ideal/firstLogonPreAction.do
 		// Find password using username value:
 
 		result = b.openUrl(b.getFormAction(), b.constructFormBody(b.formParameters), true);
 		n = b.getNavajo();
+		n.write(System.err);
 		System.err.println("vertaling = " + n.getMessage("Form").getProperty("q").getValue());
 		//System.err.println(b.currentContent);
 //		HashMap clubdetails = b.getFormParameters();
