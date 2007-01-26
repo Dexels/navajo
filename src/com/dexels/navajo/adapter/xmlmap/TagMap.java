@@ -162,7 +162,7 @@ public class TagMap implements Mappable {
 		}
 	}
 	
-	public void setChildText(String s) {
+	public void setChildText(String s) throws UserException {
 		TagMap t = getChild();
 		t.setText(s);
 	}
@@ -174,28 +174,28 @@ public class TagMap implements Mappable {
 		return null;
 	}
 	
-	public String getChildAttribute(String a) {
+	public String getChildAttribute(String a) throws UserException {
 		TagMap t = getChild();
 		return t.getAttribute(a);
 	}
 	
-	public String getChildAttribute(String child, String a) {
+	public String getChildAttribute(String child, String a) throws UserException {
 		setChildName(child);
 		TagMap t = getChild();
 		return t.getAttribute(a);
 	}
 	
-	public String getChildText() {
+	public String getChildText() throws UserException {
 		TagMap t = getChild();
 		return t.getText();
 	}
 	
-	public String getChildText(String child) {
+	public String getChildText(String child) throws UserException {
 		setChildName(child);
 		return getChildText();
 	}
 	
-	public TagMap getChild() {
+	public TagMap getChild() throws UserException {
 		
 		StringTokenizer childList = new StringTokenizer(childName, "/");
 		TagMap child = this;
@@ -210,8 +210,13 @@ public class TagMap implements Mappable {
 			if ( indexSpecifier.hasMoreTokens() ) {
 				index = Integer.parseInt(indexSpecifier.nextToken());
 			}
-			
+			TagMap parent = child;
 			child = (TagMap) child.getChildTag(subChildName, index);
+			if ( child == null ) {
+				child = new TagMap();
+				child.setName(subChildName);
+				parent.setChild(child);
+			}
 		}
 		
 		return child;

@@ -136,17 +136,16 @@ public class SOAPMap implements Mappable {
          "</geocode>";
   
 		XMLMap xm = new XMLMap();
-		xm.setContent(new Binary ( aap.getBytes() ));
+		//xm.setContent(new Binary ( aap.getBytes() ));
+		xm.setStart("geocode");
+		xm.setChildName("location");
+		xm.setChildText("1600 Pennsylvania Av, Washington, DC");
 		
 		sm.setRequestBody(xm.getContent());
 		sm.setDoSend(true);
 		
-		XMLMap response = new XMLMap();
-		response.setContent(sm.getResponseBody());
-		System.err.println( new String ( response.getContent().getData() ) );
-		System.err.println("lat  = " + response.getChildText("SOAP-ENV:Body/geocodeResponse/.*/item/lat") + 
-				         ", long = " + response.getChildText("SOAP-ENV:Body/geocodeResponse/.*/item/long"));
-		System.err.println(response.getChildAttribute("SOAP-ENV:Body/geocodeResponse/.*", "xmlns:geo"));
+		XMLMap response = sm.getXmlResponse();
+		System.err.println(response.getChildText("SOAP-ENV:Body/geocodeResponse/.*/item/lat"));
 		
 		
 	}
