@@ -15,5 +15,32 @@
 	<classpathentry exported="true" kind="src" path="/NavajoFunctions"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/DexelsVersionControl"/>
 	<classpathentry kind="lib" path="lib/edtftpj.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/NavajoListeners"/>
+	<classpathentry kind="lib" path="/NavajoListeners/lib/activation.jar"/>
+	<classpathentry kind="lib" path="/NavajoListeners/lib/ant-1_5_1.jar"/>
+	<classpathentry kind="lib" path="/NavajoListeners/lib/apache_soap-2_3_1.jar"/>
+	<classpathentry kind="lib" path="/NavajoListeners/lib/axis-1_0.jar"/>
+	<classpathentry kind="lib" path="/NavajoListeners/lib/axis-1_0-ant.jar"/>
+	<classpathentry kind="lib" path="/NavajoListeners/lib/commons-discovery.jar"/>
+	<classpathentry kind="lib" path="/NavajoListeners/lib/commons-logging.jar"/>
+	<classpathentry kind="lib" path="/NavajoListeners/lib/jaxrpc-1_1.jar"/>
+	<classpathentry kind="lib" path="/NavajoListeners/lib/jms.jar"/>
+	<classpathentry kind="lib" path="/NavajoListeners/lib/junit-3_8_1.jar"/>
+	<classpathentry kind="lib" path="/NavajoListeners/lib/kxml.zip"/>
+	<classpathentry kind="lib" path="/NavajoListeners/lib/log4j-1_2_4.jar"/>
+	<classpathentry kind="lib" path="/NavajoListeners/lib/mail.jar"/>
+	<classpathentry kind="lib" path="/NavajoListeners/lib/optional-1_5_1.jar"/>
+	<classpathentry kind="lib" path="/NavajoListeners/lib/qname-from-wsdl4j-20021124.jar"/>
+	<classpathentry kind="lib" path="/NavajoListeners/lib/saaj-1_1.jar"/>
+	<classpathentry kind="lib" path="/NavajoListeners/lib/saaj-api.jar"/>
+	<classpathentry kind="lib" path="/NavajoListeners/lib/saaj-impl.jar"/>
+	<classpathentry kind="lib" path="/NavajoListeners/lib/servlet-2_2.jar"/>
+	<classpathentry kind="lib" path="/NavajoListeners/lib/soaprmi-1_1.jar"/>
+	<classpathentry kind="lib" path="/NavajoListeners/lib/wsdl4j-20021124.jar"/>
+	<classpathentry kind="lib" path="/NavajoListeners/lib/wsif.jar"/>
+	<classpathentry kind="lib" path="/NavajoListeners/lib/wsif-j2c.jar"/>
+	<classpathentry kind="lib" path="/NavajoListeners/lib/xercesImpl-2_2_1.jar"/>
+	<classpathentry kind="lib" path="/NavajoListeners/lib/xmlParserAPIs-2_2_1.jar"/>
+	<classpathentry kind="lib" path="lib/Tidy.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
