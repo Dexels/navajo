@@ -31,6 +31,7 @@ public class MappableTreeNode implements Mappable {
         public Object myObject = null;
         public String name = "";
         public String ref = "";
+        public String currentMethod = "";
         public long starttime;
         public long endtime = -1;
         public int totaltime;
@@ -76,6 +77,10 @@ public class MappableTreeNode implements Mappable {
           }
         }
 
+        public String getCurrentMethod() {
+        	return currentMethod;
+        }
+        
         private boolean hasArrayParent() {
         	if ( getParent() == null ) {
         		return false;
