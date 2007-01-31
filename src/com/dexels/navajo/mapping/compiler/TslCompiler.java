@@ -1038,6 +1038,7 @@ result.append(printIdent(ident + 4) +
       contextClass = Class.forName(className, false, loader);
       } catch (Exception e) { throw new Exception("Could not find adapter: " + className); }
       String ref = mapNode.getAttribute("ref");
+      String filter = mapNode.getAttribute("filter");
       
       String mappableArrayName = "mappableObject" + (objectCounter++);
       result.append(printIdent(ident + 2) + mappableArrayName +
@@ -1054,6 +1055,15 @@ result.append(printIdent(ident + 4) +
       result.append(printIdent(ident + 4) +
                     "currentMap = new MappableTreeNode(access, currentMap, " +
                     mappableArrayName + "[i" + (ident + 2) + "], true);\n");
+      
+      // If filter is specified, evaluate filter first (31/1/2007)
+      if (!filter.equals("")) {
+        result.append(printIdent(ident + 4) + "if (Condition.evaluate(\"" +
+                      replaceQuotes(filter) +
+                      "\", inMessage, currentMap, currentInMsg, currentParamMsg)) {\n");
+        ident += 2;
+      } 
+      
       result.append(printIdent(ident + 4) + "String optionName = \"\";\n");
       result.append(printIdent(ident + 4) + "String optionValue = \"\";\n");
       result.append(printIdent(ident + 4) + "boolean optionSelected = false;\n");
@@ -1110,6 +1120,13 @@ result.append(printIdent(ident + 4) +
         }
       }
       result.append(printIdent(ident + 4) + "p.addSelection(NavajoFactory.getInstance().createSelection(access.getOutputDoc(), optionName, optionValue, optionSelected));\n");
+      
+      // If filter is specified add closing bracket (31/1/2007)
+      if (!filter.equals("")) {
+          ident -= 2;
+          result.append(printIdent(ident + 4) + "}\n");
+      }
+      
       result.append(printIdent(ident + 4) +
                     "currentMap.setEndtime();\ncurrentMap = (MappableTreeNode) treeNodeStack.pop();\n");
       result.append(printIdent(ident + 2) +
