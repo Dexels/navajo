@@ -5,6 +5,8 @@ import org.xml.sax.InputSource;
 
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
+import com.dexels.navajo.server.Dispatcher;
+
 import java.io.*;
 import java.util.*;
 import java.util.regex.*;
@@ -270,12 +272,14 @@ public class Generate {
       }
   }
 
-  public Navajo getInputPart(InputStream is) {
+  public Navajo getInputPart(Navajo result, InputStream is) {
 	  
 	  System.err.println("IN GETINPUTPART");
 	  try {
 		  //Document wsdl = XMLDocumentUtils.createDocument();
-		  Navajo inputDoc = NavajoFactory.getInstance().createNavajo();
+		  if ( result == null ) {
+			  result = NavajoFactory.getInstance().createNavajo();
+		  }
 		  Document script = createDocument(is);
 		  
 		  // Find map nodes.
@@ -286,18 +290,23 @@ public class Generate {
 		  
 		  for (int i = 0; i < list.getLength(); i++) {
 			  if (list.item(i).getNodeName().equals("map")) {
-				  generateInputPart(null, inputDoc, list.item(i));
+				  generateInputPart(null, result, list.item(i));
 			  } else if (list.item(i).getNodeName().equals("param")) {
-				  generateInputPart(null, inputDoc, list.item(i));
+				  generateInputPart(null, result, list.item(i));
 			  } else if (list.item(i).getNodeName().equals("message")) {
-					  generateInputPart(null, inputDoc, list.item(i));
+					  generateInputPart(null, result, list.item(i));
 			  } else if (list.item(i).getNodeName().equals("include")) {
 				  // Parse include also.
 				  System.err.println("TO DO: PARSE INCLUDE FILE FOR INPUT PROPERTIES");
+				  Element e = (Element) list.item(i);
+				  String includeFile = e.getAttribute("script");
+				  InputStream is2 = Dispatcher.getInstance().getNavajoConfig().getScript(includeFile);
+				  getInputPart(result, is2);
+				  is2.close();
 			  }
 		  }
 		  
-		  return inputDoc;
+		  return result;
 	  } catch (Exception e) {
 		  e.printStackTrace();
 		    return NavajoFactory.getInstance().createNavajo();
@@ -337,8 +346,8 @@ public class Generate {
       
 
       // Determine input messages:
-      FileInputStream fis = new FileInputStream("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts/competition/knvbnl/InitQueryCompetitionType.xml");
-      Navajo inputDoc = gen.getInputPart(fis);
+      FileInputStream fis = new FileInputStream("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts/competition/knvbnl/InitQueryClassSeason.xml");
+      Navajo inputDoc = gen.getInputPart(null, fis);
       fis.close();
       ArrayList msgs = inputDoc.getAllMessages();
       HashSet inputMessages = new HashSet();
