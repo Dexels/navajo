@@ -459,8 +459,16 @@ public class NanoTslCompiler {
         boolean isStringOperand = false;
 
         String condition = exprElmnt.getNonNullStringAttribute("condition");
-        String value = XMLUnescape(exprElmnt.getNonNullStringAttribute("value"));
-
+        XMLElement valueElt = null;
+        String value = null;
+        valueElt = exprElmnt.getFirstChild();
+        if ( valueElt != null && valueElt.getName().equals("value") )  {
+        	value = value.trim();
+        	value = value.replaceAll("\n", " ");
+        	value = XMLUnescape(value);        
+        } else {
+        	value = XMLUnescape(exprElmnt.getNonNullStringAttribute("value"));
+        }
         // Check if operand is given as text node between <expression> tags.
         
         if (value == null || value.equals("")) {

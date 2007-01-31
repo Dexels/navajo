@@ -458,7 +458,21 @@ public class TslCompiler {
     boolean isStringOperand = false;
 
     String condition = exprElmnt.getAttribute("condition");
-    String value = XMLutils.XMLUnescape(exprElmnt.getAttribute("value"));
+    String value = null;
+    Element valueElt = (Element) XMLutils.findNode(exprElmnt, "value");
+
+    if ( valueElt == null ) {
+    	value = XMLutils.XMLUnescape(exprElmnt.getAttribute("value"));
+    } else {
+    	value = getCDATAContent(valueElt);
+    	if ( value == null ) {
+    		Node child = valueElt.getFirstChild();
+    		value = child.getNodeValue();
+    	}
+    	value = value.trim();
+    	value = value.replaceAll("\n", " ");
+    	value = XMLutils.XMLUnescape(value);
+    }
 
     // Check if operand is given as text node between <expression> tags.
     if (value == null || value.equals("")) {
