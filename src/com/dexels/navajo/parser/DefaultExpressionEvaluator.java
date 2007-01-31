@@ -3,9 +3,12 @@ package com.dexels.navajo.parser;
 import com.dexels.navajo.document.*;
 
 import com.dexels.navajo.mapping.*;
+import com.dexels.navajo.server.Dispatcher;
+
 import java.util.*;
 
 import java.io.PrintWriter;
+
 
 /**
  * <p>Title: Navajo Product Project</p>
@@ -509,4 +512,7 @@ public final class DefaultExpressionEvaluator
     System.err.println("teun = " + teun.getTypedValue());
   }
 
+  public ClassLoader getScriptClassLoader() {
+	  return Dispatcher.getInstance().getNavajoConfig().getClassloader();
+  }
 }
