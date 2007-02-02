@@ -1,6 +1,7 @@
 package com.dexels.navajo.mapping;
 
 import com.dexels.navajo.server.*;
+import com.dexels.navajo.server.jmx.JMXHelper;
 import com.dexels.navajo.util.AuditLog;
 import com.dexels.navajo.document.*;
 
@@ -76,7 +77,7 @@ import com.dexels.navajo.document.*;
  *
  */
 
-public abstract class AsyncMappable implements Mappable {
+public abstract class AsyncMappable implements Mappable, AsyncMappableMXBean {
 
   private static final String VERSION = "$Id$";
 	
@@ -269,6 +270,7 @@ public abstract class AsyncMappable implements Mappable {
       System.err.println("STARTED RUNTHREAD ON: " + lastAccess);
       myRequest = new RequestThread(this);
       myRequest.start();
+      //JMXHelper.registerMXBean(myRequest, JMXHelper.ASYNC_DOMAIN, myRequest.getId()+"");
       running = true;
       stop = interrupt = resume = false;
     }

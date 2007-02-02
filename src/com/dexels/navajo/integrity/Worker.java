@@ -50,9 +50,10 @@ import com.dexels.navajo.server.GenericThread;
 import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.server.UserException;
+import com.dexels.navajo.server.jmx.JMXHelper;
 import com.dexels.navajo.util.AuditLog;
 
-public class Worker extends GenericThread {
+public class Worker extends GenericThread implements WorkerMXBean {
 
 	/**
 	 * Public fields (used as getters for mappable).
@@ -82,9 +83,10 @@ public class Worker extends GenericThread {
 	private Map runningRequestIds = Collections.synchronizedMap(new HashMap());
 	
 	private final static String RESPONSE_PREFIX = "navajoresponse_";
+	private final static String id = "Navajo Integrity Worker";
 	
 	public Worker() {
-		super("Navajo Integrity Worker");
+		super(id);
 	}
 	
 	/**
@@ -105,6 +107,7 @@ public class Worker extends GenericThread {
 			}
 			
 			instance = new Worker();
+			JMXHelper.registerMXBean(instance, JMXHelper.NAVAJO_DOMAIN, id);
 			instance.setSleepTime(50);
 			instance.startThread(instance);
 			// remove all previously stored response files.
@@ -475,6 +478,7 @@ public class Worker extends GenericThread {
 			instance.clearCache();
 			instance.notWrittenReponses.clear();
 			instance = null;
+			JMXHelper.deregisterMXBean(JMXHelper.NAVAJO_DOMAIN, id);
 			AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "Killed");
 		}
 	}

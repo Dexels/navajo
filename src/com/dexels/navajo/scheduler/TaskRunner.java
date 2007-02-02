@@ -43,9 +43,10 @@ import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.GenericThread;
 import com.dexels.navajo.server.NavajoConfig;
+import com.dexels.navajo.server.jmx.JMXHelper;
 import com.dexels.navajo.util.AuditLog;
 
-public class TaskRunner extends GenericThread {
+public class TaskRunner extends GenericThread implements TaskRunnerMXBean {
 
 	private static final String VERSION = "$Id$";
 	
@@ -53,13 +54,15 @@ public class TaskRunner extends GenericThread {
 	private static TaskRunner instance = null;
 	private final Map tasks = Collections.synchronizedMap(new HashMap());
 	private long configTimestamp = -1;
+	
 		
 	private final static String TASK_CONFIG = "tasks.xml";
 	
 	private static Object semaphore = new Object();
+	private static String id = "Navajo TaskRunner";
 	
 	public TaskRunner() {
-		super("Navajo TaskRunner");
+		super(id);
 	}
 	
 	protected boolean containsTask(String id) {
@@ -148,6 +151,7 @@ public class TaskRunner extends GenericThread {
 			}
 			
 			instance = new TaskRunner();	
+			JMXHelper.registerMXBean(instance, JMXHelper.NAVAJO_DOMAIN, id);
 			instance.startThread(instance);
 			instance.readConfig();
 			
@@ -345,6 +349,10 @@ public class TaskRunner extends GenericThread {
 		}
 	}
 
+	public String getVERSION() {
+		return VERSION;
+	}
+	
 	public void terminate() {
 		// Remove all tasks.
 		Iterator iter = tasks.values().iterator();
@@ -358,6 +366,7 @@ public class TaskRunner extends GenericThread {
 		}
 		tasks.clear();
 		instance = null;
+		JMXHelper.deregisterMXBean(JMXHelper.NAVAJO_DOMAIN, id);
 		AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Killed");
 	}
 }

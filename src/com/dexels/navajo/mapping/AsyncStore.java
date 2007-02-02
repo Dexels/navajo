@@ -4,6 +4,7 @@ import java.util.*;
 
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.GenericThread;
+import com.dexels.navajo.server.jmx.JMXHelper;
 import com.dexels.navajo.util.AuditLog;
 
 /**
@@ -34,7 +35,7 @@ import com.dexels.navajo.util.AuditLog;
  * ====================================================================
  */
 
-public final class AsyncStore extends GenericThread {
+public final class AsyncStore extends GenericThread implements AsyncStoreMXBean {
 
   private static final String VERSION = "$Id$";
 	
@@ -43,11 +44,12 @@ public final class AsyncStore extends GenericThread {
   public Map accessStore = null;
   private float timeout;
   private static int threadWait = 2000;
+  private static final String id = "Navajo AsyncStore";
   
   private static Object semaphore = new Object();
   
   public AsyncStore() {
-		super("Navajo AsyncStore");
+		super(id);
   }
   
   /**
@@ -71,6 +73,7 @@ public final class AsyncStore extends GenericThread {
 	  synchronized ( semaphore ) {
 		  if (instance == null) {
 			  instance = new AsyncStore();
+			  JMXHelper.registerMXBean(instance, JMXHelper.NAVAJO_DOMAIN, id);
 			  instance.timeout = timeout;
 			  instance.objectStore = Collections.synchronizedMap(new HashMap());
 			  instance.accessStore = Collections.synchronizedMap(new HashMap());
@@ -179,6 +182,10 @@ public final class AsyncStore extends GenericThread {
     }
   }
   
+  public String getVERSION() {
+	  return VERSION;
+  }
+  
   public void terminate() {
 	  // Removed all async mappable instances.
 	  for (Iterator iter = objectStore.values().iterator(); iter.hasNext();) {
@@ -192,7 +199,7 @@ public final class AsyncStore extends GenericThread {
 	  objectStore.clear();
 	  // Remove all Access objects.
 	  accessStore.clear();
-	  
+	  JMXHelper.deregisterMXBean(JMXHelper.NAVAJO_DOMAIN, id);
 	  instance = null;
 	  AuditLog.log(AuditLog.AUDIT_MESSAGE_ASYNC_RUNNER, "Killed");
   }

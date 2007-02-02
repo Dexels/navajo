@@ -11,7 +11,13 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import javax.management.InstanceAlreadyExistsException;
+import javax.management.InstanceNotFoundException;
+import javax.management.MBeanRegistrationException;
+import javax.management.MBeanServer;
 import javax.management.MBeanServerConnection;
+import javax.management.MalformedObjectNameException;
+import javax.management.NotCompliantMBeanException;
 import javax.management.ObjectInstance;
 import javax.management.ObjectName;
 import javax.management.remote.JMXConnector;
@@ -31,8 +37,8 @@ public final class JMXHelper implements Mappable {
 	
 	public Access [] webservices;
 	
-	private static JMXConnector conn;
-	private static MBeanServerConnection server;
+	private JMXConnector conn;
+	private MBeanServerConnection server;
 	private String host = "localhost";
 	private int port = 9999;
 	
@@ -40,6 +46,7 @@ public final class JMXHelper implements Mappable {
 	public static String ADAPTER_DOMAIN = "com.dexels.navajo.adapter:type=";
 	public static String NAVAJO_DOMAIN = "com.dexels.navajo.service:type=";
 	public static String ASYNC_DOMAIN = "com.dexels.navajo.async:type=";
+	public static String TASK_DOMAIN = "com.dexels.navajo.task:type=";
 	
 	private RMIServer getRMIServer(String hostName, int port) throws IOException {
 
@@ -55,17 +62,17 @@ public final class JMXHelper implements Mappable {
 	}
 
 	public void disconnect() {
-//		try {
-//			if ( conn != null ) {
-//				conn.close();
-//			}
-//			server = null;
-//			webservices = null;
-//			conn = null;
-//			System.err.println("Disconnected JMX.");
-//		} catch (IOException e) {
-//			e.printStackTrace(System.err);
-//		}
+		try {
+			if ( conn != null ) {
+				conn.close();
+			}
+			server = null;
+			webservices = null;
+			conn = null;
+			System.err.println("Disconnected JMX.");
+		} catch (IOException e) {
+			e.printStackTrace(System.err);
+		}
 	}
 	 
 	public void connect(String host, int port) throws IOException {
@@ -78,11 +85,11 @@ public final class JMXHelper implements Mappable {
 	}
 	
 	public void connect() throws IOException {
-		if ( server == null ) {
+	
 			conn = getServerConnection();
 			conn.connect();
 			server = conn.getMBeanServerConnection();
-		}
+	
 	}
 	
 	private JMXConnector getServerConnection() {
@@ -101,6 +108,11 @@ public final class JMXHelper implements Mappable {
 		StringTokenizer st = new StringTokenizer(objectname, "=");
 		st.nextToken();
 		String lastPart = st.nextToken();
+		if ( lastPart.indexOf("/") != -1 ) {
+			StringTokenizer st2 = new StringTokenizer(lastPart, "/");
+			st2.nextToken();
+			lastPart = st2.nextToken();
+		}
 		return lastPart.substring(0, lastPart.length());
 	}
 	
@@ -163,19 +175,49 @@ public final class JMXHelper implements Mappable {
 	
 		return myThread;
 	}
-	
-	public static void main(String [] args) throws Exception {
-		
-		JMXHelper jmx = new JMXHelper();
-		jmx.connect("ficus", 9999);
-		ThreadMXBean mxthread = 
-	    	(ThreadMXBean) ManagementFactory.newPlatformMXBeanProxy(jmx.server, "java.lang:type=Threading", java.lang.management.ThreadMXBean.class);
-		long [] ids = mxthread.getAllThreadIds();
-		System.err.println("ids = " + ids);
-		
-		jmx.disconnect();
+
+	public final static ObjectName getObjectName(String domain, String type) {
+		try {
+			return new ObjectName(domain + type);
+		} catch (MalformedObjectNameException e) {
+			e.printStackTrace();
+			return  null;
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+			return null;
+		} 
 	}
 
+	public final static void registerMXBean(Object o, String domain, String type) {
+		MBeanServer mbs = ManagementFactory.getPlatformMBeanServer(); 
+		ObjectName name = getObjectName(domain, type);
+		if ( name != null ) {
+			try {
+				mbs.registerMBean(o, name);
+			} catch (InstanceAlreadyExistsException e) {
+				e.printStackTrace(System.err);
+			} catch (MBeanRegistrationException e) {
+				e.printStackTrace(System.err);
+			} catch (NotCompliantMBeanException e) {
+				e.printStackTrace(System.err);
+			} 
+		}
+	}
+
+	public final static void deregisterMXBean(String domain, String type) {
+		MBeanServer mbs = ManagementFactory.getPlatformMBeanServer(); 
+		ObjectName name = getObjectName(domain, type);
+		if ( name != null ) {
+			try {
+				mbs.unregisterMBean(name);
+			} catch (InstanceNotFoundException e) {
+				e.printStackTrace(System.err);
+			} catch (MBeanRegistrationException e) {
+				e.printStackTrace(System.err);
+			}
+		}
+	}
+	  
 	public void kill() {
 		disconnect();
 	}

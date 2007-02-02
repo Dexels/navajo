@@ -5,6 +5,7 @@ import java.util.HashSet;
 import com.dexels.navajo.mapping.AsyncMappable;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.GenericThread;
+import com.dexels.navajo.server.jmx.JMXHelper;
 import com.dexels.navajo.util.AuditLog;
 
 import java.util.HashMap;
@@ -38,7 +39,7 @@ import java.util.Collections;
  * ====================================================================
  */
 
-public final class StatisticsRunner extends GenericThread {
+public final class StatisticsRunner extends GenericThread implements StatisticsRunnerMXBean {
 
   public int todoCount;
   public String storeClass;
@@ -47,11 +48,12 @@ public final class StatisticsRunner extends GenericThread {
   private static StatisticsRunner instance = null;
   private StoreInterface myStore = null;
   private Map todo = new HashMap();
+  private static String id = "Navajo StatisticsRunner";
   
   private static Object semaphore = new Object();
   
   public StatisticsRunner() {
-	 super("Navajo StatisticsRunner");
+	 super(id);
   }
   
   public final static StatisticsRunner getInstance() {
@@ -79,6 +81,7 @@ public final class StatisticsRunner extends GenericThread {
 		  if (instance == null) {
 			  
 			  instance = new StatisticsRunner();
+			  JMXHelper.registerMXBean(instance, JMXHelper.NAVAJO_DOMAIN, id);
 			  Class si = null;
 			  try {
 				  si = Class.forName(storeClass);
@@ -166,6 +169,7 @@ public final class StatisticsRunner extends GenericThread {
   public void terminate() {
 	  todo.clear();
 	  instance = null;
+	  JMXHelper.deregisterMXBean(JMXHelper.NAVAJO_DOMAIN, id);
 	  AuditLog.log(AuditLog.AUDIT_MESSAGE_STAT_RUNNER, "Killed");
   }
 

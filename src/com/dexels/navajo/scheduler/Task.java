@@ -35,6 +35,7 @@ import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.FatalException;
 import com.dexels.navajo.server.UserException;
+import com.dexels.navajo.server.jmx.JMXHelper;
 import com.dexels.navajo.util.AuditLog;
 
 /**
@@ -44,7 +45,7 @@ import com.dexels.navajo.util.AuditLog;
  * @author Arjen
  *
  */
-public class Task implements Runnable {
+public class Task implements Runnable, TaskMXBean {
 	
 	public String webservice;
 	public String username;
@@ -168,6 +169,7 @@ public class Task implements Runnable {
 	 */
 	public void setRemove(boolean b) {
 		this.remove = b;
+		JMXHelper.deregisterMXBean(JMXHelper.TASK_DOMAIN, getId());
 		AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "About to remove task: " + id);
 		myTrigger.removeTrigger();
 		if ( myThread != null && myThread.isAlive() ) {
@@ -201,6 +203,8 @@ public class Task implements Runnable {
 	 * The worker method for the task, keeps running until it gets flagged for removal.
 	 */
 	public void run() {
+		
+		JMXHelper.registerMXBean(this, JMXHelper.TASK_DOMAIN, getId());
 		
 		while (!remove) {
 			
@@ -270,7 +274,12 @@ public class Task implements Runnable {
 			}
 			
 		}
+		JMXHelper.deregisterMXBean(JMXHelper.TASK_DOMAIN, getId());
 		AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Terminated task: " + id);
+	}
+	
+	public String getTriggerDescription() {
+		return getTrigger().getDescription();
 	}
 	
 	public static void main(String [] args) throws Exception {

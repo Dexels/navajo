@@ -33,6 +33,7 @@ import java.net.*;
 import com.dexels.navajo.broadcast.BroadcastMessage;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.scheduler.WebserviceListener;
+import com.dexels.navajo.server.jmx.JMXHelper;
 import com.dexels.navajo.util.AuditLog;
 import com.dexels.navajo.util.Util;
 import com.dexels.navajo.integrity.Worker;
@@ -53,7 +54,7 @@ import com.dexels.navajo.mapping.MappableException;
  * finally dispatching to the proper dispatcher class.
  */
 
-public final class Dispatcher implements Mappable {
+public final class Dispatcher implements Mappable, DispatcherMXBean {
 
   public static int instances = 0;
   
@@ -160,6 +161,7 @@ public final class Dispatcher implements Mappable {
 	  synchronized (semaphore) {
 		  if ( instance == null ) {
 			  instance = new Dispatcher(configurationUrl, fileInputStreamReader);
+			  JMXHelper.registerMXBean(instance, JMXHelper.NAVAJO_DOMAIN, "Dispatcher");
 			  instance.setServerIdentifier(serverIdentification);
 			  NavajoFactory.getInstance().setTempDir(instance.getTempDir());
 			  // Startup task runner.
@@ -833,8 +835,8 @@ public final class Dispatcher implements Mappable {
     return handle(inMessage, null);
   }
 
-  public static String getThreadName(Access a) {
-	  return a.accessID;
+  public String getThreadName(Access a) {
+	  return applicationId + "/" + a.accessID;
   }
   
   /**
@@ -1198,6 +1200,7 @@ private void appendServerBroadCast(Access a, Navajo in, Header h) {
 		  // Clear all classloaders.
 		  GenericHandler.doClearCache();
 		  
+		  JMXHelper.deregisterMXBean(JMXHelper.NAVAJO_DOMAIN, "Dispatcher");
 		  // Finally kill myself
 		  instance = null;
 		  AuditLog.log(AuditLog.AUDIT_MESSAGE_DISPATCHER, "Navajo Dispatcher terminated.");
@@ -1276,6 +1279,10 @@ public Access getAccessObject(String id) {
 		}
 	}
 	return null;
+}
+
+public int getAccessSetSize() {
+	return Dispatcher.getInstance().accessSet.size();
 }
 
 public void kill() {

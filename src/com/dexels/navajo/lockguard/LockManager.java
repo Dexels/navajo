@@ -63,10 +63,12 @@ public final class LockManager extends GenericThread {
 	private long configTimestamp = -1;
 	private NavajoConfig myConfig;
 	
+	private final static String id = "Navajo LockManager";
+	
 	private static Object semaphore = new Object();
 	
 	public LockManager() {
-		super("Navajo LockManager");
+		super(id);
 	}
 	
 	private final static String LOCKS_CONFIG = "locks.xml";

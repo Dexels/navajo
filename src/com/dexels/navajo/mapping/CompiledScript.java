@@ -103,7 +103,7 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable {
   }
   
   public String getThreadName() {
-	  return Dispatcher.getThreadName(myAccess);
+	  return Dispatcher.getInstance().getThreadName(myAccess);
   }
   
   public String getStackTrace() {
@@ -185,54 +185,12 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable {
     }
   }
 
-  private final ObjectName getObjectName() {
-	  try {
-		return new ObjectName(JMXHelper.SCRIPT_DOMAIN + getThreadName());
-	} catch (MalformedObjectNameException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-		return  null;
-	} catch (NullPointerException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-		return null;
-	} 
-  }
   
-  private final void registerMXBean() {
-	  MBeanServer mbs = ManagementFactory.getPlatformMBeanServer(); 
-	  ObjectName name = getObjectName();
-	  if ( name != null ) {
-		  try {
-			mbs.registerMBean(this, name);
-		} catch (InstanceAlreadyExistsException e) {
-			e.printStackTrace(System.err);
-		} catch (MBeanRegistrationException e) {
-			e.printStackTrace(System.err);
-		} catch (NotCompliantMBeanException e) {
-			e.printStackTrace(System.err);
-		} 
-	  }
-  }
-  
-  private final void deregisterMXBean() {
-	  MBeanServer mbs = ManagementFactory.getPlatformMBeanServer(); 
-	  ObjectName name = getObjectName();
-	  if ( name != null ) {
-		  try {
-			mbs.unregisterMBean(name);
-		} catch (InstanceNotFoundException e) {
-			e.printStackTrace(System.err);
-		} catch (MBeanRegistrationException e) {
-			e.printStackTrace(System.err);
-		}
-	  }
-  }
   
   public final void run(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws Exception {
 
 	  myAccess = access;
-	  registerMXBean();
+	  JMXHelper.registerMXBean(this, JMXHelper.SCRIPT_DOMAIN, getThreadName());
 
 	  setValidations();
 
@@ -273,7 +231,7 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable {
 			  throw e;
 		  } finally {
 			  finalBlock(parms, inMessage, access, config);
-			  deregisterMXBean();
+			  JMXHelper.deregisterMXBean(JMXHelper.SCRIPT_DOMAIN, getThreadName());
 		  }
 	  }
   }
