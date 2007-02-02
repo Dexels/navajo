@@ -27,22 +27,43 @@ package com.dexels.navajo.mapping;
 
 import com.dexels.navajo.loader.NavajoClassSupplier;
 import com.dexels.navajo.server.*;
+import com.dexels.navajo.server.jmx.JMXHelper;
 import com.dexels.navajo.document.*;
+
+import java.lang.management.ManagementFactory;
+import java.lang.management.ThreadInfo;
 import java.util.*;
 
 import com.dexels.navajo.parser.Condition;
 import java.util.ArrayList;
 
-public abstract class CompiledScript {
+import javax.management.InstanceAlreadyExistsException;
+import javax.management.InstanceNotFoundException;
+import javax.management.MBeanRegistrationException;
+import javax.management.MBeanServer;
+import javax.management.MalformedObjectNameException;
+import javax.management.NotCompliantMBeanException;
+import javax.management.ObjectName;
+
+public abstract class CompiledScript implements CompiledScriptMXBean, Mappable {
 
   protected NavajoClassSupplier classLoader;
   private final HashMap functions = new HashMap();
 
+  /**
+   * Fields accessable by webservice.
+   */
+  public String stackTrace;
+  public String threadName;
+  public String accessId;
+  public long runnningTime;
+  
   public MappableTreeNode currentMap = null;
   public final Stack treeNodeStack = new Stack();
 //  public Navajo outDoc = null;
   public Navajo inDoc = null;
   public Message currentOutMsg = null;
+  public Access myAccess = null;
   public final Stack outMsgStack = new Stack();
   public final Stack paramMsgStack = new Stack();
   public Message currentParamMsg = null;
@@ -69,8 +90,58 @@ public abstract class CompiledScript {
 
   protected boolean kill = false;
 
+  public String getScriptName() {
+	  return getClass().getName();
+  }
+  
+  public String getUser() {
+	  return myAccess.rpcUser;
+  }
+  
+  public String getAccessId() {
+	  return myAccess.accessID;
+  }
+  
+  public String getThreadName() {
+	  return Dispatcher.getThreadName(myAccess);
+  }
+  
+  public String getStackTrace() {
+	  StringBuffer stackTrace = new StringBuffer();
+	  JMXHelper jmx = new JMXHelper();
+	  boolean connected = false;
+	  try {
+		  jmx.connect();
+		  connected = true;
+		  ThreadInfo ti = jmx.getThread(myAccess.getThread());
+		  StackTraceElement [] elt = ti.getStackTrace();
+		 
+		  for (int i = 0; i < elt.length; i++) {
+			  stackTrace.append(elt[i].getClassName()+"."+elt[i].getMethodName() + " (" + elt[i].getFileName() + ":" + elt[i].getLineNumber() + ")\n");
+		  }
+	  } catch (Exception e) {
+		  e.printStackTrace(System.err);
+		  return null;
+	  } finally {
+		  if ( connected ) {
+			  jmx.disconnect();
+		  }
+	  }
+	  return stackTrace.toString();
+  }
+  
+  public long getRunningTime() {
+	  return System.currentTimeMillis() -  myAccess.created.getTime();
+  }
+  
+  public void kill() {
+	  System.err.println("Calling kill from JMX");
+	  myAccess.getCompiledScript().setKill(true);
+  }
+  
   public void setKill(boolean b) {
-    kill = b;
+	  kill = b;
+	  myAccess.getThread().interrupt();
   }
 
   public boolean getKill() {
@@ -114,47 +185,97 @@ public abstract class CompiledScript {
     }
   }
 
+  private final ObjectName getObjectName() {
+	  try {
+		return new ObjectName(JMXHelper.SCRIPT_DOMAIN + getThreadName());
+	} catch (MalformedObjectNameException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+		return  null;
+	} catch (NullPointerException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+		return null;
+	} 
+  }
+  
+  private final void registerMXBean() {
+	  MBeanServer mbs = ManagementFactory.getPlatformMBeanServer(); 
+	  ObjectName name = getObjectName();
+	  if ( name != null ) {
+		  try {
+			mbs.registerMBean(this, name);
+		} catch (InstanceAlreadyExistsException e) {
+			e.printStackTrace(System.err);
+		} catch (MBeanRegistrationException e) {
+			e.printStackTrace(System.err);
+		} catch (NotCompliantMBeanException e) {
+			e.printStackTrace(System.err);
+		} 
+	  }
+  }
+  
+  private final void deregisterMXBean() {
+	  MBeanServer mbs = ManagementFactory.getPlatformMBeanServer(); 
+	  ObjectName name = getObjectName();
+	  if ( name != null ) {
+		  try {
+			mbs.unregisterMBean(name);
+		} catch (InstanceNotFoundException e) {
+			e.printStackTrace(System.err);
+		} catch (MBeanRegistrationException e) {
+			e.printStackTrace(System.err);
+		}
+	  }
+  }
+  
   public final void run(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws Exception {
-    setValidations();
-    currentParamMsg = inMessage.getMessage("__parms__");
-    
-    ConditionData[] conditions = checkValidations(inMessage);
-    boolean conditionsFailed = false;
-    if (conditions != null && conditions.length > 0) {
-      Navajo outMessage = access.getOutputDoc();
-      Message[] failed = Dispatcher.getInstance().checkConditions(conditions, inMessage,
-          outMessage);
-      if (failed != null) {
-        conditionsFailed = true;
-        Message msg = NavajoFactory.getInstance().createMessage(outMessage,
-            "ConditionErrors");
-        outMessage.addMessage(msg);
-        msg.setType(Message.MSG_TYPE_ARRAY);
-        for (int i = 0; i < failed.length; i++) {
-          msg.addMessage( (Message) failed[i]);
-        }
-      }
-    }
-    if (!conditionsFailed) {
-      try {
-        execute(parms, inMessage, access, config);
-      }
-      catch (com.dexels.navajo.mapping.BreakEvent be) {
-        // Be sure that all maps are killed()!
-        if (currentMap != null) {
-          callStoreOrKill(currentMap, "kill");
-        }
-        throw be;
-      }
-      catch (Exception e) {
-        if (currentMap != null && currentMap.getParent() != null) {
-          callStoreOrKill(currentMap.getParent(), "kill");
-        }
-        throw e;
-      } finally {
-        finalBlock(parms, inMessage, access, config);
-      }
-    }
+
+	  myAccess = access;
+	  registerMXBean();
+
+	  setValidations();
+
+	  currentParamMsg = inMessage.getMessage("__parms__");
+
+	  ConditionData[] conditions = checkValidations(inMessage);
+	  boolean conditionsFailed = false;
+	  if (conditions != null && conditions.length > 0) {
+		  Navajo outMessage = access.getOutputDoc();
+		  Message[] failed = Dispatcher.getInstance().checkConditions(conditions, inMessage,
+				  outMessage);
+		  if (failed != null) {
+			  conditionsFailed = true;
+			  Message msg = NavajoFactory.getInstance().createMessage(outMessage,
+					  "ConditionErrors");
+			  outMessage.addMessage(msg);
+			  msg.setType(Message.MSG_TYPE_ARRAY);
+			  for (int i = 0; i < failed.length; i++) {
+				  msg.addMessage( (Message) failed[i]);
+			  }
+		  }
+	  }
+	  if (!conditionsFailed) {
+		  try {
+			  execute(parms, inMessage, access, config);
+		  }
+		  catch (com.dexels.navajo.mapping.BreakEvent be) {
+			  // Be sure that all maps are killed()!
+			  if (currentMap != null) {
+				  callStoreOrKill(currentMap, "kill");
+			  }
+			  throw be;
+		  }
+		  catch (Exception e) {
+			  if (currentMap != null && currentMap.getParent() != null) {
+				  callStoreOrKill(currentMap.getParent(), "kill");
+			  }
+			  throw e;
+		  } finally {
+			  finalBlock(parms, inMessage, access, config);
+			  deregisterMXBean();
+		  }
+	  }
   }
 
   public final ConditionData[] checkValidations(Navajo inMessage) throws
@@ -223,5 +344,12 @@ public abstract class CompiledScript {
 	  
 	  return m;
   }
+  
+  public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
+  }
+
+  public void store() throws MappableException, UserException {
+  }
+
 
 }

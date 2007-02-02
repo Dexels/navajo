@@ -30,15 +30,9 @@ import java.io.*;
 import java.util.*;
 import java.net.*;
 
-import org.dexels.utils.JarResources;
-
-//import org.dexels.grus.DbConnectionBroker;
-
 import com.dexels.navajo.broadcast.BroadcastMessage;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.scheduler.WebserviceListener;
-import com.dexels.navajo.server.descriptionprovider.DescriptionProvider;
-import com.dexels.navajo.server.descriptionprovider.NullDescriptionProvider;
 import com.dexels.navajo.util.AuditLog;
 import com.dexels.navajo.util.Util;
 import com.dexels.navajo.integrity.Worker;
@@ -50,6 +44,8 @@ import com.dexels.navajo.lockguard.LockManager;
 import com.dexels.navajo.lockguard.LocksExceeded;
 
 import com.dexels.navajo.logger.*;
+import com.dexels.navajo.mapping.Mappable;
+import com.dexels.navajo.mapping.MappableException;
 
 /**
  * This class implements the general Navajo Dispatcher.
@@ -57,11 +53,14 @@ import com.dexels.navajo.logger.*;
  * finally dispatching to the proper dispatcher class.
  */
 
-public final class Dispatcher {
+public final class Dispatcher implements Mappable {
 
   public static int instances = 0;
   
-  /** Version information **/
+  /**
+   * Fields accessable by webservices
+   */
+  public Access [] users;
   public static final String VERSION = "$Id$";
   public static final String vendor = "Dexels BV";
   public static final String product = "Navajo Integrator";
@@ -170,6 +169,18 @@ public final class Dispatcher {
 	  return instance;
   }
    
+  public Access [] getUsers() {
+	  Set all = new HashSet(com.dexels.navajo.server.Dispatcher.getInstance().accessSet);
+	  Iterator iter = all.iterator();
+	  ArrayList d = new ArrayList();
+	  while (iter.hasNext()) {
+		  Access a = (Access) iter.next();
+		  d.add(a);
+	  }
+	  Access [] ams = new Access[d.size()];
+	  return (Access []) d.toArray(ams);
+  }
+  
   /**
    * Set the location of the certificate keystore.
    *
@@ -822,6 +833,10 @@ public final class Dispatcher {
     return handle(inMessage, null);
   }
 
+  public static String getThreadName(Access a) {
+	  return a.accessID;
+  }
+  
   /**
    * Handle a webservice.
    *
@@ -841,6 +856,7 @@ public final class Dispatcher {
     String rpcPassword = "";
     //String requestId = "";
     Exception myException = null;
+    String origThreadName = null;
     
     try {
 //      this.inMessage = inMessage;
@@ -900,6 +916,9 @@ public final class Dispatcher {
             access.compressedSend = clientInfo.isCompressedSend();
             access.contentLength = clientInfo.getContentLength();
             access.created = clientInfo.getCreated();
+            // Set the name of this thread.
+            origThreadName = Thread.currentThread().getName();
+            Thread.currentThread().setName(getThreadName(access));
           }
         }
         catch (AuthorizationException ex) {
@@ -1092,6 +1111,7 @@ public final class Dispatcher {
     			getNavajoConfig().getStatisticsRunner().addAccess(dummy, myException, null);
     		}
     	}
+    	Thread.currentThread().setName(origThreadName);
     }
   }
 
@@ -1242,6 +1262,34 @@ private void appendServerBroadCast(Access a, Navajo in, Header h) {
 public void setBroadcast(String message, int timeToLive, String recipientExpression) {
 	BroadcastMessage bm = new BroadcastMessage(message,timeToLive,recipientExpression);
 	broadcastMessage.add(bm);
+	
+}
+
+public Access getAccessObject(String id) {
+
+	Iterator iter = accessSet.iterator();
+	while (iter.hasNext()) {
+		Access a = (Access) iter.next();
+		if (a.accessID.equals(id)) {
+			System.err.println("FOUND ACCESS OBJECT!!!");
+			return a;
+		}
+	}
+	return null;
+}
+
+public void kill() {
+	// TODO Auto-generated method stub
+	
+}
+
+public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
+	// TODO Auto-generated method stub
+	
+}
+
+public void store() throws MappableException, UserException {
+	// TODO Auto-generated method stub
 	
 }
 }

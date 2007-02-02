@@ -25,254 +25,277 @@
 
 package com.dexels.navajo.server;
 
-
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.mapping.CompiledScript;
-import com.dexels.navajo.server.statistics.MapStatistics;
+import com.dexels.navajo.mapping.Mappable;
+import com.dexels.navajo.mapping.MappableException;
 
-public final class Access
-    implements java.io.Serializable {
+public final class Access implements java.io.Serializable, Mappable {
 
-  private static final String VERSION = "$Id$";
-	
-  public java.util.Date created = new java.util.Date();
-  public static int accessCount = 0;
-  public int threadCount = 0;
-  public String accessID = "";
-  public int userID;
-  public int serviceID;
-  public String rpcName = "";
-  public String rpcPwd = "";
-  public String rpcUser = "";
-  public String userAgent;
-  public String ipAddress;
-  public String hostName;
-  public boolean betaUser = false;
-  private Dispatcher myDispatcher;
-  private CompiledScript myScript = null;
-  private int totaltime;
-  public int parseTime;
-  public int authorisationTime;
-  public int clientTime;
-  //public int processingTime;
-  public String requestEncoding;
-  public boolean compressedReceive = false;
-  public boolean compressedSend = false;
-  public boolean isFinished = false;
-  public int contentLength;
+	private static final String VERSION = "$Id$";
 
-  private Throwable myException;
-  private Navajo outputDoc;
-  private Navajo inDoc;
-  private LazyMessageImpl lazyMap;
-  private Message currentOutMessage;
-  private Object userCertificate;
-  private static Object mutex = new Object();
-  private Set piggyBackData = null;
-  private String clientToken = null;
-  
-  private String waitingForPreviousRequest = null;
-  
-  
-  //private HashMap mapStatistics = null;
-  
-//  public MapStatistics createStatistics() {
-//	  MapStatistics ms = new MapStatistics();
-//	  if ( mapStatistics == null ) { // First map.
-//		  mapStatistics = new HashMap();
-//	  }
-//	  Integer count = new Integer(mapStatistics.size());
-//	  mapStatistics.put(count, ms);
-//	  
-//	  return ms;
-//  }
-//  
-//  public void updateStatistics(MapStatistics ms, int levelId, String mapName, long totalTime, int elementCount, boolean isArrayElement) {
-//	  
-//	  ms.levelId = levelId;
-//	  ms.mapName = mapName;
-//	  ms.elementCount = elementCount;
-//	  ms.totalTime = totalTime;
-//	  ms.isArrayElement = isArrayElement;
-//	 
-//  }
-  
-  public Navajo getOutputDoc() {
-    return outputDoc;
-  }
+	public java.util.Date created = new java.util.Date();
+	public static int accessCount = 0;
+	public int threadCount = 0;
+	public String accessID = "";
+	public int userID;
+	public int serviceID;
+	public String rpcName = "";
+	public String rpcPwd = "";
+	public String rpcUser = "";
+	public String userAgent;
+	public String ipAddress;
+	public String hostName;
+	public boolean betaUser = false;
+	private Dispatcher myDispatcher;
+	public CompiledScript myScript = null;
+	private int totaltime;
+	public int parseTime;
+	public int authorisationTime;
+	public int clientTime;
+	//public int processingTime;
+	public String requestEncoding;
+	public boolean compressedReceive = false;
+	public boolean compressedSend = false;
+	public boolean isFinished = false;
+	public int contentLength;
 
-  public boolean hasCertificate() {
-    return (userCertificate != null);
-  }
+	private Throwable myException;
+	private Navajo outputDoc;
+	private Navajo inDoc;
+	private LazyMessageImpl lazyMap;
+	private Message currentOutMessage;
+	private Object userCertificate;
+	private static Object mutex = new Object();
+	private Set piggyBackData = null;
+	private String clientToken = null;
 
-  public void setOutputDoc(Navajo n) {
-    outputDoc = n;
-  }
+	private String waitingForPreviousRequest = null;
+	private Thread myThread = null;
 
-  public void setWaitingForPreviousResponse(String id) {
-	  this.waitingForPreviousRequest = id;
-  }
-  
-  public String getWaitingForPreviousResponse() {
-	  return this.waitingForPreviousRequest;
-  }
-  
-  public void setCompiledScript(CompiledScript cs) {
-    this.myScript = cs;
-  }
 
-  public CompiledScript getCompiledScript() {
-    return this.myScript;
-  }
+	//private HashMap mapStatistics = null;
 
-  public void setException(Throwable e) {
-    this.myException = e;
-  }
+//	public MapStatistics createStatistics() {
+//	MapStatistics ms = new MapStatistics();
+//	if ( mapStatistics == null ) { // First map.
+//	mapStatistics = new HashMap();
+//	}
+//	Integer count = new Integer(mapStatistics.size());
+//	mapStatistics.put(count, ms);
 
-  public Throwable getException() {
-    return this.myException;
-  }
+//	return ms;
+//	}
 
-  public Access(int accessID, int userID, int serviceID, String rpcUser,
-                String rpcName, String userAgent, String ipAddress,
-                String hostName,
-                boolean betaUser, Object certificate) {
+//	public void updateStatistics(MapStatistics ms, int levelId, String mapName, long totalTime, int elementCount, boolean isArrayElement) {
 
-	  
-    synchronized (mutex) {
-      accessCount++;
-      this.accessID = created.getTime() + "-" + accessCount;
-      //System.err.println("accessID " + this.accessID + ", WS = " + rpcName + ", USER = " + rpcUser);
-    }
-    this.userID = userID;
-    this.serviceID = serviceID;
-    this.rpcName = rpcName;
-    this.rpcUser = rpcUser;
-    this.userAgent = userAgent;
-    this.hostName = hostName;
-    this.ipAddress = ipAddress;
-    this.betaUser = betaUser;
-    this.userCertificate = certificate;
+//	ms.levelId = levelId;
+//	ms.mapName = mapName;
+//	ms.elementCount = elementCount;
+//	ms.totalTime = totalTime;
+//	ms.isArrayElement = isArrayElement;
 
-  }
+//	}
 
-  public Access(int accessID, int userID, int serviceID, String rpcUser,
-                String rpcName, String userAgent, String ipAddress,
-                String hostName, Object certificate) {
-	  
-	  
-    synchronized (mutex) {
-      accessCount++;
-      this.accessID = created.getTime() + "-" + accessCount;
-      //System.err.println("accessID " + this.accessID + ", WS = " + rpcName + ", USER = " + rpcUser);
-    }
-    this.userID = userID;
-    this.serviceID = serviceID;
-    this.rpcName = rpcName;
-    this.rpcUser = rpcUser;
-    this.userAgent = userAgent;
-    this.hostName = hostName;
-    this.ipAddress = ipAddress;
-    this.betaUser = false;
-    this.userCertificate = certificate;
-
-  }
-
-  protected final void setUserCertificate(Object cert) {
-    userCertificate = cert;
-  }
-
-  public final Object getUserCertificate() {
-    return userCertificate;
-  }
-
-  protected final void setMyDispatcher(Dispatcher d) {
-    this.myDispatcher = d;
-  }
-
-  public final Dispatcher getDispatcher() {
-    return this.myDispatcher;
-  }
-
-  public final void setLazyMessages(LazyMessageImpl h) {
-    this.lazyMap = h;
-  }
-
-  public final LazyMessageImpl getLazyMessages() {
-    return this.lazyMap;
-  }
-
-  public final Message getCurrentOutMessage() {
-    return currentOutMessage;
-  }
-
-  public final void setCurrentOutMessage(Message currentOutMessage) {
-    this.currentOutMessage = currentOutMessage;
-  }
-
-  public final void setFinished() {
-	  isFinished = true;
-	  totaltime = (int) (System.currentTimeMillis() - created.getTime());
-  }
-  
-  public final boolean isFinished() {
-	  return isFinished;
-  }
-
-  public int getTotaltime() {
-    return totaltime;
-  }
-
-  public Navajo getInDoc() {
-    return inDoc;
-  }
-
-  public void setInDoc(Navajo inDoc) {
-    this.inDoc = inDoc;
-  }
-
-  public int getThreadCount() {
-    return threadCount;
-  }
-
-  public void setThreadCount(int threadCount) {
-    this.threadCount = threadCount;
-  }
-
-  public void storeStatistics(Header h) {
-	  if (h!=null) {
-		  h.setAttribute("serverTime",""+getTotaltime());
-		  h.setAttribute("accessId", this.accessID);
-		  h.setAttribute("requestParseTime",""+parseTime);
-	  }
-  }
-
-//  public HashMap getMapStatistics() {
-//	  return mapStatistics;
-//  }
-  
-public void addPiggybackData(Map element) {
-	if (piggyBackData==null) {
-		piggyBackData = new HashSet();
+	public Navajo getOutputDoc() {
+		return outputDoc;
 	}
-	piggyBackData.add(element);
-}
 
-public Set getPiggybackData() {
-	return piggyBackData;
-}
+	public boolean hasCertificate() {
+		return (userCertificate != null);
+	}
 
-public String getClientToken() {
-	return clientToken ;
-}
+	public void setOutputDoc(Navajo n) {
+		outputDoc = n;
+	}
 
-public void setClientToken(String clientToken) {
-	this.clientToken = clientToken;
-}
+	public void setWaitingForPreviousResponse(String id) {
+		this.waitingForPreviousRequest = id;
+	}
+
+	public String getWaitingForPreviousResponse() {
+		return this.waitingForPreviousRequest;
+	}
+
+	public void setCompiledScript(CompiledScript cs) {
+		this.myScript = cs;
+	}
+
+	public CompiledScript getMyScript() {
+		return myScript;
+	}
+
+	public CompiledScript getCompiledScript() {
+		return this.myScript;
+	}
+
+	public void setException(Throwable e) {
+		this.myException = e;
+	}
+
+	public Throwable getException() {
+		return this.myException;
+	}
+
+	public Access(int accessID, int userID, int serviceID, String rpcUser,
+			String rpcName, String userAgent, String ipAddress,
+			String hostName,
+			boolean betaUser, Object certificate) {
+
+		myThread = Thread.currentThread();
+
+		synchronized (mutex) {
+			accessCount++;
+			this.accessID = created.getTime() + "-" + accessCount;
+			//System.err.println("accessID " + this.accessID + ", WS = " + rpcName + ", USER = " + rpcUser);
+		}
+		this.userID = userID;
+		this.serviceID = serviceID;
+		this.rpcName = rpcName;
+		this.rpcUser = rpcUser;
+		this.userAgent = userAgent;
+		this.hostName = hostName;
+		this.ipAddress = ipAddress;
+		this.betaUser = betaUser;
+		this.userCertificate = certificate;
+
+	}
+
+	public Access(int accessID, int userID, int serviceID, String rpcUser,
+			String rpcName, String userAgent, String ipAddress,
+			String hostName, Object certificate) {
+
+
+		myThread = Thread.currentThread();
+
+		synchronized (mutex) {
+			accessCount++;
+			this.accessID = created.getTime() + "-" + accessCount;
+			//System.err.println("accessID " + this.accessID + ", WS = " + rpcName + ", USER = " + rpcUser);
+		}
+		this.userID = userID;
+		this.serviceID = serviceID;
+		this.rpcName = rpcName;
+		this.rpcUser = rpcUser;
+		this.userAgent = userAgent;
+		this.hostName = hostName;
+		this.ipAddress = ipAddress;
+		this.betaUser = false;
+		this.userCertificate = certificate;
+
+	}
+
+	protected final void setUserCertificate(Object cert) {
+		userCertificate = cert;
+	}
+
+	public final Object getUserCertificate() {
+		return userCertificate;
+	}
+
+	protected final void setMyDispatcher(Dispatcher d) {
+		this.myDispatcher = d;
+	}
+
+	public final Dispatcher getDispatcher() {
+		return this.myDispatcher;
+	}
+
+	public final void setLazyMessages(LazyMessageImpl h) {
+		this.lazyMap = h;
+	}
+
+	public final LazyMessageImpl getLazyMessages() {
+		return this.lazyMap;
+	}
+
+	public final Message getCurrentOutMessage() {
+		return currentOutMessage;
+	}
+
+	public final void setCurrentOutMessage(Message currentOutMessage) {
+		this.currentOutMessage = currentOutMessage;
+	}
+
+	public final void setFinished() {
+		isFinished = true;
+		totaltime = (int) (System.currentTimeMillis() - created.getTime());
+	}
+
+	public final boolean isFinished() {
+		return isFinished;
+	}
+
+	public int getTotaltime() {
+		return totaltime;
+	}
+
+	public Navajo getInDoc() {
+		return inDoc;
+	}
+
+	public void setInDoc(Navajo inDoc) {
+		this.inDoc = inDoc;
+	}
+
+	public int getThreadCount() {
+		return threadCount;
+	}
+
+	public void setThreadCount(int threadCount) {
+		this.threadCount = threadCount;
+	}
+
+	public void storeStatistics(Header h) {
+		if (h!=null) {
+			h.setAttribute("serverTime",""+getTotaltime());
+			h.setAttribute("accessId", this.accessID);
+			h.setAttribute("requestParseTime",""+parseTime);
+		}
+	}
+
+//	public HashMap getMapStatistics() {
+//	return mapStatistics;
+//	}
+
+	public void addPiggybackData(Map element) {
+		if (piggyBackData==null) {
+			piggyBackData = new HashSet();
+		}
+		piggyBackData.add(element);
+	}
+
+	public Set getPiggybackData() {
+		return piggyBackData;
+	}
+
+	public String getClientToken() {
+		return clientToken ;
+	}
+
+	public void setClientToken(String clientToken) {
+		this.clientToken = clientToken;
+	}
+
+	public Thread getThread() {
+		return myThread;
+	}
+
+	public String getAccessID() {
+		return this.accessID;
+	}
+
+	public void kill() {
+	}
+
+	public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
+	}
+
+	public void store() throws MappableException, UserException {
+	}
+
 }
