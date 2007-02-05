@@ -199,7 +199,12 @@ public final class AsyncStore extends GenericThread implements AsyncStoreMXBean 
 	  objectStore.clear();
 	  // Remove all Access objects.
 	  accessStore.clear();
-	  JMXHelper.deregisterMXBean(JMXHelper.NAVAJO_DOMAIN, id);
+	  try {
+		  JMXHelper.deregisterMXBean(JMXHelper.NAVAJO_DOMAIN, id);
+	  } catch (Throwable e) {
+		  // TODO Auto-generated catch block
+		  e.printStackTrace();
+	  }
 	  instance = null;
 	  AuditLog.log(AuditLog.AUDIT_MESSAGE_ASYNC_RUNNER, "Killed");
   }

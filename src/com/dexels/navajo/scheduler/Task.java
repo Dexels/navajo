@@ -169,7 +169,12 @@ public class Task implements Runnable, TaskMXBean {
 	 */
 	public void setRemove(boolean b) {
 		this.remove = b;
-		JMXHelper.deregisterMXBean(JMXHelper.TASK_DOMAIN, getId());
+		try {
+			JMXHelper.deregisterMXBean(JMXHelper.TASK_DOMAIN, getId());
+		} catch (Throwable e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "About to remove task: " + id);
 		myTrigger.removeTrigger();
 		if ( myThread != null && myThread.isAlive() ) {
@@ -274,7 +279,12 @@ public class Task implements Runnable, TaskMXBean {
 			}
 			
 		}
-		JMXHelper.deregisterMXBean(JMXHelper.TASK_DOMAIN, getId());
+		try {
+			JMXHelper.deregisterMXBean(JMXHelper.TASK_DOMAIN, getId());
+		} catch (Throwable e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Terminated task: " + id);
 	}
 	

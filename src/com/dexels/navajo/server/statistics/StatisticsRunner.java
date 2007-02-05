@@ -169,7 +169,12 @@ public final class StatisticsRunner extends GenericThread implements StatisticsR
   public void terminate() {
 	  todo.clear();
 	  instance = null;
-	  JMXHelper.deregisterMXBean(JMXHelper.NAVAJO_DOMAIN, id);
+	  try {
+		  JMXHelper.deregisterMXBean(JMXHelper.NAVAJO_DOMAIN, id);
+	  } catch (Throwable e) {
+		  // TODO Auto-generated catch block
+		  e.printStackTrace();
+	  }
 	  AuditLog.log(AuditLog.AUDIT_MESSAGE_STAT_RUNNER, "Killed");
   }
 

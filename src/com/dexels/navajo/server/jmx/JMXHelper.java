@@ -195,26 +195,23 @@ public final class JMXHelper implements Mappable {
 			try {
 				mbs.registerMBean(o, name);
 			} catch (InstanceAlreadyExistsException e) {
-				e.printStackTrace(System.err);
+				System.err.println("WARNING: Could not register MXBean for domain " + domain + ": " + e.getMessage());
+				//e.printStackTrace(System.err);
 			} catch (MBeanRegistrationException e) {
-				e.printStackTrace(System.err);
+				System.err.println("WARNING: Could not register MXBean for domain " + domain + ": " + e.getMessage());
+				//e.printStackTrace(System.err);
 			} catch (NotCompliantMBeanException e) {
-				e.printStackTrace(System.err);
+				System.err.println("WARNING: Could not register MXBean for domain " + domain +  ": " + e.getMessage());
+				//e.printStackTrace(System.err);
 			} 
 		}
 	}
 
-	public final static void deregisterMXBean(String domain, String type) {
+	public final static void deregisterMXBean(String domain, String type) throws Throwable {
 		MBeanServer mbs = ManagementFactory.getPlatformMBeanServer(); 
 		ObjectName name = getObjectName(domain, type);
 		if ( name != null ) {
-			try {
-				mbs.unregisterMBean(name);
-			} catch (InstanceNotFoundException e) {
-				e.printStackTrace(System.err);
-			} catch (MBeanRegistrationException e) {
-				e.printStackTrace(System.err);
-			}
+			mbs.unregisterMBean(name);
 		}
 	}
 	  

@@ -1113,7 +1113,9 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
     			getNavajoConfig().getStatisticsRunner().addAccess(dummy, myException, null);
     		}
     	}
-    	Thread.currentThread().setName(origThreadName);
+    	if ( origThreadName != null ) {
+    		Thread.currentThread().setName(origThreadName);
+    	}
     }
   }
 
@@ -1200,7 +1202,12 @@ private void appendServerBroadCast(Access a, Navajo in, Header h) {
 		  // Clear all classloaders.
 		  GenericHandler.doClearCache();
 		  
-		  JMXHelper.deregisterMXBean(JMXHelper.NAVAJO_DOMAIN, "Dispatcher");
+		  try {
+			  JMXHelper.deregisterMXBean(JMXHelper.NAVAJO_DOMAIN, "Dispatcher");
+		  } catch (Throwable e) {
+			  // TODO Auto-generated catch block
+			  e.printStackTrace();
+		  }
 		  // Finally kill myself
 		  instance = null;
 		  AuditLog.log(AuditLog.AUDIT_MESSAGE_DISPATCHER, "Navajo Dispatcher terminated.");

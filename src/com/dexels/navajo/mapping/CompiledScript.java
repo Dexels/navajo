@@ -231,7 +231,11 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable {
 			  throw e;
 		  } finally {
 			  finalBlock(parms, inMessage, access, config);
-			  JMXHelper.deregisterMXBean(JMXHelper.SCRIPT_DOMAIN, getThreadName());
+			  try {
+				  JMXHelper.deregisterMXBean(JMXHelper.SCRIPT_DOMAIN, getThreadName());
+			  } catch (Throwable t) {
+				  System.err.println("WARNING: Could not register script as MBean: " + t.getMessage());
+			  }
 		  }
 	  }
   }
