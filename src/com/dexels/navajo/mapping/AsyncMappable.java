@@ -208,7 +208,7 @@ public abstract class AsyncMappable implements Mappable, AsyncMappableMXBean {
   }
 
   public String getClassName() {
-	  return this.getClassName();
+	  return this.getClass().getName();
   }
   
   public final boolean isInterrupted() {

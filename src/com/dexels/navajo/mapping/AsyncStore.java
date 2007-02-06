@@ -107,7 +107,13 @@ public final class AsyncStore extends GenericThread implements AsyncStoreMXBean 
 					  System.err.println("REMOVED " + ref +
 					  " FROM OBJECT STORE DUE TO KILLONFINNISH");
 				  }
+				  
 				  a.kill();
+				  AsyncMappable am = (AsyncMappable) objectStore.get(ref);
+				  try {
+						JMXHelper.deregisterMXBean(JMXHelper.ASYNC_DOMAIN, am.getClassName() + "-" + ref);
+					} catch (Throwable e) {
+					}
 				  objectStore.remove(ref);
 				  accessStore.remove(ref);
 				  a = null;
@@ -127,7 +133,7 @@ public final class AsyncStore extends GenericThread implements AsyncStoreMXBean 
     String ref = o.hashCode() + "";
     objectStore.put(ref + "", o);
     accessStore.put(ref + "", a);
-    JMXHelper.registerMXBean(o, JMXHelper.ASYNC_DOMAIN, o.className + "-" + ref);
+    JMXHelper.registerMXBean(o, JMXHelper.ASYNC_DOMAIN, o.getClassName() + "-" + ref);
     return ref;
   }
 
@@ -172,7 +178,7 @@ public final class AsyncStore extends GenericThread implements AsyncStoreMXBean 
 	System.err.println("About to remove async instance: " + ref);
     Object o = objectStore.get(ref);
     try {
-		JMXHelper.deregisterMXBean(JMXHelper.ASYNC_DOMAIN, ((AsyncMappable )o).className + "-" + ref);
+		JMXHelper.deregisterMXBean(JMXHelper.ASYNC_DOMAIN, ((AsyncMappable )o).getClassName() + "-" + ref);
 	} catch (Throwable e) {
 	}
     if (o == null) {
