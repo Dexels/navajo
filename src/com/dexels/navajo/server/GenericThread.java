@@ -27,11 +27,15 @@ package com.dexels.navajo.server;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import javax.management.AttributeChangeNotification;
+import javax.management.MBeanNotificationInfo;
+import javax.management.NotificationBroadcasterSupport;
+
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 
-public class GenericThread implements Runnable, Mappable {
+public class GenericThread extends NotificationBroadcasterSupport implements Runnable, Mappable {
 
 	public String myId;
 	public boolean killed = false;
@@ -39,6 +43,7 @@ public class GenericThread implements Runnable, Mappable {
 	public String status = EMBRYO;
 	public long totalWorkTime = 0;
 	public long totalSleepTime = 0;
+	public static long notificationSequence = 0;
 	
 	private Thread thread = null;
 	private int sleepTime = 1000;
@@ -182,5 +187,18 @@ public class GenericThread implements Runnable, Mappable {
 	public long getTotalSleepTime() {
 		return this.totalSleepTime;
 	}
+	
+	public MBeanNotificationInfo[] getNotificationInfo() { 
+        String[] types = new String[] { 
+            AttributeChangeNotification.ATTRIBUTE_CHANGE
+        }; 
+       
+        String name = AttributeChangeNotification.class.getName(); 
+        String description = "An attribute of this MBean has changed"; 
+        MBeanNotificationInfo info = 
+            new MBeanNotificationInfo(types, name, description); 
+    
+        return new MBeanNotificationInfo[] {info}; 
+    } 
 
 }

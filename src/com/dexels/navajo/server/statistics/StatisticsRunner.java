@@ -5,6 +5,7 @@ import java.util.HashSet;
 import com.dexels.navajo.mapping.AsyncMappable;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.GenericThread;
+import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.jmx.JMXHelper;
 import com.dexels.navajo.util.AuditLog;
 
@@ -13,6 +14,9 @@ import java.util.Set;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Collections;
+
+import javax.management.AttributeChangeNotification;
+import javax.management.Notification;
 
 /**
  * <p>Title: Navajo Product Project</p>
@@ -51,6 +55,7 @@ public final class StatisticsRunner extends GenericThread implements StatisticsR
   private static String id = "Navajo StatisticsRunner";
   
   private static Object semaphore = new Object();
+  private boolean enabled = false;
   
   public StatisticsRunner() {
 	 super(id);
@@ -81,6 +86,7 @@ public final class StatisticsRunner extends GenericThread implements StatisticsR
 		  if (instance == null) {
 			  
 			  instance = new StatisticsRunner();
+			  instance.enabled = true;
 			  JMXHelper.registerMXBean(instance, JMXHelper.NAVAJO_DOMAIN, id);
 			  Class si = null;
 			  try {
@@ -168,6 +174,7 @@ public final class StatisticsRunner extends GenericThread implements StatisticsR
   
   public void terminate() {
 	  todo.clear();
+	  instance.enabled = false;
 	  instance = null;
 	  try {
 		  JMXHelper.deregisterMXBean(JMXHelper.NAVAJO_DOMAIN, id);
@@ -176,6 +183,27 @@ public final class StatisticsRunner extends GenericThread implements StatisticsR
 		  e.printStackTrace();
 	  }
 	  AuditLog.log(AuditLog.AUDIT_MESSAGE_STAT_RUNNER, "Killed");
+  }
+
+  public void setEnabled(boolean b) {
+	  boolean previousValue = enabled;
+	  NavajoConfig.getInstance().setStatisticsRunnerEnabled(b);
+	  enabled = b;
+	  Notification n = 
+          new AttributeChangeNotification(this, 
+					    GenericThread.notificationSequence++, 
+					    System.currentTimeMillis(), 
+					    (b ? "Statistics runner enabled" : "Statistics runner disabled"), 
+					    "enabled", 
+					    "boolean", 
+					    new Boolean(previousValue), 
+					    new Boolean(enabled)); 
+
+	sendNotification(n); 
+  }
+  
+  public boolean isEnabled() {
+	  return enabled;
   }
 
 }
