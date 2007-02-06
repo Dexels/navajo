@@ -35,6 +35,8 @@ import com.dexels.navajo.server.UserException;
 
 public final class JMXHelper implements Mappable {
 	
+	public String accessId;
+	public String webservice;
 	public Access [] webservices;
 	
 	private JMXConnector conn;
@@ -114,6 +116,14 @@ public final class JMXHelper implements Mappable {
 			lastPart = st2.nextToken();
 		}
 		return lastPart.substring(0, lastPart.length());
+	}
+	
+	public void setAccessId(String s) {
+		this.accessId = s;
+	}
+	
+	public Access getWebservice() {
+		return Dispatcher.getInstance().getAccessObject(accessId);
 	}
 	
 	public Access [] getWebservices() throws UserException {
