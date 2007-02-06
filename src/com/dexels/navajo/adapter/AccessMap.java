@@ -6,6 +6,7 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.UserException;
+import com.dexels.navajo.mapping.CompiledScript;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.mapping.MappableTreeNode;
 import com.dexels.navajo.document.*;
@@ -28,7 +29,8 @@ public final class AccessMap implements Mappable {
   public boolean killed = false;
   public boolean waiting = false;
   public String waitingFor = null;
-
+  public CompiledScript myScript = null;
+  
   /* Private vars */
   private boolean showDetails = false;
   private Access thisAccess = null;
@@ -41,9 +43,15 @@ public final class AccessMap implements Mappable {
   
   public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
     this.myAccess = access;
+    this.myScript = myAccess.getCompiledScript();
+    myScript.load(parms, inMessage, access, config);
     thisAccess = access;
   }
 
+  public CompiledScript getMyScript() {
+	  return myScript;
+  }
+  
   public void setKilled(boolean b) {
     if (myAccess.getCompiledScript().currentMap != null) {
       Mappable myMap = (Mappable) myAccess.getCompiledScript().currentMap.myObject;
@@ -96,6 +104,10 @@ public final class AccessMap implements Mappable {
 
   public void store() throws MappableException, UserException {
 
+	  if ( myScript != null ) {
+		  myScript.store();
+	  }
+	  
     if (showDetails) {
       try {
         Message user = getMessage(null, "User");
@@ -128,6 +140,9 @@ public final class AccessMap implements Mappable {
   }
 
   public void kill() {
+	  if ( myScript != null ) {
+		  myScript.kill();
+	  }
   }
 
   public void setAccessId(String id) throws UserException {

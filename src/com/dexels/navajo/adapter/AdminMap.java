@@ -5,7 +5,6 @@ import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
-import com.dexels.navajo.document.base.BaseNode;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.GenericHandler;
@@ -15,12 +14,10 @@ import com.dexels.navajo.server.statistics.WebserviceAccess;
 import com.dexels.navajo.server.statistics.WebserviceAccessListener;
 import com.dexels.navajo.mapping.MappableException;
 
-import java.sql.Connection;
-import java.sql.SQLException;
+
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.ArrayList;
-import java.util.HashMap;
 import com.dexels.navajo.mapping.AsyncMappable;
 import com.dexels.navajo.parser.DefaultExpressionEvaluator;
 
