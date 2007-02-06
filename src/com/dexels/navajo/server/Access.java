@@ -126,11 +126,12 @@ public final class Access implements java.io.Serializable, Mappable {
 	}
 
 	public CompiledScript getMyScript() {
+		System.err.println("In getMyScript: " + myScript);
 		return myScript;
 	}
 
 	public CompiledScript getCompiledScript() {
-		return this.myScript;
+		return myScript;
 	}
 
 	public void setException(Throwable e) {
@@ -290,12 +291,15 @@ public final class Access implements java.io.Serializable, Mappable {
 	}
 
 	public void kill() {
+		myScript.kill();
 	}
 
 	public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
+		myScript.load(null, null, null, null);
 	}
 
 	public void store() throws MappableException, UserException {
+		myScript.store();
 	}
 
 }

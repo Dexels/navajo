@@ -34,19 +34,12 @@ import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.server.UserException;
 
-public final class JMXHelper implements Mappable {
-	
-	public String accessId;
-	public String webservice;
-	public Access [] webservices;
-	
+public final class JMXHelper  {
+		
 	private JMXConnector conn;
 	private MBeanServerConnection server;
 	private String host = "localhost";
 	private int port = 9999;
-	private Access myAccess;
-	private Navajo myMessage;
-	private Parameters myParams;
 	
 	public static String SCRIPT_DOMAIN = "com.dexels.navajo.script:type=";
 	public static String ADAPTER_DOMAIN = "com.dexels.navajo.adapter:type=";
@@ -73,7 +66,6 @@ public final class JMXHelper implements Mappable {
 				conn.close();
 			}
 			server = null;
-			webservices = null;
 			conn = null;
 			System.err.println("Disconnected JMX.");
 		} catch (IOException e) {
@@ -106,74 +98,14 @@ public final class JMXHelper implements Mappable {
 		}
 	}
 	
-	private String getAccessId(String objectname) {
-		StringTokenizer st = new StringTokenizer(objectname, "=");
-		st.nextToken();
-		String lastPart = st.nextToken();
-		if ( lastPart.indexOf("/") != -1 ) {
-			StringTokenizer st2 = new StringTokenizer(lastPart, "/");
-			st2.nextToken();
-			lastPart = st2.nextToken();
-		}
-		return lastPart.substring(0, lastPart.length());
-	}
-	
-	public void setAccessId(String s) {
-		this.accessId = s;
-	}
-	
-	public Access getWebservice() throws UserException {
-		Access a = Dispatcher.getInstance().getAccessObject(accessId);
-		try {
-			a.load(myParams, myMessage, myAccess, null);
-			com.dexels.navajo.mapping.CompiledScript cs = a.getCompiledScript();
-			cs.load(myParams, myMessage, myAccess, null);
-		} catch (MappableException e) {
-			throw new UserException(-1, e.getMessage(), e);
-		}
-		return a;
-	}
-	
-	public Access [] getWebservices() throws UserException {
-		
-		try {
-			Set s = server.queryMBeans(new ObjectName(SCRIPT_DOMAIN + "*"), null);
-			Iterator i = s.iterator();
-			Access [] all = new Access[s.size()];
-			int index = 0;
-			while ( i.hasNext() ) {
-				ObjectInstance oi = (ObjectInstance) i.next();
-				System.err.println("Found oi " + oi);
-				String accessId = getAccessId(oi.getObjectName().toString());
-				System.err.println("accessId: " + accessId);
-				Access a = Dispatcher.getInstance().getAccessObject(accessId);
-				a.load(myParams, myMessage, myAccess, null);
-				com.dexels.navajo.mapping.CompiledScript cs = a.getCompiledScript();
-				cs.load(myParams, myMessage, myAccess, null);
-				all[index++] = a;
-				System.err.println("Found access object = " + a);
-			}
-			return all;
-		} catch (Exception e) {
-			throw new UserException(-1, e.getMessage(), e);
-		}
-	}
-	
 	public ThreadInfo getThread(Thread t) {
 
 		if ( server == null ) {
 			return null;
 		}
-		
-		try {
-			getWebservices();
-		} catch (UserException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+
 		ThreadInfo myThread = null;
 		try {
-	
 			ThreadMXBean mxthread = 
 				(ThreadMXBean) ManagementFactory.newPlatformMXBeanProxy(server, "java.lang:type=Threading", java.lang.management.ThreadMXBean.class);
 			long [] all = mxthread.getAllThreadIds();
@@ -234,26 +166,6 @@ public final class JMXHelper implements Mappable {
 		if ( name != null ) {
 			mbs.unregisterMBean(name);
 		}
-	}
-	  
-	public void kill() {
-		disconnect();
-	}
-
-	public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
-		myAccess = access;
-		myParams = parms;
-		myMessage = inMessage;
-		
-		try {
-			connect();
-		} catch (IOException e) {
-			throw new UserException(-1, e.getMessage(), e);
-		}
-	}
-
-	public void store() throws MappableException, UserException {
-		disconnect();
 	}
 	
 }

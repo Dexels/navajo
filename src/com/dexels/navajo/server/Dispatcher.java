@@ -1278,14 +1278,16 @@ public void setBroadcast(String message, int timeToLive, String recipientExpress
 public Access getAccessObject(String id) {
 
 	Iterator iter = accessSet.iterator();
-	while (iter.hasNext()) {
-		Access a = (Access) iter.next();
+	boolean found = false;
+	Access a = null;
+	while (iter.hasNext() && !found) {
+		a = (Access) iter.next();
 		if (a.accessID.equals(id)) {
 			System.err.println("FOUND ACCESS OBJECT!!!");
-			return a;
+			found = true;
 		}
 	}
-	return null;
+	return a;
 }
 
 public int getAccessSetSize() {

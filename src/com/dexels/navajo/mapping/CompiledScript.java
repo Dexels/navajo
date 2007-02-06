@@ -31,20 +31,11 @@ import com.dexels.navajo.server.jmx.JMXHelper;
 import com.dexels.navajo.document.*;
 
 import java.lang.management.LockInfo;
-import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadInfo;
 import java.util.*;
 
 import com.dexels.navajo.parser.Condition;
 import java.util.ArrayList;
-
-import javax.management.InstanceAlreadyExistsException;
-import javax.management.InstanceNotFoundException;
-import javax.management.MBeanRegistrationException;
-import javax.management.MBeanServer;
-import javax.management.MalformedObjectNameException;
-import javax.management.NotCompliantMBeanException;
-import javax.management.ObjectName;
 
 public abstract class CompiledScript implements CompiledScriptMXBean, Mappable {
 
