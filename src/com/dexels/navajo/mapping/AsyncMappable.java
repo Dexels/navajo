@@ -118,8 +118,9 @@ public abstract class AsyncMappable implements Mappable, AsyncMappableMXBean {
 
     private AsyncMappable parent;
 
-    public RequestThread(AsyncMappable parent) {
-      this.parent = parent;
+    public RequestThread(AsyncMappable parent, String name) {
+    	super(name);
+    	this.parent = parent;
     }
 
     public void run() {
@@ -295,7 +296,7 @@ public abstract class AsyncMappable implements Mappable, AsyncMappableMXBean {
     if (!running) {
       startTime = System.currentTimeMillis();
       System.err.println("STARTED RUNTHREAD ON: " + lastAccess);
-      myRequest = new RequestThread(this);
+      myRequest = new RequestThread(this, this.getClass().getName() + "-" + pointer);
       myRequest.start();
       //JMXHelper.registerMXBean(myRequest, JMXHelper.ASYNC_DOMAIN, myRequest.getId()+"");
       running = true;
