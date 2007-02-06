@@ -23,6 +23,7 @@ import javax.management.ObjectName;
 import javax.management.remote.JMXConnector;
 import javax.management.remote.rmi.RMIConnector;
 import javax.management.remote.rmi.RMIServer;
+import javax.script.CompiledScript;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.mapping.Mappable;
@@ -43,6 +44,9 @@ public final class JMXHelper implements Mappable {
 	private MBeanServerConnection server;
 	private String host = "localhost";
 	private int port = 9999;
+	private Access myAccess;
+	private Navajo myMessage;
+	private Parameters myParams;
 	
 	public static String SCRIPT_DOMAIN = "com.dexels.navajo.script:type=";
 	public static String ADAPTER_DOMAIN = "com.dexels.navajo.adapter:type=";
@@ -78,20 +82,16 @@ public final class JMXHelper implements Mappable {
 	}
 	 
 	public void connect(String host, int port) throws IOException {
-	
 			this.host = host;
 			this.port = port;
 			connect();
 			System.err.println("Connected JMX.");
-		
 	}
 	
 	public void connect() throws IOException {
-	
 			conn = getServerConnection();
 			conn.connect();
 			server = conn.getMBeanServerConnection();
-	
 	}
 	
 	private JMXConnector getServerConnection() {
@@ -122,8 +122,16 @@ public final class JMXHelper implements Mappable {
 		this.accessId = s;
 	}
 	
-	public Access getWebservice() {
-		return Dispatcher.getInstance().getAccessObject(accessId);
+	public Access getWebservice() throws UserException {
+		Access a = Dispatcher.getInstance().getAccessObject(accessId);
+		try {
+			a.load(myParams, myMessage, myAccess, null);
+			com.dexels.navajo.mapping.CompiledScript cs = a.getCompiledScript();
+			cs.load(myParams, myMessage, myAccess, null);
+		} catch (MappableException e) {
+			throw new UserException(-1, e.getMessage(), e);
+		}
+		return a;
 	}
 	
 	public Access [] getWebservices() throws UserException {
@@ -139,6 +147,9 @@ public final class JMXHelper implements Mappable {
 				String accessId = getAccessId(oi.getObjectName().toString());
 				System.err.println("accessId: " + accessId);
 				Access a = Dispatcher.getInstance().getAccessObject(accessId);
+				a.load(myParams, myMessage, myAccess, null);
+				com.dexels.navajo.mapping.CompiledScript cs = a.getCompiledScript();
+				cs.load(myParams, myMessage, myAccess, null);
 				all[index++] = a;
 				System.err.println("Found access object = " + a);
 			}
@@ -230,6 +241,10 @@ public final class JMXHelper implements Mappable {
 	}
 
 	public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
+		myAccess = access;
+		myParams = parms;
+		myMessage = inMessage;
+		
 		try {
 			connect();
 		} catch (IOException e) {
