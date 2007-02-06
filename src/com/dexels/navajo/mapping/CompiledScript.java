@@ -30,6 +30,7 @@ import com.dexels.navajo.server.*;
 import com.dexels.navajo.server.jmx.JMXHelper;
 import com.dexels.navajo.document.*;
 
+import java.lang.management.LockInfo;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadInfo;
 import java.util.*;
@@ -51,12 +52,16 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable {
   private final HashMap functions = new HashMap();
 
   /**
-   * Fields accessable by webservice.
+   * Fields accessable by webservice via Mappable interface.
    */
   public String stackTrace;
   public String threadName;
   public String accessId;
   public long runnningTime;
+  public boolean waiting;
+  public String lockName;
+  public String lockOwner;
+  public String lockClass;
   
   public MappableTreeNode currentMap = null;
   public final Stack treeNodeStack = new Stack();
@@ -90,6 +95,10 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable {
 
   protected boolean kill = false;
 
+  private JMXHelper jmx = null;
+  private boolean connected = false;
+  private ThreadInfo myThread = null;
+  
   public String getScriptName() {
 	  return getClass().getName();
   }
@@ -106,27 +115,40 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable {
 	  return Dispatcher.getInstance().getThreadName(myAccess);
   }
   
+  public boolean isWaiting() {
+	  return getWaiting();
+  }
+  
+  public boolean getWaiting() {
+	  LockInfo [] monitors = myThread.getLockedSynchronizers();
+	  return monitors.length != 0;
+  }
+  
+  public String getLockName() {
+	  return myThread.getLockName();
+  }
+  
+  public String getLockOwner() {
+	  return myThread.getLockOwnerName();
+  }
+  
+  public String getLockClass() {
+	  LockInfo lockInfo = myThread.getLockInfo();
+	  if ( lockInfo != null ) {
+		   return lockInfo.getClassName();
+	  } else {
+		  return null;
+	  }
+  }
+  
   public String getStackTrace() {
 	  StringBuffer stackTrace = new StringBuffer();
-	  JMXHelper jmx = new JMXHelper();
-	  boolean connected = false;
-	  try {
-		  jmx.connect();
-		  connected = true;
-		  ThreadInfo ti = jmx.getThread(myAccess.getThread());
-		  StackTraceElement [] elt = ti.getStackTrace();
+	  StackTraceElement [] elt = myThread.getStackTrace();
 		 
-		  for (int i = 0; i < elt.length; i++) {
-			  stackTrace.append(elt[i].getClassName()+"."+elt[i].getMethodName() + " (" + elt[i].getFileName() + ":" + elt[i].getLineNumber() + ")\n");
-		  }
-	  } catch (Exception e) {
-		  e.printStackTrace(System.err);
-		  return null;
-	  } finally {
-		  if ( connected ) {
-			  jmx.disconnect();
-		  }
+	  for (int i = 0; i < elt.length; i++) {
+		  stackTrace.append(elt[i].getClassName()+"."+elt[i].getMethodName() + " (" + elt[i].getFileName() + ":" + elt[i].getLineNumber() + ")\n");
 	  }
+	  
 	  return stackTrace.toString();
   }
   
@@ -137,6 +159,9 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable {
   public void kill() {
 	  System.err.println("Calling kill from JMX");
 	  myAccess.getCompiledScript().setKill(true);
+	  if ( connected && jmx != null ) {
+		  jmx.disconnect();
+	  }
   }
   
   public void setKill(boolean b) {
@@ -287,7 +312,11 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable {
   }
 
   public void finalize() {
-    functions.clear();
+	  functions.clear();
+	  if ( connected && jmx != null ) {
+		  jmx.disconnect();
+		  connected = false;
+	  }
   }
   
   public final Mappable findMapByPath(String path) {
@@ -308,9 +337,23 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable {
   }
   
   public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
+	  
+	  jmx = new JMXHelper();
+	  connected = false;
+	  try {
+		  jmx.connect();
+		  connected = true;
+		  myThread = jmx.getThread(myAccess.getThread());
+	  } catch (Exception e) {
+		  e.printStackTrace(System.err);
+	  } 
   }
 
   public void store() throws MappableException, UserException {
+	  if ( connected && jmx != null ) {
+		  jmx.disconnect();
+		  connected = false;
+	  }
   }
 
 
