@@ -89,6 +89,7 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable {
   private JMXHelper jmx = null;
   private boolean connected = false;
   private ThreadInfo myThread = null;
+  private boolean keepJMXConnectionAlive = false;
   
   public String getScriptName() {
 	  return getClass().getName();
@@ -111,36 +112,71 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable {
   }
   
   public boolean getWaiting() {
-	  LockInfo [] monitors = myThread.getLockedSynchronizers();
-	  return monitors.length != 0;
+	  try {
+		  connectJMX();
+		  LockInfo [] monitors = myThread.getLockedSynchronizers();
+		  return monitors.length != 0;
+	  } finally {
+		  if (!keepJMXConnectionAlive) {
+			  disconnectJMX();
+		  }
+	  }
   }
   
   public String getLockName() {
-	  return myThread.getLockName();
+	  try {
+		  connectJMX();
+		  return myThread.getLockName();
+	  } finally {
+		  if (!keepJMXConnectionAlive) {
+			  disconnectJMX();
+		  }
+	  }
   }
   
   public String getLockOwner() {
-	  return myThread.getLockOwnerName();
+	  try {
+		  connectJMX();
+		  return myThread.getLockOwnerName();
+	  } finally {
+		  if (!keepJMXConnectionAlive) {
+			  disconnectJMX();
+		  }
+	  }
   }
   
   public String getLockClass() {
-	  LockInfo lockInfo = myThread.getLockInfo();
-	  if ( lockInfo != null ) {
-		   return lockInfo.getClassName();
-	  } else {
-		  return null;
+	  try {
+		  connectJMX();
+		  LockInfo lockInfo = myThread.getLockInfo();
+		  if ( lockInfo != null ) {
+			  return lockInfo.getClassName();
+		  } else {
+			  return null;
+		  }
+	  } finally {
+		  if (!keepJMXConnectionAlive) {
+			  disconnectJMX();
+		  }
 	  }
   }
   
   public String getStackTrace() {
-	  StringBuffer stackTrace = new StringBuffer();
-	  StackTraceElement [] elt = myThread.getStackTrace();
-		 
-	  for (int i = 0; i < elt.length; i++) {
-		  stackTrace.append(elt[i].getClassName()+"."+elt[i].getMethodName() + " (" + elt[i].getFileName() + ":" + elt[i].getLineNumber() + ")\n");
+	  try {
+		  connectJMX();
+		  StringBuffer stackTrace = new StringBuffer();
+		  StackTraceElement [] elt = myThread.getStackTrace();
+
+		  for (int i = 0; i < elt.length; i++) {
+			  stackTrace.append(elt[i].getClassName()+"."+elt[i].getMethodName() + " (" + elt[i].getFileName() + ":" + elt[i].getLineNumber() + ")\n");
+		  }
+
+		  return stackTrace.toString();
+	  } finally {
+		  if (!keepJMXConnectionAlive) {
+			  disconnectJMX();
+		  }
 	  }
-	  
-	  return stackTrace.toString();
   }
   
   public long getRunningTime() {
@@ -150,9 +186,7 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable {
   public void kill() {
 	  System.err.println("Calling kill from JMX");
 	  myAccess.getCompiledScript().setKill(true);
-	  if ( connected && jmx != null ) {
-		  jmx.disconnect();
-	  }
+	  disconnectJMX();
   }
   
   public void setKill(boolean b) {
@@ -304,10 +338,7 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable {
 
   public void finalize() {
 	  functions.clear();
-	  if ( connected && jmx != null ) {
-		  jmx.disconnect();
-		  connected = false;
-	  }
+	  disconnectJMX();
   }
   
   public final Mappable findMapByPath(String path) {
@@ -327,24 +358,39 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable {
 	  return m;
   }
   
-  public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
-	  
-	  jmx = new JMXHelper();
-	  connected = false;
+  private void connectJMX() {
+	  if (!connected) {
+		  jmx = new JMXHelper();
+		  connected = false;
+		  try {
+			  jmx.connect();
+			  connected = true;
+			  myThread = jmx.getThread(myAccess.getThread());
+		  } catch (Exception e) {
+			  e.printStackTrace(System.err);
+		  } 
+	  }
+  }
+  
+  private void disconnectJMX() {
 	  try {
-		  jmx.connect();
-		  connected = true;
-		  myThread = jmx.getThread(myAccess.getThread());
-	  } catch (Exception e) {
-		  e.printStackTrace(System.err);
-	  } 
+		  if ( connected && jmx != null ) {
+			  jmx.disconnect();
+		  }
+	  } finally {
+		  keepJMXConnectionAlive = false;
+		  jmx = null;
+		  connected = false;
+	  }
+  }
+  
+  public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
+	  keepJMXConnectionAlive = true;
+	  connectJMX();
   }
 
   public void store() throws MappableException, UserException {
-	  if ( connected && jmx != null ) {
-		  jmx.disconnect();
-		  connected = false;
-	  }
+	disconnectJMX();
   }
 
 

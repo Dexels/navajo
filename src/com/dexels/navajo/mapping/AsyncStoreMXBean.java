@@ -4,4 +4,6 @@ import com.dexels.navajo.server.jmx.GenericThreadMXBean;
 
 public interface AsyncStoreMXBean extends GenericThreadMXBean {
 
+	public int getStoreSize();
+	
 }

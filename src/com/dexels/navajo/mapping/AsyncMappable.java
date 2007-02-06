@@ -91,6 +91,10 @@ public abstract class AsyncMappable implements Mappable, AsyncMappableMXBean {
   public java.util.Date startDate;
   public boolean kill = false;
   public int percReady;
+  public String accessId;
+  public String webservice;
+  public String user;
+  public String className;
 
   private RequestThread myRequest = null;
 
@@ -167,6 +171,25 @@ public abstract class AsyncMappable implements Mappable, AsyncMappableMXBean {
    */
   public abstract void afterResponse()  throws UserException;
 
+  public String getAccessId() {
+	  Access a = AsyncStore.getInstance().getAccessObject(this.pointer);  
+	  return a.accessID;
+  }
+  
+  public String getWebservice() {
+	  Access a = AsyncStore.getInstance().getAccessObject(this.pointer);  
+	  return a.rpcName;
+  }
+  
+  public String getUser() {
+	  Access a = AsyncStore.getInstance().getAccessObject(this.pointer);  
+	  return a.rpcUser;
+  }
+  
+  public String getVERSION() {
+	  return VERSION;
+  }
+  
   /**
    * Use this method to let a thread sleep for a while...
    */
@@ -184,6 +207,10 @@ public abstract class AsyncMappable implements Mappable, AsyncMappableMXBean {
       }
   }
 
+  public String getClassName() {
+	  return this.getClassName();
+  }
+  
   public final boolean isInterrupted() {
     return interrupt;
   }

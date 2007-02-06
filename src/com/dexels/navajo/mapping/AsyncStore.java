@@ -127,6 +127,7 @@ public final class AsyncStore extends GenericThread implements AsyncStoreMXBean 
     String ref = o.hashCode() + "";
     objectStore.put(ref + "", o);
     accessStore.put(ref + "", a);
+    JMXHelper.registerMXBean(o, JMXHelper.ASYNC_DOMAIN, o.className + "-" + ref);
     return ref;
   }
 
@@ -170,6 +171,10 @@ public final class AsyncStore extends GenericThread implements AsyncStoreMXBean 
   public final synchronized void removeInstance(String ref) {
 	System.err.println("About to remove async instance: " + ref);
     Object o = objectStore.get(ref);
+    try {
+		JMXHelper.deregisterMXBean(JMXHelper.ASYNC_DOMAIN, ((AsyncMappable )o).className + "-" + ref);
+	} catch (Throwable e) {
+	}
     if (o == null) {
       return;
     }
@@ -184,6 +189,10 @@ public final class AsyncStore extends GenericThread implements AsyncStoreMXBean 
   
   public String getVERSION() {
 	  return VERSION;
+  }
+  
+  public int getStoreSize() {
+	  return objectStore.size();
   }
   
   public void terminate() {
