@@ -41,6 +41,12 @@ public class AsyncProxy implements Mappable {
   public String accessId;
   public String ipAddress;
   public String host;
+  public String stackTrace;
+  public String threadName;
+  public boolean waiting;
+  public String lockName;
+  public String lockOwner;
+  public String lockClass;
 
   public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
     //System.err.println("IN ASYNCPROXY LOAD()......................");
@@ -52,7 +58,7 @@ public class AsyncProxy implements Mappable {
   public void kill() {
 
   }
-
+  
   public String getAccessId() {
     return accessId;
   }
@@ -156,6 +162,42 @@ public class AsyncProxy implements Mappable {
   public boolean getKill() {
     return kill;
   }
+
+public Exception getCaught() {
+	return caught;
+}
+
+public boolean isKillOnFinnish() {
+	return killOnFinnish;
+}
+
+public String getLockClass() {
+	return lockClass;
+}
+
+public String getLockName() {
+	return lockName;
+}
+
+public String getLockOwner() {
+	return lockOwner;
+}
+
+public boolean isResume() {
+	return resume;
+}
+
+public String getStackTrace() {
+	return stackTrace;
+}
+
+public String getThreadName() {
+	return threadName;
+}
+
+public boolean getWaiting() {
+	return waiting;
+}
 
 
 }

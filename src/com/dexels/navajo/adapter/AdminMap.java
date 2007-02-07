@@ -190,6 +190,11 @@ public class AdminMap implements Mappable {
        o.ipAddress = ac.ipAddress;
        o.host = ac.hostName;
        o.kill = am.kill;
+       o.stackTrace = am.getStackTrace();
+       o.lockClass = am.getLockClass();
+       o.lockName = am.getLockName();
+       o.lockOwner = am.getLockOwner();
+       o.waiting = am.isWaiting();
        try {
          o.percReady = am.getPercReady();
        } catch (Exception e) { e.printStackTrace(System.err); }
