@@ -1,5 +1,8 @@
 package com.dexels.navajo.mapping;
 
+import java.lang.management.LockInfo;
+import java.lang.management.ThreadInfo;
+
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.server.jmx.JMXHelper;
 import com.dexels.navajo.util.AuditLog;
@@ -96,6 +99,16 @@ public abstract class AsyncMappable implements Mappable, AsyncMappableMXBean {
   public String user;
   public String className;
 
+  /**
+   * Fields accessable by webservice via Mappable interface.
+   */
+  public String stackTrace;
+  public String threadName;
+  public boolean waiting;
+  public String lockName;
+  public String lockOwner;
+  public String lockClass;
+  
   private RequestThread myRequest = null;
 
   /**
@@ -107,6 +120,13 @@ public abstract class AsyncMappable implements Mappable, AsyncMappableMXBean {
   private boolean resume = false;
   private boolean logged = false;
 
+  /**
+   * JMX stuff.
+   */
+  private JMXHelper jmx = null;
+  private boolean connected = false;
+  private ThreadInfo myThread = null;
+  
   /**
    * This class implements the asynchronous thread.
    * It runs the run() method of the parent object that instantiates this class.
@@ -257,6 +277,7 @@ public abstract class AsyncMappable implements Mappable, AsyncMappableMXBean {
     System.out.println("FINALIZE() METHOD CALL FOR OBJECT " + this);
     if (killOnFinnish) {
       kill = true;
+      disconnectJMX();
       AsyncStore.getInstance().removeInstance(this.pointer);
     }
   }
@@ -298,7 +319,6 @@ public abstract class AsyncMappable implements Mappable, AsyncMappableMXBean {
       System.err.println("STARTED RUNTHREAD ON: " + lastAccess);
       myRequest = new RequestThread(this, this.getClass().getName() + "-" + pointer);
       myRequest.start();
-      //JMXHelper.registerMXBean(myRequest, JMXHelper.ASYNC_DOMAIN, myRequest.getId()+"");
       running = true;
       stop = interrupt = resume = false;
     }
@@ -439,5 +459,96 @@ public abstract class AsyncMappable implements Mappable, AsyncMappableMXBean {
   }
   public String getPointer() {
     return pointer;
+  }
+  
+  /**
+   * MXBean interface follows.
+   */
+  
+  public final boolean isWaiting() {
+	  return getWaiting();
+  }
+  
+  public final boolean getWaiting() {
+	  try {
+		  connectJMX();
+		  LockInfo [] monitors = myThread.getLockedSynchronizers();
+		  return monitors.length != 0;
+	  } finally {
+		  disconnectJMX();
+	  }
+  }
+
+  public final String getLockName() {
+	  try {
+		  connectJMX();
+		  return myThread.getLockName();
+	  } finally {
+		  disconnectJMX();
+	  }
+  }
+  
+  public final String getLockOwner() {
+	  try {
+		  connectJMX();
+		  return myThread.getLockOwnerName();
+	  } finally {
+		  disconnectJMX();
+	  }
+  }
+  
+  public final String getLockClass() {
+	  try {
+		  connectJMX();
+		  LockInfo lockInfo = myThread.getLockInfo();
+		  if ( lockInfo != null ) {
+			  return lockInfo.getClassName();
+		  } else {
+			  return null;
+		  }
+	  } finally {
+		  disconnectJMX();
+	  }
+  }
+  
+  public final String getStackTrace() {
+	  try {
+		  connectJMX();
+		  StringBuffer stackTrace = new StringBuffer();
+		  StackTraceElement [] elt = myThread.getStackTrace();
+
+		  for (int i = 0; i < elt.length; i++) {
+			  stackTrace.append(elt[i].getClassName()+"."+elt[i].getMethodName() + " (" + elt[i].getFileName() + ":" + elt[i].getLineNumber() + ")\n");
+		  }
+
+		  return stackTrace.toString();
+	  } finally {
+		  disconnectJMX();	 
+	  }
+  }
+  
+  private final void connectJMX() {
+	  if (!connected) {
+		  jmx = new JMXHelper();
+		  connected = false;
+		  try {
+			  jmx.connect();
+			  connected = true;
+			  myThread = jmx.getThread(this.myRequest);
+		  } catch (Exception e) {
+			  e.printStackTrace(System.err);
+		  } 
+	  }
+  }
+  
+  private final void disconnectJMX() {
+	  try {
+		  if ( connected && jmx != null ) {
+			  jmx.disconnect();
+		  }
+	  } finally {
+		  jmx = null;
+		  connected = false;
+	  }
   }
 }

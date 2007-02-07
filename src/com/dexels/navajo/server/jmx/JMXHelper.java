@@ -145,7 +145,7 @@ public final class JMXHelper  {
 	private static final String constructObjectName(String domain) {
 		if ( applicationPrefix == null ) {
 			synchronized ( SCRIPT_DOMAIN ) {
-				applicationPrefix = Dispatcher.getInstance().getNavajoConfig().getInstanceName();
+				applicationPrefix = NavajoConfig.getInstance().getInstanceName();
 				if ( applicationPrefix  == null ) {
 					applicationPrefix = "unnamedapplication";
 				} 

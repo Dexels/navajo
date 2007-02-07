@@ -133,6 +133,7 @@ public final class AsyncStore extends GenericThread implements AsyncStoreMXBean 
     String ref = o.hashCode() + "";
     objectStore.put(ref + "", o);
     accessStore.put(ref + "", a);
+    // Register Async mappable as MXBean.
     JMXHelper.registerMXBean(o, JMXHelper.ASYNC_DOMAIN, o.getClassName() + "-" + ref);
     return ref;
   }

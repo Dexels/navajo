@@ -1,6 +1,7 @@
 package com.dexels.navajo.mapping;
 
 public interface AsyncMappableMXBean {
+	
 	public String getAccessId();
 	public String getWebservice();
 	public String getUser();
@@ -17,5 +18,11 @@ public interface AsyncMappableMXBean {
 	public boolean isResumed();
 	public boolean isStopped();
 	public String getClassName();
+	public String getStackTrace();
+	public String getLockClass();
+	public String getLockOwner();
+	public String getLockName();
+	public boolean isWaiting();
 	public String getVERSION();
+	
 }

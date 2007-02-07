@@ -152,6 +152,11 @@ public final class NavajoConfig {
     	try {
     		rootPath = properDir(body.getProperty("paths/root").getValue());
     		
+//    		 Get the instance name.
+    		instanceName = ( body.getProperty("instance_name") != null ? 
+    				body.getProperty("instance_name").getValue() : null );
+    			
+    		
     		rootFile = new File(rootPath);
     		if (!rootFile.exists()) {
 				throw new IllegalArgumentException("Rootpath defined in server.xml not found.");
@@ -359,10 +364,6 @@ public final class NavajoConfig {
     			AuditLog.log(AuditLog.AUDIT_MESSAGE_DISPATCHER, "Documentclass is now: " + documentClass);
     		} 
 
-    		// Get the instance name.
-    		instanceName = ( body.getProperty("instance_name") != null ? 
-    				body.getProperty("instance_name").getValue() : null );
-    			
     		
     	} catch (Throwable t) {
     		t.printStackTrace(System.err);
