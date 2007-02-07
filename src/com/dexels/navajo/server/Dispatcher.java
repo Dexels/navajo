@@ -1128,7 +1128,7 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
 
   private void updatePropertyDescriptions(Navajo inMessage, Navajo outMessage) {
 		if (navajoConfig.getDescriptionProvider() == null) {
-			System.err.println("No description provider");
+			//System.err.println("No description provider");
 			return;
 		}
 		try {

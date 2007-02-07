@@ -240,7 +240,8 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable  
   public final void run(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws Exception {
 
 	  myAccess = access;
-	  JMXHelper.registerMXBean(this, JMXHelper.SCRIPT_DOMAIN, getThreadName());
+	  String myThreadName = getThreadName();
+	  JMXHelper.registerMXBean(this, JMXHelper.SCRIPT_DOMAIN, myThreadName);
 
 	  try {
 		  setValidations();
@@ -286,7 +287,7 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable  
 		  }
 	  } finally {
 		  try {
-			  JMXHelper.deregisterMXBean(JMXHelper.SCRIPT_DOMAIN, getThreadName());
+			  JMXHelper.deregisterMXBean(JMXHelper.SCRIPT_DOMAIN, myThreadName);
 		  } catch (Throwable t) {
 			  System.err.println("WARNING: Could not register script as MBean: " + t.getMessage());
 		  }
