@@ -251,18 +251,18 @@ public final class NavajoConfig {
     		enableStatisticsRunner = (body.getProperty("parameters/enable_statistics") == null ||
     				body.getProperty("parameters/enable_statistics").getValue().equals("true"));
     		
-    		if (enableStatisticsRunner) {
-    			HashMap p = new HashMap();
-    			if (dbPort != -1) {
-    				System.err.println("PUTTING PORT = " + dbPort + " IN MAP");
-    				p.put("port", new Integer(dbPort));
-    			}
-    			if (store == null) {
-    				statisticsRunner = com.dexels.navajo.server.statistics.StatisticsRunner.getInstance(dbPath, p);
-    			} else {
-    				statisticsRunner = com.dexels.navajo.server.statistics.StatisticsRunner.getInstance(dbPath, p, store);
-    			}
+
+    		HashMap p = new HashMap();
+    		if (dbPort != -1) {
+    			System.err.println("PUTTING PORT = " + dbPort + " IN MAP");
+    			p.put("port", new Integer(dbPort));
     		}
+    		if (store == null) {
+    			statisticsRunner = com.dexels.navajo.server.statistics.StatisticsRunner.getInstance(dbPath, p);
+    		} else {
+    			statisticsRunner = com.dexels.navajo.server.statistics.StatisticsRunner.getInstance(dbPath, p, store);
+    		}
+    		statisticsRunner.setEnabled(enableStatisticsRunner);
     		
     		//System.err.println("USing repository = " + repository);
     		Message maintenance = body.getMessage("maintenance-services");
@@ -394,21 +394,19 @@ public final class NavajoConfig {
      * @param b
      */
     public synchronized void setStatisticsRunnerEnabled(boolean b) {
-    	if ( b ) {
-    		if (store == null) {
-    			statisticsRunner = com.dexels.navajo.server.statistics.StatisticsRunner.getInstance(dbPath, null);
-    		} else {
-    			statisticsRunner = com.dexels.navajo.server.statistics.StatisticsRunner.getInstance(dbPath, null, store);
-    		}
-    		enableStatisticsRunner = true;
-    	} else {
-    		statisticsRunner = null;
-    		enableStatisticsRunner = false;
+    	
+    	if ( statisticsRunner != null ) {
+    		statisticsRunner.setEnabled(b);
     	}
+ 
     }
     
     public boolean isStatisticsRunnerEnabled() {
-    	return enableStatisticsRunner;
+    	if ( statisticsRunner != null ) {
+    		return statisticsRunner.isEnabled();
+    	} else {
+    		return enableStatisticsRunner;
+    	}
     }
     
     public Worker getIntegrityWorker() {

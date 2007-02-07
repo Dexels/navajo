@@ -1081,7 +1081,9 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
     		}
     		access.storeStatistics(h);
     		// Store access if navajostore is enabled and if webservice is not in list of special webservices.
-    		if (getNavajoConfig().getStatisticsRunner() != null && !isSpecialwebservice(access.rpcName)) {
+    		if (    getNavajoConfig().getStatisticsRunner() != null &&  
+    				getNavajoConfig().getStatisticsRunner().isEnabled() && 
+    				!isSpecialwebservice(access.rpcName)) {
     			// Give asynchronous statistics runner a new access object to persist.
     			getNavajoConfig().getStatisticsRunner().addAccess(access, myException, null);
     		}
@@ -1095,7 +1097,8 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
     				(clientInfo != null ? clientInfo.getHost() :
     				"via NavajoMap"),
     				false, userCertificate);
-    		if (getNavajoConfig().getStatisticsRunner() != null &&
+    		if (    getNavajoConfig().getStatisticsRunner() != null &&
+    				getNavajoConfig().getStatisticsRunner().isEnabled() &&
     				!isSpecialwebservice(rpcName)) {
     			// Give asynchronous statistics runner a new access object to persist.
     			dummy.setInDoc(inMessage);
