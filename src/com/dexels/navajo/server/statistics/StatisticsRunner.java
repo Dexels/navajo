@@ -187,7 +187,6 @@ public final class StatisticsRunner extends GenericThread implements StatisticsR
 
   public void setEnabled(boolean b) {
 	  boolean previousValue = enabled;
-	  NavajoConfig.getInstance().setStatisticsRunnerEnabled(b);
 	  enabled = b;
 	  Notification n = 
           new AttributeChangeNotification(this, 
