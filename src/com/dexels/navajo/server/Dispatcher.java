@@ -1319,4 +1319,8 @@ public void store() throws MappableException, UserException {
 public int getPeakAccessSetSize() {
 	return peakAccessSetSize;
 }
+
+public void resetAccessSetPeakSize() {
+	peakAccessSetSize = 0;
+}
 }

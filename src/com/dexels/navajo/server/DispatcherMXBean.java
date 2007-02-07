@@ -6,5 +6,6 @@ public interface DispatcherMXBean {
 	public String getApplicationId();
 	public int getAccessSetSize();
 	public int getPeakAccessSetSize();
+	public void resetAccessSetPeakSize();
 	
 }
