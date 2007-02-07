@@ -100,7 +100,7 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
   private  long[] rateWindow = new long[rateWindowSize];
   
   private static Object semaphore = new Object();
-
+  private int peakAccessSetSize = 0;
   
   private static final Set broadcastMessage = Collections.synchronizedSet(new HashSet());
   
@@ -975,7 +975,11 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
         }
         
         access.setMyDispatcher(this);
-        access.setThreadCount(accessSet.size());
+        int accessSetSize = accessSet.size();
+        if ( accessSetSize > peakAccessSetSize ) {
+        	peakAccessSetSize = accessSetSize;
+        }
+        access.setThreadCount(accessSetSize);
         
         // Check for lazy message control.
         access.setLazyMessages(header.getLazyMessages());
@@ -1310,5 +1314,9 @@ public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig
 public void store() throws MappableException, UserException {
 	// TODO Auto-generated method stub
 	
+}
+
+public int getPeakAccessSetSize() {
+	return peakAccessSetSize;
 }
 }

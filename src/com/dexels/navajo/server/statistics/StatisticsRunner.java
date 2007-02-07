@@ -1,19 +1,14 @@
 package com.dexels.navajo.server.statistics;
 
-import java.util.HashSet;
-
 import com.dexels.navajo.mapping.AsyncMappable;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.GenericThread;
-import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.jmx.JMXHelper;
+import com.dexels.navajo.server.jmx.NavajoNotification;
 import com.dexels.navajo.util.AuditLog;
 
 import java.util.HashMap;
-import java.util.Set;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Collections;
 
 import javax.management.AttributeChangeNotification;
 import javax.management.Notification;
@@ -56,6 +51,8 @@ public final class StatisticsRunner extends GenericThread implements StatisticsR
   
   private static Object semaphore = new Object();
   private boolean enabled = false;
+  
+  private int previousSize = 0;
   
   public StatisticsRunner() {
 	 super(id);
@@ -114,24 +111,28 @@ public final class StatisticsRunner extends GenericThread implements StatisticsR
 		
 	}
   }
-  
+    
   /**
    * Main thread. Responsible for persisting queued access objects.
    *
    */
   public final void worker() {
-  
+
 	  HashMap copyOfTodo = null;
 	  synchronized ( semaphore ) {
 		  if ( todo.size() == 0 ) {
 			  return;
 		  }
+		  int level = todo.size();
+		  if ( level != previousSize && level > 30 ) {
+			  sendHealthCheck(level, 30, NavajoNotification.WARNING, "Todo list of statistics is rather large");
+		  }
+		  previousSize = level;
 		  copyOfTodo = new HashMap(todo);
 		  todo.clear();
+		  
 	  }
-
 	  myStore.storeAccess(copyOfTodo);
-	  
   }
 
   /**

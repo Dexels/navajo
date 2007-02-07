@@ -5,5 +5,6 @@ public interface DispatcherMXBean {
 	public String getServerId();
 	public String getApplicationId();
 	public int getAccessSetSize();
+	public int getPeakAccessSetSize();
 	
 }

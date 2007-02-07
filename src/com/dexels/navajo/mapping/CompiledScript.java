@@ -37,7 +37,7 @@ import java.util.*;
 import com.dexels.navajo.parser.Condition;
 import java.util.ArrayList;
 
-public abstract class CompiledScript implements CompiledScriptMXBean, Mappable {
+public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, javax.management.NotificationBroadcaster  {
 
   protected NavajoClassSupplier classLoader;
   private final HashMap functions = new HashMap();
@@ -242,50 +242,53 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable {
 	  myAccess = access;
 	  JMXHelper.registerMXBean(this, JMXHelper.SCRIPT_DOMAIN, getThreadName());
 
-	  setValidations();
+	  try {
+		  setValidations();
 
-	  currentParamMsg = inMessage.getMessage("__parms__");
+		  currentParamMsg = inMessage.getMessage("__parms__");
 
-	  ConditionData[] conditions = checkValidations(inMessage);
-	  boolean conditionsFailed = false;
-	  if (conditions != null && conditions.length > 0) {
-		  Navajo outMessage = access.getOutputDoc();
-		  Message[] failed = Dispatcher.getInstance().checkConditions(conditions, inMessage,
-				  outMessage);
-		  if (failed != null) {
-			  conditionsFailed = true;
-			  Message msg = NavajoFactory.getInstance().createMessage(outMessage,
-					  "ConditionErrors");
-			  outMessage.addMessage(msg);
-			  msg.setType(Message.MSG_TYPE_ARRAY);
-			  for (int i = 0; i < failed.length; i++) {
-				  msg.addMessage( (Message) failed[i]);
+		  ConditionData[] conditions = checkValidations(inMessage);
+		  boolean conditionsFailed = false;
+		  if (conditions != null && conditions.length > 0) {
+			  Navajo outMessage = access.getOutputDoc();
+			  Message[] failed = Dispatcher.getInstance().checkConditions(conditions, inMessage,
+					  outMessage);
+			  if (failed != null) {
+				  conditionsFailed = true;
+				  Message msg = NavajoFactory.getInstance().createMessage(outMessage,
+				  "ConditionErrors");
+				  outMessage.addMessage(msg);
+				  msg.setType(Message.MSG_TYPE_ARRAY);
+				  for (int i = 0; i < failed.length; i++) {
+					  msg.addMessage( (Message) failed[i]);
+				  }
 			  }
 		  }
-	  }
-	  if (!conditionsFailed) {
-		  try {
-			  execute(parms, inMessage, access, config);
-		  }
-		  catch (com.dexels.navajo.mapping.BreakEvent be) {
-			  // Be sure that all maps are killed()!
-			  if (currentMap != null) {
-				  callStoreOrKill(currentMap, "kill");
-			  }
-			  throw be;
-		  }
-		  catch (Exception e) {
-			  if (currentMap != null && currentMap.getParent() != null) {
-				  callStoreOrKill(currentMap.getParent(), "kill");
-			  }
-			  throw e;
-		  } finally {
-			  finalBlock(parms, inMessage, access, config);
+		  if (!conditionsFailed) {
 			  try {
-				  JMXHelper.deregisterMXBean(JMXHelper.SCRIPT_DOMAIN, getThreadName());
-			  } catch (Throwable t) {
-				  System.err.println("WARNING: Could not register script as MBean: " + t.getMessage());
+				  execute(parms, inMessage, access, config);
 			  }
+			  catch (com.dexels.navajo.mapping.BreakEvent be) {
+				  // Be sure that all maps are killed()!
+				  if (currentMap != null) {
+					  callStoreOrKill(currentMap, "kill");
+				  }
+				  throw be;
+			  }
+			  catch (Exception e) {
+				  if (currentMap != null && currentMap.getParent() != null) {
+					  callStoreOrKill(currentMap.getParent(), "kill");
+				  }
+				  throw e;
+			  } finally {
+				  finalBlock(parms, inMessage, access, config);
+			  }
+		  }
+	  } finally {
+		  try {
+			  JMXHelper.deregisterMXBean(JMXHelper.SCRIPT_DOMAIN, getThreadName());
+		  } catch (Throwable t) {
+			  System.err.println("WARNING: Could not register script as MBean: " + t.getMessage());
 		  }
 	  }
   }

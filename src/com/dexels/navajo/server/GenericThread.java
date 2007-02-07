@@ -29,11 +29,13 @@ import java.util.Iterator;
 
 import javax.management.AttributeChangeNotification;
 import javax.management.MBeanNotificationInfo;
+import javax.management.Notification;
 import javax.management.NotificationBroadcasterSupport;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
+import com.dexels.navajo.server.jmx.NavajoNotification;
 
 public class GenericThread extends NotificationBroadcasterSupport implements Runnable, Mappable {
 
@@ -188,7 +190,23 @@ public class GenericThread extends NotificationBroadcasterSupport implements Run
 		return this.totalSleepTime;
 	}
 	
+	public final void sendHealthCheck(int level, int warningLevel, String severity, String message) {
+
+		String m = severity + ":" + "level=" + level + ",warninglevel=" + warningLevel + ",message=" + message;
+		
+			Notification n = 
+				new Notification(NavajoNotification.NAVAJO_NOTIFICATION, 
+						this, 
+						GenericThread.notificationSequence++, 
+						System.currentTimeMillis(),
+						m);
+			
+			sendNotification(n); 
+		
+	}
+	
 	public MBeanNotificationInfo[] getNotificationInfo() { 
+		// Attribute changes.
         String[] types = new String[] { 
             AttributeChangeNotification.ATTRIBUTE_CHANGE
         }; 
@@ -197,8 +215,16 @@ public class GenericThread extends NotificationBroadcasterSupport implements Run
         String description = "An attribute of this MBean has changed"; 
         MBeanNotificationInfo info = 
             new MBeanNotificationInfo(types, name, description); 
-    
-        return new MBeanNotificationInfo[] {info}; 
+        // Navajo notification checks.
+        String [] types2 = new String[] {
+        		NavajoNotification.NAVAJO_NOTIFICATION
+        };
+        String name2 = Notification.class.getName();
+        String description2= "A message from a Navajo service";
+        MBeanNotificationInfo info2 = 
+            new MBeanNotificationInfo(types2, name2, description2);
+        
+        return new MBeanNotificationInfo[] {info, info2}; 
     } 
 
 }
