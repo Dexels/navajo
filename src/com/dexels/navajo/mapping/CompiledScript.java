@@ -37,7 +37,7 @@ import java.util.*;
 import com.dexels.navajo.parser.Condition;
 import java.util.ArrayList;
 
-public abstract class CompiledScript implements CompiledScriptMXBean, Mappable, javax.management.NotificationBroadcaster  {
+public abstract class CompiledScript implements CompiledScriptMXBean, Mappable  {
 
   protected NavajoClassSupplier classLoader;
   private final HashMap functions = new HashMap();
