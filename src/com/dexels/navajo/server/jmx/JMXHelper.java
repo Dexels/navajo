@@ -68,7 +68,7 @@ public final class JMXHelper  {
 			}
 			server = null;
 			conn = null;
-			System.err.println("Disconnected JMX.");
+			//System.err.println("Disconnected JMX.");
 		} catch (IOException e) {
 			e.printStackTrace(System.err);
 		}
@@ -78,7 +78,7 @@ public final class JMXHelper  {
 			this.host = host;
 			this.port = port;
 			connect();
-			System.err.println("Connected JMX.");
+			//System.err.println("Connected JMX.");
 	}
 	
 	public void connect() throws IOException {
@@ -115,7 +115,7 @@ public final class JMXHelper  {
 				ThreadInfo ti = mxthread.getThreadInfo(all[i]);
 				//System.err.println("Found thread: " + ti.getThreadName());
 				if ( ti.getThreadName().equals(t.getName() ) )  {
-					System.err.println("Found thread: " + t.getName());
+					//System.err.println("Found thread: " + t.getName());
 					target[0] = all[i];
 					myThread = mxthread.getThreadInfo(target, true, true)[0];
 					return myThread;
