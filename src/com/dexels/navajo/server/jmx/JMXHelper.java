@@ -41,11 +41,12 @@ public final class JMXHelper  {
 	private String host = "localhost";
 	private int port = 9999;
 	
-	public static String SCRIPT_DOMAIN = "com.dexels.navajo.script:type=";
-	public static String ADAPTER_DOMAIN = "com.dexels.navajo.adapter:type=";
-	public static String NAVAJO_DOMAIN = "com.dexels.navajo.service:type=";
-	public static String ASYNC_DOMAIN = "com.dexels.navajo.async:type=";
-	public static String TASK_DOMAIN = "com.dexels.navajo.task:type=";
+	private static String applicationPrefix = null;
+	public static String SCRIPT_DOMAIN = ".navajo.script:type=";
+	public static String ADAPTER_DOMAIN = ".navajo.adapter:type=";
+	public static String NAVAJO_DOMAIN = ".navajo.service:type=";
+	public static String ASYNC_DOMAIN = ".navajo.async:type=";
+	public static String TASK_DOMAIN = ".navajo.task:type=";
 	
 	private RMIServer getRMIServer(String hostName, int port) throws IOException {
 
@@ -131,7 +132,7 @@ public final class JMXHelper  {
 
 	public final static ObjectName getObjectName(String domain, String type) {
 		try {
-			return new ObjectName(domain + type);
+			return new ObjectName(constructObjectName(domain) + type);
 		} catch (MalformedObjectNameException e) {
 			e.printStackTrace();
 			return  null;
@@ -141,6 +142,18 @@ public final class JMXHelper  {
 		} 
 	}
 
+	private static final String constructObjectName(String domain) {
+		if ( applicationPrefix == null ) {
+			synchronized ( SCRIPT_DOMAIN ) {
+				applicationPrefix = Dispatcher.getInstance().getNavajoConfig().getInstanceName();
+				if ( applicationPrefix  == null ) {
+					applicationPrefix = "unnamedapplication";
+				} 
+			}
+		}
+		return applicationPrefix + domain;
+	}
+	
 	public final static void registerMXBean(Object o, String domain, String type) {
 		MBeanServer mbs = ManagementFactory.getPlatformMBeanServer(); 
 		ObjectName name = getObjectName(domain, type);
