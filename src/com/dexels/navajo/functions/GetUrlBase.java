@@ -19,6 +19,7 @@ public abstract class GetUrlBase extends FunctionInterface {
         InputStream os = null;
         try {
         	HttpURLConnection uc = (HttpURLConnection)u.openConnection();
+        	uc.setConnectTimeout(1000);
 //        	System.err.println(uc.getHeaderFields());
         	uc.setRequestMethod("HEAD");
             Date d = new Date(uc.getLastModified());
@@ -41,6 +42,7 @@ public abstract class GetUrlBase extends FunctionInterface {
         InputStream os = null;
         try {
         	HttpURLConnection uc = (HttpURLConnection)u.openConnection();
+        	uc.setConnectTimeout(1000);
 //        	System.err.println(uc.getHeaderFields());
         	uc.setRequestMethod("HEAD");
             Date d = new Date(uc.getDate());
@@ -63,6 +65,7 @@ public abstract class GetUrlBase extends FunctionInterface {
         InputStream os = null;
         try {
         	HttpURLConnection uc = (HttpURLConnection)u.openConnection();
+        	uc.setConnectTimeout(1000);
 //        	System.err.println(uc.getHeaderFields());
         	uc.setRequestMethod("HEAD");
 //        	System.err.println(uc.getHeaderFields());
@@ -85,6 +88,7 @@ public abstract class GetUrlBase extends FunctionInterface {
 		InputStream os = null;
 		try {
         	HttpURLConnection uc = (HttpURLConnection)u.openConnection();
+        	uc.setConnectTimeout(1000);
 //        	System.err.println(uc.getHeaderFields());
         	uc.setRequestMethod("HEAD");
 			String type = uc.getContentType();
