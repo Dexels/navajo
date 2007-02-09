@@ -56,6 +56,7 @@ public class HTTPMap implements Mappable {
 	public boolean doSend = false;
 	public Binary result = null;
 	public String textResult = null;
+	public int connectTimeOut = 5000;
 	
 	private static int instances = 0;
 	
@@ -79,6 +80,10 @@ public class HTTPMap implements Mappable {
 		contentType = s;
 	}
 	
+	public void setConnectTimeOut(int i) {
+		this.connectTimeOut = i;
+	}
+	
 	public void setDoSend(boolean b) throws UserException {
 		instances++;
 		
@@ -89,6 +94,7 @@ public class HTTPMap implements Mappable {
 			URL u = new URL("http://" + url);
 			HttpURLConnection con = null;
 			con = (HttpURLConnection) u.openConnection();
+			con.setConnectTimeout(connectTimeOut);
 			con.setRequestMethod(method);
 			con.setDoOutput(true);
 			con.setDoInput(true);
