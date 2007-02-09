@@ -52,18 +52,23 @@ public class TagMap implements Mappable {
 	public final String PREFIX_SEPARATOR = "@";
 	public final int    DEFAULT_INDENT   = 2;
 	
-	public String name;
-	public String text;
-	public Binary insert;
-	public TagMap [] children;
-	public TagMap child;
-	public String childName;
-	public String childText;
-	public String childAttribute;
-	public boolean exists;
-	public int indent = DEFAULT_INDENT;
+	public String     name;
+	public String     text;
+	public String     attributeText;
+	
+	public Binary     insert;
+	public TagMap     [] children;
+	public TagMap     child;
+	
+	public String     childName;
+	public String     attributeName;
+	public String     childText;
+	
+	public boolean    exists;
+	
+	public int        indent     = DEFAULT_INDENT;
 		
-	protected HashMap tags = null;
+	protected HashMap tags       = null;
 	protected HashMap attributes = null;
 	
 	public void load(Parameters parms, Navajo inMessage, Access access,
@@ -72,6 +77,19 @@ public class TagMap implements Mappable {
 
 	public void setText(String t) {
 		text = t;
+	}
+	
+	public void setAttributeText(String t) {
+		// attribute name must be known
+		if ( this.attributeName == null )
+			return;
+		
+		// create attributes if not already present
+		if ( this.attributes == null ) {
+			this.attributes = new HashMap ();
+		}
+
+		this.attributes.put( this.attributeName, t);
 	}
 	
 	public void setName(String s) {
@@ -105,6 +123,10 @@ public class TagMap implements Mappable {
 		return text;
 	}
 	
+	public String getAttributeText() {
+		return attributeText;
+	}
+	
 	public void setChild(TagMap t) throws UserException {
 		if ( tags == null ) {
 			tags = new HashMap();
@@ -133,6 +155,19 @@ public class TagMap implements Mappable {
 	
 	public void setChildName(String s) {
 		childName = s;
+	}
+	
+	public void setAttributeName(String s) {
+		try {
+			TagMap child = this.getChild();
+		
+			if ( child != null ) {
+				child.attributeName = s;
+			}
+		}
+		catch ( UserException ex ) {
+			System.err.println("Setting attribute " + s + " failed");
+		}
 	}
 	
 	public void setIndent(int indent) {
@@ -167,7 +202,7 @@ public class TagMap implements Mappable {
 		t.setText(s);
 	}
 	
-	public String getAttribute(String a) {
+	public String getAttribute(String a) throws UserException {
 		if ( attributes.get(a) != null ) {
 			return (String) attributes.get(a);
 		}
