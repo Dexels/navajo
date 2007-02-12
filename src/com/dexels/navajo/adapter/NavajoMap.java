@@ -220,7 +220,11 @@ public class NavajoMap implements Mappable {
   }
   
   public final void setProperty(Object o) throws UserException {
-	  currentProperty.setAnyValue(o);
+	  if ( o == null ) {
+		  currentProperty.setValue((String) null);
+	  } else {
+		  currentProperty.setAnyValue(o);
+	  }
 	  addProperty(currentFullName, currentProperty);
   }
 
