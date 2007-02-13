@@ -75,6 +75,8 @@ public class TipiDialog extends TipiEchoDataComponentImpl {
 
     public Object createContainer() {
         Component tp = new Row();
+//        tp.setStyleName("Default");
+        
         TipiHelper th = new EchoTipiHelper();
         th.initHelper(this);
         // tp.setBackground(new Color(200, 100, 100));
@@ -222,6 +224,8 @@ public class TipiDialog extends TipiEchoDataComponentImpl {
             y = 100;
         }
         myDialog = new WindowPane(title, new Extent(w, Extent.PX), new Extent(h, Extent.PX));
+        //myDialog.setStyleName("dialog");
+        myDialog.setStyleName("dialog");
         myDialog.setDefaultCloseOperation(WindowPane.DISPOSE_ON_CLOSE);
         // myDialog.setUndecorated(!decorated);
         FillImageBorder fib = new FillImageBorder(new Color(100,100,100),new Insets(new Extent(1,Extent.PX)),new Insets(new Extent(2,Extent.PX)));
