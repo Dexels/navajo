@@ -109,13 +109,13 @@ public final class TmlHttpLaszloServlet extends TmlHttpServlet {
 				java.util.zip.GZIPOutputStream gzipout = new java.util.zip.GZIPOutputStream(response.getOutputStream());
 
 				Document laszlo = createLaszloFromNavajo(outDoc);
-				XMLDocumentUtils.write(laszlo, new OutputStreamWriter(gzipout), false);
+				XMLDocumentUtils.write(laszlo, new OutputStreamWriter(gzipout));
 				gzipout.close();
 			} else {
 				response.setContentType("text/xml; charset=UTF-8");
 				OutputStream out = (OutputStream) response.getOutputStream();
 				Document laszlo = createLaszloFromNavajo(outDoc);
-				XMLDocumentUtils.write(laszlo, new OutputStreamWriter(out), false);
+				XMLDocumentUtils.write(laszlo, new OutputStreamWriter(out));
 				out.close();
 			}
 		} catch (Throwable e) {
@@ -205,6 +205,7 @@ public final class TmlHttpLaszloServlet extends TmlHttpServlet {
 					row.appendChild(prop);
 				}
 				row.setAttribute(cp.getName(), cp.getValue());
+				row.setAttribute("type_"+cp.getName(), cp.getType());
 			}
 			e.appendChild(row);
 		}
@@ -319,8 +320,11 @@ public final class TmlHttpLaszloServlet extends TmlHttpServlet {
 				Node prop = properties.item(i);
 				String name = prop.getNodeName();
 				String value = prop.getNodeValue();
-				Property p = NavajoFactory.getInstance().createProperty(n, name, Property.STRING_PROPERTY, value, 0, "", "in");
-				row.addProperty(p);
+				if(!name.startsWith("type_")){
+					String type = elm.getAttribute("type_" + name);
+				  Property p = NavajoFactory.getInstance().createProperty(n, name, type, value, 0, "", "in");
+				  row.addProperty(p);
+				}
 			}
 			
 			NodeList selProps = elm.getChildNodes();
