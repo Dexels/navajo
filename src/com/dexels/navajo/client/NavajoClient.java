@@ -898,8 +898,10 @@ public class NavajoClient implements ClientInterface {
    * @param header
    */
   private final void processPiggybackData(Header header) {
-	  
+
 	  synchronized (piggyBackData) {
+		  // Clear previous piggyback data.
+		  header.clearPiggybackData();
 		  for (Iterator iter = piggyBackData.iterator(); iter.hasNext();) {
 			  Map element = (Map) iter.next();
 			  header.addPiggyBackData(element);
@@ -907,7 +909,7 @@ public class NavajoClient implements ClientInterface {
 		  // remove piggyback data.
 		  piggyBackData.clear();
 	  }
-	  
+
   }
 
 private final BufferedInputStream retryTransaction(String server, Navajo out, boolean useCompression, int attemptsLeft, long interval, Navajo n) throws Exception {
