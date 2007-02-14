@@ -41,6 +41,8 @@ public class NavajoClient implements ClientInterface {
 
   public static final int DIRECT_PROTOCOL = 0;
   public static final int HTTP_PROTOCOL = 1;
+  public static int CONNECT_TIMEOUT = 2000;
+  
 //  private String host = null;
   private String username = null;
   private String password = null;
@@ -547,6 +549,7 @@ public class NavajoClient implements ClientInterface {
       urlcon.setSSLSocketFactory(sslFactory);
       con = urlcon;
     }
+    con.setConnectTimeout(CONNECT_TIMEOUT);
     con.setDoOutput(true);
     con.setDoInput(true);
     con.setUseCaches(false);
@@ -586,17 +589,15 @@ public class NavajoClient implements ClientInterface {
     	OutputStream os = null;
     	try {
     		os = con.getOutputStream();
-    		d.write(os, condensed, d.getHeader().getRPCName());
-    	}
-    	catch (java.net.NoRouteToHostException nrthe) {
-    		throw new ClientException( -1, 20, "Could not connect to URI: " + name + ", check your connection");
-    	}
-    	catch (java.net.SocketException se) {
-    		se.printStackTrace();
-    		throw new ClientException( -1, 21, "Could not connect to network, check your connection");
+    		d.write(os, condensed, d.getHeader().getRPCName());    	
     	} finally {
     		if ( os != null ) {
-    			os.close();
+    			try {
+    				os.flush();
+    				os.close();
+    			} catch (IOException e) {
+    				e.printStackTrace();
+    			}
     		}
     	}
     }
