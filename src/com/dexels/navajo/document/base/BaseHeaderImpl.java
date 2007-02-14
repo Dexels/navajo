@@ -409,7 +409,9 @@ public Set getPiggybackData() {
 }
 
 public void clearPiggybackData() {
-	piggyBackData.clear();
+	if ( piggyBackData != null ) {
+		piggyBackData.clear();
+	}
 }
 
 }
