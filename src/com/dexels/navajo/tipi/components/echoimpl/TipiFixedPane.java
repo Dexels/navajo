@@ -41,6 +41,8 @@ public final class TipiFixedPane
     public Object createContainer() {
         // myWindow = new WindowPane();
         innerContainer = new ContainerEx();
+//        innerContainer.setStyleName("Default");
+        
         innerContainer.setPosition(Positionable.FIXED);
         innerContainer.setLeft(new Extent(0, Extent.PX));
         innerContainer.setTop(new Extent(0, Extent.PX));

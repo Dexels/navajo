@@ -265,10 +265,10 @@ public class TipiMegaTable extends TipiEchoDataComponentImpl {
         }
     }
 
-    private final void reload() {
+    private final void reload() throws TipiBreakException {
         try {
             if (myNavajo != null) {
-                loadData(getNavajo(), myContext, getCurrentMethod());
+                loadData(getNavajo(), myContext, getCurrentMethod(),null);
             } else {
                 System.err.println("Can not reload, no navajo!");
             }
@@ -277,7 +277,7 @@ public class TipiMegaTable extends TipiEchoDataComponentImpl {
         }
     }
 
-    public void loadData(final Navajo n, TipiContext context, String method) throws TipiException {
+    public void loadData(final Navajo n, TipiContext context, String method,String server) throws TipiException, TipiBreakException {
         myPanel.removeAll();
         // footerRendererMap.clear();
         tableInstances.clear();
@@ -288,6 +288,6 @@ public class TipiMegaTable extends TipiEchoDataComponentImpl {
         current = n.getMessage(tmtl.getMessagePath());
         tmtl.loadData(n, null, currentLayers, myPanel);
 
-        super.loadData(n, context, method);
+        super.loadData(n, context, method,server);
     }
 }

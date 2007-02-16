@@ -10,6 +10,8 @@ public class TipiToolbar extends TipiEchoDataComponentImpl {
     public Object createContainer() {
         // ContainerEx myContainer = new ContainerEx();
         myRow = new Row();
+        myRow.setStyleName("ControlPane");
+		
         // myColumn.setLayoutData(new ColumnLayoutData());
         // myContainer.add(myRow);
         return myRow;

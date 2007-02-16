@@ -32,6 +32,7 @@ public class TipiQuestionGroup extends TipiBaseQuestionGroup {
 
     public Object createContainer() {
         myColumn = new Column();
+//        myColumn.setStyleName("Default");
         return myColumn;
     }
 

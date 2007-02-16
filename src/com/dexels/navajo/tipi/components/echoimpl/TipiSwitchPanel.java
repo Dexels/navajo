@@ -37,6 +37,7 @@ public class TipiSwitchPanel extends TipiEchoDataComponentImpl {
 
     public Object createContainer() {
         myContainer = new Grid(1);
+//        myContainer.setStyleName("Default");
         return myContainer;
     }
 

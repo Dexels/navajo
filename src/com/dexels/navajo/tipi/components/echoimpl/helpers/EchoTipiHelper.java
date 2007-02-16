@@ -55,6 +55,9 @@ public class EchoTipiHelper implements TipiHelper {
         }
         Component c = (Component) myComponent.getActualComponent();
         if (name.equals("background")) {
+        	if(object instanceof String) {
+        		System.err.println("Setting color: "+object);
+        	}
             c.setBackground((Color) object);
         }
         if (name.equals("foreground")) {

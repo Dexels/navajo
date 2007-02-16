@@ -33,7 +33,8 @@ public class ButtonImpl extends ButtonEx {
         setup();
     }
     private void setup() {
-        setTextAlignment(new Alignment(Alignment.CENTER, Alignment.DEFAULT));
+//    	setStyleName("Default");
+		setTextAlignment(new Alignment(Alignment.CENTER, Alignment.DEFAULT));
         setAlignment(new Alignment(Alignment.CENTER,Alignment.DEFAULT));
         setBorder(new Border(1,new Color(0x88,0x88,0x88),Border.STYLE_SOLID));
 //        setRolloverBackground(new Color(0xff,0xff,0xff));

@@ -67,22 +67,25 @@ public class MessageTable extends SortableTable {
 
     public MessageTable() {
     	
-        super.addActionListener(new ActionListener() {
+//    	setStyleName("Default");
+		super.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
                 lastSelectedRow = currentSelectedRow;
                 currentSelectedRow = getSelectedIndex();
+                if (lastSelectedRow>=getMessageTableModel().getRowCount()) {
+					lastSelectedRow = -1;
+				}
                 for (int i = 0; i < getColumnModel().getColumnCount(); i++) {
                     // TODO Ewwwwww
                     // System.err.println("Last row: "+lastSelectedRow);
                     // System.err.println("Current row: "+currentSelectedRow);
                     Component lastc = getCellComponent(i, lastSelectedRow);
-                    Component currentc = getCellComponent(i, currentSelectedRow);
-                    // System.err.println("Last: "+lastc+" current: "+currentc);
-                    if (lastSelectedRow > -1 && lastc instanceof EchoPropertyComponent) {
+                     // System.err.println("Last: "+lastc+" current: "+currentc);
+                    if (lastSelectedRow > -1  && lastc instanceof EchoPropertyComponent) {
                         ((EchoPropertyComponent) lastc).setZebra(i, lastSelectedRow, false);
-                        // lastc.setBackground(new Color(0,0,255));
                     }
+                    Component currentc = getCellComponent(i, currentSelectedRow);
                     if (currentSelectedRow > -1 && currentc instanceof EchoPropertyComponent) {
                         ((EchoPropertyComponent) currentc).setZebra(i, currentSelectedRow, true);
                         // currentc.setBackground(new Color(255,0,0));
@@ -199,9 +202,11 @@ public class MessageTable extends SortableTable {
     }
 
     public Message getSelectedMessage() {
-        // System.err.println("GETTING SELECTED MESSAGE: "
-        // + getSelectionModel().getMinSelectedIndex());
-        return myModel.getMessageRow(getSelectionModel().getMinSelectedIndex());
+        int index = getSelectionModel().getMinSelectedIndex();
+        if (index<0) {
+			return null;
+		}
+        return myModel.getMessageRow(index);
     }
 
     public int getSelectedIndex() {
@@ -230,6 +235,14 @@ public class MessageTable extends SortableTable {
         editables.add(new Boolean(editable));
     }
 
+    public boolean isColumnEditable(int index) {
+    	Boolean b = (Boolean)editables.get(index);
+    	if (b!=null) {
+			return b.booleanValue();
+		}
+    	return false;
+    }
+    
     public String getColumnTitle(int i) {
         return (String) names.get(i);
     }

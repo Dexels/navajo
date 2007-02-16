@@ -56,6 +56,8 @@ public class TipiTabs extends TipiEchoDataComponentImpl {
     public Object createContainer() {
         final TipiComponent me = this;
         myTabbedPane = new TabbedPane();
+//        myTabbedPane.setStyleName("Default");
+        
         defaultTabModel = new DefaultTabModel();
         defaultTabModel.setSelectedBackground(new Color(255, 255, 255));
         defaultTabModel.setSelectedForeground(new Color(0, 0, 0));

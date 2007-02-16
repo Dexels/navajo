@@ -1,13 +1,9 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
 import nextapp.echo2.app.*;
-import nextapp.echo2.app.Component;
-import nextapp.echo2.app.Extent;
-import nextapp.echo2.app.LayoutData;
-import nextapp.echo2.app.Window;
-import nextapp.echo2.app.WindowPane;
 
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.TipiHelper;
@@ -20,7 +16,6 @@ import com.dexels.navajo.tipi.internal.TipiLayout;
 
 import echopointng.ExtentEx;
 import echopointng.able.*;
-import echopointng.able.Sizeable;
 
 /**
  * <p>
@@ -49,6 +44,9 @@ public abstract class TipiEchoDataComponentImpl extends TipiDataComponentImpl {
         TipiHelper th = new EchoTipiHelper();
         th.initHelper(this);
         addHelper(th);
+        
+        
+        
     }
 
     public Component getLayoutComponent() {
@@ -91,6 +89,9 @@ public abstract class TipiEchoDataComponentImpl extends TipiDataComponentImpl {
     }
 
     public void setContainerLayout(Object layout) {
+    	if(true) {
+    		return;
+    	}
         if (layout instanceof TipiLayoutManager) {
             /* 'Real layout' */
             // layoutComponent = (TipiLayoutManager)layout;
@@ -98,10 +99,10 @@ public abstract class TipiEchoDataComponentImpl extends TipiDataComponentImpl {
             if (layout instanceof Component) {
             	System.err.println("Deprecated layout usage IN TipiEchoDataComponent");
                 layoutComponent = (Component) layout;
-                if (layoutComponent instanceof Sizeable) {
-                    ((Sizeable) layoutComponent).setWidth(new Extent(100, Extent.PERCENT));
-                    ((Sizeable) layoutComponent).setHeight(new Extent(100, Extent.PERCENT));
-                }
+//                if (layoutComponent instanceof Sizeable) {
+//                    ((Sizeable) layoutComponent).setWidth(new Extent(100, Extent.PERCENT));
+//                    ((Sizeable) layoutComponent).setHeight(new Extent(100, Extent.PERCENT));
+//                }
                 ((Component) getContainer()).add(layoutComponent);
 
             } else {
@@ -120,8 +121,8 @@ public abstract class TipiEchoDataComponentImpl extends TipiDataComponentImpl {
      * @throws TipiException
      * @todo Implement this com.dexels.navajo.tipi.TipiDataComponent method
      */
-    public void loadData(Navajo n, TipiContext context, String method) throws TipiException {
-        super.loadData(n, context, method);
+    public void loadData(Navajo n, TipiContext context, String method,String server) throws TipiException, TipiBreakException {
+        super.loadData(n, context, method,server);
     }
     
     public void processStyles() {

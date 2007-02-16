@@ -1,6 +1,8 @@
 package com.dexels.navajo.tipi.components.echoimpl.parsers;
 
 //import java.awt.*;
+import nextapp.echo2.app.Color;
+
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiTypeParser;
 import com.dexels.navajo.tipi.internal.TipiEvent;
@@ -24,6 +26,6 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
  */
 public class PaintParser extends TipiTypeParser {
     public Object parse(TipiComponent source, String expression, TipiEvent event) {
-        return null;
+        return new Color(255,255,255);
     }
 }

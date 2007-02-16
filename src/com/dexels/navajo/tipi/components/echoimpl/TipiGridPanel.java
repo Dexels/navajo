@@ -55,7 +55,8 @@ public class TipiGridPanel extends TipiEchoDataComponentImpl {
     public Object createContainer() {
         // myContainer = new GroupBox((String)null);
         gridComponent = new Grid();
-        
+//        gridComponent.setStyleName("Default");
+         
         
         // myContainer.setBorder(null);
         // gridComponent = myContainer;

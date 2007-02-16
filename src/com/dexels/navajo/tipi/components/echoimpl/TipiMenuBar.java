@@ -1,5 +1,6 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
+import nextapp.echo2.extras.app.MenuBarPane;
 import echopointng.MenuBar;
 
 /**
@@ -25,7 +26,9 @@ public class TipiMenuBar extends TipiEchoDataComponentImpl {
     }
 
     public Object createContainer() {
+    	
         MenuBar b = new MenuBar();
+//        b.setStyleName("Default");
         b.setTopOffset(0);
 
         return b;

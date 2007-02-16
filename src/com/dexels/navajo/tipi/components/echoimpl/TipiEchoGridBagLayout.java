@@ -46,7 +46,7 @@ public class TipiEchoGridBagLayout extends TipiLayoutImpl {
     public Object parseConstraint(String text, int index) {
         // return new EchoGridBagConstraints(text);
         TipiEchoGridBagConstraints g = new TipiEchoGridBagConstraints();
-        g.parse(text);
+        g.parse(text,index);
         return g;
     }
 

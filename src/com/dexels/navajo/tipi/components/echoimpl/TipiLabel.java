@@ -34,6 +34,7 @@ public class TipiLabel extends TipiEchoComponentImpl {
 
     public Object createContainer() {
         Label b = new LabelEx();
+//        b.setStyleName("Default");
         return b;
     }
     public void processStyles() {

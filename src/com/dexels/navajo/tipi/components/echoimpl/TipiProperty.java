@@ -7,6 +7,8 @@ import java.util.Map;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.Selection;
+
 import com.dexels.navajo.tipi.TipiEventListener;
 import com.dexels.navajo.tipi.actions.PropertyEventListener;
 import com.dexels.navajo.tipi.internal.PropertyComponent;
@@ -122,6 +124,83 @@ public class TipiProperty extends TipiEchoComponentImpl implements PropertyCompo
         myListeners.add(listener);
     }
 
+    
+    
+    public Object getComponentValue(String name) {
+  	  if (myProperty!=null) {
+  		  System.err.println("myProperty:"+myProperty.getName()+" value: "+myProperty.getValue());
+  	  }
+      if ("propertyname".equals(name)) {
+        if (myProperty != null && myProperty.getType().equals(Property.SELECTION_PROPERTY)) {
+          try {
+            Selection s = myProperty.getSelected();
+            if (s != null) {
+              return s.getName();
+            }
+            else {
+              return myPropertyName;
+            }
+          }
+          catch (Exception e) {
+            return myPropertyName;
+          }
+        }
+        return myPropertyName;
+      }
+//      if ("use_checkbox".equals(name)) {
+//        return new Boolean("checkbox".equals(selectionType));
+//      }
+//      if ("selectiontype".equals(name)) {
+//        return selectionType;
+//      }
+//      if ("showlabel".equals(name)) {
+//        return new Boolean(isLabelVisible());
+//      }
+//      if ("label_valign".equals(name)) {
+//        return vAlign;
+//      }
+//      if ("enabled".equals(name)) {
+//          if (myEnableState!=null) {
+//              return new Boolean(myEnableState.booleanValue());
+//          } else {
+//              return new Boolean( ( (GenericPropertyComponent) getContainer()).isEnabled());
+//          }
+//        }
+//      if ("visible".equals(name)) {
+//        return new Boolean( ( (GenericPropertyComponent) getContainer()).isVisible());
+//      }
+//      if ("label_halign".equals(name)) {
+//        return hAlign;
+//      }
+//      if ("label_indent".equals(name)) {
+//        return new Integer( ( (GenericPropertyComponent) getContainer()).getLabelIndent());
+//      }
+//      if ("capitalization".equals(name)) {
+//        return myCapitalization;
+//      }
+      if ("propertyValue".equals(name)) {
+        if (myProperty != null) {
+          if (myProperty.getType().equals(Property.SELECTION_PROPERTY)) {
+            try {
+              Selection s = myProperty.getSelected();
+              if (s != null) {
+                return s.getValue();
+              }
+              else {
+                return "" + myProperty.getTypedValue();
+              }
+            }
+            catch (Exception e) {
+              return "" + myProperty.getTypedValue();
+            }
+          }
+          return "" + myProperty.getTypedValue();
+        }
+      }
+      return super.getComponentValue(name);
+    }
+    
+    
     /**
      * addTipiEvent
      * 
@@ -131,7 +210,8 @@ public class TipiProperty extends TipiEchoComponentImpl implements PropertyCompo
      *       method
      */
     // public void addTipiEvent(TipiEvent te) {
-    // }
+    // }	  System.err.println("Getting PROPERTY VALUE: "+name);
+
     protected void setComponentValue(String name, Object object) {
         if ("propertyname".equals(name)) {
             myPropertyName = object.toString();

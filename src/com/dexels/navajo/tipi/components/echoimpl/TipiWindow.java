@@ -49,6 +49,7 @@ public final class TipiWindow
 
     public Object createContainer() {
         myWindow = new WindowPane();
+        myWindow.setStyleName("window");
         TipiHelper th = new EchoTipiHelper();
         th.initHelper(this);
         addHelper(th);
@@ -60,6 +61,7 @@ public final class TipiWindow
             }
         });
         myWindow.setDefaultCloseOperation(WindowPane.DO_NOTHING_ON_CLOSE);
+        myWindow.setClosable(false);
         return myWindow;
     }
 
@@ -103,7 +105,8 @@ public final class TipiWindow
     }
 
     private final void myWindow_internalFrameClosed(WindowPaneEvent arg0) {
-        // myContext.disposeTipi(this);
+    		myWindow.setVisible(false);
+    	// myContext.disposeTipi(this);
     }
 
     public void addToContainer(final Object c, final Object constraints) {

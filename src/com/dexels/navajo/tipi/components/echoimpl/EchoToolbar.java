@@ -26,6 +26,7 @@ public class EchoToolbar extends TipiEchoDataComponentImpl {
 
     public Object createContainer() {
         Row p = new Row();
+//        p.setStyleName("Default");
         return p;
     }
 

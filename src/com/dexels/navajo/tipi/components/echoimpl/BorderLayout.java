@@ -6,7 +6,7 @@
  */
 package com.dexels.navajo.tipi.components.echoimpl;
 
-import echopointng.*;
+//import echopointng.*;
 import nextapp.echo2.app.*;
 import nextapp.echo2.app.event.*;
 import nextapp.echo2.app.table.*;
@@ -35,7 +35,6 @@ public class BorderLayout extends SplitPane {
 
        setStyleName("DefaultResizable");
        
-       Label label;
        SplitPaneLayoutData splitPaneLayoutData;
        
        splitPaneLayoutData = new SplitPaneLayoutData();

@@ -14,7 +14,6 @@ import echopointng.able.Sizeable;
 /**
  * <p>
  * Title:
- * </p>
  * <p>
  * Description:
  * </p>
@@ -29,9 +28,10 @@ import echopointng.able.Sizeable;
  * @version 1.0
  */
 
+
 public class TipiFrame extends TipiEchoDataComponentImpl {
 
-    private ContentPane myContentPane = new ContentPane();
+//    private ContentPane myContentPane = new ContentPane();
 
     private Window myWindow;
 
@@ -39,7 +39,11 @@ public class TipiFrame extends TipiEchoDataComponentImpl {
 
     private ContentPane contentPane;
 
+	private SplitPane mySplit;
+
     private ContainerEx realContent;
+
+	private ContainerEx menuPane;
 //
 //	private ContainerEx topPlaceHolder;
 //
@@ -51,7 +55,8 @@ public class TipiFrame extends TipiEchoDataComponentImpl {
     }
 
     public Window getWindow() {
-        return myWindow;
+
+    	return myWindow;
     }
 
     public Object createContainer() {
@@ -59,7 +64,25 @@ public class TipiFrame extends TipiEchoDataComponentImpl {
         contentPane = new ContentPane();
         contentPane.setInsets(new Insets(10,10,10,10));
         myWindow.setContent(contentPane);
-//        realContent = new ContainerEx();
+        mySplit = new SplitPane(SplitPane.ORIENTATION_VERTICAL);
+        mySplit.setSeparatorHeight(new Extent(0,Extent.PX));
+        mySplit.setSeparatorPosition(new Extent(35,Extent.PX));
+        contentPane.add(mySplit);
+        menuPane = new ContainerEx();
+        realContent = new ContainerEx();
+        realContent.setzIndex(Integer.MIN_VALUE);
+        mySplit.add(menuPane); 
+        menuPane.setzIndex(Integer.MAX_VALUE);
+        
+        mySplit.add(realContent);
+        
+        //        contentPane.add(realContent);
+//        actualContent = new ContainerEx();
+//        realContent.add(actualContent);
+//        actualContent.setBackground(new Color(240,230,220));
+//        actualContent.setTop(new Extent(20, Extent.PX));
+
+        //        realContent = new ContainerEx();
 //        myWindowGrid = new Grid(3);
 //		topPlaceHolder = new ContainerEx();
 //		myWindowGrid.add(topPlaceHolder);
@@ -122,7 +145,19 @@ public class TipiFrame extends TipiEchoDataComponentImpl {
     
     
     public void setContainerLayout(Object layout) {
-  
+        if (layout instanceof Component) {
+        	System.err.println("Deprecated layout usage IN TipiEchoDataComponent");
+            layoutComponent = (Component) layout;
+            if (layoutComponent instanceof Sizeable) {
+                ((Sizeable) layoutComponent).setWidth(new Extent(100, Extent.PERCENT));
+                ((Sizeable) layoutComponent).setHeight(new Extent(100, Extent.PERCENT));
+            }
+            realContent.add(layoutComponent);
+
+        } else {
+            System.err.println("*********************\nStrange layout found!\n*********************");
+        }
+//    	realContent.add(layout)
     }
 
     
@@ -144,9 +179,9 @@ public class TipiFrame extends TipiEchoDataComponentImpl {
         if ("background".equals(name)) {
             if (object instanceof Color) {
                 contentPane.setBackground((Color) object);
-                if (realContent!=null) {
-                    realContent.setBackground((Color) object);
-				}
+//                if (realContent!=null) {
+//                    realContent.setBackground((Color) object);
+//				}
                 myWindow.setBackground((Color) object);
 //                topPlaceHolder.setBackground((Color) object);
 //                leftPlaceHolder.setBackground((Color) object);
@@ -157,37 +192,80 @@ public class TipiFrame extends TipiEchoDataComponentImpl {
     }
 
     public void addToContainer(Object c, Object constraints) {
+    	
+    	
+    	System.err.println("Attempting to add component: "+c.getClass());
         if (c instanceof MenuBar) {
             MenuBar m = (MenuBar) c;
-            m.setPosition(Positionable.ABSOLUTE);
-            m.setTop(new Extent(0, Extent.PX));
-            m.setWidth(new Extent(100, Extent.PERCENT));
-            m.setHeight(new Extent(20, Extent.PX));
+//            m.setPosition(Positionable.ABSOLUTE);
+//            m.setTop(new Extent(0, Extent.PX));
+//            m.setWidth(new Extent(97, Extent.PERCENT));
+//            m.setHeight(new Extent(20, Extent.PX));
+//            mySplit.setSeparatorPosition(new Extent(30,Extent.PX));
+//            mySplit.setSeparatorHeight(new Extent(5,Extent.PX));
+            menuPane.add(m);
+           
+//            actualContent.setPosition(Positionable.ABSOLUTE);
+
+//            actualContent.setTop(new Extent(20, Extent.PX));
+//            actualContent.setHeight(new Extent(97, Extent.PERCENT));
+//            actualContent.setWidth(new Extent(97, Extent.PERCENT));
+            
             // MEnu geslooopt. kijk ik later naar
             // innerContainer.add(m);
             // contentPane.setTop(new Extent(20, Extent.PX));
         } else {
+//        	if(contentPane.getComponentCount()>0) {
+//        		System.err.println("CAN NOT ADD MORE COMPONENTS TO A FRAME!");
+//        		System.err.println(": "+c.getClass());
+//        		return;
+//        	}
+        	
+        	
+           
             Component child = (Component) c;
-//            realContent.add(child);
-            contentPane.add(child);
-            if (constraints != null && constraints instanceof LayoutData) {
-                child.setLayoutData((LayoutData) constraints);
+            Component cc = realContent;
+            if (layoutComponent != null) {
+                cc = layoutComponent;
             }
+            if (child instanceof WindowPane) {
+                TipiScreen s = (TipiScreen) getContext().getDefaultTopLevel();
+                // Watch this.
+                final Window w = (Window) s.getTopLevel();
+               cc.add(child);
+            } else {
+                 if(cc.getComponentCount()>0) {
+                	return;
+                }
+                 cc.add(child);
+               if (constraints != null && constraints instanceof LayoutData) {
+                    child.setLayoutData((LayoutData) constraints);
+                }
+                if (getLayout() != null) {
+                    getLayout().childAdded(c);
+                }
+                
+            }
+        	
+//            Component child = (Component) c;
+//            realContent.add(child);
+//            realContent.add(child);
+//            conten
+//            if (constraints != null && constraints instanceof LayoutData) {
+//                child.setLayoutData((LayoutData) constraints);
+//            }
 
+            
+            
+            
+            
         }
     }
 
     public void removeFromContainer(Object c) {
-        Component cc = (Component) getContainer();
-        Component child = (Component) c;
-        if (c instanceof MenuBar) {
-            // MEnu geslooopt. kijk ik later naar
-            // innerContainer.remove((Component) c);
+    
+        	realContent.remove((Component) c);
 
-        } else {
-            contentPane.remove((Component) c);
-
-        }
     }
 
     protected Object getComponentValue(String name) {

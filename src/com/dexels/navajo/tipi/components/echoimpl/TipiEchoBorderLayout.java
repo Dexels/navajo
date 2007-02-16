@@ -1,6 +1,12 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
+import nextapp.echo2.app.Column;
 import nextapp.echo2.app.Component;
+import nextapp.echo2.app.ContentPane;
+import nextapp.echo2.app.PaneContainer;
+import nextapp.echo2.app.Row;
+import nextapp.echo2.app.SplitPane;
+import nextapp.echo2.app.layout.ColumnLayoutData;
 
 import com.dexels.navajo.tipi.TipiValue;
 import com.dexels.navajo.tipi.components.core.TipiLayoutImpl;
@@ -26,7 +32,9 @@ import echopointng.able.Sizeable;
  */
 
 public class TipiEchoBorderLayout extends TipiLayoutImpl {
-    public TipiEchoBorderLayout() {
+    private boolean splitmode = false;
+
+	public TipiEchoBorderLayout() {
     }
 
     protected void setValue(String name, TipiValue tv) {
@@ -37,7 +45,17 @@ public class TipiEchoBorderLayout extends TipiLayoutImpl {
     }
 
     public void createLayout() throws com.dexels.navajo.tipi.TipiException {
-        // myLayout = new Column();
+    	Component parent = (Component) myComponent.getContainer();
+    	if(parent instanceof PaneContainer) {
+    		splitmode  = true;
+    	}
+    	ContentPane p;
+//    	if(splitmode) {
+//        	myLayout = new SplitPane(SplitPane.ORIENTATION_VERTICAL);
+//    	} else {
+//    		myLayout = new Row();
+//    	}
+//    	 myLayout = new Column();
         // if (parent instanceof Sizeable) {
         // Sizeable s = (Sizeable)parent;
         // }
@@ -51,10 +69,12 @@ public class TipiEchoBorderLayout extends TipiLayoutImpl {
     }
 
     public void childAdded(Object c) {
-        Component parent = (Component) myComponent.getContainer();
-        if (parent instanceof Sizeable) {
-            Sizeable s = (Sizeable) parent;
-        }
+    	
+    	
+//        Component parent = (Component) myComponent.getContainer();
+//        if (parent instanceof Sizeable) {
+//            Sizeable s = (Sizeable) parent;
+//        }
     }
 
     protected Object parseConstraint(String text) {
@@ -76,7 +96,7 @@ public class TipiEchoBorderLayout extends TipiLayoutImpl {
         // return (cc);
         // }
         // return new CellConstraints(0, 0, 0, 0);
-        return null;
+        return new ColumnLayoutData();
     }
 
 }

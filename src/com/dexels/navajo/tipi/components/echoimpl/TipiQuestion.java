@@ -63,6 +63,8 @@ public class TipiQuestion extends TipiBaseQuestion {
     public Object createContainer() {
 //        myGroupBox = new GroupBox();
         myColumn = new Column();
+//        myColumn.setStyleName("Default");
+        
 //        myGroupBox.add(myColumn);
         return myColumn;
     }

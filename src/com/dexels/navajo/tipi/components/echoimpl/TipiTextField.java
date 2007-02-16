@@ -26,7 +26,8 @@ public class TipiTextField extends TipiEchoComponentImpl {
 
     public Object createContainer() {
         TextField b = new TextField();
-        return b;
+//        b.setStyleName("Default");
+                return b;
     }
 
     protected void setComponentValue(String name, Object object) {

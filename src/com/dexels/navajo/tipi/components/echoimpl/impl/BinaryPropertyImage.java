@@ -26,8 +26,10 @@ public class BinaryPropertyImage extends StreamImageReference {
 
     public void setProperty(Property p) {
         Binary b = (Binary) p.getTypedValue();
-        datas = b.getData();
-        myProperty = p;
+        if(b!=null) {
+            datas = b.getData();
+            myProperty = p;
+        }
     }
 
     public String getContentType() {

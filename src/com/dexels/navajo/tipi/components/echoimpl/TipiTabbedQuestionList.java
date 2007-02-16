@@ -46,10 +46,10 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
         }
         return name.getValue();
     }
-    public void loadData(final Navajo n, final TipiContext context,final String method) throws TipiException {
+    public void loadData(final Navajo n, final TipiContext context,final String method,String server) throws TipiException {
         clearQuestions();
 //        lastSelectedTab = null;
-        super.loadData(n, context, method);
+        super.loadData(n, context, method,server);
         if(defaultTabModel.size()>0) {
         	myTabbedPane.setSelectedIndex(0);
         }
@@ -71,6 +71,7 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
     public Object createContainer() {
         final TipiComponent me = this;
         myTabbedPane = new TabbedPane();
+//        myTabbedPane.setStyleName("Default");
         defaultTabModel = new DefaultTabModel();
         defaultTabModel.setSelectedBackground(new Color(255, 255, 255));
         defaultTabModel.setSelectedForeground(new Color(0, 0, 0));

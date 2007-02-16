@@ -71,6 +71,10 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 
 	private String myCapitalization = null;
 
+	private static final Extent PERCENTAGE = new Extent(97,Extent.PERCENT);
+	private static final Extent SMALL_PERCENTAGE = new Extent(50,Extent.PERCENT);
+	
+	
 	public EchoPropertyComponent() {
 		super(2);
 	}
@@ -117,6 +121,8 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 	private void addPropertyLabel(Property p) {
 		if (p == null) {
 			l = new Label(" ");
+//	        l.setStyleName("Default");
+			
 			l.setBackground(new Color(0, 255, 0));
 			add(l);
 			// currentComponent = l;
@@ -139,14 +145,16 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 							Alignment.DEFAULT));
 			add(l);
 			l.setLayoutData(gd);
-//			System.err.println("SETTING COLUMN WIDTH::: " + label_indent);
+			System.err.println("SETTING COLUMN WIDTH::: " + label_indent);
+			System.err.println("SETTING VALUE WIDTH::: " + value_size);
+			
 			setColumnWidth(0, new Extent(label_indent, Extent.PX));
 			if (value_size == 0) {
-				setColumnWidth(1, new Extent(60, Extent.PERCENT));
-			} else {
+				setColumnWidth(1, SMALL_PERCENTAGE);
+			} else {	
 				setColumnWidth(1, new Extent(value_size, Extent.PX));
 			}
-			// currentComponent = l;
+		
 
 		} else {
 //			System.err.println("Ignoring label!");
@@ -223,7 +231,19 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 	}
 
 	private void createSelectionProperty(Property p) {
+		
+		
 		try {
+			if (alwaysUseLabel) {
+				Selection s = p.getSelected();
+//				createLabel(myCapitalization);
+				if (s==null) {
+					createLabel("-");
+				} else {
+					createLabel(s.getName());
+				}
+				return;
+			}
 			if (p.getCardinality().equals("1")) {
 				switch (selectionMode) {
 				case SELECTIONMODE_COMBO:
@@ -386,7 +406,10 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 				final TipiEchoTextField tf = new TipiEchoTextField(p.getValue());
 				if (value_size != 0) {
 					tf.setWidth(new Extent(value_size));
+				} else {
+					tf.setWidth(PERCENTAGE);
 				}
+//		        tf.setStyleName("Default");
 				tf.setEnabled(false);
 				tf.setForeground(new Color(90, 90, 90));
 				boolean res = ((Boolean) p.getTypedValue()).booleanValue();
@@ -401,6 +424,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 
 	private void createBooleanLabel(Property p) {
 		Label ll = new Label(p.getValue());
+//        ll.setStyleName("Default");
 		ll.setEnabled(false);
 		ll.setForeground(new Color(90, 90, 90));
 		boolean res = ((Boolean) p.getTypedValue()).booleanValue();
@@ -413,8 +437,11 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 	private void createPasswordField(Property p) {
 
 		final PasswordField tf = new PasswordField();
+//	    tf.setStyleName("Default");
 		if (value_size != 0) {
 			tf.setWidth(new Extent(value_size));
+		} else {
+			tf.setWidth(PERCENTAGE);
 		}
 		tf.setText(p.getValue());
 		addPropertyComponent(tf);
@@ -439,6 +466,8 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 
 	private void createBinaryImage(Property p) {
 		final Label ll = new Label(p.getValue());
+//        ll.setStyleName("Default");
+
 		ll.setIcon(new BinaryPropertyImage(p));
 		addPropertyComponent(ll);
 
@@ -453,6 +482,8 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 			return;
 		}
 		final TextArea cb = new TextArea(new StringDocument(), "", column, row);
+//	    cb.setStyleName("Default");
+
 		// System.err.println("Creating memo property: "+column+" row: "+row+"
 		// val: "+value_size);
 		cb.setWidth(new Extent(memoColumnCount, Extent.EM));
@@ -496,6 +527,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 
 	private void createCheckBox(Property p) {
 		final CheckBox cb = new CheckBox();
+//        cb.setStyleName("Default");
 		cb.setSelected("true".equals(myProperty.getValue()));
 		addPropertyComponent(cb);
 		cb.addChangeListener(new ChangeListener() {
@@ -523,6 +555,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 			value = "";
 		}
 		final Label tf = new Label(value);
+//	    tf.setStyleName("Default");
 		tf.setTextAlignment(new Alignment(Alignment.LEADING, Alignment.CENTER));
 		GridLayoutData gd = new GridLayoutData();
 		gd.setAlignment(new Alignment(Alignment.LEADING, Alignment.CENTER));
@@ -532,9 +565,14 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 
 	private void createTextField(Property p) {
 		final TipiEchoTextField tf = new TipiEchoTextField(p.getValue());
+//	    tf.setStyleName("Default");
+
 		if (value_size != 0) {
 			tf.setWidth(new Extent(value_size-4));
+		} else {
+			tf.setWidth(PERCENTAGE);
 		}
+
 		if (!p.isDirIn()) {
 			tf.setForeground(new Color(90, 90, 90));
 		}
@@ -597,14 +635,18 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 
 	private void createDateTextField(Property p) {
 		final SimpleDateFormat sd = new SimpleDateFormat("dd-MM-yyyy");
-
+		
 		Date d = (Date) p.getTypedValue();
 		final TipiEchoTextField tf = new TipiEchoTextField("");
+//		tf.setStyleName("Default");
+
 		if (d != null) {
 			tf.setText(sd.format(d));
 		}
 		if (value_size != 0) {
 			tf.setWidth(new Extent(value_size-4));
+		} else {
+			tf.setWidth(new Extent(97,Extent.PERCENT));
 		}
 		if (!p.isDirIn()) {
 			tf.setForeground(new Color(90, 90, 90));
@@ -649,9 +691,14 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 
 	private void createClocktimeField(final Property p) {
 		final TipiEchoTextField tf = new TipiEchoTextField(p.getValue());
+//        tf.setStyleName("Default");
+
 		if (value_size != 0) {
 			tf.setWidth(new Extent(value_size));
+		} else {
+			tf.setWidth(PERCENTAGE);
 		}
+
 		if (!p.isDirIn()) {
 			tf.setForeground(new Color(90, 90, 90));
 		}
@@ -693,11 +740,16 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 
 	private void createMultiSelect(Property p) throws NavajoException {
 		ListBox lb = new ListBox(p.getAllSelections().toArray());
+//	    lb.setStyleName("Default");
+
 		addPropertyComponent(lb);
 		lb.setEnabled(p.isDirIn());
 		if (value_size != 0) {
 			lb.setWidth(new Extent(value_size));
+		} else {
+			lb.setWidth(PERCENTAGE);
 		}
+
 		lb.setSelectionMode(ListSelectionModel.MULTIPLE_SELECTION);
 		for (int i = 0; i < p.getAllSelections().size(); i++) {
 			Selection current = (Selection) p.getAllSelections().get(i);
@@ -721,8 +773,11 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 		for (int i = 0; i < ss.size(); i++) {
 			Selection cc = (Selection) ss.get(i);
 			final RadioButton rb = new RadioButton();
+//		    rb.setStyleName("Default");
+
 			rb.setEnabled(p.isDirIn());
 			// rb.setModel(model);
+			
 			buttons.put(cc.getValue(), rb);
 			r.add(rb);
 			rb.setText(cc.getName());
@@ -789,6 +844,8 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 			Selection cc = (Selection) ss.get(i);
 			final CheckBox rb = new CheckBox();
 			// rb.setModel(model);
+//	        rb.setStyleName("Default");
+			
 			buttons.put(cc, rb);
 			r.add(rb);
 			rb.setText(cc.getName());
@@ -850,11 +907,14 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 			final SelectFieldEx lb = new SelectFieldEx(p.getAllSelections()
 					.toArray());
 			
-			
+//		      lb.setStyleName("Default");
+		
 			add(lb);
 			lb.setEnabled(p.isDirIn());
 			if (value_size != 0) {
 				lb.setWidth(new Extent(value_size-4));
+			} else {
+				lb.setWidth(PERCENTAGE);
 			}
 			// PropertyImpl ppp = (PropertyImpl) p;
 			ArrayList ss = p.getAllSelections();
@@ -899,7 +959,10 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 			final TipiEchoTextField tf = new TipiEchoTextField(p.getValue());
 			if (value_size != 0) {
 				tf.setWidth(new Extent(value_size));
+			} else {
+				tf.setWidth(PERCENTAGE);
 			}
+
 			tf.setEnabled(false);
 			tf.setForeground(new Color(90, 90, 90));
 
@@ -923,12 +986,15 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 		final MessageTable messageTable = (MessageTable) table;
 		EchoPropertyComponent epc = new EchoPropertyComponent();
 		Extent tableColumnwidth = messageTable.getColumnSize(column);
+		
+		epc.setAlwaysUseLabel(!messageTable.isColumnEditable(column));
+		
 		epc.setUseLabelForReadOnlyProperties(true);
 		epc.setLabelVisible(false);
 		epc.setProperty((Property) value);
 		// epc.setWidth(tableColumnwidth);
 
-		boolean editable = ((Property) value).isDirIn();
+//		boolean editable = ((Property) value).isDirIn();
 		epc.addPropertyEventListener(new PropertyEventListener() {
 			public void propertyEventFired(Property p, String eventType) {
 				messageTable.fireTableEdited(p, column, row);

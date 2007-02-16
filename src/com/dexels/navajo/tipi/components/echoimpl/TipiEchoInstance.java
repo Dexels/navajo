@@ -11,7 +11,9 @@ import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpSession;
 
 import nextapp.echo2.app.ApplicationInstance;
+import nextapp.echo2.app.Style;
 import nextapp.echo2.app.Window;
+import nextapp.echo2.app.WindowPane;
 import nextapp.echo2.webcontainer.ContainerContext;
 import nextapp.echo2.webcontainer.command.BrowserRedirectCommand;
 
@@ -73,7 +75,10 @@ public class TipiEchoInstance extends ApplicationInstance {
     }
 
     private void startup() {
-
+       	setStyleSheet(Styles.DEFAULT_STYLE_SHEET); 
+		Style ss = Styles.DEFAULT_STYLE_SHEET.getStyle(WindowPane.class, "Default");
+        System.err.println(">>> "+ss);
+//        Title.Sub
         context = new EchoTipiContext();
 
         TipiScreen es = new TipiScreen();
@@ -103,10 +108,14 @@ public class TipiEchoInstance extends ApplicationInstance {
 
     public Window init() {
         TipiScreen echo = (TipiScreen) context.getDefaultTopLevel();
-        TipiFrame w = (TipiFrame) echo.getTipiComponent("init");
+
         ContainerContext containerContext = (ContainerContext)getContextProperty(ContainerContext.CONTEXT_PROPERTY_NAME);
         containerContext.setServerDelayMessage(new NavajoServerDelayMessage(containerContext,"Moment.."));
         
+        TipiFrame w = (TipiFrame) echo.getTipiComponent("init");
+        if(w==null) {
+        	throw new RuntimeException("No toplevel found!");
+        }
         return w.getWindow();
     }
 

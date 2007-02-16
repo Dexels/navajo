@@ -9,6 +9,8 @@ public class TipiColumn extends TipiEchoDataComponentImpl {
 
     public Object createContainer() {
         myColumn = new Column();
+//        myColumn.setStyleName("Default");
+                
         return myColumn;
     }
 

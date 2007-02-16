@@ -14,6 +14,8 @@ import com.dexels.navajo.tipi.components.echoimpl.helpers.EchoTipiHelper;
 import com.dexels.navajo.tipi.components.echoimpl.parsers.*;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 
+import echopointng.ContainerEx;
+
 /**
  * <p>
  * Title:
@@ -34,7 +36,7 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
 public class TipiDialog extends TipiEchoDataComponentImpl {
     private boolean disposed = false;
 
-    private WindowPane myDialog = null;
+    private WindowPane myWindow = null;
 
     private boolean modal = false;
 
@@ -52,6 +54,7 @@ public class TipiDialog extends TipiEchoDataComponentImpl {
     private boolean closable = false;
 
     private boolean resizable = true;
+    private ContainerEx innerContainer;
 
     private int headerheight = 25;
     private int leftheaderinset = 0;
@@ -62,6 +65,8 @@ public class TipiDialog extends TipiEchoDataComponentImpl {
     private Color headerforeground = null;
     private Color headerbackground = null;
     private Font headerfont = null;
+
+	private String myTitle;
 
     // headerheight leftheaderinset topheaderinset rightheaderinset bottomheaderinset
     
@@ -74,16 +79,30 @@ public class TipiDialog extends TipiEchoDataComponentImpl {
     }
 
     public Object createContainer() {
-        Component tp = new Row();
-//        tp.setStyleName("Default");
-        
-        TipiHelper th = new EchoTipiHelper();
-        th.initHelper(this);
-        // tp.setBackground(new Color(200, 100, 100));
-        addHelper(th);
-        return tp;
-    }
 
+            myWindow = new WindowPane();
+            myWindow.setStyleName("window");
+            TipiHelper th = new EchoTipiHelper();
+            th.initHelper(this);
+            addHelper(th);
+            innerContainer = new ContainerEx();
+            myWindow.add(innerContainer);
+            myWindow.addWindowPaneListener(new WindowPaneListener() {
+                public void windowPaneClosing(WindowPaneEvent arg0) {
+                    myWindow_internalFrameClosed(arg0);
+                }
+            });
+            myWindow.setDefaultCloseOperation(WindowPane.DO_NOTHING_ON_CLOSE);
+            myWindow.setClosable(false);
+            return myWindow;
+        }
+
+    
+    private final void myWindow_internalFrameClosed(WindowPaneEvent arg0) {
+		myWindow.setVisible(false);
+	// myContext.disposeTipi(this);
+}
+    
     // }
     private final void dialog_windowClosing(WindowPaneEvent e) {
         WindowPane d = (WindowPane) e.getSource();
@@ -109,9 +128,6 @@ public class TipiDialog extends TipiEchoDataComponentImpl {
     // getSwingContainer().remove( (Component) c);
     // }
     public void setComponentValue(final String name, final Object object) {
-        // runSyncInEventThread(new Runnable() {
-        // public void run() {
-
         if (name.equals("modal")) {
             modal = ((Boolean) object).booleanValue();
             return;
@@ -161,7 +177,10 @@ public class TipiDialog extends TipiEchoDataComponentImpl {
         if (name.equals("resizable")) {
             resizable = ((Boolean) object).booleanValue();
         }
-
+        if (name.equals("title")) {
+            myTitle = object.toString();
+            myWindow.setTitle(myTitle);
+        }
         super.setComponentValue(name, object);
     }
 
@@ -191,11 +210,15 @@ public class TipiDialog extends TipiEchoDataComponentImpl {
     }
 
     public void disposeComponent() {
-        if (myDialog != null) {
-            myDialog.setVisible(false);
+        if (myWindow != null) {
+        	myWindow.setVisible(false);
         }
         super.disposeComponent();
-    }
+        TipiScreen s = (TipiScreen) getContext().getDefaultTopLevel();
+        final Window win = (Window) s.getTopLevel();
+        win.getContent().remove(myWindow);
+        myWindow = null;
+   }
 
     private final void constructDialog() {
         // System.err.println("Constructing: studio? "+isStudioElement());
@@ -223,46 +246,35 @@ public class TipiDialog extends TipiEchoDataComponentImpl {
         if (y == 0) {
             y = 100;
         }
-        myDialog = new WindowPane(title, new Extent(w, Extent.PX), new Extent(h, Extent.PX));
-        //myDialog.setStyleName("dialog");
-        myDialog.setStyleName("dialog");
-        myDialog.setDefaultCloseOperation(WindowPane.DISPOSE_ON_CLOSE);
-        // myDialog.setUndecorated(!decorated);
-        FillImageBorder fib = new FillImageBorder(new Color(100,100,100),new Insets(new Extent(1,Extent.PX)),new Insets(new Extent(2,Extent.PX)));
-        myDialog.setBorder(fib);
-        createWindowListener(myDialog);
-        myDialog.setTitle(title);
-//        myDialog.
-        // myDialog.toFront();
-        // if (myBar != null) {
-        // myDialog.setJMenuBar(myBar);
-        // }
-        win.getContent().add(myDialog);
-        // myDialog.setModal(true);
-        myDialog.add((Component) getContainer());
+//        myWindow = new WindowPane(title, new Extent(w, Extent.PX), new Extent(h, Extent.PX));
+//        myWindow.setStyleName("dialog");
+//        myWindow.setDefaultCloseOperation(WindowPane.DISPOSE_ON_CLOSE);
+//        FillImageBorder fib = new FillImageBorder(new Color(100,100,100),new Insets(new Extent(1,Extent.PX)),new Insets(new Extent(2,Extent.PX)));
+//        myWindow.setBorder(fib);
+//        createWindowListener(myWindow);
+        myWindow.setTitle(title);
+        win.getContent().add(myWindow);
+//        myWindow.add((Component) getContainer());
 
-        myDialog.setPositionX(new Extent(x, Extent.PX));
-        myDialog.setPositionY(new Extent(y, Extent.PX));
-        myDialog.setModal(modal);
-        myDialog.setResizable(resizable);
+        myWindow.setPositionX(new Extent(x, Extent.PX));
+        myWindow.setPositionY(new Extent(y, Extent.PX));
+        myWindow.setModal(modal);
+        myWindow.setResizable(resizable);
         // ARRRRRRRGGGGHHHHH
-        myDialog.setClosable(closable);
+        myWindow.setClosable(true);
 
-        if (headerbackground!=null) {
-            myDialog.setTitleBackground(headerbackground);
-        }
-        if (headerforeground!=null) {
-            myDialog.setTitleForeground(headerforeground);
-        }
-        
-//        myDialog.setTitleBackground(new Color(232, 232, 232));
-        myDialog.setTitleInsets(new Insets(leftheaderinset, topheaderinset, rightheaderinset, bottomheaderinset));
-//        myDialog.setTitleForeground(new Color(0, 0, 0));
-//        myDialog.setTitleFont(new Font(Font.ARIAL, Font.PLAIN, new Extent(10, Extent.PT)));
-        if (headerheight!=0) {
-            myDialog.setTitleHeight(new Extent(headerheight, Extent.PX));
-        }
-        myDialog.setVisible(true);
+//        if (headerbackground!=null) {
+//        	myWindow.setTitleBackground(headerbackground);
+//        }
+//        if (headerforeground!=null) {
+//        	myWindow.setTitleForeground(headerforeground);
+//        }
+//        
+////        myWindow.setTitleInsets(new Insets(leftheaderinset, topheaderinset, rightheaderinset, bottomheaderinset));
+//        if (headerheight!=0) {
+//        	myWindow.setTitleHeight(new Extent(headerheight, Extent.PX));
+//        }
+        myWindow.setVisible(true);
     }
     public void processStyles() {
 //        System.err.println("Processing styles.... "+styleHintMap);
@@ -317,9 +329,16 @@ public class TipiDialog extends TipiEchoDataComponentImpl {
         }
     }
 
-    public void addToContainer(Object c, Object constraints) {
-        super.addToContainer(c, constraints);
+    public void addToContainer(final Object c, final Object constraints) {
+        innerContainer.add((Component) c);
+        if (constraints != null && constraints instanceof LayoutData) {
+            ((WindowPane) getContainer()).setLayoutData((LayoutData) constraints);
+
+        }
+        // ((SwingTipiContext)myContext).addTopLevel(c);
+        // });
     }
+
 
     protected synchronized void performComponentMethod(String name, TipiComponentMethod compMeth, TipiEvent event) throws TipiBreakException {
         final TipiComponent me = this;
@@ -333,14 +352,16 @@ public class TipiDialog extends TipiEchoDataComponentImpl {
         // }
         // });
         if (name.equals("hide")) {
-            if (myDialog != null) {
-                myDialog.setVisible(false);
+            if (myWindow != null) {
+            	myWindow.setVisible(false);
+            	System.err.println("HIDING DIALOG!!!!!!!!!!!!!!!!!");
             }
         }
         if (name.equals("dispose")) {
-            if (myDialog != null) {
-                myDialog.setVisible(false);
-                myDialog = null;
+        	System.err.println("DISPOSING DIALOG!!!!!!!!!!!!!!!!!");
+              if (myWindow != null) {
+            	myWindow.setVisible(false);
+            	myWindow = null;
             }
             myContext.disposeTipiComponent(me);
             disposed = true;

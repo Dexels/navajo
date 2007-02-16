@@ -31,6 +31,8 @@ public class TipiHidden extends TipiEchoComponentImpl {
 
     public Object createContainer() {
         Label b = new LabelEx();
+//        b.setStyleName("Default");
+        
         b.setVisible(false);
         return b;
     }

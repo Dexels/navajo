@@ -26,6 +26,7 @@ public class TipiTextArea extends TipiEchoComponentImpl {
 
     public Object createContainer() {
         TextArea rta = new TextArea();
+//        rta.setStyleName("Default");
         // rta.setWidth(new Extent(100,100) TextArea.PERCENT_UNITS);
 
         // rta.setColumns(100);

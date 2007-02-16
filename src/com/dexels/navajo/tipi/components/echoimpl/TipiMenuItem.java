@@ -1,7 +1,10 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
+import java.net.URL;
+
 import nextapp.echo2.app.ResourceImageReference;
 import echopointng.MenuItem;
+import echopointng.image.URLImageReference;
 
 /**
  * <p>
@@ -27,6 +30,7 @@ public class TipiMenuItem extends TipiEchoComponentImpl {
 
     public Object createContainer() {
         MenuItem b = new MenuItem();
+//        b.setStyleName("Default");
         return b;
     }
 
@@ -36,7 +40,12 @@ public class TipiMenuItem extends TipiEchoComponentImpl {
             b.setText("" + object);
         }
         if ("icon".equals(name)) {
-            b.setIcon(new ResourceImageReference(object.toString()));
+            if (object instanceof URL) {
+                URL u = (URL) object;
+                b.setIcon(new URLImageReference(u));
+            } else {
+                System.err.println("Can not set button icon: I guess it failed to parse (TipiButton)");
+            }
         }
         super.setComponentValue(name, object);
     }

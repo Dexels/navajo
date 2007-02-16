@@ -7,6 +7,7 @@ import nextapp.echo2.app.event.ActionEvent;
 import nextapp.echo2.app.event.ActionListener;
 
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.components.echoimpl.impl.*;
@@ -49,6 +50,8 @@ public class TipiTable extends TipiEchoDataComponentImpl {
     public Object createContainer() {
          ContainerEx myContainer = new ContainerEx();
         myTable = new MessageTable();
+//        myTable.setStyleName("Default");
+        myContainer.setStyleName("Default");
         myContainer.setPosition(Positionable.STATIC);
         myTable.addSelectionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -87,8 +90,8 @@ public class TipiTable extends TipiEchoDataComponentImpl {
         return myTable;
     }
 
-    public void loadData(Navajo n, TipiContext context, String method) throws TipiException {
-        super.loadData(n, context, method);
+    public void loadData(Navajo n, TipiContext context, String method,String server) throws TipiException, TipiBreakException {
+        super.loadData(n, context, method,server);
 //        ((ContainerEx)getContainer()).setzIndex(0);
         
         MessageTable mm = (MessageTable) getActualComponent();

@@ -40,6 +40,8 @@ public class TipiOptionPane {
     public static void showQuestion(TipiContext context, String text, String title, String yes, String no) throws TipiBreakException {
         TipiScreen s = (TipiScreen) context.getDefaultTopLevel();
         final Window w = (Window) s.getTopLevel();
+        w.setStyleName("Default");
+		        
         final WindowPane wp = new WindowPane("?", new Extent(400, Extent.PX), new Extent(300, Extent.PX));
         w.getContent().add(wp);
         wp.setTitle(title);
@@ -85,6 +87,7 @@ public class TipiOptionPane {
     }
 
     public static void showInfo(final TipiContext context, final String text, String title, String closeText) {
+//        w.setStyleName("Default");
         TipiScreen s = (TipiScreen) context.getDefaultTopLevel();
         final Window w = (Window) s.getTopLevel();
         final WindowPane wp = new WindowPane(title, new Extent(400, Extent.PX), new Extent(150, Extent.PX));

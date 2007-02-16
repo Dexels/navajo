@@ -10,6 +10,7 @@ public class TipiRow extends TipiEchoDataComponentImpl {
         myRow = new Row();
         // myColumn.setLayoutData(new ColumnLayoutData());
         // myContainer.add(myRow);
+//        myRow.setStyleName("Default");
         return myRow;
     }
 

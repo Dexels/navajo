@@ -23,11 +23,13 @@ import nextapp.echo2.app.TextField;
 public class TipiEchoTextField extends TextField {
     public TipiEchoTextField() {
         super();
-    }
+//        setStyleName("Default");
+	}
 
     public TipiEchoTextField(String text) {
         super();
-        setText(text);
+//        setStyleName("Default");
+		setText(text);
     }
 
 }

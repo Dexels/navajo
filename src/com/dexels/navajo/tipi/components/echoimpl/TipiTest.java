@@ -55,10 +55,14 @@ public class TipiTest extends TipiEchoDataComponentImpl {
 
     public Object createContainer() {
         myTabbedPane = new TabbedPane();
+//        myTabbedPane.setStyleName("Default");
+        
         defaultTabModel = new DefaultTabModel();
         myTabbedPane.setModel(defaultTabModel);
         ContainerEx containerEx = new ContainerEx();
-      //  containerEx.setBackground(new Color(0,50,100));
+//        containerEx.setStyleName("Default");
+        
+        //  containerEx.setBackground(new Color(0,50,100));
         LabelEx labelEx = new LabelEx("AAAAAAAAAAP");
         containerEx.add(labelEx);
         defaultTabModel.addTab("ContainerEx"  , containerEx );

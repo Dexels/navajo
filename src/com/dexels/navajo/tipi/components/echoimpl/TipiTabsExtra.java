@@ -58,6 +58,8 @@ public class TipiTabsExtra extends TipiEchoDataComponentImpl {
     public Object createContainer() {
         final TipiComponent me = this;
         myTabbedPane = new TabPane();
+        myTabbedPane.setStyleName("Default");
+        
         TipiHelper th = new EchoTipiHelper();
         th.initHelper(this);
         addHelper(th);
