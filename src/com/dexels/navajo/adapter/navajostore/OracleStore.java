@@ -65,7 +65,7 @@ public final class OracleStore implements StoreInterface {
 	" set compressedrecv = ?, set compressedsnd = ?, set ip_address = ?, set hostname = ?" + 
 	",set created = ?, set clientid = ? where access_id = ? ";
 	
-	private static String insertEmbryoAccessSQL = "insert into navajoaccess " + "(access_id, clienttime) values (?, ?)";
+	private static String insertEmbryoAccessSQL = "insert into navajoaccess " + "(access_id, clienttime, webservice, created) values (?, ?, ?, ?)";
 	
 	private static String insertLog =
 		"insert into navajolog (access_id, exception, navajoin, navajoout) values (?, ?, ?, ?)";
@@ -255,15 +255,33 @@ public final class OracleStore implements StoreInterface {
 			// Did not find in accessMap, creating embryo access.
 			if (con != null) {
 				
+				PreparedStatement exists = null;
 				PreparedStatement ps = null;
+				ResultSet rs = null;
 				try {
-					ps = con.prepareStatement(insertEmbryoAccessSQL);
-					ps.setString(1, ti.access.accessID);
-					ps.setInt(2, ti.access.clientTime);
-					ps.executeUpdate();
+					// Check if access already exists.
+					exists = con.prepareStatement(existsAccessSQL);
+					exists.setString(1, accessId);
+					rs = exists.executeQuery();
+					rs.next();
+					int cnt = rs.getInt("cnt"); 
+					if ( cnt == 0 ) {
+						ps = con.prepareStatement(insertEmbryoAccessSQL);
+						ps.setString(1, accessId);
+						ps.setString(2, clnt);
+						ps.setString(3, "embryo");
+						ps.setTimestamp(4, new java.sql.Timestamp(new java.util.Date().getTime()));
+						ps.executeUpdate();
+					}
 				} finally {
+					if ( rs != null ) {
+						rs.close();
+					}
 					if ( ps != null ) {
 						ps.close();
+					}
+					if ( exists != null ) {
+						exists.close();
 					}
 				}
 			}
@@ -342,7 +360,9 @@ public final class OracleStore implements StoreInterface {
 							// Check if embryo exists.
 							exists.setString(1, a.accessID);
 							ResultSet rs = exists.executeQuery();
+							rs.next();
 							int cnt = rs.getInt("cnt"); 
+							rs.close();
 							if ( cnt == 0 ) {
 								ps.setString(1, a.accessID);
 								ps.setString(2, a.rpcName);
