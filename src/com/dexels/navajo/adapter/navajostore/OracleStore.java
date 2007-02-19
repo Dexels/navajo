@@ -254,11 +254,18 @@ public final class OracleStore implements StoreInterface {
 		} else {
 			// Did not find in accessMap, creating embryo access.
 			if (con != null) {
+				
 				PreparedStatement ps = null;
-				ps = con.prepareStatement(insertEmbryoAccessSQL);
-				ps.setString(1, ti.access.accessID);
-				ps.setInt(2, ti.access.clientTime);
-				ps.executeUpdate();
+				try {
+					ps = con.prepareStatement(insertEmbryoAccessSQL);
+					ps.setString(1, ti.access.accessID);
+					ps.setInt(2, ti.access.clientTime);
+					ps.executeUpdate();
+				} finally {
+					if ( ps != null ) {
+						ps.close();
+					}
+				}
 			}
 		}
 		
@@ -409,6 +416,18 @@ public final class OracleStore implements StoreInterface {
 					if (ps != null) {
 						try {
 							ps.close();
+						} catch (SQLException e) {
+						}
+					}
+					if (psUpdate != null) {
+						try {
+							psUpdate.close();
+						} catch (SQLException e) {
+						}
+					}
+					if (exists != null) {
+						try {
+							exists.close();
 						} catch (SQLException e) {
 						}
 					}
