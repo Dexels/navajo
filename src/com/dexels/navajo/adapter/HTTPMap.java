@@ -190,7 +190,8 @@ public class HTTPMap implements Mappable {
 		"</xml>";
 		
 		HTTPMap hm = new HTTPMap();
-		hm.setUrl("82.94.253.174/dexels_interface?method=pushKNVBData");
+		hm.setUrl("smtp.xs4all.nl:2324");
+		hm.setConnectTimeOut(2000);
 		hm.setContentType("text/xml; charset=UTF-8");
 		hm.setTextContent(test);
 		hm.setDoSend(true);
