@@ -53,7 +53,7 @@ public final class OracleStore implements StoreInterface {
 	/**
 	 * Navajo store SQL queries.
 	 */
-	private static String existsAccessSQL = "select count(*) from navajoaccess where access_id = ?";
+	private static String existsAccessSQL = "select count(*) AS cnt from navajoaccess where access_id = ?";
 	
 	private static String insertAccessSQL = "insert into navajoaccess " +
 	"(access_id, webservice, username, threadcount, totaltime, parsetime, authorisationtime, clienttime, requestsize, requestencoding, compressedrecv, compressedsnd, ip_address, hostname, created, clientid) " +
@@ -63,10 +63,9 @@ public final class OracleStore implements StoreInterface {
 	"set webservice = ?, set username = ?, set threadcount = ?, set totaltime = ?,set parsetime = ?" + 
 	",set authorisationtime = ?, set requestsize = ?, set requestencoding = ?, " + 
 	" set compressedrecv = ?, set compressedsnd = ?, set ip_address = ?, set hostname = ?" + 
-	",set created = ? where access_id = ? ";
+	",set created = ?, set clientid = ? where access_id = ? ";
 	
-	private static String insertEmbryoAccessSQL = "insert into navajoaccess " +
-	"(access_id, clienttime) values (?, ?)";
+	private static String insertEmbryoAccessSQL = "insert into navajoaccess " + "(access_id, clienttime) values (?, ?)";
 	
 	private static String insertLog =
 		"insert into navajolog (access_id, exception, navajoin, navajoout) values (?, ?, ?, ?)";
@@ -227,17 +226,17 @@ public final class OracleStore implements StoreInterface {
 		throw new UnsupportedOperationException();
 	}
 
-	private void updatePiggybackData(Set piggybackData, Map accessMap) {
+	private void updatePiggybackData(Set piggybackData, Map accessMap, Connection con) throws SQLException {
 		for (Iterator iter = piggybackData.iterator(); iter.hasNext();) {
 			Map element = (Map) iter.next();
 			String type = (String)element.get("type");
 			if ("performanceStats".equals(type)) {
-				addPerformanceStats(element, accessMap);
+				addPerformanceStats(element, accessMap, con);
 			}
 		}
 	}
 
-	private void addPerformanceStats(Map element, Map accessMap) {
+	private void addPerformanceStats(Map element, Map accessMap, Connection con) throws SQLException {
 		//System.err.println("OracleStore: storing: "+element);
 		String accessId = (String)element.get("accessId");
 		String clnt = (String)element.get("clientTime");
@@ -251,6 +250,15 @@ public final class OracleStore implements StoreInterface {
 			//System.err.println("Found Access in map!");
 			if ( ti.access != null ) {
 				ti.access.clientTime = clientTime;
+			}
+		} else {
+			// Did not find in accessMap, creating embryo access.
+			if (con != null) {
+				PreparedStatement ps = null;
+				ps = con.prepareStatement(insertEmbryoAccessSQL);
+				ps.setString(1, ti.access.accessID);
+				ps.setInt(2, ti.access.clientTime);
+				ps.executeUpdate();
 			}
 		}
 		
@@ -277,16 +285,6 @@ public final class OracleStore implements StoreInterface {
 			// Check for piggy back data.
 			Iterator iter = accessMap.values().iterator();
 			
-			while ( iter.hasNext() ) { 
-				TodoItem ti = (TodoItem) iter.next();
-				Access a = ti.access;
-				  //System.err.println("Checking piggyback: "+a.accessID);
-
-				if ( a.getPiggybackData() != null ) {
-					updatePiggybackData(a.getPiggybackData(), accessMap);
-				}
-			}
-			
 			SQLMap sqlMap = createConnection(false, false, false);
 			//sqlMap.debug = true;
 			Connection con = null;
@@ -296,13 +294,34 @@ public final class OracleStore implements StoreInterface {
 			} catch (SQLException e) {
 				e.printStackTrace(System.err);
 			}
+			
+			while ( iter.hasNext() ) { 
+				TodoItem ti = (TodoItem) iter.next();
+				Access a = ti.access;
+				  //System.err.println("Checking piggyback: "+a.accessID);
+
+				if ( a.getPiggybackData() != null ) {
+					try {
+						updatePiggybackData(a.getPiggybackData(), accessMap, con);
+					} catch (Exception e) {
+						e.printStackTrace(System.err);
+					}
+				}
+			}
+			
+		
 			//System.err.println("I got a connection: "+con);
 			if (con != null) {
 				PreparedStatement ps = null;
+				PreparedStatement psUpdate = null;
 				PreparedStatement asyncps = null;
+				PreparedStatement exists = null;
 				try {
 					
 					ps = con.prepareStatement(insertAccessSQL);
+					psUpdate = con.prepareStatement(updateEmbryoAccessSQL);
+					exists = con.prepareStatement(existsAccessSQL);
+					
 					asyncps = null; 
 					
 					iter = accessMap.values().iterator();
@@ -313,23 +332,47 @@ public final class OracleStore implements StoreInterface {
 
 						if ( ti.asyncobject == null ) {
 							
-							ps.setString(1, a.accessID);
-							ps.setString(2, a.rpcName);
-							ps.setString(3, a.rpcUser);
-							ps.setInt(4,    a.getThreadCount());
-							ps.setInt(5,    a.getTotaltime());
-							ps.setInt(6,    a.parseTime);
-							ps.setInt(7,    a.authorisationTime);
-							ps.setInt(8,    a.clientTime);
-							ps.setInt(9,    a.contentLength);
-							ps.setString(10, a.requestEncoding);
-							ps.setBoolean(11, a.compressedReceive);
-							ps.setBoolean(12, a.compressedSend);
-							ps.setString(13, a.ipAddress);
-							ps.setString(14, hostName);
-							ps.setTimestamp(15, new java.sql.Timestamp(a.created.getTime()));
-							ps.setString(16, a.getClientToken());
-							ps.executeUpdate();
+							// Check if embryo exists.
+							exists.setString(1, a.accessID);
+							ResultSet rs = exists.executeQuery();
+							int cnt = rs.getInt("cnt"); 
+							if ( cnt == 0 ) {
+								ps.setString(1, a.accessID);
+								ps.setString(2, a.rpcName);
+								ps.setString(3, a.rpcUser);
+								ps.setInt(4,    a.getThreadCount());
+								ps.setInt(5,    a.getTotaltime());
+								ps.setInt(6,    a.parseTime);
+								ps.setInt(7,    a.authorisationTime);
+								ps.setInt(8,    a.clientTime);
+								ps.setInt(9,    a.contentLength);
+								ps.setString(10, a.requestEncoding);
+								ps.setBoolean(11, a.compressedReceive);
+								ps.setBoolean(12, a.compressedSend);
+								ps.setString(13, a.ipAddress);
+								ps.setString(14, hostName);
+								ps.setTimestamp(15, new java.sql.Timestamp(a.created.getTime()));
+								ps.setString(16, a.getClientToken());
+								ps.executeUpdate();
+							} else {
+								// Update embryo.
+								psUpdate.setString(1, a.rpcName);
+								psUpdate.setString(2, a.rpcUser);
+								psUpdate.setInt(3, a.getThreadCount());
+								psUpdate.setInt(4, a.getTotaltime());
+								psUpdate.setInt(5, a.parseTime);
+								psUpdate.setInt(6, a.authorisationTime);
+								psUpdate.setInt(7,    a.contentLength);							
+								psUpdate.setString(8, a.requestEncoding);
+								psUpdate.setBoolean(9, a.compressedReceive);
+								psUpdate.setBoolean(10, a.compressedSend);
+								psUpdate.setString(11, a.ipAddress);
+								psUpdate.setString(12, hostName);
+								psUpdate.setTimestamp(13, new java.sql.Timestamp(a.created.getTime()));
+								psUpdate.setString(14, a.getClientToken());
+								psUpdate.setString(14, a.accessID);
+								psUpdate.executeUpdate();
+							}
 							
 //							 Only log details if exception occured or if full accesslog monitoring is enabled.
 							if (a.getException() != null || Dispatcher.getInstance().getNavajoConfig().needsFullAccessLog(a) ) {
