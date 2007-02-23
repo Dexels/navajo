@@ -92,4 +92,10 @@ public class FileStore implements MessageStore {
 		}
 	}
 
+	public int getSize() {
+		File queue = new File(path);
+		File [] files = queue.listFiles();
+		return files.length;
+	}
+
 }

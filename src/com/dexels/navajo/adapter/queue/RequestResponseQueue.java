@@ -5,7 +5,7 @@ import com.dexels.navajo.server.GenericThread;
 import com.dexels.navajo.server.jmx.JMXHelper;
 import com.dexels.navajo.util.AuditLog;
 
-public class RequestResponseQueue extends GenericThread {
+public class RequestResponseQueue extends GenericThread implements RequestResponseQueueMXBean {
 
 	public boolean useQueue;
 	public boolean queueOnly = false;
@@ -37,7 +37,7 @@ public class RequestResponseQueue extends GenericThread {
 			try {
 				JMXHelper.registerMXBean(instance, JMXHelper.NAVAJO_DOMAIN, id);
 			} catch (Throwable t) {
-
+				t.printStackTrace(System.err);
 			} 
 			instance.myId = id;
 			instance.setSleepTime(5000);
@@ -60,17 +60,33 @@ public class RequestResponseQueue extends GenericThread {
 
 			public void run() {
 				System.err.println("Starting work....");
-				if ( handler.send() ) {
-					System.err.println("Succesfully send message!!");
-				} else {
-					// Put stuff back in queue.
-					System.err.println("Could not send message");
-					myStore.putMessage(handler);
+				String qid = handler.getClass().getName()+"-"+System.currentTimeMillis();
+				JMXHelper.registerMXBean(handler, JMXHelper.QUEUED_ADAPTER_DOMAIN, qid);
+				try {
+					if ( handler.send() ) {
+						System.err.println("Succesfully processed send() method");
+					} else {
+						// Put stuff back in queue.
+						System.err.println("Could not process send() method, putting queued adapter back in queue...");
+						myStore.putMessage(handler);
+					}
+				} finally {
+					try {
+						JMXHelper.deregisterMXBean(JMXHelper.QUEUED_ADAPTER_DOMAIN, qid);
+					} catch (Throwable e) {
+					}
 				}
 				System.err.println("....Finished asyncwork thread");
 			}
 			
 		}.start();
+	}
+	
+	public void finalize() {
+		try {
+			JMXHelper.deregisterMXBean(JMXHelper.NAVAJO_DOMAIN, id);
+		} catch (Throwable e) {
+		}
 	}
 	
 	public void worker() {
@@ -83,5 +99,9 @@ public class RequestResponseQueue extends GenericThread {
 				asyncwork(handler);		
 			}
 		}
+	}
+
+	public int getSize() {
+		return myStore.getSize();
 	}
 }

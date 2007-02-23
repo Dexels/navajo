@@ -22,5 +22,9 @@ public class MemoryStore implements MessageStore {
 			store.push(handler);
 		}
 	}
+
+	public int getSize() {
+		return store.size();
+	}
 	
 }
