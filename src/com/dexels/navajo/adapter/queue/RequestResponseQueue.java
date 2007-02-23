@@ -95,6 +95,17 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 		}
 	}
 	
+	public void terminate() {
+		instance = null;
+		try {
+			JMXHelper.deregisterMXBean(JMXHelper.NAVAJO_DOMAIN, id);
+		} catch (Throwable e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		AuditLog.log("Adapter Queue", "Killed");
+	}
+	
 	public void worker() {
 
 		System.err.println("In worker!!");
