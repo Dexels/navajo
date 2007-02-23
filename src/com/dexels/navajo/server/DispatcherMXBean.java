@@ -1,5 +1,9 @@
 package com.dexels.navajo.server;
 
+import java.util.Date;
+
+import javax.management.openmbean.ArrayType;
+
 public interface DispatcherMXBean {
 
 	public String getServerId();
@@ -7,5 +11,15 @@ public interface DispatcherMXBean {
 	public int getAccessSetSize();
 	public int getPeakAccessSetSize();
 	public void resetAccessSetPeakSize();
+	public long getUptime();
+	public Date getStarttime();
+	/**
+	 * SNMP stuff:
+	 * SNMP managers are coded as follows:
+     * hostname:port[:V1|V2][,hostname:port[:V1|V2]]*
+	 */
+	public String getSnmpManangers();
+	public void setSnmpManagers(String s);
+	
 	
 }

@@ -95,6 +95,7 @@ public class GenericThread extends NotificationBroadcasterSupport implements Run
 	
 	public void run() {
 
+		System.err.println("in run, killed " + killed);
 		while ( !killed ) {
 			try {
 				status = WORKING;
@@ -107,6 +108,7 @@ public class GenericThread extends NotificationBroadcasterSupport implements Run
 			status = SLEEPING;
 			inactive();
 		}
+		System.err.println("Thread " + myId + " is dying");
 		status = DEAD;
 	}
 	

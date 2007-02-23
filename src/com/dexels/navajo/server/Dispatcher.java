@@ -30,10 +30,14 @@ import java.io.*;
 import java.util.*;
 import java.net.*;
 
+import javax.management.openmbean.ArrayType;
+import javax.management.openmbean.OpenDataException;
+
 import com.dexels.navajo.broadcast.BroadcastMessage;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.scheduler.WebserviceListener;
 import com.dexels.navajo.server.jmx.JMXHelper;
+import com.dexels.navajo.server.jmx.SNMPManager;
 import com.dexels.navajo.util.AuditLog;
 import com.dexels.navajo.util.Util;
 import com.dexels.navajo.integrity.Worker;
@@ -103,6 +107,11 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
   private int peakAccessSetSize = 0;
   
   private static final Set broadcastMessage = Collections.synchronizedSet(new HashSet());
+  
+  /**
+   * Registered SNMP managers.
+   */
+  private ArrayList snmpManagers = new ArrayList(); 
   
   /**
    * Constructor for URL based configuration.
@@ -1276,51 +1285,74 @@ private void appendServerBroadCast(Access a, Navajo in, Header h) {
 
   }
 
-public void setBroadcast(String message, int timeToLive, String recipientExpression) {
-	BroadcastMessage bm = new BroadcastMessage(message,timeToLive,recipientExpression);
-	broadcastMessage.add(bm);
-	
-}
+  public void setBroadcast(String message, int timeToLive, String recipientExpression) {
+	  BroadcastMessage bm = new BroadcastMessage(message,timeToLive,recipientExpression);
+	  broadcastMessage.add(bm);
 
-public Access getAccessObject(String id) {
+  }
 
-	Iterator iter = accessSet.iterator();
-	boolean found = false;
-	Access a = null;
-	while (iter.hasNext() && !found) {
-		a = (Access) iter.next();
-		if (a.accessID.equals(id)) {
-			System.err.println("FOUND ACCESS OBJECT!!!");
-			found = true;
-		}
-	}
-	return a;
-}
+  public Access getAccessObject(String id) {
 
-public int getAccessSetSize() {
-	return Dispatcher.getInstance().accessSet.size();
-}
+	  Iterator iter = accessSet.iterator();
+	  boolean found = false;
+	  Access a = null;
+	  while (iter.hasNext() && !found) {
+		  a = (Access) iter.next();
+		  if (a.accessID.equals(id)) {
+			  System.err.println("FOUND ACCESS OBJECT!!!");
+			  found = true;
+		  }
+	  }
+	  return a;
+  }
 
-public void kill() {
-	// TODO Auto-generated method stub
-	
-}
+  public int getAccessSetSize() {
+	  return Dispatcher.getInstance().accessSet.size();
+  }
 
-public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
-	// TODO Auto-generated method stub
-	
-}
+  public void kill() {
+  }
 
-public void store() throws MappableException, UserException {
-	// TODO Auto-generated method stub
-	
-}
+  public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
 
-public int getPeakAccessSetSize() {
-	return peakAccessSetSize;
-}
+  }
 
-public void resetAccessSetPeakSize() {
-	peakAccessSetSize = 0;
-}
+  public void store() throws MappableException, UserException {
+  }
+
+  public int getPeakAccessSetSize() {
+	  return peakAccessSetSize;
+  }
+
+  public void resetAccessSetPeakSize() {
+	  peakAccessSetSize = 0;
+  }
+
+  public Date getStarttime() {
+	  return startTime;
+  }
+
+  public long getUptime() {
+	  return ( System.currentTimeMillis() - startTime.getTime() );
+  }
+
+  public String getSnmpManangers() {
+	  StringBuffer s = new StringBuffer();
+	  for (int i = 0; i < snmpManagers.size(); i++ ) {
+		  SNMPManager snmp = (SNMPManager) snmpManagers.get(i);
+		  s.append(snmp.getHost() + ":" + snmp.getPort() + ":" + snmp.getSnmpVersion());
+		  s.append(",");
+	  }
+	  String result = s.toString();
+	  result = result.substring(0, result.length() - 1);
+	  return result;
+  }
+
+  public void setSnmpManagers(String s) {
+	  StringTokenizer st = new StringTokenizer(s, ",");
+	  while ( st.hasMoreTokens() ) {
+		  snmpManagers.add(new SNMPManager(st.nextToken()));
+	  }
+  }
+
 }
