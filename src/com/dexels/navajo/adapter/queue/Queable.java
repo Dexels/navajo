@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import com.dexels.navajo.document.types.Binary;
 
-public interface Queable extends Serializable {
+public interface Queable extends Serializable, QueableMXBean {
 	
 	// send() should implement the work that should be done upon processing of the queable object.
 	public boolean send();
