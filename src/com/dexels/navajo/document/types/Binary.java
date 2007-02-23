@@ -29,14 +29,20 @@ import com.dexels.navajo.document.saximpl.qdxml.*;
  * @version 1.0
  */
 
-public final class Binary extends NavajoType {
+public final class Binary extends NavajoType implements Serializable {
 
-    // private byte [] data;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 6392612802747438142L;
+
+	// private byte [] data;
     private String mimetype = "text/plain";
 
     private File dataFile = null;
     private File lazySourceFile = null;
     private InputStream lazyInputStream = null;
+    private String myRef = null;
     
     public final static String MSEXCEL = "application/msexcel";
 
@@ -611,17 +617,26 @@ public final class Binary extends NavajoType {
     	if ( persist && ref != null && !persistedBinaries.containsKey(ref) ) {
     		persistedBinaries.put(ref, this);
     	}
+    	myRef = ref;
     	
     	return ref;
     }	
     
+    public void removeRef() {
+    	System.err.println("In removeRef(), myRef = " + myRef);
+    	if ( myRef != null ) {
+    		persistedBinaries.remove(myRef);
+    	}
+    }
     /**
      * Remove a persisted binary.
      * 
      * @param ref
      */
     public static void removeRef(String ref) {
+    	if ( ref != null ) {
     	persistedBinaries.remove(ref);
+    	}
     }
 
     public boolean isEmpty() {

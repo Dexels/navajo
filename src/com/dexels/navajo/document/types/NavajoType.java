@@ -1,6 +1,8 @@
 package com.dexels.navajo.document.types;
 
 import com.dexels.navajo.document.*;
+
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -12,7 +14,7 @@ import java.util.*;
  * @version 1.0
  */
 
-public abstract class NavajoType implements Comparable {
+public abstract class NavajoType implements Comparable, Serializable {
   private Map subTypeMap = null;
 
   public abstract boolean isEmpty();
@@ -23,6 +25,10 @@ public abstract class NavajoType implements Comparable {
     }
   }
 
+  public NavajoType() {
+	  
+  }
+  
   public NavajoType(String type, String subtype) {
     if (subtype!=null) {
       subTypeMap = NavajoFactory.getInstance().parseSubTypes(subtype);
