@@ -47,6 +47,7 @@ public final class JMXHelper  {
 	public static String NAVAJO_DOMAIN = ".navajo.service:type=";
 	public static String ASYNC_DOMAIN = ".navajo.async:type=";
 	public static String TASK_DOMAIN = ".navajo.task:type=";
+	public static String QUEUED_ADAPTER_DOMAIN = ".navajo.queuedadapter:type=";
 	
 	private RMIServer getRMIServer(String hostName, int port) throws IOException {
 
