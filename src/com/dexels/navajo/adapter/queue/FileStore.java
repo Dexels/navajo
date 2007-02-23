@@ -31,7 +31,7 @@ public class FileStore implements MessageStore {
 		synchronized ( path ) {
 			File queue = new File(path);
 			File [] files = queue.listFiles();
-			System.err.println("Getting work from store, size: " + files.length);
+		
 			for (int i = 0; i < files.length; i++) {
 				File f = files[i];
 				try {

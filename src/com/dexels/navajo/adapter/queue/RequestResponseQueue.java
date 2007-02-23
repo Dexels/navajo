@@ -114,9 +114,7 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 	
 	public void worker() {
 
-		System.err.println("In worker!!");
 		Queable handler = null;
-
 		if ( !queueOnly) {
 				while ( ( handler = myStore.getNext()) != null && !emptyQueue ) {
 					asyncwork(handler);		
