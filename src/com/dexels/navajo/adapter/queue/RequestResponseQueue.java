@@ -9,6 +9,8 @@ import com.dexels.navajo.util.AuditLog;
 public class RequestResponseQueue extends GenericThread implements RequestResponseQueueMXBean {
 
 	public boolean useQueue;
+	public boolean emptyQueue = false;
+	public boolean doingWork = false;
 	public boolean queueOnly = false;
 	private MessageStore myStore = new FileStore();
 	private static RequestResponseQueue instance = null;
@@ -64,7 +66,7 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 				String qid = handler.getClass().getName()+"-"+System.currentTimeMillis();
 				JMXHelper.registerMXBean(handler, JMXHelper.QUEUED_ADAPTER_DOMAIN, qid);
 				try {
-					if ( handler.send() ) {
+					if ( handler.send() && !emptyQueue) {
 						System.err.println("Succesfully processed send() method");
 						// Make sure that request payload get garbage collected by removing ref.
 						Binary b = handler.getRequest();
@@ -72,9 +74,11 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 							b.removeRef();
 						}
 					} else {
-						// Put stuff back in queue.
+						// Put stuff back in queue, unless queue is being emptied.
 						System.err.println("Could not process send() method, putting queued adapter back in queue...");
-						myStore.putMessage(handler);
+						if ( !emptyQueue ) {
+							myStore.putMessage(handler);
+						}
 					}
 				} finally {
 					try {
@@ -112,14 +116,30 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 		Queable handler = null;
 
 		if ( !queueOnly) {
-			while ( ( handler = myStore.getNext()) != null ) {
-				asyncwork(handler);		
+			try {
+				doingWork = true;
+				while ( ( handler = myStore.getNext()) != null && !emptyQueue ) {
+					asyncwork(handler);		
+				}
+			} finally {
+				doingWork = false;
 			}
 		}
 	}
 
 	public void emptyQueue() {
-		myStore.emptyQueue();
+		try {
+			emptyQueue = true;
+			myStore.emptyQueue();
+			while (doingWork) {
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+				}
+			}
+		} finally {
+			emptyQueue = false;
+		}
 	}
 	
 	public int getSize() {
