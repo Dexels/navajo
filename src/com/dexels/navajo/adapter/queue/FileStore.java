@@ -40,10 +40,6 @@ public class FileStore implements MessageStore {
 					ois.close();
 					System.err.println("Read object: " + q.hashCode());
 					f.delete();
-					Binary b = q.getRequest();
-					if ( b != null ) {
-						b.removeRef();
-					}
 					System.err.println("Delete file");
 					return q;
 				} catch (Exception e) {
@@ -92,6 +88,16 @@ public class FileStore implements MessageStore {
 		}
 	}
 
+	public void emptyQueue() {
+		synchronized ( path ) {
+			File queue = new File(path);
+			File [] files = queue.listFiles();
+			for (int i = 0; i < files.length; i++) {
+				files[i].delete();
+			}
+		}
+	}
+	
 	public int getSize() {
 		File queue = new File(path);
 		File [] files = queue.listFiles();

@@ -1,6 +1,7 @@
 package com.dexels.navajo.adapter.queue;
 
 
+import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.server.GenericThread;
 import com.dexels.navajo.server.jmx.JMXHelper;
 import com.dexels.navajo.util.AuditLog;
@@ -65,6 +66,11 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 				try {
 					if ( handler.send() ) {
 						System.err.println("Succesfully processed send() method");
+						// Make sure that request payload get garbage collected by removing ref.
+						Binary b = handler.getRequest();
+						if ( b != null ) {
+							b.removeRef();
+						}
 					} else {
 						// Put stuff back in queue.
 						System.err.println("Could not process send() method, putting queued adapter back in queue...");
@@ -101,6 +107,10 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 		}
 	}
 
+	public void emptyQueue() {
+		myStore.emptyQueue();
+	}
+	
 	public int getSize() {
 		return myStore.getSize();
 	}

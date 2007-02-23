@@ -7,5 +7,6 @@ public interface MessageStore {
 	public void putMessage(Queable handler);
 	public Queable getNext();
 	public int getSize();
+	public void emptyQueue();
 	
 }

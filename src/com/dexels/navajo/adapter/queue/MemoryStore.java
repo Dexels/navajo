@@ -26,5 +26,11 @@ public class MemoryStore implements MessageStore {
 	public int getSize() {
 		return store.size();
 	}
+
+	public void emptyQueue() {
+		synchronized (store ) {
+			store.clear();
+		}
+	}
 	
 }
