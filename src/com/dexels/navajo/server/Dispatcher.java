@@ -33,6 +33,7 @@ import java.net.*;
 import javax.management.openmbean.ArrayType;
 import javax.management.openmbean.OpenDataException;
 
+import com.dexels.navajo.adapter.queue.RequestResponseQueue;
 import com.dexels.navajo.broadcast.BroadcastMessage;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.scheduler.WebserviceListener;
@@ -175,6 +176,8 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
 			  NavajoFactory.getInstance().setTempDir(instance.getTempDir());
 			  // Startup task runner.
 			  instance.navajoConfig.getTaskRunner();
+			  // Startup queued adapter.
+			  RequestResponseQueue.getInstance();
 		  }
 	  }
 	  return instance;

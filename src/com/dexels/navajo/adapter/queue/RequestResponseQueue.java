@@ -66,6 +66,7 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 				String qid = handler.getClass().getName()+"-"+System.currentTimeMillis();
 				JMXHelper.registerMXBean(handler, JMXHelper.QUEUED_ADAPTER_DOMAIN, qid);
 				try {
+					doingWork = true;
 					if ( handler.send() && !emptyQueue) {
 						System.err.println("Succesfully processed send() method");
 						// Make sure that request payload get garbage collected by removing ref.
@@ -81,6 +82,7 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 						}
 					}
 				} finally {
+					doingWork = false;
 					try {
 						JMXHelper.deregisterMXBean(JMXHelper.QUEUED_ADAPTER_DOMAIN, qid);
 					} catch (Throwable e) {
@@ -116,14 +118,9 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 		Queable handler = null;
 
 		if ( !queueOnly) {
-			try {
-				doingWork = true;
 				while ( ( handler = myStore.getNext()) != null && !emptyQueue ) {
 					asyncwork(handler);		
 				}
-			} finally {
-				doingWork = false;
-			}
 		}
 	}
 
