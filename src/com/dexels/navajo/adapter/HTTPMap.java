@@ -36,6 +36,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import com.dexels.navajo.adapter.queue.Queable;
+import com.dexels.navajo.adapter.queue.RequestResponseQueue;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.mapping.Mappable;
@@ -46,14 +48,20 @@ import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.util.AuditLog;
 
-public class HTTPMap implements Mappable {
+public class HTTPMap implements Mappable, Queable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5398399368623971687L;
+	
 	public Binary content = null;
 	public String textContent = null;
 	public String method = "POST";
 	public String contentType = null;
 	public String url = null;
 	public boolean doSend = false;
+	public boolean queuedSend = false;
 	public Binary result = null;
 	public String textResult = null;
 	public int connectTimeOut = 5000;
@@ -91,6 +99,7 @@ public class HTTPMap implements Mappable {
 			AuditLog.log("HTTPMap", "WARNING: More than 100 waiting HTTP requests");
 		}
 		try {
+			System.err.println("About to send to: " + url);
 			URL u = new URL("http://" + url);
 			HttpURLConnection con = null;
 			con = (HttpURLConnection) u.openConnection();
@@ -103,6 +112,7 @@ public class HTTPMap implements Mappable {
 				con.setRequestProperty("Content-type", contentType);
 			}
 			if ( textContent != null ) {
+				System.err.println("textContent: " + textContent);
 				OutputStreamWriter osw = null;
 				osw = new OutputStreamWriter(con.getOutputStream());
 				try {
@@ -114,6 +124,7 @@ public class HTTPMap implements Mappable {
 				}
 			} else if ( content != null ) {
 				OutputStream os = null;
+				System.err.println("content: "  + content);
 				os = con.getOutputStream();
 				try {
 					content.write(os);
@@ -166,6 +177,33 @@ public class HTTPMap implements Mappable {
 	public void kill() {
 	}
 	
+	public Binary getResponse() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public boolean send() {
+		try {
+			setDoSend(true);
+		} catch (UserException e) {
+			return false;
+		}
+		return true;
+	}
+
+	public void setRequest(Binary b) {
+		setContent(b);
+	}
+
+	public void setQueuedSend(boolean b) {
+		
+		try {
+			RequestResponseQueue.send( this, 100);
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+		}
+	}
+	
 	public static void main(String [] args) throws Exception {
 		// 82.94.253.174/dexels_interface?method=pushKNVBData 
 		
@@ -190,21 +228,32 @@ public class HTTPMap implements Mappable {
 		"</xml>";
 		
 		HTTPMap hm = new HTTPMap();
-		hm.setUrl("smtp.xs4all.nl:2324");
+		hm.setUrl("www.dexels.com");
 		hm.setConnectTimeOut(2000);
 		hm.setContentType("text/xml; charset=UTF-8");
 		hm.setTextContent(test);
-		hm.setDoSend(true);
-		String tr = hm.getTextResult();
-		System.err.println(tr);
-		Binary b = hm.getResult();
-		
-		FileOutputStream fos = new FileOutputStream("/home/arjen/testje");
-		b.write(fos);
-		fos.close();
-		
-		
+		hm.setQueuedSend(true);
+		System.err.println("Initiated queued send");
+		while ( true ) {
+			Thread.sleep(10000);
+		}
+//		String tr = hm.getTextResult();
+//		System.err.println(tr);
+//		Binary b = hm.getResult();
+//		
+//		FileOutputStream fos = new FileOutputStream("/home/arjen/testje");
+//		b.write(fos);
+//		fos.close();	
 		
 	}
+
+	public Binary getRequest() {
+		if ( textContent != null ) {
+			return new Binary(textContent.getBytes());
+		} else {
+			return content;
+		}
+	}
+
 
 }

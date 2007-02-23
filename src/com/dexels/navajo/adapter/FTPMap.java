@@ -27,7 +27,8 @@ package com.dexels.navajo.adapter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-
+import com.dexels.navajo.adapter.queue.Queable;
+import com.dexels.navajo.adapter.queue.RequestResponseQueue;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.mapping.Mappable;
@@ -40,14 +41,20 @@ import com.enterprisedt.net.ftp.FTPClient;
 import com.enterprisedt.net.ftp.FTPTransferType;
 
 
-public class FTPMap  implements Mappable {
+public class FTPMap  implements Mappable, Queable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3957374732092549725L;
+	
 	public String filename = "filename_not_specified";
 	public Binary content;
 	public String server;
 	public String username;
 	public String password;
 	public String path;
+	public boolean queuedSend = false;
 	
 	public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
 	}
@@ -77,55 +84,95 @@ public class FTPMap  implements Mappable {
 	}
 	
 	public void store() throws MappableException, UserException {
-		
-		if ( server == null ) {
-			throw new UserException(-1, "Set server name");
-		}
-		
-		if ( username == null ) {
-			throw new UserException(-1, "Set username");
-		}
-		
-		if ( password == null ) {
-			throw new UserException(-1, "Set password");
-		}
-		
-		try {
-			FTPClient ftpClient = new FTPClient( server );
-			ftpClient.login( username, password );
-			ftpClient.setType(FTPTransferType.BINARY);
-			if ( path != null ) {
-				ftpClient.chdir( path );
+
+		if ( queuedSend ) {
+			try {
+				RequestResponseQueue.send(this, 100);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-			InputStream is = content.getDataAsStream();
-			ftpClient.put( content.getDataAsStream(), filename );
-			is.close();
-			ftpClient.quit();
-		} catch (Exception e) {
-			e.printStackTrace(System.err);
-			throw new UserException( -1, e.getMessage(), e);
+		} else {
+			if ( server == null ) {
+				throw new UserException(-1, "Set server name");
+			}
+
+			if ( username == null ) {
+				throw new UserException(-1, "Set username");
+			}
+
+			if ( password == null ) {
+				throw new UserException(-1, "Set password");
+			}
+
+			try {
+				FTPClient ftpClient = new FTPClient( server );
+				ftpClient.login( username, password );
+				ftpClient.setType(FTPTransferType.BINARY);
+				if ( path != null ) {
+					ftpClient.chdir( path );
+				}
+				InputStream is = content.getDataAsStream();
+				ftpClient.put( content.getDataAsStream(), filename );
+				is.close();
+				ftpClient.quit();
+			} catch (Exception e) {
+				e.printStackTrace(System.err);
+				throw new UserException( -1, e.getMessage(), e);
+			}
 		}
 	}
 
 	public void kill() {
 	}
 	
+	
+	public Binary getRequest() {
+		return content;
+	}
+	
+	public Binary getResponse() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public boolean send() {
+		try {
+			queuedSend = false;
+			store();
+		} catch (Exception e) {
+			return false;
+		}
+		queuedSend = true;
+		return true;
+	}
+
+	/**
+	 * Enable queued operation of this adapter.
+	 */
+	public void setQueuedSend(boolean b) {
+		this.queuedSend = b;
+	}
+
 	public static void main(String [] args) throws Exception {
+
+		RequestResponseQueue.getInstance().setQueueOnly(true);
 		
-		ZipMap zm = new ZipMap();
-		
-		FTPMap f = new FTPMap();
-		Binary b = new Binary(new FileInputStream(new File("/home/arjen/dexels.gif")));
-		zm.setName("dexels_logo.gif");
-		zm.setContent(b);
-		f.setContent(zm.getZipped());
-		
-		f.setServer("spiritus");
-		f.setUsername("arjen");
-		f.setFilename("zipped.zip");
-		f.setPassword("xxxxxx");
-		//f.setPath("/home/arjen");
-		f.store();
+//		FTPMap f = new FTPMap();
+//		Binary b = new Binary(new FileInputStream(new File("/home/arjen/Dexels/logo_zw.eps")));
+//		
+//		f.setContent(b);
+//		f.setServer("ftp.servage.net");
+//		f.setUsername("yourcapital");
+//		f.setFilename("zipped.zip");
+//		f.setPassword("janpaul");
+//		//f.setPath("/home/arjen");
+//		f.setQueuedSend(true);
+//		f.store();
+//		System.err.println("Initiated queued send");
+		while ( true ) {
+			Thread.sleep(10000);
+		}
 	}
 
 }
