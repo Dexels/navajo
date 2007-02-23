@@ -65,6 +65,8 @@ public final class OracleStore implements StoreInterface {
 	" set compressedrecv = ?, set compressedsnd = ?, set ip_address = ?, set hostname = ?" + 
 	",set created = ?, set clientid = ? where access_id = ? ";
 	
+	private static String updateAccessSQL = "update navajoaccess set clienttime = ? where access_id = ?";
+	
 	private static String insertEmbryoAccessSQL = "insert into navajoaccess " + "(access_id, clienttime, webservice, created) values (?, ?, ?, ?)";
 	
 	private static String insertLog =
@@ -236,20 +238,22 @@ public final class OracleStore implements StoreInterface {
 		}
 	}
 
-	private void addPerformanceStats(Map element, Map accessMap, Connection con) throws SQLException {
-		//System.err.println("OracleStore: storing: "+element);
+	private final void addPerformanceStats(Map element, Map accessMap, Connection con) throws SQLException {
+		
 		String accessId = (String)element.get("accessId");
 		String clnt = (String)element.get("clientTime");
 		if (accessId==null || clnt==null) {
 			return;
 		}
 		int clientTime = Integer.parseInt(clnt);
-		//System.err.println("Found clienttime " + clientTime + " for access " + accessId);
+		
 		TodoItem ti = (TodoItem) accessMap.get(accessId);
 		if ( ti != null ) {
-			//System.err.println("Found Access in map!");
+			
 			if ( ti.access != null ) {
 				ti.access.clientTime = clientTime;
+			} else {
+				System.err.println("EMPTY ACCESS FOUND IN TODO!");
 			}
 		} else {
 			// Did not find in accessMap, creating embryo access.
@@ -257,6 +261,7 @@ public final class OracleStore implements StoreInterface {
 				
 				PreparedStatement exists = null;
 				PreparedStatement ps = null;
+				PreparedStatement update = null;
 				ResultSet rs = null;
 				try {
 					// Check if access already exists.
@@ -266,12 +271,19 @@ public final class OracleStore implements StoreInterface {
 					rs.next();
 					int cnt = rs.getInt("cnt"); 
 					if ( cnt == 0 ) {
+						// Insert new embryo record.
 						ps = con.prepareStatement(insertEmbryoAccessSQL);
 						ps.setString(1, accessId);
 						ps.setString(2, clnt);
 						ps.setString(3, "embryo");
 						ps.setTimestamp(4, new java.sql.Timestamp(new java.util.Date().getTime()));
 						ps.executeUpdate();
+					} else {
+						// Update existing record.
+						update = con.prepareStatement(updateAccessSQL);
+						update.setString(1, clnt);
+						update.setString(2, accessId);
+						update.executeUpdate();
 					}
 				} finally {
 					if ( rs != null ) {
@@ -279,6 +291,9 @@ public final class OracleStore implements StoreInterface {
 					}
 					if ( ps != null ) {
 						ps.close();
+					}
+					if ( update != null ) {
+						update.close();
 					}
 					if ( exists != null ) {
 						exists.close();
@@ -344,8 +359,8 @@ public final class OracleStore implements StoreInterface {
 				try {
 					
 					ps = con.prepareStatement(insertAccessSQL);
-					psUpdate = con.prepareStatement(updateEmbryoAccessSQL);
 					exists = con.prepareStatement(existsAccessSQL);
+					psUpdate = con.prepareStatement(updateEmbryoAccessSQL);
 					
 					asyncps = null; 
 					
@@ -398,7 +413,7 @@ public final class OracleStore implements StoreInterface {
 								psUpdate.setTimestamp(13, new java.sql.Timestamp(a.created.getTime()));
 								psUpdate.setString(14, a.getClientToken());
 								psUpdate.setString(14, a.accessID);
-								psUpdate.executeUpdate();
+								int x = psUpdate.executeUpdate();
 							}
 							
 //							 Only log details if exception occured or if full accesslog monitoring is enabled.
