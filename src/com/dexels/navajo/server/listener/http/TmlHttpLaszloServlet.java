@@ -109,13 +109,13 @@ public final class TmlHttpLaszloServlet extends TmlHttpServlet {
 				java.util.zip.GZIPOutputStream gzipout = new java.util.zip.GZIPOutputStream(response.getOutputStream());
 
 				Document laszlo = createLaszloFromNavajo(outDoc);
-				XMLDocumentUtils.write(laszlo, new OutputStreamWriter(gzipout));
+				XMLDocumentUtils.write(laszlo, new OutputStreamWriter(gzipout), false);
 				gzipout.close();
 			} else {
 				response.setContentType("text/xml; charset=UTF-8");
 				OutputStream out = (OutputStream) response.getOutputStream();
 				Document laszlo = createLaszloFromNavajo(outDoc);
-				XMLDocumentUtils.write(laszlo, new OutputStreamWriter(out));
+				XMLDocumentUtils.write(laszlo, new OutputStreamWriter(out),false);
 				out.close();
 			}
 		} catch (Throwable e) {
