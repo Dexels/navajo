@@ -10,8 +10,6 @@ import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.GenericHandler;
 import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.UserException;
-import com.dexels.navajo.server.statistics.WebserviceAccess;
-import com.dexels.navajo.server.statistics.WebserviceAccessListener;
 import com.dexels.navajo.mapping.MappableException;
 
 
@@ -46,7 +44,7 @@ public class AdminMap implements Mappable {
   public String rootPath;
   public String webservice;
   public String documentClass;
-  public WebserviceAccess webserviceAccess;
+ // public WebserviceAccess webserviceAccess;
   public boolean supportsHotCompile;
   public boolean supportsAsync;
   public boolean supportsStore;
@@ -359,12 +357,12 @@ public class AdminMap implements Mappable {
 	  this.webservice = w;
   }
 
-  public WebserviceAccess getWebserviceAccess() {
-	  if ( webservice == null ) {
-		  return null;
-	  }
-	  return WebserviceAccessListener.getInstance().getAccessInfo(webservice);
-  }
+//  public WebserviceAccess getWebserviceAccess() {
+//	  if ( webservice == null ) {
+//		  return null;
+//	  }
+//	  return WebserviceAccessListener.getInstance().getAccessInfo(webservice);
+//  }
 
   public String getDocumentClass() {
 	  return NavajoFactory.getInstance().getClass().getName();
