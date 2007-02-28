@@ -149,8 +149,7 @@ public final class StatisticsRunner extends GenericThread implements StatisticsR
 			  notifyAll();
 		  }
 	  }
-	  // Add to webserviceaccesslistener.
-	  WebserviceAccessListener.getInstance().addAccess(a, e);
+	 
   }
   
   public int getTodoCount() {
