@@ -57,6 +57,20 @@ public class TmlHttpServlet extends HttpServlet {
     //logger.log(Priority.INFO, "In TmlHttpServlet finalize()");
   }
 
+  private void dumHttp(HttpServletRequest request) {
+	  // Dump stuff.
+	  System.err.println("HTTP DUMP (" + request.getRemoteAddr() + "/" + request.getRequestURI() );
+	  if ( request != null ) {
+		  Enumeration enum = request.getHeaderNames();
+		  while ( enum.hasMoreElements() ) {
+			  String headerName = (String) enum.nextElement();
+			  System.err.println(headerName + "=" + request.getHeader(headerName));
+		  }  
+	  } else {
+		  System.err.println("EMPTY REQUEST OBJECT!!");
+	  }
+  }
+  
   private final Navajo constructFromRequest(HttpServletRequest request) throws
       NavajoException {
 
@@ -315,11 +329,9 @@ public class TmlHttpServlet extends HttpServlet {
 			  out.close();
 		  }
 	  }
-	  catch (FatalException e) {
+	  catch (Throwable e) {
+		  dumHttp(request);
 		  throw new ServletException(e);
-	  }
-	  catch (NavajoException te) {
-		  throw new ServletException(te);
 	  }
 	  finally {
 		  dis = null;

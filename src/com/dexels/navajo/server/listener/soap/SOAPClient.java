@@ -15,6 +15,7 @@ import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
+import javax.xml.soap.MimeHeaders;
 
 /**
  * <p>Title: Navajo Product Project</p>
@@ -33,7 +34,8 @@ public class SOAPClient {
 
         try {
 
-            URL endpoint=new URL(SIMPLE_SAMPLE_URI);
+            URL endpoint=new URL("http://geocoder.us/service/soap");
+           
             
             //Endpoint ep = new Endpoint(SIMPLE_SAMPLE_URI);
             
@@ -44,25 +46,19 @@ public class SOAPClient {
 
             // Create a message from the message factory.
             SOAPMessage msg = mf.createMessage();
-
+            MimeHeaders hd = msg.getMimeHeaders();
+            hd.addHeader("SOAPAction", "http://rpc.geocoder.us/Geo/Coder/US#geocode");
+            
             SOAPPart soapPart= msg.getSOAPPart();
             SOAPEnvelope envelope = soapPart.getEnvelope();
 
 
             // create dummy message
             SOAPBody body = envelope.getBody();
-
-            body.addChildElement("Club").addChildElement("ClubIdentifier").addTextNode("BBFW63X");
-
-            SOAPHeader h = msg.getSOAPHeader();
-        
-            h.addChildElement(envelope.createName("webservice", "navajo", "http://www.dexels.com/navajo"))
-            	.addTextNode("club/ProcessQueryClub");
-            
+            body.addChildElement("geocode").addChildElement("location").addTextNode("\n1600 Pennsylvania Av, Washington, DC\n");
             msg.setContentDescription("text/xml");
             msg.saveChanges();
 
-            
             msg.writeTo(System.err);
             
             System.err.println("Sending message to URL: "+ endpoint);
@@ -72,7 +68,6 @@ public class SOAPClient {
  */
 
             SOAPMessage reply = connection.call(msg, endpoint);
-
             System.err.println("Sent message is logged in \"sent.msg\"");
 
             FileOutputStream sentFile = new FileOutputStream("sent.msg");
