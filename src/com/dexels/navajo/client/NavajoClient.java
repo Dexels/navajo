@@ -41,7 +41,7 @@ public class NavajoClient implements ClientInterface {
 
   public static final int DIRECT_PROTOCOL = 0;
   public static final int HTTP_PROTOCOL = 1;
-  public static int CONNECT_TIMEOUT = 2000;
+  public static int CONNECT_TIMEOUT = 10000;
   
 //  private String host = null;
   private String username = null;
