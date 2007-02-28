@@ -549,7 +549,14 @@ public class NavajoClient implements ClientInterface {
       urlcon.setSSLSocketFactory(sslFactory);
       con = urlcon;
     }
-    con.setConnectTimeout(CONNECT_TIMEOUT);
+   
+    try {
+    	java.lang.reflect.Method timeout = con.getClass().getMethod("setConnectTimeout", new Class[]{int.class});
+    	timeout.invoke( con, new Object[]{new Integer(CONNECT_TIMEOUT)});
+    } catch (Throwable e) {
+     	System.err.println("setConnectTimeout does not exist, upgrade to java 1.5+");
+    }
+    
     con.setDoOutput(true);
     con.setDoInput(true);
     con.setUseCaches(false);
