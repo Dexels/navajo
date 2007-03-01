@@ -60,10 +60,10 @@ public final class OracleStore implements StoreInterface {
 	"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	
 	private static String updateEmbryoAccessSQL = "update navajoaccess " +
-	"set webservice = ?, set username = ?, set threadcount = ?, set totaltime = ?,set parsetime = ?" + 
-	",set authorisationtime = ?, set requestsize = ?, set requestencoding = ?, " + 
-	" set compressedrecv = ?, set compressedsnd = ?, set ip_address = ?, set hostname = ?" + 
-	",set created = ?, set clientid = ? where access_id = ? ";
+	"set webservice = ?, username = ?, threadcount = ?, totaltime = ?, parsetime = ?, " + 
+	"authorisationtime = ?, requestsize = ?, requestencoding = ?, " + 
+	"compressedrecv = ?, compressedsnd = ?, ip_address = ?, hostname = ?, " + 
+	"created = ?, clientid = ? where access_id = ?";
 	
 	private static String updateAccessSQL = "update navajoaccess set clienttime = ? where access_id = ?";
 	
