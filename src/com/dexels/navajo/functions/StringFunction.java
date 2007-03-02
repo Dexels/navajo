@@ -41,13 +41,13 @@ public final class StringFunction extends FunctionInterface {
     for (int i = 2; i < getOperands().size(); i++) {
       parameters.add(getOperand(i));
     }
-    boolean containsInteger = false;
+    //boolean containsInteger = false;
     Class [] classTypes = null;
     if (parameters.size() > 0) {
       classTypes = new Class[parameters.size()];
       for (int i = 0; i < parameters.size(); i++) {
         Class c = parameters.get(i).getClass();
-        System.err.println(i + " c = " + c.getName());
+        //System.err.println(i + " c = " + c.getName());
         if (c.getName().equals("java.lang.Integer")) {
           c = java.lang.Integer.TYPE;
         }
