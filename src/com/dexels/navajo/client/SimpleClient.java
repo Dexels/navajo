@@ -8,7 +8,7 @@ public class SimpleClient extends Thread {
 
     private Navajo inputFile;
     private int total = 0;
-    private String header = "";
+    //private String header = "";
     private String URI = "";
 
     public SimpleClient(Navajo inputFile, String uri) {
@@ -26,6 +26,7 @@ public class SimpleClient extends Thread {
     }
 
     public  void run() {
+    	BufferedReader in = null;
         try {
           URL url = new URL("http://"+this.URI);
           URLConnection con = url.openConnection();
@@ -33,14 +34,14 @@ public class SimpleClient extends Thread {
           con.setDoInput(true);
           con.setUseCaches(false);
           con.setRequestProperty("Content-type", "text/plain");
-          OutputStream o = con.getOutputStream();
+          //OutputStream o = con.getOutputStream();
 
           PrintWriter writer = new PrintWriter(con.getOutputStream());
           writer.write(inputFile.toString());
           writer.close();
 
           InputStream i = con.getInputStream();
-          BufferedReader in = new BufferedReader(new java.io.InputStreamReader(i));
+          in = new BufferedReader(new java.io.InputStreamReader(i));
           StringBuffer buffer = new StringBuffer(4048);
           String line = "";
           while ((line = in.readLine()) != null) {
@@ -51,6 +52,13 @@ public class SimpleClient extends Thread {
 
         } catch (Throwable e) {
             System.out.println(e.getMessage());
+        } finally {
+        	if ( in != null ) {
+        		try {
+					in.close();
+				} catch (IOException e) {
+				}
+        	}
         }
 
     }
@@ -67,10 +75,10 @@ public class SimpleClient extends Thread {
         }
         String uri = args[0];
         String inputFile = args[1];
-        String rpcName = args[2];
-        String userName = "";
-        String passWord = "";
-        long expiration_interval = (args.length > 3) ? Integer.parseInt(args[3]) : -1;
+//        String rpcName = args[2];
+//        String userName = "";
+//        String passWord = "";
+//        long expiration_interval = (args.length > 3) ? Integer.parseInt(args[3]) : -1;
         Navajo f = NavajoFactory.getInstance().createNavajo(new FileInputStream(inputFile));
 
         System.out.println("Constructed TML: ");
@@ -83,7 +91,7 @@ public class SimpleClient extends Thread {
               long start = System.currentTimeMillis();
               SimpleClient c1= new SimpleClient(f, uri);
               for (int k = 0; k < i; k++) {
-                c1.run();
+                c1.start();
               }
               Thread.yield();
               long end = System.currentTimeMillis();

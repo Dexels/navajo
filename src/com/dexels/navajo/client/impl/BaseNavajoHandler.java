@@ -223,7 +223,7 @@ private boolean secure = false;
 
   }
 
-  class NavajoUrl {
+  static class NavajoUrl {
 
     public String server = null;
     public int port;

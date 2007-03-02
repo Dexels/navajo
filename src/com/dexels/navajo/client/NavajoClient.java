@@ -41,7 +41,7 @@ public class NavajoClient implements ClientInterface {
 
   public static final int DIRECT_PROTOCOL = 0;
   public static final int HTTP_PROTOCOL = 1;
-  public static int CONNECT_TIMEOUT = 3000;
+  public static final int CONNECT_TIMEOUT = 3000;
   
 //  private String host = null;
   private String username = null;
@@ -64,14 +64,14 @@ public class NavajoClient implements ClientInterface {
   
   private final List broadcastListeners = Collections.synchronizedList(new ArrayList());
   
-  private long timeStamp = 0;
+  //private long timeStamp = 0;
   // Standard option: use HTTP protocol.
   private int protocol = HTTP_PROTOCOL;
   private boolean useLazyMessaging = true;
   private ErrorResponder myResponder;
   private boolean setSecure = false;
   private SSLSocketFactory sslFactory = null;
-  private String keystore, passphrase;
+  //private String keystore, passphrase;
   private long retryInterval = 1000; // default retry interval is 1000 milliseconds
   private int retryAttempts = 10; // default three retry attempts
   private int switchServerAfterRetries = 2;
@@ -191,12 +191,6 @@ public class NavajoClient implements ClientInterface {
     this.protocol = protocol;
   }
 
-  
-  
-  public void finalize() {
-	  
-  }
-  
   
   public String getSessionToken() {
 	  return mySessionToken;
@@ -486,7 +480,7 @@ public class NavajoClient implements ClientInterface {
         e.printStackTrace(System.err);
         // throw new ClientException(-1, -1, e.getMessage());
       }
-      this.passphrase = passphrase;
+      //this.passphrase = passphrase;
     }
   }
 
@@ -1125,14 +1119,15 @@ private final BufferedInputStream retryTransaction(String server, Navajo out, bo
    * @return Navajo
    */
   protected final Navajo doMethod(String method, String user, String password, Navajo message, boolean secure, String keystore, String passphrase, long expirationInterval, HttpServletRequest request, boolean stripped, boolean useCompression) throws NavajoException, ClientException {
-    String server = message.getMethod(method).getServer();
-    if (server.equals("")) {
-      throw NavajoFactory.getInstance().createNavajoException("No server found for RPC: " + method);
-    }
-    if (message == null) {
-      throw NavajoFactory.getInstance().createNavajoException("doMethod(): empty Navajo message");
-    }
-    return doMethod(method, user, password, message, server, secure, keystore, passphrase, expirationInterval, request, stripped, false, useCompression);
+	  if (message == null) {
+		  throw NavajoFactory.getInstance().createNavajoException("doMethod(): empty Navajo message");
+	  }
+	  String server = message.getMethod(method).getServer();
+	  if (server.equals("")) {
+		  throw NavajoFactory.getInstance().createNavajoException("No server found for RPC: " + method);
+	  }
+
+	  return doMethod(method, user, password, message, server, secure, keystore, passphrase, expirationInterval, request, stripped, false, useCompression);
   }
 
   /**

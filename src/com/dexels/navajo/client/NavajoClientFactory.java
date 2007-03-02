@@ -33,6 +33,9 @@ public class NavajoClientFactory {
     catch (InstantiationException ex) {
       ex.printStackTrace();
     }
+    if ( client == null ) {
+    	return null;
+    }
     try {
       client.init(config);
     }

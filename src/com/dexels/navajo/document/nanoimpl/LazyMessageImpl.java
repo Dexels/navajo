@@ -8,11 +8,13 @@ import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.lazy.MessageListener;
 import com.dexels.navajo.client.*;
 
-public class LazyMessageImpl
-    extends MessageImpl
-    implements LazyMessage, Runnable {
+public class LazyMessageImpl extends MessageImpl implements LazyMessage, Runnable {
 
-  private int total = 0;
+  /**
+	 * 
+	 */
+	private static final long serialVersionUID = 324284341501860386L;
+private int total = 0;
   private int shown = -1;
   private int remaining = -1;
   private int loadedMessageCount = -1;
@@ -26,7 +28,7 @@ public class LazyMessageImpl
 
 //  boolean[] loaded = null;
 
-  private boolean running = true;
+  private volatile boolean running = true;
   private int cycles = 0;
   private int unloadedMessageCount = -1;
 
@@ -78,7 +80,7 @@ public class LazyMessageImpl
     unloadedMessageCount = total;
 //    int end = total - remaining;
 //    int start = end - shown;
-    int end = getEndIndex();
+//    int end = getEndIndex();
     int start = getStartIndex();
 //    int start = end - shown;
 
@@ -136,6 +138,7 @@ public class LazyMessageImpl
         }
         catch (NavajoException ex) {
           ex.printStackTrace();
+          return;
         }
         this.addProperty(p);
         p.fromXml(child);

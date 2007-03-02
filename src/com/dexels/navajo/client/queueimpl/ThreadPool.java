@@ -11,9 +11,9 @@ import java.util.*;
  * @version 1.0
  */
 
-public class ThreadPool {
+public final class ThreadPool {
 
-  private final int THREAD_COUNT = 5;
+  private final static int THREAD_COUNT = 5;
 
   private final List myWaitingQueue = Collections.synchronizedList(new ArrayList());
   private Set activeThreadSet = Collections.synchronizedSet(new HashSet());

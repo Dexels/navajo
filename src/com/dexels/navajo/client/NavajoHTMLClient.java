@@ -31,7 +31,7 @@ import javax.xml.transform.stream.StreamResult;
 public class NavajoHTMLClient extends NavajoClient {
 
     // private Vector nodes;
-    private Message n;
+    //private Message n;
 
     public NavajoHTMLClient(String dtdFile) {
         super(dtdFile);

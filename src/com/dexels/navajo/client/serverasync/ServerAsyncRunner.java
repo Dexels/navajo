@@ -20,9 +20,9 @@ public class ServerAsyncRunner
   private ServerAsyncListener myListener = null;
   private String myClientId = null;
   private int myPollingInterval = -1;
-  private int maxIter = 2;
+  //private int maxIter = 2;
   private boolean iterate = true;
-  private boolean kill = false;
+  private volatile boolean kill = false;
   int prev_progress = 0;
   long prev_time = 0;
   private int serverIndex = 0;
@@ -88,9 +88,8 @@ public class ServerAsyncRunner
             // Really dont know what I should pass to getCallBackPointer
             if (myListener != null) {
               myListener.setProgress(head.getCallBackPointer(null), 100);
+              myListener.receiveServerAsync(temp, myMethod, head.getCallBackPointer(null), myClientId);
             }
-
-            myListener.receiveServerAsync(temp, myMethod, head.getCallBackPointer(null), myClientId);
             myClientInterface.deRegisterAsyncRunner(myClientId);
             myNavajo.removeHeader();
             return;

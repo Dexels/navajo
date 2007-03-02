@@ -194,12 +194,14 @@ public class HTMLutils {
 
     public static String readHTMLForm(Navajo tbMessage, HttpServletRequest request) throws NavajoException {
 
-        int i, j;
-        String rawName, messageName, property, value, type, cardinality = "";
-        Vector props;
+        String rawName, value, type, cardinality = "";
         ArrayList v;
         StringBuffer dummy = new StringBuffer();
 
+        if ( request == null ) {
+        	return null;
+        }
+        
         NavajoFactory.getInstance().createProperty(tbMessage, "nr", Property.INTEGER_PROPERTY, "value", 1, "", Property.DIR_OUT);
         Enumeration allParameters = request.getParameterNames();
 

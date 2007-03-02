@@ -51,7 +51,7 @@ public class NavajoAgent
 
   private HttpServletRequest request = null;
 
-  private ResourceBundle navajoAgentProperties = null;
+  //private ResourceBundle navajoAgentProperties = null;
 
   public NavajoAgent(ResourceBundle navajoAgentProperties) {
     super();
@@ -187,6 +187,9 @@ public class NavajoAgent
                    long expirationInterval, boolean useCompression) throws
       ClientException, NavajoException {
 
+	if ( message == null ) {
+		return;
+	}
     String identifier = message.toString().hashCode() + "";
     // System.out.println("identifier = " + identifier);
     boolean foundInCache = false;
@@ -194,14 +197,12 @@ public class NavajoAgent
 
     useCache = useCache && enableCache;
 
-    if (message == null) {
-      message = NavajoFactory.getInstance().createNavajo();
+    message = NavajoFactory.getInstance().createNavajo();
+    // Check for old error messages and remove them.
+    // try {
+    // Util.debugLog("BEFORE error removal: ");
+    // message.getMessageBuffer().write(System.out);
 
-      // Check for old error messages and remove them.
-      // try {
-      // Util.debugLog("BEFORE error removal: ");
-      // message.getMessageBuffer().write(System.out);
-    }
     error = message.getMessage("error");
     if (error != null) {
       message.removeMessage("error");

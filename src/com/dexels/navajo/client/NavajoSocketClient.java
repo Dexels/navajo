@@ -52,19 +52,14 @@ public class NavajoSocketClient extends ClientQueueImpl {
     
     
     public BufferedInputStream doTransaction(Socket con, String name, Navajo d, boolean useCompression) throws IOException, ClientException, NavajoException {
-        long timeStamp = System.currentTimeMillis();
-
-
-        	//TODO HACKCKCKCKC
-        useCompression = false;
-        
-        
+        //long timeStamp = System.currentTimeMillis();
+ 
         // Verstuur bericht
         if (useCompression) {
                java.util.zip.GZIPOutputStream out = new java.util.zip.GZIPOutputStream(con.getOutputStream());
           d.write(out, condensed, d.getHeader().getRPCName());
 //          out.close();
-          long tt = System.currentTimeMillis() - timeStamp;
+          //long tt = System.currentTimeMillis() - timeStamp;
 //          System.err.println("Sending request took: " + tt + " millisec");
         }
         else {
@@ -75,9 +70,9 @@ public class NavajoSocketClient extends ClientQueueImpl {
 //            out.write("\n\0".getBytes());
             bout.flush();
 //            bout.
-            long tt = System.currentTimeMillis() - timeStamp;
+            //long tt = System.currentTimeMillis() - timeStamp;
 //            System.err.println("Sending request took: " + tt + " millisec");
-            timeStamp = System.currentTimeMillis();
+            //timeStamp = System.currentTimeMillis();
 //            out.close();
           }
           catch (java.net.NoRouteToHostException nrthe) {
@@ -218,7 +213,7 @@ public class NavajoSocketClient extends ClientQueueImpl {
     private synchronized static void performScript(String script) {
         try {
             Navajo n = NavajoFactory.getInstance().createNavajo();
-            Navajo res = NavajoClientFactory.getClient().doSimpleSend(n, script);
+            NavajoClientFactory.getClient().doSimpleSend(n, script);
             
         } catch (ClientException e) {
              e.printStackTrace();

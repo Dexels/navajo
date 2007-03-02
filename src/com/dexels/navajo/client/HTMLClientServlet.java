@@ -22,7 +22,7 @@ class Identification {
 
     String username;
     String password;
-    int id;
+    //int id;
 }
 
   /**
@@ -32,7 +32,11 @@ public class HTMLClientServlet extends HttpServlet {
 
     // Initialize global variables
 
-    String navajoServer = "";
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -6572470344508932724L;
+	String navajoServer = "";
     String rpcUser = "";
     String rpcPwd = "";
     boolean secure = false;
@@ -166,9 +170,9 @@ public class HTMLClientServlet extends HttpServlet {
                 Message error = resultDoc.getMessage("error");
 
                 if (error != null) {
-                    int level = Integer.parseInt(error.getProperty("level").getValue());
-                    int code = Integer.parseInt(error.getProperty("code").getValue());
-                    String messageString = error.getProperty("message").getValue();
+//                    int level = Integer.parseInt(error.getProperty("level").getValue());
+//                    int code = Integer.parseInt(error.getProperty("code").getValue());
+//                    String messageString = error.getProperty("message").getValue();
 
                     out.write("NOT AUTHORISED");
                     out.close();
@@ -309,7 +313,7 @@ public class HTMLClientServlet extends HttpServlet {
                 tbMessage = NavajoFactory.getInstance().createNavajo();
         } else {
             try {
-                result = gc.readHTMLForm(tbMessage, request);
+                gc.readHTMLForm(tbMessage, request);
                 //System.err.println("READ HTML FORM: " + result);
             } catch (NavajoException e) {
                 throw new ServletException(e);
@@ -341,6 +345,10 @@ public class HTMLClientServlet extends HttpServlet {
                 } catch (com.dexels.navajo.client.ClientException ce) {
                     System.err.println(ce.getMessage());
                 }
+                if ( resultDoc == null ) {
+                	return;
+                }
+                
                 messages = resultDoc.getAllMessages();
                 actions = resultDoc.getAllMethods();
 
