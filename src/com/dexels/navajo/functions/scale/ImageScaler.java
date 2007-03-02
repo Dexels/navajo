@@ -92,8 +92,8 @@ public class ImageScaler {
         	if ( ios != null ) {
         		try {
         			ios.close();
-        		} catch (IOException e) {
-        			
+        		} catch (Exception e) {
+        			// too bad, ios can throw a NullPointer
         		}
         	}
         }
