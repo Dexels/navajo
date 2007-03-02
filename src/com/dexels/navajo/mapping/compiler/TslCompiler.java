@@ -2146,7 +2146,7 @@ result.append(printIdent(ident + 4) +
      }
      catch (Throwable ex) {
        System.err.println("Error compiling script: "+script);
-       System.err.println("delete javaFile: "+javaFile.toString());
+       //System.err.println("delete javaFile: "+javaFile.toString());
        File f = new File(javaFile);
        if (f.exists()) {
 		f.delete();

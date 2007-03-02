@@ -66,7 +66,7 @@ public class Worker extends GenericThread implements WorkerMXBean {
 	
 	public static final String VERSION = "$Id$";
 	
-	private static Worker instance = null;
+	private static volatile Worker instance = null;
 	private static String responseDir = null;
 	
 	

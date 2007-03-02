@@ -76,7 +76,7 @@ public class NavajoClassLoader extends MultiClassLoader {
     
     public static int instances = 0;
     
-    private Class myScriptClass = null;
+    private volatile Class myScriptClass = null;
     
     /**
      * beta flag denotes whether beta versions of jar files should be used (if present).

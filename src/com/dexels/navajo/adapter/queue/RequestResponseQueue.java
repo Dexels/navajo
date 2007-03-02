@@ -13,7 +13,7 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 	public boolean doingWork = false;
 	public boolean queueOnly = false;
 	private MessageStore myStore = new FileStore();
-	private static RequestResponseQueue instance = null;
+	private static volatile RequestResponseQueue instance = null;
 	private static Object semaphore = new Object();
 	private static String id = "Queued adapters";
 	

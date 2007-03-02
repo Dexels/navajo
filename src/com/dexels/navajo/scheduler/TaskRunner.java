@@ -51,7 +51,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean {
 	private static final String VERSION = "$Id$";
 	
 	private int maxSize = 25;
-	private static TaskRunner instance = null;
+	private static volatile TaskRunner instance = null;
 	private final Map tasks = Collections.synchronizedMap(new HashMap());
 	private long configTimestamp = -1;
 	

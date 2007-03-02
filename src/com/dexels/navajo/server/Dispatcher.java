@@ -77,7 +77,7 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
   /**
    * Unique dispatcher instance.
    */
-  private static Dispatcher instance = null;
+  private static volatile Dispatcher instance = null;
   
   //private Navajo inMessage = null;
   protected  boolean matchCN = false;

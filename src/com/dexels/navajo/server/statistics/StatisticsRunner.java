@@ -44,7 +44,7 @@ public final class StatisticsRunner extends GenericThread implements StatisticsR
   public String storeClass;
   public static final String VERSION = "$Id$";
   
-  private static StatisticsRunner instance = null;
+  private static volatile StatisticsRunner instance = null;
   private StoreInterface myStore = null;
   private Map todo = new HashMap();
   private static String id = "Navajo StatisticsRunner";

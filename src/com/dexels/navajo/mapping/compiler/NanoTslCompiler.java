@@ -2215,7 +2215,7 @@ public class NanoTslCompiler {
         } catch (Throwable ex) {
             String javaFile = output + "/" + script + ".java";
             System.err.println("Error compiling script: " + script + " ex: " + ex.getMessage() + " cl: " + ex.getClass());
-            System.err.println("delete javaFile: " + javaFile.toString());
+            //System.err.println("delete javaFile: " + javaFile.toString());
             ex.printStackTrace();
             File f = new File(javaFile);
             if (f.exists()) {

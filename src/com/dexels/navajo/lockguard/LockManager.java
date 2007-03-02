@@ -58,7 +58,7 @@ public final class LockManager extends GenericThread {
 	public static final String VERSION = "$Id$";
 	
 	final Map lockDefinitions = Collections.synchronizedMap( new HashMap() );
-	static LockManager instance = null;
+	static volatile LockManager instance = null;
 	boolean readingDefinitions = true;
 	private long configTimestamp = -1;
 	private NavajoConfig myConfig;
