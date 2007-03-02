@@ -93,7 +93,7 @@ public class ImageScaler {
         		try {
         			ios.close();
         		} catch (Exception e) {
-        			// too bad, ios can throw a NullPointer
+        			// too bad, ios can throw a NullPointer too
         		}
         	}
         }
