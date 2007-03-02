@@ -63,6 +63,7 @@ public class ImageScaler {
         	ImageScaler.scale(iis, ios, width, height, keepAspect, (float)compressionQuality);
         	ios.flush();
         	ios.close();
+        	ios = null;
         	return c;
         } catch (IOException e) {
         	e.printStackTrace(System.err);
