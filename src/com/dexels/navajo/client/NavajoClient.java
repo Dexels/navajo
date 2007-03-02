@@ -48,7 +48,7 @@ public class NavajoClient implements ClientInterface {
   private String password = null;
   protected boolean condensed = true;
 
-  private String[] serverUrls;
+  private  String[] serverUrls;
   
   private final static Random randomize = new Random(System.currentTimeMillis());
   // Threadsafe collections:
