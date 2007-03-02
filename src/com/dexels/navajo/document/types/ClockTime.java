@@ -20,12 +20,17 @@ import com.dexels.navajo.document.*;
 
 public final class ClockTime extends NavajoType implements Comparable {
 
-  public final static String VERSION = "$Id$";
+  /**
+	 * 
+	 */
+	private static final long serialVersionUID = -1867359996556685730L;
+
+public final static String VERSION = "$Id$";
 	
   //Set the fixed year constants.
-  public static int FIXED_YEAR = 1971;
-  public static int FIXED_MONTH = 0;
-  public static int FIXED_DAY = 1;
+  public static final int FIXED_YEAR = 1971;
+  public static final int FIXED_MONTH = 0;
+  public static final int FIXED_DAY = 1;
   //private Date value;
   private Calendar calValue;
   private static DateFormat df = SimpleDateFormat.getTimeInstance(2, Locale.GERMAN);
@@ -206,10 +211,12 @@ public final class ClockTime extends NavajoType implements Comparable {
    * @return String
    */
   public final String toString() {
-    if (calValue != null)
+    if (calValue != null) {
       return df.format(calValue.getTime());
-    else
+    }
+    else {
       return null;
+    }
   }
 
   public static void main(String [] args) throws Exception {
@@ -241,6 +248,13 @@ public final class ClockTime extends NavajoType implements Comparable {
     return (int) (calValue.getTimeInMillis() - ((ClockTime) o).dateValue().getTime());
   }
 
+  public int hashCode() {
+	  if ( calValue == null ) {
+		  return 434343;
+	  }
+	  return calValue.toString().hashCode();
+  }
+  
   public boolean equals(Object obj) {
 
     if (calValue == null && obj == null) {

@@ -19,6 +19,10 @@ import java.util.*;
 public final class MethodImpl implements Method {
 
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = -5610359183106541489L;
+	/**
      * Public constants.
      */
     public static final String METHOD_DEFINITION = "method";
@@ -27,7 +31,7 @@ public final class MethodImpl implements Method {
     public static final String METHOD_DESCRIPTION = "description";
     public static final String METHOD_SERVER = "server";
 
-    public Element ref;
+    public final transient Element ref;
 
     /**
      * Create a new method (give name and server) for a Navajo document tb.

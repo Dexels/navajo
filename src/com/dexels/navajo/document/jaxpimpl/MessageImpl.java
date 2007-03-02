@@ -34,10 +34,14 @@ import javax.xml.transform.stream.StreamResult;
  */
 public final class MessageImpl implements Message {
 
-    private int totalElements;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 993688423553100266L;
+	private int totalElements;
     private Navajo myRootDoc = null;
 
-    public Element ref;
+    public final transient Element ref;
 
     public final String toString() {
         return ref.getAttribute(Message.MSG_NAME);

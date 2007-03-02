@@ -16,7 +16,7 @@ import org.w3c.dom.*;
 public final class FieldImpl implements FieldTag {
 
   public Element ref;
-   private Navajo myRootDoc = null;
+   //private Navajo myRootDoc = null;
 
    public FieldImpl(Element e) {
      this.ref = e;

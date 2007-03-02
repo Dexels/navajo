@@ -379,11 +379,18 @@ public final class StopwatchTime
     return ( (int) (this.getMillis() - other.getMillis()));
   }
 
+  public int hashCode() {
+	  return (this.getMillis() + "").hashCode();
+  }
+  
   public boolean equals(Object obj) {
 
-    StopwatchTime other = (StopwatchTime) obj;
-
-    return (other.getMillis() == this.getMillis());
+	  if ( obj instanceof StopwatchTime ) {
+		  StopwatchTime other = (StopwatchTime) obj;
+		  return (other.getMillis() == this.getMillis());
+	  } else {
+		  return false;
+	  }
   }
 
   public static void main(String[] args) throws Exception {

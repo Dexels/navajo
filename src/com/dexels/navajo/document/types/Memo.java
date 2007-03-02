@@ -25,6 +25,13 @@ public final class Memo
     return contents;
   }
 
+  public int hashCode() {
+	  if ( contents == null ) {
+		  return 334234;
+	  }
+	  return contents.hashCode();
+  }
+  
   public int compareTo(Object s) {
 	  if (s==null) {
 		return 0;
@@ -34,6 +41,22 @@ public final class Memo
 	}
 		return contents.compareTo(s.toString());
 	}
+  
+  public boolean equals(Object s) {
+	  if ( s == null && contents != null ) {
+		  return false;
+	  }
+	  if ( contents == null && s != null ) {
+		  return false;
+	  }
+	  if ( s == null && contents == null ) {
+		  return true;
+	  }
+	  if ( s == null ) {
+		  return false;
+	  }
+	  return contents.equals(s.toString());
+  }
 
 public boolean isEmpty() {
     return contents==null || "".equals(contents);

@@ -226,6 +226,13 @@ public final class Money
      System.err.println("sa =" + m.doubleValue());
   }
 
+  public int hashCode() {
+	  if (value == null) {
+		  return 312321;
+	  }
+	  return value.hashCode();
+  }
+  
   public boolean equals(Object obj) {
 
     if (value == null && obj == null) {

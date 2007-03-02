@@ -267,7 +267,7 @@ public class BaseHeaderImpl
 		  BaseObjectImpl boi = (BaseObjectImpl)objects.get(0);
 		  boi.setInterrupt(interrupt);
 	  }
-	  if (objects==null && objects.size()>1) {
+	  if (objects!=null && objects.size()>1) {
 		System.err.println("Warning: Multible references found. Ambiguous kill detected");
   	}
 	  if (objects==null) {

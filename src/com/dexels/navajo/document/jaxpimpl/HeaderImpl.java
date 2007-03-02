@@ -19,8 +19,12 @@ import javax.xml.transform.stream.StreamResult;
 
 public final class HeaderImpl implements Header {
 
-  // I think ref should be final
-  private Element ref;
+  /**
+	 * 
+	 */
+	private static final long serialVersionUID = 5030482585922598458L;
+// I think ref should be final
+  private final transient Element ref;
 //  private Map attributeMap = null;
 
   

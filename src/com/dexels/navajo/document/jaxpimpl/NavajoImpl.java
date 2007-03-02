@@ -34,16 +34,21 @@ import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
 public final class NavajoImpl implements Navajo, java.io.Serializable {
 
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 8175746322818786056L;
+
+	/**
      * The XML message buffer. The message buffer contains all the
      * XML messages that have been received from the server.
      */
-    private Document docBuffer;
+    private  transient Document docBuffer;
 
     private String documentName = "ANONYMOUS";
     private String myBodyDefinition = BODY_DEFINITION;
 
-    private Node messagePointer;
-    private Node propertyPointer;
+    private transient Node messagePointer;
+    private transient Node propertyPointer;
     private String errorDescription;
     private int errorNumber;
 

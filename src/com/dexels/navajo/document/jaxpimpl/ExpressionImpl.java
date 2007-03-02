@@ -15,8 +15,12 @@ import org.w3c.dom.*;
 public final class ExpressionImpl
     implements ExpressionTag {
 
-  public Element ref;
-  private Navajo myRootDoc = null;
+  /**
+	 * 
+	 */
+	private static final long serialVersionUID = -7226916693752872142L;
+public final transient Element ref;
+  //private Navajo myRootDoc = null;
 
   public ExpressionImpl(Element e) {
     this.ref = e;

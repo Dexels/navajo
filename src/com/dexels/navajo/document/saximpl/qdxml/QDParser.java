@@ -9,7 +9,7 @@ import java.util.*;
  */
 public class QDParser {
     
-    public static int PUSHBACK_SIZE = 2000;
+    public static final int PUSHBACK_SIZE = 2000;
     
     private static int popMode(Stack st) {
         if (!st.empty())
@@ -24,7 +24,7 @@ public class QDParser {
     public static void parse(DocHandler doc, Reader re) throws Exception {
         PushbackReader r = new PushbackReader(new BufferedReader(re), PUSHBACK_SIZE);
         StringBuffer attributeBuffer = new StringBuffer(50);
-        Stack st = new Stack();
+        //Stack st = new Stack();
         int depth = 0;
         int mode = PRE;
         int c = 0;
@@ -36,7 +36,7 @@ public class QDParser {
         String lvalue = null;
         String rvalue = null;
         Hashtable attrs = null;
-        st = new Stack();
+        Stack st = new Stack();
         doc.startDocument();
         int line = 1, col = 0;
         boolean eol = false;

@@ -41,7 +41,7 @@ public final class Binary extends NavajoType implements Serializable {
 
     private File dataFile = null;
     private File lazySourceFile = null;
-    private InputStream lazyInputStream = null;
+    private transient InputStream lazyInputStream = null;
     private String myRef = null;
     
     public final static String MSEXCEL = "application/msexcel";
@@ -537,12 +537,16 @@ public final class Binary extends NavajoType implements Serializable {
         this.mimetype = mime;
     }
 
+    public boolean equals() {
+    	return false;
+    }
+    
     // for sorting. Not really much to sort
     public final int compareTo(Object o) {
         return 0;
     }
 
-    public void finalize() {
+    protected void finalize() {
     
         if (dataFile != null && dataFile.exists()) {
             try {

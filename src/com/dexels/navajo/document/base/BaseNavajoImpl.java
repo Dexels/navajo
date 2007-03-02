@@ -481,10 +481,10 @@ public void write(OutputStream stream, boolean condense, String method) throws N
     super.write(stream);
 }
 
-public void printElement(Writer sw, int indent) throws IOException {
-//    sw.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-    super.printElement(sw, indent);
-}
+//public void printElement(Writer sw, int indent) throws IOException {
+////    sw.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+//    super.printElement(sw, indent);
+//}
 /** @deprecated
  * Create a new navajo using a stream in the NavajoFactory
  * @see com.dexels.navajo.document.Navajo#read(java.io.Reader)

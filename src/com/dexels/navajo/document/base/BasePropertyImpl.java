@@ -23,10 +23,14 @@ import com.dexels.navajo.document.types.*;
  * @version 1.0
  */
 
-public class BasePropertyImpl
+public  class BasePropertyImpl
     extends BaseNode
     implements Property, Comparable, TreeNode {
-  protected String myName;
+  /**
+	 * 
+	 */
+	private static final long serialVersionUID = 5167262782916246791L;
+protected String myName;
   protected String myValue = null;
   
   protected ArrayList selectionList = new ArrayList();
@@ -434,16 +438,16 @@ public class BasePropertyImpl
       }
 
       try {
-        Date d = dateFormat1.parse(getValue().toString());
+        Date d = dateFormat1.parse(getValue());
         return d;
       }
       catch (Exception ex) {
         try {
-          Date d = dateFormat2.parse(getValue().toString());
+          Date d = dateFormat2.parse(getValue());
           return d;
         }
         catch (Exception ex2) {
-          System.err.println("Sorry I really can't parse that date: " + getValue().toString() );
+          System.err.println("Sorry I really can't parse that date: " + getValue() );
           //ex2.printStackTrace();
         }
       }
@@ -1484,7 +1488,8 @@ public Object clone(String newName) {
     return p;
 }
 
-public Object clone() {
+public  Object clone() {
+	
     Property p = cloneWithoutValue();
     p.setName(getName());
     if (BINARY_PROPERTY.equals(p.getType())) {

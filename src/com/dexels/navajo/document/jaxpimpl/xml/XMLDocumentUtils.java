@@ -14,7 +14,7 @@ import org.w3c.dom.*;
 
 public class XMLDocumentUtils {
 
-    public static String DEFAULT_ENCODING = "UTF-8";
+    public static final String DEFAULT_ENCODING = "UTF-8";
 
     private static javax.xml.parsers.DocumentBuilderFactory builderFactory = null;
     private static javax.xml.transform.TransformerFactory transformerFactory = null;
@@ -324,9 +324,9 @@ public class XMLDocumentUtils {
     }
 
     public static void main(String args[]) throws Exception {
-        Document d = createDocument("/home/arjen/projecten/Navajo/soap/tml.xml");
+        //Document d = createDocument("/home/arjen/projecten/Navajo/soap/tml.xml");
         //Document d = createDocument("/home/arjen/projecten/Navajo/soap/soap.xml");
-        String out = transform(d,
-            new File("/home/arjen/projecten/Navajo/soap/tml2xml.xsl"));
+//        String out = transform(d,
+//            new File("/home/arjen/projecten/Navajo/soap/tml2xml.xsl"));
     }
 }

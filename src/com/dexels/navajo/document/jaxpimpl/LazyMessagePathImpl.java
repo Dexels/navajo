@@ -12,13 +12,13 @@ import com.dexels.navajo.document.*;
  */
 
 public class LazyMessagePathImpl {
-  private String messagePath;
+  //private String messagePath;
   private int startIndex = -1;
   private int endIndex = -1;
 
   public LazyMessagePathImpl(Navajo n, String path, int startIndex, int endIndex) {
     super();
-    messagePath = path;
+    //messagePath = path;
     this.startIndex = startIndex;
     this.endIndex = endIndex;
   }

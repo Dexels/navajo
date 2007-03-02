@@ -85,11 +85,11 @@ public class MessageImpl
       }
     }
 
-    Message parent = getArrayParentMessage();
-    Message def = null;
-    if (parent!=null ) {
-      def = parent.getDefinitionMessage();
-    }
+   // Message parent = getArrayParentMessage();
+//    Message def = null;
+//    if (parent!=null ) {
+//      def = parent.getDefinitionMessage();
+//    }
 
     if (propertyList!=null) {
         Iterator props = propertyList.iterator();

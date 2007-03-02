@@ -471,7 +471,7 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode, Comp
      */
     public ArrayList getMessages(String regularExpression) throws NavajoException {
 
-        ArrayList messages = new ArrayList();
+        //ArrayList messages = new ArrayList();
         ArrayList sub = null;
         ArrayList sub2 = null;
 
@@ -501,7 +501,7 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode, Comp
                 if (sub == null) { // First message in path.
                     sub = getMessages(msgName);
                 } else { // Subsequent submessages in path.
-                    messages = new ArrayList();
+                	ArrayList messages = new ArrayList();
                     for (int i = 0; i < sub.size(); i++) {
                         m = (Message) sub.get(i);
                         sub2 = m.getMessages(msgName);

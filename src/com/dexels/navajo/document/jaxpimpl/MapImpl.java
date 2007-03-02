@@ -16,7 +16,7 @@ import org.w3c.dom.*;
 public final class MapImpl
     implements MapTag {
   public Element ref;
-  private Navajo myRootDoc = null;
+  //private Navajo myRootDoc = null;
 
   public MapImpl(Element e) {
     this.ref = e;

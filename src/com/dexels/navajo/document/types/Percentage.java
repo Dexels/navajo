@@ -165,6 +165,13 @@ public final class Percentage extends NavajoType {
     return -1;
   }
 
+  public int hashCode() {
+	if ( value == null ) {
+		return 434343;
+	}
+	return value.hashCode();
+  }
+  
   public boolean equals(Object obj) {
 
     if (value == null && obj == null) {

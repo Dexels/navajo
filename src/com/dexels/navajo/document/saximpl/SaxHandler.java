@@ -9,6 +9,7 @@ package com.dexels.navajo.document.saximpl;
 
 import java.io.*;
 import java.util.*;
+import java.util.Map.Entry;
 
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.base.*;
@@ -202,9 +203,10 @@ public final class SaxHandler implements DocHandler {
             throw new IllegalArgumentException("Piggyback tag outside header tag.");
         }
         Map m = new HashMap();
-        for (Iterator iter = h.keySet().iterator(); iter.hasNext();) {
-			String  key = (String ) iter.next();
-			String value = (String )h.get(key);
+        for (Iterator iter = h.entrySet().iterator(); iter.hasNext();) {
+        	Entry e = (Entry) iter.next();
+			String  key = (String ) e.getKey();
+			String value = (String ) e.getValue();
 			m.put(key, value);
 		}
         
@@ -219,9 +221,10 @@ public final class SaxHandler implements DocHandler {
 //                NavajoFactory.getInstance().createHeader(current, rpcName, rpcUser, rpcPassword, expiration_interval)
         BaseHeaderImpl bhi = new BaseHeaderImpl(currentDocument);
         currentHeader = bhi;
-        for (Iterator iter = h.keySet().iterator(); iter.hasNext();) {
-			String element = (String) iter.next();
-			String value = (String) h.get(element);
+        for (Iterator iter = h.entrySet().iterator(); iter.hasNext();) {
+        	Entry e = (Entry) iter.next();
+			String element = (String) e.getKey();
+			String value = (String) e.getValue();
 			bhi.setAttribute(element, value);
         }
         currentDocument.addHeader(bhi);
@@ -459,7 +462,7 @@ public final class SaxHandler implements DocHandler {
          }
         if (tag.equals("message")) {
             mergeDefinitionMessage();
-            Message m = (Message)messageStack.pop();
+            messageStack.pop();
         }
         if (tag.equals("property")) {
 //            System.err.println("Property ended");

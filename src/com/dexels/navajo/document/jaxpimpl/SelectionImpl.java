@@ -15,7 +15,11 @@ import org.w3c.dom.*;
 
 public final class SelectionImpl implements Selection {
 
-    public Element ref;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -4164534613644023304L;
+	public final transient Element ref;
     private Navajo myRootDoc;
     
     public SelectionImpl(Element e) {

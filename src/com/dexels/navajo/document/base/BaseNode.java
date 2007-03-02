@@ -12,6 +12,7 @@ package com.dexels.navajo.document.base;
 //import nanoxml.*;
 import java.io.*;
 import java.util.*;
+import java.util.Map.Entry;
 
 
 import com.dexels.navajo.document.*;
@@ -48,89 +49,90 @@ public abstract class BaseNode implements java.io.Serializable{
   }
  
 
-  public void printElement(Writer sw, int indent) throws IOException {
-          String tagName = getTagName();
+ public final void printElement(Writer sw, int indent) throws IOException {
+	 String tagName = getTagName();
 
-          for (int a = 0; a < indent; a++) {
-            sw.write(" ");
-        }
-          writeElement( sw, "<");
-          writeElement( sw, tagName);
-          Map map = getAttributes();
+	 for (int a = 0; a < indent; a++) {
+		 sw.write(" ");
+	 }
+	 writeElement( sw, "<");
+	 writeElement( sw, tagName);
+	 Map map = getAttributes();
 
-          if (map != null) {
-              for (Iterator iter = map.keySet().iterator(); iter.hasNext();) {
-                String element = (String) iter.next();
-                String value = (String)map.get(element);
-                /*
-                 * Todo: stream!
-                 */
-                if (value!=null) {
-                	// optimization: Only escape properties:
-                	String sss = element;
-                	if (getTagName().equals("property")) {
-                		if (element.equals("value")) {
-                            sss = XMLEscape(value);
-						}
-                	}
-                	if (getTagName().equals("option")) {
-                        sss = XMLEscape(value);
-                	}
+	 if (map != null) {
+		 for (Iterator iter = map.entrySet().iterator(); iter.hasNext();) {
+			 Entry e = (Entry) iter.next();
+			 String element = (String) e.getKey();
+			 String value = (String) e.getValue();
+			 /*
+			  * Todo: stream!
+			  */
+			  if (value!=null) {
+				  // optimization: Only escape properties:
+				  String sss = element;
+				  if (getTagName().equals("property")) {
+					  if (element.equals("value")) {
+						  sss = XMLEscape(value);
+					  }
+				  }
+				  if (getTagName().equals("option")) {
+					  sss = XMLEscape(value);
+				  }
 
-                        sss = XMLEscape(value);
-                        writeElement( sw," ");
-                        writeElement( sw, element);
-                        writeElement( sw, "=\"");
-                        writeElement( sw, sss);
-                        writeElement( sw, "\"");
-//                    System.err.println("||"+value+"||");
-                }
-            }
-          }
-          List list = getChildren();
-          boolean hasText = hasTextNode();
-          boolean hasChildren = (list!=null) && list.size()>0;
-          if (hasChildren && hasText) {
-            throw new IllegalStateException("Can not have both children AND text");
-        }
-          if (!hasChildren && !hasText) {
-              writeElement( sw, "/>\n");
-              return;
-          }
-//          if (list!=null && list.size() > 0) {
-            writeElement( sw, ">\n");
-//          }
-//          else {
-//              throw new RuntimeException("WHOOOOOPS thought this did not happen");
-//            writeElement( sw, "/>\n");
-//          }
+				  sss = XMLEscape(value);
+				  writeElement( sw," ");
+				  writeElement( sw, element);
+				  writeElement( sw, "=\"");
+				  writeElement( sw, sss);
+				  writeElement( sw, "\"");
+//				  System.err.println("||"+value+"||");
+			  }
+		 }
+	 }
+	 List list = getChildren();
+	 boolean hasText = hasTextNode();
+	 boolean hasChildren = (list!=null) && list.size()>0;
+	 if (hasChildren && hasText) {
+		 throw new IllegalStateException("Can not have both children AND text");
+	 }
+	 if (!hasChildren && !hasText) {
+		 writeElement( sw, "/>\n");
+		 return;
+	 }
+//	 if (list!=null && list.size() > 0) {
+	 writeElement( sw, ">\n");
+//	 }
+//	 else {
+//	 throw new RuntimeException("WHOOOOOPS thought this did not happen");
+//	 writeElement( sw, "/>\n");
+//	 }
 
-          for (int i = 0; i < list.size(); i++) {
-              BaseNode child = (BaseNode)list.get(i);
-//              if (child!=null) {
-//                System.err.println("CHILD::: "+child.getClass()+ " in class: "+getClass());
-//            } else {
-//                System.err.println("Null child at index: "+i+ " in class: "+getClass());
-//              
-//            }
-              child.printElement(sw,indent+INDENT);
-          }
-          if (hasText) {
-//              System.err.println("*******************                                    Text PRESENT");
-            writeText(sw);
-//            System.err.println("Text written...");
-          }
-          if (hasText || hasChildren) {
-              for (int a = 0; a < indent; a++) {
-                  sw.write(" ");
-              }
-            writeElement( sw, "</");
-            writeElement( sw,tagName);
-            writeElement( sw,">\n");
-          }
+	 for (int i = 0; i < list.size(); i++) {
+		 BaseNode child = (BaseNode)list.get(i);
+//		 if (child!=null) {
+//		 System.err.println("CHILD::: "+child.getClass()+ " in class: "+getClass());
+//		 } else {
+//		 System.err.println("Null child at index: "+i+ " in class: "+getClass());
 
-      
-  }  
+//		 }
+		 child.printElement(sw,indent+INDENT);
+	 }
+	 if (hasText) {
+//		 System.err.println("*******************                                    Text PRESENT");
+		 writeText(sw);
+//		 System.err.println("Text written...");
+	 }
+	 if (hasText || hasChildren) {
+		 for (int a = 0; a < indent; a++) {
+			 sw.write(" ");
+		 }
+		 writeElement( sw, "</");
+		 writeElement( sw,tagName);
+		 writeElement( sw,">\n");
+	 }
+
+
+ }  
   
   public void write(Writer w) throws NavajoException {
       try {

@@ -30,7 +30,11 @@ import com.dexels.navajo.document.types.*;
  */
 public final class PropertyImpl implements Property, Comparable {
 
-    public Element ref;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 2113782113914631398L;
+	public final transient Element ref;
     private Navajo myRootDoc = null;
     private Map subtypeMap = null;
 
@@ -429,12 +433,12 @@ public final class PropertyImpl implements Property, Comparable {
           return null;
 
         try {
-          Date d = dateFormat1.parse(getValue().toString());
+          Date d = dateFormat1.parse(getValue());
           return d;
         }
         catch (Exception ex) {
           try {
-            Date d = dateFormat2.parse(getValue().toString());
+            Date d = dateFormat2.parse(getValue());
             return d;
           }
           catch (Exception ex2) {

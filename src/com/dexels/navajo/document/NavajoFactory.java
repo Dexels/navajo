@@ -18,9 +18,9 @@ import com.dexels.navajo.document.saximpl.qdxml.QDParser;
  */
 
 public abstract class NavajoFactory {
-  protected static NavajoFactory impl = null;
+  protected static volatile NavajoFactory impl = null;
   protected File tempDir = null;
-  protected static HashMap alternativeFactories = new HashMap();
+  protected static final HashMap alternativeFactories = new HashMap();
   protected Map defaultSubTypes = new HashMap();
   protected final ArrayList myBinaryActivityListeners = new ArrayList();
 
