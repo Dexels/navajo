@@ -116,6 +116,9 @@ public class MessageImpl
         try {
           p = (PropertyImpl) NavajoFactory.getInstance().createProperty(
               myDocRoot, (String) child.getAttribute("name"), "", "", 0, "", "");
+          if ( p == null ) {
+        	  return;
+          }
         }
         catch (NavajoException ex) {
           ex.printStackTrace();

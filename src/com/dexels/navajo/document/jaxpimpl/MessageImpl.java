@@ -281,14 +281,15 @@ public final class MessageImpl implements Message {
 
     public final Message addMessage(Message m) {
 
+    	if (m == null) {
+            return null;
+          }
+    	
         // Do not add messages with mode "ignore".
         if (m.getMode().endsWith(Message.MSG_MODE_IGNORE)) {
             //System.out.println("IGNORING ADDMESSAGE(), MODE = IGNORE!!!!!!!");
             return null;
         }
-
-        if (m == null)
-          return null;
 
         if (this.getType().equals(Message.MSG_TYPE_ARRAY))
           return addMessage(m, false);
@@ -422,7 +423,7 @@ public final class MessageImpl implements Message {
      */
     public final ArrayList getMessages(String regularExpression) throws NavajoException {
 
-        ArrayList messages = new ArrayList();
+        ArrayList messages = null;
         ArrayList sub = null;
         ArrayList sub2 = null;
 
@@ -592,9 +593,9 @@ public final class MessageImpl implements Message {
         if (name.indexOf(Navajo.MESSAGE_SEPARATOR) != -1)
             return getPathProperty(name);
 
-        if (name.startsWith(Navajo.PARENT_MESSAGE+Navajo.MESSAGE_SEPARATOR)) {
-
-        }
+//        if (name.startsWith(Navajo.PARENT_MESSAGE+Navajo.MESSAGE_SEPARATOR)) {
+//
+//        }
 
         NodeList list = ref.getChildNodes();
 

@@ -528,7 +528,7 @@ public class Base64 {
                     decoder.write(cbuf, off, len);
                 } catch (IOException e) {
                     if (e instanceof Base64DecodingFinishedException) {
-                        Base64DecodingFinishedException b =  (Base64DecodingFinishedException)e;
+                        //Base64DecodingFinishedException b =  (Base64DecodingFinishedException)e;
                         pStream.flush();
 
                     }

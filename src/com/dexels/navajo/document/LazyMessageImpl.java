@@ -12,7 +12,12 @@ import java.util.HashMap;
 
 public class LazyMessageImpl implements java.io.Serializable{
 
-   class Entry {
+   /**
+	 * 
+	 */
+	private static final long serialVersionUID = -7446208229906069903L;
+
+ class Entry {
      public String name;
      public int startIndex;
      public int endIndex;

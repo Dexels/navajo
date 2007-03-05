@@ -388,7 +388,7 @@ protected String myName;
 
     if (getType().equals(Property.BOOLEAN_PROPERTY)) {
       if (getValue() != null && !getValue().equals("") ) {
-        return new Boolean( ( (String) getValue()).equals("true"));
+        return Boolean.valueOf( ( (String) getValue()).equals("true"));
       }
       else {
         return null;
@@ -1087,6 +1087,14 @@ protected String myName;
     return getValue();
   }
 
+   public int hashCode() {
+    	return super.hashCode();
+    }
+    
+    public boolean equals(Object o) {
+    	return super.equals(o);
+    }
+  
 //  public int compare(Property p) {
 //    Comparable ob1 = (Comparable)getAlternativeTypedValue();
 //    Comparable ob2 = (Comparable)p.getAlternativeTypedValue();

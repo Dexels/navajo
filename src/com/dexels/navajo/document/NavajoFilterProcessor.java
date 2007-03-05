@@ -22,8 +22,8 @@ public class NavajoFilterProcessor {
   }
 
   private static Navajo filter(Header header, Navajo out) throws NavajoException {
-    Navajo newNavajo = NavajoFactory.getInstance().createNavajo();
-    ArrayList messages = out.getAllMessages();
+//    Navajo newNavajo = NavajoFactory.getInstance().createNavajo();
+//    ArrayList messages = out.getAllMessages();
     return out;
   }
 }

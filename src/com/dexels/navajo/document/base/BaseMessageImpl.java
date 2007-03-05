@@ -305,8 +305,8 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode, Comp
 				if (local!=null) {
 					mergeProperty(local,element);
 				}
+				resList.add(getProperty(element.getName()));
 			}
-			resList.add(getProperty(element.getName()));
 		}
     	for (Iterator iter = propertyList.iterator(); iter.hasNext();) {
 			Property element = (Property) iter.next();
@@ -1136,6 +1136,14 @@ public final Message getParentMessage() {
       return (TreeNode) getArrayParentMessage();
     }
 
+    public int hashCode() {
+    	return super.hashCode();
+    }
+    
+    public boolean equals(Object o) {
+    	return super.equals(o);
+    }
+    
 	public int compareTo(Object o)  {
 	  if(o instanceof Message){
 		Message m = (Message)o;

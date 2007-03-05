@@ -349,9 +349,9 @@ public final class SaxHandler implements DocHandler {
                 }
               }
 
-              if (myValue == null || "".equals(myValue)) {
-                myValue = definitionProperty.getValue();
-              }
+//              if (myValue == null || "".equals(myValue)) {
+//                myValue = definitionProperty.getValue();
+//              }
             }
           }
 

@@ -395,10 +395,10 @@ public final class PropertyImpl implements Property, Comparable {
 
       if (getType().equals(Property.BOOLEAN_PROPERTY)) {
         if (getValue() == null) {
-          return new Boolean(false);
+          return Boolean.FALSE;
         }
         else {
-          return new Boolean( ( (String) getValue()).equals("true"));
+          return Boolean.valueOf( ( (String) getValue()).equals("true"));
         }
       }
       else if (getType().equals(Property.STRING_PROPERTY)) {

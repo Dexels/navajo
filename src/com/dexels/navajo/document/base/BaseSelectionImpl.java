@@ -89,6 +89,14 @@ public class BaseSelectionImpl extends BaseNode implements Selection{
   }
 
 
+  public int hashCode() {
+  	return super.hashCode();
+  }
+  
+  public boolean equals(Object o) {
+  	return super.equals(o);
+  }
+  
   public final int compareTo(Object o) {
     if (!(o instanceof Selection)) {
       return 0;

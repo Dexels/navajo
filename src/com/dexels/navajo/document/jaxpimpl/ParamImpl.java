@@ -16,7 +16,7 @@ import org.w3c.dom.*;
 
 public class ParamImpl implements ParamTag {
   public Element ref;
-   private Navajo myRootDoc = null;
+  // private Navajo myRootDoc = null;
 
    public ParamImpl(Element e) {
      this.ref = e;

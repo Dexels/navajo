@@ -257,7 +257,7 @@ public final class NavajoImpl implements Navajo, java.io.Serializable {
 
         Document d = XMLDocumentUtils.createDocument();
 
-        Element body = (Element) d.createElement(myBodyDefinition);
+       // Element body = (Element) d.createElement(myBodyDefinition);
         Node n = getMessage(name, false).cloneNode(true);
 
         d.appendChild(n);
@@ -769,7 +769,7 @@ public final class NavajoImpl implements Navajo, java.io.Serializable {
     }
 
     public void clearAllSelections() throws NavajoException {
-        Element body = (Element) XMLutils.findNode(this.docBuffer, myBodyDefinition);
+        //Element body = (Element) XMLutils.findNode(this.docBuffer, myBodyDefinition);
         ArrayList list = getAllMessages();
         for (int i = 0; i < list.size(); i++) {
             clearAllSelections((Message) list.get(i));

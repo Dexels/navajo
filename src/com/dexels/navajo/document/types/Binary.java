@@ -541,6 +541,10 @@ public final class Binary extends NavajoType implements Serializable {
     	return false;
     }
     
+    public final boolean equals(Object o) {
+    	return false;
+    }
+    
     // for sorting. Not really much to sort
     public final int compareTo(Object o) {
         return 0;
@@ -715,11 +719,11 @@ public final class Binary extends NavajoType implements Serializable {
     	}
     }
     
-    public static void main(String [] args) throws Exception {
-    	Binary b1 = new Binary( new File("/home/arjen/menu_kop.jpg" ) );
-    	Binary b2 = new Binary( new File("/home/arjen/menu_kop.jpg" ) );
-    	
-    	System.err.println("equals: " + b1.isEqual(b2) );
-    	
-    }
+//    public static void main(String [] args) throws Exception {
+//    	Binary b1 = new Binary( new File("/home/arjen/menu_kop.jpg" ) );
+//    	Binary b2 = new Binary( new File("/home/arjen/menu_kop.jpg" ) );
+//    	
+//    	System.err.println("equals: " + b1.isEqual(b2) );
+//    	
+//    }
 }
