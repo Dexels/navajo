@@ -68,8 +68,11 @@ public class ConnectionBrokerManager extends Object {
 		  final String lfile, final double rfrsh,
 		  final Boolean ac, final boolean forcecreation
   ) throws ClassNotFoundException {
+	  
+	  SQLMapBroker broker = null;
+	  
 	  synchronized ( semaphore ) {
-		  SQLMapBroker broker = null;
+		
 		  
 		  if ( !forcecreation ) {
 			  broker =this.haveExistingBroker(dsrc, usr);
@@ -116,6 +119,10 @@ public class ConnectionBrokerManager extends Object {
 					  ": putting new broker with identifier '" +
 					  key + "'");
 		  }
+		  
+	  }
+	  // Check transaction support.
+	  if ( broker != null ) {
 		  
 	  }
   }
@@ -408,6 +415,7 @@ public class ConnectionBrokerManager extends Object {
     			try {
     				//System.err.print("GETTING METADATA FOR " + url + "...");
     				DatabaseMetaData dbmd = c.getMetaData();
+    				broker.supportsAutocommit = dbmd.supportsTransactions();
     				dbInfo = new DatabaseInfo(dbmd, this.datasource);
     				//System.err.println("...GOT IT!");
     			}

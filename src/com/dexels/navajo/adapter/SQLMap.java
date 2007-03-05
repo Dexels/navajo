@@ -394,21 +394,21 @@ public class SQLMap implements Mappable, LazyArray {
         }
       }
       // Set autoCommit mode to default value.
-      if (con != null) {
-        con.setAutoCommit(true);
-      }
-      if (transactionContext == -1) {
-        if (con != null) {
-          transactionContextMap.remove(connectionId + "");
-          try {
-            SessionIdentification.clearSessionId( (getMetaData() != null ? getMetaData().getVendor() : "" ), con);
-          }
-          catch (UserException ex) {
-          }
-          // Free connection.
-          myConnectionBroker.freeConnection(con);
-          con = null;
-        }
+      if ( con != null && myConnectionBroker.supportsAutocommit ) {
+    	  con.setAutoCommit(true);
+    	  if (transactionContext == -1) {
+    		  if (con != null) {
+    			  transactionContextMap.remove(connectionId + "");
+    			  try {
+    				  SessionIdentification.clearSessionId( (getMetaData() != null ? getMetaData().getVendor() : "" ), con);
+    			  }
+    			  catch (UserException ex) {
+    			  }
+    			  // Free connection.
+    			  myConnectionBroker.freeConnection(con);
+    			  con = null;
+    		  }
+    	  }
       }
     }
     catch (SQLException sqle) {
@@ -418,45 +418,45 @@ public class SQLMap implements Mappable, LazyArray {
   }
 
   public void store() throws MappableException, UserException {
-    // Kill temporary broker.
-    // If part of transaction context, do not free connection or commit changes yet.
-    boolean isClosed = false;
-    try {
-      isClosed = (con != null) ? con.isClosed() : true;
-    }
-    catch (SQLException sqle2) {
-    }
-    if (transactionContext == -1) {
-      if (con != null && !isClosed) {
-        try {
-          // Determine autocommit value
-          boolean ac = (this.overideAutoCommit) ? autoCommit :  ( (Boolean) autoCommitMap.get(datasource)).booleanValue();
-          if (!ac) {
-            con.commit();
-            //System.err.println("SQLMAP, CALLING COMMIT() FOR AUTOCOMMIT = FALSE CONNECTION");
-            // Set autoCommit mode to default value.
-          }
-//          con.setAutoCommit( ( (Boolean) autoCommitMap.get(datasource)).
-//                            booleanValue());
-          con.setAutoCommit(true);
-          //System.err.println("SQLMAP, SETTING AUTOCOMMIT TO TRUE AGAIN");
-        }
-        catch (SQLException sqle) {
-          logger.log(NavajoPriority.ERROR, sqle.getMessage(), sqle);
-          throw new UserException( -1, sqle.getMessage(), sqle);
-        }
-        if (transactionContextMap != null) {
-          transactionContextMap.remove(connectionId + "");
-        }
-        if (fixedBroker != null) {
-          SessionIdentification.clearSessionId(getMetaData() != null ? getMetaData().getVendor() : "", con);
-          // Free connection.
-          myConnectionBroker.freeConnection(con);
-          con = null;
-        }
-      }
-    }
-    con = null;
+	  // Kill temporary broker.
+	  // If part of transaction context, do not free connection or commit changes yet.
+	  boolean isClosed = false;
+	  try {
+		  isClosed = (con != null) ? con.isClosed() : true;
+	  }
+	  catch (SQLException sqle2) {
+	  }
+	  if (transactionContext == -1) {
+		  if (con != null && !isClosed && myConnectionBroker.supportsAutocommit ) {
+			  try {
+				  // Determine autocommit value
+				  boolean ac = (this.overideAutoCommit) ? autoCommit :  ( (Boolean) autoCommitMap.get(datasource)).booleanValue();
+				  if (!ac) {
+					  con.commit();
+					  //System.err.println("SQLMAP, CALLING COMMIT() FOR AUTOCOMMIT = FALSE CONNECTION");
+					  // Set autoCommit mode to default value.
+				  }
+				  con.setAutoCommit(true);
+				  //System.err.println("SQLMAP, SETTING AUTOCOMMIT TO TRUE AGAIN");
+			  }
+			  catch (SQLException sqle) {
+				  logger.log(NavajoPriority.ERROR, sqle.getMessage(), sqle);
+				  throw new UserException( -1, sqle.getMessage(), sqle);
+			  }
+			  if (transactionContextMap != null) {
+				  transactionContextMap.remove(connectionId + "");
+			  }
+			  if (fixedBroker != null) {
+				  SessionIdentification.clearSessionId(getMetaData() != null ? getMetaData().getVendor() : "", con);
+			  }
+		  }
+		  if ( fixedBroker != null ) {
+			  // Free connection.
+			  myConnectionBroker.freeConnection(con);
+			  con = null;
+		  }
+	  }
+	  con = null;
   }
 
   public void setTransactionIsolationLevel(int j) {
@@ -466,7 +466,7 @@ public class SQLMap implements Mappable, LazyArray {
   public void setAutoCommit(boolean b) throws UserException {
     this.autoCommit = b;
     try {
-      if (con != null) {
+      if ( con != null && myConnectionBroker.supportsAutocommit ) {
         con.commit(); // Commit previous actions.
         con.setAutoCommit(b);
       }
@@ -859,7 +859,7 @@ public class SQLMap implements Mappable, LazyArray {
               ": returned a good connection from the broker manager");
         }
       }
-      if (con != null) {
+      if (con != null && myConnectionBroker.supportsAutocommit ) {
         boolean ac = (this.overideAutoCommit) ? autoCommit : ( (Boolean) autoCommitMap.get(datasource)).booleanValue();
         con.commit();
         con.setAutoCommit(ac);
