@@ -39,7 +39,7 @@ public final class AsyncStore extends GenericThread implements AsyncStoreMXBean 
 
   private static final String VERSION = "$Id$";
 	
-  private static AsyncStore instance = null;
+  private static volatile AsyncStore instance = null;
   public Map objectStore = null;
   public Map accessStore = null;
   private float timeout;
@@ -202,6 +202,10 @@ public final class AsyncStore extends GenericThread implements AsyncStoreMXBean 
 	  return objectStore.size();
   }
   
+  private static final synchronized void resetInstance() {
+	  instance = null;
+  }
+  
   public void terminate() {
 	  // Removed all async mappable instances.
 	  for (Iterator iter = objectStore.values().iterator(); iter.hasNext();) {
@@ -221,7 +225,7 @@ public final class AsyncStore extends GenericThread implements AsyncStoreMXBean 
 		  // TODO Auto-generated catch block
 		  e.printStackTrace();
 	  }
-	  instance = null;
+	  resetInstance();
 	  AuditLog.log(AuditLog.AUDIT_MESSAGE_ASYNC_RUNNER, "Killed");
   }
 
