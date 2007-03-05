@@ -100,7 +100,7 @@ public final class NavajoConfig {
     public int monitorExceedTotaltime = -1;
 	private File rootFile;
 
-    private static NavajoConfig instance = null;
+    private static volatile NavajoConfig instance = null;
 	private File jarFolder;
 	private String instanceName;
     
@@ -113,7 +113,7 @@ public final class NavajoConfig {
       this.inputStreamReader = inputStreamReader;
       classPath = System.getProperty("java.class.path");
       adapterClassloader = ncs;
-      resetInstance();
+      instance = this;
       //loadConfig(in);
      }
     
