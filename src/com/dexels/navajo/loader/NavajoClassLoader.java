@@ -191,7 +191,12 @@ public class NavajoClassLoader extends MultiClassLoader {
      */
     public Class getClass(String className) throws ClassNotFoundException {
     	//System.err.println("in getClass("+className+")");
-        return Class.forName(className, false, this);
+    	try {
+    		return Class.forName(className, false, this);
+    	} catch (ClassNotFoundException cnfe) {
+    		System.err.println("ERROR: COULD NOT FIND CLASS: " + className);
+    		throw cnfe;
+    	}
     }
 
     public final File [] getJarFiles(String path, boolean beta) {
