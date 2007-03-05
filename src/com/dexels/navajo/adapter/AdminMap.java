@@ -298,7 +298,7 @@ public class AdminMap implements Mappable {
     return storeLocation;
   }
   public int getClassLoaderInstances() {
-    return NavajoClassLoader.instances;
+    return NavajoClassLoader.getInstances();
   }
   public int getScriptClassInstances() {
 	return GenericHandler.getLoadedClassesSize();
