@@ -11,13 +11,13 @@ public final class ASTOrNode extends SimpleNode {
         Boolean a = (Boolean) jjtGetChild(0).interpret();
 
         if (a.booleanValue() == true)
-            return new Boolean(true);
+            return Boolean.TRUE;
 
         // System.out.println("Got first argument");
         Boolean b = (Boolean) jjtGetChild(1).interpret();
 
         // System.out.println("Got second argument");
 
-        return new Boolean(a.booleanValue() || b.booleanValue());
+        return Boolean.valueOf(a.booleanValue() || b.booleanValue());
     }
 }

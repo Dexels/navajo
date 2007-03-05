@@ -79,7 +79,7 @@ public class NavajoSocketLauncher {
         dci.setUseAuthorization(false);
      //
         
-        NavajoSocketListener nsl = new NavajoSocketListener(dci,port,dir, config);
+        new NavajoSocketListener(dci,port,dir, config);
 //        System.err.println("Main terminating.");
     }
 }

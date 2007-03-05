@@ -58,7 +58,7 @@ public class LockDefinition implements Mappable {
 	
 	public static final String VERSION = "$Id$";
 	
-	public static int sequence = 0;
+	private static int sequence = 0;
 	
 	/**
 	 * Matching parameters.

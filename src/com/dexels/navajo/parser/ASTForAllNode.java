@@ -101,9 +101,9 @@ public final class ASTForAllNode extends SimpleNode {
                     boolean result = Condition.evaluate(expr, doc, mapObject, parentMsg);
 
                     if ((result == false) && matchAll)
-                        return new Boolean(false);
+                        return Boolean.FALSE;
                     if ((result == true) && !matchAll)
-                        return new Boolean(true);
+                        return Boolean.TRUE;
                 }
 
         } catch (com.dexels.navajo.server.SystemException se) {
@@ -115,8 +115,8 @@ public final class ASTForAllNode extends SimpleNode {
         }
 
         if (matchAll)
-            return new Boolean(true);
+            return Boolean.TRUE;
         else
-            return new Boolean(false);
+            return Boolean.FALSE;
     }
 }

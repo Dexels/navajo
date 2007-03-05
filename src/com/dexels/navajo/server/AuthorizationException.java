@@ -11,8 +11,8 @@ package com.dexels.navajo.server;
 
 public class AuthorizationException extends Exception {
 
-  public static String AUTHORIZATION_ERROR_MESSAGE = "AuthorizationError";
-  public static String AUTHENTICATION_ERROR_MESSAGE = "AuthenticationError";
+  public static final String AUTHORIZATION_ERROR_MESSAGE = "AuthorizationError";
+  public static final String AUTHENTICATION_ERROR_MESSAGE = "AuthenticationError";
 
   private String message;
   private String user;

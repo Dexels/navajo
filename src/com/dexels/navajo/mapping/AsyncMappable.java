@@ -273,7 +273,7 @@ public abstract class AsyncMappable implements Mappable, AsyncMappableMXBean {
     kill();
   }
 
-  public void finalize() {
+  protected void finalize() {
     System.out.println("FINALIZE() METHOD CALL FOR OBJECT " + this);
     if (killOnFinnish) {
       kill = true;

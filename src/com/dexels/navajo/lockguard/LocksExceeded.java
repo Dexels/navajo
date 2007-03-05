@@ -26,7 +26,12 @@ package com.dexels.navajo.lockguard;
 
 public class LocksExceeded extends Exception {
 	
-	private LockDefinition ld;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2895361839237191106L;
+
+	private transient LockDefinition ld;
 	
 	public static final String VERSION = "$Id$";
 

@@ -16,7 +16,7 @@ public final class ASTNENode extends SimpleNode {
 
         // System.out.println("Got second argument");
 
-        return new Boolean(!Utils.equals(a, b));
+        return Boolean.valueOf(!Utils.equals(a, b));
 
     }
 }

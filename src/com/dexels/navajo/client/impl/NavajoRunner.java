@@ -28,12 +28,12 @@ public class NavajoRunner {
     
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
 //    	
 //    	for (int i = 0; i < args.length; i++) {
 //			System.err.println("Arg # "+i+" "+args[i]);
 //		}
-	    try {
+	   
 			System.setProperty("com.dexels.navajo.DocumentImplementation","com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl");
       String script = args[1];
 			//        String tmlFile = args[0];
@@ -112,9 +112,7 @@ public class NavajoRunner {
 //			Runtime.runFinalizersOnExit(true);
 			System.err.println("Ending main thread...");
 			System.exit(0);
-		} catch (Exception e) {
-				e.printStackTrace();
-		} 
+		
     }
     
     public String usage() {

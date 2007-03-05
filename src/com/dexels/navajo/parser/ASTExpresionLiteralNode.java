@@ -14,6 +14,6 @@ public final class ASTExpresionLiteralNode extends SimpleNode {
     public final Object interpret() {
 
         // Strip quotes.
-        return new String(val.substring(1, val.length() - 1));
+        return val.substring(1, val.length() - 1);
     }
 }

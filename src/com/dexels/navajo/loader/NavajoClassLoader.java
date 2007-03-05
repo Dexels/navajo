@@ -30,7 +30,6 @@ package com.dexels.navajo.loader;
 
 import org.dexels.utils.*;
 
-import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.util.AuditLog;
 
@@ -74,7 +73,7 @@ public class NavajoClassLoader extends MultiClassLoader {
     
     private boolean noCaching = false;
     
-    public static int instances = 0;
+    private static int instances = 0;
     
     private volatile Class myScriptClass = null;
     
@@ -103,6 +102,10 @@ public class NavajoClassLoader extends MultiClassLoader {
 
     public void setNoCaching() {
     	noCaching = true;
+    }
+    
+    public boolean isNoCaching() {
+    	return noCaching;
     }
     
     public synchronized void clearCache(String className) {
@@ -412,11 +415,15 @@ public class NavajoClassLoader extends MultiClassLoader {
 
     }
 
-    public void finalize() {
+    protected void finalize() {
         //System.out.println("In NavajoClassLoader finalize(): Killing class loader");
     	instances--;
     }
 
+    public static int getIntances() {
+    	return instances;
+    }
+    
     public static void main(String [] args) throws Exception {
     	
     	int total = 2;

@@ -82,12 +82,9 @@ public final class LockManager extends GenericThread {
 				return 0;
 			}
 		} else {
-			java.io.File f = new java.io.File("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/config/locks.xml");
-			if ( f != null && f.exists() ) {
-				return f.lastModified();
-			}
+			return -1;
 		}
-		return -1;
+		
 	}
 	
 	private final void setConfigTimeStamp() {
@@ -137,9 +134,7 @@ public final class LockManager extends GenericThread {
 				lockDefinitions.put( new Integer(ld.id), ld );
 			}
 			
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			//e.printStackTrace();
+		} catch (FileNotFoundException e) {
 			AuditLog.log(AuditLog.AUDIT_MESSAGE_LOCK_MANAGER, "Could not read config file");
 		} finally {
 			readingDefinitions = false;
@@ -297,10 +292,14 @@ public final class LockManager extends GenericThread {
 		return VERSION;
 	}
 
+	private final static void resetInstance() {
+		instance = null;
+	}
+	
 	public void terminate() {
 		LockStore.getStore().reset();
 		lockDefinitions.clear();
-		instance = null;
+		resetInstance();
 		AuditLog.log(AuditLog.AUDIT_MESSAGE_LOCK_MANAGER, "Killed");	
 	}
 }

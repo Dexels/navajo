@@ -382,9 +382,9 @@ public final class MappingUtils {
 
   public static final  ArrayList getSelectedItems(Message msg, Navajo doc, String msgName) throws
       NavajoException {
-    Message ref = null;
+    //Message ref = null;
     Property prop = null;
-    ArrayList result = new ArrayList();
+    ArrayList result = null;
 
     if (msg != null) {
       prop = msg.getProperty(msgName);

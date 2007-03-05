@@ -104,12 +104,16 @@ public final class NavajoConfig {
 	private File jarFolder;
 	private String instanceName;
     
+	private static final synchronized void resetInstance() {
+		instance = null;
+	}
+	
     public NavajoConfig(InputStreamReader inputStreamReader, NavajoClassSupplier ncs)  throws SystemException {
 
       this.inputStreamReader = inputStreamReader;
       classPath = System.getProperty("java.class.path");
       adapterClassloader = ncs;
-      instance = this;
+      resetInstance();
       //loadConfig(in);
      }
     

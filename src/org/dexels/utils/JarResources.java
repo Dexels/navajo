@@ -261,14 +261,14 @@ public final class JarResources {
      */
     public static void main(String[] args) throws IOException {
 
-        JarResources jr = new JarResources(new File("/home/arjen/projecten/Navajo/tml.dtd"));
-        Iterator iter = jr.getResources("/com/dexels/navajo/document/");
-
-        while (iter.hasNext()) {
-            String name = (String) iter.next();
-
-            System.out.println(name);
-        }
+//        JarResources jr = new JarResources(new File("/home/arjen/projecten/Navajo/tml.dtd"));
+//        Iterator iter = jr.getResources("/com/dexels/navajo/document/");
+//
+//        while (iter.hasNext()) {
+//            String name = (String) iter.next();
+//
+//            System.out.println(name);
+//        }
         // byte [] file =
         // jr.getResource("org/dexels/toolbox/studio/BPFLMethodPanel.class");
 

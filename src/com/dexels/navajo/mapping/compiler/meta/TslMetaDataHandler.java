@@ -8,6 +8,7 @@ package com.dexels.navajo.mapping.compiler.meta;
 
 import java.io.*;
 import java.util.*;
+import java.util.Map.Entry;
 
 import com.dexels.navajo.document.nanoimpl.*;
 import com.dexels.navajo.mapping.compiler.meta.MetaDataListener;
@@ -352,10 +353,11 @@ public class TslMetaDataHandler implements MetaDataListener {
     private XMLElement toXml(Map m,String topTagName, String tagname, String elementName, String attribute) {
         XMLElement x = new CaseSensitiveXMLElement();
         x.setName(topTagName);
-        Set s = m.keySet();
+        Set s = m.entrySet();
         for (Iterator iter = s.iterator(); iter.hasNext();) {
-            String element = (String) iter.next();
-            TreeSet value = (TreeSet)m.get(element);
+        	Entry e = (Entry) iter.next();
+            String element = (String) e.getKey();
+            TreeSet value = (TreeSet) e.getValue();
             XMLElement xc = new CaseSensitiveXMLElement();
             xc.setName(tagname);
             xc.setAttribute("name", element);

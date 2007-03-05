@@ -224,8 +224,8 @@ public class Generate {
                           msgName = msgName + "/" + sm;
                       }
                       if (!ref.startsWith(Navajo.MESSAGE_SEPARATOR) && msgName.startsWith(Navajo.MESSAGE_SEPARATOR))
-                        msgName = msgName.substring(1);
-                      msgName.trim();
+                    	  msgName = msgName.substring(1);
+                      msgName = msgName.trim();
                       //System.out.println("De-regular-expressioned: " + msgName);
                       Message sub = com.dexels.navajo.mapping.MappingUtils.getMessageObject(msgName,
                                                                     parent, true, result, true, "", -1);

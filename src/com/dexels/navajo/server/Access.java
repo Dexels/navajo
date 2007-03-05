@@ -36,10 +36,15 @@ import com.dexels.navajo.mapping.MappableException;
 
 public final class Access implements java.io.Serializable, Mappable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7782160335447961196L;
+
 	private static final String VERSION = "$Id$";
 
 	public java.util.Date created = new java.util.Date();
-	public static int accessCount = 0;
+	protected static int accessCount = 0;
 	public int threadCount = 0;
 	public String accessID = "";
 	public int userID;
@@ -51,8 +56,8 @@ public final class Access implements java.io.Serializable, Mappable {
 	public String ipAddress;
 	public String hostName;
 	public boolean betaUser = false;
-	private Dispatcher myDispatcher;
-	public CompiledScript myScript = null;
+	private transient Dispatcher myDispatcher;
+	public transient CompiledScript myScript = null;
 	private int totaltime;
 	public int parseTime;
 	public int authorisationTime;
@@ -75,7 +80,7 @@ public final class Access implements java.io.Serializable, Mappable {
 	private String clientToken = null;
 
 	private String waitingForPreviousRequest = null;
-	private Thread myThread = null;
+	private transient Thread myThread = null;
 
 
 	//private HashMap mapStatistics = null;

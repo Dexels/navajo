@@ -7,7 +7,7 @@ public final class ASTFalseNode extends SimpleNode {
     }
 
     public final Object interpret() {
-        return new Boolean(false);
+        return Boolean.valueOf(false);
     }
 
 }

@@ -60,7 +60,7 @@ public final class GenericHandler extends ServiceHandler {
 
     protected static void doClearCache() {
        loadedClasses = null;
-       System.gc();
+       //System.gc();
        loadedClasses = new HashMap();
     }
 
@@ -164,7 +164,7 @@ public final class GenericHandler extends ServiceHandler {
             							if (newLoader != null) {
             								loadedClasses.remove(className);
             								newLoader = null;
-            								System.gc();
+            								//System.gc();
             							}
             						}
             						com.dexels.navajo.compiler.NavajoCompiler compiler = new com.dexels.navajo.compiler.NavajoCompiler();
@@ -199,6 +199,10 @@ public final class GenericHandler extends ServiceHandler {
             	loadedClasses.put(className, newLoader);
             }
             //}
+            
+            if ( newLoader == null ) {
+            	return null;
+            }
             
             // Should method getCompiledNavaScript be fully synced???
             Class cs = newLoader.getCompiledNavaScript(className);

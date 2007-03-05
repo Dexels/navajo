@@ -69,7 +69,7 @@ public class NanoTslCompiler {
 
     private int startElementCounter = 0;
 
-    private int offsetElementCounter = 0;
+    //private int offsetElementCounter = 0;
 
     private int methodCounter = 0;
 
@@ -463,7 +463,7 @@ public class NanoTslCompiler {
         String value = null;
         valueElt = exprElmnt.getFirstChild();
         if ( valueElt != null && valueElt.getName().equals("value") )  {
-        	value = value.trim();
+        	value = valueElt.getContent().trim();
         	value = value.replaceAll("\n", " ");
         	value = XMLUnescape(value);        
         } else {
@@ -493,7 +493,7 @@ public class NanoTslCompiler {
                 //        value = child.getContent();
             } else {
                 throw new TslCompileException(TslCompileException.TSL_MISSING_VALUE, "Error @" + (exprElmnt.getParent() + "/" + exprElmnt)
-                        + ": <expression> node should either contain a value attribute or a text child node: >" + value + "<", exprElmnt
+                        + ": <expression> node should either contain a value attribute or a text child node: >" + "null" + "<", exprElmnt
                         .getStartOffset(), exprElmnt.getOffset());
             }
         }
@@ -1934,8 +1934,8 @@ public class NanoTslCompiler {
         StringBuffer codeString = new StringBuffer("codeArray = new String[]{\n");
 
         Vector list = d.getElementsByTagName("validations");
-        boolean valid = true;
-        ArrayList conditions = new ArrayList();
+//        boolean valid = true;
+//        ArrayList conditions = null;
         for (int i = 0; i < list.size(); i++) {
             Vector rules = ((XMLElement) list.get(i)).getChildren();
             for (int j = 0; j < rules.size(); j++) {
@@ -1947,7 +1947,7 @@ public class NanoTslCompiler {
                     if (value.equals("")) {
                         value = removeNewLines(rule.getContent());
                     }
-                    if (rule.equals("")) {
+                    if (code.equals("")) {
                         throw new TslCompileException(TslCompileException.VALIDATION_NO_CODE,
                                 "Validation syntax error: code attribute missing or empty", rule);
                     }
@@ -1998,10 +1998,10 @@ public class NanoTslCompiler {
         FileWriter fo = null;
         
         reuse();
-        if (packagePath==null || "".equals(packagePath)) {
-            currentScript = script;
+        if ( packagePath != null && !("".equals(packagePath))) {
+        	currentScript = packagePath +"/"+script;
         } else {
-            currentScript = packagePath +"/"+script;
+        	currentScript = script;
         }
         
         //
@@ -2187,15 +2187,15 @@ public class NanoTslCompiler {
     // this);
     //  }
 
-    private static void compileStandAlone(boolean all, String script, String input, String output, String packagePath) {
-        compileStandAlone(all, script, input, output, packagePath, null);
-    }
+//    private static void compileStandAlone(boolean all, String script, String input, String output, String packagePath) {
+//        compileStandAlone(all, script, input, output, packagePath, null);
+//    }
 
     public static String compileToJava(String script, String input, String output, String packagePath, NavajoClassLoader classLoader)
             throws Exception {
-        File dir = new File(output);
+        //File dir = new File(output);
         String javaFile = output + "/" + script + ".java";
-        ArrayList javaList = new ArrayList();
+        //ArrayList javaList = new ArrayList();
         NanoTslCompiler tslCompiler = new NanoTslCompiler(classLoader);
         tslCompiler.compileTsl(script, input, output, packagePath, false);
         return javaFile;
@@ -2488,7 +2488,7 @@ public class NanoTslCompiler {
     }
 
     private String getHostName() throws SocketException {
-        ArrayList list = new ArrayList();
+        //ArrayList list = new ArrayList();
         Enumeration all = java.net.NetworkInterface.getNetworkInterfaces();
 
         while (all.hasMoreElements()) {
@@ -2539,7 +2539,7 @@ public class NanoTslCompiler {
 
         String input = args[0];
         String output = args[1];
-        String service = args[2];
+        //String service = args[2];
 
         if (all) {
             File scriptDir = new File(input);
@@ -2761,7 +2761,7 @@ public class NanoTslCompiler {
         subObjectCounter = 0;
         startIndexCounter = 0;
         startElementCounter = 0;
-        offsetElementCounter = 0;
+        //offsetElementCounter = 0;
         methodCounter = 0;
         methodClipboard.clear();
         variableClipboard.clear();

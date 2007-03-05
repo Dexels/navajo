@@ -75,12 +75,12 @@ public class Verifier {
             return false;
     }
 
-    public static void main(String args[]) throws Exception {
-        // tokens("$value");
-        boolean result = verifyExpression("'* ? / \" ='");
-
-
-        Operand o = Expression.evaluate("'group_id = '", null);
-
-    }
+//    public static void main(String args[]) throws Exception {
+//        // tokens("$value");
+//        boolean result = verifyExpression("'* ? / \" ='");
+//
+//
+//        Operand o = Expression.evaluate("'group_id = '", null);
+//
+//    }
 }

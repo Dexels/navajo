@@ -14,7 +14,7 @@ public final class ASTEQNode extends SimpleNode {
         Object b = (Object) jjtGetChild(1).interpret();
 
         // System.out.println("Got second argument");
-
-        return new Boolean(Utils.equals(a, b));
+        
+        return Boolean.valueOf(Utils.equals(a, b));
     }
 }

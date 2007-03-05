@@ -61,7 +61,7 @@ import com.dexels.navajo.mapping.MappableException;
 
 public final class Dispatcher implements Mappable, DispatcherMXBean {
 
-  public static int instances = 0;
+  protected static int instances = 0;
   
   /**
    * Fields accessable by webservices
@@ -85,10 +85,9 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
   public final Set accessSet = new HashSet();
 
   public  boolean useAuthorisation = true;
-  private  final String defaultDispatcher =
-      "com.dexels.navajo.server.GenericHandler";
+  private static final String defaultDispatcher ="com.dexels.navajo.server.GenericHandler";
   private static final String defaultNavajoDispatcher = "com.dexels.navajo.server.MaintainanceHandler";
-  public static java.util.Date startTime = new java.util.Date();
+  public static final java.util.Date startTime = new java.util.Date();
 
   public  long requestCount = 0;
   private final NavajoConfig navajoConfig;
@@ -101,7 +100,7 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
   private  String keyPassword;
 
   public static final int rateWindowSize = 20;
-  public static double requestRate = 0.0;
+  public static final double requestRate = 0.0;
   private  long[] rateWindow = new long[rateWindowSize];
   
   private static Object semaphore = new Object();
@@ -248,7 +247,7 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
     navajoConfig.doClearCache();
     GenericHandler.doClearCache();
     System.runFinalization();
-    System.gc();
+    //System.gc();
   }
 
   /**
@@ -334,33 +333,30 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
 	  
 	  Worker integ = null;
 	  Navajo out = null;
-	  if (access == null) {
+	  if ( access == null || in == null ) {
 		  System.err.println("Null access!!!");
 	  }
 	  
 	  access.setInDoc(in);
 	  
-	  if (in!=null) {
-		Header h = in.getHeader();
-		if (h!=null) {
-			// Process client token:
-			String clientToken = h.getAttribute("clientToken");
-			if (clientToken!=null) {
-				access.setClientToken(clientToken);
-			}
-			
-			// Process piggyback data:
-			Set s = h.getPiggybackData();
-			if (s!=null ) {
-				for (Iterator iter = s.iterator(); iter.hasNext();) {
-					Map element = (Map) iter.next();
-					access.addPiggybackData(element);
-				}
-			}
-		}
-	}
-	  
-	  
+	  Header h = in.getHeader();
+	  if (h!=null) {
+		  // Process client token:
+		  String clientToken = h.getAttribute("clientToken");
+		  if (clientToken!=null) {
+			  access.setClientToken(clientToken);
+		  }
+
+		  // Process piggyback data:
+		  Set s = h.getPiggybackData();
+		  if (s!=null ) {
+			  for (Iterator iter = s.iterator(); iter.hasNext();) {
+				  Map element = (Map) iter.next();
+				  access.addPiggybackData(element);
+			  }
+		  }
+	  }
+	
 	  // Check for webservice transaction integrity.
 	  boolean integrityViolation = false;
 	  integ = navajoConfig.getIntegrityWorker();
@@ -1207,7 +1203,7 @@ private void appendServerBroadCast(Access a, Navajo in, Header h) {
 	  }
   }
 
-  public void finalize() {
+  protected void finalize() {
 	  //System.err.println("In finalize() Dispatcher object");
 	  instances--;
   }
@@ -1335,6 +1331,10 @@ private void appendServerBroadCast(Access a, Navajo in, Header h) {
 	  return startTime;
   }
 
+  public static int getInstances() {
+	  return instances;
+  }
+  
   public long getUptime() {
 	  return ( System.currentTimeMillis() - startTime.getTime() );
   }

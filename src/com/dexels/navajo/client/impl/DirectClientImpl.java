@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.*;
+import java.util.Map.Entry;
 
 import com.dexels.navajo.client.*;
 import com.dexels.navajo.document.*;
@@ -132,7 +133,7 @@ private final String mySessionToken;
     fireActivityChanged(true, method);
     String cacheKey = out.persistenceKey();
     Navajo reply = (Navajo)serviceCache.get(cacheKey);
-    Header outHeader = out.getHeader();
+    //Header outHeader = out.getHeader();
     if(reply != null && cachedServicesNameMap.get(method) != null){
         System.err.println("Returning cached WS from DirectClient");
         return reply;
@@ -242,14 +243,16 @@ private final String mySessionToken;
     	  
     	  
        final Properties props = System.getProperties();
-      final Set keys = props.keySet();
+      final Set keys = props.entrySet();
       final Iterator iter = keys.iterator();
       while (iter.hasNext()) {
-        final String name = (String) iter.next();
+    	  Entry e = (Entry) iter.next();
+        final String name = (String) e.getKey();
 //        System.err.println("Current global: "+name);
         if (name.startsWith(GLOBALSPREFIX)) {
           final String propName = name.substring(GLOBALSPREFIX.length());
-          final String value = (String) props.get(name);
+          
+          final String value = (String) e.getValue();
           final Property p = NavajoFactory.getInstance().createProperty(doc,
               propName, Property.STRING_PROPERTY,
               value, value.length(), "",

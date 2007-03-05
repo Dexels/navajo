@@ -94,15 +94,19 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 		}.start();
 	}
 	
-	public void finalize() {
+	protected void finalize() {
 		try {
 			JMXHelper.deregisterMXBean(JMXHelper.NAVAJO_DOMAIN, id);
 		} catch (Throwable e) {
 		}
 	}
 	
-	public void terminate() {
+	private final static synchronized void resetInstance() {
 		instance = null;
+	}
+	
+	public void terminate() {
+		resetInstance();
 		try {
 			JMXHelper.deregisterMXBean(JMXHelper.NAVAJO_DOMAIN, id);
 		} catch (Throwable e) {

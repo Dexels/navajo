@@ -44,6 +44,7 @@ public class SocketConnection implements Runnable {
             outWriter = new OutputStreamWriter(out);
         } catch (IOException e1) {
              e1.printStackTrace();
+             return;
         }
         
         try {
@@ -52,17 +53,18 @@ public class SocketConnection implements Runnable {
                 long time1 = System.currentTimeMillis();
                 Dispatcher.getInstance().doClearScriptCache();
                 long time2 = System.currentTimeMillis();               
-                Navajo n = NavajoFactory.getInstance().createNavajo(in);             
+                Navajo n = NavajoFactory.getInstance().createNavajo(in);   
+                if (n == null) {
+                    System.err.println("Read fail or something?");
+                    continue;
+                }
                 long time3 = System.currentTimeMillis();
                 String service = n.getHeader().getRPCName();
                 String username = n.getHeader().getRPCUser();
                 String password = n.getHeader().getRPCPassword();
                 Navajo outNavajo = myClient.doSimpleSend(n, null, service, username, password, -1);
                 long time4 = System.currentTimeMillis();
-                if (n == null) {
-                    System.err.println("Read fail or something?");
-                    continue;
-                }
+               
                 outNavajo.write(outWriter);
                outWriter.write("\n");
                 outWriter.flush();

@@ -15,6 +15,6 @@ public final class ASTOptionNode extends SimpleNode {
 
         // System.out.println("PARENT = " + optionParent);
         // System.out.println("OPTION = " + option);
-        return new String(option);
+        return option;
     }
 }

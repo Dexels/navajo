@@ -40,7 +40,7 @@ public class EclipseCompiler implements JavaCompiler {
      */
     public void setCompilerPath(String compilerPath) {
         // not used by the SunJavaCompiler
-	this.compilerPath = compilerPath;
+	//this.compilerPath = compilerPath;
     }
 
     /**

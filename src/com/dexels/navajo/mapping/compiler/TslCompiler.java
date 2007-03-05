@@ -53,7 +53,7 @@ public class TslCompiler {
   private int subObjectCounter = 0;
   private int startIndexCounter = 0;
   private int startElementCounter = 0;
-  private int offsetElementCounter = 0;
+  //private int offsetElementCounter = 0;
   private int methodCounter = 0;
   private ArrayList methodClipboard = new ArrayList();
   private ArrayList variableClipboard = new ArrayList();
@@ -1936,8 +1936,8 @@ result.append(printIdent(ident + 4) +
    StringBuffer codeString = new StringBuffer("codeArray = new String[]{\n");
 
    NodeList list = d.getElementsByTagName("validations");
-   boolean valid = true;
-   ArrayList conditions = new ArrayList();
+//   boolean valid = true;
+//   ArrayList conditions = new ArrayList();
    for (int i = 0; i < list.getLength(); i++) {
      NodeList rules = list.item(i).getChildNodes();
      for (int j = 0; j < rules.getLength(); j++) {
@@ -1949,7 +1949,7 @@ result.append(printIdent(ident + 4) +
          if (value.equals("")) {
            value = rule.getFirstChild().getNodeValue();
          }
-         if (rule.equals("")) {
+         if (code.equals("")) {
            throw new UserException(-1, "Validation syntax error: code attribute missing or empty");
          }
          if (value.equals("")) {
@@ -2117,21 +2117,17 @@ result.append(printIdent(ident + 4) +
     ////System.out.println(result.toString());
   }
 
-  public void finalize() {
-    //System.out.println("FINALIZE() METHOD CALL FOR TslCompiler OBJECT " + this);
-  }
-
-  private static void compileStandAlone(boolean all, String script,
-                                        String input, String output, String packagePath) {
-    compileStandAlone(all,script,input,output,packagePath,null);
-  }
+//  private static void compileStandAlone(boolean all, String script,
+//                                        String input, String output, String packagePath) {
+//    compileStandAlone(all,script,input,output,packagePath,null);
+//  }
 
 
   public static String compileToJava(String script,
                                         String input, String output, String packagePath, NavajoClassLoader classLoader) throws Exception {
-      File dir = new File(output);
+     // File dir = new File(output);
     String javaFile = output + "/" + script + ".java";
-     ArrayList javaList = new ArrayList();
+     //ArrayList javaList = new ArrayList();
    TslCompiler tslCompiler = new TslCompiler(classLoader);
      try {
        String bareScript;
@@ -2364,7 +2360,7 @@ result.append(printIdent(ident + 4) +
 	 synchronized (VERSION) {
 
 		 if ( hostname == null ) {
-			 ArrayList list = new ArrayList();
+			 //ArrayList list = new ArrayList();
 			 
 			 hostname = "unknown host";
 			 long start = System.currentTimeMillis();
@@ -2421,7 +2417,7 @@ public static void main(String[] args) throws Exception {
 
    String input = args[0];
    String output = args[1];
-   String service = args[2];
+   //String service = args[2];
 
    if (all) {
      File scriptDir = new File(input);

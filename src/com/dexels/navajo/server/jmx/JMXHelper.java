@@ -42,12 +42,12 @@ public final class JMXHelper  {
 	private int port = 9999;
 	
 	private static String applicationPrefix = null;
-	public static String SCRIPT_DOMAIN = ".navajo.script:type=";
-	public static String ADAPTER_DOMAIN = ".navajo.adapter:type=";
-	public static String NAVAJO_DOMAIN = ".navajo.service:type=";
-	public static String ASYNC_DOMAIN = ".navajo.async:type=";
-	public static String TASK_DOMAIN = ".navajo.task:type=";
-	public static String QUEUED_ADAPTER_DOMAIN = ".navajo.queuedadapter:type=";
+	public static final String SCRIPT_DOMAIN = ".navajo.script:type=";
+	public static final String ADAPTER_DOMAIN = ".navajo.adapter:type=";
+	public static final String NAVAJO_DOMAIN = ".navajo.service:type=";
+	public static final String ASYNC_DOMAIN = ".navajo.async:type=";
+	public static final String TASK_DOMAIN = ".navajo.task:type=";
+	public static final String QUEUED_ADAPTER_DOMAIN = ".navajo.queuedadapter:type=";
 	
 	private RMIServer getRMIServer(String hostName, int port) throws IOException {
 

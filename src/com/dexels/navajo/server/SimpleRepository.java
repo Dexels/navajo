@@ -10,8 +10,7 @@ package com.dexels.navajo.server;
  */
 
 import java.util.*;
-import java.util.ResourceBundle;
-import java.util.ArrayList;
+import java.util.Map.Entry;
 import java.io.*;
 
 import com.dexels.navajo.document.*;
@@ -78,9 +77,10 @@ public void initGlobals(String method, String username, Navajo inMessage, Map ex
               paramMsg.addProperty(p2);
             }
             if (extraParams!=null) {
-                for (Iterator iter = extraParams.keySet().iterator(); iter.hasNext();) {
-                    String key = (String) iter.next();
-                    String value = (String)extraParams.get(key);
+                for (Iterator iter = extraParams.entrySet().iterator(); iter.hasNext();) {
+                	Entry e = (Entry) iter.next();
+                    String key = (String) e.getKey();
+                    String value = (String) e.getValue();
                     Property p2 = NavajoFactory.getInstance().createProperty(inMessage, key, Property.STRING_PROPERTY,
                             value, 10, "",
                             Property.DIR_OUT);

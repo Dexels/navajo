@@ -35,15 +35,20 @@ import com.dexels.navajo.server.Dispatcher;
 
 public class AdminServlet extends HttpServlet {
 
-    private static final String CONTENT_TYPE = "text/html; charset=iso-8859-1";
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 2946695359450254191L;
 
-    private String configurationPath = "";
+	private static final String CONTENT_TYPE = "text/html; charset=iso-8859-1";
 
-    private Dispatcher dispatcher = null;
+//    private String configurationPath = "";
+//
+//    private transient Dispatcher dispatcher = null;
 
     /** Initialize global variables*/
     public void init(ServletConfig config) throws ServletException {
-    	dispatcher = Dispatcher.getInstance();
+    	//dispatcher = Dispatcher.getInstance();
     }
 
     /** Process the HTTP Get request*/
@@ -77,7 +82,7 @@ public class AdminServlet extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 
-            String tempPath = dispatcher.getNavajoConfig().getRootPath();
+           // String tempPath = dispatcher.getNavajoConfig().getRootPath();
 
 //            org.dexels.grus.MultipartRequest newrequest = new org.dexels.grus.MultipartRequest(request, tempPath);
 //            org.dexels.grus.MultipartRequest mpr = (org.dexels.grus.MultipartRequest) newrequest;

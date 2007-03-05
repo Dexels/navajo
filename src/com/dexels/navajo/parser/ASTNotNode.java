@@ -17,7 +17,7 @@ public final class ASTNotNode extends SimpleNode {
         } else {
             Boolean b = (Boolean) a;
 
-            return new Boolean(!b.booleanValue());
+            return Boolean.valueOf(!b.booleanValue());
         }
     }
 

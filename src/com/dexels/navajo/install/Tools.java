@@ -11,16 +11,18 @@ package com.dexels.navajo.install;
 
 import java.io.*;
 import java.util.*;
+import java.util.Map.Entry;
+
 import javax.xml.parsers.*;
 import org.w3c.dom.*;
 
 public class Tools {
 
-    public static String DEFAULT_ENCODING = "UTF-8";
+    public static final String DEFAULT_ENCODING = "UTF-8";
 
     private static javax.xml.parsers.DocumentBuilderFactory builderFactory = null;
     private static javax.xml.parsers.DocumentBuilder builder = null;
-    private static javax.xml.transform.TransformerFactory transformerFactory = null;
+   // private static javax.xml.transform.TransformerFactory transformerFactory = null;
 
     static {
 
@@ -195,18 +197,21 @@ public class Tools {
      */
     public static void copyAndReplaceTokens(String fileIn, String fileOut, HashMap tokens) throws IOException, FileNotFoundException {
 
+    	
         BufferedReader reader = new java.io.BufferedReader(new java.io.InputStreamReader(new FileInputStream(new File(fileIn))));
+        try {
         FileWriter fos = new FileWriter(new File(fileOut));
 
         String line = "";
 
         while ((line = reader.readLine()) != null) {
             if (tokens != null) {
-                Iterator allTokens = tokens.keySet().iterator();
+                Iterator allTokens = tokens.entrySet().iterator();
 
                 while (allTokens.hasNext()) {
-                    String token = allTokens.next().toString();
-                    String value = tokens.get(token).toString();
+                	Entry e = (Entry) allTokens.next();
+                    String token = e.getKey().toString();
+                    String value = e.getValue().toString();
 
                     line = searchAndReplace(line, "{" + token + "}", value);
                 }
@@ -214,6 +219,11 @@ public class Tools {
             fos.write(line + "\n");
         }
         fos.close();
+        } finally {
+        	if ( reader != null ) {
+        		reader.close();
+        	}
+        }
 
     }
 
@@ -227,8 +237,9 @@ public class Tools {
      */
     public static void extractJar(String jarFile, String extractPath) throws FileNotFoundException, IOException {
         FileInputStream fis = new java.io.FileInputStream(jarFile);
+        
         java.util.zip.ZipInputStream zipIn = new java.util.zip.ZipInputStream(fis);
-
+try {
         byte[] buf = new byte[1024];
         int len;
         java.util.zip.ZipEntry entry = null;
@@ -248,6 +259,9 @@ public class Tools {
             }
         }
         fis.close();
+} finally {
+	zipIn.close();
+}
     }
 
     public static void mkDir(String dir) {
@@ -257,9 +271,9 @@ public class Tools {
     }
 
     public static void main(String args[]) throws Exception {
-        Document d = builder.parse(new File("/usr/local/orion/config/server.xml"));
-
-        System.out.println(d);
-        System.out.println(xmlToString(d));
+//        Document d = builder.parse(new File("/usr/local/orion/config/server.xml"));
+//
+//        System.out.println(d);
+//        System.out.println(xmlToString(d));
     }
 }

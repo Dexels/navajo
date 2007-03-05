@@ -340,7 +340,7 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable  
     return f;
   }
 
-  public void finalize() {
+  protected void finalize() {
 	  functions.clear();
 	  disconnectJMX();
   }

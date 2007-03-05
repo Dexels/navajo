@@ -63,7 +63,7 @@ public final class ASTTmlNode extends SimpleNode {
             else if (dum.equals("value") || selectionOption.equals("value")) {
               return parentSel.getValue();
             } else if (dum.equals("selected") || selectionOption.equals("selected")) {
-              return new Boolean(parentSel.isSelected());
+              return Boolean.valueOf(parentSel.isSelected());
             }
         }
 
@@ -142,44 +142,44 @@ public final class ASTTmlNode extends SimpleNode {
                     // I changed getValue into getTypedValue, as it resulted in a serialization
                     // of binary properties. Should be equivalent, and MUCH faster.
                     if (prop.getTypedValue() == null && !type.equals(Property.SELECTION_PROPERTY)) {
-                        return new Boolean(false);
+                        return Boolean.valueOf(false);
                     }
 
                     if (type.equals(Property.INTEGER_PROPERTY)) {
                        try {
                           Integer.parseInt(prop.getValue());
-                          return new Boolean(true);
+                          return Boolean.valueOf(true);
                        } catch (Exception e) {
-                          return new Boolean(false);
+                          return Boolean.valueOf(false);
                        }
                     } else if (type.equals(Property.FLOAT_PROPERTY)) {
                       try {
                           Double.parseDouble(prop.getValue());
-                          return new Boolean(true);
+                          return Boolean.valueOf(true);
                        } catch (Exception e) {
-                          return new Boolean(false);
+                          return Boolean.valueOf(false);
                        }
                     } else if (type.equals(Property.DATE_PROPERTY)) {
                       try {
                           com.dexels.navajo.util.Util.getDate(prop.getValue());
-                          return new Boolean(true);
+                          return Boolean.valueOf(true);
                        } catch (Exception e) {
-                          return new Boolean(false);
+                          return Boolean.valueOf(false);
                        }
                     } else if ( type.equals(Property.CLOCKTIME_PROPERTY)) {
                     	try {
                             ClockTime ct = new ClockTime(prop.getValue());
                             if ( ct != null && ct.calendarValue() == null ) {
-                            	return new Boolean(false);
+                            	return Boolean.valueOf(false);
                             }
-                            return new Boolean(true);
+                            return Boolean.valueOf(true);
                          } catch (Exception e) {
-                            return new Boolean(false);
+                            return Boolean.valueOf(false);
                          }
                     } else
-                        return new Boolean(true);
+                        return Boolean.valueOf(true);
                 } else
-                    return new Boolean(false);
+                    return Boolean.valueOf(false);
             }
               
               
@@ -304,7 +304,7 @@ public final class ASTTmlNode extends SimpleNode {
                   resultList.add(null);
                 else {
                   try {
-                    resultList.add(new Boolean(value.equals(Property.TRUE)));
+                    resultList.add(Boolean.valueOf(value.equals(Property.TRUE)));
                   }
                   catch (Exception e) {
                     throw new TMLExpressionException(e.getMessage());
@@ -337,7 +337,7 @@ public final class ASTTmlNode extends SimpleNode {
                 }
             } else if (type.equals(Property.STRING_PROPERTY)) {
                 try {
-                    resultList.add(new String(value));
+                    resultList.add(value);
                 } catch (Exception e) {
                     throw new TMLExpressionException(e.getMessage());
                 }
@@ -404,7 +404,7 @@ public final class ASTTmlNode extends SimpleNode {
               resultList.add(prop.getTypedValue());
             } else {
                 try {
-                    resultList.add(new String(value));
+                    resultList.add(value);
                 } catch (Exception e) {
                     throw new TMLExpressionException(e.getMessage());
                 }
@@ -419,6 +419,6 @@ public final class ASTTmlNode extends SimpleNode {
         else if (!exists)
             throw new TMLExpressionException("Property does not exist: " + val);
         else
-            return new Boolean(false);
+            return Boolean.valueOf(false);
     }
 }

@@ -195,8 +195,8 @@ public final class StatisticsRunner extends GenericThread implements StatisticsR
 					    (b ? "Statistics runner enabled" : "Statistics runner disabled"), 
 					    "enabled", 
 					    "boolean", 
-					    new Boolean(previousValue), 
-					    new Boolean(enabled)); 
+					    Boolean.valueOf(previousValue), 
+					    Boolean.valueOf(enabled)); 
 
 	sendNotification(n); 
   }

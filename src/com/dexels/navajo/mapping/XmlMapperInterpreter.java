@@ -387,9 +387,9 @@ public final class XmlMapperInterpreter {
 
   private ArrayList getSelectedItems(Message msg, Navajo doc, String msgName) throws
       NavajoException {
-    Message ref = null;
+    //Message ref = null;
     Property prop = null;
-    ArrayList result = new ArrayList();
+    ArrayList result = null;
 
     if (msg != null) {
       prop = msg.getProperty(msgName);
@@ -414,6 +414,7 @@ public final class XmlMapperInterpreter {
     }
     catch (com.dexels.navajo.parser.TMLExpressionException te) {
       logger.log(NavajoPriority.DEBUG, te.getMessage(), te);
+      return null;
     }
     return op.value;
   }
@@ -1160,9 +1161,15 @@ public final class XmlMapperInterpreter {
         }
       }
     }
-    catch (Exception e) {
+    catch (NavajoException e) {
       //Util.debugLog(e.getMessage());
-    }
+    } 
+    catch (UserException e) {
+        //Util.debugLog(e.getMessage());
+      }
+    catch (SystemException e) {
+        //Util.debugLog(e.getMessage());
+      }
   }
 
   private final static String getSelectionField(String name) {
@@ -1419,7 +1426,7 @@ public final class XmlMapperInterpreter {
     if (type.equals("boolean")) {
       setAttribute(o, name,
                    (value instanceof Boolean) ? value :
-                   new Boolean(value.toString()), Boolean.TYPE);
+                   Boolean.valueOf(value.toString()), Boolean.TYPE);
     }
     else if (type.equals("int")) {
       setAttribute(o, name,
@@ -1817,7 +1824,7 @@ public final class XmlMapperInterpreter {
                                 boolean parameter) throws Exception, BreakEvent {
     TslNode addNode = node;
 
-    String command = addNode.getTagName();
+    //String command = addNode.getTagName();
     String message = addNode.getAttribute("name");
     String template = addNode.getAttribute("template");
     String condition = addNode.getAttribute("condition");

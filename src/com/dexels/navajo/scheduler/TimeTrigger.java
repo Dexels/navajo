@@ -188,11 +188,11 @@ public class TimeTrigger extends Trigger {
 		}
 	}
 	
-	public static void main(String [] args) throws Exception {
-		
-		TimeTrigger t = new TimeTrigger("*|*|10|10|SAT,SUN");
-		
-	}
+//	public static void main(String [] args) throws Exception {
+//		
+//		TimeTrigger t = new TimeTrigger("*|*|10|10|SAT,SUN");
+//		
+//	}
 
 	public void removeTrigger() {
 		// TODO Auto-generated method stub	

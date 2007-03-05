@@ -32,7 +32,7 @@ import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.server.UserException;
 
-public class Lock implements Mappable {
+public final class Lock implements Mappable {
 
 	public static final String VERSION = "$Id$";
 	

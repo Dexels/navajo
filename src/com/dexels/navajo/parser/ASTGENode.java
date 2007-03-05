@@ -14,21 +14,21 @@ public final class ASTGENode extends SimpleNode {
 
     public static final Boolean compare(Object a, Object b) throws TMLExpressionException {
         if (a instanceof Integer && b instanceof Integer)
-            return new Boolean(((Integer) a).intValue() >= ((Integer) b).intValue());
+            return Boolean.valueOf(((Integer) a).intValue() >= ((Integer) b).intValue());
         else if (a instanceof Integer && b instanceof Double)
-            return new Boolean(((Integer) a).intValue() >= ((Double) b).doubleValue());
+            return Boolean.valueOf(((Integer) a).intValue() >= ((Double) b).doubleValue());
         else if (a instanceof Double && b instanceof Integer)
-            return new Boolean(((Double) a).intValue() >= ((Integer) b).doubleValue());
+            return Boolean.valueOf(((Double) a).intValue() >= ((Integer) b).doubleValue());
         else if (a instanceof Double && b instanceof Double)
-            return new Boolean(((Double) a).doubleValue() >= ((Double) b).doubleValue());
+            return Boolean.valueOf(((Double) a).doubleValue() >= ((Double) b).doubleValue());
         else if (a instanceof Date)
-            return new Boolean(Utils.compareDates(a, b, ">="));
+            return Boolean.valueOf(Utils.compareDates(a, b, ">="));
         else if (a instanceof Money || b instanceof Money)
-            return new Boolean(Utils.getDoubleValue(a) >= Utils.getDoubleValue(b));
+            return Boolean.valueOf(Utils.getDoubleValue(a) >= Utils.getDoubleValue(b));
           else if (a instanceof Percentage || b instanceof Percentage)
-              return new Boolean(Utils.getDoubleValue(a) >= Utils.getDoubleValue(b));
+              return Boolean.valueOf(Utils.getDoubleValue(a) >= Utils.getDoubleValue(b));
         else if (a instanceof ClockTime && b instanceof ClockTime)
-          return new Boolean(Utils.compareDates(a, b, ">="));
+          return Boolean.valueOf(Utils.compareDates(a, b, ">="));
         else
             throw new TMLExpressionException("Illegal comparison for ge; " + a.getClass().getName() + " " + b.getClass().getName());
     }
@@ -50,10 +50,10 @@ public final class ASTGENode extends SimpleNode {
 
 
                 if (dum == false)
-                    return new Boolean(false);
+                    return Boolean.valueOf(false);
                 result = result && dum;
             }
-            return new Boolean(result);
+            return Boolean.valueOf(result);
         } else {
             return compare(a, b);
         }

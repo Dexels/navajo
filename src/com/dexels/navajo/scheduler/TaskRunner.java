@@ -353,6 +353,10 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean {
 		return VERSION;
 	}
 	
+	private static final synchronized void resetInstance() {
+		instance = null;
+	}
+	
 	public void terminate() {
 		// Remove all tasks.
 		Iterator iter = tasks.values().iterator();
@@ -365,7 +369,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean {
 			}
 		}
 		tasks.clear();
-		instance = null;
+		resetInstance();
 		try {
 			JMXHelper.deregisterMXBean(JMXHelper.NAVAJO_DOMAIN, id);
 		} catch (Throwable e) {

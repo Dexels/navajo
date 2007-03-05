@@ -7,7 +7,7 @@ public final class ASTTrueNode extends SimpleNode {
     }
 
     public final Object interpret() {
-        return new Boolean(true);
+        return Boolean.TRUE;
     }
 
 }
