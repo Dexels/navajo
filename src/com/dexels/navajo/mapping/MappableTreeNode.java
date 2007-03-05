@@ -43,7 +43,7 @@ public class MappableTreeNode implements Mappable {
         private Access myAccess = null;
         private boolean arrayElement = false;
 
-        private MapStatistics myStatistics;
+        //private MapStatistics myStatistics;
         
         public MappableTreeNode(MappableTreeNode parent, Object o) {
         	this(null, parent, o, false);
