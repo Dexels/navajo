@@ -8,11 +8,7 @@ import com.dexels.navajo.client.*;
 //import com.dexels.navajo.swingclient.components.*;
 public class NavajoAsyncRunner
     extends Thread {
-//  private Navajo myCommand;
-//  private String myService;
-//  private NavajoClient myClient;
-//  private ResponseListener myCallback = null;
-//  private String callBackId = null;
+
   private ClientInterface myClient;
   private boolean alive = true;
   private ArrayList pending = new ArrayList();

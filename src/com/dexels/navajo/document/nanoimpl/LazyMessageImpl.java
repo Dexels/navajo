@@ -40,7 +40,7 @@ private int total = 0;
   // A field to store the submessage data, until it can be parsed.
   private XMLElement subMessageData = null;
 
-  private Thread myMessageThread = null;
+  private transient Thread myMessageThread = null;
   private ArrayList myMessageListeners = new ArrayList();
   private String myResponseMessageName;
 
