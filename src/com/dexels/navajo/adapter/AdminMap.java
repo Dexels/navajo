@@ -392,7 +392,7 @@ public class AdminMap implements Mappable {
   public ClassCount [] getClassCounts() {
 	  ClassCount [] cc = new ClassCount[1];
 	  cc[0].className = "com.dexels.navajo.server.Dispatcher";
-	  cc[0].count = com.dexels.navajo.server.Dispatcher.instances;
+	  cc[0].count = com.dexels.navajo.server.Dispatcher.getInstances();
 	  return cc;
   }
   
