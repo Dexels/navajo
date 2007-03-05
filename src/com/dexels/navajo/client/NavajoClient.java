@@ -74,7 +74,8 @@ public class NavajoClient implements ClientInterface {
   //private String keystore, passphrase;
   private long retryInterval = 1000; // default retry interval is 1000 milliseconds
   private int retryAttempts = 10; // default three retry attempts
-  private int switchServerAfterRetries = 2;
+  private int switchServerAfterRetries = 10; /** If same as retry attempts, never switch between servers, while in retry attempt. FOR NOW
+  THIS IS A SAFE VALUE CAUSE INTEGRITY WORKER DOES NOT YET WORKER OVER MULTIPLE SERVER INSTANCES!!! */
   
   private int currentServerIndex;
   private Thread keepAliveThread = null;
@@ -105,7 +106,6 @@ public class NavajoClient implements ClientInterface {
   public NavajoClient(String dtdFile) {
 	  this();
   }
-
 
   public void addComparedServices(String serviceQuery, String serviceUpdate) {
     //single query support!!
@@ -951,25 +951,31 @@ private final BufferedInputStream retryTransaction(String server, Navajo out, bo
       generateConnectionError(n, 55555, "No route to host: " + uhe.getMessage());
     }
     catch (java.net.SocketException uhe) {
-      attemptsLeft--;
-      if (attemptsLeft == 0) {
-        generateConnectionError(n, 4444, "Could not connect to server (network problem?) " + uhe.getMessage());
-      }
-      else {
-        return retryTransaction(server, out, useCompression, attemptsLeft, interval, n);
-      }
+    	attemptsLeft--;
+    	if (attemptsLeft == 0) {
+    		disabledServers.put(getCurrentHost(), new Long(System.currentTimeMillis()));
+    		System.err.println("Disabled server: "+getCurrentHost()+" for "+serverDisableTimeout+" millis." );
+    		switchServer(currentServerIndex,true);
+    		generateConnectionError(n, 4444, "Could not connect to server (network problem?) " + uhe.getMessage());
+    	}
+    	else {
+    		return retryTransaction(server, out, useCompression, attemptsLeft, interval, n);
+    	}
     }
     catch (IOException uhe) {
-      if (attemptsLeft == 0) {
-        generateConnectionError(n, 4444, "Could not connect to server (network problem?) " + uhe.getMessage());
-      }
-      else {
-          attemptsLeft--;
-       System.err.println("---> Got a 500 server exception");
-       System.err.println("Sending: ");
-       out.write(System.err);
-        return retryTransaction(server, out, false, attemptsLeft, interval, n);
-      }
+    	if (attemptsLeft == 0) {
+    		disabledServers.put(getCurrentHost(), new Long(System.currentTimeMillis()));
+    		System.err.println("Disabled server: "+getCurrentHost()+" for "+serverDisableTimeout+" millis." );
+    		switchServer(currentServerIndex,true);
+    		generateConnectionError(n, 4444, "Could not connect to server (network problem?) " + uhe.getMessage());
+    	}
+    	else {
+    		attemptsLeft--;
+    		System.err.println("---> Got a 500 server exception");
+    		System.err.println("Sending: ");
+    		out.write(System.err);
+    		return retryTransaction(server, out, false, attemptsLeft, interval, n);
+    	}
     }
     return in;
   }
