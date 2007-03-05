@@ -85,9 +85,10 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
   public final Set accessSet = new HashSet();
 
   public  boolean useAuthorisation = true;
-  private static final String defaultDispatcher ="com.dexels.navajo.server.GenericHandler";
+  private  final String defaultDispatcher =
+      "com.dexels.navajo.server.GenericHandler";
   private static final String defaultNavajoDispatcher = "com.dexels.navajo.server.MaintainanceHandler";
-  public static final java.util.Date startTime = new java.util.Date();
+  public static java.util.Date startTime = new java.util.Date();
 
   public  long requestCount = 0;
   private final NavajoConfig navajoConfig;
@@ -333,30 +334,33 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
 	  
 	  Worker integ = null;
 	  Navajo out = null;
-	  if ( access == null || in == null ) {
+	  if (access == null) {
 		  System.err.println("Null access!!!");
 	  }
 	  
 	  access.setInDoc(in);
 	  
-	  Header h = in.getHeader();
-	  if (h!=null) {
-		  // Process client token:
-		  String clientToken = h.getAttribute("clientToken");
-		  if (clientToken!=null) {
-			  access.setClientToken(clientToken);
-		  }
-
-		  // Process piggyback data:
-		  Set s = h.getPiggybackData();
-		  if (s!=null ) {
-			  for (Iterator iter = s.iterator(); iter.hasNext();) {
-				  Map element = (Map) iter.next();
-				  access.addPiggybackData(element);
-			  }
-		  }
-	  }
-	
+	  if (in!=null) {
+		Header h = in.getHeader();
+		if (h!=null) {
+			// Process client token:
+			String clientToken = h.getAttribute("clientToken");
+			if (clientToken!=null) {
+				access.setClientToken(clientToken);
+			}
+			
+			// Process piggyback data:
+			Set s = h.getPiggybackData();
+			if (s!=null ) {
+				for (Iterator iter = s.iterator(); iter.hasNext();) {
+					Map element = (Map) iter.next();
+					access.addPiggybackData(element);
+				}
+			}
+		}
+	}
+	  
+	  
 	  // Check for webservice transaction integrity.
 	  boolean integrityViolation = false;
 	  integ = navajoConfig.getIntegrityWorker();
