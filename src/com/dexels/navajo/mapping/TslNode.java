@@ -18,7 +18,7 @@ public class TslNode {
     private Vector nodes = new Vector();    // the childnodes
     private Map attributes = new HashMap(); // the attributes
     private String tag = "";                     // the tag name ie. <tsl>, <map>, <field>
-    private Hashtable attrib = new Hashtable();
+    //private Hashtable attrib = new Hashtable();
     private Node node;
 
     private static final String COMMENT_NODE = "comment";
