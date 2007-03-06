@@ -38,7 +38,7 @@ public final class BinaryHttpServlet extends HttpServlet {
 	public void destroy() {
 	}
 
-	public void finalize() {
+	protected void finalize() {
 		System.err.println("In BinaryHttpServlet finalize(), thread = "
 				+ Thread.currentThread().hashCode());
 		// logger.log(Priority.INFO, "In TmlHttpServlet finalize()");
