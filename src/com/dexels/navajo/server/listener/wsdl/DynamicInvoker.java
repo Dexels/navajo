@@ -89,13 +89,13 @@ public class DynamicInvoker {
 
 	public static void main(String[] args) throws Exception {
 
-		WSDLReader wsdlReader = WSDLFactory.newInstance().newWSDLReader();
-		Definition wsdl = wsdlReader.readWSDL(null, new InputSource("http://ficus:3000/sportlink/knvb/servlet/WSDL?utils/ProcessGetZipcodeDistance"));
-		Map services = wsdl.getNamespaces();
-	
-		Input input =  wsdl.createInput();
-		QName qname = wsdl.getQName();
-		System.err.println("qname = " + input);
+//		WSDLReader wsdlReader = WSDLFactory.newInstance().newWSDLReader();
+//		Definition wsdl = wsdlReader.readWSDL(null, new InputSource("http://ficus:3000/sportlink/knvb/servlet/WSDL?utils/ProcessGetZipcodeDistance"));
+//		Map services = wsdl.getNamespaces();
+//	
+//		Input input =  wsdl.createInput();
+//		QName qname = wsdl.getQName();
+//		System.err.println("qname = " + input);
 	}
 
 }
