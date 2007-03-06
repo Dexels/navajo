@@ -100,6 +100,7 @@ public class TmlSmtpServlet extends org.dexels.servlet.smtp.SmtpServlet {
                 if (!line.equals(""))
                     buffer.append(line);
             }
+            reader.close();
             Util.debugLog("buffer = " + buffer.toString());
             // Navajo in = parseReceivedDocument(new java.io.StringBufferInputStream(buffer.toString()));
             // Navajo in = parseReceivedDocument(buffer.toString());

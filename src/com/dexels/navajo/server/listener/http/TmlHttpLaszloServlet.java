@@ -397,7 +397,7 @@ public final class TmlHttpLaszloServlet extends TmlHttpServlet {
 			TmlHttpLaszloServlet t = new TmlHttpLaszloServlet();
 			Document d = t.createLaszloFromNavajo(n);
 
-			String s = XMLDocumentUtils.toString(d);
+			//String s = XMLDocumentUtils.toString(d);
 			// System.err.println(s);
 
 			// ----------------------------------------------

@@ -4,6 +4,7 @@ import http.utils.multipartrequest.MultipartRequest;
 import http.utils.multipartrequest.ServletMultipartRequest;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,7 +19,11 @@ import javax.servlet.http.HttpServletResponse;
 //import com.sun.java_cup.internal.parse_action;
 
 public class LaszloUploadServlet extends HttpServlet {
-	ResourceBundle res;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3254301125757262709L;
+	transient ResourceBundle res;
 	
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	  System.err.println("Proxiying GET command to POST");
@@ -62,7 +67,7 @@ public class LaszloUploadServlet extends HttpServlet {
 				System.err.println("Stored: " + loc + upload.getFileSystemName("Filedata"));
 			}
 		}
-		catch (Exception e) {
+		catch (FileNotFoundException e) {
 			e.printStackTrace();
 			throw new ServletException(e);
 		}

@@ -52,18 +52,18 @@ public class TmlHttpServlet extends HttpServlet {
     Dispatcher.killMe();
   }
 
-  public void finalize() {
+  protected void finalize() {
     System.err.println("In TmlHttpServlet finalize(), thread = " + Thread.currentThread().hashCode());
     //logger.log(Priority.INFO, "In TmlHttpServlet finalize()");
   }
 
   private void dumHttp(HttpServletRequest request) {
 	  // Dump stuff.
-	  System.err.println("HTTP DUMP (" + request.getRemoteAddr() + "/" + request.getRequestURI() );
 	  if ( request != null ) {
-		  Enumeration enum = request.getHeaderNames();
-		  while ( enum.hasMoreElements() ) {
-			  String headerName = (String) enum.nextElement();
+		  System.err.println("HTTP DUMP (" + request.getRemoteAddr() + "/" + request.getRequestURI() );
+		  Enumeration e = request.getHeaderNames();
+		  while ( e.hasMoreElements() ) {
+			  String headerName = (String) e.nextElement();
 			  System.err.println(headerName + "=" + request.getHeader(headerName));
 		  }  
 	  } else {
@@ -184,10 +184,7 @@ public class TmlHttpServlet extends HttpServlet {
       type = "xml";
 
     }
-    if (username == null) {
-      username = "";
-
-    }
+  
     if (password == null) {
       password = "";
 
