@@ -74,7 +74,7 @@ public class NavajoClient implements ClientInterface {
   //private String keystore, passphrase;
   private long retryInterval = 1000; // default retry interval is 1000 milliseconds
   private int retryAttempts = 10; // default three retry attempts
-  private int switchServerAfterRetries = 10; /** If same as retry attempts, never switch between servers, while in retry attempt. FOR NOW
+  private int switchServerAfterRetries = 5; /** If same as retry attempts, never switch between servers, while in retry attempt. FOR NOW
   THIS IS A SAFE VALUE CAUSE INTEGRITY WORKER DOES NOT YET WORKER OVER MULTIPLE SERVER INSTANCES!!! */
   
   private int currentServerIndex;
