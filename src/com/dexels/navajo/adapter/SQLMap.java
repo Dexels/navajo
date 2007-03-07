@@ -450,7 +450,7 @@ public class SQLMap implements Mappable, LazyArray {
 				  SessionIdentification.clearSessionId(getMetaData() != null ? getMetaData().getVendor() : "", con);
 			  }
 		  }
-		  if ( fixedBroker != null ) {
+		  if ( fixedBroker != null && con != null && myConnectionBroker != null ) {
 			  // Free connection.
 			  myConnectionBroker.freeConnection(con);
 			  con = null;
