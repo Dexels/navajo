@@ -90,18 +90,21 @@ public final class PersistenceManagerImpl implements PersistenceManager {
     private static long totalOutOfCacheProcessing2 = 0;
     private static long fileWrites = 0;
 
-    //private static HashMap nocachePerformance = null;
-    //private static HashMap cachePerformance = null;
+    private static HashMap nocachePerformance = null;
+    private static HashMap cachePerformance = null;
 
     private static String statisticsFile = null;
 
-    private static HashMap inMemoryCache = new HashMap();;
+    private static HashMap inMemoryCache = null;
     private static int inMemoryCacheSize = 0;
 
-    private static HashMap accessFrequency = new HashMap();
+    private static HashMap accessFrequency = null;
 
     public PersistenceManagerImpl() {
-       
+        nocachePerformance = new HashMap();
+        cachePerformance = new HashMap();
+        inMemoryCache = new HashMap();
+        accessFrequency = new HashMap();
     }
 
     /**
@@ -247,12 +250,12 @@ public final class PersistenceManagerImpl implements PersistenceManager {
         }
         finally {
         	if ( w != null ) {
-        		try {
-        			w.close();
-        		}
-        		catch (IOException ex) {
-        			ex.printStackTrace();
-        		}
+          try {
+            w.close();
+          }
+          catch (IOException ex) {
+            ex.printStackTrace();
+          }
         	}
         }
     }
