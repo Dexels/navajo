@@ -394,8 +394,7 @@ public class SQLMap implements Mappable, LazyArray {
         }
       }
       // Set autoCommit mode to default value.
-      if ( con != null && myConnectionBroker.supportsAutocommit ) {
-    	  con.setAutoCommit(true);
+      if ( con != null ) {
     	  if (transactionContext == -1) {
     		  if (con != null) {
     			  transactionContextMap.remove(connectionId + "");
@@ -405,6 +404,9 @@ public class SQLMap implements Mappable, LazyArray {
     			  catch (UserException ex) {
     			  }
     			  // Free connection.
+    			  if ( myConnectionBroker.supportsAutocommit ) {
+    				  con.setAutoCommit(true);
+    			  }
     			  myConnectionBroker.freeConnection(con);
     			  con = null;
     		  }
@@ -427,16 +429,18 @@ public class SQLMap implements Mappable, LazyArray {
 	  catch (SQLException sqle2) {
 	  }
 	  if (transactionContext == -1) {
-		  if (con != null && !isClosed && myConnectionBroker.supportsAutocommit ) {
+		  if (con != null && !isClosed ) {
 			  try {
 				  // Determine autocommit value
-				  boolean ac = (this.overideAutoCommit) ? autoCommit :  ( (Boolean) autoCommitMap.get(datasource)).booleanValue();
-				  if (!ac) {
-					  con.commit();
-					  //System.err.println("SQLMAP, CALLING COMMIT() FOR AUTOCOMMIT = FALSE CONNECTION");
-					  // Set autoCommit mode to default value.
+				  if ( myConnectionBroker.supportsAutocommit ) {
+					  boolean ac = (this.overideAutoCommit) ? autoCommit :  ( (Boolean) autoCommitMap.get(datasource)).booleanValue();
+					  if (!ac) {
+						  con.commit();
+						  //System.err.println("SQLMAP, CALLING COMMIT() FOR AUTOCOMMIT = FALSE CONNECTION");
+						  // Set autoCommit mode to default value.
+					  }
+					  con.setAutoCommit(true);
 				  }
-				  con.setAutoCommit(true);
 				  //System.err.println("SQLMAP, SETTING AUTOCOMMIT TO TRUE AGAIN");
 			  }
 			  catch (SQLException sqle) {

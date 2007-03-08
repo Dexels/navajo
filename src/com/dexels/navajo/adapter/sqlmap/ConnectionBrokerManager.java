@@ -416,6 +416,7 @@ public class ConnectionBrokerManager extends Object {
     				//System.err.print("GETTING METADATA FOR " + url + "...");
     				DatabaseMetaData dbmd = c.getMetaData();
     				broker.supportsAutocommit = dbmd.supportsTransactions();
+    				System.err.println("supportsAutocommit = " + broker.supportsAutocommit);
     				dbInfo = new DatabaseInfo(dbmd, this.datasource);
     				//System.err.println("...GOT IT!");
     			}
