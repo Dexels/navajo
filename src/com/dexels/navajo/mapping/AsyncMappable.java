@@ -473,7 +473,7 @@ public abstract class AsyncMappable implements Mappable, AsyncMappableMXBean {
 	  try {
 		  connectJMX();
 		  if ( myThread == null ) {
-			  return "";
+			  return false;
 		  }
 		  LockInfo [] monitors = myThread.getLockedSynchronizers();
 		  return monitors.length != 0;
