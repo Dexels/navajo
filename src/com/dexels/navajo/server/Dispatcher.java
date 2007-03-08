@@ -872,6 +872,11 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
     Exception myException = null;
     String origThreadName = null;
     
+    int accessSetSize = accessSet.size();
+    if ( accessSetSize > peakAccessSetSize ) {
+    	peakAccessSetSize = accessSetSize;
+    }
+    
     try {
 //      this.inMessage = inMessage;
 
@@ -987,10 +992,7 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
         }
         
         access.setMyDispatcher(this);
-        int accessSetSize = accessSet.size();
-        if ( accessSetSize > peakAccessSetSize ) {
-        	peakAccessSetSize = accessSetSize;
-        }
+       
         access.setThreadCount(accessSetSize);
         
         // Check for lazy message control.
