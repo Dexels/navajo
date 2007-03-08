@@ -285,6 +285,9 @@ public final class OracleStore implements StoreInterface {
 						update.setString(2, accessId);
 						update.executeUpdate();
 					}
+				} catch (SQLException sqle) {
+					// Could throw SQLException due to the fact that when trying to insert embryo original suddenly exists (due to insert by other app. server)
+					// Silently catch this one.
 				} finally {
 					if ( rs != null ) {
 						rs.close();
