@@ -472,6 +472,9 @@ public abstract class AsyncMappable implements Mappable, AsyncMappableMXBean {
   public final boolean getWaiting() {
 	  try {
 		  connectJMX();
+		  if ( myThread == null ) {
+			  return "";
+		  }
 		  LockInfo [] monitors = myThread.getLockedSynchronizers();
 		  return monitors.length != 0;
 	  } finally {
@@ -482,6 +485,9 @@ public abstract class AsyncMappable implements Mappable, AsyncMappableMXBean {
   public final String getLockName() {
 	  try {
 		  connectJMX();
+		  if ( myThread == null ) {
+			  return "";
+		  }
 		  return myThread.getLockName();
 	  } finally {
 		  disconnectJMX();
@@ -491,6 +497,9 @@ public abstract class AsyncMappable implements Mappable, AsyncMappableMXBean {
   public final String getLockOwner() {
 	  try {
 		  connectJMX();
+		  if ( myThread == null ) {
+			  return "";
+		  }
 		  return myThread.getLockOwnerName();
 	  } finally {
 		  disconnectJMX();
@@ -500,6 +509,9 @@ public abstract class AsyncMappable implements Mappable, AsyncMappableMXBean {
   public final String getLockClass() {
 	  try {
 		  connectJMX();
+		  if ( myThread == null ) {
+			  return "";
+		  }
 		  LockInfo lockInfo = myThread.getLockInfo();
 		  if ( lockInfo != null ) {
 			  return lockInfo.getClassName();
@@ -514,6 +526,9 @@ public abstract class AsyncMappable implements Mappable, AsyncMappableMXBean {
   public final String getStackTrace() {
 	  try {
 		  connectJMX();
+		  if ( myThread == null ) {
+			  return "";
+		  }
 		  StringBuffer stackTrace = new StringBuffer();
 		  StackTraceElement [] elt = myThread.getStackTrace();
 
@@ -536,7 +551,7 @@ public abstract class AsyncMappable implements Mappable, AsyncMappableMXBean {
 			  connected = true;
 			  myThread = jmx.getThread(this.myRequest);
 		  } catch (Exception e) {
-			  e.printStackTrace(System.err);
+			 // e.printStackTrace(System.err);
 		  } 
 	  }
   }
