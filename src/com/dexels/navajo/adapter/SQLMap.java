@@ -432,7 +432,7 @@ public class SQLMap implements Mappable, LazyArray {
 		  if (con != null && !isClosed ) {
 			  try {
 				  // Determine autocommit value
-				  if ( myConnectionBroker.supportsAutocommit ) {
+				  if ( myConnectionBroker == null || myConnectionBroker.supportsAutocommit ) {
 					  boolean ac = (this.overideAutoCommit) ? autoCommit :  ( (Boolean) autoCommitMap.get(datasource)).booleanValue();
 					  if (!ac) {
 						  con.commit();
@@ -470,7 +470,8 @@ public class SQLMap implements Mappable, LazyArray {
   public void setAutoCommit(boolean b) throws UserException {
     this.autoCommit = b;
     try {
-      if ( con != null && myConnectionBroker.supportsAutocommit ) {
+      if ( con != null && ( myConnectionBroker == null || myConnectionBroker.supportsAutocommit ) ) {
+    	
         con.commit(); // Commit previous actions.
         con.setAutoCommit(b);
       }
@@ -863,7 +864,7 @@ public class SQLMap implements Mappable, LazyArray {
               ": returned a good connection from the broker manager");
         }
       }
-      if (con != null && myConnectionBroker.supportsAutocommit ) {
+      if (con != null && ( myConnectionBroker == null || myConnectionBroker.supportsAutocommit ) ) {
         boolean ac = (this.overideAutoCommit) ? autoCommit : ( (Boolean) autoCommitMap.get(datasource)).booleanValue();
         con.commit();
         con.setAutoCommit(ac);
