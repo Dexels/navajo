@@ -27,6 +27,7 @@ package com.dexels.navajo.adapter.xmlmap;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -66,10 +67,12 @@ public class TagMap implements Mappable {
 	
 	public boolean    exists;
 	
-	public int        indent     = DEFAULT_INDENT;
+	public int          indent     = DEFAULT_INDENT;
 		
-	protected HashMap tags       = null;
-	protected HashMap attributes = null;
+	protected HashMap   tags       = null;
+	protected HashMap   attributes = null;
+	
+	protected ArrayList tagList    = null;
 	
 	public void load(Parameters parms, Navajo inMessage, Access access,
 			NavajoConfig config) throws MappableException, UserException {
@@ -129,10 +132,12 @@ public class TagMap implements Mappable {
 	
 	public void setChild(TagMap t) throws UserException {
 		if ( tags == null ) {
-			tags = new HashMap();
+			tags    = new HashMap();
+			tagList = new ArrayList();
 		}
 		
 		tags.put( ( 1 + tags.size() ) + this.PREFIX_SEPARATOR + t.getName(), t);
+		tagList.add( ( 1 + tagList.size() ) + this.PREFIX_SEPARATOR + t.getName() );
 	}
 	
 	public boolean getExists(String name) {
@@ -258,9 +263,13 @@ public class TagMap implements Mappable {
 	}
 	
 	public TagMap [] getChildren() {
-		Collection c = tags.values();
-		children = new TagMap[c.size()];
-		children = (TagMap []) c.toArray(children);
+		
+		children = new TagMap[tagList.size()];
+		
+		for ( int i = 0; i < tagList.size(); i++) {
+			children[i] = (TagMap) tags.get( tagList.get(i) );
+		}
+		
 		return children;
 	}
 	
@@ -289,9 +298,8 @@ public class TagMap implements Mappable {
 		sw.write(">\n");
 		
 		if ( tags != null ) {
-			Iterator all = tags.values().iterator();
-			while ( all.hasNext() ) {
-				TagMap c = (TagMap) all.next();
+			for ( int i = 0; i < tagList.size(); i++ ) {
+				TagMap c = (TagMap) tags.get( tagList.get( i ) );
 				String s = c.getString(indent + tabsize, tabsize);
 				sw.write(s);
 			}
