@@ -1,6 +1,9 @@
 package com.dexels.navajo.adapter.queue;
 
 
+import java.util.HashSet;
+import java.util.Iterator;
+
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.server.GenericThread;
 import com.dexels.navajo.server.jmx.JMXHelper;
@@ -118,11 +121,22 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 	
 	public void worker() {
 
+		HashSet set = new HashSet();
 		Queable handler = null;
 		if ( !queueOnly) {
+			    // Add all work in private Set.
 				while ( ( handler = myStore.getNext()) != null && !emptyQueue ) {
-					asyncwork(handler);		
+					set.add(handler);	
 				}
+				// Iterate over private set to do work.
+				if ( !emptyQueue ) {
+					Iterator iter = set.iterator();
+					while ( iter.hasNext() && !emptyQueue ) {
+						handler = (Queable) iter.next();
+						asyncwork(handler);	
+					}
+				}
+				
 		}
 	}
 

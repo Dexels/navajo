@@ -261,6 +261,7 @@ public final class Access implements java.io.Serializable, Mappable {
 			h.setAttribute("serverTime",""+getTotaltime());
 			h.setAttribute("accessId", this.accessID);
 			h.setAttribute("requestParseTime",""+parseTime);
+			h.setAttribute("threadCount", this.threadCount+"");
 		}
 	}
 
