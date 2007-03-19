@@ -100,7 +100,7 @@ public final class TmlHttpLaszloServlet extends TmlHttpServlet {
 
 			// Call Dispatcher with parsed TML document as argument.
 //			System.err.println("Dispatching now!");
-			Navajo outDoc = dis.handle(in, certObject, new ClientInfo(request.getRemoteAddr(), request.getRemoteHost(), recvEncoding, pT, useRecvCompression, useSendCompression, request.getContentLength(), created));
+			Navajo outDoc = dis.handle(in, certObject, new ClientInfo(request.getRemoteAddr(), "unknown", recvEncoding, pT, useRecvCompression, useSendCompression, request.getContentLength(), created));
 //			outDoc.write(System.err);
 			long sendStart = System.currentTimeMillis();
 			if (useSendCompression) {

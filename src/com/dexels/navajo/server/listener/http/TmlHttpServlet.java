@@ -152,7 +152,7 @@ public class TmlHttpServlet extends HttpServlet {
 
     if (service == null) {
       
-      System.err.println("Empty service specified, request originating from " + request.getRemoteHost());
+      //System.err.println("Empty service specified, request originating from " + request.getRemoteHost());
       System.err.println("thread = " + Thread.currentThread().hashCode());
       System.err.println("path = " + request.getPathInfo());
       System.err.println("query = " + request.getQueryString());
@@ -176,7 +176,7 @@ public class TmlHttpServlet extends HttpServlet {
 
     if (username == null) {
       //logger.log(Priority.FATAL, "Empty service specified, request originating from " + request.getRemoteHost());
-      System.err.println("Empty service specified, request originating from " + request.getRemoteHost());
+      //System.err.println("Empty service specified, request originating from " + request.getRemoteHost());
       return;
     }
 
@@ -309,7 +309,7 @@ public class TmlHttpServlet extends HttpServlet {
 
 		  // Call Dispatcher with parsed TML document as argument.
 		  Navajo outDoc = dis.handle(in, certObject, 
-				  new ClientInfo(request.getRemoteAddr(), request.getRemoteHost(),
+				  new ClientInfo(request.getRemoteAddr(), "unknown",
 						  recvEncoding, pT, useRecvCompression, useSendCompression, request.getContentLength(), created));
 
 		  if (useSendCompression) {
