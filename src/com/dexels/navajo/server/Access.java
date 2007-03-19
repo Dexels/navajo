@@ -62,7 +62,7 @@ public final class Access implements java.io.Serializable, Mappable {
 	public int parseTime;
 	public int authorisationTime;
 	public int clientTime;
-	//public int processingTime;
+	public int processingTime;
 	public String requestEncoding;
 	public boolean compressedReceive = false;
 	public boolean compressedSend = false;
@@ -258,9 +258,11 @@ public final class Access implements java.io.Serializable, Mappable {
 
 	public void storeStatistics(Header h) {
 		if (h!=null) {
-			h.setAttribute("serverTime",""+getTotaltime());
 			h.setAttribute("accessId", this.accessID);
+			h.setAttribute("serverTime",""+getTotaltime());
+			h.setAttribute("authorisationTime",""+authorisationTime);
 			h.setAttribute("requestParseTime",""+parseTime);
+			h.setAttribute("processingTime",""+processingTime);
 			h.setAttribute("threadCount", this.threadCount+"");
 		}
 	}
