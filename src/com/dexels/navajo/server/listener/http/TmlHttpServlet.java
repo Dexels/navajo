@@ -279,11 +279,14 @@ public class TmlHttpServlet extends HttpServlet {
 			  java.util.zip.GZIPInputStream unzip = new java.util.zip.GZIPInputStream(request.getInputStream());
 			  is = new BufferedInputStream(unzip);
 			  in = NavajoFactory.getInstance().createNavajo(is);
+			  is.close();
+			  is = null;
 		  }
 		  else {
 			  r = request.getReader();
 			  in = NavajoFactory.getInstance().createNavajo(r);
 			  r.close();
+			  r = null;
 		  }
 
 		  long stamp = System.currentTimeMillis();
@@ -325,6 +328,7 @@ public class TmlHttpServlet extends HttpServlet {
 			  outDoc.write(out);
 			  out.close();
 		  }
+		  System.err.println(outDoc.getHeader().getAttribute("accessId") + ":" + in.getHeader().getRPCName() + ":" + ( System.currentTimeMillis() - start ) + " ms.");
 	  }
 	  catch (Throwable e) {
 		  dumHttp(request);
@@ -342,6 +346,7 @@ public class TmlHttpServlet extends HttpServlet {
 		  if (r!=null) {
 			  r.close();
 		  }
+		
 	  }
   }
 }
