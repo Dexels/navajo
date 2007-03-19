@@ -330,7 +330,7 @@ public class TmlHttpServlet extends HttpServlet {
 			  outDoc.write(out);
 			  out.close();
 		  }
-		  System.err.println(outDoc.getHeader().getAttribute("accessId") + ":" + in.getHeader().getRPCName() + "/" + in.getHeader().getRPCUser() + ":" + ( System.currentTimeMillis() - start ) + " ms. (st=" + 
+		  System.err.println(outDoc.getHeader().getAttribute("accessId") + ":" + in.getHeader().getRPCName() + "(" + in.getHeader().getRPCUser() + "):" + ( System.currentTimeMillis() - start ) + " ms. (st=" + 
 				  ( outDoc.getHeader().getAttribute("serverTime") + ",rpt=" + outDoc.getHeader().getAttribute("requestParseTime") + ",at=" + outDoc.getHeader().getAttribute("authorisationTime") + ",pt=" + 
 						  outDoc.getHeader().getAttribute("processingTime") + ",tc=" + outDoc.getHeader().getAttribute("threadCount") + ")" ));
 	  }
