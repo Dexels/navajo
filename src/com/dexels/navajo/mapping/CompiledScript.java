@@ -112,71 +112,76 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable  
   }
   
   public boolean getWaiting() {
-	  try {
-		  connectJMX();
-		  LockInfo [] monitors = myThread.getLockedSynchronizers();
-		  return monitors.length != 0;
-	  } finally {
-		  if (!keepJMXConnectionAlive) {
-			  disconnectJMX();
-		  }
-	  }
+	  return false;
+//	  try {
+//		  connectJMX();
+//		  LockInfo [] monitors = myThread.getLockedSynchronizers();
+//		  return monitors.length != 0;
+//	  } finally {
+//		  if (!keepJMXConnectionAlive) {
+//			  disconnectJMX();
+//		  }
+//	  }
   }
   
   public String getLockName() {
-	  try {
-		  connectJMX();
-		  return myThread.getLockName();
-	  } finally {
-		  if (!keepJMXConnectionAlive) {
-			  disconnectJMX();
-		  }
-	  }
+	  return "";
+//	  try {
+//		  connectJMX();
+//		  return myThread.getLockName();
+//	  } finally {
+//		  if (!keepJMXConnectionAlive) {
+//			  disconnectJMX();
+//		  }
+//	  }
   }
   
   public String getLockOwner() {
-	  try {
-		  connectJMX();
-		  return myThread.getLockOwnerName();
-	  } finally {
-		  if (!keepJMXConnectionAlive) {
-			  disconnectJMX();
-		  }
-	  }
+	  return "";
+//	  try {
+//		  connectJMX();
+//		  return myThread.getLockOwnerName();
+//	  } finally {
+//		  if (!keepJMXConnectionAlive) {
+//			  disconnectJMX();
+//		  }
+//	  }
   }
   
   public String getLockClass() {
-	  try {
-		  connectJMX();
-		  LockInfo lockInfo = myThread.getLockInfo();
-		  if ( lockInfo != null ) {
-			  return lockInfo.getClassName();
-		  } else {
-			  return null;
-		  }
-	  } finally {
-		  if (!keepJMXConnectionAlive) {
-			  disconnectJMX();
-		  }
-	  }
+	  return "";
+//	  try {
+//		  connectJMX();
+//		  LockInfo lockInfo = myThread.getLockInfo();
+//		  if ( lockInfo != null ) {
+//			  return lockInfo.getClassName();
+//		  } else {
+//			  return null;
+//		  }
+//	  } finally {
+//		  if (!keepJMXConnectionAlive) {
+//			  disconnectJMX();
+//		  }
+//	  }
   }
   
   public String getStackTrace() {
-	  try {
-		  connectJMX();
-		  StringBuffer stackTrace = new StringBuffer();
-		  StackTraceElement [] elt = myThread.getStackTrace();
-
-		  for (int i = 0; i < elt.length; i++) {
-			  stackTrace.append(elt[i].getClassName()+"."+elt[i].getMethodName() + " (" + elt[i].getFileName() + ":" + elt[i].getLineNumber() + ")\n");
-		  }
-
-		  return stackTrace.toString();
-	  } finally {
-		  if (!keepJMXConnectionAlive) {
-			  disconnectJMX();
-		  }
-	  }
+	  return "";
+//	  try {
+//		  connectJMX();
+//		  StringBuffer stackTrace = new StringBuffer();
+//		  StackTraceElement [] elt = myThread.getStackTrace();
+//
+//		  for (int i = 0; i < elt.length; i++) {
+//			  stackTrace.append(elt[i].getClassName()+"."+elt[i].getMethodName() + " (" + elt[i].getFileName() + ":" + elt[i].getLineNumber() + ")\n");
+//		  }
+//
+//		  return stackTrace.toString();
+//	  } finally {
+//		  if (!keepJMXConnectionAlive) {
+//			  disconnectJMX();
+//		  }
+//	  }
   }
   
   public long getRunningTime() {
@@ -241,8 +246,10 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable  
 
 	  myAccess = access;
 	  String myThreadName = getThreadName();
-	  JMXHelper.registerMXBean(this, JMXHelper.SCRIPT_DOMAIN, myThreadName);
+	  //JMXHelper.registerMXBean(this, JMXHelper.SCRIPT_DOMAIN, myThreadName);
 
+	  long start = System.currentTimeMillis();
+	  
 	  try {
 		  setValidations();
 
@@ -286,8 +293,9 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable  
 			  }
 		  }
 	  } finally {
+		  access.processingTime = (int) ( System.currentTimeMillis() - start );
 		  try {
-			  JMXHelper.deregisterMXBean(JMXHelper.SCRIPT_DOMAIN, myThreadName);
+			  //JMXHelper.deregisterMXBean(JMXHelper.SCRIPT_DOMAIN, myThreadName);
 		  } catch (Throwable t) {
 			  System.err.println("WARNING: Could not register script as MBean: " + t.getMessage());
 		  }
@@ -362,19 +370,19 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable  
 	  return m;
   }
   
-  private void connectJMX() {
-	  if (!connected) {
-		  jmx = new JMXHelper();
-		  connected = false;
-		  try {
-			  jmx.connect();
-			  connected = true;
-			  myThread = jmx.getThread(myAccess.getThread());
-		  } catch (Exception e) {
-			  e.printStackTrace(System.err);
-		  } 
-	  }
-  }
+//  private void connectJMX() {
+//	  if (!connected) {
+//		  jmx = new JMXHelper();
+//		  connected = false;
+//		  try {
+//			  jmx.connect();
+//			  connected = true;
+//			  myThread = jmx.getThread(myAccess.getThread());
+//		  } catch (Exception e) {
+//			  e.printStackTrace(System.err);
+//		  } 
+//	  }
+//  }
   
   private void disconnectJMX() {
 	  try {
@@ -390,7 +398,7 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable  
   
   public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
 	  keepJMXConnectionAlive = true;
-	  connectJMX();
+	  //connectJMX();
   }
 
   public void store() throws MappableException, UserException {
