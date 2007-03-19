@@ -315,6 +315,7 @@ public class TmlHttpServlet extends HttpServlet {
 				  new ClientInfo(request.getRemoteAddr(), "unknown",
 						  recvEncoding, pT, useRecvCompression, useSendCompression, request.getContentLength(), created));
 
+		  
 		  if (useSendCompression) {
 			  response.setContentType("text/xml; charset=UTF-8");
 			  response.setHeader("Content-Encoding", "gzip");
@@ -325,10 +326,11 @@ public class TmlHttpServlet extends HttpServlet {
 		  else {
 			  response.setContentType("text/xml; charset=UTF-8");
 			  Writer out = (Writer) response.getWriter();
+			  //OutputStream out = response.getOutputStream();
 			  outDoc.write(out);
 			  out.close();
 		  }
-		  System.err.println(outDoc.getHeader().getAttribute("accessId") + ":" + in.getHeader().getRPCName() + ":" + ( System.currentTimeMillis() - start ) + " ms. (st=" + 
+		  System.err.println(outDoc.getHeader().getAttribute("accessId") + ":" + in.getHeader().getRPCName() + "/" + in.getHeader().getRPCUser() + ":" + ( System.currentTimeMillis() - start ) + " ms. (st=" + 
 				  ( outDoc.getHeader().getAttribute("serverTime") + ",rpt=" + outDoc.getHeader().getAttribute("requestParseTime") + ",at=" + outDoc.getHeader().getAttribute("authorisationTime") + ",pt=" + 
 						  outDoc.getHeader().getAttribute("processingTime") + ",tc=" + outDoc.getHeader().getAttribute("threadCount") + ")" ));
 	  }
