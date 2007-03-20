@@ -109,11 +109,11 @@ public final class AsyncStore extends GenericThread implements AsyncStoreMXBean 
 				  }
 				  
 				  a.kill();
-				  AsyncMappable am = (AsyncMappable) objectStore.get(ref);
-				  try {
-						JMXHelper.deregisterMXBean(JMXHelper.ASYNC_DOMAIN, am.getClassName() + "-" + ref);
-					} catch (Throwable e) {
-					}
+				 // AsyncMappable am = (AsyncMappable) objectStore.get(ref);
+//				  try {
+//						JMXHelper.deregisterMXBean(JMXHelper.ASYNC_DOMAIN, am.getClassName() + "-" + ref);
+//					} catch (Throwable e) {
+//					}
 				  objectStore.remove(ref);
 				  accessStore.remove(ref);
 				  a = null;
@@ -134,7 +134,7 @@ public final class AsyncStore extends GenericThread implements AsyncStoreMXBean 
     objectStore.put(ref + "", o);
     accessStore.put(ref + "", a);
     // Register Async mappable as MXBean.
-    JMXHelper.registerMXBean(o, JMXHelper.ASYNC_DOMAIN, o.getClassName() + "-" + ref);
+    // JMXHelper.registerMXBean(o, JMXHelper.ASYNC_DOMAIN, o.getClassName() + "-" + ref);
     return ref;
   }
 
@@ -178,10 +178,10 @@ public final class AsyncStore extends GenericThread implements AsyncStoreMXBean 
   public final synchronized void removeInstance(String ref) {
 	System.err.println("About to remove async instance: " + ref);
     Object o = objectStore.get(ref);
-    try {
-		JMXHelper.deregisterMXBean(JMXHelper.ASYNC_DOMAIN, ((AsyncMappable )o).getClassName() + "-" + ref);
-	} catch (Throwable e) {
-	}
+//    try {
+//		JMXHelper.deregisterMXBean(JMXHelper.ASYNC_DOMAIN, ((AsyncMappable )o).getClassName() + "-" + ref);
+//	} catch (Throwable e) {
+//	}
     if (o == null) {
       return;
     }

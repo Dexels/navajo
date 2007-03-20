@@ -66,8 +66,8 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 
 			public void run() {
 				System.err.println("Starting work....");
-				String qid = handler.getClass().getName()+"-"+System.currentTimeMillis();
-				JMXHelper.registerMXBean(handler, JMXHelper.QUEUED_ADAPTER_DOMAIN, qid);
+				//String qid = handler.getClass().getName()+"-"+System.currentTimeMillis();
+				//JMXHelper.registerMXBean(handler, JMXHelper.QUEUED_ADAPTER_DOMAIN, qid);
 				try {
 					doingWork = true;
 					if ( handler.send() && !emptyQueue) {
@@ -86,10 +86,10 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 					}
 				} finally {
 					doingWork = false;
-					try {
-						JMXHelper.deregisterMXBean(JMXHelper.QUEUED_ADAPTER_DOMAIN, qid);
-					} catch (Throwable e) {
-					}
+//					try {
+//						JMXHelper.deregisterMXBean(JMXHelper.QUEUED_ADAPTER_DOMAIN, qid);
+//					} catch (Throwable e) {
+//					}
 				}
 				System.err.println("....Finished asyncwork thread");
 			}

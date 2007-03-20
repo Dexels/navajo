@@ -123,9 +123,9 @@ public abstract class AsyncMappable implements Mappable, AsyncMappableMXBean {
   /**
    * JMX stuff.
    */
-  private JMXHelper jmx = null;
-  private boolean connected = false;
-  private ThreadInfo myThread = null;
+//  private JMXHelper jmx = null;
+//  private boolean connected = false;
+//  private ThreadInfo myThread = null;
   
   /**
    * This class implements the asynchronous thread.
@@ -277,7 +277,7 @@ public abstract class AsyncMappable implements Mappable, AsyncMappableMXBean {
     System.out.println("FINALIZE() METHOD CALL FOR OBJECT " + this);
     if (killOnFinnish) {
       kill = true;
-      disconnectJMX();
+      //disconnectJMX();
       AsyncStore.getInstance().removeInstance(this.pointer);
     }
   }
@@ -470,100 +470,105 @@ public abstract class AsyncMappable implements Mappable, AsyncMappableMXBean {
   }
   
   public final boolean getWaiting() {
-	  try {
-		  connectJMX();
-		  if ( myThread == null ) {
-			  return false;
-		  }
-		  LockInfo [] monitors = myThread.getLockedSynchronizers();
-		  return monitors.length != 0;
-	  } finally {
-		  disconnectJMX();
-	  }
+	  return false;
+//	  try {
+//		  connectJMX();
+//		  if ( myThread == null ) {
+//			  return false;
+//		  }
+//		  LockInfo [] monitors = myThread.getLockedSynchronizers();
+//		  return monitors.length != 0;
+//	  } finally {
+//		  disconnectJMX();
+//	  }
   }
 
   public final String getLockName() {
-	  try {
-		  connectJMX();
-		  if ( myThread == null ) {
-			  return "";
-		  }
-		  return myThread.getLockName();
-	  } finally {
-		  disconnectJMX();
-	  }
+	  return "";
+//	  try {
+//		  connectJMX();
+//		  if ( myThread == null ) {
+//			  return "";
+//		  }
+//		  return myThread.getLockName();
+//	  } finally {
+//		  disconnectJMX();
+//	  }
   }
   
   public final String getLockOwner() {
-	  try {
-		  connectJMX();
-		  if ( myThread == null ) {
-			  return "";
-		  }
-		  return myThread.getLockOwnerName();
-	  } finally {
-		  disconnectJMX();
-	  }
+	  return "";
+//	  try {
+//		  connectJMX();
+//		  if ( myThread == null ) {
+//			  return "";
+//		  }
+//		  return myThread.getLockOwnerName();
+//	  } finally {
+//		  disconnectJMX();
+//	  }
   }
   
   public final String getLockClass() {
-	  try {
-		  connectJMX();
-		  if ( myThread == null ) {
-			  return "";
-		  }
-		  LockInfo lockInfo = myThread.getLockInfo();
-		  if ( lockInfo != null ) {
-			  return lockInfo.getClassName();
-		  } else {
-			  return null;
-		  }
-	  } finally {
-		  disconnectJMX();
-	  }
+	  return "";
+//	  try {
+//		  connectJMX();
+//		  if ( myThread == null ) {
+//			  return "";
+//		  }
+//		  LockInfo lockInfo = myThread.getLockInfo();
+//		  if ( lockInfo != null ) {
+//			  return lockInfo.getClassName();
+//		  } else {
+//			  return null;
+//		  }
+//	  } finally {
+//		  disconnectJMX();
+//	  }
   }
   
   public final String getStackTrace() {
-	  try {
-		  connectJMX();
-		  if ( myThread == null ) {
-			  return "";
-		  }
-		  StringBuffer stackTrace = new StringBuffer();
-		  StackTraceElement [] elt = myThread.getStackTrace();
-
-		  for (int i = 0; i < elt.length; i++) {
-			  stackTrace.append(elt[i].getClassName()+"."+elt[i].getMethodName() + " (" + elt[i].getFileName() + ":" + elt[i].getLineNumber() + ")\n");
-		  }
-
-		  return stackTrace.toString();
-	  } finally {
-		  disconnectJMX();	 
-	  }
+	  return "";
+//	  try {
+//		  connectJMX();
+//		  if ( myThread == null ) {
+//			  return "";
+//		  }
+//		  StringBuffer stackTrace = new StringBuffer();
+//		  StackTraceElement [] elt = myThread.getStackTrace();
+//
+//		  for (int i = 0; i < elt.length; i++) {
+//			  stackTrace.append(elt[i].getClassName()+"."+elt[i].getMethodName() + " (" + elt[i].getFileName() + ":" + elt[i].getLineNumber() + ")\n");
+//		  }
+//
+//		  return stackTrace.toString();
+//	  } finally {
+//		  disconnectJMX();	 
+//	  }
   }
   
-  private final void connectJMX() {
-	  if (!connected) {
-		  jmx = new JMXHelper();
-		  connected = false;
-		  try {
-			  jmx.connect();
-			  connected = true;
-			  myThread = jmx.getThread(this.myRequest);
-		  } catch (Exception e) {
-			 // e.printStackTrace(System.err);
-		  } 
-	  }
-  }
+//  private final void connectJMX() {
+//	  if (!connected) {
+//		  jmx = new JMXHelper();
+//		  connected = false;
+//		  try {
+//			  jmx.connect();
+//			  connected = true;
+//			  myThread = jmx.getThread(this.myRequest);
+//		  } catch (Exception e) {
+//			 // e.printStackTrace(System.err);
+//		  } 
+//	  }
+//  }
   
-  private final void disconnectJMX() {
-	  try {
-		  if ( connected && jmx != null ) {
-			  jmx.disconnect();
-		  }
-	  } finally {
-		  jmx = null;
-		  connected = false;
-	  }
-  }
+//  private final void disconnectJMX() {
+//	  try {
+//		  if ( connected && jmx != null ) {
+//			  jmx.disconnect();
+//		  }
+//	  } finally {
+//		  jmx = null;
+//		  connected = false;
+//	  }
+//  }
 }
