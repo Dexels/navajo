@@ -46,7 +46,7 @@ import com.dexels.navajo.logger.*;
 
 public final class NavajoConfig {
 
-	private static final int MAX_ACCESS_SET_SIZE = 40;
+	private static final int MAX_ACCESS_SET_SIZE = 50;
 	
 	public String adapterPath;
 	public String compiledScriptPath;
