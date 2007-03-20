@@ -47,24 +47,24 @@ import com.dexels.navajo.logger.*;
 
 public final class NavajoConfig {
 
-    public String adapterPath;
-    public String compiledScriptPath;
-    public String hibernatePath;
-    public String scriptPath;
-    public String dbPath;
-    public String store;
+	public String adapterPath;
+	public String compiledScriptPath;
+	public String hibernatePath;
+	public String scriptPath;
+	public String dbPath;
+	public String store;
 	private String resourcePath;
-   public int dbPort = -1;
-    public boolean compileScripts = false;
-    protected HashMap properties = new HashMap();
-    private String configPath;
-//    protected NavajoClassSupplier classloader;
-    protected NavajoClassLoader betaClassloader;
-    protected NavajoClassSupplier adapterClassloader;
-    protected com.dexels.navajo.server.Repository repository;
-    protected Navajo configuration;
-    //private HashSet myJarResources = null;
-    
+	public int dbPort = -1;
+	public boolean compileScripts = false;
+	protected HashMap properties = new HashMap();
+	private String configPath;
+//	protected NavajoClassSupplier classloader;
+	protected NavajoClassLoader betaClassloader;
+	protected NavajoClassSupplier adapterClassloader;
+	protected com.dexels.navajo.server.Repository repository;
+	protected Navajo configuration;
+	//private HashSet myJarResources = null;
+    public int maxAccessSetSize = 40;
     
     /**
      * Several supporting threads.
@@ -335,6 +335,9 @@ public final class NavajoConfig {
     		useLog4j = (body.getProperty("parameters/use_log4j") != null &&
     				body.
     				getProperty("parameters/use_log4j").getValue().equals("true"));
+    		
+    		maxAccessSetSize = (body.getProperty("parameters/max_webservices") == null ? 50 :
+    			                   Integer.parseInt(body.getProperty("parameters/max_webservices").getValue()) );
     		
     		try {
     			betaUser = body.getProperty("special-users/beta").getValue();
