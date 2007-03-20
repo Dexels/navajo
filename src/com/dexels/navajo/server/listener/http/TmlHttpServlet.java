@@ -7,6 +7,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.server.*;
+import com.sun.xml.internal.bind.v2.util.FatalAdapter;
 
 /**
  * Title:        Navajo
@@ -336,6 +337,13 @@ public class TmlHttpServlet extends HttpServlet {
 	  }
 	  catch (Throwable e) {
 		  dumHttp(request);
+		  if ( e instanceof  FatalException ) {
+			  FatalException fe = (FatalException) e;
+			  if ( fe.getMessage().equals("500.13")) {
+				  // Server too busy.
+				  throw new ServletException("500.13");
+			  }
+		  }
 		  throw new ServletException(e);
 	  }
 	  finally {
