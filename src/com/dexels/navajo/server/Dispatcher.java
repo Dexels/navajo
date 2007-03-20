@@ -336,6 +336,7 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
 	  Navajo out = null;
 	  if (access == null) {
 		  System.err.println("Null access!!!");
+		  return null;
 	  }
 	  
 	  access.setInDoc(in);
@@ -873,6 +874,13 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
     String origThreadName = null;
     
     int accessSetSize = accessSet.size();
+    
+    // Check accessSetSize first!
+    if ( accessSetSize > navajoConfig.maxAccessSetSize ) {
+    	// Server too busy!
+    	throw new FatalException("500.13");
+    }
+    
     if ( accessSetSize > peakAccessSetSize ) {
     	peakAccessSetSize = accessSetSize;
     }
