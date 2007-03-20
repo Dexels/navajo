@@ -42,11 +42,12 @@ import com.dexels.navajo.persistence.*;
 import com.dexels.navajo.scheduler.TaskRunner;
 import com.dexels.navajo.server.descriptionprovider.DescriptionProvider;
 import com.dexels.navajo.util.AuditLog;
-import com.dexels.navajo.util.Util;
 import com.dexels.navajo.logger.*;
 
 public final class NavajoConfig {
 
+	private static final int MAX_ACCESS_SET_SIZE = 40;
+	
 	public String adapterPath;
 	public String compiledScriptPath;
 	public String hibernatePath;
@@ -58,13 +59,11 @@ public final class NavajoConfig {
 	public boolean compileScripts = false;
 	protected HashMap properties = new HashMap();
 	private String configPath;
-//	protected NavajoClassSupplier classloader;
 	protected NavajoClassLoader betaClassloader;
 	protected NavajoClassSupplier adapterClassloader;
 	protected com.dexels.navajo.server.Repository repository;
 	protected Navajo configuration;
-	//private HashSet myJarResources = null;
-    public int maxAccessSetSize = 40;
+    public int maxAccessSetSize = MAX_ACCESS_SET_SIZE;
     
     /**
      * Several supporting threads.
@@ -76,8 +75,6 @@ public final class NavajoConfig {
     protected LockManager lockManager = null;
     protected DescriptionProvider myDescriptionProvider = null;
         
-    
-    
     public String rootPath;
     private String scriptVersion = "";
     private PersistenceManager persistenceManager;
@@ -336,7 +333,7 @@ public final class NavajoConfig {
     				body.
     				getProperty("parameters/use_log4j").getValue().equals("true"));
     		
-    		maxAccessSetSize = (body.getProperty("parameters/max_webservices") == null ? 50 :
+    		maxAccessSetSize = (body.getProperty("parameters/max_webservices") == null ? MAX_ACCESS_SET_SIZE :
     			                   Integer.parseInt(body.getProperty("parameters/max_webservices").getValue()) );
     		
     		try {
