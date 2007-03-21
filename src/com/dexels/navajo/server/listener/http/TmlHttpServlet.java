@@ -7,7 +7,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.server.*;
-import com.sun.xml.internal.bind.v2.util.FatalAdapter;
+//import com.sun.xml.internal.bind.v2.util.FatalAdapter;
 
 /**
  * Title:        Navajo
@@ -315,6 +315,9 @@ public class TmlHttpServlet extends HttpServlet {
 		  Navajo outDoc = dis.handle(in, certObject, 
 				  new ClientInfo(request.getRemoteAddr(), "unknown",
 						  recvEncoding, pT, useRecvCompression, useSendCompression, request.getContentLength(), created));
+//		  Navajo outDoc = dis.handle(in, certObject, 
+//				  new ClientInfo(request.getRemoteAddr(), request.getRemoteHost(),
+//						  recvEncoding, pT, useRecvCompression, useSendCompression, request.getContentLength(), created));
 
 		  
 		  if (useSendCompression) {
