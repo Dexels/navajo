@@ -468,19 +468,20 @@ public class SQLMap implements Mappable, LazyArray {
   }
 
   public void setAutoCommit(boolean b) throws UserException {
-    this.autoCommit = b;
-    try {
-      if ( con != null && ( myConnectionBroker == null || myConnectionBroker.supportsAutocommit ) ) {
-    	
-        con.commit(); // Commit previous actions.
-        con.setAutoCommit(b);
-      }
-    }
-    catch (SQLException sqle) {
-      logger.log(NavajoPriority.DEBUG, sqle.getMessage(), sqle);
-      throw new UserException( -1, sqle.getMessage(), sqle);
-    }
-    overideAutoCommit = true;
+	  try {
+		  if ( con != null && ( myConnectionBroker == null || myConnectionBroker.supportsAutocommit ) ) {
+			  if ( !autoCommit ) {
+				  con.commit(); // Commit previous actions.
+			  }
+			  this.autoCommit = b;
+			  con.setAutoCommit(b);
+		  }
+	  }
+	  catch (SQLException sqle) {
+		  logger.log(NavajoPriority.DEBUG, sqle.getMessage(), sqle);
+		  throw new UserException( -1, sqle.getMessage(), sqle);
+	  }
+	  overideAutoCommit = true;
   }
 
   public void setTransactionContext(int i) throws UserException {
@@ -866,7 +867,9 @@ public class SQLMap implements Mappable, LazyArray {
       }
       if (con != null && ( myConnectionBroker == null || myConnectionBroker.supportsAutocommit ) ) {
         boolean ac = (this.overideAutoCommit) ? autoCommit : ( (Boolean) autoCommitMap.get(datasource)).booleanValue();
-        con.commit();
+        if ( !ac ) {
+        	con.commit();
+        }
         con.setAutoCommit(ac);
         //con.setHoldability(ResultSet.CLOSE_CURSORS_AT_COMMIT);
         if (transactionIsolation != -1) {
