@@ -44,12 +44,12 @@ public abstract class BaseNode implements java.io.Serializable{
     myDocRoot = n;
   }
 
- public final void writeElement( Writer sw, String value ) throws IOException {
+ public final void writeElement(final Writer sw, String value ) throws IOException {
     sw.write(value);
   }
  
 
- public final void printElement(Writer sw, int indent) throws IOException {
+ public final void printElement(final Writer sw, int indent) throws IOException {
 	 String tagName = getTagName();
 
 	 for (int a = 0; a < indent; a++) {
@@ -134,7 +134,7 @@ public abstract class BaseNode implements java.io.Serializable{
 
  }  
   
-  public void write(Writer w) throws NavajoException {
+  public void write(final Writer w) throws NavajoException {
       try {
         printElement(w,0);
     } catch (IOException e) {
@@ -143,7 +143,7 @@ public abstract class BaseNode implements java.io.Serializable{
   }
  
 
-  public void write(OutputStream stream) throws NavajoException {
+  public void write(final OutputStream stream) throws NavajoException {
 	  try {
 //		  System.err.println("Writing to stream impl: "+stream.getClass());
 		  OutputStreamWriter osw = new OutputStreamWriter(stream,"UTF-8");
@@ -167,7 +167,7 @@ public abstract class BaseNode implements java.io.Serializable{
    * Replace all occurrences of the characters &, ', ", < and > by the escaped
    * characters &amp;, &quot;, &apos;, &lt; and &gt;
    */
-  private static String XMLEscape(String s) {
+  private static final String XMLEscape(String s) {
     
     boolean contains = false;
     for ( int i = 0; i < XML_ESCAPE_DELIMITERS.length(); i++ ) {
@@ -237,7 +237,7 @@ public abstract class BaseNode implements java.io.Serializable{
    * Replace all occurrences of the escaped characters &amp;, &quot;, &apos;,
    * &lt; and &gt; by the unescaped characters &, ', ", < and >.
    */
-  public static String XMLUnescape(String s) {
+  public static final String XMLUnescape(String s) {
       if ((s == null) || (s.length() == 0)) {
           return s;
       }
