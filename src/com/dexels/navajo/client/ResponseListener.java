@@ -10,8 +10,9 @@ import com.dexels.navajo.document.*;
  * @version 1.0
  */
 public interface ResponseListener {
-  public void receive(Navajo n, String method, String id);
-  public void handleException(Exception e);
-  public void setWaiting(boolean b);
-//  public String getIdentifier();
+	public void swingSafeReceive(Navajo n, String method, String id);
+	public void receive(Navajo n, String method, String id);
+	public void handleException(Exception e);
+	public void setWaiting(boolean b);
+//	public String getIdentifier();
 }
