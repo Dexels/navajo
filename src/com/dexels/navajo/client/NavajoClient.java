@@ -523,9 +523,9 @@ public class NavajoClient implements ClientInterface {
    * @param useCompression boolean
    */
   
-  protected BufferedInputStream doTransaction(String name, Navajo d, boolean useCompression) throws IOException, ClientException, NavajoException, javax.net.ssl.SSLHandshakeException {
+  protected InputStream doTransaction(String name, Navajo d, boolean useCompression) throws IOException, ClientException, NavajoException, javax.net.ssl.SSLHandshakeException {
     URL url;
-    
+    //useCompression = false;
     if (setSecure) {
       url = new URL("https://" + name);
     }
@@ -542,7 +542,13 @@ public class NavajoClient implements ClientInterface {
       HttpsURLConnection urlcon = (HttpsURLConnection) url.openConnection();
       urlcon.setSSLSocketFactory(sslFactory);
       con = urlcon;
+      urlcon.setHostnameVerifier(new HostnameVerifier() {
+    	  public boolean verify(String hostname, SSLSession session) {
+    		  return true;
+    	  }
+      });
     }
+    
    
     try {
     	java.lang.reflect.Method timeout = con.getClass().getMethod("setConnectTimeout", new Class[]{int.class});
@@ -569,16 +575,15 @@ public class NavajoClient implements ClientInterface {
     if (useCompression) {
     	con.setRequestProperty("Accept-Encoding", "gzip");
     	con.setRequestProperty("Content-Encoding", "gzip");
-    	OutputStream os = null;
-    	java.util.zip.GZIPOutputStream out = null;
+    	
+    	BufferedWriter out = null;
     	try {
-    		os = con.getOutputStream();
-    		out = new java.util.zip.GZIPOutputStream(os);
+    		out = new BufferedWriter(new OutputStreamWriter(new java.util.zip.GZIPOutputStream(con.getOutputStream()), "UTF-8"));
     		d.write(out, condensed, d.getHeader().getRPCName());
     	} finally  {
     		if ( out != null ) {
     			try {
-    				out.flush();
+    				//out.flush();
     				out.close();
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -587,14 +592,14 @@ public class NavajoClient implements ClientInterface {
     	}
     }
     else {
-    	OutputStream os = null;
+    	BufferedWriter os = null;
     	try {
-    		os = con.getOutputStream();
+    		os = new BufferedWriter(new OutputStreamWriter(con.getOutputStream(), "UTF-8"));
     		d.write(os, condensed, d.getHeader().getRPCName());    	
     	} finally {
     		if ( os != null ) {
     			try {
-    				os.flush();
+    				//os.flush();
     				os.close();
     			} catch (IOException e) {
     				e.printStackTrace();
@@ -603,16 +608,20 @@ public class NavajoClient implements ClientInterface {
     	}
     }
     // Lees bericht
-    BufferedInputStream in = null;
-    if (useCompression) {
-      java.util.zip.GZIPInputStream unzip = new java.util.zip.GZIPInputStream(con.getInputStream());
-      in = new BufferedInputStream(unzip);
-    }
-    else {
-      in = new BufferedInputStream(con.getInputStream());
+//    BufferedInputStream in = null;
+//    if (useCompression) {
+//      in = new BufferedInputStream(new java.util.zip.GZIPInputStream(con.getInputStream()));
+//    }
+//    else {
+//      in = new BufferedInputStream(con.getInputStream());
+//    }
+    
+    if ( useCompression ) {
+    	return new java.util.zip.GZIPInputStream(con.getInputStream());
+    } else {
+    	return con.getInputStream();
     }
     
-    return in;
   }
 
   /**
@@ -757,7 +766,7 @@ public class NavajoClient implements ClientInterface {
      	 
     	 
     	 
-        BufferedInputStream in = null;
+        InputStream in = null;
         Navajo n = null;
         try {
         	long timeStamp = System.currentTimeMillis();
@@ -914,8 +923,8 @@ public class NavajoClient implements ClientInterface {
 
   }
 
-private final BufferedInputStream retryTransaction(String server, Navajo out, boolean useCompression, int attemptsLeft, long interval, Navajo n) throws Exception {
-    BufferedInputStream in = null;
+private final InputStream retryTransaction(String server, Navajo out, boolean useCompression, int attemptsLeft, long interval, Navajo n) throws Exception {
+	InputStream in = null;
     
     globalRetryCounter++;
     System.err.println("------------> retrying transaction: " + server + ", attempts left: " + attemptsLeft+" total retries: "+globalRetryCounter);
@@ -1037,7 +1046,7 @@ private final BufferedInputStream retryTransaction(String server, Navajo out, bo
       }
     }
     Navajo docIn = null;
-    BufferedInputStream in = null;
+    InputStream in = null;
     try {
       if (protocol == HTTP_PROTOCOL) {
         in = doTransaction(server, out, useCompression);
@@ -1056,7 +1065,7 @@ private final BufferedInputStream retryTransaction(String server, Navajo out, bo
     		try {
 				in.close();
 			} catch (IOException e) {
-				// NOT INTERESTED.
+				//
 			}
     	}
     }
