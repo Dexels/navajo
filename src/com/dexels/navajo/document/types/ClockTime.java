@@ -33,7 +33,7 @@ public final static String VERSION = "$Id$";
   public static final int FIXED_DAY = 1;
   //private Date value;
   private Calendar calValue;
-  private static DateFormat df = SimpleDateFormat.getTimeInstance(2, Locale.GERMAN);
+  private static final DateFormat df = SimpleDateFormat.getTimeInstance(2, Locale.GERMAN);
 
   private final void normalize() {
     calValue.set(Calendar.MILLISECOND, 0);
