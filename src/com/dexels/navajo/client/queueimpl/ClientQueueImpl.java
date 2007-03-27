@@ -46,7 +46,7 @@ public class ClientQueueImpl extends NavajoClient {
             n = doSimpleSend(nc, mc, v);
           }
           if (response != null) {
-            rc.receive(n, mc, ic);
+            rc.swingSafeReceive(n, mc, ic);
           }
         }
         catch (Throwable ex) {
