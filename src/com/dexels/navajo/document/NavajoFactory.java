@@ -210,8 +210,11 @@ public abstract class NavajoFactory {
 	  tempDir = f;
   }
   
-  public File getTempDir() {
+  public final File getTempDir() {
 	  if ( tempDir != null ) {
+		  if (!tempDir.exists()) {
+			  tempDir.mkdirs();
+		  }
 		  return tempDir;
 	  } else {
 		  return new File(System.getProperty("java.io.tmpdir"));
