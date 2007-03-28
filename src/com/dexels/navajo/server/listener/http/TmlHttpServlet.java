@@ -1,6 +1,7 @@
 package com.dexels.navajo.server.listener.http;
 
 import java.io.*;
+import java.io.InputStreamReader;
 import java.util.*;
 
 import javax.servlet.*;
@@ -270,26 +271,23 @@ public class TmlHttpServlet extends HttpServlet {
 	  boolean useRecvCompression = ( (recvEncoding != null) && (recvEncoding.indexOf("zip") != -1));
 
 	  Dispatcher dis = null;
-	  BufferedInputStream is = null;
-	  Reader r = null;
+	  BufferedReader r = null;
+	  BufferedWriter out = null;
 	  try {
 
 		  Navajo in = null;
 
 		  if (useRecvCompression) {
-			  java.util.zip.GZIPInputStream unzip = new java.util.zip.GZIPInputStream(request.getInputStream());
-			  is = new BufferedInputStream(unzip);
-			  in = NavajoFactory.getInstance().createNavajo(is);
-			  is.close();
-			  is = null;
+			  r = new BufferedReader(new InputStreamReader(new java.util.zip.GZIPInputStream(request.getInputStream()), "UTF-8")); 
 		  }
 		  else {
-			  r = request.getReader();
-			  in = NavajoFactory.getInstance().createNavajo(r);
-			  r.close();
-			  r = null;
+			  r = new BufferedReader(request.getReader());
 		  }
 
+		  in = NavajoFactory.getInstance().createNavajo(r);
+		  r.close();
+		  r = null;
+		  
 		  long stamp = System.currentTimeMillis();
 		  int pT = (int) (stamp - start);
 
@@ -320,20 +318,20 @@ public class TmlHttpServlet extends HttpServlet {
 //						  recvEncoding, pT, useRecvCompression, useSendCompression, request.getContentLength(), created));
 
 		  
+		  response.setContentType("text/xml; charset=UTF-8");
+		  
 		  if (useSendCompression) {
-			  response.setContentType("text/xml; charset=UTF-8");
 			  response.setHeader("Content-Encoding", "gzip");
-			  java.util.zip.GZIPOutputStream gzipout = new java.util.zip.GZIPOutputStream(response.getOutputStream());
-			  outDoc.write(gzipout);
-			  gzipout.close();
+			  out = new BufferedWriter(new OutputStreamWriter(new java.util.zip.GZIPOutputStream(response.getOutputStream()), "UTF-8"));
 		  }
 		  else {
-			  response.setContentType("text/xml; charset=UTF-8");
-			  Writer out = (Writer) response.getWriter();
-			  //OutputStream out = response.getOutputStream();
-			  outDoc.write(out);
-			  out.close();
+			  out = new BufferedWriter(response.getWriter());
 		  }
+		  
+		  outDoc.write(out);
+		  out.close();
+		  out = null;
+		  
 		  System.err.println(outDoc.getHeader().getAttribute("accessId") + ":" + in.getHeader().getRPCName() + "(" + in.getHeader().getRPCUser() + "):" + ( System.currentTimeMillis() - start ) + " ms. (st=" + 
 				  ( outDoc.getHeader().getAttribute("serverTime") + ",rpt=" + outDoc.getHeader().getAttribute("requestParseTime") + ",at=" + outDoc.getHeader().getAttribute("authorisationTime") + ",pt=" + 
 						  outDoc.getHeader().getAttribute("processingTime") + ",tc=" + outDoc.getHeader().getAttribute("threadCount") + ")" ));
@@ -351,17 +349,20 @@ public class TmlHttpServlet extends HttpServlet {
 	  }
 	  finally {
 		  dis = null;
-		  if ( is != null ) {
+		  if (r!=null) {
 			  try {
-				  is.close();
+				  r.close();
 			  } catch (Exception e) {
 				  // NOT INTERESTED.
 			  }
 		  }
-		  if (r!=null) {
-			  r.close();
+		  if (out != null) {
+			  try {
+				  out.close();
+			  } catch (Exception e) {
+				  // NOT INTERESTED.
+			  }
 		  }
-		
 	  }
   }
 }
