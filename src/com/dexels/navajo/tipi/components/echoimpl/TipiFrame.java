@@ -70,9 +70,9 @@ public class TipiFrame extends TipiEchoDataComponentImpl {
         contentPane.add(mySplit);
         menuPane = new ContainerEx();
         realContent = new ContainerEx();
-        realContent.setzIndex(Integer.MIN_VALUE);
+//        realContent.setzIndex(Integer.MIN_VALUE);
         mySplit.add(menuPane); 
-        menuPane.setzIndex(Integer.MAX_VALUE);
+//        menuPane.setzIndex(Integer.MAX_VALUE);
         
         mySplit.add(realContent);
         
