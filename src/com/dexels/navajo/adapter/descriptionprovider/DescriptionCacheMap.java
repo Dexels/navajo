@@ -42,15 +42,15 @@ public class DescriptionCacheMap implements Mappable {
 		myConfig = config;
 	}
 
-	public void setDumpCache(boolean b) {
-		try {
-			myAccess.getOutputDoc().addMessage(myConfig.getDescriptionProvider().dumpCacheMessage(myAccess.getOutputDoc()));
-			
-		} catch (NavajoException e) {
-			e.printStackTrace();
-		}
-	}
-	
+//	public void setDumpCache(boolean b) {
+//		try {
+//			myAccess.getOutputDoc().addMessage(myConfig.getDescriptionProvider().dumpCacheMessage(myAccess.getOutputDoc()));
+//			
+//		} catch (NavajoException e) {
+//			e.printStackTrace();
+//		}
+//	}
+//	
 	public void store() throws MappableException, UserException {
 		// l
 

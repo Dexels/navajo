@@ -946,19 +946,10 @@ public class SQLMap implements Mappable, LazyArray {
           if (debug) {
             System.err.println("TRYING TO INSERT A BLOB....");
           }
+          Binary b = (Binary)param;
+          System.err.println("APPROACHING BLOBNESS...");
           //byte[] data = ( (Binary) param).getData();
-          // TODO BLOB IS ONLY ORACLE SPECIFIC!!!!!!!!!!!!!!!!!!
-          oracle.sql.BLOB blob = oracle.sql.BLOB.createTemporary(this.con, false, oracle.sql.BLOB.DURATION_SESSION);
-          blob.open(oracle.sql.BLOB.MODE_READWRITE);
-          OutputStream os = blob.getBinaryOutputStream();
-          try {
-        	  ( (Binary) param).write( os );
-        	  os.close();
-          } catch (Exception e) {
-        	  e.printStackTrace(System.err);
-          }        
-          blob.close();
-          statement.setBlob(i + 1, blob);
+          setBlob(statement, i, b);
           //statement.setBytes(i+1, data);
           //java.io.ByteArrayInputStream bis = new java.io.ByteArrayInputStream(data);
           //statement.setBinaryStream(i + 1, bis, data.length);
@@ -970,6 +961,41 @@ public class SQLMap implements Mappable, LazyArray {
     }
 
   }
+  // TODO BLOB IS ONLY ORACLE SPECIFIC!!!!!!!!!!!!!!!!!!
+  
+private void setOracleBlob(PreparedStatement statement, int i, Binary param) throws SQLException {
+	oracle.sql.BLOB blob = oracle.sql.BLOB.createTemporary(this.con, false, oracle.sql.BLOB.DURATION_SESSION);
+	  blob.open(oracle.sql.BLOB.MODE_READWRITE);
+	  statement.setBlob(i+1,blob);
+	  OutputStream os = blob.getBinaryOutputStream();
+	  try {
+		  param.write( os );
+		  os.close();
+	  } catch (Exception e) {
+		  e.printStackTrace(System.err);
+	  }        
+	  blob.close();
+	  statement.setBlob(i + 1, blob);
+}
+
+/**
+ * BEWARE! Possible resource leak!!! Should the stream be closed?
+ * @param statement
+ * @param i
+ * @param b
+ * @throws SQLException
+ */
+  
+private void setBlob(PreparedStatement statement, int i, Binary b) throws SQLException {
+	  InputStream os = b.getDataAsStream();
+	  statement.setBinaryStream(i+1,os,(int)b.getLength());
+	  // Should the stream be closed yet?
+//	  try {
+//		os.close();
+//	} catch (IOException e) {
+//		e.printStackTrace();
+//	}
+}
 
   /**
    * NOTE: DO NOT USE THIS METHOD ON LARGE RESULTSETS WITHOUT SETTING ENDINDEX.
@@ -1159,9 +1185,9 @@ public class SQLMap implements Mappable, LazyArray {
                 int type = meta.getColumnType(i);
 
 //                if (debug) {
-//                  System.err.println("i = " + i + ", type = " + type + "(BLOB = " + Types.BLOB + ")" + " getType() = " + getType(type));
+                  System.err.println("i = " + i + ", type = " + type + "(BLOB = " + Types.BLOB + ")" + " getType() = " + getType(type));
 //                }
-
+                
                 Object value = null;
                 final String strVal = rs.getString(i);
 
@@ -1169,23 +1195,14 @@ public class SQLMap implements Mappable, LazyArray {
                   switch (type) {
 
                     case Types.BINARY:
-
+                    case Types.BLOB:
+                    case -4:
                       InputStream is = rs.getBinaryStream(i);
                       if (is != null) {
                         value = new Binary(is);
                       } else {
                         value = null;
                       }
-                      break;
-                    case Types.BLOB:
-
-                    	InputStream is2 = rs.getBinaryStream(i);
-                        if (is2 != null) {
-                            value = new Binary(is2);
-                          } else {
-                            value = null;
-                          }
-                    	
                       break;
 
                     case Types.INTEGER:
