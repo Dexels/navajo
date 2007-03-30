@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.Rectangle;
 import java.util.*;
 
 import javax.swing.*;
@@ -45,15 +46,25 @@ public class TipiGridPanel extends TipiPanel {
     private final Set fixedSet = new HashSet();
 //	private final Map heightStrutConstraiintMap = new HashMap();
 	// List of array of boolean
-	private final Set availabilityMatrix = new HashSet(); 
+	private final Set availabilityMatrix = new HashSet();
+
+private GridBagLayout gridBagLayout; 
 	
 	public TipiGridPanel() {
 	}
 
+	
+	
+	
+    
+	
+	
+	
 	public Object createContainer() {
-        gridComponent = (JPanel)super.createContainer();
-//        gridComponent = new JPanel();
-		gridComponent.setLayout(new GridBagLayout());
+		gridComponent = (JPanel) super.createContainer();
+gridBagLayout = new GridBagLayout();
+		//        gridComponent = new JPanel();
+		gridComponent.setLayout(gridBagLayout);
            TipiHelper th = new TipiSwingHelper();
             th.initHelper(this);
             addHelper(th);
@@ -82,9 +93,18 @@ public class TipiGridPanel extends TipiPanel {
 //		 c.setBackground(new Color(t.nextFloat(),t.nextFloat(),t.nextFloat()));
          GridBagConstraints gc = parseGridConstraints(constr,jc);
 //         gridComponent.add(new JLabel(">>"+o.toString()),gc);
-         
+         System.err.println("GC: "+gc);
+         System.err.println("Preferred of component to add: "+c.getPreferredSize()+" isset: "+c.isPreferredSizeSet()+" component: "+c);
          gridComponent.add(c,gc);
-	 }
+
+         System.err.println("Added to container. LAyout indications: ");
+//         System.err.println("Max: "+ gridBagLayout.maximumLayoutSize(gridComponent));
+//         System.err.println("Min: "+ gridBagLayout.minimumLayoutSize(gridComponent));
+         System.err.println("Pref:"+ gridBagLayout.preferredLayoutSize(gridComponent));
+    }
+    
+    
+    
 	 
 	  public void initBeforeBuildingChildren(XMLElement instance, XMLElement classdef, XMLElement def) {
 		  String ss = instance.getStringAttribute("columnWidth");
@@ -99,8 +119,12 @@ public class TipiGridPanel extends TipiPanel {
 
 	  }	 
 	 
-	 public GridBagConstraints parseGridConstraints(String txt, JComponent component) {
-		 GridBagConstraints myData = new GridBagConstraints();
+	 public GridBagConstraints parseGridConstraints(final String txt, JComponent component) {
+		 GridBagConstraints myData = new GridBagConstraints() {
+			 public String toString() {
+				 return this.ipadx+" - "+ipady+" "+txt;
+			 }
+		 };
 		 myData.fill=GridBagConstraints.BOTH;
 		 myData.weightx=isFixed(currentx)?0:1;
 		 
@@ -110,6 +134,7 @@ public class TipiGridPanel extends TipiPanel {
 //		 myData.weightx = 1;
 //		 System.err.println("Parsing constraints: "+txt+" >> "+getPath()+" gridwidth: "+gridwidth);
 		 myData.gridx = currentx;
+		 myData.anchor = GridBagConstraints.NORTHWEST;
 		 myData.gridy = currenty;
 //		 System.err.println("Adding at: "+currentx+"/"+currenty+" grid: "+gridwidth);
 		 if (txt!=null) {
@@ -240,7 +265,7 @@ public class TipiGridPanel extends TipiPanel {
                 int height = Integer.parseInt(value);
                 addHeightStrut(currenty, height, current);
                 current.setMaximumSize(new Dimension(current.getMaximumSize().width,height));
-                current.setPreferredSize(new Dimension(current.getMaximumSize().width,height));
+                current.setMinimumSize(new Dimension(0,height));
             }
 		}
 		 
@@ -314,8 +339,13 @@ public class TipiGridPanel extends TipiPanel {
 			 int height = ((Integer)object).intValue();
 //			 gridComponent.setHeight(new Extent(height,Extent.PX));
 			 gridComponent.setMinimumSize(new Dimension(0,height));
-		 }
-		super.setComponentValue(name, object);
+			 gridComponent.setMaximumSize(new Dimension(Integer.MAX_VALUE,height));
+			 }
+//		 if ("maxheight".equals(name)) {
+//			 int height = ((Integer)object).intValue();
+////			 gridComponent.setHeight(new Extent(height,Extent.PX));
+//			 gridComponent.setMaximumSize(new Dimension(Integer.MAX_VALUE,height));
+//		 }		super.setComponentValue(name, object);
 	}
 	private void addHeightStrut(int y, int height, JComponent current) {
 		int actualHeight = height;
