@@ -43,28 +43,36 @@ public class TipiSwingPanel
       this.myComponent = null;
     }
   
-//  
-//  private Dimension checkMax(Dimension preferredSize) {
-//      Dimension maximumSize = getMaximumSize();
-//      if (maximumSize==null) {
-//          return preferredSize;
-//      }
-//      return new Dimension(Math.min(preferredSize.width, maximumSize.width),Math.min(preferredSize.height, maximumSize.height));
-//  }
-//  private Dimension checkMin(Dimension preferredSize) {
-//      Dimension minimumSize = getMinimumSize();
-//      if (minimumSize==null) {
-//          return preferredSize;
-//      }
-//      return new Dimension(Math.max(preferredSize.width, minimumSize.width),Math.max(preferredSize.height, minimumSize.height));
-//  }
-//
-//  public Dimension checkMaxMin(Dimension d) {
-//      return checkMin(checkMax(d));
-//  }
-//  public Dimension getPreferredSize() {
-//      return checkMaxMin(super.getPreferredSize());
-//  }
+  public String toString() {
+	  if(myComponent!=null) {
+		  return "Class: "+getClass()+" component: "+myComponent.getClass()+" path: "+myComponent.getPath();
+	  } else {
+		  return "Unknown tipi component";
+	  }
+  }
+  
+  
+  private Dimension checkMax(Dimension preferredSize) {
+      Dimension maximumSize = getMaximumSize();
+      if (maximumSize==null) {
+          return preferredSize;
+      }
+      return new Dimension(Math.min(preferredSize.width, maximumSize.width),Math.min(preferredSize.height, maximumSize.height));
+  }
+  private Dimension checkMin(Dimension preferredSize) {
+      Dimension minimumSize = getMinimumSize();
+      if (minimumSize==null) {
+          return preferredSize;
+      }
+      return new Dimension(Math.max(preferredSize.width, minimumSize.width),Math.max(preferredSize.height, minimumSize.height));
+  }
+
+  public Dimension checkMaxMin(Dimension d) {
+      return checkMin(checkMax(d));
+  }
+  public Dimension getPreferredSize() {
+      return checkMaxMin(super.getPreferredSize());
+  }
 public void paintComponent(Graphics g) {
     super.paintComponent(g);
     if (myComponent==null) {
@@ -169,4 +177,6 @@ public boolean getScrollableTracksViewportWidth() {
 public int getScrollableUnitIncrement(Rectangle arg0, int arg1, int arg2) {
 	return 20;
 }
+
+
 }
