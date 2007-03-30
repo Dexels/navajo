@@ -51,6 +51,7 @@ public class TipiTable
   private boolean ignoreColumns = false;
 
   public Object createContainer() {
+//    TipiMessageTablePanel mm = new TipiMessageTablePanel(myContext);
     TipiMessageTablePanel mm = new TipiMessageTablePanel(myContext);
     mm.setShowRowHeaders(false);
     // Don't register actionPerformed, that is done elsewhere.
@@ -59,11 +60,13 @@ public class TipiTable
         messageTableSelectionChanged(e);
       }
     });
+  //  mm.setUseScrollBars(true);
     mm.addChangeListener(this);
     TipiHelper th = new TipiSwingHelper();
     th.initHelper(this);
     addHelper(th);
     mm.doLayout();
+   // mm.setSize(mm.getPreferredSize());
     return mm;
   }
 
@@ -308,10 +311,10 @@ public class TipiTable
               mtp.createColumnsFromDef(m);
               ignoreColumns = true;
             }
-            Dimension d = mtp.getPreferredSize();
+//            Dimension d = mtp.getPreferredSize();
             mtp.setMessage(m);
-            mtp.setPreferredSize(d);
-            mtp.revalidate();
+//            mtp.setPreferredSize(d);
+//            mtp.revalidate();
           }
         });
       }
