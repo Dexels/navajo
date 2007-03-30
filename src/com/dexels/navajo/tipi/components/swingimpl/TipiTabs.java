@@ -2,6 +2,7 @@ package com.dexels.navajo.tipi.components.swingimpl;
 
 import java.util.*;
 import java.awt.*;
+
 import javax.swing.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
@@ -28,7 +29,30 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 
   public Object createContainer() {
     final TipiComponent me = this;
-    final JTabbedPane jt = new JTabbedPane();
+    final JTabbedPane jt = new JTabbedPane() {
+
+    	  private Dimension checkMax(Dimension preferredSize) {
+    	      Dimension maximumSize = getMaximumSize();
+    	      if (maximumSize==null) {
+    	          return preferredSize;
+    	      }
+    	      return new Dimension(Math.min(preferredSize.width, maximumSize.width),Math.min(preferredSize.height, maximumSize.height));
+    	  }
+    	  private Dimension checkMin(Dimension preferredSize) {
+    	      Dimension minimumSize = getMinimumSize();
+    	      if (minimumSize==null) {
+    	          return preferredSize;
+    	      }
+    	      return new Dimension(Math.max(preferredSize.width, minimumSize.width),Math.max(preferredSize.height, minimumSize.height));
+    	  }
+
+    	  public Dimension checkMaxMin(Dimension d) {
+    	      return checkMin(checkMax(d));
+    	  }
+    	  public Dimension getPreferredSize() {
+    	      return checkMaxMin(super.getPreferredSize());
+    	  }
+    };
     TipiHelper th = new TipiSwingHelper();
     th.initHelper(this);
     addHelper(th);
@@ -38,6 +62,7 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
           Component childContainer = jt.getSelectedComponent();
           me.performTipiEvent("onTabChanged", null, false);
           lastSelectedTab = jt.getSelectedComponent();
+          lastSelectedTab.doLayout();
         }
         catch (TipiException ex) {
           System.err.println("Exception while switching tabs.");
@@ -91,11 +116,20 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
   }
 
   public void addToContainer(Object c, Object constraints) {
-    ( (JTabbedPane) getContainer()).addTab( (String) constraints, (Component) c);
+	  JComponent jc = (JComponent)c;
+//	  System.err.println("Preferred sizz: "+jc.getPreferredSize());
+	  Dimension d = jc.getPreferredSize();
+	  if(d.width<=0 || d.height<=0) {
+		  jc.setPreferredSize(null);
+	  }
+	  jc.revalidate();
+
+	  ( (JTabbedPane) getContainer()).addTab( (String) constraints, jc);
+//    System.err.println("Preferred size: "+jc.getPreferredSize()+" component: "+jc.getClass()+" layout: "+jc.getLayout().getClass());
     JTabbedPane pane = (JTabbedPane) getContainer();
-    pane.setEnabledAt(pane.indexOfComponent( (Component) c), ( (Component) c).isEnabled());
+    pane.setEnabledAt(pane.indexOfComponent( jc),  jc.isEnabled());
     if (lastSelectedTab==null) {
-      lastSelectedTab = (Component)c;
+      lastSelectedTab = jc;
     }
   }
 
