@@ -114,7 +114,7 @@ public class NavajoClient implements ClientInterface {
     comparedServicesUpdateToQueryMap.put(serviceUpdate, serviceQuery);
   }
 
-  private final void checkForComparedServices(String queryService, Navajo n) {
+  private final void checkForComparedServices(final String queryService, final Navajo n) {
     try {
       String s = (String) comparedServicesQueryToUpdateMap.get(queryService);
       if (s != null) {
@@ -127,7 +127,7 @@ public class NavajoClient implements ClientInterface {
     }
   }
 
-  private boolean hasComparedServiceChanged(String updateService, Navajo n) {
+  private final boolean hasComparedServiceChanged(final String updateService, final Navajo n) {
     try {
       Navajo orig = (Navajo) storedNavajoComparisonMap.get(updateService);
       if (orig != null) {
@@ -156,7 +156,7 @@ public class NavajoClient implements ClientInterface {
    * Returns "http"
    * @return String
    */
-  public String getClientName() {
+  public final String getClientName() {
     return "http";
   }
 
@@ -192,7 +192,7 @@ public class NavajoClient implements ClientInterface {
   }
 
   
-  public String getSessionToken() {
+  public final String getSessionToken() {
 	  return mySessionToken;
   }
   
@@ -209,7 +209,7 @@ public class NavajoClient implements ClientInterface {
    * Gets this NavajoClient object's username
    * @return String
    */
-  public String getUsername() {
+  public final String getUsername() {
     return username;
   }
 
@@ -217,7 +217,7 @@ public class NavajoClient implements ClientInterface {
    * Gets this NavajoClient object's password
    * @return String
    */
-  public String getPassword() {
+  public final String getPassword() {
 //    System.err.println("Getting password: "+password);
     return password;
   }
@@ -226,7 +226,7 @@ public class NavajoClient implements ClientInterface {
    * Gets this NavajoClient object's server URL
    * @return String
    */
-  public String getServerUrl() {
+  public final String getServerUrl() {
     return getCurrentHost();
   }
 
@@ -342,7 +342,7 @@ public class NavajoClient implements ClientInterface {
    * @param m Message
    * @return boolean
    */
-  public boolean removeGlobalMessage(Message m) {
+  public final boolean removeGlobalMessage(Message m) {
     return globalMessages.remove(m.getName()) != null;
   }
 
@@ -351,7 +351,7 @@ public class NavajoClient implements ClientInterface {
    * @param name
    * @return
    */
-  public Message getGlobalMessage(String name) {
+  public final Message getGlobalMessage(String name) {
 	  return (Message)globalMessages.get(name);
   }
   
@@ -515,6 +515,25 @@ public class NavajoClient implements ClientInterface {
     return con;
   }
 
+  private final void readErrorStream(final HttpURLConnection myCon) {
+	  try {
+		  if ( myCon != null ) {
+			  int respCode = myCon.getResponseCode();
+			  InputStream es = myCon.getErrorStream();
+			  int ret = 0;
+			  // read the response body
+			  byte [] buf = new byte[32];
+			  while ((ret = es.read(buf)) > 0) {
+				  // Ignore errorstream.
+			  }
+			  // close the errorstream
+			  es.close();
+		  }
+	  } catch (IOException ioe) {
+		  ioe.printStackTrace(System.err);
+	  }
+  }
+  
   /**
    * Do a transation with the Navajo Server (name) using
    * a Navajo Message Structure (TMS) compliant XML document.
@@ -523,7 +542,7 @@ public class NavajoClient implements ClientInterface {
    * @param useCompression boolean
    */
   
-  protected InputStream doTransaction(String name, Navajo d, boolean useCompression) throws IOException, ClientException, NavajoException, javax.net.ssl.SSLHandshakeException {
+  protected InputStream doTransaction(String name, Navajo d, boolean useCompression, HttpURLConnection myCon) throws IOException, ClientException, NavajoException, javax.net.ssl.SSLHandshakeException {
     URL url;
     //useCompression = false;
     if (setSecure) {
@@ -549,7 +568,8 @@ public class NavajoClient implements ClientInterface {
       });
     }
     
-   
+    myCon = con;
+    
     try {
     	java.lang.reflect.Method timeout = con.getClass().getMethod("setConnectTimeout", new Class[]{int.class});
     	timeout.invoke( con, new Object[]{new Integer(CONNECT_TIMEOUT)});
@@ -560,12 +580,12 @@ public class NavajoClient implements ClientInterface {
     con.setDoOutput(true);
     con.setDoInput(true);
     con.setUseCaches(false);
-//  con.setRequestProperty("Connection", "keep-alive");
+    //con.setRequestProperty("Connection", "keep-alive");
     con.setRequestProperty("Content-type", "text/xml; charset=UTF-8");
 
     try {
     	java.lang.reflect.Method chunked = con.getClass().getMethod("setChunkedStreamingMode", new Class[]{int.class});
-    	chunked.invoke( con, new Object[]{new Integer(1000)});
+    	chunked.invoke( con, new Object[]{new Integer(1024)});
     	con.setRequestProperty("Transfer-Encoding", "chunked" );
     } catch (Throwable e) {
      	System.err.println("setChunkedStreamingMode does not exist, upgrade to java 1.5+");
@@ -768,10 +788,12 @@ public class NavajoClient implements ClientInterface {
     	 
         InputStream in = null;
         Navajo n = null;
+        HttpURLConnection myCon = null;
+        
         try {
         	long timeStamp = System.currentTimeMillis();
         	
-        	in = doTransaction(server, out, useCompression);
+        	in = doTransaction(server, out, useCompression, myCon);
 //            if (n == null) {
                 n = NavajoFactory.getInstance().createNavajo(in);
                 if (n.getHeader()!=null) {
@@ -823,6 +845,7 @@ public class NavajoClient implements ClientInterface {
         }
         catch (IOException uhe) {
         	uhe.printStackTrace();
+        	readErrorStream(myCon);
           System.err.println("Generic IOException: "+uhe.getMessage()+". Retrying without compression...");
           n = NavajoFactory.getInstance().createNavajo();
           in = retryTransaction(server, out, false, retryAttempts, retryInterval, n); // lees uit resource
@@ -878,7 +901,7 @@ public class NavajoClient implements ClientInterface {
 
 
 
-  private void fireBroadcastEvents(Navajo n) {
+  private final void fireBroadcastEvents(final Navajo n) {
 	  Header h = n.getHeader();
 	  
 	  
@@ -940,24 +963,25 @@ private final InputStream retryTransaction(String server, Navajo out, boolean us
     	server = getCurrentHost();
 	}
     
+    HttpURLConnection myCon = null;
     try {
-      try {
-        Thread.sleep(interval);
-    } catch (InterruptedException e) {
-         e.printStackTrace();
-    }
-      in = doTransaction(server, out, useCompression);
-      System.err.println("It worked!  the inputstream is: " + in);
-      return in;
+    	try {
+    		Thread.sleep(interval);
+    	} catch (InterruptedException e) {
+    		e.printStackTrace();
+    	}
+    	in = doTransaction(server, out, useCompression, myCon);
+    	System.err.println("It worked!  the inputstream is: " + in);
+    	return in;
     }
     catch (javax.net.ssl.SSLException ex) {
-      generateConnectionError(n, 666666, "Wrong certificate or ssl connection problem: " + ex.getMessage());
+    	generateConnectionError(n, 666666, "Wrong certificate or ssl connection problem: " + ex.getMessage());
     }
     catch (java.net.UnknownHostException uhe) {
-      generateConnectionError(n, 7777777, "Unknown host: " + uhe.getMessage());
+    	generateConnectionError(n, 7777777, "Unknown host: " + uhe.getMessage());
     }
     catch (java.net.NoRouteToHostException uhe) {
-      generateConnectionError(n, 55555, "No route to host: " + uhe.getMessage());
+    	generateConnectionError(n, 55555, "No route to host: " + uhe.getMessage());
     }
     catch (java.net.SocketException uhe) {
     	attemptsLeft--;
@@ -972,6 +996,7 @@ private final InputStream retryTransaction(String server, Navajo out, boolean us
     	}
     }
     catch (IOException uhe) {
+    	readErrorStream(myCon);
     	if (attemptsLeft == 0) {
     		disabledServers.put(getCurrentHost(), new Long(System.currentTimeMillis()));
     		System.err.println("Disabled server: "+getCurrentHost()+" for "+serverDisableTimeout+" millis." );
@@ -1047,9 +1072,10 @@ private final InputStream retryTransaction(String server, Navajo out, boolean us
     }
     Navajo docIn = null;
     InputStream in = null;
+    HttpURLConnection myCon = null;
     try {
       if (protocol == HTTP_PROTOCOL) {
-        in = doTransaction(server, out, useCompression);
+        in = doTransaction(server, out, useCompression, myCon);
         docIn = NavajoFactory.getInstance().createNavajo(in);
       }
       else {
@@ -1058,6 +1084,7 @@ private final InputStream retryTransaction(String server, Navajo out, boolean us
     }
     catch (IOException e) {
       e.printStackTrace();
+      readErrorStream(myCon);
       throw NavajoFactory.getInstance().createNavajoException("An error occured in doMethod(): " + e.getMessage());
     }
     finally {
@@ -1673,11 +1700,11 @@ public String getCurrentHost() {
 	return null;
 }
 
-public String getCurrentHost(int serverIndex) {
+public final String getCurrentHost(int serverIndex) {
 		return serverUrls[serverIndex];
 }
 
-public void switchServer(int startIndex, boolean forceChange) {
+public final void switchServer(int startIndex, boolean forceChange) {
 	if (serverUrls==null || serverUrls.length==0) {
 		return;
 	}
@@ -1700,7 +1727,7 @@ public void switchServer(int startIndex, boolean forceChange) {
 //		throw new RuntimeException("No enabled servers left!");
 	}
 	String nextServer = serverUrls[currentServerIndex];
-	System.err.println("Current Server now: "+nextServer);
+	//System.err.println("Current Server now: "+nextServer);
 
 	if (disabledServers.containsKey(nextServer)) {
 		Long timeout = (Long)disabledServers.get(nextServer);
