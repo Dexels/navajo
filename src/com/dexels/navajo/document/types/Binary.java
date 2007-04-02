@@ -82,8 +82,8 @@ public final class Binary extends NavajoType implements Serializable {
             } catch (Exception e) {
                 e.printStackTrace(System.err);
             }
+            this.mimetype = guessContentType();
         }
-        this.mimetype = guessContentType();
      }    
     
     public Binary() {
@@ -137,13 +137,21 @@ public final class Binary extends NavajoType implements Serializable {
         int b = -1;
         long fileSize = 0;
         OutputStream fos = createTempFileOutputStream();
-        byte[] buffer = new byte[1024];
-        while ((b = is.read(buffer, 0, buffer.length)) != -1) {
-            fos.write(buffer, 0, b);
-            fileSize+=b;
-        }
-        fos.close();
-        is.close();
+		byte[] buffer = new byte[1024];
+		try {
+			while ((b = is.read(buffer, 0, buffer.length)) != -1) {
+				fos.write(buffer, 0, b);
+				fileSize += b;
+			}
+		} finally {
+			
+			try {
+				fos.close();
+			} catch (IOException e) {}
+			try {
+			is.close();
+			} catch (IOException e) {}
+		}
         expectedLength = fileSize;
 
         this.mimetype = getSubType("mime");
