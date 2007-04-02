@@ -166,6 +166,9 @@ public class SQLMap implements Mappable, LazyArray {
   protected Connection con = null;
   protected PreparedStatement statement = null;
   protected ArrayList parameters = null;
+  
+  protected final ArrayList binaryStreamList = new ArrayList();
+  
 
   protected static ConnectionBrokerManager fixedBroker = null;
   protected DbConnectionBroker myConnectionBroker = null;
@@ -359,6 +362,18 @@ public class SQLMap implements Mappable, LazyArray {
   public void setDebug(boolean b) {
     this.debug = b;
   }
+  
+  public void cleanupBinaryStreams() {
+	  for (int i = 0; i < binaryStreamList.size(); i++) {
+		InputStream is = (InputStream)binaryStreamList.get(i);
+		try {
+			is.close();
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+	}
+	  binaryStreamList.clear();
+  }
 
   public void load(Parameters parms, Navajo inMessage, Access access,
                    NavajoConfig config) throws MappableException, UserException {
@@ -376,6 +391,8 @@ public class SQLMap implements Mappable, LazyArray {
   }
 
   public void kill() {
+	  
+	cleanupBinaryStreams();
 	  
     if (autoCommitMap.get(this.datasource) == null) {
       return;
@@ -420,6 +437,8 @@ public class SQLMap implements Mappable, LazyArray {
   }
 
   public void store() throws MappableException, UserException {
+	  
+	  cleanupBinaryStreams();
 	  // Kill temporary broker.
 	  // If part of transaction context, do not free connection or commit changes yet.
 	  boolean isClosed = false;
@@ -963,20 +982,20 @@ public class SQLMap implements Mappable, LazyArray {
   }
   // TODO BLOB IS ONLY ORACLE SPECIFIC!!!!!!!!!!!!!!!!!!
   
-private void setOracleBlob(PreparedStatement statement, int i, Binary param) throws SQLException {
-	oracle.sql.BLOB blob = oracle.sql.BLOB.createTemporary(this.con, false, oracle.sql.BLOB.DURATION_SESSION);
-	  blob.open(oracle.sql.BLOB.MODE_READWRITE);
-	  statement.setBlob(i+1,blob);
-	  OutputStream os = blob.getBinaryOutputStream();
-	  try {
-		  param.write( os );
-		  os.close();
-	  } catch (Exception e) {
-		  e.printStackTrace(System.err);
-	  }        
-	  blob.close();
-	  statement.setBlob(i + 1, blob);
-}
+//private void setOracleBlob(PreparedStatement statement, int i, Binary param) throws SQLException {
+//	oracle.sql.BLOB blob = oracle.sql.BLOB.createTemporary(this.con, false, oracle.sql.BLOB.DURATION_SESSION);
+//	  blob.open(oracle.sql.BLOB.MODE_READWRITE);
+//	  statement.setBlob(i+1,blob);
+//	  OutputStream os = blob.getBinaryOutputStream();
+//	  try {
+//		  param.write( os );
+//		  os.close();
+//	  } catch (Exception e) {
+//		  e.printStackTrace(System.err);
+//	  }        
+//	  blob.close();
+//	  statement.setBlob(i + 1, blob);
+//}
 
 /**
  * BEWARE! Possible resource leak!!! Should the stream be closed?
@@ -989,12 +1008,9 @@ private void setOracleBlob(PreparedStatement statement, int i, Binary param) thr
 private void setBlob(PreparedStatement statement, int i, Binary b) throws SQLException {
 	  InputStream os = b.getDataAsStream();
 	  statement.setBinaryStream(i+1,os,(int)b.getLength());
-	  // Should the stream be closed yet?
-//	  try {
-//		os.close();
-//	} catch (IOException e) {
-//		e.printStackTrace();
-//	}
+	  
+	  // All streams in this list will be closed on kill() or store()
+	  binaryStreamList.add(os);
 }
 
   /**
