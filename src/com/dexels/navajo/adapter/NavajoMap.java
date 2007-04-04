@@ -357,7 +357,14 @@ public class NavajoMap implements Mappable {
       if (error != null) {
           String errMsg = error.getProperty("message").getValue();
           String errCode = error.getProperty("code").getValue();
-          throw new UserException(Integer.parseInt(errCode), errMsg);
+          int errorCode = -1;
+	          try {
+				errorCode = Integer.parseInt(errCode);
+			} catch (NumberFormatException e) {
+				
+				e.printStackTrace();
+			}
+          throw new UserException(errorCode, errMsg);
       }
 
       boolean authenticationError = false;
