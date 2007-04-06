@@ -44,9 +44,11 @@ public class FileStore implements MessageStore {
 
 			for (int i = 0; i < files.length; i++) {
 				File f = files[i];
-				currentObjects.add(f);
+				if ( f.isFile() ) {
+					currentObjects.add(f);
+				}
 			}
-			
+
 			objectPointer = currentObjects.iterator();
 		}
 	}
