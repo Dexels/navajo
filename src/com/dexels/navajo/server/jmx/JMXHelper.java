@@ -93,6 +93,7 @@ public final class JMXHelper  {
 		try {
 			RMIServer rmi = getRMIServer(this.host, this.port);
 			JMXConnector conn = new RMIConnector(rmi, null);
+			
 			return conn;
 		} catch (Exception e) {
 			e.printStackTrace(System.err);
