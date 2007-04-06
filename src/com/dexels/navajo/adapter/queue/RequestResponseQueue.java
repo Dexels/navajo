@@ -19,6 +19,10 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 	private static volatile RequestResponseQueue instance = null;
 	private static Object semaphore = new Object();
 	private static String id = "Queued adapters";
+	private int MAX_THREADS = 25;
+	private int currentThreads = 0;
+	private long SLEEPING_TIME = 60000;
+	private int MAX_RETRIES = 10;
 	
 	public void setUseQueue(boolean b) {
 		useQueue = b;
@@ -57,7 +61,7 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 	public static void send(Queable handler, int maxretries) throws Exception {
 		
 		RequestResponseQueue rrq = RequestResponseQueue.getInstance();
-		rrq.myStore.putMessage(handler);
+		rrq.myStore.putMessage(handler, false);
 		
 	}
 	
@@ -65,6 +69,7 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 		new Thread() {
 
 			public void run() {
+				currentThreads++;
 				System.err.println("Starting work....");
 				//String qid = handler.getClass().getName()+"-"+System.currentTimeMillis();
 				//JMXHelper.registerMXBean(handler, JMXHelper.QUEUED_ADAPTER_DOMAIN, qid);
@@ -81,11 +86,18 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 						// Put stuff back in queue, unless queue is being emptied.
 						System.err.println("Could not process send() method, putting queued adapter back in queue...");
 						if ( !emptyQueue ) {
-							myStore.putMessage(handler);
+							handler.setWaitUntil(System.currentTimeMillis() + SLEEPING_TIME);
+							// Put queable in as failure if maxretries has past....
+							int maxRetries = handler.getMaxRetries();
+							if ( maxRetries == 0 ) {
+								maxRetries = MAX_RETRIES;
+							}
+							myStore.putMessage(handler, ( handler.getRetries() > maxRetries ));
 						}
 					}
 				} finally {
 					doingWork = false;
+					currentThreads--;
 //					try {
 //						JMXHelper.deregisterMXBean(JMXHelper.QUEUED_ADAPTER_DOMAIN, qid);
 //					} catch (Throwable e) {
@@ -124,19 +136,37 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 		HashSet set = new HashSet();
 		Queable handler = null;
 		if ( !queueOnly) {
-			    // Add all work in private Set.
+			// Add all work in private Set.
+			try {
+				myStore.rewind();
 				while ( ( handler = myStore.getNext()) != null && !emptyQueue ) {
-					set.add(handler);	
-				}
-				// Iterate over private set to do work.
-				if ( !emptyQueue ) {
-					Iterator iter = set.iterator();
-					while ( iter.hasNext() && !emptyQueue ) {
-						handler = (Queable) iter.next();
-						asyncwork(handler);	
+					// Only handle if handler does not sleep anymore.
+					if ( handler.getWaitUntil() < System.currentTimeMillis() ) {
+						set.add(handler);	
 					}
 				}
-				
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace(System.err);
+			}
+			// Iterate over private set to do work.
+			if ( !emptyQueue ) {
+				Iterator iter = set.iterator();
+				while ( iter.hasNext() && !emptyQueue ) {
+					handler = (Queable) iter.next();
+					// Only handle MAX_THREADS at a time...
+					while ( currentThreads >= MAX_THREADS ) {
+						try {
+							Thread.sleep(500);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+					asyncwork(handler);	
+				}
+			}
+
 		}
 	}
 
@@ -157,5 +187,21 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 	
 	public int getSize() {
 		return myStore.getSize();
+	}
+
+	public void setMaxThreads(int t) {
+		MAX_THREADS = t;
+	}
+
+	public void setSleepingTime(long l) {
+		SLEEPING_TIME = l;
+	}
+
+	public int getMaxThreads() {
+		return MAX_THREADS;
+	}
+
+	public long getSleepingTime() {
+		return SLEEPING_TIME;
 	}
 }

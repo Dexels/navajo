@@ -16,4 +16,11 @@ public interface Queable extends Serializable, QueableMXBean {
 	// Public method.
 	public void setQueuedSend(boolean b);
 	
+	public void setWaitUntil(long w);
+	public long getWaitUntil();
+	
+	public void setMaxRetries(int r);
+	public int getMaxRetries();
+	public void resetRetries();
+	public int getRetries();
 }

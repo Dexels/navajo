@@ -6,7 +6,7 @@ public class MemoryStore implements MessageStore {
 
 	private static Stack store = new Stack();
 	
-	public Queable getNext() {
+	public Queable getNext()  throws Exception {
 		System.err.println("Getting work from store, size = " + store.size());
 		if ( store.size() != 0 ) {
 			synchronized (store ) {
@@ -16,10 +16,12 @@ public class MemoryStore implements MessageStore {
 		return null;
 	}
 	
-	public void putMessage(Queable handler) {
+	public void putMessage(Queable handler, boolean failure) {
 		System.err.println("Putting work in store: " + handler.getClass().getName());
-		synchronized (store ) {
-			store.push(handler);
+		if ( !failure ) {
+			synchronized (store ) {
+				store.push(handler);
+			}
 		}
 	}
 
@@ -31,6 +33,10 @@ public class MemoryStore implements MessageStore {
 		synchronized (store ) {
 			store.clear();
 		}
+	}
+
+	public void rewind() {
+		
 	}
 	
 }
