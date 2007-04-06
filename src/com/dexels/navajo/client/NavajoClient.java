@@ -12,9 +12,15 @@ import java.io.*;
 import java.net.*;
 import java.security.*;
 import java.util.*;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 import javax.net.ssl.*;
 import javax.servlet.http.*;
+
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.methods.RequestEntity;
 
 import com.dexels.navajo.client.serverasync.*;
 import com.dexels.navajo.document.*;
@@ -534,6 +540,24 @@ public class NavajoClient implements ClientInterface {
 	  }
   }
   
+//  protected InputStream doTransaction(String name, Navajo d, boolean useCompression, HttpURLConnection myCon) throws IOException, ClientException, NavajoException, javax.net.ssl.SSLHandshakeException {
+//	  HttpClient httpclient = new HttpClient();
+//	  PostMethod httppost = new PostMethod("http://" + name);
+//	  httppost.setContentChunked(true);
+//	  httppost.setHttp11(true);
+//	  httppost.setRequestHeader("Accept-Encoding", "gzip");
+//	  httppost.setRequestHeader("Content-Encoding", "gzip");
+//	  try {
+//		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+//		d.write(bos);
+//		httppost.setRequestBody(new ByteArrayInputStream(bos.toByteArray()));
+//	    httpclient.executeMethod(httppost);
+//	    return httppost.getResponseBodyAsStream();
+//	    // consume the response entity 
+//	  } finally {
+//		  //httppost.releaseConnection();
+//	  }
+//  }
   /**
    * Do a transation with the Navajo Server (name) using
    * a Navajo Message Structure (TMS) compliant XML document.
@@ -545,6 +569,8 @@ public class NavajoClient implements ClientInterface {
   protected InputStream doTransaction(String name, Navajo d, boolean useCompression, HttpURLConnection myCon) throws IOException, ClientException, NavajoException, javax.net.ssl.SSLHandshakeException {
     URL url;
     //useCompression = false;
+    
+    
     if (setSecure) {
       url = new URL("https://" + name);
     }
@@ -569,7 +595,7 @@ public class NavajoClient implements ClientInterface {
     }
     
     myCon = con;
-    
+   
     try {
     	java.lang.reflect.Method timeout = con.getClass().getMethod("setConnectTimeout", new Class[]{int.class});
     	timeout.invoke( con, new Object[]{new Integer(CONNECT_TIMEOUT)});
@@ -603,7 +629,7 @@ public class NavajoClient implements ClientInterface {
     	} finally  {
     		if ( out != null ) {
     			try {
-    				//out.flush();
+    				out.flush();
     				out.close();
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -619,7 +645,7 @@ public class NavajoClient implements ClientInterface {
     	} finally {
     		if ( os != null ) {
     			try {
-    				//os.flush();
+    				os.flush();
     				os.close();
     			} catch (IOException e) {
     				e.printStackTrace();
@@ -789,34 +815,11 @@ public class NavajoClient implements ClientInterface {
         InputStream in = null;
         Navajo n = null;
         HttpURLConnection myCon = null;
+        long timeStamp = System.currentTimeMillis();
         
-        try {
-        	long timeStamp = System.currentTimeMillis();
-        	
+        try {	
         	in = doTransaction(server, out, useCompression, myCon);
-//            if (n == null) {
-                n = NavajoFactory.getInstance().createNavajo(in);
-                if (n.getHeader()!=null) {
-                    n.getHeader().setAttribute("sourceScript", callingService);
-                    clientTime = (System.currentTimeMillis()-timeStamp);
-                    n.getHeader().setAttribute("clientTime", ""+clientTime);
-                    String tot = n.getHeader().getAttribute("serverTime");
-                    long totalTime = -1;
-                    if (tot!=null&& !"".equals(tot)) {
-                    	totalTime = Long.parseLong(tot);
-                    	n.getHeader().setAttribute("transferTime",""+(clientTime-totalTime));
-    				} 
-                    Map headerAttributes = n.getHeader().getAttributes();
-                    Map pbd = new HashMap(headerAttributes);
-                    pbd.put("type","performanceStats");
-                    pbd.put("service",method);
-                    synchronized (piggyBackData) {
-                    	piggyBackData.add(pbd);
-					}
-//                    System.err.println(method+": totaltime = " + ( clientTime / 1000.0 )+ ", servertime = " + ( totalTime / 1000.0 )+" transfertime = "+((clientTime-totalTime)/1000)+" piggybackdata: "+piggyBackData.size()); 
-				} else {
-					System.err.println("Null header in input message");
-				}
+        	n = NavajoFactory.getInstance().createNavajo(in);
         }
         catch (javax.net.ssl.SSLException ex) {
           n = NavajoFactory.getInstance().createNavajo();
@@ -859,6 +862,27 @@ public class NavajoClient implements ClientInterface {
               n.getHeader().setAttribute("sourceScript", callingService);
           }
         } finally {
+        	 if (n.getHeader()!=null) {
+                 n.getHeader().setAttribute("sourceScript", callingService);
+                 clientTime = (System.currentTimeMillis()-timeStamp);
+                 n.getHeader().setAttribute("clientTime", ""+clientTime);
+                 String tot = n.getHeader().getAttribute("serverTime");
+                 long totalTime = -1;
+                 if (tot!=null&& !"".equals(tot)) {
+                 	totalTime = Long.parseLong(tot);
+                 	n.getHeader().setAttribute("transferTime",""+(clientTime-totalTime));
+ 				} 
+                 Map headerAttributes = n.getHeader().getAttributes();
+                 Map pbd = new HashMap(headerAttributes);
+                 pbd.put("type","performanceStats");
+                 pbd.put("service",method);
+                 synchronized (piggyBackData) {
+                 	piggyBackData.add(pbd);
+					}
+//                 System.err.println(method+": totaltime = " + ( clientTime / 1000.0 )+ ", servertime = " + ( totalTime / 1000.0 )+" transfertime = "+((clientTime-totalTime)/1000)+" piggybackdata: "+piggyBackData.size()); 
+				} else {
+					System.err.println("Null header in input message");
+				}
             if (in!=null) {
                 try {
                     in.close();
