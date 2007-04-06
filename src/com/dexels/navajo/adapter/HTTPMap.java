@@ -62,9 +62,12 @@ public class HTTPMap implements Mappable, Queable {
 	public String url = null;
 	public boolean doSend = false;
 	public boolean queuedSend = false;
+	private long waitUntil = 0;
 	public Binary result = null;
 	public String textResult = null;
 	public int connectTimeOut = 5000;
+	private int retries = 0;
+	private int maxRetries = 100;
 	
 	private static int instances = 0;
 	
@@ -183,6 +186,7 @@ public class HTTPMap implements Mappable, Queable {
 	}
 
 	public boolean send() {
+		retries++;
 		try {
 			setDoSend(true);
 		} catch (UserException e) {
@@ -255,5 +259,27 @@ public class HTTPMap implements Mappable, Queable {
 		}
 	}
 
+	public void setWaitUntil(long w) {
+		waitUntil = w;
+	}
+	
+	public long getWaitUntil() {
+		return waitUntil;
+	}
 
+	public int getRetries() {
+		return retries;
+	}
+
+	public int getMaxRetries() {
+		return maxRetries;
+	}
+
+	public void setMaxRetries(int r) {
+		maxRetries = r;
+	}
+
+	public void resetRetries() {
+		retries = 0;
+	}
 }

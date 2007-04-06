@@ -55,6 +55,9 @@ public class FTPMap  implements Mappable, Queable {
 	public String password;
 	public String path;
 	public boolean queuedSend = false;
+	private long waitUntil = 0;
+	private int retries = 0;
+	private int maxRetries = 100;
 	
 	public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
 	}
@@ -137,6 +140,7 @@ public class FTPMap  implements Mappable, Queable {
 	}
 
 	public boolean send() {
+		retries++;
 		try {
 			queuedSend = false;
 			store();
@@ -173,6 +177,30 @@ public class FTPMap  implements Mappable, Queable {
 		while ( true ) {
 			Thread.sleep(10000);
 		}
+	}
+
+	public void setWaitUntil(long w) {
+		waitUntil = w;
+	}
+
+	public long getWaitUntil() {
+		return waitUntil;
+	}
+
+	public int getRetries() {
+		return retries;
+	}
+	
+	public int getMaxRetries() {
+		return maxRetries;
+	}
+
+	public void setMaxRetries(int r) {
+		maxRetries = r;
+	}
+
+	public void resetRetries() {
+		retries = 0;
 	}
 
 }
