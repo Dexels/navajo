@@ -966,7 +966,7 @@ public class SQLMap implements Mappable, LazyArray {
             System.err.println("TRYING TO INSERT A BLOB....");
           }
           Binary b = (Binary)param;
-          System.err.println("APPROACHING BLOBNESS...");
+          //System.err.println("APPROACHING BLOBNESS...");
           //byte[] data = ( (Binary) param).getData();
           setBlob(statement, i, b);
           //statement.setBytes(i+1, data);
@@ -1200,9 +1200,9 @@ private void setBlob(PreparedStatement statement, int i, Binary b) throws SQLExc
                 String param = meta.getColumnLabel(i);
                 int type = meta.getColumnType(i);
 
-//                if (debug) {
+                if (debug) {
                   System.err.println("i = " + i + ", type = " + type + "(BLOB = " + Types.BLOB + ")" + " getType() = " + getType(type));
-//                }
+                }
                 
                 Object value = null;
                 final String strVal = rs.getString(i);
