@@ -68,8 +68,11 @@ public class TipiTabsExtra extends TipiEchoDataComponentImpl {
         myTabbedPane.addPropertyChangeListener(new PropertyChangeListener() {
 
             public void propertyChange(PropertyChangeEvent evt) {
-              }
+            	System.err.println("Hoei: "+evt.getPropertyName());
+            	
+            }
             });
+        
         return myTabbedPane;
     }
 
@@ -168,25 +171,27 @@ public class TipiTabsExtra extends TipiEchoDataComponentImpl {
 //        }
 //        ButtonEx selected = (ButtonEx) defaultTabModel.getTabAt(getChildCount() - 1, true);
 //        selected.setBorder(new Border(1, new Color(50, 50, 50), Border.STYLE_GROOVE));
-    	myTabbedPane.add((Component)c);
+    	ContentPane pp = new ContentPane();
+    	pp.add((Component)c);
+    	myTabbedPane.add((Component)pp);
     	TabPaneLayoutData tabPaneLayoutData = new TabPaneLayoutData();
     	tabPaneLayoutData.setTitle(""+constraints);
-    	((Component)c).setLayoutData(tabPaneLayoutData);
+    	pp.setLayoutData(tabPaneLayoutData);
     }
 
     public void setComponentValue(String name, Object object) {
         super.setComponentValue(name, object);
-        if (name.equals("selected")) {
-            String sel = (String) object;
-            final TipiComponent tc = getTipiComponent(sel);
-            int ii = myTabbedPane.indexOf((Component) (tc.getContainer()));
-            if (ii >= 0) {
-                myTabbedPane.setActiveTabIndex(ii);
-            }
-        }
+//        if (name.equals("selected")) {
+//            String sel = (String) object;
+//            final TipiComponent tc = getTipiComponent(sel);
+//            int ii = myTabbedPane.indexOf((Component) (tc.getContainer()));
+//            if (ii >= 0) {
+//                myTabbedPane.setActiveTabIndex(ii);
+//            }
+//        }
         if (name.equals("selectedindex")) {
-            final Integer sel = (Integer) object;
-            myTabbedPane.setActiveTabIndex(sel.intValue());
+//            final Integer sel = (Integer) object;
+//            myTabbedPane.setActiveTabIndex(sel.intValue());
                }
         // if (name.equals("placement")) {
         // final String sel = (String) object;

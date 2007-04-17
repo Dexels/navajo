@@ -85,16 +85,16 @@ public final class TipiFixedPane
         // });
     }
 
-    public void setContainerLayout(final Object layout) {
-        // runSyncInEventThread(new Runnable() {
-        // public void run() {
-
-        // eueueuh
-        // ( (JInternalFrame) getContainer()).getContentPane().setLayout(
-        // (LayoutManager) layout);
-        // }
-        // });
-    }
+//    public void setContainerLayout(final Object layout) {
+//        // runSyncInEventThread(new Runnable() {
+//        // public void run() {
+//
+//        // eueueuh
+//        // ( (JInternalFrame) getContainer()).getContentPane().setLayout(
+//        // (LayoutManager) layout);
+//        // }
+//        // });
+//    }
 
     public final void setComponentValue(final String name, final Object object) {
         super.setComponentValue(name, object);

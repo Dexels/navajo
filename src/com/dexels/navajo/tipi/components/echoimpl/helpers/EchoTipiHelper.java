@@ -122,6 +122,9 @@ public class EchoTipiHelper implements TipiHelper {
     }
 
     public void registerEvent(final TipiEvent te) {
+    	if(!(myComponent.getActualComponent() instanceof Component)) {
+    		return;
+    	}
         Component c = (Component) myComponent.getActualComponent();
         if (c == null) {
             System.err.println("Cannot register echo event: Container is null!");
@@ -149,26 +152,6 @@ public class EchoTipiHelper implements TipiHelper {
                 exe.printStackTrace();
             }
         }
-
-        // void windowClosed(WindowEvent windowEvent);
-        // void windowClosing(WindowEvent windowEvent);
-        // void windowOpened(WindowEvent windowEvent);
-
-        // if (te.isTrigger("onWindowClosed", null)) {
-        // if (Window.class.isInstance(c)) {
-        // Window jj = (Window) c;
-        // jj.addWindowListener(new WindowAdapter() {
-        // public void onWindowClosing(WindowEvent e) {
-        // try {
-        // myComponent.performTipiEvent("onWindowClosed", null, true);
-        // }
-        // catch (TipiException ex) {
-        // ex.printStackTrace();
-        // }
-        // }
-        // });
-        // }
-        // }
 
     }
 

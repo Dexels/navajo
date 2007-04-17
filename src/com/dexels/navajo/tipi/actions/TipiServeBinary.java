@@ -3,7 +3,10 @@ package com.dexels.navajo.tipi.actions;
 import java.io.*;
 import java.net.*;
 
+import javax.servlet.http.Cookie;
+
 import nextapp.echo2.app.*;
+import nextapp.echo2.webcontainer.ContainerContext;
 import nextapp.echo2.webcontainer.command.*;
 
 import com.dexels.navajo.document.Operand;
@@ -42,7 +45,7 @@ public class TipiServeBinary extends TipiAction {
             Operand binary = getEvaluatedParameter("binary", e);
             Operand baseUrlOperand = getEvaluatedParameter("baseUrl", e);
             URL baseUrl = new URL((String)baseUrlOperand.value);
-            System.err.println(">>>>>>>>>> BASEURL::"+baseUrl);
+
             Binary b = null;
             if (binary.value instanceof URL) {
             	URL u = (URL)binary.value;
@@ -52,11 +55,6 @@ public class TipiServeBinary extends TipiAction {
 			} else {
 				b = (Binary)binary.value;
 			}
-            //            System.err.println("baseUrl: "+baseUrl);
-//            System.err.println("baseDir: "+baseDir);
-            if (b==null) {
-				System.err.println("Can not evaluate binary!");
-			}
             String extension = b.getExtension();
             String random = new String(""+Math.random()).substring(2,7);
             File xx = new File(baseDir,"binary"+random+"."+extension);
@@ -65,10 +63,9 @@ public class TipiServeBinary extends TipiAction {
             fos.flush();
             fos.close();
             URL result = new URL(baseUrl.toString()+"/binary"+random+"."+extension);
-            System.err.println("ResultURL: "+result.toString());
             Command brc = new BrowserOpenWindowCommand(result.toString(),"reports"+random,null);
             ApplicationInstance.getActive().enqueueCommand(brc);
-//            ((EchoTipiContext)myContext).getServerContext().enqueueCommand(brc);
+
         } catch (MalformedURLException e1) {
               e1.printStackTrace();
         } catch (IOException ex) {
@@ -76,5 +73,6 @@ public class TipiServeBinary extends TipiAction {
             ex.printStackTrace();
         }
     }
+
 
 }

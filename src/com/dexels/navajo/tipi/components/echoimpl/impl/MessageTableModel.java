@@ -1,11 +1,10 @@
 package com.dexels.navajo.tipi.components.echoimpl.impl;
 
 import java.util.*;
-import java.util.ArrayList;
-import java.util.List;
 
 import nextapp.echo2.app.Table;
 import nextapp.echo2.app.table.AbstractTableModel;
+import nextapp.echo2.app.table.DefaultTableModel;
 import nextapp.echo2.app.table.TableCellRenderer;
 import nextapp.echo2.app.table.TableColumn;
 import nextapp.echo2.app.table.TableColumnModel;
@@ -37,7 +36,7 @@ import echopointng.table.SortableTableModel;
  * @version 1.0
  */
 
-public class MessageTableModel extends DefaultSortableTableModel implements MessageListener {
+public class MessageTableModel extends DefaultTableModel implements MessageListener {
 
     // private ArrayList myColumnIds = new ArrayList();
     //
@@ -88,15 +87,15 @@ public class MessageTableModel extends DefaultSortableTableModel implements Mess
         return rows;
     }
 
-    public MessageTableModel(MessageTable t, TableColumnModel columnModel) {
-        super(columnModel);
-        this.myTable = t;
-        myColumnModel = columnModel;
-    }
+//    public MessageTableModel(MessageTable t, TableColumnModel columnModel) {
+////        super(columnModel);
+//        this.myTable = t;
+//        myColumnModel = columnModel;
+//    }
 
     public MessageTableModel(MessageTable t, TableColumnModel columnModel, Message m) {
-        super(columnModel);
-        this.myTable = t;
+//        super(columnModel);
+    	this.myTable = t;
         myColumnModel = columnModel;
         setMessage(m);
     }
@@ -119,21 +118,21 @@ public class MessageTableModel extends DefaultSortableTableModel implements Mess
     // protected List getRows() {
     // return myData;
     // }
-
-    private void createListFromMessage(Message m, List l) {
-        l.clear();
-        for (int i = 0; i < m.getArraySize(); i++) {
-            Message current = m.getMessage(i);
-            List currentMessage = new ArrayList();
-            for (int j = 0; j < current.getAllProperties().size(); j++) {
-                // String currentColumn = (String)myColumnIds.get(j);
-                Property p = (Property) current.getAllProperties().get(j);
-                currentMessage.add(p);
-            }
-            l.add(currentMessage);
-        }
-        // return l;
-    }
+//
+//    private void createListFromMessage(Message m, List l) {
+//        l.clear();
+//        for (int i = 0; i < m.getArraySize(); i++) {
+//            Message current = m.getMessage(i);
+//            List currentMessage = new ArrayList();
+//            for (int j = 0; j < current.getAllProperties().size(); j++) {
+//                // String currentColumn = (String)myColumnIds.get(j);
+//                Property p = (Property) current.getAllProperties().get(j);
+//                currentMessage.add(p);
+//            }
+//            l.add(currentMessage);
+//        }
+//        // return l;
+//    }
 
     public void setMessage(Message m) {
         // lastSortedColumn = -1;
@@ -155,6 +154,7 @@ public class MessageTableModel extends DefaultSortableTableModel implements Mess
 
     private ArrayList createListFromRow(Message m) {
         ArrayList al = new ArrayList();
+//        al.add(new Boolean(false));
         for (int i = 0; i < myColumnModel.getColumnCount(); i++) {
             String id = myTable.getColumnId(i);
             al.add(m.getProperty(id));

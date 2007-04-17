@@ -11,6 +11,7 @@ import com.dexels.navajo.tipi.TipiComponentMethod;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.TipiHelper;
 import com.dexels.navajo.tipi.components.echoimpl.helpers.EchoTipiHelper;
+import com.dexels.navajo.tipi.components.echoimpl.impl.Styles;
 import com.dexels.navajo.tipi.components.echoimpl.parsers.*;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 
@@ -54,7 +55,7 @@ public class TipiDialog extends TipiEchoDataComponentImpl {
     private boolean closable = false;
 
     private boolean resizable = true;
-    private ContainerEx innerContainer;
+    private ContentPane innerContainer;
 
     private int headerheight = 25;
     private int leftheaderinset = 0;
@@ -81,11 +82,12 @@ public class TipiDialog extends TipiEchoDataComponentImpl {
     public Object createContainer() {
 
             myWindow = new WindowPane();
-            myWindow.setStyleName("window");
+			Style ss = Styles.DEFAULT_STYLE_SHEET.getStyle(WindowPane.class, "Default");
+            myWindow.setStyle(ss);
             TipiHelper th = new EchoTipiHelper();
             th.initHelper(this);
             addHelper(th);
-            innerContainer = new ContainerEx();
+            innerContainer = new ContentPane();
             myWindow.add(innerContainer);
             myWindow.addWindowPaneListener(new WindowPaneListener() {
                 public void windowPaneClosing(WindowPaneEvent arg0) {
@@ -97,7 +99,10 @@ public class TipiDialog extends TipiEchoDataComponentImpl {
             return myWindow;
         }
 
-    
+    public Component getInnerComponent() {
+    	return innerContainer;
+    }
+  
     private final void myWindow_internalFrameClosed(WindowPaneEvent arg0) {
 		myWindow.setVisible(false);
 	// myContext.disposeTipi(this);
@@ -150,10 +155,12 @@ public class TipiDialog extends TipiEchoDataComponentImpl {
         }
         if (name.equals("w")) {
             w = ((Integer) object).intValue();
+            myWindow.setWidth(new Extent(w,Extent.PX));
             return;
         }
         if (name.equals("h")) {
             h = ((Integer) object).intValue();
+            myWindow.setHeight(new Extent(h,Extent.PX));
             return;
         }
 
@@ -330,14 +337,20 @@ public class TipiDialog extends TipiEchoDataComponentImpl {
     }
 
     public void addToContainer(final Object c, final Object constraints) {
-        innerContainer.add((Component) c);
-        if (constraints != null && constraints instanceof LayoutData) {
-            ((WindowPane) getContainer()).setLayoutData((LayoutData) constraints);
+		Component cc = innerContainer;
+		if (layoutComponent != null) {
+			// do layoutstuff
+			layoutComponent.setParentComponent(this);
+			layoutComponent.addChildComponent(cc, constraints);
+		} else {
+			cc.add((Component) c);
+			if (constraints != null && constraints instanceof LayoutData) {
+				((WindowPane) getContainer()).setLayoutData((LayoutData) constraints);
 
-        }
-        // ((SwingTipiContext)myContext).addTopLevel(c);
-        // });
-    }
+			}
+		}
+
+	}
 
 
     protected synchronized void performComponentMethod(String name, TipiComponentMethod compMeth, TipiEvent event) throws TipiBreakException {

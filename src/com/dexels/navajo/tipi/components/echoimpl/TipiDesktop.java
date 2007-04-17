@@ -2,6 +2,7 @@ package com.dexels.navajo.tipi.components.echoimpl;
 
 import nextapp.echo2.app.Color;
 import nextapp.echo2.app.Component;
+import nextapp.echo2.app.ContentPane;
 import nextapp.echo2.app.Grid;
 import echopointng.ContainerEx;
 import echopointng.able.Positionable;
@@ -26,15 +27,15 @@ import echopointng.able.Positionable;
 
 public class TipiDesktop extends TipiEchoDataComponentImpl {
 
-    private Grid myContainer;
+    private ContentPane myContainer;
 
 	public TipiDesktop() {
     }
 
     public Object createContainer() {
-        myContainer = new nextapp.echo2.app.Grid();
+        myContainer = new ContentPane();
 //        myContainer.setStyleName("Default");
-        
+        myContainer.setBackground(new Color(180,180,240));
 //		myContainer.setPosition(Positionable.STATIC);
         return myContainer;
     }

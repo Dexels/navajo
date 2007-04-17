@@ -52,9 +52,10 @@ public class Styles {
 		try {
 	         DEFAULT_STYLE_SHEET = StyleSheetLoader.load(STYLE_PATH + "Default.stylesheet", 
                     Thread.currentThread().getContextClassLoader());
-  			
-//			DEFAULT_STYLE_SHEET = StyleSheetLoader.load("Default.stylesheet", Thread.currentThread().getContextClassLoader());
-			System.err.println("LOADED STYLESHEET: "+DEFAULT_STYLE_SHEET.toString());
+  			if(DEFAULT_STYLE_SHEET!=null) {
+  				System.err.println("LOADED STYLESHEET: "+DEFAULT_STYLE_SHEET.toString());
+  			}
+ //			DEFAULT_STYLE_SHEET = StyleSheetLoader.load("Default.stylesheet", Thread.currentThread().getContextClassLoader());
 		} catch (ComponentXmlException ex) {
 			ex.printStackTrace();
 			throw new RuntimeException(ex);
@@ -78,9 +79,7 @@ public class Styles {
 	public static final ImageReference ICON_24_EXIT = new ResourceImageReference(IMAGE_PATH + "exit.png");
 	public static final ImageReference ICON_24_SUBSCRIPTIONS = new ResourceImageReference(IMAGE_PATH + "note.png");
 	public static final ImageReference ICON_24_ADD_SUBSCRIPTION = new ResourceImageReference(IMAGE_PATH + "note_add.png");
-	public static final ImageReference ICON_24_UPDATE_SUBSCRIPTION = new ResourceImageReference(IMAGE_PATH + "note_new.png");
-
-		
+	public static final ImageReference ICON_24_UPDATE_SUBSCRIPTION = new ResourceImageReference(IMAGE_PATH + "note_new.png");		
 	public static final ImageReference ICON_24_DELETE_SUBSCRIPTION = new ResourceImageReference(IMAGE_PATH + "note_delete.png");
 	public static final ImageReference ICON_24_ADD_ADDRESS = new ResourceImageReference(IMAGE_PATH + "mail_add.png");
 	public static final ImageReference ICON_24_DELETE_ADDRESS = new ResourceImageReference(IMAGE_PATH + "mail_delete.png");

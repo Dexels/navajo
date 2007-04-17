@@ -12,6 +12,12 @@
     <param name="text" type="string"/>
   </tipiaction>
 
+    <tipiaction name="setCookie"  class="TipiSetCookie" package="com.dexels.navajo.tipi.actions">
+        <param name="name" type="string"/>
+        <param name="value" type="string"/>
+    </tipiaction>
+    
+    
   <tipiaction name="showQuestion"  class="TipiEchoShowQuestion" package="com.dexels.navajo.tipi.actions">
     <param name="text" type="string"/>
   </tipiaction>
@@ -41,12 +47,17 @@
   <tipiaction name="exitsession"  class="TipiEchoExit" package="com.dexels.navajo.tipi.actions">
    <param name="destination" type="string"/>
  </tipiaction>
+ 
   <tipiaction name="servebinary"  class="TipiServeBinary" package="com.dexels.navajo.tipi.actions">
    <param name="binary" type="string"/>
    <param name="string" type="baseUrl"/>
   </tipiaction>
 
-
+    <tipiaction name="openBinary"  class="TipiServeBinary" package="com.dexels.navajo.tipi.actions">
+        <param name="binary" type="string"/>
+        <param name="string" type="baseUrl"/>
+    </tipiaction>
+    
 
     <tipiclass addtocontainer="true" childcount="*" class="TipiQuestion" layoutmanager="true"
         module="data" name="tipiquestion" package="com.dexels.navajo.tipi.components.echoimpl"
@@ -69,7 +80,11 @@
         </values>
         <methods>
             <method name="print"/>
-        </methods>
+            <method name="selectNext"/>
+            <method name="selectPrevious"/>
+            <method name="selectFirst"/>
+            <method name="selectLast"/>
+               </methods>
     </tipiclass>
     <tipiclass addtocontainer="true" childcount="*" class="TipiQuestionGroup" layoutmanager="true"
         module="data" name="tipiquestiongroup" package="com.dexels.navajo.tipi.components.echoimpl"
@@ -219,8 +234,8 @@
         </values>
     </tipiclass>
 
-    <tipiclass class="TipiEchoGridBagLayout" name="gridbag"
-        package="com.dexels.navajo.tipi.components.echoimpl" type="layout">
+    <tipiclass class="TipiGridLayout" name="gridbag"
+        package="com.dexels.navajo.tipi.components.echoimpl.impl.layout" type="layout">
         <values/>
     </tipiclass>
 
@@ -258,26 +273,7 @@
         <methods/>
     </tipiclass>
            
-        <tipiclass class="TipiToolbar" name="toolbar" package="com.dexels.navajo.tipi.components.echoimpl" type="tipi" childcount="*" layoutmanager="true" addtocontainer="true">
-        <events>
-            <event name="onInstantiate"/>
-            <event name="onLoad"/>
-            <event name="onGeneratedErrors"/>
-        </events>
-        <values>
-            <value direction="in" name="enabled" type="boolean"/>
-            <value direction="in" name="visible" type="boolean"/>
-            <value direction="inout" name="title" type="string"/>
-            <value direction="in" name="w" type="integer"/>
-            <value direction="in" name="h" type="integer"/>
-            <value direction="in" name="background" type="color"/>
-            <value direction="in" name="foreground" type="color"/>
-            <value direction="in" name="border" type="border"/>
-        </values>
-        <methods/>
-    </tipiclass>
-           
-    
+        
 
   	<tipiclass class="TipiGridLayout" name="grid" package="com.dexels.navajo.tipi.components.echoimpl" type="layout"/>
     
@@ -363,7 +359,7 @@
         <methods/>
     </tipiclass>
 
-<!--
+
     <tipiclass class="TipiProgressBar" name="progressbar" package="com.dexels.navajo.tipi.components.echoimpl" propertycomponent="false" type="component" addtocontainer="true">
         <events>
             <event name="onInstantiate"/>
@@ -384,7 +380,7 @@
         </values>
         <methods/>
     </tipiclass>
--->
+
 
     <tipiclass class="TipiButton" name="button" package="com.dexels.navajo.tipi.components.echoimpl" type="tipi" childcount="0" layoutmanager="false" addtocontainer="true" toplevel="false">
         <events>
@@ -400,7 +396,9 @@
             <value direction="in" name="foreground" type="color"/>
             <value direction="in" name="border" type="border"/>
         </values>
-        <methods/>
+        <methods>
+            <method name="fireAction"/>
+        </methods>
     </tipiclass>
     
     <tipiclass class="TipiTextField" name="textfield" package="com.dexels.navajo.tipi.components.echoimpl" type="tipi" childcount="0" layoutmanager="false" addtocontainer="true" toplevel="false">
@@ -517,6 +515,20 @@
         <methods/>
     </tipiclass>
        
+    <tipiclass class="TipiToolbar" name="toolbar" package="com.dexels.navajo.tipi.components.echoimpl" type="tipi" childcount="*" layoutmanager="true" addtocontainer="true">
+        <events>
+            <event name="onInstantiate"/>
+            <event name="onLoad"/>
+            <event name="onGeneratedErrors"/>
+        </events>
+        <values>
+            <value direction="in" name="visible" type="boolean"/>
+            <value direction="in" name="background" type="color"/>
+            <value direction="in" name="foreground" type="color"/>
+            <value direction="in" name="border" type="border"/>
+        </values>
+        <methods/>
+    </tipiclass>
     
     <tipiclass class="TipiDesktop" name="desktop" package="com.dexels.navajo.tipi.components.echoimpl" type="tipi" childcount="*" layoutmanager="true" addtocontainer="true">
         <events>
@@ -668,7 +680,7 @@
         <methods/>
     </tipiclass>
   
-   <tipiclass class="TipiEchoBorderLayout" name="border" package="com.dexels.navajo.tipi.components.echoimpl" type="layout"/>
+   <tipiclass class="TipiBorderLayout" name="border" package="com.dexels.navajo.tipi.components.echoimpl.impl.layout" type="layout"/>
 
 <!--
     <tipiclass class="TipiEchoGridBagLayout" name="gridbag" package="com.dexels.navajo.tipi.components.echoimpl" type="layout"/>
@@ -680,8 +692,9 @@
             <event name="onStateChanged"/>
             <event name="onFocusGained"/>
             <event name="onFocusLost"/>
+            <event name="onEnter"/>
             <event name="onActionPerformed"/>
- 
+            
  			<!-- only included for compatibility reasons. Not implement. -->
             <event name="onKey">
                 <param name="code" type="integer"/>
@@ -706,6 +719,8 @@
             <value direction="in" name="selectiontype" type="selection">
                 <option description="radio" value="radio"/>
                 <option description="combo" value="combo"/>
+                <option description="list" value="list"/>
+                <option description="checkbox" value="checkbox"/>
             </value>
 		
             <value direction="inout" name="label_halign" type="selection">
@@ -781,6 +796,7 @@
             <value direction="in" name="h" type="integer"/>
             <value direction="in" name="w" type="integer"/>
             <value direction="in" name="visible" type="boolean"/>
+            <value direction="in" name="selected" type="boolean"/>
             <value direction="in" name="background" type="color"/>
             <value direction="in" name="closable" type="color"/>
             <value direction="in" name="resizable" type="color"/>
@@ -805,7 +821,7 @@
 	</methods>
     </tipiclass>
 
-   <tipiclass addtocontainer="true" childcount="*" class="TipiTabs" layoutmanager="false"
+   <tipiclass addtocontainer="true" childcount="*" class="TipiTabsExtra" layoutmanager="false"
         module="container" name="tabs" package="com.dexels.navajo.tipi.components.echoimpl"
         studio-icon="tabs.gif" type="tipi">
         <events>
@@ -916,8 +932,26 @@
             </method>
         </methods>
     </tipiclass>
+    
+    <tipiclass studio-icon="tipitableprinter.gif" module="extensions" class="TipiEmailLauncher" name="emaillauncher" package="com.dexels.navajo.tipi.components.echoimpl" type="tipi" addtocontainer="false">
+        <events>
+            <event name="onInstantiate"/>
+            <event name="onLoad"/>
+        </events>
+        <values/>
+        <methods>
+            <method name="setEmailParameters">
+                <param name="messagepath" type="message"/>
+                <param name="propertyname" type="string"/>
+                <param name="clubname" type="string"/>
+            </method>
+        </methods>
+    </tipiclass>
+    
 
-
+    <tipi-parser name="cookie" parser="com.dexels.navajo.tipi.components.echoimpl.parsers.CookieParser" type="java.lang.String"/>
+    <tipi-parser name="cookieref" parser="com.dexels.navajo.tipi.components.echoimpl.parsers.CookieRefParser" type="com.dexels.navajo.tipi.internal.TipiReference"/>
+    
     <tipi-parser name="extent" parser="com.dexels.navajo.tipi.components.echoimpl.parsers.ExtentParser" type="nextapp.echo2.app.Extent"/>
     <tipi-parser name="border" parser="com.dexels.navajo.tipi.components.echoimpl.parsers.BorderParser" type="java.lang.Object"/>
     <tipi-parser name="font" parser="com.dexels.navajo.tipi.components.echoimpl.parsers.FontParser" type="nextapp.echo2.app.Font"/>

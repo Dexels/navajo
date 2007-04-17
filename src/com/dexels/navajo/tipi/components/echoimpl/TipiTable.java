@@ -8,10 +8,12 @@ import nextapp.echo2.app.event.ActionListener;
 
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.TipiBreakException;
+import com.dexels.navajo.tipi.TipiComponentMethod;
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.components.echoimpl.impl.*;
 import com.dexels.navajo.tipi.components.echoimpl.parsers.*;
+import com.dexels.navajo.tipi.internal.TipiEvent;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
 
 import echopointng.ContainerEx;
@@ -48,15 +50,19 @@ public class TipiTable extends TipiEchoDataComponentImpl {
     }
 
     public Object createContainer() {
-         ContainerEx myContainer = new ContainerEx();
+//    	ContainerEx myContainer = new ContainerEx();
         myTable = new MessageTable();
 //        myTable.setStyleName("Default");
-        myContainer.setStyleName("Default");
-        myContainer.setPosition(Positionable.STATIC);
+//        myContainer.setStyleName("Default");
+//        myContainer.setPosition(Positionable.STATIC);
+    	Style ss = Styles.DEFAULT_STYLE_SHEET.getStyle(MessageTable.class, "Default");
+    	myTable.setStyle(ss);
+    
         myTable.addSelectionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
-                    performTipiEvent("onSelectionChanged", null, true);
+                	System.err.println("SEKECTION CHANGE");
+//                    performTipiEvent("onSelectionChanged", null, true);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -80,9 +86,9 @@ public class TipiTable extends TipiEchoDataComponentImpl {
                 }
                 
             }});
-         myContainer.add(myTable);
+//         myContainer.add(myTable);
 //         myContainer.setBackground(new Color(255,0,0));
-    return myContainer;
+    return myTable;
 //         return myTable;
     }
 
@@ -91,7 +97,8 @@ public class TipiTable extends TipiEchoDataComponentImpl {
     }
 
     public void loadData(Navajo n, TipiContext context, String method,String server) throws TipiException, TipiBreakException {
-        super.loadData(n, context, method,server);
+        System.err.println("In LoadDATA (TipiTable)");
+    	super.loadData(n, context, method,server);
 //        ((ContainerEx)getContainer()).setzIndex(0);
         
         MessageTable mm = (MessageTable) getActualComponent();
@@ -206,22 +213,22 @@ public class TipiTable extends TipiEchoDataComponentImpl {
         if (c!=null) {
             myTable.setBackground(c);
         }
-        c = ColorParser.parseColor(getStyle("pressedforeground"));
-        if (c!=null) {
-            myTable.setHeaderPressedForeground(c);
-        }
-        c = ColorParser.parseColor(getStyle("pressedbackground"));
-        if (c!=null) {
-            myTable.setHeaderPressedBackground(c);
-        }
-        c = ColorParser.parseColor(getStyle("rolloverbackground"));
-        if (c!=null) {
-            myTable.setHeaderRolloverBackground(c);
-        }
-        c = ColorParser.parseColor(getStyle("rolloverforeground"));
-        if (c!=null) {
-            myTable.setHeaderRolloverForeground(c);
-        }
+//        c = ColorParser.parseColor(getStyle("pressedforeground"));
+//        if (c!=null) {
+//            myTable.setHeaderPressedForeground(c);
+//        }
+//        c = ColorParser.parseColor(getStyle("pressedbackground"));
+//        if (c!=null) {
+//            myTable.setHeaderPressedBackground(c);
+//        }
+//        c = ColorParser.parseColor(getStyle("rolloverbackground"));
+//        if (c!=null) {
+//            myTable.setHeaderRolloverBackground(c);
+//        }
+//        c = ColorParser.parseColor(getStyle("rolloverforeground"));
+//        if (c!=null) {
+//            myTable.setHeaderRolloverForeground(c);
+//        }
         String headHeight = getStyle("headerheight");
         if (headHeight!=null) {
             int hh = Integer.parseInt(headHeight);
@@ -230,6 +237,31 @@ public class TipiTable extends TipiEchoDataComponentImpl {
       
     }    
     
-    
+    protected void performComponentMethod(String name, TipiComponentMethod compMeth, TipiEvent event) {
+        int count = myTable.getModel().getRowCount();
+        if (count != 0) {
+          if ("selectNext".equals(name)) {
+            int r = myTable.getSelectedIndex();
+            if ( (r < count - 1)) {
+            	myTable.setSelectedIndex(r + 1);
+            }
+            return;
+          }
+         
+          if ("selectPrevious".equals(name)) {
+            int r = myTable.getSelectedIndex();
+            if ( (r > 0)) {
+            	myTable.setSelectedIndex(r - 1);
+            }
+            return;
+          }
+          if ("selectFirst".equals(name)) {
+        	  myTable.setSelectedIndex(0);
+          }
+          if ("selectLast".equals(name)) {
+        	  myTable.setSelectedIndex(count - 1);
+          }
+        }
+    }
     
 }

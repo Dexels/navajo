@@ -30,9 +30,9 @@ public class TipiScrollQuestionGroup extends TipiBaseQuestionGroup {
     public void removeFromContainer(Object c) {
         // jpanel.remove((Component)c);
     }
-
-    public void setContainerLayout(Object layout) {
-        // jpanel.setLayout((LayoutManager)layout);
-    }
+//
+//    public void setContainerLayout(Object layout) {
+//        // jpanel.setLayout((LayoutManager)layout);
+//    }
 
 }

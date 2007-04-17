@@ -248,10 +248,11 @@ public class TipiProperty extends TipiEchoComponentImpl implements PropertyCompo
             boolean val = ((Boolean) object).booleanValue();
             me.setAlwaysUseLabel(val);
         }
-        if ("useCheckBoxes".equals(name)) {
+        if ("selectionmode".equals(name)) {
             EchoPropertyComponent me = (EchoPropertyComponent) getContainer();
             boolean val = ((Boolean) object).booleanValue();
             me.setUseCheckBoxes(val);
+            
         }
         if ("memoRowCount".equals(name)) {
             myPropertyComponent.setMemoRowCount(((Integer) object).intValue());
@@ -271,6 +272,11 @@ public class TipiProperty extends TipiEchoComponentImpl implements PropertyCompo
         if ("capitalization".equals(name)) {
             myPropertyComponent.setCapitalization( (String) object);
          }
+
+        if ("propertyValue".equals(name)) {
+            myPropertyComponent.setPropertyValue( object);
+         }
+        
         
         super.setComponentValue(name, object);
     }

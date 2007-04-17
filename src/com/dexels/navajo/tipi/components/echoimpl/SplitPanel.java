@@ -28,23 +28,12 @@ public class SplitPanel extends TipiEchoDataComponentImpl {
 
     public Object createContainer() {
         SplitPane splitPane = new SplitPane();
-		// Grid p = new Grid();
-        // return p;
-//        splitPane.setStyleName("Default");
-        
         return splitPane;
     }
 
     public void addToContainer(Object o, Object constraints) {
-        // GridLayoutData gld = new GridLayoutData();
-        // gld.setColumnSpan(2);
         super.addToContainer(o, null);
     }
-
-    //
-    // public void setContainerLayout(Object l){
-    //
-    // }
 
     public void setComponentValue(final String name, final Object object) {
         SplitPane p = (SplitPane) getContainer();

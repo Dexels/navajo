@@ -29,6 +29,7 @@
 package com.dexels.navajo.tipi.components.echoimpl.impl;
 
 import echopointng.*;
+import echopointng.table.DefaultSortableTableModel;
 import echopointng.table.SortableTableModel;
 import nextapp.echo2.app.Alignment;
 import nextapp.echo2.app.Button;
@@ -63,47 +64,52 @@ public class MessageTableHeaderRenderer implements TableCellRenderer {
     public Component getTableCellRendererComponent(Table table, Object value, int column, int row) {
         SortableTableModel model = (SortableTableModel) table.getModel();
         MessageTable mt = (MessageTable)table;
-        return getSortButton(mt,(String) value, column, (MessageTableModel) model, (MessageTable) table);
+        return getSortButton(mt,(String) value, column,  model, (MessageTable) table);
     }
 
-    protected Button getSortButton(MessageTable mt, String label, int column, MessageTableModel model, MessageTable table) {
-        ButtonEx button = new ButtonImpl(label);
-        Color color = mt.getHeaderForeground();
-        if (color!=null) {
-            button.setForeground(color);
-        }
-        color = mt.getHeaderBackground();
-        if (color!=null) {
-            button.setForeground(color);
-        }
-        color = mt.getHeaderPressedBackground();
-        if (color!=null) {
-            button.setPressedBackground(color);
-        }
-        color = mt.getHeaderPressedForeground();
-        if (color!=null) {
-            button.setPressedForeground(color);
-        }
-        color = mt.getHeaderRolloverBackground();
-        if (color!=null) {
-            button.setRolloverBackground(color);
-        }
-        color = mt.getHeaderRolloverForeground();
-        if (color!=null) {
-            button.setRolloverForeground(color);
-        }
-        
+    protected Button getSortButton(MessageTable mt, String label, int column, SortableTableModel model, MessageTable table) {
+    	TableHeaderImpl button = new TableHeaderImpl(label);
+//        Color color = mt.getHeaderForeground();
+//        if (color!=null) {
+//            button.setForeground(color);
+//        }
+//        color = mt.getHeaderBackground();
+//        if (color!=null) {
+//            button.setForeground(color);
+//        }
+//        color = mt.getHeaderPressedBackground();
+//        if (color!=null) {
+//            button.setPressedBackground(color);
+//        }
+//        color = mt.getHeaderPressedForeground();
+//        if (color!=null) {
+//            button.setPressedForeground(color);
+//        }
+//        color = mt.getHeaderRolloverBackground();
+//        if (color!=null) {
+//            button.setRolloverBackground(color);
+//        }
+//        color = mt.getHeaderRolloverForeground();
+//        if (color!=null) {
+//            button.setRolloverForeground(color);
+//        }
+//        
         button.addActionListener(getSortButtonListener(column, model));
-        button.setLayoutData(getLayoutData());
-        button.setInsets(new Insets(2, 0, 0, 0));
+//        button.setLayoutData(getLayoutData());
+//        button.setInsets(new Insets(2, 0, 0, 0));
+//        
+//        button.setTextPosition(new Alignment(Alignment.CENTER, Alignment.DEFAULT));
+//        
         
-        button.setTextPosition(new Alignment(Alignment.CENTER, Alignment.DEFAULT));
-        int colsize = table.getColumnSize(column).getValue()-2;
-        button.setWidth(new Extent(colsize, Extent.PX));
+//        int colsize = table.getColumnSize(column).getValue()-2;
+//        button.setWidth(new Extent(colsize, Extent.PX));
+        
         button.setHeight(new Extent(mt.getHeaderHeight(), Extent.PX));
+
         ImageReference icon = null;
         if (model.getCurrentSortColumn() == column) {
-            if (model.isCurrentSortAscending()) {
+        	
+        	if (model.getSortDirective(column)==DefaultSortableTableModel.ASCENDING) {
                 icon = upArrowImage;
             } else {
                 icon = downArrowImage;
@@ -123,10 +129,16 @@ public class MessageTableHeaderRenderer implements TableCellRenderer {
     protected ActionListener getSortButtonListener(final int column, final SortableTableModel model) {
         return new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+            	System.err.println("Boioioioin!");
                 Button button = (Button) e.getSource();
-                boolean ascending = model.isCurrentSortAscending();
-                ascending = model.getCurrentSortColumn() == column?!ascending:ascending;
-                model.sortByColumn(column, !ascending);
+                int currentSort = model.getCurrentSortColumn();
+                int ascending = SortableTableModel.ASCENDING;
+                if(currentSort>=0) {
+                    ascending = model.getSortDirective(currentSort);
+                }
+//                ascending = model.getCurrentSortColumn() == column?!ascending:ascending;
+                
+                model.sortByColumn(column, ascending==SortableTableModel.ASCENDING?SortableTableModel.DESCENDING:SortableTableModel.ASCENDING);
             }
         };
     }

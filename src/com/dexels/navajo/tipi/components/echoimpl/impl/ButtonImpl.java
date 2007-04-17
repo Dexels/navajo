@@ -9,7 +9,7 @@ package com.dexels.navajo.tipi.components.echoimpl.impl;
 import echopointng.*;
 import nextapp.echo2.app.*;
 
-public class ButtonImpl extends ButtonEx {
+public class ButtonImpl extends Button {
 
     public ButtonImpl() {
         super();
@@ -34,9 +34,12 @@ public class ButtonImpl extends ButtonEx {
     }
     private void setup() {
 //    	setStyleName("Default");
-		setTextAlignment(new Alignment(Alignment.CENTER, Alignment.DEFAULT));
-        setAlignment(new Alignment(Alignment.CENTER,Alignment.DEFAULT));
-        setBorder(new Border(1,new Color(0x88,0x88,0x88),Border.STYLE_SOLID));
+		Style ss = Styles.DEFAULT_STYLE_SHEET.getStyle(this.getClass(), "Default");
+        setStyle(ss);
+        
+//		setTextAlignment(new Alignment(Alignment.CENTER, Alignment.DEFAULT));
+//        setAlignment(new Alignment(Alignment.CENTER,Alignment.DEFAULT));
+//        setBorder(new Border(1,new Color(0x88,0x88,0x88),Border.STYLE_SOLID));
 //        setRolloverBackground(new Color(0xff,0xff,0xff));
 //        setRolloverForeground(new Color(0,0,0));
 //        setRolloverBorder(new Border(1,new Color(0x88,0x88,0x88),Border.STYLE_SOLID));

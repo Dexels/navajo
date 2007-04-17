@@ -2,7 +2,7 @@ package com.dexels.navajo.tipi.components.echoimpl;
 
 import com.dexels.navajo.tipi.TipiValue;
 import com.dexels.navajo.tipi.components.core.TipiLayoutImpl;
-import com.dexels.navajo.tipi.components.echoimpl.impl.TipiEchoGridBagConstraints;
+import com.dexels.navajo.tipi.components.echoimpl.impl.layout.TipiEchoGridBagConstraints;
 
 import nextapp.echo2.app.Grid;
 import nextapp.echo2.app.layout.GridLayoutData;

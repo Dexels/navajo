@@ -1,5 +1,6 @@
 package com.dexels.navajo.tipi.components.echoimpl.impl;
 
+import nextapp.echo2.app.Style;
 import nextapp.echo2.app.TextField;
 
 /**
@@ -23,12 +24,15 @@ import nextapp.echo2.app.TextField;
 public class TipiEchoTextField extends TextField {
     public TipiEchoTextField() {
         super();
-//        setStyleName("Default");
+		Style ss = Styles.DEFAULT_STYLE_SHEET.getStyle(this.getClass(), "Default");
+        setStyle(ss);
+
 	}
 
     public TipiEchoTextField(String text) {
         super();
-//        setStyleName("Default");
+		Style ss = Styles.DEFAULT_STYLE_SHEET.getStyle(this.getClass(), "Default");
+        setStyle(ss);
 		setText(text);
     }
 

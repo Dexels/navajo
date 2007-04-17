@@ -8,11 +8,14 @@ import java.util.Comparator;
 import nextapp.echo2.app.Color;
 import nextapp.echo2.app.Component;
 import nextapp.echo2.app.Extent;
+import nextapp.echo2.app.Style;
 import nextapp.echo2.app.Table;
 import nextapp.echo2.app.event.ActionEvent;
 import nextapp.echo2.app.event.ActionListener;
 import nextapp.echo2.app.event.ChangeEvent;
 import nextapp.echo2.app.event.ChangeListener;
+import nextapp.echo2.app.list.DefaultListSelectionModel;
+import nextapp.echo2.app.list.ListSelectionModel;
 import nextapp.echo2.app.table.DefaultTableColumnModel;
 import nextapp.echo2.app.table.TableCellRenderer;
 import nextapp.echo2.app.table.TableColumn;
@@ -24,6 +27,7 @@ import com.dexels.navajo.tipi.components.echoimpl.EchoPropertyComponent;
 import com.dexels.navajo.tipi.components.echoimpl.parsers.*;
 
 import echopointng.PushButton;
+import echopointng.table.DefaultSortableTableModel;
 import echopointng.table.PageableSortableTable;
 import echopointng.table.SortableTable;
 import echopointng.table.SortableTableColumn;
@@ -67,71 +71,79 @@ public class MessageTable extends SortableTable {
 
     public MessageTable() {
     	
-//    	setStyleName("Default");
-		super.addActionListener(new ActionListener() {
+    	
+    	Style ss = Styles.DEFAULT_STYLE_SHEET.getStyle(this.getClass(), "Default");
+        setStyle(ss);
 
-            public void actionPerformed(ActionEvent e) {
-                lastSelectedRow = currentSelectedRow;
-                currentSelectedRow = getSelectedIndex();
-                if (lastSelectedRow>=getMessageTableModel().getRowCount()) {
-					lastSelectedRow = -1;
-				}
-                for (int i = 0; i < getColumnModel().getColumnCount(); i++) {
-                    // TODO Ewwwwww
-                    // System.err.println("Last row: "+lastSelectedRow);
-                    // System.err.println("Current row: "+currentSelectedRow);
-                    Component lastc = getCellComponent(i, lastSelectedRow);
-                     // System.err.println("Last: "+lastc+" current: "+currentc);
-                    if (lastSelectedRow > -1  && lastc instanceof EchoPropertyComponent) {
-                        ((EchoPropertyComponent) lastc).setZebra(i, lastSelectedRow, false);
-                    }
-                    Component currentc = getCellComponent(i, currentSelectedRow);
-                    if (currentSelectedRow > -1 && currentc instanceof EchoPropertyComponent) {
-                        ((EchoPropertyComponent) currentc).setZebra(i, currentSelectedRow, true);
-                        // currentc.setBackground(new Color(255,0,0));
-                    }
-                    // ((EchoPropertyComponent)getCellComponent(i,lastSelectedRow)).setBackground(((EchoPropertyComponent)getCellComponent(i,lastSelectedRow)).getBackground());
-                }
-            }
-        });
+//		super.addActionListener(new ActionListener() {
+//
+//            public void actionPerformed(ActionEvent e) {
+//                lastSelectedRow = currentSelectedRow;
+//                currentSelectedRow = getSelectedIndex();
+//                if (lastSelectedRow>=getMessageTableModel().getRowCount()) {
+//					lastSelectedRow = -1;
+//				}
+//                for (int i = 0; i < getColumnModel().getColumnCount(); i++) {
+//                    // TODO Ewwwwww
+//                    // System.err.println("Last row: "+lastSelectedRow);
+//                    // System.err.println("Current row: "+currentSelectedRow);
+//                    Component lastc = getCellComponent(i, lastSelectedRow);
+//                     // System.err.println("Last: "+lastc+" current: "+currentc);
+//                    if (lastSelectedRow > -1  && lastc instanceof EchoPropertyComponent) {
+//                        ((EchoPropertyComponent) lastc).setZebra(i, lastSelectedRow, false);
+//                        
+//                    }
+//                    Component currentc = getCellComponent(i, currentSelectedRow);
+//                    if (currentSelectedRow > -1 && currentc instanceof EchoPropertyComponent) {
+//                        ((EchoPropertyComponent) currentc).setZebra(i, currentSelectedRow, true);
+//                        // currentc.setBackground(new Color(255,0,0));
+//                    }
+//                    // ((EchoPropertyComponent)getCellComponent(i,lastSelectedRow)).setBackground(((EchoPropertyComponent)getCellComponent(i,lastSelectedRow)).getBackground());
+//                }
+//            }
+//        });
     }
 
     public void setMessage(Message m) {
         // setSelectionMode(Table.);
+    	System.err.println("Setting message...");
         setAutoCreateColumnsFromModel(false);
         setHeaderVisible(true);
         setDefaultRenderer(Property.class, myRenderer);
         setSelectionBackground(new Color(200, 200, 255));
         setColumnModel(createColumnModel(m, myRenderer));
         myModel = new MessageTableModel(this, getColumnModel(), m);
+        DefaultSortableTableModel dst = new DefaultSortableTableModel(myModel);
         setBackground(new Color(255, 255, 255));
 
         TableColumnModel tcm = getColumnModel();
 
-        setModel(myModel);
+        setModel(dst);
         debugColumns(tcm);
-        if (getSelectionModel() != null) {
-            getSelectionModel().addChangeListener(new ChangeListener() {
-
-                public void stateChanged(ChangeEvent arg0) {
-                }
-            });
-        } else {
-            System.err.println("No selection model!");
-        }
-        addActionListener(new ActionListener() {
-
-            public void actionPerformed(ActionEvent e) {
-
-            }
-        });
-        addPropertyChangeListener(new PropertyChangeListener() {
-
-            public void propertyChange(PropertyChangeEvent evt) {
-                // System.err.println("AAAP!");
-            }
-        });
+//        if (getSelectionModel() != null) {
+//            getSelectionModel().addChangeListener(new ChangeListener() {
+//
+//                public void stateChanged(ChangeEvent arg0) {
+//                }
+//            });
+//        } else {
+//            System.err.println("No selection model!");
+//        }
+//        addActionListener(new ActionListener() {
+//
+//            public void actionPerformed(ActionEvent e) {
+//
+//            }
+//        });
+//        addPropertyChangeListener(new PropertyChangeListener() {
+//
+//            public void propertyChange(PropertyChangeEvent evt) {
+//                // System.err.println("AAAP!");
+//            }
+//        });
         getSelectionModel().clearSelection();
+        setSelectionModel(new DefaultListSelectionModel(){});
+        
         setSelectionBackground(new Color(200, 200, 255));
         invalidate();
     }
@@ -181,7 +193,7 @@ public class MessageTable extends SortableTable {
     }
 
     public MessageTableModel getMessageTableModel() {
-        return (MessageTableModel) getModel();
+        return (MessageTableModel)((DefaultSortableTableModel)getModel()).getUnderlyingTableModel();
     }
 
     public void debugTableModel() {
@@ -213,6 +225,13 @@ public class MessageTable extends SortableTable {
         // System.err.println("GETTING SELECTED MESSAGE: "
         // + getSelectionModel().getMinSelectedIndex());
         return getSelectionModel().getMinSelectedIndex();
+    }
+
+    public void setSelectedIndex(int s) {
+        // System.err.println("GETTING SELECTED MESSAGE: "
+        // + getSelectionModel().getMinSelectedIndex());
+        getSelectionModel().clearSelection();
+    	getSelectionModel().setSelectedIndex(s,true);
     }
 
     public void addActionListener(ActionListener al) {
@@ -287,48 +306,48 @@ public class MessageTable extends SortableTable {
         }
         return tcm;
     }
-     public Color getHeaderForeground() {
-        return headerForeground;
-    }
-
-    public Color getHeaderBackground() {
-        return headerBackground;
-    }
-    
-    public Color getHeaderRolloverForeground() {
-        return headerRolloverForeground;
-    }
-
-    public Color getHeaderRolloverBackground() {
-        return headerRolloverBackground;
-    }
-
-    public Color getHeaderPressedBackground() {
-        return headerPressedBackground;
-    }
-    public Color getHeaderPressedForeground() {
-        return headerPressedForeground;
-    }
-
-    public final void setHeaderForeground(Color headerForeground) {
-        this.headerForeground = headerForeground;
-    }
-
-    public final void setHeaderPressedBackground(Color headerPressedBackground) {
-        this.headerPressedBackground = headerPressedBackground;
-    }
-
-    public final void setHeaderPressedForeground(Color headerPressedForeground) {
-        this.headerPressedForeground = headerPressedForeground;
-    }
-
-    public final void setHeaderRolloverBackground(Color headerRolloverBackground) {
-        this.headerRolloverBackground = headerRolloverBackground;
-    }
-
-    public final void setHeaderRolloverForeground(Color headerRolloverForeground) {
-        this.headerRolloverForeground = headerRolloverForeground;
-    }
+//     public Color getHeaderForeground() {
+//        return headerForeground;
+//    }
+//
+//    public Color getHeaderBackground() {
+//        return headerBackground;
+//    }
+//    
+//    public Color getHeaderRolloverForeground() {
+//        return headerRolloverForeground;
+//    }
+//
+//    public Color getHeaderRolloverBackground() {
+//        return headerRolloverBackground;
+//    }
+//
+//    public Color getHeaderPressedBackground() {
+//        return headerPressedBackground;
+//    }
+//    public Color getHeaderPressedForeground() {
+//        return headerPressedForeground;
+//    }
+//
+//    public final void setHeaderForeground(Color headerForeground) {
+//        this.headerForeground = headerForeground;
+//    }
+//
+//    public final void setHeaderPressedBackground(Color headerPressedBackground) {
+//        this.headerPressedBackground = headerPressedBackground;
+//    }
+//
+//    public final void setHeaderPressedForeground(Color headerPressedForeground) {
+//        this.headerPressedForeground = headerPressedForeground;
+//    }
+//
+//    public final void setHeaderRolloverBackground(Color headerRolloverBackground) {
+//        this.headerRolloverBackground = headerRolloverBackground;
+//    }
+//
+//    public final void setHeaderRolloverForeground(Color headerRolloverForeground) {
+//        this.headerRolloverForeground = headerRolloverForeground;
+//    }
     public final void setHeaderHeight(int headerHeight) {
         this.headerHeight = headerHeight;
     }

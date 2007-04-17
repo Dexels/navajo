@@ -1,6 +1,7 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
 import nextapp.echo2.app.Row;
+import nextapp.echo2.app.layout.RowLayoutData;
 
 /**
  * <p>
@@ -26,12 +27,11 @@ public class EchoToolbar extends TipiEchoDataComponentImpl {
 
     public Object createContainer() {
         Row p = new Row();
-//        p.setStyleName("Default");
         return p;
     }
 
-    public void setContainerLayout(Object l) {
-        // hoei!
-    }
+//    public void setContainerLayout(Object l) {
+//
+//    }
 
 }

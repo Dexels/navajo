@@ -8,6 +8,8 @@ import nextapp.echo2.app.Font;
 import nextapp.echo2.app.Insets;
 import nextapp.echo2.app.Label;
 import nextapp.echo2.app.Row;
+import nextapp.echo2.app.SplitPane;
+import nextapp.echo2.app.Style;
 import nextapp.echo2.app.Window;
 import nextapp.echo2.app.WindowPane;
 import nextapp.echo2.app.event.ActionEvent;
@@ -16,6 +18,9 @@ import nextapp.echo2.app.event.ActionListener;
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.components.echoimpl.TipiScreen;
+
+import echopointng.TemplatePanel;
+import echopointng.template.StringTemplateDataSource;
 
 /**
  * <p>
@@ -43,27 +48,34 @@ public class TipiOptionPane {
         w.setStyleName("Default");
 		        
         final WindowPane wp = new WindowPane("?", new Extent(400, Extent.PX), new Extent(300, Extent.PX));
+		Style ss = Styles.DEFAULT_STYLE_SHEET.getStyle(wp.getClass(), "Default");
+        wp.setStyle(ss);
+
         w.getContent().add(wp);
         wp.setTitle(title);
         wp.setModal(true);
 
-        wp.setTitleBackground(new Color(232, 232, 232));
-        wp.setTitleInsets(new Insets(3, 2, 0, 0));
-        wp.setTitleForeground(new Color(0, 0, 0));
-        wp.setTitleFont(new Font(Font.ARIAL, Font.BOLD, new Extent(11, Extent.PT)));
-        wp.setTitleHeight(new Extent(20, Extent.PX));
+        SplitPane sp = new SplitPane(SplitPane.ORIENTATION_VERTICAL_BOTTOM_TOP);
 
-        Column cp = new Column();
+//        Column cp = new Column();
 
-        wp.add(cp);
-        cp.add(new nextapp.echo2.app.Label((String) text));
+        wp.add(sp);
+        TemplatePanel tp = new TemplatePanel();
+        StringTemplateDataSource std = new StringTemplateDataSource((String)text);
+        tp.setTemplateDataSource(std);
+        
+        
 
-        Row toolbar = new Row();
-        cp.add(toolbar);
+        sp.setSeparatorPosition(new Extent(40,Extent.PX));
+        Row toolbar = new ToolbarImpl();
+        sp.add(toolbar);
 
-        Button yesButton = new Button("Yes");
+        sp.add(tp);
+
+        
+        Button yesButton = new ButtonImpl("Yes");
         toolbar.add(yesButton);
-        Button noButton = new Button("No");
+        Button noButton = new ButtonImpl("No");
         toolbar.add(noButton);
 
         wp.setDefaultCloseOperation(WindowPane.DISPOSE_ON_CLOSE);
@@ -84,6 +96,7 @@ public class TipiOptionPane {
         });
         noButton.setText(no);
         wp.setVisible(true);
+        throw new TipiBreakException();
     }
 
     public static void showInfo(final TipiContext context, final String text, String title, String closeText) {

@@ -42,7 +42,7 @@ public class TipiServlet extends WebContainerServlet {
     public ApplicationInstance newApplicationInstance() {
       	TipiEchoInstance tp = null;
         try {
-         	tp = new TipiEchoInstance(getServletConfig());
+         	tp = new TipiEchoInstance(getServletConfig(),getServletContext());
         } catch (Throwable ex) {
             ex.printStackTrace();
             throw new RuntimeException(ex);

@@ -39,9 +39,9 @@ public class TipiPanel extends TipiEchoDataComponentImpl {
     //
     // }
     //
-    // public void setContainerLayout(Object l){
-    //
-    // }
+//     public void setContainerLayout(Object l){
+//    
+//     }
 
     public void setComponentValue(final String name, final Object object) {
         if ("background".equals(name)) {
@@ -50,14 +50,6 @@ public class TipiPanel extends TipiEchoDataComponentImpl {
                             }
         }
 
-        // if ("w".equals(name)) {
-        // ContentPane cont = (ContentPane) getContainer();
-        // cont.setWidth( ( (Integer) object).intValue());
-        // }
-        // if ("h".equals(name)) {
-        // TipiEchoPanel cont = (TipiEchoPanel) getContainer();
-        // cont.setHeight( ( (Integer) object).intValue());
-        // }
         super.setComponentValue(name, object);
     }
 

@@ -1,4 +1,4 @@
-package com.dexels.navajo.tipi.components.echoimpl.impl;
+package com.dexels.navajo.tipi.components.echoimpl.impl.layout;
 
 import java.util.*;
 
@@ -20,6 +20,8 @@ import nextapp.echo2.app.layout.GridLayoutData;
 public class TipiEchoGridBagConstraints
     extends GridLayoutData {
   private String[] myConstraints = new String[14];
+private int gridx;
+private int gridy;
   public TipiEchoGridBagConstraints() {
 	  super();
   }
@@ -41,9 +43,9 @@ public class TipiEchoGridBagConstraints
         myConstraints[i] = tok.nextToken();
       }
     
-      int gridx = Integer.parseInt(myConstraints[0]);
-      int gridy = Integer.parseInt(myConstraints[1]);
-      int gridwidth = Integer.parseInt(myConstraints[2]);
+      gridx = Integer.parseInt(myConstraints[0]);
+	gridy = Integer.parseInt(myConstraints[1]);
+	int gridwidth = Integer.parseInt(myConstraints[2]);
       int gridheight = Integer.parseInt(myConstraints[3]);
       double weightx = Double.parseDouble(myConstraints[4]);
       double weighty = Double.parseDouble(myConstraints[5]);
@@ -68,6 +70,10 @@ public class TipiEchoGridBagConstraints
   public TipiEchoGridBagConstraints(String s, Component parent, Component child, int index) {
     parse(s,index);
   }
+
+public int getColumn() {
+	return gridx;
+}
 
 //  public static void main(String[] args) {
 //    XMLElement bert = new CaseSensitiveXMLElement();

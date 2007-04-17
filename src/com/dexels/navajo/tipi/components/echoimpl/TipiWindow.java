@@ -2,8 +2,10 @@ package com.dexels.navajo.tipi.components.echoimpl;
 
 import nextapp.echo2.app.Color;
 import nextapp.echo2.app.Component;
+import nextapp.echo2.app.ContentPane;
 import nextapp.echo2.app.Extent;
 import nextapp.echo2.app.LayoutData;
+import nextapp.echo2.app.Style;
 import nextapp.echo2.app.WindowPane;
 import nextapp.echo2.app.event.WindowPaneEvent;
 import nextapp.echo2.app.event.WindowPaneListener;
@@ -11,6 +13,8 @@ import nextapp.echo2.app.event.WindowPaneListener;
 import com.dexels.navajo.tipi.TipiComponentMethod;
 import com.dexels.navajo.tipi.TipiHelper;
 import com.dexels.navajo.tipi.components.echoimpl.helpers.EchoTipiHelper;
+import com.dexels.navajo.tipi.components.echoimpl.impl.Styles;
+import com.dexels.navajo.tipi.components.echoimpl.impl.layout.EchoLayoutImpl;
 import com.dexels.navajo.tipi.components.echoimpl.parsers.ColorParser;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 
@@ -39,7 +43,7 @@ public final class TipiWindow
 
     private String myTitle;
 
-    private ContainerEx innerContainer;
+    private ContentPane innerContainer;
 
     public void disposeComponent() {
         myWindow.setVisible(false);
@@ -47,13 +51,28 @@ public final class TipiWindow
         super.disposeComponent();
     }
 
+    
+
+    public void setContainerLayout(Object layout) {
+    	if(layout==null) {
+    		layoutComponent = null;
+    	}
+    	if (layout instanceof EchoLayoutImpl) {
+            layoutComponent = (EchoLayoutImpl) layout;
+        }
+    }
+    
+    
     public Object createContainer() {
         myWindow = new WindowPane();
-        myWindow.setStyleName("window");
+//        myWindow = new WindowPane();
+		Style ss = Styles.DEFAULT_STYLE_SHEET.getStyle(WindowPane.class, "Default");
+        myWindow.setStyle(ss);
         TipiHelper th = new EchoTipiHelper();
         th.initHelper(this);
         addHelper(th);
-        innerContainer = new ContainerEx();
+        myWindow.setClosable(true);
+        innerContainer = new ContentPane();
         myWindow.add(innerContainer);
         myWindow.addWindowPaneListener(new WindowPaneListener() {
             public void windowPaneClosing(WindowPaneEvent arg0) {
@@ -109,12 +128,27 @@ public final class TipiWindow
     	// myContext.disposeTipi(this);
     }
 
+    public Component getInnerComponent() {
+    	return innerContainer;
+    }
+    
+    
     public void addToContainer(final Object c, final Object constraints) {
-        innerContainer.add((Component) c);
-        if (constraints != null && constraints instanceof LayoutData) {
-            ((WindowPane) getContainer()).setLayoutData((LayoutData) constraints);
+        
+        if(layoutComponent!=null) {
+         	// do layoutstuff
+        	 System.err.println("LAYOUT DETECTED ON FRAME!!!!");
+         	layoutComponent.setParentComponent(this);
+         	layoutComponent.addChildComponent((Component) c, constraints);
+         } else {
+        	 innerContainer.add((Component) c);
+        	  if (constraints != null && constraints instanceof LayoutData) {
+                  ((WindowPane) getContainer()).setLayoutData((LayoutData) constraints);
 
-        }
+              }   	 
+         }
+    	
+      
         // ((SwingTipiContext)myContext).addTopLevel(c);
         // });
     }
@@ -130,16 +164,16 @@ public final class TipiWindow
         // });
     }
 
-    public void setContainerLayout(final Object layout) {
-        // runSyncInEventThread(new Runnable() {
-        // public void run() {
-
-        // eueueuh
-        // ( (JInternalFrame) getContainer()).getContentPane().setLayout(
-        // (LayoutManager) layout);
-        // }
-        // });
-    }
+//    public void setContainerLayout(final Object layout) {
+//        // runSyncInEventThread(new Runnable() {
+//        // public void run() {
+//
+//        // eueueuh
+//        // ( (JInternalFrame) getContainer()).getContentPane().setLayout(
+//        // (LayoutManager) layout);
+//        // }
+//        // });
+//    }
 
     public void processStyles() {
 //      System.err.println("Processing styles.... "+styleHintMap);

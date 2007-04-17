@@ -34,7 +34,7 @@ public class BinaryPropertyImage extends StreamImageReference {
 
     public String getContentType() {
         // TODO Auto-generated method stub
-        return null;
+        return "image/jpeg";
     }
 
     public void render(OutputStream out) throws IOException {
@@ -65,7 +65,12 @@ public class BinaryPropertyImage extends StreamImageReference {
 
     public String getRenderId() {
         try {
-            return myProperty.getFullPropertyName();
+        	if(myProperty!=null) {
+                return myProperty.getFullPropertyName();
+        	} else {
+        	      return "unknown_property";
+        	      		
+        	}
         } catch (NavajoException e) {
             return "unknown_property";
         }

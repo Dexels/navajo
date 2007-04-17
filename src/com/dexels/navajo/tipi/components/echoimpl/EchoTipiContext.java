@@ -40,11 +40,16 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
 public class EchoTipiContext extends TipiContext {
 //    private ApplicationInstance myServerContext;
     private static int instanceCount = 0;
-    public EchoTipiContext() {
+    private final TipiEchoInstance myInstance;
+    public EchoTipiContext(TipiEchoInstance t) {
     	instanceCount++;
-    	System.err.println("Instantiated context. Count: "+instanceCount);
+    	myInstance = t;
+
     }
 
+    public ApplicationInstance getInstance() {
+    	return myInstance;
+    }
 
     public Set getRequiredIncludes() {
         Set s = super.getRequiredIncludes();
@@ -97,8 +102,7 @@ public class EchoTipiContext extends TipiContext {
 //    }
 
     public void exit() {
-    	System.err.println("CALLED EXIT IN TIPIECHO CONTEXT. IGNORING");
-    	NavajoClientFactory.getClient().destroy();
+     	NavajoClientFactory.getClient().destroy();
     }
     
 
@@ -114,24 +118,18 @@ public class EchoTipiContext extends TipiContext {
         HttpServletRequest req = con.getRequest();
         String url = req.getRequestURL().toString();
         URL u = new URL(url);
-        System.err.println("URL:: "+u);
-//        System.err.println("Context: "+getServletContext().get());
+
         for (Enumeration iter = getServletContext().getAttributeNames(); iter.hasMoreElements();) {
             String element = (String) iter.nextElement();
-            System.err.println("Attribute: "+element);
         }
         URL rootURL =  new URL(u.getProtocol(),u.getHost(),u.getPort(),path);
-//        System.err.println("Assembled rootURL: "+rootURL.toString());
-//        URL u2 = new URL(rootURL,"dynamic");
-//        System.err.println("Returing: "+u2.toString());
         return rootURL;
         
     }
 
     public File getDynamicResourceBaseDir() {
         File ff = new File(getServletContext().getRealPath("/dynamic"));
-        System.err.println("My context name: "+getServletContext().getServletContextName());
-        System.err.println("USING DIR: "+ff);
+
         if (!ff.exists()) {
             ff.mkdirs();
         }
@@ -143,19 +141,9 @@ public class EchoTipiContext extends TipiContext {
         long stamp = System.currentTimeMillis()-startTime;
         SimpleDateFormat inputFormat1 = new SimpleDateFormat("HH:mm:ss S");
 
-//        Calendar c = Calendar.getInstance();
         Date d = new Date(stamp);
-//        c.setTimeInMillis(stamp);
-        
-//        try {
-//          FileWriter fw = new FileWriter(System.getProperty("user.home") + "/.tipidebug", true);
+
           System.err.println(category + ", " + inputFormat1.format(d) + ", "  + "," + event+"\n");
-//          fw.flush();
-//          fw.close();
-//        }
-//        catch (IOException ex) {
-//          ex.printStackTrace();
-//        }
       }
     public ServletContext getServletContext() {
  
@@ -174,7 +162,7 @@ public class EchoTipiContext extends TipiContext {
       	if (xe==null) {
       		return super.getTipiDefinition(name);
 		} else {
-			System.err.println("Definition found in static. Not reparsing.");
+
 			return xe;
 		}
     }

@@ -11,6 +11,7 @@ import com.dexels.navajo.tipi.components.core.TipiDataComponentImpl;
 import com.dexels.navajo.tipi.components.core.TipiLayoutImpl;
 import com.dexels.navajo.tipi.components.echoimpl.helpers.EchoTipiHelper;
 import com.dexels.navajo.tipi.components.echoimpl.impl.TipiLayoutManager;
+import com.dexels.navajo.tipi.components.echoimpl.impl.layout.EchoLayoutImpl;
 import com.dexels.navajo.tipi.components.echoimpl.parsers.*;
 import com.dexels.navajo.tipi.internal.TipiLayout;
 
@@ -38,7 +39,7 @@ import echopointng.able.*;
 public abstract class TipiEchoDataComponentImpl extends TipiDataComponentImpl {
 
     // protected TipiLayout layout = null;
-    protected Component layoutComponent;
+    protected EchoLayoutImpl layoutComponent;
 
     public TipiEchoDataComponentImpl() {
         TipiHelper th = new EchoTipiHelper();
@@ -49,9 +50,9 @@ public abstract class TipiEchoDataComponentImpl extends TipiDataComponentImpl {
         
     }
 
-    public Component getLayoutComponent() {
-        return layoutComponent;
-    }
+//    public Component getLayoutComponent() {
+//        return layoutComponent;
+//    }
 
     // public TipiLayout getLayout() {
     // return layout;
@@ -64,51 +65,51 @@ public abstract class TipiEchoDataComponentImpl extends TipiDataComponentImpl {
         cc.remove(child);
     }
 
+    public Component getInnerComponent() {
+    	return (Component)getContainer();
+    }
+    
+    
     public void addToContainer(Object c, Object constraints) {
         Component cc;
         cc = (Component) getContainer();
         Component child = (Component) c;
-        if (layoutComponent != null) {
-            cc = layoutComponent;
-        }
-        if (child instanceof WindowPane) {
-            TipiScreen s = (TipiScreen) getContext().getDefaultTopLevel();
-            // Watch this.
-            final Window w = (Window) s.getTopLevel();
-            w.getContent().add(child);
+//        if (layoutComponent != null) {
+//            cc = layoutComponent;
+//        }
+        if(layoutComponent!=null) {
+        	// do layoutstuff
+        	layoutComponent.setParentComponent(this);
+        	layoutComponent.addChildComponent(child, constraints);
         } else {
-            cc.add(child);
-            if (constraints != null && constraints instanceof LayoutData) {
-                child.setLayoutData((LayoutData) constraints);
-            }
-            if (getLayout() != null) {
-                getLayout().childAdded(c);
-            }
+            if (child instanceof WindowPane) {
+                TipiScreen s = (TipiScreen) getContext().getDefaultTopLevel();
+                // Watch this.
+                final Window w = (Window) s.getTopLevel();
+                w.getContent().add(child);
+            } else {
+                cc.add(child);
+                if (constraints != null && constraints instanceof LayoutData) {
+                    child.setLayoutData((LayoutData) constraints);
+                }
+                if (getLayout() != null) {
+                    getLayout().childAdded(c);
+                }
 
+            }
         }
+    
     }
 
     public void setContainerLayout(Object layout) {
-    	if(true) {
-    		return;
+    	if(layout==null) {
+    		layoutComponent = null;
     	}
-        if (layout instanceof TipiLayoutManager) {
-            /* 'Real layout' */
-            // layoutComponent = (TipiLayoutManager)layout;
-        } else {
-            if (layout instanceof Component) {
-            	System.err.println("Deprecated layout usage IN TipiEchoDataComponent");
-                layoutComponent = (Component) layout;
-//                if (layoutComponent instanceof Sizeable) {
-//                    ((Sizeable) layoutComponent).setWidth(new Extent(100, Extent.PERCENT));
-//                    ((Sizeable) layoutComponent).setHeight(new Extent(100, Extent.PERCENT));
-//                }
-                ((Component) getContainer()).add(layoutComponent);
-
-            } else {
-                System.err.println("*********************\nStrange layout found!\n*********************");
+    	if (layout instanceof EchoLayoutImpl) {
+    		System.err.println("Setting layout");
+                layoutComponent = (EchoLayoutImpl) layout;
+//                ((Component) getContainer()).add(layoutComponent);
             }
-        }
     }
 
     /**
