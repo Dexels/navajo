@@ -32,7 +32,7 @@ public class BIRTMap implements Mappable {
 	public String parameterName;
 	
 	public String birtDatasourceUrl;
-	private static IReportEngine myEngine = null;
+	private IReportEngine myEngine = null;
  
   public Binary getReport(){
 	  
@@ -228,7 +228,7 @@ public class BIRTMap implements Mappable {
   public void finalize() {
 	  if(myEngine!=null) {
 		  myEngine.shutdown();
-		  
+		  myEngine = null;
 	  }
   }
 
