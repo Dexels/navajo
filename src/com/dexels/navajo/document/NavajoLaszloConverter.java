@@ -48,20 +48,21 @@ public class NavajoLaszloConverter {
 		return n;
 	}
 
-	public static Document createLaszloFromNavajo(Navajo in) {
+	public static Document createLaszloFromNavajo(Navajo in, String serviceName) {
 		Document doc = XMLDocumentUtils.createDocument();
 		try {
 //			System.err.println("Creating laszlo for:");
 //			in.write(System.err);
 
-			String nodeName = in.getHeader().getRPCName();
-			nodeName = nodeName.replaceAll("/", "_");
+//			String nodeName = in.getHeader().getRPCName();
+			
+			String nodeName = serviceName.replaceAll("/", "_");
 			Element root = doc.createElement(nodeName);
 			doc.appendChild(root);
 			Element tml = doc.createElement("tml");
 			tml.setAttribute("rpc_usr", in.getHeader().getRPCUser());
 			tml.setAttribute("rpc_pwd", in.getHeader().getRPCPassword());
-			tml.setAttribute("rpc_name", in.getHeader().getRPCName());
+			tml.setAttribute("rpc_name", serviceName);
 			root.appendChild(tml);
 			ArrayList l = in.getAllMessages();
 			for (int i = 0; i < l.size(); i++) {
@@ -263,6 +264,7 @@ public class NavajoLaszloConverter {
 						option.setAttribute("selected", ""+s.isSelected());
 						prop.appendChild(option);
 					}
+					
 				}
 				e.appendChild(prop);
 			}
@@ -271,8 +273,8 @@ public class NavajoLaszloConverter {
 		}
 	}
 
-	public static void dumpNavajoLaszloStyle(Navajo n,String filename) throws IOException {
-		 	Document d = createLaszloFromNavajo(n);
+	public static void dumpNavajoLaszloStyle(Navajo n,String filename, String serviceName) throws IOException {
+		 	Document d = createLaszloFromNavajo(n,serviceName);
 			FileWriter fw = new FileWriter(filename);
 			XMLDocumentUtils.write(d, fw, false);
 			fw.close();
