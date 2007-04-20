@@ -25,6 +25,6 @@ public class TipiSetPostman
 	    NavajoClientFactory.getClient().setServerUrl(""+serv.value);
 	    NavajoClientFactory.getClient().setUsername(""+user.value);
 	    NavajoClientFactory.getClient().setPassword(""+pass.value);
-	    System.err.println("Created new client pointing to: "+serv.value+" using username: "+user);
+	    System.err.println("Created new client pointing to: "+serv.value+" using username: "+user.value);
   }
 }
