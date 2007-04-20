@@ -18,9 +18,9 @@ import java.util.zip.GZIPOutputStream;
 import javax.net.ssl.*;
 import javax.servlet.http.*;
 
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.httpclient.methods.RequestEntity;
+//import org.apache.commons.httpclient.HttpClient;
+//import org.apache.commons.httpclient.methods.PostMethod;
+//import org.apache.commons.httpclient.methods.RequestEntity;
 
 import com.dexels.navajo.client.serverasync.*;
 import com.dexels.navajo.document.*;
@@ -247,12 +247,11 @@ public class NavajoClient implements ClientInterface {
   /**
    * Set the server URL
    * @param url String
-   * @deprecated
    * USE SET SERVERURLS
    */
   public final void setServerUrl(String url) {
 //    host = url;
-	  System.err.println("Warning: setServerURL is deprecated!");
+//	  System.err.println("Warning: setServerURL is deprecated!");
 	  serverUrls = new String[]{url};
   }
 
