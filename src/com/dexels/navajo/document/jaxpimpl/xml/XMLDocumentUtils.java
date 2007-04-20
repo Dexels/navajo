@@ -90,7 +90,13 @@ public class XMLDocumentUtils {
         }
 
         StringWriter sw = new StringWriter();
-        Transformer  transformer = transformerFactory.newTransformer(new StreamSource(xslFile));
+        Transformer  transformer = null;
+
+        if (xslFile==null) {
+              transformer = transformerFactory.newTransformer();
+		} else {
+              transformer = transformerFactory.newTransformer(new StreamSource(xslFile));
+		}
 
         transformer.setOutputProperty(OutputKeys.ENCODING, DEFAULT_ENCODING);
         transformer.transform(new DOMSource(xmlIn), new StreamResult(sw));
@@ -226,13 +232,12 @@ public class XMLDocumentUtils {
     }
 
     private static void printElement(Node n, Writer sw) throws IOException {
-
         if (n == null) {
             return;
         }
-
+ 
         if (n instanceof Element) {
-
+         
             //StringBuffer result = new StringBuffer();
             String tagName = n.getNodeName();
 
@@ -253,10 +258,10 @@ public class XMLDocumentUtils {
             NodeList list = n.getChildNodes();
 
             if (list.getLength() > 0) {
-            	writeElement( sw, ">\n");
+            	writeElement( sw, ">");
             }
             else {
-            	writeElement( sw, "/>\n");
+            	writeElement( sw, "/>");
             }
 
             for (int i = 0; i < list.getLength(); i++) {
@@ -272,7 +277,11 @@ public class XMLDocumentUtils {
             if (n instanceof Text) {
                 Text t = (Text)n;
                 sw.write(t.getData());
+            } else if (n  instanceof Comment) {
+            	Comment c = (Comment)n;
+                sw.write("<!--"+c.getData()+"-->");
             }
+            
             return;
         }
     }
