@@ -68,7 +68,7 @@ public class FileStore implements MessageStore {
 			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(f));
 			q = (Queable) ois.readObject();
 			ois.close();
-			System.err.println("Read object: " + q.hashCode());
+			System.err.println("Read object: " + q.getClass().getName() + ", retries " + q.getRetries() + ", max retries " + q.getMaxRetries());
 			// Only return object if it is not sleeping
 			if ( q.getWaitUntil() < System.currentTimeMillis() ) {
 				f.delete();
