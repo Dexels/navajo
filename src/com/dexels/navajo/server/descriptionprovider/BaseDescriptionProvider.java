@@ -10,13 +10,19 @@ import com.dexels.navajo.document.Property;
 
 public abstract class BaseDescriptionProvider implements DescriptionProvider{
 
+	private Message descriptionMessage = null;
+
 	public abstract void updateProperty(Navajo in, Property element, String locale);
 
 	
+	public void setDescriptionConfigMessage(Message descriptionMessage) {
+		this.descriptionMessage = descriptionMessage;
+	}
 
 
 	public void updatePropertyDescriptions(Navajo in, Navajo out) throws NavajoException {
 		String locale = in.getHeader().getAttribute("locale");
+		System.err.println("Locale: "+locale);
 		if (locale==null) {
 			return;
 		}
@@ -41,6 +47,11 @@ public abstract class BaseDescriptionProvider implements DescriptionProvider{
 			Property element = (Property) iter.next();
 			updateProperty(in,element,locale);
 		}				
+	}
+
+
+	public Message getDescriptionMessage() {
+		return descriptionMessage;
 	}
 	
 

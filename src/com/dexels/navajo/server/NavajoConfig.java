@@ -213,6 +213,7 @@ public final class NavajoConfig {
     			betaClassloader = new NavajoClassLoader(adapterPath, compiledScriptPath, true, getClass().getClassLoader());
     		}
     		
+    		Message descriptionMessage = body.getMessage("description-provider");
     		Property descriptionProviderProperty = body.getProperty("description-provider/class");
 			String descriptionProviderClass = null;
 			if (descriptionProviderProperty!=null) {
@@ -224,6 +225,7 @@ public final class NavajoConfig {
 //						System.err.println("Setting description provider. config hash: "+hashCode());
 						if (myDescriptionProvider==null) {
 							myDescriptionProvider = (DescriptionProvider)cc.newInstance();
+							myDescriptionProvider.setDescriptionConfigMessage(descriptionMessage);
 						} else {
 							System.err.println("Warning: Resetting description provider.");
 						}
