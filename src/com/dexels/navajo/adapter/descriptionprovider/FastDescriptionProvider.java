@@ -1,5 +1,8 @@
 package com.dexels.navajo.adapter.descriptionprovider;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.util.HashMap;
 
 import com.dexels.navajo.adapter.SQLMap;
@@ -36,6 +39,8 @@ public class FastDescriptionProvider extends BaseDescriptionProvider {
 	
 	private static HashMap properties = new HashMap();
 	private static Object semaphore = new Object();
+
+	private String datasource;
 	
 	private void initializeCache(String propertyName) throws UserException {
 
@@ -154,7 +159,8 @@ public class FastDescriptionProvider extends BaseDescriptionProvider {
 		HashMap users = null;
 		// Check if there are non-generic sublocales.
 		if ( locales.get(locale) == null ) {
-			return defaultDescription;
+			String res = getExternalTranslation(propertyName, subLocale);
+			return res;
 		}
 		if ( ((HashMap) locales.get(locale)).size() > 1 ) {
 			users = (HashMap) ((HashMap) locales.get(locale)).get(subLocale);
@@ -226,7 +232,17 @@ public class FastDescriptionProvider extends BaseDescriptionProvider {
 				  new com.dexels.navajo.server.FileInputStreamReader(), "aap").getNavajoConfig();
 			}
 			sqlMap.load(null, null, null, Dispatcher.getInstance().getNavajoConfig());
-			sqlMap.setDatasource("navajostore");
+			
+			datasource = "navajostore";
+			if(getDescriptionMessage()!=null) {
+				// found message, should always be the case
+				Property datasourceProperty = getDescriptionMessage().getProperty("Datasource");
+				if(datasourceProperty!=null) {
+					datasource = datasourceProperty.getValue();
+				}
+			}
+
+			sqlMap.setDatasource(datasource);
 		}
 		catch (Exception ex) {
 			ex.printStackTrace(System.err);
@@ -294,4 +310,14 @@ public class FastDescriptionProvider extends BaseDescriptionProvider {
 		
 	}
 	
+	
+	public String getExternalTranslation(String word, String locale) {
+		try {
+			return TestBabel.getTranslation(word, "en_"+locale);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		return word;
+		
+	}
 }
