@@ -84,7 +84,7 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 						}
 					} else {
 						// Put stuff back in queue, unless queue is being emptied.
-						System.err.println("Could not process send() method, putting queued adapter back in queue...");
+						System.err.println("Could not process send() method, putting queued adapter back in queue... emptyqueue: " + emptyQueue);
 						if ( !emptyQueue ) {
 							handler.setWaitUntil(System.currentTimeMillis() + SLEEPING_TIME);
 							// Put queable in as failure if maxretries has past....
@@ -92,6 +92,7 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 							if ( maxRetries == 0 ) {
 								maxRetries = MAX_RETRIES;
 							}
+							System.err.println("ABOUT TO CALL PUTMESSAGE");
 							myStore.putMessage(handler, ( handler.getRetries() > maxRetries ));
 						}
 					}
@@ -140,10 +141,7 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 			try {
 				myStore.rewind();
 				while ( ( handler = myStore.getNext()) != null && !emptyQueue ) {
-					// Only handle if handler does not sleep anymore.
-					if ( handler.getWaitUntil() < System.currentTimeMillis() ) {
-						set.add(handler);	
-					}
+					set.add(handler);	
 				}
 			} catch (Exception e1) {
 				// TODO Auto-generated catch block

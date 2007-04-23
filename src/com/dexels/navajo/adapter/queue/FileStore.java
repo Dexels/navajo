@@ -9,8 +9,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.HashSet;
 import java.util.Iterator;
-
-import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.server.Dispatcher;
 
 public class FileStore implements MessageStore {
@@ -71,9 +69,14 @@ public class FileStore implements MessageStore {
 			q = (Queable) ois.readObject();
 			ois.close();
 			System.err.println("Read object: " + q.hashCode());
-			f.delete();
-			System.err.println("Delete file");
-			return q;
+			// Only return object if it is not sleeping
+			if ( q.getWaitUntil() < System.currentTimeMillis() ) {
+				f.delete();
+				//System.err.println("Delete file");
+				return q;
+			}
+			//System.err.println("This one is sleeping, try next object");
+			return getNext();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -82,7 +85,7 @@ public class FileStore implements MessageStore {
 	}
 	
 	public void putMessage(Queable handler, boolean failure) {
-		System.err.println("Putting work in store: " + handler.getClass().getName());
+		//System.err.println(">> Putting work in store: " + handler.getClass().getName());
 		
 		synchronized ( path ) {
 			if ( failure ) {
@@ -114,7 +117,7 @@ public class FileStore implements MessageStore {
 			try {
 				ObjectInputStream ois = new ObjectInputStream(new FileInputStream(f));
 				Queable q = (Queable) ois.readObject();
-				System.err.println("Read object: " + q.hashCode());
+				System.err.println("Read object: " + q.getClass().getName() + ", retries " + q.getRetries() + ", max retries " + q.getMaxRetries());
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
