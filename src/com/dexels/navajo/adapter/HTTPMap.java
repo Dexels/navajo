@@ -66,6 +66,7 @@ public class HTTPMap implements Mappable, Queable {
 	public Binary result = null;
 	public String textResult = null;
 	public int connectTimeOut = 5000;
+	public int readTimeOut = -1;
 	private int retries = 0;
 	private int maxRetries = 100;
 	
@@ -95,6 +96,10 @@ public class HTTPMap implements Mappable, Queable {
 		this.connectTimeOut = i;
 	}
 	
+	public void setReadTimeOut(int i) {
+		this.readTimeOut = i;
+	}
+	
 	public void setDoSend(boolean b) throws UserException {
 		instances++;
 		
@@ -107,6 +112,9 @@ public class HTTPMap implements Mappable, Queable {
 			HttpURLConnection con = null;
 			con = (HttpURLConnection) u.openConnection();
 			con.setConnectTimeout(connectTimeOut);
+			if ( readTimeOut != -1 ) {
+				con.setReadTimeout(readTimeOut);
+			}
 			con.setRequestMethod(method);
 			con.setDoOutput(true);
 			con.setDoInput(true);
