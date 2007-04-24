@@ -159,8 +159,8 @@ public class FastDescriptionProvider extends BaseDescriptionProvider {
 		HashMap users = null;
 		// Check if there are non-generic sublocales.
 		if ( locales.get(locale) == null ) {
-			String res = getExternalTranslation(propertyName, subLocale);
-			return res;
+//			String res = getExternalTranslation(propertyName, subLocale);
+			return defaultDescription;
 		}
 		if ( ((HashMap) locales.get(locale)).size() > 1 ) {
 			users = (HashMap) ((HashMap) locales.get(locale)).get(subLocale);
@@ -311,13 +311,4 @@ public class FastDescriptionProvider extends BaseDescriptionProvider {
 	}
 	
 	
-	public String getExternalTranslation(String word, String locale) {
-		try {
-			return TestBabel.getTranslation(word, "en_"+locale);
-		} catch (Exception e) {
-			e.printStackTrace();
-		} 
-		return word;
-		
-	}
 }
