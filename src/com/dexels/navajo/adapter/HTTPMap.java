@@ -62,13 +62,13 @@ public class HTTPMap implements Mappable, Queable {
 	public String url = null;
 	public boolean doSend = false;
 	public boolean queuedSend = false;
-	private long waitUntil = 0;
+	public long waitUntil = 0;
 	public Binary result = null;
 	public String textResult = null;
 	public int connectTimeOut = 5000;
 	public int readTimeOut = -1;
-	private int retries = 0;
-	private int maxRetries = 100;
+	public int retries = 0;
+	public int maxRetries = 100;
 	
 	private static int instances = 0;
 	
@@ -289,5 +289,10 @@ public class HTTPMap implements Mappable, Queable {
 
 	public void resetRetries() {
 		retries = 0;
+	}
+
+	public void setMaxInstances() {
+		// TODO Auto-generated method stub
+		
 	}
 }

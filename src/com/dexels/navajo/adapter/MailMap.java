@@ -5,6 +5,8 @@ import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.adapter.mailmap.AttachementMap;
+import com.dexels.navajo.adapter.queue.Queable;
+import com.dexels.navajo.adapter.queue.RequestResponseQueue;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.NavajoConfig;
@@ -37,7 +39,7 @@ import com.dexels.navajo.datasource.ByteArrayDataSource;
 /**
  * This business object is used as a mail agent in Navajo Script files.
  */
-public class MailMap implements Mappable {
+public class MailMap implements Mappable, Queable {
 
     public String recipients = "";
     public String mailServer = "";
@@ -65,6 +67,11 @@ public class MailMap implements Mappable {
 
     private static Object semaphore = new Object();
     
+    public int retries = 0;
+    public int maxRetries = 100;
+    public boolean queuedSend = false;
+	public long waitUntil = 0;
+	
     public MailMap() {}
 
     public void kill() {}
@@ -75,9 +82,25 @@ public class MailMap implements Mappable {
     }
 
 
-
     public void store() throws MappableException, UserException {
+		if ( !queuedSend ) {
+			sendMail();
+		}
+	}
+    
+    public boolean send() {
+		retries++;
+		try {
+			sendMail();
+		} catch (Exception e) {
+			return false;
+		} 
+		return true;
+	}
+    
+    public void sendMail() throws MappableException, UserException {
 
+    	retries++;
     	
     		try {
     			String result = "";
@@ -299,6 +322,47 @@ public class MailMap implements Mappable {
 		  attachments = new ArrayList();
 	  }
 	  attachments.add(m);
+  }
+
+  public int getMaxRetries() {
+	  return maxRetries;
+  }
+
+  public Binary getRequest() {
+	  return null;
+  }
+
+  public Binary getResponse() {
+	  return null;
+  }
+
+  public int getRetries() {
+	  return retries;
+  }
+
+  public long getWaitUntil() {
+	  return waitUntil;
+  }
+
+  public void resetRetries() {
+	  retries = 0;
+  }
+
+  public void setMaxRetries(int r) {
+	  maxRetries = r;
+  }
+
+  public void setQueuedSend(boolean b) {
+	  queuedSend = b;
+	  try {
+		  RequestResponseQueue.send( this, 100);
+	  } catch (Exception e) {
+		  System.err.println(e.getMessage());
+	  }
+  }
+
+  public void setWaitUntil(long w) {
+	  waitUntil = w;
   }
 
 }
