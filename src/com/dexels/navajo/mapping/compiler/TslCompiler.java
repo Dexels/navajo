@@ -1297,6 +1297,8 @@ result.append(printIdent(ident + 4) +
       }
       String filter = mapNode.getAttribute("filter");
       filter = (filter == null) ? "" : filter;
+      result.append(printIdent(ident + 2) + "// And by the way, my filter is "+filter+"\n");
+            
       result.append(printIdent(ident + 2) + "// Map message(s) to field\n");
       String messageListName = "messages" + ident;
 

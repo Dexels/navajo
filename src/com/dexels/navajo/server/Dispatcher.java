@@ -1037,13 +1037,13 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
             outMessage = dispatch(defaultDispatcher, inMessage, access, parms);
           }
         }
-        updatePropertyDescriptions(inMessage,outMessage);
+//        updatePropertyDescriptions(inMessage,outMessage);
         return outMessage;
       }
     }
     catch (AuthorizationException aee) {
      outMessage = generateAuthorizationErrorMessage(access, aee, rpcName);
-      updatePropertyDescriptions(inMessage,outMessage);
+//      updatePropertyDescriptions(inMessage,outMessage);
       return outMessage;
     }
     catch (UserException ue) {
@@ -1051,7 +1051,7 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
         outMessage = generateErrorMessage(access, ue.getMessage(), ue.code, 1,
                                           (ue.t != null ? ue.t : ue));
         myException = ue;
-        updatePropertyDescriptions(inMessage,outMessage);
+//        updatePropertyDescriptions(inMessage,outMessage);
         return outMessage;
       }
       catch (Exception ee) {
@@ -1068,7 +1068,7 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
       try {
         outMessage = generateErrorMessage(access, se.getMessage(), se.code, 1,
                                           (se.t != null ? se.t : se));
-        updatePropertyDescriptions(inMessage,outMessage);
+//        updatePropertyDescriptions(inMessage,outMessage);
         return outMessage;
       }
       catch (Exception ee) {
@@ -1105,6 +1105,9 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
     			h = NavajoFactory.getInstance().createHeader(outMessage,rpcName,rpcUser,rpcPassword,-1);
     			outMessage.addHeader(h);
     		}
+    		
+    		updatePropertyDescriptions(inMessage,outMessage);
+            
     		access.storeStatistics(h);
     		// Store access if navajostore is enabled and if webservice is not in list of special webservices.
     		if (    getNavajoConfig().getStatisticsRunner() != null &&  

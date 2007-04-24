@@ -3,9 +3,11 @@ package com.dexels.navajo.server.descriptionprovider;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 
 public abstract class BaseDescriptionProvider implements DescriptionProvider{
@@ -25,6 +27,21 @@ public abstract class BaseDescriptionProvider implements DescriptionProvider{
 		System.err.println("Locale: "+locale);
 		if (locale==null) {
 			return;
+		}
+		Header outHeader = out.getHeader();
+		Header inHeader = in.getHeader();
+		if(inHeader==null) {
+			System.err.println("No IN header found. Thats is weird");
+			return;
+		} else {
+			outHeader.setAttribute("locale", locale);
+		}
+		 
+		if(outHeader==null) {
+			System.err.println("No header found. Thats a problem");
+//			outHeader = NavajoFactory.getInstance().createHeader(in, locale, locale, locale, getCacheSize())
+		} else {
+			outHeader.setAttribute("locale", locale);
 		}
 //		System.err.println("Updating navajo. Locale: "+locale);
 //		System.err.println("user: "+in.getHeader().getRPCUser());
