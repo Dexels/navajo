@@ -58,8 +58,12 @@ public class FTPMap  implements Mappable, Queable {
 	private long waitUntil = 0;
 	private int retries = 0;
 	private int maxRetries = 100;
+	private Navajo myNavajo;
+	private Access myAccess;
 	
 	public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
+		myNavajo = inMessage;
+		myAccess = access;
 	}
 
 	public void setContent(Binary b) {
@@ -201,6 +205,14 @@ public class FTPMap  implements Mappable, Queable {
 
 	public void resetRetries() {
 		retries = 0;
+	}
+	
+	public Access getAccess() {
+		return myAccess;
+	}
+
+	public Navajo getNavajo() {
+		return myNavajo;
 	}
 
 }

@@ -71,9 +71,13 @@ public class HTTPMap implements Mappable, Queable {
 	public int maxRetries = 100;
 	
 	private static int instances = 0;
+	private Navajo myNavajo;
+	private Access myAccess;
 	
 	public void load(Parameters parms, Navajo inMessage, Access access,
 			NavajoConfig config) throws MappableException, UserException {
+		myNavajo = inMessage;
+		myAccess = access;
 	}
 
 	public void setTextContent(String s) {
@@ -294,5 +298,13 @@ public class HTTPMap implements Mappable, Queable {
 	public void setMaxInstances() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	public Access getAccess() {
+		return myAccess;
+	}
+
+	public Navajo getNavajo() {
+		return myNavajo;
 	}
 }

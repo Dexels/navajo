@@ -16,6 +16,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.Serializable;
 import java.util.*;
 import javax.mail.*;
 import javax.activation.*;
@@ -41,7 +42,12 @@ import com.dexels.navajo.datasource.ByteArrayDataSource;
  */
 public class MailMap implements Mappable, Queable {
 
-    public String recipients = "";
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -6829674936474299750L;
+	
+	public String recipients = "";
     public String mailServer = "";
     public String sender = "";
     public String subject = "";
@@ -72,12 +78,17 @@ public class MailMap implements Mappable, Queable {
     public boolean queuedSend = false;
 	public long waitUntil = 0;
 	
+	private Navajo myNavajo;
+	private Access myAccess;
+	
     public MailMap() {}
 
     public void kill() {}
 
     public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException {
         doc = inMessage;
+        myNavajo = inMessage;
+		myAccess = access;
         Util.debugLog("in MailMap load()");
     }
 
@@ -89,14 +100,23 @@ public class MailMap implements Mappable, Queable {
 	}
     
     public boolean send() {
-		retries++;
-		try {
-			sendMail();
-		} catch (Exception e) {
-			return false;
-		} 
-		return true;
-	}
+    	retries++;
+    	try {
+    		sendMail();
+    		// Un-persist binary attachments.
+    		for (int i = 0; i < attachments.size(); i++) { 
+    			AttachementMap am = (AttachementMap) attachments.get(i);
+    			Binary content = am.getAttachFileContent();
+    			if ( content != null ) {
+    				content.removeRef();
+    			}
+    		}
+    	} catch (Exception e) {
+    		e.printStackTrace(System.err);
+    		return false;
+    	} 
+    	return true;
+    }
     
     public void sendMail() throws MappableException, UserException {
 
@@ -354,15 +374,32 @@ public class MailMap implements Mappable, Queable {
 
   public void setQueuedSend(boolean b) {
 	  queuedSend = b;
+	  // Make sure binary attachements do not get garbage collected, persist them.
+	  for (int i = 0; i < attachments.size(); i++) {
+		  AttachementMap am = (AttachementMap) attachments.get(i);
+		  Binary content = am.getAttachFileContent();
+		  if ( content != null ) {
+			  String fileRef = content.getTempFileName(true);
+		  }
+	  }
 	  try {
 		  RequestResponseQueue.send( this, 100);
 	  } catch (Exception e) {
+		  e.printStackTrace(System.err);
 		  System.err.println(e.getMessage());
 	  }
   }
 
   public void setWaitUntil(long w) {
 	  waitUntil = w;
+  }
+  
+  public Access getAccess() {
+	  return myAccess;
+  }
+
+  public Navajo getNavajo() {
+	  return myNavajo;
   }
 
 }
