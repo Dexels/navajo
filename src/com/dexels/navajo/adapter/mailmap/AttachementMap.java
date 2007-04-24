@@ -1,5 +1,7 @@
 package com.dexels.navajo.adapter.mailmap;
 
+import java.io.Serializable;
+
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.document.Navajo;
@@ -18,9 +20,14 @@ import com.dexels.navajo.document.types.Binary;
  * @version 1.0
  */
 
-public class AttachementMap implements Mappable {
+public class AttachementMap implements Mappable, Serializable {
 
-  // The readable descriptive name of the attachement.
+/**
+	 * 
+	 */
+	private static final long serialVersionUID = 533613230177877706L;
+
+// The readable descriptive name of the attachement.
   public String attachFileName = "unknown name";
   
   // Either attachFileContent or attachFile should be used!
