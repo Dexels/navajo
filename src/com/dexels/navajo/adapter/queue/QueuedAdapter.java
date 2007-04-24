@@ -1,6 +1,7 @@
 package com.dexels.navajo.adapter.queue;
 
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.Access;
@@ -12,6 +13,9 @@ public class QueuedAdapter extends Thread implements Mappable {
 
 	public int runningTime;
 	public String adapterName;
+	public int retries;
+	public int maxRetries;
+	public Binary request;
 	
 	private long startTime;
 	private Queable handler;
@@ -36,6 +40,18 @@ public class QueuedAdapter extends Thread implements Mappable {
 		return handler;
 	}
 
+	public int getRetries() {
+		return handler.getRetries();
+	}
+	
+	public int getMaxRetries() {
+		return handler.getMaxRetries();
+	}
+	
+	public Binary getRequest() {
+		return handler.getRequest();
+	}
+	
 	public void kill() {
 		// TODO Auto-generated method stub
 		
