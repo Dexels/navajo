@@ -9,12 +9,17 @@ public final class ASTOrNode extends SimpleNode {
     public final Object interpret() throws TMLExpressionException {
         // System.out.println("in ASTOrNode()");
         Boolean a = (Boolean) jjtGetChild(0).interpret();
-
+        if(a==null) {
+        	a = new Boolean(false);
+        }
         if (a.booleanValue() == true)
             return Boolean.TRUE;
 
         // System.out.println("Got first argument");
         Boolean b = (Boolean) jjtGetChild(1).interpret();
+        if(b==null) {
+        	b = new Boolean(false);
+        }
 
         // System.out.println("Got second argument");
 
