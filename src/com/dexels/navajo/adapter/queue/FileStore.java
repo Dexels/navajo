@@ -121,7 +121,9 @@ public class FileStore implements MessageStore {
 			File f = new File( (failure ? deadQueue : path ) + "/" + handler.hashCode() + "_" + System.currentTimeMillis() + ".queue");
 			try {
 				// Persist request data, make sure binary base file does not get garbage collected.
-				String fileRef = handler.getRequest().getTempFileName(true);
+				if ( handler.getRequest() != null ) {
+					String fileRef = handler.getRequest().getTempFileName(true);
+				}
 				ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(f));
 				oos.writeObject(handler);
 				oos.close();

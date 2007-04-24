@@ -12,6 +12,7 @@ import com.dexels.navajo.server.UserException;
 public class QueuedAdapter extends Thread implements Mappable {
 
 	public int runningTime;
+	public int timeToRun;
 	public String adapterName;
 	public int retries;
 	public int maxRetries;
@@ -29,6 +30,10 @@ public class QueuedAdapter extends Thread implements Mappable {
 	
 	public long getStartTime() {
 		return startTime;
+	}
+	
+	public int getTimeToRun() {
+		return (int) ( handler.getWaitUntil() - System.currentTimeMillis() );
 	}
 	
 	public int getRunningTime() {

@@ -10,7 +10,7 @@ public final class ASTOrNode extends SimpleNode {
         // System.out.println("in ASTOrNode()");
         Boolean a = (Boolean) jjtGetChild(0).interpret();
         if(a==null) {
-        	a = new Boolean(false);
+        	a = Boolean.FALSE;
         }
         if (a.booleanValue() == true)
             return Boolean.TRUE;
@@ -18,7 +18,7 @@ public final class ASTOrNode extends SimpleNode {
         // System.out.println("Got first argument");
         Boolean b = (Boolean) jjtGetChild(1).interpret();
         if(b==null) {
-        	b = new Boolean(false);
+        	b = Boolean.FALSE;
         }
 
         // System.out.println("Got second argument");
