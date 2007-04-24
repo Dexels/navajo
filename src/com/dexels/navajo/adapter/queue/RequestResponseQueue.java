@@ -1,10 +1,10 @@
 package com.dexels.navajo.adapter.queue;
 
-
 import java.util.HashSet;
 import java.util.Iterator;
 
 import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.server.GenericThread;
 import com.dexels.navajo.server.jmx.JMXHelper;
 import com.dexels.navajo.util.AuditLog;
@@ -20,10 +20,31 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 	private static Object semaphore = new Object();
 	private static String id = "Queued adapters";
 	private int MAX_THREADS = 25;
-	private int currentThreads = 0;
 	private long SLEEPING_TIME = 60000;
 	private int MAX_RETRIES = 10;
+	private static HashSet runningThreads = new HashSet();
 	
+	// Exposed fields.
+	public int currentThreads = 0;
+	public QueuedAdapter [] runningAdapters;
+	public QueuedAdapter [] queuedAdapters;
+
+	public QueuedAdapter [] getRunningAdapters() {
+		synchronized (runningThreads ) {
+			runningAdapters = new QueuedAdapter[runningThreads.size()];
+			runningAdapters = (QueuedAdapter []) runningThreads.toArray(runningAdapters);
+			return runningAdapters;
+		}
+	}
+	
+	public QueuedAdapter [] getQueuedAdapters() {
+		HashSet s = myStore.getQueuedAdapters();
+		queuedAdapters = new QueuedAdapter[s.size()];
+		queuedAdapters = (QueuedAdapter []) s.toArray(queuedAdapters);
+		return queuedAdapters;
+
+	}
+		
 	public void setUseQueue(boolean b) {
 		useQueue = b;
 	}
@@ -59,14 +80,13 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 	}
 	
 	public static void send(Queable handler, int maxretries) throws Exception {
-		
 		RequestResponseQueue rrq = RequestResponseQueue.getInstance();
 		rrq.myStore.putMessage(handler, false);
 		
 	}
 	
 	public void asyncwork(final Queable handler) {
-		new Thread() {
+		QueuedAdapter t = new QueuedAdapter(handler) {
 
 			public void run() {
 				currentThreads++;
@@ -99,15 +119,18 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 				} finally {
 					doingWork = false;
 					currentThreads--;
-//					try {
-//						JMXHelper.deregisterMXBean(JMXHelper.QUEUED_ADAPTER_DOMAIN, qid);
-//					} catch (Throwable e) {
-//					}
+					synchronized (runningThreads ) {
+						runningThreads.remove(this);
+					}
 				}
 				System.err.println("....Finished asyncwork thread");
 			}
 			
-		}.start();
+		};
+		synchronized (runningThreads ) {
+			runningThreads.add(t);
+		}
+		t.start();
 	}
 	
 	protected void finalize() {
@@ -161,6 +184,7 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 							e.printStackTrace();
 						}
 					}
+					// Spawn worker thread.
 					asyncwork(handler);	
 				}
 			}

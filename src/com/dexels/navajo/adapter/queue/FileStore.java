@@ -51,6 +51,32 @@ public class FileStore implements MessageStore {
 		}
 	}
 	
+	public HashSet getQueuedAdapters() {
+		HashSet queuedAdapters = new HashSet();
+		synchronized ( path ) {
+			File queue = new File(path);
+			File [] files = queue.listFiles();
+
+			for (int i = 0; i < files.length; i++) {
+				File f = files[i];
+				if ( f.isFile() ) {
+					
+					ObjectInputStream ois;
+					try {
+						ois = new ObjectInputStream(new FileInputStream(f));
+						Queable q = (Queable) ois.readObject();
+						ois.close();
+						queuedAdapters.add(new QueuedAdapter(q));
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+		return queuedAdapters;
+	}
+	
 	public Queable getNext() throws Exception {
 
 		if ( objectPointer == null ) {

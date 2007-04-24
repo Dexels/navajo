@@ -1,5 +1,7 @@
 package com.dexels.navajo.adapter.queue;
 
+import java.util.HashSet;
+
 import com.dexels.navajo.document.types.Binary;
 
 public interface MessageStore {
@@ -9,5 +11,6 @@ public interface MessageStore {
 	public Queable getNext() throws Exception;
 	public int getSize();
 	public void emptyQueue();
+	public HashSet getQueuedAdapters();
 	
 }

@@ -23,4 +23,5 @@ public interface Queable extends Serializable, QueableMXBean {
 	public int getMaxRetries();
 	public void resetRetries();
 	public int getRetries();
+	
 }

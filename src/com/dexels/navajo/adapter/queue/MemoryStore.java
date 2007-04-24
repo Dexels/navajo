@@ -1,5 +1,6 @@
 package com.dexels.navajo.adapter.queue;
 
+import java.util.HashSet;
 import java.util.Stack;
 
 public class MemoryStore implements MessageStore {
@@ -37,6 +38,11 @@ public class MemoryStore implements MessageStore {
 
 	public void rewind() {
 		
+	}
+
+	public HashSet getQueuedAdapters() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }
