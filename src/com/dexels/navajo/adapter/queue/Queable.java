@@ -2,7 +2,9 @@ package com.dexels.navajo.adapter.queue;
 
 import java.io.Serializable;
 
+import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.server.Access;
 
 public interface Queable extends Serializable, QueableMXBean {
 	
@@ -12,6 +14,9 @@ public interface Queable extends Serializable, QueableMXBean {
 	public Binary getResponse();
 	// getRequest() will return the request payload for to be used in queable object send() method.
 	public Binary getRequest();
+	
+	public Access getAccess();
+	public Navajo getNavajo();
 	
 	// Public method.
 	public void setQueuedSend(boolean b);

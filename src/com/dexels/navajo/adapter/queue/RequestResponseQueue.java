@@ -226,4 +226,8 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 	public long getSleepingTime() {
 		return SLEEPING_TIME;
 	}
+	
+	public int getCurrentThreads() {
+		return currentThreads;
+	}
 }

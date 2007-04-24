@@ -15,7 +15,9 @@ public class QueuedAdapter extends Thread implements Mappable {
 	public String adapterName;
 	public int retries;
 	public int maxRetries;
-	public Binary request;
+	public String accessId;
+	public String webservice;
+	public String username;
 	
 	private long startTime;
 	private Queable handler;
@@ -48,8 +50,16 @@ public class QueuedAdapter extends Thread implements Mappable {
 		return handler.getMaxRetries();
 	}
 	
-	public Binary getRequest() {
-		return handler.getRequest();
+	public String getAccessId() {
+		return handler.getAccess().accessID;
+	}
+	
+	public String getWebservice() {
+		return handler.getAccess().rpcName;
+	}
+	
+	public String getUsername() {
+		return handler.getAccess().rpcUser;
 	}
 	
 	public void kill() {
