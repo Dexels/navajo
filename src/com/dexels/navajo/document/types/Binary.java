@@ -560,8 +560,10 @@ public final class Binary extends NavajoType implements Serializable {
 
     protected void finalize() {
     
-        if (dataFile != null && dataFile.exists() && !persistedBinaries.containsKey(myRef)) {
+    	
+        if (dataFile != null && dataFile.exists() && !persistedBinaries.containsKey(dataFile.getAbsolutePath())) {
             try {
+            	System.err.println("Deleting binary placeholder filer myRef : " + dataFile.getAbsolutePath());
                 dataFile.delete();
             } catch (Throwable t) {
                 t.printStackTrace();
