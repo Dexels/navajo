@@ -18,15 +18,22 @@ public interface Queable extends Serializable, QueableMXBean {
 	public Access getAccess();
 	public Navajo getNavajo();
 	
-	// Public method.
+	// Public method to be used from web service script.
 	public void setQueuedSend(boolean b);
 	
+	// Set waiting time interval to use between retries.
 	public void setWaitUntil(long w);
 	public long getWaitUntil();
 	
+	// Set maximum number of retries before giving up.
 	public void setMaxRetries(int r);
 	public int getMaxRetries();
 	public void resetRetries();
+	// Get number of processed retries thus far.
 	public int getRetries();
 	
+	// Method that can be used to prevent garbage collection of binary placeholder files.
+	public void persistBinaries();
+	// Method that can be used to flag garbage collection of binary placeholder files.
+	public void removeBinaries();
 }

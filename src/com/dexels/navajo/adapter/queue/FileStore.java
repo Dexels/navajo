@@ -65,6 +65,8 @@ public class FileStore implements MessageStore {
 					try {
 						ois = new ObjectInputStream(new FileInputStream(f));
 						Queable q = (Queable) ois.readObject();
+						// Persist binary file references after reading object.
+						q.persistBinaries();
 						ois.close();
 						QueuedAdapter qa = new QueuedAdapter(q);
 						qa.ref = f.getAbsolutePath();
@@ -95,6 +97,8 @@ public class FileStore implements MessageStore {
 		try {
 			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(f));
 			q = (Queable) ois.readObject();
+            // Persist binary file references after reading object.
+			q.persistBinaries();
 			ois.close();
 			System.err.println("Read object: " + q.getClass().getName() + ", retries " + q.getRetries() + ", max retries " + q.getMaxRetries());
 			// Only return object if it is not sleeping
@@ -123,6 +127,7 @@ public class FileStore implements MessageStore {
 			File f = new File( (failure ? deadQueue : path ) + "/" + handler.hashCode() + "_" + System.currentTimeMillis() + ".queue");
 			try {
 				// Persist request data, make sure binary base file does not get garbage collected.
+				handler.persistBinaries();
 				if ( handler.getRequest() != null ) {
 					String fileRef = handler.getRequest().getTempFileName(true);
 				}

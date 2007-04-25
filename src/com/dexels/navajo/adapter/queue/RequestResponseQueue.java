@@ -110,6 +110,7 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 	
 	public static void send(Queable handler, int maxretries) throws Exception {
 		RequestResponseQueue rrq = RequestResponseQueue.getInstance();
+		handler.persistBinaries();
 		rrq.myStore.putMessage(handler, false);
 		
 	}
@@ -127,10 +128,7 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 					if ( handler.send() && !emptyQueue) {
 						System.err.println("Succesfully processed send() method");
 						// Make sure that request payload get garbage collected by removing ref.
-						Binary b = handler.getRequest();
-						if ( b != null ) {
-							b.removeRef();
-						}
+						handler.removeBinaries();
 					} else {
 						// Put stuff back in queue, unless queue is being emptied.
 						System.err.println("Could not process send() method, putting queued adapter back in queue... emptyqueue: " + emptyQueue);
