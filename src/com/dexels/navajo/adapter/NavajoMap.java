@@ -22,7 +22,7 @@ import com.dexels.navajo.document.types.Money;
  * @version $Id$
  */
 
-public class NavajoMap implements Mappable {
+public class NavajoMap extends AsyncMappable  implements Mappable {
 
   public String doSend;
   public String username = null;
@@ -74,10 +74,13 @@ public class NavajoMap implements Mappable {
   protected Navajo inMessage;
   protected Message msgPointer;
 
+  public String method;
+  
   public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
     this.access = access;
     this.config = config;
     this.inMessage = inMessage;
+    killOnFinnish = true;
     try {
       outDoc = NavajoFactory.getInstance().createNavajo();
     } catch (Exception e) {
@@ -725,7 +728,60 @@ public class NavajoMap implements Mappable {
 	  }
   }
   
+  public void setMethod(String name) {
+	  System.out.println("NavajoMap: in setMethod(), name = " + name);
+	  this.method = name;
+  }
+  
   public void setPerformOrderBy(boolean b) {
 	  performOrderBy = b;
   }
+
+  public void afterRequest() throws UserException {
+	  System.out.println("NavajoMap: in afterRequest()");
+	  if (method == null)
+		  throw new UserException(-1, "AsyncProxyMap: specify a method");
+  }
+
+  public void afterResponse() {
+	  System.out.println("NavajoMap: in afterResponse()");
+	  access.setOutputDoc(inDoc);
+  }
+
+  public int getPercReady() {
+	  System.out.println("NavajoMap: in getPercReady()");
+	  return 0;
+  }
+
+  public void beforeResponse(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) {
+	  access.setOutputDoc(inDoc);
+	  System.out.println("NavajoMap: in beforeResponse()");
+	  System.out.println("INDOC = " + access.getOutputDoc());
+  }
+
+  public void run() throws com.dexels.navajo.server.UserException {
+	  
+	     Header h = outDoc.getHeader();
+	     if (h == null) {
+	          h = NavajoFactory.getInstance().createHeader(outDoc, method, username, password, -1);
+	          outDoc.addHeader(h);
+	     } else {
+	          h.setRPCName(method);
+	          h.setRPCPassword(password);
+	          h.setRPCUser(username);
+	    }
+	    // Clear request id.
+	    h.setRequestId(null);
+	    try {
+	      inDoc = access.getDispatcher().handle(outDoc);
+	    } catch (Exception e) {
+	      e.printStackTrace();
+	      throw new UserException(-1, e.getMessage());
+	    } finally {
+	    	System.err.println("Setting set is finished.");
+	    	setIsFinished();
+	    }
+	    
+	  }
+  
 }
