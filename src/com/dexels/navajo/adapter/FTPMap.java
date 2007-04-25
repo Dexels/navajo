@@ -150,8 +150,9 @@ public class FTPMap  implements Mappable, Queable {
 			store();
 		} catch (Exception e) {
 			return false;
+		} finally {
+			queuedSend = true;
 		}
-		queuedSend = true;
 		return true;
 	}
 
