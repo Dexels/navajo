@@ -401,6 +401,7 @@ public abstract class AsyncMappable implements Mappable, AsyncMappableMXBean {
    */
   protected void setIsFinished() {
 	  isFinished = true;
+	  percReady = 100;
 	  // Check whether killOnFinnish flag is set. If so, kill thread.
 
 	  // Log finalization.
