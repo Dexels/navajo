@@ -761,14 +761,15 @@ public class NavajoMap extends AsyncMappable  implements Mappable {
 
   public void run() throws com.dexels.navajo.server.UserException {
 	  
+	     Header origHeader = inMessage.getHeader();
 	     Header h = outDoc.getHeader();
 	     if (h == null) {
-	          h = NavajoFactory.getInstance().createHeader(outDoc, method, username, password, -1);
+	          h = NavajoFactory.getInstance().createHeader(outDoc, method, origHeader.getRPCUser(), origHeader.getRPCPassword(), -1);
 	          outDoc.addHeader(h);
 	     } else {
 	          h.setRPCName(method);
-	          h.setRPCPassword(password);
-	          h.setRPCUser(username);
+	          h.setRPCPassword(origHeader.getRPCPassword());
+	          h.setRPCUser(origHeader.getRPCUser());
 	    }
 	    // Clear request id.
 	    h.setRequestId(null);
