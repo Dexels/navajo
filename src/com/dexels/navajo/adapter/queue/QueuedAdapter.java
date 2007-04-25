@@ -1,5 +1,8 @@
 package com.dexels.navajo.adapter.queue;
 
+import java.util.HashSet;
+import java.util.Iterator;
+
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.mapping.Mappable;
@@ -19,9 +22,10 @@ public class QueuedAdapter extends Thread implements Mappable {
 	public String accessId;
 	public String webservice;
 	public String username;
+	public String request;
 	
 	private long startTime;
-	private Queable handler;
+	protected Queable handler;
 	
 	public QueuedAdapter(Queable h) {
 		startTime = System.currentTimeMillis();
@@ -65,6 +69,23 @@ public class QueuedAdapter extends Thread implements Mappable {
 	
 	public String getUsername() {
 		return handler.getAccess().rpcUser;
+	}
+	
+	/**
+	 * Get the request Navajo of this queued adapter.
+	 * 
+	 * @return
+	 */
+	public String getRequest() {
+		java.io.StringWriter sw = new java.io.StringWriter();
+		Navajo in = handler.getNavajo();
+		try {
+			in.write(sw);
+			return sw.toString();
+		} catch (Exception e) {
+			e.printStackTrace(System.err);
+			return null;
+		}
 	}
 	
 	public void kill() {

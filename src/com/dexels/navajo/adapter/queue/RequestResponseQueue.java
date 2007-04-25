@@ -1,5 +1,6 @@
 package com.dexels.navajo.adapter.queue;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 
@@ -15,7 +16,7 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 	public boolean emptyQueue = false;
 	public boolean doingWork = false;
 	public boolean queueOnly = false;
-	private MessageStore myStore = new FileStore();
+	protected MessageStore myStore = new FileStore();
 	private static volatile RequestResponseQueue instance = null;
 	private static Object semaphore = new Object();
 	private static String id = "Queued adapters";
@@ -28,6 +29,8 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 	public int currentThreads = 0;
 	public QueuedAdapter [] runningAdapters;
 	public QueuedAdapter [] queuedAdapters;
+	
+	public String accessId;
 
 	public QueuedAdapter [] getRunningAdapters() {
 		synchronized (runningThreads ) {
@@ -35,6 +38,33 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 			runningAdapters = (QueuedAdapter []) runningThreads.toArray(runningAdapters);
 			return runningAdapters;
 		}
+	}
+	
+	/**
+	 * Get all queued adapters of specific web service (by accessId)
+	 * 
+	 * @return
+	 */
+	public QueuedAdapter [] getQueuedAdapters(String a) {
+		ArrayList l = new ArrayList();
+		RequestResponseQueue q = RequestResponseQueue.getInstance();
+		if ( q != null ) {
+			HashSet s = q.myStore.getQueuedAdapters();
+			Iterator i = s.iterator();
+			while ( i.hasNext() ) {
+				QueuedAdapter qa = (QueuedAdapter) i.next();
+				if ( qa.handler.getAccess().accessID.equals(a) ) {
+					l.add(qa);
+				}
+			}
+		}
+		if ( l.size() == 0 ) {
+			queuedAdapters = null;
+			return null;
+		}
+		queuedAdapters = new QueuedAdapter[l.size()];
+		queuedAdapters = (QueuedAdapter []) l.toArray(queuedAdapters);
+		return queuedAdapters;
 	}
 	
 	public QueuedAdapter [] getQueuedAdapters() {
