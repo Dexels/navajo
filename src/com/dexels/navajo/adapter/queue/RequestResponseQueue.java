@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 import com.dexels.navajo.document.types.Binary;
-import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.server.GenericThread;
 import com.dexels.navajo.server.jmx.JMXHelper;
 import com.dexels.navajo.util.AuditLog;

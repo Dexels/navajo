@@ -66,7 +66,9 @@ public class FileStore implements MessageStore {
 						ois = new ObjectInputStream(new FileInputStream(f));
 						Queable q = (Queable) ois.readObject();
 						ois.close();
-						queuedAdapters.add(new QueuedAdapter(q));
+						QueuedAdapter qa = new QueuedAdapter(q);
+						qa.ref = f.getAbsolutePath();
+						queuedAdapters.add(q);
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();

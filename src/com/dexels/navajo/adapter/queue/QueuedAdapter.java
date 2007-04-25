@@ -1,5 +1,7 @@
 package com.dexels.navajo.adapter.queue;
 
+import java.io.File;
+
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
@@ -19,6 +21,8 @@ public class QueuedAdapter extends Thread implements Mappable {
 	public String webservice;
 	public String username;
 	public String request;
+	public String ref;
+	public boolean delete;
 	
 	private long startTime;
 	protected Queable handler;
@@ -81,6 +85,27 @@ public class QueuedAdapter extends Thread implements Mappable {
 		} catch (Exception e) {
 			e.printStackTrace(System.err);
 			return null;
+		}
+	}
+	
+	/**
+	 * Get the reference String associated with this queued adapter.
+	 * 
+	 * @return
+	 */
+	public String getRef() {
+		return ref;
+	}
+	
+	/**
+	 * Immediately delete the file associated with this queued adapter.
+	 * 
+	 * @param b
+	 */
+	public void setDelete(boolean b) {
+		if ( ref != null ) {
+			File f = new File(ref);
+			f.delete();
 		}
 	}
 	
