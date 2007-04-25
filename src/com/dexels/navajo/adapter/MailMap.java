@@ -103,14 +103,6 @@ public class MailMap implements Mappable, Queable {
     	retries++;
     	try {
     		sendMail();
-    		// Un-persist binary attachments.
-    		for (int i = 0; i < attachments.size(); i++) { 
-    			AttachementMap am = (AttachementMap) attachments.get(i);
-    			Binary content = am.getAttachFileContent();
-    			if ( content != null ) {
-    				content.removeRef();
-    			}
-    		}
     	} catch (Exception e) {
     		e.printStackTrace(System.err);
     		return false;
@@ -374,14 +366,6 @@ public class MailMap implements Mappable, Queable {
 
   public void setQueuedSend(boolean b) {
 	  queuedSend = b;
-	  // Make sure binary attachements do not get garbage collected, persist them.
-	  for (int i = 0; i < attachments.size(); i++) {
-		  AttachementMap am = (AttachementMap) attachments.get(i);
-		  Binary content = am.getAttachFileContent();
-		  if ( content != null ) {
-			  String fileRef = content.getTempFileName(true);
-		  }
-	  }
 	  try {
 		  RequestResponseQueue.send( this, 100);
 	  } catch (Exception e) {
@@ -402,4 +386,25 @@ public class MailMap implements Mappable, Queable {
 	  return myNavajo;
   }
 
+  public final void persistBinaries() {
+	  // Make sure binary attachements do not get garbage collected, persist them.
+	  for (int i = 0; i < attachments.size(); i++) {
+		  AttachementMap am = (AttachementMap) attachments.get(i);
+		  Binary content = am.getAttachFileContent();
+		  if ( content != null ) {
+			  String fileRef = content.getTempFileName(true);
+		  }
+	  }
+  }
+
+  public void removeBinaries() {
+	  // Un-persist binary attachments.
+	  for (int i = 0; i < attachments.size(); i++) { 
+		  AttachementMap am = (AttachementMap) attachments.get(i);
+		  Binary content = am.getAttachFileContent();
+		  if ( content != null ) {
+			  content.removeRef();
+		  }
+	  }
+  }
 }

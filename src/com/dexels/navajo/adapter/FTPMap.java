@@ -215,4 +215,16 @@ public class FTPMap  implements Mappable, Queable {
 		return myNavajo;
 	}
 
+	public void persistBinaries() {
+		if ( getRequest() != null ) {
+			getRequest().getTempFileName(true);
+		}
+	}
+
+	public void removeBinaries() {
+		if ( getRequest() != null ) {
+			getRequest().removeRef();
+		}
+	}
+
 }
