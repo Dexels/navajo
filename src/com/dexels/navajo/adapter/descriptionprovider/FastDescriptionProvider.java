@@ -31,7 +31,7 @@ public class FastDescriptionProvider extends BaseDescriptionProvider {
 	
 	private String queryUsers = "SELECT DISTINCT NVL(objectid, '%') FROM propertydescription WHERE name = ? AND locale = ? AND NVL(sublocale,'%') = ?";
 	
-	private String queryWebservices = "SELECT DISTINCT NVL(context, '%') FROM propertydescription WHERE name = ? " + 
+	private String queryContexts = "SELECT DISTINCT NVL(context, '%') FROM propertydescription WHERE name = ? " + 
 									  "AND locale = ? AND NVL(sublocale,'%') = ? AND NVL(objectid, '%') = ?";
 	
 	private String queryDescription = "SELECT description FROM propertydescription WHERE name = ? " + 
@@ -59,10 +59,10 @@ public class FastDescriptionProvider extends BaseDescriptionProvider {
 					
 						HashMap locales = new HashMap();
 						// Fill locales.
-						//System.err.println("Found locales: " + results.length);
+//						System.err.println("Found locales: " + results.length);
 						
 						if ( results.length == 0 ) {
-							//System.err.println("Putting " + propertyName + " as null translation");
+//							System.err.println("Putting " + propertyName + " as null translation");
 							properties.put(propertyName, propertyName);
 							return;
 						}
@@ -76,7 +76,7 @@ public class FastDescriptionProvider extends BaseDescriptionProvider {
 							
 							
 							ResultSetMap [] sublocaleresults = sql.getResultSet();
-							//System.err.println("Found sublocales: " + sublocaleresults.length);
+//							System.err.println("Found sublocales: " + sublocaleresults.length);
 							
 							// Fill sublocales.
 							for (int j = 0; j < sublocaleresults.length; j++) {
@@ -94,7 +94,7 @@ public class FastDescriptionProvider extends BaseDescriptionProvider {
 								for (int k = 0; k < userresults.length; k++) {
 									String userString = (String) userresults[k].getColumnValue(new Integer(0));
 									HashMap webservices = new HashMap();
-									sql.setQuery(queryWebservices);
+									sql.setQuery(queryContexts);
 									sql.setParameter(propertyName);
 									sql.setParameter(localeString);
 									sql.setParameter(subLocaleString);
@@ -118,7 +118,7 @@ public class FastDescriptionProvider extends BaseDescriptionProvider {
 										}
 
 									}
-									//System.err.println("Putting for " + userString + ", " + webservices + " into users");
+//									System.err.println("Putting for " + userString + ", " + webservices + " into users");
 									users.put(userString, webservices);
 								}
 								//System.err.println("Putting " + subLocaleString + " into hashmap sublocales " + subLocales);
@@ -151,15 +151,16 @@ public class FastDescriptionProvider extends BaseDescriptionProvider {
 
 		// Check for null translation first.
 		if ( properties.get(propertyName) instanceof String ) {
+//			System.err.println("Null translation found. Returning default.");
 			return defaultDescription;
 		}
 		
 		HashMap locales = (HashMap) properties.get(propertyName);
-		
+
 		HashMap users = null;
 		// Check if there are non-generic sublocales.
 		if ( locales.get(locale) == null ) {
-//			String res = getExternalTranslation(propertyName, subLocale);
+//			System.err.println("No locales found. Returning default. ");
 			return defaultDescription;
 		}
 		if ( ((HashMap) locales.get(locale)).size() > 1 ) {
@@ -177,9 +178,11 @@ public class FastDescriptionProvider extends BaseDescriptionProvider {
 		// Check if there are non-generic users.
 		if ( users.size() > 1 ||  users.get(user) != null ) {
 			webservices = (HashMap) users.get(user);
+//			System.err.println("Users found. Returning set: "+webservices);
 		}
 		if ( webservices == null ) {
 			webservices = (HashMap) users.get("%");
+//			System.err.println("Generic services found: "+webservices);
 		}
 		if ( webservices == null ) {
 			// Generic translation does not exist.
@@ -189,9 +192,12 @@ public class FastDescriptionProvider extends BaseDescriptionProvider {
 		// Check if there are non-generic webservices.
 		if ( webservices.size() > 1 || webservices.get(webservice) != null ) {
 			description = (String) webservices.get(webservice);
+//			System.err.println("Webservice specific result: "+description);
 		}
 		if ( description == null ) {
 			description = (String) webservices.get("%");
+//			System.err.println("Webservice generic result: "+description);
+
 		}
 		if ( description == null ) {
 			return defaultDescription;
@@ -204,9 +210,10 @@ public class FastDescriptionProvider extends BaseDescriptionProvider {
 
 		
 		try {
-			//System.err.println("Getting description for: " + propertyName + ", locale: " + locale + ", sublocale: " + subLocale + ", user: " + user + ", webservice: " + webservice);
 			initializeCache(propertyName);
-			return getLocaleTranslation(propertyName, defaultDescription, locale, subLocale, user, webservice);
+			String localeTranslation = getLocaleTranslation(propertyName, defaultDescription, locale, subLocale, user, webservice);
+//			System.err.println("Getting description for: " + propertyName + ", locale: " + locale + ", sublocale: " + subLocale + ", user: " + user + ", webservice: " + webservice+" result: "+localeTranslation);
+			return localeTranslation;
 
 		} catch (UserException e) {
 			// TODO Auto-generated catch block
@@ -255,7 +262,7 @@ public class FastDescriptionProvider extends BaseDescriptionProvider {
 	public static void main(String [] args) {
 		FastDescriptionProvider pdc = new FastDescriptionProvider();
 		String value = pdc.getTranslation("kibasd", "apenoot", "nl", null, "PIET", "ProcessNoot");
-		System.err.println("value = " + value);
+//		System.err.println("value = " + value);
 //		value = pdc.getTranslation("BusinessRegistrationNumber", "apenoot", "nl", null, "PIET", "ProcessApenoot");
 //		System.err.println("value2 = " + value);
 //		value = pdc.getTranslation("BusinessRegistrationNumber", "apenoot", "nl", null, "WILLEM", "ProcessAap");
