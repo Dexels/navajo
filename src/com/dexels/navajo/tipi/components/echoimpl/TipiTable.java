@@ -46,22 +46,31 @@ public class TipiTable extends TipiEchoDataComponentImpl {
 
     private MessageTable myTable;
 
+	private PageNavigator pageNavigator;
+
     public TipiTable() {
     }
 
     public Object createContainer() {
 //    	ContainerEx myContainer = new ContainerEx();
-        myTable = new MessageTable();
-//        myTable.setStyleName("Default");
+    	SplitPane myPane = new SplitPane(SplitPane.ORIENTATION_VERTICAL,new Extent(25,Extent.PX));
+    	pageNavigator = new PageNavigator();
+		myTable = new MessageTable();
+        myPane.add(pageNavigator);
+        myPane.add(myTable);
+//        pageNavigator.addPageIndexChangeListener(myTable);
+        //        myTable.setStyleName("Default");
 //        myContainer.setStyleName("Default");
 //        myContainer.setPosition(Positionable.STATIC);
     	Style ss = Styles.DEFAULT_STYLE_SHEET.getStyle(MessageTable.class, "Default");
     	myTable.setStyle(ss);
-    
+    	myTable.setRolloverEnabled(false);
         myTable.addSelectionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
                 	System.err.println("SEKECTION CHANGE");
+                	Message m = myTable.getSelectedMessage();
+                	System.err.println("M: index: "+m.getIndex());
 //                    performTipiEvent("onSelectionChanged", null, true);
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -88,7 +97,7 @@ public class TipiTable extends TipiEchoDataComponentImpl {
             }});
 //         myContainer.add(myTable);
 //         myContainer.setBackground(new Color(255,0,0));
-    return myTable;
+    return myPane;
 //         return myTable;
     }
 
@@ -113,6 +122,8 @@ public class TipiTable extends TipiEchoDataComponentImpl {
         Message m = n.getMessage(messagePath);
         // System.err.println("------------------------------------------------------------------------------------>>
         // Got message: " + m);
+        pageNavigator.setTotalPages(myTable.getTotalPages());
+        pageNavigator.addPageIndexChangeListener(myTable);
         if (m != null) {
             if (!colDefs) {
                 mm.removeAllColumns();

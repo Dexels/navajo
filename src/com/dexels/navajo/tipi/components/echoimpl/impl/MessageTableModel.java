@@ -157,7 +157,10 @@ public class MessageTableModel extends DefaultTableModel implements MessageListe
 //        al.add(new Boolean(false));
         for (int i = 0; i < myColumnModel.getColumnCount(); i++) {
             String id = myTable.getColumnId(i);
-            al.add(m.getProperty(id));
+            Property property = m.getProperty(id);
+            if(property!=null) {
+                al.add(property);
+            }
         }
         return al;
     }
@@ -221,6 +224,9 @@ public class MessageTableModel extends DefaultTableModel implements MessageListe
     // }
 
     public String getColumnName(int column) {
+    	if(column==0) {
+    		return "";
+    	}
         return myTable.getColumnTitle(column);
         // System.err.println("Getting column name: " + column);
         // return ""+myColumnModel.getColumn(column).getHeaderValue();
@@ -264,6 +270,9 @@ public class MessageTableModel extends DefaultTableModel implements MessageListe
     }
 
     public Class getColumnClass(int columnIndex) {
+//    	if(columnIndex==0) {
+//    		return Boolean.class;
+//    	}
         return Property.class;
     }
 

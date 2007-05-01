@@ -6,6 +6,7 @@ import nextapp.echo2.app.Color;
 import nextapp.echo2.app.Component;
 import nextapp.echo2.app.Extent;
 import nextapp.echo2.app.Grid;
+import nextapp.echo2.app.LayoutData;
 import nextapp.echo2.app.SplitPane;
 
 public class EchoGridLayoutImpl extends EchoLayoutImpl {
@@ -13,6 +14,8 @@ public class EchoGridLayoutImpl extends EchoLayoutImpl {
 	public EchoGridLayoutImpl() {
 		
 	}
+	
+	
 	public void commitToParent() {
 		int maxwidth = 0;
 		for (int i = 0; i < childComponents.size(); i++) {
@@ -28,10 +31,13 @@ public class EchoGridLayoutImpl extends EchoLayoutImpl {
 
 		
 		Grid sp = new Grid(maxwidth);
-	
+		System.err.println("Creating");
 		for (int i = 0; i < childComponents.size(); i++) {
 			Component current = (Component)childComponents.get(i);
 			sp.add(current);
+			LayoutData layoutData = (LayoutData)constraints.get(current);
+			System.err.println("LAYOUT: "+layoutData);
+			current.setLayoutData(layoutData);
 		}
 	
 		System.err.println("Parent class: "+myParent.getClass());

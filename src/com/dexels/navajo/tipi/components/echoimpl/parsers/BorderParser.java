@@ -71,8 +71,8 @@ public class BorderParser extends TipiTypeParser {
             return new Border(size, c, Border.STYLE_INSET);
         }
         if ("titled".equals(borderName)) {
-//            return st.nextToken();
-            // return new Border(1,new Color(0,0,0),Border.STYLE_GROOVE);
+            return new Border(size, c, Border.STYLE_RIDGE);
+            
         }
         // return BorderFactory.createEmptyBorder();
         return null;

@@ -2,6 +2,7 @@ package com.dexels.navajo.tipi.components.echoimpl;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.NoSuchElementException;
@@ -9,6 +10,7 @@ import java.util.StringTokenizer;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import nextapp.echo2.app.ApplicationInstance;
@@ -17,6 +19,8 @@ import nextapp.echo2.app.Window;
 import nextapp.echo2.app.WindowPane;
 import nextapp.echo2.webcontainer.ContainerContext;
 import nextapp.echo2.webcontainer.command.BrowserRedirectCommand;
+import nextapp.echo2.webrender.Connection;
+import nextapp.echo2.webrender.WebRenderServlet;
 
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiException;
@@ -58,23 +62,40 @@ public class TipiEchoInstance extends ApplicationInstance {
         myServletContext = c;
      }
 
-    public void exitToUrl(String name) {
-        enqueueCommand(new BrowserRedirectCommand(name));
+    public URL getLogoutUrl() throws MalformedURLException {
+        Connection con = WebRenderServlet.getActiveConnection();
+        HttpServletRequest req = con.getRequest();
+        String url = req.getRequestURL().toString();
+        
+        URL u = new URL(url);
+        String contextname = con.getRequest().getContextPath();
+        // deprecated the init. The context path should work
+        String base = (String) con.getServlet().getInitParameter("baseURL");
+        if(base==null) {
+        	base=contextname;
+        }
+        URL rootURL =  new URL(u.getProtocol(),u.getHost(),u.getPort(),base+"/logout?destination="+u.getPath());
+        return rootURL;
+        
+    }
+    
+    public void exitToUrl() throws MalformedURLException {
+        enqueueCommand(new BrowserRedirectCommand(getLogoutUrl().toString()));
         ContainerContext containerContext = (ContainerContext) getContextProperty(ContainerContext.CONTEXT_PROPERTY_NAME);
         final HttpSession session = containerContext.getSession();
         // Invalidate session in a different thread
-        Thread thread = new Thread(new Runnable() {
-            public void run() {
-                try {
-                    Thread.currentThread().sleep(500);
-                    if (session != null)
-                        session.invalidate();
-                } catch (Throwable t) {
-                    t.printStackTrace();
-                }
-            }
-        });
-        thread.start();
+//        Thread thread = new Thread(new Runnable() {
+//            public void run() {
+//                try {
+//                    Thread.currentThread().sleep(200);
+//                    if (session != null)
+//                        session.invalidate();
+//                } catch (Throwable t) {
+//                    t.printStackTrace();
+//                }
+//            }
+//        });
+//        thread.start();
     }
 
     private void startup() {
@@ -108,7 +129,8 @@ public class TipiEchoInstance extends ApplicationInstance {
     }
 
     public void loadTipi(String fileName) throws IOException, TipiException {
-        File dir = new File(tipiDir);
+    	File rootDir = new File(myServletContext.getRealPath("/"));
+        File dir = new File(rootDir,tipiDir);
         File f = new File(dir, fileName);
         context.parseFile(f, false, tipiDir);
     }
@@ -156,13 +178,17 @@ public class TipiEchoInstance extends ApplicationInstance {
                 continue;
             }
             if ("tipidir".equals(current)) {
-            	System.err.println("");
-                context.setTipiBaseDirectory(new File(myServletConfig.getInitParameter(current)));
+            	File rootDir = new File(myServletContext.getRealPath("/"));
                 tipiDir = myServletConfig.getInitParameter(current);
-                continue;
+            	File dir = new File(rootDir,tipiDir);
+            	context.setTipiBaseDirectory(dir);
+
             }
             if ("resourcedir".equals(current)) {
-//                context.setResourceBaseDirectory(new File(myServletConfig.getInitParameter(current)));
+            	File rootDir = new File(myServletContext.getRealPath("/"));
+                resourceDir = myServletConfig.getInitParameter(current);
+            	File dir = new File(rootDir,resourceDir);
+            	context.setResourceBaseDirectory(dir);
                 continue;
             }
             System.setProperty(current, myServletConfig.getInitParameter(current));

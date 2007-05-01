@@ -47,6 +47,11 @@
   <tipiaction name="exitsession"  class="TipiEchoExit" package="com.dexels.navajo.tipi.actions">
    <param name="destination" type="string"/>
  </tipiaction>
+
+    <tipiaction name="exit"  class="TipiEchoExit" package="com.dexels.navajo.tipi.actions">
+        <!--<param name="destination" type="string"/>-->
+    </tipiaction>
+    
  
   <tipiaction name="servebinary"  class="TipiServeBinary" package="com.dexels.navajo.tipi.actions">
    <param name="binary" type="string"/>
@@ -774,6 +779,9 @@
             <value direction="in" name="closable" type="boolean"/>
             <value direction="in" name="resizable" type="boolean"/>
             <value direction="inout" name="tooltip" type="string"/>
+            <value direction="in" name="closable" type="boolean"/>
+            <value direction="in" name="resizable" type="boolean"/>
+            <value direction="in" name="movable" type="boolean"/>
         </values>
         <methods>
             <method name="show"/>
@@ -798,8 +806,9 @@
             <value direction="in" name="visible" type="boolean"/>
             <value direction="in" name="selected" type="boolean"/>
             <value direction="in" name="background" type="color"/>
-            <value direction="in" name="closable" type="color"/>
-            <value direction="in" name="resizable" type="color"/>
+            <value direction="in" name="closable" type="boolean"/>
+            <value direction="in" name="resizable" type="boolean"/>
+            <value direction="in" name="movable" type="boolean"/>
         </values>
         <methods>
 	</methods>

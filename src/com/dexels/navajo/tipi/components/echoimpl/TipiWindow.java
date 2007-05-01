@@ -65,7 +65,7 @@ public final class TipiWindow
     
     public Object createContainer() {
         myWindow = new WindowPane();
-//        myWindow = new WindowPane();
+        //        myWindow = new WindowPane();
 		Style ss = Styles.DEFAULT_STYLE_SHEET.getStyle(WindowPane.class, "Default");
         myWindow.setStyle(ss);
         TipiHelper th = new EchoTipiHelper();
@@ -81,6 +81,8 @@ public final class TipiWindow
         });
         myWindow.setDefaultCloseOperation(WindowPane.DO_NOTHING_ON_CLOSE);
         myWindow.setClosable(false);
+        myWindow.setZIndex(((EchoTipiContext)myContext).acquireHighestZIndex());
+                
         return myWindow;
     }
 
@@ -134,7 +136,7 @@ public final class TipiWindow
     
     
     public void addToContainer(final Object c, final Object constraints) {
-        
+        System.err.println("In window. Visible: "+ ((WindowPane) getContainer()).isVisible()+" w: "+ ((WindowPane) getContainer()).getWidth()+" h: "+ ((WindowPane) getContainer()).getHeight());
         if(layoutComponent!=null) {
          	// do layoutstuff
         	 System.err.println("LAYOUT DETECTED ON FRAME!!!!");
@@ -201,6 +203,18 @@ public final class TipiWindow
             boolean b = ((Boolean) object).booleanValue();
             jj.setResizable(b);
         }
+        
+        if (name.equals("movable")) {
+            boolean b = ((Boolean) object).booleanValue();
+            jj.setMovable(b);
+        }      
+        
+        if (name.equals("visible")) {
+            boolean b = ((Boolean) object).booleanValue();
+            jj.setVisible(b);
+            jj.setZIndex(((EchoTipiContext)myContext).acquireHighestZIndex());
+        }        
+        
         if (name.equals("x")) {
             jj.setPositionX(new Extent(((Integer) object).intValue(), Extent.PX));
         }

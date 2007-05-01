@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/NavajoTipi"/>
-	<classpathentry kind="lib" path="lib/servlet-api.jar"/>
-	<classpathentry sourcepath="/EchoSource/src/app/java" kind="lib" path="lib/Echo2_App.jar"/>
-	<classpathentry kind="lib" path="lib/Echo2_WebContainer.jar"/>
-	<classpathentry kind="lib" path="lib/Echo2_WebRender.jar"/>
-	<classpathentry kind="lib" path="lib/echopointng_for_echo_2.1.jar"/>
-	<classpathentry kind="lib" path="lib/Echo2_Extras_App.jar"/>
-	<classpathentry kind="lib" path="lib/Echo2_Extras_WebContainer.jar"/>
-	<classpathentry kind="output" path="classes"/>
+	<classpathentry path="src" kind="src"/>
+	<classpathentry path="org.eclipse.jdt.launching.JRE_CONTAINER" kind="con"/>
+	<classpathentry path="/NavajoTipi" combineaccessrules="false" kind="src"/>
+	<classpathentry path="lib/servlet-api.jar" kind="lib"/>
+	<classpathentry sourcepath="/EchoSource/src/app/java" path="lib/Echo2_App.jar" kind="lib"/>
+	<classpathentry path="lib/Echo2_WebContainer.jar" kind="lib"/>
+	<classpathentry path="lib/Echo2_WebRender.jar" kind="lib"/>
+	<classpathentry sourcepath="/EchoExtrasSource/src/app/java" path="lib/Echo2_Extras_App.jar" kind="lib"/>
+	<classpathentry path="lib/Echo2_Extras_WebContainer.jar" kind="lib"/>
+	<classpathentry path="lib/echopointng-2.1.0rc5.jar" kind="lib"/>
+	<classpathentry path="lib/Echo2_FileTransfer_App.jar" kind="lib"/>
+	<classpathentry path="lib/Echo2_FileTransfer_WebContainer.jar" kind="lib"/>
+	<classpathentry path="lib/echopointng_for_echo_2.1.jar" kind="lib"/>
+	<classpathentry path="lib/jcommon-1.0.0.jar" kind="lib"/>
+	<classpathentry path="lib/commons-fileupload-1.0.jar" kind="lib"/>
+	<classpathentry path="classes" kind="output"/>
 </classpath>

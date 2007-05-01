@@ -134,7 +134,7 @@ public class TipiButton extends TipiEchoComponentImpl {
         if ("text".equals(name)) {
             myButton.setText("" + object);
         }
-        if ("tooptip".equals(name)) {
+        if ("tooltip".equals(name)) {
             myButton.setToolTipText("" + object);
         }
         if ("icon".equals(name)) {

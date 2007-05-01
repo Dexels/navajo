@@ -58,7 +58,9 @@ private int gridy;
       
       setColumnSpan(gridwidth);
       setRowSpan(gridheight);
-      System.err.println("ROW/COLUMNSPAN: "+gridwidth+" / "+gridheight);
+      if(gridheight>1) {
+          System.err.println("ROW/COLUMNSPAN: "+gridwidth+" / "+gridheight);
+      }
 //      if(weightx>0 && child instanceof Sizeable) {
 //    	  Sizeable s = (Sizeable)child;
 //    	  s.setWidth(new Extent(90,Extent.PERCENT));
@@ -67,6 +69,9 @@ private int gridy;
     }
   }
 
+  public String toString() {
+	  return "x:"+gridx+"y:"+gridy+"w:"+getColumnSpan()+"h:"+getRowSpan();
+  }
   public TipiEchoGridBagConstraints(String s, Component parent, Component child, int index) {
     parse(s,index);
   }

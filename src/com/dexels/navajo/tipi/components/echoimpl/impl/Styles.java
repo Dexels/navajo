@@ -54,6 +54,9 @@ public class Styles {
                     Thread.currentThread().getContextClassLoader());
   			if(DEFAULT_STYLE_SHEET!=null) {
   				System.err.println("LOADED STYLESHEET: "+DEFAULT_STYLE_SHEET.toString());
+  			} else {
+  				throw new RuntimeException("Stylesheet missing!");
+		
   			}
  //			DEFAULT_STYLE_SHEET = StyleSheetLoader.load("Default.stylesheet", Thread.currentThread().getContextClassLoader());
 		} catch (ComponentXmlException ex) {

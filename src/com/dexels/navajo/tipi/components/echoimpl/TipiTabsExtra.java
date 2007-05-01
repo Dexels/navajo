@@ -12,6 +12,7 @@ import nextapp.echo2.extras.app.layout.TabPaneLayoutData;
 
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiComponentMethod;
+import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.TipiHelper;
 import com.dexels.navajo.tipi.components.echoimpl.helpers.EchoTipiHelper;
 import com.dexels.navajo.tipi.components.echoimpl.parsers.*;
@@ -68,8 +69,15 @@ public class TipiTabsExtra extends TipiEchoDataComponentImpl {
         myTabbedPane.addPropertyChangeListener(new PropertyChangeListener() {
 
             public void propertyChange(PropertyChangeEvent evt) {
-            	System.err.println("Hoei: "+evt.getPropertyName());
-            	
+            	if(evt.getPropertyName().equals(TabPane.ACTIVE_TAB_INDEX_CHANGED_PROPERTY))
+					try {
+						me.performTipiEvent("onTabChanged", null, false);
+					} catch (TipiException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+//                lastSelectedTab = jt.getSelectedComponent();
+//                lastSelectedTab.doLayout();
             }
             });
         

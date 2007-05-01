@@ -9,6 +9,7 @@ import nextapp.echo2.app.event.ActionEvent;
 import nextapp.echo2.app.event.ActionListener;
 
 import com.dexels.navajo.tipi.TipiComponent;
+import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.TipiHelper;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 
@@ -139,12 +140,17 @@ public class EchoTipiHelper implements TipiHelper {
                 java.lang.reflect.Method m = c.getClass().getMethod("addActionListener", new Class[] { ActionListener.class });
                 ActionListener bert = new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
-                        try {
+//                        try {
                             // System.err.println("Firing component: " +c);
-                            myComponent.performTipiEvent("onActionPerformed", null, true);
-                        } catch (Throwable ex) {
-                            ex.printStackTrace();
-                        }
+                            try {
+								myComponent.performTipiEvent("onActionPerformed", null, true);
+							} catch (TipiException e1) {
+							
+								e1.printStackTrace();
+							}
+//                        } catch (Throwable ex) {
+//                            ex.printStackTrace();
+//                        }
                     }
                 };
                 m.invoke(c, new Object[] { bert });

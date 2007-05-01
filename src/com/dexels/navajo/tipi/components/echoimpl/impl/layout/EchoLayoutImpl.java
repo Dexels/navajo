@@ -26,8 +26,13 @@ public abstract class EchoLayoutImpl {
 	
 	public void addChildComponent(Component c, Object constraint) {
 		childComponents.add(c);
-		System.err.println("Adding constraint to echo layout: "+constraint);
+		System.err.println("Adding component: "+c.hashCode()+ "constraint to echo layout: "+constraint);
 		constraints.put(c, constraint);
+		System.err.println("Constraint size: "+constraints.size());
+	}
+	
+	public Component getLayoutComponent() {
+		return myComponent;
 	}
 	
 	public abstract void commitToParent();

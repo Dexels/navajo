@@ -71,12 +71,17 @@ public abstract class TipiEchoDataComponentImpl extends TipiDataComponentImpl {
     
     
     public void addToContainer(Object c, Object constraints) {
-        Component cc;
-        cc = (Component) getContainer();
+
+      	System.err.println("\n********************************\nAttempting to add component: "+c.getClass()+" to: "+getClass()+"\n********************************\n");
+      	Component cc;
+        cc = (Component) getInnerComponent();
         Component child = (Component) c;
 //        if (layoutComponent != null) {
 //            cc = layoutComponent;
 //        }
+        
+        
+        
         if(layoutComponent!=null) {
         	// do layoutstuff
         	layoutComponent.setParentComponent(this);
@@ -108,7 +113,7 @@ public abstract class TipiEchoDataComponentImpl extends TipiDataComponentImpl {
     	if (layout instanceof EchoLayoutImpl) {
     		System.err.println("Setting layout");
                 layoutComponent = (EchoLayoutImpl) layout;
-//                ((Component) getContainer()).add(layoutComponent);
+//                ((Component) getInnerComponent()).add(layoutComponent);
             }
     }
 

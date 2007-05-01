@@ -40,6 +40,9 @@ import com.dexels.navajo.tipi.tipixml.XMLElement;
 public class EchoTipiContext extends TipiContext {
 //    private ApplicationInstance myServerContext;
     private static int instanceCount = 0;
+    
+    private int zIndexCounter = 0;
+    
     private final TipiEchoInstance myInstance;
     public EchoTipiContext(TipiEchoInstance t) {
     	instanceCount++;
@@ -47,6 +50,8 @@ public class EchoTipiContext extends TipiContext {
 
     }
 
+
+    
     public ApplicationInstance getInstance() {
     	return myInstance;
     }
@@ -102,29 +107,47 @@ public class EchoTipiContext extends TipiContext {
 //    }
 
     public void exit() {
-     	NavajoClientFactory.getClient().destroy();
-    }
+    	 ApplicationInstance ai = ApplicationInstance.getActive();
+         if (ai instanceof TipiEchoInstance) {
+             try {
+				((TipiEchoInstance)ai).exitToUrl();
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+ 		} }
     
 
-    public void exit(String destination) {
-        ApplicationInstance ai = ApplicationInstance.getActive();
-        if (ai instanceof TipiEchoInstance) {
-            ((TipiEchoInstance)ai).exitToUrl(destination);
-		}
-    }
 
     public URL getDynamicResourceBaseUrl(String path) throws MalformedURLException {
         Connection con = WebRenderServlet.getActiveConnection();
         HttpServletRequest req = con.getRequest();
         String url = req.getRequestURL().toString();
+        System.err.println("RequestURL: "+url);
+        System.err.println("Servletinfo: "+ con.getServlet().getServletInfo());
+        System.err.println("Servletname: "+ con.getServlet().getServletName());
         URL u = new URL(url);
+//        getServletContext().
+        String base = (String) con.getServlet().getInitParameter("baseURL");
+        System.err.println("Base ATTR: "+base);
 
-        for (Enumeration iter = getServletContext().getAttributeNames(); iter.hasMoreElements();) {
-            String element = (String) iter.nextElement();
-        }
-        URL rootURL =  new URL(u.getProtocol(),u.getHost(),u.getPort(),path);
+        URL rootURL =  new URL(u.getProtocol(),u.getHost(),u.getPort(),base+"/"+path);
         return rootURL;
         
+    }
+    
+    
+    public URL getContextURL() throws MalformedURLException {
+        Connection con = WebRenderServlet.getActiveConnection();
+        HttpServletRequest req = con.getRequest();
+        String url = req.getRequestURL().toString();
+        URL u = new URL(url);
+//        getServletContext().
+        String base = (String) con.getServlet().getInitParameter("baseURL");
+        System.err.println("Base ATTR: "+base);
+
+        URL rootURL =  new URL(u.getProtocol(),u.getHost(),u.getPort(),base);
+        return rootURL;
     }
 
     public File getDynamicResourceBaseDir() {
@@ -157,6 +180,10 @@ public class EchoTipiContext extends TipiContext {
     private static Map staticComponentMap = new HashMap();
     
    
+    public int acquireHighestZIndex() {
+    	return zIndexCounter++;
+    }
+    
     protected XMLElement getTipiDefinition(String name) throws TipiException {
       	XMLElement xe = (XMLElement) staticComponentMap.get(name);
       	if (xe==null) {
@@ -173,6 +200,7 @@ public class EchoTipiContext extends TipiContext {
         staticComponentMap.put(defname, elm);
 //        tipiMap.put(defname, elm);
       }
+
 
 
 }

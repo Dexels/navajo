@@ -28,9 +28,9 @@ public class TipiEchoExit extends TipiAction {
     }
 
     public void execute(TipiEvent e) {
-        Operand destination = getEvaluatedParameter("destination", e);
-
-        ((EchoTipiContext) myContext).exit("" + destination.value);
+        //Operand destination = getEvaluatedParameter("destination", e);
+        //String dest = ((EchoTipiContext) myContext).getDynamicResourceBaseUrl();
+        ((EchoTipiContext) myContext).exit();
     }
 
 }

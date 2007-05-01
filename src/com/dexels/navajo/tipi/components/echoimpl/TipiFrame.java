@@ -208,7 +208,7 @@ public class TipiFrame extends TipiEchoDataComponentImpl {
     public void addToContainer(Object c, Object constraints) {
     	
     	
-    	System.err.println("Attempting to add component: "+c.getClass());
+    	System.err.println("\n********************************\nAttempting to add component: "+c.getClass()+" to: "+getClass()+"\n********************************\n");
         if (c instanceof nextapp.echo2.extras.app.MenuBarPane) {
         	MenuBarPane m = (MenuBarPane) c;
 
@@ -218,18 +218,10 @@ public class TipiFrame extends TipiEchoDataComponentImpl {
         } else {
             Component child = (Component) c;
             Component cc = realContent;
-//            if (layoutComponent != null) {
-//                cc = layoutComponent;
-//            }
             if (child instanceof WindowPane) {
-                TipiScreen s = (TipiScreen) getContext().getDefaultTopLevel();
-                // Watch this.
-                final Window w = (Window) s.getTopLevel();
-               cc.add(child);
+            	System.err.println("Window detected");
+            	addWindowPane((WindowPane)child);
             } else {
-//                 if(cc.getComponentCount()>0) {
-//                	return;
-//                }
                  if(layoutComponent!=null) {
                  	// do layoutstuff
                 	 System.err.println("LAYOUT DETECTED ON FRAME!!!!");
@@ -245,12 +237,22 @@ public class TipiFrame extends TipiEchoDataComponentImpl {
                 if (getLayout() != null) {
                     getLayout().childAdded(c);
                 }
-                
             }
-        	
-            
         }
     }
+
+	private void addWindowPane(WindowPane child) {
+		WindowPane sp = (WindowPane)child;
+		System.err.println("Windowpane detected.");
+		System.err.println("is viz: "+sp.isVisible()+" w: "+sp.getWidth()+" h: "+sp.getHeight());
+		TipiScreen s = (TipiScreen) getContext().getDefaultTopLevel();
+		// Watch this.
+		final Window w = (Window) s.getTopLevel();
+		if(w==null) {
+			System.err.println("oh dear, no toplevel found");
+		}
+		w.getContent().add(child);
+	}
 
     public void removeFromContainer(Object c) {
     

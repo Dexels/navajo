@@ -11,6 +11,7 @@ import nextapp.echo2.app.Component;
 import nextapp.echo2.app.Extent;
 import nextapp.echo2.app.Grid;
 import nextapp.echo2.app.Insets;
+import nextapp.echo2.app.PaneContainer;
 import nextapp.echo2.app.layout.GridLayoutData;
 import echopointng.ContainerEx;
 import echopointng.GroupBox;
@@ -89,11 +90,27 @@ public class TipiGridPanel extends TipiEchoDataComponentImpl {
             return;
         }
         
-        gridComponent.add(c);
-        if (constr != null) {
-            GridLayoutData cons = parseGridConstraints(constr, c);
-            c.setLayoutData(cons);
+        if(o instanceof PaneContainer) {
+        	System.err.println("Don't think its allowed. Using a workaround...");
+        	ContainerEx ce = new ContainerEx();
+        	 gridComponent.add(ce);
+            ce.add(c);
+        	if (constr != null) {
+                GridLayoutData cons = parseGridConstraints(constr, ce);
+                c.setLayoutData(cons);
+//            	System.err.println("Height: "+cons.);
+            }
+//        	ce.setHeight(new Extent(200,Extent.PX));
+            
+        	
+        } else {
+            gridComponent.add(c);
+            if (constr != null) {
+                GridLayoutData cons = parseGridConstraints(constr, c);
+                c.setLayoutData(cons);
+            }
         }
+        
     }
 
     public GridLayoutData parseGridConstraints(String txt, Component c) {

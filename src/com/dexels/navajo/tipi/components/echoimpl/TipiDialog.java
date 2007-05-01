@@ -69,6 +69,8 @@ public class TipiDialog extends TipiEchoDataComponentImpl {
 
 	private String myTitle;
 
+	private boolean movable;
+
     // headerheight leftheaderinset topheaderinset rightheaderinset bottomheaderinset
     
     // headerfont headerforeground headerbackground
@@ -184,6 +186,9 @@ public class TipiDialog extends TipiEchoDataComponentImpl {
         if (name.equals("resizable")) {
             resizable = ((Boolean) object).booleanValue();
         }
+        if (name.equals("movable")) {
+             movable = ((Boolean) object).booleanValue();
+              }        
         if (name.equals("title")) {
             myTitle = object.toString();
             myWindow.setTitle(myTitle);
@@ -223,7 +228,9 @@ public class TipiDialog extends TipiEchoDataComponentImpl {
         super.disposeComponent();
         TipiScreen s = (TipiScreen) getContext().getDefaultTopLevel();
         final Window win = (Window) s.getTopLevel();
-        win.getContent().remove(myWindow);
+        ContentPane content = win.getContent();
+
+        content.remove(myWindow);
         myWindow = null;
    }
 
@@ -268,7 +275,10 @@ public class TipiDialog extends TipiEchoDataComponentImpl {
         myWindow.setModal(modal);
         myWindow.setResizable(resizable);
         // ARRRRRRRGGGGHHHHH
-        myWindow.setClosable(true);
+        myWindow.setClosable(closable);
+        myWindow.setMovable(movable);
+        myWindow.setZIndex(((EchoTipiContext)myContext).acquireHighestZIndex());
+        
 
 //        if (headerbackground!=null) {
 //        	myWindow.setTitleBackground(headerbackground);
@@ -341,7 +351,7 @@ public class TipiDialog extends TipiEchoDataComponentImpl {
 		if (layoutComponent != null) {
 			// do layoutstuff
 			layoutComponent.setParentComponent(this);
-			layoutComponent.addChildComponent(cc, constraints);
+			layoutComponent.addChildComponent((Component)c, constraints);
 		} else {
 			cc.add((Component) c);
 			if (constraints != null && constraints instanceof LayoutData) {
