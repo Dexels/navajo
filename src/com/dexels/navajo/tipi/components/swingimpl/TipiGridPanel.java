@@ -127,16 +127,10 @@ gridBagLayout = new GridBagLayout();
 		 };
 		 myData.fill=GridBagConstraints.BOTH;
 		 myData.weightx=isFixed(currentx)?0:1;
-		 
          myData.weighty=0;
-		 
-         //			return myData;
-//		 myData.weightx = 1;
-//		 System.err.println("Parsing constraints: "+txt+" >> "+getPath()+" gridwidth: "+gridwidth);
 		 myData.gridx = currentx;
 		 myData.anchor = GridBagConstraints.NORTHWEST;
 		 myData.gridy = currenty;
-//		 System.err.println("Adding at: "+currentx+"/"+currenty+" grid: "+gridwidth);
 		 if (txt!=null) {
 			 StringTokenizer st = new StringTokenizer(txt,";");
 			 while (st.hasMoreTokens()) {
@@ -147,13 +141,14 @@ gridBagLayout = new GridBagLayout();
 				setProperty(key,value,myData, component);
 			}
 		}
-//			System.err.println("updateAvailability to constraint: ");
+		 myData.insets = new Insets(3,3,3,3);
 		 updateComponentSize(component,myData);
 		updateAvailability(myData.gridx,myData.gridy,myData.gridx+myData.gridwidth,myData.gridy+myData.gridheight);
 		advance();
-//		 System.err.println("Advanced to: "+currentx+"/"+currenty);
-//		 System.err.println("Grid constraints: "+myData.gridx+"/"+myData.gridy+" size: "+myData.gridwidth+"/"+myData.gridheight+" I am: "+getId()+" gridwidth: "+gridwidth);
-		 return myData;
+		if(myData.gridx==(myWidths.size()-1)) {
+			myData.weightx = 1;
+		}
+		return myData;
 	 }
 	 
 	 private void updateComponentSize(JComponent component, GridBagConstraints myData) {
@@ -223,7 +218,7 @@ gridBagLayout = new GridBagLayout();
 
 	private void advance() {
 		while (isOccupied(currentx,currenty)) {
-			if (currentx==gridwidth-1) {
+			if (currentx>=gridwidth-1) {
 				currentx = 0;
 				currenty++;
 			} else {
@@ -345,7 +340,8 @@ gridBagLayout = new GridBagLayout();
 //			 int height = ((Integer)object).intValue();
 ////			 gridComponent.setHeight(new Extent(height,Extent.PX));
 //			 gridComponent.setMaximumSize(new Dimension(Integer.MAX_VALUE,height));
-//		 }		super.setComponentValue(name, object);
+//		 }	
+		 super.setComponentValue(name, object);
 	}
 	private void addHeightStrut(int y, int height, JComponent current) {
 		int actualHeight = height;

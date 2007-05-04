@@ -68,6 +68,7 @@ public class TipiMenuItem
   public void setComponentValue(String name, Object object) {
     super.setComponentValue(name, object);
     if ("text".equals(name)) {
+    	System.err.println("Setting menu item to: "+object);
       myItem.setText( (String) object);
     }
     if ("mnemonic".equals(name)) {

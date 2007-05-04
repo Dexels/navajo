@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tid errorhandler="error">
+    
+    <tipiaction name="setCookie"  class="TipiSetCookie" package="com.dexels.navajo.tipi.components.swingimpl.actions">
+        <param name="name" type="string"/>
+        <param name="value" type="string"/>
+    </tipiaction>
+    
+    
     <tipiaction name="askValue" class="TipiAskValue"
         package="com.dexels.navajo.tipi.components.swingimpl.actions">
         <param name="text" type="string"/>
@@ -29,6 +36,11 @@
         <param name="value" type="binary"/>
         <param name="extension" type="string"/>
     </tipiaction>
+
+    <!-- refactored from NavajoTipi, as it is not applicable to echo -->
+    
+    <tipiaction name="exit"  class="TipiExit" package="com.dexels.navajo.tipi.actions"/>
+    
       
 <!-- the actual classes should be refactored too! -->      
   <tipiaction name="showInfo"  class="TipiShowInfo" package="com.dexels.navajo.tipi.actions">
@@ -1134,6 +1146,8 @@
                 <param name="modifiers" type="string"/>
                 <param name="mode" type="string"/>
 			</event>
+            <event name="onEnter"/>
+                
         </events>
         <values>
             <value direction="out" name="selectionIndex" type="insteger"/>
@@ -1213,10 +1227,26 @@
             <value direction="in" name="visible" type="boolean"/>
             <value direction="in" name="background" type="color"/>
             <value direction="in" name="foreground" type="color"/>
-            <value direction="in" name="border" type="border"/>
+            <value direction="in" name="border" type="object"/>
         </values>
         <methods/>
     </tipiclass>
+    
+    <tipiclass studio-icon="tipitableprinter.gif" module="extensions" class="TipiEmailLauncher" name="emaillauncher" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" addtocontainer="false">
+        <events> 
+            <event name="onInstantiate"/>
+            <event name="onLoad"/>
+        </events>
+        <values/>
+        <methods>
+            <method name="setEmailParameters">
+                <param name="messagepath" type="message"/>
+                <param name="propertyname" type="string"/>
+                <param name="clubname" type="string"/>
+            </method>
+        </methods>
+    </tipiclass>
+    
     
     <tipiclass class="TipiTableLayout" name="table"
         package="com.dexels.navajo.tipi.components.swingimpl.layout" type="layout"/>
@@ -1239,6 +1269,11 @@
     <tipi-parser name="border"
         parser="com.dexels.navajo.tipi.components.swingimpl.parsers.BorderParser"
         type="javax.swing.border.Border"/>
+    <tipi-parser name="labelborder"
+        parser="com.dexels.navajo.tipi.components.swingimpl.parsers.BorderParser"
+        type="javax.swing.border.LabelBorder"/>
+    
+        
     <tipi-parser name="font" parser="com.dexels.navajo.tipi.components.swingimpl.parsers.FontParser"
         type="java.awt.Font"/>
     <tipi-parser name="color"
@@ -1247,4 +1282,9 @@
     <tipi-parser name="paint"
         parser="com.dexels.navajo.tipi.components.swingimpl.parsers.PaintParser"
         type="java.awt.Paint"/>
+        
+    
+    <tipi-parser name="cookie" parser="com.dexels.navajo.tipi.components.swingimpl.parsers.CookieParser" type="java.lang.String"/>
+    <tipi-parser name="cookieref" parser="com.dexels.navajo.tipi.components.swingimpl.parsers.CookieRefParser" type="com.dexels.navajo.tipi.internal.TipiReference"/>
+        
 </tid>

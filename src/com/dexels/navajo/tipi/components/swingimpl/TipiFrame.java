@@ -63,7 +63,7 @@ public class TipiFrame
       });
     }
     else {
-      runASyncInEventThread(new Runnable() {
+      runSyncInEventThread(new Runnable() {
         public void run() {
 //        	System.err.println("Constraints: "+constraints);
 //        	if (constraints!=null) {

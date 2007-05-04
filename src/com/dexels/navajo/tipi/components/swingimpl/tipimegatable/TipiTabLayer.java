@@ -79,7 +79,7 @@ public class TipiTabLayer extends TipiTableBaseLayer {
         final Message msg = nextMessage;
         final Stack newStack = (Stack) layerStack.clone();
         final TipiTableBaseLayer nextLayer = (TipiTableBaseLayer) newStack.pop();
-        myTable.runASyncInEventThread(new Runnable() {
+        myTable.runSyncInEventThread(new Runnable() {
             public void run() {
                 JTabbedPane jt = new JTabbedPane();
                 myTabbedPane = jt;

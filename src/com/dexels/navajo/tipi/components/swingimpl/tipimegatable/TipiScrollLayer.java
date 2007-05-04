@@ -64,7 +64,7 @@ public class TipiScrollLayer
     final Stack newStack = (Stack) layerStack.clone();
     final TipiTableBaseLayer nextLayer = (TipiTableBaseLayer) newStack.pop();
     final Message msg = nextMessage;
-    myTable.runASyncInEventThread(new Runnable() {
+    myTable.runSyncInEventThread(new Runnable() {
       public void run() {
         JPanel jt = new JPanel();
         BoxLayout myLayout = new BoxLayout(jt, direction);

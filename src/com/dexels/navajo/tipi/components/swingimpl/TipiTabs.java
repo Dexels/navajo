@@ -56,6 +56,7 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
     TipiHelper th = new TipiSwingHelper();
     th.initHelper(this);
     addHelper(th);
+    
     jt.addChangeListener(new ChangeListener() {
       public void stateChanged(ChangeEvent ce) {
         try {

@@ -24,5 +24,5 @@ public interface TipiSwingComponent extends TipiComponent{
   public void setPaint(Paint p);
 
   public void runSyncInEventThread(Runnable r);
-  public void runASyncInEventThread(Runnable r) ;
+//  public void runASyncInEventThread(Runnable r) ;
 }

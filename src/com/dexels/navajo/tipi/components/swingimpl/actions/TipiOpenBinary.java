@@ -50,10 +50,10 @@ public class TipiOpenBinary extends TipiAction {
         }
         Binary b = (Binary)value.value;
         if (extString==null) {
-            String mime = b.getMimeType();
-            if (mime==null || "".equals(mime)) {
-                mime = b.guessContentType();
-            }
+            String mime = b.guessContentType();
+//            if (mime==null || "".equals(mime)) {
+//                mime = b.guessContentType();
+//            }
             if (mime!=null) {
                 if (mime.indexOf("/") != -1) {
                     StringTokenizer st = new StringTokenizer(mime,"/");

@@ -14,22 +14,25 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.*;
  */
 public class TipiTextArea
     extends TipiSwingComponentImpl {
-  public TipiTextArea() {
+  private TipiSwingTextArea myTextArea;
+
+public TipiTextArea() {
   }
 
   public Object createContainer() {
-    TipiSwingTextArea t = new TipiSwingTextArea(this);
-    TipiHelper th = new TipiSwingHelper();
+    myTextArea = new TipiSwingTextArea(this);
+	TipiHelper th = new TipiSwingHelper();
     th.initHelper(this);
+    JScrollPane jsp = new JScrollPane(myTextArea);
     addHelper(th);
-    return t;
+    return jsp;
   }
 
   public void setComponentValue(final String name, final Object object) {
     if (name.equals("text")) {
       runSyncInEventThread(new Runnable() {
         public void run() {
-          ( (JTextArea) getContainer()).setText( (String) object);
+        	myTextArea.setText( (String) object);
         }
       });
       return;
@@ -39,7 +42,7 @@ public class TipiTextArea
 
   public Object getComponentValue(String name) {
     if (name.equals("text")) {
-      return ( (JTextArea) getContainer()).getText();
+      return myTextArea.getText();
     }
     return super.getComponentValue(name);
   }

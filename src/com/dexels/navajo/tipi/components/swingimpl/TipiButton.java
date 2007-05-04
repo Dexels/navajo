@@ -83,7 +83,7 @@ public class TipiButton
         TipiEvent current = (TipiEvent) getEventList().get(i);
         if (current.isTrigger("onActionPerformed", "aap")) {
           try {
-            current.performAction(current);
+            current.performAction(current,current,0);
           }
           catch (TipiException ex) {
             ex.printStackTrace();

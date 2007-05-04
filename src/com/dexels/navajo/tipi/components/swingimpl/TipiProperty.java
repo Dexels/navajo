@@ -58,6 +58,13 @@ public class TipiProperty
         public void keyTyped(KeyEvent e) {
             Map m = getEventMap(e);
             m.put("mode", "typed");
+            if (e.getKeyCode()==KeyEvent.VK_ENTER) {
+                try {
+                performTipiEvent("onEnter", m, true);
+                } catch (TipiException e1) {
+                    e1.printStackTrace();
+                }
+			}
             try {
                 performTipiEvent("onKey", m, true);
             } catch (TipiException e1) {
@@ -116,7 +123,7 @@ public class TipiProperty
 //    getSwingContainer().remove( (Component) c);
 //  }
   public void setLabelWidth(final int width) {
-    runASyncInEventThread(new Runnable() {
+    runSyncInEventThread(new Runnable() {
       public void run() {
          ( (GenericPropertyComponent) getContainer()).setLabelIndent(width);
       }
@@ -140,7 +147,7 @@ public class TipiProperty
   }
 
   public void setLabelVisible(final boolean state) {
-    runASyncInEventThread(new Runnable() {
+    runSyncInEventThread(new Runnable() {
       public void run() {
         if (state) {
            ( (GenericPropertyComponent) getContainer()).showLabel();
@@ -157,7 +164,7 @@ public class TipiProperty
   }
 
   public void setProperty(final Property p) {
-    runASyncInEventThread(new Runnable() {
+    runSyncInEventThread(new Runnable() {
       public void run() {
         myProperty = p;
         if (p == null) {
@@ -214,7 +221,7 @@ public class TipiProperty
 
   public void setComponentValue(final String name, final Object object) {
     final TipiComponent me = this;
-    runASyncInEventThread(new Runnable() {
+    runSyncInEventThread(new Runnable() {
       public void run() {
         if ("propertyname".equals(name)) {
           myPropertyName = ( (String) object);

@@ -24,6 +24,8 @@ public class TipiSwingToolBar
 
   public TipiSwingToolBar(TipiToolBar me) {
     this.me = me;
+    setAlignmentX(0);
+    setLayout(new FlowLayout(FlowLayout.LEFT));
   }
 
   public void paintComponent(Graphics g) {

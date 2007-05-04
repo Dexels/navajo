@@ -175,7 +175,7 @@ public abstract class TipiSwingDataComponentImpl
 //    getContext().debugLog("data    ", "Entering doLayout in tipi: " + getId());
     if (getContainer() != null) {
       if (JComponent.class.isInstance(getContainer())) {
-        runASyncInEventThread(new Runnable() {
+        runSyncInEventThread(new Runnable() {
           public void run() {
 //            getContext().debugLog("data    ", "Entering doLayout in tipi: " + getId());
             ( (JComponent) getContainer()).revalidate(); ( (JComponent) getContainer()).repaint(); getContext().debugLog("data    ", "Exiting doLayout in tipi: " + getId());
@@ -230,15 +230,15 @@ public abstract class TipiSwingDataComponentImpl
       }
     }
   }
-
-  public void runASyncInEventThread(Runnable r) {
-    if (SwingUtilities.isEventDispatchThread() || !committedInUI) {
-      r.run();
-    }
-    else {
-      SwingUtilities.invokeLater(r);
-    }
-  }
+//
+//  public void runASyncInEventThread(Runnable r) {
+//    if (SwingUtilities.isEventDispatchThread() || !committedInUI) {
+//      r.run();
+//    }
+//    else {
+//      SwingUtilities.invokeLater(r);
+//    }
+//  }
 
   protected void performComponentMethod(final String name, final TipiComponentMethod compMeth, TipiEvent event) throws TipiBreakException {
     if ("print".equals(name)) {

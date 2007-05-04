@@ -78,32 +78,15 @@ public class TipiTable
           int ii = ( (Integer) columnSize.get(new Integer(i))).intValue();
           final int index = i;
           final int value = ii;
-//          System.err.println("Setting column: " + i + " to: " + ii);
           mtp.setColumnWidth(index, value);
         }
       }
     });
   }
 
-//  private void refreshColumnLabels(Navajo n, Message m) {
-//    for (int i = 0; i < columnLabelList.size(); i++) {
-//      String label = (String) columnLabelList.get(i);
-//      String labelString = (String) columnLabelList.get(i);
-//      try {
-//        Operand evalLabel = this.getContext().evaluate(labelString, this, null, m);
-//        if (evalLabel != null) {
-//          labelString = "" + evalLabel.value;
-//        }
-//      }
-//      catch (Exception ex) {
-//      }
-//      mm.setColumnLabel(i, labelString);
-//    }
-//  }
 
   public final void load(XMLElement elm, XMLElement instance, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
     mm = (MessageTablePanel) getContainer();
-//    columnLabelList.clear();
     mm.removeAllColumns();
     removeAllAggregate();
     columnSize.clear();
@@ -113,7 +96,6 @@ public class TipiTable
     if (messagePath != null) {
       if (messagePath.startsWith("'") && messagePath.endsWith("'")) {
         messagePath = messagePath.substring(1, messagePath.length() - 1);
-//        System.err.println("MESSAGEPATH: "+messagePath);
       }
     }
     super.load(elm, instance, context);
@@ -124,13 +106,11 @@ public class TipiTable
       if (child.getName().equals("column")) {
         ignoreColumns = false;
         String label = (String) child.getAttribute("label");
-//        columnLabelList.add(label);
         String name = (String) child.getAttribute("name");
         String editableString = (String) child.getAttribute("editable");
         String aggr = child.getStringAttribute("aggregate");
         String typehint = child.getStringAttribute("typeHint");
         if (aggr != null) {
-//          System.err.println("Found aggregate: " + aggr);
           addAggregate(i, aggr);
         }
         boolean editable = "true".equals(editableString);

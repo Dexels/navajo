@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry exported="true" kind="src" path="/NavajoDocument"/>
-	<classpathentry exported="true" kind="src" path="/NavajoClient"/>
-	<classpathentry exported="true" kind="src" path="/NavajoSwingClient"/>
-	<classpathentry exported="true" kind="src" path="/NavajoTipi"/>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="src" path="/Navajo"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/DexelsVersionControl"/>
-	<classpathentry kind="lib" path="lib/calpahtml.jar"/>
-	<classpathentry kind="output" path="classes"/>
+	<classpathentry path="/NavajoDocument" exported="true" kind="src"/>
+	<classpathentry path="/NavajoClient" exported="true" kind="src"/>
+	<classpathentry path="/NavajoSwingClient" exported="true" kind="src"/>
+	<classpathentry path="/NavajoTipi" exported="true" kind="src"/>
+	<classpathentry path="src" kind="src"/>
+	<classpathentry path="org.eclipse.jdt.launching.JRE_CONTAINER" kind="con"/>
+	<classpathentry path="/Navajo" kind="src"/>
+	<classpathentry path="/DexelsVersionControl" combineaccessrules="false" kind="src"/>
+	<classpathentry path="lib/calpahtml.jar" kind="lib"/>
+	<classpathentry path="lib/liquidlnf.jar" kind="lib"/>
+	<classpathentry path="lib/alloy.jar" kind="lib"/>
+	<classpathentry path="classes" kind="output"/>
 </classpath>

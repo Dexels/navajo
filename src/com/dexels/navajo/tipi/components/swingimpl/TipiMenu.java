@@ -62,6 +62,7 @@ public class TipiMenu
 
   public void setComponentValue(String name, Object object) {
     if ("text".equals(name)) {
+    	System.err.println("Setting menu label to: "+object);
       myMenu.setText( (String) object);
       return;
     }

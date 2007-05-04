@@ -226,7 +226,7 @@ public class TipiDialog
     final boolean amIEventThread = SwingUtilities.isEventDispatchThread();
     super.performComponentMethod(name, compMeth, event);
     if (name.equals("show")) {
-      runASyncInEventThread(new Runnable() {
+      SwingUtilities.invokeLater(new Runnable() {
         public void run() {
           if (myDialog == null) {
             constructDialog();

@@ -52,6 +52,7 @@ public class TipiSwingHelper
       c.setToolTipText( (String) object);
     }
     if (name.equals("border")) {
+   
       c.setBorder( (Border) object);
     }
     if (name.equals("visible")) {
