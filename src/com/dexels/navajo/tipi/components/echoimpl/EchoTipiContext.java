@@ -128,10 +128,18 @@ public class EchoTipiContext extends TipiContext {
         System.err.println("Servletname: "+ con.getServlet().getServletName());
         URL u = new URL(url);
 //        getServletContext().
-        String base = (String) con.getServlet().getInitParameter("baseURL");
-        System.err.println("Base ATTR: "+base);
+        
 
-        URL rootURL =  new URL(u.getProtocol(),u.getHost(),u.getPort(),base+"/"+path);
+        String contextname = con.getRequest().getContextPath();
+        // deprecated the init. The context path should work
+//        String base = (String) con.getServlet().getInitParameter("baseURL");
+//        if(base==null) {
+//        	base=contextname;
+//        }
+//      System.err.println("Base ATTR: "+base);
+
+        URL rootURL =  new URL(u.getProtocol(),u.getHost(),u.getPort(),contextname+"/dynamic/"+path);
+        System.err.println("Resulting url: "+u.toString());
         return rootURL;
         
     }
@@ -143,16 +151,25 @@ public class EchoTipiContext extends TipiContext {
         String url = req.getRequestURL().toString();
         URL u = new URL(url);
 //        getServletContext().
+ 
+        String contextname = con.getRequest().getContextPath();
+        // deprecated the init. The context path should work
         String base = (String) con.getServlet().getInitParameter("baseURL");
-        System.err.println("Base ATTR: "+base);
-
+        if(base==null) {
+        	base=contextname;
+        }
         URL rootURL =  new URL(u.getProtocol(),u.getHost(),u.getPort(),base);
         return rootURL;
     }
 
     public File getDynamicResourceBaseDir() {
-        File ff = new File(getServletContext().getRealPath("/dynamic"));
-
+        Connection con = WebRenderServlet.getActiveConnection();
+//   .     HttpServletRequest req = con.getRequest();
+        String contextname = con.getRequest().getContextPath();
+        System.err.println("CONTEXTNAME: "+contextname);
+        String pathString = "/dynamic";
+        String realPath = getServletContext().getRealPath(pathString);
+		File ff = new File(realPath);
         if (!ff.exists()) {
             ff.mkdirs();
         }

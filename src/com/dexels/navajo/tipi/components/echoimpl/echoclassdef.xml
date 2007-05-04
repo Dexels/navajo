@@ -515,7 +515,7 @@
             <value direction="in" name="h" type="integer"/>
             <value direction="in" name="background" type="color"/>
             <value direction="in" name="foreground" type="color"/>
-            <value direction="in" name="border" type="border"/>
+            <value direction="in" name="border" type="object"/>
         </values>
         <methods/>
     </tipiclass>
@@ -615,7 +615,7 @@
             <value direction="in" name="visible" type="boolean"/>
             <value direction="in" name="background" type="color"/>
             <value direction="in" name="foreground" type="color"/>
-            <value direction="in" name="border" type="border"/>
+            <value direction="in" name="border" type="object"/>
         </values>
         <methods/>
     </tipiclass>
@@ -712,7 +712,7 @@
             <value direction="inout" name="propertyname" type="string"/>
             <value direction="inout" name="background" type="color"/>
             <value direction="inout" name="foreground" type="color"/>
-            <value direction="inout" name="border" type="border"/>
+            <value direction="inout" name="border" type="string"/>
             <value direction="inout" name="font" type="font"/>
             <value direction="inout" name="tooltip" type="string"/>
             <value diretction="inout" name="propertyValue" type="object"/>
@@ -963,6 +963,7 @@
     
     <tipi-parser name="extent" parser="com.dexels.navajo.tipi.components.echoimpl.parsers.ExtentParser" type="nextapp.echo2.app.Extent"/>
     <tipi-parser name="border" parser="com.dexels.navajo.tipi.components.echoimpl.parsers.BorderParser" type="java.lang.Object"/>
+    <tipi-parser name="labelborder" parser="com.dexels.navajo.tipi.components.echoimpl.parsers.LabelBorderParser" type="java.lang.Object"/>
     <tipi-parser name="font" parser="com.dexels.navajo.tipi.components.echoimpl.parsers.FontParser" type="nextapp.echo2.app.Font"/>
     <tipi-parser name="color" parser="com.dexels.navajo.tipi.components.echoimpl.parsers.ColorParser" type="nextapp.echo2.app.Color"/>
     <tipi-parser name="paint" parser="com.dexels.navajo.tipi.components.echoimpl.parsers.PaintParser" type="java.lang.Object"/>

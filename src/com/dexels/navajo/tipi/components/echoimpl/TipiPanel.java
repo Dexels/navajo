@@ -1,5 +1,7 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
+import com.dexels.navajo.tipi.components.echoimpl.impl.Styles;
+
 import nextapp.echo2.app.Border;
 import nextapp.echo2.app.Color;
 import nextapp.echo2.app.Component;
@@ -7,7 +9,10 @@ import nextapp.echo2.app.ContentPane;
 import nextapp.echo2.app.Extent;
 import nextapp.echo2.app.Insets;
 import nextapp.echo2.app.Label;
+import nextapp.echo2.app.LayoutData;
+import nextapp.echo2.app.Style;
 import echopointng.ContainerEx;
+import echopointng.GroupBox;
 import echopointng.LabelEx;
 import echopointng.able.Positionable;
 
@@ -49,19 +54,23 @@ public class TipiPanel extends TipiEchoDataComponentImpl {
         return myContainer;
     }
 
- public void addToContainer(Object o, Object contraints){
-	 System.err.println("############ Adding to PANEL.");
-	 if(layoutComponent!=null) {
-		 System.err.println("############ Layout found: "+layoutComponent.getClass());		 
-	 }
-	 System.err.println("############ Comeponet found: "+getContainer());
-	 System.err.println("############ Inner found: "+getInnerComponent());
-	 System.err.println("############ My container: "+myContainer.getComponentCount());
-	 for (int i = 0; i < myContainer.getComponentCount(); i++) {
-		System.err.println("CHILD: "+myContainer.getComponent(i));
-	}
-	 super.addToContainer(o, contraints);
- }
+   public Object getActualComponent() {
+	   return myContainer;
+   }
+
+//public void addToContainer(Object o, Object contraints){
+//	 System.err.println("############ Adding to PANEL.");
+//	 if(layoutComponent!=null) {
+//		 System.err.println("############ Layout found: "+layoutComponent.getClass());		 
+//	 }
+//	 System.err.println("############ Comeponet found: "+getContainer());
+//	 System.err.println("############ Inner found: "+getInnerComponent());
+//	 System.err.println("############ My container: "+myContainer.getComponentCount());
+//	 for (int i = 0; i < myContainer.getComponentCount(); i++) {
+//		System.err.println("CHILD: "+myContainer.getComponent(i));
+//	}
+//	 super.addToContainer(o, contraints);
+// }
     //
 //     public void setContainerLayout(Object l){
 //    
@@ -77,6 +86,30 @@ public class TipiPanel extends TipiEchoDataComponentImpl {
         		return;
             }
         }
+
+        if ("border".equals(name)) {
+          	System.err.println("SET_BORDER_GRIDPANEL: "+object);
+            Component parent = myContainer.getParent();
+            if(parent!=null) {
+            	LayoutData ld = parent.getLayoutData();
+            	parent.remove(myContainer);
+            	GroupBox gb = new GroupBox(""+object);
+            	gb.add(myContainer);
+            	if(ld!=null) {
+            		gb.setLayoutData(ld);
+            	}
+            	parent.add(gb);
+            	setContainer(gb);
+
+            } else {
+            	GroupBox gb = new GroupBox(""+object);
+            	gb.add(myContainer);
+            	setContainer(gb);
+            }
+
+        	
+        	return;
+         }                 
 //        if ("border".equals(name)) {
 //        	if(object instanceof Border) {
 //        		Border border = (Border)object;

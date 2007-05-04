@@ -7,6 +7,7 @@ import nextapp.echo2.app.Color;
 
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiTypeParser;
+import com.dexels.navajo.tipi.internal.DescriptionProvider;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 
 import echopointng.able.Expandable;
@@ -28,7 +29,7 @@ import echopointng.able.Expandable;
  * @author not attributable
  * @version 1.0
  */
-public class BorderParser extends TipiTypeParser {
+public class LabelBorderParser extends TipiTypeParser {
     public Object parse(TipiComponent source, String expression, TipiEvent event) {
         return parseBorder(expression);
     }
@@ -36,7 +37,7 @@ public class BorderParser extends TipiTypeParser {
 //        return parseBorder(s);
 //    }
 
-    public static Object parseBorder(String s) {
+    public Object parseBorder(String s) {
         if(s==null) {
             return null;
         }
@@ -79,7 +80,15 @@ public class BorderParser extends TipiTypeParser {
         }
         if ("titled".equals(borderName)) {
         	System.err.println("RETURNING TITLED BORDER: "+title);
-            return title;
+        	 DescriptionProvider dp = myContext.getDescriptionProvider();
+	
+	       	  if (dp==null) {
+	       		  
+	       		  return "["+title+"]";
+	       	} else {
+	       		return myContext.XMLUnescape(dp.getDescription(title));
+	       	}
+          
             
         }
         // return BorderFactory.createEmptyBorder();

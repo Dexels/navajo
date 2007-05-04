@@ -80,15 +80,5 @@ public int getColumn() {
 	return gridx;
 }
 
-//  public static void main(String[] args) {
-//    XMLElement bert = new CaseSensitiveXMLElement();
-//    bert.setName("Bert");
-//    bert.setAttribute("name", "bert_een");
-//    bert.setAttribute("gridbag", "1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0");
-//    TipiEchoGridBagConstraints bertje = new TipiEchoGridBagConstraints("1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0");
-//  }
 
-//  public String toString() {
-//    return "" + gridx + "," + gridy + "," + gridwidth + "," + gridheight + "," + weightx + "," + weighty + "," + anchor + "," + fill + "," + insets.top + "," + insets.left + "," + insets.bottom + "," + insets.right + "," + ipadx + "," + ipady;
-//  }
 }

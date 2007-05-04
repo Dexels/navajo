@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import nextapp.echo2.app.Component;
+import nextapp.echo2.app.ContentPane;
+import nextapp.echo2.app.LayoutData;
+import nextapp.echo2.app.Style;
+
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Property;
@@ -11,9 +16,11 @@ import com.dexels.navajo.document.Selection;
 
 import com.dexels.navajo.tipi.TipiEventListener;
 import com.dexels.navajo.tipi.actions.PropertyEventListener;
+import com.dexels.navajo.tipi.components.echoimpl.impl.Styles;
 import com.dexels.navajo.tipi.internal.PropertyComponent;
 
 import echopointng.ContainerEx;
+import echopointng.GroupBox;
 
 /**
  * <p>
@@ -53,7 +60,7 @@ public class TipiProperty extends TipiEchoComponentImpl implements PropertyCompo
 
     public void setProperty(Property p) {
         myProperty = p;
-        ((EchoPropertyComponent) getContainer()).setProperty(p);
+        ((EchoPropertyComponent) getActualComponent()).setProperty(p);
     }
 
     public void propertyEventFired(Property p, String eventType) {
@@ -84,11 +91,13 @@ public class TipiProperty extends TipiEchoComponentImpl implements PropertyCompo
 
     public Object createContainer() {
         // myContainer = new ContainerEx();
-        myPropertyComponent = new EchoPropertyComponent();
+    	ContainerEx gb = new ContainerEx();
+
+    	myPropertyComponent = new EchoPropertyComponent();
         myPropertyComponent.setUseLabelForReadOnlyProperties(false);
         myPropertyComponent.addPropertyEventListener(this);
-        // myContainer.add(myPropertyComponent);
-        return myPropertyComponent;
+        gb.add(myPropertyComponent);
+        return gb;
     }
 
     public Object getActualComponent() {
@@ -215,53 +224,69 @@ public class TipiProperty extends TipiEchoComponentImpl implements PropertyCompo
     protected void setComponentValue(String name, Object object) {
         if ("propertyname".equals(name)) {
             myPropertyName = object.toString();
+        	return;
         }
         if ("label_indent".equals(name)) {
-            EchoPropertyComponent me = (EchoPropertyComponent) getContainer();
+            EchoPropertyComponent me = (EchoPropertyComponent) getActualComponent();
             Integer ii = (Integer) object;
             me.setLabelIndent(ii.intValue());
+        	return;
         }
         if ("width".equals(name)) {
-            EchoPropertyComponent me = (EchoPropertyComponent) getContainer();
+            EchoPropertyComponent me = (EchoPropertyComponent) getActualComponent();
             Integer ii = (Integer) object;
             me.setValueSize(ii.intValue());
+        	return;
+        	   
         }
         if ("showlabel".equals(name)) {
-            EchoPropertyComponent me = (EchoPropertyComponent) getContainer();
+            EchoPropertyComponent me = (EchoPropertyComponent) getActualComponent();
             me.setLabelVisible(((Boolean)object).booleanValue());
+        	return;
+
         }
         if ("selectiontype".equals(name)) {
-            EchoPropertyComponent me = (EchoPropertyComponent) getContainer();
+            EchoPropertyComponent me = (EchoPropertyComponent) getActualComponent();
             try {
                 me.setSelectiontype("" + object);
             } catch (NavajoException e) {
                 e.printStackTrace();
             }
+        	return;
         }
         if ("useLabelsForReadOnly".equals(name)) {
-            EchoPropertyComponent me = (EchoPropertyComponent) getContainer();
+            EchoPropertyComponent me = (EchoPropertyComponent) getActualComponent();
             boolean val = ((Boolean) object).booleanValue();
             me.setUseLabelForReadOnlyProperties(val);
+        	return;
         }
         if ("alwaysUseLabel".equals(name)) {
-            EchoPropertyComponent me = (EchoPropertyComponent) getContainer();
+            EchoPropertyComponent me = (EchoPropertyComponent) getActualComponent();
             boolean val = ((Boolean) object).booleanValue();
             me.setAlwaysUseLabel(val);
+        	return;
         }
         if ("selectionmode".equals(name)) {
-            EchoPropertyComponent me = (EchoPropertyComponent) getContainer();
+            EchoPropertyComponent me = (EchoPropertyComponent) getActualComponent();
             boolean val = ((Boolean) object).booleanValue();
             me.setUseCheckBoxes(val);
-            
+        	return;
         }
         if ("memoRowCount".equals(name)) {
             myPropertyComponent.setMemoRowCount(((Integer) object).intValue());
+        	return;
         }
         if ("memoColumnCount".equals(name)) {
             myPropertyComponent.setMemoColumnCount(((Integer) object).intValue());
+        	return;
         }
         if ("checkboxGroupColumnCount".equals(name)) {
             myPropertyComponent.setCheckboxGroupColumnCount(((Integer) object).intValue());
+        	return;
+        }
+        if ("visibleRowCount".equals(name)) {
+            myPropertyComponent.setMultiRowCount(((Integer) object).intValue());
+        	return;
         }
         // if("verticalScrolls".equals(name)) {
         // setVerticalScrolls(((Boolean) object).booleanValue());
@@ -271,10 +296,31 @@ public class TipiProperty extends TipiEchoComponentImpl implements PropertyCompo
         // }
         if ("capitalization".equals(name)) {
             myPropertyComponent.setCapitalization( (String) object);
-         }
+        	return;
+        	   
+        }
 
         if ("propertyValue".equals(name)) {
             myPropertyComponent.setPropertyValue( object);
+        	return;
+        }
+        
+        if ("border".equals(name)) {
+        	Component parent = myPropertyComponent.getParent();
+        	LayoutData ld = parent.getLayoutData();
+        	parent.remove(myPropertyComponent);
+        	GroupBox gb = new GroupBox(""+object);
+        	Style ss = Styles.DEFAULT_STYLE_SHEET.getStyle(gb.getClass(), "Default");
+            gb.setStyle(ss);
+            
+        	gb.add(myPropertyComponent);
+        	parent.add(gb);
+        	if(ld!=null) {
+        		gb.setLayoutData(ld);
+        	}
+        	myPropertyComponent.setPropertyValue( object);
+        	setContainer(gb);
+        	return;
          }
         
         

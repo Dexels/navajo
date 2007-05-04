@@ -74,7 +74,7 @@ public abstract class TipiEchoDataComponentImpl extends TipiDataComponentImpl {
 
       	System.err.println("\n********************************\nAttempting to add component: "+c.getClass()+" to: "+getClass()+"\n********************************\n");
       	Component cc;
-        cc = (Component) getInnerComponent();
+        cc = (Component) getActualComponent();
         Component child = (Component) c;
 //        if (layoutComponent != null) {
 //            cc = layoutComponent;

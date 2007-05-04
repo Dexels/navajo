@@ -1,5 +1,6 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
+import tucana.echo2.app.ModalDimmer;
 import nextapp.echo2.app.*;
 import nextapp.echo2.app.layout.GridLayoutData;
 import nextapp.echo2.extras.app.MenuBarPane;
@@ -54,15 +55,34 @@ public class TipiFrame extends TipiEchoDataComponentImpl {
 //	private ContainerEx leftPlaceHolder;
 
 //	private Grid myWindowGrid;
+	private ModalDimmer dimmer;
 
     public TipiFrame() {
-    }
+		dimmer = new ModalDimmer();
+		dimmer.setDimOpacity((float)0.5);
+		dimmer.setDimAnimated(false);
+		dimmer.setVisible(false);
+   }
 
     public Window getWindow() {
 
     	return myWindow;
     }
-
+//    public void setDimmer(Component w) {
+//    	// Watch this.
+//	     w.add(dimmer);
+//	}
+	
+//	public void stopDimmer() {
+//		if(dimmer==null) {
+//			return;
+//		}
+//    	// Watch this.
+//		final Window w = (Window) getTopLevel();
+//        w.getContent().remove(dimmer);
+//        dimmer=null;
+//	}
+	
     public Object createContainer() {
         myWindow = new Window();
         contentPane = new ContentPane();
@@ -72,6 +92,7 @@ public class TipiFrame extends TipiEchoDataComponentImpl {
         contentPane.add(mySplit);
         menuPane = new ContentPane();
         realContent = new ContentPane();
+        realContent.add(dimmer);
 //        realContent.setBackground(new Color(255,255,0));
 //        mySplit.setBackground(new Color(200,100,0));
         mySplit.add(menuPane); 
@@ -79,23 +100,6 @@ public class TipiFrame extends TipiEchoDataComponentImpl {
         mySplit.setSeparatorHeight(new Extent(0,Extent.PX));
         mySplit.setSeparatorPosition(new Extent(0,Extent.PX));
 
-        
-//        MenuBarPane b = new MenuBarPane();
-//        DefaultMenuModel defaultMenuModel = new DefaultMenuModel();
-//
-//        b.setModel(defaultMenuModel);
-//        DefaultMenuModel fileMenuModel = new DefaultMenuModel(null, "File");
-//      fileMenuModel.addItem(new DefaultOptionModel("new", "New", null));
-//      fileMenuModel.addItem(new DefaultOptionModel("open", "Open", null));
-//      DefaultMenuModel openRecentMenuModel = new DefaultMenuModel(null, "Open Recent");
-//      openRecentMenuModel.addItem(new DefaultOptionModel("open-recent-1", "Hotel.pdf", null));
-//      openRecentMenuModel.addItem(new DefaultOptionModel("open-recent-2", "Alpha.txt", null));
-//
-//      defaultMenuModel.addItem(fileMenuModel);
-//      defaultMenuModel.addItem(openRecentMenuModel);
-//      
-//        menuPane.add(b);
-        
         return myWindow;
 
     }

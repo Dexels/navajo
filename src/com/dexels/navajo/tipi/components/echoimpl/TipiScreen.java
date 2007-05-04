@@ -1,5 +1,6 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
+import tucana.echo2.app.ModalDimmer;
 import nextapp.echo2.app.Component;
 import nextapp.echo2.app.Window;
 
@@ -26,14 +27,13 @@ import com.dexels.navajo.tipi.TipiContext;
 
 public class TipiScreen extends TipiEchoDataComponentImpl {
     // private Map componentMap = new HashMap();
-
     public TipiScreen() {
         setId("init");
     }
-
+   
     public Object createContainer() {
         myContext.setDefaultTopLevel(this);
-        return null;
+         return null;
     }
 
     // public Object createContainer() {
@@ -130,4 +130,8 @@ public class TipiScreen extends TipiEchoDataComponentImpl {
         }
         super.addComponent(tc, context, constraints);
     }
+	public void setWindow(Window window) {
+//	     setDimmer();
+	     	
+	}
 }

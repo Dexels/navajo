@@ -11,6 +11,8 @@ import nextapp.echo2.app.Component;
 import nextapp.echo2.app.Extent;
 import nextapp.echo2.app.Grid;
 import nextapp.echo2.app.Insets;
+import nextapp.echo2.app.Label;
+import nextapp.echo2.app.LayoutData;
 import nextapp.echo2.app.PaneContainer;
 import nextapp.echo2.app.layout.GridLayoutData;
 import echopointng.ContainerEx;
@@ -39,7 +41,7 @@ public class TipiGridPanel extends TipiEchoDataComponentImpl {
 
     private Grid gridComponent;
 
-    // private GroupBox myContainer;
+     private GroupBox myContainer;
     // private GroupBox myBox;
 
     private int currentx = 0;
@@ -50,21 +52,19 @@ public class TipiGridPanel extends TipiEchoDataComponentImpl {
 
     private final Set availabilityMatrix = new HashSet();
 
+	private Border myBorder;
+
     public TipiGridPanel() {
     }
 
     public Object createContainer() {
-        // myContainer = new GroupBox((String)null);
+        myContainer = new GroupBox("Oega!");
+        myContainer.setTitleLabel(null);
+        myBorder = myContainer.getBorder();
+        myContainer.setBorder(new Border(0,new Color(0,0,0),Border.STYLE_NONE));
         gridComponent = new Grid();
-//        gridComponent.setStyleName("Default");
-         
-        
-        // myContainer.setBorder(null);
-        // gridComponent = myContainer;
-        // myContainer.setBorder(null);
-        // myContainer.add(gridComponent);
-
-        return gridComponent;
+        myContainer.add(gridComponent);
+        return myContainer;
     }
 
     public Object getActualComponent() {
@@ -97,8 +97,8 @@ public class TipiGridPanel extends TipiEchoDataComponentImpl {
             ce.add(c);
         	if (constr != null) {
                 GridLayoutData cons = parseGridConstraints(constr, ce);
-                c.setLayoutData(cons);
-//            	System.err.println("Height: "+cons.);
+                ce.setLayoutData(cons);
+            	System.err.println("Height: "+cons);
             }
 //        	ce.setHeight(new Extent(200,Extent.PX));
             
@@ -134,8 +134,15 @@ public class TipiGridPanel extends TipiEchoDataComponentImpl {
         return myData;
     }
 
+    public void setRowHeight(int rowIndex, Extent height) {
+    	System.err.println("Setting row height, row: "+rowIndex+" to:"+height.toString());
+    	gridComponent.setRowHeight(rowIndex, height);
+    }
+
+    
     private void setProperty(String key, String value, GridLayoutData myData, Component c) {
-        if ("align".equals(key)) {
+    	System.err.println("Setting layoutdata: "+key+" value: "+value);
+    	if ("align".equals(key)) {
 //        	System.err.println("Alignment: "+value);
             myData.setAlignment(parseAlignment(value));
         }
@@ -159,7 +166,7 @@ public class TipiGridPanel extends TipiEchoDataComponentImpl {
 				Sizeable s = (Sizeable)c;
 				s.setHeight(new Extent(height,Extent.PX));
 			}
-            gridComponent.setRowHeight(currenty, new Extent(height, Extent.PX));
+            setRowHeight(currenty, new Extent(height, Extent.PX));
             // GridLayoutData gd = new GridLayoutData();
             // addHeightStrut(myD, height, c);
 
@@ -234,6 +241,41 @@ public class TipiGridPanel extends TipiEchoDataComponentImpl {
             gridComponent.setHeight(new Extent(height, Extent.PX));
             return;
         }
+        
+        if ("border".equals(name)) {
+          	System.err.println("SET_BORDER_GRIDPANEL: "+object);
+            Component parent = gridComponent.getParent();
+            if(parent!=null) {
+            	System.err.println("PARENT:::"+parent.getClass());
+            } else {
+            	System.err.println("NULLPARENT::BORDER");
+            }
+            	//            	LayoutData ld = parent.getLayoutData();
+//            	parent.remove(gridComponent);
+//            	GroupBox gb = new GroupBox(""+object);
+//            	gb.add(gridComponent);
+//            	if(ld!=null) {
+//            		gb.setLayoutData(ld);
+//            	}
+//            	parent.add(gb);
+//            	setContainer(gb);
+//
+//            } else {
+//            	GroupBox gb = new GroupBox(""+object);
+//            	gb.add(gridComponent);
+//            	setContainer(gb);
+//            }
+
+            if(object instanceof String) {
+                myContainer.setTitleLabel(new Label(""+object));
+                myContainer.setBorder(myBorder);
+                
+                //                myContainer.setBorder(new Border());
+          
+            }
+        	
+        	return;
+         }         
         // if ("border".equals(name)) {
         // System.err.println("Parsing border!!!!!!");
         // if (object!=null && object instanceof String) {
@@ -304,9 +346,11 @@ public class TipiGridPanel extends TipiEchoDataComponentImpl {
 
     private void advance() {
         while (isOccupied(currentx, currenty)) {
-            if (currentx == gridwidth - 1) {
+        	System.err.println("Currentx: "+currentx+" currenty: "+currenty+" gridwidth: "+gridwidth);
+            if (currentx >= gridwidth - 1) {
                 currentx = 0;
                 currenty++;
+                System.err.println("Advancing row. Row now: "+currenty);
             } else {
                 currentx++;
             }

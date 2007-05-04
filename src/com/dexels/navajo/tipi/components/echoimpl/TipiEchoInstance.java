@@ -149,6 +149,7 @@ public class TipiEchoInstance extends ApplicationInstance {
         if(w==null) {
         	throw new RuntimeException("No toplevel found!");
         }
+        echo.setWindow(w.getWindow());
         return w.getWindow();
     }
 

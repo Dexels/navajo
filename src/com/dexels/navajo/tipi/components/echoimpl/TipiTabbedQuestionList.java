@@ -72,18 +72,18 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
         final TipiComponent me = this;
         myTabbedPane = new TabbedPane();
 //        myTabbedPane.setStyleName("Default");
-        defaultTabModel = new DefaultTabModel();
-        defaultTabModel.setSelectedBackground(new Color(255, 255, 255));
-        defaultTabModel.setSelectedForeground(new Color(0, 0, 0));
-        defaultTabModel.setForeground(new Color(153, 153, 153));
-        defaultTabModel.setRolloverForeground(new Color(68, 68, 68));
-        defaultTabModel.setSelectedRolloverForeground(new Color(68, 68, 68));
-        defaultTabModel.setSelectedFont(new Font(Font.ARIAL, Font.BOLD, new Extent(10, Extent.PT)));
-        defaultTabModel.setFont(new Font(Font.ARIAL, Font.PLAIN, new Extent(10, Extent.PT)));
+//        defaultTabModel = new DefaultTabModel();
+//        defaultTabModel.setSelectedBackground(new Color(255, 255, 255));
+//        defaultTabModel.setSelectedForeground(new Color(0, 0, 0));
+//        defaultTabModel.setForeground(new Color(153, 153, 153));
+//        defaultTabModel.setRolloverForeground(new Color(68, 68, 68));
+//        defaultTabModel.setSelectedRolloverForeground(new Color(68, 68, 68));
+//        defaultTabModel.setSelectedFont(new Font(Font.ARIAL, Font.BOLD, new Extent(10, Extent.PT)));
+//        defaultTabModel.setFont(new Font(Font.ARIAL, Font.PLAIN, new Extent(10, Extent.PT)));
 //        defaultTabModel.setRolloverFont(new Font(Font.ARIAL, Font.BOLD, new Extent(10, Extent.PT)));
-        defaultTabModel.setBackground(new Color(255, 255, 255));
-        defaultTabModel.setRolloverBackground(new Color(255, 255, 255));
-        defaultTabModel.setSelectedRolloverBackground(new Color(255, 255, 255));
+//        defaultTabModel.setBackground(new Color(255, 255, 255));
+//        defaultTabModel.setRolloverBackground(new Color(255, 255, 255));
+//        defaultTabModel.setSelectedRolloverBackground(new Color(255, 255, 255));
         myTabbedPane.setModel(defaultTabModel);
         TipiHelper th = new EchoTipiHelper();
         th.initHelper(this);
@@ -162,8 +162,8 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
             System.err.println("Sh!34#@$!");
             return;
         }
-        ButtonEx selected = (ButtonEx) defaultTabModel.getTabAt(i, true);
-        selected.setIcon(valid ? validImage : inValidImage);
+//        ButtonEx selected = (ButtonEx) defaultTabModel.getTabAt(i, true);
+//        selected.setIcon(valid ? validImage : inValidImage);
     }
 
     public void setComponentValue(String name, Object object) {

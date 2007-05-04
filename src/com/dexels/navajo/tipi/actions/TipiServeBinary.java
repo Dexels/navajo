@@ -37,8 +37,6 @@ public class TipiServeBinary extends TipiAction {
     public TipiServeBinary() {
     }
 
-    public static void main(String[] args) {
-    }
     public void execute(TipiEvent e) {
         try {
         	 EchoTipiContext ee = (EchoTipiContext)myContext;
@@ -65,11 +63,13 @@ public class TipiServeBinary extends TipiAction {
             String extension = b.getExtension();
             String random = new String(""+Math.random()).substring(2,7);
             File xx = new File(baseDir,"binary"+random+"."+extension);
+            System.err.println("CREATING FILE: "+xx.getAbsolutePath());
+            System.err.println("BINARY SIZE: "+b.getLength());
             FileOutputStream fos = new FileOutputStream(xx);
             b.write(fos);
             fos.flush();
             fos.close();
-            URL result = ee.getDynamicResourceBaseUrl(baseDir.getName()+"/"+xx.getName());
+            URL result = ee.getDynamicResourceBaseUrl(xx.getName());
 //            URL result = new URL(baseUrl.toString()+"/binary"+random+"."+extension);
             Command brc = new BrowserOpenWindowCommand(result.toString(),"reports"+random,"_blank");
             ApplicationInstance.getActive().enqueueCommand(brc);

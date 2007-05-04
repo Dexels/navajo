@@ -17,6 +17,7 @@ import nextapp.echo2.app.event.DocumentListener;
 import nextapp.echo2.app.filetransfer.UploadEvent;
 import nextapp.echo2.app.filetransfer.UploadListener;
 import nextapp.echo2.app.filetransfer.UploadSelect;
+import nextapp.echo2.app.layout.ColumnLayoutData;
 import nextapp.echo2.app.layout.GridLayoutData;
 import nextapp.echo2.app.list.ListSelectionModel;
 import nextapp.echo2.app.table.TableCellRenderer;
@@ -27,6 +28,7 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.types.*;
 import com.dexels.navajo.tipi.actions.PropertyEventListener;
+import com.dexels.navajo.tipi.actions.TipiShowInfo;
 import com.dexels.navajo.tipi.components.echoimpl.impl.BinaryPropertyImage;
 import com.dexels.navajo.tipi.components.echoimpl.impl.MessageTable;
 import com.dexels.navajo.tipi.components.echoimpl.impl.Styles;
@@ -81,6 +83,8 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 	private int memoRowCount = 0;
 
 	private String myCapitalization = null;
+
+	private int listboxRowCount;
 
 	private static final Extent PERCENTAGE = new Extent(97,Extent.PERCENT);
 	private static final Extent SMALL_PERCENTAGE = new Extent(50,Extent.PERCENT);
@@ -510,15 +514,18 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
         ll.setId("aap"+new Random(System.currentTimeMillis()).nextDouble());
     	ll.setIcon(new BinaryPropertyImage(p));
 		g.add(ll);
+		ColumnLayoutData cld = new ColumnLayoutData();
+		cld.setHeight(new Extent(15,Extent.PX));
+		cld.setInsets(new Insets(2,2,2,2));
 		UploadSelect bb = new UploadSelect();
 		g.add(bb);
+		bb.setLayoutData(cld);
 		try {
 			bb.addUploadListener(new UploadListener(){
 
 				public void fileUpload(UploadEvent e) {
 					 Binary bb = new Binary( e.getInputStream(),false);
 					 p.setAnyValue(bb);
-
 				}
 
 				public void invalidFileUpload(UploadEvent arg0) {
@@ -812,12 +819,12 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 		tf.setLayoutData(gd);
 	}
 
-	private void createMultiSelect(Property p) throws NavajoException {
-		ListBoxEx lb = new ListBoxEx(p.getAllSelections().toArray());
+	private void createMultiSelect(final Property p) throws NavajoException {
+		final ListBoxEx lb = new ListBoxEx(p.getAllSelections().toArray());
 //	    lb.setStyleName("Default");
 		Style ss = Styles.DEFAULT_STYLE_SHEET.getStyle(lb.getClass(), "Default");
         lb.setStyle(ss);
-        
+        lb.setHeight(new Extent(listboxRowCount+1,Extent.EM));
 		addPropertyComponent(lb);
 		lb.setEnabled(p.isDirIn());
 		if (value_size != 0) {
@@ -833,6 +840,18 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 		}
 		lb.getSelectionModel().addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent ce) {
+				System.err.println("HOOOOOOOOOOOEI!");
+				try {
+					for (int i = 0; i < p.getAllSelections().size(); i++) {
+						Selection current = (Selection) p.getAllSelections().get(i);
+						current.setSelected(lb.isSelectedIndex(i));
+						//					.setSelectedIndex(i, current.isSelected());
+					}
+				} catch (NavajoException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
 				fireTipiEvent("onValueChanged");
 			}
 		});
@@ -915,6 +934,13 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 		}
 	}
 
+	public void setMultiRowCount(int row) {
+		listboxRowCount = row;
+		if (getProperty() != null) {
+			setProperty(getProperty());
+		}
+	}
+	
 	private void createCheckBoxes(final Property p) throws NavajoException {
 		final ContainerEx r = new ContainerEx();
 		
@@ -1236,7 +1262,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 				
 			} else {
 				Style oddRow = Styles.DEFAULT_STYLE_SHEET.getStyle(this.getClass(), "OddRow");
-				setStyle(Styles.DEFAULT_STYLE_SHEET.getStyle(this.getClass(), "OddRow"));
+				setStyle(oddRow);
 			}
 			
 		}
