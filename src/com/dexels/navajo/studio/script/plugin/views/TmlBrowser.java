@@ -6,6 +6,8 @@
  */
 package com.dexels.navajo.studio.script.plugin.views;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 import org.eclipse.core.resources.*;
@@ -15,16 +17,23 @@ import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.contentassist.*;
 import org.eclipse.jface.util.*;
 import org.eclipse.jface.viewers.*;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.*;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.*;
+import org.eclipse.ui.dialogs.ContainerSelectionDialog;
+import org.eclipse.ui.dialogs.FileSelectionDialog;
+import org.eclipse.ui.dialogs.ResourceSelectionDialog;
+import org.eclipse.ui.dialogs.SaveAsDialog;
 import org.eclipse.ui.forms.widgets.*;
 import org.eclipse.ui.ide.*;
+import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.part.*;
 
+import com.dexels.navajo.birt.BirtUtils;
 import com.dexels.navajo.client.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.parser.DefaultExpressionEvaluator;
@@ -40,9 +49,11 @@ public class TmlBrowser extends BaseNavajoView implements INavajoScriptListener,
     private TextViewer myService;
     private Button goButton;
     private Button backButton;
+    private ComboViewer localeBox;
     private Button forwardButton;
     private Button reloadButton;
     private Button sourceButton;
+    private Button createReport;
    private String currentService = null;
     private String lastInit = null;
    private final Stack historyList = new Stack();
@@ -86,7 +97,7 @@ public class TmlBrowser extends BaseNavajoView implements INavajoScriptListener,
 //        headComp.setLayout(new FillLayout(SWT.HORIZONTAL));
 
         TableWrapLayout twl = new TableWrapLayout();
-        twl.numColumns=8;
+        twl.numColumns=9;
         headComp.setLayout(twl);
         Label l = new Label(headComp,SWT.NONE);
         l.setBackground(new Color(Display.getCurrent(), 240, 240, 220));
@@ -140,6 +151,15 @@ public class TmlBrowser extends BaseNavajoView implements INavajoScriptListener,
             }});
         
         
+        localeBox = new ComboViewer(headComp);
+        localeBox.getCombo().setLayoutData(new TableWrapData(TableWrapData.LEFT,TableWrapData.FILL_GRAB));
+        localeBox.addSelectionChangedListener(new ISelectionChangedListener(){
+            public void selectionChanged(SelectionChangedEvent event) {
+            	NavajoScriptPluginPlugin.getDefault().setSelectedLocale((String)((IStructuredSelection)event.getSelection()).getFirstElement());
+            }});
+
+        localeBox.add(NavajoScriptPluginPlugin.getDefault().getLocales());
+        
         backButton = new Button(headComp,SWT.PUSH);
         backButton.setText("<");
         backButton.setLayoutData(new TableWrapData(TableWrapData.LEFT,TableWrapData.FILL_GRAB));
@@ -184,7 +204,20 @@ public class TmlBrowser extends BaseNavajoView implements INavajoScriptListener,
             public void widgetDefaultSelected(SelectionEvent e) {
             }});
 
-               
+        
+        createReport = new Button(headComp,SWT.PUSH);
+        createReport.setText("Create BIRT");
+        createReport.setEnabled(false);
+        createReport.setLayoutData(new TableWrapData(TableWrapData.LEFT,TableWrapData.FILL_GRAB));
+        createReport.addSelectionListener(new SelectionListener() {
+            public void widgetSelected(SelectionEvent e) {
+                createBirt();
+            }
+
+            public void widgetDefaultSelected(SelectionEvent e) {
+            }});
+        
+        createReport.setEnabled(false);
         forwardButton.setEnabled(false);
         backButton.setEnabled(false);
         reloadButton.setEnabled(false);
@@ -205,7 +238,45 @@ public class TmlBrowser extends BaseNavajoView implements INavajoScriptListener,
             }});
         }
 
-    protected void showSource() {
+    protected void createBirt() {
+		// TODO Auto-generated method stub
+//		FileDialog fd = new FileDialog(formComposite.getShell());
+    	SaveAsDialog   sd = new SaveAsDialog (formComposite.getShell());
+//		fd.setText("Choose report name");
+//		sd.showClosedProjects(false);
+//		fd.setFileName("NewReport.rptdesign");
+    	sd.setOriginalName(currentService);
+    	
+    	int result = sd.open();
+		if(result==Window.CANCEL) {
+			return;
+		}
+		IPath ip = sd.getResult();
+		IPath ipp = ip.addFileExtension("rptdesign");
+		IFile iff = ResourcesPlugin.getWorkspace().getRoot().getFile(ipp);
+		
+		String rez = iff.getLocation().toString();
+		System.err.println("Result: "+rez);
+		BirtUtils b = new BirtUtils();
+		File createdFile = new File(rez);
+		try {
+			b.createEmptyReport(myCurrentNavajo, currentService, createdFile);
+			iff.refreshLocal(0, null);
+			IDE.openEditor(NavajoScriptPluginPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage(), iff);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NavajoException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (CoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+    }
+
+	protected void showSource() {
 
         IWorkbenchWindow window = NavajoScriptPluginPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow();
         NavajoInput nai = new NavajoInput(currentService,myCurrentNavajo);
@@ -271,6 +342,7 @@ public class TmlBrowser extends BaseNavajoView implements INavajoScriptListener,
         }
     }
 
+    
     public void dispose() {
         formComposite.removeNavajoScriptListener(this);
         NavajoScriptPluginPlugin.getDefault().removeServerEntryListener(this);
@@ -377,8 +449,9 @@ public class TmlBrowser extends BaseNavajoView implements INavajoScriptListener,
                 
                 System.err.println("Setting NAVAJO TO SCRIPT: "+currentService);
                    myCurrentNavajo = n;
-                   sourceButton.setEnabled(true);
-                if (formComposite != null) {
+//                   sourceButton.setEnabled(true);
+                   updateNavigationButtons();
+                   if (formComposite != null) {
                     currentService = scriptName;
                     formComposite.setNavajo(n,null,scriptName);
                    myContainer.layout();
@@ -423,7 +496,9 @@ public class TmlBrowser extends BaseNavajoView implements INavajoScriptListener,
        forwardButton.setEnabled(!futureList.isEmpty());        
        backButton.setEnabled(historyList.size()>1);
        reloadButton.setEnabled(myCurrentNavajo!=null);
-    }
+       createReport.setEnabled(myCurrentNavajo!=null);
+       sourceButton.setEnabled(myCurrentNavajo!=null);
+       }
 
     public void serverEntryChanged(int index) {
     }

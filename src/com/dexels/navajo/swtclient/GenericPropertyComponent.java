@@ -21,11 +21,14 @@ import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.forms.widgets.*;
 
+import sun.reflect.generics.scope.DummyScope;
+
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.types.*;
 import com.dexels.navajo.parser.*;
 import com.dexels.navajo.studio.script.plugin.*;
 import com.gface.date.*;
+import com.sun.org.apache.bcel.internal.generic.GETSTATIC;
 
 /**
  * @author Administrator
@@ -120,6 +123,7 @@ public class GenericPropertyComponent {
             // myLabel = toolkit.createLabel(currentComposite, "-");
             if (labelShown) {
                 myLabel = new Label(currentComposite, SWT.LEFT);
+                myLabel.setToolTipText(myProperty.getDescription());
             }
 
             // currentComposite = toolkit.createComposite(myParent);
@@ -162,6 +166,7 @@ public class GenericPropertyComponent {
         }
         if (Property.CLOCKTIME_PROPERTY.equals(myProperty.getType())) {
             createOtherProperty(false);
+//            createClocktimeProperty();
             return;
         }
         if (Property.BINARY_PROPERTY.equals(myProperty.getType())) {
@@ -371,6 +376,8 @@ public class GenericPropertyComponent {
         ttt.setSize(100, 20);
         ttt.setEnabled(myProperty.isDirIn());
         ttt.setText(value);
+        ttt.setToolTipText(myProperty.getDescription());
+
         ttt.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL));
         ttt.addFocusListener(new FocusListener() {
 
@@ -414,6 +421,8 @@ public class GenericPropertyComponent {
         ttt.setSize(100, 20);
         ttt.setEnabled(myProperty.isDirIn());
         ttt.setText(value);
+        ttt.setToolTipText(myProperty.getDescription());
+
         final DatePickerCombo dp = new DatePickerCombo(subComponent, SWT.BORDER | SWT.SINGLE);
         ttt.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL));
         dp.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL));
@@ -474,7 +483,8 @@ public class GenericPropertyComponent {
 
     private void createClocktimeProperty() {
         // Not used (yet)
-        HourSelectionCombo hsc = new HourSelectionCombo(currentComposite, SWT.BORDER);
+        final HourSelectionCombo hsc = new HourSelectionCombo(currentComposite, SWT.BORDER);
+        hsc.setMinuteInterval(1);
         if (!(myProperty.getTypedValue() instanceof ClockTime)) {
             return;
         }
@@ -486,8 +496,19 @@ public class GenericPropertyComponent {
         if (dd == null) {
             return;
         }
-        Calendar c = Calendar.getInstance();
-        c.setTime(dd);
+//        Calendar c = Calendar.getInstance();
+//        c.setTime(dd);
+        hsc.setTime(dd);
+        System.err.println("Adding listener to component: "+hsc.hashCode());
+        hsc.addDateSelectionListener(new DateSelectionListener(){
+
+			public void dateSelected(DateSelectedEvent d) {
+				System.err.println("Source: "+d.getSource());
+				System.err.println("Date selected: "+d);
+				System.err.println("Component hash: "+hsc.hashCode());
+				myProperty.setValue(new ClockTime(d.date));
+			}});
+        hsc.setToolTipText(myProperty.getDescription());
     }
 
     private void createBooleanProperty() {
@@ -495,6 +516,8 @@ public class GenericPropertyComponent {
         String value = myProperty.getValue();
         b.setEnabled(myProperty.isDirIn());
         b.setSelection("true".equals(value));
+        b.setToolTipText(myProperty.getDescription());
+
         b.addSelectionListener(new SelectionListener() {
             public void widgetSelected(SelectionEvent e) {
                 myProperty.setAnyValue(new Boolean(b.getSelection()));
@@ -513,19 +536,31 @@ public class GenericPropertyComponent {
     private void createSelectionProperty() {
         final Combo ttt = new Combo(currentComposite, SWT.DROP_DOWN);
         currentControl = ttt;
+        ttt.setToolTipText(myProperty.getDescription());
+
         // toolkit.adapt(ttt,true,true);
         try {
             final ArrayList al = myProperty.getAllSelections();
-//            ttt.add("-");
+            boolean hasDummy = false;
             for (Iterator iter = al.iterator(); iter.hasNext();) {
-                Selection element = (Selection) iter.next();
-                ttt.add(element.getName());
+            	Selection element = (Selection) iter.next();
+            	if (Selection.DUMMY_ELEMENT.equals(element.getValue())) {
+					hasDummy = true;
+				}
+            	ttt.add(element.getName());
             }
+            if (!hasDummy) {
+                ttt.add("-");
+			}
+//            for (Iterator iter = al.iterator(); iter.hasNext();) {
+//                Selection element = (Selection) iter.next();
+//                ttt.add(element.getName());
+//            }
             boolean hasSel = false;
             for (int i = 0; i < al.size(); i++) {
                 Selection element = (Selection) al.get(i);
                 if (element.isSelected()) {
-                    ttt.select(i + 1);
+                    ttt.select(i );
                     hasSel = true;
                 }
 
@@ -540,8 +575,9 @@ public class GenericPropertyComponent {
                     for (int i = 0; i < al.size(); i++) {
                         Selection element = (Selection) al.get(i);
                         int index = ttt.getSelectionIndex();
-                        element.setSelected(index - 1 == i);
+                        element.setSelected(index  == i);
                         // ttt.add(element.getName());
+                        System.err.println("Index: "+i+" selected: "+index);
                     }
 
                 }
@@ -569,6 +605,7 @@ public class GenericPropertyComponent {
                 final Selection element = (Selection) iter.next();
                 final Button b = new Button(comp, SWT.CHECK);
                 b.setBackground(new Color(Display.getDefault(), 255, 255, 255));
+                b.setToolTipText(myProperty.getDescription());
 
                 b.setEnabled(myProperty.isDirIn());
                 b.setText(element.getName());

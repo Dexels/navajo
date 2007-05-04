@@ -91,11 +91,11 @@ public class ServerEntry {
         if ("local".equals(protocol)) {
             nc = NavajoClientFactory.createClient("com.dexels.navajo.client.NavajoSocketClient", null);
         }
- 
+        nc.setLocaleCode(NavajoScriptPluginPlugin.getDefault().getSelectedLocale());
         nc.setServerUrl(server);
         nc.setUsername(username);
         nc.setPassword(password);
-        Navajo n = nc.doSimpleSend(input, scriptName);
+        Navajo n = nc.doSimpleSend(input.copy(), scriptName);
         if (n.getMessage("error")==null && n.getMessage("ConditionErrors")==null) {
             System.err.println("Parsed correctly. Adding script to CA");
         }

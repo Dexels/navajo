@@ -31,6 +31,7 @@ import org.eclipse.ui.plugin.*;
 import org.eclipse.ui.texteditor.*;
 import org.osgi.framework.BundleContext;
 
+import com.dexels.navajo.birt.BirtUtils;
 import com.dexels.navajo.client.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.nanoimpl.*;
@@ -83,6 +84,8 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
     public static final String RELATIVE_ADAPTERS_PATH = "/adapters";
 
     public static final String RELATIVE_TML_PATH = "/tml";
+    
+    public static final String RELATIVE_REPORT_PATH = "/reports";    
 
     public static final String NAVAJO_CONFIG_PATH = "/config";
 
@@ -169,12 +172,15 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
     private final Map navajoProjectRootMap = new HashMap();
 
     private final Map serverXmlNavajoMap = new HashMap();
+
+	private String selectedLocale;
     
     public  static final String DOC_IMPL = "com.dexels.navajo.DocumentImplementation";
     public static final String NANO = "com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl";
     public static final String JAXP = "com.dexels.navajo.document.jaxpimpl.NavajoFactoryImpl";
     public static final String QDSAX = "com.dexels.navajo.document.base.BaseNavajoFactoryImpl";
-    
+
+	
     
     
     
@@ -777,7 +783,11 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
     public String getScriptPath(IProject prj)  throws NavajoPluginException{
         return getNavajoRootPath(prj) + NAVAJO_AUXILARY + RELATIVE_SCRIPT_PATH;
     }    
-    
+ 
+    public String getReportPath(IProject prj)  throws NavajoPluginException{
+        return getNavajoRootPath(prj) + NAVAJO_AUXILARY + RELATIVE_REPORT_PATH;
+    }    
+        
     public String getTmlPath(IProject prj)  throws NavajoPluginException{
         return getNavajoRootPath(prj) + NAVAJO_AUXILARY + RELATIVE_TML_PATH;
     }
@@ -836,6 +846,14 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
         return ifff;
     }
 
+    
+    public IFile getReportFile(IProject p, String path)  throws NavajoPluginException{
+        IFolder iff = p.getFolder(getReportPath(p));
+        IFile ifff = iff.getFile(path + ".rptdesign");
+        return ifff;
+    }
+
+    
     public IFile getCompiledScriptFile(IProject p, String path)  throws NavajoPluginException{
         IFolder iff = p.getFolder(getCompilePath(p));
         IFile ifff = iff.getFile(path + ".java");
@@ -1044,7 +1062,8 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
     }
 
     public void showTml(IFile tmlFile,String scriptName) throws Exception {
-        InputStream is = null;
+    	System.err.println("in showtml");
+    	InputStream is = null;
        if (tmlFile == null) {
             return;
         }
@@ -1060,7 +1079,7 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
             if (is==null) {
                 return;
             }
-            
+            System.err.println("Opening tml: "+tmlFile.getLocation());
             n = NavajoFactory.getInstance().createNavajo(is);
             is.close();
         } catch (CoreException e) {
@@ -1084,6 +1103,7 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
     
     
     public void showTml(IFile tmlFile,Navajo n,String scriptName) {
+    	System.err.println("ShowTml: "+tmlFile.getLocation().toString());
         if (currentTmlViewer == null) {
             System.err.println("Opening new viewer");
             logMessage("Opening new viewer: "+tmlFile.getName());
@@ -2180,6 +2200,40 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
         setCurrentSocketLaunch(lll);
     }
 
-    
+//    public void createEmptyReport(Navajo n, File reportFolder, String reportName, String serviceName ) throws IOException, NavajoException {
+    	
+	public void createReport(IProject p, String name, Navajo n, File sourceFile) throws NavajoPluginException, IOException, NavajoException, PartInitException {
+		 IFolder iff = p.getFolder(getReportPath(p));
+		 
+			System.err.println("CREATING REPORT...");
+		BirtUtils b = new BirtUtils();
+		System.err.println("BIRT_UTILS_FOUND");
+		b.createEmptyReport(n, iff.getLocation().toFile(), name);
+		try {
+			iff.refreshLocal(IResource.DEPTH_INFINITE, null);
+		} catch (CoreException e) {
+			e.printStackTrace();
+		}
+		IFile rep = getReportFile(p, name+".rptdesign");
+//		if(rep==null || !rep.exists()) {
+//			showError("Dat ging even mis...");
+//		} else {
+//		}
+		
+		IDE.openEditor(getWorkbench().getActiveWorkbenchWindow().getActivePage(), rep);
+		
+	}
+
+	public String getSelectedLocale() {
+		return selectedLocale;
+	}
+	
+	public void setSelectedLocale(String l) {
+		selectedLocale = l;
+	}
+
+	public String[] getLocales() {
+		return new String[]{"nl","en","fr","es","pt","ar"};
+	}    
     
 }

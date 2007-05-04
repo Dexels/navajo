@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
-<plugin id="com.dexels.plugin" name="NavajoScriptPlugin Plug-in" version="0.98.5"
+<plugin id="com.dexels.plugin" name="NavajoScriptPlugin Plug-in" version="0.98.7"
    provider-name="dexels" class="com.dexels.navajo.studio.script.plugin.NavajoScriptPluginPlugin">
    <runtime>
       <library name="bin/">
@@ -321,6 +321,9 @@
          <action label="Show latest tml.." icon="icons/dexels_searchtml.gif"  tooltip="Shows the latest TML file of this script, if it exists" 
                class="com.dexels.navajo.studio.script.plugin.actions.ShowTml"
                id="com.dexels.plugin.showTml" definitionId="com.dexels.plugin.command.tml"/>
+          <action label="Show input tml.." icon="icons/dexels_searchtml.gif"  tooltip="Shows the latest TML file of this script, if it exists" 
+             class="com.dexels.navajo.studio.script.plugin.actions.ShowGeneratedInputTml"
+             id="com.dexels.plugin.showTml" definitionId="com.dexels.plugin.command.tml"/>               
          <action label="Edit latest tml.." icon="icons/dexels_searchtml.gif"  tooltip="Edits the latest TML file of this script, if it exists" 
                class="com.dexels.navajo.studio.script.plugin.actions.FindTml"
                id="com.dexels.plugin.editTml"/>
@@ -347,6 +350,10 @@
          <action label="Show TML" icon="icons/dexels_tml.gif"  tooltip="Shows this file in the viewer" 
                class="com.dexels.navajo.studio.script.plugin.actions.ShowTml"
                id="com.dexels.plugin.newAction2"/>
+         <action label="Show Generated input TML" icon="icons/dexels_tml.gif"  tooltip="Show required input" 
+            class="com.dexels.navajo.studio.script.plugin.actions.ShowGeneratedInputTml"
+            id="com.dexels.plugin.newActiongenerated"/>
+         
          <action label="Show java.." icon="icons/dexels_searchjava.gif"  tooltip="Shows the java file of this script, if it exists" 
                class="com.dexels.navajo.studio.script.plugin.actions.FindJavaSource"
                id="com.dexels.plugin.showJava"/>

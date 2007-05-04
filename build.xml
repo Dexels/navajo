@@ -49,7 +49,7 @@
 		<antcall target="gather.bin.parts">
 			<param name="destination.temp.folder" value="${temp.folder}/"/>
 		</antcall>
-		<zip destfile="${plugin.destination}/com.dexels.plugin_0.98.5.jar" basedir="${temp.folder}/com.dexels.plugin_0.98.5" filesonly="false" whenempty="skip" update="false"/>
+		<zip destfile="${plugin.destination}/com.dexels.plugin_0.98.7.jar" basedir="${temp.folder}/com.dexels.plugin_0.98.7" filesonly="false" whenempty="skip" update="false"/>
 		<delete dir="${temp.folder}"/>
 	</target>
 
@@ -130,18 +130,23 @@
 			<pathelement path="../../eclipse/plugins/org.eclipse.ltk.core.refactoring_3.2.0.v20060605-1400.jar"/>
 			<pathelement path="../../eclipse/plugins/org.eclipse.ltk.ui.refactoring_3.2.0.v20060605-1400.jar"/>
 			<pathelement path="../../eclipse/plugins/org.eclipse.jdt.core.manipulation_1.0.0.v20060605-1400.jar"/>
+			<pathelement path="${build.result.folder}/../NavajoPluginLibraries/bin"/>
+			<pathelement path="${build.result.folder}/../NavajoPluginLibraries/lib/NavajoBIRTUtilities.jar"/>
 			<pathelement path="${build.result.folder}/../NavajoPluginLibraries/lib/metadata.jar"/>
 			<pathelement path="${build.result.folder}/../NavajoPluginLibraries/lib/NanoImpl.jar"/>
 			<pathelement path="${build.result.folder}/../NavajoPluginLibraries/lib/Navajo.jar"/>
 			<pathelement path="${build.result.folder}/../NavajoPluginLibraries/lib/NavajoClient.jar"/>
 			<pathelement path="${build.result.folder}/../NavajoPluginLibraries/lib/NavajoFunctions.jar"/>
-			<pathelement path="${build.result.folder}/../NavajoPluginLibraries/lib/gface_0.8.9.jar"/>
+			<pathelement path="${build.result.folder}/../NavajoPluginLibraries/lib/gface_0.9.1.jar"/>
 			<pathelement path="../NavajoPluginLibraries/lib/metadata.jar"/>
 			<pathelement path="../NavajoPluginLibraries/lib/NanoImpl.jar"/>
+			<pathelement path="../NavajoPluginLibraries/lib/jaxpimpl.jar"/>
+			<pathelement path="${build.result.folder}/../NavajoPluginLibraries/lib/jaxpimpl.jar"/>
 			<pathelement path="../NavajoPluginLibraries/lib/Navajo.jar"/>
 			<pathelement path="../NavajoPluginLibraries/lib/NavajoClient.jar"/>
 			<pathelement path="../NavajoPluginLibraries/lib/NavajoFunctions.jar"/>
-			<pathelement path="../NavajoPluginLibraries/lib/gface_0.8.9.jar"/>
+			<pathelement path="../NavajoPluginLibraries/lib/gface_0.9.1.jar"/>
+			<pathelement path="../NavajoPluginLibraries/lib/NavajoBIRTUtilities.jar"/>
 			<pathelement path="${build.result.folder}/bin"/>
 			<pathelement path="${build.result.folder}/../com.dexels.plugin/bin"/>
 			<pathelement path="lib/NavajoClient.jar"/>
@@ -194,11 +199,11 @@
 	</target>
 
 	<target name="gather.bin.parts" depends="init" if="destination.temp.folder">
-		<mkdir dir="${destination.temp.folder}/com.dexels.plugin_0.98.5"/>
-		<copy todir="${destination.temp.folder}/com.dexels.plugin_0.98.5" failonerror="true" overwrite="false">
+		<mkdir dir="${destination.temp.folder}/com.dexels.plugin_0.98.7"/>
+		<copy todir="${destination.temp.folder}/com.dexels.plugin_0.98.7" failonerror="true" overwrite="false">
 			<fileset dir="${build.result.folder}" includes="bin//"			/>
 		</copy>
-		<copy todir="${destination.temp.folder}/com.dexels.plugin_0.98.5" failonerror="true" overwrite="false">
+		<copy todir="${destination.temp.folder}/com.dexels.plugin_0.98.7" failonerror="true" overwrite="false">
 			<fileset dir="${basedir}" includes="plugin.xml,icons/,lib/,build.properties,bin/"			/>
 		</copy>
 	</target>
@@ -207,23 +212,23 @@
 	</target>
 
 	<target name="gather.sources" depends="init" if="destination.temp.folder">
-		<mkdir dir="${destination.temp.folder}/com.dexels.plugin_0.98.5/"/>
-		<copy file="${build.result.folder}/bin.src.zip" todir="${destination.temp.folder}/com.dexels.plugin_0.98.5/" failonerror="false" overwrite="false"/>
-		<copy todir="${destination.temp.folder}/com.dexels.plugin_0.98.5" failonerror="false" overwrite="false">
+		<mkdir dir="${destination.temp.folder}/com.dexels.plugin_0.98.7/"/>
+		<copy file="${build.result.folder}/bin.src.zip" todir="${destination.temp.folder}/com.dexels.plugin_0.98.7/" failonerror="false" overwrite="false"/>
+		<copy todir="${destination.temp.folder}/com.dexels.plugin_0.98.7" failonerror="false" overwrite="false">
 			<fileset dir="${basedir}" includes="src/,bin/"			/>
 		</copy>
 	</target>
 
 	<target name="gather.logs" depends="init" if="destination.temp.folder">
-		<mkdir dir="${destination.temp.folder}/com.dexels.plugin_0.98.5/"/>
-		<copy file="${temp.folder}/bin/.bin${logExtension}" todir="${destination.temp.folder}/com.dexels.plugin_0.98.5/" failonerror="false" overwrite="false"/>
+		<mkdir dir="${destination.temp.folder}/com.dexels.plugin_0.98.7/"/>
+		<copy file="${temp.folder}/bin/.bin${logExtension}" todir="${destination.temp.folder}/com.dexels.plugin_0.98.7/" failonerror="false" overwrite="false"/>
 	</target>
 
 	<target name="clean" depends="init" description="Clean the plug-in: com.dexels.plugin of all the zips, jars and logs created.">
 		<delete dir="${build.result.folder}/bin/"/>
 		<delete file="${build.result.folder}/bin.src.zip"/>
-		<delete file="${plugin.destination}/com.dexels.plugin_0.98.5.jar"/>
-		<delete file="${plugin.destination}/com.dexels.plugin_0.98.5.zip"/>
+		<delete file="${plugin.destination}/com.dexels.plugin_0.98.7.jar"/>
+		<delete file="${plugin.destination}/com.dexels.plugin_0.98.7.zip"/>
 		<delete dir="${temp.folder}"/>
 	</target>
 
@@ -246,7 +251,7 @@
 		<delete>
 			<fileset dir="${temp.folder}" includes="**/*.bin${logExtension}"			/>
 		</delete>
-		<zip destfile="${plugin.destination}/com.dexels.plugin_0.98.5.zip" basedir="${temp.folder}" filesonly="true" whenempty="skip" update="false"/>
+		<zip destfile="${plugin.destination}/com.dexels.plugin_0.98.7.zip" basedir="${temp.folder}" filesonly="true" whenempty="skip" update="false"/>
 		<delete dir="${temp.folder}"/>
 	</target>
 
