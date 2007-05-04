@@ -137,4 +137,9 @@ public abstract class TipiLayout {
 
 public void childAdded(Object c) {
 }
+
+public void commitLayout() {
+	// Not implemented, called after creating layout, override if further action is needed
+	
+}
 }

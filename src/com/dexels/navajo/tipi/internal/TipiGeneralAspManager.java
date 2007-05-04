@@ -141,7 +141,8 @@ public class TipiGeneralAspManager implements TipiStorageManager {
     }
 
     public void setInstanceId(String id) {
-        instanceId = id;
+    	System.err.println("Setting sublocale to: "+id);
+    	instanceId = id;
     }
 
 }

@@ -21,27 +21,6 @@ public class TipiInstantiateTipi
     instantiateTipi(false,event);
   }
 
-//  public static TipiComponent instantiateByClass(TipiComponent parent, boolean force,
-//                                                 String id, String className,Object constraints) throws
-//      TipiException {
-//    TipiInstantiateTipi t = new TipiInstantiateTipi();
-//    // sort of hackish
-//    t.setContext(parent.getContext());
-//    TipiComponent tc = t.instantiateTipi(true, parent, force, id, className, null, null,constraints);
-//    tc.commitToUi();
-//    return tc;
-//  }
-//
-//  public static TipiComponent instantiateNonTransientByClass(TipiComponent parent, boolean force,
-//                                                 String id, String className,Object constraints) throws
-//      TipiException {
-//    TipiInstantiateTipi t = new TipiInstantiateTipi();
-//    // sort of hackish
-//    t.setContext(parent.getContext());
-//    TipiComponent ttt = t.instantiateTipi(true, parent, force, id, className, null, null,constraints);
-//    ttt.setTransient(false);
-//    return ttt;
-//  }
 
   public static TipiComponent instantiateByDefinition(TipiComponent parent,
       boolean force, String id,

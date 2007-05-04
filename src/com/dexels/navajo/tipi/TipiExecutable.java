@@ -16,7 +16,7 @@ import com.dexels.navajo.tipi.internal.*;
  */
 public interface TipiExecutable {
 //  public void performAction(TipiEvent te) throws TipiBreakException, TipiException;
-  public void performAction(TipiEvent te) throws TipiBreakException, TipiException;
+  public void performAction(TipiEvent te,TipiExecutable parent, int index) throws TipiBreakException, TipiException;
 
   public XMLElement store();
 

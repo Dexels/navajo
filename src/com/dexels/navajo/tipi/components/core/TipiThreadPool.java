@@ -127,7 +127,7 @@ public class TipiThreadPool {
   public void enqueueExecutable(TipiExecutable exe) throws  TipiException {
 	  if (poolSize==0) {
           // For echo:
-          exe.getEvent().performAction(exe.getEvent());
+          exe.getEvent().performAction(exe.getEvent(),exe.getEvent(),0);
       }
       else {
         myWaitingQueue.add(exe);

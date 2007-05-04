@@ -15,7 +15,9 @@ public abstract class BaseDescriptionProvider implements DescriptionProvider{
 	}
 	
 	public String getDescription(String id) {
-		return (String)myDescriptionMap.get(id);
+		String desc = (String)myDescriptionMap.get(id);
+		System.err.println("Retriqeving description: "+desc);
+		return desc;
 	}
 	
 	public void addDescription(String name, String description) {

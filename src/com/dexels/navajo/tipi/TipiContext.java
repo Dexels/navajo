@@ -86,6 +86,15 @@ public abstract class TipiContext
 //    myThreadPool = new TipiThreadPool(this);
     NavajoFactory.getInstance().setExpressionEvaluator(new DefaultExpressionEvaluator());
     // Use the null implementation as default (Will always return null, will ignore all saves)
+//    try {
+//		initRemoteDescriptionProvider("tipi","nl");
+//	} catch (NavajoException e) {
+//		// TODO Auto-generated catch block
+//		e.printStackTrace();
+//	} catch (ClientException e) {
+//		// TODO Auto-generated catch block
+//		e.printStackTrace();
+//	}
     setStorageManager(new TipiNullStorageManager());
   }
   protected void clearLogFile() {
@@ -235,8 +244,12 @@ public abstract class TipiContext
     setSystemProperty("tipi.client.impl", impl, false);
     String cfg = (String)attemptGenericEvaluate(config.getStringAttribute("config", "'server.xml'"));
     setSystemProperty("tipi.client.config", cfg, false);
-    boolean secure = ((Boolean)attemptGenericEvaluate(config.getStringAttribute("secure", "false"))).booleanValue();
-    setSystemProperty("tipi.client.secure", ""+secure, false);
+    Object secure = attemptGenericEvaluate(config.getStringAttribute("secure", "false"));
+    boolean secureBoolean = false;
+    if(secure!=null && secure instanceof Boolean) {
+        setSystemProperty("tipi.client.secure", ""+secure, false);
+        secureBoolean = ((Boolean)secure).booleanValue();
+    }
 
     String locale = (String)attemptGenericEvaluate(config.getStringAttribute("locale", "'en'"));
     setSystemProperty("tipi.client.locale", cfg, false);
@@ -281,7 +294,7 @@ public abstract class TipiContext
     
     NavajoClientFactory.getClient().setLocaleCode(locale);
     NavajoClientFactory.getClient().setSubLocaleCode(sublocale);
-    if (secure) {
+    if (secureBoolean) {
       if (storepass != null && keystore != null) {
         try {
           if (keystore instanceof URL) {
@@ -468,6 +481,7 @@ public void parseDefinition(XMLElement child) throws TipiException {
   
   public URL getResourceURL(String location, ClassLoader cl) {
 	  // Try the classloader first, the 
+//	  System.err.println("Entering getResourceURL for location: "+location);
 //	  System.err.println("Classloader: "+cl);
 	  if (cl==null) {
           cl = getClass().getClassLoader();
@@ -494,10 +508,10 @@ public void parseDefinition(XMLElement child) throws TipiException {
       }
     
     if (resourceBaseDirectory!=null) {
-//        System.err.println("ResourceDir found: "+resourceBaseDirectory.getAbsolutePath());
+        System.err.println("ResourceDir found: "+resourceBaseDirectory.getAbsolutePath());
         File locationFile = new File(resourceBaseDirectory.getAbsolutePath()+"/"+location);
         if (!locationFile.exists()) {
-           // System.err.println(".. but it did not exist: "+locationFile);
+           System.err.println(".. but it did not exist: "+locationFile);
         	// ignore and continue
         } else {
 	        try {
@@ -506,6 +520,8 @@ public void parseDefinition(XMLElement child) throws TipiException {
 	            e.printStackTrace();
 	        }
         }
+    } else {
+    	System.err.println("No resource dir found");
     }
     if (tipiBaseDirectory!=null) {
 //      System.err.println("ResourceDir found: "+resourceBaseDirectory.getAbsolutePath());
@@ -989,7 +1005,7 @@ public void parseDefinition(XMLElement child) throws TipiException {
 //    	Thread.dumpStack();
     	return null;
     }
-    System.err.println("Parsing lib location: "+location);
+//    System.err.println("Parsing lib location: "+location);
     parseLibrary(location, true,"dir", componentName, false);
     xe = getTipiDefinition(componentName);
 
@@ -1297,7 +1313,7 @@ public void parseDefinition(XMLElement child) throws TipiException {
    }
 
 
-  protected final void loadTipiMethod(Navajo reply, String tipiDestinationPath, String method,String server) throws TipiException {
+  protected void loadTipiMethod(Navajo reply, String tipiDestinationPath, String method,String server) throws TipiException {
     TipiDataComponent tt;
     ArrayList tipiList;
     //System.err.println("Loading method");
@@ -1386,12 +1402,12 @@ public void parseDefinition(XMLElement child) throws TipiException {
     catch (Exception ex) {
       System.err.println("Not happy while evaluating expression: " + expr + " message: " + ex.getMessage());
       Operand op = new Operand(expr, Property.STRING_PROPERTY, "");
-//      ex.printStackTrace();
+      ex.printStackTrace();
       return o;
     }
     catch (Error ex) {
       System.err.println("Not happy while evaluating expression: " + expr + " message: " + ex.getMessage());
-//        ex.printStackTrace();
+        ex.printStackTrace();
         Operand op = new Operand(expr, Property.STRING_PROPERTY, "");
       return o;
     }
@@ -1949,20 +1965,115 @@ public DescriptionProvider getDescriptionProvider() {
 
 
 public void initRemoteDescriptionProvider(String context, String locale) throws NavajoException, ClientException {
-	   Navajo n = NavajoFactory.getInstance().createNavajo();
+	System.err.println("AAAAAAAAAAAAAAAAAAPPPPPPPP!");
+	Navajo n = NavajoFactory.getInstance().createNavajo();
 	   Message m = NavajoFactory.getInstance().createMessage(n, "Description");
 	   n.addMessage(m);
-	   Property w = NavajoFactory.getInstance().createProperty(n, "Webservice", Property.STRING_PROPERTY,context, 99,"", Property.DIR_IN);
+	   Property w = NavajoFactory.getInstance().createProperty(n, "Context", Property.STRING_PROPERTY,context, 99,"", Property.DIR_IN);
 	   m.addProperty(w);
 	   Property l = NavajoFactory.getInstance().createProperty(n, "Locale", Property.STRING_PROPERTY,locale, 99,"", Property.DIR_IN);
 	   m.addProperty(l);
-//	   n.write(System.err);
+	   n.write(System.err);
 	   Navajo res = NavajoClientFactory.getClient().doSimpleSend(n, "navajo/description/ProcessGetContextResources");
+	   
 //	   res.write(System.err);
 	   Message descr = res.getMessage("Descriptions");
 	   myDescriptionProvider = new RemoteDescriptionProvider(this);
 //	   myDescriptionProvider.init(locale, context);
 	   ((RemoteDescriptionProvider)myDescriptionProvider).setMessage(descr);		
+}
+public String XMLUnescape(String s) {
+    if ((s == null) || (s.length() == 0)) {
+        return s;
+    }
+
+    int    offset;
+    int    next;
+    String result;
+
+    // filter out all escaped ampersands
+    offset = 0;
+    result = "";
+
+    while ((next = s.indexOf("&amp;", offset)) >= 0) {
+        result += s.substring(offset, next) + "&";
+        offset = next + "&amp;".length();
+    }
+
+    result += s.substring(offset, s.length());    // characters after last &
+    s      = result;
+
+    // filter out all escaped double quotes
+    offset = 0;
+    result = "";
+
+    while ((next = s.indexOf("&quot;", offset)) >= 0) {
+        result += s.substring(offset, next) + "\"";
+        offset = next + "&quot;".length();
+    }
+
+    result += s.substring(offset, s.length());    // characters after last "
+    s      = result;
+
+    // filter out all escaped single quotes
+    offset = 0;
+    result = "";
+
+    while ((next = s.indexOf("&apos;", offset)) >= 0) {
+        result += s.substring(offset, next) + "\'";
+        offset = next + "&apos;".length();
+    }
+
+    result += s.substring(offset, s.length());    // characters after last "
+    s      = result;
+
+    // filter out all escaped less than characters
+    offset = 0;
+    result = "";
+
+    while ((next = s.indexOf("&lt;", offset)) >= 0) {
+        result += s.substring(offset, next) + "<";
+        offset = next + "&lt;".length();
+    }
+
+    result += s.substring(offset, s.length());    // characters after last <
+    s      = result;
+
+    // filter out all escaped greater than characters
+    offset = 0;
+    result = "";
+
+    while ((next = s.indexOf("&gt;", offset)) >= 0) {
+        result += s.substring(offset, next) + ">";
+        offset = next + "&gt;".length();
+    }
+
+    result += s.substring(offset, s.length());    // characters after last >
+    s      = result;
+
+    // filter out all escaped newlines
+    offset = 0;
+    result = "";
+
+    while ((next = s.indexOf("\\n", offset)) >= 0) {
+        result += s.substring(offset, next) + "\n";
+        offset = next + "\\n".length();
+    }
+
+    result += s.substring(offset, s.length());    // characters after last newline
+
+     // filter out all escaped ;'s
+    offset = 0;
+    result = "";
+
+    while ((next = s.indexOf("\\;", offset)) >= 0) {
+        result += s.substring(offset, next) + ";";
+        offset = next + "\\;".length();
+    }
+
+    result += s.substring(offset, s.length());    // characters after last newline
+
+    return result;
 }
 
 }

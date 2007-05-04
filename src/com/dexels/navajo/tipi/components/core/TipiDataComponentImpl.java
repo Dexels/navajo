@@ -117,7 +117,7 @@ private String myServer;
   
   private final void instantiateWithLayout(XMLElement x) throws TipiException {
     TipiLayout tl = myContext.instantiateLayout(x,this);
-    if (tl == null) {
+     if (tl == null) {
       throw new RuntimeException("Trying to instantiate with layout, but the layout == null");
     }
     tl.setComponent(this);
@@ -128,6 +128,7 @@ private String myServer;
       setContainerLayout(tl.getLayout());
     }
     tl.loadLayout(this);
+    tl.commitLayout();
   }
 
   public String getName() {

@@ -19,6 +19,8 @@ public abstract class TipiAction implements TipiExecutable {
     protected String myType;
 
     protected Map parameterMap = new HashMap();
+    
+    protected int counter = 0;
 
     //  protected TipiCondition myCondition;
     protected abstract void execute(TipiEvent event) throws TipiBreakException, TipiException;
@@ -34,7 +36,7 @@ public abstract class TipiAction implements TipiExecutable {
         parameterMap.put(tv.getName(), tv);
     }
 
-    public void performAction(TipiEvent te) throws TipiBreakException, TipiException {
+    public void performAction(TipiEvent te, TipiExecutable parent, int index) throws TipiBreakException, TipiException {
     	myContext.debugLog("action", myType);
     	myEvent = te;
         if (myComponent.isDisposed()) {

@@ -56,7 +56,7 @@ public class TipiActionBlock implements TipiExecutable {
     myExpressionSource = exs;
   }
 
-  public void performAction(TipiEvent te) throws TipiBreakException, TipiException {
+  public void performAction(TipiEvent te, TipiExecutable parent, int index) throws TipiBreakException, TipiException {
 //    System.err.println("PERFORMING BLOCK with expression "+myExpression);
       myEvent = te;
       boolean evaluated; 
@@ -88,7 +88,7 @@ public class TipiActionBlock implements TipiExecutable {
         } else {
             for (int i = 0; i < myExecutables.size(); i++) {
                 TipiExecutable current = (TipiExecutable) myExecutables.get(i);
-                  current.performAction(te);
+                  current.performAction(te,this,i);
             }
         }
         myEvent = null;

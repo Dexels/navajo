@@ -124,7 +124,7 @@ public class TipiEvent
     return myComponent;
   }
 
-  public void performAction(TipiEvent te) throws TipiException {
+  public void performAction(TipiEvent te, TipiExecutable parent,  int index) throws TipiException {
     performAction(myComponent, null);
   }
 
@@ -176,7 +176,7 @@ public class TipiEvent
     try {
       for (int i = 0; i < myExecutables.size(); i++) {
         TipiExecutable current = (TipiExecutable) myExecutables.get(i);
-        current.performAction(this);
+        current.performAction(this,this,i);
       }
     }
     catch (Throwable ex) {

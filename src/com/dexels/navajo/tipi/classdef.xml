@@ -48,7 +48,18 @@
           <method name="stop"/>
         </methods>
     </tipiclass>
-
+    <tipiclass studio-icon="resourcecopy.gif" module="extensions" class="TipiResourceCopier" name="copy" package="com.dexels.navajo.tipi.components.core" propertycomponent="false" type="component" addtocontainer="false">
+        <events>
+            <event name="onInstantiate"/>
+        </events>
+        <values/>
+        <methods>
+            <method name="copy">
+                <param name="source" type="resource"/>
+                <param name="target" type="resource"/>
+            </method>
+        </methods>
+    </tipiclass>
     <tipi-parser name="tipi" type="com.dexels.navajo.tipi.TipiDataComponent" parser="com.dexels.navajo.tipi.components.core.parsers.TipiParser"/>
     <tipi-parser name="component" type="com.dexels.navajo.tipi.TipiComponent" parser="com.dexels.navajo.tipi.components.core.parsers.ComponentParser"/>
     <tipi-parser name="attributeref" type="com.dexels.navajo.tipi.internal.AttributeRef" parser="com.dexels.navajo.tipi.components.core.parsers.AttributeRefParser"/>

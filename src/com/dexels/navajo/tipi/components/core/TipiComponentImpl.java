@@ -309,7 +309,7 @@ public abstract class TipiComponentImpl
       if (xx.getName().equals("event")) {
         String type = xx.getStringAttribute("type");
         if (!componentEvents.contains(type)) {
-          throw new RuntimeException("Invalid event type for component with name " + myName + ": " + type + ". This component allows: " + componentEvents);
+          throw new RuntimeException("Invalid event type for component with name " + myName + ": " + type + " path "+getPath()+" " +". This component allows: " + componentEvents);
         }
         TipiEvent event = new TipiEvent();
 //        System.err.println(">>>>>>>>>>>>>> "+classDef);
@@ -564,11 +564,20 @@ public void loadStartValues(XMLElement element) {
         if (tv.getType().equals("out")) {
           throw new RuntimeException("You cannot pass the value of an 'out' direction value in to an instance or definition in the script");
         }
+//        System.err.println("About to evaluate value: "+value);
         Operand o = evaluate(  value.toString(), this,null);
       if (o != null &&  o.value != null) {
           setValue(key, value,o.value,this,false,null);
 //          setComponentValue(key, o.value);
       } else {
+    	  System.err.println("Evaluation error: "+value);
+    	  if (o==null) {
+			System.err.println("Null operand returned");
+		} else {
+			System.err.println("value: "+o.value);
+			System.err.println("type: "+o.type);
+			System.err.println("option: "+o.option);
+		}
           setValue(key, value);
       }
       }

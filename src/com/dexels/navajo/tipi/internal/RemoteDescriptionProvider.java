@@ -1,6 +1,7 @@
 package com.dexels.navajo.tipi.internal;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -13,6 +14,9 @@ public class RemoteDescriptionProvider extends BaseDescriptionProvider {
 		super(myContext);
 	}
 
+	public Set getDescriptionNames() {
+		return myDescriptionMap.keySet();
+	}
 
 	public void setMessage(Message m) {
 		  ArrayList al = m.getAllMessages();
@@ -20,8 +24,9 @@ public class RemoteDescriptionProvider extends BaseDescriptionProvider {
 			   Message current = (Message)al.get(i);
 			   String name = current.getProperty("Name").getValue();
 			   String value = current.getProperty("Description").getValue();
-			   addDescription(name, value+"O");
+			   addDescription(name, value);
 		   }
+		   System.err.println("# of descriptions: "+myDescriptionMap.size());
 	}
 
 

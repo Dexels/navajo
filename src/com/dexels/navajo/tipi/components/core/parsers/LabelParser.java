@@ -1,5 +1,6 @@
 package com.dexels.navajo.tipi.components.core.parsers;
 
+import com.dexels.navajo.document.jaxpimpl.xml.XMLutils;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.internal.*;
 
@@ -21,10 +22,15 @@ public class LabelParser extends TipiTypeParser {
 
 	  if (dp==null) {
 		  
-		  return expression;
+		  return "["+expression+"]";
 	} else {
-		return dp.getDescription(expression);
+		return myContext.XMLUnescape(dp.getDescription(expression));
 	}
   }
+
+  /**
+   * Replace all occurrences of the escaped characters &amp;, &quot;, &apos;,
+   * &lt; and &gt; by the unescaped characters &, ', ", < and >.
+   */
 
 }
