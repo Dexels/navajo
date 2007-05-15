@@ -97,7 +97,7 @@ public class TmlBrowser extends BaseNavajoView implements INavajoScriptListener,
 //        headComp.setLayout(new FillLayout(SWT.HORIZONTAL));
 
         TableWrapLayout twl = new TableWrapLayout();
-        twl.numColumns=9;
+        twl.numColumns=10;
         headComp.setLayout(twl);
         Label l = new Label(headComp,SWT.NONE);
         l.setBackground(new Color(Display.getCurrent(), 240, 240, 220));
