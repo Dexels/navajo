@@ -96,7 +96,7 @@ public class FileStore implements MessageStore {
 		Queable q = null;
 		File f = (File) objectPointer.next();
 		try {
-			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(f));
+			NavajoObjectInputStream ois = new NavajoObjectInputStream(new FileInputStream(f), NavajoConfig.getInstance().getClassloader());
 			q = (Queable) ois.readObject();
             // Persist binary file references after reading object.
 			q.persistBinaries();
