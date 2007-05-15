@@ -10,6 +10,7 @@ import java.io.ObjectOutputStream;
 import java.util.HashSet;
 import java.util.Iterator;
 import com.dexels.navajo.server.Dispatcher;
+import com.dexels.navajo.server.NavajoConfig;
 
 public class FileStore implements MessageStore {
 
@@ -61,9 +62,9 @@ public class FileStore implements MessageStore {
 				File f = files[i];
 				if ( f.isFile() ) {
 					
-					ObjectInputStream ois;
+					NavajoObjectInputStream ois;
 					try {
-						ois = new ObjectInputStream(new FileInputStream(f));
+						ois = new NavajoObjectInputStream(new FileInputStream(f), NavajoConfig.getInstance().getClassloader());
 						Queable q = (Queable) ois.readObject();
 						// Persist binary file references after reading object.
 						q.persistBinaries();
