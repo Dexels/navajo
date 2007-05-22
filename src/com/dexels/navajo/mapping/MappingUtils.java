@@ -275,15 +275,40 @@ public final class MappingUtils {
 	 return msgs;
    }
 
+   public static String getBaseMessageName(String name) {
+	   if ( name.startsWith("../") ) {
+		   return getBaseMessageName(name.substring(3));
+	   }
+	   return name;
+   }
+   
+   /**
+    * Get parent message of a (possibly non-existing) message name.
+    * 
+    * @param parent
+    * @param name
+    * @return
+    */
+   public static Message getParentMessage(Message parent, String name) {
+	   if ( name.startsWith("../") ) {
+		   return getParentMessage(parent.getParentMessage(), name.substring(3));
+	   }
+	   return parent;
+   }
+   
    public static final Message[] addMessage(Navajo doc, Message parent, String message,
                                       String template, int count,
                                       String type, String mode) throws java.io.IOException, NavajoException,
                                       org.xml.sax.SAXException, MappingException {
 
-    if (message.indexOf(Navajo.MESSAGE_SEPARATOR) != -1) {
+	/**
+	 * Added 22/5/2007: support for relative message creation.
+	 */
+    if ( message.indexOf(Navajo.MESSAGE_SEPARATOR) != -1 && parent == null ) {
       throw new MappingException(
-          "No submessage constructs allowed in <message> tags: " + message);
+          "No submessage constructs allowed in non-nested <message> tags: " + message);
     }
+    
     Message[] messages = new Message[count];
     Message msg = null;
     int index = 0;
@@ -328,13 +353,21 @@ public final class MappingUtils {
       //msg = tmp.copyMessage(bluePrint, doc);
     }
     else {
-      msg = NavajoFactory.getInstance().createMessage(doc, message);
+      /**
+       * Added getBaseMessageName to support relative message creation.
+       */
+      msg = NavajoFactory.getInstance().createMessage(doc, getBaseMessageName(message));
     }
 
     if (!mode.equals("")) {
       msg.setMode(mode);
     }
 
+    /**
+     * Get the real parent message given the fact that message could contain a relative name.
+     */
+    parent = getParentMessage(parent, message);
+    
     if (count > 1) {
       msg.setName(message + "0");
       msg.setIndex(0);
