@@ -414,7 +414,11 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode, Comp
 
     public Message getMessage(String name) {
         if (name.startsWith("../")) {
-            return getParentMessage().getMessage(name.substring(3));
+        	if ( getParentMessage() == null ) {
+        		return null;
+        	} else {
+        		return getParentMessage().getMessage(name.substring(3));
+        	}
         }
 
         if (name.startsWith("/")) {
