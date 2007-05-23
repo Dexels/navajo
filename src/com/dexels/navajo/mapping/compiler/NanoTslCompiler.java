@@ -805,12 +805,12 @@ public class NanoTslCompiler {
 
             if (n.getName().equals("message")) {
                 result.append(printIdent(ident + 4) + "outMsgStack.push(currentOutMsg);\n");
-                result.append(printIdent(ident + 4) + "currentOutMsg = MappingUtils.getMessageObject(\"" + messageName
+                result.append(printIdent(ident + 4) + "currentOutMsg = MappingUtils.getMessageObject(\"" + MappingUtils.getBaseMessageName(messageName)
                         + "\", currentOutMsg, true, access.getOutputDoc(), false, \"\", " + ((startIndex == -1) ? "-1" : startIndexVar + "++") + ");\n");
                 result.append(printIdent(ident + 4) + "access.setCurrentOutMessage(currentOutMsg);\n");
             } else { // parammessage.
                 result.append(printIdent(ident + 4) + "paramMsgStack.push(currentParamMsg);\n");
-                result.append(printIdent(ident + 4) + "currentParamMsg = MappingUtils.getMessageObject(\"" + messageName
+                result.append(printIdent(ident + 4) + "currentParamMsg = MappingUtils.getMessageObject(\"" + MappingUtils.getBaseMessageName(messageName)
                         + "\", currentParamMsg, true, inMessage, false, \"\", " + ((startIndex == -1) ? "-1" : startIndexVar + "++") + ");\n");
             }
 

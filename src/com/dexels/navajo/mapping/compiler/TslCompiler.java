@@ -794,7 +794,7 @@ public class TslCompiler {
 	                    "outMsgStack.push(currentOutMsg);\n");
 	      result.append(printIdent(ident + 4) +
 	                    "currentOutMsg = MappingUtils.getMessageObject(\"" +
-	                    messageName +
+	                    MappingUtils.getBaseMessageName(messageName) +
 	                    "\", currentOutMsg, true, access.getOutputDoc(), false, \"\", " + ((startIndex == -1) ? "-1" : startIndexVar + "++") + ");\n");
 	      result.append(printIdent(ident + 4) +
 	                    "access.setCurrentOutMessage(currentOutMsg);\n");
@@ -803,7 +803,7 @@ public class TslCompiler {
         "paramMsgStack.push(currentParamMsg);\n");
 result.append(printIdent(ident + 4) +
         "currentParamMsg = MappingUtils.getMessageObject(\"" +
-        messageName +
+        MappingUtils.getBaseMessageName(messageName) +
         "\", currentParamMsg, true, inMessage, false, \"\", " + ((startIndex == -1) ? "-1" : startIndexVar + "++") + ");\n");
       }
 
