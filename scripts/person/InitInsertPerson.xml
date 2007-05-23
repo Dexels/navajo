@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tsl author="Matthijs Philip" id="person/InitInsertPerson" notes="" repository="$Id$" xmlns="http://www.dexels.com/navascript" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dexels.com/navascript http://www.dexels.com/schema/navascript.xsd ">
+    <methods>
+        <method name="person/ProcessInsertPerson">
+            <required message="Person"/>
+        </method>
+    </methods>
+    <message name="Person">
+        <property name="LastName" type="string" direction="in" description="Achternaam"/>
+        <property name="Infix" type="string" direction="in" description="Tussenvoegsel"/>
+        <property name="Initials" type="string" direction="in" description="Initialen"/>
+        <property name="FirstName" type="string" direction="in" description="Voornaam"/>
+        <property name="DateOfBirth" type="date" direction="in" description="Geboortedatum"/>
+        <property name="Nationality" type="string" direction="in" description="Nationaliteit"/>
+        <property name="Sex" type="selection" direction="in" description="Geslacht">
+            <option name="Onbekend" value="0" selected="0"/>
+            <option name="Man" value="1" selected="0"/>
+            <option name="Vrouw" value="2" selected="0"/>
+        </property>
+	<property name="StreetName" type="string" direction="in" description="Straat"/>
+        <property name="HouseNumber" type="integer" direction="in" description="Huisnummer"/>
+        <property name="NumberAppendix" type="string" direction="in" description="Toevoeging"/>
+        <property name="City" type="string" direction="in" description="Woonplaats"/>
+        <property name="ZipCode" type="string" direction="in" description="Postcode"/>
+        <property name="CountryCode" type="string" direction="in" description="Landcode"/>
+        <property name="TelephoneNumber" type="string" direction="in" description="Telefoonnummer"/>
+        <property name="MobileNumber" type="string" direction="in" description="Mobiel nummer"/>
+        <property name="EmailAddress" type="string" direction="in" description="E-mailadres"/>
+    </message>
+</tsl>

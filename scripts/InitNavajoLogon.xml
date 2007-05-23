@@ -1,0 +1,13 @@
+<tml>
+  <methods>
+    <method name="navajo_logon_send">
+       <required message="identification"/>
+       <required message="services"/>
+    </method>
+  </methods>
+  <message name="identification">
+    <property type="string" name="username" direction="in" value="demo"/>
+    <property type="password" name="password" direction="in" value="demo"/>
+  </message>
+  <message name="services"/>
+</tml>

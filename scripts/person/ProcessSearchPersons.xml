@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tsl author="Matthijs Philip" id="person/ProcessSearchPersons" notes="" repository="$Id$" xmlns="http://www.dexels.com/navascript" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dexels.com/navascript http://www.dexels.com/schema/navascript.xsd">
+    <methods>
+        <method name="person/ProcessQueryPerson">
+            <required message="Person"/>
+        </method>
+    </methods>
+    <param name="LastNameCondition">
+        <expression condition="?[/SearchCriteria/LastName] AND Trim([/SearchCriteria/LastName]) != ''" value="' AND UPPER(lastname) LIKE ?'"/>
+        <expression value="''"/>
+    </param>
+    <param name="SexCondition">
+        <expression condition="?[/SearchCriteria/Sex] AND [/SearchCriteria/Sex] != '-1'" value="' AND sex = ?'"/>
+        <expression value="''"/>
+    </param>
+    <param name="ZipCodeCondition">
+        <expression condition="?[/SearchCriteria/ZipCode] AND Trim([/SearchCriteria/ZipCode]) != ''" value="' AND UPPER(zipcode) LIKE ?'"/>
+        <expression value="''"/>
+    </param>
+    <map object="com.dexels.navajo.adapter.SQLMap">
+        <field name="datasource">
+            <expression value="'default'"/>
+        </field>
+        <param name="Query">
+            <expression xml:space="preserve">
+               SELECT id 
+               ,      lastname
+               ,      infix
+               ,      initials
+               ,      firstname
+               ,      dateofbirth
+               ,      nationality
+               ,      sex
+               ,      telephonenumber
+               ,      mobilenumber
+               ,      emailaddress
+               FROM   person
+            </expression>
+        </param>
+        <field name="query">
+            <expression value="[/@Query] + ' ' + [/@LastNameCondition] + ' ' + [/@SexCondition] + ' ' + [/@ZipCodeCondition]"/>
+        </field>
+        <field name="parameter" condition="?[/SearchCriteria/LastName] AND Trim([/SearchCriteria/LastName]) != ''">
+            <expression value="ToUpper([/SearchCriteria/LastName]) + '%'"/>
+        </field>
+        <field name="parameter" condition="?[/SearchCriteria/Sex] AND [/SearchCriteria/Sex] != '-1'">
+            <expression value="[/SearchCriteria/Sex]"/>
+        </field>
+        <field name="parameter" condition="?[/SearchCriteria/ZipCode] AND Trim([/SearchCriteria/ZipCode]) != ''">
+            <expression value="ToUpper([/SearchCriteria/ZipCode]) + '%'"/>
+        </field>
+        <message name="Person" type="array">
+            <map ref="resultSet">
+                <property name="Update" type="boolean" direction="in" description="Open" value="false"/>
+                <property name="PersonId" type="integer" direction="out" description="CV code (intern)">
+                    <expression value="$columnValue('id')"/>
+                </property>
+                <property name="LastName" type="string" direction="out" description="Achternaam">
+                    <expression value="$columnValue('lastname')"/>
+                </property>
+                <property name="Infix" type="string" direction="out" description="Tussenvoegsel">
+                    <expression value="$columnValue('infix')"/>
+                </property>
+                <property name="Initials" type="string" direction="out" description="Initialen">
+                    <expression value="$columnValue('initials')"/>
+                </property>
+                <property name="FirstName" type="string" direction="out" description="Voornaam">
+                    <expression value="$columnValue('firstname')"/>
+                </property>
+                <property name="DateOfBirth" type="string" direction="out" description="Geboortedatum">
+                    <expression value="$columnValue('dateofbirth')"/>
+                </property>
+                <property name="Nationality" type="string" direction="out" description="Nationaliteit">
+                    <expression value="$columnValue('nationality')"/>
+                </property>
+                <property name="Sex" type="selection" direction="out" description="Geslacht">
+                    <option name="Onbekend" value="0" condition="$columnValue('sex') == '0'" selected="1"/>
+                    <option name="Onbekend" value="0" condition="$columnValue('sex') != '0'" selected="0"/>
+                    <option name="Man" value="1" condition="$columnValue('sex') == '1'" selected="1"/>
+                    <option name="Man" value="1" condition="$columnValue('sex') != '1'" selected="0"/>
+                    <option name="Vrouw" value="2" condition="$columnValue('sex') == '2'" selected="1"/>
+                    <option name="Vrouw" value="2" condition="$columnValue('sex') != '2'" selected="0"/>
+                </property>
+                <property name="TelephoneNumber" type="string" direction="out" description="Telefoonnummer">
+                    <expression value="$columnValue('telephonenumber')"/>
+                </property>
+                <property name="MobileNumber" type="string" direction="out" description="Mobiel nummer">
+                    <expression value="$columnValue('mobilenumber')"/>
+                </property>
+                <property name="EmailAddress" type="string" direction="out" description="E-mailadres">
+                    <expression value="$columnValue('emailaddress')"/>
+                </property>
+            </map>
+        </message>
+    </map>
+</tsl>

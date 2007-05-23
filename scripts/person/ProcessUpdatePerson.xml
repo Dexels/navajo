@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tsl author="Matthijs Philip" id="person/ProcessInsertPerson" notes="" repository="$Id$" xmlns="http://www.dexels.com/navascript" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dexels.com/navascript http://www.dexels.com/schema/navascript.xsd ">
+    <param name="UpdateCount">
+        <expression value="0"/>
+    </param>
+    <map object="com.dexels.navajo.adapter.SQLMap">
+        <field name="datasource">
+            <expression value="'default'"/>
+        </field>
+        <field name="update">
+            <expression xml:space="preserve">
+                UPDATE person 
+                SET    lastname        = ?
+                ,      infix           = ?
+                ,      initials        = ? 
+                ,      firstname       = ?
+                ,      dateofbirth     = ?
+                ,      nationality     = ?
+                ,      sex             = ?
+                ,      streetname      = ?
+                ,      housenumber     = ?
+                ,      numberappendix  = ?
+                ,      city            = ?
+                ,      zipcode         = ?
+                ,      countrycode     = ?
+                ,      telephonenumber = ?
+                ,      mobilenumber    = ?
+                ,      emailaddress    = ? 
+                WHERE  id              = ?
+            </expression>
+        </field>        
+        <field name="parameter">
+            <expression value="[/Person/LastName]"/>
+        </field>
+        <field name="parameter">
+            <expression value="[/Person/Infix]"/>
+        </field>
+        <field name="parameter">
+            <expression value="[/Person/Initials]"/>
+        </field>
+        <field name="parameter">
+            <expression value="[/Person/FirstName]"/>
+        </field>
+        <field name="parameter">
+            <expression value="[/Person/DateOfBirth]"/>
+        </field>
+        <field name="parameter">
+            <expression value="[/Person/Nationality]"/>
+        </field>
+        <field name="parameter">
+            <expression value="[/Person/Sex]"/>
+        </field>
+        <field name="parameter">
+            <expression value="[/Person/StreetName]"/>
+        </field>
+        <field name="parameter">
+            <expression value="[/Person/HouseNumber]"/>
+        </field>
+        <field name="parameter">
+            <expression value="[/Person/NumberAppendix]"/>
+        </field>
+        <field name="parameter">
+            <expression value="[/Person/City]"/>
+        </field>
+        <field name="parameter">
+            <expression value="[/Person/ZipCode]"/>
+        </field>
+        <field name="parameter">
+            <expression value="[/Person/CountryCode]"/>
+        </field>
+        <field name="parameter">
+            <expression value="[/Person/TelephoneNumber]"/>
+        </field>
+        <field name="parameter">
+            <expression value="[/Person/MobileNumber]"/>
+        </field>
+        <field name="parameter">
+            <expression value="[/Person/EmailAddress]"/>
+        </field>
+        <field name="parameter">
+            <expression value="[/Person/PersonId]"/>
+        </field>
+        <field name="doUpdate">
+            <expression value="true"/>
+        </field>
+        <param name="UpdateCount">
+            <expression value="[/@UpdateCount] + $updateCount"/>
+        </param>
+    </map>
+    <message name="Person">
+        <property name="PersonId" direction="out" type="integer" description="CV code (intern)">
+            <expression value="[/PersonId/PersonId]"/>
+        </property>
+    </message>
+    <message name="Result">
+        <property name="UpdateCount" direction="out" type="integer" description="Wijzigingen">
+            <expression condition="?[/@UpdateCount] AND [/@UpdateCount] &gt; 0" value="[/@UpdateCount]"/>
+            <expression value="0"/>
+        </property>
+    </message>
+</tsl>
