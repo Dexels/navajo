@@ -99,7 +99,7 @@ public class NavajoClient implements ClientInterface {
 	private long lastActivity;
 	private int keepAliveDelay;
 	private int globalRetryCounter = 0;
-	private String locale = null;
+	private String localeCode = null;
 	private String subLocale;
 	private static boolean silent = true;
 	  
@@ -799,8 +799,8 @@ public class NavajoClient implements ClientInterface {
         //==================================================================
     	// set the locale
     	// ==============================================
-    	 if (locale!=null) {
-        	 out.getHeader().setAttribute("locale", locale);
+    	 if (localeCode!=null) {
+        	 out.getHeader().setAttribute("locale", localeCode);
 		}
          //==================================================================
      	// set the sublocale
@@ -1859,7 +1859,11 @@ public final void switchServer(int startIndex, boolean forceChange) {
 
 
 	public void setLocaleCode(String locale) {
-		this.locale  = locale;
+		this.localeCode  = locale;
+	}
+
+	public String getLocaleCode() {
+		return this.localeCode;
 	}
 
 

@@ -170,6 +170,7 @@ public int getAsyncServerIndex();
  * sets the locale for the client, it will be appended to the header
  */
 public void setLocaleCode(String locale);
+public String getLocaleCode();
 
 public void setSubLocaleCode(String locale);
 
