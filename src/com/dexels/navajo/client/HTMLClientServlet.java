@@ -371,7 +371,7 @@ public class HTMLClientServlet extends HttpServlet {
                     "}\n" +
                     "</script>";
 
-                out.write("Copyright(c) 2002 Dexels BV (Use view source to view the TML message)");
+                out.write("Copyright(c) 2002-2007 Dexels BV (Use view source to view the XTML message)");
 //                resultDoc.write(text);
 //                session.setAttribute("NAVAJO_MESSAGE",tbMessage);
                 

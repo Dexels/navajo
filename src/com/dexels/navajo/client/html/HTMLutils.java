@@ -328,8 +328,12 @@ public class HTMLutils {
                     } else
                         prop.setValue(year + "-" + month + "-" + day);
                 } else if (type.equals("boolean")) {
-                    value = request.getParameter(rawName);
-                    prop.setValue(Property.TRUE);
+                	value = request.getParameter(rawName);
+                	if ( value != null && value.equals("true") ) {
+                		prop.setValue(Property.TRUE);
+                	} else {
+                		prop.setValue(Property.FALSE);
+                	}
                 }
             } // end if (type != null)
         } // end while()
