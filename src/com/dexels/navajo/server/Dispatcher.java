@@ -878,6 +878,7 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
     // Check accessSetSize first!
     if ( accessSetSize > navajoConfig.maxAccessSetSize ) {
     	// Server too busy!
+    	System.err.println(">> SERVER TOO BUSY!!!!!");
     	throw new FatalException("500.13");
     }
     
