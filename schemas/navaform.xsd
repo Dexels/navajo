@@ -70,6 +70,11 @@
                         <xs:enumeration value="string"/>
                         <xs:enumeration value="date"/>
                         <xs:enumeration value="float"/>
+                        <xs:enumeration value="binary"/>
+                        <xs:enumeration value="money"/>
+                        <xs:enumeration value="clocktime"/>
+                        <xs:enumeration value="stopwatchtime"/>
+                        <xs:enumeration value="percentage"/>
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
