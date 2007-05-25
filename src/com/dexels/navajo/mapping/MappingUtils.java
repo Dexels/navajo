@@ -315,14 +315,21 @@ public final class MappingUtils {
 
     // Check for existing message.
     Message existing = null;
+    
+    /**
+     * Get the real parent message given the fact that message could contain a relative name.
+     */
+    parent = getParentMessage(parent, message);
+    
     if (parent != null) {
-      existing = parent.getMessage(message);
+      existing = parent.getMessage(getBaseMessageName(message));
     } else {
       existing = doc.getMessage(message);
     }
 
     if ( mode.equals(Message.MSG_MODE_OVERWRITE ) && existing != null ) {
     	// remove existing message.
+    	
     	if ( parent != null ) {
     		parent.removeMessage(existing);
     	} else {
@@ -362,14 +369,9 @@ public final class MappingUtils {
     if (!mode.equals("")) {
       msg.setMode(mode);
     }
-
-    /**
-     * Get the real parent message given the fact that message could contain a relative name.
-     */
-    parent = getParentMessage(parent, message);
-    
+  
     if (count > 1) {
-      msg.setName(message + "0");
+      msg.setName(getBaseMessageName(message) + "0");
       msg.setIndex(0);
       //msg.setType(Message.MSG_TYPE_ARRAY);
       if (!mode.equals(Message.MSG_MODE_IGNORE)) {
@@ -399,7 +401,7 @@ public final class MappingUtils {
     // Add additional messages based on the first messages that was added.
     for (int i = 1; i < count; i++) {
       Message extra = doc.copyMessage(msg, doc);
-      extra.setName(message + i);
+      extra.setName(getBaseMessageName(message) + i);
       extra.setIndex(i);
       if (parent == null) {
         extra = doc.addMessage(extra, false);
@@ -578,4 +580,8 @@ public final class MappingUtils {
     return System.getProperty("file.separator")+packageName;
   }
 
+  public static void main(String [] args) {
+	  Navajo n = NavajoFactory.getInstance().createNavajo();
+	  Message m = NavajoFactory.getInstance().createMessage(n, "Aap");
+  }
 }
