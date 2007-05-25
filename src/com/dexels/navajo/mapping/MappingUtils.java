@@ -275,7 +275,7 @@ public final class MappingUtils {
 	 return msgs;
    }
 
-   public static String getBaseMessageName(String name) {
+   public static final String getBaseMessageName(String name) {
 	   if ( name.startsWith("../") ) {
 		   return getBaseMessageName(name.substring(3));
 	   }
@@ -289,7 +289,7 @@ public final class MappingUtils {
     * @param name
     * @return
     */
-   public static Message getParentMessage(Message parent, String name) {
+   public static final Message getParentMessage(Message parent, String name) {
 	   if ( name.startsWith("../") ) {
 		   return getParentMessage(parent.getParentMessage(), name.substring(3));
 	   }
