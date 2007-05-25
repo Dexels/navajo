@@ -6,9 +6,14 @@ import java.util.*;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
+
+import com.dexels.navajo.client.NavajoClient;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.server.*;
 //import com.sun.xml.internal.bind.v2.util.FatalAdapter;
+import com.jcraft.jzlib.JZlib;
+import com.jcraft.jzlib.ZInputStream;
+import com.jcraft.jzlib.ZOutputStream;
 
 /**
  * Title:        Navajo
@@ -40,6 +45,10 @@ public class TmlHttpServlet extends HttpServlet {
   public static final String JAXP = "com.dexels.navajo.document.jaxpimpl.NavajoFactoryImpl";
   public static final String QDSAX = "com.dexels.navajo.document.base.BaseNavajoFactoryImpl";
 
+  public static final String COMPRESS_GZIP = "gzip";
+  public static final String COMPRESS_JZLIB = "jzlib";
+  public static final String COMPRESS_NONE = "";
+  
   public void init(ServletConfig config) throws ServletException {
     super.init(config);
 
@@ -267,8 +276,6 @@ public class TmlHttpServlet extends HttpServlet {
 
 	  String sendEncoding = request.getHeader("Accept-Encoding");
 	  String recvEncoding = request.getHeader("Content-Encoding");
-	  boolean useSendCompression = ( (sendEncoding != null) && (sendEncoding.indexOf("zip") != -1));
-	  boolean useRecvCompression = ( (recvEncoding != null) && (recvEncoding.indexOf("zip") != -1));
 
 	  Dispatcher dis = null;
 	  BufferedReader r = null;
@@ -276,9 +283,11 @@ public class TmlHttpServlet extends HttpServlet {
 	  try {
 
 		  Navajo in = null;
-
-		  if (useRecvCompression) {
-			  r = new BufferedReader(new InputStreamReader(new java.util.zip.GZIPInputStream(request.getInputStream()), "UTF-8")); 
+		  
+		  if ( sendEncoding != null && sendEncoding.equals(COMPRESS_JZLIB)) {			 
+			  r = new BufferedReader(new InputStreamReader(new ZInputStream(request.getInputStream())));
+		  } else if ( sendEncoding != null && sendEncoding.equals(COMPRESS_GZIP)) {
+			 r = new BufferedReader(new InputStreamReader(new java.util.zip.GZIPInputStream(request.getInputStream()), "UTF-8")); 
 		  }
 		  else {
 			  r = new BufferedReader(request.getReader());
@@ -312,16 +321,17 @@ public class TmlHttpServlet extends HttpServlet {
 		  // Call Dispatcher with parsed TML document as argument.
 		  Navajo outDoc = dis.handle(in, certObject, 
 				  new ClientInfo(request.getRemoteAddr(), "unknown",
-						  recvEncoding, pT, useRecvCompression, useSendCompression, request.getContentLength(), created));
-//		  Navajo outDoc = dis.handle(in, certObject, 
-//				  new ClientInfo(request.getRemoteAddr(), request.getRemoteHost(),
-//						  recvEncoding, pT, useRecvCompression, useSendCompression, request.getContentLength(), created));
-
+						  recvEncoding, pT, ( recvEncoding != null && ( recvEncoding.equals(COMPRESS_GZIP) || recvEncoding.equals(COMPRESS_JZLIB))), 
+						  ( sendEncoding != null && ( sendEncoding.equals(COMPRESS_GZIP) || sendEncoding.equals(COMPRESS_JZLIB))), 
+						  request.getContentLength(), created));
 		  
 		  response.setContentType("text/xml; charset=UTF-8");
 		  
-		  if (useSendCompression) {
-			  response.setHeader("Content-Encoding", "gzip");
+		  if ( recvEncoding != null && recvEncoding.equals(COMPRESS_JZLIB)) {		
+			  response.setHeader("Content-Encoding", COMPRESS_JZLIB);
+			  out = new BufferedWriter(new OutputStreamWriter(new ZOutputStream(response.getOutputStream(), JZlib.Z_BEST_SPEED), "UTF-8"));
+		  } else if ( recvEncoding != null && recvEncoding.equals(COMPRESS_GZIP)) {
+			  response.setHeader("Content-Encoding", COMPRESS_GZIP);
 			  out = new BufferedWriter(new OutputStreamWriter(new java.util.zip.GZIPOutputStream(response.getOutputStream()), "UTF-8"));
 		  }
 		  else {
@@ -329,12 +339,13 @@ public class TmlHttpServlet extends HttpServlet {
 		  }
 		  
 		  outDoc.write(out);
+		  out.flush();
 		  out.close();
 		  out = null;
 		  
 		  System.err.println(outDoc.getHeader().getAttribute("accessId") + ":" + in.getHeader().getRPCName() + "(" + in.getHeader().getRPCUser() + "):" + ( System.currentTimeMillis() - start ) + " ms. (st=" + 
 				  ( outDoc.getHeader().getAttribute("serverTime") + ",rpt=" + outDoc.getHeader().getAttribute("requestParseTime") + ",at=" + outDoc.getHeader().getAttribute("authorisationTime") + ",pt=" + 
-						  outDoc.getHeader().getAttribute("processingTime") + ",tc=" + outDoc.getHeader().getAttribute("threadCount") + ")" ));
+						  outDoc.getHeader().getAttribute("processingTime") + ",tc=" + outDoc.getHeader().getAttribute("threadCount") + ")" + " (" + sendEncoding + "/" + recvEncoding + ")" ));
 	  }
 	  catch (Throwable e) {
 		  dumHttp(request);
