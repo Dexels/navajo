@@ -584,7 +584,11 @@ public void setLocaleCode(String locale) {
 }
 
 public void setSubLocaleCode(String locale) {
-	// TODO Auto-generated method stub
 	
+	
+}
+
+public String getLocaleCode() {
+	return null;
 }
 }
