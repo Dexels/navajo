@@ -192,6 +192,20 @@ public class HTMLutils {
         return buffer.toString();
     }
 
+    private static void clearAllBooleans(Message m) {
+    	ArrayList messages = m.getAllMessages();
+    	ArrayList properties = m.getAllProperties();
+    	for (int i = 0; i < properties.size(); i++) {
+    		Property p = (Property) properties.get(i);
+    		if ( p.getType().equals(Property.BOOLEAN_PROPERTY )) {
+    			p.setValue(false);
+    		}
+    	}
+    	for (int i = 0; i < messages.size(); i++) {
+    		clearAllBooleans((Message) messages.get(i));
+    	}
+    }
+    
     public static String readHTMLForm(Navajo tbMessage, HttpServletRequest request) throws NavajoException {
 
         String rawName, value, type, cardinality = "";
@@ -237,7 +251,11 @@ public class HTMLutils {
 
 
         tbMessage.clearAllSelections();
-
+        ArrayList l = tbMessage.getAllMessages();
+        for (int i = 0; i < l.size(); i++ ) {
+        	clearAllBooleans((Message) l.get(i));
+        }
+        
         while (allParameters.hasMoreElements()) {
             rawName = (String) allParameters.nextElement();
             //System.out.println("Raw parameter: " + rawName);
@@ -329,11 +347,7 @@ public class HTMLutils {
                         prop.setValue(year + "-" + month + "-" + day);
                 } else if (type.equals("boolean")) {
                 	value = request.getParameter(rawName);
-                	if ( value != null && value.equals("true") ) {
-                		prop.setValue(Property.TRUE);
-                	} else {
-                		prop.setValue(Property.FALSE);
-                	}
+                	prop.setValue(Property.TRUE);
                 }
             } // end if (type != null)
         } // end while()
