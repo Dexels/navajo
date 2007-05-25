@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id$ -->
+<xs:schema elementFormDefault="qualified" targetNamespace="http://www.dexels.com/xtsl" xmlns:xtsl="http://www.dexels.com/xtsl" xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="http://www.dexels.com/schema/xml.xsd"/>
+    <xs:element name="tsl">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="1" minOccurs="0" ref="xtsl:validations"/>
+                <xs:element maxOccurs="1" minOccurs="0" ref="xtsl:methods"/>
+                <xs:choice maxOccurs="unbounded" minOccurs="0">
+                    <xs:element ref="xtsl:include"/>
+                    <xs:element ref="xtsl:param"/>
+                    <xs:element ref="xtsl:map"/>
+                    <xs:element ref="xtsl:message"/>
+                    <xs:element ref="xtsl:debug"/>
+                </xs:choice>
+            </xs:sequence>
+            <xs:attribute name="notes" type="xs:string"/>
+            <xs:attribute name="author" type="xs:string"/>
+            <xs:attribute name="repository" type="xs:string"/>
+            <xs:attribute name="id" type="xs:string"/>
+            <xs:attribute name="debug" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="include">
+        <xs:complexType>
+            <xs:attribute name="script" type="xs:string" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="validations">
+        <xs:complexType>
+            <xs:choice maxOccurs="unbounded" minOccurs="0">
+                <xs:element ref="xtsl:check"/>
+            </xs:choice>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="check">
+        <xs:complexType>
+            <xs:simpleContent>
+                <xs:extension base="xs:string">
+                    <xs:attribute name="code" type="xs:integer" use="required"/>
+                    <xs:attribute name="condition" type="xs:string" use="optional"/>
+                    <xs:attribute ref="xml:space" use="optional"/>
+                </xs:extension>
+            </xs:simpleContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="message">
+        <xs:complexType>
+            <xs:choice maxOccurs="unbounded" minOccurs="0">
+                <xs:element ref="xtsl:include"/>
+                <xs:element ref="xtsl:property"/>
+                <xs:element ref="xtsl:map"/>
+                <xs:element ref="xtsl:message"/>
+                <xs:element ref="xtsl:debug"/>
+                <xs:element ref="xtsl:param"/>
+            </xs:choice>
+            <xs:attribute name="name" type="xs:string" use="required"/>
+            <xs:attribute default="1" name="count" type="xs:integer"/>
+            <xs:attribute name="index" type="xs:integer"/>
+            <xs:attribute name="condition" type="xs:string"/>
+            <xs:attribute name="type">
+                <xs:simpleType>
+                    <xs:restriction base="xs:NMTOKEN">
+                        <xs:enumeration value="array"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="mode">
+                <xs:simpleType>
+                    <xs:restriction base="xs:NMTOKEN">
+                        <xs:enumeration value="ignore"/>
+                        <xs:enumeration value="overwrite"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="map">
+        <xs:complexType>
+            <xs:choice maxOccurs="unbounded" minOccurs="0">
+                <xs:element ref="xtsl:include"/>
+                <xs:element ref="xtsl:param"/>
+                <xs:element ref="xtsl:field"/>
+                <xs:element ref="xtsl:property"/>
+                <xs:element ref="xtsl:message"/>
+                <xs:element ref="xtsl:map"/>
+                <xs:element ref="xtsl:debug"/>
+            </xs:choice>
+            <xs:attribute name="object">
+                <xs:simpleType>
+                    <xs:restriction base="xs:NMTOKEN">
+                        <xs:enumeration value="com.dexels.navajo.adapter.SQLMap"/>
+                        <xs:enumeration value="com.dexels.navajo.adapter.NavajoMap"/>
+                        <xs:enumeration value="com.dexels.navajo.adapter.MailMap"/>
+                        <xs:enumeration value="com.dexels.navajo.adapter.XMLMap"/>
+                        <xs:enumeration value="com.dexels.navajo.adapter.HTTPMap"/>
+                        <xs:enumeration value="com.dexels.navajo.adapter.FTPMap"/>
+                        <xs:enumeration value="com.dexels.navajo.adapter.FileMap"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="ref" type="xs:string"/>
+            <xs:attribute name="condition" type="xs:string"/>
+            <xs:attribute name="filter" type="xs:string"/>
+            <xs:attribute name="comment" type="xs:string" use="optional"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="property">
+        <xs:complexType>
+            <xs:choice minOccurs="0">
+                <xs:element ref="xtsl:include"/>
+                <xs:element maxOccurs="unbounded" ref="xtsl:expression"/>
+                <xs:element ref="xtsl:map"/>
+                <xs:element maxOccurs="unbounded" ref="xtsl:option"/>
+                <xs:element ref="xtsl:debug"/>
+            </xs:choice>
+            <xs:attribute name="comment" type="xs:string"/>
+            <xs:attribute name="description" type="xs:string"/>
+            <xs:attribute name="name" type="xs:string" use="required"/>
+            <xs:attribute name="type">
+                <xs:simpleType>
+                    <xs:restriction base="xs:NMTOKEN">
+                        <xs:enumeration value="boolean"/>
+                        <xs:enumeration value="integer"/>
+                        <xs:enumeration value="selection"/>
+                        <xs:enumeration value="string"/>
+                        <xs:enumeration value="date"/>
+                        <xs:enumeration value="float"/>
+                        <xs:enumeration value="binary"/>
+                        <xs:enumeration value="money"/>
+                        <xs:enumeration value="clocktime"/>
+                        <xs:enumeration value="stopwatchtime"/>
+                        <xs:enumeration value="percentage"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="subtype" type="xs:string"/>
+            <xs:attribute name="direction">
+                <xs:simpleType>
+                    <xs:restriction base="xs:NMTOKEN">
+                        <xs:enumeration value="in"/>
+                        <xs:enumeration value="out"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="length" type="xs:integer"/>
+            <xs:attribute name="cardinality">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="1"/>
+                        <xs:enumeration value="+"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="value" type="xs:string"/>
+            <xs:attribute name="condition" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="field">
+        <xs:complexType>
+            <xs:choice>
+                <xs:element maxOccurs="unbounded" minOccurs="1" ref="xtsl:expression"/>
+                <xs:element maxOccurs="1" minOccurs="1" ref="xtsl:map"/>
+            </xs:choice>
+            <xs:attribute name="name" type="xs:string" use="required"/>
+            <xs:attribute name="condition" type="xs:string"/>
+            <xs:attribute name="comment" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="param">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" ref="xtsl:expression"/>
+            </xs:sequence>
+            <xs:attribute name="name" type="xs:string" use="required"/>
+            <xs:attribute name="condition" type="xs:string"/>
+            <xs:attribute name="comment" use="optional"/>
+            <xs:attribute name="type" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="option">
+        <xs:complexType>
+            <xs:attribute name="name" type="xs:string" use="required"/>
+            <xs:attribute name="value" type="xs:string" use="required"/>
+            <xs:attribute name="selected">
+                <xs:simpleType>
+                    <xs:restriction base="xs:NMTOKEN">
+                        <xs:enumeration value="0"/>
+                        <xs:enumeration value="1"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="condition" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="expression">
+        <xs:complexType>
+            <xs:sequence maxOccurs="unbounded" minOccurs="0">
+                <xs:element ref="xtsl:value"/>
+            </xs:sequence>
+            <xs:attribute name="value" type="xs:string" use="optional"/>
+            <xs:attribute name="condition" type="xs:string"/>
+            <xs:attribute name="comment" type="xs:string"/>
+            <xs:attribute ref="xml:space" use="optional"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="value">
+        <xs:complexType>
+            <xs:attribute name="condition" use="optional"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="methods">
+        <xs:complexType>
+            <xs:choice>
+                <xs:element maxOccurs="unbounded" ref="xtsl:method"/>
+            </xs:choice>
+            <xs:attribute name="condition" type="xs:string" use="optional"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="method">
+        <xs:complexType>
+            <xs:attribute name="name" type="xs:string" use="required"/>
+            <xs:attribute name="description" type="xs:string" use="optional"/>
+            <xs:attribute name="condition" type="xs:string" use="optional"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="debug">
+        <xs:complexType>
+            <xs:attribute name="value" type="xs:string" use="required"/>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
