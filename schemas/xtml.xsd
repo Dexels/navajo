@@ -1,17 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-    <xs:element name="message">
+    <xs:element name="tml">
+        <xs:annotation>
+            <xs:documentation>This is the top level tag</xs:documentation>
+        </xs:annotation>
         <xs:complexType>
-            <xs:choice>
-                <xs:element maxOccurs="unbounded" ref="message"/>
-                <xs:element maxOccurs="unbounded" ref="property"/>
-            </xs:choice>
-            <xs:attribute name="name" type="xs:string" use="required"/>
-            <xs:attribute name="type" type="xs:string"/>
-            <xs:attribute name="index" type="xs:integer"/>
+            <xs:sequence>
+                <xs:element maxOccurs="1" minOccurs="1" ref="xtml:header"/>
+                <xs:element maxOccurs="1" minOccurs="0" ref="xtml:methods"/>
+                <xs:choice maxOccurs="unbounded" minOccurs="0">
+                    <xs:element ref="xtml:message"/>
+                </xs:choice>
+            </xs:sequence>
         </xs:complexType>
     </xs:element>
     <xs:element name="header">
+        <xs:annotation>
+            <xs:documentation>Contains the target Navajo service and username/password information</xs:documentation>
+        </xs:annotation>
         <xs:complexType>
             <xs:sequence>
                 <xs:element ref="transaction"/>
@@ -25,37 +31,24 @@
             <xs:attribute name="rpc_pwd" use="required"/>
         </xs:complexType>
     </xs:element>
-    <xs:element name="method">
+    <xs:element name="message">
+        <xs:annotation>
+            <xs:documentation>A message groups properties and other messages</xs:documentation>
+        </xs:annotation>
         <xs:complexType>
-            <xs:sequence>
-                <xs:element ref="required"/>
-            </xs:sequence>
+            <xs:choice>
+                <xs:element maxOccurs="unbounded" ref="message"/>
+                <xs:element maxOccurs="unbounded" ref="property"/>
+            </xs:choice>
             <xs:attribute name="name" type="xs:string" use="required"/>
-            <xs:attribute name="description" type="xs:string" use="required"/>
-        </xs:complexType>
-    </xs:element>
-    <xs:element name="methods">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element maxOccurs="unbounded" ref="method"/>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
-    <xs:element name="option">
-        <xs:complexType>
-            <xs:attribute name="name" type="xs:string" use="required"/>
-            <xs:attribute name="value" type="xs:string" use="required"/>
-            <xs:attribute name="selected" use="required">
-                <xs:simpleType>
-                    <xs:restriction base="xs:NMTOKEN">
-                        <xs:enumeration value="1"/>
-                        <xs:enumeration value="0"/>
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
+            <xs:attribute name="type" type="xs:string"/>
+            <xs:attribute name="index" type="xs:integer"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="property">
+        <xs:annotation>
+            <xs:documentation>A property is the basic data element</xs:documentation>
+        </xs:annotation>
         <xs:complexType>
             <xs:sequence>
                 <xs:element maxOccurs="unbounded" minOccurs="0" ref="option"/>
@@ -92,18 +85,40 @@
             <xs:attribute name="description" type="xs:string"/>
         </xs:complexType>
     </xs:element>
-    <xs:element name="required">
+    <xs:element name="option">
+        <xs:annotation>
+            <xs:documentation>Used in properties of type selection to define a list of (possibly selected) name/value pairs</xs:documentation>
+        </xs:annotation>
         <xs:complexType>
-            <xs:attribute name="message" type="xs:string" use="required"/>
+            <xs:attribute name="name" type="xs:string" use="required"/>
+            <xs:attribute name="value" type="xs:string" use="required"/>
+            <xs:attribute name="selected" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:NMTOKEN">
+                        <xs:enumeration value="1"/>
+                        <xs:enumeration value="0"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
         </xs:complexType>
     </xs:element>
-    <xs:element name="tml">
+    <xs:element name="methods">
+        <xs:annotation>
+            <xs:documentation>Links to possible subsequent methods</xs:documentation>
+        </xs:annotation>
         <xs:complexType>
             <xs:sequence>
-                <xs:element maxOccurs="unbounded" minOccurs="0" ref="message"/>
-                <xs:element maxOccurs="1" minOccurs="0" ref="methods"/>
-                <xs:element maxOccurs="1" minOccurs="0" ref="header"/>
+                <xs:element maxOccurs="unbounded" ref="method"/>
             </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="method">
+        <xs:annotation>
+            <xs:documentation>A method location</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="name" type="xs:string" use="required"/>
+            <xs:attribute name="description" type="xs:string" use="required"/>
         </xs:complexType>
     </xs:element>
 </xs:schema>

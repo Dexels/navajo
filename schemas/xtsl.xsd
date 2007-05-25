@@ -3,6 +3,9 @@
 <xs:schema elementFormDefault="qualified" targetNamespace="http://www.dexels.com/xtsl" xmlns:xtsl="http://www.dexels.com/xtsl" xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:xs="http://www.w3.org/2001/XMLSchema">
     <xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="http://www.dexels.com/schema/xml.xsd"/>
     <xs:element name="tsl">
+        <xs:annotation>
+            <xs:documentation>This is the top level tag</xs:documentation>
+        </xs:annotation>
         <xs:complexType>
             <xs:sequence>
                 <xs:element maxOccurs="1" minOccurs="0" ref="xtsl:validations"/>
@@ -23,11 +26,17 @@
         </xs:complexType>
     </xs:element>
     <xs:element name="include">
+        <xs:annotation>
+            <xs:documentation>For including xtsl files</xs:documentation>
+        </xs:annotation>
         <xs:complexType>
             <xs:attribute name="script" type="xs:string" use="required"/>
         </xs:complexType>
     </xs:element>
     <xs:element name="validations">
+        <xs:annotation>
+            <xs:documentation>Defines xtml request validation rules</xs:documentation>
+        </xs:annotation>
         <xs:complexType>
             <xs:choice maxOccurs="unbounded" minOccurs="0">
                 <xs:element ref="xtsl:check"/>
@@ -35,17 +44,74 @@
         </xs:complexType>
     </xs:element>
     <xs:element name="check">
+        <xs:annotation>
+            <xs:documentation>A specific validation rule</xs:documentation>
+        </xs:annotation>
         <xs:complexType>
             <xs:simpleContent>
                 <xs:extension base="xs:string">
-                    <xs:attribute name="code" type="xs:integer" use="required"/>
+                    <xs:attribute name="code" type="xs:integer" use="required">
+                        <xs:annotation>
+                            <xs:documentation>A Navajo expression</xs:documentation>
+                        </xs:annotation>
+                    </xs:attribute>
                     <xs:attribute name="condition" type="xs:string" use="optional"/>
                     <xs:attribute ref="xml:space" use="optional"/>
                 </xs:extension>
             </xs:simpleContent>
         </xs:complexType>
     </xs:element>
+    <xs:element name="map">
+        <xs:annotation>
+            <xs:documentation>A map defines a Java object (adapter) that can be accessed from the xtsl</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:choice maxOccurs="unbounded" minOccurs="0">
+                <xs:element ref="xtsl:include"/>
+                <xs:element ref="xtsl:param"/>
+                <xs:element ref="xtsl:field"/>
+                <xs:element ref="xtsl:property"/>
+                <xs:element ref="xtsl:message"/>
+                <xs:element ref="xtsl:map"/>
+                <xs:element ref="xtsl:debug"/>
+            </xs:choice>
+            <xs:attribute name="object">
+                <xs:simpleType>
+                    <xs:restriction base="xs:NMTOKEN">
+                        <xs:enumeration value="com.dexels.navajo.adapter.SQLMap"/>
+                        <xs:enumeration value="com.dexels.navajo.adapter.NavajoMap"/>
+                        <xs:enumeration value="com.dexels.navajo.adapter.MailMap"/>
+                        <xs:enumeration value="com.dexels.navajo.adapter.XMLMap"/>
+                        <xs:enumeration value="com.dexels.navajo.adapter.HTTPMap"/>
+                        <xs:enumeration value="com.dexels.navajo.adapter.FTPMap"/>
+                        <xs:enumeration value="com.dexels.navajo.adapter.FileMap"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="ref" type="xs:string"/>
+            <xs:attribute name="condition" type="xs:string"/>
+            <xs:attribute name="filter" type="xs:string"/>
+            <xs:attribute name="comment" type="xs:string" use="optional"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="field">
+        <xs:annotation>
+            <xs:documentation>A field sets adapter parameters</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:choice>
+                <xs:element maxOccurs="unbounded" minOccurs="1" ref="xtsl:expression"/>
+                <xs:element maxOccurs="1" minOccurs="1" ref="xtsl:map"/>
+            </xs:choice>
+            <xs:attribute name="name" type="xs:string" use="required"/>
+            <xs:attribute name="condition" type="xs:string"/>
+            <xs:attribute name="comment" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
     <xs:element name="message">
+        <xs:annotation>
+            <xs:documentation>A message groups properties, other messages and control elements</xs:documentation>
+        </xs:annotation>
         <xs:complexType>
             <xs:choice maxOccurs="unbounded" minOccurs="0">
                 <xs:element ref="xtsl:include"/>
@@ -76,37 +142,10 @@
             </xs:attribute>
         </xs:complexType>
     </xs:element>
-    <xs:element name="map">
-        <xs:complexType>
-            <xs:choice maxOccurs="unbounded" minOccurs="0">
-                <xs:element ref="xtsl:include"/>
-                <xs:element ref="xtsl:param"/>
-                <xs:element ref="xtsl:field"/>
-                <xs:element ref="xtsl:property"/>
-                <xs:element ref="xtsl:message"/>
-                <xs:element ref="xtsl:map"/>
-                <xs:element ref="xtsl:debug"/>
-            </xs:choice>
-            <xs:attribute name="object">
-                <xs:simpleType>
-                    <xs:restriction base="xs:NMTOKEN">
-                        <xs:enumeration value="com.dexels.navajo.adapter.SQLMap"/>
-                        <xs:enumeration value="com.dexels.navajo.adapter.NavajoMap"/>
-                        <xs:enumeration value="com.dexels.navajo.adapter.MailMap"/>
-                        <xs:enumeration value="com.dexels.navajo.adapter.XMLMap"/>
-                        <xs:enumeration value="com.dexels.navajo.adapter.HTTPMap"/>
-                        <xs:enumeration value="com.dexels.navajo.adapter.FTPMap"/>
-                        <xs:enumeration value="com.dexels.navajo.adapter.FileMap"/>
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:attribute>
-            <xs:attribute name="ref" type="xs:string"/>
-            <xs:attribute name="condition" type="xs:string"/>
-            <xs:attribute name="filter" type="xs:string"/>
-            <xs:attribute name="comment" type="xs:string" use="optional"/>
-        </xs:complexType>
-    </xs:element>
     <xs:element name="property">
+        <xs:annotation>
+            <xs:documentation>A property is the basic data element</xs:documentation>
+        </xs:annotation>
         <xs:complexType>
             <xs:choice minOccurs="0">
                 <xs:element ref="xtsl:include"/>
@@ -157,18 +196,10 @@
             <xs:attribute name="condition" type="xs:string"/>
         </xs:complexType>
     </xs:element>
-    <xs:element name="field">
-        <xs:complexType>
-            <xs:choice>
-                <xs:element maxOccurs="unbounded" minOccurs="1" ref="xtsl:expression"/>
-                <xs:element maxOccurs="1" minOccurs="1" ref="xtsl:map"/>
-            </xs:choice>
-            <xs:attribute name="name" type="xs:string" use="required"/>
-            <xs:attribute name="condition" type="xs:string"/>
-            <xs:attribute name="comment" type="xs:string"/>
-        </xs:complexType>
-    </xs:element>
     <xs:element name="param">
+        <xs:annotation>
+            <xs:documentation>For storing local script variables</xs:documentation>
+        </xs:annotation>
         <xs:complexType>
             <xs:sequence>
                 <xs:element maxOccurs="unbounded" ref="xtsl:expression"/>
@@ -179,7 +210,32 @@
             <xs:attribute name="type" type="xs:string"/>
         </xs:complexType>
     </xs:element>
+    <xs:element name="expression">
+        <xs:annotation>
+            <xs:documentation>Defines an expression in which both xtml properties and adapter fields can be manipulated</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence maxOccurs="unbounded" minOccurs="0">
+                <xs:element ref="xtsl:value"/>
+            </xs:sequence>
+            <xs:attribute name="value" type="xs:string" use="optional"/>
+            <xs:attribute name="condition" type="xs:string"/>
+            <xs:attribute name="comment" type="xs:string"/>
+            <xs:attribute ref="xml:space" use="optional"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="value">
+        <xs:annotation>
+            <xs:documentation>An expression</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="condition" use="optional"/>
+        </xs:complexType>
+    </xs:element>
     <xs:element name="option">
+        <xs:annotation>
+            <xs:documentation>Used in properties of type selection to define a list of (possibly selected) name/value pairs</xs:documentation>
+        </xs:annotation>
         <xs:complexType>
             <xs:attribute name="name" type="xs:string" use="required"/>
             <xs:attribute name="value" type="xs:string" use="required"/>
@@ -194,23 +250,10 @@
             <xs:attribute name="condition" type="xs:string"/>
         </xs:complexType>
     </xs:element>
-    <xs:element name="expression">
-        <xs:complexType>
-            <xs:sequence maxOccurs="unbounded" minOccurs="0">
-                <xs:element ref="xtsl:value"/>
-            </xs:sequence>
-            <xs:attribute name="value" type="xs:string" use="optional"/>
-            <xs:attribute name="condition" type="xs:string"/>
-            <xs:attribute name="comment" type="xs:string"/>
-            <xs:attribute ref="xml:space" use="optional"/>
-        </xs:complexType>
-    </xs:element>
-    <xs:element name="value">
-        <xs:complexType>
-            <xs:attribute name="condition" use="optional"/>
-        </xs:complexType>
-    </xs:element>
     <xs:element name="methods">
+        <xs:annotation>
+            <xs:documentation>Links to possible subsequent methods</xs:documentation>
+        </xs:annotation>
         <xs:complexType>
             <xs:choice>
                 <xs:element maxOccurs="unbounded" ref="xtsl:method"/>
@@ -219,6 +262,9 @@
         </xs:complexType>
     </xs:element>
     <xs:element name="method">
+        <xs:annotation>
+            <xs:documentation>A method location</xs:documentation>
+        </xs:annotation>
         <xs:complexType>
             <xs:attribute name="name" type="xs:string" use="required"/>
             <xs:attribute name="description" type="xs:string" use="optional"/>
@@ -226,6 +272,9 @@
         </xs:complexType>
     </xs:element>
     <xs:element name="debug">
+        <xs:annotation>
+            <xs:documentation>For writing debug messages to System.err</xs:documentation>
+        </xs:annotation>
         <xs:complexType>
             <xs:attribute name="value" type="xs:string" use="required"/>
         </xs:complexType>
