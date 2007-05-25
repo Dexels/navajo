@@ -28,6 +28,9 @@ import com.dexels.navajo.document.base.BaseHeaderImpl;
 import com.dexels.navajo.document.saximpl.*;
 import com.dexels.navajo.document.types.*;
 import com.dexels.navajo.client.impl.*;
+import com.jcraft.jzlib.JZlib;
+import com.jcraft.jzlib.ZInputStream;
+import com.jcraft.jzlib.ZOutputStream;
 
 //import com.dexels.navajo.client.impl.*;
 
@@ -618,17 +621,17 @@ public class NavajoClient implements ClientInterface {
     
     // Send message
     if (useCompression) {
-    	con.setRequestProperty("Accept-Encoding", "gzip");
-    	con.setRequestProperty("Content-Encoding", "gzip");
+    	con.setRequestProperty("Accept-Encoding", "jzlib");
+    	con.setRequestProperty("Content-Encoding", "jzlib");
     	
     	BufferedWriter out = null;
     	try {
-    		out = new BufferedWriter(new OutputStreamWriter(new java.util.zip.GZIPOutputStream(con.getOutputStream()), "UTF-8"));
+    		out = new BufferedWriter(new OutputStreamWriter(new ZOutputStream(con.getOutputStream(), JZlib.Z_BEST_SPEED), "UTF-8"));
     		d.write(out, condensed, d.getHeader().getRPCName());
     	} finally  {
     		if ( out != null ) {
     			try {
-    				out.flush();
+    				//out.flush();
     				out.close();
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -662,7 +665,7 @@ public class NavajoClient implements ClientInterface {
 //    }
     
     if ( useCompression ) {
-    	return new java.util.zip.GZIPInputStream(con.getInputStream());
+    	return new ZInputStream(con.getInputStream());
     } else {
     	return con.getInputStream();
     }
