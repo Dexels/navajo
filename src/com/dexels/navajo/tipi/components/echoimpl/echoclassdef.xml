@@ -302,7 +302,9 @@
 
         </events>
         <values>
-            <value direction="inout" name="messagepath" type="string"/>        
+            <value direction="inout" name="messagepath" type="string"/>  
+                  
+            <value direction="in" name="rowsPerPage" type="integer"/>
             <value direction="inout" name="selectedIndex" type="integer"/>
             <value direction="inout" name="filtersvisible" type="boolean"/>
             <value direction="inout" name="columnsvisible" type="boolean"/>

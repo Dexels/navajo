@@ -38,6 +38,10 @@ import echopointng.table.SortableTableColumn;
 import echopointng.table.SortableTableHeaderRenderer;
 
 public class MessageTable extends PageableSortableTable implements PageIndexChangeListener {
+	private static final int DEFAULT_ROWS_PER_PAGE = 20;
+
+	private int rowsPerPage = DEFAULT_ROWS_PER_PAGE;
+	
 	private static final Extent RADIOSIZE = new Extent(10, Extent.PX);
 
 	private MessageTableModel myModel = null;
@@ -113,6 +117,13 @@ public class MessageTable extends PageableSortableTable implements PageIndexChan
 		// });
 	}
 
+	
+	public void setRowsPerPage(int rpp) {
+		rowsPerPage = rpp;
+		if(sortablePageableModel!=null) {
+			sortablePageableModel.setRowsPerPage(rpp);
+		}
+	}
 	public void setMessage(Message m) {
 		// setSelectionMode(Table.);
 		System.err.println("Setting message...");
@@ -123,7 +134,7 @@ public class MessageTable extends PageableSortableTable implements PageIndexChan
 		setColumnModel(createColumnModel(m, myRenderer));
 		myModel = new MessageTableModel(this, getColumnModel(), m);
 		sortablePageableModel = new DefaultPageableSortableTableModel(myModel);
-		sortablePageableModel.setRowsPerPage(20);
+		sortablePageableModel.setRowsPerPage(rowsPerPage);
 		setBackground(new Color(255, 255, 255));
 		System.err.println("Total pages: " + sortablePageableModel.getTotalPages());
 		System.err.println("Current page: " + sortablePageableModel.getCurrentPage());

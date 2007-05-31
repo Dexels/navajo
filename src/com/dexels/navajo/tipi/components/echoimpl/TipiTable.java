@@ -154,7 +154,21 @@ public class TipiTable extends TipiEchoDataComponentImpl {
         // TipiSwingColumnAttributeParser();
         
         boolean editableColumnsFound = false;
+        
+        String rowsPerPage = (String) elm.getAttribute("rowsPerPage");
+        if(rowsPerPage!=null) {
+        	int rpp = Integer.parseInt(rowsPerPage);
+        	  MessageTable xmm = (MessageTable) getActualComponent();
+              if(xmm!=null) {
+            	  xmm.setRowsPerPage(rpp);
+              }
+        }
+        
+        
         messagePath = (String) elm.getAttribute("messagepath");
+        
+        
+        
         if (messagePath != null) {
             if (messagePath.startsWith("'") && messagePath.endsWith("'")) {
                 messagePath = messagePath.substring(1, messagePath.length() - 1);
@@ -200,19 +214,7 @@ public class TipiTable extends TipiEchoDataComponentImpl {
         // mm.setColumnAttributes(columnAttributes);
     }
 
-//    public void setComponentValue(final String name, final Object object) {
-//
-//        if ("w".equals(name)) {
-//        ContainerEx cont = (ContainerEx) getContainer();
-//        cont.setWidth( new Extent(( (Integer) object).intValue(),Extent.PX));
-//        }
-//        if ("h".equals(name)) {
-//        ContainerEx cont = (ContainerEx) getContainer();
-//        cont.setHeight(  new Extent(( (Integer) object).intValue(),Extent.PX));
-//        }
-//       super.setComponentValue(name, object);
-//   }
-
+ 
     
     public void processStyles() {
          super.processStyles();
