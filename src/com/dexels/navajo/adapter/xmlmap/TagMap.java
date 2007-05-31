@@ -32,6 +32,7 @@ import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Random;
 import java.util.StringTokenizer;
 import java.util.Vector;
 import java.util.regex.Pattern;
@@ -53,7 +54,7 @@ public class TagMap implements Mappable {
 	public final String PREFIX_SEPARATOR = "@";
 	public final int    DEFAULT_INDENT   = 2;
 	
-	public String     name;
+	public String     name = "unknown";
 	public String     text;
 	public String     attributeText;
 	
@@ -73,6 +74,16 @@ public class TagMap implements Mappable {
 	protected HashMap   attributes = null;
 	
 	protected ArrayList tagList    = null;
+	
+	private int tagsIndex = -1;
+	private int tagListIndex = -1;
+	
+	private static Random rand = new Random(System.currentTimeMillis());
+	
+	public TagMap() {
+		// Set random tag name first.
+		name = name + rand.nextInt();
+	}
 	
 	public void load(Parameters parms, Navajo inMessage, Access access,
 			NavajoConfig config) throws MappableException, UserException {
@@ -96,7 +107,13 @@ public class TagMap implements Mappable {
 	}
 	
 	public void setName(String s) {
+		// Remove previous name from tags and tagList.
+		tagList.remove( tagListIndex + this.PREFIX_SEPARATOR + this.getName() );
+		tags.remove( tagsIndex + this.PREFIX_SEPARATOR + this.getName() );
+		// Set new name and inser into tags and tagList structures.
 		name = s;
+		tags.put(tagsIndex + this.PREFIX_SEPARATOR + this.getName(), this);
+		tagList.add( tagListIndex + this.PREFIX_SEPARATOR + this.getName() );
 	}
 	
 	public void setInsert(Binary b) throws UserException {
@@ -136,8 +153,10 @@ public class TagMap implements Mappable {
 			tagList = new ArrayList();
 		}
 		
-		tags.put( ( 1 + tags.size() ) + this.PREFIX_SEPARATOR + t.getName(), t);
-		tagList.add( ( 1 + tagList.size() ) + this.PREFIX_SEPARATOR + t.getName() );
+		tagsIndex = 1 + tags.size();
+		tags.put( tagsIndex + this.PREFIX_SEPARATOR + t.getName(), t);
+		tagListIndex = 1 + tagList.size();
+		tagList.add( tagListIndex + this.PREFIX_SEPARATOR + t.getName() );
 	}
 	
 	public boolean getExists(String name) {
@@ -271,6 +290,12 @@ public class TagMap implements Mappable {
 		}
 		
 		return children;
+	}
+	
+	public void setChildren(TagMap [] all) throws UserException {
+		for (int i = 0; i < all.length; i++) {
+			setChild(all[i]);
+		}
 	}
 	
 	private String getSpaces(int indent) {
