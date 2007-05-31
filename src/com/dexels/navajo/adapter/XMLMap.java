@@ -147,13 +147,14 @@ public class XMLMap extends TagMap implements Mappable {
 		parseString(s);
 	}
 	
-	public static void main(String [] args) throws UserException {
+	public static void main(String [] args) throws Exception {
 		XMLMap xml = new XMLMap();
 		xml.setStart("xml");
 		TagMap district = new TagMap();
 		district.setName("district");
 		xml.setChild(district);
-		
+		district.setName("DISTRIKTJE");
+		district.setName("WERKT DIT NOG STEEDS");
 		System.err.println("child = " + xml.getChildTag("district", 0));
 		
 		TagMap n = new TagMap();
@@ -166,6 +167,8 @@ public class XMLMap extends TagMap implements Mappable {
 		xml.setChildName("district");
 		TagMap kind = xml.getChild();
 		System.err.println("kind = " + kind.getName());
+		
+		b.write(System.err);
 		
 	}
 }
