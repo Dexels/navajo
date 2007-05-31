@@ -1,6 +1,6 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
-import tucana.echo2.app.ModalDimmer;
+//import tucana.echo2.app.ModalDimmer;
 import nextapp.echo2.app.Component;
 import nextapp.echo2.app.Window;
 

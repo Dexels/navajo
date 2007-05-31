@@ -1,6 +1,6 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
-import tucana.echo2.app.ModalDimmer;
+//import tucana.echo2.app.ModalDimmer;
 import nextapp.echo2.app.*;
 import nextapp.echo2.app.layout.GridLayoutData;
 import nextapp.echo2.extras.app.MenuBarPane;
@@ -55,13 +55,13 @@ public class TipiFrame extends TipiEchoDataComponentImpl {
 //	private ContainerEx leftPlaceHolder;
 
 //	private Grid myWindowGrid;
-	private ModalDimmer dimmer;
+//	private ModalDimmer dimmer;
 
     public TipiFrame() {
-		dimmer = new ModalDimmer();
-		dimmer.setDimOpacity((float)0.5);
-		dimmer.setDimAnimated(false);
-		dimmer.setVisible(false);
+//		dimmer = new ModalDimmer();
+//		dimmer.setDimOpacity((float)0.5);
+//		dimmer.setDimAnimated(false);
+//		dimmer.setVisible(false);
    }
 
     public Window getWindow() {
@@ -92,7 +92,7 @@ public class TipiFrame extends TipiEchoDataComponentImpl {
         contentPane.add(mySplit);
         menuPane = new ContentPane();
         realContent = new ContentPane();
-        realContent.add(dimmer);
+//        realContent.add(dimmer);
 //        realContent.setBackground(new Color(255,255,0));
 //        mySplit.setBackground(new Color(200,100,0));
         mySplit.add(menuPane); 
