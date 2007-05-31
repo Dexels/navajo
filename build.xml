@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- $Id$ -->
+<project name="NavajoEchoClient" default="archive" basedir=".">
+	<property name="src" location="src" />
+	<property name="build" location="classes" />
+	<property name="lib" value="lib" />
+	<property name="log" value="log" />
+	<property name="archive" value="${ant.project.name}.jar" />
+
+	<property name="runscript" value="runner.sh" />
+  <property name="cvs.release.arg" value="-A" />
+  <condition property="cvs.release.arg" value="-r ${VERSION}">
+    <isset property="${VERSION}" />
+  </condition>
+	<property name="NavajoClient" value="${PROJECTHOME}/NavajoClient" />
+	<property name="NavajoClient.build" value="${NavajoClient}/classes" />
+  <available file="${NavajoClient}" type="dir" property="NavajoClient.present" />
+	<property name="NavajoDocument" value="${PROJECTHOME}/NavajoDocument" />
+	<property name="NavajoDocument.build" value="${NavajoDocument}/classes" />
+  <available file="${NavajoDocument}" type="dir" property="NavajoDocument.present" />
+  <property name="Navajo" value="${PROJECTHOME}/Navajo" />
+  <property name="Navajo.build" value="${Navajo}/classes" />
+  <available file="${Navajo}" type="dir" property="Navajo.present" />
+	<path id="depend">
+		<fileset dir="${lib}">
+			<include name="**/*.jar" />
+		</fileset>
+		<pathelement location="${NavajoDocument.build}" />
+		<pathelement location="${NavajoClient.build}" />
+		<pathelement location="${Navajo.build}" />
+	</path>
+  <path id="run.depend">
+    <path refid="depend" />
+    <pathelement location="${archive}" />
+  </path>
+  <property name="run.path" refid="run.depend" />
+	<target name="check-env">
+    <tstamp />
+		<fail unless="PROJECTHOME">  
+	      Set the PROJECTHOME environment variable to the top directory of
+	      your CVS projects, for example:
+	
+	      export PROJECTHOME=C:\PROJECTS
+	
+	      declare -x PROJECTHOME=/home/arjen/las-projectas 
+	    </fail>
+	</target>
+  <target name="checkout.NavajoClient" depends="check-env" unless="NavajoClient.present">
+    <cvs package="NavajoClient" dest="${PROJECTHOME}" />
+  </target>
+  <target name="checkout.NavajoDocument" depends="check-env" unless="NavajoDocument.present">
+    <cvs package="NavajoDocument" dest="${PROJECTHOME}" />
+  </target>
+  <target name="checkout.Navajo" depends="check-env" unless="Navajo.present">
+    <cvs package="Navajo" dest="${PROJECTHOME}" />
+  </target>
+
+	<target name="checkout" depends="check-env,checkout.NavajoClient,checkout.NavajoDocument,checkout.Navajo" />
+	<target name="init" depends="checkout">
+		<mkdir dir="${Navajo.build}" />
+		<mkdir dir="${NavajoDocument.build}" />
+		<mkdir dir="${NavajoClient.build}" />
+    	<mkdir dir="${build}" />
+		<mkdir dir="${log}" />
+	</target>
+	<target name="clean" depends="check-env">
+		<delete file="${archive}" />
+		<delete dir="${Navajo.build}" />
+		<delete dir="${NavajoDocument.build}" />
+		<delete dir="${NavajoClient.build}" />
+     	<delete dir="${build}" />
+		<delete dir="${log}" />
+	</target>
+	<target name="resource">
+		<copy todir="${build}">
+			<fileset dir="${src}">
+				<exclude name="**/*.java" />
+			</fileset>
+		</copy>
+	</target>
+  <target name="Navajo" depends="init">
+    <ant dir="${Navajo}" target="compile" inheritAll="false">
+      <property name="PROJECTHOME" value="${PROJECTHOME}" />
+    </ant>
+  </target>
+
+  <target name="compile" >
+    <javac srcdir="${src}" destdir="${build}">
+      <classpath refid="depend" />
+    </javac>
+  </target>
+	<target name="archive" depends="compile,resource">
+		<jar jarfile="${archive}" basedir="${build}" />
+	</target>
+	<target name="run" depends="archive">
+		<java classname="${main}" fork="true" output="./log/console-output.log">
+			<classpath refid="run.depend"/>
+		</java>
+	</target>
+	<target name="runner-script" depends="archive">
+		<echo file="${runscript}" xml:space="preserve">#! /bin/bash
+#
+# this wrapper script is generated from an Ant build
+# DO NOT CHECK ME INTO CVS!
+#
+printf "Operating system is %s\n" "${os.name}"
+
+declare -x CYGPATH=`which cygpath 2&gt;/dev/null`
+if [[ "${os.name}" = Win* ]]
+then
+  declare -x PROJECTHOME=`$${CYGPATH} -u "${PROJECTHOME}"`
+else
+  declare -x PROJECTHOME=${PROJECTHOME}
+fi
+cd $${PROJECTHOME}/${ant.project.name}
+
+declare -x CLASSPATH="${run.path}"
+printf "class path from ant is: %s\n" "$${CLASSPATH}"
+
+java -cp $${CLASSPATH} ${main}
+### EOF ###
+    </echo>
+		<chmod file="${runscript}" perm="775" />
+	</target>
+</project>
+<!-- EOF: $RCSfile$ -->
