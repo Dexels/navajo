@@ -75,8 +75,9 @@ public class TagMap implements Mappable {
 	
 	protected ArrayList tagList    = null;
 	
-	private int tagsIndex = -1;
-	private int tagListIndex = -1;
+	protected int tagsIndex = -1;
+	protected int tagListIndex = -1;
+	private TagMap parent = null;
 	
 	private static Random rand = new Random(System.currentTimeMillis());
 	
@@ -108,12 +109,20 @@ public class TagMap implements Mappable {
 	
 	public void setName(String s) {
 		// Remove previous name from tags and tagList.
-		tagList.remove( tagListIndex + this.PREFIX_SEPARATOR + this.getName() );
-		tags.remove( tagsIndex + this.PREFIX_SEPARATOR + this.getName() );
+
+		if ( parent != null ) {
+			//System.err.println("Removing parent references..." + parent.tagListIndex);
+			parent.tagList.remove( parent.tagListIndex + this.PREFIX_SEPARATOR + this.getName() );
+			parent.tags.remove( parent.tagsIndex + this.PREFIX_SEPARATOR + this.getName() );
+		}
+
 		// Set new name and inser into tags and tagList structures.
 		name = s;
-		tags.put(tagsIndex + this.PREFIX_SEPARATOR + this.getName(), this);
-		tagList.add( tagListIndex + this.PREFIX_SEPARATOR + this.getName() );
+		if ( parent != null ) {
+			//System.err.println("Adding parent references...");
+			parent.tags.put(parent.tagsIndex + this.PREFIX_SEPARATOR + this.getName(), this);
+			parent.tagList.add( parent.tagListIndex + this.PREFIX_SEPARATOR + this.getName() );
+		}
 	}
 	
 	public void setInsert(Binary b) throws UserException {
@@ -152,7 +161,7 @@ public class TagMap implements Mappable {
 			tags    = new HashMap();
 			tagList = new ArrayList();
 		}
-		
+		t.parent = this;
 		tagsIndex = 1 + tags.size();
 		tags.put( tagsIndex + this.PREFIX_SEPARATOR + t.getName(), t);
 		tagListIndex = 1 + tagList.size();
@@ -361,6 +370,7 @@ public class TagMap implements Mappable {
 			XMLElement child = (XMLElement) v.get(i);
 			
 			TagMap childTag = parseXMLElement(child);
+			
 			t.setChild(childTag);
 		}
 		
@@ -380,4 +390,5 @@ public class TagMap implements Mappable {
 	public void kill() {
 	}
 
+	
 }
