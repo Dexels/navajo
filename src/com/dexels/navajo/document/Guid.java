@@ -31,7 +31,7 @@ public final class Guid {
 	private final static String VERSION = "$Id$";
 	
 	static final Random rand = new Random(System.currentTimeMillis() + 
-			 Math.abs( (System.getProperties().hashCode() == Integer.MIN_VALUE ? 3213232 : System.getProperties().hashCode() )));
+			 Math.abs( (System.class.hashCode() == Integer.MIN_VALUE ? 3213232 : System.class.hashCode() )));
 	
 	public final static String create() {
 		return Math.abs(rand.nextLong() * System.currentTimeMillis()) + "";
