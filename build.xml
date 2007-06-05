@@ -4,6 +4,7 @@
   <property name="src" location="src"/>
   <property name="build" location="classes"/>
   <property name="lib" value="lib"/>
+  <property name="base.archive" value="NavajoDocument.jar"/>
   <property name="nano.archive" value="NanoImpl.jar"/>
   <property name="jaxp.archive" value="jaxpimpl.jar"/>
   <property name="navajo.base" value="com/dexels/navajo"/>
@@ -29,22 +30,17 @@
       <classpath refid="depend"/>
     </javac>
   </target>
-  <target name="nano" depends="compile">
-    <jar jarfile="${nano.archive}">
+  <target name="base" depends="compile">
+    <jar jarfile="${base.archive}">
       <fileset dir="${build}">
         <include name="${document.base}/*.class"/>
-        <include name="org/**/*.class"/>
-        <include name="${document.base}/nanoimpl/**/*.class"/>
         <include name="${document.base}/lazy/**/*.class"/>
         <include name="${document.base}/typecheck/**/*.class"/>
         <include name="${document.base}/types/**/*.class"/>
         <include name="${document.base}/base/**/*.class"/>
         <include name="${document.base}/saximpl/**/*.class"/>
       </fileset>
-      <fileset dir="${build}">
-        <include name="${navajo.base}/nanoclient/**/*.class"/>
-      </fileset>
-      <fileset dir="${build}">
+          <fileset dir="${build}">
         <include name="${persistence.base}/**/*.class"/>
       </fileset>
       <fileset dir="${build}">
@@ -53,29 +49,28 @@
       <fileset dir="${DexelsVersionControl.build}"/>
     </jar>
   </target>
+	 <target name="nano" depends="compile">
+	    <jar jarfile="${nano.archive}">
+	      <fileset dir="${build}">
+	        <include name="${document.base}/nanoimpl/**/*.class"/>
+	     </fileset>
+	      <fileset dir="${build}">
+	        <include name="navajodocument/*.class"/>
+	      </fileset>
+	      <fileset dir="${DexelsVersionControl.build}"/>
+	    </jar>
+	  </target>
   <target name="jaxp" depends="compile">
     <jar jarfile="${jaxp.archive}">
       <fileset dir="${build}">
-        <include name="${document.base}/*.class"/>
-        <include name="org/**/*.class"/>
         <include name="${document.base}/jaxpimpl/**/*.class"/>
-        <include name="${document.base}/lazy/**/*.class"/>
-        <include name="${document.base}/typecheck/**/*.class"/>
-        <include name="${document.base}/types/**/*.class"/>
-        <include name="${document.base}/base/**/*.class"/>
      </fileset>
-      <fileset dir="${build}">
-        <include name="${navajo.base}/nanoclient/**/*.class"/>
-      </fileset>
-      <fileset dir="${build}">
-        <include name="${persistence.base}/**/*.class"/>
-      </fileset>
       <fileset dir="${build}">
         <include name="navajodocument/*.class"/>
       </fileset>
       <fileset dir="${DexelsVersionControl.build}"/>
     </jar>
   </target>
-  <target name="archive" depends="nano,jaxp"/>
+  <target name="archive" depends="base,nano,jaxp"/>
 </project>
 <!-- EOF: $RCSfile$ -->
