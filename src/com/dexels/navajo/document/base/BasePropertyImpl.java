@@ -235,7 +235,7 @@ protected String myName;
 	  }
 	  if (o instanceof Long) {
 		  setType(Property.LONG_PROPERTY);
-		  setValue(((Long)o).longValue());
+		  setLongValue(((Long)o).longValue());
 		  return;
 	  }
 	  if (o instanceof Money) {
@@ -672,10 +672,12 @@ protected String myName;
     setValue( (value ? "true" : "false"));
   }
 
+  public final void setLongValue(long value) {
+    setValue(value + "");
+  }
   public final void setValue(long value) {
     setValue(value + "");
   }
-
   public final void setValue(String value) {
 	  if (BINARY_PROPERTY.equals(getType())) {
 		  Thread.dumpStack();

@@ -291,8 +291,11 @@ public interface Property
 
   public void setValue(int value);
 
+  public void setLongValue(long value);
+
   public void setValue(long value);
 
+  
   public void setValue(double value);
 
   public void setValue(float value);

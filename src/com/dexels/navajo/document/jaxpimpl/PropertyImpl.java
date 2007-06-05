@@ -598,10 +598,13 @@ public final class PropertyImpl implements Property, Comparable {
    setValue((value ? "true" : "false"));
  }
 
- public final void setValue(long value) {
+ public final void setLongValue(long value) {
    setValue(value+"");
  }
 
+ public final void setValue(long value) {
+   setValue(value+"");
+ }
  public final void setValue(Selection [] l) {
 	 if ( l == null ) {
 		 return;
