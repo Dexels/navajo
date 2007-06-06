@@ -163,7 +163,7 @@ public class FastDescriptionProvider extends BaseDescriptionProvider {
 //			System.err.println("No locales found. Returning default. ");
 			return defaultDescription;
 		}
-		if ( ((HashMap) locales.get(locale)).size() > 1 ) {
+		if ( ((HashMap) locales.get(locale)).size() > 1 || ((HashMap) locales.get(locale)).get("%") == null ) {
 			users = (HashMap) ((HashMap) locales.get(locale)).get(subLocale);
 		}
 		// Dit not find specific sublocale, use generic sublocale.
