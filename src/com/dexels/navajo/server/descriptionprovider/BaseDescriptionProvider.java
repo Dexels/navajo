@@ -9,8 +9,9 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
+import com.dexels.navajo.server.enterprise.descriptionprovider.DescriptionProviderInterface;
 
-public abstract class BaseDescriptionProvider implements DescriptionProvider{
+public abstract class BaseDescriptionProvider implements DescriptionProviderInterface {
 
 	private Message descriptionMessage = null;
 

@@ -30,18 +30,16 @@ import java.io.*;
 import java.util.*;
 import java.net.*;
 
-import javax.management.openmbean.ArrayType;
-import javax.management.openmbean.OpenDataException;
-
-import com.dexels.navajo.adapter.queue.RequestResponseQueue;
+import com.dexels.navajo.server.enterprise.queue.RequestResponseQueueFactory;
+import com.dexels.navajo.server.enterprise.scheduler.WebserviceListenerFactory;
+import com.dexels.navajo.server.enterprise.scheduler.WebserviceListenerInterface;
 import com.dexels.navajo.broadcast.BroadcastMessage;
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.scheduler.WebserviceListener;
 import com.dexels.navajo.server.jmx.JMXHelper;
 import com.dexels.navajo.server.jmx.SNMPManager;
 import com.dexels.navajo.util.AuditLog;
 import com.dexels.navajo.util.Util;
-import com.dexels.navajo.integrity.Worker;
+import com.dexels.navajo.server.enterprise.integrity.WorkerInterface;
 import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.loader.NavajoClassSupplier;
 import com.dexels.navajo.lockguard.Lock;
@@ -177,7 +175,7 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
 			  // Startup task runner.
 			  instance.navajoConfig.getTaskRunner();
 			  // Startup queued adapter.
-			  RequestResponseQueue.getInstance();
+			  RequestResponseQueueFactory.getInstance();
 		  }
 	  }
 	  return instance;
@@ -332,7 +330,7 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
    */
   private final Navajo dispatch(String handler, Navajo in, Access access, Parameters parms) throws Exception {
 	  
-	  Worker integ = null;
+	  WorkerInterface integ = null;
 	  Navajo out = null;
 	  if (access == null) {
 		  System.err.println("Null access!!!");
@@ -365,6 +363,7 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
 	  // Check for webservice transaction integrity.
 	  boolean integrityViolation = false;
 	  integ = navajoConfig.getIntegrityWorker();
+	  
 	  if ( integ != null ) {
 		  // Check for stored response or webservice that is still running.
 		  out = integ.getResponse(access, in);
@@ -1088,7 +1087,7 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
     	
     	// Register webservice call to WebserviceListener.
     	if ( access != null ) {
-    		WebserviceListener listener = WebserviceListener.getInstance();
+    		WebserviceListenerInterface listener = WebserviceListenerFactory.getInstance();
     		access.setInDoc(inMessage);
     		listener.invocation(rpcName, access);
     	}

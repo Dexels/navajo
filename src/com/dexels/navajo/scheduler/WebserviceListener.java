@@ -30,6 +30,7 @@ import java.util.Set;
 import java.util.HashSet;
 
 import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.enterprise.scheduler.WebserviceListenerInterface;
 
 
 /**
@@ -38,7 +39,7 @@ import com.dexels.navajo.server.Access;
  * a matching webservice is invoked.
  * 
  */
-public class WebserviceListener {
+public class WebserviceListener implements WebserviceListenerInterface {
 
 	static WebserviceListener instance = null;
 	
@@ -66,7 +67,7 @@ public class WebserviceListener {
 	 * 
 	 * @param t the trigger object that needs to be removed.
 	 */
-	public void removeTrigger(WebserviceTrigger t) {
+	public final void removeTrigger(WebserviceTrigger t) {
 		triggers.remove(t);
 	}
 	
@@ -78,7 +79,7 @@ public class WebserviceListener {
 	 * @param webservice the name of the webservice that was invoked
 	 * @param a the access object of the caller
 	 */
-	public void invocation(String webservice, Access a) {
+	public final void invocation(final String webservice, final Access a) {
 		Iterator iter = triggers.iterator();
 		while ( iter.hasNext() ) {
 			WebserviceTrigger t = (WebserviceTrigger) iter.next();

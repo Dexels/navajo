@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.NavajoConfig;
+import com.dexels.navajo.server.enterprise.queue.Queable;
 
 public class FileStore implements MessageStore {
 

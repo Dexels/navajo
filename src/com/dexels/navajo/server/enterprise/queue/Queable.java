@@ -1,4 +1,4 @@
-package com.dexels.navajo.adapter.queue;
+package com.dexels.navajo.server.enterprise.queue;
 
 import java.io.Serializable;
 

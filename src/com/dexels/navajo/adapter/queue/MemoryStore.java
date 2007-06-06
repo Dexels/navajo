@@ -3,6 +3,8 @@ package com.dexels.navajo.adapter.queue;
 import java.util.HashSet;
 import java.util.Stack;
 
+import com.dexels.navajo.server.enterprise.queue.Queable;
+
 public class MemoryStore implements MessageStore {
 
 	private static Stack store = new Stack();

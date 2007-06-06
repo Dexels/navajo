@@ -1,4 +1,4 @@
-package com.dexels.navajo.server.statistics;
+package com.dexels.navajo.server.enterprise.statistics;
 
 import com.dexels.navajo.mapping.AsyncMappable;
 import com.dexels.navajo.server.Access;

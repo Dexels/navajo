@@ -3,6 +3,8 @@ package com.dexels.navajo.server.statistics;
 import com.dexels.navajo.mapping.AsyncMappable;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.GenericThread;
+import com.dexels.navajo.server.enterprise.statistics.StatisticsRunnerInterface;
+import com.dexels.navajo.server.enterprise.statistics.StoreInterface;
 import com.dexels.navajo.server.jmx.JMXHelper;
 import com.dexels.navajo.server.jmx.NavajoNotification;
 import com.dexels.navajo.util.AuditLog;
@@ -38,7 +40,7 @@ import javax.management.Notification;
  * ====================================================================
  */
 
-public final class StatisticsRunner extends GenericThread implements StatisticsRunnerMXBean {
+public final class StatisticsRunner extends GenericThread implements StatisticsRunnerMXBean, StatisticsRunnerInterface {
 
   public int todoCount;
   public String storeClass;
@@ -73,7 +75,7 @@ public final class StatisticsRunner extends GenericThread implements StatisticsR
    *
    * @return
    */
-  public final synchronized static StatisticsRunner getInstance(String storePath, Map parameters, String storeClass) {
+  public final static StatisticsRunner getInstance(String storePath, Map parameters, String storeClass) {
 	  
 	  if ( instance != null ) {
 		  return instance;

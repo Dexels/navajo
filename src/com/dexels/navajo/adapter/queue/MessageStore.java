@@ -3,6 +3,7 @@ package com.dexels.navajo.adapter.queue;
 import java.util.HashSet;
 
 import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.server.enterprise.queue.Queable;
 
 public interface MessageStore {
 

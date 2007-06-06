@@ -6,10 +6,12 @@ import java.util.Iterator;
 
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.server.GenericThread;
+import com.dexels.navajo.server.enterprise.queue.Queable;
+import com.dexels.navajo.server.enterprise.queue.RequestResponseQueueInterface;
 import com.dexels.navajo.server.jmx.JMXHelper;
 import com.dexels.navajo.util.AuditLog;
 
-public class RequestResponseQueue extends GenericThread implements RequestResponseQueueMXBean {
+public class RequestResponseQueue extends GenericThread implements RequestResponseQueueMXBean, RequestResponseQueueInterface {
 
 	public boolean useQueue;
 	public boolean emptyQueue = false;
@@ -108,7 +110,7 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 		}
 	}
 	
-	public static void send(Queable handler, int maxretries) throws Exception {
+	public void send(Queable handler, int maxretries) throws Exception {
 		RequestResponseQueue rrq = RequestResponseQueue.getInstance();
 		handler.persistBinaries();
 		rrq.myStore.putMessage(handler, false);

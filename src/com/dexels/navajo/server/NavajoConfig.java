@@ -30,7 +30,13 @@ import com.dexels.navajo.document.*;
 
 import java.util.*;
 
-import com.dexels.navajo.integrity.Worker;
+import com.dexels.navajo.server.enterprise.descriptionprovider.DescriptionProviderInterface;
+import com.dexels.navajo.server.enterprise.integrity.WorkerFactory;
+import com.dexels.navajo.server.enterprise.integrity.WorkerInterface;
+import com.dexels.navajo.server.enterprise.scheduler.TaskRunnerFactory;
+import com.dexels.navajo.server.enterprise.scheduler.TaskRunnerInterface;
+import com.dexels.navajo.server.enterprise.statistics.StatisticsRunnerFactory;
+import com.dexels.navajo.server.enterprise.statistics.StatisticsRunnerInterface;
 import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.loader.NavajoClassSupplier;
 import com.dexels.navajo.lockguard.LockManager;
@@ -39,8 +45,6 @@ import java.io.*;
 
 import com.dexels.navajo.parser.DefaultExpressionEvaluator;
 import com.dexels.navajo.persistence.*;
-import com.dexels.navajo.scheduler.TaskRunner;
-import com.dexels.navajo.server.descriptionprovider.DescriptionProvider;
 import com.dexels.navajo.util.AuditLog;
 import com.dexels.navajo.logger.*;
 
@@ -69,11 +73,10 @@ public final class NavajoConfig {
      * Several supporting threads.
      */
     protected com.dexels.navajo.mapping.AsyncStore asyncStore = null;
-    protected com.dexels.navajo.server.statistics.StatisticsRunner statisticsRunner = null;
-    protected TaskRunner taskRunner = null;
-    protected Worker integrityWorker = null;
+    protected StatisticsRunnerInterface statisticsRunner = null;
+    //protected TaskRunnerInterface taskRunner = null;
     protected LockManager lockManager = null;
-    protected DescriptionProvider myDescriptionProvider = null;
+    protected DescriptionProviderInterface myDescriptionProvider = null;
         
     public String rootPath;
     private String scriptVersion = "";
@@ -219,16 +222,20 @@ public final class NavajoConfig {
 			if (descriptionProviderProperty!=null) {
 				descriptionProviderClass = descriptionProviderProperty.getValue();
 				if (descriptionProviderClass!=null) {
+					try {
 					Class cc = Class.forName(descriptionProviderClass);
 					System.err.println("Descriptionprovider is: " + descriptionProviderClass);
 					if (cc!=null) {
 //						System.err.println("Setting description provider. config hash: "+hashCode());
 						if (myDescriptionProvider==null) {
-							myDescriptionProvider = (DescriptionProvider)cc.newInstance();
+							myDescriptionProvider = (DescriptionProviderInterface)cc.newInstance();
 							myDescriptionProvider.setDescriptionConfigMessage(descriptionMessage);
 						} else {
 							System.err.println("Warning: Resetting description provider.");
 						}
+					}
+					} catch (Throwable e) {
+						System.err.println("WARNING: DescriptionProvider not available");
 					}
 				}
 			} 
@@ -261,9 +268,9 @@ public final class NavajoConfig {
     			p.put("port", new Integer(dbPort));
     		}
     		if (store == null) {
-    			statisticsRunner = com.dexels.navajo.server.statistics.StatisticsRunner.getInstance(dbPath, p);
+    			statisticsRunner = StatisticsRunnerFactory.getInstance(dbPath, p);
     		} else {
-    			statisticsRunner = com.dexels.navajo.server.statistics.StatisticsRunner.getInstance(dbPath, p, store);
+    			statisticsRunner = StatisticsRunnerFactory.getInstance(dbPath, p, store);
     		}
     		statisticsRunner.setEnabled(enableStatisticsRunner);
     		
@@ -378,12 +385,9 @@ public final class NavajoConfig {
     	//System.out.println("COMPILE SCRIPTS: " + compileScripts);
     }
 
-    public TaskRunner getTaskRunner() {
+    public TaskRunnerInterface getTaskRunner() {
     	// Startup task scheduler
-    	if ( taskRunner == null ) {
-    		taskRunner = TaskRunner.getInstance();
-    	}
-    	return taskRunner;   
+    	return TaskRunnerFactory.getInstance();  
     }
     
     public boolean isIntegrityWorkerEnabled() {
@@ -415,17 +419,15 @@ public final class NavajoConfig {
     	}
     }
     
-    public Worker getIntegrityWorker() {
+    public WorkerInterface getIntegrityWorker() {
     	
     	if ( !enableIntegrityWorker ) {
     		
     		return null;
     	}
     	
-    	if ( integrityWorker == null ) {
-    		integrityWorker = Worker.getInstance();
-    	}
-    	return integrityWorker;
+    	return WorkerFactory.getInstance();
+    	
     }
     
     public LockManager getLockManager() {
@@ -554,7 +556,7 @@ public final class NavajoConfig {
       return this.asyncStore;
     }
 
-    public final com.dexels.navajo.server.statistics.StatisticsRunner getStatisticsRunner() {
+    public final StatisticsRunnerInterface getStatisticsRunner() {
      return this.statisticsRunner;
    }
 
@@ -861,7 +863,7 @@ public final class NavajoConfig {
 		return instanceName;
 	}
 
-	public DescriptionProvider getDescriptionProvider() {
+	public DescriptionProviderInterface getDescriptionProvider() {
 //		System.err.println("Getting description provider. Config hash: "+hashCode());
 		return myDescriptionProvider;
 	}

@@ -50,10 +50,11 @@ import com.dexels.navajo.server.GenericThread;
 import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.server.UserException;
+import com.dexels.navajo.server.enterprise.integrity.WorkerInterface;
 import com.dexels.navajo.server.jmx.JMXHelper;
 import com.dexels.navajo.util.AuditLog;
 
-public class Worker extends GenericThread implements WorkerMXBean {
+public class Worker extends GenericThread implements WorkerMXBean, WorkerInterface {
 
 	/**
 	 * Public fields (used as getters for mappable).

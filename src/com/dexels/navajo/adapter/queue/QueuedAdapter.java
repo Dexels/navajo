@@ -9,6 +9,7 @@ import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.server.UserException;
+import com.dexels.navajo.server.enterprise.queue.Queable;
 
 public class QueuedAdapter extends Thread implements Mappable {
 

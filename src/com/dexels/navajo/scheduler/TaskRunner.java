@@ -43,10 +43,12 @@ import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.GenericThread;
 import com.dexels.navajo.server.NavajoConfig;
+import com.dexels.navajo.server.enterprise.scheduler.TaskRunnerInterface;
 import com.dexels.navajo.server.jmx.JMXHelper;
 import com.dexels.navajo.util.AuditLog;
 
-public class TaskRunner extends GenericThread implements TaskRunnerMXBean {
+public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskRunnerInterface {
+	
 
 	private static final String VERSION = "$Id$";
 	
@@ -152,8 +154,8 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean {
 			
 			instance = new TaskRunner();	
 			JMXHelper.registerMXBean(instance, JMXHelper.NAVAJO_DOMAIN, id);
-			instance.startThread(instance);
 			instance.readConfig();
+			instance.startThread(instance);
 			
 			AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Started task scheduler process $Id$");
 			return instance;
@@ -161,7 +163,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean {
 	}
 	
 	public final void worker() {
-		// Check whether tasks.xml has gotten updated.
+		// Check whether tasks.xml has gotten updated
 		if ( isConfigModified() ) {
 			AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Task configuration is modified, re-initializing");
 			readConfig();
