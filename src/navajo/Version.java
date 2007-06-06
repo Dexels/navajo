@@ -27,6 +27,8 @@ package navajo;
 /**
  * VERSION HISTORY
  * 
+ * 6.0.0 Strict separation of standard (free) and enterprise edition functionality
+ * 
  * 5.1.2 Change in TslCompiler and NanoTslCompiler: when calling getXYZ() method that returns a mappable Array (Mappable []),
  * assign value to variable and in subsequent calls use this variable instead of calling getXYZ() again. This will fix
  * a common problem in calling InitNavajoStatus which can return -1 in case of frequent User count changes. Furthermore, this
@@ -100,12 +102,12 @@ package navajo;
 
 public class Version extends dexels.Version {
 
-	public static final int MAJOR = 5;
-	public static final int MINOR = 6;
-	public static final int PATCHLEVEL = 3;
+	public static final int MAJOR = 6;
+	public static final int MINOR = 0;
+	public static final int PATCHLEVEL = 0;
 	public static final String VENDOR = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Kernel";
-	public static final String RELEASEDATE = "2007-02-02";
+	public static final String RELEASEDATE = "2007-06-06";
 	
 //	 Included packages.
 	String [] includes = {"navajodocument.Version"};
