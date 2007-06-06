@@ -27,8 +27,6 @@ package com.dexels.navajo.adapter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import com.dexels.navajo.adapter.queue.Queable;
-import com.dexels.navajo.adapter.queue.RequestResponseQueue;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.mapping.Mappable;
@@ -37,11 +35,12 @@ import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.server.UserException;
+import com.dexels.navajo.server.enterprise.queue.RequestResponseQueueFactory;
 import com.enterprisedt.net.ftp.FTPClient;
 import com.enterprisedt.net.ftp.FTPTransferType;
 
 
-public class FTPMap  implements Mappable, Queable {
+public class FTPMap  implements Mappable, com.dexels.navajo.server.enterprise.queue.Queable {
 
 	/**
 	 * 
@@ -94,7 +93,7 @@ public class FTPMap  implements Mappable, Queable {
 
 		if ( queuedSend ) {
 			try {
-				RequestResponseQueue.send(this, 100);
+				RequestResponseQueueFactory.getInstance().send(this, 100);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -165,7 +164,7 @@ public class FTPMap  implements Mappable, Queable {
 
 	public static void main(String [] args) throws Exception {
 
-		RequestResponseQueue.getInstance().setQueueOnly(true);
+		RequestResponseQueueFactory.getInstance().setQueueOnly(true);
 		
 //		FTPMap f = new FTPMap();
 //		Binary b = new Binary(new FileInputStream(new File("/home/arjen/Dexels/logo_zw.eps")));

@@ -36,8 +36,9 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import com.dexels.navajo.adapter.queue.Queable;
-import com.dexels.navajo.adapter.queue.RequestResponseQueue;
+import com.dexels.navajo.server.enterprise.queue.Queable;
+import com.dexels.navajo.server.enterprise.queue.RequestResponseQueueInterface;
+import com.dexels.navajo.server.enterprise.queue.RequestResponseQueueFactory;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.mapping.Mappable;
@@ -214,7 +215,7 @@ public class HTTPMap implements Mappable, Queable {
 	public void setQueuedSend(boolean b) {
 		
 		try {
-			RequestResponseQueue.send( this, 100);
+			RequestResponseQueueFactory.getInstance().send( this, 100);
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
 		}

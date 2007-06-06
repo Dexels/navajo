@@ -1,22 +1,17 @@
 package com.dexels.navajo.adapter;
 
 import com.dexels.navajo.mapping.*;
-import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.adapter.mailmap.AttachementMap;
-import com.dexels.navajo.adapter.queue.Queable;
-import com.dexels.navajo.adapter.queue.RequestResponseQueue;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.NavajoConfig;
+import com.dexels.navajo.server.enterprise.queue.RequestResponseQueueFactory;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.Serializable;
 import java.util.*;
 import javax.mail.*;
 import javax.activation.*;
@@ -25,7 +20,6 @@ import com.dexels.navajo.util.*;
 import org.w3c.dom.Document;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.datasource.BinaryDataSource;
-import com.dexels.navajo.datasource.ByteArrayDataSource;
 
 
 /**
@@ -40,7 +34,7 @@ import com.dexels.navajo.datasource.ByteArrayDataSource;
 /**
  * This business object is used as a mail agent in Navajo Script files.
  */
-public class MailMap implements Mappable, Queable {
+public class MailMap implements Mappable, com.dexels.navajo.server.enterprise.queue.Queable {
 
     /**
 	 * 
@@ -367,7 +361,7 @@ public class MailMap implements Mappable, Queable {
   public void setQueuedSend(boolean b) {
 	  queuedSend = b;
 	  try {
-		  RequestResponseQueue.send( this, 100);
+		  RequestResponseQueueFactory.getInstance().send( this, 100);
 	  } catch (Exception e) {
 		  e.printStackTrace(System.err);
 		  System.err.println(e.getMessage());

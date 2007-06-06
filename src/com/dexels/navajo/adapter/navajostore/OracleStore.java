@@ -10,12 +10,10 @@ import java.sql.*;
 import java.io.StringWriter;
 import java.io.PrintWriter;
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.server.statistics.MapStatistics;
-import com.dexels.navajo.server.statistics.StoreInterface;
+import com.dexels.navajo.server.enterprise.statistics.StoreInterface;
 import com.dexels.navajo.server.statistics.TodoItem;
 import com.dexels.navajo.adapter.SQLMap;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;

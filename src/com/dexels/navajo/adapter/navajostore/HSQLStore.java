@@ -3,11 +3,12 @@ package com.dexels.navajo.adapter.navajostore;
 import com.dexels.navajo.mapping.AsyncMappable;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.Dispatcher;
+import com.dexels.navajo.server.enterprise.statistics.StoreInterface;
+
 import java.sql.*;
 import java.io.StringWriter;
 import java.io.PrintWriter;
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.server.statistics.StoreInterface;
 import com.dexels.navajo.adapter.SQLMap;
 import java.util.Map;
 
