@@ -95,7 +95,8 @@
 				<exclude name="com/dexels/navajo/adapter/**" />
 				<exclude name="com/dexels/navajo/integrity/**" />
 				<exclude name="com/dexels/navajo/server/descriptionprovider/**" />
-				<exclude name="com/dexels/navajo/server/statistics**" />
+				<exclude name="com/dexels/navajo/server/statistics/**" />
+			    <exclude name="com/dexels/navajo/server/enterprise/**" />
 
 				<!-- server -->
 
@@ -142,13 +143,13 @@
 		<jar jarfile="NavajoServer.jar">
 			<fileset dir="${build}">
 
-				<include name="com/dexels/navajo/server/**" />
 				<include name="com/dexels/navajo/client/**" />
 				<include name="com/dexels/navajo/install/**" />
 				<include name="com/dexels/navajo/mapping/compiler/**" />
 				<include name="com/dexels/navajo/compiler/**" />
 			    <include name="com/dexels/navajo/lockguard/**" />
 			    <include name="com/dexels/navajo/server/jmx/**" />
+			    <include name="com/dexels/navajo/server/enterprise/**" />
 				<include name="org/**" />
 				
 				<include name="com/dexels/navajo/server/Dispatcher.*" />
