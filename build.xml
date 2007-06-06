@@ -94,9 +94,7 @@
 				<exclude name="com/dexels/navajo/scheduler/**" />
 				<exclude name="com/dexels/navajo/adapter/**" />
 				<exclude name="com/dexels/navajo/integrity/**" />
-				<exclude name="com/dexels/navajo/lockguard/**" />
 				<exclude name="com/dexels/navajo/server/descriptionprovider/**" />
-				<exclude name="com/dexels/navajo/server/jmx/**" />
 				<exclude name="com/dexels/navajo/server/statistics**" />
 
 				<!-- server -->
@@ -105,7 +103,8 @@
 				<exclude name="com/dexels/navajo/server/Dispatcher.*" />
 				<exclude name="com/dexels/navajo/server/NavajoConfig.*" />
 				<exclude name="com/dexels/navajo/server/Access.*" />
-
+			    <exclude name="com/dexels/navajo/lockguard/**" />
+			    <exclude name="com/dexels/navajo/server/jmx/**" />
 				<exclude name="com/dexels/navajo/client/**" />
 				<exclude name="com/dexels/navajo/install/**" />
 				<exclude name="com/dexels/navajo/compiler/**" />
@@ -128,9 +127,7 @@
 				<include name="com/dexels/navajo/scheduler/**" />
 				<include name="com/dexels/navajo/adapter/**" />
 				<include name="com/dexels/navajo/integrity/**" />
-				<include name="com/dexels/navajo/lockguard/**" />
 				<include name="com/dexels/navajo/server/descriptionprovider/**" />
-				<include name="com/dexels/navajo/server/jmx/**" />
 				<include name="com/dexels/navajo/server/statistics/**" />
 				<!-- source file, never needed. -->
 				<exclude name="**/*.jj" />
@@ -150,6 +147,8 @@
 				<include name="com/dexels/navajo/install/**" />
 				<include name="com/dexels/navajo/mapping/compiler/**" />
 				<include name="com/dexels/navajo/compiler/**" />
+			    <include name="com/dexels/navajo/lockguard/**" />
+			    <include name="com/dexels/navajo/server/jmx/**" />
 				<include name="org/**" />
 				
 				<include name="com/dexels/navajo/server/Dispatcher.*" />
