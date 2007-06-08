@@ -326,12 +326,19 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 			
 			fw = new FileWriter( log, true );
 			if ( freshfile ) {
-				fw.write("ID;WEBSERVICE;USERNAME;TRIGGER;ERROR;STARTTIME;ENDTIME");
+				fw.write("ID;WEBSERVICE;USERNAME;TRIGGER;STATUS;STARTTIME;ENDTIME;ERRORMESSAGE\n");
 			}
 			StringBuffer header = new StringBuffer();
            
-            header.append(t.getId() + ";" + t.getWebservice() + ";" + t.getUsername() + ";" + t.getTrigger().getDescription() + ";" + (error ? "error" : "ok") + ";" +
-            		startedat + ";" + (new java.util.Date()) + ";" + ( error ? errMsg : "") + "\n"); 
+            header.append(t.getId() + ";" + 
+            		      t.getWebservice() + ";" + 
+            		      t.getUsername() + ";" + 
+            		      t.getTrigger().getDescription() + ";" + 
+            		      (error ? "error" : "ok") + ";" +
+            		      startedat + ";" + 
+            		      (new java.util.Date()) + ";" + 
+            		      ( error ? errMsg : "") + 
+            		      "\n"); 
           
 			String logMsg = header.toString();
 			fw.write(logMsg);
