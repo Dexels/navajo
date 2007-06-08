@@ -1,0 +1,14 @@
+<tml>
+    <message name="datasources">
+        <message name="default">
+            <property name="driver" value="com.mysql.jdbc.Driver"/>
+            <property name="url" value="jdbc:mysql://localhost/test"/>
+            <property name="username" value="test"/>
+            <property name="password" value=""/>
+            <property name="logfile" value="navajo.test.sqlmap"/>
+            <property name="refresh" type="float" value="0.00001"/>
+            <property name="min_connections" type="integer" value="1"/>
+            <property name="max_connections" type="integer" value="10"/>
+        </message>
+    </message>
+</tml>

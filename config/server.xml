@@ -1,0 +1,37 @@
+<tml>
+    <message name="server-configuration">
+        <property name="documentClass" value="com.dexels.navajo.document.base.BaseNavajoFactoryImpl"/>
+        <property name="instance_name" value="Navajo Demo Server"/>
+        <message name="paths">
+            <property name="root" value="/home/matthijs/workspace/NavajoServer"/>
+            <property name="scripts" value="scripts"/>
+            <property name="adapters" value="adapters"/>
+            <property name="configuration" value="config"/>
+            <property name="logging" value="logs"/>
+            <property name="tmp" value="tmp"/>
+            <property name="resource" value="resource"/>
+            <property name="compiled-scripts" value="compiled"/>
+            <property name="jar_folder" type="string" length="0" value="./WEB-INF/lib" direction="in"/>
+        </message>
+        <message name="maintenance-services">
+            <property name="navajo_logon" value="InitNavajoLogon.xml"/>
+        </message>
+        <message name="persistence-manager">
+            <property name="class" value="com.dexels.navajo.persistence.impl.PersistenceManagerImpl"/>
+        </message>
+        <message name="repository">
+            <property name="class" type="string" length="0" value="com.dexels.navajo.server.SimpleRepository" direction="in"/>
+        </message>
+        <message name="parameters">
+            <property name="use_compression" value="true"/>
+            <property name="script_version" value="2.0"/>
+            <property name="async_timeout" value="3600"/>
+            <property name="compile_scripts" value="true"/>
+            <property name="hot_compile" value="true"/>
+            <property name="enable_locks" value="false"/>
+            <property name="enable_statistics" value="false"/>
+            <property name="enable_integrity" value="false"/>
+            <property name="enable_async" value="true"/>
+        </message>
+    </message>
+</tml>

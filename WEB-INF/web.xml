@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" "http://java.sun.com/j2ee/dtds/web-app_2_3.dtd">
+<web-app>
+    <servlet>
+        <servlet-name>Postman</servlet-name>
+        <display-name>Postman</display-name>
+        <servlet-class>com.dexels.navajo.server.listener.http.TmlHttpServlet</servlet-class>
+        <init-param>
+            <param-name>configuration</param-name>
+            <param-value>file:///home/matthijs/workspace/NavajoServer/config/server.xml</param-value>
+        </init-param>
+    </servlet>
+    <servlet>
+        <servlet-name>NavajoTester</servlet-name>
+        <servlet-class>com.dexels.navajo.client.HTMLClientServlet</servlet-class>
+        <init-param>
+            <param-name>navajo_server</param-name>
+            <param-value>localhost:8080/NavajoServer/Postman</param-value>
+        </init-param>
+        <init-param>
+            <param-name>enable_https</param-name>
+            <param-value>no</param-value>
+        </init-param>
+        <init-param>
+            <param-name>use_compression</param-name>
+            <param-value>false</param-value>
+        </init-param>
+        <init-param>
+            <param-name>xslFile</param-name>
+            <param-value>/home/matthijs/workspace/NavajoServer/resource/tml2html.xsl</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Postman</servlet-name>
+        <url-pattern>/Postman</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>NavajoTester</servlet-name>
+        <url-pattern>/NavajoTester</url-pattern>
+    </servlet-mapping>
+</web-app>
