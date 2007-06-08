@@ -12,6 +12,7 @@ public class BaseTransactionImpl extends BaseNode {
 private String rpc_name;
 private String rpc_usr;
 private String rpc_pwd;
+private String rpc_schedule;
 protected String myRequestId;
 
   public BaseTransactionImpl(Navajo n) {
@@ -29,6 +30,9 @@ protected String myRequestId;
       }
       if (rpc_pwd!=null) {
           m.put("rpc_pwd", rpc_pwd);
+      }
+      if (rpc_schedule!=null) {
+          m.put("rpc_schedule", rpc_schedule);
       }
       if (myRequestId!=null) {
           m.put("requestid", myRequestId);
@@ -61,6 +65,12 @@ public final String getRpc_usr() {
 }
 public final void setRpc_usr(String rpc_usr) {
     this.rpc_usr = rpc_usr;
+}
+public final void setRpc_schedule(String rpc_schedule) {
+    this.rpc_schedule = rpc_schedule;
+}
+public final String getRpc_schedule() {
+    return rpc_schedule;
 }
 public String getRequestId() {
     return myRequestId;

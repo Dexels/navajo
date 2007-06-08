@@ -227,6 +227,10 @@ public interface Header extends java.io.Serializable {
 	public Set getPiggybackData();
 	
 	public void clearPiggybackData();
+	
+	public String getSchedule();
+	
+	public void setSchedule(String s);
 
 	public void write(OutputStream err) throws NavajoException;
 

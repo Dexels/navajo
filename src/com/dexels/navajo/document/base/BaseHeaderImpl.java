@@ -77,6 +77,14 @@ public class BaseHeaderImpl
     myCallback  = new BaseCallbackImpl(n);
   }
 
+  public final void setSchedule(String s) {
+	  myTransaction.setRpc_schedule(s);
+  }
+  
+  public final String getSchedule() {
+	  return myTransaction.getRpc_schedule();
+  }
+  
   public final void setExpiration(long i) {
     expiration = i;
   }

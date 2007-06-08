@@ -194,6 +194,7 @@ public final class SaxHandler implements DocHandler {
         bci.setRpc_name((String)h.get("rpc_name"));
         bci.setRpc_usr((String)h.get("rpc_usr"));
         bci.setRpc_pwd((String)h.get("rpc_pwd"));
+        bci.setRpc_schedule((String)h.get("rpc_schedule"));
         bci.setRequestId((String)h.get("requestid"));
         currentHeader.addTransaction(bci);        
     }

@@ -270,6 +270,8 @@ public final class HeaderImpl implements Header {
         n.setAttribute("rpc_usr", s);
     }
 
+    
+    
     /**
      *
      * @param name
@@ -406,5 +408,23 @@ public final class HeaderImpl implements Header {
 	public Set getPiggybackData() {
 	      throw new UnsupportedOperationException("Sorry, getPiggyBackData is not supported in JaxpImpl!");
 	}
+
+	public String getSchedule() {
+		  String s = "";
+
+	        Element n = (Element)
+	                XMLutils.findNode(ref, "transaction");
+
+	        s = n.getAttribute("rpc_schedule");
+
+	        return s;
+	}
+
+	public final void setSchedule(String s) {
+        Element n = (Element)
+                XMLutils.findNode(ref, "transaction");
+
+        n.setAttribute("rpc_schedule", s);
+    }
 
 }
