@@ -56,6 +56,7 @@ public class Task implements Runnable, TaskMXBean, TaskInterface {
     private boolean remove = false;
     private boolean inactive = false;
     private boolean isRunning = false;
+    private boolean keepRequestResponse = false;
     private String id = null;
     private Thread myThread = null;
     
@@ -308,20 +309,18 @@ public class Task implements Runnable, TaskMXBean, TaskInterface {
 					TaskRunner.log(this, null, true, e.getMessage(), now);
 				} 
 
-				TaskRunner.writeTaskOutput(this);
-				TaskRunner.log(this, getResponse(), ( getResponse() != null && getResponse().getMessage("error") != null ), "", now );
-
-				
+				TaskRunner.log(this, getResponse(), ( getResponse() != null && getResponse().getMessage("error") != null ), "", now );				
 				isRunning = false;		
 				
 				if ( myTrigger.isSingleEvent() ) {
-					System.err.println(">>>>>>>>>>>>>> Single event task finished, removing everything");
-					TaskRunner.getInstance().removeTaskInput(this);
+					if ( !keepRequestResponse ) {
+						TaskRunner.getInstance().removeTaskInput(this);
+					} else {
+						TaskRunner.writeTaskOutput(this);
+					}
 					TaskRunner.getInstance().removeTask( this.getId() );
 				} else {
 					myTrigger.resetAlarm();		
-					System.err.println("Reset alarm, issingleevent = " + myTrigger.isSingleEvent());
-					System.err.println(">>>>>>>>>>>>>> Not a single event task finished, removing nothing");
 				}
 			}
 			

@@ -727,11 +727,8 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
   private final Navajo generateScheduledMessage(Header h) {
 	  try {
 	      Navajo outMessage = NavajoFactory.getInstance().createNavajo();
-	      Message scheduledMsg = NavajoFactory.getInstance().createMessage(
-	              outMessage, "NAVAJO_SCHEDULED");
-	      outMessage.addMessage(scheduledMsg);
 	      Header hnew = NavajoFactory.getInstance().createHeader(outMessage, h.getRPCName(), h.getRPCUser(), "", -1);
-	      hnew.setSchedule(h.getSchedule());
+	      hnew.setSchedule("scheduled");
 	      outMessage.addHeader(hnew);
 	      return outMessage;
 	  } catch (Exception e) {
