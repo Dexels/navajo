@@ -8,11 +8,15 @@ package com.dexels.navajo.tipi.components.swingimpl.actions;
 
 import java.awt.*;
 import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import javax.swing.*;
 
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.components.swingimpl.SwingTipiContext;
+import com.dexels.navajo.tipi.components.swingimpl.TipiApplet;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.internal.*;
 
@@ -32,7 +36,17 @@ public class TipiOpenBrowser extends TipiAction {
     protected void execute(TipiEvent event) throws TipiBreakException, TipiException {
         Operand url  = getEvaluatedParameter("url", event);
         String urlVal = (String)url.value;
-        DefaultBrowser.displayURL(urlVal);
+        TipiApplet rr = ((SwingTipiContext)myContext).getAppletRoot();
+        if(rr!=null) {
+        	try {
+				rr.getAppletContext().showDocument(new URL(urlVal), "_blank");
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        }else {
+            DefaultBrowser.displayURL(urlVal);
+        }
     }
 
 }

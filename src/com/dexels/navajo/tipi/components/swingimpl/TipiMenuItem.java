@@ -68,7 +68,6 @@ public class TipiMenuItem
   public void setComponentValue(String name, Object object) {
     super.setComponentValue(name, object);
     if ("text".equals(name)) {
-    	System.err.println("Setting menu item to: "+object);
       myItem.setText( (String) object);
     }
     if ("mnemonic".equals(name)) {
@@ -82,7 +81,8 @@ public class TipiMenuItem
     if (name.equals("icon")) {
         //System.err.println("Type: "+object.getClass());
       if (object instanceof URL) {
-          myItem.setIcon(getIcon( (URL) object));
+    	  URL uu = (URL) object;
+          myItem.setIcon(getIcon(uu));
       } else {
           System.err.println("Ignoring strange resource");
       }

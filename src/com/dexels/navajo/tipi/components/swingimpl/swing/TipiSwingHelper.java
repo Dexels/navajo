@@ -152,6 +152,10 @@ public class TipiSwingHelper
             }
           }
         });
+      } else if (JApplet.class.isInstance(c)) {
+          JApplet jj = (JApplet) c;
+          // do nothing.
+          
       }
       else {
         throw new RuntimeException("Can not fire onWindowClosed event from class: " + c.getClass());

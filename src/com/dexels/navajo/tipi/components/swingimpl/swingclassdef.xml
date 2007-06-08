@@ -294,28 +294,7 @@
             </method>
         </methods>
     </tipiclass>
-    <!-- Deprecated... Use the tipimegatable instead-->
-    <tipiclass addtocontainer="true" childcount="0" class="TipiMultiTable" layoutmanager="false"
-        module="data" name="tipimultitable" package="com.dexels.navajo.tipi.components.swingimpl"
-        studio-icon="tipitable.gif" type="tipi">
-        <events>
-            <event name="onInstantiate"/>
-             <event name="onLoad">
-                <param name="service" type="string"/>
-            </event>
-        </events>
-        <values>
-            <value direction="inout" name="useTabs" type="boolean" value="true"/>
-            <value direction="inout" name="innerMessageName" type="string"/>
-            <value direction="inout" name="outerMessageName" type="string"/>
-            <value direction="inout" name="titlePropertyName" type="string"/>
-            <value direction="in" name="rowHeight" type="integer"/>
-            <value direction="inout" name="columnButtonVisible" type="boolean" value="false"/>
-            <value direction="inout" name="filtersVisible" type="boolean" value="false"/>
-            <value direction="inout" name="useScrollBars" type="boolean" value="true"/>
-            <value direction="inout" name="headerVisible" type="boolean" value="true"/>
-        </values>
-    </tipiclass>
+
     <tipiclass addtocontainer="true" childcount="*" class="TipiQuestion" layoutmanager="true"
         module="data" name="tipiquestion" package="com.dexels.navajo.tipi.components.swingimpl"
         studio-icon="tipitable.gif" type="tipi">
@@ -657,26 +636,7 @@
         </values>
         <methods/>
     </tipiclass>
-    <tipiclass addtocontainer="true" childcount="0" class="TipiHelp" layoutmanager="false"
-        module="component" name="browser" package="com.dexels.navajo.tipi.components.swingimpl"
-        studio-icon="property.gif" type="tipi">
-        <events>
-            <event name="onInstantiate"/>
-            <event name="onLoad">
-                <param name="service" type="string"/>
-            </event>
-        </events>
-        <values>
-            <value direction="in" name="url" type="url"/>
-            <value direction="in" name="background" type="color"/>
-            <value direction="in" name="foreground" type="color"/>
-            <value direction="in" name="border" type="border"/>
-            <value direction="in" name="tooltip" type="string"/>
-            <value direction="in" name="enabled" type="boolean"/>
-            <value direction="in" name="visible" type="boolean"/>
-        </values>
-        <methods/>
-    </tipiclass>
+    
     <tipiclass addtocontainer="false" childcount="*" class="TipiFrame" layoutmanager="true"
         module="container" name="frame" package="com.dexels.navajo.tipi.components.swingimpl"
         studio-icon="frame.gif" toplevel="true" type="tipi">

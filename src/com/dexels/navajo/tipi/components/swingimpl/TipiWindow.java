@@ -47,7 +47,7 @@ public final class TipiWindow
 	    TipiHelper th = new TipiSwingHelper();
 	    th.initHelper(this);
 	    addHelper(th);
-  	  	System.err.println("INSTANTIATING WINDOW!");
+//  	  	System.err.println("INSTANTIATING WINDOW!");
 //  	  	myWindow.addInternalFrameListener(new InternalFrameAdapter() {
 //	      public void internalFrameClosing(InternalFrameEvent l) {
 //	      }
@@ -285,7 +285,8 @@ public final class TipiWindow
   }
 
   protected void setBounds(final Rectangle r) {
-    myWindow.setBounds(r);
+//	  System.err.println("Setting bounds: "+r);
+	  myWindow.setBounds(r);
   }
 
   protected Rectangle getBounds() {
@@ -385,10 +386,10 @@ public final class TipiWindow
   
   
   public void disposeComponent() {
-	  System.err.println("Disposing tipi window:");
+//	  System.err.println("Disposing tipi window:");
       JInternalFrame jj = (JInternalFrame) getContainer();
       if (jj!=null) {
-    	  System.err.println("Internal frame found. Disposing....");
+//    	  System.err.println("Internal frame found. Disposing....");
        	  jj.dispose();
        	 Container parent = jj.getParent();
     	  if (parent!=null) {

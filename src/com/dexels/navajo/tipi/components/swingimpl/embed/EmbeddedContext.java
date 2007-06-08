@@ -45,7 +45,7 @@ public class EmbeddedContext extends SwingTipiContext {
          
     }
      for (int i = 0; i < definitionName.length; i++) {
-       parseURL(getResourceURL(tipiDefinition[i],getClass().getClassLoader()),false,definitionName[i]);
+       parseURL(getTipiResourceURL(tipiDefinition[i],getClass().getClassLoader()),false,definitionName[i]);
      }
   }
   public EmbeddedContext(String definitionName, InputStream contents, List libraries, ActivityController al, String resourceBaseDirectory) throws IOException, TipiException {

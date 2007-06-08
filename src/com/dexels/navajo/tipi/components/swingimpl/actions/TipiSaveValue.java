@@ -48,8 +48,11 @@ public class TipiSaveValue extends TipiAction {
         //        if (o==null) {
 //            o =event.getContext().getDefaultTopLevel()
 //        }
-        jf.setCurrentDirectory(new File(System.getProperty("user.home")));
-
+        try {
+        	  jf.setCurrentDirectory(new File(System.getProperty("user.home")));
+         	} catch (SecurityException e) {
+			throw new TipiException("No file access allowed. Sorry.");
+		}
         int result = jf.showSaveDialog(c);
         if (result != JFileChooser.APPROVE_OPTION) {
             throw new TipiBreakException(-2);

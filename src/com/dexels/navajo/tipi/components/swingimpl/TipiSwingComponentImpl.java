@@ -110,7 +110,7 @@ public abstract class TipiSwingComponentImpl
   }
 
   public void runSyncInEventThread(Runnable r) {
-    if (SwingUtilities.isEventDispatchThread() || !committedInUI) {
+    if (SwingUtilities.isEventDispatchThread()) {
       r.run();
     }
     else {

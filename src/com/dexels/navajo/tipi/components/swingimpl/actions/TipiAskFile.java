@@ -36,7 +36,11 @@ public class TipiAskFile extends TipiAction {
         if (o instanceof Container) {
             c = (Container) c;
         }
-        jf.setCurrentDirectory(new File(System.getProperty("user.home")));
+        try {
+			jf.setCurrentDirectory(new File(System.getProperty("user.home")));
+		} catch (SecurityException e) {
+			throw new TipiException("No file access allowed. Sorry.");
+		}
         int result = jf.showSaveDialog(c);
         if (result != JFileChooser.APPROVE_OPTION) {
             throw new TipiBreakException(0);

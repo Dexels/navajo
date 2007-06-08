@@ -18,6 +18,8 @@ public class TipiSwingFrameImpl
     extends JFrame
     implements TopLevel, TipiDesignable, TipiSwingFrame {
 //  TipiContext c;
+	 
+	
   BorderLayout borderLayout1 = new BorderLayout();
   private TipiSwingDataComponentImpl me;
   private boolean gridFlag = false;

@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.event.ComponentEvent;
 
 import javax.swing.*;
+
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.embed.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
@@ -25,40 +26,47 @@ public class TipiFrame
   private boolean visible = false;
   private int x = 0, y = 0, w = 0, h = 0;
   private String myMenuBar = "";
+  
+  private RootPaneContainer myToplevel = null;
+  
   public TipiFrame() {
   }
 
   public Object createContainer() {
-     boolean internal = getContext() instanceof EmbeddedContext;
-//    if (internal) {
-//      TipiSwingFrameStudioImpl myFrame;
-//      myFrame = new TipiSwingFrameStudioImpl(this);
-//      myFrame.setClosable(true);
-//      myFrame.setResizable(true);
-//      myFrame.setIconifiable(true);
-//      myFrame.setMaximizable(true);
-//      TipiHelper th = new TipiSwingHelper();
-//      th.initHelper(this);
-//      addHelper(th);
-//      return (Container) myFrame;
-//    }
-//    else {
+     boolean internal = (getContext() instanceof EmbeddedContext) || ((SwingTipiContext)getContext()).getAppletRoot()!=null;
+    if (internal) {
+    	System.err.println("Internal mode!");
+      TipiApplet ta = ((SwingTipiContext)getContext()).getAppletRoot();
+      TipiHelper th = new TipiSwingHelper();
+      th.initHelper(this);
+      addHelper(th);
+      myToplevel = ta;
+      return ta;
+    }
+    else {
       TipiSwingFrameImpl myFrame;
       myFrame = new TipiSwingFrameImpl(this);
       TipiHelper th = new TipiSwingHelper();
       th.initHelper(this);
       addHelper(th);
-//        myContext.setToplevel(myFrame);
+      myToplevel = myFrame;
+
+      //        myContext.setToplevel(myFrame);
       return (Container) myFrame;
-//    }
+    }
   }
 
   public void addToContainer(final Object c, final Object constraints) {
-    final TipiSwingFrame myFrame = (TipiSwingFrame) getContainer();
+  //  final TipiSwingFrame myFrame = (TipiSwingFrame) getContainer();
     if (JMenuBar.class.isInstance(c)) {
       runSyncInEventThread(new Runnable() {
         public void run() {
-          myFrame.setJMenuBar( (JMenuBar) c);
+        	if(myToplevel instanceof JFrame) {
+        		((JFrame)myToplevel).setJMenuBar( (JMenuBar) c);
+        	}
+        	if(myToplevel instanceof JApplet) {
+            	((JApplet)myToplevel).setJMenuBar( (JMenuBar) c);
+        	}
         }
       });
     }
@@ -69,7 +77,7 @@ public class TipiFrame
 //        	if (constraints!=null) {
 //				System.err.println("constraints: "+constraints.getClass());
 //			}
-          myFrame.getContentPane().add( (Component) c, constraints);
+          myToplevel.getContentPane().add( (Component) c, constraints);
 //          myFrame.getContentPane().dispatchEvent(new ComponentEvent(myFrame.getContentPane(),ComponentEvent.COMPONENT_RESIZED));
         }
       });
@@ -77,40 +85,46 @@ public class TipiFrame
   }
 
   public void removeFromContainer(final Object c) {
-    final TipiSwingFrame myFrame = (TipiSwingFrame) getContainer();
+   // final TipiSwingFrame myFrame = (TipiSwingFrame) getContainer();
     runSyncInEventThread(new Runnable() {
       public void run() {
-        myFrame.getContentPane().remove( (Component) c);
+        myToplevel.getContentPane().remove( (Component) c);
       }
     });
   }
 
   protected void setBounds(Rectangle r) {
-    final TipiSwingFrame myFrame = (TipiSwingFrame) getContainer();
-    myFrame.setBounds(r);
+  	if(myToplevel instanceof JFrame) {
+		((JFrame)myToplevel).setBounds(r);
+	}    
   }
 
   protected Rectangle getBounds() {
-    final TipiSwingFrame myFrame = (TipiSwingFrame) getContainer();
-    return myFrame.getBounds();
+  //  final TipiSwingFrame myFrame = (TipiSwingFrame) getContainer();
+	  	if(myToplevel instanceof JFrame) {
+	  		 return ((JFrame)myToplevel).getBounds();
+	  		 }      
+	  	return null;
   }
 
   protected void setIcon(ImageIcon ic) {
-    final TipiSwingFrame myFrame = (TipiSwingFrame) getContainer();
     if (ic == null) {
       return;
     }
-    myFrame.setIconImage(ic);
+  	if(myToplevel instanceof JFrame) {
+  		((JFrame)myToplevel).setIconImage(ic.getImage());
+  }   
   }
 
   protected void setTitle(String s) {
-    final TipiSwingFrame myFrame = (TipiSwingFrame) getContainer();
-    myFrame.setTitle(s);
+	 	if(myToplevel instanceof JFrame) {
+	  		((JFrame)myToplevel).setTitle(s);
+	  }   
   }
 
   public void setContainerLayout(Object layout) {
-    final TipiSwingFrame myFrame = (TipiSwingFrame) getContainer();
-    myFrame.getContentPane().setLayout( (LayoutManager) layout);
+	
+	  myToplevel.getContentPane().setLayout( (LayoutManager) layout);
   }
 
   private ImageIcon getIcon(URL u) {
@@ -118,7 +132,6 @@ public class TipiFrame
   }
 
   public void setComponentValue(String name, Object object) {
-    final TipiSwingFrame myFrame = (TipiSwingFrame) getContainer();
     if (name.equals("fullscreen")) {
       fullscreen = ( (Boolean) object).booleanValue();
     }
@@ -172,11 +185,37 @@ public class TipiFrame
   }
 
   public Object getComponentValue(String name) {
-    final TipiSwingFrame myFrame = (TipiSwingFrame) getContainer();
     if ("visible".equals(name)) {
-      return new Boolean(myFrame.isVisible());
+    	if(myToplevel instanceof JFrame) {
+    	      return new Boolean(((JFrame)myToplevel).isVisible());
+    	}
+    	if(myToplevel instanceof JApplet) {
+    	      return new Boolean(((JFrame)myToplevel).isVisible());
+    	}
     }
-    Rectangle r = myFrame.getBounds();
+    
+    if (name.equals("resizable")) {
+    	if(myToplevel instanceof JFrame) {
+    		   return new Boolean(((JFrame)myToplevel).isResizable());
+      	}    	
+     }
+
+      if (name.equals("fullscreen")) {
+		   return new Boolean(JFrame.MAXIMIZED_BOTH ==((JFrame)myToplevel).getExtendedState());
+		   
+    	//  new Boolean(JFrame.MAXIMIZED_BOTH == myFrame.getExtendedState());
+      }
+
+      if (name.equals("title")) {
+    	if(myToplevel instanceof JFrame) {
+   		   return new Boolean(((JFrame)myToplevel).getTitle());
+     	}       	  
+//        return myFrame.getTitle();
+      }    
+    Rectangle r = getBounds();
+    if(r==null) {
+    	   return super.getComponentValue(name);
+    }
     if (name.equals("x")) {
       return new Integer(r.x);
     }
@@ -189,33 +228,20 @@ public class TipiFrame
     if (name.equals("h")) {
       return new Integer(r.height);
     }
-    if (name.equals("resizable")) {
-      return new Boolean(myFrame.isResizable());
-    }
-
-    if (name.equals("fullscreen")) {
-      new Boolean(JFrame.MAXIMIZED_BOTH == myFrame.getExtendedState());
-    }
-
-    if (name.equals("title")) {
-      return myFrame.getTitle();
-    }
-
+ 
+    // Watch out: Jump exit at getBounds
     return super.getComponentValue(name);
   }
 
-  protected void setJMenuBar(JMenuBar s) {
-    final TipiSwingFrame myFrame = (TipiSwingFrame) getContainer();
-    ( (JFrame) myFrame).setJMenuBar(s);
-  }
-
+  
   /**
    * componentInstantiated
    *
    * @todo Implement this com.dexels.navajo.tipi.TipiComponent method
    */
   public void componentInstantiated() {
-    runSyncInEventThread(new Runnable() {
+	  if(getContainer() instanceof TipiSwingFrame) {
+	  runSyncInEventThread(new Runnable() {
       public void run() {
         setBounds(new Rectangle(x, y, w, h));
         if (fullscreen) {
@@ -225,5 +251,7 @@ public class TipiFrame
         getSwingContainer().setVisible(visible);
       }
     });
-  }
+
+	  }
+	 }
 }

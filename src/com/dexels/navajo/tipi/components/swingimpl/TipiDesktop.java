@@ -49,7 +49,6 @@ public class TipiDesktop
     runSyncInEventThread(new Runnable() {
       public void run() {
     	  if (c instanceof JInternalFrame) {
-			System.err.println("Internal frame found!");
 			((JInternalFrame)c).dispose();
     	  }
     	  getSwingContainer().remove( (Component) c);
@@ -67,10 +66,8 @@ public class TipiDesktop
           } else {
               if (value instanceof Binary) {
                 byte[] data = ((Binary)value).getData();
-                System.err.println(">>>>>>>>>>>>>>>>> Data size: "+data.length);
                 ImageIcon ii = new ImageIcon(data);
-                System.err.println("IMAGEICON CREATED!");
-                
+           
                 ( (TipiSwingDesktop) getContainer()).setImage(ii.getImage());
                 getSwingContainer().repaint();
                 

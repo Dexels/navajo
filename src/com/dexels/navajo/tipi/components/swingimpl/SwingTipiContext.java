@@ -42,6 +42,8 @@ public class SwingTipiContext extends TipiContext {
 	private UserInterface myUserInterface;
 	private boolean debugMode = false;
 
+	private TipiApplet myAppletRoot;
+
 	public SwingTipiContext() {
 	}
 
@@ -60,10 +62,10 @@ public class SwingTipiContext extends TipiContext {
 			return;
 		}
 		if(SwingUtilities.isEventDispatchThread()) {
-			System.err.println("EVENT THREAD!");
+//			System.err.println("EVENT THREAD!");
 			deliverData(reply, method, server);
 		} else {
-			System.err.println("NON EVENT THREAD!");
+//			System.err.println("NON EVENT THREAD!");
 			try {
 				SwingUtilities.invokeAndWait(new Runnable(){
 
@@ -211,9 +213,14 @@ public class SwingTipiContext extends TipiContext {
 	}
 
 	protected void clearLogFile() {
-		File f = new File(System.getProperty("user.home") + "/.tipidebug");
-		// System.err.println("Deleting: "+f.getAbsolutePath());
-		f.delete();
+		try {
+			File f = new File(System.getProperty("user.home") + "/.tipidebug");
+			// System.err.println("Deleting: "+f.getAbsolutePath());
+			f.delete();
+		} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public void debugLog(String category, String event) {
@@ -233,6 +240,8 @@ public class SwingTipiContext extends TipiContext {
 			fw.close();
 		} catch (IOException ex) {
 			ex.printStackTrace();
+		} catch (SecurityException ee) {
+			ee.printStackTrace();
 		}
 	}
 
@@ -269,4 +278,22 @@ public class SwingTipiContext extends TipiContext {
 
 	}
 
+	public void setAppletRoot(TipiApplet appletRoot) {
+		myAppletRoot = appletRoot;
+	}
+
+	public TipiApplet getAppletRoot() {
+		return myAppletRoot;
+	}
+	
+
+	public void exit() {
+		if(myAppletRoot!=null) {
+			myAppletRoot.reload();
+		} else {
+			System.exit(0); 
+		}
+	}
+	
+	
 }

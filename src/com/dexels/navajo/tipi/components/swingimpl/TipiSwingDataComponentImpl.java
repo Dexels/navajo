@@ -216,7 +216,7 @@ public abstract class TipiSwingDataComponentImpl
   }
 
   public void runSyncInEventThread(Runnable r) {
-    if (SwingUtilities.isEventDispatchThread() || !committedInUI) {
+    if (SwingUtilities.isEventDispatchThread()) {
       r.run();
     }
     else {
@@ -260,7 +260,7 @@ public abstract class TipiSwingDataComponentImpl
   public void showPreview(String header,String footer) {
     TipiPrintPreview tpp = new TipiPrintPreview(header,footer);
     tpp.setSwingDataComponent(this);
-    JDialog jd = new JDialog(SwingClient.getUserInterface().getMainFrame());
+    JDialog jd = new JDialog((JFrame)SwingClient.getUserInterface().getMainFrame());
     jd.getContentPane().add(tpp);
     jd.pack();
     ((UserInterface)((SwingTipiContext)myContext).getUserInterface()).showCenteredDialog(jd);

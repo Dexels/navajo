@@ -33,6 +33,10 @@ public class SwingTipiUserInterface extends DummyUserInterface{
     return (JFrame)myContext.getTopLevel();
   }
 
+  public RootPaneContainer getRootPaneContainer() {
+	    return (RootPaneContainer)myContext.getTopLevel();
+	  }
+
   public void addDialog(JDialog d) {
 //    d.setLocationRelativeTo(getMainFrame());
     d.pack();
@@ -60,9 +64,9 @@ public class SwingTipiUserInterface extends DummyUserInterface{
   
   public void showCenteredDialog(JDialog dlg) {
     Dimension dlgSize = dlg.getBounds().getSize();
-    Rectangle r = getMainFrame().getBounds();
+    Rectangle r = getRootPaneContainer().getRootPane().getBounds();
     Dimension frmSize = new Dimension(r.width, r.height);
-    Point loc = getMainFrame().getLocation();
+    Point loc = getRootPaneContainer().getRootPane().getLocation();
     int x =  Math.max(0, (frmSize.width - dlgSize.width) / 2 + loc.x + r.x);
     int y = Math.max(0, (frmSize.height - dlgSize.height) / 2 + loc.y + r.y);
     dlg.setLocation(x, y);

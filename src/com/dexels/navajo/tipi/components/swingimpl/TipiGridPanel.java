@@ -93,14 +93,14 @@ gridBagLayout = new GridBagLayout();
 //		 c.setBackground(new Color(t.nextFloat(),t.nextFloat(),t.nextFloat()));
          GridBagConstraints gc = parseGridConstraints(constr,jc);
 //         gridComponent.add(new JLabel(">>"+o.toString()),gc);
-         System.err.println("GC: "+gc);
-         System.err.println("Preferred of component to add: "+c.getPreferredSize()+" isset: "+c.isPreferredSizeSet()+" component: "+c);
+//         System.err.println("GC: "+gc);
+//         System.err.println("Preferred of component to add: "+c.getPreferredSize()+" isset: "+c.isPreferredSizeSet()+" component: "+c);
          gridComponent.add(c,gc);
 
-         System.err.println("Added to container. LAyout indications: ");
+//         System.err.println("Added to container. LAyout indications: ");
 //         System.err.println("Max: "+ gridBagLayout.maximumLayoutSize(gridComponent));
 //         System.err.println("Min: "+ gridBagLayout.minimumLayoutSize(gridComponent));
-         System.err.println("Pref:"+ gridBagLayout.preferredLayoutSize(gridComponent));
+//         System.err.println("Pref:"+ gridBagLayout.preferredLayoutSize(gridComponent));
     }
     
     
