@@ -50,6 +50,7 @@ public class Task implements Runnable, TaskMXBean, TaskInterface {
 	public String password;
 	public String trigger;
 	public Navajo navajo = null;
+	public Navajo response = null;
 	
     private Trigger myTrigger = null;
     private boolean remove = false;
@@ -213,9 +214,10 @@ public class Task implements Runnable, TaskMXBean, TaskInterface {
 		this.navajo = n;
 		Header h = n.getHeader();
 		if ( h != null ) {
-			setUsername(h.getRPCName());
+			setUsername(h.getRPCUser());
 			setPassword(h.getRPCPassword());
-			n.removeHeader();
+			setWebservice(h.getRPCName());
+			h.setSchedule("");
 		} else {
 			System.err.println("Weird, empty header supplied for input navajo for task");
 		}
@@ -223,6 +225,24 @@ public class Task implements Runnable, TaskMXBean, TaskInterface {
 	
 	public Navajo getNavajo() {
 		return navajo;
+	}
+	
+	/**
+	 * Set the response for the webservice
+	 * 
+	 * @param r
+	 */
+	public void setResponse(Navajo r) {
+		this.response = r;
+	}
+	
+	/**
+	 * Gets the response for the webservice
+	 * 
+	 * @return
+	 */
+	public Navajo getResponse() {
+		return response;
 	}
 	
 	/**
@@ -259,7 +279,7 @@ public class Task implements Runnable, TaskMXBean, TaskInterface {
 				} 
 				
 				isRunning = true;
-				AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Alarm goes off for task: " + id);
+				AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "(!!)Alarm goes off for task: " + id);
 				java.util.Date now = new java.util.Date();
 				
 				Header h = request.getHeader();
@@ -274,33 +294,34 @@ public class Task implements Runnable, TaskMXBean, TaskInterface {
 				}
 				Dispatcher.getInstance().setUseAuthorisation(true);
 				
-				Navajo result = null;
-				
 				// Dispatcher is dead, exit.
 				if ( Dispatcher.getInstance() == null ) {
+					System.err.println("ERROR: Dead dispatcher, trying to execute task");
 					return;
 				}
 				
 				try {
-					result = Dispatcher.getInstance().handle(request);
+					Navajo result = Dispatcher.getInstance().handle(request);
+					this.setResponse(result);
 				} catch (FatalException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					e.printStackTrace(System.err);
 					TaskRunner.log(this, null, true, e.getMessage(), now);
-				}
-				
-				// Log result if error.
-				if ( result != null && result.getMessage("error") != null ) {		
-					TaskRunner.log(this, result, true, "", now );
-				} else {
-					TaskRunner.log(this, result, false, "", now );
-				}
+				} 
+
+				TaskRunner.writeTaskOutput(this);
+				TaskRunner.log(this, getResponse(), ( getResponse() != null && getResponse().getMessage("error") != null ), "", now );
+
 				
 				isRunning = false;		
-				myTrigger.resetAlarm();			
 				
 				if ( myTrigger.isSingleEvent() ) {
+					System.err.println(">>>>>>>>>>>>>> Single event task finished, removing everything");
+					TaskRunner.getInstance().removeTaskInput(this);
 					TaskRunner.getInstance().removeTask( this.getId() );
+				} else {
+					myTrigger.resetAlarm();		
+					System.err.println("Reset alarm, issingleevent = " + myTrigger.isSingleEvent());
+					System.err.println(">>>>>>>>>>>>>> Not a single event task finished, removing nothing");
 				}
 			}
 			
@@ -309,7 +330,7 @@ public class Task implements Runnable, TaskMXBean, TaskInterface {
 			JMXHelper.deregisterMXBean(JMXHelper.TASK_DOMAIN, getId());
 		} catch (Throwable e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+            // e.printStackTrace(System.err);
 		}
 		AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Terminated task: " + id);
 	}

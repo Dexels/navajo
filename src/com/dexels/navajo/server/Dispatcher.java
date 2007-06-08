@@ -724,6 +724,22 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
     }
   }
 
+  private final Navajo generateScheduledMessage(Header h) {
+	  try {
+	      Navajo outMessage = NavajoFactory.getInstance().createNavajo();
+	      Message scheduledMsg = NavajoFactory.getInstance().createMessage(
+	              outMessage, "NAVAJO_SCHEDULED");
+	      outMessage.addMessage(scheduledMsg);
+	      Header hnew = NavajoFactory.getInstance().createHeader(outMessage, h.getRPCName(), h.getRPCUser(), "", -1);
+	      hnew.setSchedule(h.getSchedule());
+	      outMessage.addHeader(hnew);
+	      return outMessage;
+	  } catch (Exception e) {
+		  e.printStackTrace(System.err);
+		  return null;
+	  }
+  }
+  
   /**
    * Evaluate user specific parameters.
    *
@@ -886,8 +902,9 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
 		} catch (UserException e) {
 			System.err.println("WARNING: Invalid trigger specified for task " + ti.getId()  + ": " + inMessage.getHeader().getSchedule());
 		}
+		ti.setNavajo(inMessage);
     	trf.addTask(ti);
-    	return NavajoFactory.getInstance().createNavajo();
+    	return generateScheduledMessage(inMessage.getHeader());
     }
     
     int accessSetSize = accessSet.size();

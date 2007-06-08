@@ -73,7 +73,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 		
 	private final static String TASK_CONFIG = "tasks.xml";
 	private final static String TASK_INPUT_DIR = "tasks";
-	private File taskInputDir = null;
+	private volatile static File taskInputDir = null;
 	
 	private static Object semaphore = new Object();
 	private static String id = "Navajo TaskRunner";
@@ -81,7 +81,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 	public TaskRunner() {
 		super(id);
 		// Check for existence of tasks directory.
-		java.io.File taskInputDir = new java.io.File(Dispatcher.getInstance().getNavajoConfig().getRootPath() + "/" + TASK_INPUT_DIR);
+		taskInputDir = new java.io.File(Dispatcher.getInstance().getNavajoConfig().getRootPath() + "/" + TASK_INPUT_DIR);
 		taskInputDir.mkdirs();
 	}
 	
@@ -95,8 +95,11 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 	 * @param t
 	 */
 	protected void writeTaskInput(Task t) {
+		if ( t.getNavajo() == null ) {
+			return;
+		}
 		try {
-			FileWriter fw = new FileWriter(new File(taskInputDir, t.getId() + ".xml"));
+			FileWriter fw = new FileWriter(new File(taskInputDir, t.getId() + "_request.xml"));
 			t.getNavajo().write(fw);
 			fw.close();
 		} catch (Exception e) {
@@ -106,13 +109,33 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 	}
 	
 	/**
+	 * Write the Navajo request input for a task.
+	 * 
+	 * @param t
+	 */
+	protected static void writeTaskOutput(Task t) {
+		if ( t.getResponse() == null ) {
+			return;
+		}
+		try {
+			FileWriter fw = new FileWriter(new File(taskInputDir, t.getId() + "_response.xml"));
+			t.getResponse().write(fw);
+			fw.close();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	
+	/**
 	 * Read the Navajo request input for a task.
 	 * 
 	 * @param t
 	 */
 	protected void readTaskInput(Task t) {
 		try {
-			File f = new File(taskInputDir, t.getId() + ".xml");
+			File f = new File(taskInputDir, t.getId() + "_request.xml");
 			if ( !f.exists() ) {
 				System.err.println("Input navajo does not exist for task: " + t.getId());
 				return;
@@ -134,7 +157,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 	 */
 	protected void removeTaskInput(Task t) {
 		try {
-			File f = new File(taskInputDir, t.getId() + ".xml");
+			File f = new File(taskInputDir, t.getId() + "_request.xml");
 			if ( f.exists() ) {
 				f.delete();
 			}
@@ -254,7 +277,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 		}
 		
 		Task t = (Task) tasks.get(id);
-		removeTaskInput(t);
+		
 		tasks.remove(id);
 		t.setRemove(true);
 		
@@ -292,30 +315,25 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 	
 	public static synchronized void log(Task t, Navajo result, boolean error, String errMsg, java.util.Date startedat) {
 		File log = new File( Dispatcher.getInstance().getNavajoConfig().rootPath + "/log/tasks.log" );
+		FileWriter fw = null;
+		boolean freshfile = false;
 		if ( !log.exists() ) {
 			log.getParentFile().mkdirs();
+			freshfile = true;
 		}
-		FileWriter fw = null;
+		
 		try {
+			
 			fw = new FileWriter( log, true );
-			StringBuffer header = new StringBuffer();
-            header.append("---------------------------------------------------------\n");
-            header.append("REPORT LOG FOR TASK: " + t.getId() + "\n"); 
-            header.append("ws       : " + t.getWebservice() + "\n");
-            header.append("trigger  : " + t.getTrigger().getDescription() + "\n");
-            header.append("status   : " +  (error ? "error" : "ok") + "\n");
-            header.append("started @: " + startedat + "\n");
-            header.append("finished@: " + (new java.util.Date()) + "\n");
-            if ( error ) {
-            	header.append("errmsg   : " + errMsg);
-            }
-            
-			StringWriter sw = new StringWriter();
-			if ( error ) {
-				header.append("error result: \n");
-				result.write(sw);
+			if ( freshfile ) {
+				fw.write("ID;WEBSERVICE;USERNAME;TRIGGER;ERROR;STARTTIME;ENDTIME");
 			}
-			String logMsg = header.toString() + sw.toString();
+			StringBuffer header = new StringBuffer();
+           
+            header.append(t.getId() + ";" + t.getWebservice() + ";" + t.getUsername() + ";" + t.getTrigger().getDescription() + ";" + (error ? "error" : "ok") + ";" +
+            		startedat + ";" + (new java.util.Date()) + ";" + ( error ? errMsg : "") + "\n"); 
+          
+			String logMsg = header.toString();
 			fw.write(logMsg);
 			
 		} catch (Exception e) {
@@ -398,6 +416,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 				newTask.addProperty(propTrigger);
 
 				synchronized (semaphore) {
+					writeTaskInput(t);
 					Dispatcher.getInstance().getNavajoConfig().writeConfig(TASK_CONFIG, taskDoc);
 				}
 				

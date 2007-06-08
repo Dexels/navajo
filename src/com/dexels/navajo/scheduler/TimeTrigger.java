@@ -128,7 +128,7 @@ public class TimeTrigger extends Trigger {
 		int currentDay = c.get(Calendar.DAY_OF_WEEK);
 		
 		if (month != -1) {
-			if ( currentMonth != month ) {
+			if ( currentMonth != ( month - 1 ) ) {
 				return false;
 			}
 		}
@@ -207,5 +207,12 @@ public class TimeTrigger extends Trigger {
 
 	public void removeTrigger() {
 		// TODO Auto-generated method stub	
+	}
+	
+	public static void main(String [] args) {
+		java.util.Date d =  new java.util.Date();
+		Calendar c = Calendar.getInstance();
+		c.setTime(d);
+		System.err.println("y = " + c.get(Calendar.DAY_OF_MONTH));
 	}
 }
