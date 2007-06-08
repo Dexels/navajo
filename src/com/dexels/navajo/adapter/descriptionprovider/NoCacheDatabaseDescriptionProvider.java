@@ -20,7 +20,7 @@ public class NoCacheDatabaseDescriptionProvider extends BaseDescriptionProvider 
 	
 	private static String selectDescription = 
 		"SELECT description FROM (" +
-			"SELECT name, locale||'|'||NVL(sublocale, '%')||'|'||name||'|'||NVL(objectid, '%')||'|'||NVL(context, '%') AS key,NVL(context, '0') AS context,NVL(objectid, '0') AS objectid,description" +
+			"SELECT name, locale||'|'||NVL(sublocale, '%')||'|'||name||'|'||NVL(objectid, '%')||'|'||NVL(context, '%') AS key,NVL(context, '0') AS context,NVL(objectid, '0') AS objectid,description " +
 			"FROM propertydescription WHERE name = ? AND locale = ? AND ( sublocale = ? OR sublocale IS NULL ) AND ( context = ? OR context IS NULL ) AND " +
 			"( objectid = ? OR objectid IS NULL ) ORDER BY sublocale||objectid||context DESC ) WHERE rownum = 1";
 	
@@ -28,7 +28,10 @@ public class NoCacheDatabaseDescriptionProvider extends BaseDescriptionProvider 
 	public void updateProperty(Navajo in, Property element, String locale) {
 		String subLocale = in.getHeader().getAttribute("sublocale");
 
-		element.setDescription(retrieveDescription(element.getName(), locale, subLocale, locale, locale));
+		String retrievedDescription = retrieveDescription(element.getName(), locale, subLocale, in.getHeader().getRPCName(), in.getHeader().getRPCUser());
+		if(retrievedDescription!=null) {
+			element.setDescription(retrievedDescription);
+		}
 	}
 
 	public void deletePropertyContext(String locale, String context) {
@@ -89,7 +92,7 @@ public class NoCacheDatabaseDescriptionProvider extends BaseDescriptionProvider 
 						System.err.println("Found description: "+desc);
 						return desc;
 					}
-				
+					
 				return null;
 			}
 			catch (Exception ex) {
