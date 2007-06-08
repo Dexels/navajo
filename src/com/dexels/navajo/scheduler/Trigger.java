@@ -88,6 +88,10 @@ public abstract class Trigger {
 	 */
 	public abstract void removeTrigger();
 	
+	public abstract boolean isSingleEvent();
+	
+	public abstract void setSingleEvent();
+	
 	/**
 	 * Trigger factory, creates proper trigger based upon URL definition.
 	 * 

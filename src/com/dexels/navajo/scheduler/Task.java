@@ -25,9 +25,6 @@
 
 package com.dexels.navajo.scheduler;
 
-import java.io.StringWriter;
-import java.util.Date;
-
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
@@ -35,6 +32,7 @@ import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.FatalException;
 import com.dexels.navajo.server.UserException;
+import com.dexels.navajo.server.enterprise.scheduler.TaskInterface;
 import com.dexels.navajo.server.jmx.JMXHelper;
 import com.dexels.navajo.util.AuditLog;
 
@@ -45,12 +43,13 @@ import com.dexels.navajo.util.AuditLog;
  * @author Arjen
  *
  */
-public class Task implements Runnable, TaskMXBean {
+public class Task implements Runnable, TaskMXBean, TaskInterface {
 	
 	public String webservice;
 	public String username;
 	public String password;
 	public String trigger;
+	public Navajo navajo = null;
 	
     private Trigger myTrigger = null;
     private boolean remove = false;
@@ -58,6 +57,10 @@ public class Task implements Runnable, TaskMXBean {
     private boolean isRunning = false;
     private String id = null;
     private Thread myThread = null;
+    
+    public Task() {
+    	// The empty constructor.
+    }
     
 	/**
 	 * 
@@ -71,7 +74,8 @@ public class Task implements Runnable, TaskMXBean {
 				String username,
 				String password,
 				Access a, 
-				String triggerURL) throws IllegalTrigger, IllegalTask {
+				String triggerURL,
+				Navajo requestNavajo) throws IllegalTrigger, IllegalTask {
 		if ( webservice == null || webservice.equals("") ) {
 			throw new IllegalTask("Empty webservice pattern");
 		}
@@ -82,6 +86,7 @@ public class Task implements Runnable, TaskMXBean {
 		this.username = username;
 		this.password = password;
 		this.myTrigger = Trigger.parseTrigger(triggerURL);
+		this.navajo = requestNavajo;
 	}
 	
 	/**
@@ -204,6 +209,22 @@ public class Task implements Runnable, TaskMXBean {
 		return isRunning;
 	}
 	
+	public void setNavajo(Navajo n) {
+		this.navajo = n;
+		Header h = n.getHeader();
+		if ( h != null ) {
+			setUsername(h.getRPCName());
+			setPassword(h.getRPCPassword());
+			n.removeHeader();
+		} else {
+			System.err.println("Weird, empty header supplied for input navajo for task");
+		}
+	}
+	
+	public Navajo getNavajo() {
+		return navajo;
+	}
+	
 	/**
 	 * The worker method for the task, keeps running until it gets flagged for removal.
 	 */
@@ -229,12 +250,13 @@ public class Task implements Runnable, TaskMXBean {
 				
 				Access access = myTrigger.getAccess();
 				Navajo request = null;
-				if ( access != null ) {
+				if ( access != null && navajo == null ) {
 					request = ( myTrigger.swapInOut() ? access.getOutputDoc() :  access.getInDoc() );
-				} 
-				if (request == null ) {
+				} else if ( navajo != null ) {
+					request = navajo;
+				} else {
 					request = NavajoFactory.getInstance().createNavajo();
-				}
+				} 
 				
 				isRunning = true;
 				AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Alarm goes off for task: " + id);
@@ -275,7 +297,11 @@ public class Task implements Runnable, TaskMXBean {
 				}
 				
 				isRunning = false;		
-				myTrigger.resetAlarm();				
+				myTrigger.resetAlarm();			
+				
+				if ( myTrigger.isSingleEvent() ) {
+					TaskRunner.getInstance().removeTask( this.getId() );
+				}
 			}
 			
 		}
@@ -293,7 +319,11 @@ public class Task implements Runnable, TaskMXBean {
 	}
 	
 	public static void main(String [] args) throws Exception {
-		Task t = new Task("InitBM", "ROOT", "", null, "");
+		Task t = new Task("InitBM", "ROOT", "", null, "", null);
 		t.run();
+	}
+
+	public TaskInterface getInstance() {
+		return new Task();
 	}
 }

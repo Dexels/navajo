@@ -30,7 +30,11 @@ import java.io.*;
 import java.util.*;
 import java.net.*;
 
+import com.dexels.navajo.scheduler.Trigger;
 import com.dexels.navajo.server.enterprise.queue.RequestResponseQueueFactory;
+import com.dexels.navajo.server.enterprise.scheduler.TaskInterface;
+import com.dexels.navajo.server.enterprise.scheduler.TaskRunnerFactory;
+import com.dexels.navajo.server.enterprise.scheduler.TaskRunnerInterface;
 import com.dexels.navajo.server.enterprise.scheduler.WebserviceListenerFactory;
 import com.dexels.navajo.server.enterprise.scheduler.WebserviceListenerInterface;
 import com.dexels.navajo.broadcast.BroadcastMessage;
@@ -872,6 +876,20 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
     Exception myException = null;
     String origThreadName = null;
     
+    // Check if scheduled webservice.
+    if ( inMessage.getHeader().getSchedule() != null && !inMessage.getHeader().getSchedule().equals("") ) {
+    	System.err.println("Scheduling webservice: " + inMessage.getHeader().getRPCName() + " on " + inMessage.getHeader().getSchedule());
+    	TaskRunnerInterface trf = TaskRunnerFactory.getInstance();
+    	TaskInterface ti = TaskRunnerFactory.getTaskInstance();
+    	try {
+			ti.setTrigger(inMessage.getHeader().getSchedule());
+		} catch (UserException e) {
+			System.err.println("WARNING: Invalid trigger specified for task " + ti.getId()  + ": " + inMessage.getHeader().getSchedule());
+		}
+    	trf.addTask(ti);
+    	return NavajoFactory.getInstance().createNavajo();
+    }
+    
     int accessSetSize = accessSet.size();
     
     // Check accessSetSize first!
@@ -886,7 +904,6 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
     }
     
     try {
-//      this.inMessage = inMessage;
 
       requestCount++;
 
@@ -1034,6 +1051,7 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
             outMessage = dispatch(defaultNavajoDispatcher, inMessage, access, parms);
           }
           else {
+        	// Actually do something.
             outMessage = dispatch(defaultDispatcher, inMessage, access, parms);
           }
         }

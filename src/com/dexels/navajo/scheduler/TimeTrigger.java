@@ -46,6 +46,7 @@ public class TimeTrigger extends Trigger {
 	private int minute = -1;
 	private ArrayList day = null; /* SAT,SUN.MON,TUE,WED,FRI */
 	private String description = null;
+	private boolean singleEvent;
 	
 	public TimeTrigger(String s) {
 		description = s;
@@ -91,7 +92,17 @@ public class TimeTrigger extends Trigger {
 				day = null;
 			}
 		}
-		System.err.println(month + "|" + monthday + "|" + hour + "|" + minute + "|" + day);
+		singleEvent = ( month != -1 && monthday != -1 && hour != -1 && minute != -1 );
+		System.err.println("Trigger " + s + ", singleEvent = " + singleEvent);
+		System.err.println(month + "|" + monthday + "|" + hour + "|" + minute + "|" + day + ", singleEvent = " + singleEvent);
+	}
+	
+	public void setSingleEvent() {
+		singleEvent = true;
+	}
+	
+	public boolean isSingleEvent() {
+		return singleEvent;
 	}
 	
 	public TimeTrigger(int month, int monthday, int hour, int minute, ArrayList day) throws Exception {

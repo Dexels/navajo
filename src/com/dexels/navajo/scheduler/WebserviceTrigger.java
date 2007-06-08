@@ -39,6 +39,8 @@ public class WebserviceTrigger extends Trigger {
 	private WebserviceListener myListener = null;
 	private HashMap commands = new HashMap();
 	
+	private boolean singleEvent = false;
+	
 	public WebserviceTrigger(String description) {
 		AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Creating webservice trigger: " + description);
 		
@@ -66,6 +68,10 @@ public class WebserviceTrigger extends Trigger {
 		//System.err.println("webservice = " + webservice);
 		myListener = WebserviceListener.getInstance();
 		myListener.registerTrigger(this);
+	}
+	
+	public boolean isSingleEvent() {
+		return singleEvent;
 	}
 	
 	public String getCommand(String c) {
@@ -100,5 +106,9 @@ public class WebserviceTrigger extends Trigger {
 
 	public Access getAccess() {
 		return myAccess;
+	}
+
+	public void setSingleEvent() {
+		singleEvent = true;
 	}
 }

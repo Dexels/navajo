@@ -36,4 +36,15 @@ public class TaskRunnerFactory {
 			}
 		}
 	}
+	
+	public static final TaskInterface getTaskInstance() {
+		try {
+		Class c = Class.forName("com.dexels.navajo.scheduler.Task");
+		TaskInterface tif = (TaskInterface) c.newInstance();
+		return tif;
+		} catch (Exception e) {
+			System.err.println("WARNING: Scheduler not available");
+			return new DummyTask();
+		}	
+	}
 }

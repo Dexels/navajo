@@ -24,10 +24,13 @@
  */
 package com.dexels.navajo.scheduler;
 
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.Iterator;
 
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.Access;
@@ -46,6 +49,7 @@ public class TaskRunnerMap implements Mappable {
 	public String id;
 	public String webservice;
 	public String trigger;
+	public Binary navajo;
 	
 	// Actions
 	public boolean start;
@@ -68,6 +72,10 @@ public class TaskRunnerMap implements Mappable {
 	
 	public void setId(String id) {
 		this.id = id;
+	}
+	
+	public void setNavajo(Binary n) {
+		this.navajo = n;
 	}
 	
 	public void setWebservice(String webservice) {
@@ -111,7 +119,16 @@ public class TaskRunnerMap implements Mappable {
 		}
 		
 		try {
-			Task myTask = new Task(webservice, myAccess.rpcUser, myAccess.rpcPwd, myAccess, trigger);
+			// Create request Navajo if navajo binary has been set.
+			Navajo requestNavajo = null;
+			if ( navajo != null ) {
+				try {
+					requestNavajo = NavajoFactory.getInstance().createNavajo( navajo.getDataAsStream() );
+				} catch (Exception e) {
+					requestNavajo = null;
+				}
+			}
+			Task myTask = new Task(webservice, myAccess.rpcUser, myAccess.rpcPwd, myAccess, trigger, requestNavajo);
 			TaskRunner tr = TaskRunner.getInstance();
 			if ( tr.containsTask( id ) ) {
 				throw new UserException(-1, "Tasks already exists");
@@ -147,4 +164,15 @@ public class TaskRunnerMap implements Mappable {
 		
 	}
 
+	public static void main(String [] args) throws Exception {
+		String aap = "<tml><message name=\"aap\"/></tml>";
+		
+		Binary b = new Binary(aap.getBytes());
+		
+		InputStream is = b.getDataAsStream();
+		
+		Navajo n = NavajoFactory.getInstance().createNavajo(is);
+		
+		n.write(System.err);
+	}
 }

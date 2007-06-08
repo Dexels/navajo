@@ -25,15 +25,16 @@
 package com.dexels.navajo.scheduler;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringWriter;
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Random;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -42,11 +43,23 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.GenericThread;
-import com.dexels.navajo.server.NavajoConfig;
+import com.dexels.navajo.server.enterprise.scheduler.TaskInterface;
 import com.dexels.navajo.server.enterprise.scheduler.TaskRunnerInterface;
 import com.dexels.navajo.server.jmx.JMXHelper;
 import com.dexels.navajo.util.AuditLog;
 
+/**
+ * The TaskRunner controls the set of tasks and offers logging functionality to tasks.
+ * FUTURE ENHANCEMENT: 
+ * Tasks can be scheduled from the Dispatcher if the header of the requests contains a definition to do this:
+ * 
+ * <header>
+ *   <transaction rpc_name="[some webservice]" rpc_usr="" rpc_pwd="" rpc_schedule="time:yyyy|MM|dd|HH|mm"/>
+ * </header>
+ * 
+ * @author arjen
+ *
+ */
 public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskRunnerInterface {
 	
 
@@ -59,16 +72,75 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 	
 		
 	private final static String TASK_CONFIG = "tasks.xml";
+	private final static String TASK_INPUT_DIR = "tasks";
+	private File taskInputDir = null;
 	
 	private static Object semaphore = new Object();
 	private static String id = "Navajo TaskRunner";
 	
 	public TaskRunner() {
 		super(id);
+		// Check for existence of tasks directory.
+		java.io.File taskInputDir = new java.io.File(Dispatcher.getInstance().getNavajoConfig().getRootPath() + "/" + TASK_INPUT_DIR);
+		taskInputDir.mkdirs();
 	}
 	
 	protected boolean containsTask(String id) {
 		return tasks.containsKey(id);
+	}
+	
+	/**
+	 * Write the Navajo request input for a task.
+	 * 
+	 * @param t
+	 */
+	protected void writeTaskInput(Task t) {
+		try {
+			FileWriter fw = new FileWriter(new File(taskInputDir, t.getId() + ".xml"));
+			t.getNavajo().write(fw);
+			fw.close();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Read the Navajo request input for a task.
+	 * 
+	 * @param t
+	 */
+	protected void readTaskInput(Task t) {
+		try {
+			File f = new File(taskInputDir, t.getId() + ".xml");
+			if ( !f.exists() ) {
+				System.err.println("Input navajo does not exist for task: " + t.getId());
+				return;
+			}
+			FileReader fr = new FileReader(f);
+			Navajo n = NavajoFactory.getInstance().createNavajo(fr);
+			fr.close();
+			t.setNavajo(n);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Removes the Navajo request input for a task.
+	 * 
+	 * @param t
+	 */
+	protected void removeTaskInput(Task t) {
+		try {
+			File f = new File(taskInputDir, t.getId() + ".xml");
+			if ( f.exists() ) {
+				f.delete();
+			}
+		} catch (Exception e) {
+			
+		}	
 	}
 	
 	private long getConfigTimeStamp() {
@@ -124,7 +196,8 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 						Access newAcces = new Access(-1, -1, -1, username, webservice, "Taskrunner", "127.0.0.1", "localhost", false, null);
 						
 						try {
-							Task t = new Task(webservice, username, password, newAcces, trigger);
+							Task t = new Task(webservice, username, password, newAcces, trigger, null);
+							readTaskInput(t);
 							instance.addTask(id, t);
 						} catch (IllegalTrigger it) {
 							//it.printStackTrace(System.err);
@@ -181,6 +254,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 		}
 		
 		Task t = (Task) tasks.get(id);
+		removeTaskInput(t);
 		tasks.remove(id);
 		t.setRemove(true);
 		
@@ -269,6 +343,15 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 		addTask(id, t);
 	}
 	
+	private final String generateTaskId() {
+		long l = new Random().nextLong();
+		return "scheduled_task"+l;
+	}
+	
+	public boolean addTask(TaskInterface t) {
+		return addTask(generateTaskId(),(Task) t);
+	}
+	
 	public synchronized boolean addTask(String id, Task t) {
 		
 		if ( tasks.containsKey(id) ) {
@@ -341,8 +424,8 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 	public static void main(String [] args)  {
 		try {
 		TaskRunner tr = TaskRunner.getInstance();
-		Task t1 = new Task("asdfd", null, "", null, "time:*|*|10|10|*");
-		Task t2 = new Task("InitBM", "ROOT", "", null, "webservice:");
+		Task t1 = new Task("asdfd", null, "", null, "time:*|*|10|10|*", null);
+		Task t2 = new Task("InitBM", "ROOT", "", null, "webservice:", null);
 		tr.addTask("myTask", t1);
 		tr.addTask("myOtherTask", t2);
 		System.err.println("LEAVING MAIN");
