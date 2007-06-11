@@ -591,4 +591,8 @@ public void setSubLocaleCode(String locale) {
 public String getLocaleCode() {
 	return null;
 }
+
+public Navajo doScheduledSend(Navajo out, String method, String schedule) throws ClientException {
+	 throw new java.lang.UnsupportedOperationException("Method doScheduledSend() not yet implemented.");
+}
 }
