@@ -34,7 +34,7 @@ public interface ClientInterface {
   public Navajo doSimpleSend(Navajo out, String server, String method, String user, String password, long expirationInterval, boolean useCompression) throws ClientException;
 
   public Navajo doSimpleSend(Navajo out, String method) throws ClientException;
-
+  
   public Navajo doSimpleSend(Navajo out, String method, long expirationInterval) throws ClientException;
 
   public Message doSimpleSend(Navajo out, String method, String messagePath) throws ClientException;
@@ -47,13 +47,15 @@ public interface ClientInterface {
 
   public Navajo doSimpleSend(Navajo n, String method, ConditionErrorHandler v, long expirationInterval) throws ClientException;
 
+  public Navajo doSimpleSend(Navajo n, String method, ConditionErrorHandler v) throws ClientException;
+
+  public Navajo doScheduledSend(Navajo out, String method, String schedule) throws ClientException;
+
   public void doAsyncSend(Navajo in, String method, ResponseListener response, String responseId) throws ClientException;
 
   public void doAsyncSend(Navajo in, String method, ResponseListener response, ConditionErrorHandler v) throws ClientException;
 
   public void doAsyncSend(Navajo in, String method, ResponseListener response, String responseId, ConditionErrorHandler v) throws ClientException;
-
-  public Navajo doSimpleSend(Navajo n, String method, ConditionErrorHandler v) throws ClientException;
 
   public void init(URL config) throws ClientException;
 
