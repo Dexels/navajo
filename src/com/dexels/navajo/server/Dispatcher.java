@@ -889,21 +889,7 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
     Exception myException = null;
     String origThreadName = null;
     
-    // Check if scheduled webservice.
-    if ( inMessage.getHeader().getSchedule() != null && !inMessage.getHeader().getSchedule().equals("") ) {
-    	System.err.println("Scheduling webservice: " + inMessage.getHeader().getRPCName() + " on " + inMessage.getHeader().getSchedule());
-    	TaskRunnerInterface trf = TaskRunnerFactory.getInstance();
-    	TaskInterface ti = TaskRunnerFactory.getTaskInstance();
-    	try {
-			ti.setTrigger(inMessage.getHeader().getSchedule());
-		} catch (UserException e) {
-			System.err.println("WARNING: Invalid trigger specified for task " + ti.getId()  + ": " + inMessage.getHeader().getSchedule());
-		}
-		ti.setNavajo(inMessage);
-    	trf.addTask(ti);
-    	return generateScheduledMessage(inMessage.getHeader());
-    }
-    
+   
     int accessSetSize = accessSet.size();
     
     // Check accessSetSize first!
@@ -1051,25 +1037,44 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
         addParameters(inMessage, parms);
 
         /**
-         * Phase VI: Dispatch to proper servlet.
+         * Phase VIa: Check if scheduled webservice
          */
+        if ( inMessage.getHeader().getSchedule() != null && !inMessage.getHeader().getSchedule().equals("") ) {
+        	System.err.println("Scheduling webservice: " + inMessage.getHeader().getRPCName() + " on " + inMessage.getHeader().getSchedule());
+        	TaskRunnerInterface trf = TaskRunnerFactory.getInstance();
+        	TaskInterface ti = TaskRunnerFactory.getTaskInstance();
+        	try {
+    			ti.setTrigger(inMessage.getHeader().getSchedule());
+    		} catch (UserException e) {
+    			System.err.println("WARNING: Invalid trigger specified for task " + ti.getId()  + ": " + inMessage.getHeader().getSchedule());
+    		}
+    		ti.setNavajo(inMessage);
+        	trf.addTask(ti);
+        	outMessage = generateScheduledMessage(inMessage.getHeader());
+        } else {
 
-        if (useAuthorisation) {
-          outMessage = dispatch(navajoConfig.getRepository().getServlet(access), inMessage, access, parms);
+        	/**
+        	 * Phase VI: Dispatch to proper servlet.
+        	 */
+
+        	if (useAuthorisation) {
+        		outMessage = dispatch(navajoConfig.getRepository().getServlet(access), inMessage, access, parms);
+        	}
+        	else {
+        		if (rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_LOGON) || 
+        				rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_LOGON_SEND) ||
+        				rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_PING)  
+        		) {
+        			outMessage = dispatch(defaultNavajoDispatcher, inMessage, access, parms);
+        		}
+        		else {
+        			// Actually do something.
+        			outMessage = dispatch(defaultDispatcher, inMessage, access, parms);
+        		}
+        	}
+//      	updatePropertyDescriptions(inMessage,outMessage);
         }
-        else {
-          if (rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_LOGON) || 
-        	  rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_LOGON_SEND) ||
-        	  rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_PING)  
-             ) {
-            outMessage = dispatch(defaultNavajoDispatcher, inMessage, access, parms);
-          }
-          else {
-        	// Actually do something.
-            outMessage = dispatch(defaultDispatcher, inMessage, access, parms);
-          }
-        }
-//        updatePropertyDescriptions(inMessage,outMessage);
+        
         return outMessage;
       }
     }

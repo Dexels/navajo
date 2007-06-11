@@ -24,6 +24,8 @@
  */
 package com.dexels.navajo.scheduler;
 
+import java.util.Date;
+
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
@@ -32,6 +34,12 @@ import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.server.UserException;
 
+/**
+ * A wrapper class for a Task. Wraps Task object to be used from a Navajo Script.
+ * 
+ * @author arjen
+ *
+ */
 public class TaskMap implements Mappable {
 
 	private Task myTask;
@@ -42,9 +50,15 @@ public class TaskMap implements Mappable {
 	public String trigger;
 	public boolean active;
 	public boolean running;
+	public boolean finished;
+	public Date startTime;
+	public Date finishedTime;
 	
 	public TaskMap(Task t) {
 		myTask = t;
+		this.startTime = t.getStartTime();
+		this.finishedTime = t.getFinishedTime();
+		this.finished = t.isFinished();
 	}
 	
 	public void load(Parameters parms, Navajo inMessage, Access access,
@@ -85,6 +99,30 @@ public class TaskMap implements Mappable {
 	public void kill() {
 		// TODO Auto-generated method stub
 
+	}
+
+	public boolean getFinished() {
+		return finished;
+	}
+
+	public void setFinished(boolean finished) {
+		this.finished = finished;
+	}
+
+	public Date getFinishedTime() {
+		return finishedTime;
+	}
+
+	public void setFinishedTime(Date finishedTime) {
+		this.finishedTime = finishedTime;
+	}
+
+	public Date getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(Date startTime) {
+		this.startTime = startTime;
 	}
 
 }

@@ -25,7 +25,9 @@
 package com.dexels.navajo.scheduler;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 
 import com.dexels.navajo.document.Navajo;
@@ -40,10 +42,19 @@ import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.util.AuditLog;
 
+/**
+ * Wrapper class for the TaskRunner. Can be used from Navajo Scripts to introspect the TaskRunnner.
+ * 
+ * @author arjen
+ *
+ */
 public class TaskRunnerMap implements Mappable {
 
 	// Introspect
 	public TaskMap [] tasks;
+	public String username = null;
+	public TaskMap [] userTasks;
+	public String response;
 	
 	// Identification.
 	public String id;
@@ -56,6 +67,11 @@ public class TaskRunnerMap implements Mappable {
 	public boolean update;
 	public boolean remove;
 	public boolean inactive;
+
+
+	// Various
+	public boolean finished;
+	public Date finishedTime;
 	
 	private Access myAccess;
 	private Navajo myRequest;
@@ -144,6 +160,7 @@ public class TaskRunnerMap implements Mappable {
 	public TaskMap [] getTasks() throws UserException, MappableException {
 		TaskRunner tr = TaskRunner.getInstance();
 		Collection all = tr.getTasks().values();
+		
 		TaskMap [] tm = new TaskMap[all.size()];
 		Iterator iter = all.iterator();
 		int index = 0;
@@ -153,6 +170,41 @@ public class TaskRunnerMap implements Mappable {
 			tm[index].load(null, myRequest, myAccess, Dispatcher.getInstance().getNavajoConfig() );
 			index++;
 		}
+		
+		return tm;
+	}
+	
+	public TaskMap [] getUserTasks() throws UserException, MappableException {
+		return getUserTasks(username);
+	}
+	
+	public TaskMap [] getUserTasks(String user) throws UserException, MappableException {
+		TaskRunner tr = TaskRunner.getInstance();
+		// Get all finished tasks for this user.
+		ArrayList l = tr.getFinishedTasks(user, null);
+		// Add none-finished tasks.
+		TaskMap [] scheduledTasks = getTasks();
+		for (int i = 0; i < scheduledTasks.length; i++) {
+			if ( user == null || scheduledTasks[i].getUsername().equals(user) ) {
+				l.add(scheduledTasks[i]);
+			}
+		}
+		TaskMap [] tm = new TaskMap[l.size()];
+		Iterator iter = l.iterator();
+		int index = 0;
+		
+		while ( iter.hasNext() ) {
+			Object o = iter.next();
+			if ( o instanceof Task ) {
+				Task t = (Task) o;
+				tm[index] = new TaskMap(t);
+				tm[index].load(null, myRequest, myAccess, Dispatcher.getInstance().getNavajoConfig() );
+			} else {
+				tm[index] = (TaskMap) o;
+			}
+			index++;
+		}
+		
 		return tm;
 	}
 
@@ -174,5 +226,25 @@ public class TaskRunnerMap implements Mappable {
 		Navajo n = NavajoFactory.getInstance().createNavajo(is);
 		
 		n.write(System.err);
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getId() {
+		return id;
+	}
+	
+	public String getResponse() {
+		Navajo out = TaskRunner.getTaskOutput(id);
+		if ( out != null ) {
+			myAccess.setOutputDoc(out);
+		}
+		return null;
 	}
 }

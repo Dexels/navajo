@@ -25,6 +25,8 @@
 
 package com.dexels.navajo.scheduler;
 
+import java.util.Date;
+
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
@@ -56,7 +58,10 @@ public class Task implements Runnable, TaskMXBean, TaskInterface {
     private boolean remove = false;
     private boolean inactive = false;
     private boolean isRunning = false;
-    private boolean keepRequestResponse = false;
+    private boolean isFinished;
+    private Date startTime = null;
+    private Date finishedTime = null;
+    private boolean keepRequestResponse = true;
     private String id = null;
     private Thread myThread = null;
     
@@ -108,6 +113,10 @@ public class Task implements Runnable, TaskMXBean, TaskInterface {
 		return myTrigger;
 	}
 	
+	/**
+	 * Sets the trigger for the task, if trigger url is invalid exception is thrown.
+	 * 
+	 */
 	public void setTrigger(String s) throws UserException {
 		try {
 			Trigger t = Trigger.parseTrigger(s);
@@ -128,12 +137,17 @@ public class Task implements Runnable, TaskMXBean, TaskInterface {
 	}
 	
 	/**
-	 * @return the webservice (can be regular expression)
+	 * @return the webservice 
 	 */
 	public String getWebservice() {
 		return this.webservice;
 	}
 	
+	/**
+	 * Sets the webservice for this task
+	 * 
+	 * @param s
+	 */
 	public void setWebservice(String s) {
 		this.webservice = s;
 	}
@@ -145,6 +159,11 @@ public class Task implements Runnable, TaskMXBean, TaskInterface {
 		return this.username;
 	}
 	
+	/**
+	 * Sets the username for this task.
+	 * 
+	 * @param s
+	 */
 	public void setUsername(String s) {
 		this.username = s;
 	}
@@ -156,6 +175,11 @@ public class Task implements Runnable, TaskMXBean, TaskInterface {
 		return this.password;
 	}
 	
+	/**
+	 * Sets the password for the user of this task.
+	 * 
+	 * @param s
+	 */
 	protected void setPassword(String s) {
 		this.password = s;
 	}
@@ -179,8 +203,7 @@ public class Task implements Runnable, TaskMXBean, TaskInterface {
 		try {
 			JMXHelper.deregisterMXBean(JMXHelper.TASK_DOMAIN, getId());
 		} catch (Throwable e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			
 		}
 		AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "About to remove task: " + id);
 		myTrigger.removeTrigger();
@@ -211,6 +234,11 @@ public class Task implements Runnable, TaskMXBean, TaskInterface {
 		return isRunning;
 	}
 	
+	/**
+	 * Sets the 'request' navajo for this task, can be empty. User username, password and webservice from header 
+	 * to set respective values.
+	 * 
+	 */
 	public void setNavajo(Navajo n) {
 		this.navajo = n;
 		Header h = n.getHeader();
@@ -224,6 +252,11 @@ public class Task implements Runnable, TaskMXBean, TaskInterface {
 		}
 	}
 	
+	/**
+	 * Gets the request Navajo for this task.
+	 * 
+	 * @return
+	 */
 	public Navajo getNavajo() {
 		return navajo;
 	}
@@ -251,6 +284,7 @@ public class Task implements Runnable, TaskMXBean, TaskInterface {
 	 */
 	public void run() {
 		
+		System.err.println("Registering task " + getId() + " with JMX");
 		JMXHelper.registerMXBean(this, JMXHelper.TASK_DOMAIN, getId());
 		
 		while (!remove) {
@@ -293,7 +327,7 @@ public class Task implements Runnable, TaskMXBean, TaskInterface {
 					h.setRPCUser(username);
 					h.setExpirationInterval(-1);
 				}
-				Dispatcher.getInstance().setUseAuthorisation(true);
+				Dispatcher.getInstance().setUseAuthorisation(false);
 				
 				// Dispatcher is dead, exit.
 				if ( Dispatcher.getInstance() == null ) {
@@ -343,7 +377,65 @@ public class Task implements Runnable, TaskMXBean, TaskInterface {
 		t.run();
 	}
 
+	/**
+	 * Creates a new TaskInterface for compatability with Navajo Standard Edition.
+	 * 
+	 */
 	public TaskInterface getInstance() {
 		return new Task();
+	}
+
+	/**
+	 * return true if task is finished.
+	 * 
+	 * @return
+	 */
+	public boolean isFinished() {
+		return isFinished;
+	}
+
+	/**
+	 * Sets the finished status
+	 * 
+	 * @param isFinished
+	 */
+	public void setFinished(boolean isFinished) {
+		this.isFinished = isFinished;
+	}
+
+	/**
+	 * Returns the timestamp when task was finished.
+	 * 
+	 * @return
+	 */
+	public Date getFinishedTime() {
+		return finishedTime;
+	}
+
+	/**
+	 * Sets the timestamp when task was finished.
+	 * 
+	 * @param finishedTime
+	 */
+	public void setFinishedTime(Date finishedTime) {
+		this.finishedTime = finishedTime;
+	}
+
+	/**
+	 * Gets the timestamp when task was started.
+	 * 
+	 * @return
+	 */
+	public Date getStartTime() {
+		return startTime;
+	}
+
+	/**
+	 * Sets the timestamp when task was started.
+	 * 
+	 * @param startTime
+	 */
+	public void setStartTime(Date startTime) {
+		this.startTime = startTime;
 	}
 }

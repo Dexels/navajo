@@ -24,17 +24,21 @@
  */
 package com.dexels.navajo.scheduler;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
+import java.util.StringTokenizer;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -50,7 +54,7 @@ import com.dexels.navajo.util.AuditLog;
 
 /**
  * The TaskRunner controls the set of tasks and offers logging functionality to tasks.
- * FUTURE ENHANCEMENT: 
+ * 
  * Tasks can be scheduled from the Dispatcher if the header of the requests contains a definition to do this:
  * 
  * <header>
@@ -77,6 +81,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 	
 	private static Object semaphore = new Object();
 	private static String id = "Navajo TaskRunner";
+	private static SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy");
 	
 	public TaskRunner() {
 		super(id);
@@ -127,6 +132,18 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 		}
 	}
 	
+	protected static Navajo getTaskOutput(String id) {
+		FileReader fr;
+		try {
+			fr = new FileReader(new File(taskInputDir, id + "_response.xml"));
+			Navajo n = NavajoFactory.getInstance().createNavajo(fr);
+			fr.close();
+			return n;
+		} catch (Exception e) {
+			e.printStackTrace(System.err);
+			return null;
+		}
+	}
 	
 	/**
 	 * Read the Navajo request input for a task.
@@ -220,6 +237,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 						
 						try {
 							Task t = new Task(webservice, username, password, newAcces, trigger, null);
+							t.setId(id);
 							readTaskInput(t);
 							instance.addTask(id, t);
 						} catch (IllegalTrigger it) {
@@ -313,6 +331,72 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 		return null;
 	}
 	
+	public ArrayList getFinishedTasks(String username, String fromDate) {
+		ArrayList result = new ArrayList();
+		File log = new File( Dispatcher.getInstance().getNavajoConfig().rootPath + "/log/tasks.log" );
+		try {
+			BufferedReader fr = new BufferedReader( new FileReader(log) );
+			String line = null;
+			while ( ( line = fr.readLine() ) != null ) {
+				StringTokenizer st = new StringTokenizer(line, ";");
+				String id = null;
+				String user = null;
+				String webservice = null;
+				String trigger = null;
+				String singleEvent = null;
+				String status  = null;
+				String starttime = null;
+				String endtime = null;
+				String errorMsg = null;
+				if ( st.hasMoreTokens() ) {
+					id = st.nextToken();
+				}
+				if ( st.hasMoreTokens() ) {
+					webservice = st.nextToken();
+				}
+				if ( st.hasMoreTokens() ) {
+					user = st.nextToken();
+				}
+				if ( st.hasMoreTokens() ) {
+					trigger = st.nextToken();
+				}
+				if ( st.hasMoreTokens() ) {
+					singleEvent = st.nextToken();
+				}
+				if ( st.hasMoreTokens() ) {
+					status = st.nextToken();
+				}
+				if ( st.hasMoreTokens() ) {
+					starttime = st.nextToken();
+				}
+				if ( st.hasMoreTokens() ) {
+					endtime = st.nextToken();
+				}
+				if ( st.hasMoreTokens() ) {
+					errorMsg = st.nextToken();
+				}
+				
+				if ( username == null || username.equals(user)) {
+					Task t = new Task(webservice, user, "", null, trigger, null);
+					t.setId(id);
+					t.setFinished(true);
+					t.setStartTime(sdf.parse(starttime));
+					t.setFinishedTime(sdf.parse(endtime));
+					if ( singleEvent.equals("true")) {
+						t.getTrigger().setSingleEvent();
+					}
+					result.add(t);
+				}
+				
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+	
 	public static synchronized void log(Task t, Navajo result, boolean error, String errMsg, java.util.Date startedat) {
 		File log = new File( Dispatcher.getInstance().getNavajoConfig().rootPath + "/log/tasks.log" );
 		FileWriter fw = null;
@@ -326,7 +410,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 			
 			fw = new FileWriter( log, true );
 			if ( freshfile ) {
-				fw.write("ID;WEBSERVICE;USERNAME;TRIGGER;STATUS;STARTTIME;ENDTIME;ERRORMESSAGE\n");
+				fw.write("ID;WEBSERVICE;USERNAME;TRIGGER;SINGLEEVENT;STATUS;STARTTIME;ENDTIME;ERRORMESSAGE\n");
 			}
 			StringBuffer header = new StringBuffer();
            
@@ -334,9 +418,10 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
             		      t.getWebservice() + ";" + 
             		      t.getUsername() + ";" + 
             		      t.getTrigger().getDescription() + ";" + 
+            		      t.getTrigger().isSingleEvent() + ";" +
             		      (error ? "error" : "ok") + ";" +
-            		      startedat + ";" + 
-            		      (new java.util.Date()) + ";" + 
+            		      sdf.format(startedat) + ";" + 
+            		      sdf.format(new java.util.Date()) + ";" + 
             		      ( error ? errMsg : "") + 
             		      "\n"); 
           
