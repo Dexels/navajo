@@ -385,6 +385,8 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 					if ( singleEvent.equals("true")) {
 						t.getTrigger().setSingleEvent();
 					}
+					t.setStatus(status);
+					t.setErrorMessage(errorMsg);
 					result.add(t);
 				}
 				

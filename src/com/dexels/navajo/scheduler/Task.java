@@ -53,6 +53,8 @@ public class Task implements Runnable, TaskMXBean, TaskInterface {
 	public String trigger;
 	public Navajo navajo = null;
 	public Navajo response = null;
+	public String status;
+	public String errorMessage;
 	
     private Trigger myTrigger = null;
     private boolean remove = false;
@@ -437,5 +439,21 @@ public class Task implements Runnable, TaskMXBean, TaskInterface {
 	 */
 	public void setStartTime(Date startTime) {
 		this.startTime = startTime;
+	}
+
+	public String getErrorMessage() {
+		return errorMessage;
+	}
+
+	public void setErrorMessage(String errorMessage) {
+		this.errorMessage = errorMessage;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 }

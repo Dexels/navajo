@@ -53,12 +53,16 @@ public class TaskMap implements Mappable {
 	public boolean finished;
 	public Date startTime;
 	public Date finishedTime;
+	public String status;
+	public String errorMessage;
 	
 	public TaskMap(Task t) {
 		myTask = t;
 		this.startTime = t.getStartTime();
 		this.finishedTime = t.getFinishedTime();
 		this.finished = t.isFinished();
+		this.status = t.getStatus();
+		this.errorMessage = t.getErrorMessage();
 	}
 	
 	public void load(Parameters parms, Navajo inMessage, Access access,
@@ -123,6 +127,14 @@ public class TaskMap implements Mappable {
 
 	public void setStartTime(Date startTime) {
 		this.startTime = startTime;
+	}
+
+	public String getErrorMessage() {
+		return errorMessage;
+	}
+
+	public String getStatus() {
+		return status;
 	}
 
 }
