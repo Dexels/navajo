@@ -400,6 +400,10 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 	}
 	
 	public static synchronized void log(Task t, Navajo result, boolean error, String errMsg, java.util.Date startedat) {
+		
+		if ( errMsg != null ) {
+			errMsg = errMsg.replaceAll("\n", ".");
+		}
 		File log = new File( Dispatcher.getInstance().getNavajoConfig().rootPath + "/log/tasks.log" );
 		FileWriter fw = null;
 		boolean freshfile = false;

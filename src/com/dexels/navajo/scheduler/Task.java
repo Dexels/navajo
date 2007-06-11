@@ -345,7 +345,9 @@ public class Task implements Runnable, TaskMXBean, TaskInterface {
 					TaskRunner.log(this, null, true, e.getMessage(), now);
 				} 
 
-				TaskRunner.log(this, getResponse(), ( getResponse() != null && getResponse().getMessage("error") != null ), "", now );				
+				TaskRunner.log(this, getResponse(), ( getResponse() != null && getResponse().getMessage("error") != null ), 
+						( getResponse().getMessage("error") != null ? getResponse().getMessage("error").getProperty("message").getValue() : ""), 
+						now );				
 				isRunning = false;		
 				
 				if ( myTrigger.isSingleEvent() ) {
