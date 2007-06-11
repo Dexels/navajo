@@ -175,7 +175,7 @@ public class NavajoClassLoader extends MultiClassLoader {
     	  }
     	  catch (Exception e) {
     		  e.printStackTrace();
-    		  throw new ClassNotFoundException(script);
+    		  throw new ClassNotFoundException("Could not find script: " + script);
     	  } finally {
     		  if ( fis != null ) {
     			  try {
