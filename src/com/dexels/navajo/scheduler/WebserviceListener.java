@@ -30,6 +30,7 @@ import java.util.Set;
 import java.util.HashSet;
 
 import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.GenericThread;
 import com.dexels.navajo.server.enterprise.scheduler.WebserviceListenerInterface;
 
 
@@ -82,10 +83,21 @@ public class WebserviceListener implements WebserviceListenerInterface {
 	public final void invocation(final String webservice, final Access a) {
 		Iterator iter = triggers.iterator();
 		while ( iter.hasNext() ) {
-			WebserviceTrigger t = (WebserviceTrigger) iter.next();
-		    if ( webservice.matches(t.getWebservicePattern()) ) {
+			final WebserviceTrigger t = (WebserviceTrigger) iter.next();
+			if ( webservice.matches(t.getWebservicePattern()) ) {
 				t.setAccess(a);
-				t.setAlarm();
+				// Spawn task.
+				GenericThread taskThread = new GenericThread("task:" + t.getTask().getId() ) {
+
+					public void run() {
+						worker();
+					}
+
+					public final void worker() {
+						t.getTask().run();
+					}
+				};
+				taskThread.startThread(taskThread);
 			}	
 		}
 	}

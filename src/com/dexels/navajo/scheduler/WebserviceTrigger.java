@@ -66,8 +66,7 @@ public class WebserviceTrigger extends Trigger {
 			webservicePattern	= myDescription;
 		}
 		//System.err.println("webservice = " + webservice);
-		myListener = WebserviceListener.getInstance();
-		myListener.registerTrigger(this);
+	
 	}
 	
 	public boolean isSingleEvent() {
@@ -97,7 +96,7 @@ public class WebserviceTrigger extends Trigger {
 	}
 	
 	public String getDescription() {
-		return myDescription;
+		return Trigger.WS_TRIGGER + ":" + myDescription;
 	}
 	
 	public String getWebservicePattern() {
@@ -108,7 +107,12 @@ public class WebserviceTrigger extends Trigger {
 		return myAccess;
 	}
 
-	public void setSingleEvent() {
-		singleEvent = true;
+	public void setSingleEvent(boolean b) {
+		singleEvent = b;
+	}
+
+	public void activateTrigger() {
+		myListener = WebserviceListener.getInstance();
+		myListener.registerTrigger(this);
 	}
 }

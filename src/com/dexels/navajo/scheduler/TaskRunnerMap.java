@@ -125,6 +125,7 @@ public class TaskRunnerMap implements Mappable {
 		Task t = (Task) tr.getTasks().get(id);
 		t.setWebservice(this.webservice);
 		t.setTrigger(this.trigger);
+		t.getTrigger().activateTrigger();
 		tr.updateTask(id, t);
 	}
 	

@@ -27,8 +27,9 @@ package com.dexels.navajo.scheduler;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.StringTokenizer;
+import com.dexels.navajo.server.GenericThread;
 
-public class TimeTrigger extends Trigger {
+public class TimeTrigger extends Trigger implements ClockListener {
 
 	/**
 	 * Specification of a time trigger:
@@ -52,6 +53,7 @@ public class TimeTrigger extends Trigger {
 	private ArrayList day = null; /* SAT,SUN.MON,TUE,WED,FRI */
 	private String description = null;
 	private boolean singleEvent;
+	private long lastRan = -1;
 	
 	public TimeTrigger(String s) {
 		description = s;
@@ -107,10 +109,11 @@ public class TimeTrigger extends Trigger {
 		singleEvent = ( year != -1 && month != -1 && monthday != -1 && hour != -1 && minute != -1 );
 		System.err.println("Trigger " + s + ", singleEvent = " + singleEvent);
 		System.err.println(year + "|" + month + "|" + monthday + "|" + hour + "|" + minute + "|" + day + ", singleEvent = " + singleEvent);
+		
 	}
 	
-	public void setSingleEvent() {
-		singleEvent = true;
+	public void setSingleEvent(boolean b) {
+		singleEvent = b;
 	}
 	
 	public boolean isSingleEvent() {
@@ -130,9 +133,26 @@ public class TimeTrigger extends Trigger {
 		}
 	}
 	
-	public boolean alarm() {
-		
+	public String getDescription() {
+		return Trigger.TIME_TRIGGER + ":" + description;
+	}
+	
+	public void removeTrigger() {
+		Clock.getInstance().removeClockListener(this);
+	}
+	
+	public static void main(String [] args) {
+		java.util.Date d =  new java.util.Date();
 		Calendar c = Calendar.getInstance();
+		c.setTime(d);
+		System.err.println("y = " + c.get(Calendar.DAY_OF_MONTH));
+	}
+
+	private final boolean checkAlarm(Calendar c) {
+		
+		if ( lastRan != -1 && ( c.getTimeInMillis() - lastRan ) < 60000 ) {
+			return false;
+		}
 		
 		int currentYear = c.get(Calendar.YEAR);
 		int currentMonth = c.get(Calendar.MONTH);
@@ -204,35 +224,31 @@ public class TimeTrigger extends Trigger {
 		} else {
 			return false;
 		}
-		
 	}
 	
-	public String getDescription() {
-		return Trigger.TIME_TRIGGER + ":" + description;
-	}
-	
-	public void resetAlarm()  {
-		try {
-			Thread.sleep(1000000);
-		} catch (InterruptedException e) {
+	public void timetick(final Calendar c) {
+		if ( checkAlarm(c) ) {
+			System.err.println("Alarm in time trigger!");
+			// Spawn thread.
+			GenericThread taskThread = new GenericThread("task:" + getTask().getId()) {
+				
+				public void run() {
+					worker();
+				}
+				
+				public final void worker() {
+					lastRan = c.getTimeInMillis();
+					getTask().run();
+				}
+			};
+			taskThread.startThread(taskThread);
 			
+		} else {
+			System.err.println("Down boy.");
 		}
 	}
-	
-//	public static void main(String [] args) throws Exception {
-//		
-//		TimeTrigger t = new TimeTrigger("*|*|10|10|SAT,SUN");
-//		
-//	}
 
-	public void removeTrigger() {
-		// TODO Auto-generated method stub	
-	}
-	
-	public static void main(String [] args) {
-		java.util.Date d =  new java.util.Date();
-		Calendar c = Calendar.getInstance();
-		c.setTime(d);
-		System.err.println("y = " + c.get(Calendar.DAY_OF_MONTH));
+	public void activateTrigger() {
+		Clock.getInstance().addClockListener(this);
 	}
 }

@@ -72,6 +72,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 	private int maxSize = 25;
 	private static volatile TaskRunner instance = null;
 	private final Map tasks = Collections.synchronizedMap(new HashMap());
+	private final ArrayList taskListeners = new ArrayList();
 	private long configTimestamp = -1;
 	
 		
@@ -86,8 +87,12 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 	public TaskRunner() {
 		super(id);
 		// Check for existence of tasks directory.
-		taskInputDir = new java.io.File(Dispatcher.getInstance().getNavajoConfig().getRootPath() + "/" + TASK_INPUT_DIR);
-		taskInputDir.mkdirs();
+		try {
+			taskInputDir = new java.io.File(Dispatcher.getInstance().getNavajoConfig().getRootPath() + "/" + TASK_INPUT_DIR);
+			taskInputDir.mkdirs();
+		} catch (Throwable t) {
+			// Dan maar niet.
+		}
 	}
 	
 	protected boolean containsTask(String id) {
@@ -184,7 +189,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 	}
 	
 	private long getConfigTimeStamp() {
-		if ( Dispatcher.getInstance().getNavajoConfig() != null ) {
+		if (  Dispatcher.getInstance() != null && Dispatcher.getInstance().getNavajoConfig() != null ) {
 			java.io.File f = new java.io.File(Dispatcher.getInstance().getNavajoConfig().getConfigPath() + "/" + TASK_CONFIG);
 			if ( f != null && f.exists() ) {
 				return f.lastModified();
@@ -236,9 +241,11 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 						Access newAcces = new Access(-1, -1, -1, username, webservice, "Taskrunner", "127.0.0.1", "localhost", false, null);
 						
 						try {
+							// Create a new task and activate its trigger.
 							Task t = new Task(webservice, username, password, newAcces, trigger, null);
 							t.setId(id);
 							readTaskInput(t);
+							t.getTrigger().activateTrigger();
 							instance.addTask(id, t);
 						} catch (IllegalTrigger it) {
 							//it.printStackTrace(System.err);
@@ -247,7 +254,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 					}
 				}
 				
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				e.printStackTrace(System.err);
 			} finally {
 				setConfigTimeStamp();
@@ -267,8 +274,12 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 			}
 			
 			instance = new TaskRunner();	
-			JMXHelper.registerMXBean(instance, JMXHelper.NAVAJO_DOMAIN, id);
-			instance.readConfig();
+			try {
+				JMXHelper.registerMXBean(instance, JMXHelper.NAVAJO_DOMAIN, id);
+				instance.readConfig();
+			} catch (Throwable t) {
+				// Then but not.
+			}
 			instance.startThread(instance);
 			
 			AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Started task scheduler process $Id$");
@@ -295,6 +306,9 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 		}
 		
 		Task t = (Task) tasks.get(id);
+		if ( t.getTrigger() != null ) {
+			t.getTrigger().removeTrigger();
+		}
 		
 		tasks.remove(id);
 		t.setRemove(true);
@@ -378,12 +392,13 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 				
 				if ( username == null || username.equals(user)) {
 					Task t = new Task(webservice, user, "", null, trigger, null);
+					t.setTrigger(trigger);
 					t.setId(id);
 					t.setFinished(true);
 					t.setStartTime(sdf.parse(starttime));
 					t.setFinishedTime(sdf.parse(endtime));
 					if ( singleEvent.equals("true")) {
-						t.getTrigger().setSingleEvent();
+						t.getTrigger().setSingleEvent(true);
 					}
 					t.setStatus(status);
 					t.setErrorMessage(errorMsg);
@@ -483,9 +498,9 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 		AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Adding task: " + id);
 		tasks.put(id, t);
 		t.setId(id);
-		Thread thread = new Thread(t);
-		t.setThread(thread);
-		thread.start();
+//		Thread thread = new Thread(t);
+//		t.setThread(thread);
+//		thread.start();
 		// Add to task configuration file config/tasks.xml
 		
 		Navajo taskDoc = null;
@@ -523,7 +538,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 				readConfig();	
 			}
 			
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
@@ -579,5 +594,29 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 			e.printStackTrace();
 		}
 		AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Killed");
+	}
+	
+	public void addTaskListener(TaskListener tl) {
+		taskListeners.add(tl);
+	}
+	
+	public void removeTaskListener(TaskListener tl) {
+		taskListeners.remove(tl);
+	}
+	
+	public void fireAfterTaskEvent(Task t, Navajo request) {
+		System.err.println("Fire after task event: " + t.getId() + ", listeners: " + taskListeners.size());
+		for ( int i = 0 ; i < taskListeners.size(); i++ ) {
+			TaskListener tl = (TaskListener) taskListeners.get(i);
+			tl.afterTask(t, request);
+		}
+	}
+	
+	public void fireBeforeTaskEvent(Task t) {
+		System.err.println("Fire before task event: " + t.getId()  + ", listeners: " + taskListeners.size() );
+		for ( int i = 0 ; i < taskListeners.size(); i++ ) {
+			TaskListener tl = (TaskListener) taskListeners.get(i);
+			tl.beforeTask(t);
+		}
 	}
 }

@@ -33,6 +33,10 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 	
 	public String accessId;
 
+	public RequestResponseQueue() {
+		super(id);
+	}
+	
 	public QueuedAdapter [] getRunningAdapters() {
 		synchronized (runningThreads ) {
 			runningAdapters = new QueuedAdapter[runningThreads.size()];

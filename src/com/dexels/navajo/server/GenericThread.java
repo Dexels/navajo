@@ -59,8 +59,7 @@ public class GenericThread extends NotificationBroadcasterSupport implements Run
 	private static HashMap threadPool = new HashMap();
 	
 	public GenericThread() {
-		// dummy.
-		status = NOTSTARTED;
+		myId = "dummy";
 	}
 	
 	public GenericThread(String id) {

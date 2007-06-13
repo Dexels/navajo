@@ -65,7 +65,7 @@ public class Task implements Runnable, TaskMXBean, TaskInterface {
     private Date finishedTime = null;
     private boolean keepRequestResponse = true;
     private String id = null;
-    private Thread myThread = null;
+    //private Thread myThread = null;
     
     public Task() {
     	// The empty constructor.
@@ -95,6 +95,11 @@ public class Task implements Runnable, TaskMXBean, TaskInterface {
 		this.username = username;
 		this.password = password;
 		this.myTrigger = Trigger.parseTrigger(triggerURL);
+		if ( myTrigger != null ) {
+			myTrigger.setTask(this);
+		} else {
+			System.err.println("Empty trigger for task.....");
+		}
 		this.navajo = requestNavajo;
 	}
 	
@@ -103,10 +108,10 @@ public class Task implements Runnable, TaskMXBean, TaskInterface {
 	 * 
 	 * @param t the thread
 	 */
-	protected void setThread(Thread t) {
-		myThread = t;
-		AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Scheduling task: " + id);
-	}
+//	protected void setThread(Thread t) {
+//		myThread = t;
+//		AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Scheduling task: " + id);
+//	}
 	
 	/**
 	 * @return the trigger object that goes with this task.
@@ -121,8 +126,13 @@ public class Task implements Runnable, TaskMXBean, TaskInterface {
 	 */
 	public void setTrigger(String s) throws UserException {
 		try {
+			// Check for old trigger.
+			if ( getTrigger() != null ) {
+				getTrigger().removeTrigger();
+			}
 			Trigger t = Trigger.parseTrigger(s);
-			this.myTrigger = t;
+			myTrigger = t;
+			myTrigger.setTask(this);
 			System.err.println("Set trigger for task " + getId() + ": " + t.getDescription());
 		} catch (IllegalTrigger e) {
 			// TODO Auto-generated catch block
@@ -209,9 +219,9 @@ public class Task implements Runnable, TaskMXBean, TaskInterface {
 		}
 		AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "About to remove task: " + id);
 		myTrigger.removeTrigger();
-		if ( myThread != null && myThread.isAlive() ) {
-			myThread.interrupt();
-		}
+//		if ( myThread != null && myThread.isAlive() ) {
+//			myThread.interrupt();
+//		}
 	}
 	
 	/**
@@ -285,90 +295,74 @@ public class Task implements Runnable, TaskMXBean, TaskInterface {
 	 * The worker method for the task, keeps running until it gets flagged for removal.
 	 */
 	public void run() {
-		
+
 		System.err.println("Registering task " + getId() + " with JMX");
 		JMXHelper.registerMXBean(this, JMXHelper.TASK_DOMAIN, getId());
-		
-		while (!remove) {
-			
-			// Sleep for a while.
-			try {
-				Thread.sleep(1000);
-				//System.err.println("Task " + getId() + " listening for alarm: " + myTrigger.getDescription());
-			} catch (Exception e) {
-				if ( remove ) {
-					AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Terminated task while sleeping: " + id);
-					return;
-				}
-				e.printStackTrace(System.err);
-			}
-			
-			if (myTrigger.alarm()) {
-				
-				Access access = myTrigger.getAccess();
-				Navajo request = null;
-				if ( access != null && navajo == null ) {
-					request = ( myTrigger.swapInOut() ? access.getOutputDoc() :  access.getInDoc() );
-				} else if ( navajo != null ) {
-					request = navajo;
-				} else {
-					request = NavajoFactory.getInstance().createNavajo();
-				} 
-				
-				isRunning = true;
-				AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "(!!)Alarm goes off for task: " + id);
-				java.util.Date now = new java.util.Date();
-				
-				Header h = request.getHeader();
-				if (h == null) {
-					h = NavajoFactory.getInstance().createHeader(request, webservice, username, password, -1);
-					request.addHeader(h);
-				} else {
-					h.setRPCName(webservice);
-					h.setRPCPassword(password);
-					h.setRPCUser(username);
-					h.setExpirationInterval(-1);
-				}
-				Dispatcher.getInstance().setUseAuthorisation(false);
-				
-				// Dispatcher is dead, exit.
-				if ( Dispatcher.getInstance() == null ) {
-					System.err.println("ERROR: Dead dispatcher, trying to execute task");
-					return;
-				}
-				
-				try {
-					Navajo result = Dispatcher.getInstance().handle(request);
-					this.setResponse(result);
-				} catch (FatalException e) {
-					e.printStackTrace(System.err);
-					TaskRunner.log(this, null, true, e.getMessage(), now);
-				} 
 
-				TaskRunner.log(this, getResponse(), ( getResponse() != null && getResponse().getMessage("error") != null ), 
-						( getResponse().getMessage("error") != null ? getResponse().getMessage("error").getProperty("message").getValue() : ""), 
-						now );				
-				isRunning = false;		
-				
-				if ( myTrigger.isSingleEvent() ) {
-					if ( !keepRequestResponse ) {
-						TaskRunner.getInstance().removeTaskInput(this);
-					} else {
-						TaskRunner.writeTaskOutput(this);
-					}
-					TaskRunner.getInstance().removeTask( this.getId() );
-				} else {
-					myTrigger.resetAlarm();		
-				}
-			}
-			
+		// Invoke onbefore triggers.
+		TaskRunner.getInstance().fireBeforeTaskEvent(this);
+		
+		Access access = myTrigger.getAccess();
+		Navajo request = null;
+		if ( access != null && navajo == null ) {
+			request = ( myTrigger.swapInOut() ? access.getOutputDoc() :  access.getInDoc() );
+		} else if ( navajo != null ) {
+			request = navajo;
+		} else {
+			request = NavajoFactory.getInstance().createNavajo();
+		} 
+
+		isRunning = true;
+		AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "(!!)Alarm goes off for task: " + id);
+		java.util.Date now = new java.util.Date();
+
+		Header h = request.getHeader();
+		if (h == null) {
+			h = NavajoFactory.getInstance().createHeader(request, webservice, username, password, -1);
+			request.addHeader(h);
+		} else {
+			h.setRPCName(webservice);
+			h.setRPCPassword(password);
+			h.setRPCUser(username);
+			h.setExpirationInterval(-1);
 		}
+		// Reset request id to prevent integrity worker from kicking in.
+		h.setRequestId(null);
+		
+		Dispatcher.getInstance().setUseAuthorisation(false);
+
+		// Dispatcher is dead, exit.
+		if ( Dispatcher.getInstance() == null ) {
+			System.err.println("ERROR: Dead dispatcher, trying to execute task");
+			return;
+		}
+
+		Navajo result = null;
 		try {
-			JMXHelper.deregisterMXBean(JMXHelper.TASK_DOMAIN, getId());
-		} catch (Throwable e) {
-			// TODO Auto-generated catch block
-            // e.printStackTrace(System.err);
-		}
+			result = Dispatcher.getInstance().handle(request);
+			this.setResponse(result);
+		} catch (FatalException e) {
+			e.printStackTrace(System.err);
+			TaskRunner.log(this, null, true, e.getMessage(), now);
+		} 
+
+		TaskRunner.log(this, getResponse(), ( getResponse() != null && getResponse().getMessage("error") != null ), 
+				( getResponse().getMessage("error") != null ? getResponse().getMessage("error").getProperty("message").getValue() : ""), 
+				now );				
+		isRunning = false;		
+
+		if ( myTrigger.isSingleEvent() ) {
+			if ( !keepRequestResponse ) {
+				TaskRunner.getInstance().removeTaskInput(this);
+			} else {
+				TaskRunner.writeTaskOutput(this);
+			}
+			TaskRunner.getInstance().removeTask( this.getId() );
+		} 
+		
+        // Invoke after triggers.
+		TaskRunner.getInstance().fireAfterTaskEvent(this, result);
+		
 		AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Terminated task: " + id);
 	}
 	

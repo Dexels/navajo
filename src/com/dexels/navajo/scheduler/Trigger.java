@@ -67,22 +67,23 @@ public abstract class Trigger {
 	 * offsettime:x[d|h|m]
 	 * specify a trigger that alarms after x (h)ours or (m)inutes or (d)ays.
 	 * 
+	 * 5. Trigger on after-trigger, before-trigger
+	 * triggerafter:taskid
+	 * 
 	 */
 	public final static String TIME_TRIGGER = "time";
 	public final static String WS_TRIGGER = "navajo";
+	public final static String AFTER_TASK_TRIGGER = "aftertask";
 	
-	/**
-	 * @return true if alarm is set.
-	 */
-	public abstract boolean alarm();
-	/**
-	 * Resets the alarm, cleanup or other stuff can take place.
-	 */
-	public abstract void resetAlarm();
+	private Task myTask = null;
+
 	/**
 	 * String representation of the trigger URL.
 	 */
 	public abstract String getDescription();
+	
+	public abstract void activateTrigger();
+	
 	/**
 	 * Need to be called when trigger is removed, due to task removal, for cleanup purposes.
 	 */
@@ -90,7 +91,7 @@ public abstract class Trigger {
 	
 	public abstract boolean isSingleEvent();
 	
-	public abstract void setSingleEvent();
+	public abstract void setSingleEvent(boolean b);
 	
 	/**
 	 * Trigger factory, creates proper trigger based upon URL definition.
@@ -99,21 +100,28 @@ public abstract class Trigger {
 	 * @return the proper Trigger object
 	 */
 	public final static Trigger parseTrigger(String s) throws IllegalTrigger {
+		
+		Trigger t = null;
 		try {
 			if (s.startsWith(TIME_TRIGGER)) {
 				String v = s.substring(TIME_TRIGGER.length()+1);
-				TimeTrigger t = new TimeTrigger(v);
+				t = new TimeTrigger(v);
 				return t;
 			} else if (s.startsWith(WS_TRIGGER)) {
 				String v = s.substring(WS_TRIGGER.length()+1);
-				WebserviceTrigger t = new WebserviceTrigger(v);
+				t = new WebserviceTrigger(v);
 				return t;
-			} else {
+			} else if (s.startsWith(AFTER_TASK_TRIGGER)) {
+				String v = s.substring(AFTER_TASK_TRIGGER.length()+1);
+				t = new AfterTaskTrigger(v);
+				return t;
+			} 
+			else {
 				throw new IllegalTrigger(s);
 			}
 		} catch (Exception e) {
 			throw new IllegalTrigger(s);
-		}
+		} 
 	}
 	
 	/**
@@ -146,5 +154,13 @@ public abstract class Trigger {
 	 */
 	public void setAccess(Access a) {
 		myAccess = a;
+	}
+	
+	public Task getTask() {
+		return myTask;
+	}
+	
+	public void setTask(Task t) {
+		this.myTask = t;
 	}
 }

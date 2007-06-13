@@ -724,11 +724,11 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
     }
   }
 
-  private final Navajo generateScheduledMessage(Header h) {
+  private final Navajo generateScheduledMessage(Header h, String taskId) {
 	  try {
 	      Navajo outMessage = NavajoFactory.getInstance().createNavajo();
 	      Header hnew = NavajoFactory.getInstance().createHeader(outMessage, h.getRPCName(), h.getRPCUser(), "", -1);
-	      hnew.setSchedule("scheduled");
+	      hnew.setSchedule(taskId);
 	      outMessage.addHeader(hnew);
 	      return outMessage;
 	  } catch (Exception e) {
@@ -1050,7 +1050,7 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
     		}
     		ti.setNavajo(inMessage);
         	trf.addTask(ti);
-        	outMessage = generateScheduledMessage(inMessage.getHeader());
+        	outMessage = generateScheduledMessage(inMessage.getHeader(), ti.getId());
         } else {
 
         	/**
