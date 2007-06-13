@@ -233,7 +233,11 @@ public class TimeTrigger extends Trigger implements ClockListener {
 			GenericThread taskThread = new GenericThread("task:" + getTask().getId()) {
 				
 				public void run() {
-					worker();
+					try {
+						worker();
+					} finally {
+						finishThread();
+					}
 				}
 				
 				public final void worker() {

@@ -90,7 +90,11 @@ public class WebserviceListener implements WebserviceListenerInterface {
 				GenericThread taskThread = new GenericThread("task:" + t.getTask().getId() ) {
 
 					public void run() {
-						worker();
+						try {
+							worker();
+						} finally {
+							finishThread();
+						}
 					}
 
 					public final void worker() {

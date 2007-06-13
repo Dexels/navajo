@@ -45,7 +45,11 @@ public class AfterTaskTrigger extends Trigger implements TaskListener {
 		GenericThread taskThread = new GenericThread("task:" + getTask().getId()) {
 
 			public void run() {
-				worker();
+				try {
+					worker();
+				} finally {
+					finishThread();
+				}
 			}
 
 			public final void worker() {

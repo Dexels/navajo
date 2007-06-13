@@ -24,8 +24,11 @@
  */
 package com.dexels.navajo.server;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import javax.management.AttributeChangeNotification;
 import javax.management.MBeanNotificationInfo;
@@ -56,7 +59,7 @@ public class GenericThread extends NotificationBroadcasterSupport implements Run
 	private final static String DEAD = "Zombie";
 	private final static String NOTSTARTED = "Not running";
 	
-	private static HashMap threadPool = new HashMap();
+	private static Map threadPool = Collections.synchronizedMap(new HashMap());
 	
 	public GenericThread() {
 		myId = "dummy";
@@ -65,6 +68,11 @@ public class GenericThread extends NotificationBroadcasterSupport implements Run
 	public GenericThread(String id) {
 		myId = id;
 		status = NOTSTARTED;
+	}
+	
+	public void finishThread() {
+		System.err.println("Finishing GenericThread: " + myId);
+		threadPool.remove(myId);
 	}
 	
 	public void startThread(GenericThread instance) {
@@ -93,22 +101,25 @@ public class GenericThread extends NotificationBroadcasterSupport implements Run
 	}
 	
 	public void run() {
-
-		System.err.println("in run, killed " + killed);
-		while ( !killed ) {
-			try {
-				status = WORKING;
-				long start = System.currentTimeMillis();
-				worker();
-				totalWorkTime += ( System.currentTimeMillis() - start );
-			} catch (Throwable t) {
-				t.printStackTrace(System.err);
+		try {
+			System.err.println("in run, killed " + killed);
+			while ( !killed ) {
+				try {
+					status = WORKING;
+					long start = System.currentTimeMillis();
+					worker();
+					totalWorkTime += ( System.currentTimeMillis() - start );
+				} catch (Throwable t) {
+					t.printStackTrace(System.err);
+				}
+				status = SLEEPING;
+				inactive();
 			}
-			status = SLEEPING;
-			inactive();
+			System.err.println("Thread " + myId + " is dying");
+			status = DEAD;
+		} finally {
+			finishThread();
 		}
-		System.err.println("Thread " + myId + " is dying");
-		status = DEAD;
 	}
 	
 	public final void setSleepTime(int i) {
