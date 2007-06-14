@@ -1,7 +1,14 @@
 package com.dexels.navajo.workflow;
 
-public class Parameter {
+import java.io.Serializable;
 
+public class Parameter implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2928305184859925521L;
+	
 	private String name;
 	private String expression;
 	

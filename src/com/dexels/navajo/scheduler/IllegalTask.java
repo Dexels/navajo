@@ -6,12 +6,19 @@
  */
 package com.dexels.navajo.scheduler;
 
+import java.io.Serializable;
+
 /**
  * @author Arjen
  *
  */
-public class IllegalTask extends Exception {
+public class IllegalTask extends Exception implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1597289698912784893L;
+	
 	private static String msg = "Illegal Task: ";
 	String message = "";
 	

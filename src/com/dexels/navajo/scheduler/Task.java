@@ -25,6 +25,7 @@
 
 package com.dexels.navajo.scheduler;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import com.dexels.navajo.document.Header;
@@ -45,7 +46,12 @@ import com.dexels.navajo.util.AuditLog;
  * @author Arjen
  *
  */
-public class Task implements Runnable, TaskMXBean, TaskInterface {
+public class Task implements Runnable, TaskMXBean, TaskInterface, Serializable {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5450771508465465624L;
 	
 	public String webservice = "";
 	public String username;

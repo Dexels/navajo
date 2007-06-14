@@ -1,37 +1,37 @@
 package com.dexels.navajo.workflow;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.Serializable;
-import java.util.HashMap;
+import java.util.ArrayList;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
-import com.dexels.navajo.document.Property;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
-import com.dexels.navajo.mapping.MappingException;
 import com.dexels.navajo.mapping.MappingUtils;
 
 public class WorkFlow implements Mappable, Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -6582796299941671005L;
 	
 	private String myId = null;
 	private String definition = null;
-	private String startState = "start";
-	private final HashMap states = new HashMap();
+	private State currentState = null;
 	private Navajo localNavajo = null;
+	/**
+	 * This arraylist contains all the visited states for this workflow.
+	 */
+	protected final ArrayList historicStates = new ArrayList();
 	
 	public static WorkFlow getInstance(String definition, String activatedState) {
-		WorkFlow wf = new WorkFlow(definition, WorkFlowManager.generateWorkflowId(), activatedState);
+		WorkFlow wf = new WorkFlow(definition, WorkFlowManager.generateWorkflowId());
 		if ( definition.equals("demo") ) {
 			try {
 				wf.createState("start");
@@ -47,10 +47,9 @@ public class WorkFlow implements Mappable, Serializable {
 		return wf;
 	}
 	
-	public WorkFlow(String definition, String id, String startState) {
+	public WorkFlow(String definition, String id) {
 		myId = id;
 		this.definition = definition;
-		this.startState = startState;
 		// Create local Navajo to store parameters.
 		localNavajo = NavajoFactory.getInstance().createNavajo();
 		Message params = NavajoFactory.getInstance().createMessage(localNavajo, "__parms__");
@@ -102,59 +101,54 @@ public class WorkFlow implements Mappable, Serializable {
 	 * @return
 	 */
 	protected State createState(String name) {
-		if ( name.equals("start") && definition.equals("demo") ){
-			State s1 = new State("start", this);
-			states.put("start", s1);
-			try {
-				Transition t1 = s1.addTransition("waitforinput", "navajo:InitAap", null);
-			} catch (Exception e) {
-				e.printStackTrace(System.err);
+		try {
+			if ( name.equals("start") && definition.equals("demo") ){
+				State s1 = new State("start", this);
+				currentState = s1;
+				try {
+					Transition t1 = s1.addTransition("waitforinput", "navajo:InitAap", null);
+				} catch (Exception e) {
+					e.printStackTrace(System.err);
+				}
+				return s1;
+			} else if ( name.equals("waitforinput") && definition.equals("demo")) {
+				State s2 = new State("waitforinput", this);
+				currentState = s2;
+				try {
+					// Add a task and two transitions.
+					WorkFlowTask wtf = s2.addTask("person/InitInsertPerson", null, null);
+					Transition t4 = s2.addTransition(null, "offsettime:2m", null);
+					Transition t2 = s2.addTransition("approve", "navajo:ProcessAap", null);
+					t2.addParameter("Name", "[/Result/Name]");
+				} catch (Exception e) {
+					e.printStackTrace(System.err);
+				}
+				return s2;
+			} else if ( name.equals("approve") && definition.equals("demo")) {
+				State s2 = new State("waitforinput", this);
+				currentState = s2;
+				try {
+					Transition t2 = s2.addTransition(null, "navajo:ProcessApproveAap", "[/Approval/Name] == [/@Name] AND [/Approval/Status] == 'ok'");
+					Transition t3 = s2.addTransition("start", "navajo:ProcessApproveAap", "[/Approval/Name] == [/@Name] AND [/Approval/Status] != 'ok'");
+				} catch (Exception e) {
+					e.printStackTrace(System.err);
+				}
+				return s2;
 			}
-			return s1;
-		} else if ( name.equals("waitforinput") && definition.equals("demo")) {
-			State s2 = new State("waitforinput", this);
-			states.put("waitforinput", s2);
-			try {
-				Transition t4 = s2.addTransition(null, "offsettime:1m", null);
-				Transition t2 = s2.addTransition("approve", "navajo:ProcessAap", null);
-				t2.addParameter("Name", "[/Result/Name]");
-			} catch (Exception e) {
-				e.printStackTrace(System.err);
+			else {
+				State s = new State(name, this);
+				currentState = s;
+				return s;
 			}
-			return s2;
-		} else if ( name.equals("approve") && definition.equals("demo")) {
-			State s2 = new State("waitforinput", this);
-			states.put("waitforinput", s2);
-			try {
-				Transition t2 = s2.addTransition(null, "navajo:ProcessApproveAap", "[/Approval/Name] == [/@Name] AND [/Approval/Status] == 'ok'");
-				Transition t3 = s2.addTransition("start", "navajo:ProcessApproveAap", "[/Approval/Name] == [/@Name] AND [/Approval/Status] != 'ok'");
-			} catch (Exception e) {
-				e.printStackTrace(System.err);
-			}
-			return s2;
-		}
-		else {
-			State s = new State(name, this);
-			states.put(name, s);
-			return s;
-		}
-	}
-	
-	protected void removeState(State s) {
-		if ( s != null && states.containsKey(s.getId() )) {
-			System.err.println("Removing state " + s.getId() + " for workflow " + myId);
-			states.remove(s.getId());
+		} finally {
+			
 		}
 	}
 	
 	public void start() {
 		// Find start state.
-		if ( states.get(startState) != null ) {
-			State s = (State) states.get(startState);
-			// Enter this state.
-			s.enter();
-		} else {
-			System.err.println("WARNING: COULD NOT FIND START STATE FOR WORKFLOW: " + startState);
+		if ( currentState != null ) {
+			currentState.enter();
 		}
 	}
 	
@@ -175,8 +169,20 @@ public class WorkFlow implements Mappable, Serializable {
 		return myId;
 	}
 	
+	public void finish() {
+		System.err.println("Workflow " + getMyId() + " is finished");
+		WorkFlowManager.getInstance().removePersistedWorkFlow(this);
+	}
+	
+	public void revive() {
+		if ( currentState != null ) {
+			System.err.println("Reviving workflow from state: " + currentState.getId() );
+			currentState.enter();
+		}
+	}
+
 	public static void main(String [] args) throws Exception {
-		WorkFlow wf = new WorkFlow("", "", "");
+		WorkFlow wf = new WorkFlow("", "");
 		wf.addParameter("Name", new Integer(43453));
 		wf.addParameter("Name", "Dexels");
 		wf.localNavajo.write(System.err);

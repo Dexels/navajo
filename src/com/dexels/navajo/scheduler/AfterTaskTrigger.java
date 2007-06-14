@@ -1,5 +1,7 @@
 package com.dexels.navajo.scheduler;
 
+import java.io.Serializable;
+
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.server.GenericThread;
 
@@ -10,8 +12,13 @@ import com.dexels.navajo.server.GenericThread;
  * @author arjen
  *
  */
-public class AfterTaskTrigger extends Trigger implements TaskListener {
+public class AfterTaskTrigger extends Trigger implements TaskListener, Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1389461783321528112L;
+	
 	private String myDescription;
 	private boolean isSingleEvent = true;
 	

@@ -24,13 +24,18 @@
  */
 package com.dexels.navajo.scheduler;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.StringTokenizer;
 import com.dexels.navajo.server.GenericThread;
 
-public class TimeTrigger extends Trigger implements ClockListener {
+public class TimeTrigger extends Trigger implements ClockListener, Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2959238255950798212L;
 	/**
 	 * Specification of a time trigger:
 	 * 

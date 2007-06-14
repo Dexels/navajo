@@ -1,19 +1,18 @@
 package com.dexels.navajo.workflow;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.parser.Condition;
 import com.dexels.navajo.parser.Expression;
-import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.scheduler.IllegalTask;
 import com.dexels.navajo.scheduler.IllegalTrigger;
 import com.dexels.navajo.scheduler.Task;
 import com.dexels.navajo.scheduler.TaskListener;
 import com.dexels.navajo.scheduler.TaskRunner;
-import com.dexels.navajo.server.SystemException;
 
 /**
  * A Transition is basically contains a task/trigger, next state value and a condition.
@@ -22,8 +21,13 @@ import com.dexels.navajo.server.SystemException;
  * @author arjen
  *
  */
-public class Transition implements TaskListener {
+public class Transition implements TaskListener, Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3144803468988103221L;
+	
 	private Task myTask;
 	private State myState;
 	private String nextState;
@@ -158,11 +162,11 @@ public class Transition implements TaskListener {
 				// First evaluate all parameters that need to be set with this transition.
 				evaluateParameters(t);
 				myState.leave();
-				if ( nextState != null ) {
+				if ( nextState != null && !nextState.equals("finish") ) {
 					System.err.println("About to enter next workflow state: " + nextState);
 					myState.getWorkFlow().createState(nextState).enter();
 				} else {
-					System.err.println("Workflow is finished!!!!!!!!!!!!!!!!!!!!!!!!!");
+					myState.getWorkFlow().finish();
 				}
 			}
 			/**

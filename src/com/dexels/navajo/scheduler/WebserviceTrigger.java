@@ -24,17 +24,22 @@
  */
 package com.dexels.navajo.scheduler;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 import com.dexels.navajo.util.AuditLog;
 
-public class WebserviceTrigger extends Trigger {
+public class WebserviceTrigger extends Trigger implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1782109779749326472L;
+	
 	public String webservicePattern;
 	public String myDescription;
 	
 	private boolean alarm = false;
-	private WebserviceListener myListener = null;
 	private HashMap commands = new HashMap();
 	
 	private boolean singleEvent = false;
@@ -77,9 +82,7 @@ public class WebserviceTrigger extends Trigger {
 	
 	public void removeTrigger() {
 		// Remove myself from the listener list.
-		if ( myListener != null ) {
-			myListener.removeTrigger(this);
-		}
+		WebserviceListener.getInstance().removeTrigger(this);
 	}
 	
 	public void setAlarm() {
@@ -108,7 +111,6 @@ public class WebserviceTrigger extends Trigger {
 	}
 
 	public void activateTrigger() {
-		myListener = WebserviceListener.getInstance();
-		myListener.registerTrigger(this);
+		WebserviceListener.getInstance().registerTrigger(this);
 	}
 }
