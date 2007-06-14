@@ -24,6 +24,8 @@
  */
 package com.dexels.navajo.scheduler;
 
+import java.util.Calendar;
+
 import com.dexels.navajo.server.Access;
 
 public abstract class Trigger {
@@ -49,6 +51,7 @@ public abstract class Trigger {
 	 * 3. hour of day (0-23) or *
 	 * 4. minute of hour (0-59)
 	 * 5. day of week (SAT,SUN,MON,TUE,WED,THU,FRI) or *
+	 * 6. year
 	 * 
 	 * 2. Trigger on navajo webservice event:
 	 * navajo:xyz[?doc=out], e.g. navajo:relation/ProcessUpdatePerson?doc=out
@@ -72,6 +75,7 @@ public abstract class Trigger {
 	 * 
 	 */
 	public final static String TIME_TRIGGER = "time";
+	public final static String OFFSETTIME_TRIGGER = "offsettime";
 	public final static String WS_TRIGGER = "navajo";
 	public final static String AFTER_TASK_TRIGGER = "aftertask";
 	
@@ -107,7 +111,23 @@ public abstract class Trigger {
 				String v = s.substring(TIME_TRIGGER.length()+1);
 				t = new TimeTrigger(v);
 				return t;
-			} else if (s.startsWith(WS_TRIGGER)) {
+			} else if (s.startsWith(OFFSETTIME_TRIGGER)) {
+				String v = s.substring(OFFSETTIME_TRIGGER.length()+1);
+				String field = v.substring(v.length() - 1);
+				String offset = v.substring(0, v.length() - 1);
+				System.err.println("OFFSETTIME TRIGGER: field = " + field + ", offset = " + offset);
+				if ( field.equals("m")) {
+					t = new TimeTrigger(Integer.parseInt(offset), Calendar.MINUTE );
+				}
+				if ( field.equals("h")) {
+					t = new TimeTrigger(Integer.parseInt(offset), Calendar.HOUR_OF_DAY );
+				}
+				if ( field.equals("d")) {
+					t = new TimeTrigger(Integer.parseInt(offset), Calendar.DAY_OF_MONTH );
+				}
+				return t;
+			}  
+			else if (s.startsWith(WS_TRIGGER)) {
 				String v = s.substring(WS_TRIGGER.length()+1);
 				t = new WebserviceTrigger(v);
 				return t;

@@ -65,10 +65,10 @@ public class AfterTaskTrigger extends Trigger implements TaskListener {
 	}
 	
 	public void afterTask(Task t, Navajo request) {
-		System.err.println("In after task trigger of " + t.getId() + ", checking if I am " + myDescription);
-		// Is my parents' task-trigger single event? If it is so am I.
-		setSingleEvent(t.getTrigger().isSingleEvent());
+		
 		if ( myDescription.equals(t.getId() ) ){
+			System.err.println(t.getTriggerDescription() + ": in after task trigger of " + t.getId() + ", checking if I am " + myDescription);
+			setSingleEvent(t.getTrigger().isSingleEvent());
 			spawnTask(request);
 		}
 	}

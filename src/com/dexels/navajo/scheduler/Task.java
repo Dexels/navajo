@@ -47,7 +47,7 @@ import com.dexels.navajo.util.AuditLog;
  */
 public class Task implements Runnable, TaskMXBean, TaskInterface {
 	
-	public String webservice;
+	public String webservice = "";
 	public String username;
 	public String password;
 	public String trigger;
@@ -55,6 +55,8 @@ public class Task implements Runnable, TaskMXBean, TaskInterface {
 	public Navajo response = null;
 	public String status;
 	public String errorMessage;
+	public String workflowDefinition = "";
+	public String workflowId = "";
 	
     private Trigger myTrigger = null;
     private boolean remove = false;
@@ -85,9 +87,7 @@ public class Task implements Runnable, TaskMXBean, TaskInterface {
 				Access a, 
 				String triggerURL,
 				Navajo requestNavajo) throws IllegalTrigger, IllegalTask {
-		if ( webservice == null || webservice.equals("") ) {
-			throw new IllegalTask("Empty webservice pattern");
-		}
+		
 		this.webservice = webservice;
 		if ( username == null || password == null ) {
 			throw new IllegalTask("No username/password specified");
@@ -296,59 +296,63 @@ public class Task implements Runnable, TaskMXBean, TaskInterface {
 	 */
 	public void run() {
 
-		System.err.println("Registering task " + getId() + " with JMX");
 		JMXHelper.registerMXBean(this, JMXHelper.TASK_DOMAIN, getId());
 
+		AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, " trigger " + getTriggerDescription() + " goes off for task: " + getId() );
+		
 		// Invoke onbefore triggers.
 		TaskRunner.getInstance().fireBeforeTaskEvent(this);
-		
-		Access access = myTrigger.getAccess();
-		Navajo request = null;
-		if ( access != null && navajo == null ) {
-			request = ( myTrigger.swapInOut() ? access.getOutputDoc() :  access.getInDoc() );
-		} else if ( navajo != null ) {
-			request = navajo;
-		} else {
-			request = NavajoFactory.getInstance().createNavajo();
-		} 
-
-		isRunning = true;
-		AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "(!!)Alarm goes off for task: " + id);
-		java.util.Date now = new java.util.Date();
-
-		Header h = request.getHeader();
-		if (h == null) {
-			h = NavajoFactory.getInstance().createHeader(request, webservice, username, password, -1);
-			request.addHeader(h);
-		} else {
-			h.setRPCName(webservice);
-			h.setRPCPassword(password);
-			h.setRPCUser(username);
-			h.setExpirationInterval(-1);
-		}
-		// Reset request id to prevent integrity worker from kicking in.
-		h.setRequestId(null);
-		
-		Dispatcher.getInstance().setUseAuthorisation(false);
-
-		// Dispatcher is dead, exit.
-		if ( Dispatcher.getInstance() == null ) {
-			System.err.println("ERROR: Dead dispatcher, trying to execute task");
-			return;
-		}
-
 		Navajo result = null;
-		try {
-			result = Dispatcher.getInstance().handle(request);
-			this.setResponse(result);
-		} catch (FatalException e) {
-			e.printStackTrace(System.err);
-			TaskRunner.log(this, null, true, e.getMessage(), now);
-		} 
+		
+		if ( webservice != null && !webservice.equals("") ) {
+			Access access = myTrigger.getAccess();
+			Navajo request = null;
+			if ( access != null && navajo == null ) {
+				request = ( myTrigger.swapInOut() ? access.getOutputDoc() :  access.getInDoc() );
+			} else if ( navajo != null ) {
+				request = navajo;
+			} else {
+				request = NavajoFactory.getInstance().createNavajo();
+			} 
 
-		TaskRunner.log(this, getResponse(), ( getResponse() != null && getResponse().getMessage("error") != null ), 
-				( getResponse().getMessage("error") != null ? getResponse().getMessage("error").getProperty("message").getValue() : ""), 
-				now );				
+			isRunning = true;
+			
+			java.util.Date now = new java.util.Date();
+
+			Header h = request.getHeader();
+			if (h == null) {
+				h = NavajoFactory.getInstance().createHeader(request, webservice, username, password, -1);
+				request.addHeader(h);
+			} else {
+				h.setRPCName(webservice);
+				h.setRPCPassword(password);
+				h.setRPCUser(username);
+				h.setExpirationInterval(-1);
+			}
+			// Reset request id to prevent integrity worker from kicking in.
+			h.setRequestId(null);
+
+			Dispatcher.getInstance().setUseAuthorisation(false);
+
+			// Dispatcher is dead, exit.
+			if ( Dispatcher.getInstance() == null ) {
+				System.err.println("ERROR: Dead dispatcher, trying to execute task");
+				return;
+			}
+
+			try {
+				result = Dispatcher.getInstance().handle(request);
+				this.setResponse(result);
+			} catch (FatalException e) {
+				e.printStackTrace(System.err);
+				TaskRunner.log(this, null, true, e.getMessage(), now);
+			} 
+			TaskRunner.log(this, getResponse(), ( getResponse() != null && getResponse().getMessage("error") != null ), 
+					( getResponse().getMessage("error") != null ? getResponse().getMessage("error").getProperty("message").getValue() : ""), 
+					now );	
+		}
+		
+				
 		isRunning = false;		
 
 		if ( myTrigger.isSingleEvent() ) {
@@ -451,5 +455,21 @@ public class Task implements Runnable, TaskMXBean, TaskInterface {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public String getWorkflowDefinition() {
+		return workflowDefinition;
+	}
+
+	public void setWorkflowDefinition(String workflowDefinition) {
+		this.workflowDefinition = workflowDefinition;
+	}
+
+	public String getWorkflowId() {
+		return workflowId;
+	}
+
+	public void setWorkflowId(String workflowId) {
+		this.workflowId = workflowId;
 	}
 }

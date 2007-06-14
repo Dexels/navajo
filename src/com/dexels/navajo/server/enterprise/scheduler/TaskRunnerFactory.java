@@ -40,6 +40,15 @@ public class TaskRunnerFactory {
 						e.printStackTrace(System.err);
 						System.err.println("WARNING: Clock not available");
 					}	
+					try {
+						Class c = Class.forName("com.dexels.navajo.workflow.WorkFlowManager");
+						Object dummy = c.newInstance();
+						Method m = c.getMethod("getInstance", null);
+						m.invoke(dummy, null);
+					} catch (Exception e) {
+						e.printStackTrace(System.err);
+						System.err.println("WARNING: Clock not available");
+					}	
 				}
 				
 				return instance;

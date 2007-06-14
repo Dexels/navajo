@@ -26,8 +26,6 @@ package com.dexels.navajo.scheduler;
 
 import java.util.HashMap;
 import java.util.StringTokenizer;
-
-import com.dexels.navajo.server.Access;
 import com.dexels.navajo.util.AuditLog;
 
 public class WebserviceTrigger extends Trigger {
@@ -79,7 +77,9 @@ public class WebserviceTrigger extends Trigger {
 	
 	public void removeTrigger() {
 		// Remove myself from the listener list.
-		myListener.removeTrigger(this);
+		if ( myListener != null ) {
+			myListener.removeTrigger(this);
+		}
 	}
 	
 	public void setAlarm() {
@@ -101,10 +101,6 @@ public class WebserviceTrigger extends Trigger {
 	
 	public String getWebservicePattern() {
 		return webservicePattern;
-	}
-
-	public Access getAccess() {
-		return myAccess;
 	}
 
 	public void setSingleEvent(boolean b) {

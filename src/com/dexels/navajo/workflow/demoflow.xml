@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workflow>
+    <state id="init">
+        <transition trigger="navajo:InitNavajoDemo" nextstate="start"/>
+    </state>
+    <state id="start">
+        <transition trigger="navajo:InitAap" nextstate="waitforinput"/>
+    </state>
+    <state id="waitforinput">
+        <!-- If nothing happens for 20 seconds, quit workflow -->
+        <transition trigger="offsettime:20s" nextstate="null"/>
+        <transition trigger="navajo:ProcessAap" nextstate="approve">
+            <param name="Name">
+                <expression value="[/Result/Name]"/>
+            </param>
+        </transition>
+    </state>
+    <state id="approve">
+        <transition trigger="navajo:ProcessApproveAap" nextstate="null" condition="[/Approval/Name] == [/@Name] AND [/Approval/Status] == 'ok'"/>
+        <transition trigger="navajo:ProcessApproveAap" nextstate="start" condition="[/Approval/Name] == [/@Name] AND [/Approval/Status] != 'ok'"/>
+    </state>
+</workflow>

@@ -888,7 +888,7 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
     //String requestId = "";
     Exception myException = null;
     String origThreadName = null;
-    
+    boolean scheduledWebservice = false;
    
     int accessSetSize = accessSet.size();
     
@@ -1040,17 +1040,22 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
          * Phase VIa: Check if scheduled webservice
          */
         if ( inMessage.getHeader().getSchedule() != null && !inMessage.getHeader().getSchedule().equals("") ) {
+        	scheduledWebservice = true;
         	System.err.println("Scheduling webservice: " + inMessage.getHeader().getRPCName() + " on " + inMessage.getHeader().getSchedule());
         	TaskRunnerInterface trf = TaskRunnerFactory.getInstance();
         	TaskInterface ti = TaskRunnerFactory.getTaskInstance();
         	try {
     			ti.setTrigger(inMessage.getHeader().getSchedule());
+    			ti.setNavajo(inMessage);
+    			trf.addTask(ti);
+            	outMessage = generateScheduledMessage(inMessage.getHeader(), ti.getId());
     		} catch (UserException e) {
     			System.err.println("WARNING: Invalid trigger specified for task " + ti.getId()  + ": " + inMessage.getHeader().getSchedule());
+    			trf.removeTask(ti);
+    			outMessage = generateErrorMessage(access, "Could not schedule task:" + e.getMessage(), -1, -1, e);
     		}
-    		ti.setNavajo(inMessage);
-        	trf.addTask(ti);
-        	outMessage = generateScheduledMessage(inMessage.getHeader(), ti.getId());
+    		
+        	
         } else {
 
         	/**
@@ -1122,18 +1127,17 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
     }
     finally {
     	
-    	// Register webservice call to WebserviceListener.
-    	if ( access != null ) {
-    		WebserviceListenerInterface listener = WebserviceListenerFactory.getInstance();
-    		access.setInDoc(inMessage);
-    		listener.invocation(rpcName, access);
-    	}
     	
-    	if (access != null) {
+    	if ( access != null && !scheduledWebservice ) {
+    		access.setInDoc(inMessage);
+    		// Register webservice call to WebserviceListener if it was not a scheduled webservice.
+    		WebserviceListenerInterface listener = WebserviceListenerFactory.getInstance();
+    		listener.invocation(rpcName, access);
+
     		// Remove access object from set of active webservices first.
     		synchronized ( accessSet ) {
     			accessSet.remove(access);
-			}
+    		}
     		//System.err.println("AccessSet size: " + accessSet.size());
     		// Set access to finished state.
     		access.setFinished();
@@ -1142,9 +1146,9 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
     			h = NavajoFactory.getInstance().createHeader(outMessage,rpcName,rpcUser,rpcPassword,-1);
     			outMessage.addHeader(h);
     		}
-    		
+
     		updatePropertyDescriptions(inMessage,outMessage);
-            
+
     		access.storeStatistics(h);
     		// Store access if navajostore is enabled and if webservice is not in list of special webservices.
     		if (    getNavajoConfig().getStatisticsRunner() != null &&  
@@ -1152,7 +1156,7 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
     			// Give asynchronous statistics runner a new access object to persist.
     			getNavajoConfig().getStatisticsRunner().addAccess(access, myException, null);
     		}
-    		
+
     		appendServerBroadCast(access, inMessage,h);
     	}
     	else if (getNavajoConfig().monitorOn) { // Also monitor requests without access objects if monitor is on.

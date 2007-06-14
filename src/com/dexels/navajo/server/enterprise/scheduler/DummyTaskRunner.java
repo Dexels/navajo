@@ -13,4 +13,8 @@ public class DummyTaskRunner implements TaskRunnerInterface {
 		return null;
 	}
 
+	public void removeTask(TaskInterface t) {
+		
+	}
+
 }

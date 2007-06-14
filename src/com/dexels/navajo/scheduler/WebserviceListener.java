@@ -81,10 +81,15 @@ public class WebserviceListener implements WebserviceListenerInterface {
 	 * @param a the access object of the caller
 	 */
 	public final void invocation(final String webservice, final Access a) {
-		Iterator iter = triggers.iterator();
+		// First create copy of triggers set to prevent concurrent modification exceptions.
+		HashSet copyOfTriggers = new HashSet(triggers);
+		// Iterate over copy.
+		Iterator iter = copyOfTriggers.iterator();
 		while ( iter.hasNext() ) {
 			final WebserviceTrigger t = (WebserviceTrigger) iter.next();
+			
 			if ( webservice.matches(t.getWebservicePattern()) ) {
+				System.err.println("match in invocation(" + webservice + ") for webservicepattern: " + t.getWebservicePattern());
 				t.setAccess(a);
 				// Spawn task.
 				GenericThread taskThread = new GenericThread("task:" + t.getTask().getId() ) {

@@ -41,19 +41,24 @@ public class Clock extends GenericThread implements ClockMXBean, ClockInterface 
 	}
 	
 	public final void addClockListener(ClockListener cl) {
-		listeners.add(cl);
+		synchronized ( semaphore ) {
+			listeners.add(cl);
+		}
 	}
 	
 	public final void removeClockListener(ClockListener cl) {
-		listeners.remove(cl);
+		synchronized ( semaphore ) {
+			listeners.remove(cl);
+		}
 	}
 	
 	public final void worker() {
 		Calendar c = Calendar.getInstance();
-		for ( int i = 0; i < listeners.size(); i++ ) {
-			ClockListener cl = (ClockListener) listeners.get(i);
-			System.err.println(i + ": ClockListener found: " + cl);
-			cl.timetick(c);
+		synchronized ( semaphore ) {
+			for ( int i = 0; i < listeners.size(); i++ ) {
+				ClockListener cl = (ClockListener) listeners.get(i);
+				cl.timetick(c);
+			}
 		}
 	}
 }

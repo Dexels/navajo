@@ -52,11 +52,36 @@ public class TimeTrigger extends Trigger implements ClockListener {
 	private ArrayList minutes = null;
 	private ArrayList day = null; /* SAT,SUN.MON,TUE,WED,FRI */
 	private String description = null;
-	private boolean singleEvent;
+	private boolean singleEvent = false;
 	private long lastRan = -1;
 	
+	private static final String NOW = "now";
+	private boolean now = false;
+	
+	public TimeTrigger(int i, int field) {
+		Calendar c = Calendar.getInstance();
+		c.add(field, i);
+		year = c.get(Calendar.YEAR);
+		month = c.get(Calendar.MONTH) + 1;
+		monthday = c.get(Calendar.DAY_OF_MONTH);
+		hour = c.get(Calendar.HOUR_OF_DAY);
+		minute = c.get(Calendar.MINUTE);
+		description = month + "|" + monthday + "|" + hour + "|" + minute + "|*|" + year;
+	}
+	
 	public TimeTrigger(String s) {
+		
 		description = s;
+		
+		if ( s.equals(NOW) ) {
+			now = true;
+			singleEvent = true;
+			return;
+		}
+		
+		now = false;
+		singleEvent = false;
+		
 		StringTokenizer tokens = new StringTokenizer(s, "|");
 		if (tokens.hasMoreTokens()) {
 			String ms = tokens.nextToken();
@@ -107,9 +132,7 @@ public class TimeTrigger extends Trigger implements ClockListener {
 		}
 		
 		singleEvent = ( year != -1 && month != -1 && monthday != -1 && hour != -1 && minute != -1 );
-		System.err.println("Trigger " + s + ", singleEvent = " + singleEvent);
-		System.err.println(year + "|" + month + "|" + monthday + "|" + hour + "|" + minute + "|" + day + ", singleEvent = " + singleEvent);
-		
+
 	}
 	
 	public void setSingleEvent(boolean b) {
@@ -149,6 +172,10 @@ public class TimeTrigger extends Trigger implements ClockListener {
 	}
 
 	private final boolean checkAlarm(Calendar c) {
+		
+		if ( now ) {
+			return true;
+		}
 		
 		if ( lastRan != -1 && ( c.getTimeInMillis() - lastRan ) < 60000 ) {
 			return false;
@@ -228,7 +255,6 @@ public class TimeTrigger extends Trigger implements ClockListener {
 	
 	public void timetick(final Calendar c) {
 		if ( checkAlarm(c) ) {
-			System.err.println("Alarm in time trigger!");
 			// Spawn thread.
 			GenericThread taskThread = new GenericThread("task:" + getTask().getId()) {
 				
@@ -247,9 +273,7 @@ public class TimeTrigger extends Trigger implements ClockListener {
 			};
 			taskThread.startThread(taskThread);
 			
-		} else {
-			System.err.println("Down boy.");
-		}
+		} 
 	}
 
 	public void activateTrigger() {

@@ -69,7 +69,8 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 
 	private static final String VERSION = "$Id$";
 	
-	private int maxSize = 25;
+	// Maximum number of tasks.
+	private int maxSize = 1000;
 	private static volatile TaskRunner instance = null;
 	private final Map tasks = Collections.synchronizedMap(new HashMap());
 	private final ArrayList taskListeners = new ArrayList();
@@ -81,8 +82,11 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 	private volatile static File taskInputDir = null;
 	
 	private static Object semaphore = new Object();
+	private static Object semaphore2 = new Object();
 	private static String id = "Navajo TaskRunner";
 	private static SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy");
+	
+	private boolean configIsBeingUpdated = false;
 	
 	public TaskRunner() {
 		super(id);
@@ -238,14 +242,18 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 						String username = m.getProperty("username").getValue();
 						String password = m.getProperty("password").getValue();
 						String trigger = m.getProperty("trigger").getValue();
+						String workflowdef = m.getProperty("workflowdef").getValue();
+						String workflowid = m.getProperty("workflowid").getValue();
+						
 						Access newAcces = new Access(-1, -1, -1, username, webservice, "Taskrunner", "127.0.0.1", "localhost", false, null);
 						
 						try {
 							// Create a new task and activate its trigger.
 							Task t = new Task(webservice, username, password, newAcces, trigger, null);
+							t.setWorkflowDefinition(workflowdef);
+							t.setWorkflowId(workflowid);
 							t.setId(id);
 							readTaskInput(t);
-							t.getTrigger().activateTrigger();
 							instance.addTask(id, t);
 						} catch (IllegalTrigger it) {
 							//it.printStackTrace(System.err);
@@ -289,7 +297,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 	
 	public final void worker() {
 		// Check whether tasks.xml has gotten updated
-		if ( isConfigModified() ) {
+		if ( isConfigModified() && !instance.configIsBeingUpdated ) {
 			AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Task configuration is modified, re-initializing");
 			readConfig();
 		}
@@ -299,7 +307,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 		return tasks.size();
 	}
 	
-	public synchronized void removeTask(String id) {
+	public void removeTask(String id) {
 		
 		if ( !tasks.containsKey(id) ) {
 			return;
@@ -314,24 +322,28 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 		t.setRemove(true);
 		
 		// Remove task from configuration file config/tasks.xml
-		Navajo taskDoc;
-		try {
-			taskDoc = Dispatcher.getInstance().getNavajoConfig().readConfig(TASK_CONFIG);
-			if (taskDoc != null) {
-				Message allTasks = taskDoc.getMessage("tasks");
-				if (allTasks != null) {
-					Message tbr = containsTask(allTasks, id);
-					if ( tbr != null ) {
-						allTasks.removeMessage(tbr);
-						Dispatcher.getInstance().getNavajoConfig().writeConfig(TASK_CONFIG, taskDoc);
+		synchronized (semaphore) {
+			instance.configIsBeingUpdated = true;
+			Navajo taskDoc;
+			try {
+				taskDoc = Dispatcher.getInstance().getNavajoConfig().readConfig(TASK_CONFIG);
+				if (taskDoc != null) {
+					Message allTasks = taskDoc.getMessage("tasks");
+					if (allTasks != null) {
+						Message tbr = containsTask(allTasks, id);
+						if ( tbr != null ) {
+							allTasks.removeMessage(tbr);
+							Dispatcher.getInstance().getNavajoConfig().writeConfig(TASK_CONFIG, taskDoc);
+						}
 					}
 				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} finally {
+				instance.setConfigTimeStamp();
+				instance.configIsBeingUpdated = false;
 			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			setConfigTimeStamp();
 		}
 	}
 	
@@ -463,7 +475,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 		}
 	}
 	
-	public synchronized void updateTask(String id, Task t) {
+	public void updateTask(String id, Task t) {
 		if (! tasks.containsKey(id ))  {
 			return;
 		}
@@ -483,7 +495,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 		return addTask(generateTaskId(),(Task) t);
 	}
 	
-	public synchronized boolean addTask(String id, Task t) {
+	public boolean addTask(String id, Task t) {
 		
 		if ( tasks.containsKey(id) ) {
 			t.setRemove(true);
@@ -498,53 +510,60 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 		AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Adding task: " + id);
 		tasks.put(id, t);
 		t.setId(id);
-//		Thread thread = new Thread(t);
-//		t.setThread(thread);
-//		thread.start();
+		t.getTrigger().activateTrigger();
+		
 		// Add to task configuration file config/tasks.xml
 		
 		Navajo taskDoc = null;
-		try {
-			
-			taskDoc = Dispatcher.getInstance().getNavajoConfig().readConfig(TASK_CONFIG);
-			
-			if (taskDoc == null) {
-				taskDoc = NavajoFactory.getInstance().createNavajo();
-				Message m = NavajoFactory.getInstance().createMessage(taskDoc, "tasks", Message.MSG_TYPE_ARRAY);
-				taskDoc.addMessage(m);
-			}
-			Message allTasks = taskDoc.getMessage("tasks");
-			if ( allTasks != null && containsTask(allTasks, id) == null ) {
-				Message newTask = NavajoFactory.getInstance().createMessage(taskDoc, "tasks");
-				allTasks.addMessage(newTask);
-				Property propId = NavajoFactory.getInstance().createProperty(taskDoc, "id", Property.STRING_PROPERTY, t.getId(), 0, "", Property.DIR_OUT);
-				Property propUser = NavajoFactory.getInstance().createProperty(taskDoc, "username", Property.STRING_PROPERTY, t.getUsername(), 0, "", Property.DIR_OUT);
-				Property propPassword = NavajoFactory.getInstance().createProperty(taskDoc, "password", Property.STRING_PROPERTY, t.getPassword(), 0, "", Property.DIR_OUT);
-				Property propService = NavajoFactory.getInstance().createProperty(taskDoc, "webservice", Property.STRING_PROPERTY, t.getWebservice(), 0, "", Property.DIR_OUT);
-				Property propTrigger = NavajoFactory.getInstance().createProperty(taskDoc, "trigger", Property.STRING_PROPERTY, t.getTrigger().getDescription(), 0, "", Property.DIR_OUT);
-				newTask.addProperty(propId);
-				newTask.addProperty(propUser);
-				newTask.addProperty(propPassword);
-				newTask.addProperty(propService);
-				newTask.addProperty(propTrigger);
+		synchronized (semaphore) {
+			instance.configIsBeingUpdated = true;
+			try {
 
-				synchronized (semaphore) {
+				// Read current version of tasks.xml.
+				taskDoc = Dispatcher.getInstance().getNavajoConfig().readConfig(TASK_CONFIG);
+
+				// Create empty tasks.xml if it did not yet exist.
+				if (taskDoc == null) {
+					taskDoc = NavajoFactory.getInstance().createNavajo();
+					Message m = NavajoFactory.getInstance().createMessage(taskDoc, "tasks", Message.MSG_TYPE_ARRAY);
+					taskDoc.addMessage(m);
+				}
+				Message allTasks = taskDoc.getMessage("tasks");
+				
+				// Add task to Navajo if it does not yet exist.
+				if ( allTasks != null && containsTask(allTasks, id) == null ) {
+					Message newTask = NavajoFactory.getInstance().createMessage(taskDoc, "tasks");
+					allTasks.addMessage(newTask);
+					Property propId = NavajoFactory.getInstance().createProperty(taskDoc, "id", Property.STRING_PROPERTY, t.getId(), 0, "", Property.DIR_OUT);
+					Property propUser = NavajoFactory.getInstance().createProperty(taskDoc, "username", Property.STRING_PROPERTY, t.getUsername(), 0, "", Property.DIR_OUT);
+					Property propPassword = NavajoFactory.getInstance().createProperty(taskDoc, "password", Property.STRING_PROPERTY, t.getPassword(), 0, "", Property.DIR_OUT);
+					Property propService = NavajoFactory.getInstance().createProperty(taskDoc, "webservice", Property.STRING_PROPERTY, t.getWebservice(), 0, "", Property.DIR_OUT);
+					Property propTrigger = NavajoFactory.getInstance().createProperty(taskDoc, "trigger", Property.STRING_PROPERTY, t.getTrigger().getDescription(), 0, "", Property.DIR_OUT);
+					Property propWorkflowDef = NavajoFactory.getInstance().createProperty(taskDoc, "workflowdef", Property.STRING_PROPERTY, t.getWorkflowDefinition(), 0, "", Property.DIR_OUT);
+					Property propWorkflowId = NavajoFactory.getInstance().createProperty(taskDoc, "workflowid", Property.STRING_PROPERTY, t.getWorkflowId(), 0, "", Property.DIR_OUT);
+					
+					newTask.addProperty(propId);
+					newTask.addProperty(propUser);
+					newTask.addProperty(propPassword);
+					newTask.addProperty(propService);
+					newTask.addProperty(propTrigger);
+					newTask.addProperty(propWorkflowDef);
+					newTask.addProperty(propWorkflowId);
+					
+					// Persist task request Navajo and tasks.xml
 					writeTaskInput(t);
 					Dispatcher.getInstance().getNavajoConfig().writeConfig(TASK_CONFIG, taskDoc);
 				}
-				
-				// Re-initialize config.
-				// System.err.println("Re-initializing configuration....");
-				readConfig();	
+
+			} catch (Throwable e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} finally {
+				// Set configtimestamp.
+				instance.setConfigTimeStamp();
+				instance.configIsBeingUpdated = false;
 			}
-			
-		} catch (Throwable e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			//instance.setConfigTimeStamp();
 		}
-		
 		
 		return true;
 	}
@@ -597,26 +616,38 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 	}
 	
 	public void addTaskListener(TaskListener tl) {
-		taskListeners.add(tl);
+		synchronized ( semaphore2 ) {
+			taskListeners.add(tl);
+		}
 	}
 	
 	public void removeTaskListener(TaskListener tl) {
-		taskListeners.remove(tl);
+		synchronized ( semaphore2 ) {
+			taskListeners.remove(tl);
+		}
 	}
 	
 	public void fireAfterTaskEvent(Task t, Navajo request) {
 		System.err.println("Fire after task event: " + t.getId() + ", listeners: " + taskListeners.size());
-		for ( int i = 0 ; i < taskListeners.size(); i++ ) {
-			TaskListener tl = (TaskListener) taskListeners.get(i);
-			tl.afterTask(t, request);
+		synchronized ( semaphore2 ) {
+			for ( int i = 0 ; i < taskListeners.size(); i++ ) {
+				TaskListener tl = (TaskListener) taskListeners.get(i);
+				tl.afterTask(t, request);
+			}
 		}
 	}
 	
 	public void fireBeforeTaskEvent(Task t) {
 		System.err.println("Fire before task event: " + t.getId()  + ", listeners: " + taskListeners.size() );
-		for ( int i = 0 ; i < taskListeners.size(); i++ ) {
-			TaskListener tl = (TaskListener) taskListeners.get(i);
-			tl.beforeTask(t);
+		synchronized ( semaphore2 ) {
+			for ( int i = 0 ; i < taskListeners.size(); i++ ) {
+				TaskListener tl = (TaskListener) taskListeners.get(i);
+				tl.beforeTask(t);
+			}
 		}
+	}
+
+	public void removeTask(TaskInterface t) {
+		removeTask(t.getId());
 	}
 }
