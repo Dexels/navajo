@@ -72,6 +72,7 @@ public class TimeTrigger extends Trigger implements ClockListener, Serializable 
 		hour = c.get(Calendar.HOUR_OF_DAY);
 		minute = c.get(Calendar.MINUTE);
 		description = month + "|" + monthday + "|" + hour + "|" + minute + "|*|" + year;
+		singleEvent = true;
 	}
 	
 	public TimeTrigger(String s) {

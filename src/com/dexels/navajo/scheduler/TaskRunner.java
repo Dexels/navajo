@@ -239,6 +239,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 						Message m = (Message) allTasks.get(i);
 						String id = m.getProperty("id").getValue();
 						String webservice = m.getProperty("webservice").getValue();
+						Boolean proxy = (Boolean) m.getProperty("proxy").getTypedValue();
 						String username = m.getProperty("username").getValue();
 						String password = m.getProperty("password").getValue();
 						String trigger = m.getProperty("trigger").getValue();
@@ -252,6 +253,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 							Task t = new Task(webservice, username, password, newAcces, trigger, null);
 							t.setWorkflowDefinition(workflowdef);
 							t.setWorkflowId(workflowid);
+							t.setProxy(proxy.booleanValue());
 							t.setId(id);
 							readTaskInput(t);
 							instance.addTask(id, t);
@@ -538,6 +540,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 					Property propUser = NavajoFactory.getInstance().createProperty(taskDoc, "username", Property.STRING_PROPERTY, t.getUsername(), 0, "", Property.DIR_OUT);
 					Property propPassword = NavajoFactory.getInstance().createProperty(taskDoc, "password", Property.STRING_PROPERTY, t.getPassword(), 0, "", Property.DIR_OUT);
 					Property propService = NavajoFactory.getInstance().createProperty(taskDoc, "webservice", Property.STRING_PROPERTY, t.getWebservice(), 0, "", Property.DIR_OUT);
+					Property propProxy = NavajoFactory.getInstance().createProperty(taskDoc, "proxy", Property.BOOLEAN_PROPERTY, t.isProxy()+"", 0, "", Property.DIR_OUT);
 					Property propTrigger = NavajoFactory.getInstance().createProperty(taskDoc, "trigger", Property.STRING_PROPERTY, t.getTrigger().getDescription(), 0, "", Property.DIR_OUT);
 					Property propWorkflowDef = NavajoFactory.getInstance().createProperty(taskDoc, "workflowdef", Property.STRING_PROPERTY, t.getWorkflowDefinition(), 0, "", Property.DIR_OUT);
 					Property propWorkflowId = NavajoFactory.getInstance().createProperty(taskDoc, "workflowid", Property.STRING_PROPERTY, t.getWorkflowId(), 0, "", Property.DIR_OUT);
@@ -546,6 +549,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 					newTask.addProperty(propUser);
 					newTask.addProperty(propPassword);
 					newTask.addProperty(propService);
+					newTask.addProperty(propProxy);
 					newTask.addProperty(propTrigger);
 					newTask.addProperty(propWorkflowDef);
 					newTask.addProperty(propWorkflowId);
@@ -619,6 +623,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 		synchronized ( semaphore2 ) {
 			taskListeners.add(tl);
 		}
+		System.err.println("NUMBER OF TASK LISTENERS: " + taskListeners.size());
 	}
 	
 	public void removeTaskListener(TaskListener tl) {
@@ -628,23 +633,29 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 	}
 	
 	public void fireAfterTaskEvent(Task t, Navajo request) {
-		System.err.println("Fire after task event: " + t.getId() + ", listeners: " + taskListeners.size());
+		
 		synchronized ( semaphore2 ) {
 			for ( int i = 0 ; i < taskListeners.size(); i++ ) {
-				TaskListener tl = (TaskListener) taskListeners.get(i);
+				TaskListener tl = (TaskListener) taskListeners.get(i); 
+				System.err.println(i + ": calling AFTERTASK() for task with trigger " + t.getTriggerDescription() + " and webservice " + t.webservice);
 				tl.afterTask(t, request);
 			}
 		}
 	}
 	
-	public void fireBeforeTaskEvent(Task t) {
-		System.err.println("Fire before task event: " + t.getId()  + ", listeners: " + taskListeners.size() );
+	public boolean fireBeforeTaskEvent(Task t) {
+		
 		synchronized ( semaphore2 ) {
 			for ( int i = 0 ; i < taskListeners.size(); i++ ) {
 				TaskListener tl = (TaskListener) taskListeners.get(i);
-				tl.beforeTask(t);
+				System.err.println(i + ": calling BEFORETASK() for task with trigger " + t.getTriggerDescription() + " and webservice " + t.webservice);
+				boolean result = tl.beforeTask(t);
+				if ( !result ) {
+					return false;
+				}
 			}
 		}
+		return true;
 	}
 
 	public void removeTask(TaskInterface t) {

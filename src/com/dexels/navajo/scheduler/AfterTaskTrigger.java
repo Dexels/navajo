@@ -80,10 +80,11 @@ public class AfterTaskTrigger extends Trigger implements TaskListener, Serializa
 		}
 	}
 
-	public void beforeTask(Task t) {
+	public boolean beforeTask(Task t) {
 		if ( myDescription.equals(t.getId() ) ){
 
 		}
+		return true;
 	}
 
 }

@@ -54,6 +54,7 @@ public class Task implements Runnable, TaskMXBean, TaskInterface, Serializable {
 	private static final long serialVersionUID = 5450771508465465624L;
 	
 	public String webservice = "";
+	public boolean proxy = false; // A task with a beforenavajo trigger can act as a proxy for the original webservice.
 	public String username;
 	public String password;
 	public String trigger;
@@ -305,66 +306,74 @@ public class Task implements Runnable, TaskMXBean, TaskInterface, Serializable {
 		JMXHelper.registerMXBean(this, JMXHelper.TASK_DOMAIN, getId());
 
 		AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, " trigger " + getTriggerDescription() + " goes off for task: " + getId() );
-		
-		// Invoke onbefore triggers.
-		TaskRunner.getInstance().fireBeforeTaskEvent(this);
+	
 		Navajo result = null;
 		
-		if ( webservice != null && !webservice.equals("") ) {
-			Access access = myTrigger.getAccess();
-			Navajo request = null;
-			if ( access != null && navajo == null ) {
-				request = ( myTrigger.swapInOut() ? access.getOutputDoc() :  access.getInDoc() );
-			} else if ( navajo != null ) {
-				request = navajo;
-			} else {
-				request = NavajoFactory.getInstance().createNavajo();
-			} 
+		// Invoke onbefore triggers.
+		// If the fireBeforeTaskEvent return false, do not execute this webservice. If webservice is not a proxy, continue as normal.
+		boolean resultOfBeforeTaskEvent = TaskRunner.getInstance().fireBeforeTaskEvent(this);
+		if ( ( resultOfBeforeTaskEvent && isProxy() ) || !isProxy() ) {
 
-			isRunning = true;
+			System.err.println(getTriggerDescription() + ": ---------------------------> ABOUT TO RUN WEBSERVICE: " + webservice );
 			
-			java.util.Date now = new java.util.Date();
+			if ( webservice != null && !webservice.equals("") ) {
+				Access access = myTrigger.getAccess();
+				Navajo request = null;
+				if ( access != null && navajo == null ) {
+					request = ( myTrigger.swapInOut() ? access.getOutputDoc() :  access.getInDoc() );
+				} else if ( navajo != null ) {
+					request = navajo;
+				} else {
+					request = NavajoFactory.getInstance().createNavajo();
+				} 
 
-			Header h = request.getHeader();
-			if (h == null) {
-				h = NavajoFactory.getInstance().createHeader(request, webservice, username, password, -1);
-				request.addHeader(h);
-			} else {
-				h.setRPCName(webservice);
-				h.setRPCPassword(password);
-				h.setRPCUser(username);
-				h.setExpirationInterval(-1);
+				isRunning = true;
+
+				java.util.Date now = new java.util.Date();
+
+				Header h = request.getHeader();
+				if (h == null) {
+					h = NavajoFactory.getInstance().createHeader(request, webservice, username, password, -1);
+					request.addHeader(h);
+				} else {
+					h.setRPCName(webservice);
+					h.setRPCPassword(password);
+					h.setRPCUser(username);
+					h.setExpirationInterval(-1);
+				}
+				// Reset request id to prevent integrity worker from kicking in.
+				h.setRequestId(null);
+
+				Dispatcher.getInstance().setUseAuthorisation(false);
+
+				// Dispatcher is dead, exit.
+				if ( Dispatcher.getInstance() == null ) {
+					System.err.println("ERROR: Dead dispatcher, trying to execute task");
+					return;
+				}
+
+				try {
+					result = Dispatcher.getInstance().handle(request);
+					this.setResponse(result);
+				} catch (FatalException e) {
+					e.printStackTrace(System.err);
+					TaskRunner.log(this, null, true, e.getMessage(), now);
+				} 
+				TaskRunner.log(this, getResponse(), ( getResponse() != null && getResponse().getMessage("error") != null ), 
+						( getResponse().getMessage("error") != null ? getResponse().getMessage("error").getProperty("message").getValue() : ""), 
+						now );	
 			}
-			// Reset request id to prevent integrity worker from kicking in.
-			h.setRequestId(null);
 
-			Dispatcher.getInstance().setUseAuthorisation(false);
-
-			// Dispatcher is dead, exit.
-			if ( Dispatcher.getInstance() == null ) {
-				System.err.println("ERROR: Dead dispatcher, trying to execute task");
-				return;
-			}
-
-			try {
-				result = Dispatcher.getInstance().handle(request);
-				this.setResponse(result);
-			} catch (FatalException e) {
-				e.printStackTrace(System.err);
-				TaskRunner.log(this, null, true, e.getMessage(), now);
-			} 
-			TaskRunner.log(this, getResponse(), ( getResponse() != null && getResponse().getMessage("error") != null ), 
-					( getResponse().getMessage("error") != null ? getResponse().getMessage("error").getProperty("message").getValue() : ""), 
-					now );	
+		} else {
+			setResponse(null);
 		}
 		
-				
 		isRunning = false;		
 
 		if ( myTrigger.isSingleEvent() ) {
 			if ( !keepRequestResponse ) {
 				TaskRunner.getInstance().removeTaskInput(this);
-			} else {
+			} else if ( getResponse() != null ){
 				TaskRunner.writeTaskOutput(this);
 			}
 			TaskRunner.getInstance().removeTask( this.getId() );
@@ -477,5 +486,13 @@ public class Task implements Runnable, TaskMXBean, TaskInterface, Serializable {
 
 	public void setWorkflowId(String workflowId) {
 		this.workflowId = workflowId;
+	}
+
+	public boolean isProxy() {
+		return proxy;
+	}
+
+	public void setProxy(boolean proxy) {
+		this.proxy = proxy;
 	}
 }

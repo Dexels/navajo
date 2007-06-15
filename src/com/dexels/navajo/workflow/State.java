@@ -46,6 +46,15 @@ public class State implements Serializable {
 		return wft;
 	}
 	
+	public Transition addTransition(String nextState, String trigger, String condition, String webservice) throws IllegalTrigger, IllegalTask  {
+		Task task = new Task(webservice, "ROOT", "", null, trigger, null);
+		task.setWorkflowDefinition(myWorkFlow.getDefinition());
+		task.setWorkflowId(myWorkFlow.getMyId());
+		Transition t = new Transition(this, nextState, task, condition);	
+		myTransitions.add(t);
+		return t;
+	}
+	
 	public Transition addTransition(String nextState, String trigger, String condition) throws IllegalTrigger, IllegalTask  {
 		Task task = new Task("", "ROOT", "", null, trigger, null);
 		task.setWorkflowDefinition(myWorkFlow.getDefinition());
@@ -60,14 +69,16 @@ public class State implements Serializable {
 	 *
 	 */
 	public void enter() {
-        // Persist workflow instance. This method will be entry point for resurection.
-		WorkFlowManager.getInstance().persistWorkFlow(myWorkFlow);
-		
+       
 	    // Activate tasks.
 		Iterator tks = myTasks.iterator();
 		while ( tks.hasNext() ) {
 			WorkFlowTask wtf = (WorkFlowTask) tks.next();
-			wtf.activate();
+			if (!wtf.isFinished()) { // In case of revival, a workflowtask could already have been executed(!)
+				wtf.activate();
+			} else {
+				System.err.println("Do not activate workflowtask..............it was already finished");
+			}
 		}
 		// Activate transitions.
 		Iterator i = myTransitions.iterator();
@@ -75,6 +86,10 @@ public class State implements Serializable {
 			Transition t = (Transition) i.next();
 			t.activate();
 		}	
+		
+		 // Persist workflow instance. This method will be entry point for resurection.
+		WorkFlowManager.getInstance().persistWorkFlow(myWorkFlow);
+		
 	}
 	
 	/**

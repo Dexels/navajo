@@ -16,6 +16,7 @@ public class WorkFlowTask implements Serializable, TaskListener {
 
 	private Task myTask = null;
 	private State myState = null;
+	private boolean finished = false;
 	
 	public WorkFlowTask(State s, Task t) {
 		myTask = t;
@@ -58,10 +59,17 @@ public class WorkFlowTask implements Serializable, TaskListener {
 	public void afterTask(Task t, Navajo request) {
 		if ( isMyTaskTrigger(t) ) {
 			// Do something that is defined in my nested children tags...
+			finished = true;
+			// Persist state again, because task has been executed (basically an internal state change!).
+			WorkFlowManager.getInstance().persistWorkFlow(myState.getWorkFlow());
 		}
 	}
 
-	public void beforeTask(Task t) {
-		
+	public boolean beforeTask(Task t) {
+		return true;
+	}
+
+	public boolean isFinished() {
+		return finished;
 	}
 }

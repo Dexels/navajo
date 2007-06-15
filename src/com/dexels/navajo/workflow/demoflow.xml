@@ -8,7 +8,8 @@
     </state>
     <state id="waitforinput">
         <!-- If nothing happens for 20 seconds, quit workflow -->
-        <transition trigger="offsettime:20s" nextstate="null"/>
+        <task service="person/InitInsertPerson"/>
+        <transition trigger="offsettime:2m" nextstate="null"/>
         <transition trigger="navajo:ProcessAap" nextstate="approve">
             <param name="Name">
                 <expression value="[/Result/Name]"/>
@@ -16,6 +17,7 @@
         </transition>
     </state>
     <state id="approve">
+        <transition trigger="beforenavajo:ProcessApproveAap" proxy="person/InitInsertPerson" nextstate="null" condition="[/Approval/Name] == [/@Name] AND [/Approval/Status] == 'nok'"/>
         <transition trigger="navajo:ProcessApproveAap" nextstate="null" condition="[/Approval/Name] == [/@Name] AND [/Approval/Status] == 'ok'"/>
         <transition trigger="navajo:ProcessApproveAap" nextstate="start" condition="[/Approval/Name] == [/@Name] AND [/Approval/Status] != 'ok'"/>
     </state>

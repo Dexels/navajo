@@ -29,6 +29,7 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.HashSet;
 
+import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.GenericThread;
 import com.dexels.navajo.server.enterprise.scheduler.WebserviceListenerInterface;
@@ -44,14 +45,24 @@ public class WebserviceListener implements WebserviceListenerInterface {
 
 	static WebserviceListener instance = null;
 	
-	private Set triggers = null;
+	private Set afterTriggers = null;
+	private Set beforeTriggers = null;
 	
 	public static WebserviceListener getInstance() {
 		if ( instance == null ) {
 			instance = new WebserviceListener();
-			instance.triggers = Collections.synchronizedSet(new HashSet());
+			instance.afterTriggers = Collections.synchronizedSet(new HashSet());
+			instance.beforeTriggers = Collections.synchronizedSet(new HashSet());
 		}
 		return instance;
+	}
+	
+	public void registerBeforeTrigger(BeforeWebserviceTrigger t) {
+		beforeTriggers.add(t);
+	}
+	
+	public final void removeBeforeTrigger(BeforeWebserviceTrigger t) {
+		beforeTriggers.remove(t);
 	}
 	
 	/**
@@ -60,7 +71,7 @@ public class WebserviceListener implements WebserviceListenerInterface {
 	 * @param t the trigger object to be registered
 	 */
 	public void registerTrigger(WebserviceTrigger t) {
-		triggers.add(t);
+		afterTriggers.add(t);
 	}
 	
 	/**
@@ -69,7 +80,7 @@ public class WebserviceListener implements WebserviceListenerInterface {
 	 * @param t the trigger object that needs to be removed.
 	 */
 	public final void removeTrigger(WebserviceTrigger t) {
-		triggers.remove(t);
+		afterTriggers.remove(t);
 	}
 	
 	/**
@@ -80,16 +91,17 @@ public class WebserviceListener implements WebserviceListenerInterface {
 	 * @param webservice the name of the webservice that was invoked
 	 * @param a the access object of the caller
 	 */
-	public final void invocation(final String webservice, final Access a) {
+	public final void afterWebservice(final String webservice, final Access a) {
 		// First create copy of triggers set to prevent concurrent modification exceptions.
-		HashSet copyOfTriggers = new HashSet(triggers);
+		HashSet copyOfTriggers = new HashSet(afterTriggers);
 		// Iterate over copy.
 		Iterator iter = copyOfTriggers.iterator();
 		while ( iter.hasNext() ) {
+			
 			final WebserviceTrigger t = (WebserviceTrigger) iter.next();
 			
 			if ( webservice.matches(t.getWebservicePattern()) ) {
-				System.err.println("match in invocation(" + webservice + ") for webservicepattern: " + t.getWebservicePattern());
+				System.err.println("match AFTER invocation(" + webservice + ") for webservicepattern: " + t.getWebservicePattern());
 				t.setAccess(a);
 				// Spawn task.
 				GenericThread taskThread = new GenericThread("task:" + t.getTask().getId() ) {
@@ -109,5 +121,36 @@ public class WebserviceListener implements WebserviceListenerInterface {
 				taskThread.startThread(taskThread);
 			}	
 		}
+	}
+
+	public Navajo beforeWebservice(String webservice, Access a) {
+		// First create copy of triggers set to prevent concurrent modification exceptions.
+		HashSet copyOfTriggers = new HashSet(beforeTriggers);
+		// Iterate over copy.
+		Iterator iter = copyOfTriggers.iterator();
+		System.err.println("CALLING beforeWebservice(" + webservice + ")");
+		while ( iter.hasNext() ) {
+
+			final BeforeWebserviceTrigger t = (BeforeWebserviceTrigger) iter.next();
+			System.err.println("BeforeWebserviceTrigger: " + t.getWebservicePattern());
+			
+			if ( webservice.matches(t.getWebservicePattern()) ) {
+				System.err.println("match BEFORE invocation(" + webservice + ") for webservicepattern: " + t.getWebservicePattern());
+				t.setAccess(a);
+				// Run task (synchronously!).
+				t.getTask().run();
+				// If task was proxy webservice, return result of this task immediately.
+				if ( t.getTask().isProxy() && t.getTask().getResponse() != null ) {
+					System.err.println("RETURNING NAVAJO OF TASK AS PROXY RESPONSE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ");
+					a.rpcName = t.getTask().getWebservice();
+					a.setOutputDoc(t.getTask().getResponse());
+					return t.getTask().getResponse();
+				} else {
+					System.err.println("DID NOT RUN PROXY..........");
+				}
+			}	
+		}
+		
+		return null;
 	}
 }

@@ -4,7 +4,13 @@ import com.dexels.navajo.document.Navajo;
 
 public interface TaskListener {
 	
-	public void beforeTask(Task t);
+	/**
+	 * Return true if task has to be processed, false otherwise.
+	 * 
+	 * @param t
+	 * @return
+	 */
+	public boolean beforeTask(Task t);
 	public void afterTask(Task t, Navajo request);
 	
 }

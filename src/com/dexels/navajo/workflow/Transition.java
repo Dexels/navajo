@@ -28,11 +28,13 @@ public class Transition implements TaskListener, Serializable {
 	 */
 	private static final long serialVersionUID = 3144803468988103221L;
 	
-	private Task myTask;
+	private Task myTask = null;
 	private State myState;
 	private String nextState;
 	private String myCondition;
+	private boolean beforeTrigger = false;
 	private final ArrayList parameters = new ArrayList();
+	private static Object semaphore = new Object();
 	
 	/**
 	 * An transition is an activationTranstion if it can activate a new workflow instance.
@@ -46,6 +48,9 @@ public class Transition implements TaskListener, Serializable {
 		myState = s;
 		nextState = nextStateId;
 		myCondition = condition;
+		if ( t.getTriggerDescription().startsWith("beforenavajo")) {
+			beforeTrigger = true;
+		}
 	}
 	
 	private Transition() {
@@ -92,17 +97,36 @@ public class Transition implements TaskListener, Serializable {
 	}
 	
 	private final boolean isMyTransitionTaskTrigger(Task t) {
-		System.err.println("myTask = " + myTask);
-		System.err.println("t = " + t);
-		System.err.println("myState = " + myState);
-		return ( t.getId().equals(myTask.getId()) &&
-				 ( myState == null ||
-				   myState.getWorkFlow() == null ||
-				     ( myState.getWorkFlow().getDefinition().equals(t.getWorkflowDefinition()) &&
-				       myState.getWorkFlow().getMyId().equals(t.getWorkflowId())
-				     )
-				 )
-		 );
+		
+		synchronized ( semaphore ) {
+			if ( myTask != null) {
+				System.err.println("myTask = " + myTask.getId() + ", otherTask: " + t.getId());
+				System.err.println("myTrigger = " + myTask.getTriggerDescription());
+			} else {
+				System.err.println("empty task");
+			}
+			System.err.println("t = " + t.getId());
+			if ( myState != null ) {
+				System.err.println("myWorkflowId = " + myState.getWorkFlow().getMyId() + ", task workflowid: " + t.getWorkflowId());
+			} else {
+				System.err.println("empty state");
+			}
+			boolean result= ( t.getId().equals(myTask.getId()) &&
+					( myState == null ||
+							myState.getWorkFlow() == null ||
+							( myState.getWorkFlow().getDefinition().equals(t.getWorkflowDefinition()) &&
+									myState.getWorkFlow().getMyId().equals(t.getWorkflowId())
+							)
+					)
+			);
+			if ( result ) {
+				System.err.println("YES THIS IS MY TRANSITION TRIGGER");
+			} else {
+				System.err.println("NO THIS IS NOT MY TRANSITION TRIGGER");
+			}
+
+			return result;
+		}
 	}
 	
 	/**
@@ -111,12 +135,14 @@ public class Transition implements TaskListener, Serializable {
 	 *
 	 */
 	public void activate() {
+		System.err.println("----> Current task with trigger " + myTask.getTriggerDescription() + " = " + myTask.getId());
 		TaskRunner.getInstance().addTaskListener(this);
 		if ( myTask.getId() == null ) {
 			TaskRunner.getInstance().addTask(myTask);
 		} else {
 			TaskRunner.getInstance().addTask(myTask.getId(), myTask);
 		}
+		System.err.println("Activated task " + myTask.getId());
 	}
 	
 	/**
@@ -130,15 +156,19 @@ public class Transition implements TaskListener, Serializable {
 	}
 	
 	private boolean enterNextState(Task t) {
-		System.err.println("In enterNextState logic");
+		System.err.println("In enterNextState logic, beforeTrigger: " + beforeTrigger);
 		if ( myCondition == null || myCondition.equals("") || t.getTrigger().getAccess() == null ) {
 			return true;
 		}
-		Navajo n = t.getTrigger().getAccess().getOutputDoc();
+		Navajo n = ( beforeTrigger ? t.getTrigger().getAccess().getInDoc() : t.getTrigger().getAccess().getOutputDoc() );
 		// Merge this Navajo with localNavajo store of the workflow instance to use local workflow parameters.
 		myState.getWorkFlow().mergeWithParmaters(n);
 		try {
-			n.write(System.err);
+			if ( n != null ) {
+				n.write(System.err);
+			} else {
+				System.err.println("IN ENTERNEXTSTATE(): WARNING EMPTY NAVAJO!");
+			}
 		} catch (NavajoException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -155,8 +185,9 @@ public class Transition implements TaskListener, Serializable {
 	
 	public void afterTask(Task t, Navajo request) {
 		
-		if ( isMyTransitionTaskTrigger(t) ) {
-			System.err.println("In transtition of state " + ( myState != null ? myState.getId() : "") + ",  instance Received afterTask event from task: " + t.getId());
+		System.err.println("Transition " + myTask.getTriggerDescription() + ": Received AFTERTASK event from task with trigger: " + t.getTriggerDescription() + " and webservice: " + t.webservice);
+		if (  !beforeTrigger && isMyTransitionTaskTrigger(t) ) {
+			System.err.println(myTask.getTriggerDescription() + "/" + myCondition + ": in afterTask transtition of state " + ( myState != null ? myState.getId() : "") + ",  instance Received afterTask event from task: " + t.getId());
 
 			if ( enterNextState(t) && !activationTranstion ) {
 				// First evaluate all parameters that need to be set with this transition.
@@ -181,8 +212,30 @@ public class Transition implements TaskListener, Serializable {
 
 	}
 
-	public void beforeTask(Task t) {
-		System.err.println("In Workflow instance Received beforeTask event from task: " + t.getId());
+	public boolean beforeTask(Task t) {
+		
+		System.err.println("Transition " + myTask.getTriggerDescription() + ": Received BEFORETASK event from task with trigger: " + t.getTriggerDescription() + " and webservice: " + t.webservice);
+		if ( beforeTrigger && isMyTransitionTaskTrigger(t) ) {
+			
+			System.err.println("In Workflow instance Received beforeTask event from task: " + t.getId());
+			
+			if ( enterNextState(t) ) {
+//				 First evaluate all parameters that need to be set with this transition.
+				evaluateParameters(t);
+				myState.leave();
+				if ( nextState != null && !nextState.equals("finish") ) {
+					System.err.println("----------------------> About to enter next workflow state: " + nextState);
+					myState.getWorkFlow().createState(nextState).enter();
+				} else {
+					myState.getWorkFlow().finish();
+				}
+				return true;
+			} else { // Although it was my task, condition did not evaluate to true, return false in order to prevent proxy webservice from running.
+				return false;
+			}
+		}
+		
+		return true;
 	}
 
 	public boolean isActivationTranstion() {
@@ -191,6 +244,14 @@ public class Transition implements TaskListener, Serializable {
 
 	public void setActivationTranstion(boolean activationTranstion) {
 		this.activationTranstion = activationTranstion;
+	}
+
+	public boolean isBeforeTrigger() {
+		return beforeTrigger;
+	}
+
+	public Task getMyTask() {
+		return myTask;
 	}
 
 }

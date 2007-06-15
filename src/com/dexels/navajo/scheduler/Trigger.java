@@ -77,6 +77,7 @@ public abstract class Trigger {
 	public final static String TIME_TRIGGER = "time";
 	public final static String OFFSETTIME_TRIGGER = "offsettime";
 	public final static String WS_TRIGGER = "navajo";
+	public final static String WS_BEFORE_TRIGGER = "beforenavajo";
 	public final static String AFTER_TASK_TRIGGER = "aftertask";
 	
 	private Task myTask = null;
@@ -115,7 +116,6 @@ public abstract class Trigger {
 				String v = s.substring(OFFSETTIME_TRIGGER.length()+1);
 				String field = v.substring(v.length() - 1);
 				String offset = v.substring(0, v.length() - 1);
-				System.err.println("OFFSETTIME TRIGGER: field = " + field + ", offset = " + offset);
 				if ( field.equals("m")) {
 					t = new TimeTrigger(Integer.parseInt(offset), Calendar.MINUTE );
 				}
@@ -134,6 +134,10 @@ public abstract class Trigger {
 			} else if (s.startsWith(AFTER_TASK_TRIGGER)) {
 				String v = s.substring(AFTER_TASK_TRIGGER.length()+1);
 				t = new AfterTaskTrigger(v);
+				return t;
+			} else if (s.startsWith(WS_BEFORE_TRIGGER)) {
+				String v = s.substring(WS_BEFORE_TRIGGER.length()+1);
+				t = new BeforeWebserviceTrigger(v);
 				return t;
 			} 
 			else {

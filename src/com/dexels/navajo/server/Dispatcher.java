@@ -1063,7 +1063,15 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
         	 */
 
         	if (useAuthorisation) {
-        		outMessage = dispatch(navajoConfig.getRepository().getServlet(access), inMessage, access, parms);
+        		System.err.println("ABOUT TO CALL BEFOREWEBSERVICE IN DISPATCHER!!!!!!!!!!!!!!!!!");
+        		access.setInDoc(inMessage);
+    			Navajo useProxy = WebserviceListenerFactory.getInstance().beforeWebservice(rpcName, access);
+    			if ( useProxy == null ) {
+    				outMessage = dispatch(navajoConfig.getRepository().getServlet(access), inMessage, access, parms);
+    			} else {
+    				rpcName = access.rpcName;
+    				outMessage = useProxy;
+    			}
         	}
         	else {
         		if (rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_LOGON) || 
@@ -1073,8 +1081,17 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
         			outMessage = dispatch(defaultNavajoDispatcher, inMessage, access, parms);
         		}
         		else {
-        			// Actually do something.
-        			outMessage = dispatch(defaultDispatcher, inMessage, access, parms);
+        			// Create beforeWebservice event.
+        			access.setInDoc(inMessage);
+        			System.err.println("ABOUT TO CALL BEFOREWEBSERVICE IN DISPATCHER!!!!!!!!!!!!!!!!!");
+        			Navajo useProxy = WebserviceListenerFactory.getInstance().beforeWebservice(rpcName, access);
+        			if ( useProxy == null ) {
+        				// Actually do something.
+        				outMessage = dispatch(defaultDispatcher, inMessage, access, parms);
+        			} else {
+        				rpcName = access.rpcName;
+        				outMessage = useProxy;
+        			}
         		}
         	}
 //      	updatePropertyDescriptions(inMessage,outMessage);
@@ -1131,8 +1148,7 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
     	if ( access != null && !scheduledWebservice ) {
     		access.setInDoc(inMessage);
     		// Register webservice call to WebserviceListener if it was not a scheduled webservice.
-    		WebserviceListenerInterface listener = WebserviceListenerFactory.getInstance();
-    		listener.invocation(rpcName, access);
+    		WebserviceListenerFactory.getInstance().afterWebservice(rpcName, access);
 
     		// Remove access object from set of active webservices first.
     		synchronized ( accessSet ) {

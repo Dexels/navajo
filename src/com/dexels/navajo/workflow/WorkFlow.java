@@ -117,7 +117,7 @@ public class WorkFlow implements Mappable, Serializable {
 				try {
 					// Add a task and two transitions.
 					WorkFlowTask wtf = s2.addTask("person/InitInsertPerson", null, null);
-					Transition t4 = s2.addTransition(null, "offsettime:2m", null);
+					Transition t4 = s2.addTransition("start", "offsettime:2m", null);
 					Transition t2 = s2.addTransition("approve", "navajo:ProcessAap", null);
 					t2.addParameter("Name", "[/Result/Name]");
 				} catch (Exception e) {
@@ -125,9 +125,12 @@ public class WorkFlow implements Mappable, Serializable {
 				}
 				return s2;
 			} else if ( name.equals("approve") && definition.equals("demo")) {
-				State s2 = new State("waitforinput", this);
+				State s2 = new State("approve", this);
 				currentState = s2;
 				try {
+					Transition t1 = s2.addTransition("approve", "beforenavajo:ProcessApproveAap", "[/Result/Name] == [/@Name] AND [/Result/Status] == 'nok'", "person/InitInsertPerson");
+					t1.getMyTask().setProxy(true);
+					//Transition t2 = s2.addTransition(null, "beforenavajo:ProcessApproveAap", "[/Result/Name] == [/@Name] AND [/Result/Status] != 'nok'", null);
 					Transition t2 = s2.addTransition(null, "navajo:ProcessApproveAap", "[/Approval/Name] == [/@Name] AND [/Approval/Status] == 'ok'");
 					Transition t3 = s2.addTransition("start", "navajo:ProcessApproveAap", "[/Approval/Name] == [/@Name] AND [/Approval/Status] != 'ok'");
 				} catch (Exception e) {

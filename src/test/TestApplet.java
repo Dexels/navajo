@@ -7,9 +7,11 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -32,38 +34,72 @@ import javax.swing.SwingUtilities;
 public class TestApplet extends JApplet {
 
 	public String [] urlnames = new String [] {
-			"Sportlink website",
-			"Sportlink club atlas 80",
-			"Sportlink club atlas 443",
-			"Sportlink club hera 80",
-			"Sportlink club hera 443",
-			"Navajo Test"
+			"Sportlink website (GET)",
+			"Sportlink club atlas 80 (GET)",
+			"Sportlink club atlas 443 (GET)",
+			"Sportlink club hera 80 (GET)",
+			"Sportlink club hera 443 (GET)",
+			"Sportlink club atlas 80 (POST)",
+			"Sportlink club atlas 443 (POST)",
+			"Sportlink club hera 80 (POST)",
+			"Sportlink club hera 443 (POST)"
 	};
 	
 	public String [] urls = new String[] {
-		"http://www.sportlinkservices.nl/",
-	    "http://atlas.dexels.com/sportlink/knvb/",
-	    "http://atlas.dexels.com:443/sportlink/knvb/",
-		"http://hera1.dexels.com/sportlink/knvb/",
-		"http://hera1.dexels.com:443/sportlink/knvb/",
-		"http://www.navajo.nl:8081/"
-		};
+			"http://www.sportlinkservices.nl/",
+			"http://atlas.dexels.com/sportlink/knvb",
+			"http://atlas.dexels.com:443/sportlink/knvb",
+			"http://hera1.dexels.com/sportlink/knvb",
+			"http://hera1.dexels.com:443/sportlink/knvb",
+			"http://atlas.dexels.com/sportlink/knvb/servlet/Postman",
+			"http://atlas.dexels.com:443/sportlink/knvb/servlet/Postman",
+			"http://hera1.dexels.com/sportlink/knvb/servlet/Postman",
+			"http://hera1.dexels.com:443/sportlink/knvb/servlet/Postman"
+	};
 	
 	private boolean testConnection(URL url) {
 		
+		String xml = "<tml><header><transaction rpc_name=\"navajo_logon\" rpc_usr= \"ROOT\" rpc_pwd=\"\"/></header></tml>";
 		HttpURLConnection con = null;
-
+		
 		try {
 			con = (HttpURLConnection) url.openConnection();
+			
 			try {
 				java.lang.reflect.Method timeout = con.getClass().getMethod("setConnectTimeout", new Class[]{int.class});
 				timeout.invoke( con, new Object[]{new Integer(3000)});
 			} catch (Throwable e) {
 				System.err.println("setConnectTimeout does not exist, upgrade to java 1.5+");
 			}
+			
+			if ( url.toString().endsWith("Postman")) {
+				
+				System.err.println("Using POST");
+				con.setRequestMethod("POST");
+				con.setDoOutput(true);
+				con.setDoInput(true);
+				con.setUseCaches(false);
 
-			InputStreamReader isr = new InputStreamReader( con.getInputStream());
+				//con.setRequestProperty("Connection", "keep-alive");
+				con.setRequestProperty("Content-type", "text/xml; charset=UTF-8");
+				OutputStreamWriter out = new OutputStreamWriter(con.getOutputStream());
+				System.err.println("Wrote POST");
+				out.write(xml);
+				out.close();
+				System.err.println("POST done");
+			} else {
+				System.err.println("Using GET");
+			}
+			
+			BufferedReader isr = new BufferedReader( new InputStreamReader( con.getInputStream()) );
+			String line = null;
+			if ( (line = isr.readLine() ) != null ) {
+				System.err.println(line);
+			}
+			isr.close();
+			
 		} catch (Throwable e) {
+			e.printStackTrace(System.err);
 			return false;
 		}
 		return true;
