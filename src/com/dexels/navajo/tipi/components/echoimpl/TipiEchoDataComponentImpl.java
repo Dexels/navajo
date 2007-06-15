@@ -90,8 +90,17 @@ public abstract class TipiEchoDataComponentImpl extends TipiDataComponentImpl {
             if (child instanceof WindowPane) {
                 TipiScreen s = (TipiScreen) getContext().getDefaultTopLevel();
                 // Watch this.
-                final Window w = (Window) s.getTopLevel();
-                w.getContent().add(child);
+//                final Window w = (Window) s.getTopLevel();
+//                if(w==null) {
+//                	System.err.println("WARNING: Null toplevel.");
+//                	Thread.dumpStack();
+//                }
+//                if(w.getContent()==null) {
+//                	System.err.println("WARNING: Null toplevel contentpane");
+//                	Thread.dumpStack();
+//                }
+//                w.getContent().add(child);
+                cc.add(child);
             } else {
                 cc.add(child);
                 if (constraints != null && constraints instanceof LayoutData) {

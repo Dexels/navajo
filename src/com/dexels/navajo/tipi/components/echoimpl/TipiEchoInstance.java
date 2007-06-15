@@ -2,6 +2,7 @@ package com.dexels.navajo.tipi.components.echoimpl;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Enumeration;
@@ -12,6 +13,7 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.sound.midi.SysexMessage;
 
 import nextapp.echo2.app.ApplicationInstance;
 import nextapp.echo2.app.Style;
@@ -130,21 +132,25 @@ public class TipiEchoInstance extends ApplicationInstance {
 
     public void loadTipi(String fileName) throws IOException, TipiException {
     	File rootDir = new File(myServletContext.getRealPath("/"));
-        File dir = new File(rootDir,tipiDir);
+        File dir = null;
+        if (tipiDir==null) {
+            dir = rootDir;
+		} else {
+	        dir = new File(rootDir,tipiDir);
+		}
         File f = new File(dir, fileName);
-        context.parseFile(f, false, tipiDir);
+//        context.parseFile(f, false, tipiDir);
+        InputStream in = getClass().getClassLoader().getResource(fileName).openStream();
+        context.parseStream(in, "startup", false);
+        in.close();
     }
 
     public Window init() {
-    	
-    	
         startup();
-        
+        System.err.println("Startup finished");
         TipiScreen echo = (TipiScreen) context.getDefaultTopLevel();
+        System.err.println("echo: "+echo.store());
 
-        ContainerContext containerContext = (ContainerContext)getContextProperty(ContainerContext.CONTEXT_PROPERTY_NAME);
-//        containerContext.setServerDelayMessage(new NavajoServerDelayMessage(containerContext,"Moment.."));
-        
         TipiFrame w = (TipiFrame) echo.getTipiComponent("init");
         if(w==null) {
         	throw new RuntimeException("No toplevel found!");
@@ -181,15 +187,26 @@ public class TipiEchoInstance extends ApplicationInstance {
             if ("tipidir".equals(current)) {
             	File rootDir = new File(myServletContext.getRealPath("/"));
                 tipiDir = myServletConfig.getInitParameter(current);
-            	File dir = new File(rootDir,tipiDir);
-            	context.setTipiBaseDirectory(dir);
+            	if (tipiDir==null) {
+            	 	context.setTipiBaseDirectory(rootDir);
+    			} else {
+					File dir = new File(rootDir,tipiDir);
+	            	context.setTipiBaseDirectory(dir);
+				}
+            	
 
             }
             if ("resourcedir".equals(current)) {
             	File rootDir = new File(myServletContext.getRealPath("/"));
                 resourceDir = myServletConfig.getInitParameter(current);
-            	File dir = new File(rootDir,resourceDir);
-            	context.setResourceBaseDirectory(dir);
+               	if (resourceDir==null) {
+            	 	context.setResourceBaseDirectory(rootDir);
+    			} else {
+					File dir = new File(rootDir,tipiDir);
+	            	context.setResourceBaseDirectory(dir);
+				}                
+//            	File dir = new File(rootDir,resourceDir);
+//            	context.setResourceBaseDirectory(dir);
                 continue;
             }
             System.setProperty(current, myServletConfig.getInitParameter(current));

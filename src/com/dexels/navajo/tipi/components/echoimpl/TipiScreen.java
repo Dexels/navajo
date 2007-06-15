@@ -24,7 +24,7 @@ import com.dexels.navajo.tipi.TipiContext;
  * @author Frank Lyaruu
  * @version 1.0
  */
-
+ 
 public class TipiScreen extends TipiEchoDataComponentImpl {
     // private Map componentMap = new HashMap();
     public TipiScreen() {
@@ -97,6 +97,7 @@ public class TipiScreen extends TipiEchoDataComponentImpl {
 
     // For now, always return the first frame. Maybe enhance later or something
     public Object getTopLevel() {
+    	System.err.println("Scanning toplevels: "+getChildCount());
         for (int i = 0; i < getChildCount(); i++) {
             TipiComponent current = getTipiComponent(i);
             if (current.isTopLevel()) {
