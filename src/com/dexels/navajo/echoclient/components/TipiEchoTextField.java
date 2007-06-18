@@ -1,4 +1,4 @@
-package com.dexels.navajo.tipi.components.echoimpl.impl;
+package com.dexels.navajo.echoclient.components;
 
 import nextapp.echo2.app.Style;
 import nextapp.echo2.app.TextField;

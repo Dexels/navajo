@@ -27,7 +27,7 @@
  * the terms of any one of the MPL, the GPL or the LGPL.
  */
 
-package com.dexels.navajo.tipi.components.echoimpl.impl;
+package com.dexels.navajo.echoclient.components;
 
 import nextapp.echo2.app.ImageReference;
 import nextapp.echo2.app.ResourceImageReference;
@@ -40,7 +40,7 @@ import nextapp.echo2.app.componentxml.StyleSheetLoader;
  */
 public class Styles {
 
-	public static final String IMAGE_PATH = "/com/dexels/navajo/tipi/components/echoimpl/resource/image/";
+	public static final String IMAGE_PATH = "/com/dexels/navajo/echoclient/resource/image/";
 //	public static final String STYLE_PATH = "/com/dexels/navajo/tipi/components/echoimpl/resource/style/";
 	public static final String STYLE_PATH = "/";
 

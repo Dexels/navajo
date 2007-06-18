@@ -27,7 +27,7 @@
  * the terms of any one of the MPL, the GPL or the LGPL.
  */
 
-package com.dexels.navajo.tipi.components.echoimpl.impl;
+package com.dexels.navajo.echoclient.components;
 
 import java.io.Serializable;
 import java.util.EventListener;

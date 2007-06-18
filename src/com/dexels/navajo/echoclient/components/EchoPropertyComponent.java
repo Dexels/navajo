@@ -1,4 +1,4 @@
-package com.dexels.navajo.tipi.components.echoimpl;
+package com.dexels.navajo.echoclient.components;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -28,11 +28,6 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
 import com.dexels.navajo.document.types.*;
 
-import com.dexels.navajo.tipi.components.echoimpl.impl.BinaryPropertyImage;
-import com.dexels.navajo.tipi.components.echoimpl.impl.MessageTable;
-import com.dexels.navajo.tipi.components.echoimpl.impl.Styles;
-import com.dexels.navajo.tipi.components.echoimpl.impl.TipiEchoTextField;
-
 import echopointng.ButtonEx;
 import echopointng.ComboBox;
 import echopointng.ContainerEx;
@@ -51,6 +46,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 	
 	private static final int SELECTIONMODE_LIST = 3;
 
+    public static final String PROPERTY_BACKGROUND = "propertyBackground";
 	private Property myProperty = null;
 
 	private boolean showLabel = true;
@@ -1152,7 +1148,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 		// Extent(widthVal,Extent.PX));
 		// }
 		epc.setColumnWidth(0, new Extent(2, Extent.PX));
-		
+		System.err.println("Setting zebra to: "+column+" / "+row);
 		epc.setZebra(column, row, false);
 		// TODO FIX DISABLED ZEBRA
 		// epc.setBackground(null);
@@ -1168,6 +1164,11 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 		showLabel = b;
 	}
 
+
+	public boolean getLabelVisible() {
+		return showLabel;
+	}
+
 	public void setLabelIndent(int indent) {
 		label_indent = indent;
 		if (getComponents().length > 1) {
@@ -1178,6 +1179,12 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 		}
 	}
 
+	public int getLabelIndent() {
+		return label_indent;
+		
+	}
+
+	
 	public void setValueSize(int indent) {
 		value_size = indent;
 		if (getComponents().length > 1) {
@@ -1277,6 +1284,11 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 	    gg.setBackground(c);
 	}
 
+	public Color getPropertyBackground() {
+		return getBackground();
+	}
+	
+	
 	public void setSelectiontype(String type) throws NavajoException {
 		if ("radio".equals(type)) {
 			selectionMode = SELECTIONMODE_RADIO;

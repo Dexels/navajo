@@ -1,4 +1,4 @@
-package com.dexels.navajo.tipi.components.echoimpl.impl;
+package com.dexels.navajo.echoclient.components;
 
 import com.dexels.navajo.document.Message;
 

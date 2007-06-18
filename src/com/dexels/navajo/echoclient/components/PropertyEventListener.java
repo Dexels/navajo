@@ -1,4 +1,4 @@
-package com.dexels.navajo.tipi.components.echoimpl;
+package com.dexels.navajo.echoclient.components;
 
 /**
  * <p>Title: </p>

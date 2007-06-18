@@ -1,4 +1,4 @@
-package com.dexels.navajo.tipi.components.echoimpl.impl;
+package com.dexels.navajo.echoclient.components;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -24,9 +24,8 @@ import nextapp.echo2.app.table.TableColumnModel;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Property;
-import com.dexels.navajo.tipi.components.echoimpl.EchoPropertyComponent;
-import com.dexels.navajo.tipi.components.echoimpl.impl.PageNavigator.PageIndexChangeEvent;
-import com.dexels.navajo.tipi.components.echoimpl.impl.PageNavigator.PageIndexChangeListener;
+import com.dexels.navajo.echoclient.components.PageNavigator.PageIndexChangeEvent;
+import com.dexels.navajo.echoclient.components.PageNavigator.PageIndexChangeListener;
 
 import echopointng.PushButton;
 import echopointng.table.DefaultPageableSortableTableModel;
@@ -77,7 +76,9 @@ public class MessageTable extends PageableSortableTable implements PageIndexChan
 
 	private SortableTableHeaderRenderer sortableTableHeaderRenderer = new SortableTableHeaderRenderer();
 
-	private DefaultPageableSortableTableModel sortablePageableModel;;
+	private DefaultPageableSortableTableModel sortablePageableModel;
+
+	private PageNavigator myPageNavigator;;
 
 	public MessageTable() {
 
@@ -126,13 +127,14 @@ public class MessageTable extends PageableSortableTable implements PageIndexChan
 	public void setMessage(Message m) {
 		// setSelectionMode(Table.);
 		System.err.println("Setting message...");
+		
 		setAutoCreateColumnsFromModel(false);
 		setHeaderVisible(true);
 		setDefaultRenderer(Property.class, myRenderer);
 		setSelectionBackground(new Color(200, 200, 255));
 		setColumnModel(createColumnModel(m, myRenderer));
 		myModel = new MessageTableModel(this, getColumnModel(), m);
-		sortablePageableModel = new DefaultPageableSortableTableModel(myModel);
+sortablePageableModel = new DefaultPageableSortableTableModel(myModel);
 		sortablePageableModel.setRowsPerPage(rowsPerPage);
 		setBackground(new Color(255, 255, 255));
 		System.err.println("Total pages: " + sortablePageableModel.getTotalPages());
@@ -421,8 +423,9 @@ public class MessageTable extends PageableSortableTable implements PageIndexChan
 	}
 
 	public void pageIndexChanged(PageIndexChangeEvent e) {
-		sortablePageableModel.setCurrentPage(e.getNewPageIndex());
-
+		if(sortablePageableModel!=null) {
+			sortablePageableModel.setCurrentPage(e.getNewPageIndex());
+		}
 	}
 
 	public int getTotalPages() {
@@ -430,5 +433,10 @@ public class MessageTable extends PageableSortableTable implements PageIndexChan
 			return 0;
 		}
 		return sortablePageableModel.getTotalPages();
+	}
+
+
+	public void setPageNavigator(PageNavigator pageNavigator) {
+		myPageNavigator = pageNavigator;
 	}
 }
