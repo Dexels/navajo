@@ -10,6 +10,7 @@ import nextapp.echo2.app.Component;
 import nextapp.echo2.app.Extent;
 import nextapp.echo2.app.RadioButton;
 import nextapp.echo2.app.Style;
+import nextapp.echo2.app.StyleSheet;
 import nextapp.echo2.app.Table;
 import nextapp.echo2.app.event.ActionEvent;
 import nextapp.echo2.app.event.ActionListener;
@@ -78,12 +79,25 @@ public class MessageTable extends PageableSortableTable implements PageIndexChan
 
 	private DefaultPageableSortableTableModel sortablePageableModel;
 
-	private PageNavigator myPageNavigator;;
+	private PageNavigator myPageNavigator;
+
+	private Message myMessage;;
 
 	public MessageTable() {
-
-		Style ss = Styles.DEFAULT_STYLE_SHEET.getStyle(this.getClass(), "Default");
-		setStyle(ss);
+		StyleSheet sh = Styles.DEFAULT_STYLE_SHEET;
+		if (sh!=null) {
+			Style ss = sh.getStyle(this.getClass(), "Default");
+		} else {
+			System.err.println("Null stylesheet!");
+		}
+		
+		Style ss=null;
+		if(ss!=null) {
+			ss = Styles.DEFAULT_STYLE_SHEET.getStyle(this.getClass(), "Default");
+			setStyle(ss);
+		}else {
+			System.err.println("Null style!");
+		}
 
 		// super.addActionListener(new ActionListener() {
 		//
@@ -124,10 +138,13 @@ public class MessageTable extends PageableSortableTable implements PageIndexChan
 			sortablePageableModel.setRowsPerPage(rpp);
 		}
 	}
+	
+	public int getRowsPerPage() {
+		return rowsPerPage;
+	}
 	public void setMessage(Message m) {
 		// setSelectionMode(Table.);
-		System.err.println("Setting message...");
-		
+		myMessage = m;
 		setAutoCreateColumnsFromModel(false);
 		setHeaderVisible(true);
 		setDefaultRenderer(Property.class, myRenderer);
@@ -166,9 +183,17 @@ sortablePageableModel = new DefaultPageableSortableTableModel(myModel);
 		// }
 		// });
 		getSelectionModel().clearSelection();
-		setSelectionModel(new DefaultListSelectionModel() {
-		});
+		DefaultListSelectionModel defaultListSelectionModel = new DefaultListSelectionModel() {
+				};
+		setSelectionModel(defaultListSelectionModel);
 
+		defaultListSelectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		defaultListSelectionModel.addChangeListener(new ChangeListener(){
+
+			public void stateChanged(ChangeEvent arg0) {
+				System.err.println("Selection in table changed!");
+			}});
+	//	defaultListSelectionModel.setSelectedIndex(1, true);
 		setSelectionBackground(new Color(200, 200, 255));
 		invalidate();
 	}
@@ -438,5 +463,15 @@ sortablePageableModel = new DefaultPageableSortableTableModel(myModel);
 
 	public void setPageNavigator(PageNavigator pageNavigator) {
 		myPageNavigator = pageNavigator;
+	}
+
+
+	public Message getMessage() {
+		return myMessage;
+	}
+
+
+	public void setSelectedMessage(Message selectedMessage) {
+		// not implemented for now.
 	}
 }

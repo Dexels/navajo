@@ -621,6 +621,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 			value = "";
 		}
 		final Label tf = new Label(value);
+		tf.setBackground(null);
 		tf.setLineWrap(false);
 //	    tf.setStyleName("Default");
 		Style ss = Styles.DEFAULT_STYLE_SHEET.getStyle(tf.getClass(), "Default");
@@ -835,7 +836,6 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 		}
 		lb.getSelectionModel().addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent ce) {
-				System.err.println("HOOOOOOOOOOOEI!");
 				try {
 					for (int i = 0; i < p.getAllSelections().size(); i++) {
 						Selection current = (Selection) p.getAllSelections().get(i);
@@ -1108,7 +1108,6 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 		final MessageTable messageTable = (MessageTable) table;
 		EchoPropertyComponent epc = new EchoPropertyComponent();
 		Extent tableColumnwidth = messageTable.getColumnSize(column);
-		
 		epc.setAlwaysUseLabel(!messageTable.isColumnEditable(column));
 		
 		epc.setUseLabelForReadOnlyProperties(true);
@@ -1148,8 +1147,11 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 		// Extent(widthVal,Extent.PX));
 		// }
 		epc.setColumnWidth(0, new Extent(2, Extent.PX));
-		System.err.println("Setting zebra to: "+column+" / "+row);
-		epc.setZebra(column, row, false);
+		boolean isSelected = table.getSelectionModel().isSelectedIndex(row);
+		if(isSelected) {
+			System.err.println("Setting SELECTED zebra to: "+column+" / "+row);
+		}
+		epc.setZebra(column, row, isSelected);
 		// TODO FIX DISABLED ZEBRA
 		// epc.setBackground(null);
 		// epc.currentComponent.setBackground(null);
@@ -1278,7 +1280,10 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 		setBackground(c);
 		Component cn = (Component) currentComponent;
 		if (c != null) {
+			System.err.println("Setting to color: "+c+" ckass: "+cn.getClass());
 			cn.setBackground(c);
+		} else {
+			System.err.println("NULL FOUND!");
 		}
 	    GridLayoutData gg = (GridLayoutData) currentComponent.getLayoutData();
 	    gg.setBackground(c);
@@ -1288,6 +1293,22 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 		return getBackground();
 	}
 	
+	
+
+//	public void setPropertyBackground(Color c) {
+//		setBackground(c);
+//		Component cn = (Component) currentComponent;
+//		if (c != null) {
+//			cn.setBackground(c);
+//		}
+//	    GridLayoutData gg = (GridLayoutData) currentComponent.getLayoutData();
+//	    gg.setBackground(c);
+//	}
+//
+//	public Color getPropertyBackground() {
+//		return getBackground();
+//	}
+		
 	
 	public void setSelectiontype(String type) throws NavajoException {
 		if ("radio".equals(type)) {
