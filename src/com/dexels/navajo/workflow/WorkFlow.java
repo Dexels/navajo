@@ -1,14 +1,14 @@
 package com.dexels.navajo.workflow;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.Parameters;
@@ -21,17 +21,25 @@ public class WorkFlow implements Mappable, Serializable {
 
 	private static final long serialVersionUID = -6582796299941671005L;
 	
-	private String myId = null;
-	private String definition = null;
-	private State currentState = null;
+	public String myId = null;
+	public String definition = null;
+	public State currentState = null;
+	public Access initiatingAccess = null;
+	public State [] history = null;
+	public boolean kill = false;
+	
+	/**
+	 * The local Navajo state store.
+	 */
 	private Navajo localNavajo = null;
 	/**
 	 * This arraylist contains all the visited states for this workflow.
 	 */
 	protected final ArrayList historicStates = new ArrayList();
 	
-	public static WorkFlow getInstance(String definition, String activatedState) {
+	public static WorkFlow getInstance(String definition, String activatedState, Access a) {
 		WorkFlow wf = new WorkFlow(definition, WorkFlowManager.generateWorkflowId());
+		wf.initiatingAccess = a;
 		if ( definition.equals("demo") ) {
 			try {
 				wf.createState("start");
@@ -155,6 +163,16 @@ public class WorkFlow implements Mappable, Serializable {
 		}
 	}
 	
+	public void setKill(boolean b) {
+		if ( b ) {
+			if ( currentState != null ) {
+				System.err.println("Workflow " + getMyId() + " got killed!");
+				currentState.setKill();
+			}
+			finish();
+		}
+	}
+	
 	public void kill() {
 	}
 
@@ -175,6 +193,7 @@ public class WorkFlow implements Mappable, Serializable {
 	public void finish() {
 		System.err.println("Workflow " + getMyId() + " is finished");
 		WorkFlowManager.getInstance().removePersistedWorkFlow(this);
+		WorkFlowManager.getInstance().removeWorkFlow(this);
 	}
 	
 	public void revive() {
@@ -189,6 +208,24 @@ public class WorkFlow implements Mappable, Serializable {
 		wf.addParameter("Name", new Integer(43453));
 		wf.addParameter("Name", "Dexels");
 		wf.localNavajo.write(System.err);
+	}
+
+	public State getCurrentState() {
+		return currentState;
+	}
+
+	public Access getInitiatingAccess() {
+		return initiatingAccess;
+	}
+
+	public State[] getHistory() {
+		if ( historicStates.size() == 0) {
+			return null;
+		}
+		ArrayList copy = new ArrayList(historicStates);
+		State [] historyd = new State[copy.size()];
+		historyd = (State []) copy.toArray(historyd);
+		return historyd;
 	}
 
 }

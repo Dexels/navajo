@@ -58,10 +58,10 @@ public class TimeTrigger extends Trigger implements ClockListener, Serializable 
 	private ArrayList day = null; /* SAT,SUN.MON,TUE,WED,FRI */
 	private String description = null;
 	private boolean singleEvent = false;
+	private boolean runImmediate = false;
 	private long lastRan = -1;
 	
 	private static final String NOW = "now";
-	private boolean now = false;
 	
 	public TimeTrigger(int i, int field) {
 		Calendar c = Calendar.getInstance();
@@ -80,12 +80,12 @@ public class TimeTrigger extends Trigger implements ClockListener, Serializable 
 		description = s;
 		
 		if ( s.equals(NOW) ) {
-			now = true;
+			runImmediate = true;
 			singleEvent = true;
 			return;
 		}
 		
-		now = false;
+		runImmediate = false;
 		singleEvent = false;
 		
 		StringTokenizer tokens = new StringTokenizer(s, "|");
@@ -179,7 +179,7 @@ public class TimeTrigger extends Trigger implements ClockListener, Serializable 
 
 	private final boolean checkAlarm(Calendar c) {
 		
-		if ( now ) {
+		if ( runImmediate ) {
 			return true;
 		}
 		

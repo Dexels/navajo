@@ -8,19 +8,21 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Random;
 
-import com.dexels.navajo.adapter.queue.NavajoObjectInputStream;
-import com.dexels.navajo.adapter.queue.QueuedAdapter;
-import com.dexels.navajo.scheduler.Task;
-import com.dexels.navajo.scheduler.TaskRunner;
 import com.dexels.navajo.server.Dispatcher;
+import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.server.GenericThread;
-import com.dexels.navajo.server.NavajoConfig;
-import com.dexels.navajo.server.enterprise.queue.Queable;
 import com.dexels.navajo.server.jmx.JMXHelper;
 import com.dexels.navajo.util.AuditLog;
 
 public class WorkFlowManager extends GenericThread implements WorkFlowManagerMXBean {
 
+	/**
+	 * Public fields for mappable.
+	 */
+	public WorkFlow [] workflows = null;
+	public WorkFlow workflow = null;
+	public String workflowId = null;
+	
 	private static volatile WorkFlowManager instance = null;
 	private static Object semaphore = new Object();
 	private final ArrayList workflowInstances = new ArrayList();
@@ -133,4 +135,31 @@ public class WorkFlowManager extends GenericThread implements WorkFlowManagerMXB
 	public void worker() {
 		// Do something usefull.
 	}
+
+	public WorkFlow[] getWorkflows() {
+		WorkFlowManager mng = WorkFlowManager.getInstance();
+		ArrayList wfList = new ArrayList(mng.workflowInstances);
+		workflows = new WorkFlow[wfList.size()];
+		workflows = (WorkFlow []) wfList.toArray(workflows);
+		return workflows;
+	}
+
+	public void setWorkflowId(String workflowId) {
+		this.workflowId = workflowId;
+	}
+
+	public WorkFlow getWorkflow() throws UserException {
+		if ( workflowId == null ) {
+			throw new UserException(-1, "Set workflow id before retrieving workflow instance");
+		}
+		WorkFlowManager mng = WorkFlowManager.getInstance();
+		ArrayList wfList = new ArrayList(mng.workflowInstances);
+		for (int i = 0; i < wfList.size(); i++ ) {
+			if ( ((WorkFlow) wfList.get(i)).getMyId().equals(workflowId) ) {
+				return (WorkFlow) wfList.get(i);
+			}
+		}
+		return null;
+	}
+	
 }

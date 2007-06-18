@@ -1,12 +1,20 @@
 package com.dexels.navajo.workflow;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 
 import com.dexels.navajo.scheduler.IllegalTask;
 import com.dexels.navajo.scheduler.IllegalTrigger;
 import com.dexels.navajo.scheduler.Task;
+import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.NavajoConfig;
+import com.dexels.navajo.server.Parameters;
+import com.dexels.navajo.server.UserException;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.mapping.Mappable;
+import com.dexels.navajo.mapping.MappableException;
 
 /**
  * A State consists of transitions and tasks.
@@ -17,14 +25,19 @@ import com.dexels.navajo.scheduler.Task;
  * @author arjen
  *
  */
-public class State implements Serializable {
+public class State implements Serializable, Mappable {
 	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -1658431106536428135L;
 	
-	private String id;
+	public  String id;
+	public  Date entryDate = null;
+	public  Date leaveDate = null;
+	public  boolean killed = false;
+	public  Transition [] transitions = null;
+	
 	private final HashSet myTransitions = new HashSet();
 	private final HashSet myTasks = new HashSet();
 	private final WorkFlow myWorkFlow;
@@ -38,7 +51,7 @@ public class State implements Serializable {
 		if ( trigger == null || trigger.equals("")) {
 			trigger = "time:now";
 		}
-		Task task = new Task(webservice, "ROOT", "", null, trigger, null);
+		Task task = new Task(webservice, myWorkFlow.getInitiatingAccess().rpcUser, "", null, trigger, null);
 		task.setWorkflowDefinition(myWorkFlow.getDefinition());
 		task.setWorkflowId(myWorkFlow.getMyId());
 		WorkFlowTask wft = new WorkFlowTask(this, task);
@@ -47,7 +60,7 @@ public class State implements Serializable {
 	}
 	
 	public Transition addTransition(String nextState, String trigger, String condition, String webservice) throws IllegalTrigger, IllegalTask  {
-		Task task = new Task(webservice, "ROOT", "", null, trigger, null);
+		Task task = new Task(webservice, myWorkFlow.getInitiatingAccess().rpcUser, "", null, trigger, null);
 		task.setWorkflowDefinition(myWorkFlow.getDefinition());
 		task.setWorkflowId(myWorkFlow.getMyId());
 		Transition t = new Transition(this, nextState, task, condition);	
@@ -56,7 +69,7 @@ public class State implements Serializable {
 	}
 	
 	public Transition addTransition(String nextState, String trigger, String condition) throws IllegalTrigger, IllegalTask  {
-		Task task = new Task("", "ROOT", "", null, trigger, null);
+		Task task = new Task("", myWorkFlow.getInitiatingAccess().rpcUser, "", null, trigger, null);
 		task.setWorkflowDefinition(myWorkFlow.getDefinition());
 		task.setWorkflowId(myWorkFlow.getMyId());
 		Transition t = new Transition(this, nextState, task, condition);	
@@ -70,6 +83,9 @@ public class State implements Serializable {
 	 */
 	public void enter() {
        
+		// Set entry date.
+		entryDate = new Date();
+		
 	    // Activate tasks.
 		Iterator tks = myTasks.iterator();
 		while ( tks.hasNext() ) {
@@ -121,6 +137,8 @@ public class State implements Serializable {
 			Transition t = (Transition) i.next();
 			t.cleanup();
 		}
+		leaveDate = new Date();
+		
 		myWorkFlow.historicStates.add(this);
 	}
 
@@ -130,6 +148,47 @@ public class State implements Serializable {
 	
 	public WorkFlow getWorkFlow() {
 		return myWorkFlow;
+	}
+
+	public void setKill() {
+		leave();
+		killed = true;
+	}
+	
+	public void kill() {
+		
+	}
+
+	public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void store() throws MappableException, UserException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public Transition[] getTransitions() {
+		HashSet copy = new HashSet();
+		copy.addAll(myTransitions);
+		transitions = new Transition[copy.size()];
+		transitions = (Transition []) copy.toArray(transitions);
+		
+		return transitions;
+		
+	}
+
+	public Date getEntryDate() {
+		return entryDate;
+	}
+
+	public Date getLeaveDate() {
+		return leaveDate;
+	}
+
+	public boolean getKilled() {
+		return killed;
 	}
 	
 }

@@ -310,4 +310,36 @@ public final class Access implements java.io.Serializable, Mappable {
 		myScript.store();
 	}
 
+	public String getRpcUser() {
+		return rpcUser;
+	}
+
+	public int getProcessingTime() {
+		return processingTime;
+	}
+
+	public String getRequestEncoding() {
+		return requestEncoding;
+	}
+
+	public String getRpcName() {
+		return rpcName;
+	}
+
+	public String getUserAgent() {
+		return userAgent;
+	}
+
+	public java.util.Date getCreated() {
+		return created;
+	}
+
+	public String getHostName() {
+		return hostName;
+	}
+
+	public String getIpAddress() {
+		return ipAddress;
+	}
+
 }

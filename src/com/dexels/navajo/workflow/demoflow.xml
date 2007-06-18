@@ -7,7 +7,7 @@
         <transition trigger="navajo:InitAap" nextstate="waitforinput"/>
     </state>
     <state id="waitforinput">
-        <!-- If nothing happens for 20 seconds, quit workflow -->
+        <!-- If nothing happens for 2 minutes, quit workflow -->
         <task service="person/InitInsertPerson"/>
         <transition trigger="offsettime:2m" nextstate="null"/>
         <transition trigger="navajo:ProcessAap" nextstate="approve">

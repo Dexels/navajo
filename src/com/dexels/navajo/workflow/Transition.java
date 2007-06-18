@@ -13,6 +13,12 @@ import com.dexels.navajo.scheduler.IllegalTrigger;
 import com.dexels.navajo.scheduler.Task;
 import com.dexels.navajo.scheduler.TaskListener;
 import com.dexels.navajo.scheduler.TaskRunner;
+import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.NavajoConfig;
+import com.dexels.navajo.server.Parameters;
+import com.dexels.navajo.server.UserException;
+import com.dexels.navajo.mapping.Mappable;
+import com.dexels.navajo.mapping.MappableException;
 
 /**
  * A Transition is basically contains a task/trigger, next state value and a condition.
@@ -21,17 +27,21 @@ import com.dexels.navajo.scheduler.TaskRunner;
  * @author arjen
  *
  */
-public class Transition implements TaskListener, Serializable {
+public class Transition implements TaskListener, Serializable, Mappable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 3144803468988103221L;
 	
+	public String nextState;
+	public String myCondition;
+	public String trigger;
+	public String webservice = null;
+	public boolean proxy = false;
+	
 	private Task myTask = null;
 	private State myState;
-	private String nextState;
-	private String myCondition;
 	private boolean beforeTrigger = false;
 	private final ArrayList parameters = new ArrayList();
 	private static Object semaphore = new Object();
@@ -51,6 +61,7 @@ public class Transition implements TaskListener, Serializable {
 		if ( t.getTriggerDescription().startsWith("beforenavajo")) {
 			beforeTrigger = true;
 		}
+		trigger = t.getTriggerDescription();
 	}
 	
 	private Transition() {
@@ -60,6 +71,7 @@ public class Transition implements TaskListener, Serializable {
 	public static Transition createStartTransition(String startStateId, String triggerString, String condition, String activateWorkflow) throws IllegalTrigger, IllegalTask{	
 		Transition t = new Transition();
 		t.myTask = new Task(null, "ROOT", "", null, triggerString, null);
+		t.trigger = triggerString;
 		t.myTask.setId("workflow-"+activateWorkflow);
 		t.myTask.setWorkflowDefinition(activateWorkflow);
 		t.nextState = startStateId;
@@ -206,7 +218,7 @@ public class Transition implements TaskListener, Serializable {
 			if ( activationTranstion ) {
 				// Activate new workflow instance.
 				System.err.println("Initiating new workflow '" + workFlowToBeActivated + "', with start state: " + nextState);
-				WorkFlow.getInstance(workFlowToBeActivated, nextState);
+				WorkFlow wf = WorkFlow.getInstance(workFlowToBeActivated, nextState, t.getTrigger().getAccess());
 			}
 		}
 
@@ -252,6 +264,47 @@ public class Transition implements TaskListener, Serializable {
 
 	public Task getMyTask() {
 		return myTask;
+	}
+
+	public void kill() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void store() throws MappableException, UserException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public String getTrigger() {
+		return trigger;
+	}
+
+	public String getMyCondition() {
+		return myCondition;
+	}
+
+	public String getNextState() {
+		return nextState;
+	}
+
+	public String getWebservice() {
+		if ( myTask != null ) {
+			return myTask.webservice;
+		}
+		return null;
+	}
+
+	public boolean getProxy() {
+		if ( myTask != null ) {
+			return myTask.proxy;
+		}
+		return false;
 	}
 
 }
