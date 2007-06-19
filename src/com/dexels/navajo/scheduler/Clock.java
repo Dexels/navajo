@@ -15,9 +15,12 @@ public class Clock extends GenericThread implements ClockMXBean, ClockInterface 
 	private final ArrayList listeners = new ArrayList();
 	private static String id = "Navajo Clock";
 	
+	private static final int CLOCK_RESOLUTION = 1000;
+	
 	public Clock() {
 		super(id);
-		System.err.println("Instantiated clock");
+		setSleepTime(CLOCK_RESOLUTION);
+		AuditLog.log(AuditLog.AUDIT_MESSAGE_CLOCK, "Started clock $Id$");
 	}
 	
 	public static Clock getInstance() {
