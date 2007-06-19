@@ -111,18 +111,6 @@ public class Transition implements TaskListener, Serializable, Mappable {
 	private final boolean isMyTransitionTaskTrigger(Task t) {
 		
 		synchronized ( semaphore ) {
-			if ( myTask != null) {
-				System.err.println("myTask = " + myTask.getId() + ", otherTask: " + t.getId());
-				System.err.println("myTrigger = " + myTask.getTriggerDescription());
-			} else {
-				System.err.println("empty task");
-			}
-			System.err.println("t = " + t.getId());
-			if ( myState != null ) {
-				System.err.println("myWorkflowId = " + myState.getWorkFlow().getMyId() + ", task workflowid: " + t.getWorkflowId());
-			} else {
-				System.err.println("empty state");
-			}
 			boolean result= ( t.getId().equals(myTask.getId()) &&
 					( myState == null ||
 							myState.getWorkFlow() == null ||
@@ -131,12 +119,7 @@ public class Transition implements TaskListener, Serializable, Mappable {
 							)
 					)
 			);
-			if ( result ) {
-				System.err.println("YES THIS IS MY TRANSITION TRIGGER");
-			} else {
-				System.err.println("NO THIS IS NOT MY TRANSITION TRIGGER");
-			}
-
+			
 			return result;
 		}
 	}
@@ -147,14 +130,14 @@ public class Transition implements TaskListener, Serializable, Mappable {
 	 *
 	 */
 	public void activate() {
-		System.err.println("----> Current task with trigger " + myTask.getTriggerDescription() + " = " + myTask.getId());
+		
 		TaskRunner.getInstance().addTaskListener(this);
 		if ( myTask.getId() == null ) {
 			TaskRunner.getInstance().addTask(myTask);
 		} else {
 			TaskRunner.getInstance().addTask(myTask.getId(), myTask);
 		}
-		System.err.println("Activated task " + myTask.getId());
+		
 	}
 	
 	/**
@@ -168,25 +151,16 @@ public class Transition implements TaskListener, Serializable, Mappable {
 	}
 	
 	private boolean enterNextState(Task t) {
-		System.err.println("In enterNextState logic, beforeTrigger: " + beforeTrigger);
+		
 		if ( myCondition == null || myCondition.equals("") || t.getTrigger().getAccess() == null ) {
 			return true;
 		}
 		Navajo n = ( beforeTrigger ? t.getTrigger().getAccess().getInDoc() : t.getTrigger().getAccess().getOutputDoc() );
 		// Merge this Navajo with localNavajo store of the workflow instance to use local workflow parameters.
 		myState.getWorkFlow().mergeWithParmaters(n);
+	
 		try {
-			if ( n != null ) {
-				n.write(System.err);
-			} else {
-				System.err.println("IN ENTERNEXTSTATE(): WARNING EMPTY NAVAJO!");
-			}
-		} catch (NavajoException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		try {
-			System.err.println("About to evaluate next state condition: " + myCondition);
+			
 			return Condition.evaluate(myCondition, n);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -197,16 +171,13 @@ public class Transition implements TaskListener, Serializable, Mappable {
 	
 	public void afterTask(Task t, Navajo request) {
 		
-		System.err.println("Transition " + myTask.getTriggerDescription() + ": Received AFTERTASK event from task with trigger: " + t.getTriggerDescription() + " and webservice: " + t.webservice);
 		if (  !beforeTrigger && isMyTransitionTaskTrigger(t) ) {
-			System.err.println(myTask.getTriggerDescription() + "/" + myCondition + ": in afterTask transtition of state " + ( myState != null ? myState.getId() : "") + ",  instance Received afterTask event from task: " + t.getId());
-
+			
 			if ( enterNextState(t) && !activationTranstion ) {
 				// First evaluate all parameters that need to be set with this transition.
 				evaluateParameters(t);
 				myState.leave();
 				if ( nextState != null && !nextState.equals("finish") ) {
-					System.err.println("About to enter next workflow state: " + nextState);
 					myState.getWorkFlow().createState(nextState).enter();
 				} else {
 					myState.getWorkFlow().finish();
@@ -217,7 +188,6 @@ public class Transition implements TaskListener, Serializable, Mappable {
 			 */
 			if ( activationTranstion ) {
 				// Activate new workflow instance.
-				System.err.println("Initiating new workflow '" + workFlowToBeActivated + "', with start state: " + nextState);
 				WorkFlow wf = WorkFlow.getInstance(workFlowToBeActivated, nextState, t.getTrigger().getAccess());
 			}
 		}
@@ -226,17 +196,14 @@ public class Transition implements TaskListener, Serializable, Mappable {
 
 	public boolean beforeTask(Task t) {
 		
-		System.err.println("Transition " + myTask.getTriggerDescription() + ": Received BEFORETASK event from task with trigger: " + t.getTriggerDescription() + " and webservice: " + t.webservice);
 		if ( beforeTrigger && isMyTransitionTaskTrigger(t) ) {
 			
-			System.err.println("In Workflow instance Received beforeTask event from task: " + t.getId());
 			
 			if ( enterNextState(t) ) {
 //				 First evaluate all parameters that need to be set with this transition.
 				evaluateParameters(t);
 				myState.leave();
 				if ( nextState != null && !nextState.equals("finish") ) {
-					System.err.println("----------------------> About to enter next workflow state: " + nextState);
 					myState.getWorkFlow().createState(nextState).enter();
 				} else {
 					myState.getWorkFlow().finish();
@@ -305,6 +272,10 @@ public class Transition implements TaskListener, Serializable, Mappable {
 			return myTask.proxy;
 		}
 		return false;
+	}
+
+	public String getDescription() {
+		return "transition:" + trigger + "(" + myCondition + ")->" + nextState;
 	}
 
 }

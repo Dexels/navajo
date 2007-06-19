@@ -163,13 +163,13 @@ public final class JMXHelper  {
 			try {
 				mbs.registerMBean(o, name);
 			} catch (InstanceAlreadyExistsException e) {
-				System.err.println("WARNING: Could not register MXBean for domain " + domain + ": " + e.getMessage());
+				System.err.println("WARNING: InstanceAlreadyExistsException, Could not register MXBean for domain " + domain + ": " + e.getMessage());
 				//e.printStackTrace(System.err);
 			} catch (MBeanRegistrationException e) {
-				System.err.println("WARNING: Could not register MXBean for domain " + domain + ": " + e.getMessage());
+				System.err.println("WARNING: MBeanRegistrationException, Could not register MXBean for domain " + domain + ": " + e.getMessage());
 				//e.printStackTrace(System.err);
 			} catch (NotCompliantMBeanException e) {
-				System.err.println("WARNING: Could not register MXBean for domain " + domain +  ": " + e.getMessage());
+				System.err.println("WARNING: NotCompliantMBeanException, Could not register MXBean for domain " + domain +  ": " + e.getMessage());
 				//e.printStackTrace(System.err);
 			} 
 		}

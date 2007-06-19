@@ -36,7 +36,6 @@ import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.FatalException;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.server.enterprise.scheduler.TaskInterface;
-import com.dexels.navajo.server.jmx.JMXHelper;
 import com.dexels.navajo.util.AuditLog;
 
 /**
@@ -111,16 +110,6 @@ public class Task implements Runnable, TaskMXBean, TaskInterface, Serializable {
 	}
 	
 	/**
-	 * Set the thread to which the task belongs.
-	 * 
-	 * @param t the thread
-	 */
-//	protected void setThread(Thread t) {
-//		myThread = t;
-//		AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Scheduling task: " + id);
-//	}
-	
-	/**
 	 * @return the trigger object that goes with this task.
 	 */
 	public Trigger getTrigger() {
@@ -140,7 +129,6 @@ public class Task implements Runnable, TaskMXBean, TaskInterface, Serializable {
 			Trigger t = Trigger.parseTrigger(s);
 			myTrigger = t;
 			myTrigger.setTask(this);
-			System.err.println("Set trigger for task " + getId() + ": " + t.getDescription());
 		} catch (IllegalTrigger e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -219,16 +207,8 @@ public class Task implements Runnable, TaskMXBean, TaskInterface, Serializable {
 	 */
 	public void setRemove(boolean b) {
 		this.remove = b;
-		try {
-			JMXHelper.deregisterMXBean(JMXHelper.TASK_DOMAIN, getId());
-		} catch (Throwable e) {
-			
-		}
 		AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "About to remove task: " + id);
 		myTrigger.removeTrigger();
-//		if ( myThread != null && myThread.isAlive() ) {
-//			myThread.interrupt();
-//		}
 	}
 	
 	/**
@@ -303,8 +283,6 @@ public class Task implements Runnable, TaskMXBean, TaskInterface, Serializable {
 	 */
 	public void run() {
 
-		JMXHelper.registerMXBean(this, JMXHelper.TASK_DOMAIN, getId());
-
 		AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, " trigger " + getTriggerDescription() + " goes off for task: " + getId() );
 	
 		Navajo result = null;
@@ -314,8 +292,6 @@ public class Task implements Runnable, TaskMXBean, TaskInterface, Serializable {
 		boolean resultOfBeforeTaskEvent = TaskRunner.getInstance().fireBeforeTaskEvent(this);
 		if ( ( resultOfBeforeTaskEvent && isProxy() ) || !isProxy() ) {
 
-			System.err.println(getTriggerDescription() + ": ---------------------------> ABOUT TO RUN WEBSERVICE: " + webservice );
-			
 			if ( webservice != null && !webservice.equals("") ) {
 				Access access = myTrigger.getAccess();
 				Navajo request = null;

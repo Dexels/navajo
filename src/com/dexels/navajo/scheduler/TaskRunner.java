@@ -26,11 +26,9 @@ package com.dexels.navajo.scheduler;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -70,7 +68,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 	private static final String VERSION = "$Id$";
 	
 	// Maximum number of tasks.
-	private int maxSize = 1000;
+	private int maxSize = 100000;
 	private static volatile TaskRunner instance = null;
 	private final Map tasks = Collections.synchronizedMap(new HashMap());
 	private final ArrayList taskListeners = new ArrayList();
@@ -619,36 +617,33 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 		AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Killed");
 	}
 	
-	public void addTaskListener(TaskListener tl) {
+	public final void addTaskListener(TaskListener tl) {
 		synchronized ( semaphore2 ) {
 			taskListeners.add(tl);
 		}
-		System.err.println("NUMBER OF TASK LISTENERS: " + taskListeners.size());
 	}
 	
-	public void removeTaskListener(TaskListener tl) {
+	public final void removeTaskListener(TaskListener tl) {
 		synchronized ( semaphore2 ) {
 			taskListeners.remove(tl);
 		}
 	}
 	
-	public void fireAfterTaskEvent(Task t, Navajo request) {
+	public final void fireAfterTaskEvent(Task t, Navajo request) {
 		
 		synchronized ( semaphore2 ) {
 			for ( int i = 0 ; i < taskListeners.size(); i++ ) {
 				TaskListener tl = (TaskListener) taskListeners.get(i); 
-				System.err.println(i + ": calling AFTERTASK() for task with trigger " + t.getTriggerDescription() + " and webservice " + t.webservice);
 				tl.afterTask(t, request);
 			}
 		}
 	}
 	
-	public boolean fireBeforeTaskEvent(Task t) {
-		
+	public final boolean fireBeforeTaskEvent(Task t) {
+
 		synchronized ( semaphore2 ) {
 			for ( int i = 0 ; i < taskListeners.size(); i++ ) {
 				TaskListener tl = (TaskListener) taskListeners.get(i);
-				System.err.println(i + ": calling BEFORETASK() for task with trigger " + t.getTriggerDescription() + " and webservice " + t.webservice);
 				boolean result = tl.beforeTask(t);
 				if ( !result ) {
 					return false;
@@ -658,7 +653,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 		return true;
 	}
 
-	public void removeTask(TaskInterface t) {
+	public final void removeTask(TaskInterface t) {
 		removeTask(t.getId());
 	}
 }

@@ -72,4 +72,8 @@ public class WorkFlowTask implements Serializable, TaskListener {
 	public boolean isFinished() {
 		return finished;
 	}
+
+	public String getDescription() {
+		return "task:" + myTask.getWebservice();
+	}
 }

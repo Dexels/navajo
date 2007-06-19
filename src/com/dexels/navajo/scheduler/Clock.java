@@ -20,7 +20,6 @@ public class Clock extends GenericThread implements ClockMXBean, ClockInterface 
 	public Clock() {
 		super(id);
 		setSleepTime(CLOCK_RESOLUTION);
-		AuditLog.log(AuditLog.AUDIT_MESSAGE_CLOCK, "Started clock $Id$");
 	}
 	
 	public static Clock getInstance() {
@@ -63,5 +62,13 @@ public class Clock extends GenericThread implements ClockMXBean, ClockInterface 
 				cl.timetick(c);
 			}
 		}
+	}
+
+	public int getResolution() {
+		return CLOCK_RESOLUTION;
+	}
+
+	public int getListeners() {
+		return listeners.size();
 	}
 }

@@ -183,6 +183,11 @@ public class TimeTrigger extends Trigger implements ClockListener, Serializable 
 			return true;
 		}
 		
+		/**
+		 * Resolution of time trigger is one minute. If trigger was active less then 60 seconds ago, do 
+		 * not activate again.
+		 * 
+		 */
 		if ( lastRan != -1 && ( c.getTimeInMillis() - lastRan ) < 60000 ) {
 			return false;
 		}
@@ -195,31 +200,31 @@ public class TimeTrigger extends Trigger implements ClockListener, Serializable 
 		int currentDay = c.get(Calendar.DAY_OF_WEEK);
 		
 		if (year != -1) {
-			if ( currentYear != year ) {
+			if ( currentYear < year ) {
 				return false;
 			}
 		}
 		
 		if (month != -1) {
-			if ( currentMonth != ( month - 1 ) ) {
+			if ( currentMonth < ( month - 1 ) ) {
 				return false;
 			}
 		}
 		
 		if (monthday != -1) {
-			if ( currentMonthDay != monthday ) {
+			if ( currentMonthDay < monthday ) {
 				return false;
 			}
 		}
 		
 		if (hour != -1) {
-			if ( currentHour != hour ) {
+			if ( currentHour < hour ) {
 				return false;
 			}
 		}
 		
 		if (minute != -1) {
-			if ( currentMinute != minute ) {
+			if ( currentMinute < minute ) {
 				return false;
 			}
 		}

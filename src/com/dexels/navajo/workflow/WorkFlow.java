@@ -1,6 +1,9 @@
 package com.dexels.navajo.workflow;
 
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.Serializable;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -8,6 +11,7 @@ import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.NavajoConfig;
@@ -32,6 +36,8 @@ public class WorkFlow implements Mappable, Serializable {
 	 * The local Navajo state store.
 	 */
 	private Navajo localNavajo = null;
+	private Binary localState = null;
+	
 	/**
 	 * This arraylist contains all the visited states for this workflow.
 	 */
@@ -40,16 +46,7 @@ public class WorkFlow implements Mappable, Serializable {
 	public static WorkFlow getInstance(String definition, String activatedState, Access a) {
 		WorkFlow wf = new WorkFlow(definition, WorkFlowManager.generateWorkflowId());
 		wf.initiatingAccess = a;
-		if ( definition.equals("demo") ) {
-			try {
-				wf.createState("start");
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		} else {
-			// Read from workflow definition file...
-		}
+		wf.createState(activatedState);
 		WorkFlowManager.getInstance().addWorkFlow(wf);
 		wf.start();
 		return wf;
@@ -94,7 +91,6 @@ public class WorkFlow implements Mappable, Serializable {
 		try {
 			String type = (value != null) ? MappingUtils.determineNavajoType(value) : "";
 			MappingUtils.setProperty(true, localNavajo.getMessage("__parms__"), name, value, type, "", "in", "", 0, null, localNavajo, false);
-			System.err.println(myId +  ": Added parameter " + name + " with value " + value);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace(System.err);
@@ -110,47 +106,18 @@ public class WorkFlow implements Mappable, Serializable {
 	 */
 	protected State createState(String name) {
 		try {
-			if ( name.equals("start") && definition.equals("demo") ){
-				State s1 = new State("start", this);
-				currentState = s1;
+		
+				State s = null;
 				try {
-					Transition t1 = s1.addTransition("waitforinput", "navajo:InitAap", null);
+					s = WorkFlowDefinitionReader.parseState(this, name);
+					currentState = s;
 				} catch (Exception e) {
+					System.err.println("Could not parse workflow state " + name + " of workflowdefinition " + this.getDefinition());
 					e.printStackTrace(System.err);
 				}
-				return s1;
-			} else if ( name.equals("waitforinput") && definition.equals("demo")) {
-				State s2 = new State("waitforinput", this);
-				currentState = s2;
-				try {
-					// Add a task and two transitions.
-					WorkFlowTask wtf = s2.addTask("person/InitInsertPerson", null, null);
-					Transition t4 = s2.addTransition("start", "offsettime:2m", null);
-					Transition t2 = s2.addTransition("approve", "navajo:ProcessAap", null);
-					t2.addParameter("Name", "[/Result/Name]");
-				} catch (Exception e) {
-					e.printStackTrace(System.err);
-				}
-				return s2;
-			} else if ( name.equals("approve") && definition.equals("demo")) {
-				State s2 = new State("approve", this);
-				currentState = s2;
-				try {
-					Transition t1 = s2.addTransition("approve", "beforenavajo:ProcessApproveAap", "[/Result/Name] == [/@Name] AND [/Result/Status] == 'nok'", "person/InitInsertPerson");
-					t1.getMyTask().setProxy(true);
-					//Transition t2 = s2.addTransition(null, "beforenavajo:ProcessApproveAap", "[/Result/Name] == [/@Name] AND [/Result/Status] != 'nok'", null);
-					Transition t2 = s2.addTransition(null, "navajo:ProcessApproveAap", "[/Approval/Name] == [/@Name] AND [/Approval/Status] == 'ok'");
-					Transition t3 = s2.addTransition("start", "navajo:ProcessApproveAap", "[/Approval/Name] == [/@Name] AND [/Approval/Status] != 'ok'");
-				} catch (Exception e) {
-					e.printStackTrace(System.err);
-				}
-				return s2;
-			}
-			else {
-				State s = new State(name, this);
-				currentState = s;
 				return s;
-			}
+				
+			
 		} finally {
 			
 		}
@@ -228,4 +195,22 @@ public class WorkFlow implements Mappable, Serializable {
 		return historyd;
 	}
 
+	public Binary getLocalState() throws UserException {
+
+		System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>> In getLocalState() ");
+		try {
+			if ( localNavajo != null ) {
+				localState = new Binary();
+				OutputStream os = localState.getOutputStream();
+				localNavajo.write(os);
+				os.close();
+				return localState;
+			}
+		} catch (Exception e) {
+			throw new UserException(-1, e.getMessage(), e);
+		}
+		return null;
+	}
+
+	
 }

@@ -1028,8 +1028,7 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
         /**
          * Phase IV: Get application specific parameters for user.
          */
-        //System.err.println("REPOSITORY IS: " + navajoConfig.getRepository());
-        
+       
         Parameter[] pl = navajoConfig.getRepository().getParameters(access);
 
         parms = evaluateParameters(pl, inMessage);
@@ -1063,7 +1062,6 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
         	 */
 
         	if (useAuthorisation) {
-        		System.err.println("ABOUT TO CALL BEFOREWEBSERVICE IN DISPATCHER!!!!!!!!!!!!!!!!!");
         		access.setInDoc(inMessage);
     			Navajo useProxy = WebserviceListenerFactory.getInstance().beforeWebservice(rpcName, access);
     			if ( useProxy == null ) {
@@ -1083,7 +1081,6 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
         		else {
         			// Create beforeWebservice event.
         			access.setInDoc(inMessage);
-        			System.err.println("ABOUT TO CALL BEFOREWEBSERVICE IN DISPATCHER!!!!!!!!!!!!!!!!!");
         			Navajo useProxy = WebserviceListenerFactory.getInstance().beforeWebservice(rpcName, access);
         			if ( useProxy == null ) {
         				// Actually do something.
@@ -1096,7 +1093,6 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
         	}
 //      	updatePropertyDescriptions(inMessage,outMessage);
         }
-        
         return outMessage;
       }
     }
@@ -1141,6 +1137,10 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
       logger.log(NavajoPriority.DEBUG, e.getMessage(), e);
       myException = e;
       return errorHandler(access, e, inMessage);
+    } catch (Throwable e) {
+    	 e.printStackTrace(System.err);
+    	 logger.log(NavajoPriority.DEBUG, e.getMessage(), e);
+         return errorHandler(access, e, inMessage);
     }
     finally {
     	

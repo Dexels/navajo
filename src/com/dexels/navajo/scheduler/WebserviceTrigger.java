@@ -82,7 +82,6 @@ public class WebserviceTrigger extends Trigger implements Serializable {
 	
 	public void removeTrigger() {
 		// Remove myself from the listener list.
-		System.err.println("REMOVING AFTER WEBSERVICE TRIGGER: " + getDescription());
 		WebserviceListener.getInstance().removeTrigger(this);
 	}
 	
@@ -112,7 +111,6 @@ public class WebserviceTrigger extends Trigger implements Serializable {
 	}
 
 	public void activateTrigger() {
-		System.err.println("ACTIVATING AFTER WEBSERVICE TRIGGER: " + getDescription());
 		WebserviceListener.getInstance().registerTrigger(this);
 	}
 }

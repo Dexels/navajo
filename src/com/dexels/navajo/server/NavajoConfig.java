@@ -267,11 +267,8 @@ public final class NavajoConfig {
     			System.err.println("PUTTING PORT = " + dbPort + " IN MAP");
     			p.put("port", new Integer(dbPort));
     		}
-    		if (store == null) {
-    			statisticsRunner = StatisticsRunnerFactory.getInstance(dbPath, p);
-    		} else {
-    			statisticsRunner = StatisticsRunnerFactory.getInstance(dbPath, p, store);
-    		}
+    		
+    		statisticsRunner = StatisticsRunnerFactory.getInstance(dbPath, p, store);
     		statisticsRunner.setEnabled(enableStatisticsRunner);
     		
     		//System.err.println("USing repository = " + repository);

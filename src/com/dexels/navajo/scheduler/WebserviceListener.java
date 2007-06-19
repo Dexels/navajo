@@ -41,14 +41,14 @@ import com.dexels.navajo.server.enterprise.scheduler.WebserviceListenerInterface
  * a matching webservice is invoked.
  * 
  */
-public class WebserviceListener implements WebserviceListenerInterface {
+public final class WebserviceListener implements WebserviceListenerInterface {
 
 	static WebserviceListener instance = null;
 	
 	private Set afterTriggers = null;
 	private Set beforeTriggers = null;
 	
-	public static WebserviceListener getInstance() {
+	public final static WebserviceListener getInstance() {
 		if ( instance == null ) {
 			instance = new WebserviceListener();
 			instance.afterTriggers = Collections.synchronizedSet(new HashSet());
@@ -57,7 +57,7 @@ public class WebserviceListener implements WebserviceListenerInterface {
 		return instance;
 	}
 	
-	public void registerBeforeTrigger(BeforeWebserviceTrigger t) {
+	public final void registerBeforeTrigger(BeforeWebserviceTrigger t) {
 		beforeTriggers.add(t);
 	}
 	
@@ -70,7 +70,7 @@ public class WebserviceListener implements WebserviceListenerInterface {
 	 * 
 	 * @param t the trigger object to be registered
 	 */
-	public void registerTrigger(WebserviceTrigger t) {
+	public final void registerTrigger(WebserviceTrigger t) {
 		afterTriggers.add(t);
 	}
 	
@@ -92,65 +92,93 @@ public class WebserviceListener implements WebserviceListenerInterface {
 	 * @param a the access object of the caller
 	 */
 	public final void afterWebservice(final String webservice, final Access a) {
+
 		// First create copy of triggers set to prevent concurrent modification exceptions.
 		HashSet copyOfTriggers = new HashSet(afterTriggers);
 		// Iterate over copy.
 		Iterator iter = copyOfTriggers.iterator();
 		while ( iter.hasNext() ) {
-			
+
 			final WebserviceTrigger t = (WebserviceTrigger) iter.next();
-			
+
 			if ( webservice.matches(t.getWebservicePattern()) ) {
-				System.err.println("match AFTER invocation(" + webservice + ") for webservicepattern: " + t.getWebservicePattern());
 				t.setAccess(a);
-				// Spawn task.
-				GenericThread taskThread = new GenericThread("task:" + t.getTask().getId() ) {
 
-					public void run() {
-						try {
-							worker();
-						} finally {
-							finishThread();
+                // Spawn task asynchronously, if there is no webservice to run, invoke task sychronously.
+				if ( t.getTask().getWebservice() != null ) {
+					
+					GenericThread taskThread = new GenericThread("task:" + t.getTask().getId() ) {
+
+						public void run() {
+							try {
+								worker();
+							} finally {
+								finishThread();
+							}
 						}
-					}
 
-					public final void worker() {
-						t.getTask().run();
-					}
-				};
-				taskThread.startThread(taskThread);
-			}	
+						public final void worker() {
+							t.getTask().run();
+						}
+					};
+					taskThread.startThread(taskThread);
+				} else {
+					// Invoke task synchronously to support workflow before and after task trigger synchronously.
+					t.getTask().run();
+				}
+			}
 		}
 	}
 
-	public Navajo beforeWebservice(String webservice, Access a) {
+	public final Navajo beforeWebservice(String webservice, Access a) {
 		// First create copy of triggers set to prevent concurrent modification exceptions.
 		HashSet copyOfTriggers = new HashSet(beforeTriggers);
 		// Iterate over copy.
 		Iterator iter = copyOfTriggers.iterator();
-		System.err.println("CALLING beforeWebservice(" + webservice + ")");
 		while ( iter.hasNext() ) {
 
 			final BeforeWebserviceTrigger t = (BeforeWebserviceTrigger) iter.next();
-			System.err.println("BeforeWebserviceTrigger: " + t.getWebservicePattern());
-			
+
 			if ( webservice.matches(t.getWebservicePattern()) ) {
-				System.err.println("match BEFORE invocation(" + webservice + ") for webservicepattern: " + t.getWebservicePattern());
 				t.setAccess(a);
-				// Run task (synchronously!).
-				t.getTask().run();
-				// If task was proxy webservice, return result of this task immediately.
-				if ( t.getTask().isProxy() && t.getTask().getResponse() != null ) {
-					System.err.println("RETURNING NAVAJO OF TASK AS PROXY RESPONSE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ");
-					a.rpcName = t.getTask().getWebservice();
-					a.setOutputDoc(t.getTask().getResponse());
-					return t.getTask().getResponse();
-				} else {
-					System.err.println("DID NOT RUN PROXY..........");
+				// Run task (synchronously if proxy).
+				if ( t.getTask().isProxy() ) {
+					t.getTask().run();
+					// If task was proxy webservice, return result of this task immediately.
+					if ( t.getTask().getResponse() != null ) {
+						a.rpcName = t.getTask().getWebservice();
+						a.setOutputDoc(t.getTask().getResponse());
+						return t.getTask().getResponse();
+					}
+				} else { // There is no proxy webservice defined.
+					// Spawn task asynchronously if there is a webservice defined.
+					if ( t.getTask().getWebservice() != null ) {
+						GenericThread taskThread = new GenericThread("task:" + t.getTask().getId() ) {
+
+							public void run() {
+								try {
+									worker();
+								} finally {
+									finishThread();
+								}
+							}
+
+							public final void worker() {
+								t.getTask().run();
+							}
+						};
+						taskThread.startThread(taskThread);
+					} else {
+                        //	Invoke task synchronously to support workflow before and after task trigger synchronously.
+						t.getTask().run();
+					}
+
+					return null;
 				}
+
 			}	
 		}
-		
+
 		return null;
 	}
 }

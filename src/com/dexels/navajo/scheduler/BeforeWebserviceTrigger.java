@@ -17,12 +17,10 @@ public class BeforeWebserviceTrigger extends WebserviceTrigger {
 	
 	public void removeTrigger() {
 		// Remove myself from the listener list.
-		System.err.println("REMOVING BEFORE WEBSERVICE   TRIGGER: " + getDescription());
 		WebserviceListener.getInstance().removeBeforeTrigger(this);
 	}
 	
 	public void activateTrigger() {
-		System.err.println("ACTIVATING BEFORE WEBSERVICE TRIGGER: " + getDescription());
 		WebserviceListener.getInstance().registerBeforeTrigger(this);
 	}
 }

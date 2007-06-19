@@ -48,7 +48,6 @@ public class AfterTaskTrigger extends Trigger implements TaskListener, Serializa
 
 	protected final void spawnTask(final Navajo request) {
 		// Spawn thread.
-		System.err.println("Spawning task " + getTask().getId());
 		GenericThread taskThread = new GenericThread("task:" + getTask().getId()) {
 
 			public void run() {
@@ -74,7 +73,6 @@ public class AfterTaskTrigger extends Trigger implements TaskListener, Serializa
 	public void afterTask(Task t, Navajo request) {
 		
 		if ( myDescription.equals(t.getId() ) ){
-			System.err.println(t.getTriggerDescription() + ": in after task trigger of " + t.getId() + ", checking if I am " + myDescription);
 			setSingleEvent(t.getTrigger().isSingleEvent());
 			spawnTask(request);
 		}

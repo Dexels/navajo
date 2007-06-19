@@ -29,6 +29,7 @@ public class WorkFlowManager extends GenericThread implements WorkFlowManagerMXB
 	private static String id = "Navajo WorkFlow Manager";
 	
 	private String workflowPath = null;
+	private String workflowDefinitionPath = null;
 	
 	protected static final String generateWorkflowId() {
 		long l = new Random().nextLong();
@@ -82,19 +83,27 @@ public class WorkFlowManager extends GenericThread implements WorkFlowManagerMXB
 			JMXHelper.registerMXBean(instance, JMXHelper.NAVAJO_DOMAIN, "WorkFlowManager");
 			instance.startThread(instance);
 
-			// Create dummy start transition for demo workflow.
-			try {
-				Transition.createStartTransition("start", "navajo:InitNavajoDemo", "", "demo");
-			} catch (Exception e) {
-				e.printStackTrace(System.err);
+			// Create workflow definitions dir.
+			if ( instance.workflowDefinitionPath == null ) {
+				instance.workflowDefinitionPath = Dispatcher.getInstance().getNavajoConfig().getRootPath() + "/workflows/definitions/";
+				File f1 = new File(instance.workflowDefinitionPath);
+				f1.mkdirs();
 			}
 			
 			// Create workflow persistence dir.
 			if ( instance.workflowPath == null ) {
-				instance.workflowPath = Dispatcher.getInstance().getNavajoConfig().getRootPath() + "/workflows";
+				instance.workflowPath = Dispatcher.getInstance().getNavajoConfig().getRootPath() + "/workflows/instances/";
 				File f1 = new File(instance.workflowPath);
-				f1.mkdir();
+				f1.mkdirs();
 			}
+			
+			// Create dummy start transition for demo workflow.
+//			try {
+//				Transition.createStartTransition("start", "navajo:InitNavajoDemo", "", "demo");
+//			} catch (Exception e) {
+//				e.printStackTrace(System.err);
+//			}
+			WorkFlowDefinitionReader.initialize(new File(instance.workflowDefinitionPath));
 			
 			// Revive persisted workflows.
 			instance.reviveSavedWorkFlows();

@@ -8,10 +8,6 @@ public class StatisticsRunnerFactory {
 	private static volatile StatisticsRunnerInterface instance = null;
 	private static Object semaphore = new Object();
 	
-	public static final StatisticsRunnerInterface getInstance(String storePath, Map parameters) {
-		return getInstance(storePath, parameters, "com.dexels.navajo.adapter.navajostore.HSQLStore");
-	}
-	
 	public static final StatisticsRunnerInterface getInstance(String storePath, Map parameters, String storeClass) {
 
 		if ( instance != null ) {

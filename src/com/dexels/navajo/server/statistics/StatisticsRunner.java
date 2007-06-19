@@ -64,10 +64,6 @@ public final class StatisticsRunner extends GenericThread implements StatisticsR
 	  return instance;
   }
   
-  public final static StatisticsRunner getInstance(String storePath, Map parameters) {
-  	return getInstance(storePath, parameters, "com.dexels.navajo.adapter.navajostore.HSQLStore");
-  }
-  
   /**
    * Get an instance of the StatisticsRunner (singleton).
    *
@@ -75,7 +71,14 @@ public final class StatisticsRunner extends GenericThread implements StatisticsR
    *
    * @return
    */
-  public final static StatisticsRunner getInstance(String storePath, Map parameters, String storeClass) {
+  public final static StatisticsRunner getInstance(String storePath, Map parameters, String storeClass) throws Throwable {
+	  
+	  if ( storeClass == null ) {
+		  throw new Exception("No store class specified");
+	  }
+//	  if ( storeClass == null ) {
+//		  storeClass = "com.dexels.navajo.adapter.navajostore.HSQLStore";
+//	  }
 	  
 	  if ( instance != null ) {
 		  return instance;
@@ -83,21 +86,18 @@ public final class StatisticsRunner extends GenericThread implements StatisticsR
 	  
 	  synchronized (semaphore) {
 		  if (instance == null) {
-			  
+
 			  instance = new StatisticsRunner();
 			  instance.enabled = true;
 			  JMXHelper.registerMXBean(instance, JMXHelper.NAVAJO_DOMAIN, id);
 			  Class si = null;
-			  try {
-				  si = Class.forName(storeClass);
-				  instance.myStore = (StoreInterface) si.newInstance();
-				  instance.myStore.setDatabaseParameters((parameters == null ? new HashMap() : parameters));
-				  instance.myStore.setDatabaseUrl(storePath);
-				  instance.storeClass = storeClass;
-			  }
-			  catch (Exception ex) {
-				  ex.printStackTrace(System.err);
-			  }
+
+			  si = Class.forName(storeClass);
+			  instance.myStore = (StoreInterface) si.newInstance();
+			  instance.myStore.setDatabaseParameters((parameters == null ? new HashMap() : parameters));
+			  instance.myStore.setDatabaseUrl(storePath);
+			  instance.storeClass = storeClass;
+
 			  instance.setSleepTime(100);
 			  instance.startThread(instance);
 			  System.err.println("Started StatisticsRunner version $Id$ using store: " + instance.myStore.getClass().getName());
