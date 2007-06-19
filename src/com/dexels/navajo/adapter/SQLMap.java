@@ -1200,9 +1200,9 @@ private void setBlob(PreparedStatement statement, int i, Binary b) throws SQLExc
                 String param = meta.getColumnLabel(i);
                 int type = meta.getColumnType(i);
 
-                if (debug) {
-                  System.err.println("i = " + i + ", type = " + type + "(BLOB = " + Types.BLOB + ")" + " getType() = " + getType(type));
-                }
+//                if (debug) {
+//                  System.err.println("i = " + i + ", type = " + type + "(BLOB = " + Types.BLOB + ")" + " getType() = " + getType(type));
+//                }
                 
                 Object value = null;
                 final String strVal = rs.getString(i);
