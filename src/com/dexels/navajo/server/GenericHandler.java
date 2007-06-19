@@ -193,9 +193,6 @@ public final class GenericHandler extends ServiceHandler {
             	newLoader = new NavajoClassLoader(null, properties.getCompiledScriptPath(), 
             			( access.betaUser ? NavajoConfig.getInstance().getBetaClassLoader() : 
             				NavajoConfig.getInstance().adapterClassloader) );
-            	System.err.println(className + ", loader: " + newLoader.hashCode() + ", adapterLoader: " +
-            			( access.betaUser ? NavajoConfig.getInstance().getBetaClassLoader().hashCode() : 
-            				NavajoConfig.getInstance().adapterClassloader.hashCode()));
             	loadedClasses.put(className, newLoader);
             }
             //}

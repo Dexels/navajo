@@ -97,12 +97,6 @@ public class WorkFlowManager extends GenericThread implements WorkFlowManagerMXB
 				f1.mkdirs();
 			}
 			
-			// Create dummy start transition for demo workflow.
-//			try {
-//				Transition.createStartTransition("start", "navajo:InitNavajoDemo", "", "demo");
-//			} catch (Exception e) {
-//				e.printStackTrace(System.err);
-//			}
 			WorkFlowDefinitionReader.initialize(new File(instance.workflowDefinitionPath));
 			
 			// Revive persisted workflows.
