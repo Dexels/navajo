@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 import com.dexels.navajo.server.Dispatcher;
@@ -26,10 +27,13 @@ public class WorkFlowManager extends GenericThread implements WorkFlowManagerMXB
 	private static volatile WorkFlowManager instance = null;
 	private static Object semaphore = new Object();
 	private final ArrayList workflowInstances = new ArrayList();
+	private final HashMap workflowDefinitions = new HashMap();
 	private static String id = "Navajo WorkFlow Manager";
 	
 	private String workflowPath = null;
 	private String workflowDefinitionPath = null;
+	
+	private long configTimestamp = -1;
 	
 	protected static final String generateWorkflowId() {
 		long l = new Random().nextLong();
@@ -87,6 +91,7 @@ public class WorkFlowManager extends GenericThread implements WorkFlowManagerMXB
 				instance.workflowDefinitionPath = Dispatcher.getInstance().getNavajoConfig().getRootPath() + "/workflows/definitions/";
 				File f1 = new File(instance.workflowDefinitionPath);
 				f1.mkdirs();
+				instance.configTimestamp = f1.lastModified();
 			}
 			
 			// Create workflow persistence dir.
@@ -96,7 +101,7 @@ public class WorkFlowManager extends GenericThread implements WorkFlowManagerMXB
 				f1.mkdirs();
 			}
 			
-			WorkFlowDefinitionReader.initialize(new File(instance.workflowDefinitionPath));
+			WorkFlowDefinitionReader.initialize(new File(instance.workflowDefinitionPath), instance.workflowDefinitions);
 			
 			// Revive persisted workflows.
 			instance.reviveSavedWorkFlows();
@@ -133,7 +138,13 @@ public class WorkFlowManager extends GenericThread implements WorkFlowManagerMXB
 	}
 	
 	public void worker() {
-		// Do something usefull.
+        // Check whether definition has been added.
+		System.err.println("Checking workflow definition change....");
+		if ( isConfigModified() ) {
+			AuditLog.log(AuditLog.AUDIT_MESSAGE_WORKFLOW, "Workflow definition change detected");
+			WorkFlowDefinitionReader.initialize(new File(workflowDefinitionPath), workflowDefinitions);
+			setConfigTimeStamp();
+		}
 	}
 
 	public WorkFlow[] getWorkflows() {
@@ -160,6 +171,28 @@ public class WorkFlowManager extends GenericThread implements WorkFlowManagerMXB
 			}
 		}
 		return null;
+	}
+	
+	private long getConfigTimeStamp() {
+		if (  Dispatcher.getInstance() != null && Dispatcher.getInstance().getNavajoConfig() != null ) {
+			java.io.File f = new java.io.File(workflowDefinitionPath);
+			if ( f != null && f.exists() ) {
+				return f.lastModified();
+			}
+		}
+		return -1;
+	}
+	
+	private void setConfigTimeStamp() {
+		configTimestamp = getConfigTimeStamp();
+	}
+	
+	private boolean isConfigModified() {
+		if ( configTimestamp != getConfigTimeStamp() && getConfigTimeStamp() != -1 ) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 }

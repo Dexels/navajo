@@ -2,6 +2,8 @@ package com.dexels.navajo.workflow;
 
 import java.io.File;
 import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Vector;
 
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
@@ -16,6 +18,7 @@ import com.dexels.navajo.document.nanoimpl.XMLElement;
 public final class WorkFlowDefinitionReader {
 
 	private static File definitionPath = null;
+	private static volatile HashMap initialTransitions = new HashMap();
 	
 	private static final XMLElement readDefinition(String definition) throws Exception {
 		return readDefinition(new File(definitionPath, definition));
@@ -114,7 +117,8 @@ public final class WorkFlowDefinitionReader {
 			String nextState = readAttribute(t, "nextstate");
 			String trigger = readAttribute(t,"trigger");
 			String condition = readAttribute(t,"condition");
-			Transition.createStartTransition(nextState, trigger, condition, definition);
+			Transition trans = Transition.createStartTransition(nextState, trigger, condition, definition);
+			initialTransitions.put(definition, trans);
 		}
 	}
 	
@@ -123,7 +127,7 @@ public final class WorkFlowDefinitionReader {
 	 * 
 	 * @param path
 	 */
-	public static void initialize(File path) {
+	public static void initialize(File path, HashMap defs) {
 		definitionPath = path;
 		File [] files = path.listFiles();
 
@@ -131,11 +135,28 @@ public final class WorkFlowDefinitionReader {
 			File f = files[i];
 			if ( f.isFile() ) {
 				try {
+
 					XMLElement xml = readDefinition(f);
 					String name = f.getName().substring(0, f.getName().length() - 4);
-					createInitState(xml, name);
+					if ( !defs.containsKey(name) ){
+						System.err.println("Found new flow definition: " + name);
+						createInitState(xml, name);
+						defs.put(name, new Long(f.lastModified()));
+					} else {
+						Long lu = (Long) defs.get(name);
+						if ( lu.longValue() != f.lastModified() ) {
+							System.err.println("Workflow " + name + " has been updated");
+							lu = new Long(f.lastModified());
+							defs.put(name, lu);
+							Transition trans = (Transition) initialTransitions.get(name);
+							if ( trans != null ) {
+								trans.cleanup();
+							}
+							createInitState(xml, name);
+						}
+					}
 				} catch (Exception e) {
-					e.printStackTrace(System.err);
+					//e.printStackTrace(System.err);
 					System.err.println("Could not initialize flow: " + f.getName());
 				}
 			}
