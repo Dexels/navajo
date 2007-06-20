@@ -25,7 +25,9 @@
 package com.dexels.navajo.scheduler;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 import java.util.HashSet;
 
@@ -48,21 +50,46 @@ public final class WebserviceListener implements WebserviceListenerInterface {
 	private Set afterTriggers = null;
 	private Set beforeTriggers = null;
 	
+	/**
+	 * Sets to store webservices that are listened to.
+	 */
+	private Map beforeWebservices = null;
+	private Map afterWebservices = null;
+	
 	public final static WebserviceListener getInstance() {
 		if ( instance == null ) {
 			instance = new WebserviceListener();
 			instance.afterTriggers = Collections.synchronizedSet(new HashSet());
 			instance.beforeTriggers = Collections.synchronizedSet(new HashSet());
+			instance.beforeWebservices = Collections.synchronizedMap(new HashMap());
+			instance.afterWebservices = Collections.synchronizedMap(new HashMap());
 		}
 		return instance;
 	}
 	
 	public final void registerBeforeTrigger(BeforeWebserviceTrigger t) {
 		beforeTriggers.add(t);
+		Integer i = (Integer) beforeWebservices.get(t.getWebservicePattern());
+		if ( i == null ) {
+			i = new Integer(1);
+		} else {
+			i = new Integer(i.intValue() + 1);
+		}
+		beforeWebservices.put(t.getWebservicePattern(), i);
 	}
 	
 	public final void removeBeforeTrigger(BeforeWebserviceTrigger t) {
 		beforeTriggers.remove(t);
+		Integer i = (Integer) beforeWebservices.get(t.getWebservicePattern());
+		if ( i == null ) {
+			return;
+		}
+		i = new Integer(i.intValue() -1 );
+		if ( i.intValue() > 0 ) {
+			beforeWebservices.put(t.getWebservicePattern(), i);
+		} else {
+			beforeWebservices.remove(t.getWebservicePattern());
+		}
 	}
 	
 	/**
@@ -72,6 +99,13 @@ public final class WebserviceListener implements WebserviceListenerInterface {
 	 */
 	public final void registerTrigger(WebserviceTrigger t) {
 		afterTriggers.add(t);
+		Integer i = (Integer) afterWebservices.get(t.getWebservicePattern());
+		if ( i == null ) {
+			i = new Integer(1);
+		} else {
+			i = new Integer(i.intValue() + 1);
+		}
+		afterWebservices.put(t.getWebservicePattern(), i);
 	}
 	
 	/**
@@ -81,6 +115,16 @@ public final class WebserviceListener implements WebserviceListenerInterface {
 	 */
 	public final void removeTrigger(WebserviceTrigger t) {
 		afterTriggers.remove(t);
+		Integer i = (Integer) afterWebservices.get(t.getWebservicePattern());
+		if ( i == null ) {
+			return;
+		}
+		i = new Integer(i.intValue() -1 );
+		if ( i.intValue() > 0 ) {
+			afterWebservices.put(t.getWebservicePattern(), i);
+		} else {
+			afterWebservices.remove(t.getWebservicePattern());
+		}
 	}
 	
 	/**
@@ -93,6 +137,12 @@ public final class WebserviceListener implements WebserviceListenerInterface {
 	 */
 	public final void afterWebservice(final String webservice, final Access a) {
 
+		// Return immediately if webservice is not contained in afterWebservices set, i.e. there is
+		// no listener interested in this webservice.
+		if ( afterWebservices.get(webservice) == null ) {
+			return;
+		} 
+		
 		// First create copy of triggers set to prevent concurrent modification exceptions.
 		HashSet copyOfTriggers = new HashSet(afterTriggers);
 		// Iterate over copy.
@@ -101,7 +151,7 @@ public final class WebserviceListener implements WebserviceListenerInterface {
 
 			final WebserviceTrigger t = (WebserviceTrigger) iter.next();
 
-			if ( webservice.matches(t.getWebservicePattern()) ) {
+			if ( webservice.equals(t.getWebservicePattern()) ) {
 				t.setAccess(a);
 
                 // Spawn task asynchronously, if there is no webservice to run, invoke task sychronously.
@@ -130,7 +180,15 @@ public final class WebserviceListener implements WebserviceListenerInterface {
 		}
 	}
 
+	
 	public final Navajo beforeWebservice(String webservice, Access a) {
+		
+        // Return immediately if webservice is not contained in beforeWebservices set, i.e. there is
+		// no listener interested in this webservice.
+		if ( beforeWebservices.get(webservice) == null ) {
+			return null;
+		}
+		
 		// First create copy of triggers set to prevent concurrent modification exceptions.
 		HashSet copyOfTriggers = new HashSet(beforeTriggers);
 		// Iterate over copy.
@@ -139,7 +197,7 @@ public final class WebserviceListener implements WebserviceListenerInterface {
 
 			final BeforeWebserviceTrigger t = (BeforeWebserviceTrigger) iter.next();
 
-			if ( webservice.matches(t.getWebservicePattern()) ) {
+			if ( webservice.equals(t.getWebservicePattern()) ) {
 				t.setAccess(a);
 				// Run task (synchronously if proxy).
 				if ( t.getTask().isProxy() ) {

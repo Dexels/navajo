@@ -135,7 +135,7 @@ public class Transition implements TaskListener, Serializable, Mappable {
 		if ( myTask.getId() == null ) {
 			TaskRunner.getInstance().addTask(myTask);
 		} else {
-			TaskRunner.getInstance().addTask(myTask.getId(), myTask);
+			TaskRunner.getInstance().addTask(myTask.getId(), myTask, true);
 		}
 		
 	}
@@ -163,8 +163,8 @@ public class Transition implements TaskListener, Serializable, Mappable {
 			
 			return Condition.evaluate(myCondition, n);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace(System.err);
+			// Could no evaluate condition, hence must return false.
+			//e.printStackTrace(System.err);
 			return false;
 		}
 	}

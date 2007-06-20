@@ -190,6 +190,22 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 		}	
 	}
 	
+	/**
+	 * Removes the Navajo request input for a task.
+	 * 
+	 * @param t
+	 */
+	protected void removeTaskOutput(Task t) {
+		try {
+			File f = new File(taskInputDir, t.getId() + "_response.xml");
+			if ( f.exists() ) {
+				f.delete();
+			}
+		} catch (Exception e) {
+			
+		}	
+	}
+	
 	private long getConfigTimeStamp() {
 		if (  Dispatcher.getInstance() != null && Dispatcher.getInstance().getNavajoConfig() != null ) {
 			java.io.File f = new java.io.File(Dispatcher.getInstance().getNavajoConfig().getConfigPath() + "/" + TASK_CONFIG);
@@ -243,6 +259,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 						String trigger = m.getProperty("trigger").getValue();
 						String workflowdef = m.getProperty("workflowdef").getValue();
 						String workflowid = m.getProperty("workflowid").getValue();
+						Boolean keeprequestresponse = (Boolean) m.getProperty("keeprequestresponse").getTypedValue();
 						
 						Access newAcces = new Access(-1, -1, -1, username, webservice, "Taskrunner", "127.0.0.1", "localhost", false, null);
 						
@@ -253,8 +270,9 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 							t.setWorkflowId(workflowid);
 							t.setProxy(proxy.booleanValue());
 							t.setId(id);
+							t.setKeepRequestResponse(keeprequestresponse.booleanValue());
 							readTaskInput(t);
-							instance.addTask(id, t);
+							instance.addTask(id, t, false);
 						} catch (IllegalTrigger it) {
 							//it.printStackTrace(System.err);
 							AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Problem adding task: " + it.getMessage());
@@ -314,10 +332,6 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 		}
 		
 		Task t = (Task) tasks.get(id);
-		if ( t.getTrigger() != null ) {
-			t.getTrigger().removeTrigger();
-		}
-		
 		tasks.remove(id);
 		t.setRemove(true);
 		
@@ -483,7 +497,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 		// Remove first.
 		removeTask(id);
 		// Add later.
-		addTask(id, t);
+		addTask(id, t, false);
 	}
 	
 	private final String generateTaskId() {
@@ -492,14 +506,18 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 	}
 	
 	public boolean addTask(TaskInterface t) {
-		return addTask(generateTaskId(),(Task) t);
+		return addTask(generateTaskId(),(Task) t, false);
 	}
 	
-	public boolean addTask(String id, Task t) {
+	public boolean addTask(String id, Task t, boolean overwrite) {
 		
 		if ( tasks.containsKey(id) ) {
-			t.setRemove(true);
-			return false;
+			if ( !overwrite ) {
+				t.setRemove(true);
+				return false;
+			} else {
+				removeTask(id);
+			}
 		}
 		
 		if ( tasks.size() == maxSize ) {
@@ -511,6 +529,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 		tasks.put(id, t);
 		t.setId(id);
 		t.getTrigger().activateTrigger();
+		t.getTrigger().setTask(t);
 		
 		// Add to task configuration file config/tasks.xml
 		
@@ -539,6 +558,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 					Property propPassword = NavajoFactory.getInstance().createProperty(taskDoc, "password", Property.STRING_PROPERTY, t.getPassword(), 0, "", Property.DIR_OUT);
 					Property propService = NavajoFactory.getInstance().createProperty(taskDoc, "webservice", Property.STRING_PROPERTY, t.getWebservice(), 0, "", Property.DIR_OUT);
 					Property propProxy = NavajoFactory.getInstance().createProperty(taskDoc, "proxy", Property.BOOLEAN_PROPERTY, t.isProxy()+"", 0, "", Property.DIR_OUT);
+					Property propKRS = NavajoFactory.getInstance().createProperty(taskDoc, "keeprequestresponse", Property.BOOLEAN_PROPERTY, t.isKeepRequestResponse()+"", 0, "", Property.DIR_OUT);
 					Property propTrigger = NavajoFactory.getInstance().createProperty(taskDoc, "trigger", Property.STRING_PROPERTY, t.getTrigger().getDescription(), 0, "", Property.DIR_OUT);
 					Property propWorkflowDef = NavajoFactory.getInstance().createProperty(taskDoc, "workflowdef", Property.STRING_PROPERTY, t.getWorkflowDefinition(), 0, "", Property.DIR_OUT);
 					Property propWorkflowId = NavajoFactory.getInstance().createProperty(taskDoc, "workflowid", Property.STRING_PROPERTY, t.getWorkflowId(), 0, "", Property.DIR_OUT);
@@ -548,6 +568,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 					newTask.addProperty(propPassword);
 					newTask.addProperty(propService);
 					newTask.addProperty(propProxy);
+					newTask.addProperty(propKRS);
 					newTask.addProperty(propTrigger);
 					newTask.addProperty(propWorkflowDef);
 					newTask.addProperty(propWorkflowId);
@@ -579,8 +600,8 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 		TaskRunner tr = TaskRunner.getInstance();
 		Task t1 = new Task("asdfd", null, "", null, "time:*|*|10|10|*", null);
 		Task t2 = new Task("InitBM", "ROOT", "", null, "webservice:", null);
-		tr.addTask("myTask", t1);
-		tr.addTask("myOtherTask", t2);
+		tr.addTask("myTask", t1, false);
+		tr.addTask("myOtherTask", t2, false);
 		System.err.println("LEAVING MAIN");
 		} catch (Exception e ) {
 			System.err.println(e.getMessage());
@@ -639,6 +660,14 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 		}
 	}
 	
+	/**
+	 * This method returns true if 
+	 * 1. The associated webservice of this task was not a proxy.
+	 * 2. The associated webservice of this task was a proxy and the beforeTask method of the tasklistener returns true.
+	 * 
+	 * @param t
+	 * @return
+	 */
 	public final boolean fireBeforeTaskEvent(Task t) {
 
 		synchronized ( semaphore2 ) {

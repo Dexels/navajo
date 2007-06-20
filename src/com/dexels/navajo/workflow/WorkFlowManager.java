@@ -56,7 +56,6 @@ public class WorkFlowManager extends GenericThread implements WorkFlowManagerMXB
 				try {
 					ois = new ObjectInputStream(new FileInputStream(f));
 					WorkFlow wf = (WorkFlow) ois.readObject();
-					System.err.println("Resurected workflow: " + ( wf.getDefinition() + "-" + wf.getMyId() ) );
 					ois.close();
 					addWorkFlow(wf);
 					wf.revive();
@@ -111,7 +110,6 @@ public class WorkFlowManager extends GenericThread implements WorkFlowManagerMXB
 		
 		try {
 			File f =  new File(workflowPath, wf.getDefinition()+wf.getMyId());
-			System.err.println("Persisted workflow: " + wf.getDefinition()+wf.getMyId() );
 			ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(f));
 			oos.writeObject(wf);
 			oos.close();
@@ -124,7 +122,6 @@ public class WorkFlowManager extends GenericThread implements WorkFlowManagerMXB
 	public void removePersistedWorkFlow(WorkFlow wf) {
 		File f =  new File(workflowPath, wf.getDefinition()+wf.getMyId());
 		f.delete();
-		System.err.println("Removed workflow: " + wf.getDefinition()+wf.getMyId() );
 	}
 	
 	public void addWorkFlow(WorkFlow wf) {

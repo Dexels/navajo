@@ -150,7 +150,7 @@ public class TaskRunnerMap implements Mappable {
 			if ( tr.containsTask( id ) ) {
 				throw new UserException(-1, "Tasks already exists");
 			}
-			tr.addTask(id, myTask);
+			tr.addTask(id, myTask, false);
 		} catch (IllegalTrigger i) {
 			AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, i.getMessage());
 		} catch (IllegalTask t) {

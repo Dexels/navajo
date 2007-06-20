@@ -1061,9 +1061,10 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
         	 * Phase VI: Dispatch to proper servlet.
         	 */
 
+            // Create beforeWebservice event.
+        	access.setInDoc(inMessage);
+			Navajo useProxy = WebserviceListenerFactory.getInstance().beforeWebservice(rpcName, access);
         	if (useAuthorisation) {
-        		access.setInDoc(inMessage);
-    			Navajo useProxy = WebserviceListenerFactory.getInstance().beforeWebservice(rpcName, access);
     			if ( useProxy == null ) {
     				outMessage = dispatch(navajoConfig.getRepository().getServlet(access), inMessage, access, parms);
     			} else {
@@ -1079,9 +1080,6 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
         			outMessage = dispatch(defaultNavajoDispatcher, inMessage, access, parms);
         		}
         		else {
-        			// Create beforeWebservice event.
-        			access.setInDoc(inMessage);
-        			Navajo useProxy = WebserviceListenerFactory.getInstance().beforeWebservice(rpcName, access);
         			if ( useProxy == null ) {
         				// Actually do something.
         				outMessage = dispatch(defaultDispatcher, inMessage, access, parms);

@@ -71,9 +71,8 @@ public class Task implements Runnable, TaskMXBean, TaskInterface, Serializable {
     private boolean isFinished;
     private Date startTime = null;
     private Date finishedTime = null;
-    private boolean keepRequestResponse = true;
+    private boolean keepRequestResponse = false;
     private String id = null;
-    //private Thread myThread = null;
     
     public Task() {
     	// The empty constructor.
@@ -208,7 +207,9 @@ public class Task implements Runnable, TaskMXBean, TaskInterface, Serializable {
 	public void setRemove(boolean b) {
 		this.remove = b;
 		AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "About to remove task: " + id);
-		myTrigger.removeTrigger();
+		if ( myTrigger != null ) {
+			myTrigger.removeTrigger();
+		}
 	}
 	
 	/**
@@ -288,7 +289,8 @@ public class Task implements Runnable, TaskMXBean, TaskInterface, Serializable {
 		Navajo result = null;
 		
 		// Invoke onbefore triggers.
-		// If the fireBeforeTaskEvent return false, do not execute this webservice. If webservice is not a proxy, continue as normal.
+		// If the fireBeforeTaskEvent returns false and webservice was proxy, do not execute this webservice. 
+		// If webservice was not a proxy, continue as normal.
 		boolean resultOfBeforeTaskEvent = TaskRunner.getInstance().fireBeforeTaskEvent(this);
 		if ( ( resultOfBeforeTaskEvent && isProxy() ) || !isProxy() ) {
 
@@ -470,5 +472,13 @@ public class Task implements Runnable, TaskMXBean, TaskInterface, Serializable {
 
 	public void setProxy(boolean proxy) {
 		this.proxy = proxy;
+	}
+
+	public boolean isKeepRequestResponse() {
+		return keepRequestResponse;
+	}
+
+	public void setKeepRequestResponse(boolean keepRequestResponse) {
+		this.keepRequestResponse = keepRequestResponse;
 	}
 }

@@ -197,7 +197,6 @@ public class WorkFlow implements Mappable, Serializable {
 
 	public Binary getLocalState() throws UserException {
 
-		System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>> In getLocalState() ");
 		try {
 			if ( localNavajo != null ) {
 				localState = new Binary();

@@ -1,7 +1,7 @@
 /**
  * <p>Title: Navajo Product Project</p>
  * <p>Description: This is the official source for the Navajo server</p>
- * <p>Copyright: Copyright (c) 2005</p>
+ * <p>Copyright: Copyright (c) 2005, 2006, 2007</p>
  * <p>Company: Dexels BV</p>
  * @author 
  * @version $Id$.

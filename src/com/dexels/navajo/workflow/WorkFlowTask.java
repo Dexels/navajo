@@ -30,10 +30,10 @@ public class WorkFlowTask implements Serializable, TaskListener {
 	 */
 	public void activate() {
 		TaskRunner.getInstance().addTaskListener(this);
-		if ( myTask.getId() == null ) {
+		if ( myTask.getId() == null ) { // It's a first task.
 			TaskRunner.getInstance().addTask(myTask);
-		} else {
-			TaskRunner.getInstance().addTask(myTask.getId(), myTask);
+		} else { // It's a revived task.
+			TaskRunner.getInstance().addTask(myTask.getId(), myTask, true);
 		}
 	}
 
@@ -43,9 +43,6 @@ public class WorkFlowTask implements Serializable, TaskListener {
 	}
 	
 	private final boolean isMyTaskTrigger(Task t) {
-		System.err.println("myTask = " + myTask);
-		System.err.println("t = " + t);
-		System.err.println("myState = " + myState);
 		return ( t.getId().equals(myTask.getId()) &&
 				 ( myState == null ||
 				   myState.getWorkFlow() == null ||

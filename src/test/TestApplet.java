@@ -36,11 +36,9 @@ public class TestApplet extends JApplet {
 	public String [] urlnames = new String [] {
 			"Sportlink website (GET)",
 			"Sportlink club atlas 80 (GET)",
-			"Sportlink club atlas 443 (GET)",
 			"Sportlink club hera 80 (GET)",
 			"Sportlink club hera 443 (GET)",
 			"Sportlink club atlas 80 (POST)",
-			"Sportlink club atlas 443 (POST)",
 			"Sportlink club hera 80 (POST)",
 			"Sportlink club hera 443 (POST)"
 	};
@@ -48,11 +46,9 @@ public class TestApplet extends JApplet {
 	public String [] urls = new String[] {
 			"http://www.sportlinkservices.nl/",
 			"http://atlas.dexels.com/sportlink/knvb",
-			"http://atlas.dexels.com:443/sportlink/knvb",
 			"http://hera1.dexels.com/sportlink/knvb",
 			"http://hera1.dexels.com:443/sportlink/knvb",
 			"http://atlas.dexels.com/sportlink/knvb/servlet/Postman",
-			"http://atlas.dexels.com:443/sportlink/knvb/servlet/Postman",
 			"http://hera1.dexels.com/sportlink/knvb/servlet/Postman",
 			"http://hera1.dexels.com:443/sportlink/knvb/servlet/Postman"
 	};
