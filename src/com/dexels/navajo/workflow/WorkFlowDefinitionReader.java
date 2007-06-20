@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Vector;
 
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
@@ -161,5 +162,17 @@ public final class WorkFlowDefinitionReader {
 				}
 			}
 		}
+		// Check for deleted workflows.
+		Iterator iter = initialTransitions.keySet().iterator();
+		while ( iter.hasNext() ) {
+			String name = (String) iter.next();
+			File f = new File(definitionPath, name + ".xml");
+			if ( !f.exists() ) {
+				System.err.println("Definition " + name + " was obviously deleted, deleting initiating transition");
+				Transition trans = (Transition) initialTransitions.get(name);
+				trans.cleanup();
+			}
+		}
+		
 	}
 }
