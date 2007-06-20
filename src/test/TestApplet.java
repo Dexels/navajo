@@ -72,8 +72,19 @@ public class TestApplet extends JApplet {
 				System.err.println("setConnectTimeout does not exist, upgrade to java 1.5+");
 			}
 			
+			boolean isPost = false;
+			
 			if ( url.toString().endsWith("Postman")) {
 				
+				try {
+			    	java.lang.reflect.Method chunked = con.getClass().getMethod("setChunkedStreamingMode", new Class[]{int.class});
+			    	chunked.invoke( con, new Object[]{new Integer(1024)});
+			    	con.setRequestProperty("Transfer-Encoding", "chunked" );
+			    } catch (Throwable e) {
+			     	System.err.println("setChunkedStreamingMode does not exist, upgrade to java 1.5+");
+			    }
+			    
+				isPost = true;
 				System.err.println("Using POST");
 				con.setRequestMethod("POST");
 				con.setDoOutput(true);
@@ -97,6 +108,10 @@ public class TestApplet extends JApplet {
 				System.err.println(line);
 			}
 			isr.close();
+			
+			if ( isPost && !line.equals("<tml documentImplementation=\"SAXP\">")) {
+				return false;
+			}
 			
 		} catch (Throwable e) {
 			e.printStackTrace(System.err);
