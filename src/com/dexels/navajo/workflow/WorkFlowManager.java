@@ -139,7 +139,6 @@ public class WorkFlowManager extends GenericThread implements WorkFlowManagerMXB
 	
 	public void worker() {
         // Check whether definition has been added.
-		System.err.println("Checking workflow definition change....");
 		if ( isConfigModified() ) {
 			AuditLog.log(AuditLog.AUDIT_MESSAGE_WORKFLOW, "Workflow definition change detected");
 			WorkFlowDefinitionReader.initialize(new File(workflowDefinitionPath), workflowDefinitions);
