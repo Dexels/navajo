@@ -59,7 +59,8 @@ public class NavajoClient implements ClientInterface {
   private String password = null;
   protected boolean condensed = true;
 
-  private  String[] serverUrls;
+  private String[] serverUrls;
+  private double[] serverLoads;
   
   private final static Random randomize = new Random(System.currentTimeMillis());
   // Threadsafe collections:
@@ -258,6 +259,7 @@ public class NavajoClient implements ClientInterface {
 //    host = url;
 //	  System.err.println("Warning: setServerURL is deprecated!");
 	  serverUrls = new String[]{url};
+	  serverLoads = new double[serverUrls.length];
   }
 
   /**
@@ -871,6 +873,19 @@ public class NavajoClient implements ClientInterface {
                  clientTime = (System.currentTimeMillis()-timeStamp);
                  n.getHeader().setAttribute("clientTime", ""+clientTime);
                  String tot = n.getHeader().getAttribute("serverTime");
+                 String loadStr = n.getHeader().getAttribute("cpuload");
+                 double load = -1.0;
+                 if ( loadStr != null ) {
+                	 try {
+                		 load = Double.parseDouble(loadStr);
+                		 for (int x = 0; x < serverUrls.length; x++) {
+                			 if ( serverUrls[x].equals(server) ) {
+                				 serverLoads[x] = load;
+                				 x = serverUrls.length + 1;
+                			 }
+                		 }
+                	 } catch (Throwable t) {}
+                 }
                  long totalTime = -1;
                  if (tot!=null&& !"".equals(tot)) {
                  	totalTime = Long.parseLong(tot);
@@ -1741,12 +1756,31 @@ public final void switchServer(int startIndex, boolean forceChange) {
 		return;
 	}
 	
+	double minload = 1000000.0;
+	int candidate = -1;
 	
-	if (currentServerIndex==(serverUrls.length-1)) {
-		currentServerIndex = 0;
-	} else {
-		currentServerIndex++;
+	for (int i = 0; i < serverUrls.length; i++) {
+		if ( minload == 1000000.0 ) { // Initially set minload to value of first server.
+			minload = serverLoads[i];
+		} else if ( serverLoads[i] < minload && serverLoads[i] != -1.0 ) { // If there is really a server with a lower load, use this server as candidate.
+			minload = serverLoads[i];
+			candidate = i;
+		}
 	}
+	
+	if ( candidate == -1 ) {
+		// Round robin...
+		if (currentServerIndex==(serverUrls.length-1)) {
+			currentServerIndex = 0;
+		} else {
+			currentServerIndex++;
+		}
+	} else {
+		currentServerIndex = candidate;
+	}
+	
+	
+	
 	if (startIndex == currentServerIndex) {
 		System.err.println("BACK AT THE ORIGINAL SERVER!!!!");
 //		if (!forceChange) {
