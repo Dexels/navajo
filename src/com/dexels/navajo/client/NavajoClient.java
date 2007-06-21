@@ -1878,13 +1878,22 @@ public final void switchServer(int startIndex, boolean forceChange) {
 	}
 
 	/**
-	 * Schedule a webservice @ a certain time.
+	 * Schedule a webservice @ a certain time. Note that this method does NOT return the response
+	 * of the scheduled webservice. It contains a Navajo with the status of the scheduling.
+	 * 
 	 * @out contains the request Navajo
 	 * @method defines the webservice
-	 * @schedule defines a timestamp of the format: HH:mm:ss dd-MM-yyyy
+	 * @schedule defines a timestamp of the format: HH:mm:ss dd-MM-yyyy. If null assume immediate execution.
 	 * 
 	 */
 	public Navajo doScheduledSend(Navajo out, String method, String schedule) throws ClientException {
+		
+		String triggerURL = null;
+		
+		if ( schedule == null ) {
+			schedule = "now";
+		}
+		
 		Header h = out.getHeader();
 		if ( h == null ) {
 			h = NavajoFactory.getInstance().createHeader(out, method, username, password, -1 );
@@ -1892,13 +1901,17 @@ public final void switchServer(int startIndex, boolean forceChange) {
 		}
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm dd-MM-yyyy");
 		Calendar c = Calendar.getInstance();
-		try {
-			c.setTime(sdf.parse(schedule));
-		} catch (ParseException e) {
-			throw new ClientException(-1, -1, "Unknown schedule timestamp format: " + schedule);
+		if ( !schedule.equals("now") ) {
+			try {
+				c.setTime(sdf.parse(schedule));
+				triggerURL = "time:" + (c.get(Calendar.MONTH) + 1) + "|" + c.get(Calendar.DAY_OF_MONTH) + "|" + c.get(Calendar.HOUR_OF_DAY) + "|" +
+				c.get(Calendar.MINUTE) + "|*|" + c.get(Calendar.YEAR);
+			} catch (ParseException e) {
+				throw new ClientException(-1, -1, "Unknown schedule timestamp format: " + schedule);
+			}
+		} else {
+			triggerURL = "time:" + schedule;
 		}
-		String triggerURL = "time:" + (c.get(Calendar.MONTH) + 1) + "|" + c.get(Calendar.DAY_OF_MONTH) + "|" + c.get(Calendar.HOUR_OF_DAY) + "|" +
-		c.get(Calendar.MINUTE) + "|*|" + c.get(Calendar.YEAR);
 		
 		h.setSchedule(triggerURL);
 		
