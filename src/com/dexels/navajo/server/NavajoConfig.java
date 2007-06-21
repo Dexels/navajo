@@ -42,6 +42,8 @@ import com.dexels.navajo.loader.NavajoClassSupplier;
 import com.dexels.navajo.lockguard.LockManager;
 
 import java.io.*;
+import java.lang.management.ManagementFactory;
+import java.lang.management.OperatingSystemMXBean;
 
 import com.dexels.navajo.parser.DefaultExpressionEvaluator;
 import com.dexels.navajo.persistence.*;
@@ -103,6 +105,8 @@ public final class NavajoConfig {
     private static volatile NavajoConfig instance = null;
 	private File jarFolder;
 	private String instanceName;
+	
+	private OperatingSystemMXBean myOs = null;
     
 	private static final synchronized void resetInstance() {
 		instance = null;
@@ -114,6 +118,7 @@ public final class NavajoConfig {
       classPath = System.getProperty("java.class.path");
       adapterClassloader = ncs;
       instance = this;
+      myOs = ManagementFactory.getOperatingSystemMXBean();
       //loadConfig(in);
      }
     
@@ -863,6 +868,14 @@ public final class NavajoConfig {
 	public DescriptionProviderInterface getDescriptionProvider() {
 //		System.err.println("Getting description provider. Config hash: "+hashCode());
 		return myDescriptionProvider;
+	}
+	
+	public double getCurrentCPUload() {
+		if ( myOs != null ) {
+			return myOs.getSystemLoadAverage();
+		} else {
+			return -1.0;
+		}
 	}
 	
 }

@@ -1019,6 +1019,7 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
         access.setMyDispatcher(this);
        
         access.setThreadCount(accessSetSize);
+        access.setCpuload(NavajoConfig.getInstance().getCurrentCPUload());
         
         // Check for lazy message control.
         access.setLazyMessages(header.getLazyMessages());

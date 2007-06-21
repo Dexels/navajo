@@ -46,6 +46,7 @@ public final class Access implements java.io.Serializable, Mappable {
 	public java.util.Date created = new java.util.Date();
 	protected static int accessCount = 0;
 	public int threadCount = 0;
+	public double cpuload = -1.0;
 	public String accessID = "";
 	public int userID;
 	public int serviceID;
@@ -264,6 +265,7 @@ public final class Access implements java.io.Serializable, Mappable {
 			h.setAttribute("requestParseTime",""+parseTime);
 			h.setAttribute("processingTime",""+processingTime);
 			h.setAttribute("threadCount", this.threadCount+"");
+			h.setAttribute("cpuload", cpuload+"");
 		}
 	}
 
@@ -340,6 +342,14 @@ public final class Access implements java.io.Serializable, Mappable {
 
 	public String getIpAddress() {
 		return ipAddress;
+	}
+
+	public double getCpuload() {
+		return cpuload;
+	}
+
+	public void setCpuload(double cpuload) {
+		this.cpuload = cpuload;
 	}
 
 }
