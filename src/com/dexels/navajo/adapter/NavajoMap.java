@@ -437,15 +437,7 @@ public class NavajoMap extends AsyncMappable  implements Mappable {
 
   public final Object getProperty(String fullName) throws Exception {
 	  Property p = getPropertyObject(fullName);
-	  if ( p.getType().equals(Property.SELECTION_PROPERTY)) {
-		  if ( p.getSelected() != null ) {
-			  return p.getSelected().getValue();
-		  } else {
-			  return null;
-		  }
-	  } else {
-		  return p.getTypedValue(); 
-	  }
+	  return p.getTypedValue(); 
   }
   
   private Property getPropertyObject(String fullName) throws UserException {
