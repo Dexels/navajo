@@ -435,9 +435,17 @@ public class NavajoMap extends AsyncMappable  implements Mappable {
     return msg;
   }
 
-  public Object getProperty(String fullName) throws Exception {
-	   Property p = getPropertyObject(fullName);
-	   return p.getTypedValue(); 
+  public final Object getProperty(String fullName) throws Exception {
+	  Property p = getPropertyObject(fullName);
+	  if ( p.getType().equals(Property.SELECTION_PROPERTY)) {
+		  if ( p.getSelected() != null ) {
+			  return p.getSelected().getValue();
+		  } else {
+			  return null;
+		  }
+	  } else {
+		  return p.getTypedValue(); 
+	  }
   }
   
   private Property getPropertyObject(String fullName) throws UserException {
@@ -514,12 +522,19 @@ public class NavajoMap extends AsyncMappable  implements Mappable {
 }
 
 
-  public final String getStringProperty(String fullName) throws UserException {
+ public final String getStringProperty(String fullName) throws Exception {
 
-    Property p = getPropertyObject(fullName);
-    return p.getValue();
-
-  }
+	 Property p = getPropertyObject(fullName);
+	 if ( p.getType().equals(Property.SELECTION_PROPERTY )) {
+		 if ( p.getSelected() != null ) {
+			 return p.getSelected().getValue();
+		 } else {
+			 return null;
+		 }
+	 } else {
+		 return p.getValue();
+	 }
+ }
   
   
   /**
