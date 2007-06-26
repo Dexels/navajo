@@ -1,12 +1,7 @@
 package com.dexels.navajo.tipi.components.swingimpl.swing;
 
-import javax.swing.JInternalFrame;
-import javax.swing.RootPaneContainer;
-import javax.swing.event.InternalFrameEvent;
-import javax.swing.event.InternalFrameListener;
 import java.awt.*;
 import java.awt.event.*;
-
 import javax.swing.*;
 import javax.swing.event.*;
 import java.beans.*;
@@ -14,14 +9,12 @@ import java.beans.*;
 public class TipiModalInternalFrame extends JInternalFrame {
 
   private JPanel glass;
+private final JRootPane myRootPane;
 
 public TipiModalInternalFrame(String title, JRootPane 
-      rootPane, Component desktop,Dimension size) {
+      rootPane, Component desktop, Component contentComponent, Dimension size) {
     super(title);
-
-    System.err.println("Getting bounds  of: rootPane: "+rootPane.getBounds());
-    System.err.println("Getting bounds  of: desktop: "+desktop.getBounds());
-    System.err.println("Getting bounds  of: desktopLocation: "+desktop.getLocationOnScreen());
+    myRootPane = rootPane;
     glass = new JPanel();
 	glass.setOpaque(false);
 
@@ -32,8 +25,9 @@ public TipiModalInternalFrame(String title, JRootPane
     glass.addMouseMotionListener(adapter);
 
     // Add in option pane
-//    getContentPane().add(pane, BorderLayout.CENTER);
+    getContentPane().add(contentComponent, BorderLayout.CENTER);
 
+    
     // Define close behavior
 //    PropertyChangeListener pcl = 
 //        new PropertyChangeListener() {
@@ -53,7 +47,7 @@ public TipiModalInternalFrame(String title, JRootPane
 //        }
 //      }
 //    };
-//    this.addPropertyChangeListener(pcl);
+//    pane.addPropertyChangeListener(pcl);
 
     // Change frame border
     putClientProperty("JInternalFrame.frameType",
@@ -63,11 +57,9 @@ public TipiModalInternalFrame(String title, JRootPane
 //    Dimension size = getPreferredSize();
     Dimension rootSize = desktop.getSize();
 
-    Rectangle r = new Rectangle((rootSize.width - size.width) / 2,
+    setBounds((rootSize.width - size.width) / 2,
               (rootSize.height - size.height) / 2,
-               size.width, size.height);
-    System.err.println("Bounds: "+r);
-    setBounds(r); 
+               size.width, size.height); 
     desktop.validate(); 
     try {
       setSelected(true);
@@ -79,25 +71,26 @@ public TipiModalInternalFrame(String title, JRootPane
 
     // Change glass pane to our panel
     rootPane.setGlassPane(glass);
-    setClosable(true);
-    setResizable(true);
+
     // Show glass pane, then modal dialog
-   }
+    glass.setVisible(true);
+  }
 
   public void setVisible(boolean value) {
-	  if(value) {
-		  glass.setVisible(true);
-	  }
-	  super.setVisible(value);
-    
-//    if (value) {
-//      startModal();
-//    } else {
-//      stopModal();
-//    }
+	  System.err.println("SETTING VISIBLE: "+value);
+    super.setVisible(value);
+    if (value) {
+      startModal();
+    } else {
+      stopModal();
+      if(glass!=null) {
+          glass.setVisible(false);
+          glass = new JPanel();
+      }
+    }
   }
-//
-//  private synchronized void startModal() {
+
+  private synchronized void startModal() {
 //    try {
 //      if (SwingUtilities.isEventDispatchThread()) {
 //        EventQueue theQueue = 
@@ -105,6 +98,8 @@ public TipiModalInternalFrame(String title, JRootPane
 //        while (isVisible()) {
 //          AWTEvent event = theQueue.getNextEvent();
 //          Object source = event.getSource();
+//          System.err.println("Source: "+source);
+//          System.err.println("Event: "+event.toString());
 //          if (event instanceof ActiveEvent) {
 //            ((ActiveEvent)event).dispatch();
 //          } else if (source instanceof Component) {
@@ -125,12 +120,14 @@ public TipiModalInternalFrame(String title, JRootPane
 //      }
 //    } catch (InterruptedException ignored) {
 //    }
-//  }
+//    System.err.println("Exiting startmodal:");
+  }
 
-//  private synchronized void stopModal() {
-//    notifyAll();
-//  }
+  private synchronized void stopModal() {
+    notifyAll();
+  }
 
+  
   public static void main(String args[]) {
     final JFrame frame = new JFrame(
       "Modal Internal Frame");
@@ -146,32 +143,25 @@ public TipiModalInternalFrame(String title, JRootPane
       public void actionPerformed(ActionEvent e) {
 
         // Manually construct an input popup
-//        JOptionPane optionPane = new JOptionPane(
-//          "Print?", JOptionPane.QUESTION_MESSAGE, 
-//          JOptionPane.YES_NO_OPTION);
+        JOptionPane optionPane = new JOptionPane(
+          "Print?", JOptionPane.QUESTION_MESSAGE, 
+          JOptionPane.YES_NO_OPTION);
 
         // Construct a message internal frame popup
-        final JInternalFrame modal = 
+        JInternalFrame modal = 
           new TipiModalInternalFrame("Really Modal", 
-          frame.getRootPane(), desktop,new Dimension(100,100));
-        modal.setClosable(true);
-        modal.setResizable(true);
-        JButton button = new JButton("Holadie");
-        button.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent arg0) {
-				modal.setVisible(false);
-			}});
-        modal.getContentPane().add(button);
+          frame.getRootPane(), desktop, optionPane, new Dimension(200,200));
+
         modal.setVisible(true);
 
-//        Object value = optionPane.getValue();
-//        if (value.equals(ZERO)) {
-//          System.out.println("Selected Yes");
-   //     } else if (value.equals(ONE)) {
-  //        System.out.println("Selected No");
-//        } else {
-//          System.err.println("Input Error"); 
-//       }
+        Object value = optionPane.getValue();
+        if (value.equals(ZERO)) {
+          System.out.println("Selected Yes");
+        } else if (value.equals(ONE)) {
+          System.out.println("Selected No");
+        } else {
+          System.err.println("Input Error"); 
+       }
       }
     };
 
@@ -192,4 +182,47 @@ public TipiModalInternalFrame(String title, JRootPane
     frame.setSize(500, 300);
     frame.setVisible(true);
   }
+
+public static void showInternalMessage(JRootPane rootPane, TipiSwingDesktop defaultDesktop, String title, String text, int poolSize) {
+	// TODO Auto-generated method stub
+	JOptionPane.showInternalMessageDialog(defaultDesktop,text,title,JOptionPane.INFORMATION_MESSAGE);
+}
+  
+//public static void showInternalFrame(JRootPane root, JDesktopPane pane, JComponent contents, String title, String text, int type) {
+//JOptionPane optionPane = new JOptionPane();
+////JInternalFrame modal = optionPane.createInternalFrame();
+//}
+
+//public static void showInternalMessage(JRootPane root, JDesktopPane pane, String title, String text, int type) {
+//  JOptionPane optionPane = new JOptionPane();
+//  optionPane.setMessage(text);
+//  optionPane.setMessageType(
+//    type);
+//  JInternalFrame modal = optionPane.
+//    createInternalFrame(pane, title);
+//
+//  showInternalFrame(root, modal);
+//
+//  System.out.println("Returns immediately");  
+//}
+
+//private static void showInternalFrame(JRootPane root, JInternalFrame modal) {
+//// create opaque glass pane
+//  JPanel glass = new JPanel();
+//  glass.setOpaque(false);
+//
+//  // Attach modal behavior to frame
+//  modal.addInternalFrameListener(
+//    new ModalAdapter(glass));
+//
+//  // Add modal internal frame to glass pane
+//  glass.add(modal);
+//
+//  // Change glass pane to our panel
+//  root.setGlassPane(glass);
+//
+//  // Show glass pane, then modal dialog
+//  glass.setVisible(true);
+//  modal.setVisible(true);
+//}
 }
