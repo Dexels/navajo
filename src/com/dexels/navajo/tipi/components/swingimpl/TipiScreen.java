@@ -42,8 +42,13 @@ public class TipiScreen
             ( (Component) current).setVisible(true);
           }
           else {
-            System.err.println("**************** SHOULD NOT REALLY BE HERE: " +
-                               current);
+        	  if(c instanceof JApplet) {
+        		  // ok
+        	  } else {
+                  System.err.println("**************** SHOULD NOT REALLY BE HERE: " +
+                          current);
+                  Thread.dumpStack();
+        	  }
           }
         }
     });
