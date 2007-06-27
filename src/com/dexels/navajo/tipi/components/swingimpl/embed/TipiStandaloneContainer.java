@@ -38,11 +38,11 @@ public class TipiStandaloneContainer implements TipiStandaloneToplevelContainer 
       embeddedContext.setUserInterface(u);
     }
   }
-  public void setResourceBaseDirectory(File f) {
-      if (embeddedContext!=null) {
-          embeddedContext.setResourceBaseDirectory(f);
-        }
-  }
+//  public void setResourceBaseDirectory(File f) {
+//      if (embeddedContext!=null) {
+//          embeddedContext.setResourceBaseDirectory(f);
+//        }
+//  }
 
   public void loadDefinition(String tipiPath, String definitionName,String resourceBaseDirectory) throws IOException, TipiException {
     embeddedContext = new EmbeddedContext(new String[]{tipiPath},false,new String[]{definitionName},libraries,resourceBaseDirectory);
