@@ -530,31 +530,33 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode, Comp
 
                 }
                 Pattern pattern = Pattern.compile(regularExpression);
-                for (int i = 0; i < messageList.size(); i++) {
-                    BaseMessageImpl m = (BaseMessageImpl) messageList.get(i);
-                    String name = m.getName();
-                    if (m.getType().equals(Message.MSG_TYPE_ARRAY) && pattern.matcher(name).matches()) { // If
-                                                                                                            // message
-                                                                                                            // is
-                                                                                                            // array
-                                                                                                            // type
-                                                                                                            // add
-                                                                                                            // all
-                                                                                                            // children.
-                        if (index == null) {
-                            result.addAll(m.messageList);
-                        } else {
-                            try {
-                                result.add(m.getMessage(Integer.parseInt(index)));
-                            } catch (Exception pe) {
-                                throw new NavajoExceptionImpl("Could not parse array index: " + index);
-                            }
-                        }
-                    } else {
-                        if (pattern.matcher(name).matches()) {
-                            result.add(messageList.get(i));
-                        }
-                    }
+                if ( messageList != null ) {
+                	for (int i = 0; i < messageList.size(); i++) {
+                		BaseMessageImpl m = (BaseMessageImpl) messageList.get(i);
+                		String name = m.getName();
+                		if (m.getType().equals(Message.MSG_TYPE_ARRAY) && pattern.matcher(name).matches()) { // If
+                			// message
+                			// is
+                			// array
+                			// type
+                			// add
+                			// all
+                			// children.
+                			if (index == null) {
+                				result.addAll(m.messageList);
+                			} else {
+                				try {
+                					result.add(m.getMessage(Integer.parseInt(index)));
+                				} catch (Exception pe) {
+                					throw new NavajoExceptionImpl("Could not parse array index: " + index);
+                				}
+                			}
+                		} else {
+                			if (pattern.matcher(name).matches()) {
+                				result.add(messageList.get(i));
+                			}
+                		}
+                	}
                 }
 
             } catch (Exception re) {
@@ -670,15 +672,18 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode, Comp
         cp.setMode(getMode());
         cp.setType(getType());
 
-        for (int i = 0; i < messageList.size(); i++) {
-            BaseMessageImpl current = (BaseMessageImpl) messageList.get(i);
-            if (current == this) {
-                throw new RuntimeException("CYCLIC Message copy found!");
-            }
+        if ( messageList != null ) {
+        	for (int i = 0; i < messageList.size(); i++) {
+        		BaseMessageImpl current = (BaseMessageImpl) messageList.get(i);
+        		if (current == this) {
+        			throw new RuntimeException("CYCLIC Message copy found!");
+        		}
 
-            Message cc = current.copy(n);
-            cp.addMessage(cc);
+        		Message cc = current.copy(n);
+        		cp.addMessage(cc);
+        	}
         }
+        
         ArrayList myProp = getAllProperties();
         for (int i = 0; i < myProp.size(); i++) {
             BasePropertyImpl current = (BasePropertyImpl) myProp.get(i);
@@ -689,27 +694,31 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode, Comp
     }
 
     public final void prune() {
-     
-        for (int i = 0; i < messageList.size(); i++) {
-            BaseMessageImpl current = (BaseMessageImpl) messageList.get(i);
-            current.prune();
-        }
-        ArrayList myProp = getAllProperties();
-        for (int i = 0; i < myProp.size(); i++) {
-            BasePropertyImpl current = (BasePropertyImpl) myProp.get(i);
-            current.prune();
-        }
+
+    	if ( messageList != null ) {
+    		for (int i = 0; i < messageList.size(); i++) {
+    			BaseMessageImpl current = (BaseMessageImpl) messageList.get(i);
+    			current.prune();
+    		}
+    	}
+    	ArrayList myProp = getAllProperties();
+    	for (int i = 0; i < myProp.size(); i++) {
+    		BasePropertyImpl current = (BasePropertyImpl) myProp.get(i);
+    		current.prune();
+    	}
     }
 
     public final void setMessageMap(MessageMappable m) {
-        myStringMap = m;
-       
-        for (int i = 0; i < messageList.size(); i++) {
-            BaseMessageImpl current = (BaseMessageImpl) messageList.get(i);
-            if (current != null) {
-                current.setMessageMap(m);
-            }
-        }
+    	myStringMap = m;
+
+    	if ( messageList != null ) {
+    		for (int i = 0; i < messageList.size(); i++) {
+    			BaseMessageImpl current = (BaseMessageImpl) messageList.get(i);
+    			if (current != null) {
+    				current.setMessageMap(m);
+    			}
+    		}
+    	}
     }
 
     public final MessageMappable getMessageMap() {
@@ -967,22 +976,30 @@ public final Message getParentMessage() {
         // Check sub message structure.
         List allOther = other.messageList;
         //ArrayList allMe = messag;
-        if (allOther.size() != messageList.size()) {
+        if ( allOther != null && messageList == null ) {
+        	return false;
+        }
+        if ( messageList != null && allOther == null ) {
+        	return false;
+        }
+        if (allOther != null && messageList != null && allOther.size() != messageList.size()) {
             return false;
         }
-        for (int i = 0; i < allOther.size(); i++) {
-            Message otherMsg = (Message) allOther.get(i);
-            boolean match = false;
-            for (int j = 0; j < messageList.size(); j++) {
-                Message myMsg = (Message) messageList.get(j);
-                if (myMsg.isEqual(otherMsg, skipProperties)) {
-                    match = true;
-                    j = messageList.size() + 1;
-                }
-            }
-            if (!match) {
-                return false;
-            }
+        if ( allOther != null ) {
+        	for (int i = 0; i < allOther.size(); i++) {
+        		Message otherMsg = (Message) allOther.get(i);
+        		boolean match = false;
+        		for (int j = 0; j < messageList.size(); j++) {
+        			Message myMsg = (Message) messageList.get(j);
+        			if (myMsg.isEqual(otherMsg, skipProperties)) {
+        				match = true;
+        				j = messageList.size() + 1;
+        			}
+        		}
+        		if (!match) {
+        			return false;
+        		}
+        	}
         }
         // Check property structure.
         ArrayList allOtherProps = other.getAllProperties();
@@ -1088,11 +1105,11 @@ public final Message getParentMessage() {
     
 
     public int getChildCount() {
-      return getAllProperties().size() + messageList.size();
+      return getAllProperties().size() + ( messageList != null ? messageList.size() : 0);
     }
 
     public TreeNode getChildAt(int childIndex) {
-      if (childIndex >= getAllProperties().size()) {
+      if ( messageList != null && childIndex >= getAllProperties().size()) {
         return (TreeNode) messageList.get(childIndex -
                                                getAllProperties().size());
       }
@@ -1109,17 +1126,19 @@ public final Message getParentMessage() {
     }
 
     public int getIndex(TreeNode t) {
-      for (int i = 0; i < getAllProperties().size(); i++) {
-        if (getAllProperties().get(i) == t) {
-          return i;
-        }
-      }
-      for (int i = 0; i < messageList.size(); i++) {
-        if (messageList.get(i) == t) {
-          return i;
-        }
-      }
-      return 0;
+    	for (int i = 0; i < getAllProperties().size(); i++) {
+    		if (getAllProperties().get(i) == t) {
+    			return i;
+    		}
+    	}
+    	if ( messageList != null ) {
+    		for (int i = 0; i < messageList.size(); i++) {
+    			if (messageList.get(i) == t) {
+    				return i;
+    			}
+    		}
+    	}
+    	return 0;
     }
 
     public boolean isLeaf() {
