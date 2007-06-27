@@ -571,13 +571,13 @@ public void loadStartValues(XMLElement element) {
 //          setComponentValue(key, o.value);
       } else {
     	  System.err.println("Evaluation error: "+value);
-    	  if (o==null) {
-			System.err.println("Null operand returned");
-		} else {
-			System.err.println("value: "+o.value);
-			System.err.println("type: "+o.type);
-			System.err.println("option: "+o.option);
-		}
+//    	  if (o==null) {
+//			System.err.println("Null operand returned");
+//		} else {
+//			System.err.println("value: "+o.value);
+//			System.err.println("type: "+o.type);
+//			System.err.println("option: "+o.option);
+//		}
           setValue(key, value);
       }
       }

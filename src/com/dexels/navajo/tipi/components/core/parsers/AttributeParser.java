@@ -20,19 +20,10 @@ public class AttributeParser
   private Object getAttributeByPath(TipiComponent source, String path) {
     String componentPath = path.substring(0, path.indexOf(":"));
     String attr = path.substring(path.indexOf(":") + 1);
-    System.err.println("AttributeParse: Looking for component: "+componentPath);
-    TipiComponent tc = getTipiComponent(source, componentPath);
-    if (tc!=null) {
-		System.err.println("Component found: "+tc.getId()+" class: "+tc.getClass());
-	} else {
-		System.err.println("No component found");
-
-	}
-    System.err.println("Looking for attribute: "+attr);
+     TipiComponent tc = getTipiComponent(source, componentPath);
+  
     Object o =  tc.getValue(attr);
-		if(o!=null) {
-			System.err.println("Component returned: "+o); 
-		}
+
 	    return o;
     }
 }
