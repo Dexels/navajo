@@ -40,13 +40,16 @@ public abstract class TipiSwingDataComponentImpl
   private int pageCount = -1;
 
 
+  protected SwingTipiContext mySwingTipiContext;
+  
   private final ArrayList myBreaks = new ArrayList();
   private boolean committedInUI;
 
 
   
   public void initContainer() {
-    if (getContainer() == null) {
+	  mySwingTipiContext = (SwingTipiContext)myContext;
+	  if (getContainer() == null) {
       runSyncInEventThread(new Runnable() {
         public void run() {
           setContainer(createContainer());

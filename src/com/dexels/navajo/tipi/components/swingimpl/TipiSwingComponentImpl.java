@@ -22,6 +22,7 @@ public abstract class TipiSwingComponentImpl
   protected TipiGradientPaint myPaint;
   protected TipiPopupMenu myPopupMenu = null;
   private boolean committedInUI;
+  protected SwingTipiContext mySwingTipiContext;
 
   public void showPopup(MouseEvent e) {
   ( (JPopupMenu) myPopupMenu.getSwingContainer()).show(getSwingContainer(), e.getX(), e.getY());
@@ -71,6 +72,7 @@ public abstract class TipiSwingComponentImpl
   }
 
   public void initContainer() {
+	  mySwingTipiContext = (SwingTipiContext)myContext;
     if (getContainer() == null) {
       runSyncInEventThread(new Runnable() {
         public void run() {
