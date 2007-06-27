@@ -1090,15 +1090,25 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 	public Component getTableCellRendererComponent(final Table table,
 			final Object value, final int column, final int row) {
 		// try {
+		MessageTable myTable = (MessageTable)table;
+		boolean isSelected = table.getSelectionModel().isSelectedIndex(row);
+		if(isSelected) {
+			System.err.println("Setting SELECTED zebra to: "+column+" / "+row);
+		}
+		
 		
 		if(value instanceof Boolean) {
-			RadioButton rb = new RadioButton();
+			final RadioButton rb = new RadioButton();
 			rb.setSelected(((Boolean)value).booleanValue());
 			rb.addActionListener(new ActionListener(){
 
 				public void actionPerformed(ActionEvent arg0) {
+					System.err.println("CHAGGA!");
 					((MessageTable)table).setSelectedIndex(row);
 				}});
+			EchoPropertyComponent.setZebra(rb,column, row, false);
+			rb.setEnabled(true);
+			myTable.mapRowSelection(rb,row);
 			return rb;
 		}
 		
@@ -1112,7 +1122,10 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 		
 		epc.setUseLabelForReadOnlyProperties(true);
 		epc.setLabelVisible(false);
-		epc.setProperty((Property) value);
+		Property property = (Property) value;
+		property.setDirection(Property.DIR_IN);
+		epc.setProperty(property);
+		
 		setInsets(new Insets(0,0,0,0));
 		// epc.setWidth(tableColumnwidth);
 		
@@ -1147,11 +1160,8 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 		// Extent(widthVal,Extent.PX));
 		// }
 		epc.setColumnWidth(0, new Extent(2, Extent.PX));
-		boolean isSelected = table.getSelectionModel().isSelectedIndex(row);
-		if(isSelected) {
-			System.err.println("Setting SELECTED zebra to: "+column+" / "+row);
-		}
-		epc.setZebra(column, row, isSelected);
+	//	EchoPropertyComponent.setZebra(this,column, row, isSelected);
+		epc.setZebra(column, row, false);
 		// TODO FIX DISABLED ZEBRA
 		// epc.setBackground(null);
 		// epc.currentComponent.setBackground(null);
@@ -1259,6 +1269,22 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 		}
 	}
 
+	public static void setZebra(Component c, int column, int row, boolean selected) {
+		System.err.println("ZEBRA: "+c+" col: "+column+" row: "+row+" sel: "+selected);
+		if (selected) {
+			c.setStyle(Styles.DEFAULT_STYLE_SHEET.getStyle(c.getClass(), "SelectedRow"));
+		} else {
+			if (row % 2 == 0) {
+				Style evenRow = Styles.DEFAULT_STYLE_SHEET.getStyle(c.getClass(), "EvenRow");
+				c.setStyle(evenRow);
+				
+			} else {
+				Style oddRow = Styles.DEFAULT_STYLE_SHEET.getStyle(c.getClass(), "OddRow");
+				c.setStyle(oddRow);
+			}
+			
+		}
+	}
 	public void setZebra(int column, int row, boolean selected) {
 
 		if (selected) {
@@ -1275,7 +1301,6 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 			
 		}
 	}
-
 	public void setPropertyBackground(Color c) {
 		setBackground(c);
 		Component cn = (Component) currentComponent;

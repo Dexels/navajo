@@ -3,6 +3,7 @@ package com.dexels.navajo.echoclient.components;
 import java.util.*;
 
 import nextapp.echo2.app.Table;
+import nextapp.echo2.app.list.ListSelectionModel;
 import nextapp.echo2.app.table.AbstractTableModel;
 import nextapp.echo2.app.table.DefaultTableModel;
 import nextapp.echo2.app.table.TableCellRenderer;
@@ -57,6 +58,8 @@ public class MessageTableModel extends DefaultTableModel implements MessageListe
 
     private final ArrayList myMessageRows = new ArrayList();
 
+	private ListSelectionModel mySelectionModel;
+
     // private int lastSortedColumn = -1;
     // private boolean lastSortedDirection = true;
 
@@ -75,8 +78,9 @@ public class MessageTableModel extends DefaultTableModel implements MessageListe
             // Fix, to make sure the sorting/selecting goes well
             // I need to be able to find out what message it was originally.
             Message current = null;
-            if (getColumnCount() > 0) {
-                Property p = (Property) getValueAt(0, i);
+            if (getColumnCount() > 1) {
+            	// take the first value, value 0 is the boolean
+                Property p = (Property) getValueAt(1, i);
                 if (p != null) {
                     current = p.getParentMessage();
                 }
@@ -93,14 +97,23 @@ public class MessageTableModel extends DefaultTableModel implements MessageListe
 //        myColumnModel = columnModel;
 //    }
 
-    public MessageTableModel(MessageTable t, TableColumnModel columnModel, Message m) {
+    public MessageTableModel(MessageTable t, TableColumnModel columnModel, Message m, ListSelectionModel selection) {
 //        super(columnModel);
     	this.myTable = t;
-        myColumnModel = columnModel;
+    	this.mySelectionModel = selection;
+    	myColumnModel = columnModel;
         setMessage(m);
     }
 
     public void messageLoaded(int aap, int noot, int mies) {
+    }
+
+    public Object getValueAt(int column, int row) {
+    	if(column==0) {
+    		return new Boolean(mySelectionModel.isSelectedIndex(row));
+    	}
+    	Object o = super.getValueAt(column-1, row);
+    	return o;
     }
 
     public void clearMessage() {
@@ -227,7 +240,7 @@ public class MessageTableModel extends DefaultTableModel implements MessageListe
     	if(column==0) {
     		return "";
     	}
-        return myTable.getColumnTitle(column);
+        return myTable.getColumnTitle(column-1);
         // System.err.println("Getting column name: " + column);
         // return ""+myColumnModel.getColumn(column).getHeaderValue();
         // String s = (String) myColumnTitles.get(column);
@@ -270,9 +283,9 @@ public class MessageTableModel extends DefaultTableModel implements MessageListe
     }
 
     public Class getColumnClass(int columnIndex) {
-//    	if(columnIndex==0) {
-//    		return Boolean.class;
-//    	}
+    	if(columnIndex==0) {
+    		return Boolean.class;
+    	}
         return Property.class;
     }
 
@@ -283,6 +296,14 @@ public class MessageTableModel extends DefaultTableModel implements MessageListe
     public void fireDataChanged() {
         fireTableDataChanged();
     }
+
+	public ListSelectionModel getMySelectionModel() {
+		return mySelectionModel;
+	}
+
+	public void setMySelectionModel(ListSelectionModel mySelectionModel) {
+		this.mySelectionModel = mySelectionModel;
+	}
 
     // public void createColumnsFromModel(Message m, MessageTable table,
     // TableColumnModel tcm, TableCellRenderer myCellRenderer) {

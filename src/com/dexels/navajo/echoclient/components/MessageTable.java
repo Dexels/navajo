@@ -4,6 +4,9 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import nextapp.echo2.app.Color;
 import nextapp.echo2.app.Component;
@@ -81,7 +84,11 @@ public class MessageTable extends PageableSortableTable implements PageIndexChan
 
 	private PageNavigator myPageNavigator;
 
-	private Message myMessage;;
+	private Message myMessage;
+	
+	private final ArrayList actionEventListeners = new ArrayList();
+
+	private final Map rowSelectMap = new HashMap();
 
 	public MessageTable() {
 		StyleSheet sh = Styles.DEFAULT_STYLE_SHEET;
@@ -99,8 +106,15 @@ public class MessageTable extends PageableSortableTable implements PageIndexChan
 			System.err.println("Null style!");
 		}
 
-		// super.addActionListener(new ActionListener() {
-		//
+		 super.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+		 });
+		 
+			 //
 		// public void actionPerformed(ActionEvent e) {
 		// lastSelectedRow = currentSelectedRow;
 		// currentSelectedRow = getSelectedIndex();
@@ -145,12 +159,14 @@ public class MessageTable extends PageableSortableTable implements PageIndexChan
 	public void setMessage(Message m) {
 		// setSelectionMode(Table.);
 		myMessage = m;
+		rowSelectMap.clear();
 		setAutoCreateColumnsFromModel(false);
 		setHeaderVisible(true);
 		setDefaultRenderer(Property.class, myRenderer);
-		setSelectionBackground(new Color(200, 200, 255));
+		//setSelectionBackground(new Color(200, 200, 255));
 		setColumnModel(createColumnModel(m, myRenderer));
-		myModel = new MessageTableModel(this, getColumnModel(), m);
+		final DefaultListSelectionModel defaultListSelectionModel = new DefaultListSelectionModel();
+		myModel = new MessageTableModel(this, getColumnModel(), m,defaultListSelectionModel);
 sortablePageableModel = new DefaultPageableSortableTableModel(myModel);
 		sortablePageableModel.setRowsPerPage(rowsPerPage);
 		setBackground(new Color(255, 255, 255));
@@ -183,15 +199,23 @@ sortablePageableModel = new DefaultPageableSortableTableModel(myModel);
 		// }
 		// });
 		getSelectionModel().clearSelection();
-		DefaultListSelectionModel defaultListSelectionModel = new DefaultListSelectionModel() {
-				};
 		setSelectionModel(defaultListSelectionModel);
-
+		setSelectionEnabled(false);
+		
 		defaultListSelectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		defaultListSelectionModel.addChangeListener(new ChangeListener(){
 
 			public void stateChanged(ChangeEvent arg0) {
-				System.err.println("Selection in table changed!");
+				int row = defaultListSelectionModel.getMinSelectedIndex();
+				if(row<0) {
+					return;
+				}
+				System.err.println("Row: "+row);
+				setSelectedRow(row);
+//				RadioButton rb = (RadioButton) rowSelectMap.get(new Integer(row));
+//				if(rb!=null) {
+//					rb.setSelected(true);
+//				}
 			}});
 	//	defaultListSelectionModel.setSelectedIndex(1, true);
 		setSelectionBackground(new Color(200, 200, 255));
@@ -264,7 +288,7 @@ sortablePageableModel = new DefaultPageableSortableTableModel(myModel);
 
 	public Message getSelectedMessage() {
 		int index = getSelectionModel().getMinSelectedIndex();
-		System.err.println();
+		System.err.println("GETTING SELECTED INDEX: "+index);
 		if (index < 0) {
 			return null;
 		}
@@ -273,13 +297,13 @@ sortablePageableModel = new DefaultPageableSortableTableModel(myModel);
 		int pagedSortedIndex= -1;
 		try {
 			int sortedIndex = sortablePageableModel.toUnsortedModelRowIndex(index);
-			System.err.println("sorted: " + sortedIndex);
+//			System.err.println("sorted: " + sortedIndex);
 			int pagedIndex = sortablePageableModel.toUnpagedModelRowIndex(index);
-			System.err.println("pagedIndex: " + pagedIndex);
+//			System.err.println("pagedIndex: " + pagedIndex);
 			sortedPagedIndex = sortablePageableModel.toUnpagedModelRowIndex(sortedIndex);
-			System.err.println("sortedPagedIndex: " + sortedPagedIndex);
+//			System.err.println("sortedPagedIndex: " + sortedPagedIndex);
 			pagedSortedIndex = sortablePageableModel.toUnsortedModelRowIndex(pagedIndex);
-			System.err.println("pagedSortedIndex: " + pagedSortedIndex);
+//			System.err.println("pagedSortedIndex: " + pagedSortedIndex);
 		} catch (Throwable e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -299,7 +323,18 @@ sortablePageableModel = new DefaultPageableSortableTableModel(myModel);
 		// + getSelectionModel().getMinSelectedIndex());
 		getSelectionModel().clearSelection();
 		getSelectionModel().setSelectedIndex(s, true);
+//		System.err.println("Setting selected index to: "+s);
+//		System.err.println("Set selected index to: "+getSelectionModel().getMinSelectedIndex());
+		fireActionEvents(new ActionEvent(this,""+s));
 	}
+
+	private void fireActionEvents(ActionEvent a) {
+		for (int i = 0; i < actionEventListeners.size(); i++) {
+			ActionListener al = (ActionListener)actionEventListeners.get(i);
+			al.actionPerformed(a);
+		}
+	}
+
 
 	public void addActionListener(ActionListener al) {
 		System.err.println("Ignoring addActionListener. Use addselectionlistener");
@@ -307,11 +342,14 @@ sortablePageableModel = new DefaultPageableSortableTableModel(myModel);
 
 	//
 	public void addSelectionListener(ActionListener al) {
-		super.addActionListener(al);
+	//	super.addActionListener(al);
+		actionEventListeners.add(al);
+		
 	}
 
 	public void removeSelectionListener(ActionListener al) {
-		super.removeActionListener(al);
+//		super.removeActionListener(al);
+		actionEventListeners.remove(al);
 	}
 
 	public void addColumn(String id, String title, boolean editable, int size) {
@@ -322,11 +360,11 @@ sortablePageableModel = new DefaultPageableSortableTableModel(myModel);
 	}
 
 	public boolean isColumnEditable(int index) {
-		Boolean b = (Boolean) editables.get(index);
-		// if(index==0) {
-		// return true;
-		// }
-		// Boolean b = (Boolean)editables.get(index-1);
+		//Boolean b = (Boolean) editables.get(index);
+		 if(index==0) {
+		 return true;
+		 }
+		 Boolean b = (Boolean)editables.get(index-1);
 		if (b != null) {
 			return b.booleanValue();
 		}
@@ -334,6 +372,9 @@ sortablePageableModel = new DefaultPageableSortableTableModel(myModel);
 	}
 
 	public String getColumnTitle(int i) {
+		if(i>=names.size()) {
+			return "";
+		}
 		return (String) names.get(i);
 		// if(i==0){
 		// return " ";
@@ -347,7 +388,10 @@ sortablePageableModel = new DefaultPageableSortableTableModel(myModel);
 	// }
 
 	public Extent getColumnSize(int columnIndex) {
-		Integer i = (Integer) sizes.get(columnIndex);
+		if(columnIndex==0) {
+			return new Extent(8, Extent.PX);
+		}
+		Integer i = (Integer) sizes.get(columnIndex-1);
 		if (i != null) {
 			// System.err.println("MESSAGETABLE: RETURNING SIZE:
 			// "+i.intValue());
@@ -364,20 +408,23 @@ sortablePageableModel = new DefaultPageableSortableTableModel(myModel);
 	}
 
 	public String getColumnId(int columnIndex) {
-		return (String) ids.get(columnIndex);
-		// if(columnIndex==0){
-		// return " ";
-		// }
-		// return (String) ids.get(columnIndex-1);
+//		return (String) ids.get(columnIndex);
+		 if(columnIndex==0){
+		 return " ";
+		 }
+		 return (String) ids.get(columnIndex-1);
 	}
 
 	public TableColumnModel createColumnModel(Message m, TableCellRenderer myCellRenderer) {
 		TableColumnModel tcm = new DefaultTableColumnModel();
 		int columnCount = ids.size();
 		// super.setColumnCount(columnCount);
-
+		SortableTableColumn tc = new SortableTableColumn(0, getColumnSize(0), myRenderer, new MessageTableHeaderRenderer());
+		tcm.addColumn(tc);
+		
+		
 		for (int index = 0; index < columnCount; index++) {
-			SortableTableColumn tc = new SortableTableColumn(index, getColumnSize(index), myRenderer, new MessageTableHeaderRenderer());
+			tc = new SortableTableColumn(index+1, getColumnSize(index+1), myRenderer, new MessageTableHeaderRenderer());
 			// tc.setHeaderRenderer(new MessageTableHeaderRenderer());
 			tc.setComparator(new Comparator() {
 				public int compare(Object o1, Object o2) {
@@ -473,5 +520,18 @@ sortablePageableModel = new DefaultPageableSortableTableModel(myModel);
 
 	public void setSelectedMessage(Message selectedMessage) {
 		// not implemented for now.
+	}
+
+
+	public void mapRowSelection(RadioButton rb, int row) {
+		rowSelectMap.put(new Integer(row),rb);
+	}
+	
+	public void setSelectedRow(int row) {
+		for (Iterator iter = rowSelectMap.keySet().iterator(); iter.hasNext();) {
+			Integer element = (Integer) iter.next();
+			RadioButton r = (RadioButton) rowSelectMap.get(element);
+			r.setSelected(element.intValue()==row);
+		}
 	}
 }

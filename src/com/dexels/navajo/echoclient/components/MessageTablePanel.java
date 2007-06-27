@@ -94,4 +94,12 @@ public class MessageTablePanel extends SplitPane {
 	public void setSelectedMessage(Message selectedMessage) {
 		myTable.setSelectedMessage(selectedMessage);
 	}
+
+	public void addSelectionListener(ActionListener al) {
+		myTable.addSelectionListener(al);
+	}
+
+	public void removeSelectionListener(ActionListener al) {
+		myTable.addSelectionListener(al);
+	}
 }
