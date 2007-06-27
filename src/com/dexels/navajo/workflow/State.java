@@ -47,7 +47,7 @@ public class State implements Serializable, Mappable {
 		myWorkFlow = wf;
 	}
 	
-	public WorkFlowTask addTask(String webservice, String trigger, String condition) throws IllegalTrigger, IllegalTask  {
+	public void addTask(String webservice, String trigger, String condition) throws IllegalTrigger, IllegalTask  {
 		if ( trigger == null || trigger.equals("")) {
 			trigger = "time:now";
 		}
@@ -56,7 +56,6 @@ public class State implements Serializable, Mappable {
 		task.setWorkflowId(myWorkFlow.getMyId());
 		WorkFlowTask wft = new WorkFlowTask(this, task);
 		myTasks.add(wft);
-		return wft;
 	}
 	
 	public Transition addTransition(String nextState, String trigger, String condition, String webservice) throws IllegalTrigger, IllegalTask  {

@@ -1,18 +1,15 @@
 package com.dexels.navajo.workflow;
 
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
-import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.Date;
+
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.types.Binary;
-import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.Parameters;
@@ -92,7 +89,6 @@ public class WorkFlow implements Mappable, Serializable {
 			String type = (value != null) ? MappingUtils.determineNavajoType(value) : "";
 			MappingUtils.setProperty(true, localNavajo.getMessage("__parms__"), name, value, type, "", "in", "", 0, null, localNavajo, false);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace(System.err);
 		} 
 	}

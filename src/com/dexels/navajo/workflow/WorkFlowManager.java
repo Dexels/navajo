@@ -7,7 +7,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Random;
 
@@ -32,7 +31,7 @@ public class WorkFlowManager extends GenericThread implements WorkFlowManagerMXB
 	private static Object semaphore = new Object();
 	private final ArrayList<WorkFlow> workflowInstances = new ArrayList<WorkFlow>();
 	private final HashMap<String,WorkFlowDefinition> workflowDefinitions = new HashMap<String,WorkFlowDefinition>();
-	private static String id = "Navajo WorkFlow Manager";
+	private static String id = "Navajo WorkFlow Manager $Id$";
 	
 	private String workflowPath = null;
 	private String workflowDefinitionPath = null;
@@ -237,6 +236,14 @@ public class WorkFlowManager extends GenericThread implements WorkFlowManagerMXB
 
 	public void setWorkflowDef(String workflowDef) {
 		this.workflowDef = workflowDef;
+	}
+
+	public int getDefinitionCount() {
+		return workflowInstances.size();
+	}
+
+	public int getInstanceCount() {
+		return workflowDefinitions.size();
 	}
 	
 

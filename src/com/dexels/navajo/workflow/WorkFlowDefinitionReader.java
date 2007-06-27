@@ -3,7 +3,6 @@ package com.dexels.navajo.workflow;
 import java.io.File;
 import java.io.FileReader;
 import java.io.StringWriter;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
@@ -101,7 +100,7 @@ public final class WorkFlowDefinitionReader {
 			String service = readAttribute(t,"service");
 			String trigger = readAttribute(t,"trigger");
 			String condition = readAttribute(t,"condition");
-			WorkFlowTask wtf = s.addTask(service, trigger, condition);
+			s.addTask(service, trigger, condition);
 		}
 		
 		return s;
