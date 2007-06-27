@@ -13,6 +13,8 @@ import java.util.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
+import javax.swing.table.TableColumn;
+
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.swingclient.components.*;
 import com.dexels.navajo.tipi.*;
@@ -85,6 +87,20 @@ public class TipiTable
   }
 
 
+  public final void exportToService() {
+	  for (int i = 0; i < mm.getRowCount(); i++) {
+		System.err.print("Row # "+i);
+		for (int j = 0; j < mm.getColumnCount(); j++) {
+			TableColumn t = mm.getTable().getColumnModel().getColumn(j);
+			Object value = mm.getTable().getModel().getValueAt(i, j);
+//			String columnName = t.get
+			System.err.println("Column # "+j+":"+value+" width: "+t.getWidth()+" ");
+		}
+		System.err.println("");
+	}
+	System.err.println("End of table");
+  }
+  
   public final void load(XMLElement elm, XMLElement instance, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
     mm = (MessageTablePanel) getContainer();
     mm.removeAllColumns();
@@ -511,6 +527,7 @@ public class TipiTable
     if ("export".equals(name)) {
       Operand filename = compMeth.getEvaluatedParameter("filename", event);
       Operand delimiter = compMeth.getEvaluatedParameter("delimiter", event);
+      doExportAll();
       mm.getTable().exportTable((String)filename.value, (String)delimiter.value);
     }
 
@@ -563,14 +580,19 @@ public class TipiTable
       }
     if ("doExcel".equals(name)) {
         mm.doExcel();
-      }
+//        doExportAll();
+        // DONT CHECK IN!
+    }
     if ("doSaveColumns".equals(name)) {
         mm.doSaveColumns();
       }
 
     if ("doChooseColumns".equals(name)) {
         mm.doChooseColumns();
-      }   
+      }  
+    if ("doExportAll".equals(name)) {
+        doExportAll();
+      }  
   }
 
   public void setColumnDefinitionSavePath(String path) {
@@ -710,4 +732,9 @@ public class TipiTable
   public void doChooseColumns() {
 	  mm.doChooseColumns();
   }
+
+  public void doExportAll() {
+	 exportToService();
+  }
+  
 }

@@ -31,6 +31,12 @@
         package="com.dexels.navajo.tipi.components.swingimpl.actions">
         <param name="url" type="string"/>
     </tipiaction>
+    
+    <tipiaction name="playSound" class="TipiPlaySound"
+        package="com.dexels.navajo.tipi.components.swingimpl.actions">
+        <param name="url" type="string"/>
+    </tipiaction>
+    
     <tipiaction name="openBinary" class="TipiOpenBinary"
         package="com.dexels.navajo.tipi.components.swingimpl.actions">
         <param name="value" type="binary"/>
@@ -225,7 +231,8 @@
             <method name="doWord"/>
             <method name="doExcel"/>
             <method name="doSaveColumns"/>
-            <method name="doChooseColumns"/>       
+            <method name="doChooseColumns"/> 
+            <method name="doExportAll"/> 
         </methods>
     </tipiclass>
     <tipiclass addtocontainer="true" childcount="0" class="TipiMegaTable" layoutmanager="false"
