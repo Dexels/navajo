@@ -27,6 +27,7 @@
 		<pathelement location="${Navajo.build}"/>
 		<pathelement location="${NavajoSwingClient.build}"/>
 		<pathelement location="${NavajoTipi.build}"/>
+		<pathelement location="${DexelsVersionControl.build}" />
 	</path>
 	<target name="check-env">
 		<fail unless="PROJECTHOME"> Set the PROJECTHOME environment variable to the top directory of your CVS projects,
