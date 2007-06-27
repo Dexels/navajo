@@ -399,11 +399,13 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode, Comp
     }
 
     public void refreshExpression() throws NavajoException {
-        ArrayList aa = getAllMessages();
-        for (int i = 0; i < aa.size(); i++) {
-            Message current = (Message) aa.get(i);
-            current.refreshExpression();
-        }
+       
+    	if ( messageList != null ) {
+    		for (int i = 0; i < messageList.size(); i++) {
+    			Message current = (Message) messageList.get(i);
+    			current.refreshExpression();
+    		}
+    	}
         ArrayList bb = getAllProperties();
         for (int j = 0; j < bb.size(); j++) {
             Property current = (Property) bb.get(j);
@@ -516,7 +518,7 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode, Comp
             }
             return sub;
         } else {
-            ArrayList msgList = getAllMessages();
+           
             ArrayList result = new ArrayList();
             try {
                 String index = null;
@@ -528,8 +530,8 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode, Comp
 
                 }
                 Pattern pattern = Pattern.compile(regularExpression);
-                for (int i = 0; i < msgList.size(); i++) {
-                    Message m = (Message) msgList.get(i);
+                for (int i = 0; i < messageList.size(); i++) {
+                    BaseMessageImpl m = (BaseMessageImpl) messageList.get(i);
                     String name = m.getName();
                     if (m.getType().equals(Message.MSG_TYPE_ARRAY) && pattern.matcher(name).matches()) { // If
                                                                                                             // message
@@ -540,7 +542,7 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode, Comp
                                                                                                             // all
                                                                                                             // children.
                         if (index == null) {
-                            result.addAll(m.getAllMessages());
+                            result.addAll(m.messageList);
                         } else {
                             try {
                                 result.add(m.getMessage(Integer.parseInt(index)));
@@ -550,7 +552,7 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode, Comp
                         }
                     } else {
                         if (pattern.matcher(name).matches()) {
-                            result.add(msgList.get(i));
+                            result.add(messageList.get(i));
                         }
                     }
                 }
@@ -587,19 +589,14 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode, Comp
         myIndex = index;
     }
 
-    private Message getValueMessage(int i) {
-        return (Message) getAllMessages().get(i);
-
-    }
-
     public Message getMessage(int i) {
     	if (messageMap==null || messageList==null) {
 			return null;
 		}
-        if ( i >= getAllMessages().size() ) {
+        if ( i >= messageList.size() ) {
             return null;
         }
-        return (Message) getAllMessages().get(i);
+        return (Message) messageList.get(i);
     }
 
     // Returns an array element
@@ -645,7 +642,7 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode, Comp
     	if (messageList==null) {
 			return 0;
 		}
-        return getAllMessages().size();
+        return messageList.size();
     }
 
     public final void addArrayMessage(Message m) {
@@ -666,15 +663,15 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode, Comp
     public final Message copy(Navajo n) {
         BaseMessageImpl cp = (BaseMessageImpl) NavajoFactory.getInstance().createMessage(n, getName());
         cp.setRootDoc(n);
-        ArrayList myMsg = getAllMessages();
+       
         cp.setEndIndex(getEndIndex());
         cp.setStartIndex(getStartIndex());
         cp.setIndex(getIndex());
         cp.setMode(getMode());
         cp.setType(getType());
 
-        for (int i = 0; i < myMsg.size(); i++) {
-            BaseMessageImpl current = (BaseMessageImpl) myMsg.get(i);
+        for (int i = 0; i < messageList.size(); i++) {
+            BaseMessageImpl current = (BaseMessageImpl) messageList.get(i);
             if (current == this) {
                 throw new RuntimeException("CYCLIC Message copy found!");
             }
@@ -692,9 +689,9 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode, Comp
     }
 
     public final void prune() {
-        ArrayList myMsg = getAllMessages();
-        for (int i = 0; i < myMsg.size(); i++) {
-            BaseMessageImpl current = (BaseMessageImpl) myMsg.get(i);
+     
+        for (int i = 0; i < messageList.size(); i++) {
+            BaseMessageImpl current = (BaseMessageImpl) messageList.get(i);
             current.prune();
         }
         ArrayList myProp = getAllProperties();
@@ -706,9 +703,9 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode, Comp
 
     public final void setMessageMap(MessageMappable m) {
         myStringMap = m;
-        ArrayList myMsg = getAllMessages();
-        for (int i = 0; i < myMsg.size(); i++) {
-            BaseMessageImpl current = (BaseMessageImpl) myMsg.get(i);
+       
+        for (int i = 0; i < messageList.size(); i++) {
+            BaseMessageImpl current = (BaseMessageImpl) messageList.get(i);
             if (current != null) {
                 current.setMessageMap(m);
             }
@@ -963,24 +960,24 @@ public final Message getParentMessage() {
     }
 
     public boolean isEqual(Message o, String skipProperties) {
-        Message other = (Message) o;
+        BaseMessageImpl other = (BaseMessageImpl) o;
         if (!other.getName().equals(this.getName())) {
             return false;
         }
         // Check sub message structure.
-        ArrayList allOther = other.getAllMessages();
-        ArrayList allMe = this.getAllMessages();
-        if (allOther.size() != allMe.size()) {
+        List allOther = other.messageList;
+        //ArrayList allMe = messag;
+        if (allOther.size() != messageList.size()) {
             return false;
         }
         for (int i = 0; i < allOther.size(); i++) {
             Message otherMsg = (Message) allOther.get(i);
             boolean match = false;
-            for (int j = 0; j < allMe.size(); j++) {
-                Message myMsg = (Message) allMe.get(j);
+            for (int j = 0; j < messageList.size(); j++) {
+                Message myMsg = (Message) messageList.get(j);
                 if (myMsg.isEqual(otherMsg, skipProperties)) {
                     match = true;
-                    j = allMe.size() + 1;
+                    j = messageList.size() + 1;
                 }
             }
             if (!match) {
@@ -1091,12 +1088,12 @@ public final Message getParentMessage() {
     
 
     public int getChildCount() {
-      return getAllProperties().size() + getAllMessages().size();
+      return getAllProperties().size() + messageList.size();
     }
 
     public TreeNode getChildAt(int childIndex) {
       if (childIndex >= getAllProperties().size()) {
-        return (TreeNode) getAllMessages().get(childIndex -
+        return (TreeNode) messageList.get(childIndex -
                                                getAllProperties().size());
       }
       else {
@@ -1107,7 +1104,7 @@ public final Message getParentMessage() {
 
     public Enumeration children() {
       Vector v = new Vector(getAllProperties());
-      v.addAll(getAllMessages());
+      v.addAll(messageList);
       return v.elements();
     }
 
@@ -1117,8 +1114,8 @@ public final Message getParentMessage() {
           return i;
         }
       }
-      for (int i = 0; i < getAllMessages().size(); i++) {
-        if (getAllMessages().get(i) == t) {
+      for (int i = 0; i < messageList.size(); i++) {
+        if (messageList.get(i) == t) {
           return i;
         }
       }
