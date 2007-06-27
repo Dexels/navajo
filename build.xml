@@ -11,6 +11,8 @@
 	<property name="NavajoDocument.build" value="${NavajoDocument}/classes" />
 	<property name="Navajo" value="${PROJECTHOME}/Navajo" />
 	<property name="Navajo.build" value="${Navajo}/classes" />
+    <property name="DexelsVersionControl" value="${PROJECTHOME}/DexelsVersionControl"/>
+    <property name="DexelsVersionControl.build" value="${PROJECTHOME}/DexelsVersionControl/classes"/>    
 	<path id="depend">
 		<fileset dir="${lib}">
 			<include name="**/*.jar" />
@@ -18,6 +20,7 @@
 		<pathelement location="${NavajoClient.build}" />
 		<pathelement location="${NavajoDocument.build}" />
 		<pathelement location="${Navajo.build}" />
+		<pathelement location="${DexelsVersionControl.build}" />
 	</path>
 	<target name="check-env">
 		<fail unless="PROJECTHOME">  
