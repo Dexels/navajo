@@ -293,7 +293,7 @@ public class TipiPathParser {
     if (myType == RESOURCE_DEF) {
       int i = path.indexOf(":");
       String rpath = path.substring(i + 2);
-      return myContext.getResourceURL(rpath);
+      return myContext.getTipiResourceURL(rpath);
     }
     throw new IllegalArgumentException("Invalid type: " + path + " is not not a resource!");
   }
