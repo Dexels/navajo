@@ -29,7 +29,7 @@ public class TipiThreadPool {
   public TipiThreadPool(TipiContext context,int initSize) {
     this.poolSize = initSize;
     myContext = context;
-    String maxThreads = System.getProperty("com.dexels.navajo.tipi.maxthreads");
+    String maxThreads = context.getSystemProperty("com.dexels.navajo.tipi.maxthreads");
 //    System.err.println("MAX THREADS::::::: "+maxThreads+"\n\n"+" poolsize: "+initSize);
 
     // HACK!

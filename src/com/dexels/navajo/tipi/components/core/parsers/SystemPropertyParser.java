@@ -16,7 +16,11 @@ import com.dexels.navajo.tipi.internal.*;
 public class SystemPropertyParser extends TipiTypeParser {
 
   public Object parse(TipiComponent source, String expression, TipiEvent event) {
-    return System.getProperty(expression);
+//	  System.err.println("System parse: "+source);
+	  String result = myContext.getSystemProperty(expression);
+//	  System.err.println("Result: "+result);
+	  return result;
+	  // return System.getProperty(expression);
   }
 
 }
