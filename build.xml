@@ -69,6 +69,13 @@
 	</target>
 	<target name="archive" depends="compile,resource">
 		<jar jarfile="${archive}" basedir="${build}" />
+		<fileset dir="${src}">
+			<exclude name="**/*.java" />
+			<exclude name="**/*.png" />
+			<exclude name="**/*.jpg" />
+			<exclude name="**/*.db" />
+		</fileset>
+
 	</target>
 </project>
 <!-- EOF: $RCSfile$ -->
