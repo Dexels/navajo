@@ -118,7 +118,7 @@ public class MainApplication {
 		SwingTipiUserInterface stui = new SwingTipiUserInterface((SwingTipiContext) context);
 		SwingClient.setUserInterface(stui);
 
-		context.setResourceBaseDirectory(new File("resource"));
+//		context.setResourceBaseDirectory(new File("resource"));
 
 		context.setDefaultTopLevel(new TipiScreen());
 		context.getDefaultTopLevel().setContext(context);
