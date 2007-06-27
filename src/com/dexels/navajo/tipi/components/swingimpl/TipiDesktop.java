@@ -22,6 +22,9 @@ public class TipiDesktop
     extends TipiSwingDataComponentImpl {
   public Object createContainer() {
     TipiSwingDesktop jp = new TipiSwingDesktop(this);
+    SwingTipiContext c = (SwingTipiContext)myContext;
+	// register as default desktop, to create modal dialogs as modal internalframes
+    c.setDefaultDesktop(jp);
     jp.setDesktopManager(new DefaultDesktopManager());
     jp.setDragMode(TipiSwingDesktop.LIVE_DRAG_MODE);
     TipiHelper th = new TipiSwingHelper();
