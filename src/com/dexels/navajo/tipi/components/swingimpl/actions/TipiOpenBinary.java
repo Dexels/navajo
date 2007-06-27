@@ -16,6 +16,7 @@ import javax.swing.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.types.*;
 import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.components.swingimpl.SwingTipiContext;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.internal.*;
 
@@ -64,17 +65,25 @@ public class TipiOpenBinary extends TipiAction {
                 }
             }
         }
+        SwingTipiContext stc = (SwingTipiContext)myContext;
+        
+//        if(stc.getAppletRoot()!=null) {
+//        	URL u = stc.getBinaryUrl(b);
+//        	JApplet ap = stc.getAppletRoot();
+//        	ap.getAppletContext().showDocument(u, "_blank");
+//        } else {
+            try {
+                File f = File.createTempFile("tipi_", "."+extString);
+                TipiSaveValue.saveFile(b, f);
 
-        try {
-            File f = File.createTempFile("tipi_", "."+extString);
-            TipiSaveValue.saveFile(b, f);
-
-//            URL u = f.toURL();
-            DefaultBrowser.displayURL(f.getAbsolutePath());
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+//                URL u = f.toURL();
+                DefaultBrowser.displayURL(f.getAbsolutePath());
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        //}
+        b.getHandle();
     }
 
     public static void main(String[] args) throws Exception {
