@@ -24,22 +24,6 @@ public class TipiShowInfo
     final Operand op = getEvaluatedParameter("text", event);
 
     final String txt = ((String)op.value).replaceAll("\n", " ");
-    if (SwingUtilities.isEventDispatchThread()) {
-      JOptionPane.showMessageDialog( (Component) myContext.getTopLevel(), txt, "Info", JOptionPane.PLAIN_MESSAGE);
-    }
-    else {
-      try {
-        SwingUtilities.invokeAndWait(new Runnable() {
-          public void run() {
-            JOptionPane.showMessageDialog( (Component) myContext.getTopLevel(), txt, "Info", JOptionPane.PLAIN_MESSAGE);
-          }
-        });
-      }
-      catch (InvocationTargetException ex1) {
-        ex1.printStackTrace();
-      }
-      catch (InterruptedException ex1) {
-      }
-    }
+   myContext.showInfo(txt, "Info");
   }
 }
