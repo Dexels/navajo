@@ -170,17 +170,17 @@ private int total = 0;
     setLocalMessage(t, m);
   }
 
-  public int getChildMessageCount() {
-    return total;
-  }
-
-  public int getStartIndex() {
-    return getEndIndex() - getShown();
-  }
-
-  public int getEndIndex() {
-    return getTotal() - getRemaining();
-  }
+//  public int getChildMessageCount() {
+//    return total;
+//  }
+//
+//  public int getStartIndex() {
+//    return getEndIndex() - getShown();
+//  }
+//
+//  public int getEndIndex() {
+//    return getTotal() - getRemaining();
+//  }
 
   public int getShown() {
     return shown;
@@ -317,16 +317,16 @@ System.err.println("Merging updt " + lm.getStartIndex() + " to " + lm.getEndInde
     return itemsAfter;
   }
 
-  public Message getMessage(int index) {
-//    System.err.println("LazyMessageImpl: null? "+myRequestMessage==null);
-    if (getLocalMessage(index) == null) {
-//      retrieve(index);
-      touch(index);
-      return getLocalMessage(index);
-    }
-//    System.err.println("Returning cached message");
-    return getLocalMessage(index);
-  }
+//  public Message getMessage(int index) {
+////    System.err.println("LazyMessageImpl: null? "+myRequestMessage==null);
+//    if (getLocalMessage(index) == null) {
+////      retrieve(index);
+//      touch(index);
+//      return getLocalMessage(index);
+//    }
+////    System.err.println("Returning cached message");
+//    return getLocalMessage(index);
+//  }
 
   private Message getSyncMessage(int index) {
     if (getLocalMessage(index) == null) {
@@ -437,9 +437,9 @@ System.err.println("Merging updt " + lm.getStartIndex() + " to " + lm.getEndInde
 
     return m;
   }
-  public int getArraySize() {
-    return getTotal();
-  }
+//  public int getArraySize() {
+//    return getTotal();
+//  }
   public int getItemsAfter() {
     return itemsAfter;
   }
