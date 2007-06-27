@@ -14,7 +14,7 @@ import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.studio.*;
 
 public interface TipiStandaloneToplevelContainer {
-    public void setResourceBaseDirectory(File f);
+//    public void setResourceBaseDirectory(File f);
 
     public void loadDefinition(String tipiPath, String definitionName, String resourceBaseDirectory) throws IOException, TipiException;
 
