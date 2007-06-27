@@ -1120,9 +1120,11 @@ public final Message getParentMessage() {
     }
 
     public final Enumeration children() {
-      Vector v = new Vector(getAllProperties());
-      v.addAll(messageList);
-      return v.elements();
+    	Vector v = new Vector(getAllProperties());
+    	if ( messageList != null ) {
+    		v.addAll(messageList);
+    	}
+    	return v.elements();
     }
 
     public final int getIndex(TreeNode t) {
