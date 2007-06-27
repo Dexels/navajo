@@ -1,8 +1,14 @@
 package com.dexels.navajo.tipi;
 
+import java.awt.Component;
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 import java.net.*;
 import java.util.*;
+
+import javax.sound.midi.SysexMessage;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 
 import com.dexels.navajo.client.*;
@@ -82,19 +88,14 @@ public abstract class TipiContext
   private ClassLoader resourceClassLoader = null;
   private final ArrayList shutdownListeners = new ArrayList();
 
+  private TipiResourceLoader tipiResourceLoader;
+  private TipiResourceLoader genericResourceLoader;
+  
+  private final Map systemPropertyMap = new HashMap();
+
   public TipiContext() {
-//    myThreadPool = new TipiThreadPool(this);
     NavajoFactory.getInstance().setExpressionEvaluator(new DefaultExpressionEvaluator());
-    // Use the null implementation as default (Will always return null, will ignore all saves)
-//    try {
-//		initRemoteDescriptionProvider("tipi","nl");
-//	} catch (NavajoException e) {
-//		// TODO Auto-generated catch block
-//		e.printStackTrace();
-//	} catch (ClientException e) {
-//		// TODO Auto-generated catch block
-//		e.printStackTrace();
-//	}
+    tipiResourceLoader = new ClassPathResourceLoader();
     setStorageManager(new TipiNullStorageManager());
   }
   protected void clearLogFile() {
@@ -103,13 +104,23 @@ public abstract class TipiContext
   public void setResourceClassLoader(ClassLoader c) {
       resourceClassLoader = c;
   }
-  public void setResourceBaseDirectory(File f) {
-      resourceBaseDirectory = f;
+  
+  public void setTipiResourceLoader(TipiResourceLoader tr) {
+	  tipiResourceLoader = tr;
   }
   
-  public void setTipiBaseDirectory(File f) {
-	  tipiBaseDirectory = f;
+  public void setGenericResourceLoader(TipiResourceLoader tr) {
+	  genericResourceLoader = tr;
   }
+
+  
+//  public void setResourceBaseDirectory(File f) {
+//      resourceBaseDirectory = f;
+//  }
+//  
+//  public void setTipiBaseDirectory(File f) {
+//	  tipiBaseDirectory = f;
+//  }
 
   
   public void debugLog(String category, String event) {
@@ -207,16 +218,20 @@ public abstract class TipiContext
     runtimeObject.gc();
   }
 
+  public void clearLazyDefinitionCache() {
+	  for (Iterator iter = tipiComponentMap.keySet().iterator(); iter.hasNext();) {
+		String definitionName = (String) iter.next();
+		XMLElement def = (XMLElement) tipiComponentMap.get(definitionName);
+		String lazyLocation = (String) lazyMap.get(definitionName);
+		if(lazyLocation!=null && def!=null) {
+			tipiComponentMap.remove(definitionName);
+		}
+	  }
+  }
+  
   public abstract void clearTopScreen();
 
   private final void configureTipi(XMLElement config) throws TipiException {
-    /** @todo Implement configuration of tipi setup
-     * For example, the threading model, the amount of event threads, the # of allowed
-     * connections.
-     *  */
-//    System.err.println("CONFIGURING TIPI WITH: "+config);
-      
-     // TODO WATCH OUT IN THE STANDALONE
     maxToServer = config.getIntAttribute("maxtoserver", 5);
     System.setProperty("tipi.client.maxthreadstoserver", "" + maxToServer);
     poolSize = config.getIntAttribute("poolsize", 1);
@@ -224,22 +239,45 @@ public abstract class TipiContext
   }
 
   protected final void setSystemProperty(String name, String value, boolean overwrite) {
-    if (System.getProperty(name) != null) {
-      if (overwrite) {
-        System.setProperty(name, value);
-      }
-    }
-    else {
-      System.setProperty(name, value);
-    }
+	  systemPropertyMap.put(name,value);
+	  
+    try {
+		if (System.getProperty(name) != null) {
+		  if (overwrite) {
+		    System.setProperty(name, value);
+		  }
+		}
+		else {
+		  System.setProperty(name, value);
+		}
+	} catch (SecurityException e) {
+//		System.err.println("No system propery access allowed.");
+	}
   }
 
+  public final void setSystemProperty(String name, String value) {
+	  setSystemProperty(name, value,true);
+  }
+  
+  public final String getSystemProperty(String name) {
+	  String value = (String)systemPropertyMap.get(name);
+	  String sysVal = null;
+	  try {
+		sysVal = System.getProperty(name);
+		systemPropertyMap.put(name, sysVal);
+		value = sysVal;
+	} catch (SecurityException e) {
+//		System.err.println("No system propery access allowed.");
+	}
+//	  System.err.println("Getting system property: "+name+" value: "+value);
+
+	return value;
+	  
+  }
+
+  
   protected void createClient(XMLElement config) throws TipiException {
-//    System.err.println("**************CREATING CLIENT:***************************");
-//    System.err.println(config.toString());
-//    System.err.println("*********************************************************");
 	  String name = config.getStringAttribute("name");
-//    clientConfig = config;
     String impl = (String)attemptGenericEvaluate(config.getStringAttribute("impl", "'indirect'"));
     setSystemProperty("tipi.client.impl", impl, false);
     String cfg = (String)attemptGenericEvaluate(config.getStringAttribute("config", "'server.xml'"));
@@ -271,8 +309,6 @@ public abstract class TipiContext
     
     
     if (!impl.equals("direct")) {
-        
-//      System.err.println("Using INDIRECT. Username = " + navajoUsername);
         if(impl.equals("socket")) {
             NavajoClientFactory.resetClient();
             ClientInterface ci =  NavajoClientFactory.createClient("com.dexels.navajo.client.NavajoSocketClient",null);
@@ -319,29 +355,27 @@ public abstract class TipiContext
   }
 
   public void parseStream(InputStream in, String sourceName, String definitionName, boolean studioMode) throws IOException, XMLParseException, TipiException {
-//    clearResources();
     XMLElement doc = new CaseSensitiveXMLElement();
     InputStreamReader isr = new InputStreamReader(in, "UTF-8");
     doc.parseFromReader(isr);
     isr.close();
     parseXMLElement(doc, studioMode, sourceName);
-    Class initClass = (Class) tipiClassMap.get(definitionName);
-    try {
-      if (initClass != null) {
-        //System.err.println("---- Found init class");
-        TipiInitInterface tii = (TipiInitInterface) initClass.newInstance();
-        tii.init(this);
-      }
-    }
-    catch (IllegalAccessException ex) {
-      ex.printStackTrace();
-    }
-    catch (InstantiationException ex) {
-      ex.printStackTrace();
-    }
-    catch (ClassCastException ex) {
-      ex.printStackTrace();
-    }
+//    Class initClass = (Class) tipiClassMap.get(definitionName);
+//    try {
+//      if (initClass != null) {
+//        TipiInitInterface tii = (TipiInitInterface) initClass.newInstance();
+//        tii.init(this);
+//      }
+//    }
+//    catch (IllegalAccessException ex) {
+//      ex.printStackTrace();
+//    }
+//    catch (InstantiationException ex) {
+//      ex.printStackTrace();
+//    }
+//    catch (ClassCastException ex) {
+//      ex.printStackTrace();
+//    }
     switchToDefinition(definitionName, null);
     if (errorHandler != null) {
       try {
@@ -367,10 +401,8 @@ public abstract class TipiContext
     }
     errorHandler = (String) elm.getAttribute("errorhandler", null);
     Vector children = elm.getChildren();
-    XMLElement startScreenDef = null;
     for (int i = 0; i < children.size(); i++) {
       XMLElement child = (XMLElement) children.elementAt(i);
-//      System.err.println("Parsing::: "+child.getName());
       parseChild(child,studioMode, dir);
     }
   }
@@ -421,11 +453,6 @@ public abstract class TipiContext
         parseStorage(child);
         return;
       }
-    
-//    if (childName.equals("tipi-package-reference")) {
-//      parsePackageReference(child);
-//      return;
-//    }
   }
 
   private void parseStorage(XMLElement child) {
@@ -475,40 +502,75 @@ public void parseDefinition(XMLElement child) throws TipiException {
     }
   }
 
+  
+  public InputStream getTipiResourceStream(String location) throws IOException {
+//	  System.err.println("Entering getResourceStream for location: "+location);
+	  if(tipiResourceLoader!=null) {
+			return tipiResourceLoader.getResourceStream(location);
+	  } else {
+//		  System.err.println("No tipiresourceloader found");
+		  URL u = getTipiResourceURL(location);
+		  return u.openStream();
+	  }
+}  
+
+
   public URL getResourceURL(String location) {
-      return getResourceURL(location,resourceClassLoader);
+	  // Try the classloader first, the 
+      URL u = getClass().getClassLoader().getResource(location);
+	    if (u==null) {
+//	      System.err.println("getResourceURL: "+location+" not found in classpath, continuing");
+	    } else {
+	    	return u;
+	    }
+	   
+    if(genericResourceLoader!=null) {
+		  try {
+			return genericResourceLoader.getResourceURL(location);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+	  } else {
+		  System.err.println("NO generic resource loader found!");
+	  }
+    return null;
+  	}
+ 
+  
+  public URL getTipiResourceURL(String location) {
+      return getTipiResourceURL(location,resourceClassLoader);
   }  
   
-  public URL getResourceURL(String location, ClassLoader cl) {
+  public URL getTipiResourceURL(String location, ClassLoader cl) {
 	  // Try the classloader first, the 
-//	  System.err.println("Entering getResourceURL for location: "+location);
-//	  System.err.println("Classloader: "+cl);
+//	  System.err.println("WARNING: DEPRECATED! Entering getResourceURL for location: "+location);
 	  if (cl==null) {
           cl = getClass().getClassLoader();
       }
       URL u = cl.getResource(location);
     if (u==null) {
-   //   System.err.println("getResourceURL: "+location+" not found in classpath, continuing");
+//      System.err.println("getResourceURL: "+location+" not found in classpath, continuing");
     } else {
     	return u;
     }
-    // case 2: strip the path, keep only the filename:
-    if (location.startsWith("tipi/")) {
-		location = location.substring(5);
-	} else {
-	    if (location.startsWith("resource/")) {
-			location = location.substring(9);
+    // Now, it was not found in the classpath. if there is a tipiResourceLoader, then it means
+    // we are looking for a resource we are not certain where we can find it.
+    // If we supply a tipiResourceLoader, this means that we will NEVER look in the local file
+    // system.
+    if(tipiResourceLoader!=null) {
+		  try {
+			return tipiResourceLoader.getResourceURL(location);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
 		}
-	}
-    u = cl.getResource(location);
-    if (u==null) {
-        System.err.println("getResourceURL: "+location+" not found in classpath, continuing");
-      } else {
-      	return u;
-      }
+	  }
+    
+    //TODO Check and throw away the rest. I don't think it is needed any more.
+    //     If file based access is needed, implement a FileResourceLoader
+    if(true) {return null;}
     
     if (resourceBaseDirectory!=null) {
-        System.err.println("ResourceDir found: "+resourceBaseDirectory.getAbsolutePath());
+//        System.err.println("ResourceDir found: "+resourceBaseDirectory.getAbsolutePath());
         File locationFile = new File(resourceBaseDirectory.getAbsolutePath()+"/"+location);
         if (!locationFile.exists()) {
            System.err.println(".. but it did not exist: "+locationFile);
@@ -524,7 +586,6 @@ public void parseDefinition(XMLElement child) throws TipiException {
     	System.err.println("No resource dir found");
     }
     if (tipiBaseDirectory!=null) {
-//      System.err.println("ResourceDir found: "+resourceBaseDirectory.getAbsolutePath());
       File locationFile = new File(tipiBaseDirectory.getAbsolutePath()+"/"+location);
       if (!locationFile.exists()) {
           System.err.println(".. but it did not exist either: "+locationFile);
@@ -536,10 +597,8 @@ public void parseDefinition(XMLElement child) throws TipiException {
 	        }
       }
   }
-  //      System.err.println("ResourceDir found: "+resourceBaseDirectory.getAbsolutePath());
-    // Finally, try the working dir
+
       File locationFile = new File(location);
-//      System.err.println("Abs: "+locationFile.getAbsolutePath());
       if (!locationFile.exists()) {
           System.err.println(".. but it did not exist either: "+locationFile);
       } else {
@@ -633,16 +692,12 @@ public void parseDefinition(XMLElement child) throws TipiException {
   }
 
   private InputStream resolveInclude(String location, String dir) throws IOException {
-    File tipiDir = null; // only studio related, for now.
-    // first, try to resolve the include by checking the classpath:
-    URL loc = getResourceURL(location);
-    if (loc != null) {
+     // first, try to resolve the include by checking the classpath:
       try {
-        InputStream in = loc.openStream();
+        InputStream in = getTipiResourceStream(location);
           return in;
     } catch (IOException e) {
-        // classload failed. Continuing.
-    }
+        //classload failed. Continuing.
     }
     //System.err.println("Resolving: " + location);
     File currentDir = new File(dir);
@@ -659,33 +714,7 @@ public void parseDefinition(XMLElement child) throws TipiException {
         FileInputStream fis = new FileInputStream(ff);
         return fis;
 	}
-    
-    // finally, try the project directory:
-    if (tipiDir == null) {
-      String td = System.getProperty("tipi.project.dir");
-      //System.err.println("FOUND PROP: " + td);
-      if (td != null) {
-        tipiDir = new File(td);
-        //System.err.println("CREATED: " + tipiDir.toString());
-      }
-    }
-    if (tipiDir != null) {
-      location = location.replace('/', System.getProperty("file.separator").charAt(0));
-      File f = new File(tipiDir, location);
-      //System.err.println("Constructed file: " + f.toString());
-      if (!f.exists()) {
-        System.err.println("OH DEAR!!!");
-        throw new FileNotFoundException("Could not resolve");
-      }
-      else {
-        FileInputStream fis = new FileInputStream(f);
-        return fis;
-      }
-    }
-    else {
-      System.err.println("Resource not found in classpath, and filedir not set: " + location);
-      return null;
-    }
+    return null;
   }
 
   public TipiActionBlock instantiateTipiActionBlock(XMLElement definition, TipiComponent parent) throws TipiException {
@@ -995,20 +1024,16 @@ public void parseDefinition(XMLElement child) throws TipiException {
   }
 
   public XMLElement getComponentDefinition(String componentName) throws TipiException {
-    XMLElement xe = getTipiDefinition(componentName);
+	XMLElement xe = getTipiDefinition(componentName);
     if(xe!=null) {
         return xe;
     }
     String location = (String)lazyMap.get(componentName);
     if (location==null) {
-//    	System.err.println("No lazy location found: "+componentName);
-//    	Thread.dumpStack();
     	return null;
     }
-//    System.err.println("Parsing lib location: "+location);
     parseLibrary(location, true,"dir", componentName, false);
     xe = getTipiDefinition(componentName);
-
     return xe;
   }
 
@@ -1059,11 +1084,8 @@ public void parseDefinition(XMLElement child) throws TipiException {
 
 
   public void switchToDefinition(String name, TipiEvent event) throws TipiException {
-    setSwitching(true);
     clearTopScreen();
     setSplashInfo("Starting application");
-//    System.err.println("Switching to: "+name);
-    
     XMLElement componentDefinition = getComponentDefinition(name);
     if (componentDefinition==null) {
         throw new TipiException("Fatal tipi error: Can not switch. Unknown definition: "+name);
@@ -1072,28 +1094,9 @@ public void parseDefinition(XMLElement child) throws TipiException {
     tc.commitToUi();
     ( (TipiComponent) getDefaultTopLevel()).addComponent(tc, this, null);
     ( (TipiComponent) getDefaultTopLevel()).addToContainer(tc.getContainer(), null);
-//    if (TipiDataComponent.class.isInstance(tc)) {
-//      ( (TipiDataComponent) tc).autoLoadServices(this, event);
-//    }
     setSplashVisible(false);
-//    ( (TipiDataComponent) getDefaultTopLevel()).autoLoadServices(this, event);
-
     currentDefinition = name;
-    setSwitching(false);
     fireTipiStructureChanged(tc);
-  }
-
-
-
-
-  protected synchronized boolean isSwitching() {
-//    System.err.println("Setting switching to: "+b);
-    return isSwitching;
-  }
-
-  protected synchronized void setSwitching(boolean b) {
-//    System.err.println("Setting switching to: "+b);
-    isSwitching = b;
   }
 
   public String getCurrentDefinition() {
@@ -1118,7 +1121,6 @@ public void parseDefinition(XMLElement child) throws TipiException {
   public TipiDataComponent getTipiByPath(String path) {
     TipiComponent tc = getTipiComponentByPath(path);
     if (!TipiDataComponent.class.isInstance(tc)) {
-//      System.err.println("Object referred to by path: " + path + " is a TipiComponent, not a Tipi");
       return null;
     }
     return (TipiDataComponent) tc;
@@ -1174,7 +1176,7 @@ public void parseDefinition(XMLElement child) throws TipiException {
     try {
       String oldhost = null;
       if (hosturl!=null &&!"".equals(hosturl)) {
-        if (NavajoClientFactory.getClient() instanceof DirectClientImpl) {
+        if ("direct".equals(NavajoClientFactory.getClient().getClientName())) {
           ClientInterface ci = NavajoClientFactory.createDefaultClient();
           ci.setServerUrl(hosturl);
 //          System.err.println("Specifically sending to: "+hosturl);
@@ -1188,7 +1190,6 @@ public void parseDefinition(XMLElement child) throws TipiException {
           reply = ci.doSimpleSend(n, service, ch, expirtationInterval);
           debugLog("data","simpleSend to host (diverted from directclient): "+hosturl+" username: "+username+" password: "+password+" method: "+service);
         } else {
-          /** @todo This situation is untested */
           String url = NavajoClientFactory.getClient().getServerUrl();
           NavajoClientFactory.getClient().setServerUrl(hosturl);
           NavajoClientFactory.getClient().setUsername(username);
@@ -1204,6 +1205,7 @@ public void parseDefinition(XMLElement child) throws TipiException {
       }
     }
     catch (Throwable ex) {
+      ex.printStackTrace();
       if (eHandler != null && Exception.class.isInstance(ex)) {
         debugLog("data","send error occurred:"+ex.getMessage()+" method: "+service);
         eHandler.showError( (Exception) ex);
@@ -1216,6 +1218,7 @@ public void parseDefinition(XMLElement child) throws TipiException {
     if (reply == null) {
       reply = NavajoFactory.getInstance().createNavajo();
     }
+ 
     return reply;
   }
 
@@ -1973,7 +1976,7 @@ public void initRemoteDescriptionProvider(String context, String locale) throws 
 	   m.addProperty(w);
 	   Property l = NavajoFactory.getInstance().createProperty(n, "Locale", Property.STRING_PROPERTY,locale, 99,"", Property.DIR_IN);
 	   m.addProperty(l);
-	   n.write(System.err);
+//	   n.write(System.err);
 	   Navajo res = NavajoClientFactory.getClient().doSimpleSend(n, "navajo/description/ProcessGetContextResources");
 	   
 //	   res.write(System.err);
@@ -2075,5 +2078,19 @@ public String XMLUnescape(String s) {
 
     return result;
 }
+
+public URL getBinaryUrl(Binary b) {
+	String url = NavajoClientFactory.getClient().getServerUrl();
+	URL u;
+	try {
+		u = new URL(url+"?GetBinary=true&handle="+b.getHandle());
+		return u;
+	} catch (MalformedURLException e) {
+		e.printStackTrace();
+		return null;
+	}
+}
+
+public abstract void showInfo(final String text, final String title);
 
 }
