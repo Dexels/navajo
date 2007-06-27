@@ -2,13 +2,16 @@ package com.dexels.navajo.tipi.components.swingimpl;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
 import java.text.*;
 import java.util.*;
 
 import java.awt.*;
+
 import javax.swing.*;
 
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.swingclient.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
@@ -43,6 +46,7 @@ public class SwingTipiContext extends TipiContext {
 	private boolean debugMode = false;
 
 	private TipiApplet myAppletRoot;
+	private TipiSwingDesktop defaultDesktop = null;
 
 	public SwingTipiContext() {
 	}
@@ -53,7 +57,8 @@ public class SwingTipiContext extends TipiContext {
 		return s;
 	}
 
-	protected final void loadTipiMethod(final Navajo reply, final String tipiDestinationPath, final String method, final String server) throws TipiException {
+	protected final void loadTipiMethod(final Navajo reply, final String tipiDestinationPath, final String method, final String server)
+			throws TipiException {
 		TipiDataComponent tt;
 		ArrayList tipiList;
 		// System.err.println("Loading method");
@@ -61,13 +66,13 @@ public class SwingTipiContext extends TipiContext {
 			System.err.println("Destination blocked");
 			return;
 		}
-		if(SwingUtilities.isEventDispatchThread()) {
-//			System.err.println("EVENT THREAD!");
+		if (SwingUtilities.isEventDispatchThread()) {
+			// System.err.println("EVENT THREAD!");
 			deliverData(reply, method, server);
 		} else {
-//			System.err.println("NON EVENT THREAD!");
+			// System.err.println("NON EVENT THREAD!");
 			try {
-				SwingUtilities.invokeAndWait(new Runnable(){
+				SwingUtilities.invokeAndWait(new Runnable() {
 
 					public void run() {
 						try {
@@ -75,7 +80,8 @@ public class SwingTipiContext extends TipiContext {
 						} catch (TipiException e) {
 							e.printStackTrace();
 						}
-					}});
+					}
+				});
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -116,6 +122,10 @@ public class SwingTipiContext extends TipiContext {
 		if (dialogShowing) {
 			b = false;
 		}
+		if(getAppletRoot()!=null) {
+			
+			getAppletRoot().setCursor(b ? Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR) : Cursor.getDefaultCursor());
+		}
 		for (int i = 0; i < rootPaneList.size(); i++) {
 			Object obj = rootPaneList.get(i);
 			if (TipiSwingComponent.class.isInstance(obj)) {
@@ -136,13 +146,19 @@ public class SwingTipiContext extends TipiContext {
 	}
 
 	public void setSplashInfo(final String info) {
-		if (splash != null) {
-			SwingUtilities.invokeLater(new Runnable() {
-				public void run() {
-					splash.setInfoText(info);
-				}
-			});
+		if (getAppletRoot() != null) {
+			getAppletRoot().showStatus(info);
+		} else {
+			if (splash != null) {
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						splash.setInfoText(info);
+					}
+				});
+			}
+
 		}
+
 	}
 
 	public void setSplashVisible(boolean b) {
@@ -285,15 +301,47 @@ public class SwingTipiContext extends TipiContext {
 	public TipiApplet getAppletRoot() {
 		return myAppletRoot;
 	}
-	
 
 	public void exit() {
-		if(myAppletRoot!=null) {
+		if (myAppletRoot != null) {
 			myAppletRoot.reload();
 		} else {
-			System.exit(0); 
+			System.exit(0);
 		}
 	}
+
+	public void setDefaultDesktop(TipiSwingDesktop jp) {
+		defaultDesktop = jp;
+
+	}
+
+	public TipiSwingDesktop getDefaultDesktop() {
+		return defaultDesktop;
+	}
+
+	public void showQuestion(final String text, final String title) throws TipiBreakException {
+	}
 	
-	
+	public void showInfo(final String text, final String title) {
+		// swing implementation.
+		if (getAppletRoot() != null && getDefaultDesktop() != null) {
+			TipiModalInternalFrame.showInternalMessage(getAppletRoot().getRootPane(), getDefaultDesktop(), title, text, getPoolSize());
+		} else {
+			if (SwingUtilities.isEventDispatchThread()) {
+				JOptionPane.showMessageDialog((Component) getTopLevel(), text, title, JOptionPane.PLAIN_MESSAGE);
+			} else {
+				try {
+					SwingUtilities.invokeAndWait(new Runnable() {
+						public void run() {
+							JOptionPane.showMessageDialog((Component) getTopLevel(), text, title, JOptionPane.PLAIN_MESSAGE);
+						}
+					});
+				} catch (InvocationTargetException ex1) {
+					ex1.printStackTrace();
+				} catch (InterruptedException ex1) {
+				}
+			}
+		}
+
+	}
 }
