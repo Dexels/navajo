@@ -239,11 +239,11 @@ public class WorkFlowManager extends GenericThread implements WorkFlowManagerMXB
 	}
 
 	public int getDefinitionCount() {
-		return workflowInstances.size();
+		return workflowDefinitions.size();
 	}
 
 	public int getInstanceCount() {
-		return workflowDefinitions.size();
+		return workflowInstances.size();
 	}
 	
 
