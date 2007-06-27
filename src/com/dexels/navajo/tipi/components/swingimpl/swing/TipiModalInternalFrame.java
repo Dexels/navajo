@@ -6,126 +6,65 @@ import javax.swing.*;
 import javax.swing.event.*;
 import java.beans.*;
 
-public class TipiModalInternalFrame extends JInternalFrame {
+public class TipiModalInternalFrame extends JExtendedInternalFrame {
 
   private JPanel glass;
 private final JRootPane myRootPane;
 
 public TipiModalInternalFrame(String title, JRootPane 
       rootPane, Component desktop, Component contentComponent, Dimension size) {
-    super(title);
+    super(title,false,true,false,false);
     myRootPane = rootPane;
-    glass = new JPanel();
-	glass.setOpaque(false);
-
-    // Attach mouse listeners
-    MouseInputAdapter adapter = 
-      new MouseInputAdapter(){};
-    glass.addMouseListener(adapter);
-    glass.addMouseMotionListener(adapter);
-
-    // Add in option pane
-    getContentPane().add(contentComponent, BorderLayout.CENTER);
-
-    
-    // Define close behavior
-//    PropertyChangeListener pcl = 
-//        new PropertyChangeListener() {
-//      public void propertyChange(PropertyChangeEvent 
-//          event) {
-//        if (isVisible() && 
-//          (event.getPropertyName().equals(
-//            JOptionPane.VALUE_PROPERTY) ||
-//           event.getPropertyName().equals(
-//            JOptionPane.INPUT_VALUE_PROPERTY))) {
-//          try {
-//            setClosed(true);
-//          } catch (PropertyVetoException ignored) {
-//          }
-//          TipiModalInternalFrame.this.setVisible(false);
-//          glass.setVisible(false);
-//        }
-//      }
-//    };
-//    pane.addPropertyChangeListener(pcl);
-
-    // Change frame border
-    putClientProperty("JInternalFrame.frameType",
-      "optionDialog");
-
-    // Size frame
-//    Dimension size = getPreferredSize();
+//    glass = new JPanel();
+//	glass.setOpaque(false);
+//
+//    // Attach mouse listeners
+//    MouseInputAdapter adapter = 
+//      new MouseInputAdapter(){};
+//    glass.addMouseListener(adapter);
+//    glass.addMouseMotionListener(adapter);
+//
+//    // Add in option pane
+//    getContentPane().add(contentComponent, BorderLayout.CENTER);
+//    putClientProperty("JInternalFrame.frameType",
+//      "optionDialog");
     Dimension rootSize = desktop.getSize();
-
+//
     setBounds((rootSize.width - size.width) / 2,
               (rootSize.height - size.height) / 2,
                size.width, size.height); 
-    desktop.validate(); 
-    try {
-      setSelected(true);
-    } catch (PropertyVetoException ignored) {
-    }
-
-    // Add modal internal frame to glass pane
-    glass.add(this);
-
-    // Change glass pane to our panel
-    rootPane.setGlassPane(glass);
-
-    // Show glass pane, then modal dialog
-    glass.setVisible(true);
-  }
-
-  public void setVisible(boolean value) {
-	  System.err.println("SETTING VISIBLE: "+value);
-    super.setVisible(value);
-    if (value) {
-      startModal();
-    } else {
-      stopModal();
-      if(glass!=null) {
-          glass.setVisible(false);
-          glass = new JPanel();
-      }
-    }
-  }
-
-  private synchronized void startModal() {
+//    desktop.validate(); 
 //    try {
-//      if (SwingUtilities.isEventDispatchThread()) {
-//        EventQueue theQueue = 
-//          getToolkit().getSystemEventQueue();
-//        while (isVisible()) {
-//          AWTEvent event = theQueue.getNextEvent();
-//          Object source = event.getSource();
-//          System.err.println("Source: "+source);
-//          System.err.println("Event: "+event.toString());
-//          if (event instanceof ActiveEvent) {
-//            ((ActiveEvent)event).dispatch();
-//          } else if (source instanceof Component) {
-//            ((Component)source).dispatchEvent(
-//              event);
-//          } else if (source instanceof MenuComponent) {
-//            ((MenuComponent)source).dispatchEvent(
-//              event);
-//          } else {
-//            System.err.println(
-//              "Unable to dispatch: " + event);
-//          }
-//        }
-//      } else {
-//        while (isVisible()) {
-//          wait();
-//        }
-//      }
-//    } catch (InterruptedException ignored) {
+//      setSelected(true);
+//    } catch (PropertyVetoException ignored) {
 //    }
-//    System.err.println("Exiting startmodal:");
+//    // Add modal internal frame to glass pane
+//    glass.add(this);
+//    // Change glass pane to our panel
+//    rootPane.setGlassPane(glass);
+//    // Show glass pane, then modal dialog
+//    glass.setVisible(true);
   }
 
-  private synchronized void stopModal() {
-    notifyAll();
-  }
+//  public void setVisible(boolean value) {
+//	  System.err.println("SETTING VISIBLE: "+value);
+//	  Thread.dumpStack();
+//    super.setVisible(value);
+//    if (value) {
+//      startModal();
+//    } else {
+//      stopModal();
+//      if(glass!=null) {
+//          glass.setVisible(false);
+//          glass = new JPanel();
+//      }
+//    }
+//  }
+
+//
+//  private synchronized void stopModal() {
+//    notifyAll();
+//  }
 
   
   public static void main(String args[]) {
