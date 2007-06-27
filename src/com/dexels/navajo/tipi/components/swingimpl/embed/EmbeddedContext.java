@@ -36,14 +36,14 @@ public class EmbeddedContext extends SwingTipiContext {
      setDebugMode(debugMode);
 //      System.err.println("Opening: " +
 //                         context.getResourceURL(args[args.length - 1]));
-     if (resourceBaseDirectory!=null) {
-         setResourceBaseDirectory(new File(resourceBaseDirectory));
+//     if (resourceBaseDirectory!=null) {
+//         setResourceBaseDirectory(new File(resourceBaseDirectory));
     for (int i = 0; i < libraries.size(); i++) {
        String current = (String)libraries.get(i);
        parseLibraryFromClassPath(current);
      }
          
-    }
+//    }
      for (int i = 0; i < definitionName.length; i++) {
        parseURL(getTipiResourceURL(tipiDefinition[i],getClass().getClassLoader()),false,definitionName[i]);
      }
@@ -53,14 +53,12 @@ public class EmbeddedContext extends SwingTipiContext {
   }
 
   public EmbeddedContext(String definitionName, InputStream contents, List libraries, ActivityController al, String resourceBaseDirectory, ClassLoader cl) throws IOException, TipiException {
-      System.err.println("DefinitionName: "+definitionName);
-      System.err.println("Res: "+resourceBaseDirectory);
-      setResourceClassLoader(cl);
+   setResourceClassLoader(cl);
       if ( SwingClient.getUserInterface()==null) {
           SwingTipiUserInterface stui = new SwingTipiUserInterface(this);
           SwingClient.setUserInterface(stui);
         };
-        setResourceBaseDirectory(new File(resourceBaseDirectory));
+//        setResourceBaseDirectory(new File(resourceBaseDirectory));
 
          setDefaultTopLevel(top);
          getDefaultTopLevel().setContext(this);
