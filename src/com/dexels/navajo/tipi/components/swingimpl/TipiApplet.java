@@ -93,14 +93,21 @@ public class TipiApplet extends JApplet {
 	}
 	
 	public void reload() {
-		TipiComponent tc = myContext.getDefaultTopLevel();
-		if(tc!=null) {
-			tc.disposeComponent();
-		}
+//		TipiComponent tc = myContext.getDefaultTopLevel();
+//		if(tc!=null) {
+//			tc.disposeComponent();
+//		}
 //		removeAll();
 		myContext.shutdown();
-		init();
-		repaint();
+		System.err.println("my Codebase: " + getCodeBase());
+		try {
+		// TODO: Setup in applet parameter
+			getAppletContext().showDocument(new URL("http://penelope1.dexels.com/sportlink/club"));
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+//		init();
+//		repaint();
 	}
 	
 	 public Point getCenteredPoint(Dimension dlgSize) {
