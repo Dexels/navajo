@@ -481,12 +481,12 @@ public class TipiProperty
 	  String forceFieldAlignment = getStyle("forceFieldAlignment");
 	  String limitFieldWidth = getStyle("limitFieldWidth");
 	if (limitFieldWidth!=null) {
-		System.err.println("Encountered a limitFieldWidth: "+limitFieldWidth);
+//		System.err.println("Encountered a limitFieldWidth: "+limitFieldWidth);
 		gp.limitFieldWidth(Integer.parseInt(limitFieldWidth));
 		
 	}
 	if (forceFieldAlignment!=null) {
-		System.err.println("Encountered a forceFieldAlignment: "+forceFieldAlignment);
+//		System.err.println("Encountered a forceFieldAlignment: "+forceFieldAlignment);
 		gp.forceFieldAlignment(forceFieldAlignment);
 		
 	}
