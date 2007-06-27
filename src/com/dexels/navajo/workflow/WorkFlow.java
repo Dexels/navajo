@@ -41,7 +41,7 @@ public class WorkFlow implements Mappable, Serializable {
 	/**
 	 * This arraylist contains all the visited states for this workflow.
 	 */
-	protected final ArrayList historicStates = new ArrayList();
+	protected final ArrayList<State> historicStates = new ArrayList<State>();
 	
 	public static WorkFlow getInstance(String definition, String activatedState, Access a) {
 		WorkFlow wf = new WorkFlow(definition, WorkFlowManager.generateWorkflowId());
@@ -189,9 +189,9 @@ public class WorkFlow implements Mappable, Serializable {
 		if ( historicStates.size() == 0) {
 			return null;
 		}
-		ArrayList copy = new ArrayList(historicStates);
+		ArrayList<State> copy = new ArrayList<State>(historicStates);
 		State [] historyd = new State[copy.size()];
-		historyd = (State []) copy.toArray(historyd);
+		historyd = copy.toArray(historyd);
 		return historyd;
 	}
 

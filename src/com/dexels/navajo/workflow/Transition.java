@@ -43,7 +43,7 @@ public class Transition implements TaskListener, Serializable, Mappable {
 	private Task myTask = null;
 	private State myState;
 	private boolean beforeTrigger = false;
-	private final ArrayList parameters = new ArrayList();
+	private final ArrayList<Parameter> parameters = new ArrayList<Parameter>();
 	private static Object semaphore = new Object();
 	
 	/**
@@ -95,7 +95,7 @@ public class Transition implements TaskListener, Serializable, Mappable {
 		if ( t.getTrigger().getAccess() != null ) {
 			Navajo n = t.getTrigger().getAccess().getOutputDoc();
 			for ( int i = 0; i < parameters.size(); i++ ) {
-				Parameter p = (Parameter) parameters.get(i);
+				Parameter p = parameters.get(i);
 				String name = p.getName();
 				String expression = p.getExpression();
 				try {

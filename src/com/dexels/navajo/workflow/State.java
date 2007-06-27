@@ -38,8 +38,8 @@ public class State implements Serializable, Mappable {
 	public  boolean killed = false;
 	public  Transition [] transitions = null;
 	
-	private final HashSet myTransitions = new HashSet();
-	private final HashSet myTasks = new HashSet();
+	private final HashSet<Transition> myTransitions = new HashSet<Transition>();
+	private final HashSet<WorkFlowTask> myTasks = new HashSet<WorkFlowTask>();
 	private final WorkFlow myWorkFlow;
 	
 	protected State(String s, WorkFlow wf) {
@@ -87,9 +87,10 @@ public class State implements Serializable, Mappable {
 		entryDate = new Date();
 		
 	    // Activate tasks.
-		Iterator tks = myTasks.iterator();
+		Iterator<WorkFlowTask> tks = myTasks.iterator();
+		
 		while ( tks.hasNext() ) {
-			WorkFlowTask wtf = (WorkFlowTask) tks.next();
+			WorkFlowTask wtf = tks.next();
 			if (!wtf.isFinished()) { // In case of revival, a workflowtask could already have been executed(!)
 				wtf.activate();
 			} else {
@@ -97,9 +98,9 @@ public class State implements Serializable, Mappable {
 			}
 		}
 		// Activate transitions.
-		Iterator i = myTransitions.iterator();
+		Iterator<Transition> i = myTransitions.iterator();
 		while ( i.hasNext() ) {
-			Transition t = (Transition) i.next();
+			Transition t = i.next();
 			t.activate();
 		}	
 		
@@ -114,9 +115,9 @@ public class State implements Serializable, Mappable {
 	 */
 	public void waitForAction() {
         // Activate transitions.
-		Iterator i = myTransitions.iterator();
+		Iterator<Transition> i = myTransitions.iterator();
 		while ( i.hasNext() ) {
-			Transition t = (Transition) i.next();
+			Transition t = i.next();
 			t.activate();
 		}
 	}
@@ -127,14 +128,14 @@ public class State implements Serializable, Mappable {
 	 */
 	public void leave() {
 		// Clean up all tasks/triggers.
-		Iterator i2 = myTasks.iterator();
+		Iterator<WorkFlowTask> i2 = myTasks.iterator();
 		while ( i2.hasNext() ) {
-			WorkFlowTask t = (WorkFlowTask) i2.next();
+			WorkFlowTask t = i2.next();
 			t.cleanup();
 		}
-		Iterator i = myTransitions.iterator();
+		Iterator<Transition> i = myTransitions.iterator();
 		while ( i.hasNext() ) {
-			Transition t = (Transition) i.next();
+			Transition t = i.next();
 			t.cleanup();
 		}
 		leaveDate = new Date();
@@ -170,10 +171,10 @@ public class State implements Serializable, Mappable {
 	}
 
 	public Transition[] getTransitions() {
-		HashSet copy = new HashSet();
+		HashSet<Transition> copy = new HashSet<Transition>();
 		copy.addAll(myTransitions);
 		transitions = new Transition[copy.size()];
-		transitions = (Transition []) copy.toArray(transitions);
+		transitions = copy.toArray(transitions);
 		
 		return transitions;
 		

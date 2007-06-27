@@ -2,12 +2,15 @@ package com.dexels.navajo.workflow;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
 
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
+import com.dexels.navajo.document.types.Binary;
 
 /**
  * Helper class to parse workflow states from definition files.
@@ -18,7 +21,7 @@ import com.dexels.navajo.document.nanoimpl.XMLElement;
 public final class WorkFlowDefinitionReader {
 
 	private static File definitionPath = null;
-	private static volatile HashMap initialTransitions = new HashMap();
+	private static volatile HashMap<String,Transition> initialTransitions = new HashMap<String,Transition>();
 	
 	private static final XMLElement readDefinition(String definition) throws Exception {
 		return readDefinition(new File(definitionPath, definition));
@@ -105,8 +108,9 @@ public final class WorkFlowDefinitionReader {
 		
 	}
 	
-	private static final void createInitState(XMLElement xml, String definition) throws Exception { 
+	private static final WorkFlowDefinition createInitState(XMLElement xml, String definition) throws Exception { 
 		
+		WorkFlowDefinition wfd = new WorkFlowDefinition();
 		XMLElement init = findState(xml, "init");
 		if ( init == null ) {
 			throw new Exception("Could not find init state for workflow: " + definition);
@@ -119,15 +123,24 @@ public final class WorkFlowDefinitionReader {
 			String condition = readAttribute(t,"condition");
 			Transition trans = Transition.createStartTransition(nextState, trigger, condition, definition);
 			initialTransitions.put(definition, trans);
+			wfd.setActivationTrigger(trigger);
+			wfd.setName(definition);
 		}
+		StringWriter sw = new StringWriter();
+		xml.write(sw);
+		sw.close();
+		wfd.setDefinition(new Binary(sw.getBuffer().toString().getBytes()));
+		return wfd;
 	}
 	
 	/**
 	 * Initializes all workflows defined in workflow definition path.
+	 * Returns an ArrayList of WorkFlowDefinitions objects.
 	 * 
 	 * @param path
 	 */
-	public static void initialize(File path, HashMap defs) {
+	public static void initialize(File path, HashMap<String,WorkFlowDefinition> defs) {
+		
 		definitionPath = path;
 		File [] files = path.listFiles();
 
@@ -140,19 +153,20 @@ public final class WorkFlowDefinitionReader {
 					String name = f.getName().substring(0, f.getName().length() - 4);
 					if ( !defs.containsKey(name) ){
 						System.err.println("Found new flow definition: " + name);
-						createInitState(xml, name);
-						defs.put(name, new Long(f.lastModified()));
+						WorkFlowDefinition wfd = createInitState(xml, name);
+						wfd.setLastModified(f.lastModified());
+						defs.put(name, wfd);
 					} else {
-						Long lu = (Long) defs.get(name);
-						if ( lu.longValue() != f.lastModified() ) {
+						WorkFlowDefinition wfd = defs.get(name);
+						if ( wfd.getLastModified() != f.lastModified() ) {
 							System.err.println("Workflow " + name + " has been updated");
-							lu = new Long(f.lastModified());
-							defs.put(name, lu);
-							Transition trans = (Transition) initialTransitions.get(name);
+							Transition trans = initialTransitions.get(name);
 							if ( trans != null ) {
 								trans.cleanup();
 							}
-							createInitState(xml, name);
+							wfd = createInitState(xml, name);
+							wfd.setLastModified(f.lastModified());
+							defs.put(name, wfd);	
 						}
 					}
 				} catch (Exception e) {
@@ -168,7 +182,7 @@ public final class WorkFlowDefinitionReader {
 			File f = new File(definitionPath, name + ".xml");
 			if ( !f.exists() ) {
 				System.err.println("Definition " + name + " was obviously deleted, deleting initiating transition");
-				Transition trans = (Transition) initialTransitions.get(name);
+				Transition trans = initialTransitions.get(name);
 				trans.cleanup();
 			}
 		}

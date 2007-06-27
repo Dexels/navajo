@@ -7,6 +7,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Random;
 
 import com.dexels.navajo.server.Dispatcher;
@@ -21,13 +23,15 @@ public class WorkFlowManager extends GenericThread implements WorkFlowManagerMXB
 	 * Public fields for mappable.
 	 */
 	public WorkFlow [] workflows = null;
+	public WorkFlowDefinition [] definitions = null;
 	public WorkFlow workflow = null;
 	public String workflowId = null;
+	public String workflowDef = null;
 	
 	private static volatile WorkFlowManager instance = null;
 	private static Object semaphore = new Object();
-	private final ArrayList workflowInstances = new ArrayList();
-	private final HashMap workflowDefinitions = new HashMap();
+	private final ArrayList<WorkFlow> workflowInstances = new ArrayList<WorkFlow>();
+	private final HashMap<String,WorkFlowDefinition> workflowDefinitions = new HashMap<String,WorkFlowDefinition>();
 	private static String id = "Navajo WorkFlow Manager";
 	
 	private String workflowPath = null;
@@ -146,9 +150,38 @@ public class WorkFlowManager extends GenericThread implements WorkFlowManagerMXB
 		}
 	}
 
+	/**
+	 * Get all workflow instances.
+	 * 
+	 * @return
+	 */
 	public WorkFlow[] getWorkflows() {
+		if ( workflowDef != null ) {
+			return getWorkflows(workflowDef);
+		}
 		WorkFlowManager mng = WorkFlowManager.getInstance();
-		ArrayList wfList = new ArrayList(mng.workflowInstances);
+		ArrayList<WorkFlow> wfList = new ArrayList<WorkFlow>(mng.workflowInstances);
+		workflows = new WorkFlow[wfList.size()];
+		workflows = (WorkFlow []) wfList.toArray(workflows);
+		return workflows;
+	}
+	
+	/**
+	 * Get all workflow instances specified by a specific name.
+	 * 
+	 * @param byName
+	 * @return
+	 */
+	private final WorkFlow[] getWorkflows(String byName) {
+		WorkFlowManager mng = WorkFlowManager.getInstance();
+		ArrayList<WorkFlow> wfList = new ArrayList<WorkFlow>();
+		Iterator<WorkFlow> iter = mng.workflowInstances.iterator();
+		while ( iter.hasNext() ) {
+			WorkFlow wf = iter.next();
+			if ( wf.getDefinition().equals(byName) ) {
+				wfList.add(wf);
+			}
+		}
 		workflows = new WorkFlow[wfList.size()];
 		workflows = (WorkFlow []) wfList.toArray(workflows);
 		return workflows;
@@ -163,10 +196,10 @@ public class WorkFlowManager extends GenericThread implements WorkFlowManagerMXB
 			throw new UserException(-1, "Set workflow id before retrieving workflow instance");
 		}
 		WorkFlowManager mng = WorkFlowManager.getInstance();
-		ArrayList wfList = new ArrayList(mng.workflowInstances);
+		ArrayList<WorkFlow> wfList = new ArrayList<WorkFlow>(mng.workflowInstances);
 		for (int i = 0; i < wfList.size(); i++ ) {
-			if ( ((WorkFlow) wfList.get(i)).getMyId().equals(workflowId) ) {
-				return (WorkFlow) wfList.get(i);
+			if (wfList.get(i).getMyId().equals(workflowId) ) {
+				return wfList.get(i);
 			}
 		}
 		return null;
@@ -193,5 +226,18 @@ public class WorkFlowManager extends GenericThread implements WorkFlowManagerMXB
 			return false;
 		}
 	}
+
+	public WorkFlowDefinition[] getDefinitions() {
+		WorkFlowManager mng = WorkFlowManager.getInstance();
+		ArrayList<WorkFlowDefinition> wfList = new ArrayList<WorkFlowDefinition>(mng.workflowDefinitions.values());
+		definitions = new WorkFlowDefinition[wfList.size()];
+		definitions = wfList.toArray(definitions);
+		return definitions;
+	}
+
+	public void setWorkflowDef(String workflowDef) {
+		this.workflowDef = workflowDef;
+	}
 	
+
 }
