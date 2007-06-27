@@ -30,26 +30,26 @@ public  class BasePropertyImpl
 	 * 
 	 */
 	private static final long serialVersionUID = 5167262782916246791L;
-protected String myName;
-  protected String myValue = null;
+	protected String myName;
+	protected String myValue = null;
   
-  protected ArrayList selectionList = new ArrayList();
-  protected String type = null;
-  protected String cardinality = null;
-  protected String description = null;
-  protected String direction = Property.DIR_IN;
-  protected int length = -1;
-  private Map subtypeMap = null;
+	protected ArrayList selectionList = new ArrayList();
+	protected String type = null;
+	protected String cardinality = null;
+	protected String description = null;
+	protected String direction = Property.DIR_IN;
+	protected int length = -1;
+	private Map subtypeMap = null;
 
-  protected Binary myBinary = null;
+	protected Binary myBinary = null;
 
-  protected Property definitionProperty = null;
+	protected Property definitionProperty = null;
 
-//  private String myMessageName = null;
-  private Message myParent = null;
-  private Vector[] myPoints = null;
+//	private String myMessageName = null;
+	private Message myParent = null;
+	private Vector[] myPoints = null;
 
-  protected boolean isListType = false;
+	protected boolean isListType = false;
 
 
   public BasePropertyImpl(Navajo n, String name, String type, String value, int i,

@@ -23,7 +23,7 @@ import javax.swing.tree.*;
 
 import sun.rmi.server.Dispatcher;
 
-public class BaseMessageImpl extends BaseNode implements Message, TreeNode, Comparable {
+public  class BaseMessageImpl extends BaseNode implements Message, TreeNode, Comparable {
     protected String myName = "";
 
     private String myType = "";
@@ -591,7 +591,7 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode, Comp
         myIndex = index;
     }
 
-    public Message getMessage(int i) {
+    public final Message getMessage(int i) {
     	if (messageMap==null || messageList==null) {
 			return null;
 		}
@@ -602,7 +602,7 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode, Comp
     }
 
     // Returns an array element
-    public Message getMessage(String name, int index) {
+    public final Message getMessage(String name, int index) {
         Message m = getMessage(name);
         if (m == null) {
              return null;
@@ -624,11 +624,11 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode, Comp
 
     private int currentTotal = -1;
 
-    public int getCurrentTotal() {
+    public final int getCurrentTotal() {
         return currentTotal;
     }
 
-    public void setCurrentTotal(int aap) {
+    public final void setCurrentTotal(int aap) {
         currentTotal = aap;
     }
 
@@ -640,7 +640,7 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode, Comp
     	}
     }
 
-    public int getChildMessageCount() {
+    public final int getChildMessageCount() {
     	if (messageList==null) {
 			return 0;
 		}
@@ -742,7 +742,7 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode, Comp
         myParent = (BaseMessageImpl) m;
     }
 
-      public Message getByPath(String path) {
+      public final Message getByPath(String path) {
         /** @todo ARRAY SUPPORT */
         if (path.startsWith("../")) {
             Message m = getParentMessage().getMessage(path.substring(3));
@@ -833,11 +833,11 @@ public class BaseMessageImpl extends BaseNode implements Message, TreeNode, Comp
         }
     }
 
-    public int getStartIndex() {
+    public final int getStartIndex() {
         return startIndex;
     }
 
-    public int getEndIndex() {
+    public final int getEndIndex() {
         return endIndex;
     }
 
@@ -882,14 +882,14 @@ public final Message getParentMessage() {
         return m;
     }
 
-    public int getArraySize() {
+    public final int getArraySize() {
     	if (messageList==null || messageMap==null) {
 			return 0;
 		}
         return messageList.size();
     }
 
-    public void setArraySize(int i) {
+    public final void setArraySize(int i) {
         throw new UnsupportedOperationException("Dont know what this method should do.");
     }
 
@@ -964,11 +964,11 @@ public final Message getParentMessage() {
         System.err.println("p = " + ((Property) p.get(0)).getValue());
     }
 
-    public boolean isEqual(Message o) {
+    public final boolean isEqual(Message o) {
         return isEqual(o, "");
     }
 
-    public boolean isEqual(Message o, String skipProperties) {
+    public final boolean isEqual(Message o, String skipProperties) {
         BaseMessageImpl other = (BaseMessageImpl) o;
         if (!other.getName().equals(this.getName())) {
             return false;
@@ -1036,11 +1036,11 @@ public final Message getParentMessage() {
     }
 
 
-    public Message getDefinitionMessage() {
+    public final Message getDefinitionMessage() {
         return definitionMessage;
     }
 
-    public void setDefinitionMessage(Message m) {
+    public final void setDefinitionMessage(Message m) {
     	this.definitionMessage = (BaseMessageImpl) m;
     	if ( m == null ) {
     		return;
@@ -1056,7 +1056,7 @@ public final Message getParentMessage() {
     	}
     }
     
-    public Map getAttributes() {
+    public  final Map getAttributes() {
         Map m = new HashMap();
         m.put("name", myName);
         if(!"".equals(orderBy)){
@@ -1071,7 +1071,7 @@ public final Message getParentMessage() {
         return m;
     }
 
-    public List getChildren() {
+    public final List getChildren() {
     	ArrayList al = null;
     	if (propertyList==null) {
 			al = new ArrayList();
@@ -1104,11 +1104,11 @@ public final Message getParentMessage() {
 
     
 
-    public int getChildCount() {
+    public final int getChildCount() {
       return getAllProperties().size() + ( messageList != null ? messageList.size() : 0);
     }
 
-    public TreeNode getChildAt(int childIndex) {
+    public final TreeNode getChildAt(int childIndex) {
       if ( messageList != null && childIndex >= getAllProperties().size()) {
         return (TreeNode) messageList.get(childIndex -
                                                getAllProperties().size());
@@ -1119,13 +1119,13 @@ public final Message getParentMessage() {
 
     }
 
-    public Enumeration children() {
+    public final Enumeration children() {
       Vector v = new Vector(getAllProperties());
       v.addAll(messageList);
       return v.elements();
     }
 
-    public int getIndex(TreeNode t) {
+    public final int getIndex(TreeNode t) {
     	for (int i = 0; i < getAllProperties().size(); i++) {
     		if (getAllProperties().get(i) == t) {
     			return i;
@@ -1141,30 +1141,30 @@ public final Message getParentMessage() {
     	return 0;
     }
 
-    public boolean isLeaf() {
+    public final boolean isLeaf() {
 		if (messageList==null) {
 			return true;
 		}
 		return messageList.size() == 0;
     }
 
-    public boolean getAllowsChildren() {
+    public final boolean getAllowsChildren() {
       return true;
     }
 
-    public TreeNode getParent() {
+    public final TreeNode getParent() {
       return (TreeNode) getArrayParentMessage();
     }
 
-    public int hashCode() {
+    public final int hashCode() {
     	return super.hashCode();
     }
     
-    public boolean equals(Object o) {
+    public final boolean equals(Object o) {
     	return super.equals(o);
     }
     
-	public int compareTo(Object o)  {
+	public final int compareTo(Object o)  {
 	  if(o instanceof Message){
 		Message m = (Message)o;
 		if(getType().equals(Message.MSG_TYPE_ARRAY_ELEMENT)){
