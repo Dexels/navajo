@@ -32,26 +32,34 @@ public final class State implements Serializable, Mappable {
 	 */
 	private static final long serialVersionUID = -1658431106536428135L;
 	
-	public  String id;
+	public  final String id;
 	public  Date entryDate = null;
 	public  Date leaveDate = null;
 	public  boolean killed = false;
 	public  Transition [] transitions = null;
+	public  final Access initiatingAccess;
 	
 	private final HashSet<Transition> myTransitions = new HashSet<Transition>();
 	private final HashSet<WorkFlowTask> myTasks = new HashSet<WorkFlowTask>();
 	private final WorkFlow myWorkFlow;
 	
-	protected State(String s, WorkFlow wf) {
+	protected State(String s, WorkFlow wf, Access a) {
 		id = s;
 		myWorkFlow = wf;
+		if ( a != null ) {
+			initiatingAccess = a;
+		} else {
+			// Could be triggered by e.g. time trigger, in which case there is no access object, use initiatingaccess object from workflow (if it exists!).
+			initiatingAccess = wf.getInitiatingAccess();
+		}
 	}
 	
 	public void addTask(String webservice, String trigger, String condition) throws IllegalTrigger, IllegalTask  {
 		if ( trigger == null || trigger.equals("")) {
 			trigger = "time:now";
 		}
-		Task task = new Task(webservice, myWorkFlow.getInitiatingAccess().rpcUser, "", null, trigger, null);
+		// Task should be schedule with user that initiated this state.
+		Task task = new Task(webservice, initiatingAccess.rpcUser, "", null, trigger, null);
 		task.setWorkflowDefinition(myWorkFlow.getDefinition());
 		task.setWorkflowId(myWorkFlow.getMyId());
 		WorkFlowTask wft = new WorkFlowTask(this, task);
@@ -59,7 +67,7 @@ public final class State implements Serializable, Mappable {
 	}
 	
 	public Transition addTransition(String nextState, String trigger, String condition, String webservice) throws IllegalTrigger, IllegalTask  {
-		Task task = new Task(webservice, myWorkFlow.getInitiatingAccess().rpcUser, "", null, trigger, null);
+		Task task = new Task(webservice, initiatingAccess.rpcUser, "", null, trigger, null);
 		task.setWorkflowDefinition(myWorkFlow.getDefinition());
 		task.setWorkflowId(myWorkFlow.getMyId());
 		Transition t = new Transition(this, nextState, task, condition);	
@@ -68,7 +76,7 @@ public final class State implements Serializable, Mappable {
 	}
 	
 	public Transition addTransition(String nextState, String trigger, String condition) throws IllegalTrigger, IllegalTask  {
-		Task task = new Task("", myWorkFlow.getInitiatingAccess().rpcUser, "", null, trigger, null);
+		Task task = new Task("", initiatingAccess.rpcUser, "", null, trigger, null);
 		task.setWorkflowDefinition(myWorkFlow.getDefinition());
 		task.setWorkflowId(myWorkFlow.getMyId());
 		Transition t = new Transition(this, nextState, task, condition);	
@@ -156,17 +164,12 @@ public final class State implements Serializable, Mappable {
 	}
 	
 	public void kill() {
-		
 	}
 
 	public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
-		// TODO Auto-generated method stub
-		
 	}
 
 	public void store() throws MappableException, UserException {
-		// TODO Auto-generated method stub
-		
 	}
 
 	public Transition[] getTransitions() {
@@ -191,6 +194,7 @@ public final class State implements Serializable, Mappable {
 		return killed;
 	}
 	
-	public static void main (String [] args ) {
+	public Access getInitiatingAccess() {
+		return initiatingAccess;
 	}
 }

@@ -22,34 +22,40 @@ public class WorkFlow implements Mappable, Serializable {
 
 	private static final long serialVersionUID = -6582796299941671005L;
 	
-	public String myId = null;
-	public String definition = null;
+	public final String myId;
+	public final String definition;
 	public State currentState = null;
-	public Access initiatingAccess = null;
+	public final Access initiatingAccess;
 	public State [] history = null;
 	public boolean kill = false;
+	public Binary localState = null;
 	
 	/**
 	 * The local Navajo state store.
 	 */
 	private Navajo localNavajo = null;
-	private Binary localState = null;
 	
 	/**
 	 * This arraylist contains all the visited states for this workflow.
 	 */
 	protected final ArrayList<State> historicStates = new ArrayList<State>();
 	
-	public static WorkFlow getInstance(String definition, String activatedState, Access a) {
-		WorkFlow wf = new WorkFlow(definition, WorkFlowManager.generateWorkflowId());
-		wf.initiatingAccess = a;
-		wf.createState(activatedState);
+	public static WorkFlow getInstance(String definition, String activatedState, Access a, String username) {
+		WorkFlow wf = new WorkFlow(definition, WorkFlowManager.generateWorkflowId(), a, username);
+		
+		wf.createState(activatedState, a);
 		WorkFlowManager.getInstance().addWorkFlow(wf);
 		wf.start();
 		return wf;
 	}
 	
-	public WorkFlow(String definition, String id) {
+	public WorkFlow(String definition, String id, Access a, String username) {
+		if ( a != null ) {
+			initiatingAccess = a;
+		} else {
+			// Create empty access object using specified username for initiating task.
+			initiatingAccess = new Access(-1, -1, -1, username, null, null, null, null, false, null);
+		}
 		myId = id;
 		this.definition = definition;
 		// Create local Navajo to store parameters.
@@ -100,12 +106,12 @@ public class WorkFlow implements Mappable, Serializable {
 	 * @param name
 	 * @return
 	 */
-	protected State createState(String name) {
+	protected State createState(String name, Access a) {
 		try {
 		
 				State s = null;
 				try {
-					s = WorkFlowDefinitionReader.parseState(this, name);
+					s = WorkFlowDefinitionReader.parseState(this, name, a);
 					currentState = s;
 				} catch (Exception e) {
 					System.err.println("Could not parse workflow state " + name + " of workflowdefinition " + this.getDefinition());
@@ -167,7 +173,7 @@ public class WorkFlow implements Mappable, Serializable {
 	}
 
 	public static void main(String [] args) throws Exception {
-		WorkFlow wf = new WorkFlow("", "");
+		WorkFlow wf = new WorkFlow("", "", null, "ROOT");
 		wf.addParameter("Name", new Integer(43453));
 		wf.addParameter("Name", "Dexels");
 		wf.localNavajo.write(System.err);

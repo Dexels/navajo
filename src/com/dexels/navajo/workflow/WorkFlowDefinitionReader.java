@@ -3,6 +3,7 @@ package com.dexels.navajo.workflow;
 import java.io.File;
 import java.io.FileReader;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
@@ -10,6 +11,7 @@ import java.util.Vector;
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.server.Access;
 
 /**
  * Helper class to parse workflow states from definition files.
@@ -56,9 +58,9 @@ public final class WorkFlowDefinitionReader {
 		return null;
 	}
 	
-	public static final State parseState(WorkFlow wf, String name) throws Exception {
+	public static final State parseState(WorkFlow wf, String name, Access a) throws Exception {
 		
-		State s = new State(name, wf);
+		State s = new State(name, wf, a);
 		String definitionFile = wf.getDefinition() + ".xml";
 		XMLElement def = readDefinition(definitionFile);
 		XMLElement state = findState(def, name);
@@ -87,10 +89,15 @@ public final class WorkFlowDefinitionReader {
 			for (int j = 0; j < params.size(); j++) {
 				XMLElement p = (XMLElement) params.get(j);
 				String paramname = (String) p.getAttribute("name");
-				XMLElement e = p.getElementByTagName("expression");
-				String expression = (String) e.getAttribute("value");
-				trans.addParameter(paramname, expression);
-				
+				Vector exp = p.getElementsByTagName("expression");
+				ArrayList<ConditionalExpression> al = new ArrayList<ConditionalExpression>();
+				for (int e = 0; e < exp.size(); e++) {
+					XMLElement ep = (XMLElement) exp.get(e);
+					String expression = (String) ep.getAttribute("value");
+					String cond = (String) ep.getAttribute("condition");
+					al.add(new ConditionalExpression(cond, expression));
+				}
+				trans.addParameter(paramname, al);	
 			}
 		}
 		// Parse tasks.
@@ -107,12 +114,12 @@ public final class WorkFlowDefinitionReader {
 		
 	}
 	
-	private static final WorkFlowDefinition createInitState(XMLElement xml, String definition) throws Exception { 
+	private static final WorkFlowDefinition createInitState(XMLElement xml, String definition, String filePath) throws WorkFlowDefinitionException { 
 		
-		WorkFlowDefinition wfd = new WorkFlowDefinition();
+		WorkFlowDefinition wfd = new WorkFlowDefinition(definition, filePath);
 		XMLElement init = findState(xml, "init");
 		if ( init == null ) {
-			throw new Exception("Could not find init state for workflow: " + definition);
+			throw new WorkFlowDefinitionException("Could not find init state for workflow: " + definition);
 		}
 		Vector transitions = init.getElementsByTagName("transition");
 		for (int i = 0; i < transitions.size(); i++) {
@@ -120,16 +127,25 @@ public final class WorkFlowDefinitionReader {
 			String nextState = readAttribute(t, "nextstate");
 			String trigger = readAttribute(t,"trigger");
 			String condition = readAttribute(t,"condition");
-			Transition trans = Transition.createStartTransition(nextState, trigger, condition, definition);
-			initialTransitions.put(definition, trans);
-			wfd.setActivationTrigger(trigger);
-			wfd.setName(definition);
+			String user = readAttribute(t,"username");
+			try {
+				Transition trans = Transition.createStartTransition(nextState, trigger, condition, definition, user);
+				initialTransitions.put(definition, trans);
+				wfd.setActivationTrigger(trigger);
+			} catch (Exception e) {
+				throw new WorkFlowDefinitionException(e.getMessage());
+			}	
 		}
-		StringWriter sw = new StringWriter();
-		xml.write(sw);
-		sw.close();
-		wfd.setDefinition(new Binary(sw.getBuffer().toString().getBytes()));
-		return wfd;
+		try {
+			StringWriter sw = new StringWriter();
+			xml.write(sw);
+			sw.close();
+			wfd.setDefinition(new Binary(sw.getBuffer().toString().getBytes()));
+			return wfd;
+		} catch (Exception e) {
+			throw new WorkFlowDefinitionException(e.getMessage());
+		}	
+		
 	}
 	
 	/**
@@ -152,9 +168,13 @@ public final class WorkFlowDefinitionReader {
 					String name = f.getName().substring(0, f.getName().length() - 4);
 					if ( !defs.containsKey(name) ){
 						System.err.println("Found new flow definition: " + name);
-						WorkFlowDefinition wfd = createInitState(xml, name);
-						wfd.setLastModified(f.lastModified());
-						defs.put(name, wfd);
+						try {
+							WorkFlowDefinition wfd = createInitState(xml, name, f.getAbsolutePath());
+							wfd.setLastModified(f.lastModified());
+							defs.put(name, wfd);
+						} catch (WorkFlowDefinitionException e) {
+							System.err.println("Could not initialize workflow " + name + ": " + e.getMessage());
+						}
 					} else {
 						WorkFlowDefinition wfd = defs.get(name);
 						if ( wfd.getLastModified() != f.lastModified() ) {
@@ -163,9 +183,13 @@ public final class WorkFlowDefinitionReader {
 							if ( trans != null ) {
 								trans.cleanup();
 							}
-							wfd = createInitState(xml, name);
-							wfd.setLastModified(f.lastModified());
-							defs.put(name, wfd);	
+							try {
+								wfd = createInitState(xml, name, f.getAbsolutePath());
+								wfd.setLastModified(f.lastModified());
+								defs.put(name, wfd);	
+							} catch (WorkFlowDefinitionException e) {
+								System.err.println("Could not initialize workflow " + name + ": " + e.getMessage());
+							}
 						}
 					}
 				} catch (Exception e) {

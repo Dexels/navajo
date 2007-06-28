@@ -16,7 +16,7 @@ import com.dexels.navajo.server.GenericThread;
 import com.dexels.navajo.server.jmx.JMXHelper;
 import com.dexels.navajo.util.AuditLog;
 
-public class WorkFlowManager extends GenericThread implements WorkFlowManagerMXBean {
+public final class WorkFlowManager extends GenericThread implements WorkFlowManagerMXBean {
 
 	/**
 	 * Public fields for mappable.
@@ -134,10 +134,14 @@ public class WorkFlowManager extends GenericThread implements WorkFlowManagerMXB
 	
 	public void addWorkFlow(WorkFlow wf) {
 		workflowInstances.add(wf);
+		WorkFlowDefinition wdf = workflowDefinitions.get(wf.getDefinition());
+		wdf.instances++;
 	}
 	
 	public void removeWorkFlow(WorkFlow wf) {
 		workflowInstances.remove(wf);
+		WorkFlowDefinition wdf = workflowDefinitions.get(wf.getDefinition());
+		wdf.instances--;
 	}
 	
 	public void worker() {
@@ -204,7 +208,7 @@ public class WorkFlowManager extends GenericThread implements WorkFlowManagerMXB
 		return null;
 	}
 	
-	private long getConfigTimeStamp() {
+	private final long getConfigTimeStamp() {
 		if (  Dispatcher.getInstance() != null && Dispatcher.getInstance().getNavajoConfig() != null ) {
 			java.io.File f = new java.io.File(workflowDefinitionPath);
 			if ( f != null && f.exists() ) {
@@ -214,11 +218,11 @@ public class WorkFlowManager extends GenericThread implements WorkFlowManagerMXB
 		return -1;
 	}
 	
-	private void setConfigTimeStamp() {
+	private final void setConfigTimeStamp() {
 		configTimestamp = getConfigTimeStamp();
 	}
 	
-	private boolean isConfigModified() {
+	private final boolean isConfigModified() {
 		if ( configTimestamp != getConfigTimeStamp() && getConfigTimeStamp() != -1 ) {
 			return true;
 		} else {
@@ -244,6 +248,11 @@ public class WorkFlowManager extends GenericThread implements WorkFlowManagerMXB
 
 	public int getInstanceCount() {
 		return workflowInstances.size();
+	}
+
+	public String getId() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 

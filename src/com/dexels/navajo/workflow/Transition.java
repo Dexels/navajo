@@ -67,9 +67,9 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 		
 	}
 	
-	public final static Transition createStartTransition(String startStateId, String triggerString, String condition, String activateWorkflow) throws IllegalTrigger, IllegalTask{	
+	public final static Transition createStartTransition(String startStateId, String triggerString, String condition, String activateWorkflow, String username) throws IllegalTrigger, IllegalTask{	
 		Transition t = new Transition();
-		t.myTask = new Task(null, "ROOT", "", null, triggerString, null);
+		t.myTask = new Task(null, username, "", null, triggerString, null);
 		t.trigger = triggerString;
 		t.myTask.setId("workflow-"+activateWorkflow);
 		t.myTask.setWorkflowDefinition(activateWorkflow);
@@ -81,8 +81,8 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 		return t;
 	}
 	
-	public final void addParameter(String name, String expression) {
-		Parameter p = new Parameter(name, expression);
+	public final void addParameter(String name, ArrayList<ConditionalExpression> expressions) {
+		Parameter p = new Parameter(name, expressions);
 		parameters.add(p);
 	}
 	
@@ -96,13 +96,20 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 			for ( int i = 0; i < parameters.size(); i++ ) {
 				Parameter p = parameters.get(i);
 				String name = p.getName();
-				String expression = p.getExpression();
-				try {
-					Operand o = Expression.evaluate(expression, n);
-					myState.getWorkFlow().addParameter(name, o.value);
-				} catch (Exception e) {
-					e.printStackTrace(System.err);
-				} 
+				ArrayList<ConditionalExpression> exps =  p.getExpressions();
+				for (int j = 0; j < exps.size(); j++) {
+					ConditionalExpression ce = exps.get(j);
+					try {
+						// Evaluate corresponding condition with expression.
+						if ( Condition.evaluate(ce.getCondition(), n) ) {
+							Operand o = Expression.evaluate(ce.getExpression(), n);
+							myState.getWorkFlow().addParameter(name, o.value);
+							j = exps.size() + 1;
+						}
+					} catch (Exception e) {
+						e.printStackTrace(System.err);
+					} 
+				}
 			}
 		}
 	}
@@ -159,10 +166,13 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 		myState.getWorkFlow().mergeWithParmaters(n);
 	
 		try {
-			return Condition.evaluate(myCondition, n);
+			System.err.println("CHECKING " + myCondition);
+			boolean b =  Condition.evaluate(myCondition, n);
+			System.err.println("B = " + b);
+			return b;
 		} catch (Throwable e) {
 			// Could not evaluate condition, hence must return false.
-			//e.printStackTrace(System.err);
+			e.printStackTrace(System.err);
 			return false;
 		}
 	}
@@ -175,8 +185,9 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 				// First evaluate all parameters that need to be set with this transition.
 				evaluateParameters(t);
 				myState.leave();
+				
 				if ( nextState != null && !nextState.equals("finish") ) {
-					myState.getWorkFlow().createState(nextState).enter();
+					myState.getWorkFlow().createState(nextState, t.getTrigger().getAccess()).enter();
 				} else {
 					myState.getWorkFlow().finish();
 				}
@@ -186,7 +197,7 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 			 */
 			if ( activationTranstion ) {
 				// Activate new workflow instance.
-				WorkFlow wf = WorkFlow.getInstance(workFlowToBeActivated, nextState, t.getTrigger().getAccess());
+				WorkFlow wf = WorkFlow.getInstance(workFlowToBeActivated, nextState, t.getTrigger().getAccess(), t.getUsername());
 			}
 		}
 
@@ -202,7 +213,7 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 				evaluateParameters(t);
 				myState.leave();
 				if ( nextState != null && !nextState.equals("finish") ) {
-					myState.getWorkFlow().createState(nextState).enter();
+					myState.getWorkFlow().createState(nextState, t.getTrigger().getAccess()).enter();
 				} else {
 					myState.getWorkFlow().finish();
 				}
