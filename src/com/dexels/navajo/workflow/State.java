@@ -25,7 +25,7 @@ import com.dexels.navajo.mapping.MappableException;
  * @author arjen
  *
  */
-public class State implements Serializable, Mappable {
+public final class State implements Serializable, Mappable {
 	
 	/**
 	 * 

@@ -26,7 +26,7 @@ import com.dexels.navajo.mapping.MappableException;
  * @author arjen
  *
  */
-public class Transition implements TaskListener, Serializable, Mappable {
+public final class Transition implements TaskListener, Serializable, Mappable {
 
 	/**
 	 * 
@@ -67,7 +67,7 @@ public class Transition implements TaskListener, Serializable, Mappable {
 		
 	}
 	
-	public static Transition createStartTransition(String startStateId, String triggerString, String condition, String activateWorkflow) throws IllegalTrigger, IllegalTask{	
+	public final static Transition createStartTransition(String startStateId, String triggerString, String condition, String activateWorkflow) throws IllegalTrigger, IllegalTask{	
 		Transition t = new Transition();
 		t.myTask = new Task(null, "ROOT", "", null, triggerString, null);
 		t.trigger = triggerString;
@@ -81,7 +81,7 @@ public class Transition implements TaskListener, Serializable, Mappable {
 		return t;
 	}
 	
-	public void addParameter(String name, String expression) {
+	public final void addParameter(String name, String expression) {
 		Parameter p = new Parameter(name, expression);
 		parameters.add(p);
 	}
@@ -90,7 +90,7 @@ public class Transition implements TaskListener, Serializable, Mappable {
 	 * Evaluate all parameters.
 	 *
 	 */
-	private void evaluateParameters(Task t) {
+	private final void evaluateParameters(Task t) {
 		if ( t.getTrigger().getAccess() != null ) {
 			Navajo n = t.getTrigger().getAccess().getOutputDoc();
 			for ( int i = 0; i < parameters.size(); i++ ) {
@@ -128,7 +128,7 @@ public class Transition implements TaskListener, Serializable, Mappable {
 	 * as a task listener.
 	 *
 	 */
-	public void activate() {
+	public final void activate() {
 		
 		TaskRunner.getInstance().addTaskListener(this);
 		if ( myTask.getId() == null ) {
@@ -144,12 +144,12 @@ public class Transition implements TaskListener, Serializable, Mappable {
 	 * as a tasklistener.
 	 *
 	 */
-	public void cleanup() {
+	public final void cleanup() {
 		TaskRunner.getInstance().removeTaskListener(this);
 		TaskRunner.getInstance().removeTask(myTask.getId());
 	}
 	
-	private boolean enterNextState(Task t) {
+	private final boolean enterNextState(Task t) {
 		
 		if ( myCondition == null || myCondition.equals("") || t.getTrigger().getAccess() == null ) {
 			return true;
@@ -159,16 +159,15 @@ public class Transition implements TaskListener, Serializable, Mappable {
 		myState.getWorkFlow().mergeWithParmaters(n);
 	
 		try {
-			
 			return Condition.evaluate(myCondition, n);
-		} catch (Exception e) {
-			// Could no evaluate condition, hence must return false.
+		} catch (Throwable e) {
+			// Could not evaluate condition, hence must return false.
 			//e.printStackTrace(System.err);
 			return false;
 		}
 	}
 	
-	public void afterTask(Task t, Navajo request) {
+	public final void afterTask(Task t, Navajo request) {
 		
 		if (  !beforeTrigger && isMyTransitionTaskTrigger(t) ) {
 			
@@ -193,7 +192,7 @@ public class Transition implements TaskListener, Serializable, Mappable {
 
 	}
 
-	public boolean beforeTask(Task t) {
+	public final boolean beforeTask(Task t) {
 		
 		if ( beforeTrigger && isMyTransitionTaskTrigger(t) ) {
 			
@@ -216,35 +215,29 @@ public class Transition implements TaskListener, Serializable, Mappable {
 		return true;
 	}
 
-	public boolean isActivationTranstion() {
+	public final boolean isActivationTranstion() {
 		return activationTranstion;
 	}
 
-	public void setActivationTranstion(boolean activationTranstion) {
+	public final void setActivationTranstion(boolean activationTranstion) {
 		this.activationTranstion = activationTranstion;
 	}
 
-	public boolean isBeforeTrigger() {
+	public final boolean isBeforeTrigger() {
 		return beforeTrigger;
 	}
 
-	public Task getMyTask() {
+	public final Task getMyTask() {
 		return myTask;
 	}
 
 	public void kill() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
-		// TODO Auto-generated method stub
-		
 	}
 
 	public void store() throws MappableException, UserException {
-		// TODO Auto-generated method stub
-		
 	}
 
 	public String getTrigger() {

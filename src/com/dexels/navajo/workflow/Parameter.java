@@ -2,7 +2,7 @@ package com.dexels.navajo.workflow;
 
 import java.io.Serializable;
 
-public class Parameter implements Serializable {
+public final class Parameter implements Serializable {
 
 	/**
 	 * 
@@ -17,11 +17,11 @@ public class Parameter implements Serializable {
 		this.expression = expression;
 	}
 
-	public String getName() {
+	public final String getName() {
 		return name;
 	}
 
-	public String getExpression() {
+	public final String getExpression() {
 		return expression;
 	}
 	
