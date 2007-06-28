@@ -187,8 +187,10 @@ public final class State implements Serializable, Mappable {
 		return leaveDate;
 	}
 
-	public boolean getKilled() {
+	public final boolean getKilled() {
 		return killed;
 	}
 	
+	public static void main (String [] args ) {
+	}
 }
