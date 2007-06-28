@@ -4,5 +4,6 @@ public interface ClockMXBean {
 
 	public int getResolution();
 	public int getListeners();
+	public String getId();
 	
 }
