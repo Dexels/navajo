@@ -149,7 +149,7 @@ public final class NavajoConfig {
       return nl;
     }
 
-    public void loadConfig(InputStream in)  throws SystemException{
+    public void loadConfig(InputStream in, String rootPath)  throws SystemException{
     	
     	configuration = NavajoFactory.getInstance().createNavajo(in);
     	
@@ -159,8 +159,16 @@ public final class NavajoConfig {
     	}
     	
     	try {
-    		rootPath = properDir(body.getProperty("paths/root").getValue());
     		
+    		String r = body.getProperty("paths/root").getValue();
+    		// in Old Skool situation, passed rootPath is null.
+    		if(rootPath==null) {
+    			System.err.println("Old skool configuration (null rootPath), get path from serverXml: "+r);
+    			rootPath = properDir(r);
+    		} else {
+    			System.err.println("New skool configuration (rootPath found), path:"+rootPath);
+    			
+    		}
 //    		 Get the instance name.
     		instanceName = ( body.getProperty("instance_name") != null ? 
     				body.getProperty("instance_name").getValue() : null );
@@ -389,7 +397,12 @@ public final class NavajoConfig {
 
     public TaskRunnerInterface getTaskRunner() {
     	// Startup task scheduler
-    	return TaskRunnerFactory.getInstance();  
+    	try {
+			return TaskRunnerFactory.getInstance();
+		} catch (RuntimeException e) {
+			System.err.println("No taskrunner found.");
+			return null;
+		}  
     }
     
     public boolean isIntegrityWorkerEnabled() {
