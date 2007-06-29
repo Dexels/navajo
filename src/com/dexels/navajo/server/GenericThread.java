@@ -80,8 +80,6 @@ public class GenericThread extends NotificationBroadcasterSupport implements Run
 		thread = new Thread(instance,myId);
 		thread.setDaemon(true);
 		thread.start();
-		
-		System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>> STARTING THREAD: " + instance.myId  + "(" + instance.getClass().getName() + ")");
 		threadPool.put(instance.myId, instance);
 	
 	}
