@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.Reader;
 import java.util.*;
 
+import com.dexels.navajo.document.base.BaseNavajoFactoryImpl;
 import com.dexels.navajo.document.saximpl.SaxHandler;
 import com.dexels.navajo.document.saximpl.qdxml.QDParser;
 
@@ -24,6 +25,9 @@ public abstract class NavajoFactory {
   protected Map defaultSubTypes = new HashMap();
   protected final ArrayList myBinaryActivityListeners = new ArrayList();
 
+  private final Map binaryStorage = new HashMap();
+  private boolean sandboxMode = false;
+  
   private static Object semaphore = new Object();
   
   /**
@@ -37,17 +41,27 @@ public abstract class NavajoFactory {
 	}
 	  synchronized ( semaphore ) {
 		  if (impl == null) {
-			  
-			  String name = System.getProperty(
-			  "com.dexels.navajo.DocumentImplementation");
+			  boolean sbmode = false;
+			  String name = null;
+			  try {
+				name = System.getProperty(
+				  "com.dexels.navajo.DocumentImplementation");
+			} catch (SecurityException e1) {
+				System.err.println("No permission. Using standard document impl.");
+				sbmode = true;
+			}
 			  if (name == null) {
 				  name = "com.dexels.navajo.document.base.BaseNavajoFactoryImpl";
-			  }
-			  try {
-				  impl = (NavajoFactory) Class.forName(name).newInstance();
-			  }
-			  catch (Exception e) {
-				  e.printStackTrace();
+				  impl = new BaseNavajoFactoryImpl();
+				  impl.sandboxMode = sbmode;
+			  } else {
+				  try {
+					  impl = (NavajoFactory) Class.forName(name).newInstance();
+					  impl.sandboxMode = sbmode;
+				  }
+				  catch (Exception e) {
+					  e.printStackTrace();
+				  }
 			  }
 		  }
 	  }
@@ -532,5 +546,24 @@ public void fireBinaryFinished(String message, long expectedLength) {
    
 }
 
+public File createStorageHandle() {
+	String handle = "storage_"+Math.random();
+	System.err.println("HANDLE: "+handle);
+	return new File(handle);
+}
 
+public void storeHandle(String name, byte[] data) {
+	binaryStorage.put(name,data);
+}
+public byte[] getHandle(String name) {
+	return (byte[])binaryStorage.get(name);
+}
+
+public boolean isSandboxMode() {
+	return sandboxMode;
+}
+
+public void removeHandle(String name) {
+	binaryStorage.remove(name);
+}
 }

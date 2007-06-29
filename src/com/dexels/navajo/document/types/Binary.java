@@ -93,7 +93,7 @@ public final class Binary extends NavajoType implements Serializable {
     
     public String getHandle() {
         if (dataFile!=null) {
-            return dataFile.getAbsolutePath();
+            return dataFile.getName();
         }
         if (lazySourceFile!=null) {
             return lazySourceFile.getAbsolutePath();
@@ -160,11 +160,25 @@ public final class Binary extends NavajoType implements Serializable {
     }
 
     private OutputStream createTempFileOutputStream() throws IOException, FileNotFoundException {
-    	
-        dataFile = File.createTempFile("binary_object", "navajo", NavajoFactory.getInstance().getTempDir());
-      
-        FileOutputStream fos = new FileOutputStream(dataFile);
-        return fos;
+    	if(NavajoFactory.getInstance().isSandboxMode()) {
+    		dataFile = NavajoFactory.getInstance().createStorageHandle();
+    		ByteArrayOutputStream baos = new ByteArrayOutputStream() {
+    			public void close() {
+    				try {
+						super.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+	    			NavajoFactory.getInstance().storeHandle(dataFile.getName(), toByteArray());
+    			}
+    		};
+    		return baos;
+    	} else {
+            dataFile = File.createTempFile("binary_object", "navajo", NavajoFactory.getInstance().getTempDir());
+            
+            FileOutputStream fos = new FileOutputStream(dataFile);
+            return fos;
+    	}
     }
 
     public Binary(File f) throws IOException {
@@ -356,15 +370,33 @@ public final class Binary extends NavajoType implements Serializable {
     
     
     public long getLength() {
-        if (lazySourceFile != null && lazySourceFile.exists()) {
-            return lazySourceFile.length();
-        } else {
-            if (dataFile != null && dataFile.exists()) {
-                return dataFile.length();
-            } else {
-                return 0;
-            }
-        }
+    	if (NavajoFactory.getInstance().isSandboxMode()) {
+    		byte[] b = NavajoFactory.getInstance().getHandle(dataFile.getName());
+    		if (b==null) {
+				return 0;
+			} else {
+				return b.length;
+			}
+		} else {
+	        if (lazySourceFile != null && lazySourceFile.exists()) {
+	            return lazySourceFile.length();
+	        } else {
+	            if (dataFile != null && dataFile.exists()) {
+	            	if (NavajoFactory.getInstance().isSandboxMode()) {
+	            		byte[] res = NavajoFactory.getInstance().getHandle(dataFile.getName());
+	            		if(res==null) {
+	            			return 0;
+	            		} else {
+	            			return res.length;
+	            		}
+	            	} else {
+		            	return dataFile.length();
+					}
+	            } else {
+	                return 0;
+	            }
+	        }
+		}
     }
 
     /**
@@ -383,7 +415,11 @@ public final class Binary extends NavajoType implements Serializable {
                 f = dataFile;
             }
             if ( f != null ) {
-            	currentFormatDescription = metadata.FormatIdentification.identify(f);
+            	if(NavajoFactory.getInstance().isSandboxMode()) {
+                	currentFormatDescription = metadata.FormatIdentification.identify(NavajoFactory.getInstance().getHandle(f.getName()));
+            	} else {
+                	currentFormatDescription = metadata.FormatIdentification.identify(f);
+            	}
             }
 //            System.err.println("Guessed: "+currentFormatDescription.getMimeType());
 //            System.err.println("Guessed: "+currentFormatDescription.getFileExtensions());
@@ -419,38 +455,51 @@ public final class Binary extends NavajoType implements Serializable {
     /**
      * Get this Binary's data
      * 
+     * This one is a bit odd. Why on earth not simply get the data as a stream, and copyResource to a ByteArrayOutputStream?
      * @return byte[]
      */
     public final byte[] getData() {
-        // return this.data;
-        RandomAccessFile in = null;
 
-        File file = null;
-        if (lazySourceFile != null) {
-            file = lazySourceFile;
-        } else {
-            file = dataFile;
-        }
-        try {
-            if (file != null) {
-                in = new RandomAccessFile(file, "r");
-                byte[] data = new byte[(int) file.length()];// + 1 ];
-                in.readFully(data);
-                return data;
-            }
-        } catch (Exception e) {
-            e.printStackTrace(System.err);
-        } finally {
-            try {
-                if (in != null) {
-                    in.close();
-                }
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
-        return null;
+    	if (NavajoFactory.getInstance().isSandboxMode()) {
+			if(dataFile==null) {
+				return null;
+			} else {
+				byte[] bb= NavajoFactory.getInstance().getHandle(dataFile.getName());
+				return bb;
+			}
+		} else {
+	        RandomAccessFile in = null;
+
+	        File file = null;
+	        if (lazySourceFile != null) {
+	            file = lazySourceFile;
+	        } else {
+	            file = dataFile;
+	        }
+	        try {
+	            if (file != null) {
+	                in = new RandomAccessFile(file, "r");
+	                byte[] data = new byte[(int) file.length()];// + 1 ];
+	                in.readFully(data);
+	                return data;
+	            }
+	        } catch (Exception e) {
+	            e.printStackTrace(System.err);
+	        } finally {
+	            try {
+	                if (in != null) {
+	                    in.close();
+	                }
+	            } catch (IOException e) {
+	                // TODO Auto-generated catch block
+	                e.printStackTrace();
+	            }
+	        }
+	        return null;
+		}
+    	
+    	// return this.data;
+
     }
 
     private final void copyResource(String name, OutputStream out, InputStream in, long totalSize) throws IOException {
@@ -504,26 +553,31 @@ public final class Binary extends NavajoType implements Serializable {
     }
     
     public final InputStream getDataAsStream() {
-        if (lazySourceFile != null) {
-            try {
-                return new FileInputStream(lazySourceFile);
-            } catch (FileNotFoundException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace(System.err);
-                return null;
-            }
-        }
-        if (dataFile != null) {
-            try {
-                return new FileInputStream(dataFile);
-            } catch (FileNotFoundException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace(System.err);
-                return null;
-            }
-        } else {
-            return null;
-        }
+    	if (NavajoFactory.getInstance().isSandboxMode()) {
+    		ByteArrayInputStream bais = new ByteArrayInputStream(NavajoFactory.getInstance().getHandle(dataFile.getName()));
+    		return bais;
+    	} else {
+	        if (lazySourceFile != null) {
+	            try {
+	                return new FileInputStream(lazySourceFile);
+	            } catch (FileNotFoundException e) {
+	                // TODO Auto-generated catch block
+	                e.printStackTrace(System.err);
+	                return null;
+	            }
+	        }
+	        if (dataFile != null) {
+	            try {
+	                return new FileInputStream(dataFile);
+	            } catch (FileNotFoundException e) {
+	                // TODO Auto-generated catch block
+	                e.printStackTrace(System.err);
+	                return null;
+	            }
+	        } else {
+	            return null;
+	        }
+		}
     }
 
     /**
@@ -560,15 +614,20 @@ public final class Binary extends NavajoType implements Serializable {
 
     protected void finalize() {
     
-    	
-        if (dataFile != null && dataFile.exists() && !persistedBinaries.containsKey(dataFile.getAbsolutePath())) {
-            try {
-            	System.err.println("Deleting binary placeholder filer myRef : " + dataFile.getAbsolutePath());
-                dataFile.delete();
-            } catch (Throwable t) {
-                t.printStackTrace();
-            }
-        }
+    	if (NavajoFactory.getInstance().isSandboxMode()) {
+    		if(dataFile!=null) {
+    			NavajoFactory.getInstance().removeHandle(dataFile.getName());
+    		}
+		} else {
+	        if (dataFile != null && dataFile.exists() && !persistedBinaries.containsKey(dataFile.getAbsolutePath())) {
+	            try {
+	            	System.err.println("Deleting binary placeholder filer myRef : " + dataFile.getAbsolutePath());
+	                dataFile.delete();
+	            } catch (Throwable t) {
+	                t.printStackTrace();
+	            }
+	        }
+		}
     }
 
     /**
@@ -580,23 +639,27 @@ public final class Binary extends NavajoType implements Serializable {
      *             memory exceptions
      */
     public final String getBase64() {
-        // final StringWriter sw = new StringWriter();
-        // final OutputStream os = Base64.newEncoder( sw );
-        //    
-        // copyResource( os, datastream );
-        //     
-        // os.close();
-        // datastream.close();
-        // return sw.toString();
+         final StringWriter sw = new StringWriter();
+         final OutputStream os = Base64.newEncoder( sw );
+            
+         InputStream dataAsStream = getDataAsStream();
+   		 try {
+			copyResource("base64", os, dataAsStream, getLength());
+			 os.close();
+			 dataAsStream.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+         return sw.toString();
 
-        if (getData() != null) {
-            sun.misc.BASE64Encoder enc = new sun.misc.BASE64Encoder();
-            String data = enc.encode(getData());
-            data = data.replaceAll("\n", "\n  ");
-            return data;
-        } else {
-            return null;
-        }
+//        if (getData() != null) {
+//            sun.misc.BASE64Encoder enc = new sun.misc.BASE64Encoder();
+//            String data = enc.encode(getData());
+//            data = data.replaceAll("\n", "\n  ");
+//            return data;
+//        } else {
+//            return null;
+//        }
     }
 
     /**
