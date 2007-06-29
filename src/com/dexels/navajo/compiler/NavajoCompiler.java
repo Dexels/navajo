@@ -24,6 +24,8 @@ package com.dexels.navajo.compiler;
  * SUCH DAMAGE.
  * ====================================================================
  */
+import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.Access;
 
@@ -43,7 +45,8 @@ public class NavajoCompiler
 				Class cc = Class.forName("com.sun.tools.javac.Main");
 			} catch (ClassNotFoundException e) {
 				System.err.println("No sun compiler.");
-				return;
+				throw NavajoFactory.getInstance().createNavajoException("No java compiler found! Is tools.jar in your classpath? Are you using a full JDK?");
+//				return;
 			}
         	
             String classPath = null;
