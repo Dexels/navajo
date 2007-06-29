@@ -12,6 +12,9 @@ import java.util.*;
 
 import com.dexels.navajo.client.queueimpl.*;
 import com.dexels.navajo.document.*;
+import com.jcraft.jzlib.JZlib;
+import com.jcraft.jzlib.ZInputStream;
+import com.jcraft.jzlib.ZOutputStream;
 
 /**
  * @author Administrator
@@ -31,12 +34,12 @@ public class NavajoSocketClient extends ClientQueueImpl {
         inoutCount--;
     }
 
-   public InputStream doTransaction(String name, Navajo d, boolean useCompression) throws IOException, ClientException, NavajoException, javax.net.ssl.SSLHandshakeException {
+   public InputStream doTransaction(String name, Navajo d, boolean useCompression, HttpURLConnection myCon) throws IOException, ClientException, NavajoException, javax.net.ssl.SSLHandshakeException {
         Socket connection = null;
          if (connection==null) {
             connection = initialize();
         }
-        BufferedInputStream bi = null;
+        InputStream bi = null;
         try {
             bi = doTransaction(connection, name, d, useCompression);
         } catch (Throwable e) {
@@ -51,54 +54,66 @@ public class NavajoSocketClient extends ClientQueueImpl {
     
     
     
-    public BufferedInputStream doTransaction(Socket con, String name, Navajo d, boolean useCompression) throws IOException, ClientException, NavajoException {
-        //long timeStamp = System.currentTimeMillis();
- 
-        // Verstuur bericht
-        if (useCompression) {
-               java.util.zip.GZIPOutputStream out = new java.util.zip.GZIPOutputStream(con.getOutputStream());
-          d.write(out, condensed, d.getHeader().getRPCName());
-//          out.close();
-          //long tt = System.currentTimeMillis() - timeStamp;
-//          System.err.println("Sending request took: " + tt + " millisec");
-        }
-        else {
-          try {
-            OutputStream out = con.getOutputStream();
-            BufferedOutputStream bout = new BufferedOutputStream(out);
-            d.write(bout, condensed, d.getHeader().getRPCName());
-//            out.write("\n\0".getBytes());
-            bout.flush();
-//            bout.
-            //long tt = System.currentTimeMillis() - timeStamp;
-//            System.err.println("Sending request took: " + tt + " millisec");
-            //timeStamp = System.currentTimeMillis();
-//            out.close();
-          }
-          catch (java.net.NoRouteToHostException nrthe) {
-            throw new ClientException( -1, 20, "Could not connect to URI: " + name + ", check your connection");
-          }
-//          catch (java.net.SocketException se) {
-//            se.printStackTrace();
-//            throw new ClientException( -1, 21, "Could not connect to network, check your connection");
+//    public BufferedInputStream doTransactionOld(Socket con, String name, Navajo d, boolean useCompression) throws IOException, ClientException, NavajoException {
+//        if (useCompression) {
+//               java.util.zip.GZIPOutputStream out = new java.util.zip.GZIPOutputStream(con.getOutputStream());
+//          d.write(out, condensed, d.getHeader().getRPCName());
+//        }
+//        else {
+//          try {
+//            OutputStream out = con.getOutputStream();
+//            BufferedOutputStream bout = new BufferedOutputStream(out);
+//            d.write(bout, condensed, d.getHeader().getRPCName());
+//            bout.flush();
 //          }
-        }
-        // Lees bericht
-        BufferedInputStream in = null;
-         if (useCompression) {
-          java.util.zip.GZIPInputStream unzip = new java.util.zip.GZIPInputStream(con.getInputStream());
-          in = new BufferedInputStream(unzip);
-        }
-        else {
-          in = new BufferedInputStream(con.getInputStream());
-        }
-        //long tt = System.currentTimeMillis() - timeStamp;
-        //System.err.println("Executing script took: " + tt + " millisec");
-        //timeStamp = System.currentTimeMillis();
-//         connection = null;
-        return in;
-        
-    }
+//          catch (java.net.NoRouteToHostException nrthe) {
+//            throw new ClientException( -1, 20, "Could not connect to URI: " + name + ", check your connection");
+//          }
+//        }
+//        BufferedInputStream in = null;
+//         if (useCompression) {
+//          java.util.zip.GZIPInputStream unzip = new java.util.zip.GZIPInputStream(con.getInputStream());
+//          in = new BufferedInputStream(unzip);
+//        }
+//        else {
+//          in = new BufferedInputStream(con.getInputStream());
+//        }
+//        return in;
+//        
+//    }
+    
+
+    public InputStream doTransaction(Socket con, String name, Navajo d, boolean useCompression) throws IOException, ClientException, NavajoException {
+    	   // Send message
+    
+    	BufferedWriter os = null;
+    	try {
+    		os = new BufferedWriter(new OutputStreamWriter(con.getOutputStream(), "UTF-8"));
+    		d.write(os, condensed, d.getHeader().getRPCName());    	
+    		System.err.println("Wrote socket client request.");
+    	} finally {
+    		if ( os != null ) {
+    			try {
+    				os.flush();
+//    				os.close();
+    			} catch (IOException e) {
+    				e.printStackTrace();
+    			}
+    		}
+    	}
+    
+    // Lees bericht
+//    BufferedInputStream in = null;
+//    if (useCompression) {
+//      in = new BufferedInputStream(new java.util.zip.GZIPInputStream(con.getInputStream()));
+//    }
+//    else {
+//      in = new BufferedInputStream(con.getInputStream());
+//    }
+    
+     	return con.getInputStream();
+    
+  }    
 
     /**
      * @throws IOException
