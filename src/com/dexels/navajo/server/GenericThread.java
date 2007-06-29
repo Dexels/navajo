@@ -24,7 +24,6 @@
  */
 package com.dexels.navajo.server;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -59,7 +58,7 @@ public class GenericThread extends NotificationBroadcasterSupport implements Run
 	private final static String DEAD = "Zombie";
 	private final static String NOTSTARTED = "Not running";
 	
-	private static Map threadPool = Collections.synchronizedMap(new HashMap());
+	private static Map<String,GenericThread> threadPool = Collections.synchronizedMap(new HashMap<String,GenericThread>());
 	
 	public GenericThread() {
 		myId = "dummy";
@@ -152,10 +151,10 @@ public class GenericThread extends NotificationBroadcasterSupport implements Run
 	
 	public static void killAllThreads() {
 
-		HashMap copyOfThreadPool = new HashMap(threadPool); 
-		Iterator iter = copyOfThreadPool.values().iterator();
+		HashMap<String, GenericThread> copyOfThreadPool = new HashMap<String, GenericThread>(threadPool); 
+		Iterator<GenericThread> iter = copyOfThreadPool.values().iterator();
 		while ( iter.hasNext() ) {
-			GenericThread gt = (GenericThread) iter.next();
+			GenericThread gt = iter.next();
 			if ( gt.thread != null ) {
 				try {
 					gt.kill();
@@ -190,7 +189,7 @@ public class GenericThread extends NotificationBroadcasterSupport implements Run
 	public GenericThread [] getAllThreads() {
 		if ( threadPool.size() > 0 ) {
 			GenericThread [] all = new GenericThread[threadPool.size()];
-			return (GenericThread []) threadPool.values().toArray(all);
+			return threadPool.values().toArray(all);
 		}
 		return null;
 	}
@@ -206,16 +205,15 @@ public class GenericThread extends NotificationBroadcasterSupport implements Run
 	public final void sendHealthCheck(int level, int warningLevel, String severity, String message) {
 
 		String m = severity + ":" + "level=" + level + ",warninglevel=" + warningLevel + ",message=" + message;
-		
-			Notification n = 
-				new Notification(NavajoNotification.NAVAJO_NOTIFICATION, 
-						this, 
-						GenericThread.notificationSequence++, 
-						System.currentTimeMillis(),
-						m);
-			
-			sendNotification(n); 
-		
+		Notification n = 
+			new Notification(NavajoNotification.NAVAJO_NOTIFICATION, 
+					this, 
+					GenericThread.notificationSequence++, 
+					System.currentTimeMillis(),
+					m);
+
+		sendNotification(n); 
+
 	}
 	
 	public MBeanNotificationInfo[] getNotificationInfo() { 
