@@ -126,8 +126,10 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
    * @throws NavajoException
    */
   private Dispatcher(URL configurationUrl,
-		  InputStreamReader fileInputStreamReader,String rootPath,
-		  NavajoClassSupplier cl) throws
+		  InputStreamReader fileInputStreamReader,
+		  String rootPath,
+		  NavajoClassSupplier cl,
+		  String serverIdentification) throws
 		  NavajoException {
 	  
 	  instances++;
@@ -139,6 +141,9 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
 		  navajoConfig.loadConfig(is,rootPath);
 		  debugOn = navajoConfig.isLogged();
 		  logger = NavajoConfig.getNavajoLogger(Dispatcher.class);
+		  JMXHelper.registerMXBean(this, JMXHelper.NAVAJO_DOMAIN, "Dispatcher");
+		  setServerIdentifier(serverIdentification);
+		  NavajoFactory.getInstance().setTempDir(getTempDir());
 	  }
 	  
 	  catch (Exception se) {
@@ -153,19 +158,48 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
 		  }
 	  }
   }
-
-//  private Dispatcher(URL configurationUrl,
-//                    InputStreamReader fileInputStreamReader) throws
-//      NavajoException {
-//    this(configurationUrl, fileInputStreamReader, null);
-//  }
+  
+  /**
+   * Constructor for URL based configuration.
+   *
+   * @param configurationUrl
+   * @param fileInputStreamReader
+   * @throws NavajoException
+   */
+  private Dispatcher(URL configurationUrl,
+		  InputStreamReader fileInputStreamReader,
+		  NavajoClassSupplier cl,
+		  String serverIdentification) throws
+		  NavajoException {
+	  this(configurationUrl, fileInputStreamReader, null, cl, serverIdentification);
+  }
 
   public static Dispatcher getInstance() {
 	  return instance;
   }
   
-  public static Dispatcher getInstance(String rootPath, String serverXmlPath, InputStreamReader fileInputStreamReader,
-			String serverIdentification) throws NavajoException {
+  private final void startUpServices() {
+	  // Startup task runner.
+	  instance.navajoConfig.getTaskRunner();
+	  // Startup queued adapter.
+	  RequestResponseQueueFactory.getInstance();
+  }
+  
+  public static Dispatcher getInstance(URL configurationUrl, InputStreamReader fileInputStreamReader,String serverIdentification) throws NavajoException {
+	  if ( instance != null ) {
+		  return instance;
+	  }
+
+	  synchronized (semaphore) {
+		  if (instance == null) {
+			  instance = new Dispatcher(configurationUrl, fileInputStreamReader, null, serverIdentification);
+			  instance.startUpServices();
+		  }
+	  }
+	  return instance;
+  }
+  
+  public static Dispatcher getInstance(String rootPath, String serverXmlPath, InputStreamReader fileInputStreamReader, String serverIdentification) throws NavajoException {
 
 		if (instance != null) {
 			return instance;
@@ -200,15 +234,8 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
 		
 		synchronized (semaphore) {
 			if (instance == null) {
-
-				instance = new Dispatcher(configurationUrl, fileInputStreamReader,rootPath,null);
-				JMXHelper.registerMXBean(instance, JMXHelper.NAVAJO_DOMAIN, "Dispatcher");
-				instance.setServerIdentifier(serverIdentification);
-				NavajoFactory.getInstance().setTempDir(instance.getTempDir());
-				// Startup task runner.
-				instance.navajoConfig.getTaskRunner();
-				// Startup queued adapter.
-				RequestResponseQueueFactory.getInstance();
+				instance = new Dispatcher(configurationUrl, fileInputStreamReader,rootPath,null,serverIdentification);
+				instance.startUpServices();
 			}
 		}
 		return instance;

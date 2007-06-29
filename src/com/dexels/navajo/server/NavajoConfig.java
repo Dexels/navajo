@@ -149,7 +149,11 @@ public final class NavajoConfig {
       return nl;
     }
 
-    public void loadConfig(InputStream in, String rootPath)  throws SystemException{
+    public void loadConfig(InputStream in)  throws SystemException{
+    	loadConfig(in, null);
+    }
+    
+    public void loadConfig(InputStream in, String externalRootPath)  throws SystemException{
     	
     	configuration = NavajoFactory.getInstance().createNavajo(in);
     	
@@ -162,11 +166,12 @@ public final class NavajoConfig {
     		
     		String r = body.getProperty("paths/root").getValue();
     		// in Old Skool situation, passed rootPath is null.
-    		if(rootPath==null) {
+    		if(externalRootPath==null) {
     			System.err.println("Old skool configuration (null rootPath), get path from serverXml: "+r);
     			rootPath = properDir(r);
     		} else {
     			System.err.println("New skool configuration (rootPath found), path:"+rootPath);
+    			rootPath = externalRootPath;
     			
     		}
 //    		 Get the instance name.
