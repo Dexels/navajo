@@ -1,7 +1,14 @@
 package com.dexels.navajo.workflow;
 
-public final class ConditionalExpression {
+import java.io.Serializable;
 
+public final class ConditionalExpression implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4772219522840149089L;
+	
 	private final String condition;
 	private final String expression; // value
 	

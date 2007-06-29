@@ -1,6 +1,8 @@
 package com.dexels.navajo.workflow;
 
-public interface WorkFlowManagerMXBean {
+import com.dexels.navajo.server.jmx.GenericThreadMXBean;
+
+public interface WorkFlowManagerMXBean  extends GenericThreadMXBean {
 
 	public String getId();
 	public int getInstanceCount();

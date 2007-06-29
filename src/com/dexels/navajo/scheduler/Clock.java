@@ -13,7 +13,8 @@ public class Clock extends GenericThread implements ClockMXBean, ClockInterface 
 	private static volatile Clock instance = null;
 	private static Object semaphore = new Object();
 	private final ArrayList<ClockListener> listeners = new ArrayList<ClockListener>();
-	private static String id = "Navajo Clock $Id$";
+	private static String id = "Navajo Clock";
+	public static String VERSION = "$Id$";
 	
 	private static final int CLOCK_RESOLUTION = 1000;
 	
@@ -74,5 +75,16 @@ public class Clock extends GenericThread implements ClockMXBean, ClockInterface 
 
 	public String getId() {
 		return id;
+	}
+	
+	public void terminate() {
+		try {
+			JMXHelper.deregisterMXBean(JMXHelper.NAVAJO_DOMAIN, id);
+		} catch (Throwable e) {
+		}
+	}
+
+	public String getVERSION() {
+		return VERSION;
 	}
 }

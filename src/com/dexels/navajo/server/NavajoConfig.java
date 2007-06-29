@@ -164,10 +164,13 @@ public final class NavajoConfig {
     	
     	try {
     		
-    		String r = body.getProperty("paths/root").getValue();
+    		String r = ( body.getProperty("paths/root") != null ? body.getProperty("paths/root").getValue() : null);
     		// in Old Skool situation, passed rootPath is null.
     		if(externalRootPath==null) {
     			System.err.println("Old skool configuration (null rootPath), get path from serverXml: "+r);
+    			if ( r == null ) {
+    				throw new SystemException(-1, "Server root was not specified, try defining root in server.xml");
+    			}
     			rootPath = properDir(r);
     		} else {
     			System.err.println("New skool configuration (rootPath found), path:"+rootPath);

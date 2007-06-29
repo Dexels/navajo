@@ -31,7 +31,8 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 	private static Object semaphore = new Object();
 	private final ArrayList<WorkFlow> workflowInstances = new ArrayList<WorkFlow>();
 	private final HashMap<String,WorkFlowDefinition> workflowDefinitions = new HashMap<String,WorkFlowDefinition>();
-	private static String id = "Navajo WorkFlow Manager $Id$";
+	private static String id = "Navajo WorkFlow Manager";
+	public static String VERSION = "$Id$";
 	
 	private String workflowPath = null;
 	private String workflowDefinitionPath = null;
@@ -250,9 +251,19 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 		return workflowInstances.size();
 	}
 
+	public void terminate() {
+		try {
+			JMXHelper.deregisterMXBean(JMXHelper.NAVAJO_DOMAIN, id);
+		} catch (Throwable e) {
+		}
+	}
+	
 	public String getId() {
-		// TODO Auto-generated method stub
-		return null;
+		return id;
+	}
+
+	public String getVERSION() {
+		return VERSION;
 	}
 	
 

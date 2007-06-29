@@ -1,6 +1,8 @@
 package com.dexels.navajo.adapter.queue;
 
-public interface RequestResponseQueueMXBean {
+import com.dexels.navajo.server.jmx.GenericThreadMXBean;
+
+public interface RequestResponseQueueMXBean extends GenericThreadMXBean {
 
 	public int getSize();
 	public void emptyQueue();

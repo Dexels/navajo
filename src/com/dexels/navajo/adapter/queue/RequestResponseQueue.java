@@ -17,10 +17,11 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 	public boolean emptyQueue = false;
 	public boolean doingWork = false;
 	public boolean queueOnly = false;
-	protected MessageStore myStore = new FileStore();
+	protected MessageStore myStore = null;
 	private static volatile RequestResponseQueue instance = null;
 	private static Object semaphore = new Object();
 	private static String id = "Queued adapters";
+	public static String VERSION = "$Id$";
 	private int MAX_THREADS = 25;
 	private long SLEEPING_TIME = 60000;
 	private int MAX_RETRIES = 10;
@@ -100,6 +101,7 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 			}
 			
 			instance = new RequestResponseQueue();	
+			instance.myStore = new FileStore();
 			try {
 				JMXHelper.registerMXBean(instance, JMXHelper.NAVAJO_DOMAIN, id);
 			} catch (Throwable t) {
@@ -166,25 +168,16 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 		t.start();
 	}
 	
-	protected void finalize() {
-		try {
-			JMXHelper.deregisterMXBean(JMXHelper.NAVAJO_DOMAIN, id);
-		} catch (Throwable e) {
-		}
-	}
-	
 	private final static synchronized void resetInstance() {
 		instance = null;
 	}
 	
 	public void terminate() {
-		resetInstance();
 		try {
 			JMXHelper.deregisterMXBean(JMXHelper.NAVAJO_DOMAIN, id);
 		} catch (Throwable e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
+		resetInstance();
 		AuditLog.log("Adapter Queue", "Killed");
 	}
 	
@@ -262,5 +255,9 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 	
 	public int getCurrentThreads() {
 		return currentThreads;
+	}
+
+	public String getVERSION() {
+		return VERSION;
 	}
 }

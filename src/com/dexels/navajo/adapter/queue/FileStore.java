@@ -37,20 +37,19 @@ public class FileStore implements MessageStore {
 	}
 	
 	public void rewind() {
-		synchronized ( path ) {
-			currentObjects.clear();
-			File queue = new File(path);
-			File [] files = queue.listFiles();
+		currentObjects.clear();
+		File queue = new File(path);
+		File [] files = queue.listFiles();
 
-			for (int i = 0; i < files.length; i++) {
-				File f = files[i];
-				if ( f.isFile() ) {
-					currentObjects.add(f);
-				}
+		for (int i = 0; i < files.length; i++) {
+			File f = files[i];
+			if ( f.isFile() ) {
+				currentObjects.add(f);
 			}
-
-			objectPointer = currentObjects.iterator();
 		}
+
+		objectPointer = currentObjects.iterator();
+
 	}
 	
 	public HashSet getQueuedAdapters() {

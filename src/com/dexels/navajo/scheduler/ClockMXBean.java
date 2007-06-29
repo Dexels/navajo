@@ -1,6 +1,8 @@
 package com.dexels.navajo.scheduler;
 
-public interface ClockMXBean {
+import com.dexels.navajo.server.jmx.GenericThreadMXBean;
+
+public interface ClockMXBean extends GenericThreadMXBean {
 
 	public int getResolution();
 	public int getListeners();

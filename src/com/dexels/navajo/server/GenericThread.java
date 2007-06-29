@@ -81,6 +81,7 @@ public class GenericThread extends NotificationBroadcasterSupport implements Run
 		thread.setDaemon(true);
 		thread.start();
 		
+		System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>> STARTING THREAD: " + instance.myId  + "(" + instance.getClass().getName() + ")");
 		threadPool.put(instance.myId, instance);
 	
 	}
@@ -152,7 +153,9 @@ public class GenericThread extends NotificationBroadcasterSupport implements Run
 	}
 	
 	public static void killAllThreads() {
-		Iterator iter = threadPool.values().iterator();
+
+		HashMap copyOfThreadPool = new HashMap(threadPool); 
+		Iterator iter = copyOfThreadPool.values().iterator();
 		while ( iter.hasNext() ) {
 			GenericThread gt = (GenericThread) iter.next();
 			if ( gt.thread != null ) {
@@ -161,7 +164,7 @@ public class GenericThread extends NotificationBroadcasterSupport implements Run
 				} catch (Throwable t) {
 					t.printStackTrace(System.err);
 				}
-			}
+			} 
 		}
 		threadPool.clear();
 	}
