@@ -355,10 +355,15 @@ public class TmlHttpServlet extends HttpServlet {
 		  }
 
 		  // Create dispatcher object.
-		  dis = Dispatcher.getInstance(rootPath,DEFAULT_SERVER_XML, 
-				  new com.dexels.navajo.server.FileInputStreamReader(),
-				  request.getServerName() + request.getRequestURI()
-		  );
+		  if (configurationPath!=null) {
+			  // Old SKOOL. Path provided, notify the dispatcher by passing a null DEFAULT_SERVER_XML
+			  dis = Dispatcher.getInstance(configurationPath, null, new com.dexels.navajo.server.FileInputStreamReader(),
+					  request.getServerName() + request.getRequestURI());
+		  } else {
+			  dis = Dispatcher.getInstance(rootPath, DEFAULT_SERVER_XML, new com.dexels.navajo.server.FileInputStreamReader(),
+					  request.getServerName() + request.getRequestURI());
+
+		  }
 
 		  // Check for certificate.
 		  Object certObject = request.getAttribute( "javax.servlet.request.X509Certificate");
