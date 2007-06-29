@@ -26,7 +26,7 @@ import com.dexels.navajo.mapping.MappableException;
  * @author arjen
  *
  */
-public final class Transition implements TaskListener, Serializable, Mappable {
+public final class Transition extends StateStep implements Serializable, Mappable {
 
 	/**
 	 * 
@@ -39,8 +39,6 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 	public String webservice = null;
 	public boolean proxy = false;
 	
-	private Task myTask = null;
-	private State myState;
 	private boolean beforeTrigger = false;
 	private final ArrayList<Parameter> parameters = new ArrayList<Parameter>();
 	private static Object semaphore = new Object();
@@ -114,47 +112,6 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 		}
 	}
 	
-	private final boolean isMyTransitionTaskTrigger(Task t) {
-		
-		synchronized ( semaphore ) {
-			boolean result= ( t.getId().equals(myTask.getId()) &&
-					( myState == null ||
-							myState.getWorkFlow() == null ||
-							( myState.getWorkFlow().getDefinition().equals(t.getWorkflowDefinition()) &&
-									myState.getWorkFlow().getMyId().equals(t.getWorkflowId())
-							)
-					)
-			);
-			
-			return result;
-		}
-	}
-	
-	/**
-	 * Activates a transition, e.g. registers associated task with the taskrunner manager and registers the transition
-	 * as a task listener.
-	 *
-	 */
-	public final void activate() {
-		
-		TaskRunner.getInstance().addTaskListener(this);
-		if ( myTask.getId() == null ) {
-			TaskRunner.getInstance().addTask(myTask);
-		} else {
-			TaskRunner.getInstance().addTask(myTask.getId(), myTask, true);
-		}
-		
-	}
-	
-	/**
-	 * Deactivates a transition, e.g. deregisters an associated task with the taskrunner manager and deregisters the transition
-	 * as a tasklistener.
-	 *
-	 */
-	public final void cleanup() {
-		TaskRunner.getInstance().removeTaskListener(this);
-		TaskRunner.getInstance().removeTask(myTask.getId());
-	}
 	
 	private final boolean enterNextState(Task t) {
 		
@@ -179,7 +136,7 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 	
 	public final void afterTask(Task t, Navajo request) {
 		
-		if (  !beforeTrigger && isMyTransitionTaskTrigger(t) ) {
+		if (  !beforeTrigger && isMyTaskTrigger(t) ) {
 			
 			if ( enterNextState(t) && !activationTranstion ) {
 				// First evaluate all parameters that need to be set with this transition.
@@ -205,7 +162,7 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 
 	public final boolean beforeTask(Task t) {
 		
-		if ( beforeTrigger && isMyTransitionTaskTrigger(t) ) {
+		if ( beforeTrigger && isMyTaskTrigger(t) ) {
 			
 			
 			if ( enterNextState(t) ) {
