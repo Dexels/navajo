@@ -2,6 +2,8 @@ package com.dexels.navajo.server.listener.http;
 
 import java.io.*;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.*;
 
 import javax.servlet.*;
@@ -36,7 +38,8 @@ import com.jcraft.jzlib.ZOutputStream;
 
 public class TmlHttpServlet extends HttpServlet {
 
-  protected String configurationPath = "";
+ protected String configurationPath = "";
+ protected String rootPath = null;
 
   public TmlHttpServlet() {}
 
@@ -47,13 +50,47 @@ public class TmlHttpServlet extends HttpServlet {
 
   public static final String COMPRESS_GZIP = "gzip";
   public static final String COMPRESS_JZLIB = "jzlib";
-  public static final String COMPRESS_NONE = "";
   
+  
+ public static final String COMPRESS_NONE = "";
+  
+ public static final String DEFAULT_SERVER_XML = "config/server.xml";
+
+ 
   public void init(ServletConfig config) throws ServletException {
     super.init(config);
 
     configurationPath = config.getInitParameter("configuration");
     System.setProperty(DOC_IMPL,QDSAX);
+    System.err.println("Configuration path: "+configurationPath);
+    boolean verified = false;
+
+    URL configUrl;
+    InputStream is = null;
+    try {
+		configUrl = new URL(configurationPath);
+	    is = configUrl.openStream();
+	    verified = true;
+	    
+	} catch (MalformedURLException e) {
+	} catch (IOException e) {
+	} finally {
+		if(is!=null) {
+			try {
+				is.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+    if( configurationPath==null || "".equals(configurationPath)|| !verified) {
+    	configurationPath = config.getServletContext().getRealPath(DEFAULT_SERVER_XML);
+    	rootPath = config.getServletContext().getRealPath("");
+    }
+    System.err.println("Resolved Configuration path: "+configurationPath);
+    System.err.println("Resolved Root path: "+rootPath);
+
+    //    System.err.println("Real: "+config.getServletContext().getRealPath(DEFAULT_SERVER_XML));
 
   }
 
@@ -224,8 +261,15 @@ public class TmlHttpServlet extends HttpServlet {
     Dispatcher dis = null;
 
     try {
-      dis = Dispatcher.getInstance(new java.net.URL(configurationPath), new com.dexels.navajo.server.FileInputStreamReader(),
-    		  request.getServerName() + request.getRequestURI());
+      if (configurationPath!=null) {
+    	  // Old SKOOL. Path provided, notify the dispatcher by passing a null DEFAULT_SERVER_XML
+          dis = Dispatcher.getInstance(configurationPath, null, new com.dexels.navajo.server.FileInputStreamReader(),
+        		  request.getServerName() + request.getRequestURI());
+	} else {
+	      dis = Dispatcher.getInstance(rootPath, DEFAULT_SERVER_XML, new com.dexels.navajo.server.FileInputStreamReader(),
+	    		  request.getServerName() + request.getRequestURI());
+ 
+	}
     		  	  
       tbMessage = constructFromRequest(request);
       Header header = NavajoFactory.getInstance().createHeader(tbMessage,service, username, password,expirationInterval);
@@ -256,7 +300,8 @@ public class TmlHttpServlet extends HttpServlet {
    * @throws ServletException
    */
   public final void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-  
+    
+ 
         callDirect(request, response);
 
   }
@@ -310,7 +355,7 @@ public class TmlHttpServlet extends HttpServlet {
 		  }
 
 		  // Create dispatcher object.
-		  dis = Dispatcher.getInstance(new java.net.URL(configurationPath), 
+		  dis = Dispatcher.getInstance(rootPath,DEFAULT_SERVER_XML, 
 				  new com.dexels.navajo.server.FileInputStreamReader(),
 				  request.getServerName() + request.getRequestURI()
 		  );

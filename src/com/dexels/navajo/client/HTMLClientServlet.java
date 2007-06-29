@@ -32,7 +32,8 @@ public class HTMLClientServlet extends HttpServlet {
 
     // Initialize global variables
 
-    /**
+    public static final String RESOURCE_TML2HTML_XSL = "resource/tml2html.xsl";
+	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -6572470344508932724L;
@@ -65,6 +66,7 @@ public class HTMLClientServlet extends HttpServlet {
           useCompression = config.getInitParameter("use_compression").equals("true");
         xslFile = config.getInitParameter("xslFile");
 
+   
     }
 
     private void setNoCache(HttpServletRequest request, HttpServletResponse response) {
@@ -209,6 +211,11 @@ public class HTMLClientServlet extends HttpServlet {
                 // transform TML message to HTML format
                 
 //                if (useGzipEncoding) {
+                InputStream xslStream = null;
+                if (xslFile==null || !new File(xslFile).exists()) {
+					xslFile = getServletContext().getRealPath(RESOURCE_TML2HTML_XSL);
+				}
+                
                     gc.generateHTMLFromMessage(resultDoc, messages, actions, servletName, xslFile,out);
                     out.flush();
                     out.close();
@@ -244,7 +251,9 @@ public class HTMLClientServlet extends HttpServlet {
 
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+    	if(navajoServer==null) {
+    		resolveNavajoServer(request);
+    	}
         ArrayList messages = null, actions = null;
         String result;
         String command;
@@ -339,7 +348,8 @@ public class HTMLClientServlet extends HttpServlet {
                     //                        false, true, useCompression);
                     //System.err.println("ABOUT TO REQUEST FOR WEBSERVICE: " + command);
                     //tbMessage.write(System.err);
-
+             	
+                	
                     resultDoc = gc.doSimpleSend(tbMessage, navajoServer, command, ident.username, ident.password, -1, useCompression);
 
                 } catch (com.dexels.navajo.client.ClientException ce) {
@@ -390,6 +400,12 @@ public class HTMLClientServlet extends HttpServlet {
         out.flush();
         out.close();
     }
+
+	private void resolveNavajoServer(HttpServletRequest request) {
+		navajoServer =  request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/Postman";
+
+		System.err.println("requesT: "+navajoServer);
+	}
     
 //    public static void main(String[] args) {
 //        

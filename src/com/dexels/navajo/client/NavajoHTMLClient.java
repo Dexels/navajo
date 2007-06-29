@@ -103,8 +103,8 @@ public class NavajoHTMLClient extends NavajoClient {
             }
             prop.setValue(newValue.toString());
         }
-        java.io.File xsl = new java.io.File(xslFile);
-
+              File xsl = new java.io.File(xslFile);
+		
         try {
 
             // if aanvraag is filled, then only process the new TML Message, else
