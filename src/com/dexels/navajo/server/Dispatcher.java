@@ -102,6 +102,8 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
   private  String keyStore;
   private  String keyPassword;
 
+  private String rootPath;
+  
   public static final int rateWindowSize = 20;
   public static final double requestRate = 0.0;
   private  long[] rateWindow = new long[rateWindowSize];
@@ -124,7 +126,7 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
    * @throws NavajoException
    */
   private Dispatcher(URL configurationUrl,
-		  InputStreamReader fileInputStreamReader,
+		  InputStreamReader fileInputStreamReader,String rootPath,
 		  NavajoClassSupplier cl) throws
 		  NavajoException {
 	  
@@ -134,7 +136,7 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
 		  // Read configuration file.
 		  is = configurationUrl.openStream();
 		  navajoConfig = new NavajoConfig(fileInputStreamReader, cl); 
-		  navajoConfig.loadConfig(is);
+		  navajoConfig.loadConfig(is,rootPath);
 		  debugOn = navajoConfig.isLogged();
 		  logger = NavajoConfig.getNavajoLogger(Dispatcher.class);
 	  }
@@ -152,38 +154,65 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
 	  }
   }
 
-  private Dispatcher(URL configurationUrl,
-                    InputStreamReader fileInputStreamReader) throws
-      NavajoException {
-    this(configurationUrl, fileInputStreamReader, null);
-  }
+//  private Dispatcher(URL configurationUrl,
+//                    InputStreamReader fileInputStreamReader) throws
+//      NavajoException {
+//    this(configurationUrl, fileInputStreamReader, null);
+//  }
 
   public static Dispatcher getInstance() {
 	  return instance;
   }
   
-  public static Dispatcher getInstance(URL configurationUrl,
-		  InputStreamReader fileInputStreamReader, String serverIdentification) throws
-		  NavajoException  {
+  public static Dispatcher getInstance(String rootPath, String serverXmlPath, InputStreamReader fileInputStreamReader,
+			String serverIdentification) throws NavajoException {
 
-	  if ( instance != null ) {
-		  return instance;
-	  }
+		if (instance != null) {
+			return instance;
+		}
+		if(!rootPath.endsWith("/")) {
+			rootPath = rootPath+"/";
+		}
+//		this.rootPath = rootPath;
+		URL configurationUrl;
+		if(serverXmlPath==null) {
+			System.err.println("Old skool configuration detected.");
+			// old skool, the passed url is the configurationUrl (from web.xml):
+				try {
+					configurationUrl = new URL(rootPath);
+					rootPath = null;
+				} catch (MalformedURLException e) {
+					throw NavajoFactory.getInstance().createNavajoException(e);
+				}
+		} else {
+			// new-style: rootUrl is the root of the installation, serverXmlPath is the relative path to the server.xml file
+			System.err.println("Newskool configuration detected.");
+			try {
+				File f = new File(rootPath);
+				URL rootUrl = f.toURI().toURL();
+//				URL rootUrl = new URL(rootPath);
+				configurationUrl = new URL(rootUrl, serverXmlPath);
+			} catch (MalformedURLException e) {
+				throw NavajoFactory.getInstance().createNavajoException(e);
+			}
+			
+		}
+		
+		synchronized (semaphore) {
+			if (instance == null) {
 
-	  synchronized (semaphore) {
-		  if ( instance == null ) {
-			  instance = new Dispatcher(configurationUrl, fileInputStreamReader);
-			  JMXHelper.registerMXBean(instance, JMXHelper.NAVAJO_DOMAIN, "Dispatcher");
-			  instance.setServerIdentifier(serverIdentification);
-			  NavajoFactory.getInstance().setTempDir(instance.getTempDir());
-			  // Startup task runner.
-			  instance.navajoConfig.getTaskRunner();
-			  // Startup queued adapter.
-			  RequestResponseQueueFactory.getInstance();
-		  }
-	  }
-	  return instance;
-  }
+				instance = new Dispatcher(configurationUrl, fileInputStreamReader,rootPath,null);
+				JMXHelper.registerMXBean(instance, JMXHelper.NAVAJO_DOMAIN, "Dispatcher");
+				instance.setServerIdentifier(serverIdentification);
+				NavajoFactory.getInstance().setTempDir(instance.getTempDir());
+				// Startup task runner.
+				instance.navajoConfig.getTaskRunner();
+				// Startup queued adapter.
+				RequestResponseQueueFactory.getInstance();
+			}
+		}
+		return instance;
+	}
    
   public Access [] getUsers() {
 	  Set all = new HashSet(com.dexels.navajo.server.Dispatcher.getInstance().accessSet);
