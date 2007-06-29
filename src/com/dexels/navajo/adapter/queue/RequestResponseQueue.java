@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 
-import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.server.GenericThread;
 import com.dexels.navajo.server.enterprise.queue.Queable;
 import com.dexels.navajo.server.enterprise.queue.RequestResponseQueueInterface;
@@ -120,7 +119,6 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 		RequestResponseQueue rrq = RequestResponseQueue.getInstance();
 		handler.persistBinaries();
 		rrq.myStore.putMessage(handler, false);
-		
 	}
 	
 	public void asyncwork(final Queable handler) {
@@ -128,13 +126,11 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 
 			public void run() {
 				currentThreads++;
-				System.err.println("Starting work....");
 				//String qid = handler.getClass().getName()+"-"+System.currentTimeMillis();
 				//JMXHelper.registerMXBean(handler, JMXHelper.QUEUED_ADAPTER_DOMAIN, qid);
 				try {
 					doingWork = true;
 					if ( handler.send() && !emptyQueue) {
-						System.err.println("Succesfully processed send() method");
 						// Make sure that request payload get garbage collected by removing ref.
 						handler.removeBinaries();
 					} else {
@@ -147,7 +143,6 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 							if ( maxRetries == 0 ) {
 								maxRetries = MAX_RETRIES;
 							}
-							System.err.println("ABOUT TO CALL PUTMESSAGE");
 							myStore.putMessage(handler, ( handler.getRetries() > maxRetries ));
 						}
 					}

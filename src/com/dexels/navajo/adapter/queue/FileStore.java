@@ -44,6 +44,7 @@ public class FileStore implements MessageStore {
 		for (int i = 0; i < files.length; i++) {
 			File f = files[i];
 			if ( f.isFile() ) {
+				System.err.println("ADDING FILE IN FILESTORE: " + f.getAbsolutePath());
 				currentObjects.add(f);
 			}
 		}
@@ -172,9 +173,7 @@ public class FileStore implements MessageStore {
 	}
 	
 	public int getSize() {
-		File queue = new File(path);
-		File [] files = queue.listFiles();
-		return files.length;
+		return currentObjects.size();
 	}
 
 }
