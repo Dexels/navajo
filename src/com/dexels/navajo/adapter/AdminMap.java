@@ -71,6 +71,9 @@ public class AdminMap implements Mappable {
   // RequestRate windowSize
   public int requestRateWindowSize;
 
+  private NavajoConfig myConfig = null;
+  private Access myAccess = null;
+
   public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
     NavajoConfig nc = Dispatcher.getInstance().getNavajoConfig();
     scriptPath = nc.getScriptPath();
@@ -119,35 +122,37 @@ public class AdminMap implements Mappable {
    }
 
    public final boolean getAliveConnection(String datasource) {
+		boolean b = true;
+		SQLMap sql = new SQLMap();
+		try {
 
-   	boolean b = true;
-    SQLMap sql = new SQLMap();
-    sql.setDatasource(datasource);
+			sql.load(null, null, myAccess, myConfig);
+			sql.setDatasource(datasource);
+			sql.createConnection();
+			if (sql.con == null) {
+				b = false;
+			}
 
-    try {
-		sql.createConnection();
-	} catch (Throwable e) {
-		b = false;
+		} catch (Throwable e1) {
+			b = false;
+		} finally {
+			try {
+				sql.store();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		return b;
 	}
-    if ( sql.con == null )
-    	b = false;
-
-    try {
-		sql.store();
-	} catch (Throwable e1) {
-		b = false;
-	}
-
-    return b;
-   }
 
    /**
-    * Some admin functions.
-    *
-    * @param datasourceName
-    * @throws MappableException
-    * @throws UserException
-    */
+	 * Some admin functions.
+	 * 
+	 * @param datasourceName
+	 * @throws MappableException
+	 * @throws UserException
+	 */
    public final int getMaxConnections(String datasource) throws UserException {
      SQLMap sql = new SQLMap();
      sql.setDatasource(datasource);
