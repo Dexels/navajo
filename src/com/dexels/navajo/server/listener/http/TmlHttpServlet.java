@@ -63,6 +63,7 @@ public class TmlHttpServlet extends HttpServlet {
     configurationPath = config.getInitParameter("configuration");
     System.setProperty(DOC_IMPL,QDSAX);
     System.err.println("Configuration path: "+configurationPath);
+   
     boolean verified = false;
 
     URL configUrl;
@@ -84,7 +85,6 @@ public class TmlHttpServlet extends HttpServlet {
 		}
 	}
     if( configurationPath==null || "".equals(configurationPath)|| !verified) {
-    	configurationPath = config.getServletContext().getRealPath(DEFAULT_SERVER_XML);
     	rootPath = config.getServletContext().getRealPath("");
     }
     System.err.println("Resolved Configuration path: "+configurationPath);
