@@ -109,6 +109,9 @@ public class NavajoClient implements ClientInterface {
 	private String subLocale;
 	private static boolean silent = true;
 	  
+  private boolean killed = false;
+  private boolean pingStarted = false;
+  
   // Disable for one minute. Bit short, should be maybe an hour, but better for debugging.
   private static final long serverDisableTimeout = 60000;
   
@@ -750,7 +753,7 @@ public class NavajoClient implements ClientInterface {
     if (cachedServiceNameMap.get(method) != null) {
       cacheKey = method + out.persistenceKey();
       if (serviceCache.get(cacheKey) != null) {
-        System.err.println("---------------------------------------------> Returning cached WS");
+        //System.err.println("---------------------------------------------> Returning cached WS");
         Navajo cached = (Navajo) serviceCache.get(cacheKey);
         return cached.copy();
       }
@@ -1568,13 +1571,50 @@ public void destroy() {
 	
 }
 
+private final void ping() {
+	// Start thread to periodically check servers.
+	if ( !pingStarted) {
+		new Thread() {
+			public void run() {
+
+				System.err.println("Started ping thread.");
+				Navajo out = NavajoFactory.getInstance().createNavajo();
+				Header outHeader = NavajoFactory.getInstance().createHeader(out, "navajo_logon", "ROOT", "", -1);
+				out.addHeader(outHeader);
+				while (!killed) {
+					try {
+						Thread.sleep(10000);
+						for (int i = 0; i < serverUrls.length; i++) {
+							try {
+								HttpURLConnection myCon = null;
+								InputStream in  = doTransaction(serverUrls[i], out, false, myCon);
+								Navajo n = NavajoFactory.getInstance().createNavajo(in);
+								in.close();
+								Header h = n.getHeader();
+								String load =  h.getAttribute("cpuload");
+								serverLoads[i] = Double.parseDouble(load);
+							} catch (Throwable e) {
+							}
+							
+						}
+					} catch (InterruptedException e) {
+					}
+				}
+
+			}
+		}.start();
+		pingStarted = true;
+	}
+}
+
 public void setServers(String[] servers) {
 	serverUrls = servers;
+	serverLoads = new double[serverUrls.length];
 	if (servers.length>0) {
 		currentServerIndex = randomize.nextInt(servers.length);
 		System.err.println("Starting at server # "+currentServerIndex);
 	}
-	
+	ping();
 }
 
 public String getCurrentHost() {
@@ -1618,10 +1658,10 @@ public final void switchServer(int startIndex, boolean forceChange) {
 		currentServerIndex = candidate;
 	}
 	
-	
+	System.err.println("currentServer = " + serverUrls[currentServerIndex] + " with load: " + serverLoads[currentServerIndex]);
 	
 	if (startIndex == currentServerIndex) {
-		System.err.println("BACK AT THE ORIGINAL SERVER!!!!");
+		//System.err.println("BACK AT THE ORIGINAL SERVER!!!!");
 //		if (!forceChange) {
 			return;
 //		}
@@ -1791,5 +1831,12 @@ public final void switchServer(int startIndex, boolean forceChange) {
 		return doSimpleSend(out, method);
 	}
 	
+	public void finalize() {
+		killed = true;
+	}
+	
+	public void dispose() {
+		killed = true;
+	}
 
 }
