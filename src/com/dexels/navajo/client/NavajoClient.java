@@ -1601,9 +1601,7 @@ public final void switchServer(int startIndex, boolean forceChange) {
 	int candidate = -1;
 	
 	for (int i = 0; i < serverUrls.length; i++) {
-		if ( minload == 1000000.0 ) { // Initially set minload to value of first server.
-			minload = serverLoads[i];
-		} else if ( serverLoads[i] < minload && serverLoads[i] != -1.0 ) { // If there is really a server with a lower load, use this server as candidate.
+		if ( serverLoads[i] < minload && serverLoads[i] != -1.0 ) { // If there is really a server with a lower load, use this server as candidate.
 			minload = serverLoads[i];
 			candidate = i;
 		}
