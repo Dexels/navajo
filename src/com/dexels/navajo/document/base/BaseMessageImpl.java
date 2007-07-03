@@ -543,7 +543,9 @@ public  class BaseMessageImpl extends BaseNode implements Message, TreeNode, Com
                 			// all
                 			// children.
                 			if (index == null) {
-                				result.addAll(m.messageList);
+                				if ( m.messageList != null ) {
+                					result.addAll(m.messageList);
+                				}
                 			} else {
                 				try {
                 					result.add(m.getMessage(Integer.parseInt(index)));
@@ -560,7 +562,7 @@ public  class BaseMessageImpl extends BaseNode implements Message, TreeNode, Com
                 }
 
             } catch (Exception re) {
-                throw new NavajoExceptionImpl(re.getMessage());
+                throw new NavajoExceptionImpl(re);
             }
             return result;
         }
