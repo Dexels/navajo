@@ -91,6 +91,9 @@ public class AdminMap implements Mappable {
     
     storeLocation = nc.dbPath;
     serverId = Dispatcher.getInstance().getApplicationId();
+    
+    myConfig = config;
+    myAccess = access;
   }
 
   
