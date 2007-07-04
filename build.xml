@@ -39,7 +39,9 @@
         <include name="${document.base}/types/**/*.class"/>
         <include name="${document.base}/base/**/*.class"/>
         <include name="${document.base}/saximpl/**/*.class"/>
-        <include name="org/**/*.class"/>
+        <include name="metadata/**/*.class"/>
+        <include name="metadata/**/*.txt"/>
+       <include name="org/**/*.class"/>
       </fileset>
           <fileset dir="${build}">
         <include name="${persistence.base}/**/*.class"/>
