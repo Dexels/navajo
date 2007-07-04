@@ -209,20 +209,18 @@ public Navajo createNavajo(InputStream stream) {
         QDParser.parse(sax,isr);
         return  sax.getNavajo();
     } catch (Exception e) {
-        e.printStackTrace();
-        return null;
+       throw new RuntimeException(e);
     }  
 }
 
 public Navajo createNavajo(Reader r) {
-    try {
-        SaxHandler sax = new SaxHandler();
-         QDParser.parse(sax,r);
-        return  sax.getNavajo();
-    } catch (Exception e) {
-        e.printStackTrace();
-        return null;
-    }  
+	try {
+		SaxHandler sax = new SaxHandler();
+		QDParser.parse(sax,r);
+		return  sax.getNavajo();
+	} catch (Exception e) {
+		throw new RuntimeException(e);
+	}  
 }
 
 
