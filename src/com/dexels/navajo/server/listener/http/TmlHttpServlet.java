@@ -1,7 +1,6 @@
 package com.dexels.navajo.server.listener.http;
 
 import java.io.*;
-import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
@@ -56,6 +55,9 @@ public class TmlHttpServlet extends HttpServlet {
   
  public static final String DEFAULT_SERVER_XML = "config/server.xml";
 
+ private static boolean streamingMode = true; 
+ private static long logfileIndex = 0;
+ private static long bytesWritten = 0;
  
   public void init(ServletConfig config) throws ServletException {
     super.init(config);
@@ -105,19 +107,35 @@ public class TmlHttpServlet extends HttpServlet {
     //logger.log(Priority.INFO, "In TmlHttpServlet finalize()");
   }
 
-  private void dumHttp(HttpServletRequest request) {
-	  // Dump stuff.
-	  if ( request != null ) {
-		  System.err.println("HTTP DUMP (" + request.getRemoteAddr() + "/" + request.getRequestURI() );
-		  Enumeration e = request.getHeaderNames();
-		  while ( e.hasMoreElements() ) {
-			  String headerName = (String) e.nextElement();
-			  System.err.println(headerName + "=" + request.getHeader(headerName));
-		  }  
-	  } else {
-		  System.err.println("EMPTY REQUEST OBJECT!!");
-	  }
-  }
+  private void dumHttp(HttpServletRequest request, long index, File dir) {
+		// Dump stuff.
+		if (request != null) {
+			StringBuffer sb = new StringBuffer();
+
+			sb.append("HTTP DUMP (" + request.getRemoteAddr() + "/"
+					+ request.getRequestURI());
+			Enumeration e = request.getHeaderNames();
+			while (e.hasMoreElements()) {
+				String headerName = (String) e.nextElement();
+				sb.append(headerName + "=" + request.getHeader(headerName));
+			}
+			try {
+
+				if (dir != null) {
+					FileWriter fw = new FileWriter(new File(dir, "httpdump-"
+							+ index));
+					fw.write(sb.toString());
+					fw.close();
+				} else {
+					System.err.println(sb.toString());
+				}
+			} catch (IOException ioe) {
+				ioe.printStackTrace(System.err);
+			}
+		} else {
+			System.err.println("EMPTY REQUEST OBJECT!!");
+		}
+	}
   
   private final Navajo constructFromRequest(HttpServletRequest request) throws
       NavajoException {
@@ -300,12 +318,50 @@ public class TmlHttpServlet extends HttpServlet {
    * @throws ServletException
    */
   public final void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-    
- 
-        callDirect(request, response);
 
+	  // Check for streamingmode toggle.
+	  if ( request.getParameter("streaming") != null && request.getParameter("streaming").equals("no")) {
+		  streamingMode = false;
+		  PrintWriter pw = new PrintWriter(response.getWriter());
+		  pw.write("Switched off streaming mode");
+		  pw.close();
+	  } else if ( request.getParameter("streaming") != null ) {
+		  streamingMode = true;
+		  PrintWriter pw = new PrintWriter(response.getWriter());
+		  pw.write("Switched on streaming mode");
+		  pw.close();
+	  } else {
+		  callDirect(request, response);
+	  }
   }
 
+  private final void copyResource(OutputStream out, InputStream in){
+	  BufferedInputStream bin = new BufferedInputStream(in);
+	  BufferedOutputStream bout = new BufferedOutputStream(out);
+	  byte[] buffer = new byte[1024];
+	  int read = -1;
+	  boolean ready = false;
+	  while (!ready) {
+		  try {
+			  read = bin.read(buffer);
+			  if ( read > -1 ) {
+				  bout.write(buffer,0,read);
+			  }
+		  } catch (IOException e) {
+		  }
+		  if ( read <= -1) {
+			  ready = true;
+		  }
+	  }
+	  try {
+		  bin.close();
+		  bout.flush();
+		  bout.close();
+	  } catch (IOException e) {
+
+	  }
+  }
+  
   /**
    * Handle a request.
    *
@@ -329,18 +385,61 @@ public class TmlHttpServlet extends HttpServlet {
 
 		  Navajo in = null;
 		  
-		  if ( sendEncoding != null && sendEncoding.equals(COMPRESS_JZLIB)) {			 
-			  r = new BufferedReader(new InputStreamReader(new ZInputStream(request.getInputStream())));
-		  } else if ( sendEncoding != null && sendEncoding.equals(COMPRESS_GZIP)) {
-			 r = new BufferedReader(new InputStreamReader(new java.util.zip.GZIPInputStream(request.getInputStream()), "UTF-8")); 
+		 
+		  if (streamingMode) {
+			  if ( sendEncoding != null && sendEncoding.equals(COMPRESS_JZLIB)) {			 
+				  r = new BufferedReader(new java.io.InputStreamReader(new ZInputStream(request.getInputStream())));
+			  } else if ( sendEncoding != null && sendEncoding.equals(COMPRESS_GZIP)) {
+				  r = new BufferedReader(new java.io.InputStreamReader(new java.util.zip.GZIPInputStream(request.getInputStream()), "UTF-8")); 
+			  }
+			  else {
+				  r = new BufferedReader(request.getReader());
+			  }
+			  in = NavajoFactory.getInstance().createNavajo(r);
+			  r.close();
+			  r = null;
+		  } else {
+			  System.err.println("Warning: Using non-streaming mode for " + request.getRequestURI() + ", file written: " + logfileIndex + ", total size: " + bytesWritten);
+			  InputStream is = request.getInputStream();
+			  ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			  copyResource(bos, is);
+			  is.close();
+			  bos.close();
+			  byte [] bytes = bos.toByteArray();
+			  try {
+				  if ( sendEncoding != null && sendEncoding.equals(COMPRESS_JZLIB)) {			 
+					  r = new BufferedReader(new java.io.InputStreamReader(new ZInputStream(new ByteArrayInputStream(bytes))));
+				  } else if ( sendEncoding != null && sendEncoding.equals(COMPRESS_GZIP)) {
+					  r = new BufferedReader(new java.io.InputStreamReader(new java.util.zip.GZIPInputStream(new ByteArrayInputStream(bytes)), "UTF-8")); 
+				  }
+				  else {
+					  r = new BufferedReader(new java.io.InputStreamReader(new ByteArrayInputStream(bytes)));
+				  }
+				  in = NavajoFactory.getInstance().createNavajo(r);
+				  if ( in == null ) {
+					  throw new Exception("Invalid Navajo");
+				  }
+				  r.close();
+				  r = null;
+			  } catch (Throwable t) {
+				  // Write request to file.
+				  File f = new File(getServletContext().getRealPath("tmp"));
+				  if ( !f.exists() ) {
+					  f.mkdirs();
+				  }
+				  bytesWritten += bytes.length;
+				  logfileIndex++;
+				  FileOutputStream fos = new FileOutputStream(new File(f, "request-" + logfileIndex));
+				  copyResource(fos, new ByteArrayInputStream(bytes));
+				  fos.close();
+				  PrintWriter fw = new PrintWriter(new FileWriter(new File(f, "exception-" + logfileIndex)));
+				  t.printStackTrace(fw);
+				  fw.flush();
+				  fw.close();
+				  dumHttp(request, logfileIndex, f);
+				  throw new ServletException(t);
+			  }
 		  }
-		  else {
-			  r = new BufferedReader(request.getReader());
-		  }
-
-		  in = NavajoFactory.getInstance().createNavajo(r);
-		  r.close();
-		  r = null;
 		  
 		  long stamp = System.currentTimeMillis();
 		  int pT = (int) (stamp - start);
@@ -399,7 +498,7 @@ public class TmlHttpServlet extends HttpServlet {
 	  }
 	  catch (Throwable e) {
 		  e.printStackTrace(System.err);
-		  dumHttp(request);
+		  dumHttp(request, -1, null);
 		  if ( e instanceof  FatalException ) {
 			  FatalException fe = (FatalException) e;
 			  if ( fe.getMessage().equals("500.13")) {
