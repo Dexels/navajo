@@ -184,8 +184,9 @@ public class QDParser {
             } else if (mode == SINGLE_TAG) {
                 if (tagName == null)
                     tagName = sb.toString();
-                if (c != '>')
-                    exc("Expected > for tag: <" + tagName + "/>", line, col);
+                if (c != '>') {
+                    exc("Expected > for tag: <" + tagName + "/>. Got c='" + c + "'", line, col);
+                }
                 doc.startElement(tagName, attrs);
                 doc.endElement(tagName);
                 if (depth == 0) {
@@ -294,7 +295,7 @@ public class QDParser {
                 } else if (Character.isWhitespace((char) c)) {
                     ;
                 } else {
-                    exc("Error in attribute processing.", line, col);
+                    exc("Error in attribute processing, got c='" + c + "'", line, col);
                 }
 
             } else if (mode == IN_TAG) {
@@ -399,4 +400,5 @@ public class QDParser {
     private static void exc(String s, int line, int col) throws Exception {
         throw new Exception(s + " near line " + line + ", column " + col);
     }
+ 
 }
