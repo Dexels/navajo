@@ -42,6 +42,7 @@ public final class State implements Serializable, Mappable {
 	private final HashSet<Transition> myTransitions = new HashSet<Transition>();
 	private final HashSet<WorkFlowTask> myTasks = new HashSet<WorkFlowTask>();
 	private final WorkFlow myWorkFlow;
+	protected boolean aftertaskentry = false;
 	
 	protected State(String s, WorkFlow wf, Access a) {
 		id = s;
@@ -86,10 +87,13 @@ public final class State implements Serializable, Mappable {
 	
 	/**
 	 * Method to be called when entering this state.
+	 * If b is set to true, it's an after task entry otherwise its a before task entry.
 	 *
 	 */
-	public void enter() {
+	public void enter(boolean b) {
        
+		aftertaskentry = b;
+		
 		// Set entry date.
 		entryDate = new Date();
 		

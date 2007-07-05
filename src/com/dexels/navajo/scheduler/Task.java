@@ -30,6 +30,7 @@ import java.util.Date;
 
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.Dispatcher;
@@ -253,6 +254,18 @@ public class Task implements Runnable, TaskMXBean, TaskInterface, Serializable {
 	}
 	
 	/**
+	 * Set request Navajo to be used by this task.
+	 * 
+	 * @param n
+	 */
+	public void setRequest(Navajo n) {
+		this.navajo = n;
+		if ( navajo != null ) {
+			navajo.removeHeader();
+		}
+	}
+	
+	/**
 	 * Gets the request Navajo for this task.
 	 * 
 	 * @return
@@ -285,7 +298,6 @@ public class Task implements Runnable, TaskMXBean, TaskInterface, Serializable {
 	public void run() {
 
 		AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, " trigger " + getTriggerDescription() + " goes off for task: " + getId() );
-	
 		Navajo result = null;
 		
 		// Invoke onbefore triggers.

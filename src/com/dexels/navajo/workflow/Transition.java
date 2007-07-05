@@ -187,7 +187,7 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 				myState.leave();
 				
 				if ( nextState != null && !nextState.equals("finish") ) {
-					myState.getWorkFlow().createState(nextState, t.getTrigger().getAccess()).enter();
+					myState.getWorkFlow().createState(nextState, t.getTrigger().getAccess()).enter(true);
 				} else {
 					myState.getWorkFlow().finish();
 				}
@@ -213,7 +213,7 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 				evaluateParameters(t);
 				myState.leave();
 				if ( nextState != null && !nextState.equals("finish") ) {
-					myState.getWorkFlow().createState(nextState, t.getTrigger().getAccess()).enter();
+					myState.getWorkFlow().createState(nextState, t.getTrigger().getAccess()).enter(false);
 				} else {
 					myState.getWorkFlow().finish();
 				}

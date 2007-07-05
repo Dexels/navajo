@@ -128,7 +128,7 @@ public class WorkFlow implements Mappable, Serializable {
 	public void start() {
 		// Find start state.
 		if ( currentState != null ) {
-			currentState.enter();
+			currentState.enter(true);
 		}
 	}
 	
@@ -168,7 +168,7 @@ public class WorkFlow implements Mappable, Serializable {
 	public void revive() {
 		if ( currentState != null ) {
 			System.err.println("Reviving workflow from state: " + currentState.getId() );
-			currentState.enter();
+			currentState.enter(false);
 		}
 	}
 

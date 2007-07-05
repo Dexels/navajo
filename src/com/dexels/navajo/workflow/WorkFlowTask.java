@@ -29,7 +29,16 @@ public class WorkFlowTask implements Serializable, TaskListener {
 	 *
 	 */
 	public void activate() {
+		
 		TaskRunner.getInstance().addTaskListener(this);
+		if ( myState != null ) {
+			// Set request Navajo based upon initiating access webservice of my state.
+			if ( myState.aftertaskentry &&  myState.initiatingAccess.getOutputDoc() != null ) {
+				myTask.setRequest(myState.initiatingAccess.getOutputDoc());
+			} else if ( myState.initiatingAccess.getInDoc() != null ) {
+				myTask.setRequest(myState.initiatingAccess.getInDoc());
+			}
+		}
 		if ( myTask.getId() == null ) { // It's a first task.
 			TaskRunner.getInstance().addTask(myTask);
 		} else { // It's a revived task.
