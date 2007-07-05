@@ -34,11 +34,14 @@ public class NavajoHTMLClient extends NavajoClient {
     //private Message n;
 
     public NavajoHTMLClient(String dtdFile) {
+    	
         super(dtdFile);
+        setRetryAttempts(0);
     }
 
     public NavajoHTMLClient(int protocol) {
         super(protocol);
+        setRetryAttempts(0);
     }
 
     // NOTE: readHTMLForm() ASSUMES THAT ALL PROPERTY NAMES MAP UNIQUELY TO FORM FIELD NAMES!!!!!
