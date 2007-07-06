@@ -69,6 +69,9 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
       Method m2 = m.copy(n);
       n.addMethod(m2);
     }
+    if(getHeader()!=null) {
+        ni.addHeader(getHeader().copy(ni));
+    }
     return n;
   }
   public void addMethod(Method m) {
