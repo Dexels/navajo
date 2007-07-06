@@ -94,7 +94,7 @@ public final class TmlHttpLaszloServlet extends TmlHttpServlet {
 
 			String serviceName = header.getRPCName();
 			// Create dispatcher object.
-			dis = Dispatcher.getInstance(new java.net.URL(configurationPath), new com.dexels.navajo.server.FileInputStreamReader(), request.getServerName() + request.getRequestURI());
+			dis = Dispatcher.getInstance(configurationPath,null, new com.dexels.navajo.server.FileInputStreamReader(), request.getServerName() + request.getRequestURI());
 
 			// Check for certificate.
 			Object certObject = request.getAttribute("javax.servlet.request.X509Certificate");
