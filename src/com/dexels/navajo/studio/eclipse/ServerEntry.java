@@ -83,13 +83,13 @@ public class ServerEntry {
         System.err.println("username: "+username+" pass: "+password);
         NavajoClientFactory.resetClient();
         if ("http".equals(protocol)) {
-            nc = NavajoClientFactory.createClient("com.dexels.navajo.client.NavajoClient", null);
+            nc = NavajoClientFactory.createClient("com.dexels.navajo.client.NavajoClient", null,null);
         }
         if ("socket".equals(protocol)) {
-            nc = NavajoClientFactory.createClient("com.dexels.navajo.client.NavajoSocketClient", null);
+            nc = NavajoClientFactory.createClient("com.dexels.navajo.client.NavajoSocketClient", null,null);
         }
         if ("local".equals(protocol)) {
-            nc = NavajoClientFactory.createClient("com.dexels.navajo.client.NavajoSocketClient", null);
+            nc = NavajoClientFactory.createClient("com.dexels.navajo.client.NavajoSocketClient", null,null);
         }
         nc.setLocaleCode(NavajoScriptPluginPlugin.getDefault().getSelectedLocale());
         nc.setServerUrl(server);
