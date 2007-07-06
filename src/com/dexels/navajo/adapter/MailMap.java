@@ -88,10 +88,17 @@ public class MailMap implements Mappable, com.dexels.navajo.server.enterprise.qu
 
 
     public void store() throws MappableException, UserException {
-		if ( !queuedSend ) {
-			sendMail();
-		}
-	}
+    	if ( !queuedSend ) {
+    		sendMail();
+    	} else {
+    		try {
+    			RequestResponseQueueFactory.getInstance().send( this, 100);
+    		} catch (Exception e) {
+    			e.printStackTrace(System.err);
+    			System.err.println(e.getMessage());
+    		}
+    	}
+    }
     
     public boolean send() {
     	retries++;
@@ -104,7 +111,7 @@ public class MailMap implements Mappable, com.dexels.navajo.server.enterprise.qu
     	return true;
     }
     
-    public void sendMail() throws MappableException, UserException {
+    private final void sendMail() throws MappableException, UserException {
 
     	retries++;
     	
@@ -360,12 +367,6 @@ public class MailMap implements Mappable, com.dexels.navajo.server.enterprise.qu
 
   public void setQueuedSend(boolean b) {
 	  queuedSend = b;
-	  try {
-		  RequestResponseQueueFactory.getInstance().send( this, 100);
-	  } catch (Exception e) {
-		  e.printStackTrace(System.err);
-		  System.err.println(e.getMessage());
-	  }
   }
 
   public void setWaitUntil(long w) {

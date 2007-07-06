@@ -106,6 +106,12 @@ public class HTTPMap implements Mappable, Queable {
 	}
 	
 	public void setDoSend(boolean b) throws UserException {
+		if ( !queuedSend ) {
+			sendOverHTTP();
+		}
+	}
+	
+	private final void sendOverHTTP() throws UserException {
 		instances++;
 		
 		if ( instances > 100 ) {
@@ -188,6 +194,13 @@ public class HTTPMap implements Mappable, Queable {
 	}
 	
 	public void store() throws MappableException, UserException {
+		if (queuedSend) {
+			try {
+				RequestResponseQueueFactory.getInstance().send(this, 100);
+			} catch (Exception e) {
+				System.err.println(e.getMessage());
+			}
+		}
 	}
 
 	public void kill() {
@@ -201,7 +214,7 @@ public class HTTPMap implements Mappable, Queable {
 	public boolean send() {
 		retries++;
 		try {
-			setDoSend(true);
+			sendOverHTTP();
 		} catch (UserException e) {
 			return false;
 		}
@@ -213,12 +226,7 @@ public class HTTPMap implements Mappable, Queable {
 	}
 
 	public void setQueuedSend(boolean b) {
-		
-		try {
-			RequestResponseQueueFactory.getInstance().send( this, 100);
-		} catch (Exception e) {
-			System.err.println(e.getMessage());
-		}
+		queuedSend = b;
 	}
 	
 	public static void main(String [] args) throws Exception {
