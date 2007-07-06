@@ -22,7 +22,14 @@ public final class Size extends FunctionInterface {
     public Size() {}
 
     public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
-        Object arg = this.getOperands().get(0);
+    	if(this.getOperands().size()==0) {
+    		return new Integer(0);
+    	}
+    	if(this.getOperands().size()==1 && this.getOperands().get(0)==null) {
+    		return new Integer(0);
+    	}    	
+    	
+    	Object arg = this.getOperands().get(0);
 
         //System.out.println("IN SIZE(), ARG = " + arg);
         if (arg == null) {
