@@ -48,7 +48,7 @@ public class NavajoStudioSqlConfig extends PropertyPage {
      */
     protected Control createContents(Composite parent) {
         parent.setLayout(new FillLayout(SWT.VERTICAL));
-        tfc = new TmlFormComposite(null, parent);
+        tfc = new TmlFormComposite(parent);
         GridData gd = new GridData(GridData.FILL, GridData.FILL, true, true);
         gd.grabExcessHorizontalSpace = true;
         gd.grabExcessVerticalSpace = true;

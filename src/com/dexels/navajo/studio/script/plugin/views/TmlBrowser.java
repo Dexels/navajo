@@ -222,7 +222,7 @@ public class TmlBrowser extends BaseNavajoView implements INavajoScriptListener,
         backButton.setEnabled(false);
         reloadButton.setEnabled(false);
         
-        formComposite = new TmlFormComposite(null, myContainer);
+        formComposite = new TmlFormComposite(myContainer);
         formComposite.setLayoutData(new GridData(SWT.FILL,SWT.FILL,true,true));
         formComposite.addNavajoScriptListener(this);
         NavajoScriptPluginPlugin.getDefault().addServerEntryListener(this);

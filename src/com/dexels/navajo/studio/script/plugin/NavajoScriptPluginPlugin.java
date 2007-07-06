@@ -61,6 +61,9 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
     //The shared instance.
     private static NavajoScriptPluginPlugin plugin;
 
+    
+    com.jcraft.jzlib.ZOutputStream hardDep = null;
+    
     //Resource bundle.
     private ResourceBundle resourceBundle;
 
@@ -514,11 +517,11 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
                     getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(new FileEditorInput(f), edId.getId());
                     if (range != null) {
                         IEditorPart ied = getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-                        if (ied != null && ied instanceof AbstractTextEditor) {
-                            AbstractTextEditor cue = (AbstractTextEditor) ied;
-                            //                                cue.
-                            cue.selectAndReveal(range.getOffset(), range.getLength());
-                        }
+//                        if (ied != null && ied instanceof AbstractTextEditor) {
+//                            AbstractTextEditor cue = (AbstractTextEditor) ied;
+//                            //                                cue.
+//                            cue.selectAndReveal(range.getOffset(), range.getLength());
+//                        }
                     }
 
                 } catch (PartInitException e) {
@@ -1262,30 +1265,6 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
     }
     
     
-    public void insertIntoCurrentTextEditor(String s) {
-        IEditorPart activeEditor = getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-        if (activeEditor instanceof ITextEditor) {
-            ITextEditor ite = (ITextEditor) activeEditor;
-            IEditorInput ie = activeEditor.getEditorInput();
-            IDocumentProvider idp = ite.getDocumentProvider();
-            IDocument id = idp.getDocument(ie);
-            IRegion ir = ite.getHighlightRange();
-            //            ite.g
-            TextEdit ied;
-            if (ir != null) {
-                ied = new ReplaceEdit(ir.getOffset(), ir.getLength(), s);
-            } else {
-                ied = new InsertEdit(0, s);
-            }
-            try {
-                ied.apply(id);
-            } catch (MalformedTreeException e1) {
-                e1.printStackTrace();
-            } catch (BadLocationException e1) {
-                e1.printStackTrace();
-            }
-        }
-    }
 
     /**
      * @param ip
@@ -1772,21 +1751,29 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
                 System.setProperty(DOC_IMPL,QDSAX);
                 NavajoFactory.resetImplementation();
                 NavajoFactory.getInstance().setExpressionEvaluator(new DefaultExpressionEvaluator());
-                NavajoClientFactory.createClient("com.dexels.navajo.client.NavajoSocketClient", null);
+                NavajoClientFactory.createClient("com.dexels.navajo.client.NavajoSocketClient", null,null);
                 NavajoClientFactory.getClient().setServerUrl(getRemoteServer());
                 NavajoClientFactory.getClient().setUsername(getRemoteUsername());
                 NavajoClientFactory.getClient().setPassword(getRemotePassword());
                 Navajo in = null;
+                String inservice = null;
                 if (sourceTml!=null && sourceTml.exists()) {
                     in = loadNavajo(sourceTml);
+                    inservice = in.getHeader().getRPCName();
+                    System.err.println("Run href with service: "+inservice);
 //                    in = NavajoFactory.getInstance().createNavajo(sourceTml.getContents());
                 } else {
 //                    System.err.println("Running init script with empty navajo...");
                     in = NavajoFactory.getInstance().createNavajo();
                 }
+                Header h = NavajoFactory.getInstance().createHeader(in,getRemoteUsername() , getRemotePassword(), getRemoteServer(),-1);
+                h.setHeaderAttribute("callingService", inservice);
+                in.addHeader(h);
+                
+                
                 Navajo result = NavajoClientFactory.getClient().doSimpleSend(in, getRemoteServer(),scriptName,getRemoteUsername(),getRemotePassword(),-1,false);
                 if (sourceName!=null&& !"".equals(sourceName)) {
-                    result.getHeader().setAttribute("sourceScript", sourceName);
+                    result.getHeader().setHeaderAttribute("sourceScript", inservice);
                 }
                 if (currentTmlViewer != null) {
                     currentTmlViewer.setListeningForResourceChanges(false);

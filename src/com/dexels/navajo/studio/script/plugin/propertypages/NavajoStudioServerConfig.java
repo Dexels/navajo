@@ -49,7 +49,7 @@ public class NavajoStudioServerConfig extends PropertyPage {
      */
     protected Control createContents(Composite parent) {
         //        parent.setLayout(new FillLayout(SWT.VERTICAL));
-        tfc = new TmlFormComposite(null, parent);
+        tfc = new TmlFormComposite(parent);
         GridData gd = new GridData(GridData.FILL, GridData.FILL, true, true);
         tfc.setLayoutData(gd);
         System.err.println("Layoutclass: " + parent.getLayout().getClass());

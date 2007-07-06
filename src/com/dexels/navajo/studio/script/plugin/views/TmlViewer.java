@@ -109,7 +109,7 @@ public class TmlViewer extends BaseNavajoView implements IResourceChangeListener
             System.err.println("Child: "+c[i].getClass());
             c[i].dispose();
         }
-        formComposite = new TmlFormComposite(null, parent);
+        formComposite = new TmlFormComposite(parent);
        System.err.println("PARENTLAYOUT CLASS: "+parent.getLayout().getClass());
        ResourcesPlugin.getWorkspace().addResourceChangeListener(this);     
 
