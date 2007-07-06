@@ -81,6 +81,10 @@ public class XMLutils {
       return actualFindNodeWithAttributeValue(body, name, attribute, value);
     }
 
+    public static Node findNodeWithAttributeValue(Node node, String name, String attribute,String value)     {
+    	    return actualFindNodeWithAttributeValue(node, name, attribute, value);
+    }
+    
     public static Node findNode(Node node, String name)
     {
 
