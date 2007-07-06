@@ -88,8 +88,7 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 
 			instance = new WorkFlowManager();	
 			JMXHelper.registerMXBean(instance, JMXHelper.NAVAJO_DOMAIN, "WorkFlowManager");
-			instance.startThread(instance);
-
+			
 			// Create workflow definitions dir.
 			if ( instance.workflowDefinitionPath == null ) {
 				instance.workflowDefinitionPath = Dispatcher.getInstance().getNavajoConfig().getRootPath() + "/workflows/definitions/";
@@ -109,6 +108,9 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 			
 			// Revive persisted workflows.
 			instance.reviveSavedWorkFlows();
+			
+			// Start worker thread at last...
+			instance.startThread(instance);
 			
 			AuditLog.log(AuditLog.AUDIT_MESSAGE_WORKFLOW, "Started workflow process $Id$");
 			return instance;
