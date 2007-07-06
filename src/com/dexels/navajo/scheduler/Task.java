@@ -187,7 +187,7 @@ public class Task implements Runnable, TaskMXBean, TaskInterface, Serializable {
 	 * 
 	 * @param s
 	 */
-	protected void setPassword(String s) {
+	public void setPassword(String s) {
 		this.password = s;
 	}
 	
