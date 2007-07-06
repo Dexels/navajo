@@ -334,7 +334,7 @@ public class Task implements Runnable, TaskMXBean, TaskInterface, Serializable {
 				// Reset request id to prevent integrity worker from kicking in.
 				h.setRequestId(null);
 
-				Dispatcher.getInstance().setUseAuthorisation(false);
+				//Dispatcher.getInstance().setUseAuthorisation(false);
 
 				// Dispatcher is dead, exit.
 				if ( Dispatcher.getInstance() == null ) {
