@@ -33,6 +33,10 @@ public class WorkFlowTask implements Serializable, TaskListener {
 		TaskRunner.getInstance().addTaskListener(this);
 		if ( myState != null ) {
 			// Set request Navajo based upon initiating access webservice of my state.
+			if (  myState.initiatingAccess != null ) {
+				myTask.setUsername(myState.initiatingAccess.rpcUser);
+				myTask.setPassword(myState.initiatingAccess.rpcPwd);
+			}
 			if ( myState.aftertaskentry &&  myState.initiatingAccess.getOutputDoc() != null ) {
 				myTask.setRequest(myState.initiatingAccess.getOutputDoc());
 			} else if ( myState.initiatingAccess.getInDoc() != null ) {

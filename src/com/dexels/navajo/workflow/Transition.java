@@ -136,14 +136,17 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 	 *
 	 */
 	public final void activate() {
-		
+
 		TaskRunner.getInstance().addTaskListener(this);
+		if ( myState != null && myState.initiatingAccess != null ) {
+			myTask.setUsername(myState.initiatingAccess.rpcUser);
+			myTask.setPassword(myState.initiatingAccess.rpcPwd);
+		}
 		if ( myTask.getId() == null ) {
 			TaskRunner.getInstance().addTask(myTask);
 		} else {
 			TaskRunner.getInstance().addTask(myTask.getId(), myTask, true);
 		}
-		
 	}
 	
 	/**
