@@ -151,7 +151,7 @@ public final class SaxHandler implements DocHandler {
     		return;
     	}
     	
-    	System.err.println(h);
+    //	System.err.println(h);
     	
     	BaseObjectImpl baseObjectImpl = new BaseObjectImpl(currentDocument);
     	baseObjectImpl.setName((String) h.get("name"));
@@ -226,7 +226,7 @@ public final class SaxHandler implements DocHandler {
         	Entry e = (Entry) iter.next();
 			String element = (String) e.getKey();
 			String value = (String) e.getValue();
-			bhi.setAttribute(element, value);
+			bhi.setHeaderAttribute(element, value);
         }
         currentDocument.addHeader(bhi);
         // TODO Auto-generated method stub
