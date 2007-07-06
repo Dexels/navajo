@@ -311,7 +311,7 @@ public abstract class TipiContext
     if (!impl.equals("direct")) {
         if(impl.equals("socket")) {
             NavajoClientFactory.resetClient();
-            ClientInterface ci =  NavajoClientFactory.createClient("com.dexels.navajo.client.NavajoSocketClient",null);
+            ClientInterface ci =  NavajoClientFactory.createClient("com.dexels.navajo.client.NavajoSocketClient",null,null);
         } else {
             NavajoClientFactory.resetClient();
             NavajoClientFactory.createDefaultClient();
@@ -325,7 +325,9 @@ public abstract class TipiContext
     }
     else {
         NavajoClientFactory.resetClient();
-      NavajoClientFactory.createClient("com.dexels.navajo.client.impl.DirectClientImpl", getClass().getClassLoader().getResource(cfg));
+        // deprecated
+        throw new UnsupportedOperationException("Sorry, I deprecated the direct client for tipi usage");
+      //NavajoClientFactory.createClient("com.dexels.navajo.client.impl.DirectClientImpl", getClass().getClassLoader().getResource(cfg));
     }
     
     NavajoClientFactory.getClient().setLocaleCode(locale);
