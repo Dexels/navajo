@@ -44,7 +44,6 @@ public class FileStore implements MessageStore {
 		for (int i = 0; i < files.length; i++) {
 			File f = files[i];
 			if ( f.isFile() ) {
-				System.err.println("ADDING FILE IN FILESTORE: " + f.getAbsolutePath());
 				currentObjects.add(f);
 			}
 		}
@@ -102,10 +101,11 @@ public class FileStore implements MessageStore {
             // Persist binary file references after reading object.
 			q.persistBinaries();
 			ois.close();
-			System.err.println("Read object: " + q.getClass().getName() + ", retries " + q.getRetries() + ", max retries " + q.getMaxRetries());
+			//System.err.println("Read object: " + q.getClass().getName() + ", retries " + q.getRetries() + ", max retries " + q.getMaxRetries());
 			// Only return object if it is not sleeping
 			if ( q.getWaitUntil() < System.currentTimeMillis() ) {
 				f.delete();
+				System.err.println("Read object: " + q.getClass().getName() + ", retries " + q.getRetries() + ", max retries " + q.getMaxRetries());
 				//System.err.println("Delete file");
 				return q;
 			}
