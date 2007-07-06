@@ -241,7 +241,7 @@ public class Task implements Runnable, TaskMXBean, TaskInterface, Serializable {
 	 * 
 	 */
 	public void setNavajo(Navajo n) {
-		this.navajo = n;
+		this.navajo = n.copy();
 		Header h = n.getHeader();
 		if ( h != null ) {
 			setUsername(h.getRPCUser());
@@ -259,7 +259,7 @@ public class Task implements Runnable, TaskMXBean, TaskInterface, Serializable {
 	 * @param n
 	 */
 	public void setRequest(Navajo n) {
-		this.navajo = n;
+		this.navajo = n.copy();
 		if ( navajo != null ) {
 			navajo.removeHeader();
 		}
