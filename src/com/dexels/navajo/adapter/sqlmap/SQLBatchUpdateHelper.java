@@ -109,7 +109,7 @@ public class SQLBatchUpdateHelper {
 
   // ----------------------------------------------------------- private methods
 
-  private void parseStatements() throws SQLException {
+  private final void parseStatements() throws SQLException {
     final StringTokenizer tok = new StringTokenizer(this.sql, DELIMITER);
     if (tok.countTokens() == 0) {
       throw new SQLException("tried to pass empty SQL statement batch");
@@ -135,7 +135,7 @@ public class SQLBatchUpdateHelper {
 
   }
 
-  private void executeStatements() throws SQLException {
+  private final void executeStatements() throws SQLException {
     for (int i = 0; i < this.parsed.size(); i++) {
 
       final boolean last = i == (this.parsed.size() - 1);
@@ -191,7 +191,7 @@ public class SQLBatchUpdateHelper {
 
   }
 
-  private int countRequiredParameters(final String statement) {
+  private final int countRequiredParameters(final String statement) {
     final char[] a = statement.toCharArray();
     int cnt = 0;
     for (int i = 0; i < a.length; i++) {
@@ -203,7 +203,7 @@ public class SQLBatchUpdateHelper {
 
   }
 
-  private void setStatementParameters(final PreparedStatement pre, final int n) throws
+  private final void setStatementParameters(final PreparedStatement pre, final int n) throws
       SQLException {
     if (this.params != null) {
       for (int i = 0; i < n; i++, this.pptr++) {
@@ -219,9 +219,9 @@ public class SQLBatchUpdateHelper {
 
   }
 
-  private void setParameter(final int idx,
-                            final Object param,
-                            final PreparedStatement pre) throws SQLException {
+  private final void setParameter(final int idx,
+                                  final Object param,
+                                  final PreparedStatement pre) throws SQLException {
     if (this.debug) {
       System.out.println("parameter " + this.pptr + " = " + param);
     }
@@ -246,7 +246,6 @@ public class SQLBatchUpdateHelper {
     }
     else if (param instanceof ClockTime) {
       java.sql.Timestamp sqlDate = new java.sql.Timestamp( ( (ClockTime) param).dateValue().getTime());
-      System.err.println("TIMESTAMP IS: " + sqlDate);
       pre.setTimestamp(idx + 1, sqlDate);
     }
     else if (param instanceof Money) {
@@ -255,7 +254,7 @@ public class SQLBatchUpdateHelper {
 
   }
 
-  private void logWarnings(final PreparedStatement pre) throws SQLException {
+  private final void logWarnings(final PreparedStatement pre) throws SQLException {
     if (this.debug) {
       SQLWarning warning = pre.getWarnings();
       while (warning != null) {
