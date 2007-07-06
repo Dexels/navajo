@@ -91,7 +91,9 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 		// Check for existence of tasks directory.
 		try {
 			taskInputDir = new java.io.File(Dispatcher.getInstance().getNavajoConfig().getRootPath() + "/" + TASK_INPUT_DIR);
-			taskInputDir.mkdirs();
+			if ( !taskInputDir.exists() ) {
+				taskInputDir.mkdirs();
+			}
 		} catch (Throwable t) {
 			// Dan maar niet.
 		}
@@ -240,52 +242,53 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 	
 	private void readConfig() {
 		// Read task configuration file to read predefined tasks config/tasks.xml
-		synchronized (semaphore) {
-			try {
-			
-				Navajo taskDoc = Dispatcher.getInstance().getNavajoConfig().readConfig(TASK_CONFIG);
-				
-				if ( taskDoc != null ) {
-					// Remove all previous tasks.
-					clearTaskMap();
-					ArrayList allTasks = taskDoc.getMessages("tasks");
-					for (int i = 0; i < allTasks.size(); i++) {
-						Message m = (Message) allTasks.get(i);
-						String id = m.getProperty("id").getValue();
-						String webservice = m.getProperty("webservice").getValue();
-						Boolean proxy = (Boolean) m.getProperty("proxy").getTypedValue();
-						String username = m.getProperty("username").getValue();
-						String password = m.getProperty("password").getValue();
-						String trigger = m.getProperty("trigger").getValue();
-						String workflowdef = m.getProperty("workflowdef").getValue();
-						String workflowid = m.getProperty("workflowid").getValue();
-						Boolean keeprequestresponse = (Boolean) m.getProperty("keeprequestresponse").getTypedValue();
-						
-						Access newAcces = new Access(-1, -1, -1, username, webservice, "Taskrunner", "127.0.0.1", "localhost", false, null);
-						
-						try {
-							// Create a new task and activate its trigger.
-							Task t = new Task(webservice, username, password, newAcces, trigger, null);
-							t.setWorkflowDefinition(workflowdef);
-							t.setWorkflowId(workflowid);
-							t.setProxy(proxy.booleanValue());
-							t.setId(id);
-							t.setKeepRequestResponse(keeprequestresponse.booleanValue());
-							readTaskInput(t);
-							instance.addTask(id, t, false);
-						} catch (IllegalTrigger it) {
-							//it.printStackTrace(System.err);
-							AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Problem adding task: " + it.getMessage());
-						}
+		setConfigTimeStamp();
+		
+		try {
+
+			Navajo taskDoc = Dispatcher.getInstance().getNavajoConfig().readConfig(TASK_CONFIG);
+
+			if ( taskDoc != null ) {
+				// Remove all previous tasks.
+				clearTaskMap();
+				ArrayList allTasks = taskDoc.getMessages("tasks");
+				for (int i = 0; i < allTasks.size(); i++) {
+					Message m = (Message) allTasks.get(i);
+					String id = m.getProperty("id").getValue();
+					String webservice = m.getProperty("webservice").getValue();
+					Boolean proxy = ( m.getProperty("proxy") != null ? (Boolean) m.getProperty("proxy").getTypedValue() : Boolean.FALSE);
+					String username = m.getProperty("username").getValue();
+					String password = m.getProperty("password").getValue();
+					String trigger = m.getProperty("trigger").getValue();
+					String workflowdef =  (  m.getProperty("workflowdef") != null ?  m.getProperty("workflowdef").getValue() : "");
+					String workflowid = (  m.getProperty("workflowid") != null ? m.getProperty("workflowid").getValue() : "");
+					Boolean keeprequestresponse = ( m.getProperty("keeprequestresponse") != null ? 
+							(Boolean) m.getProperty("keeprequestresponse").getTypedValue() : Boolean.FALSE );
+
+					Access newAcces = new Access(-1, -1, -1, username, webservice, "Taskrunner", "127.0.0.1", "localhost", false, null);
+
+					try {
+						// Create a new task and activate its trigger.
+						Task t = new Task(webservice, username, password, newAcces, trigger, null);
+						t.setWorkflowDefinition(workflowdef);
+						t.setWorkflowId(workflowid);
+						t.setProxy(proxy.booleanValue());
+						t.setId(id);
+						t.setKeepRequestResponse(keeprequestresponse.booleanValue());
+						readTaskInput(t);
+						instance.addTask(id, t, false);
+					} catch (IllegalTrigger it) {
+						//it.printStackTrace(System.err);
+						AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Problem adding task: " + it.getMessage());
 					}
 				}
-				
-			} catch (Throwable e) {
-				e.printStackTrace(System.err);
-			} finally {
-				setConfigTimeStamp();
 			}
-		}
+
+		} catch (Throwable e) {
+			e.printStackTrace(System.err);
+		} 
+		
+
 	}
 	
 	public static TaskRunner getInstance() {
@@ -302,10 +305,10 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 			instance = new TaskRunner();	
 			try {
 				JMXHelper.registerMXBean(instance, JMXHelper.NAVAJO_DOMAIN, id);
-				instance.readConfig();
 			} catch (Throwable t) {
 				// Then but not.
 			}
+			instance.readConfig();
 			instance.startThread(instance);
 			
 			AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Started task scheduler process $Id$");
