@@ -110,7 +110,7 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 			// Revive persisted workflows.
 			instance.reviveSavedWorkFlows();
 			
-			AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Started workflow process $Id$");
+			AuditLog.log(AuditLog.AUDIT_MESSAGE_WORKFLOW, "Started workflow process $Id$");
 			return instance;
 		}
 	}
@@ -149,8 +149,8 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
         // Check whether definition has been added.
 		if ( isConfigModified() ) {
 			AuditLog.log(AuditLog.AUDIT_MESSAGE_WORKFLOW, "Workflow definition change detected");
-			WorkFlowDefinitionReader.initialize(new File(workflowDefinitionPath), workflowDefinitions);
 			setConfigTimeStamp();
+			WorkFlowDefinitionReader.initialize(new File(workflowDefinitionPath), workflowDefinitions);	
 		}
 	}
 
