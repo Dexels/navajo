@@ -191,7 +191,7 @@ public class WsdlProducer extends HttpServlet {
 		System.err.println("in WsdlProducer doPost()");
 		try {
 
-			Dispatcher dis = Dispatcher.getInstance(new java.net.URL(configurationPath), 
+			Dispatcher dis = Dispatcher.getInstance(configurationPath,null, 
 					new com.dexels.navajo.server.FileInputStreamReader(),
 					request.getServerName() + request.getRequestURI()
 			);

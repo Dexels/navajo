@@ -91,7 +91,7 @@ public class TmlSoapServlet extends HttpServlet {
 
 
 			// Create dispatcher object and handle request.
-			Dispatcher dis = Dispatcher.getInstance(new java.net.URL(configurationPath), new com.dexels.navajo.server.FileInputStreamReader(), "??");
+			Dispatcher dis = Dispatcher.getInstance(configurationPath,null, new com.dexels.navajo.server.FileInputStreamReader(), "??");
 			Navajo navajoOut = dis.handle(navajoIn);
 
 			// Check for errors.
