@@ -167,7 +167,9 @@ public class FileStore implements MessageStore {
 			File queue = new File(path);
 			File [] files = queue.listFiles();
 			for (int i = 0; i < files.length; i++) {
-				files[i].delete();
+				if ( files[i].isFile() ) { // Only delete files.
+					files[i].delete();
+				}
 			}
 		}
 	}
