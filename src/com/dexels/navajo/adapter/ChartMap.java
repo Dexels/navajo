@@ -1,6 +1,8 @@
 package com.dexels.navajo.adapter;
 
 import org.eclipse.birt.chart.model.Chart;
+import org.eclipse.birt.core.framework.Platform;
+import org.eclipse.birt.core.framework.PlatformConfig;
 
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.mapping.*;
@@ -13,6 +15,10 @@ public class ChartMap implements Mappable{
 	public String seriesLabel;
 	public int type;
 	public String outputFile;
+	
+	private String engineDir;
+	private PlatformConfig platformConfig;
+	
 	
 	public ChartMap(){
 		
@@ -51,7 +57,17 @@ public class ChartMap implements Mappable{
 //	}
 	
 	public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
-		try{
+
+		
+	    // paths
+	    engineDir = inMessage.getMessage("__globals__").getProperty("BIRTEngineDir").getValue();
+	    System.err.println("BIRTEngineDir: " + engineDir);
+
+	    platformConfig = new PlatformConfig();
+//	    platformConfig.setBIRTHome(engineDir);
+	
+	    try{
+
 			// we expect the Result message to be incoming..
 			inMessage.write(System.err);
 			data = inMessage.getMessage("Result");

@@ -31,8 +31,10 @@ public class BIRTMap implements Mappable {
 	public Object parameterValue;
 	public String parameterName;
 	
-	public String birtDatasourceUrl;
-	private IReportEngine myEngine = null;
+//	public String birtDatasourceUrl;
+	
+	public final Map birtDataSources = new HashMap();
+	private static IReportEngine myEngine = null;
  
   public Binary getReport(){
 	  
@@ -64,7 +66,7 @@ public class BIRTMap implements Mappable {
     parameters.put(parameterName, o);
   }
 
-  private File getFixedReport(String reportName, String dataUrl) throws XMLParseException, IOException {
+  private File getFixedReport(String reportName, Map dataUrl) throws XMLParseException, IOException {
 	  File reportFile = new File(reportDir+reportName+ ".rptdesign");
 	  Reader fw = (Reader) new InputStreamReader(new FileInputStream(reportFile),"UTF-8");
 	  XMLElement xe = new CaseSensitiveXMLElement();
@@ -75,25 +77,41 @@ public class BIRTMap implements Mappable {
 		System.err.println("No datasources found"); 
 		return null;
 	  }
-	  XMLElement dataSource = dataSources.getElementByTagName("oda-data-source");
-	  if (dataSource==null) {
-			System.err.println("No datasource found"); 
-			return null;
-	  }
-	  Vector children = dataSource.getChildren();
-	  for (int i = 0; i < children.size(); i++) {
-		XMLElement current = (XMLElement)children.get(i);
-		String name = current.getStringAttribute("name");
-		if ("odaURL".equals(name)) {
-			current.setContent(dataUrl);
+	  
+	  for (Iterator iter = dataSources.getChildren().iterator(); iter.hasNext();) {
+		XMLElement dataSource = (XMLElement) iter.next();
+		if(dataSource.getName().equals("oda-data-source")) {
+			String dataSourceName = dataSource.getStringAttribute("name");
+			if(dataSourceName!=null) {
+				String urlValue = (String)dataUrl.get(dataSourceName);
+				if(urlValue!=null) {
+					 Vector children = dataSource.getChildren();
+					  for (int i = 0; i < children.size(); i++) {
+						XMLElement current = (XMLElement)children.get(i);
+						String name = current.getStringAttribute("name");
+						if ("odaURL".equals(name)) {
+							current.setContent(urlValue);
+						}
+					}
+				}
+			}
+			 
+
 		}
-//		if ("odaUser".equals(name)) {
-//			current.setContent(username);
-//		}
-//		if ("odaPassword".equals(name)) {
-//			current.setContent(password);
-//		}
 	}
+//	  XMLElement dataSource = dataSources.getElementByTagName("oda-data-source");
+//	  if (dataSource==null) {
+//			System.err.println("No datasource found"); 
+//			return null;
+//	  }
+//	  Vector children = dataSource.getChildren();
+//	  for (int i = 0; i < children.size(); i++) {
+//		XMLElement current = (XMLElement)children.get(i);
+//		String name = current.getStringAttribute("name");
+//		if ("odaURL".equals(name)) {
+//			current.setContent(dataUrl);
+//		}
+//	}
 	  File temp = File.createTempFile("tempReport", ".rptdesign");
 	  Writer ffw = new OutputStreamWriter(new FileOutputStream(temp),"UTF-8");
 	  ffw.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
@@ -114,6 +132,7 @@ public class BIRTMap implements Mappable {
 		  //Engine Configuration - set and get temp dir, BIRT home, Servlet context
 		  if (myEngine==null) {
 			  EngineConfig config = new EngineConfig();
+//			  config.getLogger();
 			  config.setEngineHome(engineDir);
 			  config.setLogConfig(null, Level.SEVERE);
 			  try {
@@ -140,7 +159,7 @@ public class BIRTMap implements Mappable {
 			  f = new File(directFile);
 		} else {
 			try {
-				f = getFixedReport(reportName,birtDatasourceUrl);
+				f = getFixedReport(reportName,birtDataSources);
 			} catch (XMLParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -276,8 +295,12 @@ public class BIRTMap implements Mappable {
     // paths
     reportDir = inMessage.getMessage("__globals__").getProperty("BIRTReportDir").getValue();
     engineDir = inMessage.getMessage("__globals__").getProperty("BIRTEngineDir").getValue();
-    birtDatasourceUrl = inMessage.getMessage("__globals__").getProperty("BIRTDatasourceUrl").getValue();
+//    birtDatasourceUrl = inMessage.getMessage("__globals__").getProperty("BIRTKernelDatasourceUrl").getValue();
+//    birtDatasourceUrl = inMessage.getMessage("__globals__").getProperty("BIRTClubDatasourceUrl").getValue();
 
+    birtDataSources.put("kernel", inMessage.getMessage("__globals__").getProperty("BIRTKernelDatasourceUrl").getValue());
+    birtDataSources.put("club", inMessage.getMessage("__globals__").getProperty("BIRTClubDatasourceUrl").getValue());
+    
     System.err.println("BIRTReportDir: " + reportDir);
     System.err.println("BIRTEngineDir: " + engineDir);
   }
@@ -300,8 +323,8 @@ public class BIRTMap implements Mappable {
   public void kill() {
   }
 
-public String getBirtDatasourceUrl() {
-	return birtDatasourceUrl;
+public String getBirtDatasourceUrl(String name) {
+	return (String)birtDataSources.get(name);
 }
   
 }

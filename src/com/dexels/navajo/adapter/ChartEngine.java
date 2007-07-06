@@ -21,6 +21,7 @@ import org.eclipse.birt.chart.model.impl.*;
 import org.eclipse.birt.chart.model.type.*;
 import org.eclipse.birt.chart.model.type.impl.*;
 import org.eclipse.birt.chart.util.*;
+import org.eclipse.birt.core.exception.BirtException;
 import org.eclipse.birt.core.framework.*;
 
 import com.dexels.navajo.client.NavajoClientFactory;
@@ -179,11 +180,10 @@ public class ChartEngine {
 	}
 
 	public void saveChart(String fileName) {
-		PlatformConfig pc = new PlatformConfig();
-		PluginSettings ps = PluginSettings.instance(pc);
+//		Pl
 		IDeviceRenderer idr = null;
 		try {
-			idr = ps.getDevice("dv.PNG");
+			idr = PluginSettings.instance().getDevice("dv.PNG");
 
 			Bounds bo = BoundsImpl.create(0, 0, width, height);
 			bo.scale(72d / idr.getDisplayServer().getDpiResolution());
@@ -201,7 +201,10 @@ public class ChartEngine {
 		}
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws BirtException {
+		PlatformConfig pc = new PlatformConfig();
+//		pc.setBIRTHome("c:/projecten/NavajoBIRT/birt-runtime-2_2_0/ReportEngine");
+		Platform.startup(pc);
 		ChartEngine ce = new ChartEngine();
 		try {
 			System.setProperty("com.dexels.navajo.DocumentImplementation", "com.dexels.navajo.document.base.BaseNavajoFactoryImpl");
@@ -229,7 +232,7 @@ public class ChartEngine {
 					ce.setChartSize(800, 300);
 
 					Chart c = ce.createChart();
-					ce.saveChart("/home/aphilip/good.png");
+					ce.saveChart("c:/good.png");
 				}
 			}
 

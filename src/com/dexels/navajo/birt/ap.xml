@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Written by Eclipse BIRT 2.0 -->
+<report id="1" version="3.2.6" xmlns="http://www.eclipse.org/birt/2005/design">
+    <property name="createdBy">Eclipse</property>
+    <property name="units">in</property>
+    <property name="comments">Copyright (c) 2007 Dexels</property>
+    <data-sources>
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.xml" id="4" name="Data Source">
+            <text-property name="displayName">club/ProcessSearchClubs</text-property>
+            <property name="FILELIST">ali12271baba</property>
+            <property name="SCHEMAFILELIST"/>
+        </oda-data-source>
+    </data-sources>
+    <page-setup>
+        <simple-master-page id="2" name="Simple MasterPage">
+            <page-footer>
+                <text id="3">
+                    <property name="contentType">html</property>
+                    <text-property name="content"><value-of>new Date()</value-of></text-property>
+                </text>
+            </page-footer>
+        </simple-master-page>
+    </page-setup>
+</report>
