@@ -81,7 +81,7 @@ public final class HeaderImpl
     while (ee.hasMoreElements()) {
         String element = (String) ee.nextElement();
 //        System.err.println("Found header attribute: "+element);
-        setAttribute(element, e.getStringAttribute(element));
+        setHeaderAttribute(element, e.getStringAttribute(element));
     }
 
   }
@@ -145,7 +145,7 @@ public final class HeaderImpl
         if (attributeMap!=null) {
             for (Iterator iter = attributeMap.keySet().iterator(); iter.hasNext();) {
                 String element = (String) iter.next();
-                Object localValue = getAttribute(element);
+                Object localValue = getHeaderAttribute(element);
                 if ( localValue!=null) {
                     header.setAttribute(element, localValue);
                 }

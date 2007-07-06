@@ -70,6 +70,15 @@ public class BaseHeaderImpl
     myCallback  = new BaseCallbackImpl(n);
   }
 
+  public Header copy(Navajo n) {
+	  Header h = NavajoFactory.getInstance().createHeader(n, getRPCName(), getRPCUser(), getRPCPassword(), expiration);
+	  for (Iterator iter = getAttributes().keySet().iterator(); iter.hasNext();) {
+		String element = (String) iter.next();
+		h.setHeaderAttribute(element, getHeaderAttribute(element));
+	  }
+	  return h;
+  }
+  
   public BaseHeaderImpl(com.dexels.navajo.document.Navajo n) {
     super(n);
     myClientImpl =  new BaseClientImpl(n);
@@ -89,14 +98,14 @@ public class BaseHeaderImpl
     expiration = i;
   }
 
-  public void setAttribute(String key, String value) {
+  public void setHeaderAttribute(String key, String value) {
       if (attributeMap==null) {
         attributeMap = new HashMap();
     }
       attributeMap.put(key, value);
   }
 
-  public String getAttribute(String key) {
+  public String getHeaderAttribute(String key) {
       if (attributeMap==null) {
         return null;
     }
@@ -337,7 +346,7 @@ public class BaseHeaderImpl
 	  return false;
   }
 
-public Map getAttributes() {
+public Map getHeaderAttributes() {
     return attributeMap;
 }
 
@@ -349,9 +358,7 @@ public List getChildren() {
     }
     al.add(myCallback);
     al.add(myClientImpl);
-    //System.err.println("Serializing header.");
     if (piggyBackData!=null) {
-//    	System.err.println(":::::::::: ADDING PIGGYBACKDATA ::::::: count:  "+piggyBackData.size());
 		for (Iterator iter = piggyBackData.iterator(); iter.hasNext();) {
 			Map element = (Map) iter.next();
 			BasePiggybackImpl bpi  = new BasePiggybackImpl(element);
@@ -382,16 +389,13 @@ public String getRequestId() {
 public static void main (String [] args) throws Exception {
         System.setProperty("com.dexels.navajo.DocumentImplementation", "com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl");
         Navajo n = NavajoFactory.getInstance().createNavajo();
-        System.err.println("n = " + n.getClass().getName());
         Header h = NavajoFactory.getInstance().createHeader(n , "aap", "noot", "mies", -1 );
         n.addHeader(h);
-        n.write(System.err);
     }
 
 public void setRequestId(String id) {
     if (myTransaction!=null) {
-    	//System.err.println("in setRequestId(" + id + ")");
-        myTransaction.setRequestId(id);
+    	myTransaction.setRequestId(id);
     }
 }
 
@@ -401,11 +405,9 @@ public BaseCallbackImpl getCallback() {
 
 public void addPiggyBackData(Map element) {
 	if (piggyBackData==null) {
-//		System.err.println("Lazy create of piggyback data");
 		piggyBackData = new HashSet();
 	}
 	piggyBackData.add(element);
-//	System.err.println("piggyback size: "+piggyBackData.size());
 }
 
 /**
@@ -420,6 +422,14 @@ public void clearPiggybackData() {
 	if ( piggyBackData != null ) {
 		piggyBackData.clear();
 	}
+}
+
+
+public Map getAttributes() {
+	if(attributeMap==null) {
+		return null;
+	}
+	return new HashMap(attributeMap);
 }
 
 }

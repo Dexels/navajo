@@ -202,14 +202,14 @@ public interface Header extends java.io.Serializable {
      * @param key
      * @param value
      */
-    public void setAttribute(String key, String value);
+    public void setHeaderAttribute(String key, String value);
 
     /**
      * Get an attribute value given a key
      * @param key String
      * @return String
      */
-    public String getAttribute(String key);
+    public String getHeaderAttribute(String key);
     
     /**
      * Get the unique request id.
@@ -218,7 +218,7 @@ public interface Header extends java.io.Serializable {
      */
     public String getRequestId();
     
-    public Map getAttributes();
+    public Map getHeaderAttributes();
     
     public void setRequestId(String id);
 
@@ -233,5 +233,7 @@ public interface Header extends java.io.Serializable {
 	public void setSchedule(String s);
 
 	public void write(OutputStream err) throws NavajoException;
+
+	public Header copy(Navajo n);
 
 }

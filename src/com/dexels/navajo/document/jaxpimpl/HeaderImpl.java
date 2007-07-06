@@ -12,6 +12,7 @@ package com.dexels.navajo.document.jaxpimpl;
 import java.util.*;
 
 import com.dexels.navajo.document.*;
+
 import org.w3c.dom.*;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLutils;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
@@ -41,7 +42,7 @@ public final class HeaderImpl implements Header {
   }
 
 
-  public Map getAttributes() {
+  public Map getHeaderAttributes() {
       return null;
   }
   
@@ -94,7 +95,7 @@ public final class HeaderImpl implements Header {
     }
 
     
-    public void setAttribute(String key, String value) {
+    public void getHeaderAttributes(String key, String value) {
     	ref.setAttribute(key,value);
     }
 
@@ -426,5 +427,20 @@ public final class HeaderImpl implements Header {
 
         n.setAttribute("rpc_schedule", s);
     }
+
+	public Header copy(Navajo n) {
+		System.err.println("Warning: Copying headers not supported in JAXP");
+		return this;
+	}
+
+	public String getHeaderAttribute(String key) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void setHeaderAttribute(String key, String value) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }
