@@ -24,7 +24,14 @@
  */
 package com.dexels.navajo.server.statistics;
 
-public class MapStatistics {
+import java.io.Serializable;
+
+public class MapStatistics implements Serializable {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5971580806985961800L;
 	
 	public int levelId;
 	public String mapName;

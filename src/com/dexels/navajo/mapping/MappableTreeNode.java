@@ -11,6 +11,7 @@ package com.dexels.navajo.mapping;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.io.Serializable;
 import java.lang.reflect.*;
 import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.document.Navajo;
@@ -19,14 +20,24 @@ import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.server.statistics.MapStatistics;
 
-class ArrayChildStatistics {
+class ArrayChildStatistics implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 576411679354811834L;
+	
 	public int elementCount;
 	public long totalTime;
 }
 
-public final class MappableTreeNode implements Mappable {
+public final class MappableTreeNode implements Mappable, Serializable {
 
-        public MappableTreeNode parent = null;
+        /**
+	 * 
+	 */
+	private static final long serialVersionUID = 6880152616096374576L;
+	
+		public MappableTreeNode parent = null;
         public Mappable myMap = null;
         public Object myObject = null;
         public String name = "";
