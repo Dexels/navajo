@@ -97,6 +97,13 @@ public final class State implements Serializable, Mappable {
 		// Set entry date.
 		entryDate = new Date();
 		
+        // Activate transitions.
+		Iterator<Transition> i = myTransitions.iterator();
+		while ( i.hasNext() ) {
+			Transition t = i.next();
+			t.activate();
+		}	
+		
 	    // Activate tasks.
 		Iterator<WorkFlowTask> tks = myTasks.iterator();
 		
@@ -108,12 +115,6 @@ public final class State implements Serializable, Mappable {
 				System.err.println("Do not activate workflowtask..............it was already finished");
 			}
 		}
-		// Activate transitions.
-		Iterator<Transition> i = myTransitions.iterator();
-		while ( i.hasNext() ) {
-			Transition t = i.next();
-			t.activate();
-		}	
 		
 		 // Persist workflow instance. This method will be entry point for resurection.
 		WorkFlowManager.getInstance().persistWorkFlow(myWorkFlow);
