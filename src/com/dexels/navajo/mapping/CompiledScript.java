@@ -168,7 +168,7 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable  
   public String getStackTrace() {
 
 	  StringBuffer stackTrace = new StringBuffer();
-	  StackTraceElement [] elt = myThread.getStackTrace();
+	  StackTraceElement [] elt = myAccess.getThread().getStackTrace();
 	  for (int i = 0; i < elt.length; i++) {
 		  stackTrace.append(elt[i].getClassName()+"."+elt[i].getMethodName() + " (" + elt[i].getFileName() + ":" + elt[i].getLineNumber() + ")\n");
 	  }

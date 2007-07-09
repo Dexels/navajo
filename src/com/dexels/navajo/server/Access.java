@@ -85,7 +85,7 @@ public final class Access implements java.io.Serializable, Mappable {
 	private String waitingForPreviousRequest = null;
 	private transient Thread myThread = null;
 
-
+	
 	private HashMap mapStatistics = null;
 
 	public MapStatistics createStatistics() {
