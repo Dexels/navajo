@@ -773,7 +773,7 @@ public class NavajoClient implements ClientInterface {
     }
     // ALWAY SET REQUEST ID AT THIS POINT.
     header.setRequestId( Guid.create() );
-    header.setAttribute("clientToken", getSessionToken());
+    header.setHeaderAttribute("clientToken", getSessionToken());
     // ========= Adding globalMessages
     Iterator entries = globalMessages.entrySet().iterator();
     while (entries.hasNext()) {
@@ -802,13 +802,13 @@ public class NavajoClient implements ClientInterface {
     	// set the locale
     	// ==============================================
     	 if (localeCode!=null) {
-        	 out.getHeader().setAttribute("locale", localeCode);
+        	 out.getHeader().setHeaderAttribute("locale", localeCode);
 		}
          //==================================================================
      	// set the sublocale
      	// ==============================================
      	 if (subLocale!=null) {
-         	 out.getHeader().setAttribute("sublocale", subLocale);
+         	 out.getHeader().setHeaderAttribute("sublocale", subLocale);
  		}
      	 
     	 
@@ -843,8 +843,8 @@ public class NavajoClient implements ClientInterface {
           }
           if (n == null) {
               n = NavajoFactory.getInstance().createNavajo(in);
-              System.err.println("METHOD: "+method+" sourcehead: "+callingService+" sourceSource: "+out.getHeader().getAttribute("sourceScript")+" outRPCName: "+n.getHeader().getRPCName());
-              n.getHeader().setAttribute("sourceScript", callingService);
+              System.err.println("METHOD: "+method+" sourcehead: "+callingService+" sourceSource: "+out.getHeader().getHeaderAttribute("sourceScript")+" outRPCName: "+n.getHeader().getRPCName());
+              n.getHeader().setHeaderAttribute("sourceScript", callingService);
           }
         }
         catch (IOException uhe) {
@@ -859,19 +859,19 @@ public class NavajoClient implements ClientInterface {
           }
           if (n == null) {
               n = NavajoFactory.getInstance().createNavajo(in);
-              System.err.println("METHOD: "+method+" sourcehead: "+callingService+" sourceSource: "+out.getHeader().getAttribute("sourceScript")+" outRPCName: "+n.getHeader().getRPCName());
-              n.getHeader().setAttribute("sourceScript", callingService);
+              System.err.println("METHOD: "+method+" sourcehead: "+callingService+" sourceSource: "+out.getHeader().getHeaderAttribute("sourceScript")+" outRPCName: "+n.getHeader().getRPCName());
+              n.getHeader().setHeaderAttribute("sourceScript", callingService);
           }
         } catch(Throwable r) {
         	r.printStackTrace();
         }
         finally {
         	 if (n.getHeader()!=null) {
-                 n.getHeader().setAttribute("sourceScript", callingService);
+                 n.getHeader().setHeaderAttribute("sourceScript", callingService);
                  clientTime = (System.currentTimeMillis()-timeStamp);
-                 n.getHeader().setAttribute("clientTime", ""+clientTime);
-                 String tot = n.getHeader().getAttribute("serverTime");
-                 String loadStr = n.getHeader().getAttribute("cpuload");
+                 n.getHeader().setHeaderAttribute("clientTime", ""+clientTime);
+                 String tot = n.getHeader().getHeaderAttribute("serverTime");
+                 String loadStr = n.getHeader().getHeaderAttribute("cpuload");
                  double load = -1.0;
                  if ( loadStr != null ) {
                 	 try {
@@ -887,9 +887,9 @@ public class NavajoClient implements ClientInterface {
                  long totalTime = -1;
                  if (tot!=null&& !"".equals(tot)) {
                  	totalTime = Long.parseLong(tot);
-                 	n.getHeader().setAttribute("transferTime",""+(clientTime-totalTime));
+                 	n.getHeader().setHeaderAttribute("transferTime",""+(clientTime-totalTime));
  				} 
-                 Map headerAttributes = n.getHeader().getAttributes();
+                 Map headerAttributes = n.getHeader().getHeaderAttributes();
                  Map pbd = new HashMap(headerAttributes);
                  pbd.put("type","performanceStats");
                  pbd.put("service",method);
@@ -1542,28 +1542,62 @@ private final InputStream retryTransaction(String server, Navajo out, boolean us
 	}
   
   public static void main(String[] args) throws Exception {
-	  System.err.println(createSessionToken());
-	  System.err.println(InetAddress.getLocalHost().getHostName());
-	  System.getProperties().list(System.err);
-      System.setProperty(SaxTester.DOC_IMPL, SaxTester.QDSAX);
-      NavajoClientFactory.getClient().setServerUrl("ficus:3000/sportlink/knvb/servlet/Postman");
-      NavajoClientFactory.getClient().setUsername("ROOT");
-      NavajoClientFactory.getClient().setPassword("");
-      
-      Navajo n = NavajoClientFactory.getClient().doSimpleSend("documents/InitUpdateDocument" );
-      Property id = n.getProperty("Document/DocumentId");
-      id.setValue("148040");
-      Navajo m = NavajoClientFactory.getClient().doSimpleSend(n,"documents/ProcessQueryDocument" );
-//      m.write(System.err);
-      Binary qddata = (Binary)m.getProperty("DocumentData/Data").getTypedValue();
-      System.err.println("NAVAJO SAVED: ");
-      
-      System.err.println("Binary size: "+qddata.getLength());
-      FileOutputStream fos = new FileOutputStream("c:/testjpg.jpg");
-      qddata.write(fos);
-      fos.flush();
-      fos.close();
+	  
+	
+	    URL  url = new URL("http://hera3.dexels.com/sportlink/knvb/servlet/Postman");
+	  
+	    HttpURLConnection con = null;
+	   
+	      con = (HttpURLConnection) url.openConnection();
+	      ( (HttpURLConnection) con).setRequestMethod("POST");
+	   
+	   
+	    try {
+	    	java.lang.reflect.Method timeout = con.getClass().getMethod("setConnectTimeout", new Class[]{int.class});
+	    	timeout.invoke( con, new Object[]{new Integer(CONNECT_TIMEOUT)});
+	    }catch (SecurityException e) {
+	    }
+	    catch (Throwable e) {
+	     	System.err.println("setConnectTimeout does not exist, upgrade to java 1.5+");
+	    }
+	    
+	    con.setDoOutput(true);
+	    con.setDoInput(true);
+	    con.setUseCaches(false);
+	    //con.setRequestProperty("Connection", "keep-alive");
+	    con.setRequestProperty("Content-type", "text/xml; charset=UTF-8");
+
+	    try {
+	    	java.lang.reflect.Method chunked = con.getClass().getMethod("setChunkedStreamingMode", new Class[]{int.class});
+	    	chunked.invoke( con, new Object[]{new Integer(1024)});
+	    	con.setRequestProperty("Transfer-Encoding", "chunked" );
+	    } catch (SecurityException e) {
+	    } catch (Throwable e) {
+	     	System.err.println("setChunkedStreamingMode does not exist, upgrade to java 1.5+");
+	    }
+	    
+	    // Send message
+	   
+	    	con.setRequestProperty("Accept-Encoding", "jzlib");
+	    	con.setRequestProperty("Content-Encoding", "jzlib");
+	    	
+	    	BufferedWriter out = null;
+	    	try {
+	    		out = new BufferedWriter(new OutputStreamWriter(new ZOutputStream(con.getOutputStream(), JZlib.Z_BEST_SPEED), "UTF-8"));
+	    		//d.write(out, false, d.getHeader().getRPCName());
+	    		out.write("<ROMMEL/>");
+	    	} finally  {
+	    		if ( out != null ) {
+	    			try {
+	    				//out.flush();
+	    				out.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+	    		}
+	    	}
  
+	   
   }
 
 public void destroy() {
@@ -1591,7 +1625,7 @@ private final void ping() {
 								Navajo n = NavajoFactory.getInstance().createNavajo(in);
 								in.close();
 								Header h = n.getHeader();
-								String load =  h.getAttribute("cpuload");
+								String load =  h.getHeaderAttribute("cpuload");
 								serverLoads[i] = Double.parseDouble(load);
 							} catch (Throwable e) {
 							}
@@ -1838,5 +1872,7 @@ public final void switchServer(int startIndex, boolean forceChange) {
 	public void dispose() {
 		killed = true;
 	}
+	
+	
 
 }
