@@ -25,6 +25,7 @@
 
 package com.dexels.navajo.server;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -33,6 +34,7 @@ import com.dexels.navajo.document.*;
 import com.dexels.navajo.mapping.CompiledScript;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
+import com.dexels.navajo.server.statistics.MapStatistics;
 
 public final class Access implements java.io.Serializable, Mappable {
 
@@ -84,28 +86,28 @@ public final class Access implements java.io.Serializable, Mappable {
 	private transient Thread myThread = null;
 
 
-	//private HashMap mapStatistics = null;
+	private HashMap mapStatistics = null;
 
-//	public MapStatistics createStatistics() {
-//	MapStatistics ms = new MapStatistics();
-//	if ( mapStatistics == null ) { // First map.
-//	mapStatistics = new HashMap();
-//	}
-//	Integer count = new Integer(mapStatistics.size());
-//	mapStatistics.put(count, ms);
+	public MapStatistics createStatistics() {
+		MapStatistics ms = new MapStatistics();
+		if ( mapStatistics == null ) { // First map.
+			mapStatistics = new HashMap();
+		}
+		Integer count = new Integer(mapStatistics.size());
+		mapStatistics.put(count, ms);
 
-//	return ms;
-//	}
+		return ms;
+	}
 
-//	public void updateStatistics(MapStatistics ms, int levelId, String mapName, long totalTime, int elementCount, boolean isArrayElement) {
+	public void updateStatistics(MapStatistics ms, int levelId, String mapName, long totalTime, int elementCount, boolean isArrayElement) {
 
-//	ms.levelId = levelId;
-//	ms.mapName = mapName;
-//	ms.elementCount = elementCount;
-//	ms.totalTime = totalTime;
-//	ms.isArrayElement = isArrayElement;
+		ms.levelId = levelId;
+		ms.mapName = mapName;
+		ms.elementCount = elementCount;
+		ms.totalTime = totalTime;
+		ms.isArrayElement = isArrayElement;
 
-//	}
+	}
 
 	public Navajo getOutputDoc() {
 		return outputDoc;
@@ -269,9 +271,9 @@ public final class Access implements java.io.Serializable, Mappable {
 		}
 	}
 
-//	public HashMap getMapStatistics() {
-//	return mapStatistics;
-//	}
+	public HashMap getMapStatistics() {
+		return mapStatistics;
+	}
 
 	public void addPiggybackData(Map element) {
 		if (piggyBackData==null) {

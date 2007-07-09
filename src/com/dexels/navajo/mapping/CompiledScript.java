@@ -166,22 +166,13 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable  
   }
   
   public String getStackTrace() {
-	  return "";
-//	  try {
-//		  connectJMX();
-//		  StringBuffer stackTrace = new StringBuffer();
-//		  StackTraceElement [] elt = myThread.getStackTrace();
-//
-//		  for (int i = 0; i < elt.length; i++) {
-//			  stackTrace.append(elt[i].getClassName()+"."+elt[i].getMethodName() + " (" + elt[i].getFileName() + ":" + elt[i].getLineNumber() + ")\n");
-//		  }
-//
-//		  return stackTrace.toString();
-//	  } finally {
-//		  if (!keepJMXConnectionAlive) {
-//			  disconnectJMX();
-//		  }
-//	  }
+
+	  StringBuffer stackTrace = new StringBuffer();
+	  StackTraceElement [] elt = myThread.getStackTrace();
+	  for (int i = 0; i < elt.length; i++) {
+		  stackTrace.append(elt[i].getClassName()+"."+elt[i].getMethodName() + " (" + elt[i].getFileName() + ":" + elt[i].getLineNumber() + ")\n");
+	  }
+	  return stackTrace.toString();
   }
   
   public long getRunningTime() {
