@@ -26,7 +26,7 @@ public class NoCacheDatabaseDescriptionProvider extends BaseDescriptionProvider 
 	
 	
 	public void updateProperty(Navajo in, Property element, String locale) {
-		String subLocale = in.getHeader().getAttribute("sublocale");
+		String subLocale = in.getHeader().getHeaderAttribute("sublocale");
 
 		String retrievedDescription = retrieveDescription(element.getName(), locale, subLocale, in.getHeader().getRPCName(), in.getHeader().getRPCUser());
 		if(retrievedDescription!=null) {

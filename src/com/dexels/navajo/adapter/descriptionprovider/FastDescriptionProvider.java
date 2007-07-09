@@ -282,7 +282,7 @@ public class FastDescriptionProvider extends BaseDescriptionProvider {
 	public void updateProperty(Navajo in, Property element, String locale) {
 		String translation = 
 			getTranslation(element.getName(), element.getDescription(), 
-					locale, in.getHeader().getAttribute("sublocale"), 
+					locale, in.getHeader().getHeaderAttribute("sublocale"), 
 					in.getHeader().getRPCUser(), in.getHeader().getRPCName());
 		element.setDescription(translation);
 	}

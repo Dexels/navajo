@@ -11,9 +11,10 @@ import java.io.StringWriter;
 import java.io.PrintWriter;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.server.enterprise.statistics.StoreInterface;
-import com.dexels.navajo.server.statistics.TodoItem;
+import com.dexels.navajo.server.statistics.*;
 import com.dexels.navajo.adapter.SQLMap;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -54,11 +55,11 @@ public final class OracleStore implements StoreInterface {
 	private static String existsAccessSQL = "select count(*) AS cnt from navajoaccess where access_id = ?";
 	
 	private static String insertAccessSQL = "insert into navajoaccess " +
-	"(access_id, webservice, username, threadcount, totaltime, parsetime, authorisationtime, clienttime, requestsize, requestencoding, compressedrecv, compressedsnd, ip_address, hostname, created, clientid) " +
-	"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	"(access_id, webservice, username, threadcount, cpuload, totaltime, parsetime, authorisationtime, clienttime, requestsize, requestencoding, compressedrecv, compressedsnd, ip_address, hostname, created, clientid) " +
+	"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	
 	private static String updateEmbryoAccessSQL = "update navajoaccess " +
-	"set webservice = ?, username = ?, threadcount = ?, totaltime = ?, parsetime = ?, " + 
+	"set webservice = ?, username = ?, threadcount = ?, cpuload = ?, totaltime = ?, parsetime = ?, " + 
 	"authorisationtime = ?, requestsize = ?, requestencoding = ?, " + 
 	"compressedrecv = ?, compressedsnd = ?, ip_address = ?, hostname = ?, " + 
 	"created = ?, clientid = ? where access_id = ?";
@@ -122,45 +123,45 @@ public final class OracleStore implements StoreInterface {
 	 * access_id, sequence_id, level_id, mapname, array, instancecount, totaltime, created
 	 * @param a
 	 */
-//	private final void addMapLog(final Connection con, final Access a) {
-//		if (Dispatcher.getInstance().getNavajoConfig().dbPath != null) {
-//			if (con != null) {
-//				PreparedStatement ps = null;
-//				try {
-//					ps = con.prepareStatement(insertMapLog);
-//					HashMap mapLogs = a.getMapStatistics();
-//					if ( mapLogs != null ) {
-//						// Loop over all map log.
-//						Iterator iter = mapLogs.keySet().iterator();
-//						while ( iter.hasNext() ) {
-//							Integer id = (Integer) iter.next();
-//							MapStatistics ms = (MapStatistics) mapLogs.get(id);
-//							ps.setString(1, a.accessID);
-//							ps.setInt(2, id.intValue());
-//							ps.setInt(3, ms.levelId);
-//							ps.setString(4, ( ms.mapName != null ? ms.mapName : "empty" ) );
-//							ps.setString(5, ( ms.isArrayElement ? "1" : "0" ) );
-//							ps.setInt(6, ms.elementCount);
-//							ps.setString(7, ms.totalTime+"");
-//							ps.setTimestamp(8, new java.sql.Timestamp(a.created.getTime()));
-//							ps.executeUpdate();
-//						}
-//					}
-//					ps.close();
-//					ps = null;
-//				} catch (SQLException ex) {
-//					ex.printStackTrace(System.err);
-//				} finally {
-//					if (ps != null) {
-//						try {
-//							ps.close();
-//						} catch (SQLException e) {
-//						}
-//					}
-//				}
-//			}
-//		}
-//	}
+	private final void addMapLog(final Connection con, final Access a) {
+
+		if (con != null) {
+			PreparedStatement ps = null;
+			try {
+				ps = con.prepareStatement(insertMapLog);
+				HashMap mapLogs = a.getMapStatistics();
+				if ( mapLogs != null ) {
+					// Loop over all map log.
+					Iterator iter = mapLogs.keySet().iterator();
+					while ( iter.hasNext() ) {
+						Integer id = (Integer) iter.next();
+						MapStatistics ms = (MapStatistics) mapLogs.get(id);
+						ps.setString(1, a.accessID);
+						ps.setInt(2, id.intValue());
+						ps.setInt(3, ms.levelId);
+						ps.setString(4, ( ms.mapName != null ? ms.mapName : "empty" ) );
+						ps.setString(5, ( ms.isArrayElement ? "1" : "0" ) );
+						ps.setInt(6, ms.elementCount);
+						ps.setString(7, ms.totalTime+"");
+						ps.setTimestamp(8, new java.sql.Timestamp(a.created.getTime()));
+						ps.executeUpdate();
+					}
+				}
+				ps.close();
+				ps = null;
+			} catch (SQLException ex) {
+				ex.printStackTrace(System.err);
+			} finally {
+				if (ps != null) {
+					try {
+						ps.close();
+					} catch (SQLException e) {
+					}
+				}
+			}
+		}
+
+	}
 	
 	/**
 	 * Add a new access object to the persistent Navajo store.
@@ -379,41 +380,46 @@ public final class OracleStore implements StoreInterface {
 							rs.next();
 							int cnt = rs.getInt("cnt"); 
 							rs.close();
+							
 							if ( cnt == 0 ) {
-								ps.setString(1, a.accessID);
-								ps.setString(2, a.rpcName);
-								ps.setString(3, a.rpcUser);
-								ps.setInt(4,    a.getThreadCount());
-								ps.setInt(5,    a.getTotaltime());
-								ps.setInt(6,    a.parseTime);
-								ps.setInt(7,    a.authorisationTime);
-								ps.setInt(8,    a.clientTime);
-								ps.setInt(9,    a.contentLength);
-								ps.setString(10, a.requestEncoding);
-								ps.setBoolean(11, a.compressedReceive);
-								ps.setBoolean(12, a.compressedSend);
-								ps.setString(13, a.ipAddress);
-								ps.setString(14, hostName);
-								ps.setTimestamp(15, new java.sql.Timestamp(a.created.getTime()));
-								ps.setString(16, a.getClientToken());
+								int index = 0;
+								ps.setString(++index, a.accessID);
+								ps.setString(++index, a.rpcName);
+								ps.setString(++index, a.rpcUser);
+								ps.setInt(++index,    a.getThreadCount());
+								ps.setDouble(++index, a.cpuload);
+								ps.setInt(++index,    a.getTotaltime());
+								ps.setInt(++index,    a.parseTime);
+								ps.setInt(++index,    a.authorisationTime);
+								ps.setInt(++index,    a.clientTime);
+								ps.setInt(++index,    a.contentLength);
+								ps.setString(++index, a.requestEncoding);
+								ps.setBoolean(++index, a.compressedReceive);
+								ps.setBoolean(++index, a.compressedSend);
+								ps.setString(++index, a.ipAddress);
+								ps.setString(++index, hostName);
+								ps.setTimestamp(++index, new java.sql.Timestamp(a.created.getTime()));
+								ps.setString(++index, a.getClientToken());
 								ps.executeUpdate();
 							} else {
 								// Update embryo.
-								psUpdate.setString(1, a.rpcName);
-								psUpdate.setString(2, a.rpcUser);
-								psUpdate.setInt(3, a.getThreadCount());
-								psUpdate.setInt(4, a.getTotaltime());
-								psUpdate.setInt(5, a.parseTime);
-								psUpdate.setInt(6, a.authorisationTime);
-								psUpdate.setInt(7,    a.contentLength);							
-								psUpdate.setString(8, a.requestEncoding);
-								psUpdate.setBoolean(9, a.compressedReceive);
-								psUpdate.setBoolean(10, a.compressedSend);
-								psUpdate.setString(11, a.ipAddress);
-								psUpdate.setString(12, hostName);
-								psUpdate.setTimestamp(13, new java.sql.Timestamp(a.created.getTime()));
-								psUpdate.setString(14, a.getClientToken());
-								psUpdate.setString(15, a.accessID);
+								int index = 0;
+								psUpdate.setString(++index, a.rpcName);
+								psUpdate.setString(++index, a.rpcUser);
+								psUpdate.setInt(++index, a.getThreadCount());
+								psUpdate.setDouble(++index, a.getCpuload());
+								psUpdate.setInt(++index, a.getTotaltime());
+								psUpdate.setInt(++index, a.parseTime);
+								psUpdate.setInt(++index, a.authorisationTime);
+								psUpdate.setInt(++index,    a.contentLength);							
+								psUpdate.setString(++index, a.requestEncoding);
+								psUpdate.setBoolean(++index, a.compressedReceive);
+								psUpdate.setBoolean(++index, a.compressedSend);
+								psUpdate.setString(++index, a.ipAddress);
+								psUpdate.setString(++index, hostName);
+								psUpdate.setTimestamp(++index, new java.sql.Timestamp(a.created.getTime()));
+								psUpdate.setString(++index, a.getClientToken());
+								psUpdate.setString(++index, a.accessID);
 								int x = psUpdate.executeUpdate();
 							}
 							
@@ -440,9 +446,9 @@ public final class OracleStore implements StoreInterface {
 							
 						}
 						
-//						if (a.getMapStatistics() != null) {
-//							addMapLog(con, a);
-//						}
+						if (a.getMapStatistics() != null) {
+							addMapLog(con, a);
+						}
 					}
 					
 				}

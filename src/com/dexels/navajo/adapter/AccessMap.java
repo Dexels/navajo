@@ -118,6 +118,7 @@ public final class AccessMap implements Mappable {
         addProperty(user, "User", myAccess.rpcUser, Property.STRING_PROPERTY, 50);
         addProperty(user, "Webservice", myAccess.rpcName, Property.STRING_PROPERTY, 50);
         addProperty(user, "AccessId", myAccess.accessID, Property.STRING_PROPERTY, 50);
+        addProperty(user, "Stacktrace", myAccess.getCompiledScript().getStackTrace(), Property.MEMO_PROPERTY, 4096);
         Message currentMap = getMessage(user, "CurrentMap");
         MappableTreeNode currentNode = getCurrentMap();
         if (currentNode != null) {
