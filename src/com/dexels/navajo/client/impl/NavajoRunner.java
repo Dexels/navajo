@@ -81,10 +81,10 @@ public class NavajoRunner {
 			Navajo reply = dci.doSimpleSend(n,script);
 
 			if (sourceTml!=null) {
-				reply.getHeader().setAttribute("sourceScript", sourceTmlName);
+				reply.getHeader().setHeaderAttribute("sourceScript", sourceTmlName);
                 
             }
-			reply.getHeader().setAttribute("local","true");
+			reply.getHeader().setHeaderAttribute("local","true");
 			
 //			Navajo reply = NavajoFactory.getInstance().createNavajo();
 //			Access a = new Access(1,2,3,"Eclipse Developer","plug1n","3cl1ps3","localhost","localhost",false,cf);

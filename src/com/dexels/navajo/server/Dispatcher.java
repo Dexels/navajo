@@ -403,7 +403,7 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
 		Header h = in.getHeader();
 		if (h!=null) {
 			// Process client token:
-			String clientToken = h.getAttribute("clientToken");
+			String clientToken = h.getHeaderAttribute("clientToken");
 			if (clientToken!=null) {
 				access.setClientToken(clientToken);
 			}

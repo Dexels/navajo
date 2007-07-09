@@ -24,7 +24,7 @@ public abstract class BaseDescriptionProvider implements DescriptionProviderInte
 
 
 	public void updatePropertyDescriptions(Navajo in, Navajo out) throws NavajoException {
-		String locale = in.getHeader().getAttribute("locale");
+		String locale = in.getHeader().getHeaderAttribute("locale");
 		//System.err.println("Locale: "+locale);
 		if (locale==null) {
 			return;
@@ -35,14 +35,14 @@ public abstract class BaseDescriptionProvider implements DescriptionProviderInte
 			System.err.println("No IN header found. Thats is weird");
 			return;
 		} else {
-			outHeader.setAttribute("locale", locale);
+			outHeader.setHeaderAttribute("locale", locale);
 		}
 		 
 		if(outHeader==null) {
 			System.err.println("No header found. Thats a problem");
 //			outHeader = NavajoFactory.getInstance().createHeader(in, locale, locale, locale, getCacheSize())
 		} else {
-			outHeader.setAttribute("locale", locale);
+			outHeader.setHeaderAttribute("locale", locale);
 		}
 //		System.err.println("Updating navajo. Locale: "+locale);
 //		System.err.println("user: "+in.getHeader().getRPCUser());

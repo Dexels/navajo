@@ -261,13 +261,13 @@ public final class Access implements java.io.Serializable, Mappable {
 
 	public void storeStatistics(Header h) {
 		if (h!=null) {
-			h.setAttribute("accessId", this.accessID);
-			h.setAttribute("serverTime",""+getTotaltime());
-			h.setAttribute("authorisationTime",""+authorisationTime);
-			h.setAttribute("requestParseTime",""+parseTime);
-			h.setAttribute("processingTime",""+processingTime);
-			h.setAttribute("threadCount", this.threadCount+"");
-			h.setAttribute("cpuload", cpuload+"");
+			h.setHeaderAttribute("accessId", this.accessID);
+			h.setHeaderAttribute("serverTime",""+getTotaltime());
+			h.setHeaderAttribute("authorisationTime",""+authorisationTime);
+			h.setHeaderAttribute("requestParseTime",""+parseTime);
+			h.setHeaderAttribute("processingTime",""+processingTime);
+			h.setHeaderAttribute("threadCount", this.threadCount+"");
+			h.setHeaderAttribute("cpuload", cpuload+"");
 		}
 	}
 
