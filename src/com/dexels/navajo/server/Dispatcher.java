@@ -1200,7 +1200,7 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
     finally {
     	
     	
-    	if ( access != null && !scheduledWebservice ) {
+    	if ( access != null && !scheduledWebservice && !isSpecialwebservice(rpcName) ) {
     		access.setInDoc(inMessage);
     		// Register webservice call to WebserviceListener if it was not a scheduled webservice.
     		WebserviceListenerFactory.getInstance().afterWebservice(rpcName, access);
@@ -1317,7 +1317,7 @@ private void appendServerBroadCast(Access a, Navajo in, Header h) {
    * @param name
    * @return
    */
-  private final boolean isSpecialwebservice(String name) {
+  public static final boolean isSpecialwebservice(String name) {
 	  
 	  if (name == null) {
 		  return false;
