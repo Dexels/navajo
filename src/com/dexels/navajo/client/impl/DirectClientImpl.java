@@ -126,10 +126,10 @@ private final String mySessionToken;
   public final Navajo doSimpleSend(Navajo out, String server, String method,
                              String user, String password,
                              long expirationInterval) throws ClientException {
-    return doSimpleSend(out, server, method, user, password, expirationInterval, false);
+    return doSimpleSend(out, server, method, user, password, expirationInterval, false, false);
   }
 
-  public final Navajo doSimpleSend(Navajo out, String server, String method, String user, String password, long expirationInterval, boolean useCompression) throws ClientException {
+  public final Navajo doSimpleSend(Navajo out, String server, String method, String user, String password, long expirationInterval, boolean useCompression, boolean allowPreparseProxy) throws ClientException {
     fireActivityChanged(true, method);
     String cacheKey = out.persistenceKey();
     Navajo reply = (Navajo)serviceCache.get(cacheKey);
@@ -300,12 +300,12 @@ private final String mySessionToken;
   }
 
   public final Navajo doSimpleSend(Navajo n, String service, long expirationInterval) throws ClientException {
-    return doSimpleSend(n, "", service, getUsername(), getPassword(), expirationInterval, false);
+    return doSimpleSend(n, "", service, getUsername(), getPassword(), expirationInterval, false, false);
   }
 
 
   public final Navajo doSimpleSend(Navajo n, String service) throws ClientException {
-    return doSimpleSend(n, "", service, getUsername(), getPassword(), -1, false);
+    return doSimpleSend(n, "", service, getUsername(), getPassword(), -1, false, false);
   }
 
   public final Navajo doSimpleSend(Navajo n, String method, ConditionErrorHandler v) throws
