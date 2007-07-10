@@ -325,7 +325,7 @@ public class NavajoMap extends AsyncMappable  implements Mappable {
         if (keyStore != null) {
           nc.setSecure(keyStore, keyPassword, true);
         }
-        inDoc = nc.doSimpleSend(outDoc, server, method, username, password, -1, true);
+        inDoc = nc.doSimpleSend(outDoc, server, method, username, password, -1, true, false);
       }
       else {
         Header h = outDoc.getHeader();
