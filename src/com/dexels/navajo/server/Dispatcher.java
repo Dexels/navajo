@@ -1200,11 +1200,14 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
     finally {
     	
     	
-    	if ( access != null && !scheduledWebservice && !isSpecialwebservice(rpcName) ) {
+    	if ( access != null && !scheduledWebservice ) {
     		access.setInDoc(inMessage);
-    		// Register webservice call to WebserviceListener if it was not a scheduled webservice.
-    		WebserviceListenerFactory.getInstance().afterWebservice(rpcName, access);
-
+    		
+    		if (!isSpecialwebservice(rpcName)  ) {
+    			// Register webservice call to WebserviceListener if it was not a scheduled webservice.
+    			WebserviceListenerFactory.getInstance().afterWebservice(rpcName, access);
+    		}
+    		
     		// Remove access object from set of active webservices first.
     		synchronized ( accessSet ) {
     			accessSet.remove(access);
@@ -1219,11 +1222,12 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
     		}
 
     		updatePropertyDescriptions(inMessage,outMessage);
-
+    		
     		access.storeStatistics(h);
     		// Store access if navajostore is enabled and if webservice is not in list of special webservices.
     		if (    getNavajoConfig().getStatisticsRunner() != null &&  
-    				getNavajoConfig().getStatisticsRunner().isEnabled() ) {
+    				getNavajoConfig().getStatisticsRunner().isEnabled() &&
+    				!isSpecialwebservice(rpcName)) {
     			// Give asynchronous statistics runner a new access object to persist.
     			getNavajoConfig().getStatisticsRunner().addAccess(access, myException, null);
     		}
