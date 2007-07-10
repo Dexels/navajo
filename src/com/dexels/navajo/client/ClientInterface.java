@@ -31,7 +31,7 @@ public interface ClientInterface {
 
   public Navajo doSimpleSend(Navajo out, String server, String method, String user, String password, long expirationInterval) throws ClientException;
 
-  public Navajo doSimpleSend(Navajo out, String server, String method, String user, String password, long expirationInterval, boolean useCompression) throws ClientException;
+  public Navajo doSimpleSend(Navajo out, String server, String method, String user, String password, long expirationInterval, boolean useCompression, boolean allowPreparseProxy) throws ClientException;
 
   public Navajo doSimpleSend(Navajo out, String method) throws ClientException;
   

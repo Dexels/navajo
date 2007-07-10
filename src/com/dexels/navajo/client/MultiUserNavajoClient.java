@@ -45,7 +45,7 @@ public class MultiUserNavajoClient   {
 		 setServers(servers);
 	 }
 	 
-	 public void remoteDispatch(String server, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	 public void remoteDispatch(String server, HttpServletRequest request, HttpServletResponse response, String sendEncoding, String recvEncoding) throws Exception {
 		 URL url = new URL("http://" + server);
 
 		 HttpURLConnection con = null;
@@ -62,6 +62,15 @@ public class MultiUserNavajoClient   {
 			 .println("setConnectTimeout does not exist, upgrade to java 1.5+");
 		 }
 
+		  
+		 if ( sendEncoding != null ) {
+			 con.setRequestProperty("Accept-Encoding", sendEncoding);
+		 }
+		 if ( recvEncoding != null ) {
+			 con.setRequestProperty("Content-Encoding", recvEncoding);
+		 }
+		 
+		  
 		 con.setDoOutput(true);
 		 con.setDoInput(true);
 		 con.setUseCaches(false);

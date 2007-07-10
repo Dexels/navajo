@@ -33,6 +33,7 @@ import com.dexels.navajo.client.impl.*;
 import com.jcraft.jzlib.JZlib;
 import com.jcraft.jzlib.ZInputStream;
 import com.jcraft.jzlib.ZOutputStream;
+import com.sun.org.apache.bcel.internal.generic.AllocationInstruction;
 
 //import com.dexels.navajo.client.impl.*;
 
@@ -431,7 +432,7 @@ public class NavajoClient implements ClientInterface {
 //    catch (NavajoException ex) {
 //      ex.printStackTrace();
 //    }
-    return doSimpleSend(out, getCurrentHost(), method, username, password, expirationInterval, true);
+    return doSimpleSend(out, getCurrentHost(), method, username, password, expirationInterval, true, false);
   }
 
   /**
@@ -564,7 +565,7 @@ public class NavajoClient implements ClientInterface {
    * @param useCompression boolean
    */
   
-  protected InputStream doTransaction(String name, Navajo d, boolean useCompression, HttpURLConnection myCon) throws IOException, ClientException, NavajoException, javax.net.ssl.SSLHandshakeException {
+  protected InputStream doTransaction(String name, Navajo d, boolean useCompression, boolean forcePreparseProxy, HttpURLConnection myCon) throws IOException, ClientException, NavajoException, javax.net.ssl.SSLHandshakeException {
     URL url;
     //useCompression = false;
     
@@ -608,7 +609,9 @@ public class NavajoClient implements ClientInterface {
     con.setUseCaches(false);
     //con.setRequestProperty("Connection", "keep-alive");
     con.setRequestProperty("Content-type", "text/xml; charset=UTF-8");
-
+    if ( forcePreparseProxy ) {
+    	con.setRequestProperty("Navajo-Preparse", "true");
+    }
     try {
     	java.lang.reflect.Method chunked = con.getClass().getMethod("setChunkedStreamingMode", new Class[]{int.class});
     	chunked.invoke( con, new Object[]{new Integer(1024)});
@@ -683,7 +686,7 @@ public class NavajoClient implements ClientInterface {
    * @return Navajo
    */
   public final Navajo doSimpleSend(Navajo out, String server, String method, String user, String password, long expirationInterval) throws ClientException {
-    return doSimpleSend(out, server, method, user, password, expirationInterval, true);
+    return doSimpleSend(out, server, method, user, password, expirationInterval, true, false);
   }
 
   //   navajo://frank:aap@192.0.0.1/InitUpdateMember
@@ -724,7 +727,7 @@ public class NavajoClient implements ClientInterface {
    * @throws ClientException
    * @return Navajo
    */
-  public final Navajo doSimpleSend(Navajo out, String server, String method, String user, String password, long expirationInterval, boolean useCompression) throws ClientException {
+  public final Navajo doSimpleSend(Navajo out, String server, String method, String user, String password, long expirationInterval, boolean useCompression, boolean allowPreparseProxy) throws ClientException {
     // NOTE: prefix persistence key with method, because same Navajo object could be used as a request
     // for multiple methods!
 
@@ -819,7 +822,7 @@ public class NavajoClient implements ClientInterface {
         long timeStamp = System.currentTimeMillis();
         
         try {	
-        	in = doTransaction(server, out, useCompression, myCon);
+        	in = doTransaction(server, out, useCompression, allowPreparseProxy, myCon);
         	n = NavajoFactory.getInstance().createNavajo(in);
         }
         catch (javax.net.ssl.SSLException ex) {
@@ -836,7 +839,7 @@ public class NavajoClient implements ClientInterface {
         }
         catch (java.net.SocketException uhe) {
           n = NavajoFactory.getInstance().createNavajo();
-          in = retryTransaction(server, out, useCompression, retryAttempts, retryInterval, n); // lees uit resource
+          in = retryTransaction(server, out, useCompression, allowPreparseProxy, retryAttempts, retryInterval, n); // lees uit resource
 
           if (in != null) {
             n = null;
@@ -852,7 +855,7 @@ public class NavajoClient implements ClientInterface {
         	readErrorStream(myCon);
           System.err.println("Generic IOException: "+uhe.getMessage()+". Retrying without compression...");
           n = NavajoFactory.getInstance().createNavajo();
-          in = retryTransaction(server, out, false, retryAttempts, retryInterval, n); // lees uit resource
+          in = retryTransaction(server, out, false, allowPreparseProxy, retryAttempts, retryInterval, n); // lees uit resource
 
           if (in != null) {
             n = null;
@@ -990,7 +993,7 @@ public class NavajoClient implements ClientInterface {
 
   }
 
-private final InputStream retryTransaction(String server, Navajo out, boolean useCompression, int attemptsLeft, long interval, Navajo n) throws Exception {
+private final InputStream retryTransaction(String server, Navajo out, boolean useCompression, boolean allowPreparseProxy, int attemptsLeft, long interval, Navajo n) throws Exception {
 	InputStream in = null;
     
     globalRetryCounter++;
@@ -1014,7 +1017,7 @@ private final InputStream retryTransaction(String server, Navajo out, boolean us
     	} catch (InterruptedException e) {
     		e.printStackTrace();
     	}
-    	in = doTransaction(server, out, useCompression, myCon);
+    	in = doTransaction(server, out, useCompression, allowPreparseProxy, myCon);
     	System.err.println("It worked!  the inputstream is: " + in);
     	return in;
     }
@@ -1036,7 +1039,7 @@ private final InputStream retryTransaction(String server, Navajo out, boolean us
     		generateConnectionError(n, 4444, "Could not connect to server (network problem?) " + uhe.getMessage());
     	}
     	else {
-    		return retryTransaction(server, out, useCompression, attemptsLeft, interval, n);
+    		return retryTransaction(server, out, useCompression, allowPreparseProxy, attemptsLeft, interval, n);
     	}
     }
     catch (IOException uhe) {
@@ -1052,7 +1055,7 @@ private final InputStream retryTransaction(String server, Navajo out, boolean us
     		System.err.println("---> Got a 500 server exception");
     		System.err.println("Sending: ");
     		out.write(System.err);
-    		return retryTransaction(server, out, false, attemptsLeft, interval, n);
+    		return retryTransaction(server, out, false, allowPreparseProxy, attemptsLeft, interval, n);
     	}
     }
     return in;
@@ -1621,7 +1624,7 @@ private final void ping() {
 						for (int i = 0; i < serverUrls.length; i++) {
 							try {
 								HttpURLConnection myCon = null;
-								InputStream in  = doTransaction(serverUrls[i], out, false, myCon);
+								InputStream in  = doTransaction(serverUrls[i], out, false, false, myCon);
 								Navajo n = NavajoFactory.getInstance().createNavajo(in);
 								in.close();
 								Header h = n.getHeader();
@@ -1802,7 +1805,7 @@ public final void switchServer(int startIndex, boolean forceChange) {
 //			    catch (NavajoException ex) {
 //			      ex.printStackTrace();
 //			    }
-			    return doSimpleSend(out, getCurrentHost(serverIndex), method, username, password, -1, true);
+			    return doSimpleSend(out, getCurrentHost(serverIndex), method, username, password, -1, true, true);
 		}
 
 	public int getAsyncServerIndex() {
