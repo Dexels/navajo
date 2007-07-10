@@ -150,7 +150,7 @@ public final class OracleStore implements StoreInterface {
 				ps.close();
 				ps = null;
 			} catch (SQLException ex) {
-				ex.printStackTrace(System.err);
+				//ex.printStackTrace(System.err);
 			} finally {
 				if (ps != null) {
 					try {
@@ -423,6 +423,10 @@ public final class OracleStore implements StoreInterface {
 								int x = psUpdate.executeUpdate();
 							}
 							
+							if (a.getMapStatistics() != null) {
+								addMapLog(con, a);
+							}
+							
 //							 Only log details if exception occured or if full accesslog monitoring is enabled.
 							if (a.getException() != null || Dispatcher.getInstance().getNavajoConfig().needsFullAccessLog(a) ) {
 								addLog(con, a);
@@ -446,9 +450,7 @@ public final class OracleStore implements StoreInterface {
 							
 						}
 						
-						if (a.getMapStatistics() != null) {
-							addMapLog(con, a);
-						}
+						
 					}
 					
 				}
