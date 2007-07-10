@@ -1620,7 +1620,8 @@ private final void ping() {
 				out.addHeader(outHeader);
 				while (!killed) {
 					try {
-						Thread.sleep(10000);
+						Thread.sleep(60000);
+						System.err.println("servers: " + serverUrls.length);
 						for (int i = 0; i < serverUrls.length; i++) {
 							try {
 								HttpURLConnection myCon = null;
@@ -1630,11 +1631,14 @@ private final void ping() {
 								Header h = n.getHeader();
 								String load =  h.getHeaderAttribute("cpuload");
 								serverLoads[i] = Double.parseDouble(load);
+								System.err.println(serverUrls[i] + "=" + serverLoads[i]);
 							} catch (Throwable e) {
+								e.printStackTrace(System.err);
 							}
 							
 						}
 					} catch (InterruptedException e) {
+						e.printStackTrace(System.err);
 					}
 				}
 
