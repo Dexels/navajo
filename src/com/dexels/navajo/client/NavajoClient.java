@@ -1616,7 +1616,7 @@ private final void ping() {
 
 				System.err.println("Started ping thread.");
 				Navajo out = NavajoFactory.getInstance().createNavajo();
-				Header outHeader = NavajoFactory.getInstance().createHeader(out, "navajo_logon", "ROOT", "", -1);
+				Header outHeader = NavajoFactory.getInstance().createHeader(out, "navajo_ping", "NAVAJO", "", -1);
 				out.addHeader(outHeader);
 				while (!killed) {
 					try {
