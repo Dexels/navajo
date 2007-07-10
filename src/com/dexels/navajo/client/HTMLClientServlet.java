@@ -167,7 +167,7 @@ public class HTMLClientServlet extends HttpServlet {
                 //resultDoc = gc.doMethod("navajo_logon_send", "ANONYMOUS", "ANONYMOUS", tbMessage, navajoServer, false, "", "", -1, request,
                 //                        false, false, useCompression);
 
-                resultDoc = gc.doSimpleSend(tbMessage, navajoServer, "navajo_logon_send", "ANONYMOUS", "ANONYMOUS", -1, useCompression);
+                resultDoc = gc.doSimpleSend(tbMessage, navajoServer, "navajo_logon_send", "ANONYMOUS", "ANONYMOUS", -1, useCompression, false);
                 //resultDoc.write(System.err);                
                 Message error = resultDoc.getMessage("error");
 
@@ -202,7 +202,7 @@ public class HTMLClientServlet extends HttpServlet {
 
                 //System.err.println("BEFORE CALLING navajo_logon");
 
-                resultDoc = gc.doSimpleSend(tbMessage, navajoServer, "navajo_logon", "ANONYMOUS", "ANONYMOUS", -1, useCompression);
+                resultDoc = gc.doSimpleSend(tbMessage, navajoServer, "navajo_logon", "ANONYMOUS", "ANONYMOUS", -1, useCompression, false);
  
                 //System.err.println("AFTER CALLING navajo_logon");
                 messages = resultDoc.getAllMessages();
@@ -350,7 +350,7 @@ public class HTMLClientServlet extends HttpServlet {
                     //tbMessage.write(System.err);
              	
                 	
-                    resultDoc = gc.doSimpleSend(tbMessage, navajoServer, command, ident.username, ident.password, -1, useCompression);
+                    resultDoc = gc.doSimpleSend(tbMessage, navajoServer, command, ident.username, ident.password, -1, useCompression, false);
 
                 } catch (com.dexels.navajo.client.ClientException ce) {
                     System.err.println(ce.getMessage());

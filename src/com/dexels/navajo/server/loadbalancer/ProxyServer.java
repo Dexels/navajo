@@ -107,152 +107,161 @@ public class ProxyServer extends HttpServlet {
 	}
 	
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws IOException, ServletException {
+	throws IOException, ServletException {
 
 		Date created = new java.util.Date();
 		long start = created.getTime();
 
 		String sendEncoding = request.getHeader("Accept-Encoding");
 		String recvEncoding = request.getHeader("Content-Encoding");
-
+		String preParse = request.getHeader("Navajo-Preparse");
+		
 		BufferedReader r = null;
 		BufferedWriter out = null;
 		Navajo outDoc = null;
 		Navajo in = null;
 		boolean hasCallBack = false;
 		String callbackKey = null;
-		
-//		MultiUserNavajoClient nc = new MultiUserNavajoClient();
-//		try {
-//			nc.remoteDispatch(nc.getCurrentHost(), request, response);
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace(System.err);
-//			throw new ServletException(e);
-//		}
-		try {
 
-			if (sendEncoding != null && sendEncoding.equals(COMPRESS_JZLIB)) {
-				r = new BufferedReader(new java.io.InputStreamReader(new ZInputStream(request.getInputStream())));
-			} else if (sendEncoding != null
-					&& sendEncoding.equals(COMPRESS_GZIP)) {
-				r = new BufferedReader(new java.io.InputStreamReader(new java.util.zip.GZIPInputStream(request.getInputStream()), "UTF-8"));
-			} else {
-				r = new BufferedReader(request.getReader());
-			}
-			
-			long decompress = System.currentTimeMillis();
-			
-			in = NavajoFactory.getInstance().createNavajo(r);
-			r.close();
-			
-			long parse = System.currentTimeMillis();
-			
-			r = null;
+		/*
+		 * If preparse was not defined, directly pass request, response to proper server.
+		 * If preparse was defined, parse request and call a normal doSimpleSend.
+		 */
+		if ( preParse == null ) {
+			try {
+				MultiUserNavajoClient nc = new MultiUserNavajoClient();
+				nc.remoteDispatch(nc.getCurrentHost(), request, response, sendEncoding, recvEncoding);
+				System.err.println("PROXY took " + ( System.currentTimeMillis() - start )  + " millis");
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace(System.err);
+				throw new ServletException(e);
+			} 
+		} else {
+			try {
 
-			if (in == null) {
-				throw new ServletException("Invalid request.");
-			}
-
-			Header header = in.getHeader();
-			if (header == null) {
-				throw new ServletException("Empty Navajo header.");
-			}
-
-			MultiUserNavajoClient nc = new MultiUserNavajoClient();
-			String server = nc.getCurrentHost();
-
-			// Check for asynchronous adapters. If they exist, make sure that
-			// same server is used for subsequent calls.
-			
-			if (in.getHeader().hasCallBackPointers()) {
-				hasCallBack = true;
-				callbackKey = in.getHeader().getCallBackSignature();
-				if (callbackSet.containsKey(callbackKey)) {
-					server = callbackSet.get(callbackKey);
-					System.err.println("USING SAME SERVER: " + server + "@" + callbackKey);
-				} 
-			}
-
-			outDoc = nc.doSimpleSend(in, server);
-		
-			long serviceCall = System.currentTimeMillis();
-			
-            // Check for asynchronous adapters. If they exist, make sure that
-			// same server is used for subsequent calls. 
-			if ( outDoc != null && outDoc.getHeader().hasCallBackPointers() ) {
-				callbackKey = outDoc.getHeader().getCallBackSignature();
-				if ( !callbackSet.containsKey(callbackKey)) {
-					callbackSet.put(callbackKey, server);
-					System.err.println("PUTTING NEW ASYNC: " + server + "@" + callbackKey + " IN CALLBACKSET()");
+				if (sendEncoding != null && sendEncoding.equals(COMPRESS_JZLIB)) {
+					r = new BufferedReader(new java.io.InputStreamReader(new ZInputStream(request.getInputStream())));
+				} else if (sendEncoding != null
+						&& sendEncoding.equals(COMPRESS_GZIP)) {
+					r = new BufferedReader(new java.io.InputStreamReader(new java.util.zip.GZIPInputStream(request.getInputStream()), "UTF-8"));
+				} else {
+					r = new BufferedReader(request.getReader());
 				}
-			}
-			
-			response.setContentType("text/xml; charset=UTF-8");
 
-			if (recvEncoding != null && recvEncoding.equals(COMPRESS_JZLIB)) {
-				response.setHeader("Content-Encoding", COMPRESS_JZLIB);
-				out = new BufferedWriter(new OutputStreamWriter(
-						new ZOutputStream(response.getOutputStream(),
-								JZlib.Z_BEST_SPEED), "UTF-8"));
-			} else if (recvEncoding != null
-					&& recvEncoding.equals(COMPRESS_GZIP)) {
-				response.setHeader("Content-Encoding", COMPRESS_GZIP);
-				out = new BufferedWriter(new OutputStreamWriter(
-						new java.util.zip.GZIPOutputStream(response
-								.getOutputStream()), "UTF-8"));
-			} else {
-				out = new BufferedWriter(response.getWriter());
-			}
+				long decompress = System.currentTimeMillis();
 
-			outDoc.write(out);
-			out.flush();
-			out.close();
+				in = NavajoFactory.getInstance().createNavajo(r);
+				r.close();
 
-			long end = System.currentTimeMillis();
-			
-			long decompressTime = ( decompress - start);
-			long parseTime = ( parse - decompress );
-			long serviceTime = ( serviceCall - parse );
-			long compressTime = ( end - serviceCall );
-			long totalTime = ( end - start );
-			
-			System.err.println("PROXY for " + in.getHeader().getRPCName() + ". Decompress: " + decompressTime + ", Parstime: " + parseTime + ", Servicetime: " + serviceTime + 
-					"(" + Long.parseLong(outDoc.getHeader().getHeaderAttribute("serverTime")) + "), CompressTime: " + compressTime + ", Totaltime: " +  totalTime);
-			
-			//System.err.println("PROXY: " + in.getHeader().getRPCName() + " took  " + ( end - Long.parseLong(outDoc.getHeader().getHeaderAttribute("serverTime")))  + " millis" + "( server time was: " + Long.parseLong(outDoc.getHeader().getHeaderAttribute("serverTime")) + "), CBSIZE: " + callbackSet.size());
-			out = null;
+				long parse = System.currentTimeMillis();
 
-		} catch (Throwable e) {
-			e.printStackTrace(System.err);
-			if (e instanceof FatalException) {
-				FatalException fe = (FatalException) e;
-				if (fe.getMessage().equals("500.13")) {
-					// Server too busy.
-					throw new ServletException("500.13");
+				r = null;
+
+				if (in == null) {
+					throw new ServletException("Invalid request.");
 				}
-			}
-			throw new ServletException(e);
-		} finally {
-			// Remove callback keys if async was finished or callback was null.
-			if (hasCallBack) {
-				if (in != null && outDoc == null || outDoc.getHeader().isCallBackFinished() ) {
-					System.err.println("REMOVING FROM CALLBACKSET: " + callbackKey);
-					callbackSet.remove(callbackKey);
+
+				Header header = in.getHeader();
+				if (header == null) {
+					throw new ServletException("Empty Navajo header.");
 				}
-			}
-			if (r != null) {
-				try {
-					r.close();
-				} catch (Exception e) {
-					// NOT INTERESTED.
+
+				MultiUserNavajoClient nc = new MultiUserNavajoClient();
+				String server = nc.getCurrentHost();
+
+				// Check for asynchronous adapters. If they exist, make sure that
+				// same server is used for subsequent calls.
+
+				if (in.getHeader().hasCallBackPointers()) {
+					hasCallBack = true;
+					callbackKey = in.getHeader().getCallBackSignature();
+					if (callbackSet.containsKey(callbackKey)) {
+						server = callbackSet.get(callbackKey);
+						System.err.println("USING SAME SERVER: " + server + "@" + callbackKey);
+					} 
 				}
-			}
-			if (out != null) {
-				try {
-					out.close();
-				} catch (Exception e) {
-					// NOT INTERESTED.
+
+				outDoc = nc.doSimpleSend(in, server);
+
+				long serviceCall = System.currentTimeMillis();
+
+				// Check for asynchronous adapters. If they exist, make sure that
+				// same server is used for subsequent calls. 
+				if ( outDoc != null && outDoc.getHeader().hasCallBackPointers() ) {
+					callbackKey = outDoc.getHeader().getCallBackSignature();
+					if ( !callbackSet.containsKey(callbackKey)) {
+						callbackSet.put(callbackKey, server);
+						System.err.println("PUTTING NEW ASYNC: " + server + "@" + callbackKey + " IN CALLBACKSET()");
+					}
+				}
+
+				response.setContentType("text/xml; charset=UTF-8");
+
+				if (recvEncoding != null && recvEncoding.equals(COMPRESS_JZLIB)) {
+					response.setHeader("Content-Encoding", COMPRESS_JZLIB);
+					out = new BufferedWriter(new OutputStreamWriter(
+							new ZOutputStream(response.getOutputStream(),
+									JZlib.Z_BEST_SPEED), "UTF-8"));
+				} else if (recvEncoding != null
+						&& recvEncoding.equals(COMPRESS_GZIP)) {
+					response.setHeader("Content-Encoding", COMPRESS_GZIP);
+					out = new BufferedWriter(new OutputStreamWriter(
+							new java.util.zip.GZIPOutputStream(response
+									.getOutputStream()), "UTF-8"));
+				} else {
+					out = new BufferedWriter(response.getWriter());
+				}
+
+				outDoc.write(out);
+				out.flush();
+				out.close();
+
+				long end = System.currentTimeMillis();
+
+				long decompressTime = ( decompress - start);
+				long parseTime = ( parse - decompress );
+				long serviceTime = ( serviceCall - parse );
+				long compressTime = ( end - serviceCall );
+				long totalTime = ( end - start );
+
+				System.err.println("PROXY for " + in.getHeader().getRPCName() + ". Decompress: " + decompressTime + ", Parstime: " + parseTime + ", Servicetime: " + serviceTime + 
+						"(" + Long.parseLong(outDoc.getHeader().getHeaderAttribute("serverTime")) + "), CompressTime: " + compressTime + ", Totaltime: " +  totalTime);
+
+				//System.err.println("PROXY: " + in.getHeader().getRPCName() + " took  " + ( end - Long.parseLong(outDoc.getHeader().getHeaderAttribute("serverTime")))  + " millis" + "( server time was: " + Long.parseLong(outDoc.getHeader().getHeaderAttribute("serverTime")) + "), CBSIZE: " + callbackSet.size());
+				out = null;
+
+			} catch (Throwable e) {
+				e.printStackTrace(System.err);
+				if (e instanceof FatalException) {
+					FatalException fe = (FatalException) e;
+					if (fe.getMessage().equals("500.13")) {
+						// Server too busy.
+						throw new ServletException("500.13");
+					}
+				}
+				throw new ServletException(e);
+			} finally {
+				// Remove callback keys if async was finished or callback was null.
+				if (hasCallBack) {
+					if (in != null && outDoc == null || outDoc.getHeader().isCallBackFinished() ) {
+						System.err.println("REMOVING FROM CALLBACKSET: " + callbackKey);
+						callbackSet.remove(callbackKey);
+					}
+				}
+				if (r != null) {
+					try {
+						r.close();
+					} catch (Exception e) {
+						// NOT INTERESTED.
+					}
+				}
+				if (out != null) {
+					try {
+						out.close();
+					} catch (Exception e) {
+						// NOT INTERESTED.
+					}
 				}
 			}
 		}
