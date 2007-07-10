@@ -1222,6 +1222,7 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
     		}
 
     		updatePropertyDescriptions(inMessage,outMessage);
+    	
     		
     		access.storeStatistics(h);
     		// Store access if navajostore is enabled and if webservice is not in list of special webservices.
