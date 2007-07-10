@@ -163,7 +163,11 @@ public interface Header extends java.io.Serializable {
      * Remove ALL callback pointers.
      */
     public void removeCallBackPointers();
+    
+    public boolean hasCallBackPointers();
 
+    public String getCallBackSignature();
+    
 //    /**
 //    * Serialize a header as a string to a particular writer.
 //    *

@@ -51,6 +51,15 @@ public class BaseCallbackImpl extends BaseNode {
     public ArrayList getObjects() {
     	return myObjects;
     }
+    
+    public String getSignature() {
+    	StringBuffer sb = new StringBuffer();
+    	for (int i = 0; i < myObjects.size(); i++ ) {
+    		BaseObjectImpl obj = (BaseObjectImpl) myObjects.get(i);
+    		sb.append(obj.getName() +"-"+obj.getRef());
+    	}
+    	return sb.toString();
+    }
 }
 
 // EOF $RCSfile$ //

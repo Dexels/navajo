@@ -432,4 +432,16 @@ public Map getAttributes() {
 	return new HashMap(attributeMap);
 }
 
+public boolean hasCallBackPointers() {
+	if ( getCallback() != null && getCallback().getChildren().size() > 0) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+public String getCallBackSignature() {
+	return getRPCUser() + "@" + getRPCName() + "-" + getCallback().getSignature();
+}
+
 }

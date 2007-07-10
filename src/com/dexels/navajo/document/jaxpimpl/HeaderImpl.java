@@ -443,4 +443,16 @@ public final class HeaderImpl implements Header {
 		
 	}
 
+	public boolean hasCallBackPointers() {
+		 Element n = (Element)
+         XMLutils.findNode(ref, "callback");
+		 return ( n != null);
+	}
+
+	public String getCallBackSignature() {
+		Element n = (Element)
+		XMLutils.findNode(ref, "callback");
+		return n.toString();
+	}
+
 }
