@@ -8,7 +8,7 @@ import com.dexels.navajo.util.*;
 
 public class MaintainanceRequest extends Request {
 
-    public static final String NAVAJO_VERSION = "Navajo v2";
+    public static final String NAVAJO_VERSION = "Navajo ($Id$)";
 
     // Navajo method names
     public static final String METHOD_NAVAJO = "navajo";
