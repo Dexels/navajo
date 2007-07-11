@@ -18,8 +18,8 @@ public class FileStore implements MessageStore {
 	private static String path = null; 
 	private static String deadQueue = null;
 	private static Object semaphore = new Object();
-	private final HashSet currentObjects = new HashSet();
-	private Iterator objectPointer = null;
+	private final HashSet<File> currentObjects = new HashSet<File>();
+	private Iterator<File> objectPointer = null;
 	
 	public FileStore() {
 		synchronized (semaphore) {
@@ -52,8 +52,8 @@ public class FileStore implements MessageStore {
 
 	}
 	
-	public HashSet getQueuedAdapters() {
-		HashSet queuedAdapters = new HashSet();
+	public HashSet<QueuedAdapter> getQueuedAdapters() {
+		HashSet<QueuedAdapter> queuedAdapters = new HashSet<QueuedAdapter>();
 		synchronized ( path ) {
 			File queue = new File(path);
 			File [] files = queue.listFiles();
@@ -94,7 +94,7 @@ public class FileStore implements MessageStore {
 			return null;
 		}
 		Queable q = null;
-		File f = (File) objectPointer.next();
+		File f = objectPointer.next();
 		try {
 			NavajoObjectInputStream ois = new NavajoObjectInputStream(new FileInputStream(f), NavajoConfig.getInstance().getClassloader());
 			q = (Queable) ois.readObject();
@@ -176,6 +176,38 @@ public class FileStore implements MessageStore {
 	
 	public int getSize() {
 		return currentObjects.size();
+	}
+
+	public HashSet<QueuedAdapter> getDeadQueue() {
+
+		HashSet<QueuedAdapter> deadQueueAdapters = new HashSet<QueuedAdapter>();
+		synchronized (deadQueue) {
+			File queue = new File(deadQueue);
+			File[] files = queue.listFiles();
+
+			for (int i = 0; i < files.length; i++) {
+				File f = files[i];
+				if (f.isFile()) {
+
+					NavajoObjectInputStream ois;
+					try {
+						ois = new NavajoObjectInputStream(new FileInputStream(f), NavajoConfig.getInstance().getClassloader());
+						Queable q = (Queable) ois.readObject();
+						// Persist binary file references after reading object.
+						q.persistBinaries();
+						ois.close();
+						QueuedAdapter qa = new QueuedAdapter(q);
+						qa.ref = f.getAbsolutePath();
+						deadQueueAdapters.add(qa);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+		return deadQueueAdapters;
+
 	}
 
 }

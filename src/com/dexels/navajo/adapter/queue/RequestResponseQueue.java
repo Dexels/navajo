@@ -30,6 +30,7 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 	public int currentThreads = 0;
 	public QueuedAdapter [] runningAdapters;
 	public QueuedAdapter [] queuedAdapters;
+	public QueuedAdapter [] deadQueue;
 	
 	public String accessId;
 
@@ -51,7 +52,7 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 	 * @return
 	 */
 	public QueuedAdapter [] getQueuedAdapters(String a) {
-		ArrayList l = new ArrayList();
+		ArrayList<QueuedAdapter> l = new ArrayList<QueuedAdapter>();
 		RequestResponseQueue q = RequestResponseQueue.getInstance();
 		if ( q != null ) {
 			HashSet s = q.myStore.getQueuedAdapters();
@@ -68,18 +69,25 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 			return null;
 		}
 		queuedAdapters = new QueuedAdapter[l.size()];
-		queuedAdapters = (QueuedAdapter []) l.toArray(queuedAdapters);
+		queuedAdapters = l.toArray(queuedAdapters);
 		return queuedAdapters;
 	}
 	
 	public QueuedAdapter [] getQueuedAdapters() {
-		HashSet s = myStore.getQueuedAdapters();
+		HashSet<QueuedAdapter> s = instance.myStore.getQueuedAdapters();
 		queuedAdapters = new QueuedAdapter[s.size()];
-		queuedAdapters = (QueuedAdapter []) s.toArray(queuedAdapters);
+		queuedAdapters = s.toArray(queuedAdapters);
 		return queuedAdapters;
 
 	}
 		
+	public QueuedAdapter[] getDeadQueue() {
+		HashSet<QueuedAdapter> s = instance.myStore.getDeadQueue();
+		deadQueue = new QueuedAdapter[s.size()];
+		deadQueue = s.toArray(deadQueue);
+		return deadQueue;
+	}
+	
 	public void setUseQueue(boolean b) {
 		useQueue = b;
 	}
@@ -216,7 +224,7 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 	public void emptyQueue() {
 		try {
 			emptyQueue = true;
-			myStore.emptyQueue();
+			instance.myStore.emptyQueue();
 			while (doingWork) {
 				try {
 					Thread.sleep(100);
@@ -229,7 +237,7 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 	}
 	
 	public int getSize() {
-		return myStore.getSize();
+		return instance.myStore.getSize();
 	}
 
 	public void setMaxThreads(int t) {
@@ -255,4 +263,5 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 	public String getVERSION() {
 		return VERSION;
 	}
+
 }

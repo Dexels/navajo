@@ -46,5 +46,10 @@ public class MemoryStore implements MessageStore {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	public HashSet getDeadQueue() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 }

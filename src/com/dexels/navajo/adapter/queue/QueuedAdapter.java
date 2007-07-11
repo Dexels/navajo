@@ -1,6 +1,7 @@
 package com.dexels.navajo.adapter.queue;
 
 import java.io.File;
+import java.util.Date;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.mapping.Mappable;
@@ -24,7 +25,8 @@ public class QueuedAdapter extends Thread implements Mappable {
 	public String request;
 	public String ref;
 	public boolean delete;
-	
+	public String exception;
+	public Date created;
 	private long startTime;
 	protected Queable handler;
 	
@@ -123,5 +125,21 @@ public class QueuedAdapter extends Thread implements Mappable {
 	public void store() throws MappableException, UserException {
 		// TODO Auto-generated method stub
 		
+	}
+
+	public String getException() {
+		if ( handler != null && handler.getAccess() != null ) {
+			return handler.getAccess().getException().getLocalizedMessage();
+		} else {
+			return null;
+		}
+	}
+
+	public Date getCreated() {
+		if ( handler != null && handler.getAccess() != null ) {
+			return handler.getAccess().created;
+		} else {
+			return null;
+		}
 	}
 }
