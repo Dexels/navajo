@@ -1,7 +1,5 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
-import com.dexels.navajo.tipi.components.echoimpl.impl.Styles;
-
 import nextapp.echo2.app.Border;
 import nextapp.echo2.app.Color;
 import nextapp.echo2.app.Component;

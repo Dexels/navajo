@@ -15,6 +15,8 @@ import nextapp.echo2.app.WindowPane;
 import nextapp.echo2.app.event.ActionEvent;
 import nextapp.echo2.app.event.ActionListener;
 
+import com.dexels.navajo.echoclient.components.ButtonImpl;
+import com.dexels.navajo.echoclient.components.Styles;
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.components.echoimpl.TipiScreen;

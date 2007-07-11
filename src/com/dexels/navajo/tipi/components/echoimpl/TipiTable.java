@@ -7,6 +7,10 @@ import nextapp.echo2.app.event.ActionEvent;
 import nextapp.echo2.app.event.ActionListener;
 
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.echoclient.components.MessageTable;
+import com.dexels.navajo.echoclient.components.PageNavigator;
+import com.dexels.navajo.echoclient.components.Styles;
+import com.dexels.navajo.echoclient.components.TableEditorListener;
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiComponentMethod;
 import com.dexels.navajo.tipi.TipiContext;
@@ -56,7 +60,9 @@ public class TipiTable extends TipiEchoDataComponentImpl {
     	SplitPane myPane = new SplitPane(SplitPane.ORIENTATION_VERTICAL,new Extent(25,Extent.PX));
     	pageNavigator = new PageNavigator();
 		myTable = new MessageTable();
-        myPane.add(pageNavigator);
+
+		
+		myPane.add(pageNavigator);
         myPane.add(myTable);
 //        pageNavigator.addPageIndexChangeListener(myTable);
         //        myTable.setStyleName("Default");
@@ -124,6 +130,8 @@ public class TipiTable extends TipiEchoDataComponentImpl {
         // Got message: " + m);
         pageNavigator.setTotalPages(myTable.getTotalPages());
         pageNavigator.addPageIndexChangeListener(myTable);
+        pageNavigator.setPageIndex(0);
+        myTable.setPageNavigator(pageNavigator);
         if (m != null) {
             if (!colDefs) {
                 mm.removeAllColumns();

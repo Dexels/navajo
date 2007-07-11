@@ -19,6 +19,8 @@ import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
 
+import echopointng.command.JavaScriptEval;
+
 /**
  * <p>
  * Title:
@@ -217,6 +219,13 @@ public class EchoTipiContext extends TipiContext {
         staticComponentMap.put(defname, elm);
 //        tipiMap.put(defname, elm);
       }
+
+
+
+	public void showInfo(String text, String title) {
+        ApplicationInstance.getActive().enqueueCommand(new JavaScriptEval("alert('" + text + "')"));
+		
+	}
 
 
 

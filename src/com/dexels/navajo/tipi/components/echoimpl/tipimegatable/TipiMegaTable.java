@@ -8,6 +8,7 @@ import java.util.*;
 import com.dexels.navajo.tipi.tipixml.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.echoclient.components.MessageTable;
 import com.dexels.navajo.tipi.internal.*;
 import java.io.*;
 import java.util.List;

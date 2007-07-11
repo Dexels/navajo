@@ -8,6 +8,7 @@ import nextapp.echo2.app.*;
 import nextapp.echo2.app.event.*;
 //import com.dexels.navajo.swingclient.components.*;
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.echoclient.components.MessageTable;
 import com.dexels.navajo.parser.*;
 import com.dexels.navajo.tipi.*;
 

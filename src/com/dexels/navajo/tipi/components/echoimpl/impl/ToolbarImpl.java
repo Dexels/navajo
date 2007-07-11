@@ -1,5 +1,7 @@
 package com.dexels.navajo.tipi.components.echoimpl.impl;
 
+import com.dexels.navajo.echoclient.components.Styles;
+
 import nextapp.echo2.app.Insets;
 import nextapp.echo2.app.Row;
 import nextapp.echo2.app.Style;

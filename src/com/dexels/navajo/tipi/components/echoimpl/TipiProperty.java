@@ -13,10 +13,12 @@ import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.Selection;
+import com.dexels.navajo.echoclient.components.EchoPropertyComponent;
+import com.dexels.navajo.echoclient.components.PropertyEventListener;
+import com.dexels.navajo.echoclient.components.Styles;
 
 import com.dexels.navajo.tipi.TipiEventListener;
 
-import com.dexels.navajo.tipi.components.echoimpl.impl.Styles;
 import com.dexels.navajo.tipi.internal.PropertyComponent;
 
 import echopointng.ContainerEx;

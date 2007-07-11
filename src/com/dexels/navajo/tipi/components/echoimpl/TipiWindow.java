@@ -10,10 +10,10 @@ import nextapp.echo2.app.WindowPane;
 import nextapp.echo2.app.event.WindowPaneEvent;
 import nextapp.echo2.app.event.WindowPaneListener;
 
+import com.dexels.navajo.echoclient.components.Styles;
 import com.dexels.navajo.tipi.TipiComponentMethod;
 import com.dexels.navajo.tipi.TipiHelper;
 import com.dexels.navajo.tipi.components.echoimpl.helpers.EchoTipiHelper;
-import com.dexels.navajo.tipi.components.echoimpl.impl.Styles;
 import com.dexels.navajo.tipi.components.echoimpl.impl.layout.EchoLayoutImpl;
 import com.dexels.navajo.tipi.components.echoimpl.parsers.ColorParser;
 import com.dexels.navajo.tipi.internal.TipiEvent;

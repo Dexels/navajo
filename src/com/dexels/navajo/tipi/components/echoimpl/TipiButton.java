@@ -2,6 +2,7 @@ package com.dexels.navajo.tipi.components.echoimpl;
 
 import java.net.URL;
 
+import com.dexels.navajo.echoclient.components.ButtonImpl;
 import com.dexels.navajo.tipi.TipiComponentMethod;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.components.echoimpl.impl.*;
