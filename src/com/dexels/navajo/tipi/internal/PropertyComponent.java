@@ -1,29 +1,38 @@
 package com.dexels.navajo.tipi.internal;
 
-import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.tipi.*;
 
 /**
- * <p>Title: </p>
- * <p>Description: </p>
- * <p>Copyright: Copyright (c) 2003</p>
- * <p>Company: </p>
+ * <p>
+ * Title:
+ * </p>
+ * <p>
+ * Description:
+ * </p>
+ * <p>
+ * Copyright: Copyright (c) 2003
+ * </p>
+ * <p>
+ * Company:
+ * </p>
+ * 
  * @author not attributable
  * @version 1.0
  */
-public interface PropertyComponent extends TipiComponent{
-  public String getPropertyName();
+public interface PropertyComponent extends TipiComponent {
+	public String getPropertyName();
 
-  public void addTipiEventListener(TipiEventListener listener);
+	public void addTipiEventListener(TipiEventListener listener);
 
-  public void addTipiEvent(TipiEvent te);
+	public void addTipiEvent(TipiEvent te);
 
-  public Property getProperty();
+	public Property getProperty();
 
-  public void setProperty(Property p);
+	public void setProperty(Property p);
 
-  public void checkForConditionErrors(Message m);
-  
-//  public void validate();
+	public void checkForConditionErrors(Message m);
+
+	// public void validate();
 
 }

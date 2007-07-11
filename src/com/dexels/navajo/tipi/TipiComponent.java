@@ -1,222 +1,239 @@
 package com.dexels.navajo.tipi;
 
 import java.util.*;
-//import java.awt.*;
+
 import com.dexels.navajo.client.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.internal.*;
 import com.dexels.navajo.tipi.tipixml.*;
 
 /**
- * <p>Title: </p>
- * <p>Description: </p>
- * <p>Copyright: Copyright (c) 2003</p>
- * <p>Company: </p>
+ * <p>
+ * Title:
+ * </p>
+ * <p>
+ * Description:
+ * </p>
+ * <p>
+ * Copyright: Copyright (c) 2003
+ * </p>
+ * <p>
+ * Company:
+ * </p>
+ * 
  * @author not attributable
  * @version 1.0
  */
-public interface TipiComponent
-    extends ConditionErrorHandler, TipiEventListener, TipiLink {
-  public void removeFromContainer(Object c);
+public interface TipiComponent extends ConditionErrorHandler, TipiEventListener, TipiLink {
+	public void removeFromContainer(Object c);
 
-  public void addToContainer(Object c, Object constraints);
+	public void addToContainer(Object c, Object constraints);
 
-  public void setHighlighted(boolean value);
+	public void setHighlighted(boolean value);
 
-  public boolean isHighlighted();
+	public boolean isHighlighted();
 
-  public void showGrid(boolean value);
+	public void showGrid(boolean value);
 
-  public boolean isGridShowing();
-  public boolean isTransient();
-  public void setTransient(boolean b);
+	public boolean isGridShowing();
 
-//  public void highLight(Component c, Graphics g);
-//
-//  public void paintGrid(Component c, Graphics g);
-  public TipiContext getContext();
-  public void parseStyle(String style);
-  public void addStyle(String key, String value);
-  public String getStyle(String key);
-  public void processStyles();
+	public boolean isTransient();
 
-  public void initContainer();
+	public void setTransient(boolean b);
 
-  public Set getPossibleValues();
+	// public void highLight(Component c, Graphics g);
+	//
+	// public void paintGrid(Component c, Graphics g);
+	public TipiContext getContext();
 
-  public void deregisterEvent(TipiEvent e);
+	public void parseStyle(String style);
 
-  public void setName(String name);
+	public void addStyle(String key, String value);
 
-  public void setContext(TipiContext tc);
+	public String getStyle(String key);
 
-  public boolean isPropertyComponent();
+	public void processStyles();
 
-  public void setPropertyComponent(boolean b);
+	public void initContainer();
 
-  public void setValue(String name, Object value);
+	public Set getPossibleValues();
 
-  public void setValue(String name, Object value, TipiComponent source,TipiEvent event);
+	public void deregisterEvent(TipiEvent e);
 
-  public Object getValue(String name);
+	public void setName(String name);
 
-  public String getStringValue(String name);
+	public void setContext(TipiContext tc);
 
-  public TipiValue getTipiValue(String name);
+	public boolean isPropertyComponent();
 
-  /**
-   * Loads an event definition from the component definition
-   */
-  public void loadEventsDefinition(TipiContext context, XMLElement definition, XMLElement classDef) throws TipiException;
+	public void setPropertyComponent(boolean b);
 
-  public void loadMethodDefinitions(TipiContext context, XMLElement definition, XMLElement classDef) throws TipiException;
+	public void setValue(String name, Object value);
 
+	public void setValue(String name, Object value, TipiComponent source, TipiEvent event);
 
-  public void load(XMLElement def, XMLElement instance, TipiContext context) throws TipiException;
+	public Object getValue(String name);
 
-  public void setId(String id);
+	public String getStringValue(String name);
 
-  public ArrayList getDefinedEvents();
+	public TipiValue getTipiValue(String name);
 
-  public Map getClassDefValues();
+	/**
+	 * Loads an event definition from the component definition
+	 */
+	public void loadEventsDefinition(TipiContext context, XMLElement definition, XMLElement classDef) throws TipiException;
 
-  public boolean isVisibleElement();
+	public void loadMethodDefinitions(TipiContext context, XMLElement definition, XMLElement classDef) throws TipiException;
 
-  public void instantiateComponent(XMLElement instance, XMLElement classdef) throws TipiException;
+	public void load(XMLElement def, XMLElement instance, TipiContext context) throws TipiException;
 
-  public void loadStartValues(XMLElement element);
+	public void setId(String id);
 
-  public boolean isReusable();
+	public ArrayList getDefinedEvents();
 
-  public boolean isTopLevel();
+	public Map getClassDefValues();
 
-  public void reUse();
+	public boolean isVisibleElement();
 
-  public String getId();
+	public void instantiateComponent(XMLElement instance, XMLElement classdef) throws TipiException;
 
-  public void performMethod(String methodName, TipiAction invocation, TipiEvent event) throws TipiBreakException;
+	public void loadStartValues(XMLElement element);
 
-  public TipiComponentMethod getTipiComponentMethod(String methodName);
+	public boolean isReusable();
 
-  public TipiComponent getTipiComponentByPath(String path);
+	public boolean isTopLevel();
 
-  public void setLayout(TipiLayout tl);
-  
-  public void initBeforeBuildingChildren(XMLElement instance, XMLElement classdef, XMLElement definition);  
+	public void reUse();
 
-  public TipiLayout getLayout();
+	public String getId();
 
-  public TipiComponent getTipiComponent(String s);
+	public void performMethod(String methodName, TipiAction invocation, TipiEvent event) throws TipiBreakException;
 
-  public TipiComponent getTipiComponent(int i);
+	public TipiComponentMethod getTipiComponentMethod(String methodName);
 
-  public ArrayList getChildComponentIdList();
+	public TipiComponent getTipiComponentByPath(String path);
 
-  public void disposeComponent();
+	public void setLayout(TipiLayout tl);
 
-  public void removeChild(TipiComponent child);
+	public void initBeforeBuildingChildren(XMLElement instance, XMLElement classdef, XMLElement definition);
 
-  public void setParent(TipiComponent tc);
+	public TipiLayout getLayout();
 
-  public TipiComponent getTipiParent();
+	public TipiComponent getTipiComponent(String s);
 
-  public void addComponent(TipiComponent c, TipiContext context, Object td);
+	public TipiComponent getTipiComponent(int i);
 
-  public void addComponent(TipiComponent c, int index, TipiContext context, Object td);
+	public ArrayList getChildComponentIdList();
 
-  public Navajo getNavajo();
+	public void disposeComponent();
 
-  public Navajo getNearestNavajo();
+	public void removeChild(TipiComponent child);
 
-  public void setConstraints(Object constraints);
+	public void setParent(TipiComponent tc);
 
-  public Object getConstraints();
+	public TipiComponent getTipiParent();
 
-  public void addTipiEvent(TipiEvent te);
+	public void addComponent(TipiComponent c, TipiContext context, Object td);
 
-  public void removeTipiEvent(TipiEvent e);
+	public void addComponent(TipiComponent c, int index, TipiContext context, Object td);
 
-  public void refreshParent();
+	public Navajo getNavajo();
 
-  public boolean performTipiEvent(String type, Map event, boolean sync) throws TipiException;
+	public Navajo getNearestNavajo();
 
-  public String getName();
+	public void setConstraints(Object constraints);
 
-  public Object getContainer();
+	public Object getConstraints();
 
-  public void setContainer(Object c);
+	public void addTipiEvent(TipiEvent te);
 
-  public void setCursor(int cursorid);
+	public void removeTipiEvent(TipiEvent e);
 
-  public XMLElement store();
+	public void refreshParent();
 
-  public void checkValidation(Message msg);
+	public boolean performTipiEvent(String type, Map event, boolean sync) throws TipiException;
 
-  public void resetComponentValidationStateByRule(String id);
+	public String getName();
 
-  public boolean hasConditionErrors();
+	public Object getContainer();
 
-  public int getIndex(TipiComponent node);
+	public void setContainer(Object c);
 
-  public String toString();
+	public void setCursor(int cursorid);
 
-  public boolean hasPath(String path,TipiEvent event);
+	public XMLElement store();
 
-  public String getPath();
+	public void checkValidation(Message msg);
 
-  public String getPath(String typedef);
+	public void resetComponentValidationStateByRule(String id);
 
-  public AttributeRef getAttributeRef(String name);
+	public boolean hasConditionErrors();
 
-  public ArrayList getEventList();
+	public int getIndex(TipiComponent node);
 
-  public void tipiLoaded();
+	public String toString();
 
-  public void childDisposed();
+	public boolean hasPath(String path, TipiEvent event);
 
-  public void componentInstantiated();
+	public String getPath();
 
-  public boolean isStudioElement();
+	public String getPath(String typedef);
 
-  public void setStudioElement(boolean b);
+	public AttributeRef getAttributeRef(String name);
 
-  public void addHelper(TipiHelper th);
+	public ArrayList getEventList();
 
-  public void removeHelper(TipiHelper th);
+	public void tipiLoaded();
 
-  public int getChildCount();
+	public void childDisposed();
 
-  public TipiComponent addComponentInstance(TipiContext context, XMLElement inst, Object constraints) throws TipiException;
+	public void componentInstantiated();
 
-  public Object getContainerLayout();
+	public boolean isStudioElement();
 
-  public void setContainerLayout(Object o);
+	public void setStudioElement(boolean b);
 
-  public TipiComponent getChildByContainer(Object container);
+	public void addHelper(TipiHelper th);
 
-  public boolean isDisposed();
+	public void removeHelper(TipiHelper th);
 
-  public boolean isValueSet(String name);
+	public int getChildCount();
 
-  public void unSetValue(String name);
+	public TipiComponent addComponentInstance(TipiContext context, XMLElement inst, Object constraints) throws TipiException;
 
-  public String getExpression(String name);
+	public Object getContainerLayout();
 
- 
-  public int getIndexOfComponent(TipiComponent source);
+	public void setContainerLayout(Object o);
 
-  public void setCurrentEvent(TipiEvent event);
-  public void updateId(TipiComponent tc, String oldId, String id);
-  public void removeInstantiatedChildren();
-  public Object getActualComponent();
-  
-  /*
-   * gets all the property components under this property, and also under its (recursive) children
-   */
-  public ArrayList getRecursiveProperties();  
-/**
- * 
- */
-public void commitToUi();
+	public TipiComponent getChildByContainer(Object container);
+
+	public boolean isDisposed();
+
+	public boolean isValueSet(String name);
+
+	public void unSetValue(String name);
+
+	public String getExpression(String name);
+
+	public int getIndexOfComponent(TipiComponent source);
+
+	public void setCurrentEvent(TipiEvent event);
+
+	public void updateId(TipiComponent tc, String oldId, String id);
+
+	public void removeInstantiatedChildren();
+
+	public Object getActualComponent();
+
+	/*
+	 * gets all the property components under this property, and also under its
+	 * (recursive) children
+	 */
+	public ArrayList getRecursiveProperties();
+
+	/**
+	 * 
+	 */
+	public void commitToUi();
 
 }

@@ -1,6 +1,7 @@
 package com.dexels.navajo.tipi.internal;
 
 import java.util.*;
+
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.actions.*;
 import com.dexels.navajo.tipi.tipixml.*;
@@ -14,41 +15,43 @@ import com.dexels.navajo.tipi.tipixml.*;
  * @version 1.0
  */
 /**
- * This is essentially a map of ActionFactories. All action definitions will be presented to this manager, and
- * it will create an ActionFactory for each different action type.
+ * This is essentially a map of ActionFactories. All action definitions will be
+ * presented to this manager, and it will create an ActionFactory for each
+ * different action type.
  */
 public class TipiActionManager {
-  private Map actionFactoryMap = new HashMap();
-  public TipiActionManager() {
-  }
+	private Map actionFactoryMap = new HashMap();
 
-  public void addAction(XMLElement actionDef, TipiContext context) throws TipiException {
-    TipiActionFactory taf = new TipiActionFactory();
-    taf.load(actionDef, context);
-    actionFactoryMap.put(actionDef.getAttribute("name"), taf);
-  }
+	public TipiActionManager() {
+	}
 
-  public TipiActionFactory getActionFactory(String name) throws TipiException {
-    TipiActionFactory taf = (TipiActionFactory) actionFactoryMap.get(name);
-    if (taf == null) {
-      throw new TipiException("No action defined with name: " + name);
-    }
-    return taf;
-  }
+	public void addAction(XMLElement actionDef, TipiContext context) throws TipiException {
+		TipiActionFactory taf = new TipiActionFactory();
+		taf.load(actionDef, context);
+		actionFactoryMap.put(actionDef.getAttribute("name"), taf);
+	}
 
-  public TipiAction instantiateAction(XMLElement instance, TipiComponent tc) throws TipiException {
-    String name = (String) instance.getAttribute("type");
-    TipiActionFactory taf = getActionFactory(name);
-    return taf.instantateAction(instance,  tc);
-  }
+	public TipiActionFactory getActionFactory(String name) throws TipiException {
+		TipiActionFactory taf = (TipiActionFactory) actionFactoryMap.get(name);
+		if (taf == null) {
+			throw new TipiException("No action defined with name: " + name);
+		}
+		return taf;
+	}
 
-  public ArrayList getDefinedActions() {
-    ArrayList actions = new ArrayList();
-    Iterator it = actionFactoryMap.keySet().iterator();
-    while (it.hasNext()) {
-      String name = (String) it.next();
-      actions.add(name);
-    }
-    return actions;
-  }
+	public TipiAction instantiateAction(XMLElement instance, TipiComponent tc) throws TipiException {
+		String name = (String) instance.getAttribute("type");
+		TipiActionFactory taf = getActionFactory(name);
+		return taf.instantateAction(instance, tc);
+	}
+
+	public ArrayList getDefinedActions() {
+		ArrayList actions = new ArrayList();
+		Iterator it = actionFactoryMap.keySet().iterator();
+		while (it.hasNext()) {
+			String name = (String) it.next();
+			actions.add(name);
+		}
+		return actions;
+	}
 }

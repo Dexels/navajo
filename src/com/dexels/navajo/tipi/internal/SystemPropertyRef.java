@@ -1,26 +1,34 @@
 package com.dexels.navajo.tipi.internal;
 
 import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.document.*;
 
 /**
- * <p>Title: </p>
- * <p>Description: </p>
- * <p>Copyright: Copyright (c) 2003</p>
- * <p>Company: </p>
+ * <p>
+ * Title:
+ * </p>
+ * <p>
+ * Description:
+ * </p>
+ * <p>
+ * Copyright: Copyright (c) 2003
+ * </p>
+ * <p>
+ * Company:
+ * </p>
+ * 
  * @author not attributable
  * @version 1.0
  */
 
-public class SystemPropertyRef  implements TipiReference {
+public class SystemPropertyRef implements TipiReference {
 
-  private final String name;
+	private final String name;
 
-  public SystemPropertyRef(String name) {
-    this.name = name;
-  }
+	public SystemPropertyRef(String name) {
+		this.name = name;
+	}
 
-  public void setValue(Object expression, TipiComponent tc) {
-    System.setProperty(name,""+expression);
- }
+	public void setValue(Object expression, TipiComponent tc) {
+		System.setProperty(name, "" + expression);
+	}
 }

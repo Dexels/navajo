@@ -10,30 +10,29 @@ import java.io.*;
 import java.util.*;
 
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.studio.*;
 
 public interface TipiStandaloneToplevelContainer {
-//    public void setResourceBaseDirectory(File f);
+	// public void setResourceBaseDirectory(File f);
 
-    public void loadDefinition(String tipiPath, String definitionName, String resourceBaseDirectory) throws IOException, TipiException;
+	public void loadDefinition(String tipiPath, String definitionName, String resourceBaseDirectory) throws IOException, TipiException;
 
-    public void loadDefinition(String tipiPath[], String[] definitionName, String resourceBaseDirectory) throws IOException, TipiException;
+	public void loadDefinition(String tipiPath[], String[] definitionName, String resourceBaseDirectory) throws IOException, TipiException;
 
-    public void loadDefinition(String name, InputStream contents, ActivityController al, String resourceBaseDirectory) throws IOException,
-            TipiException;
+	public void loadDefinition(String name, InputStream contents, ActivityController al, String resourceBaseDirectory) throws IOException,
+			TipiException;
 
-    public void loadDefinition(String name, InputStream contents, ActivityController al, String resourceBaseDirectory, ClassLoader cl) throws IOException,TipiException;
-    
-    
-    public ArrayList getListeningServices();
+	public void loadDefinition(String name, InputStream contents, ActivityController al, String resourceBaseDirectory, ClassLoader cl)
+			throws IOException, TipiException;
 
-    public void loadClassPathLib(String location);
+	public ArrayList getListeningServices();
 
-    public void loadNavajo(Navajo nav, String method) throws TipiException, TipiBreakException;
+	public void loadClassPathLib(String location);
 
-    public TipiContext getContext();
+	public void loadNavajo(Navajo nav, String method) throws TipiException, TipiBreakException;
 
-    public void shutDownTipi();
+	public TipiContext getContext();
+
+	public void shutDownTipi();
 
 }

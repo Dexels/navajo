@@ -1,7 +1,7 @@
 package com.dexels.navajo.tipi;
 
-import com.dexels.navajo.tipi.tipixml.*;
 import com.dexels.navajo.tipi.internal.*;
+import com.dexels.navajo.tipi.tipixml.*;
 
 /**
  * <p>Title: </p>
@@ -12,23 +12,25 @@ import com.dexels.navajo.tipi.internal.*;
  * @version 1.0
  */
 /**
- * This is an interface to identify executable tipi elements, typically either TipiAction derived classes, or TipiActionBlock blocks
+ * This is an interface to identify executable tipi elements, typically either
+ * TipiAction derived classes, or TipiActionBlock blocks
  */
 public interface TipiExecutable {
-//  public void performAction(TipiEvent te) throws TipiBreakException, TipiException;
-  public void performAction(TipiEvent te,TipiExecutable parent, int index) throws TipiBreakException, TipiException;
+	// public void performAction(TipiEvent te) throws TipiBreakException,
+	// TipiException;
+	public void performAction(TipiEvent te, TipiExecutable parent, int index) throws TipiBreakException, TipiException;
 
-  public XMLElement store();
+	public XMLElement store();
 
-  public int getExecutableChildCount();
+	public int getExecutableChildCount();
 
-  public TipiExecutable getExecutableChild(int index);
+	public TipiExecutable getExecutableChild(int index);
 
-  public TipiComponent getComponent();
+	public TipiComponent getComponent();
 
-  public TipiEvent getEvent();
+	public TipiEvent getEvent();
 
-  public void setEvent(TipiEvent e);
-  //  public TipiEvent getEvent();
+	public void setEvent(TipiEvent e);
+	// public TipiEvent getEvent();
 
 }

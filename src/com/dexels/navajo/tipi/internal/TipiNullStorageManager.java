@@ -6,26 +6,22 @@
  */
 package com.dexels.navajo.tipi.internal;
 
-import java.io.*;
-
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
 
 public class TipiNullStorageManager implements TipiStorageManager {
 
+	public Navajo getStorageDocument(String id) throws TipiException {
+		System.err.println("TipiNullStorageManager: Asked for: " + id);
+		return null;
+	}
 
-    
-    public Navajo getStorageDocument(String id) throws TipiException {
-        System.err.println("TipiNullStorageManager: Asked for: "+id);
-        return null;
-    }
+	public void setStorageDocument(String id, Navajo n) throws TipiException {
+		System.err.println("TipiNullStorageManager: Stored: " + id);
+	}
 
-    public void setStorageDocument(String id, Navajo n) throws TipiException {
-        System.err.println("TipiNullStorageManager: Stored: "+id);
-    }
-
-    public void setInstanceId(String id) {
-        // whatever
-    }
+	public void setInstanceId(String id) {
+		// whatever
+	}
 
 }

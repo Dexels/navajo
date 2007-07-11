@@ -9,8 +9,10 @@ package com.dexels.navajo.tipi;
 import com.dexels.navajo.document.*;
 
 public interface TipiStorageManager {
-    public Navajo getStorageDocument(String id) throws TipiException;
-    public void setStorageDocument(String id, Navajo n) throws TipiException;
-    public void setInstanceId(String id);
-    
+	public Navajo getStorageDocument(String id) throws TipiException;
+
+	public void setStorageDocument(String id, Navajo n) throws TipiException;
+
+	public void setInstanceId(String id);
+
 }

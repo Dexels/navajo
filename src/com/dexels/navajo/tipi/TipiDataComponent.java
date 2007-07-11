@@ -1,57 +1,70 @@
 package com.dexels.navajo.tipi;
 
 import java.util.*;
+
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.internal.*;
 
 /**
- * <p>Title: </p>
- * <p>Description: </p>
- * <p>Copyright: Copyright (c) 2003</p>
- * <p>Company: </p>
+ * <p>
+ * Title:
+ * </p>
+ * <p>
+ * Description:
+ * </p>
+ * <p>
+ * Copyright: Copyright (c) 2003
+ * </p>
+ * <p>
+ * Company:
+ * </p>
+ * 
  * @author not attributable
  * @version 1.0
  */
-public interface TipiDataComponent
-    extends TipiComponent {
-  public Navajo getNavajo();
+public interface TipiDataComponent extends TipiComponent {
+	public Navajo getNavajo();
 
-  public void loadData(Navajo n, TipiContext context, String method, String server) throws TipiException, TipiBreakException;
+	public void loadData(Navajo n, TipiContext context, String method, String server) throws TipiException, TipiBreakException;
 
-  public String getCurrentMethod();
-  
-  /**
-   * @deprecated
-   */
-  public void performService(TipiContext context, String tipiPath, String service, boolean breakOnError, TipiEvent event, long expirationInterval, String hostUrl, String username, String password,String keystore, String keypass) throws TipiException, TipiBreakException;
+	public String getCurrentMethod();
 
-  public ArrayList getServices();
+	/**
+	 * @deprecated
+	 */
+	public void performService(TipiContext context, String tipiPath, String service, boolean breakOnError, TipiEvent event,
+			long expirationInterval, String hostUrl, String username, String password, String keystore, String keypass)
+			throws TipiException, TipiBreakException;
 
-  public void addService(String service);
+	public ArrayList getServices();
 
-  public void removeService(String service);
+	public void addService(String service);
 
-  public TipiDataComponent getTipiByPath(String path);
+	public void removeService(String service);
 
-  public void clearProperties();
+	public TipiDataComponent getTipiByPath(String path);
 
-  public boolean loadErrors(Navajo n, String method);
+	public void clearProperties();
 
-//  public void autoLoadServices(TipiContext context, TipiEvent event) throws TipiException;
+	public boolean loadErrors(Navajo n, String method);
 
-  public void tipiLoaded();
+	// public void autoLoadServices(TipiContext context, TipiEvent event) throws
+	// TipiException;
 
-  public void replaceLayout(TipiLayout tl);
+	public void tipiLoaded();
 
-  public void refreshLayout();
+	public void replaceLayout(TipiLayout tl);
 
-  public boolean listensTo(String service);
+	public void refreshLayout();
 
-  public boolean hasProperty(String path);
+	public boolean listensTo(String service);
 
-  public void setPrefix(String pr);
-  public String getPrefix();
+	public boolean hasProperty(String path);
 
-  public String getServer();
+	public void setPrefix(String pr);
+
+	public String getPrefix();
+
+	public String getServer();
 
 }

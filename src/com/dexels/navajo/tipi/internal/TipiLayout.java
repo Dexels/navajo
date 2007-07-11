@@ -1,145 +1,156 @@
 package com.dexels.navajo.tipi.internal;
 
 import java.util.*;
-import com.dexels.navajo.document.*;
+
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.studio.*;
 import com.dexels.navajo.tipi.tipixml.*;
 
 /**
- * <p>Title: </p>
- * <p>Description: </p>
- * <p>Copyright: Copyright (c) 2003</p>
- * <p>Company: </p>
+ * <p>
+ * Title:
+ * </p>
+ * <p>
+ * Description:
+ * </p>
+ * <p>
+ * Copyright: Copyright (c) 2003
+ * </p>
+ * <p>
+ * Company:
+ * </p>
+ * 
  * @author not attributable
  * @version 1.0
  */
 public abstract class TipiLayout {
-  protected Map componentValues = new HashMap();
-  protected String layoutName = null;
-  protected Object myLayout;
-  protected XMLElement myDefinition;
-  protected TipiConstraintEditor myConstraintEditor = null;
-  protected XMLElement myClassDef = null;
-  protected TipiContext myContext;
-  protected TipiComponent myComponent;
+	protected Map componentValues = new HashMap();
+	protected String layoutName = null;
+	protected Object myLayout;
+	protected XMLElement myDefinition;
+	protected TipiConstraintEditor myConstraintEditor = null;
+	protected XMLElement myClassDef = null;
+	protected TipiContext myContext;
+	protected TipiComponent myComponent;
 
-//  protected abstract Object parseConstraint(String text);
-  public TipiLayout() {
-  }
+	// protected abstract Object parseConstraint(String text);
+	public TipiLayout() {
+	}
 
-  public void setContext(TipiContext tc) {
-    myContext = tc;
-  }
+	public void setContext(TipiContext tc) {
+		myContext = tc;
+	}
 
-  public void setComponent(TipiComponent tc) {
-    myComponent = tc;
-  }
+	public void setComponent(TipiComponent tc) {
+		myComponent = tc;
+	}
 
+	// public abstract void instantiateLayout(TipiContext context, Tipi t,
+	// XMLElement def);
+	public abstract void createLayout() throws TipiException;
 
-//  public abstract void instantiateLayout(TipiContext context, Tipi t, XMLElement def);
-  public abstract void createLayout() throws TipiException;
+	protected abstract void loadLayout(XMLElement def, TipiComponent current) throws TipiException;
 
-  protected abstract void loadLayout(XMLElement def, TipiComponent current) throws TipiException;
+	public TipiConstraintEditor getConstraintEditor() {
+		if (myDefinition == null) {
+			return null;
+		}
+		return myConstraintEditor;
+	}
 
-  public TipiConstraintEditor getConstraintEditor() {
-    if (myDefinition == null) {
-      return null;
-    }
-    return myConstraintEditor;
-  }
+	public void loadLayout(TipiComponent current) throws TipiException {
+		loadLayout(myDefinition, current);
+	}
 
-  public void loadLayout(TipiComponent current) throws TipiException {
-    loadLayout(myDefinition, current);
-  }
+	public XMLElement store() {
+		XMLElement xe = new CaseSensitiveXMLElement();
+		xe.setName("layout");
+		xe.setAttribute("type", getName());
+		return xe;
+	}
 
-  public XMLElement store() {
-    XMLElement xe = new CaseSensitiveXMLElement();
-    xe.setName("layout");
-    xe.setAttribute("type", getName());
-    return xe;
-  }
+	public void setClassDef(XMLElement xe) {
+		myClassDef = xe;
+	}
 
-  public void setClassDef(XMLElement xe) {
-    myClassDef = xe;
-  }
+	public void loadClassDef() {
+		String constraintClass = myClassDef.getStringAttribute("constrainteditor", "");
+		if (constraintClass.equals("")) {
+			return;
+		}
+		Class constraintEditor;
+		/**
+		 * @todo Maybe check first... The classnotfound exception is not
+		 *       exceptional
+		 */
+		try {
+			constraintEditor = Class.forName(constraintClass, true, myContext.getClassLoader());
+		} catch (ClassNotFoundException ex) {
+			// No problem.
+			return;
+		}
+		try {
+			myConstraintEditor = (TipiConstraintEditor) constraintEditor.newInstance();
+		} catch (IllegalAccessException ex1) {
+			System.err.println("Warning error initializing constrainteditor class: " + constraintClass + " error: " + ex1.getMessage());
+			return;
+		} catch (InstantiationException ex1) {
+			System.err.println("Warning error initializing constrainteditor class: " + constraintClass + " error: " + ex1.getMessage());
+			return;
+		}
+		if (!TipiConstraintEditor.class.isInstance(myConstraintEditor)) {
+			System.err.println("Warning: ConstraintEditor class: " + constraintEditor.getClass()
+					+ " does not implement the TipiConstraintEditor interface, which is: " + TipiConstraintEditor.class);
+			return;
+		}
+	}
 
-  public void loadClassDef() {
-    String constraintClass = myClassDef.getStringAttribute("constrainteditor", "");
-    if (constraintClass.equals("")) {
-      return;
-    }
-    Class constraintEditor;
-    /** @todo Maybe check first... The classnotfound exception is not exceptional */
-    try {
-      constraintEditor = Class.forName(constraintClass,true,myContext.getClassLoader());
-    }
-    catch (ClassNotFoundException ex) {
-      // No problem.
-      return;
-    }
-    try {
-      myConstraintEditor = (TipiConstraintEditor) constraintEditor.newInstance();
-    }
-    catch (IllegalAccessException ex1) {
-      System.err.println("Warning error initializing constrainteditor class: " + constraintClass + " error: " + ex1.getMessage());
-      return;
-    }
-    catch (InstantiationException ex1) {
-      System.err.println("Warning error initializing constrainteditor class: " + constraintClass + " error: " + ex1.getMessage());
-      return;
-    }
-    if (!TipiConstraintEditor.class.isInstance(myConstraintEditor)) {
-      System.err.println("Warning: ConstraintEditor class: " + constraintEditor.getClass() + " does not implement the TipiConstraintEditor interface, which is: " + TipiConstraintEditor.class);
-      return;
-    }
-  }
+	public void initializeLayout(XMLElement def) throws TipiException {
+		myDefinition = def;
+	}
 
-  public void initializeLayout(XMLElement def) throws TipiException {
-    myDefinition = def;
-  }
+	public Object createDefaultConstraint(int index) {
+		return null;
+	}
 
-  public Object createDefaultConstraint(int index) {
-    return null;
-  }
+	protected abstract void setValue(String name, TipiValue tv);
 
-  protected abstract void setValue(String name, TipiValue tv);
+	public String getName() {
+		return layoutName;
+	}
 
-  public String getName() {
-    return layoutName;
-  }
+	public void setName(String name) {
+		layoutName = name;
+	}
 
-  public void setName(String name) {
-    layoutName = name;
-  }
+	public Object getLayout() {
+		return myLayout;
+	}
 
-  public Object getLayout() {
-    return myLayout;
-  }
+	public void setLayout(Object l) {
+		myLayout = l;
+	}
 
-  public void setLayout(Object l) {
-    myLayout = l;
-  }
+	private final void loadValues(XMLElement values) {
+		Vector children = values.getChildren();
+		for (int i = 0; i < children.size(); i++) {
+			XMLElement xx = (XMLElement) children.get(i);
+			String valueName = xx.getStringAttribute("name");
+			TipiValue tv = new TipiValue();
+			tv.load(xx);
+			componentValues.put(valueName, tv);
+			if (tv.getValue() != null && !"".equals(tv.getValue())) {
+				setValue(tv.getName(), tv);
+			}
+		}
+	}
 
-  private final  void loadValues(XMLElement values) {
-    Vector children = values.getChildren();
-    for (int i = 0; i < children.size(); i++) {
-      XMLElement xx = (XMLElement) children.get(i);
-      String valueName = xx.getStringAttribute("name");
-      TipiValue tv = new TipiValue();
-      tv.load(xx);
-      componentValues.put(valueName, tv);
-      if (tv.getValue() != null && !"".equals(tv.getValue())) {
-        setValue(tv.getName(), tv);
-      }
-    }
-  }
+	public void childAdded(Object c) {
+	}
 
-public void childAdded(Object c) {
-}
+	public void commitLayout() {
+		// Not implemented, called after creating layout, override if further
+		// action is needed
 
-public void commitLayout() {
-	// Not implemented, called after creating layout, override if further action is needed
-	
-}
+	}
 }

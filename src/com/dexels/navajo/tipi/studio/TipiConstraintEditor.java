@@ -3,16 +3,24 @@ package com.dexels.navajo.tipi.studio;
 import com.dexels.navajo.tipi.*;
 
 /**
- * <p>Title: </p>
- * <p>Description: </p>
- * <p>Copyright: Copyright (c) 2003</p>
- * <p>Company: </p>
+ * <p>
+ * Title:
+ * </p>
+ * <p>
+ * Description:
+ * </p>
+ * <p>
+ * Copyright: Copyright (c) 2003
+ * </p>
+ * <p>
+ * Company:
+ * </p>
+ * 
  * @author not attributable
  * @version 1.0
  */
-public interface TipiConstraintEditor
-    extends ComponentSelectionListener {
-  public Object getConstraint();
+public interface TipiConstraintEditor extends ComponentSelectionListener {
+	public Object getConstraint();
 
-  public void setComponent(TipiComponent tc);
+	public void setComponent(TipiComponent tc);
 }
