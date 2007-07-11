@@ -148,6 +148,9 @@ public class FTPMap  implements Mappable, com.dexels.navajo.server.enterprise.qu
 			queuedSend = false;
 			store();
 		} catch (Exception e) {
+			if ( myAccess != null ) {
+				myAccess.setException(e);
+			}
 			return false;
 		} finally {
 			queuedSend = true;

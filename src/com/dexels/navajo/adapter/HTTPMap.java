@@ -216,6 +216,9 @@ public class HTTPMap implements Mappable, Queable {
 		try {
 			sendOverHTTP();
 		} catch (UserException e) {
+			if ( myAccess != null ) {
+				myAccess.setException(e);
+			}
 			return false;
 		}
 		return true;

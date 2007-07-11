@@ -106,6 +106,9 @@ public class MailMap implements Mappable, com.dexels.navajo.server.enterprise.qu
     		sendMail();
     	} catch (Exception e) {
     		e.printStackTrace(System.err);
+    		if ( myAccess != null ) {
+				myAccess.setException(e);
+			}
     		return false;
     	} 
     	return true;
