@@ -8,6 +8,5 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="src" path="/Navajo"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/DexelsVersionControl"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JavaFX"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
