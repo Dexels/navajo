@@ -61,7 +61,7 @@ public class NavajoRunner {
 			if (scriptClass==null) {
 				System.err.println("Class not found?!");
 			}
-			DirectClientImpl dci = new DirectClientImpl(true);
+			DirectClientImpl dci = new DirectClientImpl();
 			dci.setUsername(username);
 			dci.setPassword(password);
 			dci.init(server.toURL(),NavajoRunner.class.getClassLoader(),System.getProperty("user.dir"));

@@ -17,8 +17,7 @@ import com.dexels.navajo.server.*;
  * <p>Copyright: Copyright (c) 2002</p>
  * <p>Company: </p>
  * @author not attributable
- * @version $Id$
- *
+  *
  * DISCLAIMER
  *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
@@ -38,16 +37,8 @@ import com.dexels.navajo.server.*;
 public class DirectClientImpl
     implements ClientInterface {
 //  private ThreadGroup myThreadGroup = new ThreadGroup("navajothreads");
-  private NavajoAsyncRunner myRunner = null;
+//  private NavajoAsyncRunner myRunner = null;
   public DirectClientImpl() {
-  	this(false);
-  }
-
-  public DirectClientImpl(boolean suppressRunner) {
-  	if (!suppressRunner) {
-  	  	myRunner = new NavajoAsyncRunner(this);
-  	    myRunner.start();
-	}
 	  String token = null;
 	  try {
 		token = NavajoClient.createSessionToken();
@@ -87,9 +78,6 @@ private final String mySessionToken;
   	dispatcher.setUseAuthorisation(b);
   }
   
-  public synchronized int getPending() {
-    return myRunner.getPending();
-  }
 
   public String getClientName() {
     return "direct";
@@ -300,12 +288,12 @@ private final String mySessionToken;
   }
 
   public final Navajo doSimpleSend(Navajo n, String service, long expirationInterval) throws ClientException {
-    return doSimpleSend(n, "", service, getUsername(), getPassword(), expirationInterval, false, false);
+    return doSimpleSend(n, "", service, getUsername(), getPassword(), expirationInterval, false,false);
   }
 
 
   public final Navajo doSimpleSend(Navajo n, String service) throws ClientException {
-    return doSimpleSend(n, "", service, getUsername(), getPassword(), -1, false, false);
+    return doSimpleSend(n, "", service, getUsername(), getPassword(), -1, false,false);
   }
 
   public final Navajo doSimpleSend(Navajo n, String method, ConditionErrorHandler v) throws
@@ -339,7 +327,7 @@ private final String mySessionToken;
   public void init(URL config) throws ClientException {
     try {
 
-      dispatcher = Dispatcher.getInstance( config,
+      dispatcher = Dispatcher.getInstance( null,null,
                                   new com.dexels.navajo.server.
                                   ClassloaderInputStreamReader(), null);
       dispatcher.setUseAuthorisation(false);
@@ -349,6 +337,21 @@ private final String mySessionToken;
       throw new ClientException(1, 1, ex.getMessage());
     }
   }
+
+  public void init(String rootPath, String serverXml) throws ClientException {
+	    try {
+
+	      dispatcher = Dispatcher.getInstance( rootPath,serverXml,
+	                                  new com.dexels.navajo.server.
+	                                  ClassloaderInputStreamReader(), null);
+	      dispatcher.setUseAuthorisation(false);
+	    }
+	    catch (NavajoException ex) {
+	      ex.printStackTrace();
+	      throw new ClientException(1, 1, ex.getMessage());
+	    }
+	  }
+	  
   
   // Ummm, it is ignoring the cl parameter. Is that 'meant to be'?
   
@@ -360,7 +363,7 @@ private final String mySessionToken;
     try {
 
 //    NavajoBasicClassLoader nbcl = new NavajoBasicClassLoader();
-      dispatcher = Dispatcher.getInstance(config,new FileInputStreamReader(path),null);
+      dispatcher = Dispatcher.getInstance(path, "config/server.xml",new FileInputStreamReader(path),null);
 //      dispatcher.setUseAuthorisation(false);
 //      System.err.println("IN INIT of DCI. classloader: "+dispatcher.getNavajoConfig().getClassloader());
 //      dispatcher.getNavajoConfig().setClassloader(cl);
@@ -377,11 +380,17 @@ private final String mySessionToken;
     }
   }
   
+  /**
+   * @deprecated, usage of URLs for config paths is no longer supported
+   * @param config
+   * @param path
+   * @throws ClientException
+   */
   public void init(URL config, String path) throws ClientException {
       try {
 //          dispatcher = new Dispatcher(config,new FileInputStreamReader(path),new DirectClassLoader(path,path+"/navajo-tester/auxilary/classes"));
 
-        dispatcher = Dispatcher.getInstance(config,new FileInputStreamReader(path),null);
+        dispatcher = Dispatcher.getInstance(path, "config/server.xml",new FileInputStreamReader(path),null);
       }
       
       catch (NavajoException ex) {
@@ -430,18 +439,21 @@ private final String mySessionToken;
 
   public void doAsyncSend(Navajo in, String method, ResponseListener response,
                           String responseId) throws ClientException {
-    myRunner.enqueueRequest(in, method, response, responseId);
+	    throw new UnsupportedOperationException(
+        "Async comms are not supported in the direct implementation!");
   }
 
   public void doAsyncSend(Navajo in, String method, ResponseListener response,
                           ConditionErrorHandler v) throws ClientException {
-    myRunner.enqueueRequest(in, method, response, v);
+	    throw new UnsupportedOperationException(
+        "Async comms are not supported in the direct implementation!");
   }
 
   public void doAsyncSend(Navajo in, String method, ResponseListener response,
                           String responseId, ConditionErrorHandler v) throws
       ClientException {
-    myRunner.enqueueRequest(in, method, response, responseId, v);
+	    throw new UnsupportedOperationException(
+        "Async comms are not supported in the direct implementation!");
   }
 
   public LazyMessage doLazySend(Message request, String service,
@@ -592,6 +604,9 @@ public String getLocaleCode() {
 	return null;
 }
 
+public int getPending() {
+  return 0;
+}
 public Navajo doScheduledSend(Navajo out, String method, String schedule) throws ClientException {
 	 throw new java.lang.UnsupportedOperationException("Method doScheduledSend() not yet implemented.");
 }
