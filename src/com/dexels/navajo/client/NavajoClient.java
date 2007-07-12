@@ -604,7 +604,7 @@ public class NavajoClient implements ClientInterface {
       url = new URL("https://" + name );
     }
     else {
-      url = new URL("http://" + name + "_" );
+      url = new URL("http://" + name );
     }
 
     HttpURLConnection con = null;
