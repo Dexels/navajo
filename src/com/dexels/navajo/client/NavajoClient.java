@@ -520,23 +520,53 @@ public class NavajoClient implements ClientInterface {
     return con;
   }
 
-  protected final void readErrorStream(final HttpURLConnection myCon) {
+  private final void copyResource(OutputStream out, InputStream in){
+	  BufferedInputStream bin = new BufferedInputStream(in);
+	  BufferedOutputStream bout = new BufferedOutputStream(out);
+	  byte[] buffer = new byte[1024];
+	  int read = -1;
+	  boolean ready = false;
+	  while (!ready) {
+		  try {
+			  read = bin.read(buffer);
+			  if ( read > -1 ) {
+				  bout.write(buffer,0,read);
+			  }
+		  } catch (IOException e) {
+		  }
+		  if ( read <= -1) {
+			  ready = true;
+		  }
+	  }
+	  try {
+		  bin.close();
+		  bout.flush();
+		  bout.close();
+	  } catch (IOException e) {
+
+	  }
+  }
+  
+  protected final String readErrorStream(final HttpURLConnection myCon) {
 	  try {
 		  if ( myCon != null ) {
 			  int respCode = myCon.getResponseCode();
 			  InputStream es = myCon.getErrorStream();
-			  int ret = 0;
-			  // read the response body
-			  byte [] buf = new byte[32];
-			  while ((ret = es.read(buf)) > 0) {
-				  // Ignore errorstream.
-			  }
+			  ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			  copyResource(bos, es);
+			  bos.close();
+			  String error = new String(bos.toByteArray());
+			  System.err.println("Responsecode: " + respCode);
+			  System.err.println("Responsemessage: " + myCon.getResponseMessage());
+			  System.err.println("Got error from server: " + error);
 			  // close the errorstream
 			  es.close();
+			  return "HTTP Status error " + respCode;
 		  }
 	  } catch (IOException ioe) {
 		  ioe.printStackTrace(System.err);
 	  }
+	  return null;
   }
   
 //  protected InputStream doTransaction(String name, Navajo d, boolean useCompression, HttpURLConnection myCon) throws IOException, ClientException, NavajoException, javax.net.ssl.SSLHandshakeException {
@@ -565,16 +595,16 @@ public class NavajoClient implements ClientInterface {
    * @param useCompression boolean
    */
   
-  protected InputStream doTransaction(String name, Navajo d, boolean useCompression, boolean forcePreparseProxy, HttpURLConnection myCon) throws IOException, ClientException, NavajoException, javax.net.ssl.SSLHandshakeException {
+  protected InputStream doTransaction(String name, Navajo d, boolean useCompression, boolean forcePreparseProxy) throws IOException, ClientException, NavajoException, javax.net.ssl.SSLHandshakeException {
     URL url;
     //useCompression = false;
     
     
     if (setSecure) {
-      url = new URL("https://" + name);
+      url = new URL("https://" + name );
     }
     else {
-      url = new URL("http://" + name);
+      url = new URL("http://" + name + "_" );
     }
 
     HttpURLConnection con = null;
@@ -592,8 +622,6 @@ public class NavajoClient implements ClientInterface {
     	  }
       });
     }
-    
-    myCon = con;
    
     try {
     	java.lang.reflect.Method timeout = con.getClass().getMethod("setConnectTimeout", new Class[]{int.class});
@@ -657,21 +685,17 @@ public class NavajoClient implements ClientInterface {
     		}
     	}
     }
-    // Lees bericht
-//    BufferedInputStream in = null;
-//    if (useCompression) {
-//      in = new BufferedInputStream(new java.util.zip.GZIPInputStream(con.getInputStream()));
-//    }
-//    else {
-//      in = new BufferedInputStream(con.getInputStream());
-//    }
-    
-    if ( useCompression ) {
-    	return new ZInputStream(con.getInputStream());
+
+    // Check for errors.
+    if ( con.getResponseCode() >= 400 ) {
+    	throw new IOException(readErrorStream(con));
     } else {
-    	return con.getInputStream();
-    }
-    
+    	if ( useCompression ) {
+    		return new ZInputStream(con.getInputStream());
+    	} else {
+    		return con.getInputStream();
+    	}
+    } 
   }
 
   /**
@@ -818,11 +842,11 @@ public class NavajoClient implements ClientInterface {
     	 
         InputStream in = null;
         Navajo n = null;
-        HttpURLConnection myCon = null;
+       
         long timeStamp = System.currentTimeMillis();
         
         try {	
-        	in = doTransaction(server, out, useCompression, allowPreparseProxy, myCon);
+        	in = doTransaction(server, out, useCompression, allowPreparseProxy);
         	n = NavajoFactory.getInstance().createNavajo(in);
         }
         catch (javax.net.ssl.SSLException ex) {
@@ -852,7 +876,7 @@ public class NavajoClient implements ClientInterface {
         }
         catch (IOException uhe) {
         	uhe.printStackTrace();
-        	readErrorStream(myCon);
+        	//readErrorStream(myCon);
           System.err.println("Generic IOException: "+uhe.getMessage()+". Retrying without compression...");
           n = NavajoFactory.getInstance().createNavajo();
           in = retryTransaction(server, out, false, allowPreparseProxy, retryAttempts, retryInterval, n); // lees uit resource
@@ -1010,14 +1034,13 @@ private final InputStream retryTransaction(String server, Navajo out, boolean us
     	server = getCurrentHost();
 	}
     
-    HttpURLConnection myCon = null;
     try {
     	try {
     		Thread.sleep(interval);
     	} catch (InterruptedException e) {
     		e.printStackTrace();
     	}
-    	in = doTransaction(server, out, useCompression, allowPreparseProxy, myCon);
+    	in = doTransaction(server, out, useCompression, allowPreparseProxy);
     	System.err.println("It worked!  the inputstream is: " + in);
     	return in;
     }
@@ -1043,7 +1066,8 @@ private final InputStream retryTransaction(String server, Navajo out, boolean us
     	}
     }
     catch (IOException uhe) {
-    	readErrorStream(myCon);
+    	//readErrorStream(myCon);
+    	System.err.println(uhe.getMessage());
     	if (attemptsLeft == 0) {
     		disabledServers.put(getCurrentHost(), new Long(System.currentTimeMillis()));
     		System.err.println("Disabled server: "+getCurrentHost()+" for "+serverDisableTimeout+" millis." );
@@ -1052,7 +1076,6 @@ private final InputStream retryTransaction(String server, Navajo out, boolean us
     	}
     	else {
     		attemptsLeft--;
-    		System.err.println("---> Got a 500 server exception");
     		System.err.println("Sending: ");
     		out.write(System.err);
     		return retryTransaction(server, out, false, allowPreparseProxy, attemptsLeft, interval, n);
@@ -1624,8 +1647,7 @@ private final void ping() {
 						System.err.println("servers: " + serverUrls.length);
 						for (int i = 0; i < serverUrls.length; i++) {
 							try {
-								HttpURLConnection myCon = null;
-								InputStream in  = doTransaction(serverUrls[i], out, false, false, myCon);
+								InputStream in  = doTransaction(serverUrls[i], out, false, false);
 								Navajo n = NavajoFactory.getInstance().createNavajo(in);
 								in.close();
 								Header h = n.getHeader();
