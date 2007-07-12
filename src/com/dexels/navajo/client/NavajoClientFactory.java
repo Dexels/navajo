@@ -18,7 +18,7 @@ public class NavajoClientFactory {
    * @param config URL
    * @return ClientInterface
    */
-  public synchronized static ClientInterface createClient(String className, URL config) {
+  public synchronized static ClientInterface createClient(String className, String rootPath, String serverXmlRelativePath) {
     ClientInterface client = null;
     try {
       Class clientClass = Class.forName(className);
@@ -37,7 +37,7 @@ public class NavajoClientFactory {
     	return null;
     }
     try {
-      client.init(config);
+      client.init(rootPath, serverXmlRelativePath);
     }
     catch (ClientException ex1) {
       ex1.printStackTrace();
@@ -83,7 +83,7 @@ public class NavajoClientFactory {
   public synchronized static ClientInterface createDefaultClient() {
     /** @todo Beware when refactoring */
 //    return createClient("com.dexels.navajo.client.NavajoClient",null);
-    return createClient("com.dexels.navajo.client.queueimpl.ClientQueueImpl",null);
+    return createClient("com.dexels.navajo.client.queueimpl.ClientQueueImpl",null,null);
   }
 
 
@@ -93,7 +93,7 @@ public class NavajoClientFactory {
    * @return ClientInterface
    */
   public synchronized static ClientInterface createSocketClient() {
-    return createClient("com.dexels.navajo.client.NavajoSocketClient",null);
+    return createClient("com.dexels.navajo.client.NavajoSocketClient",null,null);
   }
 
   
@@ -102,18 +102,18 @@ public class NavajoClientFactory {
    * @param u URL
    * @return ClientInterface
    */
-  public synchronized static ClientInterface createDirectClient(URL u) {
-    return createClient("com.dexels.navajo.client.impl.DirectClientImpl",u);
+  public synchronized static ClientInterface createDirectClient(String rootPath, String serverXmlRelativePath) {
+    return createClient("com.dexels.navajo.client.impl.DirectClientImpl",rootPath, serverXmlRelativePath);
   }
 
-  /**
-   * Create a queue client
-   * @param u URL
-   * @return ClientInterface
-   */
-  public synchronized static ClientInterface createQueueClient(URL u) {
-    return createClient("com.dexels.navajo.client.queueimpl.ClientQueueImpl",u);
-  }
+//  /**
+//   * Create a queue client
+//   * @param u URL
+//   * @return ClientInterface
+//   */
+//  public synchronized static ClientInterface createQueueClient(URL u) {
+//    return createClient("com.dexels.navajo.client.queueimpl.ClientQueueImpl",u);
+//  }
 
   /**
    * Get the instantiated client (default, if not instatiated yet)

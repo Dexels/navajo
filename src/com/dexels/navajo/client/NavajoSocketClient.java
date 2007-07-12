@@ -142,7 +142,7 @@ public class NavajoSocketClient extends ClientQueueImpl {
 //        n.addMessage(m);
 //        m.addProperty(pp);
 
-        NavajoClientFactory.createClient("com.dexels.navajo.client.NavajoSocketClient", null);
+        NavajoClientFactory.createClient("com.dexels.navajo.client.NavajoSocketClient", null,null);
         NavajoClientFactory.getClient().setServerUrl("bananus:10000");
         NavajoClientFactory.getClient().setUsername("ROOT");
         NavajoClientFactory.getClient().setPassword("");

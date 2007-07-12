@@ -1904,4 +1904,9 @@ public final void switchServer(int startIndex, boolean forceChange) {
 	
 	
 
+	public void init(String rootPath, String serverXmlPath) throws ClientException {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

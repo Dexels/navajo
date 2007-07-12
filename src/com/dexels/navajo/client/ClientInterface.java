@@ -57,8 +57,22 @@ public interface ClientInterface {
 
   public void doAsyncSend(Navajo in, String method, ResponseListener response, String responseId, ConditionErrorHandler v) throws ClientException;
 
+/**
+ * @deprecated
+ * @param config
+ * @throws ClientException
+ */
   public void init(URL config) throws ClientException;
 
+  /**
+   * For direct clients. 
+   * @param rootPath
+   * @param serverXmlPath
+   * @throws ClientException
+   */
+  public void init(String rootPath, String serverXmlPath) throws ClientException;
+
+  
   public String getUsername();
 
   public String getPassword();
