@@ -239,6 +239,10 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 	public int getSize() {
 		return instance.myStore.getSize();
 	}
+	
+	public int getDeadQueueSize() {
+		return instance.myStore.getDeadQueue().size();	
+	}
 
 	public void setMaxThreads(int t) {
 		MAX_THREADS = t;
