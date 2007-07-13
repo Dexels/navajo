@@ -90,7 +90,7 @@ public class TipiInstantiateTipi extends TipiAction {
 			}
 		}
 		XMLElement xe = new CaseSensitiveXMLElement();
-		xe.setName("component-instance");
+		xe.setName("component");
 		if (byClass) {
 			xe.setAttribute("class", className);
 		} else {

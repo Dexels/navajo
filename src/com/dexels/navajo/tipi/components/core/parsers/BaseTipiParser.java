@@ -20,7 +20,23 @@ abstract class BaseTipiParser extends TipiTypeParser {
 	}
 
 	protected Property getPropertyByPath(TipiComponent source, String path) {
-		StringTokenizer st = new StringTokenizer(path, ":");
+		StringTokenizer counter = new StringTokenizer(path,":");
+		int tokencount = counter.countTokens();
+		if(tokencount==2) {
+			System.err.println("jahoorrr.r..");
+			String navajo = counter.nextToken();
+			String propertyPath = counter.nextToken();
+			Navajo n = myContext.getNavajo(navajo);
+			System.err.println(">>> "+myContext.getNavajoNames());
+			if(n!=null) {
+				System.err.println("Lookin for message: "+propertyPath);
+				return n.getProperty(propertyPath);
+			} else {
+				System.err.println("No navajo..");
+				return null;
+			}
+		}
+					StringTokenizer st = new StringTokenizer(path, ":");
 		String partOne = st.nextToken();
 		String partTwo = st.nextToken();
 		String partThree = st.nextToken();
@@ -38,6 +54,23 @@ abstract class BaseTipiParser extends TipiTypeParser {
 	}
 
 	protected Message getMessageByPath(TipiComponent source, String path) {
+		StringTokenizer counter = new StringTokenizer(path,":");
+		int tokencount = counter.countTokens();
+		if(tokencount==2) {
+			System.err.println("jahoorrr.r..");
+			String navajo = counter.nextToken();
+			String messagePath = counter.nextToken();
+			Navajo n = myContext.getNavajo(navajo);
+			System.err.println(">>> "+myContext.getNavajoNames());
+			if(n!=null) {
+				System.err.println("Lookin for message: "+messagePath);
+				return n.getMessage(messagePath);
+			} else {
+				System.err.println("No navajo..");
+				return null;
+			}
+			
+		}
 		StringTokenizer st = new StringTokenizer(path, ":");
 		String partOne = st.nextToken();
 		String partTwo = st.nextToken();

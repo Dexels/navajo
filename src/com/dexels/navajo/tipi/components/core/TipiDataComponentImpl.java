@@ -30,7 +30,7 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 	// private String autoLoad = null;
 	// private String autoLoadDestination = null;
 	protected String myMethod;
-	private String myServer;
+//	private String myServer;
 
 	public TipiDataComponentImpl() {
 	}
@@ -74,16 +74,16 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 		}
 	}
 
-	protected Object getComponentValue(String name) {
-		if ("server".equals(name)) {
-			return myServer;
-		}
-		return super.getComponentValue(name);
-	}
-
-	public String getServer() {
-		return myServer;
-	}
+//	protected Object getComponentValue(String name) {
+//		if ("server".equals(name)) {
+//			return myServer;
+//		}
+//		return super.getComponentValue(name);
+//	}
+//
+//	public String getServer() {
+//		return myServer;
+//	}
 
 	public void load(XMLElement definition, XMLElement instance, TipiContext context) throws TipiException {
 		super.load(definition, instance, context);
@@ -103,7 +103,7 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 		}
 		// System.err.println("MY CONSTRIANT::::::::::::::::: " + constraint);
 		Vector children = null;
-		if (instance.getAttribute("class") != null) {
+		if (instance.getAttribute("class") != null || instance.getAttribute("type")!=null ) {
 			// System.err.println("Instantiating from instance");
 			children = instance.getChildren();
 		} else {
@@ -115,7 +115,7 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 			if (child.getName().equals("layout")) {
 				instantiateWithLayout(child);
 			} else {
-				if (child.getName().equals("tipi-instance") || child.getName().equals("component-instance")) {
+				if (child.getName().equals("tipi-instance") || child.getName().equals("component-instance") ||  child.getName().equals("component")) {
 					addComponentInstance(myContext, child, child.getAttribute("constraint"));
 				}
 			}
@@ -210,13 +210,6 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 		myServices.remove(service);
 	}
 
-	// /**
-	// * @deprecated
-	// */
-	public void performService(TipiContext context, String service, TipiEvent event) throws TipiException, TipiBreakException {
-		performService(context, "*", service, false, event, -1, null, null, null, null, null);
-	}
-
 	/**
 	 * @deprecated
 	 */
@@ -243,16 +236,12 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 		return myMethod;
 	}
 
-	public void loadData(Navajo n, TipiContext tc, String method, String server) throws TipiException, TipiBreakException {
+	public void loadData(Navajo n,String method) throws TipiException, TipiBreakException {
 		myMethod = method;
 		if (n == null) {
 			throw new TipiException("Loading with null Navajo! ");
 		}
-		if (server != null) {
-			if (!server.equals(myServer)) {
-				throw new TipiBreakException(TipiBreakException.BREAK_BLOCK);
-			}
-		}
+		
 		for (int i = 0; i < properties.size(); i++) {
 			PropertyComponent current = (PropertyComponent) properties.get(i);
 			Property p;
@@ -296,9 +285,10 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 			TipiComponent tcomp = getTipiComponent(i);
 			if (TipiDataComponent.class.isInstance(tcomp)) {
 				TipiDataComponent current = (TipiDataComponent) tcomp;
-				current.loadData(n, tc, method, server);
+				current.loadData(n, method);
 			}
 		}
+		// hmmmmmmmmm
 		doPerformOnLoad(method);
 		doLayout();
 	}

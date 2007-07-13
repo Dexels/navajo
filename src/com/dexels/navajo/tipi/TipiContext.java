@@ -52,7 +52,9 @@ public abstract class TipiContext implements ActivityController {
 	private final ArrayList activityListenerList = new ArrayList();
 
 	protected final HashMap clientConfigMap = new HashMap();
-	protected boolean studioMode = false;
+
+	protected final HashMap navajoMap = new HashMap();
+	
 	protected TipiThreadPool myThreadPool;
 	protected TipiComponent topScreen = null;
 	protected List myThreadsToServer = new ArrayList();
@@ -134,10 +136,6 @@ public abstract class TipiContext implements ActivityController {
 		return poolSize;
 	}
 
-	public void setStudioMode(boolean b) {
-		studioMode = b;
-	}
-
 	public void setClassLoader(ClassLoader cl) {
 		tipiClassLoader = cl;
 	}
@@ -167,10 +165,6 @@ public abstract class TipiContext implements ActivityController {
 		parseStream(new FileInputStream(location), dir, studioMode);
 	}
 
-	public boolean isStudioMode() {
-		return studioMode;
-		// return false;
-	}
 
 	public void parseURL(URL location, boolean studioMode) throws IOException, XMLParseException, TipiException {
 		try {
@@ -351,7 +345,7 @@ public abstract class TipiContext implements ActivityController {
 		InputStreamReader isr = new InputStreamReader(in, "UTF-8");
 		doc.parseFromReader(isr);
 		isr.close();
-		parseXMLElement(doc, studioMode, sourceName);
+		parseXMLElement(doc, sourceName);
 		// Class initClass = (Class) tipiClassMap.get(definitionName);
 		// try {
 		// if (initClass != null) {
@@ -383,7 +377,7 @@ public abstract class TipiContext implements ActivityController {
 		}
 	}
 
-	protected void parseXMLElement(XMLElement elm, boolean studioMode, String dir) throws TipiException {
+	protected void parseXMLElement(XMLElement elm, String dir) throws TipiException {
 		String elmName = elm.getName();
 		setSplashInfo("Loading user interface");
 		if (!elmName.equals("tid")) {
@@ -393,11 +387,11 @@ public abstract class TipiContext implements ActivityController {
 		Vector children = elm.getChildren();
 		for (int i = 0; i < children.size(); i++) {
 			XMLElement child = (XMLElement) children.elementAt(i);
-			parseChild(child, studioMode, dir);
+			parseChild(child, dir);
 		}
 	}
 
-	protected void parseChild(XMLElement child, boolean studioMode, String dir) throws TipiException {
+	protected void parseChild(XMLElement child, String dir) throws TipiException {
 		String childName = child.getName();
 		if (childName.equals("client-config")) {
 			if (!"__ignore".equals(dir)) {
@@ -408,7 +402,7 @@ public abstract class TipiContext implements ActivityController {
 			configureTipi(child);
 			return;
 		}
-		if (childName.equals("component") || childName.equals("tipi")) {
+		if (childName.equals("component") || childName.equals("tipi") || childName.equals("definition")) {
 			parseDefinition(child);
 			return;
 		}
@@ -473,7 +467,7 @@ public abstract class TipiContext implements ActivityController {
 
 	public void parseDefinition(XMLElement child) throws TipiException {
 		String childName = child.getName();
-		if (childName.equals("tipi") || childName.equals("component")) {
+		if (childName.equals("tipi") || childName.equals("component") || childName.equals("definition")) {
 			if (getTipiDefinition(childName) != null) {
 				System.err.println(">>>>>>>>>>>>>>>>> SKIPPING ALREADY DEFINED: " + childName);
 			} else {
@@ -488,7 +482,7 @@ public abstract class TipiContext implements ActivityController {
 		if (xe.getAttribute("name") == null) {
 			throw new RuntimeException("Tipi/component definition found without name at: " + xe.getLineNr());
 		}
-		if (xe.getAttribute("class") == null) {
+		if (xe.getAttribute("class") == null && xe.getAttribute("type") == null) {
 			throw new RuntimeException("Tipi/component definition found without class at: " + xe.getLineNr());
 		}
 	}
@@ -683,7 +677,7 @@ public abstract class TipiContext implements ActivityController {
 					ex.printStackTrace();
 					return;
 				}
-				parseXMLElement(doc, studioMode, dir);
+				parseXMLElement(doc, dir);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -730,6 +724,9 @@ public abstract class TipiContext implements ActivityController {
 	public TipiAction instantiateTipiAction(XMLElement definition, TipiComponent parent) throws TipiException {
 		String type = (String) definition.getAttribute("type");
 		if (type == null) {
+			type = definition.getName();
+		}
+		if (type == null) {
 			throw new TipiException("Undefined action type in: " + definition.toString());
 		}
 		return myActionManager.instantiateAction(definition, parent);
@@ -763,7 +760,10 @@ public abstract class TipiContext implements ActivityController {
 	// }
 
 	protected TipiComponent instantiateComponentByDefinition(XMLElement definition, XMLElement instance) throws TipiException {
-		String clas = definition.getStringAttribute("class", "");
+		String clas = definition.getStringAttribute("class");
+		if(clas==null) {
+			clas = definition.getStringAttribute("type");
+		}
 		String name = instance.getStringAttribute("name");
 		if (name == null) {
 			System.err.println("Error instantiating component: " + clas + ". No name supplied. instance: " + instance);
@@ -802,6 +802,9 @@ public abstract class TipiContext implements ActivityController {
 
 	public TipiComponent reloadComponent(TipiComponent comp, XMLElement definition, XMLElement instance) throws TipiException {
 		String clas = definition.getStringAttribute("class", "");
+		if(clas==null || "".equals(clas)) {
+			clas = definition.getStringAttribute("type", "");
+		}
 		String name = instance.getStringAttribute("name");
 		if (!clas.equals("")) {
 			// Class cc = getTipiClass(clas);
@@ -828,7 +831,11 @@ public abstract class TipiContext implements ActivityController {
 
 	public TipiComponent instantiateComponent(XMLElement instance) throws TipiException {
 		String name = (String) instance.getAttribute("name");
-		String clas = instance.getStringAttribute("class", "");
+		String clas = instance.getStringAttribute("class");
+		if(clas==null) {
+			clas = instance.getStringAttribute("type", "");
+		}
+		
 		TipiComponent tc = null;
 		if (clas.equals("") && name != null && !"".equals(name)) {
 			// No class provided. Must be instantiating from a definition.
@@ -1061,9 +1068,9 @@ public abstract class TipiContext implements ActivityController {
 		return new TipiActionBlock(this);
 	}
 
-	public ArrayList getScreens() {
-		return screenList;
-	}
+//	public ArrayList getScreens() {
+//		return screenList;
+//	}
 
 	public Object getTopLevel() {
 		return ((TipiComponent) getDefaultTopLevel()).getContainer();
@@ -1152,27 +1159,42 @@ public abstract class TipiContext implements ActivityController {
 	// }
 	// }
 
-	public Navajo doSimpleSend(Navajo n, String service, ConditionErrorHandler ch, boolean breakOnError) throws TipiBreakException {
-		return doSimpleSend(n, service, ch, -1, breakOnError);
-	}
+//	public Navajo doSimpleSend(Navajo n, String service, ConditionErrorHandler ch, boolean breakOnError) throws TipiBreakException {
+//		return doSimpleSend(n, service, ch, -1, breakOnError);
+//	}
 
-	public Navajo doSimpleSend(Navajo n, String service, ConditionErrorHandler ch, long expirtationInterval, boolean breakOnError)
-			throws TipiBreakException {
-		return doSimpleSend(n, service, ch, expirtationInterval, null, null, null, breakOnError);
-	}
+//	/**
+//	 * @deprecated
+//	 */
+//
+//	public Navajo doSimpleSend(Navajo n, String service, ConditionErrorHandler ch, long expirtationInterval, boolean breakOnError)
+//			throws TipiBreakException {
+//		return doSimpleSend(n, service, ch, expirtationInterval, null, null, null, breakOnError);
+//	}
+
+	/**
+	 * @deprecated
+	 */
 
 	public Navajo doSimpleSend(Navajo n, String service, ConditionErrorHandler ch, long expirtationInterval, String hosturl,
 			String username, String password, boolean breakOnError) throws TipiBreakException {
 		return doSimpleSend(n, service, ch, expirtationInterval, hosturl, username, password, null, null, breakOnError);
 	}
 
-	// public Navajo doSimpleSend(Navajo n, String service,
-	// ConditionErrorHandler ch, String clientName, boolean breakOnError) throws
-	// TipiBreakException {
-	// return doSimpleSend(n, service, ch, -1, null,null,null, null, null,
-	// breakOnError);
-	// }
+	/**
+	 * @deprecated
+	 */
 
+	 public Navajo doSimpleSend(Navajo n, String service,
+	 ConditionErrorHandler ch, String clientName, boolean breakOnError) throws
+	 TipiBreakException {
+	 return doSimpleSend(n, service, ch, -1, null,null,null, null, null,
+	 breakOnError);
+	 }
+
+	/**
+	 * @deprecated
+	 */
 	public Navajo doSimpleSend(Navajo n, String service, ConditionErrorHandler ch, long expirtationInterval, String hosturl,
 			String username, String password, String keystore, String keypass, boolean breakOnError) throws TipiBreakException {
 		return doSimpleSend(n, service, ch, expirtationInterval, hosturl, username, password, null, null, breakOnError, null);
@@ -1182,6 +1204,9 @@ public abstract class TipiContext implements ActivityController {
 		NavajoClientFactory.getClient().setSecure(keystore.getDataAsStream(), passphrase, true);
 	}
 
+	/**
+	 * @deprecated
+	 */
 	private Navajo doSimpleSend(Navajo n, String service, ConditionErrorHandler ch, long expirtationInterval, String hosturl,
 			String username, String password, String keystore, String keypass, boolean breakOnError, String clientName)
 			throws TipiBreakException {
@@ -1247,39 +1272,49 @@ public abstract class TipiContext implements ActivityController {
 				null);
 	}
 
-	public void performTipiMethod(TipiDataComponent t, Navajo n, String tipiDestinationPath, String method, boolean breakOnError,
-			TipiEvent event, long expirationInterval, String hosturl, String username, String password, String keystore, String keypass)
-			throws TipiException, TipiBreakException {
-		performTipiMethod(t, n, tipiDestinationPath, method, breakOnError, event, expirationInterval, hosturl, username, password,
-				keystore, keypass, null);
-	}
 
 	public void performTipiMethod(TipiDataComponent t, Navajo n, String tipiDestinationPath, String method, boolean breakOnError,
-			TipiEvent event, long expirationInterval, String hosturl, String username, String password, String keystore, String keypass,
-			String server) throws TipiException, TipiBreakException {
+			TipiEvent event, long expirationInterval, String hosturl, String username, String password, String keystore, String keypass) throws TipiException, TipiBreakException {
 
 		ConditionErrorHandler ch = t;
 
 		Navajo reply = doSimpleSend(n, method, ch, expirationInterval, hosturl, username, password, keystore, keypass, breakOnError);
-		loadNavajo(reply, method, tipiDestinationPath, event, breakOnError, server);
-
-		// long x2 = System.currentTimeMillis() - xx;
-		// logServicePerformance(method, x2);
+		addNavajo(method, reply);
+		loadNavajo(reply, method, tipiDestinationPath, event, breakOnError);
 	}
 
-	public void loadNavajo(Navajo reply, String method, String server) throws TipiException, TipiBreakException {
-		loadNavajo(reply, method, "*", null, false, server);
+	public Navajo getNavajo(String method) {
+		return (Navajo)navajoMap.get(method);
 	}
 
-	public void loadNavajo(Navajo reply, String method, String tipiDestinationPath, TipiEvent event, boolean breakOnError, String server)
+	public Set getNavajoNames() {
+		return navajoMap.keySet();
+	}
+
+	
+	public void removeNavajo(String method) {
+		navajoMap.remove(method);
+	}
+	public void addNavajo(String method, Navajo navajo) {
+		System.err.println("Adding navajo: "+method);
+		
+		navajoMap.put(method,navajo);
+	}
+	
+	
+	public void loadNavajo(Navajo reply, String method) throws TipiException, TipiBreakException {
+		loadNavajo(reply, method, "*", null, false);
+	}
+
+	public void loadNavajo(Navajo reply, String method, String tipiDestinationPath, TipiEvent event, boolean breakOnError)
 			throws TipiException, TipiBreakException {
+		System.err.println("Loading navajo: "+method);
 		if (reply != null) {
 			if (eHandler != null) {
 				if (eHandler.hasErrors(reply)) {
+					System.err.println("Errors detected. ");
 					boolean hasUserDefinedErrorHandler = false;
 					try {
-						// System.err.println("Error found. Looking for
-						// instances listening to: "+method);
 						ArrayList tipis = getTipiInstancesByService(method);
 						if (tipis != null) {
 							for (int i = 0; i < tipis.size(); i++) {
@@ -1292,39 +1327,30 @@ public abstract class TipiContext implements ActivityController {
 									if (hasHandler) {
 										hasUserDefinedErrorHandler = true;
 									}
-								} else {
-									// System.err.println("HASPATH RETURNED
-									// FALSE!!!!");
-								}
+								} 
 							}
-						} else {
-							// System.err.println("No tipis found");
-						}
+						} 
 					} catch (TipiException ex1) {
 						ex1.printStackTrace();
 					}
 					if (!hasUserDefinedErrorHandler) {
 						eHandler.showError();
 					}
-					// System.err.println("Error found in service... Checking
-					// for break");
 					if (breakOnError) {
-						// System.err.println("breakOnError set. Breaking
-						// event...");
 						throw new TipiBreakException(-1);
 					}
 					return;
 				}
+			} else {
+				System.err.println("No error handler!");
 			}
 			try {
-				if (studioMode) {
-					storeTemplateNavajo(method, reply);
-					fireNavajoLoaded(method, reply);
-				}
-				loadTipiMethod(reply, tipiDestinationPath, method, server);
+				loadTipiMethod(reply, method);
 			} catch (TipiException ex) {
 				ex.printStackTrace();
 			}
+		} else {
+			System.err.println("Trying to load null navajo.");
 		}
 
 	}
@@ -1345,23 +1371,21 @@ public abstract class TipiContext implements ActivityController {
 		// do nothing
 	}
 
-	protected void loadTipiMethod(Navajo reply, String tipiDestinationPath, String method, String server) throws TipiException {
+	protected void loadTipiMethod(Navajo reply, String method) throws TipiException {
 		TipiDataComponent tt;
 		ArrayList tipiList;
 		// System.err.println("Loading method");
-		if ("-".equals(tipiDestinationPath)) {
-			System.err.println("Destination blocked");
-			return;
-		}
 		tipiList = getTipiInstancesByService(method);
 		if (tipiList == null) {
 			return;
 		}
+//		System.err.println(":: loadTipiMethod"+tipiList);
 		for (int i = 0; i < tipiList.size(); i++) {
 			TipiDataComponent t = (TipiDataComponent) tipiList.get(i);
 			debugLog("data    ", "delivering data from method: " + method + " to tipi: " + t.getId());
 			try {
-				t.loadData(reply, this, method, server);
+				t.loadData(reply, method);
+				System.err.println("Data loaded in t: "+t.toString());
 			} catch (TipiBreakException e) {
 				System.err.println("Data refused by component");
 			}

@@ -234,17 +234,7 @@ public abstract class TipiBaseQuestionList extends TipiDataComponentImpl {
 
 	public abstract void runSyncInEventThread(Runnable r);
 
-	public void loadData(final Navajo n, final TipiContext context, final String method, final String server) throws TipiException {
-
-		// NO super.loadData?!
-
-		// System.err.println("LOADING..........................................");
-		// try {
-		// n.write(System.err);
-		// } catch (NavajoException e1) {
-		// e1.printStackTrace();
-		// }
-		// System.err.println(".................................................");
+	public void loadData(final Navajo n, final String method) throws TipiException {
 		final TipiBaseQuestionList me = this;
 		myGroups.clear();
 		myValidGroups.clear();
@@ -286,7 +276,7 @@ public abstract class TipiBaseQuestionList extends TipiDataComponentImpl {
 						} else {
 							System.err.println("This is _not_ good");
 						}
-						tc.loadData(n, myContext, method, server);
+						tc.loadData(n,  method);
 					} catch (TipiException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();

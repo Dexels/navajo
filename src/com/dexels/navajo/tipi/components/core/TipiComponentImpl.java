@@ -315,15 +315,29 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 		Vector defChildren = definition.getChildren();
 		for (int i = 0; i < defChildren.size(); i++) {
 			XMLElement xx = (XMLElement) defChildren.get(i);
-			if (xx.getName().equals("event")) {
+			String[] s = getCustomChildTags();
+			boolean customTag = false;
+			for (int j = 0; j < s.length; j++) {
+				if(s[j].equals(xx.getName())) {
+					customTag = true;
+				}
+			}
+			if(customTag) {
+				continue;
+			}
+			if (!xx.getName().equals("layout") && !xx.getName().equals("tipi-instance") && !xx.getName().equals("component-instance")&& !xx.getName().equals("component")) {
 				String type = xx.getStringAttribute("type");
+				if(type==null) {
+					type = xx.getName();
+				}
 				if (!componentEvents.contains(type)) {
 					throw new RuntimeException("Invalid event type for component with name " + myName + ": " + type + " path " + getPath()
 							+ " " + ". This component allows: " + componentEvents);
 				}
 				TipiEvent event = new TipiEvent();
-				// System.err.println(">>>>>>>>>>>>>> "+classDef);
-				XMLElement eventDef = getEventDefFromClassDef(classDef, xx.getStringAttribute("type"));
+				System.err.println("We are talking 'bout: "+type);
+				XMLElement eventDef = getEventDefFromClassDef(classDef, type);
+				System.err.println(">>>>>>>>>>>>>> "+eventDef);
 				event.init(eventDef);
 				event.load(this, xx, context);
 				addTipiEvent(event);
@@ -342,10 +356,14 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 				Vector eventChildren = child.getChildren();
 				for (int j = 0; j < eventChildren.size(); j++) {
 					XMLElement eventChild = (XMLElement) eventChildren.get(j);
+					String eventChildName = eventChild.getStringAttribute("name");
+					if(eventChildName==null) {
+						eventChildName = eventChild.getName();
+					}
 					// System.err.println("Noot: "+eventChild.getName());
 					// System.err.println("Mies
 					// "+eventChild.getStringAttribute("name"));
-					if (eventName.equals(eventChild.getStringAttribute("name"))) {
+					if (eventName.equals(eventChildName)) {
 						return eventChild;
 					}
 
@@ -954,6 +972,7 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 
 	public boolean performTipiEvent(String type, Map event, boolean sync) throws TipiException {
 		boolean hasEventType = false;
+		System.err.println("Perform tipi event: "+type+" list: "+myEventList);
 		for (int i = 0; i < myEventList.size(); i++) {
 			TipiEvent te = (TipiEvent) myEventList.get(i);
 			if (te.isTrigger(type, myService)) {
@@ -1326,5 +1345,14 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 
 	public String childDump() {
 		return "LIST: " + tipiComponentList + " MAP: " + tipiComponentMap;
+	}
+	
+	/**
+	 * If a component has a custom load method, override this method and enumerate
+	 * all the possible tags, so it can identify its events.
+	 * @return
+	 */
+	public String[] getCustomChildTags() {
+		return new String[]{};
 	}
 }

@@ -23,7 +23,7 @@ import com.dexels.navajo.tipi.internal.*;
  */
 public class MessageParser extends BaseTipiParser {
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
-		// System.err.println("PAESING " + expression);
+		 System.err.println("PAESING " + expression);
 		Message m = getMessageByPath(source, expression);
 		// if (m != null) {
 		// m.write(System.err);

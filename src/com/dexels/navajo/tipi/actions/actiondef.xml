@@ -73,8 +73,12 @@
   </tipiaction>
 
   <tipiaction name="reloadNavajo"  class="TipiReloadNavajo" package="com.dexels.navajo.tipi.actions">
-    <param name="to" type="tipi" required="true"/>
-    <param name="from" type="tipi" required="true"/>
+    <!--  old school -->
+    <param name="to" type="tipi" required="false"/>
+    <param name="from" type="tipi" required="false"/>
+    <!--  new school -->
+    <param name="service" type="navajo" required="false"/>
+ 
   </tipiaction>
 
   <tipiaction name="updateExpressions"  class="TipiUpdateExpressions" package="com.dexels.navajo.tipi.actions">
@@ -114,12 +118,43 @@
   <tipiaction name="debug" class="TipiDebugOutput" package="com.dexels.navajo.tipi.actions">
     <param name="value" type="object"/>
   </tipiaction>
+  
   <tipiaction name="debugNavajo" class="TipiDebugNavajo" package="com.dexels.navajo.tipi.actions">
     <param name="tipipath" type="tipi"/>
+  </tipiaction>
+
+  <tipiaction name="dumpNavajo" class="TipiDumpNavajo" package="com.dexels.navajo.tipi.actions">
+    <param name="input" type="navajo"/>
   </tipiaction>
 
   <tipiaction name="setSystemProperty" class="TipiSetSystemProperty" package="com.dexels.navajo.tipi.actions">
     <param name="name" type="string" required="true"/>
     <param name="value" type="string"/>
   </tipiaction>
+  
+  <tipiaction name="addProperty" class="TipiAddProperty" package="com.dexels.navajo.tipi.actions">
+    <param name="path" type="string" required="true"/>
+    <param name="value" type="object" required="true"/>
+    <param name="navajo" type="navajo" required="true"/>
+  </tipiaction>
+
+  <tipiaction name="addPropertyToMessage" class="TipiAddPropertyToMessage" package="com.dexels.navajo.tipi.actions">
+    <param name="path" type="string" required="true"/>
+    <param name="value" type="object" required="true"/>
+    <param name="message" type="message" required="true"/>
+  </tipiaction>
+
+  <tipiaction name="insertMessage" class="TipiInsertMessage" package="com.dexels.navajo.tipi.actions">
+    <param name="message" type="message" required="true"/>
+  </tipiaction>
+  <tipiaction name="createNavajo" class="TipiCreateNavajo" package="com.dexels.navajo.tipi.actions">
+    <param name="name" type="string" required="true"/>
+  </tipiaction>
+  
+  <tipiaction name="callService" class="TipiCallService" package="com.dexels.navajo.tipi.actions">
+    <param name="service" type="string" required="true"/>
+    <param name="navajo" type="navajo"/>
+  </tipiaction>
+
+  
 </tid>

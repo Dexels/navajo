@@ -25,7 +25,7 @@ import com.dexels.navajo.tipi.internal.*;
 public interface TipiDataComponent extends TipiComponent {
 	public Navajo getNavajo();
 
-	public void loadData(Navajo n, TipiContext context, String method, String server) throws TipiException, TipiBreakException;
+	public void loadData(Navajo n, String method) throws TipiException, TipiBreakException;
 
 	public String getCurrentMethod();
 
@@ -64,7 +64,5 @@ public interface TipiDataComponent extends TipiComponent {
 	public void setPrefix(String pr);
 
 	public String getPrefix();
-
-	public String getServer();
 
 }

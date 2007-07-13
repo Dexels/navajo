@@ -53,30 +53,34 @@ public class TipiEvent implements TipiExecutable {
 
 	public void load(TipiComponent tc, XMLElement elm, TipiContext context) throws TipiException {
 		myComponent = tc;
-		if (elm.getName().equals("event")) {
+//		if (elm.getName().equals("event")) {
 			String stringType = (String) elm.getAttribute("type");
+			if(stringType==null) {
+				stringType = elm.getName();
+			}
 			myEventName = stringType;
 			myEventService = (String) elm.getAttribute("service");
 			mySource = (String) elm.getAttribute("listen");
 			Vector temp = elm.getChildren();
 			for (int i = 0; i < temp.size(); i++) {
 				XMLElement current = (XMLElement) temp.get(i);
-				if (current.getName().equals("condition")) {
-					TipiActionBlock ta = context.instantiateDefaultTipiActionBlock(myComponent);
-					ta.loadConditionStyle(current, myComponent);
-					myExecutables.add(ta);
-				}
+//				if (current.getName().equals("condition")) {
+//					TipiActionBlock ta = context.instantiateDefaultTipiActionBlock(myComponent);
+//					ta.loadConditionStyle(current, myComponent);
+//					myExecutables.add(ta);
+//				}
 				if (current.getName().equals("block")) {
 					TipiActionBlock ta = context.instantiateDefaultTipiActionBlock(myComponent);
 					ta.load(current, myComponent);
 					myExecutables.add(ta);
+					continue;
 				}
-				if (current.getName().equals("action")) {
+//				if (current.getName().equals("action")) {
 					TipiAction ta = context.instantiateTipiAction(current, myComponent);
 					myExecutables.add(ta);
-				}
+//				}
 			}
-		}
+//		}
 	}
 
 	public boolean isSync() {

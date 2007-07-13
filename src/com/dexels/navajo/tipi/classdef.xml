@@ -81,6 +81,8 @@
     <tipi-parser name="event" type="java.lang.Object" parser="com.dexels.navajo.tipi.components.core.parsers.EventParser"/>
     <tipi-parser name="label" type="java.lang.String" parser="com.dexels.navajo.tipi.components.core.parsers.LabelParser"/>
     
+    <tipi-parser name="navajo" type="com.dexels.navajo.document.Navajo" parser="com.dexels.navajo.tipi.components.core.parsers.NavajoParser"/>
+     
     <tipi-parser name="selection" type="java.lang.String" parser="com.dexels.navajo.tipi.components.core.parsers.StringParser"/>
     <tipi-parser type="java.lang.Object" name="object" parser="com.dexels.navajo.tipi.components.core.parsers.ObjectParser"/>
 
