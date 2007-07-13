@@ -21,7 +21,7 @@ public class TipiQuestionGroup extends TipiSwingDataComponentImpl {
     /**@todo Implement this com.dexels.navajo.tipi.components.core.TipiComponentImpl abstract method*/
     throw new java.lang.UnsupportedOperationException("Method createContainer() not yet implemented.");
   }
-  public void loadData(Navajo n, TipiContext context, String method, String server) throws TipiException {
+  public void loadData(Navajo n, String method) throws TipiException {
 
   }
 

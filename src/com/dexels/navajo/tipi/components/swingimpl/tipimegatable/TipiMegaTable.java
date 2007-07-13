@@ -325,7 +325,7 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
   private final void reload() throws TipiBreakException {
     try {
       if (myNavajo != null) {
-        loadData(getNavajo(), myContext, getCurrentMethod(),null);
+        loadData(getNavajo(), getCurrentMethod());
       }
       else {
         System.err.println("Can not reload, no navajo!");
@@ -375,7 +375,7 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
    }
 
 
-  public void loadData(final Navajo n, TipiContext context, String method, String server) throws
+  public void loadData(final Navajo n,String method) throws
       TipiException, TipiBreakException {
     myPanel.removeAll();
     footerRendererMap.clear(); 
@@ -390,7 +390,7 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
     tmtl.loadData(n,null,currentLayers,myPanel);
 
     
-    super.loadData(n, context, method,server);
+    super.loadData(n, method);
     processSelectionList(selectionList);
      }
   
