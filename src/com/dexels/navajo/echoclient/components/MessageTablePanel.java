@@ -25,7 +25,7 @@ public class MessageTablePanel extends SplitPane {
 		myTable = new MessageTable();
 		add(pageNavigator);
         add(myTable);
-    	Style ss = Styles.DEFAULT_STYLE_SHEET.getStyle(MessageTable.class, "Default");
+    	Style ss = Styles.DEFAULT_STYLE_SHEET.getStyle(MessageTablePanel.class, "Default");
     	myTable.setStyle(ss);
     	myTable.setSelectionEnabled(true);
     	myTable.setRolloverEnabled(false);
