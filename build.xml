@@ -3,7 +3,6 @@
 <project name="NavajoTipi" default="archive" basedir=".">
 	<property name="src" location="src" />
 	<property name="build" location="classes" />
-	<property name="lib" value="lib" />
 	<property name="archive" value="tipipackage.jar" />
 	<property name="NavajoClient" value="${PROJECTHOME}/NavajoClient" />
 	<property name="NavajoClient.build" value="${NavajoClient}/classes" />
@@ -14,9 +13,6 @@
     <property name="DexelsVersionControl" value="${PROJECTHOME}/DexelsVersionControl"/>
     <property name="DexelsVersionControl.build" value="${PROJECTHOME}/DexelsVersionControl/classes"/>    
 	<path id="depend">
-		<fileset dir="${lib}">
-			<include name="**/*.jar" />
-		</fileset>
 		<pathelement location="${NavajoClient.build}" />
 		<pathelement location="${NavajoDocument.build}" />
 		<pathelement location="${Navajo.build}" />
