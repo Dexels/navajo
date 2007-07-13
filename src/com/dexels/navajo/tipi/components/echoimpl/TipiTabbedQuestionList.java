@@ -46,10 +46,10 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
         }
         return name.getValue();
     }
-    public void loadData(final Navajo n, final TipiContext context,final String method,String server) throws TipiException {
+    public void loadData(final Navajo n,final String method) throws TipiException {
         clearQuestions();
 //        lastSelectedTab = null;
-        super.loadData(n, context, method,server);
+        super.loadData(n, method);
         if(defaultTabModel.size()>0) {
         	myTabbedPane.setSelectedIndex(0);
         }

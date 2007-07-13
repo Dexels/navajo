@@ -111,9 +111,8 @@ public class TipiTable extends TipiEchoDataComponentImpl {
         return myTable;
     }
 
-    public void loadData(Navajo n, TipiContext context, String method,String server) throws TipiException, TipiBreakException {
-        System.err.println("In LoadDATA (TipiTable)");
-    	super.loadData(n, context, method,server);
+    public void loadData(Navajo n, String method) throws TipiException, TipiBreakException {
+    	super.loadData(n, method);
 //        ((ContainerEx)getContainer()).setzIndex(0);
         
         MessageTable mm = (MessageTable) getActualComponent();
@@ -222,7 +221,10 @@ public class TipiTable extends TipiEchoDataComponentImpl {
         // mm.setColumnAttributes(columnAttributes);
     }
 
- 
+    public String[] getCustomChildTags() {
+		return new String[]{"column","column-attribute"};
+	}
+  
     
     public void processStyles() {
          super.processStyles();
