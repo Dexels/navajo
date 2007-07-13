@@ -1,24 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tsl author="Matthijs Philip" id="person/ProcessQueryPerson" notes="" repository="$Id$" xmlns="http://www.dexels.com/navascript" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dexels.com/navascript http://www.dexels.com/schema/navascript.xsd ">   
+<tsl author="Matthijs Philip" debug="request" id="person/ProcessQueryPerson" notes="" repository="$Id$" xmlns="http://www.dexels.com/navascript" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dexels.com/navascript http://www.dexels.com/schema/navascript.xsd ">
     <methods>
         <method name="person/ProcessUpdatePerson">
-            <required message="Person"/>            
+            <required message="Person"/>
         </method>
         <method name="person/ProcessDeletePerson">
-            <required message="Person"/>            
+            <required message="Person"/>
         </method>
     </methods>
-    <!-- Determine selected PersonId -->
-    <map object="com.dexels.navajo.adapter.MultipleEmptyMap">
-        <field name="emptyMaps">
-            <map ref="/Person" filter="?[Update] AND [Update]">
-                <param name="PersonId">
-                    <expression value="[PersonId]"/>
-                </param>
-            </map>
-        </field>
-    </map>
-    <param name="PersonId" condition="!?[/@PersonId] AND ?[/Person/PersonId]">
+    <param name="PersonId">
         <expression value="[/Person/PersonId]"/>
     </param>
     <map object="com.dexels.navajo.adapter.SQLMap">
@@ -70,7 +60,8 @@
                 <expression value="$columnValue('dateofbirth')"/>
             </property>
             <property name="Age" type="integer" direction="out" description="Leeftijd">
-                <expression value="Age($columnValue('dateofbirth'))"/>
+                <expression condition="$columnValue('dateofbirth') != null" value="Age($columnValue('dateofbirth'))"/>
+                <expression value="null"/>
             </property>
             <property name="Nationality" type="string" direction="in" description="Nationaliteit">
                 <expression value="$columnValue('nationality')"/>
@@ -80,26 +71,26 @@
                 <option name="Onbekend" value="0" condition="$columnValue('sex') != '0'" selected="0"/>
                 <option name="Man" value="1" condition="$columnValue('sex') == '1'" selected="1"/>
                 <option name="Man" value="1" condition="$columnValue('sex') != '1'" selected="0"/>
-                <option name="Vrouw" value="2" condition="$columnValue('sex') == '2'" selected="1"/>                
-                <option name="Vrouw" value="2" condition="$columnValue('sex') != '2'" selected="0"/>                
+                <option name="Vrouw" value="2" condition="$columnValue('sex') == '2'" selected="1"/>
+                <option name="Vrouw" value="2" condition="$columnValue('sex') != '2'" selected="0"/>
             </property>
             <property name="StreetName" type="string" direction="in" description="Straat">
-                 <expression value="$columnValue('streetname')"/>
+                <expression value="$columnValue('streetname')"/>
             </property>
             <property name="HouseNumber" type="integer" direction="in" description="Huisnummer">
-                 <expression value="$columnValue('housenumber')"/>
+                <expression value="$columnValue('housenumber')"/>
             </property>
             <property name="NumberAppendix" type="string" direction="in" description="Toevoeging">
-                 <expression value="$columnValue('numberappendix')"/>
+                <expression value="$columnValue('numberappendix')"/>
             </property>
             <property name="City" type="string" direction="in" description="Woonplaats">
-                 <expression value="$columnValue('city')"/>
+                <expression value="$columnValue('city')"/>
             </property>
             <property name="ZipCode" type="string" direction="in" description="Postcode">
-                 <expression value="$columnValue('zipcode')"/>
+                <expression value="$columnValue('zipcode')"/>
             </property>
             <property name="CountryCode" type="string" direction="in" description="Landcode">
-                 <expression value="$columnValue('countrycode')"/>
+                <expression value="$columnValue('countrycode')"/>
             </property>
             <property name="TelephoneNumber" type="string" direction="in" description="Telefoonnummer">
                 <expression value="$columnValue('telephonenumber')"/>

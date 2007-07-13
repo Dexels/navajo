@@ -89,7 +89,7 @@
     </map>
     <message name="Person">
         <property name="PersonId" direction="out" type="integer" description="CV code (intern)">
-            <expression value="[/PersonId/PersonId]"/>
+            <expression value="[/Person/PersonId]"/>
         </property>
     </message>
     <message name="Result">
