@@ -57,57 +57,57 @@ public class SwingTipiContext extends TipiContext {
 		return s;
 	}
 
-	protected final void loadTipiMethod(final Navajo reply, final String tipiDestinationPath, final String method, final String server)
-			throws TipiException {
-		TipiDataComponent tt;
-		ArrayList tipiList;
-		// System.err.println("Loading method");
-		if ("-".equals(tipiDestinationPath)) {
-			System.err.println("Destination blocked");
-			return;
-		}
-		if (SwingUtilities.isEventDispatchThread()) {
-			// System.err.println("EVENT THREAD!");
-			deliverData(reply, method, server);
-		} else {
-			// System.err.println("NON EVENT THREAD!");
-			try {
-				SwingUtilities.invokeAndWait(new Runnable() {
-
-					public void run() {
-						try {
-							deliverData(reply, method, server);
-						} catch (TipiException e) {
-							e.printStackTrace();
-						}
-					}
-				});
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
-	}
-
-	private void deliverData(Navajo reply, String method, String server) throws TipiException {
-		ArrayList tipiList;
-		tipiList = getTipiInstancesByService(method);
-		if (tipiList != null) {
-			for (int i = 0; i < tipiList.size(); i++) {
-				TipiDataComponent t = (TipiDataComponent) tipiList.get(i);
-				debugLog("data    ", "delivering data from method: " + method + " to tipi: " + t.getId());
-				try {
-					t.loadData(reply, this, method, server);
-				} catch (TipiBreakException e) {
-					System.err.println("Data refused by component");
-				}
-				if (t.getContainer() != null) {
-					t.tipiLoaded();
-				}
-			}
-		}
-	}
+//	protected final void loadTipiMethod(final Navajo reply, final String tipiDestinationPath, final String method)
+//			throws TipiException {
+//		TipiDataComponent tt;
+//		ArrayList tipiList;
+//		// System.err.println("Loading method");
+//		if ("-".equals(tipiDestinationPath)) {
+//			System.err.println("Destination blocked");
+//			return;
+//		}
+//		if (SwingUtilities.isEventDispatchThread()) {
+//			// System.err.println("EVENT THREAD!");
+//			deliverData(reply, method);
+//		} else {
+//			// System.err.println("NON EVENT THREAD!");
+//			try {
+//				SwingUtilities.invokeAndWait(new Runnable() {
+//
+//					public void run() {
+//						try {
+//							deliverData(reply, method);
+//						} catch (TipiException e) {
+//							e.printStackTrace();
+//						}
+//					}
+//				});
+//			} catch (Exception e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		}
+//
+//	}
+//
+//	private void deliverData(Navajo reply, String method) throws TipiException {
+//		ArrayList tipiList;
+//		tipiList = getTipiInstancesByService(method);
+//		if (tipiList != null) {
+//			for (int i = 0; i < tipiList.size(); i++) {
+//				TipiDataComponent t = (TipiDataComponent) tipiList.get(i);
+//				debugLog("data    ", "delivering data from method: " + method + " to tipi: " + t.getId());
+//				try {
+//					t.loadData(reply, this, method);
+//				} catch (TipiBreakException e) {
+//					System.err.println("Data refused by component");
+//				}
+//				if (t.getContainer() != null) {
+//					t.tipiLoaded();
+//				}
+//			}
+//		}
+//	}
 
 	public void setUserInterface(UserInterface ui) {
 		myUserInterface = (UserInterface) ui;
