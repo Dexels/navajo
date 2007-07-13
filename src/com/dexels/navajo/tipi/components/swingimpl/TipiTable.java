@@ -196,6 +196,10 @@ public class TipiTable
     mm.setColumnAttributes(columnAttributes);
   }
 
+  public String[] getCustomChildTags() {
+		return new String[]{"column","column-attribute","remarks","columndivider"};
+	}
+  
   public XMLElement store() {
     TipiSwingColumnAttributeParser cap = new TipiSwingColumnAttributeParser();
     XMLElement xx = super.store();
@@ -287,21 +291,29 @@ public class TipiTable
       ex.printStackTrace();
     }
   }
-
-  public void loadData(final Navajo n, TipiContext tc,String method,String server) throws TipiException, TipiBreakException {
+@Override
+  public void loadData(final Navajo n,String method) throws TipiException, TipiBreakException {
     //Thread.currentThread().dumpStack();
-	    super.loadData(n, tc,method,server);
-
+	    super.loadData(n, method);
 	  flushAggregateValues();
     updateConditionalRemarks();
     final MessageTablePanel mtp = (MessageTablePanel) getContainer();
     if (messagePath != null && n != null) {
       final Message m = n.getMessage(messagePath);
       myMessage = m;
+//      System.err.println("MEssage: "+myMessage);
       if (m != null) {
         runSyncInEventThread(new Runnable() {
           public void run() {
-//            refreshColumnLabels(n, m);
+//      	    System.err.println("Loading data in table: ");
+//      	    try {
+//				m.write(System.err);
+//			} catch (NavajoException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+
+        	  //            refreshColumnLabels(n, m);
             // if no columnsdefined:
             if (columnSize.size()==0) {
               mtp.createColumnsFromDef(m);
