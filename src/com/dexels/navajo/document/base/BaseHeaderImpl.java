@@ -72,9 +72,11 @@ public class BaseHeaderImpl
 
   public Header copy(Navajo n) {
 	  Header h = NavajoFactory.getInstance().createHeader(n, getRPCName(), getRPCUser(), getRPCPassword(), expiration);
-	  for (Iterator iter = getAttributes().keySet().iterator(); iter.hasNext();) {
-		String element = (String) iter.next();
-		h.setHeaderAttribute(element, getHeaderAttribute(element));
+	  if(getAttributes()!=null) {
+		  for (Iterator iter = getAttributes().keySet().iterator(); iter.hasNext();) {
+				String element = (String) iter.next();
+				h.setHeaderAttribute(element, getHeaderAttribute(element));
+			  }
 	  }
 	  return h;
   }
