@@ -49,7 +49,7 @@ public interface ClientInterface {
 
   public Navajo doSimpleSend(Navajo n, String method, ConditionErrorHandler v) throws ClientException;
 
-  public Navajo doScheduledSend(Navajo out, String method, String schedule) throws ClientException;
+  public Navajo doScheduledSend(Navajo out, String method, String schedule, String description, String clientId) throws ClientException;
 
   public void doAsyncSend(Navajo in, String method, ResponseListener response, String responseId) throws ClientException;
 
