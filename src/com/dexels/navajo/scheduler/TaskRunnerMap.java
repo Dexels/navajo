@@ -61,6 +61,8 @@ public class TaskRunnerMap implements Mappable {
 	public String webservice;
 	public String trigger;
 	public Binary navajo;
+	public String taskDescription;
+	public String clientId;
 	
 	// Actions
 	public boolean start;
@@ -96,6 +98,14 @@ public class TaskRunnerMap implements Mappable {
 	
 	public void setWebservice(String webservice) {
 		this.webservice = webservice;
+	}
+	
+	public void setTaskDescription(String s){
+		this.taskDescription = s;
+	}
+	
+	public void setClientId(String s){
+		this.clientId = s;
 	}
 	
 	public void setInactive(boolean b) {

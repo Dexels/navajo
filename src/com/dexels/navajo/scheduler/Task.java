@@ -73,6 +73,8 @@ public class Task implements Runnable, TaskMXBean, TaskInterface, Serializable {
     private Date startTime = null;
     private Date finishedTime = null;
     private boolean keepRequestResponse = false;
+    private String taskDescription = "";
+    private String clientId = "";
     private String id = null;
     
     public Task() {
@@ -107,6 +109,11 @@ public class Task implements Runnable, TaskMXBean, TaskInterface, Serializable {
 			System.err.println("Empty trigger for task.....");
 		}
 		this.navajo = requestNavajo;
+		
+		if(this.navajo != null){
+			taskDescription = this.navajo.getHeader().getHeaderAttribute("description");
+			clientId = this.navajo.getHeader().getHeaderAttribute("clientid");
+		}
 	}
 	
 	/**
@@ -148,6 +155,14 @@ public class Task implements Runnable, TaskMXBean, TaskInterface, Serializable {
 	 */
 	public String getWebservice() {
 		return this.webservice;
+	}
+	
+	public String getClientId(){
+		return this.clientId;
+	}
+	
+	public String getTaskDescription(){
+		return this.taskDescription;
 	}
 	
 	/**
@@ -198,6 +213,14 @@ public class Task implements Runnable, TaskMXBean, TaskInterface, Serializable {
 	 */
 	public void setId(String s) {
 		this.id = s;
+	}
+	
+	public void setClientId(String s){
+		this.clientId = s;
+	}
+	
+	public void setTaskDescription(String s){
+		this.taskDescription = s;
 	}
 	
 	/**
