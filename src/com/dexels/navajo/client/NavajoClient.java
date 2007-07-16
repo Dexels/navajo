@@ -1862,7 +1862,7 @@ public final void switchServer(int startIndex, boolean forceChange) {
 	 * @schedule defines a timestamp of the format: HH:mm:ss dd-MM-yyyy. If null assume immediate execution.
 	 * 
 	 */
-	public Navajo doScheduledSend(Navajo out, String method, String schedule) throws ClientException {
+	public Navajo doScheduledSend(Navajo out, String method, String schedule, String description, String clientId) throws ClientException {
 		
 		String triggerURL = null;
 		
@@ -1888,7 +1888,12 @@ public final void switchServer(int startIndex, boolean forceChange) {
 		} else {
 			triggerURL = "time:" + schedule;
 		}
-		
+		if(description != null){
+			h.setHeaderAttribute("description", description);
+		}
+		if(clientId != null){
+			h.setHeaderAttribute("clientid", clientId);
+		}
 		h.setSchedule(triggerURL);
 		
 		return doSimpleSend(out, method);
