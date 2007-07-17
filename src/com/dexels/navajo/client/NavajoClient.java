@@ -1894,6 +1894,7 @@ public final void switchServer(int startIndex, boolean forceChange) {
 		if(clientId != null){
 			h.setHeaderAttribute("clientid", clientId);
 		}
+		h.setHeaderAttribute("keeprequestresponse", "true");
 		h.setSchedule(triggerURL);
 		
 		return doSimpleSend(out, method);
