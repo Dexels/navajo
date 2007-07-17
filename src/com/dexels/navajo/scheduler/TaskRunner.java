@@ -386,6 +386,8 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 				String user = null;
 				String webservice = null;
 				String trigger = null;
+				String taskDesc = null;
+				String clientId = null;
 				String singleEvent = null;
 				String status  = null;
 				String starttime = null;
@@ -402,6 +404,12 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 				}
 				if ( st.hasMoreTokens() ) {
 					trigger = st.nextToken();
+				}
+				if ( st.hasMoreTokens() ) {
+					taskDesc = st.nextToken();
+				}
+				if ( st.hasMoreTokens() ) {
+					clientId = st.nextToken();
 				}
 				if ( st.hasMoreTokens() ) {
 					singleEvent = st.nextToken();
@@ -422,6 +430,8 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 				if ( username == null || username.equals(user)) {
 					Task t = new Task(webservice, user, "", null, trigger, null);
 					t.setTrigger(trigger);
+					t.setTaskDescription(taskDesc);
+					t.setClientId(clientId);
 					t.setId(id);
 					t.setFinished(true);
 					t.setStartTime(sdf.parse(starttime));
@@ -460,7 +470,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 			
 			fw = new FileWriter( log, true );
 			if ( freshfile ) {
-				fw.write("ID;WEBSERVICE;USERNAME;TRIGGER;SINGLEEVENT;STATUS;STARTTIME;ENDTIME;ERRORMESSAGE\n");
+				fw.write("ID;WEBSERVICE;USERNAME;TRIGGER;TASKDESCRIPTION;CLIENTID;SINGLEEVENT;STATUS;STARTTIME;ENDTIME;ERRORMESSAGE\n");
 			}
 			StringBuffer header = new StringBuffer();
            
@@ -468,6 +478,8 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
             		      t.getWebservice() + ";" + 
             		      t.getUsername() + ";" + 
             		      t.getTrigger().getDescription() + ";" + 
+            		      t.getTaskDescription() + ";" +
+            		      t.getClientId() + ";" +
             		      t.getTrigger().isSingleEvent() + ";" +
             		      (error ? "error" : "ok") + ";" +
             		      sdf.format(startedat) + ";" + 
