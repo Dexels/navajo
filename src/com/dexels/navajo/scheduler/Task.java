@@ -271,6 +271,8 @@ public class Task implements Runnable, TaskMXBean, TaskInterface, Serializable {
 			setPassword(h.getRPCPassword());
 			setWebservice(h.getRPCName());
 			h.setSchedule("");
+			taskDescription = h.getHeaderAttribute("description");
+			clientId = h.getHeaderAttribute("clientid");			
 		} else {
 			System.err.println("Weird, empty header supplied for input navajo for task");
 		}
