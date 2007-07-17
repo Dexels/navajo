@@ -607,7 +607,7 @@ public String getLocaleCode() {
 public int getPending() {
   return 0;
 }
-public Navajo doScheduledSend(Navajo out, String method, String schedule) throws ClientException {
+public Navajo doScheduledSend(Navajo out, String method, String schedule, String description, String clientId) throws ClientException {
 	 throw new java.lang.UnsupportedOperationException("Method doScheduledSend() not yet implemented.");
 }
 }
