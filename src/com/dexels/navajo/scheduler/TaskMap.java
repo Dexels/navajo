@@ -95,6 +95,14 @@ public class TaskMap implements Mappable {
 		return myTask.isActive();
 	}
 	
+	public String getTaskDescription(){
+		return myTask.getTaskDescription();
+	}
+	
+	public String getClientId(){
+		return myTask.getClientId();
+	}
+	
 	public void store() throws MappableException, UserException {
 		// TODO Auto-generated method stub
 
