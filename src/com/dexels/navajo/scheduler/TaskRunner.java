@@ -565,6 +565,9 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 					Property propTrigger = NavajoFactory.getInstance().createProperty(taskDoc, "trigger", Property.STRING_PROPERTY, t.getTrigger().getDescription(), 0, "", Property.DIR_OUT);
 					Property propWorkflowDef = NavajoFactory.getInstance().createProperty(taskDoc, "workflowdef", Property.STRING_PROPERTY, t.getWorkflowDefinition(), 0, "", Property.DIR_OUT);
 					Property propWorkflowId = NavajoFactory.getInstance().createProperty(taskDoc, "workflowid", Property.STRING_PROPERTY, t.getWorkflowId(), 0, "", Property.DIR_OUT);
+
+					Property propTaskDescription = NavajoFactory.getInstance().createProperty(taskDoc, "taskdescription", Property.STRING_PROPERTY, t.getTaskDescription(), 0, "", Property.DIR_OUT);
+					Property propClientId = NavajoFactory.getInstance().createProperty(taskDoc, "clientid", Property.STRING_PROPERTY, t.getClientId(), 0, "", Property.DIR_OUT);
 					
 					newTask.addProperty(propId);
 					newTask.addProperty(propUser);
@@ -575,6 +578,8 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 					newTask.addProperty(propTrigger);
 					newTask.addProperty(propWorkflowDef);
 					newTask.addProperty(propWorkflowId);
+					newTask.addProperty(propTaskDescription);
+					newTask.addProperty(propClientId);
 					
 					// Persist task request Navajo and tasks.xml
 					writeTaskInput(t);
