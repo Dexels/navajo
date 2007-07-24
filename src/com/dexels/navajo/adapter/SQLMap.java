@@ -1712,40 +1712,41 @@ private void setBlob(PreparedStatement statement, int i, Binary b) throws SQLExc
   public Binary getRecords() throws UserException {
 	  
 	  java.io.File tempFile = null;
-	  
+	  ResultSet rs = null;
 	  try {
 		  Binary b = null;
-		  ResultSetMap [] rs = getResultSet();
-		  //StringBuffer lines = new StringBuffer();
+		  rs = getDBResultSet(false);
 		  tempFile = File.createTempFile("sqlmap_records", "navajo");
 		  FileOutputStream fos = new FileOutputStream( tempFile );
 		  OutputStreamWriter fw = new OutputStreamWriter( fos, "UTF-8" );
-		  for (int i = 0; i < rs.length; i++) {
-			  //StringBuffer line = new StringBuffer();
-			  RecordMap [] records = rs[i].getRecords();
-			  if (i == 0 && showHeader) { // Show headers.
-				  for (int j = 0; j < records.length; j++) {
-					  String column = records[j].getRecordName();
-					  if ( j == 0 ) {
-						  fw.write(column);
-					  } else {
-						  fw.write(this.separator + column);
-					  }
+		  int columns = 0;
+		  ResultSetMetaData meta = null;
+		  try {
+			  meta = rs.getMetaData();
+			  columns = meta.getColumnCount();
+			  for (int j = 0; j < columns; j++) {
+				  String column = meta.getColumnLabel(j);
+				  if ( j == 0 ) {
+					  fw.write(column);
+				  } else {
+					  fw.write(this.separator + column);
 				  }
-				  fw.write("\n");
-				  //fw.write(line.toString());
-				  //line = new StringBuffer();
 			  }
-			  for (int j = 0; j < records.length; j++) {
-				  String value = ( records[j].getRecordValue() != null ? records[j].getRecordValue()+"" : "");
-				  if ( j == 0) {
+			  fw.write("\n");
+		  }
+		  catch (Exception e) {
+
+		  }
+		  while ( rs.next() ) {
+			  for (int j = 1; j <= columns; j++) {
+				  String value = ( rs.getObject(j)  != null ?  rs.getString(j) +"" : "");
+				  if ( j == 1) {
 					  fw.write(value);
 				  } else {
 					  fw.write(this.separator + value);
 				  }
 			  }
 			  fw.write("\n");
-			  //fw.write(line.toString());
 		  }
 		  fw.flush();
 		  fw.close();
@@ -1757,9 +1758,19 @@ private void setBlob(PreparedStatement statement, int i, Binary b) throws SQLExc
 		  }
 		  
 		  return b;
-	  } catch ( IOException ioe ) {
+	  } catch ( Exception ioe ) {
 		  throw new UserException( -1, ioe.getMessage(), ioe );
 	  } finally {
+		  if ( rs != null ) {
+			  try {
+				rs.close();
+				rs = null;
+				resetAll();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		  }
 		  if ( tempFile != null ) {
 			  try {
 				  tempFile.delete();
