@@ -50,24 +50,26 @@ public class ShowGeneratedInputTml extends BaseNavajoAction {
 					Generate g = new Generate();
 					InputStream is = scriptFile.getContents();
 					Navajo input = g.getInputPart(null,is);
+					input.write(System.err);
 					input.addMethod(NavajoFactory.getInstance().createMethod(input, scriptName, null));
 					Header h = NavajoFactory.getInstance().createHeader(input, "unknown", "unknown", "unknown", -1);
 					input.addHeader(h);
-					input.write(System.err);
 					
 					IFolder iff = NavajoScriptPluginPlugin.getDefault().getTmlFolder(scriptFile.getProject());
-					System.err.println("TML FoldeR: "+iff.getLocation());
+					System.err.println("TML FoldeRrrrr: "+iff.getLocation());
 					IFile igenerated = iff.getFile("Generated.tml");
 					if (igenerated.exists()) {
 						igenerated.delete(true, null);
+						System.err.println("Deleted");
 					}
 					System.err.println("creating iff: "+igenerated.getLocation().toString());
 					ByteArrayOutputStream baos = new ByteArrayOutputStream();
 					input.write(baos);
 					ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+					System.err.println("Aout to create: ");
 					igenerated.create(bais, true, null);
+					System.err.println("created. "+igenerated.getLocation());
                     NavajoScriptPluginPlugin.getDefault().showTml(igenerated,scriptName+"(Generated)");
-
 //					}
 					//					NavajoScriptPluginPlugin.getDefault().showTml(scriptFile,
 //							scriptName);
@@ -84,6 +86,7 @@ public class ShowGeneratedInputTml extends BaseNavajoAction {
 		} catch (Exception e) {
 			NavajoScriptPluginPlugin.getDefault().showInfo(
 					"Error retrieving TML file: " + e.getMessage());
+			e.printStackTrace();
 		}
 
 	}

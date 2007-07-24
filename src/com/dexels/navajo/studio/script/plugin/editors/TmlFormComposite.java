@@ -16,12 +16,16 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.jobs.*;
 import org.eclipse.debug.core.*;
 import org.eclipse.jface.viewers.*;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.*;
 import org.eclipse.swt.custom.*;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.dialogs.SaveAsDialog;
 import org.eclipse.ui.forms.*;
 import org.eclipse.ui.forms.events.*;
 import org.eclipse.ui.forms.widgets.*;
@@ -29,8 +33,12 @@ import org.eclipse.ui.ide.*;
 import org.eclipse.ui.internal.*;
 import org.eclipse.ui.part.ViewPart;
 
+import org.eclipse.core.resources.*;
+
+import com.dexels.navajo.birt.BirtUtils;
 import com.dexels.navajo.client.*;
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.functions.*;
 import com.dexels.navajo.studio.eclipse.*;
 import com.dexels.navajo.studio.script.plugin.*;
@@ -60,13 +68,15 @@ public class TmlFormComposite extends Composite {
 
 	private final FormToolkit whiteKit;
 
-//	private final TmlEditor myEditor;
+	// private final TmlEditor myEditor;
 
 	private Composite mainMessageContainer;
 
 	private IFile myCurrentFile = null;
 
 	private Section methodSection;
+
+	private Section birtSection;
 
 	private Navajo myCurrentNavajo;
 
@@ -79,11 +89,11 @@ public class TmlFormComposite extends Composite {
 	private final ArrayList myScriptListeners = new ArrayList();
 
 	// private ScrolledComposite mainMessageScroll;
- 
+
 	public TmlFormComposite(Composite parent) {
 		super(parent, SWT.NONE);
 		setLayout(new FillLayout());
-//		myEditor = ee;
+		// myEditor = ee;
 		kit = new FormToolkit(parent.getDisplay());
 		whiteKit = new FormToolkit(parent.getDisplay());
 
@@ -146,9 +156,10 @@ public class TmlFormComposite extends Composite {
 		}
 
 		try {
-			setHeader(n, myFile, scriptName,mainMessageContainer);
+			setHeader(n, myFile, scriptName, mainMessageContainer);
 			setMessages(n, mainMessageContainer);
 			setMethods(n, myCurrentFile, scriptName);
+			setBirtSection(n);
 		} catch (NavajoPluginException e1) {
 			e1.printStackTrace();
 		}
@@ -354,6 +365,25 @@ public class TmlFormComposite extends Composite {
 		gpc.getComposite().setLayoutData(tableWrapData);
 	}
 
+	private void setBirtSection(Navajo n) {
+		if (birtSection != null) {
+			birtSection.dispose();
+		}
+
+		birtSection = getKit().createSection(getForm().getBody(), Section.TITLE_BAR);
+		birtSection.setText("BIRT:");
+		Composite list = getKit().createComposite(birtSection);
+		addBirtHref(list, n);
+		birtSection.setClient(list);
+		TableWrapData td = new TableWrapData(TableWrapData.FILL_GRAB, TableWrapData.BOTTOM);
+		td.grabVertical = false;
+		birtSection.setLayoutData(td);
+		TableWrapLayout layout = new TableWrapLayout();
+		layout.numColumns = 4;
+		list.setLayout(layout);
+
+	}
+
 	/**
 	 * @param n
 	 * @param myFile
@@ -383,8 +413,7 @@ public class TmlFormComposite extends Composite {
 		addRestartHref(scriptName, list, n, myFile);
 		addRefreshAdaptersHref(list, myFile);
 		addRecompileHref(list, scriptName, myFile);
-		addBirtHref(list, n);
-		
+
 		for (Iterator iter = n.getAllMethods().iterator(); iter.hasNext();) {
 			final Method element = (Method) iter.next();
 			final Hyperlink hl = whiteKit.createHyperlink(list, element.getName(), SWT.NONE);
@@ -424,7 +453,7 @@ public class TmlFormComposite extends Composite {
 			return;
 		}
 		Header h = n.getHeader();
-		
+
 		ss.addExpansionListener(new IExpansionListener() {
 
 			public void expansionStateChanging(ExpansionEvent e) {
@@ -433,7 +462,7 @@ public class TmlFormComposite extends Composite {
 			public void expansionStateChanged(ExpansionEvent e) {
 				myForm.reflow(true);
 			}
-		});		
+		});
 		String locale = n.getHeader().getHeaderAttribute("locale");
 		if (locale == null) {
 			ss.setText("Header");
@@ -452,35 +481,39 @@ public class TmlFormComposite extends Composite {
 		performanceSection.setText("Performance:");
 		Section transactionSection = getKit().createSection(list, Section.TITLE_BAR);
 		transactionSection.setText("Transaction:");
-		
-//		TableWrapData td3 = new TableWrapData(TableWrapData.FILL_GRAB, TableWrapData.FILL_GRAB);
-//		ss.setLayoutData(td3);
-//		
-//		TableWrapData td4 = new TableWrapData(TableWrapData.FILL_GRAB, TableWrapData.FILL_GRAB);
-//		ss.setLayoutData(td4);
-//		
-		
+
+		// TableWrapData td3 = new TableWrapData(TableWrapData.FILL_GRAB,
+		// TableWrapData.FILL_GRAB);
+		// ss.setLayoutData(td3);
+		//		
+		// TableWrapData td4 = new TableWrapData(TableWrapData.FILL_GRAB,
+		// TableWrapData.FILL_GRAB);
+		// ss.setLayoutData(td4);
+		//		
+
 		Composite performanceList = getKit().createComposite(performanceSection);
 		TableWrapLayout tw = new TableWrapLayout();
 		tw.numColumns = 1;
 		performanceList.setLayout(tw);
 		performanceSection.setClient(performanceList);
-		
+
 		Composite transactionList = getKit().createComposite(transactionSection);
 		TableWrapLayout tw2 = new TableWrapLayout();
 		tw2.numColumns = 1;
 		transactionList.setLayout(tw2);
 		transactionSection.setClient(transactionList);
 
-		
-		addLabel(transactionList, "Username: "+h.getRPCUser());
-		addLabel(transactionList, "Password: "+h.getRPCPassword());
-		addLabel(transactionList, "Webservice: "+h.getRPCName());
+		addLabel(transactionList, "Username: " + h.getRPCUser());
+		addLabel(transactionList, "Password: " + h.getRPCPassword());
+		addLabel(transactionList, "Webservice: " + h.getRPCName());
 
-		Set s = h.getHeaderAttributes().keySet();
-		for (Iterator iter = s.iterator(); iter.hasNext();) {
-			String element = (String) iter.next();
-			addLabel(performanceList, element+": "+h.getHeaderAttribute(element));
+		Map headerAttributes = h.getHeaderAttributes();
+		if (headerAttributes != null) {
+			Set s = headerAttributes.keySet();
+			for (Iterator iter = s.iterator(); iter.hasNext();) {
+				String element = (String) iter.next();
+				addLabel(performanceList, element + ": " + h.getHeaderAttribute(element));
+			}
 		}
 	}
 
@@ -537,22 +570,106 @@ public class TmlFormComposite extends Composite {
 
 		});
 	}
-	
+
 	private void addBirtHref(Composite list, final Navajo n) {
-//		final Method element = (Method) iter.next();
-		final Hyperlink hl = whiteKit.createHyperlink(list, "[[BIRT]]", SWT.NONE);
+		// final Method element = (Method) iter.next();
+
+		// final Text birtReportName = whiteKit.createText(list, "");
 		TableWrapData tdd = new TableWrapData();
+		// birtReportName.setLayoutData(tdd);
+
+		final Combo birtCombo = new Combo(list, SWT.NONE);
+		birtCombo.setItems(new String[] { "", "pdf", "html", "ppt", "postscript", "xls_prototype", "doc" });
+		tdd = new TableWrapData();
+		birtCombo.setLayoutData(tdd);
+		// for now:
+		// birtReportName.setVisible(false);
+
+		final Hyperlink hcreate = whiteKit.createHyperlink(list, "[[CREATE REPORT]]", SWT.NONE);
+		tdd = new TableWrapData();
+		hcreate.setLayoutData(tdd);
+		hcreate.addHyperlinkListener(new HyperlinkAdapter() {
+			public void linkActivated(HyperlinkEvent e) {
+				createBirt(myCurrentName);
+			}
+		});
+
+		final Hyperlink hl = whiteKit.createHyperlink(list, "[[RUN REPORT]]", SWT.NONE);
+		tdd = new TableWrapData();
 		hl.setLayoutData(tdd);
 		hl.addHyperlinkListener(new HyperlinkAdapter() {
 			public void linkActivated(HyperlinkEvent e) {
 				try {
-					runHref(myCurrentNavajo, null, "ProcessPrintGenericBirt", e, false, null);
+					if (myCurrentNavajo == null) {
+						return;
+					}
+
+					final Navajo copiedNavajo = myCurrentNavajo.copy();
+
+					IEditorPart part = NavajoScriptPluginPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage()
+							.getActiveEditor();
+
+					IFile iff = null;
+					Message reportDef = NavajoFactory.getInstance().createMessage(copiedNavajo, "__ReportDefinition");
+					copiedNavajo.addMessage(reportDef);
+					if (part != null) {
+						IEditorInput ei = part.getEditorInput();
+						if (ei != null) {
+							iff = ResourceUtil.getFile(ei);
+						}
+					}
+					int i = birtCombo.getSelectionIndex();
+					if (i > 0) {
+						String ss = birtCombo.getItem(i);
+						if (ss != null && !"".equals(ss)) {
+							System.err.println("Selected reporting type: ");
+							Property reportProperty = NavajoFactory.getInstance().createProperty(copiedNavajo, "OutputFormat",
+									Property.STRING_PROPERTY, null, 0, null, Property.DIR_IN, null);
+							reportDef.addProperty(reportProperty);
+							reportProperty.setValue(ss);
+						}
+					}
+
+					if (iff != null && iff.getFullPath().toString().endsWith(".rptdesign")) {
+						System.err.println("Editor resource: " + iff.getLocation());
+						InputStream contents = iff.getContents();
+						Binary b = new Binary(contents);
+						contents.close();
+						// There is a supplied report. Use it, disregard
+						// reportName
+						Property reportProperty = NavajoFactory.getInstance().createProperty(copiedNavajo, "Report",
+								Property.BINARY_PROPERTY, null, 0, null, Property.DIR_IN, null);
+						reportDef.addProperty(reportProperty);
+						reportProperty.setAnyValue(b);
+
+						copiedNavajo.write(System.err);
+						runHref(copiedNavajo, null, "ProcessPrintGenericBirt", e, false, null);
+
+					} else {
+						// disabled for now
+						// if (birtReportName.getText() != null &&
+						// !"".equals(birtReportName.getText())) {
+						//
+						// // No supplied report file, but filename found.
+						// Property reportNameProperty =
+						// NavajoFactory.getInstance().createProperty(copiedNavajo,
+						// "ReportName",
+						// Property.STRING_PROPERTY, null, 0, null,
+						// Property.DIR_IN, null);
+						// reportDef.addProperty(reportNameProperty);
+						// reportNameProperty.setAnyValue(birtReportName.getText());
+						// }
+
+						runHref(copiedNavajo, null, "ProcessPrintGenericBirt", e, false, null);
+
+					}
+
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
 			}
 		});
-	
+
 	}
 
 	/**
@@ -778,9 +895,10 @@ public class TmlFormComposite extends Composite {
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
-//		if (myEditor != null) {
-//			NavajoScriptPluginPlugin.getDefaultWorkbench().getActiveWorkbenchWindow().getActivePage().closeEditor(myEditor, false);
-//		}
+		// if (myEditor != null) {
+		// NavajoScriptPluginPlugin.getDefaultWorkbench().getActiveWorkbenchWindow().getActivePage().closeEditor(myEditor,
+		// false);
+		// }
 	}
 
 	private void addBackHref(final String name, Composite list, final Navajo n, final IFile myFile) {
@@ -814,16 +932,16 @@ public class TmlFormComposite extends Composite {
 		if (myCurrentFile == null) {
 			return;
 		}
-//		if (myEditor != null) {
-//			myEditor.doSave(null);
-//		} else {
-			File currentF = new File(myCurrentFile.getLocation().toOSString());
-			FileOutputStream fos = new FileOutputStream(currentF);
-			myCurrentNavajo.write(fos);
-			fos.flush();
-			fos.close();
-			myCurrentFile.refreshLocal(0, null);
-//		}
+		// if (myEditor != null) {
+		// myEditor.doSave(null);
+		// } else {
+		File currentF = new File(myCurrentFile.getLocation().toOSString());
+		FileOutputStream fos = new FileOutputStream(currentF);
+		myCurrentNavajo.write(fos);
+		fos.flush();
+		fos.close();
+		myCurrentFile.refreshLocal(0, null);
+		// }
 
 	}
 
@@ -947,7 +1065,7 @@ public class TmlFormComposite extends Composite {
 						// }
 
 					} else {
-						System.err.println("Setting header to: "+sourceTmlName);
+						System.err.println("Setting header to: " + sourceTmlName);
 						myCurrentNavajo.getHeader().setHeaderAttribute("sourceScript", sourceTmlName);
 						NavajoScriptPluginPlugin.getDefault().runRemoteNavajo(ipp, name, myFile, sourceTmlName);
 
@@ -971,9 +1089,9 @@ public class TmlFormComposite extends Composite {
 		}
 		IFile sourceTmlFile = NavajoScriptPluginPlugin.getDefault().getTmlFile(myFile.getProject(), sourceTml);
 		System.err.println("SourceMTL: " + sourceTmlFile.getFullPath());
-//		if (myEditor != null) {
-//			NavajoScriptPluginPlugin.getDefault().openInEditor(sourceTmlFile);
-//		}
+		// if (myEditor != null) {
+		// NavajoScriptPluginPlugin.getDefault().openInEditor(sourceTmlFile);
+		// }
 		Navajo n = NavajoScriptPluginPlugin.getDefault().loadNavajo(sourceTmlFile);
 		setNavajo(n, sourceTmlFile, sourceTml);
 		fireGotoScript(sourceTml, n);
@@ -1029,6 +1147,44 @@ public class TmlFormComposite extends Composite {
 
 	public IFile getCurrentFile() {
 		return myCurrentFile;
+	}
+
+	protected void createBirt(String service) {
+		// TODO Auto-generated method stub
+		// FileDialog fd = new FileDialog(formComposite.getShell());
+		SaveAsDialog sd = new SaveAsDialog(getShell());
+		// fd.setText("Choose report name");
+		// sd.showClosedProjects(false);
+		// fd.setFileName("NewReport.rptdesign");
+		sd.setOriginalName(service);
+
+		int result = sd.open();
+		if (result == Window.CANCEL) {
+			return;
+		}
+		IPath ip = sd.getResult();
+		IPath ipp = ip.addFileExtension("rptdesign");
+		IFile iff = ResourcesPlugin.getWorkspace().getRoot().getFile(ipp);
+
+		String rez = iff.getLocation().toString();
+		System.err.println("Result: " + rez);
+		BirtUtils b = new BirtUtils();
+		File createdFile = new File(rez);
+		try {
+			b.createEmptyReport(myCurrentNavajo, createdFile, service);
+			iff.refreshLocal(0, null);
+			IDE.openEditor(NavajoScriptPluginPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage(), iff);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NavajoException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (CoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 
 }

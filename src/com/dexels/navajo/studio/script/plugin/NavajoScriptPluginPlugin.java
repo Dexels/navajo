@@ -2190,25 +2190,21 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
 //    public void createEmptyReport(Navajo n, File reportFolder, String reportName, String serviceName ) throws IOException, NavajoException {
     	
 	public void createReport(IProject p, String name, Navajo n, File sourceFile) throws NavajoPluginException, IOException, NavajoException, PartInitException {
-		 IFolder iff = p.getFolder(getReportPath(p));
-		 
-			System.err.println("CREATING REPORT...");
-		BirtUtils b = new BirtUtils();
-		System.err.println("BIRT_UTILS_FOUND");
-		b.createEmptyReport(n, iff.getLocation().toFile(), name);
-		try {
-			iff.refreshLocal(IResource.DEPTH_INFINITE, null);
-		} catch (CoreException e) {
-			e.printStackTrace();
-		}
-		IFile rep = getReportFile(p, name+".rptdesign");
-//		if(rep==null || !rep.exists()) {
-//			showError("Dat ging even mis...");
-//		} else {
+//		 IFolder iff = p.getFolder(getReportPath(p));
+//		 
+//			System.err.println("CREATING REPORT...");
+//		BirtUtils b = new BirtUtils();
+//		System.err.println("BIRT_UTILS_FOUND");
+//		b.createEmptyReport(n, iff.getLocation().toFile(), name,n.getHeader().getHeaderAttribute("sourceScript"));
+//		try {
+//			iff.refreshLocal(IResource.DEPTH_INFINITE, null);
+//		} catch (CoreException e) {
+//			e.printStackTrace();
 //		}
-		
-		IDE.openEditor(getWorkbench().getActiveWorkbenchWindow().getActivePage(), rep);
-		
+//		IFile rep = getReportFile(p, name+".rptdesign");
+//
+//		IDE.openEditor(getWorkbench().getActiveWorkbenchWindow().getActivePage(), rep);
+//		
 	}
 
 	public String getSelectedLocale() {

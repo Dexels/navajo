@@ -53,7 +53,7 @@ public class TmlBrowser extends BaseNavajoView implements INavajoScriptListener,
     private Button forwardButton;
     private Button reloadButton;
     private Button sourceButton;
-    private Button createReport;
+//    private Button createReport;
    private String currentService = null;
     private String lastInit = null;
    private final Stack historyList = new Stack();
@@ -97,7 +97,7 @@ public class TmlBrowser extends BaseNavajoView implements INavajoScriptListener,
 //        headComp.setLayout(new FillLayout(SWT.HORIZONTAL));
 
         TableWrapLayout twl = new TableWrapLayout();
-        twl.numColumns=10;
+        twl.numColumns=9;
         headComp.setLayout(twl);
         Label l = new Label(headComp,SWT.NONE);
         l.setBackground(new Color(Display.getCurrent(), 240, 240, 220));
@@ -205,19 +205,19 @@ public class TmlBrowser extends BaseNavajoView implements INavajoScriptListener,
             }});
 
         
-        createReport = new Button(headComp,SWT.PUSH);
-        createReport.setText("Create BIRT");
-        createReport.setEnabled(false);
-        createReport.setLayoutData(new TableWrapData(TableWrapData.LEFT,TableWrapData.FILL_GRAB));
-        createReport.addSelectionListener(new SelectionListener() {
-            public void widgetSelected(SelectionEvent e) {
-                createBirt();
-            }
-
-            public void widgetDefaultSelected(SelectionEvent e) {
-            }});
+//        createReport = new Button(headComp,SWT.PUSH);
+//        createReport.setText("Create BIRT");
+//        createReport.setEnabled(false);
+//        createReport.setLayoutData(new TableWrapData(TableWrapData.LEFT,TableWrapData.FILL_GRAB));
+//        createReport.addSelectionListener(new SelectionListener() {
+//            public void widgetSelected(SelectionEvent e) {
+//                createBirt();
+//            }
+//
+//            public void widgetDefaultSelected(SelectionEvent e) {
+//            }});
         
-        createReport.setEnabled(false);
+//        createReport.setEnabled(false);
         forwardButton.setEnabled(false);
         backButton.setEnabled(false);
         reloadButton.setEnabled(false);
@@ -238,43 +238,6 @@ public class TmlBrowser extends BaseNavajoView implements INavajoScriptListener,
             }});
         }
 
-    protected void createBirt() {
-		// TODO Auto-generated method stub
-//		FileDialog fd = new FileDialog(formComposite.getShell());
-    	SaveAsDialog   sd = new SaveAsDialog (formComposite.getShell());
-//		fd.setText("Choose report name");
-//		sd.showClosedProjects(false);
-//		fd.setFileName("NewReport.rptdesign");
-    	sd.setOriginalName(currentService);
-    	
-    	int result = sd.open();
-		if(result==Window.CANCEL) {
-			return;
-		}
-		IPath ip = sd.getResult();
-		IPath ipp = ip.addFileExtension("rptdesign");
-		IFile iff = ResourcesPlugin.getWorkspace().getRoot().getFile(ipp);
-		
-		String rez = iff.getLocation().toString();
-		System.err.println("Result: "+rez);
-		BirtUtils b = new BirtUtils();
-		File createdFile = new File(rez);
-		try {
-			b.createEmptyReport(myCurrentNavajo, currentService, createdFile);
-			iff.refreshLocal(0, null);
-			IDE.openEditor(NavajoScriptPluginPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage(), iff);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NavajoException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-    }
 
 	protected void showSource() {
 
@@ -496,7 +459,7 @@ public class TmlBrowser extends BaseNavajoView implements INavajoScriptListener,
        forwardButton.setEnabled(!futureList.isEmpty());        
        backButton.setEnabled(historyList.size()>1);
        reloadButton.setEnabled(myCurrentNavajo!=null);
-       createReport.setEnabled(myCurrentNavajo!=null);
+//       createReport.setEnabled(myCurrentNavajo!=null);
        sourceButton.setEnabled(myCurrentNavajo!=null);
        }
 
