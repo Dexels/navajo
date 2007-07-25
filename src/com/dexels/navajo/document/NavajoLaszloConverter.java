@@ -3,7 +3,8 @@ package com.dexels.navajo.document;
 import java.io.BufferedInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.text.*;
+import java.util.*;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -19,7 +20,8 @@ public class NavajoLaszloConverter {
 		try {
 			Document doc = XMLDocumentUtils.createDocument(is, false);
 
-//			System.err.println("Received: " + XMLDocumentUtils.toString(doc));
+			// System.err.println("Received: " +
+			// XMLDocumentUtils.toString(doc));
 
 			Node root = doc.getFirstChild();
 			n = NavajoFactory.getInstance().createNavajo();
@@ -40,8 +42,8 @@ public class NavajoLaszloConverter {
 					createMessageFromLaszlo(noot, n, null);
 				}
 			}
-//			System.err.println("Created navajo: ");
-//			n.write(System.err);
+			// System.err.println("Created navajo: ");
+			// n.write(System.err);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -49,13 +51,12 @@ public class NavajoLaszloConverter {
 	}
 
 	public static Document createLaszloFromNavajo(Navajo in, String serviceName) {
+		return createLaszloFromNavajo(in, serviceName, true);
+	}
+
+	public static Document createLaszloFromNavajo(Navajo in, String serviceName, boolean includeSelections) {
 		Document doc = XMLDocumentUtils.createDocument();
 		try {
-//			System.err.println("Creating laszlo for:");
-//			in.write(System.err);
-
-//			String nodeName = in.getHeader().getRPCName();
-			
 			String nodeName = serviceName.replaceAll("/", "_");
 			Element root = doc.createElement(nodeName);
 			doc.appendChild(root);
@@ -66,59 +67,104 @@ public class NavajoLaszloConverter {
 			root.appendChild(tml);
 			ArrayList l = in.getAllMessages();
 			for (int i = 0; i < l.size(); i++) {
-				appendMessage((Message) l.get(i), tml, doc);
+				appendMessage((Message) l.get(i), tml, doc, includeSelections);
 			}
-//			System.err.println("Created doc: " + XMLDocumentUtils.toString(doc));
+			// System.err.println("Created doc: " +
+			// XMLDocumentUtils.toString(doc));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return doc;
 	}
 
-	private static void appendMessage(Message m, Element e, Document d) {
-		try{
-		if (m.getType().equals(Message.MSG_TYPE_ARRAY_ELEMENT)) {
-			Element row = d.createElement("row");
-			ArrayList allProp = m.getAllProperties();
-			for (int j = 0; j < allProp.size(); j++) {
-				Property cp = (Property) allProp.get(j);
-				if(cp.getType().equals(Property.SELECTION_PROPERTY)){
-					Element prop = d.createElement(cp.getName());
-					ArrayList sel = cp.getAllSelections();
-					for(int k=0;k<sel.size();k++){
-						Selection s = (Selection)sel.get(k); 
-						Element option = d.createElement("option");
-						option.setAttribute("value", s.getValue());
-						option.setAttribute("name", s.getName());
-						option.setAttribute("selected", ""+s.isSelected());
-						prop.appendChild(option);
+	private static void appendMessage(Message m, Element e, Document d, boolean includeSelections) {
+		try {
+			if (m.getType().equals(Message.MSG_TYPE_ARRAY_ELEMENT)) {
+				System.err.println("CREATING ARRAY ELEMENT");
+				Element row = d.createElement("row");
+				ArrayList allProp = m.getAllProperties();
+				for (int j = 0; j < allProp.size(); j++) {
+					Property cp = (Property) allProp.get(j);
+					if (cp.getType().equals(Property.SELECTION_PROPERTY)) {
+
+						if (includeSelections) {
+							Element prop = d.createElement(cp.getName());
+							ArrayList sel = cp.getAllSelections();
+							for (int k = 0; k < sel.size(); k++) {
+								Selection s = (Selection) sel.get(k);
+								Element option = d.createElement("option");
+								option.setAttribute("value", s.getValue());
+								option.setAttribute("name", s.getName());
+								option.setAttribute("selected", "" + s.isSelected());
+								prop.appendChild(option);
+							}
+							Selection s = cp.getSelected();
+							if (s != null) {
+								prop.setAttribute("value", s.getName());
+							}
+							row.appendChild(prop);
+						} else {
+							Selection s = cp.getSelected();
+							if(s!=null && s.getName()!=null) {
+							row.setAttribute(cp.getName(), s.getName());
+							} else {
+								row.setAttribute(cp.getName(), "-");
+								
+							}
+						}
+						
 					}
-					row.appendChild(prop);
+
+					// DateFormat Hack:
+					if (cp.getType().equals(Property.DATE_PROPERTY)) {
+						Date dd = (Date) cp.getTypedValue();
+						if(dd!=null) {
+							DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+							row.setAttribute(cp.getName(), df.format(dd));
+						} else {
+							System.err.println("null date");
+							row.setAttribute(cp.getName(), "#");
+						}
+					} else {
+						if (!cp.getType().equals(Property.SELECTION_PROPERTY)) {
+							String result = cp.getValue().replaceAll("\n", "<br/>");
+							row.setAttribute(cp.getName(), result);
+						}
+					}
+
+					if (includeSelections) {
+						row.setAttribute("type_" + cp.getName(), cp.getType());
+					} else {
+						// if selection properties are not supported, treat
+						// selections as strings
+						if (cp.getType().equals(Property.SELECTION_PROPERTY)) {
+							row.setAttribute("type_" + cp.getName(), Property.STRING_PROPERTY);
+						} else {
+							row.setAttribute("type_" + cp.getName(), cp.getType());
+						}
+					}
 				}
-				row.setAttribute(cp.getName(), cp.getValue());
-				row.setAttribute("type_"+cp.getName(), cp.getType());
+				e.appendChild(row);
 			}
-			e.appendChild(row);
-		}
-		if (m.getType().equals(Message.MSG_TYPE_ARRAY)) {
-			Element array = d.createElement("a_" + m.getName());
-			e.appendChild(array);
-			for (int i = 0; i < m.getArraySize(); i++) {
-				Message row = m.getMessage(i);
-				appendMessage(row, array, d);
+			if (m.getType().equals(Message.MSG_TYPE_ARRAY)) {
+				Element array = d.createElement("a_" + m.getName());
+				e.appendChild(array);
+				for (int i = 0; i < m.getArraySize(); i++) {
+					Message row = m.getMessage(i);
+					appendMessage(row, array, d, includeSelections);
+				}
 			}
-		}
-		if (m.getType().equals(Message.MSG_TYPE_SIMPLE) || m.getType().equals(Message.MSG_TYPE)) {
-			Element mes = d.createElement("m_" + m.getName());
-			ArrayList allMes = m.getAllMessages();
-			for (int k = 0; k < allMes.size(); k++) {
-				Message cm = (Message) allMes.get(k);
-				appendMessage(cm, mes, d);
+			if (m.getType().equals(Message.MSG_TYPE_SIMPLE) || m.getType().equals(Message.MSG_TYPE)) {
+				Element mes = d.createElement("m_" + m.getName());
+				ArrayList allMes = m.getAllMessages();
+				for (int k = 0; k < allMes.size(); k++) {
+					Message cm = (Message) allMes.get(k);
+					appendMessage(cm, mes, d, includeSelections);
+				}
+				appendProperties(m, mes, d);
+				e.appendChild(mes);
 			}
-			appendProperties(m, mes, d);
-			e.appendChild(mes);
-		}
-		}catch(Exception ex){
+		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 	}
@@ -154,19 +200,18 @@ public class NavajoLaszloConverter {
 		}
 	}
 
-	private static void createSelectionFromLaszlo(Element cn, Navajo n, Property p){
-		try{
-		String name = cn.getAttribute("name");
-		String value = cn.getAttribute("value");
-		String selected = cn.getAttribute("selected");
-		Selection s = NavajoFactory.getInstance().createSelection(n, name, value, "true".equals(selected));
-		p.addSelection(s);
-		}catch(Exception e){
+	private static void createSelectionFromLaszlo(Element cn, Navajo n, Property p) {
+		try {
+			String name = cn.getAttribute("name");
+			String value = cn.getAttribute("value");
+			String selected = cn.getAttribute("selected");
+			Selection s = NavajoFactory.getInstance().createSelection(n, name, value, "true".equals(selected));
+			p.addSelection(s);
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
-	
+
 	private static void createPropertyFromLaszlo(Node cn, Navajo n, Message m) {
 		try {
 			Element elm = (Element) cn;
@@ -182,21 +227,21 @@ public class NavajoLaszloConverter {
 				l = Integer.parseInt(length);
 			} catch (Exception e) {
 			}
-			if(type.equals(Property.SELECTION_PROPERTY)){
+			if (type.equals(Property.SELECTION_PROPERTY)) {
 				Property p = NavajoFactory.getInstance().createProperty(n, name, "1", description, direction);
 				NodeList options = elm.getChildNodes();
 				for (int i = 0; i < options.getLength(); i++) {
-					Node option = (Element)options.item(i);
-					if(option.getNodeName().startsWith("option")){
-						createSelectionFromLaszlo((Element)option, n, p);
+					Node option = (Element) options.item(i);
+					if (option.getNodeName().startsWith("option")) {
+						createSelectionFromLaszlo((Element) option, n, p);
 					}
 				}
 				m.addProperty(p);
-			}else{
+			} else {
 				Property p = NavajoFactory.getInstance().createProperty(n, name, type, value, l, description, direction);
 				m.addProperty(p);
 			}
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -211,22 +256,22 @@ public class NavajoLaszloConverter {
 				Node prop = properties.item(i);
 				String name = prop.getNodeName();
 				String value = prop.getNodeValue();
-				if(!name.startsWith("type_")){
+				if (!name.startsWith("type_")) {
 					String type = elm.getAttribute("type_" + name);
-				  Property p = NavajoFactory.getInstance().createProperty(n, name, type, value, 0, "", "in");
-				  row.addProperty(p);
+					Property p = NavajoFactory.getInstance().createProperty(n, name, type, value, 0, "", "in");
+					row.addProperty(p);
 				}
 			}
-			
+
 			NodeList selProps = elm.getChildNodes();
-			for(int j = 0;j < selProps.getLength(); j++){
-				Element prop = (Element)selProps.item(j);
+			for (int j = 0; j < selProps.getLength(); j++) {
+				Element prop = (Element) selProps.item(j);
 				String name = prop.getNodeName();
 				Property p = NavajoFactory.getInstance().createProperty(n, name, "1", "", "in");
-				
+
 				NodeList options = prop.getChildNodes();
-				for(int k = 0; k < options.getLength(); k++){
-					Element op = (Element)options.item(k);
+				for (int k = 0; k < options.getLength(); k++) {
+					Element op = (Element) options.item(k);
 					String op_name = op.getAttribute("name");
 					String op_value = op.getAttribute("value");
 					String op_selected = op.getAttribute("selected");
@@ -256,15 +301,15 @@ public class NavajoLaszloConverter {
 
 				if (current.getType().equals(Property.SELECTION_PROPERTY)) {
 					ArrayList sel = current.getAllSelections();
-					for(int j=0;j<sel.size();j++){
-						Selection s = (Selection)sel.get(j); 
+					for (int j = 0; j < sel.size(); j++) {
+						Selection s = (Selection) sel.get(j);
 						Element option = d.createElement("option");
 						option.setAttribute("value", s.getValue());
 						option.setAttribute("name", s.getName());
-						option.setAttribute("selected", ""+s.isSelected());
+						option.setAttribute("selected", "" + s.isSelected());
 						prop.appendChild(option);
 					}
-					
+
 				}
 				e.appendChild(prop);
 			}
@@ -273,11 +318,11 @@ public class NavajoLaszloConverter {
 		}
 	}
 
-	public static void dumpNavajoLaszloStyle(Navajo n,String filename, String serviceName) throws IOException {
-		 	Document d = createLaszloFromNavajo(n,serviceName);
-			FileWriter fw = new FileWriter(filename);
-			XMLDocumentUtils.write(d, fw, false);
-			fw.close();
+	public static void dumpNavajoLaszloStyle(Navajo n, String filename, String serviceName) throws IOException {
+		Document d = createLaszloFromNavajo(n, serviceName);
+		FileWriter fw = new FileWriter(filename);
+		XMLDocumentUtils.write(d, fw, false);
+		fw.close();
 	}
 
 }
