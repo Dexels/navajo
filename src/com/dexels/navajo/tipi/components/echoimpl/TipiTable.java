@@ -127,10 +127,7 @@ public class TipiTable extends TipiEchoDataComponentImpl {
         Message m = n.getMessage(messagePath);
         // System.err.println("------------------------------------------------------------------------------------>>
         // Got message: " + m);
-        pageNavigator.setTotalPages(myTable.getTotalPages());
-        pageNavigator.addPageIndexChangeListener(myTable);
-        pageNavigator.setPageIndex(0);
-        myTable.setPageNavigator(pageNavigator);
+
         if (m != null) {
             if (!colDefs) {
                 mm.removeAllColumns();
@@ -142,6 +139,10 @@ public class TipiTable extends TipiEchoDataComponentImpl {
             }
             mm.setMessage(m);
         }
+        pageNavigator.setTotalPages(myTable.getTotalPages());
+        pageNavigator.addPageIndexChangeListener(myTable);
+        pageNavigator.setPageIndex(0);
+        myTable.setPageNavigator(pageNavigator);
     }
 
     public Object getComponentValue(String name) {
