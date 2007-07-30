@@ -1103,6 +1103,11 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
         	try {
     			ti.setTrigger(inMessage.getHeader().getSchedule());
     			ti.setNavajo(inMessage);
+    			if ( inMessage.getHeader().getHeaderAttribute("keeprequestresponse") != null && 
+    					inMessage.getHeader().getHeaderAttribute("keeprequestresponse").equals("true")
+    			    ) {
+    				ti.setKeepRequestResponse(true);
+    			}
     			trf.addTask(ti);
             	outMessage = generateScheduledMessage(inMessage.getHeader(), ti.getId());
     		} catch (UserException e) {
@@ -1148,6 +1153,7 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
         	}
 //      	updatePropertyDescriptions(inMessage,outMessage);
         }
+       
         return outMessage;
       }
     }
@@ -1199,7 +1205,6 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
     }
     finally {
     	
-    	
     	if ( access != null && !scheduledWebservice ) {
     		access.setInDoc(inMessage);
     		
@@ -1222,9 +1227,7 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
     		}
 
     		updatePropertyDescriptions(inMessage,outMessage);
-    	
-    		
-    		access.storeStatistics(h);
+    	    access.storeStatistics(h);
     		// Store access if navajostore is enabled and if webservice is not in list of special webservices.
     		if (    getNavajoConfig().getStatisticsRunner() != null &&  
     				getNavajoConfig().getStatisticsRunner().isEnabled() &&
