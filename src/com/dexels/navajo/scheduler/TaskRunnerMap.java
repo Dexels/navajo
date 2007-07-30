@@ -52,6 +52,7 @@ public class TaskRunnerMap implements Mappable {
 
 	// Introspect
 	public TaskMap [] tasks;
+	public TaskMap finishedTask;
 	public String username = null;
 	public TaskMap [] userTasks;
 	public String response;
@@ -257,5 +258,23 @@ public class TaskRunnerMap implements Mappable {
 			myAccess.setOutputDoc(out);
 		}
 		return null;
+	}
+
+	public TaskMap getFinishedTask() {
+		if ( id != null ) {
+			TaskRunner tr = TaskRunner.getInstance();
+			// Get all finished tasks for this user.
+			ArrayList l = tr.getFinishedTasks(username, null);
+			// Add none-finished tasks.
+			for ( int i = 0; i < l.size(); i++ ) {
+				Task t = (Task) l.get(i);
+				if ( t.getId().equals(id) ) {
+					return new TaskMap(t);
+				}
+			}
+			return null;
+		} else {
+			return null;
+		}
 	}
 }

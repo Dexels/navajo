@@ -145,4 +145,8 @@ public class TaskMap implements Mappable {
 		return status;
 	}
 
+	public Task getMyTask() {
+		return myTask;
+	}
+
 }
