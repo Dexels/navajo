@@ -428,20 +428,26 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 				}
 				
 				if ( username == null || username.equals(user)) {
-					Task t = new Task(webservice, user, "", null, trigger, null);
-					t.setTrigger(trigger);
-					t.setTaskDescription(taskDesc);
-					t.setClientId(clientId);
-					t.setId(id);
-					t.setFinished(true);
-					t.setStartTime(sdf.parse(starttime));
-					t.setFinishedTime(sdf.parse(endtime));
-					if ( singleEvent.equals("true")) {
-						t.getTrigger().setSingleEvent(true);
-					}
-					t.setStatus(status);
-					t.setErrorMessage(errorMsg);
-					result.add(t);
+					try {
+						Task t = new Task(webservice, user, "", null, trigger, null);
+						t.setTrigger(trigger);
+						t.setId(id);
+						t.setFinished(true);
+						t.setStartTime(sdf.parse(starttime));
+						t.setFinishedTime(sdf.parse(endtime));
+						if ( singleEvent.equals("true")) {
+							t.getTrigger().setSingleEvent(true);
+						}
+						t.setStatus(status);
+						t.setErrorMessage(errorMsg);
+						// Check whether request/response is avaible.
+						Navajo out = getTaskOutput(id);
+						if ( out != null ) {
+							t.setResponse(out);
+							t.setKeepRequestResponse(true);
+						}
+						result.add(t);
+					} catch (Exception e) {}
 				}
 				
 			}
