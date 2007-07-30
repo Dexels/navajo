@@ -1,6 +1,8 @@
 package com.dexels.navajo.adapter;
 
 import com.dexels.navajo.mapping.*;
+import com.dexels.navajo.scheduler.TaskMap;
+import com.dexels.navajo.scheduler.TaskRunnerMap;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.adapter.navajomap.MessageMap;
@@ -28,6 +30,9 @@ public class NavajoMap extends AsyncMappable  implements Mappable {
   public String username = null;
   public String password = null;
   public String server = null;
+  // For scheduling tasks from NavajoMap.
+  public String trigger = null;
+  public String taskId = null;
 
   /**
    * For each of the supported property types a corresponding field of
@@ -320,29 +325,45 @@ public class NavajoMap extends AsyncMappable  implements Mappable {
 		}
 	  }
       
+     
+      
       if (server != null) {
-        NavajoClient nc = new NavajoClient();
-        if (keyStore != null) {
-          nc.setSecure(keyStore, keyPassword, true);
-        }
-        inDoc = nc.doSimpleSend(outDoc, server, method, username, password, -1, true, false);
+    	  NavajoClient nc = new NavajoClient();
+    	  if (keyStore != null) {
+    		  nc.setSecure(keyStore, keyPassword, true);
+    	  }
+    	  if ( trigger == null ) {
+    		  inDoc = nc.doSimpleSend(outDoc, server, method, username, password, -1, true, false);
+    	  } else {
+    		  inDoc = nc.doScheduledSend(outDoc, method, "now", "", "");
+    	  }
       }
       else {
-        Header h = outDoc.getHeader();
-        if (h == null) {
-          h = NavajoFactory.getInstance().createHeader(outDoc, method, username, password, -1);
-          outDoc.addHeader(h);
-        } else {
-          h.setRPCName(method);
-          h.setRPCPassword(password);
-          h.setRPCUser(username);
-          h.setExpirationInterval(-1);
-          // Clear request id.
-          h.setRequestId(null);
-        }
-        inDoc = access.getDispatcher().handle(outDoc, access.getUserCertificate());
+    	  Header h = outDoc.getHeader();
+    	  if (h == null) {
+    		  h = NavajoFactory.getInstance().createHeader(outDoc, method, username, password, -1);
+    		  outDoc.addHeader(h);
+    	  } else {
+    		  h.setRPCName(method);
+    		  h.setRPCPassword(password);
+    		  h.setRPCUser(username);
+    		  h.setExpirationInterval(-1);
+    		  // Clear request id.
+    		  h.setRequestId(null);
+    	  }
+    	  if ( trigger != null ) {
+    		  h.setSchedule(trigger);
+    		  h.setHeaderAttribute("keeprequestresponse", "true");
+    	  }
+    	  inDoc = access.getDispatcher().handle(outDoc, access.getUserCertificate());
       }
 
+      // Get task if if trigger was specified.
+      if ( trigger != null ) {
+    	  taskId = inDoc.getHeader().getSchedule();
+    	  System.err.println("************************************************* TASKID: " + taskId);
+      }
+      
       // Call sorted.
       if ( performOrderBy ) {
     	  OutputStream os = new OutputStream(){
@@ -790,5 +811,32 @@ public class NavajoMap extends AsyncMappable  implements Mappable {
 	    }
 	    
 	  }
+
+  public void setTrigger(String trigger) {
+	  this.trigger = trigger;
+  }
+
+  public String getTaskId() {
+	  return taskId;
+  }
+  
+  public void setTaskId(String t) {
+	  taskId = t;
+	  // Get response from TaskRunnerMap.
+	  TaskRunnerMap trm = new TaskRunnerMap();
+	  trm.setId(taskId);
+	  TaskMap tm = null; 
+	  while ( tm == null ) {
+		  tm = trm.getFinishedTask();
+		  if ( tm == null) {
+			  System.err.println("Waiting for task to finish....");
+			  try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+			}
+		  }
+	  }
+	  inDoc = tm.getMyTask().getResponse();
+  }
   
 }
