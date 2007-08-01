@@ -33,9 +33,9 @@ public class NavajoSocketLauncher {
            URL config = null;
       
            String configUrl = null; 
-//    	for (int i = 0; i < args.length; i++) {
-//    		System.err.println("Arg # "+i+" "+args[i]);
-//    	}
+    	for (int i = 0; i < args.length; i++) {
+    		System.err.println("Arg # "+i+" "+args[i]);
+    	}
            System.err.println("Running navajo for project: "+System.getProperty("navajo.project"));
         if (args.length>1) {
             File f = new File(args[1]);
