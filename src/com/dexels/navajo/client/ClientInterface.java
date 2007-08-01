@@ -160,6 +160,9 @@ public void destroy();
 
 public void setServers(String[] servers);
 
+public Binary getArrayMessageReport(Message m, String[] propertyNames,String[] propertyTitles, int[] columnWidths, String format) throws NavajoException;
+public Binary getArrayMessageReport(Message m, String[] propertyNames, String[] propertyTitles, int[] columnWidths, String format, String orientation, int[] margins) throws NavajoException;
+
 
 /**
  * Add broadcastlistener

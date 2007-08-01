@@ -1908,11 +1908,90 @@ public final void switchServer(int startIndex, boolean forceChange) {
 		killed = true;
 	}
 	
-	
-
 	public void init(String rootPath, String serverXmlPath) throws ClientException {
-		// TODO Auto-generated method stub
-		
 	}
 
+	public Binary getArrayMessageReport(Message m, String[] propertyNames, String[] propertyTitles, int[] columnWidths, String format) throws NavajoException {
+		return getArrayMessageReport(m, propertyNames, propertyTitles, columnWidths, format, null,null);
+	}
+	
+	public Binary getArrayMessageReport(Message m, String[] propertyNames, String[] propertyTitles, int[] columnWidths, String format, String orientation, int[] margins) throws NavajoException {
+//		Message m = in.getMessage(messagePath);
+		if(m==null) {
+			throw NavajoFactory.getInstance().createNavajoException("Message not found. Can not run report.");
+		}
+		Navajo n = NavajoFactory.getInstance().createNavajo();
+		Message cp = m.copy(n);
+		Header h = NavajoFactory.getInstance().createHeader(n, "Irrelevant", "Irrelevant", "Irrelevant", -1);
+		n.addHeader(h);
+		h.setHeaderAttribute("sourceScript", "Irrelevant");
+		n.addMessage(cp);
+		Message repDef = NavajoFactory.getInstance().createMessage(n,"__ReportDefinition");
+		n.addMessage(repDef);
+		StringBuffer sz = new StringBuffer();
+		for (int i = 0; i < columnWidths.length; i++) {
+			if(i!=0) {
+				sz.append(",");
+			}
+			sz.append(columnWidths[i]);
+		}
+		Property sizeProp = NavajoFactory.getInstance().createProperty(n, "PropertySizes",Property.STRING_PROPERTY, sz.toString(), 0, "", Property.DIR_IN);
+		repDef.addProperty(sizeProp);
+
+		sz = new StringBuffer();
+		for (int i = 0; i < propertyNames.length; i++) {
+			if(i!=0) {
+				sz.append(",");
+			}
+			sz.append(propertyNames[i]);
+		}
+		String propertyNamesString = sz.toString();
+		Property namesProp = NavajoFactory.getInstance().createProperty(n, "PropertyNames",Property.STRING_PROPERTY,propertyNamesString, 0, "", Property.DIR_IN);
+		repDef.addProperty(namesProp);
+		
+		sz = new StringBuffer();
+		if(propertyTitles!=null) {
+			for (int i = 0; i < propertyTitles.length; i++) {
+				if(i!=0) {
+					sz.append(",");
+				}
+				sz.append(propertyTitles[i]);
+			}
+		} else {
+			// If no titles supplied, use property names
+			sz.append(propertyNamesString);
+		}
+		Property titlesProp = NavajoFactory.getInstance().createProperty(n, "PropertyTitles",Property.STRING_PROPERTY, sz.toString(), 0, "", Property.DIR_IN);
+		repDef.addProperty(titlesProp);		
+		
+		Property messagePathProp = NavajoFactory.getInstance().createProperty(n, "MessagePath",Property.STRING_PROPERTY, cp.getName(), 0, "", Property.DIR_IN);
+		repDef.addProperty(messagePathProp);
+		
+		Property reportFormatProp = NavajoFactory.getInstance().createProperty(n, "OutputFormat",Property.STRING_PROPERTY, format, 0, "", Property.DIR_IN);
+		repDef.addProperty(reportFormatProp);
+
+		if(margins!=null) {
+			Property marginProperty = NavajoFactory.getInstance().createProperty(n, "Margin",Property.STRING_PROPERTY, format, 0, margins[0]+","+margins[1]+","+margins[2]+","+margins[3], Property.DIR_IN);
+			repDef.addProperty(marginProperty);
+		}
+		if(orientation!=null) {
+			Property orientationProperty = NavajoFactory.getInstance().createProperty(n, "Orientation",Property.STRING_PROPERTY, format, 0, orientation, Property.DIR_IN);
+			repDef.addProperty(orientationProperty);
+		}
+
+		n.getMessage("__ReportDefinition").write(System.err);
+//		repDef.write(System.err);
+		try {
+			Navajo result = NavajoClientFactory.getClient().doSimpleSend(n, "ProcessPrintTableBirt");
+			Property data = result.getProperty("/Result/Data");
+			if(data==null) {
+				result.write(System.err);
+				throw NavajoFactory.getInstance().createNavajoException("No report property found.");
+			}
+			Binary b = (Binary) data.getTypedValue();
+			return b;
+		} catch (ClientException e) {
+			throw NavajoFactory.getInstance().createNavajoException(e);
+		}
+	}
 }
