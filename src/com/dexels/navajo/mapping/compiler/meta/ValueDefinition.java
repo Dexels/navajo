@@ -56,9 +56,13 @@ public class ValueDefinition {
 		this.type = type;
 	}
 	
-	public static ValueDefinition parseDef(XMLElement e) {
+	public static ValueDefinition parseDef(XMLElement e) throws KeywordException {
 		
 		String name = (String) e.getAttribute("name");
+		if ( name.equals("condition") ) {
+			throw new KeywordException("", 0, "Illegal parameter specified: " + name);
+		}
+		
 		String type = (String) e.getAttribute("type");
 		String required = (String) e.getAttribute("required");
 		String direction = (String) e.getAttribute("direction");
@@ -74,13 +78,16 @@ public class ValueDefinition {
 	 * @param in
 	 * @param out
 	 */
-	public XMLElement generateCode(String setterValue, XMLElement out, boolean append, String filename) throws Exception {
+	public XMLElement generateCode(String setterValue, String condition, XMLElement out, boolean append, String filename) throws Exception {
 		
 		if ( direction.equals("in") || direction.equals("automatic")) {
 					
 			XMLElement field = new CaseSensitiveXMLElement();
 			field.setName("field");
 			field.setAttribute("name", ( this.getClass().getName().equals("com.dexels.navajo.mapping.compiler.meta.ValueDefinition") ? name : ((ParameterDefinition) this).getField() ) );
+			if ( condition != null && !condition.equals("") ) {
+				field.setAttribute("condition", condition);
+			}
 			XMLElement expression = new CaseSensitiveXMLElement();
 			expression.setName("expression");
 			field.addChild(expression);
@@ -109,6 +116,9 @@ public class ValueDefinition {
 			XMLElement mapref = new CaseSensitiveXMLElement();
 			mapref.setName("map");
 			mapref.setAttribute("ref", setterValue);
+			if ( condition != null && !condition.equals("") ) {
+				mapref.setAttribute("filter", condition);
+			}
 			out.addChild(mapref);
 			return mapref;
 		} else {
@@ -124,7 +134,7 @@ public class ValueDefinition {
 		StringWriter sw = new StringWriter();
 		XMLElement start = new CaseSensitiveXMLElement();
 		start.setName("tsl");
-		vd.generateCode("sportlinkkernel", start, true, "aap.xml");
+		vd.generateCode("sportlinkkernel", null, start, true, "aap.xml");
 		sw = new StringWriter();
 		start.write(sw);
 		System.err.println(sw.toString());

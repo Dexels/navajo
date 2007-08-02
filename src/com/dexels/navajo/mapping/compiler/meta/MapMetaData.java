@@ -24,7 +24,7 @@ public class MapMetaData {
 		maps.put("__empty__", empty);
 	}
 	
-	private void readConfig() {
+	private void readConfig() throws Exception {
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(new File("/home/arjen/projecten/Navajo/adapters.xml")));
 			XMLElement config = new CaseSensitiveXMLElement();
@@ -42,7 +42,7 @@ public class MapMetaData {
 		}
 	}
 	
-	public static MapMetaData getInstance() {
+	public static MapMetaData getInstance() throws Exception {
 		if ( instance != null ) {
 			return instance;
 		} else {

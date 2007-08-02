@@ -31,7 +31,7 @@ public class MapDefinition {
 		return methods.get(name);
 	}
 	
-	public static MapDefinition parseDef(XMLElement e) {
+	public static MapDefinition parseDef(XMLElement e) throws Exception {
 
 		MapDefinition md = new MapDefinition(MapMetaData.getInstance());
 		
@@ -88,6 +88,10 @@ public class MapDefinition {
 			map = new CaseSensitiveXMLElement();
 			map.setName("map");
 			map.setAttribute("object", objectName);
+			String condition = (String) in.getAttribute("condition");
+			if (  condition != null && !condition.equals("") ) {
+				map.setAttribute("condition", condition);
+			}
 			// Parse attributes using ValueDefinition.
 			Enumeration attributes = in.enumerateAttributeNames();
 			while ( attributes.hasMoreElements() ) {
@@ -97,8 +101,8 @@ public class MapDefinition {
 				ValueDefinition vd = getValueDefinition(attribName);
 				System.err.println("Found vd: " + vd);
 				if ( vd != null ) {
-					vd.generateCode(attribValue, map, true, filename);
-				} else {
+					vd.generateCode(attribValue, null, map, true, filename);
+				} else if ( !attribName.equals("condition") ){
 					throw new UnknownMapInitializationParameterException("map:"+tagName, attribName, in.getLineNr(), filename);
 				}
 			}
@@ -117,13 +121,14 @@ public class MapDefinition {
 				
 				String field = (String) child.getAttribute("field");
 				String setterValue = (String) child.getAttribute("value");
+				String condition = (String) child.getAttribute("condition");
 				if ( setterValue == null ) {
 					setterValue = child.getContent();
 				}
 				ValueDefinition vd = getValueDefinition(field);
 				System.err.println("field: " + field + ", vd = " + vd);
 				if ( vd != null ) {
-					vd.generateCode(setterValue, ( map != null ? map : out ), true, filename );
+					vd.generateCode(setterValue, condition, ( map != null ? map : out ), true, filename );
 				} else {
 					throw new UnknownValueException(child.getName(), field, child.getLineNr(), filename);
 				}
@@ -131,6 +136,7 @@ public class MapDefinition {
 				// Could be a method or a map ref getter.
 				String method = child.getName().substring(child.getName().indexOf(":") + 1);
 				System.err.println("method: " + method);
+				String filter = (String) child.getAttribute("filter");
 				if ( getMethodDefinition(method) != null ) {
 					MethodDefinition md = getMethodDefinition(method);
 					md.generateCode(child, ( map != null ? map : out ), filename );
@@ -142,7 +148,7 @@ public class MapDefinition {
 						if (  ! ( child.getParent().getName().equals("message") || child.getParent().getName().equals("property") ) ) {
 							throw new MetaCompileException(filename, child.getLineNr(), "Illegal tag <" + child.getName() + "/> encountered");
 						}
-						XMLElement out2 = vd.generateCode(method, ( map != null ? map : out ), true, filename );
+						XMLElement out2 = vd.generateCode(method, filter, ( map != null ? map : out ), true, filename );
 						generateCode(child, out2, filename);
 					} else {
 						System.err.println("Parent of " + child.getName() + " IS " + child.getParent().getName());

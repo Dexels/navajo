@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.TreeMap;
 import java.util.Vector;
 
+import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 
 public class MethodDefinition {
@@ -43,6 +44,16 @@ public class MethodDefinition {
 			throw new MetaCompileException(filename, in.getLineNr(), "Illegal children tags defined for tag <" + in.getName() + "/>");
 		}
 		
+		String condition = (String) in.getAttribute("condition");
+		if ( condition != null && !condition.equals("condition")) {
+			XMLElement c = new CaseSensitiveXMLElement();
+			c.setName("message");
+			c.setAttribute("name", "__dummy__");
+			c.setAttribute("condition", condition);
+			c.setAttribute("mode", "ignore");
+			out.addChild(c);
+			out = c;
+		}
 		Enumeration attributes = in.enumerateAttributeNames();
 		HashSet<String> required = new HashSet<String>();
 		// Get all 'automatic' parameters and determine required parameters.
@@ -50,7 +61,7 @@ public class MethodDefinition {
 		while ( auto.hasNext() )  {
 			ParameterDefinition pd = auto.next();
 			if ( pd.getRequired().equals("automatic") ) {
-				XMLElement pdx = pd.generateCode(pd.getValue(), out, false, filename);
+				XMLElement pdx = pd.generateCode(pd.getValue(), null, out, false, filename);
 				orderedParameters.put(new Integer(pd.getOrder()), pdx);
 			} else if ( pd.getRequired().equals("true") ) {
 				required.add(pd.getName());
@@ -61,11 +72,11 @@ public class MethodDefinition {
 			String attribValue = (String) in.getAttribute(attribName);
 			System.err.println("Looking up parameterdefinition: " + attribName);
 			ParameterDefinition pd = parameters.get(attribName);
-			if ( pd == null ) {
+			if ( pd == null && !attribName.equals("condition")) {
 				throw new UnknownParameterException(getName(), attribName, in.getLineNr(), filename );
 			}
 			if ( pd != null && !pd.getRequired().equals("automatic")) {
-				XMLElement pdx = pd.generateCode(attribValue, out, false, filename);
+				XMLElement pdx = pd.generateCode(attribValue, null, out, false, filename);
 				orderedParameters.put(new Integer(pd.getOrder()), pdx);
 				required.remove(pd.getName());
 			}
