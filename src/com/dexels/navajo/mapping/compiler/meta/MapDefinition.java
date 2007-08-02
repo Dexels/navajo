@@ -173,6 +173,7 @@ public class MapDefinition {
 			} else if (!( child.getName().equals("message") || 
 					    child.getName().equals("property") ||
 					    child.getName().equals("field") ||
+					    child.getName().equals("comment") ||
 					    child.getName().equals("debug") ||
 					    child.getName().equals("param") || 
 					    child.getName().equals("include") ||
@@ -199,6 +200,10 @@ public class MapDefinition {
 					String name = (String) allAttribs.nextElement();
 					String value = (String) child.getAttribute(name);
 					copy.setAttribute(name, value);
+				}
+				// Copy text node, if it exists.
+				if ( child.getContent() != null ) {
+					copy.setContent(child.getContent());
 				}
 				generateCode(child, copy, filename);
 			}

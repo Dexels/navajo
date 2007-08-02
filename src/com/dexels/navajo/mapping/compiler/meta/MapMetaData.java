@@ -36,7 +36,12 @@ public class MapMetaData {
 	private void readConfig() throws Exception {
 		try {
 			
-			BufferedReader br = new BufferedReader(new FileReader(new File(Dispatcher.getInstance().getNavajoConfig().getConfigPath() + "/adapters.xml")));
+			BufferedReader br = 
+				( Dispatcher.getInstance() != null ) ?
+				new BufferedReader(new FileReader(new File(Dispatcher.getInstance().getNavajoConfig().getConfigPath() + "/adapters.xml")))
+			:
+				new BufferedReader(new FileReader("/home/arjen/projecten/Navajo/adapters.xml"));
+				
 			XMLElement config = new CaseSensitiveXMLElement();
 			config.parseFromReader(br);
 			br.close();
@@ -110,9 +115,11 @@ public class MapMetaData {
 	public static void main(String [] args) throws Exception {
 		
 		MapMetaData mmd = MapMetaData.getInstance();
-		System.err.println("is: " + mmd.isMetaScript("ProcessUpdatePersonNewStyle", "/home/arjen/projecten/Navajo/", "."));
+		System.err.println("is: " + mmd.isMetaScript("ProcessQueryMemberNewStyle", "/home/arjen/projecten/Navajo/", "."));
 		
-		//mmd.parse("/home/arjen/projecten/Navajo/ProcessUpdatePersonNewStyle.xml");
+		String result = mmd.parse("/home/arjen/projecten/Navajo/ProcessQueryMemberNewStyle.xml");
+		
+		System.err.println(result);
 		
 	}
 }
