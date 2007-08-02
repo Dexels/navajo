@@ -99,7 +99,7 @@ public class ValueDefinition {
 					setterValue = "'" + setterValue + "'";
 				}
 				if ( setterValue.startsWith("{") ) {  // Force expression.
-					System.err.println("FOUND ESCAPED EXPRESSION!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+					//System.err.println("FOUND ESCAPED EXPRESSION!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 					setterValue = setterValue.replace('{', ' ');
 					setterValue = setterValue.replace('}', ' ');
 				}

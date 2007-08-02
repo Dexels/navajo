@@ -70,7 +70,7 @@ public class MethodDefinition {
 		while ( attributes.hasMoreElements() ) {
 			String attribName = (String) attributes.nextElement();
 			String attribValue = (String) in.getAttribute(attribName);
-			System.err.println("Looking up parameterdefinition: " + attribName);
+			//System.err.println("Looking up parameterdefinition: " + attribName);
 			ParameterDefinition pd = parameters.get(attribName);
 			if ( pd == null && !attribName.equals("condition")) {
 				throw new UnknownParameterException(getName(), attribName, in.getLineNr(), filename );

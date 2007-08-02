@@ -7,6 +7,12 @@ import java.util.Vector;
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 
+/**
+ * This class holds the meta data definition of an adapter.
+ * 
+ * @author arjen
+ *
+ */
 public class MapDefinition {
 
 	public String tagName;
@@ -21,7 +27,7 @@ public class MapDefinition {
 	}
 	
 	protected HashMap<String, ValueDefinition> values = new HashMap<String, ValueDefinition>();
-	protected HashMap<String,MethodDefinition> methods = new HashMap<String, MethodDefinition>();
+	protected HashMap<String, MethodDefinition> methods = new HashMap<String, MethodDefinition>();
 	
 	public ValueDefinition getValueDefinition(String name) {
 		return values.get(name);
@@ -83,7 +89,7 @@ public class MapDefinition {
 		
 		XMLElement map = null;
 		
-		System.err.println("IN GENERATECODE FOR : " + in.getName() + ", tagname is: " + tagName );
+		//System.err.println("IN GENERATECODE FOR : " + in.getName() + ", tagname is: " + tagName );
 		if ( in.getName().equals("map:"+tagName)  ) {
 			map = new CaseSensitiveXMLElement();
 			map.setName("map");
@@ -97,9 +103,9 @@ public class MapDefinition {
 			while ( attributes.hasMoreElements() ) {
 				String attribName = (String) attributes.nextElement();
 				String attribValue = (String) in.getAttribute(attribName);
-				System.err.println("Looking up: " + attribName);
+				//System.err.println("Looking up: " + attribName);
 				ValueDefinition vd = getValueDefinition(attribName);
-				System.err.println("Found vd: " + vd);
+				//System.err.println("Found vd: " + vd);
 				if ( vd != null ) {
 					vd.generateCode(attribValue, null, map, true, filename);
 				} else if ( !attribName.equals("condition") ){
@@ -126,7 +132,7 @@ public class MapDefinition {
 					setterValue = child.getContent();
 				}
 				ValueDefinition vd = getValueDefinition(field);
-				System.err.println("field: " + field + ", vd = " + vd);
+				//System.err.println("field: " + field + ", vd = " + vd);
 				if ( vd != null ) {
 					vd.generateCode(setterValue, condition, ( map != null ? map : out ), true, filename );
 				} else {
@@ -135,12 +141,12 @@ public class MapDefinition {
 			} else if ( child.getName().startsWith(tagName + ":")) {
 				// Could be a method or a map ref getter.
 				String method = child.getName().substring(child.getName().indexOf(":") + 1);
-				System.err.println("method: " + method);
+				//System.err.println("method: " + method);
 				String filter = (String) child.getAttribute("filter");
 				if ( getMethodDefinition(method) != null ) {
 					MethodDefinition md = getMethodDefinition(method);
 					md.generateCode(child, ( map != null ? map : out ), filename );
-					System.err.println("Generated code for method");
+					//System.err.println("Generated code for method");
 				} else {
 					// Maybe an out ValueDefinition, map ref stuff...
 					ValueDefinition vd = getValueDefinition(method);
@@ -151,7 +157,7 @@ public class MapDefinition {
 						XMLElement out2 = vd.generateCode(method, filter, ( map != null ? map : out ), true, filename );
 						generateCode(child, out2, filename);
 					} else {
-						System.err.println("Parent of " + child.getName() + " IS " + child.getParent().getName());
+						//System.err.println("Parent of " + child.getName() + " IS " + child.getParent().getName());
 						throw new UnknownMethodException(child.getName(), ((XMLElement) v.get(i)).getLineNr(), filename);
 					}
 				}

@@ -13,6 +13,12 @@ import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.server.Dispatcher;
 
+/**
+ * This class holds the metadata for adapters that can be used in new navasript 'style' scripts.
+ * 
+ * @author arjen
+ *
+ */
 public class MapMetaData {
 
 	protected HashMap<String, MapDefinition> maps = new HashMap<String, MapDefinition>();
@@ -35,7 +41,7 @@ public class MapMetaData {
 			config.parseFromReader(br);
 			br.close();
 			Vector allmaps = config.getElementsByTagName("map");
-			System.err.println("Found " + allmaps.size() + " map definitions");
+			//System.err.println("Found " + allmaps.size() + " map definitions");
 			for ( int i = 0; i < allmaps.size(); i++ ) {
 				XMLElement map = (XMLElement) allmaps.get(i);
 				MapDefinition md = MapDefinition.parseDef(map);
@@ -66,7 +72,7 @@ public class MapMetaData {
 	}
 	
 	protected String getFileName(XMLElement e) {
-		System.err.println(">>>>>>>>> e = " + e.getFirstChild());
+		//System.err.println(">>>>>>>>> e = " + e.getFirstChild());
 		return (String) e.getFirstChild().getAttribute("filename");
 	}
 	
