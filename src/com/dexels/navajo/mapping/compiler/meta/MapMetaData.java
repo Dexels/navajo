@@ -2,13 +2,16 @@ package com.dexels.navajo.mapping.compiler.meta;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
+import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Vector;
 
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
+import com.dexels.navajo.server.Dispatcher;
 
 public class MapMetaData {
 
@@ -26,7 +29,8 @@ public class MapMetaData {
 	
 	private void readConfig() throws Exception {
 		try {
-			BufferedReader br = new BufferedReader(new FileReader(new File("/home/arjen/projecten/Navajo/adapters.xml")));
+			
+			BufferedReader br = new BufferedReader(new FileReader(new File(Dispatcher.getInstance().getNavajoConfig().getConfigPath() + "/adapters.xml")));
 			XMLElement config = new CaseSensitiveXMLElement();
 			config.parseFromReader(br);
 			br.close();
@@ -66,7 +70,7 @@ public class MapMetaData {
 		return (String) e.getFirstChild().getAttribute("filename");
 	}
 	
-	public void parse(String fileName) throws Exception {
+	public String parse(String fileName) throws Exception {
 		File f = new File(fileName);
 		BufferedReader br = new BufferedReader(new FileReader(f));
 		XMLElement in = new CaseSensitiveXMLElement();
@@ -80,13 +84,29 @@ public class MapMetaData {
 		StringWriter sw = new StringWriter();
 		result.write(sw);
 
-		System.err.println(sw.toString());
+		return sw.toString();
+	}
+	
+	public static boolean isMetaScript(String script, String scriptPath, String packagePath) {
+		try {
+			InputStreamReader isr =  new InputStreamReader( new FileInputStream(scriptPath + "/" + packagePath + "/" + script + ".xml") );
+			XMLElement x = new CaseSensitiveXMLElement();
+			x.parseFromReader(isr);
+			isr.close();
+			return ( x.getName().equals("navascript"));
+		} catch (Exception e) {
+			e.printStackTrace(System.err);
+			return false;
+		}
+		
 	}
 	
 	public static void main(String [] args) throws Exception {
 		
 		MapMetaData mmd = MapMetaData.getInstance();
-		mmd.parse("/home/arjen/projecten/Navajo/navascript.xml");
+		System.err.println("is: " + mmd.isMetaScript("ProcessUpdatePersonNewStyle", "/home/arjen/projecten/Navajo/", "."));
+		
+		//mmd.parse("/home/arjen/projecten/Navajo/ProcessUpdatePersonNewStyle.xml");
 		
 	}
 }

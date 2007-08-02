@@ -2,9 +2,11 @@ package com.dexels.navajo.server;
 
 import java.util.*;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 
 import com.dexels.navajo.mapping.*;
+import com.dexels.navajo.mapping.compiler.meta.MapMetaData;
 import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.loader.NavajoClassSupplier;
 import com.dexels.navajo.document.*;
@@ -130,15 +132,23 @@ public final class GenericHandler extends ServiceHandler {
             				synchronized (mutex1) { // Check for outdated compiled script Java source.
 
             				if (!sourceFile.exists() || (scriptFile.lastModified() > sourceFile.lastModified()) || sourceFile.length() == 0  ) {
+            					
             					com.dexels.navajo.mapping.compiler.TslCompiler tslCompiler = new
             					com.dexels.navajo.mapping.compiler.TslCompiler(properties.getClassloader());
+            					
             					try {
-            						tslCompiler.compileScript(serviceName, scriptPath,
-            								properties.
-            								getCompiledScriptPath(),
-            								pathPrefix);
-            					}
-            					catch (SystemException ex) {
+            						if ( MapMetaData.isMetaScript(serviceName, scriptPath, pathPrefix) ) {
+            							MapMetaData mmd = MapMetaData.getInstance();
+            							String intermed = mmd.parse(scriptPath + "/" + pathPrefix + "/" + serviceName + ".xml");
+            							tslCompiler.compileScript(new ByteArrayInputStream(intermed.getBytes()), pathPrefix, serviceName, 
+            									scriptPath, properties.getCompiledScriptPath() );
+            						} else {
+            							tslCompiler.compileScript(serviceName, scriptPath,
+            									properties.
+            									getCompiledScriptPath(),
+            									pathPrefix);
+            						}
+            					} catch (SystemException ex) {
             						sourceFile.delete();
             						throw ex;
             					}
