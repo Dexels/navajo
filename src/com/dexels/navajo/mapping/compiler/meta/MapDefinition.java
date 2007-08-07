@@ -121,12 +121,12 @@ public class MapDefinition {
 			XMLElement child = (XMLElement) v.get(i);
 			if ( child.getName().equals(tagName + ":set") ) {
 				
-				if ( child.getChildren().size() > 0 ) {
+				if ( child.getChildren().size() > 0 && (String) child.getAttribute("ref") == null ) {
 					throw new MetaCompileException(filename, child.getLineNr(), "Illegal children tags defined for tag <" + child.getName() + "/>");
 				}
 				
 				String field = (String) child.getAttribute("field");
-				String setterValue = (String) child.getAttribute("value");
+				String setterValue = ( child.getAttribute("value") != null ? (String) child.getAttribute("value") : (String) child.getAttribute("ref") );
 				String condition = (String) child.getAttribute("condition");
 				if ( setterValue == null ) {
 					setterValue = child.getContent();

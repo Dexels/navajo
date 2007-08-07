@@ -115,9 +115,9 @@ public class MapMetaData {
 	public static void main(String [] args) throws Exception {
 		
 		MapMetaData mmd = MapMetaData.getInstance();
-		System.err.println("is: " + mmd.isMetaScript("ProcessQueryMemberNewStyle", "/home/arjen/projecten/Navajo/", "."));
+		//System.err.println("is: " + mmd.isMetaScript("ProcessQueryMemberNewStyle", "/home/arjen/projecten/Navajo/", "."));
 		
-		String result = mmd.parse("/home/arjen/projecten/Navajo/ProcessQueryMemberNewStyle.xml");
+		String result = mmd.parse("/home/arjen/projecten/Navajo/ProcessUpdatePersonNewStyle.xml");
 		
 		System.err.println(result);
 		

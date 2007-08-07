@@ -80,7 +80,7 @@ public class ValueDefinition {
 	 */
 	public XMLElement generateCode(String setterValue, String condition, XMLElement out, boolean append, String filename) throws Exception {
 		
-		if ( direction.equals("in") || direction.equals("automatic")) {
+		if ( ( direction.equals("in") || direction.equals("automatic") ) && !type.startsWith("map:")) { // generate <field name=""><expression value=""/></field> construction
 					
 			XMLElement field = new CaseSensitiveXMLElement();
 			field.setName("field");
@@ -112,7 +112,7 @@ public class ValueDefinition {
 				out.addChild(field);
 			}
 			return field;
-		} else if ( direction.equals("out") && type.startsWith("map:") ){
+		} else if ( direction.equals("out") && type.startsWith("map:") ){ // Generate <map ref=""> construction
 			XMLElement mapref = new CaseSensitiveXMLElement();
 			mapref.setName("map");
 			mapref.setAttribute("ref", setterValue);
@@ -120,6 +120,19 @@ public class ValueDefinition {
 				mapref.setAttribute("filter", condition);
 			}
 			out.addChild(mapref);
+			return mapref;
+		} else if ( direction.equals("in") && type.startsWith("map:") ) { // Generate <field name=""><map ref=""></field> construction...
+			XMLElement field = new CaseSensitiveXMLElement();
+			field.setName("field");
+			field.setAttribute("name", ( this.getClass().getName().equals("com.dexels.navajo.mapping.compiler.meta.ValueDefinition") ? name : ((ParameterDefinition) this).getField() ) );
+			if ( condition != null && !condition.equals("") ) {
+				field.setAttribute("condition", condition);
+			}
+			XMLElement mapref = new CaseSensitiveXMLElement();
+			mapref.setName("map");
+			mapref.setAttribute("ref", setterValue);
+			field.addChild(mapref);
+			out.addChild(field);
 			return mapref;
 		} else {
 			throw new Exception("Unknown value tag");
