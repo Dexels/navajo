@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 
 import com.dexels.navajo.client.*;
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.types.*;
 import com.dexels.navajo.loader.NavajoBasicClassLoader;
 import com.dexels.navajo.server.*;
 
@@ -363,7 +364,7 @@ private final String mySessionToken;
     try {
 
 //    NavajoBasicClassLoader nbcl = new NavajoBasicClassLoader();
-      dispatcher = Dispatcher.getInstance(path, "config/server.xml",new FileInputStreamReader(path),null);
+      dispatcher = Dispatcher.getInstance(path, null,new FileInputStreamReader(path),null);
 //      dispatcher.setUseAuthorisation(false);
 //      System.err.println("IN INIT of DCI. classloader: "+dispatcher.getNavajoConfig().getClassloader());
 //      dispatcher.getNavajoConfig().setClassloader(cl);
@@ -390,7 +391,8 @@ private final String mySessionToken;
       try {
 //          dispatcher = new Dispatcher(config,new FileInputStreamReader(path),new DirectClassLoader(path,path+"/navajo-tester/auxilary/classes"));
 
-        dispatcher = Dispatcher.getInstance(path, "config/server.xml",new FileInputStreamReader(path),null);
+//        dispatcher = Dispatcher.getInstance(path, "config/server.xml",new FileInputStreamReader(path),null);
+        dispatcher = Dispatcher.getInstance(config,new FileInputStreamReader(path),null);
       }
       
       catch (NavajoException ex) {
@@ -609,5 +611,17 @@ public int getPending() {
 }
 public Navajo doScheduledSend(Navajo out, String method, String schedule, String description, String clientId) throws ClientException {
 	 throw new java.lang.UnsupportedOperationException("Method doScheduledSend() not yet implemented.");
+}
+
+
+
+public Binary getArrayMessageReport(Message m, String[] propertyNames, String[] propertyTitles, int[] columnWidths, String format) throws NavajoException {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+public Binary getArrayMessageReport(Message m, String[] propertyNames, String[] propertyTitles, int[] columnWidths, String format, String orientation, int[] margins) throws NavajoException {
+	// TODO Auto-generated method stub
+	return null;
 }
 }
