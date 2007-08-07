@@ -52,6 +52,10 @@ public class ValueDefinition {
 		return type;
 	}
 	
+	public String getMapType() {
+		return type.substring(type.indexOf("map:") + 4, type.indexOf(" "));
+	}
+	
 	public void setType(String type) {
 		this.type = type;
 	}

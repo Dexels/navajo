@@ -133,11 +133,23 @@ public class MapDefinition {
 				}
 				ValueDefinition vd = getValueDefinition(field);
 				//System.err.println("field: " + field + ", vd = " + vd);
+				XMLElement remainder = null;
 				if ( vd != null ) {
-					vd.generateCode(setterValue, condition, ( map != null ? map : out ), true, filename );
+					remainder = vd.generateCode(setterValue, condition, ( map != null ? map : out ), true, filename );
 				} else {
 					throw new UnknownValueException(child.getName(), field, child.getLineNr(), filename);
 				}
+				
+				if ( (String) child.getAttribute("ref") != null && remainder != null ) {
+					//System.err.println("MAPTYPE: " + vd.getMapType());
+					MapDefinition md = myMetaData.getMapDefinition(vd.getMapType());
+					if ( md != null ) {
+						md.generateCode(child, remainder, filename );
+					} else {
+						throw new UnknownAdapterException(child.getName(), child.getLineNr(), filename);
+					}
+				}
+				
 			} else if ( child.getName().startsWith(tagName + ":")) {
 				// Could be a method or a map ref getter.
 				String method = child.getName().substring(child.getName().indexOf(":") + 1);
