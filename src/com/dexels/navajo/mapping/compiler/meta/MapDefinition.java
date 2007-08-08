@@ -2,6 +2,8 @@ package com.dexels.navajo.mapping.compiler.meta;
 
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Vector;
 
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
@@ -100,6 +102,22 @@ public class MapDefinition {
 			}
 			// Parse attributes using ValueDefinition.
 			Enumeration attributes = in.enumerateAttributeNames();
+			
+			HashSet<String> required = new HashSet<String>();
+			// Get all 'automatic' parameters and determine required parameters.
+			Iterator<ValueDefinition> auto = values.values().iterator();
+			while ( auto.hasNext() )  {
+				ValueDefinition pd = auto.next();
+				if ( pd.getRequired().equals("automatic") ) {
+					System.err.println("AUTOMATIC!!!!!!!!!!" + pd.getName());
+					XMLElement pdx = pd.generateCode(pd.getValue(), null, map, true, filename);
+					//out.addChild(pdx);
+				} else if ( pd.getRequired().equals("true") ) {
+					required.add(pd.getName());
+				}
+			}
+			
+			
 			while ( attributes.hasMoreElements() ) {
 				String attribName = (String) attributes.nextElement();
 				String attribValue = (String) in.getAttribute(attribName);
@@ -108,10 +126,17 @@ public class MapDefinition {
 				//System.err.println("Found vd: " + vd);
 				if ( vd != null ) {
 					vd.generateCode(attribValue, null, map, true, filename);
+					required.remove(attribName);
 				} else if ( !attribName.equals("condition") ){
 					throw new UnknownMapInitializationParameterException("map:"+tagName, attribName, in.getLineNr(), filename);
 				}
 			}
+			
+            // Check if all required parameters are present.
+			if ( required.size() > 0 ) {
+				throw new MissingParameterException(required, tagName, in.getLineNr(), filename );
+			}
+			
 			out.addChild(map);
 		}
 		

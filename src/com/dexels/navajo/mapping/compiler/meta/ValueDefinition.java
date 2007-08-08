@@ -14,6 +14,7 @@ public class ValueDefinition {
 
 	protected String name;
 	protected String type;
+	protected String value;
 	protected String required;
 	protected String direction;
 	
@@ -38,6 +39,14 @@ public class ValueDefinition {
 	
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public void setValue(String v) {
+		this.value = v;
+	}
+	
+	public String getValue() {
+		return value;
 	}
 	
 	public String getRequired() {
@@ -70,7 +79,11 @@ public class ValueDefinition {
 		String type = (String) e.getAttribute("type");
 		String required = (String) e.getAttribute("required");
 		String direction = (String) e.getAttribute("direction");
+		String value = (String) e.getAttribute("value");
 		ValueDefinition vd = new ValueDefinition(name, type, required, direction);
+		if ( value != null ) {
+			vd.setValue(value);
+		}
 		
 		return vd;
 	}

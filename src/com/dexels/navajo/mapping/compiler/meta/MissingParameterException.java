@@ -17,6 +17,6 @@ public class MissingParameterException extends MetaCompileException {
 		while ( i.hasNext() ) {
 			sb.append(i.next() + ",");
 		}
-		super.message = "Missing required parameters: [" + sb.toString().substring(0, sb.length() - 1) + "], for method: <" + method + "/>";
+		super.message = "Missing required parameters: [" + sb.toString().substring(0, sb.length() - 1) + "], for map/method: <" + method + "/>";
 	}
 }
