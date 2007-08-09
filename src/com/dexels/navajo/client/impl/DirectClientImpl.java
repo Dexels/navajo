@@ -391,7 +391,7 @@ private final String mySessionToken;
       try {
 //          dispatcher = new Dispatcher(config,new FileInputStreamReader(path),new DirectClassLoader(path,path+"/navajo-tester/auxilary/classes"));
     	 System.err.println("Initializing Direct client with path: "+path);
-        dispatcher = Dispatcher.getInstance(path, "auxilary/config/server.xml",new FileInputStreamReader(path),null);
+        dispatcher = Dispatcher.getInstance(path, "config/server.xml",new FileInputStreamReader(path),null);
        
         // dispatcher = Dispatcher.getInstance(config,new FileInputStreamReader(path),null);
       }
