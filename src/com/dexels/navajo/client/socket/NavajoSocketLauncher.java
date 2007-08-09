@@ -66,13 +66,22 @@ public class NavajoSocketLauncher {
 
 
 
-
 //        final String dir = "c:/toy-workspace/sportlink-serv/navajo-tester";
         String dir = System.getProperty("user.dir");
+        
+		File navajoRootFile = new File(dir,".navajoroot");
+		if(navajoRootFile.exists()) {
+			BufferedReader fr = new BufferedReader(new FileReader(navajoRootFile));
+			String offset = fr.readLine();
+			dir = dir + System.getProperty("file.separator") +offset;
+			fr.close();
+		}
+        
       DirectClientImpl dci = new DirectClientImpl();
       // Will use a BasicClassLoader:
 //      dci.init(config,null,dir);
         // Will use a MultiClassLoader:
+      System.err.println("Initializing client: "+config);
         dci.init(config,dir);
 
         // ---------------------
