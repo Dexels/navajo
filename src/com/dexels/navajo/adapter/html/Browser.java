@@ -5,6 +5,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
+import java.io.StreamTokenizer;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -12,10 +13,13 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.StringTokenizer;
+import java.util.Vector;
+
 import javax.net.ssl.HttpsURLConnection;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.tidy.Tidy;
 
@@ -281,32 +285,137 @@ public class Browser {
 		try {
 			r = new BufferedReader( new InputStreamReader( urlcon.getInputStream(), encoding ) );
 		} catch (Exception e) {
-			e.printStackTrace(System.err);
+			//e.printStackTrace(System.err);
 			System.err.println("unknown encoding: " + encoding);
 			r = new BufferedReader( new InputStreamReader( urlcon.getInputStream(), "8859_1" ) );
 		}
 		System.err.println("DONE");
-		String line;
+		int l = -1;
 		StringBuffer form = new StringBuffer();
 	
 		boolean inscript = false;
+		boolean incomment = false;
+		boolean openedtag = false;
+		int columncount = 0;
+		boolean breakIf = false;
 		
-		while ( (line = r.readLine()) != null ) {
+		while (  (l = r.read()) != -1 ) {
 			
-			// Remove javascript.
-			if ( line.indexOf("<script") != -1 && !inscript) {
-				inscript = true;
+			char line = (char) l;
+			
+			if ( line == '<' ) {
+				openedtag = true;
+				char c = (char) r.read();
+				if ( c == '!' && !inscript && !incomment) {
+					char c2;
+					if ( ( c2 = (char) r.read() ) == '-' ) {
+						incomment = true;
+						breakIf = true;
+					} else if (!incomment) {
+						form.append(line);
+						form.append(c);
+						form.append(c2);
+						breakIf = true;
+					}
+				} else if ( c == '/') {
+					openedtag = false;
+					breakIf = false;
+					if ( inscript ) {
+						c = (char) r.read();
+						//System.err.println("READING / WHILE IN SCRIPT...., c = " + c);
+					}
+				} else {
+					breakIf = false;
+				}
+				if ( !breakIf && !incomment && ( !openedtag || !inscript ) ) {
+					
+					//char s = (char) r.read();
+					if ( c == 's') { // maybe script?
+						char c2 = (char) r.read();
+						if ( c2 == 'c') {
+							char c3 = (char) r.read();
+							if ( c3 == 'r') {
+								char c4 = (char) r.read();
+								if ( c4 == 'i') {
+									char c5 = (char) r.read();
+									if ( c5 == 'p') {
+										char c6 = (char) r.read();
+										if ( c6 == 't') {
+											//System.err.println("READ SCRIPT WORD!!");
+											if ( !inscript ) {
+												inscript = true;
+											} else if (inscript && !openedtag) {
+												// read >
+												r.read();
+												inscript = false;
+											}
+										} else if (!incomment) {
+											form.append(line);
+											form.append(c);
+											//form.append(s);
+											form.append(c2);
+											form.append(c3);
+											form.append(c4);
+											form.append(c5);
+											form.append(c6);
+										}
+									} else if (!incomment) {
+										form.append(line);
+										form.append(c);
+										//form.append(s);
+										form.append(c2);
+										form.append(c3);
+										form.append(c4);
+										form.append(c5);
+									}
+								} else if (!incomment) {
+									form.append(line);
+									form.append(c);
+									//form.append(s);
+									form.append(c2);
+									form.append(c3);
+									form.append(c4);
+								}
+							} else if (!incomment) {
+								form.append(line);
+								form.append(c);
+								//form.append(s);
+								form.append(c2);
+								form.append(c3);
+							}
+						} else if (!incomment) {
+							form.append(line);
+							form.append(c);
+							//form.append(s);
+							form.append(c2);
+						}
+					} else if (!incomment){
+						form.append(line);
+						form.append(c);
+						//form.append(s);
+						columncount += 3;
+					}
+				}
+			} else if ( line == '-' && incomment) {
+				char c1;
+				if ( ( c1 = (char) r.read() ) == '-' ) {
+					char c2;
+					if ( ( c2 = (char) r.read() ) == '>' ) {
+						incomment = false;
+					}
+				}
+			} else if ( !incomment && !inscript ) {
+				form.append(line);
+				columncount ++;
 			}
-		
-			if ( line.indexOf("!DOCTYPE") == -1 && !inscript) {
-				form.append(line+"\n");
-			} else {
-				//System.err.println("Ignoring line: " + line);
+			if ( line == '\n') {
+				columncount = 0;
+			}
+			if ( line == '>' && columncount > 200 ) {
+				form.append('\n');
 			}
 			
-			if ( line.indexOf("</script>") != -1 && inscript) {
-				inscript = false;
-			}
+			
 		}
 		
 		currentContent = form.toString();
@@ -362,28 +471,43 @@ public class Browser {
 	}
 	
 	public static void main(String [] args) throws Exception {
-		Browser b = new Browser("http://babelfish.altavista.com/", "babelfish.altavista.com");
+		Browser b = new Browser("http://www.voetbalmaten.nl/", "www.voetbalmaten.nl");
 		b.debug = true;
-		String result = b.openUrl("http://babelfish.altavista.com/", null, false);
+		for ( int x = 1; x < 2; x++ ) {
+			String result = b.openUrl("http://www.voetbalmaten.nl/index_club_display.vmnl?club_id=" + x, null, false);
+
+			NodeList v = b.tidiedContent.getElementsByTagName("img");
+
+			System.err.println(b.tidiedStringContent);
+			for (int i = 0; i < v.getLength(); i++) {
+				Element n = (Element) v.item(i);
+				String img = n.getAttribute("src");
+				if ( img.startsWith("clublogos")) {
+					System.err.println(img);
+				}
+			}
+		}
 		
+		//clublogos/1020
+		//System.err.println(result);
 //		System.err.println(b.currentContent);
-		Navajo n = b.getNavajo();
+		//Navajo n = b.getNavajo();
 //		
-		n.write(System.err);
-		System.err.println(b.getFormAction());
-		
-		
-		HashMap parameters = b.getFormParameters();
-		parameters.put("trtext", "Coffee");
-		parameters.put("lp", "en_el");
+//		n.write(System.err);
+//		System.err.println(b.getFormAction());
+//		
+//		
+//		HashMap parameters = b.getFormParameters();
+//		parameters.put("trtext", "Coffee");
+//		parameters.put("lp", "en_el");
 		
 		// next action, login and post to /ideal/firstLogonPreAction.do
 		// Find password using username value:
 
-		result = b.openUrl(b.getFormAction(), b.constructFormBody(b.formParameters), true);
-		n = b.getNavajo();
-		n.write(System.err);
-		System.err.println("vertaling = " + n.getMessage("Form").getProperty("q").getValue());
+		//result = b.openUrl(b.getFormAction(), b.constructFormBody(b.formParameters), true);
+		//n = b.getNavajo();
+		//n.write(System.err);
+		//System.err.println("vertaling = " + n.getMessage("Form").getProperty("q").getValue());
 		//System.err.println(b.currentContent);
 //		HashMap clubdetails = b.getFormParameters();
 //		Iterator iter= clubdetails.keySet().iterator();
