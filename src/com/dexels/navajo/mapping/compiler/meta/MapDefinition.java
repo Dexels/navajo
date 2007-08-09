@@ -52,8 +52,12 @@ public class MapDefinition {
 			md.objectName = o.getContent();
 		}
 		XMLElement d = e.getElementByTagName("description");
-		if ( o != null ) {
-			md.description = o.getContent();
+		if ( d != null ) {
+			md.description = d.getContent();
+		}
+		XMLElement a = e.getElementByTagName("abstract");
+		if ( a != null ) {
+			md.abstractMap = a.getContent().equals("true");
 		}
 		XMLElement valuesTag = e.getElementByTagName("values");
 		if ( valuesTag != null ) {
@@ -202,6 +206,9 @@ public class MapDefinition {
 				generateCode(child, ( map != null ? map : out ), filename );
 			} else if ( child.getName().startsWith("map:" ) ) {
 				MapDefinition md = myMetaData.getMapDefinition(child.getName().substring(4));
+				if ( md.abstractMap ) {
+					throw new MetaCompileException(filename, child.getLineNr(), "Illegal declaration of abstract adapter: " + md.tagName);
+				}
 				if ( md != null ) {
 					md.generateCode(child, ( map != null ? map : out ), filename );
 				} else {
