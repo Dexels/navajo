@@ -86,14 +86,14 @@ public class MapMetaData {
 		BufferedReader br = new BufferedReader(new FileReader(f));
 		XMLElement in = new CaseSensitiveXMLElement();
 		
-		XMLElement navascript = in.getFirstChild();
+		
 		in.parseFromReader(br);
 		br.close();
 		
 		XMLElement result = new CaseSensitiveXMLElement();
 		result.setName("tsl");
-		if ( navascript.getAttribute("debug") != null ) {
-			result.setAttribute("debug", navascript.getAttribute("debug"));
+		if ( in != null && in.getAttribute("debug") != null ) {
+			result.setAttribute("debug", in.getAttribute("debug"));
 		}
 		generateCode(in, result, f.getName());
 
