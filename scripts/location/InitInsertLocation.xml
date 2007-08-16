@@ -1,0 +1,13 @@
+<tsl>
+    <methods>
+        <method name="location/ProcessInsertLocation"/>
+    </methods> 
+<message name="Location">
+          <property name="Longitude" type="float" direction="in" description="Longitude" value="0"/>
+          <property name="Latitude" type="float" direction="in" description="Latitude" value="0"/>
+          <property name="Altitude" type="float" direction="in" description="Altitude" value="0"/>
+          <property name="Tag" type="string" direction="in" description="Tag" value="0"/>
+          <property name="User" type="string" direction="in" description="User" value="frank"/>
+          <property name="Description" type="float" direction="in" description="Description"/>
+</message>
+</tsl>

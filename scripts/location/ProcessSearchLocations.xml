@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tsl author="Matthijs Philip" id="person/ProcessSearchLocations" notes="" repository="$Id$" xmlns="http://www.dexels.com/navascript" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dexels.com/navascript http://www.dexels.com/schema/navascript.xsd">
+    <methods>
+        <method name="person/ProcessSearchLocations">
+            <required message="Person"/>
+        </method>
+    </methods>
+    
+ 
+    <map object="com.dexels.navajo.adapter.SQLMap">
+        <field name="datasource">
+            <expression value="'location'"/>
+        </field>
+        <field name="debug">
+            <expression value="true"/>
+        </field>
+       <field name="query">
+             <expression xml:space="preserve">
+               SELECT id
+               ,	  longitude 
+               ,      latitude
+               ,      altitude
+               ,      user
+               ,      tag
+               FROM   location
+               WHERE  1 = 1
+            </expression>
+        </field>
+        <message name="Locations" type="array">
+            <map ref="resultSet">
+                <property name="Id" type="integer" direction="out">
+                    <expression value="$columnValue('id')"/>
+                </property>
+                <property name="Longitude" type="string" direction="out" description="Longitude">
+                    <expression value="$columnValue('longitude')"/>
+                </property>
+                <property name="Latitude" type="string" direction="out" description="Latitude">
+                    <expression value="$columnValue('latitude')"/>
+                </property>
+                <property name="Altitude" type="string" direction="out" description="Altitude">
+                    <expression value="$columnValue('altitude')"/>
+                </property>
+                <property name="Tag" type="string" direction="out" description="Tag">
+                    <expression value="$columnValue('tag')"/>
+                </property>
+                <property name="User" type="string" direction="out" description="User">
+                    <expression value="$columnValue('user')"/>
+                </property>              
+            </map>
+        </message>
+    </map>
+</tsl>

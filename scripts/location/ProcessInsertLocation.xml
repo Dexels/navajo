@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tsl author="Matthijs Philip" id="person/ProcessInsertPerson" notes="" repository="$Id$" xmlns="http://www.dexels.com/navascript" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dexels.com/navascript http://www.dexels.com/schema/navascript.xsd">
+    <param name="UpdateCount">
+        <expression value="0"/>
+    </param>
+    <map object="com.dexels.navajo.adapter.SQLMap">
+        <field name="datasource">
+            <expression value="'location'"/>
+        </field>
+        <field name="update">
+            <expression xml:space="preserve">
+                INSERT INTO location (  
+                       longitude
+                ,      latitude
+                ,      altitude
+                ,      tag
+                ,      user
+                ,      description )
+                VALUES ( ?, ?, ?, ?, ?, ? )
+            </expression>
+        </field>
+        <field name="parameter">
+            <expression value="[/Location/Longitude]"/>
+        </field>
+        <field name="parameter">
+            <expression value="[/Location/Latitude]"/>
+        </field>
+        <field name="parameter">
+            <expression value="[/Location/Altitude]"/>
+        </field>
+        <field name="parameter">
+            <expression value="[/Location/Tag]"/>
+        </field>
+        <field name="parameter">
+            <expression value="[/Location/User]"/>
+        </field>
+        <field name="parameter">
+            <expression value="[/Location/Description]"/>
+        </field>
+        <param name="UpdateCount">
+            <expression value="[/@UpdateCount] + $updateCount"/>
+        </param>
+      <field name="doUpdate">
+            <expression value="true"/>
+        </field>
+        <param name="UpdateCount">
+            <expression value="[/@UpdateCount] + $updateCount"/>
+        </param>
+ 
+    </map>
+    <message name="Result">
+        <property name="UpdateCount" direction="out" type="integer" description="Wijzigingen">
+            <expression condition="?[/@UpdateCount] AND [/@UpdateCount] &gt; 0" value="[/@UpdateCount]"/>
+            <expression value="0"/>
+        </property>
+    </message>
+</tsl>

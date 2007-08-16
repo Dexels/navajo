@@ -1,0 +1,6 @@
+<tsl>
+    <methods>
+        <method name="location/InitInsertLocation"/>
+        <method name="location/InitSearchLocations"/>
+    </methods> 
+</tsl>
