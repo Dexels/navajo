@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tsl author="Matthijs Philip" debug="request" id="person/ProcessQueryPerson" notes="" repository="$Id$" xmlns="http://www.dexels.com/navascript" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dexels.com/navascript http://www.dexels.com/schema/navascript.xsd ">
+<tsl author="Matthijs Philip" id="person/ProcessQueryPerson" notes="" repository="$Id$" xmlns="http://www.dexels.com/navascript" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dexels.com/navascript http://www.dexels.com/schema/navascript.xsd " debug="request">
     <methods>
         <method name="person/ProcessUpdatePerson">
             <required message="Person"/>
@@ -41,65 +41,72 @@
             <expression value="[/@PersonId]"/>
         </field>
         <message name="Person" condition="$rowCount &gt; 0">
-            <property name="PersonId" type="integer" direction="out" description="CV code (intern)">
+            <property name="PersonId" type="integer" direction="out" description="Code">
                 <expression value="[/@PersonId]"/>
             </property>
-            <property name="LastName" type="string" direction="in" description="Achternaam">
+            <property name="LastName" type="string" direction="in" description="Lastname">
                 <expression value="$columnValue('lastname')"/>
             </property>
-            <property name="Infix" type="string" direction="in" description="Tussenvoegsel">
+            <property name="Infix" type="string" direction="in" description="Infix">
                 <expression value="$columnValue('infix')"/>
             </property>
-            <property name="Initials" type="string" direction="in" description="Initialen">
+            <property name="Initials" type="string" direction="in" description="Initials">
                 <expression value="$columnValue('initials')"/>
             </property>
-            <property name="FirstName" type="string" direction="in" description="Voornaam">
+            <property name="FirstName" type="string" direction="in" description="Firstname">
                 <expression value="$columnValue('firstname')"/>
             </property>
-            <property name="DateOfBirth" type="date" direction="in" description="Geboortedatum">
+            <property name="DateOfBirth" type="date" direction="in" description="Birthdate">
                 <expression value="$columnValue('dateofbirth')"/>
             </property>
-            <property name="Age" type="integer" direction="out" description="Leeftijd">
+            <property name="Age" type="integer" direction="out" description="Age">
                 <expression condition="$columnValue('dateofbirth') != null" value="Age($columnValue('dateofbirth'))"/>
                 <expression value="null"/>
             </property>
-            <property name="Nationality" type="string" direction="in" description="Nationaliteit">
+            <property name="Nationality" type="string" direction="in" description="Nationality">
                 <expression value="$columnValue('nationality')"/>
             </property>
-            <property name="Sex" type="selection" direction="in" description="Geslacht">
-                <option name="Onbekend" value="0" condition="$columnValue('sex') == '0'" selected="1"/>
-                <option name="Onbekend" value="0" condition="$columnValue('sex') != '0'" selected="0"/>
-                <option name="Man" value="1" condition="$columnValue('sex') == '1'" selected="1"/>
-                <option name="Man" value="1" condition="$columnValue('sex') != '1'" selected="0"/>
-                <option name="Vrouw" value="2" condition="$columnValue('sex') == '2'" selected="1"/>
-                <option name="Vrouw" value="2" condition="$columnValue('sex') != '2'" selected="0"/>
+            <property name="Sex" type="selection" direction="in" description="Sex">
+                <option name="Unknown" value="0" condition="$columnValue('sex') == '0'" selected="1"/>
+                <option name="Unknown" value="0" condition="$columnValue('sex') != '0'" selected="0"/>
+                <option name="Male" value="1" condition="$columnValue('sex') == '1'" selected="1"/>
+                <option name="Male" value="1" condition="$columnValue('sex') != '1'" selected="0"/>
+                <option name="Female" value="2" condition="$columnValue('sex') == '2'" selected="1"/>
+                <option name="Female" value="2" condition="$columnValue('sex') != '2'" selected="0"/>
             </property>
-            <property name="StreetName" type="string" direction="in" description="Straat">
+            <property name="StreetName" type="string" direction="in" description="Streetname">
                 <expression value="$columnValue('streetname')"/>
             </property>
-            <property name="HouseNumber" type="integer" direction="in" description="Huisnummer">
+            <property name="HouseNumber" type="integer" direction="in" description="Housenumber">
                 <expression value="$columnValue('housenumber')"/>
             </property>
-            <property name="NumberAppendix" type="string" direction="in" description="Toevoeging">
+            <property name="NumberAppendix" type="string" direction="in" description="Nr. appendix">
                 <expression value="$columnValue('numberappendix')"/>
             </property>
-            <property name="City" type="string" direction="in" description="Woonplaats">
+            <property name="City" type="string" direction="in" description="City">
                 <expression value="$columnValue('city')"/>
             </property>
-            <property name="ZipCode" type="string" direction="in" description="Postcode">
+            <property name="ZipCode" type="string" direction="in" description="Zipcode">
                 <expression value="$columnValue('zipcode')"/>
             </property>
-            <property name="CountryCode" type="string" direction="in" description="Landcode">
+            <property name="CountryCode" type="string" direction="in" description="Countrycode">
                 <expression value="$columnValue('countrycode')"/>
             </property>
-            <property name="TelephoneNumber" type="string" direction="in" description="Telefoonnummer">
+            <property name="TelephoneNumber" type="string" direction="in" description="Telephone">
                 <expression value="$columnValue('telephonenumber')"/>
             </property>
-            <property name="MobileNumber" type="string" direction="in" description="Mobiel nummer">
+            <property name="MobileNumber" type="string" direction="in" description="Mobile">
                 <expression value="$columnValue('mobilenumber')"/>
             </property>
-            <property name="EmailAddress" type="string" direction="in" description="E-mailadres">
+            <property name="EmailAddress" type="string" direction="in" description="Emailaddress">
                 <expression value="$columnValue('emailaddress')"/>
+            </property>
+            <!-- get photo -->
+            <param name="PhotoDir">
+                <expression value="'/tmp/'"/>
+            </param>
+            <property name="Photo" type="binary" description="Photo" direction="in">
+                <expression value="File([/@PhotoDir] + [/@PersonId])"/>
             </property>
         </message>
     </map>

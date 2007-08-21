@@ -86,6 +86,18 @@
         <param name="UpdateCount">
             <expression value="[/@UpdateCount] + $updateCount"/>
         </param>
+        <!-- update photo -->
+        <map object="com.dexels.navajo.adapter.FileMap" condition="?[/Person/Photo] AND [/Person/Photo] != null">
+            <param name="PhotoDir">
+                 <expression value="'/tmp/'"/>
+            </param>
+            <field name="fileName">
+                 <expression value="[/@PhotoDir] + [/Person/PersonId]"/>
+            </field>
+            <field name="content">
+                 <expression value="ScaleImageMax([/Person/Photo], 1280, 1024)"/>
+            </field>
+         </map>
     </map>
     <message name="Person">
         <property name="PersonId" direction="out" type="integer" description="CV code (intern)">

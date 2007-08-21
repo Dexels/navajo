@@ -6,25 +6,27 @@
         </method>
     </methods>
     <message name="Person">
-        <property name="LastName" type="string" direction="in" description="Achternaam"/>
-        <property name="Infix" type="string" direction="in" description="Tussenvoegsel"/>
-        <property name="Initials" type="string" direction="in" description="Initialen"/>
-        <property name="FirstName" type="string" direction="in" description="Voornaam"/>
-        <property name="DateOfBirth" type="date" direction="in" description="Geboortedatum"/>
-        <property name="Nationality" type="string" direction="in" description="Nationaliteit"/>
-        <property name="Sex" type="selection" direction="in" description="Geslacht">
-            <option name="Onbekend" value="0" selected="0"/>
-            <option name="Man" value="1" selected="0"/>
-            <option name="Vrouw" value="2" selected="0"/>
+        <property name="LastName" type="string" direction="in" description="Lastname"/>
+        <property name="Infix" type="string" direction="in" description="Infix"/>
+        <property name="Initials" type="string" direction="in" description="Initials"/>
+        <property name="FirstName" type="string" direction="in" description="Firstname"/>
+        <property name="DateOfBirth" type="date" direction="in" description="Birthdate"/>
+        <property name="Age" type="integer" direction="out" description="Age"/>
+        <property name="Nationality" type="string" direction="in" description="Nationality"/>
+        <property name="Sex" type="selection" direction="in" description="Sex">
+            <option name="Unknown" value="0" selected="0"/>
+            <option name="Male" value="1" selected="0"/>
+            <option name="Female" value="2" selected="0"/>
         </property>
-	<property name="StreetName" type="string" direction="in" description="Straat"/>
-        <property name="HouseNumber" type="integer" direction="in" description="Huisnummer"/>
-        <property name="NumberAppendix" type="string" direction="in" description="Toevoeging"/>
-        <property name="City" type="string" direction="in" description="Woonplaats"/>
-        <property name="ZipCode" type="string" direction="in" description="Postcode"/>
-        <property name="CountryCode" type="string" direction="in" description="Landcode"/>
-        <property name="TelephoneNumber" type="string" direction="in" description="Telefoonnummer"/>
-        <property name="MobileNumber" type="string" direction="in" description="Mobiel nummer"/>
-        <property name="EmailAddress" type="string" direction="in" description="E-mailadres"/>
+	<property name="StreetName" type="string" direction="in" description="Streetname"/>
+        <property name="HouseNumber" type="integer" direction="in" description="Housenumber"/>
+        <property name="NumberAppendix" type="string" direction="in" description="Nr. appendix"/>
+        <property name="City" type="string" direction="in" description="City"/>
+        <property name="ZipCode" type="string" direction="in" description="Zipcode"/>
+        <property name="CountryCode" type="string" direction="in" description="Countrycode"/>
+        <property name="TelephoneNumber" type="string" direction="in" description="Telephone"/>
+        <property name="MobileNumber" type="string" direction="in" description="Mobile"/>
+        <property name="EmailAddress" type="string" direction="in" description="Emailaddress"/>
+        <property name="Photo" type="binary" direction="in" description="Photo"/>
     </message>
 </tsl>

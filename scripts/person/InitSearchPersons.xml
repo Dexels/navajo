@@ -2,11 +2,12 @@
 <tsl author="Matthijs Philip" id="person/InitSearchPersons" notes="" repository="$Id$" xmlns="http://www.dexels.com/navascript" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dexels.com/navascript http://www.dexels.com/schema/navascript.xsd ">
     <methods>
         <method name="person/ProcessSearchPersons"/>
+        <method name="person/ProcessSearchPersonsAll"/>
     </methods>
     <message name="SearchCriteria">        
         <property name="LastName" type="string" direction="in" description="Achternaam"/>        
         <property name="Sex" type="selection" direction="in" description="Geslacht">
-            <option name="-" value="-1"/>
+            <option name="-" value="-1" selected="1"/>
             <option name="Onbekend" value="0" selected="0"/>
             <option name="Man" value="1" selected="0"/>
             <option name="Vrouw" value="2" selected="0"/>

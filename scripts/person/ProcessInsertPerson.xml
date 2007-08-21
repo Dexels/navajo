@@ -88,6 +88,43 @@
         <param name="UpdateCount">
             <expression value="[/@UpdateCount] + $updateCount"/>
         </param>
+        <!-- for the photo get person id -->
+        <message name="GetPersonId" mode="ignore" condition="?[/Person/Photo] AND [/Person/Photo] != null">
+            <field name="query">
+               <expression xml:space="preserve">
+                   SELECT id
+                   FROM   person 
+                   WHERE  lastname    = ?
+                   AND    initials    = ?
+                   AND    dateofbirth = ?
+               </expression>
+            </field>
+            <field name="parameter">
+                <expression value="[/Person/LastName]"/>
+            </field>
+            <field name="parameter">
+                <expression value="[/Person/Initials]"/>
+            </field>
+            <field name="parameter">
+                <expression value="[/Person/DateOfBirth]"/>
+            </field>
+            <param name="PersonId">
+                <expression condition="$rowCount &gt; 0" value="$columnValue('id')"/>
+                <expression value="null"/>
+            </param>
+        </message>
+    </map>
+    <!-- add photo -->
+    <map object="com.dexels.navajo.adapter.FileMap" condition="?[/Person/Photo] AND [/Person/Photo] != null">
+       <param name="PhotoDir">
+            <expression value="'/tmp/'"/>
+       </param>
+       <field name="fileName">
+            <expression value="[/@PhotoDir] + [/@PersonId]"/>
+       </field>
+       <field name="content">
+            <expression value="ScaleImageMax([/Person/Photo], 1280, 1024)"/>
+       </field>
     </map>
     <message name="Result">
         <property name="UpdateCount" direction="out" type="integer" description="Wijzigingen">
