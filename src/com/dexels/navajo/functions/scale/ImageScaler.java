@@ -29,8 +29,8 @@ import javax.imageio.plugins.jpeg.*;
 import javax.imageio.spi.*;
 import javax.imageio.stream.*;
 
+import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.types.*;
-import com.dexels.navajo.server.UserException;
 
 /**
  * Class to demonstrate a way to scale an image without the
@@ -45,7 +45,7 @@ public class ImageScaler {
     
     
     
-    private static Binary scale(Binary b, int width, int height, boolean keepAspect, double compressionQuality, boolean alsoScaleUp) throws UserException {
+    private static Binary scale(Binary b, int width, int height, boolean keepAspect, double compressionQuality, boolean alsoScaleUp) throws IOException {
         if (b==null || b.getLength()<=0) {
             return null;
         }
@@ -67,7 +67,7 @@ public class ImageScaler {
         	return c;
         } catch (IOException e) {
         	e.printStackTrace(System.err);
-        	throw new UserException(-1, e.getMessage());
+        	throw new IOException(e.getMessage(),e);
         } finally {
         	if ( is != null ) {
         		try {
@@ -100,7 +100,7 @@ public class ImageScaler {
         }
     }
 
-    public static Binary scaleToMax(Binary b, int width, int height, double compressionQuality) throws UserException {
+    public static Binary scaleToMax(Binary b, int width, int height, double compressionQuality) throws IOException {
         if (width>height) {
             height = width;
         }
@@ -110,11 +110,11 @@ public class ImageScaler {
         return scale(b,width,height,true,compressionQuality,false);
     }
 
-    public static Binary scaleToMin(Binary b, int width, int height, double compressionQuality) throws UserException {
+    public static Binary scaleToMin(Binary b, int width, int height, double compressionQuality) throws IOException {
         return scale(b,width,height,true,compressionQuality,true);
     }
 
-    public static Binary scaleFree(Binary b, int width, int height, double compressionQuality) throws UserException {
+    public static Binary scaleFree(Binary b, int width, int height, double compressionQuality) throws IOException {
         return scale(b,width,height,false,compressionQuality,true);
     }
   

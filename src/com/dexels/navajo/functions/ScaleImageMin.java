@@ -48,7 +48,7 @@ public class ScaleImageMin extends FunctionInterface {
         try {
             Binary res =ImageScaler.scaleToMin(b, width.intValue(), height.intValue(), DEFAULT_COMPRESSION);
             return res;
-        } catch (UserException e) {
+        } catch (IOException e) {
            e.printStackTrace();
            throw new TMLExpressionException(this, "Error scaling image!");
         }
