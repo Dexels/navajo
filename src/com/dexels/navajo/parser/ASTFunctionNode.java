@@ -4,6 +4,9 @@ package com.dexels.navajo.parser;
 /**
  * $Id$
  * $Log$
+ * Revision 1.23  2007/08/21 10:05:52  frank
+ * added exception chaining
+ *
  * Revision 1.22  2006/12/13 17:16:14  arjen
  * Beta functionality also works again for adapters.
  *
@@ -129,11 +132,11 @@ public final class ASTFunctionNode extends SimpleNode {
 
 			return result;
 		} catch (ClassNotFoundException cnfe) {
-			throw new TMLExpressionException("Function not implemented: " + functionName);
+			throw new TMLExpressionException("Function not implemented: " + functionName,cnfe);
 		} catch (IllegalAccessException iae) {
-			throw new TMLExpressionException(iae.getMessage());
+			throw new TMLExpressionException(iae.getMessage(),iae);
 		} catch (InstantiationException ie) {
-			throw new TMLExpressionException(ie.getMessage());
+			throw new TMLExpressionException(ie.getMessage(),ie);
 		}
 	}
 
