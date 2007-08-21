@@ -14,28 +14,14 @@ import java.security.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
-
 import javax.net.ssl.*;
-
-
-//import org.apache.commons.httpclient.HttpClient;
-//import org.apache.commons.httpclient.methods.PostMethod;
-//import org.apache.commons.httpclient.methods.RequestEntity;
 
 import com.dexels.navajo.client.serverasync.*;
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.base.BaseHeaderImpl;
-import com.dexels.navajo.document.saximpl.*;
 import com.dexels.navajo.document.types.*;
-import com.dexels.navajo.client.impl.*;
 import com.jcraft.jzlib.JZlib;
 import com.jcraft.jzlib.ZInputStream;
 import com.jcraft.jzlib.ZOutputStream;
-import com.sun.org.apache.bcel.internal.generic.AllocationInstruction;
-
-//import com.dexels.navajo.client.impl.*;
 
 class MyX509TrustManager implements X509TrustManager {
   public java.security.cert.X509Certificate[] getAcceptedIssuers() {
@@ -569,24 +555,6 @@ public class NavajoClient implements ClientInterface {
 	  return null;
   }
   
-//  protected InputStream doTransaction(String name, Navajo d, boolean useCompression, HttpURLConnection myCon) throws IOException, ClientException, NavajoException, javax.net.ssl.SSLHandshakeException {
-//	  HttpClient httpclient = new HttpClient();
-//	  PostMethod httppost = new PostMethod("http://" + name);
-//	  httppost.setContentChunked(true);
-//	  httppost.setHttp11(true);
-//	  httppost.setRequestHeader("Accept-Encoding", "gzip");
-//	  httppost.setRequestHeader("Content-Encoding", "gzip");
-//	  try {
-//		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-//		d.write(bos);
-//		httppost.setRequestBody(new ByteArrayInputStream(bos.toByteArray()));
-//	    httpclient.executeMethod(httppost);
-//	    return httppost.getResponseBodyAsStream();
-//	    // consume the response entity 
-//	  } finally {
-//		  //httppost.releaseConnection();
-//	  }
-//  }
   /**
    * Do a transation with the Navajo Server (name) using
    * a Navajo Message Structure (TMS) compliant XML document.
@@ -848,6 +816,10 @@ public class NavajoClient implements ClientInterface {
         try {	
         	in = doTransaction(server, out, useCompression, allowPreparseProxy);
         	n = NavajoFactory.getInstance().createNavajo(in);
+        	if ( in != null ) {
+        		in.close();
+        		in = null;
+        	}
         }
         catch (javax.net.ssl.SSLException ex) {
           n = NavajoFactory.getInstance().createNavajo();
@@ -864,12 +836,12 @@ public class NavajoClient implements ClientInterface {
         catch (java.net.SocketException uhe) {
           n = NavajoFactory.getInstance().createNavajo();
           in = retryTransaction(server, out, useCompression, allowPreparseProxy, retryAttempts, retryInterval, n); // lees uit resource
-
           if (in != null) {
-            n = null;
+        	  n = null;
           }
           if (n == null) {
               n = NavajoFactory.getInstance().createNavajo(in);
+              in.close();
               System.err.println("METHOD: "+method+" sourcehead: "+callingService+" sourceSource: "+out.getHeader().getHeaderAttribute("sourceScript")+" outRPCName: "+n.getHeader().getRPCName());
               n.getHeader().setHeaderAttribute("sourceScript", callingService);
           }
@@ -1569,61 +1541,25 @@ private final InputStream retryTransaction(String server, Navajo out, boolean us
   
   public static void main(String[] args) throws Exception {
 	  
-	
-	    URL  url = new URL("http://hera3.dexels.com/sportlink/knvb/servlet/Postman");
-	  
-	    HttpURLConnection con = null;
-	   
-	      con = (HttpURLConnection) url.openConnection();
-	      ( (HttpURLConnection) con).setRequestMethod("POST");
-	   
-	   
-	    try {
-	    	java.lang.reflect.Method timeout = con.getClass().getMethod("setConnectTimeout", new Class[]{int.class});
-	    	timeout.invoke( con, new Object[]{new Integer(CONNECT_TIMEOUT)});
-	    }catch (SecurityException e) {
+	    NavajoClient nc = new NavajoClient();
+	  	Navajo doc =  NavajoFactory.getInstance().createNavajo();
+	  	Header h = NavajoFactory.getInstance().createHeader(doc, "InitNavajoStatus", "", "", -1);
+	  	doc.addHeader(h);
+	  	
+	    long start = System.currentTimeMillis();
+	    int total = 100;
+	    for ( int i = 0; i < total; i++ ) {
+	    	System.err.println("i = " + i);
+	    	InputStream input = nc.doTransaction("penelope1.dexels.com/sportlink/knvb/servlet/Postman", doc, true, false);
+		    Navajo doc2 =  NavajoFactory.getInstance().createNavajo(input);
+		    input.close();
+		    //doc2.write(System.err);
+		  
 	    }
-	    catch (Throwable e) {
-	     	System.err.println("setConnectTimeout does not exist, upgrade to java 1.5+");
-	    }
+	    System.err.println("Took: " + ( ( System.currentTimeMillis() - start ) / 1000.0 ) / total );
+//	    System.err.println(response.toString());
+//	    doc2.write(System.err);
 	    
-	    con.setDoOutput(true);
-	    con.setDoInput(true);
-	    con.setUseCaches(false);
-	    //con.setRequestProperty("Connection", "keep-alive");
-	    con.setRequestProperty("Content-type", "text/xml; charset=UTF-8");
-
-	    try {
-	    	java.lang.reflect.Method chunked = con.getClass().getMethod("setChunkedStreamingMode", new Class[]{int.class});
-	    	chunked.invoke( con, new Object[]{new Integer(1024)});
-	    	con.setRequestProperty("Transfer-Encoding", "chunked" );
-	    } catch (SecurityException e) {
-	    } catch (Throwable e) {
-	     	System.err.println("setChunkedStreamingMode does not exist, upgrade to java 1.5+");
-	    }
-	    
-	    // Send message
-	   
-	    	con.setRequestProperty("Accept-Encoding", "jzlib");
-	    	con.setRequestProperty("Content-Encoding", "jzlib");
-	    	
-	    	BufferedWriter out = null;
-	    	try {
-	    		out = new BufferedWriter(new OutputStreamWriter(new ZOutputStream(con.getOutputStream(), JZlib.Z_BEST_SPEED), "UTF-8"));
-	    		//d.write(out, false, d.getHeader().getRPCName());
-	    		out.write("<ROMMEL/>");
-	    	} finally  {
-	    		if ( out != null ) {
-	    			try {
-	    				//out.flush();
-	    				out.close();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-	    		}
-	    	}
- 
-	   
   }
 
 public void destroy() {
@@ -1650,6 +1586,7 @@ private final void ping() {
 								InputStream in  = doTransaction(serverUrls[i], out, false, false);
 								Navajo n = NavajoFactory.getInstance().createNavajo(in);
 								in.close();
+								in = null;
 								Header h = n.getHeader();
 								String load =  h.getHeaderAttribute("cpuload");
 								serverLoads[i] = Double.parseDouble(load);
