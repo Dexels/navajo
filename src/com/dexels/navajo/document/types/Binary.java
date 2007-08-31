@@ -643,6 +643,9 @@ public final class Binary extends NavajoType implements Serializable {
          final OutputStream os = Base64.newEncoder( sw );
             
          InputStream dataAsStream = getDataAsStream();
+         if(dataAsStream==null) {
+        	 return null;
+         }
    		 try {
 			copyResource("base64", os, dataAsStream, getLength());
 			 os.close();
