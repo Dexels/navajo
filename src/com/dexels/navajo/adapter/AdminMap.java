@@ -104,25 +104,25 @@ public class AdminMap implements Mappable {
     * @throws MappableException
     * @throws UserException
     */
-   public final int getOpenConnections(String datasource) {
-   	try {
-     SQLMap sql = new SQLMap();
-     sql.setDatasource(datasource);
+  public final int getOpenConnections(String datasource) {
+	  try {
+		  SQLMap sql = new SQLMap();
+		  sql.setDatasource(datasource);
 
-     if (SQLMap.fixedBroker == null || SQLMap.fixedBroker.get(sql.datasource, sql.username, sql.password) == null) {
-       System.err.println("Could not create connection to datasource " +
-                          sql.datasource + ", using username " +
-                          sql.username);
-       return 0;
-     }
-     int c = SQLMap.fixedBroker.get(sql.datasource, sql.username, sql.password).getUseCount();
+		  if (SQLMap.fixedBroker == null || SQLMap.fixedBroker.get(sql.datasource, sql.username, sql.password) == null) {
+			  System.err.println("Could not create connection to datasource " +
+					  sql.datasource + ", using username " +
+					  sql.username);
+			  return 0;
+		  }
+		  int c = SQLMap.fixedBroker.get(sql.datasource, sql.username, sql.password).getUseCount();
 
-      sql.store();
+		  sql.store();
 
-      return c;
-     } catch (Throwable e) { e.printStackTrace(System.err);  }
-     return 0;
-   }
+		  return c;
+	  } catch (Throwable e) { e.printStackTrace(System.err);  }
+	  return 0;
+  }
 
    public final boolean getAliveConnection(String datasource) {
 		boolean b = true;

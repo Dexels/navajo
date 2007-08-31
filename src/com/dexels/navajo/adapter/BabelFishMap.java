@@ -65,7 +65,7 @@ public class BabelFishMap implements Mappable {
 	
 	public static void main(String [] args) throws Exception {
 		BabelFishMap bfm = new BabelFishMap();
-		bfm.setText("Monkey");
+		bfm.setText("Middle");
 		System.err.println(bfm.getTranslation());
 	}
 
