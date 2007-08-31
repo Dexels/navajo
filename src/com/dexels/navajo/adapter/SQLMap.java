@@ -1725,7 +1725,7 @@ private void setBlob(PreparedStatement statement, int i, Binary b) throws SQLExc
 			  meta = rs.getMetaData();
 			  columns = meta.getColumnCount();
 			  for (int j = 0; j < columns; j++) {
-				  String column = meta.getColumnLabel(j);
+				  String column = meta.getColumnLabel(j+1);
 				  if ( j == 0 ) {
 					  fw.write(column);
 				  } else {
@@ -1735,7 +1735,7 @@ private void setBlob(PreparedStatement statement, int i, Binary b) throws SQLExc
 			  fw.write("\n");
 		  }
 		  catch (Exception e) {
-
+			  e.printStackTrace(System.err);
 		  }
 		  while ( rs.next() ) {
 			  for (int j = 1; j <= columns; j++) {
