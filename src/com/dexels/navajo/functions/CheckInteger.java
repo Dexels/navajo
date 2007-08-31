@@ -73,7 +73,7 @@ public class CheckInteger extends FunctionInterface {
     System.err.println("result = " + result);
 
     ci.reset();
-    ci.insertOperand(new String("3432"));
+    ci.insertOperand(null);
     result = ci.evaluate();
     System.err.println("result = " + result);
 

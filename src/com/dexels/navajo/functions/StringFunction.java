@@ -121,6 +121,13 @@ public final class StringFunction extends FunctionInterface {
     f.insertOperand(new Integer(7));
     o = f.evaluate();
     System.out.println("o = " + o + ", type = " + o.getClass().getName());
+    
+    f.reset();
+    f.insertOperand("indexOf");
+    f.insertOperand("Navajo");
+    f.insertOperand("ava");
+    o = f.evaluate();
+    System.out.println("o = " + o + ", type = " + o.getClass().getName());
   }
 
 }

@@ -30,7 +30,7 @@ import com.dexels.navajo.server.Dispatcher;
 
 import dexels.Version;
 
-public class GetVersionInfo extends FunctionInterface {
+public final class GetVersionInfo extends FunctionInterface {
 
 	public String remarks() {
 		return "Gets the version info of a specific Version object";
@@ -40,7 +40,7 @@ public class GetVersionInfo extends FunctionInterface {
 		return "GetVersionInfo([package name])";
 	}
 
-	public Object evaluate() throws TMLExpressionException {
+	public final Object evaluate() throws TMLExpressionException {
 		Object o = getOperand(0);
 		String packageName = o+"";
 		try {

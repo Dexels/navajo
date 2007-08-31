@@ -7,7 +7,7 @@ import java.util.Date;
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
 
-public class GetUrlTime extends GetUrlBase {
+public final class GetUrlTime extends GetUrlBase {
 
 	public String remarks() {
 		return "Check the date of an url. This is not the modification date, this is the time the header was sent. Effectively the current time of the webserver.";
@@ -17,7 +17,7 @@ public class GetUrlTime extends GetUrlBase {
 		return "Check the  date of a webserver.";
 	}
 
-	public Object evaluate() throws TMLExpressionException {
+	public final Object evaluate() throws TMLExpressionException {
 	      // input (ArrayList, Object).
         if (this.getOperands().size() != 1)
             throw new TMLExpressionException("GetUrlTime(String) expected");
