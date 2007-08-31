@@ -61,30 +61,30 @@ public class BinaryScaler implements Mappable {
 
     }
 
-    public final Binary getScaledFree() throws UserException {
+    public final Binary getScaledFree() throws IOException {
         if (source!=null) {
             
                 return ImageScaler.scaleFree(source, width, height,compressionQuality);
 
         }
-        throw new UserException(-1010,"No image source defined");
+        throw new IOException("No image source defined");
     }
 
-    public final Binary getScaledToMax()  throws UserException{
+    public final Binary getScaledToMax()  throws IOException{
     	if (source!=null) {
     		
     		return ImageScaler.scaleToMax(source, width, height,compressionQuality);
     	}
-    	throw new UserException(-1010,"No image source defined");
+    	throw new IOException("No image source defined");
     }
 
-    public final Binary getScaledToMin()  throws UserException{
+    public final Binary getScaledToMin()  throws IOException{
     	if (source!=null) {
     		
     		return ImageScaler.scaleToMin(source, width, height,compressionQuality);
     		
     	}
-    	throw new UserException(-1010,"No image source defined");
+    	throw new IOException("No image source defined");
     }
 
     public final void setHeight(int height) {
