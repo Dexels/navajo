@@ -127,7 +127,10 @@ public class NavajoLaszloConverter {
 						}
 					} else {
 						if (!cp.getType().equals(Property.SELECTION_PROPERTY)) {
-							String result = cp.getValue().replaceAll("\n", "<br/>");
+							String result = cp.getValue();
+							if(result != null){
+							  result = result.replaceAll("\n", "<br/>");
+							}
 							row.setAttribute(cp.getName(), result);
 						}
 					}
