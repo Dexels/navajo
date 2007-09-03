@@ -43,7 +43,7 @@ public class WorkFlow implements Mappable, Serializable {
 	public static WorkFlow getInstance(String definition, String activatedState, Access a, String username) {
 		WorkFlow wf = new WorkFlow(definition, WorkFlowManager.generateWorkflowId(), a, username);
 		
-		wf.createState(activatedState, a);
+		wf.currentState = wf.createState(activatedState, a);
 		WorkFlowManager.getInstance().addWorkFlow(wf);
 		wf.start();
 		return wf;

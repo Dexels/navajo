@@ -115,7 +115,7 @@ public final class WorkFlowDefinitionReader {
 	}
 	
 	private static final WorkFlowDefinition createInitState(XMLElement xml, String definition, String filePath) throws WorkFlowDefinitionException { 
-		
+
 		WorkFlowDefinition wfd = new WorkFlowDefinition(definition, filePath);
 		XMLElement init = findState(xml, "init");
 		if ( init == null ) {
@@ -132,9 +132,25 @@ public final class WorkFlowDefinitionReader {
 				Transition trans = Transition.createStartTransition(nextState, trigger, condition, definition, user);
 				initialTransitions.put(definition, trans);
 				wfd.setActivationTrigger(trigger);
+
+				// Parse param children.
+				Vector params = t.getElementsByTagName("param");
+				for (int j = 0; j < params.size(); j++) {
+					XMLElement p = (XMLElement) params.get(j);
+					String paramname = (String) p.getAttribute("name");
+					Vector exp = p.getElementsByTagName("expression");
+					ArrayList<ConditionalExpression> al = new ArrayList<ConditionalExpression>();
+					for (int e = 0; e < exp.size(); e++) {
+						XMLElement ep = (XMLElement) exp.get(e);
+						String expression = (String) ep.getAttribute("value");
+						String cond = (String) ep.getAttribute("condition");
+						al.add(new ConditionalExpression(cond, expression));
+					}
+					trans.addParameter(paramname, al);	
+				}
 			} catch (Exception e) {
 				throw new WorkFlowDefinitionException(e.getMessage());
-			}	
+			}
 		}
 		try {
 			StringWriter sw = new StringWriter();
@@ -145,7 +161,7 @@ public final class WorkFlowDefinitionReader {
 		} catch (Exception e) {
 			throw new WorkFlowDefinitionException(e.getMessage());
 		}	
-		
+
 	}
 	
 	/**

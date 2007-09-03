@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.parser.Condition;
 import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.document.Operand;
@@ -91,8 +92,17 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 	 *
 	 */
 	private final void evaluateParameters(Task t) {
+		
+		System.err.println("IN evaluateParameters(), Task t Access object : " + t.getTrigger().getAccess() );
 		if ( t.getTrigger().getAccess() != null ) {
 			Navajo n = t.getTrigger().getAccess().getOutputDoc();
+			try {
+				n.write(System.err);
+			} catch (NavajoException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			System.err.println("parameters size: " + parameters.size());
 			for ( int i = 0; i < parameters.size(); i++ ) {
 				Parameter p = parameters.get(i);
 				String name = p.getName();
@@ -166,8 +176,10 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 		}
 		Navajo n = ( beforeTrigger ? t.getTrigger().getAccess().getInDoc() : t.getTrigger().getAccess().getOutputDoc() );
 		// Merge this Navajo with localNavajo store of the workflow instance to use local workflow parameters.
-		myState.getWorkFlow().mergeWithParmaters(n);
-	
+		if ( myState != null ) {
+			myState.getWorkFlow().mergeWithParmaters(n);
+		}
+		
 		try {
 			System.err.println("CHECKING " + myCondition);
 			boolean b =  Condition.evaluate(myCondition, n);
@@ -181,26 +193,28 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 	}
 	
 	public final void afterTask(Task t, Navajo request) {
-		
-		if (  !beforeTrigger && isMyTransitionTaskTrigger(t) ) {
-			
-			if ( enterNextState(t) && !activationTranstion ) {
+
+		if (  !beforeTrigger && isMyTransitionTaskTrigger(t) && enterNextState(t) ) {
+
+			if ( !activationTranstion ) {
 				// First evaluate all parameters that need to be set with this transition.
 				evaluateParameters(t);
 				myState.leave();
-				
+
 				if ( nextState != null && !nextState.equals("finish") ) {
 					myState.getWorkFlow().createState(nextState, t.getTrigger().getAccess()).enter(true);
 				} else {
 					myState.getWorkFlow().finish();
 				}
-			}
-			/**
-			 * If this is a special activationTranstion, do not clean up this transition, simply create new workflow.
-			 */
-			if ( activationTranstion ) {
+			} else {
+				/**
+				 * If this is a special activationTranstion, do not clean up this transition, simply create new workflow.
+				 */
 				// Activate new workflow instance.
 				WorkFlow wf = WorkFlow.getInstance(workFlowToBeActivated, nextState, t.getTrigger().getAccess(), t.getUsername());
+				System.err.println("EVALUATE PARAMETERS.....");
+				myState = wf.currentState;
+				evaluateParameters(t);
 			}
 		}
 
