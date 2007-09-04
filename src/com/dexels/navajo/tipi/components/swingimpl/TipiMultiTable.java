@@ -80,10 +80,16 @@ public class TipiMultiTable
     try {
       if (myNavajo != null) {
           // todo: replace with real 
-        loadData(getNavajo(), myContext, null,null);
+    	  String hh = null;
+    	  Header h = myNavajo.getHeader();
+    	  if(h!=null) {
+    		  hh = h.getRPCName();
+    	  }
+        loadData(getNavajo(), hh);
       }
       else {
         System.err.println("Can not reload, no navajo!");
+        Thread.dumpStack();
       }
     }
     catch (TipiException ex) {
@@ -274,7 +280,8 @@ public class TipiMultiTable
     }
   }
 
-  public void loadData(final Navajo n, TipiContext context, String method,String server) throws
+
+  public void loadData(final Navajo n, String method) throws
       TipiException, TipiBreakException {
     if (outerMessageName == null) {
       System.err.println("No outermessage");
