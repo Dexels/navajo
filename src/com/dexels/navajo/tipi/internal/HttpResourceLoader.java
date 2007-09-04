@@ -22,8 +22,6 @@ public class HttpResourceLoader extends ClassPathResourceLoader {
 	}
 
 	public InputStream getResourceStream(String location) throws IOException {
-		// System.err.println("HttpResourceLoader.getResourceStream:
-		// "+location+" base: "+baseURL);
 		URL u = getResourceURL(location);
 		InputStream is = null;
 		try {
@@ -33,6 +31,7 @@ public class HttpResourceLoader extends ClassPathResourceLoader {
 		if (is != null) {
 			return is;
 		}
+		System.err.println("HttpResourceLoader failed. Looking in classpath: "+location+" base: "+baseURL);
 		return super.getResourceStream(location);
 	}
 }
