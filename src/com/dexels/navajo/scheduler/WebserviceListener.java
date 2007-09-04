@@ -174,7 +174,9 @@ public final class WebserviceListener implements WebserviceListenerInterface {
 					taskThread.startThread(taskThread);
 				} else {
 					// Invoke task synchronously to support workflow before and after task trigger synchronously.
-					t.getTask().run();
+					try {
+						t.getTask().run();
+					} catch (Throwable t2) {}
 				}
 			}
 		}
@@ -228,10 +230,10 @@ public final class WebserviceListener implements WebserviceListenerInterface {
 						taskThread.startThread(taskThread);
 					} else {
                         //	Invoke task synchronously to support workflow before and after task trigger synchronously.
-						t.getTask().run();
+						try {
+							t.getTask().run();
+						} catch (Throwable e) {}
 					}
-
-					return null;
 				}
 
 			}	
