@@ -68,7 +68,7 @@ public class TipiActionBlock implements TipiExecutable {
 	}
 
 	public void performAction(TipiEvent te, TipiExecutable parent, int index) throws TipiBreakException, TipiException {
-		// System.err.println("PERFORMING BLOCK with expression "+myExpression);
+//		 System.err.println("PERFORMING BLOCK with expression "+myExpression);
 		myEvent = te;
 		boolean evaluated;
 		if (te instanceof TipiEvent) {
@@ -79,14 +79,15 @@ public class TipiActionBlock implements TipiExecutable {
 		try {
 			myContext.performedBlock(myComponent, this, myExpression, myExpressionSource, evaluated, te);
 		} catch (BlockActivityException ex1) {
-			// System.err.println("Blocked exception");
+			 System.err.println("Blocked exception");
 			return;
 		}
 		if (!evaluated) {
-			// System.err.println("Expression failed: Not executing children");
+//			 System.err.println("Expression failed: Not executing children");
 			return;
 		}
-		// System.err.println("Succeeded.");
+//		 System.err.println("Succeeded.");
+//		 System.err.println("MY # of executables: "+myExecutables.size());
 		try {
 			if (multithread) {
 				for (int i = 0; i < myExecutables.size(); i++) {
@@ -112,40 +113,6 @@ public class TipiActionBlock implements TipiExecutable {
 			t.printStackTrace();
 		}
 	}
-
-	public void loadConditionStyle(XMLElement elm, TipiComponent parent) {
-		conditionStyle = true;
-		myComponent = parent;
-		if (elm.getName().equals("condition")) {
-			Vector temp = elm.getChildren();
-			for (int i = 0; i < temp.size(); i++) {
-				XMLElement current = (XMLElement) temp.elementAt(i);
-				if (current.getName().equals("param")) {
-					String name = (String) current.getAttribute("name");
-					String value = (String) current.getAttribute("value");
-					// myParams.put(name, value);
-					if ("tipipath".equals(name)) {
-						myExpressionSource = value;
-					}
-					if ("expression".equals(name)) {
-						myExpression = value;
-					}
-				}
-				if ("action".equals(current.getName())) {
-					try {
-						TipiAction ta = myContext.instantiateTipiAction(current, parent);
-						myExecutables.add(ta);
-					} catch (TipiException ex) {
-						ex.printStackTrace();
-					}
-				}
-			}
-		}
-	}
-
-	// public void setEvent(TipiEvent event) {
-	// myEvent = event;
-	// }
 
 	private boolean evaluateBlock(TipiContext context, Object source, TipiEvent te) throws TipiException {
 		boolean valid = false;
@@ -277,7 +244,7 @@ public class TipiActionBlock implements TipiExecutable {
 	}
 
 	public void appendTipiExecutable(TipiExecutable tp) {
-		// System.err.println("ADDING EXECUTABLE. Class: "+tp.getClass());
+//		 System.err.println("ADDING EXECUTABLE. Class: "+tp.getClass());
 		//
 		myExecutables.add(tp);
 		// System.err.println("New count: "+myExecutables.size());
@@ -299,13 +266,13 @@ public class TipiActionBlock implements TipiExecutable {
 		try {
 			for (int i = 0; i < v.size(); i++) {
 				XMLElement current = (XMLElement) v.elementAt(i);
-				if (current.getName().equals("action")) {
-					// currentBlock.parseActions(v,context,myComponent);
-					TipiAction action = myContext.instantiateTipiAction(current, myComponent);
-					// action.setActionBlock(this);
-					appendTipiExecutable(action);
-					// myActions.add(action);
-				}
+//				if (current.getName().equals("action")) {
+//					// currentBlock.parseActions(v,context,myComponent);
+//					TipiAction action = myContext.instantiateTipiAction(current, myComponent);
+//					// action.setActionBlock(this);
+//					appendTipiExecutable(action);
+//					// myActions.add(action);
+//				}
 				// if (current.getName().equals("condition")) {
 				// TipiCondition con = context.instantiateTipiCondition(current,
 				// myComponent, this);
@@ -316,6 +283,11 @@ public class TipiActionBlock implements TipiExecutable {
 					// con.parseActions(current.getChildren());
 					// con.setTipiActionBlockParent(this);
 					appendTipiExecutable(con);
+				}else {
+					TipiAction action = myContext.instantiateTipiAction(current, myComponent);
+					// action.setActionBlock(this);
+					appendTipiExecutable(action);
+					
 				}
 			}
 		} catch (Exception e) {
