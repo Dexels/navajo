@@ -9,6 +9,7 @@ import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.NavajoConfig;
@@ -74,12 +75,21 @@ public class WorkFlow implements Mappable, Serializable {
 	 * @param in
 	 */
 	protected void mergeWithParmaters(Navajo in) {
-		if ( in != null ) {
+		
+		if ( in != null && in.getMessage("__parms__") == null ) {
 			Message clone = localNavajo.getMessage("__parms__").copy(in);
 			try {
 				in.addMessage(clone);
 			} catch (NavajoException e) {
 				e.printStackTrace(System.err);
+			}
+		} else if ( in != null ) {
+			Message orig = in.getMessage("__parms__");
+			// Get all properties:
+			Message clone = localNavajo.getMessage("__parms__").copy(in);
+			ArrayList<Property> props = clone.getAllProperties();
+			for (int i = 0; i < props.size(); i++) {
+				orig.addProperty(props.get(i));
 			}
 		}
 	}
@@ -197,6 +207,21 @@ public class WorkFlow implements Mappable, Serializable {
 		return historyd;
 	}
 
+	// Gets an historic state by the name (always returns first instance!).
+	public State getHistoricState(String name) {
+		System.err.println("IN getHistoricState(" + name + "), number of states: " + historicStates.size());
+		if ( historicStates.size() == 0) {
+			return null;
+		}
+		for ( int i = 0; i < historicStates.size(); i++ ) {
+			System.err.println("FOUND HISTORIC STATE: " + historicStates.get(i).getId());
+			if ( historicStates.get(i).getId().equals(name) ) {
+				return historicStates.get(i);
+			}
+		}
+		return null;
+	}
+	
 	public Binary getLocalState() throws UserException {
 
 		try {
