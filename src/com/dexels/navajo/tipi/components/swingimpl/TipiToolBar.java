@@ -20,6 +20,7 @@ public class TipiToolBar
     TipiHelper th = new TipiSwingHelper();
     th.initHelper(this);
     addHelper(th);
+    ts.setFloatable(false);
     ts.setMinimumSize(new Dimension(0,0));
     return ts;
   }
