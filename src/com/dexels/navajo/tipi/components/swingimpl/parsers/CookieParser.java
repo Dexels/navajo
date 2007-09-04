@@ -34,8 +34,7 @@ public class CookieParser extends TipiTypeParser {
 //    }
 
     public Object parseCookie(String s) {
-    	System.err.println("%%%%%%%%%%%%%%%%%% qParsing COOKIE: "+s);
-        if(s==null) {
+    	  if(s==null) {
             return null;
         }
 //        Command c = new Command(){};
