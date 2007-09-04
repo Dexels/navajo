@@ -45,6 +45,8 @@ public class TipiActionFactory {
 		String clas = (String) actionDef.getAttribute("class");
 		String fullDef = pack + "." + clas;
 		context.setSplashInfo("Adding action: " + fullDef);
+//		System.err.println("Adding action: " + fullDef);
+//		context.setSplashInfo("Adding action: " + fullDef);
 		try {
 			myActionClass = Class.forName(fullDef, true, getClass().getClassLoader());
 		} catch (ClassNotFoundException ex) {
