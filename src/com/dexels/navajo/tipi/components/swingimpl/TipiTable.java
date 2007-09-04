@@ -16,6 +16,7 @@ import javax.swing.event.*;
 import javax.swing.table.TableColumn;
 
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.types.*;
 import com.dexels.navajo.swingclient.components.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
@@ -87,19 +88,6 @@ public class TipiTable
   }
 
 
-  public final void exportToService() {
-	  for (int i = 0; i < mm.getRowCount(); i++) {
-		System.err.print("Row # "+i);
-		for (int j = 0; j < mm.getColumnCount(); j++) {
-			TableColumn t = mm.getTable().getColumnModel().getColumn(j);
-			Object value = mm.getTable().getModel().getValueAt(i, j);
-//			String columnName = t.get
-			System.err.println("Column # "+j+":"+value+" width: "+t.getWidth()+" ");
-		}
-		System.err.println("");
-	}
-	System.err.println("End of table");
-  }
   
   public final void load(XMLElement elm, XMLElement instance, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
     mm = (MessageTablePanel) getContainer();
@@ -539,7 +527,7 @@ public class TipiTable
     if ("export".equals(name)) {
       Operand filename = compMeth.getEvaluatedParameter("filename", event);
       Operand delimiter = compMeth.getEvaluatedParameter("delimiter", event);
-      doExportAll();
+//      doExportAll();
       mm.getTable().exportTable((String)filename.value, (String)delimiter.value);
     }
 
@@ -602,9 +590,33 @@ public class TipiTable
     if ("doChooseColumns".equals(name)) {
         mm.doChooseColumns();
       }  
-    if ("doExportAll".equals(name)) {
-        doExportAll();
+    if ("doRunReport".equals(name)) {
+        Operand format = compMeth.getEvaluatedParameter("format", event);
+        Operand marginsOperand = compMeth.getEvaluatedParameter("margins", event);
+        Operand orientationOperand = compMeth.getEvaluatedParameter("orientation", event);
+        String orientation = null;
+        if(orientationOperand!=null) {
+        	orientation = (String) orientationOperand.value;
+        }
+        int[] margin = null;
+
+        if(marginsOperand!=null) {
+        	margin = new int[4];
+        	String marginString = (String) marginsOperand.value;
+        	StringTokenizer st = new StringTokenizer(marginString,",");
+        	margin[0]=Integer.parseInt(st.nextToken());
+        	margin[1]=Integer.parseInt(st.nextToken());
+        	margin[2]=Integer.parseInt(st.nextToken());
+        	margin[3]=Integer.parseInt(st.nextToken());
+        }
+    	try {
+			doRunReport((String)format.value,orientation, margin);
+		} catch (TipiException e) {
+			e.printStackTrace();
+		}
       }  
+    
+    
   }
 
   public void setColumnDefinitionSavePath(String path) {
@@ -745,8 +757,17 @@ public class TipiTable
 	  mm.doChooseColumns();
   }
 
-  public void doExportAll() {
-	 exportToService();
+  public void doRunReport(String format, String orientation , int[] margins) throws  TipiException {
+	  Binary b;
+	try {
+		b = mm.getTableReport(format, orientation, margins);
+	} catch (NavajoException e) {
+		throw new TipiException("Error calling birt report!",e);
+	}
+	  Map m = new HashMap();
+	  m.put("report", b);
+	  m.put("format", format);
+	  performTipiEvent("onReportFinished",m, false);
   }
   
 }
