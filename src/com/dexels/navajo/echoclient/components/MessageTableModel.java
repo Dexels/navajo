@@ -91,13 +91,23 @@ public class MessageTableModel extends DefaultTableModel implements MessageListe
         return rows;
     }
 
+    
 //    public MessageTableModel(MessageTable t, TableColumnModel columnModel) {
 ////        super(columnModel);
 //        this.myTable = t;
 //        myColumnModel = columnModel;
 //    }
 
-    public MessageTableModel(MessageTable t, TableColumnModel columnModel, Message m, ListSelectionModel selection) {
+    @Override
+	public int getRowCount() {
+		if(myMessage!=null) {
+			return myMessage.getArraySize();
+		} 
+		return super.getRowCount();
+	}
+
+
+	public MessageTableModel(MessageTable t, TableColumnModel columnModel, Message m, ListSelectionModel selection) {
 //        super(columnModel);
     	this.myTable = t;
     	this.mySelectionModel = selection;

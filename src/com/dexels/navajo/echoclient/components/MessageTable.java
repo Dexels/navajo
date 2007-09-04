@@ -94,16 +94,12 @@ public class MessageTable extends PageableSortableTable implements PageIndexChan
 		StyleSheet sh = Styles.DEFAULT_STYLE_SHEET;
 		if (sh!=null) {
 			Style ss = sh.getStyle(this.getClass(), "Default");
-		} else {
-			System.err.println("Null stylesheet!");
 		}
 		
 		Style ss=null;
 		if(ss!=null) {
 			ss = Styles.DEFAULT_STYLE_SHEET.getStyle(this.getClass(), "Default");
 			setStyle(ss);
-		}else {
-			System.err.println("Null style!");
 		}
 
 		 super.addActionListener(new ActionListener() {
@@ -170,8 +166,8 @@ public class MessageTable extends PageableSortableTable implements PageIndexChan
 sortablePageableModel = new DefaultPageableSortableTableModel(myModel);
 		sortablePageableModel.setRowsPerPage(rowsPerPage);
 		setBackground(new Color(255, 255, 255));
-		System.err.println("Total pages: " + sortablePageableModel.getTotalPages());
-		System.err.println("Current page: " + sortablePageableModel.getCurrentPage());
+//		System.err.println("Total pages: " + sortablePageableModel.getTotalPages());
+//		System.err.println("Current page: " + sortablePageableModel.getCurrentPage());
 
 		TableColumnModel tcm = getColumnModel();
 
