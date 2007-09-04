@@ -47,9 +47,6 @@ public class TipiCallService extends TipiAction {
 		//nn
 			// Don't let NavajoClient touch your original navajo! It will mess things up.
 			Navajo result = NavajoClientFactory.getClient().doSimpleSend(nn, service);
-			String name = result.getHeader().getRPCName();
-			System.err.println("NAAAM: "+name);
-			System.err.println("Transaction from: "+input.getHeader().getRPCName()+" to: "+result.getHeader().getRPCName());
 			myContext.addNavajo(service, result);
 			// is this correct? It is a bit odd.
 			result.getHeader().setHeaderAttribute("sourceScript", result.getHeader().getRPCName());

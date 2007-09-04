@@ -509,6 +509,7 @@ public abstract class TipiContext implements ActivityController {
 			return u;
 		}
 
+		System.err.println("Resource: "+location+" not found in classpath. Trying: generic");
 		if (genericResourceLoader != null) {
 			try {
 				return genericResourceLoader.getResourceURL(location);
@@ -953,10 +954,6 @@ public abstract class TipiContext implements ActivityController {
 		String clas = (String) xe.getAttribute("class");
 		String fullDef = pack + "." + clas;
 		setSplashInfo("Adding: " + fullDef);
-		// System.err.println("Loading class: "+fullDef+" with classloader:
-		// "+getClass().getClassLoader());
-		// System.err.println("Adding class " + pack + "." + clas + " as " +
-		// name);
 		try {
 			Class c = Class.forName(fullDef, true, getClassLoader());
 			tipiClassMap.put(name, c);
@@ -1296,8 +1293,6 @@ public abstract class TipiContext implements ActivityController {
 		navajoMap.remove(method);
 	}
 	public void addNavajo(String method, Navajo navajo) {
-		System.err.println("Adding navajo: "+method);
-		
 		navajoMap.put(method,navajo);
 	}
 	
@@ -1308,7 +1303,6 @@ public abstract class TipiContext implements ActivityController {
 
 	public void loadNavajo(Navajo reply, String method, String tipiDestinationPath, TipiEvent event, boolean breakOnError)
 			throws TipiException, TipiBreakException {
-		System.err.println("Loading navajo: "+method);
 		if (reply != null) {
 			if (eHandler != null) {
 				if (eHandler.hasErrors(reply)) {
@@ -1385,7 +1379,6 @@ public abstract class TipiContext implements ActivityController {
 			debugLog("data    ", "delivering data from method: " + method + " to tipi: " + t.getId());
 			try {
 				t.loadData(reply, method);
-				System.err.println("Data loaded in t: "+t.toString());
 			} catch (TipiBreakException e) {
 				System.err.println("Data refused by component");
 			}
