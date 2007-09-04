@@ -176,10 +176,10 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 	private final void constructDialog() {
 		// System.err.println("Constructing: studio? "+isStudioElement());
 		if (mySwingTipiContext.getAppletRoot() != null) {
-			System.err.println("Applet root");
+//			System.err.println("Applet root");
 			constructAppletDialog();
 		} else {
-			System.err.println("Standard dialog mode");
+//			System.err.println("Standard dialog mode");
 			constructStandardDialog();
 		}
 	}
@@ -196,7 +196,7 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 			// bnds.translate(myOffset.x, myOffset.y);
 			// }
 			// myDialog.setSize(bnds.getSize());
-			System.err.println("Setting bounds: " + bnds + " offset: " + myOffset);
+//			System.err.println("Setting bounds: " + bnds + " offset: " + myOffset);
 		}
 
 		JInternalFrame myDialog = createInternalFrame(modal, mySwingTipiContext.getDefaultDesktop(), bnds.getSize());
@@ -279,18 +279,21 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 				if (Frame.class.isInstance(r)) {
 					// System.err.println("Creating with frame root");
 					myDialog = new JDialog((Frame) r);
+					myRootPaneContainer = myDialog;
 				} else {
 					if (rootObject instanceof TipiApplet) {
 						JApplet jap = (JApplet) rootObject;
 						myDialog = new JDialog();
-						System.err.println("Root bounds: " + jap.getBounds());
+//						System.err.println("Root bounds: " + jap.getBounds());
 						myDialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 						myOffset = jap.getLocationOnScreen();
 						myDialog.setLocation(jap.getLocationOnScreen());
 					} else {
-						System.err.println("Creating with dialog root. This is quite surpising, actually.");
+//						System.err.println("Creating with dialog root. This is quite surpising, actually.");
 						myDialog = new JDialog((Dialog) r);
 						myDialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+						myRootPaneContainer = myDialog;
+
 					}
 				}
 			} else {
@@ -310,6 +313,7 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 			myDialog.setModal(modal);
 		}
 
+//		myDialog.setVisible(true);
 		myDialog.getContentPane().setLayout(new BorderLayout());
 		myDialog.getContentPane().add(getSwingContainer(), BorderLayout.CENTER);
 		myDialog.pack();
@@ -350,6 +354,7 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 
 		// final JDialog myDialog = (JDialog) getDialogContainer();
 		if (name.equals("show")) {
+//			System.err.println("ENTERING SHOW\n=================");
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
 					if (getDialogContainer() == null) {
@@ -362,7 +367,7 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 						mySwingTipiContext.dialogShowing(true);
 						mySwingTipiContext.updateWaiting();
 						if (myBounds.x >= 0 && myBounds.y >= 0) {
-							System.err.println("Entering bounssss...");
+//							System.err.println("Entering bounssss...");
 							// will show NOW, after this bounds will not matter
 							if (myContext.getTopLevel() instanceof TipiApplet) {
 								TipiApplet jap = (TipiApplet) myContext.getTopLevel();
@@ -372,15 +377,17 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 							} else {
 								SwingClient.getUserInterface().showDialogAt((JDialog) getDialogContainer(), myBounds.x, myBounds.y);
 							}
-							System.err.println("Setting to location: " + myBounds);
+//							System.err.println("Setting to location: " + myBounds);
 						} else {
-							System.err.println("Centering...");
+//							System.err.println("Centering...");
 							// will show NOW, after this bounds will not matter
 							if (myContext.getTopLevel() instanceof TipiApplet) {
 								TipiApplet jap = (TipiApplet) myContext.getTopLevel();
 							} else {
 								JDialog g = (JDialog) getDialogContainer();
+//								System.err.println("NEARLY SHOWING NOW>>>>>>>>>>>>");
 								SwingClient.getUserInterface().showCenteredDialog(g);
+//								System.err.println("SHOWING NOW>>>>>>>>>>>>");
 							}
 						}
 						final Rectangle bnds = getDialogBounds();
