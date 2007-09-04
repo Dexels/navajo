@@ -26,7 +26,7 @@ public class NavajoParser extends TipiTypeParser {
 	}
 
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
-		System.err.println("Parsing navajo expression: "+expression);
+//		System.err.println("Parsing navajo expression: "+expression);
 		return myContext.getNavajo(expression);
 	}
 

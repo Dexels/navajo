@@ -23,16 +23,12 @@ abstract class BaseTipiParser extends TipiTypeParser {
 		StringTokenizer counter = new StringTokenizer(path,":");
 		int tokencount = counter.countTokens();
 		if(tokencount==2) {
-			System.err.println("jahoorrr.r..");
 			String navajo = counter.nextToken();
 			String propertyPath = counter.nextToken();
 			Navajo n = myContext.getNavajo(navajo);
-			System.err.println(">>> "+myContext.getNavajoNames());
 			if(n!=null) {
-				System.err.println("Lookin for message: "+propertyPath);
 				return n.getProperty(propertyPath);
 			} else {
-				System.err.println("No navajo..");
 				return null;
 			}
 		}
