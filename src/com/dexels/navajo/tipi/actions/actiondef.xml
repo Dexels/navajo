@@ -136,6 +136,9 @@
     <param name="path" type="string" required="true"/>
     <param name="value" type="object" required="true"/>
     <param name="navajo" type="navajo" required="true"/>
+    <param name="direction" type="string" required="false"/>
+    <param name="description" type="string" required="false"/>
+
   </tipiaction>
 
   <tipiaction name="addPropertyToMessage" class="TipiAddPropertyToMessage" package="com.dexels.navajo.tipi.actions">
