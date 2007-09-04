@@ -3,6 +3,7 @@ package com.dexels.navajo.workflow;
 import java.io.Serializable;
 
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.scheduler.Task;
 import com.dexels.navajo.scheduler.TaskListener;
 import com.dexels.navajo.scheduler.TaskRunner;
@@ -16,11 +17,13 @@ public class WorkFlowTask implements Serializable, TaskListener {
 
 	private Task myTask = null;
 	private State myState = null;
+	private String navajoToUse = null;
 	private boolean finished = false;
 	
-	public WorkFlowTask(State s, Task t) {
+	public WorkFlowTask(State s, Task t, String navajoToUse) {
 		myTask = t;
 		myState = s;
+		this.navajoToUse = navajoToUse;
 	}
 	
 	/**
@@ -37,10 +40,22 @@ public class WorkFlowTask implements Serializable, TaskListener {
 				myTask.setUsername(myState.initiatingAccess.rpcUser);
 				myTask.setPassword(myState.initiatingAccess.rpcPwd);
 			}
-			if ( myState.aftertaskentry &&  myState.initiatingAccess.getOutputDoc() != null ) {
+			if ( navajoToUse != null && navajoToUse.equalsIgnoreCase("request") && myState.initiatingAccess.getInDoc() != null ) {
+				myState.getWorkFlow().mergeWithParmaters(myState.initiatingAccess.getInDoc());
+				myTask.setRequest(myState.initiatingAccess.getInDoc());
+			} else if ( navajoToUse != null && navajoToUse.equalsIgnoreCase("response") && myState.initiatingAccess.getInDoc() != null ) {
+				myState.getWorkFlow().mergeWithParmaters(myState.initiatingAccess.getOutputDoc());
+				myTask.setRequest(myState.initiatingAccess.getOutputDoc());
+			} else if ( myState.aftertaskentry &&  myState.initiatingAccess.getOutputDoc() != null ) {
+				myState.getWorkFlow().mergeWithParmaters(myState.initiatingAccess.getOutputDoc());
 				myTask.setRequest(myState.initiatingAccess.getOutputDoc());
 			} else if ( myState.initiatingAccess.getInDoc() != null ) {
+				myState.getWorkFlow().mergeWithParmaters(myState.initiatingAccess.getInDoc());
 				myTask.setRequest(myState.initiatingAccess.getInDoc());
+			} else { // Maybe time trigger??
+				Navajo newDoc = NavajoFactory.getInstance().createNavajo();
+				myState.getWorkFlow().mergeWithParmaters(newDoc);
+				myTask.setRequest(newDoc);
 			}
 		}
 		if ( myTask.getId() == null ) { // It's a first task.
