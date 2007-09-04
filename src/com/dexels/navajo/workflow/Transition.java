@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
+import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.parser.Condition;
 import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.document.Operand;
@@ -91,37 +92,54 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 	 * Evaluate all parameters.
 	 *
 	 */
-	private final void evaluateParameters(Task t) {
-		
-		System.err.println("IN evaluateParameters(), Task t Access object : " + t.getTrigger().getAccess() );
+	private final void evaluateParameters(Task t, State usethisState) {
+
+		System.err.println(">>>>>> IN evaluateParameters(), Task t Access object : " + t.getTrigger().getAccess() );
+		Navajo n = null;
 		if ( t.getTrigger().getAccess() != null ) {
-			Navajo n = t.getTrigger().getAccess().getOutputDoc();
-			try {
-				n.write(System.err);
-			} catch (NavajoException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			System.err.println("parameters size: " + parameters.size());
-			for ( int i = 0; i < parameters.size(); i++ ) {
-				Parameter p = parameters.get(i);
-				String name = p.getName();
-				ArrayList<ConditionalExpression> exps =  p.getExpressions();
-				for (int j = 0; j < exps.size(); j++) {
-					ConditionalExpression ce = exps.get(j);
-					try {
-						// Evaluate corresponding condition with expression.
-						if ( Condition.evaluate(ce.getCondition(), n) ) {
-							Operand o = Expression.evaluate(ce.getExpression(), n);
-							myState.getWorkFlow().addParameter(name, o.value);
-							j = exps.size() + 1;
+			n = t.getTrigger().getAccess().getOutputDoc();
+			// If outputdoc does not exist, it must be beforenavajo transition trigger, use indoc instead.
+			if ( n == null ) {
+				n = t.getTrigger().getAccess().getInDoc();
+			}	
+		} else {
+				n = NavajoFactory.getInstance().createNavajo();
+		}
+		
+		System.err.println("parameters size: " + parameters.size());
+		for ( int i = 0; i < parameters.size(); i++ ) {
+			Parameter p = parameters.get(i);
+			String name = p.getName();
+			ArrayList<ConditionalExpression> exps =  p.getExpressions();
+			for (int j = 0; j < exps.size(); j++) {
+				ConditionalExpression ce = exps.get(j);
+				try {
+					// Evaluate corresponding condition with expression.
+					Navajo alt = null;
+					if ( ce.hasDefinedSourceNavajo() && myState != null ) {
+						String state = ce.getSourceState();
+						String reqresponse = ce.getSourceDirection();
+						System.err.println("EVALUATING EXPRESSION FOR STATE: " + state + " WITH DIRECTION: " + reqresponse);
+						State h = myState.getWorkFlow().getHistoricState(state);
+						if ( h != null && h.getInitiatingAccess() != null ) {
+							if ( reqresponse.equals("response") ) {
+								alt = h.getInitiatingAccess().getOutputDoc();
+							} else {
+								alt = h.getInitiatingAccess().getInDoc();
+							}
 						}
-					} catch (Exception e) {
-						e.printStackTrace(System.err);
-					} 
-				}
+					}
+					if ( Condition.evaluate(ce.getCondition(), (alt != null ? alt : n ) ) ) {
+						Operand o = Expression.evaluate(ce.getExpression(), (alt != null ? alt : n ) );
+						usethisState.getWorkFlow().addParameter(name, o.value);
+						j = exps.size() + 1;
+					}
+				} catch (Exception e) {
+					e.printStackTrace(System.err);
+				} 
 			}
 		}
+
 	}
 	
 	private final boolean isMyTransitionTaskTrigger(Task t) {
@@ -198,7 +216,7 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 
 			if ( !activationTranstion ) {
 				// First evaluate all parameters that need to be set with this transition.
-				evaluateParameters(t);
+				evaluateParameters(t, myState);
 				myState.leave();
 
 				if ( nextState != null && !nextState.equals("finish") ) {
@@ -212,9 +230,9 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 				 */
 				// Activate new workflow instance.
 				WorkFlow wf = WorkFlow.getInstance(workFlowToBeActivated, nextState, t.getTrigger().getAccess(), t.getUsername());
-				System.err.println("EVALUATE PARAMETERS.....");
-				myState = wf.currentState;
-				evaluateParameters(t);
+				//myState = wf.currentState;
+				evaluateParameters(t, wf.currentState);
+				//myState = null;
 			}
 		}
 
@@ -227,7 +245,7 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 			
 			if ( enterNextState(t) ) {
 //				 First evaluate all parameters that need to be set with this transition.
-				evaluateParameters(t);
+				evaluateParameters(t, myState);
 				myState.leave();
 				if ( nextState != null && !nextState.equals("finish") ) {
 					myState.getWorkFlow().createState(nextState, t.getTrigger().getAccess()).enter(false);
