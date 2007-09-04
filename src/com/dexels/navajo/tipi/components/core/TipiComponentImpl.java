@@ -330,17 +330,13 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 				if(type==null) {
 					type = xx.getName();
 				}
-				if (!componentEvents.contains(type)) {
-					throw new RuntimeException("Invalid event type for component with name " + myName + ": " + type + " path " + getPath()
-							+ " " + ". This component allows: " + componentEvents);
+				if (componentEvents.contains(type)) {
+					TipiEvent event = new TipiEvent();
+					XMLElement eventDef = getEventDefFromClassDef(classDef, type);
+					event.init(eventDef);
+					event.load(this, xx, context);
+					addTipiEvent(event);
 				}
-				TipiEvent event = new TipiEvent();
-				System.err.println("We are talking 'bout: "+type);
-				XMLElement eventDef = getEventDefFromClassDef(classDef, type);
-				System.err.println(">>>>>>>>>>>>>> "+eventDef);
-				event.init(eventDef);
-				event.load(this, xx, context);
-				addTipiEvent(event);
 				// System.err.println("EVENT LOADED: " + event.getEventName());
 			}
 		}
@@ -972,7 +968,6 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 
 	public boolean performTipiEvent(String type, Map event, boolean sync) throws TipiException {
 		boolean hasEventType = false;
-		System.err.println("Perform tipi event: "+type+" list: "+myEventList);
 		for (int i = 0; i < myEventList.size(); i++) {
 			TipiEvent te = (TipiEvent) myEventList.get(i);
 			if (te.isTrigger(type, myService)) {
