@@ -92,7 +92,8 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
 
     public static final String NAVAJO_CONFIG_PATH = "/config";
 
-    public static final String NAVAJO_AUXILARY = "/auxilary";
+//    public static final String NAVAJO_AUXILARY = "/auxilary";
+    public static final String NAVAJO_AUXILARY = "";
 
     public static final String RELATIVE_METADATA_PATH = "/meta";
 
@@ -405,9 +406,9 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
             Object[] cp = lll.toArray();
             classpath = new String[cp.length];
             System.arraycopy(cp, 0, classpath, 0, cp.length);
-            for (int i = 0; i < classpath.length; i++) {
-                System.err.println("Classpath: "+classpath[i]);
-            }
+//            for (int i = 0; i < classpath.length; i++) {
+//                System.err.println("Classpath: "+classpath[i]);
+//            }
         } else {
             System.err.println("Not a java project?!");
             //		    System.err.println(" affe >>>"+myProject.getClass());
@@ -1760,18 +1761,30 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
                 if (sourceTml!=null && sourceTml.exists()) {
                     in = loadNavajo(sourceTml);
                     inservice = in.getHeader().getRPCName();
-                    System.err.println("Run href with service: "+inservice);
+                    System.err.println("Run href with service: "+inservice+" for service: "+scriptName);
 //                    in = NavajoFactory.getInstance().createNavajo(sourceTml.getContents());
                 } else {
-//                    System.err.println("Running init script with empty navajo...");
+                    System.err.println("Running init script with empty navajo...");
                     in = NavajoFactory.getInstance().createNavajo();
                 }
                 Header h = NavajoFactory.getInstance().createHeader(in,getRemoteUsername() , getRemotePassword(), getRemoteServer(),-1);
                 h.setHeaderAttribute("callingService", inservice);
+                h.setHeaderAttribute("sourceScript", inservice);
+
+                
+                
                 in.addHeader(h);
                 
-                
-                Navajo result = NavajoClientFactory.getClient().doSimpleSend(in, getRemoteServer(),scriptName,getRemoteUsername(),getRemotePassword(),-1,false);
+                // -- Actually doing the call:
+                NavajoClientFactory.resetClient();
+                System.setProperty(DOC_IMPL,QDSAX);
+                NavajoFactory.resetImplementation();
+                NavajoFactory.getInstance().setExpressionEvaluator(new DefaultExpressionEvaluator());
+                NavajoClientFactory.createClient("com.dexels.navajo.client.NavajoSocketClient", null,null);
+                NavajoClientFactory.getClient().setServerUrl(getRemoteServer());
+                NavajoClientFactory.getClient().setUsername(getRemoteUsername());
+                NavajoClientFactory.getClient().setPassword(getRemotePassword());                
+                Navajo result = NavajoClientFactory.getClient().doSimpleSend(in, getRemoteServer(),scriptName,getRemoteUsername(),getRemotePassword(),-1,false,false);
                 if (sourceName!=null&& !"".equals(sourceName)) {
                     result.getHeader().setHeaderAttribute("sourceScript", inservice);
                 }
