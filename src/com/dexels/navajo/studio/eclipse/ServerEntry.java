@@ -10,6 +10,7 @@ import java.util.*;
 
 import com.dexels.navajo.client.*;
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.types.*;
 import com.dexels.navajo.studio.script.plugin.*;
 
 public class ServerEntry {
@@ -76,7 +77,7 @@ public class ServerEntry {
         return "Protocol: "+protocol+" server: "+server+" username: "+username+" password: "+password+" name: "+name;
     }
     public Navajo runProcess(String scriptName, Navajo input) throws ClientException {
-        ClientInterface nc = null;
+        ClientInterface nc = null; 
         System.setProperty(NavajoScriptPluginPlugin.DOC_IMPL,NavajoScriptPluginPlugin.QDSAX);
         NavajoFactory.resetImplementation();
        System.err.println("Running process: "+scriptName+" >>> "+toDebug());
@@ -101,6 +102,28 @@ public class ServerEntry {
         }
         return n;
     }
+    
+	public Binary getArrayMessageReport(Message m, String[] propertyNames, String[] propertyTitles, int[] columnWidths, String format, String orientation, int[] margins) throws NavajoException {
+	       ClientInterface nc = null;
+	        System.setProperty(NavajoScriptPluginPlugin.DOC_IMPL,NavajoScriptPluginPlugin.QDSAX);
+	        NavajoFactory.resetImplementation();
+	     NavajoClientFactory.resetClient();
+	        if ("http".equals(protocol)) {
+	            nc = NavajoClientFactory.createClient("com.dexels.navajo.client.NavajoClient", null,null);
+	        }
+	        if ("socket".equals(protocol)) {
+	            nc = NavajoClientFactory.createClient("com.dexels.navajo.client.NavajoSocketClient", null,null);
+	        }
+	        if ("local".equals(protocol)) {
+	            nc = NavajoClientFactory.createClient("com.dexels.navajo.client.NavajoSocketClient", null,null);
+	        }
+	        nc.setLocaleCode(NavajoScriptPluginPlugin.getDefault().getSelectedLocale());
+	        nc.setServerUrl(server);
+	        nc.setUsername(username);
+	        nc.setPassword(password);
+	        Binary b = nc.getArrayMessageReport(m,propertyNames,propertyTitles,columnWidths,format,orientation,margins);
+	        return b;
+	}
     
     public String toString() {
         return name;
