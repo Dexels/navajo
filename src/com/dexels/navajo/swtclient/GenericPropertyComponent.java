@@ -642,7 +642,7 @@ public class GenericPropertyComponent {
         }
     }
 
-    private void openBinary(Binary b) throws IOException {
+    public static void openBinary(Binary b) throws IOException {
         FileOutputStream fos = null;
         File f = null;
         String mime = b.getMimeType();
