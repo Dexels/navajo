@@ -298,7 +298,11 @@ public class NavajoLaszloConverter {
 				Element prop = d.createElement("p_" + current.getName());
 				if(current.getType().equals(Property.DATE_PROPERTY)){
 					DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-					prop.setAttribute("value", df.format((Date)current.getTypedValue()));
+					if(current.getTypedValue() != null){
+						prop.setAttribute("value", df.format((Date)current.getTypedValue()));
+					}else{
+						prop.setAttribute("value", current.getValue());
+					}
 				}else{
 					prop.setAttribute("value", current.getValue());
 				}
