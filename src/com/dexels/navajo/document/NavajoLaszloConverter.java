@@ -296,12 +296,20 @@ public class NavajoLaszloConverter {
 				Property current = (Property) allProp.get(i);
 
 				Element prop = d.createElement("p_" + current.getName());
-				prop.setAttribute("value", current.getValue());
+				if(current.getType().equals(Property.DATE_PROPERTY)){
+					DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+					prop.setAttribute("value", df.format((Date)current.getTypedValue()));
+				}else{
+					prop.setAttribute("value", current.getValue());
+				}
+				
 				prop.setAttribute("description", current.getDescription());
 				prop.setAttribute("direction", current.getDirection());
 				prop.setAttribute("type", current.getType());
 				prop.setAttribute("length", "" + current.getLength());
 
+				
+				
 				if (current.getType().equals(Property.SELECTION_PROPERTY)) {
 					ArrayList sel = current.getAllSelections();
 					for (int j = 0; j < sel.size(); j++) {
