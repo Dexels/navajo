@@ -9,6 +9,7 @@ import com.dexels.navajo.adapter.navajomap.MessageMap;
 import com.dexels.navajo.client.*;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.*;
 import com.dexels.navajo.document.types.ClockTime;
@@ -27,6 +28,7 @@ import com.dexels.navajo.document.types.Money;
 public class NavajoMap extends AsyncMappable  implements Mappable {
 
   public String doSend;
+  public Binary navajo;
   public String username = null;
   public String password = null;
   public String server = null;
@@ -295,6 +297,22 @@ public class NavajoMap extends AsyncMappable  implements Mappable {
 
   public void setServer(String u) {
     this.server = u;
+  }
+  
+  /**
+   * Set a Navajo object directly.
+   * 
+   * @param b
+   * @throws UserException
+   */
+  public void setNavajo(Binary b) throws UserException {
+	  try {
+	  InputStream is = b.getDataAsStream();
+	  inDoc = NavajoFactory.getInstance().createNavajo(is);
+	  is.close();
+	  } catch (Throwable t) {
+		  throw new UserException(-1, t.getMessage(), t);
+	  }
   }
 
   /**
