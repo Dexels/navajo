@@ -31,7 +31,7 @@ import com.dexels.navajo.mapping.MappableException;
 public final class Transition implements TaskListener, Serializable, Mappable {
 
 	/**
-	 * 
+	 * TODO: LOG WORKFLOW ERRORS SOMEWHERE
 	 */
 	private static final long serialVersionUID = 3144803468988103221L;
 	
@@ -94,7 +94,6 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 	 */
 	private final void evaluateParameters(Task t, State usethisState) {
 
-		System.err.println(">>>>>> IN evaluateParameters(), Task t Access object : " + t.getTrigger().getAccess() );
 		Navajo n = null;
 		if ( t.getTrigger().getAccess() != null ) {
 			n = t.getTrigger().getAccess().getOutputDoc();
@@ -106,7 +105,6 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 				n = NavajoFactory.getInstance().createNavajo();
 		}
 		
-		System.err.println("parameters size: " + parameters.size());
 		for ( int i = 0; i < parameters.size(); i++ ) {
 			Parameter p = parameters.get(i);
 			String name = p.getName();
@@ -116,11 +114,10 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 				try {
 					// Evaluate corresponding condition with expression.
 					Navajo alt = null;
-					if ( ce.hasDefinedSourceNavajo() && myState != null ) {
+					if ( ce.hasDefinedSourceNavajo() ) {
 						String state = ce.getSourceState();
 						String reqresponse = ce.getSourceDirection();
-						System.err.println("EVALUATING EXPRESSION FOR STATE: " + state + " WITH DIRECTION: " + reqresponse);
-						if ( !state.equals(".") && !state.equals(myState.getId())) {
+						if ( myState != null && !state.equals(".") && !state.equals(myState.getId())) {
 							State h = myState.getWorkFlow().getHistoricState(state);
 							if ( h != null && h.getInitiatingAccess() != null ) {
 								if ( reqresponse.equals("response") ) {
@@ -135,7 +132,7 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 							} else {
 								alt =  t.getTrigger().getAccess().getInDoc();
 							}
-						} else if ( state.equals(myState.getId() ) && myState != null && myState.getInitiatingAccess() != null ) {
+						} else if ( myState != null && state.equals(myState.getId() ) && myState != null && myState.getInitiatingAccess() != null ) {
 							if ( reqresponse.equals("response") ) {
 								alt =  myState.getInitiatingAccess().getOutputDoc();
 							} else {
