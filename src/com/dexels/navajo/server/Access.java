@@ -25,12 +25,14 @@
 
 package com.dexels.navajo.server;
 
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.mapping.CompiledScript;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
@@ -71,6 +73,9 @@ public final class Access implements java.io.Serializable, Mappable {
 	public boolean compressedSend = false;
 	public boolean isFinished = false;
 	public int contentLength;
+	public Binary requestNavajo;
+	public Binary responseNavajo;
+	
 
 	private Throwable myException;
 	private Navajo outputDoc;
@@ -352,6 +357,34 @@ public final class Access implements java.io.Serializable, Mappable {
 
 	public void setCpuload(double cpuload) {
 		this.cpuload = cpuload;
+	}
+
+	public Binary getRequestNavajo() throws UserException {
+		Binary b = new Binary();
+		if ( inDoc != null ) {
+			try { 
+				OutputStream os = b.getOutputStream();
+				inDoc.write(os);
+				os.close();
+			} catch (Throwable t) {
+				throw new UserException(-1, t.getMessage(), t);
+			}
+		}
+		return b;
+	}
+
+	public Binary getResponseNavajo() throws UserException {
+		Binary b = new Binary();
+		if ( outputDoc != null ) {
+			try { 
+				OutputStream os = b.getOutputStream();
+				outputDoc.write(os);
+				os.close();
+			} catch (Throwable t) {
+				throw new UserException(-1, t.getMessage(), t);
+			}
+		}
+		return b;
 	}
 
 }

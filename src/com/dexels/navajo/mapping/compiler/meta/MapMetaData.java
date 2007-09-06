@@ -122,7 +122,7 @@ public class MapMetaData {
 		MapMetaData mmd = MapMetaData.getInstance();
 		//System.err.println("is: " + mmd.isMetaScript("ProcessQueryMemberNewStyle", "/home/arjen/projecten/Navajo/", "."));
 		
-		String result = mmd.parse("/home/arjen/projecten/Navajo/ProcessUpdatePersonNewStyle.xml");
+		String result = mmd.parse("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts/laurus/ProcessQueryMemberDetails.xml");
 		
 		System.err.println(result);
 		
