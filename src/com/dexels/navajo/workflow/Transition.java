@@ -120,12 +120,26 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 						String state = ce.getSourceState();
 						String reqresponse = ce.getSourceDirection();
 						System.err.println("EVALUATING EXPRESSION FOR STATE: " + state + " WITH DIRECTION: " + reqresponse);
-						State h = myState.getWorkFlow().getHistoricState(state);
-						if ( h != null && h.getInitiatingAccess() != null ) {
+						if ( !state.equals(".") && !state.equals(myState.getId())) {
+							State h = myState.getWorkFlow().getHistoricState(state);
+							if ( h != null && h.getInitiatingAccess() != null ) {
+								if ( reqresponse.equals("response") ) {
+									alt = h.getInitiatingAccess().getOutputDoc();
+								} else {
+									alt = h.getInitiatingAccess().getInDoc();
+								}
+							}
+						} else if ( state.equals(".") && t.getTrigger().getAccess() != null ){  // Use trigger access state.
 							if ( reqresponse.equals("response") ) {
-								alt = h.getInitiatingAccess().getOutputDoc();
+								alt =  t.getTrigger().getAccess().getOutputDoc();
 							} else {
-								alt = h.getInitiatingAccess().getInDoc();
+								alt =  t.getTrigger().getAccess().getInDoc();
+							}
+						} else if ( state.equals(myState.getId() ) && myState != null && myState.getInitiatingAccess() != null ) {
+							if ( reqresponse.equals("response") ) {
+								alt =  myState.getInitiatingAccess().getOutputDoc();
+							} else {
+								alt =  myState.getInitiatingAccess().getInDoc();
 							}
 						}
 					}
