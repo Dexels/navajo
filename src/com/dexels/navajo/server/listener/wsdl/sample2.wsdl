@@ -18,48 +18,35 @@
                     </xsd:element>
                 </xsd:sequence>
             </xsd:complexType>
-            <xsd:complexType name="SelectGlobals">
+            <xsd:complexType name="HelloThere">
                 <xsd:sequence>
-                    <xsd:element name="PersonId" type="xsd:string"/>
+                    <xsd:element name="Name" type="xsd:string"/>
                 </xsd:sequence>
             </xsd:complexType>
-            <xsd:complexType name="Parameters">
+            <xsd:complexType name="Result">
                 <xsd:sequence>
-                    <xsd:element name="PersonId" type="xsd:string"/>
-                </xsd:sequence>
-            </xsd:complexType>
-            <xsd:complexType name="ClubMembership">
-                <xsd:sequence>
-                    <xsd:element name="PersonId" type="xsd:string"/>
-                </xsd:sequence>
-            </xsd:complexType>
-            <xsd:complexType name="DatabaseStatus">
-                <xsd:sequence>
-                    <xsd:element name="DatabaseProductName" type="xsd:string"/>
-                    <xsd:element name="DatabaseVersion" type="xsd:string"/>
-                    <xsd:element name="DatabaseSchemaOwner" type="xsd:string"/>
+                    <xsd:element name="Name" type="xsd:string"/>
+                    <xsd:element name="Status" type="xsd:string"/>
                 </xsd:sequence>
             </xsd:complexType>
         </xsd:schema>
     </types>
     <message name="ProcessReq">
-        <part name="SelectGlobals" type="tns:SelectGlobals"/>
+        <part name="HelloThere" type="tns:HelloThere"/>
     </message>
     <message name="ProcessRes">
-        <part name="Parameters" type="tns:Parameters"/>
-        <part name="ClubMembership" type="tns:ClubMembership"/>
-        <part name="DatabaseStatus" type="tns:DatabaseStatus"/>
+        <part name="Result" type="tns:Result"/>
     </message>
-    <portType name="member_ProcessGetClubMemberships_PortType">
+    <portType name="ProcessAap_PortType">
         <operation name="Process">
             <input message="tns:ProcessReq" name="ProcessReq"/>
             <output message="tns:ProcessRes" name="ProcessRes"/>
         </operation>
     </portType>
-    <binding name="member_ProcessGetClubMemberships_Binding" type="tns:member_ProcessGetClubMemberships_PortType">
+    <binding name="ProcessAap_Binding" type="tns:ProcessAap_PortType">
         <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
         <operation name="Process">
-            <soap:operation soapAction="member/ProcessGetClubMemberships"/>
+            <soap:operation soapAction="ProcessAap"/>
             <input name="ProcessReq">
                 <soap:body namespace="http://www.dexels.nl/navajo/webservice.xsd" use="literal"/>
             </input>
@@ -68,11 +55,10 @@
             </output>
         </operation>
     </binding>
-    <service name="member_ProcessGetClubMemberships">
-        <documentation>
-            Dit is de documentatie</documentation>
-        <port binding="tns:member_ProcessGetClubMemberships_Binding" name="member_ProcessGetClubMemberships_Port">
-            <soap:address location="http://ficus:3000/sportlink/knvb/servlet/SOAPMan"/>
+    <service name="ProcessAap">
+        <documentation>Dit is de documentatie</documentation>
+        <port binding="tns:ProcessAap_Binding" name="ProcessAap_Port">
+            <soap:address location="http://localhost:8080//NavajoServer/SOAPMan"/>
         </port>
     </service>
 </definitions>

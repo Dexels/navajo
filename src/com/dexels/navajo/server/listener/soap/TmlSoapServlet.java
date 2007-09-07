@@ -74,7 +74,8 @@ public class TmlSoapServlet extends HttpServlet {
 			XMLDocumentUtils.write(docIn, w, false);
 			System.err.println(w.toString());
 
-			Document tmlIn = XMLDocumentUtils.transformToDocument(docIn, new File("/home/orion/projects/Navajo/soap/xml2tml.xsl"));
+			
+			Document tmlIn = XMLDocumentUtils.transformToDocument(docIn, new File(Dispatcher.getInstance().getNavajoConfig().getRootPath() + "/soap/xml2tml.xsl"));
 			System.err.println("Transformed XML");
 			w = new StringWriter();
 			XMLDocumentUtils.write(tmlIn, w, false);
@@ -104,7 +105,7 @@ public class TmlSoapServlet extends HttpServlet {
 			javax.xml.parsers.DocumentBuilderFactory builderFactory  = DocumentBuilderFactory.newInstance();
 			javax.xml.parsers.DocumentBuilder builder = builderFactory.newDocumentBuilder();
 			Document between = builder.parse(new java.io.StringBufferInputStream(navajoOut.toString()));
-			Document docOut = XMLDocumentUtils.transformToDocument(between, new File("/home/orion/projects/Navajo/soap/tml2xml.xsl"));
+			Document docOut = XMLDocumentUtils.transformToDocument(between, new File(Dispatcher.getInstance().getNavajoConfig().getRootPath() + "/soap/tml2xml.xsl"));
 
 			// Get output stream.
 			response.setContentType("text/xml; charset=UTF-8");
@@ -141,5 +142,17 @@ public class TmlSoapServlet extends HttpServlet {
 			e.printStackTrace();
 			new ServletException(e);
 		}
+	}
+	
+	public static void main(String [] args) throws Exception {
+		
+		Document docIn = XMLDocumentUtils.createDocument(new FileInputStream("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts/match/InitUpdateMatch2.xml"), false);
+		//Document docIn = XMLDocumentUtils.createDocument(new FileInputStream("/home/arjen/projecten/Navajo/untitled1.xml"), false);
+		Document tmlIn = XMLDocumentUtils.transformToDocument(docIn, new File("/home/arjen/projecten/Navajo/soap/tml2xml.xsl"));
+		System.err.println("Transformed XML");
+		StringWriter w = new StringWriter();
+		XMLDocumentUtils.write(tmlIn, w, false);
+		System.err.println(w.toString());
+		
 	}
 }

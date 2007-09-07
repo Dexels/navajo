@@ -328,7 +328,15 @@ public class WsdlProducer extends HttpServlet {
 			port.setAttribute("name",  webservice.replaceAll("/", "_") + "_Port");
 			Element soap_address = doc.createElementNS(SOAP, "soap:address");
 			port.appendChild(soap_address);
-			soap_address.setAttribute("location", "http://ficus:3000/sportlink/knvb/servlet/SOAPMan");
+			
+			System.err.println("path = " + request.getServletPath());
+			System.err.println("name = " + getServletConfig().getServletName());
+			System.err.println("contextpath = " + request.getContextPath());
+			System.err.println("server  =" + request.getServerName());
+			System.err.println("porr  =" + request.getServerPort());
+			System.err.println("request uri = " + request.getRequestURI());
+			
+			soap_address.setAttribute("location", "http://" + request.getServerName() + ":" + request.getServerPort() + "/" +  request.getContextPath() + "/SOAPMan");
 			service.appendChild(port);
 			
 			OutputStream out = (OutputStream) response.getOutputStream();
