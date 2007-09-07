@@ -18,12 +18,13 @@
                     </xsd:element>
                 </xsd:sequence>
             </xsd:complexType>
-            <xsd:complexType name="HelloThere">
+            <xsd:complexType name="Result">
                 <xsd:sequence>
+                    <xsd:element name="Status" type="xsd:string"/>
                     <xsd:element name="Name" type="xsd:string"/>
                 </xsd:sequence>
             </xsd:complexType>
-            <xsd:complexType name="Result">
+            <xsd:complexType name="Approval">
                 <xsd:sequence>
                     <xsd:element name="Name" type="xsd:string"/>
                     <xsd:element name="Status" type="xsd:string"/>
@@ -32,21 +33,22 @@
         </xsd:schema>
     </types>
     <message name="ProcessReq">
-        <part name="HelloThere" type="tns:HelloThere"/>
-    </message>
-    <message name="ProcessRes">
         <part name="Result" type="tns:Result"/>
     </message>
-    <portType name="ProcessAap_PortType">
+    <message name="ProcessRes">
+        <part name="Approval" type="tns:Approval"/>
+        <part name="Result" type="tns:Result"/>
+    </message>
+    <portType name="ProcessApproveAap_PortType">
         <operation name="Process">
             <input message="tns:ProcessReq" name="ProcessReq"/>
             <output message="tns:ProcessRes" name="ProcessRes"/>
         </operation>
     </portType>
-    <binding name="ProcessAap_Binding" type="tns:ProcessAap_PortType">
-        <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <binding name="ProcessApproveAap_Binding" type="tns:ProcessApproveAap_PortType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
         <operation name="Process">
-            <soap:operation soapAction="ProcessAap"/>
+            <soap:operation soapAction="ProcessApproveAap"/>
             <input name="ProcessReq">
                 <soap:body namespace="http://www.dexels.nl/navajo/webservice.xsd" use="literal"/>
             </input>
@@ -55,9 +57,9 @@
             </output>
         </operation>
     </binding>
-    <service name="ProcessAap">
+    <service name="ProcessApproveAap">
         <documentation>Dit is de documentatie</documentation>
-        <port binding="tns:ProcessAap_Binding" name="ProcessAap_Port">
+        <port binding="tns:ProcessApproveAap_Binding" name="ProcessApproveAap_Port">
             <soap:address location="http://localhost:8080//NavajoServer/SOAPMan"/>
         </port>
     </service>
