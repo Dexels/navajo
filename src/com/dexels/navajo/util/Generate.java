@@ -142,7 +142,7 @@ public class Generate {
       NodeList list = offset.getChildNodes();
 
 
-      Pattern re = Pattern.compile("\\[[A-z,/]*\\]");
+       Pattern re = Pattern.compile("(\\[[A-z,/]*\\])");
       // Construct TML document from request parameters.
 
       if (list.getLength() == 0) {
@@ -169,12 +169,12 @@ public class Generate {
               Node parentNode = list.item(i).getParentNode();
 
               String parameter = ((Element) list.item(i)).getAttribute("value");
-
+              parameter = parameter.replaceAll(" ", "");
               //System.out.println("Checking expression value:  " + parameter);
               Matcher matcher = re.matcher(parameter);
 
-              while (matcher.find() && parameter.indexOf("'") == -1) {
-                  String value = matcher.group();
+              while (matcher.find() ) {
+                  String value = matcher.group(1);
                   
                   value = value.substring(1, value.length()-1);
                   if (value.indexOf("__parms__") == -1 && value.indexOf("@") == -1) { // Skip parameters!
@@ -343,10 +343,10 @@ public class Generate {
 
       Generate gen = new Generate();
 
+    
       
-
       // Determine input messages:
-      FileInputStream fis = new FileInputStream("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts/competition/knvbnl/InitQueryClassSeason.xml");
+      FileInputStream fis = new FileInputStream("/home/arjen/projecten/NavajoStandardEdition/scripts/person/ProcessSearchPersons.xml");
       Navajo inputDoc = gen.getInputPart(null, fis);
       fis.close();
       ArrayList msgs = inputDoc.getAllMessages();
