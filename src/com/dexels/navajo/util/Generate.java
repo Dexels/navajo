@@ -91,15 +91,15 @@ public class Generate {
             if (allChildren.item(j).getNodeType() == Node.ELEMENT_NODE) {
               Element child = (Element) allChildren.item(j);
               if (child.getTagName().equals("map")) { // Yes.
-//                System.out.println("GOT MAP: object = " + child.getAttribute("object") + ", ref = " +
-//                                  child.getAttribute("ref"));
+                System.out.println("GOT MAP: object = " + child.getAttribute("object") + ", ref = " +
+                                  child.getAttribute("ref"));
                 if ((child.getAttribute("ref") != null) && !child.getAttribute("ref").equals("")) {
-                  //System.out.println("MULTIPLE MESSAGE!");
-                  parent.setName(parentName);
-                  parent.setType(Message.MSG_TYPE_ARRAY);
-                  Message newSubMessage = NavajoFactory.getInstance().createMessage(result, parentName);
-                  parent.addMessage(newSubMessage);
-                  parent = newSubMessage;
+                  System.out.println("MULTIPLE MESSAGE!");
+//                  parent.setName(parentName);
+//                  parent.setType(Message.MSG_TYPE_ARRAY);
+//                  Message newSubMessage = NavajoFactory.getInstance().createMessage(result, parentName);
+//                  parent.addMessage(newSubMessage);
+//                  parent = newSubMessage;
                 }
                 NodeList l = child.getChildNodes();
                 for (int i = 0; i < l.getLength(); i++) {
@@ -319,17 +319,17 @@ public class Generate {
 		  Navajo outputDoc = NavajoFactory.getInstance().createNavajo();
 		  Document script = createDocument(is);
 		  
-		  HashSet outputMessages = new HashSet();
+		  //HashSet outputMessages = new HashSet();
 		  
 		  if ( script.getElementsByTagName("tsl").getLength() == 0 ) {
 			    return NavajoFactory.getInstance().createNavajo();
 		  }
 		  NodeList list = script.getElementsByTagName("tsl").item(0).getChildNodes();
 		  for (int i = 0; i < list.getLength(); i++) {
-			  if (list.item(i).getNodeName().equals("message")) {
-				  Element e = (Element) list.item(i);
-				  outputMessages.add(e.getAttribute("name"));
-			  }
+//			  if (list.item(i).getNodeName().equals("message")) {
+//				  Element e = (Element) list.item(i);
+//				  outputMessages.add(e.getAttribute("name"));
+//			  }
 			  generateOutputPart(null, outputDoc, list.item(i));
 		  }
 		  return outputDoc;
@@ -355,11 +355,11 @@ public class Generate {
         inputMessages.add(((Message) msgs.get(i)).getName());
       }
       //inputDoc.write(System.err);
-//      fis = new FileInputStream("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts/match/ProcessQueryMatch.xml");
-//      Navajo outputDoc = gen.getOutputPart(fis);
-//      fis.close();
-//     
-//      System.out.println(outputDoc.toString());
+      fis = new FileInputStream("/home/arjen/projecten/NavajoStandardEdition/scripts/person/ProcessSearchPersons.xml");
+      Navajo outputDoc = gen.getOutputPart(fis);
+      fis.close();
+     
+      System.out.println(outputDoc.toString());
 
       //Document input = (Document) result.getMessageBuffer();
       //String inputMessage = "get"+"ProcessInsertKernMember"+"In";
@@ -372,19 +372,19 @@ public class Generate {
       
       Document dIn = builder.parse(new StringBufferInputStream(inputDoc.toString()));
       
-      //Document dOut = builder.parse(new StringBufferInputStream(outputDoc.toString()));
+      Document dOut = builder.parse(new StringBufferInputStream(outputDoc.toString()));
       
       System.err.println("INPUT XML:");
       inputDoc.write(System.err);
       
       String xmlInput = XMLDocumentUtils.transform(dIn, new File("/home/arjen/projecten/Navajo/soap/tml2xml.xsl"));
-      //String xmlOutput = XMLDocumentUtils.transform(dOut, new File("/home/arjen/projecten/Navajo/soap/tml2xml.xsl"));
+      String xmlOutput = XMLDocumentUtils.transform(dOut, new File("/home/arjen/projecten/Navajo/soap/tml2xml.xsl"));
 
       System.err.println("XML INPUT:");
       System.err.println(xmlInput);
 
       System.err.println("XML OUTPUT:");
 
-     // System.err.println(xmlOutput);
+      System.err.println(xmlOutput);
   }
 }
