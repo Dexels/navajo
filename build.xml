@@ -37,6 +37,7 @@
         <include name="${document.base}/lazy/**/*.class"/>
         <include name="${document.base}/typecheck/**/*.class"/>
         <include name="${document.base}/types/**/*.class"/>
+        <include name="${document.base}/databinding/**/*.class"/>
         <include name="${document.base}/base/**/*.class"/>
         <include name="${document.base}/saximpl/**/*.class"/>
         <include name="metadata/**/*.class"/>
