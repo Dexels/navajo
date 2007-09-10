@@ -240,7 +240,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 		}
 	}
 	
-	private void readConfig() {
+	private void readConfig(boolean init) {
 		// Read task configuration file to read predefined tasks config/tasks.xml
 		setConfigTimeStamp();
 		
@@ -267,19 +267,23 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 
 					Access newAcces = new Access(-1, -1, -1, username, webservice, "Taskrunner", "127.0.0.1", "localhost", false, null);
 
-					try {
-						// Create a new task and activate its trigger.
-						Task t = new Task(webservice, username, password, newAcces, trigger, null);
-						t.setWorkflowDefinition(workflowdef);
-						t.setWorkflowId(workflowid);
-						t.setProxy(proxy.booleanValue());
-						t.setId(id);
-						t.setKeepRequestResponse(keeprequestresponse.booleanValue());
-						readTaskInput(t);
-						instance.addTask(id, t, false);
-					} catch (IllegalTrigger it) {
-						//it.printStackTrace(System.err);
-						AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Problem adding task: " + it.getMessage());
+					// Do not add tasks from previous workflow instances when server is started. Workflow instance tasks
+					// are added through revival of workflow.
+					if ( !init || workflowid.equals("") ) {
+						try {
+							// Create a new task and activate its trigger.
+							Task t = new Task(webservice, username, password, newAcces, trigger, null);
+							t.setWorkflowDefinition(workflowdef);
+							t.setWorkflowId(workflowid);
+							t.setProxy(proxy.booleanValue());
+							t.setId(id);
+							t.setKeepRequestResponse(keeprequestresponse.booleanValue());
+							readTaskInput(t);
+							instance.addTask(id, t, false);
+						} catch (IllegalTrigger it) {
+							//it.printStackTrace(System.err);
+							AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Problem adding task: " + it.getMessage());
+						}
 					}
 				}
 			}
@@ -308,7 +312,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 			} catch (Throwable t) {
 				// Then but not.
 			}
-			instance.readConfig();
+			instance.readConfig(true);
 			instance.startThread(instance);
 			
 			AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Started task scheduler process $Id$");
@@ -320,7 +324,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 		// Check whether tasks.xml has gotten updated
 		if ( isConfigModified() && !instance.configIsBeingUpdated ) {
 			AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Task configuration is modified, re-initializing");
-			readConfig();
+			readConfig(false);
 		}
 	}
 	
