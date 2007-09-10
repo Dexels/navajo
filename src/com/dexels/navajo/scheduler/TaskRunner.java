@@ -286,6 +286,11 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 						}
 					}
 				}
+				
+				// Write task definition file back (in case of workflow tasks that were skipped).
+				if ( init ) {
+					Dispatcher.getInstance().getNavajoConfig().writeConfig(TASK_CONFIG, taskDoc);
+				}
 			}
 
 		} catch (Throwable e) {
