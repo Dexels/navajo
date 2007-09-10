@@ -3,9 +3,8 @@ package com.dexels.navajo.document;
 import java.util.*;
 import java.text.SimpleDateFormat;
 import java.net.URL;
-import com.dexels.navajo.document.types.Money;
-import com.dexels.navajo.document.types.ClockTime;
-import com.dexels.navajo.document.types.Binary;
+
+import com.dexels.navajo.document.databinding.*;
 import com.dexels.navajo.document.types.*;
 
 /**
@@ -346,6 +345,15 @@ public interface Property
   public void setSelected(Selection s) throws NavajoException;
 
   /**
+   * Sets the selected option for a selection type property.
+   * @param s Selection
+   * @throws NavajoException
+   */
+
+  public void setSelected(Selection s, boolean selected) throws NavajoException;
+
+  
+  /**
    * Get the length attribute of a (string, integer or float) property. The length defines
    * the maximum number of posititions a property value may have.
    */
@@ -489,5 +497,12 @@ public interface Property
  * @return
  */
 public Property cloneWithoutValue();
+
+/**
+ * Adding
+ * @param p
+ */
+public void addPropertyDataListener(PropertyDataListener p);
+public void removePropertyDataListener(PropertyDataListener p);
 
 }

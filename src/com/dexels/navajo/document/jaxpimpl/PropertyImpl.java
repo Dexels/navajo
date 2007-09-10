@@ -17,6 +17,7 @@ import java.util.*;
 import org.dexels.utils.Base64;
 import org.w3c.dom.*;
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.databinding.*;
 import com.dexels.navajo.document.types.*;
 
 /**
@@ -1198,5 +1199,20 @@ public Property cloneWithoutValue() {
     Property p = (Property)clone();
     p.setValue((String)null);
     return p;
+}
+
+public void addPropertyDataListener(PropertyDataListener p) {
+	// TODO Auto-generated method stub
+	throw new UnsupportedOperationException("addPropertyDataListener");
+}
+
+public void removePropertyDataListener(PropertyDataListener p) {
+	// TODO Auto-generated method stub
+	throw new UnsupportedOperationException("removePropertyDataListener");
+}
+
+public void setSelected(Selection s, boolean selected) throws NavajoException {
+	// TODO Auto-generated method stub
+	throw new UnsupportedOperationException("setSelected");
 }
 }
