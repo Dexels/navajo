@@ -117,13 +117,13 @@ public abstract class Trigger {
 				String field = v.substring(v.length() - 1);
 				String offset = v.substring(0, v.length() - 1);
 				if ( field.equals("m")) {
-					t = new TimeTrigger(Integer.parseInt(offset), Calendar.MINUTE );
+					t = new TimeTrigger(Integer.parseInt(offset), Calendar.MINUTE);
 				}
 				if ( field.equals("h")) {
-					t = new TimeTrigger(Integer.parseInt(offset), Calendar.HOUR_OF_DAY );
+					t = new TimeTrigger(Integer.parseInt(offset), Calendar.HOUR_OF_DAY);
 				}
 				if ( field.equals("d")) {
-					t = new TimeTrigger(Integer.parseInt(offset), Calendar.DAY_OF_MONTH );
+					t = new TimeTrigger(Integer.parseInt(offset), Calendar.DAY_OF_MONTH);
 				}
 				return t;
 			}  

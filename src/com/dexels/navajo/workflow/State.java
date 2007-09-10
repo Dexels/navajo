@@ -71,7 +71,7 @@ public final class State implements Serializable, Mappable {
 		Task task = new Task(webservice, initiatingAccess.rpcUser, "", null, trigger, null);
 		task.setWorkflowDefinition(myWorkFlow.getDefinition());
 		task.setWorkflowId(myWorkFlow.getMyId());
-		Transition t = new Transition(this, nextState, task, condition);	
+		Transition t = new Transition(this, nextState, task, condition, trigger);	
 		myTransitions.add(t);
 		return t;
 	}
@@ -80,7 +80,7 @@ public final class State implements Serializable, Mappable {
 		Task task = new Task("", initiatingAccess.rpcUser, "", null, trigger, null);
 		task.setWorkflowDefinition(myWorkFlow.getDefinition());
 		task.setWorkflowId(myWorkFlow.getMyId());
-		Transition t = new Transition(this, nextState, task, condition);	
+		Transition t = new Transition(this, nextState, task, condition, trigger);	
 		myTransitions.add(t);
 		return t;
 	}

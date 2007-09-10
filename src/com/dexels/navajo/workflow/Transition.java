@@ -54,7 +54,7 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 	private boolean activationTranstion = false;
 	private String workFlowToBeActivated = null;
 	
-	public Transition(State s, String nextStateId, Task t, String condition) {
+	public Transition(State s, String nextStateId, Task t, String condition, String origTriggerDescription) {
 		myTask = t;
 		myState = s;
 		nextState = nextStateId;
@@ -62,7 +62,7 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 		if ( t.getTriggerDescription().startsWith("beforenavajo")) {
 			beforeTrigger = true;
 		}
-		trigger = t.getTriggerDescription();
+		trigger = origTriggerDescription;
 	}
 	
 	private Transition() {
@@ -180,6 +180,15 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 		if ( myState != null && myState.initiatingAccess != null ) {
 			myTask.setUsername(myState.initiatingAccess.rpcUser);
 			myTask.setPassword(myState.initiatingAccess.rpcPwd);
+		}
+		// If single event trigger, reinit trigger (to prevent time triggers from the past for offsettimes).
+		if ( myTask.getTrigger().isSingleEvent() ) {
+			try {
+				System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> REINITIALIZING TRIGGER: " + trigger);
+				myTask.setTrigger(trigger);
+			} catch (UserException e) {
+				e.printStackTrace(System.err);
+			}
 		}
 		if ( myTask.getId() == null ) {
 			TaskRunner.getInstance().addTask(myTask);

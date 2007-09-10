@@ -249,8 +249,10 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 			Navajo taskDoc = Dispatcher.getInstance().getNavajoConfig().readConfig(TASK_CONFIG);
 
 			if ( taskDoc != null ) {
+				
 				// Remove all previous tasks.
 				clearTaskMap();
+				Message allTasksMsg = taskDoc.getMessage("tasks");
 				ArrayList allTasks = taskDoc.getMessages("tasks");
 				for (int i = 0; i < allTasks.size(); i++) {
 					Message m = (Message) allTasks.get(i);
@@ -284,6 +286,9 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 							//it.printStackTrace(System.err);
 							AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Problem adding task: " + it.getMessage());
 						}
+					} else {
+						System.err.println("REMOVING WORKFLOW TASK.................................................");
+						allTasksMsg.removeMessage(m);
 					}
 				}
 				
