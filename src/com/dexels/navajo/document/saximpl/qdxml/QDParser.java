@@ -68,14 +68,14 @@ public class QDParser {
                 // We are between tags collecting text.
             } else if (mode == TEXT) {
                 if (c == '<') {
-                    st.push(new Integer(mode));
+                    st.push(Integer.valueOf(mode));
                     mode = START_TAG;
                     // if (sb.length() > 0) {
                     // doc.text(sb.toString());
                     // sb.setLength(0);
                     // }
                 } else if (c == '&') {
-                    st.push(new Integer(mode));
+                    st.push(Integer.valueOf(mode));
                     mode = ENTITY;
                     etag.setLength(0);
                 } else
@@ -138,12 +138,12 @@ public class QDParser {
             } else if (mode == START_TAG) {
                 mode = popMode(st);
                 if (c == '/') {
-                    st.push(new Integer(mode));
+                    st.push(Integer.valueOf(mode));
                     mode = CLOSE_TAG;
                 } else if (c == '?') {
                     mode = DOCTYPE;
                 } else {
-                    st.push(new Integer(mode));
+                    st.push(Integer.valueOf(mode));
                     mode = OPEN_TAG;
                     tagName = null;
                     attrs = new Hashtable();
@@ -253,7 +253,7 @@ public class QDParser {
                     // } else if (" \r\n\u0009".indexOf(c) >= 0) {
                     // sb.append(' ');
                 } else if (c == '&') {
-                    st.push(new Integer(mode));
+                    st.push(Integer.valueOf(mode));
                     mode = ENTITY;
                     etag.setLength(0);
                 } else {
