@@ -166,6 +166,8 @@ public final class AsyncStore extends GenericThread implements AsyncStoreMXBean 
       return null;
     }
     else {
+      // Always  set lastaccess timestamp when retrieving asyncmappable object.
+      ((AsyncMappable) o).setLastAccess();
       return (AsyncMappable) o;
     }
   }
