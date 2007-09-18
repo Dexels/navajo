@@ -12,6 +12,7 @@ import java.util.Iterator;
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.enterprise.queue.Queable;
+import com.dexels.navajo.util.AuditLog;
 
 public class FileStore implements MessageStore {
 
@@ -87,7 +88,7 @@ public class FileStore implements MessageStore {
 		if ( objectPointer == null ) {
 			throw new Exception("Call rewind() first before calling getNext()");
 		}
-		
+
 		if (!objectPointer.hasNext() ) {
 			objectPointer = null;
 			currentObjects.clear();
@@ -98,7 +99,7 @@ public class FileStore implements MessageStore {
 		try {
 			NavajoObjectInputStream ois = new NavajoObjectInputStream(new FileInputStream(f), NavajoConfig.getInstance().getClassloader());
 			q = (Queable) ois.readObject();
-            // Persist binary file references after reading object.
+			// Persist binary file references after reading object.
 			q.persistBinaries();
 			ois.close();
 			//System.err.println("Read object: " + q.getClass().getName() + ", retries " + q.getRetries() + ", max retries " + q.getMaxRetries());
@@ -110,12 +111,13 @@ public class FileStore implements MessageStore {
 				return q;
 			}
 			//System.err.println("This one is sleeping, try next object");
-			return getNext();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
+			System.err.println("Could not read file: " + f.getName() + " from filestore: " + e.getMessage());
 			e.printStackTrace();
 		} 
-		return null;
+
+		return getNext();
 	}
 	
 	public void putMessage(Queable handler, boolean failure) {
