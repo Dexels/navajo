@@ -455,6 +455,9 @@ public abstract class AsyncMappable implements Mappable, AsyncMappableMXBean {
   public long getLastAccess() {
     return this.lastAccess;
   }
+  public void setLastAccess() {
+	  this.lastAccess = System.currentTimeMillis();
+  }
   public void setKillOnFinnish(boolean killOnFinnish) {
     this.killOnFinnish = killOnFinnish;
   }
