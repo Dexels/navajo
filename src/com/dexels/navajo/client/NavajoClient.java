@@ -543,14 +543,14 @@ public class NavajoClient implements ClientInterface {
 			  bos.close();
 			  String error = new String(bos.toByteArray());
 			  System.err.println("Responsecode: " + respCode);
-			  System.err.println("Responsemessage: " + myCon.getResponseMessage());
+			  //System.err.println("Responsemessage: " + myCon.getResponseMessage());
 			  System.err.println("Got error from server: " + error);
 			  // close the errorstream
 			  es.close();
 			  return "HTTP Status error " + respCode;
 		  }
 	  } catch (IOException ioe) {
-		  ioe.printStackTrace(System.err);
+		  //ioe.printStackTrace(System.err);
 	  }
 	  return null;
   }
@@ -563,7 +563,7 @@ public class NavajoClient implements ClientInterface {
    * @param useCompression boolean
    */
   
-  protected InputStream doTransaction(String name, Navajo d, boolean useCompression, boolean forcePreparseProxy) throws IOException, ClientException, NavajoException, javax.net.ssl.SSLHandshakeException {
+  protected Navajo doTransaction(String name, Navajo d, boolean useCompression, boolean forcePreparseProxy) throws IOException, ClientException, NavajoException, javax.net.ssl.SSLHandshakeException {
     URL url;
     //useCompression = false;
     
@@ -616,12 +616,14 @@ public class NavajoClient implements ClientInterface {
     } catch (Throwable e) {
      	System.err.println("setChunkedStreamingMode does not exist, upgrade to java 1.5+");
     }
+    //con.setReadTimeout(500);
     
     // Send message
     if (useCompression) {
     	con.setRequestProperty("Accept-Encoding", "jzlib");
     	con.setRequestProperty("Content-Encoding", "jzlib");
-    	
+    	//con.connect();
+    	   
     	BufferedWriter out = null;
     	try {
     		out = new BufferedWriter(new OutputStreamWriter(new ZOutputStream(con.getOutputStream(), JZlib.Z_BEST_SPEED), "UTF-8"));
@@ -638,6 +640,8 @@ public class NavajoClient implements ClientInterface {
     	}
     }
     else {
+    	//con.connect();
+    	   
     	BufferedWriter os = null;
     	try {
     		os = new BufferedWriter(new OutputStreamWriter(con.getOutputStream(), "UTF-8"));
@@ -655,15 +659,30 @@ public class NavajoClient implements ClientInterface {
     }
 
     // Check for errors.
-    if ( con.getResponseCode() >= 400 ) {
-    	throw new IOException(readErrorStream(con));
-    } else {
-    	if ( useCompression ) {
-    		return new ZInputStream(con.getInputStream());
+    InputStream in = null;
+    Navajo n = null;
+    try {
+    	if ( con.getResponseCode() >= 400 ) {
+    		throw new IOException(readErrorStream(con));
     	} else {
-    		return con.getInputStream();
+    		if ( useCompression ) {
+    			in = new ZInputStream(con.getInputStream());
+    		} else {
+    			in = con.getInputStream();
+    		}
     	}
-    } 
+    	if ( in != null ) {
+    		n = NavajoFactory.getInstance().createNavajo(in);
+    	}
+    } finally {
+    	if ( in != null ) {
+    		in.close();
+    		in = null;
+    	}
+    	//con.disconnect();
+    }
+    
+	return n;
   }
 
   /**
@@ -807,18 +826,14 @@ public class NavajoClient implements ClientInterface {
  		}
      	 
     	 
-    	 
-        InputStream in = null;
         Navajo n = null;
        
         long timeStamp = System.currentTimeMillis();
         
         try {	
-        	in = doTransaction(server, out, useCompression, allowPreparseProxy);
-        	n = NavajoFactory.getInstance().createNavajo(in);
-        	if ( in != null ) {
-        		in.close();
-        		in = null;
+        	n = doTransaction(server, out, useCompression, allowPreparseProxy);
+        	if ( n == null ) {
+        		throw new Exception("Empty Navajo received");
         	}
         }
         catch (javax.net.ssl.SSLException ex) {
@@ -834,38 +849,33 @@ public class NavajoClient implements ClientInterface {
           generateConnectionError(n, 55555, "No route to host: " + uhe.getMessage());
         }
         catch (java.net.SocketException uhe) {
-          n = NavajoFactory.getInstance().createNavajo();
-          in = retryTransaction(server, out, useCompression, allowPreparseProxy, retryAttempts, retryInterval, n); // lees uit resource
-          if (in != null) {
-        	  n = null;
-          }
-          if (n == null) {
-              n = NavajoFactory.getInstance().createNavajo(in);
-              in.close();
+          Navajo n2 = NavajoFactory.getInstance().createNavajo();
+          n = retryTransaction(server, out, useCompression, allowPreparseProxy, retryAttempts, retryInterval, n); // lees uit resource
+          if (n != null) {
+             
               System.err.println("METHOD: "+method+" sourcehead: "+callingService+" sourceSource: "+out.getHeader().getHeaderAttribute("sourceScript")+" outRPCName: "+n.getHeader().getRPCName());
               n.getHeader().setHeaderAttribute("sourceScript", callingService);
+          } else {
+        	  n = n2;
           }
         }
         catch (IOException uhe) {
-        	uhe.printStackTrace();
+        	//uhe.printStackTrace();
         	//readErrorStream(myCon);
           System.err.println("Generic IOException: "+uhe.getMessage()+". Retrying without compression...");
-          n = NavajoFactory.getInstance().createNavajo();
-          in = retryTransaction(server, out, false, allowPreparseProxy, retryAttempts, retryInterval, n); // lees uit resource
-
-          if (in != null) {
-            n = null;
-          }
-          if (n == null) {
-              n = NavajoFactory.getInstance().createNavajo(in);
+          Navajo n2 = NavajoFactory.getInstance().createNavajo();
+          n = retryTransaction(server, out, false, allowPreparseProxy, retryAttempts, retryInterval, n); // lees uit resourc
+          if (n != null) {
               System.err.println("METHOD: "+method+" sourcehead: "+callingService+" sourceSource: "+out.getHeader().getHeaderAttribute("sourceScript")+" outRPCName: "+n.getHeader().getRPCName());
               n.getHeader().setHeaderAttribute("sourceScript", callingService);
+          } else {
+        	  n = n2;
           }
         } catch(Throwable r) {
         	r.printStackTrace();
         }
         finally {
-        	 if (n.getHeader()!=null) {
+        	 if ( n != null && n.getHeader()!=null) {
                  n.getHeader().setHeaderAttribute("sourceScript", callingService);
                  clientTime = (System.currentTimeMillis()-timeStamp);
                  n.getHeader().setHeaderAttribute("clientTime", ""+clientTime);
@@ -899,13 +909,6 @@ public class NavajoClient implements ClientInterface {
 				} else {
 					System.err.println("Null header in input message");
 				}
-            if (in!=null) {
-                try {
-                    in.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
         }
 
         if (myResponder != null) {
@@ -989,7 +992,7 @@ public class NavajoClient implements ClientInterface {
 
   }
 
-private final InputStream retryTransaction(String server, Navajo out, boolean useCompression, boolean allowPreparseProxy, int attemptsLeft, long interval, Navajo n) throws Exception {
+private final Navajo retryTransaction(String server, Navajo out, boolean useCompression, boolean allowPreparseProxy, int attemptsLeft, long interval, Navajo n) throws Exception {
 	InputStream in = null;
     
     globalRetryCounter++;
@@ -1012,9 +1015,9 @@ private final InputStream retryTransaction(String server, Navajo out, boolean us
     	} catch (InterruptedException e) {
     		e.printStackTrace();
     	}
-    	in = doTransaction(server, out, useCompression, allowPreparseProxy);
+    	Navajo doc = doTransaction(server, out, useCompression, allowPreparseProxy);
     	System.err.println("It worked!  the inputstream is: " + in);
-    	return in;
+    	return doc;
     }
     catch (javax.net.ssl.SSLException ex) {
     	generateConnectionError(n, 666666, "Wrong certificate or ssl connection problem: " + ex.getMessage());
@@ -1053,7 +1056,7 @@ private final InputStream retryTransaction(String server, Navajo out, boolean us
     		return retryTransaction(server, out, false, allowPreparseProxy, attemptsLeft, interval, n);
     	}
     }
-    return in;
+    return null;
   }
 
 
@@ -1550,9 +1553,8 @@ private final InputStream retryTransaction(String server, Navajo out, boolean us
 	    int total = 100;
 	    for ( int i = 0; i < total; i++ ) {
 	    	System.err.println("i = " + i);
-	    	InputStream input = nc.doTransaction("penelope1.dexels.com/sportlink/knvb/servlet/Postman", doc, true, false);
-		    Navajo doc2 =  NavajoFactory.getInstance().createNavajo(input);
-		    input.close();
+	    	Navajo doc2 = nc.doTransaction("penelope1.dexels.com/sportlink/knvb/servlet/Postman", doc, true, false);
+		   
 		    //doc2.write(System.err);
 		  
 	    }
@@ -1583,14 +1585,13 @@ private final void ping() {
 						System.err.println("servers: " + serverUrls.length);
 						for (int i = 0; i < serverUrls.length; i++) {
 							try {
-								InputStream in  = doTransaction(serverUrls[i], out, false, false);
-								Navajo n = NavajoFactory.getInstance().createNavajo(in);
-								in.close();
-								in = null;
-								Header h = n.getHeader();
-								String load =  h.getHeaderAttribute("cpuload");
-								serverLoads[i] = Double.parseDouble(load);
-								System.err.println(serverUrls[i] + "=" + serverLoads[i]);
+								Navajo n  = doTransaction(serverUrls[i], out, false, false);
+								if ( n != null ) {
+									Header h = n.getHeader();
+									String load =  h.getHeaderAttribute("cpuload");
+									serverLoads[i] = Double.parseDouble(load);
+									System.err.println(serverUrls[i] + "=" + serverLoads[i]);
+								}
 							} catch (Throwable e) {
 								e.printStackTrace(System.err);
 							}
