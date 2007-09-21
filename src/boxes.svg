@@ -1,0 +1,23 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<svg viewBox="0 0 400 700">
+   <g>
+      <rect id="box1" x="0" y="0" width="100" height="100" fill="#ff6">
+         <animateColor id="box1.focusin" attributeName="fill" begin="box1.focusin" from="#ff6" keySplines=".5 0 .5 1" to="#6ff" dur="0.5" calcMode="spline" fill="freeze" />
+         <animateColor id="box1.focusout" attributeName="fill" begin="box1.focusout" from="#6ff" keySplines=".5 0 .5 1" to="#ff6" dur="0.5" calcMode="spline" fill="freeze" />
+      </rect>
+      <rect id="box2" x="100" y="0" width="100" height="100" fill="#ff6">
+         <animateColor id="box2.focusin" attributeName="fill" begin="box2.focusin" from="#ff6" keySplines=".5 0 .5 1" to="#6ff" dur="0.5" calcMode="spline" fill="freeze" />
+         <animateColor id="box2.focusout" attributeName="fill" begin="box2.focusout" from="#6ff" keySplines=".5 0 .5 1" to="#ff6" dur="0.5" calcMode="spline" fill="freeze" />
+      </rect>
+      <rect id="box3" x="200" y="0" width="100" height="100" fill="#ff6">
+         <animateColor id="box3.focusin" attributeName="fill" begin="box3.focusin" from="#ff6" keySplines=".5 0 .5 1" to="#6ff" dur="0.5" calcMode="spline" fill="freeze" />
+         <animateColor id="box3.focusout" attributeName="fill" begin="box3.focusout" from="#6ff" keySplines=".5 0 .5 1" to="#ff6" dur="0.5" calcMode="spline" fill="freeze" />
+      </rect>
+      <rect id="box4" x="300" y="0" width="100" height="100" fill="#ff6">
+         <animateColor id="box4.focusin" attributeName="fill" begin="box4.focusin" from="#ff6" keySplines=".5 0 .5 1" to="#6ff" dur="0.5" calcMode="spline" fill="freeze" />
+         <animateColor id="box4.focusout" attributeName="fill" begin="box4.focusout" from="#6ff" keySplines=".5 0 .5 1" to="#ff6" dur="0.5" calcMode="spline" fill="freeze" />
+      </rect>
+   
+   </g>
+</svg>

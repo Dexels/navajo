@@ -85,7 +85,7 @@ public class SvgBatikComponent extends SvgBaseComponent {
 		// TimedElement te = AnimationSupport.getTimedElementById(animId, ee);
 		// System.err.println("TE: "+te);
 		// System.err.println("boing? "+b);
-		bridgeContext.getAnimationEngine().startElement(animId);
+//		bridgeContext.getAnimationEngine().startElement(animId);
 		// te.beginElement();
 
 		// if (um != null) {
@@ -158,7 +158,7 @@ public class SvgBatikComponent extends SvgBaseComponent {
 			public void gvtRenderingCompleted(GVTTreeRendererEvent e) {
 				System.err.println("");
 			}
-		});
+		}); 
 		// svgCanvas.addPropertyChangeListener(arg0, arg1)
 		svgCanvas.setURI(u.toString());
 		// svgCanvas.setURI(BatikTest.class.getClassLoader().getResource("Orc.svg").toString());
