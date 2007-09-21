@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="744.09448819"
+   height="1052.3622047"
+   id="svg2"
+   sodipodi:version="0.32"
+   inkscape:version="0.45.1"
+   sodipodi:docbase="C:\Documents and Settings\Frank Lyaruu"
+   sodipodi:docname="drawing.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     gridtolerance="10000"
+     guidetolerance="10"
+     objecttolerance="10"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.24609375"
+     inkscape:cx="496.75598"
+     inkscape:cy="598.73118"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     inkscape:window-width="748"
+     inkscape:window-height="579"
+     inkscape:window-x="1605"
+     inkscape:window-y="236" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <text
+       xml:space="preserve"
+       style="font-size:12px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+       x="270.66669"
+       y="284.10822"
+       id="text2178"><tspan
+         sodipodi:role="line"
+         id="tspan2180"
+         x="270.66669"
+         y="284.10822">Apenoot</tspan></text>
+    <path
+       sodipodi:type="star"
+       style="fill:#ffff00;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       id="path2182"
+       sodipodi:sides="5"
+       sodipodi:cx="292.57143"
+       sodipodi:cy="524.10822"
+       sodipodi:r1="297.0799"
+       sodipodi:r2="148.53995"
+       sodipodi:arg1="0.87255544"
+       sodipodi:arg2="1.500874"
+       inkscape:flatsided="false"
+       inkscape:rounded="0"
+       inkscape:randomized="0"
+       d="M 483.55556,751.66377 L 302.94924,672.2852 L 135.17059,776.06344 L 154.85368,579.76729 L 4.3082437,452.26956 L 197.07938,410.33044 L 271.81584,227.75426 L 371.27187,398.1306 L 568.00697,412.79005 L 436.70304,560.02755 L 483.55556,751.66377 z " />
+  </g>
+</svg>

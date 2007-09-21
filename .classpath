@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/batik-all.jar"/>
+	<classpathentry kind="lib" path="lib/xml-apis.jar"/>
+	<classpathentry kind="lib" path="lib/xml-apis-ext.jar"/>
+	<classpathentry kind="lib" path="lib/jzlib.jar"/>
+	<classpathentry kind="lib" path="lib/NavajoClient.jar"/>
+	<classpathentry kind="lib" path="lib/NavajoDocument.jar"/>
+	<classpathentry kind="lib" path="lib/NavajoRuntime.jar"/>
+	<classpathentry kind="lib" path="lib/NavajoSwingTipi.jar"/>
+	<classpathentry kind="lib" path="lib/tipipackage.jar"/>
+	<classpathentry kind="lib" path="lib/NavajoSwingClient.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

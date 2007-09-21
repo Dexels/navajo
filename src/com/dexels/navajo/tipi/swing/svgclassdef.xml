@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tid errorhandler="error">
+    
+    <tipiclass addtocontainer="true" childcount="*" class="TipiSvgComponent" layoutmanager="false"
+        module="container" name="svg" package="com.dexels.navajo.tipi.swing.svg"
+        studio-icon="tabs.gif" type="tipi">
+        <events>
+            <event name="onInstantiate"/>
+            <event name="onSvgLoad">
+                <param name="service" type="string"/>
+            </event>
+			<event name="onClick">
+                <param name="id" type="string"/>
+            </event>
+            <event name="onMouseDown">
+                <param name="id" type="string"/>
+            </event>
+            <event name="onMouseUp">
+                <param name="id" type="string"/>
+            </event>
+            <event name="onMouseOut">
+                <param name="id" type="string"/>
+            </event>
+            <event name="onMouseOver">
+                <param name="id" type="string"/>
+            </event>
+            <event name="onAnimationStarted">
+                <param name="id" type="string"/>
+                <param name="targetId" type="string"/>
+            </event>
+            <event name="onAnimationEnded">
+                <param name="id" type="string"/>
+                <param name="targetId" type="string"/>
+            </event>                        
+        </events>
+        <values>
+            <value direction="in" name="image" type="resource"/>
+            <value direction="in" name="ids" type="string"/>
+        </values>
+        <methods>
+            <method name="fireAnimation">
+                <param name="id" type="string"/>
+            </method>
+        </methods>
+    </tipiclass>  
+    
+        <tipiclass addtocontainer="true" childcount="*" class="TipiRegionSelectComponent" layoutmanager="false"
+        module="container" name="svgregion" package="com.dexels.navajo.tipi.swing.svg"
+        studio-icon="tabs.gif" type="tipi">
+        <events>
+            <event name="onInstantiate"/>
+            <event name="onSvgLoad">
+                <param name="service" type="string"/>
+            </event>
+         <event name="onClick">
+                <param name="id" type="string"/>
+            </event>
+      <event name="onActivate">
+                <param name="id" type="string"/>
+            </event>
+            <event name="onMouseDown">
+                <param name="id" type="string"/>
+            </event>
+            <event name="onMouseUp">
+                <param name="id" type="string"/>
+            </event>
+            <event name="onMouseOut">
+                <param name="id" type="string"/>
+            </event>
+            <event name="onMouseOver">
+                <param name="id" type="string"/>
+            </event>
+            <event name="onAnimationStarted">
+                <param name="id" type="string"/>
+                <param name="targetId" type="string"/>
+            </event>
+            <event name="onAnimationEnded">
+                <param name="id" type="string"/>
+                <param name="targetId" type="string"/>
+            </event>                        
+        </events>
+        <values>
+            <value direction="in" name="image" type="resource"/>
+            <value direction="in" name="ids" type="string"/>
+        </values>
+        <methods>
+            <method name="fireAnimation">
+                <param name="id" type="string"/>
+            </method>
+        </methods>
+    </tipiclass>  
+</tid>
