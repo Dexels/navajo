@@ -34,7 +34,7 @@ public class NavajoSocketClient extends ClientQueueImpl {
         inoutCount--;
     }
 
-    protected InputStream doTransaction(String name, Navajo d, boolean useCompression, boolean forcePreparseProxy) throws IOException, ClientException, NavajoException, javax.net.ssl.SSLHandshakeException {
+    protected Navajo doTransaction(String name, Navajo d, boolean useCompression, boolean forcePreparseProxy) throws IOException, ClientException, NavajoException, javax.net.ssl.SSLHandshakeException {
         Socket connection = null;
          if (connection==null) {
             connection = initialize();
@@ -48,7 +48,12 @@ public class NavajoSocketClient extends ClientQueueImpl {
             initialize();
             bi = doTransaction(connection, name, d, useCompression);
         }
-         return bi;
+        Navajo n = null;
+        if ( bi != null ) {
+        	n = NavajoFactory.getInstance().createNavajo(bi);
+        }
+        bi.close();
+         return n;
 //        return null;
     }
     
