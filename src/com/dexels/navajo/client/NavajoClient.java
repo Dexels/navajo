@@ -544,7 +544,7 @@ public class NavajoClient implements ClientInterface {
 			  String error = new String(bos.toByteArray());
 			  System.err.println("Responsecode: " + respCode);
 			  //System.err.println("Responsemessage: " + myCon.getResponseMessage());
-			  System.err.println("Got error from server: " + error);
+			  //System.err.println("Got error from server: " + error);
 			  // close the errorstream
 			  es.close();
 			  return "HTTP Status error " + respCode;
