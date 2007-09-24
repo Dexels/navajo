@@ -1206,6 +1206,7 @@
         </values>
         <methods>
             <method name="updateProperty"/>
+            <method name="requestFocus"/>
         </methods>
     </tipiclass>
 

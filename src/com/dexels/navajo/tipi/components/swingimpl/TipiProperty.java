@@ -469,12 +469,20 @@ public class TipiProperty
   }
 
   protected void performComponentMethod(final String name, final TipiComponentMethod compMeth, TipiEvent event) {
-      runSyncInEventThread(new Runnable() {
-        public void run() {
-            updateProperty();
-        }
-      });
+      if("updateProperty".equals(name)){
+      	runSyncInEventThread(new Runnable() {
+      		public void run() {
+            	updateProperty();
+      		}
+      	});
+      }else if("requestFocus".equals(name)){
+      	requestPropertyFocus();
+      }
     }
+  
+  private void requestPropertyFocus(){
+  	( (GenericPropertyComponent) getContainer()).requestPropertyFocus();
+  }
 
   public void processStyles() {
 	  GenericPropertyComponent gp = (GenericPropertyComponent)getContainer();

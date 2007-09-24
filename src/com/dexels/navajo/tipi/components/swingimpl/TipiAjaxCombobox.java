@@ -5,7 +5,7 @@ import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
 
-import javax.annotation.security.*;
+//import javax.annotation.security.*;
 import javax.swing.*;
 import javax.swing.text.*;
 
@@ -14,7 +14,7 @@ import com.dexels.navajo.swingclient.components.remotecombobox.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.internal.*;
-import com.jhlabs.image.*;
+//import com.jhlabs.image.*;
 
 /**
  * <p>
