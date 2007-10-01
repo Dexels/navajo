@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/activation.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/Grus.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/jaxpimpl.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/jzlib.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/log4j-1.2.8.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/mail.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/mysql.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/NanoImpl.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/NavajoAdapters.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/NavajoBIRTAdapter.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/NavajoClient.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/NavajoDashboard.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/NavajoDocument.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/NavajoEnterprise.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/NavajoFunctions.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/NavajoListeners.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/NavajoLogger.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/NavajoRuntime.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/NavajoServer.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
