@@ -3,7 +3,6 @@
         <property name="documentClass" value="com.dexels.navajo.document.base.BaseNavajoFactoryImpl"/>
         <property name="instance_name" value="Navajo Demo Server"/>
         <message name="paths">
-            <property name="root" value="/home/matthijs/workspace/NavajoServer"/>
             <property name="scripts" value="scripts"/>
             <property name="adapters" value="adapters"/>
             <property name="configuration" value="config"/>
