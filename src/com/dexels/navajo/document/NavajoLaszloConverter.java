@@ -310,6 +310,7 @@ public class NavajoLaszloConverter {
 				prop.setAttribute("description", current.getDescription());
 				prop.setAttribute("direction", current.getDirection());
 				prop.setAttribute("type", current.getType());
+				prop.setAttribute("subtype", current.getSubType());
 				prop.setAttribute("length", "" + current.getLength());
 
 				
