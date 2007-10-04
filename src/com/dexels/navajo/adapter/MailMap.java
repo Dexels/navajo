@@ -386,22 +386,26 @@ public class MailMap implements Mappable, com.dexels.navajo.server.enterprise.qu
 
   public final void persistBinaries() {
 	  // Make sure binary attachements do not get garbage collected, persist them.
-	  for (int i = 0; i < attachments.size(); i++) {
-		  AttachementMap am = (AttachementMap) attachments.get(i);
-		  Binary content = am.getAttachFileContent();
-		  if ( content != null ) {
-			  String fileRef = content.getTempFileName(true);
+	  if ( attachments != null ) {
+		  for (int i = 0; i < attachments.size(); i++) {
+			  AttachementMap am = (AttachementMap) attachments.get(i);
+			  Binary content = am.getAttachFileContent();
+			  if ( content != null ) {
+				  String fileRef = content.getTempFileName(true);
+			  }
 		  }
 	  }
   }
 
   public void removeBinaries() {
-	  // Un-persist binary attachments.
-	  for (int i = 0; i < attachments.size(); i++) { 
-		  AttachementMap am = (AttachementMap) attachments.get(i);
-		  Binary content = am.getAttachFileContent();
-		  if ( content != null ) {
-			  content.removeRef();
+	  if ( attachments != null ) {
+		  // Un-persist binary attachments.
+		  for (int i = 0; i < attachments.size(); i++) { 
+			  AttachementMap am = (AttachementMap) attachments.get(i);
+			  Binary content = am.getAttachFileContent();
+			  if ( content != null ) {
+				  content.removeRef();
+			  }
 		  }
 	  }
   }
