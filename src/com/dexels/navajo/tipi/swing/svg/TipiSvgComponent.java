@@ -15,6 +15,13 @@ import com.dexels.navajo.tipi.swing.svg.impl.*;
 public class TipiSvgComponent extends TipiSwingDataComponentImpl implements
 		SvgMouseListener, SvgAnimationListener {
 
+
+	protected SvgBaseComponent myComponent = null;
+	private String registeredIds;
+//
+//	private int preferredHeight = 20;
+//	private int preferredWidth = 20;
+//	
 	@Override
 	protected void performComponentMethod(String name,
 			TipiComponentMethod compMeth, TipiEvent event)
@@ -27,7 +34,7 @@ public class TipiSvgComponent extends TipiSwingDataComponentImpl implements
 				myComponent.fireAnimation(id);
 			}
 		}
-	}
+	} 
 
 	@Override
 	protected void setComponentValue(String name, Object object) {
@@ -51,17 +58,28 @@ public class TipiSvgComponent extends TipiSwingDataComponentImpl implements
 			
 		}
 		if(name.equals("ids")) {
+			registeredIds = (String)object;
 			myComponent.setRegisteredIds((String)object);
 		}
-		
-	}
+//		if(name.equals("preferredHeight")) {
+//			myComponent.setRegisteredIds((String)object);
+//		}
+//		if(name.equals("preferredWidth")) {
+//			myComponent.setRegisteredIds((String)object);
+//		}
 
-	protected SvgBaseComponent myComponent = null;
+	}
 
 	public Object createContainer() {
 		myComponent = new SvgBatikComponent();
 		myComponent.addSvgAnimationListener(this);
 		myComponent.addSvgMouseListener(this);
+		myComponent.addSvgDocumentListener(new SvgDocumentAdapter(){
+
+			public void onDocumentLoadingFinished() {
+				myComponent.setRegisteredIds(registeredIds);
+			}
+		});
 		//myComponent.add
 		return myComponent;
 	}
