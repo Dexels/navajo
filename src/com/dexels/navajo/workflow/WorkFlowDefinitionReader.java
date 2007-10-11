@@ -95,8 +95,8 @@ public final class WorkFlowDefinitionReader {
 					XMLElement ep = (XMLElement) exp.get(e);
 					String expression = (String) ep.getAttribute("value");
 					String cond = (String) ep.getAttribute("condition");
-					String source = (String) ep.getAttribute("source"); 
-					al.add(new ConditionalExpression(cond, expression, source));
+					String navajoToUse = (String) ep.getAttribute("navajo"); 
+					al.add(new ConditionalExpression(cond, expression, navajoToUse));
 				}
 				trans.addParameter(paramname, al);	
 			}
@@ -108,6 +108,9 @@ public final class WorkFlowDefinitionReader {
 			String service = readAttribute(t,"service");
 			String trigger = readAttribute(t,"trigger");
 			String condition = readAttribute(t,"condition");
+			// Optional: username/password.
+			String username = readAttribute(t,"username");
+			String password = readAttribute(t,"password");
 			//  Optional, specificy whether to use request or response navajo of the current workflow state.
 			String navajo = readAttribute(t,"navajo");
 			s.addTask(service, trigger, condition, navajo);
@@ -149,8 +152,8 @@ public final class WorkFlowDefinitionReader {
 						String cond = (String) ep.getAttribute("condition");
 						// source can specify the navajo to use:
 						// [wfstate]":"["request"|"response"].
-						String source = (String) ep.getAttribute("source"); 
-						al.add(new ConditionalExpression(cond, expression, source));
+						String navajoToUse = (String) ep.getAttribute("navajo"); 
+						al.add(new ConditionalExpression(cond, expression, navajoToUse));
 					}
 					trans.addParameter(paramname, al);	
 				}

@@ -6,6 +6,8 @@
  */
 package com.dexels.navajo.util;
 
+import com.dexels.navajo.server.Dispatcher;
+
 /**
  * @author Arjen
  *
@@ -21,7 +23,12 @@ public final class AuditLog {
 	public final static String AUDIT_MESSAGE_CLOCK = "AUDIT LOG (Clock): ";
 	public final static String AUDIT_MESSAGE_WORKFLOW = "AUDIT LOG (Workflow): ";
 
+	private static volatile String instanceName;
+	
 	public final static void log(String subsystem, String message) {
-		System.err.println(subsystem + message);
+		if ( instanceName == null && Dispatcher.getInstance() != null ) {
+			instanceName = Dispatcher.getInstance().getNavajoConfig().getInstanceName();
+		}
+		System.err.println(instanceName + ":" + subsystem + message);
 	}
 }

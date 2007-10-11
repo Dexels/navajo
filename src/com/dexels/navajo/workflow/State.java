@@ -55,6 +55,10 @@ public final class State implements Serializable, Mappable {
 		}
 	}
 	
+	public void addTask(String webservice, String trigger, String condition, String navajo, String username, String password) throws IllegalTrigger, IllegalTask  {
+		
+	}
+	
 	public void addTask(String webservice, String trigger, String condition, String navajo) throws IllegalTrigger, IllegalTask  {
 		if ( trigger == null || trigger.equals("")) {
 			trigger = "time:now";

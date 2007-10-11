@@ -3,6 +3,7 @@ package com.dexels.navajo.scheduler;
 import java.io.Serializable;
 
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.GenericThread;
 
 /**
@@ -74,7 +75,9 @@ public class AfterTaskTrigger extends Trigger implements TaskListener, Serializa
 		
 		if ( myDescription.equals(t.getId() ) ){
 			setSingleEvent(t.getTrigger().isSingleEvent());
-			spawnTask(request);
+			// Clone myself before calling spawnTask...
+			AfterTaskTrigger att = (AfterTaskTrigger) this.clone();
+			att.spawnTask(request);
 		}
 	}
 
@@ -83,6 +86,11 @@ public class AfterTaskTrigger extends Trigger implements TaskListener, Serializa
 
 		}
 		return true;
+	}
+
+	public Navajo perform() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

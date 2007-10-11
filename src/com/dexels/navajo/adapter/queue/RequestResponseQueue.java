@@ -8,7 +8,10 @@ import com.dexels.navajo.server.GenericThread;
 import com.dexels.navajo.server.enterprise.queue.Queable;
 import com.dexels.navajo.server.enterprise.queue.RequestResponseQueueInterface;
 import com.dexels.navajo.server.jmx.JMXHelper;
+import com.dexels.navajo.tribe.SharedStoreException;
+import com.dexels.navajo.tribe.SharedStoreFactory;
 import com.dexels.navajo.util.AuditLog;
+import com.dexels.navajo.workflow.WorkFlow;
 
 public class RequestResponseQueue extends GenericThread implements RequestResponseQueueMXBean, RequestResponseQueueInterface {
 
@@ -24,7 +27,7 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 	private int MAX_THREADS = 25;
 	private long SLEEPING_TIME = 60000;
 	private int MAX_RETRIES = 10;
-	private static HashSet runningThreads = new HashSet();
+	private static HashSet<Thread> runningThreads = new HashSet<Thread>();
 	
 	// Exposed fields.
 	public int currentThreads = 0;
@@ -55,10 +58,10 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 		ArrayList<QueuedAdapter> l = new ArrayList<QueuedAdapter>();
 		RequestResponseQueue q = RequestResponseQueue.getInstance();
 		if ( q != null ) {
-			HashSet s = q.myStore.getQueuedAdapters();
-			Iterator i = s.iterator();
+			HashSet<QueuedAdapter> s = q.myStore.getQueuedAdapters();
+			Iterator<QueuedAdapter> i = s.iterator();
 			while ( i.hasNext() ) {
-				QueuedAdapter qa = (QueuedAdapter) i.next();
+				QueuedAdapter qa = i.next();
 				if ( qa.handler.getAccess().accessID.equals(a) ) {
 					l.add(qa);
 				}
@@ -127,6 +130,9 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 		RequestResponseQueue rrq = RequestResponseQueue.getInstance();
 		handler.persistBinaries();
 		rrq.myStore.putMessage(handler, false);
+		synchronized (instance) {
+			instance.notifyAll();
+		}
 	}
 	
 	public void asyncwork(final Queable handler) {
@@ -138,6 +144,7 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 				//JMXHelper.registerMXBean(handler, JMXHelper.QUEUED_ADAPTER_DOMAIN, qid);
 				try {
 					doingWork = true;
+					//System.err.println("About to perform handler: " + handler.getClass().getName());
 					if ( handler.send() && !emptyQueue) {
 						// Make sure that request payload get garbage collected by removing ref.
 						handler.removeBinaries();
@@ -161,7 +168,7 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 						runningThreads.remove(this);
 					}
 				}
-				System.err.println("....Finished asyncwork thread");
+				//System.err.println("....Finished asyncwork thread");
 			}
 			
 		};
@@ -186,7 +193,8 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 	
 	public void worker() {
 
-		HashSet set = new HashSet();
+		//System.err.println("IN requestresponsequeue worker....................");
+		HashSet<Queable> set = new HashSet<Queable>();
 		Queable handler = null;
 		if ( !queueOnly) {
 			// Add all work in private Set.
@@ -201,26 +209,34 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 			}
 			// Iterate over private set to do work.
 			if ( !emptyQueue ) {
-				Iterator iter = set.iterator();
+				Iterator<Queable> iter = set.iterator();
 				while ( iter.hasNext() && !emptyQueue ) {
-					handler = (Queable) iter.next();
+					handler = iter.next();
 					// Only handle MAX_THREADS at a time...
 					while ( currentThreads >= MAX_THREADS ) {
 						try {
 							Thread.sleep(500);
 						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
 						}
 					}
 					// Spawn worker thread.
 					asyncwork(handler);	
 				}
 			}
-
 		}
 	}
 
+	public void inactive() {
+		synchronized (instance) {
+			try {
+				//System.err.println("RequestResponseQueue becoming inactive....");
+				instance.wait(60000);
+			} catch (InterruptedException e) {
+
+			}
+		}
+	}
+	
 	public void emptyQueue() {
 		try {
 			emptyQueue = true;
@@ -266,6 +282,10 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 
 	public String getVERSION() {
 		return VERSION;
+	}
+
+	public MessageStore getMyStore() {
+		return myStore;
 	}
 
 }

@@ -1,8 +1,11 @@
 package com.dexels.navajo.adapter.queue;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectStreamClass;
 
-public class NavajoObjectInputStream extends ObjectInputStream {
+public final class NavajoObjectInputStream extends ObjectInputStream {
 
 	private ClassLoader classLoader;
 

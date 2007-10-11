@@ -51,5 +51,10 @@ public class MemoryStore implements MessageStore {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	public void takeOverPersistedAdapters(String fromServer) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

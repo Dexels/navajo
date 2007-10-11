@@ -13,5 +13,6 @@ public interface MessageStore {
 	public void emptyQueue();
 	public HashSet<QueuedAdapter> getQueuedAdapters();
 	public HashSet<QueuedAdapter> getDeadQueue();
+	public void takeOverPersistedAdapters(String fromServer);
 	
 }

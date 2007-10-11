@@ -64,6 +64,8 @@ public class Worker extends GenericThread implements WorkerMXBean, WorkerInterfa
 	public int notWrittenSize;
 	private int fileCount = 0;
 	public int violationCount = 0;
+	public String requestId;
+	public boolean isRunning;
 	
 	public static final String VERSION = "$Id$";
 	
@@ -507,5 +509,22 @@ public class Worker extends GenericThread implements WorkerMXBean, WorkerInterfa
 		
 		System.err.println(aap);
 		System.getProperties().list(System.err);
+	}
+
+	/**
+	 * This method is used to introspect a running request.
+	 * 
+	 * @param requestId
+	 */
+	public void setRequestId(String requestId) {
+		this.requestId = requestId;
+	}
+	
+	public boolean getIsRunning() {
+		if ( getInstance().runningRequestIds.containsKey(requestId) ) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 }

@@ -1,6 +1,7 @@
 package com.dexels.navajo.workflow;
 
 import java.io.Serializable;
+import java.util.StringTokenizer;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
@@ -40,12 +41,26 @@ public class WorkFlowTask implements Serializable, TaskListener {
 				myTask.setUsername(myState.initiatingAccess.rpcUser);
 				myTask.setPassword(myState.initiatingAccess.rpcPwd);
 			}
-			if ( navajoToUse != null && navajoToUse.equalsIgnoreCase("request") && myState.initiatingAccess.getInDoc() != null ) {
+			if ( navajoToUse != null && getSourceState().equals(".") && getSourceDirection().equalsIgnoreCase("request") && myState.initiatingAccess.getInDoc() != null ) {
 				myState.getWorkFlow().mergeWithParmaters(myState.initiatingAccess.getInDoc());
 				myTask.setRequest(myState.initiatingAccess.getInDoc());
-			} else if ( navajoToUse != null && navajoToUse.equalsIgnoreCase("response") && myState.initiatingAccess.getInDoc() != null ) {
+			} else if ( navajoToUse != null && getSourceState().equals(".") && getSourceDirection().equalsIgnoreCase("response") && myState.initiatingAccess.getOutputDoc() != null ) {
 				myState.getWorkFlow().mergeWithParmaters(myState.initiatingAccess.getOutputDoc());
 				myTask.setRequest(myState.initiatingAccess.getOutputDoc());
+			} else if ( navajoToUse != null && !getSourceState().equals(".") ) { // Could be that historic state is referenced.
+				String state = getSourceState();
+				String reqresponse = getSourceDirection();
+				State h = myState.getWorkFlow().getHistoricState(state);
+				Navajo alt = null;
+				if ( h != null && h.getInitiatingAccess() != null ) {
+					if ( reqresponse.equals("response") ) {
+						alt = h.getInitiatingAccess().getOutputDoc();
+					} else {
+						alt = h.getInitiatingAccess().getInDoc();
+					}
+				}
+				myState.getWorkFlow().mergeWithParmaters(alt);
+				myTask.setRequest(alt);
 			} else if ( myState.aftertaskentry &&  myState.initiatingAccess.getOutputDoc() != null ) {
 				myState.getWorkFlow().mergeWithParmaters(myState.initiatingAccess.getOutputDoc());
 				myTask.setRequest(myState.initiatingAccess.getOutputDoc());
@@ -100,5 +115,39 @@ public class WorkFlowTask implements Serializable, TaskListener {
 
 	public String getDescription() {
 		return "task:" + myTask.getWebservice();
+	}
+	
+	public boolean hasDefinedSourceNavajo() {
+		return ( navajoToUse != null);
+	}
+	
+	public String getSourceState() {
+		if ( navajoToUse == null ) {
+			return ".";
+		}
+		StringTokenizer sts = new StringTokenizer(navajoToUse, ":");
+		String state = ".";
+		if ( sts.hasMoreTokens() ) {
+			state =  sts.nextToken();
+		}
+		if ( state.equals(myState.getId())) {
+			return ".";
+		} else {
+			return state;
+		}
+	}
+	
+	public String getSourceDirection() {
+		if ( navajoToUse == null ) {
+			return null;
+		}
+		StringTokenizer sts = new StringTokenizer(navajoToUse, ":");
+		if ( sts.hasMoreTokens() ) {
+			sts.nextToken();
+			if ( sts.hasMoreTokens() ) {
+				return sts.nextToken();
+			}
+		}
+		return "request";
 	}
 }

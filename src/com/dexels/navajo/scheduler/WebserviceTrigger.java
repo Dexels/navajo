@@ -27,6 +27,10 @@ package com.dexels.navajo.scheduler;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.StringTokenizer;
+
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.GenericThread;
 import com.dexels.navajo.util.AuditLog;
 
 public class WebserviceTrigger extends Trigger implements Serializable {
@@ -82,7 +86,7 @@ public class WebserviceTrigger extends Trigger implements Serializable {
 	
 	public void removeTrigger() {
 		// Remove myself from the listener list.
-		WebserviceListener.getInstance().removeTrigger(this);
+		WebserviceListenerRegistry.getInstance().removeTrigger(this);
 	}
 	
 	public void setAlarm() {
@@ -110,7 +114,36 @@ public class WebserviceTrigger extends Trigger implements Serializable {
 		singleEvent = b;
 	}
 
+	public Navajo perform() {
+		
+        // Spawn task asynchronously. If there is no web service to run, invoke task synchronously.
+		if ( getTask().getWebservice() != null ) {
+			
+			GenericThread taskThread = new GenericThread("task:" + getTask().getId() ) {
+
+				public void run() {
+					try {
+						worker();
+					} finally {
+						finishThread();
+					}
+				}
+
+				public final void worker() {
+					getTask().run();
+				}
+			};
+			taskThread.startThread(taskThread);
+		} else {
+			// Invoke task synchronously to support work flow before and after task trigger synchronously.
+			try {
+				getTask().run();
+			} catch (Throwable t2) {}
+		}
+		return null;
+	}
+	
 	public void activateTrigger() {
-		WebserviceListener.getInstance().registerTrigger(this);
+		WebserviceListenerRegistry.getInstance().registerTrigger(this);
 	}
 }

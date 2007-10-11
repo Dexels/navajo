@@ -28,9 +28,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.StringTokenizer;
+
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.GenericThread;
 
-public class TimeTrigger extends Trigger implements ClockListener, Serializable {
+public class TimeTrigger extends Trigger implements Serializable, ClockListener {
 
 	/**
 	 * 
@@ -60,6 +63,7 @@ public class TimeTrigger extends Trigger implements ClockListener, Serializable 
 	private boolean singleEvent = false;
 	private boolean runImmediate = false;
 	private long lastRan = -1;
+	private boolean fired = false;
 	
 	private static final String NOW = "now";
 	
@@ -264,11 +268,28 @@ public class TimeTrigger extends Trigger implements ClockListener, Serializable 
 		}
 	}
 	
-	public void timetick(final Calendar c) {
+	public boolean timetick(final Calendar c) {
 		if ( checkAlarm(c) ) {
-			// Spawn thread.
+			fired = true;
+			lastRan = System.currentTimeMillis();
+			return true;
+		}
+		return false;
+	}
+
+	public void activateTrigger() {
+		Clock.getInstance().addClockListener(this);
+	}
+
+	public boolean isFired() {
+		return fired;
+	}
+
+	public Navajo perform() {
+		// Spawn thread.
+		if ( fired ) {
 			GenericThread taskThread = new GenericThread("task:" + getTask().getId()) {
-				
+
 				public void run() {
 					try {
 						worker();
@@ -276,18 +297,14 @@ public class TimeTrigger extends Trigger implements ClockListener, Serializable 
 						finishThread();
 					}
 				}
-				
+
 				public final void worker() {
-					lastRan = c.getTimeInMillis();
 					getTask().run();
 				}
 			};
 			taskThread.startThread(taskThread);
-			
-		} 
-	}
-
-	public void activateTrigger() {
-		Clock.getInstance().addClockListener(this);
+			fired = false;
+		}
+		return null;
 	}
 }

@@ -1,6 +1,5 @@
 package com.dexels.navajo.adapter.queue;
 
-import java.io.File;
 import java.util.Date;
 
 import com.dexels.navajo.document.Navajo;
@@ -98,18 +97,6 @@ public class QueuedAdapter extends Thread implements Mappable {
 	 */
 	public String getRef() {
 		return ref;
-	}
-	
-	/**
-	 * Immediately delete the file associated with this queued adapter.
-	 * 
-	 * @param b
-	 */
-	public void setDelete(boolean b) {
-		if ( ref != null ) {
-			File f = new File(ref);
-			f.delete();
-		}
 	}
 	
 	public void kill() {

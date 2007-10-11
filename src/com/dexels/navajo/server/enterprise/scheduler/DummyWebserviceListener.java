@@ -3,7 +3,7 @@ package com.dexels.navajo.server.enterprise.scheduler;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.server.Access;
 
-public class DummyWebserviceListener implements WebserviceListenerInterface {
+public class DummyWebserviceListener implements WebserviceListenerRegistryInterface {
 
 	public void afterWebservice(String webservice, Access a) {
 		// TODO Auto-generated method stub

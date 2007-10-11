@@ -14,6 +14,12 @@ import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.server.GenericThread;
 import com.dexels.navajo.server.jmx.JMXHelper;
+import com.dexels.navajo.tribe.SharedFileStore;
+import com.dexels.navajo.tribe.SharedStoreException;
+import com.dexels.navajo.tribe.SharedStoreFactory;
+import com.dexels.navajo.tribe.SharedStoreInterface;
+import com.dexels.navajo.tribe.SharedStoreLock;
+import com.dexels.navajo.tribe.TribeManager;
 import com.dexels.navajo.util.AuditLog;
 
 public final class WorkFlowManager extends GenericThread implements WorkFlowManagerMXBean {
@@ -29,12 +35,14 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 	
 	private static volatile WorkFlowManager instance = null;
 	private static Object semaphore = new Object();
+	private static Object semaphore_instances = new Object();
 	private final ArrayList<WorkFlow> workflowInstances = new ArrayList<WorkFlow>();
 	private final HashMap<String,WorkFlowDefinition> workflowDefinitions = new HashMap<String,WorkFlowDefinition>();
 	private static String id = "Navajo WorkFlow Manager";
 	public static String VERSION = "$Id$";
 	
 	private String workflowPath = null;
+	private String baseWorkflowPath = null;
 	private String workflowDefinitionPath = null;
 	
 	private long configTimestamp = -1;
@@ -53,20 +61,20 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 	 *
 	 */
 	private void reviveSavedWorkFlows() {
-		File workflows = new File(workflowPath);
-		File [] files = workflows.listFiles();
 
-		for (int i = 0; i < files.length; i++) {
-			File f = files[i];
-			if ( f.isFile() ) {
-				
-				ObjectInputStream ois;
+		synchronized (semaphore_instances) {
+
+			SharedStoreInterface ssi = SharedStoreFactory.getInstance();
+			String [] files = ssi.getObjects(workflowPath);
+
+			for (int i = 0; i < files.length; i++) {
+
 				try {
-					ois = new ObjectInputStream(new FileInputStream(f));
-					WorkFlow wf = (WorkFlow) ois.readObject();
-					ois.close();
-					addWorkFlow(wf);
-					wf.revive();
+					WorkFlow wf = (WorkFlow) ssi.get(workflowPath, files[i]);
+					if (!hasWorkflowId(wf.getMyId())) {
+						addWorkFlow(wf);
+						wf.revive();
+					}
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -88,20 +96,25 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 
 			instance = new WorkFlowManager();	
 			JMXHelper.registerMXBean(instance, JMXHelper.NAVAJO_DOMAIN, "WorkFlowManager");
+			// get handle to sharedstore interface.
+			SharedStoreInterface ssi = SharedStoreFactory.getInstance();
+			
 			
 			// Create workflow definitions dir.
 			if ( instance.workflowDefinitionPath == null ) {
 				instance.workflowDefinitionPath = Dispatcher.getInstance().getNavajoConfig().getRootPath() + "/workflows/definitions/";
 				File f1 = new File(instance.workflowDefinitionPath);
-				f1.mkdirs();
+				if ( !f1.exists() ) {
+					f1.mkdirs();
+				}
 				instance.configTimestamp = f1.lastModified();
 			}
 			
 			// Create workflow persistence dir.
 			if ( instance.workflowPath == null ) {
-				instance.workflowPath = Dispatcher.getInstance().getNavajoConfig().getRootPath() + "/workflows/instances/";
-				File f1 = new File(instance.workflowPath);
-				f1.mkdirs();
+				instance.baseWorkflowPath = "/workflows/instances";
+				instance.workflowPath = instance.baseWorkflowPath + "/" + Dispatcher.getInstance().getNavajoConfig().getInstanceName();
+				ssi.createParent(instance.workflowPath);
 			}
 			
 			WorkFlowDefinitionReader.initialize(new File(instance.workflowDefinitionPath), instance.workflowDefinitions);
@@ -117,22 +130,44 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 		}
 	}
 	
+	/**
+	 * This method can be used to take over control of persisted workflow of another server.
+	 * 
+	 * @param fromServer
+	 */
+	public void takeOverPersistedWorkFlows(String fromServer) {
+		System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> In takeOverPersistedWorkFlows(" + fromServer + ")");
+		String [] persistedWorkflows = SharedStoreFactory.getInstance().getObjects(baseWorkflowPath + "/" + fromServer);
+		for (int i = 0; i < persistedWorkflows.length; i++) {
+			WorkFlow wf;
+			try {
+				wf = (WorkFlow) SharedStoreFactory.getInstance().get(baseWorkflowPath + "/" + fromServer, persistedWorkflows[i]);
+				System.err.println(">>>>>>>>>>>>> MOVING WORKFLOW: " + wf.getMyId() + " FROM SERVER " + fromServer);
+				persistWorkFlow(wf);
+				SharedStoreFactory.getInstance().remove(baseWorkflowPath + "/" + fromServer, persistedWorkflows[i]);
+			} catch (SharedStoreException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	
+	}
+	
 	public boolean persistWorkFlow(WorkFlow wf) {
-		
-		try {
-			File f =  new File(workflowPath, wf.getDefinition()+wf.getMyId());
-			ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(f));
-			oos.writeObject(wf);
-			oos.close();
-			return true;
-		} catch (Exception e) {
-			return false;
+		synchronized (semaphore_instances) {
+			try {
+				SharedStoreFactory.getInstance().store(workflowPath, wf.getDefinition() + wf.getMyId(), wf);
+				return true;
+			} catch (Exception e) {
+				return false;
+			}
 		}
 	}
 	
 	public void removePersistedWorkFlow(WorkFlow wf) {
-		File f =  new File(workflowPath, wf.getDefinition()+wf.getMyId());
-		f.delete();
+		synchronized (semaphore_instances) {
+			SharedStoreFactory.getInstance().remove(workflowPath, wf.getDefinition()+wf.getMyId());
+		}
 	}
 	
 	public void addWorkFlow(WorkFlow wf) {
@@ -148,12 +183,14 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 	}
 	
 	public void worker() {
-        // Check whether definition has been added.
-		if ( isConfigModified() ) {
+        // Check whether definition has been added (only the tribal chief processes new workflow definitions).
+		if ( isConfigModified() &&  TribeManager.getInstance().getIsChief() )  {
 			AuditLog.log(AuditLog.AUDIT_MESSAGE_WORKFLOW, "Workflow definition change detected");
 			setConfigTimeStamp();
 			WorkFlowDefinitionReader.initialize(new File(workflowDefinitionPath), workflowDefinitions);	
 		}
+		// Check whether new workflow instances have appeared in my instance space.
+		reviveSavedWorkFlows();
 	}
 
 	/**
@@ -193,6 +230,18 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 		return workflows;
 	}
 
+	public final boolean hasWorkflowId(String id) {
+		if ( id == null || id.equals("") ) {
+			return false;
+		}
+		for ( int i = 0; i < workflowInstances.size(); i++) {
+			if ( workflowInstances.get(i).getMyId().equals(id)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public void setWorkflowId(String workflowId) {
 		this.workflowId = workflowId;
 	}

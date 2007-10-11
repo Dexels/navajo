@@ -1,18 +1,16 @@
 package com.dexels.navajo.scheduler;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-
 import com.dexels.navajo.server.GenericThread;
 import com.dexels.navajo.server.enterprise.scheduler.ClockInterface;
 import com.dexels.navajo.server.jmx.JMXHelper;
+import com.dexels.navajo.tribe.TribeManager;
 import com.dexels.navajo.util.AuditLog;
 
 public class Clock extends GenericThread implements ClockMXBean, ClockInterface {
 
 	private static volatile Clock instance = null;
 	private static Object semaphore = new Object();
-	private final ArrayList<ClockListener> listeners = new ArrayList<ClockListener>();
 	private static String id = "Navajo Clock";
 	public static String VERSION = "$Id$";
 	
@@ -43,25 +41,44 @@ public class Clock extends GenericThread implements ClockMXBean, ClockInterface 
 		}
 	}
 	
-	public final void addClockListener(ClockListener cl) {
+	public final void addClockListener(TimeTrigger cl) {
 		synchronized ( semaphore ) {
-			listeners.add(cl);
+			ListenerStore.getInstance().addListener(cl,TimeTrigger.class.getName(), false);
 		}
 	}
 	
-	public final void removeClockListener(ClockListener cl) {
+	public final void removeClockListener(TimeTrigger cl) {
 		synchronized ( semaphore ) {
-			listeners.remove(cl);
+			ListenerStore.getInstance().removeListener(cl,TimeTrigger.class.getName(), false);
 		}
 	}
 	
+	/**
+	 * Worker checks whether timetriggers should be set to 'fired'.
+	 */
 	public final void worker() {
-		Calendar c = Calendar.getInstance();
-		synchronized ( semaphore ) {
-			for ( int i = 0; i < listeners.size(); i++ ) {
-				ClockListener cl = (ClockListener) listeners.get(i);
-				cl.timetick(c);
+
+		// Only the tribe chief may perform a clock operation.
+		if ( TribeManager.getInstance().getIsChief() ) {
+			Calendar c = Calendar.getInstance();
+			synchronized ( semaphore ) {
+				//System.err.println("Calling Clock worker()");
+
+				Listener [] all = ListenerStore.getInstance().getListeners(TimeTrigger.class.getName());
+				for (int i = 0; i < all.length; i++) {
+					TimeTrigger cl = (TimeTrigger) all[i];
+					//System.err.println("Got TimeTrigger: " + cl.getDescription() );
+					// Set fired status if appropriate.
+					if ( cl.timetick(c) ) {
+						System.err.println(i + ": >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ACTIVATING!" + cl.getDescription() + ", task:" + cl.getTask().getWebservice() );
+						ListenerStore.getInstance().activate(cl, TimeTrigger.class.getName());
+						if ( cl.isSingleEvent() ) { // Remove blue print also, do not wait for lock!
+							ListenerStore.getInstance().removeListener(cl, TimeTrigger.class.getName(), true);
+						}
+					}
+				}
 			}
+
 		}
 	}
 
@@ -70,7 +87,7 @@ public class Clock extends GenericThread implements ClockMXBean, ClockInterface 
 	}
 
 	public int getListeners() {
-		return listeners.size();
+		return 0;//listeners.size();
 	}
 
 	public String getId() {

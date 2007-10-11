@@ -1,83 +1,76 @@
 package com.dexels.navajo.adapter.queue;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.HashSet;
 import java.util.Iterator;
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.enterprise.queue.Queable;
-import com.dexels.navajo.util.AuditLog;
+import com.dexels.navajo.tribe.SharedStoreException;
+import com.dexels.navajo.tribe.SharedStoreFactory;
+import com.dexels.navajo.tribe.SharedStoreInterface;
+import com.dexels.navajo.workflow.WorkFlow;
 
+/**
+ * The FileStore uses the Navajo SharedStoreInterface for storing queued adapters.
+ * 
+ * @author arjen
+ *
+ */
 public class FileStore implements MessageStore {
 
 	private static String path = null; 
 	private static String deadQueue = null;
 	private static Object semaphore = new Object();
-	private final HashSet<File> currentObjects = new HashSet<File>();
-	private Iterator<File> objectPointer = null;
+	private final HashSet<String> currentObjects = new HashSet<String>();
+	private Iterator<String> objectPointer = null;
 	
 	public FileStore() {
 		synchronized (semaphore) {
 			if ( path == null ) {
-				path = Dispatcher.getInstance().getNavajoConfig().getRootPath() + "/adapterqueue";
+				SharedStoreInterface ssi = SharedStoreFactory.getInstance();
+				path = "/adapterqueue/" + Dispatcher.getInstance().getNavajoConfig().getInstanceName();
+				ssi.createParent(path);
 				// Define deadqueue to put in failures that have more than max retries. 
 				// If some problem was solved in the mean time, simply put back file into normal queue.
-				deadQueue = Dispatcher.getInstance().getNavajoConfig().getRootPath() + "/adapterqueue/failures";
-				File f1 = new File(path);
-				f1.mkdir();
-				File f2 = new File(deadQueue);
-				f2.mkdir();
+				deadQueue = path + "/failures";
+				ssi.createParent(deadQueue);
 			}
 		}
 	}
 	
 	public void rewind() {
 		currentObjects.clear();
-		File queue = new File(path);
-		File [] files = queue.listFiles();
-
+		SharedStoreInterface ssi = SharedStoreFactory.getInstance();
+		String [] files = ssi.getObjects(path);
 		for (int i = 0; i < files.length; i++) {
-			File f = files[i];
-			if ( f.isFile() ) {
-				currentObjects.add(f);
-			}
+				currentObjects.add(files[i]);
 		}
-
 		objectPointer = currentObjects.iterator();
-
 	}
 	
 	public HashSet<QueuedAdapter> getQueuedAdapters() {
 		HashSet<QueuedAdapter> queuedAdapters = new HashSet<QueuedAdapter>();
 		synchronized ( path ) {
-			File queue = new File(path);
-			File [] files = queue.listFiles();
+			
+			SharedStoreInterface ssi = SharedStoreFactory.getInstance();
+			String [] files = ssi.getObjects(path);
 
 			for (int i = 0; i < files.length; i++) {
-				File f = files[i];
-				if ( f.isFile() ) {
-					
 					NavajoObjectInputStream ois;
 					try {
-						ois = new NavajoObjectInputStream(new FileInputStream(f), NavajoConfig.getInstance().getClassloader());
+						ois = new NavajoObjectInputStream(ssi.getStream(path, files[i]), NavajoConfig.getInstance().getClassloader());
 						Queable q = (Queable) ois.readObject();
 						// Persist binary file references after reading object.
 						q.persistBinaries();
 						ois.close();
 						QueuedAdapter qa = new QueuedAdapter(q);
-						qa.ref = f.getAbsolutePath();
+						qa.ref = files[i];
 						queuedAdapters.add(qa);
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-				}
+				
 			}
 		}
 		return queuedAdapters;
@@ -85,6 +78,7 @@ public class FileStore implements MessageStore {
 	
 	public Queable getNext() throws Exception {
 
+		//System.err.println("In filestore getNext()");
 		if ( objectPointer == null ) {
 			throw new Exception("Call rewind() first before calling getNext()");
 		}
@@ -92,12 +86,15 @@ public class FileStore implements MessageStore {
 		if (!objectPointer.hasNext() ) {
 			objectPointer = null;
 			currentObjects.clear();
+			//System.err.println("I do not have any handlers...");
 			return null;
 		}
+		
 		Queable q = null;
-		File f = objectPointer.next();
+		String f = objectPointer.next();
+		SharedStoreInterface ssi = SharedStoreFactory.getInstance();
 		try {
-			NavajoObjectInputStream ois = new NavajoObjectInputStream(new FileInputStream(f), NavajoConfig.getInstance().getClassloader());
+			NavajoObjectInputStream ois = new NavajoObjectInputStream(ssi.getStream(path, f), NavajoConfig.getInstance().getClassloader());
 			q = (Queable) ois.readObject();
 			// Persist binary file references after reading object.
 			q.persistBinaries();
@@ -105,15 +102,15 @@ public class FileStore implements MessageStore {
 			//System.err.println("Read object: " + q.getClass().getName() + ", retries " + q.getRetries() + ", max retries " + q.getMaxRetries());
 			// Only return object if it is not sleeping
 			if ( q.getWaitUntil() < System.currentTimeMillis() ) {
-				f.delete();
-				System.err.println("Read object: " + q.getClass().getName() + ", retries " + q.getRetries() + ", max retries " + q.getMaxRetries());
-				//System.err.println("Delete file");
+				ssi.remove(path, f);
+//				System.err.println("Read object: " + q.getClass().getName() + ", retries " + q.getRetries() + ", max retries " + q.getMaxRetries());
+//				System.err.println("Delete file");
 				return q;
 			}
 			//System.err.println("This one is sleeping, try next object");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			System.err.println("Could not read file: " + f.getName() + " from filestore: " + e.getMessage());
+			System.err.println("Could not read file: " + f + " from filestore: " + e.getMessage());
 			e.printStackTrace();
 		} 
 
@@ -128,50 +125,28 @@ public class FileStore implements MessageStore {
 				// Reset retries if failure, such that it can easily be put back into normal queue..
 				handler.resetRetries();
 			}
-			File f = new File( (failure ? deadQueue : path ) + "/" + handler.hashCode() + "_" + System.currentTimeMillis() + ".queue");
+			String f = handler.hashCode() + "_" + System.currentTimeMillis() + ".queue";
+			SharedStoreInterface ssi = SharedStoreFactory.getInstance();
 			try {
 				// Persist request data, make sure binary base file does not get garbage collected.
 				handler.persistBinaries();
 				if ( handler.getRequest() != null ) {
 					String fileRef = handler.getRequest().getTempFileName(true);
 				}
-				ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(f));
-				oos.writeObject(handler);
-				oos.close();
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-	}
-	
-	public static void main(String [] args) {
-		File queue = new File(path);
-		File [] files = queue.listFiles();
-		for (int i = 0; i < files.length; i++) {
-			File f = files[i];
-			try {
-				ObjectInputStream ois = new ObjectInputStream(new FileInputStream(f));
-				Queable q = (Queable) ois.readObject();
-				System.err.println("Read object: " + q.getClass().getName() + ", retries " + q.getRetries() + ", max retries " + q.getMaxRetries());
+				ssi.store( ( failure ? deadQueue : path ), f, handler);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} 
 		}
 	}
-
+	
 	public void emptyQueue() {
 		synchronized ( path ) {
-			File queue = new File(path);
-			File [] files = queue.listFiles();
+			SharedStoreInterface ssi = SharedStoreFactory.getInstance();
+			String [] files = ssi.getObjects(path);
 			for (int i = 0; i < files.length; i++) {
-				if ( files[i].isFile() ) { // Only delete files.
-					files[i].delete();
-				}
+				ssi.remove(path, files[i]);
 			}
 		}
 	}
@@ -184,32 +159,51 @@ public class FileStore implements MessageStore {
 
 		HashSet<QueuedAdapter> deadQueueAdapters = new HashSet<QueuedAdapter>();
 		synchronized (deadQueue) {
-			File queue = new File(deadQueue);
-			File[] files = queue.listFiles();
+			SharedStoreInterface ssi = SharedStoreFactory.getInstance();
+			String [] files = ssi.getObjects(path);
 
 			for (int i = 0; i < files.length; i++) {
-				File f = files[i];
-				if (f.isFile()) {
-
 					NavajoObjectInputStream ois;
 					try {
-						ois = new NavajoObjectInputStream(new FileInputStream(f), NavajoConfig.getInstance().getClassloader());
+						ois = new NavajoObjectInputStream(ssi.getStream(deadQueue, files[i]), NavajoConfig.getInstance().getClassloader());
 						Queable q = (Queable) ois.readObject();
 						// Persist binary file references after reading object.
 						q.persistBinaries();
 						ois.close();
 						QueuedAdapter qa = new QueuedAdapter(q);
-						qa.ref = f.getAbsolutePath();
+						qa.ref = files[i];
 						deadQueueAdapters.add(qa);
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-				}
+				
 			}
 		}
 		return deadQueueAdapters;
 
+	}
+	
+	/**
+	 * This method can be used to take over control of persisted workflow of another server.
+	 * 
+	 * @param fromServer
+	 */
+	public void takeOverPersistedAdapters(String fromServer) {
+		System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> In FileStore: takeOverPersistedWorkFlows(" + fromServer + ")");
+		String [] queuedAdapters = SharedStoreFactory.getInstance().getObjects("/adapterqueue/" + fromServer);
+		for (int i = 0; i < queuedAdapters.length; i++) {
+			try {
+				Queable wf = (Queable) SharedStoreFactory.getInstance().get("/adapterqueue/" + fromServer, queuedAdapters[i]);
+				System.err.println(">>>>>>>>>>>>> MOVING WORKFLOW: " + wf.getClass().getName() + " FROM SERVER " + fromServer);
+				putMessage(wf, false);
+				SharedStoreFactory.getInstance().remove("/adapterqueue/" + fromServer, queuedAdapters[i]);
+			} catch (SharedStoreException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	
 	}
 
 }

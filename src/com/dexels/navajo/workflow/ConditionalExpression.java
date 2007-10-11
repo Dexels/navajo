@@ -12,16 +12,16 @@ public final class ConditionalExpression implements Serializable {
 	
 	private final String condition;
 	private final String expression; // value
-	private final String source; // value
+	private final String navajoToUse; // value
 	
-	public ConditionalExpression(String condition, String expression, String source) {
+	public ConditionalExpression(String condition, String expression, String navajoToUse) {
 		if ( condition != null ) {
 			this.condition = condition;
 		} else {
 			this.condition = "true";
 		}
 		this.expression = expression;
-		this.source = source;
+		this.navajoToUse = navajoToUse;
 	}
 	
 	public final String getCondition() {
@@ -33,14 +33,14 @@ public final class ConditionalExpression implements Serializable {
 	}
 	
 	public boolean hasDefinedSourceNavajo() {
-		return ( source != null);
+		return ( navajoToUse != null);
 	}
 	
 	public String getSourceState() {
-		if ( source == null ) {
+		if ( navajoToUse == null ) {
 			return null;
 		}
-		StringTokenizer sts = new StringTokenizer(source, ":");
+		StringTokenizer sts = new StringTokenizer(navajoToUse, ":");
 		if ( sts.hasMoreTokens() ) {
 			return sts.nextToken();
 		}
@@ -48,10 +48,10 @@ public final class ConditionalExpression implements Serializable {
 	}
 	
 	public String getSourceDirection() {
-		if ( source == null ) {
+		if ( navajoToUse == null ) {
 			return null;
 		}
-		StringTokenizer sts = new StringTokenizer(source, ":");
+		StringTokenizer sts = new StringTokenizer(navajoToUse, ":");
 		if ( sts.hasMoreTokens() ) {
 			sts.nextToken();
 			if ( sts.hasMoreTokens() ) {

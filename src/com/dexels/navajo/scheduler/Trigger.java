@@ -24,11 +24,17 @@
  */
 package com.dexels.navajo.scheduler;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.Calendar;
 
 import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.Dispatcher;
 
-public abstract class Trigger {
+public abstract class Trigger implements Listener, Serializable {
 
 	/**
 	 * The access object (if available) if a webservice call fired a trigger.
@@ -82,6 +88,12 @@ public abstract class Trigger {
 	
 	private Task myTask = null;
 
+	private boolean active = false;
+	private String owner = null;
+	private String listenerId = null;
+	
+	private static Object semaphore = new Object();
+	
 	/**
 	 * String representation of the trigger URL.
 	 */
@@ -186,5 +198,32 @@ public abstract class Trigger {
 	
 	public void setTask(Task t) {
 		this.myTask = t;
+	}
+	
+	
+	public String getOwnerHost() {
+		synchronized (semaphore) {
+			return owner;
+		}
+	}
+		
+	public String getListenerId() {
+		return this.getClass().getName() + "-" + this.myTask.getId();
+	}
+	
+	public Trigger clone() {
+		try {
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			ObjectOutputStream oos = new ObjectOutputStream(bos);
+			oos.writeObject(this);
+			oos.close();
+			bos.close();
+			ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(bos.toByteArray()));
+			Trigger bwt = (Trigger) ois.readObject();
+			return bwt;
+		} catch (Exception e) {
+			e.printStackTrace(System.err);
+			return null;
+		}
 	}
 }

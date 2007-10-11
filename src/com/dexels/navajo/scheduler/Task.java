@@ -62,8 +62,8 @@ public class Task implements Runnable, TaskMXBean, TaskInterface, Serializable {
 	public Navajo response = null;
 	public String status;
 	public String errorMessage;
-	public String workflowDefinition = "";
-	public String workflowId = "";
+	public String workflowDefinition = null;
+	public String workflowId = null;
 	
     private Trigger myTrigger = null;
     private boolean remove = false;
@@ -495,7 +495,9 @@ public class Task implements Runnable, TaskMXBean, TaskInterface, Serializable {
 	}
 
 	public void setWorkflowDefinition(String workflowDefinition) {
-		this.workflowDefinition = workflowDefinition;
+		if ( workflowDefinition != null && !workflowDefinition.equals("" )) {
+			this.workflowDefinition = workflowDefinition;
+		}
 	}
 
 	public String getWorkflowId() {
@@ -503,7 +505,9 @@ public class Task implements Runnable, TaskMXBean, TaskInterface, Serializable {
 	}
 
 	public void setWorkflowId(String workflowId) {
-		this.workflowId = workflowId;
+		if ( workflowDefinition != null && !workflowDefinition.equals("")) {
+			this.workflowId = workflowId;
+		}
 	}
 
 	public boolean isProxy() {
