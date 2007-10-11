@@ -18,37 +18,95 @@
                     </xsd:element>
                 </xsd:sequence>
             </xsd:complexType>
-            <xsd:complexType name="Result">
+            <xsd:complexType name="SelectGlobals">
                 <xsd:sequence>
-                    <xsd:element name="Status" type="xsd:string"/>
-                    <xsd:element name="Name" type="xsd:string"/>
+                    <xsd:element name="DistrictId" type="xsd:string"/>
+                    <xsd:element name="SeasonId" type="xsd:string"/>
+                    <xsd:element name="SportId" type="xsd:string"/>
+                    <xsd:element name="CompetitionKind" type="xsd:string"/>
+                    <xsd:element name="Series" type="xsd:string"/>
+                    <xsd:element name="CompetitionType" type="xsd:string"/>
+                    <xsd:element name="ClassId" type="xsd:string"/>
+                    <xsd:element name="PoolId" type="xsd:string"/>
                 </xsd:sequence>
             </xsd:complexType>
-            <xsd:complexType name="Approval">
+            <xsd:complexType name="SelectedGlobals">
                 <xsd:sequence>
-                    <xsd:element name="Name" type="xsd:string"/>
+                    <xsd:element name="DistrictId" type="xsd:string"/>
+                    <xsd:element name="SeasonId" type="xsd:string"/>
+                    <xsd:element name="SportId" type="xsd:string"/>
+                    <xsd:element name="CompetitionKind" type="xsd:string"/>
+                    <xsd:element name="Series" type="xsd:string"/>
+                    <xsd:element name="CompetitionType" type="xsd:string"/>
+                    <xsd:element name="ClassId" type="xsd:string"/>
+                    <xsd:element name="PoolId" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="PreferredSeason">
+                <xsd:sequence>
+                    <xsd:element name="SeasonId" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="PreferredSeries">
+                <xsd:sequence>
+                    <xsd:element name="Series" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="DispensationCheck">
+                <xsd:sequence>
+                    <xsd:element name="TeamId" type="xsd:string"/>
+                    <xsd:element name="PersonId" type="xsd:string"/>
+                    <xsd:element name="RoleId" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="CheckList">
+                <xsd:sequence>
+                    <xsd:element name="OrganizationId" type="xsd:string"/>
+                    <xsd:element name="TeamOrder" type="xsd:string"/>
+                    <xsd:element name="TeamSportId" type="xsd:string"/>
+                    <xsd:element name="SameRole" type="xsd:string"/>
+                    <xsd:element name="TooManyMembers" type="xsd:string"/>
+                    <xsd:element name="TooManyCoachingStaff" type="xsd:string"/>
+                    <xsd:element name="TooManyOtherStaff" type="xsd:string"/>
+                    <xsd:element name="TooManyStaff" type="xsd:string"/>
+                    <xsd:element name="NoClubMember" type="xsd:string"/>
+                    <xsd:element name="AllreadyPlayer" type="xsd:string"/>
+                    <xsd:element name="InvalidActivity" type="xsd:string"/>
+                    <xsd:element name="Dispensated" type="xsd:string"/>
+                    <xsd:element name="DifferentTeam" type="xsd:string"/>
+                    <xsd:element name="Staff" type="xsd:string"/>
+                    <xsd:element name="Club" type="xsd:string"/>
+                    <xsd:element name="Sex" type="xsd:string"/>
+                    <xsd:element name="SportId" type="xsd:string"/>
+                    <xsd:element name="AgeClass" type="xsd:string"/>
+                    <xsd:element name="NotYetAssigned" type="xsd:string"/>
+                    <xsd:element name="NotLowerRankTeam" type="xsd:string"/>
                     <xsd:element name="Status" type="xsd:string"/>
+                    <xsd:element name="MatchFormStatus" type="xsd:string"/>
                 </xsd:sequence>
             </xsd:complexType>
         </xsd:schema>
     </types>
     <message name="ProcessReq">
-        <part name="Result" type="tns:Result"/>
+        <part name="SelectGlobals" type="tns:SelectGlobals"/>
+        <part name="SelectedGlobals" type="tns:SelectedGlobals"/>
+        <part name="PreferredSeason" type="tns:PreferredSeason"/>
+        <part name="PreferredSeries" type="tns:PreferredSeries"/>
+        <part name="DispensationCheck" type="tns:DispensationCheck"/>
     </message>
     <message name="ProcessRes">
-        <part name="Approval" type="tns:Approval"/>
-        <part name="Result" type="tns:Result"/>
+        <part name="CheckList" type="tns:CheckList"/>
     </message>
-    <portType name="ProcessApproveAap_PortType">
+    <portType name="team_dispensation_ProcessCheckDispensation_PortType">
         <operation name="Process">
             <input message="tns:ProcessReq" name="ProcessReq"/>
             <output message="tns:ProcessRes" name="ProcessRes"/>
         </operation>
     </portType>
-    <binding name="ProcessApproveAap_Binding" type="tns:ProcessApproveAap_PortType">
-        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <binding name="team_dispensation_ProcessCheckDispensation_Binding" type="tns:team_dispensation_ProcessCheckDispensation_PortType">
+        <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
         <operation name="Process">
-            <soap:operation soapAction="ProcessApproveAap"/>
+            <soap:operation soapAction="team/dispensation/ProcessCheckDispensation"/>
             <input name="ProcessReq">
                 <soap:body namespace="http://www.dexels.nl/navajo/webservice.xsd" use="literal"/>
             </input>
@@ -57,10 +115,10 @@
             </output>
         </operation>
     </binding>
-    <service name="ProcessApproveAap">
+    <service name="team_dispensation_ProcessCheckDispensation">
         <documentation>Dit is de documentatie</documentation>
-        <port binding="tns:ProcessApproveAap_Binding" name="ProcessApproveAap_Port">
-            <soap:address location="http://localhost:8080//NavajoServer/SOAPMan"/>
+        <port binding="tns:team_dispensation_ProcessCheckDispensation_Binding" name="team_dispensation_ProcessCheckDispensation_Port">
+            <soap:address location="http://penelope1.dexels.com:80//sportlink/knvb/SOAPMan"/>
         </port>
     </service>
 </definitions>

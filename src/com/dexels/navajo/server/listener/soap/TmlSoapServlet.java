@@ -83,7 +83,7 @@ public class TmlSoapServlet extends HttpServlet {
 
 			Navajo navajoIn = NavajoFactory.getInstance().createNavajo(new java.io.StringReader(w.toString()));
 			System.err.println("Navajo XML:");
-			Header h = NavajoFactory.getInstance().createHeader(navajoIn, soapAction, "ROOT", "", -1);
+			Header h = NavajoFactory.getInstance().createHeader(navajoIn, soapAction, "ROOT", "R20T", -1);
 			navajoIn.addHeader(h);
 
 			navajoIn.write(System.err);
