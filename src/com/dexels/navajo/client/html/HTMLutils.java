@@ -330,7 +330,7 @@ public class HTMLutils {
 
                     }
                 } else  if (type.equals("string") || type.equals("integer")
-                        || type.equals("float")
+                        || type.equals("float") || type.equals(Property.MEMO_PROPERTY)
                         || type.equals(Property.PASSWORD_PROPERTY) || type.equals(Property.MONEY_PROPERTY) || type.equals(Property.CLOCKTIME_PROPERTY)) {
                     value = request.getParameter(rawName);
                     if (!(request.getParameter(rawName).equals("") && prop.getValue() == null))
