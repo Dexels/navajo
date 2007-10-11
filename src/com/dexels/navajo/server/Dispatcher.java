@@ -30,13 +30,14 @@ import java.io.*;
 import java.util.*;
 import java.net.*;
 
+import com.dexels.navajo.scheduler.ListenerRunner;
 import com.dexels.navajo.scheduler.Trigger;
 import com.dexels.navajo.server.enterprise.queue.RequestResponseQueueFactory;
 import com.dexels.navajo.server.enterprise.scheduler.TaskInterface;
 import com.dexels.navajo.server.enterprise.scheduler.TaskRunnerFactory;
 import com.dexels.navajo.server.enterprise.scheduler.TaskRunnerInterface;
 import com.dexels.navajo.server.enterprise.scheduler.WebserviceListenerFactory;
-import com.dexels.navajo.server.enterprise.scheduler.WebserviceListenerInterface;
+import com.dexels.navajo.server.enterprise.scheduler.WebserviceListenerRegistryInterface;
 import com.dexels.navajo.broadcast.BroadcastMessage;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.server.jmx.JMXHelper;
@@ -44,6 +45,7 @@ import com.dexels.navajo.server.jmx.SNMPManager;
 import com.dexels.navajo.util.AuditLog;
 import com.dexels.navajo.util.Util;
 import com.dexels.navajo.server.enterprise.integrity.WorkerInterface;
+import com.dexels.navajo.tribe.TribeManager;
 import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.loader.NavajoClassSupplier;
 import com.dexels.navajo.lockguard.Lock;
@@ -80,6 +82,8 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
    * Unique dispatcher instance.
    */
   private static volatile Dispatcher instance = null;
+  private static boolean servicesBeingStarted = false;
+  private static boolean servicesStarted = false;
   
   //private Navajo inMessage = null;
   protected  boolean matchCN = false;
@@ -178,11 +182,14 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
 	  return instance;
   }
   
-  private final void startUpServices() {
-	  // Startup task runner.
-	  instance.navajoConfig.getTaskRunner();
-	  // Startup queued adapter.
-	  RequestResponseQueueFactory.getInstance();
+  public final void startUpServices() {
+	 
+		
+		  // Startup task runner.
+		  instance.navajoConfig.getTaskRunner();
+		  // Startup queued adapter.
+		  RequestResponseQueueFactory.getInstance();
+		
   }
   
   public static Dispatcher getInstance(URL configurationUrl, InputStreamReader fileInputStreamReader,String serverIdentification) throws NavajoException {
@@ -193,7 +200,6 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
 	  synchronized (semaphore) {
 		  if (instance == null) {
 			  instance = new Dispatcher(configurationUrl, fileInputStreamReader, null, serverIdentification);
-			  instance.startUpServices();
 		  }
 	  }
 	  return instance;
@@ -235,9 +241,9 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
 		synchronized (semaphore) {
 			if (instance == null) {
 				instance = new Dispatcher(configurationUrl, fileInputStreamReader,rootPath,null,serverIdentification);
-				instance.startUpServices();
 			}
 		}
+		
 		return instance;
 	}
    
@@ -948,6 +954,20 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
    
     int accessSetSize = accessSet.size();
     
+    // Init tribe, if initializing it returns null, should not matter, let it do its thing.
+   
+    if ( !servicesBeingStarted && !servicesStarted ) {
+    	servicesBeingStarted = true;
+    	if (TribeManager.getInstance() != null) {
+    		// After tribe exists, start other service (there are dependencies on existence of tribe!).
+    		Dispatcher.getInstance().startUpServices();
+    		// Start ListenerRunner if tribemanager is alive and kicking!
+    		ListenerRunner.getInstance();
+    	}
+    	servicesStarted = true;
+    	servicesBeingStarted = false;
+    }
+    
     // Check accessSetSize first!
     if ( accessSetSize > navajoConfig.maxAccessSetSize ) {
     	// Server too busy!
@@ -1071,9 +1091,7 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
         synchronized ( accessSet ) {
         	accessSet.add(access);
         }
-        
-        access.setMyDispatcher(this);
-       
+         
         access.setThreadCount(accessSetSize);
         access.setCpuload(NavajoConfig.getInstance().getCurrentCPUload());
         
@@ -1154,6 +1172,15 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
 //      	updatePropertyDescriptions(inMessage,outMessage);
         }
        
+        // Call after web service event...
+        if ( access != null && !scheduledWebservice ) {
+    		access.setInDoc(inMessage);
+    		if (!isSpecialwebservice(rpcName)  ) {
+    			// Register webservice call to WebserviceListener if it was not a scheduled webservice.
+    			WebserviceListenerFactory.getInstance().afterWebservice(rpcName, access);
+    		}
+        }
+        
         return outMessage;
       }
     }
@@ -1206,13 +1233,8 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
     finally {
     	
     	if ( access != null && !scheduledWebservice ) {
-    		access.setInDoc(inMessage);
-    		
-    		if (!isSpecialwebservice(rpcName)  ) {
-    			// Register webservice call to WebserviceListener if it was not a scheduled webservice.
-    			WebserviceListenerFactory.getInstance().afterWebservice(rpcName, access);
-    		}
-    		
+ 
+   		
     		// Remove access object from set of active webservices first.
     		synchronized ( accessSet ) {
     			accessSet.remove(access);

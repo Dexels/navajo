@@ -61,7 +61,6 @@ public final class Access implements java.io.Serializable, Mappable {
 	public String ipAddress;
 	public String hostName;
 	public boolean betaUser = false;
-	private transient Dispatcher myDispatcher;
 	public transient CompiledScript myScript = null;
 	private int totaltime;
 	public int parseTime;
@@ -209,14 +208,6 @@ public final class Access implements java.io.Serializable, Mappable {
 
 	public final Object getUserCertificate() {
 		return userCertificate;
-	}
-
-	protected final void setMyDispatcher(Dispatcher d) {
-		this.myDispatcher = d;
-	}
-
-	public final Dispatcher getDispatcher() {
-		return this.myDispatcher;
 	}
 
 	public final void setLazyMessages(LazyMessageImpl h) {
