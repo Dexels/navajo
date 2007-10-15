@@ -25,14 +25,10 @@
 package com.dexels.navajo.integrity;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
-import java.io.FilenameFilter;
 import java.io.IOException;
-import java.net.FileNameMap;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -42,18 +38,20 @@ import java.util.Set;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
-import com.dexels.navajo.mapping.Mappable;
-import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.GenericThread;
-import com.dexels.navajo.server.NavajoConfig;
-import com.dexels.navajo.server.Parameters;
-import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.server.enterprise.integrity.WorkerInterface;
 import com.dexels.navajo.server.jmx.JMXHelper;
 import com.dexels.navajo.util.AuditLog;
 
+/**
+ * The Integrity Worker does NOT work over cluster members. Unique requests only work within
+ * a single Navajo instance. 
+ * 
+ * @author arjen
+ *
+ */
 public class Worker extends GenericThread implements WorkerMXBean, WorkerInterface {
 
 	/**
@@ -71,9 +69,6 @@ public class Worker extends GenericThread implements WorkerMXBean, WorkerInterfa
 	
 	private static volatile Worker instance = null;
 	private static String responseDir = null;
-	
-	
-	
 	private static Object semaphore = new Object();
 	
 	// Worklist containst responses that still need to be written to a file.
@@ -314,11 +309,6 @@ public class Worker extends GenericThread implements WorkerMXBean, WorkerInterfa
 	 */
 	private final boolean waitedForRunningRequest(Access a, Navajo request) {
 		
-		String id  = request.getHeader().getRequestId();
-		if ( id == null || id.trim().equals("") ) {
-			return false;
-		}
-		
 		Access r = (Access) runningRequestIds.get(id);
 		//System.err.println("Size of runningRequestIds: " + runningRequestIds.size());
 		
@@ -360,6 +350,9 @@ public class Worker extends GenericThread implements WorkerMXBean, WorkerInterfa
 	 */
 	public Navajo getResponse(Access a, Navajo request) {
 
+		/**
+		 * In case there is no request id supplied, always return empty navajo.
+		 */
 		String id  = request.getHeader().getRequestId();
 		if ( id == null || id.trim().equals("") ) {
 			return null;

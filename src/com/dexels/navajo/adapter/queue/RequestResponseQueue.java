@@ -8,11 +8,18 @@ import com.dexels.navajo.server.GenericThread;
 import com.dexels.navajo.server.enterprise.queue.Queable;
 import com.dexels.navajo.server.enterprise.queue.RequestResponseQueueInterface;
 import com.dexels.navajo.server.jmx.JMXHelper;
-import com.dexels.navajo.tribe.SharedStoreException;
-import com.dexels.navajo.tribe.SharedStoreFactory;
 import com.dexels.navajo.util.AuditLog;
-import com.dexels.navajo.workflow.WorkFlow;
 
+/**
+ * This module is responsible for processing so called 'queued' adapters. A queued adapter is put
+ * into a Message store instead of being processed immediately. This module consumes the queued adapters
+ * in this message store. The queued adapters in the store are processed by the Navajo instance that 
+ * created the adapter, however in case of 'decease' the Chief Navajo member will take over the 'running'
+ * queued adapters.
+ * 
+ * @author arjen
+ *
+ */
 public class RequestResponseQueue extends GenericThread implements RequestResponseQueueMXBean, RequestResponseQueueInterface {
 
 	public boolean useQueue;
