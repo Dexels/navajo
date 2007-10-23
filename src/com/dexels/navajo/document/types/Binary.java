@@ -117,6 +117,7 @@ public final class Binary extends NavajoType implements Serializable {
     
     /**
      * Some components like a URL to point to their data.
+     * Don't forget that this is a local (file) url, and is only valid on this machine 
      * @return
      * @throws MalformedURLException 
      */
