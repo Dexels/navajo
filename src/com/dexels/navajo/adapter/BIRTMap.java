@@ -168,6 +168,9 @@ public class BIRTMap implements Mappable {
 				e.printStackTrace();
 			}
 		}
+		/**
+		 * From here, rewrite to new-style:
+		 */
 		IReportRunnable design = null;
 		FileInputStream fis = null;
 		if (f==null) {
