@@ -246,7 +246,7 @@ public final class StopwatchTime
           seconds = hours*3600 + minutes*60 + seconds;
         }
         if (seconds == 0 && ":".equals(sep)) {
-          result += "0"+sep;
+          result += "00"+sep;
         }
         else if (seconds < 10 && ":".equals(sep)) {
           result += "00"+seconds + sep;
@@ -399,16 +399,19 @@ public final class StopwatchTime
 
 //    StopwatchTime ck = new StopwatchTime("00:01:44:400");
 //    System.err.println("ck = " + ck);
-    StopwatchTime ck2 = new StopwatchTime("01");
-    System.err.println("ck = " + ck2);
+	    StopwatchTime ck = new StopwatchTime(60000);
+	    ck.myFormat = "mm:SS";
+System.err.println("Hoea: "+ck);
+	  StopwatchTime ck2 = new StopwatchTime("01");
+    System.err.println("ck3 = " + ck2);
     StopwatchTime ck3 = new StopwatchTime("01:999");
-    System.err.println("ck = " + ck3);
+    System.err.println("ck3 = " + ck3);
     StopwatchTime ck4 = new StopwatchTime("01:100");
-    System.err.println("ck = " + ck4);
+    System.err.println("ck4 = " + ck4);
     StopwatchTime ck5 = new StopwatchTime("00:67:345", "format=SS.MM");
-    System.err.println("ck = " + ck5);
+    System.err.println("ck5 = " + ck5);
     StopwatchTime ck6 = new StopwatchTime("02:01:10");
-    System.err.println("ck = " + ck6);
+    System.err.println("ck6 = " + ck6);
     StopwatchTime ck7 = new StopwatchTime(1100);
     System.err.println("ck7 = " + ck7);
 
