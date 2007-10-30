@@ -100,9 +100,9 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 			// If outputdoc does not exist, it must be beforenavajo transition trigger, use indoc instead.
 			if ( n == null ) {
 				n = t.getTrigger().getAccess().getInDoc();
-			}	
+			} 
 		} else {
-				n = NavajoFactory.getInstance().createNavajo();
+			n = NavajoFactory.getInstance().createNavajo();
 		}
 		
 		for ( int i = 0; i < parameters.size(); i++ ) {

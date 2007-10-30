@@ -1,10 +1,6 @@
 package com.dexels.navajo.workflow;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -14,11 +10,9 @@ import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.server.GenericThread;
 import com.dexels.navajo.server.jmx.JMXHelper;
-import com.dexels.navajo.tribe.SharedFileStore;
 import com.dexels.navajo.tribe.SharedStoreException;
 import com.dexels.navajo.tribe.SharedStoreFactory;
 import com.dexels.navajo.tribe.SharedStoreInterface;
-import com.dexels.navajo.tribe.SharedStoreLock;
 import com.dexels.navajo.tribe.TribeManager;
 import com.dexels.navajo.util.AuditLog;
 
@@ -156,7 +150,7 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 	public boolean persistWorkFlow(WorkFlow wf) {
 		synchronized (semaphore_instances) {
 			try {
-				SharedStoreFactory.getInstance().store(workflowPath, wf.getDefinition() + wf.getMyId(), wf);
+				SharedStoreFactory.getInstance().store(workflowPath, wf.getDefinition() + wf.getMyId(), wf, false, false);
 				return true;
 			} catch (Exception e) {
 				return false;

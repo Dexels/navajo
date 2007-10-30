@@ -3,11 +3,10 @@ package com.dexels.navajo.scheduler;
 import com.dexels.navajo.server.GenericThread;
 
 /**
- * ListenerRunner is used to run 'activated' listeners. Activated listeners use a 2 phase method:
- * 1. Listener is activated by some server X.
+ * ListenerRunner is used to run 'activated' clock listeners. Activated clock listeners use a 2 phase method:
+ * 1. Listener is activated by some the Chief.
  * 2. Activated listener task is performed by some server Y.
  * 
- * Currently only timetriggers use the 2 phase method.
  * 
  * @author arjen
  *

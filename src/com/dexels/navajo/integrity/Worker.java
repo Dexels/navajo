@@ -81,10 +81,10 @@ public class Worker extends GenericThread implements WorkerMXBean, WorkerInterfa
 	private Map runningRequestIds = Collections.synchronizedMap(new HashMap());
 	
 	private final static String RESPONSE_PREFIX = "navajoresponse_";
-	private final static String id = "Navajo Integrity Worker";
+	private final static String myId = "Navajo Integrity Worker";
 	
 	public Worker() {
-		super(id);
+		super(myId);
 	}
 	
 	/**
@@ -105,7 +105,7 @@ public class Worker extends GenericThread implements WorkerMXBean, WorkerInterfa
 			}
 			
 			instance = new Worker();
-			JMXHelper.registerMXBean(instance, JMXHelper.NAVAJO_DOMAIN, id);
+			JMXHelper.registerMXBean(instance, JMXHelper.NAVAJO_DOMAIN, myId);
 			instance.setSleepTime(50);
 			instance.startThread(instance);
 			// remove all previously stored response files.
@@ -307,14 +307,14 @@ public class Worker extends GenericThread implements WorkerMXBean, WorkerInterfa
 	 * @param request
 	 * @return
 	 */
-	private final boolean waitedForRunningRequest(Access a, Navajo request) {
+	private final boolean waitedForRunningRequest(Access a, Navajo request, String requestId) {
 		
-		Access r = (Access) runningRequestIds.get(id);
+		Access r = (Access) runningRequestIds.get(requestId);
 		//System.err.println("Size of runningRequestIds: " + runningRequestIds.size());
 		
 		if ( r == null ) {
-			// System.err.println("Did not find request id " + id + " in running request list");
-			runningRequestIds.put(id, a);
+			//System.err.println("Did not find request id " + requestId + " in running request list");
+			runningRequestIds.put(requestId, a);
 			return false;
 		} else {
 			
@@ -325,14 +325,14 @@ public class Worker extends GenericThread implements WorkerMXBean, WorkerInterfa
 				while ( !r.isFinished() ) {
 					try {
 						Thread.sleep(2000);
-						System.err.println(a.accessID + ": Waiting for currently running access set to become ready.");
+						//System.err.println(a.accessID + ": Waiting for currently running access set to become ready.");
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
 			} finally {
-				runningRequestIds.remove(id);
+				runningRequestIds.remove(requestId);
 			}
 			
 			a.setOutputDoc(r.getOutputDoc());
@@ -353,17 +353,17 @@ public class Worker extends GenericThread implements WorkerMXBean, WorkerInterfa
 		/**
 		 * In case there is no request id supplied, always return empty navajo.
 		 */
-		String id  = request.getHeader().getRequestId();
-		if ( id == null || id.trim().equals("") ) {
+		String requestId  = request.getHeader().getRequestId();
+		if ( requestId == null || requestId.trim().equals("") ) {
 			return null;
 		}
 
 		// Check for running request first.
-		if ( !waitedForRunningRequest(a, request) ) {
+		if ( !waitedForRunningRequest(a, request, requestId) ) {
 			// Check if request id is in worklist (still) or integreatyCache (already).
-			if ( notWrittenReponses.contains( id ) || workList.containsKey( id ) || integrityCache.containsKey( id ) ) {
+			if ( notWrittenReponses.contains( requestId ) || workList.containsKey( requestId ) || integrityCache.containsKey( requestId ) ) {
 				// Response file write could be still pending, due to a large workList size and/or large responses.
-				while ( notWrittenReponses.contains( id ) ) {
+				while ( notWrittenReponses.contains( requestId ) ) {
 					//AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER,"Integrity violation detected: waiting for response file " + fileName + " to become written...");
 					try {
 						Thread.sleep(100);
@@ -372,7 +372,7 @@ public class Worker extends GenericThread implements WorkerMXBean, WorkerInterfa
 						e.printStackTrace();
 					}
 				}
-				return readFile( (File) integrityCache.get( id ) );
+				return readFile( (File) integrityCache.get( requestId ) );
 			} else {
 				return null;
 			}
@@ -475,7 +475,7 @@ public class Worker extends GenericThread implements WorkerMXBean, WorkerInterfa
 			instance.notWrittenReponses.clear();
 			instance = null;
 			try {
-				JMXHelper.deregisterMXBean(JMXHelper.NAVAJO_DOMAIN, id);
+				JMXHelper.deregisterMXBean(JMXHelper.NAVAJO_DOMAIN, myId);
 			} catch (Throwable e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

@@ -133,7 +133,7 @@ public class FileStore implements MessageStore {
 				if ( handler.getRequest() != null ) {
 					String fileRef = handler.getRequest().getTempFileName(true);
 				}
-				ssi.store( ( failure ? deadQueue : path ), f, handler);
+				ssi.store( ( failure ? deadQueue : path ), f, handler, false, false);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

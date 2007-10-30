@@ -29,9 +29,22 @@ public interface SharedStoreInterface {
 	 * 
 	 * @param parent
 	 * @param name
-	 * @param o
+	 * @param value
+	 * @param append, the object to the shared store object referenced by name.
+	 * @param requireLock, if requireLock is set; the call will block until a lock could be set.
 	 */
-	public void store(String parent, String name, Object o) throws SharedStoreException;
+	public void store(String parent, String name, Object value, boolean append, boolean requireLock) throws SharedStoreException;
+	
+	/**
+	 * Store text in the shared store. If store object with same name already exists, a SharedStoreException is thrown.
+	 * 
+	 * @param parent
+	 * @param name
+	 * @param value
+	 * @param append, the object to the shared store object referenced by name.
+	 * @param requireLock, if requireLock is set; the call will block until a lock could be set.
+	 */
+	public void storeText(String parent, String name, String value, boolean append, boolean requireLock) throws SharedStoreException;
 	
 	/**
 	 * Create a sharedstoreinterface 'parent'. A Parent is used for logical grouping of objects.
@@ -65,7 +78,7 @@ public interface SharedStoreInterface {
 	 * @param lockType, can be READ_WRITE_LOCK(0) or WRITE_LOCK(1)
 	 * @return SharedStoreLock if lock was granted, else null.
 	 */
-	public SharedStoreLock lock(String parent, String name, String owner, int lockType);
+	public SharedStoreLock lock(String parent, String name, int lockType);
 	
 	/**
 	 * Get a specific object from the shared store. 
@@ -102,7 +115,7 @@ public interface SharedStoreInterface {
 	 * @param name
 	 * @return
 	 */
-	public SharedStoreLock getLock(String parent, String name, String owner);
+	public SharedStoreLock getLock(String parent, String name);
 	
 	/**
 	 * Returns all object names from parent sub that do not have a READ_WRITE_LOCK.

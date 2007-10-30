@@ -326,6 +326,8 @@ public class Task implements Runnable, TaskMXBean, TaskInterface, Serializable {
 	public void run() {
 
 		AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, " trigger " + getTriggerDescription() + " goes off for task: " + getId() );
+		
+		System.err.println("WEBSERVICE = " + webservice + ", PROXY = " + proxy);
 		Navajo result = null;
 		
 		// Invoke onbefore triggers.
@@ -371,13 +373,14 @@ public class Task implements Runnable, TaskMXBean, TaskInterface, Serializable {
 				}
 
 				try {
+					System.err.println("ABOUT TO HANDLE REQUEST....");
 					result = Dispatcher.getInstance().handle(request);
 					this.setResponse(result);
 				} catch (FatalException e) {
 					e.printStackTrace(System.err);
-					TaskRunner.log(this, null, true, e.getMessage(), now);
+					TaskRunner.getInstance().log(this, null, true, e.getMessage(), now);
 				} 
-				TaskRunner.log(this, getResponse(), ( getResponse() != null && getResponse().getMessage("error") != null ), 
+				TaskRunner.getInstance().log(this, getResponse(), ( getResponse() != null && getResponse().getMessage("error") != null ), 
 						( getResponse().getMessage("error") != null ? getResponse().getMessage("error").getProperty("message").getValue() : ""), 
 						now );	
 			}

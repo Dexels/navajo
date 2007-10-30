@@ -2,6 +2,7 @@ package com.dexels.navajo.scheduler;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Set;
 
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.tribe.GetLockRequest;
@@ -86,7 +87,7 @@ public final class ListenerStore {
 			synchronized (semaphore) {
 
 				try {
-					ssi.store(storeLocation, l.getListenerId(), l);
+					ssi.store(storeLocation, l.getListenerId(), l, false, false);
 				} catch (Exception e) {
 					e.printStackTrace(System.err);
 				}
@@ -146,9 +147,9 @@ public final class ListenerStore {
 		synchronized (semaphore) {
 			try {
 				// Update blue-print listener.
-				ssi.store(storeLocation, t.getListenerId(), t);
+				ssi.store(storeLocation, t.getListenerId(), t, false, false);
 				// Clone listener for activation in activated listeners store.
-				ssi.store(activatedListeners, t.getListenerId() + "-" + t.hashCode(), t);
+				ssi.store(activatedListeners, t.getListenerId() + "-" + t.hashCode(), t, false, false);
 			} catch (SharedStoreException e) {
 				e.printStackTrace(System.err);
 			}
@@ -207,6 +208,10 @@ public final class ListenerStore {
 		}
 	}
 
+	public final HashMap<String,Integer> getRegisteredWebservices() {
+		return registeredWebservices;
+	}
+	
 	/**
 	 * Caching service.
 	 * Check whether a webservice is registered as being listened to.

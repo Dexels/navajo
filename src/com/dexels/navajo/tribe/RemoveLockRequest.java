@@ -13,25 +13,23 @@ public class RemoveLockRequest extends Request implements Serializable {
 	
 	public String parent;
 	public String name;
-	public String owner;
 	int lockType;
 	
 	public RemoveLockRequest(String parent, String name) {
 		this.parent = parent;
 		this.name = name;
-		this.owner = Dispatcher.getInstance().getNavajoConfig().getInstanceName();
 	}
 	
 	@Override
 	public Answer getAnswer() {
 		
 		SharedStoreInterface ssi = SharedStoreFactory.getInstance();
-		SharedStoreLock ssl = ssi.getLock(parent, name, owner);
+		SharedStoreLock ssl = ssi.getLock(parent, name);
 		//System.err.println("IN RemoveLockRequest(), getAnswer().....: " + ssl);
 		if ( ssl != null ) {
 			ssi.release(ssl);
 		}
-		return new LockAnswer(ssl);
+		return new LockAnswer(this, ssl);
 		
 	}
 

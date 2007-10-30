@@ -111,7 +111,7 @@ public final class WebserviceListenerRegistry implements WebserviceListenerRegis
 	 * @param webservice the name of the webservice that was invoked
 	 * @param a the access object of the caller
 	 */
-	public final void afterWebservice(final String webservice, final Access a) {
+	public final void afterWebservice(String webservice, Access a) {
 
 		//System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> <<<<<<<<<<<<<<<<<< IN afterWebservice(" + webservice + ")");
 		// Return immediately if webservice is not contained in afterWebservices set, i.e. there is
@@ -125,7 +125,6 @@ public final class WebserviceListenerRegistry implements WebserviceListenerRegis
 		for (int i = 0; i < all.length; i++) {
 			WebserviceTrigger cl = (WebserviceTrigger) all[i];
 			if ( cl.getWebservicePattern().equals(webservice)) {
-				cl.setAccess(a);
 				//System.err.println("Got WebserviceTrigger: " + cl.getDescription() );
 				// Set activated status.
 				// If not workflow activate task, if workflow, perform task.
@@ -136,12 +135,12 @@ public final class WebserviceListenerRegistry implements WebserviceListenerRegis
 				//System.err.println("Got synchronous WebserviceTrigger: " + cl.getDescription() );
 				
 				WebserviceTrigger t2 = (WebserviceTrigger) cl.clone();
+				t2.setAccess(a);
 				boolean initializingWorkflow = ( t2.getTask().getWorkflowDefinition() != null && t2.getTask().getWorkflowId() == null );
 				boolean myWorkflow = ( t2.getTask().getWorkflowId() != null && WorkFlowManager.getInstance().hasWorkflowId(t2.getTask().getWorkflowId()));
 				
 				//System.err.println("initializingWorkflow: " + initializingWorkflow + ", myWorkflow: " + myWorkflow);
 				if ( initializingWorkflow || myWorkflow) {
-					t2.setAccess(a);
 					t2.perform();
 				} else {
 					TribeManager.getInstance().broadcast(new SmokeSignal(Dispatcher.getInstance().getNavajoConfig().getInstanceName(), SmokeSignal.OBJECT_LISTENERS, SmokeSignal.KEY_LISTENERS_AFTERWEBSERVICE_EVENT, t2));
@@ -172,18 +171,16 @@ public final class WebserviceListenerRegistry implements WebserviceListenerRegis
 			BeforeWebserviceTrigger cl = (BeforeWebserviceTrigger) all[i];
 			if ( cl.getWebservicePattern().equals(webservice)) {
 				BeforeWebserviceTrigger t2 = (BeforeWebserviceTrigger) cl.clone();
+				t2.setAccess(a);
 				//System.err.println("Got synchronous BeforeWebserviceTrigger: " + cl.getDescription() );
 				if ( cl.getTask().isProxy() ) {
 					// TODO IMPLEMENT PROXY FOR TRIBE CLUSTER!!!!!
-					t2.setAccess(a);
 					return t2.perform();
 				} else {
 					//System.err.println(Dispatcher.getInstance().getNavajoConfig().getInstanceName() + "In beforeWebservice(" + webservice + ")");
-					
 					boolean initializingWorkflow = ( t2.getTask().getWorkflowDefinition() != null && t2.getTask().getWorkflowId() == null );
 					boolean myWorkflow = ( t2.getTask().getWorkflowId() != null && WorkFlowManager.getInstance().hasWorkflowId(t2.getTask().getWorkflowId()));
 					if ( initializingWorkflow || myWorkflow) {
-						t2.setAccess(a);
 						t2.perform();
 					} else {
 						TribeManager.getInstance().broadcast(new SmokeSignal(Dispatcher.getInstance().getNavajoConfig().getInstanceName(), SmokeSignal.OBJECT_LISTENERS, SmokeSignal.KEY_LISTENERS_BEFOREWEBSERVICE_EVENT, t2));

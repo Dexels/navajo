@@ -1,6 +1,8 @@
 package com.dexels.navajo.tribe;
 
 import java.io.Serializable;
+import java.util.Iterator;
+import java.util.Set;
 
 import com.dexels.navajo.scheduler.BeforeWebserviceTrigger;
 import com.dexels.navajo.scheduler.ListenerStore;
@@ -28,8 +30,9 @@ public class SmokeSignal implements Serializable {
 	public static final String KEY_LISTENERS_AFTERWEBSERVICE_EVENT = "after_webservice_event";
 	public static final String KEY_LISTENERS_BEFOREWEBSERVICE_EVENT = "after_webservice_event";
 	
-	public static final String OBJECT_INTRODUCTION = "introduction";
-	public static final String KEY_INTRODUCTION = "name";
+	public static final String OBJECT_MEMBERSHIP = "membership";
+	public static final String KEY_INTRODUCTION = "introduction";
+	public static final String KEY_REMOVAL = "removal";
 	
 	public SmokeSignal(String sender, String object, String key, Object value) {
 		this.object = object;
@@ -73,6 +76,8 @@ public class SmokeSignal implements Serializable {
 				ls.removeRegisteredWebservice(value);
 			} else if ( getKey().equals(KEY_LISTENERS_AFTERWEBSERVICE_EVENT)) {
 				WebserviceTrigger awt = (WebserviceTrigger) getValue();
+				System.err.println("Received AFTER webservice event.........");
+				System.err.println(">>> ACCESS OBJECT: " + awt.getAccess());
 				if ( awt.getTask().getWorkflowId() == null || WorkFlowManager.getInstance().hasWorkflowId(awt.getTask().getWorkflowId()) ) {
 					awt.perform();
 				}
@@ -81,8 +86,16 @@ public class SmokeSignal implements Serializable {
 				if ( bwt.getTask().getWorkflowId() == null || WorkFlowManager.getInstance().hasWorkflowId(bwt.getTask().getWorkflowId()) ) {
 					bwt.perform();
 				}
+			} 
+		} else if ( getObject().equals(OBJECT_MEMBERSHIP) ) {
+			System.err.println(">>>>>>>>>>>>>> RECEIVED MEMBERSHIP REQUEST....................");
+			if ( getKey().equals(KEY_INTRODUCTION)  ) {
+				TribeMember tm = (TribeMember) getValue();
+				System.err.println(">>>>>>>>>>>>>> INTRODUCTION REQUEST FOR " + tm.getName() );
+				TribeManager.getInstance().addTribeMember(tm);
 			}
 		}
+			
 	}
 	
 }

@@ -2,7 +2,7 @@ package com.dexels.navajo.tribe;
 
 import java.io.Serializable;
 
-public class LockAnswer implements Answer, Serializable {
+public class LockAnswer extends Answer {
 
 	/**
 	 * 
@@ -11,7 +11,8 @@ public class LockAnswer implements Answer, Serializable {
 	
 	public SharedStoreLock mySsl = null;
 	
-	public LockAnswer(SharedStoreLock ssl) {
+	public LockAnswer(Request q, SharedStoreLock ssl) {
+		super(q);
 		mySsl = ssl;
 	}
 	

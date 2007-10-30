@@ -427,7 +427,7 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
 	  
 	  
 	  // Check for webservice transaction integrity.
-	  boolean integrityViolation = false;
+ 	  boolean integrityViolation = false;
 	  integ = navajoConfig.getIntegrityWorker();
 	  
 	  if ( integ != null ) {
@@ -1143,8 +1143,8 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
 
             // Create beforeWebservice event.
         	access.setInDoc(inMessage);
-			Navajo useProxy = WebserviceListenerFactory.getInstance().beforeWebservice(rpcName, access);
-        	if (useAuthorisation) {
+			Navajo useProxy = null;//WebserviceListenerFactory.getInstance().beforeWebservice(rpcName, access);
+			if (useAuthorisation) {
     			if ( useProxy == null ) {
     				outMessage = dispatch(navajoConfig.getRepository().getServlet(access), inMessage, access, parms);
     			} else {
@@ -1367,6 +1367,9 @@ private void appendServerBroadCast(Access a, Navajo in, Header h) {
   
   public static void killMe() {
 	  if ( instance != null ) {
+		  
+		  // Kill tribe manager.
+		  TribeManager.getInstance().terminate();
 		  
 		  // Kill all supporting threads.
 		  GenericThread.killAllThreads();

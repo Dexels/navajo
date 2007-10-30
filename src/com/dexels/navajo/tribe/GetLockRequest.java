@@ -20,24 +20,32 @@ public class GetLockRequest extends Request implements Serializable {
 	
 	public String parent;
 	public String name;
-	public String owner;
 	int lockType;
+	
+	private int lockTimeOut = 30000; // in millis
 	
 	public GetLockRequest(String parent, String name, int lockType) {
 		super();
 		this.parent = parent;
 		this.name = name;
-		this.owner = Dispatcher.getInstance().getNavajoConfig().getInstanceName();
 		this.lockType = lockType;
 	}
-
+	
 	public Answer getAnswer() {
 		
 		SharedStoreInterface ssi = SharedStoreFactory.getInstance();
-		SharedStoreLock ssl = ssi.lock(parent, name, owner, lockType);
+		SharedStoreLock ssl = ssi.lock(parent, name, lockType);
 		
-		return new LockAnswer(ssl);
+		return new LockAnswer(this, ssl);
 		
+	}
+
+	public int getLockTimeOut() {
+		return lockTimeOut;
+	}
+
+	public void setLockTimeOut(int lockTimeOut) {
+		this.lockTimeOut = lockTimeOut;
 	}
 	
 }
