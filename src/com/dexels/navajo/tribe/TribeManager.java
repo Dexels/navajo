@@ -1,6 +1,7 @@
 package com.dexels.navajo.tribe;
 
 import java.io.Serializable;
+import java.net.Inet4Address;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -37,7 +38,6 @@ import com.dexels.navajo.workflow.WorkFlowManager;
  *  
  * Think about current Navajo functionality consequences for Tribe:
  * 
- *  - Queued adapter store, could be central store is now local.
  *  - Routing of async mappable webservices to correct server.
  *  - Task store should be local?? Triggered events should be global??
  *  - Integrity worker can be global.
@@ -97,6 +97,9 @@ public class TribeManager extends ReceiverAdapter implements Mappable {
 						instance.channel.setReceiver(instance);
 						instance.channel.connect("Navajo Tribe");
 						instance.channel.getState(null, 1000);
+						System.err.println("MyAddress = " + ((IpAddress) instance.channel.getLocalAddress()).getIpAddress() + ", port = " + 
+								((IpAddress) instance.channel.getLocalAddress()).getPort());
+						System.err.println("=================================================================================================");
 					} catch (Exception e) {
 						e.printStackTrace(System.err);
 					}
@@ -392,6 +395,11 @@ public class TribeManager extends ReceiverAdapter implements Mappable {
 		System.err.println("Closing JGROUPS channel...");
 		instance.channel.disconnect();
 		instance.channel.close();
+	}
+	
+	public static void main(String [] args) throws Exception {
+		System.err.println("Determining IP address...");
+	  System.err.println("ip address = " + Inet4Address.getLocalHost().getHostAddress());
 	}
 	
 }
