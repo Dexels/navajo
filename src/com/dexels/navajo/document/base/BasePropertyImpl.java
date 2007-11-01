@@ -849,7 +849,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 		if(old!=null) {
 			oldSel = old.getValue();
 		}
-		
+
 		for (int i = 0; i < selectionList.size(); i++) {
 			Selection current = (Selection) selectionList.get(i);
 			if (current == s) {
@@ -1552,12 +1552,14 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 
 	public void setSelected(Selection s, boolean selected) throws NavajoException {
 		// TODO Auto-generated method stub
-//		System.err.println("Wrning not really good");
+		// System.err.println("Wrning not really good");
 		if (selected) {
 			setSelected(s);
 		} else {
-			clearSelections();
-
+			if ("+".equals(getCardinality())) {
+				s.setSelected(false);
+				clearSelections();
+			}
 		}
 	}
 
