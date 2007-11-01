@@ -2,8 +2,6 @@ package com.dexels.navajo.tribe;
 
 import java.io.Serializable;
 
-import com.dexels.navajo.server.Dispatcher;
-
 public class RemoveLockRequest extends Request implements Serializable {
 
 	/**
@@ -18,6 +16,7 @@ public class RemoveLockRequest extends Request implements Serializable {
 	public RemoveLockRequest(String parent, String name) {
 		this.parent = parent;
 		this.name = name;
+		this.blocking = false;
 	}
 	
 	@Override

@@ -10,6 +10,7 @@ public abstract class Request implements Serializable {
 	public String owner = null;
 	public Answer predefined = null;
 	private String guid = null;
+	protected boolean blocking = true;
 	
 	public Request() {
 		owner = Dispatcher.getInstance().getNavajoConfig().getInstanceName();
@@ -32,5 +33,9 @@ public abstract class Request implements Serializable {
 
 	public String getGuid() {
 		return guid;
+	}
+	
+	public boolean isBlocking() {
+		return blocking;
 	}
 }

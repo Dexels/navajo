@@ -41,7 +41,7 @@ public class TestLockAdapter implements Mappable {
 			TribeManager tm = TribeManager.getInstance();
 			System.err.println("The chief: " + tm.getChiefName());
 			System.err.println("GOT INSTANCE: " + tm);
-			GetLockRequest glr = new GetLockRequest(parent, name, SharedStoreInterface.READ_WRITE_LOCK);
+			GetLockRequest glr = new GetLockRequest(parent, name, SharedStoreInterface.READ_WRITE_LOCK, false);
 			Answer a = tm.askChief(glr);
 			System.err.println("LOCK: Got answer: " + a.acknowledged());
 		} else if ( operation.equals("release")) {

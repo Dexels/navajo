@@ -21,20 +21,22 @@ public class GetLockRequest extends Request implements Serializable {
 	public String parent;
 	public String name;
 	int lockType;
+	private boolean block;
 	
 	private int lockTimeOut = 30000; // in millis
 	
-	public GetLockRequest(String parent, String name, int lockType) {
+	public GetLockRequest(String parent, String name, int lockType, boolean block) {
 		super();
 		this.parent = parent;
 		this.name = name;
 		this.lockType = lockType;
+		this.block = block;
 	}
 	
 	public Answer getAnswer() {
 		
 		SharedStoreInterface ssi = SharedStoreFactory.getInstance();
-		SharedStoreLock ssl = ssi.lock(parent, name, lockType);
+		SharedStoreLock ssl = ssi.lock(parent, name, lockType, block);
 		
 		return new LockAnswer(this, ssl);
 		

@@ -1,8 +1,6 @@
 package com.dexels.navajo.tribe;
 
-import java.io.Serializable;
 import java.net.Inet4Address;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -43,6 +41,10 @@ import com.dexels.navajo.workflow.WorkFlowManager;
  *  - Integrity worker can be global.
  *  - Workflow definitions should be global?? Workflow instances should be local??
  *  
+ * NOTE: IPv6 BUG 
+ * http://wiki.jboss.org/wiki/Wiki.jsp?page=IPv6
+ * Use java command line argument: -Djava.net.preferIPv4Stack=true
+ * 
  * @author arjen
  *
  */
@@ -93,6 +95,7 @@ public class TribeManager extends ReceiverAdapter implements Mappable {
 					
 					try {
 						System.err.println("=================================== SETTING UP JGROUPS CHANNEL ==================================");
+						System.setProperty("java.net.preferIPv4Stack", "true");
 						instance.channel=new JChannel();
 						instance.channel.setReceiver(instance);
 						instance.channel.connect("Navajo Tribe");
@@ -110,10 +113,12 @@ public class TribeManager extends ReceiverAdapter implements Mappable {
 				TribeMember candidate = new TribeMember(myName, ip);
 				instance.myMembership = candidate;
 				instance.broadcast(new SmokeSignal(myName, SmokeSignal.OBJECT_MEMBERSHIP, SmokeSignal.KEY_INTRODUCTION, candidate));
+				initializing = false;
+				semaphore.notify();
 			}
 		}
 		
-		initializing = false;
+		
 		
 		return instance;
 	}
@@ -317,7 +322,9 @@ public class TribeManager extends ReceiverAdapter implements Mappable {
 			synchronized (answerWaiters) {
 				System.err.println("About to remove request: " + a.getMyRequest().getGuid() );
 				Request q = getWaitingRequest(a.getMyRequest());
-				q.setPredefinedAnswer(a);
+				if ( q != null ) {
+					q.setPredefinedAnswer(a);
+				}
 				removeWaitingRequest(a.getMyRequest());
 				answerWaiters.notify();
 			}
@@ -334,6 +341,24 @@ public class TribeManager extends ReceiverAdapter implements Mappable {
 	 */
 	public Answer askChief(Request q) {
 
+		synchronized (semaphore) {
+			while (initializing || theChief == null) {
+				if ( initializing ) {
+					try {
+						semaphore.wait();
+					} catch (InterruptedException e) {
+					}
+				}
+				if (theChief == null) {
+					try {
+						Thread.sleep(100);
+						System.err.println("Waiting for the Chief...");
+					} catch (InterruptedException e) {
+					}
+				}
+			}
+		}
+		
 		System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>  In AskChief(), q = " + q);
 		if ( instance != null && !initializing ) {
 			if ( myMembership.isChief() ) {
@@ -341,6 +366,8 @@ public class TribeManager extends ReceiverAdapter implements Mappable {
 				return q.getAnswer();
 			}
 			try {
+				System.err.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&& CHANNEL = " + channel);
+				System.err.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&& theChief = " + theChief);
 				channel.send(theChief.getAddress(), null, q);
 			} catch (ChannelNotConnectedException e) {
 				// TODO Auto-generated catch block
@@ -349,11 +376,16 @@ public class TribeManager extends ReceiverAdapter implements Mappable {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			answerWaiters.add(q);
-			System.err.println("Adding request in answerWaiters: " + q.getGuid() + ", size is: " + answerWaiters.size() );
-			Answer w = waitForAnswer(q);
-			System.err.println(">>>>>>>>>>>>>>>>>>>>>>> Got answer from chief: " + w.acknowledged());
-			return w;
+			
+			// Only wait for answer if request is blocking.
+			if ( q.isBlocking() ) {
+				answerWaiters.add(q);
+				System.err.println("Adding request in answerWaiters: " + q.getGuid() + ", size is: " + answerWaiters.size() );
+				Answer w = waitForAnswer(q);
+				System.err.println(">>>>>>>>>>>>>>>>>>>>>>> Got answer from chief: " + w.acknowledged());
+				return w;
+			}
+			
 		}
 		
 		return null;
@@ -399,6 +431,7 @@ public class TribeManager extends ReceiverAdapter implements Mappable {
 	
 	public static void main(String [] args) throws Exception {
 		System.err.println("Determining IP address...");
+		System.setProperty("java.net.preferIPv4Stack", "true");
 	  System.err.println("ip address = " + Inet4Address.getLocalHost().getHostAddress());
 	}
 	

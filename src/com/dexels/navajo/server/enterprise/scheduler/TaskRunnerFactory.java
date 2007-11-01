@@ -37,6 +37,7 @@ public class TaskRunnerFactory {
 					Method m = c.getMethod("getInstance", null);
 					instance = (TaskRunnerInterface) m.invoke(dummy, null);
 				} catch (Exception e) {
+					e.printStackTrace(System.err);
 					System.err.println("WARNING: Scheduler not available");
 					instance = new DummyTaskRunner();
 				}	

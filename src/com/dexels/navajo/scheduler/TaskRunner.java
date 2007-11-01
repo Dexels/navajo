@@ -25,16 +25,14 @@
 package com.dexels.navajo.scheduler;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
 import java.util.StringTokenizer;
@@ -43,7 +41,6 @@ import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
-import com.dexels.navajo.lockguard.Lock;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.GenericThread;
@@ -52,6 +49,8 @@ import com.dexels.navajo.server.enterprise.scheduler.TaskRunnerInterface;
 import com.dexels.navajo.server.jmx.JMXHelper;
 import com.dexels.navajo.tribe.Answer;
 import com.dexels.navajo.tribe.GetLockRequest;
+import com.dexels.navajo.tribe.LockAnswer;
+import com.dexels.navajo.tribe.RemoveLockRequest;
 import com.dexels.navajo.tribe.SharedStoreFactory;
 import com.dexels.navajo.tribe.SharedStoreInterface;
 import com.dexels.navajo.tribe.SharedStoreLock;
@@ -86,7 +85,6 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 	private final static String TASK_CONFIG = "tasks.xml";
 	private final static String TASK_INPUT_DIR = "tasks";
 	private final static String TASK_LOG_FILE = "tasks.log";
-	private volatile static File taskInputDir = null;
 	
 	private static Object semaphore = new Object();
 	private static Object initialization = new Object();
@@ -96,18 +94,12 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 	
 	private boolean configIsBeingUpdated = false;
 	private static volatile boolean beingInitialized = false;
+	private Random rand = null;
 	
-	private TaskRunner() {
+	public TaskRunner() {
 		super(id);
 		// Check for existence of tasks directory.
-		try {
-			taskInputDir = new java.io.File(Dispatcher.getInstance().getNavajoConfig().getRootPath() + "/" + TASK_INPUT_DIR);
-			if ( !taskInputDir.exists() ) {
-				taskInputDir.mkdirs();
-			}
-		} catch (Throwable t) {
-			// Dan maar niet.
-		}
+		rand = new Random(System.currentTimeMillis());
 	}
 	
 	protected boolean containsTask(String id) {
@@ -127,28 +119,31 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 			return;
 		}
 		try {
-			FileWriter fw = new FileWriter(new File(taskInputDir, t.getId() + "_request.xml"));
-			t.getNavajo().write(fw);
-			fw.close();
+			SharedStoreInterface si = SharedStoreFactory.getInstance();
+			OutputStream os = si.getOutputStream(TASK_INPUT_DIR, t.getId() + "_request.xml", false);
+			t.getNavajo().write(os);
+			os.close();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
-	 * Write the Navajo request input for a task.
+	 * Write the Navajo request output for a task.
 	 * 
 	 * @param t
 	 */
-	protected static void writeTaskOutput(Task t) {
+	protected void writeTaskOutput(Task t, boolean singleEvent, long timeStamp) {
 		if ( t.getResponse() == null ) {
 			return;
 		}
 		try {
-			FileWriter fw = new FileWriter(new File(taskInputDir, t.getId() + "_response.xml"));
-			t.getResponse().write(fw);
-			fw.close();
+			SharedStoreInterface si = SharedStoreFactory.getInstance();
+			String name = ( !singleEvent ? t.getId() + "_" + timeStamp + "_response.xml" : t.getId() + "_response.xml" );
+			OutputStream os = si.getOutputStream(TASK_INPUT_DIR, name, false);
+			t.getResponse().write(os);
+			os.close();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -156,11 +151,11 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 	}
 	
 	protected static Navajo getTaskOutput(String id) {
-		FileReader fr;
 		try {
-			fr = new FileReader(new File(taskInputDir, id + "_response.xml"));
-			Navajo n = NavajoFactory.getInstance().createNavajo(fr);
-			fr.close();
+			SharedStoreInterface si = SharedStoreFactory.getInstance();
+			InputStream is = si.getStream(TASK_INPUT_DIR, id + "_response.xml");
+			Navajo n = NavajoFactory.getInstance().createNavajo(is);
+			is.close();
 			return n;
 		} catch (Exception e) {
 			e.printStackTrace(System.err);
@@ -175,18 +170,15 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 	 */
 	protected void readTaskInput(Task t) {
 		try {
-			File f = new File(taskInputDir, t.getId() + "_request.xml");
-			if ( !f.exists() ) {
-				System.err.println("Input navajo does not exist for task: " + t.getId());
-				return;
-			}
-			FileReader fr = new FileReader(f);
-			Navajo n = NavajoFactory.getInstance().createNavajo(fr);
-			fr.close();
+			SharedStoreInterface si = SharedStoreFactory.getInstance();
+			InputStream is = si.getStream(TASK_INPUT_DIR, t.getId() + "_request.xml");
+			Navajo n = NavajoFactory.getInstance().createNavajo(is);
+			is.close();
 			t.setNavajo(n);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.err.println("Input navajo does not exist for task: " + t.getId());
+			return;
 		}
 	}
 	
@@ -197,10 +189,8 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 	 */
 	protected void removeTaskInput(Task t) {
 		try {
-			File f = new File(taskInputDir, t.getId() + "_request.xml");
-			if ( f.exists() ) {
-				f.delete();
-			}
+			SharedStoreInterface si = SharedStoreFactory.getInstance();
+			si.remove(TASK_INPUT_DIR, t.getId() + "_request.xml");
 		} catch (Exception e) {
 			
 		}	
@@ -213,10 +203,8 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 	 */
 	protected void removeTaskOutput(Task t) {
 		try {
-			File f = new File(taskInputDir, t.getId() + "_response.xml");
-			if ( f.exists() ) {
-				f.delete();
-			}
+			SharedStoreInterface si = SharedStoreFactory.getInstance();
+			si.remove(TASK_INPUT_DIR, t.getId() + "_response.xml");
 		} catch (Exception e) {
 			
 		}	
@@ -254,12 +242,13 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 		}
 	}
 	
-	private void readConfig(boolean init) {
+	protected Navajo readConfig(boolean init) {
 		// Read task configuration file to read predefined tasks config/tasks.xml
 		
+		Navajo taskDoc = null;
 		try {
 
-			Navajo taskDoc = Dispatcher.getInstance().getNavajoConfig().readConfig(TASK_CONFIG);
+			taskDoc = Dispatcher.getInstance().getNavajoConfig().readConfig(TASK_CONFIG);
 			setConfigTimeStamp();
 			
 			if ( taskDoc != null ) {
@@ -316,7 +305,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 			e.printStackTrace(System.err);
 		} 
 		
-
+		return taskDoc;
 	}
 	
 	public static TaskRunner getInstance() {
@@ -365,22 +354,29 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 		return tasks.size();
 	}
 	
-	private void writeTaskConfig(Navajo taskDoc) {
-		boolean written = false;
+	protected static SharedStoreLock getConfigLock() {
+
+		SharedStoreInterface si = SharedStoreFactory.getInstance();
+		SharedStoreLock ssl = si.lock("config", "tasks.xml", SharedStoreInterface.READ_WRITE_LOCK, true);
+		return ssl;		
+
+	}
+	
+	protected static void releaseConfigLock(SharedStoreLock ssl) {
+
+
+		SharedStoreInterface si = SharedStoreFactory.getInstance();
+		si.release(ssl);
+
+	}
+	
+	protected void writeTaskConfig(Navajo taskDoc) {
+
 		configIsBeingUpdated = true;
-		while (!written) {
-			Answer a = TribeManager.getInstance().askChief(new GetLockRequest("config", "tasks.xml", SharedStoreInterface.WRITE_LOCK));
-			if ( a.acknowledged() ) {
-				try {
-					Dispatcher.getInstance().getNavajoConfig().writeConfig(TASK_CONFIG, taskDoc);
-				} catch (IOException e) {
-					e.printStackTrace(System.err);
-					written = true;
-				}
-				written = true;
-			} else {
-				System.err.println("Waiting for lock on tasks.xml for removing task");
-			}
+		try {
+			Dispatcher.getInstance().getNavajoConfig().writeConfig(TASK_CONFIG, taskDoc);
+		} catch (Exception e) {
+			e.printStackTrace(System.err);
 		}
 		// Set configtimestamp.
 		setConfigTimeStamp();
@@ -395,32 +391,9 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 
 		// Remove task from configuration file config/tasks.xml
 		synchronized (semaphore) {
-
 			Task t = (Task) tasks.get(id);
 			tasks.remove(id);
 			t.setRemove(true);
-
-			if ( ( t.getWorkflowDefinition() == null || t.getWorkflowDefinition().equals("") ) ) {
-				Navajo taskDoc;
-				try {
-					taskDoc = Dispatcher.getInstance().getNavajoConfig().readConfig(TASK_CONFIG);
-					if (taskDoc != null) {
-						Message allTasks = taskDoc.getMessage("tasks");
-						if (allTasks != null) {
-							Message tbr = containsTask(allTasks, id);
-							if ( tbr != null ) {
-								allTasks.removeMessage(tbr);
-								// TODO: GET LOCK ON TASKS.XML 
-								writeTaskConfig(taskDoc);
-							}
-						}
-					}
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} finally {
-				}
-			}
 		}
 	}
 	
@@ -541,14 +514,9 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 		SharedStoreLock ssl = null;
 
 		try {
-			while ( ssl == null ) {
-				ssl = si.lock("log", TASK_LOG_FILE, SharedStoreInterface.READ_WRITE_LOCK);
-				try {
-					Thread.sleep(100);
-				} catch (InterruptedException e) {
-				}
-			}
-
+			
+			ssl = si.lock("log", TASK_LOG_FILE, SharedStoreInterface.READ_WRITE_LOCK, true);
+		
 			if ( !si.exists("log", TASK_LOG_FILE)) {
 				si.storeText("log", TASK_LOG_FILE, csvHeader, false, false);
 			}
@@ -592,7 +560,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 	}
 	
 	private final String generateTaskId() {
-		long l = new Random().nextLong();
+		long l = rand.nextLong() + System.currentTimeMillis();
 		return "scheduled_task"+l;
 	}
 	
@@ -609,6 +577,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 					t.setRemove(true);
 					return false;
 				} else {
+					// Don't write config yet, wait until config is written back entirely
 					removeTask(id);
 				}
 			}
@@ -625,70 +594,80 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 			t.getTrigger().setTask(t);
 
 			// Add to task configuration file config/tasks.xml.
-			
-				Navajo taskDoc = null;
-				synchronized (semaphore) {
-					try {
 
-						// Read current version of tasks.xml.
-						taskDoc = Dispatcher.getInstance().getNavajoConfig().readConfig(TASK_CONFIG);
+			Navajo taskDoc = null;
 
-						// Create empty tasks.xml if it did not yet exist.
-						if (taskDoc == null) {
-							taskDoc = NavajoFactory.getInstance().createNavajo();
-							Message m = NavajoFactory.getInstance().createMessage(taskDoc, "tasks", Message.MSG_TYPE_ARRAY);
-							taskDoc.addMessage(m);
-						}
-						Message allTasks = taskDoc.getMessage("tasks");
+			// Only write to task.xml if NOT single event and if NOT workflow task.
+			if ( !t.getTrigger().isSingleEvent() && ( t.getWorkflowDefinition() == null || t.getWorkflowDefinition().equals("") ) ) {
 
-						// Add task to Navajo if it does not yet exist and if it is not part of a workflow instance. Workflow instances
-						// tasks are managed by WorkFlowManager.
-						
-						/**
-						 * TODO NAGAAN OF HET OOK MOGELIJK IS OM WORKFLOW GERELATEERD HELEMAAL NIET OP TE SLAAN:
-						 * t.getWorkflowDef() == null || t.getWorkflowDef().equals("")
-						 */
-						if ( allTasks != null && containsTask(allTasks, id) == null && ( t.getWorkflowDefinition() == null || t.getWorkflowDefinition().equals("") ) ) {
-							Message newTask = NavajoFactory.getInstance().createMessage(taskDoc, "tasks");
-							allTasks.addMessage(newTask);
-							Property propId = NavajoFactory.getInstance().createProperty(taskDoc, "id", Property.STRING_PROPERTY, t.getId(), 0, "", Property.DIR_OUT);
-							Property propUser = NavajoFactory.getInstance().createProperty(taskDoc, "username", Property.STRING_PROPERTY, t.getUsername(), 0, "", Property.DIR_OUT);
-							Property propPassword = NavajoFactory.getInstance().createProperty(taskDoc, "password", Property.STRING_PROPERTY, t.getPassword(), 0, "", Property.DIR_OUT);
-							Property propService = NavajoFactory.getInstance().createProperty(taskDoc, "webservice", Property.STRING_PROPERTY, t.getWebservice(), 0, "", Property.DIR_OUT);
-							Property propProxy = NavajoFactory.getInstance().createProperty(taskDoc, "proxy", Property.BOOLEAN_PROPERTY, t.isProxy()+"", 0, "", Property.DIR_OUT);
-							Property propKRS = NavajoFactory.getInstance().createProperty(taskDoc, "keeprequestresponse", Property.BOOLEAN_PROPERTY, t.isKeepRequestResponse()+"", 0, "", Property.DIR_OUT);
-							Property propTrigger = NavajoFactory.getInstance().createProperty(taskDoc, "trigger", Property.STRING_PROPERTY, t.getTrigger().getDescription(), 0, "", Property.DIR_OUT);
-							Property propWorkflowDef = NavajoFactory.getInstance().createProperty(taskDoc, "workflowdef", Property.STRING_PROPERTY, t.getWorkflowDefinition(), 0, "", Property.DIR_OUT);
-							Property propWorkflowId = NavajoFactory.getInstance().createProperty(taskDoc, "workflowid", Property.STRING_PROPERTY, t.getWorkflowId(), 0, "", Property.DIR_OUT);
+				SharedStoreLock ssl = null;
+				try {
+					ssl = getConfigLock();
 
-							Property propTaskDescription = NavajoFactory.getInstance().createProperty(taskDoc, "taskdescription", Property.STRING_PROPERTY, t.getTaskDescription(), 0, "", Property.DIR_OUT);
-							Property propClientId = NavajoFactory.getInstance().createProperty(taskDoc, "clientid", Property.STRING_PROPERTY, t.getClientId(), 0, "", Property.DIR_OUT);
+					// Read current version of tasks.xml.
+					taskDoc = Dispatcher.getInstance().getNavajoConfig().readConfig(TASK_CONFIG);
 
-							newTask.addProperty(propId);
-							newTask.addProperty(propUser);
-							newTask.addProperty(propPassword);
-							newTask.addProperty(propService);
-							newTask.addProperty(propProxy);
-							newTask.addProperty(propKRS);
-							newTask.addProperty(propTrigger);
-							newTask.addProperty(propWorkflowDef);
-							newTask.addProperty(propWorkflowId);
-							newTask.addProperty(propTaskDescription);
-							newTask.addProperty(propClientId);
+					// Create empty tasks.xml if it did not yet exist.
+					if (taskDoc == null) {
+						taskDoc = NavajoFactory.getInstance().createNavajo();
+						Message m = NavajoFactory.getInstance().createMessage(taskDoc, "tasks", Message.MSG_TYPE_ARRAY);
+						taskDoc.addMessage(m);
+					}
+					Message allTasks = taskDoc.getMessage("tasks");
 
-							// Persist task request Navajo and tasks.xml
-							writeTaskInput(t);
-							writeTaskConfig(taskDoc);
-						}
+					// Add task to Navajo if it does not yet exist and if it is not part of a workflow instance. Workflow instances
+					// tasks are managed by WorkFlowManager.
 
-					} catch (Throwable e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} finally {
-						
+					/**
+					 * TODO NAGAAN OF HET OOK MOGELIJK IS OM WORKFLOW GERELATEERD HELEMAAL NIET OP TE SLAAN:
+					 * t.getWorkflowDef() == null || t.getWorkflowDef().equals("")
+					 */
+					if ( allTasks != null && containsTask(allTasks, id) == null ) {
+						Message newTask = NavajoFactory.getInstance().createMessage(taskDoc, "tasks");
+						allTasks.addMessage(newTask);
+						Property propId = NavajoFactory.getInstance().createProperty(taskDoc, "id", Property.STRING_PROPERTY, t.getId(), 0, "", Property.DIR_OUT);
+						Property propUser = NavajoFactory.getInstance().createProperty(taskDoc, "username", Property.STRING_PROPERTY, t.getUsername(), 0, "", Property.DIR_OUT);
+						Property propPassword = NavajoFactory.getInstance().createProperty(taskDoc, "password", Property.STRING_PROPERTY, t.getPassword(), 0, "", Property.DIR_OUT);
+						Property propService = NavajoFactory.getInstance().createProperty(taskDoc, "webservice", Property.STRING_PROPERTY, t.getWebservice(), 0, "", Property.DIR_OUT);
+						Property propProxy = NavajoFactory.getInstance().createProperty(taskDoc, "proxy", Property.BOOLEAN_PROPERTY, t.isProxy()+"", 0, "", Property.DIR_OUT);
+						Property propKRS = NavajoFactory.getInstance().createProperty(taskDoc, "keeprequestresponse", Property.BOOLEAN_PROPERTY, t.isKeepRequestResponse()+"", 0, "", Property.DIR_OUT);
+						Property propTrigger = NavajoFactory.getInstance().createProperty(taskDoc, "trigger", Property.STRING_PROPERTY, t.getTrigger().getDescription(), 0, "", Property.DIR_OUT);
+						Property propWorkflowDef = NavajoFactory.getInstance().createProperty(taskDoc, "workflowdef", Property.STRING_PROPERTY, t.getWorkflowDefinition(), 0, "", Property.DIR_OUT);
+						Property propWorkflowId = NavajoFactory.getInstance().createProperty(taskDoc, "workflowid", Property.STRING_PROPERTY, t.getWorkflowId(), 0, "", Property.DIR_OUT);
+
+						Property propTaskDescription = NavajoFactory.getInstance().createProperty(taskDoc, "taskdescription", Property.STRING_PROPERTY, t.getTaskDescription(), 0, "", Property.DIR_OUT);
+						Property propClientId = NavajoFactory.getInstance().createProperty(taskDoc, "clientid", Property.STRING_PROPERTY, t.getClientId(), 0, "", Property.DIR_OUT);
+
+						newTask.addProperty(propId);
+						newTask.addProperty(propUser);
+						newTask.addProperty(propPassword);
+						newTask.addProperty(propService);
+						newTask.addProperty(propProxy);
+						newTask.addProperty(propKRS);
+						newTask.addProperty(propTrigger);
+						newTask.addProperty(propWorkflowDef);
+						newTask.addProperty(propWorkflowId);
+						newTask.addProperty(propTaskDescription);
+						newTask.addProperty(propClientId);
+
+						// Persist task request Navajo and tasks.xml
+						writeTaskConfig(taskDoc);
+					}
+
+				} catch (Throwable e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} finally {
+					if ( ssl != null ) {
+						releaseConfigLock(ssl);
 					}
 				}
+			}
 			
+			if ( t.isKeepRequestResponse() ) {
+				writeTaskInput(t);
+			}
+
 		}
 
 		return true;

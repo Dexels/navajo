@@ -392,13 +392,14 @@ public class Task implements Runnable, TaskMXBean, TaskInterface, Serializable {
 		isRunning = false;		
 
 		if ( myTrigger.isSingleEvent() ) {
-			if ( !keepRequestResponse ) {
-				TaskRunner.getInstance().removeTaskInput(this);
-			} else if ( getResponse() != null ){
-				TaskRunner.writeTaskOutput(this);
-			}
 			TaskRunner.getInstance().removeTask( this.getId() );
 		} 
+		
+		if ( !keepRequestResponse ) {
+			TaskRunner.getInstance().removeTaskInput(this);
+		} else if ( getResponse() != null ){
+			TaskRunner.getInstance().writeTaskOutput(this, myTrigger.isSingleEvent(), System.currentTimeMillis() );
+		}
 		
         // Invoke after triggers.
 		TaskRunner.getInstance().fireAfterTaskEvent(this, result);

@@ -8,8 +8,8 @@ import java.io.FilenameFilter;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.StringWriter;
 import java.util.ArrayList;
 
 import com.dexels.navajo.server.Dispatcher;
@@ -35,6 +35,7 @@ public class SharedFileStore implements SharedStoreInterface {
 	
 	private static String sharedStoreName = "sharedstore";
 	private File sharedStore = null;
+	private static Object lockSemaphore = new Object();
 	
 	private final String constructLockName(SharedStoreLock ssl) {
 		return ssl.owner + "_" + ssl.parent.replace('/', '_') + "_" + ssl.name + ".lock";
@@ -61,13 +62,6 @@ public class SharedFileStore implements SharedStoreInterface {
 			}
 		} 
 		return false;
-	}
-	
-	private final void removeLock(SharedStoreLock ssl) {
-		synchronized ( sharedStoreName ) {
-			File f = new File(sharedStore, constructLockName(ssl));
-			f.delete();
-		}
 	}
 	
 	private final SharedStoreLock readLock(String parent, String name, String owner) throws Exception {
@@ -160,26 +154,49 @@ public class SharedFileStore implements SharedStoreInterface {
 		return result;
 	}
 
-	public SharedStoreLock lock(String parent, String name, int lockType) {
-		System.err.println("ABOUT TO LOCK: (" + parent + "," + name + "," + lockType + ")");
-		SharedStoreLock ssl = new SharedStoreLock(name, parent);
-		ssl.lockType = lockType;
-		ssl.owner = Dispatcher.getInstance().getNavajoConfig().getInstanceName();
-		if ( !lockExists(ssl) ) {
-			try {
-				writeLock(ssl);
-				return ssl;
-			} catch (Exception e) {
-				e.printStackTrace(System.err);
+	public SharedStoreLock lock(String parent, String name, int lockType, boolean block) {
+		
+		if ( !TribeManager.getInstance().getIsChief() ) {
+			LockAnswer la = (LockAnswer) TribeManager.getInstance().askChief(
+					new GetLockRequest( parent, name, lockType, block));
+			return la.mySsl;
+		} else {
+			System.err.println("ABOUT TO LOCK: (" + parent + "," + name + "," + lockType + ")");
+			SharedStoreLock ssl = new SharedStoreLock(name, parent);
+			ssl.lockType = lockType;
+			ssl.owner = Dispatcher.getInstance().getNavajoConfig().getInstanceName();
+
+			synchronized (lockSemaphore) {
+
+				do {
+					if ( !lockExists(ssl) ) {
+						try {
+							writeLock(ssl);
+							System.err.println("WROTE LOCK, RETURNING LOCK FOR " + ssl.parent + "/" + ssl.name + " TO " + ssl.owner );
+							return ssl;
+						} catch (Exception e) {
+							e.printStackTrace(System.err);
+						}
+					}
+				} while ( block);
 			}
 		}
+
 		return null;
 	}
 
 	public void release(SharedStoreLock lock) {
-		//System.err.println("ABOUT TO RELEASE: " + lock);
-		if ( lock != null ) {
-			removeLock(lock);
+
+		if ( !TribeManager.getInstance().getIsChief() ) {
+			TribeManager.getInstance().askChief( new RemoveLockRequest(lock.parent, lock.name) );
+		} else {
+			synchronized (lockSemaphore) {
+				if ( lock != null ) {
+					System.err.println("RELEASING LOCK " + lock.parent + "/" + lock.name + " FOR " + lock.owner);
+					File f = new File(sharedStore, constructLockName(lock));
+					f.delete();
+				}
+			}
 		}
 	}
 
@@ -196,12 +213,9 @@ public class SharedFileStore implements SharedStoreInterface {
 
 		SharedStoreLock ssl = null;
 		try {
-			if ( requireLock) {
-				while ( ssl == null ) {
-					ssl = lock(parent, name, SharedFileStore.READ_WRITE_LOCK);
-				}
+			if (requireLock) {
+				ssl = lock(parent, name, SharedFileStore.READ_WRITE_LOCK, true);
 			}
-
 			File p = new File(sharedStore, parent);
 			if (!p.exists()) {
 				p.mkdirs();
@@ -227,7 +241,7 @@ public class SharedFileStore implements SharedStoreInterface {
 	}
 
 	public void createParent(String parent) {
-		SharedStoreLock ssl =  lock(parent, "", SharedFileStore.READ_WRITE_LOCK);
+		SharedStoreLock ssl =  lock(parent, "", SharedFileStore.READ_WRITE_LOCK, true);
 		try {
 			File p = new File(sharedStore, parent);
 			if (!p.exists()) {
@@ -247,9 +261,7 @@ public class SharedFileStore implements SharedStoreInterface {
 		SharedStoreLock ssl = null;
 		try {
 			if ( requireLock) {
-				while ( ssl == null ) {
-					ssl = lock(parent, name, SharedFileStore.READ_WRITE_LOCK);
-				}
+				ssl = lock(parent, name, SharedFileStore.READ_WRITE_LOCK, true);
 			}
 
 			File p = new File(sharedStore, parent);
@@ -263,6 +275,30 @@ public class SharedFileStore implements SharedStoreInterface {
 				sw.close();
 			} catch (Exception e) {
 				e.printStackTrace(System.err);
+			}
+		} finally {
+			if ( ssl != null ) {
+				release(ssl);
+			}
+		}
+	}
+
+	public OutputStream getOutputStream(String parent, String name, boolean requireLock) throws SharedStoreException {
+
+		SharedStoreLock ssl = null;
+		try {
+			if ( requireLock) {	
+				ssl = lock(parent, name, SharedFileStore.READ_WRITE_LOCK, true);
+			}
+			File p = new File(sharedStore, parent);
+			if (!p.exists()) {
+				p.mkdirs();
+			}
+			File f = new File(p, name);
+			try {
+				return new FileOutputStream(f);
+			} catch (FileNotFoundException e) {
+				throw new SharedStoreException(e.getMessage());
 			}
 		} finally {
 			if ( ssl != null ) {

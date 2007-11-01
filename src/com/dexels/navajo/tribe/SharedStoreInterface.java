@@ -1,6 +1,7 @@
 package com.dexels.navajo.tribe;
 
 import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  * A shared store is used as as persistent store for a Navajo Tribe cluster.
@@ -71,14 +72,15 @@ public interface SharedStoreInterface {
 	public boolean exists(String parent, String name);
 	
 	/**
-	 * Lock an object.
+	 * Lock an object, this method takes care of distributed synchronization for obtaining lock(!)
 	 * 
 	 * @param parent
 	 * @param name
 	 * @param lockType, can be READ_WRITE_LOCK(0) or WRITE_LOCK(1)
+	 * @param if block is set to true, method blocks until lock has been obtained.
 	 * @return SharedStoreLock if lock was granted, else null.
 	 */
-	public SharedStoreLock lock(String parent, String name, int lockType);
+	public SharedStoreLock lock(String parent, String name, int lockType, boolean block);
 	
 	/**
 	 * Get a specific object from the shared store. 
@@ -101,7 +103,18 @@ public interface SharedStoreInterface {
 	public InputStream getStream(String parent, String name) throws SharedStoreException;
 	
 	/**
+	 * Gets an object from the store as a stream for writing.
+	 * 
+	 * @param parent
+	 * @param name
+	 * @return
+	 * @throws SharedStoreException
+	 */
+	public OutputStream getOutputStream(String parent, String name, boolean requireLock) throws SharedStoreException;
+	
+	/**
 	 * Release the lock on an object.
+	 * Method takes care of distributed synchronization.
 	 * 
 	 * @param parent
 	 * @param name
@@ -109,7 +122,8 @@ public interface SharedStoreInterface {
 	public void release(SharedStoreLock lock);
 	
 	/**
-	 * Returns a SharedStoreLock of a specific object. Returns null if it does not exist.
+	 * Returns a SharedStoreLock of a specific object. Returns null if it does not exist. 
+	 * 
 	 * 
 	 * @param parent
 	 * @param name

@@ -30,6 +30,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 
+import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.types.Binary;
@@ -40,6 +41,7 @@ import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.server.UserException;
+import com.dexels.navajo.tribe.SharedStoreLock;
 import com.dexels.navajo.util.AuditLog;
 
 /**
@@ -123,6 +125,24 @@ public class TaskRunnerMap implements Mappable {
 		}
 		TaskRunner tr = TaskRunner.getInstance();
 		tr.removeTask(id);
+
+		// TODO: LOCK TASKS.XML
+		SharedStoreLock ssl = TaskRunner.getConfigLock();
+		try {
+			Navajo n = TaskRunner.getInstance().readConfig(false);
+			Message msgs = n.getMessage("tasks");
+			for (int i = 0; i < msgs.getArraySize(); i++) {
+				Message m = (Message) msgs.getMessage(i);
+				if ( m.getProperty("id").getValue().equals("id") ) {
+					msgs.removeMessage(m);
+					i = msgs.getArraySize() + 1;
+				}
+			}
+			TaskRunner.getInstance().writeTaskConfig(n);
+		} finally {
+			TaskRunner.releaseConfigLock(ssl);
+		}
+		// TODO: RELEASE LOCK ON TASKS.XML;
 	}
 	
 	public void setUpdate(boolean b) throws MappableException, UserException {

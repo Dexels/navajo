@@ -65,7 +65,8 @@ public final class ListenerStore {
 	public final boolean lock(String type, boolean activatedlisteners) {
 		synchronized (storeLocation) {
 			// Get lock on TimeTrigger listeners store.
-			LockAnswer la = (LockAnswer) TribeManager.getInstance().askChief(new GetLockRequest( ( activatedlisteners ? activatedListeners : storeLocation ), type, SharedStoreInterface.READ_WRITE_LOCK));
+			LockAnswer la = (LockAnswer) TribeManager.getInstance().askChief(
+					new GetLockRequest( ( activatedlisteners ? activatedListeners : storeLocation ), type, SharedStoreInterface.READ_WRITE_LOCK, false));
 			return la.acknowledged();
 		}
 	}
