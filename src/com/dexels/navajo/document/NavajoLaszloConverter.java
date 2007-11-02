@@ -308,7 +308,7 @@ public class NavajoLaszloConverter {
 					ClockTime ct = (ClockTime)current.getTypedValue();
 				  if(ct != null){
 				  	Date dv = ct.dateValue();
-				  	DateFormat dfct = new SimpleDateFormat("HH:MM");
+				  	DateFormat dfct = new SimpleDateFormat("HH:mm");
 				  	prop.setAttribute("value", dfct.format(dv));
 				  }else{
 						prop.setAttribute("value", current.getValue());
