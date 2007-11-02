@@ -13,6 +13,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
+import com.dexels.navajo.document.types.ClockTime;
 
 public class NavajoLaszloConverter {
 	public static Navajo createNavajoFromLaszlo(BufferedInputStream is) {
@@ -303,6 +304,16 @@ public class NavajoLaszloConverter {
 					}else{
 						prop.setAttribute("value", current.getValue());
 					}
+				}else if(current.getType().equals(Property.CLOCKTIME_PROPERTY)){
+					ClockTime ct = (ClockTime)current.getTypedValue();
+				  if(ct != null){
+				  	Date dv = ct.dateValue();
+				  	DateFormat dfct = new SimpleDateFormat("HH:ss");
+				  	prop.setAttribute("value", dfct.format(dv));
+				  }else{
+						prop.setAttribute("value", current.getValue());
+					}
+				  
 				}else{
 					prop.setAttribute("value", current.getValue());
 				}
@@ -312,9 +323,7 @@ public class NavajoLaszloConverter {
 				prop.setAttribute("type", current.getType());
 				prop.setAttribute("subtype", current.getSubType());
 				prop.setAttribute("length", "" + current.getLength());
-
-				
-				
+	
 				if (current.getType().equals(Property.SELECTION_PROPERTY)) {
 					ArrayList sel = current.getAllSelections();
 					for (int j = 0; j < sel.size(); j++) {
