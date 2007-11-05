@@ -9,6 +9,6 @@ public class ClusterState implements Serializable {
 
 	public String firstMember;
 	public HashSet<TribeMember> clusterMembers = new HashSet<TribeMember>();
-
+	
 
 }

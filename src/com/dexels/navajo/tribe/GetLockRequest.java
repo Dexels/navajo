@@ -2,7 +2,6 @@ package com.dexels.navajo.tribe;
 
 import java.io.Serializable;
 
-import com.dexels.navajo.server.Dispatcher;
 
 /**
  * A LockQuestion is a request for a lock.

@@ -21,6 +21,7 @@ import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.Dispatcher;
+import com.dexels.navajo.server.GenericThread;
 import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.server.UserException;
@@ -60,12 +61,14 @@ public class TribeManager extends ReceiverAdapter implements Mappable {
 	TribeMember theChief = null;
 	
 	static HashSet<Request> answerWaiters = new HashSet<Request>();
-	final static ClusterState state = new ClusterState();
+	private final static ClusterState state = new ClusterState();
 	
 	private static String myName;
 	public static boolean initializing = false;
 	private static TribeManager instance = null;
 	private static Object semaphore = new Object();
+	
+	private TribeMember [] members = null;
 	
 	public static TribeManager getInstance() {
 		
@@ -115,6 +118,7 @@ public class TribeManager extends ReceiverAdapter implements Mappable {
 				instance.broadcast(new SmokeSignal(myName, SmokeSignal.OBJECT_MEMBERSHIP, SmokeSignal.KEY_INTRODUCTION, candidate));
 				initializing = false;
 				semaphore.notify();
+				TribalStatusCollector.getInstance();
 			}
 		}
 		
@@ -310,7 +314,9 @@ public class TribeManager extends ReceiverAdapter implements Mappable {
 			Answer a = q.getAnswer();
 			System.err.println(myName + "My Answer is " + a.acknowledged() );
 			try {
-				channel.send(msg.getSrc(), null, a);
+				if ( q.isBlocking() ) { // Only send answer if it's a blocking request.
+					channel.send(msg.getSrc(), null, a);
+				}
 			} catch (ChannelNotConnectedException e) {
 				e.printStackTrace();
 			} catch (ChannelClosedException e) {
@@ -322,15 +328,31 @@ public class TribeManager extends ReceiverAdapter implements Mappable {
 			synchronized (answerWaiters) {
 				System.err.println("About to remove request: " + a.getMyRequest().getGuid() );
 				Request q = getWaitingRequest(a.getMyRequest());
-				if ( q != null ) {
-					q.setPredefinedAnswer(a);
-				}
+				q.setPredefinedAnswer(a);
 				removeWaitingRequest(a.getMyRequest());
 				answerWaiters.notify();
 			}
 		}
 	}
 
+	public Answer askSomebody(Request q, Address a) {
+		try {
+			channel.send(a, null, q);
+		} catch (ChannelNotConnectedException e) {
+			e.printStackTrace();
+		} catch (ChannelClosedException e) {
+			e.printStackTrace();
+		}
+		if ( q.isBlocking() ) {
+			answerWaiters.add(q);
+			System.err.println("Adding request in answerWaiters: " + q.getGuid() + ", size is: " + answerWaiters.size() );
+			Answer w = waitForAnswer(q);
+			return w;
+		} else {
+			return null;
+		}
+	}
+	
 	/**
 	 * Ask a question to the chief.
 	 * Ask Chief should be possible via webservice!!! Implement this....
@@ -429,10 +451,22 @@ public class TribeManager extends ReceiverAdapter implements Mappable {
 		instance.channel.close();
 	}
 	
+	public ClusterState getClusterState() {
+		return state;
+	}
+	
+	public TribeMember[] getMembers() {
+		members = new TribeMember[state.clusterMembers.size()];
+		members = state.clusterMembers.toArray(members);
+		return members;
+	}
+	
 	public static void main(String [] args) throws Exception {
 		System.err.println("Determining IP address...");
 		System.setProperty("java.net.preferIPv4Stack", "true");
 	  System.err.println("ip address = " + Inet4Address.getLocalHost().getHostAddress());
 	}
+
+	
 	
 }
