@@ -33,6 +33,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
 import java.util.StringTokenizer;
@@ -245,6 +247,8 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 	protected Navajo readConfig(boolean init) {
 		// Read task configuration file to read predefined tasks config/tasks.xml
 		
+		HashSet<String> currentTasks = new HashSet<String>();
+		
 		Navajo taskDoc = null;
 		try {
 
@@ -282,6 +286,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 							t.setId(id);
 							t.setKeepRequestResponse(keeprequestresponse.booleanValue());
 							readTaskInput(t);
+							currentTasks.add(t.getId());
 							// Remove previous version of this task.
 							clearTaskMap(id);
 							addTask(id, t, false);
@@ -305,6 +310,17 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 			e.printStackTrace(System.err);
 		} 
 		
+		// Check deleted tasks...
+		Iterator<Task> iters = tasks.values().iterator();
+		while ( iters.hasNext() ) {
+			Task t = iters.next();
+			if (t.getWorkflowDefinition() == null || t.getWorkflowDefinition().equals("") || !t.getTrigger().isSingleEvent() ) {
+				if ( !currentTasks.contains(t.getId()) ) {
+					System.err.println("Removing removed task from tasks.xml: " + t.getId() + " with trigger " + t.getTriggerDescription());
+					t.setRemove(true);
+				}
+			}
+		}
 		return taskDoc;
 	}
 	
