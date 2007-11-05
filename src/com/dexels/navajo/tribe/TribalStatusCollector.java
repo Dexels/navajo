@@ -1,5 +1,6 @@
 package com.dexels.navajo.tribe;
 
+import java.util.HashSet;
 import java.util.Iterator;
 
 import com.dexels.navajo.server.GenericThread;
@@ -45,7 +46,8 @@ public class TribalStatusCollector extends GenericThread {
 	
 	public void worker() {
 		ClusterState cs = TribeManager.getInstance().getClusterState();
-		Iterator<TribeMember> members = cs.clusterMembers.iterator();
+		HashSet<TribeMember> copyOf = new HashSet<TribeMember>(cs.clusterMembers);
+		Iterator<TribeMember> members = copyOf.iterator();
 		while ( members.hasNext() ) {
 			TribeMember tm = members.next();
 			PingAnswer pa = (PingAnswer) TribeManager.getInstance().askSomebody(new PingRequest(), tm.getAddress());

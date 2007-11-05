@@ -28,7 +28,7 @@ public class TaskRunnerFactory {
 					Method m = c.getMethod("getInstance", null);
 					ClockInterface myClock = (ClockInterface) m.invoke(dummy, null);
 				} catch (Exception e) {
-					e.printStackTrace(System.err);
+					//e.printStackTrace(System.err);
 					System.err.println("WARNING: Clock not available");
 				}	
 				try {
@@ -37,7 +37,7 @@ public class TaskRunnerFactory {
 					Method m = c.getMethod("getInstance", null);
 					instance = (TaskRunnerInterface) m.invoke(dummy, null);
 				} catch (Exception e) {
-					e.printStackTrace(System.err);
+					//e.printStackTrace(System.err);
 					System.err.println("WARNING: Scheduler not available");
 					instance = new DummyTaskRunner();
 				}	
@@ -47,8 +47,17 @@ public class TaskRunnerFactory {
 					Method m = c.getMethod("getInstance", null);
 					m.invoke(dummy, null);
 				} catch (Exception e) {
-					e.printStackTrace(System.err);
+					//e.printStackTrace(System.err);
 					System.err.println("WARNING: Clock not available");
+				}	
+				try {
+					Class c = Class.forName("com.dexels.navajo.scheduler.ListenerRunner");
+					Object dummy = c.newInstance();
+					Method m = c.getMethod("getInstance", null);
+					m.invoke(dummy, null);
+				} catch (Exception e) {
+					//e.printStackTrace(System.err);
+					System.err.println("WARNING: Listener Runner not available");
 				}	
 				
 			}

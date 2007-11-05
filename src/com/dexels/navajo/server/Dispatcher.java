@@ -30,14 +30,12 @@ import java.io.*;
 import java.util.*;
 import java.net.*;
 
-import com.dexels.navajo.scheduler.ListenerRunner;
-import com.dexels.navajo.scheduler.Trigger;
 import com.dexels.navajo.server.enterprise.queue.RequestResponseQueueFactory;
 import com.dexels.navajo.server.enterprise.scheduler.TaskInterface;
 import com.dexels.navajo.server.enterprise.scheduler.TaskRunnerFactory;
 import com.dexels.navajo.server.enterprise.scheduler.TaskRunnerInterface;
 import com.dexels.navajo.server.enterprise.scheduler.WebserviceListenerFactory;
-import com.dexels.navajo.server.enterprise.scheduler.WebserviceListenerRegistryInterface;
+import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
 import com.dexels.navajo.broadcast.BroadcastMessage;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.server.jmx.JMXHelper;
@@ -45,7 +43,6 @@ import com.dexels.navajo.server.jmx.SNMPManager;
 import com.dexels.navajo.util.AuditLog;
 import com.dexels.navajo.util.Util;
 import com.dexels.navajo.server.enterprise.integrity.WorkerInterface;
-import com.dexels.navajo.tribe.TribeManager;
 import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.loader.NavajoClassSupplier;
 import com.dexels.navajo.lockguard.Lock;
@@ -183,13 +180,12 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
   }
   
   public final void startUpServices() {
-	 
-		
-		  // Startup task runner.
-		  instance.navajoConfig.getTaskRunner();
-		  // Startup queued adapter.
-		  RequestResponseQueueFactory.getInstance();
-		
+
+	  // Startup task runner.
+	  instance.navajoConfig.getTaskRunner();
+	  // Startup queued adapter.
+	  RequestResponseQueueFactory.getInstance();
+
   }
   
   public static Dispatcher getInstance(URL configurationUrl, InputStreamReader fileInputStreamReader,String serverIdentification) throws NavajoException {
@@ -958,11 +954,9 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
    
     if ( !servicesBeingStarted && !servicesStarted ) {
     	servicesBeingStarted = true;
-    	if (TribeManager.getInstance() != null) {
+    	if (TribeManagerFactory.getInstance() != null) {
     		// After tribe exists, start other service (there are dependencies on existence of tribe!).
     		Dispatcher.getInstance().startUpServices();
-    		// Start ListenerRunner if tribemanager is alive and kicking!
-    		ListenerRunner.getInstance();
     	}
     	servicesStarted = true;
     	servicesBeingStarted = false;
@@ -1369,7 +1363,7 @@ private void appendServerBroadCast(Access a, Navajo in, Header h) {
 	  if ( instance != null ) {
 		  
 		  // Kill tribe manager.
-		  TribeManager.getInstance().terminate();
+		  TribeManagerFactory.getInstance().terminate();
 		  
 		  // Kill all supporting threads.
 		  GenericThread.killAllThreads();

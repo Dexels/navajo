@@ -27,6 +27,7 @@ import com.dexels.navajo.server.GenericThread;
 import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.server.UserException;
+import com.dexels.navajo.server.enterprise.tribe.TribeManagerInterface;
 import com.dexels.navajo.workflow.WorkFlowManager;
 
 /**
@@ -51,7 +52,7 @@ import com.dexels.navajo.workflow.WorkFlowManager;
  * @author arjen
  *
  */
-public class TribeManager extends ReceiverAdapter implements Mappable {
+public class TribeManager extends ReceiverAdapter implements Mappable, TribeManagerInterface {
 
 	public String setChief;
 	public String chiefName;
