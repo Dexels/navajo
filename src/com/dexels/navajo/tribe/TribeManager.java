@@ -1,6 +1,8 @@
 package com.dexels.navajo.tribe;
 
 import java.net.Inet4Address;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -60,7 +62,7 @@ public class TribeManager extends ReceiverAdapter implements Mappable {
 	TribeMember myMembership = null;
 	TribeMember theChief = null;
 	
-	static HashSet<Request> answerWaiters = new HashSet<Request>();
+	static Set<Request> answerWaiters = Collections.synchronizedSet(new HashSet<Request>());
 	private final static ClusterState state = new ClusterState();
 	
 	private static String myName;
@@ -68,7 +70,7 @@ public class TribeManager extends ReceiverAdapter implements Mappable {
 	private static TribeManager instance = null;
 	private static Object semaphore = new Object();
 	
-	private TribeMember [] members = null;
+	public TribeMember [] members = null;
 	
 	public static TribeManager getInstance() {
 		
@@ -164,7 +166,7 @@ public class TribeManager extends ReceiverAdapter implements Mappable {
 	public byte[] getState() {
 		try {
 			synchronized (state) {
-				System.err.println(myName + ": IN getState(), sending clusterMembers: " + state.clusterMembers.size() );
+				//System.err.println(myName + ": IN getState(), sending clusterMembers: " + state.clusterMembers.size() );
 				return Util.objectToByteBuffer(state);
 			}
 		}
@@ -175,14 +177,13 @@ public class TribeManager extends ReceiverAdapter implements Mappable {
 	}
 	 
 	public void setState(byte[] new_state) {
-		// De STATE wordt NOOIT goed gezet, waarom niet?????????????????
 		try {
 			ClusterState cs = (ClusterState) Util.objectFromByteBuffer(new_state);
-			System.err.println(myName + ": FirstMember IS: " + cs.firstMember);
-			System.err.println(myName + ": IN setState(), received clusterMembers: " + cs.clusterMembers.size() );
+			//System.err.println(myName + ": FirstMember IS: " + cs.firstMember);
+			//System.err.println(myName + ": IN setState(), received clusterMembers: " + cs.clusterMembers.size() );
 			HashSet<TribeMember> tribalMap= cs.clusterMembers;
 			synchronized (state) {
-				System.err.println(myName + ": CLEARING CLUSTERMEMBERS SET");
+				//System.err.println(myName + ": CLEARING CLUSTERMEMBERS SET");
 				state.clusterMembers.clear();
 				state.clusterMembers.addAll(tribalMap);
 			}
@@ -216,7 +217,7 @@ public class TribeManager extends ReceiverAdapter implements Mappable {
 				if ( mbr.getAddress().equals(channel.getLocalAddress() ) ) {
 					myMembership = mbr;
 				}
-				System.err.println(myName +  ">>>>VIEWVIEWVIEW>>>> " + mbr.getName() + ": " + mbr.getAddress() + ": " + mbr.isChief() + 
+				System.err.println(myName +  ">>>>VIEWVIEWVIEW>>>> " + mbr.getMemberName() + ": " + mbr.getAddress() + ": " + mbr.isChief() + 
 						( mbr.getAddress().equals(channel.getLocalAddress()) ? " (ME) " : "") );
 			}
 			
@@ -231,8 +232,7 @@ public class TribeManager extends ReceiverAdapter implements Mappable {
 			// Check if I have become the chief.
 			if ( new_view.getMembers().get(0).equals(myMembership.getAddress() )) {
 				myMembership.setChief(true);
-				System.err.println("I HAVE BECOME THE CHIEF!!!!!!");
-				
+				//System.err.println("I HAVE BECOME THE CHIEF!!!!!!");
 			}
 			
 			// Check whether members have died.
@@ -245,7 +245,7 @@ public class TribeManager extends ReceiverAdapter implements Mappable {
 						Iterator<TribeMember> iter = copyOf.iterator();
 						while ( iter.hasNext() ) {
 							TribeMember mbr = iter.next();
-							System.err.println(myName + ": CHECKING: " + mbr.getName());
+							System.err.println(myName + ": CHECKING: " + mbr.getMemberName());
 							if ( mbr.getAddress().equals(pv.get(i))) {
 								System.err.println(myName + ":FOUND DECEASED MEMBER IN CLUSTERMEMBERS LIST....");
 								state.clusterMembers.remove(mbr);
@@ -274,8 +274,8 @@ public class TribeManager extends ReceiverAdapter implements Mappable {
 	}
 	
 	private void moveSharedStoreData(TribeMember ptm) {
-		WorkFlowManager.getInstance().takeOverPersistedWorkFlows(ptm.getName());
-		RequestResponseQueue.getInstance().getMyStore().takeOverPersistedAdapters(ptm.getName());
+		WorkFlowManager.getInstance().takeOverPersistedWorkFlows(ptm.getMemberName());
+		RequestResponseQueue.getInstance().getMyStore().takeOverPersistedAdapters(ptm.getMemberName());
 	}
 	
 	public void kill() {
@@ -310,9 +310,9 @@ public class TribeManager extends ReceiverAdapter implements Mappable {
 			r.processMessage();
 		} else if ( msg.getObject() instanceof Request ) {
 			Request q = (Request) msg.getObject();
-			System.err.println(myName + "Received request " + q.getGuid());
+			//System.err.println(myName + "Received request " + q.getGuid());
 			Answer a = q.getAnswer();
-			System.err.println(myName + "My Answer is " + a.acknowledged() );
+			//System.err.println(myName + "My Answer is " + a.acknowledged() );
 			try {
 				if ( q.isBlocking() ) { // Only send answer if it's a blocking request.
 					channel.send(msg.getSrc(), null, a);
@@ -324,9 +324,9 @@ public class TribeManager extends ReceiverAdapter implements Mappable {
 			}
 		} else if ( msg.getObject() instanceof Answer ) {
 			Answer a = (Answer) msg.getObject();
-			System.err.println(myName + "Received answer...: " + a.acknowledged() );
+			//System.err.println(myName + "Received answer...: " + a.acknowledged() );
 			synchronized (answerWaiters) {
-				System.err.println("About to remove request: " + a.getMyRequest().getGuid() );
+				//System.err.println("About to remove request: " + a.getMyRequest().getGuid() );
 				Request q = getWaitingRequest(a.getMyRequest());
 				q.setPredefinedAnswer(a);
 				removeWaitingRequest(a.getMyRequest());
@@ -336,6 +336,11 @@ public class TribeManager extends ReceiverAdapter implements Mappable {
 	}
 
 	public Answer askSomebody(Request q, Address a) {
+		
+		// If it's myself.
+		if ( channel.getLocalAddress().equals(a)) {
+			return q.getAnswer();
+		}
 		try {
 			channel.send(a, null, q);
 		} catch (ChannelNotConnectedException e) {
@@ -345,7 +350,7 @@ public class TribeManager extends ReceiverAdapter implements Mappable {
 		}
 		if ( q.isBlocking() ) {
 			answerWaiters.add(q);
-			System.err.println("Adding request in answerWaiters: " + q.getGuid() + ", size is: " + answerWaiters.size() );
+			//System.err.println("Adding request in answerWaiters: " + q.getGuid() + ", size is: " + answerWaiters.size() );
 			Answer w = waitForAnswer(q);
 			return w;
 		} else {
@@ -381,15 +386,13 @@ public class TribeManager extends ReceiverAdapter implements Mappable {
 			}
 		}
 		
-		System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>  In AskChief(), q = " + q);
+		//System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>  In AskChief(), q = " + q);
 		if ( instance != null && !initializing ) {
 			if ( myMembership.isChief() ) {
-				System.err.println("I Am the Chief, hence I'll answer");
+				//System.err.println("I Am the Chief, hence I'll answer");
 				return q.getAnswer();
 			}
 			try {
-				System.err.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&& CHANNEL = " + channel);
-				System.err.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&& theChief = " + theChief);
 				channel.send(theChief.getAddress(), null, q);
 			} catch (ChannelNotConnectedException e) {
 				// TODO Auto-generated catch block
@@ -402,9 +405,9 @@ public class TribeManager extends ReceiverAdapter implements Mappable {
 			// Only wait for answer if request is blocking.
 			if ( q.isBlocking() ) {
 				answerWaiters.add(q);
-				System.err.println("Adding request in answerWaiters: " + q.getGuid() + ", size is: " + answerWaiters.size() );
+				//System.err.println("Adding request in answerWaiters: " + q.getGuid() + ", size is: " + answerWaiters.size() );
 				Answer w = waitForAnswer(q);
-				System.err.println(">>>>>>>>>>>>>>>>>>>>>>> Got answer from chief: " + w.acknowledged());
+				//System.err.println(">>>>>>>>>>>>>>>>>>>>>>> Got answer from chief: " + w.acknowledged());
 				return w;
 			}
 			
@@ -420,7 +423,7 @@ public class TribeManager extends ReceiverAdapter implements Mappable {
 	 * @return
 	 */
 	public String getChiefName() {
-		return theChief.getName();
+		return theChief.getMemberName();
 	}
 
 	/**
@@ -441,7 +444,7 @@ public class TribeManager extends ReceiverAdapter implements Mappable {
 				}
 			}
 		}
-		System.err.println("Finished waitForAnswer()");
+		//System.err.println("Finished waitForAnswer()");
 		return q.getPredefinedAnswer();
 	}
 	

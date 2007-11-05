@@ -11,10 +11,10 @@ import com.dexels.navajo.server.UserException;
 
 public class PingAnswer extends Answer implements Mappable {
 
-	private double cpuLoad;
-	private int threadCount;
-	private long requestCount;
-	private long uptime;
+	public double cpuLoad;
+	public int threadCount;
+	public long requestCount;
+	public long uptime;
 	
 	public PingAnswer(Request q) {
 		super(q);

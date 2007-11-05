@@ -91,7 +91,7 @@ public class SmokeSignal implements Serializable {
 			System.err.println(">>>>>>>>>>>>>> RECEIVED MEMBERSHIP REQUEST....................");
 			if ( getKey().equals(KEY_INTRODUCTION)  ) {
 				TribeMember tm = (TribeMember) getValue();
-				System.err.println(">>>>>>>>>>>>>> INTRODUCTION REQUEST FOR " + tm.getName() );
+				System.err.println(">>>>>>>>>>>>>> INTRODUCTION REQUEST FOR " + tm.getMemberName() );
 				TribeManager.getInstance().addTribeMember(tm);
 			}
 		}

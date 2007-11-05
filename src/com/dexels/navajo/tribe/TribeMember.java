@@ -17,20 +17,20 @@ public class TribeMember implements Serializable, Mappable {
 
 	private static final long serialVersionUID = -1371503985787191894L;
 	
-	private String name;
+	public String memberName;
 	private Address address;
-	private boolean isChief;
-	private Date joinDate;
-	private PingAnswer status;
+	public boolean isChief;
+	public Date joinDate;
+	public PingAnswer status;
 	
 	public TribeMember(String s, Address a) {
-		this.name = s;
+		this.memberName = s;
 		this.address = a;
 		this.joinDate = new Date();
 	}
 	
-	public String getName() {
-		return name;
+	public String getMemberName() {
+		return memberName;
 	}
 	
 	public Address getAddress() {
