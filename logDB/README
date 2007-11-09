@@ -1,0 +1,21 @@
+Voor het toevoegen van een <bond>NAVAJO gebruiker dienen de volgende
+stappen doorlopen te worden:
+
+1) Kopieer in de ddl/oracle9i/admin directory in het sportlink-dba project
+   een verenigingsvoorbeeld (niet create-sportdba.sql) en wijzig de
+   referenties naar het clubschema in <bond>NAVAJO.
+
+2) Laad het resultaat op de server via het reeds bestaande schema voor
+   de bond
+
+3) In het Navajo project in de directory dienen dan vervolgens in 
+   de directory logDB de volgende scripts geladen te worden in het
+   nieuwe gecreeerde schema <bond>NAVAJO:
+
+   createoraclestore.sql
+   alter.sql (niet meer nodig)
+   Alter-Table-NavajoAccess.sql
+   sp_processcleanupnavajolog.sql
+
+   Let op dat in de createoraclestore.sql de juiste tablespaces voor
+   de data en de indices gebruikt worden!
