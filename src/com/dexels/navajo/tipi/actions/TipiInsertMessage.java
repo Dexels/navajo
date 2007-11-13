@@ -53,6 +53,7 @@ public class TipiInsertMessage extends TipiAction {
 		
 		// TODO: Perhaps refactor into NavajoDocument
 		Message copy = definitionMessage.copy(arrayMessage.getRootDoc());
+		copy.setType("");
 		arrayMessage.addMessage(copy);
 		
 	}
