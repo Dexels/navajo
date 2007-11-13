@@ -46,10 +46,16 @@ public class TipiCallService extends TipiAction {
 			Navajo nn = input.copy();
 		//nn
 			// Don't let NavajoClient touch your original navajo! It will mess things up.
+			myContext.fireNavajoSent(input, service);
+			
 			Navajo result = NavajoClientFactory.getClient().doSimpleSend(nn, service);
+			myContext.fireNavajoReceived(result, service);
+
 			myContext.addNavajo(service, result);
 			// is this correct? It is a bit odd.
-			result.getHeader().setHeaderAttribute("sourceScript", result.getHeader().getRPCName());
+			if(result.getHeader()!=null) {
+				result.getHeader().setHeaderAttribute("sourceScript", result.getHeader().getRPCName());
+			}
 			myContext.loadNavajo(result, service);
 
 			
