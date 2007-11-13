@@ -316,15 +316,16 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 		for (int i = 0; i < defChildren.size(); i++) {
 			XMLElement xx = (XMLElement) defChildren.get(i);
 			String[] s = getCustomChildTags();
-			boolean customTag = false;
-			for (int j = 0; j < s.length; j++) {
-				if(s[j].equals(xx.getName())) {
-					customTag = true;
-				}
-			}
-			if(customTag) {
-				continue;
-			}
+//			boolean customTag = false;
+//			for (int j = 0; j < s.length; j++) {
+//				if(s[j].equals(xx.getName())) {
+//					customTag = true;
+//				}
+//			}
+//			if(customTag) {
+//				continue;
+//			}
+//			System.err.println("TAGNAME: "+xx.getName());
 			if (!xx.getName().equals("layout") && !xx.getName().equals("tipi-instance") && !xx.getName().equals("component-instance")&& !xx.getName().equals("component")) {
 				String type = xx.getStringAttribute("type");
 				if(type==null) {
