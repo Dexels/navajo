@@ -96,6 +96,9 @@ public class TipiInstantiateTipi extends TipiAction {
 		} else {
 			xe.setAttribute("name", definitionName);
 		}
+		if(id==null) {
+			myContext.generateComponentId(parent);
+		}
 		xe.setAttribute("id", id);
 		if (paramMap != null) {
 			Iterator it = paramMap.keySet().iterator();
