@@ -50,6 +50,8 @@ public abstract class TipiContext implements ActivityController {
 
 	protected final List myActivityListeners = new ArrayList();
 	private final ArrayList activityListenerList = new ArrayList();
+	
+	private final ArrayList navajoListenerList = new ArrayList();
 
 	protected final HashMap clientConfigMap = new HashMap();
 
@@ -115,6 +117,30 @@ public abstract class TipiContext implements ActivityController {
 		genericResourceLoader = tr;
 	}
 
+	public void addNavajoListener(TipiNavajoListener tnl) {
+		navajoListenerList.add(tnl);
+	}
+
+	public void removeNavajoListener(TipiNavajoListener tnl) {
+		navajoListenerList.remove(tnl);
+	}
+
+	public void fireNavajoReceived(Navajo n, String service) {
+		System.err.println("# of items in navajoListenerList: "+navajoListenerList.size());
+		for (Iterator iter = navajoListenerList.iterator(); iter.hasNext();) {
+			TipiNavajoListener element = (TipiNavajoListener) iter.next();
+			element.navajoReceived(n, service);
+		}
+	}
+
+	public void fireNavajoSent(Navajo n, String service) {
+		for (Iterator iter = navajoListenerList.iterator(); iter.hasNext();) {
+			TipiNavajoListener element = (TipiNavajoListener) iter.next();
+			element.navajoSent(n, service);
+		}
+	}
+
+	
 	// public void setResourceBaseDirectory(File f) {
 	// resourceBaseDirectory = f;
 	// }
@@ -509,7 +535,6 @@ public abstract class TipiContext implements ActivityController {
 			return u;
 		}
 
-		System.err.println("Resource: "+location+" not found in classpath. Trying: generic");
 		if (genericResourceLoader != null) {
 			try {
 				return genericResourceLoader.getResourceURL(location);
@@ -1274,8 +1299,10 @@ public abstract class TipiContext implements ActivityController {
 			TipiEvent event, long expirationInterval, String hosturl, String username, String password, String keystore, String keypass) throws TipiException, TipiBreakException {
 
 		ConditionErrorHandler ch = t;
-
+		fireNavajoSent(n, method);
 		Navajo reply = doSimpleSend(n, method, ch, expirationInterval, hosturl, username, password, keystore, keypass, breakOnError);
+		fireNavajoReceived(reply, method);
+
 		addNavajo(method, reply);
 		loadNavajo(reply, method, tipiDestinationPath, event, breakOnError);
 	}
@@ -2131,5 +2158,19 @@ public abstract class TipiContext implements ActivityController {
 	}
 
 	public abstract void showInfo(final String text, final String title);
+
+	public String generateComponentId(TipiComponent parent) {
+		String generated = "RandomId"+Math.random();
+		if(parent==null) {
+			return generated;
+		}
+		TipiComponent present = parent.getTipiComponent(generated);
+		if(present!=null) {
+			// try again
+			return generateComponentId(parent);
+		}
+		return generated;
+		
+	}
 
 }
