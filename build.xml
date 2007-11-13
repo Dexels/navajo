@@ -39,12 +39,9 @@
             <fileset dir="${build}">
               <exclude name="**/startup.fx"/>
               <exclude name="**/*.java"/>
-              <exclude name="**/*.properties"/>
               <exclude name="**/*.html"/>
               <exclude name="**/*.stylesheet"/>
               <exclude name="**/*.txt"/>
-              <exclude name="**/*.svg"/>
-              <exclude name="**/*.svgz"/>
             	
             </fileset>
          </copy>
@@ -59,13 +56,10 @@
             <fileset dir="${build}">
               <exclude name="**/startup.fx"/>
               <exclude name="**/*.java"/>
-              <exclude name="**/*.properties"/>
-              <exclude name="**/*.html"/>
+               <exclude name="**/*.html"/>
               <exclude name="**/*.stylesheet"/>
               <exclude name="**/*.txt"/>
-              <exclude name="**/*.svg"/>
-              <exclude name="**/*.svgz"/>
-            	
+             
             </fileset>
     	</jar>
     </target>

@@ -105,7 +105,6 @@ public class TipiSlideshowComponent extends TipiSvgComponent {
 						}});
 				}});
 			t.start();
-
 		}		
 		
 		super.setComponentValue(name, object);
@@ -141,13 +140,10 @@ public class TipiSlideshowComponent extends TipiSvgComponent {
 			index++;
 			return url;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (FlickrException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SAXException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;

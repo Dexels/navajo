@@ -12,5 +12,6 @@
 	<classpathentry kind="lib" path="lib/NavajoSwingClient.jar"/>
 	<classpathentry kind="lib" path="lib/batik-all.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/flickrapi-1.0b4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

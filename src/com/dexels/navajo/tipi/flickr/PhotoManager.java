@@ -134,8 +134,17 @@ public class PhotoManager {
     	if(al==null || al.isEmpty()) {
     		return null;
     	}
-    	URL res = (URL) al.get(0);
-    	return res.toString();
+    	Photo p = (Photo) al.get(0);
+
+		InputStream is = p.getMediumAsStream();
+		
+		File f = File.createTempFile("flickR", ".jpg");
+		f.deleteOnExit();
+		FileOutputStream fos = new FileOutputStream(f);
+		copyResource(fos, is);
+		
+
+    	return f.toURI().toURL().toString();
     }
     
     private ArrayList  getUrls(PhotoList pl) throws IOException {
@@ -153,13 +162,7 @@ public class PhotoManager {
 //				e.printStackTrace();
 //			}
 
-			InputStream is = p.getMediumAsStream();
-			
-			File f = File.createTempFile("flickR", ".jpg");
-			f.deleteOnExit();
-			FileOutputStream fos = new FileOutputStream(f);
-			copyResource(fos, is);
-			al.add(f.toURI().toURL());
+			al.add(p);
     	}
     	return al;
     }

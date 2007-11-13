@@ -109,7 +109,7 @@
 
     
       <tipiclass addtocontainer="true" class="TipiSvgButton"
-      module="component" name="button"
+      module="component" name="svgbutton"
       package="com.dexels.navajo.tipi.swing.svg"
       propertycomponent="false" studio-icon="button.gif" type="component">
       <events>

@@ -23,7 +23,7 @@ public class TipiSvgForm extends TipiSvgComponent implements
 	
 	private int currentIndex = 0;
 	
-	private String basePath = "Persons";
+	private String basePath = "Person";
 	private Message currentMessage;
 	private Message currentArrayMessage;
 	
@@ -117,8 +117,9 @@ public class TipiSvgForm extends TipiSvgComponent implements
 		System.err.println("Loading stuff");
 		super.loadData(n, method);
 		System.err.println("Loading stuff");
-		currentArrayMessage = n.getMessage(basePath);
-		currentMessage = currentArrayMessage.getMessage(currentIndex);
+	//	currentArrayMessage = n.getMessage(basePath);
+		//currentMessage = currentArrayMessage.getMessage(currentIndex);
+		currentMessage = n.getMessage(basePath);
 		updateForm();
 		
 		
@@ -141,7 +142,39 @@ public class TipiSvgForm extends TipiSvgComponent implements
 				String name = myComponent.getTagName(p.getName());
 				if(name.equals("text")) {
 					System.err.println("Setting text:");
-					myComponent.setTextContent(p.getName(), p.getTypedValue().toString());
+					Object typedValue = p.getTypedValue();
+					if(typedValue!=null) {
+						myComponent.setTextContent(p.getName(), typedValue.toString());
+					}
+				}
+				if(name.equals("image")) {
+					System.err.println("Image found!");
+					Object typedValue = p.getTypedValue();
+					
+					if(typedValue!=null && typedValue instanceof Binary) {
+						System.err.println("Binary found!");
+						
+						Binary b = (Binary)typedValue;
+						URL url;
+						try {
+							url = b.getURL();
+							if(url!=null) {
+
+								myComponent.setAttribute("http://www.w3.org/1999/xlink",p.getName(),"xlink:href",url.toString());
+								System.err.println("url: "+url.toString());
+							} else {
+								System.err.println("Null url!");
+							}
+						} catch (MalformedURLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						
+					} else {
+						myComponent.setAttribute("http://www.w3.org/1999/xlink",p.getName(),"xlink:href",getClass().getClassLoader().getResource("tipi/icons/navigate_cross_red.png").toString());
+						
+					}
+					
 				}
 			}
 		}
