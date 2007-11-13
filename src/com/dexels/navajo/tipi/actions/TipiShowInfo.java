@@ -17,8 +17,14 @@ public class TipiShowInfo extends TipiAction {
 	public void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
 		// String txt = getParameter("text").getValue();
 		final Operand op = getEvaluatedParameter("text", event);
-
-		final String txt = ((String) op.value).replaceAll("\n", " ");
+		Object oo = op.value;
+		String result = "";
+		if(oo==null) {
+			result = "Null value!";
+		} else {
+			result = oo.toString();
+		}
+		final String txt = (result).replaceAll("\n", " ");
 		myContext.showInfo(txt, "Info");
 	}
 }
