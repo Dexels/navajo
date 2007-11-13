@@ -25,7 +25,7 @@ import com.dexels.navajo.tipi.internal.*;
 public class TipiCallService extends TipiAction {
 	public void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
 		
-
+		String unevaluated = getParameter("input").getValue();
 		Operand serviceOperand = getEvaluatedParameter("service", event);
 		Operand inputOperand = getEvaluatedParameter("input", event);
 		if (serviceOperand == null || serviceOperand.value == null) {
@@ -36,9 +36,13 @@ public class TipiCallService extends TipiAction {
 		if(inputOperand!=null) {
 			input = (Navajo) inputOperand.value;
 		}
+
+		if(unevaluated!=null && input==null) {
+			throw new TipiException("Input navajo not found when calling service: "+service+" supplied input: "+unevaluated);
+		}
 		if(input==null) {
-			throw new TipiException("Input navajo not found when calling service: "+service);
-//			input = NavajoFactory.getInstance().createNavajo();
+//			throw new TipiException("Input navajo not found when calling service: "+service);
+			input = NavajoFactory.getInstance().createNavajo();
 		}
 
 //		myContext.doSimpleSend(input, service, getComponent(), getExecutableChildCount(), false)
