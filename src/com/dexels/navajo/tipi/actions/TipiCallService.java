@@ -37,7 +37,8 @@ public class TipiCallService extends TipiAction {
 			input = (Navajo) inputOperand.value;
 		}
 		if(input==null) {
-			input = NavajoFactory.getInstance().createNavajo();
+			throw new TipiException("Input navajo not found when calling service: "+service);
+//			input = NavajoFactory.getInstance().createNavajo();
 		}
 
 //		myContext.doSimpleSend(input, service, getComponent(), getExecutableChildCount(), false)
