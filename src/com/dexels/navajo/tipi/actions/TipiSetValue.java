@@ -1,6 +1,7 @@
 package com.dexels.navajo.tipi.actions;
 
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.internal.*;
 
 /**
@@ -28,8 +29,8 @@ public final class TipiSetValue extends TipiAction {
 		String value = getParameter("from").getValue();
 		Operand evaluated = evaluate(path, event);
 		Operand evaluatedValue = evaluate(value, event);
-		if (evaluated == null) {
-			return;
+		if (evaluated == null || evaluated.value==null) {
+			throw new TipiException("Error in setValue: to evaluation failed. Expression: "+path+" (from: "+value+")");
 		}
 		if (evaluatedValue == null) {
 			evaluatedValue = new Operand(null, "string", null);
@@ -37,13 +38,14 @@ public final class TipiSetValue extends TipiAction {
 			if (evaluated.value instanceof Property) {
 				Property p = (Property) evaluated.value;
 				p.setAnyValue(evaluatedValue.value);
-			}
-			if (evaluatedValue != null) {
-			}
+			} else 
 			if (evaluated.value instanceof TipiReference) {
 				TipiReference p = (TipiReference) evaluated.value;
 				p.setValue(evaluatedValue.value, myComponent);
+			} else {
+				throw new TipiException("Error in setValue: illegal 'to' parameter. Expression: "+path+" (from: "+value+")");
 			}
+			
 		}
 	}
 }
