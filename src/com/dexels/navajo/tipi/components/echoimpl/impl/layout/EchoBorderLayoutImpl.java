@@ -26,15 +26,11 @@ public class EchoBorderLayoutImpl extends EchoLayoutImpl {
 			String con = ((String)constraint).toLowerCase();
 			String height = null;
 			
-			System.err.println("BRAA: "+con+" component # "+i);
-			
 			if(con.contains(":")) {
 				StringTokenizer st = new StringTokenizer(""+con,":");
 				con = st.nextToken();
 				height = st.nextToken();
-				System.err.println("CON: "+con+" height = "+height);
-			}
-			System.err.println("Checking constraint: "+con+" component # "+i);
+				}
 			if("north".equals(con)) {
 				northComponent = current;
 				if(height!=null) {
@@ -77,8 +73,7 @@ public class EchoBorderLayoutImpl extends EchoLayoutImpl {
 			}
 		}
 //		myParent.addToContainer(sp, null);
-	System.err.println("Adding class: "+ sp.getClass()+"Parent class: "+((TipiEchoDataComponentImpl)myParent).getInnerComponent().getClass());
-
+	
 		((TipiEchoDataComponentImpl)myParent).getInnerComponent().add(sp);
 		
 	}
