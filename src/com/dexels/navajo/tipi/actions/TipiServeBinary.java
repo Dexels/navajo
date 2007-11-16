@@ -45,11 +45,12 @@ public class TipiServeBinary extends TipiAction {
             if(binary==null) {
             	binary = getEvaluatedParameter("value", e);
             }
+            URL baseUrl = null;
             
-            
-//            Operand baseUrlOperand = getEvaluatedParameter("baseUrl", e);
-//            URL baseUrl = ee.getBaseUrl();
-            //new URL((String)baseUrlOperand.value);
+            Operand baseUrlOperand = getEvaluatedParameter("baseUrl", e);
+            if(baseUrlOperand!=null && baseUrlOperand.value!=null &&!"".equals(baseUrlOperand.value)) {
+                baseUrl = new URL((String)baseUrlOperand.value);
+            }
 
             Binary b = null;
             if (binary.value instanceof URL) {
@@ -58,8 +59,19 @@ public class TipiServeBinary extends TipiAction {
             	b = new Binary(is,false);
             	is.close();
 			} else {
-				b = (Binary)binary.value;
+				if(binary.value instanceof Binary) {
+					b = (Binary)binary.value;
+				} else {
+					System.err.println("Binary class: "+binary.value.getClass());
+					System.err.println(">>>>>>>>>>>>>>>>\n"+binary.value);
+					b = new Binary(new StringReader((String)binary.value));
+				}
 			}
+            if(b==null) {
+            	System.err.println("No binary found!");
+            	myContext.showInfo("can not open binary property!", "info");
+            	return;
+            }
             String extension = b.getExtension();
             String random = new String(""+Math.random()).substring(2,7);
             File xx = new File(baseDir,"binary"+random+"."+extension);
@@ -69,7 +81,14 @@ public class TipiServeBinary extends TipiAction {
             b.write(fos);
             fos.flush();
             fos.close();
-            URL result = ee.getDynamicResourceBaseUrl(xx.getName());
+            URL result = null;
+            if(baseUrl!=null) {
+                result = new URL(baseUrl, xx.getName());
+            } else {
+                result = ee.getDynamicResourceBaseUrl(xx.getName());
+            }
+            
+            System.err.println("Resulting url: "+result);
 //            URL result = new URL(baseUrl.toString()+"/binary"+random+"."+extension);
             Command brc = new BrowserOpenWindowCommand(result.toString(),"reports"+random,"_blank");
             ApplicationInstance.getActive().enqueueCommand(brc);
