@@ -44,22 +44,18 @@ public class CookieParser extends TipiTypeParser {
 //    }
 
     public Object parseCookie(String s) {
-    	System.err.println("%%%%%%%%%%%%%%%%%% qParsing COOKIE: "+s);
-        if(s==null) {
+    	 if(s==null) {
             return null;
         }
         Command c = new Command(){};
         ContainerContext containerContext = (ContainerContext) ((EchoTipiContext)myContext).getInstance().getContextProperty(ContainerContext.CONTEXT_PROPERTY_NAME);
-        System.err.println("Context....");
         if(containerContext==null) {
         	System.err.println("No containerContext!");
         }
         Cookie[] cc = containerContext.getCookies();
-        System.err.println("Cookies....");
-        System.err.println("# of cookies: "+cc.length);
+     
         for (int i = 0; i < cc.length; i++) {
-        	System.err.println("Cookie # "+i+" has name: "+cc[i].getName()+" and value: "+cc[i].getValue());
-			if(cc[i].getName().equals(s)) {
+    		if(cc[i].getName().equals(s)) {
 				return cc[i].getValue();
 			}
 		}

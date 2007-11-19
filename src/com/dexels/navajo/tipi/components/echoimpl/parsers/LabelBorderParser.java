@@ -49,7 +49,7 @@ public class LabelBorderParser extends TipiTypeParser {
         // return parsePercent(s.substring(0,s.length()-2));
         // }
         // return parsePixels(s);
-        System.err.println("PARSING BORDER:::: "+s);
+//        System.err.println("PARSING BORDER:::: "+s);
         int size = 1;
         StringTokenizer st = new StringTokenizer(s, "-");
         String borderName = st.nextToken();
