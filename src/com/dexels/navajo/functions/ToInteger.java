@@ -20,7 +20,7 @@ public final class ToInteger extends FunctionInterface {
     public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
         Object o = this.getOperands().get(0);
 
-        if (o == null)
+        if (o == null || "".equals(o))
           return null;
 
         if (o instanceof Double)
