@@ -1556,7 +1556,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 		if (selected) {
 			setSelected(s);
 		} else {
-			if ("+".equals(getCardinality())) {
+			if (!"+".equals(getCardinality())) {
 				s.setSelected(false);
 				clearSelections();
 			}
