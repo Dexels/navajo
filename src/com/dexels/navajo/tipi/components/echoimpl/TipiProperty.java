@@ -205,6 +205,9 @@ public class TipiProperty extends TipiEchoComponentImpl implements PropertyCompo
               return "" + myProperty.getTypedValue();
             }
           }
+          if (myProperty.getType().equals(Property.BINARY_PROPERTY)) {
+        	  return myProperty.getTypedValue();
+          }
           return "" + myProperty.getTypedValue();
         }
       }
@@ -244,6 +247,12 @@ public class TipiProperty extends TipiEchoComponentImpl implements PropertyCompo
         if ("showlabel".equals(name)) {
             EchoPropertyComponent me = (EchoPropertyComponent) getActualComponent();
             me.setLabelVisible(((Boolean)object).booleanValue());
+        	return;
+
+        }
+        if ("allowDateOverlay".equals(name)) {
+            EchoPropertyComponent me = (EchoPropertyComponent) getActualComponent();
+            me.setAllowDateOverlay(((Boolean)object).booleanValue());
         	return;
 
         }
@@ -290,6 +299,14 @@ public class TipiProperty extends TipiEchoComponentImpl implements PropertyCompo
             myPropertyComponent.setMultiRowCount(((Integer) object).intValue());
         	return;
         }
+        if ("maxImageHeight".equals(name)) {
+            myPropertyComponent.setMaxImageHeight(((Integer) object).intValue());
+        	return;
+        }
+        if ("maxImageWidth".equals(name)) {
+            myPropertyComponent.setMaxImageWidth(((Integer) object).intValue());
+        	return;
+        }        
         // if("verticalScrolls".equals(name)) {
         // setVerticalScrolls(((Boolean) object).booleanValue());
         // }
@@ -325,7 +342,11 @@ public class TipiProperty extends TipiEchoComponentImpl implements PropertyCompo
         	return;
          }
         
-        
+        if ("allowStringLineWrap".equals(name)) {
+        	myPropertyComponent.setAllowLineWrap(((Boolean)object).booleanValue());
+        	return;
+        }
+ 
         super.setComponentValue(name, object);
     }
 

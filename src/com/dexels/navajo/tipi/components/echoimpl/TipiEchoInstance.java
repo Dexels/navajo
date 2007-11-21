@@ -110,6 +110,9 @@ public class TipiEchoInstance extends ApplicationInstance {
 		System.err.println("REAL PATH: " + myServletContext.getRealPath("/"));
 		// Title.Sub
 		context = new EchoTipiContext(this);
+		ServletContextResourceLoader servletContextResourceLoader = new ServletContextResourceLoader(myServletContext,"WEB-INF/classes/tipi");
+		context.setTipiResourceLoader(servletContextResourceLoader);
+		context.setGenericResourceLoader(servletContextResourceLoader);
 	//	context.setResourceBaseDirectory(new File(myServletContext.getRealPath("/") + "resource/tipi/"));
 		getContextProperty(ContainerContext.CONTEXT_PROPERTY_NAME);
 		TipiScreen es = new TipiScreen();
@@ -123,8 +126,6 @@ public class TipiEchoInstance extends ApplicationInstance {
 		} catch (Throwable ex) {
 			ex.printStackTrace();
 		}
-		context.setStudioMode(false);
-
 	}
 
 	public void loadTipi(URL tipidef) throws IOException, TipiException {
@@ -132,23 +133,31 @@ public class TipiEchoInstance extends ApplicationInstance {
 	}
 
 	public void loadTipi(String fileName) throws IOException, TipiException {
-		File rootDir = new File(myServletContext.getRealPath("/"));
-		File dir = null;
-		if (tipiDir == null) {
-			dir = rootDir;
+		InputStream in = context.getTipiResourceStream(fileName);
+
+		if(in!=null) {
+			context.parseStream(in, "startup", false);
+			in.close();
+			 
 		} else {
-			dir = new File(rootDir, tipiDir);
+			throw new TipiException("Error loading tipi: "+fileName);
 		}
-		File f = new File(dir, fileName);
-		URL resourceURL = getClass().getClassLoader().getResource(fileName);
-		// context.parseFile(f, false, tipiDir);
-		if(resourceURL!=null) {
-		InputStream in = resourceURL.openStream();
-		context.parseStream(in, "startup", false);
-		in.close();
-		} else {
-			System.err.println("Error loading: tipi: "+fileName);
-		}
+//		File rootDir = new File(myServletContext.getRealPath("/"));
+//		File dir = null;
+//		if (tipiDir == null) {
+//			dir = rootDir;
+//		} else {
+//			dir = new File(rootDir, tipiDir);
+//		}
+//		File f = new File(dir, fileName);
+//		URL resourceURL = getClass().getClassLoader().getResource(fileName);
+//		// context.parseFile(f, false, tipiDir);
+//		if(resourceURL!=null) {
+//		InputStream in = resourceURL.openStream();
+//		} else {
+//			System.err.println("Error loading: tipi: "+fileName);
+//		}
+//		
 		}
 
 	public Window init() {
@@ -156,7 +165,7 @@ public class TipiEchoInstance extends ApplicationInstance {
 		System.err.println("Startup finished");
 		TipiScreen echo = (TipiScreen) context.getDefaultTopLevel();
 		System.err.println("echo: " + echo.store());
-
+ 
 		TipiFrame w = (TipiFrame) echo.getTipiComponent("init");
 		if (w == null) {
 			throw new RuntimeException("No toplevel found!");
@@ -168,7 +177,6 @@ public class TipiEchoInstance extends ApplicationInstance {
 	private void initServlet(Enumeration args) throws Exception {
 		System.setProperty("com.dexels.navajo.propertyMap", "tipi.propertymap");
 		checkForProperties(args);
-		context.setStudioMode(false);
 		loadTipi(tipiDef);
 	}
 

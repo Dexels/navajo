@@ -136,10 +136,10 @@ public final class TipiWindow
     
     
     public void addToContainer(final Object c, final Object constraints) {
-        System.err.println("In window. Visible: "+ ((WindowPane) getContainer()).isVisible()+" w: "+ ((WindowPane) getContainer()).getWidth()+" h: "+ ((WindowPane) getContainer()).getHeight());
+//        System.err.println("In window. Visible: "+ ((WindowPane) getContainer()).isVisible()+" w: "+ ((WindowPane) getContainer()).getWidth()+" h: "+ ((WindowPane) getContainer()).getHeight());
         if(layoutComponent!=null) {
          	// do layoutstuff
-        	 System.err.println("LAYOUT DETECTED ON FRAME!!!!");
+//        	 System.err.println("LAYOUT DETECTED ON FRAME!!!!");
          	layoutComponent.setParentComponent(this);
          	layoutComponent.addChildComponent((Component) c, constraints);
          } else {

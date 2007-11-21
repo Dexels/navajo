@@ -72,10 +72,12 @@ public abstract class TipiEchoDataComponentImpl extends TipiDataComponentImpl {
     
     public void addToContainer(Object c, Object constraints) {
 
-      	System.err.println("\n********************************\nAttempting to add component: "+c.getClass()+" to: "+getClass()+"\n********************************\n");
       	Component cc;
         cc = (Component) getActualComponent();
         Component child = (Component) c;
+      	System.err.println("\n********************************\nAttempting to add component: "+c.getClass()+" to: "+getClass()+"\n********************************\n");
+                
+        
 //        if (layoutComponent != null) {
 //            cc = layoutComponent;
 //        }
@@ -136,8 +138,8 @@ public abstract class TipiEchoDataComponentImpl extends TipiDataComponentImpl {
      * @throws TipiException
      * @todo Implement this com.dexels.navajo.tipi.TipiDataComponent method
      */
-    public void loadData(Navajo n, TipiContext context, String method,String server) throws TipiException, TipiBreakException {
-        super.loadData(n, context, method,server);
+    public void loadData(Navajo n, String method) throws TipiException, TipiBreakException {
+        super.loadData(n,  method);
     }
     
     public void processStyles() {

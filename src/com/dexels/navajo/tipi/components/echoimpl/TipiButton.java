@@ -46,7 +46,6 @@ public class TipiButton extends TipiEchoComponentImpl {
 //        myButton.setAlignment(new Alignment(Alignment.CENTER, Alignment.DEFAULT));
         myButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
-				System.err.println("Button pressed!");
 				try {
 					performTipiEvent("onActionPerformed",null, true);
 				} catch (TipiException e) {
@@ -105,7 +104,7 @@ public class TipiButton extends TipiEchoComponentImpl {
             TipiEvent current = (TipiEvent) getEventList().get(i);
             if (current.isTrigger("onActionPerformed", "aap")) {
               try {
-            	  System.err.println("Button performing action (explicit fire): "+current.getEventName());
+//            	  System.err.println("Button performing action (explicit fire): "+current.getEventName());
                 current.performAction(current,current,0);
               }
               catch (TipiException ex) {
@@ -141,7 +140,7 @@ public class TipiButton extends TipiEchoComponentImpl {
         if ("icon".equals(name)) {
             if (object instanceof URL) {
                 URL u = (URL) object;
-                System.err.println("Setting URL icon for button: "+u);
+//                System.err.println("Setting URL icon for button: "+u);
                 myButton.setIcon(new URLImageReference(u));
             } else {
                 System.err.println("Can not set button icon: I guess it failed to parse (TipiButton)");

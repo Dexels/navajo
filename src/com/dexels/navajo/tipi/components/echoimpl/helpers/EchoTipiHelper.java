@@ -132,31 +132,27 @@ public class EchoTipiHelper implements TipiHelper {
             return;
         }
         if (te.isTrigger("onActionPerformed", null)) {
-            // System.err.println("\nAttempting to REGISTER:
-            // onActionPerformed!!\n\n\n\n");
-            // MenuItem m;
-            Button b;
-            try {
-                java.lang.reflect.Method m = c.getClass().getMethod("addActionListener", new Class[] { ActionListener.class });
-                ActionListener bert = new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-//                        try {
-                            // System.err.println("Firing component: " +c);
-                            try {
-								myComponent.performTipiEvent("onActionPerformed", null, true);
-							} catch (TipiException e1) {
-							
-								e1.printStackTrace();
-							}
-//                        } catch (Throwable ex) {
-//                            ex.printStackTrace();
+//            // System.err.println("\nAttempting to REGISTER:
+//            // onActionPerformed!!\n\n\n\n");
+//            // MenuItem m;
+//            Button b;
+//            try {
+//                java.lang.reflect.Method m = c.getClass().getMethod("addActionListener", new Class[] { ActionListener.class });
+//                ActionListener bert = new ActionListener() {
+//                    public void actionPerformed(ActionEvent e) {
+//                            try {
+//								myComponent.performTipiEvent("onActionPerformed", null, true);
+//							} catch (TipiException e1) {
+//							
+//								e1.printStackTrace();
+//							}
 //                        }
-                    }
-                };
-                m.invoke(c, new Object[] { bert });
-            } catch (Exception exe) {
-                exe.printStackTrace();
-            }
+//                    }
+//                };
+//                m.invoke(c, new Object[] { bert });
+//            } catch (Exception exe) {
+//                exe.printStackTrace();
+//            }
         }
 
     }

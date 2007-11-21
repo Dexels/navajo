@@ -71,8 +71,8 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
     public Object createContainer() {
         final TipiComponent me = this;
         myTabbedPane = new TabbedPane();
-//        myTabbedPane.setStyleName("Default");
-//        defaultTabModel = new DefaultTabModel();
+        myTabbedPane.setStyleName("Default");
+        defaultTabModel = new DefaultTabModel();
 //        defaultTabModel.setSelectedBackground(new Color(255, 255, 255));
 //        defaultTabModel.setSelectedForeground(new Color(0, 0, 0));
 //        defaultTabModel.setForeground(new Color(153, 153, 153));
@@ -139,6 +139,7 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
 
         while (defaultTabModel.size() > 0) {
             defaultTabModel.removeTabAt(0);
+            
         }
     }
 
@@ -162,8 +163,8 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
             System.err.println("Sh!34#@$!");
             return;
         }
-//        ButtonEx selected = (ButtonEx) defaultTabModel.getTabAt(i, true);
-//        selected.setIcon(valid ? validImage : inValidImage);
+        ButtonEx selected = (ButtonEx) defaultTabModel.getTabAt(myTabbedPane,i, true);
+        selected.setIcon(valid ? validImage : inValidImage);
     }
 
     public void setComponentValue(String name, Object object) {

@@ -52,12 +52,15 @@
         <!--<param name="destination" type="string"/>-->
     </tipiaction>
     
- 
+ <!--  DEPRECATED!!!! -->
   <tipiaction name="servebinary"  class="TipiServeBinary" package="com.dexels.navajo.tipi.actions">
    <param name="binary" type="string"/>
-   <param name="string" type="baseUrl"/>
   </tipiaction>
-
+  
+  <tipiaction name="serveBinary"  class="TipiServeBinary" package="com.dexels.navajo.tipi.actions">
+   <param name="binary" type="string"/>
+  </tipiaction>
+  
     <tipiaction name="openBinary"  class="TipiServeBinary" package="com.dexels.navajo.tipi.actions">
         <param name="binary" type="string"/>
         <param name="string" type="baseUrl"/>
@@ -450,6 +453,15 @@
     	</values>
         <methods/>
     </tipiclass>
+    <tipiclass class="TipiHtmlLabel" name="htmllabel" package="com.dexels.navajo.tipi.components.echoimpl" type="tipi" childcount="0" layoutmanager="false" addtocontainer="true" toplevel="false">
+        <events>
+            <event name="onInstantiate"/>
+        </events>
+        <values>
+            <value direction="in" name="text" type="string"/>
+    	</values>
+        <methods/>
+    </tipiclass>
 
     <tipiclass class="TipiLabel" name="hidden" package="com.dexels.navajo.tipi.components.echoimpl" type="tipi" childcount="0" layoutmanager="false" addtocontainer="true" toplevel="false">
         <events>
@@ -701,6 +713,7 @@
             <event name="onFocusLost"/>
             <event name="onEnter"/>
             <event name="onActionPerformed"/>
+            <event name="onBinarySelected"/>
             
  			<!-- only included for compatibility reasons. Not implement. -->
             <event name="onKey">
@@ -720,6 +733,7 @@
             <value diretction="inout" name="propertyValue" type="object"/>
             <value direction="inout" name="enabled" type="boolean"/>
             <value direction="inout" name="visible" type="boolean"/>
+            <value direction="inout" name="allowStringLineWrap" type="boolean"/>
             <value direction="inout" name="use_checkbox" type="boolean"/>
             <value direction="in" name="visibleRowCount" type="integer"/>
             <value direction="in" name="width" type="integer"/>
@@ -758,8 +772,10 @@
             <value direction="in" name="memoColumnCount" type="integer"/>
             <value direction="in" name="horizontalScrolls" type="boolean"/>
             <value direction="in" name="verticalScrolls" type="boolean"/>
-          
-            
+            <value direction="in" name="maxImageHeight" type="integer"/>
+            <value direction="in" name="maxImageWidth" type="integer"/>
+           <value direction="in" name="allowDateOverlay" type="boolean"/>
+
         </values>
         <methods/>
     </tipiclass>

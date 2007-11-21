@@ -234,17 +234,6 @@ public class TipiDialog extends TipiEchoDataComponentImpl {
         myWindow = null;
    }
 
-    private final void constructDialog() {
-        // System.err.println("Constructing: studio? "+isStudioElement());
-        if (myContext.isStudioMode() && !isStudioElement()) {
-            //
-            studioMode = true;
-        } else {
-            constructStandardDialog();
-            studioMode = false;
-        }
-    }
-
     private final void constructStandardDialog() {
         TipiScreen s = (TipiScreen) getContext().getDefaultTopLevel();
         final Window win = (Window) s.getTopLevel();
@@ -370,7 +359,7 @@ public class TipiDialog extends TipiEchoDataComponentImpl {
         // SwingUtilities.isEventDispatchThread();
         super.performComponentMethod(name, compMeth, event);
         if (name.equals("show")) {
-            constructDialog();
+            constructStandardDialog();
         }
         // }
         // });

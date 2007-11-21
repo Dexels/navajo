@@ -224,7 +224,8 @@ public class EchoTipiContext extends TipiContext {
 
 	public void showInfo(String text, String title) {
         ApplicationInstance.getActive().enqueueCommand(new JavaScriptEval("alert('" + text + "')"));
-		
+	//System.err.println("Show info found: ");
+//	Thread.dumpStack();
 	}
 
 
