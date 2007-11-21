@@ -221,6 +221,11 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 			setValue((Double) o);
 			return;
 		}
+		if (o instanceof Float) {
+			setType(Property.FLOAT_PROPERTY);
+			setValue((Float) o);
+			return;
+		}
 		if (o instanceof Binary) {
 			setType(Property.BINARY_PROPERTY);
 			setValue((Binary) o);
@@ -1040,41 +1045,6 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 		}
 	}
 
-	// Filthy hack. I there are some probs with typed value, in respect to
-	// displaying a date.
-	// I did not dare to change propertyimpl.
-	// Maybe later, when I feel brave... Frank
-	private final Object getAlternativeTypedValue() {
-		if (getType().equals("boolean")) {
-			if (getValue() == null) {
-				return "false";
-			} else {
-				return ((String) getValue()).equals("true") ? "true" : "false";
-			}
-		}
-		if (getType().equals("string")) {
-			return (String) getValue();
-		}
-		if (getType().equals("date")) {
-			try {
-				if (Date.class.isInstance(getValue())) {
-					return getValue();
-				} else {
-					try {
-						Date d = dateFormat1.parse((String) getValue());
-						return d;
-					} catch (Exception ex0) {
-						Date d = dateFormat2.parse((String) getValue());
-						return d;
-					}
-				}
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-		}
-		return getValue();
-	}
-
 	public int hashCode() {
 		return super.hashCode();
 	}
@@ -1211,10 +1181,12 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 
 	public final void setSelected(ArrayList al) throws com.dexels.navajo.document.NavajoException {
 		setAllSelected(false);
+		
+		
 		for (int i = 0; i < al.size(); i++) {
 			String s = (String) al.get(i);
 			Selection sl = getSelectionByValue(s);
-			setSelected(sl);
+			setSelected(sl.getValue());
 		}
 
 	}
