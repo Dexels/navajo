@@ -10,6 +10,11 @@ import com.dexels.navajo.document.base.BaseNavajoImpl;
 import com.dexels.navajo.document.base.BasePropertyImpl;
 import com.dexels.navajo.document.base.BaseSelectionImpl;
 import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.document.types.ClockTime;
+import com.dexels.navajo.document.types.Money;
+import com.dexels.navajo.document.types.Percentage;
+import com.dexels.navajo.document.types.StopwatchTime;
+import com.dexels.navajo.document.types.Memo;
 
 public class TestProperty extends TestCase {
 	NavajoDocumentTestFicture navajodocumenttestfictureInst = new NavajoDocumentTestFicture(this);
@@ -83,6 +88,37 @@ public class TestProperty extends TestCase {
 		Binary b1 = (Binary) p1.getTypedValue();
 		String expected = new String(b1.getData());
 		assertEquals("Mooie array", expected);
+		
+		// Money
+		p1.setAnyValue(new Money(50));
+		assertEquals("money", p1.getType());
+		assertEquals("50.00", p1.getValue());
+		assertTrue(p1.getTypedValue().equals(new Money(50)));
+		
+		// ClockTime
+		Date d1 = new java.util.Date();
+		ClockTime ct = new ClockTime(d1);
+		String expectedFormat2 = ct.toString();
+		p1.setAnyValue(ct);
+		assertEquals("clocktime", p1.getType());
+		assertEquals(expectedFormat2, p1.getValue());
+		assertTrue(p1.getTypedValue().equals(new ClockTime(d1)));
+		
+		// StopwatchTime
+		Date d2 = new java.util.Date();
+		String format = new SimpleDateFormat("HH:mm:ss:SS").format(d2);
+		StopwatchTime swt = new StopwatchTime(format);
+		p1.setAnyValue(swt);
+		assertEquals("stopwatchtime", p1.getType());
+		assertEquals(format, p1.getValue());
+		assertTrue(p1.getTypedValue().equals(new StopwatchTime(format)));
+		
+		// Percentage
+		Percentage p = new Percentage(50);
+		p1.setAnyValue(p);
+		assertEquals("percentage", p1.getType());
+		assertEquals("50.0", p1.getValue());
+		assertTrue(p1.getTypedValue().equals(new Percentage(50)));
 		
 	}
 	
