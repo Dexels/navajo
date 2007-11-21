@@ -18,6 +18,7 @@
       <include name="**/*.jar"/>
     </fileset>-->
   </path>
+   
   <target name="init">
     <tstamp/>
     <mkdir dir="${build}"/>
@@ -53,6 +54,17 @@
       <fileset dir="${DexelsVersionControl.build}"/>
     </jar>
   </target>
+   <path id="test.class.path">
+       <pathelement path="${build}"/>
+       </path>
+    <target name="test" description="Run the JUnit tests">
+        <junit printsummary="yes" haltonfailure="yes">
+            <classpath refid="test.class.path"/>
+            <formatter type="plain"/>
+            <test name="NavajoTestSuite" outfile="result"
+                todir="/home/arjen"/>
+        </junit>
+    </target>  
 	 <target name="nano" depends="compile">
 	    <jar jarfile="${nano.archive}">
 	      <fileset dir="${build}">
@@ -75,6 +87,6 @@
       <fileset dir="${DexelsVersionControl.build}"/>
     </jar>
   </target>
-  <target name="archive" depends="base,nano,jaxp"/>
+  <target name="archive" depends="test,base,nano,jaxp"/>
 </project>
 <!-- EOF: $RCSfile$ -->
