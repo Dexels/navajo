@@ -871,7 +871,9 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 			if (current == s) {
 				current.setSelected(true);
 			} else {
-				current.setSelected(false);
+				if(!"+".equals(getCardinality())){
+					current.setSelected(false);
+				}
 			}
 			firePropertyDataChanged(oldSel, current.getValue());
 		}
