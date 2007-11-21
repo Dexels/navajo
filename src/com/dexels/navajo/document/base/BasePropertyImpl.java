@@ -465,6 +465,17 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 				System.err.println("Numberformat exception...");
 				return null;
 			}
+		} else if (getType().equals(Property.LONG_PROPERTY)) {
+			if (getValue() == null || getValue().equals("")) {
+				return null;
+			}
+			try {
+				// Added a trim. Frank.
+				return new Long(Long.parseLong(getValue().trim()));
+			} catch (NumberFormatException ex3) {
+				System.err.println("Numberformat exception...");
+				return null;
+			}
 		} else if (getType().equals(Property.FLOAT_PROPERTY)) {
 			if (getValue() == null || getValue().equals("")) {
 				return null;
