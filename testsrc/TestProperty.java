@@ -1,5 +1,7 @@
 
 import junit.framework.*;
+
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.dexels.navajo.document.*;
@@ -7,6 +9,7 @@ import com.dexels.navajo.document.base.BaseMessageImpl;
 import com.dexels.navajo.document.base.BaseNavajoImpl;
 import com.dexels.navajo.document.base.BasePropertyImpl;
 import com.dexels.navajo.document.base.BaseSelectionImpl;
+import com.dexels.navajo.document.types.Binary;
 
 public class TestProperty extends TestCase {
 	NavajoDocumentTestFicture navajodocumenttestfictureInst = new NavajoDocumentTestFicture(this);
@@ -32,24 +35,55 @@ public class TestProperty extends TestCase {
 		// String
 		p1.setAnyValue("Apenoot");
 		assertEquals("string", p1.getType());
+		assertEquals("Apenoot", p1.getValue());
+		assertTrue(p1.getTypedValue().equals("Apenoot"));
+		
 		// Integer
 		p1.setAnyValue(new Integer(50));
 		assertEquals("integer", p1.getType());
+		assertEquals("50", p1.getValue());
+		assertTrue(p1.getTypedValue().equals(new Integer(50)));
+		
 		// Double
 		p1.setAnyValue(new Double(50));
 		assertEquals("float", p1.getType());
+		assertEquals("50.0", p1.getValue());
+		assertTrue(p1.getTypedValue().equals(new Double(50)));
+		
 		// Float
 		p1.setAnyValue(new Float(50));
 		assertEquals("float", p1.getType());
+		assertEquals("50.0", p1.getValue());
+		assertTrue(p1.getTypedValue().equals(new Double(50)));
+		
 		// Date
-		p1.setAnyValue(new java.util.Date());
+		Date d = new java.util.Date();
+		p1.setAnyValue(d);
+		String expectedFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SS").format(d);
 		assertEquals("date", p1.getType());
+		assertEquals(expectedFormat, p1.getValue());
+		assertTrue(p1.getTypedValue().equals(d));
+		
 		// Long
 		p1.setAnyValue(new Long(10));
 		assertEquals("long", p1.getType());
+		assertEquals("10", p1.getValue());
+		assertTrue(p1.getTypedValue().equals(new Long(10)));
+		
 		// Boolean
 		p1.setAnyValue(Boolean.TRUE);
 		assertEquals("boolean", p1.getType());
+		assertEquals("true", p1.getValue());
+		assertTrue(p1.getTypedValue().equals(Boolean.TRUE));
+		
+		// Binary
+		Binary b = new Binary("Mooie array".getBytes());
+		p1.setAnyValue(b);
+		assertEquals("binary", p1.getType());
+		Binary b1 = (Binary) p1.getTypedValue();
+		String expected = new String(b1.getData());
+		assertEquals("Mooie array", expected);
+		
 	}
 	
 	public void testAddSelection() {
