@@ -29,7 +29,6 @@ import java.util.HashMap;
 import java.util.StringTokenizer;
 
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.GenericThread;
 import com.dexels.navajo.util.AuditLog;
 

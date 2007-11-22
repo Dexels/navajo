@@ -8,7 +8,6 @@ import com.dexels.navajo.server.enterprise.queue.Queable;
 import com.dexels.navajo.tribe.SharedStoreException;
 import com.dexels.navajo.tribe.SharedStoreFactory;
 import com.dexels.navajo.tribe.SharedStoreInterface;
-import com.dexels.navajo.workflow.WorkFlow;
 
 /**
  * The FileStore uses the Navajo SharedStoreInterface for storing queued adapters.

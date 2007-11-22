@@ -33,16 +33,17 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 	private final ArrayList<WorkFlow> workflowInstances = new ArrayList<WorkFlow>();
 	private final HashMap<String,WorkFlowDefinition> workflowDefinitions = new HashMap<String,WorkFlowDefinition>();
 	private static String id = "Navajo WorkFlow Manager";
-	public static String VERSION = "$Id$";
+	public static final String VERSION = "$Id$";
 	
 	private String workflowPath = null;
 	private String baseWorkflowPath = null;
 	private String workflowDefinitionPath = null;
 	
 	private long configTimestamp = -1;
+	private final static Random rand = new Random(System.currentTimeMillis());
 	
 	protected static final String generateWorkflowId() {
-		long l = new Random().nextLong();
+		long l = rand.nextLong();
 		return "workflow-"+l;
 	}
 	

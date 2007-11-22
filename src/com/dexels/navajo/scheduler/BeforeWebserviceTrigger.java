@@ -1,14 +1,6 @@
 package com.dexels.navajo.scheduler;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
-
-import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.server.Access;
-import com.dexels.navajo.server.GenericThread;
 
 public class BeforeWebserviceTrigger extends WebserviceTrigger implements Serializable {
 

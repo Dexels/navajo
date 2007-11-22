@@ -16,7 +16,7 @@ import com.dexels.navajo.workflow.WorkFlowManager;
 
 public final class ListenerStore {
 
-	public static Object semaphore = new Object();
+	public static final Object semaphore = new Object();
 	private static Object semaphore_init = new Object();
 	public static final String storeLocation = "listeners";
 	public static final String activatedListeners = "listeners/activated";

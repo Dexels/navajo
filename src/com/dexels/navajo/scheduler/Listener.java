@@ -1,7 +1,6 @@
 package com.dexels.navajo.scheduler;
 
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.server.Access;
 
 public interface Listener  {
 	

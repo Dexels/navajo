@@ -30,7 +30,6 @@ import java.util.Date;
 
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.Dispatcher;

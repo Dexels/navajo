@@ -32,7 +32,6 @@ import java.io.Serializable;
 import java.util.Calendar;
 
 import com.dexels.navajo.server.Access;
-import com.dexels.navajo.server.Dispatcher;
 
 public abstract class Trigger implements Listener, Serializable {
 

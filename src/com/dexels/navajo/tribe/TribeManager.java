@@ -67,7 +67,7 @@ public class TribeManager extends ReceiverAdapter implements Mappable, TribeMana
 	private final static ClusterState state = new ClusterState();
 	
 	private static String myName;
-	public static boolean initializing = false;
+	protected static boolean initializing = false;
 	private static TribeManager instance = null;
 	private static Object semaphore = new Object();
 	
@@ -437,13 +437,14 @@ public class TribeManager extends ReceiverAdapter implements Mappable, TribeMana
 	}
 
 	public Answer waitForAnswer(Request q) {
-		while (containsWaitingRequest(q) ) {
-			synchronized (answerWaiters) {
+		synchronized (answerWaiters) {
+			while (containsWaitingRequest(q) ) {
 				try {
 					answerWaiters.wait();
 				} catch (InterruptedException e) {
 				}
 			}
+
 		}
 		//System.err.println("Finished waitForAnswer()");
 		return q.getPredefinedAnswer();

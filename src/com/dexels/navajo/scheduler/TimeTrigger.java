@@ -30,7 +30,6 @@ import java.util.Calendar;
 import java.util.StringTokenizer;
 
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.GenericThread;
 
 public class TimeTrigger extends Trigger implements Serializable, ClockListener {

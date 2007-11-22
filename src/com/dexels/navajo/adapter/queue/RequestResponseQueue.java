@@ -30,7 +30,7 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 	private static volatile RequestResponseQueue instance = null;
 	private static Object semaphore = new Object();
 	private static String id = "Queued adapters";
-	public static String VERSION = "$Id$";
+	public final static String VERSION = "$Id$";
 	private int MAX_THREADS = 25;
 	private long SLEEPING_TIME = 60000;
 	private int MAX_RETRIES = 10;

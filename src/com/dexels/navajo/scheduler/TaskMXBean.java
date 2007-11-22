@@ -1,7 +1,5 @@
 package com.dexels.navajo.scheduler;
 
-import com.dexels.navajo.server.jmx.GenericThreadMXBean;
-
 public interface TaskMXBean {
 
 	public String getWebservice();
