@@ -1,8 +1,6 @@
 package com.dexels.navajo.tribe;
 
 import java.io.Serializable;
-import java.util.Iterator;
-import java.util.Set;
 
 import com.dexels.navajo.scheduler.BeforeWebserviceTrigger;
 import com.dexels.navajo.scheduler.ListenerStore;
@@ -63,21 +61,18 @@ public class SmokeSignal implements Serializable {
 	 * @param m
 	 */
 	public void processMessage() {
-		System.err.println("SmokeSignal: PROCESS MESSAGE.....");
+		System.err.println("SmokeSignal: PROCESS MESSAGE (" + getObject() + "/" + getKey() + "/" + getValue() + ")");
 		if ( getObject().equals(OBJECT_LISTENERS)) {
 			ListenerStore ls = ListenerStore.getInstance();
 			// Determine key.
 			if ( getKey().equals(KEY_LISTENERS_ADD_WEBSERVICE)) {
 				String value = (String) getValue();
-				System.err.println("ADDING REGISTERED WEBSERVICE: " + value);
 				ls.addRegisteredWebservice(value);
 			} else if ( getKey().equals(KEY_LISTENERS_REMOVE_WEBSERVICE) ) {
 				String value = (String) getValue();
 				ls.removeRegisteredWebservice(value);
 			} else if ( getKey().equals(KEY_LISTENERS_AFTERWEBSERVICE_EVENT)) {
 				WebserviceTrigger awt = (WebserviceTrigger) getValue();
-				System.err.println("Received AFTER webservice event.........");
-				System.err.println(">>> ACCESS OBJECT: " + awt.getAccess());
 				if ( awt.getTask().getWorkflowId() == null || WorkFlowManager.getInstance().hasWorkflowId(awt.getTask().getWorkflowId()) ) {
 					awt.perform();
 				}
@@ -88,10 +83,8 @@ public class SmokeSignal implements Serializable {
 				}
 			} 
 		} else if ( getObject().equals(OBJECT_MEMBERSHIP) ) {
-			System.err.println(">>>>>>>>>>>>>> RECEIVED MEMBERSHIP REQUEST....................");
 			if ( getKey().equals(KEY_INTRODUCTION)  ) {
 				TribeMember tm = (TribeMember) getValue();
-				System.err.println(">>>>>>>>>>>>>> INTRODUCTION REQUEST FOR " + tm.getMemberName() );
 				TribeManager.getInstance().addTribeMember(tm);
 			}
 		}
