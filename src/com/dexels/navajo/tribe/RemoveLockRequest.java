@@ -1,8 +1,6 @@
 package com.dexels.navajo.tribe;
 
-import java.io.Serializable;
-
-public class RemoveLockRequest extends Request implements Serializable {
+public class RemoveLockRequest extends Request {
 
 	/**
 	 * 

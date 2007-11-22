@@ -1,8 +1,5 @@
 package com.dexels.navajo.tribe;
 
-import java.io.Serializable;
-
-
 /**
  * A LockQuestion is a request for a lock.
  * Also implement LockReleaseRequest...
@@ -10,7 +7,7 @@ import java.io.Serializable;
  * @author arjen
  *
  */
-public class GetLockRequest extends Request implements Serializable {
+public class GetLockRequest extends Request {
 
 	/**
 	 * 
