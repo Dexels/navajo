@@ -287,10 +287,48 @@ public class TestMessage extends TestCase {
      Assert.assertNull(p);
   }
 
-  public void testSetName() {
+  public void testArrayMessages() throws Exception {
+	 
+	  Message m = NavajoFactory.getInstance().createMessage(testDoc, "MyTop");
+	  testDoc.addMessage(m);
+	  Message a = NavajoFactory.getInstance().createMessage(testDoc, "MyArrayMessage", "array");
+	  m.addMessage(a);
+	  for (int i = 0; i < 5; i++) {
+		  Message a1 = NavajoFactory.getInstance().createMessage(testDoc, "MyArrayMessage");
+		  a.addMessage(a1);
+		  Property p = NavajoFactory.getInstance().createProperty(testDoc, "MyProp", "string", "noot" + i, 0, "", "in");
+		  a1.addProperty(p);
+	  }
+	  assertEquals("array", testDoc.getMessage("/MyTop/MyArrayMessage").getType());
+	  assertEquals(5, testDoc.getMessage("/MyTop/MyArrayMessage").getArraySize());
+	  assertNotNull(testDoc.getProperty("/MyTop/MyArrayMessage@1/MyProp"));
+	  assertEquals("noot3", testDoc.getProperty("/MyTop/MyArrayMessage@3/MyProp").getValue());
+	  
+	  ArrayList al = testDoc.getMessages("/MyTop/MyArrayMessage");
+	  for (int i = 0; i < al.size(); i++) {
+		  assertEquals("noot"+i, ((Message) al.get(i)).getProperty("MyProp").getValue());
+		  // MyTop is my parent message(!) parent array is ignored!!
+		  assertEquals("MyTop", ((Message) al.get(i)).getParentMessage().getName());
+	  }
+	  
+  }
+  
+  public void testSetName() throws Exception {
+	  Message m = NavajoFactory.getInstance().createMessage(testDoc, "MyTop");
+	  testDoc.addMessage(m);
+	  m.setName("MyOtherTop");
+	  System.err.println(">>>" + testDoc.getMessage("MyTop"));
+	  assertNull(testDoc.getMessage("MyTop"));
+	  assertNotNull(testDoc.getMessage("MyOtherTop"));
   }
 
-  public void testToString() {
+  public void testAddIgnoreMessage() throws Exception {
+	  Message m = NavajoFactory.getInstance().createMessage(testDoc, "MyTop");
+	  testDoc.addMessage(m);
+	  Message m2 = NavajoFactory.getInstance().createMessage(testDoc, "MyIgnoredMessage");
+	  m2.setMode("ignore");
+	  m.addMessage(m2);
+	  assertNull(testDoc.getMessage("/MyTop/MyIgnoredMessage"));
   }
 
 }
