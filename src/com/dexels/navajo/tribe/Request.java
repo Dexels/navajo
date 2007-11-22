@@ -3,7 +3,6 @@ package com.dexels.navajo.tribe;
 import java.io.Serializable;
 
 import com.dexels.navajo.server.Dispatcher;
-import com.dexels.navajo.util.Util;
 
 public abstract class Request implements Serializable {
 

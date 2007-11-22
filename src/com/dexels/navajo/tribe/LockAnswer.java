@@ -1,6 +1,5 @@
 package com.dexels.navajo.tribe;
 
-import java.io.Serializable;
 
 public class LockAnswer extends Answer {
 
