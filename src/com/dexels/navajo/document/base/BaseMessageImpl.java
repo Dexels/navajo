@@ -38,7 +38,7 @@ public  class BaseMessageImpl extends BaseNode implements Message, TreeNode, Com
 
     protected ArrayList propertyList = null;
 
-    private TreeMap messageMap = null;
+    protected TreeMap messageMap = null;
 
     private List messageList = null;
 
@@ -98,8 +98,29 @@ public  class BaseMessageImpl extends BaseNode implements Message, TreeNode, Com
         myCondition = condition;
     }
 
+    /**
+     * For internal use only, sets the initial message name.
+     * 
+     * @param name
+     */
+    protected final void setNameInitially(String name) {
+    	myName = name;
+    }
+    
+    /**
+     * Changes the name of a message.
+     * 
+     * @param name
+     */
     public final void setName(String name) {
-        myName = name;
+    	// Fix the messageMap collection to account for the changed message name.
+    	if ( ((BaseMessageImpl) getParentMessage()).messageMap != null ) {
+    		((BaseMessageImpl) getParentMessage()).messageMap.remove(myName);
+    	}
+    	myName = name;
+    	if ( ((BaseMessageImpl) getParentMessage()).messageMap != null ) {
+    		((BaseMessageImpl) getParentMessage()).messageMap.put(name, this);
+    	}
     }
 
     public final void setMode(String mode) {
@@ -182,7 +203,7 @@ public  class BaseMessageImpl extends BaseNode implements Message, TreeNode, Com
       	if ( !m.getType().equals(MSG_TYPE_DEFINITION) ) {
       		m.setIndex(messageList.size());
       	}
-          m.setName(getName());
+          ((BaseMessageImpl) m).setNameInitially(getName());
       }
       messageList.add(m);
 
@@ -205,7 +226,7 @@ public  class BaseMessageImpl extends BaseNode implements Message, TreeNode, Com
         messageList.add(index, m);
         messageMap.put(m.getName(), m);
         m.setIndex(index);
-        m.setName(getName());
+        ((BaseMessageImpl) m).setNameInitially(getName());
         m.setParent(this);
     }
 
@@ -656,7 +677,7 @@ public  class BaseMessageImpl extends BaseNode implements Message, TreeNode, Com
         if (!MSG_TYPE_ARRAY.equals(getType())) {
             throw new RuntimeException("Adding array element to non-array message");
         }
-        m.setName(getName());
+        ((BaseMessageImpl) m).setNameInitially(getName());
         addMessage(m);
     }
 
