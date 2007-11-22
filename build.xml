@@ -92,6 +92,7 @@
 
 				<!-- enterprise -->
 				<exclude name="com/dexels/navajo/scheduler/**" />
+			    <exclude name="com/dexels/navajo/tribe/**" />
 			    <exclude name="com/dexels/navajo/workflow/**" />
 				<exclude name="com/dexels/navajo/adapter/**" />
 				<exclude name="com/dexels/navajo/integrity/**" />
@@ -128,6 +129,7 @@
 			<fileset dir="${build}">
 				<include name="com/dexels/navajo/scheduler/**" />
 			    <include name="com/dexels/navajo/workflow/**" />
+			    <include name="com/dexels/navajo/tribe/**" />
 				<include name="com/dexels/navajo/adapter/**" />
 				<include name="com/dexels/navajo/integrity/**" />
 				<include name="com/dexels/navajo/server/descriptionprovider/**" />
