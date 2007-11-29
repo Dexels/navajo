@@ -1,8 +1,14 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
+import java.awt.event.*;
+import java.util.*;
+
 import javax.swing.*;
+
+import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
+import com.dexels.navajo.tipi.internal.*;
 
 /**
  * <p>Title: </p>
@@ -25,6 +31,52 @@ public TipiTextArea() {
     th.initHelper(this);
     JScrollPane jsp = new JScrollPane(myTextArea);
     addHelper(th);
+    myTextArea.addKeyListener(new KeyListener() {
+        public void keyTyped(KeyEvent e) {
+            Map m = getEventMap(e);
+            m.put("mode", "typed");
+            if (e.getKeyCode()==KeyEvent.VK_ENTER) {
+                try {
+                performTipiEvent("onEnter", m, true);
+                } catch (TipiException e1) {
+                    e1.printStackTrace();
+                }
+			}
+            try {
+                performTipiEvent("onKey", m, true);
+            } catch (TipiException e1) {
+                e1.printStackTrace();
+            }
+        }
+
+        public void keyPressed(KeyEvent e) {
+            Map m = getEventMap(e);
+            m.put("mode", "typed");
+            try {
+                performTipiEvent("onKey", m, true);
+            } catch (TipiException e1) {
+                e1.printStackTrace();
+            }
+        }
+
+        public void keyReleased(KeyEvent e) {
+            Map m = getEventMap(e);
+            m.put("mode", "released");
+            try {
+                performTipiEvent("onKey", m, true);
+            } catch (TipiException e1) {
+                e1.printStackTrace();
+            }
+        }
+        
+        public Map getEventMap(KeyEvent e) {
+            Map hm = new HashMap();
+            hm.put("code", new Integer(e.getKeyCode()));
+            hm.put("modifiers", e.getKeyModifiersText(e.getModifiers()));
+            hm.put("key", e.getKeyText(e.getKeyCode()));
+            return hm;
+        }
+    });
     return jsp;
   }
 
@@ -46,4 +98,26 @@ public TipiTextArea() {
     }
     return super.getComponentValue(name);
   }
+  
+
+	protected void performComponentMethod(String name, TipiComponentMethod compMeth, TipiEvent event) throws TipiBreakException {
+		super.performComponentMethod(name, compMeth, event);
+
+		if (name.equals("append")) {
+			Operand o = compMeth.getEvaluatedParameter("text", event);
+			if (o != null) {
+				String result = (String) o.value;
+				myTextArea.append(result);
+			}
+		}
+		if (name.equals("appendLine")) {
+			Operand o = compMeth.getEvaluatedParameter("text", event);
+			if (o != null) {
+				String result = (String) o.value;
+				myTextArea.setText(myTextArea.getText()+result+"\n");
+			}
+		}
+
+	}
+
 }
