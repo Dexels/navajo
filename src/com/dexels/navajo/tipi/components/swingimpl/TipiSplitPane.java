@@ -32,6 +32,7 @@ public class TipiSplitPane extends TipiSwingDataComponentImpl {
     sp.setOneTouchExpandable(true);
     sp.setDividerSize(10);
     sp.setDividerLocation(0.5);
+    sp.setContinuousLayout(true);
     return sp;
   }
 
