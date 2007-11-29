@@ -50,16 +50,23 @@ public class MessageTableFooterRenderer
    MessageTable mm = (MessageTable)table;
 
 
+
    Operand val = (Operand)aggregateValueMap.get(new Integer(column));
+   
 //     setText(""+val.value);
 //     return this;
+//   if(mm.isShowingRowHeaders()) {
+//	   column--;
+//   }
+   myPropComponent.setComponentBorder(null);
    if (val!=null) {
       setupProp(mm,val,column);
      return myPropComponent;
    }
-   String expr = (String)aggregateMap.get(new Integer(column));
+
+   String expr = (String)aggregateMap.get(new Integer(column-1));
    if (expr==null) {
-     setText("-");
+     setText("");
      return this;
    } else {
     try {
@@ -95,6 +102,7 @@ public class MessageTableFooterRenderer
      ex1.printStackTrace();
    }
     myPropComponent.setProperty(p);
+  //  myPropComponent
 //    System.err.println("TYPE: "+p.getType()+" name: "+p.getName()+" value: "+p.getValue());
    }
  }
