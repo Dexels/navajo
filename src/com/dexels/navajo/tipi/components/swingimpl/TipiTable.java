@@ -91,7 +91,7 @@ public class TipiTable
   
   public final void load(XMLElement elm, XMLElement instance, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
     mm = (MessageTablePanel) getContainer();
-    mm.removeAllColumns();
+   mm.removeAllColumns();
     removeAllAggregate();
     columnSize.clear();
     mm.setFooterRenderer(null);
@@ -363,6 +363,13 @@ public class TipiTable
       mm.setRowHeight( ( (Integer) object).intValue());
 //      setColumnsVisible(Boolean.valueOf(object.toString()).booleanValue());
     }
+    if (name.equals("showRowHeaders")) {
+    	mm.setShowRowHeaders(((Boolean)object).booleanValue());
+    	}
+    
+    
+    
+    
     if (name.equals("autoresize")) {
       if ("all".equals(object)) {
         mm.setAutoResize(JTable.AUTO_RESIZE_ALL_COLUMNS);
@@ -425,7 +432,7 @@ public class TipiTable
     showHeader = b;
     mm.setHeaderVisible(b);
   }
-
+  
   public void setFiltersVisible(boolean b) {
     MessageTablePanel mtp = (MessageTablePanel) getContainer();
     mtp.setFiltersVisible(b);
@@ -590,7 +597,14 @@ public class TipiTable
     if ("doChooseColumns".equals(name)) {
         mm.doChooseColumns();
       }  
-    if ("doRunReport".equals(name)) {
+    if ("stopCellEditing".equals(name)) {
+    	mm.stopCellEditing();
+    }  
+    if ("updateConditionalRemarks".equals(name)) {
+        updateConditionalRemarks();
+    }  
+    
+   if ("doRunReport".equals(name)) {
         Operand format = compMeth.getEvaluatedParameter("format", event);
         Operand marginsOperand = compMeth.getEvaluatedParameter("margins", event);
         Operand orientationOperand = compMeth.getEvaluatedParameter("orientation", event);
@@ -626,8 +640,7 @@ public class TipiTable
   public void stateChanged(ChangeEvent e) {
     Map m = (Map) e.getSource();
     System.err.println("StateChanged in TABLE");
-//    System.err.println("Event map: "+m);
-    flushAggregateValues();
+     flushAggregateValues();
     updateConditionalRemarks();
     mm.repaint();
     try {
@@ -736,7 +749,7 @@ public class TipiTable
     remarkPanel.setVisible(false);
     remarkPanel.setLayout(new GridBagLayout());
 //    mm.add(remarkPanel, BorderLayout.SOUTH);
-    mm.add(remarkPanel, new GridBagConstraints(0, 2, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(2, 2, 2, 2), 0, 0));
+    mm.add(remarkPanel, new GridBagConstraints(0, 3, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(2, 2, 2, 2), 0, 0));
    mm.revalidate();
   }
 
