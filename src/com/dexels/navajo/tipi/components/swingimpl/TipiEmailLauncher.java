@@ -14,6 +14,7 @@ import java.util.Date;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.tipi.TipiComponentMethod;
+import com.dexels.navajo.tipi.components.swingimpl.TipiSwingDataComponentImpl;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 
 
@@ -24,16 +25,22 @@ import com.dexels.navajo.tipi.internal.TipiEvent;
 
 public class TipiEmailLauncher extends TipiSwingDataComponentImpl {
 
-    private Message recipient = null;
-    private String propertyName;
-    private String clubName;
+    private Message recipient = null;       
 
     protected void performComponentMethod(String name, TipiComponentMethod compMeth, TipiEvent event) {
-        if (name.equals("setEmailParameters")) {
+    	
+    	String propertyName = null;
+    	String emailSubject = null;
+    	String emailBody    = null;
+    	
+    	if (name.equals("setEmailParameters")) {
+    		propertyName = (String) compMeth.getEvaluatedParameter("propertyname", event).value;
+    		emailSubject = (String) compMeth.getEvaluatedParameter("subject", event).value;
+            emailBody    = (String) compMeth.getEvaluatedParameter("body", event).value;
+            
             try {
                 recipient = (Message) compMeth.getEvaluatedParameter("messagepath", event).value;
-                propertyName = (String) compMeth.getEvaluatedParameter("propertyname", event).value;
-                clubName = (String) compMeth.getEvaluatedParameter("clubname", event).value;
+                
                 if (recipient == null) {
                     System.err.println("TipiPersonEmail does not recieve a message as input! Aborting...");
                     return;
@@ -43,36 +50,35 @@ public class TipiEmailLauncher extends TipiSwingDataComponentImpl {
                 ex.printStackTrace();
                 return;
             }
-            createEmail(propertyName, clubName);
+            createEmail(propertyName, emailSubject, emailBody);
         }
     }
 
-    private void createEmail(String propertyName, String clubName) {
+    private void createEmail(String propertyName, String subject, String body) {
 
-        String EmailAddress;
-        String Subject = "[" + clubName + "]";
-        String EmailString = "mailto:";
+        String emailAddress;        
+        String emailString = "mailto:";
         boolean recipientsFound = false;
 
         try {
 
             for (int i = 0; i < recipient.getArraySize(); i++) {
                 Message current = recipient.getMessage(i);
-                EmailAddress = current.getProperty(propertyName).getValue();
-                if (EmailAddress != null && EmailAddress.trim() != "") {
+                emailAddress = current.getProperty(propertyName).getValue();
+                if (emailAddress != null && emailAddress.trim() != "") {
                     recipientsFound = true;
-                    EmailString = EmailString + EmailAddress + ",";
+                    emailString = emailString + emailAddress + ",";
                 }
             }
             if (recipientsFound) {
-                EmailString = EmailString.substring(0, (EmailString.length() - 1));
-                EmailString = EmailString + "?subject=" + Subject;
-                System.err.println("Generated email string: " + EmailString);
-                String cmd = "rundll32 url.dll,FileProtocolHandler " + EmailString;
+                emailString = emailString.substring(0, (emailString.length() - 1));
+                emailString = emailString + "?subject=" + subject + "&body=" + body;
+                System.err.println("Generated email string: " + emailString);
+                String cmd = "rundll32 url.dll,FileProtocolHandler " + emailString;
                 try {
-                    Process p = Runtime.getRuntime().exec(cmd);
+                    Runtime.getRuntime().exec(cmd);
                 } catch (IOException ex) {
-                    System.err.println("Could not launch rundll32");
+                    System.err.println("Could not launch email (rundll32)");
                 }
             } else {
                 System.err.println("No recipients found that have an email address");
