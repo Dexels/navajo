@@ -1,7 +1,11 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
+import java.net.*;
 import java.util.*;
 import java.awt.*;
+
+import javax.swing.*;
+
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.tipixml.*;
@@ -62,7 +66,6 @@ public class TipiMenu
 
   public void setComponentValue(String name, Object object) {
     if ("text".equals(name)) {
-    	System.err.println("Setting menu label to: "+object);
       myMenu.setText( (String) object);
       return;
     }
@@ -72,9 +75,22 @@ public class TipiMenu
       myMenu.setMnemonic(mn);
       return;
     }
+    if (name.equals("icon")) {
+        //System.err.println("Type: "+object.getClass());
+      if (object instanceof URL) {
+    	  URL uu = (URL) object;
+    	  myMenu.setIcon(getIcon(uu));
+      } else {
+          System.err.println("Ignoring strange resource");
+      }
+  }    
     super.setComponentValue(name, object);
   }
-
+  
+  private ImageIcon getIcon(URL u) {
+      return new ImageIcon(u);
+    }
+  
   public Object getComponentValue(String name) {
     if (name.equals("text")) {
       return myMenu.getText();
