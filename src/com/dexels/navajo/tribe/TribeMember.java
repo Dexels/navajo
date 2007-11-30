@@ -59,6 +59,7 @@ public class TribeMember implements Serializable, Mappable {
 
 	public void setStatus(PingAnswer status) {
 		this.status = status;
+		System.err.println(memberName + " load " + status.cpuLoad);
 	}
 
 	public void kill() {

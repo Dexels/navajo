@@ -194,7 +194,7 @@ public class TribeManager extends ReceiverAdapter implements Mappable, TribeMana
 		}
 	}
 	
-	public void addTribeMember(TribeMember tm) {
+	protected void addTribeMember(TribeMember tm) {
 		synchronized (state) {
 			state.clusterMembers.add(tm);
 		}
@@ -293,7 +293,7 @@ public class TribeManager extends ReceiverAdapter implements Mappable, TribeMana
 	 * 
 	 * @param q
 	 */
-	public void broadcast(com.dexels.navajo.tribe.SmokeSignal m) {
+	public void broadcast(SmokeSignal m) {
 		try {
 			channel.send(null, null, m);
 		} catch (ChannelNotConnectedException e) {
@@ -311,7 +311,7 @@ public class TribeManager extends ReceiverAdapter implements Mappable, TribeMana
 			r.processMessage();
 		} else if ( msg.getObject() instanceof Request ) {
 			Request q = (Request) msg.getObject();
-			//System.err.println(myName + "Received request " + q.getGuid());
+			System.err.println(myName + "Received request " + q.getGuid());
 			Answer a = q.getAnswer();
 			//System.err.println(myName + "My Answer is " + a.acknowledged() );
 			try {
@@ -472,6 +472,16 @@ public class TribeManager extends ReceiverAdapter implements Mappable, TribeMana
 	  System.err.println("ip address = " + Inet4Address.getLocalHost().getHostAddress());
 	}
 
-	
+	public Navajo forward(Navajo in) throws TribeException {
+		System.err.println(myName + ": in forward(" + in.getHeader().getRPCName() + ")");
+		TribeMember alt =  getClusterState().getLeastBusyTribalMember();
+		System.err.println(myName + ": LEAST BUSY: " + alt.getMemberName());
+		if ( alt != null ) {
+			ServiceAnswer sa = (ServiceAnswer) askSomebody(new ServiceRequest(in), alt.getAddress());
+			return sa.getResponse();
+		} else {
+			throw new TribeException("No available tribe member");
+		}
+	}
 	
 }

@@ -43,6 +43,8 @@ import com.dexels.navajo.server.jmx.SNMPManager;
 import com.dexels.navajo.util.AuditLog;
 import com.dexels.navajo.util.Util;
 import com.dexels.navajo.server.enterprise.integrity.WorkerInterface;
+import com.dexels.navajo.tribe.TribeException;
+import com.dexels.navajo.tribe.TribeManager;
 import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.loader.NavajoClassSupplier;
 import com.dexels.navajo.lockguard.Lock;
@@ -926,6 +928,11 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
 	  return applicationId + "/" + a.accessID;
   }
   
+  public final boolean isBusy() {
+	  return  ( accessSet.size() > navajoConfig.maxAccessSetSize );
+	  //return ( !TribeManager.getInstance().getIsChief() );
+  }
+  
   /**
    * Handle a webservice.
    *
@@ -962,13 +969,18 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
     	servicesBeingStarted = false;
     }
     
-    // Check accessSetSize first!
-    if ( accessSetSize > navajoConfig.maxAccessSetSize ) {
-    	// Server too busy!
-    	System.err.println(">> SERVER TOO BUSY!!!!!");
-    	throw new FatalException("500.13");
-    }
-    
+    if ( isBusy() && !inMessage.getHeader().hasCallBackPointers() ) {
+    	try {
+			Navajo result = TribeManager.getInstance().forward(inMessage);
+			return result;
+		} catch (TribeException e) {
+			// Server too busy!
+			e.printStackTrace(System.err);
+	    	System.err.println(">> SERVER TOO BUSY!!!!!");
+	    	throw new FatalException("500.13");
+		}
+    } 
+     
     if ( accessSetSize > peakAccessSetSize ) {
     	peakAccessSetSize = accessSetSize;
     }

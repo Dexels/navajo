@@ -137,17 +137,10 @@ public final class GenericHandler extends ServiceHandler {
             					com.dexels.navajo.mapping.compiler.TslCompiler(properties.getClassloader());
             					
             					try {
-            						if ( MapMetaData.isMetaScript(serviceName, scriptPath, pathPrefix) ) {
-            							MapMetaData mmd = MapMetaData.getInstance();
-            							String intermed = mmd.parse(scriptPath + "/" + pathPrefix + "/" + serviceName + ".xml");
-            							tslCompiler.compileScript(new ByteArrayInputStream(intermed.getBytes()), pathPrefix, serviceName, 
-            									scriptPath, properties.getCompiledScriptPath() );
-            						} else {
-            							tslCompiler.compileScript(serviceName, scriptPath,
-            									properties.
-            									getCompiledScriptPath(),
-            									pathPrefix);
-            						}
+            							tslCompiler.compileScript(serviceName, 
+				            									  scriptPath,
+				            									  properties.getCompiledScriptPath(),
+				            									  pathPrefix);
             					} catch (SystemException ex) {
             						sourceFile.delete();
             						throw ex;
