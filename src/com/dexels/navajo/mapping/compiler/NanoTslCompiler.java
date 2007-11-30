@@ -1364,10 +1364,10 @@ public class NanoTslCompiler {
                 }
 
                 result.append(printIdent(ident) + "treeNodeStack.push(currentMap);\n");
-                result.append(printIdent(ident) + "currentMap = new MappableTreeNode(currentMap, (Mappable) classLoader.getClass(\"" + type
+                result.append(printIdent(ident) + "currentMap = new MappableTreeNode(currentMap, classLoader.getClass(\"" + type
                         + "\").newInstance());\n");
 
-                result.append(printIdent(ident) + "((Mappable) currentMap.myObject).load(parms, inMessage, access, config);\n");
+                result.append(printIdent(ident) + "if ( currentMap.myObject instanceof Mappable) { ((Mappable) currentMap.myObject).load(parms, inMessage, access, config);}\n");
                 result.append(printIdent(ident) + subObjectsName + "[" + loopCounterName + "] = (" + type + ") currentMap.myObject;\n");
                 result.append(printIdent(ident) + "try {\n");
                 ident = ident + 2;
@@ -1379,12 +1379,12 @@ public class NanoTslCompiler {
 
                 ident = ident - 2;
                 result.append(printIdent(ident) + "} catch (Exception e" + ident + ") {\n");
-                result.append(printIdent(ident + 2) + subObjectsName + "[" + loopCounterName + "].kill();\n");
+                result.append(printIdent(ident + 2) + "MappingUtils.callKillMethod(" + subObjectsName + "[" + loopCounterName + "]);\n");
                 result.append(printIdent(ident + 2) + "throw e" + ident + ";\n");
 
                 result.append(printIdent(ident) + "}\n");
 
-                result.append(printIdent(ident) + subObjectsName + "[" + loopCounterName + "].store();\n");
+                result.append(printIdent(ident) + "MappingUtils.callStoreMethod(" + subObjectsName + "[" + loopCounterName + "]);\n");
 
                 result.append(printIdent(ident) + "currentMap.setEndtime();\ncurrentMap = (MappableTreeNode) treeNodeStack.pop();\n");
 
@@ -1410,7 +1410,7 @@ public class NanoTslCompiler {
                 
                 // Create instance of object.
                 result.append(printIdent(ident) + 
-                		"currentMap = new MappableTreeNode(currentMap, (Mappable) classLoader.getClass(\"" +  type + "\").newInstance());\n");     
+                		"currentMap = new MappableTreeNode(currentMap, classLoader.getClass(\"" +  type + "\").newInstance());\n");     
                 
                 // Create local variable to address new object.
                 String subObjectsName = "subObject" + subObjectCounter;        
@@ -1436,7 +1436,7 @@ public class NanoTslCompiler {
 
                 // Call load on object.
                 result.append(printIdent(ident) +            
-                		"((Mappable) currentMap.myObject).load(parms, inMessage, access, config);\n");     
+                		"if ( currentMap.myObject instanceof Mappable ) { ((Mappable) currentMap.myObject).load(parms, inMessage, access, config);}\n");     
                 // Assign local variable reference.
                 result.append(printIdent(ident) + type + " " + 
                 		subObjectsName + " = (" + type +                
@@ -1453,10 +1453,10 @@ public class NanoTslCompiler {
                 ident = ident-2;        
                 result.append(printIdent(ident) + "} catch (Exception e" + 
                 		ident +                    ") {\n");        
-                result.append(printIdent(ident + 2) + subObjectsName + ".kill();\n");        
+                result.append(printIdent(ident + 2) + "MappingUtils.callStoreMethod(" + subObjectsName + ");\n");        
                 result.append(printIdent(ident + 2) + "throw e" + ident + ";\n");         
                 result.append(printIdent(ident) + "}\n");                
-                result.append(printIdent(ident) + subObjectsName + ".store();\n");         
+                result.append(printIdent(ident) + "MappingUtils.callStoreMethod(" + subObjectsName + ");\n");         
                 
                 result.append(printIdent(ident) + "currentInMsg = (Message) inMsgStack.pop();\n");
                 if (isParam) {
@@ -1720,13 +1720,13 @@ public class NanoTslCompiler {
             result.append(printIdent(ident + 4) + "if (" + resumeAsyncName + ") { " + aoName + ".afterResponse(); } else { " + aoName
                     + ".afterRequest(); " + aoName + ".runThread(); }\n");
             result.append(printIdent(ident + 2) + "} else {\n");
-            result.append(printIdent(ident + 4) + "((Mappable) currentMap.myObject).store();\n");
+            result.append(printIdent(ident + 4) + "if ( currentMap.myObject instanceof Mappable ) { ((Mappable) currentMap.myObject).store();}\n");
             result.append(printIdent(ident + 4) + "config.getAsyncStore().removeInstance(currentMap.ref);\n");
             result.append(printIdent(ident + 2) + "}\n");
             result.append(printIdent(ident) + "}\n");
 
             result.append(printIdent(ident) + "} catch (Exception e" + ident + ") {\n");
-            result.append(printIdent(ident) + "  ((Mappable) currentMap.myObject).kill();\n");
+            result.append(printIdent(ident) + " if ( currentMap.myObject instanceof Mappable ) { ((Mappable) currentMap.myObject).kill();}\n");
             result.append(printIdent(ident) + " config.getAsyncStore().removeInstance(currentMap.ref);\n");
 
             result.append(printIdent(ident) + "  throw e" + ident + ";\n");
@@ -1739,11 +1739,11 @@ public class NanoTslCompiler {
         } else {
 
             result.append(printIdent(ident) + "treeNodeStack.push(currentMap);\n");
-            result.append(printIdent(ident) + "currentMap = new MappableTreeNode(currentMap, (Mappable) classLoader.getClass(\"" + object
+            result.append(printIdent(ident) + "currentMap = new MappableTreeNode(currentMap, classLoader.getClass(\"" + object
                     + "\").newInstance());\n");
             String objectName = "mappableObject" + (objectCounter++);
             result.append(printIdent(ident) + objectName + " = (" + className + ") currentMap.myObject;\n");
-            result.append(printIdent(ident) + objectName + ".load(parms, inMessage, access, config);\n");
+            result.append(printIdent(ident) + "if ( currentMap.myObject instanceof Mappable ) {" + objectName + ".load(parms, inMessage, access, config);}\n");
 
             String objectDefinition = className + " " + objectName + " = null;\n";
             variableClipboard.add(objectDefinition);
@@ -1756,10 +1756,10 @@ public class NanoTslCompiler {
             }
 
             result.append(printIdent(ident) + "} catch (Exception e" + ident + ") {\n");
-            result.append(printIdent(ident) + objectName + ".kill();\n");
+            result.append(printIdent(ident) + "MappingUtils.callKillMethod(" + objectName + ");\n");
             result.append(printIdent(ident) + "  throw e" + ident + ";\n");
             result.append(printIdent(ident) + "}\n");
-            result.append(printIdent(ident) + objectName + ".store();\n");
+            result.append(printIdent(ident) + "MappingUtils.callStoreMethod(" + objectName + ");\n");
             result.append(printIdent(ident) + "currentMap.setEndtime();\ncurrentMap = (MappableTreeNode) treeNodeStack.pop();\n");
 
         }

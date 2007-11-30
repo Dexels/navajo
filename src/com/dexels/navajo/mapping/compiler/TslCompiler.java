@@ -23,6 +23,7 @@ package com.dexels.navajo.mapping.compiler;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.jaxpimpl.xml.*;
 import com.dexels.navajo.mapping.*;
+import com.dexels.navajo.mapping.compiler.meta.MapMetaData;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.server.SystemException;
 
@@ -1366,11 +1367,11 @@ result.append(printIdent(ident + 4) +
 
 
         result.append(printIdent(ident) + "treeNodeStack.push(currentMap);\n");
-        result.append(printIdent(ident) + "currentMap = new MappableTreeNode(access, currentMap, (Mappable) classLoader.getClass(\"" +
+        result.append(printIdent(ident) + "currentMap = new MappableTreeNode(access, currentMap, classLoader.getClass(\"" +
                       type + "\").newInstance(), false);\n");
 
         result.append(printIdent(ident) +
-            "((Mappable) currentMap.myObject).load(parms, inMessage, access, config);\n");
+            "if ( currentMap.myObject instanceof Mappable ) {  ((Mappable) currentMap.myObject).load(parms, inMessage, access, config);}\n");
         result.append(printIdent(ident) + subObjectsName + "[" +
                       loopCounterName + "] = (" + type +
                       ") currentMap.myObject;\n");
@@ -1385,12 +1386,12 @@ result.append(printIdent(ident + 4) +
         ident = ident-2;
         result.append(printIdent(ident) + "} catch (Exception e" + ident +
                     ") {\n");
-        result.append(printIdent(ident + 2) + subObjectsName + "[" + loopCounterName + "].kill();\n");
+        result.append(printIdent(ident + 2) + "MappingUtils.callKillMethod( " + subObjectsName + "[" + loopCounterName + "]);\n");
         result.append(printIdent(ident + 2) + "throw e" + ident + ";\n");
 
         result.append(printIdent(ident) + "}\n");
 
-        result.append(printIdent(ident) + subObjectsName + "[" + loopCounterName + "].store();\n");
+        result.append(printIdent(ident) + "MappingUtils.callStoreMethod(" + subObjectsName + "[" + loopCounterName + "]);\n");
 
         result.append(printIdent(ident) +
                       "currentMap.setEndtime();\ncurrentMap = (MappableTreeNode) treeNodeStack.pop();\n");
@@ -1420,7 +1421,7 @@ result.append(printIdent(ident + 4) +
         
         // Create instance of object.
         result.append(printIdent(ident) + 
-        		"currentMap = new MappableTreeNode(access, currentMap, (Mappable) classLoader.getClass(\"" +  type + "\").newInstance(), false);\n");     
+        		"currentMap = new MappableTreeNode(access, currentMap, classLoader.getClass(\"" +  type + "\").newInstance(), false);\n");     
         
         // Create local variable to address new object.
         String subObjectsName = "subObject" + subObjectCounter;        
@@ -1446,7 +1447,7 @@ result.append(printIdent(ident + 4) +
 
         // Call load on object.
         result.append(printIdent(ident) +            
-        		"((Mappable) currentMap.myObject).load(parms, inMessage, access, config);\n");     
+        		"if ( currentMap.myObject instanceof Mappable) { ((Mappable) currentMap.myObject).load(parms, inMessage, access, config);}\n");     
         // Assign local variable reference.
         result.append(printIdent(ident) + type + " " + 
         		subObjectsName + " = (" + type +                
@@ -1463,10 +1464,10 @@ result.append(printIdent(ident + 4) +
         ident = ident-2;        
         result.append(printIdent(ident) + "} catch (Exception e" + 
         		ident +                    ") {\n");        
-        result.append(printIdent(ident + 2) + subObjectsName + ".kill();\n");        
+        result.append(printIdent(ident + 2) + "MappingUtils.callKillMethod( "+ subObjectsName + ");\n");        
         result.append(printIdent(ident + 2) + "throw e" + ident + ";\n");         
         result.append(printIdent(ident) + "}\n");                
-        result.append(printIdent(ident) + subObjectsName + ".store();\n");         
+        result.append(printIdent(ident) + "MappingUtils.callStoreMethod(" + subObjectsName + ");\n");         
         
         result.append(printIdent(ident) + "currentInMsg = (Message) inMsgStack.pop();\n");
         if (isParam) {
@@ -1742,7 +1743,7 @@ result.append(printIdent(ident + 4) +
                     ".afterRequest(); " + aoName + ".runThread(); }\n");
       result.append(printIdent(ident + 2) + "} else {\n");
       result.append(printIdent(ident + 4) +
-                    "((Mappable) currentMap.myObject).store();\n");
+                    "MappingUtils.callStoreMethod(currentMap.myObject);\n");
       result.append(printIdent(ident + 4) +
                     "config.getAsyncStore().removeInstance(currentMap.ref);\n");
       result.append(printIdent(ident + 2) + "}\n");
@@ -1751,7 +1752,7 @@ result.append(printIdent(ident + 4) +
       result.append(printIdent(ident) + "} catch (Exception e" + ident +
                     ") {\n");
       result.append(printIdent(ident) +
-                    "  ((Mappable) currentMap.myObject).kill();\n");
+                    " MappingUtils.callKillMethod(currentMap.myObject);\n");
       result.append(printIdent(ident) +
                     " config.getAsyncStore().removeInstance(currentMap.ref);\n");
 
@@ -1766,13 +1767,14 @@ result.append(printIdent(ident + 4) +
     else {
 
       result.append(printIdent(ident) + "treeNodeStack.push(currentMap);\n");
-      result.append(printIdent(ident) + "currentMap = new MappableTreeNode(access, currentMap, (Mappable) classLoader.getClass(\"" +
+      result.append(printIdent(ident) + "currentMap = new MappableTreeNode(access, currentMap, classLoader.getClass(\"" +
                     object + "\").newInstance(), false);\n");
       String objectName = "mappableObject" + (objectCounter++);
       result.append(printIdent(ident) + objectName + " = (" +
                     className + ") currentMap.myObject;\n");
-      result.append(printIdent(ident) + objectName +
-                    ".load(parms, inMessage, access, config);\n");
+      if ( MappingUtils.isObjectMappable(className)) {
+    	  result.append(printIdent(ident) + objectName + ".load(parms, inMessage, access, config);\n");
+      }
 
       String objectDefinition = className + " " + objectName + " = null;\n";
       variableClipboard.add(objectDefinition);
@@ -1787,10 +1789,10 @@ result.append(printIdent(ident + 4) +
 
       result.append(printIdent(ident) + "} catch (Exception e" + ident +
                     ") {\n");
-      result.append(printIdent(ident) + objectName + ".kill();\n");
+      result.append(printIdent(ident) + "MappingUtils.callKillMethod( " + objectName + ");\n");
       result.append(printIdent(ident) + "  throw e" + ident + ";\n");
       result.append(printIdent(ident) + "}\n");
-      result.append(printIdent(ident) + objectName + ".store();\n");
+      result.append(printIdent(ident) + "MappingUtils.callStoreMethod(" + objectName + ");\n");
       result.append(printIdent(ident) +
                     "currentMap.setEndtime();\ncurrentMap = (MappableTreeNode) treeNodeStack.pop();\n");
 
@@ -1986,7 +1988,7 @@ result.append(printIdent(ident + 4) +
  }
 
 
-  public void compileScript(InputStream is, String packagePath, String script, String scriptPath, String workingPath) throws SystemException{
+  private final void compileScript(InputStream is, String packagePath, String script, String scriptPath, String workingPath) throws SystemException{
 	  
 	  boolean debugInput = false;
 	  boolean debugOutput = false;
@@ -2116,12 +2118,20 @@ result.append(printIdent(ident + 4) +
   
   public void compileScript(String script, String scriptPath, String workingPath, String packagePath) throws SystemException {
 
-    try {
-    	compileScript(new FileInputStream(scriptPath + "/" + packagePath + "/" + script + ".xml"), packagePath, script, scriptPath, workingPath);
-    } catch (Exception e) {
-    	e.printStackTrace();
-    	throw new SystemException(-1, "Error while generating Java code for script: " + script + ". Message: " + e.getMessage(), e);
-    }
+	    try {
+			if (!MapMetaData.isMetaScript(script, scriptPath, packagePath)) {
+				compileScript(new FileInputStream(scriptPath + "/" + packagePath + "/" + script + ".xml"), 
+						      packagePath, script, scriptPath, workingPath);
+			} else {
+				MapMetaData mmd = MapMetaData.getInstance();
+				String intermed = mmd.parse(scriptPath + "/" + packagePath + "/" + script + ".xml");
+				compileScript(new ByteArrayInputStream(intermed.getBytes()), 
+						     packagePath, script, scriptPath, workingPath );
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new SystemException(-1, "Error while generating Java code for script: " + script + ". Message: " + e.getMessage(), e);
+		}
     
   }
 

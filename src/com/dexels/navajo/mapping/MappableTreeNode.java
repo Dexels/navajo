@@ -81,7 +81,7 @@ public final class MappableTreeNode implements Mappable, Serializable {
         }
 
         public Mappable getMyMap() {
-          if (myObject != null) {
+          if (myObject != null && myObject instanceof Mappable) {
             return (Mappable) myObject;
           } else {
             return null;
