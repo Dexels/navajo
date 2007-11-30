@@ -1,10 +1,18 @@
 package com.dexels.navajo.server.enterprise.tribe;
 
+import com.dexels.navajo.tribe.SmokeSignal;
+import com.dexels.navajo.tribe.TribeMember;
+
 public class DummyTribeManager implements TribeManagerInterface {
 
 	public void terminate() {
-		// TODO Auto-generated method stub
-		
+	}
+
+	public void broadcast(SmokeSignal m) {
+	}
+
+	public TribeMember getChief() {
+		return null;
 	}
 
 }
