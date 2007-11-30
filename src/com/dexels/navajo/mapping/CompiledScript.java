@@ -29,6 +29,7 @@ import com.dexels.navajo.loader.NavajoClassSupplier;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.server.jmx.JMXHelper;
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.mapping.MappingUtils;
 
 import java.lang.management.LockInfo;
 import java.lang.management.ThreadInfo;

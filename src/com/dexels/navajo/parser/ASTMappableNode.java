@@ -6,6 +6,7 @@ package com.dexels.navajo.parser;
 import java.util.*;
 
 import com.dexels.navajo.mapping.MappableTreeNode;
+import com.dexels.navajo.mapping.MappingUtils;
 
 
 public final class ASTMappableNode extends SimpleNode {
@@ -42,7 +43,7 @@ public final class ASTMappableNode extends SimpleNode {
         }
 
         try {
-            Object oValue = com.dexels.navajo.mapping.XmlMapperInterpreter.getAttributeValue(mapObject, val, parameterArray);
+            Object oValue = MappingUtils.getAttributeValue(mapObject, val, parameterArray);
             if (oValue == null)
                 return null;
             else if (oValue instanceof Float) {

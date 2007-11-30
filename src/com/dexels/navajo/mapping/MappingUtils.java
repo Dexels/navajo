@@ -12,9 +12,11 @@ package com.dexels.navajo.mapping;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.util.Util;
+import com.dexels.navajo.logger.NavajoPriority;
 import com.dexels.navajo.parser.*;
 
 import java.lang.reflect.*;
+import java.lang.reflect.Method;
 import java.util.*;
 
 import com.dexels.navajo.document.types.Memo;
@@ -485,20 +487,50 @@ public final class MappingUtils {
   public static final boolean isMappable(Class c, String field, ClassLoader loader) throws UserException, ClassNotFoundException {
   	try {
         Class mappable = Class.forName("com.dexels.navajo.mapping.Mappable",true,loader);
-        if (c.getField(field) == null) {
+        if (c.getDeclaredField(field) == null) {
         	throw new UserException(-1, "No such field: " + field);
         }
-        return mappable.isAssignableFrom(c.getField(field).getType());
+        return mappable.isAssignableFrom(c.getDeclaredField(field).getType());
       
   	} catch (NoSuchFieldException nsfe) {
         throw new UserException(-1, "Could not find field " + field + " in class " + c.getName());
     }    
   }
      
+  public static final boolean isObjectMappable(String className) throws UserException {
+	  try {
+	  Class c = Class.forName(className);
+	  return ( c.newInstance() instanceof Mappable );
+	  } catch (Exception e) {
+		  throw new UserException(-1, "Could not handle class as either mappable or POJO bean: " + className + ", cause: " + e.getMessage());
+	  }
+  }
+  
+  public static final void callStoreMethod(Object o) throws MappableException,
+  MappingException, UserException {
+	  if (o == null || !(o instanceof Mappable)) {
+		  return;
+	  }
+	  if (o instanceof Mappable) {
+		  ( (Mappable) o).store();
+	  }
+  }
+  
+  public static final void callKillMethod(Object o) throws MappableException,
+  MappingException, UserException {
+
+	  if (o == null || !(o instanceof Mappable)) {
+		  return;
+	  }
+	  if (o instanceof Mappable) {
+		  ( (Mappable) o).kill();
+	  }
+  }
+
   public static final String getFieldType(Class c, String field) throws UserException {
 
     try {
-      String type = c.getField(field).getType().getName();
+      String type = c.getDeclaredField(field).getType().getName();
       if (type.startsWith("[L")) { // We have an array determine member type.
         type = type.substring(2, type.length() - 1);
       }
@@ -510,7 +542,7 @@ public final class MappingUtils {
 
   public static final Map getAllFields(Class c) {
       Map ll = new HashMap();
-      Field[] f = c.getFields(); 
+      Field[] f = c.getDeclaredFields(); 
       for (int i = 0; i < f.length; i++) {
           boolean pblc = Modifier.isPublic(f[i].getModifiers());
           String type = f[i].getType().getName();
@@ -554,7 +586,7 @@ public final class MappingUtils {
   public static final boolean isArrayAttribute(Class c, String field) throws NoSuchFieldException,
       MappingException {
 
-      String objectType = c.getField(field).getType().getName();
+      String objectType = c.getDeclaredField(field).getType().getName();
       return objectType.startsWith("[L");
 
   }
@@ -580,6 +612,120 @@ public final class MappingUtils {
     return System.getProperty("file.separator")+packageName;
   }
 
+  public final static Object getAttributeObject(MappableTreeNode o, String name, Object[] arguments) 
+     throws com.dexels.navajo.server.UserException, MappingException {
+
+	  Object result = null;
+	  String methodName = "";
+
+	  try {
+		  java.lang.reflect.Method m = o.getMethodReference(name, arguments);
+		  result = m.invoke(o.myObject, arguments);
+	  }
+	  catch (IllegalAccessException iae) {
+		  throw new MappingException(methodName +
+				  " illegally accessed in mappable class: " +
+				  o.myObject.getClass().getName());
+	  }
+	  catch (InvocationTargetException ite) {
+		  ite.printStackTrace();
+		  Throwable t = ite.getTargetException();
+		  if (t instanceof com.dexels.navajo.server.UserException) {
+			  throw (com.dexels.navajo.server.UserException) t;
+		  }
+		  else {
+			  throw new MappingException("Illegal exception thrown: " + t.getMessage());
+		  }
+	  }
+	  return result;
+  }
+  
+  /**
+   * The next two methods: getAttribute()/setAttribute() are used for the set/get functionality
+   * of the new Mappable interface (see also Java Beans standard). The use of set/get methods
+   * enables the use of triggers that can be implemented within the set/get methods.
+   * So if there is a field:
+   * private double noot;
+   * within a Mappable object, the following methods need to be implemented:
+   * public double getNoot();
+   * and
+   * public void setNoot(double d);
+   */
+  public final static Object getAttributeValue(MappableTreeNode o, String name, Object[] arguments) throws com.dexels.
+      navajo.server.UserException,
+      MappingException {
+
+    Object result = null;
+    // The ../ token is used to denote the parent of the current MappableTreeNode.
+    // e.g., $../myField or $../../myField is used to identifiy respectively the parent
+    // and the grandparent of the current MappableTreeNode.
+
+    
+    while ( (name.indexOf("../")) != -1) {
+      o = o.parent;
+      if (o == null) {
+        throw new MappingException("Null parent object encountered: " + name);
+      }
+      name = name.substring(3, name.length());
+    }
+
+    result = getAttributeObject(o, name, arguments);
+
+    if (result != null) {
+
+      //String type = result.getClass().getName();
+
+      if (result instanceof java.lang.String) {
+        return result;
+      } else
+      if (result instanceof java.lang.Long) {
+        return new Integer(result.toString());
+      }
+      else if (result instanceof java.lang.Float) {
+        return new Double(result.toString());
+      }
+      else if (result instanceof java.lang.Boolean) {
+        return result;
+      }
+      else if (result instanceof com.dexels.navajo.document.types.Binary) {
+        return result;
+      }
+      else if (result instanceof com.dexels.navajo.document.types.ClockTime) {
+        return result;
+      }
+      else if (result instanceof com.dexels.navajo.document.types.Money) {
+        return result;
+      }
+      else if (result instanceof java.util.Date) {
+        return result;
+      }
+      else if (result instanceof java.lang.Integer) {
+        return result;
+      }
+      else if (result instanceof java.lang.Double) {
+        return result;
+      }
+      else if (result.getClass().getName().startsWith("[Ljava.util.Vector")) {
+        return result;
+      }
+      else if (result.getClass().getName().startsWith("[L")) {
+        // Encountered array cast to ArrayList.
+        Object[] array = (Object[]) result;
+        ArrayList list = new ArrayList();
+        for (int i = 0; i < array.length; i++) {
+          list.add(array[i]);
+        }
+        return list;
+      }
+      else {
+        return result.toString();
+      }
+    }
+    else {
+      return null;
+    }
+  }
+  
   public static void main(String [] args) {
 	  Navajo n = NavajoFactory.getInstance().createNavajo();
 	  Message m = NavajoFactory.getInstance().createMessage(n, "Aap");
