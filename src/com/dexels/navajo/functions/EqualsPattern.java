@@ -9,35 +9,25 @@ import com.dexels.navajo.parser.TMLExpressionException;
 public class EqualsPattern extends FunctionInterface {
 
 	@Override
-	 public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
+	public Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
 
-	    Object o1 = getOperand(0);
-	    if (!(o1 instanceof String)) {
-	    	throw new TMLExpressionException(this, "String input expected");
-	    }
-	    
-	    Object o2 = getOperand(1);
-	    if (!(o2 instanceof String)) {
-	    	throw new TMLExpressionException(this, "String input expected");
-	    }
+		Object o1 = getOperand(0);
+		if (!(o1 instanceof String)) {
+			throw new TMLExpressionException(this, "String input expected");
+		}
 
-	    String suspect = (String) o1;
-	    String pattern = (String) o2;
+		Object o2 = getOperand(1);
+		if (!(o2 instanceof String)) {
+			throw new TMLExpressionException(this, "String input expected");
+		}
 
-	    try {
-	     Pattern re = Pattern.compile(pattern);
-	     boolean isMatch = re.matcher(suspect).matches();
-	     if(!isMatch) {
-	       return new Boolean(false);
-	     } else
-	       return new Boolean(true);
-	   }
-	   catch (Exception ree) {
-	     return new Boolean(false);
-	   }
+		try {
+			return Boolean.valueOf( Pattern.compile((String) o2).matcher((String) o1).matches() );
+		} catch (Exception ree) {
+			return Boolean.FALSE;
+		}
 
-	  }
-
+	}
 
 	@Override
 	public String remarks() {
@@ -49,7 +39,7 @@ public class EqualsPattern extends FunctionInterface {
 		return "EqualsPattern(<string>,<pattern>)";
 	}
 
-	public static void main(String [] args) throws Exception {
+	public static void main(String[] args) throws Exception {
 		EqualsPattern ep = new EqualsPattern();
 		ep.reset();
 		ep.insertOperand(new String("NCX12G1"));
