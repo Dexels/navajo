@@ -103,29 +103,52 @@ public final class MappingUtils {
       count = count - 1;
       newMsg = msg;
     }
+    
     for (int i = 0; i < count; i++) {
+     
+      newMsg = null;
       String messageName = tok.nextToken();
+      
       while (messageName.equals(Navajo.PARENT_MESSAGE)) {
         messageName = tok.nextToken();
         msg = msg.getParentMessage();
         i++;
       }
+       
       if (i < count) {
-        if (msg == null) {
+    	  
+    	if (msg == null) {
           newMsg = source.getMessage(messageName);
         }
         else {
           if (!msg.getType().equals(Message.MSG_TYPE_ARRAY) || (useElementIndex != -1)) { // For array type messages always add element message!!!
-            if (!msg.getType().equals(Message.MSG_TYPE_ARRAY))
+            if (!msg.getType().equals(Message.MSG_TYPE_ARRAY)) {
               newMsg = msg.getMessage(messageName);
-            else
+            }
+            else {
               newMsg = msg.getMessage(useElementIndex);
+            }
           }
         }
         if (newMsg == null) {
+        	
+        	   int arrayChild = messageName.indexOf("@");
+        	      if ( arrayChild != -1 ) {
+        	    	  messageName = messageName.substring(0, arrayChild);
+        	      }
+        	      if ( arrayChild != -1 ) {
+        	    	  if ( msg != null ) 
+        	    	  { 
+        	    		  msg.setType("array"); 
+        	    	  } else {
+        	    		  throw NavajoFactory.getInstance().createNavajoException(new Exception("Can only create array elements inside array message"));
+        	    	  }
+        	      }
+        	      
           newMsg = NavajoFactory.getInstance().createMessage(source,
               messageName,
               (array ? Message.MSG_TYPE_ARRAY : ""));
+          
           if (!mode.equals("")) {
             newMsg.setMode(mode);
           }
@@ -178,7 +201,7 @@ public final class MappingUtils {
       ref = msg;
     }
     String actualName = getStrippedPropertyName(name);
-
+   
     if (ref == null) {
       throw new MappingException("Property can only be created under a message");
     }
@@ -726,8 +749,18 @@ public final class MappingUtils {
     }
   }
   
-  public static void main(String [] args) {
+  public static void main(String [] args) throws Exception {
 	  Navajo n = NavajoFactory.getInstance().createNavajo();
-	  Message m = NavajoFactory.getInstance().createMessage(n, "Aap");
+	  setProperty(false, null, "/Aap/@/NootProp", "Apenoot", "string", "", "in", "", 20, n, null, false);
+	  setProperty(false, null, "/Aap/@/NootProp", "Apenootjes lekker", "string", "", "in", "", 20, n, null, false);
+	  
+	  setProperty(false, null, "/Kibbeling/NemoProp", "Is gek", "string", "", "in", "", 20, n, null, false);
+	  setProperty(false, null, "/Kibbeling/Kibbeling/WalvisProp", "Moby", "string", "", "in", "", 20, n, null, false);
+	  
+	  setProperty(false, null, "/Worstebroodje/@0/Worst/Hema", "Moby", "string", "", "in", "", 20, n, null, false);
+	  
+	 
+	  n.write(System.err);
+	  
   }
 }
