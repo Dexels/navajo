@@ -1,18 +1,16 @@
 package com.dexels.navajo.server.enterprise.tribe;
 
-import com.dexels.navajo.tribe.SmokeSignal;
-import com.dexels.navajo.tribe.TribeMember;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
+import com.dexels.navajo.document.Navajo;
 
 public class DummyTribeManager implements TribeManagerInterface {
 
 	public void terminate() {
 	}
 
-	public void broadcast(SmokeSignal m) {
-	}
-
-	public TribeMember getChief() {
-		return null;
+	public Navajo forward(Navajo in) throws Exception {
+		throw new NotImplementedException();
 	}
 
 }

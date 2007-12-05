@@ -1,13 +1,10 @@
 package com.dexels.navajo.server.enterprise.tribe;
 
-import com.dexels.navajo.tribe.SmokeSignal;
-import com.dexels.navajo.tribe.TribeMember;
-
+import com.dexels.navajo.document.Navajo;
 
 public interface TribeManagerInterface {
 
 	public void terminate();
-	public TribeMember getChief();
-	public void broadcast(SmokeSignal m);
+	public Navajo forward(Navajo in) throws Exception;
 	
 }
