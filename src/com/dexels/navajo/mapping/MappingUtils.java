@@ -500,31 +500,33 @@ public final class MappingUtils {
         }
         return result;
       }
-    //}
-    //catch (com.dexels.navajo.parser.TMLExpressionException tmle) {
-   //   tmle.printStackTrace();
-   //   throw new MappingException(tmle.getMessage() + showNodeInfo(currentNode));
-    //}
   }
 
   public static final boolean isMappable(Class c, String field, ClassLoader loader) throws UserException, ClassNotFoundException {
-  	try {
-        Class mappable = Class.forName("com.dexels.navajo.mapping.Mappable",true,loader);
-        if (c.getDeclaredField(field) == null) {
-        	throw new UserException(-1, "No such field: " + field);
-        }
-        return mappable.isAssignableFrom(c.getDeclaredField(field).getType());
-      
-  	} catch (NoSuchFieldException nsfe) {
-        throw new UserException(-1, "Could not find field " + field + " in class " + c.getName());
-    }    
+	  Class mappable = Class.forName("com.dexels.navajo.mapping.Mappable",true,loader);
+
+	  try {
+		  if (c.getField(field) == null) {
+			  throw new UserException(-1, "No such field: " + field);
+		  }
+		  return mappable.isAssignableFrom(c.getField(field).getType());
+	  } catch (NoSuchFieldException nsfe) {
+		  try {
+			  return mappable.isAssignableFrom(c.getDeclaredField(field).getType());
+		  } catch (SecurityException e) {
+			  throw new UserException(-1, "Could not find field " + field + " in class " + c.getName());
+		  } catch (NoSuchFieldException e) {
+			  throw new UserException(-1, "Could not find field " + field + " in class " + c.getName());
+		  }
+	  }    
   }
      
   public static final boolean isObjectMappable(String className) throws UserException {
 	  try {
-	  Class c = Class.forName(className);
-	  return ( c.newInstance() instanceof Mappable );
+		  Class c = Class.forName(className, true, NavajoConfig.getInstance().getClassloader());
+		  return ( c.newInstance() instanceof Mappable );
 	  } catch (Exception e) {
+		  e.printStackTrace(System.err);
 		  throw new UserException(-1, "Could not handle class as either mappable or POJO bean: " + className + ", cause: " + e.getMessage());
 	  }
   }
@@ -552,31 +554,40 @@ public final class MappingUtils {
 
   public static final String getFieldType(Class c, String field) throws UserException {
 
-    try {
-      String type = c.getDeclaredField(field).getType().getName();
-      if (type.startsWith("[L")) { // We have an array determine member type.
-        type = type.substring(2, type.length() - 1);
-      }
-      return type;
-    } catch (NoSuchFieldException nsfe) {
-      throw new UserException(-1, "Could not find field " + field + " in class " + c.getName());
-    }
+	  try {
+		  String type = c.getField(field).getType().getName();
+		  if (type.startsWith("[L")) { // We have an array determine member type.
+			  type = type.substring(2, type.length() - 1);
+		  }
+		  return type;
+	  } catch (NoSuchFieldException nsfe) {
+
+		  try {
+			  String type = c.getDeclaredField(field).getType().getName();
+			  if (type.startsWith("[L")) { // We have an array determine member type.
+				  type = type.substring(2, type.length() - 1);
+			  }
+			  return type;
+		  } catch (NoSuchFieldException nsfe2) {
+			  throw new UserException(-1, "Could not find field " + field + " in class " + c.getName());
+		  }
+	  }
   }
 
   public static final Map getAllFields(Class c) {
-      Map ll = new HashMap();
-      Field[] f = c.getDeclaredFields(); 
-      for (int i = 0; i < f.length; i++) {
-          boolean pblc = Modifier.isPublic(f[i].getModifiers());
-          String type = f[i].getType().getName();
-          if (type.startsWith("[L")) { // We have an array determine member type.
-            type = type.substring(2, type.length() - 1);
-          }
-          if (pblc) {
-              ll.put(f[i].getName(), type);
-          }
-    }
-      return ll;
+	  Map ll = new HashMap();
+	  Field[] f = c.getFields(); 
+	  for (int i = 0; i < f.length; i++) {
+		  boolean pblc = Modifier.isPublic(f[i].getModifiers());
+		  String type = f[i].getType().getName();
+		  if (type.startsWith("[L")) { // We have an array determine member type.
+			  type = type.substring(2, type.length() - 1);
+		  }
+		  if (pblc) {
+			  ll.put(f[i].getName(), type);
+		  }
+	  }
+	  return ll;
   }
   
   public static final boolean isSelection(Message msg, Navajo doc, String msgName) {
@@ -606,12 +617,21 @@ public final class MappingUtils {
     }
   }
 
-  public static final boolean isArrayAttribute(Class c, String field) throws NoSuchFieldException,
-      MappingException {
+  public static final boolean isArrayAttribute(Class c, String field) throws  MappingException {
 
-      String objectType = c.getDeclaredField(field).getType().getName();
-      return objectType.startsWith("[L");
-
+	  String objectType;
+	  try {
+		  objectType = c.getField(field).getType().getName();
+		  return objectType.startsWith("[L");
+	  } catch (Exception e) {
+		  try {
+			  objectType = c.getDeclaredField(field).getType().getName();
+			  return objectType.startsWith("[L");
+		  } catch (Exception e1) {
+			  // TODO Auto-generated catch block
+			  throw new MappingException(e1.getMessage());
+		  } 
+	  } 
   }
 
   public static final String createPackageName(String packagePath) {
