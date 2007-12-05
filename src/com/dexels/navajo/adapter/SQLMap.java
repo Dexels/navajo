@@ -36,6 +36,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.StringReader;
 import java.util.Map;
 import java.util.Collections;
 import com.dexels.navajo.document.types.Memo;
@@ -959,19 +960,11 @@ public class SQLMap implements Mappable, LazyArray {
           statement.setDouble(i + 1, ( (Money) param).doubleValue());
         }
         else if (param instanceof Memo) {
-          statement.setString(i + 1, ( (Memo) param).toString());
+          statement.setCharacterStream(i + 1, new StringReader(( (Memo) param).toString()));
         }
         else if (param instanceof Binary) {
-          if (debug) {
-            System.err.println("TRYING TO INSERT A BLOB....");
-          }
           Binary b = (Binary)param;
-          //System.err.println("APPROACHING BLOBNESS...");
-          //byte[] data = ( (Binary) param).getData();
           setBlob(statement, i, b);
-          //statement.setBytes(i+1, data);
-          //java.io.ByteArrayInputStream bis = new java.io.ByteArrayInputStream(data);
-          //statement.setBinaryStream(i + 1, bis, data.length);
           if (debug) {
             System.err.println("ADDED BLOB");
           }
@@ -980,23 +973,7 @@ public class SQLMap implements Mappable, LazyArray {
     }
 
   }
-  // TODO BLOB IS ONLY ORACLE SPECIFIC!!!!!!!!!!!!!!!!!!
-  
-//private void setOracleBlob(PreparedStatement statement, int i, Binary param) throws SQLException {
-//	oracle.sql.BLOB blob = oracle.sql.BLOB.createTemporary(this.con, false, oracle.sql.BLOB.DURATION_SESSION);
-//	  blob.open(oracle.sql.BLOB.MODE_READWRITE);
-//	  statement.setBlob(i+1,blob);
-//	  OutputStream os = blob.getBinaryOutputStream();
-//	  try {
-//		  param.write( os );
-//		  os.close();
-//	  } catch (Exception e) {
-//		  e.printStackTrace(System.err);
-//	  }        
-//	  blob.close();
-//	  statement.setBlob(i + 1, blob);
-//}
-
+ 
 /**
  * BEWARE! Possible resource leak!!! Should the stream be closed?
  * @param statement
