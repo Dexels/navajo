@@ -31,9 +31,13 @@ public class TestAdapter implements Mappable {
        single.empty = "I am single";
     }
 
-    public void store() throws MappableException, UserException {}
+    public void store() throws MappableException, UserException {
+    	System.err.println("TestAdapter store() called!!");
+    }
 
-    public void kill() {}
+    public void kill() {
+    	System.err.println("TestAdapter kill() called!!");
+    }
 
     public TestAdapter getSingle() {
       return this.single;
