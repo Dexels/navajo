@@ -30,6 +30,7 @@ public class SOAPMap implements Mappable {
 
 	public String url;
 	public String soapAction;
+	public XMLMap xmlRequest;
 	public Binary requestBody;
 	public boolean doSend;
 	public Binary responseBody;
@@ -128,25 +129,32 @@ public class SOAPMap implements Mappable {
 	public static void main(String [] args) throws Exception {
 		
 		SOAPMap sm = new SOAPMap();
-		sm.setUrl("http://geocoder.us/service/soap");
-		sm.setSoapAction("http://rpc.geocoder.us/Geo/Coder/US#geocode");
+		sm.setUrl("http://localhost:8080//NavajoServer/SOAPMan");
+		sm.setSoapAction("ProcessApproveAap");
 		String aap = 
-		 "<geocode>" +
-         "<location>1600 Pennsylvania Av, Washington, DC</location> " +
-         "</geocode>";
+		 "<Process><Result>" +
+         "<Status>OK</Status> " +
+         "<Name>Anton</Name> " +
+         "</Result></Process>";
   
 		XMLMap xm = new XMLMap();
-		//xm.setContent(new Binary ( aap.getBytes() ));
-		xm.setStart("geocode");
-		xm.setChildName("location");
-		xm.setChildText("1600 Pennsylvania Av, Washington, DC");
+		xm.setContent(new Binary ( aap.getBytes() ));
+//		xm.setStart("geocode");
+//		xm.setChildName("location");
+//		xm.setChildText("1600 Pennsylvania Av, Washington, DC");
 		
 		sm.setRequestBody(xm.getContent());
 		sm.setDoSend(true);
 		
-		XMLMap response = sm.getXmlResponse();
-		System.err.println(response.getChildText("SOAP-ENV:Body/geocodeResponse/.*/item/lat"));
+		sm.getResponseBody().write(System.err);
+		//System.err.println(response.getChildText("SOAP-ENV:Body/geocodeResponse/.*/item/lat"));
 		
+		
+	}
+
+	public void setXmlRequest(XMLMap xmlRequest) {
+		
+		setRequestBody(xmlRequest.getContent());
 		
 	}
 }
