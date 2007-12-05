@@ -10,6 +10,7 @@ import javax.servlet.http.*;
 
 import com.dexels.navajo.client.NavajoClient;
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.types.*;
 import com.dexels.navajo.server.*;
 //import com.sun.xml.internal.bind.v2.util.FatalAdapter;
 import com.jcraft.jzlib.JZlib;
@@ -270,11 +271,10 @@ public class TmlHttpServlet extends HttpServlet {
       }
     }
     
-    java.io.OutputStreamWriter out = new java.io.OutputStreamWriter(response.getOutputStream(),"UTF-8");
+    ServletOutputStream outputStream = response.getOutputStream();
 
     // PrintWriter out = response.getWriter();
-    response.setContentType("text/xml; charset=UTF-8");
-
+ 
     Navajo tbMessage = null;
     Dispatcher dis = null;
 
@@ -295,7 +295,30 @@ public class TmlHttpServlet extends HttpServlet {
       Navajo resultMessage = dis.handle(tbMessage);
       //System.err.println(resultMessage.toString());
       //resultMessage.write(out);
-      resultMessage.write(out);
+      String binaryPath = request.getParameter("binaryPath");
+      if(binaryPath!=null) {
+    	  Property bin = resultMessage.getProperty(binaryPath);
+    	  if(bin==null ) {
+        	  java.io.OutputStreamWriter out = new java.io.OutputStreamWriter(outputStream,"UTF-8");
+        	  response.setContentType("text/xml; charset=UTF-8");
+        	  resultMessage.write(out);
+        	  out.flush();
+        	  out.close();
+    	  } else {
+    	  // Will throw cce when not a binary?
+    		  Binary b = (Binary) bin.getTypedValue();
+    		  response.setContentType(b.getMimeType());
+    		  copyResource(outputStream, b.getDataAsStream());
+    		  outputStream.flush();
+    	  }
+      } else {
+    	  java.io.OutputStreamWriter out = new java.io.OutputStreamWriter(outputStream,"UTF-8");
+    	  response.setContentType("text/xml; charset=UTF-8");
+    	  resultMessage.write(out);
+    	  out.flush();
+    	  out.close();
+     }
+      
       
     }
     catch (Exception ce) {
@@ -303,7 +326,7 @@ public class TmlHttpServlet extends HttpServlet {
       System.err.println(ce.getMessage());
     }
     finally {
-      out.close();
+    	outputStream.close();
       dis = null;
     }
   
