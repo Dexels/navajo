@@ -295,9 +295,9 @@ public class TmlHttpServlet extends HttpServlet {
       Navajo resultMessage = dis.handle(tbMessage);
       //System.err.println(resultMessage.toString());
       //resultMessage.write(out);
-      String binaryPath = request.getParameter("binaryPath");
-      if(binaryPath!=null) {
-    	  Property bin = resultMessage.getProperty(binaryPath);
+      String dataPath = request.getParameter("dataPath");
+      if(dataPath!=null) {
+    	  Property bin = resultMessage.getProperty(dataPath);
     	  if(bin==null ) {
         	  java.io.OutputStreamWriter out = new java.io.OutputStreamWriter(outputStream,"UTF-8");
         	  response.setContentType("text/xml; charset=UTF-8");
@@ -305,10 +305,14 @@ public class TmlHttpServlet extends HttpServlet {
         	  out.flush();
         	  out.close();
     	  } else {
-    	  // Will throw cce when not a binary?
-    		  Binary b = (Binary) bin.getTypedValue();
-    		  response.setContentType(b.getMimeType());
-    		  copyResource(outputStream, b.getDataAsStream());
+    	     // Will throw cce when not a binary?
+    		  if ( bin.getTypedValue() instanceof Binary ) {
+    			  Binary b = (Binary) bin.getTypedValue();
+    			  response.setContentType(b.getMimeType());
+    			  copyResource(outputStream, b.getDataAsStream());
+    		  } else {
+    			 outputStream.write(bin.getValue().getBytes());
+    		  }
     		  outputStream.flush();
     	  }
       } else {
