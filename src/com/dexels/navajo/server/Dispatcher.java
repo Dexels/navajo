@@ -971,9 +971,9 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
     
     if ( isBusy() && !inMessage.getHeader().hasCallBackPointers() ) {
     	try {
-			Navajo result = TribeManager.getInstance().forward(inMessage);
+			Navajo result = TribeManagerFactory.getInstance().forward(inMessage);
 			return result;
-		} catch (TribeException e) {
+		} catch (Exception e) {
 			// Server too busy!
 			e.printStackTrace(System.err);
 	    	System.err.println(">> SERVER TOO BUSY!!!!!");
