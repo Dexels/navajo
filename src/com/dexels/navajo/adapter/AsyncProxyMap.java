@@ -73,7 +73,7 @@ public class AsyncProxyMap extends AsyncMappable {
     // Clear request id.
     h.setRequestId(null);
     try {
-      inDoc = access.getDispatcher().handle(outDoc);
+      inDoc = Dispatcher.getInstance().handle(outDoc);
     } catch (Exception e) {
       e.printStackTrace();
       throw new UserException(-1, e.getMessage());
