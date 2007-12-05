@@ -472,7 +472,7 @@ public class TribeManager extends ReceiverAdapter implements Mappable, TribeMana
 	  System.err.println("ip address = " + Inet4Address.getLocalHost().getHostAddress());
 	}
 
-	public Navajo forward(Navajo in) throws TribeException {
+	public Navajo forward(Navajo in) throws Exception {
 		System.err.println(myName + ": in forward(" + in.getHeader().getRPCName() + ")");
 		TribeMember alt =  getClusterState().getLeastBusyTribalMember();
 		System.err.println(myName + ": LEAST BUSY: " + alt.getMemberName());
@@ -480,7 +480,7 @@ public class TribeManager extends ReceiverAdapter implements Mappable, TribeMana
 			ServiceAnswer sa = (ServiceAnswer) askSomebody(new ServiceRequest(in), alt.getAddress());
 			return sa.getResponse();
 		} else {
-			throw new TribeException("No available tribe member");
+			throw new Exception("No available tribe member");
 		}
 	}
 	
