@@ -6,8 +6,7 @@ import javax.swing.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
-import com.dexels.navajo.tipi.internal.HttpResourceLoader;
-import com.dexels.navajo.tipi.internal.TipiResourceLoader;
+import com.dexels.navajo.tipi.internal.*;
 
 import javax.swing.UIManager.*;
 import java.io.*;
@@ -106,11 +105,26 @@ public class MainApplication {
 
 		String tipiCodeBase = (String) properties.get("tipiCodeBase");
 		if (tipiCodeBase != null) {
-			context.setTipiResourceLoader(new HttpResourceLoader(new URL(tipiCodeBase)));
+			//context.setTipiResourceLoader(new HttpResourceLoader(new URL(tipiCodeBase)));
+			if(tipiCodeBase.indexOf("http:/")!=-1) {
+				context.setTipiResourceLoader(new HttpResourceLoader(new URL(tipiCodeBase)));
+			} else {
+				System.err.println("FIIILE");
+				context.setTipiResourceLoader(new FileResourceLoader(new File(tipiCodeBase)));
+			}
+		} else {
+			// nothing supplied. Use a file loader with fallback to classloader.
+			context.setTipiResourceLoader(new FileResourceLoader(new File("tipi")));
 		}
 		String resourceCodeBase = (String) properties.get("resourceCodeBase");
 		if (resourceCodeBase != null) {
-			context.setGenericResourceLoader(new HttpResourceLoader(new URL(resourceCodeBase)));
+			if(resourceCodeBase.indexOf("http:/")!=-1) {
+				context.setGenericResourceLoader(new HttpResourceLoader(new URL(resourceCodeBase)));
+			} else {
+				context.setGenericResourceLoader(new FileResourceLoader(new File(resourceCodeBase)));
+			}
+		} else {
+			context.setGenericResourceLoader(new FileResourceLoader(new File("tipi")));
 		}
 		// context.setGenericResourceLoader(new HttpResourceLoader(new
 		// URL("http://navajo.dexels.com/TipiClientDemo/resource/")));
