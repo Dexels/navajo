@@ -326,7 +326,7 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 //				continue;
 //			}
 //			System.err.println("TAGNAME: "+xx.getName());
-			if (!xx.getName().equals("layout") && !xx.getName().equals("tipi-instance") && !xx.getName().equals("component-instance")&& !xx.getName().equals("component")) {
+			if (!xx.getName().equals("layout") && !xx.getName().equals("tipi-instance") && !xx.getName().equals("component-instance")&& !xx.getName().equals("component") &&  !xx.getName().startsWith("c.")) {
 				String type = xx.getStringAttribute("type");
 				if(type==null) {
 					type = xx.getName();

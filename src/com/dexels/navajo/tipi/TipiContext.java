@@ -233,11 +233,13 @@ public abstract class TipiContext implements ActivityController {
 	}
 
 	public void clearLazyDefinitionCache() {
-		for (Iterator iter = tipiComponentMap.keySet().iterator(); iter.hasNext();) {
-			String definitionName = (String) iter.next();
+		Set iterSet = new HashSet<String>(tipiComponentMap.keySet());
+		for (Iterator<String> iter = iterSet.iterator(); iter.hasNext();) {
+			String definitionName = iter.next();
 			XMLElement def = (XMLElement) tipiComponentMap.get(definitionName);
 			String lazyLocation = (String) lazyMap.get(definitionName);
 			if (lazyLocation != null && def != null) {
+				System.err.println("Removing: "+definitionName);
 				tipiComponentMap.remove(definitionName);
 			}
 		}
@@ -388,6 +390,8 @@ public abstract class TipiContext implements ActivityController {
 		// catch (ClassCastException ex) {
 		// ex.printStackTrace();
 		// }
+//		System.err.println(tipiComponentMap);
+		
 		switchToDefinition(definitionName, null);
 		if (errorHandler != null) {
 			try {
@@ -417,7 +421,14 @@ public abstract class TipiContext implements ActivityController {
 		}
 	}
 
+	/**
+	 * Parses a toplevel tipi file (every child is a child of tid)
+	 * @param child
+	 * @param dir
+	 * @throws TipiException
+	 */
 	protected void parseChild(XMLElement child, String dir) throws TipiException {
+		
 		String childName = child.getName();
 		if (childName.equals("client-config")) {
 			if (!"__ignore".equals(dir)) {
@@ -463,6 +474,11 @@ public abstract class TipiContext implements ActivityController {
 			parseStorage(child);
 			return;
 		}
+		if (childName.startsWith("d.") ) {
+			parseDefinition(child);
+			return;
+		}
+		
 	}
 
 	private void parseStorage(XMLElement child) {
@@ -493,14 +509,21 @@ public abstract class TipiContext implements ActivityController {
 
 	public void parseDefinition(XMLElement child) throws TipiException {
 		String childName = child.getName();
+		if (childName.startsWith("d.")) {
+			String name = child.getStringAttribute("name");
+			child.setAttribute("name", name);
+			addComponentDefinition(child);
+
+		}
 		if (childName.equals("tipi") || childName.equals("component") || childName.equals("definition")) {
-			if (getTipiDefinition(childName) != null) {
-				System.err.println(">>>>>>>>>>>>>>>>> SKIPPING ALREADY DEFINED: " + childName);
-			} else {
+		// THIS... IS.. SILLY!
+//			if (getTipiDefinition(childName) != null) {
+//				System.err.println(">>>>>>>>>>>>>>>>> SKIPPING ALREADY DEFINED: " + childName);
+//			} else {
 				testDefinition(child);
 				addComponentDefinition(child);
 
-			}
+//			}
 		}
 	}
 
@@ -763,7 +786,17 @@ public abstract class TipiContext implements ActivityController {
 	}
 
 	public TipiLayout instantiateLayout(XMLElement instance, TipiComponent cc) throws TipiException {
-		String type = (String) instance.getAttribute("type");
+		
+		String type = null;
+		if (instance.getName().equals("layout")) {
+			type = (String) instance.getAttribute("type");
+		} else {
+			if(instance.getName().startsWith("l.")) {
+				type = instance.getName().substring(2,instance.getName().length());
+			} else {
+				System.err.println("WARNING, STRANGE LAYOUT TAG: "+instance);
+			}
+		}
 		TipiLayout tl = (TipiLayout) instantiateClass(type, null, instance);
 		if (tl == null) {
 			System.err.println("Null layout!!!!!!!!!!!!");
@@ -789,6 +822,10 @@ public abstract class TipiContext implements ActivityController {
 		String clas = definition.getStringAttribute("class");
 		if(clas==null) {
 			clas = definition.getStringAttribute("type");
+		}
+		if(definition.getName().startsWith("d.")) {
+			clas = definition.getName().substring(2,definition.getName().length());
+				
 		}
 		String name = instance.getStringAttribute("name");
 		if (name == null) {
@@ -857,7 +894,15 @@ public abstract class TipiContext implements ActivityController {
 
 	public TipiComponent instantiateComponent(XMLElement instance) throws TipiException {
 		String name = (String) instance.getAttribute("name");
+		String tagName = (String) instance.getName();
 		String clas = instance.getStringAttribute("class");
+		if(tagName.startsWith("c.")) {
+			clas = instance.getName().substring(2,tagName.length());
+		}
+		if(tagName.startsWith("d.")) {
+			clas = instance.getName().substring(2,tagName.length());
+		}
+		
 		if(clas==null) {
 			clas = instance.getStringAttribute("type", "");
 		}
@@ -1061,6 +1106,9 @@ public abstract class TipiContext implements ActivityController {
 	}
 
 	public XMLElement getComponentDefinition(String componentName) throws TipiException {
+//		if(lazyMap.containsKey(componentName)) {
+//			String location = (String) lazyMap.get(componentName);
+//		}
 		XMLElement xe = getTipiDefinition(componentName);
 		if (xe != null) {
 			return xe;

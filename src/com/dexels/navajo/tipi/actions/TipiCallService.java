@@ -25,7 +25,12 @@ import com.dexels.navajo.tipi.internal.*;
 public class TipiCallService extends TipiAction {
 	public void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
 		
-		String unevaluated = getParameter("input").getValue();
+		TipiValue parameter = getParameter("input");
+		String unevaluated = null;
+
+		if(parameter!=null) {
+			unevaluated = parameter.getValue();
+		}
 		Operand serviceOperand = getEvaluatedParameter("service", event);
 		Operand inputOperand = getEvaluatedParameter("input", event);
 		if (serviceOperand == null || serviceOperand.value == null) {

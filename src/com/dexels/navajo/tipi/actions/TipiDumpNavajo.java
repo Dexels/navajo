@@ -43,11 +43,15 @@ public class TipiDumpNavajo extends TipiAction {
 			}
 			Navajo nn = (Navajo) navajo.value;
 				w.println("********** DEBUG ************* ");
-				w.println("NEAREST NAVAJO: ");
-				try {
-					nn.write(w);
-				} catch (NavajoException e) {
-					e.printStackTrace();
+				w.println("Supplied navajo: ");
+				if (nn==null) {
+					System.err.println("Null navajo supplied in dumpnavajo");
+				} else {
+					try {
+						nn.write(w);
+					} catch (NavajoException e) {
+						e.printStackTrace();
+					}
 				}
 				w.println("********** END OF DEBUG ****** ");
 			return;

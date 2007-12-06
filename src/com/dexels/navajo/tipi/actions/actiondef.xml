@@ -27,32 +27,32 @@
   </tipiaction>
 
   <tipiaction name="setPostman"  class="TipiSetPostman" package="com.dexels.navajo.tipi.actions">
-    <param name="server" type="string"/>
-    <param name="username" type="string"/>
-    <param name="password" type="string"/>
+    <param name="server" type="string" required="true"/>
+    <param name="username" type="string" required="true"/>
+    <param name="password" type="string" required="true"/>
   </tipiaction>
   
   
   <tipiaction name="setUsername"  class="TipiSetUsername" package="com.dexels.navajo.tipi.actions">
-    <param name="username" type="string"/>
+    <param name="username" type="string" required="true"/>
   </tipiaction>
 
   
   <tipiaction name="setPassword"  class="TipiSetPassword" package="com.dexels.navajo.tipi.actions">
-    <param name="password" type="string"/>
+    <param name="password" type="string" required="true"/>
   </tipiaction>
   
   <tipiaction name="setLocale"  class="TipiSetLocale" package="com.dexels.navajo.tipi.actions">
-    <param name="locale" type="string"/>
+    <param name="locale" type="string" required="true"/>
     <!--<param name="context" type="string"/>-->
   </tipiaction>
 
   <tipiaction name="setSubLocale"  class="TipiSetSubLocale" package="com.dexels.navajo.tipi.actions">
-    <param name="locale" type="string"/>
+    <param name="locale" type="string" required="true"/>
   </tipiaction>
 
   <tipiaction name="setClientLocale"  class="TipiSetClientLocale" package="com.dexels.navajo.tipi.actions">
-    <param name="locale" type="string"/>
+    <param name="locale" type="string" required="true"/>
     <param name="context" type="string"/>
   </tipiaction>
   
@@ -63,7 +63,7 @@
   
   
   <tipiaction name="execute"  class="TipiRuntime" package="com.dexels.navajo.tipi.actions">
-    <param name="command" type="string"/>
+    <param name="command" type="string" required="true"/>
   </tipiaction>
 
  
@@ -82,6 +82,9 @@
   </tipiaction>
 
   <tipiaction name="updateExpressions"  class="TipiUpdateExpressions" package="com.dexels.navajo.tipi.actions">
+    <param name="path" type="tipi" required="true"/>
+  </tipiaction>
+  <tipiaction name="updateAllExpressions"  class="TipiUpdateAllExpressions" package="com.dexels.navajo.tipi.actions">
     <param name="path" type="tipi" required="true"/>
   </tipiaction>
 
@@ -120,11 +123,11 @@
   </tipiaction>
   
   <tipiaction name="debugNavajo" class="TipiDebugNavajo" package="com.dexels.navajo.tipi.actions">
-    <param name="tipipath" type="tipi"/>
+    <param name="tipipath" type="tipi" required="true"/>
   </tipiaction>
 
   <tipiaction name="dumpNavajo" class="TipiDumpNavajo" package="com.dexels.navajo.tipi.actions">
-    <param name="input" type="navajo"/>
+    <param name="input" type="navajo" required="true"/>
   </tipiaction>
 
   <tipiaction name="setSystemProperty" class="TipiSetSystemProperty" package="com.dexels.navajo.tipi.actions">
@@ -162,8 +165,9 @@
   
   <tipiaction name="callService" class="TipiCallService" package="com.dexels.navajo.tipi.actions">
     <param name="service" type="string" required="true"/>
-    <param name="navajo" type="navajo"/>
+    <param name="input" type="navajo"/>
   </tipiaction>
 
+  <tipiaction name="flushCache" class="TipiFlushCache" package="com.dexels.navajo.tipi.actions"/>
   
 </tid>

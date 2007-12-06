@@ -27,40 +27,7 @@ import com.dexels.navajo.tipi.tipixml.*;
  * @author not attributable
  * @version 1.0
  */
-public final class TipiDumpSchema extends TipiAction {
-
-	public final void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
-
-		try {
-			Navajo n = NavajoFactory.getInstance().createNavajo();
-			Message mm = NavajoFactory.getInstance().createMessage(n, "Class", Message.MSG_TYPE_ARRAY);
-			n.addMessage(mm);
-			Map m = myContext.getTipiClassDefMap();
-			for (Iterator iter = m.keySet().iterator(); iter.hasNext();) {
-				String element = (String) iter.next();
-				XMLElement def = (XMLElement) m.get(element);
-				dumpDef(mm, element, def);
-			}
-		} catch (NavajoException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	// <tipiaction name="setStorageInstanceId" class="TipiSetStorageInstanceId"
-	// package="com.dexels.navajo.tipi.actions">
-	// <param name="id" type="string" required="true"/>
-	// </tipiaction>
-
-	private void dumpDef(Message msg, String element, XMLElement def) {
-		// TODO Auto-generated method stub
-		// Message elt = NavajoFactory.getInstance().createMessage(n, "Class",
-		// Message.MSG_TYPE_ARRAY_ELEMENT);
-		if (def.getName().equals("tipiaction")) {
-			System.err.println("Action: " + def.getStringAttribute("name"));
-
-		}
-	}
+public final class TipiDumpSchema {
 
 	public static void main(String[] args) throws Exception {
 		Map<String, XMLElement> allComponents = new HashMap<String, XMLElement>();
@@ -68,25 +35,32 @@ public final class TipiDumpSchema extends TipiAction {
 		Map<String, XMLElement> allEvents = new HashMap<String, XMLElement>();
 		Map<String, XMLElement> allValues = new HashMap<String, XMLElement>();
 
-		parseFile("src/com/dexels/navajo/tipi/classdef.xml", allComponents, allActions, allEvents, allValues);
-		parseFile("src/com/dexels/navajo/tipi/actions/actiondef.xml", allComponents, allActions, allEvents, allValues);
-		parseFile("../NavajoSwingTipi/src/com/dexels/navajo/tipi/components/swingimpl/swingclassdef.xml", allComponents, allActions,
-				allEvents, allValues);
+		File baseTipiDir = new File("tipi");
+		parseFile("start.xml", baseTipiDir, allComponents, allActions, allEvents, allValues);
 
-		// <xs:element name="tid">
-		// <xs:complexType>
-		// <xs:choice maxOccurs="unbounded">
-		// <xs:element ref="tipi-include" />
-		// <xs:element ref="definition" />
-		// <xs:element ref="component" />
-		// <xs:element ref="component-instance" />
-		// <xs:element ref="d.window" />
-		//
-		// </xs:choice>
-		// <xs:attribute name="errorhandler" type="xs:string"
-		// use="required" />
-		// </xs:complexType>
-		// </xs:element>
+		// parseStream(TipiDumpSchema.class.getClassLoader().getResourceAsStream("com/dexels/navajo/tipi/classdef.xml"),
+		// allComponents, allActions, allEvents, allValues);
+		// parseStream(TipiDumpSchema.class.getClassLoader().getResourceAsStream("com/dexels/navajo/tipi/components/swingimpl/swingclassdef.xml"),
+		// allComponents, allActions, allEvents, allValues);
+		// parseStream(TipiDumpSchema.class.getClassLoader().getResourceAsStream("com/dexels/navajo/tipi/actions/actiondef.xml"),
+		// allComponents, allActions, allEvents, allValues);
+		// parseStream(TipiDumpSchema.class.getClassLoader().getResourceAsStream("com/dexels/navajo/tipi/swing/substance/substanceclassdef.xml"),
+		// allComponents, allActions, allEvents, allValues);
+
+		//		
+		// parseFile("src/com/dexels/navajo/tipi/classdef.xml", allComponents,
+		// allActions, allEvents, allValues);
+		// parseFile("src/com/dexels/navajo/tipi/actions/actiondef.xml",
+		// allComponents, allActions, allEvents, allValues);
+		// parseFile("../NavajoSwingTipi/src/com/dexels/navajo/tipi/components/swingimpl/swingclassdef.xml",
+		// allComponents, allActions,
+		// allEvents, allValues);
+		// parseFile("../NavajoReportingTipi/src/com/dexels/navajo/tipi/components/ext/extclassdef.xml",
+		// allComponents, allActions, allEvents,
+		// allValues);
+		// parseFile("../TipiSubstance/src/com/dexels/navajo/tipi/swing/substance/substanceclassdef.xml",
+		// allComponents, allActions,
+		// allEvents, allValues);
 		XMLElement root = new CaseSensitiveXMLElement();
 		root.setName("xs:schema");
 		root.setAttribute("xmlns:xs", "http://www.w3.org/2001/XMLSchema");
@@ -94,26 +68,26 @@ public final class TipiDumpSchema extends TipiAction {
 
 		XMLElement bb = createBlockType();
 		root.addChild(bb);
-	
+
 		XMLElement cc = createActions(allActions);
 		root.addChild(cc);
 
-		
 		XMLElement rootTidElement = addTag("xs:element", root);
 		rootTidElement.setAttribute("name", "tid");
-		
-		
-		
+
 		XMLElement cmpl = addTag("xs:complexType", rootTidElement);
 		XMLElement choice = addTag("xs:choice", cmpl);
 		choice.setAttribute("maxOccurs", "unbounded");
+		choice.setAttribute("minOccurs", "0");
 
-		
-	
+		appendTipiIncludeTag(choice);
+		appendTipiConfigTag(choice);
+		appendClientConfigTag(choice);
+
 		for (Iterator<String> iter = allComponents.keySet().iterator(); iter.hasNext();) {
 			String current = iter.next();
 
-			XMLElement e = createTipiClassElement(current, false, allComponents.get(current), allEvents, allValues, allComponents,root);
+			XMLElement e = createTipiClassElement(current, false, allComponents.get(current), allComponents, root);
 			// System.err.println(">>>>>>>>>\n"+e);
 			if (e != null) {
 				root.addChild(e);
@@ -122,56 +96,82 @@ public final class TipiDumpSchema extends TipiAction {
 		}
 		for (Iterator<String> iter = allComponents.keySet().iterator(); iter.hasNext();) {
 			String current = iter.next();
-
-			XMLElement e = createTipiLayout(current, false, allComponents.get(current), allEvents, allValues, allComponents,root);
-			// System.err.println(">>>>>>>>>\n"+e);
+			XMLElement e = createTipiLayout(current, false, allComponents.get(current), allComponents, root);
 			if (e != null) {
 				root.addChild(e);
 			}
-
 		}
 
 		for (Iterator<String> iter = allComponents.keySet().iterator(); iter.hasNext();) {
 			String current = iter.next();
-			// XMLElement xx = addTag("xs:element", choice);
-			// xx.setAttribute("ref", "c." + current);
-			XMLElement e = createTipiClassElement(current, false, allComponents.get(current), allEvents, allValues, allComponents,root);
-			// System.err.println(">>>>>>>>>\n"+e);
+			XMLElement e = createTipiClassElement(current, true, allComponents.get(current), allComponents, root);
 			if (e != null) {
 				choice.addChild(e);
 			}
 		}
+		XMLElement tt = addTag("xs:attribute", cmpl);
+		tt.setAttribute("name", "errorhandler");
 
-		FileWriter fw = new FileWriter("tipi.xsd");
+		FileWriter fw = new FileWriter( new File(baseTipiDir,"tipi.xsd"));
 		root.write(fw);
 		fw.flush();
 		fw.close();
-		// XMLElement e =
-		// createComponentElement("definition",false,allComponents.get(current),allEvents,allValues,allComponents);
 
-		System.err.println("::: " + allEvents.keySet());
-		System.err.println("::: " + allComponents.keySet());
-		System.err.println("::: " + allActions.keySet());
-		System.err.println("::: " + allValues.keySet());
 	}
 
-	// <xs:element name="component-instance">
-	// <xs:complexType>
-	// <xs:sequence minOccurs="0" maxOccurs="unbounded">
-	// <xs:element ref="_event" minOccurs="0" />
-	// <xs:element ref="component-instance" minOccurs="0" />
-	// </xs:sequence>
-	// <xs:attribute name="name" type="xs:string" />
-	// <xs:attribute name="class">
-	// <xs:attribute name="class">
-	// <xs:simpleType>
-	// <xs:restriction base="xs:NMTOKEN">
-	// <xs:enumeration value="button" />
-	// <xs:enumeration value="browser" />
-	// <xs:enumeration value="copy" />
-	// </xs:restriction>
-	// </xs:simpleType>
-	// </xs:attribute>
+	private static void parseTipi(String fileName) throws FileNotFoundException {
+		FileReader fr = new FileReader(fileName);
+
+	}
+
+	private static void appendTipiIncludeTag(XMLElement choice) {
+		XMLElement tipiInclude = addTag("xs:element", choice);
+		tipiInclude.setAttribute("name", "tipi-include");
+		XMLElement cmplTipiInclude = addTag("xs:complexType", tipiInclude);
+		XMLElement locAttr = addTag("xs:attribute", cmplTipiInclude);
+		locAttr.setAttribute("name", "location");
+		locAttr.setAttribute("use", "required");
+		XMLElement lazyAttr = addTag("xs:attribute", cmplTipiInclude);
+		lazyAttr.setAttribute("name", "lazy");
+		XMLElement compAttr = addTag("xs:attribute", cmplTipiInclude);
+		compAttr.setAttribute("name", "definition");
+	}
+
+	private static void appendClientConfigTag(XMLElement choice) {
+		XMLElement tipiInclude = addTag("xs:element", choice);
+		tipiInclude.setAttribute("name", "client-config");
+		XMLElement cmplTipiInclude = addTag("xs:complexType", tipiInclude);
+		XMLElement nameAttr = addTag("xs:attribute", cmplTipiInclude);
+		nameAttr.setAttribute("name", "name");
+		XMLElement locAttr = addTag("xs:attribute", cmplTipiInclude);
+		locAttr.setAttribute("name", "impl");
+		XMLElement lazyAttr = addTag("xs:attribute", cmplTipiInclude);
+		lazyAttr.setAttribute("name", "config");
+		XMLElement compAttr = addTag("xs:attribute", cmplTipiInclude);
+		compAttr.setAttribute("name", "secure");
+		XMLElement locale = addTag("xs:attribute", cmplTipiInclude);
+		locale.setAttribute("name", "locale");
+		XMLElement keyAttr = addTag("xs:attribute", cmplTipiInclude);
+		keyAttr.setAttribute("name", "keystore");
+		XMLElement storeAttr = addTag("xs:attribute", cmplTipiInclude);
+		storeAttr.setAttribute("name", "storepass");
+		XMLElement server = addTag("xs:attribute", cmplTipiInclude);
+		server.setAttribute("name", "server");
+		XMLElement username = addTag("xs:attribute", cmplTipiInclude);
+		username.setAttribute("name", "username");
+		XMLElement password = addTag("xs:attribute", cmplTipiInclude);
+		password.setAttribute("name", "password");
+	}
+
+	private static void appendTipiConfigTag(XMLElement choice) {
+		XMLElement tipiInclude = addTag("xs:element", choice);
+		tipiInclude.setAttribute("name", "tipi-config");
+		XMLElement cmplTipiInclude = addTag("xs:complexType", tipiInclude);
+		XMLElement locAttr = addTag("xs:attribute", cmplTipiInclude);
+		locAttr.setAttribute("name", "maxtoserver");
+		XMLElement lazyAttr = addTag("xs:attribute", cmplTipiInclude);
+		lazyAttr.setAttribute("name", "poolsize");
+	}
 
 	private static XMLElement addTag(String tagName, XMLElement parent) {
 		XMLElement result = new CaseSensitiveXMLElement();
@@ -185,11 +185,14 @@ public final class TipiDumpSchema extends TipiAction {
 		block.setName("xs:element");
 		block.setAttribute("name", "block");
 		XMLElement complexType = addTag("xs:complexType", block);
-		XMLElement xxx = addTag("xs:attribute", complexType);
+		XMLElement complexContent = addTag("xs:complexContent", complexType);
+		XMLElement extension = addTag("xs:extension", complexContent);
+		extension.setAttribute("base", "allActions");
+		XMLElement xxx = addTag("xs:attribute", extension);
 		xxx.setAttribute("name", "expression");
 		xxx.setAttribute("type", "xs:string");
 		xxx.setAttribute("use", "required");
-	
+
 		return block;
 	}
 
@@ -197,51 +200,51 @@ public final class TipiDumpSchema extends TipiAction {
 		XMLElement complexType = new CaseSensitiveXMLElement();
 		complexType.setName("xs:complexType");
 		complexType.setAttribute("name", "allActions");
-		XMLElement choice = addTag("xs:choice",complexType);
+		XMLElement choice = addTag("xs:choice", complexType);
 		choice.setAttribute("maxOccurs", "unbounded");
-		
+		choice.setAttribute("minOccurs", "0");
+
 		XMLElement bl = addTag("xs:element", choice);
-		bl.setAttribute("ref","block");
+		bl.setAttribute("ref", "block");
 
 		for (Iterator<String> itt = allActions.keySet().iterator(); itt.hasNext();) {
 			String current = itt.next();
 			XMLElement currentAction = allActions.get(current);
-			System.err.println("Current: "+currentAction);
+			System.err.println("Current: " + currentAction);
 			XMLElement element = addTag("xs:element", choice);
-			element.setAttribute("name",current);
+			element.setAttribute("name", current);
 			Vector children = currentAction.getChildren();
-			if(children.size()>0) {
-				XMLElement params = addTag("xs:complexType", element);
+			XMLElement params = addTag("xs:complexType", element);
+			if (children.size() > 0) {
 				for (int i = 0; i < children.size(); i++) {
-					XMLElement currentParam = (XMLElement)children.get(i);
+					XMLElement currentParam = (XMLElement) children.get(i);
 					XMLElement xsAttr = addTag("xs:attribute", params);
 					xsAttr.setAttribute("name", currentParam.getStringAttribute("name"));
-					if("true".equals(currentParam.getStringAttribute("required"))) {
+					if ("true".equals(currentParam.getStringAttribute("required"))) {
 						xsAttr.setAttribute("use", "required");
 					}
 				}
 			}
-//			<xs:element name="product">
-//			  <xs:complexType>
-//			    <xs:attribute name="prodid" type="xs:positiveInteger"/>
-//			  </xs:complexType>
-//			</xs:element>
-			
-		}	
-		
-	
+			if (current.equals("performTipiMethod")) {
+				XMLElement xsAttr = addTag("xs:anyAttribute", params);
+				xsAttr.setAttribute("processContents", "skip");
+				// special case, we can not know what other params may be
+				// present
+			}
+
+		}
+
 		return complexType;
 	}
 
-	
 	private static XMLElement createTipiComponent(String current, boolean isDefinition, XMLElement element,
-			Map<String, XMLElement> allEvents, Map<String, XMLElement> allValues, Map<String, XMLElement> allComponents,XMLElement root) {
+			Map<String, XMLElement> allComponents, XMLElement root) {
 		XMLElement result = new CaseSensitiveXMLElement();
 		result.setName("xs:element");
 		String type = element.getStringAttribute("type");
 
 		if (type.equals("tipi") || type.equals("component")) {
-			result.setAttribute("name", "c." + current);
+			result.setAttribute("name", (isDefinition ? "d." : "c.") + current);
 		}
 
 		if (type.equals("layout")) {
@@ -249,37 +252,26 @@ public final class TipiDumpSchema extends TipiAction {
 		}
 
 		XMLElement compl = addTag("xs:complexType", result);
-		
-		
-		// XMLElement ref1 = addTag("xs:element", seq);
-		// ref1.setAttribute("ref", "component");
-		// XMLElement ref2 = addTag("xs:element", seq);
-		// ref2.setAttribute("ref", "component-instance");
 		String childCount = element.getStringAttribute("childcount");
-		//System.err.println("type: " + element.getStringAttribute("type"));
 		boolean noChildren = false;
 		XMLElement seq = null;
+		seq = addTag("xs:choice", compl);
+		seq.setAttribute("maxOccurs", "unbounded");
+		seq.setAttribute("minOccurs", "0");
 
-		if (childCount == null) {
-		//	System.err.println("unknown: " + element.getStringAttribute("name"));
-			// seq.setAttribute("maxOccurs","unbounded");
+		if (childCount == null || "*".equals(childCount) || "null".equals(childCount)) {
 		} else {
-			if ("*".equals(childCount)) {
-			//	System.err.println("infinity: " + element.getStringAttribute("name"));
-				seq = addTag("xs:choice", compl);
-				seq.setAttribute("maxOccurs", "unbounded");
-			} else {
-				//System.err.println("Count: " + childCount + " - " + element.getStringAttribute("name"));
 
-				if (Integer.parseInt(childCount) == 0) {
-					noChildren = true;
-				} else {
-					seq = addTag("xs:choice", compl);
-					seq.setAttribute("maxOccurs", "" + childCount);
-				}
+			if (Integer.parseInt(childCount) == 0) {
+				noChildren = true;
 			}
 		}
-		// System.err.println("Childcount: "+childCount);
+		if ("true".equals(element.getAttribute("customstructure"))) {
+			XMLElement any = addTag("xs:any", seq);
+			any.setAttribute("processContents", "lax");
+			any.setAttribute("minOccurs", "0");
+			any.setAttribute("maxOccurs", "unbounded");
+		}
 		if (!noChildren) {
 			for (Iterator<String> itt = allComponents.keySet().iterator(); itt.hasNext();) {
 				String e = itt.next();
@@ -288,7 +280,7 @@ public final class TipiDumpSchema extends TipiAction {
 						|| "component".equals(currentComponent.getStringAttribute("type"))) {
 					if (seq != null) {
 						XMLElement reff = addTag("xs:element", seq);
-						reff.setAttribute("ref", "c." + e);
+						reff.setAttribute("ref", ("c.") + e);
 					}
 				}
 			}
@@ -332,8 +324,9 @@ public final class TipiDumpSchema extends TipiAction {
 
 		if ("component".equals(type) || "tipi".equals(type)) {
 			XMLElement idAttr = addTag("xs:attribute", compl);
-			idAttr.setAttribute("name", "id");
+			idAttr.setAttribute("name", isDefinition ? "name" : "id");
 			idAttr.setAttribute("type", "xs:string");
+
 			XMLElement contraintAttr = addTag("xs:attribute", compl);
 			contraintAttr.setAttribute("name", "constraint");
 			contraintAttr.setAttribute("type", "xs:string");
@@ -359,76 +352,73 @@ public final class TipiDumpSchema extends TipiAction {
 							XMLElement classAttr = addTag("xs:attribute", compl);
 							classAttr.setAttribute("name", valueElement.getAttribute("name"));
 
-							// if(eventElement)
 							if ("true".equals(valueElement.getAttribute("required"))) {
 								classAttr.setAttribute("use", "required");
 							}
-							// select the type:
 							String valueType = valueElement.getStringAttribute("type");
-
-							if ("integer".equals(valueType)) {
-								classAttr.setAttribute("type", "xs:integer");
-							} else if ("date".equals(valueType)) {
-								classAttr.setAttribute("type", "xs:date");
-							} else if ("boolean".equals(valueType)) {
-								classAttr.setAttribute("type", "xs:boolean");
-							} else {
-								classAttr.setAttribute("type", "xs:string");
-							}
+							classAttr.setAttribute("type", "xs:string");
+							// }
 						}
 					}
 				}
 			}
 		}
-
-		// for medium school tipi:
-		// XMLElement classAttr = addTag("xs:attribute", compl);
-		// classAttr.setAttribute("name", "class");
-		// classAttr.setAttribute("use", "required");
-		// XMLElement simpl = addTag("xs:simpleType", classAttr);
-		// XMLElement restr = addTag("xs:restriction", simpl);
-		// restr.setAttribute("base", "xs:NMTOKEN");
-		// for (Iterator<String> itt = allComponents.keySet().iterator();
-		// itt.hasNext();) {
-		// String e = itt.next();
-		// XMLElement reff = addTag("xs:enumeration", restr);
-		// reff.setAttribute("value", e);
-		// }
-		// classAttr.setAttribute("type", "xs:string");
-		// System.err.println("" + result);
 		return result;
 
 	}
 
 	private static XMLElement createTipiClassElement(String current, boolean isDefinition, XMLElement element,
-			Map<String, XMLElement> allEvents, Map<String, XMLElement> allValues, Map<String, XMLElement> allComponents,XMLElement root) {
+			Map<String, XMLElement> allComponents, XMLElement root) {
 		// component / c.window etc /definition
-
+		System.err.println("element: " + element.getName() + " current: " + current);
 		if ("tipi".equals(element.getStringAttribute("type")) || "component".equals(element.getStringAttribute("type"))) {
-			return createTipiComponent(current, isDefinition, element, allEvents, allValues, allComponents,root);
+			return createTipiComponent(current, isDefinition, element, allComponents, root);
 		}
 
 		return null;
 	}
 
-	private static XMLElement createTipiLayout(String current, boolean isDefinition, XMLElement element, Map<String, XMLElement> allEvents,
-			Map<String, XMLElement> allValues, Map<String, XMLElement> allComponents,XMLElement root) {
+	private static XMLElement createTipiLayout(String current, boolean isDefinition, XMLElement element,
+			Map<String, XMLElement> allComponents, XMLElement root) {
 		// component / c.window etc /definition
 
 		if ("layout".equals(element.getStringAttribute("type"))) {
-			return createTipiComponent(current, isDefinition, element, allEvents, allValues, allComponents,root);
+			return createTipiComponent(current, isDefinition, element, allComponents, root);
 		}
 
 		return null;
 	}
 
-	private static void parseFile(String fileName, Map<String, XMLElement> allComponents, Map<String, XMLElement> allActions,
+	private static void parseFile(String fileName, File includeBase,Map<String, XMLElement> allComponents, Map<String, XMLElement> allActions,
+			Map<String, XMLElement> allEvents, Map<String, XMLElement> allValues) {
+		FileInputStream fis;
+		try {
+			fis = new FileInputStream(new File(includeBase,fileName));
+			System.err.println("Parsing: " + fileName);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			System.err.println("Error opening file:  "+fileName);
+			e.printStackTrace();
+			return;
+		}
+		try {
+			parseStream(fis, includeBase,allComponents, allActions, allEvents, allValues);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private static void parseStream(InputStream is, File includeBase, Map<String, XMLElement> allComponents, Map<String, XMLElement> allActions,
 			Map<String, XMLElement> allEvents, Map<String, XMLElement> allValues) throws FileNotFoundException, IOException {
-		FileReader fr = new FileReader(fileName);
+
+		if (is == null) {
+			throw new FileNotFoundException("Location not found");
+		}
+		InputStreamReader fr = new InputStreamReader(is);
 		XMLElement xe = new CaseSensitiveXMLElement();
 
-		// fr = new
-		// FileReader("../NavajoSwingTipi/src/com/dexels/navajo/tipi/swingimpl/swingclassdef.xml");
 		xe.parseFromReader(fr);
 		Vector c = xe.getChildren();
 		for (Iterator iter = c.iterator(); iter.hasNext();) {
@@ -444,6 +434,15 @@ public final class TipiDumpSchema extends TipiAction {
 				continue;
 			}
 			if (element.getName().equals("tipi-include")) {
+				String location = element.getStringAttribute("location");
+				System.err.println("Include: "+element);
+				try {
+					parseStream(TipiDumpClass.class.getClassLoader().getResourceAsStream(location),includeBase, allComponents, allActions, allEvents, allValues);
+				} catch (Exception e) {
+					System.err.println("Including: " + location + " failed!");
+					parseFile(location, includeBase, allComponents, allActions, allEvents, allValues);
+					
+				}
 				continue;
 			}
 			if (element.getName().equals("tipi-parser")) {
@@ -455,12 +454,9 @@ public final class TipiDumpSchema extends TipiAction {
 	}
 
 	private static void processClass(XMLElement componentElement, Map<String, XMLElement> allEvents, Map<String, XMLElement> allValues) {
-		// System.err.println("Element: "+element.getName()+" :
-		// "+element.getStringAttribute("class"));
 		Vector c = componentElement.getChildren();
 		for (Iterator iter = c.iterator(); iter.hasNext();) {
 			XMLElement cc = (XMLElement) iter.next();
-			// System.err.println("Sub: "+cc.getName());
 			if (cc.getName().equals("events")) {
 				Vector ccc = cc.getChildren();
 				for (Iterator iter2 = ccc.iterator(); iter2.hasNext();) {

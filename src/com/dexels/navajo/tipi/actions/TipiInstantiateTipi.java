@@ -122,6 +122,7 @@ public class TipiInstantiateTipi extends TipiAction {
 	}
 
 	protected void instantiateTipi(boolean byClass, TipiEvent event) throws TipiException {
+		
 		String id = null;
 		Object constraints = null;
 		TipiValue forceVal = getParameter("force");
@@ -149,6 +150,7 @@ public class TipiInstantiateTipi extends TipiAction {
 				System.err.println("Location evaluated to a string, trying to get Tipi from that string (" + o.toString() + ")");
 				o = evaluate("{" + o.toString() + "}", null).value;
 			}
+			System.err.println(">>> "+getEvaluatedParameter("location",event).value);
 			parent = (TipiComponent) o;
 		} catch (Exception ex) {
 			ex.printStackTrace();

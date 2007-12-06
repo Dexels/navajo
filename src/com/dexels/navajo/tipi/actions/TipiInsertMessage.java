@@ -1,5 +1,7 @@
 package com.dexels.navajo.tipi.actions;
 
+import java.util.*;
+
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.internal.*;
@@ -54,6 +56,11 @@ public class TipiInsertMessage extends TipiAction {
 		// TODO: Perhaps refactor into NavajoDocument
 		Message copy = definitionMessage.copy(arrayMessage.getRootDoc());
 		copy.setType("");
+		ArrayList al = definitionMessage.getAllProperties();
+		for (Iterator iter = al.iterator(); iter.hasNext();) {
+			Property element = (Property) iter.next();
+			copy.getProperty(element.getName()).setValue(element.getValue());
+		}
 		arrayMessage.addMessage(copy);
 		
 	}

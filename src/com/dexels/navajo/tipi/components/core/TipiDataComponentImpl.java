@@ -112,10 +112,11 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 		}
 		for (int i = 0; i < children.size(); i++) {
 			XMLElement child = (XMLElement) children.get(i);
-			if (child.getName().equals("layout")) {
+			if (child.getName().equals("layout") || child.getName().startsWith("l.")) {
 				instantiateWithLayout(child);
 			} else {
-				if (child.getName().equals("tipi-instance") || child.getName().equals("component-instance") ||  child.getName().equals("component")) {
+//				System.err.println("Checkin.");
+				if (child.getName().equals("tipi-instance") || child.getName().equals("component-instance") ||  child.getName().equals("component")||  child.getName().startsWith("c.")) {
 					addComponentInstance(myContext, child, child.getAttribute("constraint"));
 				}
 			}
