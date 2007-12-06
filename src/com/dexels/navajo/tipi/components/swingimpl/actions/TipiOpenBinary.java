@@ -75,14 +75,10 @@ public class TipiOpenBinary extends TipiAction {
             try {
                 File f = File.createTempFile("tipi_", "."+extString);
                 TipiSaveValue.saveFile(b, f);
-
-//                URL u = f.toURL();
                 DefaultBrowser.displayURL(f.getAbsolutePath());
             } catch (IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-        //}
         b.getHandle();
     }
 
