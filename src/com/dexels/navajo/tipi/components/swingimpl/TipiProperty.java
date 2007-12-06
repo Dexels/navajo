@@ -478,7 +478,33 @@ public class TipiProperty
       }else if("requestFocus".equals(name)){
       	requestPropertyFocus();
       }
-    }
+      if("selectByName".equals(name)){
+    	  String selectionName = (String) compMeth.getEvaluatedParameter("value", event).value;
+    	  if(myProperty!=null) {
+    		  try {
+				Selection s =  myProperty.getSelection(selectionName);
+				myProperty.setSelected(s);
+				setProperty(myProperty);
+    		  } catch (NavajoException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    	  }
+      }
+      if("selectByValue".equals(name)){
+    	  String selectionValue = (String) compMeth.getEvaluatedParameter("value", event).value;
+    	  if(myProperty!=null) {
+    		  try {
+    			myProperty.setSelected(selectionValue);
+				setProperty(myProperty);
+    		  } catch (NavajoException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    	  }
+      }
+
+  }
   
   private void requestPropertyFocus(){
   	( (GenericPropertyComponent) getContainer()).requestPropertyFocus();
