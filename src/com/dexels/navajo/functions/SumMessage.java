@@ -78,23 +78,28 @@ public class SumMessage extends FunctionInterface {
 		        }
 	        	if (o instanceof Integer) {
 	        		sum += ((Integer) o).doubleValue();
+	        		sumType = "int";
 	        	} else if (o instanceof Double) {
 	        		sum += ((Double) o).doubleValue();
-	        	} else {
+	        		sumType = "double";
+	        	} else if (o instanceof Money) {
+	        		sum += ((Money) o).doubleValue();
+	        		sumType = "money";
+	        	} else if (o instanceof Percentage) {
+	        		sum += ((Percentage) o).doubleValue();
+	        		sumType = "percentage";
+	        	} 
+	        	else {
 	        		throw new TMLExpressionException(this, "Incompatible type while summing: " + o);
 	        	}
 		      }
 		      if (sumType.equals("int")) {
 		        return new Integer( (int) sum);
-		      }
-		      else if (sumType.equals("money")) {
+		      } else if (sumType.equals("money")) {
 		        return new Money(sum);
-
-		      }
-		      else if (sumType.equals("percentage")) {
+		      } else if (sumType.equals("percentage")) {
 		        return new Percentage(sum);
-		      }
-		      else {
+		      } else {
 		        return new Double(sum);
 		      }
 		    
