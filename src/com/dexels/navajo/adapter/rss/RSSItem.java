@@ -12,6 +12,16 @@ import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.server.UserException;
+import com.sun.cnpi.rss.elements.Author;
+import com.sun.cnpi.rss.elements.Category;
+import com.sun.cnpi.rss.elements.Comments;
+import com.sun.cnpi.rss.elements.Description;
+import com.sun.cnpi.rss.elements.Enclosure;
+import com.sun.cnpi.rss.elements.Guid;
+import com.sun.cnpi.rss.elements.Link;
+import com.sun.cnpi.rss.elements.PubDate;
+import com.sun.cnpi.rss.elements.Source;
+import com.sun.cnpi.rss.elements.Title;
 
 public class RSSItem implements Mappable {
 
@@ -43,20 +53,65 @@ public class RSSItem implements Mappable {
 		return category;
 	}
 	
+	public Category getItemCategory() {
+		if ( category == null ) {
+			return null;
+		}
+		Category c = new Category();
+		c.setText(category);
+		return c;
+	}
+	
 	public String getDescription() {
 		return description;
+	}
+	
+	public Description getItemDescription() {
+		if ( description == null ) {
+			return null;
+		}
+		Description c = new Description();
+		c.setText(description);
+		return c;
 	}
 	
 	public String getLink() {
 		return link;
 	}
 	
+	public Link getItemLink() {
+		if ( link == null ) {
+			return null;
+		}
+		Link c = new Link();
+		c.setText(link);
+		return c;
+	}
+	
 	public String getPubDate() {
 		return pubDate;
 	}
 	
+	public PubDate getItemPubDate() {
+		if ( pubDate == null ) {
+			return null;
+		}
+		PubDate c = new PubDate();
+		c.setText(pubDate);
+		return c;
+	}
+	
 	public String getTitle() {
 		return title;
+	}
+	
+	public Title getItemTitle() {
+		if ( title == null ) {
+			return null;
+		}
+		Title c = new Title();
+		c.setText(title);
+		return c;
 	}
 	
 	public void setTitle(String title) {
@@ -83,6 +138,15 @@ public class RSSItem implements Mappable {
 		return author;
 	}
 	
+	public Author getItemAuthor() {
+		if ( author == null ) {
+			return null;
+		}
+		Author a = new Author();
+		a.setText(author);
+		return a;
+	}
+	
 	public void setAuthor(String author) {
 		this.author = author;
 	}
@@ -95,12 +159,30 @@ public class RSSItem implements Mappable {
 		return comments;
 	}
 	
+	public Comments getItemComments() {
+		if ( comments == null ) {
+			return null;
+		}
+		Comments c = new Comments();
+		c.setText(comments);
+		return c;
+	}
+	
 	public String getEnclosure() {
 		return enclosure;
 	}
 	
 	public void setEnclosure(String s) {
 		this.enclosure = s;
+	}
+	
+	public Enclosure getItemEnclosure() {
+		if ( enclosure == null ) {
+			return null;
+		}
+		Enclosure c = new Enclosure();
+		c.setText(enclosure);
+		return c;
 	}
 	
 	public Binary getEnclosureBinary() {
@@ -124,8 +206,26 @@ public class RSSItem implements Mappable {
 		return guid;
 	}
 	
+	public Guid getItemGuid() {
+		if ( guid == null ) {
+			return null;
+		}
+		Guid c = new Guid();
+		c.setText(guid);
+		return c;
+	}
+	
 	public String getSource() {
 		return source;
+	}
+	
+	public Source getItemSource() {
+		if ( source == null ) {
+			return null;
+		}
+		Source c = new Source();
+		c.setText(source);
+		return c;
 	}
 	
 	public void setSource(String source) {

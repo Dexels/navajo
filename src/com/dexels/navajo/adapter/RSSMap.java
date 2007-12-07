@@ -50,12 +50,16 @@ public class RSSMap implements Mappable {
 	public String textInput;
 	public String skipHours;
 	public String skipDays;
+	
+	private Channel channel = null;
 
 	public void kill() {
 	}
 
 	public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
-
+		channel = new Channel();
+		rss = new Rss("version 2.0");
+		rss.setChannel(channel);
 	}
 
 	public void store() throws MappableException, UserException {
@@ -66,37 +70,43 @@ public class RSSMap implements Mappable {
 		StringBuffer sb = new StringBuffer();
 		sb.append("<rss version=\"2.0\">\n");
 		sb.append("  <channel>\n");
-		sb.append("    <title>" + getTitle() + "</title>\n");
-		sb.append("    <link>" + getLink() + "</link>\n");
-		sb.append("    <copyright>" + getCopyright() + "</copyright>\n");
-		sb.append("    <language>" + getLanguage() + "</language>\n");
-		sb.append("    <category>" + getCategory() + "</category>\n");
-		sb.append("    <webmaster>" + getWebMaster() + "</webmaster>\n");
-		sb.append("    <pubDate>" + getPubDate() + "</pubDate>\n");
+		if ( getTitle() != null) sb.append("    <title>" + getTitle() + "</title>\n");
+		if ( getLink() != null) sb.append("    <link>" + getLink() + "</link>\n");
+		if ( getCopyright() != null)  sb.append("    <copyright>" + getCopyright() + "</copyright>\n");
+		if ( getLanguage() != null ) sb.append("    <language>" + getLanguage() + "</language>\n");
+		if ( getCategory() != null )  sb.append("    <category>" + getCategory() + "</category>\n");
+		if ( getWebMaster() != null )  sb.append("    <webmaster>" + getWebMaster() + "</webmaster>\n");
+		if ( getPubDate() != null )  sb.append("    <pubDate>" + getPubDate() + "</pubDate>\n");
 		
 		Image img = rss.getChannel().getImage();
 		if ( img != null ) {
 			sb.append("    <image>\n");
-			sb.append("      <title>" + img.getTitle() + "</title>\n");
-			sb.append("      <url>" + img.getUrl() + "</url>\n");
-			sb.append("      <link>" + img.getLink() + "</link>\n");
+			if ( img.getTitle() != null)  sb.append("      <title>" + img.getTitle() + "</title>\n");
+			if ( img.getUrl() != null)  sb.append("      <url>" + img.getUrl() + "</url>\n");
+			if ( img.getLink() != null) sb.append("      <link>" + img.getLink() + "</link>\n");
 			if ( img.getWidth() != null)  sb.append("      <width>" + img.getWidth() + "</width>\n");
 			if ( img.getHeight() != null) sb.append("      <height>" + img.getHeight() + "</height>\n");
-			sb.append("      <description>" + img.getDescription() + "</description>\n");
+			if ( img.getDescription() != null)  sb.append("      <description>" + img.getDescription() + "</description>\n");
 			sb.append("    </image>\n");
 		}
 			
 		getItems();
-		for ( int i = 0; i < items.length; i++ ) {
-			sb.append("    <item>\n");
-			sb.append("      <title>" + items[i].getTitle() + "</title>\n");
-			sb.append("      <link>" + items[i].getLink() + "</link>\n");
-			sb.append("      <description>" + items[i].getDescription() + "</description>\n");
-			sb.append("      <enclosure>" + items[i].getEnclosure() + "</enclosure>\n");
-			sb.append("      <category>" + items[i].getCategory() + "</category>\n");
-			sb.append("      <pubDate>" + items[i].getPubDate() + "</pubDate>\n");
-			sb.append("    </item>\n");
+		if ( items != null ) {
+			for ( int i = 0; i < items.length; i++ ) {
+				sb.append("    <item>\n");
+				if ( items[i].getTitle() != null )  sb.append("      <title>" + items[i].getTitle() + "</title>\n");
+				if ( items[i].getLink() != null ) sb.append("      <link>" + items[i].getLink() + "</link>\n");
+				if ( items[i].getCategory() != null ) sb.append("      <category>" + items[i].getCategory() + "</category>\n");
+				if ( items[i].getGuid() != null ) sb.append("      <guid>" + items[i].getGuid() + "</guid>\n");
+				if ( items[i].getAuthor() != null ) sb.append("      <author>" + items[i].getAuthor() + "</author>\n");
+				if ( items[i].getDescription() != null ) sb.append("      <description>" + items[i].getDescription() + "</description>\n");
+				if ( items[i].getEnclosure() != null ) sb.append("      <enclosure>" + items[i].getEnclosure() + "</enclosure>\n");
+				if ( items[i].getCategory() != null ) sb.append("      <category>" + items[i].getCategory() + "</category>\n");
+				if ( items[i].getPubDate() != null ) sb.append("      <pubDate>" + items[i].getPubDate() + "</pubDate>\n");
+				sb.append("    </item>\n");
+			}
 		}
+		
 		sb.append("  </channel>\n");
 		sb.append("</rss>\n");
 		
@@ -104,14 +114,29 @@ public class RSSMap implements Mappable {
 	}
 	
 	public void setItems(RSSItem [] rssitems) {
-		items = new RSSItem[rssitems.length];
-		for ( int i = 0; i < items.length; i++ ) {
-			items[i] = rssitems[i];
+		HashSet<Item> s = new HashSet<Item>();
+		for ( int i = 0; i < rssitems.length; i++ ) {
+			System.err.println("Processing item..." + i);
+			Item item = new Item();
+			item.setAuthor( rssitems[i].getItemAuthor() );
+			item.setComments( rssitems[i].getItemComments() );
+			item.setDescription( rssitems[i].getItemDescription() );
+			item.setEnclosure( rssitems[i].getItemEnclosure() );
+			item.setGuid( rssitems[i].getItemGuid() );
+			item.setLink( rssitems[i].getItemLink() );
+			item.setPubDate( rssitems[i].getItemPubDate() );
+			item.setSource( rssitems[i].getItemSource() );
+			item.setTitle( rssitems[i].getItemTitle() );
+			s.add(item);
 		}
+		rss.getChannel().setItems(s);
 	}
 	
 	public RSSItem[] getItems() {
 		
+		if ( rss.getChannel().getItems() == null ) {
+			return null;
+		}
 		Collection rssitems = rss.getChannel().getItems();
 		Iterator it = rssitems.iterator();
 		items = new RSSItem[rssitems.size()];
@@ -187,10 +212,20 @@ public class RSSMap implements Mappable {
 		
 		try{
 			RSSMap m = new RSSMap();
-			m.setRssFeed(m.rssFeed);
+			//m.setRssFeed(m.rssFeed);
 			m.load(null, null, null, null);
+			m.setTitle("Dexels News");
+			m.setCopyright("CNN");
+			m.setLanguage("en");
+			m.setPubDate("21-dec-2017");
+			RSSItem [] is = new RSSItem[1];
+			is[0] = new RSSItem();
+			is[0].setTitle("Dexels has acquired Microsoft");
+			is[0].setAuthor("Ling jang Hu");
+			m.setItems(is);
 			
 			System.err.println(new String( m.getContent().getData() ));
+			
 			//m.getItems();
 		}catch(Exception e){
 			e.printStackTrace();
@@ -380,6 +415,86 @@ public class RSSMap implements Mappable {
 		else {
 			return null;
 		}
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+		Title tt = new Title();
+		tt.setText(title);
+		rss.getChannel().setTitle(tt);
+	}
+
+	public void setLink(String link) {
+		this.link = link;
+		Link l = new Link();
+		l.setText(link);
+		rss.getChannel().setLink(l);
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+		Description d = new Description();
+		d.setText(description);
+		rss.getChannel().setDescription(d);
+	}
+
+	public void setLanguage(String language) {
+		this.language = language;
+		Language l = new Language();
+		l.setText(language);
+		rss.getChannel().setLanguage(l);
+	}
+
+	public void setCopyright(String copyright) {
+		this.copyright = copyright;
+		Copyright c = new Copyright();
+		c.setText(copyright);
+		rss.getChannel().setCopyright(c);
+	}
+
+	public void setManagingEditor(String managingEditor) {
+		this.managingEditor = managingEditor;
+		ManagingEditor m = new ManagingEditor();
+		m.setText(managingEditor);
+		rss.getChannel().setManagingEditor(m);
+	}
+
+	public void setWebMaster(String webMaster) {
+		this.webMaster = webMaster;
+		WebMaster w = new WebMaster();
+		w.setText(webMaster);
+		rss.getChannel().setWebMaster(w);
+	}
+
+	public void setPubDate(String pubDate) {
+		this.pubDate = pubDate;
+		PubDate p = new PubDate();
+		p.setText(pubDate);
+		rss.getChannel().setPubDate(p);
+	}
+
+	public void setLastBuildDate(String lastBuildDate) {
+		this.lastBuildDate = lastBuildDate;
+		LastBuildDate l = new LastBuildDate();
+		l.setText(lastBuildDate);
+		rss.getChannel().setLastBuildDate(l);
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+		Category c = new Category();
+		c.setText(category);
+	}
+
+	public void setGenerator(String generator) {
+		this.generator = generator;
+		Generator g = new Generator();
+		g.setText(generator);
+		rss.getChannel().setGenerator(g);
+	}
+
+	public void setDocs(String docs) {
+		this.docs = docs;
 	}
 
 }
