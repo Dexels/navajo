@@ -863,7 +863,7 @@ private final int jjMoveNfa_0(int startState, int curPos)
                case 112:
                   if ((0x7fffffe87fffffeL & l) != 0L)
                      jjCheckNAddStates(19, 23);
-                  if ((0xf8000001L & l) != 0L)
+                  if ((0x40000000f8000001L & l) != 0L)
                      jjCheckNAddStates(15, 18);
                   break;
                case 5:
@@ -1148,7 +1148,7 @@ private final int jjMoveNfa_0(int startState, int curPos)
                      jjCheckNAddStates(19, 23);
                   break;
                case 101:
-                  if ((0xf8000001L & l) != 0L)
+                  if ((0x40000000f8000001L & l) != 0L)
                      jjCheckNAddStates(15, 18);
                   break;
                case 103:
@@ -1213,14 +1213,12 @@ protected SimpleCharStream input_stream;
 private final int[] jjrounds = new int[112];
 private final int[] jjstateSet = new int[224];
 protected char curChar;
-public TMLParserTokenManager(SimpleCharStream stream)
-{
+public TMLParserTokenManager(SimpleCharStream stream){
    if (SimpleCharStream.staticFlag)
       throw new Error("ERROR: Cannot use a static CharStream class with a non-static lexical analyzer.");
    input_stream = stream;
 }
-public TMLParserTokenManager(SimpleCharStream stream, int lexState)
-{
+public TMLParserTokenManager(SimpleCharStream stream, int lexState){
    this(stream);
    SwitchTo(lexState);
 }

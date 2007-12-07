@@ -4,7 +4,7 @@
 #
 # Copyright (C) 1998-2000 Metamata, Inc.
 
-export CLASSPATH=/home/arjen/projecten/javacc2.1/bin/lib/JavaCC.zip
+export CLASSPATH=/home/arjen/projecten/Navajo/lib/javacc.jar
 
 NEWARGS=""
 
@@ -13,4 +13,4 @@ do
     NEWARGS="${NEWARGS} $arg"
 done
 
-java COM.sun.labs.jjtree.Main ${NEWARGS}
+java org.javacc.jjtree.Main ${NEWARGS}
