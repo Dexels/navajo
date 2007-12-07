@@ -128,6 +128,7 @@ public final class StringFunction extends FunctionInterface {
     f.insertOperand("ava");
     o = f.evaluate();
     System.out.println("o = " + o + ", type = " + o.getClass().getName());
+   
   }
 
 }
