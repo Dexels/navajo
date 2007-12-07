@@ -43,7 +43,9 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 	private final Map tipiComponentMap = new HashMap();
 	protected final ArrayList properties = new ArrayList();
 	protected final ArrayList myEventList = new ArrayList();
-
+	protected boolean isHomeComponent = false;
+	
+	
 	private final ArrayList tipiComponentList = new ArrayList();
 	private final Map detectedExpressions = new HashMap();
 	private final ArrayList componentEvents = new ArrayList();
@@ -55,6 +57,11 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 
 	protected final Map styleHintMap = new HashMap();
 
+	
+	protected final Map aliasMap = new HashMap();
+
+	
+	
 	private boolean hadConditionErrors = false;
 	private XMLElement myClassDef = null;
 	// private ImageIcon mySelectedIcon;
@@ -1351,4 +1358,33 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 	public String[] getCustomChildTags() {
 		return new String[]{};
 	}
+
+	public boolean isHomeComponent() {
+		return isHomeComponent;
+	}
+
+	public void setHomeComponent(boolean isHomeComponent) {
+		this.isHomeComponent = isHomeComponent;
+	}
+
+	public TipiComponent getHomeComponent() {
+		if(isHomeComponent()) {
+			return this;
+		}
+		if(getTipiParent()==null) {
+			return null;
+		}
+		return getTipiParent().getHomeComponent();		
+	}
+	
+	public String getAlias(String expression) {
+		System.err.println("Getting alias: "+expression+" map: "+aliasMap);
+		
+		return (String) aliasMap.get(expression);
+	}
+
+	public String setAlias(String name, String value) {
+		return (String) aliasMap.put(name,value);
+	}
+	
 }

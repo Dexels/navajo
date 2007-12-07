@@ -225,6 +225,13 @@ public interface TipiComponent extends ConditionErrorHandler, TipiEventListener,
 
 	public Object getActualComponent();
 
+	public boolean isHomeComponent();
+
+	public void setHomeComponent(boolean isHomeComponent);
+
+	public TipiComponent getHomeComponent();
+
+	
 	/*
 	 * gets all the property components under this property, and also under its
 	 * (recursive) children
@@ -236,4 +243,7 @@ public interface TipiComponent extends ConditionErrorHandler, TipiEventListener,
 	 */
 	public void commitToUi();
 
+	public String getAlias(String expression);
+
+	public String setAlias(String name, String value);
 }
