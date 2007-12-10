@@ -333,6 +333,8 @@ public class TribeManager extends ReceiverAdapter implements Mappable, TribeMana
 				removeWaitingRequest(a.getMyRequest());
 				answerWaiters.notify();
 			}
+		} else {
+			System.err.println("Received unknown message: " + msg);
 		}
 	}
 
