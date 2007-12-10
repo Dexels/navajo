@@ -52,7 +52,7 @@ import com.dexels.navajo.workflow.WorkFlowManager;
  * @author arjen
  *
  */
-public class TribeManager extends ReceiverAdapter implements Mappable, TribeManagerInterface {
+public class TribeManager extends ReceiverAdapter implements Mappable, TribeManagerInterface, TribeManagerMXBean {
 
 	public String setChief;
 	public String chiefName;
@@ -484,6 +484,14 @@ public class TribeManager extends ReceiverAdapter implements Mappable, TribeMana
 		} else {
 			throw new Exception("No available tribe member");
 		}
+	}
+
+	public String getMyName() {
+		return myName;
+	}
+
+	public void setChief(boolean isChief) {
+		this.isChief = isChief;
 	}
 	
 }
