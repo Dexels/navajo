@@ -23,7 +23,7 @@ archive;RAR;Rar;application/x-rar-compressed;rar;0;526172211a;20;
 archive;ZIP;PKWare Zip (ZIP);application/zip;zip;0;"PK";20;
 audio;MIDI;Midi (MID);audio/unknown;mid,midi;0;"MThd";20;
 audio;MP3;MPEG audio (mp3);audio/mpeg;mp3,mp2;0;"ID3";20;
-ics;ICS;iCal/vCal format;application/octet-stream;ics,ICS,vcal;0;"BEGIN:VCALENDAR";20;
+ics;ICS;iCal/vCal format;text/calendar;ics,ICS,vcal;0;"BEGIN:VCALENDAR";20;
 vcf;VCF;vCard format;text/x-vcard;vcf,VCF;0;"BEGIN:VCARD";20;
 doc;HTML;Hypertext Markup Language (HTML);text/html;htm,html;0;"<HEAD";20;
 doc;HTML;Hypertext Markup Language (HTML);text/html;htm,html;0;"<head";20;
