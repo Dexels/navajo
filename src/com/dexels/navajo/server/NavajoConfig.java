@@ -893,7 +893,12 @@ public final class NavajoConfig {
 	
 	public double getCurrentCPUload() {
 		if ( myOs != null ) {
+			try {
 			return myOs.getSystemLoadAverage();
+			} catch (Throwable t) {
+				System.err.println("Upgrade to Java 1.6 for supporting cpu load statistics");
+				return -1.0;
+			}
 		} else {
 			return -1.0;
 		}
