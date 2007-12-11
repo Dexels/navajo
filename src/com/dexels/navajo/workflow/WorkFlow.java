@@ -74,7 +74,7 @@ public class WorkFlow implements Mappable, Serializable {
 	 * 
 	 * @param in
 	 */
-	protected void mergeWithParmaters(Navajo in) {
+	protected void mergeWithParameters(Navajo in) {
 		
 		if ( in != null && in.getMessage("__parms__") == null ) {
 			Message clone = localNavajo.getMessage("__parms__").copy(in);

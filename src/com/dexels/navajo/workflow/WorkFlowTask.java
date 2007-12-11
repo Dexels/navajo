@@ -42,10 +42,10 @@ public class WorkFlowTask implements Serializable, TaskListener {
 				myTask.setPassword(myState.initiatingAccess.rpcPwd);
 			}
 			if ( navajoToUse != null && getSourceState().equals(".") && getSourceDirection().equalsIgnoreCase("request") && myState.initiatingAccess.getInDoc() != null ) {
-				myState.getWorkFlow().mergeWithParmaters(myState.initiatingAccess.getInDoc());
+				myState.getWorkFlow().mergeWithParameters(myState.initiatingAccess.getInDoc());
 				myTask.setRequest(myState.initiatingAccess.getInDoc());
 			} else if ( navajoToUse != null && getSourceState().equals(".") && getSourceDirection().equalsIgnoreCase("response") && myState.initiatingAccess.getOutputDoc() != null ) {
-				myState.getWorkFlow().mergeWithParmaters(myState.initiatingAccess.getOutputDoc());
+				myState.getWorkFlow().mergeWithParameters(myState.initiatingAccess.getOutputDoc());
 				myTask.setRequest(myState.initiatingAccess.getOutputDoc());
 			} else if ( navajoToUse != null && !getSourceState().equals(".") ) { // Could be that historic state is referenced.
 				String state = getSourceState();
@@ -59,17 +59,17 @@ public class WorkFlowTask implements Serializable, TaskListener {
 						alt = h.getInitiatingAccess().getInDoc();
 					}
 				}
-				myState.getWorkFlow().mergeWithParmaters(alt);
+				myState.getWorkFlow().mergeWithParameters(alt);
 				myTask.setRequest(alt);
 			} else if ( myState.aftertaskentry &&  myState.initiatingAccess.getOutputDoc() != null ) {
-				myState.getWorkFlow().mergeWithParmaters(myState.initiatingAccess.getOutputDoc());
+				myState.getWorkFlow().mergeWithParameters(myState.initiatingAccess.getOutputDoc());
 				myTask.setRequest(myState.initiatingAccess.getOutputDoc());
 			} else if ( myState.initiatingAccess.getInDoc() != null ) {
-				myState.getWorkFlow().mergeWithParmaters(myState.initiatingAccess.getInDoc());
+				myState.getWorkFlow().mergeWithParameters(myState.initiatingAccess.getInDoc());
 				myTask.setRequest(myState.initiatingAccess.getInDoc());
 			} else { // Maybe time trigger??
 				Navajo newDoc = NavajoFactory.getInstance().createNavajo();
-				myState.getWorkFlow().mergeWithParmaters(newDoc);
+				myState.getWorkFlow().mergeWithParameters(newDoc);
 				myTask.setRequest(newDoc);
 			}
 		}
