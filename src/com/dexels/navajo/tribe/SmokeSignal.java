@@ -5,6 +5,7 @@ import java.io.Serializable;
 import com.dexels.navajo.scheduler.BeforeWebserviceTrigger;
 import com.dexels.navajo.scheduler.ListenerStore;
 import com.dexels.navajo.scheduler.WebserviceTrigger;
+import com.dexels.navajo.util.AuditLog;
 import com.dexels.navajo.workflow.WorkFlowManager;
 
 public class SmokeSignal implements Serializable {
@@ -61,7 +62,7 @@ public class SmokeSignal implements Serializable {
 	 * @param m
 	 */
 	public void processMessage() {
-		System.err.println("SmokeSignal: PROCESS MESSAGE (" + getObject() + "/" + getKey() + "/" + getValue() + ")");
+		AuditLog.log(AuditLog.AUDIT_MESSAGE_TRIBEMANAGER, "SmokeSignal: PROCESS MESSAGE (" + getObject() + "/" + getKey() + "/" + getValue() + ")");
 		if ( getObject().equals(OBJECT_LISTENERS)) {
 			ListenerStore ls = ListenerStore.getInstance();
 			// Determine key.

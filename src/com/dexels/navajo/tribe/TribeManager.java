@@ -28,6 +28,7 @@ import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.server.enterprise.tribe.TribeManagerInterface;
+import com.dexels.navajo.util.AuditLog;
 import com.dexels.navajo.workflow.WorkFlowManager;
 
 /**
@@ -100,15 +101,15 @@ public class TribeManager extends ReceiverAdapter implements Mappable, TribeMana
 					state.firstMember = myName;
 					
 					try {
-						System.err.println("=================================== SETTING UP JGROUPS CHANNEL ==================================");
+						AuditLog.log(AuditLog.AUDIT_MESSAGE_TRIBEMANAGER, "=================================== SETTING UP JGROUPS CHANNEL ==================================");
 						System.setProperty("java.net.preferIPv4Stack", "true");
 						instance.channel=new JChannel();
 						instance.channel.setReceiver(instance);
 						instance.channel.connect("Navajo Tribe");
 						instance.channel.getState(null, 1000);
-						System.err.println("MyAddress = " + ((IpAddress) instance.channel.getLocalAddress()).getIpAddress() + ", port = " + 
+						AuditLog.log(AuditLog.AUDIT_MESSAGE_TRIBEMANAGER, "MyAddress = " + ((IpAddress) instance.channel.getLocalAddress()).getIpAddress() + ", port = " + 
 								((IpAddress) instance.channel.getLocalAddress()).getPort());
-						System.err.println("=================================================================================================");
+						AuditLog.log(AuditLog.AUDIT_MESSAGE_TRIBEMANAGER, "=================================================================================================");
 					} catch (Exception e) {
 						e.printStackTrace(System.err);
 					}
@@ -218,7 +219,7 @@ public class TribeManager extends ReceiverAdapter implements Mappable, TribeMana
 				if ( mbr.getAddress().equals(channel.getLocalAddress() ) ) {
 					myMembership = mbr;
 				}
-				System.err.println(myName +  ">>>>VIEWVIEWVIEW>>>> " + mbr.getMemberName() + ": " + mbr.getAddress() + ": " + mbr.isChief() + 
+				AuditLog.log(AuditLog.AUDIT_MESSAGE_TRIBEMANAGER,"Current cluster view: " + mbr.getMemberName() + ": " + mbr.getAddress() + ": " + mbr.isChief() + 
 						( mbr.getAddress().equals(channel.getLocalAddress()) ? " (ME) " : "") );
 			}
 			
@@ -311,7 +312,6 @@ public class TribeManager extends ReceiverAdapter implements Mappable, TribeMana
 			r.processMessage();
 		} else if ( msg.getObject() instanceof Request ) {
 			Request q = (Request) msg.getObject();
-			System.err.println(myName + "Received request " + q.getGuid());
 			Answer a = q.getAnswer();
 			//System.err.println(myName + "My Answer is " + a.acknowledged() );
 			try {
@@ -334,7 +334,7 @@ public class TribeManager extends ReceiverAdapter implements Mappable, TribeMana
 				answerWaiters.notify();
 			}
 		} else {
-			System.err.println("Received unknown message: " + msg);
+			AuditLog.log(AuditLog.AUDIT_MESSAGE_TRIBEMANAGER, "Received unknown message: " + msg);
 		}
 	}
 
@@ -382,7 +382,7 @@ public class TribeManager extends ReceiverAdapter implements Mappable, TribeMana
 				if (theChief == null) {
 					try {
 						Thread.sleep(100);
-						System.err.println("Waiting for the Chief...");
+						AuditLog.log(AuditLog.AUDIT_MESSAGE_TRIBEMANAGER, "Waiting for the Chief...");
 					} catch (InterruptedException e) {
 					}
 				}
@@ -453,7 +453,7 @@ public class TribeManager extends ReceiverAdapter implements Mappable, TribeMana
 	}
 	
 	public void terminate() {
-		System.err.println("Closing JGROUPS channel...");
+		AuditLog.log(AuditLog.AUDIT_MESSAGE_TRIBEMANAGER, "Closing JGROUPS channel...");
 		instance.channel.disconnect();
 		instance.channel.close();
 	}

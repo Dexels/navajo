@@ -14,14 +14,15 @@ import com.dexels.navajo.server.Dispatcher;
  */
 public final class AuditLog {
 
-	public final static String AUDIT_MESSAGE_TASK_SCHEDULER = "AUDIT LOG (Task Scheduler): ";
-	public final static String AUDIT_MESSAGE_ASYNC_RUNNER = "AUDIT LOG (Async Runner): ";
-	public final static String AUDIT_MESSAGE_STAT_RUNNER = "AUDIT LOG (Statistics Runner): ";
-	public final static String AUDIT_MESSAGE_INTEGRITY_WORKER = "AUDIT LOG (Integrity Worker): ";
-	public final static String AUDIT_MESSAGE_LOCK_MANAGER = "AUDIT LOG (Locking Manager): ";
-	public final static String AUDIT_MESSAGE_DISPATCHER = "AUDIT LOG (Dispatcher): ";
-	public final static String AUDIT_MESSAGE_CLOCK = "AUDIT LOG (Clock): ";
-	public final static String AUDIT_MESSAGE_WORKFLOW = "AUDIT LOG (Workflow): ";
+	public final static String AUDIT_MESSAGE_TASK_SCHEDULER = "[AUDIT LOG] (Task Scheduler): ";
+	public final static String AUDIT_MESSAGE_ASYNC_RUNNER = "[AUDIT LOG] (Async Runner): ";
+	public final static String AUDIT_MESSAGE_STAT_RUNNER = "[AUDIT LOG] (Statistics Runner): ";
+	public final static String AUDIT_MESSAGE_INTEGRITY_WORKER = "[AUDIT LOG] (Integrity Worker): ";
+	public final static String AUDIT_MESSAGE_LOCK_MANAGER = "[AUDIT LOG] (Locking Manager): ";
+	public final static String AUDIT_MESSAGE_DISPATCHER = "[AUDIT LOG] (Dispatcher): ";
+	public final static String AUDIT_MESSAGE_CLOCK = "[AUDIT LOG] (Clock): ";
+	public final static String AUDIT_MESSAGE_WORKFLOW = "[AUDIT LOG] (Workflow): ";
+	public final static String AUDIT_MESSAGE_TRIBEMANAGER = "[AUDIT LOG] (TribeManager): ";
 
 	private static volatile String instanceName;
 	

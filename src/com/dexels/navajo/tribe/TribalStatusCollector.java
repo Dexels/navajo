@@ -7,7 +7,7 @@ import com.dexels.navajo.server.GenericThread;
 import com.dexels.navajo.server.jmx.JMXHelper;
 import com.dexels.navajo.util.AuditLog;
 
-public class TribalStatusCollector extends GenericThread {
+public class TribalStatusCollector extends GenericThread implements TribalStatusCollectorMXBean {
 
 	private static String id = "Tribal Status Collector";
 	private static Object semaphore = new Object();
