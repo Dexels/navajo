@@ -21,6 +21,26 @@ import com.dexels.navajo.server.Access;
  */
 public final class WorkFlowDefinitionReader {
 
+	/**
+	 * PUBLIC CONSTANTS
+	 */
+	
+	public static final String TRANSITION_ELT = "transition";
+	public static final String STATE_ELT = "state";
+	public static final String PARAM_ELT = "param";
+	public static final String EXPRESSION_ELT = "expression";
+	public static final String TASK_ELT = "task";
+	
+	public static final String NEXTSTATE_ATTR = "nextstate";
+	public static final String TRIGGER_ATTR = "trigger";
+	public static final String CONDITION_ATTR = "condition";
+	public static final String SERVICE_ATTR = "service";
+	public static final String USERNAME_ATTR = "username";
+	public static final String PASSWORD_ATTR = "password";
+	public static final String NAVAJO_ATTR = "navajo";
+	public static final String NAME_ATTR = "name";
+	public static final String VALUE_ATTR = "value";
+	
 	private static File definitionPath = null;
 	private static volatile HashMap<String,Transition> initialTransitions = new HashMap<String,Transition>();
 	
@@ -48,7 +68,7 @@ public final class WorkFlowDefinitionReader {
 	}
 	
 	private static final XMLElement findState(XMLElement xml, String name) {
-		Vector v = xml.getElementsByTagName("state");
+		Vector v = xml.getElementsByTagName(WorkFlowDefinitionReader.STATE_ELT);
 		for (int i = 0; i < v.size(); i++) {
 			XMLElement x = (XMLElement) v.get(i);
 			if ( x.getAttribute("id").equals(name) ) {
@@ -65,12 +85,12 @@ public final class WorkFlowDefinitionReader {
 		XMLElement def = readDefinition(definitionFile);
 		XMLElement state = findState(def, name);
 		
-		Vector transitions = state.getElementsByTagName("transition");
+		Vector transitions = state.getElementsByTagName(WorkFlowDefinitionReader.TRANSITION_ELT);
 		for (int i = 0; i < transitions.size(); i++) {
 			XMLElement t = (XMLElement) transitions.get(i);
-			String nextState = readAttribute(t, "nextstate");
-			String trigger = readAttribute(t, "trigger");
-			String condition = readAttribute(t,"condition");
+			String nextState = readAttribute(t, WorkFlowDefinitionReader.NEXTSTATE_ATTR);
+			String trigger = readAttribute(t, WorkFlowDefinitionReader.TRIGGER_ATTR);
+			String condition = readAttribute(t, WorkFlowDefinitionReader.CONDITION_ATTR);
 			String proxy = readAttribute(t,"proxy");
 			String webservice = readAttribute(t,"webservice");
 			
@@ -85,34 +105,34 @@ public final class WorkFlowDefinitionReader {
 				trans.getMyTask().setProxy(true);
 			}
 			// Parse param children.
-			Vector params = t.getElementsByTagName("param");
+			Vector params = t.getElementsByTagName(WorkFlowDefinitionReader.PARAM_ELT);
 			for (int j = 0; j < params.size(); j++) {
 				XMLElement p = (XMLElement) params.get(j);
-				String paramname = (String) p.getAttribute("name");
-				Vector exp = p.getElementsByTagName("expression");
+				String paramname = (String) p.getAttribute(WorkFlowDefinitionReader.NAME_ATTR);
+				Vector exp = p.getElementsByTagName(WorkFlowDefinitionReader.EXPRESSION_ELT);
 				ArrayList<ConditionalExpression> al = new ArrayList<ConditionalExpression>();
 				for (int e = 0; e < exp.size(); e++) {
 					XMLElement ep = (XMLElement) exp.get(e);
-					String expression = (String) ep.getAttribute("value");
-					String cond = (String) ep.getAttribute("condition");
-					String navajoToUse = (String) ep.getAttribute("navajo"); 
+					String expression = (String) ep.getAttribute(WorkFlowDefinitionReader.VALUE_ATTR);
+					String cond = (String) ep.getAttribute(WorkFlowDefinitionReader.CONDITION_ATTR);
+					String navajoToUse = (String) ep.getAttribute(WorkFlowDefinitionReader.NAVAJO_ATTR); 
 					al.add(new ConditionalExpression(cond, expression, navajoToUse));
 				}
 				trans.addParameter(paramname, al);	
 			}
 		}
 		// Parse tasks.
-		Vector tasks = state.getElementsByTagName("task");
+		Vector tasks = state.getElementsByTagName(WorkFlowDefinitionReader.TASK_ELT);
 		for (int i = 0; i < tasks.size(); i++) {
 			XMLElement t = (XMLElement) tasks.get(i);
-			String service = readAttribute(t,"service");
-			String trigger = readAttribute(t,"trigger");
-			String condition = readAttribute(t,"condition");
+			String service = readAttribute(t, WorkFlowDefinitionReader.SERVICE_ATTR);
+			String trigger = readAttribute(t, WorkFlowDefinitionReader.TRIGGER_ATTR);
+			String condition = readAttribute(t, WorkFlowDefinitionReader.CONDITION_ATTR);
 			// Optional: username/password.
-			String username = readAttribute(t,"username");
-			String password = readAttribute(t,"password");
+			String username = readAttribute(t, WorkFlowDefinitionReader.USERNAME_ATTR);
+			String password = readAttribute(t, WorkFlowDefinitionReader.PASSWORD_ATTR);
 			//  Optional, specificy whether to use request or response navajo of the current workflow state.
-			String navajo = readAttribute(t,"navajo");
+			String navajo = readAttribute(t, WorkFlowDefinitionReader.NAVAJO_ATTR);
 			s.addTask(service, trigger, condition, navajo);
 		}
 		
@@ -127,32 +147,32 @@ public final class WorkFlowDefinitionReader {
 		if ( init == null ) {
 			throw new WorkFlowDefinitionException("Could not find init state for workflow: " + definition);
 		}
-		Vector transitions = init.getElementsByTagName("transition");
+		Vector transitions = init.getElementsByTagName(WorkFlowDefinitionReader.TRANSITION_ELT);
 		for (int i = 0; i < transitions.size(); i++) {
 			XMLElement t = (XMLElement) transitions.get(i);
-			String nextState = readAttribute(t, "nextstate");
-			String trigger = readAttribute(t,"trigger");
-			String condition = readAttribute(t,"condition");
-			String user = readAttribute(t,"username");
+			String nextState = readAttribute(t, WorkFlowDefinitionReader.NEXTSTATE_ATTR);
+			String trigger = readAttribute(t, WorkFlowDefinitionReader.TRIGGER_ATTR);
+			String condition = readAttribute(t, WorkFlowDefinitionReader.CONDITION_ATTR);
+			String user = readAttribute(t, WorkFlowDefinitionReader.USERNAME_ATTR);
 			try {
 				Transition trans = Transition.createStartTransition(nextState, trigger, condition, definition, user);
 				initialTransitions.put(definition, trans);
 				wfd.setActivationTrigger(trigger);
 
 				// Parse param children.
-				Vector params = t.getElementsByTagName("param");
+				Vector params = t.getElementsByTagName(WorkFlowDefinitionReader.PARAM_ELT);
 				for (int j = 0; j < params.size(); j++) {
 					XMLElement p = (XMLElement) params.get(j);
-					String paramname = (String) p.getAttribute("name");
-					Vector exp = p.getElementsByTagName("expression");
+					String paramname = (String) p.getAttribute(WorkFlowDefinitionReader.NAME_ATTR);
+					Vector exp = p.getElementsByTagName(WorkFlowDefinitionReader.EXPRESSION_ELT);
 					ArrayList<ConditionalExpression> al = new ArrayList<ConditionalExpression>();
 					for (int e = 0; e < exp.size(); e++) {
 						XMLElement ep = (XMLElement) exp.get(e);
-						String expression = (String) ep.getAttribute("value");
-						String cond = (String) ep.getAttribute("condition");
+						String expression = (String) ep.getAttribute(WorkFlowDefinitionReader.VALUE_ATTR);
+						String cond = (String) ep.getAttribute(WorkFlowDefinitionReader.CONDITION_ATTR);
 						// source can specify the navajo to use:
 						// [wfstate]":"["request"|"response"].
-						String navajoToUse = (String) ep.getAttribute("navajo"); 
+						String navajoToUse = (String) ep.getAttribute(WorkFlowDefinitionReader.NAVAJO_ATTR); 
 						al.add(new ConditionalExpression(cond, expression, navajoToUse));
 					}
 					trans.addParameter(paramname, al);	

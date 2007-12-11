@@ -34,11 +34,18 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 	 */
 	private static final long serialVersionUID = 3144803468988103221L;
 	
+	
 	public String nextState;
 	public String myCondition;
 	public String trigger;
 	public String webservice = null;
 	public boolean proxy = false;
+	
+	/**
+	 * PUBLIC CONSTANTS
+	 */
+	
+	public static final String FINISH = "finish";
 	
 	private Task myTask = null;
 	private State myState;
@@ -238,7 +245,7 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 				evaluateParameters(t, myState);
 				myState.leave();
 
-				if ( nextState != null && !nextState.equals("finish") ) {
+				if ( nextState != null && !nextState.equals(Transition.FINISH) ) {
 					myState.getWorkFlow().createState(nextState, t.getTrigger().getAccess()).enter(true);
 				} else {
 					myState.getWorkFlow().finish();
@@ -266,7 +273,7 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 //				 First evaluate all parameters that need to be set with this transition.
 				evaluateParameters(t, myState);
 				myState.leave();
-				if ( nextState != null && !nextState.equals("finish") ) {
+				if ( nextState != null && !nextState.equals(Transition.FINISH) ) {
 					myState.getWorkFlow().createState(nextState, t.getTrigger().getAccess()).enter(false);
 				} else {
 					myState.getWorkFlow().finish();

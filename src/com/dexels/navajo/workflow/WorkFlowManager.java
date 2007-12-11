@@ -131,13 +131,13 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 	 * @param fromServer
 	 */
 	public void takeOverPersistedWorkFlows(String fromServer) {
-		System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> In takeOverPersistedWorkFlows(" + fromServer + ")");
+		AuditLog.log(AuditLog.AUDIT_MESSAGE_WORKFLOW, "TakeOverPersistedWorkFlows(" + fromServer + ")");
 		String [] persistedWorkflows = SharedStoreFactory.getInstance().getObjects(baseWorkflowPath + "/" + fromServer);
 		for (int i = 0; i < persistedWorkflows.length; i++) {
 			WorkFlow wf;
 			try {
 				wf = (WorkFlow) SharedStoreFactory.getInstance().get(baseWorkflowPath + "/" + fromServer, persistedWorkflows[i]);
-				System.err.println(">>>>>>>>>>>>> MOVING WORKFLOW: " + wf.getMyId() + " FROM SERVER " + fromServer);
+				AuditLog.log(AuditLog.AUDIT_MESSAGE_WORKFLOW, "MOVING WORKFLOW: " + wf.getMyId() + " FROM SERVER " + fromServer);
 				persistWorkFlow(wf);
 				SharedStoreFactory.getInstance().remove(baseWorkflowPath + "/" + fromServer, persistedWorkflows[i]);
 			} catch (SharedStoreException e) {
