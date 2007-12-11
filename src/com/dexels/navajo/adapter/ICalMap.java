@@ -1,10 +1,15 @@
 package com.dexels.navajo.adapter;
 
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
+import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.StringTokenizer;
 
 import net.fortuna.ical4j.data.CalendarOutputter;
 import net.fortuna.ical4j.model.*;
@@ -47,6 +52,8 @@ public class ICalMap implements Mappable {
 	public ICalEvent event;
 	
 	public Binary iCal;
+	
+	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd'T'HHmmss");
 
 	public ICalMap() {
 	}
@@ -63,6 +70,135 @@ public class ICalMap implements Mappable {
 		this.events = e;
 	}
 	
+	private String getTokenValue(String token, String sep) {
+		
+		StringTokenizer st = new StringTokenizer(token, sep);
+		if ( st.hasMoreTokens() ) {
+			st.nextToken();
+			if ( st.hasMoreTokens() ) {
+				String value = st.nextToken();
+				return value;
+			}
+		}
+		return "";
+	}
+	
+	public com.dexels.navajo.adapter.icalmap.Attendee parseAttendee(String line) {
+		com.dexels.navajo.adapter.icalmap.Attendee a = new com.dexels.navajo.adapter.icalmap.Attendee();
+		
+		// CN=aap:mailto:noot
+		String cn = null;
+		String email = null;
+		int indx;
+		
+		if ( line.indexOf("CN=") != -1) {
+			StringTokenizer tokens = new StringTokenizer(line, "=");
+			tokens.nextToken();
+			cn = tokens.nextToken();
+			if ( ( indx = cn.indexOf("mailto:")) != -1) {
+				cn = cn.substring(0, indx-1);
+			}
+		}
+		
+		if ( ( indx = line.indexOf("mailto:") ) != -1 ) {
+			email = line.substring(indx+7);
+		}
+		
+		a.setName(cn);
+		a.setEmail(email);
+		
+		return a;
+	}
+	
+	public ICalEvent parseEvent(BufferedReader br) {
+
+		ICalEvent event = new ICalEvent();
+		HashSet<com.dexels.navajo.adapter.icalmap.Attendee> attendees = new HashSet<com.dexels.navajo.adapter.icalmap.Attendee>();
+		String line = null;
+		try {
+			while ( ( line = br.readLine() ) != null ) {
+				if ( line.indexOf("END:VEVENT") != -1 ) {
+					//return event;
+				} else if ( line.indexOf("SUMMARY:") != -1) {
+					event.setSummary(getTokenValue(line, ":"));
+				} else if ( line.indexOf("DESCRIPTION:") != -1) {
+					event.setDescription(getTokenValue(line, ":"));
+				} else if ( line.indexOf("LOCATION:") != -1) {
+					event.setLocation(getTokenValue(line, ":"));
+				} else if ( line.indexOf("DTEND:") != -1 ) {
+					String value = getTokenValue(line, ":");
+					event.setEndDate(sdf.parse(value));
+				} else if ( line.indexOf("DTSTART") != -1 ) {
+					String value = getTokenValue( getTokenValue(line, ";"), ":");
+					event.setStartDate(sdf.parse(value));
+				} else if ( line.indexOf("UID:") != -1) {
+					event.setUid(getTokenValue(line, ":"));
+				} else if ( line.indexOf("ATTENDEE") != -1) {
+					String value = getTokenValue(line, ";");
+					attendees.add(parseAttendee(value));
+				}
+			}
+		} catch (Exception ioe) {
+			ioe.printStackTrace(System.err);
+		}
+
+		com.dexels.navajo.adapter.icalmap.Attendee [] aas = new com.dexels.navajo.adapter.icalmap.Attendee[attendees.size()];
+		aas = (com.dexels.navajo.adapter.icalmap.Attendee []) attendees.toArray(aas);
+		event.setAttendees(aas);
+		
+		return event;
+	}
+	
+	/**
+	 * Parse an Ical document.
+	 * 
+	 * BEGIN:VCALENDAR
+PRODID:-//Dexels//Navajo Integrator Adapters iCal 1.0//EN
+VERSION:2.0
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+DTSTAMP:20071211T142053Z
+DTSTART;TZID=Europe/Amsterdam:20071208T083000
+DTEND:20071208T101500
+SUMMARY:NAC Breda [NAC Breda] - Ajax [Ajax]
+UID:72A34197-A43F-BF20-59EE-23B7DFB2BFBC
+SEQUENCE:0
+TRANSP:OPAQUE
+CLASS:PUBLIC
+DESCRIPTION:
+LOCATION:Rat Verlegh Stadion BREDA
+END:VEVENT
+BEGIN:VEVENT
+
+	 * @param b
+	 */
+	public void setICal(Binary b) {
+		
+		BufferedReader br = new BufferedReader( new StringReader(new String(b.getData())));
+		HashSet<ICalEvent> eventSet = new HashSet<ICalEvent>();
+		
+		String line = null;
+		
+		try {
+		while ( ( line = br.readLine() ) != null ) {
+			if ( line.indexOf("BEGIN:VEVENT") != -1 ) {
+				eventSet.add(parseEvent(br));
+			}
+		}
+		} catch (Exception ioe) {
+			ioe.printStackTrace(System.err);
+		}
+		events = new ICalEvent[eventSet.size()];
+		events = (ICalEvent []) eventSet.toArray(events);
+		
+	}
+	
+	/**
+	 * Generate an Ical document.
+	 * 
+	 * @return
+	 */
 	public Binary getICal() {
 
 		Calendar calendar = new Calendar();
@@ -233,7 +369,7 @@ public class ICalMap implements Mappable {
 		return uid;
 	}
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		ICalMap icm = new ICalMap();
 		ICalEvent ie = new ICalEvent();
 		
@@ -256,5 +392,23 @@ public class ICalMap implements Mappable {
 		
 		System.err.println(new String( icm.getICal().getData() ));
 		
+		// Parse ics file.
+		Binary b = new Binary(new File("/home/arjen/aap.ics"));
+		icm.setICal(b);
+		ICalEvent [] events = icm.getEvents();
+		for (int i = 0; i < events.length; i++) {
+			System.err.println(events[i]);
+			// Get attendees
+			com.dexels.navajo.adapter.icalmap.Attendee [] aas = events[i].getAttendees();
+			for (int j  = 0; j < aas.length; j++) {
+				System.err.println(aas[j]);
+			}
+		}
+		
+		
+	}
+
+	public ICalEvent[] getEvents() {
+		return events;
 	}
 }

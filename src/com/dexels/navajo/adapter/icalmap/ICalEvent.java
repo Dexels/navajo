@@ -41,6 +41,7 @@ public class ICalEvent implements Mappable {
 	public String summary;
 	public String fromName;
 	public String fromEmail;
+	public String uid;
 	public Date startDate, endDate;
 	public Date alarmDate;
 	public int alarmMinutes;
@@ -163,6 +164,23 @@ public class ICalEvent implements Mappable {
 
 	public void setAttendees(Attendee[] attendees) {
 		this.attendees = attendees;
+	}
+	
+	public String toString() {
+		return "DESCRIPTION:" + getDescription() + "\n" +
+			   "UID:" + getUid() + "\n" +
+		       "SUMMARY:" + getSummary() + "\n" +
+		       "LOCATION:" + getLocation() + "\n" +
+		       "DTSTART:" + getStartDate() + "\n" +
+		       "DTEND:" + getEndDate();
+	}
+
+	public String getUid() {
+		return uid;
+	}
+
+	public void setUid(String uid) {
+		this.uid = uid;
 	}
 
 }
