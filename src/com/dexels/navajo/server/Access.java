@@ -36,7 +36,7 @@ import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.mapping.CompiledScript;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
-import com.dexels.navajo.server.statistics.MapStatistics;
+import com.dexels.navajo.server.enterprise.statistics.MapStatistics;
 
 public final class Access implements java.io.Serializable, Mappable {
 

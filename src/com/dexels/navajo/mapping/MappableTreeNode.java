@@ -18,7 +18,7 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.UserException;
-import com.dexels.navajo.server.statistics.MapStatistics;
+import com.dexels.navajo.server.enterprise.statistics.MapStatistics;
 
 class ArrayChildStatistics implements Serializable {
 	/**
