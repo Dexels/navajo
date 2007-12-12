@@ -114,13 +114,15 @@ public  class BaseMessageImpl extends BaseNode implements Message, TreeNode, Com
      */
     public final void setName(String name) {
     	// Fix the messageMap collection to account for the changed message name.
-    	if ( ((BaseMessageImpl) getParentMessage()).messageMap != null ) {
-    		((BaseMessageImpl) getParentMessage()).messageMap.remove(myName);
+    	if ( getParentMessage() != null ) {
+    		if ( ((BaseMessageImpl) getParentMessage()).messageMap != null ) {
+    			((BaseMessageImpl) getParentMessage()).messageMap.remove(myName);
+    		}
+    		if ( ((BaseMessageImpl) getParentMessage()).messageMap != null ) {
+    			((BaseMessageImpl) getParentMessage()).messageMap.put(name, this);
+    		}
     	}
     	myName = name;
-    	if ( ((BaseMessageImpl) getParentMessage()).messageMap != null ) {
-    		((BaseMessageImpl) getParentMessage()).messageMap.put(name, this);
-    	}
     }
 
     public final void setMode(String mode) {
