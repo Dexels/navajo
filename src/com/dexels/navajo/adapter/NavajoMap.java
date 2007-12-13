@@ -316,6 +316,29 @@ public class NavajoMap extends AsyncMappable  implements Mappable {
   }
 
   /**
+   * Gets the Navajo object.
+   * If inDoc is present return inDoc, else return inMessage (request Navajo).
+   * 
+   * @return
+   * @throws UserException
+   */
+  public Binary getNavajo() throws UserException {
+	  Binary b = new Binary();
+	  OutputStream is = b.getOutputStream();
+	  try {
+		  if ( inDoc != null) {
+			  inDoc.write(is);
+		  } else {
+			  inMessage.write(is);
+		  }
+		  is.close();
+	  } catch (Exception e) {
+		  throw new UserException(-1, e.getMessage());
+	  }
+	  return b;
+  }
+  
+  /**
    * Use this method to call another Navajo webservice.
    * If server is not specified, the Navajo server that is used to handle this request is also used to handle the new request.
    *
