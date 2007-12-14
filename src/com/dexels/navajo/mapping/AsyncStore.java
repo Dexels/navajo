@@ -97,16 +97,16 @@ public final class AsyncStore extends GenericThread implements AsyncStoreMXBean 
 			  AsyncMappable a = (AsyncMappable) objectStore.get(ref);
 			  long now = System.currentTimeMillis();
 			  if ( (now - a.getLastAccess()) > timeout || a.isKilled()) {
-				  if (!a.isKilled()) {
-					  System.err.println("REMOVED " + ref +
-							  " FROM OBJECT STORE DUE TO TIME-OUT, now = " +
-							  now + ", lastAccess() = " + a.getLastAccess() +
-							  ", timeout = " + timeout);
-				  }
-				  else {
-					  System.err.println("REMOVED " + ref +
-					  " FROM OBJECT STORE DUE TO KILLONFINNISH");
-				  }
+//				  if (!a.isKilled()) {
+//					  System.err.println("REMOVED " + ref +
+//							  " FROM OBJECT STORE DUE TO TIME-OUT, now = " +
+//							  now + ", lastAccess() = " + a.getLastAccess() +
+//							  ", timeout = " + timeout);
+//				  }
+//				  else {
+//					  System.err.println("REMOVED " + ref +
+//					  " FROM OBJECT STORE DUE TO KILLONFINNISH");
+//				  }
 				  
 				  a.kill();
 				 // AsyncMappable am = (AsyncMappable) objectStore.get(ref);
@@ -178,7 +178,7 @@ public final class AsyncStore extends GenericThread implements AsyncStoreMXBean 
    * @param ref
    */
   public final synchronized void removeInstance(String ref) {
-	System.err.println("About to remove async instance: " + ref);
+//	System.err.println("About to remove async instance: " + ref);
     Object o = objectStore.get(ref);
 //    try {
 //		JMXHelper.deregisterMXBean(JMXHelper.ASYNC_DOMAIN, ((AsyncMappable )o).getClassName() + "-" + ref);
