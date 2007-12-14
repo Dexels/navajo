@@ -116,49 +116,52 @@ public final class MappingUtils {
       }
        
       if (i < count) {
-    	  
-    	if (msg == null) {
-          newMsg = source.getMessage(messageName);
-        }
-        else {
-          if (!msg.getType().equals(Message.MSG_TYPE_ARRAY) || (useElementIndex != -1)) { // For array type messages always add element message!!!
-            if (!msg.getType().equals(Message.MSG_TYPE_ARRAY)) {
-              newMsg = msg.getMessage(messageName);
-            }
-            else {
-              newMsg = msg.getMessage(useElementIndex);
-            }
-          }
-        }
-        if (newMsg == null) {
-        	
-        	   int arrayChild = messageName.indexOf("@");
-        	      if ( arrayChild != -1 ) {
-        	    	  messageName = messageName.substring(0, arrayChild);
-        	      }
-        	      if ( arrayChild != -1 ) {
-        	    	  if ( msg != null ) 
-        	    	  { 
-        	    		  msg.setType("array"); 
-        	    	  } else {
-        	    		  throw NavajoFactory.getInstance().createNavajoException(new Exception("Can only create array elements inside array message"));
-        	    	  }
-        	      }
-        	      
-          newMsg = NavajoFactory.getInstance().createMessage(source,
-              messageName,
-              (array ? Message.MSG_TYPE_ARRAY : ""));
-          
-          if (!mode.equals("")) {
-            newMsg.setMode(mode);
-          }
-          if (msg == null) {
-            source.addMessage(newMsg);
-          }
-          else {
-            msg.addMessage(newMsg);
-          }
-        }
+
+    	  int arrayChild = messageName.indexOf("@");
+    	  if ( arrayChild != -1 ) {
+    		  useElementIndex =  Integer.parseInt(messageName.substring(arrayChild+1));
+    		  messageName = messageName.substring(0, arrayChild);
+    	  } 
+
+    	  if (msg == null) {
+    		  newMsg = source.getMessage(messageName);
+    	  }
+    	  else {
+    		  if (!msg.getType().equals(Message.MSG_TYPE_ARRAY) || (useElementIndex != -1)) { // For array type messages always add element message!!!
+    			  if (!msg.getType().equals(Message.MSG_TYPE_ARRAY)) {
+    				  newMsg = msg.getMessage(messageName);
+    			  }
+    			  else {
+    				  newMsg = msg.getMessage(useElementIndex);
+    			  }
+    		  }
+    	  }
+
+    	  if (newMsg == null) {
+
+    		  if ( arrayChild != -1 ) {
+    			  if ( msg != null ) 
+    			  { 
+    				  msg.setType("array"); 
+    			  } else {
+    				  throw NavajoFactory.getInstance().createNavajoException(new Exception("Can only create array elements inside array message"));
+    			  }
+    		  }
+
+    		  newMsg = NavajoFactory.getInstance().createMessage(source,
+    				  messageName,
+    				  (array ? Message.MSG_TYPE_ARRAY : ""));
+
+    		  if (!mode.equals("")) {
+    			  newMsg.setMode(mode);
+    		  }
+    		  if (msg == null) {
+    			  source.addMessage(newMsg);
+    		  }
+    		  else {
+    			  msg.addMessage(newMsg);
+    		  }
+    	  }
         msg = newMsg;
       }
       else {
@@ -771,13 +774,14 @@ public final class MappingUtils {
   
   public static void main(String [] args) throws Exception {
 	  Navajo n = NavajoFactory.getInstance().createNavajo();
-	  setProperty(false, null, "/Aap/@/NootProp", "Apenoot", "string", "", "in", "", 20, n, null, false);
-	  setProperty(false, null, "/Aap/@/NootProp", "Apenootjes lekker", "string", "", "in", "", 20, n, null, false);
+	  setProperty(false, null, "/Aap/Aap@0/NootProp", "Apenoot", "string", "", "in", "", 20, n, null, false);
+	  setProperty(false, null, "/Aap/Aap@0/Allemaal", "Beestjes", "string", "", "in", "", 20, n, null, false);
 	  
 	  setProperty(false, null, "/Kibbeling/NemoProp", "Is gek", "string", "", "in", "", 20, n, null, false);
 	  setProperty(false, null, "/Kibbeling/Kibbeling/WalvisProp", "Moby", "string", "", "in", "", 20, n, null, false);
 	  
 	  setProperty(false, null, "/Worstebroodje/@0/Worst/Hema", "Moby", "string", "", "in", "", 20, n, null, false);
+	  setProperty(false, null, "/Worstebroodje/@0/Worst/CenA", "Moby", "string", "", "in", "", 20, n, null, false);
 	  
 	 
 	  n.write(System.err);
