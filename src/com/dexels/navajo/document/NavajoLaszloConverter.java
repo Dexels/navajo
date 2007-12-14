@@ -81,7 +81,6 @@ public class NavajoLaszloConverter {
 	private static void appendMessage(Message m, Element e, Document d, boolean includeSelections) {
 		try {
 			if (m.getType().equals(Message.MSG_TYPE_ARRAY_ELEMENT)) {
-				System.err.println("CREATING ARRAY ELEMENT");
 				Element row = d.createElement("row");
 				ArrayList allProp = m.getAllProperties();
 				for (int j = 0; j < allProp.size(); j++) {
@@ -123,7 +122,6 @@ public class NavajoLaszloConverter {
 							DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 							row.setAttribute(cp.getName(), df.format(dd));
 						} else {
-							System.err.println("null date");
 							row.setAttribute(cp.getName(), "#");
 						}
 					} else {
