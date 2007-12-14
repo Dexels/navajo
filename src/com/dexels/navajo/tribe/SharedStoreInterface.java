@@ -15,23 +15,21 @@ public interface SharedStoreInterface {
 	public static final int WRITE_LOCK = 1;
 	
 	
-	public void remove(String parent, String name);
-	
 	/**
-	 * Store an object, the name of the object is returned by the SharedStore manager.
+	 * Remove an object with the specified name of the specified parent
 	 * 
-	 * @param o
-	 * @return
+	 * @param parent
+	 * @param name
 	 */
-	//public String store(String parent, Object o);
+	public void remove(String parent, String name);
 	
 	/**
 	 * Store an object in the shared store. If object with same name already exists, a SharedStoreException is thrown.
 	 * 
 	 * @param parent
 	 * @param name
-	 * @param value
-	 * @param append, the object to the shared store object referenced by name.
+	 * @param value, the object to the shared store object referenced by name.
+	 * @param append, if set to true the object is appended to an existing value. 
 	 * @param requireLock, if requireLock is set; the call will block until a lock could be set.
 	 */
 	public void store(String parent, String name, Object value, boolean append, boolean requireLock) throws SharedStoreException;
@@ -41,8 +39,8 @@ public interface SharedStoreInterface {
 	 * 
 	 * @param parent
 	 * @param name
-	 * @param value
-	 * @param append, the object to the shared store object referenced by name.
+	 * @param value, the object to the shared store object referenced by name.
+	 * @param append,  if set to true the text is appended to an existing text. 
 	 * @param requireLock, if requireLock is set; the call will block until a lock could be set.
 	 */
 	public void storeText(String parent, String name, String value, boolean append, boolean requireLock) throws SharedStoreException;
@@ -93,7 +91,7 @@ public interface SharedStoreInterface {
 	public Object get(String parent, String name) throws SharedStoreException;
 	
 	/**
-	 * Gets an object from the store as a stream.
+	 * Gets an object from the store as a stream for reading.
 	 * 
 	 * @param parent
 	 * @param name
@@ -107,6 +105,7 @@ public interface SharedStoreInterface {
 	 * 
 	 * @param parent
 	 * @param name
+	 * @param requireLock
 	 * @return
 	 * @throws SharedStoreException
 	 */
@@ -122,8 +121,7 @@ public interface SharedStoreInterface {
 	public void release(SharedStoreLock lock);
 	
 	/**
-	 * Returns a SharedStoreLock of a specific object. Returns null if it does not exist. 
-	 * 
+	 * Returns an existing(!) SharedStoreLock of a specific object. Returns null if it does not exist. 
 	 * 
 	 * @param parent
 	 * @param name

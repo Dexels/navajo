@@ -1,7 +1,6 @@
 package com.dexels.navajo.tribe;
 
 import java.net.Inet4Address;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -23,7 +22,6 @@ import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.Dispatcher;
-import com.dexels.navajo.server.GenericThread;
 import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.server.UserException;
@@ -53,7 +51,7 @@ import com.dexels.navajo.workflow.WorkFlowManager;
  * @author arjen
  *
  */
-public class TribeManager extends ReceiverAdapter implements Mappable, TribeManagerInterface, TribeManagerMXBean {
+public class TribeManager extends ReceiverAdapter implements Mappable, TribeManagerInterface {
 
 	public String setChief;
 	public String chiefName;
@@ -196,6 +194,7 @@ public class TribeManager extends ReceiverAdapter implements Mappable, TribeMana
 	}
 	
 	protected void addTribeMember(TribeMember tm) {
+		AuditLog.log(AuditLog.AUDIT_MESSAGE_TRIBEMANAGER, "In addTribeMember");
 		synchronized (state) {
 			state.clusterMembers.add(tm);
 		}
@@ -203,13 +202,16 @@ public class TribeManager extends ReceiverAdapter implements Mappable, TribeMana
 	}
 	
 	private final void updateState() {
+		AuditLog.log(AuditLog.AUDIT_MESSAGE_TRIBEMANAGER, "In updatestate....");
 		synchronized (state) {
 			// Set chief correctly and myMembership correctly.
 			View w = channel.getView();
 			Address chiefAddress = w.getMembers().get(0);
+			AuditLog.log(AuditLog.AUDIT_MESSAGE_TRIBEMANAGER, "Chief address: " + chiefAddress);
 			Iterator<TribeMember> iter = state.clusterMembers.iterator();
 			while ( iter.hasNext() ) {
 				TribeMember mbr = iter.next();
+				AuditLog.log(AuditLog.AUDIT_MESSAGE_TRIBEMANAGER, "Processing: " + mbr.getAddress());
 				if ( mbr.getAddress().equals(chiefAddress)) {
 					mbr.setChief(true);
 					theChief = mbr;
