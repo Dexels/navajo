@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+
+tiplet app structure:
+
+resource/
+tipi/
+ 
+ -->
+<tsl>
+    <message name="Tasks" type="array">
+        <message name="Task">
+            <property name="Name" type="string"/>
+            <property name="Created" type="date"/>
+            <property name="LatestAccess" type="date"/>
+            <property name="TipiApplication" type="binary" subtype="application/zip"/>
+            <property name="TipiStartupScreen" type="string"/>
+            <property name="Role" type="string"/>
+            <property name="Username" type="string"/>
+            <property name="Category" type="string"/>
+            <message name="NavajoObjects" type="array">
+                <message name="NavajoObjects">
+                    <property name="Navajo" type="binary"/>
+                </message>
+             </message>
+        </message>
+    </message>
+</tsl>

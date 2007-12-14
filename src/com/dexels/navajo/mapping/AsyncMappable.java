@@ -1,10 +1,6 @@
 package com.dexels.navajo.mapping;
 
-import java.lang.management.LockInfo;
-import java.lang.management.ThreadInfo;
-
 import com.dexels.navajo.server.*;
-import com.dexels.navajo.server.jmx.JMXHelper;
 import com.dexels.navajo.util.AuditLog;
 import com.dexels.navajo.document.*;
 
@@ -151,7 +147,6 @@ public abstract class AsyncMappable implements Mappable, AsyncMappableMXBean {
         kill = true;
         parent.setException(e);
       } finally {
-    	System.err.println(">> Calling setIsFinished()");
     	parent.setIsFinished();
       }
     }
@@ -274,7 +269,6 @@ public abstract class AsyncMappable implements Mappable, AsyncMappableMXBean {
   }
 
   protected void finalize() {
-    System.out.println("FINALIZE() METHOD CALL FOR OBJECT " + this);
     if (killOnFinnish) {
       kill = true;
       //disconnectJMX();
@@ -316,7 +310,6 @@ public abstract class AsyncMappable implements Mappable, AsyncMappableMXBean {
     this.lastAccess = System.currentTimeMillis();
     if (!running) {
       startTime = System.currentTimeMillis();
-      System.err.println("STARTED RUNTHREAD ON: " + lastAccess);
       myRequest = new RequestThread(this, this.getClass().getName() + "-" + pointer);
       myRequest.start();
       running = true;
@@ -355,7 +348,6 @@ public abstract class AsyncMappable implements Mappable, AsyncMappableMXBean {
     }
     System.out.println(inMessage.toString());
     if (isFinished) {
-      System.err.println("THREAD IS FINISHED...");
       if (caught != null) {
         throw new UserException(-1, caught.getMessage());
       }
@@ -385,7 +377,6 @@ public abstract class AsyncMappable implements Mappable, AsyncMappableMXBean {
 				  } else {
 					  a.setException(ue);
 				  }
-				  System.err.println("Creating exception: " + a.getException() );
 			  }
 			  logged = true;
 			  Dispatcher.getInstance().getNavajoConfig().getStatisticsRunner().addAccess(a, ue, this);
@@ -475,104 +466,21 @@ public abstract class AsyncMappable implements Mappable, AsyncMappableMXBean {
   
   public final boolean getWaiting() {
 	  return false;
-//	  try {
-//		  connectJMX();
-//		  if ( myThread == null ) {
-//			  return false;
-//		  }
-//		  LockInfo [] monitors = myThread.getLockedSynchronizers();
-//		  return monitors.length != 0;
-//	  } finally {
-//		  disconnectJMX();
-//	  }
   }
 
   public final String getLockName() {
 	  return "";
-//	  try {
-//		  connectJMX();
-//		  if ( myThread == null ) {
-//			  return "";
-//		  }
-//		  return myThread.getLockName();
-//	  } finally {
-//		  disconnectJMX();
-//	  }
   }
   
   public final String getLockOwner() {
 	  return "";
-//	  try {
-//		  connectJMX();
-//		  if ( myThread == null ) {
-//			  return "";
-//		  }
-//		  return myThread.getLockOwnerName();
-//	  } finally {
-//		  disconnectJMX();
-//	  }
   }
   
   public final String getLockClass() {
 	  return "";
-//	  try {
-//		  connectJMX();
-//		  if ( myThread == null ) {
-//			  return "";
-//		  }
-//		  LockInfo lockInfo = myThread.getLockInfo();
-//		  if ( lockInfo != null ) {
-//			  return lockInfo.getClassName();
-//		  } else {
-//			  return null;
-//		  }
-//	  } finally {
-//		  disconnectJMX();
-//	  }
   }
   
   public final String getStackTrace() {
 	  return "";
-//	  try {
-//		  connectJMX();
-//		  if ( myThread == null ) {
-//			  return "";
-//		  }
-//		  StringBuffer stackTrace = new StringBuffer();
-//		  StackTraceElement [] elt = myThread.getStackTrace();
-//
-//		  for (int i = 0; i < elt.length; i++) {
-//			  stackTrace.append(elt[i].getClassName()+"."+elt[i].getMethodName() + " (" + elt[i].getFileName() + ":" + elt[i].getLineNumber() + ")\n");
-//		  }
-//
-//		  return stackTrace.toString();
-//	  } finally {
-//		  disconnectJMX();	 
-//	  }
   }
-  
-//  private final void connectJMX() {
-//	  if (!connected) {
-//		  jmx = new JMXHelper();
-//		  connected = false;
-//		  try {
-//			  jmx.connect();
-//			  connected = true;
-//			  myThread = jmx.getThread(this.myRequest);
-//		  } catch (Exception e) {
-//			 // e.printStackTrace(System.err);
-//		  } 
-//	  }
-//  }
-  
-//  private final void disconnectJMX() {
-//	  try {
-//		  if ( connected && jmx != null ) {
-//			  jmx.disconnect();
-//		  }
-//	  } finally {
-//		  jmx = null;
-//		  connected = false;
-//	  }
-//  }
 }
