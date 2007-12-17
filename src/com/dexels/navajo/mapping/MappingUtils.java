@@ -51,6 +51,8 @@ public final class MappingUtils {
             return Property.DATE_PROPERTY;
         else if (o instanceof Double)
             return Property.FLOAT_PROPERTY;
+        else if (o instanceof Float)
+            return Property.FLOAT_PROPERTY;
         else if (o instanceof ArrayList)
             return Property.SELECTION_PROPERTY;
         else if (o instanceof Boolean)
