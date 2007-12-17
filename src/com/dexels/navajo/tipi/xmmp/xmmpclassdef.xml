@@ -41,6 +41,8 @@
             <param name="from" type="string" />
             <param name="to" type="string" />
             <param name="subject" type="string" />
+            <param name="name" type="string" />
+            
          </event>
       </events>
       <values>
@@ -49,6 +51,7 @@
          <value direction="in" name="server" type="string" />
          <value direction="in" name="resource" type="string" />
          <value direction="in" name="domain" type="string" />
+         <value direction="in" name="currentUser" type="string" />
        </values>
       <methods>
          <method name="connect"/>
