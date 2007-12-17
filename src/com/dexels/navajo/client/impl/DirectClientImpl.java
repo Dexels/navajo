@@ -390,7 +390,10 @@ private final String mySessionToken;
   public void init(URL config, String path) throws ClientException {
       try {
 //          dispatcher = new Dispatcher(config,new FileInputStreamReader(path),new DirectClassLoader(path,path+"/navajo-tester/auxilary/classes"));
-    	 System.err.println("Initializing Direct client with path: "+path);
+    	  if(path==null) {
+    		  System.err.println("Null path in init...");
+    	  }
+    	  System.err.println("Initializing Direct client with path: "+path);
         dispatcher = Dispatcher.getInstance(path, "config/server.xml",new FileInputStreamReader(path),null);
        
         // dispatcher = Dispatcher.getInstance(config,new FileInputStreamReader(path),null);

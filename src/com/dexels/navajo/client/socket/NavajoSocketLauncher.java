@@ -73,7 +73,11 @@ public class NavajoSocketLauncher {
 		if(navajoRootFile.exists()) {
 			BufferedReader fr = new BufferedReader(new FileReader(navajoRootFile));
 			String offset = fr.readLine();
-			dir = dir + System.getProperty("file.separator") +offset;
+			if(offset==null || "".equals(offset)) {
+				System.err.println("Empty root.");
+			} else {
+				dir = dir + System.getProperty("file.separator") +offset;
+			}
 			fr.close();
 		}
         
