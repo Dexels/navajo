@@ -298,11 +298,11 @@ public class Generate {
 			  } else if (list.item(i).getNodeName().equals("include")) {
 				  // Parse include also.
 				  System.err.println("TO DO: PARSE INCLUDE FILE FOR INPUT PROPERTIES");
-				  Element e = (Element) list.item(i);
-				  String includeFile = e.getAttribute("script");
-				  InputStream is2 = Dispatcher.getInstance().getNavajoConfig().getScript(includeFile);
-				  getInputPart(result, is2);
-				  is2.close();
+//				  Element e = (Element) list.item(i);
+//				  String includeFile = e.getAttribute("script");
+//				  InputStream is2 = Dispatcher.getInstance().getNavajoConfig().getScript(includeFile);
+//				  getInputPart(result, is2);
+//				  is2.close();
 			  }
 		  }
 		  
