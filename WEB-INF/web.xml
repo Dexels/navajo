@@ -5,10 +5,6 @@
         <servlet-name>Postman</servlet-name>
         <display-name>Postman</display-name>
         <servlet-class>com.dexels.navajo.server.listener.http.TmlHttpServlet</servlet-class>
-        <init-param>
-            <param-name>configuration</param-name>
-            <param-value>file:///home/matthijs/workspace/NavajoServer/config/server.xml</param-value>
-        </init-param>
     </servlet>
     <servlet>
         <servlet-name>NavajoTester</servlet-name>
