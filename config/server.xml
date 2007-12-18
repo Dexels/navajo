@@ -9,7 +9,7 @@
             <property name="logging" value="logs"/>
             <property name="tmp" value="tmp"/>
             <property name="resource" value="resource"/>
-            <property name="compiled-scripts" value="compiled"/>
+            <property name="compiled-scripts" value="classes"/>
             <property name="jar_folder" type="string" length="0" value="./WEB-INF/lib" direction="in"/>
         </message>
         <message name="maintenance-services">
