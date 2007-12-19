@@ -273,7 +273,7 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
                 String ext = resource.getFileExtension();
                 if (resource instanceof IProject) {
                      //TODO: CHeck if its the RIGHT project
-                    
+                    System.err.println("Script dir: "+scriptDir.getFullPath()+" compile: "+compileDir.getFullPath());
                     System.err.println("Prject..: "+resource.getName());
                     return true;
                 }
