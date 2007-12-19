@@ -14,7 +14,6 @@
 	<classpathentry kind="lib" path="WEB-INF/lib/NavajoClient.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/NavajoDashboard.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/NavajoDocument.jar"/>
-	<classpathentry kind="lib" path="WEB-INF/lib/NavajoEnterprise.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/NavajoFunctions.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/NavajoListeners.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/NavajoLogger.jar"/>
