@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- $Id$ -->
+<project name="NavajoDocument" default="archive" basedir=".">
+	<property name="tar.archive" value="NavajoServer.tgz" />
+	<property name="zip.archive" value="NavajoServer.zip" />
+
+	<target name="tar">
+		<tar tarfile="${tar.archive}">
+			<fileset dir=".">
+				<exclude name="NavajoServer.tgz" />
+				<exclude name="NavajoServer.zip" />
+				<exclude name="build.xml"/>
+			</fileset>
+		</tar>
+	</target>
+	<target name="zip">
+		<zip zipfile="${zip.archive}">
+			<fileset dir=".">
+				<exclude name="NavajoServer.tgz" />
+				<exclude name="NavajoServer.zip" />
+				<exclude name="build.xml"/>
+			</fileset>
+		</zip>
+	</target>
+	<target name="archive" depends="tar,zip" />
+</project>
+<!-- EOF: $RCSfile$ -->
