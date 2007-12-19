@@ -606,7 +606,7 @@ public class GenericPropertyComponent {
                 final Button b = new Button(comp, SWT.CHECK);
                 b.setBackground(new Color(Display.getDefault(), 255, 255, 255));
                 b.setToolTipText(myProperty.getDescription());
-
+                b.setSelection(element.isSelected());
                 b.setEnabled(myProperty.isDirIn());
                 b.setText(element.getName());
                 b.setToolTipText(element.getValue());
