@@ -365,7 +365,7 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
             System.err.println("Java nature found: " + ipn.getClass());
 
         }
-        String serverXml = file.getRawLocation().toString();
+        String serverXml = "\""+file.getRawLocation().toString()+"\"";
 
         String[] prgArgs;
         if (programArgs!=null) {
@@ -423,12 +423,12 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
 
         StringBuffer programArguments = new StringBuffer();
         for (int i = 0; i < prgArgs.length; i++) {
-            programArguments.append(" " + prgArgs[i]);
+            programArguments.append(" \"" + prgArgs[i]+"\"");
         }
 
         StringBuffer jvmArguments = new StringBuffer();
         for (int i = 0; i < vmArgs.length; i++) {
-            jvmArguments.append(" " + vmArgs[i]);
+            jvmArguments.append(" \"" + vmArgs[i]+"\"");
         }
         Launch scriptLaunch = VMLauncherUtility.runVM("Navajo inline", runClassName, classpath, bootClasspath, jvmArguments.toString(),
                 programArguments.toString(), getSourceLocator(), isDebugMode(), showInDebugger, job);
@@ -776,7 +776,11 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
         String root = (String)navajoProjectRootMap.get(prj);
         if (root==null) {
             refreshNavajoRootPath(prj);
-            return (String)navajoProjectRootMap.get(prj);
+            root = (String)navajoProjectRootMap.get(prj);
+            if(root==null) {
+            	return "";
+            }
+            return root;
         }
         return root;
     }
@@ -1626,9 +1630,10 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
            return null;
          }
         Property prop = n.getProperty("server-configuration/plugin/defaultUser");
-        if (p==null) {
+        if (prop==null) {
             log("Missing username in the server.xml. (Property server-configuration/plugin/defaultUser is missing!)");
-            return null;
+            return "Unknown";
+//            return null;
         } else {
             String user = prop.getValue();
             if (user==null) {
@@ -1646,10 +1651,10 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
             return null;
           }
         Property prop = n.getProperty("server-configuration/plugin/defaultPassword");
-        if (p==null) {
+        if (prop==null) {
              log("Missing password in the server.xml. (Property server-configuration/plugin/defaultPassword is missing!)");
-             return null;
-         } else {
+             return "Unknown";
+        	} else {
              String user = prop.getValue();
              if (user==null) {
                  log("Missing password in the server.xml. (Property server-configuration/plugin/defaultPassword has null value!)");
@@ -1744,7 +1749,7 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
                         }});
                     if (questionResult) {
                                     startSocketRunner(ipp);
-                                    Thread.sleep(4000);
+                                    Thread.sleep(2500);
                     }
                  }  
                 
