@@ -5,23 +5,17 @@
 	<property name="zip.archive" value="NavajoServer.zip" />
 
 	<target name="tar">
-		<tar tarfile="${tar.archive}">
-			<fileset dir=".">
-				<exclude name="NavajoServer.tgz" />
-				<exclude name="NavajoServer.zip" />
-				<exclude name="build.xml"/>
-			</fileset>
+		<tar tarfile="${tar.archive}" basedir="." excludes="NavajoServer.tgz,NavajoServer.zip,compiled,classes,build.xml">
+
 		</tar>
 	</target>
 	<target name="zip">
-		<zip zipfile="${zip.archive}">
-			<fileset dir=".">
-				<exclude name="NavajoServer.tgz" />
-				<exclude name="NavajoServer.zip" />
-				<exclude name="build.xml"/>
-			</fileset>
+		<zip zipfile="${zip.archive}" basedir="."  excludes="NavajoServer.tgz,NavajoServer.zip,compiled,classes,build.xml">
 		</zip>
 	</target>
 	<target name="archive" depends="tar,zip" />
+	<target name="publish">
+		<scp file="" todir=""></scp>
+	</target>
 </project>
 <!-- EOF: $RCSfile$ -->
