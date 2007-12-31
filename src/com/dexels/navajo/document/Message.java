@@ -2,6 +2,9 @@ package com.dexels.navajo.document;
 
 import java.util.*;
 
+import com.dexels.navajo.document.base.*;
+import com.dexels.navajo.document.databinding.*;
+
 /**
  * <p>Title: Navajo Product Project</p>
  * <p>Description: This is the official source for the Navajo server</p>
@@ -370,7 +373,7 @@ public interface Message
    * refreshes recursively all the properties in this message.
    * i.e.: Recalculates all expression-type properties
    */
-  public void refreshExpression() throws NavajoException;
+  public void refreshExpression() throws NavajoException, ExpressionChangedException;
 
   /**
    * Not in use
@@ -405,5 +408,10 @@ public interface Message
   public Message getDefinitionMessage();
   
   public void setDefinitionMessage(Message m);
+
+  
+  public void addPropertyDataListener(PropertyDataListener p);
+  public void removePropertyDataListener(PropertyDataListener p);
+  public void firePropertyDataChanged(Property p,String oldValue, String newValue);
 
 }

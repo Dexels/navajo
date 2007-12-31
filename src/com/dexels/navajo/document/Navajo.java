@@ -11,6 +11,8 @@ package com.dexels.navajo.document;
 
 import java.io.OutputStream;
 import java.util.*;
+
+import com.dexels.navajo.document.databinding.*;
 import com.dexels.navajo.persistence.*;
 
 public interface Navajo
@@ -332,4 +334,9 @@ public interface Navajo
    * @return List expression properties
    */
   public List refreshExpression() throws NavajoException;
+  
+  public void addPropertyDataListener(PropertyDataListener p);
+  public void removePropertyDataListener(PropertyDataListener p);
+  public void firePropertyDataChanged(Property p,String oldValue, String newValue);
+
 }
