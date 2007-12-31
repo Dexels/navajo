@@ -82,6 +82,8 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 
 	private boolean allowDateOverlay = false;
 
+	private boolean allowLineWrap = false;
+
 	private static final Extent PERCENTAGE = new Extent(97, Extent.PERCENT);
 	private static final Extent SMALL_PERCENTAGE = new Extent(50, Extent.PERCENT);
 
@@ -651,7 +653,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 		}
 		final Label tf = new Label(value);
 		tf.setBackground(null);
-		tf.setLineWrap(false);
+		tf.setLineWrap(allowLineWrap );
 		// tf.setStyleName("Default");
 		Style ss = Styles.DEFAULT_STYLE_SHEET.getStyle(tf.getClass(), "Default");
 		tf.setStyle(ss);
@@ -1429,6 +1431,10 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 
 	public void setMaxImageWidth(int maxImageWidth) {
 		this.maxImageWidth = maxImageWidth;
+	}
+
+	public void setAllowLineWrap(boolean allowLineWrap) {
+		this.allowLineWrap = allowLineWrap;
 	}
 
 }
