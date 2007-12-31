@@ -233,7 +233,7 @@ public interface Property
    * Refresh expression
    * @throws NavajoException
    */
-  public void refreshExpression() throws NavajoException;
+  public void refreshExpression() throws NavajoException, ExpressionChangedException;
 
   /**
    * Set the type of a property (required).
