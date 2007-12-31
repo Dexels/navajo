@@ -34,9 +34,22 @@ public final class PropertyFilter {
   
   public final boolean compliesWith(Message m) throws NavajoException {
 
-    Property p = m.getProperty(myPropertyName);
+	 if ("*".equals(myPropertyName)) {
+		 List<Property> props = m.getAllProperties();
+		 for (Property property : props) {
+			if(checkProperty(property)) {
+				return true;
+			}
+		 }
+		 return false;
+	 } else {
+	    Property p = m.getProperty(myPropertyName);
+	    return checkProperty(p);
+	}
+  }
 
-    if (p == null) {
+private boolean checkProperty(Property p) throws NavajoException {
+	if (p == null) {
       System.err.println("Property can not be found");
       return true;
     }
@@ -104,7 +117,6 @@ public final class PropertyFilter {
         ArrayList l = p.getAllSelections();
         for(int i=0;i<l.size();i++){
           Selection s = (Selection)l.get(i);
-          System.err.println("Comparing: " + name + ": " + s.getName());
           if(s.getName().equals(name)){
             return true;
           }
@@ -127,5 +139,5 @@ public final class PropertyFilter {
     }
 
     return true;
-  }
+}
 }
