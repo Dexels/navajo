@@ -22,6 +22,9 @@ public class TipiFlowLayout
   public void createLayout() {
     FlowLayout layout = new FlowLayout();
     String align = myDefinition.getStringAttribute("alignment");
+    if(align==null) {
+    	align="left";
+    }
     if(align.equals("left")) {
         layout.setAlignment(FlowLayout.LEFT);
     }
