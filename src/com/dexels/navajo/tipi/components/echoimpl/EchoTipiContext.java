@@ -58,8 +58,8 @@ public class EchoTipiContext extends TipiContext {
     	return myInstance;
     }
 
-    public Set getRequiredIncludes() {
-        Set s = super.getRequiredIncludes();
+    public List getRequiredIncludes() {
+        List s = super.getRequiredIncludes();
         s.add("com/dexels/navajo/tipi/components/echoimpl/echoclassdef.xml");
         // s.add("com/dexels/navajo/tipi/actions/echoactiondef.xml");
         return s;
