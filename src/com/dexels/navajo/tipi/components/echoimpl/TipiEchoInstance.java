@@ -5,9 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Enumeration;
-import java.util.NoSuchElementException;
-import java.util.StringTokenizer;
+import java.util.*;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -162,9 +160,9 @@ public class TipiEchoInstance extends ApplicationInstance {
 
 	public Window init() {
 		startup();
-		System.err.println("Startup finished");
+//		System.err.println("Startup finished");
 		TipiScreen echo = (TipiScreen) context.getDefaultTopLevel();
-		System.err.println("echo: " + echo.store());
+//		System.err.println("echo: " + echo.store());
  
 		TipiFrame w = (TipiFrame) echo.getTipiComponent("init");
 		if (w == null) {
@@ -175,12 +173,12 @@ public class TipiEchoInstance extends ApplicationInstance {
 	}
 
 	private void initServlet(Enumeration args) throws Exception {
-		System.setProperty("com.dexels.navajo.propertyMap", "tipi.propertymap");
 		checkForProperties(args);
 		loadTipi(tipiDef);
 	}
 
-	private void checkForProperties(Enumeration e) {
+	private Map checkForProperties(Enumeration e) {
+		Map result = new HashMap();
 		while (e.hasMoreElements()) {
 			String current = (String) e.nextElement();
 			if (current.startsWith("-D")) {
@@ -190,6 +188,7 @@ public class TipiEchoInstance extends ApplicationInstance {
 					String name = st.nextToken();
 					String value = st.nextToken();
 					System.setProperty(name, value);
+					result.put(name, value);
 				} catch (NoSuchElementException ex) {
 					System.err.println("Error parsing system property");
 				}
@@ -198,35 +197,9 @@ public class TipiEchoInstance extends ApplicationInstance {
 				tipiDef = myServletConfig.getInitParameter(current);
 				continue;
 			}
-//			if ("tipidir".equals(current)) {
-//				File rootDir = new File(myServletContext.getRealPath("/"));
-//				tipiDir = myServletConfig.getInitParameter(current);
-//				if (tipiDir == null) {
-//					context.setTipiBaseDirectory(rootDir);
-//				} else {
-//					File dir = new File(rootDir, tipiDir);
-//					context.setTipiBaseDirectory(dir);
-//				}
-//
-//			}
-//			if ("resourcedir".equals(current)) {
-//				File rootDir = new File(myServletContext.getRealPath("/"));
-//				resourceDir = myServletConfig.getInitParameter(current);
-//
-//				if (resourceDir == null) {
-//					context.setResourceBaseDirectory(rootDir);
-//				} else {
-//					if (rootDir != null) {
-//						File dir = new File(rootDir, resourceDir);
-//						context.setResourceBaseDirectory(dir); 
-//					}
-//				}
-//				// File dir = new File(rootDir,resourceDir);
-//				// context.setResourceBaseDirectory(dir);
-//				continue;
-//			}
 			System.setProperty(current, myServletConfig.getInitParameter(current));
 		}
+		return result;
 	}
 
 	public void finalize() {
