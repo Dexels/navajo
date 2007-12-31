@@ -16,6 +16,8 @@ import java.util.*;
 import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.*;
 import java.util.regex.*;
+
+import com.dexels.navajo.document.databinding.*;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLutils;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
 
@@ -1143,5 +1145,20 @@ public final class NavajoImpl implements Navajo, java.io.Serializable {
     public List refreshExpression() throws NavajoException {
       throw new UnsupportedOperationException("Can not refresh expressions in JAXPIMPL");
     }
+
+	public void addPropertyDataListener(PropertyDataListener p) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void firePropertyDataChanged(Property p, String oldValue, String newValue) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void removePropertyDataListener(PropertyDataListener p) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

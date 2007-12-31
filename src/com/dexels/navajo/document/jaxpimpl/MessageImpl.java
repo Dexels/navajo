@@ -25,6 +25,7 @@ import java.util.*;
 import java.util.regex.*;
 
 import com.dexels.navajo.document.base.BaseMessageImpl;
+import com.dexels.navajo.document.databinding.*;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
 import javax.xml.transform.stream.StreamResult;
 
@@ -844,4 +845,19 @@ public final class MessageImpl implements Message {
 	// TODO Auto-generated method stub
 	return 0;
   }
+
+public void addPropertyDataListener(PropertyDataListener p) {
+	// TODO Auto-generated method stub
+	
+}
+
+public void firePropertyDataChanged(Property p, String oldValue, String newValue) {
+	// TODO Auto-generated method stub
+	
+}
+
+public void removePropertyDataListener(PropertyDataListener p) {
+	// TODO Auto-generated method stub
+	
+}
 }
