@@ -1429,6 +1429,73 @@
 		</methods>
 	</tipiclass>
 
+   <tipiclass studio-icon="tipitableprinter.gif" module="extensions"
+      class="TipiEmbedComponent" name="embed" childcount="0"
+      package="com.dexels.navajo.tipi.components.swingimpl" type="tipi"
+      addtocontainer="true" layoutmanager="false" >
+      <events>
+         <event name="onInstantiate" />
+         <event name="onLoad" />
+      </events>
+      <values>
+         <value direction="in" name="resourceCodeBase" type="string" />
+         <value direction="in" name="tipiCodeBase" type="string" />
+         <value direction="in" name="background" type="color" />
+         <value direction="in" name="enabled" type="boolean" />
+         <value direction="in" name="visible" type="boolean" />
+         <value direction="in" name="border" type="border" />
+         <value direction="in" name="binaryCodeBase" type="resource" />
+      </values>
+      <methods>
+         <method name="switch">
+            <param name="definition" type="string" />
+         </method>
+         <method name="loadDefinition">
+            <param name="location" type="string" />
+         </method>
+         <method name="addStartupProperty">
+            <param name="propertyName" type="string" />
+            <param name="value" type="string" />
+         </method>
+          <method name="loadAllNavajo">
+            <param name="message" type="message" />
+         </method>
+      </methods>
+   </tipiclass>
+
+   <tipiclass studio-icon="tipitableprinter.gif" module="extensions"
+      class="TipiWindowEmbedComponent" name="windowembed" childcount="0"
+      package="com.dexels.navajo.tipi.components.swingimpl" type="tipi"
+      addtocontainer="true" layoutmanager="false" >
+      <events>
+         <event name="onInstantiate" />
+         <event name="onLoad" />
+      </events>
+      <values>
+         <value direction="in" name="resourceCodeBase" type="string" />
+         <value direction="in" name="tipiCodeBase" type="string" />
+         <value direction="in" name="background" type="color" />
+         <value direction="in" name="enabled" type="boolean" />
+         <value direction="in" name="visible" type="boolean" />
+         <value direction="in" name="border" type="border" />
+         <value direction="in" name="binaryCodeBase" type="resource" />
+      </values>
+      <methods>
+         <method name="switch">
+            <param name="definition" type="string" />
+         </method>
+         <method name="loadDefinition">
+            <param name="location" type="string" />
+         </method>
+         <method name="addStartupProperty">
+            <param name="propertyName" type="string" />
+            <param name="value" type="string" />
+         </method>
+         <method name="loadAllNavajo">
+            <param name="message" type="message" />
+         </method>
+      </methods>
+   </tipiclass>
 	<tipiclass studio-icon="property.gif" module="component" childcount="0"
 		class="TipiAjaxCombobox" name="ajaxcombobox" layoutmanager="false" 
 		package="com.dexels.navajo.tipi.components.swingimpl" type="tipi"

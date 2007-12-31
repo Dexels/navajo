@@ -11,12 +11,13 @@ import com.dexels.navajo.swingclient.components.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.internal.*;
+import com.dexels.navajo.document.databinding.*;
 import com.dexels.navajo.document.nanoimpl.*;
 import com.dexels.navajo.document.types.*;
 
 public class TipiProperty
     extends TipiSwingComponentImpl
-    implements PropertyComponent, PropertyValidatable, PropertyEventListener {
+    implements PropertyComponent, PropertyValidatable, PropertyEventListener, PropertyDataListener {
   private Property myProperty = null;
   private ArrayList myListeners = new ArrayList();
 //  private int default_label_width = 50;
@@ -166,7 +167,11 @@ public class TipiProperty
   public void setProperty(final Property p) {
     runSyncInEventThread(new Runnable() {
       public void run() {
+    	  if(myProperty!=null && myProperty!=p) {
+    		  myProperty.removePropertyDataListener(TipiProperty.this);
+    	  }
         myProperty = p;
+        myProperty.addPropertyDataListener(TipiProperty.this);
         if (p == null) {
           return;
         }
@@ -421,6 +426,7 @@ public class TipiProperty
   }
 
   public void propertyEventFired(Property p, String eventType, Validatable v) {
+	  System.err.println("PROPEVENT::"+p.getName()+"  "+eventType);
     if (p == null) {
       System.err.println("Trying to fire event from null property!");
       return;
@@ -449,6 +455,8 @@ public class TipiProperty
       for (int i = 0; i < myListeners.size(); i++) {
         TipiEventListener current = (TipiEventListener) myListeners.get(i);
         current.performTipiEvent(eventType, m, false);
+        performTipiEvent(eventType, m, false);
+		
       }
     }
     catch (Exception ex) {
@@ -526,4 +534,13 @@ public class TipiProperty
 	}
 	  
   }
+
+public void propertyDataChanged(Property p, String oldValue, String newValue) {
+	// just refresh
+	System.err.println("PropDataChanged: "+oldValue+" to "+newValue);
+	GenericPropertyComponent gp = (GenericPropertyComponent)getContainer();
+	gp.setProperty(myProperty);
+}
+
+
 }

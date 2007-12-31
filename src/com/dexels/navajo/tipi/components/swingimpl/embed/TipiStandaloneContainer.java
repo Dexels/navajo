@@ -1,12 +1,10 @@
 package com.dexels.navajo.tipi.components.swingimpl.embed;
 
-import javax.swing.JPanel;
 import java.io.*;
 import java.io.IOException;
 
 import com.dexels.navajo.tipi.TipiException;
-import javax.swing.*;
-import java.awt.*;
+
 import java.util.*;
 import com.dexels.navajo.tipi.components.swingimpl.*;
 import com.dexels.navajo.tipi.studio.*;
@@ -30,7 +28,16 @@ public class TipiStandaloneContainer implements TipiStandaloneToplevelContainer 
   private UserInterface ui = null;
 
   public TipiStandaloneContainer() {
-  }
+	  try {
+		embeddedContext = new EmbeddedContext();
+	} catch (TipiException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+ }
 
   public void setUserInterface(UserInterface u) {
     ui = u;
@@ -45,30 +52,13 @@ public class TipiStandaloneContainer implements TipiStandaloneToplevelContainer 
 //  }
 
   public void loadDefinition(String tipiPath, String definitionName,String resourceBaseDirectory) throws IOException, TipiException {
-    embeddedContext = new EmbeddedContext(new String[]{tipiPath},false,new String[]{definitionName},libraries,resourceBaseDirectory);
+	 // System.err.println("Loading def: "+definitionName+" tipipath: "+tipiPath+" resbase: "+resourceBaseDirectory);
+	  embeddedContext = new EmbeddedContext(new String[]{tipiPath},false,new String[]{definitionName},libraries,resourceBaseDirectory);
     if (ui!=null) {
       embeddedContext.setUserInterface(ui);
     }
   }
-  public void loadDefinition(String tipiPath[], String[] definitionName, String resourceBaseDirectory) throws IOException, TipiException {
-    embeddedContext = new EmbeddedContext(tipiPath,false,definitionName,libraries,resourceBaseDirectory);
-    if (ui!=null) {
-      embeddedContext.setUserInterface(ui);
-    }
-  }
-  public void loadDefinition(String name, InputStream contents, ActivityController al, String resourceBaseDirectory, ClassLoader cl) throws IOException, TipiException {
-      System.err.println("In standalone container (SwingTipi) My classloader: "+cl);
-      embeddedContext = new EmbeddedContext(name,contents,libraries, al,resourceBaseDirectory,cl);
-//      embeddedContext.setResourceClassLoader(cl);
-      if (ui!=null) {
-        embeddedContext.setUserInterface(ui);
-      }
-    }
-
-  public void loadDefinition(String name, InputStream contents, ActivityController al, String resourceBaseDirectory) throws IOException, TipiException {
-      loadDefinition(name, contents, al, resourceBaseDirectory,null);
-  } 
-  
+ 
   public ArrayList getListeningServices() {
       if (embeddedContext!=null) {
           return embeddedContext.getListeningServices();
@@ -91,19 +81,4 @@ public class TipiStandaloneContainer implements TipiStandaloneToplevelContainer 
   public void shutDownTipi() {
     embeddedContext.shutdown();
   }
-
-  public static void main(String[] args) throws Exception{
-    JFrame jf = new JFrame("Test frame");
-    jf.setSize(new Dimension(500,300));
-    jf.setVisible(true);
-    TipiStandaloneContainer stc = new TipiStandaloneContainer();
-    jf.getContentPane().setLayout(new BorderLayout());
-    System.setProperty("com.dexels.navajo.propertyMap", "tipi.propertymap");
-
-    stc.loadClassPathLib("com/dexels/navajo/tipi/components/swingimpl/swingclassdef.xml");
-    stc.loadClassPathLib("com/dexels/navajo/tipi/classdef.xml");
-    stc.loadDefinition("tipi/FinancialForm2005.xml","FinancialForm2005","resource");
-    jf.getContentPane().add((Container)stc.getContext().getTopLevel(),BorderLayout.CENTER);
-  }
-
 }

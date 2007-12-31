@@ -175,7 +175,7 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 
 	private final void constructDialog() {
 		// System.err.println("Constructing: studio? "+isStudioElement());
-		if (mySwingTipiContext.getAppletRoot() != null) {
+		if (mySwingTipiContext.getAppletRoot() != null || mySwingTipiContext.getOtherRoot()!=null) {
 //			System.err.println("Applet root");
 			constructAppletDialog();
 		} else {
@@ -222,7 +222,7 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 		if (myDialog instanceof JExtendedInternalFrame) {
 			JExtendedInternalFrame jef = (JExtendedInternalFrame)myDialog;
 			jef.setVisible(true);
-			jef.startModal();
+//			jef.startModal();
 		} else {
 			myDialog.setVisible(true);
 		}
@@ -235,6 +235,9 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 		}
 		if (myContext.getTopLevel() instanceof JFrame) {
 			myRootPane = ((JFrame) myContext.getTopLevel()).getRootPane();
+		}
+		if (myContext.getTopLevel() instanceof JInternalFrame) {
+			myRootPane = ((JInternalFrame) myContext.getTopLevel()).getRootPane();
 		}
 
 		if (!modal) {
@@ -288,12 +291,10 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 						myDialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 						myOffset = jap.getLocationOnScreen();
 						myDialog.setLocation(jap.getLocationOnScreen());
-					} else {
-//						System.err.println("Creating with dialog root. This is quite surpising, actually.");
+					} else if(rootObject instanceof JInternalFrame) {
 						myDialog = new JDialog((Dialog) r);
 						myDialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 						myRootPaneContainer = myDialog;
-
 					}
 				}
 			} else {
@@ -369,7 +370,7 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 						if (myBounds.x >= 0 && myBounds.y >= 0) {
 //							System.err.println("Entering bounssss...");
 							// will show NOW, after this bounds will not matter
-							if (myContext.getTopLevel() instanceof TipiApplet) {
+							if (myContext.getTopLevel() instanceof TipiApplet || myContext.getTopLevel() instanceof JInternalFrame) {
 								TipiApplet jap = (TipiApplet) myContext.getTopLevel();
 								Point p = jap.getCenteredPoint(((JComponent) getDialogContainer()).getSize());
 								((JComponent) getDialogContainer()).setLocation(p);
@@ -379,15 +380,26 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 							}
 //							System.err.println("Setting to location: " + myBounds);
 						} else {
-//							System.err.println("Centering...");
+							System.err.println("Centering... "+myContext.getTopLevel());
 							// will show NOW, after this bounds will not matter
-							if (myContext.getTopLevel() instanceof TipiApplet) {
+							if (myContext.getTopLevel() instanceof TipiApplet ) {
 								TipiApplet jap = (TipiApplet) myContext.getTopLevel();
+								Point p = jap.getCenteredPoint(((JComponent) getDialogContainer()).getSize());
+								((JComponent) getDialogContainer()).setLocation(p);
+								
+								((JComponent) getDialogContainer()).setVisible(true);
+
 							} else {
-								JDialog g = (JDialog) getDialogContainer();
-//								System.err.println("NEARLY SHOWING NOW>>>>>>>>>>>>");
-								SwingClient.getUserInterface().showCenteredDialog(g);
-//								System.err.println("SHOWING NOW>>>>>>>>>>>>");
+								if(myContext.getTopLevel() instanceof JInternalFrame) {
+//									JInternalFrame jap = (JInternalFrame) myContext.getTopLevel();
+									Point p = new Point(50,50);
+									((JComponent) getDialogContainer()).setLocation(p);
+										((JComponent) getDialogContainer()).setVisible(true);
+	
+								} else {
+									JDialog g = (JDialog) getDialogContainer();
+									SwingClient.getUserInterface().showCenteredDialog(g);
+								}
 							}
 						}
 						final Rectangle bnds = getDialogBounds();

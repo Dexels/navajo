@@ -40,9 +40,7 @@ public class TipiApplet extends JApplet {
 		super.init();
 		ArrayList arguments = new ArrayList();
 		String init = this.getParameter("init");
-		System.err.println("Init value: "+init);
-		System.err.println("Location: "+getLocation());
-//		System.err.println("LocationOnScreen: "+getLocationOnScreen());
+	//		System.err.println("LocationOnScreen: "+getLocationOnScreen());
 		String laf = this.getParameter("tipilaf");
 		String tipiCodeBase = this.getParameter("tipiCodeBase");
 		String resourceCodeBase = this.getParameter("resourceCodeBase");
@@ -52,7 +50,6 @@ public class TipiApplet extends JApplet {
 			arguments.add(st.nextToken());
 		}
 
-		System.err.println("CODEBASE: "+getCodeBase());
 		if(tipiCodeBase!=null) {
 			try {
 				String tipiCode = new URL(getCodeBase(),tipiCodeBase).toString();
@@ -82,9 +79,8 @@ public class TipiApplet extends JApplet {
 		}
 
 		arguments.add(init);
-		System.err.println("Startup params: "+arguments);
 		try {
-			myContext = MainApplication.initialize(arguments.toArray(),this);
+			myContext = MainApplication.initialize(init, arguments.toArray(),this);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -99,7 +95,6 @@ public class TipiApplet extends JApplet {
 //		}
 //		removeAll();
 		myContext.shutdown();
-		System.err.println("my Codebase: " + getCodeBase());
 		try {
 		// TODO: Setup in applet parameter
 			getAppletContext().showDocument(new URL("http://penelope1.dexels.com/sportlink/club"));

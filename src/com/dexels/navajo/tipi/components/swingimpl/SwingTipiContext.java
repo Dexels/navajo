@@ -2,9 +2,10 @@ package com.dexels.navajo.tipi.components.swingimpl;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
-import java.net.URL;
+import java.net.*;
 import java.text.*;
 import java.util.*;
+import java.util.List;
 
 import java.awt.*;
 
@@ -48,11 +49,20 @@ public class SwingTipiContext extends TipiContext {
 	private TipiApplet myAppletRoot;
 	private TipiSwingDesktop defaultDesktop = null;
 
+	private RootPaneContainer myOtherRoot;
+
 	public SwingTipiContext() {
+
+		// Don't think it is right here
+		try {
+			Locale.setDefault(new Locale("nl", "NL"));
+		} catch (SecurityException se) {
+		}
+
 	}
 
-	public Set getRequiredIncludes() {
-		Set s = super.getRequiredIncludes();
+	public List getRequiredIncludes() {
+		List s = super.getRequiredIncludes();
 		s.add("com/dexels/navajo/tipi/components/swingimpl/swingclassdef.xml");
 		return s;
 	}
@@ -302,10 +312,21 @@ public class SwingTipiContext extends TipiContext {
 		return myAppletRoot;
 	}
 
+	
+	public void setOtherRoot(RootPaneContainer otherRoot) {
+		myOtherRoot = otherRoot;
+	}
+
+	public RootPaneContainer getOtherRoot() {
+		return myOtherRoot;
+	}
+
+	
 	public void exit() {
 		if (myAppletRoot != null) {
 			myAppletRoot.reload();
 		} else {
+			shutdown();
 			System.exit(0);
 		}
 	}
@@ -324,6 +345,10 @@ public class SwingTipiContext extends TipiContext {
 	
 	public void showInfo(final String text, final String title) {
 		// swing implementation.
+		System.err.println("SHOWING: "+text);
+		if(getOtherRoot()!=null) {
+			TipiModalInternalFrame.showInternalMessage(getOtherRoot().getRootPane(),getOtherRoot().getContentPane(), title, text, getPoolSize());			
+		} else 
 		if (getAppletRoot() != null && getDefaultDesktop() != null) {
 			TipiModalInternalFrame.showInternalMessage(getAppletRoot().getRootPane(), getDefaultDesktop(), title, text, getPoolSize());
 		} else {
@@ -344,4 +369,42 @@ public class SwingTipiContext extends TipiContext {
 		}
 
 	}
+
+	public void processProperties(Map properties) throws MalformedURLException {
+		super.processProperties(properties);
+		String tipiLaf = null;
+		
+		
+		try {
+			tipiLaf = System.getProperty("tipilaf");
+		} catch (SecurityException e) {
+		
+		}
+		if(tipiLaf == null) {
+			tipiLaf = (String)properties.get("tipilaf");
+		}
+		
+		try {
+			if (tipiLaf == null) {
+				UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+				// UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+			} else {
+				UIManager.setLookAndFeel(tipiLaf);
+
+			}
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnsupportedLookAndFeelException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
 }

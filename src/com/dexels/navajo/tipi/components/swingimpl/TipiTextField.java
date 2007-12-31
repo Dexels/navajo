@@ -42,7 +42,7 @@ public class TipiTextField extends TipiSwingComponentImpl {
 				Map m = getEventMap(e);
 				m.put("mode", "typed");
 				try {
-					performTipiEvent("onKey", m, true);
+					performTipiEvent("onKey", m, false);
 				} catch (TipiException e1) {
 					e1.printStackTrace();
 				}
@@ -50,9 +50,9 @@ public class TipiTextField extends TipiSwingComponentImpl {
 
 			public void keyPressed(KeyEvent e) {
 				Map m = getEventMap(e);
-				m.put("mode", "typed");
+				m.put("mode", "pressed");
 				try {
-					performTipiEvent("onKey", m, true);
+					performTipiEvent("onKey", m, false);
 				} catch (TipiException e1) {
 					e1.printStackTrace();
 				}
@@ -62,13 +62,13 @@ public class TipiTextField extends TipiSwingComponentImpl {
 				Map m = getEventMap(e);
 				m.put("mode", "released");
 				try {
-					performTipiEvent("onKey", m, true);
+					performTipiEvent("onKey", m, false);
 				} catch (TipiException e1) {
 					e1.printStackTrace();
 				}
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 					try {
-						performTipiEvent("onEnter", m, true);
+						performTipiEvent("onEnter", m, false);
 					} catch (TipiException e1) {
 						e1.printStackTrace();
 					}

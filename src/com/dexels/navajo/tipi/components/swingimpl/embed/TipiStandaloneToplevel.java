@@ -17,21 +17,22 @@ import java.awt.*;
 public class TipiStandaloneToplevel extends TipiPanel
     implements RootPaneContainer {
 
-  private final JPanel myPanel = new JPanel();
+private final JPanel myPanel = null; //= new JPanel();
   private final BorderLayout myLayout = new BorderLayout();
 
   public TipiStandaloneToplevel() {
-    myPanel.setLayout(myLayout);
+//    myPanel.setLayout(myLayout);
     super.setName("init");
     setId("init");
     initContainer();
   }
 
   public void addToContainer(Object c, Object constraints) {
-    System.err.println("Adding to toplevel: "+c.getClass()+ " -- "+c.hashCode());
-//    myPanel.removeAll();
-    ((Component)c).setVisible(true);
-    myPanel.add((Component)c,BorderLayout.CENTER);
+	  if (myPanel!=null) {
+		  //System.err.println("Adding to toplevel: "+c.getClass()+ " -- "+c.hashCode());
+
+		  myPanel.add((Component)c,BorderLayout.CENTER);
+	} 
   }
 
   public void setLayout(TipiLayout tl) {
@@ -65,6 +66,7 @@ public class TipiStandaloneToplevel extends TipiPanel
   }
 
   public JLayeredPane getLayeredPane() {
+	  System.err.println("GETTING LAYERED PANE. BEWARE");
     return null;
   }
 
@@ -72,6 +74,8 @@ public class TipiStandaloneToplevel extends TipiPanel
   }
 
   public JRootPane getRootPane() {
+	  System.err.println("GETTING ROOT PANE. BEWARE");
     return null;
   }
+
 }

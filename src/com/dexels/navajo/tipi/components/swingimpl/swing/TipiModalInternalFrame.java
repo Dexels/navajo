@@ -122,7 +122,7 @@ public TipiModalInternalFrame(String title, JRootPane
     frame.setVisible(true);
   }
 
-public static void showInternalMessage(JRootPane rootPane, TipiSwingDesktop defaultDesktop, String title, String text, int poolSize) {
+public static void showInternalMessage(JRootPane rootPane, Component defaultDesktop, String title, String text, int poolSize) {
 	// TODO Auto-generated method stub
 	JOptionPane.showInternalMessageDialog(defaultDesktop,text,title,JOptionPane.INFORMATION_MESSAGE);
 }
