@@ -274,6 +274,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 		// System.err.println("Evaluating property: "+getValue());
 		Operand o;
 		// No evaluator present.
+		// Object oldEvaluatedValue = evaluatedValue;
 		if (NavajoFactory.getInstance().getExpressionEvaluator() == null) {
 			return null;
 		}
@@ -336,7 +337,12 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 			return getType();
 		}
 		if (evaluatedType == null) {
-			refreshExpression();
+			try {
+				refreshExpression();
+			} catch (ExpressionChangedException e) {
+				// TODO Auto-generated catch block
+//				e.printStackTrace();
+			}
 		}
 		// System.err.println("PropertyImpl. PatH: "+getFullPropertyName()+"
 		// TYPE: "+evaluatedType);
@@ -351,26 +357,45 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 		// return o.type;
 	}
 
-	public final void refreshExpression() throws NavajoException {
+	public final void refreshExpression() throws NavajoException, ExpressionChangedException {
 		if (getType().equals(Property.EXPRESSION_PROPERTY)) {
 			// also sets evaluatedType
 			// System.err.println("Entering eval..");
-			try {
-				evaluatedValue = getEvaluatedValue();
-			}
-			// catch (Error ex) {
-			// System.err.println("Exception occured while refreshing. Not a
-			// problem");
-			// }
-			// catch (Exception ex) {
-			// System.err.println("Exception occured while refreshing. Not a
-			// problem");
-			// }
-			catch (NullPointerException ex) {
-				System.err.println("Exception occured while refreshing. Not a problem");
+			Object oldEvaluatedValue = evaluatedValue;
+			evaluatedValue = getEvaluatedValue();
+	//		System.err.println("EVALVAL: "+evaluatedValue.getClass());
+			if(evaluatedValue instanceof ArrayList) {
+//				System.err.println("Updating.................");
+				updateExpressionSelections((ArrayList)evaluatedValue);
+				firePropertyDataChanged("", " ");
+				write(System.err);
+			} else {
+				if (oldEvaluatedValue != null) {
+					if (!oldEvaluatedValue.equals(evaluatedValue)) {
+						firePropertyDataChanged("" + oldEvaluatedValue, "" + evaluatedValue);
+						throw new ExpressionChangedException();
+					}
+				}
+				if (evaluatedValue != null) {
+					if (!evaluatedValue.equals(oldEvaluatedValue)) {
+						firePropertyDataChanged("" + oldEvaluatedValue, "" + evaluatedValue);
+						throw new ExpressionChangedException();
+					}
+
+				}
 			}
 
 		}
+	}
+
+	private void updateExpressionSelections(ArrayList list) throws NavajoException {
+		removeAllSelections();
+		for (int i = 0; i < list.size(); i++) {
+			Selection s = (Selection)list.get(i);
+			Selection copy = NavajoFactory.getInstance().createSelection(getRootDoc(), s.getName(), s.getValue(), false);
+			addSelection(copy);
+		}
+		
 	}
 
 	/**
@@ -691,7 +716,8 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 		}
 		myBinary = null;
 		setCheckedValue(value);
-		if (old == null || old.equals(value)) {
+//		System.err.println("IN SETVALUE: " + value);
+		if (old == null || !old.equals(value)) {
 			if (myPropertyDataListeners != null) {
 				firePropertyDataChanged(old, value);
 			}
@@ -700,14 +726,17 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 	}
 
 	private void firePropertyDataChanged(String oldValue, String newValue) {
-		if (myPropertyDataListeners == null) {
-			return;
+//		System.err.println("Property changed: "+getName()+" old: "+oldValue+" new: "+newValue);		
+		if (myPropertyDataListeners != null) {
+			for (int i = 0; i < myPropertyDataListeners.size(); i++) {
+				PropertyDataListener c = (PropertyDataListener) myPropertyDataListeners.get(i);
+				c.propertyDataChanged(this, oldValue, newValue);
+//				System.err.println("Alpha: PROPERTY DATA CHANGE Fired: " + oldValue + " - " + newValue);
+				// Thread.dumpStack();
+			}
 		}
-		for (int i = 0; i < myPropertyDataListeners.size(); i++) {
-			PropertyDataListener c = (PropertyDataListener) myPropertyDataListeners.get(i);
-			c.propertyDataChanged(oldValue, newValue);
-			System.err.println("Alpha: PROPERTY DATA CHANGE Fired: " + oldValue + " - " + newValue);
-//			Thread.dumpStack();
+		if(getParentMessage()!=null) {
+			getParentMessage().firePropertyDataChanged(this,oldValue,newValue);
 		}
 	}
 

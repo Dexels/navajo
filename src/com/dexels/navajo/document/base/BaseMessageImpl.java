@@ -15,6 +15,7 @@ import java.util.*;
 // import com.dexels.sportlink.client.swing.*;
 // import com.dexels.navajo.nanoclient.*;
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.databinding.*;
 //import com.dexels.navajo.document.nanoimpl.PropertyImpl;
 
 import java.util.regex.*;
@@ -53,6 +54,8 @@ public  class BaseMessageImpl extends BaseNode implements Message, TreeNode, Com
     private boolean isRootMessage = false;
     
     private String orderBy = "";
+
+	private ArrayList myPropertyDataListeners;
 
     // private List myDefinitionList = null;
     // private Map myDefinitionMap = null;
@@ -424,7 +427,7 @@ public  class BaseMessageImpl extends BaseNode implements Message, TreeNode, Com
         }
     }
 
-    public void refreshExpression() throws NavajoException {
+    public void refreshExpression() throws NavajoException, ExpressionChangedException {
        
     	if ( messageList != null ) {
     		for (int i = 0; i < messageList.size(); i++) {
@@ -1271,5 +1274,39 @@ public final Message getParentMessage() {
 	  }
 	  return 0;
 	}
+	
+	public void addPropertyDataListener(PropertyDataListener p) {
+		if (myPropertyDataListeners == null) {
+			myPropertyDataListeners = new ArrayList();
+		}
+		myPropertyDataListeners.add(p);
+		if (myPropertyDataListeners.size() > 1) {
+			System.err.println("Multiple property listeners detected!" + myPropertyDataListeners.size());
+		}
+	}
 
+	public void removePropertyDataListener(PropertyDataListener p) {
+		if (myPropertyDataListeners == null) {
+			return;
+		}
+		myPropertyDataListeners.remove(p);
+	}
+	
+	public void firePropertyDataChanged(Property p,String oldValue, String newValue) {
+//		System.err.println("Message changed: "+getName()+" index: "+getIndex());
+		if(getArrayParentMessage()!=null) {
+			getArrayParentMessage().firePropertyDataChanged(p,oldValue,newValue);
+		} else {
+			getRootDoc().firePropertyDataChanged(p, oldValue, newValue);
+		}
+		if (myPropertyDataListeners != null) {
+			for (int i = 0; i < myPropertyDataListeners.size(); i++) {
+				PropertyDataListener c = (PropertyDataListener) myPropertyDataListeners.get(i);
+				c.propertyDataChanged(p,oldValue, newValue);
+	
+//				System.err.println("Alpha: PROPERTY DATA CHANGE Fired: " + oldValue + " - " + newValue);
+				// Thread.dumpStack();
+			}
+		}
+	}
 }

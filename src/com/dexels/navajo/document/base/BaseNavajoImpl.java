@@ -3,6 +3,7 @@ import java.util.*;
 import java.io.*;
 
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.databinding.*;
 
 /**
  * <p>Title: ShellApplet</p>
@@ -24,7 +25,7 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
   protected String myLazyMessagePath = "";
   protected int myErrorNumber;
   protected String myErrorDescription;
-
+	private ArrayList myPropertyDataListeners;
 
   public BaseNavajoImpl() {
     rootMessage = (BaseMessageImpl)NavajoFactory.getInstance().createMessage(this,"");
@@ -542,5 +543,36 @@ public List getChildren() {
 public String getTagName() {
     return "tml";
 }
+
+public void addPropertyDataListener(PropertyDataListener p) {
+	if (myPropertyDataListeners == null) {
+		myPropertyDataListeners = new ArrayList();
+	}
+	myPropertyDataListeners.add(p);
+	if (myPropertyDataListeners.size() > 1) {
+		System.err.println("Multiple property listeners detected!" + myPropertyDataListeners.size());
+	}
+}
+
+public void removePropertyDataListener(PropertyDataListener p) {
+	if (myPropertyDataListeners == null) {
+		return;
+	}
+	myPropertyDataListeners.remove(p);
+}
+
+public void firePropertyDataChanged(Property p,String oldValue, String newValue) {
+//	System.err.println("Navajo changed. ");
+	if (myPropertyDataListeners != null) {
+		for (int i = 0; i < myPropertyDataListeners.size(); i++) {
+			PropertyDataListener c = (PropertyDataListener) myPropertyDataListeners.get(i);
+			c.propertyDataChanged(p,oldValue, newValue);
+
+//			System.err.println("Alpha: PROPERTY DATA CHANGE Fired: " + oldValue + " - " + newValue);
+			// Thread.dumpStack();
+		}
+	}
+}
+
 
 }
