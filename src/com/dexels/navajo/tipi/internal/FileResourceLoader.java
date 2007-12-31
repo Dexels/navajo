@@ -5,12 +5,22 @@ import java.net.*;
 
 public class FileResourceLoader extends ClassPathResourceLoader {
 
-	private final File baseFile;
+	private File baseFile;
 
 	public FileResourceLoader(File baseFile) {
 		this.baseFile = baseFile;
 	}
 
+	public void setBaseFile(File baseFile) {
+		this.baseFile = baseFile;
+	}
+
+	public String toString() {
+		return "FILELOADER: "+baseFile.toString();
+		
+	}
+	
+	
 	public URL getResourceURL(String location) throws MalformedURLException {
 //		System.err.println("FILE: LOOKING FOR: "+location);
 		File f = null;
@@ -36,6 +46,9 @@ public class FileResourceLoader extends ClassPathResourceLoader {
 	public InputStream getResourceStream(String location) throws IOException {
 //		System.err.println("Stream: FILE: LOOKING FOR: "+location);
 		URL u = getResourceURL(location);
+		if(u==null) {
+			return super.getResourceStream(location);
+	}
 		InputStream is = null;
 		try {
 			is = u.openStream();

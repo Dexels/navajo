@@ -44,6 +44,7 @@ abstract class BaseTipiParser extends TipiTypeParser {
 			if(n!=null) {
 				return n.getProperty(propertyPath);
 			} else {
+				System.err.println("No navajo found. Availablie: "+myContext.getNavajoNames());
 				return null;
 			}
 		}

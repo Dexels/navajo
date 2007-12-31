@@ -220,8 +220,8 @@ public class TipiEvent implements TipiExecutable {
 	public XMLElement store() {
 		// throw new RuntimeException("Todo: check and reimplement");
 		XMLElement s = new CaseSensitiveXMLElement();
-		s.setName("event");
-		s.setAttribute("type", myEventName);
+		s.setName(myEventName);
+//		s.setAttribute("type", myEventName);
 		for (int i = 0; i < myExecutables.size(); i++) {
 			TipiExecutable current = (TipiExecutable) myExecutables.get(i);
 			s.addChild(current.store());

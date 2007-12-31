@@ -35,9 +35,13 @@ public final class TipiDumpSchema {
 		Map<String, XMLElement> allEvents = new HashMap<String, XMLElement>();
 		Map<String, XMLElement> allValues = new HashMap<String, XMLElement>();
 
+		
 		File baseTipiDir = new File("tipi");
+
 		parseFile("start.xml", baseTipiDir, allComponents, allActions, allEvents, allValues);
 
+		
+		
 		// parseStream(TipiDumpSchema.class.getClassLoader().getResourceAsStream("com/dexels/navajo/tipi/classdef.xml"),
 		// allComponents, allActions, allEvents, allValues);
 		// parseStream(TipiDumpSchema.class.getClassLoader().getResourceAsStream("com/dexels/navajo/tipi/components/swingimpl/swingclassdef.xml"),

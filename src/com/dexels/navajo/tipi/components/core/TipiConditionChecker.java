@@ -3,6 +3,7 @@ package com.dexels.navajo.tipi.components.core;
 import java.util.*;
 
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.base.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.internal.*;
 
@@ -68,7 +69,10 @@ public class TipiConditionChecker extends TipiDataComponentImpl {
 			Property condition = current.getProperty("Condition");
 			Property errorMessage = current.getProperty("ErrorMessage");
 			try {
-				condition.refreshExpression();
+				try {
+					condition.refreshExpression();
+				} catch (ExpressionChangedException e) {
+				}
 				Object o = condition.getTypedValue();
 				if (o instanceof Boolean && ((Boolean) o).booleanValue() == false) {
 					failedList.add(errorMessage.getTypedValue());

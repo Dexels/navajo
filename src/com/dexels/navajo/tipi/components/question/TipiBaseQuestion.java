@@ -136,6 +136,7 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
 					// runASyncInEventThread(new Runnable() {
 					// public void run() {
 					updateQuestionList();
+					performTipiEvent(eventtype, source, sync);
 					// CHANGED TO FULL UPDATE:
 
 					// }

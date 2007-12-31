@@ -151,6 +151,8 @@ public class TipiPerformMethod extends TipiAction {
 		// }
 		// return;
 		// }
+		
+		System.err.println("Server: "+hostUrl);
 		// If it can not find the 'sending' tipi:
 		if (evalTipi == null) {
 			if (myComponent.getNearestNavajo() != null) {

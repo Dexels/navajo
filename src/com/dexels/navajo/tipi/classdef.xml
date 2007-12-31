@@ -19,6 +19,26 @@
         </values>
         <methods/>
     </tipiclass>
+
+    <tipiclass studio-icon="messagestore.gif" module="abstract" class="TipiShadowFilterImpl" name="shadowfilter" package="com.dexels.navajo.tipi.components.core" type="tipi" childcount="0" layoutmanager="false" addtocontainer="false">
+        <events>
+            <event name="onGeneratedErrors">
+                <param name="id" type="string"/>
+                <param name="description" type="string"/>
+            </event>
+            <event name="onInstantiate"/>
+            <event name="onLoad">
+                <param name="service" type="string"/>
+            </event>
+        </events>
+        <values>
+            <value direction="in" name="messagePath" type="string"/>
+            <value direction="in" name="shadowNavajoName" type="string"/>
+            <value direction="in" name="simpleFilter" type="string"/>
+        </values>
+        <methods/>
+    </tipiclass>
+    
     <tipiclass studio-icon="messagestore.gif" module="abstract" class="TipiConditionChecker" name="conditionchecker" package="com.dexels.navajo.tipi.components.core" type="tipi" childcount="0" layoutmanager="false" addtocontainer="false">
         <events>
             <event name="onGeneratedErrors">

@@ -56,8 +56,8 @@ public abstract class TipiAction implements TipiExecutable {
 
 	public XMLElement store() {
 		XMLElement xe = new CaseSensitiveXMLElement();
-		xe.setName("action");
-		xe.setAttribute("type", getType());
+		xe.setName(getType());
+//		xe.setAttribute("type", getType());
 		Iterator it = parameterMap.keySet().iterator();
 		while (it.hasNext()) {
 			String name = (String) it.next();

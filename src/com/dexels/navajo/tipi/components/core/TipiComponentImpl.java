@@ -602,7 +602,8 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 					throw new RuntimeException(
 							"You cannot pass the value of an 'out' direction value in to an instance or definition in the script");
 				}
-				// System.err.println("About to evaluate value: "+value);
+//				 System.err.println("About to evaluate value: "+value);
+				
 				Operand o = evaluate(value.toString(), this, null);
 				if (o != null && o.value != null) {
 					setValue(key, value, o.value, this, false, null);
@@ -985,6 +986,7 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 
 				// ********************************* TODO MEGAHACK:
 				// sync = true;
+				myContext.fireTipiContextEvent(this,type,event,sync);
 
 				if (sync) {
 					te.performAction(this, event);
@@ -1046,16 +1048,17 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 	public XMLElement store() {
 
 		XMLElement IamThereforeIcanbeStored = new CaseSensitiveXMLElement();
-		IamThereforeIcanbeStored.setName("component-instance");
+		
+		IamThereforeIcanbeStored.setName("c."+className);
 		if (myName != null) {
 			IamThereforeIcanbeStored.setAttribute("name", myName);
 		}
 		if (myId != null) {
 			IamThereforeIcanbeStored.setAttribute("id", myId);
 		}
-		if (className != null) {
-			IamThereforeIcanbeStored.setAttribute("class", className);
-		}
+//		if (className != null) {
+//			IamThereforeIcanbeStored.setAttribute("class", className);
+//		}
 		// if (className != null && myName!=null) {
 		// System.err.println("THERE IS BOTH A CLASS AND A NAME SET. THIS IS
 		// EVIL, BUT I AM GETTING USED TO IT");

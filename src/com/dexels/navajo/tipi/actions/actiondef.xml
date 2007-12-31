@@ -66,7 +66,11 @@
       <param name="command" type="string" required="true" />
    </tipiaction>
 
-
+  <tipiaction name="linkProperty" class="TipiLinkProperty" package="com.dexels.navajo.tipi.actions">
+      <param name="master" type="reference" required="true" />
+      <param name="slave" type="reference" required="true" />
+   </tipiaction>
+   
    <tipiaction name="setValue" class="TipiSetValue" package="com.dexels.navajo.tipi.actions">
       <param name="to" type="reference" required="true" />
       <param name="from" type="string" required="true" />
@@ -109,10 +113,11 @@
 
    <tipiaction name="instantiateClass" class="TipiInstantiateTipiClass" package="com.dexels.navajo.tipi.actions">
       <param name="class" type="string" required="true" />
-      <param name="id" type="string" required="true" />
+      <param name="id" type="string" required="false" />
       <param name="location" type="tipi" required="true" />
       <param name="force" type="boolean" default="false" />
    </tipiaction>
+   
 
    <tipiaction name="dispose" class="TipiDispose" package="com.dexels.navajo.tipi.actions">
       <param name="path" type="tipi" required="true" />

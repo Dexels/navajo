@@ -385,7 +385,7 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 
 	public XMLElement store() {
 		XMLElement IamThereforeIcanbeStored = super.store();
-		IamThereforeIcanbeStored.setName("tipi-instance");
+//		IamThereforeIcanbeStored.setName("tipi-instance");
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < myServices.size(); i++) {
 			sb.append(myServices.get(i));
@@ -396,9 +396,9 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 		if (myServices.size() > 0) {
 			IamThereforeIcanbeStored.setAttribute("service", sb.toString());
 		}
-		if (prefix != null) {
-			IamThereforeIcanbeStored.setAttribute("prefix", prefix);
-		}
+//		if (prefix != null) {
+//			IamThereforeIcanbeStored.setAttribute("prefix", prefix);
+//		}
 		return IamThereforeIcanbeStored;
 	}
 

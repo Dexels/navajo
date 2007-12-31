@@ -1,5 +1,7 @@
 package com.dexels.navajo.tipi.components.core.parsers;
 
+import java.util.*;
+
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.internal.*;
@@ -23,7 +25,21 @@ import com.dexels.navajo.tipi.internal.*;
  */
 public class MessageParser extends BaseTipiParser {
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
-		 System.err.println("PAESING " + expression);
+		System.err.println("PAESINGUE " + expression);
+		if (expression.indexOf(":") != -1) {
+			StringTokenizer st = new StringTokenizer(expression, ":");
+			String navajo = st.nextToken();
+			String path = st.nextToken();
+			Navajo nn = myContext.getNavajo(navajo);
+			try {
+				Message myMessage = nn.getMessage(path);
+				return myMessage;
+			} catch (Throwable e) {
+				e.printStackTrace();
+				System.err.println("MESSAGE NOT FOUND: "+expression);
+				return null;
+			}
+		}
 		Message m = getMessageByPath(source, expression);
 		// if (m != null) {
 		// m.write(System.err);

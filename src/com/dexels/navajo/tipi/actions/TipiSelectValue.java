@@ -42,7 +42,7 @@ public final class TipiSelectValue extends TipiAction {
 		if(evaluatedValue!=null && evaluatedName != null) {
 			throw new TipiException("Either select a name or a value attribute, not both");
 		}
-		if (evaluatedValue != null) {
+		if (evaluatedValue == null) {
 			setByName(path, evaluated, evaluatedName);
 		} else {
 			setByValue(path, evaluated, evaluatedValue);

@@ -20,7 +20,7 @@ import com.dexels.navajo.tipi.*;
  * @version 1.0
  */
 public class TipiMessageStoreImpl extends TipiDataComponentImpl implements TipiDataComponent {
-	private Object myObject;
+//	private Object myObject;
 
 	public Object createContainer() {
 		return null;
@@ -28,12 +28,13 @@ public class TipiMessageStoreImpl extends TipiDataComponentImpl implements TipiD
 
 	/**
 	 * Where on earth is this construction good for?! Please dont use it, I may
-	 * rip it out at any moment. If you need do save something, Use a global
+	 * rip it out at any moment. If you need do save something, Use a global.
+	 * Just killed it!
 	 */
 
 	public void setComponentValue(String name, Object object) {
 		// selectedMessage is the only name that occurs, I guess.
-		myObject = object;
+//		myObject = object;
 	}
 
 	public Object getComponentValue(String name) {
