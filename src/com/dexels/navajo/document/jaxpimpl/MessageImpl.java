@@ -21,6 +21,8 @@ package com.dexels.navajo.document.jaxpimpl;
 import com.dexels.navajo.document.*;
 
 import org.w3c.dom.*;
+
+import java.beans.*;
 import java.util.*;
 import java.util.regex.*;
 
@@ -846,17 +848,19 @@ public final class MessageImpl implements Message {
 	return 0;
   }
 
-public void addPropertyDataListener(PropertyDataListener p) {
+
+
+public void firePropertyDataChanged(Property p, Object oldValue, Object newValue) {
 	// TODO Auto-generated method stub
 	
 }
 
-public void firePropertyDataChanged(Property p, String oldValue, String newValue) {
+public void addPropertyChangeListener(PropertyChangeListener p) {
 	// TODO Auto-generated method stub
 	
 }
 
-public void removePropertyDataListener(PropertyDataListener p) {
+public void removePropertyChangeListener(PropertyChangeListener p) {
 	// TODO Auto-generated method stub
 	
 }

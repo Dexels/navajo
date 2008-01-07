@@ -1,6 +1,7 @@
 package com.dexels.navajo.document.base;
 
 import java.util.*;
+import java.beans.*;
 import java.io.*;
 import java.net.*;
 
@@ -64,7 +65,9 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 
 	private Object evaluatedValue = null;
 	private String evaluatedType = null;
-	private ArrayList myPropertyDataListeners;
+	private List<PropertyChangeListener> myPropertyDataListeners;
+	protected String subType = null;
+	private Object tipiProperty = null;
 
 	public BasePropertyImpl(Navajo n, String name, String type, String value, int i, String desc, String direction) {
 		super(n);
@@ -116,8 +119,6 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 		}
 
 	}
-
-	protected String subType = null;
 
 	public void setSubType(String subType) {
 		this.subType = subType;
@@ -266,8 +267,11 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 			setValue((Boolean) o);
 			return;
 		}
-		setType(Property.STRING_PROPERTY);
-		setValue("" + o);
+		setType(Property.TIPI_PROPERTY);
+		Object old = getTypedValue();
+		tipiProperty = o;
+		setCheckedValue("" + o);
+		firePropertyChanged(old, getTypedValue());
 	}
 
 	public final Object getEvaluatedValue() throws NavajoException {
@@ -341,7 +345,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 				refreshExpression();
 			} catch (ExpressionChangedException e) {
 				// TODO Auto-generated catch block
-//				e.printStackTrace();
+				// e.printStackTrace();
 			}
 		}
 		// System.err.println("PropertyImpl. PatH: "+getFullPropertyName()+"
@@ -363,22 +367,22 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 			// System.err.println("Entering eval..");
 			Object oldEvaluatedValue = evaluatedValue;
 			evaluatedValue = getEvaluatedValue();
-	//		System.err.println("EVALVAL: "+evaluatedValue.getClass());
-			if(evaluatedValue instanceof ArrayList) {
-//				System.err.println("Updating.................");
-				updateExpressionSelections((ArrayList)evaluatedValue);
-				firePropertyDataChanged("", " ");
+			// System.err.println("EVALVAL: "+evaluatedValue.getClass());
+			if (evaluatedValue instanceof ArrayList) {
+				// System.err.println("Updating.................");
+				updateExpressionSelections((ArrayList) evaluatedValue);
+				firePropertyChanged("selection", "", " ");
 				write(System.err);
 			} else {
 				if (oldEvaluatedValue != null) {
 					if (!oldEvaluatedValue.equals(evaluatedValue)) {
-						firePropertyDataChanged("" + oldEvaluatedValue, "" + evaluatedValue);
+						firePropertyChanged("value", "" + oldEvaluatedValue, "" + evaluatedValue);
 						throw new ExpressionChangedException();
 					}
 				}
 				if (evaluatedValue != null) {
 					if (!evaluatedValue.equals(oldEvaluatedValue)) {
-						firePropertyDataChanged("" + oldEvaluatedValue, "" + evaluatedValue);
+						firePropertyChanged("value", "" + oldEvaluatedValue, "" + evaluatedValue);
 						throw new ExpressionChangedException();
 					}
 
@@ -391,11 +395,11 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 	private void updateExpressionSelections(ArrayList list) throws NavajoException {
 		removeAllSelections();
 		for (int i = 0; i < list.size(); i++) {
-			Selection s = (Selection)list.get(i);
+			Selection s = (Selection) list.get(i);
 			Selection copy = NavajoFactory.getInstance().createSelection(getRootDoc(), s.getName(), s.getValue(), false);
 			addSelection(copy);
 		}
-		
+
 	}
 
 	/**
@@ -475,8 +479,10 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 					Date d = dateFormat2.parse(getValue());
 					return d;
 				} catch (Exception ex2) {
+					ex2.printStackTrace();
 					System.err.println("Sorry I really can't parse that date: " + getValue());
-					// ex2.printStackTrace();
+
+					ex2.printStackTrace();
 				}
 			}
 		} else if (getType().equals(Property.INTEGER_PROPERTY)) {
@@ -487,7 +493,8 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 				// Added a trim. Frank.
 				return new Integer(Integer.parseInt(getValue().trim()));
 			} catch (NumberFormatException ex3) {
-				System.err.println("Numberformat exception...");
+				System.err.println("Numberformat exception...:"+getValue().trim());
+				ex3.printStackTrace();
 				return null;
 			}
 		} else if (getType().equals(Property.LONG_PROPERTY)) {
@@ -541,6 +548,8 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 				return null;
 			}
 
+		} else if (getType().equals(Property.TIPI_PROPERTY)) {
+			return tipiProperty;
 		}
 
 		return getValue();
@@ -570,12 +579,14 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 	public final void setValue(Binary b) {
 		myBinary = b;
 		myValue = null;
+		Object old = getTypedValue();
 		setType(BINARY_PROPERTY);
 		if (b != null) {
 			addSubType("handle=" + b.getHandle());
 			addSubType("mime=" + b.getMimeType());
 			addSubType("extension=" + b.getExtension());
 		}
+		firePropertyChanged("value", old, getTypedValue());
 
 	}
 
@@ -586,6 +597,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 	 */
 
 	public final void setValue(URL url) {
+		Object old = getTypedValue();
 		try {
 			if (type.equals(BINARY_PROPERTY)) {
 				InputStream in = url.openStream();
@@ -607,95 +619,124 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		firePropertyChanged("value", old, getTypedValue());
 	}
 
 	public final void setValue(java.util.Date value) {
+		Object old = getTypedValue();
 		if (value != null) {
-			setValue(dateFormat1.format(value));
+			setCheckedValue(dateFormat1.format(value));
 		} else {
 			myValue = null;
 		}
+		firePropertyChanged("value", old, getTypedValue());
 	}
 
 	public final void setValue(Boolean value) {
+		Object old = getTypedValue();
 		if (value != null) {
-			setValue((value.booleanValue() ? "true" : "false"));
+			setCheckedValue((value.booleanValue() ? "true" : "false"));
 		} else {
 			myValue = null;
 		}
+		firePropertyChanged("value", old, getTypedValue());
 	}
 
 	public final void setValue(Money value) {
+		Object old = getTypedValue();
 		if (value != null) {
-			setValue(value.toString());
+			setCheckedValue(value.toString());
 		} else {
 			myValue = null;
 		}
+		firePropertyChanged("value", old, getTypedValue());
 	}
 
 	public final void setValue(Percentage value) {
+		Object old = getTypedValue();
 		if (value != null) {
-			setValue(value.toString());
+			setCheckedValue(value.toString());
 		} else {
 			myValue = null;
 		}
+		firePropertyChanged("value", old, getTypedValue());
 	}
 
 	public final void setValue(ClockTime value) {
+		Object old = getTypedValue();
 		if (value != null) {
-			setValue(value.toString());
+			setCheckedValue(value.toString());
 		} else {
 			myValue = null;
 		}
+		firePropertyChanged("value", old, getTypedValue());
 	}
 
 	public final void setValue(StopwatchTime value) {
+		Object old = getTypedValue();
 		if (value != null) {
-			setValue(value.toString());
+			setCheckedValue(value.toString());
 		} else {
 			myValue = null;
 		}
+		firePropertyChanged("value", old, getTypedValue());
 	}
 
 	public final void setValue(Double value) {
+		Object old = getTypedValue();
 		if (value != null) {
-			setValue(value.doubleValue() + "");
+			setCheckedValue(value.doubleValue() + "");
 		} else {
 			myValue = null;
 		}
+		firePropertyChanged("value", old, getTypedValue());
 	}
 
 	public final void setValue(Integer value) {
+		Object old = getTypedValue();
 		if (value != null) {
-			setValue(value.intValue() + "");
+			setCheckedValue(value.intValue() + "");
 		} else {
 			myValue = null;
 		}
+		firePropertyChanged("value", old, getTypedValue());
 	}
 
 	public final void setValue(int value) {
-		setValue(value + "");
+		Object old = getTypedValue();
+		setCheckedValue(value + "");
+		firePropertyChanged("value", old, getTypedValue());
 	}
 
 	public final void setValue(double value) {
-		setValue(value + "");
+		Object old = getTypedValue();
+		setCheckedValue(value + "");
+		firePropertyChanged("value", old, getTypedValue());
 	}
 
 	public final void setValue(float value) {
+		Object old = getTypedValue();
 		String floatString = "" + value;
-		setValue(floatString);
+		setCheckedValue(floatString);
+		firePropertyChanged("value", old, getTypedValue());
 	}
 
 	public void setValue(boolean value) {
-		setValue((value ? "true" : "false"));
+		Object old = getTypedValue();
+		setCheckedValue((value ? "true" : "false"));
+		firePropertyChanged("value", old, getTypedValue());
 	}
 
 	public final void setLongValue(long value) {
-		setValue(value + "");
+		Object old = getTypedValue();
+		setCheckedValue(value + "");
+		firePropertyChanged("value", old, getTypedValue());
 	}
 
 	public final void setValue(long value) {
-		setValue(value + "");
+		Object old = getTypedValue();
+		setCheckedValue(value + "");
+		firePropertyChanged("value", old, getTypedValue());
 	}
 
 	public final void setValue(String value) {
@@ -716,31 +757,59 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 		}
 		myBinary = null;
 		setCheckedValue(value);
-//		System.err.println("IN SETVALUE: " + value);
-		if (old == null || !old.equals(value)) {
-			if (myPropertyDataListeners != null) {
-				firePropertyDataChanged(old, value);
-			}
-		}
+		firePropertyChanged("value", old, value);
 
 	}
 
-	private void firePropertyDataChanged(String oldValue, String newValue) {
-//		System.err.println("Property changed: "+getName()+" old: "+oldValue+" new: "+newValue);		
+	protected void firePropertyChanged(Object oldValue, Object newValue) {
+		firePropertyChanged("value", oldValue, newValue);
+	}
+
+	/**
+	 * Will check for non-changes, comprendes?
+	 * 
+	 * @param name
+	 * @param oldValue
+	 * @param newValue
+	 */
+	protected void firePropertyChanged(String name, Object oldValue, Object newValue) {
+		// System.err.println("Property changed: "+getName()+" old: "+oldValue+"
+		// new:
+		// "+newValue);
+		if (myPropertyDataListeners == null) {
+			return;
+		}
+		if (oldValue == null && newValue == null) {
+			return;
+		}
+		if (oldValue != null) {
+			if (oldValue.equals(newValue)) {
+				return;
+			}
+		}
+		if (newValue != null) {
+			if (newValue.equals(oldValue)) {
+				return;
+			}
+		}
+
 		if (myPropertyDataListeners != null) {
 			for (int i = 0; i < myPropertyDataListeners.size(); i++) {
-				PropertyDataListener c = (PropertyDataListener) myPropertyDataListeners.get(i);
-				c.propertyDataChanged(this, oldValue, newValue);
-//				System.err.println("Alpha: PROPERTY DATA CHANGE Fired: " + oldValue + " - " + newValue);
+				PropertyChangeListener c = myPropertyDataListeners.get(i);
+				c.propertyChange(new PropertyChangeEvent(this, name, oldValue, newValue));
+				// System.err.println("Alpha: PROPERTY DATA CHANGE Fired: " +
+				// oldValue + " - " +
+				// newValue);
 				// Thread.dumpStack();
 			}
 		}
-		if(getParentMessage()!=null) {
-			getParentMessage().firePropertyDataChanged(this,oldValue,newValue);
+		if (getParentMessage() != null) {
+			getParentMessage().firePropertyDataChanged(this, oldValue, newValue);
 		}
 	}
 
 	public final void setValue(Selection[] l) {
+		Object old = getTypedValue();
 		myBinary = null;
 		if (l == null) {
 			return;
@@ -753,6 +822,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 		for (int i = 0; i < l.length; i++) {
 			this.addSelection(l[i]);
 		}
+		firePropertyChanged("value", old, getTypedValue());
 	}
 
 	public final String getSubType(String key) {
@@ -891,7 +961,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 		}
 		String oldSel = null;
 		Selection old = getSelected();
-		if(old!=null) {
+		if (old != null) {
 			oldSel = old.getValue();
 		}
 
@@ -900,11 +970,11 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 			if (current == s) {
 				current.setSelected(true);
 			} else {
-				if(!"+".equals(getCardinality())){
+				if (!"+".equals(getCardinality())) {
 					current.setSelected(false);
 				}
 			}
-			firePropertyDataChanged(oldSel, current.getValue());
+			firePropertyChanged("selection", oldSel, current.getValue());
 		}
 	}
 
@@ -932,7 +1002,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 					clearSelections();
 				}
 				setSelected(current);
-//				((BaseSelectionImpl) current).setSelected(true);
+				// ((BaseSelectionImpl) current).setSelected(true);
 			} else {
 				// current.setSelected(false);
 			}
@@ -1223,8 +1293,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 
 	public final void setSelected(ArrayList al) throws com.dexels.navajo.document.NavajoException {
 		setAllSelected(false);
-		
-		
+
 		for (int i = 0; i < al.size(); i++) {
 			String s = (String) al.get(i);
 			Selection sl = getSelectionByValue(s);
@@ -1258,11 +1327,11 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 		}
 		String oldSel = null;
 		Selection sel = getSelected();
-		if(sel!=null) {
+		if (sel != null) {
 			oldSel = sel.getValue();
 		}
 		Selection s = getSelectionByValue(value);
-		firePropertyDataChanged(oldSel, value);
+		firePropertyChanged("selection", oldSel, value);
 		s.setSelected(true);
 	}
 
@@ -1526,17 +1595,17 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 		return 0;
 	}
 
-	public void addPropertyDataListener(PropertyDataListener p) {
+	public void addPropertyChangeListener(PropertyChangeListener p) {
 		if (myPropertyDataListeners == null) {
-			myPropertyDataListeners = new ArrayList();
+			myPropertyDataListeners = new ArrayList<PropertyChangeListener>();
 		}
 		myPropertyDataListeners.add(p);
-		if(myPropertyDataListeners.size()>1) {
+		if (myPropertyDataListeners.size() > 1) {
 			System.err.println("Multiple property listeners detected!" + myPropertyDataListeners.size());
 		}
 	}
 
-	public void removePropertyDataListener(PropertyDataListener p) {
+	public void removePropertyChangeListener(PropertyChangeListener p) {
 		if (myPropertyDataListeners == null) {
 			return;
 		}
@@ -1573,6 +1642,20 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 			if (!"+".equals(getCardinality())) {
 				s.setSelected(false);
 				clearSelections();
+			}
+		}
+	}
+
+	public void forcePropertyChange() {
+		if (myPropertyDataListeners != null) {
+			for (int i = 0; i < myPropertyDataListeners.size(); i++) {
+				PropertyChangeListener c = myPropertyDataListeners.get(i);
+				
+				c.propertyChange(new PropertyChangeEvent(this, "value", getTypedValue(), getTypedValue()));
+				// System.err.println("Alpha: PROPERTY DATA CHANGE Fired: " +
+				// oldValue + " - " +
+				// newValue);
+				// Thread.dumpStack();
 			}
 		}
 	}

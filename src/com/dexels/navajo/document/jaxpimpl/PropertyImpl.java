@@ -10,6 +10,7 @@
  */
 package com.dexels.navajo.document.jaxpimpl;
 
+import java.beans.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -1201,18 +1202,26 @@ public Property cloneWithoutValue() {
     return p;
 }
 
-public void addPropertyDataListener(PropertyDataListener p) {
-	// TODO Auto-generated method stub
-	throw new UnsupportedOperationException("addPropertyDataListener");
-}
-
-public void removePropertyDataListener(PropertyDataListener p) {
-	// TODO Auto-generated method stub
-	throw new UnsupportedOperationException("removePropertyDataListener");
-}
 
 public void setSelected(Selection s, boolean selected) throws NavajoException {
 	// TODO Auto-generated method stub
 	throw new UnsupportedOperationException("setSelected");
+}
+
+public void addPropertyChangeListener(PropertyChangeListener p) {
+	// TODO Auto-generated method stub
+	throw new UnsupportedOperationException("addPropertyDataListener");
+	
+}
+
+public void removePropertyChangeListener(PropertyChangeListener p) {
+	// TODO Auto-generated method stub
+	throw new UnsupportedOperationException("removePropertyDataListener");
+	
+}
+
+public void forcePropertyChange() {
+	// TODO Auto-generated method stub
+	
 }
 }

@@ -9,6 +9,7 @@ package com.dexels.navajo.document;
  * @version 1.0
  */
 
+import java.beans.*;
 import java.io.OutputStream;
 import java.util.*;
 
@@ -335,8 +336,8 @@ public interface Navajo
    */
   public List refreshExpression() throws NavajoException;
   
-  public void addPropertyDataListener(PropertyDataListener p);
-  public void removePropertyDataListener(PropertyDataListener p);
-  public void firePropertyDataChanged(Property p,String oldValue, String newValue);
+  public void addPropertyChangeListener(PropertyChangeListener p);
+  public void removePropertyChangeListener(PropertyChangeListener p);
+  public void firePropertyDataChanged(Property p,Object oldValue, Object newValue);
 
 }

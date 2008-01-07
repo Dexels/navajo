@@ -1,5 +1,6 @@
 package com.dexels.navajo.document.base;
 import java.util.*;
+import java.beans.*;
 import java.io.*;
 
 import com.dexels.navajo.document.*;
@@ -25,7 +26,7 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
   protected String myLazyMessagePath = "";
   protected int myErrorNumber;
   protected String myErrorDescription;
-	private ArrayList myPropertyDataListeners;
+	private List<PropertyChangeListener> myPropertyDataListeners;
 
   public BaseNavajoImpl() {
     rootMessage = (BaseMessageImpl)NavajoFactory.getInstance().createMessage(this,"");
@@ -544,34 +545,35 @@ public String getTagName() {
     return "tml";
 }
 
-public void addPropertyDataListener(PropertyDataListener p) {
-	if (myPropertyDataListeners == null) {
-		myPropertyDataListeners = new ArrayList();
-	}
-	myPropertyDataListeners.add(p);
-	if (myPropertyDataListeners.size() > 1) {
-		System.err.println("Multiple property listeners detected!" + myPropertyDataListeners.size());
-	}
-}
 
-public void removePropertyDataListener(PropertyDataListener p) {
-	if (myPropertyDataListeners == null) {
-		return;
-	}
-	myPropertyDataListeners.remove(p);
-}
-
-public void firePropertyDataChanged(Property p,String oldValue, String newValue) {
+public void firePropertyDataChanged(Property p,Object oldValue, Object newValue) {
 //	System.err.println("Navajo changed. ");
 	if (myPropertyDataListeners != null) {
 		for (int i = 0; i < myPropertyDataListeners.size(); i++) {
-			PropertyDataListener c = (PropertyDataListener) myPropertyDataListeners.get(i);
-			c.propertyDataChanged(p,oldValue, newValue);
+			PropertyChangeListener c = myPropertyDataListeners.get(i);
+			c.propertyChange(new PropertyChangeEvent(p,"value",oldValue, newValue));
 
 //			System.err.println("Alpha: PROPERTY DATA CHANGE Fired: " + oldValue + " - " + newValue);
 			// Thread.dumpStack();
 		}
 	}
+}
+
+public void addPropertyChangeListener(PropertyChangeListener p) {
+	if (myPropertyDataListeners == null) {
+		myPropertyDataListeners = new ArrayList<PropertyChangeListener>();
+	}
+	myPropertyDataListeners.add(p);
+	if(myPropertyDataListeners.size()>1) {
+		System.err.println("Multiple property listeners detected!" + myPropertyDataListeners.size());
+	}
+}
+
+public void removePropertyChangeListener(PropertyChangeListener p) {
+	if (myPropertyDataListeners == null) {
+		return;
+	}
+	myPropertyDataListeners.remove(p);
 }
 
 

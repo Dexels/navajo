@@ -2,6 +2,7 @@ package com.dexels.navajo.document;
 
 import java.util.*;
 import java.text.SimpleDateFormat;
+import java.beans.*;
 import java.net.URL;
 
 import com.dexels.navajo.document.databinding.*;
@@ -502,7 +503,9 @@ public Property cloneWithoutValue();
  * Adding
  * @param p
  */
-public void addPropertyDataListener(PropertyDataListener p);
-public void removePropertyDataListener(PropertyDataListener p);
+public void addPropertyChangeListener(PropertyChangeListener p);
+public void removePropertyChangeListener(PropertyChangeListener p);
+
+public void forcePropertyChange();
 
 }

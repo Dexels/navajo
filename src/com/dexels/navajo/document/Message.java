@@ -1,5 +1,6 @@
 package com.dexels.navajo.document;
 
+import java.beans.*;
 import java.util.*;
 
 import com.dexels.navajo.document.base.*;
@@ -410,8 +411,8 @@ public interface Message
   public void setDefinitionMessage(Message m);
 
   
-  public void addPropertyDataListener(PropertyDataListener p);
-  public void removePropertyDataListener(PropertyDataListener p);
-  public void firePropertyDataChanged(Property p,String oldValue, String newValue);
+  public void addPropertyChangeListener(PropertyChangeListener p);
+  public void removePropertyChangeListener(PropertyChangeListener p);
+  public void firePropertyDataChanged(Property p,Object oldValue, Object newValue);
 
 }

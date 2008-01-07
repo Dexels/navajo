@@ -11,6 +11,7 @@ package com.dexels.navajo.document.jaxpimpl;
 
 import com.dexels.navajo.document.*;
 
+import java.beans.*;
 import java.io.*;
 import java.util.*;
 import javax.xml.transform.stream.StreamResult;
@@ -1146,18 +1147,19 @@ public final class NavajoImpl implements Navajo, java.io.Serializable {
       throw new UnsupportedOperationException("Can not refresh expressions in JAXPIMPL");
     }
 
-	public void addPropertyDataListener(PropertyDataListener p) {
-		// TODO Auto-generated method stub
+
+	public void firePropertyDataChanged(Property p, Object oldValue, Object newValue) {
+	     throw new UnsupportedOperationException("Can not firePropertyDataChanged expressions in JAXPIMPL");
 		
 	}
 
-	public void firePropertyDataChanged(Property p, String oldValue, String newValue) {
-		// TODO Auto-generated method stub
-		
+
+	public void addPropertyChangeListener(PropertyChangeListener p) {
+	     throw new UnsupportedOperationException("Can not addPropertyChangeListener expressions in JAXPIMPL");
 	}
 
-	public void removePropertyDataListener(PropertyDataListener p) {
-		// TODO Auto-generated method stub
+	public void removePropertyChangeListener(PropertyChangeListener p) {
+	     throw new UnsupportedOperationException("Can not removePropertyChangeListener expressions in JAXPIMPL");
 		
 	}
 
