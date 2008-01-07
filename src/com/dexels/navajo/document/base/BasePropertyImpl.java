@@ -207,6 +207,8 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 	}
 
 	public final void setAnyValue(Object o) {
+		myBinary = null;
+		
 		if (o == null) {
 			setType(Property.STRING_PROPERTY);
 			setValue((String) null);
