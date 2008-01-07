@@ -267,6 +267,11 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 			setValue((Boolean) o);
 			return;
 		}
+		if (o instanceof String) {
+			setType(Property.STRING_PROPERTY);
+			setValue((String) o);
+			return;
+		}
 		setType(Property.TIPI_PROPERTY);
 		Object old = getTypedValue();
 		tipiProperty = o;
