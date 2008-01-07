@@ -11,6 +11,7 @@ package com.dexels.navajo.document.filter;
 
 import com.dexels.navajo.document.*;
 
+import java.beans.*;
 import java.util.*;
 
 public final class PropertyFilter {
@@ -73,7 +74,7 @@ private boolean checkProperty(Property p) throws NavajoException {
     }
     if ("startsWith".equals(myOperator) && "string".equals(p.getType())) {
     	if(p.getValue() != null){
-        return p.getValue().toLowerCase().startsWith(myValue.getValue().toLowerCase());
+        return p.getValue().toLowerCase().startsWith(((String)myValue.getTypedValue()).toLowerCase());
     	}else{
     		return false;
     	}
@@ -87,7 +88,7 @@ private boolean checkProperty(Property p) throws NavajoException {
     }
     if ("endsWith".equals(myOperator) && "string".equals(p.getType())) {
     	if(p.getValue() != null){
-        return p.getValue().toLowerCase().endsWith(myValue.getValue().toLowerCase());
+        return p.getValue().toLowerCase().endsWith(((String)myValue.getTypedValue()).toLowerCase());
     	}else{
     		return false;
     	}
@@ -101,7 +102,7 @@ private boolean checkProperty(Property p) throws NavajoException {
     }
     if ("contains".equals(myOperator) && "string".equals(p.getType())) {
     	if(p.getValue() != null){
-        return p.getValue().toLowerCase().indexOf(myValue.getValue().toLowerCase()) >= 0;
+        return p.getValue().toLowerCase().indexOf(((String)myValue.getTypedValue()).toLowerCase()) >= 0;
     	}else{
     		return false;
     	}
