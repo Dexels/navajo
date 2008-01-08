@@ -13,4 +13,8 @@ public class DummyTribeManager implements TribeManagerInterface {
 		throw new NotImplementedException();
 	}
 
+	public void broadcast(Navajo in) throws Exception {
+		throw new NotImplementedException();
+	}
+
 }
