@@ -6,5 +6,6 @@ public interface TribeManagerInterface {
 
 	public void terminate();
 	public Navajo forward(Navajo in) throws Exception;
+	public void broadcast(Navajo in) throws Exception;
 	
 }
