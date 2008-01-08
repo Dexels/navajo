@@ -298,7 +298,7 @@ public class TribeManager extends ReceiverAdapter implements Mappable, TribeMana
 	 */
 	public void broadcast(SmokeSignal m) {
 		try {
-			channel.send(null, null, m);
+			channel.send(null, channel.getLocalAddress(), m);
 		} catch (ChannelNotConnectedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -312,7 +312,11 @@ public class TribeManager extends ReceiverAdapter implements Mappable, TribeMana
 		if ( msg.getObject() instanceof SmokeSignal ) {
 			SmokeSignal r = (SmokeSignal) msg.getObject();
 			r.processMessage();
-		} else if ( msg.getObject() instanceof Request ) {
+		} else if ( msg.getObject() instanceof Request && 
+				    ( !((Request) msg.getObject()).isIgnoreRequestOnSender() || 
+				      !channel.getLocalAddress().equals(msg.getSrc())
+				    )
+		       ) {
 			Request q = (Request) msg.getObject();
 			Answer a = q.getAnswer();
 			//System.err.println(myName + "My Answer is " + a.acknowledged() );
@@ -340,14 +344,23 @@ public class TribeManager extends ReceiverAdapter implements Mappable, TribeMana
 		}
 	}
 
+	/**
+	 * Send a request on a specific server identified by the address a.
+	 * If a happens to be null, the request is send to each server in the cluster (askAnyBody!). In this case, if the
+	 * request was blocking (isBlocking() == true), the sender only receives the first answer that was send by any server.
+	 * 
+	 * @param q
+	 * @param a
+	 * @return
+	 */
 	public Answer askSomebody(Request q, Address a) {
 		
 		// If it's myself.
-		if ( channel.getLocalAddress().equals(a)) {
+		if ( a != null && channel.getLocalAddress().equals(a) && !q.isIgnoreRequestOnSender()) {
 			return q.getAnswer();
 		}
 		try {
-			channel.send(a, null, q);
+			channel.send(a, channel.getLocalAddress(), q);
 		} catch (ChannelNotConnectedException e) {
 			e.printStackTrace();
 		} catch (ChannelClosedException e) {
@@ -364,9 +377,7 @@ public class TribeManager extends ReceiverAdapter implements Mappable, TribeMana
 	}
 	
 	/**
-	 * Ask a question to the chief.
-	 * Ask Chief should be possible via webservice!!! Implement this....
-	 * 
+	 * Ask a question to the chief. 
 	 * 
 	 * @param q
 	 * @return
@@ -397,25 +408,7 @@ public class TribeManager extends ReceiverAdapter implements Mappable, TribeMana
 				//System.err.println("I Am the Chief, hence I'll answer");
 				return q.getAnswer();
 			}
-			try {
-				channel.send(theChief.getAddress(), null, q);
-			} catch (ChannelNotConnectedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (ChannelClosedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			// Only wait for answer if request is blocking.
-			if ( q.isBlocking() ) {
-				answerWaiters.add(q);
-				//System.err.println("Adding request in answerWaiters: " + q.getGuid() + ", size is: " + answerWaiters.size() );
-				Answer w = waitForAnswer(q);
-				//System.err.println(">>>>>>>>>>>>>>>>>>>>>>> Got answer from chief: " + w.acknowledged());
-				return w;
-			}
-			
+			return askSomebody(q, theChief.getAddress());
 		}
 		
 		return null;
@@ -476,6 +469,28 @@ public class TribeManager extends ReceiverAdapter implements Mappable, TribeMana
 	  System.err.println("ip address = " + Inet4Address.getLocalHost().getHostAddress());
 	}
 
+	/**
+	 * Broadcasts a Navajo service to other servers. Do not wait for the response.
+	 * 
+	 * @param in
+	 * @throws Exception
+	 */
+	public void broadcast(Navajo in) throws Exception {
+
+		String origin = in.getHeader().getHeaderAttribute("origin");
+		if ( origin == null || origin.equals("")) { // Set origin attribute to prevent broadcast ping-pong....
+			in.getHeader().setHeaderAttribute("origin", Dispatcher.getInstance().getNavajoConfig().getInstanceName());
+			ServiceRequest sr = new ServiceRequest(in);
+			sr.setIgnoreRequestOnSender(true);
+			sr.setBlocking(false);
+			askSomebody(sr, null);
+		}
+	}
+	
+	/**
+	 * Forward a Navajo service to the least busy server. The response is returned.
+	 * 
+	 */
 	public Navajo forward(Navajo in) throws Exception {
 		System.err.println(myName + ": in forward(" + in.getHeader().getRPCName() + ")");
 		TribeMember alt =  getClusterState().getLeastBusyTribalMember();
