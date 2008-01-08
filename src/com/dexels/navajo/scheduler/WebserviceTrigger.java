@@ -48,7 +48,6 @@ public class WebserviceTrigger extends Trigger implements Serializable {
 	private boolean singleEvent = false;
 	
 	public WebserviceTrigger(String description) {
-		AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Creating webservice trigger: " + description);
 		
 		myDescription = description;
 		int parmIndex = myDescription.indexOf("?");
@@ -143,6 +142,7 @@ public class WebserviceTrigger extends Trigger implements Serializable {
 	}
 	
 	public void activateTrigger() {
+		AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Activating webservice trigger: " + myDescription);	
 		WebserviceListenerRegistry.getInstance().registerTrigger(this);
 	}
 }
