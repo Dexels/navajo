@@ -164,7 +164,12 @@ public final class DefaultExpressionEvaluator
       o = ( (com.dexels.navajo.document.base.BasePropertyImpl) current).
           peekEvaluatedValue();
       try {
-        current.refreshExpression();
+        try {
+			current.refreshExpression();
+		} catch (ExpressionChangedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     } catch (NavajoException e) {
         System.err.println("Expression failed: "+current.getValue());
 
