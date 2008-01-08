@@ -28,6 +28,7 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.enterprise.scheduler.WebserviceListenerRegistryInterface;
+import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
 import com.dexels.navajo.tribe.SmokeSignal;
 import com.dexels.navajo.tribe.TribeManager;
 import com.dexels.navajo.workflow.WorkFlowManager;
@@ -113,7 +114,6 @@ public final class WebserviceListenerRegistry implements WebserviceListenerRegis
 	 */
 	public final void afterWebservice(String webservice, Access a) {
 
-		//System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> <<<<<<<<<<<<<<<<<< IN afterWebservice(" + webservice + ")");
 		// Return immediately if webservice is not contained in afterWebservices set, i.e. there is
 		// no listener interested in this webservice.
 		if ( !ListenerStore.getInstance().isRegisteredWebservice(webservice) ) {
