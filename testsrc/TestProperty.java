@@ -106,7 +106,7 @@ public class TestProperty extends TestCase {
 		
 		// StopwatchTime
 		Date d2 = new java.util.Date();
-		String format = new SimpleDateFormat("HH:mm:ss:SS").format(d2);
+		String format = new SimpleDateFormat("HH:mm:ss:SSS").format(d2);
 		StopwatchTime swt = new StopwatchTime(format);
 		p1.setAnyValue(swt);
 		assertEquals("stopwatchtime", p1.getType());
