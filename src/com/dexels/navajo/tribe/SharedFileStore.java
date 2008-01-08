@@ -166,12 +166,14 @@ public class SharedFileStore implements SharedStoreInterface {
 		File p = new File(sharedStore, parent);
 		File [] fs = p.listFiles(); 
 		// Sort files on last modification date
-		Arrays.sort(fs, new FileComparator());
-		//System.err.println("fs = " + fs);
-		if ( fs != null ) {
-			for (int i = 0; i < fs.length; i++) {
-				if ( fs[i].isFile()) {
-					names.add(fs[i].getName());
+		if ( fs != null) {
+			Arrays.sort(fs, new FileComparator());
+			//System.err.println("fs = " + fs);
+			if ( fs != null ) {
+				for (int i = 0; i < fs.length; i++) {
+					if ( fs[i].isFile()) {
+						names.add(fs[i].getName());
+					}
 				}
 			}
 		}
