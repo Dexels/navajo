@@ -208,6 +208,10 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 		}	
 	}
 	
+	private final boolean needsPersistence(Task t) {
+		return ( !t.getTrigger().isSingleEvent() && ( t.getWorkflowDefinition() == null || t.getWorkflowDefinition().equals("") ) );
+	}
+	
 	private long getConfigTimeStamp() {
 		if (  Dispatcher.getInstance() != null && Dispatcher.getInstance().getNavajoConfig() != null ) {
 			java.io.File f = new java.io.File(Dispatcher.getInstance().getNavajoConfig().getConfigPath() + "/" + TASK_CONFIG);
@@ -310,9 +314,9 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 		Iterator<Task> iters = tasks.values().iterator();
 		while ( iters.hasNext() ) {
 			Task t = iters.next();
-			if (t.getWorkflowDefinition() == null || t.getWorkflowDefinition().equals("") || !t.getTrigger().isSingleEvent() ) {
+			if ( needsPersistence(t) ) {
 				if ( !currentTasks.contains(t.getId()) ) {
-					System.err.println("Removing removed task from tasks.xml: " + t.getId() + " with trigger " + t.getTriggerDescription());
+					System.err.println("Removing removed task from tasks.xml: " + t.getId() + " with trigger " + t.getTriggerDescription() + ", workflow definition:" + t.getWorkflowDefinition());
 					t.setRemove(true);
 				}
 			}
@@ -599,7 +603,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 				t.setRemove(true);
 				return false;
 			}
-			AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Adding task: " + id);
+			AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Adding task: " + id + ", workflow definition: " + t.getWorkflowDefinition());
 			tasks.put(id, t);
 			t.setId(id);
 			t.getTrigger().activateTrigger();
@@ -610,7 +614,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 			Navajo taskDoc = null;
 
 			// Only write to task.xml if NOT single event and if NOT workflow task.
-			if ( !t.getTrigger().isSingleEvent() && ( t.getWorkflowDefinition() == null || t.getWorkflowDefinition().equals("") ) ) {
+			if ( needsPersistence(t) ) {
 
 				SharedStoreLock ssl = null;
 				try {
