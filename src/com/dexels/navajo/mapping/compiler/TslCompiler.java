@@ -1992,7 +1992,8 @@ result.append(printIdent(ident + 4) +
 	  
 	  boolean debugInput = false;
 	  boolean debugOutput = false;
-
+	  boolean broadcast = false;
+	  
 	  try {
 	      Document tslDoc = null;
 	      StringBuffer result = new StringBuffer();
@@ -2017,6 +2018,8 @@ result.append(printIdent(ident + 4) +
 	      String debugLevel = tslElt.getAttribute("debug");
 	      debugInput = (debugLevel.indexOf("request") != -1);
 	      debugOutput = (debugLevel.indexOf("response") != -1);
+	      
+	      broadcast = (tslElt.getAttribute("broadcast").indexOf("true") != -1);
 
 	      String importDef = (packagePath.equals("") ? "" :
 	                          "package " + MappingUtils.createPackageName(packagePath) +
@@ -2027,6 +2030,7 @@ result.append(printIdent(ident + 4) +
 	          "import com.dexels.navajo.parser.*;\n" +
 	          "import java.util.ArrayList;\n" +
 	          "import java.util.HashMap;\n" +
+	          "import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;\n" +
 	          "import java.util.Stack;\n\n\n";
 	      result.append(importDef);
 
@@ -2091,6 +2095,15 @@ result.append(printIdent(ident + 4) +
 	        result.append("System.err.println(\"\\n --------- END NAVAJO RESPONSE ---------\\n\");\n");
 	      }
 
+	      if ( broadcast) {
+	    	  result.append("try { \n");
+	    	  result.append("   TribeManagerFactory.getInstance().broadcast(inDoc);\n");
+	    	  result.append("} catch (Exception e) { \n");
+	    	  result.append("   e.printStackTrace(System.err);\n");
+	    	  result.append("}\n");
+	      }
+	    
+	      
 	      result.append("}// EOM\n");
 
 	      // Add generated methods.
