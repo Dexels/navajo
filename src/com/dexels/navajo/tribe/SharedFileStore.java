@@ -10,12 +10,17 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Iterator;
 
 import com.dexels.navajo.server.Dispatcher;
 
 public class SharedFileStore implements SharedStoreInterface {
 
+	
 	class LockFiles implements FilenameFilter {
 
 		String parent;
@@ -33,6 +38,24 @@ public class SharedFileStore implements SharedStoreInterface {
 		
 	}
 	
+	class FileComparator implements Comparator{
+
+		public int compare(Object o1, Object o2){
+			if(o1 == o2)
+				return 0;
+
+			File f1 = (File) o1;
+			File f2 = (File) o2;
+
+			if(f1.isDirectory() && f2.isFile())
+				return -1;
+			if(f1.isFile() && f2.isDirectory())
+				return 1;
+
+			return (new Long(f1.lastModified())).compareTo(new Long(f2.lastModified()));
+		}
+	}
+	
 	private static String sharedStoreName = "sharedstore";
 	private File sharedStore = null;
 	private static Object lockSemaphore = new Object();
@@ -47,7 +70,7 @@ public class SharedFileStore implements SharedStoreInterface {
 	
 	
 	private final boolean lockExists(SharedStoreLock ssl) {
-		System.err.println("Check if lock exists: " + ssl);
+		//System.err.println("Check if lock exists: " + ssl);
 		File [] files = sharedStore.listFiles(new LockFiles(ssl.parent, ssl.name));
 		if ( files.length > 0 ) {
 			// Check age of lock.
@@ -92,9 +115,11 @@ public class SharedFileStore implements SharedStoreInterface {
 	}
 	
 	public SharedFileStore() {
-		sharedStore = new File(Dispatcher.getInstance().getNavajoConfig().getRootPath() + "/" + sharedStoreName);
-		if ( !sharedStore.exists() ) {
-			sharedStore.mkdirs();
+		if ( Dispatcher.getInstance() != null ) {
+			sharedStore = new File(Dispatcher.getInstance().getNavajoConfig().getRootPath() + "/" + sharedStoreName);
+			if ( !sharedStore.exists() ) {
+				sharedStore.mkdirs();
+			}
 		}
 	}
 	
@@ -139,7 +164,9 @@ public class SharedFileStore implements SharedStoreInterface {
 		//System.err.println("In getObjects(" + parent + ")");
 		ArrayList<String> names = new ArrayList<String>();
 		File p = new File(sharedStore, parent);
-		File [] fs = p.listFiles();
+		File [] fs = p.listFiles(); 
+		// Sort files on last modification date
+		Arrays.sort(fs, new FileComparator());
 		//System.err.println("fs = " + fs);
 		if ( fs != null ) {
 			for (int i = 0; i < fs.length; i++) {
@@ -161,7 +188,7 @@ public class SharedFileStore implements SharedStoreInterface {
 					new GetLockRequest( parent, name, lockType, block));
 			return la.mySsl;
 		} else {
-			System.err.println("ABOUT TO LOCK: (" + parent + "," + name + "," + lockType + ")");
+			//System.err.println("ABOUT TO LOCK: (" + parent + "," + name + "," + lockType + ")");
 			SharedStoreLock ssl = new SharedStoreLock(name, parent);
 			ssl.lockType = lockType;
 			ssl.owner = Dispatcher.getInstance().getNavajoConfig().getInstanceName();
@@ -172,7 +199,7 @@ public class SharedFileStore implements SharedStoreInterface {
 					if ( !lockExists(ssl) ) {
 						try {
 							writeLock(ssl);
-							System.err.println("WROTE LOCK, RETURNING LOCK FOR " + ssl.parent + "/" + ssl.name + " TO " + ssl.owner );
+							//System.err.println("WROTE LOCK, RETURNING LOCK FOR " + ssl.parent + "/" + ssl.name + " TO " + ssl.owner );
 							return ssl;
 						} catch (Exception e) {
 							e.printStackTrace(System.err);
@@ -192,7 +219,7 @@ public class SharedFileStore implements SharedStoreInterface {
 		} else {
 			synchronized (lockSemaphore) {
 				if ( lock != null ) {
-					System.err.println("RELEASING LOCK " + lock.parent + "/" + lock.name + " FOR " + lock.owner);
+					//System.err.println("RELEASING LOCK " + lock.parent + "/" + lock.name + " FOR " + lock.owner);
 					File f = new File(sharedStore, constructLockName(lock));
 					f.delete();
 				}
@@ -305,6 +332,25 @@ public class SharedFileStore implements SharedStoreInterface {
 				release(ssl);
 			}
 		}
+	}
+	
+	public void test() {
+		File f = new File("/home/arjen/Pictures");
+		File [] fs = f.listFiles();
+		ArrayList<String> names = new ArrayList<String>();
+		Arrays.sort(fs, new FileComparator());
+		for (int i = 0; i < fs.length; i++) {
+			names.add(fs[i].getName());
+		}
+		Iterator<String> i = names.iterator();
+		while ( i.hasNext() ) {
+			System.err.println(i.next());
+		}
+	}
+	
+	public static void main (String [] args) throws Exception {
+		SharedFileStore sfs = new SharedFileStore();
+		sfs.test();
 	}
 
 }
