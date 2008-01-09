@@ -309,6 +309,7 @@ public class TribeManager extends ReceiverAdapter implements Mappable, TribeMana
 	}
 	
 	public void receive(org.jgroups.Message msg) {
+		
 		if ( msg.getObject() instanceof SmokeSignal ) {
 			SmokeSignal r = (SmokeSignal) msg.getObject();
 			r.processMessage();
@@ -340,7 +341,7 @@ public class TribeManager extends ReceiverAdapter implements Mappable, TribeMana
 				answerWaiters.notify();
 			}
 		} else {
-			AuditLog.log(AuditLog.AUDIT_MESSAGE_TRIBEMANAGER, "Received unknown message: " + msg);
+			AuditLog.log(AuditLog.AUDIT_MESSAGE_TRIBEMANAGER, "Received unknown or irrelevant message: " + msg);
 		}
 	}
 
@@ -479,6 +480,7 @@ public class TribeManager extends ReceiverAdapter implements Mappable, TribeMana
 
 		String origin = in.getHeader().getHeaderAttribute("origin");
 		if ( origin == null || origin.equals("")) { // Set origin attribute to prevent broadcast ping-pong....
+			System.err.println("Going to broadcast service to other members....");
 			in.getHeader().setHeaderAttribute("origin", Dispatcher.getInstance().getNavajoConfig().getInstanceName());
 			ServiceRequest sr = new ServiceRequest(in);
 			sr.setIgnoreRequestOnSender(true);

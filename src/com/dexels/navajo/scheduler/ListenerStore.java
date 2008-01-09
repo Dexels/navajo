@@ -178,18 +178,15 @@ public final class ListenerStore {
 					lis = (Trigger) ssi.get(activatedListeners, allNames[i]);
 					boolean isWorkflow = ( lis.getTask().getWorkflowId() != null );
 					boolean myWorkflow = ( lis.getTask().getWorkflowId() != null && WorkFlowManager.getInstance().hasWorkflowId(lis.getTask().getWorkflowId()));
-					System.err.println(Dispatcher.getInstance().getNavajoConfig().getInstanceName() +  ": In performActivatedListeners(), lis " + lis.getDescription() + ", isWorkflow = " + isWorkflow + ", myWorkflow = " + myWorkflow);
 					
 					if (!isWorkflow || myWorkflow) {
 						if (!isWorkflow) {
 							locked = lock(lis.getListenerId(), true);
 							if ( locked ) {
-								System.err.println(Dispatcher.getInstance().getNavajoConfig().getInstanceName() + ": GOT LOCK ON " + lis.getListenerId());
 								performed = true;
 								lis.perform();
 							}
 						} else {
-							System.err.println(Dispatcher.getInstance().getNavajoConfig().getInstanceName() + ": GOT PREFERRED WORKFLOW LOCK ON " + lis.getListenerId());
 							performed = true;
 							lis.perform();
 						}
