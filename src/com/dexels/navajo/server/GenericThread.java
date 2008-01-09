@@ -71,7 +71,9 @@ public class GenericThread extends NotificationBroadcasterSupport implements Run
 	
 	public void finishThread() {
 		System.err.println("Finishing GenericThread: " + myId);
-		threadPool.remove(myId);
+		if ( threadPool != null ) {
+			threadPool.remove(myId);
+		}
 	}
 	
 	public void startThread(GenericThread instance) {
