@@ -707,6 +707,7 @@ public class NavajoClient implements ClientInterface {
 //  }
 
   private final void generateConnectionError(Navajo n, int id, String description) {
+	 
     try {
       Message conditionError = NavajoFactory.getInstance().createMessage(n, "ConditionErrors", Message.MSG_TYPE_ARRAY);
       n.addMessage(conditionError);
@@ -850,10 +851,10 @@ public class NavajoClient implements ClientInterface {
         }
         catch (java.net.SocketException uhe) {
           Navajo n2 = NavajoFactory.getInstance().createNavajo();
-          n = retryTransaction(server, out, useCompression, allowPreparseProxy, retryAttempts, retryInterval, n); // lees uit resource
+          n = retryTransaction(server, out, useCompression, allowPreparseProxy, retryAttempts, retryInterval, n2); // lees uit resource
           if (n != null) {
              
-              System.err.println("METHOD: "+method+" sourcehead: "+callingService+" sourceSource: "+out.getHeader().getHeaderAttribute("sourceScript")+" outRPCName: "+n.getHeader().getRPCName());
+              //System.err.println("METHOD: "+method+" sourcehead: "+callingService+" sourceSource: "+out.getHeader().getHeaderAttribute("sourceScript")+" outRPCName: "+n.getHeader().getRPCName());
               n.getHeader().setHeaderAttribute("sourceScript", callingService);
           } else {
         	  n = n2;
@@ -864,9 +865,9 @@ public class NavajoClient implements ClientInterface {
         	//readErrorStream(myCon);
           System.err.println("Generic IOException: "+uhe.getMessage()+". Retrying without compression...");
           Navajo n2 = NavajoFactory.getInstance().createNavajo();
-          n = retryTransaction(server, out, false, allowPreparseProxy, retryAttempts, retryInterval, n); // lees uit resourc
+          n = retryTransaction(server, out, false, allowPreparseProxy, retryAttempts, retryInterval, n2); // lees uit resourc
           if (n != null) {
-              System.err.println("METHOD: "+method+" sourcehead: "+callingService+" sourceSource: "+out.getHeader().getHeaderAttribute("sourceScript")+" outRPCName: "+n.getHeader().getRPCName());
+              //System.err.println("METHOD: "+method+" sourcehead: "+callingService+" sourceSource: "+out.getHeader().getHeaderAttribute("sourceScript")+" outRPCName: "+n.getHeader().getRPCName());
               n.getHeader().setHeaderAttribute("sourceScript", callingService);
           } else {
         	  n = n2;
@@ -1051,8 +1052,8 @@ private final Navajo retryTransaction(String server, Navajo out, boolean useComp
     	}
     	else {
     		attemptsLeft--;
-    		System.err.println("Sending: ");
-    		out.write(System.err);
+//    		System.err.println("Sending: ");
+//    		out.write(System.err);
     		return retryTransaction(server, out, false, allowPreparseProxy, attemptsLeft, interval, n);
     	}
     }
@@ -1544,24 +1545,7 @@ private final Navajo retryTransaction(String server, Navajo out, boolean useComp
   
   public static void main(String[] args) throws Exception {
 	  
-	    NavajoClient nc = new NavajoClient();
-	  	Navajo doc =  NavajoFactory.getInstance().createNavajo();
-	  	Header h = NavajoFactory.getInstance().createHeader(doc, "InitNavajoStatus", "", "", -1);
-	  	doc.addHeader(h);
-	  	
-	    long start = System.currentTimeMillis();
-	    int total = 100;
-	    for ( int i = 0; i < total; i++ ) {
-	    	System.err.println("i = " + i);
-	    	Navajo doc2 = nc.doTransaction("penelope1.dexels.com/sportlink/knvb/servlet/Postman", doc, true, false);
-		   
-		    //doc2.write(System.err);
-		  
-	    }
-	    System.err.println("Took: " + ( ( System.currentTimeMillis() - start ) / 1000.0 ) / total );
-//	    System.err.println(response.toString());
-//	    doc2.write(System.err);
-	    
+	
   }
 
 public void destroy() {
