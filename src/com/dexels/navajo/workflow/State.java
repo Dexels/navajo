@@ -187,16 +187,16 @@ public final class State implements Serializable, Mappable {
 		transitions = new Transition[copy.size()];
 		transitions = copy.toArray(transitions);
 		
-		return transitions;
+		return transitions.clone();
 		
 	}
 
 	public Date getEntryDate() {
-		return entryDate;
+		return (Date) entryDate.clone();
 	}
 
 	public Date getLeaveDate() {
-		return leaveDate;
+		return (Date) leaveDate.clone();
 	}
 
 	public final boolean getKilled() {

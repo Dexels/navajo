@@ -125,11 +125,10 @@ public class WorkFlow implements Mappable, Serializable {
 					currentState = s;
 				} catch (Exception e) {
 					System.err.println("Could not parse workflow state " + name + " of workflowdefinition " + this.getDefinition());
-					e.printStackTrace(System.err);
+					WorkFlowManager.log(this, null, e.getMessage(), e);
+					setKill(true);
 				}
 				return s;
-				
-			
 		} finally {
 			
 		}
@@ -144,12 +143,18 @@ public class WorkFlow implements Mappable, Serializable {
 	
 	public void setKill(boolean b) {
 		if ( b ) {
+			kill = true;
 			if ( currentState != null ) {
 				System.err.println("Workflow " + getMyId() + " got killed!");
 				currentState.setKill();
+				WorkFlowManager.log(this, null, "killed", null);
 			}
 			finish();
 		}
+	}
+	
+	public boolean isKilled() {
+		return kill;
 	}
 	
 	public void kill() {
@@ -161,17 +166,27 @@ public class WorkFlow implements Mappable, Serializable {
 	public void store() throws MappableException, UserException {
     }
 
+	/**
+	 * Gets the defining name of this workflow.
+	 * 
+	 * @return
+	 */
 	public String getDefinition() {
 		return definition;
 	}
 
+	/**
+	 * Gets the unique workflow id for this workflow instance.
+	 * 
+	 * @return
+	 */
 	public String getMyId() {
 		return myId;
 	}
 	
 	public void finish() {
-		System.err.println("Workflow " + getMyId() + " is finished");
 		WorkFlowManager.getInstance().removePersistedWorkFlow(this);
+		WorkFlowManager.log(this, null, "finished " + ( kill ? "(got killed)" : ""), null);
 		WorkFlowManager.getInstance().removeWorkFlow(this);
 	}
 	
@@ -183,10 +198,10 @@ public class WorkFlow implements Mappable, Serializable {
 	}
 
 	public static void main(String [] args) throws Exception {
-		WorkFlow wf = new WorkFlow("", "", null, "ROOT");
-		wf.addParameter("Name", new Integer(43453));
-		wf.addParameter("Name", "Dexels");
-		wf.localNavajo.write(System.err);
+//		WorkFlow wf = new WorkFlow("", "", null, "ROOT");
+//		wf.addParameter("Name", new Integer(43453));
+//		wf.addParameter("Name", "Dexels");
+//		wf.localNavajo.write(System.err);
 	}
 
 	public State getCurrentState() {

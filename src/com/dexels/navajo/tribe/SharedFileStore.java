@@ -10,7 +10,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -18,57 +17,73 @@ import java.util.Iterator;
 
 import com.dexels.navajo.server.Dispatcher;
 
+/**
+ * LockFiles is used to filter lock files.
+ * 
+ * @author arjen
+ *
+ */
+class LockFiles implements FilenameFilter {
+
+	String parent;
+	String basename;
+
+	public LockFiles(String parent, String name) {
+		this.parent = parent.replace('/', '_');
+		this.basename = name;
+	}
+
+	public boolean accept(File dir, String name) {
+		return name.endsWith(parent + "_" + basename + ".lock");
+	}
+
+}
+
+/**
+ * FileComparator is used for sorting files based on modification date.
+ * 
+ * @author arjen
+ *
+ */
+class FileComparator implements Comparator{
+
+	public int compare(Object o1, Object o2){
+		
+		if(o1 == o2) {
+			return 0;
+		}
+
+		File f1 = (File) o1;
+		File f2 = (File) o2;
+
+		if(f1.isDirectory() && f2.isFile())
+			return -1;
+		if(f1.isFile() && f2.isDirectory())
+			return 1;
+
+		return (new Long(f1.lastModified())).compareTo(new Long(f2.lastModified()));
+	}
+}
+
 public class SharedFileStore implements SharedStoreInterface {
 
-	
-	class LockFiles implements FilenameFilter {
-
-		String parent;
-		String basename;
-		
-		public LockFiles(String parent, String name) {
-			this.parent = parent.replace('/', '_');
-			this.basename = name;
-		}
-		
-		public boolean accept(File dir, String name) {
-			//System.err.println("CHECK IF " + name + " ends with: " + parent + "_" + basename + ".lock");
-			return name.endsWith(parent + "_" + basename + ".lock");
-		}
-		
-	}
-	
-	class FileComparator implements Comparator{
-
-		public int compare(Object o1, Object o2){
-			if(o1 == o2)
-				return 0;
-
-			File f1 = (File) o1;
-			File f2 = (File) o2;
-
-			if(f1.isDirectory() && f2.isFile())
-				return -1;
-			if(f1.isFile() && f2.isDirectory())
-				return 1;
-
-			return (new Long(f1.lastModified())).compareTo(new Long(f2.lastModified()));
-		}
-	}
 	
 	private static String sharedStoreName = "sharedstore";
 	private File sharedStore = null;
 	private static Object lockSemaphore = new Object();
 	
 	private final String constructLockName(SharedStoreLock ssl) {
-		return ssl.owner + "_" + ssl.parent.replace('/', '_') + "_" + ssl.name + ".lock";
+		return constructLockName(ssl.parent, ssl.name, ssl.owner);
 	}
 	
 	private final String constructLockName(String parent, String name, String owner) {
 		return owner + "_" + parent.replace('/', '_') + "_" + name + ".lock";
 	}
 	
-	
+	/*
+	 * Check whether lock exists for specified SharedStoreLock. If lock time-out is passed, delete timed-out lock and
+	 * return no lock exists.
+	 */
 	private final boolean lockExists(SharedStoreLock ssl) {
 		//System.err.println("Check if lock exists: " + ssl);
 		File [] files = sharedStore.listFiles(new LockFiles(ssl.parent, ssl.name));
@@ -89,7 +104,6 @@ public class SharedFileStore implements SharedStoreInterface {
 	
 	private final SharedStoreLock readLock(String parent, String name, String owner) throws Exception {
 		File f = new File(sharedStore, constructLockName(parent, name, owner));
-		//System.err.println("CHECK IF FILE " + f.getName() + " EXISTS...");
 		if (f.exists()) {
 			SharedStoreLock ssl =  new SharedStoreLock(name, parent);
 			ssl.owner = owner;
@@ -160,6 +174,9 @@ public class SharedFileStore implements SharedStoreInterface {
 		}
 	}
 
+	/**
+	 * Gets the names of all objects in the shared file store sorted by 'oldest' object first.
+	 */
 	public String [] getObjects(String parent) {
 		//System.err.println("In getObjects(" + parent + ")");
 		ArrayList<String> names = new ArrayList<String>();

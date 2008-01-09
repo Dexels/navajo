@@ -19,7 +19,6 @@ public class ServiceRequest extends Request {
 		String origin = request.getHeader().getHeaderAttribute("origin");
 		if ( origin != null && !origin.equals("")) {
 			if ( origin.equals(Dispatcher.getInstance().getNavajoConfig().getInstanceName())) {
-				System.err.println("IGNORING BROADCAST FROM MYSELF................");
 				return null;
 			}
 		}

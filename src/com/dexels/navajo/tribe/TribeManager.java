@@ -460,7 +460,7 @@ public class TribeManager extends ReceiverAdapter implements Mappable, TribeMana
 	public TribeMember[] getMembers() {
 		members = new TribeMember[state.clusterMembers.size()];
 		members = state.clusterMembers.toArray(members);
-		return members;
+		return members.clone();
 	}
 	
 	public static void main(String [] args) throws Exception {
@@ -492,9 +492,7 @@ public class TribeManager extends ReceiverAdapter implements Mappable, TribeMana
 	 * 
 	 */
 	public Navajo forward(Navajo in) throws Exception {
-		System.err.println(myName + ": in forward(" + in.getHeader().getRPCName() + ")");
 		TribeMember alt =  getClusterState().getLeastBusyTribalMember();
-		System.err.println(myName + ": LEAST BUSY: " + alt.getMemberName());
 		if ( alt != null ) {
 			ServiceAnswer sa = (ServiceAnswer) askSomebody(new ServiceRequest(in), alt.getAddress());
 			return sa.getResponse();

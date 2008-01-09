@@ -98,7 +98,7 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 	 * Evaluate all parameters.
 	 *
 	 */
-	private final void evaluateParameters(Task t, State usethisState) {
+	private final void evaluateParameters(Task t, State usethisState)  {
 
 		Navajo n = null;
 		if ( t.getTrigger().getAccess() != null ) {
@@ -153,6 +153,8 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 					}
 				} catch (Exception e) {
 					e.printStackTrace(System.err);
+					WorkFlowManager.log(this.myState.getWorkFlow(), this, e.getMessage(), e);
+					this.myState.getWorkFlow().setKill(true);
 				} 
 			}
 		}
@@ -190,7 +192,6 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 		// If single event trigger, reinit trigger (to prevent time triggers from the past for offsettimes).
 		if ( myTask.getTrigger().isSingleEvent() ) {
 			try {
-				System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> REINITIALIZING TRIGGER: " + trigger);
 				myTask.setTrigger(trigger);
 			} catch (UserException e) {
 				e.printStackTrace(System.err);
@@ -225,9 +226,7 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 		}
 		
 		try {
-			System.err.println("CHECKING " + myCondition);
 			boolean b =  Condition.evaluate(myCondition, n);
-			System.err.println("B = " + b);
 			return b;
 		} catch (Throwable e) {
 			// Could not evaluate condition, hence must return false.
@@ -245,8 +244,11 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 				evaluateParameters(t, myState);
 				myState.leave();
 
-				if ( nextState != null && !nextState.equals(Transition.FINISH) ) {
-					myState.getWorkFlow().createState(nextState, t.getTrigger().getAccess()).enter(true);
+				if ( nextState != null && !nextState.equals(Transition.FINISH) ) { 
+					State ns = myState.getWorkFlow().createState(nextState, t.getTrigger().getAccess());
+					if ( ns != null ) {
+						ns.enter(true);
+					}
 				} else {
 					myState.getWorkFlow().finish();
 				}
@@ -265,16 +267,19 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 	}
 
 	public final boolean beforeTask(Task t) {
-		
+
 		if ( beforeTrigger && isMyTransitionTaskTrigger(t) ) {
-			
-			
+
+
 			if ( enterNextState(t) ) {
-//				 First evaluate all parameters that need to be set with this transition.
+//				First evaluate all parameters that need to be set with this transition.
 				evaluateParameters(t, myState);
 				myState.leave();
 				if ( nextState != null && !nextState.equals(Transition.FINISH) ) {
-					myState.getWorkFlow().createState(nextState, t.getTrigger().getAccess()).enter(false);
+					State ns = myState.getWorkFlow().createState(nextState, t.getTrigger().getAccess());
+					if ( ns != null ) {
+						ns.enter(false);
+					}
 				} else {
 					myState.getWorkFlow().finish();
 				}
@@ -283,7 +288,7 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 				return false;
 			}
 		}
-		
+
 		return true;
 	}
 

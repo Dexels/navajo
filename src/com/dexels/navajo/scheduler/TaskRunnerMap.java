@@ -191,10 +191,10 @@ public class TaskRunnerMap implements Mappable {
 	
 	public TaskMap [] getTasks() throws UserException, MappableException {
 		TaskRunner tr = TaskRunner.getInstance();
-		Collection all = tr.getTasks().values();
+		Collection<Task> all = tr.getTasks().values();
 		
 		TaskMap [] tm = new TaskMap[all.size()];
-		Iterator iter = all.iterator();
+		Iterator<Task> iter = all.iterator();
 		int index = 0;
 		while ( iter.hasNext() ) {
 			Task t = (Task) iter.next();

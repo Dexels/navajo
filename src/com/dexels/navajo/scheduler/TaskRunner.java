@@ -75,8 +75,8 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 	// Maximum number of tasks.
 	private int maxSize = 100000;
 	private static volatile TaskRunner instance = null;
-	private final Map tasks = Collections.synchronizedMap(new HashMap());
-	private final ArrayList taskListeners = new ArrayList();
+	private final Map<String,Task> tasks = Collections.synchronizedMap(new HashMap<String,Task>());
+	private final ArrayList<TaskListener> taskListeners = new ArrayList<TaskListener>();
 	private long configTimestamp = -1;
 	
 		
@@ -414,7 +414,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 	}
 	
 	private Message containsTask(Message allTasks, String id) throws Exception {
-		ArrayList list = allTasks.getAllMessages();
+		ArrayList<Message> list = allTasks.getAllMessages();
 		for (int i = 0; i < list.size(); i++) {
 			if ( ((Message) list.get(i)).getProperty("id").getValue().equals(id) ) {
 				return (Message) list.get(i);
@@ -423,11 +423,11 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 		return null;
 	}
 	
-	public ArrayList getFinishedTasks(String username, String fromDate) {
+	public ArrayList<Task> getFinishedTasks(String username, String fromDate) {
 		
 		SharedStoreInterface si = SharedStoreFactory.getInstance();
 		
-		ArrayList result = new ArrayList();
+		ArrayList<Task> result = new ArrayList<Task>();
 		BufferedReader fr = null;
 		try {
 			fr = new BufferedReader( new InputStreamReader(si.getStream("log", TASK_LOG_FILE) ) ) ;
@@ -689,7 +689,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 		return true;
 	}
 	
-	public Map getTasks() {
+	public Map<String,Task> getTasks() {
 		return tasks;
 	}
 	
@@ -708,10 +708,6 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 
 	public String getVERSION() {
 		return VERSION;
-	}
-	
-	private static final synchronized void resetInstance() {
-		instance = null;
 	}
 	
 	public void terminate() {

@@ -28,7 +28,6 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.enterprise.scheduler.WebserviceListenerRegistryInterface;
-import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
 import com.dexels.navajo.tribe.SmokeSignal;
 import com.dexels.navajo.tribe.TribeManager;
 import com.dexels.navajo.workflow.WorkFlowManager;

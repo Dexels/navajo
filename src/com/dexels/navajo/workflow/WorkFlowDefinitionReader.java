@@ -85,6 +85,10 @@ public final class WorkFlowDefinitionReader {
 		XMLElement def = readDefinition(definitionFile);
 		XMLElement state = findState(def, name);
 		
+		if ( state == null ) {
+			throw new Exception("Could not find state " + name + " in definition file");
+		}
+		
 		Vector transitions = state.getElementsByTagName(WorkFlowDefinitionReader.TRANSITION_ELT);
 		for (int i = 0; i < transitions.size(); i++) {
 			XMLElement t = (XMLElement) transitions.get(i);

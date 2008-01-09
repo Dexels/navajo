@@ -87,9 +87,7 @@ public abstract class Trigger implements Listener, Serializable {
 	
 	private Task myTask = null;
 
-	private boolean active = false;
 	private String owner = null;
-	private String listenerId = null;
 	
 	private static Object semaphore = new Object();
 	

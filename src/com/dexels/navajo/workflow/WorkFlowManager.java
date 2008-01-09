@@ -1,11 +1,14 @@
 package com.dexels.navajo.workflow;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Random;
 
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.scheduler.Task;
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.server.GenericThread;
@@ -13,6 +16,7 @@ import com.dexels.navajo.server.jmx.JMXHelper;
 import com.dexels.navajo.tribe.SharedStoreException;
 import com.dexels.navajo.tribe.SharedStoreFactory;
 import com.dexels.navajo.tribe.SharedStoreInterface;
+import com.dexels.navajo.tribe.SharedStoreLock;
 import com.dexels.navajo.tribe.TribeManager;
 import com.dexels.navajo.util.AuditLog;
 
@@ -32,8 +36,10 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 	private static Object semaphore_instances = new Object();
 	private final ArrayList<WorkFlow> workflowInstances = new ArrayList<WorkFlow>();
 	private final HashMap<String,WorkFlowDefinition> workflowDefinitions = new HashMap<String,WorkFlowDefinition>();
-	private static String id = "Navajo WorkFlow Manager";
+	private final static String id = "Navajo WorkFlow Manager";
+	private final static String WORKFLOW_LOG_FILE = "workflow.log";
 	public static final String VERSION = "$Id$";
+	private static SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss:SSS dd-MM-yyyy");
 	
 	private String workflowPath = null;
 	private String baseWorkflowPath = null;
@@ -61,12 +67,11 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 
 			SharedStoreInterface ssi = SharedStoreFactory.getInstance();
 			String [] files = ssi.getObjects(workflowPath);
-
 			for (int i = 0; i < files.length; i++) {
 
 				try {
 					WorkFlow wf = (WorkFlow) ssi.get(workflowPath, files[i]);
-					if (!hasWorkflowId(wf.getMyId())) {
+					if (!hasWorkflowId(wf.getMyId()) && !wf.isKilled()) {
 						addWorkFlow(wf);
 						wf.revive();
 					}
@@ -149,6 +154,11 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 	}
 	
 	public boolean persistWorkFlow(WorkFlow wf) {
+		
+		if ( wf.isKilled() ) {
+			return false;
+		}
+		
 		synchronized (semaphore_instances) {
 			try {
 				SharedStoreFactory.getInstance().store(workflowPath, wf.getDefinition() + wf.getMyId(), wf, false, false);
@@ -172,9 +182,11 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 	}
 	
 	public void removeWorkFlow(WorkFlow wf) {
-		workflowInstances.remove(wf);
-		WorkFlowDefinition wdf = workflowDefinitions.get(wf.getDefinition());
-		wdf.instances--;
+		synchronized (semaphore_instances) {
+			workflowInstances.remove(wf);
+			WorkFlowDefinition wdf = workflowDefinitions.get(wf.getDefinition());
+			wdf.instances--;
+		}
 	}
 	
 	public void worker() {
@@ -201,7 +213,7 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 		ArrayList<WorkFlow> wfList = new ArrayList<WorkFlow>(mng.workflowInstances);
 		workflows = new WorkFlow[wfList.size()];
 		workflows = (WorkFlow []) wfList.toArray(workflows);
-		return workflows;
+		return workflows.clone();
 	}
 	
 	/**
@@ -282,7 +294,7 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 		ArrayList<WorkFlowDefinition> wfList = new ArrayList<WorkFlowDefinition>(mng.workflowDefinitions.values());
 		definitions = new WorkFlowDefinition[wfList.size()];
 		definitions = wfList.toArray(definitions);
-		return definitions;
+		return definitions.clone();
 	}
 
 	public void setWorkflowDef(String workflowDef) {
@@ -297,6 +309,49 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 		return workflowInstances.size();
 	}
 
+	protected static final synchronized void log(WorkFlow wf, Transition t, String errMsg, Exception ex) {
+
+		String csvHeader = "TIMESTAMP;WORKFLOWDEF;WORKFLOWID;USERNAME;STATE;TRANSITION;MESSAGE\n";
+
+		if ( errMsg != null ) {
+			errMsg = errMsg.replaceAll("\n", ".");
+		}
+
+		SharedStoreInterface si = SharedStoreFactory.getInstance();
+		SharedStoreLock ssl = null;
+
+		try {
+			
+			ssl = si.lock("log", WORKFLOW_LOG_FILE, SharedStoreInterface.READ_WRITE_LOCK, true);
+		
+			if ( !si.exists("log", WORKFLOW_LOG_FILE)) {
+				si.storeText("log", WORKFLOW_LOG_FILE, csvHeader, false, false);
+			}
+
+			StringBuffer contentLine = new StringBuffer();
+
+			contentLine.append(
+					sdf.format(new java.util.Date()) + ";" + 
+					wf.getDefinition() + ";" +
+					wf.getMyId() + ";" +
+					( wf.getCurrentState().initiatingAccess != null ? wf.getCurrentState().initiatingAccess.getRpcUser() : "") + ";" +
+					wf.getCurrentState().getId() + ";" +
+					( t != null ? t.getDescription() : "") + ";" +
+					errMsg +
+			"\n"); 
+
+			String logMsg = contentLine.toString();
+			si.storeText("log", WORKFLOW_LOG_FILE, logMsg, true, false);
+
+		} catch (Exception e) {
+			e.printStackTrace(System.err);
+		} finally {
+			if ( ssl != null ) {
+				si.release(ssl);
+			}
+		}
+	}
+	
 	public void terminate() {
 		try {
 			JMXHelper.deregisterMXBean(JMXHelper.NAVAJO_DOMAIN, id);

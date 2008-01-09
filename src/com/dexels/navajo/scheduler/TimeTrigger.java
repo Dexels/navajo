@@ -54,10 +54,7 @@ public class TimeTrigger extends Trigger implements Serializable, ClockListener 
 	private int monthday = -1;
 	private int hour = -1;
 	private int minute = -1;
-	private int fromMinute = -1;
-	private int toMinute = -1;
-	private ArrayList minutes = null;
-	private ArrayList day = null; /* SAT,SUN.MON,TUE,WED,FRI */
+	private ArrayList<String> day = null; /* SAT,SUN.MON,TUE,WED,FRI */
 	private String description = null;
 	private boolean singleEvent = false;
 	private boolean runImmediate = false;
@@ -120,11 +117,11 @@ public class TimeTrigger extends Trigger implements Serializable, ClockListener 
 			String ms = tokens.nextToken();
 			if (ms != null && !ms.equals("*")) {
 				if ( ms.indexOf(",") == -1 ) {
-					day = new ArrayList();
+					day = new ArrayList<String>();
 					day.add(ms);
 				} else {
 					StringTokenizer days = new StringTokenizer(ms, ",");
-					day = new ArrayList();
+					day = new ArrayList<String>();
 					while ( days.hasMoreTokens() ) {
 						day.add(days.nextToken());
 					}
@@ -152,7 +149,7 @@ public class TimeTrigger extends Trigger implements Serializable, ClockListener 
 		return singleEvent;
 	}
 	
-	public TimeTrigger(int year, int month, int monthday, int hour, int minute, ArrayList day) throws Exception {
+	public TimeTrigger(int year, int month, int monthday, int hour, int minute, ArrayList<String> day) throws Exception {
 		this.year = year;
 		this.month = month - 1;
 		this.monthday = monthday;

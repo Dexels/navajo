@@ -447,7 +447,7 @@ public class Task implements Runnable, TaskMXBean, TaskInterface, Serializable {
 	 * @return
 	 */
 	public Date getFinishedTime() {
-		return finishedTime;
+		return (Date) finishedTime.clone();
 	}
 
 	/**
@@ -456,7 +456,7 @@ public class Task implements Runnable, TaskMXBean, TaskInterface, Serializable {
 	 * @param finishedTime
 	 */
 	public void setFinishedTime(Date finishedTime) {
-		this.finishedTime = finishedTime;
+		this.finishedTime = (Date) finishedTime.clone();
 	}
 
 	/**
@@ -465,7 +465,7 @@ public class Task implements Runnable, TaskMXBean, TaskInterface, Serializable {
 	 * @return
 	 */
 	public Date getStartTime() {
-		return startTime;
+		return (Date) startTime.clone();
 	}
 
 	/**
@@ -474,7 +474,7 @@ public class Task implements Runnable, TaskMXBean, TaskInterface, Serializable {
 	 * @param startTime
 	 */
 	public void setStartTime(Date startTime) {
-		this.startTime = startTime;
+		this.startTime = (Date) startTime.clone();
 	}
 
 	public String getErrorMessage() {

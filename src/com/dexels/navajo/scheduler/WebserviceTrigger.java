@@ -43,7 +43,7 @@ public class WebserviceTrigger extends Trigger implements Serializable {
 	public String myDescription;
 	
 	private boolean alarm = false;
-	private HashMap commands = new HashMap();
+	private HashMap<String,String> commands = new HashMap<String,String>();
 	
 	private boolean singleEvent = false;
 	

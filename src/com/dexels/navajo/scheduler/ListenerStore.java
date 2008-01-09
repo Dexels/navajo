@@ -2,7 +2,6 @@ package com.dexels.navajo.scheduler;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Set;
 
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.tribe.GetLockRequest;
@@ -16,10 +15,11 @@ import com.dexels.navajo.workflow.WorkFlowManager;
 
 public final class ListenerStore {
 
-	public static final Object semaphore = new Object();
-	private static Object semaphore_init = new Object();
-	public static final String storeLocation = "listeners";
-	public static final String activatedListeners = "listeners/activated";
+	public final static Object semaphore = new Object();
+	private final static Object semaphore_init = new Object();
+	private final static Object semaphore_lock = new Object();
+	private final static String storeLocation = "listeners";
+	public final static  String activatedListeners = "listeners/activated";
 	private volatile static ListenerStore instance = null;
 	
 	private SharedStoreInterface ssi = null;
@@ -63,7 +63,7 @@ public final class ListenerStore {
 	 * @return
 	 */
 	public final boolean lock(String type, boolean activatedlisteners) {
-		synchronized (storeLocation) {
+		synchronized (semaphore_lock) {
 			// Get lock on TimeTrigger listeners store.
 			LockAnswer la = (LockAnswer) TribeManager.getInstance().askChief(
 					new GetLockRequest( ( activatedlisteners ? activatedListeners : storeLocation ), type, SharedStoreInterface.READ_WRITE_LOCK, false));
@@ -77,7 +77,7 @@ public final class ListenerStore {
 	 * @return
 	 */
 	public final void release(String type, boolean activatedlisteners) {
-		synchronized (storeLocation) {
+		synchronized (semaphore_lock) {
 			// Release lock.
 			TribeManager.getInstance().askChief(new RemoveLockRequest(( activatedlisteners ? activatedListeners : storeLocation ), type));
 		}
@@ -237,9 +237,9 @@ public final class ListenerStore {
 		synchronized (registeredWebservices) {
 			Integer i = registeredWebservices.get(name);
 			if ( i == null ) {
-				i = new Integer(1);
+				i = Integer.valueOf(1);
 			} else {
-				i = new Integer(i.intValue() + 1);
+				i =  Integer.valueOf(i.intValue() + 1);
 			}
 			registeredWebservices.put(name, i);
 		}
@@ -258,7 +258,7 @@ public final class ListenerStore {
 			if ( i == null ) {
 				return;
 			}
-			i = new Integer(i.intValue() -1 );
+			i = Integer.valueOf(i.intValue() -1 );
 			if ( i.intValue() > 0 ) {
 				registeredWebservices.put(name, i);
 			} else {
