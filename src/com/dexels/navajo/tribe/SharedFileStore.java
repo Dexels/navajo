@@ -1,3 +1,27 @@
+/**
+ * Title:        Navajo<p>
+ * Description:  This file is part of the Navajo Service Oriented Application Framework<p>
+ * Copyright:    Copyright 2002-2008 (c) Dexels BV<p>
+ * Company:      Dexels<p>
+ * @author Arjen Schoneveld
+ * @version $Id$
+ *
+ * DISCLAIMER
+ *
+ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED.  IN NO EVENT SHALL DEXELS BV OR ITS CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
+ * OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
+ * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+ * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+ * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ * ====================================================================
+ */
 package com.dexels.navajo.tribe;
 
 import java.io.File;
@@ -45,16 +69,13 @@ class LockFiles implements FilenameFilter {
  * @author arjen
  *
  */
-class FileComparator implements Comparator{
+class FileComparator implements Comparator<File>{
 
-	public int compare(Object o1, Object o2){
+	public int compare(File f1, File f2){
 		
-		if(o1 == o2) {
+		if(f1 == f2) {
 			return 0;
 		}
-
-		File f1 = (File) o1;
-		File f2 = (File) o2;
 
 		if(f1.isDirectory() && f2.isFile())
 			return -1;
@@ -92,8 +113,11 @@ public class SharedFileStore implements SharedStoreInterface {
 			for (int i = 0; i < files.length; i++) {
 				if ( ( System.currentTimeMillis() - files[i].lastModified() ) > ssl.getLockTimeOut() ) {
 					// Lock has time-out, delete it.
-					files[i].delete();
-					return false;
+					if (files[i].delete()) {
+						return false; 
+					} else {
+						return false;
+					}
 				} else {
 					return true;
 				}
@@ -178,14 +202,12 @@ public class SharedFileStore implements SharedStoreInterface {
 	 * Gets the names of all objects in the shared file store sorted by 'oldest' object first.
 	 */
 	public String [] getObjects(String parent) {
-		//System.err.println("In getObjects(" + parent + ")");
 		ArrayList<String> names = new ArrayList<String>();
 		File p = new File(sharedStore, parent);
 		File [] fs = p.listFiles(); 
 		// Sort files on last modification date
 		if ( fs != null) {
 			Arrays.sort(fs, new FileComparator());
-			//System.err.println("fs = " + fs);
 			if ( fs != null ) {
 				for (int i = 0; i < fs.length; i++) {
 					if ( fs[i].isFile()) {

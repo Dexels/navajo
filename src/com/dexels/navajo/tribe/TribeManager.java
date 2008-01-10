@@ -1,3 +1,27 @@
+/**
+ * Title:        Navajo<p>
+ * Description:  This file is part of the Navajo Service Oriented Application Framework<p>
+ * Copyright:    Copyright 2002-2008 (c) Dexels BV<p>
+ * Company:      Dexels<p>
+ * @author Arjen Schoneveld
+ * @version $Id$
+ *
+ * DISCLAIMER
+ *
+ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIESmy
+ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED.  IN NO EVENT SHALL DEXELS BV OR ITS CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
+ * OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
+ * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+ * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+ * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ * ====================================================================
+ */
 package com.dexels.navajo.tribe;
 
 import java.net.Inet4Address;
@@ -39,7 +63,6 @@ import com.dexels.navajo.workflow.WorkFlowManager;
  *  
  * Think about current Navajo functionality consequences for Tribe:
  * 
- *  - Routing of async mappable webservices to correct server.
  *  - Task store should be local?? Triggered events should be global??
  *  - Integrity worker can be global.
  *  - Workflow definitions should be global?? Workflow instances should be local??
@@ -51,7 +74,7 @@ import com.dexels.navajo.workflow.WorkFlowManager;
  * @author arjen
  *
  */
-public class TribeManager extends ReceiverAdapter implements Mappable, TribeManagerInterface {
+public final class TribeManager extends ReceiverAdapter implements Mappable, TribeManagerInterface {
 
 	public String setChief;
 	public String chiefName;
@@ -62,13 +85,13 @@ public class TribeManager extends ReceiverAdapter implements Mappable, TribeMana
 	TribeMember myMembership = null;
 	TribeMember theChief = null;
 	
-	static Set<Request> answerWaiters = Collections.synchronizedSet(new HashSet<Request>());
+	private final static Set<Request> answerWaiters = Collections.synchronizedSet(new HashSet<Request>());
 	private final static ClusterState state = new ClusterState();
 	
 	private static String myName;
-	protected static boolean initializing = false;
+	private static boolean initializing = false;
 	private static TribeManager instance = null;
-	private static Object semaphore = new Object();
+	private final static Object semaphore = new Object();
 	
 	public TribeMember [] members = null;
 	
@@ -166,7 +189,6 @@ public class TribeManager extends ReceiverAdapter implements Mappable, TribeMana
 	public byte[] getState() {
 		try {
 			synchronized (state) {
-				//System.err.println(myName + ": IN getState(), sending clusterMembers: " + state.clusterMembers.size() );
 				return Util.objectToByteBuffer(state);
 			}
 		}
@@ -179,11 +201,8 @@ public class TribeManager extends ReceiverAdapter implements Mappable, TribeMana
 	public void setState(byte[] new_state) {
 		try {
 			ClusterState cs = (ClusterState) Util.objectFromByteBuffer(new_state);
-			//System.err.println(myName + ": FirstMember IS: " + cs.firstMember);
-			//System.err.println(myName + ": IN setState(), received clusterMembers: " + cs.clusterMembers.size() );
 			HashSet<TribeMember> tribalMap= cs.clusterMembers;
 			synchronized (state) {
-				//System.err.println(myName + ": CLEARING CLUSTERMEMBERS SET");
 				state.clusterMembers.clear();
 				state.clusterMembers.addAll(tribalMap);
 			}
@@ -215,6 +234,7 @@ public class TribeManager extends ReceiverAdapter implements Mappable, TribeMana
 				if ( mbr.getAddress().equals(chiefAddress)) {
 					mbr.setChief(true);
 					theChief = mbr;
+					state.notifyAll();
 				} else {
 					mbr.setChief(false);
 				}
@@ -236,13 +256,12 @@ public class TribeManager extends ReceiverAdapter implements Mappable, TribeMana
 			// Check if I have become the chief.
 			if ( new_view.getMembers().get(0).equals(myMembership.getAddress() )) {
 				myMembership.setChief(true);
-				//System.err.println("I HAVE BECOME THE CHIEF!!!!!!");
 			}
 			
 			// Check whether members have died.
-			Vector pv = previousView.getMembers();
+			Vector<Address> pv = previousView.getMembers();
 			for ( int i = 0; i < pv.size(); i++ ) {
-				if (!new_view.containsMember((Address) pv.get(i) ) ) {
+				if (!new_view.containsMember( pv.get(i) ) ) {
 					System.err.println(myName + "THIS ONE DIED: " + ((IpAddress) pv.get(i)).getPort() );
 					synchronized (state) {
 						Set<TribeMember> copyOf = new HashSet<TribeMember>(state.clusterMembers);
@@ -269,7 +288,7 @@ public class TribeManager extends ReceiverAdapter implements Mappable, TribeMana
 		return theChief;
 	}
 	
-	private void deActivateMember(TribeMember ptm) {
+	private final void deActivateMember(TribeMember ptm) {
 		System.err.println("DEACTIVATING MEMBER: " + ptm.getAddress() );
 		if ( myMembership.isChief() ) {
 			System.err.println("MOVING DISTRIBUTED SHARED DATA!!!");
@@ -277,7 +296,7 @@ public class TribeManager extends ReceiverAdapter implements Mappable, TribeMana
 		}
 	}
 	
-	private void moveSharedStoreData(TribeMember ptm) {
+	private final void moveSharedStoreData(TribeMember ptm) {
 		WorkFlowManager.getInstance().takeOverPersistedWorkFlows(ptm.getMemberName());
 		RequestResponseQueue.getInstance().getMyStore().takeOverPersistedAdapters(ptm.getMemberName());
 	}
@@ -350,9 +369,9 @@ public class TribeManager extends ReceiverAdapter implements Mappable, TribeMana
 	 * If a happens to be null, the request is send to each server in the cluster (askAnyBody!). In this case, if the
 	 * request was blocking (isBlocking() == true), the sender only receives the first answer that was send by any server.
 	 * 
-	 * @param q
-	 * @param a
-	 * @return
+	 * @param q the Request
+	 * @param a the Address of somebody
+	 * @return the Answer
 	 */
 	public Answer askSomebody(Request q, Address a) {
 		
@@ -380,23 +399,30 @@ public class TribeManager extends ReceiverAdapter implements Mappable, TribeMana
 	/**
 	 * Ask a question to the chief. 
 	 * 
-	 * @param q
-	 * @return
+	 * @param q the Request
+	 * @return the Answer
 	 */
 	public Answer askChief(Request q) {
 
-		synchronized (semaphore) {
-			while (initializing || theChief == null) {
-				if ( initializing ) {
-					try {
-						semaphore.wait();
-					} catch (InterruptedException e) {
+		if ( initializing ) {
+			synchronized (semaphore) {
+				while (initializing ) {
+					if ( initializing ) {
+						try {
+							semaphore.wait();
+						} catch (InterruptedException e) {
+						}
 					}
 				}
-				if (theChief == null) {
+			}
+		}
+		
+		if ( theChief == null ) {
+			synchronized (state) {
+				while (theChief == null) {
 					try {
-						Thread.sleep(100);
 						AuditLog.log(AuditLog.AUDIT_MESSAGE_TRIBEMANAGER, "Waiting for the Chief...");
+						state.wait();
 					} catch (InterruptedException e) {
 					}
 				}
@@ -434,7 +460,7 @@ public class TribeManager extends ReceiverAdapter implements Mappable, TribeMana
 		return myMembership.isChief();
 	}
 
-	public Answer waitForAnswer(Request q) {
+	private final Answer waitForAnswer(Request q) {
 		synchronized (answerWaiters) {
 			while (containsWaitingRequest(q) ) {
 				try {
@@ -448,16 +474,30 @@ public class TribeManager extends ReceiverAdapter implements Mappable, TribeMana
 		return q.getPredefinedAnswer();
 	}
 	
+	/**
+	 * Terminate the membership of this tribe member.
+	 * 
+	 */
 	public void terminate() {
 		AuditLog.log(AuditLog.AUDIT_MESSAGE_TRIBEMANAGER, "Closing JGROUPS channel...");
 		instance.channel.disconnect();
 		instance.channel.close();
 	}
 	
+	/**
+	 * Get the current state of the cluster.
+	 * 
+	 * @return the ClusterState
+	 */ 
 	public ClusterState getClusterState() {
 		return state;
 	}
 	
+	/**
+	 * Get all member states.
+	 * 
+	 * @return array with TribeMember instances
+	 */
 	public TribeMember[] getMembers() {
 		members = new TribeMember[state.clusterMembers.size()];
 		members = state.clusterMembers.toArray(members);
@@ -468,12 +508,13 @@ public class TribeManager extends ReceiverAdapter implements Mappable, TribeMana
 		System.err.println("Determining IP address...");
 		System.setProperty("java.net.preferIPv4Stack", "true");
 	  System.err.println("ip address = " + Inet4Address.getLocalHost().getHostAddress());
+	  
 	}
 
 	/**
-	 * Broadcasts a Navajo service to other servers. Do not wait for the response.
+	 * Broadcasts a Navajo service to other servers. Do NOT wait for the response.
 	 * 
-	 * @param in
+	 * @param in the request document
 	 * @throws Exception
 	 */
 	public void broadcast(Navajo in) throws Exception {
@@ -490,8 +531,10 @@ public class TribeManager extends ReceiverAdapter implements Mappable, TribeMana
 	}
 	
 	/**
-	 * Forward a Navajo service to the least busy server. The response is returned.
+	 * Forward a Navajo service request to the least busy tribe member.
 	 * 
+	 * @param in the request document
+	 * @return the response document
 	 */
 	public Navajo forward(Navajo in) throws Exception {
 		TribeMember alt =  getClusterState().getLeastBusyTribalMember();
@@ -503,12 +546,13 @@ public class TribeManager extends ReceiverAdapter implements Mappable, TribeMana
 		}
 	}
 
+	/**
+	 * Get my instance name.
+	 * 
+	 * @return
+	 */
 	public String getMyName() {
 		return myName;
-	}
-
-	public void setChief(boolean isChief) {
-		this.isChief = isChief;
 	}
 	
 }
