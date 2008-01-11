@@ -68,14 +68,15 @@ public class NavajoClassLoader extends MultiClassLoader {
     private String compiledScriptPath = "";
     private static Object mutex1 = new Object();
     private static Object mutex2 = new Object();
-    private HashSet jarResources = null;
-    private HashSet betaJarResources = null;
+    private HashSet<JarResources> jarResources = null;
+    private HashSet<JarResources> betaJarResources = null;
     
     private boolean noCaching = false;
     
     private static int instances = 0;
     
-    private volatile Class myScriptClass = null;
+    @SuppressWarnings("unchecked")
+	private volatile Class myScriptClass = null;
     
     /**
      * beta flag denotes whether beta versions of jar files should be used (if present).
@@ -129,7 +130,8 @@ public class NavajoClassLoader extends MultiClassLoader {
      * @return
      * @throws ClassNotFoundException
      */
-    public final Class getCompiledNavaScript(String script) throws ClassNotFoundException {
+    @SuppressWarnings("unchecked")
+	public final Class getCompiledNavaScript(String script) throws ClassNotFoundException {
 
       if ( myScriptClass != null ) {
     	  return myScriptClass;
@@ -189,7 +191,8 @@ public class NavajoClassLoader extends MultiClassLoader {
     /**
      * Always use this method to load a class. It uses the cache first before retrieving the class from a jar resource.
      */
-    public Class getClass(String className) throws ClassNotFoundException {
+    @SuppressWarnings("unchecked")
+	public Class getClass(String className) throws ClassNotFoundException {
     	//System.err.println("in getClass("+className+")");
     	try {
     		return Class.forName(className, false, this);
@@ -245,7 +248,7 @@ public class NavajoClassLoader extends MultiClassLoader {
 
 
     			if (jarResources == null) {
-    				jarResources = new HashSet();
+    				jarResources = new HashSet<JarResources>();
     				for (int i = 0; i < files.length; i++) {
     					JarResources d = new JarResources(files[i]);
     					jarResources.add(d);
@@ -264,7 +267,7 @@ public class NavajoClassLoader extends MultiClassLoader {
 
 
     			if (betaJarResources == null) {
-    				betaJarResources = new HashSet();
+    				betaJarResources = new HashSet<JarResources>();
     				for (int i = 0; i < files.length; i++) {
     					JarResources d = new JarResources(files[i]);
     					betaJarResources.add(d);
@@ -289,12 +292,12 @@ public class NavajoClassLoader extends MultiClassLoader {
 
       // If beta classloader first try betaJarResources.
       if ( beta ) {
-    	  Iterator allResources = betaJarResources.iterator();
+    	  Iterator<JarResources> allResources = betaJarResources.iterator();
           /// for (int i = 0; i < files.length; i++) {
           //System.err.println("NavajoClassLoader: Locating " + name + " in beta jar file");
           while (allResources.hasNext()) {
 
-        	  JarResources d = (JarResources) allResources.next();
+        	  JarResources d = allResources.next();
 
         	  try {
 
@@ -312,12 +315,12 @@ public class NavajoClassLoader extends MultiClassLoader {
           return this.getClass().getClassLoader().getResourceAsStream(name);
       }
       
-      Iterator allResources = jarResources.iterator();
+      Iterator<JarResources> allResources = jarResources.iterator();
       /// for (int i = 0; i < files.length; i++) {
       //System.err.println("NavajoClassLoader: Locating " + name + " in normal jar file");
       while (allResources.hasNext()) {
 
-    	  JarResources d = (JarResources) allResources.next();
+    	  JarResources d = allResources.next();
 
     	  try {
 
@@ -365,13 +368,13 @@ public class NavajoClassLoader extends MultiClassLoader {
         // If beta flag is on first check beta versions of jar files before other jars.
         if ( beta && betaJarResources != null ) {
 
-        	   Iterator allResources = betaJarResources.iterator();
+        	   Iterator<JarResources> allResources = betaJarResources.iterator();
                /// for (int i = 0; i < files.length; i++) {
                
                //System.err.println("Message: NavajoClassLoader: Locating " + className + " in beta jar file");
                while (allResources.hasNext()) {
 
-                  JarResources d = (JarResources) allResources.next();
+                  JarResources d = allResources.next();
 
                     try {
                         
@@ -391,13 +394,13 @@ public class NavajoClassLoader extends MultiClassLoader {
 
         if (resource == null) {
 
-           Iterator allResources = jarResources.iterator();
+           Iterator<JarResources> allResources = jarResources.iterator();
            /// for (int i = 0; i < files.length; i++) {
            
            //System.err.println("Message: NavajoClassLoader: Locating " + className + " in normal jar file");
            while (allResources.hasNext()) {
 
-              JarResources d = (JarResources) allResources.next();
+              JarResources d = allResources.next();
 
                 try {
                     
@@ -431,31 +434,31 @@ public class NavajoClassLoader extends MultiClassLoader {
     
     public static void main(String [] args) throws Exception {
     	
-    	int total = 2;
-    	if ( args.length > 0 ) {
-    		 total = Integer.parseInt(args[0]);
-    	}
-    	
-    	NavajoConfig nc = new NavajoConfig(null, null);
-    	
-    	NavajoClassLoader [] ncl = new NavajoClassLoader[total];
-    	NavajoClassLoader parent = new NavajoClassLoader("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/adapters", "/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/classes", nc.getClass().getClassLoader());
-    	
-    	
-    	for (int i = 0; i < total; i++) {
-    		
-    		
-    		ncl[i] = new NavajoClassLoader(null, "/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/classes", parent);
-    		System.err.println("ncl["+i+"] = " + ncl[i].hashCode());
-    		Class c3 = Class.forName("com.dexels.navajo.functions.ParseDouble", true, ncl[i]);
-    		
-    		Class c = ncl[i].getCompiledNavaScript("club.InitUpdateClub");
-    		Class c2 = Class.forName("java.lang.String", true, ncl[i]);
-    		System.err.println(i + ": club.InitUpdateClub = " + c.hashCode() + ", java.lang.String = " + c2.hashCode() + ", ParseDouble = " + c3.hashCode());
-    		Class c5 = ncl[i].getCompiledNavaScript("club.InitUpdateClub");
-    		Class c6 = Class.forName("com.dexels.navajo.functions.ParseDouble", true, ncl[i]);
-    	}
-    	
+//    	int total = 2;
+//    	if ( args.length > 0 ) {
+//    		 total = Integer.parseInt(args[0]);
+//    	}
+//    	
+//    	NavajoConfig nc = new NavajoConfig(null, null);
+//    	
+//    	NavajoClassLoader [] ncl = new NavajoClassLoader[total];
+//    	NavajoClassLoader parent = new NavajoClassLoader("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/adapters", "/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/classes", nc.getClass().getClassLoader());
+//    	
+//    	
+//    	for (int i = 0; i < total; i++) {
+//    		
+//    		
+//    		ncl[i] = new NavajoClassLoader(null, "/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/classes", parent);
+//    		System.err.println("ncl["+i+"] = " + ncl[i].hashCode());
+//    		Class c3 = Class.forName("com.dexels.navajo.functions.ParseDouble", true, ncl[i]);
+//    		
+//    		Class c = ncl[i].getCompiledNavaScript("club.InitUpdateClub");
+//    		Class c2 = Class.forName("java.lang.String", true, ncl[i]);
+//    		System.err.println(i + ": club.InitUpdateClub = " + c.hashCode() + ", java.lang.String = " + c2.hashCode() + ", ParseDouble = " + c3.hashCode());
+//    		Class c5 = ncl[i].getCompiledNavaScript("club.InitUpdateClub");
+//    		Class c6 = Class.forName("com.dexels.navajo.functions.ParseDouble", true, ncl[i]);
+//    	}
+//    	
     	
     }
 }

@@ -26,9 +26,6 @@ package com.dexels.navajo.lockguard;
 
 
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.StringTokenizer;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.mapping.Mappable;
@@ -67,7 +64,7 @@ public class LockDefinition implements Mappable {
 	public String webservice;      // regular expression.
 	public boolean matchUsername;  // if true, username is matched in order to determine existing lock.
 	public boolean matchRequest;   // if true, request Navajo is matched in order to determine existing lock.
-	public HashMap excludeProperties;  // list of properties that are excluded for request matching
+	public HashMap<String,String> excludeProperties;  // list of properties that are excluded for request matching
 	public int timeOut;            // set timeout for retrying request, if 0, don't wait at all, if -1, wait forever...
 	
 	/**
@@ -99,7 +96,7 @@ public class LockDefinition implements Mappable {
 				String webservice,
 				boolean matchUsername,
 				boolean matchRequest,
-				HashMap excludeProperties,
+				HashMap<String,String> excludeProperties,
 				int timeOut,
 				int maxInstanceCount
 				) {

@@ -7,7 +7,7 @@ import com.dexels.navajo.server.enterprise.queue.Queable;
 
 public class MemoryStore implements MessageStore {
 
-	private static Stack store = new Stack();
+	private static Stack<Queable> store = new Stack<Queable>();
 	
 	public Queable getNext()  throws Exception {
 		System.err.println("Getting work from store, size = " + store.size());
@@ -42,12 +42,12 @@ public class MemoryStore implements MessageStore {
 		
 	}
 
-	public HashSet getQueuedAdapters() {
+	public HashSet<QueuedAdapter> getQueuedAdapters() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public HashSet getDeadQueue() {
+	public HashSet<QueuedAdapter> getDeadQueue() {
 		// TODO Auto-generated method stub
 		return null;
 	}

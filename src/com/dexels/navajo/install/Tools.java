@@ -195,7 +195,8 @@ public class Tools {
      * @param fileOut
      * @param tokens
      */
-    public static void copyAndReplaceTokens(String fileIn, String fileOut, HashMap tokens) throws IOException, FileNotFoundException {
+    @SuppressWarnings("unchecked")
+	public static void copyAndReplaceTokens(String fileIn, String fileOut, HashMap tokens) throws IOException, FileNotFoundException {
 
     	
         BufferedReader reader = new java.io.BufferedReader(new java.io.InputStreamReader(new FileInputStream(new File(fileIn))));
@@ -206,10 +207,10 @@ public class Tools {
 
         while ((line = reader.readLine()) != null) {
             if (tokens != null) {
-                Iterator allTokens = tokens.entrySet().iterator();
+                Iterator<Entry<String,String>> allTokens = tokens.entrySet().iterator();
 
                 while (allTokens.hasNext()) {
-                	Entry e = (Entry) allTokens.next();
+                	Entry<String,String> e = allTokens.next();
                     String token = e.getKey().toString();
                     String value = e.getValue().toString();
 

@@ -12,7 +12,7 @@ public class BroadcastMessage {
 	private final int timeToLive;
 	private final String recipientExpression;
 	private final long created = System.currentTimeMillis();
-	private final Set sentToClientIds = new HashSet();
+	private final Set<String> sentToClientIds = new HashSet<String>();
 	
 	public BroadcastMessage(String message, int timeToLive, String recipientExpression) {
 		this.message = message;
@@ -38,8 +38,8 @@ public class BroadcastMessage {
 		return true;
 	}
 	
-	public Map createMap() {
-		Map m = new HashMap();
+	public Map<String,String> createMap() {
+		Map<String,String> m = new HashMap<String,String>();
 		m.put("type", "broadcast");
 		m.put("message", message);
 		m.put("timeToLive", ""+timeToLive);

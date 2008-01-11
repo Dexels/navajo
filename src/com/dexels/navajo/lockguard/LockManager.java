@@ -30,23 +30,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
-import com.dexels.navajo.integrity.Worker;
-import com.dexels.navajo.mapping.Mappable;
-import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.GenericThread;
 import com.dexels.navajo.server.NavajoConfig;
-import com.dexels.navajo.server.Parameters;
-import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.util.AuditLog;
 
 public final class LockManager extends GenericThread {
@@ -57,7 +50,7 @@ public final class LockManager extends GenericThread {
 	
 	public static final String VERSION = "$Id$";
 	
-	final Map lockDefinitions = Collections.synchronizedMap( new HashMap() );
+	final Map<Integer,LockDefinition> lockDefinitions = Collections.synchronizedMap( new HashMap<Integer,LockDefinition>() );
 	static volatile LockManager instance = null;
 	boolean readingDefinitions = true;
 	private long configTimestamp = -1;
@@ -99,6 +92,7 @@ public final class LockManager extends GenericThread {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	private final void readDefinitions() {
 
 		FileInputStream in = null;
@@ -179,6 +173,7 @@ public final class LockManager extends GenericThread {
 	 * @param a
 	 * @return
 	 */
+	@SuppressWarnings({ "unchecked", "unchecked" })
 	public final Lock [] grantAccess(Access a) throws LocksExceeded {
 		
 		while ( readingDefinitions ) {

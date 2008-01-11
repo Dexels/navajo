@@ -68,17 +68,17 @@ public class Worker extends GenericThread implements WorkerMXBean, WorkerInterfa
 	public static final String VERSION = "$Id$";
 	
 	private static volatile Worker instance = null;
-	private static String responseDir = null;
+	//private static String responseDir = null;
 	private static Object semaphore = new Object();
 	
 	// Worklist containst responses that still need to be written to a file.
-	private Map workList = new HashMap();
+	private Map<String,Navajo> workList = new HashMap<String,Navajo>();
 	// Integrity cache contains mapping between unique request id and response file.
-	private Map integrityCache = new HashMap();
+	private Map<String,File> integrityCache = new HashMap<String,File>();
 	// Contains all unique request ids that still need to be handled by the worker thread.
-	private Set notWrittenReponses = Collections.synchronizedSet(new HashSet());
+	private Set<String> notWrittenReponses = Collections.synchronizedSet(new HashSet<String>());
 	// Contains all currently running request ids.
-	private Map runningRequestIds = Collections.synchronizedMap(new HashMap());
+	private Map<String,Access> runningRequestIds = Collections.synchronizedMap(new HashMap<String,Access>());
 	
 	private final static String RESPONSE_PREFIX = "navajoresponse_";
 	private final static String myId = "Navajo Integrity Worker";
@@ -198,16 +198,16 @@ public class Worker extends GenericThread implements WorkerMXBean, WorkerInterfa
 	public final void worker() {
 		
 		// Check for new access objects in workList.
-		HashMap copyOfWorkList = null;
-		Set s = null;
+		HashMap<String,Navajo> copyOfWorkList = null;
+		Set<String> s = null;
 		synchronized (workList) {
-			copyOfWorkList = new HashMap(workList);
+			copyOfWorkList = new HashMap<String,Navajo>(workList);
 			workList.clear();
 		}
-		s = new HashSet(copyOfWorkList.keySet());
-		Iterator iter = s.iterator();
+		s = new HashSet<String>(copyOfWorkList.keySet());
+		Iterator<String> iter = s.iterator();
 		while (iter.hasNext()) {
-			String id = (String) iter.next();
+			String id = iter.next();
 			if ( id != null && !id.trim().equals("") ) {
 				writeFile( id, (Navajo) copyOfWorkList.get(id) );
 			}
@@ -222,11 +222,11 @@ public class Worker extends GenericThread implements WorkerMXBean, WorkerInterfa
 		}
 		
 		// Remove 'old' responses.
-		Set s2 = new HashSet(integrityCache.keySet());
-		Iterator i = s2.iterator();
+		Set<String> s2 = new HashSet<String>(integrityCache.keySet());
+		Iterator<String> i = s2.iterator();
 		long now = System.currentTimeMillis();
 		while ( i.hasNext() ) {
-			String id = (String) i.next();
+			String id = i.next();
 			File f = (File) integrityCache.get(id);
 			if ( f != null ) {
 				long birth = f.lastModified();
@@ -252,10 +252,10 @@ public class Worker extends GenericThread implements WorkerMXBean, WorkerInterfa
 	 * Clears the entire integrity cache.
 	 */
 	private void clearCache() {
-		Set s = new HashSet(integrityCache.keySet());
-		Iterator i = s.iterator();
+		Set<String> s = new HashSet<String>(integrityCache.keySet());
+		Iterator<String> i = s.iterator();
 		while ( i.hasNext() ) {
-			String id = (String) i.next();
+			String id = i.next();
 			File f = (File) integrityCache.get(id);
 			// remove file reference from integrity cache.
 			if ( !f.delete() ) {
@@ -458,7 +458,7 @@ public class Worker extends GenericThread implements WorkerMXBean, WorkerInterfa
 	}
 	
 	public String getVERSION() {
-		return this.VERSION;
+		return VERSION;
 	}
 	
 	public int getFileCount() {
