@@ -14,8 +14,8 @@
 	<classpathentry kind="lib" path="lib/jcommon-1.0.0.jar"/>
 	<classpathentry kind="lib" path="lib/servlet-api.jar"/>
 	<classpathentry kind="lib" path="lib/tucana-20060720.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JavaFX"/>
 	<classpathentry kind="lib" path="lib/jzlib.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/NavajoClient"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/NavajoFunctions"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
