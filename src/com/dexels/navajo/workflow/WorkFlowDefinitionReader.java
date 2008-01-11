@@ -67,6 +67,7 @@ public final class WorkFlowDefinitionReader {
 		return xml;
 	}
 	
+	@SuppressWarnings("unchecked")
 	private static final XMLElement findState(XMLElement xml, String name) {
 		Vector v = xml.getElementsByTagName(WorkFlowDefinitionReader.STATE_ELT);
 		for (int i = 0; i < v.size(); i++) {
@@ -78,6 +79,7 @@ public final class WorkFlowDefinitionReader {
 		return null;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static final State parseState(WorkFlow wf, String name, Access a) throws Exception {
 		
 		State s = new State(name, wf, a);
@@ -133,8 +135,8 @@ public final class WorkFlowDefinitionReader {
 			String trigger = readAttribute(t, WorkFlowDefinitionReader.TRIGGER_ATTR);
 			String condition = readAttribute(t, WorkFlowDefinitionReader.CONDITION_ATTR);
 			// Optional: username/password.
-			String username = readAttribute(t, WorkFlowDefinitionReader.USERNAME_ATTR);
-			String password = readAttribute(t, WorkFlowDefinitionReader.PASSWORD_ATTR);
+			//String username = readAttribute(t, WorkFlowDefinitionReader.USERNAME_ATTR);
+			//String password = readAttribute(t, WorkFlowDefinitionReader.PASSWORD_ATTR);
 			//  Optional, specificy whether to use request or response navajo of the current workflow state.
 			String navajo = readAttribute(t, WorkFlowDefinitionReader.NAVAJO_ATTR);
 			s.addTask(service, trigger, condition, navajo);
@@ -144,6 +146,7 @@ public final class WorkFlowDefinitionReader {
 		
 	}
 	
+	@SuppressWarnings("unchecked")
 	private static final WorkFlowDefinition createInitState(XMLElement xml, String definition, String filePath) throws WorkFlowDefinitionException { 
 
 		WorkFlowDefinition wfd = new WorkFlowDefinition(definition, filePath);
@@ -248,7 +251,7 @@ public final class WorkFlowDefinitionReader {
 			}
 		}
 		// Check for deleted workflows.
-		Iterator iter = initialTransitions.keySet().iterator();
+		Iterator<String> iter = initialTransitions.keySet().iterator();
 		while ( iter.hasNext() ) {
 			String name = (String) iter.next();
 			File f = new File(definitionPath, name + ".xml");

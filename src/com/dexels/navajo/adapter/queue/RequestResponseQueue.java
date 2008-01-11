@@ -30,7 +30,7 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 	private static volatile RequestResponseQueue instance = null;
 	private static Object semaphore = new Object();
 	private static String id = "Queued adapters";
-	public final static String VERSION = "$Id$";
+	public static final String VERSION = "$Id$";
 	private int MAX_THREADS = 25;
 	private long SLEEPING_TIME = 60000;
 	private int MAX_RETRIES = 10;
@@ -80,14 +80,14 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 		}
 		queuedAdapters = new QueuedAdapter[l.size()];
 		queuedAdapters = l.toArray(queuedAdapters);
-		return queuedAdapters;
+		return queuedAdapters.clone();
 	}
 	
 	public QueuedAdapter [] getQueuedAdapters() {
 		HashSet<QueuedAdapter> s = instance.myStore.getQueuedAdapters();
 		queuedAdapters = new QueuedAdapter[s.size()];
 		queuedAdapters = s.toArray(queuedAdapters);
-		return queuedAdapters;
+		return queuedAdapters.clone();
 
 	}
 		
@@ -95,7 +95,7 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 		HashSet<QueuedAdapter> s = instance.myStore.getDeadQueue();
 		deadQueue = new QueuedAdapter[s.size()];
 		deadQueue = s.toArray(deadQueue);
-		return deadQueue;
+		return deadQueue.clone();
 	}
 	
 	public void setUseQueue(boolean b) {
@@ -134,10 +134,11 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 	}
 	
 	public void send(Queable handler, int maxretries) throws Exception {
+
 		RequestResponseQueue rrq = RequestResponseQueue.getInstance();
 		handler.persistBinaries();
-		rrq.myStore.putMessage(handler, false);
 		synchronized (instance) {
+			rrq.myStore.putMessage(handler, false);	
 			instance.notifyAll();
 		}
 	}

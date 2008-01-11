@@ -18,7 +18,12 @@ package com.dexels.navajo.mapping;
 
 public class MappableException extends Exception {
 
-    public MappableException() {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -437908771360471541L;
+
+	public MappableException() {
         super();
     }
 

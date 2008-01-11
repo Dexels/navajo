@@ -7,8 +7,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Random;
 
-import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.scheduler.Task;
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.server.GenericThread;
@@ -105,7 +103,9 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 				instance.workflowDefinitionPath = Dispatcher.getInstance().getNavajoConfig().getRootPath() + "/workflows/definitions/";
 				File f1 = new File(instance.workflowDefinitionPath);
 				if ( !f1.exists() ) {
-					f1.mkdirs();
+					if (!f1.mkdirs()) {
+						throw new ExceptionInInitializerError("Could not create workflow definition root");
+					}
 				}
 				instance.configTimestamp = f1.lastModified();
 			}

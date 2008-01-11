@@ -12,11 +12,9 @@ package com.dexels.navajo.mapping;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.util.Util;
-import com.dexels.navajo.logger.NavajoPriority;
 import com.dexels.navajo.parser.*;
 
 import java.lang.reflect.*;
-import java.lang.reflect.Method;
 import java.util.*;
 
 import com.dexels.navajo.document.types.Memo;
@@ -26,6 +24,7 @@ import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.document.types.Percentage;
 import com.dexels.navajo.document.types.StopwatchTime;
 
+@SuppressWarnings("unchecked")
 public final class MappingUtils {
 
     public static final String getStrippedPropertyName(String name) {
@@ -467,7 +466,8 @@ public final class MappingUtils {
   }
 
 
-  public static final ArrayList getMessageList(Message msg, Navajo doc, String str, String filter, MappableTreeNode o, 
+  
+public static final ArrayList getMessageList(Message msg, Navajo doc, String str, String filter, MappableTreeNode o, 
   		Message currentParamMsg) throws
       NavajoException, SystemException, MappingException, TMLExpressionException {
     //try {
@@ -597,7 +597,7 @@ public final class MappingUtils {
   
   public static final boolean isSelection(Message msg, Navajo doc, String msgName) {
 
-    Message ref = null;
+    //Message ref = null;
     Property prop = null;
 
     if (msgName.startsWith(Navajo.MESSAGE_SEPARATOR)) { // Absolute reference!

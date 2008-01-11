@@ -17,6 +17,11 @@ package com.dexels.navajo.mapping;
 
 public class BreakEvent extends Exception {
 
-    public BreakEvent() {}
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 5785156069054008460L;
+
+	public BreakEvent() {}
 
 }

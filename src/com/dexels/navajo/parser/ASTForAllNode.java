@@ -7,7 +7,7 @@ import java.util.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.mapping.MappableTreeNode;
 
-
+@SuppressWarnings("unchecked")
 public final class ASTForAllNode extends SimpleNode {
 
     String functionName;
@@ -19,40 +19,7 @@ public final class ASTForAllNode extends SimpleNode {
         super(id);
     }
 
-    private static final String searchAndReplace(String text, String tag, String replace) {
-
-        StringBuffer result;
-        String before = "", last = "";
-        int start, end;
-
-        result = new StringBuffer();
-
-        start = 0;
-        end = -1;
-
-        start = text.indexOf(tag, end);
-
-        if (start == -1)
-            return text;
-
-        while (start != -1) {
-
-            before = text.substring(end + 1, start);
-            end = text.indexOf("]", start);
-
-            result.append(before);
-            result.append(replace);
-
-            start = text.indexOf(tag, end);
-            if (start == -1)
-                last = text.substring(end + 1, text.length());
-            result.append(last);
-        }
-
-        return result.toString();
-
-    }
-
+   
     /**
      * FORALL(<EXPRESSION>, `[$x] <EXPRESSION>`)
      * E.G. FORALL([/ClubMembership/ClubMemberships/ClubIdentifier], `CheckRelatieCode([$x])`)
@@ -87,8 +54,6 @@ public final class ASTForAllNode extends SimpleNode {
 
                 for (int i = 0; i < list.size(); i++) {
                     Object o = list.get(i);
-
-                    String value = "";
 
                     parentMsg = (Message) o;
 

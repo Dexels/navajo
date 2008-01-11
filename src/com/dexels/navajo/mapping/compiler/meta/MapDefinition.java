@@ -15,6 +15,7 @@ import com.dexels.navajo.document.nanoimpl.XMLElement;
  * @author arjen
  *
  */
+@SuppressWarnings("unchecked")
 public class MapDefinition {
 
 	public String tagName;
@@ -114,7 +115,7 @@ public class MapDefinition {
 				ValueDefinition pd = auto.next();
 				if ( pd.getRequired().equals("automatic") ) {
 					System.err.println("AUTOMATIC!!!!!!!!!!" + pd.getName());
-					XMLElement pdx = pd.generateCode(pd.getValue(), null, map, true, filename);
+					pd.generateCode(pd.getValue(), null, map, true, filename);
 					//out.addChild(pdx);
 				} else if ( pd.getRequired().equals("true") ) {
 					required.add(pd.getName());

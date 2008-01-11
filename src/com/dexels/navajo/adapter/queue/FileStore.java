@@ -23,16 +23,20 @@ public class FileStore implements MessageStore {
 	private final HashSet<String> currentObjects = new HashSet<String>();
 	private Iterator<String> objectPointer = null;
 	
+	private final static void setup() {
+		SharedStoreInterface ssi = SharedStoreFactory.getInstance();
+		path = "/adapterqueue/" + Dispatcher.getInstance().getNavajoConfig().getInstanceName();
+		ssi.createParent(path);
+		// Define deadqueue to put in failures that have more than max retries. 
+		// If some problem was solved in the mean time, simply put back file into normal queue.
+		deadQueue = path + "/failures";
+		ssi.createParent(deadQueue);
+	}
+	
 	public FileStore() {
 		synchronized (semaphore) {
 			if ( path == null ) {
-				SharedStoreInterface ssi = SharedStoreFactory.getInstance();
-				path = "/adapterqueue/" + Dispatcher.getInstance().getNavajoConfig().getInstanceName();
-				ssi.createParent(path);
-				// Define deadqueue to put in failures that have more than max retries. 
-				// If some problem was solved in the mean time, simply put back file into normal queue.
-				deadQueue = path + "/failures";
-				ssi.createParent(deadQueue);
+				setup();
 			}
 		}
 	}
@@ -130,7 +134,7 @@ public class FileStore implements MessageStore {
 				// Persist request data, make sure binary base file does not get garbage collected.
 				handler.persistBinaries();
 				if ( handler.getRequest() != null ) {
-					String fileRef = handler.getRequest().getTempFileName(true);
+					handler.getRequest().getTempFileName(true);
 				}
 				ssi.store( ( failure ? deadQueue : path ), f, handler, false, false);
 			} catch (Exception e) {
