@@ -35,11 +35,13 @@ import com.dexels.navajo.util.AuditLog;
  * ====================================================================
  */
 
+@SuppressWarnings("unchecked")
 public final class AsyncStore extends GenericThread implements AsyncStoreMXBean {
 
   private static final String VERSION = "$Id$";
 	
   private static volatile AsyncStore instance = null;
+  
   public Map objectStore = null;
   public Map accessStore = null;
   private float timeout;

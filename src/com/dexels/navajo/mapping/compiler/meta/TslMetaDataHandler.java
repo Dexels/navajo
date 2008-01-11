@@ -19,6 +19,7 @@ import com.dexels.navajo.mapping.compiler.meta.MetaDataListener;
  * To change the template for this generated type comment go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
+@SuppressWarnings("unchecked")
 public class TslMetaDataHandler implements MetaDataListener {
 
     private final TreeMap callsScriptMap = new TreeMap();

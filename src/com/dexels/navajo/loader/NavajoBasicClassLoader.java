@@ -18,6 +18,7 @@ public class NavajoBasicClassLoader extends NavajoClassSupplier {
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.loader.NavajoClassSupplier#getClass(java.lang.String)
 	 */
+	@SuppressWarnings("unchecked")
 	public Class getClass(String className) throws ClassNotFoundException {
 //	    System.err.println("Basic classloader supplying: "+className);
 		return Class.forName(className,true,this);
@@ -33,6 +34,7 @@ public class NavajoBasicClassLoader extends NavajoClassSupplier {
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.loader.NavajoClassSupplier#getCompiledNavaScript(java.lang.String)
 	 */
+	@SuppressWarnings("unchecked")
 	public Class getCompiledNavaScript(String className)
 			throws ClassNotFoundException {
 		String conv = className.replaceAll("/",".");

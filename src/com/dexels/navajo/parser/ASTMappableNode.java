@@ -8,7 +8,7 @@ import java.util.*;
 import com.dexels.navajo.mapping.MappableTreeNode;
 import com.dexels.navajo.mapping.MappingUtils;
 
-
+@SuppressWarnings("unchecked")
 public final class ASTMappableNode extends SimpleNode {
 
     String val = "";
@@ -60,8 +60,7 @@ public final class ASTMappableNode extends SimpleNode {
     }
 
     public static void main(String args[]) {
-        int a = 10;
-
+      
     }
 }
 

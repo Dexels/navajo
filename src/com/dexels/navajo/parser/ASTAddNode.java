@@ -3,7 +3,7 @@ package com.dexels.navajo.parser;
 
 import java.util.*;
 
-
+@SuppressWarnings("unchecked")
 public final class ASTAddNode extends SimpleNode {
 
     ASTAddNode(int id) {

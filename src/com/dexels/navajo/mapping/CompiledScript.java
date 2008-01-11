@@ -29,15 +29,14 @@ import com.dexels.navajo.loader.NavajoClassSupplier;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.server.jmx.JMXHelper;
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.mapping.MappingUtils;
 
-import java.lang.management.LockInfo;
 import java.lang.management.ThreadInfo;
 import java.util.*;
 
 import com.dexels.navajo.parser.Condition;
 import java.util.ArrayList;
 
+@SuppressWarnings("unchecked")
 public abstract class CompiledScript implements CompiledScriptMXBean, Mappable  {
 
   protected NavajoClassSupplier classLoader;
@@ -89,8 +88,10 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable  
 
   private JMXHelper jmx = null;
   private boolean connected = false;
-  private ThreadInfo myThread = null;
-  private boolean keepJMXConnectionAlive = false;
+  @SuppressWarnings("unused")
+private ThreadInfo myThread = null;
+  @SuppressWarnings("unused")
+private boolean keepJMXConnectionAlive = false;
   
   public String getScriptName() {
 	  return getClass().getName();
@@ -237,7 +238,8 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable  
   public final void run(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws Exception {
 
 	  myAccess = access;
-	  String myThreadName = getThreadName();
+	  @SuppressWarnings("unused")
+	final String myThreadName = getThreadName();
 	  //JMXHelper.registerMXBean(this, JMXHelper.SCRIPT_DOMAIN, myThreadName);
 
 	  long start = System.currentTimeMillis();

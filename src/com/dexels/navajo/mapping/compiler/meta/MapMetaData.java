@@ -19,6 +19,7 @@ import com.dexels.navajo.server.Dispatcher;
  * @author arjen
  *
  */
+@SuppressWarnings("unchecked")
 public class MapMetaData {
 
 	protected HashMap<String, MapDefinition> maps = new HashMap<String, MapDefinition>();

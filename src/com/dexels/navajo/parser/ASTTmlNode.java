@@ -18,13 +18,13 @@ import com.dexels.navajo.document.types.StopwatchTime;
  * @author Arjen Schoneveld
  * @version $Id$
  */
-
+@SuppressWarnings("unchecked")
 public final class ASTTmlNode extends SimpleNode {
     String val = "";
-    Navajo doc;
-    Message parentMsg;
-    Message parentParamMsg;
-    Selection parentSel;
+    Navajo doc = null;
+    Message parentMsg = null;
+    Message parentParamMsg = null;
+    Selection parentSel = null;
     String option = "";
     String selectionOption = "";
     boolean exists = false;
@@ -33,20 +33,12 @@ public final class ASTTmlNode extends SimpleNode {
         super(id);
     }
 
-    /**
-     * CHANGED (1/8/2002). DetermineType always return String (implicit typing does not always work).
-     * DetermineType() should only be used for selection type value and name attributes.
-     */
-    private final static Object determineType(String value) {
-        return value;
-    }
-
     public final Object interpret() throws TMLExpressionException {
 
         ArrayList match = null;
         ArrayList resultList = new ArrayList();
         boolean singleMatch = true;
-        boolean selectionProp = false;
+       // boolean selectionProp = false;
         
         boolean isParam = false;
 
@@ -377,7 +369,7 @@ public final class ASTTmlNode extends SimpleNode {
                                                          option + ", for type: " + type);
                       }
                       try {
-                        resultList.add(new Integer(altA));
+                        resultList.add(Integer.valueOf(altA));
                       }
                       catch (Exception e) {
                         throw new TMLExpressionException(e.getMessage());

@@ -11,9 +11,11 @@ import java.io.File;
  *
  */
 public abstract class NavajoClassSupplier extends ClassLoader {
+	@SuppressWarnings("unchecked")
 	public abstract Class getClass(String className) throws ClassNotFoundException;
     public abstract File [] getJarFiles(String path, boolean beta);
-    public abstract Class getCompiledNavaScript(String className)  throws ClassNotFoundException;
+    @SuppressWarnings("unchecked")
+	public abstract Class getCompiledNavaScript(String className)  throws ClassNotFoundException;
 	
     public NavajoClassSupplier(ClassLoader parent) {
     	super(parent);

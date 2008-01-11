@@ -30,6 +30,7 @@ class ArrayChildStatistics implements Serializable {
 	public long totalTime;
 }
 
+@SuppressWarnings("unchecked")
 public final class MappableTreeNode implements Mappable, Serializable {
 
         /**
@@ -48,7 +49,7 @@ public final class MappableTreeNode implements Mappable, Serializable {
         public int totaltime;
 
         // HashMap to cache method references.
-        private HashMap methods;
+		private HashMap methods;
         private int id = 0;
         private HashMap elementCount = null;
         private Access myAccess = null;

@@ -1,13 +1,12 @@
 package com.dexels.navajo.parser;
 
 
-import java.util.Date;
 import java.util.*;
 import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.Percentage;
 
-
+@SuppressWarnings("unchecked")
 public final class ASTGTNode extends SimpleNode {
     public ASTGTNode(int id) {
         super(id);

@@ -53,6 +53,7 @@ public abstract class LockStore {
 		return matches(myRequest, otherRequest, ld) && matches(otherRequest, myRequest, ld);
 	}
 	
+	@SuppressWarnings("unchecked")
 	private boolean matches( Navajo myRequest, Navajo otherRequest, LockDefinition ld) {
 		
 		try {

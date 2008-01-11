@@ -1,6 +1,6 @@
 package com.dexels.navajo.parser;
 
-
+@SuppressWarnings("unused")
 public final class ASTOrNode extends SimpleNode {
     public ASTOrNode(int id) {
         super(id);

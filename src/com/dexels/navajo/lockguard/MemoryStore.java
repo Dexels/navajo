@@ -41,6 +41,7 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.server.Access;
 
+@SuppressWarnings("unchecked")
 public final class MemoryStore extends LockStore {
 
 	public static final String VERSION = "$Id$";

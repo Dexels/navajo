@@ -74,6 +74,7 @@ public class WorkFlow implements Mappable, Serializable {
 	 * 
 	 * @param in
 	 */
+	@SuppressWarnings("unchecked")
 	protected void mergeWithParameters(Navajo in) {
 		
 		if ( in != null && in.getMessage("__parms__") == null ) {

@@ -11,6 +11,7 @@ import java.util.Vector;
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 
+@SuppressWarnings("unchecked")
 public class MethodDefinition {
 
 	private String name;

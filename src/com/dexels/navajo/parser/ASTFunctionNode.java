@@ -4,6 +4,9 @@ package com.dexels.navajo.parser;
 /**
  * $Id$
  * $Log$
+ * Revision 1.24  2008/01/11 16:55:36  arjen
+ * Suppress unchecked type warnings
+ *
  * Revision 1.23  2007/08/21 10:05:52  frank
  * added exception chaining
  *
@@ -89,6 +92,7 @@ import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.document.*;
 
+@SuppressWarnings("unchecked")
 public final class ASTFunctionNode extends SimpleNode {
 
 	String functionName;
