@@ -10,16 +10,8 @@
 			<arguments>
 			</arguments>
 		</buildCommand>
-		<buildCommand>
-			<name>javafx.eclipse.f3editor.builder.F3Builder</name>
-			<arguments>
-			</arguments>
-		</buildCommand>
-	</buildSpec>
+		</buildSpec>
 	<natures>
-		<nature>org.eclipse.jem.workbench.JavaEMFNature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
-		<nature>org.eclipse.jem.beaninfo.BeanInfoNature</nature>
-		<nature>javafx.eclipse.f3editor.builder.F3Nature</nature>
 	</natures>
 </projectDescription>

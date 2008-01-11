@@ -17,6 +17,5 @@
 	<classpathentry kind="lib" path="lib/commons-fileupload-1.0.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/NavajoEchoClient"/>
 	<classpathentry kind="lib" path="lib/NavajoRuntime.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JavaFX"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
