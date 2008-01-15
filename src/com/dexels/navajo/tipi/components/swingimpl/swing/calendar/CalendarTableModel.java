@@ -28,7 +28,7 @@ public class CalendarTableModel
     myCalendar = Calendar.getInstance();
     myCalendar.set(Calendar.DATE, myCalendar.getActualMinimum(Calendar.DATE)); // Set to the first of the current month
     myCalendar.setFirstDayOfWeek(firstDayOfWeek);
-    myMonth = myCalendar.get(myCalendar.MONTH);
+    myMonth = myCalendar.get(Calendar.MONTH);
     myYear = myCalendar.get(Calendar.YEAR);
     fillMap(myMonth, myYear);
   }
@@ -94,11 +94,11 @@ public class CalendarTableModel
       int yd_of_first = myCalendar.get(Calendar.DAY_OF_YEAR);
       int lastDay = myCalendar.getActualMaximum(Calendar.DATE);
       int yd_of_last = yd_of_first + lastDay;
-      myCalendar.set(myCalendar.WEEK_OF_MONTH, week);
+      myCalendar.set(Calendar.WEEK_OF_MONTH, week);
       if (day > 0) {
         day = day - 1;
         myCalendar.set(Calendar.DAY_OF_WEEK, ( (firstDayOfWeek + day) % 7));
-        int date = myCalendar.get(myCalendar.DATE);
+        int date = myCalendar.get(Calendar.DATE);
         // Now we know the date of the current location.
         // We return either a saved day or a new one.
         int doy = myCalendar.get(Calendar.DAY_OF_YEAR);
@@ -113,7 +113,7 @@ public class CalendarTableModel
         }
       }
       else {
-        d.setWeekOfYear(myCalendar.get(myCalendar.WEEK_OF_YEAR));
+        d.setWeekOfYear(myCalendar.get(Calendar.WEEK_OF_YEAR));
       }
     }
     else {
