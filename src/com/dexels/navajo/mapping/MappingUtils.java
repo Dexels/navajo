@@ -473,6 +473,12 @@ public static final ArrayList getMessageList(Message msg, Navajo doc, String str
     //try {
       ArrayList result = new ArrayList();
 
+      // Simply return current message if . is given.
+      if (str.equals(".")) {
+    	  result.add(msg);
+    	  return result;
+      }
+      
       if (str.equals("")) {
         result.add(NavajoFactory.getInstance().createMessage(doc,
             "__JUST_FOR_ITERATING_ONCE__"));
