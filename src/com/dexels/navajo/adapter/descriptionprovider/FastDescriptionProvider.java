@@ -50,25 +50,17 @@ public class FastDescriptionProvider extends BaseDescriptionProvider {
 
 	private String datasource;
 	private Access myAccess;
-	private SQLMap sql;
 	
 	public void load(Parameters parms, Navajo inMessage, Access access,	NavajoConfig config) throws MappableException, UserException {
 		myAccess = access;
-		sql = createConnection();
 	}
 	
 	public void store() {
-		try {
-			sql.store();
-		} catch (MappableException e) {
-			e.printStackTrace();
-		} catch (UserException e) {
-			e.printStackTrace();
-		}
+		
 	}
 	
 	public void kill() {
-		sql.kill();
+		
 	}
 	
 	/**
@@ -107,91 +99,109 @@ public class FastDescriptionProvider extends BaseDescriptionProvider {
 				if ( properties.get(propertyName) == null ) {
 
 
-					sql.setQuery(queryLocales);
-					sql.setParameter(propertyName);
-					ResultSetMap [] results = sql.getResultSet();
+					SQLMap sql = createConnection();
 
-					HashMap locales = new HashMap();
-					// Fill locales.
-//					System.err.println("Found locales: " + results.length);
+					try {
 
-					if ( results.length == 0 ) {
-//						System.err.println("Putting " + propertyName + " as null translation");
-						properties.put(propertyName, propertyName);
-						return;
-					}
-					for (int i = 0; i < results.length; i++) {
-						String localeString = (String) results[i].getColumnValue(new Integer(0));
-						HashMap subLocales = new HashMap();
-
-						sql.setQuery(querySublocales);
+						sql.setQuery(queryLocales);
 						sql.setParameter(propertyName);
-						sql.setParameter(localeString);
+						ResultSetMap [] results = sql.getResultSet();
 
+						HashMap locales = new HashMap();
+						// Fill locales.
+//						System.err.println("Found locales: " + results.length);
 
-						ResultSetMap [] sublocaleresults = sql.getResultSet();
-//						System.err.println("Found sublocales: " + sublocaleresults.length);
+						if ( results.length == 0 ) {
+//							System.err.println("Putting " + propertyName + " as null translation");
+							properties.put(propertyName, propertyName);
+							return;
+						}
+						for (int i = 0; i < results.length; i++) {
+							String localeString = (String) results[i].getColumnValue(new Integer(0));
+							HashMap subLocales = new HashMap();
 
-						// Fill sublocales.
-						for (int j = 0; j < sublocaleresults.length; j++) {
-							String subLocaleString = (String) sublocaleresults[j].getColumnValue(new Integer(0));
-							HashMap users = new HashMap();
-
-							sql.setQuery(queryUsers);
+							sql.setQuery(querySublocales);
 							sql.setParameter(propertyName);
 							sql.setParameter(localeString);
-							sql.setParameter(subLocaleString);
 
-							ResultSetMap [] userresults = sql.getResultSet();
-							//System.err.println("Found users: " + userresults.length);
-							// Fill users.
-							for (int k = 0; k < userresults.length; k++) {
-								String userString = (String) userresults[k].getColumnValue(new Integer(0));
-								HashMap webservices = new HashMap();
-								sql.setQuery(queryContexts);
+
+							ResultSetMap [] sublocaleresults = sql.getResultSet();
+//							System.err.println("Found sublocales: " + sublocaleresults.length);
+
+							// Fill sublocales.
+							for (int j = 0; j < sublocaleresults.length; j++) {
+								String subLocaleString = (String) sublocaleresults[j].getColumnValue(new Integer(0));
+								HashMap users = new HashMap();
+
+								sql.setQuery(queryUsers);
 								sql.setParameter(propertyName);
 								sql.setParameter(localeString);
 								sql.setParameter(subLocaleString);
-								sql.setParameter(userString);
 
-								ResultSetMap [] webserviceresults = sql.getResultSet();
-								//System.err.println("Found webservices: " + webserviceresults.length);
-								// Fill webservices.
-								for (int l = 0; l < webserviceresults.length; l++) {
-									String webserviceString = (String) webserviceresults[l].getColumnValue(new Integer(0));
-									sql.setQuery(queryDescription);
+								ResultSetMap [] userresults = sql.getResultSet();
+								//System.err.println("Found users: " + userresults.length);
+								// Fill users.
+								for (int k = 0; k < userresults.length; k++) {
+									String userString = (String) userresults[k].getColumnValue(new Integer(0));
+									HashMap webservices = new HashMap();
+									sql.setQuery(queryContexts);
 									sql.setParameter(propertyName);
 									sql.setParameter(localeString);
 									sql.setParameter(subLocaleString);
 									sql.setParameter(userString);
-									sql.setParameter(webserviceString);
 
-									if ( sql.getResultSet() != null && sql.getResultSet().length > 0 ) {
-										String description = (String) sql.getResultSet()[0].getColumnValue(new Integer(0));
-										webservices.put(webserviceString, description);
+									ResultSetMap [] webserviceresults = sql.getResultSet();
+									//System.err.println("Found webservices: " + webserviceresults.length);
+									// Fill webservices.
+									for (int l = 0; l < webserviceresults.length; l++) {
+										String webserviceString = (String) webserviceresults[l].getColumnValue(new Integer(0));
+										sql.setQuery(queryDescription);
+										sql.setParameter(propertyName);
+										sql.setParameter(localeString);
+										sql.setParameter(subLocaleString);
+										sql.setParameter(userString);
+										sql.setParameter(webserviceString);
+
+										if ( sql.getResultSet() != null && sql.getResultSet().length > 0 ) {
+											String description = (String) sql.getResultSet()[0].getColumnValue(new Integer(0));
+											webservices.put(webserviceString, description);
+										}
+
 									}
-
+//									System.err.println("Putting for " + userString + ", " + webservices + " into users");
+									users.put(userString, webservices);
 								}
-//								System.err.println("Putting for " + userString + ", " + webservices + " into users");
-								users.put(userString, webservices);
+								//System.err.println("Putting " + subLocaleString + " into hashmap sublocales " + subLocales);
+								subLocales.put(subLocaleString, users);
 							}
-							//System.err.println("Putting " + subLocaleString + " into hashmap sublocales " + subLocales);
-							subLocales.put(subLocaleString, users);
-						}
 
-						locales.put(localeString, subLocales);
+							locales.put(localeString, subLocales);
+						}
+						//System.err.println("Putting " + locales + " into hashmap for " + propertyName);
+						properties.put(propertyName, locales);
 					}
-					//System.err.println("Putting " + locales + " into hashmap for " + propertyName);
-					properties.put(propertyName, locales);
+
+					finally {
+						try {
+							sql.store();
+						} catch (MappableException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (UserException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				}
+				
+				if ( properties.get(propertyName) == null ) {
+					properties.put(propertyName, propertyName);
 				}
 			}
-
-			if ( properties.get(propertyName) == null ) {
-				properties.put(propertyName, propertyName);
-			}
 		}
+		
 	}
-	
+		
 	
 	private final String getLocaleTranslation(String propertyName, String defaultDescription, String locale, String subLocale, String user, String webservice) {
 
@@ -355,7 +365,9 @@ public class FastDescriptionProvider extends BaseDescriptionProvider {
 
 	public void updatePropertyDescription(PropertyDescription pd) {
 
+		SQLMap sql = createConnection();
 		try {
+			
 			sql.setUpdate(updateDescription);
 			sql.setParameter(pd.getDescription());
 			sql.setParameter(pd.getLocale());
@@ -366,9 +378,20 @@ public class FastDescriptionProvider extends BaseDescriptionProvider {
 			sql.setParameter(new Integer(pd.getId()));
 			sql.setDoUpdate(true);
 			clearCache(pd.getName(), pd.getLocale(), pd.getUsername());
+			
 		} catch (Exception e) {
 			e.printStackTrace(System.err);
-		} 
+		}  finally {
+			try {
+				sql.store();
+			} catch (MappableException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (UserException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	public void setPropertyDescription(PropertyDescription pd) {
