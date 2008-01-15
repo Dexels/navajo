@@ -1,6 +1,14 @@
 package com.dexels.navajo.server.enterprise.descriptionprovider;
 
-public class PropertyDescription {
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.mapping.Mappable;
+import com.dexels.navajo.mapping.MappableException;
+import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.NavajoConfig;
+import com.dexels.navajo.server.Parameters;
+import com.dexels.navajo.server.UserException;
+
+public class PropertyDescription implements Mappable {
 
 	private int id;
 	private String username;
@@ -64,6 +72,22 @@ public class PropertyDescription {
 	
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public void kill() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void load(Parameters parms, Navajo inMessage, Access access,
+			NavajoConfig config) throws MappableException, UserException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void store() throws MappableException, UserException {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }
