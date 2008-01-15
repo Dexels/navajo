@@ -13,6 +13,7 @@ import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.descriptionprovider.BaseDescriptionProvider;
+import com.dexels.navajo.server.enterprise.descriptionprovider.PropertyDescription;
 
 public class NoCacheDatabaseDescriptionProvider extends BaseDescriptionProvider {
 
@@ -176,6 +177,11 @@ public class NoCacheDatabaseDescriptionProvider extends BaseDescriptionProvider 
 	public void updateDescription(String locale, String name, String description, String context, String username) {
 		// TODO Auto-generated method stub
 		insertPropertyDescription(name, locale, description, context,username);
+	}
+
+	public void updatePropertyDescription(PropertyDescription pd) {
+		// TODO Auto-generated method stub
+		
 	}	
 	
 }

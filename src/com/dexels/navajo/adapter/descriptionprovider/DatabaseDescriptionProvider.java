@@ -14,6 +14,7 @@ import com.dexels.navajo.mapping.AsyncMappable;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.descriptionprovider.CachedDescriptionProvider;
+import com.dexels.navajo.server.enterprise.descriptionprovider.PropertyDescription;
 import com.dexels.navajo.server.statistics.TodoItem;
 
 public class DatabaseDescriptionProvider extends CachedDescriptionProvider {
@@ -404,6 +405,11 @@ public class DatabaseDescriptionProvider extends CachedDescriptionProvider {
 	public void updateDescription(String locale, String name, String description, String context, String username) {
 		// TODO Auto-generated method stub
 		insertPropertyDescription(name, locale, description, context,username);
+	}
+
+	public void updatePropertyDescription(PropertyDescription pd) {
+		// TODO Auto-generated method stub
+		
 	}	
 	
 }
