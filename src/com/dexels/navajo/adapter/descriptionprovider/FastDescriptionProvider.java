@@ -1,6 +1,7 @@
 package com.dexels.navajo.adapter.descriptionprovider;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 
 import com.dexels.navajo.adapter.SQLMap;
@@ -20,6 +21,7 @@ import com.dexels.navajo.server.enterprise.descriptionprovider.PropertyDescripti
 
 /**
  * This class reads the propertydescription table into a Java datastructure.
+ * It get's a bit ugly here.
  * 
  * @author Arjen Schoneveld.
  *
@@ -41,7 +43,7 @@ public class FastDescriptionProvider extends BaseDescriptionProvider {
 								      "AND locale = ? AND NVL(sublocale,'%') = ? AND NVL(objectid, '%') = ? AND NVL(context,'%') = ?";
 	
 	private String updateDescription = "UPDATE propertydescription " + 
-	   "SET description = ?, locale = ?, sublocale = ?, context = ?, object = ?, lastupdate = sysdate, updateby = ? " + 
+	   "SET description = ?, locale = ?, sublocale = ?, context = ?, objectid = ?, lastupdate = sysdate, updateby = ? " + 
 	   "WHERE descriptionid = ?";
 	
 	
@@ -70,8 +72,9 @@ public class FastDescriptionProvider extends BaseDescriptionProvider {
 	 * @param locale
 	 * @param user
 	 */
-	private void clearCache(String propertyName, String locale, String user) {
-		if ( locale == null || user == null ) {
+	private void updateCache(String propertyName, String locale, String subLocale, String username, String description) {
+		
+		if ( locale == null || username == null ) {
 			synchronized ( semaphore ) {
 				properties.remove(propertyName);
 			}
@@ -80,12 +83,29 @@ public class FastDescriptionProvider extends BaseDescriptionProvider {
 
 		synchronized ( semaphore ) {
 			HashMap locales = (HashMap) properties.get(propertyName);
+
 			if ( locales != null ) {
-				Iterator all = locales.values().iterator();
-				while ( all.hasNext() ) {
-					HashMap users = (HashMap) all.next();
-					users.remove(users);
+				HashMap users = null;
+
+				if ( ((HashMap) locales.get(locale)).size() > 1 || ((HashMap) locales.get(locale)).get("%") == null ) {
+					users = (HashMap) ((HashMap) locales.get(locale)).get(subLocale);
 				}
+				// Dit not find specific sublocale, use generic sublocale.
+				if ( users == null ) {
+					users = (HashMap) ((HashMap) locales.get(locale)).get("%");
+				}
+
+				HashMap user = (HashMap) users.get(username);
+				
+				if ( user != null) {
+					
+					Iterator allWebservices = new HashSet( user.keySet() ).iterator();
+					while ( allWebservices.hasNext() ) {
+						String ws = (String) allWebservices.next();
+						user.put(ws, description);
+					}
+				}
+
 			}
 		}
 	}
@@ -203,7 +223,8 @@ public class FastDescriptionProvider extends BaseDescriptionProvider {
 	}
 		
 	
-	private final String getLocaleTranslation(String propertyName, String defaultDescription, String locale, String subLocale, String user, String webservice) {
+	private final String getLocaleTranslation(String propertyName, String defaultDescription, String locale, String subLocale, 
+			String user, String webservice)  {
 
 		// Check for null translation first.
 		if ( properties.get(propertyName) instanceof String ) {
@@ -274,7 +295,7 @@ public class FastDescriptionProvider extends BaseDescriptionProvider {
 		} catch (UserException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} 
+		}
 
 		// By default return defaultDescription.
 		return defaultDescription;
@@ -365,6 +386,11 @@ public class FastDescriptionProvider extends BaseDescriptionProvider {
 
 	public void updatePropertyDescription(PropertyDescription pd) {
 
+		try {
+			initializeCache(pd.getName());
+		} catch (UserException e1) {
+		}
+		
 		SQLMap sql = createConnection();
 		try {
 			
@@ -377,7 +403,7 @@ public class FastDescriptionProvider extends BaseDescriptionProvider {
 			sql.setParameter(myAccess.rpcUser);
 			sql.setParameter(new Integer(pd.getId()));
 			sql.setDoUpdate(true);
-			clearCache(pd.getName(), pd.getLocale(), pd.getUsername());
+			updateCache(pd.getName(), pd.getLocale(), pd.getSubLocale(), pd.getUsername(), pd.getDescription());
 			
 		} catch (Exception e) {
 			e.printStackTrace(System.err);
