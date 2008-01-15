@@ -9,9 +9,15 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
+import com.dexels.navajo.mapping.Mappable;
+import com.dexels.navajo.mapping.MappableException;
+import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.NavajoConfig;
+import com.dexels.navajo.server.Parameters;
+import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.server.enterprise.descriptionprovider.DescriptionProviderInterface;
 
-public abstract class BaseDescriptionProvider implements DescriptionProviderInterface {
+public abstract class BaseDescriptionProvider implements DescriptionProviderInterface, Mappable {
 
 	private Message descriptionMessage = null;
 
@@ -71,8 +77,53 @@ public abstract class BaseDescriptionProvider implements DescriptionProviderInte
 	public Message getDescriptionMessage() {
 		return descriptionMessage;
 	}
+
+
+	public void deletePropertyContext(String locale, String context) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	public void flushCache() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	public void flushUserCache(String user) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	public int getCacheSize() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+	public void updateDescription(String locale, String name,
+			String description, String context, String username) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	public void updatePropertyDescription(int id, String description) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void kill() {
+	}
+
+
+	public void load(Parameters parms, Navajo inMessage, Access access,	NavajoConfig config) throws MappableException, UserException {
+	}
+
+
+	public void store() throws MappableException, UserException {
+	}
 	
-
-
-
 }

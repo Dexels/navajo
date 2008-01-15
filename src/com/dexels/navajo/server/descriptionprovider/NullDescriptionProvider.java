@@ -4,6 +4,7 @@ import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.Property;
+import com.dexels.navajo.server.enterprise.descriptionprovider.PropertyDescription;
 
 public class NullDescriptionProvider extends BaseDescriptionProvider {
 
@@ -42,6 +43,11 @@ public class NullDescriptionProvider extends BaseDescriptionProvider {
 	}
 
 	public void updateDescription(String locale, String name, String description, String context, String username) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void updatePropertyDescription(PropertyDescription pd) {
 		// TODO Auto-generated method stub
 		
 	}
