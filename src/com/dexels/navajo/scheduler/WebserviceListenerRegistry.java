@@ -28,7 +28,8 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.enterprise.scheduler.WebserviceListenerRegistryInterface;
-import com.dexels.navajo.tribe.SmokeSignal;
+import com.dexels.navajo.server.enterprise.tribe.SmokeSignal;
+import com.dexels.navajo.tribe.ServiceEventsSmokeSignal;
 import com.dexels.navajo.tribe.TribeManager;
 import com.dexels.navajo.workflow.WorkFlowManager;
 
@@ -60,7 +61,7 @@ public final class WebserviceListenerRegistry implements WebserviceListenerRegis
 
 		ListenerStore.getInstance().addListener(t,BeforeWebserviceTrigger.class.getName(), true);
 		// Broadcast..
-		TribeManager.getInstance().broadcast(new SmokeSignal(Dispatcher.getInstance().getNavajoConfig().getInstanceName(), SmokeSignal.OBJECT_LISTENERS, SmokeSignal.KEY_LISTENERS_ADD_WEBSERVICE, t.getWebservicePattern()));
+		TribeManager.getInstance().broadcast(new ServiceEventsSmokeSignal(Dispatcher.getInstance().getNavajoConfig().getInstanceName(), ServiceEventsSmokeSignal.ADD_WEBSERVICE, t.getWebservicePattern()));
 		ListenerStore.getInstance().addRegisteredWebservice(t.getWebservicePattern());
 		
 
@@ -70,7 +71,7 @@ public final class WebserviceListenerRegistry implements WebserviceListenerRegis
 
 		ListenerStore.getInstance().removeListener(t,BeforeWebserviceTrigger.class.getName(), false);
 		// Broadcast..
-		TribeManager.getInstance().broadcast(new SmokeSignal(Dispatcher.getInstance().getNavajoConfig().getInstanceName(), SmokeSignal.OBJECT_LISTENERS, SmokeSignal.KEY_LISTENERS_REMOVE_WEBSERVICE, t.getWebservicePattern()));
+		TribeManager.getInstance().broadcast(new ServiceEventsSmokeSignal(Dispatcher.getInstance().getNavajoConfig().getInstanceName(), ServiceEventsSmokeSignal.REMOVE_WEBSERVICE, t.getWebservicePattern()));
 		ListenerStore.getInstance().removeRegisteredWebservice(t.getWebservicePattern());
 		
 	}
@@ -84,7 +85,7 @@ public final class WebserviceListenerRegistry implements WebserviceListenerRegis
 
 		ListenerStore.getInstance().addListener(t,WebserviceTrigger.class.getName(), true);
 		// Broadcast..
-		TribeManager.getInstance().broadcast(new SmokeSignal(Dispatcher.getInstance().getNavajoConfig().getInstanceName(), SmokeSignal.OBJECT_LISTENERS, SmokeSignal.KEY_LISTENERS_ADD_WEBSERVICE, t.getWebservicePattern()));
+		TribeManager.getInstance().broadcast(new ServiceEventsSmokeSignal(Dispatcher.getInstance().getNavajoConfig().getInstanceName(), ServiceEventsSmokeSignal.ADD_WEBSERVICE, t.getWebservicePattern()));
 		ListenerStore.getInstance().addRegisteredWebservice(t.getWebservicePattern());
 		
 	}
@@ -99,7 +100,7 @@ public final class WebserviceListenerRegistry implements WebserviceListenerRegis
 		ListenerStore.getInstance().removeListener(t,WebserviceTrigger.class.getName(), false);
 		ListenerStore.getInstance().removeRegisteredWebservice(t.getWebservicePattern());
 		// Broadcast..
-		TribeManager.getInstance().broadcast(new SmokeSignal(Dispatcher.getInstance().getNavajoConfig().getInstanceName(), SmokeSignal.OBJECT_LISTENERS, SmokeSignal.KEY_LISTENERS_REMOVE_WEBSERVICE, t.getWebservicePattern()));
+		TribeManager.getInstance().broadcast(new ServiceEventsSmokeSignal(Dispatcher.getInstance().getNavajoConfig().getInstanceName(), ServiceEventsSmokeSignal.REMOVE_WEBSERVICE, t.getWebservicePattern()));
 
 	}
 	
@@ -142,7 +143,7 @@ public final class WebserviceListenerRegistry implements WebserviceListenerRegis
 				if ( initializingWorkflow || myWorkflow) {
 					t2.perform();
 				} else {
-					TribeManager.getInstance().broadcast(new SmokeSignal(Dispatcher.getInstance().getNavajoConfig().getInstanceName(), SmokeSignal.OBJECT_LISTENERS, SmokeSignal.KEY_LISTENERS_AFTERWEBSERVICE_EVENT, t2));
+					TribeManager.getInstance().broadcast(new ServiceEventsSmokeSignal(Dispatcher.getInstance().getNavajoConfig().getInstanceName(), ServiceEventsSmokeSignal.AFTERWEBSERVICE_EVENT, t2));
 				}
 			}
 		}
@@ -182,7 +183,7 @@ public final class WebserviceListenerRegistry implements WebserviceListenerRegis
 					if ( initializingWorkflow || myWorkflow) {
 						t2.perform();
 					} else {
-						TribeManager.getInstance().broadcast(new SmokeSignal(Dispatcher.getInstance().getNavajoConfig().getInstanceName(), SmokeSignal.OBJECT_LISTENERS, SmokeSignal.KEY_LISTENERS_BEFOREWEBSERVICE_EVENT, t2));
+						TribeManager.getInstance().broadcast(new ServiceEventsSmokeSignal(Dispatcher.getInstance().getNavajoConfig().getInstanceName(), ServiceEventsSmokeSignal.BEFOREWEBSERVICE_EVENT, t2));
 					}
 				}
 			}

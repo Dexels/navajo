@@ -17,4 +17,8 @@ public class DummyTribeManager implements TribeManagerInterface {
 		throw new NotImplementedException();
 	}
 
+	public void broadcast(SmokeSignal m) {
+
+	}
+
 }

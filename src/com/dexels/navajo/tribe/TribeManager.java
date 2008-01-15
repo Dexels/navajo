@@ -49,6 +49,7 @@ import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.server.UserException;
+import com.dexels.navajo.server.enterprise.tribe.SmokeSignal;
 import com.dexels.navajo.server.enterprise.tribe.TribeManagerInterface;
 import com.dexels.navajo.util.AuditLog;
 import com.dexels.navajo.workflow.WorkFlowManager;
@@ -140,7 +141,7 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 				IpAddress ip = (IpAddress) instance.channel.getLocalAddress();
 				TribeMember candidate = new TribeMember(myName, ip);
 				instance.myMembership = candidate;
-				instance.broadcast(new SmokeSignal(myName, SmokeSignal.OBJECT_MEMBERSHIP, SmokeSignal.KEY_INTRODUCTION, candidate));
+				instance.broadcast(new MembershipSmokeSignal(myName, MembershipSmokeSignal.INTRODUCTION, candidate));
 				initializing = false;
 				semaphore.notify();
 				TribalStatusCollector.getInstance();
