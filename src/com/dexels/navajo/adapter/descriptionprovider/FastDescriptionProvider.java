@@ -26,7 +26,7 @@ import com.dexels.navajo.server.enterprise.descriptionprovider.PropertyDescripti
  */
 public class FastDescriptionProvider extends BaseDescriptionProvider {
 
-	public PropertyDescription description;
+	public PropertyDescription propertyDescription;
 	
 	private String queryLocales = "SELECT DISTINCT locale FROM propertydescription WHERE name = ?";
 	
@@ -371,7 +371,7 @@ public class FastDescriptionProvider extends BaseDescriptionProvider {
 		} 
 	}
 	
-	public void setDescription(PropertyDescription pd) {
+	public void setPropertyDescription(PropertyDescription pd) {
 		updatePropertyDescription(pd);
 	}
 	
