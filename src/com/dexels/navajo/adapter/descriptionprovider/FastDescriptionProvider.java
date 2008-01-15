@@ -54,7 +54,7 @@ public class FastDescriptionProvider extends BaseDescriptionProvider {
 	
 	public void load(Parameters parms, Navajo inMessage, Access access,	NavajoConfig config) throws MappableException, UserException {
 		myAccess = access;
-		SQLMap sql = createConnection();
+		sql = createConnection();
 	}
 	
 	public void store() {
