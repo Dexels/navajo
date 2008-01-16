@@ -56,9 +56,11 @@ public class TslCompiler {
   private int startElementCounter = 0;
   //private int offsetElementCounter = 0;
   private int methodCounter = 0;
-  private ArrayList methodClipboard = new ArrayList();
-  private ArrayList variableClipboard = new ArrayList();
-  private Stack contextClassStack = new Stack();
+  private ArrayList<StringBuffer> methodClipboard = new ArrayList<StringBuffer>();
+  private ArrayList<String> variableClipboard = new ArrayList<String>();
+  @SuppressWarnings("unchecked")
+  private Stack<Class> contextClassStack = new Stack<Class>();
+  @SuppressWarnings("unchecked")
   private Class contextClass = null;
 
   private static String hostname = null;
@@ -94,24 +96,6 @@ public class TslCompiler {
     return result.toString();
   }
 
-  private String removeNewLinesAndSingleQuotes(String str) {
-    StringBuffer result = new StringBuffer(str.length());
-    for (int i = 0; i < str.length(); i++) {
-      char c = str.charAt(i);
-      if (c == '\'') {
-        result.append("\"");
-      }
-      else if (c == '\n') {
-        result.append("\\n");
-      }
-      else {
-        result.append(c);
-
-      }
-    }
-    return result.toString();
-  }
-
   private String removeNewLines(String str) {
     StringBuffer result = new StringBuffer(str.length());
     for (int i = 0; i < str.length(); i++) {
@@ -124,24 +108,6 @@ public class TslCompiler {
       }
     }
     return result.toString();
-  }
-
-  /**
-   * Purpose: rewrite an expression like
-   * $columnValue(1) OR $columnValue('AAP') to (objectName.getColumnValue(1)+"") (IF columnValue returns Object).
-   *                                     OR to ((Integer) objectName.getColumnValue(1)).intValue() (IF COLUMN VALUE RETURNS AN INTEGER).
-   *                                     OR to ...
-   * @param objectName
-   * @param call
-   * @param c
-   * @param attr
-   * @param result, return the rewritten statement in the StringBuffer.
-   * @return the datatype: java.lang.String, java.lang.Integer, java.lang.Float, java.util.Date, int, boolean, float, etc.
-   */
-  private String rewriteAttributeCall(String objectName, String call, Class c,
-                                      String attr, StringBuffer result) {
-    //String type = MappingUtils.getFieldType(c, attr);
-    return "";
   }
 
   private String printIdent(int count) {
@@ -192,7 +158,8 @@ public class TslCompiler {
    * @param className
    * @return
    */
-  public String optimizeExpresssion(int ident, String clause, String className, String objectName) throws UserException {
+  @SuppressWarnings("unchecked")
+public String optimizeExpresssion(int ident, String clause, String className, String objectName) throws UserException {
 
     boolean exact = false;
     StringBuffer result = new StringBuffer();
@@ -315,14 +282,12 @@ public class TslCompiler {
               	throw new Exception("Could not find adapeter: " + className);
               }
 
-            String attrType = MappingUtils.getFieldType(contextClass,
-                name.toString());
+            String attrType = MappingUtils.getFieldType(contextClass, name.toString());
 
             // Try to locate class:
-            Class fnc = null;
             if (!functionName.equals("")) {
             	try {
-            		fnc = Class.forName("com.dexels.navajo.functions." + functionName, false, loader);
+            		Class.forName("com.dexels.navajo.functions." + functionName, false, loader);
             	} catch (Exception e) { throw new Exception("Could not find Navajo function: " + functionName); }
 
             }
@@ -564,7 +529,8 @@ public class TslCompiler {
     return result.toString();
   }
 
-  public String messageNode(int ident, Element n, String className, String objectName) throws Exception {
+  @SuppressWarnings("unchecked")
+public String messageNode(int ident, Element n, String className, String objectName) throws Exception {
     StringBuffer result = new StringBuffer();
 
 
@@ -604,10 +570,8 @@ public class TslCompiler {
 
     boolean isArrayAttr = false;
     boolean isSubMapped = false;
-    boolean isParam = false;
     String mapPath = null;
-    //Class contextClass = null;
-
+    
     // Check if <message> is mapped to an object attribute:
     if (nextElt != null && nextElt.getNodeName().equals("map") &&
         nextElt.getAttribute("ref") != null &&
@@ -649,7 +613,6 @@ public class TslCompiler {
           }
           
           //System.out.println("in MessageNode(), new contextClass = " + contextClass);
-          String attrType = MappingUtils.getFieldType(contextClass, ref);
           isArrayAttr = MappingUtils.isArrayAttribute(contextClass, ref);
           if (isArrayAttr) {
             type = Message.MSG_TYPE_ARRAY;
@@ -932,7 +895,8 @@ result.append(printIdent(ident + 4) +
     return result.toString();
   }
 
-  public String propertyNode(int ident, Element n, boolean canBeSubMapped, String className, String objectName) throws
+  @SuppressWarnings("unchecked")
+public String propertyNode(int ident, Element n, boolean canBeSubMapped, String className, String objectName) throws
       Exception {
     StringBuffer result = new StringBuffer();
 
@@ -1164,7 +1128,8 @@ result.append(printIdent(ident + 4) +
 
   }
 
-  public String fieldNode(int ident, Element n, String className,
+  @SuppressWarnings("unchecked")
+public String fieldNode(int ident, Element n, String className,
                           String objectName) throws Exception {
 
     StringBuffer result = new StringBuffer();
@@ -1486,8 +1451,9 @@ result.append(printIdent(ident + 4) +
     return result.toString();
   }
 
+  @SuppressWarnings("unchecked")
   private Class locateContextClass(String mapPath) {
-//      System.err.println("finaMapByPath: "+mapPath);
+//	  System.err.println("finaMapByPath: "+mapPath);
       StringTokenizer st = new StringTokenizer(mapPath,"/");
       //System.err.println("STACK: "+contextClassStack);
       //System.err.println("CONTEXT"+contextClass);
@@ -1554,7 +1520,8 @@ result.append(printIdent(ident + 4) +
     return result.toString();
   }
 
-  public String mapNode(int ident, Element n) throws Exception {
+  @SuppressWarnings("unchecked")
+public String mapNode(int ident, Element n) throws Exception {
 
 
     StringBuffer result = new StringBuffer();
@@ -2108,15 +2075,12 @@ result.append(printIdent(ident + 4) +
 
 	      // Add generated methods.
 	      for (int i = 0; i < methodClipboard.size(); i++) {
-	        StringBuffer methodBuffer = (StringBuffer) methodClipboard.get(i);
-	        result.append(methodBuffer.toString());
-	        result.append("\n\n");
+	        result.append(methodClipboard.get(i).toString() + "\n\n");
 	      }
 
 	      // Add generated variables.
 	      for (int i = 0; i < variableClipboard.size(); i++) {
-	        String objectDefinition = (String) variableClipboard.get(i);
-	        result.append(objectDefinition);
+	    	  result.append(variableClipboard.get(i));
 	      }
 
 	      result.append("}//EOF");
@@ -2201,8 +2165,7 @@ result.append(printIdent(ident + 4) +
           //System.err.println("About to compile script: "+bareScript);
           //System.err.println("Using package path: "+packagePath);
           tslCompiler.compileScript(bareScript, input, output,packagePath);
-          File dir = new File(output);
-
+          
           ////System.out.println("CREATED JAVA FILE FOR SCRIPT: " + script);
         }
         catch (Exception ex) {
@@ -2264,10 +2227,10 @@ result.append(printIdent(ident + 4) +
     }
   }
 
-  public static ArrayList compileDirectoryToJava(File currentDir, File outputPath, String offsetPath, NavajoClassLoader classLoader) {
+  public static ArrayList<String> compileDirectoryToJava(File currentDir, File outputPath, String offsetPath, NavajoClassLoader classLoader) {
     System.err.println("Entering compiledirectory: " + currentDir + " output: " +
                        outputPath + " offset: " + offsetPath);
-    ArrayList files = new ArrayList();
+    ArrayList<String> files = new ArrayList<String>();
     File[] scripts = null;
     File f = new File(currentDir, offsetPath);
     scripts = f.listFiles();
@@ -2276,7 +2239,7 @@ result.append(printIdent(ident + 4) +
         File current = scripts[i];
         if (current.isDirectory()) {
           System.err.println("Entering directory: " + current.getName());
-          ArrayList subDir = compileDirectoryToJava(currentDir, outputPath,
+          ArrayList<String> subDir = compileDirectoryToJava(currentDir, outputPath,
               offsetPath.equals("") ? current.getName() :
               (offsetPath + "/" + current.getName()),classLoader);
           files.addAll(subDir);
@@ -2326,7 +2289,7 @@ result.append(printIdent(ident + 4) +
       }
     }
 
-    ArrayList javaFiles =  compileDirectoryToJava(currentDir, outputPath, offsetPath,classLoader);
+    ArrayList<String> javaFiles =  compileDirectoryToJava(currentDir, outputPath, offsetPath,classLoader);
     System.err.println("javaFiles: "+javaFiles);
     JavaCompiler compiler = new SunJavaCompiler();
 //    StringBuffer javaBuffer = new StringBuffer();
@@ -2382,7 +2345,8 @@ result.append(printIdent(ident + 4) +
     }
 }
 
-  private String getHostName() throws SocketException {
+  @SuppressWarnings("unchecked")
+private String getHostName() throws SocketException {
 	  
 	 if ( hostname != null ) {
 		 return hostname; 
@@ -2431,8 +2395,7 @@ result.append(printIdent(ident + 4) +
 public static void main(String[] args) throws Exception {
 
     System.err.println("today = " + new java.util.Date());
-    java.util.Date d = (java.util.Date)null;
-
+   
    if (args.length == 0) {
      System.out.println("TslCompiler: Usage: java com.dexels.navajo.mapping.compiler.TslCompiler <scriptDir> <compiledDir> [-all | scriptName]");
      System.err.println("NOTE: Startupswitch for extra class path (eg for adding an adaper jar) has not been implemented yet");

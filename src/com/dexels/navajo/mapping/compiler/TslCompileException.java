@@ -20,7 +20,12 @@ import com.dexels.navajo.document.nanoimpl.*;
 
 public class TslCompileException extends Exception {
 
-    public static final int TSL_UNKNOWN_MAP = -1;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 8007663369900721659L;
+	
+	public static final int TSL_UNKNOWN_MAP = -1;
     public static final int TSL_PARSE_EXCEPTION = -2;
     public static final int TSL_UNKNOWN_FIELD = -3;
     public static final int VALIDATION_NO_VALUE = -8;
@@ -37,7 +42,8 @@ public class TslCompileException extends Exception {
     private int endOffset;
     private XMLElement mySource;
     private final int code;
-    private Map solutions = null;
+    @SuppressWarnings("unchecked")
+	private Map solutions = null;
     private String offendingAttribute = null;
     
      public TslCompileException(int code, String message, XMLElement x) {
@@ -79,14 +85,16 @@ public class TslCompileException extends Exception {
         return mySource;
     }
     
-    public void setAttributeProblem(String attributeName, Map alternatives, XMLElement n) {
+    @SuppressWarnings("unchecked")
+	public void setAttributeProblem(String attributeName, Map alternatives, XMLElement n) {
         offendingAttribute = attributeName;
         solutions = alternatives;
         startOffset = n.getAttributeOffset(attributeName);
         endOffset = n.getAttributeEndOffset(attributeName);
         System.err.println("Attribute problem: "+attributeName+" solutions: "+alternatives+" startOffset: "+startOffset+" endOff: "+endOffset);
     }
-    public void setTagProblem(Map alternatives, XMLElement n) {
+    @SuppressWarnings("unchecked")
+	public void setTagProblem(Map alternatives, XMLElement n) {
         offendingAttribute = null;
         solutions = alternatives;
         startOffset = n.getStartTagOffset()+1;
@@ -98,7 +106,8 @@ public class TslCompileException extends Exception {
         return offendingAttribute!=null;
     }
     
-    public Map getSolutions() {
+    @SuppressWarnings("unchecked")
+	public Map getSolutions() {
         return solutions;
     }
     

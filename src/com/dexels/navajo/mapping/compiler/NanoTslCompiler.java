@@ -25,28 +25,21 @@ package com.dexels.navajo.mapping.compiler;
  *  
  */
 import com.dexels.navajo.document.*;
-//import com.dexels.navajo.document.jaxpimpl.xml.*;
 import com.dexels.navajo.document.nanoimpl.*;
 import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.mapping.compiler.meta.*;
-import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.server.SystemException;
 
 import org.apache.jasper.compiler.*;
-import org.w3c.dom.Node;
-
 import java.io.*;
-//import org.w3c.dom.*;
 import java.util.*;
 
-import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.parser.TMLExpressionException;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.Enumeration;
-import java.net.NetworkInterface;
 import com.dexels.navajo.loader.*;
 
 public class NanoTslCompiler {
@@ -73,19 +66,21 @@ public class NanoTslCompiler {
 
     private int methodCounter = 0;
 
-    private final ArrayList methodClipboard = new ArrayList();
+    private final ArrayList<StringBuffer> methodClipboard = new ArrayList<StringBuffer>();
 
-    private final ArrayList variableClipboard = new ArrayList();
+    private final ArrayList<String> variableClipboard = new ArrayList<String>();
 
-    private final Stack contextClassStack = new Stack();
+    @SuppressWarnings("unchecked")
+	private final Stack<Class> contextClassStack = new Stack<Class>();
 
-    private Class contextClass = null;
+    @SuppressWarnings("unchecked")
+	private Class contextClass = null;
 
     private static String VERSION = "$Id$";
 
     public final static String XML_ESCAPE_DELIMITERS = "&'<>\"\n";
 
-    private final ArrayList metaDataListeners = new ArrayList();
+    private final ArrayList<MetaDataListener> metaDataListeners = new ArrayList<MetaDataListener>();
     
     private String currentScript = null;
 
@@ -128,22 +123,6 @@ public class NanoTslCompiler {
         return result.toString();
     }
 
-    private String removeNewLinesAndSingleQuotes(String str) {
-        StringBuffer result = new StringBuffer(str.length());
-        for (int i = 0; i < str.length(); i++) {
-            char c = str.charAt(i);
-            if (c == '\'') {
-                result.append("\"");
-            } else if (c == '\n') {
-                result.append("\\n");
-            } else {
-                result.append(c);
-
-            }
-        }
-        return result.toString();
-    }
-
     private String removeNewLines(String str) {
         StringBuffer result = new StringBuffer(str.length());
         for (int i = 0; i < str.length(); i++) {
@@ -159,27 +138,6 @@ public class NanoTslCompiler {
             }
         }
         return result.toString();
-    }
-
-    /**
-     * Purpose: rewrite an expression like $columnValue(1) OR
-     * $columnValue('AAP') to (objectName.getColumnValue(1)+"") (IF columnValue
-     * returns Object). OR to ((Integer)
-     * objectName.getColumnValue(1)).intValue() (IF COLUMN VALUE RETURNS AN
-     * INTEGER). OR to ...
-     * 
-     * @param objectName
-     * @param call
-     * @param c
-     * @param attr
-     * @param result,
-     *            return the rewritten statement in the StringBuffer.
-     * @return the datatype: java.lang.String, java.lang.Integer,
-     *         java.lang.Float, java.util.Date, int, boolean, float, etc.
-     */
-    private String rewriteAttributeCall(String objectName, String call, Class c, String attr, StringBuffer result) {
-        //String type = MappingUtils.getFieldType(c, attr);
-        return "";
     }
 
     private String printIdent(int count) {
@@ -204,7 +162,8 @@ public class NanoTslCompiler {
         //    return null;
     }
 
-    private int countNodes(Vector l, String name) {
+    @SuppressWarnings("unchecked")
+	private int countNodes(Vector l, String name) {
         int count = 0;
         for (int i = 0; i < l.size(); i++) {
             if (((XMLElement) l.get(i)).getName().equals(name)) {
@@ -234,7 +193,8 @@ public class NanoTslCompiler {
      * @param className
      * @return
      */
-    public String optimizeExpresssion(int ident, String clause, String className, String objectName) throws UserException {
+    @SuppressWarnings("unchecked")
+	public String optimizeExpresssion(int ident, String clause, String className, String objectName) throws UserException {
 
         boolean exact = false;
         StringBuffer result = new StringBuffer();
@@ -350,10 +310,9 @@ public class NanoTslCompiler {
                         String attrType = MappingUtils.getFieldType(contextClass, name.toString());
 
                         // Try to locate class:
-                        Class fnc = null;
                         if (!functionName.equals("")) {
                             try {
-                                fnc = Class.forName("com.dexels.navajo.functions." + functionName, false, loader);
+                                Class.forName("com.dexels.navajo.functions." + functionName, false, loader);
                             } catch (Exception e) {
                                 throw new Exception("Could not find Navajo function: " + functionName);
                             }
@@ -533,7 +492,8 @@ public class NanoTslCompiler {
         return result.toString();
     }
 
-    public String methodsNode(int ident, XMLElement n) throws TslCompileException {
+    @SuppressWarnings("unchecked")
+	public String methodsNode(int ident, XMLElement n) throws TslCompileException {
 
         StringBuffer result = new StringBuffer();
 
@@ -584,7 +544,8 @@ public class NanoTslCompiler {
         return result.toString();
     }
 
-    public String messageNode(int ident, XMLElement n, String className, String objectName) throws Exception {
+    @SuppressWarnings("unchecked")
+	public String messageNode(int ident, XMLElement n, String className, String objectName) throws Exception {
         StringBuffer result = new StringBuffer();
 
         String messageName = n.getNonNullStringAttribute("name");
@@ -622,7 +583,6 @@ public class NanoTslCompiler {
 
         boolean isArrayAttr = false;
         boolean isSubMapped = false;
-        boolean isParam = false;
         String mapPath = null;
         //Class contextClass = null;
 
@@ -664,7 +624,6 @@ public class NanoTslCompiler {
             }
             //System.out.println("in MessageNode(), new contextClass = " +
             // contextClass);
-            String attrType = MappingUtils.getFieldType(contextClass, ref);
             isArrayAttr = MappingUtils.isArrayAttribute(contextClass, ref);
             if (isArrayAttr) {
                 type = Message.MSG_TYPE_ARRAY;
@@ -936,7 +895,8 @@ public class NanoTslCompiler {
         return result.toString();
     }
 
-    public String propertyNode(int ident, XMLElement n, boolean canBeSubMapped, String className, String objectName) throws Exception {
+    @SuppressWarnings("unchecked")
+	public String propertyNode(int ident, XMLElement n, boolean canBeSubMapped, String className, String objectName) throws Exception {
         StringBuffer result = new StringBuffer();
 
         String propertyName = n.getNonNullStringAttribute("name");
@@ -1166,7 +1126,8 @@ public class NanoTslCompiler {
 
     }
 
-    public String fieldNode(int ident, XMLElement n, String className, String objectName) throws Exception {
+    @SuppressWarnings("unchecked")
+	public String fieldNode(int ident, XMLElement n, String className, String objectName) throws Exception {
 
         StringBuffer result = new StringBuffer();
 
@@ -1491,7 +1452,8 @@ public class NanoTslCompiler {
         return result.toString();
     }
     
-     private Class locateContextClass(String mapPath) {
+     @SuppressWarnings("unchecked")
+	private Class locateContextClass(String mapPath) {
 //      System.err.println("finaMapByPath: "+mapPath);
       StringTokenizer st = new StringTokenizer(mapPath,"/");
       //System.err.println("STACK: "+contextClassStack);
@@ -1539,7 +1501,8 @@ public class NanoTslCompiler {
         return result.toString();
     }
 
-    public String mapNode(int ident, XMLElement n) throws Exception {
+    @SuppressWarnings("unchecked")
+	public String mapNode(int ident, XMLElement n) throws Exception {
 
         StringBuffer result = new StringBuffer();
 
@@ -1788,7 +1751,8 @@ public class NanoTslCompiler {
      * @param parent
      * @throws Exception
      */
-    private final void includeNode(String scriptPath, XMLElement n, XMLElement parent) throws Exception {
+    @SuppressWarnings("unchecked")
+	private final void includeNode(String scriptPath, XMLElement n, XMLElement parent) throws Exception {
 
         String script = ((XMLElement) n).getNonNullStringAttribute("script");
         if (script == null || script.equals("")) {
@@ -1900,7 +1864,8 @@ public class NanoTslCompiler {
         return result.toString();
     }
 
-    private final void generateFinalBlock(XMLElement d, StringBuffer generatedCode) throws Exception {
+    @SuppressWarnings("unchecked")
+	private final void generateFinalBlock(XMLElement d, StringBuffer generatedCode) throws Exception {
         generatedCode
                 .append("public final void finalBlock(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws Exception {\n");
 
@@ -1925,7 +1890,8 @@ public class NanoTslCompiler {
      * @return
      * @throws Exception
      */
-    private final void generateValidations(XMLElement d, StringBuffer generatedCode) throws Exception {
+    @SuppressWarnings("unchecked")
+	private final void generateValidations(XMLElement d, StringBuffer generatedCode) throws Exception {
 
         boolean hasValidations = false;
 
@@ -1988,7 +1954,8 @@ public class NanoTslCompiler {
     }
     
 
-    public int compileScript(String script, String scriptPath, String workingPath, String packagePath) throws SystemException, TslCompileException {
+    @SuppressWarnings("unchecked")
+	public int compileScript(String script, String scriptPath, String workingPath, String packagePath) throws SystemException, TslCompileException {
 
         boolean debugInput = false;
         boolean debugOutput = false;
@@ -2021,7 +1988,6 @@ public class NanoTslCompiler {
             //      tslDoc = XMLDocumentUtils.createDocument(new
             // FileInputStream(scriptPath + "/" + packagePath + "/" + script +
             // ".xml"), false);
-            long cc = System.currentTimeMillis();
             FileInputStream fis = null;
             try {
                 fis = new FileInputStream(scriptPath + "/" + packagePath + "/" + script + ".xml");
@@ -2064,7 +2030,7 @@ public class NanoTslCompiler {
 
             result.append("/**\n");
             result.append(" * Generated Java code by TSL compiler.\n");
-            result.append(" * " + this.VERSION + "\n");
+            result.append(" * " + NanoTslCompiler.VERSION + "\n");
             result.append(" *\n");
             result.append(" * Created on: " + new java.util.Date() + "\n");
             result.append(" * Java version: " + System.getProperty("java.vm.name") + " (" + System.getProperty("java.runtime.version") + ")\n");
@@ -2245,8 +2211,7 @@ public class NanoTslCompiler {
                 //System.err.println("About to compile script: "+bareScript);
                 //System.err.println("Using package path: "+packagePath);
                 tslCompiler.compileScript(bareScript, input, output, packagePath);
-                File dir = new File(output);
-
+                
                 ////System.out.println("CREATED JAVA FILE FOR SCRIPT: " +
                 // script);
             } catch (Exception ex) {
@@ -2288,7 +2253,8 @@ public class NanoTslCompiler {
         }
     }
     
-    public void initJavaCompiler( String outputPath, ArrayList classpath, Class javaCompilerClass) {
+    @SuppressWarnings("unchecked")
+	public void initJavaCompiler( String outputPath, ArrayList classpath, Class javaCompilerClass) {
         StringBuffer cpbuffer = new StringBuffer();
               if (classpath != null) {
             for (int i = 0; i < classpath.size(); i++) {
@@ -2312,7 +2278,7 @@ public class NanoTslCompiler {
 
     
     public void compileTslToJava(String script, String input, String output, String packagePath)  throws Exception {
-        long cc = System.currentTimeMillis();
+        
 //        	System.err.println("compileTslToJava: "+script+" inp: "+input+" out: "+output+" packpath: "+packagePath);
  
         StringWriter sw = new StringWriter();
@@ -2321,12 +2287,14 @@ public class NanoTslCompiler {
 //        System.err.println("Compile took: "+(System.currentTimeMillis()-cc)+" millis.");
 //        System.err.println("Output: "+sw.toString());
     }
-    public void compileAllTslToJava(ArrayList elements)  throws Exception {
+    @SuppressWarnings("unchecked")
+	public void compileAllTslToJava(ArrayList elements)  throws Exception {
           removeDuplicates(elements);
         
         compiler.compile(elements);
     }
-    public void compileAllTslToJava(ArrayList elements, Class compilerClass)  throws Exception {
+    @SuppressWarnings("unchecked")
+	public void compileAllTslToJava(ArrayList elements, Class compilerClass)  throws Exception {
         removeDuplicates(elements);
       
       compiler.compile(elements );
@@ -2341,7 +2309,8 @@ public class NanoTslCompiler {
     }
     
     
-    private void removeDuplicates(ArrayList elements) {
+    @SuppressWarnings("unchecked")
+	private void removeDuplicates(ArrayList elements) {
         for (int i = elements.size()-1; i >=0; i--) {
             String element = (String)elements.get(i);
             File f = new File(element);
@@ -2355,7 +2324,8 @@ public class NanoTslCompiler {
         }
     }
 
-    public static ArrayList compileDirectoryToJava(File currentDir, File outputPath, String offsetPath, NavajoClassLoader classLoader) {
+    @SuppressWarnings("unchecked")
+	public static ArrayList compileDirectoryToJava(File currentDir, File outputPath, String offsetPath, NavajoClassLoader classLoader) {
 //        System.err.println("Entering compiledirectory: " + currentDir + " output: " + outputPath + " offset: " + offsetPath);
         ArrayList files = new ArrayList();
         File[] scripts = null;
@@ -2401,7 +2371,8 @@ public class NanoTslCompiler {
         return files;
     }
 
-    public static void fastCompileDirectory(File currentDir, File outputPath, String offsetPath, String[] extraclasspath,
+    @SuppressWarnings("unchecked")
+	public static void fastCompileDirectory(File currentDir, File outputPath, String offsetPath, String[] extraclasspath,
             NavajoClassLoader classLoader) {
 
         StringBuffer classPath = new StringBuffer();
@@ -2487,7 +2458,8 @@ public class NanoTslCompiler {
 
     }
 
-    private String getHostName() throws SocketException {
+    @SuppressWarnings("unchecked")
+	private String getHostName() throws SocketException {
         //ArrayList list = new ArrayList();
         Enumeration all = java.net.NetworkInterface.getNetworkInterfaces();
 
@@ -2521,8 +2493,7 @@ public class NanoTslCompiler {
     public static void main(String[] args) throws Exception {
 
         System.err.println("today = " + new java.util.Date());
-        java.util.Date d = (java.util.Date) null;
-
+        
         if (args.length == 0) {
             System.out
                     .println("NanoTslCompiler: Usage: java com.dexels.navajo.mapping.compiler.NanoTslCompiler <scriptDir> <compiledDir> [-all | scriptName]");
@@ -2706,46 +2677,46 @@ public class NanoTslCompiler {
     }
     
     public void addScriptCalls(String source, String destination, String[] requires) {
-         for (Iterator iter = metaDataListeners.iterator(); iter.hasNext();) {
-            MetaDataListener element = (MetaDataListener) iter.next();
+         for (Iterator<MetaDataListener> iter = metaDataListeners.iterator(); iter.hasNext();) {
+            MetaDataListener element = iter.next();
             element.scriptCalls(source, destination,requires);
         }
     }
-    public void addScriptIncludes(String source, String destination) {
-        for (Iterator iter = metaDataListeners.iterator(); iter.hasNext();) {
-            MetaDataListener element = (MetaDataListener) iter.next();
+    
+	public void addScriptIncludes(String source, String destination) {
+        for (Iterator<MetaDataListener> iter = metaDataListeners.iterator(); iter.hasNext();) {
+            MetaDataListener element = iter.next();
             element.scriptIncludes(source, destination);
         }
     }
     public void addScriptUsesAdapter(String source, String adaptername) {
-         for (Iterator iter = metaDataListeners.iterator(); iter.hasNext();) {
-            MetaDataListener element = (MetaDataListener) iter.next();
+         for (Iterator<MetaDataListener> iter = metaDataListeners.iterator(); iter.hasNext();) {
+            MetaDataListener element = iter.next();
             element.scriptUsesAdapter(source, adaptername);
         }
     }
     public void addScriptUsesField(String source, String adaptername, String fieldName) {
-         for (Iterator iter = metaDataListeners.iterator(); iter.hasNext();) {
-            MetaDataListener element = (MetaDataListener) iter.next();
+         for (Iterator<MetaDataListener> iter = metaDataListeners.iterator(); iter.hasNext();) {
+            MetaDataListener element = iter.next();
             element.scriptUsesField(source, adaptername, fieldName);
         }
     }
     public void removeScriptMetadata(String script) {
-        for (Iterator iter = metaDataListeners.iterator(); iter.hasNext();) {
-           MetaDataListener element = (MetaDataListener) iter.next();
+        for (Iterator<MetaDataListener> iter = metaDataListeners.iterator(); iter.hasNext();) {
+           MetaDataListener element = iter.next();
            element.removeScriptMetadata(script);
        }
    }
     
     public void resetMetaData() {
-        for (Iterator iter = metaDataListeners.iterator(); iter.hasNext();) {
-            MetaDataListener element = (MetaDataListener) iter.next();
+        for (Iterator<MetaDataListener> iter = metaDataListeners.iterator(); iter.hasNext();) {
+            MetaDataListener element = iter.next();
             element.resetMetaData();
         }
     }
 
     public void addMetaDataListener(MetaDataListener listener) {
-//        System.err.println("Adding script meta data listener...");
-        metaDataListeners.add(listener);
+    	metaDataListeners.add(listener);
     }
 
     public void removeMetaDataListener(MetaDataListener listener) {
@@ -2761,7 +2732,6 @@ public class NanoTslCompiler {
         subObjectCounter = 0;
         startIndexCounter = 0;
         startElementCounter = 0;
-        //offsetElementCounter = 0;
         methodCounter = 0;
         methodClipboard.clear();
         variableClipboard.clear();
