@@ -236,6 +236,10 @@ public final class MappingUtils {
     			}
     		} 
     		else {
+    			// Legacy mode hack, many scripts do not expect null valued string properties.
+    			if ( type.equals(Property.STRING_PROPERTY) && sValue == null ) {
+    				sValue = "";
+    			}
     			prop = NavajoFactory.getInstance().createProperty(outputDoc, actualName, type, sValue, length, description, direction);
     		}
     	}
