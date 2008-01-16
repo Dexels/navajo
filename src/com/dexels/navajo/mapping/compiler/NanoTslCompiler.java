@@ -752,7 +752,7 @@ public class NanoTslCompiler {
           			  ( (ref.charAt(0) + "").toUpperCase() + ref.substring(1)) + "();\n");
             }
 
-            String mappableArrayDefinition = "Mappable [] " + mappableArrayName + " = null;\n";
+            String mappableArrayDefinition = "Object [] " + mappableArrayName + " = null;\n";
             variableClipboard.add(mappableArrayDefinition);
        
             result.append(printIdent(ident + 2) + "int " + lengthName + " = " + 
@@ -1055,7 +1055,7 @@ public class NanoTslCompiler {
             result.append(printIdent(ident + 2) + mappableArrayName +
           		  " = " + objectName + ".get" + ( (ref.charAt(0) + "").toUpperCase() + ref.substring(1)) + "();\n");
 
-            String mappableArrayDefinition = "Mappable [] " + mappableArrayName + " = null;\n";
+            String mappableArrayDefinition = "Object [] " + mappableArrayName + " = null;\n";
             variableClipboard.add(mappableArrayDefinition);
             /**
              * End changes 24/10
@@ -1320,9 +1320,9 @@ public class NanoTslCompiler {
             // ", ARRAY = " + isArray);      
             ////System.out.println("TYPE FOR " + attribute + " IS: " + type + ", ARRAY = " + isArray);
             
-            if (!isArray && !MappingUtils.isMappable(contextClass, attribute,loader)) {
-            	throw new TslCompileException(-1, "Not a mappable field: " + attribute, mapNode);
-            }
+//            if (!isArray && !MappingUtils.isMappable(contextClass, attribute,loader)) {
+//            	throw new TslCompileException(-1, "Not a mappable field: " + attribute, mapNode);
+//            }
             
             if (isArray) {
                 String subObjectsName = "subObject" + subObjectCounter;

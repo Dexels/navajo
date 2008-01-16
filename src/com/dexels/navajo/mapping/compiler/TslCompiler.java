@@ -753,7 +753,7 @@ public class TslCompiler {
     			  ( (ref.charAt(0) + "").toUpperCase() + ref.substring(1)) + "();\n");
       }
 
-      String mappableArrayDefinition = "Mappable [] " + mappableArrayName + " = null;\n";
+      String mappableArrayDefinition = "Object [] " + mappableArrayName + " = null;\n";
       variableClipboard.add(mappableArrayDefinition);
       
       
@@ -1059,7 +1059,7 @@ result.append(printIdent(ident + 4) +
       result.append(printIdent(ident + 2) + mappableArrayName +
     		  " = " + objectName + ".get" + ( (ref.charAt(0) + "").toUpperCase() + ref.substring(1)) + "();\n");
 
-      String mappableArrayDefinition = "Mappable [] " + mappableArrayName + " = null;\n";
+      String mappableArrayDefinition = "Object [] " + mappableArrayName + " = null;\n";
       variableClipboard.add(mappableArrayDefinition);
       
       
@@ -1324,9 +1324,9 @@ result.append(printIdent(ident + 4) +
       
       ////System.out.println("TYPE FOR " + attribute + " IS: " + type + ", ARRAY = " + isArray);
       
-      if (!isArray && !MappingUtils.isMappable(contextClass, attribute,loader)) {
-      	throw new TslCompileException(-1, "Not a mappable field: " + attribute, 0, 0);
-      }
+//      if (!isArray && !MappingUtils.isMappable(contextClass, attribute,loader)) {
+//      	throw new TslCompileException(-1, "Not a mappable field: " + attribute, 0, 0);
+//      }
       
       if (isArray) {
         String subObjectsName = "subObject" + subObjectCounter;
