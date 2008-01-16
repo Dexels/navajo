@@ -1998,22 +1998,7 @@ public class NanoTslCompiler {
 
                 }
             }
-            //       System.err.println("Parsing: "+script+" took:
-            // "+(System.currentTimeMillis()-cc)+" millis.");
-            //      cc = System.currentTimeMillis();
-            //      tslDoc.parseFromReader(new InputStreamReader(new
-            // FileInputStream(scriptPath + "/" + packagePath + "/" + script +
-            // ".xml")));
-            //           XMLDocumentUtils.createDocument(new FileInputStream(scriptPath +
-            // "/" + packagePath + "/" + script + ".xml"), false);
-
-            //      NodeList tsl = tslDoc.getElementsByTagName("tsl");
-            //      if (tsl == null || tsl.getLength() != 1 || !(tsl.item(0)
-            // instanceof Element)) {
-            //        throw new SystemException(-1, "Invalid or non existing script
-            // file: " + scriptPath + "/" + packagePath + "/" + script +
-            // ".xml");
-            //      }
+            
             if (tslDoc == null || tslDoc.getName() == null || !tslDoc.getName().equals("tsl")) {
                 throw new SystemException(-1, "Invalid or non existing script file: " + scriptPath + "/" + packagePath + "/" + script + ".xml");
             }
