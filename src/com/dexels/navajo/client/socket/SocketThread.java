@@ -13,8 +13,11 @@ import java.util.*;
 public class SocketThread
     extends Thread {
   private final SocketThreadPool myPool;
-  private final List myActivities = new ArrayList();
+  @SuppressWarnings({ "unchecked", "unused" })
+  private final ArrayList myActivities = new ArrayList();
+  @SuppressWarnings("unused")
   private final String myName;
+  @SuppressWarnings("unused")
   private final NavajoSocketListener myListener;
   public SocketThread(NavajoSocketListener listener, String name, ThreadGroup group, SocketThreadPool tp) {
     super(group, name);

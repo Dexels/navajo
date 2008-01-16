@@ -28,36 +28,26 @@ public class NavajoRunner {
     
     }
 
-    public static void main(String[] args) throws Exception {
+    @SuppressWarnings({ "unchecked", "deprecation" })
+	public static void main(String[] args) throws Exception {
 //    	
 //    	for (int i = 0; i < args.length; i++) {
 //			System.err.println("Arg # "+i+" "+args[i]);
 //		}
 	   
 			System.setProperty("com.dexels.navajo.DocumentImplementation","com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl");
-      String script = args[1];
-			//        String tmlFile = args[0];
-//			String config = "navajo-tester/auxilary/config";
-//			String tml = "navajo-tester/auxilary/tml";
-//			File confDir = new File(config);
+			String script = args[1];
+
 			File tmlDir = new File(args[2]);
-//			File server = new File(confDir,"server.xml");
 			File server = new File(args[0]);
 			
 			String sourceTml = null;
 			String sourceTmlName = null;
-		
-//			System.err.println("User dir: "+System.getProperty("user.dir"));
-//			String cp = System.getProperty("java.class.path");
-			
-//			System.err.println(">>>>>\n"+cp.replaceAll(";","\n")+"\n>>>>>\n");
-
-			
+					
 			String username = System.getProperty("navajo.user","ik");
 			String password = System.getProperty("navajo.password","ik");
 			String scriptClassName = script.replaceAll("/",".");
 			Class scriptClass = Class.forName(scriptClassName,true,NavajoRunner.class.getClassLoader());
-//			Class scriptClass = Class.forName("com.sybase.jdbc2.jdbc.SybDriver");
 			if (scriptClass==null) {
 				System.err.println("Class not found?!");
 			}
@@ -67,8 +57,7 @@ public class NavajoRunner {
 			dci.init(server.toURL(),NavajoRunner.class.getClassLoader(),System.getProperty("user.dir"));
 		      Dispatcher.getInstance().getNavajoConfig().setClassloader(new NavajoBasicClassLoader(dci.getClass().getClassLoader()));
 
-//			System.err.println("Classloader: "+NavajoRunner.class.getClassLoader());
-			Navajo n = null;
+		    Navajo n = null;
 			if (args.length>3) {
 			    sourceTml = args[3];
 			    sourceTmlName = args[4];

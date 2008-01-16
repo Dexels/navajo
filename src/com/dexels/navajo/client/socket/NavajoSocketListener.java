@@ -11,7 +11,6 @@ import java.net.*;
 
 import com.dexels.navajo.client.*;
 import com.dexels.navajo.client.impl.*;
-import com.dexels.navajo.server.*;
 
 /**
  * @author Administrator
@@ -20,7 +19,7 @@ import com.dexels.navajo.server.*;
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
 public class NavajoSocketListener implements Runnable {
-    private final int port;
+    
     private final Thread acceptThread = new Thread(this);
     private final ServerSocket myServerSocket;
 //    private final Dispatcher myDispatcher;
@@ -29,16 +28,21 @@ public class NavajoSocketListener implements Runnable {
     private final SocketThreadPool myThreadPool;
     private final String myDir;
     private final URL myConfig;
+    
+    private void startThread() {
+    	 acceptThread.start();
+    }
+    
     public NavajoSocketListener(DirectClientImpl ci, int port, String dir, URL config) throws IOException {
 //        System.setProperty("com.dexels.navajo.DocumentImplementation",
 //        "com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl");
         this.myDir = dir;
-        this.port = port;
+       
         myConfig = config;
         myClient = ci;
         myServerSocket = new ServerSocket(port);
         myThreadPool = new SocketThreadPool(this,5);
-        acceptThread.start();
+        startThread();
     }
      public void run() {
          // Will start with a naive thread-creating mechanism.

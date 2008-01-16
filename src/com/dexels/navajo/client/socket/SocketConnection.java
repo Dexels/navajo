@@ -20,18 +20,14 @@ import com.dexels.navajo.server.*;
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
 public class SocketConnection implements Runnable {
-    private final NavajoSocketListener mySocketListener;
+    
     private final Socket mySocket;
 //    private final Thread myThread;
     private final ClientInterface myClient;
-    private final String myName;
+   
     public SocketConnection(String name, ClientInterface d, Socket s, NavajoSocketListener nsl) {
         mySocket = s;
-        mySocketListener = nsl;
-        myName = name;
         myClient = d;
-//        myThread = new Thread(this,name+"_Thread");
-//        myThread.start();
     }
 
     public void run() {

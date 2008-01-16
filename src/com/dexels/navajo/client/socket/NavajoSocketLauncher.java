@@ -9,12 +9,9 @@ package com.dexels.navajo.client.socket;
 import java.io.*;
 import java.net.*;
 
-import com.dexels.navajo.client.*;
 import com.dexels.navajo.client.impl.*;
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.loader.*;
 import com.dexels.navajo.parser.DefaultExpressionEvaluator;
-import com.dexels.navajo.server.*;
 
 /**
  * @author Administrator
@@ -28,11 +25,12 @@ public class NavajoSocketLauncher {
     public static final String JAXP = "com.dexels.navajo.document.jaxpimpl.NavajoFactoryImpl";
     public static final String QDSAX = "com.dexels.navajo.document.base.BaseNavajoFactoryImpl";
 
-    public static void main(String[] args) throws Exception {
+    @SuppressWarnings("deprecation")
+	public static void main(String[] args) throws Exception {
            int port = 10000;
            URL config = null;
       
-           String configUrl = null; 
+           
     	for (int i = 0; i < args.length; i++) {
     		System.err.println("Arg # "+i+" "+args[i]);
     	}

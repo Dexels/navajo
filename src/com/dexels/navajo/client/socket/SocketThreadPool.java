@@ -1,6 +1,6 @@
 package com.dexels.navajo.client.socket;
+
 import java.util.*;
-import java.io.*;
 
 /**
  * <p>Title: </p>
@@ -14,9 +14,12 @@ public class SocketThreadPool {
   private int poolSize = 1;
   private final ThreadGroup myGroup = new ThreadGroup("TipiThreadGroup");
 // private final Set myThreadSet = Collections.synchronizedSet(new HashSet());
+  @SuppressWarnings("unchecked")
   private final List myWaitingQueue = Collections.synchronizedList(new ArrayList());
   private final NavajoSocketListener myListener;
+  @SuppressWarnings({ "unchecked", "unused" })
   private final Map myListenerMap = Collections.synchronizedMap(new HashMap());
+  @SuppressWarnings("unchecked")
   private List myThreadCollection = Collections.synchronizedList(new ArrayList());
 
   private boolean running = true;
@@ -42,11 +45,12 @@ public class SocketThreadPool {
     System.err.println("Available threads: "+myThreadCollection.size());
   }
 
+  @SuppressWarnings("unchecked")
   private final  void createThread(String name) {
-    SocketThread tt = new SocketThread(myListener,name, myGroup, this);
-//    System.err.println("Creating thread: "+name);
-     myThreadCollection.add(tt);
-    tt.start();
+	  SocketThread tt = new SocketThread(myListener,name, myGroup, this);
+//	  System.err.println("Creating thread: "+name);
+	  myThreadCollection.add(tt);
+	  tt.start();
   }
 
   public synchronized SocketConnection getExecutable() {
@@ -71,13 +75,14 @@ public class SocketThreadPool {
     running = r;
   }
 
+  @SuppressWarnings("unchecked")
   public void shutdown() {
-    setRunning(false);
-    for (Iterator iter = myThreadCollection.iterator(); iter.hasNext(); ) {
-      SocketThread item = (SocketThread)iter.next();
-//      item.shutdown();
-      item.interrupt();
-    }
+	  setRunning(false);
+	  for (Iterator iter = myThreadCollection.iterator(); iter.hasNext(); ) {
+		  SocketThread item = (SocketThread)iter.next();
+//		  item.shutdown();
+		  item.interrupt();
+	  }
   }
 
 
@@ -103,10 +108,11 @@ public class SocketThreadPool {
   }
 
  
+  @SuppressWarnings("unchecked")
   public synchronized void enqueueExecutable(SocketConnection exe)  {
-        myWaitingQueue.add(exe);
-        notify();
-     }
+	  myWaitingQueue.add(exe);
+	  notify();
+  }
 
 
 }

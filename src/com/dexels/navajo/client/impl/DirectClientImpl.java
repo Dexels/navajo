@@ -9,7 +9,6 @@ import java.util.Map.Entry;
 import com.dexels.navajo.client.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.types.*;
-import com.dexels.navajo.loader.NavajoBasicClassLoader;
 import com.dexels.navajo.server.*;
 
 /**
@@ -35,10 +34,8 @@ import com.dexels.navajo.server.*;
  * SUCH DAMAGE.
  * ====================================================================
  */
-public class DirectClientImpl
-    implements ClientInterface {
-//  private ThreadGroup myThreadGroup = new ThreadGroup("navajothreads");
-//  private NavajoAsyncRunner myRunner = null;
+public class DirectClientImpl implements ClientInterface {
+
   public DirectClientImpl() {
 	  String token = null;
 	  try {
@@ -54,15 +51,20 @@ public class DirectClientImpl
 	}
   }
 
+  @SuppressWarnings("unchecked")
   private final Map propertyMap = new HashMap();
   private Dispatcher dispatcher;
   private ErrorResponder myErrorResponder;
+  @SuppressWarnings("unchecked")
   private final ArrayList myActivityListeners = new ArrayList();
+  @SuppressWarnings("unchecked")
   private final Map cachedServicesNameMap = new HashMap();
+  @SuppressWarnings("unchecked")
   private final Map serviceCache = new HashMap();
+  @SuppressWarnings("unchecked")
   private final Map globalMessages = new HashMap();
-private String password;
-private String username;
+  private String password;
+  private String username;
 
 
 private final String mySessionToken;
@@ -95,8 +97,9 @@ private final String mySessionToken;
     // Not applicable.
   }
 
+  @SuppressWarnings("unchecked")
   public void addCachedService(String service){
-    cachedServicesNameMap.put(service, service);
+	  cachedServicesNameMap.put(service, service);
   }
 
   public void removeCachedService(String service){
@@ -118,7 +121,8 @@ private final String mySessionToken;
     return doSimpleSend(out, server, method, user, password, expirationInterval, false, false);
   }
 
-  public final Navajo doSimpleSend(Navajo out, String server, String method, String user, String password, long expirationInterval, boolean useCompression, boolean allowPreparseProxy) throws ClientException {
+  @SuppressWarnings("unchecked")
+public final Navajo doSimpleSend(Navajo out, String server, String method, String user, String password, long expirationInterval, boolean useCompression, boolean allowPreparseProxy) throws ClientException {
     fireActivityChanged(true, method);
     String cacheKey = out.persistenceKey();
     Navajo reply = (Navajo)serviceCache.get(cacheKey);
@@ -213,7 +217,8 @@ private final String mySessionToken;
     return reply;
   }
 
-  public void setDocumentGlobals(final Navajo doc) throws ClientException {
+  @SuppressWarnings("unchecked")
+public void setDocumentGlobals(final Navajo doc) throws ClientException {
 //      System.err.println("Setting doc. globals.");
     try {
     	Message msg = doc.getMessage(GLOBALSNAME);
@@ -265,14 +270,16 @@ private final String mySessionToken;
     // Well waddujaknow,..
   }
 
+  @SuppressWarnings("unchecked")
   public void setClientProperty(String key, Object value) {
-    propertyMap.put(key, value);
+	  propertyMap.put(key, value);
   }
 
   public Object getClientProperty(String key) {
     return propertyMap.get(key);
   }
 
+  @SuppressWarnings("unchecked")
   public void addActivityListener(ActivityListener al) {
     myActivityListeners.add(al);
   }
@@ -421,9 +428,10 @@ private final String mySessionToken;
 	  return (Message)globalMessages.get(name);
   }
 
+  @SuppressWarnings("unchecked")
   public void addGlobalMessage(Message m){
-    globalMessages.remove(m.getName());
-    globalMessages.put(m.getName(), m);
+	  globalMessages.remove(m.getName());
+	  globalMessages.put(m.getName(), m);
   }
 
   public boolean removeGlobalMessage(Message m){

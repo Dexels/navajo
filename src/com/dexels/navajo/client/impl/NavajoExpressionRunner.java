@@ -95,6 +95,7 @@ public class NavajoExpressionRunner {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	private static void processRemarks(String func, PrintWriter pw) {
 	
 		//System.err.println("Processing: "+func);
