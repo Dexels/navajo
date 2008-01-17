@@ -7,6 +7,7 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.parser.Condition;
 import com.dexels.navajo.parser.Expression;
+import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.scheduler.IllegalTask;
 import com.dexels.navajo.scheduler.IllegalTrigger;
@@ -16,6 +17,7 @@ import com.dexels.navajo.scheduler.TaskRunner;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.Parameters;
+import com.dexels.navajo.server.SystemException;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
@@ -151,14 +153,17 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 						usethisState.getWorkFlow().addParameter(name, o.value);
 						j = exps.size() + 1;
 					}
-				} catch (Exception e) {
+				} catch (TMLExpressionException e) {
 					e.printStackTrace(System.err);
 					WorkFlowManager.log(this.myState.getWorkFlow(), this, e.getMessage(), e);
 					this.myState.getWorkFlow().setKill(true);
-				} 
+				} catch (SystemException e2) {
+					e2.printStackTrace(System.err);
+					WorkFlowManager.log(this.myState.getWorkFlow(), this, e2.getMessage(), e2);
+					this.myState.getWorkFlow().setKill(true);
+				}
 			}
 		}
-
 	}
 	
 	private final boolean isMyTransitionTaskTrigger(Task t) {

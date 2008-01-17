@@ -1,11 +1,9 @@
 package com.dexels.navajo.util;
 
 import org.w3c.dom.*;
-import org.xml.sax.InputSource;
 
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
-import com.dexels.navajo.server.Dispatcher;
 
 import java.io.*;
 import java.util.*;
@@ -166,6 +164,7 @@ public class Generate {
 
             if (list.item(i).getNodeName().equals("expression")) {
 
+              @SuppressWarnings("unused")
               Node parentNode = list.item(i).getParentNode();
 
               String parameter = ((Element) list.item(i)).getAttribute("value");
@@ -192,6 +191,7 @@ public class Generate {
                       } else {
                           StringTokenizer selProp = new StringTokenizer(propName, ":");
                           String propertyName = selProp.nextToken();
+                          @SuppressWarnings("unused")
                           String selectionField = selProp.nextToken();
                           //Selection sel = Selection.create(result, value, value, true);
 
@@ -258,6 +258,7 @@ public class Generate {
           return d;
   }
 
+  @SuppressWarnings("unchecked")
   public void createMessageDefinition(Document d, String name, HashSet parts) {
       Element e = d.createElement("wsdl_message");
       d.appendChild(e);
@@ -339,6 +340,7 @@ public class Generate {
 	  }
   }
 
+  @SuppressWarnings({ "unchecked", "deprecation" })
   public static void main(String args[]) throws Exception {
 
       Generate gen = new Generate();

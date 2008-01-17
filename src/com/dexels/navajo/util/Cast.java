@@ -16,7 +16,8 @@ import java.util.ArrayList;
 
 public class Cast {
 
-    public static void down(Object in, Object out) {
+    @SuppressWarnings("unchecked")
+	public static void down(Object in, Object out) {
 
         Class inClass = null;
 
@@ -40,7 +41,8 @@ public class Cast {
         }
     }
 
-    public static Object up(Object in) {
+    @SuppressWarnings("unchecked")
+	public static Object up(Object in) {
 
         Object out = null;
 
@@ -89,7 +91,8 @@ public class Cast {
         return out;
     }
 
-    public static ArrayList upAll(Object[] in) {
+    @SuppressWarnings("unchecked")
+	public static ArrayList upAll(Object[] in) {
         if (in == null)
             return null;
         ArrayList out = new ArrayList();
@@ -103,7 +106,8 @@ public class Cast {
         return out;
     }
 
-    public static ArrayList upAll(ArrayList in) {
+    @SuppressWarnings("unchecked")
+	public static ArrayList upAll(ArrayList in) {
 
         if (in == null)
             return null;

@@ -23,6 +23,7 @@ public final class AuditLog {
 	public final static String AUDIT_MESSAGE_CLOCK = "[AUDIT LOG] (Clock): ";
 	public final static String AUDIT_MESSAGE_WORKFLOW = "[AUDIT LOG] (Workflow): ";
 	public final static String AUDIT_MESSAGE_TRIBEMANAGER = "[AUDIT LOG] (TribeManager): ";
+	public final static String AUDIT_MESSAGE_SHAREDSTORE = "[AUDIT LOG] (SharedStore): ";
 
 	private static volatile String instanceName;
 	

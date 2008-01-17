@@ -35,7 +35,8 @@ package com.dexels.navajo.util;
 public class TokenString {
 
     private int ElPtr = 0;
-    private int TkPtr = 0;
+    @SuppressWarnings("unused")
+	private int TkPtr = 0;
     private String input = null;
     private String[] tokens = null;
     private String curToken = null;

@@ -15,8 +15,10 @@ import java.util.regex.*;
 
 public final class Util {
 
-    private static ResourceBundle rb = null;
-    private static int logLevel = 0;
+    @SuppressWarnings("unused")
+	private static ResourceBundle rb = null;
+    @SuppressWarnings("unused")
+	private static int logLevel = 0;
 
     public final static void debugLog(int level, String message) {// System.out.println("NAVAJO: " + message);
     }
@@ -75,7 +77,8 @@ public final class Util {
         return value;
     }
 
-    public final static Object getHashKey(Hashtable hash, Object findValue) {
+    @SuppressWarnings("unchecked")
+	public final static Object getHashKey(Hashtable hash, Object findValue) {
 
         Object key;
 

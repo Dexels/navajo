@@ -114,7 +114,11 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 			if ( instance.workflowPath == null ) {
 				instance.baseWorkflowPath = "/workflows/instances";
 				instance.workflowPath = instance.baseWorkflowPath + "/" + Dispatcher.getInstance().getNavajoConfig().getInstanceName();
-				ssi.createParent(instance.workflowPath);
+				try {
+					ssi.createParent(instance.workflowPath);
+				} catch (SharedStoreException e) {
+					AuditLog.log(AuditLog.AUDIT_MESSAGE_WORKFLOW, e.getMessage());
+				}
 			}
 			
 			WorkFlowDefinitionReader.initialize(new File(instance.workflowDefinitionPath), instance.workflowDefinitions);
