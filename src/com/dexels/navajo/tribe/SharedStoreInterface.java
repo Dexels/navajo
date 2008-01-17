@@ -74,7 +74,7 @@ public interface SharedStoreInterface {
 	 * 
 	 * @param parent
 	 */
-	public void createParent(String parent);
+	public void createParent(String parent) throws SharedStoreException;
 	
 	/**
 	 * Returns the last modification time (in millis) of a specific object identified by its parent and name.

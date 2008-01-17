@@ -45,6 +45,9 @@ public class SharedStoreLock implements Serializable {
 	public String name;
 	public int lockType;
 	
+	/**
+	 * Returns a string representation of this SharedStoreLock.
+	 */
 	public String toString() {
 		return "(" + owner + "," + parent + "," + name + ")";
 	}

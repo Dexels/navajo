@@ -8,6 +8,7 @@ import com.dexels.navajo.server.enterprise.queue.Queable;
 import com.dexels.navajo.tribe.SharedStoreException;
 import com.dexels.navajo.tribe.SharedStoreFactory;
 import com.dexels.navajo.tribe.SharedStoreInterface;
+import com.dexels.navajo.util.AuditLog;
 
 /**
  * The FileStore uses the Navajo SharedStoreInterface for storing queued adapters.
@@ -23,7 +24,7 @@ public class FileStore implements MessageStore {
 	private final HashSet<String> currentObjects = new HashSet<String>();
 	private Iterator<String> objectPointer = null;
 	
-	private final static void setup() {
+	private final static void setup() throws SharedStoreException {
 		SharedStoreInterface ssi = SharedStoreFactory.getInstance();
 		path = "/adapterqueue/" + Dispatcher.getInstance().getNavajoConfig().getInstanceName();
 		ssi.createParent(path);
@@ -36,7 +37,11 @@ public class FileStore implements MessageStore {
 	public FileStore() {
 		synchronized (semaphore) {
 			if ( path == null ) {
-				setup();
+				try {
+					setup();
+				} catch (SharedStoreException e) {
+					AuditLog.log(AuditLog.AUDIT_MESSAGE_SHAREDSTORE, e.getMessage());
+				}
 			}
 		}
 	}

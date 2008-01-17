@@ -40,6 +40,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 
 import com.dexels.navajo.server.Dispatcher;
+import com.dexels.navajo.util.AuditLog;
 
 /**
  * LockFiles is used to filter lock files.
@@ -143,20 +144,26 @@ public class SharedFileStore implements SharedStoreInterface {
 			File f = new File(sharedStore, name);
 			if ( !f.exists() ) {
 				if ( name.contains("/") ) {
-					f.mkdirs();
+					if (!f.mkdirs()) {
+						throw new SharedStoreException("Could not create parent for lock in shared store: " + ssl.toString());
+					}
 				}
-				f.createNewFile();
+				if (!f.createNewFile()) {
+					throw new SharedStoreException("Could not write lock in shared store: " + ssl.toString());
+				}
 			} else {
 				throw new Exception("Lock already exists");
 			}
 		}
 	}
 	
-	public SharedFileStore() {
+	public SharedFileStore() throws Exception {
 		if ( Dispatcher.getInstance() != null ) {
 			sharedStore = new File(Dispatcher.getInstance().getNavajoConfig().getRootPath() + "/" + sharedStoreName);
 			if ( !sharedStore.exists() ) {
-				sharedStore.mkdirs();
+				if ( !sharedStore.mkdirs() ) {
+					throw new SharedStoreException("Could not create SharedFileStore");
+				}
 			}
 		}
 	}
@@ -262,7 +269,9 @@ public class SharedFileStore implements SharedStoreInterface {
 				if ( lock != null ) {
 					//System.err.println("RELEASING LOCK " + lock.parent + "/" + lock.name + " FOR " + lock.owner);
 					File f = new File(sharedStore, constructLockName(lock));
-					f.delete();
+					if ( !f.delete() ) {
+						AuditLog.log(AuditLog.AUDIT_MESSAGE_SHAREDSTORE, "Could not release lock: " + lock.toString());
+					}
 				}
 			}
 		}
@@ -286,7 +295,9 @@ public class SharedFileStore implements SharedStoreInterface {
 			}
 			File p = new File(sharedStore, parent);
 			if (!p.exists()) {
-				p.mkdirs();
+				if (!p.mkdirs()) {
+					throw new SharedStoreException("Could not store object " + name);
+				}
 			}
 			File f = new File(p, name);
 			try {
@@ -305,15 +316,20 @@ public class SharedFileStore implements SharedStoreInterface {
 
 	public void remove(String parent, String name) {
 		File f = new File(sharedStore, parent + "/" + name);
-		f.delete();
+		if (!f.delete()) {
+			AuditLog.log(AuditLog.AUDIT_MESSAGE_SHAREDSTORE, "Could not remove object, parent = " + parent + ", name = " + name);
+		}
 	}
 
-	public void createParent(String parent) {
+	public void createParent(String parent) throws SharedStoreException {
 		SharedStoreLock ssl =  lock(parent, "", SharedFileStore.READ_WRITE_LOCK, true);
 		try {
 			File p = new File(sharedStore, parent);
 			if (!p.exists()) {
-				p.mkdirs();
+				if ( !p.mkdirs() ) {
+					throw new SharedStoreException("Could not create parent: " + parent);
+				}
+					
 			}
 		} finally {
 			release(ssl);
@@ -334,7 +350,9 @@ public class SharedFileStore implements SharedStoreInterface {
 
 			File p = new File(sharedStore, parent);
 			if (!p.exists()) {
-				p.mkdirs();
+				if ( !p.mkdirs() ) {
+					throw new SharedStoreException("Could not create object for text, parent = " + parent + ", name = " + name);
+				}
 			}
 			File f = new File(p, name);
 			try {
@@ -360,7 +378,9 @@ public class SharedFileStore implements SharedStoreInterface {
 			}
 			File p = new File(sharedStore, parent);
 			if (!p.exists()) {
-				p.mkdirs();
+				if (! p.mkdirs() ) {
+					throw new SharedStoreException("Could not get outputstream for object, parent = " + parent + ", name = " + name);
+				}
 			}
 			File f = new File(p, name);
 			try {
@@ -375,8 +395,8 @@ public class SharedFileStore implements SharedStoreInterface {
 		}
 	}
 	
-	public void test() {
-		File f = new File("/home/arjen/Pictures");
+	public void test(String name) {
+		File f = new File(name);
 		File [] fs = f.listFiles();
 		ArrayList<String> names = new ArrayList<String>();
 		Arrays.sort(fs, new FileComparator());
@@ -391,7 +411,7 @@ public class SharedFileStore implements SharedStoreInterface {
 	
 	public static void main (String [] args) throws Exception {
 		SharedFileStore sfs = new SharedFileStore();
-		sfs.test();
+		sfs.test("/home/arjen/Pictures");
 	}
 
 }

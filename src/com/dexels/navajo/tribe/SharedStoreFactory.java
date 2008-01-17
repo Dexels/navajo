@@ -24,6 +24,8 @@
  */
 package com.dexels.navajo.tribe;
 
+import com.dexels.navajo.util.AuditLog;
+
 public class SharedStoreFactory {
 
 	private static volatile SharedStoreInterface instance = null;
@@ -39,7 +41,11 @@ public class SharedStoreFactory {
 			if ( instance != null ) {
 				return instance;
 			}
-			instance = new SharedFileStore();
+			try {
+				instance = new SharedFileStore();
+			} catch (Exception e) {
+				AuditLog.log(AuditLog.AUDIT_MESSAGE_SHAREDSTORE, e.getMessage());
+			}
 		}
 		
 		return instance;
