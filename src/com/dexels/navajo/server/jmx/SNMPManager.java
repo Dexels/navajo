@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 
-import javax.management.openmbean.ArrayType;
 import javax.management.openmbean.CompositeData;
 import javax.management.openmbean.CompositeType;
 import javax.management.openmbean.OpenDataException;
@@ -21,8 +20,10 @@ public class SNMPManager implements CompositeData {
 	public static final String V1 = "V1";
 	public static final String V2 = "V2";
 	
+	@SuppressWarnings("unchecked")
 	private HashMap items = new HashMap();
 	
+	@SuppressWarnings("unchecked")
 	public SNMPManager (String value) {
 
 		String host = "localhost";
@@ -45,6 +46,7 @@ public class SNMPManager implements CompositeData {
 		items.put(SNMPVERSION, version);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public SNMPManager (String host, int port, String version) {
 		items.put(HOSTNAME, host);
 		items.put(PORT, new Integer(port));
@@ -75,6 +77,7 @@ public class SNMPManager implements CompositeData {
 		return items.get(key);
 	}
 
+	@SuppressWarnings("unchecked")
 	public Object[] getAll(String[] keys) {
 		ArrayList l = new ArrayList();
 		for (int i = 0; i < keys.length; i++) {
@@ -104,6 +107,7 @@ public class SNMPManager implements CompositeData {
 		return ct;
 	}
 
+	@SuppressWarnings("unchecked")
 	public Collection values() {
 		return items.values();
 	}

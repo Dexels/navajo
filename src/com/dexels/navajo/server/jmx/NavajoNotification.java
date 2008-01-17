@@ -27,7 +27,7 @@ public class NavajoNotification  extends javax.management.Notification {
 								   String severeness,
 								   String message) {
 		super(NAVAJO_NOTIFICATION, source, sequenceNumber);
-		this.time = timeStamp;
+		this.time = (Date) timeStamp.clone();
 		this.warningLevel = warningLevel;
 		this.currentLevel = currentLevel;
 		this.message = message;
@@ -51,6 +51,6 @@ public class NavajoNotification  extends javax.management.Notification {
 	}
 
 	public Date getTime() {
-		return time;
+		return (Date) time.clone();
 	}
 }

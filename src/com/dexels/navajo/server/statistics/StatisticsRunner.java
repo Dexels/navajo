@@ -48,6 +48,7 @@ public final class StatisticsRunner extends GenericThread implements StatisticsR
   
   private static volatile StatisticsRunner instance = null;
   private StoreInterface myStore = null;
+  @SuppressWarnings("unchecked")
   private Map todo = new HashMap();
   private static String id = "Navajo StatisticsRunner";
   
@@ -71,6 +72,7 @@ public final class StatisticsRunner extends GenericThread implements StatisticsR
    *
    * @return
    */
+  @SuppressWarnings("unchecked")
   public final static StatisticsRunner getInstance(String storePath, Map parameters, String storeClass) throws Throwable {
 	  
 	  if ( storeClass == null ) {
@@ -118,6 +120,7 @@ public final class StatisticsRunner extends GenericThread implements StatisticsR
    * Main thread. Responsible for persisting queued access objects.
    *
    */
+  @SuppressWarnings("unchecked")
   public final void worker() {
 
 	  HashMap copyOfTodo = null;
@@ -142,6 +145,7 @@ public final class StatisticsRunner extends GenericThread implements StatisticsR
    *
    * @param a
    */
+  @SuppressWarnings("unchecked")
   public final void addAccess(final Access a, final Exception e, AsyncMappable am) {
 	  synchronized ( semaphore ) {
 		  todo.put( a.accessID, new TodoItem(a, am) );
