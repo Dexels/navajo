@@ -30,6 +30,7 @@ import java.io.*;
 import java.util.*;
 import java.net.*;
 
+import com.dexels.navajo.server.enterprise.monitoring.AgentFactory;
 import com.dexels.navajo.server.enterprise.queue.RequestResponseQueueFactory;
 import com.dexels.navajo.server.enterprise.scheduler.TaskInterface;
 import com.dexels.navajo.server.enterprise.scheduler.TaskRunnerFactory;
@@ -43,8 +44,6 @@ import com.dexels.navajo.server.jmx.SNMPManager;
 import com.dexels.navajo.util.AuditLog;
 import com.dexels.navajo.util.Util;
 import com.dexels.navajo.server.enterprise.integrity.WorkerInterface;
-import com.dexels.navajo.tribe.TribeException;
-import com.dexels.navajo.tribe.TribeManager;
 import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.loader.NavajoClassSupplier;
 import com.dexels.navajo.lockguard.Lock;
@@ -55,6 +54,7 @@ import com.dexels.navajo.lockguard.LocksExceeded;
 import com.dexels.navajo.logger.*;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
+import com.sun.corba.se.spi.monitoring.MonitoringFactories;
 
 /**
  * This class implements the general Navajo Dispatcher.
@@ -120,7 +120,7 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
    * Registered SNMP managers.
    */
   private ArrayList snmpManagers = new ArrayList(); 
-  
+   
   /**
    * Constructor for URL based configuration.
    *
@@ -147,6 +147,7 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
 		  JMXHelper.registerMXBean(this, JMXHelper.NAVAJO_DOMAIN, "Dispatcher");
 		  setServerIdentifier(serverIdentification);
 		  NavajoFactory.getInstance().setTempDir(getTempDir());
+		  
 	  }
 	  
 	  catch (Exception se) {
@@ -183,6 +184,8 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
   
   public final void startUpServices() {
 
+	  // Startup monitoring agent.
+	  AgentFactory.getInstance().start();
 	  // Startup task runner.
 	  instance.navajoConfig.getTaskRunner();
 	  // Startup queued adapter.
@@ -1367,7 +1370,6 @@ private void appendServerBroadCast(Access a, Navajo in, Header h) {
   }
 
   protected void finalize() {
-	  //System.err.println("In finalize() Dispatcher object");
 	  instances--;
   }
   
@@ -1389,6 +1391,10 @@ private void appendServerBroadCast(Access a, Navajo in, Header h) {
 			  // TODO Auto-generated catch block
 			  e.printStackTrace();
 		  }
+		  
+		  // Shutdown monitoring agent.
+		  AgentFactory.getInstance().stop();
+		  
 		  // Finally kill myself
 		  instance = null;
 		  AuditLog.log(AuditLog.AUDIT_MESSAGE_DISPATCHER, "Navajo Dispatcher terminated.");
