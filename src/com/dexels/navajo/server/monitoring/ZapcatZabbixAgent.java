@@ -4,6 +4,7 @@ import org.kjkoster.zapcat.Agent;
 import org.kjkoster.zapcat.zabbix.ZabbixAgent;
 
 import com.dexels.navajo.server.enterprise.monitoring.AgentInterface;
+import com.dexels.navajo.util.AuditLog;
 
 public class ZapcatZabbixAgent implements AgentInterface {
 
@@ -35,8 +36,10 @@ public class ZapcatZabbixAgent implements AgentInterface {
 	}
 
 	public void start() {
-		if ( instance.myAgent != null ) {
+		if ( instance.myAgent == null ) {
+			AuditLog.log(AuditLog.AUDIT_MESSAGE_MONITOR, "Started Zapcat Monitoring Agent");
 			instance.myAgent = new ZabbixAgent();
+			
 		}
 	}
 	
