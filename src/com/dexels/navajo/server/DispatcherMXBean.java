@@ -2,8 +2,6 @@ package com.dexels.navajo.server;
 
 import java.util.Date;
 
-import javax.management.openmbean.ArrayType;
-
 public interface DispatcherMXBean {
 
 	public String getServerId();
@@ -13,6 +11,9 @@ public interface DispatcherMXBean {
 	public void resetAccessSetPeakSize();
 	public long getUptime();
 	public Date getStarttime();
+	public float getRequestRate();
+	public long getRequestCount();
+	
 	/**
 	 * SNMP stuff:
 	 * SNMP managers are coded as follows:

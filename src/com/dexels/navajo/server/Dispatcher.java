@@ -1527,4 +1527,8 @@ private void appendServerBroadCast(Access a, Navajo in, Header h) {
 	  }
   }
 
+  public long getRequestCount() {
+	  return requestCount;
+  }
+
 }

@@ -30,12 +30,12 @@ public final class JMXHelper  {
 	private int port = 9999;
 	
 	private static String applicationPrefix = null;
-	public static final String SCRIPT_DOMAIN = ".navajo.script:type=";
-	public static final String ADAPTER_DOMAIN = ".navajo.adapter:type=";
-	public static final String NAVAJO_DOMAIN = ".navajo.service:type=";
-	public static final String ASYNC_DOMAIN = ".navajo.async:type=";
-	public static final String TASK_DOMAIN = ".navajo.task:type=";
-	public static final String QUEUED_ADAPTER_DOMAIN = ".navajo.queuedadapter:type=";
+	public static final String SCRIPT_DOMAIN = "navajo.script:type=";
+	public static final String ADAPTER_DOMAIN = "navajo.adapter:type=";
+	public static final String NAVAJO_DOMAIN = "navajo.service:type=";
+	public static final String ASYNC_DOMAIN = "navajo.async:type=";
+	public static final String TASK_DOMAIN = "navajo.task:type=";
+	public static final String QUEUED_ADAPTER_DOMAIN = "navajo.queuedadapter:type=";
 	
 	private RMIServer getRMIServer(String hostName, int port) throws IOException {
 
@@ -121,8 +121,16 @@ public final class JMXHelper  {
 	}
 
 	public final static ObjectName getObjectName(String domain, String type) {
+		if ( applicationPrefix == null ) {
+			synchronized ( SCRIPT_DOMAIN ) {
+				applicationPrefix = NavajoConfig.getInstance().getInstanceName();
+				if ( applicationPrefix  == null ) {
+					applicationPrefix = "unnamedapplication";
+				} 
+			}
+		}
 		try {
-			return new ObjectName(constructObjectName(domain) + type);
+			return new ObjectName(constructObjectName(domain) + type + ",instance=" + applicationPrefix);
 		} catch (MalformedObjectNameException e) {
 			e.printStackTrace();
 			return  null;
@@ -133,15 +141,7 @@ public final class JMXHelper  {
 	}
 
 	private static final String constructObjectName(String domain) {
-		if ( applicationPrefix == null ) {
-			synchronized ( SCRIPT_DOMAIN ) {
-				applicationPrefix = NavajoConfig.getInstance().getInstanceName();
-				if ( applicationPrefix  == null ) {
-					applicationPrefix = "unnamedapplication";
-				} 
-			}
-		}
-		return applicationPrefix + domain;
+		return domain;
 	}
 	
 	public final static void registerMXBean(Object o, String domain, String type) {
