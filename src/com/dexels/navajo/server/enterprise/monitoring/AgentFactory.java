@@ -1,7 +1,8 @@
 package com.dexels.navajo.server.enterprise.monitoring;
 
 import java.lang.reflect.Method;
-import com.dexels.navajo.server.enterprise.integrity.WorkerInterface;
+
+import com.dexels.navajo.util.AuditLog;
 
 public class AgentFactory {
 
@@ -14,8 +15,12 @@ public class AgentFactory {
 	 * @return
 	 */
 	
-	@SuppressWarnings("unchecked")
 	public static final AgentInterface getInstance() {
+		return getInstance("com.dexels.navajo.server.monitoring.ZapcatZabbixAgent");
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static final AgentInterface getInstance(String className) {
 		
 		if ( instance != null ) {
 			return instance;
@@ -25,12 +30,14 @@ public class AgentFactory {
 				
 				if ( instance == null ) {
 					try {
-						Class c = Class.forName("com.dexels.navajo.server.monitoring.ZapcatZabbixAgent");
-						WorkerInterface dummy = (WorkerInterface) c.newInstance();
+						Class c = Class.forName(className);
+						AgentInterface dummy = (AgentInterface) c.newInstance();
 						Method m = c.getMethod("getInstance", (Class []) null);
 						instance = (AgentInterface) m.invoke(dummy, (Object []) null);
+						AuditLog.log(AuditLog.AUDIT_MESSAGE_MONITOR, "Found monitoring Agent: " + className);
 					} catch (Exception e) {
-						System.err.println("WARNING: Monitoring Agent not available");
+						e.printStackTrace(System.err);
+						System.err.println("WARNING: Monitoring Agent not available: " + className);
 						instance = new DummyAgent();
 					}	
 				}
