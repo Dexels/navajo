@@ -11,6 +11,13 @@ import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.server.enterprise.queue.Queuable;
 
+/**
+ * Container class that is used to run queuable objects in seperate thread.
+ * This class is instantiated from the RequestResponse queue.
+ * 
+ * @author arjen
+ *
+ */
 public class QueuedAdapter extends Thread implements Mappable {
 
 	public int runningTime;
@@ -34,41 +41,92 @@ public class QueuedAdapter extends Thread implements Mappable {
 		handler = h;
 	}
 	
+	/**
+	 * Returns timestamp when thread was started.
+	 * 
+	 * @return
+	 */
 	public long getStartTime() {
 		return startTime;
 	}
 	
+	/**
+	 * Returns the time (in millis) when this thread is ready for execution.
+	 * 
+	 * @return
+	 */
 	public int getTimeToRun() {
 		return (int) ( handler.getWaitUntil() - System.currentTimeMillis() );
 	}
 	
+	/**
+	 * Returns the total running time (in millis) thus far.
+	 * 
+	 * @return
+	 */
 	public int getRunningTime() {
 		return (int) ( System.currentTimeMillis() - startTime );
 	}
 	
+	/**
+	 * Returns the classname of the Queuable object.
+	 * 
+	 * @return
+	 */
 	public String getAdapterName() {
 		return handler.getClass().getName();
 	}
+	
+	/**
+	 * Returns a handler to the Queuable object.
+	 * 
+	 * @return
+	 */
 	public Queuable getAdapter() {
 		return handler;
 	}
 
+	/**
+	 * Returns total number of retries thus far.
+	 * 
+	 * @return
+	 */
 	public int getRetries() {
 		return handler.getRetries();
 	}
 	
+	/**
+	 * Returns the maximum number of retries.
+	 * 
+	 * @return
+	 */
 	public int getMaxRetries() {
 		return handler.getMaxRetries();
 	}
 	
+	/**
+	 * Returns the original access id of the request that initiated Queuable object.
+	 * 
+	 * @return
+	 */
 	public String getAccessId() {
 		return handler.getAccess().accessID;
 	}
 	
+	/**
+	 * Returns the web service name of the original request hat initiated Queuable object.
+	 * 
+	 * @return
+	 */
 	public String getWebservice() {
 		return handler.getAccess().rpcName;
 	}
 	
+	/**
+	 * Returns the username of the original request that initiated Queuable object.
+	 * 
+	 * @return
+	 */
 	public String getUsername() {
 		return handler.getAccess().rpcUser;
 	}
@@ -114,6 +172,11 @@ public class QueuedAdapter extends Thread implements Mappable {
 		
 	}
 
+	/**
+	 * Returns the exception message (if present).
+	 * 
+	 * @return
+	 */
 	public String getException() {
 		if ( handler != null && handler.getAccess() != null ) {
 			return handler.getAccess().getException().getLocalizedMessage();
@@ -122,6 +185,10 @@ public class QueuedAdapter extends Thread implements Mappable {
 		}
 	}
 
+	/**
+	 * Returns the original creation date for the request that initiated this Queuable object.
+	 * @return
+	 */
 	public Date getCreated() {
 		if ( handler != null && handler.getAccess() != null ) {
 			return handler.getAccess().created;

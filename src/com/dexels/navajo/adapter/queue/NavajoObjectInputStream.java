@@ -5,6 +5,12 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectStreamClass;
 
+/**
+ * Class that supports Navajo classloaders (classloaders that support hot-pluggable jar-files)
+ * 
+ * @author arjen
+ *
+ */
 public final class NavajoObjectInputStream extends ObjectInputStream {
 
 	private ClassLoader classLoader;
