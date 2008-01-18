@@ -35,8 +35,8 @@ public class AgentFactory {
 						Method m = c.getMethod("getInstance", (Class []) null);
 						instance = (AgentInterface) m.invoke(dummy, (Object []) null);
 						AuditLog.log(AuditLog.AUDIT_MESSAGE_MONITOR, "Found monitoring Agent: " + className);
-					} catch (Exception e) {
-						e.printStackTrace(System.err);
+					} catch (Throwable e) {
+						//e.printStackTrace(System.err);
 						System.err.println("WARNING: Monitoring Agent not available: " + className);
 						instance = new DummyAgent();
 					}	
