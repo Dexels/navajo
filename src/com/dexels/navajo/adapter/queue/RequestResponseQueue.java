@@ -143,7 +143,7 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 		}
 	}
 	
-	public void asyncwork(final Queuable handler) {
+	private final void asyncwork(final Queuable handler) {
 		QueuedAdapter t = new QueuedAdapter(handler) {
 
 			public void run() {
