@@ -8,43 +8,72 @@ import com.dexels.navajo.server.Access;
 
 public interface Queuable extends Serializable, QueuableMXBean {
 	
-	/**
-	 * Public setters to be used from web service script.
-	 */
-    // Public method to be used from web service script.
+    /**
+     * Initiates the queued send operation.
+     */ 
 	public void setQueuedSend(boolean b);
-    // Set maximum number of retries before giving up.
+    /**
+     * Set maximum number of retries before giving up.
+     */
 	public void setMaxRetries(int r);
-    // Set waiting time interval to use between retries.
+    /**
+     * Set waiting time interval to use between retries.
+     */
 	public void setWaitUntil(long w);
-	
 	/**
-	 * Public getters/setters to be used by requestresponse queue for lifecycle management and administration.
+	 * Get maximum number of retries before giving up.
 	 */
-    // Get maximum number of retries before giving up.
 	public int getMaxRetries();
-    // Get waiting time interval to use between retries.
+	/**
+	 * Get waiting time interval to use between retries.
+	 * @return
+	 */
 	public long getWaitUntil();
-	
-	// send() should implement the work that should be done upon processing of the queable object.
+	/**
+	 * send() implements the work that should be done upon processing of the queable object.
+	 * 
+	 * @return
+	 */
 	public boolean send();
-	// getResponse() will retrieve the response of the queable object when finished.
+	/**
+	 * getResponse() will retrieve the response of the queable object when finished.
+	 * 
+	 * @return
+	 */
 	public Binary getResponse();
-	// getRequest() will return the request payload for to be used in queable object send() method.
+	/**
+	 * getRequest() will return the request payload for to be used in queable object send() method.
+	 * @return
+	 */
 	public Binary getRequest();
-	
-	// Get access object associated with the request.
+	/**
+	 * Get access object associated with the request.
+	 * 
+	 * @return
+	 */
 	public Access getAccess();
-	// Get tha navajo object associated with the request.
+	/**
+	 * Get the navajo object associated with the request.
+	 * 
+	 * @return
+	 */
 	public Navajo getNavajo();
-	
-	// Reset retry counter.
+	/**
+	 * Reset retry counter.
+	 */
 	public void resetRetries();
-	// Get number of processed retries thus far.
+	/**
+	 * Get number of processed retries thus far.
+	 * 
+	 * @return
+	 */
 	public int getRetries();
-	
-	// Method that can be used to prevent garbage collection of binary placeholder files.
+	/**
+	 * Method that can be used to prevent garbage collection of binary placeholder files.
+	 */
 	public void persistBinaries();
-	// Method that can be used to flag garbage collection of binary placeholder files.
+	/**
+	 * Method that can be used to flag garbage collection of binary placeholder files.
+	 */
 	public void removeBinaries();
 }
