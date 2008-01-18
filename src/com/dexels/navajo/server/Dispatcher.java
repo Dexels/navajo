@@ -54,7 +54,6 @@ import com.dexels.navajo.lockguard.LocksExceeded;
 import com.dexels.navajo.logger.*;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
-import com.sun.corba.se.spi.monitoring.MonitoringFactories;
 
 /**
  * This class implements the general Navajo Dispatcher.
@@ -184,8 +183,6 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
   
   public final void startUpServices() {
 
-	  // Startup monitoring agent.
-	  AgentFactory.getInstance().start();
 	  // Startup task runner.
 	  instance.navajoConfig.getTaskRunner();
 	  // Startup queued adapter.
