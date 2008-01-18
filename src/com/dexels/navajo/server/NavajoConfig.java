@@ -33,6 +33,7 @@ import java.util.*;
 import com.dexels.navajo.server.enterprise.descriptionprovider.DescriptionProviderInterface;
 import com.dexels.navajo.server.enterprise.integrity.WorkerFactory;
 import com.dexels.navajo.server.enterprise.integrity.WorkerInterface;
+import com.dexels.navajo.server.enterprise.monitoring.AgentFactory;
 import com.dexels.navajo.server.enterprise.scheduler.TaskRunnerFactory;
 import com.dexels.navajo.server.enterprise.scheduler.TaskRunnerInterface;
 import com.dexels.navajo.server.enterprise.statistics.StatisticsRunnerFactory;
@@ -235,6 +236,25 @@ public final class NavajoConfig {
 //    		}
     		if(betaClassloader==null) {
     			betaClassloader = new NavajoClassLoader(adapterPath, compiledScriptPath, true, getClass().getClassLoader());
+    		}
+    		
+    		// Read monitoring configuration options
+    		Message monitoringMessage = body.getMessage("monitoring-agent");
+    		Property monitoringAgentClass = body.getProperty("monitoring-agent/class");
+    		Property monitoringAgentProperties = body.getProperty("monitoring-agent/properties");
+    		// Set properties.
+    		if  ( monitoringAgentProperties != null ) {
+    			String [] properties = monitoringAgentProperties.getValue().split(";");
+    			for ( int i = 0; i < properties.length; i++ ) {
+    				String [] keyValue = properties[i].split("=");
+    				String key = ( keyValue.length > 1) ? keyValue[0] : "";
+    				String value = ( keyValue.length > 1) ? keyValue[1] : "";
+    				AuditLog.log(AuditLog.AUDIT_MESSAGE_DISPATCHER, "Setting system property, key = " + key + ", value = " + value);
+    				System.setProperty(key, value);
+    			}
+    		}
+    		if ( monitoringAgentClass != null ) {
+    			AgentFactory.getInstance(monitoringAgentClass.getValue()).start();
     		}
     		
     		Message descriptionMessage = body.getMessage("description-provider");
