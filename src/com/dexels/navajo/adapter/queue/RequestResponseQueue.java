@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 import com.dexels.navajo.server.GenericThread;
-import com.dexels.navajo.server.enterprise.queue.Queable;
+import com.dexels.navajo.server.enterprise.queue.Queuable;
 import com.dexels.navajo.server.enterprise.queue.RequestResponseQueueInterface;
 import com.dexels.navajo.server.jmx.JMXHelper;
 import com.dexels.navajo.util.AuditLog;
@@ -133,7 +133,7 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 		}
 	}
 	
-	public void send(Queable handler, int maxretries) throws Exception {
+	public void send(Queuable handler, int maxretries) throws Exception {
 
 		RequestResponseQueue rrq = RequestResponseQueue.getInstance();
 		handler.persistBinaries();
@@ -143,7 +143,7 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 		}
 	}
 	
-	public void asyncwork(final Queable handler) {
+	public void asyncwork(final Queuable handler) {
 		QueuedAdapter t = new QueuedAdapter(handler) {
 
 			public void run() {
@@ -202,8 +202,8 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 	public void worker() {
 
 		//System.err.println("IN requestresponsequeue worker....................");
-		HashSet<Queable> set = new HashSet<Queable>();
-		Queable handler = null;
+		HashSet<Queuable> set = new HashSet<Queuable>();
+		Queuable handler = null;
 		if ( !queueOnly) {
 			// Add all work in private Set.
 			try {
@@ -217,7 +217,7 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 			}
 			// Iterate over private set to do work.
 			if ( !emptyQueue ) {
-				Iterator<Queable> iter = set.iterator();
+				Iterator<Queuable> iter = set.iterator();
 				while ( iter.hasNext() && !emptyQueue ) {
 					handler = iter.next();
 					// Only handle MAX_THREADS at a time...

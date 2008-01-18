@@ -1,5 +1,5 @@
 package com.dexels.navajo.server.enterprise.queue;
 
-public interface QueableMXBean {
+public interface QueuableMXBean {
 
 }

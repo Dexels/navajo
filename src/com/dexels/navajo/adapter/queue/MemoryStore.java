@@ -3,23 +3,23 @@ package com.dexels.navajo.adapter.queue;
 import java.util.HashSet;
 import java.util.Stack;
 
-import com.dexels.navajo.server.enterprise.queue.Queable;
+import com.dexels.navajo.server.enterprise.queue.Queuable;
 
 public class MemoryStore implements MessageStore {
 
-	private static Stack<Queable> store = new Stack<Queable>();
+	private static Stack<Queuable> store = new Stack<Queuable>();
 	
-	public Queable getNext()  throws Exception {
+	public Queuable getNext()  throws Exception {
 		System.err.println("Getting work from store, size = " + store.size());
 		if ( store.size() != 0 ) {
 			synchronized (store ) {
-				return (Queable) store.pop();
+				return (Queuable) store.pop();
 			}
 		}
 		return null;
 	}
 	
-	public void putMessage(Queable handler, boolean failure) {
+	public void putMessage(Queuable handler, boolean failure) {
 		System.err.println("Putting work in store: " + handler.getClass().getName());
 		if ( !failure ) {
 			synchronized (store ) {

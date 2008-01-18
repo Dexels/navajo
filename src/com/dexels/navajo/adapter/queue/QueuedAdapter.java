@@ -9,7 +9,7 @@ import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.server.UserException;
-import com.dexels.navajo.server.enterprise.queue.Queable;
+import com.dexels.navajo.server.enterprise.queue.Queuable;
 
 public class QueuedAdapter extends Thread implements Mappable {
 
@@ -27,9 +27,9 @@ public class QueuedAdapter extends Thread implements Mappable {
 	public String exception;
 	public Date created;
 	private long startTime;
-	protected Queable handler;
+	protected Queuable handler;
 	
-	public QueuedAdapter(Queable h) {
+	public QueuedAdapter(Queuable h) {
 		startTime = System.currentTimeMillis();
 		handler = h;
 	}
@@ -49,7 +49,7 @@ public class QueuedAdapter extends Thread implements Mappable {
 	public String getAdapterName() {
 		return handler.getClass().getName();
 	}
-	public Queable getAdapter() {
+	public Queuable getAdapter() {
 		return handler;
 	}
 

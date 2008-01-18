@@ -6,7 +6,7 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.server.Access;
 
-public interface Queable extends Serializable, QueableMXBean {
+public interface Queuable extends Serializable, QueuableMXBean {
 	
 	/**
 	 * Public setters to be used from web service script.

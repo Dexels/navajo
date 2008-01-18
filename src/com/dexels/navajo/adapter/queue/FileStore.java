@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.NavajoConfig;
-import com.dexels.navajo.server.enterprise.queue.Queable;
+import com.dexels.navajo.server.enterprise.queue.Queuable;
 import com.dexels.navajo.tribe.SharedStoreException;
 import com.dexels.navajo.tribe.SharedStoreFactory;
 import com.dexels.navajo.tribe.SharedStoreInterface;
@@ -67,7 +67,7 @@ public class FileStore implements MessageStore {
 					NavajoObjectInputStream ois;
 					try {
 						ois = new NavajoObjectInputStream(ssi.getStream(path, files[i]), NavajoConfig.getInstance().getClassloader());
-						Queable q = (Queable) ois.readObject();
+						Queuable q = (Queuable) ois.readObject();
 						// Persist binary file references after reading object.
 						q.persistBinaries();
 						ois.close();
@@ -84,7 +84,7 @@ public class FileStore implements MessageStore {
 		return queuedAdapters;
 	}
 	
-	public Queable getNext() throws Exception {
+	public Queuable getNext() throws Exception {
 
 		//System.err.println("In filestore getNext()");
 		if ( objectPointer == null ) {
@@ -98,12 +98,12 @@ public class FileStore implements MessageStore {
 			return null;
 		}
 		
-		Queable q = null;
+		Queuable q = null;
 		String f = objectPointer.next();
 		SharedStoreInterface ssi = SharedStoreFactory.getInstance();
 		try {
 			NavajoObjectInputStream ois = new NavajoObjectInputStream(ssi.getStream(path, f), NavajoConfig.getInstance().getClassloader());
-			q = (Queable) ois.readObject();
+			q = (Queuable) ois.readObject();
 			// Persist binary file references after reading object.
 			q.persistBinaries();
 			ois.close();
@@ -125,7 +125,7 @@ public class FileStore implements MessageStore {
 		return getNext();
 	}
 	
-	public void putMessage(Queable handler, boolean failure) {
+	public void putMessage(Queuable handler, boolean failure) {
 		//System.err.println(">> Putting work in store: " + handler.getClass().getName());
 		
 		synchronized ( path ) {
@@ -174,7 +174,7 @@ public class FileStore implements MessageStore {
 					NavajoObjectInputStream ois;
 					try {
 						ois = new NavajoObjectInputStream(ssi.getStream(deadQueue, files[i]), NavajoConfig.getInstance().getClassloader());
-						Queable q = (Queable) ois.readObject();
+						Queuable q = (Queuable) ois.readObject();
 						// Persist binary file references after reading object.
 						q.persistBinaries();
 						ois.close();
@@ -202,7 +202,7 @@ public class FileStore implements MessageStore {
 		String [] queuedAdapters = SharedStoreFactory.getInstance().getObjects("/adapterqueue/" + fromServer);
 		for (int i = 0; i < queuedAdapters.length; i++) {
 			try {
-				Queable wf = (Queable) SharedStoreFactory.getInstance().get("/adapterqueue/" + fromServer, queuedAdapters[i]);
+				Queuable wf = (Queuable) SharedStoreFactory.getInstance().get("/adapterqueue/" + fromServer, queuedAdapters[i]);
 				System.err.println(">>>>>>>>>>>>> MOVING WORKFLOW: " + wf.getClass().getName() + " FROM SERVER " + fromServer);
 				putMessage(wf, false);
 				SharedStoreFactory.getInstance().remove("/adapterqueue/" + fromServer, queuedAdapters[i]);
