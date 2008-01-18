@@ -24,6 +24,7 @@ public final class AuditLog {
 	public final static String AUDIT_MESSAGE_WORKFLOW = "[AUDIT LOG] (Workflow): ";
 	public final static String AUDIT_MESSAGE_TRIBEMANAGER = "[AUDIT LOG] (TribeManager): ";
 	public final static String AUDIT_MESSAGE_SHAREDSTORE = "[AUDIT LOG] (SharedStore): ";
+	public final static String AUDIT_MESSAGE_MONITOR = "[AUDIT LOG] (Monitoring Agent): ";
 
 	private static volatile String instanceName;
 	
