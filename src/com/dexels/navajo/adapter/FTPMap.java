@@ -40,7 +40,7 @@ import com.enterprisedt.net.ftp.FTPClient;
 import com.enterprisedt.net.ftp.FTPTransferType;
 
 
-public class FTPMap  implements Mappable, com.dexels.navajo.server.enterprise.queue.Queable {
+public class FTPMap  implements Mappable, com.dexels.navajo.server.enterprise.queue.Queuable {
 
 	/**
 	 * 

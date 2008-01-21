@@ -34,7 +34,7 @@ import com.dexels.navajo.datasource.BinaryDataSource;
 /**
  * This business object is used as a mail agent in Navajo Script files.
  */
-public class MailMap implements Mappable, com.dexels.navajo.server.enterprise.queue.Queable {
+public class MailMap implements Mappable, com.dexels.navajo.server.enterprise.queue.Queuable {
 
     /**
 	 * 

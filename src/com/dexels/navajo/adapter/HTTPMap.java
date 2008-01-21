@@ -36,7 +36,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import com.dexels.navajo.server.enterprise.queue.Queable;
+import com.dexels.navajo.server.enterprise.queue.Queuable;
 import com.dexels.navajo.server.enterprise.queue.RequestResponseQueueInterface;
 import com.dexels.navajo.server.enterprise.queue.RequestResponseQueueFactory;
 import com.dexels.navajo.document.Navajo;
@@ -49,7 +49,7 @@ import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.util.AuditLog;
 
-public class HTTPMap implements Mappable, Queable {
+public class HTTPMap implements Mappable, Queuable {
 
 	/**
 	 * 
