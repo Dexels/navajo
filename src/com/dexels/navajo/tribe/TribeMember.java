@@ -36,8 +36,9 @@ import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.server.UserException;
+import com.dexels.navajo.server.enterprise.tribe.TribeMemberInterface;
 
-public class TribeMember implements Serializable, Mappable {
+public class TribeMember implements Serializable, Mappable, TribeMemberInterface {
 
 	private static final long serialVersionUID = -1371503985787191894L;
 	
