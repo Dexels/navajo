@@ -28,6 +28,13 @@ import java.io.Serializable;
 
 import com.dexels.navajo.server.Dispatcher;
 
+/**
+ * A SmokeSignal is use the instantiate a process ( proccesMessage() ) on an member of the Navajo cluster.
+ * The process can be parameterized by a key/value pair.
+ * 
+ * @author arjen
+ *
+ */
 public abstract class SmokeSignal implements Serializable {
 
 	/**
