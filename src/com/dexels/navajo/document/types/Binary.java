@@ -39,8 +39,8 @@ public final class Binary extends NavajoType implements Serializable {
 	// private byte [] data;
     private String mimetype = "text/plain";
 
-    private File dataFile = null;
-    private File lazySourceFile = null;
+    private transient File dataFile = null;
+    private transient File lazySourceFile = null;
     private transient InputStream lazyInputStream = null;
     private String myRef = null;
     
@@ -57,9 +57,7 @@ public final class Binary extends NavajoType implements Serializable {
     private long expectedLength = 0;
 
     private FormatDescription currentFormatDescription;
-    
-    private final static HashMap persistedBinaries = new HashMap();
-    
+      
     /**
      * Construct a new Binary object with data from an InputStream It does close
      * the stream. I don't like it, but as yet I don't see any situation where
@@ -133,8 +131,11 @@ public final class Binary extends NavajoType implements Serializable {
         }
     }
 	        
-    
     private void loadBinaryFromStream(InputStream is) throws IOException, FileNotFoundException {
+    	loadBinaryFromStream(is, true);
+    }
+    
+    private void loadBinaryFromStream(InputStream is, boolean close) throws IOException, FileNotFoundException {
         int b = -1;
         long fileSize = 0;
         OutputStream fos = createTempFileOutputStream();
@@ -145,18 +146,22 @@ public final class Binary extends NavajoType implements Serializable {
 				fileSize += b;
 			}
 		} finally {
-			
+
 			try {
 				fos.close();
 			} catch (IOException e) {}
-			try {
-			is.close();
-			} catch (IOException e) {}
+			if ( close ) {
+				try {
+					is.close();
+				} catch (IOException e) {}
+			}
 		}
         expectedLength = fileSize;
 
         this.mimetype = getSubType("mime");
         this.mimetype = (mimetype == null || mimetype.equals("") ? guessContentType() : mimetype);
+        
+        System.err.println("Mimetype = " + mimetype);
 
     }
 
@@ -195,6 +200,16 @@ public final class Binary extends NavajoType implements Serializable {
             loadBinaryFromStream(new FileInputStream(f));
         }
         this.mimetype = guessContentType();
+    }
+    
+    private final void init(File f, boolean lazy) throws IOException {
+    	 expectedLength = f.length();
+         if (lazy) {
+             lazySourceFile = f;
+         } else {
+             loadBinaryFromStream(new FileInputStream(f));
+         }
+         this.mimetype = guessContentType();
     }
 
     /**
@@ -620,7 +635,7 @@ public final class Binary extends NavajoType implements Serializable {
     			NavajoFactory.getInstance().removeHandle(dataFile.getName());
     		}
 		} else {
-	        if (dataFile != null && dataFile.exists() && !persistedBinaries.containsKey(dataFile.getAbsolutePath())) {
+	        if (dataFile != null && dataFile.exists() ) {
 	            try {
 	            	//System.err.println("Deleting binary placeholder filer myRef : " + dataFile.getAbsolutePath());
 	                dataFile.delete();
@@ -680,48 +695,6 @@ public final class Binary extends NavajoType implements Serializable {
 //        System.err.println("Copied to stream");
         os.close();
 
-    }
-
-    /**
-     * Get the file reference to a binary.
-     * If persist is set, the binary object is put in a persistent store to
-     * prevent it from being garbage collected.
-     * 
-     * @param persist
-     * @return
-     */
-    public String getTempFileName(boolean persist) {
-    	
-    	String ref = null;
-    	if (lazySourceFile != null) {
-    		ref = lazySourceFile.getAbsolutePath();
-    	} else if (dataFile != null) {    		
-    		ref =  dataFile.getAbsolutePath();
-    	} 
-    	
-    	if ( persist && ref != null && !persistedBinaries.containsKey(ref) ) {
-    		persistedBinaries.put(ref, this);
-    	}
-    	myRef = ref;
-    	
-    	return ref;
-    }	
-    
-    public void removeRef() {
-    	System.err.println("In removeRef(), myRef = " + myRef);
-    	if ( myRef != null ) {
-    		persistedBinaries.remove(myRef);
-    	}
-    }
-    /**
-     * Remove a persisted binary.
-     * 
-     * @param ref
-     */
-    public static void removeRef(String ref) {
-    	if ( ref != null ) {
-    	persistedBinaries.remove(ref);
-    	}
     }
 
     public boolean isEmpty() {
@@ -796,11 +769,49 @@ public final class Binary extends NavajoType implements Serializable {
     	}
     }
     
-//    public static void main(String [] args) throws Exception {
-//    	Binary b1 = new Binary( new File("/home/arjen/menu_kop.jpg" ) );
-//    	Binary b2 = new Binary( new File("/home/arjen/menu_kop.jpg" ) );
-//    	
-//    	System.err.println("equals: " + b1.isEqual(b2) );
-//    	
-//    }
+    /**
+     * Custom deserialization is needed.
+     */
+    private void readObject(ObjectInputStream aStream) throws IOException, ClassNotFoundException {
+    	aStream.defaultReadObject();
+    	//manually deserialize
+    	loadBinaryFromStream(aStream, false);
+    }
+
+     /**
+     * Custom serialization is needed.
+     */
+    private void writeObject(ObjectOutputStream aStream) throws IOException {
+    	aStream.defaultWriteObject();
+    	//manually serialize superclass
+    	if ( dataFile != null ) {
+    		copyResource("", aStream, new FileInputStream(dataFile), 0);
+    	} else if ( lazySourceFile != null ) {
+    		copyResource("", aStream, new FileInputStream(lazySourceFile), 0);
+    	}
+    	
+    }
+     
+    public static void main(String [] args) throws Exception {
+    	Binary b1 = new Binary( new File("/home/arjen/Pictures/photo.jpg" ), false );
+    	
+    	Navajo n = NavajoFactory.getInstance().createNavajo();
+    	Message m = NavajoFactory.getInstance().createMessage(n, "Test");
+    	n.addMessage(m);
+    	Property p = NavajoFactory.getInstance().createProperty(n, "Photo", Property.BINARY_PROPERTY, null, 0, "", "");
+    	p.setValue(b1);
+    	m.addProperty(p);
+    	
+    	ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("/home/arjen/serialized"));
+    	oos.writeObject(n);
+    	oos.close();
+    	
+    	ObjectInputStream ois = new ObjectInputStream(new FileInputStream("/home/arjen/serialized"));
+    	Navajo n2 = (Navajo) ois.readObject();
+    	
+    	n2.write(System.err);
+    	
+    	
+    	
+    }    	
 }
