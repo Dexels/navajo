@@ -452,17 +452,6 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
 	  try {
 		  
 		  Class c;
-//		  if (access == null) {
-//			  c = navajoConfig.getClassloader().getClass(handler);
-//		  }
-//		  else {
-////			  if (access.betaUser) {
-////				  c = navajoConfig.getBetaClassLoader().getClass(handler);
-////			  }
-////			  else {
-//				  c = navajoConfig.getClassloader().getClass(handler);
-//			//  }
-//		  }
 		  
 		  if ( access.betaUser ) {
 			  c = navajoConfig.getBetaClassLoader().getClass(handler);
@@ -471,12 +460,8 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
 		  }
 		  ServiceHandler sh = (ServiceHandler) c.newInstance();
 		  
-//		  if (access.betaUser) {
-//			  sh.setInput(in, access, parms, navajoConfig);
-//		  }
-//		  else {
-			  sh.setInput(in, access, parms, navajoConfig);
-		  //}
+		  sh.setInput(in, access, parms, navajoConfig);
+		
 		  long expirationInterval = in.getHeader().getExpirationInterval();
 		  
 		  // Remove password from in to create password independend persistenceKey.
