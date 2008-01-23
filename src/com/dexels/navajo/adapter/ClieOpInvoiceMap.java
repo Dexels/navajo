@@ -81,8 +81,8 @@ public class ClieOpInvoiceMap implements Mappable {
 		}
 		for(int i=0; i<posts.length; i++){
 			p.print(posts[i].getTransactionRecord()+"\r\n");
-			p.print(posts[i].getBenaficiaryNameRecord()+"\r\n");
-			p.print(posts[i].getBenaficiaryPlaceRecord()+"\r\n");
+			p.print(posts[i].getBeneficiaryNameRecord()+"\r\n");
+			p.print(posts[i].getBeneficiaryPlaceRecord()+"\r\n");
 			p.print(posts[i].getPaymentCharacteristicRecord()+"\r\n");
 			p.print(posts[i].getDescriptionRecord()+"\r\n");
 		}
