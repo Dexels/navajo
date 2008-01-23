@@ -278,6 +278,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 		Object old = getTypedValue();
 		tipiProperty = o;
 		setCheckedValue("" + o);
+		setType(Property.TIPI_PROPERTY);
 		firePropertyChanged(old, getTypedValue());
 	}
 
