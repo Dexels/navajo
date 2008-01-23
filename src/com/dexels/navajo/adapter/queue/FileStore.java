@@ -68,8 +68,6 @@ public class FileStore implements MessageStore {
 					try {
 						ois = new NavajoObjectInputStream(ssi.getStream(path, files[i]), NavajoConfig.getInstance().getClassloader());
 						Queuable q = (Queuable) ois.readObject();
-						// Persist binary file references after reading object.
-						q.persistBinaries();
 						ois.close();
 						QueuedAdapter qa = new QueuedAdapter(q);
 						qa.ref = files[i];
@@ -104,8 +102,6 @@ public class FileStore implements MessageStore {
 		try {
 			NavajoObjectInputStream ois = new NavajoObjectInputStream(ssi.getStream(path, f), NavajoConfig.getInstance().getClassloader());
 			q = (Queuable) ois.readObject();
-			// Persist binary file references after reading object.
-			q.persistBinaries();
 			ois.close();
 			//System.err.println("Read object: " + q.getClass().getName() + ", retries " + q.getRetries() + ", max retries " + q.getMaxRetries());
 			// Only return object if it is not sleeping
@@ -136,11 +132,6 @@ public class FileStore implements MessageStore {
 			String f = handler.hashCode() + "_" + System.currentTimeMillis() + ".queue";
 			SharedStoreInterface ssi = SharedStoreFactory.getInstance();
 			try {
-				// Persist request data, make sure binary base file does not get garbage collected.
-				handler.persistBinaries();
-				if ( handler.getRequest() != null ) {
-					handler.getRequest().getTempFileName(true);
-				}
 				ssi.store( ( failure ? deadQueue : path ), f, handler, false, false);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -175,8 +166,6 @@ public class FileStore implements MessageStore {
 					try {
 						ois = new NavajoObjectInputStream(ssi.getStream(deadQueue, files[i]), NavajoConfig.getInstance().getClassloader());
 						Queuable q = (Queuable) ois.readObject();
-						// Persist binary file references after reading object.
-						q.persistBinaries();
 						ois.close();
 						QueuedAdapter qa = new QueuedAdapter(q);
 						qa.ref = files[i];
@@ -194,6 +183,7 @@ public class FileStore implements MessageStore {
 	
 	/**
 	 * This method can be used to take over control of persisted workflow of another server.
+	 * TODO: Figure out how to move Binary objects (file references!).
 	 * 
 	 * @param fromServer
 	 */
@@ -204,6 +194,7 @@ public class FileStore implements MessageStore {
 			try {
 				Queuable wf = (Queuable) SharedStoreFactory.getInstance().get("/adapterqueue/" + fromServer, queuedAdapters[i]);
 				System.err.println(">>>>>>>>>>>>> MOVING WORKFLOW: " + wf.getClass().getName() + " FROM SERVER " + fromServer);
+				// TODO: HOWTO MOVE Binary objects with their file references??
 				putMessage(wf, false);
 				SharedStoreFactory.getInstance().remove("/adapterqueue/" + fromServer, queuedAdapters[i]);
 			} catch (SharedStoreException e) {

@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import com.dexels.navajo.events.NavajoEvent;
+import com.dexels.navajo.events.NavajoEventRegistry;
+import com.dexels.navajo.events.NavajoListener;
+import com.dexels.navajo.events.types.TribeMemberDownEvent;
 import com.dexels.navajo.server.GenericThread;
 import com.dexels.navajo.server.enterprise.queue.Queuable;
 import com.dexels.navajo.server.enterprise.queue.RequestResponseQueueInterface;
@@ -20,7 +24,7 @@ import com.dexels.navajo.util.AuditLog;
  * @author arjen
  *
  */
-public class RequestResponseQueue extends GenericThread implements RequestResponseQueueMXBean, RequestResponseQueueInterface {
+public class RequestResponseQueue extends GenericThread implements RequestResponseQueueMXBean, RequestResponseQueueInterface, NavajoListener {
 
 	public boolean useQueue;
 	public boolean emptyQueue = false;
@@ -128,6 +132,9 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 			instance.setSleepTime(5000);
 			instance.startThread(instance);
 			
+			// Register for interesting events.
+			NavajoEventRegistry.getInstance().addListener(TribeMemberDownEvent.class, instance);
+			
 			AuditLog.log("Adapter Message Queue", "Started message queue process $Id$");
 			return instance;
 		}
@@ -136,7 +143,6 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 	public void send(Queuable handler, int maxretries) throws Exception {
 
 		RequestResponseQueue rrq = RequestResponseQueue.getInstance();
-		handler.persistBinaries();
 		synchronized (instance) {
 			rrq.myStore.putMessage(handler, false);	
 			instance.notifyAll();
@@ -154,8 +160,7 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 					doingWork = true;
 					//System.err.println("About to perform handler: " + handler.getClass().getName());
 					if ( handler.send() && !emptyQueue) {
-						// Make sure that request payload get garbage collected by removing ref.
-						handler.removeBinaries();
+						
 					} else {
 						// Put stuff back in queue, unless queue is being emptied.
 						System.err.println("Could not process send() method, putting queued adapter back in queue... emptyqueue: " + emptyQueue);
@@ -294,6 +299,19 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 
 	public MessageStore getMyStore() {
 		return myStore;
+	}
+
+	/**
+	 * This method is called by Navajo Event Mechanism.
+	 * 
+	 */
+	public void invoke(NavajoEvent ne) {
+		
+		System.err.println("In RequestResponseQueue, event arrived: " + ne.getClass() );
+		if ( ne instanceof TribeMemberDownEvent ) {
+			instance.getMyStore().takeOverPersistedAdapters( ((TribeMemberDownEvent) ne).getTm().getMemberName() );
+		}
+		
 	}
 
 }

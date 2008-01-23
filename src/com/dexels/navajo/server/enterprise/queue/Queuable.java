@@ -68,12 +68,5 @@ public interface Queuable extends Serializable, QueuableMXBean {
 	 * @return
 	 */
 	public int getRetries();
-	/**
-	 * Method that can be used to prevent garbage collection of binary placeholder files.
-	 */
-	public void persistBinaries();
-	/**
-	 * Method that can be used to flag garbage collection of binary placeholder files.
-	 */
-	public void removeBinaries();
+	
 }
