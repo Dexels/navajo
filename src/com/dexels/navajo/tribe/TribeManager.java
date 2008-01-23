@@ -42,6 +42,10 @@ import org.jgroups.util.Util;
 
 import com.dexels.navajo.adapter.queue.RequestResponseQueue;
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.events.NavajoEvent;
+import com.dexels.navajo.events.NavajoEventRegistry;
+import com.dexels.navajo.events.NavajoListener;
+import com.dexels.navajo.events.types.TribeMemberDownEvent;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.Access;
@@ -127,6 +131,8 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 						System.setProperty("java.net.preferIPv4Stack", "true");
 						instance.channel=new JChannel();
 						instance.channel.setReceiver(instance);
+						// TODO:
+						// GET GROUP NAME TO SPECIFY SPECIFIC TRIBE GROUP..
 						instance.channel.connect("Navajo Tribe");
 						instance.channel.getState(null, 1000);
 						AuditLog.log(AuditLog.AUDIT_MESSAGE_TRIBEMANAGER, "MyAddress = " + ((IpAddress) instance.channel.getLocalAddress()).getIpAddress() + ", port = " + 
@@ -291,15 +297,9 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 	
 	private final void deActivateMember(TribeMember ptm) {
 		System.err.println("DEACTIVATING MEMBER: " + ptm.getAddress() );
-		if ( myMembership.isChief() ) {
-			System.err.println("MOVING DISTRIBUTED SHARED DATA!!!");
-			moveSharedStoreData(ptm);
+		if ( myMembership.isChief() ) { // Emit TribeMemberDownEvent if I am the chief.
+			NavajoEventRegistry.getInstance().triggerEvent(new TribeMemberDownEvent(ptm));
 		}
-	}
-	
-	private final void moveSharedStoreData(TribeMember ptm) {
-		WorkFlowManager.getInstance().takeOverPersistedWorkFlows(ptm.getMemberName());
-		RequestResponseQueue.getInstance().getMyStore().takeOverPersistedAdapters(ptm.getMemberName());
 	}
 	
 	public void kill() {
