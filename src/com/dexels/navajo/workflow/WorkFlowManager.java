@@ -7,6 +7,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Random;
 
+import com.dexels.navajo.events.NavajoEvent;
+import com.dexels.navajo.events.NavajoEventRegistry;
+import com.dexels.navajo.events.NavajoListener;
+import com.dexels.navajo.events.types.TribeMemberDownEvent;
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.server.GenericThread;
@@ -18,7 +22,7 @@ import com.dexels.navajo.tribe.SharedStoreLock;
 import com.dexels.navajo.tribe.TribeManager;
 import com.dexels.navajo.util.AuditLog;
 
-public final class WorkFlowManager extends GenericThread implements WorkFlowManagerMXBean {
+public final class WorkFlowManager extends GenericThread implements WorkFlowManagerMXBean, NavajoListener {
 
 	/**
 	 * Public fields for mappable.
@@ -128,6 +132,9 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 			
 			// Start worker thread at last...
 			instance.startThread(instance);
+			
+			// Register for events that I am interested in.
+			NavajoEventRegistry.getInstance().addListener(TribeMemberDownEvent.class, instance);
 			
 			AuditLog.log(AuditLog.AUDIT_MESSAGE_WORKFLOW, "Started workflow process $Id$");
 			return instance;
@@ -369,6 +376,17 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 
 	public String getVERSION() {
 		return VERSION;
+	}
+
+	/**
+	 * This method is called by Navajo Event Mechanism.
+	 * 
+	 */
+	public void invoke(NavajoEvent ne) {
+		System.err.println("In WorkFlowManager, event arrived: " + ne.getClass() );
+		if ( ne instanceof TribeMemberDownEvent ) {
+			instance.takeOverPersistedWorkFlows( ((TribeMemberDownEvent) ne).getTm().getMemberName() );
+		} 
 	}
 	
 
