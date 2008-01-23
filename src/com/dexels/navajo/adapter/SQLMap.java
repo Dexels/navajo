@@ -960,7 +960,8 @@ public class SQLMap implements Mappable, LazyArray {
           statement.setDouble(i + 1, ( (Money) param).doubleValue());
         }
         else if (param instanceof Memo) {
-          statement.setCharacterStream(i + 1, new StringReader(( (Memo) param).toString()));
+          String memoString = ( (Memo) param).toString();
+		statement.setCharacterStream(i + 1, new StringReader(memoString),memoString.length());
         }
         else if (param instanceof Binary) {
           Binary b = (Binary)param;
