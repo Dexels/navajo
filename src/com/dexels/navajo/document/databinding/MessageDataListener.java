@@ -1,5 +1,5 @@
 package com.dexels.navajo.document.databinding;
-@Deprecated, use javax.beans version instead
+@Deprecated
 
 public interface MessageDataListener {
 	public void propertyDataChanged(String oldValue, String newValue);
