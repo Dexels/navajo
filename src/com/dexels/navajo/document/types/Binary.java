@@ -57,7 +57,9 @@ public final class Binary extends NavajoType implements Serializable {
     private long expectedLength = 0;
 
     private FormatDescription currentFormatDescription;
-      
+    
+    private final static HashMap persistedBinaries = new HashMap();
+    
     /**
      * Construct a new Binary object with data from an InputStream It does close
      * the stream. I don't like it, but as yet I don't see any situation where
@@ -695,6 +697,48 @@ public final class Binary extends NavajoType implements Serializable {
 //        System.err.println("Copied to stream");
         os.close();
 
+    }
+
+    /**
+     * Get the file reference to a binary.
+     * If persist is set, the binary object is put in a persistent store to
+     * prevent it from being garbage collected.
+     * 
+     * @param persist
+     * @return
+     */
+    public String getTempFileName(boolean persist) {
+    	
+    	String ref = null;
+    	if (lazySourceFile != null) {
+    		ref = lazySourceFile.getAbsolutePath();
+    	} else if (dataFile != null) {    		
+    		ref =  dataFile.getAbsolutePath();
+    	} 
+    	
+    	if ( persist && ref != null && !persistedBinaries.containsKey(ref) ) {
+    		persistedBinaries.put(ref, this);
+    	}
+    	myRef = ref;
+    	
+    	return ref;
+    }	
+    
+    public void removeRef() {
+    	System.err.println("In removeRef(), myRef = " + myRef);
+    	if ( myRef != null ) {
+    		persistedBinaries.remove(myRef);
+    	}
+    }
+    /**
+     * Remove a persisted binary.
+     * 
+     * @param ref
+     */
+    public static void removeRef(String ref) {
+    	if ( ref != null ) {
+    	persistedBinaries.remove(ref);
+    	}
     }
 
     public boolean isEmpty() {
