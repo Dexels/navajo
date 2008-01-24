@@ -43,40 +43,19 @@ public class TmlSmtpServlet extends org.dexels.servlet.smtp.SmtpServlet {
 
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        Util.debugLog(this, "In TmlHttpServlet Servlet");
     }
 
-    // public  Navajo parseReceivedDocument(InputStream in) throws NavajoException
-    // {
-    // try {
-    // Document doc = null;
-    // Util.debugLog("About to create XML document");
-    // // Parse and validate incoming XML document.
-    // doc = XmlDocument.createXmlDocument(in, false);
-    // Util.debugLog("Created");
-    // doc.getDocumentElement().normalize();
-    // Util.debugLog("Parsed");
-    // // DEBUG
-    // doc.write(System.out);
-    // return new Navajo(doc);
-    // } catch (SAXException saxe) {
-    // saxe.printStackTrace();
-    // throw new NavajoException(saxe.getMessage());
-    // } catch (IOException ioe) {
-    // ioe.printStackTrace();
-    // throw new NavajoException(ioe.getMessage());
-    // }
-    // }
+  
     public Navajo parseReceivedDocument(ServletInputStream in) throws NavajoException {
         Document doc = null;
 
-        Util.debugLog("About to create XML document");
+        
         // Parse and validate incoming XML document.
         doc = XMLDocumentUtils.createDocument(in, false);
 
-        Util.debugLog("Created");
+       
         doc.getDocumentElement().normalize();
-        Util.debugLog("Parsed");
+        
         // DEBUG
         XMLDocumentUtils.toXML(doc, null, null, new StreamResult(System.out));
         return NavajoFactory.getInstance().createNavajo(doc);
@@ -86,10 +65,7 @@ public class TmlSmtpServlet extends org.dexels.servlet.smtp.SmtpServlet {
 
         try {
             // Call Postman with parsed TML document.
-            Util.debugLog("Deliver called");
-            Util.debugLog("Servlet name = " + this.getServletInfo());
-            Util.debugLog("Content type = " + req.getContentType());
-            Util.debugLog("Remote address = " + req.getRemoteAddr());
+            
 
             StringBuffer buffer = new StringBuffer();
             BufferedReader reader = new BufferedReader(req.getReader());
@@ -101,7 +77,7 @@ public class TmlSmtpServlet extends org.dexels.servlet.smtp.SmtpServlet {
                     buffer.append(line);
             }
             reader.close();
-            Util.debugLog("buffer = " + buffer.toString());
+          
             // Navajo in = parseReceivedDocument(new java.io.StringBufferInputStream(buffer.toString()));
             // Navajo in = parseReceivedDocument(buffer.toString());
             // input parameter for method parseReceivedDocument changed from String to ServletInputStream -
@@ -112,7 +88,7 @@ public class TmlSmtpServlet extends org.dexels.servlet.smtp.SmtpServlet {
             OutputStream out = (OutputStream) res.getOutputStream();
             outDoc.write(out);
             out.close();
-            Util.debugLog(this, "sendNavajoDocument(): Done");
+            
             res.setSubject(in.getHeader().getRPCName());
             res.setContentType("text/xml");
         } catch (FatalException e) {
