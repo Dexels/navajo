@@ -25,11 +25,11 @@ public class MaintainanceHandler extends ServiceHandler {
         try {
             Navajo outMessage = null;
 
-            Util.debugLog("In MaintainanceHandler doService()");
+            
             MaintainanceRequest maintain = new MaintainanceRequest(properties.getProperties(),
                                                                    Dispatcher.getInstance().getRepository());
 
-            Util.debugLog("After constructor");
+           
             if (access.rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_PING)) {
                 // return ping message.
                 outMessage = NavajoFactory.getInstance().createNavajo();
@@ -50,14 +50,10 @@ public class MaintainanceHandler extends ServiceHandler {
             } else {
                 throw new SystemException(SystemException.UNKNOWN_RPC_NAME, "", new Exception());
             }
-            Util.debugLog("Leaving MaintainanceServlet (doAction())");
+            
             return outMessage;
-        } catch (org.xml.sax.SAXException saxe) {
-            throw new SystemException(-1, saxe.getMessage(), saxe);
         } catch (java.io.IOException ioe) {
             throw new SystemException(-1, ioe.getMessage(), ioe);
-        } catch (java.sql.SQLException sqle) {
-            throw new SystemException(-1, sqle.getMessage(), sqle);
-        }
+        } 
     }
 }
