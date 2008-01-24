@@ -354,9 +354,9 @@ public class TagMap implements Mappable {
 		t.setName(startName);
 		
 		// parse attributes
-        Enumeration attrib_enum = e.enumerateAttributeNames();
-        while ( attrib_enum.hasMoreElements() ) {
-            String key = (String) attrib_enum.nextElement();
+        Iterator<String> attrib_enum = e.enumerateAttributeNames();
+        while ( attrib_enum.hasNext() ) {
+            String key = attrib_enum.next();
             String value = e.getStringAttribute(key);
 			if ( t.attributes == null ) {
 				t.attributes = new HashMap ();

@@ -27,9 +27,7 @@ package com.dexels.navajo.adapter;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Vector;
+import java.util.*;
 
 import com.dexels.navajo.adapter.xmlmap.TagMap;
 import com.dexels.navajo.document.Navajo;
@@ -99,9 +97,9 @@ public class XMLMap extends TagMap implements Mappable {
 		this.setName(startName);
 
 		// parse attributes
-        Enumeration attrib_enum = e.enumerateAttributeNames();
-        while ( attrib_enum.hasMoreElements() ) {
-            String key = (String) attrib_enum.nextElement();
+        Iterator<String> attrib_enum = e.enumerateAttributeNames();
+        while ( attrib_enum.hasNext()) {
+        	String key = attrib_enum.next();
             String value = e.getStringAttribute(key);
 			if ( this.attributes == null ) {
 				this.attributes = new HashMap ();
