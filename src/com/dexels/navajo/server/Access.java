@@ -45,6 +45,7 @@ public final class Access implements java.io.Serializable, Mappable {
 	 */
 	private static final long serialVersionUID = -7782160335447961196L;
 
+	@SuppressWarnings("unused")
 	private static final String VERSION = "$Id$";
 
 	public java.util.Date created = new java.util.Date();
@@ -83,19 +84,19 @@ public final class Access implements java.io.Serializable, Mappable {
 	private Message currentOutMessage;
 	private Object userCertificate;
 	private static Object mutex = new Object();
-	private Set piggyBackData = null;
+	private Set<Map<?,?>> piggyBackData = null;
 	private String clientToken = null;
 
 	private String waitingForPreviousRequest = null;
 	private transient Thread myThread = null;
 
 	
-	private HashMap mapStatistics = null;
+	private HashMap<Integer, MapStatistics> mapStatistics = null;
 
 	public MapStatistics createStatistics() {
 		MapStatistics ms = new MapStatistics();
 		if ( mapStatistics == null ) { // First map.
-			mapStatistics = new HashMap();
+			mapStatistics = new HashMap<Integer, MapStatistics>();
 		}
 		Integer count = new Integer(mapStatistics.size());
 		mapStatistics.put(count, ms);
@@ -267,13 +268,13 @@ public final class Access implements java.io.Serializable, Mappable {
 		}
 	}
 
-	public HashMap getMapStatistics() {
+	public HashMap<Integer, MapStatistics> getMapStatistics() {
 		return mapStatistics;
 	}
 
-	public void addPiggybackData(Map element) {
+	public void addPiggybackData(Map<?,?> element) {
 		if (piggyBackData==null) {
-			piggyBackData = new HashSet();
+			piggyBackData = new HashSet<Map<?,?>>();
 		}
 		piggyBackData.add(element);
 	}
