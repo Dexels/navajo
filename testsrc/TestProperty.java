@@ -316,9 +316,9 @@ public class TestProperty extends TestCase {
 		}
 	}
 
-	public void testGetPoints() {
-		testSetPoints();
-	}
+//	public void testGetPoints() {
+//		testSetPoints();
+//	}
 
 	public void testGetSelection() {
 		try {
@@ -426,34 +426,34 @@ public class TestProperty extends TestCase {
 		}
 	}
 
-	public void testSetPoints() {
-		// TODO.
-		try {
-			Property p = NavajoFactory.getInstance().createProperty(testDoc, "mypoints", Property.POINTS_PROPERTY, "", 0, "", Property.DIR_OUT);
-			Vector [] points = new Vector[5];
-			for (int i = 0; i < points.length; i++) {
-				Vector v = new Vector();
-				v.add(new String(i+""));
-				v.add(new String((i*i)+""));
-				points[i] = v;
-			}
-			p.setPoints(points);
-
-			Vector [] result = p.getPoints();
-			Assert.assertEquals(points.length, result.length);
-			for (int i = 0; i < result.length; i++) {
-				Vector rv = result[i];
-				String rx1 = result[i].get(0).toString();
-				String rx2 = result[i].get(1).toString();
-				String x1 = points[i].get(0).toString();
-				String x2 = points[i].get(1).toString();
-				Assert.assertEquals(x1, rx1);
-				Assert.assertEquals(x2, rx2);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+//	public void testSetPoints() {
+//		// TODO.
+//		try {
+//			Property p = NavajoFactory.getInstance().createProperty(testDoc, "mypoints", Property.POINTS_PROPERTY, "", 0, "", Property.DIR_OUT);
+//			Vector [] points = new Vector[5];
+//			for (int i = 0; i < points.length; i++) {
+//				Vector v = new Vector();
+//				v.add(new String(i+""));
+//				v.add(new String((i*i)+""));
+//				points[i] = v;
+//			}
+//			p.setPoints(points);
+//
+//			Vector [] result = p.getPoints();
+//			Assert.assertEquals(points.length, result.length);
+//			for (int i = 0; i < result.length; i++) {
+//				Vector rv = result[i];
+//				String rx1 = result[i].get(0).toString();
+//				String rx2 = result[i].get(1).toString();
+//				String x1 = points[i].get(0).toString();
+//				String x2 = points[i].get(1).toString();
+//				Assert.assertEquals(x1, rx1);
+//				Assert.assertEquals(x2, rx2);
+//			}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//	}
 
 	public void testSetSelected() {
 		try {
@@ -631,7 +631,7 @@ public class TestProperty extends TestCase {
 		assertFalse("3".equals(p1.getSelected().getValue()));
 		p1.setSelected("1");
 		p1.setSelected("2");
-		ArrayList<BaseSelectionImpl> all = p1.getAllSelectedSelections();
+		ArrayList<Selection> all = p1.getAllSelectedSelections();
 		for (int i = 0; i < all.size(); i++) {
 			assertTrue(all.get(i).getValue().equals("1") || all.get(i).getValue().equals("2"));
 			assertFalse(all.get(i).getValue().equals("3"));
