@@ -20,8 +20,8 @@ protected String myRequestId;
   }
 
  
-  public Map getAttributes() {
-      Map m = new HashMap();
+  public Map<String,String> getAttributes() {
+      Map<String,String> m = new HashMap<String,String>();
       if (rpc_name!=null) {
           m.put("rpc_name", rpc_name);
       }
@@ -37,12 +37,11 @@ protected String myRequestId;
       if (myRequestId!=null) {
           m.put("requestid", myRequestId);
       }
-      //System.err.println("m = " + m);
       return m;
   }
 
 
- public List getChildren() {
+ public List<? extends BaseNode> getChildren() {
      return null;
   }
 public String getTagName() {

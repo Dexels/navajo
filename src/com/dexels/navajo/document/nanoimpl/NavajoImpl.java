@@ -1,6 +1,6 @@
 package com.dexels.navajo.document.nanoimpl;
-import java.util.*;
 import java.io.*;
+import java.util.*;
 
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.base.*;
@@ -13,9 +13,11 @@ import com.dexels.navajo.document.base.*;
  * <p>Company: Dexels </p>
  * @author Frank Lyaruu
  * @version 1.0
+ * @deprecated
  */
 
 
+@Deprecated
 public final class NavajoImpl extends BaseNavajoImpl implements Navajo, NanoElement {
 
 
@@ -36,20 +38,19 @@ public final class NavajoImpl extends BaseNavajoImpl implements Navajo, NanoElem
   }
 
 
-// SORT OF DUPLICATE: TODO: CHECK FOR REDUNDANT CODE WITH BASENAVAJOIMPL
   public Navajo copy() {
     Navajo ni = NavajoFactory.getInstance().createNavajo();
     NavajoImpl n = (NavajoImpl)ni;
 //    n.setRootMessage(cop getRootMessage().copy(n));
-    ArrayList al = getAllMessages();
+    ArrayList<Message> al = getAllMessages();
     for (int i = 0; i < al.size(); i++) {
-      Message m = (Message)al.get(i);
+      Message m = al.get(i);
       Message m2 = copyMessage(m,n);
       n.addMessage(m2);
     }
 
     for (int i = 0; i < myMethods.getAllMethods().size(); i++) {
-      Method m = (Method)myMethods.getAllMethods().get(i);
+      Method m = myMethods.getAllMethods().get(i);
       Method m2 = n.copyMethod(m,n);
       n.addMethod(m2);
     }
@@ -63,7 +64,8 @@ public final class NavajoImpl extends BaseNavajoImpl implements Navajo, NanoElem
  *  (non-Javadoc)
  * @see com.dexels.navajo.document.Navajo#addLazyMessagePath(java.lang.String, int, int, int)
  */
-  public void addLazyMessagePath(String path, int startIndex, int endIndex, int total) {
+  @Deprecated
+public void addLazyMessagePath(String path, int startIndex, int endIndex, int total) {
 ///** @todo Fix this one */
     myHeader.addLazyMessagePath(path, startIndex, endIndex, total);
   }
@@ -115,10 +117,10 @@ public final class NavajoImpl extends BaseNavajoImpl implements Navajo, NanoElem
   }
 
   public void fromXml(XMLElement e) {
-    Vector v = e.getChildren();
+    List<XMLElement> v = e.getChildren();
     ((MessageImpl)rootMessage).fromXml(e);
     for (int i = 0; i < v.size(); i++) {
-      XMLElement x = (XMLElement)v.get(i);
+      XMLElement x = v.get(i);
       String name = x.getName();
       if (name.equals("methods")) {
         loadMethods(x);
@@ -130,9 +132,9 @@ public final class NavajoImpl extends BaseNavajoImpl implements Navajo, NanoElem
 
   private final void loadMethods(XMLElement e) {
     myMethods.clear();
-    Vector v = e.getChildren();
+    List<XMLElement> v = e.getChildren();
     for (int i = 0; i < v.size(); i++) {
-      XMLElement x = (XMLElement)v.get(i);
+      XMLElement x = v.get(i);
       String name = (String)x.getAttribute("name");
       MethodImpl m = (MethodImpl)createMethod(this,name);
       m.fromXml(x);
@@ -147,7 +149,8 @@ public final class NavajoImpl extends BaseNavajoImpl implements Navajo, NanoElem
  *  (non-Javadoc)
  * @see com.dexels.navajo.document.Navajo#getLazyMessagePath(java.lang.String)
  */
-  public LazyMessagePath getLazyMessagePath(String path) {
+  @Deprecated
+public LazyMessagePath getLazyMessagePath(String path) {
     return myHeader.getLazyMessagePath(path);
   }
 
@@ -155,7 +158,6 @@ public final class NavajoImpl extends BaseNavajoImpl implements Navajo, NanoElem
   	try {
         write(writer, false, null);
     } catch (RuntimeException e) {
-        // TODO Auto-generated catch block
         e.printStackTrace();
     }
   }

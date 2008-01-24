@@ -122,9 +122,8 @@ public class TestProperty extends TestCase {
 		
 	}
 	
-	public void testAddSelection() {
+	public void testAddSelection() throws NavajoException {
 
-		try {
 			Property testSelectionProp = NavajoFactory.getInstance().createProperty(testDoc, "testselectionproperty", "+", "", Property.DIR_IN);
 			Selection s1 = NavajoFactory.getInstance().createSelection(testDoc, "firstselection", "0", true);
 			testSelectionProp.addSelection(s1);
@@ -142,13 +141,9 @@ public class TestProperty extends TestCase {
 			Assert.assertEquals(s2.getName(), s3.getName());
 			Assert.assertEquals(s2.getValue(), s3.getValue());
 		}
-		catch(Exception e) {
-			System.err.println("Exception thrown:  "+e);
-		}
-	}
-	public void testAddSelectionWithoutReplace() {
+	
+	public void testAddSelectionWithoutReplace() throws NavajoException {
 
-		try {
 			Property testSelectionProp = NavajoFactory.getInstance().createProperty(testDoc, "testselectionproperty", "+", "", Property.DIR_IN);
 			Selection s1 = NavajoFactory.getInstance().createSelection(testDoc, "firstselection", "0", true);
 			testSelectionProp.addSelectionWithoutReplace(s1);
@@ -166,13 +161,9 @@ public class TestProperty extends TestCase {
 					count++;
 			}
 			Assert.assertEquals(2, count);
-		}
-		catch(Exception e) {
-			System.err.println("Exception thrown:  "+e);
-		}
+	
 	}
-	public void testClearSelections() {
-		try {
+	public void testClearSelections() throws NavajoException {
 			Property testSelectionProp = NavajoFactory.getInstance().createProperty(testDoc, "testselectionproperty", "+", "", Property.DIR_IN);
 			Selection s1 = NavajoFactory.getInstance().createSelection(testDoc, "firstselection", "0", true);
 			Selection s2 = NavajoFactory.getInstance().createSelection(testDoc, "secondselection", "1", false);
@@ -186,34 +177,22 @@ public class TestProperty extends TestCase {
 				Selection s = (Selection) iter.next();
 				Assert.assertTrue(!s.isSelected());
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
-	public void testCreate() {
-		try {
-			// Normal property.
+	public void testCreate() throws NavajoException {
 			Property testProp = NavajoFactory.getInstance().createProperty(testDoc, "myprop", Property.STRING_PROPERTY, "78", 89, "mydesc", Property.DIR_IN);
 			Assert.assertNotNull(testProp);
-			Assert.assertNotNull(testProp.getRef());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+			Assert.assertEquals(testProp.getName(),"myprop");
 	}
 
-	public void testCreate1() {
-		try {
+	public void testCreate1() throws NavajoException {
 			// Selection property.
 			Property testProp = NavajoFactory.getInstance().createProperty(testDoc, "myprop", "+", "", Property.DIR_IN);
 			Assert.assertNotNull(testProp);
-			Assert.assertNotNull(testProp.getRef());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+			Assert.assertNotNull(testProp.getName());
+
 	}
 
-	public void testGetAllSelectedSelections() {
-		try {
+	public void testGetAllSelectedSelections() throws NavajoException {
 			Property testSelectionProp = NavajoFactory.getInstance().createProperty(testDoc, "testselectionproperty", "+", "", Property.DIR_IN);
 			Selection s1 = NavajoFactory.getInstance().createSelection(testDoc, "firstselection", "0", true);
 			Selection s2 = NavajoFactory.getInstance().createSelection(testDoc, "secondselection", "1", false);
@@ -230,13 +209,10 @@ public class TestProperty extends TestCase {
 				Assert.assertTrue(!s.getName().equals("secondselection"));
 			}
 			Assert.assertEquals(2, count);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		
 	}
 
-	public void testGetAllSelections() {
-		try {
+	public void testGetAllSelections() throws NavajoException {
 			Property testSelectionProp = NavajoFactory.getInstance().createProperty(testDoc, "testselectionproperty", "+", "", Property.DIR_IN);
 			Selection s1 = NavajoFactory.getInstance().createSelection(testDoc, "firstselection", "0", true);
 			Selection s2 = NavajoFactory.getInstance().createSelection(testDoc, "secondselection", "1", false);
@@ -255,73 +231,48 @@ public class TestProperty extends TestCase {
 			}
 			Assert.assertEquals(3, set.size());
 			Assert.assertEquals(0, count);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	
 	}
-	public void testGetCardinality() {
-		try {
+	public void testGetCardinality() throws NavajoException {
 			Property testSelectionProp = NavajoFactory.getInstance().createProperty(testDoc, "testselectionproperty", "+", "", Property.DIR_IN);
 			Assert.assertEquals("+", testSelectionProp.getCardinality());
 			testSelectionProp = NavajoFactory.getInstance().createProperty(testDoc, "testselectionproperty", "1", "", Property.DIR_IN);
 			Assert.assertEquals("1", testSelectionProp.getCardinality());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		
 	}
 
-	public void testGetDescription() {
-		try {
+	public void testGetDescription() throws NavajoException {
 			Property testSelectionProp = NavajoFactory.getInstance().createProperty(testDoc, "testselectionproperty", "+", "mydesc", Property.DIR_IN);
 			Assert.assertEquals("mydesc", testSelectionProp.getDescription());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	
 	}
-	public void testGetDirection() {
-		try {
+	public void testGetDirection() throws NavajoException {
 			Property testSelectionProp = NavajoFactory.getInstance().createProperty(testDoc, "testselectionproperty", "+", "mydesc", Property.DIR_IN);
 			Assert.assertEquals(Property.DIR_IN, testSelectionProp.getDirection());
 			testSelectionProp = NavajoFactory.getInstance().createProperty(testDoc, "testselectionproperty", "+", "mydesc", Property.DIR_OUT);
 			Assert.assertEquals(Property.DIR_OUT, testSelectionProp.getDirection());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
-	public void testGetFullPropertyName() {
-		try {
+	public void testGetFullPropertyName() throws NavajoException {
 			Property testProp = NavajoFactory.getInstance().createProperty(testDoc, "myprop", Property.STRING_PROPERTY, "78", 89, "mydesc", Property.DIR_IN);
 			testDoc.getMessage("testmessage").addMessage(NavajoFactory.getInstance().createMessage(testDoc, "anothermsg")).addProperty(testProp);
 			Assert.assertEquals("/testmessage/anothermsg/myprop", testProp.getFullPropertyName());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
-	public void testGetLength() {
-		try {
+	public void testGetLength() throws NavajoException {
 			Property testProp = NavajoFactory.getInstance().createProperty(testDoc, "myprop", Property.STRING_PROPERTY, "78", 89, "mydesc", Property.DIR_IN);
 			Assert.assertEquals(89, testProp.getLength());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
-	public void testGetName() {
-		try {
+	public void testGetName() throws NavajoException {
 			Property testProp = NavajoFactory.getInstance().createProperty(testDoc, "myprop", Property.STRING_PROPERTY, "78", 89, "mydesc", Property.DIR_IN);
 			Assert.assertEquals("myprop", testProp.getName());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 //	public void testGetPoints() {
 //		testSetPoints();
 //	}
 
-	public void testGetSelection() {
-		try {
+	public void testGetSelection() throws NavajoException {
 			Property testSelectionProp = NavajoFactory.getInstance().createProperty(testDoc, "testselectionproperty", "+", "mydesc", Property.DIR_IN);
 			Selection s = NavajoFactory.getInstance().createSelection(testDoc, "myselection", "0", true);
 			testSelectionProp.addSelection(s);
@@ -333,12 +284,9 @@ public class TestProperty extends TestCase {
 			s1 = testSelectionProp.getSelection("myselection2");
 			Assert.assertNotNull(s1);
 			Assert.assertEquals(Selection.DUMMY_SELECTION, s1.getName());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	
 	}
-	public void testGetSelectionByValue() {
-		try {
+	public void testGetSelectionByValue() throws NavajoException {
 			Property testSelectionProp = NavajoFactory.getInstance().createProperty(testDoc, "testselectionproperty", "+", "mydesc", Property.DIR_IN);
 			Selection s = NavajoFactory.getInstance().createSelection(testDoc, "myselection", "0", true);
 			testSelectionProp.addSelection(s);
@@ -350,80 +298,52 @@ public class TestProperty extends TestCase {
 			s1 = testSelectionProp.getSelectionByValue("1");
 			Assert.assertNotNull(s1);
 			Assert.assertEquals(Selection.DUMMY_SELECTION, s1.getName());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
-	public void testGetType() {
-		try {
+	public void testGetType() throws NavajoException {
 			Property testProp = NavajoFactory.getInstance().createProperty(testDoc, "myprop", Property.STRING_PROPERTY, "78", 89, "mydesc", Property.DIR_IN);
 			Assert.assertEquals(Property.STRING_PROPERTY, testProp.getType());
 			testProp = NavajoFactory.getInstance().createProperty(testDoc, "myprop", Property.INTEGER_PROPERTY, "78", 89, "mydesc", Property.DIR_IN);
 			Assert.assertEquals(Property.INTEGER_PROPERTY, testProp.getType());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
-	public void testGetValue() {
-		try {
+	public void testGetValue() throws NavajoException {
 			Property testProp = NavajoFactory.getInstance().createProperty(testDoc, "myprop", Property.STRING_PROPERTY, "78", 89, "mydesc", Property.DIR_IN);
 			Assert.assertEquals("78", testProp.getValue());
 			testProp = NavajoFactory.getInstance().createProperty(testDoc, "myprop", Property.INTEGER_PROPERTY, "88", 89, "mydesc", Property.DIR_IN);
 			Assert.assertEquals("88", testProp.getValue());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
-	public void testSetCardinality() {
-		try {
+	public void testSetCardinality() throws NavajoException {
 			Property testSelectionProp = NavajoFactory.getInstance().createProperty(testDoc, "testselectionproperty", "+", "mydesc", Property.DIR_IN);
 			testSelectionProp.setCardinality("1");
 			Assert.assertEquals("1", testSelectionProp.getCardinality());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
-	public void testSetDescription() {
-		try {
+	public void testSetDescription() throws NavajoException {
 			Property testProp = NavajoFactory.getInstance().createProperty(testDoc, "myprop", Property.STRING_PROPERTY, "78", 89, "mydesc", Property.DIR_IN);
 			testProp.setDescription("mynewdesc");
 			Assert.assertEquals("mynewdesc", testProp.getDescription());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		
 	}
 
-	public void testSetDirection() {
-		try {
+	public void testSetDirection() throws NavajoException {
 			Property testProp = NavajoFactory.getInstance().createProperty(testDoc, "myprop", Property.STRING_PROPERTY, "78", 89, "mydesc", Property.DIR_IN);
 			testProp.setDirection(Property.DIR_OUT);
 			Assert.assertEquals(Property.DIR_OUT, testProp.getDirection());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	
 	}
 
-	public void testSetLength() {
-		try {
+	public void testSetLength() throws NavajoException {
 			Property testProp = NavajoFactory.getInstance().createProperty(testDoc, "myprop", Property.STRING_PROPERTY, "78", 89, "mydesc", Property.DIR_IN);
 			testProp.setLength(798);
 			Assert.assertEquals(798, testProp.getLength());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+
 	}
 
-	public void testSetName() {
-		try {
+	public void testSetName() throws NavajoException {
 			Property testProp = NavajoFactory.getInstance().createProperty(testDoc, "myprop", Property.STRING_PROPERTY, "78", 89, "mydesc", Property.DIR_IN);
 			testProp.setName("mypropje");
 			Assert.assertEquals("mypropje", testProp.getName());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 //	public void testSetPoints() {
@@ -455,8 +375,7 @@ public class TestProperty extends TestCase {
 //		}
 //	}
 
-	public void testSetSelected() {
-		try {
+	public void testSetSelected() throws NavajoException {
 			Property testSelectionProp1 = NavajoFactory.getInstance().createProperty(testDoc, "testselectionproperty", "1", "mydesc", Property.DIR_IN);
 			Property testSelectionProp2 = NavajoFactory.getInstance().createProperty(testDoc, "testselectionproperty", "+", "mydesc", Property.DIR_IN);
 			Selection s1 = NavajoFactory.getInstance().createSelection(testDoc, "myselection1", "0", false);
@@ -482,12 +401,9 @@ public class TestProperty extends TestCase {
 			testSelectionProp2.setSelected("0");
 			Assert.assertEquals(true, s1.isSelected());
 			Assert.assertTrue(s3.isSelected());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		
 	}
-	public void testSetSelected1() {
-		try {
+	public void testSetSelected1() throws NavajoException {
 			Property testSelectionProp1 = NavajoFactory.getInstance().createProperty(testDoc, "testselectionproperty", "+", "mydesc", Property.DIR_IN);
 			Selection s1 = NavajoFactory.getInstance().createSelection(testDoc, "myselection1", "0", false);
 			Selection s2 = NavajoFactory.getInstance().createSelection(testDoc, "myselection2", "1", false);
@@ -502,12 +418,9 @@ public class TestProperty extends TestCase {
 			Assert.assertTrue(s4.isSelected());
 			Assert.assertTrue(!s2.isSelected());
 			Assert.assertTrue(!s3.isSelected());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		
 	}
-	public void testSetSelected2() {
-		try {
+	public void testSetSelected2() throws NavajoException {
 			Property testSelectionProp1 = NavajoFactory.getInstance().createProperty(testDoc, "testselectionproperty", "+", "mydesc", Property.DIR_IN);
 			Selection s1 = NavajoFactory.getInstance().createSelection(testDoc, "myselection1", "0", false);
 			Selection s2 = NavajoFactory.getInstance().createSelection(testDoc, "myselection2", "1", false);
@@ -525,27 +438,17 @@ public class TestProperty extends TestCase {
 			Assert.assertTrue(s4.isSelected());
 			Assert.assertTrue(!s2.isSelected());
 			Assert.assertTrue(!s3.isSelected());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		
 	}
-	public void testSetType() {
-		try {
+	public void testSetType() throws NavajoException {
 			Property testProp = NavajoFactory.getInstance().createProperty(testDoc, "myprop", Property.STRING_PROPERTY, "78", 89, "mydesc", Property.DIR_IN);
 			testProp.setType(Property.INTEGER_PROPERTY);
 			Assert.assertEquals(Property.INTEGER_PROPERTY, testProp.getType());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
-	public void testSetValue() {
-		try {
+	public void testSetValue() throws NavajoException {
 			Property testProp = NavajoFactory.getInstance().createProperty(testDoc, "myprop", Property.STRING_PROPERTY, "78", 89, "mydesc", Property.DIR_IN);
 			testProp.setValue("OK!");
 			Assert.assertEquals("OK!", testProp.getValue());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 	public void testEqualProperties() throws Exception {
@@ -638,12 +541,9 @@ public class TestProperty extends TestCase {
 		}
 	}
 	
-	public void testToString() {
-		try {
+	public void testToString() throws NavajoException {
 			Property testProp = NavajoFactory.getInstance().createProperty(testDoc, "myprop", Property.STRING_PROPERTY, "78", 89, "mydesc", Property.DIR_IN);
 			Assert.assertEquals("78", testProp.toString());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		
 	}
 }

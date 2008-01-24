@@ -1,7 +1,5 @@
 package com.dexels.navajo.document.jaxpimpl.xml;
 
-import com.dexels.navajo.document.*;
-
 import java.io.*;
 
 import javax.xml.parsers.*;
@@ -10,6 +8,8 @@ import javax.xml.transform.dom.*;
 import javax.xml.transform.stream.*;
 
 import org.w3c.dom.*;
+
+import com.dexels.navajo.document.*;
 
 
 public class XMLDocumentUtils {
@@ -36,7 +36,6 @@ public class XMLDocumentUtils {
     }
 
     public static Document transformToDocument(Document xmlIn, File xslFile) throws
-        IOException,
         ParserConfigurationException,
         TransformerConfigurationException,
         TransformerException, com.dexels.navajo.document.NavajoException {
@@ -70,9 +69,7 @@ public class XMLDocumentUtils {
     /**
      * transforms an XML-file and XSL-file into a String
      */
-    public static String transform(Document xmlIn, File xslFile)throws IOException,
-            ParserConfigurationException,
-            TransformerConfigurationException,
+    public static String transform(Document xmlIn, File xslFile)throws TransformerConfigurationException,
             TransformerException, com.dexels.navajo.document.NavajoException {
         createDocumentBuilderFactory();
         if (transformerFactory == null) {

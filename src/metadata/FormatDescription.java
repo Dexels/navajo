@@ -1,22 +1,19 @@
 package metadata;
 
-import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.io.*;
+import java.util.*;
 
 /**
  * Data class to store information on a file format.
  * @author Marco Schmidt
  */
-public class FormatDescription implements Comparable, Serializable
+public class FormatDescription implements Comparable<FormatDescription>, Serializable
 {
-	private List fileExtensions;
+	private List<String> fileExtensions;
 	private String group;
 	private String longName;
 	private byte[] magicBytes;
-	private List mimeTypes;
+	private List<String>  mimeTypes;
 	private Integer minimumSize;
 	private Integer offset;
 	private String shortName;
@@ -36,7 +33,7 @@ public class FormatDescription implements Comparable, Serializable
 		}
 		if (fileExtensions == null)
 		{
-			fileExtensions = new ArrayList();
+			fileExtensions = new ArrayList<String>();
 		}
 		fileExtensions.add(ext);
 	}
@@ -75,7 +72,7 @@ public class FormatDescription implements Comparable, Serializable
 		}
 		if (mimeTypes == null)
 		{
-			mimeTypes = new ArrayList();
+			mimeTypes = new ArrayList<String> ();
 		}
 		mimeTypes.add(mimeType);
 	}
@@ -103,9 +100,9 @@ public class FormatDescription implements Comparable, Serializable
 		}
 	}
 
-	public int compareTo(Object obj)
+	public int compareTo(FormatDescription obj)
 	{
-		FormatDescription desc = (FormatDescription)obj;
+		FormatDescription desc = obj;
 		int relation = getGroup().compareTo(desc.getGroup());
 		if (relation != 0)
 		{
@@ -114,7 +111,7 @@ public class FormatDescription implements Comparable, Serializable
 		return getLongName().compareTo(desc.getLongName());
 	}
 
-	public List getFileExtensions()
+	public List<String>  getFileExtensions()
 	{
 		return fileExtensions;
 	}
@@ -143,7 +140,7 @@ public class FormatDescription implements Comparable, Serializable
 	{
 		if (mimeTypes != null && index >= 0 && index < mimeTypes.size())
 		{
-			return (String)mimeTypes.get(index);
+			return mimeTypes.get(index);
 		}
 		else
 		{
@@ -151,7 +148,7 @@ public class FormatDescription implements Comparable, Serializable
 		}
 	}
 
-	public List getMimeTypes()
+	public List<String> getMimeTypes()
 	{
 		return mimeTypes;
 	}
@@ -295,7 +292,7 @@ public class FormatDescription implements Comparable, Serializable
 		sb.append(";");
 		if (getMimeTypes() != null)
 		{
-			Iterator iter = getMimeTypes().iterator();
+			Iterator<String> iter = getMimeTypes().iterator();
 			while (iter.hasNext())
 			{
 				sb.append(iter.next());
@@ -309,7 +306,7 @@ public class FormatDescription implements Comparable, Serializable
 		sb.append(";");
 		if (getFileExtensions() != null)
 		{
-			Iterator iter = getFileExtensions().iterator();
+			Iterator<String> iter = getFileExtensions().iterator();
 			while (iter.hasNext())
 			{
 				sb.append(iter.next());

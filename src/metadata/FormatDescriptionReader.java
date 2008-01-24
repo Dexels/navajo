@@ -1,9 +1,6 @@
 package metadata;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.Serializable;
+import java.io.*;
 
 /**
  * Read {@link metadata.FormatDescription} objects from a semicolon-separated text file.

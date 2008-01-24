@@ -8,7 +8,7 @@ package com.dexels.navajo.document;
  * @author Arjen Schoneveld
  * @version 1.0
  */
-import java.util.HashMap;
+import java.util.*;
 
 public class LazyMessageImpl implements java.io.Serializable{
 
@@ -24,10 +24,10 @@ public class LazyMessageImpl implements java.io.Serializable{
      public int totalElements;
    }
 
-   private HashMap entries;
+   private Map<String,Entry> entries;
 
    public LazyMessageImpl() {
-      entries = new HashMap();
+      entries = new HashMap<String,Entry>();
    }
 
    public void addLazyMessage(String name, int startIndex, int endIndex, int totalElements) {
@@ -44,27 +44,24 @@ public class LazyMessageImpl implements java.io.Serializable{
    }
 
    public int getStartIndex(String name) {
-      Entry e = (Entry) entries.get(name);
+      Entry e = entries.get(name);
       if (e != null)
         return e.startIndex;
-      else
-        return 0;
+	return 0;
    }
 
    public int getEndIndex(String name) {
-      Entry e = (Entry) entries.get(name);
+      Entry e = entries.get(name);
       if (e != null)
         return e.endIndex;
-      else
-        return -1;
+	return -1;
    }
 
    public int getTotalElements(String name) {
-     Entry e = (Entry) entries.get(name);
+     Entry e = entries.get(name);
      if (e != null)
        return e.totalElements;
-     else
-       return -1;
+	return -1;
 
    }
 }

@@ -3,9 +3,6 @@ package com.dexels.navajo.document;
 import java.beans.*;
 import java.util.*;
 
-import com.dexels.navajo.document.base.*;
-import com.dexels.navajo.document.databinding.*;
-
 /**
  * <p>Title: Navajo Product Project</p>
  * <p>Description: This is the official source for the Navajo server</p>
@@ -19,7 +16,7 @@ import com.dexels.navajo.document.databinding.*;
  */
 
 public interface Message
-    extends java.io.Serializable, java.lang.Comparable {
+    extends java.io.Serializable, java.lang.Comparable<Message> {
 
   /**
    * Message attributes/constants.
@@ -237,7 +234,7 @@ public interface Message
    * absolute message references starting at the root level.
    * @return ArrayList of Property objects that match the given regular expression
    */
-  public ArrayList getProperties(String regularExpression) throws
+  public ArrayList<Property> getProperties(String regularExpression) throws
       NavajoException;
 
   /**
@@ -245,7 +242,7 @@ public interface Message
    * absolute message references starting at the root level.
    * @return ArrayList with Message objects that match the given regular expression
    */
-  public ArrayList getMessages(String regularExpression) throws NavajoException;
+  public ArrayList<Message> getMessages(String regularExpression) throws NavajoException;
 
   /**
    * Get an array element message with a given index.
@@ -281,13 +278,13 @@ public interface Message
    * Return all properties in this message. Properties in submessages are not included(!).
    * @return ArrayList containing all this Message's Property objects
    */
-  public ArrayList getAllProperties();
+  public ArrayList<Property> getAllProperties();
 
   /**
    * Return all messages in this message. Only first level sub-messages are returned(!).
    * @return ArrayList containting all this Message's submessages
    */
-  public ArrayList getAllMessages();
+  public ArrayList<Message> getAllMessages();
 
   /**
    * Check if this message contains a property with a specific name. Property name may include references

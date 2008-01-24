@@ -4,7 +4,7 @@ import java.util.*;
 import com.dexels.navajo.document.*;
 
 public class BaseMethodImpl extends BaseNode implements Method {
-    protected ArrayList myRequiredMessages = new ArrayList();
+  protected ArrayList<BaseRequiredImpl> myRequiredMessages = new ArrayList<BaseRequiredImpl>();
   protected String myName = "";
   protected Message myParent = null;
   protected String myDescription = null;
@@ -18,12 +18,16 @@ public class BaseMethodImpl extends BaseNode implements Method {
     myName = name;
   }
 
-  public final ArrayList getRequiredMessages() {
-    return (ArrayList) myRequiredMessages;
+  public final ArrayList<String> getRequiredMessages() {
+	  ArrayList<String> result = new ArrayList<String>();
+	  for (Required required : myRequiredMessages) {
+		result.add(required.getMessage());
+	}
+	  return result;
   }
 
-  public final void setAllRequired(ArrayList al) {
-    myRequiredMessages = al;
+  public final void setAllRequired(ArrayList<BaseRequiredImpl> al) {
+	  myRequiredMessages.addAll(al);
   }
 
   public final String getName() {
@@ -56,9 +60,12 @@ public class BaseMethodImpl extends BaseNode implements Method {
   }
 
   public final Method copy(Navajo n) {
-/** @todo SERVER?! */
+
     BaseMethodImpl m = (BaseMethodImpl)NavajoFactory.getInstance().createMethod(n,getName(),getServer());
-    m.setAllRequired(getRequiredMessages());
+//    ArrayList<BaseRequiredImpl> al = new ArrayList<BaseRequiredImpl>();
+    for (String d : getRequiredMessages()) {
+    	m.addRequired(d);
+    }
     return m;
   }
 
@@ -79,21 +86,18 @@ public class BaseMethodImpl extends BaseNode implements Method {
   }
   
   public final void addRequired(String message, String filter) {
-//  	BaseRequiredImpl req = new BaseRequiredImpl();
-//  	req.setMessage(message);
-//  	if (filter != null) {
-//  		req.setFilter(filter);
-//  	}
-//    myRequiredMessages.add(req);
+
   }
 
   public final void addRequired(Message message) {
-    myRequiredMessages.add(message.getFullMessageName());
+	  BaseRequiredImpl bri = new BaseRequiredImpl();
+	  bri.setMessage(message.getFullMessageName());
+    myRequiredMessages.add(bri);
     /**@todo Implement this com.dexels.navajo.document.Method abstract method*/
   }
   
   /**
-   * Return true if a certaing message needs to be included in serialized form based
+   * Return true if a certain message needs to be included in serialized form based
    * upon definitions in required.
    * 
    * @param message
@@ -103,7 +107,7 @@ public class BaseMethodImpl extends BaseNode implements Method {
   	
   
   	for (int i = 0; i < myRequiredMessages.size(); i++) {
-  		Required req = (Required) myRequiredMessages.get(i);
+  		Required req = myRequiredMessages.get(i);
   		if (req.getFilter() != null && !req.getFilter().equals("") && req.getMessage().equals(message.getName())) {
   			ExpressionEvaluator expr = NavajoFactory.getInstance().getExpressionEvaluator();
   			try {
@@ -118,16 +122,16 @@ public class BaseMethodImpl extends BaseNode implements Method {
   	return true;
   }
   
-  public Map getAttributes() {
-      Map m = new HashMap();
+  public Map<String,String> getAttributes() {
+      Map<String,String> m = new HashMap<String,String>();
       m.put("name", myName);
       return m;
   }
 
 
- public List getChildren() {
-     
-     return myRequiredMessages;
+ public List<BaseNode> getChildren() {
+     // does not serialize required parts of methods. don't know why, but it really couldn't work
+     return null;
   }
 public String getTagName() {
     return "method";

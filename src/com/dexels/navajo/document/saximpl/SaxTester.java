@@ -10,7 +10,6 @@ import java.io.*;
 import java.util.*;
 
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.saximpl.qdxml.*;
 import com.dexels.navajo.document.types.*;
 
 public class SaxTester {
@@ -32,7 +31,6 @@ public class SaxTester {
         System.setProperty(DOC_IMPL,QDSAX);
      }
     public static void main(String[] args) throws Exception {
-        String name = null;
         System.err.println("Starting");
         long current = System.currentTimeMillis();
 //        readWriteTest("c:/qdimplsave_text.xml",ITERATIONS,NANO);
@@ -100,24 +98,25 @@ public class SaxTester {
         }
     }    
     public static void traversalTest(Navajo n) throws NavajoException {
-        ArrayList messages = n.getAllMessages();
-        for (Iterator iter = messages.iterator(); iter.hasNext();) {
-            Message element = (Message) iter.next();
+        ArrayList<Message> messages = n.getAllMessages();
+        for (Iterator<Message> iter = messages.iterator(); iter.hasNext();) {
+            Message element = iter.next();
             traverseMessage(element);
         }
         
     }
 
     private static void traverseMessage(Message element) {
-        ArrayList messages = element.getAllMessages();
-        for (Iterator iter = messages.iterator(); iter.hasNext();) {
-            Message element2 = (Message) iter.next();
+        ArrayList<Message> messages = element.getAllMessages();
+        for (Iterator<Message> iter = messages.iterator(); iter.hasNext();) {
+            Message element2 = iter.next();
             traverseMessage(element2);
         }
-        ArrayList properties = element.getAllProperties();
-        for (Iterator iter = properties.iterator(); iter.hasNext();) {
-            Property element3 = (Property) iter.next();
-            String ss = element3.getValue();
+        ArrayList<Property> properties = element.getAllProperties();
+        for (Iterator<Property> iter = properties.iterator(); iter.hasNext();) {
+            Property element3 = iter.next();
+            // What the f#$k is this good for?!
+            element3.getValue();
         }
     }
 }

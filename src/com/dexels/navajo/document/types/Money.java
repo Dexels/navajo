@@ -1,8 +1,8 @@
 package com.dexels.navajo.document.types;
 
-import java.text.DecimalFormat;
-import java.util.Locale;
+import java.text.*;
 import java.util.regex.*;
+
 import com.dexels.navajo.document.*;
 
 /**
@@ -16,7 +16,7 @@ import com.dexels.navajo.document.*;
 
 public final class Money
     extends NavajoType
-    implements Comparable {
+    implements Comparable<Money> {
 
   private Double value = null;
   private static DecimalFormat nf = new DecimalFormat("\u00A4 #,##0.00;\u00A4 -#,##0.00");
@@ -205,11 +205,11 @@ public final class Money
     return value.doubleValue();
   }
 
-  public final int compareTo(Object o) {
-    if (! (o instanceof Money)) {
+  public final int compareTo(Money o) {
+    if (o==null) {
       return 0;
     }
-    Money other = (Money) o;
+    Money other = o;
     if (other.doubleValue() == this.doubleValue()) {
       return 0;
     }

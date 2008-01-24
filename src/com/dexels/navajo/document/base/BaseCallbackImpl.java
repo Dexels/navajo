@@ -16,17 +16,17 @@ import com.dexels.navajo.document.*;
  */
 public class BaseCallbackImpl extends BaseNode {
 
-  private final ArrayList myObjects = new ArrayList();
+  private final List<BaseNode> myObjects = new ArrayList<BaseNode>();
    
   public BaseCallbackImpl(Navajo n) {
     super(n);
   }
 
-    public Map getAttributes() {
+    public Map<String,String> getAttributes() {
         return null;
     }
 
-    public List getChildren() {
+    public List<BaseNode> getChildren() {
         return myObjects;
     }
 
@@ -48,7 +48,7 @@ public class BaseCallbackImpl extends BaseNode {
     	return null;
     }
     
-    public ArrayList getObjects() {
+    public List<BaseNode> getObjects() {
     	return myObjects;
     }
     

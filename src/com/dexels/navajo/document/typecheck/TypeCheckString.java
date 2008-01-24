@@ -45,16 +45,9 @@ public class TypeCheckString extends TypeChecker {
         if (message==null) {
             message="String format error!";
         }
-//        Pattern pat = Pattern.compile(regexp);
-//        Matcher mat = pat.matches(regexp, value);
-        CharSequence s;
         if (!Pattern.matches(regexp, value)) {
-//            System.err.println("Regexp: "+regexp+" failed on: "+value+" with message: "+message+" with oldvalue: "+p.getValue());
             throw new PropertyTypeException(p,message);
         }
-//        else {
-//            System.err.println("Regexp matches!");
-//        }
     }
     return value;
   }
@@ -70,7 +63,6 @@ public static void main(String[] args) {
         }
 //        Pattern pat = Pattern.compile(regexp);
 //        Matcher mat = pat.matches(regexp, value);
-        CharSequence s;
         if (!Pattern.matches(regexp, value)) {
             System.err.println("Regexp: "+regexp+" failed on: "+value+" with message: "+message+" with oldvalue: -");
 //            throw new PropertyTypeException(p,message);

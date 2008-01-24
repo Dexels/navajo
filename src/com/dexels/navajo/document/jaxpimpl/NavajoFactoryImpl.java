@@ -9,13 +9,12 @@ package com.dexels.navajo.document.jaxpimpl;
  * @version 1.0
  */
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
-import com.dexels.navajo.document.saximpl.SaxHandler;
-import com.dexels.navajo.document.saximpl.qdxml.QDParser;
+import java.io.*;
 
 import org.w3c.dom.*;
-import java.io.*;
+
+import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.jaxpimpl.xml.*;
 
 public final class NavajoFactoryImpl extends NavajoFactory {
 

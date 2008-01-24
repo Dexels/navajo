@@ -26,14 +26,16 @@ package com.dexels.navajo.document.nanoimpl;
 
 import java.io.*;
 
-import com.dexels.navajo.document.Required;
+import com.dexels.navajo.document.*;
 
 /**
  * @author arjen
  *
  * TODO To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Style - Code Templates
+ * @deprecated
  */
+@Deprecated
 public class RequiredImpl implements Required, NanoElement {
 
 	private String message;

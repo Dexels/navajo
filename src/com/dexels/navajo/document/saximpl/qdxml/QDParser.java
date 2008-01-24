@@ -11,9 +11,9 @@ public class QDParser {
     
     public static final int PUSHBACK_SIZE = 2000;
     
-    private static int popMode(Stack st) {
+    private static int popMode(Stack<Integer> st) {
         if (!st.empty())
-            return ((Integer) st.pop()).intValue();
+            return st.pop().intValue();
         else
             return PRE;
     }
@@ -35,8 +35,8 @@ public class QDParser {
         String tagName = null;
         String lvalue = null;
         String rvalue = null;
-        Hashtable attrs = null;
-        Stack st = new Stack();
+        Hashtable<String,String> attrs = null;
+        Stack<Integer> st = new Stack<Integer>();
         doc.startDocument();
         int line = 1, col = 0;
         boolean eol = false;
@@ -146,7 +146,7 @@ public class QDParser {
                     st.push(Integer.valueOf(mode));
                     mode = OPEN_TAG;
                     tagName = null;
-                    attrs = new Hashtable();
+                    attrs = new Hashtable<String,String>();
                     sb.append((char) c);
                 }
 
@@ -194,7 +194,7 @@ public class QDParser {
                     return;
                 }
                 sb.setLength(0);
-                attrs = new Hashtable();
+                attrs = new Hashtable<String,String>();
                 tagName = null;
                 mode = popMode(st);
 
@@ -209,14 +209,13 @@ public class QDParser {
                     depth++;
                     doc.startElement(tagName, attrs);
                     tagName = null;
-                    attrs = new Hashtable();
+                    attrs = new Hashtable<String,String>();
                     mode = popMode(st);
-                    // TODO TEST
                     skipWhitespace(r);
                     char ccc = nextChar(r);
                     if (ccc != '<') {
                         doc.text(r);
-                        char cc = (char) r.read();
+                        r.read();
                         popMode(st);
                         // / mode = CLOSE_TAG;
                     }
@@ -244,7 +243,11 @@ public class QDParser {
                 if (c == quotec) {
                     rvalue = sb.toString();
                     sb.setLength(0);
-                    attrs.put(lvalue, rvalue);
+                    if (attrs==null) {
+						throw new NullPointerException("The XML Compiler is in deep st#@$t");
+					} else {
+	                    attrs.put(lvalue, rvalue);
+					}
                     mode = IN_TAG;
                     // See section the XML spec, section 3.3.3
                     // on normalization processing.
@@ -265,7 +268,11 @@ public class QDParser {
                     quotec = c;
                     rvalue = doc.quoteStarted(quotec, r, lvalue, tagName,attributeBuffer);
                     if (rvalue != null) {
-                        attrs.put(lvalue, rvalue);
+                    	if (attrs==null) {
+							throw new NullPointerException("Serious parsing problem!");
+						} else {
+	                        attrs.put(lvalue, rvalue);
+						}
                     }
                     mode = IN_TAG;
 
@@ -304,7 +311,7 @@ public class QDParser {
                     doc.startElement(tagName, attrs);
                     depth++;
                     tagName = null;
-                    attrs = new Hashtable();
+                    attrs = new Hashtable<String,String>();
                     skipWhitespace(r);
 //                    System.err.println("Char: " + (char) nextChar(r));
                     if (nextChar(r) != '<') {
@@ -332,7 +339,6 @@ public class QDParser {
     }
 
     private static String displayMode(int mode) {
-        // TODO Auto-generated method stub
         switch (mode) {
         case 1:
             return "TEXT";
@@ -385,7 +391,6 @@ public class QDParser {
     }
 
     private static char nextChar(PushbackReader r) throws IOException {
-        // TODO Auto-generated method stub
         int c = r.read();
         r.unread(c);
         return (char) c;

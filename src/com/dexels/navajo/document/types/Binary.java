@@ -29,7 +29,7 @@ import com.dexels.navajo.document.saximpl.qdxml.*;
  * @version 1.0
  */
 
-public final class Binary extends NavajoType implements Serializable {
+public final class Binary extends NavajoType implements Serializable,Comparable<Binary> {
 
     /**
 	 * 
@@ -58,7 +58,7 @@ public final class Binary extends NavajoType implements Serializable {
 
     private FormatDescription currentFormatDescription;
     
-    private final static HashMap persistedBinaries = new HashMap();
+    private final static HashMap<String,Binary> persistedBinaries = new HashMap<String,Binary>();
     
     /**
      * Construct a new Binary object with data from an InputStream It does close
@@ -123,10 +123,10 @@ public final class Binary extends NavajoType implements Serializable {
      */
     public URL getURL() throws MalformedURLException {
         if (lazySourceFile != null && lazySourceFile.exists()) {
-            return lazySourceFile.toURL();
+            return lazySourceFile.toURI().toURL();
         } else {
             if (dataFile != null && dataFile.exists()) {
-                return dataFile.toURL();
+                return dataFile.toURI().toURL();
             } else {
                 return null;
             }
@@ -246,7 +246,8 @@ public final class Binary extends NavajoType implements Serializable {
      *            String
      *            @deprecated
      */
-    public Binary(byte[] data, String subtype) {
+    @Deprecated
+	public Binary(byte[] data, String subtype) {
         super(Property.BINARY_PROPERTY, subtype);
         try {
             OutputStream fos = createTempFileOutputStream();
@@ -462,9 +463,9 @@ public final class Binary extends NavajoType implements Serializable {
             guessContentType();
         }
         if (currentFormatDescription!=null) {
-            List exts = currentFormatDescription.getFileExtensions();
+            List<String> exts = currentFormatDescription.getFileExtensions();
             if (exts!=null && !exts.isEmpty()) {
-                return (String)exts.get(0);
+                return exts.get(0);
             }
         }
         return "dat";
@@ -509,7 +510,6 @@ public final class Binary extends NavajoType implements Serializable {
 	                    in.close();
 	                }
 	            } catch (IOException e) {
-	                // TODO Auto-generated catch block
 	                e.printStackTrace();
 	            }
 	        }
@@ -521,9 +521,6 @@ public final class Binary extends NavajoType implements Serializable {
     }
 
     private final void copyResource(String name, OutputStream out, InputStream in, long totalSize) throws IOException {
-//        BufferedInputStream bin = new BufferedInputStream(in, 2000);
-//        BufferedOutputStream bout = new BufferedOutputStream(out, 2000);
-         
         byte[] buffer = new byte[1024];
         int read;
         long size = 0;
@@ -534,20 +531,17 @@ public final class Binary extends NavajoType implements Serializable {
             size += read;
             iter++;
             if (iter % 100 == 0) {
-//                System.err.println("Size: " + size+" bytes");
-                NavajoFactory.getInstance().fireBinaryProgress(name, (long)size, (long)totalSize);
+                NavajoFactory.getInstance().fireBinaryProgress(name, size, totalSize);
                 
             }
-            // System.err.println("COPIED: "+read);
         }
         out.flush();
 
         in.close();
         out.flush();
         } finally {
-            NavajoFactory.getInstance().fireBinaryFinished("Finished", (long)totalSize);
+            NavajoFactory.getInstance().fireBinaryFinished("Finished", totalSize);
         }
-        // bout.close();
     }
 
     public final void write(OutputStream to) throws IOException {
@@ -579,7 +573,6 @@ public final class Binary extends NavajoType implements Serializable {
 	            try {
 	                return new FileInputStream(lazySourceFile);
 	            } catch (FileNotFoundException e) {
-	                // TODO Auto-generated catch block
 	                e.printStackTrace(System.err);
 	                return null;
 	            }
@@ -588,7 +581,6 @@ public final class Binary extends NavajoType implements Serializable {
 	            try {
 	                return new FileInputStream(dataFile);
 	            } catch (FileNotFoundException e) {
-	                // TODO Auto-generated catch block
 	                e.printStackTrace(System.err);
 	                return null;
 	            }
@@ -626,7 +618,7 @@ public final class Binary extends NavajoType implements Serializable {
     }
     
     // for sorting. Not really much to sort
-    public final int compareTo(Object o) {
+    public final int compareTo(Binary o) {
         return 0;
     }
 
@@ -639,7 +631,6 @@ public final class Binary extends NavajoType implements Serializable {
 		} else {
 	        if (dataFile != null && dataFile.exists() ) {
 	            try {
-	            	//System.err.println("Deleting binary placeholder filer myRef : " + dataFile.getAbsolutePath());
 	                dataFile.delete();
 	            } catch (Throwable t) {
 	                t.printStackTrace();
@@ -656,7 +647,8 @@ public final class Binary extends NavajoType implements Serializable {
      *             so it is quite possible that large binaries will result in out of
      *             memory exceptions
      */
-    public final String getBase64() {
+    @Deprecated
+	public final String getBase64() {
          final StringWriter sw = new StringWriter();
          final OutputStream os = Base64.newEncoder( sw );
             
@@ -812,6 +804,8 @@ public final class Binary extends NavajoType implements Serializable {
     		}
     	}
     }
+
+
     
     /**
      * Custom deserialization is needed.

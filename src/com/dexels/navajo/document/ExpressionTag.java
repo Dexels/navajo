@@ -9,7 +9,7 @@ package com.dexels.navajo.document;
  * @version $Id$
  */
 
-public interface ExpressionTag extends java.io.Serializable, Comparable, Cloneable {
+public interface ExpressionTag extends java.io.Serializable, Comparable<ExpressionTag>, Cloneable {
 
   /**
    * Public constants for the property node.

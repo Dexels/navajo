@@ -1,14 +1,9 @@
 package com.dexels.navajo.document.nanoimpl;
 
-import java.util.*;
 import java.io.*;
-import java.net.*;
+import java.util.*;
 
 import com.dexels.navajo.document.*;
-
-
-import org.dexels.utils.Base64;
-
 import com.dexels.navajo.document.base.*;
 import com.dexels.navajo.document.types.*;
 
@@ -20,11 +15,13 @@ import com.dexels.navajo.document.types.*;
  * <p>Company: Dexels </p>c
  * @author Frank Lyaruu
  * @version 1.0
+ * @deprecated
  */
 
+@Deprecated
 public final class PropertyImpl
     extends BasePropertyImpl
-    implements Property, Comparable, NanoElement {
+    implements Property, Comparable<Property>, NanoElement {
  
 
   
@@ -112,7 +109,7 @@ public final class PropertyImpl
         	x.setContent( myBinary.getBase64() );
         }
         if (myValue != null) {
-            x.setAttribute("value", (String) myValue);
+            x.setAttribute("value", myValue);
           }
 
     if (definitionProperty == null || definitionProperty.getAllSelections().size() == 0 ) {
@@ -161,16 +158,16 @@ public final class PropertyImpl
       if (myValue != null) {
         if (definitionProperty.getValue() != null &&
             !definitionProperty.getValue().equals(getValue())) {
-          x.setAttribute("value", (String) myValue);
+          x.setAttribute("value", myValue);
 
         }
         if (definitionProperty.getValue() == null) {
-          x.setAttribute("value", (String) myValue);
+          x.setAttribute("value", myValue);
         }
 
       }
 
-        ArrayList al = getAllSelectedSelections();
+        ArrayList<Selection> al = getAllSelectedSelections();
         //System.err.println("# of selected selections: " + al.size());
         for (int i = 0; i < al.size(); i++) {
 
@@ -283,7 +280,7 @@ public final class PropertyImpl
         if (definitionProperty == null || definitionProperty.getAllSelections().size() == 0) {
           cardinality = (String) e.getAttribute("cardinality");
           for (int i = 0; i < e.countChildren(); i++) {
-            XMLElement child = (XMLElement) e.getChildren().elementAt(i);
+            XMLElement child = e.getChildren().get(i);
             SelectionImpl s = (SelectionImpl) NavajoFactory.getInstance().createSelection(myDocRoot, "", "", false);
             s.fromXml(child);
             s.setParent(this);
@@ -291,14 +288,14 @@ public final class PropertyImpl
           }
         }
         else { // There is a definition property with defined selections(!)
-          ArrayList l = definitionProperty.getAllSelections();
+          ArrayList<Selection> l = definitionProperty.getAllSelections();
           for (int i = 0; i < l.size(); i++) {
             SelectionImpl s = (SelectionImpl) l.get(i);
             SelectionImpl s2 = (SelectionImpl) s.copy(getRootDoc());
             addSelection(s2);
           }
           for (int j = 0; j < e.countChildren(); j++) {
-            XMLElement child = (XMLElement) e.getChildren().elementAt(j);
+            XMLElement child = e.getChildren().get(j);
             String val = (String) child.getAttribute("value");
             //System.err.println(">>>>>>>>>>>>>>>>>>>>>> Attempting to select value: " + val);
             if (val != null) {

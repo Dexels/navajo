@@ -1,10 +1,7 @@
 package com.dexels.navajo.document;
 
-import java.io.OutputStream;
-import java.io.PrintStream;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.io.*;
+import java.util.*;
 
 /**
  * <p>Title: Navajo Product Project</p>
@@ -64,7 +61,8 @@ public interface Header extends java.io.Serializable {
      * @param message
      * @return
      */
-    public LazyMessageImpl getLazyMessages();
+    @Deprecated
+	public LazyMessageImpl getLazyMessages();
 
     /**
      * Get the name of the service (RPC name) from a Navajo message.
@@ -187,7 +185,8 @@ public interface Header extends java.io.Serializable {
     * @param path
     * @return
     */
-    public LazyMessagePath getLazyMessagePath(String path);
+    @Deprecated
+	public LazyMessagePath getLazyMessagePath(String path);
 
     
     /**
@@ -197,7 +196,8 @@ public interface Header extends java.io.Serializable {
      * @param endIndex
      * @param total
      */
-    public void addLazyMessagePath(String path, int startIndex, int endIndex, int total);
+    @Deprecated
+	public void addLazyMessagePath(String path, int startIndex, int endIndex, int total);
 
 
     /**
@@ -222,13 +222,13 @@ public interface Header extends java.io.Serializable {
      */
     public String getRequestId();
     
-    public Map getHeaderAttributes();
+    public Map<String,String> getHeaderAttributes();
     
     public void setRequestId(String id);
 
-	public void addPiggyBackData(Map element);
+	public void addPiggyBackData(Map<String,String> element);
 
-	public Set getPiggybackData();
+	public Set<Map<String,String>> getPiggybackData();
 	
 	public void clearPiggybackData();
 	

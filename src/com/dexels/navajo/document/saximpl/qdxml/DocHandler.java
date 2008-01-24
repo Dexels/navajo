@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.*;
 
 public interface DocHandler {
-  public void startElement(String tag,Hashtable h) throws Exception;
+  public void startElement(String tag,Hashtable<String,String> h) throws Exception;
   public void endElement(String tag) throws Exception;
   public void startDocument() throws Exception;
   public void endDocument() throws Exception;

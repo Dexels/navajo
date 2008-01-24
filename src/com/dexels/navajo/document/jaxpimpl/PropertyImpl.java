@@ -15,10 +15,10 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
-import org.dexels.utils.Base64;
+import org.dexels.utils.*;
 import org.w3c.dom.*;
+
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.databinding.*;
 import com.dexels.navajo.document.types.*;
 
 /**
@@ -30,7 +30,7 @@ import com.dexels.navajo.document.types.*;
  * A points property can store a list of carthesian coordinates.
  *
  */
-public final class PropertyImpl implements Property, Comparable {
+public final class PropertyImpl implements Property {
 
     /**
 	 * 
@@ -38,7 +38,7 @@ public final class PropertyImpl implements Property, Comparable {
 	private static final long serialVersionUID = 2113782113914631398L;
 	public final transient Element ref;
     private Navajo myRootDoc = null;
-    private Map subtypeMap = null;
+    private Map<String,String> subtypeMap = null;
 
     public PropertyImpl(Element e) {
         this.ref = e;
@@ -74,12 +74,12 @@ public final class PropertyImpl implements Property, Comparable {
      * Create a new property object for a specific Navajo object with given parameters.
      */
     public static final Property create(Navajo tb, String name, String type, String value, int length,
-                                        String description, String direction) throws NavajoException {
+                                        String description, String direction) {
 
         Property p = null;
         Document d = (Document) tb.getMessageBuffer();
 
-        Element n = (Element) d.createElement(Property.PROPERTY_DEFINITION);
+        Element n = d.createElement(Property.PROPERTY_DEFINITION);
 
         p = new PropertyImpl(n);
         p.setRootDoc(tb);
@@ -127,7 +127,7 @@ public final class PropertyImpl implements Property, Comparable {
 
         Document d = (Document) tb.getMessageBuffer();
 
-        Element n = (Element) d.createElement(Property.PROPERTY_DEFINITION);
+        Element n = d.createElement(Property.PROPERTY_DEFINITION);
 
         p = new PropertyImpl(n);
         p.setRootDoc(tb);
@@ -225,8 +225,8 @@ public final class PropertyImpl implements Property, Comparable {
      * Return all selection objects in the property. If the property object is not of a selection type,
      * a NavajoException is thrown.
      */
-    public final ArrayList getAllSelections() throws NavajoException {
-        ArrayList h = new ArrayList();
+    public final ArrayList<Selection> getAllSelections() throws NavajoException {
+        ArrayList<Selection> h = new ArrayList<Selection>();
 
         if (!this.getType().equals(Property.SELECTION_PROPERTY))
             throw new NavajoExceptionImpl("getAllSelections(): Selection property required for this operation");
@@ -267,10 +267,10 @@ public final class PropertyImpl implements Property, Comparable {
         if (!this.getType().equals(Property.SELECTION_PROPERTY))
             throw new NavajoExceptionImpl("clearSelections(): Selection property required for this operation");
 
-        ArrayList list = getAllSelections();
+        ArrayList<Selection> list = getAllSelections();
 
         for (int i = 0; i < list.size(); i++) {
-            Selection sel = (Selection) list.get(i);
+            Selection sel = list.get(i);
 
             sel.setSelected(false);
         }
@@ -292,8 +292,8 @@ public final class PropertyImpl implements Property, Comparable {
      * Return all selection objects in the property. If the property object is not of a selection type,
      * a NavajoException is thrown.
      */
-    public final ArrayList getAllSelectedSelections() throws NavajoException {
-        ArrayList h = new ArrayList();
+    public final ArrayList<Selection> getAllSelectedSelections() throws NavajoException {
+        ArrayList<Selection> h = new ArrayList<Selection>();
 
         if (!this.getType().equals(Property.SELECTION_PROPERTY))
             throw new NavajoExceptionImpl("getAllSelectedSelections(): Selection property required for this operation");
@@ -376,7 +376,7 @@ public final class PropertyImpl implements Property, Comparable {
     public final String getSubType(String key){
 //      return PropertyTypeChecker.getInstance().getSubType(getType(), getSubType(), key);
       if (subtypeMap!=null) {
-        return (String)subtypeMap.get(key);
+        return subtypeMap.get(key);
       }
       return null;
     }
@@ -389,7 +389,8 @@ public final class PropertyImpl implements Property, Comparable {
         ref.setAttribute(Property.PROPERTY_TYPE, type);
     }
 
-    public final Object getTypedValue() {
+    @SuppressWarnings("deprecation")
+	public final Object getTypedValue() {
 
       if (getValue() == null) { 
         return null;
@@ -400,11 +401,11 @@ public final class PropertyImpl implements Property, Comparable {
           return Boolean.FALSE;
         }
         else {
-          return Boolean.valueOf( ( (String) getValue()).equals("true"));
+          return Boolean.valueOf( getValue().equals("true"));
         }
       }
       else if (getType().equals(Property.STRING_PROPERTY)) {
-        return (String) getValue();
+        return getValue();
       } else if (getType().equals(Property.MONEY_PROPERTY)) {
         return new Money(Double.parseDouble(getValue()),getSubType());
 
@@ -520,7 +521,8 @@ public final class PropertyImpl implements Property, Comparable {
 	  }
  }
  
- public void setValue(URL url) {
+ @SuppressWarnings("deprecation")
+public void setValue(URL url) {
    try{
       if(getType().equals(BINARY_PROPERTY)){
         InputStream in = url.openStream();
@@ -712,10 +714,10 @@ public final class PropertyImpl implements Property, Comparable {
         if (!this.getType().equals(Property.SELECTION_PROPERTY))
             throw new NavajoExceptionImpl("setSelected(): Selection property required for this operation");
 
-        ArrayList list = this.getAllSelections();
+        ArrayList<Selection> list = this.getAllSelections();
 
         for (int i = 0; i < list.size(); i++) {
-            Selection sel = (Selection) list.get(i);
+            Selection sel = list.get(i);
 
             if (sel.getValue().equals(value)) {
                 sel.setSelected(true);
@@ -730,10 +732,10 @@ public final class PropertyImpl implements Property, Comparable {
       if (!this.getType().equals(Property.SELECTION_PROPERTY))
          throw new NavajoExceptionImpl("setSelected(): Selection property required for this operation");
 
-     ArrayList list = this.getAllSelections();
+     ArrayList<Selection> list = this.getAllSelections();
 
      for (int i = 0; i < list.size(); i++) {
-         Selection sel = (Selection) list.get(i);
+         Selection sel = list.get(i);
 
          if (sel==s) {
              sel.setSelected(true);
@@ -745,18 +747,18 @@ public final class PropertyImpl implements Property, Comparable {
 
     }
 
-    public final void setSelected(ArrayList keys) throws NavajoException {
+    public final void setSelected(ArrayList<String> keys) throws NavajoException {
         if (!this.getType().equals(Property.SELECTION_PROPERTY))
             throw new NavajoExceptionImpl("setSelected(): Selection property required for this operation");
 
-        ArrayList list = this.getAllSelections();
+        ArrayList<Selection> list = this.getAllSelections();
 
         for (int i = 0; i < list.size(); i++) {
-            ((Selection) list.get(i)).setSelected(false);
+            list.get(i).setSelected(false);
         }
 
         for (int j = 0; j < list.size(); j++) {
-            Selection sel = (Selection) list.get(j);
+            Selection sel = list.get(j);
 
             if (keys.contains(sel.getValue()))
                 sel.setSelected(true);
@@ -767,7 +769,7 @@ public final class PropertyImpl implements Property, Comparable {
     public final void setSelected(String[] keys) throws NavajoException {
         if (!this.getType().equals(Property.SELECTION_PROPERTY))
             throw new NavajoExceptionImpl("setSelected(): Selection property required for this operation");
-        ArrayList l = new ArrayList(keys.length);
+        ArrayList<String> l = new ArrayList<String>(keys.length);
 
         for (int i = 0; i < keys.length; i++)
             l.add(keys[i]);
@@ -846,20 +848,20 @@ public final class PropertyImpl implements Property, Comparable {
      * Set the cartesian coordinates of a "points" property. Points is an array of Vectors.
      * Each vector contains the "point" (of any dimensionality).
      */
-    public final void setPoints(Vector[] points) throws NavajoException {
+    public final void setPoints(Vector<String>[] points) throws NavajoException {
 
         if (!ref.getAttribute(Property.PROPERTY_TYPE).equals(Property.POINTS_PROPERTY))
             throw new NavajoExceptionImpl("Only points properties support this method.");
 
-        Document d = (Document) this.ref.getOwnerDocument();
+        Document d = this.ref.getOwnerDocument();
 
         for (int i = 0; i < points.length; i++) {
-            Element e = (Element) d.createElement("value");
+            Element e = d.createElement("value");
 
             this.setLength(points[i].size());
             for (int j = 0; j < points[i].size(); j++) {
                 String attrName = "x" + j;
-                String value = (String) points[i].get(j);
+                String value = points[i].get(j);
 
 
                 e.setAttribute(attrName, value);
@@ -872,12 +874,13 @@ public final class PropertyImpl implements Property, Comparable {
      * Return the cartesian coordinates of a "points" property.
      * The return value is an array of Vectors (containing floats).
      */
-    public final Vector[] getPoints() throws NavajoException {
+    @SuppressWarnings("unchecked")
+	public final Vector<String>[] getPoints() throws NavajoException {
 
         if (!ref.getAttribute(Property.PROPERTY_TYPE).equals(Property.POINTS_PROPERTY))
             throw new NavajoExceptionImpl("Only points properties support this method.");
 
-        Vector[] pointArray = null;
+        Vector<String>[] pointArray = null;
 
         int count = 0;
 
@@ -896,7 +899,7 @@ public final class PropertyImpl implements Property, Comparable {
             if (list.item(i).getNodeName().equals("value")) {
                 Element e = (Element) list.item(i);
 
-                pointArray[count] = new Vector();
+                pointArray[count] = new Vector<String>();
                 for (int j = 0; j < this.getLength(); j++) {
                     String attrName = "x" + j;
                     String value = e.getAttribute(attrName);
@@ -945,7 +948,8 @@ public final class PropertyImpl implements Property, Comparable {
  * This interface is needed to be able to create sortable tables
  */
 
-  public final int compareTo(Object p)  {
+  @SuppressWarnings("unchecked")
+public final int compareTo(Property p)  {
     if (p==null) {
       return 0;
     }
@@ -954,7 +958,7 @@ public final class PropertyImpl implements Property, Comparable {
     if (getType().equals(Property.BOOLEAN_PROPERTY)) {
       Boolean bool1 = (Boolean) getTypedValue();
       boolean b1 = bool1.booleanValue();
-      Boolean bool2 = (Boolean) ((Property)p).getTypedValue();
+      Boolean bool2 = (Boolean) p.getTypedValue();
       boolean b2 = bool2.booleanValue();
       if (b1 == b2) {
         return 0;
@@ -969,8 +973,8 @@ public final class PropertyImpl implements Property, Comparable {
     // =================================================================
 
 
-    Comparable ob1 = (Comparable)getValue();
-    Comparable ob2 = (Comparable)((Property)p).getValue();
+    Comparable ob1 = getValue();
+    Comparable ob2 = p.getValue();
     if (ob1==null || ob2==null) {
       return 0;
     }
@@ -990,14 +994,14 @@ public final class PropertyImpl implements Property, Comparable {
   }
 
   public final Selection getSelected() throws NavajoException{
-    ArrayList a = getAllSelectedSelections();
+    ArrayList<Selection> a = getAllSelectedSelections();
     if (a.size()==0) {
       return NavajoFactory.getInstance().createDummySelection();
     }
     if (a.size()>1) {
       throw new NavajoExceptionImpl("More than one selection selected. Change cardinality, or don't use getSelected()");
     }
-    return (Selection)a.get(0);
+    return a.get(0);
   }
 
   public final boolean isEqual(Property p) {
@@ -1032,18 +1036,18 @@ public final class PropertyImpl implements Property, Comparable {
      // Check for selection properties.
      else if (p.getType().equals(Property.SELECTION_PROPERTY)) {
        try {
-         ArrayList l = p.getAllSelectedSelections();
-         ArrayList me = this.getAllSelectedSelections();
+         ArrayList<Selection> l = p.getAllSelectedSelections();
+         ArrayList<Selection> me = this.getAllSelectedSelections();
 
          // If number of selected selections is not equal they're not equal.
          if (me.size() != l.size())
            return false;
 
          for (int j = 0; j < l.size(); j++) {
-           Selection other = (Selection) l.get(j);
+           Selection other = l.get(j);
            boolean match = false;
            for (int k = 0; k < me.size(); k++) {
-             Selection mysel = (Selection) me.get(k);
+             Selection mysel = me.get(k);
              if (mysel.getValue().equals(other.getValue())) {
                match = true;
                k = me.size() + 1;

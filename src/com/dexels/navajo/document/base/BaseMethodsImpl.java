@@ -16,16 +16,16 @@ import com.dexels.navajo.document.*;
  */
 public class BaseMethodsImpl extends BaseNode {
 
-  private final ArrayList myMethods = new ArrayList();
+  private final List<BaseNode> myMethods = new ArrayList<BaseNode>();
   public BaseMethodsImpl(Navajo n) {
     super(n);
   }
 
-    public Map getAttributes() {
+    public Map<String,String> getAttributes() {
         return null;
     }
 
-    public List getChildren() {
+    public List<BaseNode> getChildren() {
         return myMethods;
     }
 
@@ -52,8 +52,8 @@ public class BaseMethodsImpl extends BaseNode {
         return null;
       }
 
-    public ArrayList getAllMethods() {
-        ArrayList al = new ArrayList();
+    public ArrayList<Method> getAllMethods() {
+    	ArrayList<Method> al = new ArrayList<Method>();
         for (int i = 0; i < myMethods.size(); i++) {
             Method m = (Method)myMethods.get(i);
             al.add(m);

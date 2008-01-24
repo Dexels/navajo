@@ -1,11 +1,10 @@
 package com.dexels.navajo.document;
 
-import java.util.*;
-import java.text.SimpleDateFormat;
 import java.beans.*;
-import java.net.URL;
+import java.net.*;
+import java.text.*;
+import java.util.*;
 
-import com.dexels.navajo.document.databinding.*;
 import com.dexels.navajo.document.types.*;
 
 /**
@@ -18,7 +17,7 @@ import com.dexels.navajo.document.types.*;
  */
 
 public interface Property
-    extends java.io.Serializable, Comparable, Cloneable {
+    extends java.io.Serializable, Comparable<Property>, Cloneable {
 
   public static final String PROPERTY_DEFINITION = "property";
   public static final String PROPERTY_NAME = "name";
@@ -126,7 +125,7 @@ public interface Property
    * Return all selection objects in the property. If the property object is not of a selection type,
    * a NavajoException is thrown.
    */
-  public ArrayList getAllSelections() throws NavajoException;
+  public ArrayList<Selection> getAllSelections() throws NavajoException;
 
   /**
    * Get the full Property name
@@ -162,7 +161,7 @@ public interface Property
    * Return all selection objects in the property. If the property object is not of a selection type,
    * a NavajoException is thrown.
    */
-  public ArrayList getAllSelectedSelections() throws NavajoException;
+  public ArrayList<Selection> getAllSelectedSelections() throws NavajoException;
 
   public void addExpression(ExpressionTag e) throws NavajoException;
 
@@ -328,7 +327,7 @@ public interface Property
    * @param keys ArrayList
    * @throws NavajoException
    */
-  public void setSelected(ArrayList keys) throws NavajoException;
+  public void setSelected(ArrayList<String> keys) throws NavajoException;
 
   /**
    * Set multiple selections for a selection type Property with a Cardinality '+'
@@ -414,20 +413,20 @@ public interface Property
    * @return Message parent
    */
   public Message getParentMessage();
-
-  /**
-   * Set the cartesian coordinates of a "points" property. Points is an array of Vectors.
-   * Each vector contains the "point" (of any dimensionality).
-   *  @param Vector[] points
-   */
-  public void setPoints(Vector[] points) throws NavajoException;
-
-  /**
-   * Return the cartesian coordinates of a "points" property.
-   * The return value is an array of Vectors (containing floats).
-   * @return Vectort[] points
-   */
-  public Vector[] getPoints() throws NavajoException;
+//
+//  /**
+//   * Set the cartesian coordinates of a "points" property. Points is an array of Vectors.
+//   * Each vector contains the "point" (of any dimensionality).
+//   *  @param Vector[] points
+//   */
+//  public void setPoints(Vector[] points) throws NavajoException;
+//
+//  /**
+//   * Return the cartesian coordinates of a "points" property.
+//   * The return value is an array of Vectors (containing floats).
+//   * @return Vectort[] points
+//   */
+//  public Vector[] getPoints() throws NavajoException;
 
   /**
    * Return the internal implementation specific representation of the Property.

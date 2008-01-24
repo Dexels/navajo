@@ -1,19 +1,10 @@
 package com.dexels.navajo.persistence.impl;
 
-import com.dexels.navajo.persistence.*;
-import com.dexels.navajo.document.*;
-
-/**
- * Title:        Navajo Product Project
- * Description:  This is the official source for the Navajo server
- * Copyright:    Copyright (c) 2002
- * Company:      Dexels BV
- * @author Arjen Schoneveld
- * @version $Id$
- */
-
 import java.io.*;
 import java.util.*;
+
+import com.dexels.navajo.document.*;
+import com.dexels.navajo.persistence.*;
 
 class Configuration {
     protected String persistencePath = "/tmp";
@@ -44,7 +35,7 @@ class Frequency {
   public void access(int size, long processingTime) {
     frequency++;
     lastAccess = System.currentTimeMillis();
-    double rate = ((double) size / 1024.0 ) / ((double) processingTime / 1000.0 );
+    double rate = (size / 1024.0 ) / (processingTime / 1000.0 );
     totalThroughPut += rate;
   }
 
@@ -90,21 +81,21 @@ public final class PersistenceManagerImpl implements PersistenceManager {
     private static long totalOutOfCacheProcessing2 = 0;
     private static long fileWrites = 0;
 
-    private static HashMap nocachePerformance = null;
-    private static HashMap cachePerformance = null;
+//    private static HashMap nocachePerformance = null;
+//    private static HashMap cachePerformance = null;
 
     private static String statisticsFile = null;
 
-    private static HashMap inMemoryCache = null;
+    private static HashMap<String,Persistable> inMemoryCache = null;
     private static int inMemoryCacheSize = 0;
 
-    private static HashMap accessFrequency = null;
+    private static HashMap<String,Frequency> accessFrequency = null;
 
     public PersistenceManagerImpl() {
-        nocachePerformance = new HashMap();
-        cachePerformance = new HashMap();
-        inMemoryCache = new HashMap();
-        accessFrequency = new HashMap();
+//        nocachePerformance = new HashMap();
+//        cachePerformance = new HashMap();
+        inMemoryCache = new HashMap<String,Persistable>();
+        accessFrequency = new HashMap<String,Frequency>();
     }
 
     /**
@@ -115,9 +106,9 @@ public final class PersistenceManagerImpl implements PersistenceManager {
     private String findLFU() {
         int l = Integer.MAX_VALUE;
         String lUsed = "";
-        Iterator all = accessFrequency.keySet().iterator();
+        Iterator<String> all = accessFrequency.keySet().iterator();
         while (all.hasNext()) {
-            Frequency f = (Frequency) accessFrequency.get(all.next().toString());
+            Frequency f = accessFrequency.get(all.next().toString());
             if ((f.getTimesAccessed() < l) && (inMemoryCache.get(f.getName()) != null)) {
               l = f.getTimesAccessed();
               lUsed = f.getName();
@@ -129,7 +120,7 @@ public final class PersistenceManagerImpl implements PersistenceManager {
     private synchronized void addAccess(String key, long processingTime, int size) {
 
         //System.out.println("PT = " + processingTime + ", size = " + size);
-        Frequency i = (Frequency) accessFrequency.get(key);
+        Frequency i = accessFrequency.get(key);
         if (i == null) {
           i = new Frequency(key);
           accessFrequency.put(key, i);
@@ -201,7 +192,7 @@ public final class PersistenceManagerImpl implements PersistenceManager {
             totalOutOfCacheProcessing += total;
             totalOutOfCacheProcessing2 += (total * total);
         }
-        double pt = total / (double) 1000.0; // Processing time.
+//        double pt = total / 1000.0; // Processing time.
         double hr = ((cachehits) / (double) totalhits * 100.0); // Hit rate
         double cpt = (totalCacheProcessing / (double) cachehits) / 1000.0; // Average in cache processing time.
         double cptVar = ((totalCacheProcessing * totalCacheProcessing)
@@ -235,11 +226,11 @@ public final class PersistenceManagerImpl implements PersistenceManager {
                     "\navgOutOfCacheProcessingTime=" + ocpt + "\nstdDevInCacheProcessingTime=" + cptVar +
                     "\nstdDevOutOfCacheProcessingTime=" + ocptVar + "\n\n\n");
             w.write("Detailed statistics:\n\n");
-            Iterator iter = accessFrequency.keySet().iterator();
+            Iterator<String> iter = accessFrequency.keySet().iterator();
             w.write("WSKey \t\t\t lastAccess \t creationTime \t frequency \t avgThroughput \n");
             while (iter.hasNext()) {
-              String key = (String) iter.next();
-              Frequency freq = (Frequency) accessFrequency.get(key);
+              String key = iter.next();
+              Frequency freq = accessFrequency.get(key);
               w.write(freq.getName()+"\t\t"+new java.util.Date(freq.getLastAccess())+
                       "\t" +
                       new java.util.Date(freq.getCreation())+"\t" + freq.getTimesAccessed()+
@@ -262,8 +253,7 @@ public final class PersistenceManagerImpl implements PersistenceManager {
 
     public final Persistable get(Constructor c, String key, long expirationInterval, boolean persist) throws Exception {
 
-        boolean inCache = false;
-
+    
         if (configuration == null) {
           return c.construct();
         }
@@ -281,8 +271,7 @@ public final class PersistenceManagerImpl implements PersistenceManager {
             }
         } else {
             cachehits++;
-            inCache = true;
-        }
+         }
 
         long end = (persist ? System.currentTimeMillis() : 0);
 
@@ -303,7 +292,7 @@ public final class PersistenceManagerImpl implements PersistenceManager {
 
         if (read) {
             Navajo pc = null;
-            Frequency freq = (Frequency) accessFrequency.get(key);
+            Frequency freq = accessFrequency.get(key);
             if (freq != null && !freq.isExpired(expirationInterval)) {
               pc = (Navajo) inMemoryCache.get(key);
               if (pc != null)
@@ -334,7 +323,7 @@ public final class PersistenceManagerImpl implements PersistenceManager {
                         break;
                       }
                   }
-                  Frequency freq = (Frequency) accessFrequency.get(key);
+                  Frequency freq = accessFrequency.get(key);
                   if (freq != null)
                     freq.setCreation();
                   inMemoryCache.put(key, document);

@@ -9,7 +9,7 @@ package com.dexels.navajo.document;
  * @version 1.0
  */
 
-import java.util.ArrayList;
+import java.util.*;
 
 public interface Method
     extends java.io.Serializable {
@@ -72,7 +72,7 @@ public interface Method
    * Return a list of required message names.
    * @return ArrayList messagenames
    */
-  public ArrayList getRequiredMessages();
+  public ArrayList<String> getRequiredMessages();
 
   /**
    * Return the internal implementation specific representation of the Method.

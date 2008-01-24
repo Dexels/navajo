@@ -1,10 +1,10 @@
 package com.dexels.navajo.document.nanoimpl;
+import java.io.*;
+import java.lang.reflect.*;
+
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.Method;
 import com.dexels.navajo.document.base.*;
-
-import java.io.*;
-import java.lang.reflect.*;
 /**
  * <p>Title: </p>
  * <p>Description: </p>
@@ -12,8 +12,10 @@ import java.lang.reflect.*;
  * <p>Company: </p>
  * @author not attributable
  * @version 1.0
+ * @deprecated
  */
 
+@Deprecated
 public final class NavajoFactoryImpl extends NavajoFactory {
   public NavajoFactoryImpl() {
   }
@@ -171,12 +173,12 @@ public final class NavajoFactoryImpl extends NavajoFactory {
   public LazyMessage createLazyMessage(Navajo tb, String name, int windowSize) {
     Object instance = null;
     try {
-      Class cc = Class.forName(
+      Class<?> cc = Class.forName(
           "com.dexels.navajo.document.nanoimpl.LazyMessageImpl");
-      Class[] paramClasses = new Class[] {
+      Class<?>[] paramClasses = new Class[] {
           Navajo.class, String.class, Integer.class};
       try {
-        Constructor cons = cc.getConstructor(paramClasses);
+        Constructor<?> cons = cc.getConstructor(paramClasses);
         Object[] params = new Object[] {
             tb, name, new Integer(windowSize)};
         instance = cons.newInstance(params);

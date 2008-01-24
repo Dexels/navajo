@@ -42,6 +42,7 @@ package com.dexels.navajo.document.nanoimpl;
  * @author Marc De Scheemaecker
  * @version $Name$, $Revision$
  */
+
 public class XMLParseException
     extends RuntimeException
 {

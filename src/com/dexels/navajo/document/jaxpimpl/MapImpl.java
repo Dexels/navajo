@@ -1,8 +1,8 @@
 package com.dexels.navajo.document.jaxpimpl;
 
-import com.dexels.navajo.document.MapTag;
-import com.dexels.navajo.document.*;
 import org.w3c.dom.*;
+
+import com.dexels.navajo.document.*;
 
 /**
  * <p>Title: </p>
@@ -23,14 +23,13 @@ public final class MapImpl
   }
 
   public static final MapTag createObjectMap(Navajo tb, String object,
-                                          String condition) throws
-      NavajoException {
+                                          String condition)  {
 
     MapTag p = null;
 
     Document d = (Document) tb.getMessageBuffer();
 
-    Element n = (Element) d.createElement(MapTag.MAP_DEFINITION);
+    Element n = d.createElement(MapTag.MAP_DEFINITION);
 
     p = new MapImpl(n);
     if (condition != null)
@@ -41,13 +40,13 @@ public final class MapImpl
   }
 
   public static final MapTag createRefMap(Navajo tb, String ref, String condition,
-                                       String filter) throws NavajoException {
+                                       String filter)  {
 
     MapTag p = null;
 
     Document d = (Document) tb.getMessageBuffer();
 
-    Element n = (Element) d.createElement(MapTag.MAP_DEFINITION);
+    Element n = d.createElement(MapTag.MAP_DEFINITION);
 
     p = new MapImpl(n);
     p.setCondition(condition);

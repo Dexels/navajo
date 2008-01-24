@@ -1,18 +1,11 @@
 package com.dexels.navajo.document.base;
 
-import java.util.*;
 import java.beans.*;
 import java.io.*;
 import java.net.*;
-
-import javax.swing.tree.*;
+import java.util.*;
 
 import com.dexels.navajo.document.*;
-
-import org.dexels.utils.Base64;
-
-import com.dexels.navajo.document.databinding.*;
-import com.dexels.navajo.document.nanoimpl.PropertyImpl;
 import com.dexels.navajo.document.types.*;
 
 /**
@@ -37,7 +30,7 @@ import com.dexels.navajo.document.types.*;
  * @version 1.0
  */
 
-public class BasePropertyImpl extends BaseNode implements Property, Comparable, TreeNode {
+public class BasePropertyImpl extends BaseNode implements Property, Comparable<Property> {
 	/**
 	 * 
 	 */
@@ -45,13 +38,13 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 	protected String myName;
 	protected String myValue = null;
 
-	protected ArrayList selectionList = new ArrayList();
+	protected ArrayList<BaseSelectionImpl> selectionList = new ArrayList<BaseSelectionImpl>();
 	protected String type = null;
 	protected String cardinality = null;
 	protected String description = null;
 	protected String direction = Property.DIR_IN;
 	protected int length = -1;
-	private Map subtypeMap = null;
+	private Map<String,String> subtypeMap = null;
 
 	protected Binary myBinary = null;
 
@@ -59,7 +52,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 
 	// private String myMessageName = null;
 	private Message myParent = null;
-	private Vector[] myPoints = null;
+	private Vector<String>[] myPoints = null;
 
 	protected boolean isListType = false;
 
@@ -193,6 +186,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	public final String getValue() {
 		if (myBinary != null) {
 			System.err.println("Do you REALLY want this binary as a string? You really shouldn't..");
@@ -210,79 +204,79 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 		myBinary = null;
 		
 		if (o == null) {
-			setType(Property.STRING_PROPERTY);
+//			setType(Property.STRING_PROPERTY);
 			setValue((String) null);
 			return;
 		}
 		if (o instanceof Integer) {
-			setType(Property.INTEGER_PROPERTY);
+//			setType(Property.INTEGER_PROPERTY);
 			setValue((Integer) o);
 			return;
 		}
 		if (o instanceof Double) {
-			setType(Property.FLOAT_PROPERTY);
+//			setType(Property.FLOAT_PROPERTY);
 			setValue((Double) o);
 			return;
 		}
 		if (o instanceof Float) {
-			setType(Property.FLOAT_PROPERTY);
+//			setType(Property.FLOAT_PROPERTY);
 			setValue((Float) o);
 			return;
 		}
 		if (o instanceof Binary) {
-			setType(Property.BINARY_PROPERTY);
+//			setType(Property.BINARY_PROPERTY);
 			setValue((Binary) o);
 			return;
 		}
 		if (o instanceof ClockTime) {
-			setType(Property.CLOCKTIME_PROPERTY);
+//			setType(Property.CLOCKTIME_PROPERTY);
 			setValue((ClockTime) o);
 			return;
 		}
 		if (o instanceof StopwatchTime) {
-			setType(Property.STOPWATCHTIME_PROPERTY);
+//			setType(Property.STOPWATCHTIME_PROPERTY);
 			setValue((StopwatchTime) o);
 			return;
 		}
 		if (o instanceof Date) {
-			setType(Property.DATE_PROPERTY);
+//			setType(Property.DATE_PROPERTY);
 			setValue((Date) o);
 			return;
 		}
 		if (o instanceof Long) {
-			setType(Property.LONG_PROPERTY);
+//			setType(Property.LONG_PROPERTY);
 			setLongValue(((Long) o).longValue());
 			return;
 		}
 		if (o instanceof Money) {
-			setType(Property.MONEY_PROPERTY);
+//			setType(Property.MONEY_PROPERTY);
 			setValue((Money) o);
 			return;
 		}
 		if (o instanceof Percentage) {
-			setType(Property.PERCENTAGE_PROPERTY);
+//			setType(Property.PERCENTAGE_PROPERTY);
 			setValue((Percentage) o);
 			return;
 		}
 		if (o instanceof Boolean) {
-			setType(Property.BOOLEAN_PROPERTY);
+//			setType(Property.BOOLEAN_PROPERTY);
 			setValue((Boolean) o);
 			return;
 		}
 		if (o instanceof String) {
-			setType(Property.STRING_PROPERTY);
+//			setType(Property.STRING_PROPERTY);
 			setValue((String) o);
 			return;
 		}
-		setType(Property.TIPI_PROPERTY);
 		Object old = getTypedValue();
+		setType(Property.TIPI_PROPERTY);
 		tipiProperty = o;
 		setCheckedValue("" + o);
 		setType(Property.TIPI_PROPERTY);
 		firePropertyChanged(old, getTypedValue());
 	}
 
-	public final Object getEvaluatedValue() throws NavajoException {
+	public final Object getEvaluatedValue()  {
 		// System.err.println("Evaluating property: "+getValue());
 		Operand o;
 		// No evaluator present.
@@ -338,7 +332,6 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 				return null;
 			}
 		} catch (Throwable ex1) {
-			// System.err.println("trouble");
 			evaluatedType = "string";
 			return null;
 		}
@@ -352,32 +345,17 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 			try {
 				refreshExpression();
 			} catch (ExpressionChangedException e) {
-				// TODO Auto-generated catch block
-				// e.printStackTrace();
 			}
 		}
-		// System.err.println("PropertyImpl. PatH: "+getFullPropertyName()+"
-		// TYPE: "+evaluatedType);
 		return evaluatedType;
-		// if (!EXPRESSION_PROPERTY.equals(getType())) {
-		// throw NavajoFactory.getInstance().createNavajoException(
-		// "Can only evaluate expression type properties!");
-		// }
-		// Operand o =
-		// NavajoFactory.getInstance().getExpressionEvaluator().evaluate(
-		// getValue(), getRootDoc(), null, getParentMessage());
-		// return o.type;
 	}
 
 	public final void refreshExpression() throws NavajoException, ExpressionChangedException {
 		if (getType().equals(Property.EXPRESSION_PROPERTY)) {
 			// also sets evaluatedType
-			// System.err.println("Entering eval..");
 			Object oldEvaluatedValue = evaluatedValue;
 			evaluatedValue = getEvaluatedValue();
-			// System.err.println("EVALVAL: "+evaluatedValue.getClass());
 			if (evaluatedValue instanceof ArrayList) {
-				// System.err.println("Updating.................");
 				updateExpressionSelections((ArrayList) evaluatedValue);
 				firePropertyChanged("selection", "", " ");
 				write(System.err);
@@ -400,10 +378,10 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 		}
 	}
 
-	private void updateExpressionSelections(ArrayList list) throws NavajoException {
+	private void updateExpressionSelections(ArrayList<Selection> list) throws NavajoException {
 		removeAllSelections();
 		for (int i = 0; i < list.size(); i++) {
-			Selection s = (Selection) list.get(i);
+			Selection s = list.get(i);
 			Selection copy = NavajoFactory.getInstance().createSelection(getRootDoc(), s.getName(), s.getValue(), false);
 			addSelection(copy);
 		}
@@ -422,29 +400,25 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 		// }
 		// System.err.println("MYVALUE: "+myValue);
 		if (getType().equals(EXPRESSION_PROPERTY)) {
-			try {
 				if (evaluatedValue == null) {
 					evaluatedValue = getEvaluatedValue();
 					return evaluatedValue;
 				} else {
 					return evaluatedValue;
 				}
-			} catch (NavajoException ex1) {
-				ex1.printStackTrace();
-				return null;
-			}
+			
 		}
 
 		if (getType().equals(Property.BOOLEAN_PROPERTY)) {
 			if (getValue() != null && !getValue().equals("")) {
-				return Boolean.valueOf(((String) getValue()).equals("true"));
+				return Boolean.valueOf(getValue().equals("true"));
 			} else {
 				return null;
 			}
 		}
 		if (getType().equals(Property.PERCENTAGE_PROPERTY)) {
 			if (getValue() != null) {
-				return new Percentage((String) getValue());
+				return new Percentage(getValue());
 			} else {
 				return null;
 			}
@@ -568,7 +542,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 	}
 
 	public final void setValue(InputStream is) {
-
+		throw new UnsupportedOperationException("Unsupported method. Please use setValue(Binary)");
 	}
 
 	private final void copyResource(OutputStream out, InputStream in) throws IOException {
@@ -604,6 +578,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 	 * @see com.dexels.navajo.document.Property#setValue(java.net.URL)
 	 */
 
+	@Deprecated
 	public final void setValue(URL url) {
 		Object old = getTypedValue();
 		try {
@@ -632,6 +607,8 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 
 	public final void setValue(java.util.Date value) {
 		Object old = getTypedValue();
+		setType(DATE_PROPERTY);
+
 		if (value != null) {
 			setCheckedValue(dateFormat1.format(value));
 		} else {
@@ -642,6 +619,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 
 	public final void setValue(Boolean value) {
 		Object old = getTypedValue();
+		setType(BOOLEAN_PROPERTY);
 		if (value != null) {
 			setCheckedValue((value.booleanValue() ? "true" : "false"));
 		} else {
@@ -652,6 +630,8 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 
 	public final void setValue(Money value) {
 		Object old = getTypedValue();
+		setType(MONEY_PROPERTY);
+
 		if (value != null) {
 			setCheckedValue(value.toString());
 		} else {
@@ -662,6 +642,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 
 	public final void setValue(Percentage value) {
 		Object old = getTypedValue();
+		setType(PERCENTAGE_PROPERTY);
 		if (value != null) {
 			setCheckedValue(value.toString());
 		} else {
@@ -672,6 +653,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 
 	public final void setValue(ClockTime value) {
 		Object old = getTypedValue();
+		setType(CLOCKTIME_PROPERTY);
 		if (value != null) {
 			setCheckedValue(value.toString());
 		} else {
@@ -682,6 +664,8 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 
 	public final void setValue(StopwatchTime value) {
 		Object old = getTypedValue();
+		setType(STOPWATCHTIME_PROPERTY);
+
 		if (value != null) {
 			setCheckedValue(value.toString());
 		} else {
@@ -692,6 +676,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 
 	public final void setValue(Double value) {
 		Object old = getTypedValue();
+		setType(FLOAT_PROPERTY);
 		if (value != null) {
 			setCheckedValue(value.doubleValue() + "");
 		} else {
@@ -702,47 +687,54 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 
 	public final void setValue(Integer value) {
 		Object old = getTypedValue();
+		setType(INTEGER_PROPERTY);
 		if (value != null) {
 			setCheckedValue(value.intValue() + "");
 		} else {
 			myValue = null;
 		}
-		firePropertyChanged("value", old, getTypedValue());
+		firePropertyChanged("value", old, value);
 	}
 
 	public final void setValue(int value) {
 		Object old = getTypedValue();
+		setType(INTEGER_PROPERTY);
 		setCheckedValue(value + "");
-		firePropertyChanged("value", old, getTypedValue());
+		firePropertyChanged("value", old, value);
 	}
 
 	public final void setValue(double value) {
 		Object old = getTypedValue();
+		setType(FLOAT_PROPERTY);
 		setCheckedValue(value + "");
-		firePropertyChanged("value", old, getTypedValue());
+		firePropertyChanged("value", old, value);
 	}
 
 	public final void setValue(float value) {
 		Object old = getTypedValue();
 		String floatString = "" + value;
+		setType(FLOAT_PROPERTY);
 		setCheckedValue(floatString);
-		firePropertyChanged("value", old, getTypedValue());
+		firePropertyChanged("value", old, value);
 	}
 
 	public void setValue(boolean value) {
 		Object old = getTypedValue();
+		setType(BOOLEAN_PROPERTY);
 		setCheckedValue((value ? "true" : "false"));
 		firePropertyChanged("value", old, getTypedValue());
 	}
 
 	public final void setLongValue(long value) {
 		Object old = getTypedValue();
+		setType(LONG_PROPERTY);
 		setCheckedValue(value + "");
 		firePropertyChanged("value", old, getTypedValue());
 	}
 
 	public final void setValue(long value) {
 		Object old = getTypedValue();
+		setType(LONG_PROPERTY);
 		setCheckedValue(value + "");
 		firePropertyChanged("value", old, getTypedValue());
 	}
@@ -750,6 +742,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 	public final void setValue(String value) {
 		String old = getValue();
 		if (BINARY_PROPERTY.equals(getType())) {
+			System.err.println("Warning: Very deprecated. use setValue(Binary) instead");
 			Thread.dumpStack();
 			try {
 				if (value != null) {
@@ -762,6 +755,8 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 				e.printStackTrace();
 			}
 			return;
+		} else {
+			setType(Property.STRING_PROPERTY);
 		}
 		myBinary = null;
 		setCheckedValue(value);
@@ -835,7 +830,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 
 	public final String getSubType(String key) {
 		if (subtypeMap != null) {
-			return (String) subtypeMap.get(key);
+			return subtypeMap.get(key);
 		}
 		return null;
 
@@ -847,16 +842,16 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 		}
 		StringBuffer sb = new StringBuffer();
 		if (definitionProperty == null) {
-			for (Iterator iter = subtypeMap.keySet().iterator(); iter.hasNext();) {
-				String item = (String) iter.next();
-				String value = (String) subtypeMap.get(item);
+			for (Iterator<String> iter = subtypeMap.keySet().iterator(); iter.hasNext();) {
+				String item = iter.next();
+				String value = subtypeMap.get(item);
 				sb.append(item + "=" + value + (iter.hasNext() ? "," : ""));
 			}
 			return sb.toString();
 		} else {
-			for (Iterator iter = subtypeMap.keySet().iterator(); iter.hasNext();) {
-				String item = (String) iter.next();
-				String value = (String) subtypeMap.get(item);
+			for (Iterator<String> iter = subtypeMap.keySet().iterator(); iter.hasNext();) {
+				String item = iter.next();
+				String value = subtypeMap.get(item);
 				String defvalue = definitionProperty.getSubType(item);
 				if (value == null) {
 					sb.append(item + "=" + (iter.hasNext() ? "," : ""));
@@ -955,11 +950,11 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 		}
 	}
 
-	public final ArrayList getAllSelections() {
+	public final ArrayList<Selection> getAllSelections() {
 		if (selectionList == null) {
-			return new ArrayList();
+			return new ArrayList<Selection>();
 		}
-		ArrayList l = new ArrayList(selectionList);
+		ArrayList<Selection> l = new ArrayList<Selection>(selectionList);
 		return l;
 	}
 
@@ -974,7 +969,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 		}
 
 		for (int i = 0; i < selectionList.size(); i++) {
-			Selection current = (Selection) selectionList.get(i);
+			Selection current = selectionList.get(i);
 			if (current == s) {
 				current.setSelected(true);
 			} else {
@@ -991,7 +986,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 			return;
 		}
 		for (int i = 0; i < selectionList.size(); i++) {
-			Selection current = (Selection) selectionList.get(i);
+			Selection current = selectionList.get(i);
 			current.setSelected(b);
 		}
 	}
@@ -1001,7 +996,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 			return;
 		}
 		for (int i = 0; i < selectionList.size(); i++) {
-			Selection current = (Selection) selectionList.get(i);
+			Selection current = selectionList.get(i);
 			if (current.getValue() == null) {
 				continue;
 			}
@@ -1023,13 +1018,13 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 
 	public final void addSelection(Selection s) {
 		if (selectionList == null) {
-			selectionList = new ArrayList();
+			selectionList = new ArrayList<BaseSelectionImpl>();
 		}
 
 		int max = selectionList.size();
 		boolean selected = s.isSelected();
 		for (int i = 0; i < max; i++) {
-			Selection t = (Selection) selectionList.get(i);
+			Selection t = selectionList.get(i);
 			if (t.getName().equals(s.getName())) {
 				// System.err.println("REMOVING SELECTION!");
 				selected = t.isSelected();
@@ -1043,7 +1038,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 		if (selected) {
 			s.setSelected(true);
 		}
-		selectionList.add(s);
+		selectionList.add((BaseSelectionImpl) s);
 
 	}
 
@@ -1058,7 +1053,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 		if (selectionList == null) {
 			return;
 		}
-		selectionList = new ArrayList();
+		selectionList = new ArrayList<BaseSelectionImpl>();
 	}
 
 	public final Selection getSelection(String name) {
@@ -1066,7 +1061,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 			return NavajoFactory.getInstance().createDummySelection();
 		}
 		for (int i = 0; i < selectionList.size(); i++) {
-			Selection current = (Selection) selectionList.get(i);
+			Selection current = selectionList.get(i);
 			if (current.getName().equals(name)) {
 				return current;
 			}
@@ -1079,7 +1074,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 			return NavajoFactory.getInstance().createDummySelection();
 		}
 		for (int i = 0; i < selectionList.size(); i++) {
-			Selection current = (Selection) selectionList.get(i);
+			Selection current = selectionList.get(i);
 			if (current != null && current.getValue().equals(value)) {
 				return current;
 			}
@@ -1093,7 +1088,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 			return NavajoFactory.getInstance().createDummySelection();
 		}
 		for (int i = 0; i < selectionList.size(); i++) {
-			Selection current = (Selection) selectionList.get(i);
+			Selection current = selectionList.get(i);
 			// System.err.println("CHECKING:::: "+current);
 			if (current != null && current.isSelected()) {
 				return current;
@@ -1126,7 +1121,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 			throw new RuntimeException(ex.toString());
 		}
 		cp.setRootDoc(n);
-		ArrayList mySel = getAllSelections();
+		ArrayList<Selection> mySel = getAllSelections();
 		for (int i = 0; i < mySel.size(); i++) {
 			BaseSelectionImpl current = (BaseSelectionImpl) mySel.get(i);
 			BaseSelectionImpl cc = (BaseSelectionImpl) current.copy(n);
@@ -1136,9 +1131,9 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 	}
 
 	public final void prune() {
-		ArrayList mySel = getAllSelections();
+		ArrayList<Selection> mySel = getAllSelections();
 		for (int i = 0; i < mySel.size(); i++) {
-			Selection current = (Selection) mySel.get(i);
+			Selection current = mySel.get(i);
 			if (!current.isSelected()) {
 				removeSelection(current);
 			}
@@ -1178,7 +1173,8 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 	// Comparable ob2 = (Comparable)p.getAlternativeTypedValue();
 	// return ob1.compareTo(ob2);
 	// }
-	public final int compareTo(Object p) {
+	@SuppressWarnings("null")
+	public final int compareTo(Property p) {
 
 		try {
 			if (p == null) {
@@ -1190,7 +1186,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 			if (getType().equals(Property.BOOLEAN_PROPERTY)) {
 				Boolean bool1 = (Boolean) getTypedValue();
 				boolean b1 = bool1.booleanValue();
-				Boolean bool2 = (Boolean) ((Property) p).getTypedValue();
+				Boolean bool2 = (Boolean) p.getTypedValue();
 				boolean b2 = bool2.booleanValue();
 				if (b1 == b2) {
 					return 0;
@@ -1204,33 +1200,26 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 			// Get first argument.
 			if (getType().equals(Property.SELECTION_PROPERTY)) {
 				if (getSubType("name") != null && getSubType("name").equals("integer")) {
-					ob1 = (Comparable) new Integer(getSelected().getName());
+					ob1 = new Integer(getSelected().getName());
 				} else {
-					ob1 = (Comparable) getSelected().getName();
+					ob1 = getSelected().getName();
 				}
 			} else {
-				ob1 = (Comparable) getTypedValue();
+				ob1 = (Comparable<?>) getTypedValue();
 			}
 
 			// Get second argument.
 			if (((BasePropertyImpl) p).getType().equals(Property.SELECTION_PROPERTY)) {
 				BasePropertyImpl cp = (BasePropertyImpl) p;
 				if (getSubType("name") != null && cp.getSubType("name").equals("integer")) {
-					ob2 = (Comparable) new Integer(cp.getSelected().getName());
+					ob2 = new Integer(cp.getSelected().getName());
 				} else {
-					ob2 = (Comparable) ((BasePropertyImpl) p).getSelected().getName();
+					ob2 = ((BasePropertyImpl) p).getSelected().getName();
 				}
 			} else {
-				ob2 = (Comparable) ((BasePropertyImpl) p).getTypedValue();
+				ob2 = (Comparable<?>) ((BasePropertyImpl) p).getTypedValue();
 			}
 
-			// Comparable ob1 = (Comparable)getAlternativeTypedValue();
-			// Comparable ob2 =
-			// (Comparable)((PropertyImpl)p).getAlternativeTypedValue();
-
-			// System.err.println("Comparing: " + ob1 + ", " + ob2);
-
-			// now null values will be compared too.
 			if (ob1 == null && ob2 == null) {
 				return 0;
 			}
@@ -1241,15 +1230,6 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 
 			if (ob2 == null && ob1 != null) {
 				return 1;
-			}
-
-			if (ob1.getClass() != ob2.getClass()) {
-				// System.err.println("My name is: "+getName());
-				// System.err.println("The other name is:
-				// "+((Property)p).getName()+" the type: "+getType()+" -
-				// "+((Property)p).getType());
-				// System.err.println("Compared "+ob1+" with "+ob2+" class:
-				// "+ob1.getClass()+" - "+ob2.getClass());
 			}
 
 			if (!Property.class.isInstance(p)) {
@@ -1269,13 +1249,6 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 
 	}
 
-	public final void setPoints(Vector[] points) throws NavajoException {
-		myPoints = points;
-	}
-
-	public final Vector[] getPoints() throws NavajoException {
-		return myPoints;
-	}
 
 	public void setSelected(String[] s) throws com.dexels.navajo.document.NavajoException {
 		if (!getType().equals(SELECTION_PROPERTY)) {
@@ -1292,33 +1265,30 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 
 	public final void addSelectionWithoutReplace(Selection s) throws com.dexels.navajo.document.NavajoException {
 		if (selectionList == null) {
-			selectionList = new ArrayList();
+			selectionList = new ArrayList<BaseSelectionImpl>();
 		}
 
-		selectionList.add(s);
+		selectionList.add((BaseSelectionImpl)s);
 		((BaseSelectionImpl) s).setParent(this);
 	}
 
-	public final void setSelected(ArrayList al) throws com.dexels.navajo.document.NavajoException {
+	public final void setSelected(ArrayList<String> al) throws com.dexels.navajo.document.NavajoException {
 		setAllSelected(false);
 
 		for (int i = 0; i < al.size(); i++) {
-			String s = (String) al.get(i);
+			String s = al.get(i);
 			Selection sl = getSelectionByValue(s);
 			setSelected(sl.getValue());
 		}
 
 	}
 
-	public final ArrayList getAllSelectedSelections() throws com.dexels.navajo.document.NavajoException {
-		ArrayList list = new ArrayList();
-		ArrayList al = getAllSelections();
+	public final ArrayList<Selection> getAllSelectedSelections() throws com.dexels.navajo.document.NavajoException {
+		ArrayList<Selection> list = new ArrayList<Selection>();
+		ArrayList<Selection> al = getAllSelections();
 		for (int i = 0; i < al.size(); i++) {
 			BaseSelectionImpl s = (BaseSelectionImpl) al.get(i);
-			// System.err.println("Allselected. Looking at:
-			// "+s.toXml(null).toString());
 			if (s.isSelected()) {
-				// System.err.println("adding");
 				list.add(s);
 			}
 		}
@@ -1327,9 +1297,6 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 	}
 
 	public final void setSelected(String value) throws com.dexels.navajo.document.NavajoException {
-		// System.err.println("============================\nSetting selection:
-		// "+value);
-		// Selection s = getSelection(value);
 		if (!"+".equals(getCardinality())) {
 			clearSelections();
 		}
@@ -1344,7 +1311,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 	}
 
 	public final void clearSelections() throws com.dexels.navajo.document.NavajoException {
-		ArrayList al = getAllSelections();
+		ArrayList<Selection> al = getAllSelections();
 		for (int i = 0; i < al.size(); i++) {
 			BaseSelectionImpl s = (BaseSelectionImpl) al.get(i);
 			s.setSelected(false);
@@ -1373,21 +1340,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 		return getDirection().equals(DIR_OUT) || getDirection().equals(DIR_INOUT);
 	}
 
-	public int getChildCount() {
-		return 0;
-	}
 
-	public boolean getAllowsChildren() {
-		return false;
-	}
-
-	public boolean isLeaf() {
-		return true;
-	}
-
-	public Enumeration children() {
-		return null;
-	}
 
 	public final boolean isEqual(Property p) {
 
@@ -1424,8 +1377,8 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 		// Check for selection properties.
 		else if (p.getType().equals(Property.SELECTION_PROPERTY)) {
 			try {
-				ArrayList l = p.getAllSelectedSelections();
-				ArrayList me = this.getAllSelectedSelections();
+				ArrayList<Selection> l = p.getAllSelectedSelections();
+				ArrayList<Selection> me = this.getAllSelectedSelections();
 
 				// If number of selected selections is not equal they're not
 				// equal.
@@ -1434,10 +1387,10 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 				}
 
 				for (int j = 0; j < l.size(); j++) {
-					Selection other = (Selection) l.get(j);
+					Selection other = l.get(j);
 					boolean match = false;
 					for (int k = 0; k < me.size(); k++) {
-						Selection mysel = (Selection) me.get(k);
+						Selection mysel = me.get(k);
 						if (mysel.getValue().equals(other.getValue())) {
 							match = true;
 							k = me.size() + 1;
@@ -1500,8 +1453,8 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 		throw new java.lang.UnsupportedOperationException("Method addExpression() not yet implemented.");
 	}
 
-	public Map getAttributes() {
-		Map m = new HashMap();
+	public Map<String,String> getAttributes() {
+		Map<String,String> m = new HashMap<String,String>();
 		if (cardinality != null) {
 			m.put("cardinality", cardinality);
 		}
@@ -1535,7 +1488,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 		return m;
 	}
 
-	public List getChildren() {
+	public List<? extends BaseNode> getChildren() {
 		return selectionList;
 	}
 
@@ -1546,9 +1499,9 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 	public Property cloneWithoutValue() {
 		if (isListType) {
 			BasePropertyImpl prop = new BasePropertyImpl(getRootDoc(), getName(), cardinality, getDescription(), getDirection());
-			ArrayList ap = getAllSelections();
+			ArrayList<Selection> ap = getAllSelections();
 			for (int i = 0; i < ap.size(); i++) {
-				Selection s = (Selection) ap.get(i);
+				Selection s = ap.get(i);
 				Selection newS = NavajoFactory.getInstance().createSelection(getRootDoc(), s.getName(), s.getValue(), s.isSelected());
 				prop.addSelection(newS);
 			}
@@ -1581,7 +1534,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 	}
 
 	public void writeText(Writer w) throws IOException {
-		if (myBinary != null) {
+		if (myBinary != null) { 
 			myBinary.writeBase64(w);
 		}
 
@@ -1591,17 +1544,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable, 
 		return myBinary != null;
 	}
 
-	public TreeNode getChildAt(int childIndex) {
-		return null;
-	}
 
-	public TreeNode getParent() {
-		return (TreeNode) getParentMessage();
-	}
-
-	public int getIndex(TreeNode node) {
-		return 0;
-	}
 
 	public void addPropertyChangeListener(PropertyChangeListener p) {
 		if (myPropertyDataListeners == null) {

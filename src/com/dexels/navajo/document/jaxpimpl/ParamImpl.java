@@ -1,9 +1,8 @@
 package com.dexels.navajo.document.jaxpimpl;
 
-import com.dexels.navajo.document.ParamTag;
-import com.dexels.navajo.document.ExpressionTag;
-import com.dexels.navajo.document.*;
 import org.w3c.dom.*;
+
+import com.dexels.navajo.document.*;
 
 /**
  * <p>Title: </p>
@@ -22,13 +21,13 @@ public class ParamImpl implements ParamTag {
      this.ref = e;
    }
 
-   public static final ParamTag create(Navajo tb, String name, String condition) throws NavajoException {
+   public static final ParamTag create(Navajo tb, String name, String condition)  {
 
          ParamTag p = null;
 
          Document d = (Document) tb.getMessageBuffer();
 
-         Element n = (Element) d.createElement(ParamTag.PARAM_DEFINITION);
+         Element n = d.createElement(ParamTag.PARAM_DEFINITION);
 
          p = new ParamImpl(n);
          if (condition != null)

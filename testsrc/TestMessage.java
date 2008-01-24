@@ -14,12 +14,15 @@ public class TestMessage extends TestCase {
   }
 
   protected void setUp() {
-    navajodocumenttestfictureInst.setUp();
+//	System.setProperty("com.dexels.navajo.DocumentImplementation", "com.dexels.navajo.document.base.BaseNavajoFactoryImpl");
+	System.setProperty("com.dexels.navajo.DocumentImplementation", "com.dexels.navajo.document.jaxpimpl.NavajoFactoryImpl");
+	    navajodocumenttestfictureInst.setUp();
     testDoc = navajodocumenttestfictureInst.testDoc;
   }
 
   protected void tearDown() {
     navajodocumenttestfictureInst.tearDown();
+    NavajoFactory.resetImplementation();
   }
 
   public void testAddMessage() {
@@ -71,9 +74,7 @@ public class TestMessage extends TestCase {
 
   }
 
-  public void testAddProperty() {
-
-    try {
+  public void testAddProperty() throws NavajoException {
       Message m = testDoc.getMessage("testmessage");
       Property p = NavajoFactory.getInstance().createProperty(testDoc, "testprop", Property.STRING_PROPERTY, "navajo rules", 120, "", Property.DIR_OUT);
       m.addProperty(p);
@@ -85,10 +86,12 @@ public class TestMessage extends TestCase {
       p2 = m.getProperty("testprop");
       Assert.assertEquals("navajo rules big time", p2.getValue());
       // Check robustness.
-      m.addProperty(null);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
+      try {
+		m.addProperty(null);
+		Assert.fail();
+      } catch (NullPointerException e) {
+		// ok
+	}
   }
 
   public void testContains() {
@@ -153,10 +156,9 @@ public class TestMessage extends TestCase {
     Assert.assertEquals("testmessage_sub2", m3.getName());
   }
 
-  public void testGetMessages() {
+  public void testGetMessages() throws NavajoException {
 
     // Regular expression message name match testing.
-    try {
       Message m = testDoc.getMessage("testmessage");
 
       ArrayList all = m.getMessages("testmessage_sub.*");
@@ -215,9 +217,7 @@ public class TestMessage extends TestCase {
       Assert.assertEquals("testmessage_sub1_subje", ((Message) all.get(2)).getName());
       Assert.assertEquals("testmessage_sub1_sub3", ((Message) all.get(3)).getName());
 
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
+
   }
 
   public void testGetName() {
@@ -225,11 +225,10 @@ public class TestMessage extends TestCase {
     Assert.assertEquals("testmessage", m.getName());
   }
 
-  public void testGetProperties() {
+  public void testGetProperties() throws NavajoException {
 
     System.out.println(testDoc);
 
-    try {
       Message m = testDoc.getMessage("testmessage");
 
       ArrayList all = m.getProperties("[A-z]*prop");
@@ -255,9 +254,7 @@ public class TestMessage extends TestCase {
       Assert.assertEquals(1, all.size());
       Assert.assertEquals("proppie", ((Property) all.get(0)).getName());
 
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
+   
   }
 
   public void testGetProperty() {
@@ -310,7 +307,6 @@ public class TestMessage extends TestCase {
 		  // MyTop is my parent message(!) parent array is ignored!!
 		  assertEquals("MyTop", ((Message) al.get(i)).getParentMessage().getName());
 	  }
-	  
   }
   
   public void testSetName() throws Exception {

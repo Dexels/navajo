@@ -13,7 +13,6 @@ package com.dexels.navajo.document.base;
 import java.util.*;
 
 import com.dexels.navajo.document.*;
-import java.io.*;
 
 public class BaseHeaderImpl
     extends BaseNode
@@ -26,18 +25,20 @@ public class BaseHeaderImpl
   protected final BaseClientImpl myClientImpl;
   protected String myIp;
   
-  private Set piggyBackData = null;
+  private Set<Map<String,String>> piggyBackData = null;
   
   
   /**
    * @deprecated
    */
-  protected String myLazyMessage = null;
+  @Deprecated
+protected String myLazyMessage = null;
   protected long expiration = -1;
   /**
    * @deprecated
    */
- protected TreeMap lazyMessageList = new TreeMap();
+ @Deprecated
+protected TreeMap<String,LazyMessagePath> lazyMessageList = new TreeMap<String,LazyMessagePath>();
 
   //protected boolean isFinished = false;
 ///**
@@ -51,7 +52,7 @@ public class BaseHeaderImpl
 // //protected int percReady = -1;
   
 
-  protected Map attributeMap = null;
+  protected Map<String,String> attributeMap = null;
 
   
   protected final BaseCallbackImpl myCallback;
@@ -73,8 +74,8 @@ public class BaseHeaderImpl
   public Header copy(Navajo n) {
 	  Header h = NavajoFactory.getInstance().createHeader(n, getRPCName(), getRPCUser(), getRPCPassword(), expiration);
 	  if(getAttributes()!=null) {
-		  for (Iterator iter = getAttributes().keySet().iterator(); iter.hasNext();) {
-				String element = (String) iter.next();
+		  for (Iterator<String> iter = getAttributes().keySet().iterator(); iter.hasNext();) {
+				String element = iter.next();
 				h.setHeaderAttribute(element, getHeaderAttribute(element));
 			  }
 	  }
@@ -102,7 +103,7 @@ public class BaseHeaderImpl
 
   public void setHeaderAttribute(String key, String value) {
       if (attributeMap==null) {
-        attributeMap = new HashMap();
+        attributeMap = new HashMap<String,String>();
     }
       attributeMap.put(key, value);
   }
@@ -111,18 +112,19 @@ public class BaseHeaderImpl
       if (attributeMap==null) {
         return null;
     }
-    return (String)attributeMap.get(key);
+    return attributeMap.get(key);
   }
 
   /**
    * @deprecated
    */
 
-  public final void addLazyMessagePath(String path, int startIndex,
+  @Deprecated
+public final void addLazyMessagePath(String path, int startIndex,
                                        int endIndex, int total) {
     LazyMessagePath lmp = NavajoFactory.getInstance().createLazyMessagePath(getRootDoc(), path, startIndex, endIndex, total);
     lazyMessageList.put(path, lmp);
-    /** @todo repair this function*/
+    /** @TODO repair this function*/
 //    throw new UnsupportedOperationException();
   }
 
@@ -134,7 +136,8 @@ public class BaseHeaderImpl
   /**
    * @deprecated
    */
-  public final void setIdentification(String user, String password,
+  @Deprecated
+public final void setIdentification(String user, String password,
                                       String service) {
 //    myName = user;
 //    myPassword = password;
@@ -147,18 +150,20 @@ public class BaseHeaderImpl
   /**
    * @deprecated
    */
-  public final void setService(String service) {
+  @Deprecated
+public final void setService(String service) {
       myTransaction.setRpc_name(service);
         }
   
   /**
    * @deprecated
    */
-  public final LazyMessagePath getLazyMessagePath(String path) {
+  @Deprecated
+public final LazyMessagePath getLazyMessagePath(String path) {
     /** @todo repair this function*/
 //    throw new UnsupportedOperationException();
 //
-    return (LazyMessagePath) lazyMessageList.get(path);
+    return lazyMessageList.get(path);
   }
 
  
@@ -170,12 +175,13 @@ public class BaseHeaderImpl
   /**
    * @deprecated
    */
-  public final String getIPAddress() {
+  @Deprecated
+public final String getIPAddress() {
       return myClientImpl.getAddress();
   }
   
   public final String getCallBackInterupt(String object) {
-    /**@todo Implement this com.dexels.navajo.document.Header abstract method*/
+    /**@TODO Implement this com.dexels.navajo.document.Header abstract method*/
 //    throw new java.lang.UnsupportedOperationException(
 //        "Method getCallBackInterupt() not yet implemented.");
 	
@@ -190,7 +196,8 @@ public class BaseHeaderImpl
   /**
    * @deprecated
    */
-  public final void setRequestData(String ipAddress, String host) {
+  @Deprecated
+public final void setRequestData(String ipAddress, String host) {
       myClientImpl.setAddress(ipAddress);
       myClientImpl.setHost(host);
   }
@@ -215,7 +222,7 @@ public class BaseHeaderImpl
     expiration = l;
   }
 
-  public java.util.Map getLazyMessageMap() {
+  public Map<String,LazyMessagePath> getLazyMessageMap() {
     return lazyMessageList;
   }
 
@@ -251,7 +258,8 @@ public class BaseHeaderImpl
   /**
    * @deprecated
    */
-  public final void setCallBack(String name, String pointer, int percReady,
+  @Deprecated
+public final void setCallBack(String name, String pointer, int percReady,
                                 boolean isFinished, String interrupt) {
     //this.isFinished = isFinished;
 //    this.myInterrupt = interrupt;
@@ -261,27 +269,23 @@ public class BaseHeaderImpl
     BaseObjectImpl boi = new BaseObjectImpl(getRootDoc());
     boi.setName(name);
     boi.setRef(pointer);
-    boi.setPercReady((double) percReady);
+    boi.setPercReady(percReady);
     boi.setFinished(isFinished);
     boi.setInterrupt(interrupt);
     myCallback.addObject(boi);
   }
   
   public void addTransaction(BaseTransactionImpl bci) {
-      // TODO Auto-generated method stub
       myTransaction = bci;
   }
 
-//  public void addCallBack(BaseCallbackImpl bci) {
-//      // TODO Auto-generated method stub
-//      
-//  }  
   /**
    * @deprecated
    */
 
-  public final void setCallBackInterrupt(String interrupt) {
-	  ArrayList objects = getCallback().getObjects();
+  @Deprecated
+public final void setCallBackInterrupt(String interrupt) {
+	  List<BaseNode> objects = getCallback().getObjects();
 	  if(objects!=null && objects.size()>0) {
 		  BaseObjectImpl boi = (BaseObjectImpl)objects.get(0);
 		  boi.setInterrupt(interrupt);
@@ -297,14 +301,16 @@ public class BaseHeaderImpl
    * @deprecated
    */
 
-  public final String getUserAgent() {
+  @Deprecated
+public final String getUserAgent() {
     return "MoZiLLa";
   }
   /**
    * @deprecated
    */
 
-  public final String getHostName() {
+  @Deprecated
+public final String getHostName() {
 //    try {
 //      InetAddress.getLocalHost().getHostName();
 //    }
@@ -324,14 +330,14 @@ public class BaseHeaderImpl
    * TODO: Add object ref for supporting multiple async objects!
    */
 
-  public int getCallBackProgress() {
+  @Deprecated
+public int getCallBackProgress() {
 	  if ( myCallback != null && myCallback.getObjects() != null && !myCallback.getObjects().isEmpty() ) {
 		  String pr = ( (BaseObjectImpl) myCallback.getObjects().get(0) ).getPercReady();
 		  if ( pr != null ) {
 			  return (int) Double.parseDouble(pr);
-		  } else {
-			  return 0;
 		  }
+		return 0;
 	  }
 	  return 0;
   }
@@ -348,21 +354,21 @@ public class BaseHeaderImpl
 	  return false;
   }
 
-public Map getHeaderAttributes() {
+public Map<String,String> getHeaderAttributes() {
     return attributeMap;
 }
 
-public List getChildren() {
+public List<BaseNode> getChildren() {
     // TODO Auto-generated method stub
-    ArrayList al = new ArrayList();
+	List<BaseNode> al = new ArrayList<BaseNode>();
     if (myTransaction!=null) {
         al.add(myTransaction);
     }
     al.add(myCallback);
     al.add(myClientImpl);
     if (piggyBackData!=null) {
-		for (Iterator iter = piggyBackData.iterator(); iter.hasNext();) {
-			Map element = (Map) iter.next();
+		for (Iterator<Map<String, String>> iter = piggyBackData.iterator(); iter.hasNext();) {
+			Map<String, String> element = iter.next();
 			BasePiggybackImpl bpi  = new BasePiggybackImpl(element);
 			al.add(bpi);
 		}
@@ -405,9 +411,9 @@ public BaseCallbackImpl getCallback() {
     return myCallback;
 }
 
-public void addPiggyBackData(Map element) {
+public void addPiggyBackData(Map<String,String> element) {
 	if (piggyBackData==null) {
-		piggyBackData = new HashSet();
+		piggyBackData = new HashSet<Map<String,String>>();
 	}
 	piggyBackData.add(element);
 }
@@ -416,7 +422,7 @@ public void addPiggyBackData(Map element) {
  * Returns a set of maps
  * @return
  */
-public Set getPiggybackData() {
+public Set<Map<String,String>> getPiggybackData() {
 	return  piggyBackData;
 }
 
@@ -427,19 +433,18 @@ public void clearPiggybackData() {
 }
 
 
-public Map getAttributes() {
+public Map<String,String> getAttributes() {
 	if(attributeMap==null) {
 		return null;
 	}
-	return new HashMap(attributeMap);
+	return new HashMap<String,String>(attributeMap);
 }
 
 public boolean hasCallBackPointers() {
 	if ( getCallback() != null && getCallback().getChildren().size() > 0) {
 		return true;
-	} else {
-		return false;
 	}
+	return false;
 }
 
 public String getCallBackSignature() {

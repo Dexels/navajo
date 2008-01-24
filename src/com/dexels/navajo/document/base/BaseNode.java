@@ -12,8 +12,7 @@ package com.dexels.navajo.document.base;
 //import nanoxml.*;
 import java.io.*;
 import java.util.*;
-import java.util.Map.Entry;
-
+import java.util.Map.*;
 
 import com.dexels.navajo.document.*;
 
@@ -23,8 +22,8 @@ public abstract class BaseNode implements java.io.Serializable{
   public final static String XML_ESCAPE_DELIMITERS = "&'<>\"";
   //public final static String XML_ESCAPE_DELIMITERS = "";
 
-  public abstract Map getAttributes();
-  public abstract List getChildren();
+  public abstract Map<String,String> getAttributes();
+  public abstract List<? extends BaseNode> getChildren();
   public abstract String getTagName();
   private static final int INDENT = 3;
    public BaseNode(){
@@ -57,15 +56,15 @@ public abstract class BaseNode implements java.io.Serializable{
 	 }
 	 writeElement( sw, "<");
 	 writeElement( sw, tagName);
-	 Map map = getAttributes();
+	 Map<String,String> map = getAttributes();
 
 	 if (map != null) {
-		 for (Iterator iter = map.entrySet().iterator(); iter.hasNext();) {
-			 Entry e = (Entry) iter.next();
-			 String element = (String) e.getKey();
-			 String value = (String) e.getValue();
+		 for (Iterator<Entry<String, String>> iter = map.entrySet().iterator(); iter.hasNext();) {
+			 Entry<String, String> e = iter.next();
+			 String element = e.getKey();
+			 String value = e.getValue();
 			 /*
-			  * Todo: stream!
+			  * TODO: stream!
 			  */
 			  if (value!=null) {
 				  // optimization: Only escape properties:
@@ -89,7 +88,7 @@ public abstract class BaseNode implements java.io.Serializable{
 			  }
 		 }
 	 }
-	 List list = getChildren();
+	 List<? extends BaseNode> list = getChildren();
 	 boolean hasText = hasTextNode();
 	 boolean hasChildren = (list!=null) && list.size()>0;
 	 if (hasChildren && hasText) {
@@ -99,28 +98,16 @@ public abstract class BaseNode implements java.io.Serializable{
 		 writeElement( sw, "/>\n");
 		 return;
 	 }
-//	 if (list!=null && list.size() > 0) {
 	 writeElement( sw, ">\n");
-//	 }
-//	 else {
-//	 throw new RuntimeException("WHOOOOOPS thought this did not happen");
-//	 writeElement( sw, "/>\n");
-//	 }
-
-	 for (int i = 0; i < list.size(); i++) {
-		 BaseNode child = (BaseNode)list.get(i);
-//		 if (child!=null) {
-//		 System.err.println("CHILD::: "+child.getClass()+ " in class: "+getClass());
-//		 } else {
-//		 System.err.println("Null child at index: "+i+ " in class: "+getClass());
-
-//		 }
-		 child.printElement(sw,indent+INDENT);
+	 // list should not be null, but to appease the warnings
+	 if(list!=null) {
+		 for (int i = 0; i < list.size(); i++) {
+			 BaseNode child = list.get(i);
+			 child.printElement(sw,indent+INDENT);
+		 }
 	 }
 	 if (hasText) {
-//		 System.err.println("*******************                                    Text PRESENT");
 		 writeText(sw);
-//		 System.err.println("Text written...");
 	 }
 	 if (hasText || hasChildren) {
 		 for (int a = 0; a < indent; a++) {
@@ -145,11 +132,9 @@ public abstract class BaseNode implements java.io.Serializable{
 
   public void write(final OutputStream stream) throws NavajoException {
 	  try {
-//		  System.err.println("Writing to stream impl: "+stream.getClass());
 		  OutputStreamWriter osw = new OutputStreamWriter(stream,"UTF-8");
 		  printElement(osw,0);
 		  osw.flush();
-//		  System.err.println("Writing to stream finished");
 	  } catch (IOException e) {
 		  throw new NavajoExceptionImpl(e);
 	  }
@@ -158,9 +143,10 @@ public abstract class BaseNode implements java.io.Serializable{
   public boolean hasTextNode() {
       return false;
   }
-  public void writeText(Writer w) throws IOException {
+  @SuppressWarnings("unused")
+public void writeText(Writer w) throws IOException {
       // default impl. Only used for properties. 
-      
+       
   }
 
   /**

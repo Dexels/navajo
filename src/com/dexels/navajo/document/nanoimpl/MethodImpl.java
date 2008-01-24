@@ -4,9 +4,14 @@ import java.util.*;
 
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.base.*;
-
+/**
+ * 
+ * @author Frank Lyaruu
+ * @deprecated
+ */
+@Deprecated
 public final class MethodImpl extends BaseMethodImpl implements Method, NanoElement {
-  private ArrayList myRequiredMessages = new ArrayList();
+  private ArrayList<Required> myRequiredMessages = new ArrayList<Required>();
 
   public MethodImpl(Navajo n) {
     super(n);
@@ -37,7 +42,7 @@ public final class MethodImpl extends BaseMethodImpl implements Method, NanoElem
     myName = (String)e.getAttribute("name");
     myServer = (String)e.getAttribute("server");
     for (int i = 0; i < e.countChildren(); i++) {
-      XMLElement child = (XMLElement)e.getChildren().elementAt(i);
+      XMLElement child = e.getChildren().get(i);
       if (child.getName().equals("required")) {
 //        String msg = (String)child.getAttribute("message");
 //        if (msg!=null) {

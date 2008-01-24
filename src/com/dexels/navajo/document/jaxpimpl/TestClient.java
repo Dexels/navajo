@@ -11,19 +11,17 @@
 package com.dexels.navajo.document.jaxpimpl;
 
 import java.io.*;
-import org.xml.sax.InputSource;
 
-import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.*;
 
 public class TestClient {
 
     public TestClient() {}
 
     public static void main(String[] args) {
-        TestClient testClient1 = new TestClient();
+//        TestClient testClient1 = new TestClient();
 
-        InputSource input;
+//        InputSource input;
 
         try {
 

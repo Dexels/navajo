@@ -1,12 +1,9 @@
 package com.dexels.navajo.document;
 
-import java.io.File;
-import java.io.Reader;
+import java.io.*;
 import java.util.*;
 
-import com.dexels.navajo.document.base.BaseNavajoFactoryImpl;
-import com.dexels.navajo.document.saximpl.SaxHandler;
-import com.dexels.navajo.document.saximpl.qdxml.QDParser;
+import com.dexels.navajo.document.base.*;
 
 
 /**
@@ -21,11 +18,11 @@ import com.dexels.navajo.document.saximpl.qdxml.QDParser;
 public abstract class NavajoFactory {
   protected static volatile NavajoFactory impl = null;
   protected File tempDir = null;
-  protected static final HashMap alternativeFactories = new HashMap();
-  protected Map defaultSubTypes = new HashMap();
-  protected final ArrayList myBinaryActivityListeners = new ArrayList();
+  protected static final HashMap<String,NavajoFactory> alternativeFactories = new HashMap<String,NavajoFactory>();
+  protected Map<String,String> defaultSubTypes = new HashMap<String,String>();
+  protected final ArrayList<BinaryProgressListener> myBinaryActivityListeners = new ArrayList<BinaryProgressListener>();
 
-  private final Map binaryStorage = new HashMap();
+  private final Map<String,byte[]> binaryStorage = new HashMap<String,byte[]>();
   private boolean sandboxMode = false;
   
   private static Object semaphore = new Object();
@@ -89,7 +86,7 @@ public abstract class NavajoFactory {
 					  System.err.println("NavajoFactory Warning: Getting instance, but current instance if different. Use resetImplementation.");
 				  }
 			  }
-			  return (NavajoFactory) alternativeFactories.get(className);
+			  return alternativeFactories.get(className);
 			  
 		  }
 		  try {
@@ -110,8 +107,8 @@ public abstract class NavajoFactory {
    * @return Map
    */
 
-  public Map parseSubTypes(String subType) {
-    Map m = new HashMap();
+  public Map<String,String> parseSubTypes(String subType) {
+    Map<String,String> m = new HashMap<String,String>();
     if (subType == null || "".equals(subType)) {
       return m;
     }
@@ -149,7 +146,7 @@ public abstract class NavajoFactory {
    * @return String subtype
    */
   public String getDefaultSubtypeForType(String type) {
-    return (String) defaultSubTypes.get(type);
+    return defaultSubTypes.get(type);
   }
 
 //    public static final String[] VALID_DATA_TYPES = new String[] {
@@ -515,9 +512,8 @@ public abstract class NavajoFactory {
    * @param total long
    */
   public void fireBinaryProgress(String service, long progress, long total) {
-//      System.err.println("Binary: "+service+" prog: "+progress+" total: "+total);
            for (int i = 0; i < myBinaryActivityListeners.size(); i++) {
-      BinaryProgressListener current = (BinaryProgressListener) myBinaryActivityListeners.get(i);
+      BinaryProgressListener current = myBinaryActivityListeners.get(i);
       current.fireBinaryProgress(service,progress,total);
     }
   }
@@ -540,7 +536,7 @@ public abstract class NavajoFactory {
 
 public void fireBinaryFinished(String message, long expectedLength) {
     for (int i = 0; i < myBinaryActivityListeners.size(); i++) {
-        BinaryProgressListener current = (BinaryProgressListener) myBinaryActivityListeners.get(i);
+        BinaryProgressListener current = myBinaryActivityListeners.get(i);
         current.fireBinaryFinished(message,expectedLength);
       }
    
@@ -556,7 +552,7 @@ public void storeHandle(String name, byte[] data) {
 	binaryStorage.put(name,data);
 }
 public byte[] getHandle(String name) {
-	return (byte[])binaryStorage.get(name);
+	return binaryStorage.get(name);
 }
 
 public boolean isSandboxMode() {

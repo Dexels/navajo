@@ -9,7 +9,7 @@ package com.dexels.navajo.document.saximpl;
 
 import java.io.*;
 import java.util.*;
-import java.util.Map.Entry;
+import java.util.Map.*;
 
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.base.*;
@@ -19,8 +19,8 @@ import com.dexels.navajo.document.types.*;
 public final class SaxHandler implements DocHandler {
 
     private Navajo currentDocument=null;
-    private final Stack messageStack = new Stack();
-    private final ArrayList binaries = new ArrayList();
+    private final Stack<Message> messageStack = new Stack<Message>();
+//    private final ArrayList binaries = new ArrayList();
     private String currentTag = null;
     private Property currentProperty = null;
     private BaseHeaderImpl currentHeader;
@@ -30,12 +30,12 @@ public final class SaxHandler implements DocHandler {
     public void reset() {
         currentDocument = null;
         messageStack.clear();
-        binaries.clear();
+//        binaries.clear();
         currentTag = null;
     }
 
       
-    public final void startElement(String tag, Hashtable h) throws Exception {
+    public final void startElement(String tag, Hashtable<String,String> h) throws Exception {
 //        System.err.println("starting element: "+tag+" attrs: "+h);
         currentTag = tag;
         
@@ -49,11 +49,11 @@ public final class SaxHandler implements DocHandler {
             return;
         }
         if (tag.equals("property")) {
-            String val = (String)h.get("value");
+            String val = h.get("value");
             if (val!=null) {
 
             	// Dit kan NOG strakker. Niet alle types hoeven geunescaped worder
-            	Hashtable h2 = new Hashtable(h);
+            	Hashtable<String,String> h2 = new Hashtable<String,String>(h);
     			val = BaseNode.XMLUnescape(val);
     			h2.put("value", val);
                 parseProperty(h2);
@@ -72,9 +72,9 @@ public final class SaxHandler implements DocHandler {
             return;
         }
         if (tag.equals("option")) {
-            String val = (String)h.get("value");
-            String name = (String)h.get("name");
-            Hashtable h2 = new Hashtable(h);
+            String val = h.get("value");
+            String name = h.get("name");
+            Hashtable<String,String> h2 = new Hashtable<String,String>(h);
     		val = BaseNode.XMLUnescape(val);
     		name = BaseNode.XMLUnescape(name);
     		h2.put("value", val);
@@ -133,31 +133,31 @@ public final class SaxHandler implements DocHandler {
     }
     
     
-    private final void parseAgent(Hashtable h) {
+    private final void parseAgent(Hashtable<String,String> h) {
         // TODO Auto-generated method stub
         
     }
 
 
-    private final void parseRequired(Hashtable h) {
+    private final void parseRequired(Hashtable<String,String> h) {
         // TODO Auto-generated method stub
-        currentMethod.addRequired((String)h.get("name"));
+        currentMethod.addRequired(h.get("name"));
     }
 
 
-    private final void parseObject(Hashtable h) {
+    private final void parseObject(Hashtable<String,String> h) {
     	
-    	if ( (String) h.get("ref") == null || ((String) h.get("ref")).equals("") ) {
+    	if ( h.get("ref") == null || (h.get("ref")).equals("") ) {
     		return;
     	}
     	
     //	System.err.println(h);
     	
     	BaseObjectImpl baseObjectImpl = new BaseObjectImpl(currentDocument);
-    	baseObjectImpl.setName((String) h.get("name"));
-    	baseObjectImpl.setRef((String) h.get("ref"));
-    	baseObjectImpl.setPercReady((int) Double.parseDouble((String) h.get("perc_ready")));
-    	baseObjectImpl.setInterrupt((String) h.get("interrupt"));
+    	baseObjectImpl.setName(h.get("name"));
+    	baseObjectImpl.setRef(h.get("ref"));
+    	baseObjectImpl.setPercReady((int) Double.parseDouble(h.get("perc_ready")));
+    	baseObjectImpl.setInterrupt(h.get("interrupt"));
     	baseObjectImpl.setFinished( h.get("finished").equals("true") );
     	
     	currentHeader.getCallback().addObject(baseObjectImpl);
@@ -173,41 +173,41 @@ public final class SaxHandler implements DocHandler {
     }
 
 
-    private final void parseMethods(Hashtable h) {
+    private final void parseMethods(Hashtable<String,String> h) {
         // TODO Auto-generated method stub
         
     }
 
 
-    private final void parseCallback(Hashtable h) {
+    private final void parseCallback(Hashtable<String,String> h) {
         // TODO: Should use the navajo factory for these functions
         if (currentHeader==null) {
             throw new IllegalArgumentException("Callback tag outside header tag.");
         }       
     }
 
-    private final void parseTransaction(Hashtable h) {
+    private final void parseTransaction(Hashtable<String,String> h) {
         if (currentHeader==null) {
             throw new IllegalArgumentException("Callback tag outside header tag.");
         }
         BaseTransactionImpl bci = new BaseTransactionImpl(currentDocument);
-        bci.setRpc_name((String)h.get("rpc_name"));
-        bci.setRpc_usr((String)h.get("rpc_usr"));
-        bci.setRpc_pwd((String)h.get("rpc_pwd"));
-        bci.setRpc_schedule((String)h.get("rpc_schedule"));
-        bci.setRequestId((String)h.get("requestid"));
+        bci.setRpc_name(h.get("rpc_name"));
+        bci.setRpc_usr(h.get("rpc_usr"));
+        bci.setRpc_pwd(h.get("rpc_pwd"));
+        bci.setRpc_schedule(h.get("rpc_schedule"));
+        bci.setRequestId(h.get("requestid"));
         currentHeader.addTransaction(bci);        
     }
 
-    private final void parsePiggyback(Hashtable h) {
+    private final void parsePiggyback(Hashtable<String,String> h) {
         if (currentHeader==null) {
             throw new IllegalArgumentException("Piggyback tag outside header tag.");
         }
-        Map m = new HashMap();
-        for (Iterator iter = h.entrySet().iterator(); iter.hasNext();) {
-        	Entry e = (Entry) iter.next();
-			String  key = (String ) e.getKey();
-			String value = (String ) e.getValue();
+        Map<String,String> m = new HashMap<String,String>();
+        for (Iterator<Entry<String,String>> iter = h.entrySet().iterator(); iter.hasNext();) {
+        	Entry<String,String> e = iter.next();
+			String  key = e.getKey();
+			String value = e.getValue();
 			m.put(key, value);
 		}
         
@@ -217,15 +217,15 @@ public final class SaxHandler implements DocHandler {
     }
     
     
-    private final void parseHeader(Hashtable h) {
+    private final void parseHeader(Hashtable<String,String> h) {
         // TODO: Should use the navajo factory for these functions
 //                NavajoFactory.getInstance().createHeader(current, rpcName, rpcUser, rpcPassword, expiration_interval)
         BaseHeaderImpl bhi = new BaseHeaderImpl(currentDocument);
         currentHeader = bhi;
-        for (Iterator iter = h.entrySet().iterator(); iter.hasNext();) {
-        	Entry e = (Entry) iter.next();
-			String element = (String) e.getKey();
-			String value = (String) e.getValue();
+        for (Iterator<Entry<String,String>> iter = h.entrySet().iterator(); iter.hasNext();) {
+        	Entry<String,String> e = iter.next();
+			String element = e.getKey();
+			String value = e.getValue();
 			bhi.setHeaderAttribute(element, value);
         }
         currentDocument.addHeader(bhi);
@@ -233,16 +233,16 @@ public final class SaxHandler implements DocHandler {
         
     }
 
-    private final void parseMethod(Hashtable h) throws NavajoException {
-        String name = (String)h.get("name");
+    private final void parseMethod(Hashtable<String,String> h) throws NavajoException {
+        String name = h.get("name");
         currentMethod = NavajoFactory.getInstance().createMethod(currentDocument, name, null);
         currentDocument.addMethod(currentMethod);
     }
 
-    private final void parseSelection(Hashtable h) throws NavajoException {
-    	String name = (String)h.get("name");
-    	String value = (String)h.get("value");
-    	int selected = Integer.parseInt((String)h.get("selected"));
+    private final void parseSelection(Hashtable<String,String> h) throws NavajoException {
+    	String name = h.get("name");
+    	String value = h.get("value");
+    	int selected = Integer.parseInt(h.get("selected"));
     	
     	Property definitionProperty = null;
     	
@@ -268,18 +268,17 @@ public final class SaxHandler implements DocHandler {
     	
     }
 
-    private final void parseProperty(Hashtable h) throws NavajoException {
+    private final void parseProperty(Hashtable<String,String> h) throws NavajoException {
 //        System.err.println("NAME: "+(String)h.get("name"));
-        Message parentArrayMessage = null;
         String sLength = null;
-        String myName = (String) h.get(Property.PROPERTY_NAME);
-        String myValue = (String) h.get(Property.PROPERTY_VALUE);
-        String subType = (String) h.get(Property.PROPERTY_SUBTYPE);
-        String description = (String) h.get(Property.PROPERTY_DESCRIPTION);
-        String direction = (String) h.get(Property.PROPERTY_DIRECTION);
-        String type = (String) h.get(Property.PROPERTY_TYPE);
-        sLength = (String) h.get(Property.PROPERTY_LENGTH);
-        String cardinality = (String) h.get(Property.PROPERTY_CARDINALITY);
+        String myName = h.get(Property.PROPERTY_NAME);
+        String myValue = h.get(Property.PROPERTY_VALUE);
+        String subType = h.get(Property.PROPERTY_SUBTYPE);
+        String description = h.get(Property.PROPERTY_DESCRIPTION);
+        String direction = h.get(Property.PROPERTY_DIRECTION);
+        String type = h.get(Property.PROPERTY_TYPE);
+        sLength = h.get(Property.PROPERTY_LENGTH);
+        String cardinality = h.get(Property.PROPERTY_CARDINALITY);
          Integer plength = null;
         Property definitionProperty = null;
         String subtype = null;
@@ -304,7 +303,7 @@ public final class SaxHandler implements DocHandler {
             currentProperty = NavajoFactory.getInstance().createProperty(currentDocument, myName, type, myValue, length, description, direction, subtype);
         }
 
-          Message current = (Message)messageStack.peek();
+          Message current = messageStack.peek();
 //          System.err.println("Adding property: "+currentProperty.getName()+" to message: "+current.getFullMessageName());
           current.addProperty(currentProperty);
 
@@ -377,7 +376,7 @@ public final class SaxHandler implements DocHandler {
         	  }
         	  type = Property.SELECTION_PROPERTY;
         	  
-        	  ArrayList l = definitionProperty.getAllSelections();
+        	  ArrayList<Selection> l = definitionProperty.getAllSelections();
         	  for (int i = 0; i < l.size(); i++) {
         		  BaseSelectionImpl s1 = (BaseSelectionImpl) l.get(i);
         		  BaseSelectionImpl s2 = (BaseSelectionImpl) s1.copy(currentDocument);
@@ -396,10 +395,10 @@ public final class SaxHandler implements DocHandler {
       }
     
 
-    private final void parseMessage(Hashtable h) throws NavajoException {
-        String name = (String)h.get("name");
-        String type = (String)h.get("type");
-        String orderby = (String)h.get("orderby");
+    private final void parseMessage(Hashtable<String,String> h) throws NavajoException {
+        String name = h.get("name");
+        String type = h.get("type");
+        String orderby = h.get("orderby");
         Message m = null;
         if (type!=null) {
             m = NavajoFactory.getInstance().createMessage(currentDocument, name,type);
@@ -414,7 +413,7 @@ public final class SaxHandler implements DocHandler {
             currentDocument.addMessage(m);
         } else {
         	// Don't add definition messages.
-        	Message parentMessage = (Message)messageStack.peek();
+        	Message parentMessage = messageStack.peek();
             if ( !Message.MSG_TYPE_DEFINITION.equals(type) ) {
         		parentMessage.addMessage(m);
         	} else {
@@ -429,7 +428,7 @@ public final class SaxHandler implements DocHandler {
 
     private void mergeDefinitionMessage() {
 
-        Message currentMessage = (Message)messageStack.peek();
+        Message currentMessage = messageStack.peek();
         if (currentMessage==null) {
             return;
         }
@@ -441,9 +440,9 @@ public final class SaxHandler implements DocHandler {
         if (def==null) {
             return;
         }
-        ArrayList props = def.getAllProperties();
+        ArrayList<Property> props = def.getAllProperties();
         for (int i = 0; i < props.size(); i++) {
-            Property src = (Property)props.get(i);
+            Property src = props.get(i);
             Property dest = currentMessage.getProperty(src.getName());
             if (dest==null) {
                 dest = src.copy(currentDocument);

@@ -1,6 +1,7 @@
 package com.dexels.navajo.document;
 
 import java.util.*;
+
 import com.dexels.navajo.document.typecheck.*;
 
 /**
@@ -16,7 +17,7 @@ public class PropertyTypeChecker {
 
   private static PropertyTypeChecker instance = null;
 
-  private final Map propertyTypeCheckMap = new HashMap();
+  private final Map<String,TypeChecker> propertyTypeCheckMap = new HashMap<String,TypeChecker>();
 
   private PropertyTypeChecker() {
   }
@@ -46,7 +47,7 @@ public class PropertyTypeChecker {
 
     String s = type.substring(1);
     String classname = "com.dexels.navajo.document.typecheck.TypeCheck"+type.substring(0,1).toUpperCase()+s;
-    Class c;
+    Class<?> c;
     try {
       c = Class.forName(classname);
     }
@@ -73,7 +74,7 @@ public class PropertyTypeChecker {
     if (!propertyTypeCheckMap.containsKey(type)) {
       loadTypeChecker(type);
     }
-    return (TypeChecker)propertyTypeCheckMap.get(type);
+    return propertyTypeCheckMap.get(type);
   }
 
 

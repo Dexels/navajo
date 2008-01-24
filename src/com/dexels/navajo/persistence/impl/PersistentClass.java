@@ -1,7 +1,7 @@
 package com.dexels.navajo.persistence.impl;
 
 
-import com.dexels.navajo.persistence.Persistable;
+import com.dexels.navajo.persistence.*;
 
 
 /**

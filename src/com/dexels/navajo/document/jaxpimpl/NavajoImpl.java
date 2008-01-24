@@ -9,18 +9,17 @@
 
 package com.dexels.navajo.document.jaxpimpl;
 
-import com.dexels.navajo.document.*;
-
 import java.beans.*;
 import java.io.*;
 import java.util.*;
-import javax.xml.transform.stream.StreamResult;
-import org.w3c.dom.*;
 import java.util.regex.*;
 
-import com.dexels.navajo.document.databinding.*;
-import com.dexels.navajo.document.jaxpimpl.xml.XMLutils;
-import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
+import javax.xml.transform.stream.*;
+
+import org.w3c.dom.*;
+
+import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.jaxpimpl.xml.*;
 
 
 
@@ -58,7 +57,7 @@ public final class NavajoImpl implements Navajo, java.io.Serializable {
     private final void initDocument(String bodyDefinition) {
         myBodyDefinition = bodyDefinition;
         docBuffer = XMLDocumentUtils.createDocument();
-        Element body = (Element) docBuffer.createElement(bodyDefinition);
+        Element body = docBuffer.createElement(bodyDefinition);
         docBuffer.appendChild(body);
     }
 
@@ -77,7 +76,7 @@ public final class NavajoImpl implements Navajo, java.io.Serializable {
      * Initialize the XML message buffer with a predefined document
      */
     public NavajoImpl(Document d) {
-        docBuffer = (Document) d;
+        docBuffer = d;
     }
 
     public NavajoImpl(Document d, String name) {
@@ -121,12 +120,12 @@ public final class NavajoImpl implements Navajo, java.io.Serializable {
             String rpcUser, String rpcPwd, long expirationInterval,
             com.dexels.navajo.document.RequestHeader request) {
 
-        Element header = (Element) d.createElement("header");
-        Element client = (Element) d.createElement("client");
-        Element server = (Element) d.createElement("server");
-        Element agent = (Element) d.createElement("agent");
+        Element header = d.createElement("header");
+        Element client = d.createElement("client");
+        Element server = d.createElement("server");
+        Element agent = d.createElement("agent");
         Element transaction =
-                (Element) d.createElement("transaction");
+                d.createElement("transaction");
 
         header.appendChild(client);
         header.appendChild(server);
@@ -150,7 +149,7 @@ public final class NavajoImpl implements Navajo, java.io.Serializable {
                     request.getRequestHeader("remoteUser"));
 
             Element xmlhttp =
-                    (Element) d.createElement("http");
+                    d.createElement("http");
 
             xmlhttp.setAttribute("accept",
                     request.getRequestHeader("accept"));
@@ -183,12 +182,12 @@ public final class NavajoImpl implements Navajo, java.io.Serializable {
     /**
      * Return all the Method objects in the Navajo document.
      */
-    public ArrayList getAllMethods(Object o) {
+    public ArrayList<Method> getAllMethods(Object o) {
 
         Document d = (Document) o;
         NodeList list = null;
         Node n = XMLutils.findNode(d, Navajo.METHODS_DEFINITION);
-        ArrayList h = new ArrayList();
+        ArrayList<Method> h = new ArrayList<Method>();
 
         if (n != null) {
             list = n.getChildNodes();
@@ -207,11 +206,11 @@ public final class NavajoImpl implements Navajo, java.io.Serializable {
     /**
      * Return all the method names in the current XML action buffer.
      */
-    public ArrayList getAllMethods() {
+    public ArrayList<Method> getAllMethods() {
 
         Node n;
 
-        ArrayList props = new ArrayList();
+        ArrayList<Method> props = new ArrayList<Method>();
 
         if (docBuffer != null) {
 
@@ -225,8 +224,8 @@ public final class NavajoImpl implements Navajo, java.io.Serializable {
                 for (int i = 0; i < list.getLength(); i++) {
                     if (list.item(i).getNodeName().equals(MethodImpl.METHOD_DEFINITION)) {
                         Element f = (Element) list.item(i);
-
-                        props.add(index++, f.getAttribute(MethodImpl.METHOD_NAME));
+                        MethodImpl m = new MethodImpl(f);
+                        props.add(index++, m);
                     }
                 }
             }
@@ -276,16 +275,16 @@ public final class NavajoImpl implements Navajo, java.io.Serializable {
     /**
      * Return the names of the required messages of a specific method (Given the method name).
      */
-    public Vector getRequiredMessages(String method) {
+    public Vector<String> getRequiredMessages(String method) {
 
-        Vector req = null;
+        Vector<String> req = null;
 
         Element g = (Element)
                 XMLutils.findNodeWithAttributeValue(docBuffer, MethodImpl.METHOD_DEFINITION,
                 MethodImpl.METHOD_NAME, method);
 
         if (g != null) {
-            req = new Vector();
+            req = new Vector<String>();
             NodeList list = g.getChildNodes();
 
             int index = 0;
@@ -304,9 +303,9 @@ public final class NavajoImpl implements Navajo, java.io.Serializable {
     /**
      * Return the Message objects in a specific Navajo XML document.
      */
-    public ArrayList getAllMessages(Document d) {
+    public ArrayList<Message> getAllMessages(Document d) {
 
-        ArrayList h = new ArrayList();
+        ArrayList<Message> h = new ArrayList<Message>();
 
         Element body = (Element) XMLutils.findNode(d, myBodyDefinition);
 
@@ -325,7 +324,7 @@ public final class NavajoImpl implements Navajo, java.io.Serializable {
     /**
      * Return all the Message object of this Navajo document.
      */
-    public ArrayList getAllMessages() {
+    public ArrayList<Message> getAllMessages() {
         return getAllMessages(docBuffer);
     }
 
@@ -347,12 +346,12 @@ public final class NavajoImpl implements Navajo, java.io.Serializable {
     /**
      * Return a arraylist of message objects given a regular expression name.
      */
-    public ArrayList getMessages(String name) throws NavajoException {
+    public ArrayList<Message> getMessages(String name) throws NavajoException {
 
         // System.out.println("in getMessages(), name = " + name);
-        ArrayList messages = new ArrayList();
-        ArrayList sub = null;
-        ArrayList sub2 = null;
+        ArrayList<Message> messages = new ArrayList<Message>();
+        ArrayList<Message> sub = null;
+        ArrayList<Message> sub2 = null;
 
         Node body = XMLutils.findNode(docBuffer, myBodyDefinition);
 
@@ -372,9 +371,9 @@ public final class NavajoImpl implements Navajo, java.io.Serializable {
                 if (sub == null) { // First message in path.
                     sub = getMessages(msgName);
                 } else {// Subsequent submessages in path.
-                    messages = new ArrayList();
+                    messages = new ArrayList<Message>();
                     for (int i = 0; i < sub.size(); i++) {
-                        m = (Message) sub.get(i);
+                        m = sub.get(i);
                         // System.out.println("for loop, parent message m = " + m.getName());
                         sub2 = m.getMessages(msgName);
                         messages.addAll(sub2);
@@ -462,9 +461,9 @@ public final class NavajoImpl implements Navajo, java.io.Serializable {
                         String index = arEl.nextToken();
                         //System.out.println("index = " + index);
                         Message mp = new MessageImpl(e);
-                        ArrayList elements = mp.getAllMessages();
+                        ArrayList<Message> elements = mp.getAllMessages();
                         for (int j = 0; j < elements.size(); j++) {
-                          Message m = (Message) elements.get(j);
+                          Message m = elements.get(j);
                           if ((m.getIndex()+"").equals(index))
                             return m;
 
@@ -504,12 +503,11 @@ public final class NavajoImpl implements Navajo, java.io.Serializable {
         return null;
     }
 
-    public ArrayList getProperties(String regularExpression) throws NavajoException {
-        ArrayList props = new ArrayList();
+    public ArrayList<Property> getProperties(String regularExpression) throws NavajoException {
+        ArrayList<Property> props = new ArrayList<Property>();
         Property prop = null;
-        ArrayList messages = null;
-        ArrayList sub = null;
-        ArrayList sub2 = null;
+        ArrayList<Message> messages = null;
+    
         String property = null;
         Message message = null;
 
@@ -529,7 +527,7 @@ public final class NavajoImpl implements Navajo, java.io.Serializable {
 
         messages = this.getMessages(messageList);
         for (int i = 0; i < messages.size(); i++) {
-            message = (Message) messages.get(i);
+            message = messages.get(i);
 
             prop = message.getProperty(realProperty);
 
@@ -570,9 +568,11 @@ public final class NavajoImpl implements Navajo, java.io.Serializable {
                 if (index == 0) // First message.
                     message = this.getMessage(property);
                 else // Subsequent messages.
-                    message = message.getMessage(property);
                 if (message == null)
                     return null;
+                else
+                    message = message.getMessage(property);
+                
             }
             index++;
         }
@@ -616,9 +616,11 @@ public final class NavajoImpl implements Navajo, java.io.Serializable {
                 if (index == 0) // First message.
                     message = this.getMessage(property);
                 else // Subsequent messages.
-                    message = message.getMessage(property);
-                if (message == null)
+                 if (message == null)
                     return null;
+                 else
+                     message = message.getMessage(property);
+                
             }
             index++;
         }
@@ -642,7 +644,7 @@ public final class NavajoImpl implements Navajo, java.io.Serializable {
      */
     private final void stripMessage(Node n) {
 
-        Node node = null, e = null, l = null;
+        Node node = null, e = null;
         Element m = null, f = null;
         Attr at;
         NodeList optionList = null;
@@ -742,22 +744,22 @@ public final class NavajoImpl implements Navajo, java.io.Serializable {
 
     private final void clearAllSelections(Message m) throws NavajoException {
 
-        ArrayList list = m.getAllMessages();
+        ArrayList<Message> list = m.getAllMessages();
 
         for (int i = 0; i < list.size(); i++)
-            clearAllSelections((Message) list.get(i));
-        ArrayList props = m.getAllProperties();
+            clearAllSelections(list.get(i));
+        ArrayList<Property> props = m.getAllProperties();
 
         for (int i = 0; i < props.size(); i++) {
-            Property prop = (Property) props.get(i);
+            Property prop = props.get(i);
 
             if (prop.getType().equals(PropertyImpl.SELECTION_PROPERTY)
                     && prop.getCardinality().equals("+")) {
 
-                ArrayList all = prop.getAllSelections();
+                ArrayList<Selection> all = prop.getAllSelections();
 
                 for (int j = 0; j < all.size(); j++) {
-                    Selection sel = (Selection) all.get(j);
+                    Selection sel = all.get(j);
 
                     sel.setSelected(false);
                 }
@@ -773,9 +775,9 @@ public final class NavajoImpl implements Navajo, java.io.Serializable {
 
     public void clearAllSelections() throws NavajoException {
         //Element body = (Element) XMLutils.findNode(this.docBuffer, myBodyDefinition);
-        ArrayList list = getAllMessages();
+        ArrayList<Message> list = getAllMessages();
         for (int i = 0; i < list.size(); i++) {
-            clearAllSelections((Message) list.get(i));
+            clearAllSelections(list.get(i));
         }
     }
 
@@ -948,7 +950,7 @@ public final class NavajoImpl implements Navajo, java.io.Serializable {
         Element methods = (Element) XMLutils.findNode(docBuffer, Navajo.METHODS_DEFINITION);
 
         if (methods == null) {
-            methods = (Element) docBuffer.createElement(Navajo.METHODS_DEFINITION);
+            methods = docBuffer.createElement(Navajo.METHODS_DEFINITION);
             body.appendChild(methods);
         }
 
@@ -1045,7 +1047,6 @@ public final class NavajoImpl implements Navajo, java.io.Serializable {
 			osw = new OutputStreamWriter( stream, "UTF-8" );
 			XMLDocumentUtils.write( docBuffer, osw, true );
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     	
@@ -1099,16 +1100,16 @@ public final class NavajoImpl implements Navajo, java.io.Serializable {
     public boolean isEqual(Navajo o) {
 
       try {
-        Navajo other = (Navajo) o;
-        ArrayList otherMsgs = other.getAllMessages();
-        ArrayList myMsgs = this.getAllMessages();
+        Navajo other = o;
+        ArrayList<Message> otherMsgs = other.getAllMessages();
+        ArrayList<Message> myMsgs = this.getAllMessages();
         if (otherMsgs.size() != myMsgs.size())
           return false;
         for (int i = 0; i < otherMsgs.size(); i++) {
-          Message otherMsg = (Message) otherMsgs.get(i);
+          Message otherMsg = otherMsgs.get(i);
           boolean match = false;
           for (int j = 0; j < myMsgs.size(); j++) {
-            Message myMsg = (Message) myMsgs.get(j);
+            Message myMsg = myMsgs.get(j);
             if (myMsg.isEqual(otherMsg, "")) {
               match = true;
               j = myMsgs.size() + 1;

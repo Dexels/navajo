@@ -1,7 +1,8 @@
 package com.dexels.navajo.persistence.impl;
 
-import com.dexels.navajo.persistence.Persistable;
 import java.io.*;
+
+import com.dexels.navajo.persistence.*;
 
 /**
  * <p>Title: Navajo Product Project</p>

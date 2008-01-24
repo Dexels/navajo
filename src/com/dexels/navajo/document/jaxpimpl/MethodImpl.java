@@ -10,10 +10,11 @@
  */
 package com.dexels.navajo.document.jaxpimpl;
 
-import com.dexels.navajo.document.*;
+import java.util.*;
 
 import org.w3c.dom.*;
-import java.util.*;
+
+import com.dexels.navajo.document.*;
 
 
 public final class MethodImpl implements Method {
@@ -40,11 +41,11 @@ public final class MethodImpl implements Method {
         Method p = null;
 
         Document d = (Document) tb.getMessageBuffer();
-        Element n = (Element) d.createElement(MethodImpl.METHOD_DEFINITION);
+        Element n = d.createElement(MethodImpl.METHOD_DEFINITION);
 
         p = new MethodImpl(n);
         p.setName(name);
-        //p.setServer(server);
+        p.setServer(server);
 
         return p;
     }
@@ -60,7 +61,7 @@ public final class MethodImpl implements Method {
      * Add a required message to a method using a Message object.
      */
     public void addRequired(Message message) {
-        Element e = (Element) ref.getOwnerDocument().createElement(MethodImpl.METHOD_REQUIRED);
+        Element e = ref.getOwnerDocument().createElement(MethodImpl.METHOD_REQUIRED);
         e.setAttribute(MessageImpl.MSG_DEFINITION, message.getName());
         ref.appendChild(e);
     }
@@ -73,7 +74,7 @@ public final class MethodImpl implements Method {
      * Add a required message to a method using a message name.
      */
     public void addRequired(String message, String filter) {
-        Element e = (Element) ref.getOwnerDocument().createElement(MethodImpl.METHOD_REQUIRED);
+        Element e = ref.getOwnerDocument().createElement(MethodImpl.METHOD_REQUIRED);
 
         e.setAttribute(MessageImpl.MSG_DEFINITION, message);
         if (filter != null && !filter.equals("")) {
@@ -129,23 +130,23 @@ public final class MethodImpl implements Method {
     /**
      * Return a list of required message names.
      */
-    public ArrayList getRequiredMessages() {
+    public ArrayList<String> getRequiredMessages() {
 
-        ArrayList req = null;
+        ArrayList<String> req = null;
 
         if (this.ref != null) {
 
             NodeList list = this.ref.getChildNodes();
 
-            if (list.getLength() > 0)
-                req = new ArrayList();
 
             int index = 0;
 
             for (int i = 0; i < list.getLength(); i++) {
                 if (list.item(i).getNodeName().equals(MethodImpl.METHOD_REQUIRED)) {
                     Element f = (Element) list.item(i);
-
+                    if(req==null) {
+                    	req = new ArrayList<String>();
+                    }
                     req.add(index++, f.getAttribute(MessageImpl.MSG_DEFINITION));
                 }
             }

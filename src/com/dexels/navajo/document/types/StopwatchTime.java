@@ -1,9 +1,8 @@
 package com.dexels.navajo.document.types;
 
-import java.util.Date;
-import java.util.StringTokenizer;
-import com.dexels.navajo.document.*;
 import java.util.*;
+
+import com.dexels.navajo.document.*;
 
 /**
  * <p>Title: ClockTime class </p>
@@ -16,7 +15,7 @@ import java.util.*;
 
 public final class StopwatchTime
     extends NavajoType
-    implements Comparable {
+    implements Comparable<StopwatchTime> {
 
   long myMillis = 0;
 
@@ -83,8 +82,7 @@ public final class StopwatchTime
    */
   private void constructCalValue(String s) {
 
-    Date value = null;
-    if (s == null) {
+     if (s == null) {
       return;
     }
     try {
@@ -360,21 +358,20 @@ public final class StopwatchTime
   }
 
   public final StopwatchTime subtract(StopwatchTime other) {
-    StopwatchTime result = null;
-
+   
     long myMillis = getMillis();
     long otherMillis = other.getMillis();
 
     return new StopwatchTime(Math.abs(myMillis - otherMillis));
   }
 
-  public final int compareTo(Object o) {
+  public final int compareTo(StopwatchTime o) {
 
-    if (! (o instanceof StopwatchTime)) {
+    if (o==null) {
       return 0;
     }
 
-    StopwatchTime other = (StopwatchTime) o;
+    StopwatchTime other = o;
 
     return ( (int) (this.getMillis() - other.getMillis()));
   }

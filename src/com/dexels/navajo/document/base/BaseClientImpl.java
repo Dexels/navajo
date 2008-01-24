@@ -16,17 +16,17 @@ import com.dexels.navajo.document.*;
  */
 public class BaseClientImpl extends BaseNode {
 
-  private final Map myAttributes = new HashMap();
+  private final Map<String,String> myAttributes = new HashMap<String,String>();
   
   public BaseClientImpl(Navajo n) {
     super(n);
   }
 
-    public Map getAttributes() {
+    public Map<String,String> getAttributes() {
         return myAttributes;
     }
 
-    public List getChildren() {
+    public List<BaseNode> getChildren() {
         return null;
     }
 
@@ -35,10 +35,10 @@ public class BaseClientImpl extends BaseNode {
     }
 
     public String getHost() {
-        return (String)myAttributes.get("host");
+        return myAttributes.get("host");
     }
     public String getAddress() {
-        return (String)myAttributes.get("address");
+        return myAttributes.get("address");
     }
    
     public void setHost(String host) {

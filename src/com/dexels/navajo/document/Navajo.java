@@ -10,10 +10,9 @@ package com.dexels.navajo.document;
  */
 
 import java.beans.*;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.*;
 
-import com.dexels.navajo.document.databinding.*;
 import com.dexels.navajo.persistence.*;
 
 public interface Navajo
@@ -63,7 +62,7 @@ public interface Navajo
    * Return all the Method objects in the Navajo document.
    * @return ArrayList containing all Methods
    */
-  public ArrayList getAllMethods();
+  public ArrayList<Method> getAllMethods();
 
   /**
    * DEBUGGING: write the current message and action buffers to
@@ -82,13 +81,13 @@ public interface Navajo
    * Return the names of the required messages of a specific method (Given the method name).
    * @return Vector containing the names of the required Messages for the given method
    */
-  public Vector getRequiredMessages(String method);
+  public Vector<String> getRequiredMessages(String method);
 
   /**
    * Return all the Message object of this Navajo document.
    * @return ArrayList of allMessage objects in this Navajo
    */
-  public ArrayList getAllMessages() throws NavajoException;
+  public ArrayList<Message> getAllMessages() throws NavajoException;
 
   /**
    * Return a method object given a method name.
@@ -100,7 +99,7 @@ public interface Navajo
    * Return an arraylist of message objects given a regular expression name.
    * @return ArrayList of all Message objects that match the given regular expression
    */
-  public ArrayList getMessages(String name) throws NavajoException;
+  public ArrayList<Message> getMessages(String name) throws NavajoException;
 
   /**
    * Return a message object given a message name.
@@ -113,7 +112,7 @@ public interface Navajo
    * @return ArrayList of all Property objects that match the given regular expression
    */
 
-  public ArrayList getProperties(String regularExpression) throws
+  public ArrayList<Property> getProperties(String regularExpression) throws
       NavajoException;
 
   /**

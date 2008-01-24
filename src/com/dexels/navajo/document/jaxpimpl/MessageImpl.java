@@ -18,24 +18,22 @@
  */
 package com.dexels.navajo.document.jaxpimpl;
 
-import com.dexels.navajo.document.*;
-
-import org.w3c.dom.*;
-
 import java.beans.*;
 import java.util.*;
 import java.util.regex.*;
 
-import com.dexels.navajo.document.base.BaseMessageImpl;
-import com.dexels.navajo.document.databinding.*;
-import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
-import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.*;
+
+import org.w3c.dom.*;
+
+import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.jaxpimpl.xml.*;
 
 
 /**
  * The message object is used to store properties (see @Property.class).
  */
-public final class MessageImpl implements Message {
+public final class MessageImpl implements Message, Comparable<Message> {
 
     /**
 	 * 
@@ -244,7 +242,7 @@ public final class MessageImpl implements Message {
         Message p = null;
 
         Document d = (Document) tb.getMessageBuffer();
-        Element n = (Element) d.createElement(Message.MSG_DEFINITION);
+        Element n = d.createElement(Message.MSG_DEFINITION);
 
         p = new MessageImpl(n);
         p.setName(name);
@@ -262,7 +260,7 @@ public final class MessageImpl implements Message {
     public final void addProperty(Property p) {
         // First check if property is already present. If it is overwrite with new version.
         if (p == null)
-            return;
+            throw new NullPointerException("Can not add null properties");
 
         Property dummy = this.getProperty(p.getName());
 
@@ -362,7 +360,7 @@ public final class MessageImpl implements Message {
      * Return all properties that match a given regular expression. Regular expression may include sub-messages and even
      * absolute message references starting at the root level.
      */
-    public final ArrayList getProperties(String regularExpression) throws NavajoException {
+    public final ArrayList<Property> getProperties(String regularExpression) throws NavajoException {
 
         if (regularExpression.startsWith(Navajo.PARENT_MESSAGE+Navajo.MESSAGE_SEPARATOR)) {
           regularExpression = regularExpression.substring((Navajo.PARENT_MESSAGE+Navajo.MESSAGE_SEPARATOR).length());
@@ -373,11 +371,11 @@ public final class MessageImpl implements Message {
             Navajo d = new NavajoImpl(this.ref.getOwnerDocument());
             return d.getProperties(regularExpression);
         } else {
-            ArrayList props = new ArrayList();
-            Property prop = null;
-            ArrayList messages = null;
-            ArrayList sub = null;
-            ArrayList sub2 = null;
+            ArrayList<Property> props = new ArrayList<Property>();
+//            Property prop = null;
+            ArrayList<Message> messages = null;
+//            ArrayList<Message> sub = null;
+//            ArrayList<Message> sub2 = null;
             String property = null;
             Message message = null;
 
@@ -398,17 +396,17 @@ public final class MessageImpl implements Message {
             if (!messageList.equals("")) {
               messages = this.getMessages(messageList);
             } else {
-              messages = new ArrayList();
+              messages = new ArrayList<Message>();
               messages.add(this);
             }
 
             Pattern pattern = Pattern.compile(realProperty);
             for (int i = 0; i < messages.size(); i++) {
-                message = (Message) messages.get(i);
-                ArrayList allProps = message.getAllProperties();
+                message = messages.get(i);
+                ArrayList<Property> allProps = message.getAllProperties();
                 try {
                   for (int j = 0; j < allProps.size(); j++) {
-                    String name = ((Property) allProps.get(j)).getName();
+                    String name = allProps.get(j).getName();
                     if (pattern.matcher(name).matches())
                         props.add(allProps.get(j));
                   }
@@ -424,11 +422,11 @@ public final class MessageImpl implements Message {
      * Return all messages that match a given regular expression. Regular expression may include sub-messages and even
      * absolute message references starting at the root level.
      */
-    public final ArrayList getMessages(String regularExpression) throws NavajoException {
+    public final ArrayList<Message> getMessages(String regularExpression) throws NavajoException {
 
-        ArrayList messages = null;
-        ArrayList sub = null;
-        ArrayList sub2 = null;
+        ArrayList<Message> messages = null;
+        ArrayList<Message> sub = null;
+        ArrayList<Message> sub2 = null;
 
         if (regularExpression.startsWith(Navajo.PARENT_MESSAGE+Navajo.MESSAGE_SEPARATOR)) {
           regularExpression = regularExpression.substring((Navajo.PARENT_MESSAGE+Navajo.MESSAGE_SEPARATOR).length());
@@ -451,9 +449,9 @@ public final class MessageImpl implements Message {
                 if (sub == null) { // First message in path.
                     sub = getMessages(msgName);
                 } else {// Subsequent submessages in path.
-                    messages = new ArrayList();
+                    messages = new ArrayList<Message>();
                     for (int i = 0; i < sub.size(); i++) {
-                        m = (Message) sub.get(i);
+                        m = sub.get(i);
                         sub2 = m.getMessages(msgName);
                         messages.addAll(sub2);
                     }
@@ -462,12 +460,12 @@ public final class MessageImpl implements Message {
             }
             return sub;
         }  else {
-            ArrayList msgList = getAllMessages();
-            ArrayList result = new ArrayList();
+            ArrayList<Message> msgList = getAllMessages();
+            ArrayList<Message> result = new ArrayList<Message>();
             try {
                 Pattern re = Pattern.compile(regularExpression);
                 for (int i = 0; i < msgList.size(); i++) {
-                    Message m = (Message) msgList.get(i);
+                    Message m = msgList.get(i);
                     String name = m.getName();
                     if (m.getType().equals(Message.MSG_TYPE_ARRAY) && re.matcher(name).matches() ) { // If message is array type add all children.
                       result.addAll(m.getAllMessages());
@@ -523,9 +521,9 @@ public final class MessageImpl implements Message {
                       if (arEl.hasMoreTokens()) {
                         String index = arEl.nextToken();
                         Message mp = new MessageImpl(e);
-                        ArrayList elements = mp.getAllMessages();
+                        ArrayList<Message> elements = mp.getAllMessages();
                         for (int j = 0; j < elements.size(); j++) {
-                          Message m = (Message) elements.get(j);
+                          Message m = elements.get(j);
                           if ((m.getIndex()+"").equals(index))
                             return m;
                         }
@@ -576,9 +574,11 @@ public final class MessageImpl implements Message {
                     if (index == 0) // First message.
                         message = this.getMessage(property);
                     else // Subsequent messages.
-                        message = message.getMessage(property);
+                        
                     if (message == null)
                         return null;
+                    else 
+                    	message = message.getMessage(property);
                 }
                 index++;
             }
@@ -616,9 +616,9 @@ public final class MessageImpl implements Message {
     /**
      * Return all properties in this message. Properties in submessages are not included(!).
      */
-    public final ArrayList getAllProperties() {
+    public final ArrayList<Property> getAllProperties() {
 
-        ArrayList h = new ArrayList();
+        ArrayList<Property> h = new ArrayList<Property>();
         Property p = null;
         NodeList list = ref.getChildNodes();
 
@@ -637,9 +637,9 @@ public final class MessageImpl implements Message {
     /**
      * Return all messages in this message. Only first level sub-messages are returned(!).
      */
-    public final ArrayList getAllMessages() {
+    public final ArrayList<Message> getAllMessages() {
 
-        ArrayList h = new ArrayList();
+        ArrayList<Message> h = new ArrayList<Message>();
         Message m = null;
         NodeList list = ref.getChildNodes();
 
@@ -720,8 +720,8 @@ public final class MessageImpl implements Message {
         el1.addProperty(p);
         n.write(System.err);
 
-        ArrayList l = n.getProperties("/.*/Aap");
-        Property s = (Property) l.get(0);
+        ArrayList<Property> l = n.getProperties("/.*/Aap");
+        Property s = l.get(0);
         System.err.println("name =" + s.getName() + ", value = " + s.getValue());
         //System.out.println("size = " + ar.getArraySize());
     }
@@ -747,20 +747,20 @@ public final class MessageImpl implements Message {
     public boolean isEqual(Message o, String skipProperties) {
 
      //System.err.println("in Message.isEqual(), my name is " + getName() + ", other is " + getName() + ", skipProperties = " + skipProperties);
-     Message other = (Message) o;
+     Message other = o;
      if (!other.getName().equals(this.getName()))
        return false;
      // Check sub message structure.
-     ArrayList allOther = other.getAllMessages();
-     ArrayList allMe = this.getAllMessages();
+     ArrayList<Message> allOther = other.getAllMessages();
+     ArrayList<Message> allMe = this.getAllMessages();
      //System.err.println("my msg size is " + allMe.size() + ", other msg size is " + allOther.size());
      if (allOther.size() != allMe.size())
        return false;
      for (int i = 0; i < allOther.size(); i++) {
-       Message otherMsg = (Message) allOther.get(i);
+       Message otherMsg = allOther.get(i);
        boolean match = false;
        for (int j = 0; j < allMe.size(); j++) {
-         Message myMsg = (Message) allMe.get(j);
+         Message myMsg = allMe.get(j);
          if (myMsg.isEqual(otherMsg, skipProperties)) {
            match = true;
            j = allMe.size() + 1;
@@ -770,12 +770,12 @@ public final class MessageImpl implements Message {
          return false;
      }
      // Check property structure.
-     ArrayList allOtherProps = other.getAllProperties();
-     ArrayList allMyProps = this.getAllProperties();
+     ArrayList<Property> allOtherProps = other.getAllProperties();
+     ArrayList<Property> allMyProps = this.getAllProperties();
      if (allOtherProps.size() != allMyProps.size())
        return false;
      for (int i = 0; i < allOtherProps.size(); i++) {
-       Property otherProp = (Property) allOtherProps.get(i);
+       Property otherProp = allOtherProps.get(i);
        boolean match = false;
        //System.err.println("About to check property: " + otherProp.getName());
        // Check whether property name exists in skipProperties list.
@@ -783,7 +783,7 @@ public final class MessageImpl implements Message {
          match = true;
        } else {
          for (int j = 0; j < allMyProps.size(); j++) {
-           Property myProp = (Property) allMyProps.get(j);
+           Property myProp = allMyProps.get(j);
            if (myProp.isEqual(otherProp)) {
              match = true;
              j = allMyProps.size() + 1;
@@ -822,9 +822,9 @@ public final class MessageImpl implements Message {
        System.err.println("No parent, so no definition");
        return null;
      }
-     ArrayList al = m.getAllMessages();
+     ArrayList<Message> al = m.getAllMessages();
      for (int i = 0; i < al.size(); i++) {
-       Message current = (Message)al.get(i);
+       Message current = al.get(i);
        if (current.getType().equals(Message.MSG_TYPE_DEFINITION)) {
          return current;
        }
@@ -843,7 +843,7 @@ public final class MessageImpl implements Message {
 	
   }
 
-  public int compareTo(Object o) {
+  public int compareTo(Message o) {
 	// TODO Auto-generated method stub
 	return 0;
   }

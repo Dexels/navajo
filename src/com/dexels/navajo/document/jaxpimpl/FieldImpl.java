@@ -1,8 +1,8 @@
 package com.dexels.navajo.document.jaxpimpl;
 
-import com.dexels.navajo.document.FieldTag;
-import com.dexels.navajo.document.*;
 import org.w3c.dom.*;
+
+import com.dexels.navajo.document.*;
 
 /**
  * <p>Title: </p>
@@ -22,13 +22,13 @@ public final class FieldImpl implements FieldTag {
      this.ref = e;
    }
 
-   public static final FieldTag create(Navajo tb, String name, String condition) throws NavajoException {
+   public static final FieldTag create(Navajo tb, String name, String condition) {
 
          FieldTag p = null;
 
          Document d = (Document) tb.getMessageBuffer();
 
-         Element n = (Element) d.createElement(FieldTag.FIELD_DEFINITION);
+         Element n = d.createElement(FieldTag.FIELD_DEFINITION);
 
          p = new FieldImpl(n);
          if (condition != null)

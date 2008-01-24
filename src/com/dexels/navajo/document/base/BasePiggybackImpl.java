@@ -1,19 +1,18 @@
 package com.dexels.navajo.document.base;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class BasePiggybackImpl extends BaseNode {
 
-	private final Map piggyData;
-	public BasePiggybackImpl(Map init) {
+	private final Map<String,String> piggyData;
+	public BasePiggybackImpl(Map<String,String> init) {
 		piggyData = init;
 	}
-	public Map getAttributes() {
+	public Map<String,String> getAttributes() {
 		return piggyData;
 	}
 
-	public List getChildren() {
+	public List<BaseNode> getChildren() {
 		return null;
 	}
 

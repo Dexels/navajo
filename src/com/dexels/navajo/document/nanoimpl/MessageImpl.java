@@ -10,14 +10,18 @@ package com.dexels.navajo.document.nanoimpl;
  * @version 1.0
  */
 
+import java.io.*;
 import java.util.*;
 
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.base.*;
 
-import java.util.regex.*;
-import java.io.*;
-
+/**
+ * 
+ * @author Frank Lyaruu
+ * @deprecated
+ */
+@Deprecated
 public class MessageImpl
     extends BaseMessageImpl
     implements Message, NanoElement {
@@ -92,7 +96,7 @@ public class MessageImpl
 //    }
 
     if (propertyList!=null) {
-        Iterator props = propertyList.iterator();
+        Iterator<Property> props = propertyList.iterator();
         while (props.hasNext()) {
           PropertyImpl p = (PropertyImpl) props.next();
           m.addChild(p.toXml(m, condense, method));
@@ -108,7 +112,7 @@ public class MessageImpl
 
   public void fromXml(XMLElement e, MessageImpl defParent) {
     for (int i = 0; i < e.countChildren(); i++) {
-      XMLElement child = (XMLElement) e.getChildren().elementAt(i);
+      XMLElement child = e.getChildren().get(i);
       String name = child.getName();
       if (name.equals("property")) {
         /** @todo Beware: Will things be affected? */
@@ -116,12 +120,13 @@ public class MessageImpl
         try {
           p = (PropertyImpl) NavajoFactory.getInstance().createProperty(
               myDocRoot, (String) child.getAttribute("name"), "", "", 0, "", "");
-          if ( p == null ) {
-        	  return;
-          }
+         
         }
         catch (NavajoException ex) {
           ex.printStackTrace();
+        } 
+        if ( p == null ) {
+      	  return;
         }
          if (defParent!=null) {
 //           System.err.println("Defparent present");

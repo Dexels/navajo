@@ -24,7 +24,7 @@
  */
 package com.dexels.navajo.document.base;
 
-import com.dexels.navajo.document.Required;
+import com.dexels.navajo.document.*;
 
 /**
  * @author arjen
@@ -32,7 +32,7 @@ import com.dexels.navajo.document.Required;
  * TODO To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-public abstract class BaseRequiredImpl implements Required {
+public class BaseRequiredImpl implements Required {
 
 	private String message;
 	private String filter;

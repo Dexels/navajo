@@ -11,12 +11,12 @@ package com.dexels.navajo.document.jaxpimpl;
 
 import java.util.*;
 
-import com.dexels.navajo.document.*;
+import javax.xml.transform.stream.*;
 
 import org.w3c.dom.*;
-import com.dexels.navajo.document.jaxpimpl.xml.XMLutils;
-import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
-import javax.xml.transform.stream.StreamResult;
+
+import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.jaxpimpl.xml.*;
 
 public final class HeaderImpl implements Header {
 
@@ -42,7 +42,7 @@ public final class HeaderImpl implements Header {
   }
 
 
-  public Map getHeaderAttributes() {
+  public Map<String,String> getHeaderAttributes() {
       return null;
   }
   
@@ -396,7 +396,7 @@ public final class HeaderImpl implements Header {
 		transaction.setAttribute("requestid", id);
 	}
 
-	public void addPiggyBackData(Map element) {
+	public void addPiggyBackData(Map<String,String> element) {
 	      throw new UnsupportedOperationException("Sorry, addPiggyBackData is not supported in JaxpImpl!");
 		
 	}
@@ -406,7 +406,7 @@ public final class HeaderImpl implements Header {
 		
 	}
 
-	public Set getPiggybackData() {
+	public Set<Map<String,String>> getPiggybackData() {
 	      throw new UnsupportedOperationException("Sorry, getPiggyBackData is not supported in JaxpImpl!");
 	}
 
@@ -434,12 +434,10 @@ public final class HeaderImpl implements Header {
 	}
 
 	public String getHeaderAttribute(String key) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public void setHeaderAttribute(String key, String value) {
-		// TODO Auto-generated method stub
 		
 	}
 

@@ -1,19 +1,13 @@
 package com.dexels.navajo.document;
 
-import java.io.BufferedInputStream;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.text.*;
 import java.util.*;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import org.w3c.dom.*;
 
-import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
-import com.dexels.navajo.document.types.ClockTime;
+import com.dexels.navajo.document.jaxpimpl.xml.*;
+import com.dexels.navajo.document.types.*;
 
 public class NavajoLaszloConverter {
 	public static Navajo createNavajoFromLaszlo(BufferedInputStream is) {
@@ -66,9 +60,9 @@ public class NavajoLaszloConverter {
 			tml.setAttribute("rpc_pwd", in.getHeader().getRPCPassword());
 			tml.setAttribute("rpc_name", serviceName);
 			root.appendChild(tml);
-			ArrayList l = in.getAllMessages();
+			ArrayList<Message> l = in.getAllMessages();
 			for (int i = 0; i < l.size(); i++) {
-				appendMessage((Message) l.get(i), tml, doc, includeSelections);
+				appendMessage(l.get(i), tml, doc, includeSelections);
 			}
 			// System.err.println("Created doc: " +
 			// XMLDocumentUtils.toString(doc));
@@ -82,16 +76,16 @@ public class NavajoLaszloConverter {
 		try {
 			if (m.getType().equals(Message.MSG_TYPE_ARRAY_ELEMENT)) {
 				Element row = d.createElement("row");
-				ArrayList allProp = m.getAllProperties();
+				ArrayList<Property> allProp = m.getAllProperties();
 				for (int j = 0; j < allProp.size(); j++) {
-					Property cp = (Property) allProp.get(j);
+					Property cp = allProp.get(j);
 					if (cp.getType().equals(Property.SELECTION_PROPERTY)) {
 
 						if (includeSelections) {
 							Element prop = d.createElement(cp.getName());
-							ArrayList sel = cp.getAllSelections();
+							ArrayList<Selection> sel = cp.getAllSelections();
 							for (int k = 0; k < sel.size(); k++) {
-								Selection s = (Selection) sel.get(k);
+								Selection s = sel.get(k);
 								Element option = d.createElement("option");
 								option.setAttribute("value", s.getValue());
 								option.setAttribute("name", s.getName());
@@ -158,9 +152,9 @@ public class NavajoLaszloConverter {
 			}
 			if (m.getType().equals(Message.MSG_TYPE_SIMPLE) || m.getType().equals(Message.MSG_TYPE)) {
 				Element mes = d.createElement("m_" + m.getName());
-				ArrayList allMes = m.getAllMessages();
+				ArrayList<Message> allMes = m.getAllMessages();
 				for (int k = 0; k < allMes.size(); k++) {
-					Message cm = (Message) allMes.get(k);
+					Message cm = allMes.get(k);
 					appendMessage(cm, mes, d, includeSelections);
 				}
 				appendProperties(m, mes, d);
@@ -233,7 +227,7 @@ public class NavajoLaszloConverter {
 				Property p = NavajoFactory.getInstance().createProperty(n, name, "1", description, direction);
 				NodeList options = elm.getChildNodes();
 				for (int i = 0; i < options.getLength(); i++) {
-					Node option = (Element) options.item(i);
+					Node option = options.item(i);
 					if (option.getNodeName().startsWith("option")) {
 						createSelectionFromLaszlo((Element) option, n, p);
 					}
@@ -290,9 +284,9 @@ public class NavajoLaszloConverter {
 
 	private static void appendProperties(Message m, Element e, Document d) {
 		try {
-			ArrayList allProp = m.getAllProperties();
+			ArrayList<Property> allProp = m.getAllProperties();
 			for (int i = 0; i < allProp.size(); i++) {
-				Property current = (Property) allProp.get(i);
+				Property current = allProp.get(i);
 
 				Element prop = d.createElement("p_" + current.getName());
 				if(current.getType().equals(Property.DATE_PROPERTY)){
@@ -323,9 +317,9 @@ public class NavajoLaszloConverter {
 				prop.setAttribute("length", "" + current.getLength());
 	
 				if (current.getType().equals(Property.SELECTION_PROPERTY)) {
-					ArrayList sel = current.getAllSelections();
+					ArrayList<Selection> sel = current.getAllSelections();
 					for (int j = 0; j < sel.size(); j++) {
-						Selection s = (Selection) sel.get(j);
+						Selection s = sel.get(j);
 						Element option = d.createElement("option");
 						option.setAttribute("value", s.getValue());
 						option.setAttribute("name", s.getName());

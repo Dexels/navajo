@@ -1,7 +1,8 @@
 package com.dexels.navajo.document.jaxpimpl;
 
-import com.dexels.navajo.document.*;
 import org.w3c.dom.*;
+
+import com.dexels.navajo.document.*;
 
 /**
  * <p>Title: </p>
@@ -19,20 +20,19 @@ public final class ExpressionImpl
 	 * 
 	 */
 	private static final long serialVersionUID = -7226916693752872142L;
-public final transient Element ref;
-  //private Navajo myRootDoc = null;
-
+	public final transient Element ref;
+ 
   public ExpressionImpl(Element e) {
     this.ref = e;
   }
 
-  public static final ExpressionTag create(Navajo tb, String value, String condition) throws NavajoException {
+  public static final ExpressionTag create(Navajo tb, String value, String condition)  {
 
         ExpressionTag p = null;
 
         Document d = (Document) tb.getMessageBuffer();
 
-        Element n = (Element) d.createElement(ExpressionTag.EXPRESSION_DEFINITION);
+        Element n = d.createElement(ExpressionTag.EXPRESSION_DEFINITION);
 
         p = new ExpressionImpl(n);
         if (condition != null)
@@ -62,8 +62,8 @@ public final transient Element ref;
     return this.ref;
   }
 
-  public final int compareTo(Object p) {
-    return -1;
+  public final int compareTo(ExpressionTag p) {
+    return 0;
   }
 
 }

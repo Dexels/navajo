@@ -7,12 +7,12 @@ package com.dexels.navajo.document.nanoimpl;
  * <p>Company: Dexels </p>
  * @author Frank Lyaruu
  * @version 1.0
+ * @deprecated
  */
 
 //import nanoxml.*;
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.base.*;
 
+@Deprecated
 public interface NanoElement {
 
  

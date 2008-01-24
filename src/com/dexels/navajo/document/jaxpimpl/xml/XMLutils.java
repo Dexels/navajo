@@ -8,11 +8,12 @@
  */
 package com.dexels.navajo.document.jaxpimpl.xml;
 
-import com.dexels.navajo.document.*;
+import java.io.*;
+import java.util.*;
 
 import org.w3c.dom.*;
-import java.io.*;
-import java.util.StringTokenizer;
+
+import com.dexels.navajo.document.*;
 
 public class XMLutils {
 

@@ -1,14 +1,7 @@
 package metadata;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.RandomAccessFile;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.io.*;
+import java.util.*;
 
 /**
  * Static helper class that tries to identify the file format
@@ -24,7 +17,7 @@ import java.util.List;
  */
 public class FormatIdentification implements Serializable
 {
-	private static List descriptions;
+	private static List<FormatDescription> descriptions;
 	private static int minBufferSize;
 
 	static
@@ -45,10 +38,10 @@ public class FormatIdentification implements Serializable
 		{
 			return null;
 		}
-		Iterator iter = descriptions.iterator();
+		Iterator<FormatDescription> iter = descriptions.iterator();
 		while (iter.hasNext())
 		{
-			FormatDescription desc = (FormatDescription)iter.next();
+			FormatDescription desc = iter.next();
 			if (desc.matches(data))
 			{
 				return desc;
@@ -105,7 +98,7 @@ public class FormatIdentification implements Serializable
 
 	private static void init()
 	{
-		descriptions = new ArrayList();
+		descriptions = new ArrayList<FormatDescription>();
 		minBufferSize = 1;
 		try
 		{

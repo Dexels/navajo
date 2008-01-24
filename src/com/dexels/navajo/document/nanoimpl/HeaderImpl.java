@@ -10,12 +10,17 @@ package com.dexels.navajo.document.nanoimpl;
  * @version 1.0
  */
 
+import java.io.*;
 import java.util.*;
+
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.base.*;
-
-import java.io.*;
-
+/**
+ * @deprecated
+ * @author Frank Lyaruu
+ *
+ */
+@Deprecated
 public final class HeaderImpl
     extends BaseHeaderImpl
     implements Header, NanoElement {
@@ -25,7 +30,8 @@ public final class HeaderImpl
     /**
      * @deprecated
      */
-   protected String myInterrupt = null;
+   @Deprecated
+protected String myInterrupt = null;
    
    protected boolean isFinished = false;
    protected String myCallbackName = null;
@@ -43,12 +49,8 @@ public final class HeaderImpl
   }
 
   public final void fromXml(XMLElement e) {
-    Enumeration en = e.enumerateChildren();
-//    System.err.println("\n\nPARSING TO HEADER: ");
-//    System.err.println(e.toString());
-//      System.err.println("\n\nEND OF PARSING HEADER\n");
-    while (en.hasMoreElements()) {
-      XMLElement child = (XMLElement) en.nextElement();
+    for (Iterator<XMLElement> iterator = e.enumerateChildren(); iterator.hasNext();) {
+    	XMLElement child = iterator.next();
       if (child.getName().equals("transaction")) {
         setIdentification(child.getStringAttribute("rpc_usr"),
                           child.getStringAttribute("rpc_pwd"),
@@ -63,9 +65,9 @@ public final class HeaderImpl
       }
       if (child.getName().equals("callback")) {
 //        System.err.println("Parsing callback");
-        Enumeration enum2 = child.enumerateChildren();
-        while (enum2.hasMoreElements()) {
-          XMLElement child2 = (XMLElement) enum2.nextElement();
+        Iterator<XMLElement> enum2 = child.enumerateChildren();
+        while (enum2.hasNext()) {
+        	XMLElement child2 = enum2.next();
           if (child2.getName().equals("object")) {
 //            System.err.println("Parsing object");
             setCallBack(child2.getStringAttribute("name"),
@@ -77,12 +79,10 @@ public final class HeaderImpl
         }
       }
     }
-    Enumeration ee = e.enumerateAttributeNames();
-    while (ee.hasMoreElements()) {
-        String element = (String) ee.nextElement();
-//        System.err.println("Found header attribute: "+element);
-        setHeaderAttribute(element, e.getStringAttribute(element));
-    }
+    for (Iterator<String> iterator = e.enumerateAttributeNames(); iterator.hasNext();) {
+    	String element = iterator.next();
+    	setHeaderAttribute(element, e.getStringAttribute(element));
+	}
 
   }
   public final XMLElement toXml() {
@@ -143,8 +143,8 @@ public final class HeaderImpl
 //      }
 
         if (attributeMap!=null) {
-            for (Iterator iter = attributeMap.keySet().iterator(); iter.hasNext();) {
-                String element = (String) iter.next();
+            for (Iterator<String> iter = attributeMap.keySet().iterator(); iter.hasNext();) {
+                String element = iter.next();
                 Object localValue = getHeaderAttribute(element);
                 if ( localValue!=null) {
                     header.setAttribute(element, localValue);

@@ -1,10 +1,9 @@
 package com.dexels.navajo.document.base;
-import java.util.*;
 import java.beans.*;
 import java.io.*;
+import java.util.*;
 
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.databinding.*;
 
 /**
  * <p>Title: ShellApplet</p>
@@ -59,15 +58,15 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
     Navajo ni = NavajoFactory.getInstance().createNavajo();
     BaseNavajoImpl n = (BaseNavajoImpl)ni;
 //    n.setRootMessage(cop getRootMessage().copy(n));
-    ArrayList al = getAllMessages();
+    ArrayList<Message> al = getAllMessages();
     for (int i = 0; i < al.size(); i++) {
-      Message m = (Message)al.get(i);
+      Message m = al.get(i);
       Message m2 = copyMessage(m,n);
       n.addMessage(m2);
     }
-    ArrayList mm = myMethods.getAllMethods();
+    List<Method> mm = myMethods.getAllMethods();
     for (int i = 0; i < mm.size(); i++) {
-      Method m = (Method)mm.get(i);
+      Method m = mm.get(i);
       Method m2 = m.copy(n);
       n.addMethod(m2);
     }
@@ -129,17 +128,18 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
    * @deprecated
    * @see com.dexels.navajo.document.Navajo#addLazyMessagePath(java.lang.String, int, int, int)
    */
-  public void addLazyMessagePath(String path, int startIndex, int endIndex, int total) {
+  @Deprecated
+public void addLazyMessagePath(String path, int startIndex, int endIndex, int total) {
 ///** @todo Fix this one */
     myHeader.addLazyMessagePath(path, startIndex, endIndex, total);
   }
 //
 
-  public ArrayList getAllMessages() {
+  public ArrayList<Message> getAllMessages() {
     return rootMessage.getAllMessages();
   }
 
-  public ArrayList getMessages(String regexp) throws NavajoException {
+  public ArrayList<Message> getMessages(String regexp) throws NavajoException {
     if (regexp.startsWith(MESSAGE_SEPARATOR)) {
       return rootMessage.getMessages(regexp.substring(1));
     }
@@ -159,7 +159,7 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
   }
 
 
-  public ArrayList getAllMethods() {
+  public ArrayList<Method> getAllMethods() {
     return myMethods.getAllMethods();
   }
 
@@ -178,13 +178,14 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
   /**
    * @deprecated
    */
-  public LazyMessagePath getLazyMessagePath(String path) {
+  @Deprecated
+public LazyMessagePath getLazyMessagePath(String path) {
     return myHeader.getLazyMessagePath(path);
   }
 
   public void clearAllSelections() {
     try {
-      ( (BaseMessageImpl) rootMessage).clearAllSelections();
+      rootMessage.clearAllSelections();
     }
     catch (NavajoException ex) {
       ex.printStackTrace();
@@ -265,9 +266,10 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
                 if (index == 0) // First message.
                     message = this.getMessage(property);
                 else // Subsequent messages.
-                    message = message.getMessage(property);
-                if (message == null)
-                    return null;
+	                if (message == null)
+	                    return null;
+	                else
+	                	message = message.getMessage(property);
             }
             index++;
         }
@@ -278,12 +280,10 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
     return rootMessage.getProperty(s);
   }
 
-  public ArrayList getProperties(String s) throws NavajoException {
-    ArrayList props = new ArrayList();
+  public ArrayList<Property> getProperties(String s) throws NavajoException {
+    ArrayList<Property> props = new ArrayList<Property>();
         Property prop = null;
-        ArrayList messages = null;
-        ArrayList sub = null;
-        ArrayList sub2 = null;
+        ArrayList<Message> messages = null;
         String property = null;
         Message message = null;
 
@@ -303,7 +303,7 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
 
         messages = this.getMessages(messageList);
         for (int i = 0; i < messages.size(); i++) {
-            message = (Message) messages.get(i);
+            message = messages.get(i);
 
             prop = message.getProperty(realProperty);
 
@@ -318,7 +318,7 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
       return myMethods.getMethod(s);
   }
 
-  public Vector getRequiredMessages(String s) {
+  public Vector<String> getRequiredMessages(String s) {
 
     /** @todo Implement */
     throw new UnsupportedOperationException();
@@ -346,9 +346,9 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
 
   public boolean isEqual(Navajo o) {
      try {
-      Navajo other = (Navajo) o;
-      ArrayList otherMsgs = other.getAllMessages();
-      ArrayList myMsgs = this.getAllMessages();
+      Navajo other = o;
+      ArrayList<Message> otherMsgs = other.getAllMessages();
+      ArrayList<Message> myMsgs = this.getAllMessages();
 
 //      System.err.println("-----------------");
 //      this.write(System.err);
@@ -362,10 +362,10 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
       }
 
       for (int i = 0; i < otherMsgs.size(); i++) {
-        Message otherMsg = (Message) otherMsgs.get(i);
+        Message otherMsg = otherMsgs.get(i);
         boolean match = false;
         for (int j = 0; j < myMsgs.size(); j++) {
-          Message myMsg = (Message) myMsgs.get(j);
+          Message myMsg = myMsgs.get(j);
           if (myMsg.isEqual(otherMsg, "")) {
             match = true;
             j = myMsgs.size() + 1;
@@ -386,20 +386,8 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
 
 
   public synchronized List refreshExpression() throws NavajoException{
-//    ArrayList aa = getAllMessages();
-//    for (int i = 0; i < aa.size(); i++) {
-//      Message current = (Message)aa.get(i);
-//      current.refreshExpression();
-//    }
     try {
-//      if (myDepSet == null) {
-//        updateDependencySet();
-//      } else {
-//        System.err.println("Reusing depset");
-//      }
-//
-//        System.err.println("REFRESHING EXPRESSION FROM: ");
-//        Thread.dumpStack();
+
         Map depSet = NavajoFactory.getInstance().getExpressionEvaluator().createDependencyMap(this);
         return NavajoFactory.getInstance().getExpressionEvaluator().processRefreshQueue(depSet);
 
@@ -416,21 +404,14 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
 /**
  * @deprecated
  */
-  public void read(java.io.InputStream stream) throws NavajoException {
+  @Deprecated
+public void read(java.io.InputStream stream) throws NavajoException {
     InputStreamReader isr = new InputStreamReader(stream);
     read(isr);
   }
 
 
-//
-//  public boolean includeMessage(Message m, String method) {
-//  	Method methObj = (Method) getMethod(method);
-//  	if (methObj != null) {
-//  		return methObj.includeMessage(m);
-//  	} else {
-//  		return true;
-//  	}
-//  }
+
   public Object getRef() {
       throw new UnsupportedOperationException("getRef not possible on base type. Override it if you need it");
   }
@@ -446,6 +427,7 @@ public void writeMessage(String name, String filename) throws NavajoException {
 /**
  * @deprecated
  */
+@Deprecated
 public Method copyMethod(String name, Navajo newDocument) {
     return null;
 }
@@ -453,6 +435,7 @@ public Method copyMethod(String name, Navajo newDocument) {
 /**
  * @deprecated
  */
+@Deprecated
 public Method copyMethod(Method method, Navajo newDocument) {
      return null;
 }
@@ -460,6 +443,7 @@ public Method copyMethod(Method method, Navajo newDocument) {
 /**
  * @deprecated
  */
+@Deprecated
 public Object getMessageBuffer() {
      return this;
 }
@@ -467,11 +451,12 @@ public Object getMessageBuffer() {
 /**
  * @deprecated
  */
+@Deprecated
 public void appendDocBuffer(Object d) throws NavajoException {
     Navajo n = (Navajo)d;
-    ArrayList msgs = n.getAllMessages();
+    ArrayList<Message>msgs = n.getAllMessages();
     for (int i = 0; i < msgs.size(); i++) {
-        Message m = (Message)msgs.get(i);
+        Message m = msgs.get(i);
         addMessage(m.copy(this));
     }
 }
@@ -494,6 +479,7 @@ public void write(OutputStream stream, boolean condense, String method) throws N
  * Create a new navajo using a stream in the NavajoFactory
  * @see com.dexels.navajo.document.Navajo#read(java.io.Reader)
  */
+@Deprecated
 public void read(Reader stream) throws NavajoException {
      
 }
@@ -524,19 +510,21 @@ public void disposeReader(Reader r) {
     
 }
 
-public Map getAttributes() {
-    Map m = new HashMap();
+public Map<String,String> getAttributes() {
+    Map<String,String> m = new HashMap<String,String>();
     m.put("documentImplementation",getImplementationName());
     return m;
 }
 
-public List getChildren() {
+public List<BaseNode> getChildren() {
     // TODO Auto-generated method stub
-    ArrayList al = new ArrayList();
+    ArrayList<BaseNode> al = new ArrayList<BaseNode>();
     if (myHeader!=null) {
         al.add(myHeader);
     }
-    al.addAll(getAllMessages());
+    for (Message m : getAllMessages()) {
+		al.add((BaseNode) m);
+	}
     al.add(myMethods);
     return al;
 }

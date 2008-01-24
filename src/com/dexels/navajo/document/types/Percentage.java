@@ -1,6 +1,7 @@
 package com.dexels.navajo.document.types;
 
-import java.text.NumberFormat;
+import java.text.*;
+
 import com.dexels.navajo.document.*;
 
 /**
@@ -12,7 +13,7 @@ import com.dexels.navajo.document.*;
  * @version $Id$
  */
 
-public final class Percentage extends NavajoType {
+public final class Percentage extends NavajoType implements Comparable<Percentage> {
 
   private Double value;
   private static NumberFormat nf = NumberFormat.getPercentInstance();
@@ -151,11 +152,11 @@ public final class Percentage extends NavajoType {
     return value.doubleValue();
   }
 
-  public final int compareTo(Object o) {
-    if (! (o instanceof Percentage)) {
+  public final int compareTo(Percentage o) {
+    if (o ==null) {
       return 0;
     }
-    Percentage other = (Percentage) o;
+    Percentage other = o;
     if (other.doubleValue() == this.doubleValue()) {
       return 0;
     }

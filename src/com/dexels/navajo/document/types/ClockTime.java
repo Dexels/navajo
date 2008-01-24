@@ -1,12 +1,10 @@
 package com.dexels.navajo.document.types;
 
+import java.sql.*;
+import java.text.*;
+import java.util.*;
 import java.util.Date;
-import java.text.SimpleDateFormat;
-import java.text.DateFormat;
-import java.util.Locale;
-import java.util.StringTokenizer;
-import java.sql.Timestamp;
-import java.util.Calendar;
+
 import com.dexels.navajo.document.*;
 
 /**
@@ -18,7 +16,7 @@ import com.dexels.navajo.document.*;
  * @version 1.0
  */
 
-public final class ClockTime extends NavajoType implements Comparable {
+public final class ClockTime extends NavajoType implements Comparable<ClockTime> {
 
   /**
 	 * 
@@ -227,25 +225,25 @@ public final static String VERSION = "$Id$";
   System.err.println("ck = " + ck);
   }
 
-  public final int compareTo(Object o) {
+  public final int compareTo(ClockTime o) {
 
-    if (!(o instanceof ClockTime)) {
+    if (o == null) {
       return 0;
     }
 
-    if (((ClockTime) o).calValue == null && calValue == null) {
+    if (o.calValue == null && calValue == null) {
       return 0;
     }
 
-    if (((ClockTime) o).calValue != null && calValue == null) {
+    if (o.calValue != null && calValue == null) {
       return -1;
     }
 
-    if (((ClockTime) o).calValue == null && calValue != null) {
+    if (o.calValue == null && calValue != null) {
       return 1;
     }
 
-    return (int) (calValue.getTimeInMillis() - ((ClockTime) o).dateValue().getTime());
+    return (int) (calValue.getTimeInMillis() - o.dateValue().getTime());
   }
 
   public int hashCode() {

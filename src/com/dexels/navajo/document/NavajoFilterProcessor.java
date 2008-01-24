@@ -1,6 +1,5 @@
 package com.dexels.navajo.document;
 
-import java.util.*;
 
 /**
  * <p>Title: </p>
@@ -13,7 +12,7 @@ import java.util.*;
 
 public class NavajoFilterProcessor {
 
-  public static Navajo filter(Navajo incoming, Navajo out) throws NavajoException  {
+  public static Navajo filter(Navajo incoming, Navajo out)   {
     Header h = incoming.getHeader();
     if (h==null) {
       return out;
@@ -21,7 +20,7 @@ public class NavajoFilterProcessor {
     return filter(h,out);
   }
 
-  private static Navajo filter(Header header, Navajo out) throws NavajoException {
+  private static Navajo filter(Header header, Navajo out) {
 //    Navajo newNavajo = NavajoFactory.getInstance().createNavajo();
 //    ArrayList messages = out.getAllMessages();
     return out;

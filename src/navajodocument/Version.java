@@ -73,12 +73,12 @@ public class Version extends dexels.Version {
 	public static final int PATCHLEVEL     = 1;
 	public static final String VENDOR      = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Document";
-	public static final String RELEASEDATE = "2007-01-23";
+	private static final String REL = "2007-01-23";
 
 	// Included packages.
 
 	public Version() {
-		setReleaseDate(RELEASEDATE);
+		setReleaseDate(REL);
 		String name = System.getProperty("com.dexels.navajo.DocumentImplementation");
 		if (name == null || name.equals("com.dexels.navajo.document.jaxpimpl.NavajoFactoryImpl"))
 			setSpecialVersion("JAXPIMPL");

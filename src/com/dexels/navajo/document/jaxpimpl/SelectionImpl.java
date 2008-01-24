@@ -10,8 +10,9 @@
  */
 package com.dexels.navajo.document.jaxpimpl;
 
-import com.dexels.navajo.document.*;
 import org.w3c.dom.*;
+
+import com.dexels.navajo.document.*;
 
 public final class SelectionImpl implements Selection {
 
@@ -33,7 +34,7 @@ public final class SelectionImpl implements Selection {
         Selection p = null;
 
         Document d = (Document) tb.getMessageBuffer();
-        Element n = (Element) d.createElement(Selection.SELECTION_DEFINITION);
+        Element n = d.createElement(Selection.SELECTION_DEFINITION);
 
         p = new SelectionImpl(n);
         p.setRootDoc(tb);
@@ -68,7 +69,7 @@ public final class SelectionImpl implements Selection {
         Navajo tb = new NavajoImpl();
         Document d = (Document) tb.getMessageBuffer();
 
-        n = (Element) d.createElement(Selection.DUMMY_ELEMENT);
+        n = d.createElement(Selection.DUMMY_ELEMENT);
 
         p = new SelectionImpl(n);
 
@@ -126,25 +127,21 @@ public final class SelectionImpl implements Selection {
       return ref.getAttribute(Selection.SELECTION_NAME);
     }
 
-    public final int compareTo(Object o) {
-      if (!(o instanceof Selection)) {
+    public final int compareTo(Selection o) {
+      
+      if (o.getName() == null && getName() == null) {
         return 0;
       }
 
-
-      if (((Selection) o).getName() == null && getName() == null) {
-        return 0;
-      }
-
-      if (((Selection) o).getName() != null && getName() == null) {
+      if (o.getName() != null && getName() == null) {
         return -1;
       }
 
-      if (((Selection) o).getName() == null && getName() != null) {
+      if (o.getName() == null && getName() != null) {
         return 1;
       }
 
-      return (getName().compareTo(((Selection) o).getName()));
+      return (getName().compareTo(o.getName()));
 
     }
 

@@ -9,10 +9,9 @@ package com.dexels.navajo.document.filter;
  * @version 1.0
  */
 
-import com.dexels.navajo.document.*;
-
-import java.beans.*;
 import java.util.*;
+
+import com.dexels.navajo.document.*;
 
 public final class PropertyFilter {
   private String myPropertyName;
@@ -115,9 +114,9 @@ private boolean checkProperty(Property p) throws NavajoException {
         }else{
           name = myValue.getValue();
         }
-        ArrayList l = p.getAllSelections();
+        ArrayList<Selection> l = p.getAllSelections();
         for(int i=0;i<l.size();i++){
-          Selection s = (Selection)l.get(i);
+          Selection s = l.get(i);
           if(s.getName().equals(name)){
             return true;
           }

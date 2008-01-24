@@ -1,9 +1,9 @@
 package com.dexels.navajo.document.types;
 
-import com.dexels.navajo.document.*;
-
-import java.io.Serializable;
+import java.io.*;
 import java.util.*;
+
+import com.dexels.navajo.document.*;
 
 /**
  * <p>Title: </p>
@@ -14,8 +14,8 @@ import java.util.*;
  * @version 1.0
  */
 
-public abstract class NavajoType implements Comparable, Serializable {
-  private Map subTypeMap = null;
+public abstract class NavajoType implements  Serializable {
+  private Map<String,String> subTypeMap = null;
 
   public abstract boolean isEmpty();
   public NavajoType(String type) {
@@ -43,7 +43,7 @@ public abstract class NavajoType implements Comparable, Serializable {
 
   public String getSubType(String key) {
     if (subTypeMap!=null) {
-      return (String)subTypeMap.get(key);
+      return subTypeMap.get(key);
     }
     return null;
   }

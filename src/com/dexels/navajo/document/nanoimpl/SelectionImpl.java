@@ -14,7 +14,9 @@ import com.dexels.navajo.document.base.*;
  * <p>$Id$</p>
  * @author Frank Lyaruu
  * @version $Revision$
+ * @deprecated
  */
+@Deprecated
 public final class SelectionImpl extends BaseSelectionImpl implements Selection, NanoElement {
 
    public SelectionImpl(Navajo n, String name, String value, boolean isSelected) {

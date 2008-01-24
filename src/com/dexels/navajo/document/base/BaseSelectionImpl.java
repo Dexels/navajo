@@ -97,35 +97,31 @@ public class BaseSelectionImpl extends BaseNode implements Selection{
   	return super.equals(o);
   }
   
-  public final int compareTo(Object o) {
-    if (!(o instanceof Selection)) {
+  public final int compareTo(Selection o) {
+ 
+    if (o.getName() == null && getName() == null) {
       return 0;
     }
 
-
-    if (((Selection) o).getName() == null && getName() == null) {
-      return 0;
-    }
-
-    if (((Selection) o).getName() != null && getName() == null) {
+    if (o.getName() != null && getName() == null) {
       return -1;
     }
 
-    if (((Selection) o).getName() == null && getName() != null) {
+    if (o.getName() == null && getName() != null) {
       return 1;
     }
 
-    return (getName().compareTo(((Selection) o).getName()));
+    return (getName().compareTo(o.getName()));
 
   }
-public Map getAttributes() {
-    Map m = new HashMap();
+public Map<String,String> getAttributes() {
+    Map<String,String> m = new HashMap<String,String>();
     m.put("name", name);
     m.put("value", value);
     m.put("selected", isSelected?"1":"0");
     return m;
 }
-public List getChildren() {
+public List<? extends BaseNode> getChildren() {
     return null;
 }
 public final String getTagName() {

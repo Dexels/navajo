@@ -16,18 +16,17 @@ import com.dexels.navajo.document.*;
  */
 public class BaseObjectImpl extends BaseNode {
 
-  private final ArrayList myObjects = new ArrayList();
-  private final Map myAttributes = new HashMap();
+	private final Map<String,String> myAttributes = new HashMap<String,String>();
   
   public BaseObjectImpl(Navajo n) {
     super(n);
   }
 
-    public Map getAttributes() {
+    public Map<String,String> getAttributes() {
         return myAttributes;
     }
 
-    public List getChildren() {
+    public List<BaseNode> getChildren() {
         return null;
     }
 
@@ -51,19 +50,19 @@ public class BaseObjectImpl extends BaseNode {
         myAttributes.put("interrupt", in);
     }
     public String getName() {
-    	return (String)myAttributes.get("name");
+    	return myAttributes.get("name");
     }
     public String getRef() {
-        return (String)myAttributes.get("ref");
+        return myAttributes.get("ref");
     }
     public String getPercReady() {
-        return (String)myAttributes.get("perc_ready");
+        return myAttributes.get("perc_ready");
     }
     public boolean isFinished() {
         return "true".equals(myAttributes.get("finished"));
     }
     public String getInterrupt() {
-        return (String)myAttributes.get("interrupt");
+        return myAttributes.get("interrupt");
     }    
 }
 
