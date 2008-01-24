@@ -1,9 +1,6 @@
 package dexels;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * <p>Title: Navajo Product Project</p>
@@ -30,7 +27,7 @@ import java.util.TreeSet;
  * ====================================================================
  */
 
-public abstract class Version implements Comparable {
+public abstract class Version implements Comparable<Version> {
 
 	public String RELEASEDATE;
 	
@@ -53,7 +50,7 @@ public abstract class Version implements Comparable {
 	public abstract String getVendor();
 	
 	// List of versions of included packages.
-	public ArrayList includedPackages = new ArrayList();
+	public ArrayList<Version> includedPackages = new ArrayList<Version>();
 	
 	private String specialVersion = null;
 	
@@ -70,11 +67,11 @@ public abstract class Version implements Comparable {
 	 * @param versionClass
 	 * @return
 	 */
-	public boolean checkInclude(String versionClass, HashSet previouslyVisited) {
+	public boolean checkInclude(String versionClass, Set<Version> previouslyVisited) {
 		
 		
 		for (int i = 0; i < includedPackages.size(); i++) {
-			Version v = (Version) includedPackages.get(i);
+			Version v = includedPackages.get(i);
 //			System.err.print(this.getClass().getName() +
 //					": Checking if " + versionClass + " is already included...");
 			if (v.getClass().getName().equals(versionClass)) {
@@ -89,7 +86,7 @@ public abstract class Version implements Comparable {
 	
 	public void addInclude(String versionClass) {
 		try {
-			Class c = Class.forName(versionClass);
+			Class<?> c = Class.forName(versionClass);
 			Version v = (Version) c.newInstance();
 			// Check if v is not already included in chain.
 			if (!checkInclude(versionClass, null)) {
@@ -134,17 +131,17 @@ public abstract class Version implements Comparable {
 	public String versionString() {
 		StringBuffer s = new StringBuffer();
 		s.append(toString()+"\n");
-		dexels.Version [] d = (dexels.Version [] ) getIncludePackages();
+		dexels.Version [] d = getIncludePackages();
 		for (int i = 0; i < d.length; i++) {
 			s.append("\t"+d[i].toString()+"\n");
 		}
 		return s.toString();
 	}
 	
-	private void buildIncludeTree(TreeSet t) {
+	private void buildIncludeTree(Set<Version> t) {
 		//System.err.println(this.getClass().getName() + ": in buildIncludeTree: " + t.size());
 		for (int i = 0; i < includedPackages.size(); i++) {
-			Version child = (Version) includedPackages.get(i);
+			Version child = includedPackages.get(i);
 			if (!t.contains(child)) {
 				//System.err.println("Adding " + child.getClass().getName());
 				t.add(child);
@@ -152,7 +149,7 @@ public abstract class Version implements Comparable {
 		}
 		// Loop over children.
 		for (int i = 0; i < includedPackages.size(); i++) {
-			Version child = (Version) includedPackages.get(i);
+			Version child = includedPackages.get(i);
 			child.buildIncludeTree(t);
 		}
 	}
@@ -163,20 +160,18 @@ public abstract class Version implements Comparable {
 	 */
 	public Version [] getIncludePackages() {
 		
-		TreeSet allDeps = new TreeSet();
+		Set<Version> allDeps = new TreeSet<Version>();
 		buildIncludeTree(allDeps);
 		Version [] v = new Version[allDeps.size()];
-		v = (Version []) allDeps.toArray(v);
+		v = allDeps.toArray(v);
 		return v;
 	}
 	
 	public boolean equals(Object o) {
-		//System.err.println("Checking equals..");
 		return o.getClass().getName().equals(this.getClass().getName());
 	}
 	
-	public int compareTo(Object o) {
-		//System.err.println("comparing " + o.getClass().getName() + " to " + this.getClass().getName());		
+	public int compareTo(Version o) {
 	    return o.getClass().getName().compareTo(this.getClass().getName());
 	}
 	
