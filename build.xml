@@ -62,8 +62,9 @@
         <junit printsummary="yes" haltonfailure="yes">
             <classpath refid="test.class.path"/>
             <formatter type="plain"/>
-            <test name="NavajoTestSuite" outfile="result"
-                todir="/home/arjen"/>
+<!--            <test name="NavajoTestSuite" outfile="result"
+                todir="/home/arjen"/>-->
+            <test name="NavajoTestSuite"/>
         </junit>
     </target>  
 	 <target name="nano" depends="compile">
