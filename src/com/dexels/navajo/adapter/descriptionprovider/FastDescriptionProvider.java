@@ -66,48 +66,43 @@ public class FastDescriptionProvider extends BaseDescriptionProvider {
 	}
 	
 	/**
-	 * clear cache for specific property (if user is null) or for specific property and user (if user is not null).
+	 * Update cache for specific property (if user is null) or for specific property and user (if user is not null).
 	 * 
 	 * @param propertyName
 	 * @param locale
 	 * @param user
 	 */
 	private void updateCache(String propertyName, String locale, String subLocale, String username, String description) {
-		
-		if ( locale == null || username == null ) {
-			synchronized ( semaphore ) {
-				properties.remove(propertyName);
+
+		HashMap locales = (HashMap) properties.get(propertyName);
+
+		if ( locales != null ) {
+			HashMap users = null;
+
+			if ( subLocale != null && ( ((HashMap) locales.get(locale)).size() > 1 || ((HashMap) locales.get(locale)).get("%") == null ) ) {
+				users = (HashMap) ((HashMap) locales.get(locale)).get(subLocale);
 			}
-			return;
+			// Dit not find specific sublocale, use generic sublocale.
+			if ( users == null ) {
+				users = (HashMap) ((HashMap) locales.get(locale)).get("%");
+			}
+
+			HashMap user = null;
+			if ( username != null ) {
+				user = (HashMap) users.get(username);
+			}
+			if ( user == null ) {
+				user = (HashMap) users.get("%");
+			}
+			if ( user != null) {
+				Iterator allWebservices = new HashSet( user.keySet() ).iterator();
+				while ( allWebservices.hasNext() ) {
+					String ws = (String) allWebservices.next();
+					user.put(ws, description);
+				}
+			} 
 		}
 
-		synchronized ( semaphore ) {
-			HashMap locales = (HashMap) properties.get(propertyName);
-
-			if ( locales != null ) {
-				HashMap users = null;
-
-				if ( ((HashMap) locales.get(locale)).size() > 1 || ((HashMap) locales.get(locale)).get("%") == null ) {
-					users = (HashMap) ((HashMap) locales.get(locale)).get(subLocale);
-				}
-				// Dit not find specific sublocale, use generic sublocale.
-				if ( users == null ) {
-					users = (HashMap) ((HashMap) locales.get(locale)).get("%");
-				}
-
-				HashMap user = (HashMap) users.get(username);
-				
-				if ( user != null) {
-					
-					Iterator allWebservices = new HashSet( user.keySet() ).iterator();
-					while ( allWebservices.hasNext() ) {
-						String ws = (String) allWebservices.next();
-						user.put(ws, description);
-					}
-				}
-
-			}
-		}
 	}
 	
 	private void initializeCache(String propertyName) throws UserException {
