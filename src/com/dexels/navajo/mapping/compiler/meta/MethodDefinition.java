@@ -67,7 +67,7 @@ public class MethodDefinition {
 			out.addChild(c);
 			hasCondition = true;
 		}
-		Enumeration attributes = in.enumerateAttributeNames();
+		Iterator<String> attributes = in.enumerateAttributeNames();
 		HashSet<String> required = new HashSet<String>();
 		// Get all 'automatic' parameters and determine required parameters.
 		Iterator<ParameterDefinition> auto = parameters.values().iterator();
@@ -80,8 +80,8 @@ public class MethodDefinition {
 				required.add(pd.getName());
 			}
 		}
-		while ( attributes.hasMoreElements() ) {
-			String attribName = (String) attributes.nextElement();
+		while ( attributes.hasNext() ) {
+			String attribName = attributes.next();
 			String attribValue = (String) in.getAttribute(attribName);
 			//System.err.println("Looking up parameterdefinition: " + attribName);
 			ParameterDefinition pd = parameters.get(attribName);

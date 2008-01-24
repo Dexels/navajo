@@ -106,7 +106,7 @@ public class MapDefinition {
 				map.setAttribute("condition", condition);
 			}
 			// Parse attributes using ValueDefinition.
-			Enumeration attributes = in.enumerateAttributeNames();
+			Iterator<String> attributes = in.enumerateAttributeNames();
 			
 			HashSet<String> required = new HashSet<String>();
 			// Get all 'automatic' parameters and determine required parameters.
@@ -123,8 +123,8 @@ public class MapDefinition {
 			}
 			
 			
-			while ( attributes.hasMoreElements() ) {
-				String attribName = (String) attributes.nextElement();
+			while ( attributes.hasNext() ) {
+				String attribName =  attributes.next();
 				String attribValue = (String) in.getAttribute(attribName);
 				//System.err.println("Looking up: " + attribName);
 				ValueDefinition vd = getValueDefinition(attribName);
@@ -240,9 +240,9 @@ public class MapDefinition {
 					out.addChild(copy);
 				}
 				copy.setName(child.getName());
-				Enumeration allAttribs =  child.enumerateAttributeNames();
-				while ( allAttribs.hasMoreElements() ) {
-					String name = (String) allAttribs.nextElement();
+				Iterator<String> allAttribs =  child.enumerateAttributeNames();
+				while ( allAttribs.hasNext() ) {
+					String name = allAttribs.next();
 					String value = (String) child.getAttribute(name);
 					copy.setAttribute(name, value);
 				}
