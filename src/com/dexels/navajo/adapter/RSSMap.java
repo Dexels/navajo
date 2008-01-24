@@ -18,10 +18,19 @@ import java.util.*;
 public class RSSMap implements Mappable {
 
 	/**
-	 * <p>Title: </p>
-	 * <p>Description: </p>
-	 * <p>Copyright: Copyright (c) 2005</p>
-	 * <p>Company: </p>
+	 * <p>
+	 * Title:
+	 * </p>
+	 * <p>
+	 * Description:
+	 * </p>
+	 * <p>
+	 * Copyright: Copyright (c) 2005
+	 * </p>
+	 * <p>
+	 * Company:
+	 * </p>
+	 * 
 	 * @author not attributable
 	 * @version 1.0
 	 */
@@ -50,6 +59,9 @@ public class RSSMap implements Mappable {
 	public String textInput;
 	public String skipHours;
 	public String skipDays;
+
+	  public final static String XML_ESCAPE_DELIMITERS = "&'<>\"";
+
 	
 	private Channel channel = null;
 
@@ -66,75 +78,97 @@ public class RSSMap implements Mappable {
 	}
 
 	public Binary getContent() {
-	
+
 		StringBuffer sb = new StringBuffer();
 		sb.append("<rss version=\"2.0\">\n");
 		sb.append("  <channel>\n");
-		if ( getTitle() != null) sb.append("    <title>" + getTitle() + "</title>\n");
-		if ( getLink() != null) sb.append("    <link>" + getLink() + "</link>\n");
-		if ( getCopyright() != null)  sb.append("    <copyright>" + getCopyright() + "</copyright>\n");
-		if ( getLanguage() != null ) sb.append("    <language>" + getLanguage() + "</language>\n");
-		if ( getCategory() != null )  sb.append("    <category>" + getCategory() + "</category>\n");
-		if ( getWebMaster() != null )  sb.append("    <webmaster>" + getWebMaster() + "</webmaster>\n");
-		if ( getPubDate() != null )  sb.append("    <pubDate>" + getPubDate() + "</pubDate>\n");
-		
+		if (getTitle() != null)
+			sb.append("    <title>" + XMLEscape(getTitle()) + "</title>\n");
+		if (getLink() != null)
+			sb.append("    <link>" +getLink() + "</link>\n");
+		if (getCopyright() != null)
+			sb.append("    <copyright>" + XMLEscape(getCopyright()) + "</copyright>\n");
+		if (getLanguage() != null)
+			sb.append("    <language>" + XMLEscape(getLanguage()) + "</language>\n");
+		if (getCategory() != null)
+			sb.append("    <category>" + XMLEscape(getCategory()) + "</category>\n");
+		if (getWebMaster() != null)
+			sb.append("    <webmaster>" + XMLEscape(getWebMaster()) + "</webmaster>\n");
+		if (getPubDate() != null)
+			sb.append("    <pubDate>" + XMLEscape(getPubDate()) + "</pubDate>\n");
+
 		Image img = rss.getChannel().getImage();
-		if ( img != null ) {
+		if (img != null) {
 			sb.append("    <image>\n");
-			if ( img.getTitle() != null)  sb.append("      <title>" + img.getTitle() + "</title>\n");
-			if ( img.getUrl() != null)  sb.append("      <url>" + img.getUrl() + "</url>\n");
-			if ( img.getLink() != null) sb.append("      <link>" + img.getLink() + "</link>\n");
-			if ( img.getWidth() != null)  sb.append("      <width>" + img.getWidth() + "</width>\n");
-			if ( img.getHeight() != null) sb.append("      <height>" + img.getHeight() + "</height>\n");
-			if ( img.getDescription() != null)  sb.append("      <description>" + img.getDescription() + "</description>\n");
+			if (img.getTitle() != null)
+				sb.append("      <title>" + XMLEscape(img.getTitle().toString()) + "</title>\n");
+			if (img.getUrl() != null)
+				sb.append("      <url>" + img.getUrl().toString() + "</url>\n");
+			if (img.getLink() != null)
+				sb.append("      <link>" + img.getLink().toString() + "</link>\n");
+			if (img.getWidth() != null)
+				sb.append("      <width>" + img.getWidth() + "</width>\n");
+			if (img.getHeight() != null)
+				sb.append("      <height>" + img.getHeight() + "</height>\n");
+			if (img.getDescription() != null)
+				sb.append("      <description>" + XMLEscape(img.getDescription().toString()) + "</description>\n");
 			sb.append("    </image>\n");
 		}
-			
+
 		getItems();
-		if ( items != null ) {
-			for ( int i = 0; i < items.length; i++ ) {
+		if (items != null) {
+			for (int i = 0; i < items.length; i++) {
 				sb.append("    <item>\n");
-				if ( items[i].getTitle() != null )  sb.append("      <title>" + items[i].getTitle() + "</title>\n");
-				if ( items[i].getLink() != null ) sb.append("      <link>" + items[i].getLink() + "</link>\n");
-				if ( items[i].getCategory() != null ) sb.append("      <category>" + items[i].getCategory() + "</category>\n");
-				if ( items[i].getGuid() != null ) sb.append("      <guid>" + items[i].getGuid() + "</guid>\n");
-				if ( items[i].getAuthor() != null ) sb.append("      <author>" + items[i].getAuthor() + "</author>\n");
-				if ( items[i].getDescription() != null ) sb.append("      <description>" + items[i].getDescription() + "</description>\n");
-				if ( items[i].getEnclosure() != null ) sb.append("      <enclosure>" + items[i].getEnclosure() + "</enclosure>\n");
-				if ( items[i].getCategory() != null ) sb.append("      <category>" + items[i].getCategory() + "</category>\n");
-				if ( items[i].getPubDate() != null ) sb.append("      <pubDate>" + items[i].getPubDate() + "</pubDate>\n");
+				if (items[i].getTitle() != null)
+					sb.append("      <title>" + XMLEscape(items[i].getTitle()) + "</title>\n");
+				if (items[i].getLink() != null)
+					sb.append("      <link>" + XMLEscape(items[i].getLink()) + "</link>\n");
+				if (items[i].getCategory() != null)
+					sb.append("      <category>" + XMLEscape(items[i].getCategory()) + "</category>\n");
+				if (items[i].getGuid() != null)
+					sb.append("      <guid>" + XMLEscape(items[i].getGuid()) + "</guid>\n");
+				if (items[i].getAuthor() != null)
+					sb.append("      <author>" + XMLEscape(items[i].getAuthor()) + "</author>\n");
+				if (items[i].getDescription() != null)
+					sb.append("      <description>" + XMLEscape(items[i].getDescription()) + "</description>\n");
+				if (items[i].getEnclosure() != null)
+					sb.append("      <enclosure>" + XMLEscape(items[i].getEnclosure()) + "</enclosure>\n");
+				if (items[i].getCategory() != null)
+					sb.append("      <category>" + XMLEscape(items[i].getCategory()) + "</category>\n");
+				if (items[i].getPubDate() != null)
+					sb.append("      <pubDate>" + XMLEscape(items[i].getPubDate()) + "</pubDate>\n");
 				sb.append("    </item>\n");
 			}
 		}
-		
+
 		sb.append("  </channel>\n");
 		sb.append("</rss>\n");
-		
+
 		return new Binary(sb.toString().getBytes());
 	}
-	
-	public void setItems(RSSItem [] rssitems) {
+
+	public void setItems(RSSItem[] rssitems) {
 		HashSet<Item> s = new HashSet<Item>();
-		for ( int i = 0; i < rssitems.length; i++ ) {
+		for (int i = 0; i < rssitems.length; i++) {
 			System.err.println("Processing item..." + i);
 			Item item = new Item();
-			item.setAuthor( rssitems[i].getItemAuthor() );
-			item.setComments( rssitems[i].getItemComments() );
-			item.setDescription( rssitems[i].getItemDescription() );
-			item.setEnclosure( rssitems[i].getItemEnclosure() );
-			item.setGuid( rssitems[i].getItemGuid() );
-			item.setLink( rssitems[i].getItemLink() );
-			item.setPubDate( rssitems[i].getItemPubDate() );
-			item.setSource( rssitems[i].getItemSource() );
-			item.setTitle( rssitems[i].getItemTitle() );
+			item.setAuthor(rssitems[i].getItemAuthor());
+			item.setComments(rssitems[i].getItemComments());
+			item.setDescription(rssitems[i].getItemDescription());
+			item.setEnclosure(rssitems[i].getItemEnclosure());
+			item.setGuid(rssitems[i].getItemGuid());
+			item.setLink(rssitems[i].getItemLink());
+			item.setPubDate(rssitems[i].getItemPubDate());
+			item.setSource(rssitems[i].getItemSource());
+			item.setTitle(rssitems[i].getItemTitle());
 			s.add(item);
 		}
 		rss.getChannel().setItems(s);
 	}
-	
+
 	public RSSItem[] getItems() {
-		
-		if ( rss.getChannel().getItems() == null ) {
+
+		if (rss.getChannel().getItems() == null) {
 			return null;
 		}
 		Collection rssitems = rss.getChannel().getItems();
@@ -195,11 +229,10 @@ public class RSSMap implements Mappable {
 	public void setRssFeed(String feed) {
 		rssFeed = feed;
 		try {
-			
+
 			RssParser parser = RssParserFactory.createDefault();
 			rss = parser.parse(new URL(rssFeed));
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -209,25 +242,26 @@ public class RSSMap implements Mappable {
 	}
 
 	public static void main(String[] args) {
-		
-		try{
+
+		try {
 			RSSMap m = new RSSMap();
-			//m.setRssFeed(m.rssFeed);
+			// m.setRssFeed(m.rssFeed);
 			m.load(null, null, null, null);
 			m.setTitle("Dexels News");
 			m.setCopyright("CNN");
 			m.setLanguage("en");
+			m.setLink("http://www.aap.com/apenoot?hoera&olifant=compleet");
 			m.setPubDate("21-dec-2017");
-			RSSItem [] is = new RSSItem[1];
+			RSSItem[] is = new RSSItem[1];
 			is[0] = new RSSItem();
-			is[0].setTitle("Dexels has acquired Microsoft");
+			is[0].setTitle("Dexels has acquired Microsoft & Sun");
 			is[0].setAuthor("Ling jang Hu");
 			m.setItems(is);
-			
-			System.err.println(new String( m.getContent().getData() ));
-			
-			//m.getItems();
-		}catch(Exception e){
+
+			System.err.println(new String(m.getContent().getData()));
+
+			// m.getItems();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -251,8 +285,7 @@ public class RSSMap implements Mappable {
 	public String getCloud() {
 		if (rss.getChannel().getCloud() != null) {
 			return rss.getChannel().getCloud().getText();
-		}
-		else {
+		} else {
 			return null;
 		}
 	}
@@ -260,8 +293,7 @@ public class RSSMap implements Mappable {
 	public String getCopyright() {
 		if (rss.getChannel().getCopyright() != null) {
 			return rss.getChannel().getCopyright().getText();
-		}
-		else {
+		} else {
 			return "";
 		}
 
@@ -270,8 +302,7 @@ public class RSSMap implements Mappable {
 	public String getDescription() {
 		if (rss.getChannel().getDescription() != null) {
 			return rss.getChannel().getDescription().getText();
-		}
-		else {
+		} else {
 			return null;
 		}
 	}
@@ -279,8 +310,7 @@ public class RSSMap implements Mappable {
 	public String getDocs() {
 		if (rss.getChannel().getDocs() != null) {
 			return rss.getChannel().getDocs().getText();
-		}
-		else {
+		} else {
 			return null;
 		}
 	}
@@ -288,8 +318,7 @@ public class RSSMap implements Mappable {
 	public String getGenerator() {
 		if (rss.getChannel().getGenerator() != null) {
 			return rss.getChannel().getGenerator().getText();
-		}
-		else {
+		} else {
 			return null;
 		}
 	}
@@ -298,7 +327,7 @@ public class RSSMap implements Mappable {
 	public Binary getImage() {
 		if (rss.getChannel().getImage() != null) {
 			try {
-				return new Binary( new URL(rss.getChannel().getImage().getUrl().getText()).openStream() );
+				return new Binary(new URL(rss.getChannel().getImage().getUrl().getText()).openStream());
 			} catch (Throwable e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -312,8 +341,7 @@ public class RSSMap implements Mappable {
 	public String getLanguage() {
 		if (rss.getChannel().getLanguage() != null) {
 			return rss.getChannel().getLanguage().getText();
-		}
-		else {
+		} else {
 			return null;
 		}
 	}
@@ -321,8 +349,7 @@ public class RSSMap implements Mappable {
 	public String getLastBuildDate() {
 		if (rss.getChannel().getLastBuildDate() != null) {
 			return rss.getChannel().getLastBuildDate().getText();
-		}
-		else {
+		} else {
 			return null;
 		}
 	}
@@ -330,8 +357,7 @@ public class RSSMap implements Mappable {
 	public String getLink() {
 		if (rss.getChannel().getLink() != null) {
 			return rss.getChannel().getLink().getText();
-		}
-		else {
+		} else {
 			return null;
 		}
 	}
@@ -339,8 +365,7 @@ public class RSSMap implements Mappable {
 	public String getManagingEditor() {
 		if (rss.getChannel().getManagingEditor() != null) {
 			return rss.getChannel().getManagingEditor().getText();
-		}
-		else {
+		} else {
 			return null;
 		}
 	}
@@ -348,8 +373,7 @@ public class RSSMap implements Mappable {
 	public String getPubDate() {
 		if (rss.getChannel().getPubDate() != null) {
 			return rss.getChannel().getPubDate().getText();
-		}
-		else {
+		} else {
 			return null;
 		}
 	}
@@ -357,8 +381,7 @@ public class RSSMap implements Mappable {
 	public String getRating() {
 		if (rss.getChannel().getRating() != null) {
 			return rss.getChannel().getRating().getText();
-		}
-		else {
+		} else {
 			return null;
 		}
 	}
@@ -366,8 +389,7 @@ public class RSSMap implements Mappable {
 	public String getSkipDays() {
 		if (rss.getChannel().getSkipDays() != null) {
 			return rss.getChannel().getSkipDays().getText();
-		}
-		else {
+		} else {
 			return null;
 		}
 	}
@@ -375,8 +397,7 @@ public class RSSMap implements Mappable {
 	public String getTextInput() {
 		if (rss.getChannel().getTextInput() != null) {
 			return rss.getChannel().getTextInput().getText();
-		}
-		else {
+		} else {
 			return null;
 		}
 	}
@@ -384,8 +405,7 @@ public class RSSMap implements Mappable {
 	public String getSkipHours() {
 		if (rss.getChannel().getSkipHours() != null) {
 			return rss.getChannel().getSkipHours().getText();
-		}
-		else {
+		} else {
 			return null;
 		}
 	}
@@ -393,8 +413,7 @@ public class RSSMap implements Mappable {
 	public String getTitle() {
 		if (rss.getChannel().getTitle() != null) {
 			return rss.getChannel().getTitle().getText();
-		}
-		else {
+		} else {
 			return null;
 		}
 	}
@@ -402,8 +421,7 @@ public class RSSMap implements Mappable {
 	public String getTtl() {
 		if (rss.getChannel().getTtl() != null) {
 			return rss.getChannel().getTtl().getText();
-		}
-		else {
+		} else {
 			return null;
 		}
 	}
@@ -411,8 +429,7 @@ public class RSSMap implements Mappable {
 	public String getWebMaster() {
 		if (rss.getChannel().getWebMaster() != null) {
 			return rss.getChannel().getWebMaster().getText();
-		}
-		else {
+		} else {
 			return null;
 		}
 	}
@@ -495,6 +512,75 @@ public class RSSMap implements Mappable {
 
 	public void setDocs(String docs) {
 		this.docs = docs;
+	}
+
+	/**
+	 * Replace all occurrences of the characters &, ', ", < and > by the escaped
+	 * characters &amp;, &quot;, &apos;, &lt; and &gt;
+	 */
+	private static final String XMLEscape(String s) {
+
+		boolean contains = false;
+		for (int i = 0; i < XML_ESCAPE_DELIMITERS.length(); i++) {
+			if (s.indexOf(XML_ESCAPE_DELIMITERS.charAt(i)) != -1) {
+				contains = true;
+			}
+		}
+
+		if (!contains) {
+			return s;
+		}
+
+		if ((s == null) || (s.length() == 0)) {
+			return s;
+		}
+
+		StringTokenizer tokenizer = new StringTokenizer(s, XML_ESCAPE_DELIMITERS, true);
+		StringBuffer result = new StringBuffer();
+
+		while (tokenizer.hasMoreElements()) {
+			String substring = tokenizer.nextToken();
+
+			if (substring.length() == 1) {
+				switch (substring.charAt(0)) {
+
+				case '&':
+					result.append("&amp;");
+					break;
+
+				// case '\'' :
+				// result.append("&apos;");
+				// break;
+
+				case ';':
+					result.append("\\;");
+					break;
+
+				case '<':
+					result.append("&lt;");
+					break;
+
+				case '>':
+					result.append("&gt;");
+					break;
+
+				case '\"':
+					result.append("&quot;");
+					break;
+
+				// case '\n' :
+				// result.append("\\n");
+				// break;
+
+				default:
+					result.append(substring);
+				}
+			} else {
+				result.append(substring);
+			}
+		}
+
+		return result.toString();
 	}
 
 }
