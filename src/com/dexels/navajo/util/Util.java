@@ -17,18 +17,7 @@ public final class Util {
 
     @SuppressWarnings("unused")
 	private static ResourceBundle rb = null;
-    @SuppressWarnings("unused")
-	private static int logLevel = 0;
-
-    public final static void debugLog(int level, String message) {// System.out.println("NAVAJO: " + message);
-    }
-
-    public final static void debugLog(String message) {// System.out.println("NAVAJO: " + message);
-    }
-
-    public final static void debugLog(Object o, String message) {// System.out.println("NAVAJO: FROM " + o.getClass().getName() + ": " + message);
-    }
-
+    
     public final static Property getProperty(Message in, String name, boolean required)
             throws SystemException {
 
@@ -205,31 +194,6 @@ public final class Util {
 
         return decFive.format(d);
 
-    }
-
-    public static void elfProef(String nummer) throws UserException {
-
-        boolean result = false;
-
-        if (nummer.length() != 9)
-            result = false;
-
-        int total = 0;
-
-        for (int i = 0; i < (nummer.length()); i++) {
-            int digit = Integer.parseInt(nummer.charAt(i) + "");
-
-            digit = (9 - i) * digit;
-            total += digit;
-        }
-
-        if (total % 11 == 0)
-            result = true;
-        else
-            result = false;
-
-        if (!result)
-            throw new UserException(UserException.INVALID_ACCOUNT_NR, "Ongeldig rekeningnummer");
     }
 
     public static boolean regMatch(String regularExpression, String a) throws UserException {
