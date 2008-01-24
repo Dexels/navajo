@@ -83,7 +83,6 @@ public class MailMap implements Mappable, com.dexels.navajo.server.enterprise.qu
         doc = inMessage;
         myNavajo = inMessage;
 		myAccess = access;
-        Util.debugLog("in MailMap load()");
     }
 
 
@@ -249,7 +248,6 @@ public class MailMap implements Mappable, com.dexels.navajo.server.enterprise.qu
 
     public void setRecipients(String s) {
 
-        Util.debugLog("in setRecipients()");
         java.util.StringTokenizer tok = new StringTokenizer(s, ",");
 
         this.recipientArray = new String[tok.countTokens()];
@@ -262,17 +260,14 @@ public class MailMap implements Mappable, com.dexels.navajo.server.enterprise.qu
     }
 
     public void setSender(String s) {
-        Util.debugLog("in setSender()");
         this.sender = s;
     }
 
     public void setMailServer(String s) {
-        Util.debugLog("in setMailServer()");
         this.mailServer = s;
     }
 
     public void setSubject(String s) {
-        Util.debugLog("in setSubject()");
         this.subject = s;
     }
 
@@ -281,18 +276,15 @@ public class MailMap implements Mappable, com.dexels.navajo.server.enterprise.qu
     }
 
     public void setXslFile(String s) {
-        Util.debugLog("in setXslFile()");
         this.xslFile = s;
     }
 
     public void setText(String s) {
         this.text += s;
-        Util.debugLog("text = " + text);
     }
 
     public void setBcc(String bcc) {
     this.bcc = bcc;
-    Util.debugLog("in setBcc()");
     java.util.StringTokenizer tok = new StringTokenizer(bcc, ",");
 
     this.bccArray = new String[tok.countTokens()];
@@ -305,7 +297,6 @@ public class MailMap implements Mappable, com.dexels.navajo.server.enterprise.qu
 
   public void setCc(String cc) {
     this.cc = cc;
-    Util.debugLog("in setCc()");
     java.util.StringTokenizer tok = new StringTokenizer(cc, ",");
 
     this.ccArray = new String[tok.countTokens()];

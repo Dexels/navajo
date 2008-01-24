@@ -147,7 +147,7 @@ public class ClieOpInvoiceMap implements Mappable {
 		//the 10 positions at the right are used.
 		long sumOfAccountNumbers = 0;
 		for(int i=0;i<posts.length;i++){
-			sumOfAccountNumbers += Integer.parseInt(posts[i].accountNumber);
+			sumOfAccountNumbers += Integer.parseInt(posts[i].beneficiaryAccountNumber);
 		}
 
 		sumOfAccountNumbers = sumOfAccountNumbers + ( (long) posts.length * Long.parseLong(accountNumber) );
@@ -199,7 +199,7 @@ public class ClieOpInvoiceMap implements Mappable {
           map.setAccountNumber("123456789");
           for(int i=0;i<size;i++){
             ClieOpPost post = new ClieOpPost();
-            post.setAccountNumber("876545677");
+            post.setBeneficiaryAccountNumber("876545677");
             post.setAmount("5676595"+i);
             posts[i] = post;
           }
