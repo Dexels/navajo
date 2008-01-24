@@ -21,7 +21,6 @@ public class Request {
     public HashMap properties = null;
 
     public Request(HashMap rb) {
-        Util.debugLog("In Request(ResourceBundle) constructor:" + rb.toString());
         properties = rb;
     }
 
@@ -38,8 +37,6 @@ public class Request {
         // Read the filename from koopsom properties
         String fileName = properties.get(service).toString();
 
-        //System.out.println("in getInitialNavajoMesssage(), trying to open = " + fileName);
-
         outMessage = NavajoFactory.getInstance().createNavajo(new FileInputStream(fileName));
 
         return outMessage;
@@ -48,8 +45,7 @@ public class Request {
     /**
      * Generate a simple "feedback" message with only 1 property: "resultaat".
      */
-    public Navajo getThanksMessage(String what)
-            throws IOException, NavajoException {
+    public Navajo getThanksMessage(String what) throws NavajoException {
         // Create Navajo out message
         Navajo outMessage = NavajoFactory.getInstance().createNavajo();
 
