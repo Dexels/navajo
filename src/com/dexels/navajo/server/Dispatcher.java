@@ -413,10 +413,10 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
 			}
 			
 			// Process piggyback data:
-			Set s = h.getPiggybackData();
+			Set<Map<?,?>> s = h.getPiggybackData();
 			if (s!=null ) {
-				for (Iterator iter = s.iterator(); iter.hasNext();) {
-					Map element = (Map) iter.next();
+				for (Iterator<Map<?,?>> iter = s.iterator(); iter.hasNext();) {
+					Map<?,?> element = iter.next();
 					access.addPiggybackData(element);
 				}
 			}
@@ -506,23 +506,6 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
 		  }
 	  }
   }
-
-/**
-   * Somewhat deprecated method to log timings. Use navajo store for proper statistics.
-   *
-   * @param access
-   * @param part
-   * @param total
-   * @throws SystemException
-   */
-//  private final void timeSpent(Access access, int part, long total) throws
-//      SystemException {
-//    if (debugOn) {
-//      logger.log(NavajoPriority.DEBUG,
-//                 "Time spent in " + part + ": " + (total / 1000.0) + " seconds");
-//    }
-//    navajoConfig.getRepository().logTiming(access, part, total);
-//  }
 
   private final void addParameters(Navajo doc, Parameters parms) throws
       NavajoException {
