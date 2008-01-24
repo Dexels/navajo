@@ -90,7 +90,7 @@ public class CacheController extends GenericThread implements NavajoListener {
 		// implement this. 
 	}
 
-	public void invoke(NavajoEvent ne) {
+	public void onNavajoEvent(NavajoEvent ne) {
 		if ( ne instanceof NavajoRequestEvent ) {
 			// Do stuff.
 		}

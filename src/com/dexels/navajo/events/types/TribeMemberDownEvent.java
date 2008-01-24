@@ -3,6 +3,12 @@ package com.dexels.navajo.events.types;
 import com.dexels.navajo.events.NavajoEvent;
 import com.dexels.navajo.server.enterprise.tribe.TribeMemberInterface;
 
+/**
+ * This event is used to communicate internally that a specific tribe member has passed away.
+ * 
+ * @author arjen
+ *
+ */
 public class TribeMemberDownEvent implements NavajoEvent {
 
 	private TribeMemberInterface tm;

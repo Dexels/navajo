@@ -7,6 +7,6 @@ public interface NavajoListener {
 	 * 
 	 * @param ne the specific NavajoEvent that occurred.
 	 */
-	public void invoke(NavajoEvent ne);
+	public void onNavajoEvent(NavajoEvent ne);
 	
 }

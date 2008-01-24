@@ -133,9 +133,11 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 			instance.startThread(instance);
 			
 			// Register for interesting events.
+			System.err.println("EVENT REGISTRY: " + NavajoEventRegistry.getInstance());
 			NavajoEventRegistry.getInstance().addListener(TribeMemberDownEvent.class, instance);
 			
-			AuditLog.log("Adapter Message Queue", "Started message queue process $Id$");
+			AuditLog.log(AuditLog.AUDIT_MESSAGE_QUEUEDADAPTERS, "Started message queue process $Id$");
+			
 			return instance;
 		}
 	}
@@ -305,7 +307,7 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 	 * This method is called by Navajo Event Mechanism.
 	 * 
 	 */
-	public void invoke(NavajoEvent ne) {
+	public void onNavajoEvent(NavajoEvent ne) {
 		
 		System.err.println("In RequestResponseQueue, event arrived: " + ne.getClass() );
 		if ( ne instanceof TribeMemberDownEvent ) {

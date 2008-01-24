@@ -30,6 +30,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.jgroups.Address;
 import org.jgroups.ChannelClosedException;
@@ -40,11 +42,8 @@ import org.jgroups.View;
 import org.jgroups.stack.IpAddress;
 import org.jgroups.util.Util;
 
-import com.dexels.navajo.adapter.queue.RequestResponseQueue;
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.events.NavajoEvent;
 import com.dexels.navajo.events.NavajoEventRegistry;
-import com.dexels.navajo.events.NavajoListener;
 import com.dexels.navajo.events.types.TribeMemberDownEvent;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
@@ -56,7 +55,6 @@ import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.server.enterprise.tribe.SmokeSignal;
 import com.dexels.navajo.server.enterprise.tribe.TribeManagerInterface;
 import com.dexels.navajo.util.AuditLog;
-import com.dexels.navajo.workflow.WorkFlowManager;
 
 /**
  * Roles of Chief Tribemanager:
@@ -100,11 +98,15 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 	
 	public TribeMember [] members = null;
 	
+	
 	public static TribeManager getInstance() {
-		
+	
 		if ( instance != null && !initializing ) {
 			return instance;
 		}
+		
+		// Switch of warning messages (to prevent WARNING messages when different JChannel names are used.
+		Logger.getLogger("org.jgroups.protocols").setLevel(Level.SEVERE);
 		
 		while ( initializing ) {
 			System.err.println(Dispatcher.getInstance().getNavajoConfig().getInstanceName() + ": Tribemanager is still initializing...");
@@ -133,7 +135,7 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 						instance.channel.setReceiver(instance);
 						// TODO:
 						// GET GROUP NAME TO SPECIFY SPECIFIC TRIBE GROUP..
-						instance.channel.connect("Navajo Tribe");
+						instance.channel.connect( Dispatcher.getInstance().getNavajoConfig().getInstanceGroup() );
 						instance.channel.getState(null, 1000);
 						AuditLog.log(AuditLog.AUDIT_MESSAGE_TRIBEMANAGER, "MyAddress = " + ((IpAddress) instance.channel.getLocalAddress()).getIpAddress() + ", port = " + 
 								((IpAddress) instance.channel.getLocalAddress()).getPort());
@@ -298,7 +300,7 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 	private final void deActivateMember(TribeMember ptm) {
 		System.err.println("DEACTIVATING MEMBER: " + ptm.getAddress() );
 		if ( myMembership.isChief() ) { // Emit TribeMemberDownEvent if I am the chief.
-			NavajoEventRegistry.getInstance().triggerEvent(new TribeMemberDownEvent(ptm));
+			NavajoEventRegistry.getInstance().publishEvent(new TribeMemberDownEvent(ptm));
 		}
 	}
 	

@@ -106,6 +106,7 @@ public final class NavajoConfig {
     private static volatile NavajoConfig instance = null;
 	private File jarFolder;
 	private String instanceName;
+	private String instanceGroup;
 	
 	private OperatingSystemMXBean myOs = null;
     
@@ -178,15 +179,24 @@ public final class NavajoConfig {
     			rootPath = externalRootPath;
     			
     		}
-//    		 Get the instance name.
-    		instanceName = ( body.getProperty("instance_name") != null ? 
-    				body.getProperty("instance_name").getValue() : null );
-    			
+            
+    		// Get the instance name.
+    		instanceName = ( body.getProperty("instance_name") != null ? body.getProperty("instance_name").getValue() : null );
+    		if ( instanceName == null ) {
+    			throw new IllegalArgumentException("instance_name in server.xml not found.");
+    		}
+    		
+    		// Get the instance group.
+    		instanceGroup = ( body.getProperty("instance_group") != null ? body.getProperty("instance_group").getValue() : null );
+    		if ( instanceGroup == null ) {
+    			throw new IllegalArgumentException("instance_group in server.xml not found.");
+    		}
     		
     		rootFile = new File(rootPath);
     		if (!rootFile.exists()) {
-				throw new IllegalArgumentException("Rootpath defined in server.xml not found.");
+				throw new IllegalArgumentException("Rootpath in server.xml not found.");
 			}
+    		
     		configPath = properDir(rootPath +
     				body.getProperty("paths/configuration").getValue());
     		adapterPath = properDir(rootPath +
@@ -922,6 +932,10 @@ public final class NavajoConfig {
 		} else {
 			return -1.0;
 		}
+	}
+
+	public String getInstanceGroup() {
+		return instanceGroup;
 	}
 	
 }

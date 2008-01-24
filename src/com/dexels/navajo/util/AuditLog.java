@@ -6,6 +6,9 @@
  */
 package com.dexels.navajo.util;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import com.dexels.navajo.server.Dispatcher;
 
 /**
@@ -25,13 +28,23 @@ public final class AuditLog {
 	public final static String AUDIT_MESSAGE_TRIBEMANAGER = "[AUDIT LOG] (TribeManager): ";
 	public final static String AUDIT_MESSAGE_SHAREDSTORE = "[AUDIT LOG] (SharedStore): ";
 	public final static String AUDIT_MESSAGE_MONITOR = "[AUDIT LOG] (Monitoring Agent): ";
+	public final static String AUDIT_MESSAGE_QUEUEDADAPTERS = "[AUDIT LOG] (Queued Adapters): ";
 
 	private static volatile String instanceName;
 	
-	public final static void log(String subsystem, String message) {
+	private final static Logger logger = Logger.getLogger("com.dexels.navajo.AuditLog");
+	
+	public final static void log(final String subsystem, final String message, Level level) {
 		if ( instanceName == null && Dispatcher.getInstance() != null ) {
 			instanceName = Dispatcher.getInstance().getNavajoConfig().getInstanceName();
 		}
-		System.err.println(instanceName + ":" + subsystem + message);
+		logger.log(level, instanceName + ":" + subsystem + message);
+	}
+	
+	public final static void log(final String subsystem, final String message) {
+		if ( instanceName == null && Dispatcher.getInstance() != null ) {
+			instanceName = Dispatcher.getInstance().getNavajoConfig().getInstanceName();
+		}
+		logger.info(instanceName + ":" + subsystem + message);
 	}
 }

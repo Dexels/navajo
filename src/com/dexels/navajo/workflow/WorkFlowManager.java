@@ -382,7 +382,7 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 	 * This method is called by Navajo Event Mechanism.
 	 * 
 	 */
-	public void invoke(NavajoEvent ne) {
+	public void onNavajoEvent(NavajoEvent ne) {
 		System.err.println("In WorkFlowManager, event arrived: " + ne.getClass() );
 		if ( ne instanceof TribeMemberDownEvent ) {
 			instance.takeOverPersistedWorkFlows( ((TribeMemberDownEvent) ne).getTm().getMemberName() );

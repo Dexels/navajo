@@ -1,6 +1,9 @@
 package com.dexels.navajo.server.enterprise.queue;
 
 import java.lang.reflect.Method;
+import java.util.logging.Level;
+
+import com.dexels.navajo.util.AuditLog;
 
 
 public class RequestResponseQueueFactory {
@@ -18,12 +21,14 @@ public class RequestResponseQueueFactory {
 				
 				if ( instance == null ) {
 					try {
+						
 						Class c = Class.forName("com.dexels.navajo.adapter.queue.RequestResponseQueue");
 						RequestResponseQueueInterface dummy = (RequestResponseQueueInterface) c.newInstance();
 						Method m = c.getMethod("getInstance", null);
 						instance = (RequestResponseQueueInterface) m.invoke(dummy, null);
 					} catch (Exception e) {
-						System.err.println("WARNING: Queueable adapters not available");
+						e.printStackTrace(System.err);
+						AuditLog.log(AuditLog.AUDIT_MESSAGE_DISPATCHER, "Queueable adapters not available", Level.WARNING);
 						instance = new DummyRequestResponseQueue();
 					}	
 				}

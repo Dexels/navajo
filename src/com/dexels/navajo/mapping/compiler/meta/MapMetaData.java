@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.util.HashMap;
@@ -123,9 +124,12 @@ public class MapMetaData {
 		MapMetaData mmd = MapMetaData.getInstance();
 		//System.err.println("is: " + mmd.isMetaScript("ProcessQueryMemberNewStyle", "/home/arjen/projecten/Navajo/", "."));
 		
-		String result = mmd.parse("/home/arjen/projecten/NavajoStandardEdition/scripts/InitTest.xml");
+		String result = mmd.parse("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts/matchform/ProcessGetOfficialData.xml.newstyle");
 		
-		System.err.println(result);
+		FileWriter fw = new FileWriter("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts/matchform/@.xml");
+	
+		fw.write(result);
+		fw.close();
 		
 	}
 }
