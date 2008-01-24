@@ -24,8 +24,8 @@ public class MaintainanceRequest extends Request {
         this.repository = repository;
     }
 
-    public void addServicesToMessage(Access access, Parameters parms, Navajo inMessage, boolean multiple) throws SystemException, UserException, java.sql.SQLException, java.io.IOException,
-            org.xml.sax.SAXException, NavajoException {
+    public void addServicesToMessage(Access access, Parameters parms, Navajo inMessage, boolean multiple) 
+         throws SystemException, UserException, java.io.IOException, NavajoException {
 
         Message services = Util.getMessage(inMessage, "services", true);
 
@@ -50,8 +50,8 @@ public class MaintainanceRequest extends Request {
     }
 
     public Navajo logonSend(Access access, Parameters parms, Navajo inMessage)
-            throws SystemException, UserException, java.sql.SQLException, java.io.IOException,
-            org.xml.sax.SAXException, NavajoException {
+            throws SystemException, UserException, NavajoException {
+    	
         Navajo outMessage = null;
 
         Message identification = Util.getMessage(inMessage, "identification", true);
