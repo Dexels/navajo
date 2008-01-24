@@ -11,13 +11,18 @@ package com.dexels.navajo.server;
 
 public class AuthorizationException extends Exception {
 
-  public static final String AUTHORIZATION_ERROR_MESSAGE = "AuthorizationError";
-  public static final String AUTHENTICATION_ERROR_MESSAGE = "AuthenticationError";
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2640288692823196154L;
+	
+	public static final String AUTHORIZATION_ERROR_MESSAGE = "AuthorizationError";
+	public static final String AUTHENTICATION_ERROR_MESSAGE = "AuthenticationError";
 
-  private String message;
-  private String user;
-  private boolean authenticationError;
-  private boolean authorizationError;
+	private String message;
+	private String user;
+	private boolean authenticationError;
+	private boolean authorizationError;
 
   public AuthorizationException(boolean authenticationError, boolean authorizationError, String user, String message) {
     this.message = message;

@@ -13,7 +13,12 @@ package com.dexels.navajo.server;
 
 public class UserException extends Exception {
 
-    public static final int MISSING_MESSAGE = 0x03;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 3312656813477111502L;
+	
+	public static final int MISSING_MESSAGE = 0x03;
     public static final int MISSING_PROPERTY = 0x04;
     public static final int MISSING_ATTRIBUTE = 0x05;
     public static final int MISSING_ATTRIBUTE_VALUE = 0x06;
@@ -31,8 +36,6 @@ public class UserException extends Exception {
     public String message = "";
     public Throwable t = null;
 
-    // public int level = 1;
-
     public UserException() {
         super();
     }
@@ -43,9 +46,6 @@ public class UserException extends Exception {
         this.message = message;
         this.t = t;
 
-        // Util.debugLog(0, this.message);
-        // Maybe write something to LOG.
-        // Send an e-mail if the error code is in the trigger list.
     }
 
 
@@ -54,9 +54,6 @@ public class UserException extends Exception {
         this.code = code;
         this.message = message;
 
-        // Util.debugLog(0, this.message);
-        // Maybe write something to LOG.
-        // Send an e-mail if the error code is in the trigger list.
     }
 
     public String getMessage() {

@@ -13,7 +13,12 @@ package com.dexels.navajo.server;
 
 public class SystemException extends Exception {
 
-    public static final int NAVAJO_UNAVAILABLE = 0x00;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 7429135215734290433L;
+	
+	public static final int NAVAJO_UNAVAILABLE = 0x00;
     public static final int INIT_ERROR = 0x02;
     public static final int PARSE_ERROR = 0x0F;
     public static final int IO_ERROR = 0x10;
@@ -46,10 +51,6 @@ public class SystemException extends Exception {
       this.code = code;
       this.message = message;
       this.t = t;
-
-      // Util.debugLog(0, this.message);
-      // Maybe write something to LOG.
-      // Send an e-mail if the error code is in the trigger list.
     }
 
     public String getMessage() {

@@ -29,17 +29,21 @@ import com.dexels.navajo.document.Navajo;
 
 public class ConditionErrorException extends Exception {
 
-  Navajo errors = null;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1597845802212113030L;
+	Navajo errors = null;
 
-  public ConditionErrorException(Navajo n) {
-    errors = n;
-  }
+	public ConditionErrorException(Navajo n) {
+		errors = n;
+	}
 
-  public Navajo getNavajo() {
-    return errors;
-  }
+	public Navajo getNavajo() {
+		return errors;
+	}
 
-  public String getMessage() {
-    return "Found condition errors";
-  }
+	public String getMessage() {
+		return "Found condition errors";
+	}
 }
