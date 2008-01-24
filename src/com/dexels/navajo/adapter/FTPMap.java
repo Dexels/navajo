@@ -24,8 +24,6 @@
  */
 package com.dexels.navajo.adapter;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.types.Binary;
@@ -216,18 +214,6 @@ public class FTPMap  implements Mappable, com.dexels.navajo.server.enterprise.qu
 
 	public Navajo getNavajo() {
 		return myNavajo;
-	}
-
-	public void persistBinaries() {
-		if ( getRequest() != null ) {
-			getRequest().getTempFileName(true);
-		}
-	}
-
-	public void removeBinaries() {
-		if ( getRequest() != null ) {
-			getRequest().removeRef();
-		}
 	}
 
 }
