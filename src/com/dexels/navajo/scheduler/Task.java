@@ -65,7 +65,8 @@ public class Task implements Runnable, TaskMXBean, TaskInterface, Serializable {
 	public String workflowId = null;
 	
     private Trigger myTrigger = null;
-    private boolean remove = false;
+    @SuppressWarnings("unused")
+	private boolean remove = false;
     private boolean inactive = false;
     private boolean isRunning = false;
     private boolean isFinished;
