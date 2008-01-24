@@ -413,10 +413,10 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
 			}
 			
 			// Process piggyback data:
-			Set<Map<?,?>> s = h.getPiggybackData();
+			Set<Map<String,String>> s = h.getPiggybackData();
 			if (s!=null ) {
-				for (Iterator<Map<?,?>> iter = s.iterator(); iter.hasNext();) {
-					Map<?,?> element = iter.next();
+				for (Iterator<Map<String,String>> iter = s.iterator(); iter.hasNext();) {
+					Map<String,String> element = iter.next();
 					access.addPiggybackData(element);
 				}
 			}
