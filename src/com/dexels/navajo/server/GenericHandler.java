@@ -176,8 +176,8 @@ public final class GenericHandler extends ServiceHandler {
             							compilerErrors = compiler.errors;
             						}
             						catch (Throwable t) {
-            							t.printStackTrace();
-            							throw new UserException(-1, "Could not compile Java file: " + sourceFileName + " (" + t.getMessage() + ")");
+            							//t.printStackTrace();
+            							System.err.println("Could not run-time compile Java file: " + sourceFileName + " (" + t.getMessage() + "). It may be compiled already");
             						}
             					}
             				}
