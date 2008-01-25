@@ -546,4 +546,14 @@ public class TestProperty extends TestCase {
 			Assert.assertEquals("78", testProp.toString());
 		
 	}
+	
+	public void testNullValues() {
+		try {
+			Property testProp = NavajoFactory.getInstance().createProperty(testDoc, "myprop", Property.STRING_PROPERTY, null, 89, "mydesc", Property.DIR_IN);
+			Assert.assertNull(testProp.getValue());
+			Assert.assertNull(testProp.getTypedValue());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }
