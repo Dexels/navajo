@@ -14,8 +14,8 @@ public class TestMessage extends TestCase {
   }
 
   protected void setUp() {
-//	System.setProperty("com.dexels.navajo.DocumentImplementation", "com.dexels.navajo.document.base.BaseNavajoFactoryImpl");
-	System.setProperty("com.dexels.navajo.DocumentImplementation", "com.dexels.navajo.document.jaxpimpl.NavajoFactoryImpl");
+	System.setProperty("com.dexels.navajo.DocumentImplementation", "com.dexels.navajo.document.base.BaseNavajoFactoryImpl");
+	//System.setProperty("com.dexels.navajo.DocumentImplementation", "com.dexels.navajo.document.jaxpimpl.NavajoFactoryImpl");
 	    navajodocumenttestfictureInst.setUp();
     testDoc = navajodocumenttestfictureInst.testDoc;
   }
