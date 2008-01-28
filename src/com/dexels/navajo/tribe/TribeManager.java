@@ -152,8 +152,8 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 				instance.broadcast(new MembershipSmokeSignal(myName, MembershipSmokeSignal.INTRODUCTION, candidate));
 				initializing = false;
 				semaphore.notify();
-				TribalStatusCollector.getInstance();
 			}
+			TribalStatusCollector.getInstance();
 		}
 		
 		
