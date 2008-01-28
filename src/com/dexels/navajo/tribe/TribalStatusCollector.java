@@ -54,18 +54,20 @@ public class TribalStatusCollector extends GenericThread implements TribalStatus
 			}
 
 			instance = new TribalStatusCollector();	
-			try {
-				JMXHelper.registerMXBean(instance, JMXHelper.NAVAJO_DOMAIN, id);
-			} catch (Throwable t) {
-				t.printStackTrace(System.err);
-			} 
 			instance.myId = id;
 			instance.setSleepTime(5000);
 			instance.startThread(instance);
 
 			AuditLog.log("Tribal Status Collector", "Started message queue process $Id$");
-			return instance;
+
 		}
+		
+		try {
+			JMXHelper.registerMXBean(instance, JMXHelper.NAVAJO_DOMAIN, id);
+		} catch (Throwable t) {
+			t.printStackTrace(System.err);
+		} 
+		return instance;
 	}
 	
 	public void worker() {

@@ -44,6 +44,7 @@ import com.dexels.navajo.server.jmx.SNMPManager;
 import com.dexels.navajo.util.AuditLog;
 import com.dexels.navajo.util.Util;
 import com.dexels.navajo.server.enterprise.integrity.WorkerInterface;
+import com.dexels.navajo.tribe.TribalStatusCollector;
 import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.loader.NavajoClassSupplier;
 import com.dexels.navajo.lockguard.Lock;
@@ -187,6 +188,8 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
 	  instance.navajoConfig.getTaskRunner();
 	  // Startup queued adapter.
 	  RequestResponseQueueFactory.getInstance();
+	  // Startup tribal status collector.
+	  TribeManagerFactory.startStatusCollector();
 
   }
   

@@ -32,4 +32,19 @@ public class TribeManagerFactory {
 		}
 		
 	}
+	
+	public static void startStatusCollector() {
+		if ( instance != null ) {
+			// Startup tribal status collector.
+			try {
+				Class<?> c = (Class<?>) Class.forName("com.dexels.navajo.tribe.TribalStatusCollector");
+				Object dummy = c.newInstance();
+				Method m = c.getMethod("getInstance", null);
+				m.invoke(dummy, null);
+			} catch (Exception e) {
+				e.printStackTrace(System.err);
+				System.err.println("WARNING: Tribe Status Collector not available");
+			}	
+		}
+	}
 }
