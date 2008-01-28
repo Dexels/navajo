@@ -76,6 +76,7 @@ public class Browser {
 	
 	public String getFormAction() {
 	
+		
 		NodeList l = tidiedContent.getElementsByTagName("form");
 		if ( l.getLength() > 0 ) {
 			Element e = (Element) l.item(0);
@@ -87,6 +88,7 @@ public class Browser {
 	}
 	
 	public HashMap getFormParameters() {
+		System.err.println("In getFormParameters(): " + formParameters);
 		return formParameters;
 	}
 	
@@ -104,8 +106,10 @@ public class Browser {
 			if ( l.item(i) instanceof Element ) {
 				Element e = (Element) l.item(i);
 				String parameter = e.getAttribute("name");
+				
 				String value = e.getAttribute("value");
 				String type = e.getAttribute("type");
+				System.err.println("parameter = " + parameter + ", value = " + value + ", type = " + type);
 				String navajotype;
 				if ( type.toLowerCase().equals("checkbox") ) {
 					navajotype = "boolean";
@@ -147,6 +151,7 @@ public class Browser {
 	}
 	private void setFormParameters() {
 		
+		System.err.println("In setFormParameters()");
 		formParameters = new HashMap(); 
 		NodeList l = tidiedContent.getElementsByTagName("input");
 		for (int i = 0; i < l.getLength(); i++ ) {
@@ -154,6 +159,7 @@ public class Browser {
 				Element e = (Element) l.item(i);
 				String parameter = e.getAttribute("name");
 				String value = e.getAttribute("value");
+				System.err.println("name = " + parameter);
 				formParameters.put(parameter, value);
 			}
 		}
@@ -423,7 +429,7 @@ public class Browser {
 			setXHTML();
 			setFormParameters();
 		} catch (Exception e) {
-			//e.printStackTrace(System.err);
+			e.printStackTrace(System.err);
 		}
 		
 		return form.toString();
@@ -466,7 +472,19 @@ public class Browser {
 //		XMLElement xe = new CaseSensitiveXMLElement();
 //		xe.parseString(tidiedStringContent);
 	
-		tidiedContent = XMLDocumentUtils.createDocument(new ByteArrayInputStream(tidiedStringContent.getBytes()), false);
+		
+		
+		try {
+			int indx = tidiedStringContent.indexOf("<html");
+			if ( indx == -1) {
+				indx = tidiedStringContent.indexOf("<HTML");
+			}
+			tidiedStringContent = tidiedStringContent.substring(indx);
+			tidiedContent = XMLDocumentUtils.createDocument(new ByteArrayInputStream(tidiedStringContent.getBytes()), false);
+		} catch (NavajoException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
 		
 	}
 	
