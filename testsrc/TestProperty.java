@@ -556,4 +556,13 @@ public class TestProperty extends TestCase {
 			e.printStackTrace();
 		}
 	}
+	
+	public void testSetValueWithString() throws NavajoException {
+	
+			Property p = NavajoFactory.getInstance().createProperty(testDoc, "myprop", Property.BOOLEAN_PROPERTY, "false", 89, "mydesc", Property.DIR_IN);
+			Assert.assertEquals(Property.BOOLEAN_PROPERTY, p.getType());
+			p.setValue("true");
+			Assert.assertEquals(Property.BOOLEAN_PROPERTY, p.getType());
+	
+	}
 }

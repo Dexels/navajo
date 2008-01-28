@@ -264,7 +264,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 			return;
 		}
 		if (o instanceof String) {
-//			setType(Property.STRING_PROPERTY);
+			setType(Property.STRING_PROPERTY);
 			setValue((String) o);
 			return;
 		}
@@ -755,9 +755,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 				e.printStackTrace();
 			}
 			return;
-		} else {
-			setType(Property.STRING_PROPERTY);
-		}
+		} 
 		myBinary = null;
 		setCheckedValue(value);
 		firePropertyChanged("value", old, value);
