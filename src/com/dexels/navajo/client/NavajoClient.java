@@ -11,17 +11,16 @@ package com.dexels.navajo.client;
 import java.io.*;
 import java.net.*;
 import java.security.*;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.text.*;
 import java.util.*;
+import java.util.Map.*;
+
 import javax.net.ssl.*;
 
 import com.dexels.navajo.client.serverasync.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.types.*;
-import com.jcraft.jzlib.JZlib;
-import com.jcraft.jzlib.ZInputStream;
-import com.jcraft.jzlib.ZOutputStream;
+import com.jcraft.jzlib.*;
 
 class MyX509TrustManager implements X509TrustManager {
   public java.security.cert.X509Certificate[] getAcceptedIssuers() {
@@ -51,17 +50,17 @@ public class NavajoClient implements ClientInterface {
   
   private final static Random randomize = new Random(System.currentTimeMillis());
   // Threadsafe collections:
-  private Map globalMessages = new HashMap();
-  private Map serviceCache = new HashMap();
+  private Map<String,Message> globalMessages = new HashMap<String,Message>();
+  private Map<String,Navajo> serviceCache = new HashMap<String,Navajo>();
 
   private Object serviceCacheMutex = new Object();
   
-  private Map cachedServiceNameMap = new HashMap();
-  private Map asyncRunnerMap = Collections.synchronizedMap(new HashMap());
-  private Map propertyMap = Collections.synchronizedMap(new HashMap());
-  private List myActivityListeners = Collections.synchronizedList(new ArrayList());
+  private Set<String> cachedServiceNameMap = new HashSet<String>();
+  private Map<String,ServerAsyncRunner> asyncRunnerMap = Collections.synchronizedMap(new HashMap<String,ServerAsyncRunner>());
+  private Map<String,Object> propertyMap = Collections.synchronizedMap(new HashMap<String,Object>());
+  private List<ActivityListener> myActivityListeners = Collections.synchronizedList(new ArrayList<ActivityListener>());
   
-  private final List broadcastListeners = Collections.synchronizedList(new ArrayList());
+  private final List<BroadcastListener> broadcastListeners = Collections.synchronizedList(new ArrayList<BroadcastListener>());
   
   //private long timeStamp = 0;
   // Standard option: use HTTP protocol.
@@ -81,15 +80,14 @@ public class NavajoClient implements ClientInterface {
   //private static int instances = 0;
   
   // Warning: Not thread safe!
-  private final HashMap storedNavajoComparisonMap = new HashMap();
-  private final HashMap comparedServicesQueryToUpdateMap = new HashMap();
-  private final HashMap comparedServicesUpdateToQueryMap = new HashMap();
-
-  private final Set piggyBackData = new HashSet();
+  private final HashMap<String,Navajo> storedNavajoComparisonMap = new HashMap<String,Navajo>();
+  private final HashMap<String,String> comparedServicesQueryToUpdateMap = new HashMap<String,String>();
+  private final HashMap<String,String> comparedServicesUpdateToQueryMap = new HashMap<String,String>();
+  private final Set<Map<String,String>> piggyBackData = new HashSet<Map<String,String>>();
   private final String mySessionToken;
-  
-  private final HashMap disabledServers = new HashMap();
-	private long lastActivity;
+  private final Map<String,Long> disabledServers = new HashMap<String,Long>();
+
+  private long lastActivity;
 	private int keepAliveDelay;
 	private int globalRetryCounter = 0;
 	private String localeCode = null;
@@ -118,7 +116,7 @@ public class NavajoClient implements ClientInterface {
 
   private final void checkForComparedServices(final String queryService, final Navajo n) {
     try {
-      String s = (String) comparedServicesQueryToUpdateMap.get(queryService);
+      String s = comparedServicesQueryToUpdateMap.get(queryService);
       if (s != null) {
         //System.err.println("Storing Navajo object for service: " + queryService);
         storedNavajoComparisonMap.put(s, n.copy());
@@ -131,13 +129,13 @@ public class NavajoClient implements ClientInterface {
 
   private final boolean hasComparedServiceChanged(final String updateService, final Navajo n) {
     try {
-      Navajo orig = (Navajo) storedNavajoComparisonMap.get(updateService);
+      Navajo orig = storedNavajoComparisonMap.get(updateService);
       if (orig != null) {
         Navajo clone = n.copy();
-        Iterator entries = globalMessages.entrySet().iterator();
+        Iterator<Entry<String,Message>> entries = globalMessages.entrySet().iterator();
         while (entries.hasNext()) {
-          Map.Entry entry = (Map.Entry) entries.next();
-          Message global = (Message) entry.getValue();
+          Map.Entry<String,Message> entry = entries.next();
+          Message global = entry.getValue();
           try {
             clone.removeMessage(global.getName());
           }
@@ -286,7 +284,7 @@ public class NavajoClient implements ClientInterface {
 	 *            String
 	 */
 	public final void addCachedService(String service) {
-		cachedServiceNameMap.put(service, service);
+		cachedServiceNameMap.add(service);
 	}
 
 	/**
@@ -354,7 +352,7 @@ public class NavajoClient implements ClientInterface {
    * @return
    */
   public final Message getGlobalMessage(String name) {
-	  return (Message)globalMessages.get(name);
+	  return globalMessages.get(name);
   }
   
   /**
@@ -490,7 +488,7 @@ public class NavajoClient implements ClientInterface {
 //      url = new URL("http://" + name);
 //    }
     //System.err.println("in doTransaction: opening url: " + url.toString());
-    URLConnection con = null;
+	  HttpURLConnection con = null;
     if (sslFactory == null) {
       con = (HttpURLConnection) url.openConnection();
     }
@@ -541,7 +539,7 @@ public class NavajoClient implements ClientInterface {
 			  ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			  copyResource(bos, es);
 			  bos.close();
-			  String error = new String(bos.toByteArray());
+//			  String error = new String(bos.toByteArray());
 			  System.err.println("Responsecode: " + respCode);
 			  //System.err.println("Responsemessage: " + myCon.getResponseMessage());
 			  //System.err.println("Got error from server: " + error);
@@ -563,7 +561,7 @@ public class NavajoClient implements ClientInterface {
    * @param useCompression boolean
    */
   
-  protected Navajo doTransaction(String name, Navajo d, boolean useCompression, boolean forcePreparseProxy) throws IOException, ClientException, NavajoException, javax.net.ssl.SSLHandshakeException {
+  protected Navajo doTransaction(String name, Navajo d, boolean useCompression, boolean forcePreparseProxy) throws IOException, NavajoException, javax.net.ssl.SSLHandshakeException {
     URL url;
     //useCompression = false;
     
@@ -578,7 +576,7 @@ public class NavajoClient implements ClientInterface {
     HttpURLConnection con = null;
     if (sslFactory == null) {
       con = (HttpURLConnection) url.openConnection();
-      ( (HttpURLConnection) con).setRequestMethod("POST");
+      con.setRequestMethod("POST");
     }
     else {
       HttpsURLConnection urlcon = (HttpsURLConnection) url.openConnection();
@@ -765,11 +763,11 @@ public class NavajoClient implements ClientInterface {
 
     String cacheKey = "";
 
-    if (cachedServiceNameMap.get(method) != null) {
+    if (cachedServiceNameMap.contains(method)) {
       cacheKey = method + out.persistenceKey();
       if (serviceCache.get(cacheKey) != null) {
         //System.err.println("---------------------------------------------> Returning cached WS");
-        Navajo cached = (Navajo) serviceCache.get(cacheKey);
+        Navajo cached = serviceCache.get(cacheKey);
         return cached.copy();
       }
     }
@@ -790,10 +788,10 @@ public class NavajoClient implements ClientInterface {
     header.setRequestId( Guid.create() );
     header.setHeaderAttribute("clientToken", getSessionToken());
     // ========= Adding globalMessages
-    Iterator entries = globalMessages.entrySet().iterator();
+    Iterator<Entry<String,Message>> entries = globalMessages.entrySet().iterator();
     while (entries.hasNext()) {
-      Map.Entry entry = (Map.Entry) entries.next();
-      Message global = (Message) entry.getValue();
+    	Entry<String,Message> entry = entries.next();
+      Message global = entry.getValue();
       try {
         out.addMessage(global);
       }
@@ -807,9 +805,7 @@ public class NavajoClient implements ClientInterface {
     try {
 
       if (protocol == HTTP_PROTOCOL) {
-        Header h = out.getHeader();
-    	 if (out.getHeader()==null) {
-		} else {
+         if (out.getHeader()!=null) {
 			processPiggybackData(out.getHeader());
 		}
     
@@ -899,8 +895,8 @@ public class NavajoClient implements ClientInterface {
                  	totalTime = Long.parseLong(tot);
                  	n.getHeader().setHeaderAttribute("transferTime",""+(clientTime-totalTime));
  				} 
-                 Map headerAttributes = n.getHeader().getHeaderAttributes();
-                 Map pbd = new HashMap(headerAttributes);
+                 Map<String,String> headerAttributes = n.getHeader().getHeaderAttributes();
+                 Map<String,String> pbd = new HashMap<String,String>(headerAttributes);
                  pbd.put("type","performanceStats");
                  pbd.put("service",method);
                  synchronized (piggyBackData) {
@@ -919,7 +915,7 @@ public class NavajoClient implements ClientInterface {
         }
         fireActivityChanged(false, method, getQueueSize(), getActiveThreads(), 0);
 
-        if (cachedServiceNameMap.get(method) != null) {
+        if (cachedServiceNameMap.contains(method)) {
           serviceCache.put(cacheKey, n);
         }
         checkForComparedServices(method, n);
@@ -956,16 +952,16 @@ public class NavajoClient implements ClientInterface {
 			// no headers, don't know why. So no broadcasting.
 		  return;
 	  }
-	  Set s = h.getPiggybackData();
+	  Set<Map<String, String>> s = h.getPiggybackData();
 	  if (s==null) {
 		return;
 	}
-	  for (Iterator iter = s.iterator(); iter.hasNext();) {
-		Map element = (Map) iter.next();
+	  for (Iterator<Map<String, String>> iter = s.iterator(); iter.hasNext();) {
+		Map<String, String> element = iter.next();
 		if ("broadcast".equals(element.get("type"))) {
-			String message = (String)element.get("message");
+			String message = element.get("message");
 			for (int i = 0; i < broadcastListeners.size(); i++) {
-				      BroadcastListener current = (BroadcastListener) broadcastListeners.get(i);
+				      BroadcastListener current = broadcastListeners.get(i);
 				      current.broadcast(message,element);
 			   }
 		}
@@ -983,8 +979,8 @@ public class NavajoClient implements ClientInterface {
 	  synchronized (piggyBackData) {
 		  // Clear previous piggyback data.
 		  header.clearPiggybackData();
-		  for (Iterator iter = piggyBackData.iterator(); iter.hasNext();) {
-			  Map element = (Map) iter.next();
+		  for (Iterator<Map<String,String>> iter = piggyBackData.iterator(); iter.hasNext();) {
+			  Map<String,String> element = iter.next();
 			  header.addPiggyBackData(element);
 		  }
 		  // remove piggyback data.
@@ -1402,7 +1398,7 @@ private final Navajo retryTransaction(String server, Navajo out, boolean useComp
    */
   public void fireActivityChanged(boolean b, String service, int queueSize, int activeThreads, long millis) {
     for (int i = 0; i < myActivityListeners.size(); i++) {
-      ActivityListener current = (ActivityListener) myActivityListeners.get(i);
+      ActivityListener current = myActivityListeners.get(i);
       current.setWaiting(b, service, queueSize, activeThreads, millis);
     }
   }
@@ -1457,7 +1453,7 @@ private final Navajo retryTransaction(String server, Navajo out, boolean useComp
   }
 
   private final ServerAsyncRunner getAsyncRunner(String id) {
-    return (ServerAsyncRunner) asyncRunnerMap.get(id);
+    return asyncRunnerMap.get(id);
   }
 
   public int getQueueSize() {
@@ -1474,9 +1470,9 @@ private final Navajo retryTransaction(String server, Navajo out, boolean useComp
   public final void finalizeAsyncRunners() {
     try {
       System.err.println("------------------------------------------>> Finalizing asyncrunners....");
-      Iterator it = asyncRunnerMap.keySet().iterator();
+      Iterator<String> it = asyncRunnerMap.keySet().iterator();
       while (it.hasNext()) {
-        String id = (String) it.next();
+        String id = it.next();
         ServerAsyncRunner sar = getAsyncRunner(id);
         sar.killServerAsyncSend();
       }
@@ -1549,8 +1545,7 @@ private final Navajo retryTransaction(String server, Navajo out, boolean useComp
   }
 
 public void destroy() {
-	// TODO Auto-generated method stub
-	
+		
 }
 
 private final void ping() {
@@ -1656,7 +1651,7 @@ public final void switchServer(int startIndex, boolean forceChange) {
 	//System.err.println("Current Server now: "+nextServer);
 
 	if (disabledServers.containsKey(nextServer)) {
-		Long timeout = (Long)disabledServers.get(nextServer);
+		Long timeout = disabledServers.get(nextServer);
 		long t = timeout.longValue();
 		if (t+serverDisableTimeout<System.currentTimeMillis()) {
 			// The disabling time has passed.
@@ -1714,7 +1709,6 @@ public final void switchServer(int startIndex, boolean forceChange) {
 					try {
 						Thread.sleep(5000);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					while (keepAliveDelay>0) {

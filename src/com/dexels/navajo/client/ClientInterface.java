@@ -8,12 +8,11 @@ package com.dexels.navajo.client;
  * @author not attributable
  * @version 1.0
  */
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.types.Binary;
+import java.io.*;
+import java.net.*;
 
-import java.net.URL;
-import java.io.InputStream;
-import java.util.*;
+import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.types.*;
 
 /**
  * See NavajoClient for an explanation of all methods
@@ -62,7 +61,8 @@ public interface ClientInterface {
  * @param config
  * @throws ClientException
  */
-  public void init(URL config) throws ClientException;
+  @Deprecated
+public void init(URL config) throws ClientException;
 
   /**
    * For direct clients. 

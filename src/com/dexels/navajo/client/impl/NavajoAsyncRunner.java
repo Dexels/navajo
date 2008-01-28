@@ -1,7 +1,8 @@
 package com.dexels.navajo.client.impl;
 
 import com.dexels.navajo.document.*;
-import java.util.ArrayList;
+import java.util.*;
+
 import com.dexels.navajo.client.*;
 
 //import com.dexels.sportlink.client.swing.*;
@@ -11,7 +12,7 @@ public class NavajoAsyncRunner
 
   private ClientInterface myClient;
   private boolean alive = true;
-  private ArrayList pending = new ArrayList();
+  private List<QueueEntry> pending = new ArrayList<QueueEntry>();
   public NavajoAsyncRunner(ClientInterface c) {
     myClient = c;
   }
@@ -45,13 +46,6 @@ public class NavajoAsyncRunner
                                         String id) {
     try {
       Navajo reply = myClient.doSimpleSend(n, method);
-//      System.err.println("RECEIVING NAVAJO: ");
-//      try {
-//        n.write(System.err);
-//      }
-//      catch (NavajoException ex1) {
-//        ex1.printStackTrace();
-//      }
       res.receive(reply, method, id);
     }
     catch (ClientException ex) {
@@ -98,7 +92,7 @@ public class NavajoAsyncRunner
   }
 
   private synchronized QueueEntry serveQueueEntry() {
-    QueueEntry qe = (QueueEntry) pending.get(0);
+    QueueEntry qe = pending.get(0);
     pending.remove(0);
     return qe;
   }

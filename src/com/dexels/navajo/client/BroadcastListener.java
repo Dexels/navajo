@@ -1,7 +1,7 @@
 package com.dexels.navajo.client;
 
-import java.util.Map;
+import java.util.*;
 
 public interface BroadcastListener {
-	public void broadcast(String message, Map params);
+	public void broadcast(String message, Map<String,String> params);
 }

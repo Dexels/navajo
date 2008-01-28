@@ -1,6 +1,5 @@
 package com.dexels.navajo.client;
 
-import java.net.URL;
 import java.util.*;
 
 /**
@@ -10,7 +9,7 @@ import java.util.*;
 public class NavajoClientFactory {
   private static ClientInterface myClient = null;
 
-  private static final Map clientMap = new HashMap();
+  private static final Map<String,ClientInterface> clientMap = new HashMap<String,ClientInterface>();
 
   /**
    * Create a Client with a given class and configuration
@@ -21,7 +20,7 @@ public class NavajoClientFactory {
   public synchronized static ClientInterface createClient(String className, String rootPath, String serverXmlRelativePath) {
     ClientInterface client = null;
     try {
-      Class clientClass = Class.forName(className);
+      Class<?> clientClass =  Class.forName(className);
       client = (ClientInterface) clientClass.newInstance();
     }
     catch (ClassNotFoundException ex) {
@@ -140,7 +139,7 @@ public class NavajoClientFactory {
    * @return ClientInterface
    */
   public static ClientInterface getClientByName(String name) {
-    ClientInterface ci = (ClientInterface)clientMap.get(name);
+    ClientInterface ci = clientMap.get(name);
     return ci;
   }
 

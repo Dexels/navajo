@@ -215,7 +215,7 @@ public class ServerAsyncRunner
    * Kill the ServerAsyncRunner
    * @throws ClientException
    */
-  public synchronized void killServerAsyncSend() throws ClientException {
+  public synchronized void killServerAsyncSend() {
     kill = true;
     interrupt();
   }
@@ -224,14 +224,14 @@ public class ServerAsyncRunner
    * Not implemented
    * @throws ClientException
    */
-  public synchronized void pauseServerAsyncSend() throws ClientException {
+  public synchronized void pauseServerAsyncSend()  {
   }
 
   /**
    * Not implemented
    * @throws ClientException
    */
-  public synchronized void resumeServerAsyncSend() throws ClientException {
+  public synchronized void resumeServerAsyncSend()  {
   }
 
 }

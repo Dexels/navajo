@@ -12,9 +12,6 @@ import java.util.*;
 
 import com.dexels.navajo.client.queueimpl.*;
 import com.dexels.navajo.document.*;
-import com.jcraft.jzlib.JZlib;
-import com.jcraft.jzlib.ZInputStream;
-import com.jcraft.jzlib.ZOutputStream;
 
 /**
  * @author Administrator
@@ -34,7 +31,7 @@ public class NavajoSocketClient extends ClientQueueImpl {
         inoutCount--;
     }
 
-    protected Navajo doTransaction(String name, Navajo d, boolean useCompression, boolean forcePreparseProxy) throws IOException, ClientException, NavajoException, javax.net.ssl.SSLHandshakeException {
+    protected Navajo doTransaction(String name, Navajo d, boolean useCompression, boolean forcePreparseProxy) throws IOException, NavajoException, javax.net.ssl.SSLHandshakeException {
         Socket connection = null;
          if (connection==null) {
             connection = initialize();
@@ -51,10 +48,9 @@ public class NavajoSocketClient extends ClientQueueImpl {
         Navajo n = null;
         if ( bi != null ) {
         	n = NavajoFactory.getInstance().createNavajo(bi);
+            bi.close();
         }
-        bi.close();
          return n;
-//        return null;
     }
     
     
@@ -88,7 +84,7 @@ public class NavajoSocketClient extends ClientQueueImpl {
 //    }
     
 
-    public InputStream doTransaction(Socket con, String name, Navajo d, boolean useCompression) throws IOException, ClientException, NavajoException {
+    public InputStream doTransaction(Socket con, String name, Navajo d, boolean useCompression) throws IOException, NavajoException {
     	   // Send message
     
     	BufferedWriter os = null;
@@ -179,7 +175,7 @@ public class NavajoSocketClient extends ClientQueueImpl {
     }
 
     private static void bombardSimultaneous(final String script, int count) {
-        final List l = Collections.synchronizedList(new ArrayList());
+        final List<Thread> l = Collections.synchronizedList(new ArrayList<Thread>());
         for (int i = 0; i < count; i++) {
             Thread t = new Thread(tg,"AAP#"+i) {
                 public void run() {
@@ -204,7 +200,7 @@ public class NavajoSocketClient extends ClientQueueImpl {
         }
         long time = System.currentTimeMillis();
         for (int i = l.size()-1; i >=0; i--) {
-            Thread t = (Thread)l.get(i);
+            Thread t = l.get(i);
             t.start();
         }
         int last = Integer.MAX_VALUE;
@@ -219,7 +215,7 @@ public class NavajoSocketClient extends ClientQueueImpl {
                 System.err.println("No change! beware!");
                 System.err.println("InoutCount: "+inoutCount);
                if (l.size()>0) {
-                    Thread t = (Thread)l.get(0);
+                    Thread t = l.get(0);
                     System.err.println("Thread is alive: "+ t.isAlive()+" isInter: "+t.isInterrupted()+" val: "+t.toString());
                 }
             }

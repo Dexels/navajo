@@ -48,14 +48,13 @@ public class Version extends dexels.Version {
 	public static final int PATCHLEVEL = 4;
 	public static final String VENDOR = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Client";
-	public static final String RELEASEDATE = "2006-10-20";
 	
 	//Included packages.
 	String [] includes = {"navajodocument.Version"};
 	
 	public Version() {
 		addIncludes(includes);
-		setReleaseDate(RELEASEDATE);
+		setReleaseDate("2006-10-20");
 	}
 	
 	public int getMajor() {
@@ -81,7 +80,7 @@ public class Version extends dexels.Version {
 	public static void main(String [] args) {
 		Version v = new Version();
 		System.err.println(v.toString());
-		dexels.Version [] d = (dexels.Version [] ) v.getIncludePackages();
+		dexels.Version [] d = v.getIncludePackages();
 		for (int i = 0; i < d.length; i++) {
 			System.err.println("\t"+d[i].toString());
 		}

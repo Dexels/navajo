@@ -15,9 +15,9 @@ public final class ThreadPool {
 
   private final static int THREAD_COUNT = 5;
 
-  private final List myWaitingQueue = Collections.synchronizedList(new ArrayList());
-  private Set activeThreadSet = Collections.synchronizedSet(new HashSet());
-  private List myThreadCollection = Collections.synchronizedList(new ArrayList());
+  private final List<Runnable> myWaitingQueue = Collections.synchronizedList(new ArrayList<Runnable>());
+  private Set<Thread> activeThreadSet = Collections.synchronizedSet(new HashSet<Thread>());
+  private List<PoolThread> myThreadCollection = Collections.synchronizedList(new ArrayList<PoolThread>());
   private final ClientQueueImpl client;
   private long startTime = 0;
   private
@@ -36,7 +36,7 @@ public final class ThreadPool {
     if (myWaitingQueue.size() == 0) {
       return null;
     }
-    Runnable te = (Runnable) myWaitingQueue.get(0);
+    Runnable te = myWaitingQueue.get(0);
     myWaitingQueue.remove(0);
     return te;
   }
@@ -84,8 +84,8 @@ public final class ThreadPool {
   }
 
   public void destroy() {
-	  for (Iterator iter = myThreadCollection.iterator(); iter.hasNext();) {
-		PoolThread element = (PoolThread) iter.next();
+	  for (Iterator<PoolThread> iter = myThreadCollection.iterator(); iter.hasNext();) {
+		PoolThread element = iter.next();
 		element.stopPoolThread();
 	}
   }

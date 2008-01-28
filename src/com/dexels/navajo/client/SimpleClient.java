@@ -2,6 +2,7 @@ package com.dexels.navajo.client;
 
 import java.io.*;
 import java.net.*;
+
 import com.dexels.navajo.document.*;
 
 public class SimpleClient extends Thread {
