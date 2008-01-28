@@ -122,19 +122,27 @@ public class TaskMap implements Mappable {
 	}
 
 	public Date getFinishedTime() {
-		return (Date) finishedTime.clone();
+		if ( finishedTime != null ) {
+			return (Date) finishedTime.clone();
+		} else {
+			return null;
+		}
 	}
 
 	public void setFinishedTime(Date finishedTime) {
-		this.finishedTime = (Date) finishedTime.clone();
+		this.finishedTime = ( finishedTime != null ? (Date) finishedTime.clone() : null );
 	}
 
 	public Date getStartTime() {
-		return (Date) startTime.clone();
+		if ( startTime != null ) {
+			return (Date) startTime.clone();
+		} else {
+			return null;
+		}
 	}
 
 	public void setStartTime(Date startTime) {
-		this.startTime = (Date) startTime.clone();
+		this.startTime = ( startTime != null ? (Date) startTime.clone() : null );
 	}
 
 	public String getErrorMessage() {

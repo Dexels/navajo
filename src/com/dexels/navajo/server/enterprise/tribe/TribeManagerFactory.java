@@ -17,7 +17,7 @@ public class TribeManagerFactory {
 				
 				if ( instance == null ) {
 					try {
-						Class c = Class.forName("com.dexels.navajo.tribe.TribeManager");
+						Class<? extends TribeManagerInterface> c = (Class<? extends TribeManagerInterface>) Class.forName("com.dexels.navajo.tribe.TribeManager");
 						TribeManagerInterface dummy = (TribeManagerInterface) c.newInstance();
 						Method m = c.getMethod("getInstance", null);
 						instance = (TribeManagerInterface) m.invoke(dummy, null);

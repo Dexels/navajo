@@ -192,11 +192,19 @@ public final class State implements Serializable, Mappable {
 	}
 
 	public Date getEntryDate() {
-		return (Date) entryDate.clone();
+		if ( entryDate != null ) {
+			return (Date) entryDate.clone();
+		} else {
+			return null;
+		}
 	}
 
 	public Date getLeaveDate() {
-		return (Date) leaveDate.clone();
+		if ( leaveDate != null ) {
+			return (Date) leaveDate.clone();
+		} else {
+			return null;
+		}
 	}
 
 	public final boolean getKilled() {
