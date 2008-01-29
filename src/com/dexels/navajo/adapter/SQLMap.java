@@ -39,6 +39,8 @@ import java.io.OutputStreamWriter;
 import java.io.StringReader;
 import java.util.Map;
 import java.util.Collections;
+import java.util.logging.Level;
+
 import com.dexels.navajo.document.types.Memo;
 
 /**
@@ -187,7 +189,6 @@ public class SQLMap implements Mappable, LazyArray {
 
   private int connectionId = -1;
 
-  protected static NavajoLogger logger = NavajoConfig.getNavajoLogger(SQLMap.class);
   protected NavajoConfig navajoConfig = null;
 
   // handling batch mode, multiple SQL statements
@@ -274,8 +275,7 @@ public class SQLMap implements Mappable, LazyArray {
   
   public synchronized void setDeleteDatasource(String datasourceName) throws
       MappableException, UserException {
-    logger.log(NavajoPriority.INFO,
-               "SQLMap setDeleteDatasource(" + datasourceName + ") called");
+   
     if (fixedBroker != null) {
       fixedBroker.destroy(datasourceName, this.username);
     }
@@ -343,18 +343,18 @@ public class SQLMap implements Mappable, LazyArray {
 		  }
 		  catch (NavajoException ne) {
 			  ne.printStackTrace(System.err);
-			  logger.log(NavajoPriority.ERROR, ne.getMessage(), ne);
+			  AuditLog.log("SQLMap", ne.getMessage(), Level.SEVERE);
 			  throw new MappableException(ne.getMessage());
 		  }
 		  catch (java.io.IOException fnfe) {
 			  fnfe.printStackTrace(System.err);
-			  logger.log(NavajoPriority.ERROR, fnfe.getMessage(), fnfe);
+			  AuditLog.log("SQLMap", fnfe.getMessage(), Level.SEVERE);
 			  throw new MappableException(
 					  "Could not load configuration file for SQLMap object: " +
 					  fnfe.getMessage());
 		  } catch (Throwable t) {
 			  t.printStackTrace(System.err);
-			  logger.log(NavajoPriority.ERROR, t.getMessage(), t);
+			  AuditLog.log("SQLMap", t.getMessage(), Level.SEVERE);
 			  throw new MappableException(t.getMessage());
 		  }
 	  //}
@@ -432,8 +432,8 @@ public class SQLMap implements Mappable, LazyArray {
       }
     }
     catch (SQLException sqle) {
-      logger.log(NavajoPriority.ERROR, sqle.getMessage(), sqle);
-      sqle.printStackTrace();
+    	AuditLog.log("SQLMap", sqle.getMessage(), Level.SEVERE);
+    	sqle.printStackTrace();
     }
   }
 
@@ -464,7 +464,7 @@ public class SQLMap implements Mappable, LazyArray {
 				  //System.err.println("SQLMAP, SETTING AUTOCOMMIT TO TRUE AGAIN");
 			  }
 			  catch (SQLException sqle) {
-				  logger.log(NavajoPriority.ERROR, sqle.getMessage(), sqle);
+				  AuditLog.log("SQLMap", sqle.getMessage(), Level.SEVERE);
 				  throw new UserException( -1, sqle.getMessage(), sqle);
 			  }
 			  if (transactionContextMap != null) {
@@ -498,7 +498,7 @@ public class SQLMap implements Mappable, LazyArray {
 		  }
 	  }
 	  catch (SQLException sqle) {
-		  logger.log(NavajoPriority.DEBUG, sqle.getMessage(), sqle);
+		  AuditLog.log("SQLMap", sqle.getMessage(), Level.SEVERE);
 		  throw new UserException( -1, sqle.getMessage(), sqle);
 	  }
 	  overideAutoCommit = true;
@@ -519,7 +519,7 @@ public class SQLMap implements Mappable, LazyArray {
 
     }
     if (con == null) {
-      logger.log(NavajoPriority.ERROR, "Invalid transaction context: " + i);
+    	AuditLog.log("SQLMap", "Invalid transaction context: " + i, Level.SEVERE);
       throw new UserException( -1, "Invalid transaction context set");
     }
   }
@@ -740,7 +740,7 @@ public class SQLMap implements Mappable, LazyArray {
     }
     catch (Exception e) {
       e.printStackTrace();
-      logger.log(NavajoPriority.ERROR, e.getMessage(), e);
+      AuditLog.log("SQLMap", e.getMessage(), Level.SEVERE);
       throw new UserException( -1,
                               "Could not create connectiobroker: " +
                               "[driver = " +
@@ -854,25 +854,25 @@ public class SQLMap implements Mappable, LazyArray {
       con = myConnectionBroker.getConnection();
 
       if (con == null) {
-        logger.log(NavajoPriority.WARN,
-                   "Could not connect to database: " + datasource +  ", one more try with fresh broker....");
+    	  AuditLog.log("SQLMap", "Could not connect to database: " + datasource +  ", one more try with fresh broker....", Level.WARNING);
+        
         Message msg = configFile.getMessage("/datasources/" + datasource);
         try {
           createDataSource(msg, navajoConfig);
         }
         catch (NavajoException ne) {
-          logger.log(NavajoPriority.ERROR, ne.getMessage(), ne);
+        	 AuditLog.log("SQLMap", ne.getMessage(), Level.SEVERE);
           throw new UserException( -1, ne.getMessage());
         } catch (Throwable t) {
-          logger.log(NavajoPriority.ERROR, t.getMessage(), t);
+        	AuditLog.log("SQLMap", t.getMessage(), Level.SEVERE);
           throw new UserException( -1, t.getMessage());
         }
         myConnectionBroker = fixedBroker.get(this.datasource, this.username, this.password);
         con = myConnectionBroker.getConnection();
         if (con == null) {
-          logger.log(NavajoPriority.ERROR,
-                     "Could (still) not connect to database: " + datasource + " (" + this.username + ")" +
-                     ", check your connection");
+        	AuditLog.log("SQLMap",  "Could (still) not connect to database: " + datasource + " (" + this.username + ")" +
+                    ", check your connection", Level.SEVERE);
+         
           throw new UserException( -1,
                                   "Could not connect to database: " +
                                   datasource + " (" + this.username + ")" +
@@ -1001,9 +1001,9 @@ private void setBlob(PreparedStatement statement, int i, Binary b) throws SQLExc
     createConnection();
 
     if (con == null) {
-      logger.log(NavajoPriority.ERROR,
-                 "Could not connect to database: " + datasource +
-                 ", check your connection");
+    	AuditLog.log("SQLMap",   "Could not connect to database: " + datasource +
+                ", check your connection", Level.SEVERE);
+    
       throw new UserException( -1,
           "in SQLMap. Could not open database connection [driver = " + driver +
           ", url = " + url + ", username = '" + username +
@@ -1342,7 +1342,7 @@ private void setBlob(PreparedStatement statement, int i, Binary b) throws SQLExc
     }
     catch (SQLException sqle) {
       sqle.printStackTrace();
-      logger.log(NavajoPriority.ERROR, sqle.getMessage(), sqle);
+      AuditLog.log("SQLMap", sqle.getMessage(), Level.SEVERE);
       throw new UserException( -1, sqle.getMessage());
     }
     finally {
@@ -1383,7 +1383,7 @@ private void setBlob(PreparedStatement statement, int i, Binary b) throws SQLExc
 
     }
     catch (Exception e) {
-      logger.log(NavajoPriority.ERROR, e.getMessage(), e);
+    	AuditLog.log("SQLMap", e.getMessage(), Level.SEVERE);
       throw new UserException( -1, e.getMessage());
     }
     //System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> OPEN RESULT SETS: " + openResultSets);
@@ -1533,8 +1533,8 @@ private void setBlob(PreparedStatement statement, int i, Binary b) throws SQLExc
           ", url = " + url + ", username = '" + username +
           "', password = '" + password + "']";
 
-      logger.log(NavajoPriority.WARN,
-                 msg);
+      AuditLog.log("SQLMap", msg, Level.WARNING);
+     
       if (debug) {
         System.err.println(this.getClass() + ": " + msg);
         //throw new UserException(-1, "in SQLMap. Could not create default broker [driver = " + driver + ", url = " + url + ", username = '" + username + "', password = '" + password + "']");

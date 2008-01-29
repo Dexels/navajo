@@ -15,6 +15,7 @@ package com.dexels.navajo.adapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.logging.Level;
 import java.io.OutputStream;
 import java.sql.*;
 
@@ -26,6 +27,7 @@ import com.dexels.navajo.logger.*;
 import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.server.UserException;
+import com.dexels.navajo.util.AuditLog;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.document.types.Memo;
 
@@ -381,7 +383,8 @@ public class SPMap extends SQLMap {
     }
     catch (SQLException sqle) {
       sqle.printStackTrace();
-      logger.log(NavajoPriority.ERROR, sqle.getLocalizedMessage() + "/" + sqle.getSQLState(), sqle);
+      AuditLog.log("SPMap", sqle.getLocalizedMessage() + "/" + sqle.getSQLState(), Level.SEVERE);
+      
       throw new UserException( -1,  sqle.getLocalizedMessage() + "/" + sqle.getSQLState());
     }
     finally {
@@ -541,7 +544,7 @@ public class SPMap extends SQLMap {
         }
       }
       catch (SQLException sqle) {
-        logger.log(NavajoPriority.ERROR, sqle.getMessage(), sqle);
+    	  AuditLog.log("SPMap", sqle.getLocalizedMessage() + "/" + sqle.getSQLState(), Level.SEVERE);
         throw new com.dexels.navajo.server.UserException( -1, sqle.getMessage());
       }
       return value;
@@ -562,7 +565,7 @@ public class SPMap extends SQLMap {
       }
     }
     catch (SQLException sqle) {
-      logger.log(NavajoPriority.ERROR, sqle.getMessage(), sqle);
+    	AuditLog.log("SPMap", sqle.getLocalizedMessage() + "/" + sqle.getSQLState(), Level.SEVERE);
       sqle.printStackTrace();
     }
     super.store();
@@ -577,7 +580,7 @@ public class SPMap extends SQLMap {
       }
     }
     catch (SQLException sqle) {
-      logger.log(NavajoPriority.ERROR, sqle.getMessage(), sqle);
+    	AuditLog.log("SPMap", sqle.getLocalizedMessage() + "/" + sqle.getSQLState(), Level.SEVERE);
       sqle.printStackTrace();
     }
     super.kill();

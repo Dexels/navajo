@@ -50,8 +50,6 @@ public class SQLBatchUpdateHelper {
   public static final String vcIdent =
       "$Id$";
 
-  protected static NavajoLogger logger = NavajoConfig.getNavajoLogger(
-      SQLBatchUpdateHelper.class);
   private boolean debug = false;
 
   private String sql = null;

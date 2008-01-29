@@ -3,6 +3,7 @@ package com.dexels.navajo.adapter;
 
 import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.server.*;
+import com.dexels.navajo.util.AuditLog;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.logger.*;
 
@@ -19,13 +20,12 @@ public class LogMap implements Mappable {
 
   public String message;
 
-  private static NavajoLogger logger = NavajoConfig.getNavajoLogger(LogMap.class);
 
   public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
   }
 
   public void setMessage(String msg) {
-    logger.log(NavajoPriority.INFO, msg);
+	  AuditLog.log("LogMap", message);
   }
 
   public void store() throws MappableException, UserException {

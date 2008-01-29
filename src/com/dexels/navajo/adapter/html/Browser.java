@@ -479,7 +479,10 @@ public class Browser {
 			if ( indx == -1) {
 				indx = tidiedStringContent.indexOf("<HTML");
 			}
-			tidiedStringContent = tidiedStringContent.substring(indx);
+			if ( indx != -1 ) {
+				tidiedStringContent = tidiedStringContent.substring(indx);
+			}
+			System.err.println(tidiedStringContent);
 			tidiedContent = XMLDocumentUtils.createDocument(new ByteArrayInputStream(tidiedStringContent.getBytes()), false);
 		} catch (NavajoException e) {
 			// TODO Auto-generated catch block
