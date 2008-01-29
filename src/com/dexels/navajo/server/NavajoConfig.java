@@ -64,7 +64,7 @@ public final class NavajoConfig {
 	private String resourcePath;
 	public int dbPort = -1;
 	public boolean compileScripts = false;
-	protected HashMap properties = new HashMap();
+	protected HashMap<String,String> properties = new HashMap<String,String>();
 	private String configPath;
 	protected NavajoClassLoader betaClassloader;
 	protected NavajoClassSupplier adapterClassloader;
@@ -110,52 +110,30 @@ public final class NavajoConfig {
 	
 	private OperatingSystemMXBean myOs = null;
     
-	private static final synchronized void resetInstance() {
-		instance = null;
-	}
-	
-    public NavajoConfig(InputStreamReader inputStreamReader, NavajoClassSupplier ncs)  throws SystemException {
+	public NavajoConfig(InputStreamReader inputStreamReader, NavajoClassSupplier ncs)  throws SystemException {
 
-      this.inputStreamReader = inputStreamReader;
-      classPath = System.getProperty("java.class.path");
-      adapterClassloader = ncs;
-      instance = this;
-      myOs = ManagementFactory.getOperatingSystemMXBean();
-      //loadConfig(in);
-     }
+		this.inputStreamReader = inputStreamReader;
+		classPath = System.getProperty("java.class.path");
+		adapterClassloader = ncs;
+		instance = this;
+		myOs = ManagementFactory.getOperatingSystemMXBean();
+
+	}
     
-	public static NavajoConfig getInstance() {
-    	 return instance;
-     }
-     
-//    public NavajoConfig(InputStream in, InputStreamReader inputStreamReader)  throws SystemException {
-//
-//    	this.inputStreamReader = inputStreamReader;
-//    	classPath = System.getProperty("java.class.path");
-//    	loadConfig(in);
-//
-//    }
- 
+    public static NavajoConfig getInstance() {
+    	return instance;
+    }
+      
     public final boolean isLogged() {
       return useLog4j;
-    }
-
-    public final static NavajoLogger getNavajoLogger(Class c) {
-      NavajoLogger nl = null;
-      if (useLog4j) {
-         nl = NavajoLoggerFactory.getNavajoLogger("com.dexels.navajo.logger.log4j.NavajoLoggerImpl");
-      } else {
-         nl = NavajoLoggerFactory.getNavajoLogger("com.dexels.navajo.logger.nullimpl.NavajoLoggerImpl");
-      }
-      nl.setClass(c);
-      return nl;
     }
 
     public void loadConfig(InputStream in)  throws SystemException{
     	loadConfig(in, null);
     }
     
-    public void loadConfig(InputStream in, String externalRootPath)  throws SystemException{
+    @SuppressWarnings("unchecked")
+	public void loadConfig(InputStream in, String externalRootPath)  throws SystemException{
     	
     	configuration = NavajoFactory.getInstance().createNavajo(in);
     	
@@ -241,15 +219,12 @@ public final class NavajoConfig {
     		if(adapterClassloader == null) {
     			adapterClassloader = new NavajoClassLoader(adapterPath, compiledScriptPath, getClass().getClassLoader());
     		}
-//    		if(classloader==null) {
-//    			classloader = new NavajoClassLoader(null, compiledScriptPath, adapterClassloader);
-//    		}
+
     		if(betaClassloader==null) {
     			betaClassloader = new NavajoClassLoader(adapterPath, compiledScriptPath, true, getClass().getClassLoader());
     		}
     		
     		// Read monitoring configuration options
-    		Message monitoringMessage = body.getMessage("monitoring-agent");
     		Property monitoringAgentClass = body.getProperty("monitoring-agent/class");
     		Property monitoringAgentProperties = body.getProperty("monitoring-agent/properties");
     		// Set properties.
@@ -377,11 +352,7 @@ public final class NavajoConfig {
 				System.err.println("No jar path found");
 	    		jarFolder = null;				
 			}
-//    		classPath = (body.getProperty("parameters/classpathdir") == null ? System.getProperty("java.class.path"):
-//    				body.getProperty("parameters/classpath").getValue());
-//    		
-    		
-    			
+		    			
     		hotCompile = (body.getProperty("parameters/hot_compile") == null ||
     				body.getProperty("parameters/hot_compile").getValue().
     				equals("true"));
@@ -536,7 +507,7 @@ public final class NavajoConfig {
         return resourcePath;
     }
     
-    public final HashMap getProperties() {
+    public final HashMap<String,String> getProperties() {
         return properties;
     }
 
@@ -550,10 +521,7 @@ public final class NavajoConfig {
 
     // Added a cast, because I changed the type of classloader to generic class loader, so I can just use the system class loader as well...
     public final NavajoClassSupplier getClassloader() {
-//    	if (classloader instanceof NavajoClassSupplier) {
-        	return (NavajoClassSupplier) adapterClassloader;
-//		}
-  //  	return null;
+    	return (NavajoClassSupplier) adapterClassloader;
     }
 
     public final String getBetaUser() {

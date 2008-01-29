@@ -25,7 +25,8 @@ public class FileInputStreamReader implements InputStreamReader {
       filePath = path;
   }
 
-  public InputStream getResource(String name) {
+  @SuppressWarnings("deprecation")
+public InputStream getResource(String name) {
     try {
     	System.err.println("Loading config: "+name);
     	File f = new File(name);

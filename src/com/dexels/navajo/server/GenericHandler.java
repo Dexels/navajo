@@ -2,15 +2,12 @@ package com.dexels.navajo.server;
 
 import java.util.*;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 
 import com.dexels.navajo.mapping.*;
-import com.dexels.navajo.mapping.compiler.meta.MapMetaData;
 import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.loader.NavajoClassSupplier;
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.logger.*;
 
 /**
  * Title:        Navajo
@@ -41,13 +38,14 @@ import com.dexels.navajo.logger.*;
 
 public final class GenericHandler extends ServiceHandler {
 
-    private static HashMap loadedClasses = null;
+    @SuppressWarnings("unchecked")
+	private static HashMap loadedClasses = null;
 
     private static Object mutex1 = new Object();
     private static Object mutex2 = new Object();
-    private static Object mutex3 = new Object();
-
-    public GenericHandler() {
+   
+    @SuppressWarnings("unchecked")
+	public GenericHandler() {
 
     	boolean finishedSync = false;
     	
@@ -60,9 +58,9 @@ public final class GenericHandler extends ServiceHandler {
     		}
     }
 
-    protected static void doClearCache() {
+    @SuppressWarnings("unchecked")
+	protected static void doClearCache() {
        loadedClasses = null;
-       //System.gc();
        loadedClasses = new HashMap();
     }
 
@@ -75,7 +73,8 @@ public final class GenericHandler extends ServiceHandler {
      * @throws SystemException
      * @throws AuthorizationException
      */
-    public final Navajo doService() throws NavajoException, UserException, SystemException, AuthorizationException {
+    @SuppressWarnings("unchecked")
+	public final Navajo doService() throws NavajoException, UserException, SystemException, AuthorizationException {
 
         Navajo outDoc = null;
         String scriptPath = properties.getScriptPath();

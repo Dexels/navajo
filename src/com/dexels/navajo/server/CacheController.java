@@ -74,15 +74,10 @@ public class CacheController extends GenericThread implements NavajoListener {
 	}
 	
 	private void readConfig() {
-		/**
-		 * <message name="Cache">
-		 *   <message name="Cache">
-		 *      <property name="User" value="*"/>
-		 *      <property name="Webservice" value="club/ProcessQueryClub"/>
-		 *      <property name="Timeout" value="5000"/>
-		 *   </message>
-		 * </message>
-		 */
+		if ( isConfigModified() ) {
+			// read
+			setConfigTimeStamp();
+		}
 	}
 	
 	public void worker() 

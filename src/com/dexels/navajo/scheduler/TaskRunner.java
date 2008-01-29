@@ -37,7 +37,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
-import java.util.StringTokenizer;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -258,9 +257,9 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 			if ( taskDoc != null ) {
 				
 				Message allTasksMsg = taskDoc.getMessage("tasks");
-				ArrayList allTasks = taskDoc.getMessages("tasks");
+				ArrayList<Message> allTasks = taskDoc.getMessages("tasks");
 				for (int i = 0; i < allTasks.size(); i++) {
-					Message m = (Message) allTasks.get(i);
+					Message m = allTasks.get(i);
 					String id = m.getProperty("id").getValue();
 					String webservice = m.getProperty("webservice").getValue();
 					Boolean proxy = ( m.getProperty("proxy") != null ? (Boolean) m.getProperty("proxy").getTypedValue() : Boolean.FALSE);
@@ -433,73 +432,43 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 			fr = new BufferedReader( new InputStreamReader(si.getStream("log", TASK_LOG_FILE) ) ) ;
 			String line = null;
 			while ( ( line = fr.readLine() ) != null ) {
-				StringTokenizer st = new StringTokenizer(line, ";");
-				String id = null;
-				String user = null;
-				String webservice = null;
-				String trigger = null;
-				String taskDesc = null;
-				String clientId = null;
-				String singleEvent = null;
-				String status  = null;
-				String starttime = null;
-				String endtime = null;
-				String errorMsg = null;
-				if ( st.hasMoreTokens() ) {
-					id = st.nextToken();
-				}
-				if ( st.hasMoreTokens() ) {
-					webservice = st.nextToken();
-				}
-				if ( st.hasMoreTokens() ) {
-					user = st.nextToken();
-				}
-				if ( st.hasMoreTokens() ) {
-					trigger = st.nextToken();
-				}
-				if ( st.hasMoreTokens() ) {
-					taskDesc = st.nextToken();
-				}
-				if ( st.hasMoreTokens() ) {
-					clientId = st.nextToken();
-				}
-				if ( st.hasMoreTokens() ) {
-					singleEvent = st.nextToken();
-				}
-				if ( st.hasMoreTokens() ) {
-					status = st.nextToken();
-				}
-				if ( st.hasMoreTokens() ) {
-					starttime = st.nextToken();
-				}
-				if ( st.hasMoreTokens() ) {
-					endtime = st.nextToken();
-				}
-				if ( st.hasMoreTokens() ) {
-					errorMsg = st.nextToken();
-				}
-				
+				String [] tokens = line.split(";");
+				String id = tokens[0];
+				String webservice = tokens[1];
+				String user = tokens[2];
+				String trigger = tokens[3];
+//				String taskDesc = tokens[4];
+//				String clientId = tokens[5];
+				String singleEvent = tokens[6];
+				String status  = tokens[7];
+				String starttime = tokens[8];
+				String endtime = tokens[9];
+				String errorMsg = ( tokens.length > 10 ? tokens[10] : "");
+								
 				if ( username == null || username.equals(user)) {
 					try {
 						Task t = new Task(webservice, user, "", null, trigger, null);
-						t.setTrigger(trigger);
+						//t.setTrigger(trigger);
 						t.setId(id);
 						t.setFinished(true);
 						t.setStartTime(sdf.parse(starttime));
 						t.setFinishedTime(sdf.parse(endtime));
-						if ( singleEvent.equals("true")) {
+						if ( "true".equals(singleEvent)) {
 							t.getTrigger().setSingleEvent(true);
 						}
 						t.setStatus(status);
 						t.setErrorMessage(errorMsg);
 						// Check whether request/response is avaible.
+						System.err.println("About to get taskOutput");
 						Navajo out = getTaskOutput(id);
 						if ( out != null ) {
 							t.setResponse(out);
 							t.setKeepRequestResponse(true);
 						}
 						result.add(t);
-					} catch (Exception e) {}
+					} catch (Exception e) {
+						e.printStackTrace(System.err);
+					}
 				}
 				
 			}

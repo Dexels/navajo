@@ -13,7 +13,12 @@ package com.dexels.navajo.server;
 
 public class Parameter implements java.io.Serializable {
 
-    public int id = -1;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -4327023666866787383L;
+	
+	public int id = -1;
     public String name;
     public String type;
     public String expression;

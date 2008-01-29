@@ -17,9 +17,14 @@ import java.util.*;
 import com.dexels.navajo.parser.*;
 
 
-public class Parameters extends java.util.Hashtable implements java.io.Serializable {
+public class Parameters extends java.util.Hashtable<String,Parameter> implements java.io.Serializable {
 
-    public Parameters() {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 9089048153976022369L;
+
+	public Parameters() {
         super();
     }
 
@@ -63,7 +68,7 @@ public class Parameters extends java.util.Hashtable implements java.io.Serializa
         }
     }
 
-    public Enumeration getAllValues() {
+    public Enumeration<String> getAllValues() {
         return this.keys();
     }
 

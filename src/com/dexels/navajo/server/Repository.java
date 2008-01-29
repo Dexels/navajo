@@ -77,6 +77,6 @@ public interface Repository {
      * @param userRoleString
      * @throws NavajoException
      */
-    public void initGlobals(String method, String username, Navajo inMessage, Map extraParams) throws NavajoException;
+    public void initGlobals(String method, String username, Navajo inMessage, Map<String,String> extraParams) throws NavajoException;
 
 }

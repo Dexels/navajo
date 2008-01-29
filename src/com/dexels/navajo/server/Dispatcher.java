@@ -39,12 +39,13 @@ import com.dexels.navajo.server.enterprise.scheduler.WebserviceListenerFactory;
 import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
 import com.dexels.navajo.broadcast.BroadcastMessage;
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.events.NavajoEventRegistry;
+import com.dexels.navajo.events.types.ServerTooBusyEvent;
 import com.dexels.navajo.server.jmx.JMXHelper;
 import com.dexels.navajo.server.jmx.SNMPManager;
 import com.dexels.navajo.util.AuditLog;
 import com.dexels.navajo.util.Util;
 import com.dexels.navajo.server.enterprise.integrity.WorkerInterface;
-import com.dexels.navajo.tribe.TribalStatusCollector;
 import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.loader.NavajoClassSupplier;
 import com.dexels.navajo.lockguard.Lock;
@@ -87,7 +88,7 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
   //private Navajo inMessage = null;
   protected  boolean matchCN = false;
 //  public  Set accessSet = Collections.synchronizedSet(new HashSet());
-  public final Set accessSet = new HashSet();
+  public final Set<Access> accessSet = new HashSet<Access>();
 
   public  boolean useAuthorisation = true;
   private  final String defaultDispatcher =
@@ -105,8 +106,6 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
   private  String keyStore;
   private  String keyPassword;
 
-  private String rootPath;
-  
   public static final int rateWindowSize = 20;
   public static final double requestRate = 0.0;
   private  long[] rateWindow = new long[rateWindowSize];
@@ -114,12 +113,12 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
   private static Object semaphore = new Object();
   private int peakAccessSetSize = 0;
   
-  private static final Set broadcastMessage = Collections.synchronizedSet(new HashSet());
+  private static final Set<BroadcastMessage> broadcastMessage = Collections.synchronizedSet(new HashSet<BroadcastMessage>());
   
   /**
    * Registered SNMP managers.
    */
-  private ArrayList snmpManagers = new ArrayList(); 
+  private ArrayList<SNMPManager> snmpManagers = new ArrayList<SNMPManager>(); 
    
   /**
    * Constructor for URL based configuration.
@@ -143,7 +142,6 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
 		  navajoConfig = new NavajoConfig(fileInputStreamReader, cl); 
 		  navajoConfig.loadConfig(is,rootPath);
 		  debugOn = navajoConfig.isLogged();
-		  logger = NavajoConfig.getNavajoLogger(Dispatcher.class);
 		  JMXHelper.registerMXBean(this, JMXHelper.NAVAJO_DOMAIN, "Dispatcher");
 		  setServerIdentifier(serverIdentification);
 		  NavajoFactory.getInstance().setTempDir(getTempDir());
@@ -249,9 +247,9 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
 	}
    
   public Access [] getUsers() {
-	  Set all = new HashSet(com.dexels.navajo.server.Dispatcher.getInstance().accessSet);
-	  Iterator iter = all.iterator();
-	  ArrayList d = new ArrayList();
+	  Set<Access> all = new HashSet<Access>(com.dexels.navajo.server.Dispatcher.getInstance().accessSet);
+	  Iterator<Access> iter = all.iterator();
+	  ArrayList<Access> d = new ArrayList<Access>();
 	  while (iter.hasNext()) {
 		  Access a = (Access) iter.next();
 		  d.add(a);
@@ -395,6 +393,7 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
    * @return
    * @throws Exception
    */
+  @SuppressWarnings("unchecked")
   private final Navajo dispatch(String handler, Navajo in, Access access, Parameters parms) throws Exception {
 	  
 	  WorkerInterface integ = null;
@@ -454,14 +453,15 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
   
 	  try {
 		  
-		  Class c;
+		  Class<? extends ServiceHandler> c;
 		  
 		  if ( access.betaUser ) {
 			  c = navajoConfig.getBetaClassLoader().getClass(handler);
 		  } else {
 			  c = navajoConfig.getClassloader().getClass(handler);
 		  }
-		  ServiceHandler sh = (ServiceHandler) c.newInstance();
+		  
+		  ServiceHandler sh = c.newInstance();
 		  
 		  sh.setInput(in, access, parms, navajoConfig);
 		
@@ -510,28 +510,29 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
 	  }
   }
 
+  @SuppressWarnings("unchecked")
   private final void addParameters(Navajo doc, Parameters parms) throws
-      NavajoException {
+  NavajoException {
 
-    Message msg = doc.getMessage("__parms__");
-    if (msg == null) {
-      msg = NavajoFactory.getInstance().createMessage(doc, "__parms__");
-      doc.addMessage(msg);
-    }
+	  Message msg = doc.getMessage("__parms__");
+	  if (msg == null) {
+		  msg = NavajoFactory.getInstance().createMessage(doc, "__parms__");
+		  doc.addMessage(msg);
+	  }
 
-    if (parms != null) {
-      Enumeration all = parms.keys();
+	  if (parms != null) {
+		  Enumeration all = parms.keys();
 
-      // "Enrich" document with paramater message block "__parms__"
-      while (all.hasMoreElements()) {
-        String key = (String) all.nextElement();
-        Object value = parms.getValue(key);
-        String type = parms.getType(key);
-        Property prop = NavajoFactory.getInstance().createProperty(doc, key,
-            type, Util.toString(value, type), 0, "", Property.DIR_OUT);
-        msg.addProperty(prop);
-      }
-    }
+		  // "Enrich" document with paramater message block "__parms__"
+		  while (all.hasMoreElements()) {
+			  String key = (String) all.nextElement();
+			  Object value = parms.getValue(key);
+			  String type = parms.getType(key);
+			  Property prop = NavajoFactory.getInstance().createProperty(doc, key,
+					  type, Util.toString(value, type), 0, "", Property.DIR_OUT);
+			  msg.addProperty(prop);
+		  }
+	  }
   }
 
   public  final boolean doMatchCN() {
@@ -816,9 +817,7 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
       return null;
     }
 
-    ArrayList messages = new ArrayList();
-
-    boolean ok;
+    ArrayList<Message> messages = new ArrayList<Message>();
     int index = 0;
 
     for (int i = 0; i < conditions.length; i++) {
@@ -826,37 +825,37 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
       boolean valid = false;
 
       try {
-        valid = com.dexels.navajo.parser.Condition.evaluate(condition.condition,
-            inMessage);
+    	  valid = com.dexels.navajo.parser.Condition.evaluate(condition.condition,
+    			  inMessage);
       }
       catch (com.dexels.navajo.parser.TMLExpressionException ee) {
-        throw new UserException( -1, "Invalid condition: " + ee.getMessage());
-        //valid = true;
+    	  throw new UserException( -1, "Invalid condition: " + ee.getMessage());
       }
+      
       if (!valid) {
-        ok = false;
-        String eval = com.dexels.navajo.parser.Expression.replacePropertyValues(
-            condition.condition, inMessage);
-        Message msg = NavajoFactory.getInstance().createMessage(outMessage,
-            "failed" + (index++));
-        Property prop0 = NavajoFactory.getInstance().createProperty(outMessage,
-            "Id", Property.STRING_PROPERTY,
-            condition.id + "", 0, "", Property.DIR_OUT);
-        Property prop1 = NavajoFactory.getInstance().createProperty(outMessage,
-            "Description", Property.STRING_PROPERTY,
-            condition.comment, 0, "", Property.DIR_OUT);
-        Property prop2 = NavajoFactory.getInstance().createProperty(outMessage,
-            "FailedExpression", Property.STRING_PROPERTY,
-            condition.condition, 0, "", Property.DIR_OUT);
-        Property prop3 = NavajoFactory.getInstance().createProperty(outMessage,
-            "EvaluatedExpression", Property.STRING_PROPERTY,
-            eval, 0, "", Property.DIR_OUT);
 
-        msg.addProperty(prop0);
-        msg.addProperty(prop1);
-        msg.addProperty(prop2);
-        msg.addProperty(prop3);
-        messages.add(msg);
+    	  String eval = com.dexels.navajo.parser.Expression.replacePropertyValues(
+    			  condition.condition, inMessage);
+    	  Message msg = NavajoFactory.getInstance().createMessage(outMessage,
+    			  "failed" + (index++));
+    	  Property prop0 = NavajoFactory.getInstance().createProperty(outMessage,
+    			  "Id", Property.STRING_PROPERTY,
+    			  condition.id + "", 0, "", Property.DIR_OUT);
+    	  Property prop1 = NavajoFactory.getInstance().createProperty(outMessage,
+    			  "Description", Property.STRING_PROPERTY,
+    			  condition.comment, 0, "", Property.DIR_OUT);
+    	  Property prop2 = NavajoFactory.getInstance().createProperty(outMessage,
+    			  "FailedExpression", Property.STRING_PROPERTY,
+    			  condition.condition, 0, "", Property.DIR_OUT);
+    	  Property prop3 = NavajoFactory.getInstance().createProperty(outMessage,
+    			  "EvaluatedExpression", Property.STRING_PROPERTY,
+    			  eval, 0, "", Property.DIR_OUT);
+
+    	  msg.addProperty(prop0);
+    	  msg.addProperty(prop1);
+    	  msg.addProperty(prop2);
+    	  msg.addProperty(prop3);
+    	  messages.add(msg);
       }
     }
 
@@ -913,7 +912,8 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
    * @return
    * @throws FatalException
    */
-  public final Navajo handle(Navajo inMessage, Object userCertificate, ClientInfo clientInfo) throws
+  @SuppressWarnings("deprecation")
+public final Navajo handle(Navajo inMessage, Object userCertificate, ClientInfo clientInfo) throws
       FatalException {
 
     Access access = null;
@@ -946,6 +946,7 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
 			return result;
 		} catch (Exception e) {
 			// Server too busy!
+			NavajoEventRegistry.getInstance().publishEvent(new ServerTooBusyEvent());
 			e.printStackTrace(System.err);
 	    	System.err.println(">> SERVER TOO BUSY!!!!!");
 	    	throw new FatalException("500.13");
@@ -979,10 +980,6 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
       rpcUser = header.getRPCUser();
       rpcPassword = header.getRPCPassword();
       
-      String userAgent = header.getUserAgent();
-      String address = header.getIPAddress();
-      String host = header.getHostName();
-
       /**
        * Phase II: Authorisation/Authentication of the user. Is the user known and valid and may it use the
        * specified service?
@@ -1280,43 +1277,36 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
 		}
 	}
 
-private void appendServerBroadCast(Access a, Navajo in, Header h) {
-	  Set toBeRemoved = null;
-	  for (Iterator iter = broadcastMessage.iterator(); iter.hasNext();) {
-		  
-		  Object element = (Object) iter.next();
-		if (element instanceof BroadcastMessage) {
-			BroadcastMessage bm = (BroadcastMessage)element;
-			if (bm.isExpired()) {
-				if (toBeRemoved==null) {
-					toBeRemoved = new HashSet();
-				}
-				toBeRemoved.add(element);
-			}
-			if (!bm.validRecipient(a)) {
-				continue;
-			}
-			if (bm.hasBeenSent(a)) {
-				continue;
-			}
-			h.addPiggyBackData(bm.createMap());
-			bm.addSentToClientId(a);
-		} else {
-			if (element==null) {
-				System.err.println("Strange object found: NULL!");
-			} else {
-				System.err.println("Strange object found: "+element.getClass());
-			}
-		}
+  private void appendServerBroadCast(Access a, Navajo in, Header h) {
+	  Set<BroadcastMessage> toBeRemoved = null;
+	  for (Iterator<BroadcastMessage> iter = broadcastMessage.iterator(); iter.hasNext();) {
+
+		  BroadcastMessage bm = iter.next();
+		  if (bm.isExpired()) {
+			  if (toBeRemoved==null) {
+				  toBeRemoved = new HashSet<BroadcastMessage>();
+			  }
+			  toBeRemoved.add(bm);
+		  }
+		  if (!bm.validRecipient(a)) {
+			  continue;
+		  }
+		  if (bm.hasBeenSent(a)) {
+			  continue;
+		  }
+		  h.addPiggyBackData(bm.createMap());
+		  bm.addSentToClientId(a);
+
 	  }
+
 	  if (toBeRemoved!=null) {
-		broadcastMessage.removeAll(toBeRemoved);
-    	}
-	  HashMap m = new HashMap();
+		  broadcastMessage.removeAll(toBeRemoved);
+	  }
+	  HashMap<String,String> m = new HashMap<String,String>();
 	  m.put("requestRate", ""+getRequestRate());
 	  m.put("serverId", ""+serverId);
 	  h.addPiggyBackData(m);
-}
+  }
 
 /**
    * Determine if WS is reserved Navajo webservice.
@@ -1407,23 +1397,6 @@ private void appendServerBroadCast(Access a, Navajo in, Header h) {
     }
   }
 
-  public static void main(String[] args) {
-    int rateWindowSize = 20;
-    long[] rateWindow = new long[rateWindowSize];
-    for(int j=0;j<200;j++){
-      for (int i = 0; i < rateWindowSize - 1; i++) {
-        rateWindow[i] = rateWindow[i + 1];
-        System.err.println("Shifting: [" + i + "] -> " + rateWindow[i]);
-      }
-      rateWindow[rateWindowSize - 1] = System.currentTimeMillis();
-      if(rateWindow[0] > 0){
-        float time = (float)(rateWindow[rateWindowSize - 1] - rateWindow[0]) / (float)1000.0;
-        float avg = (float) rateWindowSize/time;
-      }
-    }
-
-  }
-
   public void setBroadcast(String message, int timeToLive, String recipientExpression) {
 	  BroadcastMessage bm = new BroadcastMessage(message,timeToLive,recipientExpression);
 	  broadcastMessage.add(bm);
@@ -1432,11 +1405,11 @@ private void appendServerBroadCast(Access a, Navajo in, Header h) {
 
   public Access getAccessObject(String id) {
 
-	  Iterator iter = accessSet.iterator();
+	  Iterator<Access> iter = accessSet.iterator();
 	  boolean found = false;
 	  Access a = null;
 	  while (iter.hasNext() && !found) {
-		  a = (Access) iter.next();
+		  a = iter.next();
 		  if (a.accessID.equals(id)) {
 			  System.err.println("FOUND ACCESS OBJECT!!!");
 			  found = true;

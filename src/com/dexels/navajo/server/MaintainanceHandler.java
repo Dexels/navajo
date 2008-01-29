@@ -1,9 +1,6 @@
 package com.dexels.navajo.server;
 
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.util.*;
-
-
 
 /**
  * Title:        Navajo

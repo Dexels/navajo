@@ -12,6 +12,7 @@ public class WorkerFactory {
 	 * @return
 	 */
 	
+	@SuppressWarnings("unchecked")
 	public static final WorkerInterface getInstance() {
 
 		if ( instance != null ) {

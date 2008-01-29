@@ -7,6 +7,7 @@ public class TribeManagerFactory {
 	private static volatile TribeManagerInterface instance = null;
 	private static Object semaphore = new Object();
 	
+	@SuppressWarnings("unchecked")
 	public static TribeManagerInterface getInstance() {
 		
 		if ( instance != null ) {
@@ -17,7 +18,7 @@ public class TribeManagerFactory {
 				
 				if ( instance == null ) {
 					try {
-						Class<? extends TribeManagerInterface> c = (Class<? extends TribeManagerInterface>) Class.forName("com.dexels.navajo.tribe.TribeManager");
+						Class c = Class.forName("com.dexels.navajo.tribe.TribeManager");
 						TribeManagerInterface dummy = (TribeManagerInterface) c.newInstance();
 						Method m = c.getMethod("getInstance", null);
 						instance = (TribeManagerInterface) m.invoke(dummy, null);

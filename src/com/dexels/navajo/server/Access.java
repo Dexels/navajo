@@ -279,7 +279,7 @@ public final class Access implements java.io.Serializable, Mappable {
 		piggyBackData.add(element);
 	}
 
-	public Set getPiggybackData() {
+	public Set<?> getPiggybackData() {
 		return piggyBackData;
 	}
 

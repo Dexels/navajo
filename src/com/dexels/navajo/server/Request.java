@@ -13,14 +13,12 @@ package com.dexels.navajo.server;
 import java.io.*;
 import java.util.*;
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.util.*;
-
 
 public class Request {
 
-    public HashMap properties = null;
+    public HashMap<String,String> properties = null;
 
-    public Request(HashMap rb) {
+    public Request(HashMap<String,String> rb) {
         properties = rb;
     }
 
@@ -32,8 +30,7 @@ public class Request {
             throws IOException, NavajoException {
 
         Navajo outMessage = null;
-        String fNaam;
-
+    
         // Read the filename from koopsom properties
         String fileName = properties.get(service).toString();
 

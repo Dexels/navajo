@@ -210,10 +210,12 @@ public class TaskRunnerMap implements Mappable {
 		return getUserTasks(username);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public TaskMap [] getUserTasks(String user) throws UserException, MappableException {
 		TaskRunner tr = TaskRunner.getInstance();
 		// Get all finished tasks for this user.
 		ArrayList l = tr.getFinishedTasks(user, null);
+		System.err.println("Found " + l.size() + " finished tasks");
 		// Add none-finished tasks.
 		TaskMap [] scheduledTasks = getTasks();
 		for (int i = 0; i < scheduledTasks.length; i++) {
@@ -280,6 +282,7 @@ public class TaskRunnerMap implements Mappable {
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	public TaskMap getFinishedTask() {
 		if ( id != null ) {
 			TaskRunner tr = TaskRunner.getInstance();

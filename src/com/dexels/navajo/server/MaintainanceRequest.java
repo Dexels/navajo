@@ -19,7 +19,8 @@ public class MaintainanceRequest extends Request {
 
     private Repository repository = null;
 
-    public MaintainanceRequest(HashMap rb, Repository repository) {
+    @SuppressWarnings("unchecked")
+	public MaintainanceRequest(HashMap rb, Repository repository) {
         super(rb);
         this.repository = repository;
     }
@@ -65,9 +66,9 @@ public class MaintainanceRequest extends Request {
         if (serviceProp == null) {
             service = Util.getProperty(services, "service", true).getValue();
         } else {
-            ArrayList selectedServices = serviceProp.getAllSelectedSelections();
+            ArrayList<Selection> selectedServices = serviceProp.getAllSelectedSelections();
 
-            service = ((Selection) selectedServices.get(0)).getName();
+            service = selectedServices.get(0).getName();
         }
 
         Access newAccess = null;

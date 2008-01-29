@@ -32,7 +32,8 @@ public class RepositoryFactory {
         }
     }
 
-    public static Repository getRepository(NavajoClassLoader loader, String repositoryClass, NavajoConfig config) {
+    @SuppressWarnings("unchecked")
+	public static Repository getRepository(NavajoClassLoader loader, String repositoryClass, NavajoConfig config) {
         try {
             Class c = loader.getClass(repositoryClass);
             Repository rp = (Repository) c.newInstance();

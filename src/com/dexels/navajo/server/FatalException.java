@@ -12,7 +12,12 @@ package com.dexels.navajo.server;
 
 public class FatalException extends Exception {
 	
-    public FatalException(String s) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -6962064660769014280L;
+
+	public FatalException(String s) {
         super(s);
     }
 }
