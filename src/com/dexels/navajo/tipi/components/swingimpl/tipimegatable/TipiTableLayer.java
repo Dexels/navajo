@@ -234,7 +234,7 @@ private MessageTablePanel myTablePanel;
       mtp.setFooterRenderer(myFooterRenderer);
     }
     mtp.setMessage(tableData);
-    mtp.getTable().updateTableSize();
+//    mtp.getTable().updateTableSize();
     mtp.updateTableSize();
     remarkPanel.updateConditionalRemarks();
 //    updateConditionalRemarks(remarkPanel, current);

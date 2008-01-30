@@ -29,7 +29,14 @@ public class TipiMessageTable extends MessageTable {
         
 
     }
-    
+//    public void createDefaultColumnsFromModel() {
+    	// ignore
+//    	System.err.println("Hoei!");
+//    }
+    public void createDefaultColumnsFromMessageModel() {
+//    	createDefaultColumnsFromModel();
+      }
+
     public void loadColumnsNavajo() {
         // TODO Auto-generated method stub
 //        super.loadColumnsNavajo();
@@ -50,6 +57,8 @@ public class TipiMessageTable extends MessageTable {
             loadColumnsNavajo(n);
 //            refreshColumnSizes();
             
+        } else {
+        	createDefaultColumnsFromModel();
         }
     }
 

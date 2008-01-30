@@ -15,7 +15,10 @@ public class TipiMessageTablePanel extends MessageTablePanel {
     public TipiMessageTablePanel(TipiContext tc) {
         super(new TipiMessageTable(tc));
     }
-    
+    public void createDefaultColumnsFromModel() {
+//	    messageTable.createDefaultColumnsFromModel();
+  }
+  
 //    public void setPreferredSize(Dimension d) {
 //        // ignore
 //    }
