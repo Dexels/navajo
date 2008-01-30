@@ -1,8 +1,6 @@
 package com.dexels.navajo.tipi.actions;
 
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.databinding.*;
-import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.internal.*;
 
 /**
@@ -26,15 +24,13 @@ public final class TipiLinkProperty extends TipiAction {
 
 	public final void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
 
-		final Property master = (Property)getEvaluatedParameter("master", event).value;
-		final Property slave = (Property)getEvaluatedParameter("slave", event).value;
-		
-		master.addPropertyDataListener(new PropertyDataListener(){
+		final Property master = (Property) getEvaluatedParameter("master", event).value;
+		final Property slave = (Property) getEvaluatedParameter("slave", event).value;
 
-			public void propertyDataChanged(Property p, String oldValue, String newValue) {
-				System.err.println("P: "+p.getName()+" old: "+oldValue+" new: "+newValue);
-				slave.setAnyValue(p.getTypedValue());
-			}});
+		myContext.link(master, slave);
 		
 	}
+
+
+
 }
