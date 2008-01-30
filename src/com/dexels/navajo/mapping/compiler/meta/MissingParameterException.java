@@ -3,6 +3,8 @@ package com.dexels.navajo.mapping.compiler.meta;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import com.dexels.navajo.document.nanoimpl.XMLElement;
+
 public class MissingParameterException extends MetaCompileException {
 
 	/**
@@ -10,8 +12,8 @@ public class MissingParameterException extends MetaCompileException {
 	 */
 	private static final long serialVersionUID = -2455963968481759993L;
 
-	public MissingParameterException(HashSet<String> missing, String method, int lineNr, String filename) {
-		super(filename, lineNr);
+	public MissingParameterException(HashSet<String> missing, String method, XMLElement offendingTag, String filename) {
+		super(filename, offendingTag);
 		StringBuffer sb = new StringBuffer();
 		Iterator<String> i = missing.iterator();
 		while ( i.hasNext() ) {

@@ -48,7 +48,7 @@ public class MethodDefinition {
 	public void generateCode(XMLElement in, XMLElement out, String filename) throws Exception {
 		
 		if ( in.getChildren().size() > 0 ) {
-			throw new MetaCompileException(filename, in.getLineNr(), "Illegal children tags defined for tag <" + in.getName() + "/>");
+			throw new MetaCompileException(filename, in, "Illegal children tags defined for tag <" + in.getName() + "/>");
 		}
 		
 		String condition = (String) in.getAttribute("condition");
@@ -86,7 +86,7 @@ public class MethodDefinition {
 			//System.err.println("Looking up parameterdefinition: " + attribName);
 			ParameterDefinition pd = parameters.get(attribName);
 			if ( pd == null && !attribName.equals("condition")) {
-				throw new UnknownParameterException(getName(), attribName, in.getLineNr(), filename );
+				throw new UnknownParameterException(getName(), attribName, in, filename );
 			}
 			if ( pd != null && !pd.getRequired().equals("automatic")) {
 				XMLElement pdx = pd.generateCode(attribValue, ( hasCondition ? "[/@" + tempParamName + "]" : null ), out, false, filename);
@@ -96,7 +96,7 @@ public class MethodDefinition {
 		}
 		// Check if all required parameters are present.
 		if ( required.size() > 0 ) {
-			throw new MissingParameterException(required, getName(), in.getLineNr(), filename );
+			throw new MissingParameterException(required, getName(), in, filename );
 		}
 		Iterator<XMLElement> iter = orderedParameters.values().iterator();
 		while ( iter.hasNext() ) {

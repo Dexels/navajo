@@ -73,7 +73,7 @@ public class ValueDefinition {
 		
 		String name = (String) e.getAttribute("name");
 		if ( name.equals("condition") ) {
-			throw new KeywordException("", 0, "Illegal parameter specified: " + name);
+			throw new KeywordException("", null, "Illegal parameter specified: " + name);
 		}
 		
 		String type = (String) e.getAttribute("type");

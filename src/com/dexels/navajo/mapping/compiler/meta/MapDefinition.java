@@ -133,13 +133,13 @@ public class MapDefinition {
 					vd.generateCode(attribValue, null, map, true, filename);
 					required.remove(attribName);
 				} else if ( !attribName.equals("condition") ){
-					throw new UnknownMapInitializationParameterException("map:"+tagName, attribName, in.getLineNr(), filename);
+					throw new UnknownMapInitializationParameterException("map:"+tagName, attribName, in, filename);
 				}
 			}
 			
             // Check if all required parameters are present.
 			if ( required.size() > 0 ) {
-				throw new MissingParameterException(required, tagName, in.getLineNr(), filename );
+				throw new MissingParameterException(required, tagName, in, filename );
 			}
 			
 			out.addChild(map);
@@ -152,7 +152,7 @@ public class MapDefinition {
 			if ( child.getName().equals(tagName + ":set") ) {
 				
 				if ( child.getChildren().size() > 0 && (String) child.getAttribute("ref") == null ) {
-					throw new MetaCompileException(filename, child.getLineNr(), "Illegal children tags defined for tag <" + child.getName() + "/>");
+					throw new MetaCompileException(filename, child, "Illegal children tags defined for tag <" + child.getName() + "/>");
 				}
 				
 				String field = (String) child.getAttribute("field");
@@ -167,7 +167,7 @@ public class MapDefinition {
 				if ( vd != null ) {
 					remainder = vd.generateCode(setterValue, condition, ( map != null ? map : out ), true, filename );
 				} else {
-					throw new UnknownValueException(child.getName(), field, child.getLineNr(), filename);
+					throw new UnknownValueException(child.getName(), field, child, filename);
 				}
 				
 				if ( (String) child.getAttribute("ref") != null && remainder != null ) {
@@ -176,7 +176,7 @@ public class MapDefinition {
 					if ( md != null ) {
 						md.generateCode(child, remainder, filename );
 					} else {
-						throw new UnknownAdapterException(child.getName(), child.getLineNr(), filename);
+						throw new UnknownAdapterException(child.getName(), child, filename);
 					}
 				}
 				
@@ -194,13 +194,13 @@ public class MapDefinition {
 					ValueDefinition vd = getValueDefinition(method);
 					if ( vd != null ) {
 						if (  ! ( child.getParent().getName().equals("message") || child.getParent().getName().equals("property") ) ) {
-							throw new MetaCompileException(filename, child.getLineNr(), "Illegal tag <" + child.getName() + "/> encountered");
+							throw new MetaCompileException(filename, child, "Illegal tag <" + child.getName() + "/> encountered");
 						}
 						XMLElement out2 = vd.generateCode(method, filter, ( map != null ? map : out ), true, filename );
 						generateCode(child, out2, filename);
 					} else {
 						//System.err.println("Parent of " + child.getName() + " IS " + child.getParent().getName());
-						throw new UnknownMethodException(child.getName(), ((XMLElement) v.get(i)).getLineNr(), filename);
+						throw new UnknownMethodException(child.getName(), (XMLElement) v.get(i), filename);
 					}
 				}
 			} else if ( child.getName().equals("map:" + tagName ) ) {
@@ -208,12 +208,12 @@ public class MapDefinition {
 			} else if ( child.getName().startsWith("map:" ) ) {
 				MapDefinition md = myMetaData.getMapDefinition(child.getName().substring(4));
 				if ( md.abstractMap ) {
-					throw new MetaCompileException(filename, child.getLineNr(), "Illegal declaration of abstract adapter: " + md.tagName);
+					throw new MetaCompileException(filename, child, "Illegal declaration of abstract adapter: " + md.tagName);
 				}
 				if ( md != null ) {
 					md.generateCode(child, ( map != null ? map : out ), filename );
 				} else {
-					throw new UnknownAdapterException(child.getName(), child.getLineNr(), filename);
+					throw new UnknownAdapterException(child.getName(), child, filename);
 				}
 			} else if (!( child.getName().equals("message") || 
 					    child.getName().equals("property") ||
@@ -229,7 +229,7 @@ public class MapDefinition {
 					    child.getName().equals("method") ||
 					    child.getName().equals("validations") ||
 					    child.getName().equals("check") ) ) {
-				throw new MetaCompileException(filename, child.getLineNr(), "Unknown tag <" + child.getName() + "/> encountered");
+				throw new MetaCompileException(filename, child, "Unknown tag <" + child.getName() + "/> encountered");
 			}
 			else {
 				// Copy it.

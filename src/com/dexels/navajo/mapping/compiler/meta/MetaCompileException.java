@@ -1,5 +1,7 @@
 package com.dexels.navajo.mapping.compiler.meta;
 
+import com.dexels.navajo.document.nanoimpl.XMLElement;
+
 public class MetaCompileException extends Exception {
 
 	/**
@@ -7,31 +9,31 @@ public class MetaCompileException extends Exception {
 	 */
 	private static final long serialVersionUID = -6193610832873773439L;
 
-	protected int lineNr;
+	protected XMLElement offendingTag;
 	protected String message;
 	protected String fileName;
 	
-	public  MetaCompileException(String fileName, int lineNr) {
+	public  MetaCompileException(String fileName, XMLElement offendingTag) {
 		this.fileName = fileName;
-		this.lineNr = lineNr;
+		this.offendingTag = offendingTag;
 	}
 	
-	public  MetaCompileException(String fileName, int lineNr, String message) {
+	public  MetaCompileException(String fileName, XMLElement offendingTag, String message) {
 		this.fileName = fileName;
-		this.lineNr = lineNr;
+		this.offendingTag = offendingTag;
 		this.message = message;
 	}
 	
-	public int getLineNr() {
-		return lineNr;
+	public XMLElement getOffendingTag() {
+		return this.offendingTag;
 	}
 	
-	public void setLineNr(int lineNr) {
-		this.lineNr = lineNr;
+	public void setOffendingTag(XMLElement offendingTag) {
+		this.offendingTag = offendingTag;
 	}
 	
 	public String getMessage() {
-		return message + " (" + fileName + ":" + lineNr + ")";
+		return message + " (" + fileName + ":" + offendingTag.getLineNr() + ")";
 	}
 	
 	public void setMessage(String message) {

@@ -1,9 +1,11 @@
 package com.dexels.navajo.mapping.compiler.meta;
 
+import com.dexels.navajo.document.nanoimpl.XMLElement;
+
 public class KeywordException extends MetaCompileException {
 
-	public KeywordException(String fileName, int lineNr, String message) {
-		super(fileName, lineNr);
+	public KeywordException(String fileName, XMLElement offendingTag, String message) {
+		super(fileName, offendingTag);
 		super.message = message;
 	}
 
