@@ -56,6 +56,7 @@ public class NavajoMap extends AsyncMappable  implements Mappable {
   public String messagePointer;
   public boolean exists;
   public String append;
+  public String appendTo;
   // appendParms is used to append entire output doc of called webservice to param block.
   public String appendParms;
   public boolean sendThrough;
@@ -100,6 +101,17 @@ public class NavajoMap extends AsyncMappable  implements Mappable {
   }
 
   /**
+   * Set this to the message path to which the result of the called service needs to be appended.
+   * Always used in conjunction with setAppend().
+   * 
+   * @param messageOffset
+   * @throws UserException
+   */
+  public final void setAppendTo(String messageOffset) throws UserException {
+	  appendTo = messageOffset;
+  }
+  
+  /**
    * Set this to a valid message path if the result of the webservices needs to be appended.
    * If messageOffset = "/" the entire result will be appended to the current output message pointer.
    *
@@ -140,9 +152,25 @@ public class NavajoMap extends AsyncMappable  implements Mappable {
           //currentDoc.importMessage(inMsg);
           Message clone = inDoc.copyMessage(inMsg, currentDoc);
           if (currentMsg != null) {
-            currentMsg.addMessage(clone, true);
+        	  if ( appendTo != null ) {
+        		  if ( currentMsg.getMessage(appendTo) != null ) {
+        			  currentMsg.getMessage(appendTo).addMessage(clone, true);
+        		  } else {
+        			  throw new UserException(-1, "Unknown appendTo message: " + appendTo);
+        		  }
+        	  } else {
+        		  currentMsg.addMessage(clone, true);
+        	  }
           } else {
-            currentDoc.addMessage(clone, true);
+        	  if ( appendTo != null ) {
+        		  if ( currentDoc.getMessage(appendTo) != null ) {
+        			  currentDoc.getMessage(appendTo).addMessage(clone, true);
+        		  } else {
+        			  throw new UserException(-1, "Unknown appendTo message: " + appendTo);
+        		  }
+        	  } else {
+        		  currentDoc.addMessage(clone, true);
+        	  }
           }
         }
     } catch (NavajoException ne) {
