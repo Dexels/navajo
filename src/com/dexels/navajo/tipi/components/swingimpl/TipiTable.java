@@ -312,6 +312,8 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 						}
 						// Dimension d = mtp.getPreferredSize();
 						mtp.setMessage(m);
+					    mtp.getTable().updateTableSize();
+					    mtp.updateTableSize();
 						// mtp.setPreferredSize(d);
 						// mtp.revalidate();
 					}
@@ -412,6 +414,9 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 		}
 		if (name.equals("selectedColor")) {
 			mm.setSelectedColor((Color) object);
+		}
+		if (name.equals("useScroll")) {
+			mm.setUseScrollBars((Boolean) object);
 		}
 		super.setComponentValue(name, object);
 	}
