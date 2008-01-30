@@ -645,6 +645,10 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
                                                   Throwable t) throws
       FatalException {
 
+	  if ( t != null ) {
+		  t.printStackTrace(System.err);
+	  }
+	  
     if (message == null) {
       message = "Null pointer exception";
 
