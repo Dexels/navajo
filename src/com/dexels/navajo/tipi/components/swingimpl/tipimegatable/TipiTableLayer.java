@@ -128,14 +128,23 @@ private MessageTablePanel myTablePanel;
   }
 
   private final void updateTableColumns(final MessageTablePanel mtp) {
-    mtp.createColumnModel();
-    for (int i = 0; i < columnSize.size(); i++) {
-      int ii = ( (Integer) columnSize.get(i)).intValue();
-      final int index = i;
-      final int value = ii;
-//      System.err.println("Setting column: " + i + " to: " + ii);
-      mtp.setColumnWidth(index, value);
-    }
+		Runnable invocation = new Runnable(){
+
+			@Override
+			public void run() {
+				  mtp.createColumnModel();
+				    for (int i = 0; i < columnSize.size(); i++) {
+				      int ii = ( (Integer) columnSize.get(i)).intValue();
+				      final int index = i;
+				      final int value = ii;
+				    //  System.err.println("Setting column: " + i + " to: " + ii);
+				      mtp.setColumnWidth(index, value);
+				    }
+//				    mtp.getTable().loadColumnSizes();
+				    mtp.getTable().createDefaultColumnsFromModel();
+
+			}};
+			SwingUtilities.invokeLater(invocation);
   }
 
   public void loadData(final Navajo n, final Message current, Stack layerStack, JComponent currentPanel) {
@@ -225,7 +234,8 @@ private MessageTablePanel myTablePanel;
       mtp.setFooterRenderer(myFooterRenderer);
     }
     mtp.setMessage(tableData);
-    updateTableColumns(mtp);
+    mtp.getTable().updateTableSize();
+    mtp.updateTableSize();
     remarkPanel.updateConditionalRemarks();
 //    updateConditionalRemarks(remarkPanel, current);
   }
