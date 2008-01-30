@@ -138,7 +138,6 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
 		  is = configurationUrl.openStream();
 		  navajoConfig = new NavajoConfig(fileInputStreamReader, cl); 
 		  navajoConfig.loadConfig(is,rootPath);
-		  debugOn = navajoConfig.isLogged();
 		  JMXHelper.registerMXBean(this, JMXHelper.NAVAJO_DOMAIN, "Dispatcher");
 		  setServerIdentifier(serverIdentification);
 		  NavajoFactory.getInstance().setTempDir(getTempDir());
