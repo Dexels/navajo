@@ -146,33 +146,7 @@ public class ImageScaler {
     
     ImageWriter writer =  null;
     try {
-    	int originalWidth = original.getWidth();
-    	int originalHeight = original.getHeight();
-    	
-    	if (width > originalWidth) {
-    		width = originalWidth;
-    	}
-    	if (height > originalHeight) {
-    		height = originalHeight;
-    	}
-    	
-    	
-    	float factorX = (float)originalWidth / width;
-    	float factorY = (float)originalHeight / height;
-    	if(keepAspect) {
-    		factorX = Math.max(factorX, factorY);
-    		factorY = factorX;
-    	}
-    	
-    	// The scaling will be nice smooth with this filter
-    	AreaAveragingScaleFilter scaleFilter =
-    		new AreaAveragingScaleFilter(Math.round(originalWidth / factorX),
-    				Math.round(originalHeight / factorY));
-    	ImageProducer producer = new FilteredImageSource(original.getSource(),
-    			scaleFilter);
-    	ImageGenerator generator = new ImageGenerator();
-    	producer.startProduction(generator);
-    	BufferedImage scaled = generator.getImage();
+    	BufferedImage scaled = scale(width, height, keepAspect, original);
     	
     	// Write the scaled image to a file
     	// ImageIO.write(scaled, "jpg", outfile);
@@ -194,6 +168,37 @@ public class ImageScaler {
     	}
     }
   }
+
+	public static BufferedImage scale(int width, int height, boolean keepAspect, BufferedImage original) {
+		int originalWidth = original.getWidth();
+		int originalHeight = original.getHeight();
+		
+		if (width > originalWidth) {
+			width = originalWidth;
+		}
+		if (height > originalHeight) {
+			height = originalHeight;
+		}
+		
+		
+		float factorX = (float)originalWidth / width;
+		float factorY = (float)originalHeight / height;
+		if(keepAspect) {
+			factorX = Math.max(factorX, factorY);
+			factorY = factorX;
+		}
+		
+		// The scaling will be nice smooth with this filter
+		AreaAveragingScaleFilter scaleFilter =
+			new AreaAveragingScaleFilter(Math.round(originalWidth / factorX),
+					Math.round(originalHeight / factorY));
+		ImageProducer producer = new FilteredImageSource(original.getSource(),
+				scaleFilter);
+		ImageGenerator generator = new ImageGenerator();
+		producer.startProduction(generator);
+		BufferedImage scaled = generator.getImage();
+		return scaled;
+	}
   
   /**
    * Converts a java.awt.Image to a java.awt.image.BufferedImage.
