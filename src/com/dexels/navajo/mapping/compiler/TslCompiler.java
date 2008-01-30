@@ -2376,12 +2376,10 @@ private String getHostName() throws SocketException {
 					 System.err.println("\t\tisMCGlobal: " + ip.isMCGlobal());
 					 System.err.println("\t\tisLinkLocalAddress: " + ip.isLinkLocalAddress());
 					 System.err.println("\t\t"+ip.toString());
-
 					 System.err.println("Getting hostname took: " + ( System.currentTimeMillis() - start ) ) ;
 					 
-					 if ( hostname != null ) {
-						 hostname =  ip.getCanonicalHostName();
-					 }
+					 hostname =  ip.getCanonicalHostName();
+					
 				 }
 			 }
 		 }
