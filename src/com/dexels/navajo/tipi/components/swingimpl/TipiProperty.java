@@ -167,11 +167,12 @@ public class TipiProperty
   public void setProperty(final Property p) {
     runSyncInEventThread(new Runnable() {
       public void run() {
-    	  if(myProperty!=null && myProperty!=p) {
-    		  myProperty.removePropertyDataListener(TipiProperty.this);
-    	  }
+    	  System.err.println("Set property old school");
+    	  //    	  if(myProperty!=null && myProperty!=p) {
+//    		  myProperty.removePropertyDataListener(TipiProperty.this);
+//    	  }
         myProperty = p;
-        myProperty.addPropertyDataListener(TipiProperty.this);
+//        myProperty.addPropertyDataListener(TipiProperty.this);
         if (p == null) {
           return;
         }
@@ -431,8 +432,13 @@ public class TipiProperty
       System.err.println("Trying to fire event from null property!");
       return;
     }
+    if (myProperty == null) {
+        System.err.println("my property is null!");
+        return;
+      }
     if (p != myProperty) {
       System.err.println("Mysterious anomaly: Property of event is not the loaded property");
+      
       return;
     }
     if (eventType.equals("onFocusGained") && v != null) {
