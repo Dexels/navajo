@@ -218,6 +218,7 @@
 				type="boolean" />
 			<value direction="in" name="sortable" type="boolean" />
 			<value direction="in" name="showRowHeaders" type="boolean" />
+            <value direction="in" name="useScroll" type="boolean" />
 			
 			<value direction="out" name="currentPage" type="integer" />
 		</values>
@@ -1372,6 +1373,7 @@
 			<value direction="in" name="maxImageWidth" type="integer" />
 			<value direction="in" name="maxImageHeight" type="integer" />
 			<value direction="in" name="maxWidth" type="integer" />
+            <value direction="in" name="forcedAlignment" type="string" />
 
 		</values>
 		<methods>

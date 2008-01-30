@@ -167,7 +167,7 @@ public class TipiProperty
   public void setProperty(final Property p) {
     runSyncInEventThread(new Runnable() {
       public void run() {
-    	  System.err.println("Set property old school");
+//    	  System.err.println("Set property old school");
     	  //    	  if(myProperty!=null && myProperty!=p) {
 //    		  myProperty.removePropertyDataListener(TipiProperty.this);
 //    	  }
@@ -300,14 +300,18 @@ public class TipiProperty
         if ("showdatepicker".equals(name)) {
            ( (GenericPropertyComponent) getContainer()).setShowDatePicker( ( (Boolean) object).booleanValue());
         }
-        if("alwaysUseLabel".equals("name") ) {
+        if("alwaysUseLabel".equals(name) ) {
             ( (GenericPropertyComponent) getContainer()).setAlwaysUseLabel( ( (Boolean) object).booleanValue());
         } 
-        if("maxImageWidth".equals("name") ) {
+        if("maxImageWidth".equals(name) ) {
             setMaxImageWidth( ( (Integer) object).intValue());
         } 
-        if("maxImageHeight".equals("name") ) {
+        if("maxImageHeight".equals(name) ) {
             setMaxImageHeight( ( (Integer) object).intValue());
+        } 
+        if("forcedAlignment".equals(name) ) {
+        	System.err.println("TipiProperty: "+object);
+        	( (GenericPropertyComponent) getContainer()).setForcedAlignment((String)object);
         } 
 
         
