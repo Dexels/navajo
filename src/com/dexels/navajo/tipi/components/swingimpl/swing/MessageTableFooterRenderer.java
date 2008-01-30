@@ -116,7 +116,7 @@ public class MessageTableFooterRenderer
  private final Map aggregateValueMap = new HashMap();
 
  public void addAggregate(int columnIndex, String expression) {
-   aggregateMap.put(new Integer(columnIndex),expression);
+   aggregateMap.put(new Integer(columnIndex-1),expression);
  }
 
  public void flushAggregateValues() {
