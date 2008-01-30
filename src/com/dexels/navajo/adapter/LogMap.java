@@ -5,7 +5,6 @@ import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.util.AuditLog;
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.logger.*;
 
 /**
  * <p>Title: Navajo Product Project</p>

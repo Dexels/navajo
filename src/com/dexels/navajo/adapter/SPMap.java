@@ -23,7 +23,6 @@ import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.adapter.sqlmap.ResultSetMap;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.server.*;
-import com.dexels.navajo.logger.*;
 import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.server.UserException;

@@ -31,8 +31,6 @@ package com.dexels.navajo.adapter.sqlmap;
 
 import java.sql.Connection;
 import java.util.StringTokenizer;
-import com.dexels.navajo.logger.NavajoLogger;
-import com.dexels.navajo.server.NavajoConfig;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;

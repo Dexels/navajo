@@ -1,13 +1,9 @@
 package com.dexels.navajo.adapter;
 
 import com.dexels.navajo.adapter.sqlmap.DatabaseInfo;
-import com.dexels.navajo.adapter.sqlmap.RecordMap;
 import com.dexels.navajo.adapter.sqlmap.ResultSetMap;
-
 import com.dexels.navajo.adapter.sqlmap.SQLBatchUpdateHelper;
-
 import com.dexels.navajo.adapter.sqlmap.ConnectionBrokerManager;
-
 import com.dexels.navajo.adapter.sqlmap.SessionIdentification;
 
 import com.dexels.navajo.document.*;
@@ -24,17 +20,13 @@ import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.util.*;
-import com.dexels.navajo.logger.*;
 import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.document.types.Binary;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.StringReader;
 import java.util.Map;
