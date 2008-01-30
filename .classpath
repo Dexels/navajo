@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry exported="true" kind="src" path="/NavajoLogger"/>
 	<classpathentry exported="true" kind="src" path="/NavajoClient"/>
 	<classpathentry exported="true" kind="src" path="/NavajoDocument"/>
 	<classpathentry excluding="**/CVS/*" kind="src" path="src"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/DexelsVersionControl"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/NavajoLogger"/>
+	<classpathentry kind="lib" path="lib/backport-util-concurrent-3.1.jar"/>
+	<classpathentry kind="lib" path="lib/jgroups-2.5.1-jdk14.jar"/>
+	<classpathentry kind="lib" path="lib/retrotranslator-runtime-1.2.2.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
