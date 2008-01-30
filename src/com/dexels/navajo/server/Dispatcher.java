@@ -53,7 +53,6 @@ import com.dexels.navajo.lockguard.LockDefinition;
 import com.dexels.navajo.lockguard.LockManager;
 import com.dexels.navajo.lockguard.LocksExceeded;
 
-import com.dexels.navajo.logger.*;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 
@@ -99,8 +98,6 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
   public  long requestCount = 0;
   private final NavajoConfig navajoConfig;
  
-  private  NavajoLogger logger = null;
-
   private  boolean debugOn = false;
 
   private  String keyStore;
@@ -649,36 +646,6 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
                                                   Throwable t) throws
       FatalException {
 
-    if (debugOn) {
-
-      if (access != null) {
-        if (t != null) {
-          logger.log(NavajoPriority.DEBUG,
-                     "in generateErrorMessage(), rpc = " + access.rpcName +
-                     " usr = " + access.rpcUser + ", message: " +
-                     message, t);
-        }
-        else {
-          logger.log(NavajoPriority.DEBUG,
-                     "in generateErrorMessage(), rpc = " + access.rpcName +
-                     " usr = " + access.rpcUser + ", message: " +
-                     message);
-
-        }
-      }
-      else {
-        if (t != null) {
-          logger.log(NavajoPriority.DEBUG,
-                     "in generateErrorMessage(): " + message, t);
-        }
-        else {
-          logger.log(NavajoPriority.DEBUG,
-                     "in generateErrorMessage(): " + message);
-
-        }
-      }
-    }
-
     if (message == null) {
       message = "Null pointer exception";
 
@@ -1029,18 +996,14 @@ public final Navajo handle(Navajo inMessage, Object userCertificate, ClientInfo 
         }
       } 
       else {
-        if (debugOn) {
-          logger.log(NavajoPriority.WARN, "Switched off authorisation mode");
-        }
+        
         access = new Access(0, 0, 0, rpcUser, rpcName, "", "", "", null);
       }
 
       if ( rpcUser.endsWith(navajoConfig.getBetaUser()) ) {
         access.betaUser = true;
         System.err.println("We have a beta user: " + rpcUser );
-        if (debugOn) {
-          logger.log(NavajoPriority.INFO, "BETA USER ACCESS!");
-        }
+       
       }
 
       if ( (access.userID == -1) || (access.serviceID == -1)) { // ACCESS NOT GRANTED.
@@ -1173,7 +1136,6 @@ public final Navajo handle(Navajo inMessage, Object userCertificate, ClientInfo 
       }
       catch (Exception ee) {
         ee.printStackTrace();
-        logger.log(NavajoPriority.DEBUG, ee.getMessage(), ee);
         myException = ee;
         return errorHandler(access, ee, inMessage);
       }
@@ -1190,19 +1152,16 @@ public final Navajo handle(Navajo inMessage, Object userCertificate, ClientInfo 
       }
       catch (Exception ee) {
         ee.printStackTrace();
-        logger.log(NavajoPriority.DEBUG, ee.getMessage(), ee);
         return errorHandler(access, ee, inMessage);
       }
     }
     catch (Exception e) {
       e.printStackTrace(System.err);
-      logger.log(NavajoPriority.DEBUG, e.getMessage(), e);
       myException = e;
       return errorHandler(access, e, inMessage);
     } catch (Throwable e) {
     	 e.printStackTrace(System.err);
-    	 logger.log(NavajoPriority.DEBUG, e.getMessage(), e);
-         return errorHandler(access, e, inMessage);
+    	 return errorHandler(access, e, inMessage);
     }
     finally {
     	

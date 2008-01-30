@@ -49,7 +49,6 @@ import java.lang.management.OperatingSystemMXBean;
 import com.dexels.navajo.parser.DefaultExpressionEvaluator;
 import com.dexels.navajo.persistence.*;
 import com.dexels.navajo.util.AuditLog;
-import com.dexels.navajo.logger.*;
 
 public final class NavajoConfig {
 
@@ -93,7 +92,6 @@ public final class NavajoConfig {
     private boolean enableLockManager = true;
     private boolean enableStatisticsRunner = true;
     private static boolean useLog4j = false;
-    protected NavajoLogger navajoLogger = null;
 
     public boolean monitorOn;
     public String monitorUsers = null;
