@@ -136,7 +136,7 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
 					// runASyncInEventThread(new Runnable() {
 					// public void run() {
 					updateQuestionList();
-					performTipiEvent(eventtype, source, sync);
+//					performTipiEvent(eventtype, source, sync);
 					// CHANGED TO FULL UPDATE:
 
 					// }
@@ -261,6 +261,7 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
 			if (tq.isValid() == false) {
 				invalidFound = true;
 				System.err.println("FOUND AN INVALID CHILD: " + tq.getPath());
+//				Thread.dumpStack();
 			}
 		}
 		if (invalidFound) {
