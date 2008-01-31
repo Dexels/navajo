@@ -191,7 +191,7 @@ public final class StopwatchTime
     }
     StringTokenizer tok = new StringTokenizer(myFormat, delim);
 
-    System.err.println("tokens: " + tok.countTokens());
+//    System.err.println("tokens: " + tok.countTokens());
 
     if(",".equals(sep) && tok.countTokens() > 2){
       System.err.println("WARNING: Invalid format subtype!");
