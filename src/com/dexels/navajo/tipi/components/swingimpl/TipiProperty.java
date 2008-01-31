@@ -431,7 +431,8 @@ public class TipiProperty
   }
 
   public void propertyEventFired(Property p, String eventType, Validatable v) {
-	  System.err.println("PROPEVENT::"+p.getName()+"  "+eventType);
+//	  System.err.println("PROPEVENT::"+p.getName()+"  "+eventType+" my name: "+myPropertyName);
+//	  Thread.dumpStack();
     if (p == null) {
       System.err.println("Trying to fire event from null property!");
       return;
@@ -465,9 +466,10 @@ public class TipiProperty
       for (int i = 0; i < myListeners.size(); i++) {
         TipiEventListener current = (TipiEventListener) myListeners.get(i);
         current.performTipiEvent(eventType, m, false);
-        performTipiEvent(eventType, m, false);
-		
+ 		
       }
+      performTipiEvent(eventType, m, false);
+
     }
     catch (Exception ex) {
       ex.printStackTrace();
