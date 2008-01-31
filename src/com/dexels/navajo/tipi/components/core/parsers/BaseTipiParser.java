@@ -4,7 +4,6 @@ import java.util.*;
 
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
-import com.sun.xml.txw2.output.*;
 
 abstract class BaseTipiParser extends TipiTypeParser {
 	private static final String TIPI_HOME_SYMBOL = "~";
