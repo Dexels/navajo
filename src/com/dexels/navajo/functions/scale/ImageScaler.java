@@ -67,7 +67,7 @@ public class ImageScaler {
         	return c;
         } catch (IOException e) {
         	e.printStackTrace(System.err);
-        	throw new IOException(e.getMessage(),e);
+        	throw new IOException(e.getMessage());
         } finally {
         	if ( is != null ) {
         		try {
