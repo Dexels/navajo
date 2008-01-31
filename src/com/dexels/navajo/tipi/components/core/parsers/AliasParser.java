@@ -45,7 +45,7 @@ public class AliasParser extends BaseTipiParser {
 		if(alias==null) {
 			throw new RuntimeException("Error. Can not find alias: "+expression);
 		}
-		System.err.println("Found alias: "+alias);
+//		System.err.println("Found alias: "+alias);
 		try {
 			Operand evaluate = myContext.evaluate(alias, source, event);
 			System.err.println("Evaluate: "+evaluate.value);

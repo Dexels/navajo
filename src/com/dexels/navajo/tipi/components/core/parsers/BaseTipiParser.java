@@ -23,8 +23,8 @@ abstract class BaseTipiParser extends TipiTypeParser {
 			System.err.println("Indirect home path: "+path);
 			source = source.getHomeComponent();
 			String pathExpression = path.substring(2,path.length());
-			System.err.println("Home component: "+source.getPath()+" expression: "+pathExpression);
-			myContext.debugTipiComponentTree(source, 5);
+//			System.err.println("Home component: "+source.getPath()+" expression: "+pathExpression);
+//			myContext.debugTipiComponentTree(source, 5);
 			return source.getTipiComponentByPath(pathExpression);
 		}
 		if (path.startsWith(".")) { // Relative path

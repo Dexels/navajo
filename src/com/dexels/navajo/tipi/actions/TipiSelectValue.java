@@ -54,14 +54,14 @@ public final class TipiSelectValue extends TipiAction {
 		if (evaluated.value instanceof Property) {
 			Property p = (Property) evaluated.value;
 			try {
-				System.err.println("looking for value: "+(String) evaluatedValue.value);
+//				System.err.println("looking for value: "+(String) evaluatedValue.value);
 				Selection s = p.getSelectionByValue((String) evaluatedValue.value);
 				p.setSelected(s);
 				System.err.println("After: ");
 				ArrayList al = p.getAllSelections();
 				for (int i = 0; i < al.size(); i++) {
 					Selection c = (Selection)al.get(i);
-					System.err.println("NAME: "+c.getName()+" VALUE: "+evaluatedValue.value+" sel: "+c.isSelected());
+//					System.err.println("NAME: "+c.getName()+" VALUE: "+evaluatedValue.value+" sel: "+c.isSelected());
 				}
 			} catch (NavajoException e) {
 				e.printStackTrace();
