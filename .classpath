@@ -6,6 +6,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/DexelsVersionControl"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JavaFX"/>
-	<classpathentry kind="lib" path="/Navajo/NavajoRuntime.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Navajo"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
