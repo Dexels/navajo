@@ -1381,7 +1381,7 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 	}
 	
 	public String getAlias(String expression) {
-		System.err.println("Getting alias: "+expression+" map: "+aliasMap);
+//		System.err.println("Getting alias: "+expression+" map: "+aliasMap);
 		
 		return (String) aliasMap.get(expression);
 	}

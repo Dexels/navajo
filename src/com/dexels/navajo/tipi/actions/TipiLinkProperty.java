@@ -27,7 +27,7 @@ public final class TipiLinkProperty extends TipiAction {
 		final Property master = (Property) getEvaluatedParameter("master", event).value;
 		final Property slave = (Property) getEvaluatedParameter("slave", event).value;
 
-		myContext.link(master, slave);
+//		myContext.link(master, slave);
 		
 	}
 
