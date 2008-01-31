@@ -168,7 +168,7 @@ public final class DefaultExpressionEvaluator
 			current.refreshExpression();
 		} catch (ExpressionChangedException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+//			e.printStackTrace();
 		}
     } catch (NavajoException e) {
         System.err.println("Expression failed: "+current.getValue());
