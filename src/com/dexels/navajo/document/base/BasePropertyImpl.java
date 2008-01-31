@@ -3,6 +3,7 @@ package com.dexels.navajo.document.base;
 import java.beans.*;
 import java.io.*;
 import java.net.*;
+import java.text.*;
 import java.util.*;
 
 import com.dexels.navajo.document.*;
@@ -430,7 +431,21 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 			if (getValue() == null || "".equals(getValue())) {
 				return new Money((Double) null, getSubType());
 			}
-			return new Money(Double.parseDouble(getValue()), getSubType());
+			String val = getValue();
+//			System.err.println("VALUEEEEEE: "+val);
+//			String val2 = val.replace(".", "");
+//			String val3 = val2.replace(',', '.');
+			
+			NumberFormat fn = NumberFormat.getNumberInstance(Locale.US);
+			
+			Number parse;
+			try {
+				parse = fn.parse(val);
+			} catch (ParseException e) {
+				e.printStackTrace();
+				return null;
+			}
+			return new Money(parse.doubleValue(), getSubType());
 		} else if (getType().equals(Property.CLOCKTIME_PROPERTY)) {
 			if (getValue() == null || getValue().equals("")) {
 				return null;
@@ -743,7 +758,9 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		String old = getValue();
 		if (BINARY_PROPERTY.equals(getType())) {
 			System.err.println("Warning: Very deprecated. use setValue(Binary) instead");
-			Thread.dumpStack();
+			if(value!=null) {
+				Thread.dumpStack();
+			}
 			try {
 				if (value != null) {
 					myBinary = new Binary(new StringReader(value));
