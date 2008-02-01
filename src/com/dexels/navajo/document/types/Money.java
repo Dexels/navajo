@@ -238,18 +238,26 @@ public final class Money
     if (value == null && obj == null) {
       return true;
     }
-
-    if (value == null || obj == null) {
-      return false;
+    if(obj==null) {
+    	return false;
     }
 
     if (obj instanceof Money) {
       Money m = (Money) obj;
       if (m.value == null) {
-        return false;
+    	if(value==null) {
+    		return true;
+    	} else {
+            return false;
+    	}
+      } else {
+      	if(value==null) {
+    		return false;
+    	} else {
+    	      return compareTo(m) == 0;
+    	}
       }
 
-      return compareTo(m) == 0;
     }
     else {
       return false;
