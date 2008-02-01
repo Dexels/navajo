@@ -27,7 +27,7 @@ public class TypeCheckMoney extends TypeChecker {
     }
 
     try {
-  double v = Double.parseDouble(value);
+  double v = Double.parseDouble(value.replace( ',', '.'));
 
 //    Map m = loadSubtypes(p);
     String max = p.getSubType("max");
