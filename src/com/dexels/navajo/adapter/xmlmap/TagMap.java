@@ -109,7 +109,7 @@ public class TagMap implements Mappable {
 				child.attributes = new HashMap ();
 			}
 
-			child.attributes.put( this.attributeName, t);
+			child.attributes.put( child.attributeName, t);
 		} catch (UserException ue) {
 			ue.printStackTrace(System.err);
 		}
@@ -198,16 +198,14 @@ public class TagMap implements Mappable {
 		childName = s;
 	}
 	
-	public void setAttributeName(String s) {
-		try {
-			TagMap child = this.getChild();
-		
-			if ( child != null ) {
-				child.attributeName = s;
-			}
-		}
-		catch ( UserException ex ) {
-			System.err.println("Setting attribute " + s + " failed");
+	public void setAttributeName(String s) throws UserException {
+
+		TagMap child = this.getChild();
+
+		if ( child != null ) {
+			child.attributeName = s;
+		} else {
+			throw new UserException(-1, "Could not find XML child: " + s);
 		}
 	}
 	
