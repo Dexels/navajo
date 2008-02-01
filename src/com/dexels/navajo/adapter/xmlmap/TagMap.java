@@ -62,7 +62,7 @@ public class TagMap implements Mappable {
 	public TagMap     [] children;
 	public TagMap     child;
 	
-	public String     childName;
+	public String     childName = "";
 	public String     attributeName;
 	public String     childText;
 	
@@ -94,17 +94,25 @@ public class TagMap implements Mappable {
 		text = t;
 	}
 	
-	public void setAttributeText(String t) {
-		// attribute name must be known
-		if ( this.attributeName == null )
-			return;
-		
-		// create attributes if not already present
-		if ( this.attributes == null ) {
-			this.attributes = new HashMap ();
-		}
+	public void setAttributeText(String t) throws UserException {
 
-		this.attributes.put( this.attributeName, t);
+		try {
+			TagMap child = this.getChild();
+
+			// attribute name must be known
+			if ( child.attributeName == null ) {
+				throw new UserException(-1, "Set attributeName before calling attributeText");
+			}
+
+			// create attributes if not already present
+			if ( child.attributes == null ) {
+				child.attributes = new HashMap ();
+			}
+
+			child.attributes.put( this.attributeName, t);
+		} catch (UserException ue) {
+			ue.printStackTrace(System.err);
+		}
 	}
 	
 	public void setName(String s) {
