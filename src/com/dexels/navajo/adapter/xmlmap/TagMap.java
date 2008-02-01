@@ -96,23 +96,20 @@ public class TagMap implements Mappable {
 	
 	public void setAttributeText(String t) throws UserException {
 
-		try {
-			TagMap child = this.getChild();
+		TagMap child = this.getChild();
 
-			// attribute name must be known
-			if ( child.attributeName == null ) {
-				throw new UserException(-1, "Set attributeName before calling attributeText");
-			}
-
-			// create attributes if not already present
-			if ( child.attributes == null ) {
-				child.attributes = new HashMap ();
-			}
-
-			child.attributes.put( child.attributeName, t);
-		} catch (UserException ue) {
-			ue.printStackTrace(System.err);
+		// attribute name must be known
+		if ( child.attributeName == null ) {
+			throw new UserException(-1, "Set attributeName before calling attributeText");
 		}
+
+		// create attributes if not already present
+		if ( child.attributes == null ) {
+			child.attributes = new HashMap ();
+		}
+
+		child.attributes.put( child.attributeName, t);
+
 	}
 	
 	public void setName(String s) {
