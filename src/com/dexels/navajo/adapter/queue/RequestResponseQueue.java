@@ -173,6 +173,10 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 							if ( maxRetries == 0 ) {
 								maxRetries = MAX_RETRIES;
 							}
+							if ( handler.getRetries() > maxRetries ) {
+								sendHealthCheck(handler.getRetries(), maxRetries, "ERROR", "Could not process queued adapter, service = " + 
+										handler.getAccess().getRpcName() + ", adapter = " + handler.getClass().getName());
+							}
 							myStore.putMessage(handler, ( handler.getRetries() > maxRetries ));
 						}
 					}

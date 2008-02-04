@@ -83,6 +83,9 @@ public class Worker extends GenericThread implements WorkerMXBean, WorkerInterfa
 	private final static String RESPONSE_PREFIX = "navajoresponse_";
 	private final static String myId = "Navajo Integrity Worker";
 	
+	private int previousWorkListLevelSize = 0;
+	private int maxWorkLostLevelSize = 30;
+	
 	public Worker() {
 		super(myId);
 	}
@@ -197,6 +200,13 @@ public class Worker extends GenericThread implements WorkerMXBean, WorkerInterfa
 	
 	public final void worker() {
 		
+		int level = workList.size();
+		if ( ( level !=  previousWorkListLevelSize) && workList.size() > maxWorkLostLevelSize ) {
+			AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "WARNING: Integrity Worker TODO list size:  " + workList.size());
+			sendHealthCheck(level, maxWorkLostLevelSize, "WARNING", "Integrity worker TODO list size is rather large");
+		}
+		previousWorkListLevelSize = level;
+		
 		// Check for new access objects in workList.
 		HashMap<String,Navajo> copyOfWorkList = null;
 		Set<String> s = null;
@@ -214,11 +224,6 @@ public class Worker extends GenericThread implements WorkerMXBean, WorkerInterfa
 			if ( id != null ) {
 				notWrittenReponses.remove( id );
 			}
-			//workList.remove(id);
-//			if (workList.size() > 50) {
-//				AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "WARNING: Integrity Worker TODO list size:  " + workList.size());
-//			}
-			
 		}
 		
 		// Remove 'old' responses.
@@ -519,5 +524,13 @@ public class Worker extends GenericThread implements WorkerMXBean, WorkerInterfa
 		} else {
 			return false;
 		}
+	}
+
+	public int getWarningLevelWorkList() {
+		return maxWorkLostLevelSize;
+	}
+
+	public void setWarningLevelWorkList(int i) {
+		maxWorkLostLevelSize = i;
 	}
 }

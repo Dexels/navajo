@@ -132,4 +132,10 @@ public class TribalStatusCollector extends GenericThread implements TribalStatus
 	public String getClusterJoinDates() {
 		return getClusterInfo("JOINDATE");
 	}
+
+	@Override
+	public void terminate() {
+		// TODO Auto-generated method stub
+		
+	}
 }

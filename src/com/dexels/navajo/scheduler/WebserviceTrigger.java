@@ -130,6 +130,11 @@ public class WebserviceTrigger extends Trigger implements Serializable {
 				public final void worker() {
 					getTask().run();
 				}
+
+				@Override
+				public void terminate() {
+					// Nothing special.
+				}
 			};
 			taskThread.startThread(taskThread);
 		} else {

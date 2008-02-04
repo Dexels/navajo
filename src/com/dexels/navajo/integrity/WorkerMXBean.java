@@ -8,5 +8,7 @@ public interface WorkerMXBean extends GenericThreadMXBean {
 	public int getWorkSize();
 	public int getNotWrittenSize();
 	public int getFileCount();
+	public int getWarningLevelWorkList();
+	public void setWarningLevelWorkList(int i);
 
 }

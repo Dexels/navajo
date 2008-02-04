@@ -90,4 +90,10 @@ public class CacheController extends GenericThread implements NavajoListener {
 			// Do stuff.
 		}
 	}
+
+	@Override
+	public void terminate() {
+		// TODO Auto-generated method stub
+		
+	}
 }

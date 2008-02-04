@@ -79,11 +79,12 @@ public abstract class Trigger implements Listener, Serializable {
 	 * triggerafter:taskid
 	 * 
 	 */
-	public final static String TIME_TRIGGER = "time";
-	public final static String OFFSETTIME_TRIGGER = "offsettime";
-	public final static String WS_TRIGGER = "navajo";
-	public final static String WS_BEFORE_TRIGGER = "beforenavajo";
-	public final static String AFTER_TASK_TRIGGER = "aftertask";
+	public final static String TIME_TRIGGER         = "time";
+	public final static String OFFSETTIME_TRIGGER   = "offsettime";
+	public final static String WS_TRIGGER           = "navajo";  // or afternavajo.
+	public final static String WS_BEFORE_TRIGGER    = "beforenavajo";
+	public final static String AFTER_TASK_TRIGGER   = "aftertask";
+	public final static String SERVER_EVENT_TRIGGER = "serverevent";
 	
 	private Task myTask = null;
 
@@ -148,7 +149,11 @@ public abstract class Trigger implements Listener, Serializable {
 				String v = s.substring(WS_BEFORE_TRIGGER.length()+1);
 				t = new BeforeWebserviceTrigger(v);
 				return t;
-			} 
+			}  else if (s.startsWith(SERVER_EVENT_TRIGGER)) {
+				String v = s.substring(SERVER_EVENT_TRIGGER.length()+1);
+				t = new NavajoEventTrigger(v);
+				return t;
+			}
 			else {
 				throw new IllegalTrigger(s);
 			}

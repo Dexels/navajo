@@ -297,6 +297,11 @@ public class TimeTrigger extends Trigger implements Serializable, ClockListener 
 				public final void worker() {
 					getTask().run();
 				}
+
+				@Override
+				public void terminate() {
+					// Nothing special.
+				}
 			};
 			taskThread.startThread(taskThread);
 			fired = false;

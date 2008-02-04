@@ -54,4 +54,9 @@ public class ListenerRunner extends GenericThread {
 
 		}
 	}
+
+	@Override
+	public void terminate() {
+		// Nothing special.
+	}
 }

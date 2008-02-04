@@ -50,6 +50,10 @@ public class AfterTaskTrigger extends Trigger implements TaskListener, Serializa
 		// Spawn thread.
 		GenericThread taskThread = new GenericThread("task:" + getTask().getId()) {
 
+			public void terminate () {
+				// Nothing special.
+			}
+			
 			public void run() {
 				try {
 					worker();

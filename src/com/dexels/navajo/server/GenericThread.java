@@ -35,6 +35,8 @@ import javax.management.Notification;
 import javax.management.NotificationBroadcasterSupport;
 
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.events.NavajoEventRegistry;
+import com.dexels.navajo.events.types.NavajoHealthCheckEvent;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.jmx.NavajoNotification;
@@ -133,16 +135,13 @@ public class GenericThread extends NotificationBroadcasterSupport implements Run
 	/**
 	 * Implements work.
 	 */
-	public void worker() 
-	  { // implement this. 
-	  }
+	public  void worker() {};
+	 
 	/**
 	 * Implements what to do in case of termination.
 	 */
-	public void terminate()
-	  { // implement this. 
-	  }
-	
+	public  void terminate() {};
+	 
 	public void kill() {
 		killed = true;
 		if ( thread != null ) {
@@ -204,6 +203,14 @@ public class GenericThread extends NotificationBroadcasterSupport implements Run
 		return this.totalSleepTime;
 	}
 	
+	/**
+	 * This method can be used by GenericThread object to signal health problems.
+	 * 
+	 * @param level
+	 * @param warningLevel
+	 * @param severity
+	 * @param message
+	 */
 	public final void sendHealthCheck(int level, int warningLevel, String severity, String message) {
 
 		String m = severity + ":" + "level=" + level + ",warninglevel=" + warningLevel + ",message=" + message;
@@ -215,6 +222,7 @@ public class GenericThread extends NotificationBroadcasterSupport implements Run
 					m);
 
 		sendNotification(n); 
+		NavajoEventRegistry.getInstance().publishAsynchronousEvent(new NavajoHealthCheckEvent(m));
 
 	}
 	
