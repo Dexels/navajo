@@ -385,7 +385,7 @@ public LazyMessagePath getLazyMessagePath(String path) {
 
 
 
-  public synchronized List refreshExpression() throws NavajoException{
+  public synchronized List<Property> refreshExpression() throws NavajoException{
     try {
 
         Map depSet = NavajoFactory.getInstance().getExpressionEvaluator().createDependencyMap(this);
@@ -553,7 +553,7 @@ public void addPropertyChangeListener(PropertyChangeListener p) {
 	}
 	myPropertyDataListeners.add(p);
 	if(myPropertyDataListeners.size()>1) {
-		System.err.println("Multiple property listeners detected!" + myPropertyDataListeners.size());
+//		System.err.println("Multiple property listeners detected!" + myPropertyDataListeners.size());
 	}
 }
 
