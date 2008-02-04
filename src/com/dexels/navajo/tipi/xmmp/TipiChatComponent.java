@@ -96,8 +96,6 @@ public abstract class TipiChatComponent extends TipiComponentImpl {
 				Message m = (Message) p;
 				String tml = (String) m.getProperty("tml");
 
-				System.err.println("MY MESSAGE:\n============");
-				System.err.println(tml);
 				for (Body b : m.getBodies()) {
 					System.err.println(">>> " + b.getMessage());
 				}
