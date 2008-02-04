@@ -19,7 +19,7 @@ import javax.swing.tree.*;
 import com.dexels.navajo.document.*;
 
 
-public  class BaseMessageImpl extends BaseNode implements Message, Comparable<Message> {
+public  class BaseMessageImpl extends BaseNode implements Message, Comparable<Message>, TreeNode {
     protected String myName = "";
 
     private String myType = "";
@@ -1243,5 +1243,50 @@ public final Message getParentMessage() {
 		}
 		myPropertyDataListeners.remove(p);
 	}
+	
+	/**
+	 * Methods below are needed for TreeNode interface. Should be refactored in the future, but there
+	 * is a dependency in JTreeTable (NavajoSwingClient).
+	 */
+	
+	 public final Enumeration children() {
+	    	Vector v = new Vector(getAllProperties());
+	    	if ( messageList != null ) {
+	    		v.addAll(messageList);
+	    	}
+	    	return v.elements();
+	    }
+
+	    public final int getIndex(TreeNode t) {
+	    	for (int i = 0; i < getAllProperties().size(); i++) {
+	    		if (getAllProperties().get(i) == t) {
+	    			return i;
+	    		}
+	    	}
+	    	if ( messageList != null ) {
+	    		for (int i = 0; i < messageList.size(); i++) {
+	    			if (messageList.get(i) == t) {
+	    				return i;
+	    			}
+	    		}
+	    	}
+	    	return 0;
+	    }
+
+	    public final boolean isLeaf() {
+			if (messageList==null) {
+				return true;
+			}
+			return messageList.size() == 0;
+	    }
+
+	    public final boolean getAllowsChildren() {
+	      return true;
+	    }
+
+	    public final TreeNode getParent() {
+	      return (TreeNode) getArrayParentMessage();
+	    }
+
 	
 }

@@ -6,6 +6,8 @@ import java.net.*;
 import java.text.*;
 import java.util.*;
 
+import javax.swing.tree.TreeNode;
+
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.types.*;
 
@@ -31,7 +33,7 @@ import com.dexels.navajo.document.types.*;
  * @version 1.0
  */
 
-public class BasePropertyImpl extends BaseNode implements Property, Comparable<Property> {
+public class BasePropertyImpl extends BaseNode implements Property, Comparable<Property>, TreeNode {
 	/**
 	 * 
 	 */
@@ -758,9 +760,6 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		String old = getValue();
 		if (BINARY_PROPERTY.equals(getType())) {
 			System.err.println("Warning: Very deprecated. use setValue(Binary) instead");
-			if(value!=null) {
-				Thread.dumpStack();
-			}
 			try {
 				if (value != null) {
 					myBinary = new Binary(new StringReader(value));
@@ -1624,6 +1623,38 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 				// Thread.dumpStack();
 			}
 		}
+	}
+	
+	/**
+	 * Methods below are needed for TreeNode interface. Should be refactored in the future, but there
+	 * is a dependency in JTreeTable (NavajoSwingClient).
+	 */
+	public int getChildCount() {
+		return 0;
+	}
+
+	public boolean getAllowsChildren() {
+		return false;
+	}
+
+	public boolean isLeaf() {
+		return true;
+	}
+
+	public Enumeration children() {
+		return null;
+	}
+	
+	public TreeNode getChildAt(int childIndex) {
+		return null;
+	}
+
+	public TreeNode getParent() {
+		return (TreeNode) getParentMessage();
+	}
+
+	public int getIndex(TreeNode node) {
+		return 0;
 	}
 
 }
