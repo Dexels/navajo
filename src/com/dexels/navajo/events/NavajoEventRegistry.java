@@ -87,17 +87,19 @@ public class NavajoEventRegistry {
 
 		System.err.println("Asynchronous Event Triggered: " + ne.getClass());
 		Set<NavajoListener> copy = getInterestedParties(ne);
-		Iterator<NavajoListener> i = copy.iterator();
-		while ( i.hasNext() ) {
-			final NavajoListener nl = i.next();
-			try {
-				new Thread() {
-					public void run() {
-						nl.onNavajoEvent(ne);
-					}
-				}.start();
-			} catch (Throwable t) {
-				t.printStackTrace(System.err);
+		if ( copy != null ) {
+			Iterator<NavajoListener> i = copy.iterator();
+			while ( i.hasNext() ) {
+				final NavajoListener nl = i.next();
+				try {
+					new Thread() {
+						public void run() {
+							nl.onNavajoEvent(ne);
+						}
+					}.start();
+				} catch (Throwable t) {
+					t.printStackTrace(System.err);
+				}
 			}
 		}
 	}
@@ -108,15 +110,17 @@ public class NavajoEventRegistry {
 	 * @param ne
 	 */
 	public void publishEvent(NavajoEvent ne) {
-	
+
 		System.err.println("Synchronous Event Triggered: " + ne.getClass());
 		Set<NavajoListener> copy = getInterestedParties(ne);
-		Iterator<NavajoListener> i = copy.iterator();
-		while ( i.hasNext() ) {
-			try {
-				i.next().onNavajoEvent(ne);
-			} catch (Throwable t) {
-				t.printStackTrace(System.err);
+		if ( copy != null )  {
+			Iterator<NavajoListener> i = copy.iterator();
+			while ( i.hasNext() ) {
+				try {
+					i.next().onNavajoEvent(ne);
+				} catch (Throwable t) {
+					t.printStackTrace(System.err);
+				}
 			}
 		}
 	}
@@ -125,9 +129,13 @@ public class NavajoEventRegistry {
 		synchronized (semaphore) {
 			HashSet<NavajoListener> copy = null; 
 			HashSet<NavajoListener> registered = registry.get(ne.getClass());
-			copy = new HashSet<NavajoListener>();
-			copy.addAll(registered);
-			return copy;
+			if ( registered != null ) {
+				copy = new HashSet<NavajoListener>();
+				copy.addAll(registered);
+				return copy;
+			} else {
+				return null;
+			}
 		}
 	}
 	
