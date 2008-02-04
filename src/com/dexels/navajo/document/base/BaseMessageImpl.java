@@ -1233,7 +1233,7 @@ public final Message getParentMessage() {
 		}
 		myPropertyDataListeners.add(p);
 		if(myPropertyDataListeners.size()>1) {
-			System.err.println("Multiple property listeners detected!" + myPropertyDataListeners.size());
+//			System.err.println("Multiple property listeners detected!" + myPropertyDataListeners.size());
 		}
 	}
 
