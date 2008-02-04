@@ -1,5 +1,7 @@
 package tipi;
 
+import java.util.*;
+
 public class TipiJabberExtension implements TipiExtension {
 
 	public String getDescription() {
@@ -14,16 +16,23 @@ public class TipiJabberExtension implements TipiExtension {
 		return false;
 	}
 
-	@Override
+
 	public String getId() {
 		
 		return "jabber";
 	}
 
-	@Override
+
 	public String requiresMainImplementation() {
-		// TODO Auto-generated method stub
-		return "swing";
+		return null;
+	}
+
+	public List<String> getLibraryJars() {
+		return null;
+	}
+
+	public List<String> getMainJars() {
+			return null;
 	} 
 
 }
