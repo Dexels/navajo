@@ -1,0 +1,66 @@
+Workflow and task-driven user interaction
+
+Service workflows
+
+A workflow is modeled using a finite state machine extended with a global workflow instance state.
+A workflow instance is an 'active' workflow.
+The global workflow instance state contains all the historic navajo request and response documents that have
+received/sended during the lifecycle of the specific workflow instance. Furthermore, the global state
+contains parameters that can be assigned 
+
+Each state contains transitions and tasks.
+A transitions defines triggers and the next state when the trigger is fired and an optional condition is valid.
+A transition may assign new parameters for the global workflow state.
+A task initiates new services using as a request navajo any available navajo in the global state.
+
+Example workflow:
+<workflow>
+  <state id="init"> // init is special state that is used to initiate a new workflow instance.
+     <transition trigger="navajo:MySpecialService" nextstate="sendmail"/>  // When service MySpecialService is run go to the sendmail state.
+  </state>
+  <state id="sendmail">
+     <task service="navajo:SendMail"/> // call service SendMail.
+     <transition trigger="time:now" nextstate="null"/>  // immediately go to state null, null is special state to indicate that workflow should be terminated.
+  </state>
+</workflow>
+
+Creating user-tasks
+
+Within a workflow a special Navajo service can be scheduled that creates a user-task. A user-task is defined as:
+- A Tipi userinterface definition.
+- An input Navajo.
+- A group or role id (optionally)
+- A username (optionally)
+
+When a user logs into the system a list of user-tasks will be shown in a user-task inbox. The list only contains
+those tasks for which the role id matches with the current user or the username in the task definition matches
+with the current user.
+
+Example workflow with user-task:
+Consider previous workflow example. When a service MySpecialService occurs, a
+UserTask parameter is defined to set a unique id of a predefined user-task
+template. The workflow enters the createtask state. Within this new state a
+service CreateUserTask is called. The CreateUserTask service uses the
+parameter UserTask to determine which user-task instance should be created.
+Furthermore the parameter UserRole is used to set the correct role id.
+Whenever a user within the SpecialInterestGroup role performs the user-task,
+ultimately, in this example, a service HandleSpecialService is initiated by
+the user which triggers the workflow to finalize.
+<workflow>
+  <state id="init"> // init is special state that is used to initiate a new workflow instance.
+     <transition trigger="navajo:MySpecialService" nextstate="createtask">  // When service MySpecialService is run go to the sendmail state.
+         <param name="UserTask">
+            <expression value="SpecialServiceTask"/> // Create global state parameter.
+         </param>
+         <param name="UserRole">
+            <expression value="SpecialInterestGroup"/> // Create global state parameter.
+         </param>
+     </transition>
+  </state>
+  <state id="createtask">
+     <task service="navajo:CreateUserTask"/> // call service CreateUserTask putting the global state parameters in the request.
+     <transition trigger="service:HandleSpecialService" nextstate="null"/>  // When HandleSpecialService is run go to state null.
+  </state>
+</workflow>
+
+A database table is used to persist the user-tasks. 
