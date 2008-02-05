@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tid errorhandler="error">
-   <tipiclass addtocontainer="true" childcount="*" class="TipiSwingChatComponent" layoutmanager="false" module="container" name="chat" package="com.dexels.navajo.tipi.xmmp.swingimpl" studio-icon="tabs.gif" type="tipi">
+   <tipiclass addtocontainer="true" childcount="*" class="TipiSwingChatComponent" layoutmanager="false" module="container" name="chat" package="com.dexels.navajo.tipi.xmmp.swingimpl" studio-icon="tabs.gif" >
       <events>
          <event name="onInstantiate" />
          <event name="onConnect" />
@@ -31,7 +31,7 @@
          </method>
       </methods>
    </tipiclass>
-   <tipiclass addtocontainer="false" childcount="*" class="TipiChatClient" layoutmanager="false" module="container" name="chatclient" package="com.dexels.navajo.tipi.xmmp" studio-icon="tabs.gif" type="tipi">
+   <tipiclass addtocontainer="false" childcount="*" class="TipiChatClient" layoutmanager="false" module="container" name="chatclient" package="com.dexels.navajo.tipi.xmmp" studio-icon="tabs.gif" type="connector">
       <events>
          <event name="onInstantiate" />
          <event name="onConnect" />

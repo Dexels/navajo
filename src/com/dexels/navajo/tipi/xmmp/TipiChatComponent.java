@@ -13,10 +13,10 @@ import org.jivesoftware.smack.packet.Message.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.core.*;
-import com.dexels.navajo.tipi.components.swingimpl.*;
+import com.dexels.navajo.tipi.connectors.*;
 import com.dexels.navajo.tipi.internal.*;
 
-public abstract class TipiChatComponent extends TipiComponentImpl {
+public abstract class TipiChatComponent extends TipiBaseConnector implements TipiConnector {
 
 	protected String server = "iris.dexels.nl";
 	protected int port = 5222;
@@ -33,10 +33,7 @@ public abstract class TipiChatComponent extends TipiComponentImpl {
 
 	private final Map<String,String> userMap = new HashMap<String,String>();
 	
-	public static void main(String[] args) throws XMPPException, InterruptedException {
 
-		// TipiChatComponent tcc = new TipiChatComponent();
-	}
 
 	public void initialize() throws XMPPException {
 		if (connection != null) {
@@ -63,34 +60,28 @@ public abstract class TipiChatComponent extends TipiComponentImpl {
 		System.err.println("Login ok?");
 		connection.getRoster().addRosterListener(new RosterListener() {
 
-			@Override
 			public void entriesAdded(Collection<String> arg0) {
-				postRoster(connection.getRoster());
+				rosterUpdated();
 			}
 
-			@Override
 			public void entriesDeleted(Collection<String> arg0) {
-				postRoster(connection.getRoster());
+				rosterUpdated();
 			}
 
-			@Override
 			public void entriesUpdated(Collection<String> arg0) {
-				postRoster(connection.getRoster());
+				rosterUpdated();
 			}
 
-			@Override
 			public void presenceChanged(Presence p) {
 				System.err.println("Presence changed: "+p.getFrom());
-				postRoster(connection.getRoster());
+				rosterUpdated();
 			}
 		});
 
 		postRoster(connection.getRoster());
 		connection.addPacketListener(new PacketListener() {
 
-			@Override
 			public void processPacket(Packet p) {
-				// TODO Auto-generated method stub
 				String type = (String) p.getProperty("navajoType");
 				System.err.println("My type: " + type);
 				Message m = (Message) p;
@@ -161,13 +152,10 @@ public abstract class TipiChatComponent extends TipiComponentImpl {
 //			n.write(System.err);
 			getContext().loadNavajo(n, "JabberRoster");
 		} catch (NavajoException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		} catch (TipiException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (TipiBreakException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -182,21 +170,15 @@ public abstract class TipiChatComponent extends TipiComponentImpl {
 		System.err.println("Name: " + recipient);
 		Chat c = connection.getChatManager().createChat(recipient, null);
 		c.sendMessage(text);
-		// Message m = new Message(recipient);
-		// m.setType(Message.Type.chat);
-		// connection.sendPacket(m);
-
 	}
 
 	@Override
 	public Object createContainer() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	protected void setComponentValue(String name, Object object) {
-		// TODO Auto-generated method stub
 		super.setComponentValue(name, object);
 		if (name.equals("username")) {
 			username = (String) object;
@@ -224,8 +206,8 @@ public abstract class TipiChatComponent extends TipiComponentImpl {
 			initialize();
 		}
 		Roster r = connection.getRoster();
-		for (Iterator iterator = r.getEntries().iterator(); iterator.hasNext();) {
-			RosterEntry rosterEntry = (RosterEntry) iterator.next();
+		for (Iterator<RosterEntry> iterator = r.getEntries().iterator(); iterator.hasNext();) {
+			RosterEntry rosterEntry = iterator.next();
 			String user = rosterEntry.getUser();
 			Presence p = r.getPresence(user);
 			if(p!=null) {
@@ -251,7 +233,6 @@ public abstract class TipiChatComponent extends TipiComponentImpl {
 		try {
 			performTipiEvent("onMessageReceived", m, false);
 		} catch (TipiException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -282,7 +263,6 @@ public abstract class TipiChatComponent extends TipiComponentImpl {
 				try {
 					sendMessage(result, recipient);
 				} catch (XMPPException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -294,7 +274,6 @@ public abstract class TipiChatComponent extends TipiComponentImpl {
 				try {
 					broadcastMessage(result);
 				} catch (XMPPException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -314,6 +293,53 @@ public abstract class TipiChatComponent extends TipiComponentImpl {
 	public void disposeComponent() {
 		disconnect();
 		super.disposeComponent();
+	}
+
+	protected void rosterUpdated() {
+		postRoster(connection.getRoster());
+		try {
+			performTipiEvent("onRosterChanged", null, false);
+		} catch (TipiException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void doTransaction(Navajo n, String service) throws TipiBreakException, TipiException {
+		if(service.equals("JabberRoster")) {
+			postRoster(connection.getRoster());
+		}
+		throw new UnsupportedOperationException("umm, need destination for jabber!");
+	}
+
+	public void doTransaction(Navajo n, String service, String destination) throws TipiBreakException, TipiException {
+		System.err.println("Doin it now!");
+		try {
+			sendMessage("Shake it!", destination);
+		} catch (XMPPException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		try {
+			Message p = new Message(destination,Type.chat);
+			p.setProperty("navajoType",service);
+			if(n!=null) {
+				StringWriter sw = new StringWriter();
+				n.write(sw);
+				sw.flush();
+				sw.close();
+				p.setBody(sw.toString());
+				
+			}
+			connection.sendPacket(p);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (NavajoException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public String getConnectorId() {
+		return "jabber";
 	}
 
 }

@@ -3,6 +3,8 @@ package com.dexels.navajo.tipi.xmmp.swingimpl;
 import org.jivesoftware.smack.*;
 import org.jivesoftware.smack.packet.*;
 
+import com.dexels.navajo.document.*;
+import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.xmmp.*;
 
 public class TipiSwingChatComponent extends TipiChatComponent {
@@ -37,4 +39,16 @@ public class TipiSwingChatComponent extends TipiChatComponent {
 	
 		return chatComponent;
 	}
+
+	public void doTransaction(Navajo n, String service) throws TipiBreakException, TipiException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public String getConnectorId() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
 }

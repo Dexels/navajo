@@ -3,11 +3,7 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/smack.jar"/>
-	<classpathentry kind="lib" path="lib/NavajoClient.jar"/>
-	<classpathentry kind="lib" path="lib/NavajoDocument.jar"/>
-	<classpathentry kind="lib" path="lib/NavajoRuntime.jar"/>
 	<classpathentry kind="lib" path="lib/tipipackage.jar"/>
-	<classpathentry kind="lib" path="lib/NavajoSwingClient.jar"/>
-	<classpathentry kind="lib" path="lib/NavajoSwingTipi.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/NavajoSwingTipi"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
