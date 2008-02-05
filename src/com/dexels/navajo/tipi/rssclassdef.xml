@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tid errorhandler="error">
+
+   <tipiclass addtocontainer="false" childcount="*" class="TipiRssComponent" layoutmanager="false" module="container" name="rss" package="com.dexels.navajo.tipi.rss" studio-icon="tabs.gif" type="connector">
+      <events>
+         <event name="onInstantiate" />
+      </events>
+      <values>
+       </values>
+      <methods>
+      </methods>
+   </tipiclass>
+</tid>
