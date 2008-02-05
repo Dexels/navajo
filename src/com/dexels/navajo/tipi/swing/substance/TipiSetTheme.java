@@ -1,18 +1,15 @@
 package com.dexels.navajo.tipi.swing.substance;
 
-import java.awt.Frame;
+import java.awt.*;
 
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.*;
 
-import org.jvnet.substance.SubstanceLookAndFeel;
+import org.jvnet.substance.*;
 
-import com.dexels.navajo.document.Operand;
-import com.dexels.navajo.tipi.TipiBreakException;
-import com.dexels.navajo.tipi.TipiException;
-import com.dexels.navajo.tipi.internal.TipiAction;
-import com.dexels.navajo.tipi.internal.TipiEvent;
+import com.dexels.navajo.document.*;
+import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.components.swingimpl.*;
+import com.dexels.navajo.tipi.internal.*;
 
 public class TipiSetTheme extends TipiAction {
 
@@ -48,10 +45,13 @@ public class TipiSetTheme extends TipiAction {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		for (int i = 0; i < f.length; i++) {
-			SwingUtilities.updateComponentTreeUI(f[i]);
-				
+		if(((SwingTipiContext)myContext).getAppletRoot()!=null) {
+		} else {
+			for (int i = 0; i < f.length; i++) {
+				SwingUtilities.updateComponentTreeUI(f[i]);
+			}
 		}
+		
 	}
 
 }
