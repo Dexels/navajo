@@ -24,6 +24,19 @@ Example workflow:
   </state>
 </workflow>
 
+Formal definition of workflow definition language.
+
+- state. SHOULD contain an attribute id that MUST BE unique within the
+  workflow definition. MAY contain transition children. MAY contain task
+children.
+- transition. SHOULD contain an attribute trigger. SHOULD contain an attribute
+  nextstate. MAY contain an attribute condition. MAY contain param children.
+- task. SHOULD contain an attribute service. MAY contain an attribute trigger.
+  MAY contain an attribute condition.
+- param. SHOULD contain an attribute name. SHOULD contain at least one expression child.
+- expression. SHOULD contain a value attribute. MAY contain a condition
+  attribute. MAY containg a navajo attribute.
+
 Creating user-tasks
 
 Within a workflow a special Navajo service can be scheduled that creates a user-task. A user-task is defined as:
