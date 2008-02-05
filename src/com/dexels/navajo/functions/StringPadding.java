@@ -43,7 +43,6 @@ public class StringPadding extends FunctionInterface {
         		throw new TMLExpressionException(this, "Wrong argument type: " + getOperand(3));
         	}
             padFront = ((Boolean) getOperand(3)).booleanValue();
-            System.err.println("padFront = " + padFront);
         }
 
         while (object.length() < padSize) {
