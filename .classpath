@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry exported="true" kind="lib" path="lib/AnimatedTransitions-0.11.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/TimingFramework-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/jai-1_1_2/lib/jai_codec.jar"/>
+	<classpathentry kind="lib" path="lib/jai-1_1_2/lib/jai_core.jar"/>
+	<classpathentry kind="lib" path="lib/jai-1_1_2/lib/mlibwrapper_jai.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/NavajoSwingClient"/>
+	<classpathentry kind="output" path="classes"/>
+</classpath>
