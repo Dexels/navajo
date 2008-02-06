@@ -205,10 +205,18 @@ public LazyMessagePath getLazyMessagePath(String path) {
   }
   
   public String persistenceKey() {
-      String result = this.toString();
-
-      return result.hashCode() + "";
+      Navajo copy = (Navajo) this.copy();
+      copy.removeHeader();
+      StringWriter sw = new StringWriter();
+      try {
+    	  copy.write(sw);
+      } catch (NavajoException e) {
+    	  // TODO Auto-generated catch block
+    	  e.printStackTrace();
+      }
+      return sw.toString().hashCode() + "";
   }
+  
   public void removeMessage(String s) {
     rootMessage.removeMessage(s);
   }

@@ -1,5 +1,7 @@
 package com.dexels.navajo.persistence;
 
+import com.dexels.navajo.document.Navajo;
+
 /**
  * Title:        Navajo Product Project
  * Description:  This is the official source for the Navajo server
@@ -9,6 +11,9 @@ package com.dexels.navajo.persistence;
  * @version $Id$
  *
  * $Log$
+ * Revision 1.3  2008/02/06 16:51:40  arjen
+ * Minimum PersistenceManagerInterface
+ *
  * Revision 1.2  2008/02/06 14:37:00  arjen
  * *** empty log message ***
  *
@@ -40,14 +45,12 @@ public interface PersistenceManager {
     public static final int UNIT_WEEKS = 3;
     public static final int UNIT_MONTHS = 4;
 
-    public boolean write(Persistable document, String key);
-
-    public Persistable read(String key, long expirationInterval);
-
     /**
      * Get the persistent object and pass the constructor that is responsible for its creation.
      */
     public Persistable get(Constructor c, String key, long expirationInterval, boolean persist) throws Exception;
+    
+    public void setConfiguration(Navajo config);
 
   
 }
