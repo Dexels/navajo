@@ -1,12 +1,14 @@
 package com.dexels.navajo.server;
 
-import com.dexels.navajo.events.NavajoEvent;
-import com.dexels.navajo.events.NavajoListener;
-import com.dexels.navajo.events.types.NavajoRequestEvent;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.server.jmx.JMXHelper;
 import com.dexels.navajo.util.AuditLog;
 
-public class CacheController extends GenericThread implements NavajoListener {
+public class CacheController extends GenericThread  {
 
 	private static String id = "Cache Controller";
 	public static final String VERSION = "$Id$";
@@ -15,12 +17,19 @@ public class CacheController extends GenericThread implements NavajoListener {
 	private volatile static CacheController instance = null;
 	private static Object semaphore = new Object();
 	
+	private volatile static HashMap<String, Long> expirations = new HashMap<String,Long>();
+	
 	private long configTimestamp = -1;
 	
 	
 	public CacheController() {
 		super(id);
-		readConfig();
+		try {
+			readConfig();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public static CacheController getInstance() {
@@ -73,22 +82,52 @@ public class CacheController extends GenericThread implements NavajoListener {
 		}
 	}
 	
-	private void readConfig() {
-		if ( isConfigModified() ) {
-			// read
+	/**
+	 * <message name="Cache">
+	 *   <message name="Entries" type="array">
+	 *      <message name="Entries"> 
+	 *          <property name="Webservice" value="competition/ProcessQueryClub"/>
+	 *          <property name="Timeout" value="60"/>
+	 *      </message>
+	 *   </message>
+	 * <message>
+	 */
+	private void readConfig() throws Exception {
+
+		
+			Navajo config = Dispatcher.getInstance().getNavajoConfig().readConfig(CACHE_CONFIG);
+			ArrayList<Message> messages = config.getMessages("Cache/Entries");
+			if ( messages != null ) {
+				expirations.clear();
+				for (int i = 0; i < messages.size(); i++) {
+					String webservice = messages.get(i).getProperty("Webservice").getValue();
+					Long expir = new Long( messages.get(i).getProperty("Timeout").getValue() );
+					System.err.println("PUTTING " + webservice + " IN CACHECONTROL WITH TIMEOUT " + expir);
+					expirations.put(webservice, expir);
+				}
+			}
 			setConfigTimeStamp();
+		
+	}
+	
+	public final long getExpirationInterval(String service) {
+		if ( expirations.containsKey(service )  ) {
+			return expirations.get(service).longValue();
+		} else {
+			return -1;
 		}
 	}
 	
 	public void worker() 
 	{ 
-		// implement this. 
-	}
-
-	public void onNavajoEvent(NavajoEvent ne) {
-		if ( ne instanceof NavajoRequestEvent ) {
-			// Do stuff.
+		if ( isConfigModified() ) {
+			try {
+				readConfig();
+			} catch (Exception e) {
+				e.printStackTrace(System.err);
+			}
 		}
+		
 	}
 
 	@Override
