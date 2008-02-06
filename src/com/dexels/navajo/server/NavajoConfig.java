@@ -205,9 +205,8 @@ public final class NavajoConfig {
     		
     		if (body.getProperty("parameters/script_version") != null)
     			scriptVersion = body.getProperty("parameters/script_version").getValue();
-    		String persistenceClass = body.getProperty("persistence-manager/class").
-    		getValue();
-    		persistenceManager = PersistenceManagerFactory.getInstance(persistenceClass, getConfigPath());
+    		
+    		persistenceManager = PersistenceManagerFactory.getInstance("com.dexels.navajo.persistence.impl.PersistenceManagerImpl", configPath);
     		
     		if(adapterClassloader == null) {
     			adapterClassloader = new NavajoClassLoader(adapterPath, compiledScriptPath, getClass().getClassLoader());
