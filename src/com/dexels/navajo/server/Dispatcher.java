@@ -71,9 +71,9 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
    */
   public Access [] users;
   public static final String VERSION = "$Id$";
-  public static final String vendor = "Dexels BV";
-  public static final String product = "Navajo Integrator";
-  public static final String version = "Navajo Integrator Release 2005.11.10";
+  public static final String vendor  = "Dexels BV";
+  public static final String product = "Navajo Service Delivery Platform";
+  public static final String version = "Release 2008.01.01";
   public String serverId = null;
   public String applicationId = null;
 
@@ -461,7 +461,7 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
 		  
 		  sh.setInput(in, access, parms, navajoConfig);
 		
-		  long expirationInterval = in.getHeader().getExpirationInterval();
+		  long expirationInterval = CacheController.getInstance().getExpirationInterval(access.rpcName);
 		  
 		  // Remove password from in to create password independend persistenceKey.
 		  in.getHeader().setRPCPassword("");
