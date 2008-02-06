@@ -1,6 +1,11 @@
 package com.dexels.navajo.tribe;
 
+import java.util.Collection;
+import java.util.Iterator;
+
 import com.dexels.navajo.server.enterprise.tribe.SmokeSignal;
+import com.dexels.navajo.tribe.map.IntroductionRequest;
+import com.dexels.navajo.tribe.map.SharedTribalMap;
 import com.dexels.navajo.util.AuditLog;
 
 public class MembershipSmokeSignal extends SmokeSignal {
@@ -24,6 +29,18 @@ public class MembershipSmokeSignal extends SmokeSignal {
 		if ( getKey().equals(INTRODUCTION)  ) {
 			TribeMember tm = (TribeMember) getValue();
 			TribeManager.getInstance().addTribeMember(tm);
+			
+			if ( TribeManager.getInstance().getIsChief() ) {
+				System.err.println("ABOUT TO SHARE GLOBAL STATE............");
+				// Share global state.
+				Collection<SharedTribalMap> c = SharedTribalMap.getAllTribalMaps();
+				Iterator<SharedTribalMap> iter = c.iterator();
+				while ( iter.hasNext() ) {
+					IntroductionRequest ir = new IntroductionRequest(iter.next());
+					System.err.println("SENDING TRIBALMAP TO NEW MEMBER....");
+					TribeManager.getInstance().askSomebody(ir, tm.getAddress());
+				}
+			}
 		}
 	}
 
