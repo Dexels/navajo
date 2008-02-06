@@ -1,6 +1,5 @@
 package com.dexels.navajo.tribe.map;
 
-import java.lang.ref.SoftReference;
 import java.util.Collection;
 import java.util.HashMap;
 
@@ -57,7 +56,6 @@ public class SharedTribalMap<K,V> extends HashMap {
 				TribeManagerFactory.getInstance().broadcast(tms);
 				return stm;
 			} else {
-				System.err.println("SharedTribalMap " + stm.getId() + " ALREADY PRESENT, IGNORING REGISTRATION..." + registeredMaps.get(stm.getId()).size());
 				return registeredMaps.get(stm.getId());
 			}
 		}
@@ -66,12 +64,10 @@ public class SharedTribalMap<K,V> extends HashMap {
 	protected static void registerMapLocal(SharedTribalMap stm) {
 		synchronized (semaphoreLocal) {
 			if ( registeredMaps.get(stm.getId()) != null ) {
-				System.err.println("Registering SharedTribalMap " + stm.getId() + " that is already present... overwriting existing one..");
 				SharedTribalMap existing = registeredMaps.get(stm.getId());
 				existing.clear();
 				existing.putAll(stm);
 			} else {
-				System.err.println("Registering new SharedTribalMap " + stm.getId() + ", creating new one..." + stm.size() );
 				registeredMaps.put(stm.getId(), stm);
 			}
 		}
