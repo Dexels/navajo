@@ -15,7 +15,6 @@ public class PersistenceManagerFactory {
     public static PersistenceManager getInstance(String className, String configPath) {
         try {
             PersistenceManager pm = (PersistenceManager) Class.forName(className).newInstance();
-            pm.setParameter("configPath", configPath);
             return pm;
         } catch (Exception e) {
             e.printStackTrace();
