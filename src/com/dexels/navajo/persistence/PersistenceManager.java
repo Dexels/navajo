@@ -9,6 +9,9 @@ package com.dexels.navajo.persistence;
  * @version $Id$
  *
  * $Log$
+ * Revision 1.2  2008/02/06 14:37:00  arjen
+ * *** empty log message ***
+ *
  * Revision 1.1.1.1  2003/04/16 09:45:43  arjen
  * NavajoDocument contains the interface for the Navajo Document model and 
  * it's implementations: jaxpimpl and nanoimpl
@@ -46,5 +49,5 @@ public interface PersistenceManager {
      */
     public Persistable get(Constructor c, String key, long expirationInterval, boolean persist) throws Exception;
 
-    public void setParameter(String key, String value);
+  
 }
