@@ -16,6 +16,7 @@ public class TestAdapter implements Mappable {
 	public String key;
 	public String value;
 	public String values;
+	public boolean remove;
 	
 	public static HashSet preventCollection = new HashSet();
 	
@@ -30,8 +31,10 @@ public class TestAdapter implements Mappable {
 	public void store() throws MappableException, UserException {
 		if ( value != null ) {
 			SharedTribalMap stm = SharedTribalMap.getMap(id);
+			
 			if ( stm == null ) {
 				stm = new SharedTribalMap(id);
+				SharedTribalMap.registerMap(stm, true);
 				preventCollection.add(stm);
 			}
 			System.err.println("SharedTribalMap( " + id + "), key = " + key + ", value = " + value);
@@ -69,9 +72,20 @@ public class TestAdapter implements Mappable {
 		this.id = id;
 	}
 	
+	public void setRemove(boolean b) {
+		if ( b ) {
+			SharedTribalMap stm = SharedTribalMap.getMap(id);
+			stm.remove(key);
+		}
+	}
+	
 	public String getValues() {
 		SharedTribalMap stm = SharedTribalMap.getMap(id);
-		return stm.values().toString();
+		if ( stm.values() != null ) {
+			return stm.values().toString();
+		} else {
+			return null;
+		}
 	}
 	
 	

@@ -1,11 +1,11 @@
 package com.dexels.navajo.tribe.map;
 
-import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.enterprise.tribe.SmokeSignal;
 
 public class TribalMapSignal extends SmokeSignal {
 
-	public final static String PUT = "put";
+	public final static String PUT       = "put";
+	public final static String REMOVE    = "remove";
 	public final static String CREATEMAP = "createmap";
 	public final static String DELETEMAP = "deletemap";
 	
@@ -21,27 +21,28 @@ public class TribalMapSignal extends SmokeSignal {
 	@Override
 	public void processMessage() {
 		
-		System.err.println(Dispatcher.getInstance().getNavajoConfig().getInstanceName() + ": in process message");
-		
 		if ( iAmTheSender() ) {
 			return;
 		}
 		
 		if ( key.equals(CREATEMAP) ) {
-			System.err.println("IN CREATEMAP");
 			SharedTribalMap stm = new SharedTribalMap((String) value);
 			SharedTribalMap.registerMapLocal(stm);
 		} else if ( key.equals(DELETEMAP) ) {
-			System.err.println("IN DELETEMAP");
 			SharedTribalMap.deregisterMapLocal((String) value);
-		} else if ( key.equals(PUT)) {
-			System.err.println("IN PUT");
+		} else if ( key.equals(PUT) ) {
 			SharedTribalElement ste = (SharedTribalElement) value;
 			SharedTribalMap stm = SharedTribalMap.getMap(ste.getId());
 			if ( stm != null ) {
 				stm.putLocal(ste.getKey(), ste.getValue());
 			}
-		} 
+		} else if ( key.equals(REMOVE)) {
+			SharedTribalElement ste = (SharedTribalElement) value;
+			SharedTribalMap stm = SharedTribalMap.getMap(ste.getId());
+			if ( stm != null ) {
+				stm.removeLocal(ste.getKey());
+			}
+		}
 	}
-
+	
 }
