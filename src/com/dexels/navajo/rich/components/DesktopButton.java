@@ -86,9 +86,9 @@ public class DesktopButton extends JButton {
 		});
 	}
 
-	public Dimension getPreferredSize(){
-		return new Dimension(250, 68);
-	}
+//	public Dimension getPreferredSize(){
+//		return new Dimension(200, 68);
+//	}
 	
 	public void paintComponent(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;

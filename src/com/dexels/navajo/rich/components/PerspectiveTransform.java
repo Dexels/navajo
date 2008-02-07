@@ -29,7 +29,7 @@ public class PerspectiveTransform {
 		nwg.drawImage(input, 0, 0, new_width, height, null);			
 		nwg.dispose();
 		
-		int dw = 5;
+		int dw = 2;
 		float alpha_factor = alpha_overlay / new_width;
 		
 		for(int x = 0;x<new_width;x+=dw){
