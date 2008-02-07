@@ -265,6 +265,7 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 				WorkFlow wf = WorkFlow.getInstance(workFlowToBeActivated, nextState, t.getTrigger().getAccess(), t.getUsername());
 				//myState = wf.currentState;
 				evaluateParameters(t, wf.currentState);
+				wf.start();
 				//myState = null;
 			}
 		}
