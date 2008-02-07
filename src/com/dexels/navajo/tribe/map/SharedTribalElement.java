@@ -22,12 +22,17 @@ public class SharedTribalElement implements Serializable {
 	public SharedTribalElement(String id, Object key, Object value) {
 		this.id = id;
 		this.key = key;
+		
 		if ( value instanceof SoftReference<?>) {
 			hasSoftReference = true;
 			this.value = ((SoftReference<?>) value).get();
 		} else {
 			hasSoftReference = false;
 			this.value = value;
+		}
+		
+		if ( value instanceof RemoteReference ) {
+			this.value = RemoteReference.createRemoteReference( (RemoteReference) value);
 		}
 	}
 

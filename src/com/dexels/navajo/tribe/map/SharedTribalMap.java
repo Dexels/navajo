@@ -8,10 +8,6 @@ import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
 
 public class SharedTribalMap<K,V> extends HashMap {
 
-	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -1122073018927967102L;
 	
 	private static volatile HashMap<String,SharedTribalMap> registeredMaps = new HashMap<String,SharedTribalMap>();
@@ -73,6 +69,11 @@ public class SharedTribalMap<K,V> extends HashMap {
 		}
 	}
 	
+	/**
+	 * Deregisters a shared tribal map.
+	 * 
+	 * @param id
+	 */
 	public static void deregisterMap(String id) {
 		synchronized (semaphore) {
 			deregisterMapLocal(id);

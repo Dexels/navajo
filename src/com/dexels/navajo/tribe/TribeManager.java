@@ -554,5 +554,9 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 	public String getMyName() {
 		return myName;
 	}
+
+	public TribeMember getMyMembership() {
+		return myMembership;
+	}
 	
 }

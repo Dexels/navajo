@@ -1,6 +1,7 @@
 package com.dexels.navajo.tribe.map;
 
 import java.util.HashSet;
+import java.util.Iterator;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.mapping.Mappable;
@@ -17,6 +18,7 @@ public class TestAdapter implements Mappable {
 	public String value;
 	public String values;
 	public boolean remove;
+	public boolean clear;
 	
 	public static HashSet preventCollection = new HashSet();
 	
@@ -31,14 +33,15 @@ public class TestAdapter implements Mappable {
 	public void store() throws MappableException, UserException {
 		if ( value != null ) {
 			SharedTribalMap stm = SharedTribalMap.getMap(id);
+			//preventCollection.add(stm);
 			
 			if ( stm == null ) {
 				stm = new SharedTribalMap(id);
-				SharedTribalMap.registerMap(stm, true);
-				preventCollection.add(stm);
+				SharedTribalMap.registerMap(stm, true);	
 			}
+			
 			System.err.println("SharedTribalMap( " + id + "), key = " + key + ", value = " + value);
-			stm.put(key, value);
+			stm.put(key, new RemoteReference( value ) );
 		}
 	}
 	
@@ -53,7 +56,8 @@ public class TestAdapter implements Mappable {
 	public String getValue() {
 		SharedTribalMap stm = SharedTribalMap.getMap(id);
 		if ( stm != null ) {
-			return (String) stm.get(key);
+			RemoteReference rr = (RemoteReference) stm.get(key);
+			return (String) rr.getObject();
 		} else {
 			System.err.println("Could not find sharedtribalmap with id: " + id);
 			return null;
@@ -82,11 +86,21 @@ public class TestAdapter implements Mappable {
 	public String getValues() {
 		SharedTribalMap stm = SharedTribalMap.getMap(id);
 		if ( stm.values() != null ) {
-			return stm.values().toString();
+			StringBuffer sb = new StringBuffer();
+			Iterator iter = stm.values().iterator();
+			while ( iter.hasNext() ) {
+				RemoteReference rr = (RemoteReference) iter.next();
+				sb.append(rr.getObject() + ",");
+			}
+			return sb.toString();
 		} else {
 			return null;
 		}
 	}
 	
+	public void setClear(boolean b) {
+		SharedTribalMap stm = SharedTribalMap.getMap(id);
+		SharedTribalMap.deregisterMap(stm);
+	}
 	
 }

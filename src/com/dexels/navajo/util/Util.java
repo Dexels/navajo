@@ -10,13 +10,32 @@ package com.dexels.navajo.util;
 
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.server.*;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.regex.*;
+
+import sun.reflect.ReflectionFactory.GetReflectionFactoryAction;
 
 public final class Util {
 
     @SuppressWarnings("unused")
 	private static ResourceBundle rb = null;
+
+    private final static Random random;
+    private static String id;
+    
+    static {
+    	random = new Random(System.currentTimeMillis());
+    	try {
+			id = InetAddress.getLocalHost().toString();
+		} catch (UnknownHostException e) {
+			id = "Navajo";
+		}
+    }
     
     public final static Property getProperty(Message in, String name, boolean required)
             throws SystemException {
@@ -229,9 +248,77 @@ public final class Util {
       }
     }
 
+    /**
+     * Method to generate the random GUID.
+     */
+    public static String getRandomGuid() {
+            MessageDigest md5 = null;
+            StringBuffer sbValueBeforeMD5 = new StringBuffer();
+
+            try {
+                    md5 = MessageDigest.getInstance("MD5");
+            } catch (NoSuchAlgorithmException e) {
+                    throw new RuntimeException(e);
+            }
+
+            long time = System.currentTimeMillis();
+            long rand = 0;
+
+          
+            rand = random.nextLong();
+         
+
+            // This StringBuffer can be a long as you need; the MD5
+            // hash will always return 128 bits. You can change
+            // the seed to include anything you want here.
+            // You could even stream a file through the MD5 making
+            // the odds of guessing it at least as great as that
+            // of guessing the contents of the file!
+            sbValueBeforeMD5.append(id);
+            sbValueBeforeMD5.append(":");
+            sbValueBeforeMD5.append(Long.toString(time));
+            sbValueBeforeMD5.append(":");
+            sbValueBeforeMD5.append(Long.toString(rand));
+
+            String valueBeforeMD5 = sbValueBeforeMD5.toString();
+            md5.update(valueBeforeMD5.getBytes());
+
+            byte[] array = md5.digest();
+            StringBuffer sb = new StringBuffer();
+            for (int j = 0; j < array.length; ++j) {
+                    int b = array[j] & 0xFF;
+                    if (b < 0x10)
+                            sb.append('0');
+                    sb.append(Integer.toHexString(b));
+            }
+            
+            return sb.toString();
+    }
+
+//    /**
+//     * Convert to the standard format for GUID (Useful for SQL Server UniqueIdentifiers, etc). Example:
+//     * "C2FEEEAC-CFCD-11D1-8B05-00600806D9B6".
+//     */
+//    public String toString() {
+//            String raw = guid.toUpperCase();
+//            StringBuffer sb = new StringBuffer();
+//            sb.append(raw.substring(0, 8));
+//            sb.append("-");
+//            sb.append(raw.substring(8, 12));
+//            sb.append("-");
+//            sb.append(raw.substring(12, 16));
+//            sb.append("-");
+//            sb.append(raw.substring(16, 20));
+//            sb.append("-");
+//            sb.append(raw.substring(20));
+//            return sb.toString();
+//    }
+
     public static void main(String args[]) throws Exception {
         java.util.Date d = new java.util.Date();
         System.out.println(formatDate(d));
+        for (int i = 0; i < 10; i++)
+        System.err.println(getRandomGuid());
     }
 
 }

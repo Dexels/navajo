@@ -34,7 +34,7 @@ public class ClusterState implements Serializable {
 
 	public String firstMember;
 	public HashSet<TribeMember> clusterMembers = new HashSet<TribeMember>();
-
+	
 	/**
 	 * Get the least busy tribe member.
 	 * 
@@ -53,6 +53,8 @@ public class ClusterState implements Serializable {
 		}
 		return lbtm;
 	}
+
+	
 
 	
 }
