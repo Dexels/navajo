@@ -1083,7 +1083,7 @@ public final Navajo handle(Navajo inMessage, Object userCertificate, ClientInfo 
 
             // Create beforeWebservice event.
         	access.setInDoc(inMessage);
-			Navajo useProxy = null;//WebserviceListenerFactory.getInstance().beforeWebservice(rpcName, access);
+			Navajo useProxy = WebserviceListenerFactory.getInstance().beforeWebservice(rpcName, access);
 			if (useAuthorisation) {
     			if ( useProxy == null ) {
     				outMessage = dispatch(navajoConfig.getRepository().getServlet(access), inMessage, access, parms);
