@@ -14,11 +14,12 @@ public class GetRemoteObjectAnswer extends Answer {
 	
 	public GetRemoteObjectAnswer(GetRemoteObjectRequest request, Object o) {
 		super(request);
-		myObject = o;
+		
 		if ( o instanceof SoftReference<?>) {
-			o = ((SoftReference) o).get();
+			myObject = ((SoftReference) o).get();
 			isSoftReference = true;
 		} else {
+			myObject = o;
 			isSoftReference = false;
 		}
 	}
