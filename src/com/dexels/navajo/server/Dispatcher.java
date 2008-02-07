@@ -474,8 +474,7 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
 		  }
 		  
 		  out = (Navajo) navajoConfig.getPersistenceManager().get(sh,
-				  access.rpcName + "_" +
-				  access.rpcUser + "_" + key, 
+				  CacheController.getInstance().getCacheKey(key, access.rpcUser, access.rpcName),
 				  expirationInterval,
 				  (expirationInterval != -1));
 		  

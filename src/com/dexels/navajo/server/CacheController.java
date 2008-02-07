@@ -8,6 +8,19 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.server.jmx.JMXHelper;
 import com.dexels.navajo.util.AuditLog;
 
+class CacheEntry {
+
+	public String serviceName;
+	public long expirationInterval;
+	public boolean userSpecific;
+	
+	public CacheEntry(String service, long interval, boolean userSpecific) {
+		this.serviceName = service;
+		this.expirationInterval = interval;
+		this.userSpecific = userSpecific;
+	}
+}
+
 public class CacheController extends GenericThread  {
 
 	private static String id = "Cache Controller";
@@ -17,7 +30,7 @@ public class CacheController extends GenericThread  {
 	private volatile static CacheController instance = null;
 	private static Object semaphore = new Object();
 	
-	private volatile static HashMap<String, Long> expirations = new HashMap<String,Long>();
+	private volatile static HashMap<String, CacheEntry> expirations = new HashMap<String,CacheEntry>();
 	
 	private long configTimestamp = -1;
 	
@@ -102,17 +115,33 @@ public class CacheController extends GenericThread  {
 				for (int i = 0; i < messages.size(); i++) {
 					String webservice = messages.get(i).getProperty("Webservice").getValue();
 					Long expir = new Long( messages.get(i).getProperty("Timeout").getValue() );
-					System.err.println("PUTTING " + webservice + " IN CACHECONTROL WITH TIMEOUT " + expir);
-					expirations.put(webservice, expir);
+					boolean userSpecific = (  messages.get(i).getProperty("UserCache") != null ? 
+							messages.get(i).getProperty("UserCache").getValue().equals("true") : false );
+					CacheEntry ce = new CacheEntry(webservice, expir.longValue(), userSpecific );
+					expirations.put(webservice, ce);
 				}
 			}
 			setConfigTimeStamp();
 		
 	}
 	
+	public String getCacheKey(String persistenceKey, String user, String service) {
+		
+		if ( expirations.containsKey(service )  ) {
+			if ( expirations.get(service).userSpecific ) {
+				return service + "_" + user + "_" + persistenceKey;
+			} else {
+				return service + "_" + persistenceKey;
+			}
+		} else {
+			return "-1";
+		}
+		
+	}
+	
 	public final long getExpirationInterval(String service) {
 		if ( expirations.containsKey(service )  ) {
-			return expirations.get(service).longValue();
+			return expirations.get(service).expirationInterval;
 		} else {
 			return -1;
 		}
