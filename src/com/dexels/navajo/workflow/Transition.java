@@ -80,6 +80,7 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 	public final static Transition createStartTransition(String startStateId, String triggerString, String condition, String activateWorkflow, String username) throws IllegalTrigger, IllegalTask{	
 		Transition t = new Transition();
 		t.myTask = new Task(null, username, "", null, triggerString, null);
+		t.beforeTrigger = ( t.myTask.getTriggerDescription().startsWith("beforenavajo") );
 		t.trigger = triggerString;
 		t.myTask.setId("workflow-"+activateWorkflow);
 		t.myTask.setWorkflowDefinition(activateWorkflow);
@@ -229,7 +230,7 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 		if ( myState != null ) {
 			myState.getWorkFlow().mergeWithParameters(n);
 		}
-		
+	
 		try {
 			boolean b =  Condition.evaluate(myCondition, n);
 			return b;
@@ -242,7 +243,7 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 	
 	public final void afterTask(Task t, Navajo request) {
 
-		if (  !beforeTrigger && isMyTransitionTaskTrigger(t) && enterNextState(t) ) {
+		if (  isMyTransitionTaskTrigger(t) && enterNextState(t) ) {
 
 			if ( !activationTranstion ) {
 				// First evaluate all parameters that need to be set with this transition.
@@ -274,10 +275,11 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 
 	public final boolean beforeTask(Task t) {
 
-		if ( beforeTrigger && isMyTransitionTaskTrigger(t) ) {
+		
+		if ( beforeTrigger && isMyTransitionTaskTrigger(t) && enterNextState(t) ) {
 
 
-			if ( enterNextState(t) ) {
+			if ( !activationTranstion ) {
 //				First evaluate all parameters that need to be set with this transition.
 				evaluateParameters(t, myState);
 				myState.leave();
@@ -290,12 +292,23 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 					myState.getWorkFlow().finish();
 				}
 				return true;
-			} else { // Although it was my task, condition did not evaluate to true, return false in order to prevent proxy webservice from running.
-				return false;
+			} else {
+				/**
+				 * If this is a special activationTranstion, do not clean up this transition, simply create new workflow.
+				 */
+				// Activate new workflow instance.
+				WorkFlow wf = WorkFlow.getInstance(workFlowToBeActivated, nextState, t.getTrigger().getAccess(), t.getUsername());
+				//myState = wf.currentState;
+				evaluateParameters(t, wf.currentState);
+				wf.start();
+				//myState = null;
+				return true;
 			}
+			
+		} else {
+			return false;
 		}
 
-		return true;
 	}
 
 	public final boolean isActivationTranstion() {
