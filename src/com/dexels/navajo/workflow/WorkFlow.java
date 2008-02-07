@@ -46,7 +46,7 @@ public class WorkFlow implements Mappable, Serializable {
 		
 		wf.currentState = wf.createState(activatedState, a);
 		WorkFlowManager.getInstance().addWorkFlow(wf);
-		wf.start();
+		//wf.start();
 		return wf;
 	}
 	
@@ -104,7 +104,7 @@ public class WorkFlow implements Mappable, Serializable {
 	protected void addParameter(String name, Object value) {
 		try {
 			String type = (value != null) ? MappingUtils.determineNavajoType(value) : "";
-			MappingUtils.setProperty(true, localNavajo.getMessage("__parms__"), name, value, type, "", "in", "", 0, null, localNavajo, false);
+			MappingUtils.setProperty(false, null, "/__parms__/" + name, value, type, "", "in", "", 0, localNavajo, localNavajo, false);
 		} catch (Exception e) {
 			e.printStackTrace(System.err);
 		} 
