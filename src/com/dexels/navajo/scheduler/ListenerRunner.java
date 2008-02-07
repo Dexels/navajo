@@ -4,9 +4,8 @@ import com.dexels.navajo.server.GenericThread;
 
 /**
  * ListenerRunner is used to run 'activated' clock listeners. Activated clock listeners use a 2 phase method:
- * 1. Listener is activated by some the Chief.
+ * 1. Listeners are activated by the Chief(!)
  * 2. Activated listener task is performed by some server Y.
- * 
  * 
  * @author arjen
  *
@@ -52,6 +51,16 @@ public class ListenerRunner extends GenericThread {
 			}
 		} catch (InterruptedException e) {
 
+		}
+	}
+	
+	/**
+	 * Activate this thread.
+	 * 
+	 */
+	public void activate() {
+		synchronized ( ListenerStore.semaphore ) {
+			ListenerStore.semaphore.notifyAll();
 		}
 	}
 

@@ -3,7 +3,10 @@ package com.dexels.navajo.scheduler;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import com.dexels.navajo.server.Dispatcher;
+import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
 import com.dexels.navajo.tribe.GetLockRequest;
+import com.dexels.navajo.tribe.ListenerRunnerActivationSmokeSignal;
 import com.dexels.navajo.tribe.LockAnswer;
 import com.dexels.navajo.tribe.RemoveLockRequest;
 import com.dexels.navajo.tribe.SharedStoreException;
@@ -153,8 +156,9 @@ public final class ListenerStore {
 			} catch (SharedStoreException e) {
 				e.printStackTrace(System.err);
 			}
-			System.err.println("Activating trigger: " + t.getDescription());
 			semaphore.notifyAll();
+			// NOTIFY ALL OTHER TRIBE MEMBERS.
+			TribeManager.getInstance().broadcast(new ListenerRunnerActivationSmokeSignal(Dispatcher.getInstance().getNavajoConfig().getInstanceName(), "DOIT", "NOW"));
 		}
 	}
 	
@@ -167,7 +171,6 @@ public final class ListenerStore {
 
 		synchronized (semaphore) {
 			String [] allNames = ssi.getObjects(activatedListeners);
-			System.err.println("In performActivatedListeners(), total: " + allNames.length);
 			for (int i = 0; i < allNames.length; i++ ) {
 				//System.err.println("In performActivatedListeners() Checking: "  + allNames[i]);
 				Trigger lis = null;
@@ -194,7 +197,9 @@ public final class ListenerStore {
 					e.printStackTrace();
 				} finally {
 					if ( lis != null && ( locked || performed )) {
-						ssi.remove(activatedListeners, allNames[i]);
+						if  ( performed ) {
+							ssi.remove(activatedListeners, allNames[i]);
+						}
 						if ( locked ) {
 							release(lis.getListenerId(), true);
 							locked = false;
