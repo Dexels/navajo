@@ -4,6 +4,9 @@ package com.dexels.navajo.parser;
 /**
  * $Id$
  * $Log$
+ * Revision 1.25  2008/02/08 14:57:13  arjen
+ * Added empty header check.
+ *
  * Revision 1.24  2008/01/11 16:55:36  arjen
  * Suppress unchecked type warnings
  *
@@ -115,7 +118,7 @@ public final class ASTFunctionNode extends SimpleNode {
 			if (Dispatcher.getInstance()==null) {
 				c = Class.forName("com.dexels.navajo.functions."+functionName);
 			} else {
-				if ( !doc.getHeader().getRPCUser().endsWith(NavajoConfig.getInstance().getBetaUser())) {
+				if ( doc != null && doc.getHeader() != null && doc.getHeader().getRPCUser() != null && !doc.getHeader().getRPCUser().endsWith(NavajoConfig.getInstance().getBetaUser())) {
 					c = NavajoConfig.getInstance().getClassloader().getClass("com.dexels.navajo.functions."+functionName);
 				} else {
 					c = NavajoConfig.getInstance().getBetaClassLoader().getClass("com.dexels.navajo.functions."+functionName);
