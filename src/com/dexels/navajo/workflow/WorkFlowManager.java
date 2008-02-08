@@ -7,10 +7,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Random;
 
+import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.events.NavajoEvent;
 import com.dexels.navajo.events.NavajoEventRegistry;
 import com.dexels.navajo.events.NavajoListener;
 import com.dexels.navajo.events.types.TribeMemberDownEvent;
+import com.dexels.navajo.parser.Condition;
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.server.GenericThread;
@@ -233,7 +235,7 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 	 * @param byName
 	 * @return
 	 */
-	private final WorkFlow[] getWorkflows(String byName) {
+	public final WorkFlow[] getWorkflows(String byName) {
 		WorkFlowManager mng = WorkFlowManager.getInstance();
 		ArrayList<WorkFlow> wfList = new ArrayList<WorkFlow>();
 		Iterator<WorkFlow> iter = mng.workflowInstances.iterator();
@@ -248,6 +250,32 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 		return workflows;
 	}
 
+	/**
+	 * Check whether a workflow with certain name exists.
+	 * 
+	 * @param name
+	 * @param expression an expression to which the workflow state as to confirm
+	 * @return
+	 */
+	public boolean existsWorkFlow(String name, String expression) {
+		
+		
+		WorkFlow [] flows = WorkFlowManager.getInstance().getWorkflows(name);
+		for ( int i = 0; i < flows.length; i++ ) {
+			Navajo n = flows[i].getLocalNavajo();
+			try {
+				boolean b =  Condition.evaluate(expression, n);
+				if ( b ) {
+					return true;
+				}
+			} catch (Exception e) {
+				
+			}
+		}
+		
+		return false;
+	}
+	
 	public final boolean hasWorkflowId(String id) {
 		if ( id == null || id.equals("") ) {
 			return false;
