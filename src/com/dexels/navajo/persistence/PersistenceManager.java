@@ -11,6 +11,9 @@ import com.dexels.navajo.document.Navajo;
  * @version $Id$
  *
  * $Log$
+ * Revision 1.4  2008/02/08 14:32:51  arjen
+ * Added service parameter in get() method interface
+ *
  * Revision 1.3  2008/02/06 16:51:40  arjen
  * Minimum PersistenceManagerInterface
  *
@@ -48,7 +51,7 @@ public interface PersistenceManager {
     /**
      * Get the persistent object and pass the constructor that is responsible for its creation.
      */
-    public Persistable get(Constructor c, String key, long expirationInterval, boolean persist) throws Exception;
+    public Persistable get(Constructor c, String key, String service, long expirationInterval, boolean persist) throws Exception;
     
     public void setConfiguration(Navajo config);
 
