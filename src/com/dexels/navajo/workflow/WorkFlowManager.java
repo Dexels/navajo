@@ -65,7 +65,7 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 	 * This method revives all persist workflows after starting the manager.
 	 *
 	 */
-	private void reviveSavedWorkFlows() {
+	private void reviveSavedWorkFlows(boolean init) {
 
 		synchronized (semaphore_instances) {
 
@@ -75,10 +75,17 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 
 				try {
 					WorkFlow wf = (WorkFlow) ssi.get(workflowPath, files[i]);
-					if (!hasWorkflowId(wf.getMyId()) && !wf.isKilled()) {
-						addWorkFlow(wf);
-						wf.revive();
+					
+					if ( !wf.transientWorkFlow ) {
+						if (!hasWorkflowId(wf.getMyId()) && !wf.isKilled()) {
+							addWorkFlow(wf);
+							wf.revive();
+						}
+					} else if ( init ) {
+						AuditLog.log(AuditLog.AUDIT_MESSAGE_WORKFLOW, "Removing transient workflow: " + wf.getDefinition() );
+						ssi.remove(workflowPath, files[i]);
 					}
+					
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -130,7 +137,7 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 			WorkFlowDefinitionReader.initialize(new File(instance.workflowDefinitionPath), instance.workflowDefinitions);
 			
 			// Revive persisted workflows.
-			instance.reviveSavedWorkFlows();
+			instance.reviveSavedWorkFlows(true);
 			
 			// Start worker thread at last...
 			instance.startThread(instance);
@@ -210,7 +217,7 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 			WorkFlowDefinitionReader.initialize(new File(workflowDefinitionPath), workflowDefinitions);	
 		}
 		// Check whether new workflow instances have appeared in my instance space.
-		reviveSavedWorkFlows();
+		reviveSavedWorkFlows(false);
 	}
 
 	/**
