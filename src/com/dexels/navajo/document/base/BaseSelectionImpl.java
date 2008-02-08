@@ -99,19 +99,19 @@ public class BaseSelectionImpl extends BaseNode implements Selection{
   
   public final int compareTo(Selection o) {
  
-    if (o.getName() == null && getName() == null) {
+    if (o.getValue() == null && getValue() == null) {
       return 0;
     }
 
-    if (o.getName() != null && getName() == null) {
+    if (o.getValue() != null && getValue() == null) {
       return -1;
     }
 
-    if (o.getName() == null && getName() != null) {
+    if (o.getValue() == null && getValue() != null) {
       return 1;
     }
 
-    return (getName().compareTo(o.getName()));
+    return (getValue().compareTo(o.getValue()));
 
   }
 public Map<String,String> getAttributes() {
