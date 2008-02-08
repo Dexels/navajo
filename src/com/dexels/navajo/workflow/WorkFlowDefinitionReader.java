@@ -85,6 +85,12 @@ public final class WorkFlowDefinitionReader {
 		State s = new State(name, wf, a);
 		String definitionFile = wf.getDefinition() + ".xml";
 		XMLElement def = readDefinition(definitionFile);
+		
+		if ( def.getAttribute("transient") != null && def.getAttribute("transient").equals("true" )) {
+			System.err.println("FOUND TRANSIENT WORKFLOW...");
+			wf.transientWorkFlow = true;
+		}
+		
 		XMLElement state = findState(def, name);
 		
 		if ( state == null ) {
