@@ -473,10 +473,11 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
 			  key = in.persistenceKey();
 		  }
 		  
-		  out = (Navajo) navajoConfig.getPersistenceManager().get(sh,
-				  CacheController.getInstance().getCacheKey(key, access.rpcUser, access.rpcName),
+		  out = (Navajo) navajoConfig.getPersistenceManager().get(sh,  
+				  CacheController.getInstance().getCacheKey(key, access.rpcUser, access.rpcName), access.rpcName,
 				  expirationInterval,
 				  (expirationInterval != -1));
+		  access.setOutputDoc(out);
 		  
 		  // Store response for integrity checking.
 		  if ( integ != null && out != null && !integrityViolation ) {
