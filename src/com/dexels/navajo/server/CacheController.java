@@ -11,11 +11,13 @@ import com.dexels.navajo.util.AuditLog;
 class CacheEntry {
 
 	public String serviceName;
+	public String serviceKey;
 	public long expirationInterval;
 	public boolean userSpecific;
 	
-	public CacheEntry(String service, long interval, boolean userSpecific) {
+	public CacheEntry(String service, String serviceKey, long interval, boolean userSpecific) {
 		this.serviceName = service;
+		this.serviceKey = serviceKey;
 		this.expirationInterval = interval;
 		this.userSpecific = userSpecific;
 	}
@@ -117,7 +119,8 @@ public class CacheController extends GenericThread  {
 					Long expir = new Long( messages.get(i).getProperty("Timeout").getValue() );
 					boolean userSpecific = (  messages.get(i).getProperty("UserCache") != null ? 
 							messages.get(i).getProperty("UserCache").getValue().equals("true") : false );
-					CacheEntry ce = new CacheEntry(webservice, expir.longValue(), userSpecific );
+					String serviceKeys = ( messages.get(i).getProperty("CacheKeys") != null ? messages.get(i).getProperty("CacheKeys").getValue() : "" );
+					CacheEntry ce = new CacheEntry(webservice, serviceKeys, expir.longValue(), userSpecific );
 					expirations.put(webservice, ce);
 				}
 			}
@@ -147,6 +150,14 @@ public class CacheController extends GenericThread  {
 		}
 	}
 	
+	public final String getServiceKeys(String service) {
+		if ( expirations.containsKey(service )  ) {
+			return expirations.get(service).serviceKey;
+		} else {
+			return null;
+		}
+	}
+
 	public void worker() 
 	{ 
 		if ( isConfigModified() ) {
