@@ -8,12 +8,20 @@ import java.util.Set;
 
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.persistence.*;
+import com.dexels.navajo.server.CacheController;
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.tribe.SharedStoreFactory;
 import com.dexels.navajo.tribe.SharedStoreInterface;
 import com.dexels.navajo.tribe.map.RemoteReference;
 import com.dexels.navajo.tribe.map.SharedTribalMap;
 
+
+/**
+ * TODO use softreference listener to persist objects to disk...??
+ * 
+ * @author arjen
+ *
+ */
 class Frequency implements Serializable {
 
 	/**
@@ -57,6 +65,7 @@ public final class PersistenceManagerImpl implements PersistenceManager {
 	 */
 	
 	public String key;
+	public String serviceKeyValues = null;
 	public boolean doClear;
 	public double hitratio;
 	
@@ -92,7 +101,7 @@ public final class PersistenceManagerImpl implements PersistenceManager {
     }
     
 
-    public final Persistable get(Constructor c, String key, long expirationInterval, boolean persist) throws Exception {
+    public final Persistable get(Constructor c, String key, String service, long expirationInterval, boolean persist) throws Exception {
 
     	init();
 
@@ -102,7 +111,7 @@ public final class PersistenceManagerImpl implements PersistenceManager {
 
     	if ( persist ) {
     		synchronized (semaphore) {
-    			result = read(key, expirationInterval);
+    			result = read(key, service, expirationInterval);
     		}
     	}
 
@@ -110,7 +119,7 @@ public final class PersistenceManagerImpl implements PersistenceManager {
     		result = c.construct();
     		if (persist) {
     			synchronized (semaphore) {
-    				write(result, key);
+    				write(result, key, service);
     			}
     		}
     	} else {
@@ -120,7 +129,21 @@ public final class PersistenceManagerImpl implements PersistenceManager {
     	return result;
     }
 
-    private final Persistable memoryOperation(String key, Persistable document, long expirationInterval, boolean read ) {
+    private final String constructServiceKeyValues(String serviceKeys, Navajo in) {
+    	String [] properties = serviceKeys.split(",");
+    	StringBuffer result = new StringBuffer();
+    	
+    	for (int i = 0; i < properties.length; i++) {
+    		Property p = in.getProperty(properties[i]);
+    		if ( p != null ) {
+    			result.append(p.getValue());
+    		}
+    	}
+    	
+    	return result.toString();
+    }
+    
+    private final Persistable memoryOperation(String key, String service, Persistable document, long expirationInterval, boolean read ) {
 
     	if (read) {
     		RemoteReference pc = null;
@@ -130,10 +153,8 @@ public final class PersistenceManagerImpl implements PersistenceManager {
     			if ( pc != null ) {
     				SoftReference sr = (SoftReference) pc.getObject();
     				if (sr != null &&  sr.get() != null) {
-    					System.err.println("Found Softreference, returning it... ");
-    					return (Persistable) sr.get();
+    					return ((PersistentEntry) sr.get()).getDocument();
     				} else if ( sr != null ){
-    					System.err.println("Softreference was gargage collected....");
     					inMemoryCache.remove(key);
     				}
     			}
@@ -141,7 +162,7 @@ public final class PersistenceManagerImpl implements PersistenceManager {
     		if (freq != null && freq.isExpired(expirationInterval)) { 
     			RemoteReference rr = (RemoteReference) inMemoryCache.get(freq.getName());
     			if ( rr != null ) {
-    				SoftReference<Persistable> d = (SoftReference) rr.getObject();
+    				SoftReference d = (SoftReference) rr.getObject();
     				if ( d != null && d.get() != null) {
     					inMemoryCache.remove(freq.getName());
     					System.err.println("REMOVING EXPIRED MEMORY CACHE ENTRY: " + key );
@@ -161,8 +182,10 @@ public final class PersistenceManagerImpl implements PersistenceManager {
     				freq = new Frequency(key);
     				accessFrequency.put(key, freq);
     			}
-    			System.err.println("PUTTING " + key + " IN CACHE!!");
-    			inMemoryCache.put(key, new RemoteReference( new SoftReference(document) ) );
+    			PersistentEntry pe = new PersistentEntry(document, service);
+    			String keys = CacheController.getInstance().getServiceKeys( service );
+    			pe.setKeyValues( constructServiceKeyValues(keys, (Navajo) document ) );
+    			inMemoryCache.put(key, new RemoteReference( new SoftReference( pe ) ) );
 
     		}
     		return document;
@@ -174,10 +197,10 @@ public final class PersistenceManagerImpl implements PersistenceManager {
     /**
      * Note that write() is a critical section since multiple requests using the same key can be expected!
      */
-    public final boolean write(Persistable document, String key) {
+    public final boolean write(Persistable document, String key, String service) {
 
         try {
-        	memoryOperation(key, document, -1, false);
+        	memoryOperation(key, service, document, -1, false);
             
             sharedPersistenceStore.store(CACHE_PATH, key, document, false, false);
             
@@ -197,10 +220,10 @@ public final class PersistenceManagerImpl implements PersistenceManager {
             return false;
     }
 
-    public final Persistable read(String key, long expirationInterval) {
+    public final Persistable read(String key, String service, long expirationInterval) {
         Navajo pc = null;
 
-        pc = (Navajo) memoryOperation(key, null, expirationInterval, true );
+        pc = (Navajo) memoryOperation(key, service, null, expirationInterval, true );
         if (pc != null) {  // Found in memory cache.
           System.err.println("Returning FROM MEMORY cache: " + key);
           return pc;
@@ -223,7 +246,7 @@ public final class PersistenceManagerImpl implements PersistenceManager {
                 pc = (Navajo) sharedPersistenceStore.get(CACHE_PATH, key);
                 
                 if (inMemoryCache.get(key) == null) {
-                  memoryOperation(key, pc, expirationInterval, false);
+                  memoryOperation(key, service, pc, expirationInterval, false);
                 }
                 
             } else {
@@ -254,6 +277,24 @@ public final class PersistenceManagerImpl implements PersistenceManager {
 	}
 
 
+	public boolean isCached(String service, String serviceKeyValues) {
+		System.err.println("IN isCached (" + service + ", " + serviceKeyValues + ")");
+		PersistenceManagerImpl pm = (PersistenceManagerImpl) Dispatcher.getInstance().getNavajoConfig().getPersistenceManager();
+		Iterator iter = pm.inMemoryCache.values().iterator();
+		while ( iter.hasNext() ) {
+			RemoteReference re = (RemoteReference) iter.next();
+			SoftReference se = (SoftReference) re.getObject();
+			if ( se != null ) {
+				PersistentEntry pe = (PersistentEntry) se.get();
+				if ( pe != null && ( serviceKeyValues == null ||  pe.getService().equals(service) && pe.getKeyValues().equals(serviceKeyValues) ) ) {
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}
+	
 	public void setDoClear(boolean doClear) {
 		PersistenceManagerImpl pm = (PersistenceManagerImpl) Dispatcher.getInstance().getNavajoConfig().getPersistenceManager();
 		synchronized (semaphore) {
@@ -262,22 +303,40 @@ public final class PersistenceManagerImpl implements PersistenceManager {
 				Iterator iter = keys.iterator();
 				while ( iter.hasNext() ) {
 					String cacheKey = (String) iter.next();
-					if ( cacheKey.startsWith(key )) {
-						System.err.println("REMOVING CACHE KEY " + cacheKey + " FOR " + key);
+					if ( cacheKey.startsWith(key ) && this.serviceKeyValues == null ) {
 						pm.inMemoryCache.remove(cacheKey);
 						pm.sharedPersistenceStore.remove(CACHE_PATH, cacheKey);
+					} else if ( cacheKey.startsWith(key ) && this.serviceKeyValues != null ) {
+						RemoteReference re = (RemoteReference) pm.inMemoryCache.get(cacheKey);
+						SoftReference se = (SoftReference) re.getObject();
+						if ( se != null ) {
+							PersistentEntry pe = (PersistentEntry) se.get();
+							if ( pe != null ) {
+								
+								if ( pe.getKeyValues().equals(serviceKeyValues) ) {
+									pm.inMemoryCache.remove(cacheKey);
+									pm.sharedPersistenceStore.remove(CACHE_PATH, cacheKey);
+								}
+							}
+						}
 					}
 				}
-			} else {
-				System.err.println("Cache not present...init() not yet called?");
-				System.err.println("inMemoryCache = " + pm.inMemoryCache);
-				System.err.println("sharedPersistenceStore = " + pm.sharedPersistenceStore);
-			}
+			} 
 		}
 	}
 
 	public double getHitratio() {
 		PersistenceManagerImpl pm = (PersistenceManagerImpl) Dispatcher.getInstance().getNavajoConfig().getPersistenceManager();
 		return ( (double) pm.cachehits / (double) pm.totalhits );
+	}
+
+
+	public void setServiceKeyValues(String serviceKeyValues) {
+		this.serviceKeyValues = serviceKeyValues;
+	}
+	
+	public static void main ( String [] args ) {
+		String [] aap = "aap,noot".split(",");
+		System.err.println(aap[1]);
 	}
 }
