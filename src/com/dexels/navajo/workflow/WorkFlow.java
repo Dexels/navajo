@@ -254,5 +254,9 @@ public class WorkFlow implements Mappable, Serializable {
 		return null;
 	}
 
+	public Navajo getLocalNavajo() {
+		return localNavajo;
+	}
+
 	
 }
