@@ -321,6 +321,16 @@ public final class PersistenceManagerImpl implements PersistenceManager {
 						}
 					}
 				}
+				// Remove all persisted cache objects that start with the given cache key to prevent 
+				// loading of invalidated cache entries. This is rather brute force since in the current
+				// implementation we do not store PersistentEntry objects but entire Navajo documents, hence
+				// we can not check the serviceKeyValues....
+				String [] all = pm.sharedPersistenceStore.getObjects(CACHE_PATH);
+				for ( int i = 0; i < all.length; i++ ) {
+					if ( all[i].startsWith(key) ) {
+						pm.sharedPersistenceStore.remove(CACHE_PATH, all[i]);
+					}
+				}
 			} 
 		}
 	}
