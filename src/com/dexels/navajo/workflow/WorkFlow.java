@@ -30,6 +30,7 @@ public class WorkFlow implements Mappable, Serializable {
 	public State [] history = null;
 	public boolean kill = false;
 	public Binary localState = null;
+	public boolean transientWorkFlow = false;
 	
 	/**
 	 * The local Navajo state store.
