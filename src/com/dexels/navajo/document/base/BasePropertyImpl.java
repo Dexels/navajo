@@ -984,7 +984,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 
 		for (int i = 0; i < selectionList.size(); i++) {
 			Selection current = selectionList.get(i);
-			if (current == s) {
+			if (current.getValue().equals(s.getValue())) {
 				current.setSelected(true);
 			} else {
 				if (!"+".equals(getCardinality())) {
