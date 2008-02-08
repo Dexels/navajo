@@ -526,4 +526,11 @@ public class SharedFileStore implements SharedStoreInterface {
 		sfs.test("/home/arjen/Pictures");
 	}
 
+	public void removeAll(String parent) {
+		String [] s  = getObjects(parent);
+		for ( int i = 0; i < s.length; i++ ) {
+			remove(parent, s[i]);
+		}
+	}
+
 }

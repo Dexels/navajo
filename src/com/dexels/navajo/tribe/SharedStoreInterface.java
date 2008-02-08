@@ -48,6 +48,14 @@ public interface SharedStoreInterface {
 	public void remove(String parent, String name);
 	
 	/**
+	 * Remove all objects of the specified parent
+	 * 
+	 * @param parent
+	 * @param name
+	 */
+	public void removeAll(String parent);
+	
+	/**
 	 * Store an object in the shared store. If object with same name already exists, a SharedStoreException is thrown.
 	 * 
 	 * @param parent
