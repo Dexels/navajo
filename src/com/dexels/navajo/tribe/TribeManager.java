@@ -339,7 +339,6 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 		       ) {
 			Request q = (Request) msg.getObject();
 			Answer a = q.getAnswer();
-			//System.err.println(myName + "My Answer is " + a.acknowledged() );
 			try {
 				if ( q.isBlocking() ) { // Only send answer if it's a blocking request.
 					channel.send(msg.getSrc(), null, a);
@@ -351,9 +350,7 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 			}
 		} else if ( msg.getObject() instanceof Answer ) {
 			Answer a = (Answer) msg.getObject();
-			//System.err.println(myName + "Received answer...: " + a.acknowledged() );
 			synchronized (answerWaiters) {
-				//System.err.println("About to remove request: " + a.getMyRequest().getGuid() );
 				Request q = getWaitingRequest(a.getMyRequest());
 				q.setPredefinedAnswer(a);
 				removeWaitingRequest(a.getMyRequest());
@@ -388,7 +385,6 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 		}
 		if ( q.isBlocking() ) {
 			answerWaiters.add(q);
-			//System.err.println("Adding request in answerWaiters: " + q.getGuid() + ", size is: " + answerWaiters.size() );
 			Answer w = waitForAnswer(q);
 			return w;
 		} else {
