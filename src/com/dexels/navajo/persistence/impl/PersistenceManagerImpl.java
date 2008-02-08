@@ -12,8 +12,10 @@ import com.dexels.navajo.server.CacheController;
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.tribe.SharedStoreFactory;
 import com.dexels.navajo.tribe.SharedStoreInterface;
+import com.dexels.navajo.tribe.TribeManager;
 import com.dexels.navajo.tribe.map.RemoteReference;
 import com.dexels.navajo.tribe.map.SharedTribalMap;
+import com.dexels.navajo.workflow.WorkFlowManager;
 
 
 /**
@@ -86,19 +88,22 @@ public final class PersistenceManagerImpl implements PersistenceManager {
 	private static final String MEMORY_CACHE_ID = "inMemoryCache";
 	private static final String FREQUENCE_MAP_ID = "accessFrequency";
 	
-    private void init() {
-    	if ( this.sharedPersistenceStore == null ) {
-    		synchronized ( semaphore ) {
-    			if ( this.sharedPersistenceStore == null ) {
-    				sharedPersistenceStore = SharedStoreFactory.getInstance();
-    				inMemoryCache = new SharedTribalMap(MEMORY_CACHE_ID);
-    				accessFrequency = new SharedTribalMap<String,Frequency>(FREQUENCE_MAP_ID);
-    				inMemoryCache = SharedTribalMap.registerMap(inMemoryCache, false);
-    				accessFrequency = SharedTribalMap.registerMap(accessFrequency, false);
-    			}
-    		}
-    	}
-    }
+	private void init() {
+		if ( this.sharedPersistenceStore == null ) {
+			synchronized ( semaphore ) {
+				if ( this.sharedPersistenceStore == null ) {
+					sharedPersistenceStore = SharedStoreFactory.getInstance();
+					if ( TribeManager.getInstance().getIsChief() ) {
+						sharedPersistenceStore.removeAll(CACHE_PATH); // Remove all cached entries when restarted.
+					}
+					inMemoryCache = new SharedTribalMap(MEMORY_CACHE_ID);
+					accessFrequency = new SharedTribalMap<String,Frequency>(FREQUENCE_MAP_ID);
+					inMemoryCache = SharedTribalMap.registerMap(inMemoryCache, false);
+					accessFrequency = SharedTribalMap.registerMap(accessFrequency, false);
+				}
+			}
+		}
+	}
     
 
     public final Persistable get(Constructor c, String key, String service, long expirationInterval, boolean persist) throws Exception {
