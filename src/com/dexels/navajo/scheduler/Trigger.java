@@ -85,6 +85,7 @@ public abstract class Trigger implements Listener, Serializable {
 	public final static String WS_BEFORE_TRIGGER    = "beforenavajo";
 	public final static String AFTER_TASK_TRIGGER   = "aftertask";
 	public final static String SERVER_EVENT_TRIGGER = "serverevent";
+	public final static String IMMEDIATE_TRIGGER    = "immediate";
 	
 	private Task myTask = null;
 
@@ -152,6 +153,9 @@ public abstract class Trigger implements Listener, Serializable {
 			}  else if (s.startsWith(SERVER_EVENT_TRIGGER)) {
 				String v = s.substring(SERVER_EVENT_TRIGGER.length()+1);
 				t = new NavajoEventTrigger(v);
+				return t;
+			} else if ( s.startsWith(IMMEDIATE_TRIGGER) ) {
+				t = new ImmediateTrigger();
 				return t;
 			}
 			else {
