@@ -135,9 +135,9 @@ public class CacheController extends GenericThread  {
 		
 		if ( expirations.containsKey(service )  ) {
 			if ( expirations.get(service).userSpecific ) {
-				return service + "_" + user + "_" + persistenceKey;
+				return service.replace('/', '.') + "_" + user + "_" + persistenceKey;
 			} else {
-				return service + "_" + persistenceKey;
+				return service.replace('/', '.') + "_" + persistenceKey;
 			}
 		} else {
 			return "-1";

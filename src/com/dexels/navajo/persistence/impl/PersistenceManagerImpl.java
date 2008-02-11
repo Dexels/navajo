@@ -278,7 +278,7 @@ public final class PersistenceManagerImpl implements PersistenceManager {
 
 
 	public void setKey(String key) {
-		this.key = key;
+		this.key = key.replace('/', '.');
 	}
 
 
