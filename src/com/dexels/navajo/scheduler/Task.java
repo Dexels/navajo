@@ -333,20 +333,25 @@ public class Task implements Runnable, TaskMXBean, TaskInterface, Serializable {
 		// Invoke onbefore triggers.
 		// If the fireBeforeTaskEvent returns false and webservice was proxy, do not execute this webservice. 
 		// If webservice was not a proxy, continue as normal.
-		boolean resultOfBeforeTaskEvent = TaskRunner.getInstance().fireBeforeTaskEvent(this);
+		
+		
+		Navajo request = null;
+		Access access = myTrigger.getAccess();
+		
+		if ( access != null && navajo == null ) {
+			request = ( myTrigger.swapInOut() ? access.getOutputDoc() :  access.getInDoc() );
+		} else if ( navajo != null ) {
+			request = navajo;
+		} else {
+			request = NavajoFactory.getInstance().createNavajo();
+		} 
+		
+		boolean resultOfBeforeTaskEvent = TaskRunner.getInstance().fireBeforeTaskEvent(this, request );
+		
 		if ( ( resultOfBeforeTaskEvent && isProxy() ) || !isProxy() ) {
 
 			if ( webservice != null && !webservice.equals("") ) {
-				Access access = myTrigger.getAccess();
-				Navajo request = null;
-				if ( access != null && navajo == null ) {
-					request = ( myTrigger.swapInOut() ? access.getOutputDoc() :  access.getInDoc() );
-				} else if ( navajo != null ) {
-					request = navajo;
-				} else {
-					request = NavajoFactory.getInstance().createNavajo();
-				} 
-
+				
 				isRunning = true;
 
 				java.util.Date now = new java.util.Date();
