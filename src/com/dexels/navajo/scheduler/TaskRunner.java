@@ -575,8 +575,9 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 			AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Adding task: " + id + ", workflow definition: " + t.getWorkflowDefinition());
 			tasks.put(id, t);
 			t.setId(id);
-			t.getTrigger().activateTrigger();
 			t.getTrigger().setTask(t);
+			t.getTrigger().activateTrigger();
+			
 
 			// Add to task configuration file config/tasks.xml.
 
@@ -695,12 +696,13 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 		}
 	}
 	
-	public final void fireAfterTaskEvent(Task t, Navajo request) {
+	public final void fireAfterTaskEvent(Task t, Navajo response) {
 		
+		System.err.println("IN fireAfterTaskEvent() REGISTERED TASK LISTENERS: " + taskListeners.size());
 		synchronized ( semaphore2 ) {
 			for ( int i = 0 ; i < taskListeners.size(); i++ ) {
 				TaskListener tl = (TaskListener) taskListeners.get(i); 
-				tl.afterTask(t, request);
+				tl.afterTask(t, response);
 			}
 		}
 	}
@@ -713,12 +715,13 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 	 * @param t
 	 * @return
 	 */
-	public final boolean fireBeforeTaskEvent(Task t) {
+	public final boolean fireBeforeTaskEvent(Task t, Navajo request) {
 
+		System.err.println("IN fireBeforeTaskEvent() REGISTERED TASK LISTENERS: " + taskListeners.size());
 		synchronized ( semaphore2 ) {
 			for ( int i = 0 ; i < taskListeners.size(); i++ ) {
 				TaskListener tl = (TaskListener) taskListeners.get(i);
-				boolean result = tl.beforeTask(t);
+				boolean result = tl.beforeTask(t, request);
 				if ( !result ) {
 					return false;
 				}
