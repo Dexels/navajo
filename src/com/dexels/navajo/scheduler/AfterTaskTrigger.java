@@ -74,17 +74,17 @@ public class AfterTaskTrigger extends Trigger implements TaskListener, Serializa
 		taskThread.startThread(taskThread);
 	}
 	
-	public void afterTask(Task t, Navajo request) {
+	public void afterTask(Task t, Navajo response) {
 		
 		if ( myDescription.equals(t.getId() ) ){
 			setSingleEvent(t.getTrigger().isSingleEvent());
 			// Clone myself before calling spawnTask...
 			AfterTaskTrigger att = (AfterTaskTrigger) this.clone();
-			att.spawnTask(request);
+			att.spawnTask(response);
 		}
 	}
 
-	public boolean beforeTask(Task t) {
+	public boolean beforeTask(Task t, Navajo request) {
 		if ( myDescription.equals(t.getId() ) ){
 
 		}

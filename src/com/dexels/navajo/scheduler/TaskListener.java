@@ -10,8 +10,8 @@ public interface TaskListener {
 	 * @param t
 	 * @return
 	 */
-	public boolean beforeTask(Task t);
-	public void afterTask(Task t, Navajo request);
+	public boolean beforeTask(Task t, Navajo request);
+	public void afterTask(Task t, Navajo response);
 	public String getDescription();
 	
 }

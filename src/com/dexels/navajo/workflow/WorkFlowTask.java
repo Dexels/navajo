@@ -105,7 +105,7 @@ public class WorkFlowTask implements Serializable, TaskListener {
 		}
 	}
 
-	public boolean beforeTask(Task t) {
+	public boolean beforeTask(Task t, Navajo response) {
 		return true;
 	}
 
