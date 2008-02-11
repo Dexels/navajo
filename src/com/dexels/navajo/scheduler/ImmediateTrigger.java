@@ -28,14 +28,12 @@ public class ImmediateTrigger extends Trigger {
 
 	@Override
 	public void removeTrigger() {
-		// TODO Auto-generated method stub
-
+		// n/a
 	}
 
 	@Override
 	public void setSingleEvent(boolean b) {
-		// TODO Auto-generated method stub
-
+		// n/a
 	}
 
 	public Navajo perform() {
