@@ -19,6 +19,7 @@ import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.server.SystemException;
 import com.dexels.navajo.server.UserException;
+import com.dexels.navajo.util.AuditLog;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 
@@ -51,7 +52,6 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 	
 	private Task myTask = null;
 	private State myState;
-	private boolean beforeTrigger = false;
 	private final ArrayList<Parameter> parameters = new ArrayList<Parameter>();
 	private static Object semaphore = new Object();
 	
@@ -67,9 +67,6 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 		myState = s;
 		nextState = nextStateId;
 		myCondition = condition;
-		if ( t.getTriggerDescription().startsWith("beforenavajo")) {
-			beforeTrigger = true;
-		}
 		trigger = origTriggerDescription;
 	}
 	
@@ -80,7 +77,6 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 	public final static Transition createStartTransition(String startStateId, String triggerString, String condition, String activateWorkflow, String username) throws IllegalTrigger, IllegalTask{	
 		Transition t = new Transition();
 		t.myTask = new Task(null, username, "", null, triggerString, null);
-		t.beforeTrigger = ( t.myTask.getTriggerDescription().startsWith("beforenavajo") );
 		t.trigger = triggerString;
 		t.myTask.setId("workflow-"+activateWorkflow);
 		t.myTask.setWorkflowDefinition(activateWorkflow);
@@ -169,7 +165,7 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 	
 	private final boolean isMyTransitionTaskTrigger(Task t) {
 		
-		synchronized ( semaphore ) {
+		//synchronized ( semaphore ) {
 			boolean result= ( t.getId().equals(myTask.getId()) &&
 					( myState == null ||
 							myState.getWorkFlow() == null ||
@@ -180,7 +176,7 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 			);
 			
 			return result;
-		}
+		//}
 	}
 	
 	/**
@@ -220,12 +216,16 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 		TaskRunner.getInstance().removeTask(myTask.getId());
 	}
 	
+	private final boolean isBeforeTrigger(Task t) {
+		return t.getTriggerDescription().startsWith("beforenavajo");
+	}
+	
 	private final boolean enterNextState(Task t) {
 		
 		if ( myCondition == null || myCondition.equals("") || t.getTrigger().getAccess() == null ) {
 			return true;
 		}
-		Navajo n = ( beforeTrigger ? t.getTrigger().getAccess().getInDoc() : t.getTrigger().getAccess().getOutputDoc() );
+		Navajo n = ( isBeforeTrigger(t) ? t.getTrigger().getAccess().getInDoc() : t.getTrigger().getAccess().getOutputDoc() );
 		// Merge this Navajo with localNavajo store of the workflow instance to use local workflow parameters.
 		if ( myState != null ) {
 			myState.getWorkFlow().mergeWithParameters(n);
@@ -241,73 +241,54 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 		}
 	}
 	
-	public final void afterTask(Task t, Navajo request) {
+	private final void doTaskStuff(Task t, Navajo request) {
 
-		if (  isMyTransitionTaskTrigger(t) && enterNextState(t) ) {
+		if ( !activationTranstion ) {
+			// First evaluate all parameters that need to be set with this transition.
+			evaluateParameters(t, myState);
+			myState.leave();
 
-			if ( !activationTranstion ) {
-				// First evaluate all parameters that need to be set with this transition.
-				evaluateParameters(t, myState);
-				myState.leave();
-
-				if ( nextState != null && !nextState.equals(Transition.FINISH) ) { 
-					State ns = myState.getWorkFlow().createState(nextState, t.getTrigger().getAccess());
-					if ( ns != null ) {
-						ns.enter(true);
-					}
-				} else {
-					myState.getWorkFlow().finish();
+			if ( nextState != null && !nextState.equals(Transition.FINISH) ) { 
+				State ns = myState.getWorkFlow().createState(nextState, t.getTrigger().getAccess());
+				if ( ns != null ) {
+					ns.enter(true);
 				}
 			} else {
-				/**
-				 * If this is a special activationTranstion, do not clean up this transition, simply create new workflow.
-				 */
-				// Activate new workflow instance.
-				WorkFlow wf = WorkFlow.getInstance(workFlowToBeActivated, nextState, t.getTrigger().getAccess(), t.getUsername());
-				//myState = wf.currentState;
-				evaluateParameters(t, wf.currentState);
-				wf.start();
-				//myState = null;
+				myState.getWorkFlow().finish();
 			}
+		} else {
+			/**
+			 * If this is a special activationTranstion, do not clean up this transition, simply create new workflow.
+			 */
+			// Activate new workflow instance.
+			WorkFlow wf = WorkFlow.getInstance(workFlowToBeActivated, nextState, t.getTrigger().getAccess(), t.getUsername());
+			//myState = wf.currentState;
+			evaluateParameters(t, wf.currentState);
+			wf.start();
+			//myState = wf.currentState;
+			//myState = null;
+		}
+		
+	}
+	
+	public final void afterTask(Task t, Navajo request) {
+
+		if ( !isBeforeTrigger(t) && isMyTransitionTaskTrigger(t) && enterNextState(t) ) {
+			
+			doTaskStuff(t, request);
+			
 		}
 
 	}
 
-	public final boolean beforeTask(Task t) {
+	public final boolean beforeTask(Task t, Navajo request) {
 
-		
-		if ( beforeTrigger && isMyTransitionTaskTrigger(t) && enterNextState(t) ) {
+		if ( isBeforeTrigger(t) && isMyTransitionTaskTrigger(t) && enterNextState(t) ) {
 
+			doTaskStuff(t, request);
 
-			if ( !activationTranstion ) {
-//				First evaluate all parameters that need to be set with this transition.
-				evaluateParameters(t, myState);
-				myState.leave();
-				if ( nextState != null && !nextState.equals(Transition.FINISH) ) {
-					State ns = myState.getWorkFlow().createState(nextState, t.getTrigger().getAccess());
-					if ( ns != null ) {
-						ns.enter(false);
-					}
-				} else {
-					myState.getWorkFlow().finish();
-				}
-				return true;
-			} else {
-				/**
-				 * If this is a special activationTranstion, do not clean up this transition, simply create new workflow.
-				 */
-				// Activate new workflow instance.
-				WorkFlow wf = WorkFlow.getInstance(workFlowToBeActivated, nextState, t.getTrigger().getAccess(), t.getUsername());
-				//myState = wf.currentState;
-				evaluateParameters(t, wf.currentState);
-				wf.start();
-				//myState = null;
-				return true;
-			}
-			
-		} else {
-			return false;
-		}
+		} 
+		return true;
 
 	}
 
@@ -317,10 +298,6 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 
 	public final void setActivationTranstion(boolean activationTranstion) {
 		this.activationTranstion = activationTranstion;
-	}
-
-	public final boolean isBeforeTrigger() {
-		return beforeTrigger;
 	}
 
 	public final Task getMyTask() {
