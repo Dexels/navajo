@@ -92,7 +92,7 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 	private final static ClusterState state = new ClusterState();
 	
 	private static String myName;
-	private static boolean initializing = false;
+	private volatile static boolean initializing = false;
 	private static TribeManager instance = null;
 	private final static Object semaphore = new Object();
 	
@@ -111,17 +111,17 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 		while ( initializing ) {
 			System.err.println(Dispatcher.getInstance().getNavajoConfig().getInstanceName() + ": Tribemanager is still initializing...");
 			try {
-				Thread.sleep(100);
+				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 			}
 		}
-		
-		initializing = true;
-		
+			
 		if (instance == null) {
 
 			synchronized (semaphore) {
 
+				initializing = true;
+				
 				if ( instance == null ) {
 
 					myName = Dispatcher.getInstance().getNavajoConfig().getInstanceName();
@@ -150,8 +150,8 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 				TribeMember candidate = new TribeMember(myName, ip);
 				instance.myMembership = candidate;
 				instance.broadcast(new MembershipSmokeSignal(myName, MembershipSmokeSignal.INTRODUCTION, candidate));
-				initializing = false;
 				semaphore.notify();
+				initializing = false;
 			}		
 		}
 	
