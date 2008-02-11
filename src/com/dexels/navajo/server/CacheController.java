@@ -109,8 +109,10 @@ public class CacheController extends GenericThread  {
 	 */
 	private void readConfig() throws Exception {
 
-		
-			Navajo config = Dispatcher.getInstance().getNavajoConfig().readConfig(CACHE_CONFIG);
+
+		Navajo config = Dispatcher.getInstance().getNavajoConfig().readConfig(CACHE_CONFIG);
+
+		if ( config != null ) {
 			ArrayList<Message> messages = config.getMessages("Cache/Entries");
 			if ( messages != null ) {
 				expirations.clear();
@@ -124,8 +126,9 @@ public class CacheController extends GenericThread  {
 					expirations.put(webservice, ce);
 				}
 			}
-			setConfigTimeStamp();
+		}
 		
+		setConfigTimeStamp();
 	}
 	
 	public String getCacheKey(String persistenceKey, String user, String service) {
