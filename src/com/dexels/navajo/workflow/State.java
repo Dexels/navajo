@@ -61,7 +61,7 @@ public final class State implements Serializable, Mappable {
 	
 	public void addTask(String webservice, String trigger, String condition, String navajo) throws IllegalTrigger, IllegalTask  {
 		if ( trigger == null || trigger.equals("")) {
-			trigger = "time:now";
+			trigger = "immediate";
 		}
 		// Task should be schedule with user that initiated this state.
 		Task task = new Task(webservice, initiatingAccess.rpcUser, "", null, trigger, null);
