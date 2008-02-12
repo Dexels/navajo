@@ -2,7 +2,9 @@ package com.dexels.navajo.scheduler;
 
 import java.io.Serializable;
 
-public class BeforeWebserviceTrigger extends WebserviceTrigger implements Serializable {
+import com.dexels.navajo.document.Navajo;
+
+public class BeforeWebserviceTrigger extends AfterWebserviceTrigger implements Serializable {
 
 	/**
 	 * 
@@ -24,6 +26,18 @@ public class BeforeWebserviceTrigger extends WebserviceTrigger implements Serial
 	
 	public void activateTrigger() {
 		WebserviceListenerRegistry.getInstance().registerBeforeTrigger(this);
+	}
+	
+	/**
+	 * Always perform task synchronously for before webservice trigger.
+	 */
+	public Navajo perform() {
+		try {
+			getTask().run();
+		} catch (Throwable t2) {
+			t2.printStackTrace(System.err);
+		}
+		return getTask().getResponse();
 	}
 	
 }
