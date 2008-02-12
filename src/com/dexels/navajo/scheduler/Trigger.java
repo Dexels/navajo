@@ -140,7 +140,7 @@ public abstract class Trigger implements Listener, Serializable {
 			}  
 			else if (s.startsWith(WS_TRIGGER)) {
 				String v = s.substring(WS_TRIGGER.length()+1);
-				t = new WebserviceTrigger(v);
+				t = new AfterWebserviceTrigger(v);
 				return t;
 			} else if (s.startsWith(AFTER_TASK_TRIGGER)) {
 				String v = s.substring(AFTER_TASK_TRIGGER.length()+1);
