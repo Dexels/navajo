@@ -170,10 +170,7 @@ public final class PersistenceManagerImpl implements PersistenceManager {
     				SoftReference d = (SoftReference) rr.getObject();
     				if ( d != null && d.get() != null) {
     					inMemoryCache.remove(freq.getName());
-    					System.err.println("REMOVING EXPIRED MEMORY CACHE ENTRY: " + key );
-    				} else {
-    					System.err.println("NOT REMOVING EXPIRED SOFTREFERENCE: " + key);
-    				}
+    				} 
     			}
     		}
     		return null;
@@ -283,7 +280,6 @@ public final class PersistenceManagerImpl implements PersistenceManager {
 
 
 	public boolean isCached(String service, String serviceKeyValues) {
-		System.err.println("IN isCached (" + service + ", " + serviceKeyValues + ")");
 		PersistenceManagerImpl pm = (PersistenceManagerImpl) Dispatcher.getInstance().getNavajoConfig().getPersistenceManager();
 		Iterator iter = pm.inMemoryCache.values().iterator();
 		while ( iter.hasNext() ) {

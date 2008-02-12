@@ -25,7 +25,7 @@ public class ServiceEventsSmokeSignal extends SmokeSignal {
 
 	public void processMessage() {
 
-		AuditLog.log(AuditLog.AUDIT_MESSAGE_TRIBEMANAGER, "ServiceEventsSmokeSignal: PROCESS MESSAGE (" + getKey() + "/" + getValue() + ")");
+		//AuditLog.log(AuditLog.AUDIT_MESSAGE_TRIBEMANAGER, "ServiceEventsSmokeSignal: PROCESS MESSAGE (" + getKey() + "/" + getValue() + ")");
 
 		// Do not process this smokesignal if I am the sender.
 		if ( !iAmTheSender() ) {

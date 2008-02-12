@@ -325,9 +325,8 @@ public class Task implements Runnable, TaskMXBean, TaskInterface, Serializable {
 	 */
 	public void run() {
 
-		AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, " trigger " + getTriggerDescription() + " goes off for task: " + getId() );
+		AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, " trigger " + getTriggerDescription() + " activated task: " + getId() );
 		
-		System.err.println("WEBSERVICE = " + webservice + ", PROXY = " + proxy);
 		Navajo result = null;
 		
 		// Invoke onbefore triggers.
@@ -409,7 +408,7 @@ public class Task implements Runnable, TaskMXBean, TaskInterface, Serializable {
         // Invoke after triggers.
 		TaskRunner.getInstance().fireAfterTaskEvent(this, result);
 		
-		AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Terminated task: " + id);
+		//AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Terminated task: " + id);
 	}
 	
 	public String getTriggerDescription() {
