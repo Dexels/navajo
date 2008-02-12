@@ -347,6 +347,8 @@ public class Task implements Runnable, TaskMXBean, TaskInterface, Serializable {
 		
 		boolean resultOfBeforeTaskEvent = TaskRunner.getInstance().fireBeforeTaskEvent(this, request );
 		
+		// If Proxy and some boolean resultOfBeforeTaskEvent equals to true enter this block
+		// If not a proxy, always enter this block...
 		if ( ( resultOfBeforeTaskEvent && isProxy() ) || !isProxy() ) {
 
 			if ( webservice != null && !webservice.equals("") ) {
@@ -377,7 +379,6 @@ public class Task implements Runnable, TaskMXBean, TaskInterface, Serializable {
 				}
 
 				try {
-					System.err.println("ABOUT TO HANDLE REQUEST....");
 					result = Dispatcher.getInstance().handle(request);
 					this.setResponse(result);
 				} catch (FatalException e) {
@@ -408,7 +409,7 @@ public class Task implements Runnable, TaskMXBean, TaskInterface, Serializable {
         // Invoke after triggers.
 		TaskRunner.getInstance().fireAfterTaskEvent(this, result);
 		
-		//AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Terminated task: " + id);
+		AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Terminated task: " + id);
 	}
 	
 	public String getTriggerDescription() {
