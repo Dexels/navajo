@@ -609,16 +609,34 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
         this.mimetype = mime;
     }
 
-    public boolean equals() {
-    	return false;
-    }
+
     
     public final boolean equals(Object o) {
-    	return false;
+    	if(!(o instanceof Binary)) {
+        	return false;
+    	} 
+    	Binary b = (Binary)o;
+    	if(b.getLength()!=getLength()) {
+    		return false;
+    	}
+    	if(!(getMimeType().equals(b.getMimeType()))) {
+    		return false;
+    	}
+    	// TODO REALLY implement this 
+    	return true;
+    	
     }
     
     // for sorting. Not really much to sort
     public final int compareTo(Binary o) {
+    	int h = hashCode();
+    	int i = o.hashCode();
+    	if(h>i) {
+    		return 1;
+    	}
+    	if(h<i) {
+    		return -1;
+    	}
         return 0;
     }
 

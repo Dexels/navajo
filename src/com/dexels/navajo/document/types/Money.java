@@ -21,7 +21,8 @@ public final class Money
   private Double value = null;
   private static DecimalFormat nf = new DecimalFormat("\u00A4 #,##0.00;\u00A4 -#,##0.00");
   private static DecimalFormat nf_euro = new DecimalFormat("\u20AC #,##0.00;\u20AC -#,##0.00"); //in case of the NOKBUG
-  private static DecimalFormat number = new DecimalFormat("0.00");
+  private static DecimalFormat internalTmlFormat = new DecimalFormat("0.00");
+  private static NumberFormat editingFormat = NumberFormat.getInstance();
 
   private DecimalFormat customFormat = null;
 
@@ -181,6 +182,22 @@ public final class Money
     return nf.format(value);
   }
 
+  public String tmlString() {
+	    if (value == null) {
+	      return "";
+	    }
+	
+	    return internalTmlFormat.format(value);
+	  }
+
+public String editingString() {
+	    if (value == null) {
+	      return "";
+	    }
+	    return editingFormat.format(value);
+	  }
+
+  
   /**
    * Get the String representation of this Money object
    * @return String
@@ -190,7 +207,7 @@ public final class Money
       return "";
     }
     else {
-      return number.format(value).replace(',', '.');
+      return internalTmlFormat.format(value).replace(',', '.');
     }
   }
 
@@ -220,11 +237,11 @@ public final class Money
   }
 
   public static void main(String[] args) {
-     String aap = "225.00";
+     String aap = "-225.00";
      Money m = new Money(aap);
      System.err.println("m = " + m.formattedString());
      System.err.println("sa =" + m.doubleValue());
-  }
+  } 
 
   public int hashCode() {
 	  if (value == null) {
@@ -232,6 +249,8 @@ public final class Money
 	  }
 	  return value.hashCode();
   }
+  
+
   
   public boolean equals(Object obj) {
 
