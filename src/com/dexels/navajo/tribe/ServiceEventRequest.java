@@ -1,6 +1,6 @@
 package com.dexels.navajo.tribe;
 
-import com.dexels.navajo.scheduler.BeforeWebserviceTrigger;
+import com.dexels.navajo.scheduler.WebserviceTrigger;
 
 /**
  * Use this request class to for synchronous waiting for before webservice events, since
@@ -9,28 +9,28 @@ import com.dexels.navajo.scheduler.BeforeWebserviceTrigger;
  * @author arjen
  *
  */
-public class BeforeServiceEventRequest extends Request {
+public class ServiceEventRequest extends Request {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -8857456245645813580L;
 
-	private BeforeWebserviceTrigger myBwt = null;
+	private WebserviceTrigger myBwt = null;
 	
-	public BeforeServiceEventRequest(BeforeWebserviceTrigger bwt) {
+	public ServiceEventRequest(WebserviceTrigger bwt) {
 		this.myBwt = bwt;
 	}
 	
 	@Override
 	public Answer getAnswer() {
 		
-		BeforeServiceEventAnswer bsa = new BeforeServiceEventAnswer(this);
+		ServiceEventAnswer bsa = new ServiceEventAnswer(this);
 		
 		return bsa;
 	}
 
-	public BeforeWebserviceTrigger getMyBwt() {
+	public WebserviceTrigger getMyBwt() {
 		return myBwt;
 	}
 

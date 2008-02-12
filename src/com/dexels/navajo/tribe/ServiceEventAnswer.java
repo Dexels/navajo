@@ -1,10 +1,10 @@
 package com.dexels.navajo.tribe;
 
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.scheduler.BeforeWebserviceTrigger;
+import com.dexels.navajo.scheduler.WebserviceTrigger;
 import com.dexels.navajo.workflow.WorkFlowManager;
 
-public class BeforeServiceEventAnswer extends Answer {
+public class ServiceEventAnswer extends Answer {
 
 	/**
 	 * 
@@ -14,15 +14,16 @@ public class BeforeServiceEventAnswer extends Answer {
 	private Navajo proxy = null;
 	private boolean acknowledged = true;
 	
-	public BeforeServiceEventAnswer(BeforeServiceEventRequest q) {
+	public ServiceEventAnswer(ServiceEventRequest q) {
 		super(q);
-		BeforeWebserviceTrigger bwt = ((BeforeServiceEventRequest) super.myRequest).getMyBwt();
+		WebserviceTrigger bwt = ((ServiceEventRequest) super.myRequest).getMyBwt();
 		if ( bwt.getTask().getWorkflowId() == null || WorkFlowManager.getInstance().hasWorkflowId(bwt.getTask().getWorkflowId()) ) {
 			proxy = bwt.perform();
 			acknowledged = true;
 		} else {
 			acknowledged = false;
 		}
+		System.err.println("LEAVING BeforeServiceEventAnswer() CONSTRUCTOR");
 	}
 	
 	@Override
