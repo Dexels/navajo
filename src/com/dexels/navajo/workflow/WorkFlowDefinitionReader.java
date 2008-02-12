@@ -265,6 +265,7 @@ public final class WorkFlowDefinitionReader {
 				System.err.println("Definition " + name + " was obviously deleted, deleting initiating transition");
 				Transition trans = initialTransitions.get(name);
 				trans.cleanup();
+				WorkFlowManager.getInstance().removePersistedWorkFlows(name);
 			}
 		}
 		
