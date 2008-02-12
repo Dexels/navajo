@@ -24,12 +24,21 @@
  */
 package com.dexels.navajo.scheduler;
 
+import java.util.Collection;
+import java.util.Iterator;
+
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.enterprise.scheduler.WebserviceListenerRegistryInterface;
+import com.dexels.navajo.tribe.BeforeServiceEventAnswer;
+import com.dexels.navajo.tribe.BeforeServiceEventRequest;
 import com.dexels.navajo.tribe.ServiceEventsSmokeSignal;
 import com.dexels.navajo.tribe.TribeManager;
+import com.dexels.navajo.tribe.TribeMember;
+import com.dexels.navajo.tribe.map.IntroductionRequest;
+import com.dexels.navajo.tribe.map.SharedTribalMap;
+import com.dexels.navajo.util.AuditLog;
 import com.dexels.navajo.workflow.WorkFlowManager;
 
 
@@ -148,6 +157,23 @@ public final class WebserviceListenerRegistry implements WebserviceListenerRegis
 		}
 	}
 
+	private final Navajo tribaleBeforeServiceRequest(BeforeWebserviceTrigger t2) {
+		
+		Iterator<TribeMember> iter = TribeManager.getInstance().getClusterState().clusterMembers.iterator();
+		boolean acknowledged = false;
+		Navajo result = null;
+		while ( iter.hasNext() && !acknowledged ) {
+			TribeMember tm = iter.next();
+			BeforeServiceEventRequest bser = new BeforeServiceEventRequest(t2);
+			BeforeServiceEventAnswer bsa = (BeforeServiceEventAnswer) TribeManager.getInstance().askSomebody(bser, tm.getAddress());
+			acknowledged = bsa.acknowledged();
+			if ( acknowledged ) {
+				result = bsa.getProxy();
+			}
+		}
+		return result;
+	}
+	
 	/**
 	 * Method to indicate listener that webservice is about te be(!) invoked.
 	 * If there is a matching trigger (having a matching pattern), the trigger
@@ -173,8 +199,7 @@ public final class WebserviceListenerRegistry implements WebserviceListenerRegis
 				t2.setAccess(a);
 				//System.err.println("Got synchronous BeforeWebserviceTrigger: " + cl.getDescription() );
 				if ( cl.getTask().isProxy() ) {
-					// TODO IMPLEMENT PROXY FOR TRIBE CLUSTER!!!!!
-					return t2.perform();
+					return tribaleBeforeServiceRequest(t2);
 				} else {
 					//System.err.println(Dispatcher.getInstance().getNavajoConfig().getInstanceName() + "In beforeWebservice(" + webservice + ")");
 					boolean initializingWorkflow = ( t2.getTask().getWorkflowDefinition() != null && t2.getTask().getWorkflowId() == null );
@@ -182,7 +207,7 @@ public final class WebserviceListenerRegistry implements WebserviceListenerRegis
 					if ( initializingWorkflow || myWorkflow) {
 						t2.perform();
 					} else {
-						TribeManager.getInstance().broadcast(new ServiceEventsSmokeSignal(Dispatcher.getInstance().getNavajoConfig().getInstanceName(), ServiceEventsSmokeSignal.BEFOREWEBSERVICE_EVENT, t2));
+						tribaleBeforeServiceRequest(t2);
 					}
 				}
 			}
