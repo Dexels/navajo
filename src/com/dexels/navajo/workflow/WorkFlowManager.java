@@ -189,6 +189,13 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 		}
 	}
 	
+	public void removePersistedWorkFlows(String definition) {
+		WorkFlow [] flows = getWorkflows(definition);
+		for (int i = 0; i < flows.length; i++) {
+			removePersistedWorkFlow(flows[i]);
+		}
+	}
+	
 	public void removePersistedWorkFlow(WorkFlow wf) {
 		synchronized (semaphore_instances) {
 			SharedStoreFactory.getInstance().remove(workflowPath, wf.getDefinition()+wf.getMyId());
