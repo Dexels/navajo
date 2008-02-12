@@ -487,7 +487,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 		return result;
 	}
 	
-	protected final synchronized void log(Task t, Navajo result, boolean error, String errMsg, java.util.Date startedat) {
+	protected final void log(Task t, Navajo result, boolean error, String errMsg, java.util.Date startedat) {
 
 		String csvHeader = "ID;WEBSERVICE;USERNAME;TRIGGER;TASKDESCRIPTION;CLIENTID;SINGLEEVENT;STATUS;STARTTIME;ENDTIME;ERRORMESSAGE\n";
 
@@ -501,7 +501,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 		try {
 			
 			ssl = si.lock("log", TASK_LOG_FILE, SharedStoreInterface.READ_WRITE_LOCK, true);
-		
+			
 			if ( !si.exists("log", TASK_LOG_FILE)) {
 				si.storeText("log", TASK_LOG_FILE, csvHeader, false, false);
 			}
@@ -698,7 +698,6 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 	
 	public final void fireAfterTaskEvent(Task t, Navajo response) {
 		
-		System.err.println("IN fireAfterTaskEvent() REGISTERED TASK LISTENERS: " + taskListeners.size());
 		synchronized ( semaphore2 ) {
 			for ( int i = 0 ; i < taskListeners.size(); i++ ) {
 				TaskListener tl = (TaskListener) taskListeners.get(i); 
@@ -717,17 +716,18 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 	 */
 	public final boolean fireBeforeTaskEvent(Task t, Navajo request) {
 
-		System.err.println("IN fireBeforeTaskEvent() REGISTERED TASK LISTENERS: " + taskListeners.size());
 		synchronized ( semaphore2 ) {
 			for ( int i = 0 ; i < taskListeners.size(); i++ ) {
 				TaskListener tl = (TaskListener) taskListeners.get(i);
 				boolean result = tl.beforeTask(t, request);
-				if ( !result ) {
-					return false;
+				// If task has proxy webservice and beforetask returns true, return immediately(!!!) and do not
+				// iterate over other interested task listeners..
+				if ( result && t.isProxy() ) {
+					return true;
 				}
 			}
 		}
-		return true;
+		return false;
 	}
 
 	public final void removeTask(TaskInterface t) {
