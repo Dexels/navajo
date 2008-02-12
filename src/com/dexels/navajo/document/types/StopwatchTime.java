@@ -247,7 +247,7 @@ public final class StopwatchTime
           result += "00"+sep;
         }
         else if (seconds < 10 && ":".equals(sep)) {
-          result += "00"+seconds + sep;
+          result += "0"+seconds + sep;
         }
         else if (seconds < 10) {
           result += seconds + sep;
