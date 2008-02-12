@@ -42,15 +42,12 @@ public final class ListenerStore {
 			instance.ssi = SharedStoreFactory.getInstance();
 			instance.registeredWebservices = new HashMap<String,Integer>();
 			// Register already present webservices.
-			Listener [] l =  instance.getListeners(WebserviceTrigger.class.getName());
-			System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>> IN ListenerStore.GetInstance(), number of existing triggers: " + l.length);
+			Listener [] l =  instance.getListeners(AfterWebserviceTrigger.class.getName());
 			for (int i = 0; i < l.length; i++) {
-				System.err.println("Registering already present webservice trigger: " + ((WebserviceTrigger) l[i]).getWebservicePattern());
-				instance.addRegisteredWebservice( ((WebserviceTrigger) l[i]).getWebservicePattern());
+				instance.addRegisteredWebservice( ((AfterWebserviceTrigger) l[i]).getWebservicePattern());
 			}
 			Listener [] lb = instance.getListeners(BeforeWebserviceTrigger.class.getName());
 			for (int i = 0; i < lb.length; i++) {
-				System.err.println("Registering already present webservice trigger: " + ((BeforeWebserviceTrigger) lb[i]).getWebservicePattern());
 				instance.addRegisteredWebservice( ((BeforeWebserviceTrigger) lb[i]).getWebservicePattern());
 			}
 		}
