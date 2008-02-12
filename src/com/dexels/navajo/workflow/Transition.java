@@ -286,9 +286,11 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 		if ( isBeforeTrigger(t) && isMyTransitionTaskTrigger(t) && enterNextState(t) ) {
 
 			doTaskStuff(t, request);
-
+			return true;
+			
 		} 
-		return true;
+		
+		return false;
 
 	}
 
