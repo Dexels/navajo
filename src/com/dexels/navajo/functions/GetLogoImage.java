@@ -9,6 +9,8 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.awt.image.ConvolveOp;
+import java.awt.image.Kernel;
 import java.io.*;
 
 import javax.imageio.ImageIO;
@@ -50,9 +52,6 @@ public final class GetLogoImage extends FunctionInterface {
 	private final Binary createTextImage(String text) {
 		Binary result = new Binary();
 
-		BufferedImage target = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-		Graphics2D targetGraphics = target.createGraphics();
-
 		int fontsize = 8;
 
 		int string_width = 0;
@@ -64,29 +63,54 @@ public final class GetLogoImage extends FunctionInterface {
 			f = new Font("Dialog", Font.BOLD, fontsize);
 			FontMetrics fm = c.getFontMetrics(f);
 			string_width = fm.stringWidth(text);
-			stringbounds = fm.getStringBounds(text, targetGraphics);
+			stringbounds = fm.getStringBounds(text, null);
 		}
 
 		BufferedImage text_target = new BufferedImage(width, (int) stringbounds.getHeight(), BufferedImage.TYPE_INT_ARGB);
 		Graphics2D text_targetGraphics = text_target.createGraphics();
-		text_targetGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
 		text_targetGraphics.setFont(f);
-		text_targetGraphics.setColor(Color.white);
+		text_targetGraphics.setColor(Color.black);
 		text_targetGraphics.drawString(text, width / 2 - (int) (stringbounds.getWidth() / 2), (int) (-stringbounds.getY() + 1));
 
-		BufferedImage reflection = createReflection(text_target);
+		text_target = getBlurFilter(2, 0).filter(text_target, null);
+		text_target = getBlurFilter(0, 2).filter(text_target, null);
+
+		BufferedImage target = new BufferedImage(width, (int) stringbounds.getHeight(), BufferedImage.TYPE_INT_ARGB);
+		Graphics2D targetGraphics = target.createGraphics();
+
+		targetGraphics.setColor(Color.white);
+		targetGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		targetGraphics.setFont(f);
+		targetGraphics.drawImage(text_target, 0, 0, text_target.getWidth(), text_target.getHeight(), null);
+		targetGraphics.drawString(text, width / 2 - (int) (stringbounds.getWidth() / 2), (int) (-stringbounds.getY() + 1));
+
+		BufferedImage reflection = createReflection(target);
 
 		OutputStream out = result.getOutputStream();
 		try {
 			ImageIO.write(reflection, "png", out);
 			out.close();
 		} catch (Exception e) {
+			
 		}
-		
 		result.setMimeType(result.guessContentType());
-		
 		return result;
+	}
+
+	public static ConvolveOp getBlurFilter(int horizontalRadius, int verticalRadius) {
+		int width = horizontalRadius * 2 + 1;
+		int height = verticalRadius * 2 + 1;
+
+		float weight = 1.0f / (width * height);
+		float[] data = new float[width * height];
+
+		for (int i = 0; i < data.length; i++) {
+			data[i] = weight;
+		}
+
+		Kernel kernel = new Kernel(width, height, data);
+		return new ConvolveOp(kernel, ConvolveOp.EDGE_NO_OP, null);
 	}
 
 	private final BufferedImage createReflection(BufferedImage img) {
@@ -107,5 +131,4 @@ public final class GetLogoImage extends FunctionInterface {
 		g2.dispose();
 		return result;
 	}
-
 }
