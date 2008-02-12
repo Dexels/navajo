@@ -80,8 +80,12 @@ public final class GetLogoImage extends FunctionInterface {
 		OutputStream out = result.getOutputStream();
 		try {
 			ImageIO.write(reflection, "png", out);
+			out.close();
 		} catch (Exception e) {
 		}
+		
+		result.setMimeType(result.guessContentType());
+		
 		return result;
 	}
 
