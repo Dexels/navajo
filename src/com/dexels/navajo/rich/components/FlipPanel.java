@@ -68,7 +68,7 @@ public class FlipPanel extends JPanel {
 
 	}
 
-	public void flipToComponent(JComponent next, boolean direction) {
+	public void flipToComponent(JComponent next, int direction) {
 		((RootPaneContainer) getTopLevelAncestor()).getRootPane().setGlassPane(animationPanel);
 		getRootPane().getLayeredPane().add(animationPanel, 0);
 
@@ -95,7 +95,7 @@ public class FlipPanel extends JPanel {
 			next.setBounds(getVisibleComponent().getBounds());
 			animationPanel.setComponents(getVisibleComponent(), next);
 			animationPanel.setVisible(true);
-			animationPanel.setDirection(false);
+			animationPanel.setDirection(PerspectiveTransform.FLIP_UP);
 			add(animationPanel, BorderLayout.CENTER);
 			animationPanel.flip();
 			visibleComponent = next;
@@ -117,7 +117,7 @@ public class FlipPanel extends JPanel {
 			next.setBounds(getVisibleComponent().getBounds());
 			animationPanel.setComponents(getVisibleComponent(), next);
 			animationPanel.setVisible(true);
-			animationPanel.setDirection(true);
+			animationPanel.setDirection(PerspectiveTransform.FLIP_DOWN);
 			// add(next, BorderLayout.CENTER);
 			add(animationPanel, BorderLayout.CENTER);
 			animationPanel.flip();

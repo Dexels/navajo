@@ -48,8 +48,8 @@ public class PerspectiveImagePanel extends JPanel {
 	public int angle = 0;
 	private int previousAngle;
 	private BufferedImage currentImg;
-	private boolean direction = false;
-	public static Animator a;
+	private int direction = PerspectiveTransform.FLIP_RIGHT;
+	private Animator a;
 	private JComponent c1, c2, set_visible, parent;
 	private int speed = 500;
 	
@@ -88,20 +88,19 @@ public class PerspectiveImagePanel extends JPanel {
 	public PerspectiveImagePanel(JComponent parent){
 		try{
 			this.parent = parent;
-			setDirection(false);
 			setOpaque(false);
 			a = PropertySetter.createAnimator(speed, this, "angle", 0, 84);
 			a.setAcceleration(0.5f);
 			a.addTarget(new TimingTargetAdapter(){
 				public void end(){
 					flipImage();
-					setDirection(!getDirection());
+					setDirection(getOppositeDirection());
 					Animator b = PropertySetter.createAnimator(speed, PerspectiveImagePanel.this, "angle", 84, 0);
 					b.setDeceleration(0.5f);
 					b.addTarget(new TimingTargetAdapter(){
 						public void end(){
 							setAngle(0);
-							setDirection(!getDirection());
+							setDirection(getOppositeDirection());
 							PerspectiveImagePanel.this.setVisible(false);
 						  c2.setVisible(true);
 						}
@@ -185,8 +184,8 @@ public class PerspectiveImagePanel extends JPanel {
 	}
 
 	
-	public void setDirection(boolean to_left){
-		this.direction = to_left;
+	public void setDirection(int direction){
+		this.direction = direction;
 	}
 	
 	public void flipImage(){
@@ -197,8 +196,23 @@ public class PerspectiveImagePanel extends JPanel {
 		}
 	}
 	
-	public boolean getDirection(){
+	public int getDirection(){
 		return this.direction;
+	}
+	
+	public int getOppositeDirection(){
+		switch(direction){
+			case PerspectiveTransform.FLIP_DOWN:
+				return PerspectiveTransform.FLIP_UP;
+			case PerspectiveTransform.FLIP_UP:
+				return PerspectiveTransform.FLIP_DOWN;
+			case PerspectiveTransform.FLIP_LEFT:
+				return PerspectiveTransform.FLIP_RIGHT;
+			case PerspectiveTransform.FLIP_RIGHT:
+				return PerspectiveTransform.FLIP_LEFT;
+			default:
+				return PerspectiveTransform.FLIP_LEFT;
+		}
 	}
 
 	public void flip(){
@@ -255,7 +269,7 @@ public class PerspectiveImagePanel extends JPanel {
 		JButton flip = new JButton("flip direction");
 		flip.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				p.setDirection(!p.getDirection());
+				p.setDirection(p.getOppositeDirection());
 				p.setAngle(slide.getValue()+1);
 			}
 		});
@@ -263,7 +277,7 @@ public class PerspectiveImagePanel extends JPanel {
 		frame.getContentPane().add(flip);
 		
     
-		p.setDirection(true);
+		p.setDirection(PerspectiveTransform.FLIP_LEFT);
 		frame.setSize(1024,768);
 		frame.setVisible(true);
 	}

@@ -4,6 +4,7 @@ import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -86,14 +87,43 @@ public class DesktopButton extends JButton {
 		});
 	}
 
-//	public Dimension getPreferredSize(){
-//		return new Dimension(200, 68);
-//	}
+	public Dimension getPreferredSize(){
+		Font fA = new Font(Font.DIALOG, Font.BOLD, fontsize_a);
+		Font fB = new Font(Font.DIALOG, Font.PLAIN, fontsize_b);
+		FontMetrics mA = getFontMetrics(fA);
+		FontMetrics mB = getFontMetrics(fB);
+				        
+		// Determine WIDTH
+		int width = myIcon.getIconWidth() + icon_offset_x + text_offset_x;
+		int text_width = 0;		
+		if(getText() != null){
+		  text_width = mA.charsWidth(getText().toCharArray(), 0, getText().length());
+		}
+		
+		int tooltip_width = 0;
+		if(toolTip != null){
+    	tooltip_width = mB.charsWidth(toolTip.toCharArray(), 0, toolTip.length());
+    }
+		text_width = Math.max(text_width, tooltip_width);
+		width += text_width;
+		
+		// Determine HEIGHT
+		int height = text_offset_y + text_b_offset_y;
+		if(toolTip != null || !"".equals(toolTip)){
+			height += mB.getHeight();
+		}
+		if(getText() != null || !"".equals(getText())){
+			height += mA.getHeight();
+		}
+		height = Math.max(height, myIcon.getIconHeight()+reflectionSize);
+		// Return Dimension (WIDTH x HEIGHT)  
+		return new Dimension(width, height);
+	}
 	
 	public void paintComponent(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
-		Rectangle bounds = getBounds();
-		// System.err.println("Bounds : " + bounds);
+		Dimension bounds = getPreferredSize();
+
 		BufferedImage buffer = new BufferedImage(bounds.width, bounds.height - reflectionSize, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D gBuf = buffer.createGraphics();
 
