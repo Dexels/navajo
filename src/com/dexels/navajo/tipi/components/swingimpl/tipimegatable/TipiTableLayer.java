@@ -80,7 +80,6 @@ private MessageTablePanel myTablePanel;
       }
     }
   }
-
   public void updateLayer() {
   }
 
@@ -130,7 +129,6 @@ private MessageTablePanel myTablePanel;
   private final void updateTableColumns(final MessageTablePanel mtp) {
 		Runnable invocation = new Runnable(){
 
-			@Override
 			public void run() {
 				  mtp.createColumnModel();
 				    for (int i = 0; i < columnSize.size(); i++) {
