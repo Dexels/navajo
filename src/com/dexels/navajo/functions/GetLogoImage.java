@@ -10,9 +10,6 @@ import java.awt.RenderingHints;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.net.*;
-import java.util.*;
-import java.util.Date;
 
 import javax.imageio.ImageIO;
 import javax.swing.JComponent;
@@ -23,7 +20,7 @@ import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
 
 public final class GetLogoImage extends FunctionInterface {
-	private final int max_fontsize = 40;
+	
 	private int reflectionSize = 18;
 	private int height = 60;
 	private int width = 265;
@@ -50,7 +47,7 @@ public final class GetLogoImage extends FunctionInterface {
 		return createTextImage((String)a);
 	}
 
-	public Binary createTextImage(String text) {
+	private final Binary createTextImage(String text) {
 		Binary result = new Binary();
 
 		BufferedImage target = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
@@ -70,8 +67,6 @@ public final class GetLogoImage extends FunctionInterface {
 			stringbounds = fm.getStringBounds(text, targetGraphics);
 		}
 
-		System.err.println("fonsize: " + fontsize + ", bounds: " + stringbounds);
-
 		BufferedImage text_target = new BufferedImage(width, (int) stringbounds.getHeight(), BufferedImage.TYPE_INT_ARGB);
 		Graphics2D text_targetGraphics = text_target.createGraphics();
 		text_targetGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -90,7 +85,7 @@ public final class GetLogoImage extends FunctionInterface {
 		return result;
 	}
 
-	private BufferedImage createReflection(BufferedImage img) {
+	private final BufferedImage createReflection(BufferedImage img) {
 		int height = img.getHeight();
 		BufferedImage result = new BufferedImage(img.getWidth(), (int) (height + reflectionSize), BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2 = result.createGraphics();
