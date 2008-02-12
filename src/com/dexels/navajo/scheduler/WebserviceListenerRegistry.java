@@ -31,8 +31,8 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.enterprise.scheduler.WebserviceListenerRegistryInterface;
-import com.dexels.navajo.tribe.BeforeServiceEventAnswer;
-import com.dexels.navajo.tribe.BeforeServiceEventRequest;
+import com.dexels.navajo.tribe.ServiceEventAnswer;
+import com.dexels.navajo.tribe.ServiceEventRequest;
 import com.dexels.navajo.tribe.ServiceEventsSmokeSignal;
 import com.dexels.navajo.tribe.TribeManager;
 import com.dexels.navajo.tribe.TribeMember;
@@ -89,9 +89,9 @@ public final class WebserviceListenerRegistry implements WebserviceListenerRegis
 	 * 
 	 * @param t the trigger object to be registered
 	 */
-	public final void registerTrigger(WebserviceTrigger t) {
+	public final void registerTrigger(AfterWebserviceTrigger t) {
 
-		ListenerStore.getInstance().addListener(t,WebserviceTrigger.class.getName(), true);
+		ListenerStore.getInstance().addListener(t,AfterWebserviceTrigger.class.getName(), true);
 		// Broadcast..
 		TribeManager.getInstance().broadcast(new ServiceEventsSmokeSignal(Dispatcher.getInstance().getNavajoConfig().getInstanceName(), ServiceEventsSmokeSignal.ADD_WEBSERVICE, t.getWebservicePattern()));
 		ListenerStore.getInstance().addRegisteredWebservice(t.getWebservicePattern());
@@ -103,9 +103,9 @@ public final class WebserviceListenerRegistry implements WebserviceListenerRegis
 	 * 
 	 * @param t the trigger object that needs to be removed.
 	 */
-	public final void removeTrigger(WebserviceTrigger t) {
+	public final void removeTrigger(AfterWebserviceTrigger t) {
 
-		ListenerStore.getInstance().removeListener(t,WebserviceTrigger.class.getName(), false);
+		ListenerStore.getInstance().removeListener(t,AfterWebserviceTrigger.class.getName(), false);
 		ListenerStore.getInstance().removeRegisteredWebservice(t.getWebservicePattern());
 		// Broadcast..
 		TribeManager.getInstance().broadcast(new ServiceEventsSmokeSignal(Dispatcher.getInstance().getNavajoConfig().getInstanceName(), ServiceEventsSmokeSignal.REMOVE_WEBSERVICE, t.getWebservicePattern()));
@@ -128,47 +128,44 @@ public final class WebserviceListenerRegistry implements WebserviceListenerRegis
 			return;
 		} 
 
-		Listener [] all = ListenerStore.getInstance().getListeners(WebserviceTrigger.class.getName());
-		//System.err.println(">>>>>>>>>>>>>>GOT " + all.length + " WebserviceTriggers..........................");
+		Listener [] all = ListenerStore.getInstance().getListeners(AfterWebserviceTrigger.class.getName());
+		
 		for (int i = 0; i < all.length; i++) {
-			WebserviceTrigger cl = (WebserviceTrigger) all[i];
+			AfterWebserviceTrigger cl = (AfterWebserviceTrigger) all[i];
 			if ( cl.getWebservicePattern().equals(webservice)) {
-				//System.err.println("Got WebserviceTrigger: " + cl.getDescription() );
-				// Set activated status.
-				// If not workflow activate task, if workflow, perform task.
 
-				// IF WORKFLOW, WAIT FOR FINISHING OF TASK.
-				// ?? HOE ERVOOR TE ZORGEN DAT DIT AFTERWEBSERVICE EVENT OOK BIJ ANDER SERVERS TERECHT KOMT DIE
-				// GEINTERESSEERD ZIJN IN DIT EVENT????????????? BROADCASTEN??????????????
-				//System.err.println("Got synchronous WebserviceTrigger: " + cl.getDescription() );
-				
-				WebserviceTrigger t2 = (WebserviceTrigger) cl.clone();
+				AfterWebserviceTrigger t2 = (AfterWebserviceTrigger) cl.clone();
 				t2.setAccess(a);
 				boolean initializingWorkflow = ( t2.getTask().getWorkflowDefinition() != null && t2.getTask().getWorkflowId() == null );
 				boolean myWorkflow = ( t2.getTask().getWorkflowId() != null && WorkFlowManager.getInstance().hasWorkflowId(t2.getTask().getWorkflowId()));
-				
-				//System.err.println("initializingWorkflow: " + initializingWorkflow + ", myWorkflow: " + myWorkflow);
-				if ( initializingWorkflow || myWorkflow) {
+
+				if ( t2.getTask().getWorkflowId() == null || initializingWorkflow || myWorkflow) {
 					t2.perform();
 				} else {
-					TribeManager.getInstance().broadcast(new ServiceEventsSmokeSignal(Dispatcher.getInstance().getNavajoConfig().getInstanceName(), ServiceEventsSmokeSignal.AFTERWEBSERVICE_EVENT, t2));
+					if ( t2.getTask().getWebservice() != null ) { // If webservice is accompanied with the task, perform after task trigger asynchronously.
+						TribeManager.getInstance().broadcast(new ServiceEventsSmokeSignal(Dispatcher.getInstance().getNavajoConfig().getInstanceName(), ServiceEventsSmokeSignal.AFTERWEBSERVICE_EVENT, t2));
+					} else { // Peform synchronously be sending request to each tribe member ( used in workflow transitions )
+						tribalServiceRequest(t2);
+					}
 				}
 			}
 		}
 	}
 
-	private final Navajo tribaleBeforeServiceRequest(BeforeWebserviceTrigger t2) {
-		
+	private final Navajo tribalServiceRequest(WebserviceTrigger t2) {
+
 		Iterator<TribeMember> iter = TribeManager.getInstance().getClusterState().clusterMembers.iterator();
 		boolean acknowledged = false;
 		Navajo result = null;
 		while ( iter.hasNext() && !acknowledged ) {
 			TribeMember tm = iter.next();
-			BeforeServiceEventRequest bser = new BeforeServiceEventRequest(t2);
-			BeforeServiceEventAnswer bsa = (BeforeServiceEventAnswer) TribeManager.getInstance().askSomebody(bser, tm.getAddress());
-			acknowledged = bsa.acknowledged();
-			if ( acknowledged ) {
-				result = bsa.getProxy();
+			if ( !tm.getMemberName().equals(Dispatcher.getInstance().getNavajoConfig().getInstanceName()) ) {
+				ServiceEventRequest bser = new ServiceEventRequest(t2);
+				ServiceEventAnswer bsa = (ServiceEventAnswer) TribeManager.getInstance().askSomebody(bser, tm.getAddress());
+				acknowledged = bsa.acknowledged();
+				if ( acknowledged ) {
+					result = bsa.getProxy();
+				}
 			}
 		}
 		return result;
@@ -198,17 +195,18 @@ public final class WebserviceListenerRegistry implements WebserviceListenerRegis
 				BeforeWebserviceTrigger t2 = (BeforeWebserviceTrigger) cl.clone();
 				t2.setAccess(a);
 				//System.err.println("Got synchronous BeforeWebserviceTrigger: " + cl.getDescription() );
-				if ( cl.getTask().isProxy() ) {
-					return tribaleBeforeServiceRequest(t2);
+				
+				boolean initializingWorkflow = ( t2.getTask().getWorkflowDefinition() != null && t2.getTask().getWorkflowId() == null );
+				boolean myWorkflow = ( t2.getTask().getWorkflowId() != null && WorkFlowManager.getInstance().hasWorkflowId(t2.getTask().getWorkflowId()));
+				Navajo n = null;
+				if ( t2.getTask().getWorkflowId() == null || initializingWorkflow || myWorkflow) {
+					n = t2.perform();
 				} else {
-					//System.err.println(Dispatcher.getInstance().getNavajoConfig().getInstanceName() + "In beforeWebservice(" + webservice + ")");
-					boolean initializingWorkflow = ( t2.getTask().getWorkflowDefinition() != null && t2.getTask().getWorkflowId() == null );
-					boolean myWorkflow = ( t2.getTask().getWorkflowId() != null && WorkFlowManager.getInstance().hasWorkflowId(t2.getTask().getWorkflowId()));
-					if ( initializingWorkflow || myWorkflow) {
-						t2.perform();
-					} else {
-						tribaleBeforeServiceRequest(t2);
-					}
+					// Peform synchronously be sending request to each tribe member.
+					n = tribalServiceRequest(t2);
+				}
+				if ( t2.getTask().isProxy() ) {
+					return n;
 				}
 			}
 		}
