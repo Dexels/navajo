@@ -70,7 +70,7 @@ public class Clock extends GenericThread implements ClockMXBean, ClockInterface 
 					//System.err.println("Got TimeTrigger: " + cl.getDescription() );
 					// Set fired status if appropriate.
 					if ( cl.timetick(c) ) {
-						System.err.println(i + ": >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ACTIVATING!" + cl.getDescription() + ", task:" + cl.getTask().getWebservice() );
+						//System.err.println(i + ": >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ACTIVATING!" + cl.getDescription() + ", task:" + cl.getTask().getWebservice() );
 						ListenerStore.getInstance().activate(cl, TimeTrigger.class.getName());
 						if ( cl.isSingleEvent() ) { // Remove blue print also, do not wait for lock!
 							ListenerStore.getInstance().removeListener(cl, TimeTrigger.class.getName(), true);

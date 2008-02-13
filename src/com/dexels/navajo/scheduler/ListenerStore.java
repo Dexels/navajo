@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 import com.dexels.navajo.server.Dispatcher;
-import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
 import com.dexels.navajo.tribe.GetLockRequest;
 import com.dexels.navajo.tribe.ListenerRunnerActivationSmokeSignal;
 import com.dexels.navajo.tribe.LockAnswer;
