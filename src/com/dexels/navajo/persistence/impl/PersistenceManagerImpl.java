@@ -298,42 +298,42 @@ public final class PersistenceManagerImpl implements PersistenceManager {
 	
 	public void setDoClear(boolean doClear) {
 		PersistenceManagerImpl pm = (PersistenceManagerImpl) Dispatcher.getInstance().getNavajoConfig().getPersistenceManager();
-		synchronized (semaphore) {
-			if ( doClear && pm.inMemoryCache != null && pm.sharedPersistenceStore != null ) {
-				Set keys = new HashSet( pm.inMemoryCache.keySet() );
-				Iterator iter = keys.iterator();
-				while ( iter.hasNext() ) {
-					String cacheKey = (String) iter.next();
-					if ( cacheKey.startsWith(key ) && this.serviceKeyValues == null ) {
-						pm.inMemoryCache.remove(cacheKey);
-						pm.sharedPersistenceStore.remove(CACHE_PATH, cacheKey);
-					} else if ( cacheKey.startsWith(key ) && this.serviceKeyValues != null ) {
-						RemoteReference re = (RemoteReference) pm.inMemoryCache.get(cacheKey);
-						SoftReference se = (SoftReference) re.getObject();
-						if ( se != null ) {
-							PersistentEntry pe = (PersistentEntry) se.get();
-							if ( pe != null ) {
-								
-								if ( pe.getKeyValues().equals(serviceKeyValues) ) {
-									pm.inMemoryCache.remove(cacheKey);
-									pm.sharedPersistenceStore.remove(CACHE_PATH, cacheKey);
-								}
+
+		if ( doClear && pm.inMemoryCache != null && pm.sharedPersistenceStore != null ) {
+			Set keys = new HashSet( pm.inMemoryCache.keySet() );
+			Iterator iter = keys.iterator();
+			while ( iter.hasNext() ) {
+				String cacheKey = (String) iter.next();
+				if ( cacheKey.startsWith(key ) && this.serviceKeyValues == null ) {
+					pm.inMemoryCache.remove(cacheKey);
+					pm.sharedPersistenceStore.remove(CACHE_PATH, cacheKey);
+				} else if ( cacheKey.startsWith(key ) && this.serviceKeyValues != null ) {
+					RemoteReference re = (RemoteReference) pm.inMemoryCache.get(cacheKey);
+					SoftReference se = (SoftReference) re.getObject();
+					if ( se != null ) {
+						PersistentEntry pe = (PersistentEntry) se.get();
+						if ( pe != null ) {
+
+							if ( pe.getKeyValues().equals(serviceKeyValues) ) {
+								pm.inMemoryCache.remove(cacheKey);
+								pm.sharedPersistenceStore.remove(CACHE_PATH, cacheKey);
 							}
 						}
 					}
 				}
-				// Remove all persisted cache objects that start with the given cache key to prevent 
-				// loading of invalidated cache entries. This is rather brute force since in the current
-				// implementation we do not store PersistentEntry objects but entire Navajo documents, hence
-				// we can not check the serviceKeyValues....
-				String [] all = pm.sharedPersistenceStore.getObjects(CACHE_PATH);
-				for ( int i = 0; i < all.length; i++ ) {
-					if ( all[i].startsWith(key) ) {
-						pm.sharedPersistenceStore.remove(CACHE_PATH, all[i]);
-					}
+			}
+			// Remove all persisted cache objects that start with the given cache key to prevent 
+			// loading of invalidated cache entries. This is rather brute force since in the current
+			// implementation we do not store PersistentEntry objects but entire Navajo documents, hence
+			// we can not check the serviceKeyValues....
+			String [] all = pm.sharedPersistenceStore.getObjects(CACHE_PATH);
+			for ( int i = 0; i < all.length; i++ ) {
+				if ( all[i].startsWith(key) ) {
+					pm.sharedPersistenceStore.remove(CACHE_PATH, all[i]);
 				}
-			} 
-		}
+			}
+		} 
+
 	}
 
 	public double getHitratio() {
