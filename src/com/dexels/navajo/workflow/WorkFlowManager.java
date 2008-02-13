@@ -125,7 +125,7 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 			
 			// Create workflow persistence dir.
 			if ( instance.workflowPath == null ) {
-				instance.baseWorkflowPath = "/workflows/instances";
+				instance.baseWorkflowPath = "workflows/instances";
 				instance.workflowPath = instance.baseWorkflowPath + "/" + Dispatcher.getInstance().getNavajoConfig().getInstanceName();
 				try {
 					ssi.createParent(instance.workflowPath);
@@ -175,7 +175,7 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 	
 	public boolean persistWorkFlow(WorkFlow wf) {
 		
-		if ( wf.isKilled() ) {
+		if ( wf.isKilled() || wf.isFinished() ) {
 			return false;
 		}
 		
@@ -196,10 +196,9 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 		}
 	}
 	
-	public void removePersistedWorkFlow(WorkFlow wf) {
-		synchronized (semaphore_instances) {
-			SharedStoreFactory.getInstance().remove(workflowPath, wf.getDefinition()+wf.getMyId());
-		}
+	private void removePersistedWorkFlow(WorkFlow wf) {	
+		SharedStoreFactory.getInstance().remove(workflowPath, wf.getDefinition()+wf.getMyId());
+		System.err.println(">>>>>>>>>>>>>>> REMOVE PERSISTED WORKFLOW: " + workflowPath + "/" + wf.getDefinition()+wf.getMyId());
 	}
 	
 	public void addWorkFlow(WorkFlow wf) {
@@ -210,6 +209,7 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 	
 	public void removeWorkFlow(WorkFlow wf) {
 		synchronized (semaphore_instances) {
+			removePersistedWorkFlow(wf);
 			workflowInstances.remove(wf);
 			WorkFlowDefinition wdf = workflowDefinitions.get(wf.getDefinition());
 			wdf.instances--;
