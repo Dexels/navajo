@@ -408,7 +408,7 @@ public class SharedFileStore implements SharedStoreInterface {
 	 */
 	public void remove(String parent, String name) {
 		File f = new File(sharedStore, parent + "/" + name);
-		if (!f.delete()) {
+		if (f.exists() && !f.delete()) {
 			AuditLog.log(AuditLog.AUDIT_MESSAGE_SHAREDSTORE, "Could not remove object, parent = " + parent + ", name = " + name);
 		}
 	}
