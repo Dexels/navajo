@@ -39,16 +39,24 @@ public final class ListenerStore {
 			
 			instance = new ListenerStore();
 			instance.ssi = SharedStoreFactory.getInstance();
-			instance.registeredWebservices = new HashMap<String,Integer>();
-			// Register already present webservices.
-			Listener [] l =  instance.getListeners(AfterWebserviceTrigger.class.getName());
-			for (int i = 0; i < l.length; i++) {
-				instance.addRegisteredWebservice( ((AfterWebserviceTrigger) l[i]).getWebservicePattern());
-			}
-			Listener [] lb = instance.getListeners(BeforeWebserviceTrigger.class.getName());
-			for (int i = 0; i < lb.length; i++) {
-				instance.addRegisteredWebservice( ((BeforeWebserviceTrigger) lb[i]).getWebservicePattern());
-			}
+			
+			if ( TribeManager.getInstance().getIsChief() ) {  // Clear everything is the chief is started (complete reboot of system).
+				instance.ssi.removeAll(activatedListeners);
+				instance.ssi.removeAll(storeLocation);
+			} 
+
+				instance.registeredWebservices = new HashMap<String,Integer>();
+				// Register already present webservices.
+				Listener [] l =  instance.getListeners(AfterWebserviceTrigger.class.getName());
+				for (int i = 0; i < l.length; i++) {
+					instance.addRegisteredWebservice( ((AfterWebserviceTrigger) l[i]).getWebservicePattern());
+				}
+				Listener [] lb = instance.getListeners(BeforeWebserviceTrigger.class.getName());
+				for (int i = 0; i < lb.length; i++) {
+					instance.addRegisteredWebservice( ((BeforeWebserviceTrigger) lb[i]).getWebservicePattern());
+				}
+			
+			
 		}
 		
 		return instance;
@@ -116,7 +124,7 @@ public final class ListenerStore {
 	public final Listener [] getListeners(String type) {
 
 		//System.err.println("In getListeners(" + type + ")");
-		synchronized (semaphore) {
+		
 			HashSet<Listener> set = new HashSet<Listener>();
 			String [] allNames = ssi.getObjects(storeLocation);
 			for (int i = 0; i < allNames.length; i++ ) {
@@ -133,7 +141,7 @@ public final class ListenerStore {
 			Listener [] all = new Listener[set.size()];
 			all = (Listener []) set.toArray(all);
 			return all;
-		}
+		
 	}
 
 	/**
