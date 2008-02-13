@@ -192,10 +192,10 @@ public final class Money
 
 public String editingString() {
 	    if (value == null) {
-	      return "";
+	      return "-";
 	    }
 	    return editingFormat.format(value);
-	  }
+	}
 
   
   /**
