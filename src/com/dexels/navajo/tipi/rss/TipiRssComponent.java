@@ -4,14 +4,12 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
-import sun.awt.geom.AreaOp.*;
 
 
 //import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.types.*;
 import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.core.*;
 import com.dexels.navajo.tipi.connectors.*;
 import com.dexels.navajo.tipi.internal.*;
 import com.sun.cnpi.rss.elements.*;
@@ -38,8 +36,9 @@ public class TipiRssComponent extends TipiBaseConnector implements TipiConnector
 	public void doTransaction(Navajo n, String service, String destination) throws TipiBreakException, TipiException {
 		try {
 			Rss rss = createRssFeed(destination);
-			Navajo nn = getRssNavajo(rss.getChannel());
-			myContext.addNavajo(service, n);
+			Navajo nn = getRssNavajo(rss.getChannel(),service);
+
+			myContext.addNavajo(service, nn);
 			myContext.loadNavajo(nn, service);
 		} catch (Exception e) {
 			throw new TipiException(e);
@@ -55,9 +54,11 @@ public class TipiRssComponent extends TipiBaseConnector implements TipiConnector
 		return "rss";
 	}
 
-	private Navajo getRssNavajo(Channel c) throws NavajoException {
+	@SuppressWarnings("unchecked")
+	private Navajo getRssNavajo(Channel c, String service) throws NavajoException {
 		Navajo n = NavajoFactory.getInstance().createNavajo();
-
+			Header h =NavajoFactory.getInstance().createHeader(n, service, "unknown","unknown", -1);
+			n.addHeader(h);
 		Message channelMessage = NavajoFactory.getInstance().createMessage(n,"Channel");
 		n.addMessage(channelMessage);
 		addProperty(channelMessage,"Title",c.getTitle(),Property.STRING_PROPERTY);
@@ -141,13 +142,14 @@ public class TipiRssComponent extends TipiBaseConnector implements TipiConnector
 		addProperty(m, name, e, type,null);
 	}
 
-	public static void main(String[] args) throws MalformedURLException, RssParserException, IOException, NavajoException {
+	@SuppressWarnings({"unchecked" })
+	public static void main(String[] args) throws MalformedURLException, RssParserException, IOException {
 		TipiRssComponent trc = new TipiRssComponent();
 		Rss r = trc.createRssFeed("http://search-result.com/directhit/xml/NL_algemeen.xml");
 //		http://www.nytimes.com/services/xml/rss/nyt/HomePage.xml
 		Channel ccc = r.getChannel();
 		
-		Navajo n = trc.getRssNavajo(ccc);
+//		Navajo n = trc.getRssNavajo(ccc,null);
 		Collection<Item> s = ccc.getItems();
 		for (Iterator<Item> iterator = s.iterator(); iterator.hasNext();) {
 			Item i = iterator.next();
