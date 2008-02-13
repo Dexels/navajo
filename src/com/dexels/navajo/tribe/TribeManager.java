@@ -24,6 +24,8 @@
  */
 package com.dexels.navajo.tribe;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.net.Inet4Address;
 import java.util.Collections;
 import java.util.HashSet;
@@ -41,8 +43,10 @@ import org.jgroups.ReceiverAdapter;
 import org.jgroups.View;
 import org.jgroups.stack.IpAddress;
 import org.jgroups.util.Util;
+import org.w3c.dom.Document;
 
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
 import com.dexels.navajo.events.NavajoEventRegistry;
 import com.dexels.navajo.events.types.TribeMemberDownEvent;
 import com.dexels.navajo.mapping.Mappable;
@@ -79,6 +83,7 @@ import com.dexels.navajo.util.AuditLog;
  */
 public final class TribeManager extends ReceiverAdapter implements Mappable, TribeManagerInterface {
 
+	
 	public String setChief;
 	public String chiefName;
 	public boolean isChief;
@@ -98,6 +103,8 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 	
 	public TribeMember [] members = null;
 	
+	//private static String configuration = "state_transfer():frag2(frag_size=60000):fc(min_threshold=0.10, max_credits=20000000):gms(shun=false, print_local_addr=true, view_bundling=true, join_timeout=3000, join_retry_timeout=2000):view_sync(avg_send_interval=60000):stable(max_bytes=400000, stability_delay=1000, desired_avg_gossip=50000):unicast(timeout=300,600,1200,2400,3600):nakack(max_xmit_size=60000, retransmit_timeout=300,600,1200,2400,4800, use_mcast_xmit=false, discard_delivered_msgs=true, gc_lag=0):barrier():verify_suspect(timeout=1500):fd(max_tries=5, shun=true, timeout=10000):fd_sock():merge2(max_interval=30000, min_interval=10000):ping(num_initial_members=3, timeout=2000):";
+	//private static String updConfiguration = "udp(mcast_port=45588, oob_thread_pool.enabled=true, ucast_recv_buf_size=20000000, thread_pool.enabled=true, loopback=false, thread_pool.rejection_policy=Run, max_bundle_timeout=30, thread_pool.queue_max_size=100, oob_thread_pool.min_threads=1, oob_thread_pool.keep_alive_time=5000, oob_thread_pool.rejection_policy=Run, thread_naming_pattern=cl, thread_pool.queue_enabled=false, ucast_send_buf_size=640000, max_bundle_size=64000, enable_bundling=true, thread_pool.max_threads=25, ip_ttl=2, mcast_recv_buf_size=25000000, tos=8, use_incoming_packet_handler=true, thread_pool.keep_alive_time=5000, oob_thread_pool.queue_max_size=100, use_concurrent_stack=true, discard_incompatible_packets=true, enable_diagnostics=true, oob_thread_pool.max_threads=8, mcast_send_buf_size=640000, thread_pool.min_threads=1, oob_thread_pool.queue_enabled=false, mcast_addr=228.10.10.10)";
 	
 	public static TribeManager getInstance() {
 	
@@ -131,8 +138,26 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 					try {
 						AuditLog.log(AuditLog.AUDIT_MESSAGE_TRIBEMANAGER, "=================================== SETTING UP JGROUPS CHANNEL ==================================");
 						System.setProperty("java.net.preferIPv4Stack", "true");
-						instance.channel=new JChannel();
+						
+						File xmlConfig = new File(Dispatcher.getInstance().getNavajoConfig().getConfigPath() + "/jgroups.xml");
+						
+						if ( xmlConfig.exists() ) {
+							
+							AuditLog.log("TRIBEMANAGER", "Using CUSTOMIZED jgroups configuration");
+							Document xml = XMLDocumentUtils.createDocument(new FileInputStream(xmlConfig), false);
+							xml.getDocumentElement().normalize();
+							
+							instance.channel=new JChannel( xml.getDocumentElement()  );
+						} else {
+							
+							AuditLog.log("TRIBEMANAGER", "Using DEFAULT jgroups configuration");
+							
+							instance.channel=new JChannel();
+						}
+						
 						instance.channel.setReceiver(instance);
+						
+						
 						// TODO:
 						// GET GROUP NAME TO SPECIFY SPECIFIC TRIBE GROUP..
 						instance.channel.connect( Dispatcher.getInstance().getNavajoConfig().getInstanceGroup() );
@@ -140,6 +165,8 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 						AuditLog.log(AuditLog.AUDIT_MESSAGE_TRIBEMANAGER, "MyAddress = " + ((IpAddress) instance.channel.getLocalAddress()).getIpAddress() + ", port = " + 
 								((IpAddress) instance.channel.getLocalAddress()).getPort());
 						AuditLog.log(AuditLog.AUDIT_MESSAGE_TRIBEMANAGER, "=================================================================================================");
+					
+						
 					} catch (Exception e) {
 						e.printStackTrace(System.err);
 					}
