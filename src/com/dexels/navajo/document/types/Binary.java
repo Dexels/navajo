@@ -26,7 +26,7 @@ import com.dexels.navajo.document.saximpl.qdxml.*;
  * </p>
  * 
  * @author aphilip
- * @version 1.0
+ * @version $Id$
  */
 
 public final class Binary extends NavajoType implements Serializable,Comparable<Binary> {
@@ -163,8 +163,6 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
         this.mimetype = getSubType("mime");
         this.mimetype = (mimetype == null || mimetype.equals("") ? guessContentType() : mimetype);
         
-        System.err.println("Mimetype = " + mimetype);
-
     }
 
     private OutputStream createTempFileOutputStream() throws IOException, FileNotFoundException {
