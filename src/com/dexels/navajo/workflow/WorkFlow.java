@@ -29,6 +29,7 @@ public class WorkFlow implements Mappable, Serializable {
 	public final Access initiatingAccess;
 	public State [] history = null;
 	public boolean kill = false;
+	public boolean finished = false;
 	public Binary localState = null;
 	public boolean transientWorkFlow = false;
 	
@@ -187,7 +188,7 @@ public class WorkFlow implements Mappable, Serializable {
 	}
 	
 	public void finish() {
-		WorkFlowManager.getInstance().removePersistedWorkFlow(this);
+		finished = true;
 		WorkFlowManager.log(this, null, "finished " + ( kill ? "(got killed)" : ""), null);
 		WorkFlowManager.getInstance().removeWorkFlow(this);
 	}
@@ -257,6 +258,10 @@ public class WorkFlow implements Mappable, Serializable {
 
 	public Navajo getLocalNavajo() {
 		return localNavajo;
+	}
+
+	public boolean isFinished() {
+		return finished;
 	}
 
 	
