@@ -138,8 +138,9 @@ public final class WebserviceListenerRegistry implements WebserviceListenerRegis
 				t2.setAccess(a);
 				boolean initializingWorkflow = ( t2.getTask().getWorkflowDefinition() != null && t2.getTask().getWorkflowId() == null );
 				boolean myWorkflow = ( t2.getTask().getWorkflowId() != null && WorkFlowManager.getInstance().hasWorkflowId(t2.getTask().getWorkflowId()));
-
-				if ( t2.getTask().getWorkflowId() == null || initializingWorkflow || myWorkflow) {
+				boolean isWorkflow = ( t2.getTask().getWorkflowDefinition() != null );
+				
+				if ( !isWorkflow || initializingWorkflow || myWorkflow) {
 					t2.perform();
 				} else {
 					if ( t2.getTask().getWebservice() != null ) { // If webservice is accompanied with the task, perform after task trigger asynchronously.
@@ -194,12 +195,14 @@ public final class WebserviceListenerRegistry implements WebserviceListenerRegis
 			if ( cl.getWebservicePattern().equals(webservice)) {
 				BeforeWebserviceTrigger t2 = (BeforeWebserviceTrigger) cl.clone();
 				t2.setAccess(a);
-				//System.err.println("Got synchronous BeforeWebserviceTrigger: " + cl.getDescription() );
 				
 				boolean initializingWorkflow = ( t2.getTask().getWorkflowDefinition() != null && t2.getTask().getWorkflowId() == null );
 				boolean myWorkflow = ( t2.getTask().getWorkflowId() != null && WorkFlowManager.getInstance().hasWorkflowId(t2.getTask().getWorkflowId()));
+				boolean isWorkflow = ( t2.getTask().getWorkflowDefinition() != null );
+				
 				Navajo n = null;
-				if ( t2.getTask().getWorkflowId() == null || initializingWorkflow || myWorkflow) {
+				if ( !isWorkflow || initializingWorkflow || myWorkflow) { // If this is NOT a workflow task or an initializing workflow task or                                                   
+				                                                          // my workflow task, perform locally.
 					n = t2.perform();
 				} else {
 					// Peform synchronously be sending request to each tribe member.
