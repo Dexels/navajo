@@ -19,7 +19,6 @@ import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.server.SystemException;
 import com.dexels.navajo.server.UserException;
-import com.dexels.navajo.util.AuditLog;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 
@@ -53,7 +52,6 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 	private Task myTask = null;
 	private State myState;
 	private final ArrayList<Parameter> parameters = new ArrayList<Parameter>();
-	private static Object semaphore = new Object();
 	
 	/**
 	 * An transition is an activationTranstion if it can activate a new workflow instance.
@@ -94,8 +92,23 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 	}
 	
 	/**
-	 * Evaluate all parameters.
+	 * Evaluate all parameters that are defined in the param block of this transition.
+	 * <transition ...>
+	 *   <param ... />
+	 *   <param ... />
+	 * </transition>
 	 *
+	 * DEFAULT NAVAJO
+	 * If the Access object of the Trigger that 'triggered' this transition contains an response Navajo (outDoc) use
+	 * the response Navajo (typically an AfterWebserviceTrigger contains a response Navajo, while a BeforeWebserviceTrigger
+	 * only contains a request Navajo). If response does not exist (yet) use request (inDoc), if request is empty use empty
+	 * Navajo.
+	 * 
+	 * ALTERNATIVE NAVAJO
+	 * Alternative Navajo's other than the above describe default can be defined with the param tag ( navajo="[<state>]:[request|response]", where
+	 * state can be the current (.) state or an historic state, after the colon either request or response should be specified
+	 * to denote whether the request or response Navajo of the defined state should be used.
+	 * 
 	 */
 	private final void evaluateParameters(Task t, State usethisState)  {
 
@@ -163,20 +176,25 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 		}
 	}
 	
+	/**
+	 * Returns true if the trigger 'belongs' to this transition.
+	 * 
+	 * @param t
+	 * @return
+	 */
 	private final boolean isMyTransitionTaskTrigger(Task t) {
-		
-		//synchronized ( semaphore ) {
-			boolean result= ( t.getId().equals(myTask.getId()) &&
-					( myState == null ||
-							myState.getWorkFlow() == null ||
-							( myState.getWorkFlow().getDefinition().equals(t.getWorkflowDefinition()) &&
-									myState.getWorkFlow().getMyId().equals(t.getWorkflowId())
-							)
-					)
-			);
-			
-			return result;
-		//}
+
+		boolean result= ( t.getId().equals(myTask.getId()) &&
+				( myState == null ||
+						myState.getWorkFlow() == null ||
+						( myState.getWorkFlow().getDefinition().equals(t.getWorkflowDefinition()) &&
+								myState.getWorkFlow().getMyId().equals(t.getWorkflowId())
+						)
+				)
+		);
+
+		return result;
+
 	}
 	
 	/**
@@ -220,6 +238,13 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 		return t.getTriggerDescription().startsWith("beforenavajo");
 	}
 	
+	/**
+	 * Determines whether the next state should be entered by evaluating the (optional) condition given
+	 * in the transition tag.
+	 * 
+	 * @param t
+	 * @return
+	 */
 	private final boolean enterNextState(Task t) {
 		
 		if ( myCondition == null || myCondition.equals("") || t.getTrigger().getAccess() == null ) {
@@ -262,11 +287,8 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 			 */
 			// Activate new workflow instance.
 			WorkFlow wf = WorkFlow.getInstance(workFlowToBeActivated, nextState, t.getTrigger().getAccess(), t.getUsername());
-			//myState = wf.currentState;
 			evaluateParameters(t, wf.currentState);
 			wf.start();
-			//myState = wf.currentState;
-			//myState = null;
 		}
 		
 	}
