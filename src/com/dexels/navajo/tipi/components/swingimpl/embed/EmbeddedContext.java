@@ -6,8 +6,12 @@ import com.dexels.navajo.tipi.components.swingimpl.*;
 import com.dexels.navajo.tipi.TipiException;
 import com.dexels.navajo.tipi.studio.*;
 import com.dexels.navajo.tipi.tipixml.XMLParseException;
+
+import java.awt.*;
 import java.io.*;
-import java.util.*;
+import java.util.List;
+
+import javax.swing.*;
 
 /**
  * <p>
@@ -28,9 +32,13 @@ import java.util.*;
  */
 
 public class EmbeddedContext extends SwingTipiContext {
-	TipiStandaloneToplevel top = new TipiStandaloneToplevel();
+	TipiStandaloneToplevel top;
+	private JPanel myPanel;
 	
 	public EmbeddedContext() throws TipiException, IOException {
+		myPanel = new JPanel();
+		top = new TipiStandaloneToplevel(myPanel);
+		myPanel.setLayout(new BorderLayout());
 		if (SwingClient.getUserInterface() == null) {
 			SwingTipiUserInterface stui = new SwingTipiUserInterface(this);
 			SwingClient.setUserInterface(stui);

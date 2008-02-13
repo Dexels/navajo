@@ -17,13 +17,14 @@ import java.awt.*;
 public class TipiStandaloneToplevel extends TipiPanel
     implements RootPaneContainer {
 
-private final JPanel myPanel = null; //= new JPanel();
+private final JComponent myPanel; //= new JPanel();
   private final BorderLayout myLayout = new BorderLayout();
 
-  public TipiStandaloneToplevel() {
+  public TipiStandaloneToplevel(JComponent jj) {
 //    myPanel.setLayout(myLayout);
-    super.setName("init");
-    setId("init");
+ 	  super.setName("init");
+ 	  myPanel = jj;
+ 	  setId("init");
     initContainer();
   }
 

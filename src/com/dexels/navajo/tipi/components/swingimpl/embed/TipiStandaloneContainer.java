@@ -1,7 +1,6 @@
 package com.dexels.navajo.tipi.components.swingimpl.embed;
 
 import java.io.*;
-import java.io.IOException;
 
 import com.dexels.navajo.tipi.TipiException;
 
@@ -51,6 +50,10 @@ public class TipiStandaloneContainer implements TipiStandaloneToplevelContainer 
 //        }
 //  }
 
+	public void setTopLevelContainer(Object o) {
+		embeddedContext.setTopLevelContainer(o);
+	}
+  
   public void loadDefinition(String tipiPath, String definitionName,String resourceBaseDirectory) throws IOException, TipiException {
 	 // System.err.println("Loading def: "+definitionName+" tipipath: "+tipiPath+" resbase: "+resourceBaseDirectory);
 	  embeddedContext = new EmbeddedContext(new String[]{tipiPath},false,new String[]{definitionName},libraries,resourceBaseDirectory);
