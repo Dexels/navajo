@@ -14,7 +14,11 @@ import com.dexels.navajo.tipi.connectors.*;
 import com.dexels.navajo.tipi.internal.*;
 import com.sun.cnpi.rss.elements.*;
 import com.sun.cnpi.rss.parser.*;
-
+/**
+ * 
+ * @author Frank Lyaruu
+ *
+ */
 public class TipiRssComponent extends TipiBaseConnector implements TipiConnector {
 	//http://search-result.com/directhit/xml/NL_algemeen.xml
 	@Override
