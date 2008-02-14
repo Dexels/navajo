@@ -65,6 +65,11 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	protected String subType = null;
 	private Object tipiProperty = null;
 
+	SimpleDateFormat dateFormat1 = new SimpleDateFormat( Property.DATE_FORMAT1 );
+	SimpleDateFormat dateFormat2 = new SimpleDateFormat( Property.DATE_FORMAT2 );
+	SimpleDateFormat dateFormat3 = new SimpleDateFormat( Property.DATE_FORMAT3 );
+
+	   
 	public BasePropertyImpl(Navajo n, String name, String type, String value, int i, String desc, String direction) {
 		super(n);
 		isListType = false;
@@ -398,6 +403,8 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	 */
 	public final Object getTypedValue() {
 
+		 
+		  
 		// if (myValue == null && !SELECTION_PROPERTY.equals(getType())) {
 		// return null;
 		// }

@@ -13,6 +13,7 @@ package com.dexels.navajo.document.jaxpimpl;
 import java.beans.*;
 import java.io.*;
 import java.net.*;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import org.dexels.utils.*;
@@ -39,6 +40,10 @@ public final class PropertyImpl implements Property {
 	public final transient Element ref;
     private Navajo myRootDoc = null;
     private Map<String,String> subtypeMap = null;
+
+    SimpleDateFormat dateFormat1 = new SimpleDateFormat( Property.DATE_FORMAT1 );
+	SimpleDateFormat dateFormat2 = new SimpleDateFormat( Property.DATE_FORMAT2 );
+	SimpleDateFormat dateFormat3 = new SimpleDateFormat( Property.DATE_FORMAT3 );
 
     public PropertyImpl(Element e) {
         this.ref = e;

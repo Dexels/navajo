@@ -95,10 +95,14 @@ public interface Property
   public static final String TRUE = "true";
   public static final String FALSE = "false";
 
-  public final SimpleDateFormat dateFormat1 = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss.SS");
-  public final SimpleDateFormat dateFormat2 = new SimpleDateFormat( "yyyy-MM-dd");
-  public final SimpleDateFormat dateFormat3 = new SimpleDateFormat( "dd-MM-yyyy");
-
+  public static final String DATE_FORMAT1 = "yyyy-MM-dd HH:mm:ss.SS";
+  public static final String DATE_FORMAT2 = "yyyy-MM-dd";
+  public static final String DATE_FORMAT3 = "dd-MM-yyyy";
+  
+  public final SimpleDateFormat dateFormat1 = new SimpleDateFormat( DATE_FORMAT1 );
+  public final SimpleDateFormat dateFormat2 = new SimpleDateFormat( DATE_FORMAT2 );
+  public final SimpleDateFormat dateFormat3 = new SimpleDateFormat( DATE_FORMAT3 );
+	
   public boolean isEqual(Property o);
 
   /**
