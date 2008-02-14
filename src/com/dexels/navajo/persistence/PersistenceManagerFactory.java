@@ -17,8 +17,15 @@ public class PersistenceManagerFactory {
             PersistenceManager pm = (PersistenceManager) Class.forName(className).newInstance();
             return pm;
         } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+        	PersistenceManager pm;
+			try {
+				pm = (PersistenceManager) Class.forName("com.dexels.navajo.document.Navajo.SimplePersistenceManagerImpl").newInstance();
+			} catch (Exception  e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+				return null;
+			} 
+        	return pm;
         }
     }
 }
