@@ -41,9 +41,9 @@ public final class PropertyImpl implements Property {
     private Navajo myRootDoc = null;
     private Map<String,String> subtypeMap = null;
 
-    SimpleDateFormat dateFormat1 = new SimpleDateFormat( Property.DATE_FORMAT1 );
-	SimpleDateFormat dateFormat2 = new SimpleDateFormat( Property.DATE_FORMAT2 );
-	SimpleDateFormat dateFormat3 = new SimpleDateFormat( Property.DATE_FORMAT3 );
+    transient SimpleDateFormat dateFormat1 = new SimpleDateFormat( Property.DATE_FORMAT1 );
+    transient SimpleDateFormat dateFormat2 = new SimpleDateFormat( Property.DATE_FORMAT2 );
+    transient SimpleDateFormat dateFormat3 = new SimpleDateFormat( Property.DATE_FORMAT3 );
 
     public PropertyImpl(Element e) {
         this.ref = e;

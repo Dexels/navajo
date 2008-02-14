@@ -64,11 +64,6 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	private List<PropertyChangeListener> myPropertyDataListeners;
 	protected String subType = null;
 	private Object tipiProperty = null;
-
-	SimpleDateFormat dateFormat1 = new SimpleDateFormat( Property.DATE_FORMAT1 );
-	SimpleDateFormat dateFormat2 = new SimpleDateFormat( Property.DATE_FORMAT2 );
-	SimpleDateFormat dateFormat3 = new SimpleDateFormat( Property.DATE_FORMAT3 );
-
 	   
 	public BasePropertyImpl(Navajo n, String name, String type, String value, int i, String desc, String direction) {
 		super(n);
@@ -82,8 +77,6 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		if (subType == null && NavajoFactory.getInstance().getDefaultSubtypeForType(type) != null) {
 			setSubType(NavajoFactory.getInstance().getDefaultSubtypeForType(type));
 		}
-
-		// dateFormat.pa
 	}
 
 	public BasePropertyImpl(Navajo n, String name, String type, String value, int i, String desc, String direction, String subType) {
@@ -403,7 +396,8 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	 */
 	public final Object getTypedValue() {
 
-		 
+		SimpleDateFormat dateFormat1 = new SimpleDateFormat( Property.DATE_FORMAT1 );
+	    SimpleDateFormat dateFormat2 = new SimpleDateFormat( Property.DATE_FORMAT2 );
 		  
 		// if (myValue == null && !SELECTION_PROPERTY.equals(getType())) {
 		// return null;
@@ -630,6 +624,9 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	}
 
 	public final void setValue(java.util.Date value) {
+		
+		SimpleDateFormat dateFormat1 = new SimpleDateFormat( Property.DATE_FORMAT1 );
+	    
 		Object old = getTypedValue();
 		setType(DATE_PROPERTY);
 
@@ -956,6 +953,9 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	}
 
 	public final String toString() {
+		
+	    SimpleDateFormat dateFormat3 = new SimpleDateFormat( Property.DATE_FORMAT3 );
+	    
 		if (getType().equals(Property.DATE_PROPERTY)) {
 			return (this.getTypedValue() != null) ? dateFormat3.format((Date) this.getTypedValue()) : null;
 		} else if (getType().equals(Property.SELECTION_PROPERTY)) {
@@ -1365,6 +1365,8 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 
 	public final boolean isEqual(Property p) {
 
+	    SimpleDateFormat dateFormat2 = new SimpleDateFormat( Property.DATE_FORMAT2 );
+	    
 		if (!getName().equals(p.getName())) {
 			return false;
 		}

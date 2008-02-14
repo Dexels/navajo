@@ -572,5 +572,16 @@ public void removePropertyChangeListener(PropertyChangeListener p) {
 	myPropertyDataListeners.remove(p);
 }
 
+public static void main(String [] args) throws Exception {
+	Navajo n = NavajoFactory.getInstance().createNavajo();
+	Message m = NavajoFactory.getInstance().createMessage(n, "Test");
+	Property p = NavajoFactory.getInstance().createProperty(n, "Date", Property.DATE_PROPERTY, "", 0, "","", "");
+	n.addMessage(m);
+	m.addProperty(p);
+	FileOutputStream fos = new FileOutputStream("/home/arjen/OBJECT");
+	ObjectOutputStream oos = new ObjectOutputStream(fos);
+	oos.writeObject(n);
+	oos.close();
+}
 
 }

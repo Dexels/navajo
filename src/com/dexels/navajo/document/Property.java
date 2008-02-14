@@ -16,8 +16,7 @@ import com.dexels.navajo.document.types.*;
  * @version 1.0
  */
 
-public interface Property
-    extends java.io.Serializable, Comparable<Property>, Cloneable {
+public interface Property extends java.io.Serializable, Comparable<Property>, Cloneable {
 
   public static final String PROPERTY_DEFINITION = "property";
   public static final String PROPERTY_NAME = "name";
@@ -99,9 +98,9 @@ public interface Property
   public static final String DATE_FORMAT2 = "yyyy-MM-dd";
   public static final String DATE_FORMAT3 = "dd-MM-yyyy";
   
-  public final SimpleDateFormat dateFormat1 = new SimpleDateFormat( DATE_FORMAT1 );
-  public final SimpleDateFormat dateFormat2 = new SimpleDateFormat( DATE_FORMAT2 );
-  public final SimpleDateFormat dateFormat3 = new SimpleDateFormat( DATE_FORMAT3 );
+//  public final SimpleDateFormat dateFormat1 = new SimpleDateFormat( DATE_FORMAT1 );
+//  public final SimpleDateFormat dateFormat2 = new SimpleDateFormat( DATE_FORMAT2 );
+//  public final SimpleDateFormat dateFormat3 = new SimpleDateFormat( DATE_FORMAT3 );
 	
   public boolean isEqual(Property o);
 
