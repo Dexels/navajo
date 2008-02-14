@@ -17,9 +17,10 @@ public class PersistenceManagerFactory {
             PersistenceManager pm = (PersistenceManager) Class.forName(className).newInstance();
             return pm;
         } catch (Exception e) {
+        	System.err.println("Could NOT FIND PersistenceManager: " + className + ", trying SimplePersistenceManagerImpl..");
         	PersistenceManager pm;
 			try {
-				pm = (PersistenceManager) Class.forName("com.dexels.navajo.document.Navajo.SimplePersistenceManagerImpl").newInstance();
+				pm = (PersistenceManager) Class.forName("com.dexels.navajo.persistence.SimplePersistenceManagerImpl").newInstance();
 			} catch (Exception  e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
