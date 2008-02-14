@@ -8,5 +8,6 @@ public interface TribeManagerInterface {
 	public Navajo forward(Navajo in) throws Exception;
 	public void broadcast(Navajo in) throws Exception;
 	public void broadcast(SmokeSignal m);
+	public boolean getIsChief();
 	
 }

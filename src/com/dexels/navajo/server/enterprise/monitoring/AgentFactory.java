@@ -1,6 +1,7 @@
 package com.dexels.navajo.server.enterprise.monitoring;
 
 import java.lang.reflect.Method;
+import java.util.logging.Level;
 
 import com.dexels.navajo.util.AuditLog;
 
@@ -37,7 +38,7 @@ public class AgentFactory {
 						AuditLog.log(AuditLog.AUDIT_MESSAGE_MONITOR, "Found monitoring Agent: " + className);
 					} catch (Throwable e) {
 						//e.printStackTrace(System.err);
-						System.err.println("WARNING: Monitoring Agent not available: " + className);
+						AuditLog.log("INIT", "WARNING: Monitoring Agent not available: " + className, Level.WARNING);
 						instance = new DummyAgent();
 					}	
 				}

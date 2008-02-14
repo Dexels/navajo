@@ -1,6 +1,9 @@
 package com.dexels.navajo.server.enterprise.integrity;
 
 import java.lang.reflect.Method;
+import java.util.logging.Level;
+
+import com.dexels.navajo.util.AuditLog;
 
 public class WorkerFactory {
 
@@ -28,7 +31,7 @@ public class WorkerFactory {
 						Method m = c.getMethod("getInstance", null);
 						instance = (WorkerInterface) m.invoke(dummy, null);
 					} catch (Exception e) {
-						System.err.println("WARNING: Integrity Worker not available");
+						AuditLog.log("INIT", "WARNING: Integrity Worker not available", Level.WARNING);
 						instance = new DummyWorker();
 					}	
 				}

@@ -23,7 +23,7 @@ class CacheEntry {
 	}
 }
 
-public class CacheController extends GenericThread  {
+public class CacheController extends GenericThread implements CacheControllerMXBean  {
 
 	private static String id = "Cache Controller";
 	public static final String VERSION = "$Id$";
@@ -178,4 +178,10 @@ public class CacheController extends GenericThread  {
 		// TODO Auto-generated method stub
 		
 	}
+
+	public int cachedEntries() {
+		return expirations.size();
+	}
+
+	
 }

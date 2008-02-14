@@ -572,7 +572,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 				t.setRemove(true);
 				return false;
 			}
-			AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Adding task: " + id + ", workflow definition: " + t.getWorkflowDefinition());
+			//AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Adding task: " + id + ", workflow definition: " + t.getWorkflowDefinition());
 			tasks.put(id, t);
 			t.setId(id);
 			t.getTrigger().setTask(t);

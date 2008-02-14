@@ -36,7 +36,6 @@ import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.FatalException;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.server.enterprise.scheduler.TaskInterface;
-import com.dexels.navajo.util.AuditLog;
 
 /**
  * Defines the task object that describes among other things, the webservice
@@ -230,7 +229,7 @@ public class Task implements Runnable, TaskMXBean, TaskInterface, Serializable {
 	 */
 	public void setRemove(boolean b) {
 		this.remove = b;
-		AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "About to remove task: " + id);
+		//AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "About to remove task: " + id);
 		if ( myTrigger != null ) {
 			myTrigger.removeTrigger();
 		}
@@ -325,7 +324,7 @@ public class Task implements Runnable, TaskMXBean, TaskInterface, Serializable {
 	 */
 	public void run() {
 
-		AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, " trigger " + getTriggerDescription() + " activated task: " + getId() );
+		//AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, " trigger " + getTriggerDescription() + " activated task: " + getId() );
 		
 		Navajo result = null;
 		
@@ -409,7 +408,7 @@ public class Task implements Runnable, TaskMXBean, TaskInterface, Serializable {
         // Invoke after triggers.
 		TaskRunner.getInstance().fireAfterTaskEvent(this, result);
 		
-		AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Terminated task: " + id);
+		//AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Terminated task: " + id);
 	}
 	
 	public String getTriggerDescription() {

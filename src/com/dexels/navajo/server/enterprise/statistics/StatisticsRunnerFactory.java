@@ -2,6 +2,9 @@ package com.dexels.navajo.server.enterprise.statistics;
 
 import java.lang.reflect.Method;
 import java.util.Map;
+import java.util.logging.Level;
+
+import com.dexels.navajo.util.AuditLog;
 
 public class StatisticsRunnerFactory {
 
@@ -23,7 +26,7 @@ public class StatisticsRunnerFactory {
 						Method m = c.getMethod("getInstance", new Class[]{String.class, Map.class, String.class});
 						instance = (StatisticsRunnerInterface) m.invoke(dummy, new Object[]{storePath, parameters, storeClass});
 					} catch (Exception e) {
-						System.err.println("WARNING: StatisticsRunnner not available");
+						AuditLog.log("INIT", "WARNING: StatisticsRunnner not available", Level.WARNING);
 						instance = new DummyStatisticsRunner();
 					}	
 				}

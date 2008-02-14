@@ -10,12 +10,12 @@ import com.dexels.navajo.document.*;
 import com.dexels.navajo.persistence.*;
 import com.dexels.navajo.server.CacheController;
 import com.dexels.navajo.server.Dispatcher;
+import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
+
 import com.dexels.navajo.tribe.SharedStoreFactory;
 import com.dexels.navajo.tribe.SharedStoreInterface;
-import com.dexels.navajo.tribe.TribeManager;
 import com.dexels.navajo.tribe.map.RemoteReference;
 import com.dexels.navajo.tribe.map.SharedTribalMap;
-import com.dexels.navajo.workflow.WorkFlowManager;
 
 
 /**
@@ -88,12 +88,20 @@ public final class PersistenceManagerImpl implements PersistenceManager {
 	private static final String MEMORY_CACHE_ID = "inMemoryCache";
 	private static final String FREQUENCE_MAP_ID = "accessFrequency";
 	
+	public PersistenceManagerImpl() throws InstantiationException {
+		try {
+			Class.forName("com.dexels.navajo.tribe.map.RemoteReference");
+		} catch (ClassNotFoundException e) {
+			throw new InstantiationException(e.getMessage());
+		}
+	}
+	
 	private void init() {
 		if ( this.sharedPersistenceStore == null ) {
 			synchronized ( semaphore ) {
 				if ( this.sharedPersistenceStore == null ) {
 					sharedPersistenceStore = SharedStoreFactory.getInstance();
-					if ( TribeManager.getInstance().getIsChief() ) {
+					if ( TribeManagerFactory.getInstance().getIsChief() ) {
 						sharedPersistenceStore.removeAll(CACHE_PATH); // Remove all cached entries when restarted.
 					}
 					inMemoryCache = new SharedTribalMap(MEMORY_CACHE_ID);

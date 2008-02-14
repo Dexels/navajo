@@ -1,6 +1,9 @@
 package com.dexels.navajo.server.enterprise.tribe;
 
 import java.lang.reflect.Method;
+import java.util.logging.Level;
+
+import com.dexels.navajo.util.AuditLog;
 
 public class TribeManagerFactory {
 
@@ -23,7 +26,7 @@ public class TribeManagerFactory {
 						Method m = c.getMethod("getInstance", null);
 						instance = (TribeManagerInterface) m.invoke(dummy, null);
 					} catch (Exception e) {
-						System.err.println("WARNING: Tribe Manager not available");
+						AuditLog.log("INIT", "WARNING: Tribe Manager not available", Level.WARNING);
 						instance = new DummyTribeManager();
 					}	
 				}
@@ -43,8 +46,8 @@ public class TribeManagerFactory {
 				Method m = c.getMethod("getInstance", null);
 				m.invoke(dummy, null);
 			} catch (Exception e) {
-				e.printStackTrace(System.err);
-				System.err.println("WARNING: Tribe Status Collector not available");
+				//e.printStackTrace(System.err);
+				AuditLog.log("INIT", "WARNING: Tribe Status Collector not available", Level.WARNING);
 			}	
 		}
 	}

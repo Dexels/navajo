@@ -21,4 +21,11 @@ public class DummyTribeManager implements TribeManagerInterface {
 
 	}
 
+	/**
+	 * Without a Tribe I am ALWAYS the chief!
+	 */
+	public boolean getIsChief() {
+		return true; //!!
+	}
+
 }

@@ -1,6 +1,9 @@
 package com.dexels.navajo.server.enterprise.scheduler;
 
 import java.lang.reflect.Method;
+import java.util.logging.Level;
+
+import com.dexels.navajo.util.AuditLog;
 
 public class TaskRunnerFactory {
 
@@ -29,7 +32,7 @@ public class TaskRunnerFactory {
 					ClockInterface myClock = (ClockInterface) m.invoke(dummy, null);
 				} catch (Exception e) {
 					//e.printStackTrace(System.err);
-					System.err.println("WARNING: Clock not available");
+					AuditLog.log("INIT", "WARNING: Clock not available", Level.WARNING);
 				}	
 				try {
 					Class c = Class.forName("com.dexels.navajo.scheduler.TaskRunner");
@@ -38,7 +41,7 @@ public class TaskRunnerFactory {
 					instance = (TaskRunnerInterface) m.invoke(dummy, null);
 				} catch (Exception e) {
 					//e.printStackTrace(System.err);
-					System.err.println("WARNING: Scheduler not available");
+					AuditLog.log("INIT", "WARNING: Scheduler not available", Level.WARNING);
 					instance = new DummyTaskRunner();
 				}	
 				try {
@@ -48,7 +51,7 @@ public class TaskRunnerFactory {
 					m.invoke(dummy, null);
 				} catch (Exception e) {
 					//e.printStackTrace(System.err);
-					System.err.println("WARNING: Clock not available");
+					AuditLog.log("INIT", "WARNING: Clock not available", Level.WARNING);
 				}	
 				try {
 					Class c = Class.forName("com.dexels.navajo.scheduler.ListenerRunner");
@@ -57,7 +60,7 @@ public class TaskRunnerFactory {
 					m.invoke(dummy, null);
 				} catch (Exception e) {
 					//e.printStackTrace(System.err);
-					System.err.println("WARNING: Listener Runner not available");
+					AuditLog.log("INIT", "WARNING: Listener Runner not available", Level.WARNING);
 				}	
 				
 			}
@@ -73,7 +76,7 @@ public class TaskRunnerFactory {
 		TaskInterface tif = (TaskInterface) c.newInstance();
 		return tif;
 		} catch (Exception e) {
-			System.err.println("WARNING: Scheduler not available");
+			AuditLog.log("INIT", "WARNING: Scheduler not available", Level.WARNING);
 			return new DummyTask();
 		}	
 	}

@@ -1,6 +1,9 @@
 package com.dexels.navajo.server.enterprise.scheduler;
 
 import java.lang.reflect.Method;
+import java.util.logging.Level;
+
+import com.dexels.navajo.util.AuditLog;
 
 public class WebserviceListenerFactory {
 
@@ -22,7 +25,7 @@ public class WebserviceListenerFactory {
 						Method m = c.getMethod("getInstance", null);
 						instance = (WebserviceListenerRegistryInterface) m.invoke(dummy, null);
 					} catch (Exception e) {
-						System.err.println("WARNING: WebserviceListener not available");
+						AuditLog.log("INIT", "WARNING: WebserviceListener not available", Level.WARNING);
 						instance = new DummyWebserviceListener();
 					}	
 				}
