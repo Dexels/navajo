@@ -47,7 +47,7 @@ public class WorkFlow implements Mappable, Serializable {
 		WorkFlow wf = new WorkFlow(definition, WorkFlowManager.generateWorkflowId(), a, username);
 		
 		wf.currentState = wf.createState(activatedState, a);
-		WorkFlowManager.getInstance().addWorkFlow(wf);
+		
 		//wf.start();
 		return wf;
 	}
@@ -140,7 +140,13 @@ public class WorkFlow implements Mappable, Serializable {
 	public void start() {
 		// Find start state.
 		if ( currentState != null ) {
-			currentState.enter(true);
+			WorkFlowManager.getInstance().addWorkFlow(this);
+			try {
+				currentState.enter(true);
+			} catch (Throwable t) {
+				kill = true;
+				finish();
+			}
 		}
 	}
 	
