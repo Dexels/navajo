@@ -24,6 +24,7 @@
  */
 package com.dexels.navajo.scheduler;
 
+import java.util.HashSet;
 import java.util.Iterator;
 
 import com.dexels.navajo.document.Navajo;
@@ -35,6 +36,7 @@ import com.dexels.navajo.tribe.ServiceEventRequest;
 import com.dexels.navajo.tribe.ServiceEventsSmokeSignal;
 import com.dexels.navajo.tribe.TribeManager;
 import com.dexels.navajo.tribe.TribeMember;
+import com.dexels.navajo.util.AuditLog;
 import com.dexels.navajo.workflow.WorkFlowManager;
 
 
@@ -117,6 +119,10 @@ public final class WebserviceListenerRegistry implements WebserviceListenerRegis
 	 * @param a the access object of the caller
 	 */
 	public final void afterWebservice(String webservice, Access a) {
+		afterWebservice(webservice, a, new HashSet(), false);
+	}
+	
+	public final void afterWebservice(String webservice, Access a, HashSet<String> ignoreTaskList, boolean locally) {
 
 		// Return immediately if webservice is not contained in afterWebservices set, i.e. there is
 		// no listener interested in this webservice.
@@ -125,10 +131,11 @@ public final class WebserviceListenerRegistry implements WebserviceListenerRegis
 		} 
 
 		Listener [] all = ListenerStore.getInstance().getListeners(AfterWebserviceTrigger.class.getName());
+		HashSet<String> ignoreTheseTaskOnOtherMembers = new HashSet<String>();
 		
 		for (int i = 0; i < all.length; i++) {
 			AfterWebserviceTrigger cl = (AfterWebserviceTrigger) all[i];
-			if ( cl.getWebservicePattern().equals(webservice)) {
+			if ( cl.getWebservicePattern().equals(webservice) && !ignoreTaskList.contains(cl.getTask().getId()) ) {
 
 				AfterWebserviceTrigger t2 = (AfterWebserviceTrigger) cl.clone();
 				t2.setAccess(a);
@@ -138,35 +145,49 @@ public final class WebserviceListenerRegistry implements WebserviceListenerRegis
 				
 				if ( !isWorkflow || initializingWorkflow || myWorkflow) {
 					t2.perform();
-				} else {
-					if ( t2.getTask().getWebservice() != null ) { // If webservice is accompanied with the task, perform after task trigger asynchronously.
-						TribeManager.getInstance().broadcast(new ServiceEventsSmokeSignal(Dispatcher.getInstance().getNavajoConfig().getInstanceName(), ServiceEventsSmokeSignal.AFTERWEBSERVICE_EVENT, t2));
-					} else { // Perform synchronously by sending request to each tribe member ( used in workflow transitions!!!!! )
-						tribalServiceRequest(t2);
-					}
+					ignoreTheseTaskOnOtherMembers.add(t2.getTask().getId());
 				}
 			}
 		}
+		
+		if ( !locally ) {
+			tribalAfterWebServiceRequest(webservice, a, ignoreTheseTaskOnOtherMembers);
+		}
+		
 	}
 
-	private final Navajo tribalServiceRequest(WebserviceTrigger t2) {
+	private final void tribalAfterWebServiceRequest(String service, Access a, HashSet<String> ignoreTaskIds) {
 
 		Iterator<TribeMember> iter = TribeManager.getInstance().getClusterState().clusterMembers.iterator();
 		boolean acknowledged = false;
-		Navajo result = null;
 		while ( iter.hasNext() && !acknowledged ) {
 			TribeMember tm = iter.next();
 			if ( !tm.getMemberName().equals(Dispatcher.getInstance().getNavajoConfig().getInstanceName()) ) {
-				ServiceEventRequest bser = new ServiceEventRequest(t2);
-				ServiceEventAnswer bsa = (ServiceEventAnswer) TribeManager.getInstance().askSomebody(bser, tm.getAddress());
-				acknowledged = bsa.acknowledged();
-				if ( acknowledged ) {
-					result = bsa.getProxy();
-				}
+				AfterWebServiceRequest bwsr = new AfterWebServiceRequest(service, a, ignoreTaskIds);
+				TribeManager.getInstance().askSomebody(bwsr, tm.getAddress());		
 			}
 		}
-		return result;
 	}
+	
+	private final Navajo tribalBeforeWebServiceRequest(String service, Access a, HashSet<String> ignoreList) {
+
+		Iterator<TribeMember> iter = TribeManager.getInstance().getClusterState().clusterMembers.iterator();
+		boolean acknowledged = false;
+		while ( iter.hasNext() && !acknowledged ) {
+			TribeMember tm = iter.next();
+			if ( !tm.getMemberName().equals(Dispatcher.getInstance().getNavajoConfig().getInstanceName()) ) {
+				BeforeWebServiceRequest bwsr = new BeforeWebServiceRequest(service, a, ignoreList);
+				BeforeWebServiceAnswer bwsa = (BeforeWebServiceAnswer) TribeManager.getInstance().askSomebody(bwsr, tm.getAddress());
+				if ( bwsa.getMyNavajo() != null ) {
+					return bwsa.getMyNavajo();
+				}
+				
+			}
+		}
+		
+		return null;
+	}
+	
 	
 	/**
 	 * Method to indicate listener that webservice is about te be(!) invoked.
@@ -177,7 +198,12 @@ public final class WebserviceListenerRegistry implements WebserviceListenerRegis
 	 * @param a the access object of the caller
 	 * @returns the Navajo in case the task was defined as being a proxy.
 	 */
+	
 	public final Navajo beforeWebservice(String webservice, Access a) {
+		return beforeWebservice(webservice, a,  new HashSet(), false);
+	}
+	
+	public final Navajo beforeWebservice(String webservice, Access a, HashSet<String> ignoreTaskList, boolean locally) {
 
 		// Return immediately if webservice is not contained in beforeWebservices set, i.e. there is
 		// no listener interested in this webservice.
@@ -186,9 +212,13 @@ public final class WebserviceListenerRegistry implements WebserviceListenerRegis
 		} 
 
 		Listener [] all = ListenerStore.getInstance().getListeners(BeforeWebserviceTrigger.class.getName());
+		
+		HashSet<String> ignoreTheseTaskOnOtherMembers = new HashSet<String>();
+		
 		for (int i = 0; i < all.length; i++) {
 			BeforeWebserviceTrigger cl = (BeforeWebserviceTrigger) all[i];
-			if ( cl.getWebservicePattern().equals(webservice)) {
+			
+			if ( cl.getWebservicePattern().equals(webservice) && !ignoreTaskList.contains(cl.getTask().getId()) ) {
 				BeforeWebserviceTrigger t2 = (BeforeWebserviceTrigger) cl.clone();
 				t2.setAccess(a);
 				
@@ -200,16 +230,21 @@ public final class WebserviceListenerRegistry implements WebserviceListenerRegis
 				if ( !isWorkflow || initializingWorkflow || myWorkflow) { // If this is NOT a workflow task or an initializing workflow task or                                                   
 				                                                          // my workflow task, perform locally.
 					n = t2.perform();
-				} else {
-					// Peform synchronously be sending request to each tribe member.
-					n = tribalServiceRequest(t2);
+					ignoreTheseTaskOnOtherMembers.add(t2.getTask().getId());
 				}
+				
 				if ( t2.getTask().isProxy() ) {
 					return n;
 				}
 			}
 		}
-
-		return null;
+		
+		// Try other tribal members...
+		if ( !locally ) {
+			return tribalBeforeWebServiceRequest(webservice, a, ignoreTheseTaskOnOtherMembers);
+		} else {
+			return null;
+		}
+		
 	}
 }
