@@ -12,7 +12,7 @@ public class ServiceEventAnswer extends Answer {
 	private static final long serialVersionUID = -6422874803712687196L;
 	
 	private Navajo proxy = null;
-	private boolean acknowledged = true;
+	private boolean acknowledged = false;
 	
 	public ServiceEventAnswer(ServiceEventRequest q) {
 		super(q);
@@ -23,7 +23,6 @@ public class ServiceEventAnswer extends Answer {
 		} else {
 			acknowledged = false;
 		}
-		System.err.println("LEAVING BeforeServiceEventAnswer() CONSTRUCTOR");
 	}
 	
 	@Override
