@@ -466,16 +466,9 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
 		  
 		  // Remove password from in to create password independend persistenceKey.
 		  in.getHeader().setRPCPassword("");
-		  String key = null;
-		  if (expirationInterval == -1) {
-			  key = "";
-		  }
-		  else {
-			  key = in.persistenceKey();
-		  }
-		  
+		
 		  out = (Navajo) navajoConfig.getPersistenceManager().get(sh,  
-				  CacheController.getInstance().getCacheKey(key, access.rpcUser, access.rpcName), access.rpcName,
+				  CacheController.getInstance().getCacheKey(access.rpcUser, access.rpcName, in), access.rpcName,
 				  expirationInterval,
 				  (expirationInterval != -1));
 		  access.setOutputDoc(out);
