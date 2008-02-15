@@ -74,7 +74,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 	// Maximum number of tasks.
 	private int maxSize = 100000;
 	private static volatile TaskRunner instance = null;
-	private final Map<String,Task> tasks = Collections.synchronizedMap(new HashMap<String,Task>());
+	private final Map<String,Task> tasks = new HashMap<String,Task>();
 	private final ArrayList<TaskListener> taskListeners = new ArrayList<TaskListener>();
 	private long configTimestamp = -1;
 	
@@ -85,9 +85,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 	
 	private static Object semaphore = new Object();
 	private static Object initialization = new Object();
-	private static Object semaphore2 = new Object();
 	private static String id = "Navajo TaskRunner";
-	private static SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy");
 	
 	private boolean configIsBeingUpdated = false;
 	private static volatile boolean beingInitialized = false;
@@ -425,6 +423,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 	public ArrayList<Task> getFinishedTasks(String username, String fromDate) {
 		
 		SharedStoreInterface si = SharedStoreFactory.getInstance();
+		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy");
 		
 		ArrayList<Task> result = new ArrayList<Task>();
 		BufferedReader fr = null;
@@ -490,7 +489,8 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 	protected final void log(Task t, Navajo result, boolean error, String errMsg, java.util.Date startedat) {
 
 		String csvHeader = "ID;WEBSERVICE;USERNAME;TRIGGER;TASKDESCRIPTION;CLIENTID;SINGLEEVENT;STATUS;STARTTIME;ENDTIME;ERRORMESSAGE\n";
-
+		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy");
+		
 		if ( errMsg != null ) {
 			errMsg = errMsg.replaceAll("\n", ".");
 		}
@@ -685,25 +685,25 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 	}
 	
 	public final void addTaskListener(TaskListener tl) {
-		synchronized ( semaphore2 ) {
+		
 			taskListeners.add(tl);
-		}
+		
 	}
 	
 	public final void removeTaskListener(TaskListener tl) {
-		synchronized ( semaphore2 ) {
+		
 			taskListeners.remove(tl);
-		}
+		
 	}
 	
 	public final void fireAfterTaskEvent(Task t, Navajo response) {
 		
-		synchronized ( semaphore2 ) {
+		
 			for ( int i = 0 ; i < taskListeners.size(); i++ ) {
 				TaskListener tl = (TaskListener) taskListeners.get(i); 
 				tl.afterTask(t, response);
 			}
-		}
+		
 	}
 	
 	/**
@@ -716,17 +716,17 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 	 */
 	public final boolean fireBeforeTaskEvent(Task t, Navajo request) {
 
-		synchronized ( semaphore2 ) {
-			for ( int i = 0 ; i < taskListeners.size(); i++ ) {
-				TaskListener tl = (TaskListener) taskListeners.get(i);
-				boolean result = tl.beforeTask(t, request);
-				// If task has proxy webservice and beforetask returns true, return immediately(!!!) and do not
-				// iterate over other interested task listeners..
-				if ( result && t.isProxy() ) {
-					return true;
-				}
+
+		for ( int i = 0 ; i < taskListeners.size(); i++ ) {
+			TaskListener tl = (TaskListener) taskListeners.get(i);
+			boolean result = tl.beforeTask(t, request);
+			// If task has proxy webservice and beforetask returns true, return immediately(!!!) and do not
+			// iterate over other interested task listeners..
+			if ( result && t.isProxy() ) {
+				return true;
 			}
 		}
+
 		return false;
 	}
 
