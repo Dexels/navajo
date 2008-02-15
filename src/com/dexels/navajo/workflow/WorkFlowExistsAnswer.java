@@ -6,14 +6,16 @@ import com.dexels.navajo.tribe.Request;
 public class WorkFlowExistsAnswer extends Answer {
 
 	private String workflowName;
+	private String stateName;
 	private String stateExpression;
 	private boolean exists;
 	
-	public WorkFlowExistsAnswer(Request q, String workflowName, String stateExpression) {
+	public WorkFlowExistsAnswer(Request q, String workflowName, String stateName, String stateExpression) {
 		super(q);
 		this.workflowName = workflowName;
+		this.stateName = stateName;
 		this.stateExpression = stateExpression;
-		exists =  WorkFlowManager.getInstance().existsWorkFlow(workflowName, stateExpression);
+		exists =  WorkFlowManager.getInstance().existsWorkFlow(workflowName, stateName, stateExpression);
 	}
 
 	/**
