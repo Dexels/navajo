@@ -24,6 +24,7 @@ package com.dexels.navajo.parser;
  * SUCH DAMAGE.
  * ====================================================================
  */
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.dexels.navajo.document.types.Binary;
@@ -141,7 +142,7 @@ public final class Utils extends Exception {
         else if (o instanceof Boolean)
           return o+"";
         else if (o instanceof java.util.Date)
-          return Property.dateFormat1.format(o);
+        	 return  new SimpleDateFormat ( Property.DATE_FORMAT1 ) .format(o);
         else if (o instanceof Money)
           return ((Money) o).doubleValue() + "";
         else if (o instanceof Percentage)
