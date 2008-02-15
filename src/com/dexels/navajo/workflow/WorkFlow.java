@@ -15,6 +15,7 @@ import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.server.UserException;
+import com.dexels.navajo.util.AuditLog;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.mapping.MappingUtils;
@@ -147,6 +148,10 @@ public class WorkFlow implements Mappable, Serializable {
 				kill = true;
 				finish();
 			}
+		} else {
+		    AuditLog.log(AuditLog.AUDIT_MESSAGE_WORKFLOW, ": Could not enter workflow " + getDefinition() + "(id = " + getMyId() + "), empty currentstate");
+		    kill = true;
+			finish();
 		}
 	}
 	
