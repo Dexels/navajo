@@ -24,7 +24,6 @@
  */
 package com.dexels.navajo.scheduler;
 
-import java.util.Collection;
 import java.util.Iterator;
 
 import com.dexels.navajo.document.Navajo;
@@ -36,9 +35,6 @@ import com.dexels.navajo.tribe.ServiceEventRequest;
 import com.dexels.navajo.tribe.ServiceEventsSmokeSignal;
 import com.dexels.navajo.tribe.TribeManager;
 import com.dexels.navajo.tribe.TribeMember;
-import com.dexels.navajo.tribe.map.IntroductionRequest;
-import com.dexels.navajo.tribe.map.SharedTribalMap;
-import com.dexels.navajo.util.AuditLog;
 import com.dexels.navajo.workflow.WorkFlowManager;
 
 
@@ -145,7 +141,7 @@ public final class WebserviceListenerRegistry implements WebserviceListenerRegis
 				} else {
 					if ( t2.getTask().getWebservice() != null ) { // If webservice is accompanied with the task, perform after task trigger asynchronously.
 						TribeManager.getInstance().broadcast(new ServiceEventsSmokeSignal(Dispatcher.getInstance().getNavajoConfig().getInstanceName(), ServiceEventsSmokeSignal.AFTERWEBSERVICE_EVENT, t2));
-					} else { // Peform synchronously be sending request to each tribe member ( used in workflow transitions )
+					} else { // Perform synchronously by sending request to each tribe member ( used in workflow transitions!!!!! )
 						tribalServiceRequest(t2);
 					}
 				}
