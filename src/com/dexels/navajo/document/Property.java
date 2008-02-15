@@ -98,9 +98,9 @@ public interface Property extends java.io.Serializable, Comparable<Property>, Cl
   public static final String DATE_FORMAT2 = "yyyy-MM-dd";
   public static final String DATE_FORMAT3 = "dd-MM-yyyy";
   
-//  public final SimpleDateFormat dateFormat1 = new SimpleDateFormat( DATE_FORMAT1 );
-//  public final SimpleDateFormat dateFormat2 = new SimpleDateFormat( DATE_FORMAT2 );
-//  public final SimpleDateFormat dateFormat3 = new SimpleDateFormat( DATE_FORMAT3 );
+  public static final SimpleDateFormat dateFormat1 = new SimpleDateFormat( Property.DATE_FORMAT1 );
+  public static final SimpleDateFormat dateFormat2 = new SimpleDateFormat( Property.DATE_FORMAT2 );
+  public static final SimpleDateFormat dateFormat3 = new SimpleDateFormat( Property.DATE_FORMAT3 );
 	
   public boolean isEqual(Property o);
 
