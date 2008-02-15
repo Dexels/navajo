@@ -132,6 +132,7 @@ public final class WebserviceListenerRegistry implements WebserviceListenerRegis
 
 		Listener [] all = ListenerStore.getInstance().getListeners(AfterWebserviceTrigger.class.getName());
 		HashSet<String> ignoreTheseTaskOnOtherMembers = new HashSet<String>();
+		boolean leftOvers = false;
 		
 		for (int i = 0; i < all.length; i++) {
 			AfterWebserviceTrigger cl = (AfterWebserviceTrigger) all[i];
@@ -146,11 +147,13 @@ public final class WebserviceListenerRegistry implements WebserviceListenerRegis
 				if ( !isWorkflow || initializingWorkflow || myWorkflow) {
 					t2.perform();
 					ignoreTheseTaskOnOtherMembers.add(t2.getTask().getId());
+				} else {
+					leftOvers = true;
 				}
 			}
 		}
 		
-		if ( !locally ) {
+		if ( !locally && leftOvers ) {
 			tribalAfterWebServiceRequest(webservice, a, ignoreTheseTaskOnOtherMembers);
 		}
 		
@@ -215,6 +218,8 @@ public final class WebserviceListenerRegistry implements WebserviceListenerRegis
 		
 		HashSet<String> ignoreTheseTaskOnOtherMembers = new HashSet<String>();
 		
+		boolean leftOvers = false;
+		
 		for (int i = 0; i < all.length; i++) {
 			BeforeWebserviceTrigger cl = (BeforeWebserviceTrigger) all[i];
 			
@@ -231,16 +236,17 @@ public final class WebserviceListenerRegistry implements WebserviceListenerRegis
 				                                                          // my workflow task, perform locally.
 					n = t2.perform();
 					ignoreTheseTaskOnOtherMembers.add(t2.getTask().getId());
-				}
-				
-				if ( t2.getTask().isProxy() ) {
-					return n;
+					if ( t2.getTask().isProxy() ) {
+						return n;
+					}
+				} else {
+					leftOvers = true;
 				}
 			}
 		}
 		
 		// Try other tribal members...
-		if ( !locally ) {
+		if ( !locally && leftOvers ) {
 			return tribalBeforeWebServiceRequest(webservice, a, ignoreTheseTaskOnOtherMembers);
 		} else {
 			return null;
