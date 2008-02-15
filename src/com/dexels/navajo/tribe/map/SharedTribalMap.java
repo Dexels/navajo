@@ -104,15 +104,14 @@ public class SharedTribalMap<K,V> extends HashMap {
 	}
 	
 	public Object put(Object key, Object value) {
-		synchronized (semaphore) {
-			Object o = super.put(key, value);
 
-			SharedTribalElement ste = new SharedTribalElement(getId(), key, value);
-			TribalMapSignal tms = new TribalMapSignal(Dispatcher.getInstance().getNavajoConfig().getInstanceName(), TribalMapSignal.PUT, ste);
-			TribeManagerFactory.getInstance().broadcast(tms);
+		Object o = putLocal(key, value);
 
-			return o;
-		}
+		SharedTribalElement ste = new SharedTribalElement(getId(), key, value);
+		TribalMapSignal tms = new TribalMapSignal(Dispatcher.getInstance().getNavajoConfig().getInstanceName(), TribalMapSignal.PUT, ste);
+		TribeManagerFactory.getInstance().broadcast(tms);
+
+		return o;
 	}
 	
 	protected Object putLocal(Object key, Object value) {
@@ -123,13 +122,13 @@ public class SharedTribalMap<K,V> extends HashMap {
 	}
 	
 	public Object remove(Object key) {
-		synchronized (semaphore) {
-			Object o = super.remove(key);
-			SharedTribalElement ste = new SharedTribalElement(getId(), key, null);
-			TribalMapSignal tms = new TribalMapSignal(Dispatcher.getInstance().getNavajoConfig().getInstanceName(), TribalMapSignal.REMOVE, ste);
-			TribeManagerFactory.getInstance().broadcast(tms);
-			return o;
-		}
+
+		Object o = removeLocal(key);
+		SharedTribalElement ste = new SharedTribalElement(getId(), key, null);
+		TribalMapSignal tms = new TribalMapSignal(Dispatcher.getInstance().getNavajoConfig().getInstanceName(), TribalMapSignal.REMOVE, ste);
+		TribeManagerFactory.getInstance().broadcast(tms);
+		return o;
+
 	}
 	
 	protected Object removeLocal(Object key) {
