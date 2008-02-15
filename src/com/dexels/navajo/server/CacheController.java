@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.Property;
 import com.dexels.navajo.server.jmx.JMXHelper;
 import com.dexels.navajo.util.AuditLog;
 
@@ -131,9 +132,24 @@ public class CacheController extends GenericThread implements CacheControllerMXB
 		setConfigTimeStamp();
 	}
 	
-	public String getCacheKey(String persistenceKey, String user, String service) {
+	public final String getCacheKey(final String user, final String service, final Navajo in) {
+		
+		String persistenceKey = null;
 		
 		if ( expirations.containsKey(service )  ) {
+			
+			if ( expirations.get(service).serviceKey != null ) {
+				Property p = in.getProperty(expirations.get(service).serviceKey);
+				if ( p != null ) {
+					persistenceKey = p.getValue();
+				}
+			}
+			
+			if ( persistenceKey  == null ) {
+				persistenceKey = in.persistenceKey();
+			}
+			  
+			
 			if ( expirations.get(service).userSpecific ) {
 				return service.replace('/', '.') + "_" + user + "_" + persistenceKey;
 			} else {
