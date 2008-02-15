@@ -93,7 +93,7 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 	TribeMember myMembership = null;
 	TribeMember theChief = null;
 	
-	private final static Set<Request> answerWaiters = Collections.synchronizedSet(new HashSet<Request>());
+	private final static Set<Request> answerWaiters = new HashSet<Request>();
 	private final static ClusterState state = new ClusterState();
 	
 	private static String myName;
@@ -365,6 +365,7 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 				    )
 		       ) {
 			Request q = (Request) msg.getObject();
+			
 			Answer a = q.getAnswer();
 			try {
 				if ( q.isBlocking() ) { // Only send answer if it's a blocking request.
@@ -377,15 +378,16 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 			}
 		} else if ( msg.getObject() instanceof Answer ) {
 			Answer a = (Answer) msg.getObject();
-			synchronized (answerWaiters) {
-				Request q = getWaitingRequest(a.getMyRequest());
-				q.setPredefinedAnswer(a);
-				removeWaitingRequest(a.getMyRequest());
-				answerWaiters.notify();
+			Request q = getWaitingRequest(a.getMyRequest());
+			q.setPredefinedAnswer(a);
+			removeWaitingRequest( q );
+			synchronized ( q ) {
+				q.notify();
 			}
 		} else {
 			AuditLog.log(AuditLog.AUDIT_MESSAGE_TRIBEMANAGER, "Received unknown or irrelevant message: " + msg);
 		}
+		
 	}
 
 	/**
@@ -484,16 +486,20 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 	}
 
 	private final Answer waitForAnswer(Request q) {
-		synchronized (answerWaiters) {
-			while (containsWaitingRequest(q) ) {
-				try {
-					answerWaiters.wait();
-				} catch (InterruptedException e) {
-				}
-			}
 
+		while (containsWaitingRequest(q) ) {
+			
+				synchronized (q) {
+					try {
+						q.wait();
+						//Thread.sleep(100);
+					} catch (InterruptedException e) {
+						
+					}
+				}
+			
 		}
-		//System.err.println("Finished waitForAnswer()");
+
 		return q.getPredefinedAnswer();
 	}
 	
