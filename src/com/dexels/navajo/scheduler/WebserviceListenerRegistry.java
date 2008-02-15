@@ -124,12 +124,16 @@ public final class WebserviceListenerRegistry implements WebserviceListenerRegis
 	
 	public final void afterWebservice(String webservice, Access a, HashSet<String> ignoreTaskList, boolean locally) {
 
+		
 		// Return immediately if webservice is not contained in afterWebservices set, i.e. there is
 		// no listener interested in this webservice.
 		if ( !ListenerStore.getInstance().isRegisteredWebservice(webservice) ) {
 			return;
 		} 
 
+		long start = System.currentTimeMillis();
+		long count = 0;
+		
 		Listener [] all = ListenerStore.getInstance().getListeners(AfterWebserviceTrigger.class.getName());
 		HashSet<String> ignoreTheseTaskOnOtherMembers = new HashSet<String>();
 		boolean leftOvers = false;
@@ -147,6 +151,7 @@ public final class WebserviceListenerRegistry implements WebserviceListenerRegis
 				if ( !isWorkflow || initializingWorkflow || myWorkflow) {
 					t2.perform();
 					ignoreTheseTaskOnOtherMembers.add(t2.getTask().getId());
+					count++;
 				} else {
 					leftOvers = true;
 				}
@@ -156,6 +161,8 @@ public final class WebserviceListenerRegistry implements WebserviceListenerRegis
 		if ( !locally && leftOvers ) {
 			tribalAfterWebServiceRequest(webservice, a, ignoreTheseTaskOnOtherMembers);
 		}
+		
+		AuditLog.log("SERVICEVENT", ":  afterWebservice(" + webservice + ") took " + ( System.currentTimeMillis() - start ) + " millis." + ", locally = " + locally + ", processed = " + count + ", leftOvers =" + leftOvers);
 		
 	}
 
@@ -214,43 +221,50 @@ public final class WebserviceListenerRegistry implements WebserviceListenerRegis
 			return null;
 		} 
 
-		Listener [] all = ListenerStore.getInstance().getListeners(BeforeWebserviceTrigger.class.getName());
-		
-		HashSet<String> ignoreTheseTaskOnOtherMembers = new HashSet<String>();
-		
+		long start = System.currentTimeMillis();
+		long count = 0;
 		boolean leftOvers = false;
 		
-		for (int i = 0; i < all.length; i++) {
-			BeforeWebserviceTrigger cl = (BeforeWebserviceTrigger) all[i];
-			
-			if ( cl.getWebservicePattern().equals(webservice) && !ignoreTaskList.contains(cl.getTask().getId()) ) {
-				BeforeWebserviceTrigger t2 = (BeforeWebserviceTrigger) cl.clone();
-				t2.setAccess(a);
-				
-				boolean initializingWorkflow = ( t2.getTask().getWorkflowDefinition() != null && t2.getTask().getWorkflowId() == null );
-				boolean myWorkflow = ( t2.getTask().getWorkflowId() != null && WorkFlowManager.getInstance().hasWorkflowId(t2.getTask().getWorkflowId()));
-				boolean isWorkflow = ( t2.getTask().getWorkflowDefinition() != null );
-				
-				Navajo n = null;
-				if ( !isWorkflow || initializingWorkflow || myWorkflow) { // If this is NOT a workflow task or an initializing workflow task or                                                   
-				                                                          // my workflow task, perform locally.
-					n = t2.perform();
-					ignoreTheseTaskOnOtherMembers.add(t2.getTask().getId());
-					if ( t2.getTask().isProxy() ) {
-						return n;
+		try {
+			Listener [] all = ListenerStore.getInstance().getListeners(BeforeWebserviceTrigger.class.getName());
+
+			HashSet<String> ignoreTheseTaskOnOtherMembers = new HashSet<String>();
+	
+			for (int i = 0; i < all.length; i++) {
+				BeforeWebserviceTrigger cl = (BeforeWebserviceTrigger) all[i];
+
+				if ( cl.getWebservicePattern().equals(webservice) && !ignoreTaskList.contains(cl.getTask().getId()) ) {
+					BeforeWebserviceTrigger t2 = (BeforeWebserviceTrigger) cl.clone();
+					t2.setAccess(a);
+
+					boolean initializingWorkflow = ( t2.getTask().getWorkflowDefinition() != null && t2.getTask().getWorkflowId() == null );
+					boolean myWorkflow = ( t2.getTask().getWorkflowId() != null && WorkFlowManager.getInstance().hasWorkflowId(t2.getTask().getWorkflowId()));
+					boolean isWorkflow = ( t2.getTask().getWorkflowDefinition() != null );
+
+					Navajo n = null;
+					if ( !isWorkflow || initializingWorkflow || myWorkflow) { // If this is NOT a workflow task or an initializing workflow task or                                                   
+						// my workflow task, perform locally.
+						n = t2.perform();
+						ignoreTheseTaskOnOtherMembers.add(t2.getTask().getId());
+						if ( t2.getTask().isProxy() ) {
+							return n;
+						}
+						count++;
+					} else {
+						leftOvers = true;
 					}
-				} else {
-					leftOvers = true;
 				}
 			}
+
+			// Try other tribal members...
+			if ( !locally && leftOvers ) {
+				return tribalBeforeWebServiceRequest(webservice, a, ignoreTheseTaskOnOtherMembers);
+			} else {
+				return null;
+			}
+
+		} finally {
+			AuditLog.log("SERVICEVENT", ":  beforeWebservice(" + webservice + ") took " + ( System.currentTimeMillis() - start ) + " millis." + ", locally = " + locally + ", processed = " + count + ", leftOvers =" + leftOvers );
 		}
-		
-		// Try other tribal members...
-		if ( !locally && leftOvers ) {
-			return tribalBeforeWebServiceRequest(webservice, a, ignoreTheseTaskOnOtherMembers);
-		} else {
-			return null;
-		}
-		
 	}
 }
