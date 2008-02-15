@@ -31,11 +31,11 @@ import com.dexels.navajo.parser.TMLExpressionException;
 public class Base64Encode extends FunctionInterface {
 
 	public String remarks() {
-		return "";
+		return "Get a Base64 representation of a given string or binary(deprecated).";
 	}
 
 	public String usage() {
-		return "";
+		return "Base64Encode(Binary|String)";
 	}
     
     // I think this function does not work when you pass a Binary into it.

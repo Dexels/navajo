@@ -27,10 +27,10 @@ public final class ToUpper extends FunctionInterface {
     }
 
     public String usage() {
-        return "";
+        return "ToUpper(String s)";
     }
 
     public String remarks() {
-        return "";
+        return "Get an uppercase representation of given string.";
     }
 }

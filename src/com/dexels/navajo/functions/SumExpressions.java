@@ -28,7 +28,7 @@ public class SumExpressions extends FunctionInterface {
 	 * @see com.dexels.navajo.parser.FunctionInterface#remarks()
 	 */
 	public String remarks() {
-		return "";
+		return "Sum expressions in a given array message";
 	}
 
 	/* (non-Javadoc)

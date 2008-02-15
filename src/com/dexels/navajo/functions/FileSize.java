@@ -24,11 +24,11 @@ public class FileSize extends FunctionInterface {
     }
 	
 	public String usage() {
-	    return "";
+	    return "FileSize(Binary)";
 	}
 	
 	public String remarks() {
-	    return "";
+	    return "Get the filesize of supplied Binary object in bytes.";
 	}
 	
 	public static void main(String args[]) throws Exception {

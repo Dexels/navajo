@@ -121,7 +121,7 @@ public class ToSecureImage extends FunctionInterface{
       // Tests.
       ToSecureImage tm = new ToSecureImage();
       tm.reset();
-      tm.insertOperand(new String("AEPEN00T"));
+      tm.insertOperand(new String("Schandknaep"));
       Binary b = (Binary) tm.evaluate();
 
       // Using expressions.
@@ -130,12 +130,12 @@ public class ToSecureImage extends FunctionInterface{
       System.out.println("o = " + o.value);
       System.out.println("type = " + o.type);
 
-      FileOutputStream fos = new FileOutputStream(new java.io.File("c:/test/aepenoot.png"));
+      FileOutputStream fos = new FileOutputStream(new java.io.File("/home/aphilip/aepenoot.png"));
       fos.write(b.getData());
       fos.flush();
       fos.close();
 
-      FileOutputStream fs = new FileOutputStream(new java.io.File("c:/test/noteaep.png"));
+      FileOutputStream fs = new FileOutputStream(new java.io.File("/home/aphilip/noteaep.png"));
       Binary c = (Binary)o.value;
       fs.write(c.getData());
       fs.flush();

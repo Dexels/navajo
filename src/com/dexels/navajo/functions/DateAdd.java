@@ -19,11 +19,11 @@ public final class DateAdd extends FunctionInterface {
     public DateAdd() {}
 
     public String remarks() {
-        return "";
+        return "Get a new Date object where the given field is increased by a given amount. Possible fields are YEAR, MONTH, WEEK and DAY.";
     }
 
     public String usage() {
-        return "";
+        return "DateAdd(Date date, Integer amount, String field)";
     }
 
     public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {

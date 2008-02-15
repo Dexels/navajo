@@ -33,11 +33,11 @@ public class ToStopwatchTime extends FunctionInterface{
     }
 
     public String usage() {
-        return "";
+        return "ToStopwatchTime(Date|Integer)";
     }
 
     public String remarks() {
-        return "";
+        return "Get a stopwatchtime representation of the supplied integer(in milliseconds) or date.";
     }
 
 

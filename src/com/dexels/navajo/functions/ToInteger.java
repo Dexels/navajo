@@ -32,11 +32,11 @@ public final class ToInteger extends FunctionInterface {
     }
 
     public String usage() {
-        return "";
+        return "ToInteger(Object)";
     }
 
     public String remarks() {
-        return "";
+        return "Get an integer representation of given object.";
     }
 
     public static void main(String [] args) {

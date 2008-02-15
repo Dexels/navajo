@@ -26,11 +26,11 @@ public class ToLower extends FunctionInterface {
   }
 
   public String usage() {
-      return "";
+      return "ToLower(String)";
   }
 
   public String remarks() {
-      return "";
+      return "Returns a lowercase version of the supplied string.";
   }
 
 }

@@ -48,7 +48,7 @@ public final class FormatStringList extends FunctionInterface {
     }
 
     public String remarks() {
-        return "";
+        return "Turns a list of strings in a single string using supplied delimiter.";
     }
 
     public static void main(String args[]) throws Exception {

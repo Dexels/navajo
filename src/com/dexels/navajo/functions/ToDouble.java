@@ -27,11 +27,11 @@ public final class ToDouble extends FunctionInterface {
     }
 
     public String usage() {
-        return "";
+        return "ToDouble(Object)";
     }
 
     public String remarks() {
-        return "";
+        return "Get a Double version of supplied object. Returns 0.0 if object is null.";
     }
     
     public static void main(String [] args) throws Exception {

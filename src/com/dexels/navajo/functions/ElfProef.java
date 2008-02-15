@@ -18,11 +18,11 @@ public final class ElfProef extends FunctionInterface {
     public ElfProef() {}
 
     public String remarks() {
-        return "";
+        return "Check if the supplied account number is a valid account (Dutch banks only).";
     }
 
     public String usage() {
-        return "";
+        return "ElfProef(String|Integer)";
     }
 
     public final boolean elfProef(String nummer) {

@@ -17,11 +17,11 @@ import com.dexels.navajo.parser.*;
 public final class Sum extends FunctionInterface {
 
     public String remarks() {
-        return "";
+        return "Get the sum of values in a given list.";
     }
 
     public String usage() {
-        return "";
+        return "Sum(ArrayList)";
     }
 
     public final Object sumList(ArrayList list) throws TMLExpressionException {

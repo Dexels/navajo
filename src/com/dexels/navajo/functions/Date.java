@@ -18,11 +18,11 @@ public final class Date extends FunctionInterface {
     public Date() {}
 
     public String remarks() {
-        return "";
+        return "Create a date object from a given string. String is expected to be of format: yyyy-MM-dd.";
     }
 
     public String usage() {
-        return "";
+        return "Date(String s)";
     }
 
     public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {

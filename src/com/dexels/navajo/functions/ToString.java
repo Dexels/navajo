@@ -58,10 +58,10 @@ public final class ToString extends FunctionInterface {
     }
 
     public String usage() {
-        return "";
+        return "ToString(Object)";
     }
 
     public String remarks() {
-        return "";
+        return "Returns a string representation of the supplied object.";
     }
 }

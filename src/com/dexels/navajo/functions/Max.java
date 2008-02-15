@@ -17,11 +17,11 @@ import com.dexels.navajo.parser.*;
 public final class Max extends FunctionInterface {
 
     public String remarks() {
-        return "";
+        return "Return the maximum of to given numbers.";
     }
 
     public String usage() {
-        return "";
+        return "Max(number, number), where number can be of type integer or double.";
     }
 
     public final Object evaluate() throws TMLExpressionException {

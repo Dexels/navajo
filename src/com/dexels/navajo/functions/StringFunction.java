@@ -17,7 +17,7 @@ import java.util.ArrayList;
 public final class StringFunction extends FunctionInterface {
 
   public String remarks() {
-    return "";
+    return "Perform a Java stringfunction on a given string.";
   }
 
   /**

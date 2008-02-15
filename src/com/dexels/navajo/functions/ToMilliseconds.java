@@ -27,8 +27,8 @@ public class ToMilliseconds extends FunctionInterface{
         }
         if(o instanceof ClockTime){
         	if (((ClockTime) o).calendarValue()==null) {
-				return new Long(0);
-			}
+				    return new Long(0);
+			    }
         	return new Long(((ClockTime) o).calendarValue().getTimeInMillis());
         }
 
@@ -37,11 +37,11 @@ public class ToMilliseconds extends FunctionInterface{
     }
 
     public String usage() {
-        return "";
+        return "ToMilliseconds(StopwatchTime|ClockTime)";
     }
 
     public String remarks() {
-        return "";
+        return "Get the supplied time in milliseconds (long).";
     }
 
 

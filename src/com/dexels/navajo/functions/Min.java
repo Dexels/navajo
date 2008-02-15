@@ -16,13 +16,13 @@ import com.dexels.navajo.parser.*;
 
 public final class Min extends FunctionInterface {
 
-    public String remarks() {
-        return "";
-    }
+	public String remarks() {
+    return "Return the minimum of to given numbers.";
+}
 
-    public String usage() {
-        return "";
-    }
+public String usage() {
+    return "Min(number, number), where number can be of type integer or double.";
+}
 
     public final Object evaluate() throws TMLExpressionException {
 
@@ -44,7 +44,7 @@ public final class Min extends FunctionInterface {
             Object a = operands.get(0);
 
             if (!(a instanceof ArrayList))
-                throw new TMLExpressionException("Invalid number of arguments for Max()");
+                throw new TMLExpressionException("Invalid number of arguments for Min()");
             ArrayList list = (ArrayList) a;
             double min = java.lang.Integer.MAX_VALUE;
             boolean dvalue = false;
@@ -63,6 +63,6 @@ public final class Min extends FunctionInterface {
             else
                 return new Integer((int) min);
         } else
-            throw new TMLExpressionException("Invalid number of arguments for Max()");
+            throw new TMLExpressionException("Invalid number of arguments for Min()");
     }
 }

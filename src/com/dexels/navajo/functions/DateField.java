@@ -44,7 +44,7 @@ public final class DateField extends FunctionInterface {
     }
 
     public String remarks() {
-        return "";
+        return "Get a specific part of the given date, options are WEEK, YEAR and DAY.";
     }
 
     public static void main(String args[]) {
