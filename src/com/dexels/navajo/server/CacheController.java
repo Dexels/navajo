@@ -138,7 +138,8 @@ public class CacheController extends GenericThread implements CacheControllerMXB
 		
 		if ( expirations.containsKey(service )  ) {
 			
-			if ( expirations.get(service).serviceKey != null ) {
+			if ( getServiceKeys(service) != null ) {
+				
 				Property p = in.getProperty(expirations.get(service).serviceKey);
 				if ( p != null ) {
 					persistenceKey = p.getValue();
