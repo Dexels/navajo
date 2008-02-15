@@ -13,14 +13,17 @@ class CacheEntry {
 
 	public String serviceName;
 	public String serviceKey;
+	public String persistenceKey;
 	public long expirationInterval;
 	public boolean userSpecific;
 	
-	public CacheEntry(String service, String serviceKey, long interval, boolean userSpecific) {
+	public CacheEntry(String service, String serviceKey, String persistenceKey, long interval, boolean userSpecific) {
 		this.serviceName = service;
 		this.serviceKey = serviceKey;
+		this.persistenceKey = persistenceKey;
 		this.expirationInterval = interval;
 		this.userSpecific = userSpecific;
+		AuditLog.log("CACHE", "CACHE EENTRY: serviceName="+serviceName+",serviceKey="+serviceKey+",persistenceKey="+persistenceKey+",expirationInterval="+expirationInterval);
 	}
 }
 
@@ -122,8 +125,9 @@ public class CacheController extends GenericThread implements CacheControllerMXB
 					Long expir = new Long( messages.get(i).getProperty("Timeout").getValue() );
 					boolean userSpecific = (  messages.get(i).getProperty("UserCache") != null ? 
 							messages.get(i).getProperty("UserCache").getValue().equals("true") : false );
-					String serviceKeys = ( messages.get(i).getProperty("CacheKeys") != null ? messages.get(i).getProperty("CacheKeys").getValue() : "" );
-					CacheEntry ce = new CacheEntry(webservice, serviceKeys, expir.longValue(), userSpecific );
+					String serviceKeys = ( messages.get(i).getProperty("CacheKeys") != null ? messages.get(i).getProperty("CacheKeys").getValue() : null );
+					String persistenceKeys = ( messages.get(i).getProperty("PersistenceKeys") != null ? messages.get(i).getProperty("PersistenceKeys").getValue() : null );
+					CacheEntry ce = new CacheEntry(webservice, serviceKeys, persistenceKeys, expir.longValue(), userSpecific );
 					expirations.put(webservice, ce);
 				}
 			}
@@ -132,18 +136,36 @@ public class CacheController extends GenericThread implements CacheControllerMXB
 		setConfigTimeStamp();
 	}
 	
+	private String constructPersistenceKey(Navajo in, String service) {
+		
+		StringBuffer result = new StringBuffer();
+		
+		String [] properties = expirations.get(service).persistenceKey.split(";");
+		
+		for ( int i = 0; i < properties.length; i++ ) {
+			Property p = in.getProperty( properties[i] );
+			if ( p != null ) {
+				result.append(p.getValue());
+			}
+		}
+		
+		String r = result.toString();
+		
+		if ( r.equals("") ) {
+			return null;
+		} else {
+			return r;
+		}
+	}
+	
 	public final String getCacheKey(final String user, final String service, final Navajo in) {
 		
 		String persistenceKey = null;
 		
-		if ( expirations.containsKey(service )  ) {
+		if ( expirations.containsKey(service)  ) {
 			
-			if ( getServiceKeys(service) != null ) {
-				
-				Property p = in.getProperty(expirations.get(service).serviceKey);
-				if ( p != null ) {
-					persistenceKey = p.getValue();
-				}
+			if ( expirations.get(service).persistenceKey != null ) {
+				persistenceKey = constructPersistenceKey(in, service);
 			}
 			
 			if ( persistenceKey  == null ) {
