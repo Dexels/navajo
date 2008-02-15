@@ -14,7 +14,6 @@ import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
 
 import com.dexels.navajo.tribe.SharedStoreFactory;
 import com.dexels.navajo.tribe.SharedStoreInterface;
-import com.dexels.navajo.tribe.map.RemoteReference;
 import com.dexels.navajo.tribe.map.SharedTribalMap;
 
 
@@ -78,7 +77,7 @@ public final class PersistenceManagerImpl implements PersistenceManager {
     private long cachehits = 0;
     private long fileWrites = 0;
     
-    private volatile SharedTribalMap<String,?> inMemoryCache = null;
+    private volatile SharedTribalMap<String,SoftReference<PersistentEntry>> inMemoryCache = null;
     private volatile SharedTribalMap<String,Frequency> accessFrequency = null;
 	private volatile SharedStoreInterface sharedPersistenceStore = null;
 	
@@ -90,7 +89,7 @@ public final class PersistenceManagerImpl implements PersistenceManager {
 	
 	public PersistenceManagerImpl() throws InstantiationException {
 		try {
-			Class.forName("com.dexels.navajo.tribe.map.RemoteReference");
+			Class.forName("com.dexels.navajo.tribe.map.SharedTribalMap");
 		} catch (ClassNotFoundException e) {
 			throw new InstantiationException(e.getMessage());
 		}
@@ -159,26 +158,20 @@ public final class PersistenceManagerImpl implements PersistenceManager {
     private final Persistable memoryOperation(String key, String service, Persistable document, long expirationInterval, boolean read ) {
 
     	if (read) {
-    		RemoteReference pc = null;
+    		SoftReference<PersistentEntry> pc = null;
     		Frequency freq = (Frequency) accessFrequency.get(key);
     		if (freq != null && !freq.isExpired(expirationInterval)) {
-    			pc = (RemoteReference) inMemoryCache.get(key);
-    			if ( pc != null ) {
-    				SoftReference sr = (SoftReference) pc.getObject();
-    				if (sr != null &&  sr.get() != null) {
-    					return ((PersistentEntry) sr.get()).getDocument();
-    				} else if ( sr != null ){
-    					inMemoryCache.remove(key);
-    				}
+    			pc = (SoftReference<PersistentEntry>) inMemoryCache.get(key);
+    			if ( pc != null && pc.get() != null ) {
+    				return pc.get().getDocument();
+    			} else if ( pc != null ){
+    				inMemoryCache.remove(key);
     			}
     		}
     		if (freq != null && freq.isExpired(expirationInterval)) { 
-    			RemoteReference rr = (RemoteReference) inMemoryCache.get(freq.getName());
-    			if ( rr != null ) {
-    				SoftReference d = (SoftReference) rr.getObject();
-    				if ( d != null && d.get() != null) {
-    					inMemoryCache.remove(freq.getName());
-    				} 
+    			SoftReference<PersistentEntry> rr = (SoftReference<PersistentEntry>) inMemoryCache.get(freq.getName());
+    			if ( rr != null && rr.get() != null ) {
+    				inMemoryCache.remove(freq.getName());
     			}
     		}
     		return null;
@@ -195,7 +188,7 @@ public final class PersistenceManagerImpl implements PersistenceManager {
     			PersistentEntry pe = new PersistentEntry(document, service);
     			String keys = CacheController.getInstance().getServiceKeys( service );
     			pe.setKeyValues( constructServiceKeyValues(keys, (Navajo) document ) );
-    			inMemoryCache.put(key, new RemoteReference( new SoftReference( pe ) ) );
+    			inMemoryCache.put(key, new SoftReference( pe ) );
 
     		}
     		return document;
@@ -291,8 +284,7 @@ public final class PersistenceManagerImpl implements PersistenceManager {
 		PersistenceManagerImpl pm = (PersistenceManagerImpl) Dispatcher.getInstance().getNavajoConfig().getPersistenceManager();
 		Iterator iter = pm.inMemoryCache.values().iterator();
 		while ( iter.hasNext() ) {
-			RemoteReference re = (RemoteReference) iter.next();
-			SoftReference se = (SoftReference) re.getObject();
+			SoftReference se = (SoftReference) iter.next();
 			if ( se != null ) {
 				PersistentEntry pe = (PersistentEntry) se.get();
 				if ( pe != null && ( serviceKeyValues == null ||  pe.getService().equals(service) && pe.getKeyValues().equals(serviceKeyValues) ) ) {
@@ -316,16 +308,12 @@ public final class PersistenceManagerImpl implements PersistenceManager {
 					pm.inMemoryCache.remove(cacheKey);
 					pm.sharedPersistenceStore.remove(CACHE_PATH, cacheKey);
 				} else if ( cacheKey.startsWith(key ) && this.serviceKeyValues != null ) {
-					RemoteReference re = (RemoteReference) pm.inMemoryCache.get(cacheKey);
-					SoftReference se = (SoftReference) re.getObject();
-					if ( se != null ) {
-						PersistentEntry pe = (PersistentEntry) se.get();
-						if ( pe != null ) {
-
-							if ( pe.getKeyValues().equals(serviceKeyValues) ) {
-								pm.inMemoryCache.remove(cacheKey);
-								pm.sharedPersistenceStore.remove(CACHE_PATH, cacheKey);
-							}
+					SoftReference re = (SoftReference) pm.inMemoryCache.get(cacheKey);
+					if ( re != null && re.get() != null ) {
+						PersistentEntry pe = (PersistentEntry) re.get();
+						if ( pe.getKeyValues().equals(serviceKeyValues) ) {
+							pm.inMemoryCache.remove(cacheKey);
+							pm.sharedPersistenceStore.remove(CACHE_PATH, cacheKey);
 						}
 					}
 				}
