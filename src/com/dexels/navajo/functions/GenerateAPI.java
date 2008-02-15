@@ -16,11 +16,14 @@ public class GenerateAPI {
 		assert classLoader != null;
 		String path = packageName.replace('.', '/');
 		Enumeration<URL> resources = classLoader.getResources(path);
+	
 		List<java.io.File> dirs = new ArrayList<java.io.File>();
+		
 		while (resources.hasMoreElements()) {
 			URL resource = resources.nextElement();
 			dirs.add(new java.io.File(resource.getFile()));
 		}
+			
 		ArrayList<Class> classes = new ArrayList<Class>();
 		for (java.io.File directory : dirs) {
 			classes.addAll(findClasses(directory, packageName));
@@ -59,9 +62,16 @@ public class GenerateAPI {
 		try{
 			Class[] classes = getClasses("com.dexels.navajo.functions");
 			
+			List<String> names = new ArrayList<String>();
+			for(int k=0;k<classes.length;k++){
+				names.add(classes[k].getName());
+			}
+			Collections.sort(names);
+			
 			// Generate WIKI list
-			for(int j=0;j<classes.length;j++){
-				Class a = classes[j];
+			for(int j=0;j<names.size();j++){
+				String classname = names.get(j);
+				Class a = Class.forName(classname);
 				Object instance = null;
 				try{
 					instance = a.newInstance();
@@ -83,8 +93,9 @@ public class GenerateAPI {
 			
 			// Generate WIKI details
 			
-			for(int i=0;i<classes.length;i++){
-				Class a = classes[i];
+			for(int i=0;i<names.size();i++){
+				String classname = names.get(i);
+				Class a = Class.forName(classname);
 				Object instance = null;
 				try{
 					instance = a.newInstance();
