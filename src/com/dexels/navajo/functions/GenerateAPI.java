@@ -116,7 +116,6 @@ public class GenerateAPI {
 					System.err.println("**Example:**\n<code>[example]</code>\n");
 					
 				}
-				
 			}
 		}catch(Exception e){
 			e.printStackTrace();
