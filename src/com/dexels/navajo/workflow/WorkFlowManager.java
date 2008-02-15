@@ -227,11 +227,11 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 	
 	public void worker() {
         // Check whether definition has been added (only the tribal chief processes new workflow definitions).
-		//if ( isConfigModified() &&  TribeManager.getInstance().getIsChief() )  {
+		if ( isConfigModified() )  {
 			AuditLog.log(AuditLog.AUDIT_MESSAGE_WORKFLOW, "Workflow definition change detected");
 			setConfigTimeStamp();
 			WorkFlowDefinitionReader.initialize(new File(workflowDefinitionPath), workflowDefinitions);	
-		//}
+		}
 		// Check whether new workflow instances have appeared in my instance space.
 		reviveSavedWorkFlows(false);
 	}
