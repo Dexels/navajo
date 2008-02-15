@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.Random;
 
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.events.NavajoEvent;
 import com.dexels.navajo.events.NavajoEventRegistry;
 import com.dexels.navajo.events.NavajoListener;
@@ -271,19 +272,33 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 	 * @param expression an expression to which the workflow state as to confirm
 	 * @return
 	 */
-	public boolean existsWorkFlow(String name, String expression) {
+	public boolean existsWorkFlow(String name, String state, String expression) {
 		
 		
 		WorkFlow [] flows = WorkFlowManager.getInstance().getWorkflows(name);
 		for ( int i = 0; i < flows.length; i++ ) {
 			Navajo n = flows[i].getLocalNavajo();
-			try {
-				boolean b =  Condition.evaluate(expression, n);
-				if ( b ) {
-					return true;
+
+			if ( state == null || flows[i].getCurrentState().getId().equals(state) ) {
+				try {
+					boolean b =  Condition.evaluate(expression, n);
+					if ( b ) {
+						return true;
+					}
+				} catch (Exception e) {
+					e.printStackTrace(System.err);
+					if ( n != null ) {
+						System.err.println("LOCAL WORKFLOW STATE IS FOR WFID " + flows[i].getMyId() + ", CURRENT STATE: " + flows[i].getCurrentState().getId() + 
+								", IS FINISHED: " + flows[i].isFinished()  + ", IS KILLED = " + flows[i].isKilled());
+						try {
+							n.write(System.err);
+						} catch (NavajoException e1) {
+
+						}
+					} else {
+						System.err.println("EMPTY LOCAL WORKFLOW STATE...");
+					}
 				}
-			} catch (Exception e) {
-				
 			}
 		}
 		
