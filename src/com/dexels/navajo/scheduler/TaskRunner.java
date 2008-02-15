@@ -406,7 +406,9 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 		synchronized (semaphore) {
 			Task t = (Task) tasks.get(id);
 			tasks.remove(id);
-			t.setRemove(true);
+			if ( t != null ) {
+				t.setRemove(true);
+			}
 		}
 	}
 	
