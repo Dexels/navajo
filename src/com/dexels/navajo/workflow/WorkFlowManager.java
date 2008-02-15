@@ -208,7 +208,9 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 		synchronized (semaphore_instances) {
 			workflowInstances.add(wf);
 			WorkFlowDefinition wdf = workflowDefinitions.get(wf.getDefinition());
-			wdf.instances++;
+			if ( wdf != null ) {
+				wdf.instances++;
+			}
 		}
 	}
 	
@@ -217,17 +219,19 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 			removePersistedWorkFlow(wf);
 			workflowInstances.remove(wf);
 			WorkFlowDefinition wdf = workflowDefinitions.get(wf.getDefinition());
-			wdf.instances--;
+			if ( wdf != null ) {
+				wdf.instances--;
+			}
 		}
 	}
 	
 	public void worker() {
         // Check whether definition has been added (only the tribal chief processes new workflow definitions).
-		if ( isConfigModified() &&  TribeManager.getInstance().getIsChief() )  {
+		//if ( isConfigModified() &&  TribeManager.getInstance().getIsChief() )  {
 			AuditLog.log(AuditLog.AUDIT_MESSAGE_WORKFLOW, "Workflow definition change detected");
 			setConfigTimeStamp();
 			WorkFlowDefinitionReader.initialize(new File(workflowDefinitionPath), workflowDefinitions);	
-		}
+		//}
 		// Check whether new workflow instances have appeared in my instance space.
 		reviveSavedWorkFlows(false);
 	}
