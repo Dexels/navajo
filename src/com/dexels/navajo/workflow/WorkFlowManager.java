@@ -191,9 +191,11 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 	}
 	
 	public void removePersistedWorkFlows(String definition) {
-		WorkFlow [] flows = getWorkflows(definition);
-		for (int i = 0; i < flows.length; i++) {
-			removePersistedWorkFlow(flows[i]);
+		synchronized (semaphore_instances) {
+			WorkFlow [] flows = getWorkflows(definition);
+			for (int i = 0; i < flows.length; i++) {
+				removePersistedWorkFlow(flows[i]);
+			}
 		}
 	}
 	
@@ -203,9 +205,11 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 	}
 	
 	public void addWorkFlow(WorkFlow wf) {
-		workflowInstances.add(wf);
-		WorkFlowDefinition wdf = workflowDefinitions.get(wf.getDefinition());
-		wdf.instances++;
+		synchronized (semaphore_instances) {
+			workflowInstances.add(wf);
+			WorkFlowDefinition wdf = workflowDefinitions.get(wf.getDefinition());
+			wdf.instances++;
+		}
 	}
 	
 	public void removeWorkFlow(WorkFlow wf) {
@@ -234,14 +238,19 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 	 * @return
 	 */
 	public WorkFlow[] getWorkflows() {
+
 		if ( workflowDef != null ) {
 			return getWorkflows(workflowDef);
 		}
 		WorkFlowManager mng = WorkFlowManager.getInstance();
-		ArrayList<WorkFlow> wfList = new ArrayList<WorkFlow>(mng.workflowInstances);
-		workflows = new WorkFlow[wfList.size()];
-		workflows = (WorkFlow []) wfList.toArray(workflows);
-		return workflows.clone();
+
+		synchronized (semaphore_instances) {
+			ArrayList<WorkFlow> wfList = new ArrayList<WorkFlow>(mng.workflowInstances);
+			workflows = new WorkFlow[wfList.size()];
+			workflows = (WorkFlow []) wfList.toArray(workflows);
+			return workflows.clone();
+		}
+
 	}
 	
 	/**
@@ -251,18 +260,23 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 	 * @return
 	 */
 	public final WorkFlow[] getWorkflows(String byName) {
+		
 		WorkFlowManager mng = WorkFlowManager.getInstance();
 		ArrayList<WorkFlow> wfList = new ArrayList<WorkFlow>();
-		Iterator<WorkFlow> iter = mng.workflowInstances.iterator();
-		while ( iter.hasNext() ) {
-			WorkFlow wf = iter.next();
-			if ( wf.getDefinition().equals(byName) ) {
-				wfList.add(wf);
+		
+		synchronized (semaphore_instances) {
+			Iterator<WorkFlow> iter = mng.workflowInstances.iterator();
+			while ( iter.hasNext() ) {
+				WorkFlow wf = iter.next();
+				if ( wf.getDefinition().equals(byName) ) {
+					wfList.add(wf);
+				}
 			}
+			workflows = new WorkFlow[wfList.size()];
+			workflows = (WorkFlow []) wfList.toArray(workflows);
+			return workflows;
 		}
-		workflows = new WorkFlow[wfList.size()];
-		workflows = (WorkFlow []) wfList.toArray(workflows);
-		return workflows;
+		
 	}
 
 	/**
@@ -309,14 +323,16 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 		if ( id == null || id.equals("") ) {
 			return false;
 		}
-		for ( int i = 0; i < workflowInstances.size(); i++) {
-			if ( workflowInstances.get(i).getMyId().equals(id)) {
-				return true;
+		synchronized (semaphore_instances) {
+			for ( int i = 0; i < workflowInstances.size(); i++) {
+				if ( workflowInstances.get(i).getMyId().equals(id)) {
+					return true;
+				}
 			}
 		}
 		return false;
 	}
-	
+
 	public void setWorkflowId(String workflowId) {
 		this.workflowId = workflowId;
 	}
@@ -326,10 +342,12 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 			throw new UserException(-1, "Set workflow id before retrieving workflow instance");
 		}
 		WorkFlowManager mng = WorkFlowManager.getInstance();
-		ArrayList<WorkFlow> wfList = new ArrayList<WorkFlow>(mng.workflowInstances);
-		for (int i = 0; i < wfList.size(); i++ ) {
-			if (wfList.get(i).getMyId().equals(workflowId) ) {
-				return wfList.get(i);
+		synchronized (semaphore_instances) {
+			ArrayList<WorkFlow> wfList = new ArrayList<WorkFlow>(mng.workflowInstances);
+			for (int i = 0; i < wfList.size(); i++ ) {
+				if (wfList.get(i).getMyId().equals(workflowId) ) {
+					return wfList.get(i);
+				}
 			}
 		}
 		return null;
