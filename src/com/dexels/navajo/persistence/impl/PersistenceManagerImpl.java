@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.persistence.*;
 import com.dexels.navajo.server.CacheController;
@@ -345,5 +347,10 @@ public final class PersistenceManagerImpl implements PersistenceManager {
 	public static void main ( String [] args ) {
 		String [] aap = "aap,noot".split(",");
 		System.err.println(aap[1]);
+	}
+
+	public Persistable get(Constructor c, String key, long expirationInterval,
+			boolean persist) throws Exception {
+		throw new NotImplementedException();
 	}
 }
