@@ -11,6 +11,9 @@ import com.dexels.navajo.document.Navajo;
  * @version $Id$
  *
  * $Log$
+ * Revision 1.5  2008/02/15 16:47:50  arjen
+ * Backwards compatible method signature added
+ *
  * Revision 1.4  2008/02/08 14:32:51  arjen
  * Added service parameter in get() method interface
  *
@@ -53,6 +56,8 @@ public interface PersistenceManager {
      */
     public Persistable get(Constructor c, String key, String service, long expirationInterval, boolean persist) throws Exception;
     
+    public Persistable get(Constructor c, String key, long expirationInterval, boolean persist) throws Exception;
+
     public void setConfiguration(Navajo config);
 
   

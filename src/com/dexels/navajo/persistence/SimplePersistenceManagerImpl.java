@@ -13,4 +13,10 @@ public class SimplePersistenceManagerImpl implements PersistenceManager {
 		
 	}
 
+	public Persistable get(Constructor c, String key, long expirationInterval,
+			boolean persist) throws Exception {
+		
+		return c.construct();
+	}
+
 }
