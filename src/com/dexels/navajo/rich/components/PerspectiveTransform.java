@@ -3,6 +3,7 @@ package com.dexels.navajo.rich.components;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.awt.image.ConvolveOp;
@@ -17,6 +18,21 @@ public class PerspectiveTransform {
 	public static final int FLIP_RIGHT = 1;
 	public static final int FLIP_UP = 2;
 	public static final int FLIP_DOWN = 3;
+	
+	public static ConvolveOp getBlurFilter(int horizontalRadius, int verticalRadius) {
+		int width = horizontalRadius * 2 + 1;
+		int height = verticalRadius * 2 + 1;
+
+		float weight = 1.0f / (width * height);
+		float[] data = new float[width * height];
+  
+		for (int i = 0; i < data.length; i++) {
+      data[i] = weight;
+		}
+  
+		Kernel kernel = new Kernel(width, height, data);
+		return new ConvolveOp(kernel, ConvolveOp.EDGE_NO_OP, null);
+	}
 	
 	public static BufferedImage transform(BufferedImage input, double degrees, boolean keepcenter, int direction){
 		switch(direction){
@@ -37,10 +53,14 @@ public class PerspectiveTransform {
 		long st = System.currentTimeMillis();
 		int width = input.getWidth();
 		int height = input.getHeight();
+		float scalar = 1.0f - ((float)degrees * (0.5f/85.0f));
 		double rad_a = degrees * (Math.PI/180.0);
-		int new_height = (int) ((height * Math.sin(rad_a) * Math.cos(rad_a)) / (Math.tan(rad_a)));
+		
+		int new_height = (int) (scalar*(height * Math.sin(rad_a) * Math.cos(rad_a)) / (Math.tan(rad_a)));
+		width = (int)(scalar*width);
 		float alpha_overlay = (float)degrees * 1.0f / 80.0f;
-
+		
+		
 		BufferedImage result = new BufferedImage(width, new_height, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D buffer = result.createGraphics();
 		buffer.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -68,10 +88,7 @@ public class PerspectiveTransform {
 			BufferedImage target = new BufferedImage(w, dh, BufferedImage.TYPE_INT_ARGB);
 			Graphics2D tg = target.createGraphics();
 		  tg.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-			
-			
-			tg.setColor(Color.darkGray);
-			
+		  
 			if(to_left){
 				float val = alpha_overlay - y*alpha_factor;
 				if(val > 1){
@@ -108,12 +125,10 @@ public class PerspectiveTransform {
 		
 		buffer.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
 		buffer.dispose();
-		
-//		System.err.println("Rendering X-axis took: " + (System.currentTimeMillis() - st) + " milliseconds");
-		
+
 		if(keepcenter){
 			BufferedImage displaced = new BufferedImage(input.getWidth(), input.getHeight(), BufferedImage.TYPE_INT_ARGB); 
-			displaced.createGraphics().drawImage(result, 0, (input.getHeight() - result.getHeight()) / 2, result.getWidth(), result.getHeight(), null);
+			displaced.createGraphics().drawImage(result, (input.getWidth() - result.getWidth()) / 2, (input.getHeight() - result.getHeight()) / 2, result.getWidth(), result.getHeight(), null);
 			return displaced;
 		}
 		
@@ -126,9 +141,16 @@ public class PerspectiveTransform {
 		int height = input.getHeight();
 		double rad_a = degrees * (Math.PI/180.0);
 		int new_width = (int) ((width * Math.sin(rad_a) * Math.cos(rad_a)) / (Math.tan(rad_a)));
+		
+//	 zooming for speed, though performance is the worst when zoom is near original image, so it does not matter much, but it looks nice
+		float scalar = 1.0f - ((float)degrees * (0.5f/85.0f)); 
+		//========
+		
+		new_width = (int)(scalar*new_width); 
+		height = (int)(scalar* height);
 		float alpha_overlay = (float)degrees * 1.0f / 80.0f;
 
-		BufferedImage result = new BufferedImage(new_width, input.getHeight(), BufferedImage.TYPE_INT_ARGB);
+		BufferedImage result = new BufferedImage(new_width, height, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D buffer = result.createGraphics();
 		buffer.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		
@@ -153,10 +175,7 @@ public class PerspectiveTransform {
 			}
 			BufferedImage target = new BufferedImage(dw, h, BufferedImage.TYPE_INT_ARGB);
 			Graphics2D tg = target.createGraphics();
-		  tg.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
-			
-			
-			tg.setColor(Color.darkGray);
+		  tg.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);		
 			
 			if(to_left){
 				float val = alpha_overlay - x*alpha_factor;
@@ -174,19 +193,10 @@ public class PerspectiveTransform {
 					val = 0.0f;
 				}
 				tg.setComposite(AlphaComposite.SrcOver.derive(val));
-			}
-			
+			}		
 			tg.fillRect(0,0, dw, h);
 			tg.setComposite(AlphaComposite.SrcOut.derive(1.0f));
 			tg.drawImage(new_width_input, -x, 0, new_width, h, null);
-			
-			/* Possible Blurring
-			int radius = 1;
-			
-			target = getBlurFilter(radius, 0).filter(target, null);
-			target = getBlurFilter(0, radius).filter(target, null);
-			
-			*/
 			
 			buffer.drawImage(target, x, (int)ddh, dw, h, null);
 			tg.dispose();
@@ -195,51 +205,32 @@ public class PerspectiveTransform {
 		buffer.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
 		buffer.dispose();
 		
-//		System.err.println("Rendering Y-axis took: " + (System.currentTimeMillis() - st) + " milliseconds");
-		
 		if(keepcenter){
 			BufferedImage displaced = new BufferedImage(input.getWidth(), input.getHeight(), BufferedImage.TYPE_INT_ARGB); 
-			displaced.createGraphics().drawImage(result, (input.getWidth() - result.getWidth()) / 2, 0, result.getWidth(), result.getHeight(), null);
+			displaced.createGraphics().drawImage(result, (input.getWidth() - result.getWidth()) / 2, (input.getHeight() - result.getHeight()) / 2, result.getWidth(), result.getHeight(), null);
 			return displaced;
 		}		
+		
 		return result;
-	}
-	
-	public static ConvolveOp getBlurFilter(int horizontalRadius, int verticalRadius) {
-		int width = horizontalRadius * 2 + 1;
-		int height = verticalRadius * 2 + 1;
-
-		float weight = 1.0f / (width * height);
-		float[] data = new float[width * height];
-  
-		for (int i = 0; i < data.length; i++) {
-      data[i] = weight;
-		}
-  
-		Kernel kernel = new Kernel(width, height, data);
-		return new ConvolveOp(kernel, ConvolveOp.EDGE_NO_OP, null);
-	}
-	
+	}	
 	
 	public static void main(String[] args){
 		try{
 			
-			BufferedImage img = ImageIO.read(new FileInputStream("/home/aphilip/Desktop/screenshot.png"));
-			int angle = 45;
-		//	for (int angle = 5;angle<86;angle+=5){
+			BufferedImage img = ImageIO.read(new FileInputStream("/home/aphilip/Desktop/test.png"));
+//			int angle = 45;
+			for (int angle = 25;angle<50;angle+=5){
 			
 			  //BufferedImage lowres = new BufferedImage(img.getWidth()/2, img.getHeight()/2, BufferedImage.TYPE_INT_ARGB);
 			  //Graphics2D lrg = lowres.createGraphics();
 			  //lrg.drawImage(img, 0, 0, lowres.getWidth(), lowres.getHeight(), null);
 				long st = System.currentTimeMillis();
-				BufferedImage result = transform(img, angle, true, PerspectiveTransform.FLIP_LEFT);
+				BufferedImage result = transformYaxis(img, angle, true, true);
+				System.err.println("Done.slow: " + (System.currentTimeMillis()-st) + " ms");
 				
-				//BufferedImage target = new BufferedImage(result.getWidth()*2, result.getHeight()*2, BufferedImage.TYPE_INT_ARGB);
-				//target.createGraphics().drawImage(result, 0, 0, target.getWidth(), target.getHeight(), null);
+				ImageIO.write(result, "png", new File("/home/aphilip/Desktop/test-slow" + angle +".png"));
 				
-				ImageIO.write(result, "png", new File("/home/aphilip/Desktop/output" + angle +".png"));
-				System.err.println("Done..: " + (System.currentTimeMillis()-st) + " ms");
-			//}
+			}
 		}catch(Exception e){
 			e.printStackTrace();
 		}		
