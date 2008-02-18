@@ -654,6 +654,11 @@ public class SQLMap implements Mappable, LazyArray {
    * replace " characters with ' characters.
    */
   public void setQuery(final String newQuery) throws UserException {
+	  
+	if ( newQuery.indexOf(";") != -1 ) {
+		throw new UserException(-1, "Use of semicolon in query fields is not allowed, maybe you meant to use an update field?");
+	}
+	
     query = newQuery.replace('"', '\'');
     if (debug) {
       System.err.println("SQLMap(): query = " + query);
