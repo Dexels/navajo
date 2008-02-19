@@ -186,36 +186,48 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 	}
 	
 	private final void removeWaitingRequest(Request q) {
-		
-		HashSet<Request> hs = new HashSet<Request>(answerWaiters);
-		Iterator<Request> iter = hs.iterator();
-		while ( iter.hasNext() ) {
-			Request q1 = iter.next();
-			if ( q1.getGuid().equals(q.getGuid() ) ) {
-				answerWaiters.remove(q1);
-				return;
+
+		synchronized (answerWaiters) {
+			HashSet<Request> hs = new HashSet<Request>(answerWaiters);
+			Iterator<Request> iter = hs.iterator();
+			while ( iter.hasNext() ) {
+				Request q1 = iter.next();
+				if ( q1.getGuid().equals(q.getGuid() ) ) {
+					answerWaiters.remove(q1);
+					return;
+				}
 			}
 		}
 	}
 	
 	private final boolean containsWaitingRequest(Request q) {
-		Iterator<Request> iter = answerWaiters.iterator();
-		while ( iter.hasNext() ) {
-			if ( iter.next().getGuid().equals(q.getGuid() ) ) {
-				return true;
+		
+		synchronized (answerWaiters) {
+			
+			Iterator<Request> iter = answerWaiters.iterator();
+			while ( iter.hasNext() ) {
+				if ( iter.next().getGuid().equals(q.getGuid() ) ) {
+					return true;
+				}
 			}
 		}
+		
 		return false;
 	}
 	
 	private final Request getWaitingRequest(Request q) {
-		Iterator<Request> iter = answerWaiters.iterator();
-		while ( iter.hasNext() ) {
-			Request q1 = iter.next();
-			if ( q1.getGuid().equals(q.getGuid() ) ) {
-				return q1;
+
+		synchronized (answerWaiters) {
+
+			Iterator<Request> iter = answerWaiters.iterator();
+			while ( iter.hasNext() ) {
+				Request q1 = iter.next();
+				if ( q1.getGuid().equals(q.getGuid() ) ) {
+					return q1;
+				}
 			}
 		}
+		
 		return null;
 	}
 	
@@ -413,7 +425,9 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 			e.printStackTrace();
 		}
 		if ( q.isBlocking() ) {
-			answerWaiters.add(q);
+			synchronized (answerWaiters) {
+				answerWaiters.add(q);
+			}
 			Answer w = waitForAnswer(q);
 			return w;
 		} else {
