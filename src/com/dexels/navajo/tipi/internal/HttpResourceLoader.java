@@ -2,6 +2,7 @@ package com.dexels.navajo.tipi.internal;
 
 import java.io.*;
 import java.net.*;
+import java.util.*;
 
 public class HttpResourceLoader extends ClassPathResourceLoader {
 
@@ -34,4 +35,9 @@ public class HttpResourceLoader extends ClassPathResourceLoader {
 		System.err.println("HttpResourceLoader failed. Looking in classpath: "+location+" base: "+baseURL);
 		return super.getResourceStream(location);
 	}
+
+	public List<File> getAllResources() throws IOException {
+		throw new UnsupportedOperationException("The http resource loader is unable to enumerate resources");
+}
+	
 }

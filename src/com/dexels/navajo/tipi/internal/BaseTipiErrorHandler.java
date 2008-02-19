@@ -49,17 +49,17 @@ public abstract class BaseTipiErrorHandler implements TipiErrorHandler {
 			Message error = n.getMessage("error");
 			Message conditions = n.getMessage("ConditionErrors");
 			if (error != null) {
-				errorCode = (String) error.getProperty("code").getValue();
-				errorMessage = (String) error.getProperty("message").getValue();
+				errorCode = error.getProperty("code").getValue();
+				errorMessage = error.getProperty("message").getValue();
 				// System.err.println("Found:" + getErrorMessage());
 				return true;
 			} else if (conditions != null) {
-				ArrayList failures = conditions.getAllMessages();
+				ArrayList<Message> failures = conditions.getAllMessages();
 				errorMessage = "Conditionele fouten:\n";
 				for (int i = 0; i < failures.size(); i++) {
-					Message current = (Message) failures.get(i);
-					String expression = (String) current.getProperty("FailedExpression").getValue();
-					String id = (String) current.getProperty("Id").getValue();
+					Message current = failures.get(i);
+//					String expression = current.getProperty("FailedExpression").getValue();
+					String id = current.getProperty("Id").getValue();
 					errorMessage = errorMessage + getConditionErrorDescription(id) + "\n";
 					// current.write(System.err);
 

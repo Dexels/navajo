@@ -39,11 +39,11 @@ public class TipiFireEvent extends TipiAction {
 				throw new TipiException("fireEvent: type parameter not found!");
 			}
 
-			Map eventParams = new HashMap();
-			Set params = getParameterNames();
+			Map<String,Object> eventParams = new HashMap<String,Object>();
+			Set<String> params = getParameterNames();
 
-			for (Iterator iter = params.iterator(); iter.hasNext();) {
-				String element = (String) iter.next();
+			for (Iterator<String> iter = params.iterator(); iter.hasNext();) {
+				String element = iter.next();
 				if (!element.equals("type") && !element.equals("path")) {
 					eventParams.put(element, getParameter(element));
 				}

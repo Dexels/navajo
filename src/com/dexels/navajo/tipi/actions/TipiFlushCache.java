@@ -1,5 +1,6 @@
 package com.dexels.navajo.tipi.actions;
 
+import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.internal.*;
 
 /**
@@ -22,5 +23,11 @@ import com.dexels.navajo.tipi.internal.*;
 public class TipiFlushCache extends TipiAction {
 	public void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
 		myContext.clearLazyDefinitionCache();
+		try {
+			myContext.getStateNavajo().write(System.err);
+		} catch (NavajoException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

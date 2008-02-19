@@ -19,6 +19,7 @@ import com.dexels.navajo.tipi.internal.*;
  * @deprecated
  */
 
+@Deprecated
 public class TipiRuntime extends TipiAction {
 	public void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
 		String txt = getParameter("command").getValue();

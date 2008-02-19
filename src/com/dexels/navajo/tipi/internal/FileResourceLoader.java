@@ -2,6 +2,7 @@ package com.dexels.navajo.tipi.internal;
 
 import java.io.*;
 import java.net.*;
+import java.util.*;
 
 public class FileResourceLoader extends ClassPathResourceLoader {
 
@@ -20,16 +21,24 @@ public class FileResourceLoader extends ClassPathResourceLoader {
 		
 	}
 	
+	@Override
+	public OutputStream writeResource(String resourceName) throws IOException {
+		File res = new File(baseFile,resourceName);
+		FileOutputStream fos = new FileOutputStream(res);
+		return fos;
+	}
+
+	
 	
 	public URL getResourceURL(String location) throws MalformedURLException {
-//		System.err.println("FILE: LOOKING FOR: "+location);
 		File f = null;
-		
 		if (baseFile==null) {
 			f = new File(location);
 		} else {
 			f = new File(baseFile,location);
 		}
+//		System.err.println("Opening file location: "+f.getAbsolutePath());
+
 		if(!f.exists()) {
 			return super.getResourceURL(location);
 		}
@@ -59,5 +68,22 @@ public class FileResourceLoader extends ClassPathResourceLoader {
 		}
 //		System.err.println("FileResourceLoader failed. Looking in classpath: "+location+" base: "+baseFile);
 		return super.getResourceStream(location);
+	}
+	
+	private void listAll(List<File> result, File current) {
+		File[] ff = current.listFiles();
+		for (int i = 0; i < ff.length; i++) {
+			if(ff[i].isDirectory()) {
+				listAll(result, ff[i]);
+			} else {
+				result.add(ff[i]);
+			}
+		}
+	}
+	
+	public List<File> getAllResources() throws IOException {
+		List<File> result = new ArrayList<File>();
+		listAll(result, baseFile);
+		return result;
 	}
 }

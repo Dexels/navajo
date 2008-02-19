@@ -7,10 +7,8 @@
 package com.dexels.navajo.tipi;
 
 import java.io.*;
-import java.util.*;
 
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.tipi.studio.*;
 
 public interface TipiStandaloneToplevelContainer {
 	// public void setResourceBaseDirectory(File f);

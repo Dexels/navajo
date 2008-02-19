@@ -2,6 +2,7 @@ package com.dexels.navajo.tipi.internal;
 
 import java.io.*;
 import java.net.*;
+import java.util.*;
 
 public class ClassPathResourceLoader implements TipiResourceLoader {
 
@@ -17,9 +18,18 @@ public class ClassPathResourceLoader implements TipiResourceLoader {
 	public InputStream getResourceStream(String location) throws IOException {
 		URL u = getClassResourceURL(location);
 		if (u == null) {
-			System.err.println("Problem getting resource from classpath: " + location);
 			return null;
 		}
 		return u.openStream();
 	}
+
+
+	public OutputStream writeResource(String resourceName) throws IOException {
+		throw new UnsupportedOperationException("The classpath resource loader is unable to write to the resource path");
+			
+	}
+
+	public List<File> getAllResources() throws IOException {
+		throw new UnsupportedOperationException("The classpath resource loader is unable to enumerate resources");
+}
 }

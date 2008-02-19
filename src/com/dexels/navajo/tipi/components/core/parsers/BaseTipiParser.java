@@ -33,6 +33,26 @@ abstract class BaseTipiParser extends TipiTypeParser {
 		}
 	}
 
+	protected Object getAttributePropertyValueByPath(TipiComponent source, String path) throws TipiException {
+		Property p = getAttributePropertyByPath(source, path);
+		if(p!=null) {
+			return p.getTypedValue();
+		}
+		throw new TipiException("Attributeproperty not found: "+path+" in component "+source.getPath());
+	}
+	protected Property getAttributePropertyByPath(TipiComponent source, String path) throws TipiException {
+		StringTokenizer counter = new StringTokenizer(path,":");
+		int tokencount = counter.countTokens();
+		if(tokencount==2) {
+			String tipiPath = counter.nextToken();
+			TipiComponent myTipi = getTipiComponent(source, tipiPath);
+			String value = counter.nextToken();
+			Property attrProp = myTipi.getAttributeProperty(value);
+			return attrProp;
+		}
+		throw new TipiException("Illegal attribute path property: "+path);
+	}
+	
 	protected Property getPropertyByPath(TipiComponent source, String path) {
 		StringTokenizer counter = new StringTokenizer(path,":");
 		int tokencount = counter.countTokens();
@@ -43,23 +63,24 @@ abstract class BaseTipiParser extends TipiTypeParser {
 			if(n!=null) {
 				return n.getProperty(propertyPath);
 			} else {
-				System.err.println("No navajo found. Availablie: "+myContext.getNavajoNames());
+				System.err.println("No navajo found. Available: "+myContext.getNavajoNames());
 				return null;
 			}
 		}
 					StringTokenizer st = new StringTokenizer(path, ":");
-		String partOne = st.nextToken();
+		// skip one:
+		st.nextToken();
 		String partTwo = st.nextToken();
 		String partThree = st.nextToken();
 		TipiComponent myTipi = getTipiComponent(source, path);
 		if (partTwo.equals(".")) {
 			return myTipi.getNavajo().getProperty(partThree);
 		} else {
+			
 			Message msg = (Message) myTipi.getValue(partTwo);
 			if (msg == null) {
 				return null;
 			}
-			// msg.write(System.err);
 			return msg.getProperty(partThree);
 		}
 	}
@@ -80,7 +101,8 @@ abstract class BaseTipiParser extends TipiTypeParser {
 			
 		}
 		StringTokenizer st = new StringTokenizer(path, ":");
-		String partOne = st.nextToken();
+		// skip one
+		st.nextToken();
 		String partTwo = st.nextToken();
 		TipiComponent myTipi = getTipiComponent(source, path);
 		if (partTwo.equals(".")) {

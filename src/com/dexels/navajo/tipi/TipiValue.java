@@ -2,6 +2,7 @@ package com.dexels.navajo.tipi;
 
 import java.util.*;
 
+import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.tipixml.*;
 
 /**
@@ -32,16 +33,20 @@ public class TipiValue {
 
 	private String defaultValue = null;
 	private boolean required = false;
-	private HashMap selectionMap;
+	private HashMap<String,String> selectionMap;
 
+	private final TipiComponent myComponent;
+	
 	// / private Object rawValue = null;
 
 	// private XMLElement myXml = null;
 
-	public TipiValue() {
+	public TipiValue(TipiComponent tc) {
+		myComponent = tc;
 	}
 
-	public TipiValue(XMLElement xe) {
+	public TipiValue(TipiComponent tc, XMLElement xe) {
+		myComponent = tc;
 		load(xe);
 	}
 
@@ -70,11 +75,11 @@ public class TipiValue {
 		this.defaultValue = xe.getStringAttribute("default", "");
 		required = xe.getBooleanAttribute("required", "true", "false", false);
 		if ("selection".equals(this.type)) {
-			Vector options = xe.getChildren();
+			List<XMLElement> options = xe.getChildren();
 			if (options.size() > 0) {
-				selectionMap = new HashMap();
+				selectionMap = new HashMap<String,String>();
 				for (int i = 0; i < options.size(); i++) {
-					XMLElement option = (XMLElement) options.get(i);
+					XMLElement option = options.get(i);
 					String value = option.getStringAttribute("value");
 					String description = option.getStringAttribute("description", value);
 					selectionMap.put(value, description);
@@ -85,6 +90,18 @@ public class TipiValue {
 		}
 	}
 
+	public Property getProperty(Object object) {
+		try {
+			Property p = NavajoFactory.getInstance().createProperty(myComponent.getContext().getStateNavajo(), getName(), getType(), "", 0, "", getDirection());
+			p.setAnyValue(object);
+			p.setSubType("tipitype="+type);
+			return p;
+		} catch (NavajoException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	public String toString() {
 		// if (myXml!=null) {
 		// return myXml.toString();
@@ -130,7 +147,7 @@ public class TipiValue {
 		required = r;
 	}
 
-	public void setSelectionMap(HashMap m) {
+	public void setSelectionMap(HashMap<String,String> m) {
 		selectionMap = m;
 	}
 
@@ -168,38 +185,22 @@ public class TipiValue {
 	}
 
 	public String getSelectionDescription(String value) {
-		return (String) selectionMap.get(value);
+		return selectionMap.get(value);
 	}
 
 	public String getValidSelectionValues() {
 		String values = "";
 		if (selectionMap != null) {
-			Set keySet = selectionMap.keySet();
-			Iterator it = keySet.iterator();
+			Set<String> keySet = selectionMap.keySet();
+			Iterator<String> it = keySet.iterator();
 			while (it.hasNext()) {
-				values = values + ", " + (String) it.next();
+				values = values + ", " + it.next();
 			}
 			return values.substring(2);
 		} else {
 			return null;
 		}
 	}
-
-	public Vector getValidSelectionValuesAsVector() { // Nice and easy for
-		// comboboxes
-		Vector values = new Vector();
-		if (selectionMap != null) {
-			Set keySet = selectionMap.keySet();
-			Iterator it = keySet.iterator();
-			while (it.hasNext()) {
-				values.add(it.next());
-			}
-			return values;
-		} else {
-			return null;
-		}
-	}
-
 	public String getValue() {
 		return value == null ? null : value.toString();
 	}

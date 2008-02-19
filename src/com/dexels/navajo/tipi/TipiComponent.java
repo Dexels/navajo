@@ -41,22 +41,9 @@ public interface TipiComponent extends ConditionErrorHandler, TipiEventListener,
 
 	public void setTransient(boolean b);
 
-	// public void highLight(Component c, Graphics g);
-	//
-	// public void paintGrid(Component c, Graphics g);
 	public TipiContext getContext();
 
-	public void parseStyle(String style);
-
-	public void addStyle(String key, String value);
-
-	public String getStyle(String key);
-
-	public void processStyles();
-
 	public void initContainer();
-
-	public Set getPossibleValues();
 
 	public void deregisterEvent(TipiEvent e);
 
@@ -70,7 +57,6 @@ public interface TipiComponent extends ConditionErrorHandler, TipiEventListener,
 
 	public void setValue(String name, Object value);
 
-	public void setValue(String name, Object value, TipiComponent source, TipiEvent event);
 
 	public Object getValue(String name);
 
@@ -88,10 +74,6 @@ public interface TipiComponent extends ConditionErrorHandler, TipiEventListener,
 	public void load(XMLElement def, XMLElement instance, TipiContext context) throws TipiException;
 
 	public void setId(String id);
-
-	public ArrayList getDefinedEvents();
-
-	public Map getClassDefValues();
 
 	public boolean isVisibleElement();
 
@@ -123,7 +105,6 @@ public interface TipiComponent extends ConditionErrorHandler, TipiEventListener,
 
 	public TipiComponent getTipiComponent(int i);
 
-	public ArrayList getChildComponentIdList();
 
 	public void disposeComponent();
 
@@ -151,8 +132,8 @@ public interface TipiComponent extends ConditionErrorHandler, TipiEventListener,
 
 	public void refreshParent();
 
-	public boolean performTipiEvent(String type, Map event, boolean sync) throws TipiException;
-
+	public boolean performTipiEvent(String type, Map<String,Object> event, boolean sync) throws TipiException;
+ 
 	public String getName();
 
 	public Object getContainer();
@@ -181,7 +162,7 @@ public interface TipiComponent extends ConditionErrorHandler, TipiEventListener,
 
 	public AttributeRef getAttributeRef(String name);
 
-	public ArrayList getEventList();
+	public List<TipiEvent> getEventList();
 
 	public void tipiLoaded();
 
@@ -211,8 +192,6 @@ public interface TipiComponent extends ConditionErrorHandler, TipiEventListener,
 
 	public boolean isValueSet(String name);
 
-	public void unSetValue(String name);
-
 	public String getExpression(String name);
 
 	public int getIndexOfComponent(TipiComponent source);
@@ -236,7 +215,7 @@ public interface TipiComponent extends ConditionErrorHandler, TipiEventListener,
 	 * gets all the property components under this property, and also under its
 	 * (recursive) children
 	 */
-	public ArrayList getRecursiveProperties();
+	public List<TipiComponent> getRecursiveProperties();
 
 	/**
 	 * 
@@ -245,5 +224,9 @@ public interface TipiComponent extends ConditionErrorHandler, TipiEventListener,
 
 	public String getAlias(String expression);
 
-	public String setAlias(String name, String value);
+	public void setAlias(String name, String value);
+
+	public Message getStateMessage();
+
+	public Property getAttributeProperty(String value);
 }

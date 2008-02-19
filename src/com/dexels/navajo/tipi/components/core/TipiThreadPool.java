@@ -27,10 +27,10 @@ public class TipiThreadPool {
 	private final ThreadGroup myGroup = new ThreadGroup("TipiThreadGroup");
 	// private final Set myThreadSet = Collections.synchronizedSet(new
 	// HashSet());
-	private final List myWaitingQueue = Collections.synchronizedList(new ArrayList());
+	private final List<TipiExecutable> myWaitingQueue = Collections.synchronizedList(new ArrayList<TipiExecutable>());
 	private final TipiContext myContext;
-	private final Map myListenerMap = Collections.synchronizedMap(new HashMap());
-	private List myThreadCollection = Collections.synchronizedList(new ArrayList());
+	private final Map<TipiExecutable,TipiEventListener> myListenerMap = Collections.synchronizedMap(new HashMap<TipiExecutable,TipiEventListener>());
+	private List<TipiThread> myThreadCollection = Collections.synchronizedList(new ArrayList<TipiThread>());
 
 	private boolean running = true;
 
@@ -68,7 +68,7 @@ public class TipiThreadPool {
 		if (myWaitingQueue.size() == 0) {
 			return null;
 		}
-		TipiExecutable te = (TipiExecutable) myWaitingQueue.get(0);
+		TipiExecutable te = myWaitingQueue.get(0);
 		myWaitingQueue.remove(0);
 		return te;
 	}
@@ -87,8 +87,8 @@ public class TipiThreadPool {
 
 	public void shutdown() {
 		setRunning(false);
-		for (Iterator iter = myThreadCollection.iterator(); iter.hasNext();) {
-			TipiThread item = (TipiThread) iter.next();
+		for (Iterator<TipiThread> iter = myThreadCollection.iterator(); iter.hasNext();) {
+			TipiThread item = iter.next();
 			// item.shutdown();
 			item.interrupt();
 		}
@@ -109,22 +109,11 @@ public class TipiThreadPool {
 			}
 		}
 		throw new ThreadShutdownException();
-		// return null;
 	}
 
-	// private synchronized void enqueueExecutable(TipiEvent te) throws
-	// TipiException {
-	// if (poolSize==0) {
-	// te.performAction((TipiEvent)te);
-	// }
-	// else {
-	// myWaitingQueue.add(te);
-	// notify();
-	// }
-	// }
 
 	public TipiEventListener getEventListener(TipiExecutable te) {
-		return (TipiEventListener) myListenerMap.get(te);
+		return myListenerMap.get(te);
 	}
 
 	public void removeEventListener(TipiEvent te) {
@@ -134,7 +123,11 @@ public class TipiThreadPool {
 	public void enqueueExecutable(TipiExecutable exe) throws TipiException {
 		if (poolSize == 0) {
 			// For echo:
-			exe.getEvent().performAction(exe.getEvent(), exe.getEvent(), 0);
+			try {
+				exe.getEvent().performAction(exe.getEvent(), exe.getEvent(), 0);
+			} catch (TipiBreakException e) {
+				e.printStackTrace();
+			}
 		} else {
 			myWaitingQueue.add(exe);
 			awaken();
@@ -142,11 +135,6 @@ public class TipiThreadPool {
 	}
 
 	private synchronized void awaken() {
-		// for (Iterator iter = myThreadCollection.iterator(); iter.hasNext();)
-		// {
-		// TipiThread element = (TipiThread) iter.next();
-		// element.interrupt();
-		// }
 		notifyAll();
 	}
 

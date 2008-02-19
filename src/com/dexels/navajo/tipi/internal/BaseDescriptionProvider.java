@@ -6,7 +6,7 @@ import com.dexels.navajo.tipi.*;
 
 public abstract class BaseDescriptionProvider implements DescriptionProvider {
 
-	protected final Map myDescriptionMap = new HashMap();
+	protected final Map<String,String> myDescriptionMap = new HashMap<String,String>();
 	protected final TipiContext myContext;
 
 	public BaseDescriptionProvider(TipiContext myContext) {
@@ -14,8 +14,7 @@ public abstract class BaseDescriptionProvider implements DescriptionProvider {
 	}
 
 	public String getDescription(String id) {
-		String desc = (String) myDescriptionMap.get(id);
-		System.err.println("Retriqeving description: " + desc);
+		String desc = myDescriptionMap.get(id);
 		return desc;
 	}
 

@@ -33,19 +33,15 @@ public abstract class TipiBaseQuestionGroup extends TipiDataComponentImpl {
 
 	protected String questionGroupDefinitionName = null;
 
-	protected final ArrayList myQuestions = new ArrayList();
+	protected final List<TipiBaseQuestion> myQuestions = new ArrayList<TipiBaseQuestion>();
 
 	protected TipiBaseQuestionList myQuestionList = null;
-
-	// JScrollPane jp = null;
-	//
-	// JPanel panel = null;
 
 	private String subComponent = null;
 
 	private String subConstraint = null;
 
-	private String subQuestionPath;
+//	private String subQuestionPath;
 
 	public TipiBaseQuestionGroup() {
 	}
@@ -53,39 +49,6 @@ public abstract class TipiBaseQuestionGroup extends TipiDataComponentImpl {
 	public void setQuestionList(TipiBaseQuestionList tql) {
 		myQuestionList = tql;
 	}
-
-	// public Object createContainer() {
-	// jp = new JScrollPane();
-	// panel = new JPanel();
-	// jp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-	// jp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-	// TipiHelper th = new TipiSwingHelper();
-	// th.initHelper(this);
-	// addHelper(th);
-	// jp.getViewport().add(panel);
-	// // panel.setBackground(Color.RED);
-	// // addToContainer(new JButton("affe"),null);
-	// // panel.setLayout(new BoxLayout(panel,BoxLayout.Y_AXIS));
-	// panel.setLayout(new GridBagLayout());
-	// return jp;
-	// }
-	//
-	// public void setContainerLayout(final Object layout) {
-	// // runSyncInEventThread(new Runnable() {
-	// // public void run() {
-	// // panel.setLayout( (LayoutManager) layout);
-	// // }
-	// // });
-	// }
-	//
-	// public void addToContainer(Object c, Object constraints) {
-	// int currentCount = getChildCount();
-	// // panel.add((Component) c);
-	// panel.add((Component) c, new GridBagConstraints(0, currentCount, 1, 1, 1,
-	// 0, GridBagConstraints.NORTHWEST, GridBagConstraints.BOTH,
-	// new Insets(0, 0, 0, 0), 0, 0));
-	// // ((JComponent)c).
-	// }
 
 	public void removeFromContainer(Object c) {
 		// panel.remove((Component)c);
@@ -108,9 +71,9 @@ public abstract class TipiBaseQuestionGroup extends TipiDataComponentImpl {
 			subConstraint = (String) object;
 		}
 
-		if (name.equals("subQuestionPath")) {
-			subQuestionPath = (String) object;
-		}
+//		if (name.equals("subQuestionPath")) {
+//			subQuestionPath = (String) object;
+//		}
 
 		super.setComponentValue(name, object);
 	}
@@ -125,9 +88,9 @@ public abstract class TipiBaseQuestionGroup extends TipiDataComponentImpl {
 		return super.getComponentValue(name);
 	}
 
-	private void recursiveListQuestions(TipiComponent start, ArrayList result) {
+	private void recursiveListQuestions(TipiComponent start, List<TipiBaseQuestion> result) {
 		if (start instanceof TipiBaseQuestion) {
-			result.add(start);
+			result.add((TipiBaseQuestion)start);
 		}
 		for (int i = 0; i < start.getChildCount(); i++) {
 			recursiveListQuestions(start.getTipiComponent(i), result);
@@ -135,11 +98,11 @@ public abstract class TipiBaseQuestionGroup extends TipiDataComponentImpl {
 	}
 
 	public boolean isValid() {
-		ArrayList l = new ArrayList();
+		List<TipiBaseQuestion> l = new ArrayList<TipiBaseQuestion>();
 		recursiveListQuestions(this, l);
 		// System.err.println("QUESTIONS:::: "+l.size());
 		for (int i = 0; i < l.size(); i++) {
-			TipiBaseQuestion tq = (TipiBaseQuestion) l.get(i);
+			TipiBaseQuestion tq = l.get(i);
 			if (!tq.isRecursiveValid()) {
 				return false;
 			}
@@ -162,23 +125,13 @@ public abstract class TipiBaseQuestionGroup extends TipiDataComponentImpl {
 		}
 
 		if (subComponent != null) {
-			// System.err.println("Looking for: "+subComponent+" children #
-			// "+getChildCount());
-			for (int i = 0; i < getChildCount(); i++) {
-				TipiComponent tc = getTipiComponent(i);
-				// System.err.println("Got: "+tc.getId()+" class:
-				// "+tc.toString());
-			}
 			currentComponent = getTipiComponentByPath(subComponent);
 			if (currentComponent == null) {
-				// System.err.println("NO COMPONENT FOUND");
 				currentComponent = this;
 			}
 
 		}
-		ArrayList localprops = getRecursiveProperties();
-
-		// TipiContext.debugTipiComponentTree(this, 5);
+		List<TipiComponent> localprops = getRecursiveProperties();
 		for (int i = 0; i < localprops.size(); i++) {
 			PropertyComponent o = (PropertyComponent) localprops.get(i);
 			Property pp = m.getProperty(o.getPropertyName());
@@ -197,10 +150,6 @@ public abstract class TipiBaseQuestionGroup extends TipiDataComponentImpl {
 						questionDefinitionName, subConstraint);
 				tc.setValue("messagePath", current.getFullMessageName());
 				tc.setValue("questionDefinitionName", questionDefinitionName);
-				// System.err.println("BaseQuestionGroup. Setting
-				// subQuestionPAth to: "+subQuestionPath);
-				// tc.setValue("subQuestionPath", subQuestionPath);
-
 				tc.setQuestionGroup(this);
 				tc.setQuestionList(myQuestionList);
 				tc.loadData(n, myContext);
@@ -229,7 +178,7 @@ public abstract class TipiBaseQuestionGroup extends TipiDataComponentImpl {
 
 	public void updateQuestions() {
 		for (int i = 0; i < myQuestions.size(); i++) {
-			TipiBaseQuestion tq = (TipiBaseQuestion) myQuestions.get(i);
+			TipiBaseQuestion tq = myQuestions.get(i);
 			tq.updateSubQuestions();
 		}
 

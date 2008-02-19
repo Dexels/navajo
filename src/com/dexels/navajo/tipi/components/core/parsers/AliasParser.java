@@ -1,7 +1,5 @@
 package com.dexels.navajo.tipi.components.core.parsers;
 
-import java.util.*;
-
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.internal.*;
@@ -25,9 +23,7 @@ import com.dexels.navajo.tipi.internal.*;
  */
 
 public class AliasParser extends BaseTipiParser {
-	public AliasParser() {
-	}
-
+	
 	private String findAlias(TipiComponent current, String expression) {
 		if(current==null) {
 			return null;
@@ -40,6 +36,7 @@ public class AliasParser extends BaseTipiParser {
 		
 	}
 	
+	@Override
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
 		String alias = findAlias(source, expression);
 		if(alias==null) {

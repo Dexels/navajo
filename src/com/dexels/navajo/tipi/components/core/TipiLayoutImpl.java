@@ -33,9 +33,9 @@ public abstract class TipiLayoutImpl extends TipiLayout {
 	public void loadLayout(XMLElement def, TipiComponent t) throws com.dexels.navajo.tipi.TipiException {
 		myInstanceElement = def;
 		myComponent = t;
-		Vector v = myInstanceElement.getChildren();
+		List<XMLElement> v = myInstanceElement.getChildren();
 		for (int i = 0; i < v.size(); i++) {
-			XMLElement child = (XMLElement) v.get(i);
+			XMLElement child = v.get(i);
 			String constraintString = child.getStringAttribute("constraint");
 			if (!child.getName().equals("event")) {
 				Object constraint = parseConstraint(constraintString, i);

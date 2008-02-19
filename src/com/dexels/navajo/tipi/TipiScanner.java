@@ -10,10 +10,10 @@ import com.dexels.navajo.document.jaxpimpl.xml.*;
 
 public class TipiScanner {
 
-	private static HashMap results = new HashMap();
-	private static HashMap revResults = new HashMap();
+	private static HashMap<String,String> results = new HashMap<String,String>();
+	private static HashMap<String,String> revResults = new HashMap<String,String>();
 
-	private static HashSet preloadSet = new HashSet();
+	private static HashSet<String> preloadSet = new HashSet<String>();
 	private static int conflictcount = 0;
 
 	/**
@@ -63,11 +63,11 @@ public class TipiScanner {
 
 	private static void dumpCurrent(String filename, String locale, String extension) throws IOException {
 		FileWriter fw = new FileWriter(filename + "_" + locale + ".properties");
-		Set s = results.keySet();
-		SortedSet ss = new TreeSet(s);
-		for (Iterator iter = ss.iterator(); iter.hasNext();) {
+		Set<String> s = results.keySet();
+		SortedSet<String> ss = new TreeSet<String>(s);
+		for (Iterator<String> iter = ss.iterator(); iter.hasNext();) {
 
-			String element = (String) iter.next();
+			String element = iter.next();
 			fw.write(element + " " + results.get(element) + "\n");
 			System.err.println("Result: " + element + " results: " + results.get(element));
 		}
@@ -75,9 +75,9 @@ public class TipiScanner {
 		fw.close();
 
 		fw = new FileWriter(filename + "_" + locale + ".sql");
-		for (Iterator iter = ss.iterator(); iter.hasNext();) {
+		for (Iterator<String> iter = ss.iterator(); iter.hasNext();) {
 
-			String element = (String) iter.next();
+			String element = iter.next();
 			String line = "INSERT INTO propertydescription (descriptionid,locale,name,objectid,objecttype,description,lastupdate,updateby,context,sublocale) VALUES ( propertydescription_seq.nextval, 'nl', '"
 					+ element + "', null, null, " + results.get(element) + ", sysdate, 'SLCASPUSER','tipi','club' );";
 			// System.err.println("Result: "+element+" results:

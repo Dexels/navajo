@@ -33,4 +33,6 @@ public interface TipiExecutable {
 	public void setEvent(TipiEvent e);
 	// public TipiEvent getEvent();
 
+	public String getBlockParam(String key);
+
 }

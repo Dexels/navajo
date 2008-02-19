@@ -1,7 +1,6 @@
 package com.dexels.navajo.tipi.actions;
 
 import java.io.*;
-import java.util.*;
 
 import javax.xml.parsers.*;
 import javax.xml.transform.*;
@@ -13,7 +12,6 @@ import org.xml.sax.*;
 
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.internal.*;
-import com.sun.org.apache.xerces.internal.dom.*;
 
 /**
  * <p>
@@ -67,7 +65,7 @@ public class TipiConvertTipi extends TipiAction {
 		try {
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder = factory.newDocumentBuilder();
-			DOMImplementation impl = builder.getDOMImplementation();
+//			DOMImplementation impl = builder.getDOMImplementation();
 			Document d = builder.parse(file);
 
 			int i = 0;
@@ -96,13 +94,10 @@ public class TipiConvertTipi extends TipiAction {
 				e.printStackTrace();
 			}
 		} catch (SAXException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

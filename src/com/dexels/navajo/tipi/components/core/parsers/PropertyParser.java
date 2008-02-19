@@ -26,14 +26,24 @@ public class PropertyParser extends BaseTipiParser {
 		return getPropertyValue(source, expression);
 	}
 
-	private Object getPropertyValue(TipiComponent source, String path) {
-		Property p = getPropertyByPath(source, path);
-		if (p != null) {
-			return p.getTypedValue();
+	private Object getPropertyValue(TipiComponent source, String expression) {
+		if(expression.startsWith("!")) {
+			try {
+				return getAttributePropertyValueByPath(source, expression.substring(1));
+			} catch (TipiException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return null;
+			}
+		} else {
+			Property p = getPropertyByPath(source, expression);
+			if (p != null) {
+				return p.getTypedValue();
+			}
 		}
 		return null;
 	}
-
+	
 	public String toString(Object o, TipiComponent source) {
 		return "Not possible";
 	}

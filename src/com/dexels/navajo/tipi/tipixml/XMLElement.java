@@ -132,7 +132,7 @@ public class XMLElement implements java.io.Serializable {
 	 * </dd>
 	 * </dl>
 	 */
-	private Hashtable attributes;
+	private Map<String,String> attributes;
 
 	/**
 	 * Child elements of the element.
@@ -149,7 +149,7 @@ public class XMLElement implements java.io.Serializable {
 	 * </dd>
 	 * </dl>
 	 */
-	private Vector children;
+	private List<XMLElement> children;
 
 	/**
 	 * The name of the element.
@@ -204,7 +204,7 @@ public class XMLElement implements java.io.Serializable {
 	 * </dd>
 	 * </dl>
 	 */
-	private Hashtable entities;
+	private Hashtable<String,char[]> entities;
 
 	/**
 	 * The line number where the element starts.
@@ -273,6 +273,9 @@ public class XMLElement implements java.io.Serializable {
 
 	private int startOffset;
 
+	private final Map<String,Integer> startOffsetMap = new HashMap<String,Integer>();
+	private final Map<String,Integer> endOffsetMap = new HashMap<String,Integer>();
+
 	// private final Stack parseStack = new Stack();
 
 	/**
@@ -305,7 +308,7 @@ public class XMLElement implements java.io.Serializable {
 	 *      XMLElement(Hashtable, boolean)
 	 */
 	public XMLElement() {
-		this(new Hashtable(), false, true, true);
+		this(new Hashtable<String,char[]>(), false, true, true);
 	}
 
 	/**
@@ -350,7 +353,7 @@ public class XMLElement implements java.io.Serializable {
 	 * @see nanoxml.XMLElement#XMLElement(java.util.Hashtable,boolean)
 	 *      XMLElement(Hashtable, boolean)
 	 */
-	public XMLElement(Hashtable entities) {
+	public XMLElement(Hashtable<String,char[]> entities) {
 		this(entities, false, true, true);
 	}
 
@@ -390,7 +393,7 @@ public class XMLElement implements java.io.Serializable {
 	 *      XMLElement(Hashtable, boolean)
 	 */
 	public XMLElement(boolean skipLeadingWhitespace) {
-		this(new Hashtable(), skipLeadingWhitespace, true, true);
+		this(new Hashtable<String,char[]>(), skipLeadingWhitespace, true, true);
 	}
 
 	/**
@@ -438,7 +441,7 @@ public class XMLElement implements java.io.Serializable {
 	 * @see nanoxml.XMLElement#XMLElement(java.util.Hashtable)
 	 *      XMLElement(Hashtable)
 	 */
-	public XMLElement(Hashtable entities, boolean skipLeadingWhitespace) {
+	public XMLElement(Hashtable<String,char[]> entities, boolean skipLeadingWhitespace) {
 		this(entities, skipLeadingWhitespace, true, true);
 	}
 
@@ -487,7 +490,7 @@ public class XMLElement implements java.io.Serializable {
 	 * @see nanoxml.XMLElement#XMLElement(java.util.Hashtable,boolean)
 	 *      XMLElement(Hashtable, boolean)
 	 */
-	public XMLElement(Hashtable entities, boolean skipLeadingWhitespace, boolean ignoreCase) {
+	public XMLElement(Hashtable<String,char[]> entities, boolean skipLeadingWhitespace, boolean ignoreCase) {
 		this(entities, skipLeadingWhitespace, true, ignoreCase);
 	}
 
@@ -542,23 +545,15 @@ public class XMLElement implements java.io.Serializable {
 	 * 
 	 * @see nanoxml.XMLElement#createAnotherElement()
 	 */
-	protected XMLElement(Hashtable entities, boolean skipLeadingWhitespace, boolean fillBasicConversionTable, boolean ignoreCase) {
+	protected XMLElement(Hashtable<String,char[]> entities, boolean skipLeadingWhitespace, boolean fillBasicConversionTable, boolean ignoreCase) {
 		this.ignoreWhitespace = skipLeadingWhitespace;
 		this.ignoreCase = ignoreCase;
 		this.name = null;
 		this.contents = "";
-		this.attributes = new Hashtable();
-		this.children = new Vector();
+		this.attributes = new Hashtable<String,String>();
+		this.children = new Vector<XMLElement>();
 		this.entities = entities;
-		Enumeration en = this.entities.keys();
-		while (en.hasMoreElements()) {
-			Object key = en.nextElement();
-			Object value = this.entities.get(key);
-			if (value instanceof String) {
-				value = ((String) value).toCharArray();
-				this.entities.put(key, value);
-			}
-		}
+//		Enumeration<String> en = this.entities.keys();
 		if (fillBasicConversionTable) {
 			this.entities.put("amp", new char[] { '&' });
 			this.entities.put("quot", new char[] { '"' });
@@ -605,7 +600,7 @@ public class XMLElement implements java.io.Serializable {
 	 *      removeChild(XMLElement)
 	 */
 	public void addChild(XMLElement child) {
-		this.children.addElement(child);
+		this.children.add(child);
 		child.setParent(this);
 	}
 
@@ -667,20 +662,6 @@ public class XMLElement implements java.io.Serializable {
 		this.attributes.put(name, value.toString());
 	}
 
-	/**
-	 * Adds or modifies an attribute.
-	 * 
-	 * @param name
-	 *            The name of the attribute.
-	 * @param value
-	 *            The value of the attribute.
-	 * 
-	 * @deprecated Use {@link #setAttribute(java.lang.String, java.lang.Object)
-	 *             setAttribute} instead.
-	 */
-	public void addProperty(String name, Object value) {
-		this.setAttribute(name, value);
-	}
 
 	/**
 	 * Adds or modifies an attribute.
@@ -734,20 +715,6 @@ public class XMLElement implements java.io.Serializable {
 		this.attributes.put(name, Integer.toString(value));
 	}
 
-	/**
-	 * Adds or modifies an attribute.
-	 * 
-	 * @param name
-	 *            The name of the attribute.
-	 * @param value
-	 *            The value of the attribute.
-	 * 
-	 * @deprecated Use {@link #setIntAttribute(java.lang.String, int)
-	 *             setIntAttribute} instead.
-	 */
-	public void addProperty(String key, int value) {
-		this.setIntAttribute(key, value);
-	}
 
 	/**
 	 * Adds or modifies an attribute.
@@ -801,20 +768,6 @@ public class XMLElement implements java.io.Serializable {
 		this.attributes.put(name, Double.toString(value));
 	}
 
-	/**
-	 * Adds or modifies an attribute.
-	 * 
-	 * @param name
-	 *            The name of the attribute.
-	 * @param value
-	 *            The value of the attribute.
-	 * 
-	 * @deprecated Use {@link #setDoubleAttribute(java.lang.String, double)
-	 *             setDoubleAttribute} instead.
-	 */
-	public void addProperty(String name, double value) {
-		this.setDoubleAttribute(name, value);
-	}
 
 	/**
 	 * Returns the number of child elements of the element.
@@ -890,19 +843,11 @@ public class XMLElement implements java.io.Serializable {
 	 *      java.lang.String, java.lang.String, boolean)
 	 *      getBooleanAttribute(String, String, String, boolean)
 	 */
-	public Enumeration enumerateAttributeNames() {
-		return this.attributes.keys();
+	public Iterator<String> enumerateAttributeNames() {
+		return this.attributes.keySet().iterator();
 	}
 
-	/**
-	 * Enumerates the attribute names.
-	 * 
-	 * @deprecated Use {@link #enumerateAttributeNames()
-	 *             enumerateAttributeNames} instead.
-	 */
-	public Enumeration enumeratePropertyNames() {
-		return this.enumerateAttributeNames();
-	}
+
 
 	/**
 	 * Enumerates the child elements.
@@ -922,8 +867,8 @@ public class XMLElement implements java.io.Serializable {
 	 * @see nanoxml.XMLElement#removeChild(nanoxml.XMLElement)
 	 *      removeChild(XMLElement)
 	 */
-	public Enumeration enumerateChildren() {
-		return this.children.elements();
+	public Iterator<XMLElement> enumerateChildren() {
+		return this.children.iterator();
 	}
 
 	/**
@@ -944,26 +889,11 @@ public class XMLElement implements java.io.Serializable {
 	 * @see nanoxml.XMLElement#removeChild(nanoxml.XMLElement)
 	 *      removeChild(XMLElement)
 	 */
-	public Vector getChildren() {
-		// try {
-		// return (Vector) this.children.clone();
-		// } catch (Exception e) {
-		// // this never happens, however, some Java compilers are so
-		// // braindead that they require this exception clause
-		// return null;
-		// }
+	public List<XMLElement> getChildren() {
+
 		return children;
 	}
 
-	/**
-	 * Returns the PCDATA content of the object. If there is no such content,
-	 * <CODE>null</CODE> is returned.
-	 * 
-	 * @deprecated Use {@link #getContent() getContent} instead.
-	 */
-	public String getContents() {
-		return this.getContent();
-	}
 
 	/**
 	 * Returns the PCDATA content of the object. If there is no such content,
@@ -1100,68 +1030,6 @@ public class XMLElement implements java.io.Serializable {
 		return value;
 	}
 
-	/**
-	 * Returns an attribute by looking up a key in a hashtable. If the attribute
-	 * doesn't exist, the value corresponding to defaultKey is returned.
-	 * <P>
-	 * As an example, if valueSet contains the mapping <code>"one" =>
-	 * "1"</code>
-	 * and the element contains the attribute <code>attr="one"</code>, then
-	 * <code>getAttribute("attr", mapping, defaultKey, false)</code> returns
-	 * <code>"1"</code>.
-	 * 
-	 * @param name
-	 *            The name of the attribute.
-	 * @param valueSet
-	 *            Hashtable mapping keys to values.
-	 * @param defaultKey
-	 *            Key to use if the attribute is missing.
-	 * @param allowLiterals
-	 *            <code>true</code> if literals are valid.
-	 * 
-	 * </dl>
-	 * <dl>
-	 * <dt><b>Preconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li><code>name != null</code>
-	 * <li><code>name</code> is a valid XML identifier
-	 * <li><code>valueSet</code> != null
-	 * <li>the keys of <code>valueSet</code> are strings
-	 * </ul>
-	 * </dd>
-	 * </dl>
-	 * <dl>
-	 * 
-	 * @see nanoxml.XMLElement#setAttribute(java.lang.String, java.lang.Object)
-	 *      setAttribute(String, Object)
-	 * @see nanoxml.XMLElement#removeAttribute(java.lang.String)
-	 *      removeAttribute(String)
-	 * @see nanoxml.XMLElement#enumerateAttributeNames()
-	 * @see nanoxml.XMLElement#getAttribute(java.lang.String)
-	 *      getAttribute(String)
-	 * @see nanoxml.XMLElement#getAttribute(java.lang.String, java.lang.Object)
-	 *      getAttribute(String, Object)
-	 */
-	public Object getAttribute(String name, Hashtable valueSet, String defaultKey, boolean allowLiterals) {
-		if (this.ignoreCase) {
-			name = name.toUpperCase();
-		}
-		Object key = this.attributes.get(name);
-		Object result;
-		if (key == null) {
-			key = defaultKey;
-		}
-		result = valueSet.get(key);
-		if (result == null) {
-			if (allowLiterals) {
-				result = key;
-			} else {
-				throw this.invalidValue(name, (String) key);
-			}
-		}
-		return result;
-	}
 
 	/**
 	 * Returns an attribute of the element. If the attribute doesn't exist,
@@ -1233,53 +1101,6 @@ public class XMLElement implements java.io.Serializable {
 		return (String) this.getAttribute(name, defaultValue);
 	}
 
-	/**
-	 * Returns an attribute by looking up a key in a hashtable. If the attribute
-	 * doesn't exist, the value corresponding to defaultKey is returned.
-	 * <P>
-	 * As an example, if valueSet contains the mapping <code>"one" =>
-	 * "1"</code>
-	 * and the element contains the attribute <code>attr="one"</code>, then
-	 * <code>getAttribute("attr", mapping, defaultKey, false)</code> returns
-	 * <code>"1"</code>.
-	 * 
-	 * @param name
-	 *            The name of the attribute.
-	 * @param valueSet
-	 *            Hashtable mapping keys to values.
-	 * @param defaultKey
-	 *            Key to use if the attribute is missing.
-	 * @param allowLiterals
-	 *            <code>true</code> if literals are valid.
-	 * 
-	 * </dl>
-	 * <dl>
-	 * <dt><b>Preconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li><code>name != null</code>
-	 * <li><code>name</code> is a valid XML identifier
-	 * <li><code>valueSet</code> != null
-	 * <li>the keys of <code>valueSet</code> are strings
-	 * <li>the values of <code>valueSet</code> are strings
-	 * </ul>
-	 * </dd>
-	 * </dl>
-	 * <dl>
-	 * 
-	 * @see nanoxml.XMLElement#setAttribute(java.lang.String, java.lang.Object)
-	 *      setAttribute(String, Object)
-	 * @see nanoxml.XMLElement#removeAttribute(java.lang.String)
-	 *      removeAttribute(String)
-	 * @see nanoxml.XMLElement#enumerateAttributeNames()
-	 * @see nanoxml.XMLElement#getStringAttribute(java.lang.String)
-	 *      getStringAttribute(String)
-	 * @see nanoxml.XMLElement#getStringAttribute(java.lang.String,
-	 *      java.lang.String) getStringAttribute(String, String)
-	 */
-	public String getStringAttribute(String name, Hashtable valueSet, String defaultKey, boolean allowLiterals) {
-		return (String) this.getAttribute(name, valueSet, defaultKey, allowLiterals);
-	}
 
 	/**
 	 * Returns an attribute of the element. If the attribute doesn't exist,
@@ -1347,7 +1168,7 @@ public class XMLElement implements java.io.Serializable {
 		if (this.ignoreCase) {
 			name = name.toUpperCase();
 		}
-		String value = (String) this.attributes.get(name);
+		String value = this.attributes.get(name);
 		if (value == null) {
 			return defaultValue;
 		} else {
@@ -1359,75 +1180,6 @@ public class XMLElement implements java.io.Serializable {
 		}
 	}
 
-	/**
-	 * Returns an attribute by looking up a key in a hashtable. If the attribute
-	 * doesn't exist, the value corresponding to defaultKey is returned.
-	 * <P>
-	 * As an example, if valueSet contains the mapping <code>"one" => 1</code>
-	 * and the element contains the attribute <code>attr="one"</code>, then
-	 * <code>getIntAttribute("attr", mapping, defaultKey, false)</code>
-	 * returns <code>1</code>.
-	 * 
-	 * @param name
-	 *            The name of the attribute.
-	 * @param valueSet
-	 *            Hashtable mapping keys to values.
-	 * @param defaultKey
-	 *            Key to use if the attribute is missing.
-	 * @param allowLiteralNumbers
-	 *            <code>true</code> if literal numbers are valid.
-	 * 
-	 * </dl>
-	 * <dl>
-	 * <dt><b>Preconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li><code>name != null</code>
-	 * <li><code>name</code> is a valid XML identifier
-	 * <li><code>valueSet</code> != null
-	 * <li>the keys of <code>valueSet</code> are strings
-	 * <li>the values of <code>valueSet</code> are Integer objects
-	 * <li><code>defaultKey</code> is either <code>null</code>, a key in
-	 * <code>valueSet</code> or an integer.
-	 * </ul>
-	 * </dd>
-	 * </dl>
-	 * <dl>
-	 * 
-	 * @see nanoxml.XMLElement#setIntAttribute(java.lang.String, int)
-	 *      setIntAttribute(String, int)
-	 * @see nanoxml.XMLElement#enumerateAttributeNames()
-	 * @see nanoxml.XMLElement#getIntAttribute(java.lang.String)
-	 *      getIntAttribute(String)
-	 * @see nanoxml.XMLElement#getIntAttribute(java.lang.String, int)
-	 *      getIntAttribute(String, int)
-	 */
-	public int getIntAttribute(String name, Hashtable valueSet, String defaultKey, boolean allowLiteralNumbers) {
-		if (this.ignoreCase) {
-			name = name.toUpperCase();
-		}
-		Object key = this.attributes.get(name);
-		Integer result;
-		if (key == null) {
-			key = defaultKey;
-		}
-		try {
-			result = (Integer) valueSet.get(key);
-		} catch (ClassCastException e) {
-			throw this.invalidValueSet(name);
-		}
-		if (result == null) {
-			if (!allowLiteralNumbers) {
-				throw this.invalidValue(name, (String) key);
-			}
-			try {
-				result = Integer.valueOf((String) key);
-			} catch (NumberFormatException e) {
-				throw this.invalidValue(name, (String) key);
-			}
-		}
-		return result.intValue();
-	}
 
 	/**
 	 * Returns an attribute of the element. If the attribute doesn't exist,
@@ -1495,7 +1247,7 @@ public class XMLElement implements java.io.Serializable {
 		if (this.ignoreCase) {
 			name = name.toUpperCase();
 		}
-		String value = (String) this.attributes.get(name);
+		String value = this.attributes.get(name);
 		if (value == null) {
 			return defaultValue;
 		} else {
@@ -1507,76 +1259,6 @@ public class XMLElement implements java.io.Serializable {
 		}
 	}
 
-	/**
-	 * Returns an attribute by looking up a key in a hashtable. If the attribute
-	 * doesn't exist, the value corresponding to defaultKey is returned.
-	 * <P>
-	 * As an example, if valueSet contains the mapping <code>"one" =&gt;
-	 * 1.0</code>
-	 * and the element contains the attribute <code>attr="one"</code>, then
-	 * <code>getDoubleAttribute("attr", mapping, defaultKey, false)</code>
-	 * returns <code>1.0</code>.
-	 * 
-	 * @param name
-	 *            The name of the attribute.
-	 * @param valueSet
-	 *            Hashtable mapping keys to values.
-	 * @param defaultKey
-	 *            Key to use if the attribute is missing.
-	 * @param allowLiteralNumbers
-	 *            <code>true</code> if literal numbers are valid.
-	 * 
-	 * </dl>
-	 * <dl>
-	 * <dt><b>Preconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li><code>name != null</code>
-	 * <li><code>name</code> is a valid XML identifier
-	 * <li><code>valueSet != null</code>
-	 * <li>the keys of <code>valueSet</code> are strings
-	 * <li>the values of <code>valueSet</code> are Double objects
-	 * <li><code>defaultKey</code> is either <code>null</code>, a key in
-	 * <code>valueSet</code> or a double.
-	 * </ul>
-	 * </dd>
-	 * </dl>
-	 * <dl>
-	 * 
-	 * @see nanoxml.XMLElement#setDoubleAttribute(java.lang.String, double)
-	 *      setDoubleAttribute(String, double)
-	 * @see nanoxml.XMLElement#enumerateAttributeNames()
-	 * @see nanoxml.XMLElement#getDoubleAttribute(java.lang.String)
-	 *      getDoubleAttribute(String)
-	 * @see nanoxml.XMLElement#getDoubleAttribute(java.lang.String, double)
-	 *      getDoubleAttribute(String, double)
-	 */
-	public double getDoubleAttribute(String name, Hashtable valueSet, String defaultKey, boolean allowLiteralNumbers) {
-		if (this.ignoreCase) {
-			name = name.toUpperCase();
-		}
-		Object key = this.attributes.get(name);
-		Double result;
-		if (key == null) {
-			key = defaultKey;
-		}
-		try {
-			result = (Double) valueSet.get(key);
-		} catch (ClassCastException e) {
-			throw this.invalidValueSet(name);
-		}
-		if (result == null) {
-			if (!allowLiteralNumbers) {
-				throw this.invalidValue(name, (String) key);
-			}
-			try {
-				result = Double.valueOf((String) key);
-			} catch (NumberFormatException e) {
-				throw this.invalidValue(name, (String) key);
-			}
-		}
-		return result.doubleValue();
-	}
 
 	/**
 	 * Returns an attribute of the element. If the attribute doesn't exist,
@@ -1632,111 +1314,11 @@ public class XMLElement implements java.io.Serializable {
 		}
 	}
 
-	/**
-	 * Returns an attribute by looking up a key in a hashtable.
-	 * 
-	 * @deprecated Use {@link #getIntAttribute(java.lang.String,
-	 *             java.util.Hashtable, java.lang.String, boolean)
-	 *             getIntAttribute} instead.
-	 */
-	public int getIntProperty(String name, Hashtable valueSet, String defaultKey) {
-		return this.getIntAttribute(name, valueSet, defaultKey, false);
-	}
 
-	/**
-	 * Returns an attribute.
-	 * 
-	 * @deprecated Use {@link #getStringAttribute(java.lang.String)
-	 *             getStringAttribute} instead.
-	 */
-	public String getProperty(String name) {
-		return this.getStringAttribute(name);
-	}
 
-	/**
-	 * Returns an attribute.
-	 * 
-	 * @deprecated Use {@link #getStringAttribute(java.lang.String,
-	 *             java.lang.String) getStringAttribute} instead.
-	 */
-	public String getProperty(String name, String defaultValue) {
-		return this.getStringAttribute(name, defaultValue);
-	}
 
-	/**
-	 * Returns an attribute.
-	 * 
-	 * @deprecated Use {@link #getIntAttribute(java.lang.String, int)
-	 *             getIntAttribute} instead.
-	 */
-	public int getProperty(String name, int defaultValue) {
-		return this.getIntAttribute(name, defaultValue);
-	}
 
-	/**
-	 * Returns an attribute.
-	 * 
-	 * @deprecated Use {@link #getDoubleAttribute(java.lang.String, double)
-	 *             getDoubleAttribute} instead.
-	 */
-	public double getProperty(String name, double defaultValue) {
-		return this.getDoubleAttribute(name, defaultValue);
-	}
 
-	/**
-	 * Returns an attribute.
-	 * 
-	 * @deprecated Use {@link #getBooleanAttribute(java.lang.String,
-	 *             java.lang.String, java.lang.String, boolean)
-	 *             getBooleanAttribute} instead.
-	 */
-	public boolean getProperty(String key, String trueValue, String falseValue, boolean defaultValue) {
-		return this.getBooleanAttribute(key, trueValue, falseValue, defaultValue);
-	}
-
-	/**
-	 * Returns an attribute by looking up a key in a hashtable.
-	 * 
-	 * @deprecated Use {@link #getAttribute(java.lang.String,
-	 *             java.util.Hashtable, java.lang.String, boolean) getAttribute}
-	 *             instead.
-	 */
-	public Object getProperty(String name, Hashtable valueSet, String defaultKey) {
-		return this.getAttribute(name, valueSet, defaultKey, false);
-	}
-
-	/**
-	 * Returns an attribute by looking up a key in a hashtable.
-	 * 
-	 * @deprecated Use {@link #getStringAttribute(java.lang.String,
-	 *             java.util.Hashtable, java.lang.String, boolean)
-	 *             getStringAttribute} instead.
-	 */
-	public String getStringProperty(String name, Hashtable valueSet, String defaultKey) {
-		return this.getStringAttribute(name, valueSet, defaultKey, false);
-	}
-
-	/**
-	 * Returns an attribute by looking up a key in a hashtable.
-	 * 
-	 * @deprecated Use {@link #getIntAttribute(java.lang.String,
-	 *             java.util.Hashtable, java.lang.String, boolean)
-	 *             getIntAttribute} instead.
-	 */
-	public int getSpecialIntProperty(String name, Hashtable valueSet, String defaultKey) {
-		return this.getIntAttribute(name, valueSet, defaultKey, true);
-	}
-
-	/**
-	 * Returns an attribute by looking up a key in a hashtable.
-	 * 
-	 * @deprecated Use {@link #getDoubleAttribute(java.lang.String,
-	 *             java.util.Hashtable, java.lang.String, boolean)
-	 *             getDoubleAttribute} instead.
-	 */
-	public double getSpecialDoubleProperty(String name, Hashtable valueSet, String defaultKey) {
-		return this.getDoubleAttribute(name, valueSet, defaultKey, true);
-	}
 
 	/**
 	 * Returns the name of the element.
@@ -1747,14 +1329,6 @@ public class XMLElement implements java.io.Serializable {
 		return this.name;
 	}
 
-	/**
-	 * Returns the name of the element.
-	 * 
-	 * @deprecated Use {@link #getName() getName} instead.
-	 */
-	public String getTagName() {
-		return this.getName();
-	}
 
 	/**
 	 * Reads one XML element from a java.io.Reader and parses it.
@@ -2153,7 +1727,7 @@ public class XMLElement implements java.io.Serializable {
 	 * @see nanoxml.XMLElement#getChildren()
 	 */
 	public void removeChild(XMLElement child) {
-		this.children.removeElement(child);
+		this.children.remove(child);
 	}
 
 	/**
@@ -2231,32 +1805,6 @@ public class XMLElement implements java.io.Serializable {
 	}
 
 	/**
-	 * Removes an attribute.
-	 * 
-	 * @param name
-	 *            The name of the attribute.
-	 * 
-	 * @deprecated Use {@link #removeAttribute(java.lang.String)
-	 *             removeAttribute} instead.
-	 */
-	public void removeProperty(String name) {
-		this.removeAttribute(name);
-	}
-
-	/**
-	 * Removes an attribute.
-	 * 
-	 * @param name
-	 *            The name of the attribute.
-	 * 
-	 * @deprecated Use {@link #removeAttribute(java.lang.String)
-	 *             removeAttribute} instead.
-	 */
-	public void removeChild(String name) {
-		this.removeAttribute(name);
-	}
-
-	/**
 	 * Creates a new similar XML element.
 	 * <P>
 	 * You should override this method when subclassing XMLElement.
@@ -2276,17 +1824,6 @@ public class XMLElement implements java.io.Serializable {
 		this.contents = content;
 	}
 
-	/**
-	 * Changes the name of the element.
-	 * 
-	 * @param name
-	 *            The new name.
-	 * 
-	 * @deprecated Use {@link #setName(java.lang.String) setName} instead.
-	 */
-	public void setTagName(String name) {
-		this.setName(name);
-	}
 
 	/**
 	 * Changes the name of the element.
@@ -2435,17 +1972,18 @@ public class XMLElement implements java.io.Serializable {
 		writer.write('<');
 		writer.write(this.name);
 		if (!this.attributes.isEmpty()) {
-			Enumeration en = this.attributes.keys();
+			;
 			// Enumeration enum = attributeList.elements();
-			while (en.hasMoreElements()) {
+			for (Iterator<String> en = this.attributes.keySet().iterator(); en.hasNext();) {
 				writer.write(' ');
-				String key = (String) en.nextElement();
-				String value = (String) this.attributes.get(key);
+				String key = en.next();
+				String value = this.attributes.get(key);
 				writer.write(key);
 				writer.write('=');
 				writer.write('"');
 				this.writeEncoded(writer, value);
 				writer.write('"');
+				
 			}
 		}
 		if ((this.contents != null) && (this.contents.length() > 0)) {
@@ -2464,11 +2002,11 @@ public class XMLElement implements java.io.Serializable {
 		} else {
 			writer.write('>');
 			writer.write('\n');
-			Enumeration en = this.enumerateChildren();
-			while (en.hasMoreElements()) {
-				XMLElement child = (XMLElement) en.nextElement();
+			
+			for (XMLElement child : getChildren()) {
 				child.write(writer, indent + 1);
 			}
+
 			// writer.write('\n');
 			writeIndent(writer, indent);
 			writer.write('<');
@@ -2539,7 +2077,7 @@ public class XMLElement implements java.io.Serializable {
 				writer.write(';');
 				break;
 			default:
-				int unicode = (int) ch;
+				int unicode = ch;
 				if ((unicode < 32) || (unicode > 126)) {
 					writer.write('&');
 					writer.write('#');
@@ -3093,7 +2631,7 @@ public class XMLElement implements java.io.Serializable {
 			}
 			buf.append(ch);
 		} else {
-			char[] value = (char[]) this.entities.get(key);
+			char[] value = this.entities.get(key);
 			if (value == null) {
 				throw this.unknownEntity(key);
 			}
@@ -3245,10 +2783,10 @@ public class XMLElement implements java.io.Serializable {
 		return new XMLParseException(this, msg);
 	}
 
-	public Vector getElementsByTagName(String tag) {
-		Vector al = new Vector();
-		for (Iterator iter = children.iterator(); iter.hasNext();) {
-			XMLElement element = (XMLElement) iter.next();
+	public List<XMLElement> getElementsByTagName(String tag) {
+		List<XMLElement> al = new ArrayList<XMLElement>();
+		for (Iterator<XMLElement> iter = children.iterator(); iter.hasNext();) {
+			XMLElement element = iter.next();
 			if (tag.equals(element.getName())) {
 				al.add(element);
 			}
@@ -3273,7 +2811,7 @@ public class XMLElement implements java.io.Serializable {
 		if (children.size() == 0) {
 			return null;
 		} else {
-			return (XMLElement) children.get(0);
+			return children.get(0);
 		}
 	}
 
@@ -3288,10 +2826,10 @@ public class XMLElement implements java.io.Serializable {
 		if (parent == null) {
 			return null;
 		}
-		Vector child = parent.getChildren();
+		List<XMLElement> child = parent.getChildren();
 		boolean found = false;
-		for (Iterator iter = child.iterator(); iter.hasNext();) {
-			XMLElement element = (XMLElement) iter.next();
+		for (Iterator<XMLElement> iter = child.iterator(); iter.hasNext();) {
+			XMLElement element = iter.next();
 			if (found) {
 				return element;
 			}
@@ -3303,11 +2841,8 @@ public class XMLElement implements java.io.Serializable {
 	}
 
 	public void insertBefore(XMLElement node, XMLElement before) {
-		// System.err.println("insertBefore called, in XMLElement. This function
-		// is untested and should not be trusted.");
-		// Vector child = parent.getChildren();
 		for (int i = 0; i < children.size(); i++) {
-			XMLElement current = (XMLElement) children.get(i);
+			XMLElement current = children.get(i);
 			if (before == current) {
 				addChild(node, i);
 				return;
@@ -3324,67 +2859,10 @@ public class XMLElement implements java.io.Serializable {
 		if (res.indexOf("\n") != -1) {
 			System.err.println("WTF: NEWLINE DETECTED!@!!!!!!!!!");
 		}
-		// System.err.println("Setting: "+res);
 		return res;
-		// System.err.println("Maybe check for newlines.");
-		// return attr;
 	}
 
-	/**
-	 * 
-	 */
-	// public void disposeAll() {
-	// for (int i = 0; i < children.size(); i++) {
-	// XMLElement current = (XMLElement)children.get(i);
-	// if (current.getParent()!=this) {
-	// System.err.println("\n\nHEY!!!!\nTHIS IS
-	// WEIRD!!!!\n*8888888888***********************************************************");
-	// System.err.println("current: "+current.getName()+" this:
-	// "+this.getName());
-	// }
-	// current.disposeAll();
-	// }
-	// children.removeAllElements();
-	// attributes.clear();
-	// parent = null;
-	//          
-	// }
-	//    
-	// protected void finalize() throws Throwable {
-	// //
-	// super.finalize();
-	// System.err.println("XMLElement finalized!: "+name);
-	// }
 
-	/**
-	 * 
-	 */
-	// public int getAttributeOffset(String attributeName) {
-	// Enumeration enumeration = attributes.keys();
-	// int myAttributeOffset = getName().length()+2;
-	// while (enumeration.hasMoreElements()) {
-	// String element = (String) enumeration.nextElement();
-	// if (attributeName.equals(element)) {
-	// return myAttributeOffset;
-	// }
-	// System.err.println("skip");
-	// myAttributeOffset+=element.length();
-	// myAttributeOffset+=getStringAttribute(element).length();
-	// myAttributeOffset+=4;
-	// }
-	// return myAttributeOffset;
-	// }
-	// 
-	// public int getAttributeOffsetLength(String attributeName) {
-	//
-	// String value = getStringAttribute(attributeName);
-	// if (value==null) {
-	// return 0;
-	// }
-	// return value.length()+attributeName.length()+3;
-	// }
-	private final Map startOffsetMap = new HashMap();
-	private final Map endOffsetMap = new HashMap();
 
 	public void setAttributeOffset(String attributeName, int value) {
 		startOffsetMap.put(attributeName, new Integer(value));
@@ -3396,7 +2874,7 @@ public class XMLElement implements java.io.Serializable {
 
 	public int getAttributeOffset(String attributeName) {
 		// return ((Integer)startOffsetMap.get(attributeName)).intValue();
-		Integer ii = ((Integer) startOffsetMap.get(attributeName));
+		Integer ii = startOffsetMap.get(attributeName);
 		if (ii == null) {
 			return 0;
 		}
@@ -3404,30 +2882,11 @@ public class XMLElement implements java.io.Serializable {
 	}
 
 	public int getAttributeEndOffset(String attributeName) {
-		Integer ii = ((Integer) endOffsetMap.get(attributeName));
+		Integer ii = endOffsetMap.get(attributeName);
 		if (ii == null) {
 			return 0;
 		}
 		return ii.intValue();
 	}
 
-	public static void main(String[] args) {
-		String aap = "<bla noot=\"A\" aap=\"blaat\" mies=\"blabla\"></bla>";
-		XMLElement xe = new CaseSensitiveXMLElement();
-		xe.parseString(aap);
-		StringWriter sw = new StringWriter();
-		try {
-			xe.write(sw);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		System.err.println("Ser. : " + sw.toString());
-		System.err.println("Total >" + aap + "<");
-		int start = xe.getAttributeOffset("mies");
-		int ennd = xe.getAttributeEndOffset("mies");
-		System.err.println("TEXT: " + aap.substring(start, ennd));
-		System.err.println("TxxT: " + sw.toString().substring(start, ennd));
-		System.err.println("xe: " + xe.startTagOffset + " end: " + xe.offset);
-
-	}
 }

@@ -20,7 +20,7 @@ import com.dexels.navajo.tipi.internal.*;
  * @version 1.0
  */
 public abstract class TipiTypeParser {
-	private Class myReturnType = null;
+	private Class<?> myReturnType = null;
 
 	/**
 	 * Note to implementers: EXPRESSION CAN BE NULL. Deal with it.
@@ -38,11 +38,11 @@ public abstract class TipiTypeParser {
 		myContext = tc;
 	}
 
-	public Class getReturnType() {
+	public Class<?> getReturnType() {
 		return myReturnType;
 	}
 
-	public void setReturnType(Class c) {
+	public void setReturnType(Class<?> c) {
 		myReturnType = c;
 	}
 

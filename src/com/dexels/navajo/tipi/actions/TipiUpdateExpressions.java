@@ -28,14 +28,29 @@ public class TipiUpdateExpressions extends TipiAction {
 
 	protected void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiBreakException, com.dexels.navajo.tipi.TipiException {
 		Operand to = getEvaluatedParameter("path", event);
-		if (to == null) {
-			System.err.println("Null evaluation in TipiUpdateExpressions");
+		if(to!=null) {
+			TipiDataComponent toData = (TipiDataComponent) to.value;
+			Navajo n = toData.getNearestNavajo();
+			if (n != null) {
+				try {
+					n.refreshExpression();
+					return;
+				} catch (NavajoException ex) {
+					throw new TipiException(ex);
+				}
+			}
 		}
-		TipiDataComponent toData = (TipiDataComponent) to.value;
-		Navajo n = toData.getNearestNavajo();
+		Operand navajo = getEvaluatedParameter("navajo", event);
+		
+		if(navajo==null) {
+			throw new TipiException("supply either path or navajo");
+		}
+		
+		Navajo n = (Navajo) navajo.value;
 		if (n != null) {
 			try {
 				n.refreshExpression();
+				return;
 			} catch (NavajoException ex) {
 				throw new TipiException(ex);
 			}

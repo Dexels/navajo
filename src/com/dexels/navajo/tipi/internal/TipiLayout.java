@@ -3,7 +3,6 @@ package com.dexels.navajo.tipi.internal;
 import java.util.*;
 
 import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.studio.*;
 import com.dexels.navajo.tipi.tipixml.*;
 
 /**
@@ -24,11 +23,10 @@ import com.dexels.navajo.tipi.tipixml.*;
  * @version 1.0
  */
 public abstract class TipiLayout {
-	protected Map componentValues = new HashMap();
+	protected Map<String,TipiValue> componentValues = new HashMap<String,TipiValue>();
 	protected String layoutName = null;
 	protected Object myLayout;
 	protected XMLElement myDefinition;
-	protected TipiConstraintEditor myConstraintEditor = null;
 	protected XMLElement myClassDef = null;
 	protected TipiContext myContext;
 	protected TipiComponent myComponent;
@@ -51,12 +49,6 @@ public abstract class TipiLayout {
 
 	protected abstract void loadLayout(XMLElement def, TipiComponent current) throws TipiException;
 
-	public TipiConstraintEditor getConstraintEditor() {
-		if (myDefinition == null) {
-			return null;
-		}
-		return myConstraintEditor;
-	}
 
 	public void loadLayout(TipiComponent current) throws TipiException {
 		loadLayout(myDefinition, current);
@@ -74,35 +66,6 @@ public abstract class TipiLayout {
 	}
 
 	public void loadClassDef() {
-		String constraintClass = myClassDef.getStringAttribute("constrainteditor", "");
-		if (constraintClass.equals("")) {
-			return;
-		}
-		Class constraintEditor;
-		/**
-		 * @todo Maybe check first... The classnotfound exception is not
-		 *       exceptional
-		 */
-		try {
-			constraintEditor = Class.forName(constraintClass, true, myContext.getClassLoader());
-		} catch (ClassNotFoundException ex) {
-			// No problem.
-			return;
-		}
-		try {
-			myConstraintEditor = (TipiConstraintEditor) constraintEditor.newInstance();
-		} catch (IllegalAccessException ex1) {
-			System.err.println("Warning error initializing constrainteditor class: " + constraintClass + " error: " + ex1.getMessage());
-			return;
-		} catch (InstantiationException ex1) {
-			System.err.println("Warning error initializing constrainteditor class: " + constraintClass + " error: " + ex1.getMessage());
-			return;
-		}
-		if (!TipiConstraintEditor.class.isInstance(myConstraintEditor)) {
-			System.err.println("Warning: ConstraintEditor class: " + constraintEditor.getClass()
-					+ " does not implement the TipiConstraintEditor interface, which is: " + TipiConstraintEditor.class);
-			return;
-		}
 	}
 
 	public void initializeLayout(XMLElement def) throws TipiException {
@@ -132,11 +95,11 @@ public abstract class TipiLayout {
 	}
 
 	private final void loadValues(XMLElement values) {
-		Vector children = values.getChildren();
+		List<XMLElement> children = values.getChildren();
 		for (int i = 0; i < children.size(); i++) {
-			XMLElement xx = (XMLElement) children.get(i);
+			XMLElement xx = children.get(i);
 			String valueName = xx.getStringAttribute("name");
-			TipiValue tv = new TipiValue();
+			TipiValue tv = new TipiValue(myComponent);
 			tv.load(xx);
 			componentValues.put(valueName, tv);
 			if (tv.getValue() != null && !"".equals(tv.getValue())) {

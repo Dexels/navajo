@@ -3,7 +3,6 @@ package com.dexels.navajo.tipi.actions;
 import java.io.*;
 
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.internal.*;
 
 /**
@@ -25,14 +24,11 @@ import com.dexels.navajo.tipi.internal.*;
  */
 public class TipiDebugNavajo extends TipiAction {
 	public void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
-		TipiDataComponent evalTipi = null;
-		Operand tipi = getEvaluatedParameter("tipipath", event);
+//		Operand tipi = getEvaluatedParameter("tipipath", event);
 		Operand filename = getEvaluatedParameter("filename", event);
 		String file = null;
 		PrintStream w = null;
-		if (tipi != null) {
-			evalTipi = (TipiDataComponent) tipi.value;
-		}
+
 		if (filename != null) {
 			file = (String) filename.value;
 		}
@@ -58,11 +54,12 @@ public class TipiDebugNavajo extends TipiAction {
 			// }
 
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			if (file != null) {
-				w.close();
+				if(w!=null) {
+					w.close();
+				}
 			}
 		}
 

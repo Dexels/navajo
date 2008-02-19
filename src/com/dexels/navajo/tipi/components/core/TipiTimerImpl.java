@@ -50,7 +50,7 @@ public class TipiTimerImpl extends TipiComponentImpl implements Runnable {
 		while (isRunning) {
 			try {
 				this.performTipiEvent("onTimer", null, true);
-				t.sleep(interval);
+				Thread.sleep(interval);
 			} catch (Exception e) {
 				System.err.println("Timer had an exception, stopping");
 				e.printStackTrace();

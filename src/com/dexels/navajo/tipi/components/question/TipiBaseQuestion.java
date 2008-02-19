@@ -38,7 +38,7 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
 
 	// private final ArrayList mySubQuestions = new ArrayList();
 
-	private String enabledCondition = null;
+//	private String enabledCondition = null;
 
 	private String visibleCondition = null;
 
@@ -48,7 +48,7 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
 
 	private String myId;
 
-	private PropertyComponent valueComponent = null;
+//	private PropertyComponent valueComponent = null;
 
 	private String subQuestionPath;
 
@@ -80,7 +80,7 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
 		myQuestionList = tql;
 	}
 
-	private void recursiveListQuestions(TipiComponent start, ArrayList result) {
+	private void recursiveListQuestions(TipiComponent start, List<TipiComponent> result) {
 		if (start instanceof TipiBaseQuestion) {
 			result.add(start);
 		}
@@ -89,8 +89,7 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
 		}
 	}
 
-	public void loadData(final Navajo n, final TipiContext context) throws TipiException {
-		enabledCondition = null;
+	public void loadData(final Navajo n, final TipiContext context)  {
 		visibleCondition = null;
 		validationCondition = null;
 		//
@@ -110,37 +109,33 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
 		if (visibleConditionProperty != null) {
 			visibleCondition = visibleConditionProperty.getValue();
 		}
-		Property enabledConditionProperty = m.getProperty("EnabledCondition");
-		if (enabledConditionProperty != null) {
-			enabledCondition = enabledConditionProperty.getValue();
-		}
+//		Property enabledConditionProperty = m.getProperty("EnabledCondition");
+//		if (enabledConditionProperty != null) {
+//			enabledCondition = enabledConditionProperty.getValue();
+//		}
 		Property validationConditionProperty = m.getProperty("ValidationCondition");
 		if (validationConditionProperty != null) {
 			validationCondition = validationConditionProperty.getValue();
 		}
-		ArrayList properties = getRecursiveProperties();
+		List<TipiComponent> properties = getRecursiveProperties();
 		for (int i = 0; i < properties.size(); i++) {
 			PropertyComponent o = (PropertyComponent) properties.get(i);
 			Property pp = m.getProperty(o.getPropertyName());
-			// JComponent jj = (JComponent)o.getContainer();
 			if (pp != null) {
 				o.setProperty(pp);
 			} else {
 				System.err.println("No such property");
 			}
 			if ("Value".equals(o.getPropertyName())) {
-				valueComponent = o;
+//				valueComponent = o;
 			}
 			o.addTipiEventListener(new TipiEventListener() {
-				public boolean performTipiEvent(String eventtype, Map source, boolean sync) throws TipiException {
-					// runASyncInEventThread(new Runnable() {
-					// public void run() {
+				public boolean performTipiEvent(String eventtype, Map<String,Object> source, boolean sync) throws TipiException {
+					System.err.println("TYPE: "+eventtype+" DELTA: "+source);
 					updateQuestionList();
+//					System.err.println("Forwarding tipi event");
+		
 //					performTipiEvent(eventtype, source, sync);
-					// CHANGED TO FULL UPDATE:
-
-					// }
-					// });
 					return true;
 				}
 
@@ -198,7 +193,7 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
 			throw new TipiException("Loading with null Navajo! ");
 		}
 		for (int i = 0; i < properties.size(); i++) {
-			PropertyComponent current = (PropertyComponent) properties.get(i);
+			PropertyComponent current = properties.get(i);
 			Property p;
 			if (prefix != null) {
 				p = n.getProperty(prefix + "/" + current.getPropertyName());
@@ -210,10 +205,7 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
 				}
 			}
 		}
-		if (n == null) {
-			System.err.println("NULL NAVAJO!");
-			return;
-		}
+
 		myNavajo = n;
 	}
 
@@ -253,15 +245,16 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
 		if (visibleCondition != null) {
 			setQuestionVisible(isRelevant());
 		}
+		System.err.println("In updateQuestions");
+//		Thread.dumpStack();
 		boolean invalidFound = false;
-		ArrayList subQ = getSubQuestionList();
+		List<TipiComponent> subQ = getSubQuestionList();
 		for (int i = 0; i < subQ.size(); i++) {
 			TipiBaseQuestion tq = (TipiBaseQuestion) subQ.get(i);
 			tq.updateSubQuestions();
 			if (tq.isValid() == false) {
 				invalidFound = true;
 				System.err.println("FOUND AN INVALID CHILD: " + tq.getPath());
-//				Thread.dumpStack();
 			}
 		}
 		if (invalidFound) {
@@ -275,14 +268,14 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
 		}
 	}
 
-	private ArrayList getSubQuestionList() {
-		ArrayList subQ = new ArrayList();
-		TipiDataComponent tdc = null;
+	private List<TipiComponent> getSubQuestionList() {
+		List<TipiComponent> subQ = new ArrayList<TipiComponent>();
+		TipiComponent tdc = null;
 		if (subQuestionPath != null) {
-			tdc = (TipiDataComponent) getTipiComponentByPath(subQuestionPath);
+			tdc = getTipiComponentByPath(subQuestionPath);
 			if (tdc == null) {
 				System.err.println("::: NULL subcomponent");
-			} else {
+			} else { 
 				recursiveListQuestions(tdc, subQ);
 			}
 		} else {
@@ -297,7 +290,7 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
 		if (!isValid()) {
 			return false;
 		}
-		ArrayList subQ = getSubQuestionList();
+		List<TipiComponent> subQ = getSubQuestionList();
 		for (int i = 0; i < subQ.size(); i++) {
 			TipiBaseQuestion tq = (TipiBaseQuestion) subQ.get(i);
 			if (tq.isValid() == false) {

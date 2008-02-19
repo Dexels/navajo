@@ -3,7 +3,6 @@ package com.dexels.navajo.tipi.components.core;
 import java.util.*;
 
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.base.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.internal.*;
 
@@ -27,7 +26,7 @@ import com.dexels.navajo.tipi.internal.*;
 
 public class TipiConditionChecker extends TipiDataComponentImpl {
 	private String messagePath = null;
-	private final ArrayList failedList = new ArrayList();
+	private final ArrayList<Object> failedList = new ArrayList<Object>();
 
 	public TipiConditionChecker() {
 	}

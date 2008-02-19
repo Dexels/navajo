@@ -23,10 +23,9 @@ import com.dexels.navajo.tipi.tipixml.*;
  */
 public class TipiActionFactory {
 	protected String myName = null;
-	protected Map myDefinedParams = new HashMap();
-	protected Map myParams = new HashMap();
+	protected Map<String,TipiValue> myDefinedParams = new HashMap<String,TipiValue>();
 	protected TipiContext myContext = null;
-	private Class myActionClass = null;
+	private Class<?> myActionClass = null;
 
 	public TipiActionFactory() {
 	}
@@ -54,10 +53,10 @@ public class TipiActionFactory {
 			throw new TipiException("Trouble loading action class: " + fullDef);
 		}
 		myContext = context;
-		Vector children = actionDef.getChildren();
+		List<XMLElement> children = actionDef.getChildren();
 		for (int i = 0; i < children.size(); i++) {
-			XMLElement currentParam = (XMLElement) children.get(i);
-			TipiValue tv = new TipiValue();
+			XMLElement currentParam = children.get(i);
+			TipiValue tv = new TipiValue(null);
 			tv.load(currentParam);
 			myDefinedParams.put(tv.getName(), tv);
 		}
@@ -79,16 +78,16 @@ public class TipiActionFactory {
 		newAction.setComponent(tc);
 		newAction.setType(myName);
 		// Check presence of supplied parameters in the defined parameters
-		Vector c = instance.getChildren();
+		List<XMLElement> c = instance.getChildren();
 
 		// TODO Fix that filthy performTipiMethod action. It messes up
 		// everything,
 
 		for (int i = 0; i < c.size(); i++) {
-			XMLElement x = (XMLElement) c.get(i);
-			TipiValue instanceValue = new TipiValue(x);
+			XMLElement x = c.get(i);
+			TipiValue instanceValue = new TipiValue(tc,x);
 			// System.err.println("ADDING INSTANCE: "+x.toString());
-			TipiValue defined = (TipiValue) myDefinedParams.get(x.getAttribute("name"));
+			TipiValue defined = myDefinedParams.get(x.getAttribute("name"));
 			String val = (String) x.getAttribute("value");
 			if (defined != null) {
 				instanceValue.setDefaultValue(defined.getDefaultValue());
@@ -119,9 +118,11 @@ public class TipiActionFactory {
 			newAction.addParameter(instanceValue);
 		}
 
-		Enumeration ee = instance.enumerateAttributeNames();
-		while (ee.hasMoreElements()) {
-			String element = (String) ee.nextElement();
+//		Enumeration ee = instance.enumerateAttributeNames();
+			
+//		}
+	for (Iterator<String> iterator = instance.enumerateAttributeNames(); iterator.hasNext();) {
+		String element = iterator.next();
 			// System.err.println("Checking inline element: "+element);
 			if ("type".equals(element)) {
 				continue;
@@ -129,12 +130,12 @@ public class TipiActionFactory {
 			String name = element;
 			String value = instance.getStringAttribute(name, null);
 			// System.err.println("ADDING INLINE INSTANCE: "+name+" / "+value);
-			TipiValue defined = (TipiValue) myDefinedParams.get(element);
+			TipiValue defined = myDefinedParams.get(element);
 			// String val = (String)instance.getAttribute("value");
 			if (value == null) {
 
 			}
-			TipiValue instanceValue = new TipiValue();
+			TipiValue instanceValue = new TipiValue(tc);
 			instanceValue.setName(element);
 			instanceValue.setValue(value);
 			if (defined != null) {
@@ -173,6 +174,6 @@ public class TipiActionFactory {
 	}
 
 	public TipiValue getActionParam(String name) {
-		return (TipiValue) myDefinedParams.get(name);
+		return myDefinedParams.get(name);
 	}
 }

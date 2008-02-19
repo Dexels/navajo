@@ -23,7 +23,17 @@ import com.dexels.navajo.tipi.internal.*;
 public class PropertyRefParser extends BaseTipiParser {
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
 		// return new PropertyRef(getPropertyByPath(source, expression));
-		return getPropertyByPath(source, expression);
+		if(expression.startsWith("!")) {
+			try {
+				return getAttributePropertyByPath(source, expression.substring(1));
+			} catch (TipiException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return null;
+			}
+		} else {
+			return getPropertyByPath(source, expression);
+		}
 	}
 
 	public String toString(Object o, TipiComponent source) {

@@ -2,7 +2,6 @@
 
    <tipiaction name="break" class="TipiBreak" package="com.dexels.navajo.tipi.actions" />
    <tipiaction name="breakEvent" class="TipiBreakEvent" package="com.dexels.navajo.tipi.actions" />
-   <tipiaction name="dump" class="TipiDumpInstances" package="com.dexels.navajo.tipi.actions" />
    <tipiaction name="clearCache" class="TipiClearCache" package="com.dexels.navajo.tipi.actions" />
 
    <tipiaction name="performMethod" class="TipiPerformMethod" package="com.dexels.navajo.tipi.actions">
@@ -88,12 +87,13 @@
       <param name="from" type="tipi" required="false" />
       <!--  new school -->
       <param name="service" type="navajo" required="false" />
-
    </tipiaction>
 
    <tipiaction name="updateExpressions" class="TipiUpdateExpressions" package="com.dexels.navajo.tipi.actions">
-      <param name="path" type="tipi" required="true" />
+      <param name="path" type="tipi" required="false" />
+      <param name="navajo" type="navajo" required="false" />
    </tipiaction>
+   
    <tipiaction name="updateAllExpressions" class="TipiUpdateAllExpressions" package="com.dexels.navajo.tipi.actions">
       <param name="path" type="tipi" required="true" />
    </tipiaction>
@@ -114,13 +114,16 @@
    <tipiaction name="instantiateClass" class="TipiInstantiateTipiClass" package="com.dexels.navajo.tipi.actions">
       <param name="class" type="string" required="true" />
       <param name="id" type="string" required="false" />
-      <param name="location" type="tipi" required="true" />
+      <param name="location" type="string" required="true" />
       <param name="force" type="boolean" default="false" />
+      <param name="constraint" type="string" required="false" />
    </tipiaction>
    
-
    <tipiaction name="dispose" class="TipiDispose" package="com.dexels.navajo.tipi.actions">
       <param name="path" type="tipi" required="true" />
+   </tipiaction>
+   <tipiaction name="disposePath" class="TipiDisposePath" package="com.dexels.navajo.tipi.actions">
+      <param name="path" type="string" required="true" />
    </tipiaction>
 
    <tipiaction name="fireEvent" class="TipiFireEvent" package="com.dexels.navajo.tipi.actions">
@@ -174,17 +177,55 @@
       <param name="name" type="string" required="true" />
    </tipiaction>
 
-   <tipiaction name="callService" class="TipiCallService" package="com.dexels.navajo.tipi.actions">
+   <tipiaction name="callService" class="TipiNewCallService" package="com.dexels.navajo.tipi.actions">
       <param name="service" type="string" required="true" />
+      <param name="connector" type="string" required="false" />
+      <param name="destination" type="string" required="false" />
       <param name="input" type="navajo" />
    </tipiaction>
 
    <tipiaction name="flushCache" class="TipiFlushCache" package="com.dexels.navajo.tipi.actions" />
+   <tipiaction name="loadStateNavajo" class="TipiLoadStateNavajo" package="com.dexels.navajo.tipi.actions" />
+  
+   <tipiaction name="loadComponentNavajo" class="TipiLoadComponentTypes" package="com.dexels.navajo.tipi.actions" />
+  <tipiaction name="loadNavajoList" class="TipiLoadNavajoList" package="com.dexels.navajo.tipi.actions" />
+<tipiaction name="loadExtensions" class="TipiLoadExtensions" package="com.dexels.navajo.tipi.actions" />
 
    <tipiaction name="declareAlias" class="TipiDeclareAlias" package="com.dexels.navajo.tipi.actions">
       <param name="name" type="string" required="true" />
       <param name="value" type="string" required="true" />
    </tipiaction>
 
+  <tipiaction name="link" class="TipiLinkProperty" package="com.dexels.navajo.tipi.actions">
+      <param name="master" type="property" required="true" />
+      <param name="slave" type="property" required="true" />
+   </tipiaction>
+
+
+  <tipiaction name="setType" class="TipiSetType" package="com.dexels.navajo.tipi.actions">
+      <param name="property" type="property" required="true" />
+      <param name="propertyType" type="string" required="true" />
+   </tipiaction>
+  <tipiaction name="setLength" class="TipiSetLength" package="com.dexels.navajo.tipi.actions">
+      <param name="property" type="property" required="true" />
+      <param name="length" type="integer" required="true" />
+   </tipiaction>
+  <tipiaction name="setDirection" class="TipiSetDirection" package="com.dexels.navajo.tipi.actions">
+      <param name="property" type="property" required="true" />
+      <param name="direction" type="string" required="true" />
+   </tipiaction>
+   <tipiaction name="setDescription" class="TipiSetDescription" package="com.dexels.navajo.tipi.actions">
+      <param name="property" type="property" required="true" />
+      <param name="description" type="string" required="true" />
+   </tipiaction>
+   <tipiaction name="setCardinality" class="TipiSetCardinality" package="com.dexels.navajo.tipi.actions">
+      <param name="property" type="property" required="true" />
+      <param name="cardinality" type="string" required="true" />
+   </tipiaction>
+   
+  <tipiaction name="animate" class="TipiAnimate" package="com.dexels.navajo.tipi.actions">
+      <param name="target" type="property" required="true" />
+      <param name="value" type="object" required="true" />
+   </tipiaction>
 
 </tid>

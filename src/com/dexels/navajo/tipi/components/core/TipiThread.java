@@ -1,7 +1,5 @@
 package com.dexels.navajo.tipi.components.core;
 
-import java.util.*;
-
 import com.dexels.navajo.tipi.*;
 
 /**
@@ -23,7 +21,6 @@ import com.dexels.navajo.tipi.*;
  */
 public class TipiThread extends Thread {
 	private final TipiThreadPool myPool;
-	private final List myActivities = new ArrayList();
 	private final String myName;
 	private final TipiContext myContext;
 

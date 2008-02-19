@@ -3,7 +3,6 @@ package com.dexels.navajo.tipi.actions;
 import java.util.*;
 
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.base.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.internal.*;
 
@@ -36,8 +35,9 @@ public class TipiUpdateAllExpressions extends TipiAction {
 		refreshCount = 0;
 		Operand to = getEvaluatedParameter("path", event);
 		if (to == null) {
-			System.err.println("Null evaluation in TipiUpdateExpressions");
+			throw new TipiException("Null evaluation in TipiUpdateExpressions");
 		}
+		System.err.println("Refreshing");
 		TipiDataComponent toData = (TipiDataComponent) to.value;
 		doRefresh(toData);
 	
@@ -46,22 +46,31 @@ public class TipiUpdateAllExpressions extends TipiAction {
 	private void doRefresh(TipiDataComponent toData) {
 //		System.err.println("Starting refresh");
 		Navajo n = toData.getNearestNavajo();
-		ArrayList al;
+		ArrayList<Message> al;
+//		try {
+//			al = n.getAllMessages();
+//			for (int i = 0; i < al.size(); i++) {
+//				Message current = al.get(i);
+//				try {
+//					current.refreshExpression();
+//				} catch (ExpressionChangedException e) {
+////					e.printStackTrace();
+////					System.err.println("Change detected");
+//					refreshCount++;
+//					this.doRefresh(toData);
+//					return;
+//				}
+//			}
+//
+//		} catch (NavajoException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		try {
-			al = n.getAllMessages();
-			for (int i = 0; i < al.size(); i++) {
-				Message current = (Message)al.get(i);
-				try {
-					current.refreshExpression();
-				} catch (ExpressionChangedException e) {
-//					e.printStackTrace();
-//					System.err.println("Change detected");
-					refreshCount++;
-					this.doRefresh(toData);
-					return;
-				}
-			}
-
+			List<Property> pp =n.refreshExpression();
+			Set<Property> aa = new HashSet<Property>(pp);
+			System.err.println("Changes detected: "+pp.size()+" \n "+pp);
+			System.err.println("Unique detected: "+aa.size()+" \n "+aa);
 		} catch (NavajoException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

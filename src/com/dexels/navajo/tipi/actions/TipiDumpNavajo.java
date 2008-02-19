@@ -3,7 +3,6 @@ package com.dexels.navajo.tipi.actions;
 import java.io.*;
 
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.internal.*;
 
 /**
@@ -58,11 +57,12 @@ public class TipiDumpNavajo extends TipiAction {
 			// }
 
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			if (file != null) {
-				w.close();
+				if(w!=null) {
+					w.close();
+				}
 			}
 		}
 

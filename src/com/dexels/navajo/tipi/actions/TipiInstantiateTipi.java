@@ -48,12 +48,12 @@ public class TipiInstantiateTipi extends TipiAction {
 	}
 
 	protected TipiComponent instantiateTipi(boolean byClass, TipiComponent parent, boolean force, String id, String className,
-			String definitionName, Map paramMap, Object constraints) throws TipiException {
+			String definitionName, Map<String,TipiValue> paramMap, Object constraints) throws TipiException {
 		return instantiateTipi(myContext, null, byClass, parent, force, id, className, definitionName, null, constraints);
 	}
-
+	
 	protected TipiComponent instantiateTipi(TipiContext myContext, TipiComponent myComponent, boolean byClass, TipiComponent parent,
-			boolean force, String id, String className, String definitionName, Map paramMap, Object constraints) throws TipiException {
+			boolean force, String id, String className, String definitionName, Map<String,TipiValue> paramMap, Object constraints) throws TipiException {
 
 		TipiComponent comp = parent.getTipiComponentByPath(id);
 
@@ -101,10 +101,10 @@ public class TipiInstantiateTipi extends TipiAction {
 		}
 		xe.setAttribute("id", id);
 		if (paramMap != null) {
-			Iterator it = paramMap.keySet().iterator();
+			Iterator<String> it = paramMap.keySet().iterator();
 			while (it.hasNext()) {
 				try {
-					String current = (String) it.next();
+					String current = it.next();
 					if (!"location".equals(current)) {
 						xe.setAttribute(current, evaluate(getParameter(current).getValue(), null).value);
 					}
@@ -123,7 +123,6 @@ public class TipiInstantiateTipi extends TipiAction {
 	}
 
 	protected void instantiateTipi(boolean byClass, TipiEvent event) throws TipiException {
-		
 		String id = null;
 		Object constraints = null;
 		TipiValue forceVal = getParameter("force");
@@ -135,17 +134,16 @@ public class TipiInstantiateTipi extends TipiAction {
 		}
 		TipiComponent parent = null;
 		boolean force;
-		if (forceString == null) {
-			force = false;
-		} else {
+		
 			force = forceString.equals("true");
-		}
 		try {
 			constraints = getEvaluatedParameter("constraints", event);
 			if (constraints != null) {
 				constraints = ((Operand) constraints).value;
 			}
 			id = (String) evaluate(getParameter("id").getValue(), null).value;
+			
+			
 			Object o = evaluate((getParameter("location").getValue()), null).value;
 			if (String.class.isInstance(o)) {
 				System.err.println("Location evaluated to a string, trying to get Tipi from that string (" + o.toString() + ")");
@@ -158,7 +156,7 @@ public class TipiInstantiateTipi extends TipiAction {
 			System.err.println("OOps: " + ex.getMessage());
 		}
 		if (byClass) {
-			instantiateTipi(myContext, myComponent, byClass, parent, force, id, getParameter("class").getValue(), null, parameterMap,
+			instantiateTipi(myContext, myComponent, byClass, parent, force, id, (String) getEvaluatedParameter("class",event).value, null, parameterMap,
 					constraints);
 		} else {
 			String definitionName = null;

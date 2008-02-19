@@ -5,8 +5,6 @@ import java.net.*;
 import java.util.*;
 import java.util.zip.*;
 
-
-import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.types.*;
 
 public class ZipResourceLoader extends ClassPathResourceLoader {

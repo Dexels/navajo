@@ -2,7 +2,6 @@ package com.dexels.navajo.tipi.internal;
 
 import java.util.*;
 
-import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.studio.*;
 import com.dexels.navajo.tipi.tipixml.*;
@@ -29,22 +28,23 @@ public class TipiEvent implements TipiExecutable {
 	private String myEventService;
 	private String mySource;
 	// private ArrayList myActions;
-	private Navajo myNavajo;
+//	private Navajo myNavajo;
 	private TipiComponent myComponent;
 	// private TipiActionBlock myTopActionBlock = null;
-	private final ArrayList myExecutables = new ArrayList();
-
-	private final Map eventParameterMap = new HashMap();
+	private final List<TipiExecutable> myExecutables = new ArrayList<TipiExecutable>();
+	
+	private final Map<String,TipiValue> eventParameterMap = new HashMap<String,TipiValue>();
+	private Map<String,String> eventPropertyMap = new HashMap<String, String>();
 
 	public TipiEvent() {
 	}
 
 	public void init(XMLElement xe) {
-		Vector v = xe.getChildren();
+		List<XMLElement> v = xe.getChildren();
 		for (int i = 0; i < v.size(); i++) {
-			XMLElement current = (XMLElement) v.get(i);
+			XMLElement current = v.get(i);
 			if (current.getName().equals("param")) {
-				TipiValue tv = new TipiValue();
+				TipiValue tv = new TipiValue(myComponent);
 				tv.load(current);
 				eventParameterMap.put(tv.getName(), tv);
 			}
@@ -58,29 +58,29 @@ public class TipiEvent implements TipiExecutable {
 			if(stringType==null) {
 				stringType = elm.getName();
 			}
+			
 			myEventName = stringType;
 			myEventService = (String) elm.getAttribute("service");
 			mySource = (String) elm.getAttribute("listen");
-			Vector temp = elm.getChildren();
+
+			
+			for (Iterator<String> iterator =  elm.enumerateAttributeNames(); iterator.hasNext();) {
+				String n = iterator.next();
+				eventPropertyMap .put(n,elm.getStringAttribute(n));
+			}
+			List<XMLElement> temp = elm.getChildren();
 			for (int i = 0; i < temp.size(); i++) {
-				XMLElement current = (XMLElement) temp.get(i);
-//				if (current.getName().equals("condition")) {
-//					TipiActionBlock ta = context.instantiateDefaultTipiActionBlock(myComponent);
-//					ta.loadConditionStyle(current, myComponent);
-//					myExecutables.add(ta);
-//				}
+				XMLElement current = temp.get(i);
+
 				if (current.getName().equals("block")) {
 					TipiActionBlock ta = context.instantiateDefaultTipiActionBlock(myComponent);
 					ta.load(current, myComponent);
 					myExecutables.add(ta);
 					continue;
 				}
-//				if (current.getName().equals("action")) {
 					TipiAction ta = context.instantiateTipiAction(current, myComponent);
 					myExecutables.add(ta);
-//				}
 			}
-//		}
 	}
 
 	public boolean isSync() {
@@ -118,7 +118,7 @@ public class TipiEvent implements TipiExecutable {
 		return myComponent.getContext();
 	}
 
-	public void asyncPerformAction(final TipiEventListener listener, final Map event) {
+	public void asyncPerformAction(final TipiEventListener listener, final Map<String,Object> event) {
 		loadEventValues(event);
 		// final TipiEvent te = this;
 		try {
@@ -135,29 +135,32 @@ public class TipiEvent implements TipiExecutable {
 		return myComponent;
 	}
 
-	public void performAction(TipiEvent te, TipiExecutable parent, int index) throws TipiException {
+	public void performAction(TipiEvent te, TipiExecutable parent, int index) throws TipiException, TipiBreakException {
 		performAction(myComponent, null);
 	}
 
-	public void performAction(TipiEventListener listener) throws TipiException {
+	public void performAction(TipiEventListener listener) throws TipiException, TipiBreakException {
 		performAction(listener, null);
 	}
 
 	public TipiValue getEventParameter(String name) {
-		return (TipiValue) eventParameterMap.get(name);
+		return eventParameterMap.get(name);
 	}
 
-	public Set getEventKeySet() {
+	public String getBlockParam(String name) {
+		return eventPropertyMap.get(name);
+	}
+	public Set<String> getEventKeySet() {
 		return eventParameterMap.keySet();
 	}
 
-	private final void loadEventValues(Map m) {
+	private final void loadEventValues(Map<String,Object> m) {
 		if (m == null) {
 			return;
 		}
-		Iterator it = m.keySet().iterator();
+		Iterator<String> it = m.keySet().iterator();
 		while (it.hasNext()) {
-			String s = (String) it.next();
+			String s = it.next();
 			TipiValue tv = getEventParameter(s);
 			if (tv != null) {
 				tv.setValue(m.get(s));
@@ -166,7 +169,7 @@ public class TipiEvent implements TipiExecutable {
 	}
 
 	// Sync, in current thread
-	public void performAction(TipiEventListener listener, Map event) {
+	public void performAction(TipiEventListener listener, Map<String,Object> event) throws TipiBreakException {
 		// eventParameterMap.clear();
 		// eventParameterMap.putAll(event);
 
@@ -181,17 +184,12 @@ public class TipiEvent implements TipiExecutable {
 			// System.err.println("Blocked exception");
 			return;
 		}
-		try {
-			for (int i = 0; i < myExecutables.size(); i++) {
-				TipiExecutable current = (TipiExecutable) myExecutables.get(i);
-				current.performAction(this, this, i);
-			}
-		} catch (Throwable ex) {
-			ex.printStackTrace();
-		}
+		getContext().doActions(this,myComponent,this,myExecutables);
 		getContext().debugLog("event   ", "finished event: " + this.getEventName() + " in component" + myComponent.getPath());
 		listener.eventFinished(this, event);
 	}
+
+
 
 	public boolean isTrigger(String name, String service) {
 		if (name != null) {
@@ -205,9 +203,9 @@ public class TipiEvent implements TipiExecutable {
 		return false;
 	}
 
-	public void setNavajo(Navajo n) {
-		myNavajo = n;
-	}
+//	public void setNavajo(Navajo n) {
+//		myNavajo = n;
+//	}
 
 	public String getEventName() {
 		return myEventName;
@@ -223,7 +221,7 @@ public class TipiEvent implements TipiExecutable {
 		s.setName(myEventName);
 //		s.setAttribute("type", myEventName);
 		for (int i = 0; i < myExecutables.size(); i++) {
-			TipiExecutable current = (TipiExecutable) myExecutables.get(i);
+			TipiExecutable current = myExecutables.get(i);
 			s.addChild(current.store());
 		}
 		return s;
@@ -234,7 +232,7 @@ public class TipiEvent implements TipiExecutable {
 	}
 
 	public TipiExecutable getExecutableChild(int index) {
-		return (TipiExecutable) myExecutables.get(index);
+		return myExecutables.get(index);
 	}
 
 	public String toString() {
@@ -254,8 +252,8 @@ public class TipiEvent implements TipiExecutable {
 	public void setEvent(TipiEvent e) {
 	}
 
-	public Map getParameters() {
-		return new HashMap(eventParameterMap);
+	public Map<String,TipiValue> getParameters() {
+		return new HashMap<String,TipiValue>(eventParameterMap);
 	}
 
 }

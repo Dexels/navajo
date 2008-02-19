@@ -32,11 +32,12 @@ public interface TipiDataComponent extends TipiComponent {
 	/**
 	 * @deprecated
 	 */
+	@Deprecated
 	public void performService(TipiContext context, String tipiPath, String service, boolean breakOnError, TipiEvent event,
 			long expirationInterval, String hostUrl, String username, String password, String keystore, String keypass)
 			throws TipiException, TipiBreakException;
 
-	public ArrayList getServices();
+	public List<String> getServices();
 
 	public void addService(String service);
 

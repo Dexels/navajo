@@ -11,14 +11,14 @@ public class RemoteDescriptionProvider extends BaseDescriptionProvider {
 		super(myContext);
 	}
 
-	public Set getDescriptionNames() {
+	public Set<String> getDescriptionNames() {
 		return myDescriptionMap.keySet();
 	}
 
 	public void setMessage(Message m) {
-		ArrayList al = m.getAllMessages();
+		List<Message> al = m.getAllMessages();
 		for (int i = 0; i < al.size(); i++) {
-			Message current = (Message) al.get(i);
+			Message current = al.get(i);
 			String name = current.getProperty("Name").getValue();
 			String value = current.getProperty("Description").getValue();
 			addDescription(name, value);
@@ -26,8 +26,5 @@ public class RemoteDescriptionProvider extends BaseDescriptionProvider {
 		System.err.println("# of descriptions: " + myDescriptionMap.size());
 	}
 
-	// public void init(String locale, String context) {
-	// // TODO Auto-generated method stub
-	//		
-	// }
+
 }

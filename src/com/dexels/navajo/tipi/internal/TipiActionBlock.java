@@ -28,7 +28,7 @@ import com.dexels.navajo.tipi.tipixml.*;
 public class TipiActionBlock implements TipiExecutable {
 	protected TipiComponent myComponent = null;
 	// protected Map myParams = new HashMap();
-	private final ArrayList myExecutables = new ArrayList();
+	private final List<TipiExecutable> myExecutables = new ArrayList<TipiExecutable>();
 	private String myExpression = "";
 	private String myExpressionSource = "";
 	// private TipiActionBlock myActionBlockParent = null;
@@ -38,6 +38,7 @@ public class TipiActionBlock implements TipiExecutable {
 	private TipiEvent myEvent = null;
 
 	private final TipiContext myContext;
+	private Map<String,String> eventPropertyMap = new HashMap<String, String>();
 
 	public TipiActionBlock(TipiContext tc) {
 		myContext = tc;
@@ -71,11 +72,7 @@ public class TipiActionBlock implements TipiExecutable {
 //		 System.err.println("PERFORMING BLOCK with expression "+myExpression);
 		myEvent = te;
 		boolean evaluated;
-		if (te instanceof TipiEvent) {
-			evaluated = checkCondition((TipiEvent) te);
-		} else {
-			evaluated = true;
-		}
+		evaluated = checkCondition(te);
 		try {
 			myContext.performedBlock(myComponent, this, myExpression, myExpressionSource, evaluated, te);
 		} catch (BlockActivityException ex1) {
@@ -88,19 +85,23 @@ public class TipiActionBlock implements TipiExecutable {
 		}
 //		 System.err.println("Succeeded.");
 //		 System.err.println("MY # of executables: "+myExecutables.size());
+		// Allright, now we can execute:
 		try {
 			if (multithread) {
 				for (int i = 0; i < myExecutables.size(); i++) {
-					TipiExecutable current = (TipiExecutable) myExecutables.get(i);
+					TipiExecutable current = myExecutables.get(i);
 					myContext.debugLog("thread", " multithread . Performing now");
 					System.err.println("In multithread block enqueueing: " + current.toString());
 					myContext.enqueueExecutable(current);
 				}
 			} else {
-				for (int i = 0; i < myExecutables.size(); i++) {
-					TipiExecutable current = (TipiExecutable) myExecutables.get(i);
-					current.performAction(te, this, i);
-				}
+				System.err.println("ENTERING DO ACTIONS............");
+				myContext.doActions(te,myComponent,this,myExecutables);
+//				
+//				for (int i = 0; i < myExecutables.size(); i++) {
+//					TipiExecutable current = (TipiExecutable) myExecutables.get(i);
+//					current.performAction(te, this, i);
+//				}
 			}
 			myEvent = null;
 		} catch (TipiBreakException ex) {
@@ -139,62 +140,6 @@ public class TipiActionBlock implements TipiExecutable {
 		return false;
 	}
 
-	/**
-	 * @deprecated Also: Does not really support event parameters. Did not think
-	 *             it useful to implement anymore Only added the parameter to
-	 *             make it compile.
-	 */
-	private boolean evaluateCondition(TipiContext context, Object source, TipiEvent te) throws TipiException {
-		boolean valid = false;
-		Operand o;
-		TipiPathParser pp = new TipiPathParser((TipiComponent) source, context, myExpressionSource);
-		TipiComponent sourceComponent = pp.getComponent();
-		// context.setCurrentComponent( (TipiComponent) source);
-		if (pp.getPathType() == pp.PATH_TO_TIPI) {
-			if (sourceComponent != null) {
-				try {
-					o = Expression.evaluate(myExpression, sourceComponent.getNearestNavajo(), null, null, null, (TipiComponent) source);
-					if (o.value.toString().equals("true")) {
-						valid = true;
-					}
-				} catch (TMLExpressionException ex) {
-					ex.printStackTrace();
-				} catch (Exception ex) {
-					ex.printStackTrace();
-				}
-			} else {
-				System.err.println("ERROR: --------------------------> Could not find source tipi, returning FALSE");
-				System.err.println("Expression: " + myExpression);
-				System.err.println("From path: " + myExpressionSource);
-				valid = false;
-			}
-		} else if (pp.getPathType() == pp.PATH_TO_MESSAGE) {
-			Message m = pp.getMessage();
-			if (sourceComponent != null && m != null) {
-				try {
-					// Use a copy of the Message. ArrayMessages remain a little
-					// tricky
-					Navajo n = NavajoFactory.getInstance().createNavajo();
-					Message bert = m.copy(n);
-					n.addMessage(bert);
-					o = Expression.evaluate(myExpression, n, null, bert, null, (TipiComponent) source);
-					if (o.value.toString().equals("true")) {
-						valid = true;
-					}
-				} catch (TMLExpressionException ex) {
-					ex.printStackTrace();
-				} catch (Exception ex) {
-					ex.printStackTrace();
-				}
-			} else {
-				System.err.println("ERROR: --------------------------> Could not find source tipi for MESSAGE, ignoring condition");
-				valid = true;
-			}
-		} else {
-			throw new TipiException("Cannot put a condition on a component or property source");
-		}
-		return valid;
-	}
 
 	//
 	// public TipiEvent getEvent() {
@@ -204,6 +149,13 @@ public class TipiActionBlock implements TipiExecutable {
 	public void load(XMLElement elm, TipiComponent parent) {
 		conditionStyle = false;
 		myComponent = parent;
+		for (Iterator<String> iterator = elm.enumerateAttributeNames(); iterator.hasNext();) {
+			String n= iterator.next();
+			if(!n.equals("expression")) {
+				eventPropertyMap.put(n,elm.getStringAttribute(n));
+							
+			}
+		}
 		// myEvent = event;
 		if (elm.getName().equals("block")) {
 			myExpression = (String) elm.getAttribute("expression");
@@ -213,7 +165,7 @@ public class TipiActionBlock implements TipiExecutable {
 				System.err.println("Load multithread block!");
 				multithread = true;
 			}
-			Vector temp = elm.getChildren();
+			List<XMLElement> temp = elm.getChildren();
 			parseActions(temp);
 		}
 	}
@@ -235,7 +187,7 @@ public class TipiActionBlock implements TipiExecutable {
 		}
 
 		for (int i = 0; i < myExecutables.size(); i++) {
-			TipiExecutable current = (TipiExecutable) myExecutables.get(i);
+			TipiExecutable current = myExecutables.get(i);
 			XMLElement parm = current.store();
 			// parm.setName("param");
 			cond.addChild(parm);
@@ -254,50 +206,26 @@ public class TipiActionBlock implements TipiExecutable {
 		if (myExpression == null || myExpression.equals("")) {
 			return true;
 		}
-		if (conditionStyle) {
-			return evaluateCondition(myContext, myComponent, te);
-		} else {
-			return evaluateBlock(myContext, myComponent, te);
-		}
+		return evaluateBlock(myContext, myComponent, te);
+	
 	}
 
-	private final void parseActions(Vector v) {
+	private final void parseActions(List<XMLElement> temp) {
 		// TipiActionBlock currentBlock = parentBlock;
 		try {
-			for (int i = 0; i < v.size(); i++) {
-				XMLElement current = (XMLElement) v.elementAt(i);
-//				if (current.getName().equals("action")) {
-//					// currentBlock.parseActions(v,context,myComponent);
-//					TipiAction action = myContext.instantiateTipiAction(current, myComponent);
-//					// action.setActionBlock(this);
-//					appendTipiExecutable(action);
-//					// myActions.add(action);
-//				}
-				// if (current.getName().equals("condition")) {
-				// TipiCondition con = context.instantiateTipiCondition(current,
-				// myComponent, this);
-				// parseActions(current.getChildren(), context, con);
-				// }
+			for (XMLElement current : temp) {
 				if (current.getName().equals("block")) {
 					TipiActionBlock con = myContext.instantiateTipiActionBlock(current, myComponent);
-					// con.parseActions(current.getChildren());
-					// con.setTipiActionBlockParent(this);
 					appendTipiExecutable(con);
 				}else {
 					TipiAction action = myContext.instantiateTipiAction(current, myComponent);
-					// action.setActionBlock(this);
 					appendTipiExecutable(action);
-					
-				}
+				}				
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-
-	// public void appendExecutable(TipiExecutable a) {
-	// myExecutables.add(a);
-	// }
 
 	public void removeExecutable(TipiExecutable a) {
 		myExecutables.remove(a);
@@ -357,7 +285,7 @@ public class TipiActionBlock implements TipiExecutable {
 	}
 
 	public TipiExecutable getExecutableChild(int index) {
-		return (TipiExecutable) myExecutables.get(index);
+		return myExecutables.get(index);
 	}
 
 	/*
@@ -376,5 +304,9 @@ public class TipiActionBlock implements TipiExecutable {
 	 */
 	public void setEvent(TipiEvent e) {
 		myEvent = e;
+	}
+
+	public String getBlockParam(String key) {
+		return eventPropertyMap.get(key);
 	}
 }

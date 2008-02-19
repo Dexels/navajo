@@ -3,7 +3,6 @@ package com.dexels.navajo.tipi.actions;
 import java.util.*;
 
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.parser.*;
 import com.dexels.navajo.tipi.internal.*;
 import com.dexels.navajo.tipi.tipixml.*;
 
@@ -32,10 +31,10 @@ public final class TipiDumpClass extends TipiAction {
 			Navajo n = NavajoFactory.getInstance().createNavajo();
 			Message mm = NavajoFactory.getInstance().createMessage(n, "Class", Message.MSG_TYPE_ARRAY);
 			n.addMessage(mm);
-			Map m = myContext.getTipiClassDefMap();
-			for (Iterator iter = m.keySet().iterator(); iter.hasNext();) {
-				String element = (String) iter.next();
-				XMLElement def = (XMLElement) m.get(element);
+			Map<String, XMLElement> m = myContext.getTipiClassDefMap();
+			for (Iterator<String> iter = m.keySet().iterator(); iter.hasNext();) {
+				String element = iter.next();
+				XMLElement def = m.get(element);
 				dumpDef(mm, element, def);
 			}
 		} catch (NavajoException e) {

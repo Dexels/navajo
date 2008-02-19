@@ -2,13 +2,6 @@ package com.dexels.navajo.tipi.internal;
 
 import java.io.*;
 import java.net.*;
-import java.util.*;
-import java.util.zip.*;
-
-
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.types.*;
-import com.sun.corba.se.impl.encoding.OSFCodeSetRegistry.*;
 
 public class TmlResourceLoader extends ClassPathResourceLoader {
 

@@ -18,9 +18,18 @@ public abstract class TipiAction implements TipiExecutable {
 
 	protected String myType;
 
-	protected Map parameterMap = new HashMap();
+	protected Map<String,TipiValue> parameterMap = new HashMap<String,TipiValue>();
 
 	protected int counter = 0;
+
+
+	/**
+	 * Not 'really' supported, gets a bit difficult in the xml to distinguish
+	 * from other params
+	 */
+	public String getBlockParam(String key) {
+		return null;
+	}
 
 	// protected TipiCondition myCondition;
 	protected abstract void execute(TipiEvent event) throws TipiBreakException, TipiException;
@@ -58,11 +67,11 @@ public abstract class TipiAction implements TipiExecutable {
 		XMLElement xe = new CaseSensitiveXMLElement();
 		xe.setName(getType());
 //		xe.setAttribute("type", getType());
-		Iterator it = parameterMap.keySet().iterator();
+		Iterator<String> it = parameterMap.keySet().iterator();
 		while (it.hasNext()) {
-			String name = (String) it.next();
+			String name = it.next();
 			// System.err.println("Storing: " + name);
-			TipiValue value = (TipiValue) parameterMap.get(name);
+			TipiValue value = parameterMap.get(name);
 
 			// System.err.println("DefaultValue: " + value.getValue() + "
 			// default: " + value.getDefaultValue());
@@ -105,15 +114,15 @@ public abstract class TipiAction implements TipiExecutable {
 	}
 
 	public TipiValue getParameter(String name) {
-		return (TipiValue) parameterMap.get(name);
+		return parameterMap.get(name);
 	}
 
-	public ArrayList getParams() {
-		ArrayList parms = new ArrayList(parameterMap.values());
+	public ArrayList<TipiValue> getParams() {
+		ArrayList<TipiValue> parms = new ArrayList<TipiValue>(parameterMap.values());
 		return parms;
 	}
 
-	public Set getParameterNames() {
+	public Set<String> getParameterNames() {
 		return parameterMap.keySet();
 	}
 
@@ -148,6 +157,15 @@ public abstract class TipiAction implements TipiExecutable {
 		return evaluate(t.getValue(), event);
 	}
 
+	public Object getEvaluatedParameterValue(String name, TipiEvent event) {
+		Operand o = getEvaluatedParameter(name, event);
+		if(o!=null) {
+			return o.value;
+		}
+		return null;
+	}
+
+	
 	public void setContext(TipiContext tc) {
 		myContext = tc;
 	}

@@ -4,6 +4,6 @@ import java.util.*;
 
 public class CaseSensitiveXMLElement extends XMLElement {
 	public CaseSensitiveXMLElement() {
-		super(new Hashtable(), true, false);
+		super(new Hashtable<String,char[]>(), true, false);
 	}
 }

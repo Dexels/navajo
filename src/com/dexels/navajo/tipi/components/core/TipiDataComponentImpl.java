@@ -25,7 +25,7 @@ import com.dexels.navajo.tipi.tipixml.*;
  * @version 1.0
  */
 public abstract class TipiDataComponentImpl extends TipiComponentImpl implements TipiDataComponent {
-	private final ArrayList myServices = new ArrayList();
+	private final List<String> myServices = new ArrayList<String>();
 	protected String prefix;
 	// private String autoLoad = null;
 	// private String autoLoadDestination = null;
@@ -102,7 +102,7 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 			setConstraints(constraint);
 		}
 		// System.err.println("MY CONSTRIANT::::::::::::::::: " + constraint);
-		Vector children = null;
+		List<XMLElement> children = null;
 		if (instance.getAttribute("class") != null || instance.getAttribute("type")!=null ) {
 			// System.err.println("Instantiating from instance");
 			children = instance.getChildren();
@@ -111,7 +111,7 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 			children = definition.getChildren();
 		}
 		for (int i = 0; i < children.size(); i++) {
-			XMLElement child = (XMLElement) children.get(i);
+			XMLElement child = children.get(i);
 			if (child.getName().equals("layout") || child.getName().startsWith("l.")) {
 				instantiateWithLayout(child);
 			} else {
@@ -151,9 +151,9 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 	}
 
 	public void replaceLayout(TipiLayout tl) {
-		ArrayList elementList = new ArrayList();
+		List<TipiComponent> elementList = new ArrayList<TipiComponent>();
 		for (int i = 0; i < getChildCount(); i++) {
-			TipiComponent current = (TipiComponent) getTipiComponent(i);
+			TipiComponent current = getTipiComponent(i);
 			if (current.isVisibleElement()) {
 				removeFromContainer(current.getContainer());
 			}
@@ -162,7 +162,7 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 		setLayout(tl);
 		setContainerLayout(tl.getLayout());
 		for (int i = 0; i < elementList.size(); i++) {
-			TipiComponent current = (TipiComponent) elementList.get(i);
+			TipiComponent current = elementList.get(i);
 			Object o = tl.createDefaultConstraint(i);
 			current.setConstraints(o);
 			addToContainer(current.getContainer(), o);
@@ -199,7 +199,7 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 	// }
 	// }
 
-	public ArrayList getServices() {
+	public List<String> getServices() {
 		return myServices;
 	}
 
@@ -214,6 +214,7 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 	/**
 	 * @deprecated
 	 */
+	@Deprecated
 	public void performService(TipiContext context, String tipiPath, String service, boolean breakOnError, TipiEvent event,
 			long expirationInterval, String hostUrl, String username, String password, String keystore, String keypass)
 			throws TipiException, TipiBreakException {
@@ -244,7 +245,7 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 		}
 		
 		for (int i = 0; i < properties.size(); i++) {
-			PropertyComponent current = (PropertyComponent) properties.get(i);
+			PropertyComponent current = properties.get(i);
 			Property p;
 			if (prefix != null) {
 				p = n.getProperty(prefix + "/" + current.getPropertyName());
@@ -276,12 +277,8 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 				}
 			}
 		}
-		if (n == null) {
-			// System.err.println("NULL NAVAJO!");
-			return;
-		}
 		myNavajo = n;
-		/** @todo Maybe it is not a good idea that it is recursive. */
+		/** @TODO Maybe it is not a good idea that it is recursive. */
 		for (int i = 0; i < getChildCount(); i++) {
 			TipiComponent tcomp = getTipiComponent(i);
 			if (TipiDataComponent.class.isInstance(tcomp)) {
@@ -295,7 +292,7 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 	}
 
 	protected void doPerformOnLoad(String method) throws TipiException {
-		Map m = new HashMap();
+		Map<String,Object> m = new HashMap<String,Object>();
 		m.put("service", method);
 		performTipiEvent("onLoad", m, true);
 	}
@@ -305,13 +302,11 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 
 	public boolean loadErrors(Navajo n, String method) {
 		for (int i = 0; i < properties.size(); i++) {
-			PropertyComponent current = (PropertyComponent) properties.get(i);
-			Property p;
+			PropertyComponent current = properties.get(i);
 			if (prefix != null) {
 				System.err
 						.println("LOADING ERRORS: DEPRECATED:::::: WITH Prefix, looking for: " + prefix + "/" + current.getPropertyName());
 			} else {
-				// System.err.println("Attempting to load...");
 				current.checkForConditionErrors(n.getMessage("ConditionErrors"));
 			}
 		}
@@ -342,7 +337,7 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 						}
 					}
 				}
-				Map param = new HashMap();
+				Map<String,Object> param = new HashMap<String,Object>();
 				param.put("id", ids.toString());
 				param.put("description", descs.toString());
 				param.put("service", method);
@@ -402,9 +397,11 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 		return IamThereforeIcanbeStored;
 	}
 
+	@Override
 	public void tipiLoaded() {
 	}
 
+	@Override
 	public void childDisposed() {
 	}
 
@@ -414,7 +411,7 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 
 	public boolean hasProperty(String path) {
 		for (int i = 0; i < properties.size(); i++) {
-			PropertyComponent current = (PropertyComponent) properties.get(i);
+			PropertyComponent current = properties.get(i);
 			// System.err.println("Checking hasproperty: " +
 			// current.getPropertyName());
 			if (path.equals(current.getPropertyName())) {

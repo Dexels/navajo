@@ -27,19 +27,21 @@ public class TipiComponentMethod {
 	private Map myArgs = new HashMap();
 	// private Map myInstanceArgs = new HashMap();
 	private TipiAction myTipiAction = null;
+	private final TipiComponent myComponent;
 
-	public TipiComponentMethod() {
+	public TipiComponentMethod(TipiComponent c) {
+		myComponent = c;
 	}
 
 	public void load(XMLElement x) {
 		if (!x.getName().equals("method")) {
 			throw new IllegalArgumentException("Method components are supposed to be called 'method'");
 		}
-		Vector v = x.getChildren();
+		List<XMLElement> v = x.getChildren();
 		for (int i = 0; i < v.size(); i++) {
-			XMLElement child = (XMLElement) v.elementAt(i);
+			XMLElement child = v.get(i);
 			String argName = child.getStringAttribute("name");
-			TipiValue tv = new TipiValue(child);
+			TipiValue tv = new TipiValue(myComponent, child);
 			// tv.load(child);
 			myArgs.put(argName, tv);
 		}

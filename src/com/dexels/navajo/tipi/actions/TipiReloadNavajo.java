@@ -32,12 +32,15 @@ public class TipiReloadNavajo extends TipiAction {
 		
 		if (to == null || from == null) {
 	
-			System.err.println("Null evaluation in TipiReloadNavajo, new school evaluation");
+//			System.err.println("Null evaluation in TipiReloadNavajo, new school evaluation");
 			Navajo s = (Navajo) service.value;
+			if(s.getHeader()==null) {
+				System.err.println("Header null!");
+			}
 			myContext.loadNavajo(s, s.getHeader().getRPCName());
 			return;
 		}
-		System.err.println("Old school navajoReload found!");
+//		System.err.println("Old school navajoReload found!");
 		TipiDataComponent toData = (TipiDataComponent) to.value;
 		TipiDataComponent fromData = (TipiDataComponent) from.value;
 

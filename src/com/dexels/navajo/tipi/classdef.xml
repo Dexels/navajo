@@ -1,110 +1,140 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <tid errorhandler="error">
-    <tipi-include location="com/dexels/navajo/tipi/actions/actiondef.xml"/>
+   <tipi-include location="com/dexels/navajo/tipi/actions/actiondef.xml" />
+   <tipiclass class="HttpNavajoConnector" description="Navajo HTTP" name="http" package="com.dexels.navajo.tipi.connectors" type="connector">
+      <events>
+         <event name="onInstantiate" />
+         <event name="onServiceSent">
+            <param name="service" type="string" />
+         </event>
+         <event name="onServiceReceived">
+            <param name="service" type="string" />
+         </event>
+      </events>
+      <values>
+         <value direction="in" name="server" type="string" />
+         <value direction="in" name="username" type="string" />
+         <value direction="in" name="password" type="string" />
+         <value direction="in" name="keystore" type="string" />
+         <value direction="in" name="storepass" type="string" />
+      </values>
+      <entrypoints>
+         <entry name="Init" />
+      </entrypoints>
+      <methods />
+   </tipiclass>
 
-    <tipiclass studio-icon="messagestore.gif" module="abstract" class="TipiMessageStoreImpl" name="messagestore" package="com.dexels.navajo.tipi.components.core" type="tipi" childcount="0" layoutmanager="false" addtocontainer="false">
-        <events>
-            <event name="onGeneratedErrors">
-                <param name="id" type="string"/>
-                <param name="description" type="string"/>
-            </event>
-            <event name="onInstantiate"/>
-            <event name="onLoad">
-                <param name="service" type="string"/>
-            </event>
-        </events>
-        <values>
-            <value direction="out" name="selectedMessage" type="message"/>
-        </values>
-        <methods/>
-    </tipiclass>
+   <tipiclass studio-icon="messagestore.gif" module="abstract" class="TipiShadowFilterImpl" name="filter" package="com.dexels.navajo.tipi.connectors" type="connector"
+      childcount="0" layoutmanager="false" addtocontainer="false">
 
-    <tipiclass studio-icon="messagestore.gif" module="abstract" class="TipiShadowFilterImpl" name="shadowfilter" package="com.dexels.navajo.tipi.components.core" type="tipi" childcount="0" layoutmanager="false" addtocontainer="false">
-        <events>
-            <event name="onGeneratedErrors">
-                <param name="id" type="string"/>
-                <param name="description" type="string"/>
-            </event>
-            <event name="onInstantiate"/>
-            <event name="onLoad">
-                <param name="service" type="string"/>
-            </event>
-        </events>
-        <values>
-            <value direction="in" name="messagePath" type="string"/>
-            <value direction="in" name="shadowNavajoName" type="string"/>
-            <value direction="in" name="simpleFilter" type="string"/>
-        </values>
-        <methods/>
-    </tipiclass>
-    
-    <tipiclass studio-icon="messagestore.gif" module="abstract" class="TipiConditionChecker" name="conditionchecker" package="com.dexels.navajo.tipi.components.core" type="tipi" childcount="0" layoutmanager="false" addtocontainer="false">
-        <events>
-            <event name="onGeneratedErrors">
-                <param name="id" type="string"/>
-                <param name="description" type="string"/>
-            </event>
-            <event name="onInstantiate"/>
-             <event name="onLoad">
-                <param name="service" type="string"/>
-            </event>
-        </events>
-        <values>
-            <value direction="out" name="messagePath" type="string"/>
-        </values>
-        <methods/>
-    </tipiclass>
-    <tipiclass studio-icon="messagestore.gif" module="abstract" class="TipiTimerImpl" name="timer" package="com.dexels.navajo.tipi.components.core" type="tipi" childcount="0" layoutmanager="false" addtocontainer="false">
-        <events>
-            <event name="onTimer"/>
-            <event name="onInstantiate"/>
-        </events>
-        <values>
-            <value direction="in" name="interval" type="integer"/>
-        </values>
-        <methods>
-          <method name="start"/>
-          <method name="stop"/>
-        </methods>
-    </tipiclass>
-    <tipiclass studio-icon="resourcecopy.gif" module="extensions" class="TipiResourceCopier" name="copy" package="com.dexels.navajo.tipi.components.core" propertycomponent="false" type="component" addtocontainer="false">
-        <events>
-            <event name="onInstantiate"/>
-        </events>
-        <values/>
-        <methods>
-            <method name="copy">
-                <param name="source" type="resource"/>
-                <param name="target" type="resource"/>
-            </method>
-        </methods>
-    </tipiclass>
-    <tipi-parser name="tipi" type="com.dexels.navajo.tipi.TipiDataComponent" parser="com.dexels.navajo.tipi.components.core.parsers.TipiParser"/>
-    <tipi-parser name="component" type="com.dexels.navajo.tipi.TipiComponent" parser="com.dexels.navajo.tipi.components.core.parsers.ComponentParser"/>
-    <tipi-parser name="attributeref" type="com.dexels.navajo.tipi.internal.AttributeRef" parser="com.dexels.navajo.tipi.components.core.parsers.AttributeRefParser"/>
-    <tipi-parser name="global" type="java.lang.Object" parser="com.dexels.navajo.tipi.components.core.parsers.GlobalParser"/>
-    <tipi-parser name="globalref" type="com.dexels.navajo.tipi.internal.GlobalRef" parser="com.dexels.navajo.tipi.components.core.parsers.GlobalRefParser"/>
-    <tipi-parser name="systemref" type="com.dexels.navajo.tipi.internal.SystemPropertyRef" parser="com.dexels.navajo.tipi.components.core.parsers.SystemPropertyRefParser"/>
-    <tipi-parser name="attribute" type="java.lang.Object" parser="com.dexels.navajo.tipi.components.core.parsers.AttributeParser"/>
-    <tipi-parser name="path" type="java.lang.Object" parser="com.dexels.navajo.tipi.components.core.parsers.PathParser"/>
-    <tipi-parser name="property" type="java.lang.Object" parser="com.dexels.navajo.tipi.components.core.parsers.PropertyParser"/>
-    <tipi-parser name="message" type="com.dexels.navajo.document.Message" parser="com.dexels.navajo.tipi.components.core.parsers.MessageParser"/>
-    <tipi-parser name="propertyref" type="com.dexels.navajo.document.Property" parser="com.dexels.navajo.tipi.components.core.parsers.PropertyRefParser"/>
-    <tipi-parser name="resource" type="java.net.URL" parser="com.dexels.navajo.tipi.components.core.parsers.ResourceParser"/>
-    <tipi-parser name="url" type="java.net.URL" parser="com.dexels.navajo.tipi.components.core.parsers.UrlParser"/>
-    <tipi-parser name="string" type="java.lang.String" parser="com.dexels.navajo.tipi.components.core.parsers.StringParser"/>
-    <tipi-parser name="integer" type="java.lang.Integer" parser="com.dexels.navajo.tipi.components.core.parsers.IntegerParser"/>
-    <tipi-parser name="float" type="java.lang.Float" parser="com.dexels.navajo.tipi.components.core.parsers.FloatParser"/>
-    <tipi-parser name="boolean" type="java.lang.Boolean" parser="com.dexels.navajo.tipi.components.core.parsers.BooleanParser"/>
-    <tipi-parser name="system" type="java.lang.String" parser="com.dexels.navajo.tipi.components.core.parsers.SystemPropertyParser"/>
-    <tipi-parser name="event" type="java.lang.Object" parser="com.dexels.navajo.tipi.components.core.parsers.EventParser"/>
-    <tipi-parser name="label" type="java.lang.String" parser="com.dexels.navajo.tipi.components.core.parsers.LabelParser"/>
-    <tipi-parser name="alias" type="java.lang.Object" parser="com.dexels.navajo.tipi.components.core.parsers.AliasParser"/>
-    
-    <tipi-parser name="navajo" type="com.dexels.navajo.document.Navajo" parser="com.dexels.navajo.tipi.components.core.parsers.NavajoParser"/>
-     
-    <tipi-parser name="selection" type="java.lang.String" parser="com.dexels.navajo.tipi.components.core.parsers.StringParser"/>
-    <tipi-parser type="java.lang.Object" name="object" parser="com.dexels.navajo.tipi.components.core.parsers.ObjectParser"/>
+     <events>
+        <event name="onInstantiate" />
+         <event name="onServiceSent">
+            <param name="service" type="string" />
+         </event>
+         <event name="onServiceReceived">
+            <param name="service" type="string" />
+         </event>
+      </events>
+      
+      <values>
+        <value direction="in" name="messagePath" type="string"/>
+        <value direction="in" name="simpleFilter" type="string"/>
+      </values>
+      <methods />
+   </tipiclass>
+   <tipiclass studio-icon="messagestore.gif" module="abstract" class="TipiMessageStoreImpl" name="messagestore" package="com.dexels.navajo.tipi.components.core" type="tipi"
+      childcount="0" layoutmanager="false" addtocontainer="false">
+      <events>
+         <event name="onGeneratedErrors">
+            <param name="id" type="string" />
+            <param name="description" type="string" />
+         </event>
+         <event name="onInstantiate" />
+         <event name="onLoad">
+            <param name="service" type="string" />
+         </event>
+      </events>
+      <values>
+         <value direction="out" name="selectedMessage" type="message" />
+      </values>
+      <methods />
+   </tipiclass>
+
+
+
+   <tipiclass studio-icon="messagestore.gif" module="abstract" class="TipiConditionChecker" name="conditionchecker" package="com.dexels.navajo.tipi.components.core" type="tipi"
+      childcount="0" layoutmanager="false" addtocontainer="false">
+      <events>
+         <event name="onGeneratedErrors">
+            <param name="id" type="string" />
+            <param name="description" type="string" />
+         </event>
+         <event name="onInstantiate" />
+         <event name="onLoad">
+            <param name="service" type="string" />
+         </event>
+      </events>
+      <values>
+         <value direction="out" name="messagePath" type="string" />
+      </values>
+      <methods />
+   </tipiclass>
+   <tipiclass studio-icon="messagestore.gif" module="abstract" class="TipiTimerImpl" name="timer" package="com.dexels.navajo.tipi.components.core" type="tipi" childcount="0"
+      layoutmanager="false" addtocontainer="false">
+      <events>
+         <event name="onTimer" />
+         <event name="onInstantiate" />
+      </events>
+      <values>
+         <value direction="in" name="interval" type="integer" />
+      </values>
+      <methods>
+         <method name="start" />
+         <method name="stop" />
+      </methods>
+   </tipiclass>
+   <tipiclass studio-icon="resourcecopy.gif" module="extensions" class="TipiResourceCopier" name="copy" package="com.dexels.navajo.tipi.components.core" propertycomponent="false"
+      type="component" addtocontainer="false">
+      <events>
+         <event name="onInstantiate" />
+      </events>
+      <values />
+      <methods>
+         <method name="copy">
+            <param name="source" type="resource" />
+            <param name="target" type="resource" />
+         </method>
+      </methods>
+   </tipiclass>
+   <tipi-parser name="tipi" type="com.dexels.navajo.tipi.TipiDataComponent" parser="com.dexels.navajo.tipi.components.core.parsers.TipiParser" />
+   <tipi-parser name="component" type="com.dexels.navajo.tipi.TipiComponent" parser="com.dexels.navajo.tipi.components.core.parsers.ComponentParser" />
+   <tipi-parser name="attributeref" type="com.dexels.navajo.tipi.internal.AttributeRef" parser="com.dexels.navajo.tipi.components.core.parsers.AttributeRefParser" />
+   <tipi-parser name="global" type="java.lang.Object" parser="com.dexels.navajo.tipi.components.core.parsers.GlobalParser" />
+   <tipi-parser name="globalref" type="com.dexels.navajo.tipi.internal.GlobalRef" parser="com.dexels.navajo.tipi.components.core.parsers.GlobalRefParser" />
+   <tipi-parser name="systemref" type="com.dexels.navajo.tipi.internal.SystemPropertyRef" parser="com.dexels.navajo.tipi.components.core.parsers.SystemPropertyRefParser" />
+   <tipi-parser name="attribute" type="java.lang.Object" parser="com.dexels.navajo.tipi.components.core.parsers.AttributeParser" />
+   <tipi-parser name="path" type="java.lang.Object" parser="com.dexels.navajo.tipi.components.core.parsers.PathParser" />
+   <tipi-parser name="property" type="java.lang.Object" parser="com.dexels.navajo.tipi.components.core.parsers.PropertyParser" />
+   <tipi-parser name="message" type="com.dexels.navajo.document.Message" parser="com.dexels.navajo.tipi.components.core.parsers.MessageParser" />
+   <tipi-parser name="propertyref" type="com.dexels.navajo.document.Property" parser="com.dexels.navajo.tipi.components.core.parsers.PropertyRefParser" />
+   <tipi-parser name="resource" type="java.net.URL" parser="com.dexels.navajo.tipi.components.core.parsers.ResourceParser" />
+   <tipi-parser name="url" type="java.net.URL" parser="com.dexels.navajo.tipi.components.core.parsers.UrlParser" />
+   <tipi-parser name="string" type="java.lang.String" parser="com.dexels.navajo.tipi.components.core.parsers.StringParser" />
+   <tipi-parser name="integer" type="java.lang.Integer" parser="com.dexels.navajo.tipi.components.core.parsers.IntegerParser" />
+   <tipi-parser name="float" type="java.lang.Float" parser="com.dexels.navajo.tipi.components.core.parsers.FloatParser" />
+   <tipi-parser name="boolean" type="java.lang.Boolean" parser="com.dexels.navajo.tipi.components.core.parsers.BooleanParser" />
+   <tipi-parser name="system" type="java.lang.String" parser="com.dexels.navajo.tipi.components.core.parsers.SystemPropertyParser" />
+   <tipi-parser name="event" type="java.lang.Object" parser="com.dexels.navajo.tipi.components.core.parsers.EventParser" />
+   <tipi-parser name="label" type="java.lang.String" parser="com.dexels.navajo.tipi.components.core.parsers.LabelParser" />
+   <tipi-parser name="alias" type="java.lang.Object" parser="com.dexels.navajo.tipi.components.core.parsers.AliasParser" />
+   <tipi-parser name="binary" type="com.dexels.navajo.document.types.Binary" parser="com.dexels.navajo.tipi.components.core.parsers.BinaryParser" />
+
+
+   <tipi-parser name="navajo" type="com.dexels.navajo.document.Navajo" parser="com.dexels.navajo.tipi.components.core.parsers.NavajoParser" />
+
+   <tipi-parser name="selection" type="java.lang.String" parser="com.dexels.navajo.tipi.components.core.parsers.StringParser" />
+   <tipi-parser type="java.lang.Object" name="object" parser="com.dexels.navajo.tipi.components.core.parsers.ObjectParser" />
 
 </tid>

@@ -1,10 +1,12 @@
-package com.dexels.navajo.tipi.components.core;
+package com.dexels.navajo.tipi.connectors;
 
 import java.util.*;
 
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.filter.*;
 import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.components.core.*;
+import com.dexels.navajo.tipi.components.core.impl.*;
 
 /**
  * <p>
@@ -23,15 +25,14 @@ import com.dexels.navajo.tipi.*;
  * @author not attributable
  * @version 1.0
  */
-public class TipiShadowFilterImpl extends TipiDataComponentImpl implements TipiDataComponent {
+public class TipiShadowFilterImpl extends TipiBaseConnector implements TipiConnector {
 
 	protected String messagePath = null;
-	protected String shadowNavajoName = null;
-
 	protected final List<PropertyFilter> propertyFilters = new ArrayList<PropertyFilter>();
-	private String currentMethod;
 
 	public Object createContainer() {
+	//	return new ShadowFilter();
+		System.err.println("CREATING A TIPI FILTER!!!\n\n");
 		return null;
 	}
 
@@ -40,45 +41,33 @@ public class TipiShadowFilterImpl extends TipiDataComponentImpl implements TipiD
 		if("messagePath".equalsIgnoreCase(name)) {
 			messagePath = (String) object;
 		}
-		if("shadowNavajoName".equalsIgnoreCase(name)) {
-			shadowNavajoName = (String) object;
-		}
+
 		if("simpleFilter".equalsIgnoreCase(name)) {
+			System.err.println("Adding filter: "+object);
 			propertyFilters.clear();
 			try {
 				propertyFilters.add(new PropertyFilter("*", (String)object, "string", "contains"));
-				reloadNavajo();
+//				reloadNavajo();
 			} catch (NavajoException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
-			} catch (TipiException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (TipiBreakException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			} 
 		}
-		
+		super.setComponentValue(name, object);
 	}
 
 	public Object getComponentValue(String name) {
 		return super.getComponentValue(name);
 	}
 
-	private void reloadNavajo() throws TipiException, TipiBreakException {
-		if(getNavajo()!=null) {
-			loadData(getNavajo(), currentMethod);
-		}
-	}
 	
-	@Override
-	public void loadData(Navajo n, String method) throws TipiException, TipiBreakException {
-		super.loadData(n, method);
-		currentMethod = method;
+
+
+	public void doTransaction(Navajo n, String service, String destination) throws TipiBreakException, TipiException {
+//		super.loadData(n, method);
 		Navajo result = n.copy();
 		Message currentSet = result.getMessage(messagePath);
 		Set<Message> toBeRemoved = new HashSet<Message>();
+		System.err.println("Working: # of filters: "+propertyFilters.size());
 		try {
 			for (PropertyFilter pf : propertyFilters) {
 				long s = System.currentTimeMillis();
@@ -91,16 +80,21 @@ public class TipiShadowFilterImpl extends TipiDataComponentImpl implements TipiD
 				System.err.println("Scan took: "+(System.currentTimeMillis()-s));
 			}
 		} catch (NavajoException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		for (Message message : toBeRemoved) {
 			currentSet.removeMessage(message);
 		}
 		long s = System.currentTimeMillis();
-		getContext().addNavajo(shadowNavajoName, result);
-		getContext().loadNavajo(result, shadowNavajoName);
+		injectNavajo(service, n);
 		System.err.println("Load took: "+(System.currentTimeMillis()-s));
-
+		
 	}
+
+
+
+	public String getConnectorId() {
+		return "filter";
+	}
+
 }

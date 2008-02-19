@@ -21,8 +21,8 @@ public abstract class TipiBaseQuestionList extends TipiDataComponentImpl {
 	protected String questionDefinitionName = null;
 	protected String questionGroupDefinitionName = null;
 
-	protected final ArrayList myGroups = new ArrayList();
-	protected final Set myValidGroups = new HashSet();
+	protected final List<TipiBaseQuestionGroup> myGroups = new ArrayList<TipiBaseQuestionGroup>();
+	protected final Set<TipiBaseQuestionGroup> myValidGroups = new HashSet<TipiBaseQuestionGroup>();
 	private String subQuestionPath = null;
 
 	protected abstract Object getGroupConstraints(Message groupMessage);
@@ -129,8 +129,6 @@ public abstract class TipiBaseQuestionList extends TipiDataComponentImpl {
 	public void flatten(String serviceName, String server, String username, String password, String pincode, String keystore,
 			String keypass, boolean isFinal) throws NavajoException, TipiBreakException {
 		Navajo input = getNearestNavajo();
-		// System.err.println("^^^^^^^^^^^^^^^^^^^^^^^^^^>>> "+input);
-		// input.write(System.err);
 		Message questionList = input.getMessage("QuestionList@0");
 		Navajo n = NavajoFactory.getInstance().createNavajo();
 		Message aap = input.getMessage("ObjectForm");
@@ -142,6 +140,8 @@ public abstract class TipiBaseQuestionList extends TipiDataComponentImpl {
 		if (aap != null) {
 			m = aap.copy(n);
 			n.addMessage(m);
+		} else {
+			throw NavajoFactory.getInstance().createNavajoException("Error: No ObjectForm or FromData message found.");
 		}
 		m.getProperty("Status").setAnyValue(isFinal ? "FINAL" : "CHANGED");
 
@@ -161,30 +161,22 @@ public abstract class TipiBaseQuestionList extends TipiDataComponentImpl {
 		if (clubMsg != null) {
 			n.addMessage(clubMsg.copy(n));
 		}
-		if (m != null) {
-			Property pin = NavajoFactory.getInstance().createProperty(n, "Pincode", Property.STRING_PROPERTY, pincode, 16, "",
-					Property.DIR_IN);
-			m.addProperty(pin);
+		Property pin = NavajoFactory.getInstance().createProperty(n, "Pincode", Property.STRING_PROPERTY, pincode, 16, "",
+				Property.DIR_IN);
+		m.addProperty(pin);
 
-			Property date = NavajoFactory.getInstance().createProperty(n, "TimeStamp", Property.DATE_PROPERTY, "", 0, "", Property.DIR_IN);
-			date.setValue(new Date());
-			m.addProperty(date);
-		}
+		Property date = NavajoFactory.getInstance().createProperty(n, "TimeStamp", Property.DATE_PROPERTY, "", 0, "", Property.DIR_IN);
+		date.setValue(new Date());
+		m.addProperty(date);
 
 		Message answers = NavajoFactory.getInstance().createMessage(n, "Answers", Message.MSG_TYPE_ARRAY);
 		n.addMessage(answers);
-		ArrayList questionGroups = questionList.getMessage("Group").getAllMessages();
+		ArrayList<Message> questionGroups = questionList.getMessage("Group").getAllMessages();
 		for (int i = 0; i < questionGroups.size(); i++) {
-			Message group = (Message) questionGroups.get(i);
+			Message group = questionGroups.get(i);
 			flattenGroup(group, answers);
 		}
-		try {
-			myContext.performTipiMethod(this, n, "*", serviceName, true, null, -1, server, username, password, keystore, keypass);
-		} catch (TipiException ex1) {
-			ex1.printStackTrace();
-		}
-		// myContext.doSimpleSend(n, serviceName,
-		// this,-1,server,username,password);
+		myContext.performTipiMethod(this, n, "*", serviceName, true, null, -1, server, username, password, keystore, keypass);
 	}
 
 	private final void flattenGroup(Message groupMessage, Message answerMessage) throws NavajoException {
@@ -220,9 +212,9 @@ public abstract class TipiBaseQuestionList extends TipiDataComponentImpl {
 		newValue.setCardinality(value.getCardinality());
 		Message answerMessage = NavajoFactory.getInstance().createMessage(answerDoc, "Answer");
 		Property idProp = NavajoFactory.getInstance().createProperty(answerDoc, "Id", Property.STRING_PROPERTY, id, 0, "", Property.DIR_IN);
-		ArrayList al = value.getAllSelections();
+		List<Selection> al = value.getAllSelections();
 		for (int i = 0; i < al.size(); i++) {
-			Selection current = (Selection) al.get(i);
+			Selection current = al.get(i);
 			Selection s = NavajoFactory.getInstance().createSelection(answerDoc, current.getName(), current.getValue(),
 					current.isSelected());
 			newValue.addSelection(s);
@@ -278,10 +270,8 @@ public abstract class TipiBaseQuestionList extends TipiDataComponentImpl {
 						}
 						tc.loadData(n,  method);
 					} catch (TipiException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} catch (TipiBreakException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
@@ -311,7 +301,7 @@ public abstract class TipiBaseQuestionList extends TipiDataComponentImpl {
 
 	private void updateValidity() {
 		boolean valid = myValidGroups.containsAll(myGroups);
-		Map m = new HashMap();
+		Map<String,Object> m = new HashMap<String,Object>();
 		m.put("valid", new Boolean(valid));
 		try {
 			performTipiEvent("onValidationChanged", m, true);
@@ -321,8 +311,10 @@ public abstract class TipiBaseQuestionList extends TipiDataComponentImpl {
 	}
 
 	public void updateQuestionList() {
-		for (Iterator itt = myGroups.iterator(); itt.hasNext();) {
-			TipiBaseQuestionGroup element = (TipiBaseQuestionGroup) itt.next();
+		System.err.println("Update question list");
+		Thread.dumpStack();
+		for (Iterator<TipiBaseQuestionGroup> itt = myGroups.iterator(); itt.hasNext();) {
+			TipiBaseQuestionGroup element = itt.next();
 			element.updateQuestions();
 		}
 	}
