@@ -2,6 +2,7 @@ package com.dexels.navajo.scheduler;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.tribe.GetLockRequest;
@@ -68,13 +69,13 @@ public final class ListenerStore {
 	 * @param type
 	 * @return
 	 */
-	public final boolean lock(String type, boolean activatedlisteners) {
-		synchronized (semaphore_lock) {
+	private final boolean lock(String type, boolean activatedlisteners) {
+		//synchronized (semaphore_lock) {
 			// Get lock on TimeTrigger listeners store.
 			LockAnswer la = (LockAnswer) TribeManager.getInstance().askChief(
 					new GetLockRequest( ( activatedlisteners ? activatedListeners : storeLocation ), type, SharedStoreInterface.READ_WRITE_LOCK, false));
 			return la.acknowledged();
-		}
+		//}
 	}
 	
 	/**
@@ -82,16 +83,16 @@ public final class ListenerStore {
 	 * @param type
 	 * @return
 	 */
-	public final void release(String type, boolean activatedlisteners) {
-		synchronized (semaphore_lock) {
+	private final void release(String type, boolean activatedlisteners) {
+		//synchronized (semaphore_lock) {
 			// Release lock.
 			TribeManager.getInstance().askChief(new RemoveLockRequest(( activatedlisteners ? activatedListeners : storeLocation ), type));
-		}
+		//}
 	}
 	
 	public final void addListener(Listener l, String type, boolean nolock) {
 
-			synchronized (semaphore) {
+			//synchronized (semaphore) {
 
 				try {
 					ssi.store(storeLocation, l.getListenerId(), l, false, false);
@@ -99,18 +100,18 @@ public final class ListenerStore {
 					e.printStackTrace(System.err);
 				}
 
-			}
+			//}
 	}
 	
 	public final void removeListener(Listener l, String type, boolean nolock) {
 
-			synchronized (semaphore) {
+			//synchronized (semaphore) {
 				try {
 					ssi.remove(storeLocation, l.getListenerId());
 				} catch (Exception e) {
 					e.printStackTrace(System.err);
 				}
-			}
+			//}
 
 	}
 	
@@ -150,7 +151,7 @@ public final class ListenerStore {
 	 * 
 	 * @param t
 	 */
-	public final void activate(Trigger t, String type) {
+	public final void activate(Trigger t) {
 		synchronized (semaphore) {
 			try {
 				// Update blue-print listener.
@@ -160,9 +161,9 @@ public final class ListenerStore {
 			} catch (SharedStoreException e) {
 				e.printStackTrace(System.err);
 			}
-			semaphore.notifyAll();
 			// NOTIFY ALL OTHER TRIBE MEMBERS.
 			TribeManager.getInstance().broadcast(new ListenerRunnerActivationSmokeSignal(Dispatcher.getInstance().getNavajoConfig().getInstanceName(), "DOIT", "NOW"));
+			semaphore.notifyAll();
 		}
 	}
 	
@@ -173,32 +174,47 @@ public final class ListenerStore {
 	 */
 	public final void performActivatedListeners() {
 
+		
 		synchronized (semaphore) {
 			String [] allNames = ssi.getObjects(activatedListeners);
 			for (int i = 0; i < allNames.length; i++ ) {
-				//System.err.println("In performActivatedListeners() Checking: "  + allNames[i]);
+				System.err.println(Dispatcher.getInstance().getNavajoConfig().getInstanceName() + ": In performActivatedListeners() Checking: "  + allNames[i]);
 				Trigger lis = null;
 				boolean locked = false;
 				boolean performed = false;
 				try {
+					
 					lis = (Trigger) ssi.get(activatedListeners, allNames[i]);
+					
 					boolean isWorkflow = ( lis.getTask().getWorkflowId() != null );
 					boolean myWorkflow = ( lis.getTask().getWorkflowId() != null && WorkFlowManager.getInstance().hasWorkflowId(lis.getTask().getWorkflowId()));
 					
+					//System.err.println(allNames[i] + ", lis = " + lis + ", isWorkflow = " + isWorkflow + ", myWorkflow = " + myWorkflow);
 					if (!isWorkflow || myWorkflow) {
 						if (!isWorkflow) {
 							locked = lock(lis.getListenerId(), true);
 							if ( locked ) {
 								performed = true;
 								lis.perform();
+								//System.err.println("IN !isWorkflow " + allNames[i] + " WAS PERFORMED");
+							} else {
+								//System.err.println(">>>>>>>>>>>>>>>>>> COULD NOT GET LOCK: " + lis.getListenerId() );
+								//retryList.add(lis);
 							}
 						} else {
 							performed = true;
 							lis.perform();
-						}
+							//System.err.println("IN ELSE " + allNames[i] + " WAS PERFORMED");
+					    }
+					//} else {
+						//retryList.add(lis);
 					}
-				} catch (Exception e) {
+				} catch (SharedStoreException ste) {
+					
+				} catch (Throwable e) {
 					e.printStackTrace();
+					//System.err.println("COULD NOT PERFORM: "  + allNames[i]);
+					//retryList.add(lis);
 				} finally {
 					if ( lis != null && ( locked || performed )) {
 						if  ( performed ) {
@@ -212,6 +228,15 @@ public final class ListenerStore {
 				}
 			}
 		}
+			
+//		if ( retryList.size() > 0 ) {
+//			System.err.println("REACTIVATING " + retryList.size() + " LISTENERS...");
+//			Iterator iter = retryList.iterator();
+//			while ( iter.hasNext() ) {
+//				Trigger t = (Trigger) iter.next();
+//				activate(t);
+//			}
+//		}
 	}
 
 	public final HashMap<String,Integer> getRegisteredWebservices() {
