@@ -74,7 +74,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 	// Maximum number of tasks.
 	private int maxSize = 100000;
 	private static volatile TaskRunner instance = null;
-	private final Map<String,Task> tasks = new HashMap<String,Task>();
+	private final Map<String,Task> tasks = Collections.synchronizedMap(new HashMap<String,Task>());
 	private final ArrayList<TaskListener> taskListeners = new ArrayList<TaskListener>();
 	private long configTimestamp = -1;
 	
@@ -83,7 +83,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 	private final static String TASK_INPUT_DIR = "tasks";
 	private final static String TASK_LOG_FILE = "tasks.log";
 	
-	private static Object semaphore = new Object();
+	//private static Object semaphore = new Object();
 	private static Object initialization = new Object();
 	private static String id = "Navajo TaskRunner";
 	
@@ -232,13 +232,13 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 	}
 	
 	private void clearTaskMap(String taskId) {
-		synchronized (semaphore) {
+		//synchronized (semaphore) {
 			if ( containsTask(taskId)) {
 				Task t = (Task) tasks.get(taskId);
 				t.setRemove(true);
 				tasks.remove(taskId);
 			}
-		}
+		//}
 	}
 	
 	protected Navajo readConfig(boolean init) {
@@ -403,13 +403,13 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 		}
 
 		// Remove task from configuration file config/tasks.xml
-		synchronized (semaphore) {
+		//synchronized (semaphore) {
 			Task t = (Task) tasks.get(id);
 			tasks.remove(id);
 			if ( t != null ) {
 				t.setRemove(true);
 			}
-		}
+		//}
 	}
 	
 	private Message containsTask(Message allTasks, String id) throws Exception {
@@ -488,7 +488,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 		return result;
 	}
 	
-	protected final void log(Task t, Navajo result, boolean error, String errMsg, java.util.Date startedat) {
+	protected final synchronized void log(Task t, Navajo result, boolean error, String errMsg, java.util.Date startedat) {
 
 		String csvHeader = "ID;WEBSERVICE;USERNAME;TRIGGER;TASKDESCRIPTION;CLIENTID;SINGLEEVENT;STATUS;STARTTIME;ENDTIME;ERRORMESSAGE\n";
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy");
@@ -502,7 +502,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 
 		try {
 			
-			ssl = si.lock("log", TASK_LOG_FILE, SharedStoreInterface.READ_WRITE_LOCK, true);
+			//ssl = si.lock("log", TASK_LOG_FILE, SharedStoreInterface.READ_WRITE_LOCK, true);
 			
 			if ( !si.exists("log", TASK_LOG_FILE)) {
 				si.storeText("log", TASK_LOG_FILE, csvHeader, false, false);
@@ -530,7 +530,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 			e.printStackTrace(System.err);
 		} finally {
 			if ( ssl != null ) {
-				si.release(ssl);
+				//si.release(ssl);
 			}
 		}
 	}
@@ -557,7 +557,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 	
 	public boolean addTask(String id, Task t, boolean overwrite) {
 
-		synchronized (semaphore) {
+		//synchronized (semaphore) {
 
 			if ( tasks.containsKey(id) ) {
 				if ( !overwrite ) {
@@ -656,7 +656,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 				writeTaskInput(t);
 			}
 
-		}
+		//}
 
 		return true;
 	}
