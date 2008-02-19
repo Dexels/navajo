@@ -699,13 +699,14 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 	}
 	
 	public final void fireAfterTaskEvent(Task t, Navajo response) {
-		
-		
-			for ( int i = 0 ; i < taskListeners.size(); i++ ) {
+
+		for ( int i = 0 ; i < taskListeners.size(); i++ ) {
+			try {
 				TaskListener tl = (TaskListener) taskListeners.get(i); 
 				tl.afterTask(t, response);
-			}
-		
+			} catch (Throwable tr) { tr.printStackTrace(System.err); } 
+		}
+
 	}
 	
 	/**
@@ -718,15 +719,17 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 	 */
 	public final boolean fireBeforeTaskEvent(Task t, Navajo request) {
 
-
 		for ( int i = 0 ; i < taskListeners.size(); i++ ) {
-			TaskListener tl = (TaskListener) taskListeners.get(i);
-			boolean result = tl.beforeTask(t, request);
-			// If task has proxy webservice and beforetask returns true, return immediately(!!!) and do not
-			// iterate over other interested task listeners..
-			if ( result && t.isProxy() ) {
-				return true;
-			}
+
+			try {
+				TaskListener tl = (TaskListener) taskListeners.get(i);
+				boolean result = tl.beforeTask(t, request);
+				// If task has proxy webservice and beforetask returns true, return immediately(!!!) and do not
+				// iterate over other interested task listeners..
+				if ( result && t.isProxy() ) {
+					return true;
+				}
+			} catch (Throwable tr) { tr.printStackTrace(System.err); } 
 		}
 
 		return false;

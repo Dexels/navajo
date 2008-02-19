@@ -139,6 +139,7 @@ public final class WebserviceListenerRegistry implements WebserviceListenerRegis
 		boolean leftOvers = false;
 		
 		for (int i = 0; i < all.length; i++) {
+			try {
 			AfterWebserviceTrigger cl = (AfterWebserviceTrigger) all[i];
 			if ( cl.getWebservicePattern().equals(webservice) && !ignoreTaskList.contains(cl.getTask().getId()) ) {
 
@@ -156,6 +157,7 @@ public final class WebserviceListenerRegistry implements WebserviceListenerRegis
 					leftOvers = true;
 				}
 			}
+			} catch (Throwable tr) { tr.printStackTrace(System.err); } 
 		}
 		
 		if ( !locally && leftOvers ) {
@@ -231,29 +233,32 @@ public final class WebserviceListenerRegistry implements WebserviceListenerRegis
 			HashSet<String> ignoreTheseTaskOnOtherMembers = new HashSet<String>();
 	
 			for (int i = 0; i < all.length; i++) {
-				BeforeWebserviceTrigger cl = (BeforeWebserviceTrigger) all[i];
 
-				if ( cl.getWebservicePattern().equals(webservice) && !ignoreTaskList.contains(cl.getTask().getId()) ) {
-					BeforeWebserviceTrigger t2 = (BeforeWebserviceTrigger) cl.clone();
-					t2.setAccess(a);
+				try {
+					BeforeWebserviceTrigger cl = (BeforeWebserviceTrigger) all[i];
 
-					boolean initializingWorkflow = ( t2.getTask().getWorkflowDefinition() != null && t2.getTask().getWorkflowId() == null );
-					boolean myWorkflow = ( t2.getTask().getWorkflowId() != null && WorkFlowManager.getInstance().hasWorkflowId(t2.getTask().getWorkflowId()));
-					boolean isWorkflow = ( t2.getTask().getWorkflowDefinition() != null );
+					if ( cl.getWebservicePattern().equals(webservice) && !ignoreTaskList.contains(cl.getTask().getId()) ) {
+						BeforeWebserviceTrigger t2 = (BeforeWebserviceTrigger) cl.clone();
+						t2.setAccess(a);
 
-					Navajo n = null;
-					if ( !isWorkflow || initializingWorkflow || myWorkflow) { // If this is NOT a workflow task or an initializing workflow task or                                                   
-						// my workflow task, perform locally.
-						n = t2.perform();
-						ignoreTheseTaskOnOtherMembers.add(t2.getTask().getId());
-						if ( t2.getTask().isProxy() ) {
-							return n;
+						boolean initializingWorkflow = ( t2.getTask().getWorkflowDefinition() != null && t2.getTask().getWorkflowId() == null );
+						boolean myWorkflow = ( t2.getTask().getWorkflowId() != null && WorkFlowManager.getInstance().hasWorkflowId(t2.getTask().getWorkflowId()));
+						boolean isWorkflow = ( t2.getTask().getWorkflowDefinition() != null );
+
+						Navajo n = null;
+						if ( !isWorkflow || initializingWorkflow || myWorkflow) { // If this is NOT a workflow task or an initializing workflow task or                                                   
+							// my workflow task, perform locally.
+							n = t2.perform();
+							ignoreTheseTaskOnOtherMembers.add(t2.getTask().getId());
+							if ( t2.getTask().isProxy() ) {
+								return n;
+							}
+							count++;
+						} else {
+							leftOvers = true;
 						}
-						count++;
-					} else {
-						leftOvers = true;
 					}
-				}
+				} catch (Throwable tr) { tr.printStackTrace(System.err); } 
 			}
 
 			// Try other tribal members...
