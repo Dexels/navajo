@@ -37,7 +37,7 @@ public class WorkFlow implements Mappable, Serializable {
 	/**
 	 * The local Navajo state store.
 	 */
-	private Navajo localNavajo = null;
+	private final Navajo localNavajo;
 	
 	/**
 	 * This arraylist contains all the visited states for this workflow.
@@ -79,21 +79,24 @@ public class WorkFlow implements Mappable, Serializable {
 	 */
 	@SuppressWarnings("unchecked")
 	protected void mergeWithParameters(Navajo in) {
-		
-		if ( in != null && in.getMessage("__parms__") == null ) {
-			Message clone = localNavajo.getMessage("__parms__").copy(in);
-			try {
-				in.addMessage(clone);
-			} catch (NavajoException e) {
-				e.printStackTrace(System.err);
-			}
-		} else if ( in != null ) {
-			Message orig = in.getMessage("__parms__");
-			// Get all properties:
-			Message clone = localNavajo.getMessage("__parms__").copy(in);
-			ArrayList<Property> props = clone.getAllProperties();
-			for (int i = 0; i < props.size(); i++) {
-				orig.addProperty(props.get(i));
+
+		synchronized ( localNavajo) {
+
+			if ( in != null && in.getMessage("__parms__") == null ) {
+				Message clone = localNavajo.getMessage("__parms__").copy(in);
+				try {
+					in.addMessage(clone);
+				} catch (NavajoException e) {
+					e.printStackTrace(System.err);
+				}
+			} else if ( in != null ) {
+				Message orig = in.getMessage("__parms__");
+				// Get all properties:
+				Message clone = localNavajo.getMessage("__parms__").copy(in);
+				ArrayList<Property> props = clone.getAllProperties();
+				for (int i = 0; i < props.size(); i++) {
+					orig.addProperty(props.get(i));
+				}
 			}
 		}
 	}
@@ -105,12 +108,15 @@ public class WorkFlow implements Mappable, Serializable {
 	 * @param value
 	 */
 	protected void addParameter(String name, Object value) {
-		try {
-			String type = (value != null) ? MappingUtils.determineNavajoType(value) : "";
-			MappingUtils.setProperty(false, null, "/__parms__/" + name, value, type, "", "in", "", 0, localNavajo, localNavajo, false);
-		} catch (Exception e) {
-			e.printStackTrace(System.err);
-		} 
+
+		synchronized ( localNavajo ) {
+			try {
+				String type = (value != null) ? MappingUtils.determineNavajoType(value) : "";
+				MappingUtils.setProperty(false, null, "/__parms__/" + name, value, type, "", "in", "", 0, localNavajo, localNavajo, false);
+			} catch (Exception e) {
+				e.printStackTrace(System.err);
+			} 
+		}
 	}
 	
 	/**
