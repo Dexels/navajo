@@ -291,35 +291,38 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 	 * @return
 	 */
 	public boolean existsWorkFlow(String name, String state, String expression) {
-		
-		
+
 		WorkFlow [] flows = WorkFlowManager.getInstance().getWorkflows(name);
 		for ( int i = 0; i < flows.length; i++ ) {
-			Navajo n = flows[i].getLocalNavajo();
 
-			if ( state == null || flows[i].getCurrentState().getId().equals(state) ) {
-				try {
-					boolean b =  Condition.evaluate(expression, n);
-					if ( b ) {
-						return true;
-					}
-				} catch (Exception e) {
-					e.printStackTrace(System.err);
-					if ( n != null ) {
-						System.err.println("LOCAL WORKFLOW STATE IS FOR WFID " + flows[i].getMyId() + ", CURRENT STATE: " + flows[i].getCurrentState().getId() + 
-								", IS FINISHED: " + flows[i].isFinished()  + ", IS KILLED = " + flows[i].isKilled());
-						try {
-							n.write(System.err);
-						} catch (NavajoException e1) {
+			if ( !flows[i].isFinished() && !flows[i].isKilled() ) {
+				
+				Navajo n = flows[i].getLocalNavajo();
 
+				if ( state == null || flows[i].getCurrentState().getId().equals(state) ) {
+					try {
+						boolean b =  Condition.evaluate(expression, n);
+						if ( b ) {
+							return true;
 						}
-					} else {
-						System.err.println("EMPTY LOCAL WORKFLOW STATE...");
+					} catch (Exception e) {
+						e.printStackTrace(System.err);
+						if ( n != null ) {
+							//System.err.println("LOCAL WORKFLOW STATE IS FOR WFID " + flows[i].getMyId() + ", CURRENT STATE: " + flows[i].getCurrentState().getId() + 
+							//		", IS FINISHED: " + flows[i].isFinished()  + ", IS KILLED = " + flows[i].isKilled());
+							try {
+								n.write(System.err);
+							} catch (NavajoException e1) {
+
+							}
+						} else {
+							//System.err.println("EMPTY LOCAL WORKFLOW STATE...");
+						}
 					}
 				}
 			}
 		}
-		
+
 		return false;
 	}
 	
@@ -412,7 +415,7 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 
 		try {
 			
-			ssl = si.lock("log", WORKFLOW_LOG_FILE, SharedStoreInterface.READ_WRITE_LOCK, true);
+			//ssl = si.lock("log", WORKFLOW_LOG_FILE, SharedStoreInterface.READ_WRITE_LOCK, true);
 		
 			if ( !si.exists("log", WORKFLOW_LOG_FILE)) {
 				si.storeText("log", WORKFLOW_LOG_FILE, csvHeader, false, false);
@@ -437,7 +440,7 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 			e.printStackTrace(System.err);
 		} finally {
 			if ( ssl != null ) {
-				si.release(ssl);
+				//si.release(ssl);
 			}
 		}
 	}
