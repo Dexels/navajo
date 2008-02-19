@@ -1,68 +1,83 @@
-					package com.dexels.navajo.tipi.components.swingimpl.swing;
+package com.dexels.navajo.tipi.components.swingimpl.swing;
 
 import java.awt.*;
+import java.io.*;
+import java.net.*;
+
+import javax.imageio.*;
 import javax.swing.*;
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.swingimpl.*;
+
+import com.dexels.navajo.document.types.*;
 
 /**
- * <p>Title: </p>
- * <p>Description: </p>
- * <p>Copyright: Copyright (c) 2003</p>
- * <p>Company: </p>
+ * <p>
+ * Title:
+ * </p>
+ * <p>
+ * Description:
+ * </p>
+ * <p>
+ * Copyright: Copyright (c) 2003
+ * </p>
+ * <p>
+ * Company:
+ * </p>
+ * 
  * @author not attributable
  * @version 1.0
  */
-public class TipiSwingButton
-    extends JButton
-    implements TipiDesignable {
-  private TipiSwingComponentImpl me;
-  private boolean gridFlag = false;
-  private boolean selected = false;
-  public TipiSwingButton(TipiSwingComponentImpl me) {
-    this.me = me;
-  }
+public class TipiSwingButton extends JButton {
+	
+	public static String STRINGMNEMONIC_CHANGED_PROPERTY = "string_mnemonic"; 
+	
+	public TipiSwingButton() {
+	}
 
-  public void paintComponent(Graphics g) {
-    super.paintComponent(g);
-    Color old = g.getColor();
-//    if (gridFlag) {
-//      me.paintGrid(this, g);
-//    }
-    if (selected) {
-      //me.highLight(this, g); // Doesn't work properly for a button.
-      Graphics2D g2 = (Graphics2D) g;
-      g2.setColor(Color.red);
-      g2.setStroke(new BasicStroke(3.0f));
-      Rectangle r = me.getSwingContainer().getBounds();
-      Insets insets = me.getSwingContainer().getInsets();
-      g2.drawRect(insets.left, insets.top, getWidth() - insets.left - insets.right, getHeight() - insets.top - insets.bottom);
-      g2.setStroke(new BasicStroke(1.0f));
-    }
-    g.setColor(old);
-  }
+	public void setPreferredSize(Dimension d) {
+		// ignore.
+	}
 
-  public void setHighlighted(boolean value) {
-    selected = value;
-  }
+	public Dimension getMinimumSize() {
+		return getPreferredSize();
+	}
 
-  public boolean isHighlighted() {
-    return selected;
-  }
+	public void setIconUrl(Object u) {
+		setIcon(getIcon(u));
+	}
 
-  public void showGrid(boolean value) {
-    gridFlag = value;
-  }
+	 protected ImageIcon getIcon(Object u) {
+		 if(u==null) {
+			 return null;
+		 }
+		 if(u instanceof URL) {
+			   return new ImageIcon((URL) u);
+		 }
+		 if(u instanceof Binary) {
+			 Image i;
+			try {
+				i = ImageIO.read(((Binary) u).getDataAsStream());
+				 ImageIcon ii = new ImageIcon(i);
+				 return ii;
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		 }
+		 return null;
+	  }
 
-  public boolean isGridShowing() {
-    return gridFlag;
-  }
-  
-  public void setPreferredSize(Dimension d) {
-      // ignore.
-  }
-  
-  public Dimension getMinimumSize() {
-      return getPreferredSize();
-  }
+	public void setStringMnemonic(String s) {
+		String old = getStringMnemonic();
+		setMnemonic(s.charAt(0));
+		firePropertyChange(STRINGMNEMONIC_CHANGED_PROPERTY, old, s);
+	}
+
+	public String getStringMnemonic() {
+		return new String("" + (char) getMnemonic());
+	}
+
+	public void setMnemonic(String s) {
+		setMnemonic(s.charAt(0));
+	}
+
 }

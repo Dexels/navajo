@@ -1,9 +1,9 @@
 package com.dexels.navajo.tipi.components.swingimpl.swing;
 
-import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 import java.beans.*;
+
+import javax.swing.*;
 
 /**
  * An extension of JDesktopPane that supports often used functionality. This
@@ -90,10 +90,10 @@ public class JExtendedDesktopPane extends JDesktopPane {
 
 	public Component add(JInternalFrame frame) {
 
-		JInternalFrame[] array = getAllFrames();
+//		JInternalFrame[] array = getAllFrames();
 		Point p;
-		int w;
-		int h;
+//		int w;
+//		int h;
 
 		Component retval = super.add(frame);
 		checkDesktopSize();

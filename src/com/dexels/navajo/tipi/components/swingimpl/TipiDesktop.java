@@ -9,19 +9,16 @@ package com.dexels.navajo.tipi.components.swingimpl;
  * @version 1.0
  */
 import java.awt.*;
-import java.net.*;
 
 import javax.swing.*;
 
-import com.dexels.navajo.document.types.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
-import tipi.*;
 
 public class TipiDesktop
     extends TipiSwingDataComponentImpl {
   public Object createContainer() {
-    TipiSwingDesktop jp = new TipiSwingDesktop(this);
+    TipiSwingDesktop jp = new TipiSwingDesktop();
     SwingTipiContext c = (SwingTipiContext)myContext;
 	// register as default desktop, to create modal dialogs as modal internalframes
     c.setDefaultDesktop(jp);
@@ -33,14 +30,37 @@ public class TipiDesktop
     return jp;
   }
 
+//	public void setVisible(final boolean flag) {
+//		Runnable doIt = new Runnable(){
+//
+//			public void run() {
+//				Animator animator = new Animator(500);
+//			    System.err.println("Animating: TipiSwingWindow");
+//			    ScreenTransition transition = new ScreenTransition(TipiSwingWindow.this,new TransitionTarget(){
+//
+//					public void setupNextScreen() {
+//						TipiSwingWindow.super.setVisible(flag);
+//					}}, animator);
+//			    animator.setAcceleration(.5f);  // Accelerate for first 20%
+//			       animator.setDeceleration(.5f);  // Decelerate for last 40%
+//			    transition.start();			
+//			    }};
+//	//	SwingUtilities.invokeAndWait(doIt);
+//			    doIt.run();
+//	
+//	
+//}
+  
   public void addToContainer(final Object c, final Object constraints) {
-    final TipiDesktop td = this;
     runSyncInEventThread(new Runnable() {
       public void run() {
-        getSwingContainer().add( (Component) c, constraints);
-        JInternalFrame tw = (JInternalFrame) c;
-        tw.toFront();
+			getSwingContainer().add( (Component) c, constraints);
+	        TipiSwingWindow tw = (TipiSwingWindow) c;
+	
+	        tw.toFront();
         getSwingContainer().repaint();
+
+        
       }
     });
   }
@@ -60,38 +80,38 @@ public class TipiDesktop
     });
   }
 
-  public void setComponentValue(final String name, final Object value) {
-    if ("logo".equals(name)) {
-      runSyncInEventThread(new Runnable() {
-        public void run() {
-          if (value instanceof URL) {
-              ( (TipiSwingDesktop) getContainer()).setImage(new ImageIcon(( (URL) value)).getImage());
-          } else {
-              if (value instanceof Binary) {
-                byte[] data = ((Binary)value).getData();
-                ImageIcon ii = new ImageIcon(data);
-           
-                ( (TipiSwingDesktop) getContainer()).setImage(ii.getImage());
-                getSwingContainer().repaint();
-                
-            } else {
-            	if (value==null) {
-					System.err.println("Null-type resource ignored");
-				} else {
-	                System.err.println("Ignoring strange resource: "+value.getClass());
-				}
-            }
-          }
-        }
-      });
-      
-    }
-    if ("alignment".equals(name)) {
-        ( (TipiSwingDesktop) getContainer()).setAlignment((String)value);
-    }
-    
-    super.setComponentValue(name, value);
-  }
+//  public void setComponentValue(final String name, final Object value) {
+//    if ("logo".equals(name)) {
+//      runSyncInEventThread(new Runnable() {
+//        public void run() {
+//          if (value instanceof URL) {
+//              ( (TipiSwingDesktop) getContainer()).setImage(new ImageIcon(( (URL) value)).getImage());
+//          } else {
+//              if (value instanceof Binary) {
+//                byte[] data = ((Binary)value).getData();
+//                ImageIcon ii = new ImageIcon(data);
+//           
+//                ( (TipiSwingDesktop) getContainer()).setImage(ii.getImage());
+//                getSwingContainer().repaint();
+//                
+//            } else {
+//            	if (value==null) {
+//					System.err.println("Null-type resource ignored");
+//				} else {
+//	                System.err.println("Ignoring strange resource: "+value.getClass());
+//				}
+//            }
+//          }
+//        }
+//      });
+//      
+//    }
+//    if ("alignment".equals(name)) {
+//        ( (TipiSwingDesktop) getContainer()).setAlignment((String)value);
+//    }
+//    
+//    super.setComponentValue(name, value);
+//  }
 
   protected void addedToParent() {
     runSyncInEventThread(new Runnable() {

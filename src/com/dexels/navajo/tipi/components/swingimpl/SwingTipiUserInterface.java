@@ -1,10 +1,10 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
-import com.dexels.navajo.swingclient.*;
-import javax.swing.JFrame;
-import javax.swing.JDialog;
 import java.awt.*;
+
 import javax.swing.*;
+
+import com.dexels.navajo.swingclient.*;
 
 /**
  * <p>Title: </p>
@@ -92,7 +92,7 @@ public class SwingTipiUserInterface extends DummyUserInterface{
   }
 
   public void showInfoDialog(String s) {
-    int response = JOptionPane.showConfirmDialog( (Component) myContext.getTopLevel(), s,"",JOptionPane.OK_OPTION,JOptionPane.INFORMATION_MESSAGE);
+    JOptionPane.showConfirmDialog( (Component) myContext.getTopLevel(), s,"",JOptionPane.OK_OPTION,JOptionPane.INFORMATION_MESSAGE);
   }
 
   public boolean areYouSure() {

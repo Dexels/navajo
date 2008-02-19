@@ -35,7 +35,7 @@ public class TipiSaveValue extends TipiAction {
         Object o = myComponent.getContainer();
         Container c = null;
         if (o instanceof Container) {
-            c = (Container) c;
+            c = (Container) o;
         }
         if (globalvalue==null) {
             throw new TipiBreakException(-1);

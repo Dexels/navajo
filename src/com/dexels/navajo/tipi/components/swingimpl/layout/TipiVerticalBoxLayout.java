@@ -1,13 +1,10 @@
 package com.dexels.navajo.tipi.components.swingimpl.layout;
 
-import com.dexels.navajo.tipi.internal.*;
+import java.awt.*;
+
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.core.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
-
-import java.awt.*;
-
-import javax.swing.*;
 
 /**
  * <p>Title: </p>
@@ -30,11 +27,7 @@ public class TipiVerticalBoxLayout extends TipiLayoutImpl {
     return createDefaultConstraint(index);
   }
   public void createLayout() throws com.dexels.navajo.tipi.TipiException {
-    Container c = (Container)super.myComponent.getContainer();
-//    System.err.println("Setting layout: "+c.getClass());
-//    BoxLayout layout = new BoxLayout(c,BoxLayout.Y_AXIS);
-// setLayout(layout);
-// 
+ 
     setLayout(new GridBagLayout());
 
   }

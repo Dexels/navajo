@@ -1,20 +1,14 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
-import java.net.*;
-import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
-
-//import javax.annotation.security.*;
-import javax.swing.*;
-import javax.swing.text.*;
+import java.util.*;
 
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.swingclient.components.remotecombobox.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.internal.*;
-//import com.jhlabs.image.*;
 
 /**
  * <p>
@@ -46,7 +40,7 @@ public class TipiAjaxCombobox extends TipiSwingDataComponentImpl {
 		myCombo.setCurrentRemoteRefresh(new RemoteRefreshFilter() {
 			public Navajo getNavajo(String filterString) {
 				currentSelection = filterString;
-				Map m = new HashMap();
+				Map<String,Object> m = new HashMap<String,Object>();
 				m.put("text", currentSelection);
 				try {
 					performTipiEvent("onChange", m, true);
@@ -64,7 +58,7 @@ public class TipiAjaxCombobox extends TipiSwingDataComponentImpl {
 
 				try {
 					String sel = (String) myCombo.getSelectedItem();
-					Map m = new HashMap();
+					Map<String,Object> m = new HashMap<String,Object>();
 					m.put("value", sel);
 					performTipiEvent("onSelect", m, false);
 				} catch (TipiException e) {
@@ -80,32 +74,15 @@ public class TipiAjaxCombobox extends TipiSwingDataComponentImpl {
 				try {
 					myCombo.hidePopup();
 					String sel = (String) myCombo.getSelectedItem();
-					Map m = new HashMap();
+					Map<String,Object> m = new HashMap<String,Object>();
 					m.put("value", sel);
 					performTipiEvent("onEnter", m, false);
 				} catch (TipiException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
 		});
-//		final JTextComponent editor = (JTextComponent) (myCombo.getEditor().getEditorComponent());
 
-		// does not appear to work...
-//		editor.addFocusListener(new FocusListener(){
-//			public void focusGained(FocusEvent arg0) {
-//				// TODO Auto-generated method stub
-//				
-//			}
-//
-//			public void focusLost(FocusEvent arg0) {
-//				SwingUtilities.invokeLater(new Runnable(){
-//
-//					public void run() {
-//						myCombo.hidePopup();
-//						System.err.println("njama");
-//					}});
-//			}});
 		return myCombo;
 	}
 

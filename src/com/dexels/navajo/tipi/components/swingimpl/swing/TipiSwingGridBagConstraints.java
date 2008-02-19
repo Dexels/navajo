@@ -1,7 +1,8 @@
 package com.dexels.navajo.tipi.components.swingimpl.swing;
 
-import java.util.*;
 import java.awt.*;
+import java.util.*;
+
 import com.dexels.navajo.tipi.tipixml.*;
 
 /**
@@ -31,7 +32,6 @@ public class TipiSwingGridBagConstraints
     }
     else {
       for (int i = 0; i < 14; i++) {
-//        int con = new Integer(tok.nextToken()).intValue();
         myConstraints[i] = tok.nextToken();
       }
       gridx = Integer.parseInt(myConstraints[0]);
@@ -57,8 +57,6 @@ public class TipiSwingGridBagConstraints
     bert.setName("Bert");
     bert.setAttribute("name", "bert_een");
     bert.setAttribute("gridbag", "1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0");
-    TipiSwingGridBagConstraints bertje = new TipiSwingGridBagConstraints("1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0");
-//    System.err.println("You made: " + bert.toString());
   }
 
   public String toString() {

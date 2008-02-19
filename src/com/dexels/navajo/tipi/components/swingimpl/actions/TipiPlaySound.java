@@ -6,18 +6,11 @@
  */
 package com.dexels.navajo.tipi.components.swingimpl.actions;
 
-import java.awt.*;
-import java.io.*;
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import javax.swing.*;
+import java.net.*;
 
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.swingimpl.SwingTipiContext;
-import com.dexels.navajo.tipi.components.swingimpl.TipiApplet;
-import com.dexels.navajo.tipi.components.swingimpl.swing.*;
+import com.dexels.navajo.tipi.components.swingimpl.*;
 import com.dexels.navajo.tipi.internal.*;
 
 /**

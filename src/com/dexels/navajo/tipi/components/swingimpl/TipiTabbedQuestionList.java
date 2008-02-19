@@ -14,9 +14,7 @@ import javax.swing.event.*;
 
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.*;
 import com.dexels.navajo.tipi.components.question.*;
-import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 
 public class TipiTabbedQuestionList extends TipiBaseQuestionList {
     private Component lastSelectedTab = null;
@@ -25,12 +23,13 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
     protected Object getGroupConstraints(Message groupMessage) {
         // TODO Auto-generated method stub
         Property name = groupMessage.getProperty("Name");
-        if (name!=null) {
-            if (name.getValue()==null) {
-                return "Unknown tab";
-            }
+        if (name==null) {
+            return "Unknown tab";
+            
         } else {
-            return name.getValue();
+        	if(name.getValue()!=null) {
+                return name.getValue();
+        	}
             
         }
         return name.getValue();
@@ -63,7 +62,6 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
         jt.addChangeListener(new ChangeListener() {
           public void stateChanged(ChangeEvent ce) {
             try {
-              Component childContainer = jt.getSelectedComponent();
               me.performTipiEvent("onTabChanged", null, false);
               lastSelectedTab = jt.getSelectedComponent();
             }

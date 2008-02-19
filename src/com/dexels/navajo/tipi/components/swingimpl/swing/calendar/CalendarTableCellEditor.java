@@ -1,7 +1,8 @@
 package com.dexels.navajo.tipi.components.swingimpl.swing.calendar;
 
-import java.util.*;
 import java.awt.*;
+import java.util.*;
+
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.*;

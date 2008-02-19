@@ -7,14 +7,14 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
+import java.awt.event.*;
+import java.lang.reflect.*;
+import java.util.*;
+import java.util.List;
 
 import javax.swing.*;
 
 import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.*;
 import com.dexels.navajo.tipi.components.question.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.internal.*;
@@ -54,7 +54,6 @@ public class TipiScrollQuestionGroup extends TipiBaseQuestionGroup implements Ti
 		
 	}
 
-
 	
 
 	  public Container getSwingContainer() {
@@ -62,16 +61,16 @@ public class TipiScrollQuestionGroup extends TipiBaseQuestionGroup implements Ti
 	  }
 
 	  public void refreshLayout() {
-	    ArrayList elementList = new ArrayList();
+	    List<TipiComponent> elementList = new ArrayList<TipiComponent>();
 	    for (int i = 0; i < getChildCount(); i++) {
-	      TipiComponent current = (TipiComponent) getTipiComponent(i);
+	      TipiComponent current = getTipiComponent(i);
 	      if (current.isVisibleElement()) {
 	        removeFromContainer(current.getContainer());
 	      }
 	      elementList.add(current);
 	    }
 	    for (int i = 0; i < elementList.size(); i++) {
-	      final TipiComponent current = (TipiComponent) elementList.get(i);
+	      final TipiComponent current = elementList.get(i);
 	      if (current.isVisibleElement()) {
 	        runSyncInEventThread(new Runnable() {
 	          public void run() {
@@ -125,6 +124,11 @@ public class TipiScrollQuestionGroup extends TipiBaseQuestionGroup implements Ti
 	}
 
 	public void showPopup(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void animateTransition(TipiEvent te, TipiExecutable executableParent, List<TipiExecutable> exe) {
 		// TODO Auto-generated method stub
 		
 	}

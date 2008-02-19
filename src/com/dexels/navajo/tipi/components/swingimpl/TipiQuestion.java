@@ -7,13 +7,11 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
 import java.awt.*;
-import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.*;
 
 import javax.swing.*;
 import javax.swing.border.*;
 
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.*;
 import com.dexels.navajo.tipi.components.question.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 

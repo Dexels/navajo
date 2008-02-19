@@ -1,44 +1,40 @@
 package tipi;
 
+import java.io.*;
 import java.util.*;
 
-import javax.swing.*;
-
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.swingimpl.*;
-import com.dexels.navajo.tipi.components.swingimpl.swing.*;
-import com.dexels.navajo.tipi.internal.*;
-
-import javax.swing.UIManager.*;
-import java.io.*;
-import java.net.*;
-
 import com.dexels.navajo.swingclient.*;
+import com.dexels.navajo.tipi.components.swingimpl.*;
 
 public class MainApplication {
 
 	static public void main(String[] args) throws Exception {
-		if (args.length < 1) {
+	
+			if (args.length < 1) {
 			System.err.println("Usage: tipi <url to tipidef.xml>");
 			return;
 		}
-		String definition = (String) args[args.length - 1];
-		initialize(definition,args,null);
+		String definition = args[args.length - 1];
+		List<String> arrrgs = new ArrayList<String>();
+		for (int i = 0; i < args.length; i++) {
+			arrrgs.add(args[i]);
+		}
+		initialize(definition,arrrgs,null);
 	}
 
 
-	public static  SwingTipiContext initialize(String definition, Object[] args, TipiApplet appletRoot) throws Exception {
-		Map properties = parseProperties(args);
+	public static  SwingTipiContext initialize(String definition, List<String> args, TipiApplet appletRoot) throws Exception {
+		Map<String, String> properties = parseProperties(args);
 
 		SwingTipiContext context = null;
 		context = new SwingTipiContext();
 		context.setAppletRoot(appletRoot);
-		SwingTipiUserInterface stui = new SwingTipiUserInterface((SwingTipiContext) context);
+		SwingTipiUserInterface stui = new SwingTipiUserInterface(context);
 		SwingClient.setUserInterface(stui);
 		context.setDefaultTopLevel(new TipiScreen());
 		context.getDefaultTopLevel().setContext(context);
-		context.parseRequiredIncludes();
-		context.processRequiredIncludes();
+//		context.parseRequiredIncludes();
+//		context.processRequiredIncludes();
 
 		context.processProperties(properties);
 		
@@ -53,20 +49,19 @@ public class MainApplication {
 		return context;
 	}
 
-	public static Map parseProperties(String args) {
-		StringTokenizer st = new StringTokenizer(args);
-		ArrayList a = new ArrayList();
+	public static Map<String,String> parseProperties(String gsargs) {
+		StringTokenizer st = new StringTokenizer(gsargs);
+		ArrayList<String> a = new ArrayList<String>();
 		while(st.hasMoreTokens()) {
 			String next = st.nextToken();
 			a.add(next);
 		}
-		return parseProperties(a.toArray());
+		return parseProperties(a);
 	}
 
-	public static Map parseProperties(Object[] args) {
-		Map result = new HashMap();
-		for (int i = 0; i < args.length; i++) {
-			String current = (String) args[i];
+	public static Map<String,String> parseProperties(List<String> args) {
+		Map<String,String> result = new HashMap<String,String>();
+		for (String current : args) {
 			if (current.startsWith("-D")) {
 				String prop = current.substring(2);
 				try {
@@ -86,8 +81,9 @@ public class MainApplication {
 					System.err.println("Security exception: " + se.getMessage());
 					se.printStackTrace();
 				}
-			}
+			}			
 		}
+
 		return result;
 	}
 }

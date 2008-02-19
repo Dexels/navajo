@@ -1,9 +1,20 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
-import java.net.*;
 import java.awt.*;
+import java.awt.event.*;
+import java.io.*;
+import java.net.*;
+
+import javax.imageio.*;
 import javax.swing.*;
+
+import org.jdesktop.animation.transitions.*;
+import org.jdesktop.animation.transitions.EffectsManager.*;
+import org.jdesktop.animation.transitions.effects.*;
+
+import com.dexels.navajo.document.types.*;
 import com.dexels.navajo.tipi.*;
+
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.internal.*;
 
@@ -30,10 +41,19 @@ public class TipiButton extends TipiSwingComponentImpl {
 	private boolean iAmEnabled = true;
 
 	public Object createContainer() {
-		myButton = new TipiSwingButton(this);
+		myButton = new TipiSwingButton();
+
 		TipiHelper th = new TipiSwingHelper();
 		th.initHelper(this);
 		addHelper(th);
+//		EffectsManager.setEffect(myButton, new FadeIn(), TransitionType.APPEARING);
+//		EffectsManager.setEffect(myButton, new FadeOut(), TransitionType.DISAPPEARING);
+        Effect move = new Move();
+        Effect scale = new Scale();
+        CompositeEffect comp = new CompositeEffect(move);
+        comp.addEffect(scale);
+        comp.setRenderComponent(false);
+//        EffectsManager.setEffect(label[i], comp, TransitionType.CHANGING);
 		return myButton;
 	}
 
@@ -45,26 +65,46 @@ public class TipiButton extends TipiSwingComponentImpl {
 					myButton.setText((String) object);
 				}
 				if (name.equals("icon")) {
-					// System.err.println("Type: "+object.getClass());
 					if (object == null) {
 						System.err.println("Ignoring null icon");
 					} else {
 						if (object instanceof URL) {
-							myButton.setIcon(getIcon((URL) object));
+							myButton.setIcon(getIcon(object));
 						}
 					}
 				}
 				if (name.equals("enabled")) {
 					// Just for the record.
-					iAmEnabled = ((Boolean) object).booleanValue();
+					if (object==null) {
+						iAmEnabled = false;
+					} else {
+						iAmEnabled = ((Boolean) object).booleanValue();
+					}
 				}
 			}
 		});
 	}
 
-	private ImageIcon getIcon(URL u) {
-		return new ImageIcon(u);
-	}
+	 protected ImageIcon getIcon(Object u) {
+		 if(u==null) {
+			 return null;
+		 }
+		 if(u instanceof URL) {
+			   return new ImageIcon((URL) u);
+		 }
+		 if(u instanceof Binary) {
+			 Image i;
+			try {
+				i = ImageIO.read(((Binary) u).getDataAsStream());
+				 ImageIcon ii = new ImageIcon(i);
+				 return ii;
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		 }
+		 return null;
+	  }
 
 	public Object getComponentValue(String name) {
 		if (name.equals("text")) {
@@ -89,17 +129,18 @@ public class TipiButton extends TipiSwingComponentImpl {
 		if ("fireAction".equals(name)) {
 			for (int i = 0; i < getEventList().size(); i++) {
 				final int j = i;
-				TipiEvent current = (TipiEvent) getEventList().get(j);
+				TipiEvent current = getEventList().get(j);
 				if (current.isTrigger("onActionPerformed", "aap")) {
 					runSyncInEventThread(new Runnable() {
 
 						public void run() {
-							// TODO Auto-generated method stub
-							TipiEvent c2 = (TipiEvent) getEventList().get(j);
+							TipiEvent c2 = getEventList().get(j);
 							try {
 								c2.performAction(c2, c2, 0);
 							} catch (TipiException ex) {
 								ex.printStackTrace();
+							} catch (TipiBreakException e) {
+								e.printStackTrace();
 							}
 						}
 					});

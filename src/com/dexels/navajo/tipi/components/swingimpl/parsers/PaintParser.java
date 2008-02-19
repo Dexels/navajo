@@ -1,6 +1,7 @@
 package com.dexels.navajo.tipi.components.swingimpl.parsers;
 
 import java.awt.*;
+
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.internal.*;
 

@@ -2,14 +2,14 @@ package com.dexels.navajo.tipi.components.swingimpl;
 
 import java.awt.*;
 import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.event.InternalFrameAdapter;
-import javax.swing.event.InternalFrameEvent;
 
+import javax.swing.*;
+import javax.swing.event.*;
+
+import com.dexels.navajo.swingclient.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.internal.*;
-import com.dexels.navajo.swingclient.*;
 
 /**
  * <p>
@@ -29,7 +29,6 @@ import com.dexels.navajo.swingclient.*;
  * @version 1.0
  */
 public class TipiDialog extends TipiSwingDataComponentImpl {
-	private boolean disposed = false;
 	// private JDialog myDialog = null;
 	private boolean modal = false;
 	private boolean decorated = true;
@@ -37,16 +36,16 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 	private String title = "";
 	private JMenuBar myBar = null;
 	private Rectangle myBounds = new Rectangle(-1, -1, -1, -1);
-	private boolean studioMode = false;
 	private boolean ignoreClose = false;
 	private Point myOffset;
 	private RootPaneContainer myRootPaneContainer;
+	private boolean forceInternal = false;
 
 	public TipiDialog() {
 	}
 
 	public Object createContainer() {
-		TipiSwingDesktop tp = new TipiSwingDesktop(this);
+		TipiSwingPanel tp = new TipiSwingPanel();
 		TipiHelper th = new TipiSwingHelper();
 		th.initHelper(this);
 		addHelper(th);
@@ -62,7 +61,6 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 		} catch (TipiException ex) {
 			ex.printStackTrace();
 		}
-		disposed = true;
 	}
 
 	protected void createWindowListener(JDialog d) {
@@ -81,6 +79,7 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 		// d.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 		d.addInternalFrameListener(new InternalFrameAdapter() {
 
+			@SuppressWarnings("unused")
 			public void internalFrameClosing(WindowEvent e) {
 				dialog_windowClosing();
 			}
@@ -169,17 +168,17 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 	}
 
 	private RootPaneContainer getDialogContainer() {
-		// TODO Auto-generated method stub
 		return myRootPaneContainer;
 	}
 
 	private final void constructDialog() {
 		// System.err.println("Constructing: studio? "+isStudioElement());
-		if (mySwingTipiContext.getAppletRoot() != null || mySwingTipiContext.getOtherRoot()!=null) {
-//			System.err.println("Applet root");
+		if (mySwingTipiContext.getAppletRoot() != null || mySwingTipiContext.getOtherRoot() != null
+				|| (mySwingTipiContext.getDefaultDesktop() != null && forceInternal  ==true)) {
+			// System.err.println("Applet root");
 			constructAppletDialog();
 		} else {
-//			System.err.println("Standard dialog mode");
+			// System.err.println("Standard dialog mode");
 			constructStandardDialog();
 		}
 	}
@@ -190,45 +189,34 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 			constructStandardDialog();
 			return;
 		}
-		final Rectangle bnds = getDialogBounds();
-		if (bnds != null) {
-			// if (myOffset != null) {
-			// bnds.translate(myOffset.x, myOffset.y);
-			// }
-			// myDialog.setSize(bnds.getSize());
-//			System.err.println("Setting bounds: " + bnds + " offset: " + myOffset);
+		Rectangle bnds = getDialogBounds();
+		if (bnds == null) {
+			// Not at all pretty, will look into it soon
+			bnds = new Rectangle(10,10,200,200);
 		}
-
 		JInternalFrame myDialog = createInternalFrame(modal, mySwingTipiContext.getDefaultDesktop(), bnds.getSize());
-
 		myRootPaneContainer = myDialog;
 		ignoreClose = false;
 		myDialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		// myDialog.setUndecorated(!decorated);
 		createWindowListener(myDialog);
 		myDialog.setTitle(title);
 		myDialog.toFront();
 		if (myBar != null) {
 			myDialog.setJMenuBar(myBar);
 		}
-//		myDialog.getContentPane().setLayout(new BorderLayout());
-//		myDialog.getContentPane().add(getSwingContainer(), BorderLayout.CENTER);
-//		myDialog.pack();
-		// always the case
-		// myDialog.setLocationRelativeTo((Component) myContext.getTopLevel());
-
-		// mySwingTipiContext.getDefaultDesktop().add(myDialog);
-//		myDialog.setVisible(true);
+		 myDialog.getContentPane().add(getSwingContainer(),BorderLayout.CENTER);
+		myDialog.setBounds(myBounds);
 		if (myDialog instanceof JExtendedInternalFrame) {
-			JExtendedInternalFrame jef = (JExtendedInternalFrame)myDialog;
+			JExtendedInternalFrame jef = (JExtendedInternalFrame) myDialog;
 			jef.setVisible(true);
-//			jef.startModal();
+//			 jef.startModal();
 		} else {
 			myDialog.setVisible(true);
 		}
 	}
 
 	private JInternalFrame createInternalFrame(boolean isModal, JDesktopPane desktop, Dimension size) {
+		System.err.println("Creating modal: "+isModal);
 		JRootPane myRootPane = null;
 		if (myContext.getTopLevel() instanceof TipiApplet) {
 			myRootPane = ((TipiApplet) myContext.getTopLevel()).getRootPane();
@@ -248,12 +236,12 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 			mySwingTipiContext.getDefaultDesktop().add(jif);
 			return jif;
 		} else {
-			TipiModalInternalFrame tmif = new TipiModalInternalFrame("",myRootPane,desktop,getSwingContainer(),size);
+			TipiModalInternalFrame tmif = new TipiModalInternalFrame("", myRootPane, desktop, getSwingContainer(), size);
 			tmif.setPreferredSize(size);
 			tmif.setSize(size);
 			tmif.setResizable(false);
 			tmif.setClosable(true);
-//			mySwingTipiContext.getDefaultDesktop().add(tmif);
+			// mySwingTipiContext.getDefaultDesktop().add(tmif);
 			// TipiModalInternalFrame tmif = new
 			// TipiModalInternalFrame("",myRootPane,desktop,size);
 			myRootPaneContainer = tmif;
@@ -287,11 +275,12 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 					if (rootObject instanceof TipiApplet) {
 						JApplet jap = (JApplet) rootObject;
 						myDialog = new JDialog();
-//						System.err.println("Root bounds: " + jap.getBounds());
+						// System.err.println("Root bounds: " +
+						// jap.getBounds());
 						myDialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 						myOffset = jap.getLocationOnScreen();
 						myDialog.setLocation(jap.getLocationOnScreen());
-					} else if(rootObject instanceof JInternalFrame) {
+					} else if (rootObject instanceof JInternalFrame) {
 						myDialog = new JDialog((Dialog) r);
 						myDialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 						myRootPaneContainer = myDialog;
@@ -314,7 +303,7 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 			myDialog.setModal(modal);
 		}
 
-//		myDialog.setVisible(true);
+		// myDialog.setVisible(true);
 		myDialog.getContentPane().setLayout(new BorderLayout());
 		myDialog.getContentPane().add(getSwingContainer(), BorderLayout.CENTER);
 		myDialog.pack();
@@ -349,18 +338,17 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 	protected synchronized void performComponentMethod(String name, TipiComponentMethod compMeth, TipiEvent event)
 			throws TipiBreakException {
 		final TipiDialog me = this;
-		final Thread currentThread = Thread.currentThread();
-		final boolean amIEventThread = SwingUtilities.isEventDispatchThread();
 		super.performComponentMethod(name, compMeth, event);
 
+		System.err.println("Dialog performing: " + name);
 		// final JDialog myDialog = (JDialog) getDialogContainer();
 		if (name.equals("show")) {
-//			System.err.println("ENTERING SHOW\n=================");
+			// System.err.println("ENTERING SHOW\n=================");
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
 					if (getDialogContainer() == null) {
-//						System.err.println("CONSTRUCTING DIALOG: "+getId());
-//						System.err.print(store());
+						// System.err.println("CONSTRUCTING DIALOG: "+getId());
+						// System.err.print(store());
 						constructDialog();
 					}
 					if (getDialogContainer() != null) {
@@ -368,7 +356,7 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 						mySwingTipiContext.dialogShowing(true);
 						mySwingTipiContext.updateWaiting();
 						if (myBounds.x >= 0 && myBounds.y >= 0) {
-//							System.err.println("Entering bounssss...");
+							// System.err.println("Entering bounssss...");
 							// will show NOW, after this bounds will not matter
 							if (myContext.getTopLevel() instanceof TipiApplet || myContext.getTopLevel() instanceof JInternalFrame) {
 								TipiApplet jap = (TipiApplet) myContext.getTopLevel();
@@ -378,31 +366,40 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 							} else {
 								SwingClient.getUserInterface().showDialogAt((JDialog) getDialogContainer(), myBounds.x, myBounds.y);
 							}
-//							System.err.println("Setting to location: " + myBounds);
+							// System.err.println("Setting to location: " +
+							// myBounds);
 						} else {
-							System.err.println("Centering... "+myContext.getTopLevel());
+							System.err.println("Centering... " + myContext.getTopLevel());
 							// will show NOW, after this bounds will not matter
-							if (myContext.getTopLevel() instanceof TipiApplet ) {
+							if (myContext.getTopLevel() instanceof TipiApplet) {
 								TipiApplet jap = (TipiApplet) myContext.getTopLevel();
 								Point p = jap.getCenteredPoint(((JComponent) getDialogContainer()).getSize());
 								((JComponent) getDialogContainer()).setLocation(p);
-								
+
 								((JComponent) getDialogContainer()).setVisible(true);
 
 							} else {
-								if(myContext.getTopLevel() instanceof JInternalFrame) {
-//									JInternalFrame jap = (JInternalFrame) myContext.getTopLevel();
-									Point p = new Point(50,50);
+								if (myContext.getTopLevel() instanceof JInternalFrame) {
+									// JInternalFrame jap = (JInternalFrame)
+									// myContext.getTopLevel();
+									Point p = new Point(50, 50);
 									((JComponent) getDialogContainer()).setLocation(p);
-										((JComponent) getDialogContainer()).setVisible(true);
-	
+									((JComponent) getDialogContainer()).setVisible(true);
+
 								} else {
-									JDialog g = (JDialog) getDialogContainer();
-									SwingClient.getUserInterface().showCenteredDialog(g);
+									if (getDialogContainer() instanceof JDialog) {
+										JDialog g = (JDialog) getDialogContainer();
+										SwingClient.getUserInterface().showCenteredDialog(g);
+									} else {
+										Point p = new Point(50, 50);
+										((JComponent) getDialogContainer()).setLocation(p);
+								
+										((JComponent) getDialogContainer()).setVisible(true);
+									}
+									
 								}
 							}
 						}
-						final Rectangle bnds = getDialogBounds();
 						if (myContext != null) {
 							((SwingTipiContext) myContext).dialogShowing(false);
 							if (getDialogContainer() != null) {
@@ -414,6 +411,13 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 							}
 						} else {
 							System.err.println("Null CONTEXT, in TipiDialog.");
+						}
+						
+						if(getDialogContainer() instanceof JExtendedInternalFrame) {
+							JExtendedInternalFrame x = (JExtendedInternalFrame)getDialogContainer();
+							x.startModal();
+							mySwingTipiContext.dialogShowing(false);
+							mySwingTipiContext.updateWaiting();
 						}
 
 					}
@@ -434,7 +438,7 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 						JInternalFrame j = (JInternalFrame) getDialogContainer();
 						ignoreClose = true;
 						if (j instanceof JExtendedInternalFrame) {
-							JExtendedInternalFrame jef = (JExtendedInternalFrame)j;
+							JExtendedInternalFrame jef = (JExtendedInternalFrame) j;
 							jef.stopModal();
 							jef.setVisible(false);
 						} else {
@@ -442,7 +446,6 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 							j.dispose();
 						}
 
-						
 					}
 
 				}
@@ -464,7 +467,7 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 							JInternalFrame j = (JInternalFrame) getDialogContainer();
 							ignoreClose = true;
 							if (j instanceof JExtendedInternalFrame) {
-								JExtendedInternalFrame jef = (JExtendedInternalFrame)j;
+								JExtendedInternalFrame jef = (JExtendedInternalFrame) j;
 								jef.stopModal();
 								jef.setVisible(false);
 							} else {
@@ -475,7 +478,6 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 
 					}
 					myContext.disposeTipiComponent(me);
-					disposed = true;
 				}
 			});
 		}

@@ -1,12 +1,10 @@
 package tipi;
 
 import java.io.*;
-import java.util.*;
 
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.*;
-import com.dexels.navajo.tipi.studio.*;
 
 public class SwingTopLevel implements TipiStandaloneToplevelContainer {
 

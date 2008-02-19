@@ -1,17 +1,12 @@
 package com.dexels.navajo.tipi.components.swingimpl.embed;
 
-import com.dexels.navajo.tipi.components.swingimpl.SwingTipiContext;
-import com.dexels.navajo.swingclient.*;
-import com.dexels.navajo.tipi.components.swingimpl.*;
-import com.dexels.navajo.tipi.TipiException;
-import com.dexels.navajo.tipi.studio.*;
-import com.dexels.navajo.tipi.tipixml.XMLParseException;
-
-import java.awt.*;
 import java.io.*;
-import java.util.List;
+import java.util.*;
 
-import javax.swing.*;
+import com.dexels.navajo.swingclient.*;
+import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.components.swingimpl.*;
+import com.dexels.navajo.tipi.tipixml.*;
 
 /**
  * <p>
@@ -32,13 +27,9 @@ import javax.swing.*;
  */
 
 public class EmbeddedContext extends SwingTipiContext {
-	TipiStandaloneToplevel top;
-	private JPanel myPanel;
+	TipiStandaloneToplevel top = new TipiStandaloneToplevel();
 	
-	public EmbeddedContext() throws TipiException, IOException {
-		myPanel = new JPanel();
-		top = new TipiStandaloneToplevel(myPanel);
-		myPanel.setLayout(new BorderLayout());
+	public EmbeddedContext() {
 		if (SwingClient.getUserInterface() == null) {
 			SwingTipiUserInterface stui = new SwingTipiUserInterface(this);
 			SwingClient.setUserInterface(stui);
@@ -51,7 +42,7 @@ public class EmbeddedContext extends SwingTipiContext {
 	
 	}
 
-	public EmbeddedContext(String tipiDefinition[], boolean debugMode, String[] definitionName, List libraries, String resourceBaseDirectory)
+	public EmbeddedContext(String tipiDefinition[], boolean debugMode, String[] definitionName, List<String> libraries, String resourceBaseDirectory)
 			throws TipiException, IOException {
 		this();
 		for (int i = 0; i < definitionName.length; i++) {

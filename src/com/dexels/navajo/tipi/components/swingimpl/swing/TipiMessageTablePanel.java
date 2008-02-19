@@ -6,20 +6,26 @@
  */
 package com.dexels.navajo.tipi.components.swingimpl.swing;
 
-import java.awt.*;
-
 import com.dexels.navajo.swingclient.components.*;
 import com.dexels.navajo.tipi.*;
 
 public class TipiMessageTablePanel extends MessageTablePanel {
-    public TipiMessageTablePanel(TipiContext tc) {
+    private String messagePath;
+
+	public TipiMessageTablePanel(TipiContext tc) {
         super(new TipiMessageTable(tc));
-    }
-    public void createDefaultColumnsFromModel() {
-//	    messageTable.createDefaultColumnsFromModel();
-  }
-  
-//    public void setPreferredSize(Dimension d) {
-//        // ignore
-//    }
+	}
+
+	
+	public String getMessagePath() {
+		return messagePath;
+	}
+
+	public void setMessagePath(String messagePath) {
+		String old = this.messagePath;
+		this.messagePath = messagePath;
+		firePropertyChange("messagePath", old, messagePath);
+	}
+	
+
 }

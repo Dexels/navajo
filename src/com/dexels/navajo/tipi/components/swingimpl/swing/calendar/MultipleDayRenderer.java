@@ -2,6 +2,7 @@ package com.dexels.navajo.tipi.components.swingimpl.swing.calendar;
 
 import java.awt.*;
 import java.awt.image.*;
+
 import javax.swing.*;
 
 /**
@@ -18,7 +19,7 @@ public class MultipleDayRenderer
   private boolean isSelected = false;
   private boolean isAnchor = false;
   private String myLabel = "";
-  private String myFromTime, myToTime, myHall;
+//  private String myFromTime, myToTime, myHall;
   private Image myBackgroundImage;
   private int myAttributeCount = 0;
   public MultipleDayRenderer() {

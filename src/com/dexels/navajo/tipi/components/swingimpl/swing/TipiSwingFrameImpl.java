@@ -4,8 +4,13 @@ import java.awt.*;
 import java.awt.event.*;
 
 import javax.swing.*;
+
+import org.jdesktop.animation.timing.*;
+import org.jdesktop.animation.transitions.*;
+
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.*;
+import com.dexels.navajo.tipi.internal.*;
 
 /**
  * <p>
@@ -53,5 +58,55 @@ public class TipiSwingFrameImpl extends JFrame implements TopLevel, TipiSwingFra
 	public void setModal(boolean b) {
 		// ignored for frames
 	}
+
+	public void doActions(final TipiEvent te) {
+//		SwingUtilities.invokeLater(new Runnable(){
+//
+//			public void run() {
+//				JComponent jj = 
+	//			System.err.println(">>>"+getClass());
+				JComponent jjj = (JComponent) getContentPane().getComponent(0);
+				System.err.println("JJJJJJJJJJ: "+jjj);
+				Animator animator = new Animator(2500);
+				ScreenTransition transition = new ScreenTransition(jjj,new TransitionTarget(){
+					
+					public void setupNextScreen() {
+						try {
+							for (int i = 0; i < te.getExecutableChildCount(); i++) {
+								TipiExecutable current = te.getExecutableChild(i);
+								current.performAction(te, te, i);
+							}
+						} catch (Throwable ex) {
+							ex.printStackTrace();
+						}
+					}}, animator);
+				animator.addTarget(new TimingTarget(){
+
+					public void begin() {
+						// TODO Auto-generated method stub
+						
+					}
+
+					public void end() {
+						// TODO Auto-generated method stub
+						
+					}
+
+					public void repeat() {
+						// TODO Auto-generated method stub
+						
+					}
+
+					public void timingEvent(float arg0) {
+						System.err.println("Running: "+arg0); 
+					
+					}});
+			    animator.setAcceleration(.5f);  // Accelerate for first 20%
+			       animator.setDeceleration(.5f);  // Decelerate for last 40%
+			       transition.start();
+			}
+//	});
+		
+//	}
 
 }

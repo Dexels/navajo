@@ -1,8 +1,11 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
-import com.dexels.navajo.tipi.*;
-import java.awt.event.*;
 import java.awt.*;
+import java.awt.event.*;
+import java.util.List;
+
+import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.internal.*;
 
 /**
  * <p>Title: </p>
@@ -14,9 +17,7 @@ import java.awt.*;
  */
 
 public interface TipiSwingComponent extends TipiComponent{
-  public void highLight(Component c, Graphics g);
-//
-  public void setCursor(int cursorid);
+   public void setCursor(int cursorid);
   public void setCursor(Cursor c);
   public Container getSwingContainer();
   public void showPopup(MouseEvent e);
@@ -25,4 +26,5 @@ public interface TipiSwingComponent extends TipiComponent{
 
   public void runSyncInEventThread(Runnable r);
 //  public void runASyncInEventThread(Runnable r) ;
+public void animateTransition(TipiEvent te, TipiExecutable executableParent, List<TipiExecutable> exe) throws TipiBreakException ;
 }

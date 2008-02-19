@@ -1,7 +1,9 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
 import java.net.*;
+
 import javax.swing.*;
+
 import com.dexels.navajo.tipi.*;
 
 /**

@@ -10,8 +10,6 @@ import java.awt.*;
 
 import javax.swing.*;
 
-import com.dexels.navajo.tipi.components.swingimpl.layout.*;
-
 public class TipiRow extends TipiPanel {
 
     public Object createContainer() {

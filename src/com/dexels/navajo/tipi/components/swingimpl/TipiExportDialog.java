@@ -1,10 +1,13 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
-import java.io.*;
-import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.*;
+import java.util.*;
+import java.util.List;
+
 import javax.swing.*;
+
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 
@@ -96,7 +99,7 @@ public class TipiExportDialog
 
   void proceedButton_actionPerformed(ActionEvent e) {
     if (current == 1) {
-      Vector props = sp.getExportedPropertyNames();
+      List<String> props = sp.getExportedPropertyNames();
       String[] filter = null;
       String separator = sep.getSelectedSeparator();
       exportData(props, filter, separator, sep.isHeaderSelected());
@@ -116,10 +119,9 @@ public class TipiExportDialog
     }
   }
 
-  private final void exportTitles(Message current, Vector properties, String separator, Writer output) throws IOException {
-    StringBuffer currentLine = new StringBuffer();
+  private final void exportTitles(Message current, List<String> properties, String separator, Writer output) throws IOException {
     for (int j = 0; j < properties.size(); j++) {
-      Property current_prop = current.getProperty( (String) properties.get(j));
+      Property current_prop = current.getProperty( properties.get(j));
       String propName = current_prop.getDescription();
       if(propName == null){
         propName = current_prop.getName();
@@ -132,10 +134,8 @@ public class TipiExportDialog
     output.write("\n");
   }
 
-  private final void exportData(Vector properties, String[] filter, String separator, boolean addTitles) {
-    boolean filtering = false;
-    HashMap descIdMap = sp.getDescriptionIdMap();
-    HashMap descPropMap = sp.getDescriptionPropertyMap();
+  private final void exportData(List<String> properties, String[] filter, String separator, boolean addTitles) {
+ 
     if (data != null) {
       JFileChooser fd = new JFileChooser("Opslaan");
       fd.showSaveDialog( (Container) (this.getTipiParent().getContainer()));
@@ -144,25 +144,26 @@ public class TipiExportDialog
         return;
       }
       FileWriter fw = null;
-      ArrayList subMsgs = data.getAllMessages();
+      List<Message> subMsgs = data.getAllMessages();
       try {
         fw = new FileWriter(out);
         if (subMsgs.size() > 0 && addTitles) {
-          Message first = (Message) subMsgs.get(0);
+          Message first = subMsgs.get(0);
           exportTitles(first, properties, separator, fw);
         }
       }
       catch (IOException ex1) {
         ex1.printStackTrace();
+        return;
       }
       for (int i = 0; i < subMsgs.size(); i++) {
-        Message current = (Message) subMsgs.get(i);
+        Message current = subMsgs.get(i);
         //ArrayList props = current.getAllProperties();
         boolean new_line = true;
         boolean line_complies_to_filter = false;
         String line = "";
         for (int j = 0; j < properties.size(); j++) {
-          Property current_prop = current.getProperty( (String) properties.get(j));
+          Property current_prop = current.getProperty( properties.get(j));
           String propValue;
           if (current_prop.getType().equals(Property.DATE_PROPERTY)) {
             Date d = (Date) current_prop.getTypedValue();

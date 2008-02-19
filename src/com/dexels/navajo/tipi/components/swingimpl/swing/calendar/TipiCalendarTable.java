@@ -1,9 +1,12 @@
 package com.dexels.navajo.tipi.components.swingimpl.swing.calendar;
 
-import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.*;
+import java.util.List;
+
 import javax.swing.*;
+
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.swingclient.components.*;
 
@@ -92,8 +95,8 @@ public class TipiCalendarTable
     }
   }
 
-  public ArrayList getSelectedDays() {
-    ArrayList selected = new ArrayList();
+  public List<Day> getSelectedDays() {
+    List<Day> selected = new ArrayList<Day>();
     for (int i = 1; i < this.getRowCount(); i++) {
       for (int j = 1; j < this.getColumnCount(); j++) {
         if (isCellSelected(i, j)) {
@@ -136,7 +139,7 @@ public class TipiCalendarTable
         int leadCol = getColumnModel().getSelectionModel().getLeadSelectionIndex();
         int anchorRow = getSelectionModel().getAnchorSelectionIndex();
         int leadRow = getSelectionModel().getLeadSelectionIndex();
-        boolean toRight = leadCol > anchorCol;
+//        boolean toRight = leadCol > anchorCol;
         boolean toBottom = leadRow > anchorRow;
         if (toBottom) {
           if (row == maxRow) {
@@ -197,7 +200,7 @@ public class TipiCalendarTable
   public void setCalendarManager(CalendarManager m) {
     myManager = m;
     myManager.setSource(this);
-    myDefaultModel.setManager(myManager);
+//    myDefaultModel.setManager(myManager);
   }
 
   public CalendarManager getManager() {

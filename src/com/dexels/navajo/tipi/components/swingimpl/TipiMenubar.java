@@ -1,6 +1,7 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
 import java.util.*;
+
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.tipixml.*;
@@ -19,16 +20,20 @@ public class TipiMenubar
 
   public void load(XMLElement definition, XMLElement instance, TipiContext context) throws TipiException {
     super.load(definition, instance, context);
-    Vector v = definition.getChildren();
+    List<XMLElement> v = definition.getChildren();
     for (int i = 0; i < v.size(); i++) {
-      XMLElement current = (XMLElement) v.get(i);
+      XMLElement current = v.get(i);
       TipiComponent tc = context.instantiateComponent(current);
       addComponent(tc, context, null);
     }
  }
+  public void removeFromContainer(final Object c) {
+	  super.removeFromContainer(c);
+	  myMenuBar.repaint();
+  }
 
   public Object createContainer() {
-    myMenuBar = new TipiSwingMenuBar(this);
+    myMenuBar = new TipiSwingMenuBar();
     TipiHelper th = new TipiSwingHelper();
     th.initHelper(this);
     addHelper(th);

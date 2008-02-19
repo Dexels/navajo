@@ -28,7 +28,7 @@ public class TipiSwitchPanel extends TipiPanel {
 
     private CardLayout cardLayout;
 
-	private final Map componentMap = new HashMap();
+	private final Map<Object,String> componentMap = new HashMap<Object,String>();
 
     private String selectedId;
 
@@ -52,7 +52,7 @@ public class TipiSwitchPanel extends TipiPanel {
         super.addComponent(c, index, context, td);
     }
       public void addToContainer(final Object c, final Object constraints) {
-          String name = (String)componentMap.get(c);
+          String name = componentMap.get(c);
           if (name==null) {
               getSwingContainer().add( (Component) c, name);
               if (getChildCount()<=1) {
@@ -95,7 +95,7 @@ public class TipiSwitchPanel extends TipiPanel {
             System.err.println("Oh @#$#@$");
             return;
         }
-        cardLayout.show(myPanel, tc.getId());
+        cardLayout.show(getSwingContainer(), tc.getId());
         
     }
 }

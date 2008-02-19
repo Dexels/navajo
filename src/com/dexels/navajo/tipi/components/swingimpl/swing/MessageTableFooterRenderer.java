@@ -1,14 +1,14 @@
 package com.dexels.navajo.tipi.components.swingimpl.swing;
 
+import java.awt.*;
+import java.util.*;
+
 import javax.swing.*;
 import javax.swing.table.*;
-import java.awt.*;
-import com.dexels.navajo.tipi.*;
-import java.util.*;
-import com.dexels.navajo.parser.*;
-import com.dexels.navajo.swingclient.components.*;
+
 import com.dexels.navajo.document.*;
-import javax.swing.event.*;
+import com.dexels.navajo.swingclient.components.*;
+import com.dexels.navajo.tipi.*;
 
 /**
  * <p>Title: Seperate project for Navajo Swing client</p>
@@ -22,8 +22,7 @@ import javax.swing.event.*;
 
 public class MessageTableFooterRenderer
    extends JLabel implements TableCellRenderer {
- private int columnIndex;
- private final TipiDataComponent myComponent;
+  private final TipiDataComponent myComponent;
 
  private GenericPropertyComponent myPropComponent = new GenericPropertyComponent();
 
@@ -51,7 +50,7 @@ public class MessageTableFooterRenderer
 
 
 
-   Operand val = (Operand)aggregateValueMap.get(new Integer(column));
+   Operand val = aggregateValueMap.get(new Integer(column));
    
 //     setText(""+val.value);
 //     return this;
@@ -64,7 +63,7 @@ public class MessageTableFooterRenderer
      return myPropComponent;
    }
 
-   String expr = (String)aggregateMap.get(new Integer(column-1));
+   String expr = aggregateMap.get(new Integer(column));
    if (expr==null) {
      setText("");
      return this;
@@ -112,8 +111,8 @@ public class MessageTableFooterRenderer
    this.setHorizontalTextPosition(SwingConstants.LEADING);
  }
 
- private final Map aggregateMap = new HashMap();
- private final Map aggregateValueMap = new HashMap();
+ private final Map<Integer,String> aggregateMap = new HashMap<Integer,String>();
+ private final Map<Integer,Operand> aggregateValueMap = new HashMap<Integer,Operand>();
 
  public void addAggregate(int columnIndex, String expression) {
    aggregateMap.put(new Integer(columnIndex-1),expression);
@@ -133,20 +132,10 @@ public class MessageTableFooterRenderer
  }
 
  public String getAggregateFunction(int column) {
-   return (String)aggregateMap.get(new Integer(column));
+   return aggregateMap.get(new Integer(column));
  }
 
- public Set getAggregateFunctions() {
+ public Set<Integer> getAggregateFunctions() {
    return aggregateMap.keySet();
  }
-// public void setColumnIndex(int columnIndex) {
-//   this.columnIndex = columnIndex;
-// }
-//
-// public int getColumnIndex() {
-//   return columnIndex;
-//
-// }
-
-
 }

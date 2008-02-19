@@ -1,21 +1,26 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
+import java.awt.*;
 import java.io.*;
-import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.*;
 import java.net.*;
 import java.text.*;
 import java.util.*;
 import java.util.List;
 
-import java.awt.*;
-
 import javax.swing.*;
 
-import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.types.Binary;
+import org.jdesktop.animation.timing.*;
+import org.jdesktop.animation.transitions.*;
+import org.jvnet.lafwidget.utils.LafConstants.*;
+
+import com.dexels.navajo.document.*;
 import com.dexels.navajo.swingclient.*;
 import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.animation.*;
+import com.dexels.navajo.tipi.components.swingimpl.formatters.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
+import com.dexels.navajo.tipi.internal.*;
 
 /**
  * <p>
@@ -37,11 +42,11 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 public class SwingTipiContext extends TipiContext {
 	private TipiSwingSplash splash;
 
-	private final Set threadSet = Collections.synchronizedSet(new HashSet());
-	private final Set dialogThreadSet = Collections.synchronizedSet(new HashSet());
+	private final Set<Thread> threadSet = Collections.synchronizedSet(new HashSet<Thread>());
+	private final Set<Thread> dialogThreadSet = Collections.synchronizedSet(new HashSet<Thread>());
 	private boolean dialogShowing = false;
 
-	private JDialog blockingDialog;
+//	private JDialog blockingDialog;
 
 	private UserInterface myUserInterface;
 	private boolean debugMode = false;
@@ -52,7 +57,7 @@ public class SwingTipiContext extends TipiContext {
 	private RootPaneContainer myOtherRoot;
 
 	public SwingTipiContext() {
-
+		super();
 		// Don't think it is right here
 		try {
 			Locale.setDefault(new Locale("nl", "NL"));
@@ -61,66 +66,14 @@ public class SwingTipiContext extends TipiContext {
 
 	}
 
-	public List getRequiredIncludes() {
-		List s = super.getRequiredIncludes();
+	public List<String> getRequiredIncludes() {
+		List<String> s = super.getRequiredIncludes();
 		s.add("com/dexels/navajo/tipi/components/swingimpl/swingclassdef.xml");
 		return s;
 	}
 
-//	protected final void loadTipiMethod(final Navajo reply, final String tipiDestinationPath, final String method)
-//			throws TipiException {
-//		TipiDataComponent tt;
-//		ArrayList tipiList;
-//		// System.err.println("Loading method");
-//		if ("-".equals(tipiDestinationPath)) {
-//			System.err.println("Destination blocked");
-//			return;
-//		}
-//		if (SwingUtilities.isEventDispatchThread()) {
-//			// System.err.println("EVENT THREAD!");
-//			deliverData(reply, method);
-//		} else {
-//			// System.err.println("NON EVENT THREAD!");
-//			try {
-//				SwingUtilities.invokeAndWait(new Runnable() {
-//
-//					public void run() {
-//						try {
-//							deliverData(reply, method);
-//						} catch (TipiException e) {
-//							e.printStackTrace();
-//						}
-//					}
-//				});
-//			} catch (Exception e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//		}
-//
-//	}
-//
-//	private void deliverData(Navajo reply, String method) throws TipiException {
-//		ArrayList tipiList;
-//		tipiList = getTipiInstancesByService(method);
-//		if (tipiList != null) {
-//			for (int i = 0; i < tipiList.size(); i++) {
-//				TipiDataComponent t = (TipiDataComponent) tipiList.get(i);
-//				debugLog("data    ", "delivering data from method: " + method + " to tipi: " + t.getId());
-//				try {
-//					t.loadData(reply, this, method);
-//				} catch (TipiBreakException e) {
-//					System.err.println("Data refused by component");
-//				}
-//				if (t.getContainer() != null) {
-//					t.tipiLoaded();
-//				}
-//			}
-//		}
-//	}
-
 	public void setUserInterface(UserInterface ui) {
-		myUserInterface = (UserInterface) ui;
+		myUserInterface = ui;
 	}
 
 	public UserInterface getUserInterface() {
@@ -132,8 +85,8 @@ public class SwingTipiContext extends TipiContext {
 		if (dialogShowing) {
 			b = false;
 		}
-		if(getAppletRoot()!=null) {
-			
+		if (getAppletRoot() != null) {
+
 			getAppletRoot().setCursor(b ? Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR) : Cursor.getDefaultCursor());
 		}
 		for (int i = 0; i < rootPaneList.size(); i++) {
@@ -145,9 +98,8 @@ public class SwingTipiContext extends TipiContext {
 				((Container) obj).setCursor(b ? Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR) : Cursor.getDefaultCursor());
 			}
 		}
-		for (int j = 0; j < myActivityListeners.size(); j++) {
-			TipiActivityListener tal = (TipiActivityListener) myActivityListeners.get(j);
-			tal.setActive(b);
+		for (TipiActivityListener ta : myActivityListeners) {
+			ta.setActive(b);
 		}
 	}
 
@@ -244,7 +196,6 @@ public class SwingTipiContext extends TipiContext {
 			// System.err.println("Deleting: "+f.getAbsolutePath());
 			f.delete();
 		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -286,14 +237,13 @@ public class SwingTipiContext extends TipiContext {
 		printIndent(indent, "Debugging component with hash: " + c.hashCode() + " class: " + c.getClass());
 		printIndent(indent, "Minimumsite: " + c.getMinimumSize() + " max: " + c.getMaximumSize());
 		if (c instanceof JComponent) {
-			printIndent(indent, "Preferredsize: " + ((Component) c).getPreferredSize());
+			printIndent(indent, "Preferredsize: " + c.getPreferredSize());
 		}
 		printIndent(indent, "Size: " + c.getSize() + " visible: " + c.isVisible());
 
 		// c.setPreferredSize(null);
 		if (c instanceof Container) {
 			Container cc = (Container) c;
-			LayoutManager lm = cc.getLayout();
 			printIndent(indent, "Container. Layout: " + cc.getLayout());
 			for (int i = 0; i < cc.getComponentCount(); i++) {
 				Component ccc = cc.getComponent(i);
@@ -312,7 +262,6 @@ public class SwingTipiContext extends TipiContext {
 		return myAppletRoot;
 	}
 
-	
 	public void setOtherRoot(RootPaneContainer otherRoot) {
 		myOtherRoot = otherRoot;
 	}
@@ -321,7 +270,6 @@ public class SwingTipiContext extends TipiContext {
 		return myOtherRoot;
 	}
 
-	
 	public void exit() {
 		if (myAppletRoot != null) {
 			myAppletRoot.reload();
@@ -340,16 +288,16 @@ public class SwingTipiContext extends TipiContext {
 		return defaultDesktop;
 	}
 
-	public void showQuestion(final String text, final String title) throws TipiBreakException {
+	public void showQuestion(final String text, final String title)  {
 	}
-	
+
 	public void showInfo(final String text, final String title) {
 		// swing implementation.
-		System.err.println("SHOWING: "+text);
-		if(getOtherRoot()!=null) {
-			TipiModalInternalFrame.showInternalMessage(getOtherRoot().getRootPane(),getOtherRoot().getContentPane(), title, text, getPoolSize());			
-		} else 
-		if (getAppletRoot() != null && getDefaultDesktop() != null) {
+		System.err.println("SHOWING: " + text);
+		if (getOtherRoot() != null) {
+			TipiModalInternalFrame.showInternalMessage(getOtherRoot().getRootPane(), getOtherRoot().getContentPane(), title, text,
+					getPoolSize());
+		} else if (getAppletRoot() != null && getDefaultDesktop() != null) {
 			TipiModalInternalFrame.showInternalMessage(getAppletRoot().getRootPane(), getDefaultDesktop(), title, text, getPoolSize());
 		} else {
 			if (SwingUtilities.isEventDispatchThread()) {
@@ -370,20 +318,19 @@ public class SwingTipiContext extends TipiContext {
 
 	}
 
-	public void processProperties(Map properties) throws MalformedURLException {
+	public void processProperties(Map<String,String> properties) throws MalformedURLException {
 		super.processProperties(properties);
 		String tipiLaf = null;
-		
-		
+
 		try {
 			tipiLaf = System.getProperty("tipilaf");
 		} catch (SecurityException e) {
-		
+
 		}
-		if(tipiLaf == null) {
-			tipiLaf = (String)properties.get("tipilaf");
+		if (tipiLaf == null) {
+			tipiLaf = properties.get("tipilaf");
 		}
-		
+
 		try {
 			if (tipiLaf == null) {
 				UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -393,18 +340,102 @@ public class SwingTipiContext extends TipiContext {
 
 			}
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (UnsupportedLookAndFeelException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	public void animateProperty(Property p, int duration, Object target) {
+		if (TipiAnimationManager.isAnimatable(p.getTypedValue(), target)) {
+			PropertyAnimator pa = new PropertyAnimator();
+			pa.animateProperty(p, duration, target);
+		} else {
+			super.animateProperty(p, duration, target);
+		}
+
+	}
+
+	@Override
+	public void doActions(TipiEvent te, TipiComponent comp, TipiExecutable executableParent, List<TipiExecutable> exe) throws TipiBreakException {
+		te.getEventKeySet();
+
+		String component = executableParent.getBlockParam("animationComponent");
+		if (component == null) {
+			super.doActions(te, comp,executableParent, exe);
+			return;
+		}
+
+		TipiComponent tc = (TipiComponent) evaluate(component, comp, te).value;
+		if (tc == null || !(tc instanceof TipiSwingComponent)) {
+			super.doActions(te, comp,executableParent, exe);
+			return;
+		}
+		TipiSwingComponent ttt = (TipiSwingComponent) tc;
+
+		ttt.animateTransition(te,executableParent,exe);
+
+	}
+
+	public void animateDefaultTransition(TipiSwingComponent tipiSwingComponentImpl, final TipiEvent te, final TipiExecutable exeParent, Container swingContainer,
+			final List<TipiExecutable> exe) throws TipiBreakException {
+		if (!(swingContainer instanceof JComponent)) {
+			super.doActions(te, tipiSwingComponentImpl,exeParent, exe);
+			return;
+		}
+		System.err.println("entering swing stuff. ThreaD: " + Thread.currentThread().getName()+" component "+swingContainer);
+		final JComponent jjj = (JComponent) swingContainer;
+		final Animator animator = new Animator(500);
+		final int iii = jjj.getComponentListeners().length;
+//		try {
+//			SwingUtilities.invokeAndWait(new Runnable(){
+//
+//				public void run() {
+//					
+			
+			final ScreenTransition transition = new ScreenTransition(jjj, new TransitionTarget() {
+
+				public void setupNextScreen() {
+					System.err.println(">>>>>ThreaD: " + Thread.currentThread().getName()+" hash: "+this.hashCode());
+
+//				animator.pause();
+					try {
+						int i = 0;
+						for (TipiExecutable current : exe) {
+							current.performAction(te, exeParent, i++);
+						}
+					} catch (Throwable ex) {
+						ex.printStackTrace();
+					}
+//				animator.resume();
+				long ll = animator.getCycleElapsedTime();
+				System.err.println("Elapsed during setup: " + ll);
+//				System.err.println("Free memory: "+Runtime.getRuntime().freeMemory());
+					jjj.revalidate();
+				}
+			}, animator);
+			animator.addTarget(new TimingTargetAdapter(){
+				public void end() {
+					System.err.println("Finished: "+jjj.getComponentListeners().length+" before: "+iii);
+					transition.dispose();
+				}
+
+			});
+			animator.setAcceleration(.1f); // Accelerate for first 20%
+			animator.setDeceleration(.4f); // Decelerate for last 40%
+			transition.start();
+//		System.gc();
+			// TODO only continue when the animation has finished
+//				}});
+//		} catch (InterruptedException e) {
+//			e.printStackTrace();
+//		} catch (InvocationTargetException e) {
+//			e.printStackTrace();
+//		}
 	}
 
 }

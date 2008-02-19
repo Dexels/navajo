@@ -1,7 +1,7 @@
 package com.dexels.navajo.tipi.components.swingimpl.swing.calendar;
 
-import java.util.*;
 import java.awt.event.*;
+import java.util.*;
 
 /**
  * <p>Title: </p>
@@ -23,15 +23,15 @@ public class DefaultCalendarManager
 
   public void fireCalendarEvent(CalendarEvent e) {
     if (mySource == null) {
-      mySource = (TipiCalendarTable) e.getSource();
+      mySource = e.getSource();
     }
     if (KeyEvent.class.isInstance(e.getEvent())) {
       KeyEvent ke = (KeyEvent) e.getEvent();
       if (ke.getKeyCode() == KeyEvent.VK_B) {
-        ArrayList selectedDays = mySource.getSelectedDays();
+        List<Day> selectedDays = mySource.getSelectedDays();
         for (int i = 0; i < selectedDays.size(); i++) {
-          Day current = (Day) selectedDays.get(i);
-          HashMap attr = new HashMap();
+          Day current = selectedDays.get(i);
+          Map<String,String> attr = new HashMap<String,String>();
           attr.put("from", "09:00");
           attr.put("to", "23:00");
           attr.put("hall", "1");
@@ -41,10 +41,10 @@ public class DefaultCalendarManager
         }
       }
       if (ke.getKeyCode() == KeyEvent.VK_DELETE) {
-        ArrayList selectedDays = mySource.getSelectedDays();
+    	  List<Day> selectedDays = mySource.getSelectedDays();
         for (int i = 0; i < selectedDays.size(); i++) {
-          Day current = (Day) selectedDays.get(i);
-          HashMap attr = new HashMap();
+          Day current = selectedDays.get(i);
+          Map<String,String> attr = new HashMap<String,String>();
           attr.put("from", " ");
           attr.put("to", " ");
           attr.put("hall", " ");
@@ -56,7 +56,7 @@ public class DefaultCalendarManager
     }
     if (mySource.getSelectedColumn() > -1 && mySource.getSelectedRow() > -1) {
       if (Day.class.isInstance( (mySource.getModel().getValueAt(mySource.getSelectedRow(), mySource.getSelectedColumn())))) {
-        Day d = (Day) (mySource.getModel().getValueAt(mySource.getSelectedRow(), mySource.getSelectedColumn()));
+//        Day d = (Day) (mySource.getModel().getValueAt(mySource.getSelectedRow(), mySource.getSelectedColumn()));
         System.err.println("Selected: " + mySource.getSelectedRow() + ", " + mySource.getSelectedColumn());
       }
       else {

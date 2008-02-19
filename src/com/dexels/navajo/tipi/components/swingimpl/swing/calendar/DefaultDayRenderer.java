@@ -2,6 +2,7 @@ package com.dexels.navajo.tipi.components.swingimpl.swing.calendar;
 
 import java.awt.*;
 import java.awt.image.*;
+
 import javax.swing.*;
 
 /**
@@ -14,7 +15,7 @@ import javax.swing.*;
  */
 public class DefaultDayRenderer
     extends JPanel {
-  private Day myDay;
+//  private Day myDay;
   private boolean isSelected = false;
   private boolean isAnchor = false;
   private String myLabel;
@@ -24,7 +25,7 @@ public class DefaultDayRenderer
   }
 
   public void setDay(Day d) {
-    myDay = d;
+//    myDay = d;
     myLabel = d.getDateString();
     myFromTime = (String) d.getAttribute("from");
     myToTime = (String) d.getAttribute("to");

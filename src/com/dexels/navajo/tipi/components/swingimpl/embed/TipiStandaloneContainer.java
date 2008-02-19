@@ -1,15 +1,11 @@
 package com.dexels.navajo.tipi.components.swingimpl.embed;
 
 import java.io.*;
-
-import com.dexels.navajo.tipi.TipiException;
-
 import java.util.*;
-import com.dexels.navajo.tipi.components.swingimpl.*;
-import com.dexels.navajo.tipi.studio.*;
+
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.swingclient.*;
+import com.dexels.navajo.tipi.*;
 
 /**
  * <p>Title: </p>
@@ -23,19 +19,12 @@ import com.dexels.navajo.swingclient.*;
 public class TipiStandaloneContainer implements TipiStandaloneToplevelContainer  {
 
   private EmbeddedContext embeddedContext = null;
-  private final ArrayList libraries = new ArrayList();
+  private final List<String> libraries = new ArrayList<String>();
   private UserInterface ui = null;
 
   public TipiStandaloneContainer() {
-	  try {
 		embeddedContext = new EmbeddedContext();
-	} catch (TipiException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	} catch (IOException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
+
  }
 
   public void setUserInterface(UserInterface u) {
@@ -50,10 +39,6 @@ public class TipiStandaloneContainer implements TipiStandaloneToplevelContainer 
 //        }
 //  }
 
-	public void setTopLevelContainer(Object o) {
-		embeddedContext.setTopLevelContainer(o);
-	}
-  
   public void loadDefinition(String tipiPath, String definitionName,String resourceBaseDirectory) throws IOException, TipiException {
 	 // System.err.println("Loading def: "+definitionName+" tipipath: "+tipiPath+" resbase: "+resourceBaseDirectory);
 	  embeddedContext = new EmbeddedContext(new String[]{tipiPath},false,new String[]{definitionName},libraries,resourceBaseDirectory);
@@ -62,7 +47,7 @@ public class TipiStandaloneContainer implements TipiStandaloneToplevelContainer 
     }
   }
  
-  public ArrayList getListeningServices() {
+  public List<String> getListeningServices() {
       if (embeddedContext!=null) {
           return embeddedContext.getListeningServices();
         }

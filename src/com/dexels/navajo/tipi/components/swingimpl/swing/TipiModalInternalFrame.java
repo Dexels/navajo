@@ -2,19 +2,18 @@ package com.dexels.navajo.tipi.components.swingimpl.swing;
 
 import java.awt.*;
 import java.awt.event.*;
+
 import javax.swing.*;
-import javax.swing.event.*;
-import java.beans.*;
 
 public class TipiModalInternalFrame extends JExtendedInternalFrame {
 
-  private JPanel glass;
-private final JRootPane myRootPane;
+//  private JPanel glass;
+//private final JRootPane myRootPane;
 
 public TipiModalInternalFrame(String title, JRootPane 
       rootPane, Component desktop, Component contentComponent, Dimension size) {
     super(title,false,true,false,false);
-    myRootPane = rootPane;
+//    myRootPane = rootPane;
 //    glass = new JPanel();
 //	glass.setOpaque(false);
 //
@@ -123,7 +122,6 @@ public TipiModalInternalFrame(String title, JRootPane
   }
 
 public static void showInternalMessage(JRootPane rootPane, Component defaultDesktop, String title, String text, int poolSize) {
-	// TODO Auto-generated method stub
 	JOptionPane.showInternalMessageDialog(defaultDesktop,text,title,JOptionPane.INFORMATION_MESSAGE);
 }
   

@@ -1,9 +1,11 @@
 package com.dexels.navajo.tipi.components.swingimpl.tipimegatable;
 
-import com.dexels.navajo.tipi.tipixml.*;
-import com.dexels.navajo.document.*;
-import javax.swing.*;
 import java.util.*;
+
+import javax.swing.*;
+
+import com.dexels.navajo.document.*;
+import com.dexels.navajo.tipi.tipixml.*;
 
 /**
  * <p>Title: </p>
@@ -35,7 +37,7 @@ public abstract class TipiTableBaseLayer {
     messagePath= elt.getStringAttribute("messagePath");
   }
 
-  public void loadData(Navajo n, Message current,Stack layerStack, JComponent currentPanel) {
+  public void loadData(Navajo n, Message current,Stack<TipiTableBaseLayer> layerStack, JComponent currentPanel) {
   }
 
   public XMLElement store() {

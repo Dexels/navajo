@@ -1,13 +1,12 @@
 package com.dexels.navajo.tipi.components.swingimpl.tipimegatable;
 
-import javax.swing.JPanel;
-import com.dexels.navajo.swingclient.components.*;
-import com.dexels.navajo.document.*;
-import java.util.*;
-import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import java.awt.*;
 import java.util.List;
+
 import javax.swing.*;
+
+import com.dexels.navajo.document.*;
+import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 
 /**
  * <p>Title: </p>
@@ -20,16 +19,16 @@ import javax.swing.*;
 
 public class RemarkPanel extends JPanel {
   private final TipiMegaTable myTable;
-  private final MessageTablePanel myMessageTable;
+//  private final MessageTablePanel myMessageTable;
   private final Message myMessage;
-  private final TipiTableLayer myLayer;
-  private final List conditionalRemarks;
+//  private final TipiTableLayer myLayer;
+  private final List<ConditionalRemark> conditionalRemarks;
 
-  public RemarkPanel(TipiMegaTable tmt, MessageTablePanel mtp, Message m, TipiTableLayer tmtl, List remarks) {
+  public RemarkPanel(TipiMegaTable tmt, Message m, List<ConditionalRemark> remarks) {
     myTable = tmt;
-    myMessageTable = mtp;
+//    myMessageTable = mtp;
     myMessage = m;
-    myLayer = tmtl;
+//    myLayer = tmtl;
     conditionalRemarks = remarks;
   }
 
@@ -40,7 +39,7 @@ public class RemarkPanel extends JPanel {
     removeAll();
     int complied = 0;
     for (int i = 0; i < conditionalRemarks.size(); i++) {
-      ConditionalRemark current = (ConditionalRemark) conditionalRemarks.get(i);
+      ConditionalRemark current = conditionalRemarks.get(i);
       Operand oo = null;
       try {
         oo = myTable.getContext().evaluate(current.getCondition(),

@@ -1,12 +1,5 @@
 package com.dexels.navajo.tipi.components.swingimpl.swing;
 
-import javax.swing.JDialog;
-import java.awt.HeadlessException;
-import java.awt.Container;
-import javax.swing.JMenuBar;
-import java.awt.Rectangle;
-import javax.swing.ImageIcon;
-import java.awt.*;
 import javax.swing.*;
 
 /**

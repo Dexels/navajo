@@ -26,14 +26,14 @@ public TipiTextArea() {
   }
 
   public Object createContainer() {
-    myTextArea = new TipiSwingTextArea(this);
+    myTextArea = new TipiSwingTextArea();
 	TipiHelper th = new TipiSwingHelper();
     th.initHelper(this);
     JScrollPane jsp = new JScrollPane(myTextArea);
     addHelper(th);
     myTextArea.addKeyListener(new KeyListener() {
         public void keyTyped(KeyEvent e) {
-            Map m = getEventMap(e);
+            Map<String,Object> m = getEventMap(e);
             m.put("mode", "typed");
             if (e.getKeyCode()==KeyEvent.VK_ENTER) {
                 try {
@@ -50,7 +50,7 @@ public TipiTextArea() {
         }
 
         public void keyPressed(KeyEvent e) {
-            Map m = getEventMap(e);
+            Map<String,Object> m = getEventMap(e);
             m.put("mode", "typed");
             try {
                 performTipiEvent("onKey", m, true);
@@ -60,7 +60,7 @@ public TipiTextArea() {
         }
 
         public void keyReleased(KeyEvent e) {
-            Map m = getEventMap(e);
+            Map<String,Object> m = getEventMap(e);
             m.put("mode", "released");
             try {
                 performTipiEvent("onKey", m, true);
@@ -69,11 +69,11 @@ public TipiTextArea() {
             }
         }
         
-        public Map getEventMap(KeyEvent e) {
-            Map hm = new HashMap();
+        public Map<String,Object> getEventMap(KeyEvent e) {
+            Map<String,Object> hm = new HashMap<String,Object>();
             hm.put("code", new Integer(e.getKeyCode()));
-            hm.put("modifiers", e.getKeyModifiersText(e.getModifiers()));
-            hm.put("key", e.getKeyText(e.getKeyCode()));
+            hm.put("modifiers", KeyEvent.getKeyModifiersText(e.getModifiers()));
+            hm.put("key", KeyEvent.getKeyText(e.getKeyCode()));
             return hm;
         }
     });

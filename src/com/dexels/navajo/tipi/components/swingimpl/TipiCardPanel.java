@@ -1,8 +1,9 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
-import java.util.*;
-
 import java.awt.*;
+import java.util.*;
+import java.util.List;
+
 import javax.swing.*;
 
 import com.dexels.navajo.tipi.*;
@@ -19,8 +20,8 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 
 public class TipiCardPanel extends TipiSwingDataComponentImpl {
   private final CardLayout myCardLayout = new CardLayout();
-  private final ArrayList myComponentList = new ArrayList();
-  private final Map myComponentMap = new HashMap();
+  private final List<TipiComponent> myComponentList = new ArrayList<TipiComponent>();
+  private final Map<Object,TipiComponent> myComponentMap = new HashMap<Object,TipiComponent>();
 
   private TipiComponent selectedComponent = null;
 
@@ -38,7 +39,7 @@ public class TipiCardPanel extends TipiSwingDataComponentImpl {
 
 
   public void addToContainer(Object c, Object constraints) {
-    TipiComponent tc = (TipiComponent)myComponentMap.get(c);
+    TipiComponent tc = myComponentMap.get(c);
     if (tc!=null) {
       ( (Container) getContainer()).add((Component) c,tc.getId() );
       doLayout();
@@ -56,14 +57,13 @@ public class TipiCardPanel extends TipiSwingDataComponentImpl {
     }
     if (name.equals("selectedindex")) {
       Integer sel = (Integer) object;
-      selectedComponent = (TipiComponent)myComponentList.get(sel.intValue());
+      selectedComponent = myComponentList.get(sel.intValue());
       myCardLayout.show((Container)getContainer(),selectedComponent.getId());
     }
   }
 
   public Object getComponentValue(String name) {
-    /**@todo Override this com.dexels.navajo.tipi.TipiComponent method*/
-    if (name.equals("selected")) {
+     if (name.equals("selected")) {
       return selectedComponent;
     }
     if (name.equals("selectedindex")) {

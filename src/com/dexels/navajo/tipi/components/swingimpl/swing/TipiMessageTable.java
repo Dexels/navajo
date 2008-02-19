@@ -15,13 +15,13 @@ import com.dexels.navajo.tipi.*;
 public class TipiMessageTable extends MessageTable {
 
     final TipiContext myContext;
-    
+    private Navajo columnSettings = null;
     public TipiMessageTable(TipiContext tc) {
         myContext = tc;
     }
     
     public synchronized void setMessage(Message m) {
-       setSavePathJustChanged(true);
+      setSavePathJustChanged(true);
        if (columnPathString!=null) {
             loadColumnsNavajo();
         } 
@@ -40,17 +40,29 @@ public class TipiMessageTable extends MessageTable {
     public void loadColumnsNavajo() {
         // TODO Auto-generated method stub
 //        super.loadColumnsNavajo();
+    	System.err.println("Changed: "+savePathJustChanged);
         if(columnPathString==null) {
             // ignoring, but should not happen at all, I think
             return;
         }
-
-        Navajo n;
-        try {
-            n = myContext.getStorageManager().getStorageDocument(columnPathString);
-        } catch (TipiException e) {
-            e.printStackTrace();
-            return;
+        if(savePathJustChanged) {
+        	// flush if changed
+        	columnSettings = null;
+        }
+        
+        Navajo n = null;
+        if(columnSettings==null) {
+            try {
+                n = myContext.getStorageManager().getStorageDocument(columnPathString);
+            } catch (TipiException e) {
+                e.printStackTrace();
+                return;
+            }
+            columnSettings = n;
+        	
+        } else {
+        	System.err.println("Got settings from cache");
+        	n = columnSettings;
         }
         if (n!=null) {
  
@@ -74,6 +86,7 @@ public class TipiMessageTable extends MessageTable {
                 throw new IOException("Errrorrrr saving columns. columnPath: "+columnPathString);
             }
         }
+        columnSettings = n;
 //        super.saveColumnsNavajo();
     }
     

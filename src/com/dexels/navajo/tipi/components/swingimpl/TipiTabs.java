@@ -1,15 +1,14 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
-import java.util.*;
 import java.awt.*;
 
 import javax.swing.*;
+import javax.swing.event.*;
+
+import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
-import javax.swing.event.*;
 import com.dexels.navajo.tipi.internal.*;
-import com.dexels.navajo.parser.*;
-import com.dexels.navajo.document.*;
 
 /**
  * <p>Title: </p>
@@ -20,15 +19,11 @@ import com.dexels.navajo.document.*;
  * @version 1.0
  */
 public class TipiTabs extends TipiSwingDataComponentImpl {
-  private ArrayList tipiList = new ArrayList();
-  private ArrayList methodList = new ArrayList();
-  private Map tipiMap = new HashMap();
-  private TipiComponent selectedComponent = null;
 
   private Component lastSelectedTab = null;
 
   public Object createContainer() {
-    final TipiComponent me = this;
+//    final TipiComponent me = this;
     final JTabbedPane jt = new JTabbedPane() {
 
     	  private Dimension checkMax(Dimension preferredSize) {
@@ -53,6 +48,7 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
     	      return checkMaxMin(super.getPreferredSize());
     	  }
     };
+//	jt.setBackground(new Color(0.0f,0.8f,0.0f,0.2f));
     TipiHelper th = new TipiSwingHelper();
     th.initHelper(this);
     addHelper(th);
@@ -60,8 +56,7 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
     jt.addChangeListener(new ChangeListener() {
       public void stateChanged(ChangeEvent ce) {
         try {
-          Component childContainer = jt.getSelectedComponent();
-          me.performTipiEvent("onTabChanged", null, false);
+          TipiTabs.this.performTipiEvent("onTabChanged", null, false);
           lastSelectedTab = jt.getSelectedComponent();
           lastSelectedTab.doLayout();
         }
@@ -197,8 +192,7 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
       return new Integer(((JTabbedPane) getContainer()).getSelectedIndex());
     }
     if (name.equals("lastselectedindex")) {
-      TipiComponent tc = getChildByContainer(lastSelectedTab);
-      return new Integer(getIndexOfTab(lastSelectedTab));
+       return new Integer(getIndexOfTab(lastSelectedTab));
     }
 
     return super.getComponentValue(name);

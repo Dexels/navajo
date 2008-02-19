@@ -1,11 +1,13 @@
 package com.dexels.navajo.tipi.components.swingimpl.swing;
 
-import java.text.*;
-import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.text.*;
+import java.util.*;
+
 import javax.swing.*;
 import javax.swing.border.*;
+
 import com.dexels.navajo.document.*;
 
 /**
@@ -22,7 +24,7 @@ public class TipiSwingExportFilterPanel
   TitledBorder titledBorder1;
   GridBagLayout gridBagLayout2 = new GridBagLayout();
   ButtonGroup bg = new ButtonGroup();
-  private String separator = ", ";
+//  private String separator = ", ";
   JLabel filterOn = new JLabel();
   JLabel filterType = new JLabel();
   JLabel filterValue = new JLabel();
@@ -30,15 +32,15 @@ public class TipiSwingExportFilterPanel
   JComboBox filterTypeBox = new JComboBox();
   JTextField filterValueField = new JTextField();
   GridBagLayout gridBagLayout1 = new GridBagLayout();
-  private HashMap descriptionPropertyMap;
+  private Map<String,Property> descriptionPropertyMap;
   private static SimpleDateFormat navajoDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-  private static SimpleDateFormat displayDateFormat = new SimpleDateFormat("dd-MMM-yyyy");
+//  private static SimpleDateFormat displayDateFormat = new SimpleDateFormat("dd-MMM-yyyy");
   private static SimpleDateFormat inputFormat1 = new SimpleDateFormat("dd-MM-yy");
   private static SimpleDateFormat inputFormat2 = new SimpleDateFormat("dd/MM/yy");
   private static SimpleDateFormat inputFormat3 = new SimpleDateFormat("ddMMyy");
   private final int FILTER_DATE = 0;
   private final int FILTER_STRING = 1;
-  private final int FILTER_INT = 2;
+//  private final int FILTER_INT = 2;
   private int myType = FILTER_STRING;
   public TipiSwingExportFilterPanel() {
     try {
@@ -50,9 +52,9 @@ public class TipiSwingExportFilterPanel
   }
 
   private final void jbInit() throws Exception {
-    Vector filterTypes = new Vector();
-    filterTypes.addElement("Exact");
-    filterTypes.addElement("Begint met");
+    Vector<String> filterTypes = new Vector<String>();
+    filterTypes.add("Exact");
+    filterTypes.add("Begint met");
     filterTypeBox = new JComboBox(filterTypes);
     titledBorder1 = new TitledBorder(BorderFactory.createEtchedBorder(Color.white, new Color(171, 171, 171)), "Filter");
     this.setLayout(gridBagLayout2);
@@ -86,15 +88,15 @@ public class TipiSwingExportFilterPanel
     this.setVisible(false);
   }
 
-  public void setDescriptionPropertyMap(HashMap m) {
+  public void setDescriptionPropertyMap(Map<String,Property> m) {
     descriptionPropertyMap = m;
   }
 
-  public void updateAvailableFilters(Vector filters) {
+  public void updateAvailableFilters(Vector<String> filters) {
     filterOnBox.removeAllItems();
     filterOnBox.addItem("Geen filter");
     for (int i = 0; i < filters.size(); i++) {
-      filterOnBox.addItem( (String) filters.elementAt(i));
+      filterOnBox.addItem( filters.elementAt(i));
     }
   }
 
@@ -133,7 +135,7 @@ public class TipiSwingExportFilterPanel
   void filterOnBox_focusLost(FocusEvent e) {
     if (filterOnBox.getSelectedIndex() > 0 && descriptionPropertyMap != null) {
       String item = (String) filterOnBox.getSelectedItem();
-      Property p = (Property) descriptionPropertyMap.get(item);
+      Property p = descriptionPropertyMap.get(item);
       if (p != null) {
         if (p.getType().equals(Property.DATE_PROPERTY)) {
           filterTypeBox.removeAllItems();

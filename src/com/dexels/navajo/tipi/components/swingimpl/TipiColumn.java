@@ -12,6 +12,13 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 
 public class TipiColumn extends TipiPanel {
 
+//    <value direction="in" name="enabled" type="boolean" />
+//    <value direction="in" name="visible" type="boolean" />
+//    <value direction="inout" name="title" type="string" />
+//    <value direction="in" name="background" type="color" />
+//    <value direction="in" name="foreground" type="color" />
+//    <value direction="in" name="border" type="border" />
+    
     public Object createContainer() {
         Container container = (Container)super.createContainer();
         container.setLayout(new GridBagLayout());

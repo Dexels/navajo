@@ -7,18 +7,13 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
 import java.awt.*;
-import java.io.*;
-import java.net.*;
 
 import javax.swing.*;
 import javax.swing.event.*;
 
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.core.*;
 import com.dexels.navajo.tipi.components.swingimpl.embed.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
-import com.dexels.navajo.tipi.internal.*;
 
 public class TipiWindowEmbedComponent extends TipiEmbedComponent {
 

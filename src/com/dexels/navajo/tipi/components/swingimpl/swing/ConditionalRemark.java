@@ -1,9 +1,7 @@
 package com.dexels.navajo.tipi.components.swingimpl.swing;
 
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.parser.*;
-import java.awt.*;
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.tipi.*;
 
 /**
  * <p>Title: </p>
@@ -19,15 +17,13 @@ public class ConditionalRemark {
   private final String remark;
   private final String condition;
   private final String myFont;
-  private final int type;
 
   private final String myColor;
 
-  public ConditionalRemark(TipiDataComponent owner, String remark, String condition, int type, String color, String font) {
+  public ConditionalRemark(TipiDataComponent owner, String remark, String condition,  String color, String font) {
     myComponent = owner;
     this.remark = remark;
     this.condition = condition;
-    this.type = type;
     myColor = color;
     myFont = font;
   }

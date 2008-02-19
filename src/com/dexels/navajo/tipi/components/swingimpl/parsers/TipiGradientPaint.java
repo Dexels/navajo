@@ -73,5 +73,9 @@ public class TipiGradientPaint extends GradientPaint {
     return gp;
   }
 
+public String getDirection() {
+	return direction;
+}
+
 
 }

@@ -2,8 +2,7 @@ package com.dexels.navajo.tipi.components.swingimpl.parsers;
 
 
 import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.internal.TipiReference;
-import com.dexels.navajo.document.*;
+import com.dexels.navajo.tipi.internal.*;
 
 /**
  * <p>

@@ -1,10 +1,7 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
-import java.net.*;
-import java.util.*;
 import java.awt.*;
-
-import javax.swing.*;
+import java.util.List;
 
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
@@ -22,7 +19,7 @@ public class TipiMenu
     extends TipiSwingComponentImpl {
   private TipiSwingMenu myMenu = null;
   public Object createContainer() {
-    myMenu = new TipiSwingMenu(this);
+    myMenu = new TipiSwingMenu();
     TipiHelper th = new TipiSwingHelper();
     th.initHelper(this);
     addHelper(th);
@@ -54,53 +51,18 @@ public class TipiMenu
     });
   }
 //
+
+  // Why is it still necessary to do this manually here?
+  // TODO: Fix this.
   public void load(XMLElement def, XMLElement instance, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
-//    super.load(def, instance, context);
-    Vector v = def.getChildren();
+    super.load(def, instance, context);
+    List<XMLElement> v = def.getChildren();
     for (int i = 0; i < v.size(); i++) {
-      XMLElement current = (XMLElement) v.get(i);
+      XMLElement current = v.get(i);
       TipiComponent tc = context.instantiateComponent(current);
       addComponent(tc, context, null);
     }
   }
 
-  public void setComponentValue(String name, Object object) {
-    if ("text".equals(name)) {
-      myMenu.setText( (String) object);
-      return;
-    }
-    if ("mnemonic".equals(name)) {
-      String ch = (String) object;
-      char mn = ch.charAt(0);
-      myMenu.setMnemonic(mn);
-      return;
-    }
-    if (name.equals("icon")) {
-        //System.err.println("Type: "+object.getClass());
-      if (object instanceof URL) {
-    	  URL uu = (URL) object;
-    	  myMenu.setIcon(getIcon(uu));
-      } else {
-          System.err.println("Ignoring strange resource");
-      }
-  }    
-    super.setComponentValue(name, object);
-  }
-  
-  private ImageIcon getIcon(URL u) {
-      return new ImageIcon(u);
-    }
-  
-  public Object getComponentValue(String name) {
-    if (name.equals("text")) {
-      return myMenu.getText();
-    }
-    if (name.equals("icon")) {
-      return myMenu.getIcon();
-    }
-    if (name.equals("mnemonic")) {
-      return "" + myMenu.getMnemonic();
-    }
-    return super.getComponentValue(name);
-  }
+ 
 }

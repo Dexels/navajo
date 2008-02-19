@@ -19,19 +19,10 @@
 
 package com.dexels.navajo.tipi.components.swingimpl.swing;
 
-import javax.swing.JInternalFrame;
-import javax.swing.JFrame;
-import javax.swing.JLayeredPane;
-import javax.swing.JPopupMenu;
-import javax.swing.SwingUtilities;
+import java.awt.*;
+import java.awt.event.*;
 
-import java.awt.ActiveEvent;
-import java.awt.AWTEvent;
-import java.awt.Container;
-import java.awt.Component;
-import java.awt.EventQueue;
-import java.awt.Point;
-import java.awt.event.MouseEvent;
+import javax.swing.*;
 
 public class JExtendedInternalFrame extends JInternalFrame {
 	public JExtendedInternalFrame(String title, boolean resizable, boolean closable, boolean maximizable, boolean iconifiable) {

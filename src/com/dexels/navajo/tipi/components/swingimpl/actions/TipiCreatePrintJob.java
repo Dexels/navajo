@@ -1,9 +1,10 @@
 package com.dexels.navajo.tipi.components.swingimpl.actions;
 
-import com.dexels.navajo.tipi.internal.*;
-import com.dexels.navajo.document.*;
 import java.awt.print.*;
+
+import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.internal.*;
 
 
 /**

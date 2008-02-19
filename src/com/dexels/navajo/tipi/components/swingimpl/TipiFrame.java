@@ -1,15 +1,13 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
-import java.net.*;
 import java.awt.*;
-import java.awt.event.ComponentEvent;
+import java.net.*;
 
 import javax.swing.*;
 
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.embed.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
-import com.dexels.navajo.tipi.tipixml.*;
 
 /**
  * <p>
@@ -33,14 +31,15 @@ public class TipiFrame extends TipiSwingDataComponentImpl {
 	private boolean fullscreen = false;
 	private boolean visible = false;
 	private int x = 0, y = 0, w = 0, h = 0;
-	private String myMenuBar = "";
 
 	private RootPaneContainer myToplevel = null;
+	private JPanel mySuperPanel = null;
 
 	public TipiFrame() {
 	}
 
 	public Object createContainer() {
+		System.err.println("CREATING FRAME OBJECT~~~");
 		boolean internal = (getContext() instanceof EmbeddedContext) || ((SwingTipiContext) getContext()).getAppletRoot() != null;
 		TipiHelper th = new TipiSwingHelper();
 		th.initHelper(this);
@@ -63,9 +62,12 @@ public class TipiFrame extends TipiSwingDataComponentImpl {
 			TipiSwingFrameImpl myFrame;
 			myFrame = new TipiSwingFrameImpl(this);
 			myToplevel = myFrame;
-
+			mySuperPanel = new JPanel();
+			myFrame.getContentPane().add(mySuperPanel ,BorderLayout.CENTER);
+			mySuperPanel.setLayout(new BorderLayout());
 			// myContext.setToplevel(myFrame);
-			return (Container) myFrame;
+			//mySuperPanel.addC
+			return myFrame;
 		}
 	}
 
@@ -97,7 +99,8 @@ public class TipiFrame extends TipiSwingDataComponentImpl {
 					// System.err.println("constraints:
 					// "+constraints.getClass());
 					// }
-					myToplevel.getContentPane().add((Component) c, constraints);
+					mySuperPanel.add((Component) c, constraints);
+					//myToplevel.getContentPane().add((Component) c, constraints);
 					// myFrame.getContentPane().dispatchEvent(new
 					// ComponentEvent(myFrame.getContentPane(),ComponentEvent.COMPONENT_RESIZED));
 				}
@@ -109,6 +112,7 @@ public class TipiFrame extends TipiSwingDataComponentImpl {
 		// final TipiSwingFrame myFrame = (TipiSwingFrame) getContainer();
 		runSyncInEventThread(new Runnable() {
 			public void run() {
+				System.err.println("Beware! not working well");
 				myToplevel.getContentPane().remove((Component) c);
 			}
 		});
@@ -144,8 +148,10 @@ public class TipiFrame extends TipiSwingDataComponentImpl {
 	}
 
 	public void setContainerLayout(Object layout) {
+		System.err.println("Beware! not working well");
 
-		myToplevel.getContentPane().setLayout((LayoutManager) layout);
+//		myToplevel.getContentPane().setLayout((LayoutManager) layout);
+		mySuperPanel.setLayout((LayoutManager) layout);
 	}
 
 	private ImageIcon getIcon(URL u) {

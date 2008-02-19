@@ -1,24 +1,13 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
-import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.Toolkit;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.StringTokenizer;
+import java.awt.*;
+import java.net.*;
+import java.util.*;
+import java.util.List;
 
-import javax.swing.JApplet;
-import javax.swing.JDialog;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.*;
 
-import com.dexels.navajo.tipi.TipiComponent;
-import com.dexels.navajo.tipi.internal.HttpResourceLoader;
-
-import tipi.MainApplication;
+import tipi.*;
 
 public class TipiApplet extends JApplet {
 	private SwingTipiContext myContext;
@@ -38,7 +27,7 @@ public class TipiApplet extends JApplet {
 
 	public void init() {
 		super.init();
-		ArrayList arguments = new ArrayList();
+		List<String> arguments = new ArrayList<String>();
 		String init = this.getParameter("init");
 	//		System.err.println("LocationOnScreen: "+getLocationOnScreen());
 		String laf = this.getParameter("tipilaf");
@@ -80,7 +69,7 @@ public class TipiApplet extends JApplet {
 
 		arguments.add(init);
 		try {
-			myContext = MainApplication.initialize(init, arguments.toArray(),this);
+			myContext = MainApplication.initialize(init, arguments,this);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

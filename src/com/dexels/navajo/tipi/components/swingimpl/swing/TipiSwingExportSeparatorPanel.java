@@ -1,6 +1,7 @@
 package com.dexels.navajo.tipi.components.swingimpl.swing;
 
 import java.awt.*;
+
 import javax.swing.*;
 import javax.swing.border.*;
 

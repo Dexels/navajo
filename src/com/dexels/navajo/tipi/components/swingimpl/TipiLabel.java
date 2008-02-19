@@ -1,7 +1,13 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
+import java.awt.*;
+import java.io.*;
 import java.net.*;
+
+import javax.imageio.*;
 import javax.swing.*;
+
+import com.dexels.navajo.document.types.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 
@@ -16,15 +22,32 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 public class TipiLabel
     extends TipiSwingComponentImpl {
   public Object createContainer() {
-    TipiSwingLabel myLabel = new TipiSwingLabel(this);
+    TipiSwingLabel myLabel = new TipiSwingLabel();
     TipiHelper th = new TipiSwingHelper();
     th.initHelper(this);
-    addHelper(th);
+     addHelper(th);
     return myLabel;
   }
 
-  protected ImageIcon getIcon(URL u) {
-    return new ImageIcon(u);
+  protected ImageIcon getIcon(Object u) {
+	 if(u==null) {
+		 return null;
+	 }
+	 if(u instanceof URL) {
+		   return new ImageIcon((URL) u);
+	 }
+	 if(u instanceof Binary) {
+		 Image i;
+		try {
+			i = ImageIO.read(((Binary) u).getDataAsStream());
+			 ImageIcon ii = new ImageIcon(i);
+			 return ii;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	 }
+	 return null;
   }
 
   public void setComponentValue(final String name, final Object object) {
@@ -40,7 +63,7 @@ public class TipiLabel
     if (name.equals("icon")) {
       runSyncInEventThread(new Runnable() {
         public void run() {
-          ( (TipiSwingLabel) getContainer()).setIcon(getIcon( (URL) object));
+          ( (TipiSwingLabel) getContainer()).setIcon(getIcon(object));
         }
       });
       ( (TipiSwingLabel) getContainer()).revalidate();

@@ -1,10 +1,12 @@
 package com.dexels.navajo.tipi.components.swingimpl.tipimegatable;
 
-import com.dexels.navajo.tipi.tipixml.*;
-import javax.swing.*;
-import com.dexels.navajo.document.*;
-import java.util.*;
 import java.awt.*;
+import java.util.*;
+
+import javax.swing.*;
+
+import com.dexels.navajo.document.*;
+import com.dexels.navajo.tipi.tipixml.*;
 
 /**
  * <p>
@@ -66,7 +68,7 @@ public class TipiTabLayer extends TipiTableBaseLayer {
 
     }
 
-    public void loadData(final Navajo n, Message current, Stack layerStack, final JComponent currentPanel) {
+    public void loadData(final Navajo n, Message current, Stack<TipiTableBaseLayer> layerStack, final JComponent currentPanel) {
         Message nextMessage = null;
         if (current == null) {
             nextMessage = n.getMessage(messagePath);
@@ -77,8 +79,10 @@ public class TipiTabLayer extends TipiTableBaseLayer {
             return;
         }
         final Message msg = nextMessage;
-        final Stack newStack = (Stack) layerStack.clone();
-        final TipiTableBaseLayer nextLayer = (TipiTableBaseLayer) newStack.pop();
+        final Stack<TipiTableBaseLayer> newStack = new Stack<TipiTableBaseLayer>();
+        newStack.addAll(layerStack);
+        
+        final TipiTableBaseLayer nextLayer = newStack.pop();
         myTable.runSyncInEventThread(new Runnable() {
             public void run() {
                 JTabbedPane jt = new JTabbedPane();

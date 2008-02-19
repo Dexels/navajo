@@ -1,16 +1,15 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
-import com.dexels.navajo.tipi.components.core.*;
-import javax.swing.*;
-import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.tipi.TipiBreakException;
-import com.dexels.navajo.tipi.TipiContext;
-import com.dexels.navajo.tipi.TipiException;
-import com.dexels.navajo.tipi.tipixml.*;
-import com.dexels.navajo.swingclient.components.*;
-import java.util.*;
 import java.awt.*;
+import java.util.*;
+import java.util.List;
+
+import javax.swing.*;
+
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.swingclient.components.*;
+import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.tipixml.*;
 
 /**
  * <p>Title: </p>
@@ -21,6 +20,7 @@ import com.dexels.navajo.document.*;
  * @version 1.0
  * @deprecated
  */
+@Deprecated
 public class TipiMultiTable
     extends TipiSwingDataComponentImpl {
   private JPanel myPanel = null;
@@ -33,8 +33,8 @@ public class TipiMultiTable
   private boolean useScrollBars = true;
   private boolean headerVisible = false;
   private int rowHeight = -1;
-  private final ArrayList columns = new ArrayList();
-  private final ArrayList columnSize = new ArrayList();
+  private final List<String> columns = new ArrayList<String>();
+  private final List<Integer> columnSize = new ArrayList<Integer>();
   public TipiMultiTable() {
   }
 
@@ -50,9 +50,9 @@ public class TipiMultiTable
     super.load(elm, instance, context);
     columns.clear();
     columnSize.clear();
-    Vector children = elm.getChildren();
+    List<XMLElement> children = elm.getChildren();
     for (int i = 0; i < children.size(); i++) {
-      XMLElement child = (XMLElement) children.elementAt(i);
+      XMLElement child = children.get(i);
       if (child.getName().equals("column")) {
         String name = (String) child.getAttribute("name");
         columns.add(name);
@@ -66,11 +66,11 @@ public class TipiMultiTable
     XMLElement xx = super.store();
     for (int i = 0; i < columns.size(); i++) {
       XMLElement columnDefinition = new CaseSensitiveXMLElement();
-      String cc = (String) columns.get(i);
+      String cc = columns.get(i);
       columnDefinition.setName("column");
       columnDefinition.setAttribute("name", cc);
       columnDefinition.setIntAttribute("size",
-                                       ( (Integer) columnSize.get(i)).intValue());
+                                       columnSize.get(i).intValue());
       xx.addChild(columnDefinition);
     }
     return xx;
@@ -193,7 +193,7 @@ public class TipiMultiTable
       public void run() {
         mtp.createColumnModel();
         for (int i = 0; i < columnSize.size(); i++) {
-          int ii = ( (Integer) columnSize.get(i)).intValue();
+          int ii = columnSize.get(i).intValue();
           final int index = i;
           final int value = ii;
 //          System.err.println("Setting column: " + i + " to: " + ii);
@@ -220,7 +220,7 @@ public class TipiMultiTable
       if (inner.getArraySize() > 0) {
         Message first = inner.getMessage(0);
         for (int j = 0; j < columns.size(); j++) {
-          String column = (String) columns.get(j);
+          String column = columns.get(j);
           Property p = first.getProperty(column);
           if (p != null) {
             mtp.addColumn(p.getName(), p.getDescription(), p.isDirIn());
@@ -251,6 +251,7 @@ public class TipiMultiTable
       if (titleProp == null) {
         System.err.println("NO TITLEPROP FOUND. Looking for: " +
                            titlePropertyName);
+        continue;
       }
       String title = titleProp.getValue();
       Message inner = current.getMessage(innerMessageName);
@@ -261,11 +262,10 @@ public class TipiMultiTable
              new GridBagConstraints(0, i, 1, 1, 1, 1, GridBagConstraints.WEST,
                                     GridBagConstraints.BOTH,
                                     new Insets(2, 2, 2, 2), 0, 0));
-//      jt.addTab(title, mtp);
       if (inner.getArraySize() > 0) {
         Message first = inner.getMessage(0);
         for (int j = 0; j < columns.size(); j++) {
-          String column = (String) columns.get(j);
+          String column = columns.get(j);
           Property p = first.getProperty(column);
           if (p != null) {
             mtp.addColumn(p.getName(), p.getDescription(), p.isDirIn());
@@ -303,8 +303,8 @@ public class TipiMultiTable
       System.err.println("Inner: " + innerMessageName);
       System.err.println("exists? " + outerMessage.getMessage(innerMessageName) != null);
     }
-    Message innerMessage = outerMessage.getMessage(innerMessageName);
-    if (outerMessage != null) {
+//    Message innerMessage = outerMessage.getMessage(innerMessageName);
+//    if (outerMessage != null) {
       runSyncInEventThread(new Runnable() {
         public void run() {
           myPanel.removeAll();
@@ -317,10 +317,10 @@ public class TipiMultiTable
           myPanel.revalidate();
         }
       });
-    }
-    else {
-      System.err.println("Not loading outer message null!");
-    }
+//    }
+//    else {
+//      System.err.println("Not loading outer message null!");
+//    }
     super.loadData(n, method);
   }
 }

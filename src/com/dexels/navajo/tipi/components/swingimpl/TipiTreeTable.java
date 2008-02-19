@@ -1,13 +1,14 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
-import java.util.*;
 import java.awt.event.*;
+import java.util.*;
+
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.swingclient.components.treetable.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.core.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.tipixml.*;
-import com.dexels.navajo.swingclient.components.treetable.*;
 
 /**
  * <p>Title: </p>
@@ -21,8 +22,8 @@ public class TipiTreeTable
     extends TipiDataComponentImpl {
   private MessageTreeTablePanel myTreeTable;
   private String messagePath;
-  private ArrayList myColumns = new ArrayList();
-  private ArrayList myColumnNames = new ArrayList();
+  private List<String> myColumns = new ArrayList<String>();
+  private List<String> myColumnNames = new ArrayList<String>();
   public Object createContainer() {
     myTreeTable = new MessageTreeTablePanel();
     TipiHelper th = new TipiSwingHelper();
@@ -39,24 +40,21 @@ public class TipiTreeTable
         messageTreeTableActionPerformed(e);
       }
     });
-    Vector children = elm.getChildren();
+    List<XMLElement> children = elm.getChildren();
     for (int i = 0; i < children.size(); i++) {
-      XMLElement child = (XMLElement) children.elementAt(i);
+      XMLElement child = children.get(i);
       if (child.getName().equals("column")) {
         String label = (String) child.getAttribute("label");
         String name = (String) child.getAttribute("name");
-//      boolean editable = (((String)child.getAttribute("editable")).equals("true"));
-        boolean editable = false;
-        myColumns.add(name);
+          myColumns.add(name);
         myColumnNames.add(label);
-//        myTreeTable.addColumn(name,label,editable);
       }
     }
   }
 
   public void messageTreeTableActionPerformed(ActionEvent ae) {
     try {
-       Map tempMap = new HashMap();
+       Map<String,Object> tempMap = new HashMap<String,Object>();
       tempMap.put("selectedMessage", myTreeTable.getSelectedMessage());
       performTipiEvent("onActionPerformed", tempMap, false);
     }

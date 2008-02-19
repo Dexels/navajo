@@ -1,12 +1,16 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
-import java.lang.reflect.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.lang.reflect.*;
+import java.util.List;
+
 import javax.swing.*;
-import com.dexels.navajo.tipi.components.core.*;
+
 import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.components.core.*;
 import com.dexels.navajo.tipi.components.swingimpl.parsers.*;
+import com.dexels.navajo.tipi.internal.*;
 
 /**
  * <p>Title: </p>
@@ -18,7 +22,6 @@ import com.dexels.navajo.tipi.components.swingimpl.parsers.*;
  */
 public abstract class TipiSwingComponentImpl
     extends TipiComponentImpl implements TipiSwingComponent {
-  private int gridsize = 10;
   protected TipiGradientPaint myPaint;
   protected TipiPopupMenu myPopupMenu = null;
   private boolean committedInUI;
@@ -28,17 +31,9 @@ public abstract class TipiSwingComponentImpl
   ( (JPopupMenu) myPopupMenu.getSwingContainer()).show(getSwingContainer(), e.getX(), e.getY());
   }
 
-  public void highLight(Component c, Graphics g) {
-    Graphics2D g2 = (Graphics2D) g;
-    g2.setColor(Color.red);
-    g2.setStroke(new BasicStroke(3.0f));
-    Rectangle r = c.getBounds();
-    g2.drawRect(r.x + 1, r.y + 1, r.width - 2, r.height - 2);
-    g2.setStroke(new BasicStroke(1.0f));
-  }
 
   public void setWaitCursor(boolean b) {
-    Container cc =  (Container) getSwingContainer();
+    Container cc =  getSwingContainer();
     if (cc!=null) {
       (cc).setCursor(b ? Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR) : Cursor.getDefaultCursor());
     }
@@ -150,4 +145,8 @@ public abstract class TipiSwingComponentImpl
       committedInUI = true;
   }
 
+  	public void animateTransition(TipiEvent te, TipiExecutable executableParent, List<TipiExecutable> exe) throws TipiBreakException {
+		mySwingTipiContext.animateDefaultTransition(this,te,executableParent,getSwingContainer(),exe);
+	}
+	
 }

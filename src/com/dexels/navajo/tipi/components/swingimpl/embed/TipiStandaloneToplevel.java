@@ -1,9 +1,11 @@
 package com.dexels.navajo.tipi.components.swingimpl.embed;
 
-import com.dexels.navajo.tipi.components.swingimpl.TipiPanel;
-import com.dexels.navajo.tipi.internal.TipiLayout;
-import javax.swing.*;
 import java.awt.*;
+
+import javax.swing.*;
+
+import com.dexels.navajo.tipi.components.swingimpl.*;
+import com.dexels.navajo.tipi.internal.*;
 
 /**
  * <p>Title: </p>
@@ -23,11 +25,19 @@ private final JComponent myPanel; //= new JPanel();
   public TipiStandaloneToplevel(JComponent jj) {
 //    myPanel.setLayout(myLayout);
  	  super.setName("init");
- 	  myPanel = jj;
+ 	  if (jj==null) {
+		myPanel = new JPanel();
+	} else {
+	 	  myPanel = jj;
+	}
  	  setId("init");
     initContainer();
   }
 
+
+  public TipiStandaloneToplevel() {
+	  this(null);
+  }
   public void addToContainer(Object c, Object constraints) {
 	  if (myPanel!=null) {
 		  //System.err.println("Adding to toplevel: "+c.getClass()+ " -- "+c.hashCode());

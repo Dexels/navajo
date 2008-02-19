@@ -1,9 +1,11 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
-import java.io.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.*;
+
 import javax.swing.*;
+
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 
@@ -59,7 +61,7 @@ public class TipiFileChooser
           fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         }
         int i = fc.showOpenDialog(p);
-        if (i == fc.APPROVE_OPTION) {
+        if (i == JFileChooser.APPROVE_OPTION) {
           File f = fc.getSelectedFile();
           fileNameField.setText(f.getAbsolutePath());
         }

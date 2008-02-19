@@ -1,7 +1,8 @@
 package com.dexels.navajo.tipi.components.swingimpl.swing;
 
 import java.awt.*;
-import javax.swing.SwingUtilities;
+
+import javax.swing.*;
 
 /**
  * FlowLayout subclass that fully supports wrapping of components.

@@ -1,13 +1,14 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
-import java.util.*;
 import java.awt.event.*;
+import java.util.*;
+
 import javax.swing.event.*;
+
 import com.dexels.navajo.client.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.swingclient.components.*;
 import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.core.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.internal.*;
 import com.dexels.navajo.tipi.tipixml.*;
@@ -27,11 +28,11 @@ public class TipiAdvancedTable
   private String initMessagePath, dataMessagePath, initMethod, newDataPath,
       requiredMessagePath, updateMethod, deleteMethod, insertMethod, deleteFlag,
       updateFlag;
-  private Map columnAttributes = new HashMap();
+  private Map<String,ColumnAttribute> columnAttributes = new HashMap<String,ColumnAttribute>();
   private Message initMessage;
-  private ArrayList requiredMessages = new ArrayList();
-  private ArrayList insertedMessages = new ArrayList();
-  private ArrayList changedMessages = new ArrayList();
+  private List<Message> requiredMessages = new ArrayList<Message>();
+  private List<Message> insertedMessages = new ArrayList<Message>();
+  private List<Message> changedMessages = new ArrayList<Message>();
   public TipiAdvancedTable() {
   }
 
@@ -85,9 +86,9 @@ public class TipiAdvancedTable
     }
     if (name.equals("delete")) {
       amt = (MessageTablePanel) getContainer();
-      ArrayList selected = amt.getTable().getSelectedMessages();
+      List<Message> selected = amt.getTable().getSelectedMessages();
       for (int i = 0; i < selected.size(); i++) {
-        Message current = (Message) selected.get(i);
+        Message current = selected.get(i);
         if (deleteFlag == null) {
           deleteFlag = "Delete";
         }
@@ -126,7 +127,7 @@ public class TipiAdvancedTable
       try {
         if (updateMethod != null) {
           for (int i = 0; i < changedMessages.size(); i++) {
-            Message current = (Message) changedMessages.get(i);
+            Message current = changedMessages.get(i);
             if (updateFlag == null) {
               updateFlag = "Update";
             }
@@ -142,14 +143,14 @@ public class TipiAdvancedTable
         }
         if (insertMethod != null) {
           for (int i = 0; i < insertedMessages.size(); i++) {
-            Message current = (Message) insertedMessages.get(i);
+            Message current = insertedMessages.get(i);
             Navajo n = NavajoFactory.getInstance().createNavajo();
             current.setName(newDataPath.substring(1));
             n.addMessage(current);
             System.err.println("Adding inserted message: " + current.getName());
             if (requiredMessages != null) {
               for (int j = 0; j < requiredMessages.size(); j++) {
-                n.addMessage( (Message) requiredMessages.get(j));
+                n.addMessage( requiredMessages.get(j));
               }
             }
             myContext.performTipiMethod(this,n, getPath(),
@@ -179,21 +180,23 @@ public class TipiAdvancedTable
     }
    }
 
-  public void load(XMLElement elm, XMLElement instance, TipiContext context) throws
+  @SuppressWarnings("deprecation")
+public void load(XMLElement elm, XMLElement instance, TipiContext context) throws
       com.dexels.navajo.tipi.TipiException {
     amt = (MessageTablePanel) getContainer();
     TipiSwingColumnAttributeParser cap = new TipiSwingColumnAttributeParser();
     initMessagePath = (String) elm.getAttribute("initpath");
     if (initMessagePath != null) {
+    	System.err.println("Warning: Very Old School code detected");
       TipiPathParser pp = new TipiPathParser(this, context, initMessagePath);
-      if (pp.getPathType() == pp.PATH_TO_MESSAGE) {
+      if (pp.getPathType() == TipiPathParser.PATH_TO_MESSAGE) {
         initMessage = pp.getMessage();
         if (initMessage == null) {
           throw new TipiException("Found empty message for path: " +
                                   initMessagePath);
         }
       }
-      else if (pp.getPathType() == pp.PATH_TO_TIPI) {
+      else if (pp.getPathType() == TipiPathParser.PATH_TO_TIPI) {
         if (pp.getTipi() == null) {
           throw new TipiException("Found empty Tipi: " + initMessagePath);
         }
@@ -230,9 +233,9 @@ public class TipiAdvancedTable
     deleteFlag = (String) elm.getAttribute("deleteflag");
     updateFlag = (String) elm.getAttribute("updateflag");
     super.load(elm, instance, context); // Mmm vreemde plek
-    Vector children = elm.getChildren();
+    List<XMLElement> children = elm.getChildren();
     for (int i = 0; i < children.size(); i++) {
-      XMLElement child = (XMLElement) children.elementAt(i);
+      XMLElement child = children.get(i);
       if (child.getName().equals("column")) {
         String label = (String) child.getAttribute("label");
         String name = (String) child.getAttribute("name");
@@ -254,6 +257,7 @@ public class TipiAdvancedTable
     if (initMessage != null) {
       if (initMethod != null) {
         try {
+        	// FIXME use newer methods
           loadData(context.doSimpleSend(initMessage.getRootDoc(), initMethod, this,null, false),
                    initMethod);
         }
@@ -282,7 +286,7 @@ public class TipiAdvancedTable
     }
     try {
       MessageTablePanel mm = (MessageTablePanel) getContainer();
-      Map tempMap = new HashMap();
+      Map<String,Object> tempMap = new HashMap<String,Object>();
       tempMap.put("selectedIndex",new Integer(mm.getSelectedRow()));
       tempMap.put("selectedMessage",mm.getSelectedMessage());
       performTipiEvent("onSelectionChanged", tempMap, false);

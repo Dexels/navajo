@@ -1,10 +1,10 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
-import java.util.*;
 import java.awt.*;
+
 import javax.swing.*;
+
 import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 
 /**
  * <p>Title: </p>
@@ -39,7 +39,7 @@ public class TipiScreen
 
           if (current != null && Window.class.isInstance(current)) {
 //            System.err.println("Not null, and window");
-            ( (Component) current).setVisible(true);
+            current.setVisible(true);
           }
           else {
         	  if(c instanceof JApplet) {
@@ -89,7 +89,7 @@ public class TipiScreen
     int s = path.indexOf("/");
     if (s == -1) {
       if (path.equals("")) {
-        return (TipiComponent) myContext.getDefaultTopLevel();
+        return myContext.getDefaultTopLevel();
       }
       return getTipiComponent(path);
     }

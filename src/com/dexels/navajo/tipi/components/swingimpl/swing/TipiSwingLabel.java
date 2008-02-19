@@ -1,9 +1,13 @@
 package com.dexels.navajo.tipi.components.swingimpl.swing;
 
 import java.awt.*;
+import java.io.*;
+import java.net.*;
+
+import javax.imageio.*;
 import javax.swing.*;
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.swingimpl.*;
+
+import com.dexels.navajo.document.types.*;
 
 /**
  * <p>Title: </p>
@@ -14,43 +18,37 @@ import com.dexels.navajo.tipi.components.swingimpl.*;
  * @version 1.0
  */
 public class TipiSwingLabel
-    extends JLabel
-    implements TipiDesignable {
-  TipiSwingComponentImpl me;
-  private boolean gridFlag = false;
-  private boolean selected = false;
-  public TipiSwingLabel(TipiSwingComponentImpl me) {
-    this.me = me;
+    extends JLabel {
+  public TipiSwingLabel() {
   }
-
-  public void paintComponent(Graphics g) {
-    super.paintComponent(g);
-    Color old = g.getColor();
-//    if (gridFlag) {
-//      me.paintGrid(this, g);
-//    }
-    if (selected) {
-      me.highLight(this, g);
-    }
-    g.setColor(old);
-  }
+  
 
   public Dimension getMinumumSize() {
       return getPreferredSize();
   }
-  public void setHighlighted(boolean value) {
-    selected = value;
-  }
+	public void setIconUrl(Object u) {
+		setIcon(getIcon(u));
+	}
 
-  public boolean isHighlighted() {
-    return selected;
-  }
+	 protected ImageIcon getIcon(Object u) {
+		 if(u==null) {
+			 return null;
+		 }
+		 if(u instanceof URL) {
+			   return new ImageIcon((URL) u);
+		 }
+		 if(u instanceof Binary) {
+			 Image i;
+			try {
+				i = ImageIO.read(((Binary) u).getDataAsStream());
+				 ImageIcon ii = new ImageIcon(i);
+				 return ii;
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		 }
+		 return null;
+	  }
 
-  public void showGrid(boolean value) {
-    gridFlag = value;
-  }
-
-  public boolean isGridShowing() {
-    return gridFlag;
-  }
 }

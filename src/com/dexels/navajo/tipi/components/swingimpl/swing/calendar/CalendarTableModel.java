@@ -2,8 +2,10 @@ package com.dexels.navajo.tipi.components.swingimpl.swing.calendar;
 
 import java.text.*;
 import java.util.*;
+
 import javax.swing.event.*;
 import javax.swing.table.*;
+
 import com.dexels.navajo.document.*;
 
 /**
@@ -17,13 +19,12 @@ import com.dexels.navajo.document.*;
 public class CalendarTableModel
     implements TableModel {
   private Calendar myCalendar;
-  private ArrayList myListeners = new ArrayList();
+  private List<TableModelListener> myListeners = new ArrayList<TableModelListener>();
   private int myMonth;
   private int myYear;
   private int firstDayOfWeek = Calendar.MONDAY;
-  private HashMap dayMap = new HashMap();
-  private CalendarManager myManager;
-  private Message myData;
+  private Map<String,Day> dayMap = new HashMap<String,Day>();
+ 
   public CalendarTableModel() {
     myCalendar = Calendar.getInstance();
     myCalendar.set(Calendar.DATE, myCalendar.getActualMinimum(Calendar.DATE)); // Set to the first of the current month
@@ -43,16 +44,9 @@ public class CalendarTableModel
     return weeks + 1; // The one extra is for the day-headers table-row
   }
 
-  public void setManager(CalendarManager m) {
-    myManager = m;
-  }
 
   public void setMessage(Message msg) {
-    myData = msg;
-    // myData is the message that should be used to set attributes for the specific days
-    /** @todo Implement this method according to standard message format
-     *  Take a look at the load method in the AccommodationAvailabilityCalendarManager
-     * */
+  
   }
 
   public void fireStructureChanged() {
@@ -67,7 +61,7 @@ public class CalendarTableModel
 
   public void fireTableEvent(TableModelEvent e) {
     for (int i = 0; i < myListeners.size(); i++) {
-      TableModelListener current = (TableModelListener) myListeners.get(i);
+      TableModelListener current = myListeners.get(i);
       current.tableChanged(e);
     }
   }
@@ -78,7 +72,7 @@ public class CalendarTableModel
 
   public Day getDay(String dayOfYear) {
     //System.err.println("Getting: " + dayOfYear);
-    return (Day) dayMap.get(dayOfYear);
+    return dayMap.get(dayOfYear);
   }
 
   public Object getValueAt(int week, int day) {
@@ -98,13 +92,13 @@ public class CalendarTableModel
       if (day > 0) {
         day = day - 1;
         myCalendar.set(Calendar.DAY_OF_WEEK, ( (firstDayOfWeek + day) % 7));
-        int date = myCalendar.get(Calendar.DATE);
+//        int date = myCalendar.get(Calendar.DATE);
         // Now we know the date of the current location.
         // We return either a saved day or a new one.
         int doy = myCalendar.get(Calendar.DAY_OF_YEAR);
         String day_in_year = String.valueOf(doy);
         String year = String.valueOf(myCalendar.get(Calendar.YEAR));
-        Day dayM = (Day) dayMap.get(day_in_year + year);
+        Day dayM = dayMap.get(day_in_year + year);
         if (dayM != null && doy >= yd_of_first && doy < yd_of_last) {
           return dayM;
         }
@@ -175,7 +169,7 @@ public class CalendarTableModel
     myListeners.add(l);
   }
 
-  public Class getColumnClass(int columnIndex) {
+  public Class<?> getColumnClass(int columnIndex) {
     return Object.class;
   }
 

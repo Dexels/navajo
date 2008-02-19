@@ -1,15 +1,13 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
-import java.beans.*;
-import java.net.*;
 import java.awt.*;
+import java.beans.*;
+import java.util.List;
 
 import javax.swing.*;
-import javax.swing.event.*;
 
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
-import com.dexels.navajo.tipi.tipixml.*;
 import com.dexels.navajo.tipi.internal.*;
 
 /**
@@ -26,139 +24,86 @@ public final class TipiWindow
 //    extends DefaultTipi {
     extends TipiSwingDataComponentImpl {
   private JInternalFrame myWindow;
-  private String myMenuBar = "";
-  private String myTitle;
+//  private String myMenuBar = "";
+//  private String myTitle;
   
-  private boolean iconifiable = false;
-  private boolean closable = false;
-  private boolean visible = false;
-  private boolean maximizable = false;
-  private boolean resizable = false;
-  private String title = "";
-  private Color backgroundColor = null;
-  private Rectangle myBounds;
+//  private boolean iconifiable = false;
+//  private boolean closable = false;
+//  private boolean visible = false;
+//  private boolean maximizable = false;
+//  private boolean resizable = false;
+//  private String title = "";
+//  private Color backgroundColor = null;
+//  private Rectangle myBounds;
 
-  private boolean isDisposing = false;
+//  private boolean isDisposing = false;
   
   private JInternalFrame constructWindow() {
-	  	isDisposing = false;
+//	  	isDisposing = false;
 	  	clearContainer();
-	    myWindow = new JInternalFrame();
+	    myWindow = new TipiSwingWindow();
 	    TipiHelper th = new TipiSwingHelper();
 	    th.initHelper(this);
 	    addHelper(th);
-//  	  	System.err.println("INSTANTIATING WINDOW!");
-//  	  	myWindow.addInternalFrameListener(new InternalFrameAdapter() {
-//	      public void internalFrameClosing(InternalFrameEvent l) {
-//	      }
-//
-//		public void internalFrameClosed(InternalFrameEvent e) {
-//			System.err.println("Shobiedoewa! ");
-//
-//	    	  JInternalFrame jjj = (JInternalFrame) e.getSource();
-//
-//	    	  JInternalFrame jj = (JInternalFrame) getContainer();
-//	    	      if (jjj!=null) {
-//	    	    	  System.err.println("Source found. Disposing");
-//	    	    	  Container parent = jjj.getParent();
-//	    	    	  if (parent!=null) {
-//	    	        	  parent.remove(jjj);
-//	    	    	  }
-//	    	    	  if (!isDisposing) {
-//		    	    	  isDisposing = true;
-//		    	    	  System.err.println("DISPOSING!");
-//		    	    	  try {
-//							jjj.setClosed(true);
-//						} catch (PropertyVetoException e1) {
-//								e1.printStackTrace();
-//						}
-//		    	    	  jjj.dispose();
-//	    	    	  }
-//	    	      }	 else {
-//	    	    	  System.err.println("No source, but container found");
-//	    	      }
-//	    	      myWindow = null;
-//	    	      clearContainer();
-//			super.internalFrameClosed(e);
-//		}
-//	    });
 	    myWindow.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);  
-//	    if (myBounds!=null) {
-//	    	myWindow.setBounds(myBounds);
-//		}
-//	    if (backgroundColor!=null) {
-//			myWindow.setBackground(backgroundColor);
-//		}
-//	    myWindow.setIconifiable(iconifiable);
-//	    myWindow.setClosable(closable);
-//	    myWindow.setMaximizable(maximizable);
-//	    myWindow.setResizable(resizable);
-//	    if (getTipiParent()!=null) {
-//		    getTipiParent().addToContainer(myWindow, null);
-//		}
-//	    clearContainer();
 	    myWindow.setVisible(true);
+	    myWindow.setResizable(true);
+	    myWindow.setSize(100,40);
+	 
 	    return myWindow;
   }
   
   public Object createContainer() {
 	  return constructWindow();
   }
-
-  public Object getComponentValue(String name) {
-    if ("visible".equals(name)) {
-    	if (myWindow==null) {
-			return new Boolean(false);
-		}
-      return new Boolean(myWindow.isVisible());
-    }
-//    if("title".equals(name)){
-//      return myWindow.getTitle();
+  
+	public void animateTransition(TipiEvent te, TipiExecutable executableParent, List<TipiExecutable> exe) throws TipiBreakException {
+		mySwingTipiContext.animateDefaultTransition(this,te,executableParent,myWindow.getContentPane(),exe);
+	}
+ 
+//  public Object getComponentValue(String name) {
+//    if ("visible".equals(name)) {
+//    	if (myWindow==null) {
+//			return new Boolean(false);
+//		}
+//      return new Boolean(myWindow.isVisible());
 //    }
-    Rectangle r = myWindow.getBounds();
-    if (name.equals("x")) {
-      return new Integer(r.x);
-    }
-    if (name.equals("y")) {
-      return new Integer(r.y);
-    }
-    if (name.equals("w")) {
-      return new Integer(r.width);
-    }
-    if (name.equals("h")) {
-      return new Integer(r.height);
-    }
-    if (name.equals("iconifiable")) {
-      return new Boolean(myWindow.isIconifiable());
-    }
-    if (name.equals("maximizable")) {
-      return new Boolean(myWindow.isMaximizable());
-    }
-    if (name.equals("closable")) {
-      return new Boolean(myWindow.isClosable());
-    }
-    if (name.equals("resizable")) {
-      return new Boolean(myWindow.isResizable());
-    }
-    if (name.equals("title")) {
-      return myWindow.getTitle();
-     }
-
-    return super.getComponentValue(name);
-  }
-
-
-//  private final void myWindow_internalFrameClosed(InternalFrameEvent l) {
+//    Rectangle r = myWindow.getBounds();
+//    if (name.equals("x")) {
+//      return new Integer(r.x);
+//    }
+//    if (name.equals("y")) {
+//      return new Integer(r.y);
+//    }
+//    if (name.equals("w")) {
+//      return new Integer(r.width);
+//    }
+//    if (name.equals("h")) {
+//      return new Integer(r.height);
+//    }
+//    if (name.equals("iconifiable")) {
+//      return new Boolean(myWindow.isIconifiable());
+//    }
+//    if (name.equals("maximizable")) {
+//      return new Boolean(myWindow.isMaximizable());
+//    }
+//    if (name.equals("closable")) {
+//      return new Boolean(myWindow.isClosable());
+//    }
+//    if (name.equals("resizable")) {
+//      return new Boolean(myWindow.isResizable());
+//    }
+//    if (name.equals("title")) {
+//      return myWindow.getTitle();
+//     }
 //
-//	  myWindow = null;
-//	  clearContainer();
+//    return super.getComponentValue(name);
 //  }
 
   public void addToContainer(final Object c, final Object constraints) {
     runSyncInEventThread(new Runnable() {
       public void run() {
         ( (JInternalFrame) getContainer()).getContentPane().add( (Component) c, constraints);
-//        ((SwingTipiContext)myContext).addTopLevel(c);
       }
     });
   }
@@ -167,8 +112,8 @@ public final class TipiWindow
     runSyncInEventThread(new Runnable() {
       public void run() {
         ( (JInternalFrame) getContainer()).getContentPane().remove( (Component) c);
-//        ((SwingTipiContext)myContext).removeTopLevel(c);
-      }
+        ( (JInternalFrame) getContainer()).repaint();
+ }
     });
   }
 
@@ -181,90 +126,88 @@ public final class TipiWindow
     });
   }
 
-  public final void setComponentValue(final String name, final Object object) {
-    super.setComponentValue(name, object);
-    if (object==null) {
-      System.err.println("Null object. Name = "+name);
-    } else {
-      //System.err.println("Class: "+object.getClass()+" name: "+name);
-    }
-//    final JInternalFrame jj = (JInternalFrame) getContainer();
- 	  checkContainerInstance();
- 	 
-    runSyncInEventThread(new Runnable() {
- 
-	public void run() {
-        if (name.equals("iconifiable")) {
-      	  checkContainerInstance();
-          boolean b = ( (Boolean) object).booleanValue();
-          iconifiable = b;
-          ((JInternalFrame) getContainer()).setIconifiable(b);
-        }
-        if (name.equals("background")) {
-      	  checkContainerInstance();
-        	backgroundColor = (Color) object;
-        	((JInternalFrame) getContainer()).setBackground(backgroundColor );
-        }
-        if (name.equals("maximizable")) {
-      	  checkContainerInstance();
-          maximizable = ( (Boolean) object).booleanValue();
-          ((JInternalFrame) getContainer()).setMaximizable(maximizable);
-        }
-        if (name.equals("closable")) {
-      	  checkContainerInstance();
-          closable = ( (Boolean) object).booleanValue();
-          ((JInternalFrame) getContainer()).setClosable(closable);
-        }
-        if (name.equals("resizable")) {
-      	  checkContainerInstance();
-          resizable = ( (Boolean) object).booleanValue();
-          ((JInternalFrame) getContainer()).setResizable(resizable);
-        }
-        if (name.equals("selected")) {
-          boolean b = ( (Boolean) object).booleanValue();
-          try {
-        	  checkContainerInstance();
-        	  ((JInternalFrame) getContainer()).setSelected(b);
-          }
-          catch (PropertyVetoException ex) {
-            System.err.println("Tried to select a window, but someone did not agree");
-            ex.printStackTrace();
-          }
-          // hihihiihi
-          if (name.equals("visible")) {
-        	  ((JInternalFrame) getContainer()).invalidate();
-        	  checkContainerInstance();
-        	  ((JInternalFrame) getContainer()).setVisible( ( (Boolean) object).booleanValue());
-          }
-        }
-        final Rectangle r = getBounds();
-
-      if (name.equals("x")) {
-          r.x = ( (Integer) object).intValue();
-        }
-        if (name.equals("y")) {
-          r.y = ( (Integer) object).intValue();
-        }
-        if (name.equals("w")) {
-          r.width = ( (Integer) object).intValue();
-        }
-        if (name.equals("h")) {
-          r.height = ( (Integer) object).intValue();
-        }
-        if (name.equals("title")) {
-          myTitle = object.toString();
-          setTitle(myTitle);
-        }
-        if (name.equals("icon")) {
-            if (object instanceof URL) {
-                setIcon(getIcon( (URL) object));
-            }
-        }
-        myBounds = r;
-        setBounds(r);
-      }
-    });
-  }
+//  public final void setComponentValue(final String name, final Object object) {
+//    super.setComponentValue(name, object);
+//    if (object==null) {
+//      System.err.println("Null object. Name = "+name);
+//    } else {
+//    }
+// 	  checkContainerInstance();
+// 	 
+//    runSyncInEventThread(new Runnable() {
+// 
+//	public void run() {
+//        if (name.equals("iconifiable")) {
+//      	  checkContainerInstance();
+//          boolean b = ( (Boolean) object).booleanValue();
+//          iconifiable = b;
+//          ((JInternalFrame) getContainer()).setIconifiable(b);
+//        }
+//        if (name.equals("background")) {
+//      	  checkContainerInstance();
+//        	backgroundColor = (Color) object;
+//        	((JInternalFrame) getContainer()).setBackground(backgroundColor );
+//        }
+//        if (name.equals("maximizable")) {
+//      	  checkContainerInstance();
+//          maximizable = ( (Boolean) object).booleanValue();
+//          ((JInternalFrame) getContainer()).setMaximizable(maximizable);
+//        }
+//        if (name.equals("closable")) {
+//      	  checkContainerInstance();
+//          closable = ( (Boolean) object).booleanValue();
+//          ((JInternalFrame) getContainer()).setClosable(closable);
+//        }
+//        if (name.equals("resizable")) {
+//      	  checkContainerInstance();
+//          resizable = ( (Boolean) object).booleanValue();
+//          ((JInternalFrame) getContainer()).setResizable(resizable);
+//        }
+//        if (name.equals("selected")) {
+//          boolean b = ( (Boolean) object).booleanValue();
+//          try {
+//        	  checkContainerInstance();
+//        	  ((JInternalFrame) getContainer()).setSelected(b);
+//          }
+//          catch (PropertyVetoException ex) {
+//            System.err.println("Tried to select a window, but someone did not agree");
+//            ex.printStackTrace();
+//          }
+//          // hihihiihi
+//          if (name.equals("visible")) {
+//        	  ((JInternalFrame) getContainer()).invalidate();
+//        	  checkContainerInstance();
+//        	  ((JInternalFrame) getContainer()).setVisible( ( (Boolean) object).booleanValue());
+//          }
+//        }
+//        final Rectangle r = getBounds();
+//
+//      if (name.equals("x")) {
+//          r.x = ( (Integer) object).intValue();
+//        }
+//        if (name.equals("y")) {
+//          r.y = ( (Integer) object).intValue();
+//        }
+//        if (name.equals("w")) {
+//          r.width = ( (Integer) object).intValue();
+//        }
+//        if (name.equals("h")) {
+//          r.height = ( (Integer) object).intValue();
+//        }
+//        if (name.equals("title")) {
+//          myTitle = object.toString();
+//          setTitle(myTitle);
+//        }
+//        if (name.equals("icon")) {
+//            if (object instanceof URL) {
+//                setIcon(getIcon( (URL) object));
+//            }
+//        }
+//        myBounds = r;
+//        setBounds(r);
+//      }
+//    });
+//  }
   
   public Container getSwingContainer() {
 	  checkContainerInstance();
@@ -276,30 +219,30 @@ public final class TipiWindow
 	}
   }
   
-  private ImageIcon getIcon(final URL u) {
-    return new ImageIcon(u);
-  }
+//  private ImageIcon getIcon(final URL u) {
+//    return new ImageIcon(u);
+//  }
 
-  protected void setTitle(final String s) {
-    myWindow.setTitle(s);
-  }
+//  protected void setTitle(final String s) {
+//    myWindow.setTitle(s);
+//  }
 
-  protected void setBounds(final Rectangle r) {
-//	  System.err.println("Setting bounds: "+r);
-	  myWindow.setBounds(r);
-  }
+//  protected void setBounds(final Rectangle r) {
+////	  System.err.println("Setting bounds: "+r);
+//	  myWindow.setBounds(r);
+//  }
 
-  protected Rectangle getBounds() {
-    return myWindow.getBounds();
-  }
+//  protected Rectangle getBounds() {
+//    return myWindow.getBounds();
+//  }
+//
+//  protected void setIcon(final ImageIcon ic) {
+//    myWindow.setFrameIcon(ic);
+//  }
 
-  protected void setIcon(final ImageIcon ic) {
-    myWindow.setFrameIcon(ic);
-  }
-
-  protected void setJMenuBar(JMenuBar ic) {
-    myWindow.setJMenuBar(ic);
-  }
+//  protected void setJMenuBar(JMenuBar ic) {
+//    myWindow.setJMenuBar(ic);
+//  }
 
   private final void doPerformMethod(String name, TipiComponentMethod compMeth) {
 	  
@@ -360,7 +303,7 @@ public final class TipiWindow
      	 
      JInternalFrame jj = (JInternalFrame) getContainer();
       TipiSwingDesktop tt = (TipiSwingDesktop) jj.getParent();
-      if (jj==null || tt==null) {
+      if ( tt==null) {
         return;
       }
       jj.toFront();

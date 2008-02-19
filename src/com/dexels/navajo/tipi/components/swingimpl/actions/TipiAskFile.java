@@ -34,7 +34,7 @@ public class TipiAskFile extends TipiAction {
         Object o = myComponent.getContainer();
         Container c = null;
         if (o instanceof Container) {
-            c = (Container) c;
+            c = (Container) o;
         }
         try {
 			jf.setCurrentDirectory(new File(System.getProperty("user.home")));

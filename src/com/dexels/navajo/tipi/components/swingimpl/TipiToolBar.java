@@ -1,8 +1,13 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
+import java.awt.*;
+
+import org.jdesktop.animation.transitions.*;
+import org.jdesktop.animation.transitions.EffectsManager.*;
+import org.jdesktop.animation.transitions.effects.*;
+
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
-import java.awt.*;
 
 /**
  * <p>Title: </p>
@@ -14,14 +19,16 @@ import java.awt.*;
  */
 public class TipiToolBar
     extends TipiSwingDataComponentImpl {
-  private int orientation = TipiSwingToolBar.HORIZONTAL;
-  public Object createContainer() {
-    TipiSwingToolBar ts = new TipiSwingToolBar(this);
+   public Object createContainer() {
+    TipiSwingToolBar ts = new TipiSwingToolBar();
     TipiHelper th = new TipiSwingHelper();
     th.initHelper(this);
     addHelper(th);
     ts.setFloatable(false);
     ts.setMinimumSize(new Dimension(0,0));
+//	EffectsManager.setEffect(ts, new FadeIn(), TransitionType.APPEARING);
+//	EffectsManager.setEffect(ts, new FadeOut(), TransitionType.DISAPPEARING);
+
     return ts;
   }
 

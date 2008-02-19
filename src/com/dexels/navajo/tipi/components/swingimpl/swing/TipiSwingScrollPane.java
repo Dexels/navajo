@@ -12,7 +12,7 @@ import javax.swing.*;
 
 public class TipiSwingScrollPane extends JScrollPane {
 
-    private JComponent scrollingComponent = null;
+//    private JComponent scrollingComponent = null;
 //    
 //    private Dimension checkMax(Dimension preferredSize, Dimension maximumSize) {
 ////        Dimension maximumSize = getMaximumSize();

@@ -1,9 +1,6 @@
 package com.dexels.navajo.tipi.components.swingimpl.swing;
 
-import java.awt.*;
 import javax.swing.*;
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.swingimpl.*;
 
 /**
  * <p>Title: </p>
@@ -15,25 +12,12 @@ import com.dexels.navajo.tipi.components.swingimpl.*;
  */
 public class TipiSwingMenuBar
     extends JMenuBar
-    implements TipiDesignable {
-  private TipiSwingComponentImpl me;
+    {
   private boolean gridFlag = false;
   private boolean selected = false;
-  public TipiSwingMenuBar(TipiSwingComponentImpl me) {
-    this.me = me;
-  }
+  public TipiSwingMenuBar() {
+   }
 
-  public void paintComponent(Graphics g) {
-    super.paintComponent(g);
-    Color old = g.getColor();
-//    if (gridFlag) {
-//      me.paintGrid(this, g);
-//    }
-    if (selected) {
-      me.highLight(this, g);
-    }
-    g.setColor(old);
-  }
 
   public void setHighlighted(boolean value) {
     selected = value;

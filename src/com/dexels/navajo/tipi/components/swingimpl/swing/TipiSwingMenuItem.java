@@ -1,40 +1,46 @@
 package com.dexels.navajo.tipi.components.swingimpl.swing;
 
+import java.net.*;
+
 import javax.swing.*;
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.swingimpl.*;
 
 /**
- * <p>Title: </p>
- * <p>Description: </p>
- * <p>Copyright: Copyright (c) 2003</p>
- * <p>Company: </p>
+ * <p>
+ * Title:
+ * </p>
+ * <p>
+ * Description:
+ * </p>
+ * <p>
+ * Copyright: Copyright (c) 2003
+ * </p>
+ * <p>
+ * Company:
+ * </p>
+ * 
  * @author not attributable
  * @version 1.0
  */
-public class TipiSwingMenuItem
-    extends JMenuItem
-    implements TipiDesignable {
-  private TipiSwingComponentImpl me;
-  private boolean gridFlag = false;
-  private boolean selected = false;
-  public TipiSwingMenuItem(TipiSwingComponentImpl me) {
-    this.me = me;
-  }
+public class TipiSwingMenuItem extends JMenuItem {
+	public static String STRINGMNEMONIC_CHANGED_PROPERTY = "string_mnemonic"; 
+	public TipiSwingMenuItem() {
+	}
 
-  public void setHighlighted(boolean value) {
-    selected = value;
-  }
+	public void setIconUrl(URL u) {
+		setIcon(new ImageIcon(u));
+	}
 
-  public boolean isHighlighted() {
-    return selected;
-  }
+	public void setStringMnemonic(String s) {
+		String old = getStringMnemonic();
+		setMnemonic(s.charAt(0));
+		firePropertyChange(STRINGMNEMONIC_CHANGED_PROPERTY, old, s);
+	}
+	public String getStringMnemonic() {
+		return new String(""+(char)getMnemonic());
+	}
+	
+	public void setAccelerator(String s) {
+		setAccelerator(KeyStroke.getKeyStroke(s));
+	}
 
-  public void showGrid(boolean value) {
-    gridFlag = value;
-  }
-
-  public boolean isGridShowing() {
-    return gridFlag;
-  }
 }

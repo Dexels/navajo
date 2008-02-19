@@ -6,17 +6,12 @@
  */
 package com.dexels.navajo.tipi.components.swingimpl.actions;
 
-import java.awt.*;
 import java.io.*;
-import java.net.*;
 import java.util.*;
-
-import javax.swing.*;
 
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.types.*;
 import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.swingimpl.SwingTipiContext;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.internal.*;
 
@@ -52,9 +47,6 @@ public class TipiOpenBinary extends TipiAction {
         Binary b = (Binary)value.value;
         if (extString==null) {
             String mime = b.guessContentType();
-//            if (mime==null || "".equals(mime)) {
-//                mime = b.guessContentType();
-//            }
             if (mime!=null) {
                 if (mime.indexOf("/") != -1) {
                     StringTokenizer st = new StringTokenizer(mime,"/");
@@ -65,13 +57,7 @@ public class TipiOpenBinary extends TipiAction {
                 }
             }
         }
-        SwingTipiContext stc = (SwingTipiContext)myContext;
-        
-//        if(stc.getAppletRoot()!=null) {
-//        	URL u = stc.getBinaryUrl(b);
-//        	JApplet ap = stc.getAppletRoot();
-//        	ap.getAppletContext().showDocument(u, "_blank");
-//        } else {
+
             try {
                 File f = File.createTempFile("tipi_", "."+extString);
                 TipiSaveValue.saveFile(b, f);

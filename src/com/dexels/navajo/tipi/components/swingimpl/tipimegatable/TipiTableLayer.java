@@ -1,20 +1,18 @@
 package com.dexels.navajo.tipi.components.swingimpl.tipimegatable;
 
-import com.dexels.navajo.tipi.tipixml.*;
-import java.util.*;
-//import com.dexels.navajo.swingclient.components.*;
-import com.dexels.navajo.document.*;
-import javax.swing.*;
 import java.awt.*;
-import com.dexels.navajo.tipi.components.swingimpl.swing.MessageTableFooterRenderer;
-import com.dexels.navajo.swingclient.components.*;
-
-import javax.swing.event.*;
-import com.dexels.navajo.tipi.components.swingimpl.swing.*;
-import com.dexels.navajo.parser.*;
-import javax.swing.border.*;
 import java.awt.event.*;
+import java.util.*;
+import java.util.List;
+
+import javax.swing.*;
+import javax.swing.border.*;
+
+import com.dexels.navajo.document.*;
+import com.dexels.navajo.swingclient.components.*;
 import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.components.swingimpl.swing.*;
+import com.dexels.navajo.tipi.tipixml.*;
 
 /**
  * <p>Title: </p>
@@ -26,11 +24,11 @@ import com.dexels.navajo.tipi.*;
  */
 public class TipiTableLayer
     extends TipiTableBaseLayer {
-  private final ArrayList columns = new ArrayList();
-  private final ArrayList columnSize = new ArrayList();
-  private final ArrayList columnName = new ArrayList();
-  private final ArrayList columnTypes = new ArrayList();
-  private final Map myTypeMap = new HashMap();
+  private final List<String> columns = new ArrayList<String>();
+  private final List<Integer> columnSize = new ArrayList<Integer>();
+  private final List<String> columnName = new ArrayList<String>();
+  private final List<String> columnTypes = new ArrayList<String>();
+  private final Map<String,String> myTypeMap = new HashMap<String,String>();
   private String remarkBorder = null;
   private boolean columnsButtonVisible = false;
   private boolean filtersVisible = false;
@@ -40,9 +38,9 @@ public class TipiTableLayer
   private boolean sortable = true;
 
   private int rowHeight = 16;
-  private final Map aggregateMap = new HashMap();
-  private final Map columnDividers = new HashMap();
-  private final ArrayList conditionalRemarks = new ArrayList();
+  private final Map<Integer,String> aggregateMap = new HashMap<Integer,String>();
+  private final Map<Integer,Double> columnDividers = new HashMap<Integer,Double>();
+  private final List<ConditionalRemark> conditionalRemarks = new ArrayList<ConditionalRemark>();
 private MessageTablePanel myTablePanel;
   public TipiTableLayer(TipiMegaTable tmt) {
     super(tmt);
@@ -63,9 +61,9 @@ private MessageTablePanel myTablePanel;
     sortable = elt.getBooleanAttribute("sortable", "true", "false", true);
 
     readOnly = elt.getBooleanAttribute("readOnly", "true", "false", false);
-    Vector children = elt.getChildren();
+    List<XMLElement> children = elt.getChildren();
     for (int i = 0; i < children.size(); i++) {
-      XMLElement child = (XMLElement) children.elementAt(i);
+      XMLElement child = children.get(i);
       String name = child.getName();
       if (name.equals("remarks")) {
         loadRemarks(i, child);
@@ -80,14 +78,15 @@ private MessageTablePanel myTablePanel;
       }
     }
   }
+
   public void updateLayer() {
   }
 
   private final void loadRemarks(int index, XMLElement child) {
     remarkBorder = (String) child.getAttribute("border");
-    Vector remarks = child.getChildren();
+    List<XMLElement> remarks = child.getChildren();
     for (int j = 0; j < remarks.size(); j++) {
-      XMLElement remark = (XMLElement) remarks.elementAt(j);
+      XMLElement remark = remarks.get(j);
       String condition = (String) remark.getAttribute("condition");
       String remarkString = (String) remark.getAttribute("remark");
       String colorString = (String) remark.getAttribute("color");
@@ -97,7 +96,7 @@ private MessageTablePanel myTablePanel;
   }
 
   public void addConditionalRemark(String remark, String condition, String c, String font) {
-    ConditionalRemark cr = new ConditionalRemark(myTable, remark, condition, -1, c, font);
+    ConditionalRemark cr = new ConditionalRemark(myTable, remark, condition, c, font);
     conditionalRemarks.add(cr);
   }
 
@@ -144,8 +143,7 @@ private MessageTablePanel myTablePanel;
 			}};
 			SwingUtilities.invokeLater(invocation);
   }
-
-  public void loadData(final Navajo n, final Message current, Stack layerStack, JComponent currentPanel) {
+  public void loadData(final Navajo n, final Message current, Stack<TipiTableBaseLayer> layerStack, JComponent currentPanel) {
     final MessageTableFooterRenderer myFooterRenderer = new MessageTableFooterRenderer(myTable);
     final MessageTablePanel mtp = new MessageTablePanel();
     myTablePanel = mtp;
@@ -153,24 +151,23 @@ private MessageTablePanel myTablePanel;
     inbetweenPanel.setLayout(new BorderLayout());
     currentPanel.add(inbetweenPanel, BorderLayout.CENTER);
     inbetweenPanel.add(mtp, BorderLayout.CENTER);
-//    mtp.setFooterRenderer(myFooterRenderer);
     setupTable(mtp);
     int i = 0;
-    for (Iterator iter = columnTypes.iterator(); iter.hasNext(); ) {
-      String item = (String) iter.next();
-      mtp.setTypeHint( (String) columnName.get(i), item);
+    for (Iterator<String> iter = columnTypes.iterator(); iter.hasNext(); ) {
+      String item = iter.next();
+      mtp.setTypeHint( columnName.get(i), item);
 //      System.err.println("Setting type hint: " + (String) columnName.get(i) + " - " + item);
       i++;
     }
     final RemarkPanel remarkPanel = createRemarkPanel(inbetweenPanel, current, mtp);
     myTable.addTableInstance(mtp, myFooterRenderer, remarkPanel, this);
-    for (Iterator iter = aggregateMap.keySet().iterator(); iter.hasNext(); ) {
-      Integer item = (Integer) iter.next();
-      myFooterRenderer.addAggregate(item.intValue(), (String) aggregateMap.get(item));
+    for (Iterator<Integer> iter = aggregateMap.keySet().iterator(); iter.hasNext(); ) {
+      Integer item = iter.next();
+      myFooterRenderer.addAggregate(item.intValue(), aggregateMap.get(item));
     }
     mtp.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        Map m = new HashMap();
+        Map<String,Object> m = new HashMap<String,Object>();
         m.put("table", mtp);
         m.put("selected", mtp.getSelectedMessage());
         try {
@@ -187,8 +184,8 @@ private MessageTablePanel myTablePanel;
     if (tableData.getDefinitionMessage() != null) {
       Message def = tableData.getDefinitionMessage();
       for (int j = 0; j < columns.size(); j++) {
-        String column = (String) columns.get(j);
-        String label = (String) columnName.get(j);
+        String column = columns.get(j);
+        String label = columnName.get(j);
         Property p = def.getProperty(column);
         Object labelString = null;
         try {
@@ -209,8 +206,8 @@ private MessageTablePanel myTablePanel;
       if (tableData.getArraySize() > 0) {
         Message first = tableData.getMessage(0);
         for (int j = 0; j < columns.size(); j++) {
-          String column = (String) columns.get(j);
-          String label = (String) columnName.get(j);
+          String column = columns.get(j);
+          String label = columnName.get(j);
           Property p = first.getProperty(column);
           Object labelString = null;
           try {
@@ -232,9 +229,9 @@ private MessageTablePanel myTablePanel;
       mtp.setFooterRenderer(myFooterRenderer);
     }
     mtp.setMessage(tableData);
-//    mtp.getTable().updateTableSize();
-    mtp.updateTableSize();
+    updateTableColumns(mtp);
     remarkPanel.updateConditionalRemarks();
+    System.err.println("MegaTable layer :"+mtp.getPreferredSize());
 //    updateConditionalRemarks(remarkPanel, current);
   }
 
@@ -250,15 +247,15 @@ private MessageTablePanel myTablePanel;
   if (rowHeight > 0) {
       mtp.setRowHeight(rowHeight);
     }
-    for (Iterator iter = columnDividers.keySet().iterator(); iter.hasNext(); ) {
-      Integer item = (Integer)iter.next();
-      Double size = (Double)columnDividers.get(item);
+    for (Iterator<Integer> iter = columnDividers.keySet().iterator(); iter.hasNext(); ) {
+      Integer item = iter.next();
+      Double size = columnDividers.get(item);
       mtp.addColumnDivider(item.intValue(),(float)size.doubleValue());
     }
   }
 
   public String getTypeHint(String id) {
-    return (String) myTypeMap.get(id);
+    return myTypeMap.get(id);
   }
 
   public void setTypeHint(String id, String type) {
@@ -277,15 +274,15 @@ private MessageTablePanel myTablePanel;
     for (int i = 0; i < columns.size(); i++) {
       XMLElement xxx = new CaseSensitiveXMLElement();
       xxx.setName("column");
-      String columnId = (String) columns.get(i);
+      String columnId = columns.get(i);
       String type = getTypeHint(columnId);
       xxx.setAttribute("name", columnId);
-      xxx.setIntAttribute("size", ( (Integer) columnSize.get(i)).intValue());
-      String label = (String) columnName.get(i);
+      xxx.setIntAttribute("size", columnSize.get(i).intValue());
+      String label = columnName.get(i);
       if (label != null) {
         xxx.setAttribute("label", label);
       }
-      String aggr = (String) aggregateMap.get(new Integer(i));
+      String aggr = aggregateMap.get(new Integer(i));
       if (aggr != null) {
         xxx.setAttribute("aggregate", aggr);
       }
@@ -299,7 +296,7 @@ private MessageTablePanel myTablePanel;
     remarks.setAttribute("border", remarkBorder);
     newElt.addChild(remarks);
     for (int i = 0; i < conditionalRemarks.size(); i++) {
-      ConditionalRemark current = (ConditionalRemark) conditionalRemarks.get(i);
+      ConditionalRemark current = conditionalRemarks.get(i);
       XMLElement rem = new CaseSensitiveXMLElement();
       rem.setName("remark");
       rem.setAttribute("remark", current.getRemark());
@@ -309,9 +306,9 @@ private MessageTablePanel myTablePanel;
       remarks.addChild(rem);
     }
 
-    for (Iterator iter = columnDividers.keySet().iterator(); iter.hasNext(); ) {
-      Integer item = (Integer)iter.next();
-      Double width = (Double)columnDividers.get(item);
+    for (Iterator<Integer> iter = columnDividers.keySet().iterator(); iter.hasNext(); ) {
+      Integer item = iter.next();
+      Double width = columnDividers.get(item);
       XMLElement div = new CaseSensitiveXMLElement();
       div.setName("columndivider");
       div.setAttribute("index", ""+item.intValue());
@@ -322,7 +319,7 @@ private MessageTablePanel myTablePanel;
   }
 
   private RemarkPanel createRemarkPanel(JComponent parentPanel, Message currentMessage, MessageTablePanel mtp) {
-    RemarkPanel remarkPanel = new RemarkPanel(myTable, mtp, currentMessage, this, conditionalRemarks);
+    RemarkPanel remarkPanel = new RemarkPanel(myTable,  currentMessage, conditionalRemarks);
     Operand r = myTable.getContext().evaluate(remarkBorder, myTable, null, currentMessage);
     Border b = r == null ? null : (Border) r.value;
     if (b != null) {

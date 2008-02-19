@@ -1,7 +1,6 @@
 package com.dexels.navajo.tipi.components.swingimpl.swing.calendar;
 
 import java.util.*;
-import javax.swing.*;
 
 /**
  * <p>Title: </p>
@@ -15,8 +14,7 @@ public class Day {
   private int myDate = -1;
   private int myWeekOfYear = -1;
   private int myWeekOfMonth = -1;
-  private Map myAttributes;
-  private JComponent myInfo = new JLabel();
+  private Map<String,String> myAttributes;
   private Date myRealDate;
   public Day() {
   }
@@ -62,7 +60,7 @@ public class Day {
     return myWeekOfMonth;
   }
 
-  public void setAttributes(Map attr) {
+  public void setAttributes(Map<String,String> attr) {
     myAttributes = attr;
   }
 
@@ -75,7 +73,7 @@ public class Day {
     }
   }
 
-  public Map getAttributes() {
+  public Map<String,String> getAttributes() {
     return myAttributes;
   }
 }

@@ -1,20 +1,12 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
 
-import com.dexels.navajo.tipi.components.*;
-import com.dexels.navajo.tipi.components.core.*;
-import com.dexels.navajo.tipi.components.question.*;
-import com.dexels.navajo.tipi.components.swingimpl.swing.*;
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.document.*;
-
-import com.dexels.navajo.tipi.actions.*;
-
 import java.awt.*;
 import java.lang.reflect.*;
-import java.util.*;
 
 import javax.swing.*;
+
+import com.dexels.navajo.tipi.components.question.*;
 
 /**
  * <p>Title: </p>

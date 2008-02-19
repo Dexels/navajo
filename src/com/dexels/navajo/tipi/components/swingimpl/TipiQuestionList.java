@@ -1,19 +1,11 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
-import com.dexels.navajo.tipi.components.*;
-import com.dexels.navajo.tipi.components.core.*;
-import com.dexels.navajo.tipi.components.question.*;
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.actions.*;
-import java.util.*;
-import com.dexels.navajo.tipi.internal.*;
-import java.io.*;
 import java.lang.reflect.*;
-import java.awt.*;
-import java.awt.print.*;
 
 import javax.swing.*;
+
+import com.dexels.navajo.document.*;
+import com.dexels.navajo.tipi.components.question.*;
 
 /**
  * <p>Title: </p>
@@ -29,10 +21,10 @@ public abstract class TipiQuestionList
 //  private String questionDefinitionName = null;
 //  private String questionGroupDefinitionName = null;
 //  
-  private static final String MODE_TABS = "tabs";
-  private static final String MODE_PANEL = "panel";
+//  private static final String MODE_TABS = "tabs";
+//  private static final String MODE_PANEL = "panel";
   
-  private String groupMode = MODE_PANEL;
+//  private String groupMode = MODE_PANEL;
   public TipiQuestionList() {
   }
 

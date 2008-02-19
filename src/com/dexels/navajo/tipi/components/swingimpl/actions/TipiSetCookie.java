@@ -1,7 +1,6 @@
 package com.dexels.navajo.tipi.components.swingimpl.actions;
 
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.parser.*;
 import com.dexels.navajo.tipi.internal.*;
 
 /**
@@ -25,13 +24,14 @@ public final class TipiSetCookie extends TipiAction {
 
 	public final void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
 
+		// NOT IN USE
 		Operand nameO = getEvaluatedParameter("name", event);
 		Operand valueO = getEvaluatedParameter("value", event);
 		if(nameO==null || valueO==null) {
 			return;
 		}
-		String name = (String) nameO.value;
-		String value = (String) valueO.value;
+//		String name = (String) nameO.value;
+//		String value = (String) valueO.value;
 	
 	}
 

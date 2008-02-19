@@ -1,9 +1,12 @@
 package com.dexels.navajo.tipi.components.swingimpl.swing;
 
-import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.*;
+import java.util.List;
+
 import javax.swing.*;
+
 import com.dexels.navajo.document.*;
 
 /**
@@ -27,8 +30,8 @@ public class TipiSwingExportSortingPanel
   JList availableColumnsList = new JList();
   JList exportedColumnsList = new JList();
   GridBagLayout gridBagLayout1 = new GridBagLayout();
-  private HashMap descIdMap = new HashMap();
-  private HashMap descPropMap = new HashMap();
+  private Map<String,String> descIdMap = new HashMap<String,String>();
+  private Map<String,Property> descPropMap = new HashMap<String,Property>();
   public TipiSwingExportSortingPanel() {
     try {
       jbInit();
@@ -53,9 +56,9 @@ public class TipiSwingExportSortingPanel
   }
 
   private final void fillAvailableList(Message m) {
-    ArrayList props = m.getAllProperties();
+    List<Property> props = m.getAllProperties();
     for (int i = 0; i < props.size(); i++) {
-      Property p = (Property) props.get(i);
+      Property p = props.get(i);
       String name = p.getName();
       String description = p.getDescription();
       descIdMap.put(description, name);
@@ -158,28 +161,19 @@ public class TipiSwingExportSortingPanel
     this.setVisible(false);
   }
 
-  public HashMap getDescriptionIdMap() {
+  public Map<String,String> getDescriptionIdMap() {
     return descIdMap;
   }
 
-  public HashMap getDescriptionPropertyMap() {
+  public Map<String,Property> getDescriptionPropertyMap() {
     return descPropMap;
   }
 
-  public Vector getExportedPropertyDescriptions() {
-    Vector v = new Vector();
+  public List<String> getExportedPropertyNames() {
+	  List<String> v = new ArrayList<String>();
     for (int i = 0; i < exportedColumnsList.getModel().getSize(); i++) {
       String current = (String) exportedColumnsList.getModel().getElementAt(i);
-      v.addElement(current);
-    }
-    return v;
-  }
-
-  public Vector getExportedPropertyNames() {
-    Vector v = new Vector();
-    for (int i = 0; i < exportedColumnsList.getModel().getSize(); i++) {
-      String current = (String) exportedColumnsList.getModel().getElementAt(i);
-      v.addElement(descIdMap.get(current));
+      v.add(descIdMap.get(current));
     }
     return v;
   }

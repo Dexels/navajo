@@ -1,6 +1,7 @@
 package com.dexels.navajo.tipi.components.swingimpl.swing;
 
 import java.util.*;
+
 import com.dexels.navajo.swingclient.components.*;
 import com.dexels.navajo.tipi.tipixml.*;
 
@@ -15,7 +16,7 @@ import com.dexels.navajo.tipi.tipixml.*;
 public class TipiSwingColumnAttributeParser {
   private String name, type;
   private String myAttributeType = ColumnAttribute.TYPE_UNKNOWN;
-  private Map paramMap = new HashMap();
+  private Map<String,String> paramMap = new HashMap<String,String>();
   public TipiSwingColumnAttributeParser() {
   }
 
@@ -26,9 +27,9 @@ public class TipiSwingColumnAttributeParser {
     ColumnAttribute ca = new ColumnAttribute();
     name = (String) elm.getAttribute("name");
     type = (String) elm.getAttribute("type");
-    Vector kids = elm.getChildren();
+    List<XMLElement> kids = elm.getChildren();
     for (int i = 0; i < kids.size(); i++) {
-      XMLElement child = (XMLElement) kids.elementAt(i);
+      XMLElement child = kids.get(i);
       if (child.getName().equals("param")) {
         String param_name = (String) child.getAttribute("name");
         String param_value = (String) child.getAttribute("value");
@@ -49,9 +50,9 @@ public class TipiSwingColumnAttributeParser {
     xe.setName("column-attribute");
     xe.setAttribute("type",ca.getType());
     xe.setAttribute("name",ca.getName());
-    for (Iterator iter = ca.getParamKeys().iterator(); iter.hasNext(); ) {
-      String name = (String)iter.next();
-      String value = (String)ca.getParam(name);
+    for (Iterator<String> iter = ca.getParamKeys().iterator(); iter.hasNext(); ) {
+      String name = iter.next();
+      String value = ca.getParam(name);
       XMLElement cc = new CaseSensitiveXMLElement();
       cc.setName("param");
       cc.setAttribute("name",name);
@@ -70,6 +71,6 @@ public class TipiSwingColumnAttributeParser {
   }
 
   public String getParam(String name) {
-    return (String) paramMap.get(name);
+    return paramMap.get(name);
   }
 }

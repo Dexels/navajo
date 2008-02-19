@@ -1,8 +1,10 @@
 package com.dexels.navajo.tipi.components.swingimpl.parsers;
 
 import java.util.*;
+
 import javax.swing.*;
 import javax.swing.border.*;
+
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.internal.*;
 

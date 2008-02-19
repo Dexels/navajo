@@ -1,11 +1,12 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
-import com.dexels.navajo.tipi.components.core.*;
+import java.awt.*;
+import java.net.*;
+
 import javax.swing.*;
+
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
-import java.net.*;
-import java.awt.*;
 
 /**
  * <p>Title: </p>

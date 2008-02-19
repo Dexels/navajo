@@ -1,11 +1,14 @@
 package com.dexels.navajo.tipi.components.swingimpl.tipimegatable;
 
-import com.dexels.navajo.tipi.tipixml.*;
-import com.dexels.navajo.document.*;
-import java.util.*;
-import javax.swing.*;
-import com.dexels.navajo.swingclient.components.treetable.*;
 import java.awt.*;
+import java.util.*;
+import java.util.List;
+
+import javax.swing.*;
+
+import com.dexels.navajo.document.*;
+import com.dexels.navajo.swingclient.components.treetable.*;
+import com.dexels.navajo.tipi.tipixml.*;
 
 /**
  * <p>Title: </p>
@@ -17,8 +20,8 @@ import java.awt.*;
  */
 
 public class TipiTreeTableLayer extends TipiTableBaseLayer {
-  private final ArrayList columns = new ArrayList();
-  private final ArrayList columnSize = new ArrayList();
+  private final List<String> columns = new ArrayList<String>();
+  private final List<Integer> columnSize = new ArrayList<Integer>();
 
   private boolean columnsButtonVisible = false;
   private boolean filtersVisible = false;
@@ -29,13 +32,13 @@ public class TipiTreeTableLayer extends TipiTableBaseLayer {
   public TipiTreeTableLayer(TipiMegaTable tmt) {
     super(tmt);
   }
-  public void loadData(Navajo n, Message current, Stack layerStack, JComponent currentPanel) {
+  public void loadData(Navajo n, Message current, Stack<TipiTableBaseLayer> layerStack, JComponent currentPanel) {
     MessageTreeTablePanel mttp = new MessageTreeTablePanel();
     Message m = n.getMessage(getMessagePath());
     if (m.getArraySize() > 0) {
       Message first = m.getMessage(0);
       for (int j = 0; j < columns.size(); j++) {
-        String column = (String) columns.get(j);
+        String column = columns.get(j);
         Property p = first.getProperty(column);
         if (p != null) {
           mttp.addColumn(p.getName(), p.getDescription(), p.isDirIn());
@@ -57,9 +60,9 @@ public class TipiTreeTableLayer extends TipiTableBaseLayer {
     useScrollBars = elt.getBooleanAttribute("useScrollBars","true","false",true);
     headerVisible = elt.getBooleanAttribute("headerVisible","true","false",true);
 
-    Vector children = elt.getChildren();
+    List<XMLElement> children = elt.getChildren();
     for (int i = 0; i < children.size(); i++) {
-      XMLElement child = (XMLElement) children.elementAt(i);
+      XMLElement child = children.get(i);
       loadColumn(child);
     }
   }
@@ -83,8 +86,8 @@ public class TipiTreeTableLayer extends TipiTableBaseLayer {
     for (int i = 0; i < columns.size(); i++) {
       XMLElement xxx = new CaseSensitiveXMLElement();
       xxx.setName("column");
-      xxx.setAttribute("name",((String)columns.get(i)));
-      xxx.setIntAttribute("size",((Integer)columnSize.get(i)).intValue());
+      xxx.setAttribute("name",columns.get(i));
+      xxx.setIntAttribute("size",columnSize.get(i));
       newElt.addChild(xxx);
     }
     return newElt;

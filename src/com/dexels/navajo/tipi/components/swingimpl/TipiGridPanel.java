@@ -1,19 +1,14 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 import javax.swing.*;
 
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
-import com.dexels.navajo.tipi.tipixml.XMLElement;
+import com.dexels.navajo.tipi.tipixml.*;
 
 /**
  * <p>
@@ -39,14 +34,12 @@ public class TipiGridPanel extends TipiPanel {
 
 	private int currentx = 0;
 	private int currenty = 1;
-//	private int count = 0;
 	private int gridwidth = 0;
-	private final ArrayList myWidths = new ArrayList();
-	private final Map heightStrutComponentMap = new HashMap();
-    private final Set fixedSet = new HashSet();
-//	private final Map heightStrutConstraiintMap = new HashMap();
-	// List of array of boolean
-	private final Set availabilityMatrix = new HashSet();
+	private final List<Integer> myWidths = new ArrayList<Integer>();
+	private final Map<Integer,Component> heightStrutComponentMap = new HashMap<Integer,Component>();
+	private final Map<Integer,Integer> heightStrutHeightMap = new HashMap<Integer,Integer>();
+    private final Set<Integer> fixedSet = new HashSet<Integer>();
+	private final Set<Coordinate> availabilityMatrix = new HashSet<Coordinate>();
 
 private GridBagLayout gridBagLayout; 
 	
@@ -155,7 +148,7 @@ gridBagLayout = new GridBagLayout();
 		 if (component==null) {
 			return;
 		 }
-		 Integer h = ((Integer)heightStrutComponentMap.get(component));
+		 Integer h = heightStrutHeightMap.get(component);
 		 int height = 0;
 		 if (h==null) {
 			 height = 0;
@@ -176,30 +169,14 @@ gridBagLayout = new GridBagLayout();
          if (vertical<=0) {
              vertical = Integer.MAX_VALUE;
          }
-        
-//         System.err.println("UPDATING::::: "+horizontal+" / "+vertical);
-//         System.err.println("PREF: "+component.getPreferredSize().width+" -- "+component.getPreferredSize().height);
-//         System.err.println("min: "+component.getMinimumSize().width+" -- "+component.getMinimumSize().height);
-//         System.err.println("SIZE: "+component.getSize().width+" -- "+component.getSize().height);
-//         
-         if (component!=null) {
-		     // if no height set, leave the maximum size alone
-             if (h!=null) {
-//                    component.setMaximumSize(new Dimension(horizontal,vertical));
-                    }
-             if (isFixed(currentx)) {
-//                 System.err.println("Harrr. Not good. Bad prefsize.");
-//                component.setPreferredSize(new Dimension(horizontal,5));
-            }
-             component.setMaximumSize(new Dimension(horizontal,vertical));
-             
-//             component.setPreferredSize(new Dimension(horizontal,vertical));
-             	}
+
+         component.setMaximumSize(new Dimension(horizontal,vertical));
+     
 		
 	}
 
     private int getCurrentWidth() {
-        return ((Integer)myWidths.get(currentx)).intValue();
+        return myWidths.get(currentx).intValue();
     }
 
 	private void updateAvailability(int xstart, int ystart, int xend, int yend) {
@@ -228,8 +205,8 @@ gridBagLayout = new GridBagLayout();
 	 }
 
 	 private boolean isOccupied(int x, int y) {
-			for (Iterator iter = availabilityMatrix.iterator(); iter.hasNext();) {
-				Coordinate element = (Coordinate) iter.next();
+			for (Iterator<Coordinate> iter = availabilityMatrix.iterator(); iter.hasNext();) {
+				Coordinate element = iter.next();
 				if (element.equals(new Coordinate(x,y))) {
 					return true;
 				}
@@ -345,11 +322,9 @@ gridBagLayout = new GridBagLayout();
 	}
 	private void addHeightStrut(int y, int height, JComponent current) {
 		int actualHeight = height;
-		Component existingComponent = (Component)heightStrutComponentMap.get(new Integer(y));
+		Component existingComponent = heightStrutComponentMap.get(new Integer(y));
 
 		if (existingComponent!=null) {
-//			GridBagLayout gbl = (GridBagLayout)gridComponent.getLayout();
-//			GridBagConstraints gb = gbl.getConstraints(existingComponent);
 			if (existingComponent.getHeight()>height) {
 				actualHeight = existingComponent.getHeight();
 			}

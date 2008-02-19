@@ -4,25 +4,20 @@
  */
 package com.dexels.navajo.tipi.components.swingimpl;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
+import java.io.*;
 
-import com.dexels.navajo.document.Message;
-import com.dexels.navajo.document.types.Money;
-import com.dexels.navajo.tipi.TipiComponentMethod;
-import com.dexels.navajo.tipi.components.swingimpl.TipiSwingDataComponentImpl;
-import com.dexels.navajo.tipi.internal.TipiEvent;
+import com.dexels.navajo.document.*;
+import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.internal.*;
 
 
 /**
  * @author matthijs (!)
- *  
+ * @deprecated should be replaced with an appropriate action
+ * 
  */
 
+@Deprecated
 public class TipiEmailLauncher extends TipiSwingDataComponentImpl {
 
     private Message recipient = null;       

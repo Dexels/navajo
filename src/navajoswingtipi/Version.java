@@ -32,13 +32,12 @@ public class Version extends dexels.Version {
 	public static final int PATCHLEVEL = 1;
 	public static final String VENDOR = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Swing Tipi";
-	public static final String RELEASEDATE = "2005-10-20";
 	
 	//	 Included packages.
 	String [] includes = {"tipipackage.Version"};
 	
 	public Version() {
-		setReleaseDate(RELEASEDATE);
+		setReleaseDate("2005-10-20");
 		addIncludes(includes);
 	}
 	
