@@ -151,7 +151,9 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	}
 
 	public final void setLength(int i) {
+		int old = length;
 		length = i;
+		firePropertyChanged("length", old, length);
 	}
 
 	public final String getDescription() {
@@ -159,7 +161,9 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	}
 
 	public final void setDescription(String s) {
+		String old = description;
 		description = s;
+		firePropertyChanged("description", old, description);
 	}
 
 	public final String getCardinality() {
@@ -167,7 +171,9 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	}
 
 	public final void setCardinality(String c) {
+		String old = cardinality;
 		cardinality = c;
+		firePropertyChanged("cardinality", old, cardinality);
 	}
 
 	public final String getDirection() {
@@ -175,7 +181,9 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	}
 
 	public final void setDirection(String s) {
+		String old = direction;
 		direction = s;
+		firePropertyChanged("direction", old, direction);
 	}
 
 	// This is NOT the FULL name!!
@@ -191,7 +199,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	public final String getValue() {
 		if (myBinary != null) {
 			System.err.println("Do you REALLY want this binary as a string? You really shouldn't..");
-			Thread.dumpStack();
+//			Thread.dumpStack();
 			return myBinary.getBase64();
 		}
 		return myValue;
@@ -547,6 +555,24 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 			} else {
 				return null;
 			}
+//			List<Selection> all = getAllSelectedSelections();
+//			if(all.size()==1) {
+//				return all.get(0).getValue();
+//			} 
+//			if(all.size()==0) {
+//				return Selection.DUMMY_ELEMENT;
+//			}
+//			return all;
+				
+			//			Selection s = getSelected();
+//			if (s != null) {
+//				if(s.getName().equals(Selection.DUMMY_SELECTION)) {
+//					return null;
+//				}
+//				return s.getValue();
+//			} else {
+//				return null;
+//			}
 
 		} else if (getType().equals(Property.TIPI_PROPERTY)) {
 			return tipiProperty;
@@ -949,7 +975,9 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	}
 
 	public final void setType(String t) {
+		String old = type;
 		type = t;
+		firePropertyChanged("type", old, type);
 	}
 
 	public final String toString() {
@@ -983,11 +1011,14 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		if (selectionList == null) {
 			return;
 		}
+		List<Selection> old;
+			old = getAllSelectedSelections();
+		
 		String oldSel = null;
-		Selection old = getSelected();
-		if (old != null) {
-			oldSel = old.getValue();
-		}
+//		Selection old = getSelected();
+//		if (old != null) {
+//			oldSel = old.getValue();
+//		}
 
 		for (int i = 0; i < selectionList.size(); i++) {
 			Selection current = selectionList.get(i);
@@ -998,8 +1029,8 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 					current.setSelected(false);
 				}
 			}
-			firePropertyChanged("selection", oldSel, current.getValue());
 		}
+			firePropertyChanged("selection", old,getAllSelectedSelections());
 	}
 
 	public final void setAllSelected(boolean b) {
@@ -1104,6 +1135,10 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		// return null;
 	}
 
+	/**
+	 * I don't like this function, with its silly way of indicating null selections (== dummy selection)
+	 * @deprecated
+	 */
 	public final Selection getSelected() {
 		if (selectionList == null) {
 			return NavajoFactory.getInstance().createDummySelection();
@@ -1295,16 +1330,16 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 
 	public final void setSelected(ArrayList<String> al) throws com.dexels.navajo.document.NavajoException {
 		setAllSelected(false);
-
+		List<Selection> old = new ArrayList<Selection>(getAllSelectedSelections());
 		for (int i = 0; i < al.size(); i++) {
 			String s = al.get(i);
 			Selection sl = getSelectionByValue(s);
 			setSelected(sl.getValue());
 		}
-
+		firePropertyChanged("selection", old, getAllSelectedSelections());
 	}
 
-	public final ArrayList<Selection> getAllSelectedSelections() throws com.dexels.navajo.document.NavajoException {
+	public final ArrayList<Selection> getAllSelectedSelections() {
 		ArrayList<Selection> list = new ArrayList<Selection>();
 		ArrayList<Selection> al = getAllSelections();
 		for (int i = 0; i < al.size(); i++) {
@@ -1332,12 +1367,13 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	}
 
 	public final void clearSelections() throws com.dexels.navajo.document.NavajoException {
+		List<Selection> old = new ArrayList<Selection>(getAllSelectedSelections());
 		ArrayList<Selection> al = getAllSelections();
 		for (int i = 0; i < al.size(); i++) {
 			BaseSelectionImpl s = (BaseSelectionImpl) al.get(i);
 			s.setSelected(false);
 		}
-
+		firePropertyChanged("selection", old, getAllSelectedSelections());
 	}
 
 	public final Selection existsSelection(String name) throws com.dexels.navajo.document.NavajoException {
@@ -1573,10 +1609,24 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 		if (myPropertyDataListeners == null) {
 			myPropertyDataListeners = new ArrayList<PropertyChangeListener>();
 		}
-		myPropertyDataListeners.add(p);
-		if (myPropertyDataListeners.size() > 1) {
-			System.err.println("Multiple property listeners detected!" + myPropertyDataListeners.size());
+		if(myPropertyDataListeners.contains(p)) {
+			System.err.println("IDENTICAL LISTENER!!!\n"+getFullPropertyName());
+			return;
 		}
+		myPropertyDataListeners.add(p);
+//		System.err.println("Adding: "+p.getClass()+" to: "+getFullPropertyName());
+//		Thread.dumpStack();
+
+		if (myPropertyDataListeners.size() > 5) {
+			System.err.println("Multiple property listeners detected!" + myPropertyDataListeners.size()+" path: "+getFullPropertyName());
+			System.err.println(">>> "+myPropertyDataListeners);
+		}
+		if (myPropertyDataListeners.size() > 5) {
+//			for (PropertyChangeListener xxp : myPropertyDataListeners) {
+//				System.err.println("Listener: "+xxp);
+//			}
+		}
+
 	}
 
 	public void removePropertyChangeListener(PropertyChangeListener p) {
@@ -1610,13 +1660,22 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	public void setSelected(Selection s, boolean selected) throws NavajoException {
 		// TODO Auto-generated method stub
 		// System.err.println("Wrning not really good");
-		if (selected) {
-			setSelected(s);
-		} else {
-			if (!"+".equals(getCardinality())) {
-				s.setSelected(false);
-				clearSelections();
+		List<Selection> l = new ArrayList<Selection>( getAllSelectedSelections());
+		for (Selection selection : getAllSelections()) {
+			if (selection.equals(s)) {
+				s.setSelected(selected);
+			} else {
+				if (!"+".equals(getCardinality())) {
+					selection.setSelected(false);
+				}
 			}
+		}
+
+		List<Selection> l2 = getAllSelectedSelections();
+		// Bit of a stretch. Does this work?
+		if(!l.equals(l2)) {
+			System.err.println("Selections changed. old: "+l+" new: "+l2);
+			firePropertyChanged(l, l2);
 		}
 	}
 
