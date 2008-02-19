@@ -459,9 +459,7 @@ public class SharedFileStore implements SharedStoreInterface {
 
 			File p = new File(sharedStore, parent);
 			if (!p.exists()) {
-				if ( !p.mkdirs() ) {
-					throw new SharedStoreException("Could not create object for text, parent = " + parent + ", name = " + name);
-				}
+				p.mkdirs();
 			}
 			File f = new File(p, name);
 			try {
