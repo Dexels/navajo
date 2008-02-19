@@ -53,6 +53,8 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 	// }
 	// }
 
+	
+	
 	private final void loadServices(String myService) {
 		if (myService != null) {
 			// myContext.clearTipiAllInstances();
@@ -419,5 +421,11 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 			}
 		}
 		return false;
+	}
+
+	public void disposeComponent() {
+		super.disposeComponent();
+		myContext.removeTipiInstance(this);
+		myNavajo = null;
 	}
 }

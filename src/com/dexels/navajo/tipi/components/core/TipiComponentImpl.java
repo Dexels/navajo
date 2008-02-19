@@ -594,6 +594,15 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 					}
 				}
 			}
+			
+			public String toString() {
+				try {
+					return "TipiComponentBoundProp: "+p.getFullPropertyName()+":"+p.hashCode();
+				} catch (NavajoException e) {
+					e.printStackTrace();
+				}
+				return "TipiComponentBoundPropKaboem";
+			}
 		};
 		p.addPropertyChangeListener(propListener);
 	}
@@ -823,6 +832,7 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 		clearAllComponents();
 		helperDispose();
 		isDisposed = true;
+		myContainerListeners.clear();
 
 	}
 

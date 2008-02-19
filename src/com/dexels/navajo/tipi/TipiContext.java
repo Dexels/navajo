@@ -141,7 +141,7 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 	private final Map<String, TipiConnector> tipiConnectorMap = new HashMap<String, TipiConnector>();
 	private TipiConnector defaultConnector;
 
-	private final Map<Property, List<PropertyChangeListener>> propertyBindMap = new HashMap<Property, List<PropertyChangeListener>>();
+	private final Map<String, List<PropertyChangeListener>> propertyBindMap = new HashMap<String, List<PropertyChangeListener>>();
 	
 	public TipiContext() {
 		Iterator<TipiExtension> tt = ServiceRegistry.lookupProviders(TipiExtension.class);
@@ -2381,37 +2381,36 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 
 	
 	public void unlink(Property master)  {
+		Navajo rootDoc = master.getRootDoc();
+		String service = rootDoc.getHeader().getRPCName();
+		List<PropertyChangeListener> pref;
 		try {
-			System.err.println("Master: "+master.getFullPropertyName()+" hash: "+master.hashCode());
+			pref = propertyBindMap.get(service+":"+master.getFullPropertyName());
 		} catch (NavajoException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		List<PropertyChangeListener> pref =  propertyBindMap.get(master);
+			return;
+		} 
 		propertyBindMap.remove(master);
 		if(pref!=null) {
-//			System.err.println("Unlinking: "+pref.size()+" listeners");
 			for (PropertyChangeListener propertyChangeListener : pref) {
 				master.removePropertyChangeListener(propertyChangeListener);
 			}
 			pref.clear();
 		}
-//		System.err.println("Bindmap finished");
-//		System.err.println("PBM: "+propertyBindMap);
-//		for (Iterator<Property> iterator = propertyBindMap.keySet().iterator(); iterator.hasNext();) {
-//			Property ooo =iterator.next();
-//			System.err.println("Hash: "+ooo.hashCode());
-//		}
 		
 		//		propertyBindMap.clear();
 		List<Property> p =  propertyLinkRegistry.get(master);
 		propertyLinkRegistry.remove(master);
 		if(p!=null) {
 			for (Property property : p) {
+				unlink(property);
 				List<Property> q =  propertyLinkRegistry.get(property);
-				q.remove(master);
-				if(q.isEmpty()) {
-					propertyLinkRegistry.remove(property);
+//				
+				if(q!=null) {
+					q.remove(master);
+					if(q.isEmpty()) {
+						propertyLinkRegistry.remove(property);
+					}
 				}
 			}
 		}
@@ -2472,18 +2471,6 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 
 	
 	protected void registerPropertyLink(Property master, Property slave, PropertyChangeListener pp) {
-		System.err.println("PROPERTYLINKMAP SIZE: "+propertyBindMap.size());
-		System.err.println("Masterhash: "+master.hashCode());
-		Thread.dumpStack();
-//		System.err.println(">> "+propertyLinkMap);
-		for (Entry<Property, List<PropertyChangeListener>> e: propertyBindMap.entrySet()) {
-			try {
-				System.err.println("Navajo: "+e.getKey().getRootDoc().getHeader().getRPCName()+" path: "+e.getKey().getFullPropertyName());
-			} catch (NavajoException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-		}
 		List<Property> p =  propertyLinkRegistry.get(master);
 		if(p==null) {
 			p = new LinkedList<Property>();
@@ -2492,9 +2479,16 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 		p.add(slave);
 
 		List<PropertyChangeListener> xx = propertyBindMap.get(master);
+		Navajo rootDoc = master.getRootDoc();
+		String service = rootDoc.getHeader().getRPCName();
 		if(xx==null) {
 			xx = new LinkedList<PropertyChangeListener>();
-			propertyBindMap.put(master, xx);
+			try {
+				propertyBindMap.put(service+":"+master.getFullPropertyName(), xx);
+			} catch (NavajoException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
 		// TODO beware, equality depends on equal property paths
 		if(!xx.contains(pp)) {
