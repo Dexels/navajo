@@ -41,29 +41,5 @@ public class TipiPanel
             
         }});
   }
-//  
-//  public void setComponentValue(String name, final Object value) {
-//    if ("enabled".equals(name)) {
-//      getSwingContainer().setEnabled(value.equals("true"));
-//    }
-//    if (name.equals("image")) {
-//      runSyncInEventThread(new Runnable() {
-//        public void run() {
-//          ( (TipiSwingPanel) getContainer()).setImage(getIcon( (URL) value));
-//        }
-//      });
-//      return;
-//    }
-//    if (name.equals("image_alignment")) {
-//      runSyncInEventThread(new Runnable() {
-//        public void run() {
-//          ( (TipiSwingPanel) getContainer()).setImageAlignment((String)value);
-//        }
-//      });
-//      return;
-//    }
-//
-//    super.setComponentValue(name, value);
-//  }
 
 }

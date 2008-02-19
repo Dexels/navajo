@@ -213,7 +213,7 @@ public abstract class TipiSwingDataComponentImpl
 
 @Override
 public void loadData(final Navajo n, final String method) throws TipiException, TipiBreakException {
-    System.err.println("Loading data. Thread: "+Thread.currentThread().getName());
+    System.err.println("Loading data. Thread: "+Thread.currentThread().getName()+" I am: "+getPath());
 	if (getContainer()!=null && getContainer() instanceof JComponent) {
 			//SwingUtilities.invokeAndWait 
 			runSyncInEventThread(new Runnable(){
@@ -222,10 +222,8 @@ public void loadData(final Navajo n, final String method) throws TipiException, 
 					try {
 						TipiSwingDataComponentImpl.super.loadData(n, method);
 					} catch (TipiException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} catch (TipiBreakException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 

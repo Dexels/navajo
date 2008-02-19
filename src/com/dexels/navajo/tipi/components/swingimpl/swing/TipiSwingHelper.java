@@ -2,6 +2,7 @@ package com.dexels.navajo.tipi.components.swingimpl.swing;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.lang.reflect.*;
 import java.util.*;
 
 import javax.swing.*;
@@ -22,6 +23,8 @@ import com.dexels.navajo.tipi.internal.*;
 public class TipiSwingHelper
     implements TipiHelper {
   private TipiSwingComponent myComponent = null;
+
+  private java.util.List<EventListener> myListeners = new ArrayList<EventListener>();
   public void initHelper(TipiComponent tc) {
     myComponent = (TipiSwingComponent)tc;
   }
@@ -99,7 +102,39 @@ public class TipiSwingHelper
   }
 
   public void deregisterEvent(TipiEvent e) {
-  }
+	    Component c = (Component) myComponent.getContainer();
+	    if (c == null) {
+	      System.err.println("Cannot register swing event: Container is null!");
+	      return;
+	    }
+	    try {
+		    for (EventListener el : myListeners) {
+		    	if(el instanceof ActionListener) {
+				      java.lang.reflect.Method m = c.getClass().getMethod("removeActionListener", new Class[] {ActionListener.class});
+					  m.invoke(c, new Object[] {el});
+		    	}
+		    	if(el instanceof InternalFrameListener) {
+				      java.lang.reflect.Method m = c.getClass().getMethod("removeInternalFrameListener", new Class[] {InternalFrameListener.class});
+					  m.invoke(c, new Object[] {el});
+		    	}		    
+		    	if(el instanceof WindowListener) {
+				      java.lang.reflect.Method m = c.getClass().getMethod("removeWindowListener", new Class[] {WindowListener.class});
+					  m.invoke(c, new Object[] {el});
+		    	}		    
+		    	
+		    	if(el instanceof MouseListener) {
+				      java.lang.reflect.Method m = c.getClass().getMethod("removeMouseListener", new Class[] {MouseListener.class});
+					  m.invoke(c, new Object[] {el});
+		    	}		    
+		    	
+		    	
+		    }
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		} 
+
+	 }
+ 
 
   /**
    * Refactor this silly bugger. This is called from TipiComponent. Should be able to fix it using regular inheritance
@@ -117,6 +152,7 @@ public class TipiSwingHelper
         ActionListener bert = new ActionListener() {
           public void actionPerformed(ActionEvent e) {
             try {
+            	System.err.println("ACTIONPERFORMED: "+myComponent.getPath());
               myComponent.performTipiEvent("onActionPerformed", null, te.isSync());
             }
             catch (TipiException ex) {

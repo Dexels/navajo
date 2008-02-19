@@ -306,12 +306,7 @@ public class TipiProperty extends TipiSwingComponentImpl implements PropertyComp
 
 	@Override
 	public void disposeComponent() {
-		try {
-			System.err.println("TIPIPROPERTY UNLINING: "+getAttributeProperty("propertyValue").getFullPropertyName()+" - "+getAttributeProperty("propertyValue").hashCode());
-		} catch (NavajoException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
 		myContext.unlink(getAttributeProperty("propertyValue"));
 	super.disposeComponent();
 		
