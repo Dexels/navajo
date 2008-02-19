@@ -59,7 +59,7 @@ public class TimeTrigger extends Trigger implements Serializable, ClockListener 
 	private boolean singleEvent = false;
 	private boolean runImmediate = false;
 	private long lastRan = -1;
-	private boolean fired = false;
+	//private boolean fired = false;
 	
 	private static final String NOW = "now";
 	
@@ -266,7 +266,7 @@ public class TimeTrigger extends Trigger implements Serializable, ClockListener 
 	
 	public boolean timetick(final Calendar c) {
 		if ( checkAlarm(c) ) {
-			fired = true;
+			//fired = true;
 			lastRan = System.currentTimeMillis();
 			return true;
 		}
@@ -277,18 +277,22 @@ public class TimeTrigger extends Trigger implements Serializable, ClockListener 
 		Clock.getInstance().addClockListener(this);
 	}
 
-	public boolean isFired() {
-		return fired;
-	}
+//	public boolean isFired() {
+//		return fired;
+//	}
 
 	public Navajo perform() {
 		// Spawn thread.
-		if ( fired ) {
+		//if ( fired ) {
+			//System.err.println("ABOUT TO PERFORM: " + getListenerId());
 			GenericThread taskThread = new GenericThread("task:" + getTask().getId()) {
 
 				public void run() {
 					try {
 						worker();
+					} catch (Throwable t) {
+						t.printStackTrace(System.err);
+						//System.err.println("REALLY COULD NOT PEFORM: " + getListenerId() );
 					} finally {
 						finishThread();
 					}
@@ -304,8 +308,8 @@ public class TimeTrigger extends Trigger implements Serializable, ClockListener 
 				}
 			};
 			taskThread.startThread(taskThread);
-			fired = false;
-		}
+	//		fired = false;
+//		}
 		return null;
 	}
 }
