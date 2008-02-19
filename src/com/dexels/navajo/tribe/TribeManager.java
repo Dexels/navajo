@@ -391,10 +391,12 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 		} else if ( msg.getObject() instanceof Answer ) {
 			Answer a = (Answer) msg.getObject();
 			Request q = getWaitingRequest(a.getMyRequest());
-			q.setPredefinedAnswer(a);
-			removeWaitingRequest( q );
-			synchronized ( q ) {
-				q.notify();
+			if ( q != null ) {
+				q.setPredefinedAnswer(a);
+				removeWaitingRequest( q );
+				synchronized ( q ) {
+					q.notify();
+				}
 			}
 		} else {
 			AuditLog.log(AuditLog.AUDIT_MESSAGE_TRIBEMANAGER, "Received unknown or irrelevant message: " + msg);
