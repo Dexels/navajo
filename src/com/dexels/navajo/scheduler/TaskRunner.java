@@ -490,7 +490,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 	
 	protected final synchronized void log(Task t, Navajo result, boolean error, String errMsg, java.util.Date startedat) {
 
-		String csvHeader = "ID;WEBSERVICE;USERNAME;TRIGGER;TASKDESCRIPTION;CLIENTID;SINGLEEVENT;STATUS;STARTTIME;ENDTIME;ERRORMESSAGE\n";
+		String csvHeader = "SERVER;ID;WEBSERVICE;USERNAME;TRIGGER;TASKDESCRIPTION;CLIENTID;SINGLEEVENT;STATUS;STARTTIME;ENDTIME;ERRORMESSAGE\n";
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy");
 		
 		if ( errMsg != null ) {
@@ -510,7 +510,9 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 
 			StringBuffer contentLine = new StringBuffer();
 
-			contentLine.append(t.getId() + ";" + 
+			contentLine.append(
+					Dispatcher.getInstance().getNavajoConfig().getInstanceName() + ";" + 
+					t.getId() + ";" + 
 					t.getWebservice() + ";" + 
 					t.getUsername() + ";" + 
 					t.getTrigger().getDescription() + ";" + 
