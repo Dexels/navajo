@@ -404,9 +404,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	 */
 	public final Object getTypedValue() {
 
-		SimpleDateFormat dateFormat1 = new SimpleDateFormat( Property.DATE_FORMAT1 );
-	    SimpleDateFormat dateFormat2 = new SimpleDateFormat( Property.DATE_FORMAT2 );
-		  
+		
 		// if (myValue == null && !SELECTION_PROPERTY.equals(getType())) {
 		// return null;
 		// }
@@ -479,11 +477,14 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 				return null;
 			}
 
+			SimpleDateFormat dateFormat1 = new SimpleDateFormat( Property.DATE_FORMAT1 );
+		  
 			try {
 				Date d = dateFormat1.parse(getValue());
 				return d;
 			} catch (Exception ex) {
 				try {
+					SimpleDateFormat dateFormat2 = new SimpleDateFormat( Property.DATE_FORMAT2 );
 					Date d = dateFormat2.parse(getValue());
 					return d;
 				} catch (Exception ex2) {
