@@ -31,12 +31,9 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.enterprise.scheduler.WebserviceListenerRegistryInterface;
-import com.dexels.navajo.tribe.ServiceEventAnswer;
-import com.dexels.navajo.tribe.ServiceEventRequest;
 import com.dexels.navajo.tribe.ServiceEventsSmokeSignal;
 import com.dexels.navajo.tribe.TribeManager;
 import com.dexels.navajo.tribe.TribeMember;
-import com.dexels.navajo.util.AuditLog;
 import com.dexels.navajo.workflow.WorkFlowManager;
 
 
@@ -164,7 +161,7 @@ public final class WebserviceListenerRegistry implements WebserviceListenerRegis
 			tribalAfterWebServiceRequest(webservice, a, ignoreTheseTaskOnOtherMembers);
 		}
 		
-		AuditLog.log("SERVICEVENT", ":  afterWebservice(" + webservice + ") took " + ( System.currentTimeMillis() - start ) + " millis." + ", locally = " + locally + ", processed = " + count + ", leftOvers =" + leftOvers);
+		//AuditLog.log("SERVICEVENT", ":  afterWebservice(" + webservice + ") took " + ( System.currentTimeMillis() - start ) + " millis." + ", locally = " + locally + ", processed = " + count + ", leftOvers =" + leftOvers);
 		
 	}
 
@@ -269,7 +266,7 @@ public final class WebserviceListenerRegistry implements WebserviceListenerRegis
 			}
 
 		} finally {
-			AuditLog.log("SERVICEVENT", ":  beforeWebservice(" + webservice + ") took " + ( System.currentTimeMillis() - start ) + " millis." + ", locally = " + locally + ", processed = " + count + ", leftOvers =" + leftOvers );
+			//AuditLog.log("SERVICEVENT", ":  beforeWebservice(" + webservice + ") took " + ( System.currentTimeMillis() - start ) + " millis." + ", locally = " + locally + ", processed = " + count + ", leftOvers =" + leftOvers );
 		}
 	}
 }
