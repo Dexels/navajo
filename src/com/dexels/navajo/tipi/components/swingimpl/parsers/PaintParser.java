@@ -33,7 +33,7 @@ public class PaintParser extends TipiTypeParser {
         Color c2 = (Color) cp.parse(null, colorTwo, null);
         p = new TipiGradientPaint(direction, c1, c2);
       }catch(Exception e){
-//        System.err.println("Could not construct Paint object. returning Color.gray");
+        System.err.println("Could not construct Paint object. returning Color.gray");
         return p;
       }
     }
@@ -41,6 +41,7 @@ public class PaintParser extends TipiTypeParser {
   }
   
   public static TipiGradientPaint parse(String s) {
+	  System.err.println("PARSEDPAINT!!!!!: "+s);
 	  return new PaintParser().parsePaint(s);
   }
 }
