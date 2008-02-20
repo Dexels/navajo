@@ -27,7 +27,7 @@ package com.dexels.navajo.tribe;
 import java.io.File;
 import java.io.FileInputStream;
 import java.net.Inet4Address;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -87,6 +87,7 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 	public String setChief;
 	public String chiefName;
 	public boolean isChief;
+	public String statistics;
 	
 	JChannel channel;
 	View previousView = null;
@@ -100,6 +101,7 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 	private volatile static boolean initializing = false;
 	private static TribeManager instance = null;
 	private final static Object semaphore = new Object();
+	private final static HashMap<String,Integer> counts = new HashMap<String,Integer>();
 	
 	public TribeMember [] members = null;
 	
@@ -366,7 +368,35 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 		}
 	}
 	
+	private final void increaseCount(String name) {
+
+		synchronized (counts) {
+			Integer i = counts.get(name);
+			//System.err.println("increaseCount(" + name + ") = " + i);
+			if ( i == null ) {
+				counts.put(name, Integer.valueOf(1));
+				return;
+			} else {
+				counts.put(name, new Integer(i.intValue() + 1));
+			}
+		}
+	}
+
+	public String getStatistics() {
+		StringBuffer b = new StringBuffer();
+		
+		
+		Iterator<String> iter = counts.keySet().iterator();
+		while ( iter.hasNext() ) {
+			String key = iter.next();
+			b.append(key + "=" + counts.get(key).intValue() + "\n");
+		}
+		return b.toString();
+	}
+	
 	public void receive(org.jgroups.Message msg) {
+		
+		//increaseCount(msg.getObject().getClass().getName());
 		
 		if ( msg.getObject() instanceof SmokeSignal ) {
 			SmokeSignal r = (SmokeSignal) msg.getObject();
