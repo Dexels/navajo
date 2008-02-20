@@ -41,6 +41,7 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 	public String myCondition;
 	public String trigger;
 	public String webservice = null;
+	public String taskId;
 	public boolean proxy = false;
 	
 	/**
@@ -365,6 +366,14 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 
 	public String getDescription() {
 		return "transition:" + trigger + "(" + myCondition + ")->" + nextState;
+	}
+
+	public String getTaskId() {
+		if ( myTask != null ) {
+			return myTask.getId();
+		} else {
+			return "";
+		}
 	}
 
 }
