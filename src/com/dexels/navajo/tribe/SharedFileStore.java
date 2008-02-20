@@ -139,11 +139,8 @@ public class SharedFileStore implements SharedStoreInterface {
 			for (int i = 0; i < files.length; i++) {
 				if ( ( System.currentTimeMillis() - files[i].lastModified() ) > ssl.getLockTimeOut() ) {
 					// Lock has time-out, delete it.
-					if (files[i].delete()) {
-						return false; 
-					} else {
-						return false;
-					}
+					files[i].delete();
+					return false;
 				} else {
 					return true;
 				}
@@ -184,9 +181,7 @@ public class SharedFileStore implements SharedStoreInterface {
 			File f = new File(sharedStore, name);
 			if ( !f.exists() ) {
 				if ( name.contains("/") ) {
-					if (!f.mkdirs()) {
-						throw new SharedStoreException("Could not create parent for lock in shared store: " + ssl.toString());
-					}
+					f.mkdirs();
 				}
 				try {
 					if (!f.createNewFile()) {
@@ -348,9 +343,7 @@ public class SharedFileStore implements SharedStoreInterface {
 				if ( lock != null ) {
 					//System.err.println("RELEASING LOCK " + lock.parent + "/" + lock.name + " FOR " + lock.owner);
 					File f = new File(sharedStore, constructLockName(lock));
-					if ( !f.delete() ) {
-						AuditLog.log(AuditLog.AUDIT_MESSAGE_SHAREDSTORE, "Could not release lock: " + lock.toString());
-					}
+					f.delete();
 				}
 			}
 		}
@@ -380,9 +373,7 @@ public class SharedFileStore implements SharedStoreInterface {
 			}
 			File p = new File(sharedStore, parent);
 			if (!p.exists()) {
-				if (!p.mkdirs()) {
-					throw new SharedStoreException("Could not store object " + name);
-				}
+				p.mkdirs();
 			}
 			File f = new File(p, name);
 			try {
@@ -408,11 +399,7 @@ public class SharedFileStore implements SharedStoreInterface {
 	 */
 	public void remove(String parent, String name) {
 		File f = new File(sharedStore, parent + "/" + name);
-		if (!f.delete()) {
-			if ( f.exists() ) {
-				AuditLog.log(AuditLog.AUDIT_MESSAGE_SHAREDSTORE, "Could not remove object, parent = " + parent + ", name = " + name);
-			}
-		} 
+		f.delete();
 	}
 
 	/**
@@ -425,9 +412,7 @@ public class SharedFileStore implements SharedStoreInterface {
 		try {
 			File p = new File(sharedStore, parent);
 			if (!p.exists()) {
-				if ( !p.mkdirs() ) {
-					throw new SharedStoreException("Could not create parent: " + parent);
-				}
+				p.mkdirs();
 					
 			}
 		} finally {
@@ -490,9 +475,7 @@ public class SharedFileStore implements SharedStoreInterface {
 			}
 			File p = new File(sharedStore, parent);
 			if (!p.exists()) {
-				if (! p.mkdirs() ) {
-					throw new SharedStoreException("Could not get outputstream for object, parent = " + parent + ", name = " + name);
-				}
+				p.mkdirs();
 			}
 			File f = new File(p, name);
 			try {
