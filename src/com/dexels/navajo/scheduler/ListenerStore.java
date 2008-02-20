@@ -178,7 +178,7 @@ public final class ListenerStore {
 		synchronized (semaphore) {
 			String [] allNames = ssi.getObjects(activatedListeners);
 			for (int i = 0; i < allNames.length; i++ ) {
-				System.err.println(Dispatcher.getInstance().getNavajoConfig().getInstanceName() + ": In performActivatedListeners() Checking: "  + allNames[i]);
+				//System.err.println(Dispatcher.getInstance().getNavajoConfig().getInstanceName() + ": In performActivatedListeners() Checking: "  + allNames[i]);
 				Trigger lis = null;
 				boolean locked = false;
 				boolean performed = false;

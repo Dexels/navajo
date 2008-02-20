@@ -12,7 +12,7 @@ public class ImmediateTrigger extends Trigger {
 	
 	@Override
 	public void activateTrigger() {
-		System.err.println("IN ImmediateTrigger() activateTrigger()");
+		//System.err.println("IN ImmediateTrigger() activateTrigger()");
 		perform();
 	}
 
