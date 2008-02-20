@@ -201,7 +201,7 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 	
 	private void removePersistedWorkFlow(WorkFlow wf) {	
 		SharedStoreFactory.getInstance().remove(workflowPath, wf.getDefinition()+wf.getMyId());
-		System.err.println(">>>>>>>>>>>>>>> REMOVE PERSISTED WORKFLOW: " + workflowPath + "/" + wf.getDefinition()+wf.getMyId());
+		//System.err.println(">>>>>>>>>>>>>>> REMOVE PERSISTED WORKFLOW: " + workflowPath + "/" + wf.getDefinition()+wf.getMyId());
 	}
 	
 	public void addWorkFlow(WorkFlow wf) {
@@ -404,7 +404,7 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 
 	protected static final synchronized void log(WorkFlow wf, Transition t, String errMsg, Exception ex) {
 
-		String csvHeader = "TIMESTAMP;WORKFLOWDEF;WORKFLOWID;USERNAME;STATE;TRANSITION;MESSAGE\n";
+		String csvHeader = "SERVER;TIMESTAMP;WORKFLOWDEF;WORKFLOWID;USERNAME;STATE;TRANSITION;MESSAGE\n";
 
 		if ( errMsg != null ) {
 			errMsg = errMsg.replaceAll("\n", ".");
@@ -424,6 +424,7 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 			StringBuffer contentLine = new StringBuffer();
 
 			contentLine.append(
+					Dispatcher.getInstance().getNavajoConfig().getInstanceName() + ";" +
 					sdf.format(new java.util.Date()) + ";" + 
 					wf.getDefinition() + ";" +
 					wf.getMyId() + ";" +
