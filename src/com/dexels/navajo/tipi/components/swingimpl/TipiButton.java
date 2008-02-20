@@ -7,6 +7,7 @@ import java.net.*;
 
 import javax.imageio.*;
 import javax.swing.*;
+import javax.swing.event.*;
 
 import org.jdesktop.animation.transitions.*;
 import org.jdesktop.animation.transitions.EffectsManager.*;
@@ -36,24 +37,29 @@ import com.dexels.navajo.tipi.internal.*;
  * @version 1.0
  */
 public class TipiButton extends TipiSwingComponentImpl {
-	private TipiSwingButton myButton;
+//	private TipiSwingButton myButton;
 
 	private boolean iAmEnabled = true;
 
 	public Object createContainer() {
-		myButton = new TipiSwingButton();
+		TipiSwingButton myButton = new TipiSwingButton();
 
 		TipiHelper th = new TipiSwingHelper();
 		th.initHelper(this);
 		addHelper(th);
 //		EffectsManager.setEffect(myButton, new FadeIn(), TransitionType.APPEARING);
 //		EffectsManager.setEffect(myButton, new FadeOut(), TransitionType.DISAPPEARING);
-        Effect move = new Move();
-        Effect scale = new Scale();
-        CompositeEffect comp = new CompositeEffect(move);
-        comp.addEffect(scale);
-        comp.setRenderComponent(false);
+//        Effect move = new Move();
+//        Effect scale = new Scale();
+//        CompositeEffect comp = new CompositeEffect(move);
+//        comp.addEffect(scale);
+//        comp.setRenderComponent(false);
 //        EffectsManager.setEffect(label[i], comp, TransitionType.CHANGING);
+		myButton.addChangeListener(new ChangeListener(){
+
+			public void stateChanged(ChangeEvent arg0) {
+				System.err.println("Biatch: "+arg0.toString());
+			}});
 		return myButton;
 	}
 
@@ -62,14 +68,14 @@ public class TipiButton extends TipiSwingComponentImpl {
 		runSyncInEventThread(new Runnable() {
 			public void run() {
 				if (name.equals("text")) {
-					myButton.setText((String) object);
+					((JButton)getContainer()).setText((String) object);
 				}
 				if (name.equals("icon")) {
 					if (object == null) {
 						System.err.println("Ignoring null icon");
 					} else {
 						if (object instanceof URL) {
-							myButton.setIcon(getIcon(object));
+							((JButton)getContainer()).setIcon(getIcon(object));
 						}
 					}
 				}
@@ -108,7 +114,7 @@ public class TipiButton extends TipiSwingComponentImpl {
 
 	public Object getComponentValue(String name) {
 		if (name.equals("text")) {
-			return myButton.getText();
+			return ((JButton)getContainer()).getText();
 		}
 		return super.getComponentValue(name);
 	}
