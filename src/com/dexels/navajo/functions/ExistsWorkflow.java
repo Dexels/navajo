@@ -16,7 +16,7 @@ public class ExistsWorkflow extends FunctionInterface {
 	@Override
 	public Object evaluate() throws TMLExpressionException {
 		
-		if ( getOperands().size() != 2 ) {
+		if ( getOperands().size() != 3 ) {
 			throw new TMLExpressionException(this, "Invalid number of parameters");
 		}
 		
@@ -25,12 +25,13 @@ public class ExistsWorkflow extends FunctionInterface {
 		}
 		
 		String workflowName = (String) getOperand(0);
-		String stateExpression = (String) getOperand(1);
+		String stateName = ( getOperand(1) == null ? null : (String) getOperand(1) );
+		String stateExpression = (String) getOperand(2);
 	
 		Iterator<TribeMember> all = TribeManager.getInstance().getClusterState().clusterMembers.iterator();
 		
 		while ( all.hasNext() ) {
-			WorkFlowExistsRequest wer = new WorkFlowExistsRequest(workflowName, stateExpression);
+			WorkFlowExistsRequest wer = new WorkFlowExistsRequest(workflowName, stateName, stateExpression);
 			TribeMember tm = all.next();
 			WorkFlowExistsAnswer wea = (WorkFlowExistsAnswer) TribeManager.getInstance().askSomebody(wer, tm.getAddress());
 			if ( wea.isExists() ) {
@@ -48,7 +49,7 @@ public class ExistsWorkflow extends FunctionInterface {
 
 	@Override
 	public String usage() {
-		return "ExistsWorkflow([workflow name], [global state check expression]";
+		return "ExistsWorkflow([workflow name], [workflow state], [global state check expression]";
 	}
 
 }
