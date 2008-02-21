@@ -787,6 +787,7 @@
          <value direction="in" name="dividerlocation" type="integer" />
          <value direction="in" name="dividersize" type="integer" />
          <value direction="in" name="onetouchexpandable" type="boolean" />
+         <value direction="in" name="inverted" type="boolean" />
          <value direction="in" name="orientation" type="selection" property="stringOrientation">
             <option description="Vertical" value="vertical" />
             <option description="Horizontal" value="horizontal" />

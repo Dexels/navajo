@@ -22,6 +22,7 @@ public class TipiSplitPane extends TipiSwingDataComponentImpl {
 
   private JPanel left = new JPanel();
   private JPanel right = new JPanel();
+  private boolean inverse_oriented = false;
 
   public Object createContainer() {
     left.setLayout(new BorderLayout());
@@ -30,7 +31,6 @@ public class TipiSplitPane extends TipiSwingDataComponentImpl {
     Dimension minimumSize = new Dimension(0, 0);
     left.setMinimumSize(minimumSize);
     right.setMinimumSize(minimumSize);
-
     sp.setOneTouchExpandable(true);
     sp.setDividerSize(10);
     sp.setDividerLocation(0.5);
@@ -48,22 +48,38 @@ public class TipiSplitPane extends TipiSwingDataComponentImpl {
     if("bottom".equals(constr)){
 //      ((JSplitPane) getContainer()).add((Component)c, JSplitPane.BOTTOM);
       ((TipiSwingSplitPane) getContainer()).setStringOrientation("vertical");
-      right.add(cc,BorderLayout.CENTER);
+      if(inverse_oriented){
+      	left.add(cc,BorderLayout.CENTER);
+      }else{
+      	right.add(cc,BorderLayout.CENTER);
+      }
     }
     if("right".equals(constr)){
       ((TipiSwingSplitPane) getContainer()).setStringOrientation("horizontal");
 //      ((JSplitPane) getContainer()).add((Component)c, JSplitPane.RIGHT);
-      right.add(cc,BorderLayout.CENTER);
+      if(inverse_oriented){
+      	left.add(cc,BorderLayout.CENTER);
+      }else{
+      	right.add(cc,BorderLayout.CENTER);
+      }
     }
     if("top".equals(constr)){
       ((TipiSwingSplitPane) getContainer()).setStringOrientation("vertical");
 //      ((JSplitPane) getContainer()).add((Component)c, JSplitPane.TOP);
-      left.add(cc,BorderLayout.CENTER);
+      if(inverse_oriented){
+      	right.add(cc,BorderLayout.CENTER);
+      }else{
+      	left.add(cc,BorderLayout.CENTER);
+      }
     }
     if("left".equals(constr)){
       ((TipiSwingSplitPane) getContainer()).setStringOrientation("horizontal");
 //      ((JSplitPane) getContainer()).add((Component)c, JSplitPane.LEFT);
-      left.add(cc,BorderLayout.CENTER);
+      if(inverse_oriented){
+      	right.add(cc,BorderLayout.CENTER);
+      }else{
+      	left.add(cc,BorderLayout.CENTER);
+      }
     }
     left.setMinimumSize(minimumSize);
     right.setMinimumSize(minimumSize);
@@ -81,6 +97,9 @@ public class TipiSplitPane extends TipiSwingDataComponentImpl {
       if("vertical".equals(sel)){
         ((TipiSwingSplitPane) getContainer()).setOrientation(JSplitPane.VERTICAL_SPLIT);
       }
+    }
+    if(name.equals("inverted")){
+    	inverse_oriented = ((Boolean) object).booleanValue();
     }
     if (name.equals("dividerlocation")) {
       int loc = ( (Integer) object).intValue();
