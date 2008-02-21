@@ -1,6 +1,9 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 
 import javax.swing.*;
 
@@ -23,6 +26,7 @@ public class TipiSplitPane extends TipiSwingDataComponentImpl {
   private JPanel left = new JPanel();
   private JPanel right = new JPanel();
   private boolean inverse_oriented = false;
+  private int dividerlocation = 0;
 
   public Object createContainer() {
     left.setLayout(new BorderLayout());
@@ -35,6 +39,11 @@ public class TipiSplitPane extends TipiSwingDataComponentImpl {
     sp.setDividerSize(10);
     sp.setDividerLocation(0.5);
     sp.setContinuousLayout(true);
+    sp.addComponentListener(new ComponentAdapter(){
+			public void componentResized(ComponentEvent e) {
+				updateDividerLocation();				
+			}
+    });
     return sp;
   }
 
@@ -46,40 +55,20 @@ public class TipiSplitPane extends TipiSwingDataComponentImpl {
       Component cc = (Component)c;
     Dimension minimumSize = new Dimension(0, 0);
     if("bottom".equals(constr)){
-//      ((JSplitPane) getContainer()).add((Component)c, JSplitPane.BOTTOM);
       ((TipiSwingSplitPane) getContainer()).setStringOrientation("vertical");
-      if(inverse_oriented){
-      	left.add(cc,BorderLayout.CENTER);
-      }else{
-      	right.add(cc,BorderLayout.CENTER);
-      }
+      right.add(cc,BorderLayout.CENTER);
     }
     if("right".equals(constr)){
       ((TipiSwingSplitPane) getContainer()).setStringOrientation("horizontal");
-//      ((JSplitPane) getContainer()).add((Component)c, JSplitPane.RIGHT);
-      if(inverse_oriented){
-      	left.add(cc,BorderLayout.CENTER);
-      }else{
-      	right.add(cc,BorderLayout.CENTER);
-      }
+      right.add(cc,BorderLayout.CENTER);
     }
     if("top".equals(constr)){
       ((TipiSwingSplitPane) getContainer()).setStringOrientation("vertical");
-//      ((JSplitPane) getContainer()).add((Component)c, JSplitPane.TOP);
-      if(inverse_oriented){
-      	right.add(cc,BorderLayout.CENTER);
-      }else{
-      	left.add(cc,BorderLayout.CENTER);
-      }
+      left.add(cc,BorderLayout.CENTER);
     }
     if("left".equals(constr)){
       ((TipiSwingSplitPane) getContainer()).setStringOrientation("horizontal");
-//      ((JSplitPane) getContainer()).add((Component)c, JSplitPane.LEFT);
-      if(inverse_oriented){
-      	right.add(cc,BorderLayout.CENTER);
-      }else{
-      	left.add(cc,BorderLayout.CENTER);
-      }
+      left.add(cc,BorderLayout.CENTER);
     }
     left.setMinimumSize(minimumSize);
     right.setMinimumSize(minimumSize);
@@ -100,10 +89,11 @@ public class TipiSplitPane extends TipiSwingDataComponentImpl {
     }
     if(name.equals("inverted")){
     	inverse_oriented = ((Boolean) object).booleanValue();
+    	updateDividerLocation();
     }
     if (name.equals("dividerlocation")) {
-      int loc = ( (Integer) object).intValue();
-      ((TipiSwingSplitPane) getContainer()).setDividerLocation(loc);
+      dividerlocation = ( (Integer) object).intValue(); 
+      updateDividerLocation();      
     }
     if (name.equals("dividersize")) {
       int size = ( (Integer) object).intValue();
@@ -114,6 +104,21 @@ public class TipiSplitPane extends TipiSwingDataComponentImpl {
       ((TipiSwingSplitPane) getContainer()).setOneTouchExpandable(otex);
     }
 
+  }
+  
+  private void updateDividerLocation(){
+  	if(!inverse_oriented){	
+  		((TipiSwingSplitPane) getContainer()).setDividerLocation(dividerlocation);
+  	}else{
+  		int orientation = ((TipiSwingSplitPane) getContainer()).getOrientation();
+  		int loc = dividerlocation;
+  		if(orientation == JSplitPane.HORIZONTAL_SPLIT){
+  			loc = ((TipiSwingSplitPane) getContainer()).getWidth() - dividerlocation;
+  		}else if(orientation == JSplitPane.VERTICAL_SPLIT){
+  			loc = ((TipiSwingSplitPane) getContainer()).getHeight() - dividerlocation;
+  		}
+  		((TipiSwingSplitPane) getContainer()).setDividerLocation(loc);
+  	}
   }
 
 }
