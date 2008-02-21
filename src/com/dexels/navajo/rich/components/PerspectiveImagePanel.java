@@ -50,7 +50,7 @@ public class PerspectiveImagePanel extends JPanel {
 	private BufferedImage currentImg;
 	private int direction = PerspectiveTransform.FLIP_RIGHT;
 	private Animator a;
-	private JComponent c1, c2, set_visible, parent;
+	private JComponent c1, c2, set_visible;
 	private int speed = 500;
 	
 	public void setComponents(JComponent c1, JComponent c2){
@@ -85,9 +85,8 @@ public class PerspectiveImagePanel extends JPanel {
 		c2.setVisible(false);
 	}
 	
-	public PerspectiveImagePanel(JComponent parent){
+	public PerspectiveImagePanel(){
 		try{
-			this.parent = parent;
 			setOpaque(false);
 			a = PropertySetter.createAnimator(speed, this, "angle", 0, 84);
 			a.setAcceleration(0.5f);
@@ -227,7 +226,7 @@ public class PerspectiveImagePanel extends JPanel {
 		JFrame frame = new JFrame("aap");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
-		final PerspectiveImagePanel p = new PerspectiveImagePanel(null);
+		final PerspectiveImagePanel p = new PerspectiveImagePanel();
 		p.setBackground(new Color(80,160,224));
 		JButton b = new JButton("Go");
 		b.setBounds(0, 550, 80, 30);

@@ -26,8 +26,16 @@ public class MacLink extends JButton {
 		setText(text);
 	}
 	
-	public MacLink(URL imagepath) {
+	public MacLink(URL imagepath){
+		this();
 		myIcon = new ImageIcon(imagepath);
+	}
+	
+	public void setIconUrl(URL imagepath){
+		myIcon = new ImageIcon(imagepath);
+	}
+	
+	public MacLink() {
 		this.setPreferredSize(new Dimension((int) (scale * defaultSize.width), (int) (scale * defaultSize.height) + reflectionSize));
 		setBorderPainted(false);
 		setOpaque(false);

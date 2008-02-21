@@ -7,16 +7,14 @@ import java.util.ArrayList;
 import javax.swing.*;
 
 public class FlipPanel extends JPanel {
-	private boolean isDragging = false;
-	private Point previousPoint = null;
-	private PerspectiveImagePanel animationPanel = new PerspectiveImagePanel(this);
+	private int direction = PerspectiveTransform.FLIP_LEFT;
+	private PerspectiveImagePanel animationPanel = new PerspectiveImagePanel();
 	private ArrayList<JComponent> components = new ArrayList();
 	private BorderLayout layout = new BorderLayout();
 	JComponent visibleComponent = null;
 
 	public FlipPanel() {
 		setLayout(layout);
-
 	}
 
 	public void removeComponent(JComponent c) {
@@ -32,40 +30,38 @@ public class FlipPanel extends JPanel {
 			components.get(i).setVisible(false);
 		}
 		c.setVisible(true);
-
-		c.addMouseMotionListener(new MouseMotionListener() {
-
-			public void mouseDragged(MouseEvent e) {
-				if (isDragging) {
-
-					Point current = e.getPoint();
-					int dx = current.x - previousPoint.x;
-					int dy = current.y - previousPoint.y;
-					setLocation(getX() + dx, getY() + dy);
-
-				}
-			}
-
-			public void mouseMoved(MouseEvent e) {
-
-			}
-
-		});
-
-		c.addMouseListener(new MouseAdapter() {
-
-			public void mousePressed(MouseEvent e) {
-				previousPoint = e.getPoint();
-				isDragging = true;
-			}
-
-			public void mouseReleased(MouseEvent e) {
-				previousPoint = null;
-				isDragging = false;
-			}
-
-		});
-
+	}
+	
+	public void setBounds(int x, int y, int width, int height){
+		super.setBounds(x, y, width, height);
+		for (int i = 0; i < components.size(); i++) {
+			components.get(i).setSize(width, height);
+//			components.get(i).setBounds(x, y, width, height);
+		}		
+	}
+	
+	public void setDirection(String direction){
+		
+		if("up".equals(direction)){
+			setDirection(PerspectiveTransform.FLIP_UP);
+			System.err.println("Direction set: " + direction);
+		}
+		if("down".equals(direction)){
+			setDirection(PerspectiveTransform.FLIP_DOWN);
+			System.err.println("Direction set: " + direction);
+		}
+		if("left".equals(direction)){
+			setDirection(PerspectiveTransform.FLIP_LEFT);
+			System.err.println("Direction set: " + direction);
+		}
+		if("right".equals(direction)){
+			setDirection(PerspectiveTransform.FLIP_RIGHT);
+			System.err.println("Direction set: " + direction);
+		}
+	}
+	
+	public void setDirection(int direction){
+		this.direction = direction;
 	}
 
 	public void flipToComponent(JComponent next, int direction) {
@@ -95,7 +91,7 @@ public class FlipPanel extends JPanel {
 			next.setBounds(getVisibleComponent().getBounds());
 			animationPanel.setComponents(getVisibleComponent(), next);
 			animationPanel.setVisible(true);
-			animationPanel.setDirection(PerspectiveTransform.FLIP_UP);
+			animationPanel.setDirection(direction);
 			add(animationPanel, BorderLayout.CENTER);
 			animationPanel.flip();
 			visibleComponent = next;
@@ -117,7 +113,7 @@ public class FlipPanel extends JPanel {
 			next.setBounds(getVisibleComponent().getBounds());
 			animationPanel.setComponents(getVisibleComponent(), next);
 			animationPanel.setVisible(true);
-			animationPanel.setDirection(PerspectiveTransform.FLIP_DOWN);
+			animationPanel.setDirection(direction);
 			// add(next, BorderLayout.CENTER);
 			add(animationPanel, BorderLayout.CENTER);
 			animationPanel.flip();

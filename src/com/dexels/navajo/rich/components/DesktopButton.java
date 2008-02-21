@@ -33,7 +33,6 @@ import org.jdesktop.animation.timing.TimingTargetAdapter;
 import org.jdesktop.animation.timing.interpolation.PropertySetter;
 
 public class DesktopButton extends JButton {
-	private String imagepath;
 	private ImageIcon myIcon;
 	private int reflectionSize = 20;
 	private boolean mouseover = false;
@@ -51,7 +50,10 @@ public class DesktopButton extends JButton {
 		this(imagepath);
 		setText(text);
 		setForeground(Color.white);
-		
+	}
+	
+	public void setIconUrl(URL iconpath){
+		myIcon = new ImageIcon(iconpath);
 	}
 
 	public void setToolTipText(String text){
@@ -59,8 +61,12 @@ public class DesktopButton extends JButton {
 	}
 	
 	public DesktopButton(URL imagepath) {
-		myIcon = new ImageIcon(imagepath);
-
+		this();
+		setIconUrl(imagepath);		
+	}
+	
+	public DesktopButton() {
+		
 		setBorderPainted(false);
 		setOpaque(false);
 
@@ -94,7 +100,10 @@ public class DesktopButton extends JButton {
 		FontMetrics mB = getFontMetrics(fB);
 				        
 		// Determine WIDTH
-		int width = myIcon.getIconWidth() + icon_offset_x + text_offset_x;
+		int width = icon_offset_x + text_offset_x;
+		if(myIcon != null){
+			width += myIcon.getIconWidth();
+		}
 		int text_width = 0;		
 		if(getText() != null){
 		  text_width = mA.charsWidth(getText().toCharArray(), 0, getText().length());
@@ -115,7 +124,11 @@ public class DesktopButton extends JButton {
 		if(getText() != null || !"".equals(getText())){
 			height += mA.getHeight();
 		}
-		height = Math.max(height, myIcon.getIconHeight()+reflectionSize);
+		int ic = reflectionSize;
+		if(myIcon != null){
+			ic += myIcon.getIconHeight();
+		}
+		height = Math.max(height, ic);
 		// Return Dimension (WIDTH x HEIGHT)  
 		return new Dimension(width, height);
 	}
@@ -138,16 +151,18 @@ public class DesktopButton extends JButton {
 		g2.setFont(fA);
 		g2.setComposite(AlphaComposite.SrcOver.derive(Math.min(1.0f, 1.05f*glow)));
 		
-		g2.drawString(getText(), myIcon.getIconWidth() + icon_offset_x + text_offset_x, text_offset_y + fontsize_a);
+		g2.drawString(getText(), (myIcon != null? myIcon.getIconWidth():0) + icon_offset_x + text_offset_x, text_offset_y + fontsize_a);
 		g2.setFont(fB);
 
 		if(toolTip != null && !"".equals(toolTip)){
-			g2.drawString(toolTip, myIcon.getIconWidth() + icon_offset_x + text_offset_x, text_offset_y + text_b_offset_y + 2 * fontsize_a);
+			g2.drawString(toolTip, (myIcon != null? myIcon.getIconWidth():0) + icon_offset_x + text_offset_x, text_offset_y + text_b_offset_y + 2 * fontsize_a);
 		}
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		
 		gBuf.setComposite(AlphaComposite.SrcOver.derive(glow));
-		gBuf.drawImage(myIcon.getImage(), icon_offset_x, 0, null);
+		if(myIcon != null){
+			gBuf.drawImage(myIcon.getImage(), icon_offset_x, 0, null);
+		}
 		
 		g2.drawImage(createReflection(buffer), 0, 0, buffer.getWidth(), buffer.getHeight() + reflectionSize, null);
 

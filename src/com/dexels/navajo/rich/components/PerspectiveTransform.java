@@ -53,13 +53,16 @@ public class PerspectiveTransform {
 		long st = System.currentTimeMillis();
 		int width = input.getWidth();
 		int height = input.getHeight();
-		float scalar = 1.0f - ((float)degrees * (0.5f/85.0f));
+		float scalar = 1.0f - ((float)degrees * (0.3f/85.0f));
 		double rad_a = degrees * (Math.PI/180.0);
 		
 		int new_height = (int) (scalar*(height * Math.sin(rad_a) * Math.cos(rad_a)) / (Math.tan(rad_a)));
 		width = (int)(scalar*width);
 		float alpha_overlay = (float)degrees * 1.0f / 80.0f;
 		
+		if(new_height <= 0){
+			new_height = 1;
+		}
 		
 		BufferedImage result = new BufferedImage(width, new_height, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D buffer = result.createGraphics();
@@ -143,13 +146,17 @@ public class PerspectiveTransform {
 		int new_width = (int) ((width * Math.sin(rad_a) * Math.cos(rad_a)) / (Math.tan(rad_a)));
 		
 //	 zooming for speed, though performance is the worst when zoom is near original image, so it does not matter much, but it looks nice
-		float scalar = 1.0f - ((float)degrees * (0.5f/85.0f)); 
+		float scalar = 1.0f - ((float)degrees * (0.3f/85.0f)); 
 		//========
 		
 		new_width = (int)(scalar*new_width); 
 		height = (int)(scalar* height);
 		float alpha_overlay = (float)degrees * 1.0f / 80.0f;
 
+		if(new_width <= 0){
+			new_width = 1;
+		}
+		
 		BufferedImage result = new BufferedImage(new_width, height, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D buffer = result.createGraphics();
 		buffer.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);

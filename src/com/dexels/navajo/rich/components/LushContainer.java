@@ -19,17 +19,25 @@ import javax.swing.JPanel;
 
 public class LushContainer extends JPanel{
 	private float opacity = 0.5f;
-	private int arc = 50;
+	private int arc = 20;
 	private Color borderColor = Color.white;
-	private float borderWidth = 5.0f;
+	private float borderWidth = 2.0f;
 	
 	public LushContainer(){
 		setOpaque(false);
     setBackground(new Color(145,183,219));
 	}
 	
-	public void setOpacity(float opacity){
-		this.opacity = opacity;
+	public void setOpacity(double opacity){
+		this.opacity = (float)opacity;
+	}
+	
+	public void setArcWidth(int arc){
+		this.arc = arc;
+	}
+	
+	public void setBorderWidth(double width){
+		borderWidth = (float)width;
 	}
 	
 	public void paint(Graphics g){
