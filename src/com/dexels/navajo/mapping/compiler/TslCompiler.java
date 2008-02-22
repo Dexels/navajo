@@ -1604,6 +1604,10 @@ public String mapNode(int ident, Element n) throws Exception {
                     "   config.getAsyncStore().removeInstance(" +
                     callbackRefName + ");\n" +
                     "   return;\n" +
+                    "} else if ( " + aoName + ".isKilled() ) " + 
+                    "{ " + 
+                    "     config.getAsyncStore().removeInstance(" + callbackRefName + ");\n" +
+                    "     throw new UserException(-1, " + aoName + ".getException().getMessage()," + aoName + ".getException());\n" +
                     "} else if (" + interruptTypeName +
                     ".equals(\"interrupt\")) {\n" +
                     "   " + aoName + ".interrupt();\n " +
