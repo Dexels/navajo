@@ -11,7 +11,6 @@ private MacBar myPanel;
 	
 	public Object createContainer() {
 	  myPanel = new MacBar();
-//	  myPanel.setOpaque(false);
 	  return myPanel;
   }
 	
