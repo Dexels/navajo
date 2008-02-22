@@ -14,6 +14,7 @@ import java.io.FileInputStream;
 import javax.imageio.ImageIO;
 
 public class PerspectiveTransform {
+	private static int q_factor = 2;
 	public static final int FLIP_LEFT = 0;
 	public static final int FLIP_RIGHT = 1;
 	public static final int FLIP_UP = 2;
@@ -32,6 +33,10 @@ public class PerspectiveTransform {
   
 		Kernel kernel = new Kernel(width, height, data);
 		return new ConvolveOp(kernel, ConvolveOp.EDGE_NO_OP, null);
+	}
+	
+	public static void setQ(int dw){
+		q_factor = dw;
 	}
 	
 	public static BufferedImage transform(BufferedImage input, double degrees, boolean keepcenter, int direction){
@@ -73,7 +78,7 @@ public class PerspectiveTransform {
 		nwg.drawImage(input, 0, 0, width, new_height, null);			
 		nwg.dispose();
 		
-		int dh = 2;
+		int dh = q_factor;
 		float alpha_factor = alpha_overlay / new_height;
 		
 		for(int y = 0;y<new_height;y+=dh){
@@ -166,7 +171,7 @@ public class PerspectiveTransform {
 		nwg.drawImage(input, 0, 0, new_width, height, null);			
 		nwg.dispose();
 		
-		int dw = 2;
+		int dw = q_factor;
 		float alpha_factor = alpha_overlay / new_width;
 		
 		for(int x = 0;x<new_width;x+=dw){
