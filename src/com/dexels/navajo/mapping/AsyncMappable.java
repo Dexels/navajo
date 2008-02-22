@@ -140,15 +140,18 @@ public abstract class AsyncMappable implements Mappable, AsyncMappableMXBean {
     }
 
     public void run() {
-      try {
-        parent.run();
-      } catch (Throwable e) {
-        e.printStackTrace();
-        kill = true;
-        parent.setException(e);
-      } finally {
-    	parent.setIsFinished();
-      }
+    	try {
+    		parent.run();
+    	} catch (Throwable e) {
+    		e.printStackTrace();
+    		kill = true;
+    		parent.kill();
+    		parent.setException(e);
+    	} finally {
+    		if ( !kill ) {
+    			parent.setIsFinished();
+    		}
+    	}
     }
 
   }
@@ -269,11 +272,11 @@ public abstract class AsyncMappable implements Mappable, AsyncMappableMXBean {
   }
 
   protected void finalize() {
-    if (killOnFinnish) {
-      kill = true;
-      //disconnectJMX();
-      AsyncStore.getInstance().removeInstance(this.pointer);
-    }
+	  if (killOnFinnish) {
+		  kill = true;
+		  //disconnectJMX();
+		  AsyncStore.getInstance().removeInstance(this.pointer);
+	  }
   }
 
   /**
@@ -285,6 +288,9 @@ public abstract class AsyncMappable implements Mappable, AsyncMappableMXBean {
     caught = e;
   }
 
+  public Throwable getException() {
+	  return caught;
+  }
 
   /**
    *
@@ -358,7 +364,7 @@ public abstract class AsyncMappable implements Mappable, AsyncMappableMXBean {
     return isFinished;
   }
 
-  protected boolean isKilled() {
+  public boolean isKilled() {
     return kill;
   }
 
