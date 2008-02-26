@@ -19,4 +19,14 @@ public class SimplePersistenceManagerImpl implements PersistenceManager {
 		return c.construct();
 	}
 
+	public void clearCache() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public double getHitratio() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }

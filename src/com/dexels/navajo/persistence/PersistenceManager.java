@@ -11,6 +11,9 @@ import com.dexels.navajo.document.Navajo;
  * @version $Id$
  *
  * $Log$
+ * Revision 1.6  2008/02/26 13:26:37  arjen
+ * added clearcache and gethitratio methods
+ *
  * Revision 1.5  2008/02/15 16:47:50  arjen
  * Backwards compatible method signature added
  *
@@ -59,6 +62,10 @@ public interface PersistenceManager {
     public Persistable get(Constructor c, String key, long expirationInterval, boolean persist) throws Exception;
 
     public void setConfiguration(Navajo config);
+    
+    public double getHitratio();
+    
+    public void clearCache();
 
   
 }
