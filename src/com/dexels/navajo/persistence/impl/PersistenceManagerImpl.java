@@ -119,11 +119,10 @@ public final class PersistenceManagerImpl implements PersistenceManager {
 
     	init();
 
-    	totalhits++;
-
     	Persistable result = null;
 
     	if ( persist ) {
+    		totalhits++;
     		synchronized (semaphore) {
     			result = read(key, service, expirationInterval);
     		}
@@ -136,7 +135,7 @@ public final class PersistenceManagerImpl implements PersistenceManager {
     				write(result, key, service);
     			}
     		}
-    	} else {
+    	} else if ( persist ){
     		cachehits++;
     	}
 
@@ -169,8 +168,7 @@ public final class PersistenceManagerImpl implements PersistenceManager {
     			} else if ( pc != null ){
     				inMemoryCache.remove(key);
     			}
-    		}
-    		if (freq != null && freq.isExpired(expirationInterval)) { 
+    		} else if (freq != null && freq.isExpired(expirationInterval)) { 
     			SoftReference<PersistentEntry> rr = (SoftReference<PersistentEntry>) inMemoryCache.get(freq.getName());
     			if ( rr != null && rr.get() != null ) {
     				inMemoryCache.remove(freq.getName());
@@ -352,5 +350,9 @@ public final class PersistenceManagerImpl implements PersistenceManager {
 	public Persistable get(Constructor c, String key, long expirationInterval,
 			boolean persist) throws Exception {
 		throw new NotImplementedException();
+	}
+
+	public void clearCache() {
+		setDoClear(true);
 	}
 }
