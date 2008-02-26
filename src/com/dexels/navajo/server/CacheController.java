@@ -222,5 +222,12 @@ public class CacheController extends GenericThread implements CacheControllerMXB
 		return expirations.size();
 	}
 
-	
+	public double getHitRate() {
+		return Dispatcher.getInstance().getNavajoConfig().getPersistenceManager().getHitratio();
+	}
+
+	public void clearCache() {
+		Dispatcher.getInstance().getNavajoConfig().getPersistenceManager().clearCache();
+	}
+
 }
