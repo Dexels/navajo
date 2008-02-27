@@ -8,7 +8,7 @@
 	<classpathentry exported="true" kind="src" path="/Navajo"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/DexelsVersionControl"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/AnimatedTransitions"/>
-	<classpathentry kind="lib" path="lib/substance.jar"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/TipiSwingClient"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/TipiSubstance"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

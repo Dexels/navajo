@@ -356,7 +356,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 						mtp.updateTableSize();
 						updateColumnVisibility();
 						mtp.updateColumnSizes();
-		    		    
+		    		     
 					}
 				});
 			}

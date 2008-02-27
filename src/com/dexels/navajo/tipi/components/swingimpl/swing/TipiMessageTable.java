@@ -31,13 +31,7 @@ public class TipiMessageTable extends MessageTable {
     
 
     }
-//    public void createDefaultColumnsFromModel() {
-    	// ignore
-//    	System.err.println("Hoei!");
-//    }
-//    public void createDefaultColumnsFromMessageModel() {
-//    	createDefaultColumnsFromModel();
-//      }
+
 
     public void loadColumnsNavajo() {
         // TODO Auto-generated method stub
@@ -78,30 +72,5 @@ public class TipiMessageTable extends MessageTable {
         }
 //        super.saveColumnsNavajo();
     }
-//    @Override
-//    public void resizeColumns(final Message m) {
-//    	System.err.println("IN THE REZISSSSE: "+ getClass()+" >> "+columnSizeMap);
-//    	
-//          try {
-//  			if (columnPathString == null) {
-//  			  setDefaultColumnSizes(m);
-//  			}
-//  			else {
-//  			  File columnFile = new File(columnPathString);
-//  			  if (columnFile.exists()) {
-//  				  // dont care whatever flikkerop
-//  			    setSavedColumnSizes();
-//  			  }
-//  			}
-//  			 ( (MessageTableColumnModel) getColumnModel()).loadSizes(columnSizeMap);
-//  			 
-//  		} catch (SecurityException e) {
-//  			// whatever
-//  		}
-//
-//
-//  	}
-    
-    
 
 }
