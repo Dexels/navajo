@@ -4,7 +4,7 @@ import java.awt.*;
 
 import javax.swing.*;
 
-import com.dexels.navajo.swingclient.*;
+import com.dexels.navajo.tipi.swingclient.*;
 
 /**
  * <p>Title: </p>

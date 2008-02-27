@@ -497,31 +497,6 @@
    </tipiclass>
 
 
-   <tipiclass addtocontainer="true" childcount="0" class="TipiAdvancedTable" layoutmanager="false" module="data" name="advancedtipitable"
-      package="com.dexels.navajo.tipi.components.swingimpl" studio-icon="advancedtipitable.gif" type="tipi">
-      <events>
-         <event name="onInstantiate" />
-         <event name="onActionPerformed" />
-         <event name="onSelectionChanged" />
-         <event name="onLoad">
-            <param name="service" type="string" />
-         </event>
-      </events>
-      <values>
-         <value direction="inout" name="selectedIndex" type="integer" />
-         <value direction="in" name="showColumn" type="string" />
-         <value direction="in" name="hideColumn" type="string" />
-         <value direction="out" name="selectedMessage" type="message" />
-         <value direction="inout" name="visible" type="boolean" />
-         <value direction="in" name="border" type="border" />
-         <value direction="inout" name="tooltip" type="string" />
-      </values>
-      <methods>
-         <method name="insert" />
-         <method name="delete" />
-         <method name="update" />
-      </methods>
-   </tipiclass>
 
    <tipiclass addtocontainer="true" childcount="*" class="TipiPanel" layoutmanager="true" module="container" name="tipi" package="com.dexels.navajo.tipi.components.swingimpl"
       studio-icon="tipi.gif" type="tipi">
@@ -948,7 +923,6 @@
          <value direction="in" name="icon" type="resource" property="iconUrl" />
          <value direction="in" name="background" type="color" property="background" />
          <value direction="in" name="foreground" type="color" property="foreground" />
-         <value direction="in" name="border" type="border" property="border" />
          <value direction="in" name="font" type="font" property="font" />
          <value direction="inout" name="tooltip" type="string" property="ToolTipText" />
          <value direction="in" name="enabled" type="boolean" property="enabled" />
@@ -958,6 +932,19 @@
       </values>
       <methods />
    </tipiclass>
+   
+   
+   <tipiclass addtocontainer="true" class="TipiMenuSeparator" module="menu" childcount="0" name="separator" package="com.dexels.navajo.tipi.components.swingimpl" layoutmanager="false"
+      propertycomponent="false" studio-icon="menu.gif" type="component">
+      <events>
+         <event name="onInstantiate" />
+       </events>
+      <values>
+         </values>
+      <methods />
+   </tipiclass>
+ 
+   
    <tipiclass addtocontainer="true" class="TipiMenuItem" module="menu" layoutmanager="false" name="menuitem" package="com.dexels.navajo.tipi.components.swingimpl"
       propertycomponent="false" studio-icon="menuitem.gif" childcount="0" type="component">
       <events>
@@ -971,7 +958,6 @@
          <value direction="in" name="icon" type="resource" property="iconUrl" />
          <value direction="in" name="background" type="color" property="background" />
          <value direction="in" name="foreground" type="color" property="foreground" />
-         <value direction="in" name="border" type="border" property="border" />
          <value direction="in" name="font" type="font" property="font" />
          <value direction="inout" name="tooltip" type="string" property="ToolTipText" />
          <value direction="in" name="enabled" type="boolean" property="enabled" />
@@ -1490,6 +1476,10 @@
    </tipiclass>
    <tipiclass class="TipiVerticalBoxLayout" name="verticalbox" package="com.dexels.navajo.tipi.components.swingimpl.layout" type="layout" />
    <tipiclass class="TipiHorizontalBoxLayout" name="horizontalbox" package="com.dexels.navajo.tipi.components.swingimpl.layout" type="layout" />
+
+   <tipiclass class="TipiVerticalLayout" name="vertical" package="com.dexels.navajo.tipi.components.swingimpl.layout" type="layout" />
+
+
 
    <tipiclass class="TipiXYLayout" name="xy" package="com.dexels.navajo.tipi.components.swingimpl.layout" type="layout" />
 

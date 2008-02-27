@@ -15,12 +15,12 @@ import org.jdesktop.animation.transitions.*;
 import org.jvnet.lafwidget.utils.LafConstants.*;
 
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.swingclient.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.animation.*;
 import com.dexels.navajo.tipi.components.swingimpl.formatters.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.internal.*;
+import com.dexels.navajo.tipi.swingclient.*;
 
 /**
  * <p>
@@ -267,6 +267,7 @@ public class SwingTipiContext extends TipiContext {
 	}
 
 	public RootPaneContainer getOtherRoot() {
+		System.err.println("Getting otherRoor: "+myOtherRoot);
 		return myOtherRoot;
 	}
 
@@ -293,7 +294,6 @@ public class SwingTipiContext extends TipiContext {
 
 	public void showInfo(final String text, final String title) {
 		// swing implementation.
-		System.err.println("SHOWING: " + text);
 		if (getOtherRoot() != null) {
 			TipiModalInternalFrame.showInternalMessage(getOtherRoot().getRootPane(), getOtherRoot().getContentPane(), title, text,
 					getPoolSize());

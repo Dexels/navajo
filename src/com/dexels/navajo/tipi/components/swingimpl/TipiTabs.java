@@ -58,6 +58,7 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
         try {
           TipiTabs.this.performTipiEvent("onTabChanged", null, false);
           lastSelectedTab = jt.getSelectedComponent();
+          getAttributeProperty("selectedindex").setAnyValue(jt.getSelectedIndex());
           lastSelectedTab.doLayout();
         }
         catch (TipiException ex) {
@@ -111,22 +112,27 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
     }
   }
 
-  public void addToContainer(Object c, Object constraints) {
-	  JComponent jc = (JComponent)c;
-//	  System.err.println("Preferred sizz: "+jc.getPreferredSize());
-	  Dimension d = jc.getPreferredSize();
-	  if(d.width<=0 || d.height<=0) {
-		  jc.setPreferredSize(null);
-	  }
-	  jc.revalidate();
+  public void addToContainer(final Object c, final Object constraints) {
+	  runSyncInEventThread(new Runnable(){
 
-	  ( (JTabbedPane) getContainer()).addTab( (String) constraints, jc);
-//    System.err.println("Preferred size: "+jc.getPreferredSize()+" component: "+jc.getClass()+" layout: "+jc.getLayout().getClass());
-    JTabbedPane pane = (JTabbedPane) getContainer();
-    pane.setEnabledAt(pane.indexOfComponent( jc),  jc.isEnabled());
-    if (lastSelectedTab==null) {
-      lastSelectedTab = jc;
-    }
+		public void run() {
+			// TODO Auto-generated method stub
+			  JComponent jc = (JComponent)c;
+			  Dimension d = jc.getPreferredSize();
+			  if(d.width<=0 || d.height<=0) {
+				  jc.setPreferredSize(null);
+			  }
+			  jc.revalidate();
+
+			  ( (JTabbedPane) getContainer()).addTab( (String) constraints, jc);
+//		    System.err.println("Preferred size: "+jc.getPreferredSize()+" component: "+jc.getClass()+" layout: "+jc.getLayout().getClass());
+		    JTabbedPane pane = (JTabbedPane) getContainer();
+		    pane.setEnabledAt(pane.indexOfComponent( jc),  jc.isEnabled());
+		    if (lastSelectedTab==null) {
+		      lastSelectedTab = jc;
+		    }
+		}});
+	
   }
 
   public void setComponentValue(String name, Object object) {

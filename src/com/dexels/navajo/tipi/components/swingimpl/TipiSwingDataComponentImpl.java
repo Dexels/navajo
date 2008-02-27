@@ -13,6 +13,7 @@ import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.core.*;
 import com.dexels.navajo.tipi.components.swingimpl.parsers.*;
 import com.dexels.navajo.tipi.internal.*;
+import com.dexels.navajo.tipi.tipixml.*;
 
 /**
  * <p>Title: </p>
@@ -213,8 +214,7 @@ public abstract class TipiSwingDataComponentImpl
 
 @Override
 public void loadData(final Navajo n, final String method) throws TipiException, TipiBreakException {
-    System.err.println("Loading data. Thread: "+Thread.currentThread().getName()+" I am: "+getPath());
-	if (getContainer()!=null && getContainer() instanceof JComponent) {
+  	if (getContainer()!=null && getContainer() instanceof JComponent) {
 			//SwingUtilities.invokeAndWait 
 			runSyncInEventThread(new Runnable(){
 
@@ -251,9 +251,31 @@ public void loadData(final Navajo n, final String method) throws TipiException, 
 	}
 	
 	
-
 }
-  
-  
-  
+protected void loadValues(final XMLElement values, final TipiEvent event) throws TipiException {
+	runSyncInEventThread(new Runnable(){
+
+		public void run() {
+			try {
+				TipiSwingDataComponentImpl.super.loadValues(values, event);
+			} catch (TipiException e) {
+				e.printStackTrace();
+			}
+		}});
+}
+public void loadStartValues(final XMLElement element) {
+	runSyncInEventThread(new Runnable(){
+
+		public void run() {
+				TipiSwingDataComponentImpl.super.loadStartValues(element);
+
+		}});
+}
+protected void doCallSetter(final Object component, final String propertyName, final Object param) {
+	runSyncInEventThread(new Runnable(){
+		public void run() {
+			TipiSwingDataComponentImpl.super.doCallSetter(component,propertyName,param);
+		}});
+}
+
 }

@@ -69,32 +69,38 @@ public class TipiNavajoTree extends TipiSwingDataComponentImpl {
 	
 
 	@Override
-	public void loadData(Navajo n, String method) throws TipiException, TipiBreakException {
+	public void loadData(final Navajo n, final String method) throws TipiException, TipiBreakException {
 		super.loadData(n, method);
-		NavajoTreeNode tn;
-		try {
-			tn = createRootNode(n);
-			((TipiSwingNavajoTree) getContainer()).setRootVisible(false);
-			navajoTreeModel = new TipiNavajoTreeModel(tn);
-			((TipiSwingNavajoTree) getContainer()).setDragEnabled(true);
-			
-			((TipiSwingNavajoTree) getContainer()).setModel(navajoTreeModel);
-			dump(tn);
-			((TipiSwingNavajoTree) getContainer()).expandPath((new TreePath(tn)));
-			for (int i = 0; i < tn.getChildCount(); i++) {
-				TreeNode tnn = tn.getChildAt(i);
-				updateExpansion((MessageTreeNode) tnn);
-			}
-			if(lastSelectedRow>=0) {
-				System.err.println("Row: "+lastSelectedRow);
-				TreePath ttt = ((TipiSwingNavajoTree) getContainer()).getPathForRow(lastSelectedRow);
-				System.err.println("SelectedPath: "+ttt);
-				((TipiSwingNavajoTree) getContainer()).setSelectionPath(ttt);
-			}
-		} catch (NavajoException e) {
-			throw new TipiException("Error building tree. ", e);
-		}
-//		((TipiSwingNavajoTree) getContainer()).expandPath();
+		runSyncInEventThread(new Runnable(){
+
+			public void run() {
+				NavajoTreeNode tn;
+				try {
+					tn = createRootNode(n);
+					((TipiSwingNavajoTree) getContainer()).setRootVisible(false);
+					navajoTreeModel = new TipiNavajoTreeModel(tn);
+					((TipiSwingNavajoTree) getContainer()).setDragEnabled(true);
+					
+					((TipiSwingNavajoTree) getContainer()).setModel(navajoTreeModel);
+					dump(tn);
+					((TipiSwingNavajoTree) getContainer()).expandPath((new TreePath(tn)));
+					for (int i = 0; i < tn.getChildCount(); i++) {
+						TreeNode tnn = tn.getChildAt(i);
+						updateExpansion((MessageTreeNode) tnn);
+					}
+					if(lastSelectedRow>=0) {
+						System.err.println("Row: "+lastSelectedRow);
+						TreePath ttt = ((TipiSwingNavajoTree) getContainer()).getPathForRow(lastSelectedRow);
+						System.err.println("SelectedPath: "+ttt);
+						((TipiSwingNavajoTree) getContainer()).setSelectionPath(ttt);
+					}
+				} catch (NavajoException e) {
+					//throw new TipiException("Error building tree. ", e);
+					e.printStackTrace();
+				}
+		
+			}});
+		//		((TipiSwingNavajoTree) getContainer()).expandPath();
 		
 	}
 

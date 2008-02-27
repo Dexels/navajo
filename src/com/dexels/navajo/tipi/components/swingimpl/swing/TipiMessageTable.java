@@ -11,8 +11,8 @@ import java.io.*;
 import javax.swing.*;
 
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.swingclient.components.*;
 import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.swingclient.components.*;
 
 public class TipiMessageTable extends MessageTable {
 
@@ -28,7 +28,7 @@ public class TipiMessageTable extends MessageTable {
             loadColumnsNavajo();
         } 
        super.setMessage(m);
-        
+    
 
     }
 //    public void createDefaultColumnsFromModel() {
@@ -78,28 +78,29 @@ public class TipiMessageTable extends MessageTable {
         }
 //        super.saveColumnsNavajo();
     }
-    @Override
-    public void resizeColumns(final Message m) {
-    	System.err.println("IN THE REZISSSSE: "+ getClass());
-
-          try {
-  			if (columnPathString == null) {
-  			  setDefaultColumnSizes(m);
-  			}
-  			else {
-  			  File columnFile = new File(columnPathString);
-  			  if (columnFile.exists()) {
-  				  // dont care whatever flikkerop
-  			    setSavedColumnSizes();
-  			  }
-  			}
-  			 ( (MessageTableColumnModel) getColumnModel()).loadSizes(columnSizeMap);
-  		} catch (SecurityException e) {
-  			// whatever
-  		}
-
-
-  	}
+//    @Override
+//    public void resizeColumns(final Message m) {
+//    	System.err.println("IN THE REZISSSSE: "+ getClass()+" >> "+columnSizeMap);
+//    	
+//          try {
+//  			if (columnPathString == null) {
+//  			  setDefaultColumnSizes(m);
+//  			}
+//  			else {
+//  			  File columnFile = new File(columnPathString);
+//  			  if (columnFile.exists()) {
+//  				  // dont care whatever flikkerop
+//  			    setSavedColumnSizes();
+//  			  }
+//  			}
+//  			 ( (MessageTableColumnModel) getColumnModel()).loadSizes(columnSizeMap);
+//  			 
+//  		} catch (SecurityException e) {
+//  			// whatever
+//  		}
+//
+//
+//  	}
     
     
 

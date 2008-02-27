@@ -6,10 +6,10 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
 
-import com.dexels.navajo.swingclient.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.internal.*;
+import com.dexels.navajo.tipi.swingclient.*;
 
 /**
  * <p>
@@ -340,7 +340,6 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 		final TipiDialog me = this;
 		super.performComponentMethod(name, compMeth, event);
 
-		System.err.println("Dialog performing: " + name);
 		// final JDialog myDialog = (JDialog) getDialogContainer();
 		if (name.equals("show")) {
 			// System.err.println("ENTERING SHOW\n=================");
@@ -364,12 +363,11 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 								((JComponent) getDialogContainer()).setLocation(p);
 								((JComponent) getDialogContainer()).setVisible(true);
 							} else {
-								SwingClient.getUserInterface().showDialogAt((JDialog) getDialogContainer(), myBounds.x, myBounds.y);
+								showDialogAt((JDialog) getDialogContainer(), myBounds.x, myBounds.y);
 							}
 							// System.err.println("Setting to location: " +
 							// myBounds);
 						} else {
-							System.err.println("Centering... " + myContext.getTopLevel());
 							// will show NOW, after this bounds will not matter
 							if (myContext.getTopLevel() instanceof TipiApplet) {
 								TipiApplet jap = (TipiApplet) myContext.getTopLevel();
@@ -389,7 +387,7 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 								} else {
 									if (getDialogContainer() instanceof JDialog) {
 										JDialog g = (JDialog) getDialogContainer();
-										SwingClient.getUserInterface().showCenteredDialog(g);
+										showCenteredDialog(g);
 									} else {
 										Point p = new Point(50, 50);
 										((JComponent) getDialogContainer()).setLocation(p);
@@ -504,4 +502,68 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 	// }
 	public void reUse() {
 	}
+
+	  public void addDialog(JDialog d) {
+//	    d.setLocationRelativeTo(getMainFrame());
+	    d.pack();
+	    showCenteredDialog(d);
+	  }
+
+	  public void showDialogAt(JDialog dlg, int x, int y) {
+		    Dimension dlgSize = dlg.getPreferredSize();
+		    dlg.setLocation(x, y);
+
+		    if (dlgSize.height>(Toolkit.getDefaultToolkit().getScreenSize().height)) {
+		      dlgSize.height = Toolkit.getDefaultToolkit().getScreenSize().height;
+		      dlg.setSize(dlgSize);
+		    }
+
+		    if (dlgSize.width>Toolkit.getDefaultToolkit().getScreenSize().width) {
+		      dlgSize.width = Toolkit.getDefaultToolkit().getScreenSize().width;
+		      dlg.setSize(dlgSize);
+		   }
+
+		    dlg.setModal(true);
+		    dlg.setVisible(true);
+
+	  }
+	  public RootPaneContainer getRootPaneContainer() {
+		    return (RootPaneContainer)myContext.getTopLevel();
+		  }
+	  public void showCenteredDialog(JDialog dlg) {
+	    Dimension dlgSize = dlg.getBounds().getSize();
+	    Rectangle r = getRootPaneContainer().getRootPane().getBounds();
+	    Dimension frmSize = new Dimension(r.width, r.height);
+	    Point loc = getRootPaneContainer().getRootPane().getLocation();
+	    int x =  Math.max(0, (frmSize.width - dlgSize.width) / 2 + loc.x + r.x);
+	    int y = Math.max(0, (frmSize.height - dlgSize.height) / 2 + loc.y + r.y);
+	    dlg.setLocation(x, y);
+
+
+	    if (dlgSize.height>(Toolkit.getDefaultToolkit().getScreenSize().height)) {
+	      dlgSize.height = Toolkit.getDefaultToolkit().getScreenSize().height;
+	      dlg.setSize(dlgSize);
+	    }
+
+	    if (dlgSize.width>Toolkit.getDefaultToolkit().getScreenSize().width) {
+	      dlgSize.width = Toolkit.getDefaultToolkit().getScreenSize().width;
+	      dlg.setSize(dlgSize);
+	   }
+
+	    dlg.setModal(true);
+	    dlg.setVisible(true);
+	  }
+
+	  public boolean showQuestionDialog(String s) {
+	    int response = JOptionPane.showConfirmDialog( (Component) myContext.getTopLevel(), s,"",JOptionPane.YES_NO_OPTION,JOptionPane.INFORMATION_MESSAGE);
+	    return response==0;
+	  }
+
+	  public void showInfoDialog(String s) {
+	    JOptionPane.showConfirmDialog( (Component) myContext.getTopLevel(), s,"",JOptionPane.OK_OPTION,JOptionPane.INFORMATION_MESSAGE);
+	  }
+
+	  public boolean areYouSure() {
+	    return showQuestionDialog("Are you sure?");
+	  }
 }

@@ -152,7 +152,6 @@ public class TipiSwingHelper
         ActionListener bert = new ActionListener() {
           public void actionPerformed(ActionEvent e) {
             try {
-            	System.err.println("ACTIONPERFORMED: "+myComponent.getPath());
               myComponent.performTipiEvent("onActionPerformed", null, te.isSync());
             }
             catch (TipiException ex) {

@@ -55,7 +55,8 @@ public class TipiDesktop
     runSyncInEventThread(new Runnable() {
       public void run() {
 			getSwingContainer().add( (Component) c, constraints);
-	        TipiSwingWindow tw = (TipiSwingWindow) c;
+			
+			JInternalFrame tw = (JInternalFrame) c;
 	
 	        tw.toFront();
         getSwingContainer().repaint();

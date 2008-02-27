@@ -6,8 +6,8 @@
  */
 package com.dexels.navajo.tipi.components.swingimpl.swing;
 
-import com.dexels.navajo.swingclient.components.*;
 import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.swingclient.components.*;
 
 public class TipiMessageTablePanel extends MessageTablePanel {
     private String messagePath;

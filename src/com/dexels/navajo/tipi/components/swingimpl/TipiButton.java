@@ -47,19 +47,7 @@ public class TipiButton extends TipiSwingComponentImpl {
 		TipiHelper th = new TipiSwingHelper();
 		th.initHelper(this);
 		addHelper(th);
-//		EffectsManager.setEffect(myButton, new FadeIn(), TransitionType.APPEARING);
-//		EffectsManager.setEffect(myButton, new FadeOut(), TransitionType.DISAPPEARING);
-//        Effect move = new Move();
-//        Effect scale = new Scale();
-//        CompositeEffect comp = new CompositeEffect(move);
-//        comp.addEffect(scale);
-//        comp.setRenderComponent(false);
-//        EffectsManager.setEffect(label[i], comp, TransitionType.CHANGING);
-		myButton.addChangeListener(new ChangeListener(){
 
-			public void stateChanged(ChangeEvent arg0) {
-				System.err.println("Biatch: "+arg0.toString());
-			}});
 		return myButton;
 	}
 

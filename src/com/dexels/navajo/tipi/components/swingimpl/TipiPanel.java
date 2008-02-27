@@ -27,7 +27,6 @@ public class TipiPanel
   public void loadData(final Navajo n, final String method) throws TipiException {
       myNavajo = n;
       myMethod = method;
-      System.err.println("Load data. Thread: "+Thread.currentThread().getName());
      runSyncInEventThread(new Runnable(){
         public void run() {
             try {

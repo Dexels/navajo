@@ -9,9 +9,9 @@ import javax.swing.*;
 import javax.swing.border.*;
 
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.swingclient.components.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
+import com.dexels.navajo.tipi.swingclient.components.*;
 import com.dexels.navajo.tipi.tipixml.*;
 
 /**
@@ -145,7 +145,7 @@ private MessageTablePanel myTablePanel;
   }
   public void loadData(final Navajo n, final Message current, Stack<TipiTableBaseLayer> layerStack, JComponent currentPanel) {
     final MessageTableFooterRenderer myFooterRenderer = new MessageTableFooterRenderer(myTable);
-    final MessageTablePanel mtp = new MessageTablePanel();
+    final TipiMessageTablePanel mtp = new TipiMessageTablePanel(myTable.getContext());
     myTablePanel = mtp;
     JPanel inbetweenPanel = new JPanel();
     inbetweenPanel.setLayout(new BorderLayout());
@@ -230,6 +230,8 @@ private MessageTablePanel myTablePanel;
     }
     mtp.setMessage(tableData);
     updateTableColumns(mtp);
+    mtp.updateTableSize();
+    
     remarkPanel.updateConditionalRemarks();
     System.err.println("MegaTable layer :"+mtp.getPreferredSize());
 //    updateConditionalRemarks(remarkPanel, current);

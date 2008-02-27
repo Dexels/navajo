@@ -4,7 +4,9 @@ import java.awt.*;
 import java.beans.*;
 import java.util.List;
 
+import javax.annotation.security.*;
 import javax.swing.*;
+import javax.swing.event.*;
 
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
@@ -45,11 +47,24 @@ public final class TipiWindow
 	    TipiHelper th = new TipiSwingHelper();
 	    th.initHelper(this);
 	    addHelper(th);
-	    myWindow.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);  
-	    myWindow.setVisible(true);
+	    myWindow.setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);  
 	    myWindow.setResizable(true);
 	    myWindow.setSize(100,40);
-	 
+
+	    myWindow.addInternalFrameListener(new InternalFrameAdapter(){
+
+			public void internalFrameClosed(InternalFrameEvent e) {
+				if(myWindow!=null) {
+					// will re-enter this event, so its a bit defensive
+					JInternalFrame w = myWindow;
+					myWindow = null;
+					w.dispose();
+					myContext.disposeTipiComponent(TipiWindow.this);
+				}
+			}
+
+		});
+
 	    return myWindow;
   }
   
@@ -106,6 +121,17 @@ public final class TipiWindow
         ( (JInternalFrame) getContainer()).getContentPane().add( (Component) c, constraints);
       }
     });
+    SwingUtilities.invokeLater(new Runnable(){
+
+		public void run() {
+			 try {
+				( (JInternalFrame) getContainer()).setSelected(true);
+				( (JInternalFrame) getContainer()).requestFocus();
+			} catch (PropertyVetoException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}});
   }
 
   public void removeFromContainer(final Object c) {
@@ -127,7 +153,20 @@ public final class TipiWindow
   }
 
 //  public final void setComponentValue(final String name, final Object object) {
-//    super.setComponentValue(name, object);
+//	  if(name.equals("selected")) {
+//		  System.err.println("Holadie! "+object);
+//		  Thread.dumpStack();
+//		  try {
+//			myWindow.setSelected(true);
+//		} catch (PropertyVetoException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		  return;
+//	  }
+//	  super.setComponentValue(name, object);
+//  }
+	  //    super.setComponentValue(name, object);
 //    if (object==null) {
 //      System.err.println("Null object. Name = "+name);
 //    } else {

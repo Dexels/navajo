@@ -2,11 +2,13 @@
 <classpath>
 	<classpathentry exported="true" kind="src" path="/NavajoDocument"/>
 	<classpathentry exported="true" kind="src" path="/NavajoClient"/>
-	<classpathentry exported="true" kind="src" path="/NavajoSwingClient"/>
 	<classpathentry exported="true" kind="src" path="/NavajoTipi"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="src" path="/Navajo"/>
+	<classpathentry exported="true" kind="src" path="/Navajo"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/DexelsVersionControl"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/AnimatedTransitions"/>
+	<classpathentry kind="lib" path="lib/substance.jar"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/TipiSwingClient"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

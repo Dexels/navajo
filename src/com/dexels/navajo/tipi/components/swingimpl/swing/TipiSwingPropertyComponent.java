@@ -3,8 +3,8 @@ package com.dexels.navajo.tipi.components.swingimpl.swing;
 import javax.swing.*;
 
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.swingclient.components.*;
 import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.swingclient.components.*;
 
 public class TipiSwingPropertyComponent extends GenericPropertyComponent {
 	
@@ -223,7 +223,7 @@ public class TipiSwingPropertyComponent extends GenericPropertyComponent {
 	
 	public void setEnabled(boolean b) {
 		//super.setEnabled(b);
-		System.err.println("IN SETENABLED. IGNORING");
+//		System.err.println("IN SETENABLED. IGNORING");
 //		Thread.dumpStack();
 	}
 

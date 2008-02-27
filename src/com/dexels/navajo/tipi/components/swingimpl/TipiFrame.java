@@ -39,7 +39,6 @@ public class TipiFrame extends TipiSwingDataComponentImpl {
 	}
 
 	public Object createContainer() {
-		System.err.println("CREATING FRAME OBJECT~~~");
 		boolean internal = (getContext() instanceof EmbeddedContext) || ((SwingTipiContext) getContext()).getAppletRoot() != null;
 		TipiHelper th = new TipiSwingHelper();
 		th.initHelper(this);
@@ -52,6 +51,9 @@ public class TipiFrame extends TipiSwingDataComponentImpl {
 			}
 			RootPaneContainer or = ((SwingTipiContext) getContext()).getOtherRoot();
 			myToplevel = or;
+			mySuperPanel = new JPanel();
+			or.getContentPane().add(mySuperPanel ,BorderLayout.CENTER);
+			mySuperPanel.setLayout(new BorderLayout());
 			return or;
 //			if (getContext() instanceof EmbeddedContext) {
 		//		EmbeddedContext ec = (EmbeddedContext) getContext();
@@ -148,10 +150,10 @@ public class TipiFrame extends TipiSwingDataComponentImpl {
 	}
 
 	public void setContainerLayout(Object layout) {
-		System.err.println("Beware! not working well");
-
+		
 //		myToplevel.getContentPane().setLayout((LayoutManager) layout);
-		mySuperPanel.setLayout((LayoutManager) layout);
+
+			mySuperPanel.setLayout((LayoutManager) layout);
 	}
 
 	private ImageIcon getIcon(URL u) {

@@ -7,10 +7,12 @@ import java.util.List;
 
 import javax.swing.*;
 
+import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.core.*;
 import com.dexels.navajo.tipi.components.swingimpl.parsers.*;
 import com.dexels.navajo.tipi.internal.*;
+import com.dexels.navajo.tipi.tipixml.*;
 
 /**
  * <p>Title: </p>
@@ -148,5 +150,35 @@ public abstract class TipiSwingComponentImpl
   	public void animateTransition(TipiEvent te, TipiExecutable executableParent, List<TipiExecutable> exe) throws TipiBreakException {
 		mySwingTipiContext.animateDefaultTransition(this,te,executableParent,getSwingContainer(),exe);
 	}
+	
+	protected void loadValues(final XMLElement values, final TipiEvent event) throws TipiException {
+		runSyncInEventThread(new Runnable(){
+
+			public void run() {
+				try {
+					TipiSwingComponentImpl.super.loadValues(values, event);
+				} catch (TipiException e) {
+					e.printStackTrace();
+				}
+			}});
+	}
+  	
+	public void loadStartValues(final XMLElement element) {
+		runSyncInEventThread(new Runnable(){
+
+			public void run() {
+					TipiSwingComponentImpl.super.loadStartValues(element);
+		
+			}});
+	}
+	
+	
+	protected void doCallSetter(final Object component, final String propertyName, final Object param) {
+		runSyncInEventThread(new Runnable(){
+			public void run() {
+				TipiSwingComponentImpl.super.doCallSetter(component,propertyName,param);
+			}});
+	}
+	
 	
 }

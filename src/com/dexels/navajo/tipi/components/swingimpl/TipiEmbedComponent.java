@@ -160,6 +160,7 @@ public class TipiEmbedComponent extends TipiPanel {
 			try {
 				Operand oo = compMeth.getEvaluatedParameter("location", event);
 				String loc = (String) oo.value;
+				System.err.println("Location: "+loc);
 				parseLocation(loc);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -221,9 +222,16 @@ public class TipiEmbedComponent extends TipiPanel {
 
 	}
 
-	private void switchToDefinition(String nameVal) throws TipiException {
-		stc.getContext().setTopLevelContainer(getContainer());
-		stc.getContext().switchToDefinition(nameVal);
+	private void switchToDefinition(final String nameVal) throws TipiException {
+		runSyncInEventThread(new Runnable(){
+			public void run() {
+				stc.getContext().setTopLevelContainer(getContainer());
+				try {
+					stc.getContext().switchToDefinition(nameVal);
+				} catch (TipiException e) {
+					e.printStackTrace();
+				}
+			}});
 	}
 
 	private void parseLocation(String loc) throws IOException, TipiException {

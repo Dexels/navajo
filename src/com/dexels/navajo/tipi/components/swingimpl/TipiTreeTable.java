@@ -4,10 +4,10 @@ import java.awt.event.*;
 import java.util.*;
 
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.swingclient.components.treetable.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.core.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
+import com.dexels.navajo.tipi.swingclient.components.treetable.*;
 import com.dexels.navajo.tipi.tipixml.*;
 
 /**

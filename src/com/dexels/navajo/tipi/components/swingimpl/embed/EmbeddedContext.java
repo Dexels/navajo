@@ -3,9 +3,9 @@ package com.dexels.navajo.tipi.components.swingimpl.embed;
 import java.io.*;
 import java.util.*;
 
-import com.dexels.navajo.swingclient.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.*;
+import com.dexels.navajo.tipi.swingclient.*;
 import com.dexels.navajo.tipi.tipixml.*;
 
 /**

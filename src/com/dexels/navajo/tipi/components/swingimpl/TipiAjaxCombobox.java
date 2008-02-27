@@ -5,10 +5,10 @@ import java.awt.event.*;
 import java.util.*;
 
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.swingclient.components.remotecombobox.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.internal.*;
+import com.dexels.navajo.tipi.swingclient.components.remotecombobox.*;
 
 /**
  * <p>

@@ -4,8 +4,8 @@ import java.io.*;
 import java.util.*;
 
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.swingclient.*;
 import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.swingclient.*;
 
 /**
  * <p>Title: </p>

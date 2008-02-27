@@ -9,11 +9,11 @@ import javax.swing.*;
 import javax.swing.event.*;
 
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.swingclient.components.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.internal.*;
+import com.dexels.navajo.tipi.swingclient.components.*;
 import com.dexels.navajo.tipi.tipixml.*;
 
 /**

@@ -2,7 +2,7 @@ package com.dexels.navajo.tipi.components.swingimpl.swing;
 
 import java.util.*;
 
-import com.dexels.navajo.swingclient.components.*;
+import com.dexels.navajo.tipi.swingclient.components.*;
 import com.dexels.navajo.tipi.tipixml.*;
 
 /**

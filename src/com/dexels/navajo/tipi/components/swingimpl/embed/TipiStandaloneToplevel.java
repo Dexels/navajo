@@ -27,6 +27,7 @@ private final JComponent myPanel; //= new JPanel();
  	  super.setName("init");
  	  if (jj==null) {
 		myPanel = new JPanel();
+		myPanel.setLayout(new BorderLayout());
 	} else {
 	 	  myPanel = jj;
 	}
@@ -38,11 +39,13 @@ private final JComponent myPanel; //= new JPanel();
   public TipiStandaloneToplevel() {
 	  this(null);
   }
-  public void addToContainer(Object c, Object constraints) {
+  public void addToContainer(final Object c, final Object constraints) {
 	  if (myPanel!=null) {
 		  //System.err.println("Adding to toplevel: "+c.getClass()+ " -- "+c.hashCode());
-
-		  myPanel.add((Component)c,BorderLayout.CENTER);
+		  runSyncInEventThread(new Runnable(){
+			public void run() {
+				  myPanel.add((Component)c,BorderLayout.CENTER);
+			}});
 	} 
   }
 

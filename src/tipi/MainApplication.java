@@ -3,8 +3,11 @@ package tipi;
 import java.io.*;
 import java.util.*;
 
-import com.dexels.navajo.swingclient.*;
+import javax.swing.*;
+
 import com.dexels.navajo.tipi.components.swingimpl.*;
+import com.dexels.navajo.tipi.swingclient.*;
+import com.dexels.navajo.tipi.swingclient.components.*;
 
 public class MainApplication {
 
@@ -14,12 +17,22 @@ public class MainApplication {
 			System.err.println("Usage: tipi <url to tipidef.xml>");
 			return;
 		}
-		String definition = args[args.length - 1];
-		List<String> arrrgs = new ArrayList<String>();
+		final String definition = args[args.length - 1];
+		final List<String> arrrgs = new ArrayList<String>();
 		for (int i = 0; i < args.length; i++) {
 			arrrgs.add(args[i]);
 		}
-		initialize(definition,arrrgs,null);
+		RepaintManager.setCurrentManager(new CheckThreadViolationRepaintManager());
+		SwingUtilities.invokeLater(new Runnable(){
+
+			public void run() {
+				try {
+					initialize(definition,arrrgs,null);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				
+			}});
 	}
 
 

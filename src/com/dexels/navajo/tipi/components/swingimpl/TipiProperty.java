@@ -5,13 +5,14 @@ import java.beans.*;
 import java.util.*;
 
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.swingclient.components.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.internal.*;
+import com.dexels.navajo.tipi.swingclient.components.*;
 
 public class TipiProperty extends TipiSwingComponentImpl implements PropertyComponent, PropertyChangeListener, PropertyValidatable, PropertyEventListener {
 	private Property myProperty = null;
+	private Object myPropertyValue = null;
 	private List<TipiEventListener> myListeners = new ArrayList<TipiEventListener>();
 	// private boolean myVisibleState = true;
 	// private Boolean myEnableState = null;
@@ -128,20 +129,41 @@ public class TipiProperty extends TipiSwingComponentImpl implements PropertyComp
 		return ((GenericPropertyComponent) getContainer()).isLabelVisible();
 	}
 
+	@Override
+	protected Object getComponentValue(String name) {
+		if(name.equals("propertyValue")) {
+			// ----
+			return myPropertyValue;
+		}
+		return super.getComponentValue(name);
+	}
+
+	@Override
+	protected void setComponentValue(String name, Object object) {
+		if(name.equals("propertyValue")) {
+			if(myProperty!=null) {
+				myProperty.setAnyValue(object);
+			}
+			myPropertyValue = object;
+		}
+		super.setComponentValue(name, object);
+	}
+
 	public void setProperty(final Property p) {
 		runSyncInEventThread(new Runnable() {
 			public void run() {
-				if (getAttributeProperty("propertyValue") != null) {
-					getAttributeProperty("propertyValue").removePropertyChangeListener(TipiProperty.this);
+				if (myProperty != null) {
+					myProperty.removePropertyChangeListener(TipiProperty.this);
 				}
+				// TODO: Not sure about this one:
 				if(myProperty!=null) {
 					myContext.unlink(myProperty);
 				}
-//				if(p!=null) {
-//					p.addPropertyChangeListener(TipiProperty.this);
-//				}
+				if(p!=null) {
+					p.addPropertyChangeListener(TipiProperty.this);
+				}
 				myProperty = p;
-				myContext.link(myProperty, getAttributeProperty("propertyValue"));
+//				myContext.link(myProperty, getAttributeProperty("propertyValue"));
 //					System.err.println("My attributeListenerprop has: "+getAttributeProperty("propertyValue").l);
 					// getAttributeProperty("propertyValue").setAnyValue(myProperty);
 
@@ -157,12 +179,12 @@ public class TipiProperty extends TipiSwingComponentImpl implements PropertyComp
 					return;
 				}
 				
-				if(getAttributeProperty("propertyValue")==null) {
-					System.err.println("BAMMMM! BOMMM!");
-				} else {
-					getAttributeProperty("propertyValue").addPropertyChangeListener(TipiProperty.this);
-					System.err.println("Linkt to prop!: "+TipiProperty.this);
-				}				
+//				if(getAttributeProperty("propertyValue")==null) {
+//					System.err.println("BAMMMM! BOMMM!");
+//				} else {
+//					getAttributeProperty("propertyValue").addPropertyChangeListener(TipiProperty.this);
+//					System.err.println("Linkt to prop!: "+TipiProperty.this);
+//				}				
 				// currentType = p.getType();
 				((GenericPropertyComponent) getContainer()).setProperty(p);
 
@@ -224,41 +246,44 @@ public class TipiProperty extends TipiSwingComponentImpl implements PropertyComp
 	}
 	public void propertyEventFired(Property p, String eventType, Validatable v, Object oldValue) {
 //		Thread.dumpStack();
-		System.err.println("Entering propertyEventFired: old: "+oldValue+" new: "+p.getTypedValue()+" stringvalue: "+p.getValue());
+		if("onValueChanged".equals(eventType)) {
+			Object typedValue = p.getTypedValue();
+			if(typedValue!=null && typedValue.equals(oldValue)) {
+				System.err.println("No real change. Beware:");
+				Thread.dumpStack();
+			}
+			try {
+				Map<String,Object> m = new HashMap<String,Object>();
+				m.put("propertyName", p.getFullPropertyName());
+				m.put("propertyValue", typedValue);
+				m.put("propertyType", p.getType());
+				m.put("propertyLength", new Integer(p.getLength()));
+				// PropertyImpl p = (PropertyImpl)myProperty;
+				for (int i = 0; i < myListeners.size(); i++) {
+					TipiEventListener current = myListeners.get(i);
+					current.performTipiEvent(eventType, m, false);
+		
+				}
+//				performTipiEvent(eventType, m, false);
+		} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		} else {
+			try {
+				Map<String, Object> m = new HashMap<String, Object>();
+				m.put("propertyName", p.getFullPropertyName());
+				m.put("propertyValue", p.getTypedValue());
+				m.put("propertyType", p.getType());
+				m.put("propertyLength", new Integer(p.getLength()));
+				performTipiEvent(eventType, m, false);
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+			
+		}
 		if (p == null) {
 			System.err.println("Trying to fire event from null property!");
 			return;
-		}
-		if (p != myProperty) {
-			System.err.println("Mysterious anomaly: Property of event is not the loaded property");
-			return;
-		}
-		if (eventType.equals("onFocusGained") && v != null) {
-			// Validatable v = (Validatable) currentPropertyComponent;
-			// ArrayList rules = v.getConditionRuleIds();
-			// if (rules != null) {
-			// for (int i = 0; i < rules.size(); i++) {
-			// String id = (String) rules.get(i);
-			// myContext.resetConditionRuleById(id);
-			// }
-			// }
-		}
-		try {
-			Map<String,Object> m = new HashMap<String,Object>();
-			m.put("propertyName", myProperty.getFullPropertyName());
-			m.put("propertyValue", myProperty.getTypedValue());
-			m.put("propertyType", myProperty.getType());
-			m.put("propertyLength", new Integer(myProperty.getLength()));
-			// PropertyImpl p = (PropertyImpl)myProperty;
-			for (int i = 0; i < myListeners.size(); i++) {
-				TipiEventListener current = myListeners.get(i);
-				current.performTipiEvent(eventType, m, false);
-	
-			}
-			System.err.println("Firing event type: "+eventType+" m: "+m);
-			performTipiEvent(eventType, m, false);
-	} catch (Exception ex) {
-			ex.printStackTrace();
 		}
 	}
 
@@ -304,26 +329,24 @@ public class TipiProperty extends TipiSwingComponentImpl implements PropertyComp
 
 	}
 
-	@Override
-	public void disposeComponent() {
-
-		myContext.unlink(getAttributeProperty("propertyValue"));
-	super.disposeComponent();
-		
-	}
-
 	private void requestPropertyFocus() {
 		((GenericPropertyComponent) getContainer()).requestPropertyFocus();
 	}
 
 	public void propertyChange(final PropertyChangeEvent e) {
-		
 		runSyncInEventThread(new Runnable(){
 
 			public void run() {
-				if(e.getPropertyName().equals("value")) {
+				if(e.getPropertyName().equals("value") || e.getPropertyName().equals("selection")) {
+//					if(e.getPropertyName().equals("selection")) {
+//						System.err.println("Change: "+e.getPropertyName());
+//					}
+//					System.err.println("OLD: "+e.getOldValue());
+//					System.err.println("NEW: "+e.getNewValue());
+//					Thread.dumpStack();
 					((GenericPropertyComponent) getContainer()).updatePropertyValue(e);
-					propertyEventFired((Property)e.getSource(), "onValueChanged", p,e.getOldValue());
+					propertyEventFired((Property)e.getSource(),"onValueChanged", p,e.getOldValue());
+					myPropertyValue = ((Property)e.getSource()).getTypedValue();
 				} else {
 					// direction, cardinality, length, or description change:
 					((GenericPropertyComponent) getContainer()).setProperty(getProperty());
