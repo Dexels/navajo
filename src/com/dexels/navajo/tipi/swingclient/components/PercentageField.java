@@ -44,19 +44,19 @@ public class PercentageField extends AbstractPropertyField implements PropertyCo
 		
 	}
 
-	@Override
+
 	public boolean isGhosted() {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
-	@Override
+
 	public void setGhosted(boolean b) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
+
 	public void update() {
 		updateProperty();
 	}

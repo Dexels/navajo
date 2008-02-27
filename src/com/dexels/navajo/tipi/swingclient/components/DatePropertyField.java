@@ -399,7 +399,7 @@ public final class DatePropertyField
 
   }
 
-@Override
+
 public void propertyChange(PropertyChangeEvent e) {
 	setDate((Date) e.getNewValue());
 }

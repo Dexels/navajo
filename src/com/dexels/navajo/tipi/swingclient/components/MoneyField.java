@@ -64,17 +64,17 @@ public class MoneyField extends AbstractPropertyField implements PropertyControl
 
 	}
 
-	@Override
+
 	public boolean isGhosted() {
 		return false;
 	}
 
-	@Override
+
 	public void setGhosted(boolean b) {
 		
 	}
 
-	@Override
+
 	public void update() {
 		updateProperty();
 	}

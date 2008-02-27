@@ -145,7 +145,7 @@ public final class MultipleSelectionPropertyCheckboxGroup extends BasePanel impl
     System.err.println("Req: " +req);
  }
 
-@Override
+
 public void propertyChange(PropertyChangeEvent e) {
 	if(e.getPropertyName().equals("value")) {
 		fireListeners(null);

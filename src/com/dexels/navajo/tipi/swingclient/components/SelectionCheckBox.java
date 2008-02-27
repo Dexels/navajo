@@ -37,7 +37,7 @@ public final void setSelection(Selection s, Property p){
   private final void jbInit() throws Exception {
       this.addActionListener(new ActionListener(){
 
-		@Override
+
 		public void actionPerformed(ActionEvent arg0) {
 			System.err.println("Bim!");
 //	    	System.err.println("Check changed");
