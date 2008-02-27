@@ -1592,7 +1592,7 @@ public void setFocusable(boolean b) {
       fireTipiEvent("onActionPerformed");
     }
 //    }
-  }
+  } 
 
   final void myRadioButtonField_itemStateChanged(ItemEvent e) {
     if (!setPropFlag) {
@@ -2234,7 +2234,7 @@ public int getMaxImageWidth() {
 
 public int getMaxWidth() {
 	// TODO Auto-generated method stub
-	throw new RuntimeException("");
+	return Integer.MAX_VALUE;
 }
 
 public int getMemoColumnCount() {

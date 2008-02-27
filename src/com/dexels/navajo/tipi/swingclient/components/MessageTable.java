@@ -835,7 +835,9 @@ public class MessageTable
   }
 
   public void setMessage(Message m) {
-	
+	if(myMessage!=null) {
+		myMessage.removePropertyChangeListener(this);
+	}
     try {
       if (!savePathJustChanged) {
         saveColumnsNavajo();
@@ -864,6 +866,8 @@ public class MessageTable
     }
     myMessage = m;
     
+    
+    
     resetColorMap();
     if (m.getArraySize() > 0) {
       mtm.fireTableRowsInserted(0, m.getArraySize() - 1);
@@ -887,6 +891,10 @@ public class MessageTable
     if (bd != null && bd.isShowing()) {
       bd.setMessage();
     }
+    
+
+	myMessage.addPropertyChangeListener(this);
+
   }
 
   public void createDefaultColumnsFromMessageModel() {
@@ -974,10 +982,10 @@ public void updateTableSize() {
 
   public void resizeColumns(final Message m) {
 //    final MessageTableModel mtm = getMessageModel();
-    SwingUtilities.invokeLater(new Runnable() {
-      public void run() {
-        try {
-			if (columnPathString == null) {
+	  if(!SwingUtilities.isEventDispatchThread()) {
+		  throw new IllegalStateException("should be called from event thread");
+	  }
+  			if (columnPathString == null) {
 			  setDefaultColumnSizes(m);
 			}
 			else {
@@ -986,20 +994,23 @@ public void updateTableSize() {
 			    setSavedColumnSizes();
 			  }
 			}
-		} catch (SecurityException e) {
-			// whatever
-		}
-
-      }
-    });
+	
 	}
   
   public void loadColumnSizes() {
-		 ( (MessageTableColumnModel) getColumnModel()).loadSizes(columnSizeMap);
+	  if(!SwingUtilities.isEventDispatchThread()) {
+		  throw new IllegalStateException("should be called from event thread");
+	  }
+
+	  ( (MessageTableColumnModel) getColumnModel()).loadSizes(columnSizeMap);
 			
   }
 
   public final void createDefaultFromModel(Message m) {
+	  if(!SwingUtilities.isEventDispatchThread()) {
+		  throw new IllegalStateException("should be called from event thread");
+	  }
+	  
 //    System.err.println("in createDefaultFromModel()");
     MessageTableColumnModel tcm = new MessageTableColumnModel();
     tcm.addColumnModelListener(tableFooter);
@@ -1799,14 +1810,14 @@ public void updateTableSize() {
       setColumnDefinitionSavePath(path);
       for (int i = 0; i < getColumnModel().getColumnCount(); i++) {
         TableColumn tc = this.getColumnModel().getColumn(i);
-        tc.addPropertyChangeListener(this);
+//        tc.addPropertyChangeListener(this);
         autoStoreSizes = true;
       }
     }
     else {
       for (int i = 0; i < getColumnModel().getColumnCount(); i++) {
         TableColumn tc = this.getColumnModel().getColumn(i);
-        tc.removePropertyChangeListener(this);
+//        tc.removePropertyChangeListener(this);
         autoStoreSizes = false;
       }
     }
@@ -1905,15 +1916,8 @@ public void updateTableSize() {
   }
 
   public final void propertyChange(PropertyChangeEvent e) {
-//    System.err.println("PropertyChangeEvent: " + e.getPropertyName());
-//    if (autoStoreSizes && "width".equals(e.getPropertyName())) {
-//      try {
-//        saveColumnsNavajo();
-//      }
-//      catch (Exception ex) {
-//        ex.printStackTrace();
-//      }
-//    }
+	  System.err.println("Change: "+e.getNewValue());
+	  
   }
 
   public void setConstraint(String id) {

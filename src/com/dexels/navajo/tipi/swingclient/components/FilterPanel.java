@@ -74,14 +74,14 @@ public class FilterPanel
 //    columnPanel.setPreferredSize(new Dimension(150, 35));
     this.setLayout(new BorderLayout());
     columnsButton.setToolTipText(res.getString("changeColumnToolTip"));
-    columnsButton.setIcon(new ImageIcon(FilterPanel.class.getResource("columns.gif")));
+    columnsButton.setIcon(new ImageIcon(FilterPanel.class.getResource("column_preferences.png")));
     columnsButton.setMargin(new Insets(0, 0, 0, 0));
     printButton.setToolTipText(res.getString("printToolTip"));
-    printButton.setIcon(new ImageIcon(FilterPanel.class.getResource("print.png")));
+    printButton.setIcon(new ImageIcon(FilterPanel.class.getResource("print_small.png")));
     printButton.setMargin(new Insets(0, 0, 0, 0));
     printButton.setVisible(false);
     emailButton.setToolTipText("Email");
-    emailButton.setIcon(new ImageIcon(FilterPanel.class.getResource("mail.png")));
+    emailButton.setIcon(new ImageIcon(FilterPanel.class.getResource("mail_small.png")));
     emailButton.setMargin(new Insets(0, 0, 0, 0));
     emailButton.setVisible(false);
 
@@ -121,7 +121,7 @@ public class FilterPanel
       }
     });
 
-    wordButton.setIcon(new ImageIcon(FilterPanel.class.getResource("word-groot.png")));
+    wordButton.setIcon(new ImageIcon(FilterPanel.class.getResource("word.png")));
     wordButton.setToolTipText(res.getString("wordToolTip"));
     wordButton.setMargin(new Insets(0, 0, 0, 0));
     wordButton.setVisible(false);

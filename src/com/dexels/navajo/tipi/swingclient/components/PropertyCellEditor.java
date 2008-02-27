@@ -472,7 +472,9 @@ public  class PropertyCellEditor
       /** @todo Occasional null pointer here. Fix */
 
       if (lastComponent != null && ((PropertyControlled) lastComponent).getProperty() != null && ((PropertyControlled) lastComponent).getProperty().getType().equals(Property.SELECTION_PROPERTY)) {
-       ( (PropertyControlled) lastComponent).setProperty(null);
+    	  System.err.println("Clearing component: "+lastComponent.getClass());
+    	  ( (PropertyControlled) lastComponent).setProperty(null);
+       
     }
     }
 

@@ -115,13 +115,11 @@ public final class MessageTableColumnModel
        Integer index = (Integer) e.getKey();
        
        
-      System.err.println("Loadsizes: [" + index + "]: " + size);
-
+ 
        if (size!=null) {
          TableColumn tc = getColumn(index.intValue());
          if (tc!=null) {
-        	System.err.println("Setting: "+size);
-           tc.setPreferredWidth(size.intValue());
+         tc.setPreferredWidth(size.intValue());
            tc.setWidth(size.intValue());
              }
        }

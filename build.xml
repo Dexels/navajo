@@ -10,9 +10,9 @@
         <fail unless="PROJECTHOME"> Set the PROJECTHOME environment variable to the top directory of your CVS projects, for example: export PROJECTHOME=C:\PROJECTS declare -x PROJECTHOME=/home/arjen/las-projectas </fail>
     </target>
     <path id="depend">
-        <fileset dir="${lib}">
+    <!--    <fileset dir="${lib}">
             <include name="**/*.jar"/>
-        </fileset>
+        </fileset>-->
     </path>
 
 

@@ -35,9 +35,15 @@ public abstract class AbstractPropertyField extends JTextField implements FocusL
 				myProperty.removePropertyChangeListener(this);
 			}
 			myProperty = p;
-			myProperty.addPropertyChangeListener(this);
+			if(myProperty!=null) {
+				myProperty.addPropertyChangeListener(this);
+			}
 		}
 
+		if(myProperty==null) {
+			setText("");
+			return;
+		}
 		AbstractPropertyField.super.setEditable(myProperty.isDirIn());
 		AbstractPropertyField.super.setEnabled(myProperty.isDirIn());
 		String s = getPresentationFormat(myProperty.getTypedValue());
