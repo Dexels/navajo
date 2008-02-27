@@ -95,7 +95,6 @@ public class TipiActionBlock implements TipiExecutable {
 					myContext.enqueueExecutable(current);
 				}
 			} else {
-				System.err.println("ENTERING DO ACTIONS............");
 				myContext.doActions(te,myComponent,this,myExecutables);
 //				
 //				for (int i = 0; i < myExecutables.size(); i++) {

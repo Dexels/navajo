@@ -38,7 +38,7 @@ public abstract class BaseTipiErrorHandler implements TipiErrorHandler {
 			res = ResourceBundle.getBundle("tipi.validation");
 			
 		} catch (Exception ex) {
-			System.err.println("No tipi.validation resource found.");
+//			System.err.println("No tipi.validation resource found.");
 			res = null;
 		}
 	}
@@ -97,7 +97,7 @@ public abstract class BaseTipiErrorHandler implements TipiErrorHandler {
 				if(tipiResourceStream!=null) {
 					res = new PropertyResourceBundle(tipiResourceStream);
 				} else {
-					System.err.println("Remote retrieve of validation.properties failed.");
+//					System.err.println("Remote retrieve of validation.properties failed.");
 				}
 			} catch (IOException e) {
 				System.err.println("Getting resource from server failed.");

@@ -311,8 +311,6 @@ public abstract class TipiBaseQuestionList extends TipiDataComponentImpl {
 	}
 
 	public void updateQuestionList() {
-		System.err.println("Update question list");
-		Thread.dumpStack();
 		for (Iterator<TipiBaseQuestionGroup> itt = myGroups.iterator(); itt.hasNext();) {
 			TipiBaseQuestionGroup element = itt.next();
 			element.updateQuestions();

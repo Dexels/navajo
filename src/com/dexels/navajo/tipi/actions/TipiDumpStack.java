@@ -1,6 +1,5 @@
 package com.dexels.navajo.tipi.actions;
 
-import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.internal.*;
 
 /**
@@ -20,14 +19,8 @@ import com.dexels.navajo.tipi.internal.*;
  * @author not attributable
  * @version 1.0
  */
-public class TipiLoadExtensions extends TipiAction {
+public class TipiDumpStack extends TipiAction {
 	public void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
-		try {
-			Navajo compNavajo = myContext.createExtensionNavajo();
-			myContext.addNavajo("Extension", compNavajo);
-			myContext.loadNavajo(compNavajo, "Extension");
-		} catch (NavajoException e) {
-			e.printStackTrace();
-		}
+		Thread.dumpStack();
 	}
 }

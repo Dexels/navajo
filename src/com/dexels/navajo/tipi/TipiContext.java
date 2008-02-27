@@ -175,12 +175,12 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 			fakeExtension(optionalExtensionList,"tipi.TipiRssExtension");
 			fakeExtension(optionalExtensionList,"tipi.TipiMailExtension");
 			fakeExtension(optionalExtensionList,"tipi.TipiNativeSwingExtension");
+			fakeExtension(optionalExtensionList,"tipi.TipiSubstanceExtension");
 			
 			// initialize again
 			appendIncludes(coreExtensionList, includeList);
 			appendIncludes(mainExtensionList, includeList);
 			appendIncludes(optionalExtensionList, includeList);
-			System.err.println("INCLUDES: "+includeList);
 			processRequiredIncludes();
 	}
 
@@ -188,7 +188,6 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 		try {
 			extensionList.add((TipiExtension) Class.forName(extensionName).newInstance());
 		} catch (Exception e) {
-			System.err.println("Loading: "+extensionName+"failed. Continuing");
 		}	
 	}
 
@@ -791,7 +790,7 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 			if (location != null) {
 				InputStream in = resolveInclude(location);
 				if (in == null) {
-					System.err.println("Could not resolve: " + location);
+//					System.err.println("Could not resolve: " + location);
 					return;
 				}
 				XMLElement doc = new CaseSensitiveXMLElement();
@@ -983,10 +982,9 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 		}
 		tc.loadStartValues(instance);
 		tc.componentInstantiated();
-		if (tc.getId() == null) {
-			System.err.println("NULL ID: component: " + tc.store().toString());
-			System.err.println(instance);
-		}
+//		if (tc.getId() == null) {
+//			System.err.println("NULL ID: component: " + tc.store().toString());
+//		}
 		return tc;
 	}
 
@@ -1031,11 +1029,11 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 	}
 
 	private Object instantiateClass(String className, String defname, XMLElement instance) throws TipiException {
-		// System.err.println("Instantiating class: " + className);
+		 
 		XMLElement tipiDefinition = null;
 		Class<?> c = getTipiClass(className);
 		// AAAAAAP
-		if (defname != null) {
+		if (defname != null ) {
 			tipiDefinition = getComponentDefinition(defname);
 		}
 		XMLElement classDef = tipiClassDefMap.get(className);
@@ -1059,9 +1057,12 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 		if (TipiComponent.class.isInstance(o)) {
 			TipiComponent tc = (TipiComponent) o;
 			tc.setContext(this);
+			if(tc.getId()==null) {
+				tc.setId(generateComponentId(null));
+			}
 			// tc.setContainer(tc.createContainer());
 			tc.setPropertyComponent(classDef.getBooleanAttribute("propertycomponent", "true", "false", false));
-			tc.setStudioElement(instance.getBooleanAttribute("studioelement", "true", "false", false));
+//			tc.setStudioElement(instance.getBooleanAttribute("studioelement", "true", "false", false));
 			tc.initContainer();
 			tc.instantiateComponent(instance, classDef);
 			if (tipiDefinition != null) {
@@ -1074,7 +1075,6 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 			tc.loadMethodDefinitions(this, instance, classDef);
 			
 			if("connector".equals(componentType)) {
-				System.err.println("Registering component: "+tc.getClass());
 				boolean isDefaultConnector = instance.getBooleanAttribute("default", "true", "false", false);
 				registerConnector((TipiConnector)tc);
 				if(isDefaultConnector) {
@@ -1195,18 +1195,22 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 		}
 		String location = lazyMap.get(componentName);
 		if (location == null) {
-			System.err.println("No lazy include found. Trying to resolve. Looking for: " + componentName);
+//			System.err.println("No lazy include found. Trying to resolve. Looking for: " + componentName);
 			// no lazy include found. Check the tipi resource
 //			Thread.dumpStack();
 			String fullName = null;
 			if (componentName.indexOf(".") != -1) {
-				System.err.println("PackageDefinition found. Beware");
 				fullName = componentName.replace(".", "/");
 			} else {
 				fullName = componentName;
 			}
-			String total = fullName + ".xml";
-			// System.err.println("Looking for location "+total);
+			String total = null;
+			if(fullName.endsWith(".xml")) {
+				total = fullName;
+			} else {
+				total = fullName + ".xml";
+			}
+			 System.err.println("Looking for location "+total);
 			parseLibrary(total, true, componentName, false);
 			xe = getTipiDefinition(componentName);
 			return xe;
@@ -1267,10 +1271,12 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 	public void switchToDefinition(String name) throws TipiException {
 		clearTopScreen();
 		setSplashInfo("Starting application.");
-		System.err.println("Starting application. Context class: " + getClass());
-		XMLElement componentDefinition = null; // getComponentDefinition(name);
+		XMLElement componentDefinition = null; //
+		componentDefinition = getComponentDefinition(name);
 		// fallback to init:
-		componentDefinition = getComponentDefinition("init");
+		if(componentDefinition==null) {
+			componentDefinition = getComponentDefinition("init");
+		}
 		if (componentDefinition == null) {
 			System.err.println("Available definitions: " + tipiComponentMap.keySet());
 			throw new TipiException("Fatal tipi error: Can not switch. Unknown definition: " + name);
@@ -1495,7 +1501,7 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 					return;
 				}
 			} else {
-				System.err.println("No error handler!");
+//				System.err.println("No error handler!");
 			}
 			try {
 				loadTipiMethod(reply, method);
@@ -1523,9 +1529,7 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 	protected void loadTipiMethod(Navajo reply, String method) throws TipiException, NavajoException {
 
 		Navajo oldNavajo = getNavajo(method);
-		if(reply.equals(oldNavajo)) {
-			System.err.println("Equal navajo found! This must be a reload. Should I unload?!");
-		}
+	
 		if(oldNavajo!=null) {
 			unloadNavajo(oldNavajo,method);
 		}
@@ -2362,11 +2366,11 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 
 
 	public void unlink(Navajo n) throws NavajoException {
-		System.err.println("Before unlink: "+getTotalPropertyLinks());
+//		System.err.println("Before unlink: "+getTotalPropertyLinks());
 		for(Message current : n.getAllMessages()) {
 			unlink(current);
 		}
-		System.err.println("After unlink: "+getTotalPropertyLinks());
+//		System.err.println("After unlink: "+getTotalPropertyLinks());
 	}	
 
 	public void unlink(Message m) throws NavajoException {
@@ -2612,6 +2616,19 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 
 	private void registerConnector(TipiConnector tc) {
 		tipiConnectorMap.put(tc.getConnectorId(), tc);
+	}
+
+	public boolean hasErrors(Navajo result) {
+		if(result==null) {
+			return false;
+		}
+		if(result.getMessage("error")!=null) {
+			return true;
+		}
+		if(result.getMessage("ConditionErrors")!=null) {
+			return true;
+		}
+		return false;
 	}
 
 }

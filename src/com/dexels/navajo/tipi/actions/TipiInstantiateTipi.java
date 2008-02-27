@@ -106,13 +106,22 @@ public class TipiInstantiateTipi extends TipiAction {
 				try {
 					String current = it.next();
 					if (!"location".equals(current)) {
-						xe.setAttribute(current, evaluate(getParameter(current).getValue(), null).value);
+						Object value = evaluate(getParameter(current).getValue(), null).value;
+						if("id".equals(current) || "class".equals(current) || "name".equals(current)) {
+							xe.setAttribute(current, value);
+						} else {
+							String vv = getEscapedString(value);
+							xe.setAttribute(current, vv);
+						}
+						
 					}
 				} catch (Exception ex1) {
 					ex1.printStackTrace();
 				}
 			}
 		}
+		System.err.println("Instantiating: \n\n"+xe);
+		
 		TipiComponent inst = myContext.instantiateComponent(xe);
 		inst.setHomeComponent(true);
 		inst.setId(id);
@@ -120,6 +129,16 @@ public class TipiInstantiateTipi extends TipiAction {
 
 		myContext.fireTipiStructureChanged(inst);
 		return inst;
+	}
+
+	private String getEscapedString(Object value) {
+		String vv = null;
+		if(value instanceof String) {
+			vv = "'"+(String)value+"'";
+		} else {
+			vv = ""+value;
+		}
+		return vv;
 	}
 
 	protected void instantiateTipi(boolean byClass, TipiEvent event) throws TipiException {
@@ -149,7 +168,6 @@ public class TipiInstantiateTipi extends TipiAction {
 				System.err.println("Location evaluated to a string, trying to get Tipi from that string (" + o.toString() + ")");
 				o = evaluate("{" + o.toString() + "}", null).value;
 			}
-			System.err.println(">>> "+getEvaluatedParameter("location",event).value);
 			parent = (TipiComponent) o;
 		} catch (Exception ex) {
 			ex.printStackTrace();

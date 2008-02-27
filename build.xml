@@ -67,14 +67,23 @@
 		</javac>
 	</target>
 	<target name="archive" depends="compile,resource">
-		<jar jarfile="${archive}" basedir="${build}" />
-		<fileset dir="${src}">
-			<exclude name="**/*.java" />
-			<exclude name="**/*.png" />
-			<exclude name="**/*.jpg" />
-			<exclude name="**/*.db" />
-		</fileset>
+     	<jar jarfile="${archive}">
+            <fileset dir="${build}">
+                 <exclude name="**/startup.fx"/>
+                 <exclude name="**/*.java"/>
+                 <exclude name="**/*.properties"/>
+                 <exclude name="**/*.html"/>
+                 <exclude name="**/*.stylesheet"/>
+                 <exclude name="**/*.txt"/>
+               </fileset>
+    			<service type="tipi.TipiExtension">
+    				<provider classname="tipi.TipiCore" />
+    			</service>
+    			<manifest>
+    				<attribute name="Built-By" value="Frank Lyaruu" />
+    			</manifest>
 
+    		</jar>    	
 	</target>
 </project>
 <!-- EOF: $RCSfile$ -->

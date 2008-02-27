@@ -33,14 +33,23 @@ public class TipiInstantiateTipiClass extends TipiInstantiateTipi {
 		}
 		String id = (String) getEvaluatedParameterValue("id", event);
 		String constraints = (String) getEvaluatedParameterValue("constraints", event);
-		String location = (String) getEvaluatedParameterValue("location", event);
-		String className = (String) getEvaluatedParameter("class", event).value;
+		
+		String location = null;
 		TipiComponent parent = null;
-		if(location.startsWith("/")) {
-			parent = myContext.getTipiComponentByPath(location);
+		
+		Object eval = getEvaluatedParameterValue("location", event);
+		if(eval instanceof String) {
+			location = (String) eval;
+			if(location.startsWith("/")) {
+				parent = myContext.getTipiComponentByPath(location);
+			} else {
+				parent = myComponent.getTipiComponentByPath(location);
+			}
+
 		} else {
-			parent = myComponent.getTipiComponentByPath(location);
+			parent = (TipiComponent)eval;
 		}
+		String className = (String) getEvaluatedParameter("class", event).value;
 		instantiateTipi(myContext, myComponent, byClass, parent, force, id, className, null,
 				parameterMap, constraints);
 	}

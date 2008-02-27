@@ -101,12 +101,18 @@ public class TipiNewCallService extends TipiAction {
 		
 		TipiValue parameter = getParameter("input");
 		String unevaluated = null;
+		boolean breakOnError = false;
 
 		if(parameter!=null) {
 			unevaluated = parameter.getValue();
 		}
 		Operand serviceOperand = getEvaluatedParameter("service", event);
 		Operand inputOperand = getEvaluatedParameter("input", event);
+		Operand destinationOperand = getEvaluatedParameter("destination", event);
+		Operand brk = getEvaluatedParameter("breakOnError", event);
+		if (brk != null) {
+			breakOnError = ((Boolean) brk.value).booleanValue();
+		}
 		if (serviceOperand == null || serviceOperand.value == null) {
 			throw new TipiException("Error in callService action: service parameter missing!");
 		}
@@ -120,13 +126,9 @@ public class TipiNewCallService extends TipiAction {
 			throw new TipiException("Input navajo not found when calling service: "+service+" supplied input: "+unevaluated);
 		}
 		if(input==null) {
-//			throw new TipiException("Input navajo not found when calling service: "+service);
 			input = NavajoFactory.getInstance().createNavajo();
 		}
-
-//		myContext.doSimpleSend(input, service, getComponent(), getExecutableChildCount(), false)
 		try {
-			
 			Navajo nn = input.copy();
 		//nn
 			// Don't let NavajoClient touch your original navajo! It will mess things up.
@@ -140,8 +142,19 @@ public class TipiNewCallService extends TipiAction {
 			if(result.getHeader()!=null) {
 				result.getHeader().setHeaderAttribute("sourceScript", result.getHeader().getRPCName());
 			}
+			if(destinationOperand!=null) {
+				if(destinationOperand.value!=null) {
+					service = (String) destinationOperand.value;
+				}
+			}
 			myContext.loadNavajo(result, service);
 
+			if(breakOnError) {
+				if(myContext.hasErrors(result)) {
+					throw new TipiBreakException();
+				}
+			}
+			
 			
 		} catch (ClientException e) {
 			// TODO Auto-generated catch block

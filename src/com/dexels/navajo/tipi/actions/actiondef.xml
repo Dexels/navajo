@@ -144,6 +144,8 @@
       <param name="input" type="navajo" required="true" />
    </tipiaction>
 
+   <tipiaction name="dumpStack" class="TipiDumpStack" package="com.dexels.navajo.tipi.actions"/>
+
    <tipiaction name="setSystemProperty" class="TipiSetSystemProperty" package="com.dexels.navajo.tipi.actions">
       <param name="name" type="string" required="true" />
       <param name="value" type="string" />
@@ -182,7 +184,8 @@
       <param name="connector" type="string" required="false" />
       <param name="destination" type="string" required="false" />
       <param name="input" type="navajo" />
-   </tipiaction>
+      <param name="breakOnError" type="boolean" default="false" />
+    </tipiaction>
 
    <tipiaction name="flushCache" class="TipiFlushCache" package="com.dexels.navajo.tipi.actions" />
    <tipiaction name="loadStateNavajo" class="TipiLoadStateNavajo" package="com.dexels.navajo.tipi.actions" />

@@ -455,7 +455,6 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 			id = myContext.generateComponentId(null);
 		}
 //		stateMessage  = getStateMessage();// NavajoFactory.getInstance().createMessage(myContext.getStateNavajo(), id!=null?id:"Unknown");
-		
 		XMLElement definitionXml = null;
 		if (defname != null) {
 			definitionXml = myContext.getComponentDefinition(defname);
@@ -476,6 +475,7 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 				loadMethods(xx);
 			}
 		}
+			
 	}
 
 
@@ -508,19 +508,9 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 				Operand o = evaluate(value.toString(), this, null);
 				if (o != null && o.value != null) {
 					setValue(key, value, o.value, this, false, null);
-					// setComponentValue(key, o.value);
 				} else {
 					System.err.println("Evaluation error: " + value);
-					// if (o==null) {
-					// System.err.println("Null operand returned");
-					// } else {
-					// System.err.println("value: "+o.value);
-					// System.err.println("type: "+o.type);
-					// System.err.println("option: "+o.option);
-					// }
 					setValue(key, value);
-//					Property s = componentAttributes.get(key);
-//					s.forcePropertyChange();
 				}
 			}
 		}
@@ -588,7 +578,7 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 				Object value = e.getNewValue();
 					if(value!=null) {
 					try {
-						callSetter(c, containerPropertyName, value);
+						doCallSetter(c, containerPropertyName, value);
 					} catch (Throwable ee) {
 						ee.printStackTrace();
 					}
@@ -611,6 +601,15 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 		return "set" + propertyName.substring(0, 1).toUpperCase() + propertyName.substring(1, propertyName.length());
 	}
 
+	
+	protected void doCallSetter(Object component, String propertyName, Object param) {
+		try {
+			callSetter(component, propertyName, param);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	private void callSetter(Object component, String propertyName, Object param) throws SecurityException, IllegalArgumentException,
 			IllegalAccessException, InvocationTargetException {
 		String b = getSetterName(propertyName);
@@ -649,12 +648,12 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 					}
 				}
 			}
-			System.err.println("NO METHOD FOUND! ");
+//			System.err.println("NO METHOD FOUND: "+propertyName+" in class:"+ component.getClass());
 //			e.printStackTrace();
 		}
 	}
 
-	private final void loadValues(XMLElement values, TipiEvent event) throws TipiException {
+	protected void loadValues(XMLElement values, TipiEvent event) throws TipiException {
 		List<XMLElement> children = values.getChildren();
 		for (int i = 0; i < children.size(); i++) {
 			XMLElement xx = children.get(i);
@@ -691,9 +690,8 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 		}
 		stateMessage = NavajoFactory.getInstance().createMessage(myContext.getStateNavajo(),getId());
 		if(getTipiParent()!=null) {
+//			System.err.println("Adding: "+getId()+" to: "+getTipiParent().getId());
 			getTipiParent().getStateMessage().addMessage(stateMessage);
-			System.err.println("Adding: "+getId()+" to: "+getTipiParent().getId());
-		} else {
 		}
 		return stateMessage;
 	}
@@ -799,6 +797,10 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 		return l;
 	}
 
+	/**
+	 * Disposes this component: Beware: Should not be called directly. To programatically dispose
+	 * a component, call TipiContext.disposeComponent(component)
+	 */
 	public void disposeComponent() {
 		if(getContainer()!=null) {
 		for (PropertyChangeListener p : myContainerListeners) {
@@ -927,7 +929,7 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 			System.err.println("Warning: null id.");
 		}
 		/**
-		 * @todo Fix following scenario: What should happen when a component is
+		 * @TODO Fix following scenario: What should happen when a component is
 		 *       added with the same id?
 		 */
 		if (tipiComponentMap.containsKey(c.getId())) {
@@ -964,14 +966,14 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 		 *       never called on a toplevel component
 		 */
 
-		// I placed this in a invokeAndWait clause, which is concepually not
+		// I placed this in a invokeAndWait clause, which is conceptually not
 		// correct, especially when
 		// if we are using a non-swing implementation. Need to fix.
 		// placing it in this thread gives _occasional_ freezes on startup.
 		// As far as I know, it only happens when the performTipiEvent is called
 		// from the main thread
 		try {
-			c.performTipiEvent("onInstantiate", null, false);
+			c.performTipiEvent("onInstantiate", null, true);
 		} catch (TipiException ex) {
 			ex.printStackTrace();
 		}
@@ -1352,13 +1354,11 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 	public TipiComponent addComponentInstance(TipiContext context, XMLElement inst, Object constraints) throws TipiException {
 		TipiComponent ti = (context.instantiateComponent(inst));
 		ti.setConstraints(constraints);
-		if (isStudioElement) {
-			ti.setStudioElement(true);
+		if(ti.getId()==null) {
+			ti.setId(myContext.generateComponentId(this));
 		}
 		addComponent(ti, context, constraints);
-		// if (ti instanceof TipiDataComponentImpl) {
-		// ( (TipiDataComponentImpl) ti).autoLoadServices(context,null);
-		// }
+
 		return ti;
 	}
 
