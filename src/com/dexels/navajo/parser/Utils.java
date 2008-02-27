@@ -33,6 +33,7 @@ import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.Percentage;
 import com.dexels.navajo.document.types.StopwatchTime;
 import com.dexels.navajo.document.Property;
+import com.dexels.navajo.document.Selection;
 
 
 public final class Utils extends Exception {
@@ -149,6 +150,8 @@ public final class Utils extends Exception {
           return ((Percentage) o).doubleValue() + "";
         else if (o instanceof ClockTime)
           return ((ClockTime) o).toString();
+        else if (o instanceof Selection) 
+          return ((Selection) o).getValue();
         else
           throw new TMLExpressionException("Unknown type: " + o.getClass().getName());
     }
