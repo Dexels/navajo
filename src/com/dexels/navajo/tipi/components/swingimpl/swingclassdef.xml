@@ -1344,6 +1344,7 @@
          <value direction="in" name="background" type="color" />
          <value direction="in" name="foreground" type="color" />
          <value direction="in" name="border" type="object" />
+         <value direction="in" name="opaque" type="boolean" property="opaque" />
       </values>
       <methods />
    </tipiclass>

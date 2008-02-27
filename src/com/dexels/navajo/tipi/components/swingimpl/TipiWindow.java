@@ -4,7 +4,6 @@ import java.awt.*;
 import java.beans.*;
 import java.util.List;
 
-import javax.annotation.security.*;
 import javax.swing.*;
 import javax.swing.event.*;
 
