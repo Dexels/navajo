@@ -14,16 +14,23 @@ import com.dexels.navajo.tipi.internal.*;
 public class TipiSetTheme extends TipiAction {
 
 	protected void execute(TipiEvent event) throws TipiBreakException, TipiException {
-		Operand valueOp = getEvaluatedParameter("value", event);
-		String value = null;
-		if(valueOp!=null) {
-			value = (String) valueOp.value;
-		}
-		if (value==null) {
-			setDefaultLnF();
-		} else {
-			setSubstanceTheme(value);
-		}
+		final Operand valueOp = getEvaluatedParameter("value", event);
+		
+		
+		SwingUtilities.invokeLater(new Runnable(){
+
+			public void run() {
+				String value = null;
+				if(valueOp!=null) {
+					value = (String) valueOp.value;
+				}
+				if (value==null) {
+					setDefaultLnF();
+				} else {
+					setSubstanceTheme(value);
+				}			
+			}});
+		
 	}
 
 	private void setDefaultLnF() {
