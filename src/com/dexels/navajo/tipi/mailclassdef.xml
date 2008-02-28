@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tid errorhandler="error">
+
+   <tipiclass addtocontainer="false" childcount="*" class="TipiMailConnector" layoutmanager="false" module="container" name="mail" package="com.dexels.navajo.tipi.mail" studio-icon="tabs.gif" type="connector">
+      <events>
+         <event name="onInstantiate" />
+         <event name="onMailError">
+            <param name="message" type="string"/>
+            <param name="exception" type="string"/>
+         </event>
+         <event name="onConnectionCreated" />
+         <event name="onConnectionLost" />
+         <event name="onConnectionClosed" />
+                  
+      </events>
+      <values>
+         <value direction="in" name="server" type="string" />
+         <value direction="in" name="username" type="string" />
+         <value direction="in" name="password" type="string" />
+      </values>
+      <methods>
+         <method name="connect"/>
+         <method name="disconnect" />
+      </methods>  
+</tipiclass>
+</tid>
