@@ -1,6 +1,6 @@
 package tipi;
 
-public class TipiYoutubeExtension implements TipiExtension {
+public class TipiFlickrExtension implements TipiExtension {
 
 	public String getDescription() {
 		return "Youtube extensions";
