@@ -163,8 +163,12 @@ public class TipiRssComponent extends TipiBaseConnector implements TipiConnector
 		System.err.println("s: "+s);
 	}
 
-	public void doTransaction(Navajo n, String service) throws TipiBreakException, TipiException {
-		
+
+
+	public Set<String> getEntryPoints() {
+		Set<String> s = new HashSet<String>();
+		s.add("*");
+		return s;
 	}
 	
 	
