@@ -451,6 +451,17 @@ public class GenericPropertyComponent
   public final void checkForConditionErrors(Message msg) {
     if (PropertyControlled.class.isInstance(currentComponent)) {
       PropertyControlled pc = (PropertyControlled) currentComponent;
+      if(pc.getProperty()==null) {
+    	  System.err.println("Checking error for unloaded property!");
+    	  Thread.dumpStack();
+    	  try {
+			msg.write(System.err);
+		} catch (NavajoException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return;
+      }
       String myName = pc.getProperty().getName();
       ArrayList errors = cep.getFailures(msg);
       /** @todo ADD NULL POINTER CHECK */failedPropertyIdMap = cep.getFailedPropertyIdMap();
