@@ -2,10 +2,12 @@ package com.dexels.navajo.tipi.swingclient.components;
 
 import java.beans.*;
 import java.io.*;
+import java.lang.reflect.*;
 import java.text.*;
 import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
+
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.*;
@@ -1916,9 +1918,10 @@ public void updateTableSize() {
   }
 
   public final void propertyChange(PropertyChangeEvent e) {
-	  System.err.println("Change: "+e.getNewValue());
-	  
-  }
+		Property val = (Property) e.getSource();
+		getMessageModel().firePropertyChanged(val);
+		
+	}
 
   public void setConstraint(String id) {
     primaryKeyColumn = id;

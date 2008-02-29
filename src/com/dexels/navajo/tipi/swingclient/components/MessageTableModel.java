@@ -1,6 +1,7 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
 import java.beans.*;
+import java.lang.reflect.*;
 import java.util.*;
 
 import javax.swing.*;
@@ -102,16 +103,35 @@ public class MessageTableModel
     	myMessage.addPropertyChangeListener(new PropertyChangeListener(){
 
 				public void propertyChange(PropertyChangeEvent e) {
-					Property p = (Property) e.getSource();
+					final Property p = (Property) e.getSource();
 					Message m = p.getParentMessage();
 					if(m!=null) {
-						int row = getRowOfMessage(m);
-						int column = getColumnOfProperty(row, p);
-						if(row>=0 && column>=0) {
-							fireTableCellUpdated(row, column);
+						final int row = getRowOfMessage(m);
+						final int column = getColumnOfProperty(row, p);
+						try {
+							if(!SwingUtilities.isEventDispatchThread()) {
+							SwingUtilities.invokeAndWait(new Runnable(){
+
+								public void run() {
+									if(row>=0 && column>=0) {
+										fireTableCellUpdated(row, column);
+									}
+									System.err.println("Updating: "+row+" column: "+column+" property: "+p.getName()+" orig. row: "+p.getParentMessage().getName()+" ---- "+p.getParentMessage().getIndex());
+
+								}});
+							} else {
+								if(row>=0 && column>=0) {
+									fireTableCellUpdated(row, column);
+								}
+								System.err.println("Updating: "+row+" column: "+column+" property: "+p.getName()+" orig. row: "+p.getParentMessage().getName()+" ---- "+p.getParentMessage().getIndex());
+
+							}
+						} catch (InterruptedException e1) {
+							e1.printStackTrace();
+						} catch (InvocationTargetException e1) {
+							e1.printStackTrace();
 						}
-						System.err.println("Updating: "+row+" column: "+column+" property: "+p.getName()+" orig. row: "+p.getParentMessage().getName()+" ---- "+p.getParentMessage().getIndex());
-					}
+								}
 				
 			}});
     }
@@ -368,12 +388,18 @@ public void removeColumn(int index) {
   /** @todo Rewrite this inefficient piece of sh@# */
   public final int getColumnOfProperty(int row, Property p) {
     int start = 0;
+    if(p==null) {
+    	return -1;
+    }
     if(rowHeadersVisible){
       start = 1;
     }
     for (int i = start; i < getColumnCount(); i++) {
       Property current = (Property) getValueAt(row, i);
-      if (current == p) {
+      if(current==null) {
+    	  continue;
+      }
+      if (current.getName().equals(p.getName())) {
         return i;
       }
     }
@@ -392,6 +418,7 @@ public void removeColumn(int index) {
   }
 
   public final void firePropertyChanged(Property p) {
+	  
     Message parent = p.getParentMessage();
     if (parent == null || myMessage == null) {
       System.err.println("Null parents involved. Bad news.");
@@ -402,18 +429,37 @@ public void removeColumn(int index) {
     }
 
 //    System.err.println("Yes. Right parent.");
-    int row = getRowOfMessage(parent);
+    final int row = getRowOfMessage(parent);
     if (row == -1) {
       System.err.println("Trouble locating message");
       return;
     }
-    int column = getColumnOfProperty(row, p);
+    final int column = getColumnOfProperty(row, p);
 //    try {
 //      System.err.println("Property: " + p.getFullPropertyName() + " row: " + row + " column: " + column);
 //    }
 //    catch (NavajoException ex) {
 //    }
-    fireTableCellUpdated(row, column);
+    if(column>=0) {
+    	if(SwingUtilities.isEventDispatchThread()) {
+            fireTableCellUpdated(row, column);
+    	} else {
+    		try {
+				SwingUtilities.invokeAndWait(new Runnable(){
+
+					public void run() {
+				        fireTableCellUpdated(row, column);
+				        		
+					}});
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    	}
+    }
   }
   
   public boolean hasPropertyFilters(){
