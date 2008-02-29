@@ -110,32 +110,53 @@ public class PhotoManager {
 
   }
 
-	/**
-	 * @param args
-	 */
-    public static void main(String[] args) {
-        try {
-            PhotoManager t = new PhotoManager();
-            PhotoList pl= t.getTagList(new String[]{"noordbrabant"},3);
-            ArrayList al =  t.getUrls(pl);
-            for (Iterator iterator = al.iterator(); iterator.hasNext();) {
-            	URL name = (URL) iterator.next();
-				System.err.println(name);
-			}
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        System.exit(0);
-    }
+//	/**
+//	 * @param args
+//	 */
+//    public static void main(String[] args) {
+//        try {
+//            PhotoManager t = new PhotoManager();
+//            PhotoList pl= t.getTagList(new String[]{"noordbrabant"},3);
+//            ArrayList al =  t.getUrls(pl);
+//            for (Iterator iterator = al.iterator(); iterator.hasNext();) {
+//            	URL name = (URL) iterator.next();
+//				System.err.println(name);
+//			}
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        System.exit(0);
+//    }
 
+    public List<Photo> getPhotos(String[] tags, int max, int index) throws FlickrException, IOException, SAXException {
+    	
+        SearchParameters sp = new SearchParameters();
+        sp.setTags(tags);
+        PhotoList pl =  f.getPhotosInterface().search(sp, max, index);
+        List<Photo> al = new ArrayList<Photo>();
+        for (Iterator<Photo> iterator = pl.iterator(); iterator.hasNext();) {
+			Photo photo = iterator.next();
+			al.add(photo);
+		}
+        return al;
+
+    }
+    
+    public Photo getPhoto(String id) throws FlickrException, IOException, SAXException {
+        return  f.getPhotosInterface().getPhoto(id);
+
+    }
+    
+    
     public String getUrl(String[] tags, int index) throws IOException, FlickrException, SAXException {
     	PhotoList pl = getTagList(tags, index);
-    	ArrayList al = getUrls(pl);
+    	List<Photo> al = getUrls(pl);
     	if(al==null || al.isEmpty()) {
     		return null;
     	}
-    	Photo p = (Photo) al.get(0);
-
+    	Photo p = al.get(0);
+    	String s = p.getLargeUrl();
+    	System.err.println("My url:" +s);
 		InputStream is = p.getMediumAsStream();
 		
 		File f = File.createTempFile("flickR", ".jpg");
@@ -147,8 +168,8 @@ public class PhotoManager {
     	return f.toURI().toURL().toString();
     }
     
-    private ArrayList  getUrls(PhotoList pl) throws IOException {
-    	ArrayList al = new ArrayList();
+    public List<Photo>  getUrls(PhotoList pl) throws IOException {
+    	List<Photo> al = new ArrayList<Photo>();
     	for (Iterator iterator = pl.iterator(); iterator.hasNext();) {
 			Photo p = (Photo) iterator.next();
 //		    try {

@@ -1,5 +1,7 @@
 package tipi;
 
+import java.util.*;
+
 public class TipiFlickrExtension implements TipiExtension {
 
 	public String getDescription() {
@@ -13,14 +15,22 @@ public class TipiFlickrExtension implements TipiExtension {
 	public boolean isMainImplementation() {
 		return false;
 	}
-
-	@Override
 	public String getId() {
 		return "youtube";
 	}
 
-	@Override
+
 	public String requiresMainImplementation() {
+		return null;
+	}
+
+	public List<String> getLibraryJars() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public List<String> getMainJars() {
+		// TODO Auto-generated method stub
 		return null;
 	} 
 
