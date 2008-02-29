@@ -3,6 +3,8 @@ package com.dexels.navajo.tipi.swingclient.components;
 import java.awt.*;
 
 import javax.imageio.*;
+import javax.imageio.plugins.jpeg.*;
+import javax.imageio.stream.*;
 import javax.swing.*;
 
 import com.dexels.navajo.tipi.swingclient.components.validation.*;
@@ -11,6 +13,7 @@ import java.util.*;
 import com.dexels.navajo.document.*;
 
 import java.awt.event.*;
+import java.awt.image.*;
 import java.beans.*;
 
 import com.dexels.navajo.document.databinding.*;
@@ -576,7 +579,7 @@ public class GenericPropertyComponent
 	      try {
 	        type = p.getEvaluatedType();
 	        evaluatedValue = p.getTypedValue();
-	        System.err.println("Found evaluated type: " + type+ " vAL: "+evaluatedValue );
+//	        System.err.println("Found evaluated type: " + type+ " vAL: "+evaluatedValue );
 	      }
 	      catch (NavajoException ex) {
 	        ex.printStackTrace();
@@ -855,14 +858,15 @@ private final void createBinaryComponent(final Property p) {
     String mime = b.guessContentType();
     if (mime.indexOf("image") != -1) {
         InputStream inp = b.getDataAsStream(); 
-        Image mm;
+        BufferedImage mm;
         try {
             mm = ImageIO.read(inp);
-            ImageIcon img = new ImageIcon(mm);
+            //ImageIcon img = new ImageIcon(mm);
+            System.err.println("WIDTH: "+max_img_width+" height: "+max_img_height);
             myBinaryLabel = new BaseLabel();
             ( (BaseLabel) myBinaryLabel).setHorizontalAlignment(JLabel.CENTER); 
             ( (BaseLabel) myBinaryLabel).setVerticalAlignment(JLabel.CENTER); 
-            ( (BaseLabel) myBinaryLabel).setIcon(getScaled(img,max_img_width,max_img_height)); 
+            ( (BaseLabel) myBinaryLabel).setIcon(getScaled(mm,max_img_width,max_img_height)); 
 //            ( (BaseLabel) myBinaryLabel).setIcon(img);
             addPropertyComponent(myBinaryLabel);
        } catch (IOException e) {
@@ -911,30 +915,59 @@ private final void createBinaryComponent(final Property p) {
 //    addPropertyComponent(myBinaryLabel);
 //  }
 
-  private final ImageIcon getScaled(ImageIcon icon, int maxWidth, int maxHeight) {
+	public static ImageIcon scale(ImageInputStream infile, ImageOutputStream outfile, int width, int height, boolean keepAspect, float quality)
+			throws IOException {
+
+		BufferedImage original = ImageIO.read(infile);
+		if (original == null) {
+			throw new IOException("Unsupported file format!");
+		}
+
+			BufferedImage scaled = scale(width, height, keepAspect, original);
+			return new ImageIcon(scaled);
+
+	}
+
+public static BufferedImage scale(int width, int height, boolean keepAspect, BufferedImage original) {
+	int originalWidth = original.getWidth();
+	int originalHeight = original.getHeight();
+	System.err.println("ORIGW: "+originalWidth+" origw: "+originalHeight);
+	if (width > originalWidth) {
+		width = originalWidth;
+	}
+	if (height > originalHeight) {
+		height = originalHeight;
+	}
+	
+	
+	float factorX = (float)originalWidth / width;
+	float factorY = (float)originalHeight / height;
+	if(keepAspect) {
+		factorX = Math.max(factorX, factorY);
+		factorY = factorX;
+	}
+	
+	// The scaling will be nice smooth with this filter
+	AreaAveragingScaleFilter scaleFilter =
+		new AreaAveragingScaleFilter(Math.round(originalWidth / factorX),
+				Math.round(originalHeight / factorY));
+	ImageProducer producer = new FilteredImageSource(original.getSource(),
+			scaleFilter);
+	ImageGenerator generator = new ImageGenerator();
+	producer.startProduction(generator);
+	BufferedImage scaled = generator.getImage();
+	return scaled;
+}
+
+
+  private final ImageIcon getScaled(BufferedImage icon, int maxWidth, int maxHeight) {
+	 BufferedImage bi = scale(maxWidth, maxHeight, false, icon);
     if (icon == null) {
       return null;
     }
-
+    return new ImageIcon(bi);
     
-    int new_width = 0;
-    int new_height = 0;
-    if (icon.getIconHeight() == icon.getIconWidth()) {
-      new_width = max_img_width;
-      new_height = max_img_height;
-    }
-    if (icon.getIconWidth() > icon.getIconHeight()) {
-      new_width = max_img_width;
-      double factor = (new_width + 0.0) / icon.getIconWidth();
-      new_height = (int) (icon.getIconHeight() * factor);
-    }
-    if (icon.getIconHeight() > icon.getIconWidth()) {
-      new_height = max_img_height;
-      double factor = (new_height + 0.0) / icon.getIconHeight();
-      new_width = (int) (icon.getIconWidth() * factor);
-    }
-    Image scaled_img = icon.getImage().getScaledInstance(new_width, new_height, Image.SCALE_SMOOTH);
-    return new ImageIcon(scaled_img);
+   
   }
 
   public void setComponentBackground(Color c) {
