@@ -399,5 +399,9 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 		TipiMailConnector ttt = new TipiMailConnector();
 		ttt.testMessage();
 	}
-
+	public Set<String> getEntryPoints() {
+		Set<String> s = new HashSet<String>();
+		s.add("InitMail");
+		return s;
+	}
 }
