@@ -1,4 +1,4 @@
-package com.dexels.navajo.tipi.xmmp;
+package com.dexels.navajo.tipi.jabber;
 
 import java.io.*;
 import java.util.*;
@@ -12,11 +12,10 @@ import org.jivesoftware.smack.packet.Message.*;
 //import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.core.*;
 import com.dexels.navajo.tipi.connectors.*;
 import com.dexels.navajo.tipi.internal.*;
 
-public abstract class TipiChatComponent extends TipiBaseConnector implements TipiConnector {
+public class TipiJabberConnector extends TipiBaseConnector implements TipiConnector {
 
 	protected String server = "iris.dexels.nl";
 	protected int port = 5222;
@@ -29,11 +28,15 @@ public abstract class TipiChatComponent extends TipiBaseConnector implements Tip
 	protected XMPPConnection connection;
 	private String currentUser;
 
-	public abstract void appendMessage(String msg);
+//	public abstract void appendMessage(String msg);
 
 	private final Map<String,String> userMap = new HashMap<String,String>();
 	
-
+	
+	
+	public TipiJabberConnector() {
+		
+	}
 
 	public void initialize() throws XMPPException {
 		if (connection != null) {
@@ -96,8 +99,6 @@ public abstract class TipiChatComponent extends TipiBaseConnector implements Tip
 						System.err.println("Loading navajo: " + type);
 						n.write(System.err);
 						myContext.loadNavajo(n, type);
-					} catch (TipiException e) {
-						e.printStackTrace();
 					} catch (TipiBreakException e) {
 						e.printStackTrace();
 					} catch (NavajoException e) {
@@ -153,8 +154,6 @@ public abstract class TipiChatComponent extends TipiBaseConnector implements Tip
 			getContext().loadNavajo(n, "JabberRoster");
 		} catch (NavajoException e1) {
 			e1.printStackTrace();
-		} catch (TipiException e) {
-			e.printStackTrace();
 		} catch (TipiBreakException e) {
 			e.printStackTrace();
 		}
@@ -316,7 +315,6 @@ public abstract class TipiChatComponent extends TipiBaseConnector implements Tip
 		try {
 			sendMessage("Shake it!", destination);
 		} catch (XMPPException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		try {
@@ -340,6 +338,13 @@ public abstract class TipiChatComponent extends TipiBaseConnector implements Tip
 
 	public String getConnectorId() {
 		return "jabber";
+	}
+
+	public Set<String> getEntryPoints() {
+		Set<String> s = new HashSet<String>();
+		s.add("*");
+		s.add("PostRoster");
+		return s;
 	}
 
 }

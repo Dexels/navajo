@@ -9,7 +9,7 @@ public class TipiJabberExtension implements TipiExtension {
 	}
 
 	public String[] getIncludes() {
-		return new String[]{"com/dexels/navajo/tipi/xmmp/xmmpclassdef.xml"};
+		return new String[]{"com/dexels/navajo/tipi/jabber/jabberclassdef.xml"};
 	}
 
 	public boolean isMainImplementation() {

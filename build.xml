@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- $Id$ -->
-<project name="TipiXmpp" default="archive" basedir=".">
+<project name="TipiJabber" default="archive" basedir=".">
 	<property name="src" location="src" />
 	<property name="build" location="bin" />
 	<property name="lib" value="lib" />
-	<property name="archive" value="tipixmmp.jar" />
+	<property name="archive" value="TipiJabber.jar" />
 	<target name="check-env">
 		<tstamp />
 		<fail unless="PROJECTHOME"> Set the PROJECTHOME environment variable to the top directory of your CVS projects, for example: export PROJECTHOME=C:\PROJECTS declare -x PROJECTHOME=/home/arjen/las-projectas </fail>
