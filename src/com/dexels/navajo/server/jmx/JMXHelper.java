@@ -15,11 +15,14 @@ import javax.management.MBeanServer;
 import javax.management.MBeanServerConnection;
 import javax.management.MalformedObjectNameException;
 import javax.management.NotCompliantMBeanException;
+import javax.management.NotificationListener;
 import javax.management.ObjectName;
+import javax.management.monitor.GaugeMonitor;
 import javax.management.remote.JMXConnector;
 import javax.management.remote.rmi.RMIConnector;
 import javax.management.remote.rmi.RMIServer;
 
+import com.dexels.navajo.events.NavajoEventRegistry;
 import com.dexels.navajo.server.NavajoConfig;
 
 public final class JMXHelper  {
@@ -30,12 +33,14 @@ public final class JMXHelper  {
 	private int port = 9999;
 	
 	private static String applicationPrefix = null;
-	public static final String SCRIPT_DOMAIN = "navajo.script:type=";
-	public static final String ADAPTER_DOMAIN = "navajo.adapter:type=";
+	//public static final String SCRIPT_DOMAIN = "navajo.script:type=";
+	//public static final String ADAPTER_DOMAIN = "navajo.adapter:type=";
 	public static final String NAVAJO_DOMAIN = "navajo.service:type=";
-	public static final String ASYNC_DOMAIN = "navajo.async:type=";
-	public static final String TASK_DOMAIN = "navajo.task:type=";
-	public static final String QUEUED_ADAPTER_DOMAIN = "navajo.queuedadapter:type=";
+	//public static final String ASYNC_DOMAIN = "navajo.async:type=";
+	//public static final String TASK_DOMAIN = "navajo.task:type=";
+	//public static final String EVENT_DOMAIN = "navajo.event:type=";
+	public static final String MONITOR_DOMAIN = "navajo.monitor:type=";
+	//public static final String QUEUED_ADAPTER_DOMAIN = "navajo.queuedadapter:type=";
 	
 	private RMIServer getRMIServer(String hostName, int port) throws IOException {
 
@@ -122,7 +127,7 @@ public final class JMXHelper  {
 
 	public final static ObjectName getObjectName(String domain, String type) {
 		if ( applicationPrefix == null ) {
-			synchronized ( SCRIPT_DOMAIN ) {
+			synchronized ( NAVAJO_DOMAIN ) {
 				applicationPrefix = NavajoConfig.getInstance().getInstanceName();
 				if ( applicationPrefix  == null ) {
 					applicationPrefix = "unnamedapplication";
@@ -168,6 +173,34 @@ public final class JMXHelper  {
 		ObjectName name = getObjectName(domain, type);
 		if ( name != null ) {
 			mbs.unregisterMBean(name);
+		}
+	}
+	
+	public final static void addGaugeMonitor(NotificationListener listener, String domain, String type, String attributeName, Number low, Number high, long frequency) {
+		// construct monitor
+		
+        final GaugeMonitor monitor = new GaugeMonitor();
+
+        monitor.addObservedObject( getObjectName(domain, type) );
+        monitor.setObservedAttribute(attributeName);
+        monitor.setNotifyHigh(true);
+        if ( low != null ) {
+        	monitor.setNotifyLow (true);
+        	monitor.setThresholds(high, low); 
+        } else {
+        	monitor.setNotifyLow(false);
+        	monitor.setThresholds(high, new Integer(0)); 
+        }
+       
+        monitor.setGranularityPeriod(frequency);
+
+        MBeanServer mbs = ManagementFactory.getPlatformMBeanServer(); 
+        try {
+			mbs.registerMBean(monitor, getObjectName( MONITOR_DOMAIN, "GaugeMonitor-" + monitor.hashCode()));
+			monitor.addNotificationListener( listener, null, null);
+			monitor.start();
+		} catch (Exception e) {
+			e.printStackTrace(System.err);
 		}
 	}
 	
