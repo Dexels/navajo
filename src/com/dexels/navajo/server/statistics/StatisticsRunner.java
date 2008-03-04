@@ -14,6 +14,8 @@ import java.util.Map;
 
 import javax.management.AttributeChangeNotification;
 import javax.management.Notification;
+import javax.management.NotificationListener;
+import javax.management.monitor.MonitorNotification;
 
 /**
  * <p>Title: Navajo Product Project</p>
@@ -40,7 +42,7 @@ import javax.management.Notification;
  * ====================================================================
  */
 
-public final class StatisticsRunner extends GenericThread implements StatisticsRunnerMXBean, StatisticsRunnerInterface {
+public final class StatisticsRunner extends GenericThread implements StatisticsRunnerMXBean, StatisticsRunnerInterface, NotificationListener {
 
   public int todoCount;
   public String storeClass;
@@ -78,9 +80,6 @@ public final class StatisticsRunner extends GenericThread implements StatisticsR
 	  if ( storeClass == null ) {
 		  throw new Exception("No store class specified");
 	  }
-//	  if ( storeClass == null ) {
-//		  storeClass = "com.dexels.navajo.adapter.navajostore.HSQLStore";
-//	  }
 	  
 	  if ( instance != null ) {
 		  return instance;
@@ -92,6 +91,8 @@ public final class StatisticsRunner extends GenericThread implements StatisticsR
 			  instance = new StatisticsRunner();
 			  instance.enabled = true;
 			  JMXHelper.registerMXBean(instance, JMXHelper.NAVAJO_DOMAIN, id);
+			  JMXHelper.addGaugeMonitor(instance, JMXHelper.NAVAJO_DOMAIN, id, "TodoCount", new Integer(0), new Integer(30), 10000L);
+			  
 			  Class si = null;
 
 			  si = Class.forName(storeClass);
@@ -209,6 +210,24 @@ public final class StatisticsRunner extends GenericThread implements StatisticsR
   
   public boolean isEnabled() {
 	  return enabled;
+  }
+
+  public void handleNotification(Notification notification, Object handback) {
+
+	  if (notification instanceof MonitorNotification) { 
+
+		  MonitorNotification mn = (MonitorNotification) notification;
+
+		  if ( mn.getObservedObject().equals( JMXHelper.getObjectName(JMXHelper.NAVAJO_DOMAIN, id))) {
+			  if ( mn.getType().equals("jmx.monitor.gauge.low") ) {
+				  StatisticsRunner.getInstance().setEnabled(true);
+			  }
+			  if ( mn.getType().equals("jmx.monitor.gauge.high") ) {
+				  StatisticsRunner.getInstance().setEnabled(false);
+			  }
+		  }
+	  }
+
   }
 
 }
