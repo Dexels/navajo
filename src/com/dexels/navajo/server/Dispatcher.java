@@ -140,6 +140,9 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
 		  navajoConfig = new NavajoConfig(fileInputStreamReader, cl); 
 		  navajoConfig.loadConfig(is,rootPath);
 		  JMXHelper.registerMXBean(this, JMXHelper.NAVAJO_DOMAIN, "Dispatcher");
+		  // Monitor AccessSetSize
+		  // JMXHelper.addGaugeMonitor( NavajoEventRegistry.getInstance(), JMXHelper.NAVAJO_DOMAIN, "Dispatcher", "AccessSetSize", null, new Integer(50), 10000L);
+		  
 		  setServerIdentifier(serverIdentification);
 		  NavajoFactory.getInstance().setTempDir(getTempDir());
 		  
