@@ -7,9 +7,11 @@ import java.awt.Composite;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GraphicsConfiguration;
 import java.awt.RadialGradientPaint;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.Transparency;
 import java.awt.geom.Point2D;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
@@ -42,24 +44,28 @@ public class LushContainer extends JPanel{
 	
 	public void paint(Graphics g){
 		Graphics2D graf = (Graphics2D)g;
-		Graphics2D g2 = (Graphics2D)graf.create();
-		
 		Rectangle bounds = getBounds();
 
+		
 		int blocksize = 20;
 		
-		
-		BufferedImage buffer = new BufferedImage(bounds.width, bounds.height, BufferedImage.TYPE_INT_ARGB);
+    GraphicsConfiguration	gc = graf.getDeviceConfiguration();		
+		BufferedImage buffer = gc.createCompatibleImage(bounds.width, bounds.height, Transparency.TRANSLUCENT);
 		Graphics2D bg = buffer.createGraphics();
+		bg.setComposite(AlphaComposite.Clear);
+		bg.fillRect(0, 0, bounds.width, bounds.height);
+		
+		bg.setComposite(AlphaComposite.Src.derive(opacity));
 		bg.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		
-		BufferedImage gradient = new BufferedImage(bounds.width, bounds.height, BufferedImage.TYPE_INT_ARGB);
-		Graphics2D gg = gradient.createGraphics();				
+		bg.setColor(getBackground());
+	
 		RoundRectangle2D clip = new RoundRectangle2D.Double(0,0, bounds.width, bounds.height, arc, arc);
-		gg.setClip(clip);
+		bg.fill(clip);
 		
+		BufferedImage gradient = gc.createCompatibleImage(bounds.width, bounds.height, Transparency.TRANSLUCENT);
+		Graphics2D gg = gradient.createGraphics();				
 		
-		bg.setComposite(AlphaComposite.SrcOver.derive(opacity));
+		bg.setComposite(AlphaComposite.SrcAtop);
 		bg.setColor(getBackground());
 		bg.fillRoundRect(0, 1, bounds.width-1, bounds.height-2, arc, arc);
 		bg.setColor(borderColor);
@@ -72,13 +78,13 @@ public class LushContainer extends JPanel{
 		gg.fillRect(blocksize, 0, bounds.width-2*blocksize, bounds.height-1);
 		
 		
-		BufferedImage cornerGradient = new BufferedImage(blocksize, 2*blocksize, BufferedImage.TYPE_INT_ARGB);
+		BufferedImage cornerGradient = gc.createCompatibleImage(blocksize, 2*blocksize, Transparency.TRANSLUCENT); 
 		Graphics2D cg = cornerGradient.createGraphics();		
 		RadialGradientPaint rgp = new RadialGradientPaint(new Point2D.Double(0.0, 2*blocksize), 2*blocksize, new float[]{0.5f, 1.0f}, new Color[]{new Color(1.0f,1.0f,1.0f,0.0f), new Color(1.0f,1.0f,1.0f,0.5f)} );
 		cg.setPaint(rgp);
 		cg.fillRect(0, 0, 2*blocksize, 2*blocksize);
 		
-		BufferedImage cornerGradientLeft = new BufferedImage(blocksize, 2*blocksize, BufferedImage.TYPE_INT_ARGB);
+		BufferedImage cornerGradientLeft = gc.createCompatibleImage(blocksize, 2*blocksize, Transparency.TRANSLUCENT);
 		Graphics2D cgl = cornerGradientLeft.createGraphics();		
 		RadialGradientPaint rgpl = new RadialGradientPaint(new Point2D.Double(blocksize, 2*blocksize), 2*blocksize, new float[]{0.5f, 1.0f}, new Color[]{new Color(1.0f,1.0f,1.0f,0.0f), new Color(1.0f,1.0f,1.0f,0.5f)} );
 		cgl.setPaint(rgpl);
@@ -110,14 +116,14 @@ public class LushContainer extends JPanel{
 //		gg.drawImage(cornerGradientLB, 0, bounds.height-2*blocksize, blocksize, 2*blocksize, null);
 //		
 		
+		
+		bg.setComposite(AlphaComposite.SrcAtop.derive(1.0f));
+		bg.drawImage(gradient, 0, 0, bounds.width-1, bounds.height, null);
 		bg.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
 		
+		graf.drawImage(buffer, 0, 0, bounds.width, bounds.height, null);	
 		
-		g2.drawImage(buffer, 0, 0, bounds.width, bounds.height, null);	
-		g2.drawImage(gradient, 0, 0, bounds.width-1, bounds.height, null);
-		bg.dispose();
-		g2.dispose();
-		
+		bg.dispose();		
 		// Now draw the children and other stuff
 		paintChildren(g);
 		paintBorder(g);
