@@ -1,14 +1,24 @@
 package com.dexels.navajo.events.types;
 
-import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.events.NavajoEvent;
+import com.dexels.navajo.server.Access;
 
 public class NavajoResponseEvent implements NavajoEvent {
 
-	private Navajo navajo;
+	private Access myAccess;
+	private Exception myException;
 	
-	public Navajo getNavajo() {
-		return navajo;
+	public NavajoResponseEvent(Access a, Exception e) {
+		this.myAccess = a;
+		this.myException = e;
+	}
+	
+ 	public Access getAccess() {
+		return myAccess;
+	}
+
+	public Exception getException() {
+		return myException;
 	}
 	
 }

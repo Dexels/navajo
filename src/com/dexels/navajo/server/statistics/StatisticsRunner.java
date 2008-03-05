@@ -1,7 +1,12 @@
 package com.dexels.navajo.server.statistics;
 
+import com.dexels.navajo.events.NavajoEvent;
+import com.dexels.navajo.events.NavajoEventRegistry;
+import com.dexels.navajo.events.types.NavajoRequestEvent;
+import com.dexels.navajo.events.types.NavajoResponseEvent;
 import com.dexels.navajo.mapping.AsyncMappable;
 import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.GenericThread;
 import com.dexels.navajo.server.enterprise.statistics.StatisticsRunnerInterface;
 import com.dexels.navajo.server.enterprise.statistics.StoreInterface;
@@ -103,6 +108,10 @@ public final class StatisticsRunner extends GenericThread implements StatisticsR
 
 			  instance.setSleepTime(100);
 			  instance.startThread(instance);
+			  
+			  NavajoEventRegistry.getInstance().addListener(NavajoRequestEvent.class, instance);
+			  NavajoEventRegistry.getInstance().addListener(NavajoResponseEvent.class, instance);
+			  
 			  System.err.println("Started StatisticsRunner version $Id$ using store: " + instance.myStore.getClass().getName());
 		  }
 	  }
@@ -212,6 +221,10 @@ public final class StatisticsRunner extends GenericThread implements StatisticsR
 	  return enabled;
   }
 
+  /**
+   * Handle JMX notifications.
+   * If todo size becomes too high, switch off statistics.
+   */
   public void handleNotification(Notification notification, Object handback) {
 
 	  if (notification instanceof MonitorNotification) { 
@@ -220,9 +233,11 @@ public final class StatisticsRunner extends GenericThread implements StatisticsR
 
 		  if ( mn.getObservedObject().equals( JMXHelper.getObjectName(JMXHelper.NAVAJO_DOMAIN, id))) {
 			  if ( mn.getType().equals("jmx.monitor.gauge.low") ) {
+				  AuditLog.log(AuditLog.AUDIT_MESSAGE_STAT_RUNNER, "Switching ON Statistics Runner, todo size low again...");
 				  StatisticsRunner.getInstance().setEnabled(true);
 			  }
 			  if ( mn.getType().equals("jmx.monitor.gauge.high") ) {
+				  AuditLog.log(AuditLog.AUDIT_MESSAGE_STAT_RUNNER, "Switching OFF Statistics Runner, todo size too high");
 				  StatisticsRunner.getInstance().setEnabled(false);
 			  }
 		  }
@@ -230,4 +245,18 @@ public final class StatisticsRunner extends GenericThread implements StatisticsR
 
   }
 
+  /**
+   * Handle Navajo Events: request and response.
+   */
+  public void onNavajoEvent(NavajoEvent ne) {
+
+	  if ( ne instanceof NavajoResponseEvent ) {
+		  NavajoResponseEvent nre = (NavajoResponseEvent) ne;
+		  if (  isEnabled() && !Dispatcher.isSpecialwebservice( nre.getAccess().getRpcName() )) {
+			  addAccess(nre.getAccess(), nre.getException(), null);
+		  }
+	  } else if ( ne instanceof NavajoRequestEvent ) {
+		  NavajoRequestEvent nre = (NavajoRequestEvent) ne;
+	  }
+  }
 }

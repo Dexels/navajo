@@ -22,7 +22,6 @@ import com.dexels.navajo.tribe.SharedStoreException;
 import com.dexels.navajo.tribe.SharedStoreFactory;
 import com.dexels.navajo.tribe.SharedStoreInterface;
 import com.dexels.navajo.tribe.SharedStoreLock;
-import com.dexels.navajo.tribe.TribeManager;
 import com.dexels.navajo.util.AuditLog;
 
 public final class WorkFlowManager extends GenericThread implements WorkFlowManagerMXBean, NavajoListener {
@@ -470,6 +469,26 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 		if ( ne instanceof TribeMemberDownEvent ) {
 			instance.takeOverPersistedWorkFlows( ((TribeMemberDownEvent) ne).getTm().getMemberName() );
 		} 
+	}
+
+	/**
+	 * Clear all workflow instances.
+	 */
+	public void clearAllInstances() {
+		WorkFlow [] wflows = getWorkflows();
+		for ( int i = 0; i < wflows.length; i++ ) {
+			getInstance().removeWorkFlow(wflows[i]);
+		}
+	}
+
+	/**
+	 * Clear all workflow instances of a specific definition.
+	 */
+	public void clearInstances(String definition) {
+		WorkFlow [] wflows = getWorkflows(definition);
+		for ( int i = 0; i < wflows.length; i++ ) {
+			getInstance().removeWorkFlow(wflows[i]);
+		}
 	}
 	
 

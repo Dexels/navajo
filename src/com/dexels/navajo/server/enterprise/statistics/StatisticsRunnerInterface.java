@@ -1,9 +1,10 @@
 package com.dexels.navajo.server.enterprise.statistics;
 
+import com.dexels.navajo.events.NavajoListener;
 import com.dexels.navajo.mapping.AsyncMappable;
 import com.dexels.navajo.server.Access;
 
-public interface StatisticsRunnerInterface {
+public interface StatisticsRunnerInterface extends NavajoListener {
 
 	public void setEnabled(boolean b);
 	public boolean isEnabled();

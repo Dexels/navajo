@@ -17,6 +17,10 @@ public class NavajoRequestEvent implements NavajoEvent {
 
 	private Navajo navajo;
 
+	public NavajoRequestEvent(Navajo n) {
+		this.navajo = n;
+	}
+	
 	public Navajo getNavajo() {
 		return navajo;
 	}

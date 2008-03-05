@@ -42,6 +42,7 @@ import com.dexels.navajo.server.enterprise.integrity.WorkerInterface;
 import com.dexels.navajo.broadcast.BroadcastMessage;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.events.NavajoEventRegistry;
+import com.dexels.navajo.events.types.NavajoResponseEvent;
 import com.dexels.navajo.events.types.ServerTooBusyEvent;
 import com.dexels.navajo.server.jmx.JMXHelper;
 import com.dexels.navajo.server.jmx.SNMPManager;
@@ -85,9 +86,7 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
   private static boolean servicesBeingStarted = false;
   private static boolean servicesStarted = false;
   
-  //private Navajo inMessage = null;
   protected  boolean matchCN = false;
-//  public  Set accessSet = Collections.synchronizedSet(new HashSet());
   public final Set<Access> accessSet = new HashSet<Access>();
 
   public  boolean useAuthorisation = true;
@@ -99,8 +98,6 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
   public  long requestCount = 0;
   private final NavajoConfig navajoConfig;
  
-  private  boolean debugOn = false;
-
   private  String keyStore;
   private  String keyPassword;
 
@@ -140,6 +137,7 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
 		  navajoConfig = new NavajoConfig(fileInputStreamReader, cl); 
 		  navajoConfig.loadConfig(is,rootPath);
 		  JMXHelper.registerMXBean(this, JMXHelper.NAVAJO_DOMAIN, "Dispatcher");
+		  
 		  // Monitor AccessSetSize
 		  // JMXHelper.addGaugeMonitor( NavajoEventRegistry.getInstance(), JMXHelper.NAVAJO_DOMAIN, "Dispatcher", "AccessSetSize", null, new Integer(50), 10000L);
 		  
@@ -199,6 +197,7 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
 	  synchronized (semaphore) {
 		  if (instance == null) {
 			  instance = new Dispatcher(configurationUrl, fileInputStreamReader, null, serverIdentification);
+			  instance.init();
 		  }
 	  }
 	  return instance;
@@ -212,7 +211,7 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
 		if(!rootPath.endsWith("/")) {
 			rootPath = rootPath+"/";
 		}
-//		this.rootPath = rootPath;
+
 		URL configurationUrl;
 		if(serverXmlPath==null) {
 			System.err.println("Old skool configuration detected.");
@@ -229,7 +228,6 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
 			try {
 				File f = new File(rootPath);
 				URL rootUrl = f.toURI().toURL();
-//				URL rootUrl = new URL(rootPath);
 				configurationUrl = new URL(rootUrl, serverXmlPath);
 			} catch (MalformedURLException e) {
 				throw NavajoFactory.getInstance().createNavajoException(e);
@@ -240,13 +238,29 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
 		synchronized (semaphore) {
 			if (instance == null) {
 				instance = new Dispatcher(configurationUrl, fileInputStreamReader,rootPath,null,serverIdentification);
+				instance.init();
 			}
 		}
 		
 		return instance;
 	}
    
-  public Access [] getUsers() {
+  private final void init() {
+	  
+	  // Init tribe, if initializing it returns null, should not matter, let it do its thing.
+	  if ( !servicesBeingStarted && !servicesStarted ) {
+		  servicesBeingStarted = true;
+		  if (TribeManagerFactory.getInstance() != null) {
+			  // After tribe exists, start other service (there are dependencies on existence of tribe!).
+			  Dispatcher.getInstance().startUpServices();
+		  }
+		  servicesStarted = true;
+		  servicesBeingStarted = false;
+	  }
+
+  }
+
+public Access [] getUsers() {
 	  Set<Access> all = new HashSet<Access>(com.dexels.navajo.server.Dispatcher.getInstance().accessSet);
 	  Iterator<Access> iter = all.iterator();
 	  ArrayList<Access> d = new ArrayList<Access>();
@@ -868,6 +882,29 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
 	  return  ( accessSet.size() > navajoConfig.maxAccessSetSize );
 	  //return ( !TribeManager.getInstance().getIsChief() );
   }
+
+  private void setRequestRate(ClientInfo clientInfo, int accessSetSize) {
+	  if ( accessSetSize > peakAccessSetSize ) {
+		  peakAccessSetSize = accessSetSize;
+	  }
+
+	  requestCount++;
+
+	  for (int i = 0; i < rateWindowSize - 1; i++) {
+		  try{
+			  rateWindow[i] = rateWindow[i + 1];
+		  }catch(ArrayIndexOutOfBoundsException e){
+			  rateWindow = new long[rateWindowSize];
+		  }
+	  }
+
+	  if ( clientInfo != null ) {
+		  rateWindow[rateWindowSize - 1] = clientInfo.created.getTime();
+	  } else {
+		  rateWindow[rateWindowSize - 1] = System.currentTimeMillis();
+	  }
+
+  }
   
   /**
    * Handle a webservice.
@@ -887,65 +924,34 @@ public final Navajo handle(Navajo inMessage, Object userCertificate, ClientInfo 
     String rpcName = "";
     String rpcUser = "";
     String rpcPassword = "";
-    //String requestId = "";
+   
     Exception myException = null;
     String origThreadName = null;
     boolean scheduledWebservice = false;
-   
+    
     int accessSetSize = accessSet.size();
+    setRequestRate(clientInfo, accessSetSize);
     
-    // Init tribe, if initializing it returns null, should not matter, let it do its thing.
-   
-    if ( !servicesBeingStarted && !servicesStarted ) {
-    	servicesBeingStarted = true;
-    	if (TribeManagerFactory.getInstance() != null) {
-    		// After tribe exists, start other service (there are dependencies on existence of tribe!).
-    		Dispatcher.getInstance().startUpServices();
-    	}
-    	servicesStarted = true;
-    	servicesBeingStarted = false;
-    }
-    
+    // Check whether server is too busy...
     if ( isBusy() && !inMessage.getHeader().hasCallBackPointers() ) {
     	try {
-			Navajo result = TribeManagerFactory.getInstance().forward(inMessage);
-			return result;
-		} catch (Exception e) {
-			// Server too busy!
-			NavajoEventRegistry.getInstance().publishEvent(new ServerTooBusyEvent());
-			e.printStackTrace(System.err);
-	    	System.err.println(">> SERVER TOO BUSY!!!!!");
-	    	throw new FatalException("500.13");
-		}
-    } 
-     
-    if ( accessSetSize > peakAccessSetSize ) {
-    	peakAccessSetSize = accessSetSize;
+    		Navajo result = TribeManagerFactory.getInstance().forward(inMessage);
+    		return result;
+    	} catch (Exception e) {
+    		// Server too busy!
+    		NavajoEventRegistry.getInstance().publishEvent(new ServerTooBusyEvent());
+    		e.printStackTrace(System.err);
+    		System.err.println(">> SERVER TOO BUSY!!!!!");
+    		throw new FatalException("500.13");
+    	}
     }
     
-    try {
-
-      requestCount++;
-
-      for (int i = 0; i < rateWindowSize - 1; i++) {
-        try{
-          rateWindow[i] = rateWindow[i + 1];
-        }catch(ArrayIndexOutOfBoundsException e){
-          rateWindow = new long[rateWindowSize];
-        }
-      }
-      
-      if ( clientInfo != null ) {
-    	  rateWindow[rateWindowSize - 1] = clientInfo.created.getTime();
-      } else {
-    	  rateWindow[rateWindowSize - 1] = System.currentTimeMillis();
-      }
-
       Header header = inMessage.getHeader();
       rpcName = header.getRPCName();
       rpcUser = header.getRPCUser();
       rpcPassword = header.getRPCPassword();
       
+      try {
       /**
        * Phase II: Authorisation/Authentication of the user. Is the user known and valid and may it use the
        * specified service?
@@ -956,17 +962,19 @@ public final Navajo handle(Navajo inMessage, Object userCertificate, ClientInfo 
 
       if ( useAuthorisation && !(isSpecialwebservice(rpcName) && rpcUser.equals("NAVAJO") ) ) {
         try {
+        	
           if ( navajoConfig == null ) {
         	  System.err.println("EMPTY NAVAJOCONFIG, INVALID STATE OF DISPATCHER!");
         	  throw new FatalException("EMPTY NAVAJOCONFIG, INVALID STATE OF DISPATCHER!");
           }
+          
           if ( navajoConfig.getRepository() == null ) {
         	  System.err.println("EMPTY REPOSITORY, INVALID STATE OF DISPATCHER!");
         	  throw new FatalException("EMPTY REPOSITORY, INVALID STATE OF DISPATCHER!");
           }
           
-          access = navajoConfig.getRepository().authorizeUser(rpcUser,
-              rpcPassword, rpcName, inMessage, userCertificate);
+          access = navajoConfig.getRepository().authorizeUser(rpcUser, rpcPassword, rpcName, inMessage, userCertificate);
+          
           if (clientInfo != null && access != null) {
             access.ipAddress = clientInfo.getIP();
             access.hostName = clientInfo.getHost();
@@ -996,7 +1004,8 @@ public final Navajo handle(Navajo inMessage, Object userCertificate, ClientInfo 
       } 
       else {
         
-        access = new Access(0, 0, 0, rpcUser, rpcName, "", "", "", null);
+        access = new Access(0, 0, 0, rpcUser, rpcName, "" , clientInfo.getIP(), clientInfo.getHost(), null);
+        
       }
 
       if ( rpcUser.endsWith(navajoConfig.getBetaUser()) ) {
@@ -1106,7 +1115,6 @@ public final Navajo handle(Navajo inMessage, Object userCertificate, ClientInfo 
         			}
         		}
         	}
-//      	updatePropertyDescriptions(inMessage,outMessage);
         }
        
         // Call after web service event...
@@ -1122,57 +1130,52 @@ public final Navajo handle(Navajo inMessage, Object userCertificate, ClientInfo 
       }
     }
     catch (AuthorizationException aee) {
-     outMessage = generateAuthorizationErrorMessage(access, aee, rpcName);
-//      updatePropertyDescriptions(inMessage,outMessage);
-      return outMessage;
+    	outMessage = generateAuthorizationErrorMessage(access, aee, rpcName);
+    	return outMessage;
     }
     catch (UserException ue) {
-      try {
-        outMessage = generateErrorMessage(access, ue.getMessage(), ue.code, 1,
-                                          (ue.t != null ? ue.t : ue));
-        myException = ue;
-//        updatePropertyDescriptions(inMessage,outMessage);
-        return outMessage;
-      }
-      catch (Exception ee) {
-        ee.printStackTrace();
-        myException = ee;
-        return errorHandler(access, ee, inMessage);
-      }
+    	try {
+    		outMessage = generateErrorMessage(access, ue.getMessage(), ue.code, 1,
+    				(ue.t != null ? ue.t : ue));
+    		myException = ue;
+    		return outMessage;
+    	}
+    	catch (Exception ee) {
+    		ee.printStackTrace();
+    		myException = ee;
+    		return errorHandler(access, ee, inMessage);
+    	}
     }
     catch (SystemException se) {
-      se.printStackTrace(System.err);
-      myException = se;
-      //System.err.println("CAUGHT SYSTEMEXCEPTION IN DISPATCHER()!!");
-      try {
-        outMessage = generateErrorMessage(access, se.getMessage(), se.code, 1,
-                                          (se.t != null ? se.t : se));
-//        updatePropertyDescriptions(inMessage,outMessage);
-        return outMessage;
-      }
-      catch (Exception ee) {
-        ee.printStackTrace();
-        return errorHandler(access, ee, inMessage);
-      }
+    	se.printStackTrace(System.err);
+    	myException = se;
+    	try {
+    		outMessage = generateErrorMessage(access, se.getMessage(), se.code, 1,
+    				(se.t != null ? se.t : se));
+    		return outMessage;
+    	}
+    	catch (Exception ee) {
+    		ee.printStackTrace();
+    		return errorHandler(access, ee, inMessage);
+    	}
     }
     catch (Exception e) {
-      e.printStackTrace(System.err);
-      myException = e;
-      return errorHandler(access, e, inMessage);
+    	e.printStackTrace(System.err);
+    	myException = e;
+    	return errorHandler(access, e, inMessage);
     } catch (Throwable e) {
-    	 e.printStackTrace(System.err);
-    	 return errorHandler(access, e, inMessage);
+    	e.printStackTrace(System.err);
+    	return errorHandler(access, e, inMessage);
     }
     finally {
     	
     	if ( access != null && !scheduledWebservice ) {
  
-   		
     		// Remove access object from set of active webservices first.
     		synchronized ( accessSet ) {
     			accessSet.remove(access);
     		}
-    		//System.err.println("AccessSet size: " + accessSet.size());
+    		
     		// Set access to finished state.
     		access.setFinished();
     		Header h = outMessage.getHeader();
@@ -1181,43 +1184,16 @@ public final Navajo handle(Navajo inMessage, Object userCertificate, ClientInfo 
     			outMessage.addHeader(h);
     		}
 
+    		// Translate property descriptions.
     		updatePropertyDescriptions(inMessage,outMessage);
     	    access.storeStatistics(h);
-    		// Store access if navajostore is enabled and if webservice is not in list of special webservices.
-    		if (    getNavajoConfig().getStatisticsRunner() != null &&  
-    				getNavajoConfig().getStatisticsRunner().isEnabled() &&
-    				!isSpecialwebservice(rpcName)) {
-    			// Give asynchronous statistics runner a new access object to persist.
-    			getNavajoConfig().getStatisticsRunner().addAccess(access, myException, null);
-    		}
-
+    		
+    	    // Call Navajoresponse event.
+    	    NavajoEventRegistry.getInstance().publishEvent(new NavajoResponseEvent(access, myException));
+    	    
     		appendServerBroadCast(access, inMessage,h);
     	}
-    	else if (getNavajoConfig().monitorOn) { // Also monitor requests without access objects if monitor is on.
-    		Access dummy = new Access( -1, -1, -1, rpcUser, rpcName, null,
-    				(clientInfo != null ? clientInfo.getIP() :
-    				"Internal request"),
-    				(clientInfo != null ? clientInfo.getHost() :
-    				"via NavajoMap"),
-    				false, userCertificate);
-    		if (    getNavajoConfig().getStatisticsRunner() != null &&
-    				getNavajoConfig().getStatisticsRunner().isEnabled() ) {
-    			// Give asynchronous statistics runner a new access object to persist.
-    			dummy.setInDoc(inMessage);
-    			dummy.parseTime = (clientInfo != null ? clientInfo.getParseTime() :
-    				-1);
-    			dummy.requestEncoding = (clientInfo != null ? clientInfo.getEncoding() :
-    			"");
-    			dummy.compressedReceive = (clientInfo != null ?
-    					clientInfo.isCompressedRecv() : false);
-    			dummy.compressedSend = (clientInfo != null ?
-    					clientInfo.isCompressedSend() : false);
-    			dummy.contentLength = (clientInfo != null ?
-    					clientInfo.getContentLength() : 0);
-    			dummy.threadCount = (clientInfo != null ? accessSet.size() : 0);
-    			getNavajoConfig().getStatisticsRunner().addAccess(dummy, myException, null);
-    		}
-    	}
+    	
     	if ( origThreadName != null ) {
     		Thread.currentThread().setName(origThreadName);
     	}
