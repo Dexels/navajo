@@ -327,9 +327,8 @@ public final class PersistenceManagerImpl implements PersistenceManager {
 				if ( all[i].startsWith(key) ) {
 					pm.sharedPersistenceStore.remove(CACHE_PATH, all[i]);
 				}
-			}
-		} 
-
+			}		
+		}
 	}
 
 	public double getHitratio() {
