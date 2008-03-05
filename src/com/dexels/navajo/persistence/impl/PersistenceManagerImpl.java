@@ -67,7 +67,7 @@ public final class PersistenceManagerImpl implements PersistenceManager {
 	 * Public bean properties
 	 */
 	
-	public String key;
+	public String key = "";
 	public String serviceKeyValues = null;
 	public boolean doClear;
 	public double hitratio;
