@@ -163,11 +163,12 @@ public class MacLink extends JButton {
 
 	public void paintComponent(Graphics g) {
 		if (myIcon != null) {
+			
 			Rectangle bounds = this.getBounds();
 			// System.err.printl
 
 			Image image = myIcon.getImage();
-			Graphics2D g2 = (Graphics2D) g;
+			Graphics2D g2 = (Graphics2D)g.create();
 
 			BufferedImage iconImage = new BufferedImage(bounds.width, bounds.height - reflectionSize, BufferedImage.TYPE_INT_ARGB);
 			Graphics2D icG = iconImage.createGraphics();
@@ -176,7 +177,7 @@ public class MacLink extends JButton {
 
 			BufferedImage reflection = createReflection(iconImage);
 			g2.drawImage(createReflection(iconImage), 0, 0, null);
-
+			g2.dispose();
 		} else {
 			super.paintComponent(g);
 		}

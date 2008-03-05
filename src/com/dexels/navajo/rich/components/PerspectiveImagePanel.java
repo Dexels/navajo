@@ -10,6 +10,7 @@ import java.awt.Graphics2D;
 import java.awt.GridBagLayout;
 import java.awt.Rectangle;
 import java.awt.TextField;
+import java.awt.Transparency;
 import java.awt.color.ColorSpace;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -57,28 +58,29 @@ public class PerspectiveImagePanel extends JPanel {
 		this.c1 = c1;
 		this.c2 = c2;
 			
-		BufferedImage b1 = new BufferedImage(c1.getWidth(), c1.getHeight(), BufferedImage.TYPE_INT_ARGB);
-		BufferedImage b2 = new BufferedImage(c2.getWidth(), c2.getHeight(), BufferedImage.TYPE_INT_ARGB);
+		getGraphicsConfiguration().createCompatibleImage(c1.getWidth(), c1.getHeight());
+		BufferedImage b1 = getGraphicsConfiguration().createCompatibleImage(c1.getWidth(), c1.getHeight(), Transparency.TRANSLUCENT);
+		BufferedImage b2 = getGraphicsConfiguration().createCompatibleImage(c2.getWidth(), c2.getHeight(), Transparency.TRANSLUCENT);
 		Graphics2D b1g = b1.createGraphics();
 		Graphics2D b2g = b2.createGraphics();
 		
-		c1.paint(b1g);
+		Rectangle c1Bounds = c1.getBounds();
+		Rectangle c2Bounds = c2.getBounds();
+
+		Graphics c1g = c1.getGraphics();
+	 
+		c1.print(b1g);
 		b1g.dispose();
+		img1 = b1;
+		setAngle(0);
+		
 		c1.setVisible(false);
 		c2.setVisible(true);
-		c2.paintAll(b2g);
-		b2g.dispose();
-		
-		img1 = b1;
+		c2.print(b2g);
+		b2g.dispose();		
 		img2 = b2;
 		
-//		try{
-//			ImageIO.write(img1, "png", new File("/home/aphilip/Desktop/img1.png"));
-//			ImageIO.write(img2, "png", new File("/home/aphilip/Desktop/img2.png"));
-//		}catch(Exception e){
-//			e.printStackTrace();
-//		}
-//		
+		
 		img = img1;
 	  
 		c1.setVisible(false);
@@ -243,9 +245,7 @@ public class PerspectiveImagePanel extends JPanel {
 			public void stateChanged(ChangeEvent e) {
 				// TODO Auto-generated method stub
 				p.setAngle(slide.getValue());
-				
 			}
-			
 		});
 		frame.getContentPane().add(slide);
 //		JPanel p1 = new JPanel();

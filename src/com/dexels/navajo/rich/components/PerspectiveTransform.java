@@ -69,11 +69,11 @@ public class PerspectiveTransform {
 			new_height = 1;
 		}
 		
-		BufferedImage result = new BufferedImage(width, new_height, BufferedImage.TYPE_INT_ARGB);
+		BufferedImage result = GraphicsUtilities.createCompatibleTranslucentImage(width, new_height);
 		Graphics2D buffer = result.createGraphics();
 		buffer.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		
-		BufferedImage new_width_input = new BufferedImage(width, new_height, BufferedImage.TYPE_INT_ARGB);
+		BufferedImage new_width_input = GraphicsUtilities.createCompatibleTranslucentImage(width, new_height);
 		Graphics2D nwg = new_width_input.createGraphics();		
 		nwg.drawImage(input, 0, 0, width, new_height, null);			
 		nwg.dispose();
@@ -93,7 +93,7 @@ public class PerspectiveTransform {
 				ddw = height/2;
 			}
 			
-			BufferedImage target = new BufferedImage(w, dh, BufferedImage.TYPE_INT_ARGB);
+			BufferedImage target = GraphicsUtilities.createCompatibleTranslucentImage(w, dh);
 			Graphics2D tg = target.createGraphics();
 		  tg.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 		  
@@ -135,7 +135,7 @@ public class PerspectiveTransform {
 		buffer.dispose();
 
 		if(keepcenter){
-			BufferedImage displaced = new BufferedImage(input.getWidth(), input.getHeight(), BufferedImage.TYPE_INT_ARGB); 
+			BufferedImage displaced = GraphicsUtilities.createCompatibleTranslucentImage(input.getWidth(), input.getHeight()); 
 			displaced.createGraphics().drawImage(result, (input.getWidth() - result.getWidth()) / 2, (input.getHeight() - result.getHeight()) / 2, result.getWidth(), result.getHeight(), null);
 			return displaced;
 		}
@@ -162,11 +162,11 @@ public class PerspectiveTransform {
 			new_width = 1;
 		}
 		
-		BufferedImage result = new BufferedImage(new_width, height, BufferedImage.TYPE_INT_ARGB);
+		BufferedImage result = GraphicsUtilities.createCompatibleTranslucentImage(new_width, height);
 		Graphics2D buffer = result.createGraphics();
 		buffer.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		
-		BufferedImage new_width_input = new BufferedImage(new_width, height, BufferedImage.TYPE_INT_ARGB);
+		BufferedImage new_width_input = GraphicsUtilities.createCompatibleTranslucentImage(new_width, height);
 		Graphics2D nwg = new_width_input.createGraphics();		
 		nwg.drawImage(input, 0, 0, new_width, height, null);			
 		nwg.dispose();
@@ -185,7 +185,7 @@ public class PerspectiveTransform {
 				h=1;
 				ddh = height/2;
 			}
-			BufferedImage target = new BufferedImage(dw, h, BufferedImage.TYPE_INT_ARGB);
+			BufferedImage target = GraphicsUtilities.createCompatibleTranslucentImage(dw, h);
 			Graphics2D tg = target.createGraphics();
 		  tg.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);		
 			
@@ -218,7 +218,7 @@ public class PerspectiveTransform {
 		buffer.dispose();
 		
 		if(keepcenter){
-			BufferedImage displaced = new BufferedImage(input.getWidth(), input.getHeight(), BufferedImage.TYPE_INT_ARGB); 
+			BufferedImage displaced = GraphicsUtilities.createCompatibleTranslucentImage(input.getWidth(), input.getHeight()); 
 			displaced.createGraphics().drawImage(result, (input.getWidth() - result.getWidth()) / 2, (input.getHeight() - result.getHeight()) / 2, result.getWidth(), result.getHeight(), null);
 			return displaced;
 		}		

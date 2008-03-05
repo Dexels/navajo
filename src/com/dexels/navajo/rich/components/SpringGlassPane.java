@@ -34,7 +34,6 @@ public class SpringGlassPane extends JComponent {
 	private Rectangle bounds;
 	private Image image;
   private boolean showHint = false;
-  private boolean flipMode = false;
 	private float zoom = 0.0f;
 	private float hintOpacity = 0.0f;
 	public String hint = "";
@@ -44,16 +43,10 @@ public class SpringGlassPane extends JComponent {
 	private int hint_x_offset = 7; // left compensation, for centering
 	private int hint_y_pos = 40; // distance from top of icon.
 		
-	
 	@Override
 	protected void paintComponent(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g.create();
 		
-		if(flipMode){
-			
-			
-			return;
-		}
 		
 		if (image != null && bounds != null) {
 			int width = image.getWidth(this);
@@ -110,6 +103,7 @@ public class SpringGlassPane extends JComponent {
 			g2.drawString(hint, balloon_x + hint_width_inset , bounds.y-hint_y_pos + font.getSize() + 3);
 			
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
+			g2.dispose();
 		}
 	}
 

@@ -15,7 +15,8 @@ import org.jdesktop.animation.timing.interpolation.PropertySetter;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Property;
-import com.dexels.navajo.swingclient.components.MessageTableModel;
+import com.dexels.navajo.tipi.swingclient.components.MessageTableModel;
+
 
 public class RichTable extends JTable {
 	private MessageTableModel myModel = new MessageTableModel();
