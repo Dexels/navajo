@@ -60,7 +60,7 @@ public class WorkFlow implements Mappable, Serializable {
 			// Create empty access object using specified username for initiating task.
 			initiatingAccess = new Access(-1, -1, -1, username, null, null, null, null, false, null);
 		}
-		myId = id;
+		myId = definition + id;
 		this.definition = definition;
 		// Create local Navajo to store parameters.
 		localNavajo = NavajoFactory.getInstance().createNavajo();
