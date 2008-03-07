@@ -4,6 +4,9 @@
     <tipiaction name="setTheme"  class="TipiSetTheme" package="com.dexels.navajo.tipi.swing.substance">
         <param name="value" type="string"/>
     </tipiaction>
+    <tipiaction name="setSkin"  class="TipiSetSkin" package="com.dexels.navajo.tipi.swing.substance">
+        <param name="value" type="string"/>
+    </tipiaction>
     
             
 </tid>
