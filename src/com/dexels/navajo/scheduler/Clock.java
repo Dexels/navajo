@@ -61,7 +61,7 @@ public class Clock extends GenericThread implements ClockMXBean, ClockInterface 
 		// Only the tribe chief may perform a clock operation.
 		if ( TribeManager.getInstance().getIsChief() ) {
 			Calendar c = Calendar.getInstance();
-			synchronized ( semaphore ) {
+			//synchronized ( semaphore ) {
 				//System.err.println("Calling Clock worker()");
 
 				Listener [] all = ListenerStore.getInstance().getListeners(TimeTrigger.class.getName());
@@ -70,15 +70,13 @@ public class Clock extends GenericThread implements ClockMXBean, ClockInterface 
 					//System.err.println("Got TimeTrigger: " + cl.getDescription() );
 					// Set fired status if appropriate.
 					if ( cl.timetick(c) ) {
-						//System.err.println(i + ": >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ACTIVATING!" + cl.getDescription() + ", task:" + cl.getTask().getWebservice() );
 						ListenerStore.getInstance().activate(cl);
 						if ( cl.isSingleEvent() ) { // Remove blue print also, do not wait for lock!
 							ListenerStore.getInstance().removeListener(cl, TimeTrigger.class.getName(), true);
 						}
 					}
 				}
-			}
-
+			//}
 		}
 	}
 
