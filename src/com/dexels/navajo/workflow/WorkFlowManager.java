@@ -4,6 +4,7 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Random;
 
@@ -38,14 +39,14 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 	private static volatile WorkFlowManager instance = null;
 	private static Object semaphore = new Object();
 	private static Object semaphore_instances = new Object();
-	private final ArrayList<WorkFlow> workflowInstances = new ArrayList<WorkFlow>();
+	private final HashSet<String> workflowInstances = new HashSet<String>();
 	private final HashMap<String,WorkFlowDefinition> workflowDefinitions = new HashMap<String,WorkFlowDefinition>();
 	private final static String id = "Navajo WorkFlow Manager";
 	private final static String WORKFLOW_LOG_FILE = "workflow.log";
 	public static final String VERSION = "$Id$";
 	private static SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss:SSS dd-MM-yyyy");
 	
-	private String workflowPath = null;
+	protected String workflowPath = null;
 	private String baseWorkflowPath = null;
 	private String workflowDefinitionPath = null;
 	
@@ -74,18 +75,24 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 			for (int i = 0; i < files.length; i++) {
 
 				try {
-					WorkFlow wf = (WorkFlow) ssi.get(workflowPath, files[i]);
-					
-					if ( !wf.transientWorkFlow ) {
-						if (!hasWorkflowId(wf.getMyId()) && !wf.isKilled()) {
-							addWorkFlow(wf);
-							wf.revive();
+					Object o = ssi.get(workflowPath, files[i]);
+
+					if ( o instanceof WorkFlow ) {
+						WorkFlow wf = (WorkFlow) o;
+						if ( !workflowInstances.contains(wf.getMyId()) && !wf.isFinished() ) {  // Check whether I do not already own this workflow.
+							if ( !wf.transientWorkFlow ) {
+								if ( !wf.isKilled() ) {
+									addWorkFlow(wf);
+									wf.revive();
+								}
+							} else if ( init ) {
+								AuditLog.log(AuditLog.AUDIT_MESSAGE_WORKFLOW, "Removing transient workflow: " + wf.getDefinition() );
+								wf.setKill(true);
+								//ssi.remove(workflowPath, files[i]);
+							}
 						}
-					} else if ( init ) {
-						AuditLog.log(AuditLog.AUDIT_MESSAGE_WORKFLOW, "Removing transient workflow: " + wf.getDefinition() );
-						ssi.remove(workflowPath, files[i]);
 					}
-					
+
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -159,29 +166,40 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 		AuditLog.log(AuditLog.AUDIT_MESSAGE_WORKFLOW, "TakeOverPersistedWorkFlows(" + fromServer + ")");
 		String [] persistedWorkflows = SharedStoreFactory.getInstance().getObjects(baseWorkflowPath + "/" + fromServer);
 		for (int i = 0; i < persistedWorkflows.length; i++) {
-			WorkFlow wf;
+
 			try {
-				wf = (WorkFlow) SharedStoreFactory.getInstance().get(baseWorkflowPath + "/" + fromServer, persistedWorkflows[i]);
-				AuditLog.log(AuditLog.AUDIT_MESSAGE_WORKFLOW, "MOVING WORKFLOW: " + wf.getMyId() + " FROM SERVER " + fromServer);
-				persistWorkFlow(wf);
+				Object o = SharedStoreFactory.getInstance().get(baseWorkflowPath + "/" + fromServer, persistedWorkflows[i]);
+				if ( o instanceof WorkFlow ) {
+					WorkFlow wf = (WorkFlow) o;
+					AuditLog.log(AuditLog.AUDIT_MESSAGE_WORKFLOW, "MOVING WORKFLOW: " + wf.getMyId() + " FROM SERVER " + fromServer);
+					persistWorkFlow(wf);
+				} else { // State dump
+					SharedStoreFactory.getInstance().store(workflowPath, persistedWorkflows[i], o, false, false);
+				}
 				SharedStoreFactory.getInstance().remove(baseWorkflowPath + "/" + fromServer, persistedWorkflows[i]);
 			} catch (SharedStoreException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
+	}
 	
+	protected WorkFlow getWorkFlowFromFile(String id) throws SharedStoreException {
+		return (WorkFlow) SharedStoreFactory.getInstance().get( getInstance().workflowPath, id);
 	}
 	
 	public boolean persistWorkFlow(WorkFlow wf) {
-		
+
 		if ( wf.isKilled() || wf.isFinished() ) {
 			return false;
 		}
-		
+
 		synchronized (semaphore_instances) {
 			try {
-				SharedStoreFactory.getInstance().store(workflowPath, wf.getDefinition() + wf.getMyId(), wf, false, false);
+				if ( !wf.isFinished() ) {
+					System.err.println("PERSISTING workflow: " + wf.getMyId());
+					SharedStoreFactory.getInstance().store(workflowPath, getUniqueWorkFlowId(wf), wf, false, false);
+				}
 				return true;
 			} catch (Exception e) {
 				return false;
@@ -190,22 +208,21 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 	}
 	
 	public void removePersistedWorkFlows(String definition) {
-		synchronized (semaphore_instances) {
+		//synchronized (semaphore_instances) {
 			WorkFlow [] flows = getWorkflows(definition);
 			for (int i = 0; i < flows.length; i++) {
-				removePersistedWorkFlow(flows[i]);
+				removeWorkFlow(flows[i]);
 			}
-		}
+		//}
 	}
 	
-	private void removePersistedWorkFlow(WorkFlow wf) {	
-		SharedStoreFactory.getInstance().remove(workflowPath, wf.getDefinition()+wf.getMyId());
-		//System.err.println(">>>>>>>>>>>>>>> REMOVE PERSISTED WORKFLOW: " + workflowPath + "/" + wf.getDefinition()+wf.getMyId());
+	private String getUniqueWorkFlowId(WorkFlow wf) {
+		return wf.getMyId();
 	}
-	
+		
 	public void addWorkFlow(WorkFlow wf) {
 		synchronized (semaphore_instances) {
-			workflowInstances.add(wf);
+			workflowInstances.add(getUniqueWorkFlowId(wf));
 			WorkFlowDefinition wdf = workflowDefinitions.get(wf.getDefinition());
 			if ( wdf != null ) {
 				wdf.instances++;
@@ -213,10 +230,25 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 		}
 	}
 	
+	
+	/**
+	 * Removes a WorkFlow instance completely.
+	 * All persisted state dumps are also removed.
+	 * 
+	 * @param wf
+	 */
 	public void removeWorkFlow(WorkFlow wf) {
 		synchronized (semaphore_instances) {
-			removePersistedWorkFlow(wf);
-			workflowInstances.remove(wf);
+			System.err.println("wf.currentState = " + wf.currentState.getId());
+			wf.currentState.removePersistedAccess();
+			// Remove historic persisted states...
+			for ( int i = 0; i < wf.historicStates.size(); i++ ) {
+				//System.err.println("Removing historic state: " + wf.historicStates.get(i).getId());
+				wf.historicStates.get(i).removePersistedAccess();
+			}
+			SharedStoreFactory.getInstance().remove(workflowPath, wf.getMyId());
+			System.err.println(">>>>>>>>>>>>>>> REMOVE PERSISTED WORKFLOW: " + workflowPath + "/" + wf.getMyId());
+			workflowInstances.remove(wf.getMyId());
 			WorkFlowDefinition wdf = workflowDefinitions.get(wf.getDefinition());
 			if ( wdf != null ) {
 				wdf.instances--;
@@ -248,9 +280,15 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 		WorkFlowManager mng = WorkFlowManager.getInstance();
 
 		synchronized (semaphore_instances) {
-			ArrayList<WorkFlow> wfList = new ArrayList<WorkFlow>(mng.workflowInstances);
+			ArrayList<String> wfList = new ArrayList<String>(mng.workflowInstances);
 			workflows = new WorkFlow[wfList.size()];
-			workflows = (WorkFlow []) wfList.toArray(workflows);
+			for (int i = 0; i < wfList.size(); i++ ) {
+				try {
+					workflows[i] = getWorkFlowFromFile(wfList.get(i));
+				} catch (SharedStoreException e) {
+					//e.printStackTrace(System.err);
+				}
+			}
 			return workflows.clone();
 		}
 
@@ -268,11 +306,16 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 		ArrayList<WorkFlow> wfList = new ArrayList<WorkFlow>();
 		
 		synchronized (semaphore_instances) {
-			Iterator<WorkFlow> iter = mng.workflowInstances.iterator();
+			Iterator<String> iter = mng.workflowInstances.iterator();
 			while ( iter.hasNext() ) {
-				WorkFlow wf = iter.next();
-				if ( wf.getDefinition().equals(byName) ) {
-					wfList.add(wf);
+				String w = iter.next();
+				WorkFlow wf;
+				try {
+					wf = getWorkFlowFromFile(w);
+					if ( wf.getDefinition().equals(byName) ) {
+						wfList.add(wf);
+					}
+				} catch (SharedStoreException e) {
 				}
 			}
 			workflows = new WorkFlow[wfList.size()];
@@ -330,13 +373,8 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 			return false;
 		}
 		synchronized (semaphore_instances) {
-			for ( int i = 0; i < workflowInstances.size(); i++) {
-				if ( workflowInstances.get(i).getMyId().equals(id)) {
-					return true;
-				}
-			}
+			return workflowInstances.contains(id);
 		}
-		return false;
 	}
 
 	public void setWorkflowId(String workflowId) {
@@ -349,10 +387,16 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 		}
 		WorkFlowManager mng = WorkFlowManager.getInstance();
 		synchronized (semaphore_instances) {
-			ArrayList<WorkFlow> wfList = new ArrayList<WorkFlow>(mng.workflowInstances);
+			ArrayList<String> wfList = new ArrayList<String>(mng.workflowInstances);
 			for (int i = 0; i < wfList.size(); i++ ) {
-				if (wfList.get(i).getMyId().equals(workflowId) ) {
-					return wfList.get(i);
+				WorkFlow wf;
+				try {
+					wf = getWorkFlowFromFile(wfList.get(i));
+					if ( wf != null && wf.getMyId().equals(workflowId) ) {
+						return wf;
+					}
+				} catch (SharedStoreException e) {
+					//e.printStackTrace(System.err);
 				}
 			}
 		}
@@ -427,7 +471,7 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 					sdf.format(new java.util.Date()) + ";" + 
 					wf.getDefinition() + ";" +
 					wf.getMyId() + ";" +
-					( wf.getCurrentState().initiatingAccess != null ? wf.getCurrentState().initiatingAccess.getRpcUser() : "") + ";" +
+					( wf.getCurrentState().getInitiatingAccess() != null ? wf.getCurrentState().getInitiatingAccess().getRpcUser() : "") + ";" +
 					wf.getCurrentState().getId() + ";" +
 					( t != null ? t.getDescription() : "") + ";" +
 					errMsg +

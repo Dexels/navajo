@@ -37,16 +37,16 @@ public class WorkFlowTask implements Serializable, TaskListener {
 		TaskRunner.getInstance().addTaskListener(this);
 		if ( myState != null ) {
 			// Set request Navajo based upon initiating access webservice of my state.
-			if (  myState.initiatingAccess != null ) {
-				myTask.setUsername(myState.initiatingAccess.rpcUser);
-				myTask.setPassword(myState.initiatingAccess.rpcPwd);
+			if (  myState.getInitiatingAccess() != null ) {
+				myTask.setUsername(myState.getInitiatingAccess().rpcUser);
+				myTask.setPassword(myState.getInitiatingAccess().rpcPwd);
 			}
-			if ( navajoToUse != null && getSourceState().equals(".") && getSourceDirection().equalsIgnoreCase("request") && myState.initiatingAccess.getInDoc() != null ) {
-				myState.getWorkFlow().mergeWithParameters(myState.initiatingAccess.getInDoc());
-				myTask.setRequest(myState.initiatingAccess.getInDoc());
-			} else if ( navajoToUse != null && getSourceState().equals(".") && getSourceDirection().equalsIgnoreCase("response") && myState.initiatingAccess.getOutputDoc() != null ) {
-				myState.getWorkFlow().mergeWithParameters(myState.initiatingAccess.getOutputDoc());
-				myTask.setRequest(myState.initiatingAccess.getOutputDoc());
+			if ( navajoToUse != null && getSourceState().equals(".") && getSourceDirection().equalsIgnoreCase("request") && myState.getInitiatingAccess().getInDoc() != null ) {
+				myState.getWorkFlow().mergeWithParameters(myState.getInitiatingAccess().getInDoc());
+				myTask.setRequest(myState.getInitiatingAccess().getInDoc());
+			} else if ( navajoToUse != null && getSourceState().equals(".") && getSourceDirection().equalsIgnoreCase("response") && myState.getInitiatingAccess().getOutputDoc() != null ) {
+				myState.getWorkFlow().mergeWithParameters(myState.getInitiatingAccess().getOutputDoc());
+				myTask.setRequest(myState.getInitiatingAccess().getOutputDoc());
 			} else if ( navajoToUse != null && !getSourceState().equals(".") ) { // Could be that historic state is referenced.
 				String state = getSourceState();
 				String reqresponse = getSourceDirection();
@@ -61,12 +61,12 @@ public class WorkFlowTask implements Serializable, TaskListener {
 				}
 				myState.getWorkFlow().mergeWithParameters(alt);
 				myTask.setRequest(alt);
-			} else if ( myState.aftertaskentry &&  myState.initiatingAccess.getOutputDoc() != null ) {
-				myState.getWorkFlow().mergeWithParameters(myState.initiatingAccess.getOutputDoc());
-				myTask.setRequest(myState.initiatingAccess.getOutputDoc());
-			} else if ( myState.initiatingAccess.getInDoc() != null ) {
-				myState.getWorkFlow().mergeWithParameters(myState.initiatingAccess.getInDoc());
-				myTask.setRequest(myState.initiatingAccess.getInDoc());
+			} else if ( myState.aftertaskentry &&  myState.getInitiatingAccess().getOutputDoc() != null ) {
+				myState.getWorkFlow().mergeWithParameters(myState.getInitiatingAccess().getOutputDoc());
+				myTask.setRequest(myState.getInitiatingAccess().getOutputDoc());
+			} else if ( myState.getInitiatingAccess().getInDoc() != null ) {
+				myState.getWorkFlow().mergeWithParameters(myState.getInitiatingAccess().getInDoc());
+				myTask.setRequest(myState.getInitiatingAccess().getInDoc());
 			} else { // Maybe time trigger??
 				Navajo newDoc = NavajoFactory.getInstance().createNavajo();
 				myState.getWorkFlow().mergeWithParameters(newDoc);
