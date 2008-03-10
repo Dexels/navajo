@@ -20,7 +20,7 @@ import com.dexels.navajo.document.types.Binary;
  * @version 1.0
  */
 
-public class AttachementMap implements Mappable, Serializable {
+public class AttachementMap implements Mappable, Serializable, AttachmentMapInterface {
 
 /**
 	 * 

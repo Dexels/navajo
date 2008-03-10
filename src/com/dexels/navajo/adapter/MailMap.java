@@ -4,6 +4,7 @@ import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.adapter.mailmap.AttachementMap;
+import com.dexels.navajo.adapter.mailmap.AttachmentMapInterface;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.NavajoConfig;
@@ -16,7 +17,6 @@ import java.util.*;
 import javax.mail.*;
 import javax.activation.*;
 import javax.mail.internet.*;
-import com.dexels.navajo.util.*;
 import org.w3c.dom.Document;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.datasource.BinaryDataSource;
@@ -34,7 +34,7 @@ import com.dexels.navajo.datasource.BinaryDataSource;
 /**
  * This business object is used as a mail agent in Navajo Script files.
  */
-public class MailMap implements Mappable, com.dexels.navajo.server.enterprise.queue.Queuable {
+public class MailMap implements MailMapInterface, Mappable, com.dexels.navajo.server.enterprise.queue.Queuable {
 
     /**
 	 * 
@@ -187,7 +187,7 @@ public class MailMap implements Mappable, com.dexels.navajo.server.enterprise.qu
 
     				if (attachments != null) {
     					for (int i = 0; i < attachments.size(); i++) {
-    						AttachementMap am = (AttachementMap) attachments.get(i);
+    						AttachmentMapInterface am = (AttachmentMapInterface) attachments.get(i);
     						String file = am.getAttachFile();
     						String userFileName = am.getAttachFileName();
     						Binary content = am.getAttachFileContent();
@@ -307,7 +307,7 @@ public class MailMap implements Mappable, com.dexels.navajo.server.enterprise.qu
     }
   }
 
-  public void setMultipleAttachments(AttachementMap[] c) {
+  public void setMultipleAttachments(AttachmentMapInterface [] c) {
 
     if (attachments == null) {
       attachments = new ArrayList();
@@ -322,9 +322,9 @@ public class MailMap implements Mappable, com.dexels.navajo.server.enterprise.qu
   	this.relatedMultipart = b;
   }
 
-  public void setAttachment(AttachementMap m) {
+  public void setAttachment(AttachmentMapInterface m) {
 	  System.err.println(">>>>>>>>>>>>>>>>>>>>>> in setAttachment");
-	  this.attachment = m;
+	  //this.attachment = (AttachementMap) m;
 	  if (attachments == null) {
 		  attachments = new ArrayList();
 	  }
