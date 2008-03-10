@@ -80,7 +80,7 @@ public final class GenericHandler extends ServiceHandler {
         String scriptPath = properties.getScriptPath();
         String compilerErrors = "";
         
-        NavajoClassSupplier newLoader = (properties.isHotCompileEnabled() ? null : properties.getClassloader());
+        NavajoClassSupplier newLoader = null;
 
           try {
 
@@ -106,10 +106,9 @@ public final class GenericHandler extends ServiceHandler {
 
             //System.err.println("scriptFile is " + scriptFile.getName());
             
-            if (properties.isHotCompileEnabled()) {
-              newLoader = (NavajoClassLoader) loadedClasses.get(className);
-            }
-
+         
+            newLoader = (NavajoClassLoader) loadedClasses.get(className);
+         
             if (properties.compileScripts) {
             	if (scriptFile.exists()) {
             		
@@ -162,13 +161,13 @@ public final class GenericHandler extends ServiceHandler {
             				synchronized(mutex2) {
             					
             					if (!targetFile.exists() || (sourceFile.lastModified() > targetFile.lastModified())) {
-            						if (properties.isHotCompileEnabled()) {
-            							if (newLoader != null) {
-            								loadedClasses.remove(className);
-            								newLoader = null;
-            								//System.gc();
-            							}
+            						
+            						if (newLoader != null) {
+            							loadedClasses.remove(className);
+            							newLoader = null;
+            							//System.gc();
             						}
+            					
             						com.dexels.navajo.compiler.NavajoCompiler compiler = new com.dexels.navajo.compiler.NavajoCompiler();
             						try {
             							compiler.compile(access, properties, sourceFileName);
@@ -191,16 +190,15 @@ public final class GenericHandler extends ServiceHandler {
             // Synchronized check for classloader of this script.
             //synchronized (mutex3) {
             newLoader = (NavajoClassLoader) loadedClasses.get(className);
-            if (newLoader == null &&  properties.isHotCompileEnabled()) {
+            if (newLoader == null ) {
             	newLoader = new NavajoClassLoader(null, properties.getCompiledScriptPath(), 
             			( access.betaUser ? NavajoConfig.getInstance().getBetaClassLoader() : 
             				NavajoConfig.getInstance().adapterClassloader) );
             	loadedClasses.put(className, newLoader);
             }
-            //}
             
             if ( newLoader == null ) {
-            	return null;
+            	throw new IllegalStateException("Could not create classloader for script: " + className);
             }
             
             // Should method getCompiledNavaScript be fully synced???

@@ -89,7 +89,6 @@ public final class NavajoConfig {
     private InputStreamReader inputStreamReader = null;
     private String classPath = "";
     private boolean enableAsync = true;
-    private boolean hotCompile = true;
     private boolean enableIntegrityWorker = true;
     private boolean enableLockManager = true;
     private boolean enableStatisticsRunner = true;
@@ -346,11 +345,7 @@ public final class NavajoConfig {
 				System.err.println("No jar path found");
 	    		jarFolder = null;				
 			}
-		    			
-    		hotCompile = (body.getProperty("parameters/hot_compile") == null ||
-    				body.getProperty("parameters/hot_compile").getValue().
-    				equals("true"));
-    				
+		    					
     		maxAccessSetSize = (body.getProperty("parameters/max_webservices") == null ? MAX_ACCESS_SET_SIZE :
     			                   Integer.parseInt(body.getProperty("parameters/max_webservices").getValue()) );
     		
@@ -456,10 +451,6 @@ public final class NavajoConfig {
     	return lockManager;
     }
     
-    public final boolean isHotCompileEnabled() {
-      return hotCompile;
-    }
-
     public final boolean isAsyncEnabled() {
       return enableAsync;
     }
