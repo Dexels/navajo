@@ -72,7 +72,7 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 	 */
 	public void addListener(Class<? extends NavajoEvent> type, NavajoListener l) {
 		
-		System.err.println("Event Listener Added for: " + type + ", l = " + l.getClass());
+		//System.err.println("Event Listener Added for: " + type + ", l = " + l.getClass());
 		synchronized (semaphore) {
 			
 			HashSet<NavajoListener> registered = registry.get(type);
@@ -99,10 +99,10 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 
 	private void publishMonitoredEvent(final NavajoEvent ne) {
 
-		System.err.println("In publishMonitoredEvent(" + ne.getClass().getName() + ")");
+		//System.err.println("In publishMonitoredEvent(" + ne.getClass().getName() + ")");
 		if ( monitoredEvents.contains( ne.getClass().getName() )) {
 			
-			System.err.println("About to send JMX notification....");
+			//System.err.println("About to send JMX notification....");
 			Notification n = 
 				new Notification(ne.getClass().getName(), "Navajo Event Registry", GenericThread.notificationSequence++,
 								 System.currentTimeMillis(), ne.toString());
@@ -118,7 +118,7 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 	 */
 	public void publishAsynchronousEvent(final NavajoEvent ne) {
 
-		System.err.println("Asynchronous Event Triggered: " + ne.getClass());
+		//System.err.println("Asynchronous Event Triggered: " + ne.getClass());
 		publishMonitoredEvent(ne);
 		
 		Set<NavajoListener> copy = getInterestedParties(ne);
@@ -146,7 +146,7 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 	 */
 	public void publishEvent(NavajoEvent ne) {
 
-		System.err.println("Synchronous Event Triggered: " + ne.getClass());
+		//System.err.println("Synchronous Event Triggered: " + ne.getClass());
 		publishMonitoredEvent(ne);
 		
 		Set<NavajoListener> copy = getInterestedParties(ne);
