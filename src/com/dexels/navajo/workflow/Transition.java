@@ -50,8 +50,8 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 	
 	public static final String FINISH = "finish";
 	
-	private Task myTask = null;
-	private State myState;
+	protected Task myTask = null;
+	protected State myState;
 	private final ArrayList<Parameter> parameters = new ArrayList<Parameter>();
 	
 	/**
@@ -206,9 +206,9 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 	public final void activate() {
 
 		TaskRunner.getInstance().addTaskListener(this);
-		if ( myState != null && myState.initiatingAccess != null ) {
-			myTask.setUsername(myState.initiatingAccess.rpcUser);
-			myTask.setPassword(myState.initiatingAccess.rpcPwd);
+		if ( myState != null && myState.getInitiatingAccess() != null ) {
+			myTask.setUsername(myState.getInitiatingAccess().rpcUser);
+			myTask.setPassword(myState.getInitiatingAccess().rpcPwd);
 		}
 		// If single event trigger, reinit trigger (to prevent time triggers from the past for offsettimes).
 		if ( myTask.getTrigger().isSingleEvent() ) {
@@ -233,6 +233,8 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 	public final void cleanup() {
 		TaskRunner.getInstance().removeTaskListener(this);
 		TaskRunner.getInstance().removeTask(myTask.getId());
+		//myTask = null;
+		//myState = null;
 	}
 	
 	private final boolean isBeforeTrigger(Task t) {

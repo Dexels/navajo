@@ -105,7 +105,7 @@ public final class WorkFlowDefinitionReader {
 			String condition = readAttribute(t, WorkFlowDefinitionReader.CONDITION_ATTR);
 			String proxy = readAttribute(t,"proxy");
 			String webservice = readAttribute(t,"webservice");
-			
+				
 			Transition trans = null;
 			if ( proxy == null || proxy.equals("") ) {
 				trans = s.addTransition(nextState, trigger, condition);

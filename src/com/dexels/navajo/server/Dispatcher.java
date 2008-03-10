@@ -487,6 +487,7 @@ public Access [] getUsers() {
 		  out = (Navajo) navajoConfig.getPersistenceManager().get(sh,  
 				  CacheController.getInstance().getCacheKey( access.rpcUser, access.rpcName, in), access.rpcName,
 				  expirationInterval, (expirationInterval != -1) );
+		  
 		  access.setOutputDoc(out);
 		  
 		  // Store response for integrity checking.
@@ -931,7 +932,7 @@ public final Navajo handle(Navajo inMessage, Object userCertificate, ClientInfo 
     
     int accessSetSize = accessSet.size();
     setRequestRate(clientInfo, accessSetSize);
-    
+     
     // Check whether server is too busy...
     if ( isBusy() && !inMessage.getHeader().hasCallBackPointers() ) {
     	try {
@@ -992,7 +993,7 @@ public final Navajo handle(Navajo inMessage, Object userCertificate, ClientInfo 
         catch (AuthorizationException ex) {
           //System.err.println("IN LINE 487 OF DISPATCHER, CAUGHT AUTHORIZATIONEXCEPTION");
           outMessage = generateAuthorizationErrorMessage(access, ex, rpcName);
-          outMessage.write(System.err);
+         
           return outMessage;
         }
         catch (SystemException se) {
@@ -1002,10 +1003,8 @@ public final Navajo handle(Navajo inMessage, Object userCertificate, ClientInfo 
           return outMessage;
         }
       } 
-      else {
-        
-        access = new Access(0, 0, 0, rpcUser, rpcName, "" , clientInfo.getIP(), clientInfo.getHost(), null);
-        
+      else {  
+        access = new Access(0, 0, 0, rpcUser, rpcName, "" , ( clientInfo != null ? clientInfo.getIP() : ""), ( clientInfo != null ?  clientInfo.getHost() : ""), null);
       }
 
       if ( rpcUser.endsWith(navajoConfig.getBetaUser()) ) {
