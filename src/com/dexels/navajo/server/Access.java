@@ -90,7 +90,6 @@ public final class Access implements java.io.Serializable, Mappable {
 	private String waitingForPreviousRequest = null;
 	private transient Thread myThread = null;
 
-	
 	private HashMap<Integer, MapStatistics> mapStatistics = null;
 
 	public MapStatistics createStatistics() {
@@ -160,8 +159,9 @@ public final class Access implements java.io.Serializable, Mappable {
 			String hostName,
 			boolean betaUser, Object certificate) {
 
+		
 		myThread = Thread.currentThread();
-
+		
 		synchronized (mutex) {
 			accessCount++;
 			this.accessID = created.getTime() + "-" + accessCount;
@@ -183,9 +183,9 @@ public final class Access implements java.io.Serializable, Mappable {
 			String rpcName, String userAgent, String ipAddress,
 			String hostName, Object certificate) {
 
-
+		
 		myThread = Thread.currentThread();
-
+		
 		synchronized (mutex) {
 			accessCount++;
 			this.accessID = created.getTime() + "-" + accessCount;
@@ -378,5 +378,5 @@ public final class Access implements java.io.Serializable, Mappable {
 		}
 		return b;
 	}
-
+	
 }

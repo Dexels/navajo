@@ -227,16 +227,9 @@ public final class ListenerStore {
 					}
 				}
 			}
+			semaphore.notifyAll();
 		}
 			
-//		if ( retryList.size() > 0 ) {
-//			System.err.println("REACTIVATING " + retryList.size() + " LISTENERS...");
-//			Iterator iter = retryList.iterator();
-//			while ( iter.hasNext() ) {
-//				Trigger t = (Trigger) iter.next();
-//				activate(t);
-//			}
-//		}
 	}
 
 	public final HashMap<String,Integer> getRegisteredWebservices() {
