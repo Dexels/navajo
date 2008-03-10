@@ -82,7 +82,7 @@ public class AdminMap implements Mappable {
     compiledScriptPath = nc.getCompiledScriptPath();
     rootPath = nc.getRootPath();
     
-    supportsHotCompile = nc.isHotCompileEnabled();
+    //supportsHotCompile = nc.isHotCompileEnabled();
     supportsAsync = nc.isAsyncEnabled();
     supportsStore = ( nc.getAsyncStore() != null );
     supportsIntegrity = nc.isIntegrityWorkerEnabled();
