@@ -1,6 +1,7 @@
 package com.dexels.navajo.workflow;
 
 import java.io.Serializable;
+import java.lang.ref.SoftReference;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -12,6 +13,7 @@ import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.server.UserException;
+import com.dexels.navajo.tribe.SharedStoreFactory;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
@@ -25,6 +27,7 @@ import com.dexels.navajo.mapping.MappableException;
  * @author arjen
  *
  */
+
 public final class State implements Serializable, Mappable {
 	
 	/**
@@ -37,53 +40,79 @@ public final class State implements Serializable, Mappable {
 	public  Date leaveDate = null;
 	public  boolean killed = false;
 	public  Transition [] transitions = null;
-	public  final Access initiatingAccess;
+	public  Access initiatingAccess;
+	private transient SoftReference<Access> softInitiatingAccess = null;
+	public  String initiatingAccessId = null;
+	// SHOULD THIS BE A SOFTREFERENCE????
+	private final WorkFlow myWorkFlow;
+	//private final static ReferenceQueue<WorkFlow> queue = new ReferenceQueue<WorkFlow>();
 	
 	private final HashSet<Transition> myTransitions = new HashSet<Transition>();
 	private final HashSet<WorkFlowTask> myTasks = new HashSet<WorkFlowTask>();
-	private final WorkFlow myWorkFlow;
+	
+	private final String myWorkFlowId;
+	
 	protected boolean aftertaskentry = false;
 	
 	protected State(String s, WorkFlow wf, Access a) {
 		id = s;
 		myWorkFlow = wf;
+		myWorkFlowId = wf.getMyId();
 		if ( a != null ) {
-			initiatingAccess = a;
+			softInitiatingAccess = new SoftReference<Access>(a);
 		} else {
 			// Could be triggered by e.g. time trigger, in which case there is no access object, use initiatingaccess object from workflow (if it exists!).
-			initiatingAccess = wf.getInitiatingAccess();
+			if ( getWorkFlow().currentState != null && getWorkFlow().currentState.getInitiatingAccess() != null ) {
+				softInitiatingAccess = new SoftReference<Access>( getWorkFlow().currentState.getInitiatingAccess() );
+			} else {
+				softInitiatingAccess = new SoftReference<Access>(new Access(-1, -1, -1, "", null, null, null, null, false, null));
+			}
 		}
-	}
-	
-	public void addTask(String webservice, String trigger, String condition, String navajo, String username, String password) throws IllegalTrigger, IllegalTask  {
-		
+		persistAccess(a);
 	}
 	
 	public void addTask(String webservice, String trigger, String condition, String navajo) throws IllegalTrigger, IllegalTask  {
+		
+		WorkFlow wf = getWorkFlow();
+		
 		if ( trigger == null || trigger.equals("")) {
 			trigger = "immediate";
 		}
 		// Task should be schedule with user that initiated this state.
-		Task task = new Task(webservice, initiatingAccess.rpcUser, "", null, trigger, null);
-		task.setWorkflowDefinition(myWorkFlow.getDefinition());
-		task.setWorkflowId(myWorkFlow.getMyId());
+		Task task = new Task(webservice, getInitiatingAccess().rpcUser, "", null, trigger, null);
+		task.setWorkflowDefinition( wf.getDefinition());
+		task.setWorkflowId( wf.getMyId() );
 		WorkFlowTask wft = new WorkFlowTask(this, task, navajo);
 		myTasks.add(wft);
 	}
 	
 	public Transition addTransition(String nextState, String trigger, String condition, String webservice) throws IllegalTrigger, IllegalTask  {
-		Task task = new Task(webservice, initiatingAccess.rpcUser, "", null, trigger, null);
-		task.setWorkflowDefinition(myWorkFlow.getDefinition());
-		task.setWorkflowId(myWorkFlow.getMyId());
+		
+		WorkFlow wf = getWorkFlow();
+		
+		if ( trigger == null || trigger.equals("")) {
+			trigger = "immediate";
+		}
+		
+		Task task = new Task(webservice, getInitiatingAccess().rpcUser, "", null, trigger, null);
+		task.setWorkflowDefinition( wf.getDefinition() );
+		task.setWorkflowId( wf.getMyId() );
 		Transition t = new Transition(this, nextState, task, condition, trigger);	
 		myTransitions.add(t);
 		return t;
 	}
 	
 	public Transition addTransition(String nextState, String trigger, String condition) throws IllegalTrigger, IllegalTask  {
-		Task task = new Task("", initiatingAccess.rpcUser, "", null, trigger, null);
-		task.setWorkflowDefinition(myWorkFlow.getDefinition());
-		task.setWorkflowId(myWorkFlow.getMyId());
+		
+		WorkFlow wf = getWorkFlow();
+		
+		if ( trigger == null || trigger.equals("")) {
+			trigger = "immediate";
+		}
+		
+		Task task = new Task("", getInitiatingAccess().rpcUser, "", null, trigger, null);
+		task.setWorkflowDefinition( wf.getDefinition() );
+		task.setWorkflowId( wf.getMyId() );
 		Transition t = new Transition(this, nextState, task, condition, trigger);	
 		myTransitions.add(t);
 		return t;
@@ -121,7 +150,7 @@ public final class State implements Serializable, Mappable {
 		}
 		
 		 // Persist workflow instance. This method will be entry point for resurection.
-		WorkFlowManager.getInstance().persistWorkFlow(myWorkFlow);
+		WorkFlowManager.getInstance().persistWorkFlow(getWorkFlow());
 		
 	}
 	
@@ -156,15 +185,25 @@ public final class State implements Serializable, Mappable {
 		}
 		leaveDate = new Date();
 		
-		myWorkFlow.historicStates.add(this);
+		// Clear up stuff to allow for garbage collection.
+		if ( transitions != null ) {
+			for ( int j = 0; j < transitions.length; j++ ) {
+				transitions[j].myTask = null;
+				transitions[j].myState = null;
+			}
+		}
+		
+		getWorkFlow().historicStates.add(this);
 	}
 
 	public String getId() {
 		return id;
 	}
 	
-	public WorkFlow getWorkFlow() {
+	public WorkFlow getWorkFlow() throws RuntimeException {
+				
 		return myWorkFlow;
+	
 	}
 
 	public void setKill() {
@@ -212,6 +251,37 @@ public final class State implements Serializable, Mappable {
 	}
 	
 	public Access getInitiatingAccess() {
-		return initiatingAccess;
+		if ( softInitiatingAccess != null && softInitiatingAccess.get() != null) {
+			return softInitiatingAccess.get();
+		} else {
+			try {
+				System.err.println("SOFTREFERENCE CLEANUP, initiatingAccess = " + softInitiatingAccess );
+				softInitiatingAccess = new SoftReference( (Access) SharedStoreFactory.getInstance().get(WorkFlowManager.getInstance().workflowPath, initiatingAccessId) );
+				//System.err.println("CREATED: " + softInitiatingAccess.get());
+				return softInitiatingAccess.get();
+			} catch (Throwable e) {
+				e.printStackTrace(System.err);
+				return null;
+			}
+		}
 	}
+	
+	private boolean persistAccess(Access a) {
+
+		try {
+			initiatingAccessId = getWorkFlow().getMyId() + "-statedump" + getId() + "-" + a.hashCode();
+			SharedStoreFactory.getInstance().store(WorkFlowManager.getInstance().workflowPath, 
+					initiatingAccessId, a, false, false);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+	
+	protected void removePersistedAccess() {
+		if ( initiatingAccessId != null ) {
+			SharedStoreFactory.getInstance().remove(WorkFlowManager.getInstance().workflowPath, initiatingAccessId);
+		}
+	}
+	
 }
