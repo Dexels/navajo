@@ -1206,7 +1206,7 @@ public String fieldNode(int ident, Element n, String className,
           } catch (Exception e) { throw new Exception("Could not find adapter: " + className); }
         String type = null;
         try {
-        	type = MappingUtils.getFieldType(contextClass, attribute);
+        	type = MappingUtils.getFieldType(contextClass, attribute, methodName);
         } catch (Exception e) { throw new Exception("Could not find field: " + attribute + " in adapter " + contextClass.getName()); }
         if (type.equals("java.lang.String")) {
           castedValue = "(String) sValue";
@@ -1284,7 +1284,7 @@ public String fieldNode(int ident, Element n, String className,
       } catch (Exception e) {
     	  throw new Exception("Could not find adapter: " + className);
       }
-      String type = MappingUtils.getFieldType(contextClass, attribute);
+      String type = MappingUtils.getFieldType(contextClass, attribute, methodName);
       boolean isArray = MappingUtils.isArrayAttribute(contextClass, attribute);
       
       ////System.out.println("TYPE FOR " + attribute + " IS: " + type + ", ARRAY = " + isArray);

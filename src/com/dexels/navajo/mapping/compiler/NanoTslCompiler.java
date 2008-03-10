@@ -1193,7 +1193,7 @@ public class NanoTslCompiler {
             }
             String type = null;
             try {
-                type = MappingUtils.getFieldType(contextClass, attribute);
+                type = MappingUtils.getFieldType(contextClass, attribute, methodName);
             } catch (Exception e) {
                 System.err.println("About to throw..............");
                 System.err.println("Context stack: "+contextClassStack);
@@ -1275,7 +1275,7 @@ public class NanoTslCompiler {
             } catch (Exception e) {
                 throw new TslCompileException(TslCompileException.TSL_UNKNOWN_MAP, "Could not find adapter: " + className, n);
             }
-            String type = MappingUtils.getFieldType(contextClass, attribute);
+            String type = MappingUtils.getFieldType(contextClass, attribute,methodName);
             boolean isArray = MappingUtils.isArrayAttribute(contextClass, attribute);
             ////System.out.println("TYPE FOR " + attribute + " IS: " + type +
             // ", ARRAY = " + isArray);      

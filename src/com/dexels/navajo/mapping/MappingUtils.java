@@ -15,6 +15,7 @@ import com.dexels.navajo.util.Util;
 import com.dexels.navajo.parser.*;
 
 import java.lang.reflect.*;
+import java.lang.reflect.Method;
 import java.util.*;
 
 import com.dexels.navajo.document.types.Memo;
@@ -568,6 +569,10 @@ public static final ArrayList getMessageList(Message msg, Navajo doc, String str
   }
 
   public static final String getFieldType(Class c, String field) throws UserException {
+	  return getFieldType(c, field, null);
+  }
+  
+  public static final String getFieldType(Class c, String field, String methodName) throws UserException {
 
 	  try {
 		  String type = c.getField(field).getType().getName();
@@ -584,6 +589,17 @@ public static final ArrayList getMessageList(Message msg, Navajo doc, String str
 			  }
 			  return type;
 		  } catch (NoSuchFieldException nsfe2) {
+			  
+			  Method [] methods = c.getMethods();
+			  for ( int j = 0; j < methods.length; j++ ) {
+				  if ( methods[j].getName().equals(methodName) ) {
+					  //System.err.println("Found method: " + methods[j]);
+					  Class [] types = methods[j].getParameterTypes();
+					  //System.err.println("parameter types: " + types);
+					  return types[0].getName();
+				  }
+			  }
+			  
 			  throw new UserException(-1, "Could not find field " + field + " in class " + c.getName());
 		  }
 	  }
