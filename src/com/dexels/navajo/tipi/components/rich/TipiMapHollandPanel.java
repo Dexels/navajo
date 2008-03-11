@@ -18,8 +18,12 @@ public class TipiMapHollandPanel extends TipiPanel implements LocationListener {
 	}
 
 	@Override
-	public void loadData(Navajo n, String method) throws TipiException {
-		myContainer.setMessage(n.getMessage("Clubs"));		
+	public void loadData(final Navajo n, String method) throws TipiException {
+		runSyncInEventThread(new Runnable(){
+
+			public void run() {
+				myContainer.setMessage(n.getMessage("Clubs"));		
+			}});
 	}
 
 	public void locationRequested(String locationId, String description, String union, double lat, double lon) {

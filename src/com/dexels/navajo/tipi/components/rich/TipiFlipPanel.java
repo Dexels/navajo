@@ -37,8 +37,12 @@ public class TipiFlipPanel extends TipiPanel {
   }
 
 	@Override
-	public void addToContainer(Object c, Object constraints) {
-		myPanel.addComponent((JComponent)c);
+	public void addToContainer(final Object c, Object constraints) {
+		runSyncInEventThread(new Runnable(){
+
+			public void run() {
+				myPanel.addComponent((JComponent)c);
+			}});
 	}
 
 	@Override
