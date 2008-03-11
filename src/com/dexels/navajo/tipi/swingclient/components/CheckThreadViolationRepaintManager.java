@@ -42,7 +42,7 @@ public class CheckThreadViolationRepaintManager extends RepaintManager {
                 //no problems here, since repaint() is thread safe
                 return;
             }
-            exception.printStackTrace();
+            //exception.printStackTrace();
         }
     }
 }

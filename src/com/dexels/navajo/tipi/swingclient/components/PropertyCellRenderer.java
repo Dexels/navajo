@@ -232,7 +232,7 @@ public class PropertyCellRenderer implements TableCellRenderer, ListCellRenderer
             myPropertyCheckBox.setBorder(c);
           }
         }
-        myPropertyCheckBox.setOpaque(true);
+//        myPropertyCheckBox.setOpaque(true);
         return myPropertyCheckBox;
       }
       if(myPropertyType.equals(Property.DATE_PROPERTY)) {
@@ -386,7 +386,7 @@ public class PropertyCellRenderer implements TableCellRenderer, ListCellRenderer
             }
             formatStringField.setFont(myPropertyField.getFont());
           }
-          formatStringField.setOpaque(true);
+//          formatStringField.setOpaque(true);
           Object o = myProperty.getTypedValue();
           if(o != null) {
             formatStringField.setText("" + o);
@@ -460,7 +460,7 @@ public class PropertyCellRenderer implements TableCellRenderer, ListCellRenderer
 //    myPropertyField.setName("unloaded_property");
 //      myPropertyField.setBorder(null);
 
-      readOnlyField.setOpaque(true);
+//      readOnlyField.setOpaque(true);
       setComponentColor(readOnlyField, isSelected, row, column, false, tm.getRowCount(), disabled);
       if(myTable != null && isSelected && column != -1 && column == myTable.getSelectedColumn()) {
 //        readOnlyField.setBorder(disabled ? c : b);
@@ -496,6 +496,7 @@ public class PropertyCellRenderer implements TableCellRenderer, ListCellRenderer
     JComponent cc = (JComponent)c;
     cc.setBorder(new CompoundBorder(new EmptyBorder(new Insets(0, 2, 0, 2)), null));
 
+    /*
     // hmf. lamaar
 //     cc.setForeground(isSelected?SystemColor.textHighlightText:SystemColor.textText);
     if(PropertyField.class.isInstance(cc)) {
@@ -542,7 +543,7 @@ public class PropertyCellRenderer implements TableCellRenderer, ListCellRenderer
     if(myProperty == null) {
       return;
     }
-
+    */
     if(columnAttributes != null) {
       ColumnAttribute ca = (ColumnAttribute)columnAttributes.get(myProperty.getName());
       if(ca != null) {
@@ -575,7 +576,7 @@ public class PropertyCellRenderer implements TableCellRenderer, ListCellRenderer
   public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
 //    System.err.println("Getting renderer for row: "+index);
     Selection sel = (Selection)value;
-    l.setOpaque(true);
+//    l.setOpaque(true);
     l.setText(sel == null ? "" : sel.toString());
     setComponentColor(l, isSelected, index, -1, false, list.getModel().getSize(), false);
     return l;
