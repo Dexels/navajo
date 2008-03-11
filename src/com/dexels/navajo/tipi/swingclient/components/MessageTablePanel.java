@@ -1082,13 +1082,13 @@ public void updateTableSize() {
   }
 
   public void setFooterRenderer(TableCellRenderer tc) {
-    //System.err.println("Setting footer renderer!");
-//    Thread.dumpStack();
+  // Thread.dumpStack();
 //    if (tableFooter==null) {
 //
 //    }
     if (tc == null) {
       if (tableFooter != null) {
+    	  System.err.println("Removind footer renderer!");
         tableFooter.setDefaultRenderer(tc);
         tableFooter.setVisible(false);
         remove(tableFooter);
@@ -1097,7 +1097,7 @@ public void updateTableSize() {
     }
     else {
       tableFooter = new MessageTableFooter();
-
+      
       // changed this:
       tableFooter.setDefaultRenderer(new CustomTableHeaderRenderer());
       messageTable.setMessageTableFooter(tableFooter);

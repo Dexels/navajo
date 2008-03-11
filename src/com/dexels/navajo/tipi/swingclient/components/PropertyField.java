@@ -147,7 +147,6 @@ public class PropertyField
   }
 
   public Color getOriginalForeground() {
-//  	return Color.green;
     return originalForegroundColor==null?Color.BLACK:originalForegroundColor;
   }
   private Color originalDisabledColor = null;
@@ -156,7 +155,6 @@ public class PropertyField
   }
 
   public Color getOriginalDisabledColor() {
-//  	return Color.yellow;
     return originalDisabledColor==null?Color.GRAY:originalDisabledColor;
   }
 

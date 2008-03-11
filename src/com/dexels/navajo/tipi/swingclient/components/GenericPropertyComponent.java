@@ -84,7 +84,7 @@ public class GenericPropertyComponent
   URIPropertyField myURIField = null;
   MultiSelectPropertyBox myMultiSelectBox = null;
   PropertyBox myBox = null;
-  JComponent myBinaryLabel = null;
+  BinaryComponent myBinaryLabel = null;
 
   private boolean verticalScrolls = true;
   private boolean horizontalScrolls = false;
@@ -190,10 +190,16 @@ public class GenericPropertyComponent
   
   public void setMaxImageWidth(int w) {
       max_img_width = w;
+      if(myBinaryLabel!=null){
+    	  myBinaryLabel.setMaxImgWidth(w);
+      }
   }
 
   public void setMaxImageHeight(int h) {
       max_img_height = h;
+      if(myBinaryLabel!=null){
+    	  myBinaryLabel.setMaxImgHeight(h);
+      }
   }
 
   
@@ -838,148 +844,15 @@ private final void createBinaryComponent(final Property p) {
 //      max_img_size = p.getLength();
 //    }
 //    System.err.println("Length: "+p.getLength());
-    Binary b = (Binary) p.getTypedValue();
-    if (b == null || b.getLength()<=0) {
-//        System.err.println("Null-binary found!");
-        myBinaryLabel = new JButton();
-      ( (JButton) myBinaryLabel).addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-          try {
-            JFileChooser jf = new JFileChooser();
-            jf.showOpenDialog(myBinaryLabel);
-            File f = jf.getSelectedFile();
-            if (f != null) {
-              Binary b = new Binary(f);
-                p.setAnyValue(b);
-              setProperty(p);
-            }
-          }
-          catch (Exception ex) {
-            ex.printStackTrace();
-          }
-        }
-      });
-      myBinaryLabel.setEnabled(p.isDirIn());
-      ( (JButton) myBinaryLabel).setText("<html>-</html>"); addPropertyComponent(myBinaryLabel, true);
-      myBinaryLabel.setToolTipText(p.getDescription());
-      return;
-    }
- //   System.err.println("Getting binary data!");
-//    byte[] data = b.getData();
-    String mime = b.guessContentType();
-    if (mime.indexOf("image") != -1) {
-        InputStream inp = b.getDataAsStream(); 
-        BufferedImage mm;
-        try {
-            mm = ImageIO.read(inp);
-            //ImageIcon img = new ImageIcon(mm);
-            System.err.println("WIDTH: "+max_img_width+" height: "+max_img_height);
-            myBinaryLabel = new BaseLabel();
-            ( (BaseLabel) myBinaryLabel).setHorizontalAlignment(JLabel.CENTER); 
-            ( (BaseLabel) myBinaryLabel).setVerticalAlignment(JLabel.CENTER); 
-            ( (BaseLabel) myBinaryLabel).setIcon(getScaled(mm,max_img_width,max_img_height)); 
-//            ( (BaseLabel) myBinaryLabel).setIcon(img);
-            addPropertyComponent(myBinaryLabel);
-       } catch (IOException e) {
-            e.printStackTrace();
-        }
-       return;
-    }
-    if (mime.indexOf("text") != -1) {
-      myBinaryLabel = new JTextArea();
-      ( (JTextArea) myBinaryLabel).setText(new String(b.getData())); 
-      addPropertyComponent(myBinaryLabel);
-      return;
-    }
-
-    /**
-     * I really dont know what this section does...
-     */
-/*
-    ImageIcon img = new ImageIcon(data);
-    myBinaryLabel = new BaseLabel();
-    ( (BaseLabel) myBinaryLabel).setHorizontalAlignment(JLabel.CENTER);
-    ( (BaseLabel) myBinaryLabel).setVerticalAlignment(JLabel.CENTER); 
-    if (img != null) {
-       ( (BaseLabel) myBinaryLabel).setIcon(getScaled(img));
-    }
-    else {
-       ( (BaseLabel) myBinaryLabel).setText("Unknown binary property. Mimetype: " + mime + " size: " + data.length);
-    }
-    addPropertyComponent(myBinaryLabel);
-    myBinaryLabel.setToolTipText(p.getDescription());
-    return;
-*/
-    }
-
-//  private final void createBinaryComponent(Property p) {
-//    //Test case image..
-//    if(p.getLength() > 0){
-//      max_img_size = p.getLength();
-//    }
-//    byte[] data = (byte[]) p.getTypedValue();
-//    ImageIcon img = new ImageIcon(data);
-//    myBinaryLabel = new BaseLabel();
-//    myBinaryLabel.setIcon(getScaled(img));
-//    myBinaryLabel.setVerticalAlignment(JLabel.CENTER);
-//    myBinaryLabel.setHorizontalAlignment(JLabel.CENTER);
-//    addPropertyComponent(myBinaryLabel);
-//  }
-
-	public static ImageIcon scale(ImageInputStream infile, ImageOutputStream outfile, int width, int height, boolean keepAspect, float quality)
-			throws IOException {
-
-		BufferedImage original = ImageIO.read(infile);
-		if (original == null) {
-			throw new IOException("Unsupported file format!");
-		}
-
-			BufferedImage scaled = scale(width, height, keepAspect, original);
-			return new ImageIcon(scaled);
-
-	}
-
-public static BufferedImage scale(int width, int height, boolean keepAspect, BufferedImage original) {
-	int originalWidth = original.getWidth();
-	int originalHeight = original.getHeight();
-	System.err.println("ORIGW: "+originalWidth+" origw: "+originalHeight);
-	if (width > originalWidth) {
-		width = originalWidth;
-	}
-	if (height > originalHeight) {
-		height = originalHeight;
-	}
 	
-	
-	float factorX = (float)originalWidth / width;
-	float factorY = (float)originalHeight / height;
-	if(keepAspect) {
-		factorX = Math.max(factorX, factorY);
-		factorY = factorX;
+	if (myBinaryLabel==null) {
+		myBinaryLabel = new BinaryComponent();
+		myBinaryLabel.setMaxImgWidth(max_img_width);
+		myBinaryLabel.setMaxImgHeight(max_img_height);
+		addPropertyComponent(myBinaryLabel);
 	}
-	
-	// The scaling will be nice smooth with this filter
-	AreaAveragingScaleFilter scaleFilter =
-		new AreaAveragingScaleFilter(Math.round(originalWidth / factorX),
-				Math.round(originalHeight / factorY));
-	ImageProducer producer = new FilteredImageSource(original.getSource(),
-			scaleFilter);
-	ImageGenerator generator = new ImageGenerator();
-	producer.startProduction(generator);
-	BufferedImage scaled = generator.getImage();
-	return scaled;
+	myBinaryLabel.setProperty(p);
 }
-
-
-  private final ImageIcon getScaled(BufferedImage icon, int maxWidth, int maxHeight) {
-	 BufferedImage bi = scale(maxWidth, maxHeight, false, icon);
-    if (icon == null) {
-      return null;
-    }
-    return new ImageIcon(bi);
-    
-   
-  }
 
   public void setComponentBackground(Color c) {
     if (currentPropertyComponent != null) {

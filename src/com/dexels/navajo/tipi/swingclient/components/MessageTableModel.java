@@ -102,7 +102,7 @@ public class MessageTableModel
     if(myMessage!=null) {
     	myMessage.addPropertyChangeListener(new PropertyChangeListener(){
 
-				public void propertyChange(PropertyChangeEvent e) {
+				public void propertyChange(final PropertyChangeEvent e) {
 					final Property p = (Property) e.getSource();
 					Message m = p.getParentMessage();
 					if(m!=null) {
@@ -117,15 +117,17 @@ public class MessageTableModel
 										fireTableCellUpdated(row, column);
 									}
 									System.err.println("Updating: "+row+" column: "+column+" property: "+p.getName()+" orig. row: "+p.getParentMessage().getName()+" ---- "+p.getParentMessage().getIndex());
-
+									System.err.println("Old: "+e.getOldValue()+" new: "+e.getNewValue());
 								}});
 							} else {
 								if(row>=0 && column>=0) {
 									fireTableCellUpdated(row, column);
 								}
 								System.err.println("Updating: "+row+" column: "+column+" property: "+p.getName()+" orig. row: "+p.getParentMessage().getName()+" ---- "+p.getParentMessage().getIndex());
+								System.err.println("Old: "+e.getOldValue()+" new: "+e.getNewValue());
 
 							}
+							Thread.dumpStack();
 						} catch (InterruptedException e1) {
 							e1.printStackTrace();
 						} catch (InvocationTargetException e1) {

@@ -173,8 +173,8 @@ public class FloatPropertyField extends PropertyField implements PropertyControl
   void myDocument_insertUpdate(DocumentEvent e) {
     if(initProperty != null) {
       if(!initProperty.getType().equals(Property.EXPRESSION_PROPERTY)) {
-        updateChanged(initProperty);
-        initProperty.setValue(getText());
+//        updateChanged(initProperty);
+//        initProperty.setValue(getText());
       }
       if(getText() != null && !getText().equals("")) {
         setValidationState(BaseField.VALID);
@@ -188,8 +188,8 @@ public class FloatPropertyField extends PropertyField implements PropertyControl
     }
 
     if(!initProperty.getType().equals(Property.EXPRESSION_PROPERTY)) {
-      updateChanged(initProperty);
-      initProperty.setValue(getText());
+//      updateChanged(initProperty);
+//      initProperty.setValue(getText());
     }
     if(getText() != null && !getText().equals("")) {
       setValidationState(BaseField.VALID);

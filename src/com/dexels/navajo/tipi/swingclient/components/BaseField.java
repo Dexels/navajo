@@ -11,7 +11,6 @@ import java.beans.*;
 import javax.swing.text.*;
 import javax.swing.event.*;
 //import com.dexels.sportlink.client.swing.components.validation.*;
-import com.dexels.navajo.swingclient.ui.RichTextFieldUI;
 import com.dexels.navajo.tipi.swingclient.*;
 import com.dexels.navajo.tipi.swingclient.components.validation.*;
 
@@ -42,9 +41,6 @@ public class BaseField extends JTextField implements ChangeMonitoring, Validatab
   public BaseField() {
 //    myDocument = getDocument();
     try {
-//    	setUI(new RichTextFieldUI(this));
-    	setOpaque(false);
-    	setBorder(null);
       res = SwingClient.getUserInterface().getResource("com.dexels.sportlink.client.swing.TextLabels");
       jbInit();
     }
@@ -112,10 +108,10 @@ public class BaseField extends JTextField implements ChangeMonitoring, Validatab
       if ("".equals(getText()) && p.getValue()==null) {
         return;
       }
-      if (!getText().equals(p.getValue())) {
-          
-        setChanged(true);
-    }
+//      if (!getText().equals(p.getValue())) {
+//          
+//        setChanged(true);
+//    }
   }
 
   public boolean isValidated() {

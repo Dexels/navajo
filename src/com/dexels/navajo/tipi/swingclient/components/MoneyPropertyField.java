@@ -20,6 +20,7 @@ import java.awt.*;
  * <p>Company: Dexels</p>
  * @author not attributable
  * @version 1.0
+ * @deprecated
  */
 
 public class MoneyPropertyField extends PropertyField {

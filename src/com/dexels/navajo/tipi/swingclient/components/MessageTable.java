@@ -2009,6 +2009,10 @@ public void updateTableSize() {
         int columnCount = table.getColumnCount();
         int row = table.getSelectedRow();
         int column = table.getSelectedColumn();
+        if(rowCount==0) {
+        	transferFocus();
+        	return;
+        }
         if(row > -1 && column > -1) {
 		    while (!table.isCellEditable(row, column)) {
 		      column += 1;
@@ -2040,9 +2044,15 @@ public void updateTableSize() {
         int columnCount = table.getColumnCount();
         int row = table.getSelectedRow();
         int column = table.getSelectedColumn();
+        if(table.getRowCount()==0) {
+        	transferFocusBackward();
+        	return;
+        }
+        
         while (!table.isCellEditable(row, column)) {
+          System.err.println("COL: "+column+" row: "+row);
           column -= 1;
-          if (column == -1) {
+          if (column <= -1) {
             column = columnCount - 1;
             row -= 1;
           }
