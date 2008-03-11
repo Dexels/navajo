@@ -110,6 +110,7 @@
    </tipiclass>
    <tipi-parser name="tipi" type="com.dexels.navajo.tipi.TipiDataComponent" parser="com.dexels.navajo.tipi.components.core.parsers.TipiParser" />
    <tipi-parser name="component" type="com.dexels.navajo.tipi.TipiComponent" parser="com.dexels.navajo.tipi.components.core.parsers.ComponentParser" />
+   <tipi-parser name="context" type="com.dexels.navajo.tipi.TipiContext" parser="com.dexels.navajo.tipi.components.core.parsers.ContextParser" />
    <tipi-parser name="attributeref" type="com.dexels.navajo.tipi.internal.AttributeRef" parser="com.dexels.navajo.tipi.components.core.parsers.AttributeRefParser" />
    <tipi-parser name="global" type="java.lang.Object" parser="com.dexels.navajo.tipi.components.core.parsers.GlobalParser" />
    <tipi-parser name="globalref" type="com.dexels.navajo.tipi.internal.GlobalRef" parser="com.dexels.navajo.tipi.components.core.parsers.GlobalRefParser" />

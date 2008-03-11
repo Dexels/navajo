@@ -92,7 +92,7 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 	protected TipiComponent topScreen = null;
 	// protected List myThreadsToServer = new ArrayList();
 	// protected int maxToServer = 1;
-	protected int poolSize = 2;
+	protected int poolSize = 4;
 	// protected boolean singleThread = true;
 	// private String currentDefinition = null;
 	private final Map<String, TipiTypeParser> parserInstanceMap = new HashMap<String, TipiTypeParser>();
@@ -141,7 +141,12 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 	private final Map<String, TipiConnector> tipiConnectorMap = new HashMap<String, TipiConnector>();
 	private TipiConnector defaultConnector;
 
+	private boolean hasDebugger;
+	
 	private final Map<String, List<PropertyChangeListener>> propertyBindMap = new HashMap<String, List<PropertyChangeListener>>();
+
+	private String resourceCodeBase;
+	private String tipiCodeBase;
 	
 	public TipiContext() {
 		Iterator<TipiExtension> tt = ServiceRegistry.lookupProviders(TipiExtension.class);
@@ -154,16 +159,18 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 		NavajoFactory.getInstance().setExpressionEvaluator(new DefaultExpressionEvaluator());
 		tipiResourceLoader = new ClassPathResourceLoader();
 		setStorageManager(new TipiNullStorageManager());
-//		 try {
-//		 Class c =
-//		 Class.forName("com.dexels.navajo.tipi.tools.TipiSocketDebugger");
-//		 Object o = c.newInstance();
-//		 c.getMethod("setContext", new Class[]{TipiContext.class}).invoke(o, new Object[]{this});
-//		 ;
-//		 } catch (Throwable e) {
-//			 System.err.println("Kablammo?");
-//		//System.err.println("Debugger disabled for now");
-//		 }
+		 try {
+			Class c = Class.forName("com.dexels.navajo.tipi.tools.TipiSocketDebugger");
+			hasDebugger = true;
+			// Object o = c.newInstance();
+			// c.getMethod("setContext", new
+			// Class[]{TipiContext.class}).invoke(o, new Object[]{this});
+			// ;
+		} catch (Throwable e) {
+			System.err.println("Kablammo?");
+			hasDebugger = false;
+			// System.err.println("Debugger disabled for now");
+		}
 
 	}
 
@@ -176,6 +183,10 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 			fakeExtension(optionalExtensionList,"tipi.TipiMailExtension");
 			fakeExtension(optionalExtensionList,"tipi.TipiNativeSwingExtension");
 			fakeExtension(optionalExtensionList,"tipi.TipiSubstanceExtension");
+			fakeExtension(optionalExtensionList,"tipi.TipiDevelopTools");
+			fakeExtension(optionalExtensionList,"tipi.TipiGoogleExtension");
+			fakeExtension(optionalExtensionList,"tipi.TipiYoutubeExtension");
+			fakeExtension(optionalExtensionList,"tipi.TipiFlickrExtension");
 			
 			// initialize again
 			appendIncludes(coreExtensionList, includeList);
@@ -999,17 +1010,31 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 			return;
 		}
 		TipiComponent parent = comp.getTipiParent();
+		Message pp = parent.getStateMessage();
+		final Message stateMessage = comp.getStateMessage();
+		pp.removeMessage(stateMessage);
+		
+		Runnable r = new Runnable(){
+
+			public void run() {
+				try {
+					unlink(stateMessage);
+				} catch (NavajoException e) {
+					e.printStackTrace();
+				}
+					
+			}};
+			try {
+				execute(r);
+			} catch (TipiException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		System.err.println("Parent: " + parent.getPath());
 		parent.removeChild(comp);
-		Message m = comp.getStateMessage();
-		Message pp = parent.getStateMessage();
-		try {
-			unlink(pp);
-		} catch (NavajoException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		pp.removeMessage(m);
+		Message m = stateMessage;
+
+//		pp.removeMessage(m);
 		if (comp instanceof TipiDataComponent) {
 			removeTipiInstance(comp);
 		} else {
@@ -1142,13 +1167,16 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 			// BEWARE of the backward order
 			for (int i = current.size() - 1; i >= 0; i--) {
 				TipiComponent element = current.get(i);
-				if (instance.getPath().equals(element.getPath())) {
-					current.remove(i);
-					continue;
-				}
-				if (element.getPath().startsWith(instance.getPath() + "/")) {
+				if(element==instance) {
 					current.remove(i);
 				}
+//				if (instance.getPath().equals(element.getPath())) {
+//					current.remove(i);
+//					continue;
+//				}
+//				if (element.getPath().startsWith(instance.getPath() + "/")) {
+//					current.remove(i);
+//				}
 			}
 		}
 	}
@@ -1188,7 +1216,7 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 	public XMLElement getComponentDefinition(String componentName)  {
 		// if(lazyMap.containsKey(componentName)) {
 		// String location = (String) lazyMap.get(componentName);
-		// }
+		// } 
 		XMLElement xe = getTipiDefinition(componentName);
 		if (xe != null) {
 			return xe;
@@ -1270,7 +1298,7 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 
 	public void switchToDefinition(String name) throws TipiException {
 		clearTopScreen();
-		setSplashInfo("Starting application.");
+		setSplashInfo("Starting application: "+name);
 		XMLElement componentDefinition = null; //
 		componentDefinition = getComponentDefinition(name);
 		// fallback to init:
@@ -1466,8 +1494,23 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 			h = NavajoFactory.getInstance().createHeader(reply, method, "unknown","unknown", -1);
 			reply.addHeader(h);
 		}
-
+		System.err.println("Loading method: "+method);
 		loadNavajo(reply, method, "*", null, false);
+		Navajo compNavajo = null;
+		if(hasDebugger && !"NavajoListNavajo".equals(method)) {
+			try {
+				compNavajo = createNavajoListNavajo();
+				loadNavajo(compNavajo, "NavajoListNavajo");
+				System.err.println("Firing navajo: "+method);
+
+			} catch (NavajoException e) {
+				e.printStackTrace();
+			}
+			
+		}
+		if(compNavajo!=null) {
+			fireNavajoReceived(compNavajo, "NavajoListNavajo");
+		}
 	}
 
 	public void loadNavajo(Navajo reply, String method, String tipiDestinationPath, TipiEvent event, boolean breakOnError)
@@ -1538,6 +1581,7 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 		List<TipiDataComponent> tipiList;
 		tipiList = getTipiInstancesByService(method);
 		if (tipiList == null) {
+			fireNavajoReceived(reply, method);
 			return;
 		}
 			
@@ -1553,6 +1597,8 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 				t.tipiLoaded();
 			}
 		}
+		
+		fireNavajoReceived(reply, method);
 	}
 
 	private void unloadNavajo(Navajo reply, String method) throws NavajoException {
@@ -2207,7 +2253,12 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 
 	}
 
+	public String getGenericResourceLoader() {
+		return resourceCodeBase;
+	}
+	
 	public void setGenericResourceLoader(String resourceCodeBase) throws MalformedURLException {
+		this.resourceCodeBase = resourceCodeBase;
 		if (resourceCodeBase != null) {
 			if (resourceCodeBase.indexOf("http:/") != -1) {
 				setGenericResourceLoader(new HttpResourceLoader(new URL(resourceCodeBase)));
@@ -2218,8 +2269,12 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 			setGenericResourceLoader(new FileResourceLoader(new File("resource")));
 		}
 	}
+	public String getTipiResourceLoader() {
+		return tipiCodeBase;
+	}
 
 	public void setTipiResourceLoader(String tipiCodeBase) throws MalformedURLException {
+		this.tipiCodeBase = tipiCodeBase;
 		if (tipiCodeBase != null) {
 			if (tipiCodeBase.indexOf("http:/") != -1) {
 				setTipiResourceLoader(new HttpResourceLoader(new URL(tipiCodeBase)));
@@ -2233,6 +2288,7 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 	}
 
 	public OutputStream writeTipiResource(String resourceName) throws IOException {
+		System.err.println("Writing tipiResource: "+resourceName);
 		return tipiResourceLoader.writeResource(resourceName);
 	}
 
@@ -2248,8 +2304,8 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 		}
 		String tipiCodeBase = properties.get("tipiCodeBase");
 		String resourceCodeBase = properties.get("resourceCodeBase");
-		setTipiResourceLoader(tipiCodeBase);
-		setGenericResourceLoader(resourceCodeBase);
+			setTipiResourceLoader(tipiCodeBase);
+			setGenericResourceLoader(resourceCodeBase);
 	}
 
 	public void fireTipiContextEvent(TipiComponent source, String type, Map<String,Object> event, boolean sync) {
@@ -2308,29 +2364,38 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 				element.addProperty(moduleProp);
 			}
 		}
-		try {
-			FileWriter fw = new FileWriter("c:/classes.xml");
-			n.write(fw);
-			fw.flush();
-			fw.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+
 		return n;
 	}
 
 	public Navajo createExtensionNavajo() throws NavajoException {
-
+		//Overview/InjectionName
 		Navajo n = NavajoFactory.getInstance().createNavajo();
 		Message overview = NavajoFactory.getInstance().createMessage(n, "Overview");
 		n.addMessage(overview);
 		Property overviewProperty = NavajoFactory.getInstance().createProperty(n, "Overview", Property.CARDINALITY_MULTIPLE, "",
 				Property.DIR_OUT);
 		overview.addProperty(overviewProperty);
+	
 		for (TipiExtension te : coreExtensionList) {
 			Selection s = NavajoFactory.getInstance().createSelection(n, te.getDescription(), te.getId(), false);
 			overviewProperty.addSelection(s);
 		}
+		
+		
+		Property connectors = NavajoFactory.getInstance().createProperty(n, "DevelopConnector", Property.CARDINALITY_SINGLE, "",Property.DIR_IN);
+		overview.addProperty(connectors);
+		Property injection = NavajoFactory.getInstance().createProperty(n, "InjectionName", Property.STRING_PROPERTY, "",0,"Injection name",Property.DIR_IN);
+		overview.addProperty(injection);
+		for (String conString: tipiConnectorMap.keySet()) {
+			Selection s = NavajoFactory.getInstance().createSelection(n,conString, conString, conString.equals(getDefaultConnector().getConnectorId()));
+			connectors.addSelection(s);
+		}
+		for (TipiExtension te : coreExtensionList) {
+			Selection s = NavajoFactory.getInstance().createSelection(n, te.getDescription(), te.getId(), false);
+			overviewProperty.addSelection(s);
+		}
+		
 		for (TipiExtension te : mainExtensionList) {
 			Selection s = NavajoFactory.getInstance().createSelection(n, te.getDescription(), te.getId(), false);
 			overviewProperty.addSelection(s);
@@ -2339,9 +2404,12 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 			Selection s = NavajoFactory.getInstance().createSelection(n, te.getDescription(), te.getId(), false);
 			overviewProperty.addSelection(s);
 		}
-		ExtensionManager.addExtensionMessage(n, coreExtensionList, "Core");
-		ExtensionManager.addExtensionMessage(n, mainExtensionList, "Main");
-		ExtensionManager.addExtensionMessage(n, optionalExtensionList, "Options");
+		ExtensionManager.addExtensionMessage(this,n, coreExtensionList, "Core");
+		ExtensionManager.addExtensionMessage(this,n, mainExtensionList, "Main");
+		ExtensionManager.addExtensionMessage(this,n, optionalExtensionList, "Options");
+
+		ExtensionManager.addConnectorMessage(this,n, tipiConnectorMap.keySet());
+		
 		return n;
 	}
 
@@ -2558,20 +2626,15 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 		n.addMessage(tipiClasses);
 		for (String s : navajoMap.keySet()) {
 
-			Message element = NavajoFactory.getInstance().createMessage(n, "Name", Message.MSG_TYPE_ARRAY_ELEMENT);
-			tipiClasses.addMessage(element);
-			Property nameProp = NavajoFactory.getInstance().createProperty(n, "Name", Property.STRING_PROPERTY, s, 0, "", Property.DIR_IN);
-			element.addProperty(nameProp);
+			if(!s.equals("StateNavajo") && !s.equals("NavajoView")) {
+				Message element = NavajoFactory.getInstance().createMessage(n, "Name", Message.MSG_TYPE_ARRAY_ELEMENT);
+				tipiClasses.addMessage(element);
+				Property nameProp = NavajoFactory.getInstance().createProperty(n, "Name", Property.STRING_PROPERTY, s, 0, "", Property.DIR_OUT);
+				element.addProperty(nameProp);
+			}
 
 		}
-		try {
-			FileWriter fw = new FileWriter("c:/navajos.xml");
-			n.write(fw);
-			fw.flush();
-			fw.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		
 		return n;
 	}
 
@@ -2598,7 +2661,6 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 
 	
 	public TipiConnector getConnector(String id) {
-		System.err.println("Looking for connector: "+id);
 		TipiConnector tipiConnector = tipiConnectorMap.get(id);
 		if(tipiConnector!=null) {
 			System.err.println("found!");
@@ -2609,6 +2671,7 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 	public TipiConnector getDefaultConnector() {
 		if(defaultConnector==null) {
 			defaultConnector = new HttpNavajoConnector();
+			defaultConnector.setContext(this);
 		}
 			
 		return defaultConnector;
@@ -2630,5 +2693,19 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 		}
 		return false;
 	}
+	
+	public void execute(Runnable e) throws TipiException {
+		TipiAnonymousAction taa = new TipiAnonymousAction(e);
+		myThreadPool.enqueueExecutable(taa);
+	}
+	
+	public void injectNavajo(String service, Navajo n) throws TipiBreakException {
 
+			if(n.getHeader()==null) {
+				Header h =NavajoFactory.getInstance().createHeader(n, service, "unknown","unknown", -1);
+				n.addHeader(h);
+			}
+			addNavajo(service, n);
+			loadNavajo(n, service);
+	}
 }
