@@ -614,13 +614,17 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
         	return false;
     	} 
     	Binary b = (Binary)o;
+    	System.err.println("Comparing binary sizes: "+b.getLength()+" with "+getLength());
     	if(b.getLength()!=getLength()) {
     		return false;
     	}
+    	System.err.println("Comparing binary mime: "+b.getMimeType()+" with "+getMimeType());
     	if(!(getMimeType().equals(b.getMimeType()))) {
     		return false;
     	}
     	// TODO REALLY implement this 
+    	System.err.println("DUBIOUS EQUALITY IN BINARY!");
+     	Thread.dumpStack();
     	return true;
     	
     }

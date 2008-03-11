@@ -333,7 +333,7 @@ public interface Navajo
    * @throws NavajoException
    * @return List expression properties
    */
-  public List refreshExpression() throws NavajoException;
+  public List<Property> refreshExpression() throws NavajoException;
   
   public void addPropertyChangeListener(PropertyChangeListener p);
   public void removePropertyChangeListener(PropertyChangeListener p);

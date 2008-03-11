@@ -22,7 +22,7 @@ public final class SaxHandler implements DocHandler {
     private final Stack<Message> messageStack = new Stack<Message>();
 //    private final ArrayList binaries = new ArrayList();
     private String currentTag = null;
-    private Property currentProperty = null;
+    private BasePropertyImpl currentProperty = null;
     private BaseHeaderImpl currentHeader;
     private BaseCallbackImpl currentCallback = null;
     private Method currentMethod = null;
@@ -298,9 +298,9 @@ public final class SaxHandler implements DocHandler {
         boolean isListType = (type != null && type.equals(Property.SELECTION_PROPERTY));
        
           if (isListType) {
-              currentProperty = NavajoFactory.getInstance().createProperty(currentDocument,myName,cardinality,description,direction);
+              currentProperty = (BasePropertyImpl) NavajoFactory.getInstance().createProperty(currentDocument,myName,cardinality,description,direction);
         } else {
-            currentProperty = NavajoFactory.getInstance().createProperty(currentDocument, myName, type, myValue, length, description, direction, subtype);
+            currentProperty = (BasePropertyImpl) NavajoFactory.getInstance().createProperty(currentDocument, myName, type, myValue, length, description, direction, subtype);
         }
 
           Message current = messageStack.peek();
@@ -457,7 +457,6 @@ public final class SaxHandler implements DocHandler {
 //    }
 
     public final void endElement(String tag) throws Exception {
-//        System.err.println("ending element: "+tag);
         if (tag.equals("tml")) {
          }
         if (tag.equals("message")) {
@@ -510,10 +509,11 @@ public final class SaxHandler implements DocHandler {
         if (Property.BINARY_PROPERTY.equals(currentProperty.getType())) {
             Binary b = new Binary(r,length);
             String sub = currentProperty.getSubType();
-            currentProperty.setValue(b);
+            currentProperty.setValue(b,false);
             // Preserve the subtype. This will cause the handle to refer to the server
             // handle, not the client side
             currentProperty.setSubType(sub);
+         //  currentProperty.setInitialized();
         } else {
             throw new IllegalArgumentException("uuuh?");
        }

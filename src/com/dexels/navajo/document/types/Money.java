@@ -1,5 +1,6 @@
 package com.dexels.navajo.document.types;
 
+import java.math.*;
 import java.text.*;
 import java.util.regex.*;
 
@@ -18,7 +19,8 @@ public final class Money
     extends NavajoType
     implements Comparable<Money> {
 
-  private Double value = null;
+  private static final int INTERNAL_DECIMAL_PLACES = 4;
+private Double value = null;
   private static DecimalFormat nf = new DecimalFormat("\u00A4 #,##0.00;\u00A4 -#,##0.00");
   private static DecimalFormat nf_euro = new DecimalFormat("\u20AC #,##0.00;\u20AC -#,##0.00"); //in case of the NOKBUG
   private static DecimalFormat internalTmlFormat = new DecimalFormat("0.00");
@@ -38,8 +40,14 @@ public final class Money
   public Money(Double d) {
     super(Property.MONEY_PROPERTY);
     setupSubtypes();
-    value = d;
+    setValue(d);
+
   }
+
+private void setValue(Double d) {
+	value = d;
+    roundValue();
+}
 
   /**
    * Create a new Money object from a given Double and with a given subtype
@@ -49,8 +57,8 @@ public final class Money
   public Money(Double d, String subtype) {
     super(Property.MONEY_PROPERTY, subtype);
     setupSubtypes();
-    value = d;
-  }
+    setValue(d);
+}
 
   /**
    * Create a new Money object
@@ -59,6 +67,7 @@ public final class Money
     super(Property.MONEY_PROPERTY);
     setupSubtypes();
     value = null;
+  
   }
 
   /**
@@ -72,10 +81,10 @@ public final class Money
       value = ( (Money) o).value;
     }
     else if (o instanceof Double) {
-      value = (Double) o;
+      setValue((Double) o);
     }
     else if (o instanceof Integer) {
-      value = new Double( ( (Integer) o).intValue());
+      setValue(new Double( ( (Integer) o).intValue()));
     }
     else if (o instanceof String && ! ( (String) o).trim().equals("")) {
       Pattern p = Pattern.compile("-?[0-9]+[.,]?[0-9]{0,2}");
@@ -83,16 +92,15 @@ public final class Money
       boolean isMoneyFormat = m.find();
 
       if (isMoneyFormat) {
-        value = new Double(((String) o).substring(m.start(), m.end()) + "");
-      }
-      else {
-        value = new Double(o + "");
+        setValue(new Double(((String) o).substring(m.start(), m.end()) + ""));
+      } else {
+        setValue(new Double(o + ""));
       }
     }
     else {
       value = null;
     }
-  }
+ }
 
   /**
    * Create a new MOney object from an Integer
@@ -102,8 +110,9 @@ public final class Money
     super(Property.MONEY_PROPERTY);
     setupSubtypes();
     if (d != null) {
-      value = new Double(d.intValue());
+    	setValue( new Double(d.intValue()));
     }
+  
   }
 
   /**
@@ -113,8 +122,8 @@ public final class Money
   public Money(int d) {
     super(Property.MONEY_PROPERTY);
     setupSubtypes();
-    value = new Double(d);
-  }
+    setValue(new Double(d));
+ }
 
   /**
    * Create a new Money object from a double
@@ -123,7 +132,8 @@ public final class Money
   public Money(double d) {
     super(Property.MONEY_PROPERTY);
     setupSubtypes();
-    value = new Double(d);
+    setValue(d);
+
   }
 
   /**
@@ -134,7 +144,7 @@ public final class Money
   public Money(double d, String subtype) {
     super(Property.MONEY_PROPERTY, subtype);
     setupSubtypes();
-    value = new Double(d);
+    setValue(d);
   }
 
   /**
@@ -150,7 +160,7 @@ public final class Money
     }
     try {
       if (d != null && !d.trim().equals("")) {
-        value = new Double(d);
+        setValue(new Double(d));
       }
     }
     catch (Throwable t) {
@@ -158,6 +168,22 @@ public final class Money
     }
   }
 
+  private void roundValue(){
+	  if(value==null) {
+		  return;
+	  }
+	  value = round(value, INTERNAL_DECIMAL_PLACES);
+  }
+  
+  private double round(double d, int decimalPlace){
+	    // see the Javadoc about why we use a String in the constructor
+	    // http://java.sun.com/j2se/1.5.0/docs/api/java/math/BigDecimal.html#BigDecimal(double)
+	    BigDecimal bd = new BigDecimal(Double.toString(d));
+	    bd = bd.setScale(decimalPlace,BigDecimal.ROUND_HALF_UP);
+	    return bd.doubleValue();
+	  }
+  
+  
   private void setupSubtypes() {
     String format = getSubType("format");
     if (format != null) {
@@ -179,7 +205,8 @@ public final class Money
       return customFormat.format(value);
 
     }
-    return nf.format(value);
+    String formatted = nf.format(value);
+     return formatted;
   }
 
   public String tmlString() {
@@ -219,7 +246,8 @@ public String editingString() {
     if (value == null) {
       return 0;
     }
-    return value.doubleValue();
+    double doubleValue = value.doubleValue();
+    return doubleValue;
   }
 
   public final int compareTo(Money o) {
@@ -243,6 +271,9 @@ public String editingString() {
      System.err.println("sa =" + m.doubleValue());
   } 
 
+  /**
+   * TODO WTF?
+   */
   public int hashCode() {
 	  if (value == null) {
 		  return 312321;
