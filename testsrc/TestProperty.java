@@ -1,6 +1,7 @@
 
 import junit.framework.*;
 
+import java.beans.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -110,6 +111,7 @@ public class TestProperty extends TestCase {
 		StopwatchTime swt = new StopwatchTime(format);
 		p1.setAnyValue(swt);
 		assertEquals("stopwatchtime", p1.getType());
+		System.err.println("FORM: "+format+" val: "+p1.getValue());
 		assertEquals(format, p1.getValue());
 		assertTrue(p1.getTypedValue().equals(new StopwatchTime(format)));
 		
@@ -132,6 +134,9 @@ public class TestProperty extends TestCase {
 			Assert.assertEquals(s2.isSelected(), s1.isSelected());
 			Assert.assertEquals(s2.getName(), s1.getName());
 			Assert.assertEquals(s2.getValue(), s1.getValue());
+			ArrayList selections = ((ArrayList)testSelectionProp.getTypedValue());
+//			Selection sel = (Selection) selections.get(0);
+//			System.err.println("Typed: "+selections.toString());
 			// Check whether selection with same name is correctly replaced.
 			Selection s3 = NavajoFactory.getInstance().createSelection(testDoc, "firstselection", "1", false);
 			testSelectionProp.addSelection(s3);
@@ -547,14 +552,10 @@ public class TestProperty extends TestCase {
 		
 	}
 	
-	public void testNullValues() {
-		try {
-			Property testProp = NavajoFactory.getInstance().createProperty(testDoc, "myprop", Property.STRING_PROPERTY, null, 89, "mydesc", Property.DIR_IN);
+	public void testNullValues() throws NavajoException {
+		Property testProp = NavajoFactory.getInstance().createProperty(testDoc, "myprop", Property.STRING_PROPERTY, null, 89, "mydesc", Property.DIR_IN);
 			Assert.assertNull(testProp.getValue());
 			Assert.assertNull(testProp.getTypedValue());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 	
 	public void testSetValueWithString() throws NavajoException {
@@ -565,4 +566,52 @@ public class TestProperty extends TestCase {
 			Assert.assertEquals(Property.BOOLEAN_PROPERTY, p.getType());
 	
 	}
+	
+	public void testNullEquals() throws NavajoException {
+		
+		for (int i = 0; i < Property.VALID_DATA_TYPES.length; i++) {
+			Property p = NavajoFactory.getInstance().createProperty(testDoc, "myprop", Property.VALID_DATA_TYPES[i], null, 89, "mydesc", Property.DIR_IN);
+			Property q = NavajoFactory.getInstance().createProperty(testDoc, "myprop", Property.VALID_DATA_TYPES[i], null, 89, "mydesc", Property.DIR_IN);
+			Assert.assertEquals(p.getTypedValue(), q.getTypedValue());
+		}
+
+
+	}
+
+	
+	
+	public void testNullMoneyEquals(){
+			     Money m = new Money();
+			     Money mm = new Money();
+				Assert.assertEquals(m,mm);
+	}
+	
+	public void testSelectionEqualsUpdateFix() throws Exception {
+		BaseNavajoImpl n = new BaseNavajoImpl();
+		BaseMessageImpl m = new BaseMessageImpl(n, "Aap");
+		BasePropertyImpl p1 = new BasePropertyImpl(n, "Noot");
+		p1.setType("selection");
+		p1.setCardinality("1");
+		p1.addSelection(new BaseSelectionImpl(n, "opt1", "1", false));
+		p1.addSelection(new BaseSelectionImpl(n, "opt2", "2", true));
+		p1.addPropertyChangeListener(new PropertyChangeListener(){
+
+			public void propertyChange(PropertyChangeEvent e) {
+				System.err.println("Old: "+e.getOldValue());
+				System.err.println("New: "+e.getNewValue());
+				// no real change. 
+				Assert.fail();
+			}});
+		p1.setSelected(p1.getSelection("opt2"));
+		
+	}
+	
+	public void testMoneyFormat(){
+	     Money m = new Money(10); 
+	     System.err.println("m: "+m.tmlString()+" :: "+m.editingString());
+	     Assert.assertEquals(m.tmlString(), "10.00");
+	     Assert.assertEquals(m.editingString(), "10");
+	}
+
+	
 }
