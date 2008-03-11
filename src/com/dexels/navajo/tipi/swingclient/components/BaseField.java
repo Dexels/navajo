@@ -40,6 +40,7 @@ public class BaseField extends JTextField implements ChangeMonitoring, Validatab
   private boolean changed = false;
   public BaseField() {
 //    myDocument = getDocument();
+  	setOpaque(false);
     try {
       res = SwingClient.getUserInterface().getResource("com.dexels.sportlink.client.swing.TextLabels");
       jbInit();

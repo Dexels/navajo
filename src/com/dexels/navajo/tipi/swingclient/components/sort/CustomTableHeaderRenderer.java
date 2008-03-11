@@ -116,12 +116,12 @@ public class CustomTableHeaderRenderer
     this.setMargin(new Insets(0, 3, 0, 0));
   }
 
-  protected void printComponent(Graphics g) {
-    Color c = getBackground();
-    setBackground(Color.white);
-    super.printComponent(g);
-    setBackground(c);
-  }
+//  protected void printComponent(Graphics g) {
+//    Color c = getBackground();
+//    setBackground(Color.white);
+//    super.printComponent(g);
+//    setBackground(c);
+//  }
 
 
 }

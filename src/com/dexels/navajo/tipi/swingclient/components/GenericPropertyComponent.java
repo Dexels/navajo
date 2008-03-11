@@ -150,7 +150,6 @@ public class GenericPropertyComponent
     catch (Exception e) {
       e.printStackTrace();
     }
- 
   }
 
   public void addPropertyKeyListener(KeyListener kl) {
@@ -236,17 +235,6 @@ public class GenericPropertyComponent
 
   public final Property getProperty() {
     return myProperty;
-  }
-
-  protected void printComponent(Graphics g) {
-//    Color cc = g.getColor();
-//    g.setColor(Color.white);
-//    g.fillRect(0,0,getWidth(),getHeight());
-//    g.setColor(cc);
-//    Color c = getBackground();
-//    setBackground(Color.white);
-    super.printComponent(g);
-//    setBackground(c);
   }
 
   public void setProperty(final Property p) {

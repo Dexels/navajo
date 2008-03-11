@@ -2097,16 +2097,16 @@ public void updateTableSize() {
     }
   }
 
-  protected void printComponent(Graphics g) {
-    Color cc = g.getColor();
-    g.setColor(Color.white);
-    g.fillRect(0, 0, getWidth(), getHeight());
-    g.setColor(cc);
-    Color c = getBackground();
-    setBackground(Color.white);
-    super.printComponent(g);
-    setBackground(c);
-  }
+//  protected void printComponent(Graphics g) {
+//    Color cc = g.getColor();
+//    g.setColor(Color.white);
+//    g.fillRect(0, 0, getWidth(), getHeight());
+//    g.setColor(cc);
+//    Color c = getBackground();
+//    setBackground(Color.white);
+//    super.printComponent(g);
+//    setBackground(c);
+//  }
 
   public int getSelectedIndex() {
 	  return getSelectedRow();

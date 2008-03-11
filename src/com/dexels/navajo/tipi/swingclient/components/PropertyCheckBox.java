@@ -37,16 +37,16 @@ public final class PropertyCheckBox extends BaseCheckBox implements ChangeMonito
     // gar nichts
   }
 
-  protected void printComponent(Graphics g) {
-    Color cc = g.getColor();
-    g.setColor(Color.white);
-    g.fillRect(0,0,getWidth(),getHeight());
-    g.setColor(cc);
-    Color c = getBackground();
-    setBackground(Color.white);
-    super.printComponent(g);
-    setBackground(c);
-  }
+//  protected void printComponent(Graphics g) {
+//    Color cc = g.getColor();
+//    g.setColor(Color.white);
+//    g.fillRect(0,0,getWidth(),getHeight());
+//    g.setColor(cc);
+//    Color c = getBackground();
+//    setBackground(Color.white);
+//    super.printComponent(g);
+//    setBackground(c);
+//  }
 
   public final Property getProperty() {
     return myProperty;
