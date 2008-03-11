@@ -13,6 +13,7 @@
          <value direction="in" name="border" type="border"/>
          <value direction="in" name="speed" type="integer" property="speed"/>
          <value direction="in" name="direction" type="string" property="direction"/>
+         <value direction="in" name="visible" type="boolean" property="visible"/>
       </values>
       <methods>
          <method name="flip"/>
@@ -32,6 +33,28 @@
          <value direction="in" name="opacity" type="float" property="opacity"/>
          <value direction="in" name="bordersize" type="float" property="borderWidth"/>
          <value direction="in" name="arc" type="integer" property="arcWidth"/>
+      </values>
+      <methods/>
+   </tipiclass>
+   <tipiclass addtocontainer="true" childcount="0" class="TipiMapHollandPanel" layoutmanager="false" module="container" name="mapholland" package="com.dexels.navajo.tipi.components.rich" studio-icon="tabs.gif" type="tipi">
+      <events>
+         <event name="onInstantiate"/>
+         <event name="onLoad">
+            <param name="service" type="string"/>
+         </event>
+         <event name="onLocation">
+            <param name="clubid" type="string"/>
+            <param name="clubname" type="string"/>
+            <param name="union" type="string"/>
+            <param name="lat" type="float"/>
+            <param name="lon" type="float"/>
+         </event>
+      </events>
+      <values>
+         <value direction="in" name="background" type="color" property="background"/>
+         <value direction="in" name="foreground" type="color"/>
+         <value direction="in" name="border" type="border"/>
+         <value direction="in" name="opacity" type="float" property="opacity"/>
       </values>
       <methods/>
    </tipiclass>
@@ -62,6 +85,8 @@
          <value direction="in" name="text" type="string" property="text"/>
          <value direction="in" name="tooltiptext" type="string" property="toolTipText"/>
          <value direction="in" name="icon" type="url" property="iconUrl"/>
+         <value direction="in" name="opaque" type="boolean" property="opaque"/>
+         <value direction="in" name="showSpring" type="boolean" property="showSpring"/>
       </values>
       <methods>
          <method name="flip"/>
@@ -82,9 +107,12 @@
          <value direction="in" name="text" type="string" property="text"/>
          <value direction="in" name="tooltiptext" type="string" property="toolTipText"/>
          <value direction="in" name="icon" type="url" property="iconUrl"/>
+         <value direction="in" name="showSpring" type="boolean" property="showSpring"/>
       </values>
       <methods>
          <method name="flip"/>
       </methods>
    </tipiclass>
+   
+  
 </tid>
