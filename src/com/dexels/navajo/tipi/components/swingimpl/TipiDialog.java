@@ -172,8 +172,9 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 	}
 
 	private final void constructDialog() {
+		System.err.println("Otherroot: "+mySwingTipiContext.getOtherRoot());
 		// System.err.println("Constructing: studio? "+isStudioElement());
-		if (mySwingTipiContext.getAppletRoot() != null || mySwingTipiContext.getOtherRoot() != null
+		if (mySwingTipiContext.getAppletRoot() != null  || mySwingTipiContext.getOtherRoot() != null
 				|| (mySwingTipiContext.getDefaultDesktop() != null && forceInternal  ==true)) {
 			// System.err.println("Applet root");
 			constructAppletDialog();
@@ -217,6 +218,8 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 
 	private JInternalFrame createInternalFrame(boolean isModal, JDesktopPane desktop, Dimension size) {
 		System.err.println("Creating modal: "+isModal);
+		System.err.println("HACKED TO NONMODAL!");
+		isModal = false;
 		JRootPane myRootPane = null;
 		if (myContext.getTopLevel() instanceof TipiApplet) {
 			myRootPane = ((TipiApplet) myContext.getTopLevel()).getRootPane();
@@ -234,6 +237,7 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 			myRootPaneContainer = jif;
 
 			mySwingTipiContext.getDefaultDesktop().add(jif);
+			System.err.println("Adding: "+jif+" to "+mySwingTipiContext.getDefaultDesktop());
 			return jif;
 		} else {
 			TipiModalInternalFrame tmif = new TipiModalInternalFrame("", myRootPane, desktop, getSwingContainer(), size);
@@ -270,6 +274,7 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 				if (Frame.class.isInstance(r)) {
 					// System.err.println("Creating with frame root");
 					myDialog = new JDialog((Frame) r);
+					myDialog.setUndecorated(true);
 					myRootPaneContainer = myDialog;
 				} else {
 					if (rootObject instanceof TipiApplet) {
@@ -292,7 +297,7 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 				myDialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 			}
 		}
-		myDialog.setUndecorated(!decorated);
+//		myDialog.setUndecorated(!decorated);
 		createWindowListener(myDialog);
 		myDialog.setTitle(title);
 		myDialog.toFront();

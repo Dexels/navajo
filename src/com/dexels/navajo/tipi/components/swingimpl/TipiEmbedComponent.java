@@ -29,6 +29,11 @@ public class TipiEmbedComponent extends TipiPanel {
 	private static final String NAVAJONAME_PROPERTY_NAME = null;
 	protected TipiStandaloneContainer stc = null;
 
+	
+	private String tipiCodeBase;
+	private String resourceCodeBase;
+	
+	
 	// public void loadDefinition(String tipiPath, String definitionName, String
 	// resourceBaseDirectory) throws IOException, TipiException;
 	// public void loadClassPathLib(String location);
@@ -52,7 +57,7 @@ public class TipiEmbedComponent extends TipiPanel {
 				ZipResourceLoader zr = new ZipResourceLoader(b);
 				stc.getContext().setTipiResourceLoader(new TmlResourceLoader(zr, "tipi/"));
 				stc.getContext().setGenericResourceLoader(new TmlResourceLoader(zr, "resource/"));
-				parseLocation("start.xml");
+				parseLocation("init.xml");
 				switchToDefinition("init");
 				Message m = n.getMessage(NAVAJO_MESSAGE_PATH);
 				List<Message> al = m.getAllMessages();
@@ -126,14 +131,16 @@ public class TipiEmbedComponent extends TipiPanel {
 
 		if (name.equals("tipiCodeBase")) {
 			try {
-				stc.getContext().setTipiResourceLoader((String) value);
+				tipiCodeBase = (String) value;
+				stc.getContext().setTipiResourceLoader(tipiCodeBase);
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
 			}
 		}
 		if (name.equals("resourceCodeBase")) {
 			try {
-				stc.getContext().setGenericResourceLoader((String) value);
+				resourceCodeBase = (String) value;
+				stc.getContext().setGenericResourceLoader(resourceCodeBase);
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
 			}
@@ -155,9 +162,25 @@ public class TipiEmbedComponent extends TipiPanel {
 		super.setComponentValue(name, value);
 	}
 
+	
+	
+	protected Object getComponentValue(String name) {
+		if(name.equals("context")) {
+			return myContext;
+		}
+		return super.getComponentValue(name);
+	}
+
 	protected void performComponentMethod(final String name, final TipiComponentMethod compMeth, TipiEvent event) {
+		System.err.println("Performing component method: "+name);
 		if ("loadDefinition".equals(name)) {
 			try {
+				if(resourceCodeBase==null) {
+					stc.getContext().setGenericResourceLoader(myContext.getGenericResourceLoader());
+				}
+				if(tipiCodeBase==null) {
+					stc.getContext().setTipiResourceLoader(myContext.getTipiResourceLoader());
+				}
 				Operand oo = compMeth.getEvaluatedParameter("location", event);
 				String loc = (String) oo.value;
 				System.err.println("Location: "+loc);
@@ -168,6 +191,12 @@ public class TipiEmbedComponent extends TipiPanel {
 		}
 		if ("switch".equals(name)) {
 			try {
+				if(resourceCodeBase==null) {
+					stc.getContext().setGenericResourceLoader(myContext.getGenericResourceLoader());
+				}
+				if(tipiCodeBase==null) {
+					stc.getContext().setTipiResourceLoader(myContext.getTipiResourceLoader());
+				}
 				Operand oo = compMeth.getEvaluatedParameter("definition", event);
 				String nameVal = (String) oo.value;
 
@@ -235,6 +264,7 @@ public class TipiEmbedComponent extends TipiPanel {
 	}
 
 	private void parseLocation(String loc) throws IOException, TipiException {
+		System.err.println("Parsing: "+loc);
 		InputStream tipiResourceStream = stc.getContext().getTipiResourceStream(loc);
 		stc.getContext().parseStream(tipiResourceStream);
 	}

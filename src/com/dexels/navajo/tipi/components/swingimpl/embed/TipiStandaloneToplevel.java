@@ -42,9 +42,12 @@ private final JComponent myPanel; //= new JPanel();
   public void addToContainer(final Object c, final Object constraints) {
 	  if (myPanel!=null) {
 		  //System.err.println("Adding to toplevel: "+c.getClass()+ " -- "+c.hashCode());
+		  
+		  System.err.println("BEWArE: Tiplet hack");
 		  runSyncInEventThread(new Runnable(){
-			public void run() {
-				  myPanel.add((Component)c,BorderLayout.CENTER);
+
+			  public void run() {
+//				  myPanel.add((Component)c,BorderLayout.CENTER);
 			}});
 	} 
   }

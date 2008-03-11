@@ -175,7 +175,13 @@
             <param name="format" type="string" />
             <param name="report" type="binary" />
          </event>
-
+         <event name="onKey">
+            <param name="code" type="integer" />
+            <param name="key" type="string" />
+            <param name="modifiers" type="string" />
+            <param name="mode" type="string" />
+         </event>
+         <event name="onEnter" />
       </events>
       <values>
          <value direction="in" name="highColor" type="color" property="highColor"/>
@@ -194,7 +200,7 @@
          <value direction="out" name="filteredMessage" type="message" />
          <value direction="in" name="visible" type="boolean" />
          <value direction="in" name="readOnly" type="boolean" />
-         <value direction="in" name="border" type="border" />
+         <value direction="in" name="border" type="border" property="border"/>
          <value direction="in" name="rowHeight" type="integer" />
          <value direction="out" name="columnCount" type="integer" />
          <value direction="out" name="rowCount" type="integer" />
@@ -222,7 +228,10 @@
          <method name="showEditDialog">
             <param name="title" type="string" value="'Edit'" />
          </method>
-
+         <method name="selectByValue">
+            <param name="propertyName" type="string"/>
+            <param name="value" type="object"/>
+         </method>
          <method name="updateConditionalRemarks" />
          <method name="stopCellEditing" />
          <method name="repaint" />
@@ -1343,7 +1352,7 @@
          <value direction="in" name="visible" type="boolean" />
          <value direction="in" name="background" type="color" />
          <value direction="in" name="foreground" type="color" />
-         <value direction="in" name="border" type="object" />
+         <value direction="in" name="border" type="object" property="border"/>
          <value direction="in" name="opaque" type="boolean" property="opaque" />
       </values>
       <methods />
@@ -1461,6 +1470,37 @@
       </methods>
    </tipiclass>
 
+   <tipiclass class="TipiNavajoView" name="navajoviewer" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="*" layoutmanager="false" addtocontainer="true">
+      <events>
+         <event name="onInstantiate" />
+         <event name="onLoad" />
+         <event name="onGeneratedErrors" />
+      </events>
+      <values>
+           <value direction="in" name="background" type="color" property="background" />
+         <value direction="in" name="border" type="border" property="border" />
+         <value direction="inout" name="tooltip" type="string" property="ToolTipText" />
+         <value direction="in" name="visible" type="boolean" property="visible" />
+         <value direction="in" name="paint" type="paint" property="paint" />
+
+         <value direction="in" name="image" type="resource" property="imageUrl" />
+         <value direction="in" name="image_alignment" type="selection" property="alignment">
+            <option description="North" value="north" />
+            <option description="East" value="east" />
+            <option description="South" value="south" />
+            <option description="West" value="west" />
+            <option description="Center" value="center" />
+            <option description="NorthEast" value="northeast" />
+            <option description="SouthEast" value="southeast" />
+            <option description="NorthWest" value="northwest" />
+            <option description="SouthWest" value="southwest" />
+         </value>
+         
+         <value direction="in" name="navajo" type="navajo"/>
+         
+      </values>
+      <methods />
+   </tipiclass>
 
 
 

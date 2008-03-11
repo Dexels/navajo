@@ -36,4 +36,8 @@ public class TipiSwingExtension implements TipiExtension {
 		jars.add("NavajoSwingTipi.jar");
 		return jars;
 	}
+	public String getConnectorId() {
+		return null;
+	}
+
 }

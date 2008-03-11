@@ -73,19 +73,23 @@ public abstract class TipiSwingDataComponentImpl
 	} catch (SecurityException e) {
 		// assume false;
 	}      
-	if (noPrefSizes) {
-          if (getContainer() instanceof JComponent) {
-              JComponent cc = (JComponent)getContainer();
-              LayoutManager m = cc.getLayout();
-              if (m instanceof GridBagLayout) {
-                cc.setPreferredSize(new Dimension(0,0));
-            }
-          }
-      }
+//	if (noPrefSizes) {
+//          if (getContainer() instanceof JComponent) {
+//              JComponent cc = (JComponent)getContainer();
+//              LayoutManager m = cc.getLayout();
+//              if (m instanceof GridBagLayout) {
+//                cc.setPreferredSize(new Dimension(0,0));
+//            }
+//          }
+//      }
 
     try {
-		getSwingContainer().add( (Component) c, constraints);
-	} catch (Throwable e) {
+    	runSyncInEventThread(new Runnable(){
+
+			public void run() {
+				getSwingContainer().add( (Component) c, constraints);
+			}});
+		} catch (Throwable e) {
 		throw new RuntimeException("Illegal constraint while adding object: "+c+" to component: "+
 				getPath()+" with constraint: "+constraints);
 	}

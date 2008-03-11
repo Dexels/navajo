@@ -28,7 +28,6 @@ public class TipiToolBar
     ts.setMinimumSize(new Dimension(0,0));
 //	EffectsManager.setEffect(ts, new FadeIn(), TransitionType.APPEARING);
 //	EffectsManager.setEffect(ts, new FadeOut(), TransitionType.DISAPPEARING);
-
     return ts;
   }
 

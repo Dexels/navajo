@@ -47,18 +47,83 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 	private List<XMLElement> columnList = new ArrayList<XMLElement>();
 
 	public Object createContainer() {
-		TipiMessageTablePanel mm = new TipiMessageTablePanel(myContext);
+		final TipiMessageTablePanel mm = new TipiMessageTablePanel(myContext);
 		mm.setShowRowHeaders(false);
 		// Don't register actionPerformed, that is done elsewhere.
 		mm.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
 				messageTableSelectionChanged(e);
+				getAttributeProperty("selectedMessage").setAnyValue(mm.getSelectedMessage());
 			}
 		});
+		
+		mm.addFocusListener(new FocusListener(){
+
+			public void focusGained(FocusEvent e) {
+				System.err.println("Table gained: "+e.getOppositeComponent().toString());
+			}
+
+			public void focusLost(FocusEvent e) {
+				System.err.println("Table lost: "+e.getOppositeComponent().toString());
+				
+			}});
+			
 		mm.addChangeListener(this);
 		TipiHelper th = new TipiSwingHelper();
 		th.initHelper(this);
 		addHelper(th);
+		  
+		   mm.getTable().addKeyListener(new KeyListener() {
+		        public void keyTyped(KeyEvent e) {
+		            Map<String,Object> m = getEventMap(e);
+		            m.put("mode", "typed");
+		           
+		            try {
+		                performTipiEvent("onKey", m, true);
+		            } catch (TipiException e1) {
+		                e1.printStackTrace();
+		            }
+		        }
+
+		        public void keyPressed(KeyEvent e) {
+		            Map<String,Object> m = getEventMap(e);
+		            m.put("mode", "pressed");
+		            if (e.getKeyCode()==KeyEvent.VK_ENTER) {
+		                try {
+		                System.err.println("Enterrrr!");
+		                e.consume();
+		                performTipiEvent("onEnter", m, true);
+		                } catch (TipiException e1) {
+		                    e1.printStackTrace();
+		                }
+					}
+		            try {
+		                performTipiEvent("onKey", m, true);
+		            } catch (TipiException e1) {
+		                e1.printStackTrace();
+		            }
+		        }
+
+		        public void keyReleased(KeyEvent e) {
+		        	System.err.println("REL!");
+		        	Map<String,Object> m = getEventMap(e);
+		            m.put("mode", "released");
+
+		            try {
+		                performTipiEvent("onKey", m, true);
+		            } catch (TipiException e1) {
+		                e1.printStackTrace();
+		            }
+		        }
+		        
+		        public Map<String,Object> getEventMap(KeyEvent e) {
+		            Map<String,Object> hm = new HashMap<String,Object>();
+		            hm.put("code", new Integer(e.getKeyCode()));
+		            hm.put("modifiers", KeyEvent.getKeyModifiersText(e.getModifiers()));
+		            hm.put("key", KeyEvent.getKeyText(e.getKeyCode()));
+		            return hm;
+		        }
+		    });
 		mm.doLayout();
 		return mm;
 	}
@@ -616,6 +681,25 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 							ex1.printStackTrace();
 						}
 					}
+					if ("selectByValue".equals(name)) {
+						Operand name = compMeth.getEvaluatedParameter("propertyName", event);
+						Operand value = compMeth.getEvaluatedParameter("value", event);
+						try {
+							int rowCount = mm.getRowCount();
+							for (int i = 0; i < rowCount; i++) {
+								Message current = mm.getMessageRow(i);
+								Property p = current.getProperty((String) name.value);
+								if(p!=null) {
+									if(p.getTypedValue().equals(value.value)) {
+										mm.setSelectedRow(i);
+										break;
+									}
+								}
+							}
+						} catch (Exception ex1) {
+							ex1.printStackTrace();
+						}
+					}
 				}
 				if ("export".equals(name)) {
 					Operand filename = compMeth.getEvaluatedParameter("filename", event);
@@ -741,9 +825,19 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 			runSyncInEventThread(new Runnable(){
 				public void run() {
 					myFooterRenderer = new MessageTableFooterRenderer(TipiTable.this);
+					myFooterRenderer.setVisible(true);
+					mm.setFooterRenderer(myFooterRenderer);
+					mm.doLayout();
+					
 				}});
 		}
 		myFooterRenderer.addAggregate(columnIndex, expression);
+		SwingUtilities.invokeLater(new Runnable(){
+
+			public void run() {
+				System.err.println("Footer size: "+myFooterRenderer.getSize());
+				
+			}});
 	}
 
 	public void flushAggregateValues() {

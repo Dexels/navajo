@@ -69,7 +69,7 @@ public class TipiApplet extends JApplet {
 
 		arguments.add(init);
 		try {
-			myContext = MainApplication.initialize(init, arguments,this);
+			myContext = MainApplication.initialize(init, null,arguments,this,null);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

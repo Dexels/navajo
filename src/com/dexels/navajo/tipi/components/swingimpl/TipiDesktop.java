@@ -54,6 +54,8 @@ public class TipiDesktop
   public void addToContainer(final Object c, final Object constraints) {
     runSyncInEventThread(new Runnable() {
       public void run() {
+    	  
+    	  System.err.println("Adding to desktop: "+c);
 			getSwingContainer().add( (Component) c, constraints);
 			
 			JInternalFrame tw = (JInternalFrame) c;
@@ -72,6 +74,7 @@ public class TipiDesktop
     }
     runSyncInEventThread(new Runnable() {
       public void run() {
+    	  System.err.println("Removing from desktop: "+c);
     	  if (c instanceof JInternalFrame) {
 			((JInternalFrame)c).dispose();
     	  }

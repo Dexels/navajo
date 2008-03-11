@@ -364,7 +364,7 @@ public class SwingTipiContext extends TipiContext {
 			super.doActions(te, comp,executableParent, exe);
 			return;
 		}
-
+		
 		TipiComponent tc = (TipiComponent) evaluate(component, comp, te).value;
 		if (tc == null || !(tc instanceof TipiSwingComponent)) {
 			super.doActions(te, comp,executableParent, exe);

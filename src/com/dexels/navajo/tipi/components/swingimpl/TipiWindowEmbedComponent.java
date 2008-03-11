@@ -7,10 +7,13 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
 import java.awt.*;
+import java.beans.*;
 
 import javax.swing.*;
 import javax.swing.event.*;
 
+import com.dexels.navajo.document.*;
+import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.core.*;
 import com.dexels.navajo.tipi.components.swingimpl.embed.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
@@ -42,8 +45,36 @@ public class TipiWindowEmbedComponent extends TipiEmbedComponent {
 		stc.getContext().addShutdownListener(new ShutdownListener(){
 
 			public void contextShutdown() {
-				panel.setVisible(false);
-				panel.dispose();
+				runSyncInEventThread(new Runnable(){
+
+					public void run() {
+						panel.setVisible(false);
+						panel.dispose();
+					}});
+				
+			}});
+		
+	
+		stc.getContext().addNavajoListener(new TipiNavajoListener(){
+
+			public void navajoReceived(Navajo n, String service) {
+				System.err.println("Nabacho: "+service);
+				try {
+					myContext.injectNavajo(service, n);
+					Navajo navajoList = myContext.createNavajoListNavajo();
+					myContext.injectNavajo("NavajoListNavajo", navajoList);
+					
+				} catch (TipiBreakException e) {
+					e.printStackTrace();
+				} catch (NavajoException e) {
+					e.printStackTrace();
+				}
+				
+			}
+
+			public void navajoSent(Navajo n, String service) {
+				// TODO Auto-generated method stub
+				
 			}});
 		//stc.setRootComponent(panel);
 		return panel;
