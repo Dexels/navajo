@@ -55,7 +55,7 @@ public class PerspectiveTransform {
 	}
 	
 	private static BufferedImage transformXaxis(BufferedImage input, double degrees, boolean keepcenter, boolean to_left){
-		long st = System.currentTimeMillis();
+		//long st = System.currentTimeMillis();
 		int width = input.getWidth();
 		int height = input.getHeight();
 		float scalar = 1.0f - ((float)degrees * (0.3f/85.0f));
@@ -73,29 +73,33 @@ public class PerspectiveTransform {
 		Graphics2D buffer = result.createGraphics();
 		buffer.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		
-		BufferedImage new_width_input = GraphicsUtilities.createCompatibleTranslucentImage(width, new_height);
-		Graphics2D nwg = new_width_input.createGraphics();		
+		BufferedImage new_height_input = GraphicsUtilities.createCompatibleTranslucentImage(width, new_height);
+		Graphics2D nwg = new_height_input.createGraphics();		
 		nwg.drawImage(input, 0, 0, width, new_height, null);			
 		nwg.dispose();
 		
 		int dh = q_factor;
 		float alpha_factor = alpha_overlay / new_height;
 		
+		double tan = 0.25 * Math.tan(rad_a);
+		
 		for(int y = 0;y<new_height;y+=dh){
-			double ddw = 0.25*y*Math.tan(rad_a);
+			double ddw;
 			if(to_left) {
-				ddw = 0.25*(new_height-y)*Math.tan(rad_a);
+				ddw = ((new_height-y)*tan);
+			} else {
+				ddw = (y*tan);
 			}
-			int w = (int)(width - 2*ddw);
+			int w = (int) (width - ( ddw * 2 ));
 			
 			if(w < 1){
 				w=1;
-				ddw = height/2;
+				ddw = height << 1;
 			}
 			
 			BufferedImage target = GraphicsUtilities.createCompatibleTranslucentImage(w, dh);
 			Graphics2D tg = target.createGraphics();
-		  tg.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+		  tg.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
 		  
 			if(to_left){
 				float val = alpha_overlay - y*alpha_factor;
@@ -117,7 +121,7 @@ public class PerspectiveTransform {
 			
 			tg.fillRect(0,0, w, dh);
 			tg.setComposite(AlphaComposite.SrcOut.derive(1.0f));
-			tg.drawImage(new_width_input, 0, -y, w, new_height, null);
+			tg.drawImage(new_height_input, 0, -y, w, new_height, null);
 			
 			/* Possible Blurring
 			int radius = 1;
@@ -126,8 +130,8 @@ public class PerspectiveTransform {
 			target = getBlurFilter(0, radius).filter(target, null);
 			
 			*/
-			
-			buffer.drawImage(target, (int)ddw, y, w, dh, null);
+					
+			buffer.drawImage(target, (int)ddw, y, w, dh, null);			
 			tg.dispose();
 		}
 		

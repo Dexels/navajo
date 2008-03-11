@@ -45,28 +45,33 @@ public class DesktopButton extends JButton {
 	private int fontsize_b = 12;
 	private float glow = 0.6f;
 	private String toolTip = "";
+	private boolean showSpring = true;
 
 	public DesktopButton(URL imagepath, String text) {
 		this(imagepath);
 		setText(text);
 		setForeground(Color.white);
 	}
-	
-	public void setIconUrl(URL iconpath){
+
+	public void setShowSpring(boolean b) {
+		this.showSpring = b;
+	}
+
+	public void setIconUrl(URL iconpath) {
 		myIcon = new ImageIcon(iconpath);
 	}
 
-	public void setToolTipText(String text){
+	public void setToolTipText(String text) {
 		this.toolTip = text;
 	}
-	
+
 	public DesktopButton(URL imagepath) {
 		this();
-		setIconUrl(imagepath);		
+		setIconUrl(imagepath);
 	}
-	
+
 	public DesktopButton() {
-		
+
 		setBorderPainted(false);
 		setOpaque(false);
 
@@ -93,46 +98,46 @@ public class DesktopButton extends JButton {
 		});
 	}
 
-	public Dimension getPreferredSize(){
+	public Dimension getPreferredSize() {
 		Font fA = new Font(Font.DIALOG, Font.BOLD, fontsize_a);
 		Font fB = new Font(Font.DIALOG, Font.PLAIN, fontsize_b);
 		FontMetrics mA = getFontMetrics(fA);
 		FontMetrics mB = getFontMetrics(fB);
-				        
+
 		// Determine WIDTH
 		int width = icon_offset_x + text_offset_x;
-		if(myIcon != null){
+		if (myIcon != null) {
 			width += myIcon.getIconWidth();
 		}
-		int text_width = 0;		
-		if(getText() != null){
-		  text_width = mA.charsWidth(getText().toCharArray(), 0, getText().length());
+		int text_width = 0;
+		if (getText() != null) {
+			text_width = mA.charsWidth(getText().toCharArray(), 0, getText().length());
 		}
-		
+
 		int tooltip_width = 0;
-		if(toolTip != null){
-    	tooltip_width = mB.charsWidth(toolTip.toCharArray(), 0, toolTip.length());
-    }
+		if (toolTip != null) {
+			tooltip_width = mB.charsWidth(toolTip.toCharArray(), 0, toolTip.length());
+		}
 		text_width = Math.max(text_width, tooltip_width);
 		width += text_width;
-		
+
 		// Determine HEIGHT
 		int height = text_offset_y + text_b_offset_y;
-		if(toolTip != null || !"".equals(toolTip)){
+		if (toolTip != null || !"".equals(toolTip)) {
 			height += mB.getHeight();
 		}
-		if(getText() != null || !"".equals(getText())){
+		if (getText() != null || !"".equals(getText())) {
 			height += mA.getHeight();
 		}
 		int ic = reflectionSize;
-		if(myIcon != null){
+		if (myIcon != null) {
 			ic += myIcon.getIconHeight();
 		}
 		height = Math.max(height, ic);
-		// Return Dimension (WIDTH x HEIGHT)  
+		// Return Dimension (WIDTH x HEIGHT)
 		return new Dimension(width, height);
 	}
-	
+
 	public void paintComponent(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
 		Dimension bounds = getPreferredSize();
@@ -147,23 +152,23 @@ public class DesktopButton extends JButton {
 		gBuf = buffer.createGraphics();
 
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		g2.setColor(Color.white);		
+		g2.setColor(Color.white);
 		g2.setFont(fA);
-		g2.setComposite(AlphaComposite.SrcOver.derive(Math.min(1.0f, 1.05f*glow)));
-		
-		g2.drawString(getText(), (myIcon != null? myIcon.getIconWidth():0) + icon_offset_x + text_offset_x, text_offset_y + fontsize_a);
+		g2.setComposite(AlphaComposite.SrcOver.derive(Math.min(1.0f, 1.05f * glow)));
+
+		g2.drawString(getText(), (myIcon != null ? myIcon.getIconWidth() : 0) + icon_offset_x + text_offset_x, text_offset_y + fontsize_a);
 		g2.setFont(fB);
 
-		if(toolTip != null && !"".equals(toolTip)){
-			g2.drawString(toolTip, (myIcon != null? myIcon.getIconWidth():0) + icon_offset_x + text_offset_x, text_offset_y + text_b_offset_y + 2 * fontsize_a);
+		if (toolTip != null && !"".equals(toolTip)) {
+			g2.drawString(toolTip, (myIcon != null ? myIcon.getIconWidth() : 0) + icon_offset_x + text_offset_x, text_offset_y + text_b_offset_y + 2 * fontsize_a);
 		}
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		
+
 		gBuf.setComposite(AlphaComposite.SrcOver.derive(glow));
-		if(myIcon != null){
+		if (myIcon != null) {
 			gBuf.drawImage(myIcon.getImage(), icon_offset_x, 0, null);
 		}
-		
+
 		g2.drawImage(createReflection(buffer), 0, 0, buffer.getWidth(), buffer.getHeight() + reflectionSize, null);
 
 	}
@@ -210,23 +215,24 @@ public class DesktopButton extends JButton {
 	}
 
 	public void fireSpring() {
-		SpringGlassPane glassPane = new SpringGlassPane();
-		((RootPaneContainer) getTopLevelAncestor()).getRootPane().setGlassPane(glassPane);
-		glassPane.setSize(((RootPaneContainer) getTopLevelAncestor()).getRootPane().getWidth(), ((RootPaneContainer) getTopLevelAncestor()).getRootPane().getHeight());
+		if (showSpring) {
+			SpringGlassPane glassPane = new SpringGlassPane();
+			((RootPaneContainer) getTopLevelAncestor()).getRootPane().setGlassPane(glassPane);
+			glassPane.setSize(((RootPaneContainer) getTopLevelAncestor()).getRootPane().getWidth(), ((RootPaneContainer) getTopLevelAncestor()).getRootPane().getHeight());
 
-		SpringGlassPane cc = (SpringGlassPane) ((RootPaneContainer) getTopLevelAncestor()).getGlassPane();
-		cc.setVisible(true);
-		BufferedImage bi = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
-		// boolean bb = isBorderPainted();
-		// setBorderPainted(false);
-		paintComponent(bi.getGraphics());
-		// setBorderPainted(bb);
-		Rectangle bounds = getBounds();
-		Point location = new Point(0, 0);
-		location = SwingUtilities.convertPoint(this, location, ((RootPaneContainer) getTopLevelAncestor()).getRootPane());
-		bounds.setLocation(location);
-		cc.showSpring(bounds, bi);
-
+			SpringGlassPane cc = (SpringGlassPane) ((RootPaneContainer) getTopLevelAncestor()).getGlassPane();
+			cc.setVisible(true);
+			BufferedImage bi = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
+			// boolean bb = isBorderPainted();
+			// setBorderPainted(false);
+			paintComponent(bi.getGraphics());
+			// setBorderPainted(bb);
+			Rectangle bounds = getBounds();
+			Point location = new Point(0, 0);
+			location = SwingUtilities.convertPoint(this, location, ((RootPaneContainer) getTopLevelAncestor()).getRootPane());
+			bounds.setLocation(location);
+			cc.showSpring(bounds, bi);
+		}
 	}
 
 	private BufferedImage createReflection(BufferedImage img) {

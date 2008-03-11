@@ -7,6 +7,7 @@ import java.awt.Component;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Rectangle;
 import java.awt.TextField;
@@ -148,8 +149,8 @@ public class PerspectiveImagePanel extends JPanel {
 			g2.drawImage(currentImg, 0, 0, currentImg.getWidth(), currentImg.getHeight(), null);
 		}else	if(img != null){
 			if(angle > 0 && angle < 85){
-				previousAngle = angle;
-				currentImg = PerspectiveTransform.transform(img, angle, true, direction);//				
+				previousAngle = angle;				
+				currentImg = PerspectiveTransform.transform(img, angle, true, direction);//
 				g2.drawImage(currentImg, 0, 0, currentImg.getWidth(), currentImg.getHeight(), null);
 				try{
 //					ImageIO.write(currentImg, "png", new File("/home/aphilip/Desktop/img" + angle + ".png"));
@@ -225,7 +226,10 @@ public class PerspectiveImagePanel extends JPanel {
 	}
 	
 	public static void main(String[] args){
-		JFrame frame = new JFrame("aap");
+		
+		System.err.println("CENtER " + GridBagConstraints.SOUTH);
+		
+		/*JFrame frame = new JFrame("aap");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		final PerspectiveImagePanel p = new PerspectiveImagePanel();
@@ -279,6 +283,7 @@ public class PerspectiveImagePanel extends JPanel {
 		p.setDirection(PerspectiveTransform.FLIP_LEFT);
 		frame.setSize(1024,768);
 		frame.setVisible(true);
+		*/
 	}
 	
 }

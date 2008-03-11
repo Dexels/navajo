@@ -6,44 +6,48 @@ import java.awt.image.BufferedImage;
 import java.net.*;
 
 import javax.swing.*;
+
 import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTargetAdapter;
 import org.jdesktop.animation.timing.interpolation.PropertySetter;
 
-public class MacLink extends JButton {
+import com.dexels.navajo.rich.components.SpringGlassPane;
+
+public class ClubLocation extends JButton {
 	private float min_scale = 0.5f;
 	private float scale = 0.5f;
 	private float max_scale = 1.0f;
 	private float zoom = 0.0f;
+	private ImageIcon myKNVBIcon = new ImageIcon(getClass().getResource("images/pawn_glass_red.png"));
+	private ImageIcon myNHVIcon = new ImageIcon(getClass().getResource("images/pawn_glass_green.png"));
+	private ImageIcon myKNKVIcon = new ImageIcon(getClass().getResource("images/pawn_glass_yellow.png"));
+	private ImageIcon myKNHBIcon = new ImageIcon(getClass().getResource("images/pawn_glass_blue.png"));
 	private ImageIcon myIcon;
-	private int reflectionSize = 15;
-	private Dimension defaultSize = new Dimension(48, 48);
+	private Dimension defaultSize = new Dimension(32, 32);
 	private boolean mouseover = false;
 	private boolean animating = false;
-	private boolean showSpring = true;
+	private Point originalLocation = null;
+	private String clubIdentifier = null;
+	private double lat, lon;
+	private String union;
+	
+	public ClubLocation(Point location, String union) {
+		this.union = union;
+		originalLocation = location;
+		setBounds(originalLocation.x - (int) (0.5 * scale * defaultSize.width), originalLocation.y - (int) (0.5 * scale * defaultSize.height), (int) (scale * defaultSize.width), (int) (scale * defaultSize.height));
 
-	public MacLink(URL imagepath, String text) {
-		this(imagepath);
-		setText(text);
-	}
-
-	public MacLink(URL imagepath) {
-		this();
-		myIcon = new ImageIcon(imagepath);
-	}
-
-	public void setIconUrl(URL imagepath) {
-		myIcon = new ImageIcon(imagepath);
-	}
-
-	public void setShowSpring(boolean b) {
-		this.showSpring = b;
-	}
-
-	public MacLink() {
-		this.setPreferredSize(new Dimension((int) (scale * defaultSize.width), (int) (scale * defaultSize.height) + reflectionSize));
 		setBorderPainted(false);
 		setOpaque(false);
+		
+		if("nhv".equals(union)){
+			myIcon = myNHVIcon;
+		}else if("knkv".equals(union)){
+			myIcon = myKNKVIcon;
+		}else if("knhb".equals(union)){
+			myIcon = myKNHBIcon;
+		}else {
+			myIcon = myKNVBIcon;
+		}
 
 		this.addMouseListener(new MouseAdapter() {
 			public void mouseEntered(MouseEvent e) {
@@ -63,20 +67,22 @@ public class MacLink extends JButton {
 		});
 
 		addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {			
-					fireSpring();			
+			public void actionPerformed(ActionEvent e) {
+//				fireSpring();
 			}
 		});
-	}
-
-	public void setIcon(ImageIcon icon) {
-		myIcon = icon;
 	}
 
 	// Animation framework implies, scale range (0.0 - 1.0)
 	public void setScale(float f) {
 		this.scale = f;
-		this.setPreferredSize(new Dimension((int) (scale * defaultSize.width), (int) (scale * defaultSize.height) + reflectionSize));
+		Rectangle bounds = getBounds();
+
+		int lox = originalLocation.x - (int) (0.5 * scale * defaultSize.width);
+		int loy = originalLocation.y - (int) (0.5 * scale * defaultSize.height);
+
+		Rectangle newBounds = new Rectangle(lox, loy, (int) (scale * defaultSize.width), (int) (scale * defaultSize.height));
+		this.setBounds(newBounds);
 		revalidate();
 	}
 
@@ -94,7 +100,7 @@ public class MacLink extends JButton {
 	}
 
 	public void drawHint(String hint) {
-//		if (showSpring) {
+		try {
 			SpringGlassPane glassPane = new SpringGlassPane();
 			((RootPaneContainer) getTopLevelAncestor()).getRootPane().setGlassPane(glassPane);
 			SpringGlassPane cc = (SpringGlassPane) ((RootPaneContainer) getTopLevelAncestor()).getGlassPane();
@@ -109,27 +115,26 @@ public class MacLink extends JButton {
 					// animating = false;
 				}
 			});
-//		}
+		} catch (Exception e) {
+		}
 	}
 
 	public void fireSpring() {
-		if (showSpring) {
-			SpringGlassPane glassPane = new SpringGlassPane();
+		SpringGlassPane glassPane = new SpringGlassPane();
+		try {
 			((RootPaneContainer) getTopLevelAncestor()).getRootPane().setGlassPane(glassPane);
 			glassPane.setSize(((RootPaneContainer) getTopLevelAncestor()).getRootPane().getWidth(), ((RootPaneContainer) getTopLevelAncestor()).getRootPane().getHeight());
 
 			SpringGlassPane cc = (SpringGlassPane) ((RootPaneContainer) getTopLevelAncestor()).getGlassPane();
 			cc.setVisible(true);
 			BufferedImage bi = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
-			// boolean bb = isBorderPainted();
-			// setBorderPainted(false);
 			paintComponent(bi.getGraphics());
-			// setBorderPainted(bb);
 			Rectangle bounds = getBounds();
 			Point location = new Point(0, 0);
 			location = SwingUtilities.convertPoint(this, location, ((RootPaneContainer) getTopLevelAncestor()).getRootPane());
 			bounds.setLocation(location);
 			cc.showSpring(bounds, bi);
+		} catch (Exception e) {
 		}
 	}
 
@@ -143,7 +148,6 @@ public class MacLink extends JButton {
 						animate(false);
 					} else {
 						drawHint(getText());
-						// animating = true;
 					}
 				}
 			});
@@ -170,43 +174,44 @@ public class MacLink extends JButton {
 	}
 
 	public void paintComponent(Graphics g) {
+		
 		if (myIcon != null) {
-
 			Rectangle bounds = this.getBounds();
-			// System.err.printl
 
 			Image image = myIcon.getImage();
 			Graphics2D g2 = (Graphics2D) g.create();
 
-			BufferedImage iconImage = new BufferedImage(bounds.width, bounds.height - reflectionSize, BufferedImage.TYPE_INT_ARGB);
+			BufferedImage iconImage = new BufferedImage(bounds.width, bounds.height, BufferedImage.TYPE_INT_ARGB);
 			Graphics2D icG = iconImage.createGraphics();
 			g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 			icG.drawImage(image, 0, 0, iconImage.getWidth(), iconImage.getHeight(), null);
-
-			BufferedImage reflection = createReflection(iconImage);
-			g2.drawImage(createReflection(iconImage), 0, 0, null);
+			g2.drawImage(iconImage, 0, 0, null);
 			g2.dispose();
-		} else {
-			super.paintComponent(g);
-		}
+		} 
 	}
 
-	private BufferedImage createReflection(BufferedImage img) {
-		int height = img.getHeight();
-		BufferedImage result = new BufferedImage(img.getWidth(), (int) (height + reflectionSize), BufferedImage.TYPE_INT_ARGB);
-		Graphics2D g2 = result.createGraphics();
+	public void setClubIdentifier(String clubId) {
+		this.clubIdentifier = clubId;
+	}
 
-		g2.drawImage(img, 0, 0, null);
-		g2.scale(1.0, -1.0);
-		g2.drawImage(img, 0, -height - height, null);
-		g2.scale(1.0, -1.0);
-		g2.translate(0, height);
+	public String getClubIdentifier() {
+		return this.clubIdentifier;
+	}
 
-		GradientPaint mask = new GradientPaint(0, 0, new Color(1.0f, 1.0f, 1.0f, 0.5f), 0, reflectionSize, new Color(1.0f, 1.0f, 1.0f, 0.0f));
-		g2.setPaint(mask);
-		g2.setComposite(AlphaComposite.DstIn);
-		g2.fillRect(0, 0, img.getWidth(), reflectionSize);
-		g2.dispose();
-		return result;
+	public void setLatLonPosition(double lat, double lon) {
+		this.lat = lat;
+		this.lon = lon;
+	}
+
+	public double getLat() {
+		return this.lat;
+	}
+
+	public double getLon() {
+		return this.lon;
+	}
+	
+	public String getUnion(){
+		return this.union;
 	}
 }
