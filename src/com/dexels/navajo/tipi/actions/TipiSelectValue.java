@@ -70,6 +70,7 @@ public final class TipiSelectValue extends TipiAction {
 					keys.add(selection.getValue());
 				}
 				try {
+					System.err.println("Setting selected: "+keys+" size: "+s.size());
 					p.setSelected(keys);
 				} catch (NavajoException e) {
 					e.printStackTrace();

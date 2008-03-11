@@ -120,7 +120,6 @@ public class TipiInstantiateTipi extends TipiAction {
 				}
 			}
 		}
-		System.err.println("Instantiating: \n\n"+xe);
 		
 		TipiComponent inst = myContext.instantiateComponent(xe);
 		inst.setHomeComponent(true);

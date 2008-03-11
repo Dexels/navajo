@@ -34,12 +34,7 @@ public abstract class TipiBaseConnector extends TipiComponentImpl implements Tip
 				e.printStackTrace();
 			}
 		} else {
-			if(n.getHeader()==null) {
-				Header h =NavajoFactory.getInstance().createHeader(n, service, "unknown","unknown", -1);
-				n.addHeader(h);
-			}
-			myContext.addNavajo(service, n);
-			myContext.loadNavajo(n, service);
+			myContext.injectNavajo(service, n);
 		}
 	}
 	

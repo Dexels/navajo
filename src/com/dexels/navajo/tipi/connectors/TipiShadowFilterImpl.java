@@ -97,4 +97,14 @@ public class TipiShadowFilterImpl extends TipiBaseConnector implements TipiConne
 		return "filter";
 	}
 
+
+	public Set<String> getEntryPoints() {
+		return null;
+	}
+
+
+	public String getDefaultEntryPoint() {
+		return "*";
+	}
+
 }

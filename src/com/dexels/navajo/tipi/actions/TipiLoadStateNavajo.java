@@ -3,6 +3,7 @@ package com.dexels.navajo.tipi.actions;
 import java.io.*;
 
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.internal.*;
 
 /**
@@ -24,20 +25,28 @@ import com.dexels.navajo.tipi.internal.*;
  */
 public class TipiLoadStateNavajo extends TipiAction {
 	public void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
-		try {
-			FileWriter fw = new FileWriter("c:/state.xml");
+		Operand contextParam = getEvaluatedParameter("context", event);
+		TipiContext context = null;
+		if(contextParam!=null) {
+			context = (TipiContext) contextParam.value;
+			if(context==null) {
+				context = myContext;
+			}
 			
-//			myContext.getStateNavajo().write(System.err);
-			myContext.getStateNavajo().write(fw);
-			fw.flush();
-			fw.close();
-		} catch (NavajoException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} else {
+			context = myContext;
 		}
-		myContext.loadNavajo(myContext.getStateNavajo(),"StateNavajo");
+		String service = null;
+		Operand serviceOperand = getEvaluatedParameter("service", event);
+		if(serviceOperand!=null) {
+			if(serviceOperand.value!=null) {
+				service = (String) serviceOperand.value;
+			}
+		}
+		if(service==null) {
+			service = "StateNavajo";
+		}
+		
+		context.loadNavajo(context.getStateNavajo(),service);
 	}
 }

@@ -6,8 +6,17 @@ import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.tipixml.*;
 
 public interface TipiConnector {
-//	public String[] getEntryPoints();
+	
+	/**
+	 * Which inputless-services can be used on this connector, it can return null, in which case it is unknown.
+	 * If the set contains '*' any service may be used. (e.g. filter & rss)
+	 * @return
+	 */
+	public Set<String> getEntryPoints();
 
+	public String getDefaultEntryPoint();
+
+	
 	/**
 	 * Calls the service with input navajo n. Destination may be required, optional, or ignored, depending on the
 	 * connector implementation.
@@ -41,5 +50,7 @@ public interface TipiConnector {
 	public void doTransaction() throws TipiBreakException, TipiException;
 
 	public String getConnectorId();
+
+	public void setContext(TipiContext tipiContext);
 
 }

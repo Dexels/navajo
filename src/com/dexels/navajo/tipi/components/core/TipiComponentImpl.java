@@ -247,7 +247,7 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 		Object oo = getComponentValue(name);
 		if(oo==null) {
 			if(propval!=null) {
-				System.err.println("Value mismatch detected in: "+getClass()+" attribute: "+name);
+				System.err.println("Value mismatch detected in: "+getClass()+" attribute: "+name +" class: "+propval.getClass());
 				System.err.println("Component says null, property says: "+propval);
 			} else {
 				return null;
@@ -449,14 +449,14 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 		
 		if (id == null || "".equals(id)) {
 			// pretty deprecated. I don't like it.
-			if(defname!=null) {
-				id = defname;
-			}
+//			if(defname!=null) {
+//				id = defname;
+//			}
 			id = myContext.generateComponentId(null);
 		}
 //		stateMessage  = getStateMessage();// NavajoFactory.getInstance().createMessage(myContext.getStateNavajo(), id!=null?id:"Unknown");
 		XMLElement definitionXml = null;
-		if (defname != null) {
+		if (defname != null && !instance.getName().startsWith("c.")) {
 			definitionXml = myContext.getComponentDefinition(defname);
 		}
 
@@ -824,12 +824,12 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 				p.removePropertyChangeListener(myDataListeners.get(ss));
 			}
 		}
-		try {
-			myContext.unlink(getStateMessage());
-		} catch (NavajoException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		try {
+//			myContext.unlink(getStateMessage());
+//		} catch (NavajoException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		removeAllChildren();
 		clearAllComponents();
 		helperDispose();
@@ -846,8 +846,8 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 		ArrayList<TipiComponent> backup = new ArrayList<TipiComponent>(tipiComponentList);
 		for (int i = 0; i < backup.size(); i++) {
 			TipiComponent current = backup.get(i);
-			// myContext.disposeTipiComponent(current);
-			current.disposeComponent();
+			 //myContext.disposeTipiComponent(current);
+			 current.disposeComponent();
 		}
 		clearAllComponents();
 	}
@@ -973,7 +973,7 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 		// As far as I know, it only happens when the performTipiEvent is called
 		// from the main thread
 		try {
-			c.performTipiEvent("onInstantiate", null, true);
+			c.performTipiEvent("onInstantiate", null, false);
 		} catch (TipiException ex) {
 			ex.printStackTrace();
 		}

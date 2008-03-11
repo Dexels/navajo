@@ -56,20 +56,27 @@ public class TipiNewCallService extends TipiAction {
 		}
 		TipiConnector defaultConnector = myContext.getDefaultConnector();
 		if(connector==null || connector.value==null) {
+			long timeStamp = System.currentTimeMillis();
 			System.err.println("No connector");
 			if(defaultConnector==null) {
 			} else {
 				defaultConnector.doTransaction(input, service);
 			}
+			long transaction = System.currentTimeMillis() - timeStamp;
+			System.err.println("Transaction: "+service+" in connector: "+defaultConnector.getConnectorId()+" took: "+transaction+" millis.");
 		} else {
 			System.err.println("Retrieving connector: "+(String) connector.value);
+			long timeStamp = System.currentTimeMillis();
 			TipiConnector ttt = myContext.getConnector((String) connector.value);
 			if(ttt==null) {
 				System.err.println("Warning: connector: "+(String) connector.value+" not found, reverting to default connector");
+				
 				defaultConnector.doTransaction(input, service,destAddress);
 			} else {
 				ttt.doTransaction(input,service,destAddress);
 			}
+			long transaction = System.currentTimeMillis() - timeStamp;
+			System.err.println("Transaction: "+service+" in connector: "+(String) connector.value+" took: "+transaction+" millis.");
 		}
 //
 //		if(unevaluated!=null && input==null) {
@@ -135,8 +142,7 @@ public class TipiNewCallService extends TipiAction {
 			myContext.fireNavajoSent(input, service);
 			
 			Navajo result = NavajoClientFactory.getClient().doSimpleSend(nn, service);
-			myContext.fireNavajoReceived(result, service);
-
+		
 			myContext.addNavajo(service, result);
 			// is this correct? It is a bit odd.
 			if(result.getHeader()!=null) {

@@ -37,14 +37,12 @@ public class FileResourceLoader extends ClassPathResourceLoader {
 		} else {
 			f = new File(baseFile,location);
 		}
-//		System.err.println("Opening file location: "+f.getAbsolutePath());
-
 		if(!f.exists()) {
 			return super.getResourceURL(location);
 		}
 		URL u =  f.toURI().toURL();
 		//URL u = new URL(baseURL, location);
-		// System.err.println("HttpResourceLoader: Resolved to : "+u+" base:
+		 System.err.println("FileResourceLoader: Resolved to : "+u);
 		// "+baseURL);
 		if (u == null) {
 			return super.getResourceURL(location);

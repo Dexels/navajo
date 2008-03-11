@@ -4,27 +4,30 @@
  */
 package com.dexels.navajo.functions;
 
+import java.util.*;
+
 import com.dexels.navajo.parser.*;
 import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.connectors.*;
 
 /**
  * @author frank
  *
  */
-public class GetNavajo extends FunctionInterface {
+public class GetConnectorInit extends FunctionInterface {
 
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.parser.FunctionInterface#remarks()
 	 */
 	public String remarks() {
-		return "Resolves a navajo name. Source component is required to resolve context data.";
+		return "Retrieves the init function of a connector";
 	}
 
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.parser.FunctionInterface#usage()
 	 */
 	public String usage() {
-		return "GetNavajo(TipiContext context, String navajoName)";
+		return "GetConnectorInit(TipiComponent source, String connectorId)";
 	}
 
 	/* (non-Javadoc)
@@ -33,9 +36,9 @@ public class GetNavajo extends FunctionInterface {
 	public Object evaluate() throws TMLExpressionException {
 		Object pp = getOperand(0);
 		if (pp == null) {
-		//	return null;
+			return null;
 		}
-		if(!(pp instanceof TipiContext)) {
+		if(!(pp instanceof TipiComponent)) {
 			throw new TMLExpressionException(this, "Invalid operand: " + pp.getClass().getName());
 		}
 		Object o = getOperand(1);
@@ -47,9 +50,10 @@ public class GetNavajo extends FunctionInterface {
 		} else {
 			throw new TMLExpressionException(this, "Invalid operand: " + o.getClass().getName());
 		}
-		TipiContext tc = (TipiContext)pp;
-		String path  = (String)o;
-		return tc.getNavajo(path);
+		TipiComponent tc = (TipiComponent)pp;
+		String connectorId  = (String)o;
+		TipiConnector tt = tc.getContext().getConnector(connectorId);
+		return tt.getDefaultEntryPoint();
 	}
 
 }

@@ -45,4 +45,8 @@ public class TipiCore implements TipiExtension {
 		jars.add("tipipackage.jar");
 		return jars;
 	}
+
+	public String getConnectorId() {
+		return "http";
+	}
 }

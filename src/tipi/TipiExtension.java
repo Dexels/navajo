@@ -36,4 +36,6 @@ public interface TipiExtension {
 
 	public List<String> getLibraryJars();
 
+	public String getConnectorId();
+
 }

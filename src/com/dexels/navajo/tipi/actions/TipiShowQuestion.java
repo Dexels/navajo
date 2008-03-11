@@ -1,6 +1,7 @@
 package com.dexels.navajo.tipi.actions;
 
 import java.awt.*;
+import java.lang.reflect.*;
 
 import javax.swing.*;
 
@@ -18,8 +19,11 @@ import com.dexels.navajo.tipi.internal.*;
  */
 /** @todo Refactor, move to NavajoSwingTipi */
 public class TipiShowQuestion extends TipiAction {
+	
+	int response = 0;
+	
 	public void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
-		Object[] options = { "Ja", "Nee" };
+		final Object[] options = { "Ja", "Nee" };
 		String txt = getParameter("text").getValue();
 		Operand o = null;
 		try {
@@ -28,8 +32,28 @@ public class TipiShowQuestion extends TipiAction {
 				ex.printStackTrace();
 				return;
 		}
-		int response = JOptionPane.showOptionDialog((Component) myContext.getTopLevel(), o.value, "Vraag", JOptionPane.YES_NO_OPTION,
-				JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+		final Operand p = o;
+		if(!SwingUtilities.isEventDispatchThread()) {
+			try {
+				SwingUtilities.invokeAndWait(new Runnable(){
+
+					public void run() {
+						response = JOptionPane.showOptionDialog((Component) myContext.getTopLevel(), p.value, "Vraag", JOptionPane.YES_NO_OPTION,
+								JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+					
+					}});
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				e.printStackTrace();
+			}
+		} else {
+			response = JOptionPane.showOptionDialog((Component) myContext.getTopLevel(), o.value, "Vraag", JOptionPane.YES_NO_OPTION,
+					JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+			if (response != 0) {
+				throw new TipiBreakException();
+			}
+		}
 		if (response != 0) {
 			throw new TipiBreakException();
 		}

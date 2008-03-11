@@ -24,7 +24,6 @@ public class HttpNavajoConnector extends TipiBaseConnector implements TipiConnec
 			performTipiEvent("onServiceSent", s, false);
 			Navajo result = NavajoClientFactory.getClient().doSimpleSend(nn, service);
 			performTipiEvent("onServiceReceived", s, false);
-			myContext.fireNavajoReceived(result, service);
 			if(result.getHeader()!=null) {
 				result.getHeader().setHeaderAttribute("sourceScript", result.getHeader().getRPCName());
 			}
@@ -56,6 +55,14 @@ public class HttpNavajoConnector extends TipiBaseConnector implements TipiConnec
 
 	public void doTransaction(Navajo n, String service, String destination) throws TipiBreakException, TipiException {
 		doTransaction(n, service);
+	}
+
+	public Set<String> getEntryPoints() {
+		return null;
+	}
+	
+	public String getDefaultEntryPoint() {
+		return "InitClub";
 	}
 
 }

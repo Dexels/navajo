@@ -59,8 +59,7 @@ public class TipiCallService extends TipiAction {
 			myContext.fireNavajoSent(input, service);
 			
 			Navajo result = NavajoClientFactory.getClient().doSimpleSend(nn, service);
-			myContext.fireNavajoReceived(result, service);
-
+			
 			myContext.addNavajo(service, result);
 			// is this correct? It is a bit odd.
 			if(result.getHeader()!=null) {
