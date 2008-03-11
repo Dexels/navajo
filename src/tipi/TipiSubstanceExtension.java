@@ -37,4 +37,9 @@ public class TipiSubstanceExtension implements TipiExtension {
 		jars.add("TipiSubstance.jar");
 		return jars;
 	}
+	
+	public String getConnectorId() {
+		return null;
+	}
+
 }
