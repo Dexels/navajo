@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.server.Parameters;
+import com.dexels.navajo.adapter.MailMap;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.NavajoConfig;
@@ -75,4 +76,9 @@ public class AttachementMap implements Mappable, Serializable, AttachmentMapInte
   	attachContentHeader = s;
   }
 
+  public static void main(String [] args) {
+	  MailMap mm = new MailMap();
+	  AttachementMap am = new AttachementMap();
+	  mm.setAttachment(am);
+  }
 }
