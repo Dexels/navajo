@@ -217,11 +217,15 @@ private boolean keepJMXConnectionAlive = false;
       if (mtn.getMyMap() != null) {
         if (storeOrKill.equals("store")) {
           System.err.println("Calling store for object " + mtn.getMyMap());
-          mtn.getMyMap().store();
+          if ( mtn.getMyMap() instanceof Mappable ) {
+             ((Mappable) mtn.getMyMap()).store();
+          }
         }
         else {
           System.err.println("Calling kill for object " + mtn.getMyMap());
-          mtn.getMyMap().kill();
+          if ( mtn.getMyMap() instanceof Mappable ) {
+        	  ((Mappable) mtn.getMyMap()).kill();
+          }
         }
       }
     }
@@ -347,7 +351,7 @@ private boolean keepJMXConnectionAlive = false;
 	  disconnectJMX();
   }
   
-  public final Mappable findMapByPath(String path) {
+  public final Object findMapByPath(String path) {
 	 
 	  StringTokenizer st = new StringTokenizer(path,"/");
 	  int count = 0;
@@ -359,7 +363,7 @@ private boolean keepJMXConnectionAlive = false;
 		  count++;
 	  }
 
-	  Mappable m = ((MappableTreeNode)treeNodeStack.get(treeNodeStack.size()-count)).getMyMap();
+	  Object m = ((MappableTreeNode)treeNodeStack.get(treeNodeStack.size()-count)).getMyMap();
 	  
 	  return m;
   }
