@@ -32,6 +32,8 @@ import org.apache.jasper.compiler.*;
 import java.io.*;
 
 import org.w3c.dom.*;
+
+import java.util.HashSet;
 import java.util.Stack;
 import java.util.StringTokenizer;
 import com.dexels.navajo.parser.Expression;
@@ -63,6 +65,7 @@ public class TslCompiler {
   private Stack<Class> contextClassStack = new Stack<Class>();
   @SuppressWarnings("unchecked")
   private Class contextClass = null;
+  private HashSet included = new HashSet();
 
   private static String hostname = null;
   
@@ -1798,6 +1801,12 @@ public String mapNode(int ident, Element n) throws Exception {
     if (script == null || script.equals("")) {
       throw new UserException(-1, "No script name found in include tag (missing or empty script attribute): " + n);
     }
+    
+    if ( included.contains(script) ) {
+    	throw new UserException(-1, "Cyclic include detected, this one was already included: " + script);
+    }
+    
+    included.add(script);
     
   //  System.err.println("INCLUDING SCRIPT " + script + " @ NODE " + n);
 

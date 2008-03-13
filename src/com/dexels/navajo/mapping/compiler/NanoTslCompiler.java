@@ -40,6 +40,8 @@ import com.dexels.navajo.parser.TMLExpressionException;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashSet;
+
 import com.dexels.navajo.loader.*;
 
 public class NanoTslCompiler {
@@ -75,6 +77,8 @@ public class NanoTslCompiler {
     @SuppressWarnings("unchecked")
 	private final Stack<Class> contextClassStack = new Stack<Class>();
 
+    private HashSet included = new HashSet();
+    
     @SuppressWarnings("unchecked")
 	private Class contextClass = null;
 
@@ -1761,6 +1765,13 @@ public class NanoTslCompiler {
             throw new TslCompileException(TslCompileException.VALIDATION_NO_SCRIPT_INCLUDE,
                     "No script name found in include tag (missing or empty script attribute)", n);
         }
+        
+        if ( included.contains(script) ) {
+        	throw new UserException(-1, "Cyclic include detected, this one was already included: " + script);
+        }
+        
+        included.add(script);
+        
         addScriptIncludes(currentScript, script);
 //        System.err.println("INCLUDING SCRIPT " + script + " @ NODE " + n);
         XMLElement nextNode = n.getNextSibling();
