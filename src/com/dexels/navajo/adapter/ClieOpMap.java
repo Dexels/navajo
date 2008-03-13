@@ -36,6 +36,7 @@ public class ClieOpMap implements Mappable {
 	public String accountNumber;
 	public String constituent;
 	public String currency;
+	public String nAWcode                       = "1";
 	public String fixedDescription;
 
 	public boolean includeFixedDescription      = true;
@@ -160,7 +161,7 @@ public class ClieOpMap implements Mappable {
 	}
 
 	public String getConstituentRecord() {
-		constituentRecord = "0030B1" + processingDateStr + this.constituent;
+		constituentRecord = "0030B" + this.nAWcode + processingDateStr + this.constituent;
 		return constituentRecord;
 	}
 
@@ -235,6 +236,10 @@ public class ClieOpMap implements Mappable {
 
 	public void setCurrency(String currency) {
 		this.currency = currency;
+	}
+
+	public void setNAWcode(String code) {
+		this.nAWcode = code;
 	}
 
 	public void setFixedDescription(String fixedDescription) {
