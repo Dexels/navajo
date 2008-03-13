@@ -5,9 +5,11 @@ import com.dexels.navajo.document.types.Binary;
 
 public class DummyAttachmentMap implements AttachmentMapInterface {
 
+	private String attachFile;
+	
 	public String getAttachFile() {
 		// TODO Auto-generated method stub
-		return null;
+		return this.attachFile;
 	}
 
 	public Binary getAttachFileContent() {
@@ -31,6 +33,7 @@ public class DummyAttachmentMap implements AttachmentMapInterface {
 
 	public void setAttachFile(String attachFile) {
 		System.err.println("in setAttachFile(" + attachFile + ")");
+		this.attachFile = attachFile;
 	}
 
 	public void setAttachFileContent(Binary attachFileContent) {

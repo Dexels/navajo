@@ -54,6 +54,7 @@ public class DummyMailMap implements MailMapInterface, Mappable {
 
 	public void setMultipleAttachments(AttachmentMapInterface[] c) {
 		System.err.println("In DummyMailMap, setMultipleAttachments(" + c + ")");
+		this.multipleAttachments = (DummyAttachmentMap []) c;
 	}
 
 	public void setRecipients(String s) {
@@ -71,7 +72,7 @@ public class DummyMailMap implements MailMapInterface, Mappable {
 	}
 	
 	public String getSender() {
-		return "apenoot";
+		return this.sender;
 	}
 
 	public void setSubject(String s) {
@@ -110,6 +111,10 @@ public class DummyMailMap implements MailMapInterface, Mappable {
 			e.printStackTrace();
 		}
 		
+	}
+
+	public DummyAttachmentMap[] getMultipleAttachments() {
+		return multipleAttachments;
 	}
 
 }
