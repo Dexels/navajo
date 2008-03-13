@@ -242,7 +242,7 @@ public String optimizeExpresssion(int ident, String clause, String className, St
         if (removeWhiteSpaces(expr).equals(removeWhiteSpaces(clause))) {
           // Let's evaluate this directly.
           exact = true;
-          Class contextClass = null;
+          Class expressionContextClass = null;
 
           try {
             StringBuffer objectizedParams = new StringBuffer();
@@ -279,14 +279,14 @@ public String optimizeExpresssion(int ident, String clause, String className, St
               }
             }
 
-              contextClass = null;
+            expressionContextClass = null;
               try {
-              	contextClass = Class.forName(className, false, loader);
+            	  expressionContextClass = Class.forName(className, false, loader);
               } catch (Exception e) {
               	throw new Exception("Could not find adapeter: " + className);
               }
 
-            String attrType = MappingUtils.getFieldType(contextClass, name.toString());
+            String attrType = MappingUtils.getFieldType(expressionContextClass, name.toString());
 
             // Try to locate class:
             if (!functionName.equals("")) {
@@ -311,7 +311,7 @@ public String optimizeExpresssion(int ident, String clause, String className, St
             }
           }
           catch (ClassNotFoundException cnfe) {
-            if (contextClass == null) {
+            if (expressionContextClass == null) {
               throw new UserException( -1,
                   "Error in script: Could not find adapter: " + className +
                                       " @clause: " + clause);
@@ -600,10 +600,10 @@ public String messageNode(int ident, Element n, String className, String objectN
           if (contextClass==null) {
               //System.err.println("NO CONTEXT CLASS (YET)");
             } else {
-                //System.err.println("LINE 587: PUSHING CLASS: "+contextClass);
+                System.err.println("LINE 587: PUSHING CLASS: "+contextClass);
                 contextClassStack.push(contextClass);
            }
-          contextClass = null;
+          //contextClass = null;
         
           try {
         	  if (mapPath!=null) {
@@ -797,7 +797,7 @@ result.append(printIdent(ident + 4) +
       }
 
       contextClass = (Class) contextClassStack.pop();
-
+      
       if (n.getNodeName().equals("message")) {
 	      result.append(printIdent(ident + 2) +
 	                    "currentOutMsg = (Message) outMsgStack.pop();\n");
@@ -857,7 +857,7 @@ result.append(printIdent(ident + 4) +
       }
 
       contextClass = (Class) contextClassStack.pop();
-
+      
       //result.append(printIdent(ident + 4) +
       //              "currentOutMsg = (Message) outMsgStack.pop();\n");
       //result.append(printIdent(ident + 4) +
@@ -944,7 +944,7 @@ public String propertyNode(int ident, Element n, boolean canBeSubMapped, String 
     int exprCount = countNodes(children, "expression");
 
     result.append(printIdent(ident) + "matchingConditions = false;\n");
-    Class contextClass = null;
+    Class localContextClass = null;
     for (int i = 0; i < children.getLength(); i++) {
       hasChildren = true;
       // Has condition;
@@ -1016,9 +1016,9 @@ public String propertyNode(int ident, Element n, boolean canBeSubMapped, String 
     }
 
     if (isMapped) {
-      contextClass = null;
+    	localContextClass = null;
       try {
-      contextClass = Class.forName(className, false, loader);
+    	  localContextClass = Class.forName(className, false, loader);
       } catch (Exception e) { throw new Exception("Could not find adapter: " + className); }
       String ref = mapNode.getAttribute("ref");
       String filter = mapNode.getAttribute("filter");
@@ -1051,7 +1051,7 @@ public String propertyNode(int ident, Element n, boolean canBeSubMapped, String 
       result.append(printIdent(ident + 4) + "String optionValue = \"\";\n");
       result.append(printIdent(ident + 4) + "boolean optionSelected = false;\n");
       children = mapNode.getChildNodes();
-      String subClassName = MappingUtils.getFieldType(contextClass, ref);
+      String subClassName = MappingUtils.getFieldType(localContextClass, ref);
       String subClassObjectName = "mappableObject" + (objectCounter++);
       result.append(printIdent(ident + 4) +
                     subClassObjectName + " = (" + subClassName +
@@ -1199,19 +1199,20 @@ public String fieldNode(int ident, Element n, String className,
     if (!isMapped) {
       String castedValue = "";
       try {
-        Class contextClass = null;
+        Class localContextClass = null;
+    	
 		try {
             if (mapPath!=null) {
-                contextClass = locateContextClass(mapPath);
+            	localContextClass = locateContextClass(mapPath);
             } else {
-                contextClass = Class.forName(className, false, loader);
+            	localContextClass = Class.forName(className, false, loader);
             }
-           // contextClassStack.push(contextClass);
-          } catch (Exception e) { throw new Exception("Could not find adapter: " + className); }
+            
+          } catch (Exception e) { e.printStackTrace(System.err);throw new Exception("Could not find adapter: " + className); }
         String type = null;
         try {
-        	type = MappingUtils.getFieldType(contextClass, attribute, methodName);
-        } catch (Exception e) { throw new Exception("Could not find field: " + attribute + " in adapter " + contextClass.getName()); }
+        	type = MappingUtils.getFieldType(localContextClass, attribute, methodName);
+        } catch (Exception e) { throw new Exception("Could not find field: " + attribute + " in adapter " + localContextClass.getName()); }
         if (type.equals("java.lang.String")) {
           castedValue = "(String) sValue";
         } else if (type.equals("com.dexels.navajo.document.types.ClockTime")) {
@@ -1257,6 +1258,7 @@ public String fieldNode(int ident, Element n, String className,
           result.append(printIdent(ident + 2) + objectName + "." + methodName + "(" +
                   castedValue + ");\n");        
       }
+      
     }
     else { // Field with ref: indicates that a message or set of messages is mapped to attribute (either Array Mappable or singular Mappable)
       String ref = mapNode.getAttribute("ref");
@@ -1282,16 +1284,19 @@ public String fieldNode(int ident, Element n, String className,
       result.append(printIdent(ident + 4) + messageListName +
          " = MappingUtils.getSelectedItems(currentInMsg, inMessage, \"" + ref + "\");\n");
 
-      Class contextClass = null;
-      try {
-      	contextClass = Class.forName(className, false, loader);
-      } catch (Exception e) {
-    	  throw new Exception("Could not find adapter: " + className);
-      }
+     
+      contextClassStack.push(contextClass);
+      
       String type = MappingUtils.getFieldType(contextClass, attribute, methodName);
       boolean isArray = MappingUtils.isArrayAttribute(contextClass, attribute);
       
-      ////System.out.println("TYPE FOR " + attribute + " IS: " + type + ", ARRAY = " + isArray);
+      //System.out.println("TYPE FOR " + attribute + " IS: " + type + ", ARRAY = " + isArray);
+      
+      try {
+      	contextClass = Class.forName(type, false, loader);
+      } catch (Exception e) {
+    	  throw new Exception("Could not find adapter: " + type);
+      }
       
 //      if (!isArray && !MappingUtils.isMappable(contextClass, attribute,loader)) {
 //      	throw new TslCompileException(-1, "Not a mappable field: " + attribute, 0, 0);
@@ -1450,6 +1455,7 @@ public String fieldNode(int ident, Element n, String className,
                 "(" + subObjectsName + ");\n");
       	
       }
+      contextClass = contextClassStack.pop();
     }
     result.append(printIdent(ident) + "}\n");
     return result.toString();
@@ -1457,10 +1463,7 @@ public String fieldNode(int ident, Element n, String className,
 
   @SuppressWarnings("unchecked")
   private Class locateContextClass(String mapPath) {
-//	  System.err.println("finaMapByPath: "+mapPath);
-      StringTokenizer st = new StringTokenizer(mapPath,"/");
-      //System.err.println("STACK: "+contextClassStack);
-      //System.err.println("CONTEXT"+contextClass);
+	  StringTokenizer st = new StringTokenizer(mapPath,"/");
       
       int count = 0;
       while (st.hasMoreTokens()) {
@@ -1473,9 +1476,9 @@ public String fieldNode(int ident, Element n, String className,
       if (count==0) {
         return contextClass;
     }
-//      System.err.println("Count element: "+count);
+      //System.err.println("Count element: "+count);
       //System.err.println("STACK: "+contextClassStack);
-      Class m = (Class)contextClassStack.get(contextClassStack.size()-( count+1));
+      Class m = (Class)contextClassStack.get(contextClassStack.size()-( count ));
 //      System.err.println("Mappable: "+m);
       return m;
 }
@@ -1548,7 +1551,7 @@ public String mapNode(int ident, Element n) throws Exception {
 
     String className = object;
     if (contextClass!=null) {
-        contextClassStack.push(contextClass);
+    	contextClassStack.push(contextClass);
     } 
      try {
          contextClass = Class.forName(className, false, loader);
