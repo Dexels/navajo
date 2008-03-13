@@ -65,6 +65,8 @@ public class NanoTslCompiler {
     //private int offsetElementCounter = 0;
 
     private int methodCounter = 0;
+    
+    private String scriptPath;
 
     private final ArrayList<StringBuffer> methodClipboard = new ArrayList<StringBuffer>();
 
@@ -1815,6 +1817,10 @@ public class NanoTslCompiler {
         //    } else {
         //        System.err.println("Received xmlelement with name: "+n.getName());
         //    }
+        
+        if (n.getName().equals("include") ) {
+        	includeNode(scriptPath, n, n.getParent());
+        } else
         if (n.getName().equals("map")) {
             result.append(printIdent(ident) + "{ // Starting new mappable object context. \n");
             result.append(mapNode(ident + 2, (XMLElement) n));
@@ -1961,6 +1967,8 @@ public class NanoTslCompiler {
         boolean debugOutput = false;
         StringBuffer result = new StringBuffer();
 
+        this.scriptPath = scriptPath;
+        
         XMLElement tslDoc = null;
         FileWriter fo = null;
         

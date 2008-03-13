@@ -54,6 +54,7 @@ public class TslCompiler {
   private int subObjectCounter = 0;
   private int startIndexCounter = 0;
   private int startElementCounter = 0;
+  private String scriptPath;
   //private int offsetElementCounter = 0;
   private int methodCounter = 0;
   private ArrayList<StringBuffer> methodClipboard = new ArrayList<StringBuffer>();
@@ -1795,9 +1796,10 @@ public String mapNode(int ident, Element n) throws Exception {
 
     String script = ( (Element) n ).getAttribute("script");
     if (script == null || script.equals("")) {
-      throw new UserException(-1, "No script name found in include tag (missing or empty script attribute)");
+      throw new UserException(-1, "No script name found in include tag (missing or empty script attribute): " + n);
     }
-    //System.err.println("INCLUDING SCRIPT " + script + " @ NODE " + n);
+    
+  //  System.err.println("INCLUDING SCRIPT " + script + " @ NODE " + n);
 
     Document includeDoc = XMLDocumentUtils.createDocument(new FileInputStream(scriptPath + "/" + script + ".xml"), false);
 
@@ -1822,10 +1824,10 @@ public String mapNode(int ident, Element n) throws Exception {
 
     parentNode.removeChild(n);
 
-    //System.err.println("After include");
-    //String result = XMLDocumentUtils.toString(parent);
-    //System.err.println("result:");
-    //System.err.println(result);
+//    System.err.println("After include");
+//    String result = XMLDocumentUtils.toString(parent);
+//    System.err.println("result:");
+//    System.err.println(result);
   }
 
   public String compile(int ident, Node n, String className, String objectName) throws
@@ -1833,6 +1835,9 @@ public String mapNode(int ident, Element n) throws Exception {
     StringBuffer result = new StringBuffer();
     //System.err.println("in compile(), className = " + className + ", objectName = " + objectName);
 
+    if (n.getNodeName().equals("include") ) {
+    	includeNode(scriptPath, n, n.getParentNode().getOwnerDocument());
+    } else
     if (n.getNodeName().equals("map")) {
       result.append(printIdent(ident) +
                     "{ // Starting new mappable object context. \n");
@@ -1965,6 +1970,8 @@ public String mapNode(int ident, Element n) throws Exception {
 	  boolean debugOutput = false;
 	  boolean broadcast = false;
 	  
+	  this.scriptPath = scriptPath;
+	  
 	  try {
 	      Document tslDoc = null;
 	      StringBuffer result = new StringBuffer();
@@ -2056,6 +2063,7 @@ public String mapNode(int ident, Element n) throws Exception {
 	      NodeList children = tslDoc.getElementsByTagName("tsl").item(0).getChildNodes();
 	      //System.err.println("FOUND " + children.getLength() + " CHILDREN");
 	      for (int i = 0; i < children.getLength(); i++) {
+	    	
 	        String str = compile(0, children.item(i), "", "");
 	        result.append(str);
 	      }
