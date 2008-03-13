@@ -582,6 +582,8 @@ public String messageNode(int ident, Element n, String className, String objectN
         !nextElt.getAttribute("ref").equals("")) {
           String refOriginal = nextElt.getAttribute("ref");
           
+          //System.err.println("refOriginal = " + refOriginal);
+          
           if (refOriginal.indexOf("/")!=-1) {
         	  ref = refOriginal.substring(refOriginal.lastIndexOf('/')+1, refOriginal.length());
               mapPath = refOriginal.substring(0,refOriginal.lastIndexOf('/'));
@@ -597,13 +599,13 @@ public String messageNode(int ident, Element n, String className, String objectN
           //System.out.println("in MessageNode(), REF = " + ref);
           ////System.out.println("filter = " + filter);
           //System.out.println("in MessageNode(), current contextClass = " + contextClass);
-          if (contextClass==null) {
-              //System.err.println("NO CONTEXT CLASS (YET)");
-            } else {
-                System.err.println("LINE 587: PUSHING CLASS: "+contextClass);
-                contextClassStack.push(contextClass);
-           }
-          //contextClass = null;
+//          if (contextClass==null) {
+//              //System.err.println("NO CONTEXT CLASS (YET)");
+//            } else {
+//                System.err.println("LINE 587: PUSHING CLASS: "+contextClass);
+//                contextClassStack.push(contextClass);
+//           }
+          //Class localContextClass = null;
         
           try {
         	  if (mapPath!=null) {
@@ -616,7 +618,7 @@ public String messageNode(int ident, Element n, String className, String objectN
         	  throw new Exception("Could not find adapter: " + className);
           }
           
-          //System.out.println("in MessageNode(), new contextClass = " + contextClass);
+          System.out.println("in MessageNode(), new contextClass = " + contextClass);
           isArrayAttr = MappingUtils.isArrayAttribute(contextClass, ref);
           if (isArrayAttr) {
             type = Message.MSG_TYPE_ARRAY;
@@ -797,6 +799,7 @@ result.append(printIdent(ident + 4) +
       }
 
       contextClass = (Class) contextClassStack.pop();
+      //System.err.println("802: popped: " + contextClass);
       
       if (n.getNodeName().equals("message")) {
 	      result.append(printIdent(ident + 2) +
@@ -857,6 +860,7 @@ result.append(printIdent(ident + 4) +
       }
 
       contextClass = (Class) contextClassStack.pop();
+      //System.err.println("863: popped: " + contextClass);
       
       //result.append(printIdent(ident + 4) +
       //              "currentOutMsg = (Message) outMsgStack.pop();\n");
@@ -892,9 +896,10 @@ result.append(printIdent(ident + 4) +
       result.append(printIdent(ident) + "} // EOF message condition \n");
     }
 
-    if (isSubMapped) {
-      contextClass = (Class) contextClassStack.pop();
-    }
+//    if (isSubMapped) {
+//      contextClass = (Class) contextClassStack.pop();
+//      System.err.println("901: popped: " + contextClass);
+//    }
 
     return result.toString();
   }
@@ -1456,6 +1461,8 @@ public String fieldNode(int ident, Element n, String className,
       	
       }
       contextClass = contextClassStack.pop();
+      //System.err.println("JUST POPPED CONTEXTCLASS: " + contextClass);
+      //System.err.println(contextClassStack);
     }
     result.append(printIdent(ident) + "}\n");
     return result.toString();
@@ -1463,6 +1470,12 @@ public String fieldNode(int ident, Element n, String className,
 
   @SuppressWarnings("unchecked")
   private Class locateContextClass(String mapPath) {
+	  
+	//System.err.println("Count element: "+count);
+	  //System.err.println("in locateContextClass(" + mapPath + ")");
+      //System.err.println("STACK: "+contextClassStack);
+      //System.err.println("STACK: "+contextClass);
+      
 	  StringTokenizer st = new StringTokenizer(mapPath,"/");
       
       int count = 0;
@@ -1782,6 +1795,7 @@ public String mapNode(int ident, Element n) throws Exception {
     }
     if (!contextClassStack.isEmpty()) {
         contextClass = (Class)contextClassStack.pop();
+       // System.err.println("1798: popped: " + contextClass);
     } else {
         contextClass = null;
     }
