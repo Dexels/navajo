@@ -347,19 +347,8 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 						if ( b ) {
 							return true;
 						}
-					} catch (Exception e) {
-						e.printStackTrace(System.err);
-						if ( n != null ) {
-							//System.err.println("LOCAL WORKFLOW STATE IS FOR WFID " + flows[i].getMyId() + ", CURRENT STATE: " + flows[i].getCurrentState().getId() + 
-							//		", IS FINISHED: " + flows[i].isFinished()  + ", IS KILLED = " + flows[i].isKilled());
-							try {
-								n.write(System.err);
-							} catch (NavajoException e1) {
-
-							}
-						} else {
-							//System.err.println("EMPTY LOCAL WORKFLOW STATE...");
-						}
+					} catch (Throwable e) {
+						
 					}
 				}
 			}
