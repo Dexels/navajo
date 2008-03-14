@@ -219,7 +219,7 @@ public class TaskRunnerMap implements Mappable {
 		// Add none-finished tasks.
 		TaskMap [] scheduledTasks = getTasks();
 		for (int i = 0; i < scheduledTasks.length; i++) {
-			if ( user == null || scheduledTasks[i].getUsername().equals(user) ) {
+			if ( scheduledTasks[i].getWorkflowId() == null && ( user == null || scheduledTasks[i].getUsername().equals(user) ) ) {
 				l.add(scheduledTasks[i]);
 			}
 		}
@@ -291,7 +291,7 @@ public class TaskRunnerMap implements Mappable {
 			// Add none-finished tasks.
 			for ( int i = 0; i < l.size(); i++ ) {
 				Task t = (Task) l.get(i);
-				if ( t.getId().equals(id) ) {
+				if ( t.getId().equals(id) ) { // Do not show finished workflow tasks.
 					return new TaskMap(t);
 				}
 			}
