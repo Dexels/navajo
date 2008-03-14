@@ -21,8 +21,9 @@ public final class ASTMappableNode extends SimpleNode {
 
     public final Object interpret() throws TMLExpressionException {
 
-        if (mapObject == null)
+        if (mapObject == null) {
             throw new TMLExpressionException("No known mapobject");
+        }
 
         ArrayList objects = null;
 

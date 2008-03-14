@@ -26,6 +26,7 @@ import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.mapping.compiler.meta.MapMetaData;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.server.SystemException;
+import com.dexels.navajo.util.AuditLog;
 
 import org.apache.jasper.compiler.*;
 
@@ -311,19 +312,19 @@ public String optimizeExpresssion(int ident, String clause, String className, St
             }
           }
           catch (ClassNotFoundException cnfe) {
-            if (expressionContextClass == null) {
-              throw new UserException( -1,
-                  "Error in script: Could not find adapter: " + className +
-                                      " @clause: " + clause);
-            }
-          else {
-            throw new UserException( -1,
-                "Error in script: Could not locate function: " + functionName +
-                                    " @ clause: " + clause);
+        	  if (expressionContextClass == null) {
+        		  throw new UserException( -1,
+        				  "Error in script: Could not find adapter: " + className +
+        				  " @clause: " + clause);
+        	  }
+        	  else {
+        		  throw new UserException( -1,
+        				  "Error in script: Could not locate function: " + functionName +
+        				  " @ clause: " + clause);
+        	  }
           }
-          }
-          catch (Exception e) {
-            exact = false;
+          catch (Throwable e) {
+        	  exact = false;
           }
         }
       }
