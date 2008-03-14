@@ -65,7 +65,7 @@ public class TslCompiler {
   private Stack<Class> contextClassStack = new Stack<Class>();
   @SuppressWarnings("unchecked")
   private Class contextClass = null;
-  private HashSet included = new HashSet();
+  private int included = 0;
 
   private static String hostname = null;
   
@@ -374,7 +374,7 @@ public String optimizeExpresssion(int ident, String clause, String className, St
       }
       catch (Throwable e) {
         exact = false;
-        //System.err.println("Throwable, COULD NOT OPTIMIZE EXPRESSION: " + clause);
+        System.err.println("Throwable, COULD NOT OPTIMIZE EXPRESSION: " + clause);
       }
     }
 
@@ -618,7 +618,8 @@ public String messageNode(int ident, Element n, String className, String objectN
         	  throw new Exception("Could not find adapter: " + className);
           }
           
-          System.out.println("in MessageNode(), new contextClass = " + contextClass);
+          //System.out.println("in MessageNode(), new contextClass = " + contextClass);
+          
           isArrayAttr = MappingUtils.isArrayAttribute(contextClass, ref);
           if (isArrayAttr) {
             type = Message.MSG_TYPE_ARRAY;
@@ -1814,17 +1815,17 @@ public String mapNode(int ident, Element n) throws Exception {
    */
   private final void includeNode(String scriptPath, Node n, Document parent) throws Exception {
 
+	included++;
+	
+	if ( included > 1000 ) {
+		throw new UserException(-1, "Too many included scripts!!!");
+	}
+	
     String script = ( (Element) n ).getAttribute("script");
     if (script == null || script.equals("")) {
       throw new UserException(-1, "No script name found in include tag (missing or empty script attribute): " + n);
     }
-    
-    if ( included.contains(script) ) {
-    	throw new UserException(-1, "Cyclic include detected, this one was already included: " + script);
-    }
-    
-    included.add(script);
-    
+        
   //  System.err.println("INCLUDING SCRIPT " + script + " @ NODE " + n);
 
     Document includeDoc = XMLDocumentUtils.createDocument(new FileInputStream(scriptPath + "/" + script + ".xml"), false);
@@ -2080,7 +2081,7 @@ public String mapNode(int ident, Element n) throws Exception {
 	      for (int i = 0; i < includes.getLength(); i++) {
 	        includeArray[i] = includes.item(i);
 	      }
-
+	      
 	      for (int i = 0; i < includeArray.length; i++) {
 	        //System.err.println("ABOUT TO RESOLVE INCLUDE: " + includeArray[i]);
 	        includeNode(scriptPath, includeArray[i], tslDoc);
