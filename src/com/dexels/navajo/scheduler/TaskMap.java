@@ -55,9 +55,10 @@ public class TaskMap implements Mappable {
 	public Date finishedTime;
 	public String status;
 	public String errorMessage;
+	public String workflowDefinition = null;
+	public String workflowId = null;
 	public String taskDescription;
 
-	
 	public TaskMap(Task t) {
 		myTask = t;
 		this.startTime = t.getStartTime();
@@ -157,6 +158,14 @@ public class TaskMap implements Mappable {
 
 	public Task getMyTask() {
 		return myTask;
+	}
+
+	public String getWorkflowDefinition() {
+		return myTask.getWorkflowDefinition();
+	}
+
+	public String getWorkflowId() {
+		return myTask.getWorkflowId();
 	}
 
 }
