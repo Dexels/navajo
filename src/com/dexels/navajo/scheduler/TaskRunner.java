@@ -37,6 +37,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
+import java.util.logging.Level;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -153,7 +154,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 			is.close();
 			return n;
 		} catch (Exception e) {
-			e.printStackTrace(System.err);
+			AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Could not find response Navajo for task: " + id, Level.WARNING);
 			return null;
 		}
 	}
@@ -171,8 +172,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 			is.close();
 			t.setNavajo(n);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			System.err.println("Input navajo does not exist for task: " + t.getId());
+			AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Could not find request Navajo for task: " + t.getId(), Level.WARNING);
 			return;
 		}
 	}
@@ -434,19 +434,22 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 			String line = null;
 			while ( ( line = fr.readLine() ) != null ) {
 				String [] tokens = line.split(";");
-				String id = tokens[0];
-				String webservice = tokens[1];
-				String user = tokens[2];
-				String trigger = tokens[3];
-//				String taskDesc = tokens[4];
-//				String clientId = tokens[5];
-				String singleEvent = tokens[6];
-				String status  = tokens[7];
-				String starttime = tokens[8];
-				String endtime = tokens[9];
-				String errorMsg = ( tokens.length > 10 ? tokens[10] : "");
+				String id = tokens[1];
+				String webservice = tokens[2];
+				String user = tokens[3];
+				String trigger = tokens[4];
+				String taskDesc = tokens[5];
+				String clientId = tokens[6];
+				String singleEvent = tokens[7];
+				String status  = tokens[8];
+				String starttime = tokens[9];
+				String endtime = tokens[10];
+				String errorMsg = tokens[11].trim();
+				String workflowDef = tokens[12].trim();
+				String workflowId = tokens[13].trim();
 								
-				if ( username == null || username.equals(user)) {
+				System.err.println("workflowId = >" + workflowId + "<, username = >" + user + "<");
+				if ( workflowId.equals("") && (  username == null || username.equals(user) ) ) {
 					try {
 						Task t = new Task(webservice, user, "", null, trigger, null);
 						//t.setTrigger(trigger);
@@ -459,6 +462,9 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 						}
 						t.setStatus(status);
 						t.setErrorMessage(errorMsg);
+						t.setTaskDescription(taskDesc);
+						t.setClientId(clientId);
+						
 						// Check whether request/response is avaible.
 						System.err.println("About to get taskOutput");
 						Navajo out = getTaskOutput(id);
@@ -490,7 +496,12 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 	
 	protected final synchronized void log(Task t, Navajo result, boolean error, String errMsg, java.util.Date startedat) {
 
-		String csvHeader = "SERVER;ID;WEBSERVICE;USERNAME;TRIGGER;TASKDESCRIPTION;CLIENTID;SINGLEEVENT;STATUS;STARTTIME;ENDTIME;ERRORMESSAGE\n";
+		// Do not log (workflow) tasks without a webservice.
+		if ( t.getWebservice() == null || "".equals(t.getWebservice()) ) {
+			return;
+		}
+		
+		String csvHeader = "SERVER;ID;WEBSERVICE;USERNAME;TRIGGER;TASKDESCRIPTION;CLIENTID;SINGLEEVENT;STATUS;STARTTIME;ENDTIME;ERRORMESSAGE;WORKFLOWDEF;WORKFLOWID\n";
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy");
 		
 		if ( errMsg != null ) {
@@ -522,7 +533,9 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 					(error ? "error" : "ok") + ";" +
 					sdf.format(startedat) + ";" + 
 					sdf.format(new java.util.Date()) + ";" + 
-					( error ? errMsg : "") + 
+					( error ? errMsg : " ;") +
+					( t.getWorkflowDefinition() != null ? t.getWorkflowDefinition() : " " ) + ";" +
+					( t.getWorkflowId() != null ? t.getWorkflowId() : " " ) + 
 			"\n"); 
 
 			String logMsg = contentLine.toString();
