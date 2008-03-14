@@ -9,10 +9,12 @@ import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Vector;
+import java.util.logging.Level;
 
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.server.Dispatcher;
+import com.dexels.navajo.util.AuditLog;
 
 /**
  * This class holds the metadata for adapters that can be used in new navasript 'style' scripts.
@@ -113,7 +115,8 @@ public class MapMetaData {
 			isr.close();
 			return ( x.getName().equals("navascript"));
 		} catch (Exception e) {
-			e.printStackTrace(System.err);
+			AuditLog.log("", "Something went wrong while in determination of metascript status of script: " + script + "(" + e.getMessage() + ")", Level.WARNING);
+			//e.printStackTrace(System.err);
 			return false;
 		}
 		
