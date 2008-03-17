@@ -10,7 +10,9 @@ package com.dexels.navajo.util.navadoc;
      * @version $Id$
  */
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -20,6 +22,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+import com.dexels.navajo.util.navadoc.config.PathConfig;
 
 import sun.security.action.GetIntegerAction;
 
@@ -70,9 +74,36 @@ public class NavaDocOutputter {
   public NavaDocOutputter(final NavaDocBaseDOM d, final PrintWriter out)   {
     this.dom = d;
     try {
-    	String result = toString ( this.dom.getDocument().getDocumentElement() );
-    	out.write( result );
-    	out.close();
+//    	String result = toString ( this.dom.getDocument().getDocumentElement() );
+//    	out.write( result );
+//    	out.close();
+    	
+    	  System.err.println("About to create file: " + ( targetPath != null ? targetPath : "doc" ) + File.separator + dom.getBaseName() + ".html");
+    	  
+    	    this.targetFile = new File( NavaDocTransformer.basePath, "doc" + File.separator +  this.dom.getBaseName() + ".html");
+    	    if ( dom.domIn != null ) {
+    	    	this.targetFileIn = new File( NavaDocTransformer.basePath, "doc" + File.separator +  this.dom.getBaseName() + "_input.html");
+    	    	this.targetFileIn.getParentFile().mkdirs();
+    	    }
+    	    if ( dom.domOut != null ) {
+    	    	this.targetFileOut = new File( NavaDocTransformer.basePath, "doc" + File.separator +  this.dom.getBaseName() + "_output.html");
+    	    	this.targetFileOut.getParentFile().mkdirs();
+    	    }
+    	    targetFile.getParentFile().mkdirs();
+    	    System.err.println("ABSOLUTE PATH: " + targetFile.getAbsolutePath());
+    	    System.err.println();
+    	    this.output();    
+    	    
+    	    if ( out != null ) {
+    	    	BufferedReader bf = new BufferedReader( new FileReader(this.targetFile) );
+    	    	String l = null;
+    	    	while ( ( l = bf.readLine() ) != null  ) {
+    	    		out.write(l);
+    	    	}
+    	    	bf.close();
+    	    	out.close();
+    	    }
+    	    
     } catch ( Exception ex ) {
       ex.printStackTrace(System.err);
     }

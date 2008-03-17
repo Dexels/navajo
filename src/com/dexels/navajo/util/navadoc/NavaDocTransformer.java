@@ -51,7 +51,8 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
   // paths
   private File styleSheetPath = null;
   private File servicesPath = null;
-
+  public static File basePath = null;
+  
   // current service we last worked on
   private String serviceName = null;
 
@@ -103,7 +104,8 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
     // path housekeeping
     this.styleSheetPath = styPath;
     this.servicesPath = svcPath;
-
+    this.basePath = this.styleSheetPath.getParentFile().getParentFile();
+    
     // set indentation
     this.setIndent( ind );
 
@@ -330,8 +332,8 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
     	Generate gen = new Generate();
     	
     	// Generate input TML:
-    	FileInputStream fis = new FileInputStream(this.servicesPath  + File.separator + sname);
-    	inDoc = gen.getInputPart( null,  fis );
+    	FileInputStream fis = new FileInputStream(this.servicesPath  + File.separator + sname  + ".xml");
+    	inDoc = gen.getInputPart( null,  fis ); 
     	fis.close();
     	
     	final Element inputNavajo = this.domIn.createElement( "span" );
@@ -346,9 +348,9 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
     	DOMSource domSrcIn = new DOMSource( inSrc.getDocumentElement() );
     	DOMResult domResIn = new DOMResult( inputNavajo );
     	this.transformer.transform( domSrcIn, domResIn );
-    	
-    	// Generate output TML:
-    	fis = new FileInputStream(this.servicesPath  + File.separator + sname);
+    
+        // Generate output TML:
+    	fis = new FileInputStream(this.servicesPath  + File.separator + sname + ".xml");
     	outDoc = gen.getOutputPart( fis );
     	fis.close();
     	

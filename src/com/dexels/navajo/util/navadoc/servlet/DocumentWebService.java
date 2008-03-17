@@ -3,7 +3,6 @@ package com.dexels.navajo.util.navadoc.servlet;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import java.io.*;
-import java.util.*;
 
 /**
  * <p>
@@ -26,10 +25,8 @@ import java.util.*;
  */
 
 import com.dexels.navajo.util.navadoc.NavaDocConstants;
-import com.dexels.navajo.util.navadoc.ServicesList;
 import com.dexels.navajo.util.navadoc.NavaDocTransformer;
 import com.dexels.navajo.util.navadoc.NavaDocOutputter;
-import com.dexels.navajo.util.navadoc.NavaDocIndexDOM;
 
 import com.dexels.navajo.util.navadoc.config.NavaDocConfigurator;
 import com.dexels.navajo.util.navadoc.config.ConfigurationException;
@@ -45,20 +42,11 @@ public class DocumentWebService extends HttpServlet {
 
     private NavaDocConfigurator config;
 
-    // this caches transformers so we only ever create one transformer per
-    // document set requested
-    private Map transformMap = new HashMap();
-
-    private Map slistMap = new HashMap();
-
-    private Map indexMap = new HashMap();
-
-    // ------------------------------------------------------------ public
-    // methods
-
     //Initialize global variables
     public void init() throws ServletException {
 
+    	System.setProperty("com.dexels.navajo.DocumentImplementation", "com.dexels.navajo.document.jaxpimpl.NavajoFactoryImpl");
+    	
         this.configUri = this
                 .getInitParameter( NavaDocConstants.WEB_CONFIG_INITPARAM );
         if ( ( this.configUri == null ) || ( this.configUri.length() == 0 ) ) {
@@ -77,10 +65,6 @@ public class DocumentWebService extends HttpServlet {
         String sname = null;
         String set = null;
         DocumentSet dset = null;
-
-        if ( request.getParameter( NavaDocConstants.WEB_FLUSH_PARAMETER ) != null ) {
-            this.flush();
-        }
 
         // parameters
         HttpSession sess = request.getSession( true );
@@ -106,47 +90,26 @@ public class DocumentWebService extends HttpServlet {
         }
 
         final NavaDocTransformer transformer = this.getTransformer( dset );
-        final ServicesList list = (ServicesList) this.slistMap.get( dset
-                .getName() );
-        if ( list == null ) {
-            throw new ServletException( "null services list for document set '"
-                    + set + "'" );
-        }
+        
         response.setContentType( NavaDocConstants.WEB_CONTENT_TYPE );
 
         sname = request.getParameter( NavaDocConstants.WEB_SNAME_PARAMETER );
         if ( ( sname != null ) && ( sname.length() > 0 ) ) {
-            if ( !list.contains( sname ) ) {
-                throw new ServletException( "'" + sname
-                        + "' web service not found in '" + set + "'" );
-            }
 
             transformer.transformWebService( sname );
-            final NavaDocOutputter outputter = new NavaDocOutputter(
-                    transformer, response.getWriter() );
+            final NavaDocOutputter outputter = new NavaDocOutputter(transformer, (PrintWriter) null);
+            
+            response.sendRedirect("doc/" + sname + ".html");
             return;
         }
-        // create an index page
-        NavaDocIndexDOM idx = getIndexDOM( dset, list, transformer, request );
-        final NavaDocOutputter outputter = new NavaDocOutputter( idx, response
-                .getWriter() );
-
+     
         sess.setAttribute( NavaDocConstants.WEB_SET_PARAMETER, set );
     }
-
-    //Clean up resources
-    public void destroy() {
-    }
-
-    // ----------------------------------------------------------- private
-    // methods
 
     private NavaDocTransformer getTransformer( final DocumentSet dset )
             throws ServletException {
 
-        NavaDocTransformer t = (NavaDocTransformer) this.transformMap.get( dset
-                .getName() );
-        if ( t == null ) {
+     
 
             final File sPath = dset.getPathConfiguration().getPath(
                     NavaDocConstants.SVC_PATH_ELEMENT );
@@ -158,27 +121,18 @@ public class DocumentWebService extends HttpServlet {
             final String cssUri = dset.getProperty( "css-uri" );
 
             try {
-                t = new NavaDocTransformer( styleSheet, sPath, indent );
+            	NavaDocTransformer t = new NavaDocTransformer( styleSheet, sPath, indent );
 
                 // set optional parameters, nulls OK
                 t.setProjectName( dset.getName() );
                 t.setCssUri( cssUri );
-               
-
-                // cache the list of webservices found in this set
-                final ServicesList l = new ServicesList( sPath );
-
-                this.setCache( dset.getName(), t, l );
-
+   
+                return t;
             } catch ( Exception e ) {
                 throw new ServletException( e.getMessage() );
 
             }
-
-        }
-
-        return ( t );
-    } // private NavaDocTransformer getTransformer(final DocumentSet dset)
+    } 
 
     /**
      * reads the configuration from the specific NavaDoc XML configuration using
@@ -191,15 +145,20 @@ public class DocumentWebService extends HttpServlet {
 
         final String base = this
                 .getInitParameter( NavaDocConstants.WEB_BASE_INITPARAM );
+        
+        System.err.println(">>>>>>>>>>>>>>>>> FOUND BASE: " + base);
         if ( ( base != null ) && ( base.length() > 0 ) ) {
             System.setProperty( NavaDocConstants.BASE_SYS_PROPERTY, base );
         }
+        
+        System.err.println("BASE = " + base + ", configUri = " + configUri);
 
         final NavaDocConfigurator conf = new NavaDocConfigurator(
                 this.configUri );
         try {
             conf.configure();
         } catch ( ConfigurationException ex ) {
+        	ex.printStackTrace(System.err);
             throw new ServletException( ex.toString() );
         }
 
@@ -216,76 +175,6 @@ public class DocumentWebService extends HttpServlet {
         this.config = conf;
     }
 
-    /**
-     * shared data, needs to be sychronized
-     * 
-     * @param name
-     *            of document set
-     * @param NavaDocTransformer
-     * @param ServicesList
-     */
 
-    private synchronized void setCache( final String name,
-            final NavaDocTransformer t, final ServicesList l ) {
-        this.transformMap.put( name, t );
-        this.slistMap.put( name, l );
-  
-    }
-
-    /**
-     * creates an index page or simply retrieves a cached one
-     * 
-     * @param DocumentSet
-     * @param ServicesList
-     * @param NavaDocTransformer
-     * @return NavaDocIndexDOM
-     * @throws ServletException
-     *             if there's any trouble reading services notes
-     */
-
-    private NavaDocIndexDOM getIndexDOM( DocumentSet dset, ServicesList list,
-            NavaDocTransformer transformer, HttpServletRequest request )
-            throws ServletException {
-        NavaDocIndexDOM idx = (NavaDocIndexDOM) this.indexMap.get( dset
-                .getName() );
-        if ( idx == null ) {
-            try {
-                idx = new NavaDocIndexDOM( dset );
-                final Iterator iter = list.iterator();
-                while ( iter.hasNext() ) {
-                    final String sname = (String) iter.next();
-                    idx.addEntry( sname, transformer.getNotes( sname ), request.getRequestURI() );
-                }
-                this.cacheIndex( dset.getName(), idx );
-            } catch ( Exception ex ) {
-                throw new ServletException( ex.toString() );
-            }
-        }
-        return ( idx );
-    }
-
-    /**
-     * cache a newly created index page
-     * 
-     * @param document
-     *            set name
-     * @param NavaDocIndexDOM
-     */
-
-    private synchronized void cacheIndex( String set, NavaDocIndexDOM idx ) {
-        this.indexMap.put( set, idx );
-      
-    }
-
-    /**
-     * flushes all cached objects and re-reads the configuration
-     */
-    private synchronized void flush() throws ServletException {
-        this.transformMap = new HashMap();
-        this.slistMap = new HashMap();
-        this.indexMap = new HashMap();
-        this.configure();
-      
-
-    }
+ 
 }
