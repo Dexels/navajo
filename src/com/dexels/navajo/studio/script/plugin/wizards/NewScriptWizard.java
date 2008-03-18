@@ -113,7 +113,7 @@ public class NewScriptWizard extends Wizard implements INewWizard {
         if (selectedFile == null) {
             throwCoreException("Please select a resource in the project you want to add the script to.");
         }
-        IProject myProject = resource.getProject();
+         IProject myProject = resource.getProject();
         System.err.println("Project: " + myProject);
         //		if (!resource.exists() ) {
         //			throwCoreException("Container \"" + scriptName + "\" does not
