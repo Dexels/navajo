@@ -40,7 +40,7 @@ public class BaseField extends JTextField implements ChangeMonitoring, Validatab
   private boolean changed = false;
   public BaseField() {
 //    myDocument = getDocument();
-  	setOpaque(false);
+//  	setOpaque(false);
     try {
       res = SwingClient.getUserInterface().getResource("com.dexels.sportlink.client.swing.TextLabels");
       jbInit();
@@ -70,7 +70,7 @@ public class BaseField extends JTextField implements ChangeMonitoring, Validatab
     this.addFocusListener(new java.awt.event.FocusAdapter() {
       public void focusGained(FocusEvent e) {
 //        SwingClient.getUserInterface().setStatusText(myName);
-        selectAll();
+//        selectAll();
       }
     });
   }
@@ -120,21 +120,24 @@ public class BaseField extends JTextField implements ChangeMonitoring, Validatab
   }
 
   public void setValidationState(int state){
-    validationState = state;
-    switch (validationState){
-      case VALID:
-        this.setBackground(Color.white);
-        break;
-      case INVALID:
-        this.setBackground(Color.red);
-        break;
-      case EMPTY:
-        this.setBackground(Color.blue);
-        break;
-      case ADJUSTED:
-        this.setBackground(Color.yellow);
-        break;
-    }
+	 if(state==validationState) {
+		 return;
+	 }
+//    validationState = state;
+//    switch (validationState){
+//      case VALID:
+//        this.setBackground(Color.white);
+//        break;
+//      case INVALID:
+//        this.setBackground(Color.red);
+//        break;
+//      case EMPTY:
+//        this.setBackground(Color.blue);
+//        break;
+//      case ADJUSTED:
+//        this.setBackground(Color.yellow);
+//        break;
+//    }
   }
 
   public void addConditionRuleId(String id){

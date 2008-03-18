@@ -36,7 +36,7 @@ public class PropertyBox extends BaseComboBox implements PropertyControlled, Gho
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
+		setBackground(Color.white);
 		setEditable(false);
 	}
 
@@ -129,7 +129,7 @@ public class PropertyBox extends BaseComboBox implements PropertyControlled, Gho
 		setEnabled(p.isDirIn());
 		if (p.isDirOut()) {
 			setForeground(Color.darkGray);
-			setBackground(SystemColor.control);
+//			setBackground(SystemColor.control);
 		}
 		// updateUI();
 		String toolTipText;

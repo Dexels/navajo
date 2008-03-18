@@ -22,7 +22,7 @@ import com.dexels.navajo.tipi.swingclient.components.calendar.*;
 
 public final class DatePropertyField
     extends PropertyField
-    implements PropertyControlled, PropertyChangeListener {
+    implements PropertyControlled {
 
   ResourceBundle myResource;
   private String tooltip = null;
@@ -67,25 +67,25 @@ public final class DatePropertyField
   }
 
   public final void setProperty(Property p) {
-	if(initProperty!=null) {
-		initProperty.removePropertyChangeListener(this);
-	}
+//	if(initProperty!=null) {
+//		initProperty.removePropertyChangeListener(this);
+//	}
     if (p == null) {
       return;
     }
     if (!p.getType().equals(Property.DATE_PROPERTY)) {
       System.err.println("Warning: Setting date field to non date property of type: " + p.getType());
     }
-    setValidationState(BaseField.VALID);
+//    setValidationState(BaseField.VALID);
     initProperty = p;
-    if (getValidationState() == BaseField.VALID) {
-      setDescription();
-    }
+//    if (getValidationState() == BaseField.VALID) {
+//      setDescription();
+//    }
     setEditable(p.isDirIn());
-    if (p.isDirOut()) {
-      setForeground(Color.darkGray);
-      setBackground(SystemColor.control);
-    }
+//    if (p.isDirOut()) {
+//      setForeground(Color.darkGray);
+//      setBackground(SystemColor.control);
+//    }
     setChanged(false);
      try {
       setDate( (Date) p.getTypedValue());
@@ -100,10 +100,6 @@ public final class DatePropertyField
 
   public final void setReadOnly(boolean b) {
     readOnly = b;
-  }
-
-  public final void setBackground(java.awt.Color c) {
-    super.setBackground(c);
   }
 
   public final Date getDate() throws ParseException {

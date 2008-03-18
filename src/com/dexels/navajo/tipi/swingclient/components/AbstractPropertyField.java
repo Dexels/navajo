@@ -21,6 +21,7 @@ public abstract class AbstractPropertyField extends JTextField implements FocusL
 	
 	public AbstractPropertyField() {
 		addFocusListener(this);
+		setOpaque(true);
 	}
 
 	public Property getProperty() {
@@ -31,6 +32,9 @@ public abstract class AbstractPropertyField extends JTextField implements FocusL
 		return isEditing;
 	}
 	
+	public boolean isOpaque() {
+		return true;
+	}
 	public void setEditing(boolean b) {
 		isEditing = b;
 	}
@@ -44,11 +48,21 @@ public abstract class AbstractPropertyField extends JTextField implements FocusL
 			if (myProperty != null) {
 				myProperty.removePropertyChangeListener(this);
 			}
-			myProperty = p;
+			setPropertyValue(p);
 			if(myProperty!=null) {
 				myProperty.addPropertyChangeListener(this);
 			}
+		} else {
+			setPropertyValue(p);
 		}
+	
+	}
+/**
+ * Similar to setProperty, only will not listen for property changes
+ * @param p
+ */
+	public void setPropertyValue(Property p) {
+		myProperty = p;
 
 		if(myProperty==null) {
 			setText("");
@@ -59,7 +73,7 @@ public abstract class AbstractPropertyField extends JTextField implements FocusL
 		String s = getPresentationFormat(myProperty.getTypedValue());
 		setText(s);
 	}
-
+	
 	public void focusGained(FocusEvent e) {
 		editProperty();
 		}
@@ -96,8 +110,10 @@ public abstract class AbstractPropertyField extends JTextField implements FocusL
 
 	protected void updateProperty() {
 		if(!isEditing()) {
+			System.err.println("Not editing");
 			return;
 		}
+		System.err.println("Editing");
 		Object value = parseProperty(getText());
 		myProperty.setAnyValue(value);
 		presentObject(value);

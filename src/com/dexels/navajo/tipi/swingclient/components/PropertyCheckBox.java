@@ -59,6 +59,9 @@ public final class PropertyCheckBox extends BaseCheckBox implements ChangeMonito
     setChanged(true);
   }
 
+  public boolean isOpaque() {
+	  return false;
+  }
   public final void setProperty(Property p) {
     myProperty = p;
 //    this_actionPerformed(null);

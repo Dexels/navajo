@@ -40,7 +40,7 @@ public class PropertyHiddenField extends PropertyPasswordField {
     setText("xxxxx");
     setEnabled(false);
     setEditable(false);
-    setBackground(SystemColor.control);
+//    setBackground(SystemColor.control);
 
     try {
       if (localResource != null) {

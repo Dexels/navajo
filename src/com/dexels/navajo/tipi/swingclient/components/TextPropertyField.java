@@ -1,5 +1,6 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
+import javax.swing.event.*;
 import javax.swing.text.*;
 import com.dexels.navajo.document.*;
 import java.awt.*;
@@ -27,7 +28,7 @@ public class TextPropertyField extends PropertyField {
     	  selectAll();
       }
     });
-
+   
   }
   public void focusLost(FocusEvent e) {
     // overridden, to fix the klopgeest-aap bug
@@ -100,6 +101,8 @@ public class TextPropertyField extends PropertyField {
               textValue = textValue.substring(0, p.getLength());
               p.setValue(textValue);
             }
+          } else {
+         	        	  
           }
         }
 

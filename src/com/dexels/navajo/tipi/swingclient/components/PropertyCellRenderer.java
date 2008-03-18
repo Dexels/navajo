@@ -11,6 +11,8 @@ import com.dexels.navajo.document.types.*;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.border.*;
 import java.awt.event.*;
+import java.beans.*;
+
 import javax.swing.border.LineBorder;
 import java.text.*;
 
@@ -43,12 +45,11 @@ public class PropertyCellRenderer implements TableCellRenderer, ListCellRenderer
   private ClockTimeField myClockTimeField = null;
   private StopwatchTimeField myStopwatchTimeField = null;
   private PropertyPasswordField myPasswordField = null;
-  private PropertyHiddenField myHiddenField = null;
-  private Property myProperty = null;
+   private Property myProperty = null;
   private Map columnAttributes;
   private MessageTable myTable;
   private TableCellRenderer def = new DefaultTableCellRenderer();
-  private JLabel l = new JLabel();
+  private final JLabel l;
   private JButton rowButton = new JButton();
   JLabel readOnlyField = new JLabel();
 
@@ -58,8 +59,14 @@ public class PropertyCellRenderer implements TableCellRenderer, ListCellRenderer
   public PropertyCellRenderer() {
     //
     myPropertyField = new TextPropertyField();
+    l = new JLabel() {
+    	public boolean isOpaque() {
+    		return true;
+    	}
+    };
     l.setPreferredSize(new Dimension(l.getPreferredSize().width, 17));
     l.setFont(myPropertyField.getFont());
+    
     rowButton.setMargin(new Insets(0,1,0,1));
     rowButton.setFont(new Font(rowButton.getFont().getName(), Font.BOLD, rowButton.getFont().getSize()));
   }
@@ -98,9 +105,10 @@ public class PropertyCellRenderer implements TableCellRenderer, ListCellRenderer
 
   public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
     TableModel tm = table.getModel();
-
+    if(!table.hasFocus()) {
+    	hasFocus = false;
+    }	
     boolean disabled = false;
-
     if(table.getSelectedRow() == row) {
       isSelected = true;
     }
@@ -111,14 +119,12 @@ public class PropertyCellRenderer implements TableCellRenderer, ListCellRenderer
       columnAttributes = myTable.getColumnAttributes();
     }
 
-    if(myTable != null) {
-      int selrow = myTable.getSelectedRow();
-      int selcol = myTable.getSelectedColumn();
-      if(row == selrow && selcol == column) {
-        //System.err.println("Rendering. Selected: "+selrow+"/"+selcol);
-      }
+    if(value==null) {
+    	setComponentColor(l, isSelected, row, column, false,tm.getRowCount(), disabled);
+        System.err.println("Returning null component");
+    	return l;
     }
-
+    
     if(Integer.class.isInstance(value)){
       rowButton.setText(""+(row+1));
       return rowButton;
@@ -127,64 +133,35 @@ public class PropertyCellRenderer implements TableCellRenderer, ListCellRenderer
     if(Property.class.isInstance(value)) {
 //      System.err.println("Yes, a property");
       myProperty = (Property)value;
-      myPropertyType = (String)myProperty.getType();
-      if("true".equals(myProperty.getSubType("hidden"))){
-        if(myHiddenField == null) {
-          myHiddenField = new PropertyHiddenField();
-        }
-        myHiddenField.setProperty(myProperty);
-        setComponentColor(myHiddenField, isSelected, row, column, false, tm.getRowCount(), disabled);
-        myHiddenField.setBorder(null);
-        if(hasFocus){
-          myHiddenField.setBorder(c);
-        }
-        return myHiddenField;
-      }
-
-      if(myPropertyType.equals(Property.EXPRESSION_PROPERTY)) {
-        try {
-          myPropertyType = myProperty.getEvaluatedType();
-//          System.err.println("My property: "+myProperty.getTypedValue());
-//          System.err.println("*************FOUND EXPRESSION TYPE PROPERTY. Name: "+myProperty.getFullPropertyName()+". Resolved to:  "+myPropertyType);
-          if(myPropertyType == null || "".equals(myPropertyType)) {
-            myPropertyType = myTable.getTypeHint(myProperty.getName());
-//            System.err.println("No type. Looking for hint: "+myPropertyType);
-            if(myPropertyType != null) {
-              System.err.println("*******************\n**********************\n********************\n Hint found: " + myPropertyType);
-            }
+      myPropertyType = myProperty.getType();
+      
+      JComponent propComponent = createComponent(myProperty);
+      PropertyControlled pc = (PropertyControlled)propComponent;
+     pc.setProperty(myProperty);
+      setComponentColor(propComponent, isSelected, row, column, false,tm.getRowCount(), disabled);
+      if (hasFocus)	 {
+          if (myTable != null && myTable.isCellEditable(row, column)) {
+        	  propComponent.setBorder(b);
           }
-          if(myPropertyType == null || "".equals(myPropertyType)) {
-//            System.err.println("No type. Setting to string");
-            myPropertyType = Property.STRING_PROPERTY;
+          else {
+        	  propComponent.setBorder(c);
           }
-          disabled = true;
-//          System.err.println("Final prop type: "+myPropertyType);
-        } catch(Throwable ex1) {
-          ex1.printStackTrace();
+        } else {
+        	propComponent.setBorder(BorderFactory.createEmptyBorder());
+        	
         }
+      
+      if(true) {
+    	  return propComponent;
       }
-
+      
       if(myPropertyType.equals(Property.SELECTION_PROPERTY)) {
-        try {
-          if(row == 0) {
-//            System.err.println("\n\n=====================================================================================");
-            for(int i = 0;i < myProperty.getAllSelections().size();i++) {
-//              System.err.println("RENDERER SEL: " + ( (Selection) myProperty.getAllSelections().get(i)).getName() + " selected: " + ( (Selection) myProperty.getAllSelections().get(i)).isSelected());
-            }
-//            System.err.println("=====================================================================================");
-          }
-        } catch(Exception e) {
-          e.printStackTrace();
-        }
-//        System.err.println("Selectionproperty["+myProperty.getName() + "] with cardinality: " + myProperty.getCardinality());
-
         if(myProperty.getCardinality().equals("+")){
           if (myMultiSelectPropertyBox == null) {
               myMultiSelectPropertyBox = new MultiSelectPropertyBox();
             }
             myMultiSelectPropertyBox.setProperty(myProperty);
-            setComponentColor(myMultiSelectPropertyBox, isSelected, row, column, false,
-                              tm.getRowCount(), disabled);
+            setComponentColor(myMultiSelectPropertyBox, isSelected, row, column, false,tm.getRowCount(), disabled);
             myMultiSelectPropertyBox.setBorder(null);
             if (hasFocus) {
               if (myTable != null && myTable.isCellEditable(row, column)) {
@@ -206,10 +183,12 @@ public class PropertyCellRenderer implements TableCellRenderer, ListCellRenderer
           setComponentColor(myPropertyBox, isSelected, row, column, false,
                             tm.getRowCount(), disabled);
           myPropertyBox.setBorder(null);
+          myPropertyBox.setOpaque(true);
           if (hasFocus) {
             if (myTable != null && myTable.isCellEditable(row, column)) {
-              myPropertyBox.setBorder(b);
-            }
+            	myPropertyBox.setBorder(b);
+             
+             }
             else {
               myPropertyBox.setBorder(c);
             }
@@ -224,7 +203,6 @@ public class PropertyCellRenderer implements TableCellRenderer, ListCellRenderer
           myPropertyCheckBox = new PropertyCheckBox();
         }
         myPropertyCheckBox.setProperty(myProperty);
-        setComponentColor(myPropertyCheckBox, isSelected, row, column, false, tm.getRowCount(), disabled);
         if(hasFocus) {
           if(myTable != null && myTable.isCellEditable(row, column)) {
             myPropertyCheckBox.setBorder(b);
@@ -232,7 +210,9 @@ public class PropertyCellRenderer implements TableCellRenderer, ListCellRenderer
             myPropertyCheckBox.setBorder(c);
           }
         }
-//        myPropertyCheckBox.setOpaque(true);
+        myPropertyCheckBox.setOpaque(true);
+        setComponentColor(myPropertyCheckBox, isSelected, row, column, false, tm.getRowCount(), disabled);
+        
         return myPropertyCheckBox;
       }
       if(myPropertyType.equals(Property.DATE_PROPERTY)) {
@@ -242,7 +222,7 @@ public class PropertyCellRenderer implements TableCellRenderer, ListCellRenderer
           myDatePropertyField.setReadOnly(true);
         }
         myDatePropertyField.setProperty(myProperty);
-        setComponentColor(myDatePropertyField, isSelected, row, column, false, tm.getRowCount(), disabled);
+         myDatePropertyField.setOpaque(true);
         if(hasFocus) {
           if(myTable != null && myTable.isCellEditable(row, column)) {
             myDatePropertyField.setBorder(b);
@@ -250,6 +230,7 @@ public class PropertyCellRenderer implements TableCellRenderer, ListCellRenderer
             myDatePropertyField.setBorder(c);
           }
         }
+        setComponentColor(myDatePropertyField, isSelected, row, column, false, tm.getRowCount(), disabled);
 
         return myDatePropertyField;
       }
@@ -332,13 +313,6 @@ public class PropertyCellRenderer implements TableCellRenderer, ListCellRenderer
         }
         myClockTimeField.setProperty(myProperty);
         setComponentColor(myClockTimeField, isSelected, row, column, false, tm.getRowCount(), disabled);
-        if(hasFocus) {
-          if(myTable != null && myTable.isCellEditable(row, column)) {
-            myClockTimeField.setBorder(b);
-          } else {
-            myClockTimeField.setBorder(c);
-          }
-        }
 
         return myClockTimeField;
       }
@@ -349,14 +323,7 @@ public class PropertyCellRenderer implements TableCellRenderer, ListCellRenderer
         }
         myStopwatchTimeField.setProperty(myProperty);
         setComponentColor(myStopwatchTimeField, isSelected, row, column, false, tm.getRowCount(), disabled);
-        if(hasFocus) {
-          if(myTable != null && myTable.isCellEditable(row, column)) {
-            myStopwatchTimeField.setBorder(b);
-          } else {
-            myStopwatchTimeField.setBorder(c);
-          }
-        }
-
+        updateComponentBorder(myStopwatchTimeField,hasFocus, row, column);
         return myStopwatchTimeField;
       }
 
@@ -369,13 +336,7 @@ public class PropertyCellRenderer implements TableCellRenderer, ListCellRenderer
           myPropertyField.setCapitalizationMode(null);
           myPropertyField.setProperty(myProperty);
           setComponentColor(myPropertyField, isSelected, row, column, false, tm.getRowCount(), disabled);
-          if(hasFocus) {
-            if(myTable != null && myTable.isCellEditable(row, column)) {
-              myPropertyField.setBorder(b);
-            } else {
-              myPropertyField.setBorder(c);
-            }
-          }
+          updateComponentBorder(myPropertyField,hasFocus, row, column);
           return myPropertyField;
 
         } else {
@@ -393,10 +354,12 @@ public class PropertyCellRenderer implements TableCellRenderer, ListCellRenderer
           } else {
             formatStringField.setText("");
           }
+//          if(hasFocus) {
+//            formatStringField.setBorder(c);
+//          }
           setComponentColor(formatStringField, isSelected, row, column, false, tm.getRowCount(), disabled);
-          if(hasFocus) {
-            formatStringField.setBorder(c);
-          }
+          updateComponentBorder(formatStringField,hasFocus, row, column);
+          
           return formatStringField;
 
         }
@@ -412,13 +375,7 @@ public class PropertyCellRenderer implements TableCellRenderer, ListCellRenderer
         myPropertyField.setProperty(myProperty);
         setComponentColor(myPropertyField, isSelected, row, column, false, tm.getRowCount(), disabled);
         myPropertyField.setToolTipText(myProperty.getValue());
-        if(hasFocus) {
-          if(myTable != null && myTable.isCellEditable(row, column)) {
-            myPropertyField.setBorder(b);
-          } else {
-            myPropertyField.setBorder(c);
-          }
-        }
+//        updateComponentBorder(hasFocus, row, column);
         return myPropertyField;
       }
 
@@ -441,6 +398,8 @@ public class PropertyCellRenderer implements TableCellRenderer, ListCellRenderer
         return myPasswordField;
       }
 
+      
+      
 //    System.err.println("Oh dear, strange property type...");
 //      if (myPropertyField == null) {
 //        myPropertyField = new TextPropertyField();
@@ -488,15 +447,138 @@ public class PropertyCellRenderer implements TableCellRenderer, ListCellRenderer
     return l;
   }
 
+  
+  private JComponent createComponent(Property p) {
+
+	  String type = p.getType();
+      if(type.equals(Property.EXPRESSION_PROPERTY)) {
+          try {
+        	  type = p.getEvaluatedType();
+            if(type == null || "".equals(type)) {
+            	type = myTable.getTypeHint(p.getName());
+              if(type != null) {
+                System.err.println("*******************\n**********************\n********************\n Hint found: " + myPropertyType);
+              }
+            }
+            if(type == null || "".equals(type)) {
+            	type = Property.STRING_PROPERTY;
+            }
+//            disabled = true;
+          } catch(Throwable ex1) {
+            ex1.printStackTrace();
+          }
+        }
+	  if(type.equals(Property.PASSWORD_PROPERTY)) {
+          if(myPasswordField == null) {
+            myPasswordField = new PropertyPasswordField();
+          }
+          return myPasswordField;
+      }
+      if(type.equals(Property.PASSWORD_PROPERTY)) {
+          if(myStopwatchTimeField == null) {
+        	  myStopwatchTimeField = new StopwatchTimeField();
+          }
+          return myStopwatchTimeField;
+      }
+      if(type.equals(Property.BOOLEAN_PROPERTY)) {
+          if(myPropertyCheckBox == null) {
+        	  myPropertyCheckBox = new PropertyCheckBox();
+          }
+          return myPropertyCheckBox;
+      }
+      if(type.equals(Property.PERCENTAGE_PROPERTY)) {
+          if(myPercentagePropertyField == null) {
+        	  myPercentagePropertyField = new PercentagePropertyField();
+          }
+          return myPercentagePropertyField;
+      }
+      if(type.equals(Property.MONEY_PROPERTY)) {
+          if(myMoneyPropertyField == null) {
+        	  myMoneyPropertyField = new MoneyField();
+          }
+          return myMoneyPropertyField;
+      }
+      if(type.equals(Property.INTEGER_PROPERTY)) {
+          if(myIntegerPropertyField == null) {
+        	  myIntegerPropertyField = new IntegerPropertyField();
+          }
+          return myIntegerPropertyField;
+      }
+      if(type.equals(Property.FLOAT_PROPERTY)) {
+          if(myFloatPropertyField == null) {
+        	  myFloatPropertyField = new FloatPropertyField();
+          }
+          return myFloatPropertyField;
+      }
+      if(type.equals(Property.CLOCKTIME_PROPERTY)) {
+          if(myClockTimeField == null) {
+        	  myClockTimeField = new ClockTimeField();
+          }
+          return myClockTimeField;
+      }
+      if(type.equals(Property.DATE_PROPERTY)) {
+          if(myDatePropertyField == null) {
+        	  myDatePropertyField = new DatePropertyField();
+              myDatePropertyField.setShowCalendarPickerButton(false);
+
+          }
+          return myDatePropertyField;
+      }
+      if(type.equals(Property.SELECTION_PROPERTY)) {
+          if(p.getCardinality().equals("+")){
+            if (myMultiSelectPropertyBox == null) {
+                myMultiSelectPropertyBox = new MultiSelectPropertyBox();
+              }
+            return myMultiSelectPropertyBox;
+          }else{
+            if (myPropertyBox == null) {
+              myPropertyBox = new PropertyBox();
+            }
+            return myPropertyBox;
+          }
+      }
+//      if(type.equals(Property.STRING_PROPERTY) || type.equals(Property.MEMO_PROPERTY)) {
+          if(myPropertyField == null) {
+        	  myPropertyField = new TextPropertyField();
+          }
+          return myPropertyField;
+//      }
+  }
+  
+  
+private void updateComponentBorder(JComponent vc, boolean hasFocus, int row, int column) {
+	if(hasFocus) {
+	    if(myTable != null && myTable.isCellEditable(row, column)) {
+	      vc.setBorder(b);
+	    } else {
+	      vc.setBorder(c);
+	    }
+	  } else {
+		   vc.setBorder(new CompoundBorder(new EmptyBorder(new Insets(0, 2, 0, 2)), null));
+	  }
+}
+
   public void setComponentColor(Component c, boolean isSelected, int row, int col, boolean loading, int rowcount, boolean isDisabled) {
     /** @todo Check this a bit */
 //    Message m = myTable.getMessageModel().getMessageRow(row);
 //    m.write(System.err);
 
     JComponent cc = (JComponent)c;
-    cc.setBorder(new CompoundBorder(new EmptyBorder(new Insets(0, 2, 0, 2)), null));
-
-    /*
+//    cc.setBorder(new CompoundBorder(new EmptyBorder(new Insets(0, 2, 0, 2)), null));
+    
+//    cc.setBackground(new Color(255,20,120));
+//    cc.setOpaque(true		);
+    if(isSelected) {
+    	
+        c.setBackground(selectedColor);
+      } else {
+    	  if(row % 2 == 0) {
+        c.setBackground(highColor);
+      } else {
+        c.setBackground(lowColor);
+      }
+      }
+      /*
     // hmf. lamaar
 //     cc.setForeground(isSelected?SystemColor.textHighlightText:SystemColor.textText);
     if(PropertyField.class.isInstance(cc)) {
@@ -533,11 +615,7 @@ public class PropertyCellRenderer implements TableCellRenderer, ListCellRenderer
         }
 //        c.setBackground(Color.pink);
       } else {
-        if(row % 2 == 0) {
-          c.setBackground(highColor);
-        } else {
-          c.setBackground(lowColor);
-        }
+
       }
     }
     if(myProperty == null) {

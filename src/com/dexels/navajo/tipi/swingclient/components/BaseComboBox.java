@@ -45,7 +45,9 @@ public abstract class BaseComboBox
       e.printStackTrace();
     }
   }
-
+	public boolean isOpaque() {
+		return true;
+	}
   public void loadCombobox(Property p) {
     try {
       defaultComboBoxModel = new DefaultComboBoxModel();

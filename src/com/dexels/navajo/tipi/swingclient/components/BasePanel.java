@@ -144,12 +144,6 @@ public class BasePanel
     }
   }
 
-  public final void addBusyPanel() {
-    synchronized (busyPanelSemaphore) {
-      addGlassPane(BaseGlassPane.MODE_HOURGLASS);
-      busyPanelCount++;
-    }
-  }
 
   public final void removeBusyPanel() {
     synchronized (busyPanelSemaphore) {

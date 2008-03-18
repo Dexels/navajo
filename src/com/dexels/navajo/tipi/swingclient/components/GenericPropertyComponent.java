@@ -1284,7 +1284,7 @@ public void setFocusable(boolean b) {
         }
       });
     }
-    myMoneyField.setProperty(p);
+    myMoneyField.setPropertyValue(p);
     addPropertyComponent(myMoneyField);
   }
 

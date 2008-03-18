@@ -236,10 +236,14 @@ public class MergeUtils {
 
 	public static void openDocument(String docFile) {
 		try {
-
+			Process p = null;
 			if (System.getProperty("os.name").toLowerCase().indexOf("windows") >= 0) {
-				final Process p = Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + docFile);
-			} else { // non-Windows platform, assume Linux/Unix
+				p = Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + docFile);
+			} else { 
+				if(System.getProperty("os.name").toLowerCase().indexOf("mac") >= 0) {
+					p = Runtime.getRuntime().exec("open " + docFile);
+				} else{
+				// non-Windows platform, assume Linux/Unix
 				String[] cmd = new String[2];
 
 				if (docFile.toLowerCase().endsWith(".doc") || docFile.toLowerCase().endsWith(".rtf")
@@ -264,7 +268,8 @@ public class MergeUtils {
 				cmd[(docFile.toLowerCase().endsWith(".txt")) ? 3 : 1] = docFile;
 
 				if (cmd[0] != null) {
-					final Process p = Runtime.getRuntime().exec(cmd);
+					 p = Runtime.getRuntime().exec(cmd);
+				}
 				}
 			}
 		} catch (Exception e) {

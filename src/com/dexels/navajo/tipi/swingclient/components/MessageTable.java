@@ -65,7 +65,7 @@ public class MessageTable
   public MessageTable() {
     setAutoCreateColumnsFromModel(false);
     myModel = new MessageTableModel();
-    myModel.setJTable(this);
+    myModel.setMessageTable(this);
     mySorter = new TableSorter(myModel);
     setModel(mySorter);
     
@@ -74,6 +74,7 @@ public class MessageTable
     setDefaultRenderer(Property.class, myRenderer);
     setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
     setPreferredScrollableViewportSize(getPreferredSize());
+//    setSurrendersFocusOnKeystroke(true);
     getTableHeader().setDefaultRenderer(new CustomTableHeaderRenderer());
     headerMouseAdapter = mySorter.addMouseListenerToHeaderInTable(this);
 
@@ -95,18 +96,31 @@ public class MessageTable
         }
       }
     });
-//    addFocusListener(new FocusAdapter() {
-//      public void focusLost(FocusEvent e) {
-//        if (isEditing()) {
-//          Property p = myEditor.getProperty();
+    addFocusListener(new FocusListener() {
+      public void focusLost(FocusEvent e) {
+//  		refreshSelectedCell();
+        if (isEditing()) {
+        	System.err.println("Stopping edit!");
+          Property p = myEditor.getProperty();
+          myEditor.updateProperty();
+          try {
+			System.err.println("Path: "+p.getFullPropertyName());
+		} catch (NavajoException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 //          if( !(e.getSource() instanceof MessageTable) &&  p!=null && !Property.SELECTION_PROPERTY.equals(p.getType())) {
 //        	  // DON'T DO THIS FOR SELECTION PROPERTIES.
 //        	  System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> STOP EDITING: " + e.getSource());
 //        	  myEditor.stopCellEditing();
 //          } 
-//        }
-//      }
-//    });
+        }
+      }
+
+	public void focusGained(FocusEvent arg0) {
+		refreshSelectedCell();
+	}
+    });
     setupTableActions();
   }
 
@@ -1171,6 +1185,7 @@ public void updateTableSize() {
 		SwingUtilities.invokeLater(new Runnable() {
 
 			public void run() {
+				System.err.println("BEWARE OF THE WOBBLE!");
 				doSort(sortedColumn, sortedDirection);
 			}
 		});
@@ -1483,19 +1498,7 @@ public void updateTableSize() {
     return constructed;
   }
 
-  public void valueChanged(ListSelectionEvent e) {
-//    Crap..
 
-//    System.err.println("Value changed in mt");
-//    int row = getSelectedRow();
-//    int col = getSelectedColumn();
-//    if((row > -1) && (col >-1)){
-//      if (isCellEditable(row, col)) {
-//        this.editCellAt(row, col);
-//      }
-//    }
-    super.valueChanged(e);
-  }
 
   public final void tableChanged(TableModelEvent parm1) {
     super.tableChanged(parm1);
@@ -1655,7 +1658,7 @@ public void updateTableSize() {
    * @param p
    */
   public void firePropertyChanged(Property p) {
-    getMessageModel().firePropertyChanged(p);
+    getMessageModel().firePropertyChanged(p,"value");
   }
 
   protected final void fireChangeEvents(Property init, Property current) throws NavajoException {
@@ -1663,7 +1666,7 @@ public void updateTableSize() {
     if (changelisteners.size() == 0) {
       return;
     }
-    Map m = new HashMap();
+    Map<String,Object> m = new HashMap<String,Object>();
     m.put("name", current.getName());
     m.put("row", new Integer(getSelectedRow()));
     m.put("column", new Integer(getSelectedColumn()));
@@ -1671,6 +1674,8 @@ public void updateTableSize() {
     m.put("old", init.getTypedValue());
     m.put("path", current.getFullPropertyName());
     m.put("message", current.getParentMessage());
+    m.put("property", current);
+
     for (int i = 0; i < changelisteners.size(); i++) {
       ChangeListener cl = (ChangeListener) changelisteners.get(i);
       ChangeEvent e = new ChangeEvent(m);
@@ -1919,7 +1924,7 @@ public void updateTableSize() {
 
   public final void propertyChange(PropertyChangeEvent e) {
 		Property val = (Property) e.getSource();
-		getMessageModel().firePropertyChanged(val);
+		getMessageModel().firePropertyChanged(val,"value");
 		
 	}
 
@@ -2116,6 +2121,52 @@ public void updateTableSize() {
 		getSelectionModel().setSelectionInterval(selectedIndex, selectedIndex);
 	}
 
+	public void editCellAt(Property p) {
+		Message m = p.getParentMessage();
+		int row = getMessageModel().getRowOfMessage(m);
+		int column = getMessageModel().getColumnOfProperty(row, p);
+		//		stopCellEditing();
+//		repaint();
+//		getMessageModel().fireTableCellUpdated(getEditingRow(), getEditingColumn());
+//		fireTableStructureChanged();
+//		requestFocusInWindow();
+//		transferFocus();
+		int oldColumn = getSelectedColumn();
+		int oldRow = getSelectedRow();
+//		getMessageModel().fireTableCellUpdated(oldRow, oldColumn);
+//		getMessageModel().fireTableCellUpdated(row, column);
+		System.err.println("Starting edit at row: "+row+" column: "+column+" old sel: "+oldRow+" oldcol: "+oldColumn);
+		
+		getColumnModel().getSelectionModel().setSelectionInterval(column, column);
+		getSelectionModel().setSelectionInterval(row, row);
+	
+		if(!hasFocus()) {
+			grabFocus();
+		}
+		editCellAt(row, column);
+//		getMessageModel().fireTableCellUpdated(oldRow, oldColumn);
+		
+	}
+
+
+	private void refreshSelectedCell() {
+		int oldColumn = getSelectedColumn();
+		int oldRow = getSelectedRow();
+		getMessageModel().fireTableCellUpdated(oldRow, oldColumn);
+	}
+	
+//	@Override
+//	public boolean requestFocusInWindow() {
+//		System.err.println(getClass().getName()+" REQUESTFOCUS!");
+//		if(isEditing()) {
+//			return myEditor.requestFocusInWindow();
+//			
+//		} else {
+//			return super.requestFocusInWindow();
+//		}
+//	}
+
+	
 
 
 }

@@ -35,7 +35,7 @@ public class MessageTableModel
   private boolean isFiltered = false;
   private int[] filterMap = null;
   private int filteredRecordCount = -1;
-  private JTable myTable = null;
+  private MessageTable myTable = null;
 
 //  private boolean autoResize = false;
 //  private boolean initialResize = true;
@@ -71,7 +71,7 @@ public class MessageTableModel
     return myColumnIds.contains(id);
   }
 
-  public void setJTable(JTable t) {
+  public void setMessageTable(MessageTable t) {
     this.myTable = t;
   }
 
@@ -116,18 +116,17 @@ public class MessageTableModel
 									if(row>=0 && column>=0) {
 										fireTableCellUpdated(row, column);
 									}
-									System.err.println("Updating: "+row+" column: "+column+" property: "+p.getName()+" orig. row: "+p.getParentMessage().getName()+" ---- "+p.getParentMessage().getIndex());
-									System.err.println("Old: "+e.getOldValue()+" new: "+e.getNewValue());
+//									System.err.println("Updating: "+row+" column: "+column+" property: "+p.getName()+" orig. row: "+p.getParentMessage().getName()+" ---- "+p.getParentMessage().getIndex());
+//									System.err.println("Old: "+e.getOldValue()+" new: "+e.getNewValue());
 								}});
 							} else {
 								if(row>=0 && column>=0) {
 									fireTableCellUpdated(row, column);
 								}
-								System.err.println("Updating: "+row+" column: "+column+" property: "+p.getName()+" orig. row: "+p.getParentMessage().getName()+" ---- "+p.getParentMessage().getIndex());
-								System.err.println("Old: "+e.getOldValue()+" new: "+e.getNewValue());
+//								System.err.println("Updating: "+row+" column: "+column+" property: "+p.getName()+" orig. row: "+p.getParentMessage().getName()+" ---- "+p.getParentMessage().getIndex());
+//								System.err.println("Old: "+e.getOldValue()+" new: "+e.getNewValue());
 
 							}
-							Thread.dumpStack();
 						} catch (InterruptedException e1) {
 							e1.printStackTrace();
 						} catch (InvocationTargetException e1) {
@@ -247,7 +246,7 @@ public void removeColumn(int index) {
     }
     for (int i = 0; i < l.size(); i++) {
       Property current = l.get(i);
-      firePropertyChanged(current);
+      firePropertyChanged(current,"value");
     }
   }
 
@@ -330,6 +329,7 @@ public void removeColumn(int index) {
   }
 
   public boolean isCellEditable(int rowIndex, int columnIndex) {
+	  
     int column = columnIndex - subsractColumnCount;
     if (column < 0) {
       return true;
@@ -342,7 +342,7 @@ public void removeColumn(int index) {
 //      System.err.println("Readonly table");
       return false;
     }
-    if (!editableMap.containsKey(id)) {
+  if (!editableMap.containsKey(id)) {
       //System.err.println("Not in editable list. index too big");
       return false;
     }
@@ -366,7 +366,8 @@ public void removeColumn(int index) {
       return false;
     }
     else {
-//      System.err.println("Property found. (" + p.getName() + ") Returning: "+p.isDirIn());
+//      System.err.println("Property found. (" + p.getName() + ") Returning: "+p.isDirIn()+" row: "+rowIndex+" column: "+columnIndex);
+//      Thread.dumpStack();
       return p.isDirIn();
     }
 //    return b.booleanValue();
@@ -419,7 +420,7 @@ public void removeColumn(int index) {
     return -1;
   }
 
-  public final void firePropertyChanged(Property p) {
+  public final void firePropertyChanged(Property p,String beanPropertyName) {
 	  
     Message parent = p.getParentMessage();
     if (parent == null || myMessage == null) {
@@ -444,13 +445,13 @@ public void removeColumn(int index) {
 //    }
     if(column>=0) {
     	if(SwingUtilities.isEventDispatchThread()) {
-            fireTableCellUpdated(row, column);
+            fireTableCellUpdated(myTable.mapRowNumber(row), column);
     	} else {
     		try {
 				SwingUtilities.invokeAndWait(new Runnable(){
 
 					public void run() {
-				        fireTableCellUpdated(row, column);
+				        fireTableCellUpdated(myTable.mapRowNumber(row), column);
 				        		
 					}});
 			} catch (InterruptedException e) {

@@ -1,6 +1,7 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
 import java.awt.*;
+import java.beans.*;
 import java.text.*;
 
 import javax.swing.*;
@@ -17,6 +18,9 @@ public class MoneyField extends AbstractPropertyField implements PropertyControl
 		myEditFormat.setMaximumFractionDigits(2);
 		myEditFormat.setMinimumFractionDigits(2);
 		setHorizontalAlignment(JTextField.RIGHT);
+		setOpaque(true);
+		
+		
 	}
 	
 	protected String getEditingFormat(Object o) {
@@ -38,6 +42,7 @@ public class MoneyField extends AbstractPropertyField implements PropertyControl
 			return new Money();
 		}
 	}
+
 	
 	protected String getPresentationFormat(Object newValue) {
 		if(newValue instanceof Money) {

@@ -121,6 +121,10 @@ public class MessageTablePanel
 
   }
 
+  public void editCell(Property p) {
+	  messageTable.editCellAt(p);
+  }
+  
   public void setShowColumnsItem(boolean b) {
     showColumnEditDialog = b;
   }
@@ -1223,5 +1227,5 @@ public void doChooseColumns() {
 public Binary getTableReport(String format, String orientation, int[] margins) throws NavajoException {
 	return messageTable.getTableReport(format,orientation, margins);
 }
-  
+
 }

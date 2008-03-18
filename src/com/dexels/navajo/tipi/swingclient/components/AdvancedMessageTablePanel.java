@@ -726,11 +726,6 @@ implements ResponseListener, ListSelectionListener, ChangeListener {
 		}
 	}
 
-	public final void loadPanelData() {
-		addBusyPanel();
-		reload();
-	}
-
 	public final Set getChangedMessages() {
 		return changedMessages;
 	}

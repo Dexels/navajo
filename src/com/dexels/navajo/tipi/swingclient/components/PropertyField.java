@@ -98,15 +98,17 @@ public class PropertyField
       setDescription();
     }
     setEditable(p.isDirIn());
-    if (p.isDirOut()) {
-      setForeground(Color.darkGray);
-      setBackground(SystemColor.control);
-    }
+//    if (p.isDirOut()) {
+//      setForeground(Color.darkGray);
+//      setBackground(SystemColor.control);
+//    }
 //    textValue = p.getValue();
 
     setChanged(false);
   }
-
+	public boolean isOpaque() {
+		return true;
+	}
   protected void setDescription() {
 
     if (initProperty == null) {
