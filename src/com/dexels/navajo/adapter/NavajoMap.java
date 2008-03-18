@@ -139,10 +139,10 @@ public class NavajoMap extends AsyncMappable  implements Mappable {
         	list = inDoc.getAllMessages();
         } else if ( inDoc.getMessage(messageOffset) == null ) {
         	return;
-        } else if ( inDoc.getMessage(messageOffset).getType().equals(Message.MSG_TYPE_ARRAY) ) {
+        } else if ( !inDoc.getMessage(messageOffset).getType().equals(Message.MSG_TYPE_ARRAY) ) {
         	list = new ArrayList();
         	list.add( inDoc.getMessage(messageOffset) );
-        } else {
+        } else { // For array messages...
         	list = inDoc.getMessages(messageOffset);
         }
         	
