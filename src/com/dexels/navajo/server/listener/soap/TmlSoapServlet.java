@@ -6,14 +6,11 @@ import java.io.*;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.soap.SOAPHeader;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.stream.StreamResult;
 
-import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 import org.w3c.dom.*;
 
 import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
@@ -21,7 +18,6 @@ import com.dexels.navajo.document.jaxpimpl.xml.XMLutils;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.FatalException;
-import com.dexels.navajo.server.UserException;
 
 public class TmlSoapServlet extends HttpServlet {
 
