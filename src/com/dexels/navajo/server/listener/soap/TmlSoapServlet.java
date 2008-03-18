@@ -17,6 +17,7 @@ import org.xml.sax.SAXParseException;
 import org.w3c.dom.*;
 
 import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
+import com.dexels.navajo.document.jaxpimpl.xml.XMLutils;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.FatalException;
@@ -68,22 +69,33 @@ public class TmlSoapServlet extends HttpServlet {
 			System.err.println("Request");
 			XMLDocumentUtils.write(docIn, new OutputStreamWriter(System.err), false);
 
-			// Transform to TML.
-			System.err.println("Original XML:");
+			Node header = XMLutils.findNode(docIn, "Header");
+			String navajoUser = "";
+			String navajoPwd = "";
+			if ( header != null ) {
+				// find authentication node.
+				Node a = XMLutils.findNode(header, "authentication");
+				if  ( a != null ) {
+					Element authentication = (Element) a;
+					navajoUser = authentication.getAttribute("username");
+					navajoPwd = authentication.getAttribute("password");
+				}
+			}
+			
 			StringWriter w = new StringWriter();
 			XMLDocumentUtils.write(docIn, w, false);
-			System.err.println(w.toString());
-
 			
 			Document tmlIn = XMLDocumentUtils.transformToDocument(docIn, new File(Dispatcher.getInstance().getNavajoConfig().getRootPath() + "/soap/xml2tml.xsl"));
-			System.err.println("Transformed XML");
+			
 			w = new StringWriter();
 			XMLDocumentUtils.write(tmlIn, w, false);
-			System.err.println(w.toString());
-
+			
 			Navajo navajoIn = NavajoFactory.getInstance().createNavajo(new java.io.StringReader(w.toString()));
 			System.err.println("Navajo XML:");
-			Header h = NavajoFactory.getInstance().createHeader(navajoIn, soapAction, "ROOT", "R20T", -1);
+			
+			// What to do with username/password information???
+			// Create special thingy in SOAP header??
+			Header h = NavajoFactory.getInstance().createHeader(navajoIn, soapAction, navajoUser, navajoPwd, -1);
 			navajoIn.addHeader(h);
 
 			navajoIn.write(System.err);
