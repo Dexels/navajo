@@ -154,7 +154,11 @@ public class NavajoMap extends AsyncMappable  implements Mappable {
           if (currentMsg != null) {
         	  if ( appendTo != null ) {
         		  if ( currentMsg.getMessage(appendTo) != null ) {
-        			  currentMsg.getMessage(appendTo).addMessage(clone, true);
+        			  if ( currentMsg.getMessage(appendTo).getType().equals(Message.MSG_TYPE_ARRAY )  ) { // For array messages do not overwrite.
+        				  currentMsg.getMessage(appendTo).addMessage(clone);
+        			  } else {
+        				  currentMsg.getMessage(appendTo).addMessage(clone, true);
+        			  }
         		  } else {
         			  throw new UserException(-1, "Unknown appendTo message: " + appendTo);
         		  }
@@ -164,7 +168,11 @@ public class NavajoMap extends AsyncMappable  implements Mappable {
           } else {
         	  if ( appendTo != null ) {
         		  if ( currentDoc.getMessage(appendTo) != null ) {
-        			  currentDoc.getMessage(appendTo).addMessage(clone, true);
+        			  if ( currentDoc.getMessage(appendTo).getType().equals(Message.MSG_TYPE_ARRAY )  ) { // For array messages do not overwrite.
+        				  currentDoc.getMessage(appendTo).addMessage(clone);
+        			  } else {
+        				  currentDoc.getMessage(appendTo).addMessage(clone, true);
+        			  }
         		  } else {
         			  throw new UserException(-1, "Unknown appendTo message: " + appendTo);
         		  }
