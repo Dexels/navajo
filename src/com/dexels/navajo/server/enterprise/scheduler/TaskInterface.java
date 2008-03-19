@@ -10,5 +10,6 @@ public interface TaskInterface {
 	public void setNavajo(Navajo n);
 	public String getId();
 	public void setKeepRequestResponse(boolean keepRequestResponse);
+	public void setPersisted(boolean b);
 	
 }

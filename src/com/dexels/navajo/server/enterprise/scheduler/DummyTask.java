@@ -24,4 +24,7 @@ public class DummyTask implements TaskInterface {
 	public void setKeepRequestResponse(boolean keepRequestResponse) {
 	}
 
+	public void setPersisted(boolean b) {
+	}
+
 }

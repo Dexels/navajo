@@ -1065,6 +1065,7 @@ public final Navajo handle(Navajo inMessage, Object userCertificate, ClientInfo 
         	try {
     			ti.setTrigger(inMessage.getHeader().getSchedule());
     			ti.setNavajo(inMessage);
+    			ti.setPersisted(true); // Make sure task gets persisted in tasks.xml
     			if ( inMessage.getHeader().getHeaderAttribute("keeprequestresponse") != null && 
     					inMessage.getHeader().getHeaderAttribute("keeprequestresponse").equals("true")
     			    ) {

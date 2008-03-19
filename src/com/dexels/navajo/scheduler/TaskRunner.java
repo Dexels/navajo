@@ -206,7 +206,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 	}
 	
 	private final boolean needsPersistence(Task t) {
-		return ( !t.getTrigger().isSingleEvent() && ( t.getWorkflowDefinition() == null || t.getWorkflowDefinition().equals("") ) );
+		return ( t.isPersisted() || ( !t.getTrigger().isSingleEvent() && ( t.getWorkflowDefinition() == null || t.getWorkflowDefinition().equals("") ) ) );
 	}
 	
 	private long getConfigTimeStamp() {

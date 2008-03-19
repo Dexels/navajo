@@ -76,6 +76,8 @@ public class Task implements Runnable, TaskMXBean, TaskInterface, Serializable {
     private String clientId = "";
     private String id = null;
     
+    private boolean persisted = false;
+    
     public Task() {
     	// The empty constructor.
     }
@@ -540,5 +542,13 @@ public class Task implements Runnable, TaskMXBean, TaskInterface, Serializable {
 
 	public void setKeepRequestResponse(boolean keepRequestResponse) {
 		this.keepRequestResponse = keepRequestResponse;
+	}
+
+	public boolean isPersisted() {
+		return persisted;
+	}
+
+	public void setPersisted(boolean persisted) {
+		this.persisted = persisted;
 	}
 }
