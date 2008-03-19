@@ -232,9 +232,7 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 	 */
 	public final void cleanup() {
 		TaskRunner.getInstance().removeTaskListener(this);
-		TaskRunner.getInstance().removeTask(myTask.getId());
-		//myTask = null;
-		//myState = null;
+		TaskRunner.getInstance().removeTask(myTask.getId(), true);
 	}
 	
 	private final boolean isBeforeTrigger(Task t) {

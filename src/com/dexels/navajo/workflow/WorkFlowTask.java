@@ -82,7 +82,7 @@ public class WorkFlowTask implements Serializable, TaskListener {
 
 	public void cleanup() {
 		TaskRunner.getInstance().removeTaskListener(this);
-		TaskRunner.getInstance().removeTask(myTask.getId());
+		TaskRunner.getInstance().removeTask(myTask.getId(), true);
 	}
 	
 	private final boolean isMyTaskTrigger(Task t) {

@@ -205,10 +205,6 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 		}	
 	}
 	
-	private final boolean needsPersistence(Task t) {
-		return ( t.isPersisted() || ( !t.getTrigger().isSingleEvent() && ( t.getWorkflowDefinition() == null || t.getWorkflowDefinition().equals("") ) ) );
-	}
-	
 	private long getConfigTimeStamp() {
 		if (  Dispatcher.getInstance() != null && Dispatcher.getInstance().getNavajoConfig() != null ) {
 			java.io.File f = new java.io.File(Dispatcher.getInstance().getNavajoConfig().getConfigPath() + "/" + TASK_CONFIG);
@@ -235,13 +231,20 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 		//synchronized (semaphore) {
 			if ( containsTask(taskId)) {
 				Task t = (Task) tasks.get(taskId);
-				t.setRemove(true);
+				t.setRemove(true, true);
 				tasks.remove(taskId);
 			}
 		//}
 	}
 	
-	protected Navajo readConfig(boolean init) {
+	/**
+	 * 
+	 * @param init to be used when initializing only
+	 * @param readonly to be used when only interested in content of task.xml
+	 * 
+	 * @return
+	 */
+	protected Navajo readConfig(boolean init, boolean readonly) {
 		// Read task configuration file to read predefined tasks config/tasks.xml
 		
 		HashSet<String> currentTasks = new HashSet<String>();
@@ -268,12 +271,14 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 					String workflowid = (  m.getProperty("workflowid") != null ? m.getProperty("workflowid").getValue() : "");
 					Boolean keeprequestresponse = ( m.getProperty("keeprequestresponse") != null ? 
 							(Boolean) m.getProperty("keeprequestresponse").getTypedValue() : Boolean.FALSE );
+					Boolean persistedFlag = ( m.getProperty("persisted") != null  ? 
+							(Boolean) m.getProperty("persisted").getTypedValue() : Boolean.FALSE );
 
 					Access newAcces = new Access(-1, -1, -1, username, webservice, "Taskrunner", "127.0.0.1", "localhost", false, null);
 
 					// Do not add tasks from previous workflow instances when server is started. Workflow instance tasks
 					// are added through revival of workflow.
-					if ( !init || workflowid == null || workflowid.equals("") ) {
+					if ( !readonly && ( !init || workflowid == null || workflowid.equals("") ) ) {
 						try {
 							// Create a new task and activate its trigger.
 							Task t = new Task(webservice, username, password, newAcces, trigger, null);
@@ -282,6 +287,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 							t.setProxy(proxy.booleanValue());
 							t.setId(id);
 							t.setKeepRequestResponse(keeprequestresponse.booleanValue());
+							t.setPersisted(persistedFlag.booleanValue());
 							readTaskInput(t);
 							currentTasks.add(t.getId());
 							// Remove previous version of this task.
@@ -291,7 +297,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 							//it.printStackTrace(System.err);
 							AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Problem adding task: " + it.getMessage());
 						}
-					} else {
+					} else if ( !readonly ) {
 						System.err.println("REMOVING WORKFLOW TASK.................................................");
 						allTasksMsg.removeMessage(m);
 					}
@@ -307,17 +313,21 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 			e.printStackTrace(System.err);
 		} 
 		
-		// Check deleted tasks...
-		Iterator<Task> iters = tasks.values().iterator();
-		while ( iters.hasNext() ) {
-			Task t = iters.next();
-			if ( needsPersistence(t) ) {
-				if ( !currentTasks.contains(t.getId()) ) {
-					System.err.println("Removing removed task from tasks.xml: " + t.getId() + " with trigger " + t.getTriggerDescription() + ", workflow definition:" + t.getWorkflowDefinition());
-					t.setRemove(true);
+		if ( !readonly ) {
+			// Check deleted tasks...
+			HashSet<String> alltasks = new HashSet<String>(tasks.keySet());
+			Iterator<String> iters = alltasks.iterator();
+			while ( iters.hasNext() ) {
+				Task t = tasks.get(iters.next());
+				if ( t != null && t.needsPersistence() ) {
+					if ( !currentTasks.contains(t.getId()) ) {
+						System.err.println("Removing removed task from tasks.xml: " + t.getId() + " with trigger " + t.getTriggerDescription() + ", workflow definition:" + t.getWorkflowDefinition());
+						removeTask(t.getId(), false);
+					}
 				}
 			}
 		}
+		
 		return taskDoc;
 	}
 	
@@ -358,7 +368,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 //			   ", configIsBeingUpdated = " + instance.configIsBeingUpdated + ", beingInitialized = " + beingInitialized);
 			if ( isConfigModified() &&   TribeManager.getInstance().getIsChief() && !instance.configIsBeingUpdated && !beingInitialized ) {
 				AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Task configuration is modified, re-initializing");
-				readConfig(false);
+				readConfig(false, false);
 			}
 		}
 	}
@@ -367,7 +377,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 		return tasks.size();
 	}
 	
-	protected static SharedStoreLock getConfigLock() {
+	protected synchronized SharedStoreLock getConfigLock() {
 
 		SharedStoreInterface si = SharedStoreFactory.getInstance();
 		SharedStoreLock ssl = si.lock("config", "tasks.xml", SharedStoreInterface.READ_WRITE_LOCK, true);
@@ -375,8 +385,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 
 	}
 	
-	protected static void releaseConfigLock(SharedStoreLock ssl) {
-
+	protected synchronized void releaseConfigLock(SharedStoreLock ssl) {
 
 		SharedStoreInterface si = SharedStoreFactory.getInstance();
 		si.release(ssl);
@@ -396,20 +405,18 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 		configIsBeingUpdated = false;
 	}
 	
-	public void removeTask(String id) {
+	public Task removeTask(String id, boolean removePersistedTask) {
 
 		if ( !tasks.containsKey(id) ) {
-			return;
+			return null;
 		}
 
-		// Remove task from configuration file config/tasks.xml
-		//synchronized (semaphore) {
-			Task t = (Task) tasks.get(id);
-			tasks.remove(id);
-			if ( t != null ) {
-				t.setRemove(true);
-			}
-		//}
+		Task t = (Task) tasks.get(id);
+		tasks.remove(id);
+		if ( t != null ) {
+			t.setRemove(true, removePersistedTask);
+		}
+		return t;
 	}
 	
 	private Message containsTask(Message allTasks, String id) throws Exception {
@@ -448,7 +455,6 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 				String workflowDef = tokens[12].trim();
 				String workflowId = tokens[13].trim();
 								
-				System.err.println("workflowId = >" + workflowId + "<, username = >" + user + "<");
 				if ( workflowId.equals("") && (  username == null || username.equals(user) ) ) {
 					try {
 						Task t = new Task(webservice, user, "", null, trigger, null);
@@ -555,10 +561,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 			return;
 		}
 		AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Updating task: " + id);
-		// Remove first.
-		removeTask(id);
-		// Add later.
-		addTask(id, t, false);
+		addTask(id, t, true);
 	}
 	
 	private final String generateTaskId() {
@@ -576,20 +579,21 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 
 			if ( tasks.containsKey(id) ) {
 				if ( !overwrite ) {
-					t.setRemove(true);
+					t.setRemove(true, true);
 					return false;
 				} else {
 					// Don't write config yet, wait until config is written back entirely
-					removeTask(id);
+					removeTask(id, true);
 				}
 			}
 
 			if ( tasks.size() == maxSize ) {
 				AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Task pool is full");
-				t.setRemove(true);
+				t.setRemove(true, true);
 				return false;
 			}
-			//AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Adding task: " + id + ", workflow definition: " + t.getWorkflowDefinition());
+			
+			AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Adding task: " + id + ", workflow definition: " + t.getWorkflowDefinition());
 			tasks.put(id, t);
 			t.setId(id);
 			t.getTrigger().setTask(t);
@@ -601,7 +605,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 			Navajo taskDoc = null;
 
 			// Only write to task.xml if NOT single event and if NOT workflow task.
-			if ( needsPersistence(t) ) {
+			if ( t.needsPersistence() ) {
 
 				SharedStoreLock ssl = null;
 				try {
@@ -617,6 +621,15 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 						taskDoc.addMessage(m);
 					}
 					Message allTasks = taskDoc.getMessage("tasks");
+					if ( overwrite ) { // Remove updated task first when overwrite is set to true.
+						for (int i = 0; i < allTasks.getArraySize(); i++) {
+							Message m = (Message) allTasks.getMessage(i);
+							if ( m.getProperty("id").getValue().equals(id) ) {
+								allTasks.removeMessage(m);
+								i = allTasks.getArraySize() + 1;
+							}
+						}
+					}
 
 					// Add task to Navajo if it does not yet exist and if it is not part of a workflow instance. Workflow instances
 					// tasks are managed by WorkFlowManager.
@@ -626,6 +639,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 					 * t.getWorkflowDef() == null || t.getWorkflowDef().equals("")
 					 */
 					if ( allTasks != null && containsTask(allTasks, id) == null ) {
+						
 						Message newTask = NavajoFactory.getInstance().createMessage(taskDoc, "tasks");
 						allTasks.addMessage(newTask);
 						Property propId = NavajoFactory.getInstance().createProperty(taskDoc, "id", Property.STRING_PROPERTY, t.getId(), 0, "", Property.DIR_OUT);
@@ -640,7 +654,8 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 
 						Property propTaskDescription = NavajoFactory.getInstance().createProperty(taskDoc, "taskdescription", Property.STRING_PROPERTY, t.getTaskDescription(), 0, "", Property.DIR_OUT);
 						Property propClientId = NavajoFactory.getInstance().createProperty(taskDoc, "clientid", Property.STRING_PROPERTY, t.getClientId(), 0, "", Property.DIR_OUT);
-
+						Property persistedFlag = NavajoFactory.getInstance().createProperty(taskDoc, "persisted", Property.BOOLEAN_PROPERTY, t.isPersisted() + "", 0, "", Property.DIR_OUT);
+						
 						newTask.addProperty(propId);
 						newTask.addProperty(propUser);
 						newTask.addProperty(propPassword);
@@ -652,6 +667,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 						newTask.addProperty(propWorkflowId);
 						newTask.addProperty(propTaskDescription);
 						newTask.addProperty(propClientId);
+						newTask.addProperty(persistedFlag);
 
 						// Persist task request Navajo and tasks.xml
 						writeTaskConfig(taskDoc);
@@ -751,6 +767,6 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 	}
 
 	public final void removeTask(TaskInterface t) {
-		removeTask(t.getId());
+		removeTask(t.getId(), true);
 	}
 }

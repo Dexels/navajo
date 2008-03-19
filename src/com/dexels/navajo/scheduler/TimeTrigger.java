@@ -284,7 +284,7 @@ public class TimeTrigger extends Trigger implements Serializable, ClockListener 
 	public Navajo perform() {
 		// Spawn thread.
 		//if ( fired ) {
-			//System.err.println("TIMETRIGGER, ABOUT TO PERFORM: " + getTask().getId());
+			System.err.println("TIMETRIGGER, ABOUT TO PERFORM: " + getTask().getId());
 			GenericThread taskThread = new GenericThread("task:" + getTask().getId()) {
 
 				public void run() {

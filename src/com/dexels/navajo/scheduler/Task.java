@@ -29,6 +29,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 import com.dexels.navajo.document.Header;
+import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.server.Access;
@@ -36,6 +37,7 @@ import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.FatalException;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.server.enterprise.scheduler.TaskInterface;
+import com.dexels.navajo.tribe.SharedStoreLock;
 
 /**
  * Defines the task object that describes among other things, the webservice
@@ -226,14 +228,40 @@ public class Task implements Runnable, TaskMXBean, TaskInterface, Serializable {
 	
 	/**
 	 * If set to true, flags the task for removal.
+	 * If removePersistedTask is set to true, the task is also removed from tasks.xml (if task needs persistence )
 	 * 
 	 * @param b
 	 */
-	public void setRemove(boolean b) {
+	public void setRemove(boolean b, boolean removePersistedTask) {
 		this.remove = b;
 		//AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "About to remove task: " + id);
 		if ( myTrigger != null ) {
+			//System.err.println("removing trigger: " + myTrigger);
 			myTrigger.removeTrigger();
+			//System.err.println("done!");
+			if ( removePersistedTask && needsPersistence() ) {
+				//System.err.println("TaskRunner in setRemove(" + b + "," + removePersistedTask + "): waiting for sharedstore lock...");
+				SharedStoreLock ssl = TaskRunner.getInstance().getConfigLock();
+				//System.err.println("TaskRunner in setRemove(): got shared store lock");
+				try {
+					Navajo n = TaskRunner.getInstance().readConfig(false, true);
+					Message msgs = n.getMessage("tasks");
+					for (int i = 0; i < msgs.getArraySize(); i++) {
+						Message m = (Message) msgs.getMessage(i);
+						if ( m.getProperty("id").getValue().equals(getId()) ) {
+							msgs.removeMessage(m);
+							i = msgs.getArraySize() + 1;
+						}
+					}
+					//System.err.println("TaskRunner in setRemove(): about to write task config");
+					TaskRunner.getInstance().writeTaskConfig(n);
+					//System.err.println("TaskRunner in setRemove(): removed task config");
+				} finally {
+					//System.err.println("TaskRunner in setRemove(): releasing sharedstore lock..");
+					TaskRunner.getInstance().releaseConfigLock(ssl);
+					//System.err.println("TaskRunner in setRemove(): done!");
+				}
+			}
 		}
 	}
 	
@@ -398,7 +426,7 @@ public class Task implements Runnable, TaskMXBean, TaskInterface, Serializable {
 		isRunning = false;		
 
 		if ( myTrigger.isSingleEvent() ) {
-			TaskRunner.getInstance().removeTask( this.getId() );
+			TaskRunner.getInstance().removeTask( this.getId(), true );
 		} 
 		
 		if ( !keepRequestResponse ) {
@@ -548,6 +576,11 @@ public class Task implements Runnable, TaskMXBean, TaskInterface, Serializable {
 		return persisted;
 	}
 
+	public boolean needsPersistence() {
+		return ( this.isPersisted() || 
+			( !this.getTrigger().isSingleEvent() && ( this.getWorkflowDefinition() == null || this.getWorkflowDefinition().equals("") ) ) );
+	}
+	
 	public void setPersisted(boolean persisted) {
 		this.persisted = persisted;
 	}

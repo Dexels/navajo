@@ -66,6 +66,7 @@ public class TaskRunnerMap implements Mappable {
 	public Binary navajo;
 	public String taskDescription;
 	public String clientId;
+	public boolean persisted = true;
 	
 	// Actions
 	public boolean start;
@@ -124,40 +125,32 @@ public class TaskRunnerMap implements Mappable {
 			return;
 		}
 		TaskRunner tr = TaskRunner.getInstance();
-		tr.removeTask(id);
-
-		// TODO: LOCK TASKS.XML
-		SharedStoreLock ssl = TaskRunner.getConfigLock();
-		try {
-			Navajo n = TaskRunner.getInstance().readConfig(false);
-			Message msgs = n.getMessage("tasks");
-			for (int i = 0; i < msgs.getArraySize(); i++) {
-				Message m = (Message) msgs.getMessage(i);
-				if ( m.getProperty("id").getValue().equals("id") ) {
-					msgs.removeMessage(m);
-					i = msgs.getArraySize() + 1;
-				}
-			}
-			TaskRunner.getInstance().writeTaskConfig(n);
-		} finally {
-			TaskRunner.releaseConfigLock(ssl);
-		}
-		// TODO: RELEASE LOCK ON TASKS.XML;
+		System.err.println("about to remove task:  " + id);
+		tr.removeTask(id, true);
+		System.err.println("done!!");
+		
 	}
 	
 	public void setUpdate(boolean b) throws MappableException, UserException {
 		if ( !b || id == null ) {
 			return;
 		}
+		System.err.println("In setUpdate(" + b + ")");
 		TaskRunner tr = TaskRunner.getInstance();
 		if ( ! tr.getTasks().containsKey(id) ) {
 			return;
 		}
 		Task t = (Task) tr.getTasks().get(id);
 		t.setWebservice(this.webservice);
+		System.err.println(">>>>>>>>>>>>>>>>>>> NEW TRIGGER: " + this.trigger );
 		t.setTrigger(this.trigger);
+		if ( this.taskDescription != null ) {
+			t.setTaskDescription(this.taskDescription);
+		}
 		t.getTrigger().activateTrigger();
 		tr.updateTask(id, t);
+		System.err.println("Leaving setUpdate");
+		
 	}
 	
 	public void setStart(boolean b) throws MappableException, UserException {
@@ -177,6 +170,7 @@ public class TaskRunnerMap implements Mappable {
 				}
 			}
 			Task myTask = new Task(webservice, myAccess.rpcUser, myAccess.rpcPwd, myAccess, trigger, requestNavajo);
+			myTask.setPersisted(persisted);
 			TaskRunner tr = TaskRunner.getInstance();
 			if ( tr.containsTask( id ) ) {
 				throw new UserException(-1, "Tasks already exists");
@@ -189,20 +183,33 @@ public class TaskRunnerMap implements Mappable {
 		}
 	}
 	
+	/**
+	 * Get all persisted tasks.
+	 * 
+	 * @return
+	 * @throws UserException
+	 * @throws MappableException
+	 */
 	public TaskMap [] getTasks() throws UserException, MappableException {
 		TaskRunner tr = TaskRunner.getInstance();
 		Collection<Task> all = tr.getTasks().values();
+
 		
-		TaskMap [] tm = new TaskMap[all.size()];
+		ArrayList<TaskMap> taskList = new ArrayList<TaskMap>();
 		Iterator<Task> iter = all.iterator();
-		int index = 0;
+		
 		while ( iter.hasNext() ) {
 			Task t = (Task) iter.next();
-			tm[index] = new TaskMap(t);
-			tm[index].load(null, myRequest, myAccess, Dispatcher.getInstance().getNavajoConfig() );
-			index++;
+			if ( t.needsPersistence() ) {
+				TaskMap taskM = new TaskMap(t);
+				taskM.load(null, myRequest, myAccess, Dispatcher.getInstance().getNavajoConfig() );
+				taskList.add(taskM);
+			}
 		}
 		
+		TaskMap [] tm = new TaskMap[taskList.size()];
+		tm = (TaskMap []) taskList.toArray(tm);
+
 		return tm;
 	}
 	
@@ -299,5 +306,9 @@ public class TaskRunnerMap implements Mappable {
 		} else {
 			return null;
 		}
+	}
+
+	public void setPersisted(boolean persisted) {
+		this.persisted = persisted;
 	}
 }
