@@ -27,7 +27,7 @@ public class Generate {
 
   public Navajo generateNavajoOutput(String file) throws Exception {
 
-      Navajo result = NavajoFactory.getInstance().createNavajo();
+      Navajo result = NavajoFactory.getInstance("com.dexels.navajo.document.jaxpimpl.NavajoFactoryImpl").createNavajo();
 
       Document d = XMLDocumentUtils.createDocument();
       FileInputStream input = new FileInputStream(new File(file));
@@ -70,13 +70,13 @@ public class Generate {
           //System.err.println("FOUND newMessage: " + parentName + ", TYPE is: " + type);
           if (newMessage == null && type.equals(Message.MSG_TYPE_ARRAY)) {
         	//System.err.println("CREATING ARRAY MESSAGE");
-        	newMessage = NavajoFactory.getInstance().createMessage(result, parentName, Message.MSG_TYPE_ARRAY);
-            Message newSubMessage = NavajoFactory.getInstance().createMessage(result, parentName);
+        	newMessage = NavajoFactory.getInstance("com.dexels.navajo.document.jaxpimpl.NavajoFactoryImpl").createMessage(result, parentName, Message.MSG_TYPE_ARRAY);
+            Message newSubMessage = NavajoFactory.getInstance("com.dexels.navajo.document.jaxpimpl.NavajoFactoryImpl").createMessage(result, parentName);
             newMessage.addMessage(newSubMessage);
             if (parent == null) result.addMessage(newMessage); else parent.addMessage(newMessage);
             parent = newSubMessage;
           } else if (newMessage == null) {
-        	newMessage = NavajoFactory.getInstance().createMessage(result, parentName);
+        	newMessage = NavajoFactory.getInstance("com.dexels.navajo.document.jaxpimpl.NavajoFactoryImpl").createMessage(result, parentName);
         	if (parent == null) result.addMessage(newMessage); else parent.addMessage(newMessage);
             parent = newMessage;
           }
@@ -95,7 +95,7 @@ public class Generate {
                   System.out.println("MULTIPLE MESSAGE!");
 //                  parent.setName(parentName);
 //                  parent.setType(Message.MSG_TYPE_ARRAY);
-//                  Message newSubMessage = NavajoFactory.getInstance().createMessage(result, parentName);
+//                  Message newSubMessage = NavajoFactory.getInstance("com.dexels.navajo.document.jaxpimpl.NavajoFactoryImpl").createMessage(result, parentName);
 //                  parent.addMessage(newSubMessage);
 //                  parent = newSubMessage;
                 }
@@ -115,7 +115,8 @@ public class Generate {
            Element child = (Element) offset;
            String propName = child.getAttribute("name");
            String propType = child.getAttribute("type");
-           Property prop = NavajoFactory.getInstance().createProperty(result, propName, propType, "", 30, "", Property.DIR_IN);
+           String description = child.getAttribute("description");
+           Property prop = NavajoFactory.getInstance("com.dexels.navajo.document.jaxpimpl.NavajoFactoryImpl").createProperty(result, propName, propType, "", 30, description, Property.DIR_IN);
            parent.addProperty(prop);
         } else {
           NodeList list = offset.getChildNodes();
@@ -153,7 +154,7 @@ public class Generate {
           String propertyName = ((Element) offset).getAttribute("name");
           Property prop = parent.getProperty(propertyName);
           if (prop == null) {
-            prop = NavajoFactory.getInstance().createProperty(result, propertyName, "1", "", Property.DIR_IN);
+            prop = NavajoFactory.getInstance("com.dexels.navajo.document.jaxpimpl.NavajoFactoryImpl").createProperty(result, propertyName, "1", "", Property.DIR_IN);
             parent.addProperty(prop);
           }
       }
@@ -179,13 +180,13 @@ public class Generate {
                   if (value.indexOf("__parms__") == -1 && value.indexOf("@") == -1) { // Skip parameters!
                 	 
                 	  
-                      Message msg = com.dexels.navajo.mapping.MappingUtils.getMessageObject(value,
-                                              parent, false, result, false, "", -1);
+                      Message msg = com.dexels.navajo.mapping.MappingUtils.getMessageObject(value, parent, false, result, false, "", -1);
+                      
                       String propName = com.dexels.navajo.mapping.MappingUtils.getStrippedPropertyName(value);
                       Property prop = null;
 
                       if (propName.indexOf(":") == -1) {
-                          prop = NavajoFactory.getInstance().createProperty(result, propName, Property.STRING_PROPERTY, "", 30, "",
+                          prop = NavajoFactory.getInstance("com.dexels.navajo.document.jaxpimpl.NavajoFactoryImpl").createProperty(result, propName, Property.STRING_PROPERTY, "", 30, "",
                                                  Property.DIR_IN);
                           msg.addProperty(prop);
                       } else {
@@ -197,7 +198,7 @@ public class Generate {
 
                           prop = msg.getProperty(propertyName);
                           if (prop == null) {
-                              prop = NavajoFactory.getInstance().createProperty(result, propertyName, "1", "", Property.DIR_IN);
+                              prop = NavajoFactory.getInstance("com.dexels.navajo.document.jaxpimpl.NavajoFactoryImpl").createProperty(result, propertyName, "1", "", Property.DIR_IN);
                               msg.addProperty(prop);
                           }
                           //prop.addSelection(sel);
@@ -229,7 +230,7 @@ public class Generate {
                       //System.out.println("De-regular-expressioned: " + msgName);
                       Message sub = com.dexels.navajo.mapping.MappingUtils.getMessageObject(msgName,
                                                                     parent, true, result, true, "", -1);
-                      Message sub2 = NavajoFactory.getInstance().createMessage(result, msgName);
+                      Message sub2 = NavajoFactory.getInstance("com.dexels.navajo.document.jaxpimpl.NavajoFactoryImpl").createMessage(result, msgName);
                       sub.addElement(sub2);
                       generateInputPart(sub2, result, list.item(i));
                   } else
@@ -238,7 +239,7 @@ public class Generate {
                //String propertyName = ((Element) offset).getAttribute("name");
                //Property prop = parent.getProperty(propertyName);
                //if (prop == null) {
-               //   prop = NavajoFactory.getInstance().createProperty(result, propertyName, "1", "", Property.DIR_IN);
+               //   prop = NavajoFactory.getInstance("com.dexels.navajo.document.jaxpimpl.NavajoFactoryImpl").createProperty(result, propertyName, "1", "", Property.DIR_IN);
                //   parent.addProperty(prop);
                //}
             } else { // for all other nodes continue processing with the same reference parent.
@@ -279,13 +280,13 @@ public class Generate {
 	  try {
 		  //Document wsdl = XMLDocumentUtils.createDocument();
 		  if ( result == null ) {
-			  result = NavajoFactory.getInstance().createNavajo();
+			  result = NavajoFactory.getInstance("com.dexels.navajo.document.jaxpimpl.NavajoFactoryImpl").createNavajo();
 		  }
 		  Document script = createDocument(is);
 		  
 		  // Find map nodes.
 		  if ( script.getElementsByTagName("tsl").getLength() == 0 ) {
-			  return NavajoFactory.getInstance().createNavajo();
+			  return NavajoFactory.getInstance("com.dexels.navajo.document.jaxpimpl.NavajoFactoryImpl").createNavajo();
 		  }
 		  NodeList list = script.getElementsByTagName("tsl").item(0).getChildNodes();
 		  
@@ -310,20 +311,20 @@ public class Generate {
 		  return result;
 	  } catch (Exception e) {
 		  e.printStackTrace();
-		    return NavajoFactory.getInstance().createNavajo();
+		    return NavajoFactory.getInstance("com.dexels.navajo.document.jaxpimpl.NavajoFactoryImpl").createNavajo();
 	  }
   }
   
   public Navajo getOutputPart(InputStream is) {
 	
 	  try {
-		  Navajo outputDoc = NavajoFactory.getInstance().createNavajo();
+		  Navajo outputDoc = NavajoFactory.getInstance("com.dexels.navajo.document.jaxpimpl.NavajoFactoryImpl").createNavajo();
 		  Document script = createDocument(is);
 		  
 		  //HashSet outputMessages = new HashSet();
 		  
 		  if ( script.getElementsByTagName("tsl").getLength() == 0 ) {
-			    return NavajoFactory.getInstance().createNavajo();
+			    return NavajoFactory.getInstance("com.dexels.navajo.document.jaxpimpl.NavajoFactoryImpl").createNavajo();
 		  }
 		  NodeList list = script.getElementsByTagName("tsl").item(0).getChildNodes();
 		  for (int i = 0; i < list.getLength(); i++) {
@@ -336,7 +337,7 @@ public class Generate {
 		  return outputDoc;
 	  } catch (Exception e) {
 		  e.printStackTrace();
-		  return NavajoFactory.getInstance().createNavajo();
+		  return NavajoFactory.getInstance("com.dexels.navajo.document.jaxpimpl.NavajoFactoryImpl").createNavajo();
 	  }
   }
 
