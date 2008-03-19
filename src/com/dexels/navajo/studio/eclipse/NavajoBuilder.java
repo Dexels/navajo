@@ -41,9 +41,10 @@ import com.dexels.navajo.studio.script.plugin.navajobrowser.*;
 public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProjectBuilder {
 
     public static final int LARGE_COMPILE_THRESHOLD = 100;
-    private boolean isOkToCompile;
+    public static final int VERY_LARGE_COMPILE_THRESHOLD = 500;
+      private boolean isOkToCompile;
 //    private TslMetaDataHandler metaDataHandler;
-    private int compileCount;
+//    private int compileCount;
     private boolean classPathChanged;
 
     /**
@@ -260,7 +261,6 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
             throws CoreException, NavajoPluginException {
         final ArrayList changed = new ArrayList();
         final ArrayList removed = new ArrayList();
-        compileCount = 0;
         final IFolder configFolder = NavajoScriptPluginPlugin.getDefault().getNavajoConfigFolder(getProject());
         final IFolder adapterFolder = NavajoScriptPluginPlugin.getDefault().getAdaptersFolder(getProject());
                 
@@ -384,7 +384,7 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
                 System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Rebuilding stuff");
                 NavajoScriptPluginPlugin.getDefault().refreshNavajoCompiler(getProject());
                 NavajoScriptPluginPlugin.getDefault().getClassProvider(getProject(), true);
-                NavajoScriptPluginPlugin.getDefault().showInfo("A classpath change occurred!");
+//                NavajoScriptPluginPlugin.getDefault().showInfo("A classpath change occurred!");
                 NavajoScriptPluginPlugin.getDefault().refreshCompilerClassLoader(getProject());
             }
             try {
@@ -480,7 +480,16 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
 
     private void compileScript(final ArrayList compilationList, IProgressMonitor monitor) throws CoreException, NavajoPluginException {
 //        System.err.println("Compilelist: " + compilationList.size());
-        if (compilationList.size() > LARGE_COMPILE_THRESHOLD) {
+        if (compilationList.size() > VERY_LARGE_COMPILE_THRESHOLD) {
+            NavajoScriptPluginPlugin.getDefault().getWorkbench().getDisplay().syncExec(new Runnable() {
+
+                public void run() {
+                    isOkToCompile = MessageDialog.openQuestion(NavajoScriptPluginPlugin.getDefault().getWorkbench().getDisplay().getActiveShell(), "Oh dear", "About to build: "
+                            + compilationList.size() + " scripts. You are a very, very, VERY brave Navajo.");
+                }
+            });
+
+        } else if (compilationList.size() > LARGE_COMPILE_THRESHOLD) {
             NavajoScriptPluginPlugin.getDefault().getWorkbench().getDisplay().syncExec(new Runnable() {
 
                 public void run() {

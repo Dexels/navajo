@@ -747,7 +747,9 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
         try {
 //            iff.refreshLocal(0, null);
             if (!iff.exists()) {
-                throw new NavajoPluginException("Error accessing navajo project: Navajo nature present, but no .navajoroot file. Project: "+prj.getName());
+//                throw new NavajoPluginException("Error accessing navajo project: Navajo nature present, but no .navajoroot file. Project: "+prj.getName());
+            	System.err.println("No .navajoroot found assuming project dir.");
+            	return;
             }
             iss = iff.getContents();
             isr = new BufferedReader(new InputStreamReader(iss));
@@ -805,7 +807,7 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
     }
 
     public String getCompiledScriptPath(IProject prj)  throws NavajoPluginException{
-        return getNavajoRootPath(prj) + NAVAJO_AUXILARY + COMPILED_SCRIPT_PATH;
+        return getNavajoRootPath(prj) + NAVAJO_AUXILARY + RELATIVE_COMPILED_PATH;
     }
 
     

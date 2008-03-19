@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
-<plugin id="com.dexels.plugin" name="NavajoScriptPlugin Plug-in" version="0.99.5"
+<plugin id="com.dexels.plugin" name="NavajoScriptPlugin Plug-in" version="0.99.13"
    provider-name="dexels" class="com.dexels.navajo.studio.script.plugin.NavajoScriptPluginPlugin">
    <runtime>
       <library name="bin/">
@@ -39,8 +39,20 @@
             id="com.dexels.navajo.studio.script.plugin.wizards.NewScriptWizard">
        <description>Create a new, empty, Navajo script.</description>
       </wizard>
+   </extension> 
+  <extension point="org.eclipse.ui.newWizards">
+      <category name="Examples" id="NavajoStudioPlugin">
+      </category>
+      <wizard
+            name="New navajo demo project"
+            icon="icons/dexels_newscript.gif"
+            category="NavajoStudioPlugin"
+            class="com.dexels.navajo.studio.script.plugin.wizards.NavajoDemoProjectWizard"
+            id="com.dexels.navajo.studio.script.plugin.wizards.NavajoDemoProjectWizard">
+       <description>Create a new, empty, Navajo project.</description>
+      </wizard>
    </extension>
-   
+      
    <extension point="org.eclipse.ui.views">
       <category name="Navajo Script Category" id="com.dexels.plugin.views"/>
 

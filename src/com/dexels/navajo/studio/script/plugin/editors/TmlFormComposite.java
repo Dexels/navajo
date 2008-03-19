@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.jobs.*;
 import org.eclipse.debug.core.*;
+import org.eclipse.jdt.internal.codeassist.ThrownExceptionFinder;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.*;
@@ -648,7 +649,8 @@ public class TmlFormComposite extends Composite {
 		// birtReportName.setLayoutData(tdd);
 
 		final Combo birtCombo = new Combo(list, SWT.NONE);
-		birtCombo.setItems(new String[] { "", "pdf", "html", "ppt", "postscript", "xls_prototype", "doc" });
+
+		birtCombo.setItems(new String[] {"pdf","ppt", "postscript", "xls", "doc" });
 		tdd = new TableWrapData();
 		birtCombo.setLayoutData(tdd);
 		// for now:
@@ -706,7 +708,6 @@ public class TmlFormComposite extends Composite {
 				try {
 					reload(n, myFile, e);
 				} catch (NavajoPluginException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			}
@@ -728,7 +729,6 @@ public class TmlFormComposite extends Composite {
 				try {
 					NavajoScriptPluginPlugin.getDefault().startSocketRunner(p);
 				} catch (DebugException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			}
@@ -978,6 +978,16 @@ public class TmlFormComposite extends Composite {
 		} else {
 			System.err.println("RUNHREF: file: " + myFile.getFullPath().toOSString() + "name: " + name + " reload: " + reload+" sourceTmlName: "+sourceTmlName);
 		}
+		nav.getHeader().setHeaderAttribute("sourceScript", sourceTmlName);
+		
+		try {
+			System.err.println("BEFORE running run: ");
+			nav.getHeader().write(System.err);
+			System.err.println("End of href.");
+		} catch (NavajoException ex) {
+			ex.printStackTrace();
+		}
+		
 		// I think this is for the TmlBrowser
 		if (myServerEntry != null) {
 			Job j = new Job("Running Navajo...") {
@@ -1189,20 +1199,20 @@ public class TmlFormComposite extends Composite {
 		BirtUtils b = new BirtUtils();
 		File createdFile = new File(rez);
 		try {
-			b.createEmptyReport(myCurrentNavajo, createdFile, service);
+			InputStream template = getClass().getClassLoader().getResourceAsStream("com/dexels/navajo/birt/blank.rptdesign");
+			System.err.println("Template: "+template);
+			b.createEmptyReport(myCurrentNavajo, createdFile, template);
 			iff.refreshLocal(0, null);
 			IDE.openEditor(NavajoScriptPluginPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage(), iff);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (NavajoException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (CoreException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch(Throwable t) {
+			t.printStackTrace();
 		}
-
 	}
 
 	private void runBirtReport(final Combo birtCombo, HyperlinkEvent e) {
@@ -1240,7 +1250,6 @@ public class TmlFormComposite extends Composite {
 			// Check for the open editor: If the editor is editing a birt report,
 			// use it as definition
 			if (iff != null && iff.getFullPath().toString().endsWith(".rptdesign")) {
-				System.err.println("Editor resource: " + iff.getLocation());
 				InputStream contents = iff.getContents();
 				Binary b = new Binary(contents);
 				contents.close();
@@ -1250,9 +1259,8 @@ public class TmlFormComposite extends Composite {
 						Property.BINARY_PROPERTY, null, 0, null, Property.DIR_IN, null);
 				reportDef.addProperty(reportProperty);
 				reportProperty.setAnyValue(b);
-
 				copiedNavajo.write(System.err);
-				runHref(copiedNavajo, null, "ProcessPrintGenericBirt", e, false, null);
+				runHref(copiedNavajo, null, "ProcessPrintGenericBirt", e, false, getCurrentScript());
 
 			} else {
 				// disabled for now
@@ -1269,7 +1277,7 @@ public class TmlFormComposite extends Composite {
 				// reportNameProperty.setAnyValue(birtReportName.getText());
 				// }
 
-				runHref(copiedNavajo, null, "ProcessPrintGenericBirt", e, false, null);
+				runHref(copiedNavajo, null, "ProcessPrintGenericBirt", e, false, getCurrentScript());
 
 			}
 
