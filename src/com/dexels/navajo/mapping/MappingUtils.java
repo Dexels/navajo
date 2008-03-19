@@ -146,13 +146,11 @@ public final class MappingUtils {
     			  { 
     				  msg.setType("array"); 
     			  } else {
-    				  throw NavajoFactory.getInstance().createNavajoException(new Exception("Can only create array elements inside array message"));
+    				  throw source.getNavajoFactory().createNavajoException(new Exception("Can only create array elements inside array message"));
     			  }
     		  }
 
-    		  newMsg = NavajoFactory.getInstance().createMessage(source,
-    				  messageName,
-    				  (array ? Message.MSG_TYPE_ARRAY : ""));
+    		  newMsg = source.getNavajoFactory().createMessage(source, messageName, (array ? Message.MSG_TYPE_ARRAY : ""));
 
     		  if (!mode.equals("")) {
     			  newMsg.setMode(mode);
@@ -225,13 +223,13 @@ public final class MappingUtils {
     if (prop == null) { // Property does not exist.
     	if (!parameter) {
     		if (type.equals(Property.SELECTION_PROPERTY)) {
-    			prop = NavajoFactory.getInstance().createProperty(outputDoc, actualName, "1", description, direction);
+    			prop = ref.getRootDoc().getNavajoFactory().createProperty(outputDoc, actualName, "1", description, direction);
     			if ( value instanceof Selection [] ) {
     				prop.setCardinality("+");
     				prop.setValue((Selection []) value);
     			}
     		} else if (type.equals(Property.BINARY_PROPERTY)) {
-    			prop = NavajoFactory.getInstance().createProperty(outputDoc, actualName, type, "", length, description, direction);
+    			prop = ref.getRootDoc().getNavajoFactory().createProperty(outputDoc, actualName, type, "", length, description, direction);
     			if (value != null && value instanceof Binary) {
     				prop.setValue( (Binary) value);
     			}
@@ -241,24 +239,24 @@ public final class MappingUtils {
     			if ( type.equals(Property.STRING_PROPERTY) && sValue == null ) {
     				sValue = "";
     			}
-    			prop = NavajoFactory.getInstance().createProperty(outputDoc, actualName, type, sValue, length, description, direction);
+    			prop = ref.getRootDoc().getNavajoFactory().createProperty(outputDoc, actualName, type, sValue, length, description, direction);
     		}
     	}
     	else {
     		if (type.equals(Property.SELECTION_PROPERTY)) {
-    			prop = NavajoFactory.getInstance().createProperty(tmlDoc, actualName, "1", description, direction);
+    			prop = ref.getRootDoc().getNavajoFactory().createProperty(tmlDoc, actualName, "1", description, direction);
     			if ( value instanceof Selection [] ) {
     				prop.setCardinality("+");
     				prop.setValue((Selection []) value);
     			}
     		} else if (type.equals(Property.BINARY_PROPERTY)) {
-    			prop = NavajoFactory.getInstance().createProperty(tmlDoc, actualName, type, "", length, description, direction);
+    			prop = ref.getRootDoc().getNavajoFactory().createProperty(tmlDoc, actualName, type, "", length, description, direction);
     			if (value != null && value instanceof Binary) {
     				prop.setValue( (Binary) value);
     			}
     		}
     		else {
-    			prop = NavajoFactory.getInstance().createProperty(tmlDoc, actualName, type, sValue, length, description, direction);
+    			prop = ref.getRootDoc().getNavajoFactory().createProperty(tmlDoc, actualName, type, sValue, length, description, direction);
     		}
     	}
     	ref.addProperty(prop);
@@ -387,17 +385,12 @@ public final class MappingUtils {
 
     if (!template.equals("")) { // Read template file.
       throw new MappingException("TEMPLATES ARE NOT SUPPORTED");
-      //Navajo tmp = NavajoFactory.getInstance().createNavajo(config.getTemplate(
-      //    template));
-      //Message bluePrint = tmp.getMessage(template);
-      //bluePrint.setName(message);
-      //msg = tmp.copyMessage(bluePrint, doc);
     }
     else {
       /**
        * Added getBaseMessageName to support relative message creation.
        */
-      msg = NavajoFactory.getInstance().createMessage(doc, getBaseMessageName(message));
+      msg = doc.getNavajoFactory().createMessage(doc, getBaseMessageName(message));
     }
 
     if (!mode.equals("")) {
@@ -462,7 +455,7 @@ public final class MappingUtils {
       prop = doc.getProperty(msgName);
     }
     if (!prop.getType().equals(Property.SELECTION_PROPERTY)) {
-      throw NavajoFactory.getInstance().createNavajoException(
+      throw doc.getNavajoFactory().createNavajoException(
           "Selection Property expected");
     }
     result = prop.getAllSelectedSelections();
