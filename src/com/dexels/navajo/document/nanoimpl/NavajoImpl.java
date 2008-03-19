@@ -23,9 +23,11 @@ public final class NavajoImpl extends BaseNavajoImpl implements Navajo, NanoElem
 
 //  private Map myDepSet = null;
 
-  public NavajoImpl() {
-     /** @todo Check.. */
-    myHeader = (HeaderImpl)NavajoFactory.getInstance().createHeader(this,"","","",-1);
+  
+  public NavajoImpl(NavajoFactory nf) {
+	  /** @todo Check.. */
+	  super(nf);  
+	  myHeader = (HeaderImpl)nf.createHeader(this,"","","",-1);
   }
 
   public String getImplementationName() {

@@ -25,11 +25,13 @@ public class BaseNavajoImpl extends BaseNode implements Navajo {
   protected String myLazyMessagePath = "";
   protected int myErrorNumber;
   protected String myErrorDescription;
-	private List<PropertyChangeListener> myPropertyDataListeners;
-
-  public BaseNavajoImpl() {
-    rootMessage = (BaseMessageImpl)NavajoFactory.getInstance().createMessage(this,"");
-//    new BaseMessageImpl(this);
+  private List<PropertyChangeListener> myPropertyDataListeners;
+  private final NavajoFactory myFactory;
+  
+  public BaseNavajoImpl(NavajoFactory nf) {
+	  myFactory = nf;
+	  rootMessage = (BaseMessageImpl)nf.createMessage(this,"");
+//	  new BaseMessageImpl(this);
   }
 
   public String getImplementationName() {
@@ -582,6 +584,10 @@ public static void main(String [] args) throws Exception {
 	ObjectOutputStream oos = new ObjectOutputStream(fos);
 	oos.writeObject(n);
 	oos.close();
+}
+
+public NavajoFactory getNavajoFactory() {
+	return myFactory;
 }
 
 }

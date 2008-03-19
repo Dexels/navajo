@@ -99,7 +99,7 @@ public final class NavajoFactoryImpl extends NavajoFactory {
   }
 
   public Navajo createNavajo(InputStream stream) {
-    NavajoImpl n = new NavajoImpl();
+    NavajoImpl n = new NavajoImpl(this);
     XMLElement xe = new CaseSensitiveXMLElement();
     try {
       xe.parseFromReader(new InputStreamReader(stream, "UTF-8"));
@@ -115,7 +115,7 @@ public final class NavajoFactoryImpl extends NavajoFactory {
   }
   
   public Navajo createNavajo(Reader r) {
-	    NavajoImpl n = new NavajoImpl();
+	    NavajoImpl n = new NavajoImpl(this);
 	    XMLElement xe = new CaseSensitiveXMLElement();
 	    try {
 	      xe.parseFromReader(r);
@@ -136,7 +136,7 @@ public final class NavajoFactoryImpl extends NavajoFactory {
     return new SelectionImpl(null,Selection.DUMMY_SELECTION,Selection.DUMMY_ELEMENT,true);
   }
   public Navajo createNavajo(Object representation) {
-    NavajoImpl n = new NavajoImpl();
+    NavajoImpl n = new NavajoImpl(this);
     n.fromXml((XMLElement)representation);
     return n;
   }
@@ -146,7 +146,7 @@ public final class NavajoFactoryImpl extends NavajoFactory {
     return mi;
   }
   public Navajo createNavajo() {
-    return new NavajoImpl();
+    return new NavajoImpl(this);
   }
   public Selection createSelection(Navajo tb, String name, String value, boolean selected) {
     SelectionImpl si = new SelectionImpl(tb,name,value,selected);

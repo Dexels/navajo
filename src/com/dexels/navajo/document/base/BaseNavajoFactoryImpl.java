@@ -15,8 +15,13 @@ import com.dexels.navajo.document.saximpl.qdxml.*;
  * @version 1.0
  */
 
-public class BaseNavajoFactoryImpl extends NavajoFactory {
+public class BaseNavajoFactoryImpl extends NavajoFactory implements Serializable {
 //  private final SaxHandler saxHandler;
+
+/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4927821415020342916L;
 
 public BaseNavajoFactoryImpl() {
 //    saxHandler = new SaxHandler();
@@ -106,7 +111,7 @@ public BaseNavajoFactoryImpl() {
     return mi;
   }
   public Navajo createNavajo() {
-    return new BaseNavajoImpl();
+    return new BaseNavajoImpl(this);
   }
   public Selection createSelection(Navajo tb, String name, String value, boolean selected) {
     BaseSelectionImpl si = new BaseSelectionImpl(tb,name,value,selected);

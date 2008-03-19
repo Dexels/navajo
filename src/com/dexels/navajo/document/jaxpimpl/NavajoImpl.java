@@ -54,6 +54,8 @@ public final class NavajoImpl implements Navajo, java.io.Serializable {
     private String errorDescription;
     private int errorNumber;
 
+    private final NavajoFactory myFactory;
+    
     private final void initDocument(String bodyDefinition) {
         myBodyDefinition = bodyDefinition;
         docBuffer = XMLDocumentUtils.createDocument();
@@ -65,21 +67,30 @@ public final class NavajoImpl implements Navajo, java.io.Serializable {
      * Initialize the XML message buffer
      */
     public NavajoImpl() {
+    	myFactory = new NavajoFactoryImpl();
+        initDocument(Navajo.BODY_DEFINITION);
+    }
+    
+    public NavajoImpl(NavajoFactoryImpl nf) {
+    	myFactory = nf;
         initDocument(Navajo.BODY_DEFINITION);
     }
 
-    public NavajoImpl(String bodyDefinition)  {
+    public NavajoImpl(String bodyDefinition, NavajoFactory nf)  {
+    	myFactory = nf;
       initDocument(bodyDefinition);
     }
 
     /**
      * Initialize the XML message buffer with a predefined document
      */
-    public NavajoImpl(Document d) {
+    public NavajoImpl(Document d, NavajoFactory nf) {
+    	myFactory = nf;
         docBuffer = d;
     }
 
-    public NavajoImpl(Document d, String name) {
+    public NavajoImpl(Document d, String name, NavajoFactory nf) {
+    	myFactory = nf;
         docBuffer = d;
         documentName = name;
     }
@@ -1162,6 +1173,10 @@ public final class NavajoImpl implements Navajo, java.io.Serializable {
 	public void removePropertyChangeListener(PropertyChangeListener p) {
 	     throw new UnsupportedOperationException("Can not removePropertyChangeListener expressions in JAXPIMPL");
 		
+	}
+
+	public NavajoFactory getNavajoFactory() {
+		return myFactory;
 	}
 
 }

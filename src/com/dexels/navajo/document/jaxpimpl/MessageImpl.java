@@ -368,7 +368,7 @@ public final class MessageImpl implements Message, Comparable<Message> {
         } else
         if (regularExpression.startsWith(Navajo.MESSAGE_SEPARATOR)) { // We have an absolute offset
 
-            Navajo d = new NavajoImpl(this.ref.getOwnerDocument());
+            Navajo d = getRootDoc();
             return d.getProperties(regularExpression);
         } else {
             ArrayList<Property> props = new ArrayList<Property>();
@@ -434,7 +434,7 @@ public final class MessageImpl implements Message, Comparable<Message> {
         } else
         if (regularExpression.startsWith(Navajo.MESSAGE_SEPARATOR)) { // We have an absolute offset
 
-            Navajo d = new NavajoImpl(this.ref.getOwnerDocument());
+            Navajo d = getRootDoc();
 
             return d.getMessages(regularExpression);
         } else // Contains submessages.
@@ -503,7 +503,7 @@ public final class MessageImpl implements Message, Comparable<Message> {
     public final Message getMessage(String name) {
 
         if (name.startsWith(Navajo.MESSAGE_SEPARATOR)) { // We have an absolute offset
-            Navajo d = new NavajoImpl(this.ref.getOwnerDocument());
+            Navajo d = getRootDoc();
             return d.getMessage(name);
         } if (name.startsWith(Navajo.PARENT_MESSAGE+Navajo.MESSAGE_SEPARATOR)) {
            name = name.substring((Navajo.PARENT_MESSAGE+Navajo.MESSAGE_SEPARATOR).length());
@@ -544,7 +544,7 @@ public final class MessageImpl implements Message, Comparable<Message> {
 
         if (property.startsWith(Navajo.MESSAGE_SEPARATOR)) { // We have an absolute offset
 
-            Navajo d = new NavajoImpl(this.ref.getOwnerDocument());
+            Navajo d = getRootDoc();
 
             return d.getProperty(property);
         } else {
@@ -680,7 +680,7 @@ public final class MessageImpl implements Message, Comparable<Message> {
     public final Navajo getRootDoc() {
       if (myRootDoc == null) {
          Document d = ref.getOwnerDocument();
-         myRootDoc = new NavajoImpl(d);
+         myRootDoc = new NavajoImpl(d, new NavajoFactoryImpl());
       }
       return myRootDoc;
     }

@@ -1744,14 +1744,15 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 
 		System.setProperty("com.dexels.navajo.DocumentImplementation", "com.dexels.navajo.document.base.BaseNavajoFactoryImpl");
 
-		BaseNavajoImpl n = new BaseNavajoImpl();
+		NavajoFactory nf = NavajoFactory.getInstance();
+		BaseNavajoImpl n = new BaseNavajoImpl(nf);
 		BaseMessageImpl m = new BaseMessageImpl(n, "Aap");
 		BasePropertyImpl p1 = new BasePropertyImpl(n, "Noot");
 		m.addProperty(p1);
 		p1.setType("string");
 		p1.setValue("CHGP12Y");
 
-		BaseNavajoImpl n2 = new BaseNavajoImpl();
+		BaseNavajoImpl n2 = new BaseNavajoImpl(nf);
 		BaseMessageImpl m2 = new BaseMessageImpl(n2, "Aap");
 		BasePropertyImpl p2 = new BasePropertyImpl(n2, "Noot");
 		m2.addProperty(p2);

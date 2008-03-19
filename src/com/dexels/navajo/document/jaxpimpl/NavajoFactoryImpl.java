@@ -31,7 +31,7 @@ public final class NavajoFactoryImpl extends NavajoFactory {
        Document docIn = XMLDocumentUtils.createDocument(stream, false);
        docIn.getDocumentElement().normalize();
        stream.close();
-       return new NavajoImpl(docIn);
+       return new NavajoImpl(docIn, this);
       } catch (Exception e) {
         e.printStackTrace();
         return null;
@@ -43,18 +43,18 @@ public final class NavajoFactoryImpl extends NavajoFactory {
 	}
   
   public Navajo createNavajo(Object representation) {
-    return new NavajoImpl((Document) representation);
+    return new NavajoImpl((Document) representation, this);
   }
 
   public Navajo createNavajo() {
-    return new NavajoImpl();
+    return new NavajoImpl(this);
   }
 
   public Navajo createNavaScript(java.io.InputStream stream) {
      try {
       Document docIn = XMLDocumentUtils.createDocument(stream, false);
       docIn.getDocumentElement().normalize();
-      return new NavajoImpl(docIn);
+      return new NavajoImpl(docIn, this);
      } catch (Exception e) {
        e.printStackTrace();
        return null;
@@ -70,11 +70,11 @@ public final class NavajoFactoryImpl extends NavajoFactory {
  }
 
  public Navajo createNavaScript(Object representation) {
-   return new NavajoImpl((Document) representation);
+   return new NavajoImpl((Document) representation, this);
  }
 
  public Navajo createNavaScript() {
-   return new NavajoImpl(Navajo.SCRIPT_BODY_DEFINITION);
+   return new NavajoImpl(Navajo.SCRIPT_BODY_DEFINITION, this);
  }
 
 

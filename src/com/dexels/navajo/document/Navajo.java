@@ -339,4 +339,6 @@ public interface Navajo
   public void removePropertyChangeListener(PropertyChangeListener p);
   public void firePropertyDataChanged(Property p,Object oldValue, Object newValue);
 
+  public NavajoFactory getNavajoFactory();
+  
 }
