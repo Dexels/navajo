@@ -599,13 +599,11 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 			t.getTrigger().setTask(t);
 			t.getTrigger().activateTrigger();
 			
-
-			// Add to task configuration file config/tasks.xml.
-
-			Navajo taskDoc = null;
-
 			// Only write to task.xml if NOT single event and if NOT workflow task.
 			if ( t.needsPersistence() ) {
+
+				// Add to task configuration file config/tasks.xml.
+				Navajo taskDoc = null;
 
 				SharedStoreLock ssl = null;
 				try {
@@ -631,13 +629,6 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 						}
 					}
 
-					// Add task to Navajo if it does not yet exist and if it is not part of a workflow instance. Workflow instances
-					// tasks are managed by WorkFlowManager.
-
-					/**
-					 * TODO NAGAAN OF HET OOK MOGELIJK IS OM WORKFLOW GERELATEERD HELEMAAL NIET OP TE SLAAN:
-					 * t.getWorkflowDef() == null || t.getWorkflowDef().equals("")
-					 */
 					if ( allTasks != null && containsTask(allTasks, id) == null ) {
 						
 						Message newTask = NavajoFactory.getInstance().createMessage(taskDoc, "tasks");
