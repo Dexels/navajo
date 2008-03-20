@@ -45,20 +45,28 @@ public class NavajoLaszloConverter {
 		return n;
 	}
 
-	public static Document createLaszloFromNavajo(Navajo in, String serviceName) {
-		return createLaszloFromNavajo(in, serviceName, true);
+	public static Document createLaszloFromNavajo(Navajo in) {
+		return createLaszloFromNavajo(in, "navajo");
 	}
 
-	public static Document createLaszloFromNavajo(Navajo in, String serviceName, boolean includeSelections) {
+	
+	public static Document createLaszloFromNavajo(Navajo in, String serviceName) {
+		return createLaszloFromNavajo(in, false, serviceName);
+	}
+	public static Document createLaszloFromNavajo(Navajo in, boolean includeSelections) {
+		return createLaszloFromNavajo(in, includeSelections, "navajo");
+	}
+	public static Document createLaszloFromNavajo(Navajo in, boolean includeSelections,  String serviceName) {
 		Document doc = XMLDocumentUtils.createDocument();
 		try {
+
 			String nodeName = serviceName.replaceAll("/", "_");
 			Element root = doc.createElement(nodeName);
 			doc.appendChild(root);
 			Element tml = doc.createElement("tml");
-			tml.setAttribute("rpc_usr", in.getHeader().getRPCUser());
-			tml.setAttribute("rpc_pwd", in.getHeader().getRPCPassword());
-			tml.setAttribute("rpc_name", serviceName);
+//			tml.setAttribute("rpc_usr", in.getHeader().getRPCUser());
+//			tml.setAttribute("rpc_pwd", in.getHeader().getRPCPassword());
+//			tml.setAttribute("rpc_name", serviceName);
 			root.appendChild(tml);
 			ArrayList<Message> l = in.getAllMessages();
 			for (int i = 0; i < l.size(); i++) {

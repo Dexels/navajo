@@ -435,7 +435,7 @@ public void clearPiggybackData() {
 
 public Map<String,String> getAttributes() {
 	if(attributeMap==null) {
-		return null;
+			return null;
 	}
 	return new HashMap<String,String>(attributeMap);
 }
