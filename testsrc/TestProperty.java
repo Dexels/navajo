@@ -457,7 +457,7 @@ public class TestProperty extends TestCase {
 	}
 
 	public void testEqualProperties() throws Exception {
-		BaseNavajoImpl n = new BaseNavajoImpl();
+		BaseNavajoImpl n = new BaseNavajoImpl(NavajoFactory.getInstance());
 		BasePropertyImpl p1 = new BasePropertyImpl(n, "Noot");
 		BasePropertyImpl p2 = new BasePropertyImpl(n, "Noot");
 		
@@ -507,7 +507,7 @@ public class TestProperty extends TestCase {
 	}
 	
 	public void testSelections() throws Exception {
-		BaseNavajoImpl n = new BaseNavajoImpl();
+		BaseNavajoImpl n = new BaseNavajoImpl(NavajoFactory.getInstance());
 		BaseMessageImpl m = new BaseMessageImpl(n, "Aap");
 		BasePropertyImpl p1 = new BasePropertyImpl(n, "Noot");
 		p1.setType("selection");
@@ -587,7 +587,7 @@ public class TestProperty extends TestCase {
 	}
 	
 	public void testSelectionEqualsUpdateFix() throws Exception {
-		BaseNavajoImpl n = new BaseNavajoImpl();
+		BaseNavajoImpl n = new BaseNavajoImpl(NavajoFactory.getInstance());
 		BaseMessageImpl m = new BaseMessageImpl(n, "Aap");
 		BasePropertyImpl p1 = new BasePropertyImpl(n, "Noot");
 		p1.setType("selection");
