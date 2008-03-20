@@ -23,6 +23,7 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLutils;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
+import com.dexels.navajo.document.types.*;
 import com.dexels.navajo.parser.DefaultExpressionEvaluator;
 
 public class BirtUtils {
@@ -30,6 +31,23 @@ public class BirtUtils {
 	// for XML tag id's. Start at 10
 	private int idCounter = 10;
 
+	
+
+	public Binary createEmptyReport(Navajo n, Binary template) throws IOException,
+			NavajoException {
+		InputStream templateStream = null;
+		if(template==null) {
+			templateStream = getClass().getResourceAsStream("blank.rptdesign");
+		} else {
+			templateStream = template.getDataAsStream();
+		}
+		File reportFile = File.createTempFile("temp", ".rptdesign");
+		createEmptyReport(n,reportFile,templateStream);
+		Binary result = new Binary(reportFile,false);
+		reportFile.delete();
+		return result;
+	}
+	
 	/**
 	 * 1. Creates a datasource xml file, based on the Navajo object(s). 2.
 	 * Creates a an empty rptdesign file on location 'File'
@@ -42,10 +60,12 @@ public class BirtUtils {
 	 * @throws IOException
 	 * @throws NavajoException
 	 */
-	public void createEmptyReport(Navajo n, File reportFile, String serviceName, File sourceReportTemplate) throws IOException,
+	public void createEmptyReport(Navajo n, File reportFile, InputStream reportTemplateStream) throws IOException,
 			NavajoException {
-		File source = createDataSource(n, serviceName);
-		createReportFile(source, n, reportFile, serviceName, sourceReportTemplate);
+		File source = createDataSource(n);
+		System.err.println("Datasource created.");
+		System.err.println("Creating report: "+reportFile.getAbsolutePath());
+		createReportFile(source, n, reportFile,"navajo",reportTemplateStream);
 	}
 
 	public void setupMasterPage(Document d, int left, int top, int right, int bottom, boolean landscape) {
@@ -59,23 +79,23 @@ public class BirtUtils {
 
 	}
 
-	public void createEmptyReport(File tmlFile, File reportFolder, String reportName, String serviceName, File reportTemplateFile)
+	public void createEmptyReport(File tmlFile, File reportFolder, String reportName, File reportTemplateFile)
 			throws IOException, NavajoException {
 		FileInputStream fis = new FileInputStream(tmlFile);
 		Navajo n = NavajoFactory.getInstance().createNavajo(fis);
 		fis.close();
-		if (serviceName == null) {
-			serviceName = n.getHeader().getRPCName();
-		}
-		File source = createDataSource(n, serviceName);
+
+		File source = createDataSource(n);
 		File reportFile = new File(reportFolder, reportName);
-		createReportFile(source, n, reportFile, serviceName, reportTemplateFile);
+		FileInputStream templatInput = new FileInputStream(reportTemplateFile);
+		createReportFile(source, n, reportFile, "navajo", templatInput);
 	}
 
 	public File createFixedReportDefinition(InputStream rptdesign, File datasource, File tempReportDir) throws NavajoException, IOException {
 		Document d = XMLDocumentUtils.createDocument(rptdesign, false);
 		Element ods = (Element) XMLutils.findNode(d, "oda-data-source");
-
+		Element cr = (Element) XMLutils.findNodeWithAttributeValue(d, "property", "name", "createdBy");
+		cr.setTextContent("Dexels");
 		Element e = (Element) XMLutils.findNodeWithAttributeValue(d, "property", "name", "FILELIST");
 		if (e == null) {
 			addProperty(d, ods, "property", "FILELIST", datasource.getAbsolutePath());
@@ -132,7 +152,7 @@ public class BirtUtils {
 	 * @return
 	 * @throws IOException
 	 */
-	public File createDataSource(Navajo n, String serviceName) throws IOException {
+	public File createDataSource(Navajo n) throws IOException {
 
 		File sourceFile = File.createTempFile("dat", ".txt", new File(System.getProperty("java.io.tmpdir")));
 		File origFile = new File(sourceFile.getAbsolutePath() + ".xml");
@@ -147,7 +167,7 @@ public class BirtUtils {
 				origW.close();
 			}
 		}
-		Document t = NavajoLaszloConverter.createLaszloFromNavajo(n, serviceName, false);
+		Document t = NavajoLaszloConverter.createLaszloFromNavajo(n, false);
 		FileWriter fw = new FileWriter(sourceFile);
 		System.err.println("Data source created: " + sourceFile.getAbsolutePath());
 		XMLDocumentUtils.write(t, fw, false);
@@ -156,22 +176,20 @@ public class BirtUtils {
 		return sourceFile;
 	}
 
-	private void createReportFile(File datasource, Navajo n, File reportFile, String serviceName, File reportTemplateFile)
+	private void createReportFile(File datasource, Navajo n, File reportFile, String dataSourceName, InputStream reportTemplateStream)
 			throws IOException, NavajoException {
 		// URL u =
 		// BirtUtils.class.getClassLoader().getResource("blank.rptdesign");
-		System.err.println("Opening file: " + reportTemplateFile.getAbsolutePath());
-		InputStream is = new FileInputStream(reportTemplateFile);
 		Document d = null;
 		try {
-			d = XMLDocumentUtils.createDocument(is, false);
+			d = XMLDocumentUtils.createDocument(reportTemplateStream, false);
 		} catch (NavajoException e1) {
 			e1.printStackTrace();
 		}
-		is.close();
+		reportTemplateStream.close();
 
 		Element dsrc = (Element) XMLutils.findNode(d, "oda-data-source");
-		dsrc.setAttribute("name", serviceName);
+		dsrc.setAttribute("name", dataSourceName);
 		Element datasourcePath = (Element) XMLutils.findNodeWithAttributeValue(d, "property", "name", "FILELIST");
 		if (datasourcePath == null) {
 			addProperty(d, dsrc, "property", "FILELIST", datasource.getAbsolutePath());
@@ -180,12 +198,12 @@ public class BirtUtils {
 		}
 		Element datasourceName = (Element) XMLutils.findNodeWithAttributeValue(d, "text-property", "name", "displayName");
 		if (datasourceName == null) {
-			addProperty(d, dsrc, "text-property", "name", serviceName);
+			addProperty(d, dsrc, "text-property", "name", dataSourceName);
 		} else {
-			datasourceName.setTextContent(serviceName);
+			datasourceName.setTextContent(dataSourceName);
 		}
 
-		parseArrayMessages(d, n.getAllMessages(), datasource.getAbsolutePath(), serviceName);
+		parseArrayMessages(d, n.getAllMessages(), datasource.getAbsolutePath(), dataSourceName);
 
 		// File reportFile = new File(reportFolder,reportName);
 		File parentFile = reportFile.getParentFile();
@@ -445,7 +463,7 @@ public class BirtUtils {
 	// }
 	// }
 
-	public void createTableReport(File reportTemplateFile, File reportFile, Navajo n, int left, int top, int right, int bottom,
+	public void createTableReport(InputStream reportTemplateStream, File reportFile, Navajo n, int left, int top, int right, int bottom,
 			boolean landscape) throws IOException, NavajoException {
 		// public void setupMasterPage(Document d, int left, int top, int right,
 		// int bottom, boolean landscape) {
@@ -487,14 +505,14 @@ public class BirtUtils {
 
 		}
 		System.err.println("SERVICE NAME: " + serviceName);
-		createTableReport(n, reportTemplateFile, reportFile, serviceName, messagePath, pNames.toArray(), pSizes.toArray(), pTitles
+		createTableReport(n, reportTemplateStream, reportFile, serviceName, messagePath, pNames.toArray(), pSizes.toArray(), pTitles
 				.toArray(), left, top, right, bottom, landscape);
 	}
 
-	private void createTableReport(Navajo n, File reportTemplateFile, File reportFile, String serviceName, String messagePath,
+	private void createTableReport(Navajo n, InputStream reportTemplateStream, File reportFile, String serviceName, String messagePath,
 			Object[] propertyNames, Object[] propertyWidths, Object[] propertyTitles, int left, int top, int right, int bottom,
 			boolean landscape) throws IOException, NavajoException {
-		createEmptyReport(n, reportFile, serviceName, reportTemplateFile);
+		createEmptyReport(n, reportFile, reportTemplateStream);
 		FileInputStream fis = new FileInputStream(reportFile);
 
 		if (messagePath == null) {

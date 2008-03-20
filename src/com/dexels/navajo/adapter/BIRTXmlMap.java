@@ -107,6 +107,7 @@ public class BIRTXmlMap implements Mappable {
 
 		BirtUtils b = new BirtUtils();
 		
+		input.write(System.err);
 		File rep = File.createTempFile("generic", ".rptdesign",new File(getViewerReportDir()));
 		Property marginProperty = inNavajo.getProperty("/__ReportDefinition/Margin");
 		String margin = null;
@@ -116,6 +117,7 @@ public class BIRTXmlMap implements Mappable {
 		}
 		
 		if(margin!=null) {
+			System.err.println("Margin: "+margin);
 			StringTokenizer st = new StringTokenizer(margin,",");
 			top = Integer.parseInt(st.nextToken());
 			right = Integer.parseInt(st.nextToken());
@@ -138,7 +140,8 @@ public class BIRTXmlMap implements Mappable {
 			templateDir.mkdirs();
 		}
 		File reportTemplateFile = new File(templateDir,"template.rptdesign");
-		b.createTableReport(reportTemplateFile,rep,input,left,top,right,bottom, landscape);
+		InputStream reportTemplateStream = new FileInputStream(reportTemplateFile);
+		b.createTableReport(reportTemplateStream,rep,input,left,top,right,bottom, landscape);
 		return processReport(rep,input);
 	}
 	
@@ -149,12 +152,7 @@ public class BIRTXmlMap implements Mappable {
 			IOException {
 		Binary result = new Binary();
 		Binary reportDef = null;
-		if (reportName == null) {
-			reportName = inNavajo.getHeader().getHeaderAttribute("sourceScript");
-		}
-		
-		// todo: 
-		// check reportName
+
 		Property outputFormatProperty = inNavajo.getProperty("/__ReportDefinition/OutputFormat");
 		if(outputFormatProperty!=null) {
 			outputFormat = outputFormatProperty.getValue();
@@ -168,19 +166,18 @@ public class BIRTXmlMap implements Mappable {
 			reportDef = (Binary) reportDefinitionProperty.getTypedValue();
 		}
 		
-		
-		
-		
 		BirtUtils b = new BirtUtils();
-		File lzfile = b.createDataSource(input, input.getHeader().getHeaderAttribute("sourceScript"));
+		File lzfile = b.createDataSource(input);
 		InputStream reportIs = null;
 		if(reportDef==null) {
 			File reportFile = new File(reportDir + reportName + ".rptdesign");
+			System.err.println("No definition defined. Using reportname: "+reportFile.getAbsolutePath());
 			if (!reportFile.exists()) {
 				throw NavajoFactory.getInstance().createNavajoException("Report: " + reportFile + " not found.");
 			}
 			reportIs = new FileInputStream(reportFile);
 		} else {
+			System.err.println("Using supplied definition. Size: "+reportDef.getLength());
 			reportIs = reportDef.getDataAsStream();		
 		}
 		
