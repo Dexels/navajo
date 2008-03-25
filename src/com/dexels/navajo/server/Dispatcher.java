@@ -27,6 +27,7 @@ package com.dexels.navajo.server;
 
 import java.io.*;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.net.*;
 
@@ -737,13 +738,24 @@ public Access [] getUsers() {
     }
   }
 
-  private final Navajo generateScheduledMessage(Header h, String taskId) {
+  private final Navajo generateScheduledMessage(Header h, String taskId, boolean rejected) {
 	  try {
-	      Navajo outMessage = NavajoFactory.getInstance().createNavajo();
-	      Header hnew = NavajoFactory.getInstance().createHeader(outMessage, h.getRPCName(), h.getRPCUser(), "", -1);
-	      hnew.setSchedule(taskId);
-	      outMessage.addHeader(hnew);
-	      return outMessage;
+		  Navajo outMessage = NavajoFactory.getInstance().createNavajo();
+		  Header hnew = NavajoFactory.getInstance().createHeader(outMessage, h.getRPCName(), h.getRPCUser(), "", -1);
+
+		  if ( ! rejected ) {
+			  hnew.setSchedule(taskId);
+		  }
+		  else {
+			  Message msg = NavajoFactory.getInstance().createMessage( outMessage, "Warning" );
+			  outMessage.addMessage( msg );
+			  
+			  Property prop = NavajoFactory.getInstance().createProperty(outMessage, "Status", Property.STRING_PROPERTY, "TimeExpired", 32, "Created by generateScheduledMessage", Property.DIR_OUT );
+			  msg.addProperty( prop );
+		  }
+		  outMessage.addHeader(hnew);
+
+		  return outMessage;
 	  } catch (Exception e) {
 		  e.printStackTrace(System.err);
 		  return null;
@@ -1058,28 +1070,34 @@ public final Navajo handle(Navajo inMessage, Object userCertificate, ClientInfo 
          * Phase VIa: Check if scheduled webservice
          */
         if ( inMessage.getHeader().getSchedule() != null && !inMessage.getHeader().getSchedule().equals("") ) {
-        	scheduledWebservice = true;
-        	System.err.println("Scheduling webservice: " + inMessage.getHeader().getRPCName() + " on " + inMessage.getHeader().getSchedule());
-        	TaskRunnerInterface trf = TaskRunnerFactory.getInstance();
-        	TaskInterface ti = TaskRunnerFactory.getTaskInstance();
-        	try {
-    			ti.setTrigger(inMessage.getHeader().getSchedule());
-    			ti.setNavajo(inMessage);
-    			ti.setPersisted(true); // Make sure task gets persisted in tasks.xml
-    			if ( inMessage.getHeader().getHeaderAttribute("keeprequestresponse") != null && 
-    					inMessage.getHeader().getHeaderAttribute("keeprequestresponse").equals("true")
-    			    ) {
-    				ti.setKeepRequestResponse(true);
-    			}
-    			trf.addTask(ti);
-            	outMessage = generateScheduledMessage(inMessage.getHeader(), ti.getId());
-    		} catch (UserException e) {
-    			System.err.println("WARNING: Invalid trigger specified for task " + ti.getId()  + ": " + inMessage.getHeader().getSchedule());
-    			trf.removeTask(ti);
-    			outMessage = generateErrorMessage(access, "Could not schedule task:" + e.getMessage(), -1, -1, e);
-    		}
-    		
-        	
+
+        	if ( validTimeSpecification( inMessage.getHeader().getSchedule()) ) {
+
+        		scheduledWebservice = true;
+        		System.err.println("Scheduling webservice: " + inMessage.getHeader().getRPCName() + " on " + inMessage.getHeader().getSchedule());
+        		TaskRunnerInterface trf = TaskRunnerFactory.getInstance();
+        		TaskInterface ti = TaskRunnerFactory.getTaskInstance();
+        		try {
+        			ti.setTrigger(inMessage.getHeader().getSchedule());
+        			ti.setNavajo(inMessage);
+        			ti.setPersisted(true); // Make sure task gets persisted in tasks.xml
+        			if ( inMessage.getHeader().getHeaderAttribute("keeprequestresponse") != null && 
+        					inMessage.getHeader().getHeaderAttribute("keeprequestresponse").equals("true")
+        			) {
+        				ti.setKeepRequestResponse(true);
+        			}
+        			trf.addTask(ti);
+        			outMessage = generateScheduledMessage(inMessage.getHeader(), ti.getId(), false);
+        		} catch (UserException e) {
+        			System.err.println("WARNING: Invalid trigger specified for task " + ti.getId()  + ": " + inMessage.getHeader().getSchedule());
+        			trf.removeTask(ti);
+        			outMessage = generateErrorMessage(access, "Could not schedule task:" + e.getMessage(), -1, -1, e);
+        		}
+        	}
+        	else {	// obsolete time specification
+        		outMessage = generateScheduledMessage(inMessage.getHeader(), null, true);
+        	}
+
         } else {
 
         	/**
@@ -1410,4 +1428,55 @@ public final Navajo handle(Navajo inMessage, Object userCertificate, ClientInfo 
 	  return requestCount;
   }
 
+  public static boolean validTimeSpecification(String dateString) {
+
+		boolean result = false;
+
+		try {
+			if (dateString.startsWith("time:")) {
+				dateString = dateString.substring(5);
+
+				StringTokenizer tok = new StringTokenizer(dateString, "|");
+
+				String field  = null;
+				
+				long   timeSpecified = 0;
+				long   now           = 0;
+
+				if (tok.hasMoreTokens()) {
+					field          = tok.nextToken();
+					timeSpecified += 1000000L * ( ( "*".equals( field ) ) ? 13 : Integer.parseInt( field ) );
+				}
+				if (tok.hasMoreTokens()) {
+					field          = tok.nextToken();
+					timeSpecified += 10000L * ( ( "*".equals( field ) ) ? 32 : Integer.parseInt( field ) );
+				}
+				if (tok.hasMoreTokens()) {
+					field          = tok.nextToken();
+					timeSpecified += 100L * ( ( "*".equals( field ) ) ? 25 : Integer.parseInt( field ) );
+				}
+				if (tok.hasMoreTokens()) {
+					field          = tok.nextToken();
+					timeSpecified += 1L * ( ( "*".equals( field ) ) ? 32 : Integer.parseInt( field ) );
+				}
+				if (tok.hasMoreTokens()) {
+					field          = tok.nextToken();
+				}
+				if (tok.hasMoreTokens()) {
+					field          = tok.nextToken();
+					timeSpecified += 100000000L * ( ( "*".equals( field ) ) ? 9999 : Integer.parseInt( field ) );
+				}
+
+				Calendar current = Calendar.getInstance();
+				
+				now = 100000000L * current.get( Calendar.YEAR ) + 1000000L * ( current.get( Calendar.MONTH ) + 1 ) + 10000L * current.get( Calendar.DAY_OF_MONTH ) + 100L * current.get( Calendar.HOUR_OF_DAY ) + 1L * current.get( Calendar.MINUTE );
+				
+				result = timeSpecified > now;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return result;
+	}
 }
