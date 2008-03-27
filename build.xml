@@ -3,7 +3,6 @@
 <project name="Navajo" default="archive" basedir=".">
 	<property name="src" location="src" />
 	<property name="build" location="classes" />
-	<property name="lib" value="lib" />
 	<property name="log" value="log" />
 	<property name="cvs.release.arg" value="-A" />
 	<condition property="cvs.release.arg" value="-r ${VERSION}">
@@ -22,9 +21,7 @@
 	<property name="NavajoDocument.build" value="${NavajoDocument}/classes" />
 	<available file="${NavajoDocument}" type="dir" property="NavajoDocument.present" />
 	<path id="depend">
-		<fileset dir="${lib}">
-			<include name="**/*.jar" />
-		</fileset>
+
 		<pathelement location="${NavajoClient.build}" />
 		<pathelement location="${NavajoDocument.build}" />
 		<pathelement location="${NavajoLogger.build}" />
@@ -96,6 +93,7 @@
 			    <exclude name="com/dexels/navajo/workflow/**" />
 				<exclude name="com/dexels/navajo/adapter/**" />
 				<exclude name="com/dexels/navajo/integrity/**" />
+				<exclude name="com/dexels/navajo/jabber/**" />
 				<exclude name="com/dexels/navajo/server/descriptionprovider/**" />
 				<exclude name="com/dexels/navajo/server/statistics/**" />
 			    <exclude name="com/dexels/navajo/server/enterprise/**" />
@@ -132,6 +130,7 @@
 			    <include name="com/dexels/navajo/tribe/**" />
 				<include name="com/dexels/navajo/adapter/**" />
 				<include name="com/dexels/navajo/integrity/**" />
+				<include name="com/dexels/navajo/jabber/**" />
 				<include name="com/dexels/navajo/server/descriptionprovider/**" />
 				<include name="com/dexels/navajo/server/statistics/**" />
 				<!-- source file, never needed. -->
