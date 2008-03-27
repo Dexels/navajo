@@ -34,6 +34,7 @@ import java.util.logging.Level;
 import com.dexels.navajo.server.enterprise.descriptionprovider.DescriptionProviderInterface;
 import com.dexels.navajo.server.enterprise.integrity.WorkerFactory;
 import com.dexels.navajo.server.enterprise.integrity.WorkerInterface;
+import com.dexels.navajo.server.enterprise.jabber.*;
 import com.dexels.navajo.server.enterprise.monitoring.AgentFactory;
 import com.dexels.navajo.server.enterprise.scheduler.TaskRunnerFactory;
 import com.dexels.navajo.server.enterprise.scheduler.TaskRunnerInterface;
@@ -259,7 +260,15 @@ public final class NavajoConfig {
 				}
 			} 
 			
-
+			Message jabberMessage = body.getMessage("jabber");
+			if(jabberMessage!=null) {
+				// Ewwww
+				JabberInterface ji = JabberFactory.getInstance();
+				ji.configJabber(jabberMessage);
+				
+//				myJabber.configJabber(jabberMessage);
+				
+			}
     		
     		
     		String repositoryClass = body.getProperty("repository/class").getValue();
