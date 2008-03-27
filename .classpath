@@ -6,8 +6,10 @@
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/DexelsVersionControl"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/NavajoLogger"/>
-	<classpathentry kind="lib" path="lib/backport-util-concurrent-3.1.jar"/>
-	<classpathentry kind="lib" path="lib/jgroups-2.5.1-jdk14.jar"/>
-	<classpathentry kind="lib" path="lib/retrotranslator-runtime-1.2.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/backport-util-concurrent-3.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jgroups-2.5.1-jdk14.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/retrotranslator-runtime-1.2.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/smack.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/smackx.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
