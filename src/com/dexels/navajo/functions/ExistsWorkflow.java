@@ -5,8 +5,8 @@ import java.util.Iterator;
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
 
-import com.dexels.navajo.tribe.TribeManager;
-import com.dexels.navajo.tribe.TribeMember;
+import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
+import com.dexels.navajo.server.enterprise.tribe.TribeMemberInterface;
 import com.dexels.navajo.workflow.WorkFlowExistsAnswer;
 import com.dexels.navajo.workflow.WorkFlowExistsRequest;
 
@@ -28,12 +28,12 @@ public class ExistsWorkflow extends FunctionInterface {
 		String stateName = ( getOperand(1) == null ? null : (String) getOperand(1) );
 		String stateExpression = (String) getOperand(2);
 	
-		Iterator<TribeMember> all = TribeManager.getInstance().getClusterState().clusterMembers.iterator();
+		Iterator<TribeMemberInterface> all = TribeManagerFactory.getInstance().getAllMembers().iterator();
 		
 		while ( all.hasNext() ) {
 			WorkFlowExistsRequest wer = new WorkFlowExistsRequest(workflowName, stateName, stateExpression);
-			TribeMember tm = all.next();
-			WorkFlowExistsAnswer wea = (WorkFlowExistsAnswer) TribeManager.getInstance().askSomebody(wer, tm.getAddress());
+			TribeMemberInterface tm = all.next();
+			WorkFlowExistsAnswer wea = (WorkFlowExistsAnswer) TribeManagerFactory.getInstance().askSomebody(wer, tm.getAddress());
 			if ( wea.isExists() ) {
 				return Boolean.TRUE;
 			}
