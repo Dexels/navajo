@@ -13,10 +13,10 @@ import com.dexels.navajo.persistence.*;
 import com.dexels.navajo.server.CacheController;
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
+import com.dexels.navajo.sharedstore.SharedStoreFactory;
+import com.dexels.navajo.sharedstore.SharedStoreInterface;
+import com.dexels.navajo.sharedstore.map.SharedTribalMap;
 
-import com.dexels.navajo.tribe.SharedStoreFactory;
-import com.dexels.navajo.tribe.SharedStoreInterface;
-import com.dexels.navajo.tribe.map.SharedTribalMap;
 
 
 /**
@@ -91,7 +91,7 @@ public final class PersistenceManagerImpl implements PersistenceManager {
 	
 	public PersistenceManagerImpl() throws InstantiationException {
 		try {
-			Class.forName("com.dexels.navajo.tribe.map.SharedTribalMap");
+			Class.forName("com.dexels.navajo.sharedstore.map.SharedTribalMap");
 		} catch (ClassNotFoundException e) {
 			throw new InstantiationException(e.getMessage());
 		}
@@ -202,7 +202,7 @@ public final class PersistenceManagerImpl implements PersistenceManager {
      */
     public final boolean write(Persistable document, String key, String service) {
 
-        try {
+    	try {
         	memoryOperation(key, service, document, -1, false);
             
             sharedPersistenceStore.store(CACHE_PATH, key, document, false, false);

@@ -37,7 +37,7 @@ import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.FatalException;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.server.enterprise.scheduler.TaskInterface;
-import com.dexels.navajo.tribe.SharedStoreLock;
+import com.dexels.navajo.sharedstore.SharedStoreLock;
 
 /**
  * Defines the task object that describes among other things, the webservice

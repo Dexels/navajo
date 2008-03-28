@@ -41,7 +41,7 @@ import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.server.UserException;
-import com.dexels.navajo.tribe.SharedStoreLock;
+import com.dexels.navajo.sharedstore.SharedStoreLock;
 import com.dexels.navajo.util.AuditLog;
 
 /**

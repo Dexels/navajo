@@ -22,25 +22,47 @@
  * SUCH DAMAGE.
  * ====================================================================
  */
-package com.dexels.navajo.tribe;
+package com.dexels.navajo.sharedstore;
 
+import java.io.Serializable;
 
-public class LockAnswer extends Answer {
+public class SharedStoreLock implements Serializable {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 6037231721197484744L;
+	private static final long serialVersionUID = 6982466905008510851L;
 	
-	public SharedStoreLock mySsl = null;
+	private int lockTimeOut = 10000; // in millis
 	
-	public LockAnswer(Request q, SharedStoreLock ssl) {
-		super(q);
-		mySsl = ssl;
+	public SharedStoreLock(String name, String parent) {
+		this.name = name;
+		this.parent = parent;
 	}
 	
-	public boolean acknowledged() {
-		return ( mySsl != null );
+	public String owner;
+	public String parent;
+	public String name;
+	public int lockType;
+	
+	/**
+	 * Returns a string representation of this SharedStoreLock.
+	 */
+	public String toString() {
+		return "(" + owner + "," + parent + "," + name + ")";
 	}
 
+	public int getLockTimeOut() {
+		return lockTimeOut;
+	}
+
+	/**
+	 * Specify lock timeout in millis.
+	 * Default value is 10000.
+	 * 
+	 * @param lockTimeOut
+	 */
+	public void setLockTimeOut(int lockTimeOut) {
+		this.lockTimeOut = lockTimeOut;
+	}
 }

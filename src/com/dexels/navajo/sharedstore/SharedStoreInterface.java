@@ -22,10 +22,11 @@
  * SUCH DAMAGE.
  * ====================================================================
  */
-package com.dexels.navajo.tribe;
+package com.dexels.navajo.sharedstore;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+
 
 /**
  * A shared store is used as as persistent store for a Navajo Tribe cluster.

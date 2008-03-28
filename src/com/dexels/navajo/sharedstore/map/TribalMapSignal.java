@@ -1,4 +1,4 @@
-package com.dexels.navajo.tribe.map;
+package com.dexels.navajo.sharedstore.map;
 
 import com.dexels.navajo.server.enterprise.tribe.SmokeSignal;
 

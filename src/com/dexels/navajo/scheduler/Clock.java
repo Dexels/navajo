@@ -3,8 +3,8 @@ package com.dexels.navajo.scheduler;
 import java.util.Calendar;
 import com.dexels.navajo.server.GenericThread;
 import com.dexels.navajo.server.enterprise.scheduler.ClockInterface;
+import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
 import com.dexels.navajo.server.jmx.JMXHelper;
-import com.dexels.navajo.tribe.TribeManager;
 import com.dexels.navajo.util.AuditLog;
 
 public class Clock extends GenericThread implements ClockMXBean, ClockInterface {
@@ -59,7 +59,7 @@ public class Clock extends GenericThread implements ClockMXBean, ClockInterface 
 	public final void worker() {
 
 		// Only the tribe chief may perform a clock operation.
-		if ( TribeManager.getInstance().getIsChief() ) {
+		if ( TribeManagerFactory.getInstance().getIsChief() ) {
 			Calendar c = Calendar.getInstance();
 			//synchronized ( semaphore ) {
 				//System.err.println("Calling Clock worker()");

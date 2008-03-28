@@ -1,6 +1,8 @@
-package com.dexels.navajo.tribe;
+package com.dexels.navajo.sharedstore.map;
 
 import java.lang.ref.SoftReference;
+
+import com.dexels.navajo.server.enterprise.tribe.Answer;
 
 public class GetRemoteObjectAnswer extends Answer {
 

@@ -1,7 +1,5 @@
-package com.dexels.navajo.tribe;
+package com.dexels.navajo.scheduler;
 
-import com.dexels.navajo.scheduler.ListenerStore;
-import com.dexels.navajo.scheduler.AfterWebserviceTrigger;
 import com.dexels.navajo.server.enterprise.tribe.SmokeSignal;
 import com.dexels.navajo.workflow.WorkFlowManager;
 

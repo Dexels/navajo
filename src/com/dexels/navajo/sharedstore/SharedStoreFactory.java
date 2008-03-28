@@ -22,36 +22,32 @@
  * SUCH DAMAGE.
  * ====================================================================
  */
-package com.dexels.navajo.tribe;
+package com.dexels.navajo.sharedstore;
 
-public class RemoveLockRequest extends Request {
+import com.dexels.navajo.util.AuditLog;
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 4793070731846134259L;
+public class SharedStoreFactory {
+
+	private static volatile SharedStoreInterface instance = null;
+	private static Object semaphore = new Object();
 	
-	public String parent;
-	public String name;
-	int lockType;
-	
-	public RemoveLockRequest(String parent, String name) {
-		this.parent = parent;
-		this.name = name;
-		this.blocking = false;
-	}
-	
-	@Override
-	public Answer getAnswer() {
+	public final static SharedStoreInterface getInstance() {
 		
-		SharedStoreInterface ssi = SharedStoreFactory.getInstance();
-		SharedStoreLock ssl = ssi.getLock(parent, name);
-		//System.err.println("IN RemoveLockRequest(), getAnswer().....: " + ssl);
-		if ( ssl != null ) {
-			ssi.release(ssl);
+		if ( instance != null ) {
+			return instance;
 		}
-		return new LockAnswer(this, ssl);
 		
+		synchronized (semaphore ) {
+			if ( instance != null ) {
+				return instance;
+			}
+			try {
+				instance = new SharedFileStore();
+			} catch (Exception e) {
+				AuditLog.log(AuditLog.AUDIT_MESSAGE_SHAREDSTORE, e.getMessage());
+			}
+		}
+		
+		return instance;
 	}
-
 }

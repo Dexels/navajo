@@ -22,32 +22,24 @@
  * SUCH DAMAGE.
  * ====================================================================
  */
-package com.dexels.navajo.tribe;
 
-import com.dexels.navajo.util.AuditLog;
+package com.dexels.navajo.server.enterprise.tribe;
 
-public class SharedStoreFactory {
+import java.io.Serializable;
 
-	private static volatile SharedStoreInterface instance = null;
-	private static Object semaphore = new Object();
+
+public abstract class Answer implements Serializable {
 	
-	public final static SharedStoreInterface getInstance() {
-		
-		if ( instance != null ) {
-			return instance;
-		}
-		
-		synchronized (semaphore ) {
-			if ( instance != null ) {
-				return instance;
-			}
-			try {
-				instance = new SharedFileStore();
-			} catch (Exception e) {
-				AuditLog.log(AuditLog.AUDIT_MESSAGE_SHAREDSTORE, e.getMessage());
-			}
-		}
-		
-		return instance;
+	public Request myRequest;
+	
+	public Answer(Request q) {
+		myRequest = q;
 	}
+	
+	public abstract boolean acknowledged();
+
+	public Request getMyRequest() {
+		return myRequest;
+	}
+	
 }

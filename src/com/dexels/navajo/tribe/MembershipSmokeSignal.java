@@ -4,8 +4,8 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import com.dexels.navajo.server.enterprise.tribe.SmokeSignal;
-import com.dexels.navajo.tribe.map.IntroductionRequest;
-import com.dexels.navajo.tribe.map.SharedTribalMap;
+import com.dexels.navajo.sharedstore.map.IntroductionRequest;
+import com.dexels.navajo.sharedstore.map.SharedTribalMap;
 import com.dexels.navajo.util.AuditLog;
 
 public class MembershipSmokeSignal extends SmokeSignal {

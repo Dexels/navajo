@@ -1,4 +1,4 @@
-package com.dexels.navajo.tribe.map;
+package com.dexels.navajo.sharedstore.map;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -6,8 +6,6 @@ import java.util.Map;
 
 import org.jgroups.Address;
 
-import com.dexels.navajo.tribe.GetRemoteObjectAnswer;
-import com.dexels.navajo.tribe.GetRemoteObjectRequest;
 import com.dexels.navajo.tribe.TribeManager;
 import com.dexels.navajo.util.Util;
 

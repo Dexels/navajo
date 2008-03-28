@@ -1,6 +1,5 @@
-package com.dexels.navajo.tribe;
+package com.dexels.navajo.scheduler;
 
-import com.dexels.navajo.scheduler.ListenerRunner;
 import com.dexels.navajo.server.enterprise.tribe.SmokeSignal;
 
 /**

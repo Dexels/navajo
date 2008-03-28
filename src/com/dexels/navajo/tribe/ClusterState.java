@@ -28,6 +28,7 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Iterator;
 
+
 public class ClusterState implements Serializable {
 
 	private static final long serialVersionUID = -6046777687660294098L;

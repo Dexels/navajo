@@ -1,7 +1,7 @@
-package com.dexels.navajo.tribe;
+package com.dexels.navajo.scheduler;
 
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.scheduler.WebserviceTrigger;
+import com.dexels.navajo.server.enterprise.tribe.Answer;
 import com.dexels.navajo.workflow.WorkFlowManager;
 
 public class ServiceEventAnswer extends Answer {

@@ -22,7 +22,7 @@
  * SUCH DAMAGE.
  * ====================================================================
  */
-package com.dexels.navajo.tribe;
+package com.dexels.navajo.sharedstore;
 
 public class SharedStoreException extends Exception {
 

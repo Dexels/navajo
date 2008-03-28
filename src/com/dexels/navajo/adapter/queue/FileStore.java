@@ -5,9 +5,9 @@ import java.util.Iterator;
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.enterprise.queue.Queuable;
-import com.dexels.navajo.tribe.SharedStoreException;
-import com.dexels.navajo.tribe.SharedStoreFactory;
-import com.dexels.navajo.tribe.SharedStoreInterface;
+import com.dexels.navajo.sharedstore.SharedStoreException;
+import com.dexels.navajo.sharedstore.SharedStoreFactory;
+import com.dexels.navajo.sharedstore.SharedStoreInterface;
 import com.dexels.navajo.util.AuditLog;
 
 /**

@@ -1,6 +1,7 @@
-package com.dexels.navajo.tribe;
+package com.dexels.navajo.sharedstore.map;
 
-import com.dexels.navajo.tribe.map.RemoteReference;
+import com.dexels.navajo.server.enterprise.tribe.Answer;
+import com.dexels.navajo.server.enterprise.tribe.Request;
 
 public class GetRemoteObjectRequest extends Request {
 

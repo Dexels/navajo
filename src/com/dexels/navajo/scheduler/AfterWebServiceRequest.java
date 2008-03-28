@@ -3,8 +3,8 @@ package com.dexels.navajo.scheduler;
 import java.util.HashSet;
 
 import com.dexels.navajo.server.Access;
-import com.dexels.navajo.tribe.Answer;
-import com.dexels.navajo.tribe.Request;
+import com.dexels.navajo.server.enterprise.tribe.Answer;
+import com.dexels.navajo.server.enterprise.tribe.Request;
 
 public class AfterWebServiceRequest extends Request {
 

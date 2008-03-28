@@ -1,6 +1,6 @@
 package com.dexels.navajo.scheduler;
 
-import com.dexels.navajo.tribe.Answer;
+import com.dexels.navajo.server.enterprise.tribe.Answer;
 
 public class AfterWebServiceAnswer extends Answer {
 

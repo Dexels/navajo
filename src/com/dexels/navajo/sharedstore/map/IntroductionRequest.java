@@ -1,9 +1,9 @@
-package com.dexels.navajo.tribe.map;
+package com.dexels.navajo.sharedstore.map;
 
 import java.lang.ref.SoftReference;
 
-import com.dexels.navajo.tribe.Answer;
-import com.dexels.navajo.tribe.Request;
+import com.dexels.navajo.server.enterprise.tribe.Answer;
+import com.dexels.navajo.server.enterprise.tribe.Request;
 
 public class IntroductionRequest extends Request {
 

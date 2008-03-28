@@ -1,7 +1,7 @@
 package com.dexels.navajo.workflow;
 
-import com.dexels.navajo.tribe.Answer;
-import com.dexels.navajo.tribe.Request;
+import com.dexels.navajo.server.enterprise.tribe.Answer;
+import com.dexels.navajo.server.enterprise.tribe.Request;
 
 public class WorkFlowExistsRequest extends Request {
 

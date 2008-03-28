@@ -24,6 +24,10 @@
  */
 package com.dexels.navajo.tribe;
 
+import com.dexels.navajo.server.enterprise.tribe.Answer;
+import com.dexels.navajo.server.enterprise.tribe.PingAnswer;
+import com.dexels.navajo.server.enterprise.tribe.Request;
+
 public class PingRequest extends Request {
 
 	/**

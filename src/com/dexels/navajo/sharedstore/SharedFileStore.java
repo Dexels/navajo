@@ -22,7 +22,7 @@
  * SUCH DAMAGE.
  * ====================================================================
  */
-package com.dexels.navajo.tribe;
+package com.dexels.navajo.sharedstore;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -41,6 +41,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 
 import com.dexels.navajo.server.Dispatcher;
+import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
 import com.dexels.navajo.util.AuditLog;
 
 /**
@@ -300,8 +301,8 @@ public class SharedFileStore implements SharedStoreInterface {
 	 */
 	public SharedStoreLock lock(String parent, String name, int lockType, boolean block) {
 		
-		if ( !TribeManager.getInstance().getIsChief() ) {
-			LockAnswer la = (LockAnswer) TribeManager.getInstance().askChief(
+		if ( !TribeManagerFactory.getInstance().getIsChief() ) {
+			LockAnswer la = (LockAnswer) TribeManagerFactory.getInstance().askChief(
 					new GetLockRequest( parent, name, lockType, block));
 			return la.mySsl;
 		} else {
@@ -336,8 +337,8 @@ public class SharedFileStore implements SharedStoreInterface {
 	 */
 	public void release(SharedStoreLock lock) {
 
-		if ( !TribeManager.getInstance().getIsChief() ) {
-			TribeManager.getInstance().askChief( new RemoveLockRequest(lock.parent, lock.name) );
+		if ( !TribeManagerFactory.getInstance().getIsChief() ) {
+			TribeManagerFactory.getInstance().askChief( new RemoveLockRequest(lock.parent, lock.name) );
 		} else {
 			synchronized (lockSemaphore) {
 				if ( lock != null ) {

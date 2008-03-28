@@ -22,16 +22,39 @@
  * SUCH DAMAGE.
  * ====================================================================
  */
-package com.dexels.navajo.tribe;
+package com.dexels.navajo.sharedstore;
 
-public class TribeException extends Exception {
+import com.dexels.navajo.server.enterprise.tribe.Answer;
+import com.dexels.navajo.server.enterprise.tribe.Request;
+
+public class RemoveLockRequest extends Request {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -5381044827165664065L;
-
-	public TribeException(String message) {
-		super(message);
+	private static final long serialVersionUID = 4793070731846134259L;
+	
+	public String parent;
+	public String name;
+	int lockType;
+	
+	public RemoveLockRequest(String parent, String name) {
+		this.parent = parent;
+		this.name = name;
+		this.blocking = false;
 	}
+	
+	@Override
+	public Answer getAnswer() {
+		
+		SharedStoreInterface ssi = SharedStoreFactory.getInstance();
+		SharedStoreLock ssl = ssi.getLock(parent, name);
+		//System.err.println("IN RemoveLockRequest(), getAnswer().....: " + ssl);
+		if ( ssl != null ) {
+			ssi.release(ssl);
+		}
+		return new LockAnswer(this, ssl);
+		
+	}
+
 }

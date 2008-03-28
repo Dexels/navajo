@@ -31,6 +31,10 @@ import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.server.UserException;
+import com.dexels.navajo.server.enterprise.tribe.Answer;
+import com.dexels.navajo.sharedstore.GetLockRequest;
+import com.dexels.navajo.sharedstore.RemoveLockRequest;
+import com.dexels.navajo.sharedstore.SharedStoreInterface;
 
 public class TestLockAdapter implements Mappable {
 

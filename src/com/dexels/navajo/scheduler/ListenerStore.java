@@ -2,17 +2,16 @@ package com.dexels.navajo.scheduler;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 
 import com.dexels.navajo.server.Dispatcher;
-import com.dexels.navajo.tribe.GetLockRequest;
-import com.dexels.navajo.tribe.ListenerRunnerActivationSmokeSignal;
-import com.dexels.navajo.tribe.LockAnswer;
-import com.dexels.navajo.tribe.RemoveLockRequest;
-import com.dexels.navajo.tribe.SharedStoreException;
-import com.dexels.navajo.tribe.SharedStoreFactory;
-import com.dexels.navajo.tribe.SharedStoreInterface;
-import com.dexels.navajo.tribe.TribeManager;
+import com.dexels.navajo.server.enterprise.tribe.Answer;
+import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
+import com.dexels.navajo.sharedstore.GetLockRequest;
+import com.dexels.navajo.sharedstore.LockAnswer;
+import com.dexels.navajo.sharedstore.RemoveLockRequest;
+import com.dexels.navajo.sharedstore.SharedStoreException;
+import com.dexels.navajo.sharedstore.SharedStoreFactory;
+import com.dexels.navajo.sharedstore.SharedStoreInterface;
 import com.dexels.navajo.workflow.WorkFlowManager;
 
 public final class ListenerStore {
@@ -41,7 +40,7 @@ public final class ListenerStore {
 			instance = new ListenerStore();
 			instance.ssi = SharedStoreFactory.getInstance();
 			
-			if ( TribeManager.getInstance().getIsChief() ) {  // Clear everything is the chief is started (complete reboot of system).
+			if ( TribeManagerFactory.getInstance().getIsChief() ) {  // Clear everything is the chief is started (complete reboot of system).
 				instance.ssi.removeAll(activatedListeners);
 				instance.ssi.removeAll(storeLocation);
 			} 
@@ -72,9 +71,13 @@ public final class ListenerStore {
 	private final boolean lock(String type, boolean activatedlisteners) {
 		//synchronized (semaphore_lock) {
 			// Get lock on TimeTrigger listeners store.
-			LockAnswer la = (LockAnswer) TribeManager.getInstance().askChief(
+			Answer a = TribeManagerFactory.getInstance().askChief(
 					new GetLockRequest( ( activatedlisteners ? activatedListeners : storeLocation ), type, SharedStoreInterface.READ_WRITE_LOCK, false));
-			return la.acknowledged();
+			if ( a != null ) {
+				return ((LockAnswer) a).acknowledged();
+			} else {
+				return true;
+			}
 		//}
 	}
 	
@@ -86,7 +89,7 @@ public final class ListenerStore {
 	private final void release(String type, boolean activatedlisteners) {
 		//synchronized (semaphore_lock) {
 			// Release lock.
-			TribeManager.getInstance().askChief(new RemoveLockRequest(( activatedlisteners ? activatedListeners : storeLocation ), type));
+		TribeManagerFactory.getInstance().askChief(new RemoveLockRequest(( activatedlisteners ? activatedListeners : storeLocation ), type));
 		//}
 	}
 	
@@ -162,7 +165,7 @@ public final class ListenerStore {
 				e.printStackTrace(System.err);
 			}
 			// NOTIFY ALL OTHER TRIBE MEMBERS.
-			TribeManager.getInstance().broadcast(new ListenerRunnerActivationSmokeSignal(Dispatcher.getInstance().getNavajoConfig().getInstanceName(), "DOIT", "NOW"));
+			TribeManagerFactory.getInstance().broadcast(new ListenerRunnerActivationSmokeSignal(Dispatcher.getInstance().getNavajoConfig().getInstanceName(), "DOIT", "NOW"));
 			semaphore.notifyAll();
 		}
 	}

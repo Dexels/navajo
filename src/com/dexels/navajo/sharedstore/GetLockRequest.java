@@ -22,23 +22,55 @@
  * SUCH DAMAGE.
  * ====================================================================
  */
+package com.dexels.navajo.sharedstore;
 
-package com.dexels.navajo.tribe;
+import com.dexels.navajo.server.enterprise.tribe.Answer;
+import com.dexels.navajo.server.enterprise.tribe.Request;
 
-import java.io.Serializable;
+/**
+ * A LockQuestion is a request for a lock.
+ * Also implement LockReleaseRequest...
+ * 
+ * @author arjen
+ *
+ */
+public class GetLockRequest extends Request {
 
-public abstract class Answer implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5986028260014271881L;
 	
-	public Request myRequest;
+	public String parent;
+	public String name;
+	int lockType;
+	private boolean block;
 	
-	public Answer(Request q) {
-		myRequest = q;
+	private int lockTimeOut = 30000; // in millis
+	
+	public GetLockRequest(String parent, String name, int lockType, boolean block) {
+		super();
+		this.parent = parent;
+		this.name = name;
+		this.lockType = lockType;
+		this.block = block;
 	}
 	
-	public abstract boolean acknowledged();
+	public Answer getAnswer() {
+		
+		SharedStoreInterface ssi = SharedStoreFactory.getInstance();
+		SharedStoreLock ssl = ssi.lock(parent, name, lockType, block);
+		
+		return new LockAnswer(this, ssl);
+		
+	}
 
-	public Request getMyRequest() {
-		return myRequest;
+	public int getLockTimeOut() {
+		return lockTimeOut;
+	}
+
+	public void setLockTimeOut(int lockTimeOut) {
+		this.lockTimeOut = lockTimeOut;
 	}
 	
 }

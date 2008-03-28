@@ -19,10 +19,10 @@ import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.server.GenericThread;
 import com.dexels.navajo.server.jmx.JMXHelper;
-import com.dexels.navajo.tribe.SharedStoreException;
-import com.dexels.navajo.tribe.SharedStoreFactory;
-import com.dexels.navajo.tribe.SharedStoreInterface;
-import com.dexels.navajo.tribe.SharedStoreLock;
+import com.dexels.navajo.sharedstore.SharedStoreException;
+import com.dexels.navajo.sharedstore.SharedStoreFactory;
+import com.dexels.navajo.sharedstore.SharedStoreInterface;
+import com.dexels.navajo.sharedstore.SharedStoreLock;
 import com.dexels.navajo.util.AuditLog;
 
 public final class WorkFlowManager extends GenericThread implements WorkFlowManagerMXBean, NavajoListener {

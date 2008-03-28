@@ -25,15 +25,12 @@
 package com.dexels.navajo.scheduler;
 
 import java.util.HashSet;
-import java.util.Iterator;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.enterprise.scheduler.WebserviceListenerRegistryInterface;
-import com.dexels.navajo.tribe.ServiceEventsSmokeSignal;
-import com.dexels.navajo.tribe.TribeManager;
-import com.dexels.navajo.tribe.TribeMember;
+import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
 import com.dexels.navajo.workflow.WorkFlowManager;
 
 
@@ -64,7 +61,7 @@ public final class WebserviceListenerRegistry implements WebserviceListenerRegis
 
 		ListenerStore.getInstance().addListener(t,BeforeWebserviceTrigger.class.getName(), true);
 		// Broadcast..
-		TribeManager.getInstance().broadcast(new ServiceEventsSmokeSignal(Dispatcher.getInstance().getNavajoConfig().getInstanceName(), ServiceEventsSmokeSignal.ADD_WEBSERVICE, t.getWebservicePattern()));
+		TribeManagerFactory.getInstance().broadcast(new ServiceEventsSmokeSignal(Dispatcher.getInstance().getNavajoConfig().getInstanceName(), ServiceEventsSmokeSignal.ADD_WEBSERVICE, t.getWebservicePattern()));
 		ListenerStore.getInstance().addRegisteredWebservice(t.getWebservicePattern());
 		
 
@@ -74,7 +71,7 @@ public final class WebserviceListenerRegistry implements WebserviceListenerRegis
 
 		ListenerStore.getInstance().removeListener(t,BeforeWebserviceTrigger.class.getName(), false);
 		// Broadcast..
-		TribeManager.getInstance().broadcast(new ServiceEventsSmokeSignal(Dispatcher.getInstance().getNavajoConfig().getInstanceName(), ServiceEventsSmokeSignal.REMOVE_WEBSERVICE, t.getWebservicePattern()));
+		TribeManagerFactory.getInstance().broadcast(new ServiceEventsSmokeSignal(Dispatcher.getInstance().getNavajoConfig().getInstanceName(), ServiceEventsSmokeSignal.REMOVE_WEBSERVICE, t.getWebservicePattern()));
 		ListenerStore.getInstance().removeRegisteredWebservice(t.getWebservicePattern());
 		
 	}
@@ -88,7 +85,7 @@ public final class WebserviceListenerRegistry implements WebserviceListenerRegis
 
 		ListenerStore.getInstance().addListener(t,AfterWebserviceTrigger.class.getName(), true);
 		// Broadcast..
-		TribeManager.getInstance().broadcast(new ServiceEventsSmokeSignal(Dispatcher.getInstance().getNavajoConfig().getInstanceName(), ServiceEventsSmokeSignal.ADD_WEBSERVICE, t.getWebservicePattern()));
+		TribeManagerFactory.getInstance().broadcast(new ServiceEventsSmokeSignal(Dispatcher.getInstance().getNavajoConfig().getInstanceName(), ServiceEventsSmokeSignal.ADD_WEBSERVICE, t.getWebservicePattern()));
 		ListenerStore.getInstance().addRegisteredWebservice(t.getWebservicePattern());
 		
 	}
@@ -103,7 +100,7 @@ public final class WebserviceListenerRegistry implements WebserviceListenerRegis
 		ListenerStore.getInstance().removeListener(t,AfterWebserviceTrigger.class.getName(), false);
 		ListenerStore.getInstance().removeRegisteredWebservice(t.getWebservicePattern());
 		// Broadcast..
-		TribeManager.getInstance().broadcast(new ServiceEventsSmokeSignal(Dispatcher.getInstance().getNavajoConfig().getInstanceName(), ServiceEventsSmokeSignal.REMOVE_WEBSERVICE, t.getWebservicePattern()));
+		TribeManagerFactory.getInstance().broadcast(new ServiceEventsSmokeSignal(Dispatcher.getInstance().getNavajoConfig().getInstanceName(), ServiceEventsSmokeSignal.REMOVE_WEBSERVICE, t.getWebservicePattern()));
 
 	}
 	
@@ -158,45 +155,13 @@ public final class WebserviceListenerRegistry implements WebserviceListenerRegis
 		}
 		
 		if ( !locally && leftOvers ) {
-			tribalAfterWebServiceRequest(webservice, a, ignoreTheseTaskOnOtherMembers);
+			TribeManagerFactory.getInstance().tribalAfterWebServiceRequest(webservice, a, ignoreTheseTaskOnOtherMembers);
 		}
 		
 		//AuditLog.log("SERVICEVENT", ":  afterWebservice(" + webservice + ") took " + ( System.currentTimeMillis() - start ) + " millis." + ", locally = " + locally + ", processed = " + count + ", leftOvers =" + leftOvers);
 		
 	}
 
-	private final void tribalAfterWebServiceRequest(String service, Access a, HashSet<String> ignoreTaskIds) {
-
-		Iterator<TribeMember> iter = TribeManager.getInstance().getClusterState().clusterMembers.iterator();
-		boolean acknowledged = false;
-		while ( iter.hasNext() && !acknowledged ) {
-			TribeMember tm = iter.next();
-			if ( !tm.getMemberName().equals(Dispatcher.getInstance().getNavajoConfig().getInstanceName()) ) {
-				AfterWebServiceRequest bwsr = new AfterWebServiceRequest(service, a, ignoreTaskIds);
-				TribeManager.getInstance().askSomebody(bwsr, tm.getAddress());		
-			}
-		}
-	}
-	
-	private final Navajo tribalBeforeWebServiceRequest(String service, Access a, HashSet<String> ignoreList) {
-
-		Iterator<TribeMember> iter = TribeManager.getInstance().getClusterState().clusterMembers.iterator();
-		boolean acknowledged = false;
-		while ( iter.hasNext() && !acknowledged ) {
-			TribeMember tm = iter.next();
-			if ( !tm.getMemberName().equals(Dispatcher.getInstance().getNavajoConfig().getInstanceName()) ) {
-				BeforeWebServiceRequest bwsr = new BeforeWebServiceRequest(service, a, ignoreList);
-				BeforeWebServiceAnswer bwsa = (BeforeWebServiceAnswer) TribeManager.getInstance().askSomebody(bwsr, tm.getAddress());
-				if ( bwsa.getMyNavajo() != null ) {
-					return bwsa.getMyNavajo();
-				}
-				
-			}
-		}
-		
-		return null;
-	}
-	
 	
 	/**
 	 * Method to indicate listener that webservice is about te be(!) invoked.
@@ -260,7 +225,7 @@ public final class WebserviceListenerRegistry implements WebserviceListenerRegis
 
 			// Try other tribal members...
 			if ( !locally && leftOvers ) {
-				return tribalBeforeWebServiceRequest(webservice, a, ignoreTheseTaskOnOtherMembers);
+				return TribeManagerFactory.getInstance().tribalBeforeWebServiceRequest(webservice, a, ignoreTheseTaskOnOtherMembers);
 			} else {
 				return null;
 			}

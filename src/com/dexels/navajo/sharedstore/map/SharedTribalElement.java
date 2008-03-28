@@ -1,7 +1,8 @@
-package com.dexels.navajo.tribe.map;
+package com.dexels.navajo.sharedstore.map;
 
 import java.io.Serializable;
 import java.lang.ref.SoftReference;
+
 
 /**
  * 

@@ -48,11 +48,11 @@ import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.GenericThread;
 import com.dexels.navajo.server.enterprise.scheduler.TaskInterface;
 import com.dexels.navajo.server.enterprise.scheduler.TaskRunnerInterface;
+import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
 import com.dexels.navajo.server.jmx.JMXHelper;
-import com.dexels.navajo.tribe.SharedStoreFactory;
-import com.dexels.navajo.tribe.SharedStoreInterface;
-import com.dexels.navajo.tribe.SharedStoreLock;
-import com.dexels.navajo.tribe.TribeManager;
+import com.dexels.navajo.sharedstore.SharedStoreFactory;
+import com.dexels.navajo.sharedstore.SharedStoreInterface;
+import com.dexels.navajo.sharedstore.SharedStoreLock;
 import com.dexels.navajo.util.AuditLog;
 
 /**
@@ -366,7 +366,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 			// Check whether tasks.xml has gotten updated
 //			System.err.println("IN WORKER, isConfigModified = " + isConfigModified() + ", CHIEF = " +  TribeManager.getInstance().getIsChief() +
 //			   ", configIsBeingUpdated = " + instance.configIsBeingUpdated + ", beingInitialized = " + beingInitialized);
-			if ( isConfigModified() &&   TribeManager.getInstance().getIsChief() && !instance.configIsBeingUpdated && !beingInitialized ) {
+			if ( isConfigModified() &&   TribeManagerFactory.getInstance().getIsChief() && !instance.configIsBeingUpdated && !beingInitialized ) {
 				AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Task configuration is modified, re-initializing");
 				readConfig(false, false);
 			}

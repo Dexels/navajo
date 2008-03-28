@@ -51,11 +51,16 @@ import com.dexels.navajo.events.NavajoEventRegistry;
 import com.dexels.navajo.events.types.TribeMemberDownEvent;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
+import com.dexels.navajo.scheduler.AfterWebServiceRequest;
+import com.dexels.navajo.scheduler.BeforeWebServiceAnswer;
+import com.dexels.navajo.scheduler.BeforeWebServiceRequest;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.server.UserException;
+import com.dexels.navajo.server.enterprise.tribe.Answer;
+import com.dexels.navajo.server.enterprise.tribe.Request;
 import com.dexels.navajo.server.enterprise.tribe.SmokeSignal;
 import com.dexels.navajo.server.enterprise.tribe.TribeManagerInterface;
 import com.dexels.navajo.util.AuditLog;
@@ -443,8 +448,9 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 	 * @param a the Address of somebody
 	 * @return the Answer
 	 */
-	public Answer askSomebody(Request q, Address a) {
+	public Answer askSomebody(Request q, Object address) {
 		
+		Address a = (Address) address;
 		// If it's myself.
 		if ( a != null && channel.getLocalAddress().equals(a) && !q.isIgnoreRequestOnSender()) {
 			return q.getAnswer();
@@ -568,6 +574,10 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 		return state;
 	}
 	
+	public Set getAllMembers() {
+		return state.clusterMembers;
+	}
+	
 	/**
 	 * Get all member states.
 	 * 
@@ -634,4 +644,35 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 		return myMembership;
 	}
 	
+	public final void tribalAfterWebServiceRequest(String service, Access a, HashSet<String> ignoreTaskIds) {
+
+		Iterator<TribeMember> iter = TribeManager.getInstance().getClusterState().clusterMembers.iterator();
+		boolean acknowledged = false;
+		while ( iter.hasNext() && !acknowledged ) {
+			TribeMember tm = iter.next();
+			if ( !tm.getMemberName().equals(Dispatcher.getInstance().getNavajoConfig().getInstanceName()) ) {
+				AfterWebServiceRequest bwsr = new AfterWebServiceRequest(service, a, ignoreTaskIds);
+				TribeManager.getInstance().askSomebody(bwsr, tm.getAddress());		
+			}
+		}
+	}
+	
+	public final Navajo tribalBeforeWebServiceRequest(String service, Access a, HashSet<String> ignoreList) {
+
+		Iterator<TribeMember> iter = TribeManager.getInstance().getClusterState().clusterMembers.iterator();
+		boolean acknowledged = false;
+		while ( iter.hasNext() && !acknowledged ) {
+			TribeMember tm = iter.next();
+			if ( !tm.getMemberName().equals(Dispatcher.getInstance().getNavajoConfig().getInstanceName()) ) {
+				BeforeWebServiceRequest bwsr = new BeforeWebServiceRequest(service, a, ignoreList);
+				BeforeWebServiceAnswer bwsa = (BeforeWebServiceAnswer) TribeManager.getInstance().askSomebody(bwsr, tm.getAddress());
+				if ( bwsa.getMyNavajo() != null ) {
+					return bwsa.getMyNavajo();
+				}
+				
+			}
+		}
+		
+		return null;
+	}
 }
