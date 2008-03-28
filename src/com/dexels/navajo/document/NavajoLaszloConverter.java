@@ -46,7 +46,7 @@ public class NavajoLaszloConverter {
 	}
 
 	public static Document createLaszloFromNavajo(Navajo in) {
-		return createLaszloFromNavajo(in, "navajo");
+		return createLaszloFromNavajo(in, "navajoDataSource");
 	}
 
 	
@@ -54,7 +54,7 @@ public class NavajoLaszloConverter {
 		return createLaszloFromNavajo(in, false, serviceName);
 	}
 	public static Document createLaszloFromNavajo(Navajo in, boolean includeSelections) {
-		return createLaszloFromNavajo(in, includeSelections, "navajo");
+		return createLaszloFromNavajo(in, includeSelections, "navajoDataSource");
 	}
 	public static Document createLaszloFromNavajo(Navajo in, boolean includeSelections,  String serviceName) {
 		Document doc = XMLDocumentUtils.createDocument();
