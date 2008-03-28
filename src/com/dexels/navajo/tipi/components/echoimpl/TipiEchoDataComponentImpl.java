@@ -142,34 +142,34 @@ public abstract class TipiEchoDataComponentImpl extends TipiDataComponentImpl {
         super.loadData(n,  method);
     }
     
-    public void processStyles() {
-        super.processStyles();
-        if (getContainer()!=null && getContainer() instanceof Positionable) {
-            Positionable pos = (Positionable)getContainer();
-            String s = getStyle("x");
-            if (s!=null) {
-//                 pos.setLeft(ExtentParser.parseExtent(s));
-//                 pos.setPosition(Positionable.ABSOLUTE);
-            }
-            s = getStyle("y");
-            if (s!=null) {
-//                 pos.setTop(ExtentParser.parseExtent(s));
-//                 pos.setPosition(Positionable.ABSOLUTE);
-            }
-         }
-        if (getContainer()!=null && getContainer() instanceof Sizeable) {
-            Sizeable pos = (Sizeable)getContainer();
-            String s = getStyle("w");
-            if (s!=null) {
-                 pos.setWidth(ExtentParser.parseExtent(s));
-             }
-            s = getStyle("h");
-            if (s!=null) {
-                 pos.setHeight(ExtentParser.parseExtent(s));
-            }
-         }
-   
-    }
+//    public void processStyles() {
+//        super.processStyles();
+//        if (getContainer()!=null && getContainer() instanceof Positionable) {
+//            Positionable pos = (Positionable)getContainer();
+//            String s = getStyle("x");
+//            if (s!=null) {
+////                 pos.setLeft(ExtentParser.parseExtent(s));
+////                 pos.setPosition(Positionable.ABSOLUTE);
+//            }
+//            s = getStyle("y");
+//            if (s!=null) {
+////                 pos.setTop(ExtentParser.parseExtent(s));
+////                 pos.setPosition(Positionable.ABSOLUTE);
+//            }
+//         }
+//        if (getContainer()!=null && getContainer() instanceof Sizeable) {
+//            Sizeable pos = (Sizeable)getContainer();
+//            String s = getStyle("w");
+//            if (s!=null) {
+//                 pos.setWidth(ExtentParser.parseExtent(s));
+//             }
+//            s = getStyle("h");
+//            if (s!=null) {
+//                 pos.setHeight(ExtentParser.parseExtent(s));
+//            }
+//         }
+//   
+//    }
     
 
 }

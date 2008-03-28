@@ -282,50 +282,49 @@ public class TipiDialog extends TipiEchoDataComponentImpl {
 //        }
         myWindow.setVisible(true);
     }
-    public void processStyles() {
-//        System.err.println("Processing styles.... "+styleHintMap);
-        super.processStyles();
-        
-        String s = getStyle("headerheight");
-        if (s!=null) {
-            headerheight = Integer.parseInt(s);
-        }
-        s = getStyle("leftheaderinset");
-        if (s!=null) {
-            leftheaderinset = Integer.parseInt(s);
-        }
-        s = getStyle("topheaderinset");
-        if (s!=null) {
-            topheaderinset = Integer.parseInt(s);
-        }
-        s = getStyle("rightheaderinset");
-        if (s!=null) {
-            rightheaderinset = Integer.parseInt(s);
-        }
-        s = getStyle("bottomheaderinset");
-        if (s!=null) {
-            bottomheaderinset = Integer.parseInt(s);
-        }
-        
-        // headerheight leftheaderinset topheaderinset rightheaderinset bottomheaderinset
-        
-        // headerfont headerforeground headerbackground
-
-        
-        Color c = ColorParser.parseColor(getStyle("foreground"));
-        if (c!=null) {
-            headerforeground = c;
-        }
-        c = ColorParser.parseColor(getStyle("background"));
-        if (c!=null) {
-            headerbackground = c;
-        }
-        s = getStyle("headerfont");
-        Font f= FontParser.parseFont(s);
-        if (s!=null) {
-            headerfont = f;
-        }
-    }
+//    public void processStyles() {
+//        super.processStyles();
+//        
+//        String s = getStyle("headerheight");
+//        if (s!=null) {
+//            headerheight = Integer.parseInt(s);
+//        }
+//        s = getStyle("leftheaderinset");
+//        if (s!=null) {
+//            leftheaderinset = Integer.parseInt(s);
+//        }
+//        s = getStyle("topheaderinset");
+//        if (s!=null) {
+//            topheaderinset = Integer.parseInt(s);
+//        }
+//        s = getStyle("rightheaderinset");
+//        if (s!=null) {
+//            rightheaderinset = Integer.parseInt(s);
+//        }
+//        s = getStyle("bottomheaderinset");
+//        if (s!=null) {
+//            bottomheaderinset = Integer.parseInt(s);
+//        }
+//        
+//        // headerheight leftheaderinset topheaderinset rightheaderinset bottomheaderinset
+//        
+//        // headerfont headerforeground headerbackground
+//
+//        
+//        Color c = ColorParser.parseColor(getStyle("foreground"));
+//        if (c!=null) {
+//            headerforeground = c;
+//        }
+//        c = ColorParser.parseColor(getStyle("background"));
+//        if (c!=null) {
+//            headerbackground = c;
+//        }
+//        s = getStyle("headerfont");
+//        Font f= FontParser.parseFont(s);
+//        if (s!=null) {
+//            headerfont = f;
+//        }
+//    }
     
     protected void helperRegisterEvent(TipiEvent te) {
         if (te != null && te.getEventName().equals("onWindowClosed")) {

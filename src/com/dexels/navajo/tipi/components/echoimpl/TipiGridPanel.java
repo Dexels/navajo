@@ -85,13 +85,8 @@ public class TipiGridPanel extends TipiEchoDataComponentImpl {
             System.err.println("Warning: Adding null component to tipicomponent: " + getPath());
             return;
         }
-        if (!(c instanceof Component)) {
             System.err.println("Warning: Adding non-component to tipicomponent: " + getPath()+ " class: "+c.getClass());
-            return;
-        }
-        
         if(o instanceof PaneContainer) {
-//        	System.err.println("Don't think its allowed. Using a workaround...");
         	ContainerEx ce = new ContainerEx();
         	 gridComponent.add(ce);
             ce.add(c);

@@ -243,9 +243,9 @@ public class TipiMegaTable extends TipiEchoDataComponentImpl {
     }
 
     private final void loadLevels(XMLElement elm) {
-        Vector children = elm.getChildren();
+        List<XMLElement> children = elm.getChildren();
         for (int i = children.size() - 1; i >= 0; i--) {
-            XMLElement child = (XMLElement) children.elementAt(i);
+            XMLElement child = children.get(i);
             if (child.getName().equals("layer")) {
                 String type = child.getStringAttribute("type");
                 TipiTableBaseLayer tmtl = null;

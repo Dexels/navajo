@@ -45,7 +45,7 @@ public class TipiMenuItem extends TipiEchoComponentImpl {
     }
     
     public void performAction() throws TipiException {
-        performTipiEvent("onActionPerformed", null, true);
+        performTipiEvent("onActionPerformed", null, false);
      }
 
     protected void setComponentValue(String name, Object object) {

@@ -81,7 +81,7 @@ public class TipiScreen extends TipiEchoDataComponentImpl {
         int s = path.indexOf("/");
         if (s == -1) {
             if (path.equals("")) {
-                return (TipiComponent) myContext.getDefaultTopLevel();
+                return myContext.getDefaultTopLevel();
             }
             return getTipiComponent(path);
         } else {

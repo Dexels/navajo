@@ -84,7 +84,7 @@ public class TipiTabsExtra extends TipiEchoDataComponentImpl {
         return myTabbedPane;
     }
 
-    public void processStyles() {
+//    public void processStyles() {
 //        System.err.println("Processing styles.... "+styleHintMap);
 //        super.processStyles();
 //        Color c = ColorParser.parseColor(getStyle("foreground"));
@@ -125,7 +125,7 @@ public class TipiTabsExtra extends TipiEchoDataComponentImpl {
 //            int ii = Integer.parseInt(s);
 //            myTabbedPane.setTabSpacing(ii);
 //        }
-    }
+//    }
     
     protected void performComponentMethod(String name, TipiComponentMethod compMeth, TipiEvent event) {
         // if (name.equals("enableTab")) {
@@ -181,7 +181,7 @@ public class TipiTabsExtra extends TipiEchoDataComponentImpl {
 //        selected.setBorder(new Border(1, new Color(50, 50, 50), Border.STYLE_GROOVE));
     	ContentPane pp = new ContentPane();
     	pp.add((Component)c);
-    	myTabbedPane.add((Component)pp);
+    	myTabbedPane.add(pp);
     	TabPaneLayoutData tabPaneLayoutData = new TabPaneLayoutData();
     	tabPaneLayoutData.setTitle(""+constraints);
     	pp.setLayoutData(tabPaneLayoutData);

@@ -183,9 +183,9 @@ public class TipiTable extends TipiEchoDataComponentImpl {
             }
         }
         super.load(elm, instance, context);
-        Vector children = elm.getChildren();
+        List<XMLElement> children = elm.getChildren();
         for (int i = 0; i < children.size(); i++) {
-            XMLElement child = (XMLElement) children.elementAt(i);
+            XMLElement child = children.get(i);
             if (child.getName().equals("column")) {
                 Operand o = evaluate(child.getStringAttribute("label"), this, null);
                 String label = null;
@@ -227,40 +227,24 @@ public class TipiTable extends TipiEchoDataComponentImpl {
 	}
   
     
-    public void processStyles() {
-         super.processStyles();
-        Color c = ColorParser.parseColor(getStyle("foreground"));
-        if (c!=null) {
-            myTable.setForeground(c);
-        }
-        c = ColorParser.parseColor(getStyle("background"));
-        if (c!=null) {
-            myTable.setBackground(c);
-        }
-//        c = ColorParser.parseColor(getStyle("pressedforeground"));
+//    public void processStyles() {
+//         super.processStyles();
+//        Color c = ColorParser.parseColor(getStyle("foreground"));
 //        if (c!=null) {
-//            myTable.setHeaderPressedForeground(c);
+//            myTable.setForeground(c);
 //        }
-//        c = ColorParser.parseColor(getStyle("pressedbackground"));
+//        c = ColorParser.parseColor(getStyle("background"));
 //        if (c!=null) {
-//            myTable.setHeaderPressedBackground(c);
+//            myTable.setBackground(c);
 //        }
-//        c = ColorParser.parseColor(getStyle("rolloverbackground"));
-//        if (c!=null) {
-//            myTable.setHeaderRolloverBackground(c);
+//        String headHeight = getStyle("headerheight");
+//        if (headHeight!=null) {
+//            int hh = Integer.parseInt(headHeight);
+//                myTable.setHeaderHeight(hh);
 //        }
-//        c = ColorParser.parseColor(getStyle("rolloverforeground"));
-//        if (c!=null) {
-//            myTable.setHeaderRolloverForeground(c);
-//        }
-        String headHeight = getStyle("headerheight");
-        if (headHeight!=null) {
-            int hh = Integer.parseInt(headHeight);
-                myTable.setHeaderHeight(hh);
-        }
-      
-    }    
-    
+//      
+//    }    
+//    
     protected void performComponentMethod(String name, TipiComponentMethod compMeth, TipiEvent event) {
         int count = myTable.getModel().getRowCount();
         if (count != 0) {

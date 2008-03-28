@@ -1,8 +1,6 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
@@ -71,11 +69,20 @@ public class TipiEchoInstance extends ApplicationInstance {
 		URL u = new URL(url);
 		String contextname = con.getRequest().getContextPath();
 		// deprecated the init. The context path should work
-		String base = (String) con.getServlet().getInitParameter("baseURL");
-		if (base == null) {
-			base = contextname;
+		System.err.println("CONTEXTNAME: "+contextname);
+		String host = con.getServlet().getInitParameter("host");
+//		if (base == null) {
+//			base = contextname;
+//		}
+		if(host==null) {
+			host = u.getHost();
 		}
-		URL rootURL = new URL(u.getProtocol(), u.getHost(), u.getPort(), base + "/logout?destination=" + u.getPath());
+
+		URL rootURL = null;
+
+		rootURL = new URL(u.getProtocol(),host, u.getPort(), contextname + "/logout?destination=" + u.getPath());
+		
+		System.err.println("ROOTURL: "+rootURL);
 		return rootURL;
 
 	}
@@ -100,12 +107,24 @@ public class TipiEchoInstance extends ApplicationInstance {
 	}
 
 	private void startup() {
+		String stylePath = myServletContext.getRealPath("WEB-INF/Default.stylesheet");
+		System.err.println("StylePath: "+stylePath);
+		try {
+			FileInputStream fis = new FileInputStream(stylePath);
+			Styles.loadStyleSheet(fis);
+			fis.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 		if (Styles.DEFAULT_STYLE_SHEET != null) {
 			setStyleSheet(Styles.DEFAULT_STYLE_SHEET);
 			Style ss = Styles.DEFAULT_STYLE_SHEET.getStyle(WindowPane.class, "Default");
 			System.err.println(">>> " + ss);
 		}
 		System.err.println("REAL PATH: " + myServletContext.getRealPath("/"));
+		
 		// Title.Sub
 		context = new EchoTipiContext(this);
 		ServletContextResourceLoader servletContextResourceLoader = new ServletContextResourceLoader(myServletContext,"WEB-INF/classes/tipi");

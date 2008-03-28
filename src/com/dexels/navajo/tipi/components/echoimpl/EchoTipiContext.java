@@ -156,7 +156,7 @@ public class EchoTipiContext extends TipiContext {
  
         String contextname = con.getRequest().getContextPath();
         // deprecated the init. The context path should work
-        String base = (String) con.getServlet().getInitParameter("baseURL");
+        String base = con.getServlet().getInitParameter("baseURL");
         if(base==null) {
         	base=contextname;
         }
@@ -196,30 +196,30 @@ public class EchoTipiContext extends TipiContext {
         return sc;
     }
     
-    private static Map staticComponentMap = new HashMap();
+//    private static Map staticComponentMap = new HashMap();
     
    
     public int acquireHighestZIndex() {
     	return zIndexCounter++;
     }
     
-    protected XMLElement getTipiDefinition(String name) throws TipiException {
-      	XMLElement xe = (XMLElement) staticComponentMap.get(name);
-      	if (xe==null) {
-      		return super.getTipiDefinition(name);
-		} else {
-
-			return xe;
-		}
-    }
-    
-    protected void addComponentDefinition(XMLElement elm) {
-        String defname = (String) elm.getAttribute("name");
-        setSplashInfo("Loading statically: " + defname);
-        staticComponentMap.put(defname, elm);
-//        tipiMap.put(defname, elm);
-      }
-
+//    protected XMLElement getTipiDefinition(String name) throws TipiException {
+//      	XMLElement xe = (XMLElement) staticComponentMap.get(name);
+//      	if (xe==null) {
+//      		return super.getTipiDefinition(name);
+//		} else {
+//
+//			return xe;
+//		}
+//    }
+//    
+//    protected void addComponentDefinition(XMLElement elm) {
+//        String defname = (String) elm.getAttribute("name");
+//        setSplashInfo("Loading statically: " + defname);
+//        staticComponentMap.put(defname, elm);
+////        tipiMap.put(defname, elm);
+//      }
+//
 
 
 	public void showInfo(String text, String title) {

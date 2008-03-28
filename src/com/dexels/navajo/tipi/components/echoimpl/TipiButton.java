@@ -3,8 +3,7 @@ package com.dexels.navajo.tipi.components.echoimpl;
 import java.net.URL;
 
 import com.dexels.navajo.echoclient.components.ButtonImpl;
-import com.dexels.navajo.tipi.TipiComponentMethod;
-import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.echoimpl.impl.*;
 import com.dexels.navajo.tipi.components.echoimpl.parsers.*;
 import com.dexels.navajo.tipi.internal.TipiEvent;
@@ -47,7 +46,7 @@ public class TipiButton extends TipiEchoComponentImpl {
         myButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-					performTipiEvent("onActionPerformed",null, true);
+					performTipiEvent("onActionPerformed",null, false);
 				} catch (TipiException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -101,7 +100,7 @@ public class TipiButton extends TipiEchoComponentImpl {
     protected void performComponentMethod(String name, TipiComponentMethod compMeth, TipiEvent event) {
         if ("fireAction".equals(name)) {
           for (int i = 0; i < getEventList().size(); i++) {
-            TipiEvent current = (TipiEvent) getEventList().get(i);
+            TipiEvent current = getEventList().get(i);
             if (current.isTrigger("onActionPerformed", "aap")) {
               try {
 //            	  System.err.println("Button performing action (explicit fire): "+current.getEventName());
@@ -109,7 +108,10 @@ public class TipiButton extends TipiEchoComponentImpl {
               }
               catch (TipiException ex) {
                 ex.printStackTrace();
-              }
+              } catch (TipiBreakException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
             }
           }
         }

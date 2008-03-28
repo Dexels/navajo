@@ -74,7 +74,7 @@ public class TipiProperty extends TipiEchoComponentImpl implements PropertyCompo
             m.put("propertyLength", new Integer(myProperty.getLength()));
             for (int i = 0; i < myListeners.size(); i++) {
                 TipiEventListener tel = (TipiEventListener) myListeners.get(i);
-                tel.performTipiEvent(eventType, m, true);
+                tel.performTipiEvent(eventType, m, false);
             }
             if (p == null) {
                 return;
@@ -353,12 +353,12 @@ public class TipiProperty extends TipiEchoComponentImpl implements PropertyCompo
     public void checkForConditionErrors(Message m) {
         // err.. implement?
     }
-
-	public void processStyles() {
-		// TODO Auto-generated method stub
-		super.processStyles();
-
-	}
+//
+//	public void processStyles() {
+//		// TODO Auto-generated method stub
+//		super.processStyles();
+//
+//	}
 
 
 }

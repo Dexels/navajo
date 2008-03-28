@@ -87,8 +87,8 @@ public class TipiSwitchPanel extends TipiEchoDataComponentImpl {
 
         if (name.equals("width")) {
             final Integer sel = (Integer) object;
-            ((Grid) myContainer).setWidth(new Extent(sel.intValue(), Extent.PX));
-            ((Grid) myContainer).setColumnWidth(0, new Extent(sel.intValue(), Extent.PX));
+            myContainer.setWidth(new Extent(sel.intValue(), Extent.PX));
+            myContainer.setColumnWidth(0, new Extent(sel.intValue(), Extent.PX));
         }
         // if (name.equals("placement")) {
         // final String sel = (String) object;

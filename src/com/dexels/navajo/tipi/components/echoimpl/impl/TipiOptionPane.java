@@ -63,7 +63,7 @@ public class TipiOptionPane {
 
         wp.add(sp);
         TemplatePanel tp = new TemplatePanel();
-        StringTemplateDataSource std = new StringTemplateDataSource((String)text);
+        StringTemplateDataSource std = new StringTemplateDataSource(text);
         tp.setTemplateDataSource(std);
         
         
@@ -118,7 +118,7 @@ public class TipiOptionPane {
         Column cp = new Column();
 
         wp.add(cp);
-        cp.add(new Label((String) text));
+        cp.add(new Label(text));
 
         Row toolbar = new Row();
         cp.add(toolbar);

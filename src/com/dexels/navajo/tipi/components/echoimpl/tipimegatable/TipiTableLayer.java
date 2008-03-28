@@ -2,6 +2,7 @@ package com.dexels.navajo.tipi.components.echoimpl.tipimegatable;
 
 import com.dexels.navajo.tipi.components.echoimpl.impl.*;
 import com.dexels.navajo.tipi.tipixml.*;
+
 import java.util.*;
 
 import nextapp.echo2.app.*;
@@ -81,9 +82,9 @@ public class TipiTableLayer extends TipiTableBaseLayer {
         sortable = elt.getBooleanAttribute("sortable", "true", "false", true);
 
         readOnly = elt.getBooleanAttribute("readOnly", "true", "false", false);
-        Vector children = elt.getChildren();
+        List<XMLElement> children = elt.getChildren();
         for (int i = 0; i < children.size(); i++) {
-            XMLElement child = (XMLElement) children.elementAt(i);
+            XMLElement child = children.get(i);
             String name = child.getName();
             // if (name.equals("remarks")) {
             // loadRemarks(i, child);

@@ -5,14 +5,12 @@ import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
 
-import javax.annotation.security.*;
 import javax.swing.*;
 import javax.swing.text.*;
 
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.internal.*;
-import com.jhlabs.image.*;
 
 import echopointng.*;
 

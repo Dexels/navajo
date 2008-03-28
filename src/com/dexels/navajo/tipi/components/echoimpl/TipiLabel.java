@@ -37,13 +37,13 @@ public class TipiLabel extends TipiEchoComponentImpl {
 //        b.setStyleName("Default");
         return b;
     }
-    public void processStyles() {
-//      System.err.println("Processing styles.... "+styleHintMap);
-      super.processStyles();
-      boolean bl = "true".equals(getStyle("linewrap")) || "yes".equals(getStyle("linewrap"));
-     	  ((LabelEx)getContainer()).setLineWrap(bl);
-     
-       }
+//    public void processStyles() {
+////      System.err.println("Processing styles.... "+styleHintMap);
+//      super.processStyles();
+//      boolean bl = "true".equals(getStyle("linewrap")) || "yes".equals(getStyle("linewrap"));
+//     	  ((LabelEx)getContainer()).setLineWrap(bl);
+//     
+//       }
 
     protected void setComponentValue(String name, Object object) {
         Label b = (Label) getContainer();

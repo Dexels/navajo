@@ -177,17 +177,16 @@ public final class TipiWindow
 //        // });
 //    }
 
-    public void processStyles() {
-//      System.err.println("Processing styles.... "+styleHintMap);
-      super.processStyles();
-      final WindowPane jj = (WindowPane) getContainer();
-      Color c = ColorParser.parseColor(getStyle("titlebackground"));
-      if (c!=null) {
-          jj.setTitleBackground(c);
-      }
-     
-       }
-    
+//    public void processStyles() {
+//      super.processStyles();
+//      final WindowPane jj = (WindowPane) getContainer();
+//      Color c = ColorParser.parseColor(getStyle("titlebackground"));
+//      if (c!=null) {
+//          jj.setTitleBackground(c);
+//      }
+//     
+//       }
+//    
     public final void setComponentValue(final String name, final Object object) {
         super.setComponentValue(name, object);
 

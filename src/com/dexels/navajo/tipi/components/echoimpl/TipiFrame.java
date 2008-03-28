@@ -104,45 +104,45 @@ public class TipiFrame extends TipiEchoDataComponentImpl {
 
     }
 
-    public void processStyles() {
-        String x =  getStyle("xindent");
-        if (x!=null) {
-            int xoff = Integer.parseInt(x);
-//            myWindowGrid.setColumnWidth(0,new Extent(xoff, Extent.PX));
-//            leftPlaceHolder.setWidth(new Extent(xoff, Extent.PX));
-//            realContent.setLeft(new Extent(xoff,Extent.PX));
-            return;
-        }
-        String y =  getStyle("yindent");
-        if (y!=null) {
-            int yoff = Integer.parseInt(y);
-//            myWindowGrid.setRowHeight(0,new Extent(yoff, Extent.PX));
-//            topPlaceHolder.setHeight(new Extent(yoff, Extent.PX));
-//           realContent.setTop(new Extent(yoff,Extent.PX));
-            return;
-        }
-
-        String widthS =  getStyle("width");
-        if (widthS!=null) {
-            int width = Integer.parseInt(widthS);
-//            myWindowGrid.setColumnWidth(1,new Extent(width, Extent.PX));
-//            realContent.setWidth(new Extent(width, Extent.PX));
-            //       realContent.setLeft(new Extent(xoff,Extent.PX));
-            return;
-        }
-        String heightS =  getStyle("height");
-        if (heightS!=null) {
-            int height = Integer.parseInt(heightS);
-//            myWindowGrid.setRowHeight(1,new Extent(height, Extent.PX));
-//            realContent.setHeight(new Extent(height, Extent.PX));
-                 //       realContent.setLeft(new Extent(xoff,Extent.PX));
-            return;
-        }
-        
-        super.processStyles();
-
-    }    
-    
+//    public void processStyles() {
+//        String x =  getStyle("xindent");
+//        if (x!=null) {
+//            int xoff = Integer.parseInt(x);
+////            myWindowGrid.setColumnWidth(0,new Extent(xoff, Extent.PX));
+////            leftPlaceHolder.setWidth(new Extent(xoff, Extent.PX));
+////            realContent.setLeft(new Extent(xoff,Extent.PX));
+//            return;
+//        }
+//        String y =  getStyle("yindent");
+//        if (y!=null) {
+//            int yoff = Integer.parseInt(y);
+////            myWindowGrid.setRowHeight(0,new Extent(yoff, Extent.PX));
+////            topPlaceHolder.setHeight(new Extent(yoff, Extent.PX));
+////           realContent.setTop(new Extent(yoff,Extent.PX));
+//            return;
+//        }
+//
+//        String widthS =  getStyle("width");
+//        if (widthS!=null) {
+//            int width = Integer.parseInt(widthS);
+////            myWindowGrid.setColumnWidth(1,new Extent(width, Extent.PX));
+////            realContent.setWidth(new Extent(width, Extent.PX));
+//            //       realContent.setLeft(new Extent(xoff,Extent.PX));
+//            return;
+//        }
+//        String heightS =  getStyle("height");
+//        if (heightS!=null) {
+//            int height = Integer.parseInt(heightS);
+////            myWindowGrid.setRowHeight(1,new Extent(height, Extent.PX));
+////            realContent.setHeight(new Extent(height, Extent.PX));
+//                 //       realContent.setLeft(new Extent(xoff,Extent.PX));
+//            return;
+//        }
+//        
+//        super.processStyles();
+//
+//    }    
+//    
     
 //    public void setContainerLayout(Object layout) {
 //        if (layout instanceof Component) {
@@ -246,9 +246,8 @@ public class TipiFrame extends TipiEchoDataComponentImpl {
     }
 
 	private void addWindowPane(WindowPane child) {
-		WindowPane sp = (WindowPane)child;
 		System.err.println("Windowpane detected.");
-		System.err.println("is viz: "+sp.isVisible()+" w: "+sp.getWidth()+" h: "+sp.getHeight());
+		System.err.println("is viz: "+child.isVisible()+" w: "+child.getWidth()+" h: "+child.getHeight());
 		TipiScreen s = (TipiScreen) getContext().getDefaultTopLevel();
 		// Watch this.
 		final Window w = (Window) s.getTopLevel();
