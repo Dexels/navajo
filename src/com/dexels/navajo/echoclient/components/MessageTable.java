@@ -2,11 +2,7 @@ package com.dexels.navajo.echoclient.components;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 import nextapp.echo2.app.Color;
 import nextapp.echo2.app.Component;
@@ -50,15 +46,15 @@ public class MessageTable extends PageableSortableTable implements PageIndexChan
 
 	private final TableCellRenderer myRenderer = new EchoPropertyComponent();
 
-	private final ArrayList ids = new ArrayList();
+	private final List<String> ids = new ArrayList<String>();
 
-	private final ArrayList names = new ArrayList();
+	private final List<String> names = new ArrayList<String>();
 
-	private final ArrayList editables = new ArrayList();
+	private final List<Boolean> editables = new ArrayList<Boolean>();
 
-	private final ArrayList sizes = new ArrayList();
+	private final List<Integer> sizes = new ArrayList<Integer>();
 
-	private final ArrayList editorListeners = new ArrayList();
+	private final List<TableEditorListener> editorListeners = new ArrayList<TableEditorListener>();
 
 	private int lastSelectedRow = -1;
 
@@ -86,9 +82,9 @@ public class MessageTable extends PageableSortableTable implements PageIndexChan
 
 	private Message myMessage;
 	
-	private final ArrayList actionEventListeners = new ArrayList();
+	private final List<ActionListener> actionEventListeners = new ArrayList<ActionListener>();
 
-	private final Map rowSelectMap = new HashMap();
+	private final Map<Integer,RadioButton> rowSelectMap = new HashMap<Integer,RadioButton>();
 
 	public MessageTable() {
 		StyleSheet sh = Styles.DEFAULT_STYLE_SHEET;
@@ -230,7 +226,7 @@ sortablePageableModel = new DefaultPageableSortableTableModel(myModel);
 
 	public void removeAllColumns() {
 		for (int i = 0; i < ids.size(); i++) {
-			String id = (String) ids.get(i);
+			String id = ids.get(i);
 			// removeColumn(id);
 		}
 		ids.clear();
@@ -251,7 +247,7 @@ sortablePageableModel = new DefaultPageableSortableTableModel(myModel);
 		// "+p.getValue()+" listeners: "+editorListeners.size());
 
 		for (int i = 0; i < editorListeners.size(); i++) {
-			TableEditorListener element = (TableEditorListener) editorListeners.get(i);
+			TableEditorListener element = editorListeners.get(i);
 			element.propertyChanged(p, "onValueChanged", column, row);
 		}
 	}
@@ -326,7 +322,7 @@ sortablePageableModel = new DefaultPageableSortableTableModel(myModel);
 
 	private void fireActionEvents(ActionEvent a) {
 		for (int i = 0; i < actionEventListeners.size(); i++) {
-			ActionListener al = (ActionListener)actionEventListeners.get(i);
+			ActionListener al = actionEventListeners.get(i);
 			al.actionPerformed(a);
 		}
 	}
@@ -360,7 +356,7 @@ sortablePageableModel = new DefaultPageableSortableTableModel(myModel);
 		 if(index==0) {
 		 return true;
 		 }
-		 Boolean b = (Boolean)editables.get(index-1);
+		 Boolean b = editables.get(index-1);
 		if (b != null) {
 			return b.booleanValue();
 		}
@@ -371,7 +367,7 @@ sortablePageableModel = new DefaultPageableSortableTableModel(myModel);
 		if(i>=names.size()) {
 			return "";
 		}
-		return (String) names.get(i);
+		return names.get(i);
 		// if(i==0){
 		// return " ";
 		// }
@@ -387,7 +383,7 @@ sortablePageableModel = new DefaultPageableSortableTableModel(myModel);
 		if(columnIndex==0) {
 			return new Extent(8, Extent.PX);
 		}
-		Integer i = (Integer) sizes.get(columnIndex-1);
+		Integer i = sizes.get(columnIndex-1);
 		if (i != null) {
 			// System.err.println("MESSAGETABLE: RETURNING SIZE:
 			// "+i.intValue());
@@ -408,7 +404,7 @@ sortablePageableModel = new DefaultPageableSortableTableModel(myModel);
 		 if(columnIndex==0){
 		 return " ";
 		 }
-		 return (String) ids.get(columnIndex-1);
+		 return ids.get(columnIndex-1);
 	}
 
 	public TableColumnModel createColumnModel(Message m, TableCellRenderer myCellRenderer) {
@@ -422,12 +418,12 @@ sortablePageableModel = new DefaultPageableSortableTableModel(myModel);
 		for (int index = 0; index < columnCount; index++) {
 			tc = new SortableTableColumn(index+1, getColumnSize(index+1), myRenderer, new MessageTableHeaderRenderer());
 			// tc.setHeaderRenderer(new MessageTableHeaderRenderer());
-			tc.setComparator(new Comparator() {
-				public int compare(Object o1, Object o2) {
+			tc.setComparator(new Comparator<Property>() {
+				public int compare(Property o1, Property o2) {
 					if (o1 == null || o2 == null) {
 						return 0;
 					}
-					return ((Property) o1).compareTo(o2);
+					return o1.compareTo(o2);
 				}
 			});
 			tcm.addColumn(tc);
@@ -524,9 +520,9 @@ sortablePageableModel = new DefaultPageableSortableTableModel(myModel);
 	}
 	
 	public void setSelectedRow(int row) {
-		for (Iterator iter = rowSelectMap.keySet().iterator(); iter.hasNext();) {
-			Integer element = (Integer) iter.next();
-			RadioButton r = (RadioButton) rowSelectMap.get(element);
+		for (Iterator<Integer> iter = rowSelectMap.keySet().iterator(); iter.hasNext();) {
+			Integer element = iter.next();
+			RadioButton r = rowSelectMap.get(element);
 			r.setSelected(element.intValue()==row);
 		}
 	}

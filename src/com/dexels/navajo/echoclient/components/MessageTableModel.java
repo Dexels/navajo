@@ -43,11 +43,11 @@ public class MessageTableModel extends DefaultTableModel implements MessageListe
     //
     // private ArrayList myColumnTitles = new ArrayList();
 
-    private ArrayList editableList = new ArrayList();
+//    private ArrayList editableList = new ArrayList();
 
     private Message myMessage;
 
-    private ArrayList filterList = new ArrayList();
+//    private ArrayList filterList = new ArrayList();
 
     // private boolean isFiltered = false;
     // private int[] filterMap = null;
@@ -56,7 +56,7 @@ public class MessageTableModel extends DefaultTableModel implements MessageListe
 
     private final TableColumnModel myColumnModel;
 
-    private final ArrayList myMessageRows = new ArrayList();
+//    private final ArrayList myMessageRows = new ArrayList();
 
 	private ListSelectionModel mySelectionModel;
 
@@ -68,10 +68,10 @@ public class MessageTableModel extends DefaultTableModel implements MessageListe
      * Creates a List of Lists based on the data backing this model in the
      * superclass.
      */
-    protected List getRows() {
-        List rows = new LinkedList();
+    protected List<List<Object>> getRows() {
+    	List<List<Object>> rows = new LinkedList<List<Object>>();
         for (int i = 0; i < getRowCount(); i++) {
-            List row = new LinkedList();
+            List<Object> row = new LinkedList<Object>();
             for (int j = 0; j < getColumnCount(); j++) {
                 row.add(j, getValueAt(j, i));
             }
@@ -161,7 +161,7 @@ public class MessageTableModel extends DefaultTableModel implements MessageListe
         // lastSortedColumn = -1;
         // lastSortedDirection = true;
         myMessage = m;
-        myMessageRows.clear();
+//        myMessageRows.clear();
 
         setColumnCount(myColumnModel.getColumnCount());
         for (int i = 0; i < myColumnModel.getColumnCount(); i++) {
@@ -169,14 +169,14 @@ public class MessageTableModel extends DefaultTableModel implements MessageListe
         }
 
         for (int i = 0; i < m.getArraySize(); i++) {
-            ArrayList c = createListFromRow(myMessage.getMessage(i));
+            List<Property> c = createListFromRow(myMessage.getMessage(i));
 //            System.err.println();
             addRow(c.toArray());
         }
     }
 
-    private ArrayList createListFromRow(Message m) {
-        ArrayList al = new ArrayList();
+    private List<Property> createListFromRow(Message m) {
+    	List<Property> al = new ArrayList<Property>();
 //        al.add(new Boolean(false));
         for (int i = 0; i < myColumnModel.getColumnCount(); i++) {
             String id = myTable.getColumnId(i);
@@ -188,95 +188,19 @@ public class MessageTableModel extends DefaultTableModel implements MessageListe
         return al;
     }
 
-    // public void addColumn(String id, String title, boolean editable) {
-    // myColumnIds.add(id);
-    // myColumnTitles.add(title);
-    // editableList.add(new Boolean(editable));
-    // }
-    //
-    // public void removeColumn(String id) {
-    // int index = myColumnIds.indexOf(id);
-    // if (index > -1) {
-    // myColumnIds.remove(index);
-    // myColumnTitles.remove(index);
-    // editableList.remove(index);
-    // }
-    // }
-    //
-    // public void removeAllColumns() {
-    // myColumnIds.clear();
-    // myColumnTitles.clear();
-    // editableList.clear();
-    // }
-
     public void messageChanged() {
     }
-
-    // public int getColumnCount() {
-    // System.err.println("Column count: "+myColumnIds.size());
-    // return myColumnIds.size();
-    // }
-
-    // public Object getValueAt(int column, int row) {
-    // if (myMessage == null) {
-    // return null;
-    // }
-    // if (column >= myColumnIds.size()) {
-    // return null;
-    // }
-    // Message m = getMessageRow(row);
-    // if (m != null) {
-    // String columnName = (String) myColumnIds.get(column);
-    // if (columnName == null) {
-    // return null;
-    // }
-    // Property p = m.getProperty(columnName);
-    // return p;
-    // }
-    // else {
-    // return null;
-    // }
-    //
-    // }
-
-    // public int getRowCount() {
-    // if (myMessage == null) {
-    // return 0;
-    // }
-    // return myMessage.getArraySize();
-    // }
 
     public String getColumnName(int column) {
     	if(column==0) {
     		return "";
     	}
         return myTable.getColumnTitle(column-1);
-        // System.err.println("Getting column name: " + column);
-        // return ""+myColumnModel.getColumn(column).getHeaderValue();
-        // String s = (String) myColumnTitles.get(column);
-        // if (s == null) {
-        // s = getColumnId(column);
-        // if (s == null) {
-        // return super.getColumnName(column);
-        // } else {
-        // return s;
-        // }
-        // } else {
-        // return s;
-        // }
     }
 
-    // public String getColumnId(int column) {
-    // String s = (String) myColumnIds.get(column);
-    // return s;
-    // }
-
-    // public void setValueAt(Object aValue, int row, int column) {
-    // }
-
     public Message getMessageRow(int row) {
-        List l = getRows();
-        List rowList = (List) l.get(row);
+        List<List<Object>> l = getRows();
+        List<Object> rowList = l.get(row);
         Object last = rowList.get(rowList.size() - 1);
         if (last instanceof Message) {
             return (Message) last;
@@ -292,7 +216,7 @@ public class MessageTableModel extends DefaultTableModel implements MessageListe
 
     }
 
-    public Class getColumnClass(int columnIndex) {
+    public Class<?> getColumnClass(int columnIndex) {
     	if(columnIndex==0) {
     		return Boolean.class;
     	}

@@ -42,19 +42,13 @@ public class MessageTablePanel extends SplitPane {
          myTable.addTableEditorListener(new TableEditorListener(){
 
             public void propertyChanged(Property p, String eventType, int column, int row) {
-            	Map event = new HashMap();
+            	Map<String,Object> event = new HashMap<String,Object>();
                 event.put("column", new Integer(column));
                 event.put("row", new Integer(row));
                 event.put("new", p.getValue());
                 event.put("message", p.getParentMessage());
                 event.put("name", p.getName());
-                System.err.println("HOEI!");
-//                try {
-//                    performTipiEvent(eventType, event, true);
-//                } catch (TipiException e) {
-//                    e.printStackTrace();
-//                }
-                
+ 
             }});
 	}
 

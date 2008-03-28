@@ -58,7 +58,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 
 	private Component currentComponent;
 
-	private final ArrayList myPropertyEventListeners = new ArrayList();
+	private final List<PropertyEventListener> myPropertyEventListeners = new ArrayList<PropertyEventListener>();
 
 	private boolean alwaysUseLabel = false;
 
@@ -102,7 +102,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 
 	public final void firePropertyEvents(Property p, String eventType) {
 		for (int i = 0; i < myPropertyEventListeners.size(); i++) {
-			PropertyEventListener current = (PropertyEventListener) myPropertyEventListeners.get(i);
+			PropertyEventListener current = myPropertyEventListeners.get(i);
 			current.propertyEventFired(p, eventType);
 		}
 	}
@@ -910,15 +910,15 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 
 	private void createRadioButtons(final Property p) throws NavajoException {
 		final Component r = new Column();
-		final Map buttons = new HashMap();
+		final Map<String,RadioButton> buttons = new HashMap<String,RadioButton>();
 		// if (p.isDirIn()) {
 		Style ssss = Styles.DEFAULT_STYLE_SHEET.getStyle(r.getClass(), "Default");
 		r.setStyle(ssss);
 
 		addPropertyComponent(r);
-		ArrayList ss = p.getAllSelections();
+		ArrayList<Selection> ss = p.getAllSelections();
 		for (int i = 0; i < ss.size(); i++) {
-			Selection cc = (Selection) ss.get(i);
+			Selection cc = ss.get(i);
 			final RadioButton rb = new RadioButton();
 			// rb.setStyleName("Default");
 			Style sss = Styles.DEFAULT_STYLE_SHEET.getStyle(rb.getClass(), "Default");
@@ -994,9 +994,9 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 	private void createCheckBoxes(final Property p) throws NavajoException {
 		final ContainerEx r = new ContainerEx();
 
-		final Map buttons = new HashMap();
+		final Map<Selection,CheckBox> buttons = new HashMap<Selection,CheckBox>();
 		addPropertyComponent(r);
-		ArrayList ss = p.getAllSelections();
+		ArrayList<Selection> ss = p.getAllSelections();
 		for (int i = 0; i < ss.size(); i++) {
 			Selection cc = (Selection) ss.get(i);
 			final CheckBox rb = new CheckBox();
@@ -1031,15 +1031,15 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 		currentComponent = r;
 	}
 
-	protected void updateRadioButtonList(RadioButton rb, Map buttons, Property p) throws NavajoException {
+	protected void updateRadioButtonList(RadioButton rb, Map<String,RadioButton> buttons, Property p) throws NavajoException {
 		p.clearSelections();
 		p.setSelected(rb.getActionCommand());
 
 		// if (!rb.isSelected()) {
 		// return;
 		// }
-		for (Iterator iter = buttons.values().iterator(); iter.hasNext();) {
-			RadioButton element = (RadioButton) iter.next();
+		for (Iterator<RadioButton> iter = buttons.values().iterator(); iter.hasNext();) {
+			RadioButton element = iter.next();
 			Selection s = p.getSelectionByValue(element.getActionCommand());
 			if (element == rb) {
 				s.setSelected(true);
@@ -1052,11 +1052,11 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 		}
 	}
 
-	protected void updateCheckboxButtonList(CheckBox rb, Map buttons, Property p) throws NavajoException {
+	protected void updateCheckboxButtonList(CheckBox rb, Map<Selection,CheckBox> buttons, Property p) throws NavajoException {
 		p.clearSelections();
-		for (Iterator iter = buttons.keySet().iterator(); iter.hasNext();) {
-			Selection sel = (Selection) iter.next();
-			CheckBox element = (CheckBox) buttons.get(sel);
+		for (Iterator<Selection> iter = buttons.keySet().iterator(); iter.hasNext();) {
+			Selection sel = iter.next();
+			CheckBox element = buttons.get(sel);
 			sel.setSelected(element.isSelected());
 		}
 	}
@@ -1078,9 +1078,9 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 				// lb.setWidth(new Extent(200,Extent.PX));
 			}
 			// PropertyImpl ppp = (PropertyImpl) p;
-			ArrayList ss = p.getAllSelections();
+			List<Selection> ss = p.getAllSelections();
 			for (int i = 0; i < ss.size(); i++) {
-				Selection cc = (Selection) ss.get(i);
+				Selection cc = ss.get(i);
 				if (cc.isSelected()) {
 					System.err.println("Sett");
 					lb.setSelectedIndex(i);
@@ -1350,7 +1350,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 
 	public void setPropertyBackground(Color c) {
 		setBackground(c);
-		Component cn = (Component) currentComponent;
+		Component cn = currentComponent;
 		if (c != null) {
 			System.err.println("Setting to color: " + c + " ckass: " + cn.getClass());
 			cn.setBackground(c);

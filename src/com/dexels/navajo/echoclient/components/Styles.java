@@ -29,6 +29,8 @@
 
 package com.dexels.navajo.echoclient.components;
 
+import java.io.*;
+
 import nextapp.echo2.app.ImageReference;
 import nextapp.echo2.app.ResourceImageReference;
 import nextapp.echo2.app.StyleSheet;
@@ -41,28 +43,37 @@ import nextapp.echo2.app.componentxml.StyleSheetLoader;
 public class Styles {
 
 	public static final String IMAGE_PATH = "/com/dexels/navajo/echoclient/resource/image/";
-//	public static final String STYLE_PATH = "/com/dexels/navajo/tipi/components/echoimpl/resource/style/";
+	// public static final String STYLE_PATH =
+	// "/com/dexels/navajo/tipi/components/echoimpl/resource/style/";
 	public static final String STYLE_PATH = "/";
 
 	/**
 	 * Default application style sheet.
 	 */
-	public static final StyleSheet DEFAULT_STYLE_SHEET;
-	static {
+	public static StyleSheet DEFAULT_STYLE_SHEET;
+
+	public static final void loadStyleSheet(InputStream is) {
 		try {
-	         DEFAULT_STYLE_SHEET = StyleSheetLoader.load(STYLE_PATH + "Default.stylesheet", 
-                    Thread.currentThread().getContextClassLoader());
-  			if(DEFAULT_STYLE_SHEET!=null) {
-  				System.err.println("LOADED STYLESHEET: "+DEFAULT_STYLE_SHEET.toString());
-  			} else {
-  				throw new RuntimeException("Stylesheet missing!");
-		
-  			}
- //			DEFAULT_STYLE_SHEET = StyleSheetLoader.load("Default.stylesheet", Thread.currentThread().getContextClassLoader());
+			DEFAULT_STYLE_SHEET = StyleSheetLoader.load(is, Thread.currentThread().getContextClassLoader());
+			if(DEFAULT_STYLE_SHEET!=null) {
+				// all is well
+				return;
+			}
+			// fallback:
+			DEFAULT_STYLE_SHEET = StyleSheetLoader.load(STYLE_PATH + "Default.stylesheet", Thread.currentThread().getContextClassLoader());
+			if (DEFAULT_STYLE_SHEET != null) {
+				System.err.println("LOADED STYLESHEET: " + DEFAULT_STYLE_SHEET.toString());
+			} else {
+				throw new RuntimeException("Stylesheet missing!");
+
+			}
+			// DEFAULT_STYLE_SHEET = StyleSheetLoader.load("Default.stylesheet",
+			// Thread.currentThread().getContextClassLoader());
 		} catch (ComponentXmlException ex) {
 			ex.printStackTrace();
 			throw new RuntimeException(ex);
 		}
+
 	}
 
 	// Images
@@ -77,24 +88,28 @@ public class Styles {
 	public static final ImageReference ICON_24_LEFT_ARROW_DISABLED = new ResourceImageReference(IMAGE_PATH + "navigate_left.png");
 	public static final ImageReference ICON_24_RIGHT_ARROW_DISABLED = new ResourceImageReference(IMAGE_PATH + "navigate_right.png");
 	public static final ImageReference ICON_24_LEFT_ARROW_ROLLOVER = new ResourceImageReference(IMAGE_PATH + "navigate_left.png");
-	public static final ImageReference ICON_24_RIGHT_ARROW_ROLLOVER = new ResourceImageReference(IMAGE_PATH	+ "navigate_right.png");
-//	public static final ImageReference ICON_24_EXIT = new ResourceImageReference(IMAGE_PATH + "Icon24Exit.gif");
+	public static final ImageReference ICON_24_RIGHT_ARROW_ROLLOVER = new ResourceImageReference(IMAGE_PATH + "navigate_right.png");
+	// public static final ImageReference ICON_24_EXIT = new
+	// ResourceImageReference(IMAGE_PATH + "Icon24Exit.gif");
 	public static final ImageReference ICON_24_EXIT = new ResourceImageReference(IMAGE_PATH + "exit.png");
 	public static final ImageReference ICON_24_SUBSCRIPTIONS = new ResourceImageReference(IMAGE_PATH + "note.png");
 	public static final ImageReference ICON_24_ADD_SUBSCRIPTION = new ResourceImageReference(IMAGE_PATH + "note_add.png");
-	public static final ImageReference ICON_24_UPDATE_SUBSCRIPTION = new ResourceImageReference(IMAGE_PATH + "note_new.png");		
+	public static final ImageReference ICON_24_UPDATE_SUBSCRIPTION = new ResourceImageReference(IMAGE_PATH + "note_new.png");
 	public static final ImageReference ICON_24_DELETE_SUBSCRIPTION = new ResourceImageReference(IMAGE_PATH + "note_delete.png");
 	public static final ImageReference ICON_24_ADD_ADDRESS = new ResourceImageReference(IMAGE_PATH + "mail_add.png");
 	public static final ImageReference ICON_24_DELETE_ADDRESS = new ResourceImageReference(IMAGE_PATH + "mail_delete.png");
 	public static final ImageReference ICON_24_ADDRESSES = new ResourceImageReference(IMAGE_PATH + "mail.png");
 	public static final ImageReference ICON_24_EDIT_PASSWORD = new ResourceImageReference(IMAGE_PATH + "id_card.png");
 	public static final ImageReference ICON_24_MAIL_REPLY = new ResourceImageReference(IMAGE_PATH + "Icon24MailReply.gif");
-//	public static final ImageReference ICON_24_REFRESH = new ResourceImageReference(IMAGE_PATH + "Icon24Refresh.gif");
+	// public static final ImageReference ICON_24_REFRESH = new
+	// ResourceImageReference(IMAGE_PATH + "Icon24Refresh.gif");
 	public static final ImageReference ICON_24_REFRESH = new ResourceImageReference(IMAGE_PATH + "recycle.png");
-	public static final ImageReference ICON_24_DELETE = new ResourceImageReference(IMAGE_PATH + "garbage.png");	
+	public static final ImageReference ICON_24_DELETE = new ResourceImageReference(IMAGE_PATH + "garbage.png");
 	public static final ImageReference ICON_24_MAIL_COMPOSE = new ResourceImageReference(IMAGE_PATH + "Icon24MailCompose.gif");
-//	public static final ImageReference ICON_24_NO = new ResourceImageReference(IMAGE_PATH + "Icon24No.gif");
+	// public static final ImageReference ICON_24_NO = new
+	// ResourceImageReference(IMAGE_PATH + "Icon24No.gif");
 	public static final ImageReference ICON_24_NO = new ResourceImageReference(IMAGE_PATH + "navigate_cross_red.png");
-//	public static final ImageReference ICON_24_YES = new ResourceImageReference(IMAGE_PATH + "Icon24Yes.gif");
+	// public static final ImageReference ICON_24_YES = new
+	// ResourceImageReference(IMAGE_PATH + "Icon24Yes.gif");
 	public static final ImageReference ICON_24_YES = new ResourceImageReference(IMAGE_PATH + "navigate_check_green.png");
 }
