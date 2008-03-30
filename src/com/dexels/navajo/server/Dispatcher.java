@@ -1457,7 +1457,7 @@ public final Navajo handle(Navajo inMessage, Object userCertificate, ClientInfo 
 				}
 				if (tok.hasMoreTokens()) {
 					field          = tok.nextToken();
-					timeSpecified += 1L * ( ( "*".equals( field ) ) ? 32 : Integer.parseInt( field ) );
+					timeSpecified += 1L * ( ( "*".equals( field ) ) ? 60 : Integer.parseInt( field ) );
 				}
 				if (tok.hasMoreTokens()) {
 					field          = tok.nextToken();
