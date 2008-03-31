@@ -55,8 +55,8 @@ public interface ClientInterface {
   public void doAsyncSend(Navajo in, String method, ResponseListener response, ConditionErrorHandler v) throws ClientException;
 
   public void doAsyncSend(Navajo in, String method, ResponseListener response, String responseId, ConditionErrorHandler v) throws ClientException;
-
-/**
+  public String getSessionToken();
+  /*
  * @deprecated
  * @param config
  * @throws ClientException

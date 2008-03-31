@@ -193,7 +193,7 @@ public class NavajoClient implements ClientInterface {
 
   
   public final String getSessionToken() {
-	  return mySessionToken;
+		  return mySessionToken;
   }
   
   /**
@@ -407,15 +407,6 @@ public class NavajoClient implements ClientInterface {
     if (getCurrentHost() == null) {
       throw new ClientException(1, 1, "No host set!");
     }
-
-    //System.err.println("------> Calling service: " + method);
-
-//    try {
-//      out.write(System.err);
-//    }
-//    catch (NavajoException ex) {
-//      ex.printStackTrace();
-//    }
     return doSimpleSend(out, getCurrentHost(), method, username, password, expirationInterval, true, false);
   }
 
@@ -1887,11 +1878,11 @@ public final void switchServer(int startIndex, boolean forceChange) {
 		repDef.addProperty(reportFormatProp);
 
 		if(margins!=null) {
-			Property marginProperty = NavajoFactory.getInstance().createProperty(n, "Margin",Property.STRING_PROPERTY, format, 0, margins[0]+","+margins[1]+","+margins[2]+","+margins[3], Property.DIR_IN);
+			Property marginProperty = NavajoFactory.getInstance().createProperty(n, "Margin",Property.STRING_PROPERTY,  margins[0]+","+margins[1]+","+margins[2]+","+margins[3], 0,"", Property.DIR_IN);
 			repDef.addProperty(marginProperty);
 		}
 		if(orientation!=null) {
-			Property orientationProperty = NavajoFactory.getInstance().createProperty(n, "Orientation",Property.STRING_PROPERTY, format, 0, orientation, Property.DIR_IN);
+			Property orientationProperty = NavajoFactory.getInstance().createProperty(n, "Orientation",Property.STRING_PROPERTY, orientation, 0, "", Property.DIR_IN);
 			repDef.addProperty(orientationProperty);
 		}
 
