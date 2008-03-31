@@ -59,7 +59,7 @@ public class NavajoJabberAgent  {
 		config = new ConnectionConfiguration(server, port, chatDomain);
 		connection = new XMPPConnection(config);
 		connection.connect();
-		connection.login(username, password, chatDomain);
+		connection.login(username, password, NavajoClientFactory.getClient().getSessionToken());
 		System.err.println("Login ok");
 
 		connection.addPacketListener(new PacketListener() {
