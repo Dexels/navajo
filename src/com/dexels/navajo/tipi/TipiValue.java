@@ -123,7 +123,9 @@ public class TipiValue {
 		if (direction != null) {
 			xe.setAttribute("direction", direction);
 		}
-		xe.setAttribute("type", type);
+		if(type!=null) {
+			xe.setAttribute("type", type);
+		}
 		return xe;
 	}
 
