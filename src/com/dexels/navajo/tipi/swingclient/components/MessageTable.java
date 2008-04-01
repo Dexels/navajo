@@ -1661,6 +1661,28 @@ public void updateTableSize() {
     getMessageModel().firePropertyChanged(p,"value");
   }
 
+  protected final void fireChangeEvents(Property p, Object oldValue, Object newValue) throws NavajoException {
+
+	  if (changelisteners.size() == 0) {
+		  return;
+	  }
+	  Map m = new HashMap();
+	  m.put("name", p.getName());
+	  m.put("row", new Integer(getSelectedRow()));
+	  m.put("column", new Integer(getSelectedColumn()));
+	  m.put("new", newValue);
+	  m.put("old", oldValue);
+	  m.put("path", p.getFullPropertyName());
+	  m.put("message", p.getParentMessage());
+
+	  for (int i = 0; i < changelisteners.size(); i++) {
+		  ChangeListener cl = (ChangeListener) changelisteners.get(i);
+		  ChangeEvent e = new ChangeEvent(m);
+		  cl.stateChanged(e);
+	  }
+
+  }
+  
   protected final void fireChangeEvents(Property init, Property current) throws NavajoException {
 
     if (changelisteners.size() == 0) {

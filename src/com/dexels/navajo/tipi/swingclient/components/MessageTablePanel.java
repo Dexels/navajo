@@ -458,53 +458,90 @@ public class MessageTablePanel
   }
 
   private final void invertSelection(int column) {
-    ArrayList selected = getSelectedMessages();
-    if (selected != null && selected.size() > 0) {
-      for (int i = 0; i < selected.size(); i++) {
-        Object o = messageTable.getValueAt(i, column);
-        Property q = (Property) o;
-        Message m = (Message) selected.get(i);
-        Property p = m.getProperty(q.getName());
-        boolean value = ( (Boolean) p.getTypedValue()).booleanValue();
-        p.setValue(!value);
-      }
-    }
-    else {
-      final int rowCount = getRowCount();
-      for (int i = 0; i < rowCount; i++) {
-        Object o = messageTable.getValueAt(i, column);
-        Property p = (Property) o;
-        boolean value = ( (Boolean) p.getTypedValue()).booleanValue();
-        p.setValue(!value);
-      }
-    }
-    fireDataChanged();
-    fireHeaderMenuEvent();
-    doSort(getSortedColumn(), getSortingDirection());
+	  ArrayList selected = getSelectedMessages();
+	  if (selected != null && selected.size() > 0) {
+		  for (int i = 0; i < selected.size(); i++) {
+			  Object o = messageTable.getValueAt(i, column);
+			  Property q = (Property) o;
+			  Message m = (Message) selected.get(i);
+			  Property p = m.getProperty(q.getName());
+			  boolean value = ( (Boolean) p.getTypedValue()).booleanValue();
+			  p.setValue(!value);
+			  try {
+				  messageTable.fireChangeEvents(p, !value, value);
+				  p.getParentMessage().refreshExpression();
+			  } catch (NavajoException e) {
+				  e.printStackTrace();
+			  } catch (ExpressionChangedException e) {
+			  }
+		  }
+	  }
+	  else {
+		  final int rowCount = getRowCount();
+		  for (int i = 0; i < rowCount; i++) {
+			  Object o = messageTable.getValueAt(i, column);
+			  Property p = (Property) o;
+			  boolean value = ( (Boolean) p.getTypedValue()).booleanValue();
+			  p.setValue(!value);
+			  try {
+				  messageTable.fireChangeEvents(p, !value, value);
+				  p.getParentMessage().refreshExpression();
+			  } catch (NavajoException e) {
+				  e.printStackTrace();
+			  } catch (ExpressionChangedException e) {
+			  }
+		  }
+	  }
+	  fireDataChanged();
+	  fireHeaderMenuEvent();
+	  doSort(getSortedColumn(), getSortingDirection());
   }
 
   private final void setSelectAll(int column, boolean value) {
-    ArrayList selected = getSelectedMessages();
-    if (selected != null && selected.size() > 0) {
-      for (int i = 0; i < selected.size(); i++) {
-        Object o = messageTable.getValueAt(i, column);
-        Property q = (Property) o;
-        Message m = (Message) selected.get(i);
-        Property p = m.getProperty(q.getName());
-        p.setValue(value);
-      }
-    }
-    else {
-      final int rowCount = getRowCount();
-      for (int i = 0; i < rowCount; i++) {
-        Object o = messageTable.getValueAt(i, column);
-        Property p = (Property) o;
-        p.setValue(value);
-      }
-    }
-    fireDataChanged();
-    fireHeaderMenuEvent();
-    doSort(getSortedColumn(), getSortingDirection());
+	  ArrayList selected = getSelectedMessages();
+	  if (selected != null && selected.size() > 0) {
+		  for (int i = 0; i < selected.size(); i++) {
+			  Object o = messageTable.getValueAt(i, column);
+			  Property q = (Property) o;
+			  Message m = (Message) selected.get(i);
+			  Property p = m.getProperty(q.getName());
+			  if ( ((Boolean) p.getTypedValue()).booleanValue() != value ) {
+				  try {
+					  Object oldValue = p.getTypedValue();
+					  p.setValue(value);
+					  messageTable.fireChangeEvents(p, oldValue, value);	
+					  m.refreshExpression();
+				  } catch (NavajoException e) {
+					  e.printStackTrace();
+				  } catch (ExpressionChangedException e) {
+				  }
+			  }
+		  }
+	  }
+	  else {
+
+		  selected = getMessage().getAllMessages();
+		  final int rowCount = getRowCount();
+		  for (int i = 0; i < rowCount; i++) {
+			  Object o = messageTable.getValueAt(i, column);
+			  Message m = (Message) selected.get(i);
+			  Property p = m.getProperty( ((Property) o).getName() );
+			  if ( ((Boolean) p.getTypedValue()).booleanValue() != value ) {
+				  try {
+					  Object oldValue = p.getTypedValue();
+					  p.setValue(value);
+					  messageTable.fireChangeEvents(p, oldValue, value);	
+					  p.getParentMessage().refreshExpression();
+				  } catch (NavajoException e) {
+					  e.printStackTrace();
+				  } catch (ExpressionChangedException e) {
+				  }
+			  }
+		  }
+	  }
+	  fireDataChanged();
+	  fireHeaderMenuEvent();
+	  doSort(getSortedColumn(), getSortingDirection());
   }
 
   public void setAllUpdateFlags() {
