@@ -27,7 +27,7 @@ public class TipiThreadPool {
 	private final ThreadGroup myGroup = new ThreadGroup("TipiThreadGroup");
 	// private final Set myThreadSet = Collections.synchronizedSet(new
 	// HashSet());
-	private final List<TipiExecutable> myWaitingQueue = Collections.synchronizedList(new ArrayList<TipiExecutable>());
+	private final List<TipiExecutable> myWaitingQueue = new ArrayList<TipiExecutable>();
 	private final TipiContext myContext;
 	private final Map<TipiExecutable,TipiEventListener> myListenerMap = Collections.synchronizedMap(new HashMap<TipiExecutable,TipiEventListener>());
 	private List<TipiThread> myThreadCollection = Collections.synchronizedList(new ArrayList<TipiThread>());
@@ -64,13 +64,16 @@ public class TipiThreadPool {
 		tt.start();
 	}
 
-	public synchronized TipiExecutable getExecutable() {
-		if (myWaitingQueue.size() == 0) {
-			return null;
+	public TipiExecutable getExecutable() {
+		synchronized (myWaitingQueue) {
+			if (myWaitingQueue.size() == 0) {
+				return null;
+			}
+
+			TipiExecutable te = (TipiExecutable) myWaitingQueue.get(0);
+			myWaitingQueue.remove(0);
+			return te;
 		}
-		TipiExecutable te = myWaitingQueue.get(0);
-		myWaitingQueue.remove(0);
-		return te;
 	}
 
 	public TipiContext getContext() {
@@ -129,7 +132,9 @@ public class TipiThreadPool {
 				e.printStackTrace();
 			}
 		} else {
-			myWaitingQueue.add(exe);
+			synchronized (myWaitingQueue) {
+				myWaitingQueue.add(exe);
+			}
 			awaken();
 		}
 	}
