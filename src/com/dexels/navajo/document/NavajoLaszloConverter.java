@@ -64,9 +64,11 @@ public class NavajoLaszloConverter {
 			Element root = doc.createElement(nodeName);
 			doc.appendChild(root);
 			Element tml = doc.createElement("tml");
-//			tml.setAttribute("rpc_usr", in.getHeader().getRPCUser());
-//			tml.setAttribute("rpc_pwd", in.getHeader().getRPCPassword());
-//			tml.setAttribute("rpc_name", serviceName);
+			if ( in.getHeader() != null ) {
+				tml.setAttribute("rpc_usr", in.getHeader().getRPCUser());
+				tml.setAttribute("rpc_pwd", in.getHeader().getRPCPassword());
+				tml.setAttribute("rpc_name", serviceName);
+			}
 			root.appendChild(tml);
 			ArrayList<Message> l = in.getAllMessages();
 			for (int i = 0; i < l.size(); i++) {
