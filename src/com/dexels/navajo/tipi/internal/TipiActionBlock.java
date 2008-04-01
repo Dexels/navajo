@@ -119,11 +119,14 @@ public class TipiActionBlock implements TipiExecutable {
 		Operand o;
 		try {
 			if ((TipiComponent) source != null) {
-				((TipiComponent) source).setCurrentEvent(te);
-				o = Expression
-						.evaluate(myExpression, ((TipiComponent) source).getNearestNavajo(), null, null, null, (TipiComponent) source);
-				if (o.value.toString().equals("true")) {
-					return true;
+				TipiComponent tc = (TipiComponent) source;
+				synchronized (tc) {
+					tc.setCurrentEvent(te);
+					o = Expression
+					.evaluate(myExpression, ((TipiComponent) source).getNearestNavajo(), null, null, null, (TipiComponent) source);
+					if (o.value.toString().equals("true")) {
+						return true;
+					}
 				}
 			} else {
 				o = Expression.evaluate(myExpression, null, null, null, null, (TipiComponent) source);
