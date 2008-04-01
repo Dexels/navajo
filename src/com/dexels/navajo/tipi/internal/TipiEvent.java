@@ -31,14 +31,35 @@ public class TipiEvent implements TipiExecutable {
 //	private Navajo myNavajo;
 	private TipiComponent myComponent;
 	// private TipiActionBlock myTopActionBlock = null;
-	private final List<TipiExecutable> myExecutables = new ArrayList<TipiExecutable>();
+	private List<TipiExecutable> myExecutables = new ArrayList<TipiExecutable>();
 	
-	private final Map<String,TipiValue> eventParameterMap = new HashMap<String,TipiValue>();
+	private Map<String,TipiValue> eventParameterMap = new HashMap<String,TipiValue>();
 	private Map<String,String> eventPropertyMap = new HashMap<String, String>();
 
 	public TipiEvent() {
 	}
 
+	public Object clone() {
+
+		TipiEvent ti = new TipiEvent();
+		ti.myEventName = this.myEventName;
+		ti.myEventService = this.myEventService;
+		ti.mySource = this.mySource;
+		ti.myComponent = this.myComponent;
+		ti.myExecutables = this.myExecutables;
+		ti.eventParameterMap = new HashMap();
+
+		Iterator iter = this.eventParameterMap.keySet().iterator();
+
+		while ( iter.hasNext() ) {
+			String key = (String) iter.next();
+			TipiValue tv = (TipiValue) ((TipiValue) this.eventParameterMap.get(key)).clone();
+			ti.eventParameterMap.put(key, tv);
+		}
+		
+		return ti;
+	}
+	
 	public void init(XMLElement xe) {
 		List<XMLElement> v = xe.getChildren();
 		for (int i = 0; i < v.size(); i++) {
@@ -119,13 +140,14 @@ public class TipiEvent implements TipiExecutable {
 	}
 
 	public void asyncPerformAction(final TipiEventListener listener, final Map<String,Object> event) {
-		loadEventValues(event);
+		TipiEvent localEvent = (TipiEvent) this.clone();
+		localEvent.loadEventValues(event);
 		// final TipiEvent te = this;
 		try {
-			listener.eventStarted(this, event);
-			getContext().debugLog("event   ", "enqueueing (in event) async event: " + this);
+			//listener.eventStarted(this, event);
+			getContext().debugLog("event   ", "enqueueing (in event) async event: " + localEvent);
 
-			myComponent.getContext().performAction(this, listener);
+			myComponent.getContext().performAction(localEvent, listener);
 		} catch (Throwable ex) {
 			ex.printStackTrace();
 		}
@@ -170,23 +192,35 @@ public class TipiEvent implements TipiExecutable {
 
 	// Sync, in current thread
 	public void performAction(TipiEventListener listener, Map<String,Object> event) throws TipiBreakException {
+		TipiEvent localInstance = this;
+		if ( event != null ) {
+			localInstance = (TipiEvent) this.clone();
+			localInstance.loadEventValues(event);
+		} 
+		
+		
 		// eventParameterMap.clear();
 		// eventParameterMap.putAll(event);
 
-		getContext().debugLog("event   ", "performing event: " + this.getEventName());
+		getContext().debugLog("event   ", "performing event: " + localInstance.getEventName());
 
-		loadEventValues(event);
-
-		listener.eventStarted(this, event);
+		listener.eventStarted(localInstance, event);
 		try {
-			getContext().performedEvent(myComponent, this);
+			getContext().performedEvent(myComponent, localInstance);
 		} catch (BlockActivityException ex1) {
 			// System.err.println("Blocked exception");
 			return;
 		}
-		getContext().doActions(this,myComponent,this,myExecutables);
-		getContext().debugLog("event   ", "finished event: " + this.getEventName() + " in component" + myComponent.getPath());
-		listener.eventFinished(this, event);
+		try {
+			for (int i = 0; i < myExecutables.size(); i++) {
+				TipiExecutable current = (TipiExecutable) myExecutables.get(i);
+				current.performAction(localInstance, localInstance, i);
+			}
+		} catch (Throwable ex) {
+			ex.printStackTrace();
+		}
+		getContext().debugLog("event   ", "finished event: " + localInstance.getEventName() + " in component" + myComponent.getPath());
+		listener.eventFinished(localInstance, event);
 	}
 
 

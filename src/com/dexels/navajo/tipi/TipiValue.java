@@ -40,7 +40,20 @@ public class TipiValue {
 	// / private Object rawValue = null;
 
 	// private XMLElement myXml = null;
-
+	public Object clone() {
+		TipiValue tv = new TipiValue(this.myComponent);
+		tv.name = this.name;
+		tv.type = this.type;
+		tv.direction = this.direction;
+		tv.value = this.value;
+		tv.defaultValue = this.defaultValue;
+		tv.required = this.required;
+		if ( this.selectionMap != null ) {
+			tv.selectionMap = new HashMap( this.selectionMap );
+		}
+		return tv;
+	}
+	
 	public TipiValue(TipiComponent tc) {
 		myComponent = tc;
 	}
