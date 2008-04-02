@@ -61,7 +61,7 @@ public class SharedTribalMap<K,V> extends HashMap {
 		synchronized (semaphoreLocal) {
 			if ( registeredMaps.get(stm.getId()) != null ) {
 				SharedTribalMap existing = registeredMaps.get(stm.getId());
-				existing.clear();
+				existing.clearLocal();
 				existing.putAll(stm);
 			} else {
 				registeredMaps.put(stm.getId(), stm);
@@ -85,7 +85,7 @@ public class SharedTribalMap<K,V> extends HashMap {
 	protected static void deregisterMapLocal(String id) {
 		synchronized (semaphoreLocal) {
 			if ( registeredMaps.get(id) != null ) {
-				registeredMaps.get(id).clear();
+				registeredMaps.get(id).clearLocal();
 				registeredMaps.remove(id);
 			}
 		}
@@ -112,6 +112,19 @@ public class SharedTribalMap<K,V> extends HashMap {
 		TribeManagerFactory.getInstance().broadcast(tms);
 
 		return o;
+	}
+	
+	public void clear() {
+		clearLocal();
+		SharedTribalElement ste = new SharedTribalElement(getId(), null, null);
+		TribalMapSignal tms = new TribalMapSignal(Dispatcher.getInstance().getNavajoConfig().getInstanceName(), TribalMapSignal.CLEAR, ste);
+		TribeManagerFactory.getInstance().broadcast(tms);
+	}
+	
+	protected void clearLocal() {
+		synchronized (semaphoreLocal) {
+			super.clear();
+		}
 	}
 	
 	protected Object putLocal(Object key, Object value) {

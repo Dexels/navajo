@@ -5,6 +5,7 @@ import com.dexels.navajo.server.enterprise.tribe.SmokeSignal;
 public class TribalMapSignal extends SmokeSignal {
 
 	public final static String PUT       = "put";
+	public final static String CLEAR     = "clear";
 	public final static String REMOVE    = "remove";
 	public final static String CREATEMAP = "createmap";
 	public final static String DELETEMAP = "deletemap";
@@ -41,6 +42,12 @@ public class TribalMapSignal extends SmokeSignal {
 			SharedTribalMap stm = SharedTribalMap.getMap(ste.getId());
 			if ( stm != null ) {
 				stm.removeLocal(ste.getKey());
+			}
+		} else if ( key.equals(CLEAR)) {
+			SharedTribalElement ste = (SharedTribalElement) value;
+			SharedTribalMap stm = SharedTribalMap.getMap(ste.getId());
+			if ( stm != null ) {
+				stm.clearLocal();
 			}
 		}
 	}
