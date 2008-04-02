@@ -76,6 +76,10 @@ public class LockDefinition implements Mappable {
 		return this.id;
 	}
 	
+	public int getWaitTimeOut() {
+		return timeOut;
+	}
+	
 	public String getWebservice() {
 		return this.webservice;
 	}

@@ -192,7 +192,7 @@ public final class LockManager extends GenericThread {
 		
 		try {
 			while ( iter.hasNext() ) {
-				Lock l = LockStore.getStore().addLock(a, (LockDefinition) iter.next() );
+				Lock l = LockStore.getStore().addLock(a, (LockDefinition) iter.next(), 0 );
 				lockList.add(l);
 			}
 		} catch (LocksExceeded le) {

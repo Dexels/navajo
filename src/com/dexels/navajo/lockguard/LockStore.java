@@ -44,7 +44,7 @@ public abstract class LockStore {
 	}
 	
 	public abstract void reset();
-	public abstract Lock addLock(Access a, LockDefinition ld) throws LocksExceeded ;
+	public abstract Lock addLock(Access a, LockDefinition ld, long waited) throws LocksExceeded ;
 	public abstract void removeLock(Access a, Lock l);
 	public abstract Lock [] getAllLocks();
 	public abstract int getStoreSize();

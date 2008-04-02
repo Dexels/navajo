@@ -24,6 +24,8 @@
  */
 package com.dexels.navajo.lockguard;
 
+import java.io.Serializable;
+
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
@@ -32,7 +34,12 @@ import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.server.UserException;
 
-public final class Lock implements Mappable {
+public final class Lock implements Mappable, Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 847273830792579002L;
 
 	public static final String VERSION = "$Id$";
 	

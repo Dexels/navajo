@@ -24,13 +24,10 @@
  */
 package com.dexels.navajo.lockguard;
 
-import java.util.Collections;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
 
 import java.util.regex.Pattern;
@@ -40,6 +37,7 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.server.Access;
+import com.dexels.navajo.sharedstore.map.SharedTribalMap;
 
 @SuppressWarnings("unchecked")
 public final class MemoryStore extends LockStore {
@@ -50,7 +48,13 @@ public final class MemoryStore extends LockStore {
 	// 0: l1, l2, l3
 	// 1: l1
 	// ..
-	public final Map store = Collections.synchronizedMap( new HashMap() );
+	// TODO: USE TRIBAL MAP TO SUPPORT LOCKING OVER DIFFERENT TRIBE MEMBERS...
+	public volatile static SharedTribalMap store;
+	
+	static {
+		store = new SharedTribalMap("webservice-lock-store");
+		store = SharedTribalMap.registerMap(store, false);
+	}
 	
 	
 	/**
@@ -59,16 +63,39 @@ public final class MemoryStore extends LockStore {
 	 * Returns LocksExceeded if no entry allowed due to too many locks of certain type.
 	 * 
 	 */
-	public final Lock addLock(Access a, LockDefinition ld) throws LocksExceeded {
+	public final Lock addLock(Access a, LockDefinition ld, long waited) throws LocksExceeded {
 		
 		synchronized (VERSION) {
 			Lock hl = getLock(a, ld);
 			
 			if ( hl != null ) {
+				System.err.println("GOT LOCK: " + hl + ", instance count " + hl.instanceCount + ", max: " + ld.maxInstanceCount + ", wait timeout: " + ld.getWaitTimeOut());
+				
 				if ( hl.instanceCount >= ld.maxInstanceCount ) {
-					throw new LocksExceeded(ld);
+					if ( ld.getWaitTimeOut() != -1 && ( ld.getWaitTimeOut() == 0 || waited >= ld.getWaitTimeOut() ) ) {
+						throw new LocksExceeded(ld);
+					} else {
+						// Keep waiting...
+						System.err.println("Waiting for lock to become available...");
+						long startedWaiting = System.currentTimeMillis();
+						try {
+							if ( ld.getWaitTimeOut() == -1 ) {
+								VERSION.wait();
+							} else {
+								VERSION.wait(ld.getWaitTimeOut());
+							}
+						} catch (InterruptedException e) {
+						}
+						waited += ( System.currentTimeMillis() - startedWaiting );
+						System.err.println("Retrying lock after having waited for " + waited + " millis..");
+						return addLock(a, ld, waited);
+					}
 				} else {
 					hl.instanceCount++;
+					// Store
+					HashSet s = new HashSet();
+					s.add(hl);
+					store.put( ld.id, s);
 					return hl;
 				}
 			}
@@ -91,6 +118,7 @@ public final class MemoryStore extends LockStore {
 	
 	private final Lock getLock(Access a, LockDefinition ld) {
 		
+		// TODO: ONLY SUPPORT EXACT MATCH, HENCE 1 LOCK PER WEBSERVICE!!!!!!!!!! ELSE IT WILL BE TOO COMPLICATED..
 		if ( Pattern.matches( ld.webservice, a.rpcName ) ) {
 			
 			Set relevantLocks = (Set) store.get( new Integer(ld.id) );
@@ -160,13 +188,20 @@ public final class MemoryStore extends LockStore {
 		
 		synchronized (VERSION) {
 			l.instanceCount--;
+			Set relevantLocks = (Set) store.get( new Integer(l.lockId) );
 			if ( l.instanceCount == 0 ) {
-				Set relevantLocks = (Set) store.get( new Integer(l.lockId) );
 				relevantLocks.remove( l );
 				if ( relevantLocks.size() == 0 ) {
-					store.remove(relevantLocks);
+					store.remove( new Integer(l.lockId) );
 				}
+			} else {
+				relevantLocks.add(l);
+				store.put( new Integer(l.lockId), relevantLocks);
 			}
+			
+			try {
+				VERSION.notifyAll();
+			} catch (Throwable t) {}
 		}
 	}
 
@@ -192,9 +227,7 @@ public final class MemoryStore extends LockStore {
 	}
 
 	public final void reset() {
-	
 		store.clear();
-	
 	}
 
 	public final Lock[] getAllLocks() {
