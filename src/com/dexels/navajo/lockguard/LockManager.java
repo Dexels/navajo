@@ -43,6 +43,10 @@ import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.jmx.JMXHelper;
 import com.dexels.navajo.util.AuditLog;
 
+class TotalDefinitions {
+	int count;
+}
+
 public final class LockManager extends GenericThread implements LockManagerMXBean {
 
 	public LockDefinition [] definitions;
@@ -180,7 +184,7 @@ public final class LockManager extends GenericThread implements LockManagerMXBea
 	 * @return
 	 */
 	@SuppressWarnings({ "unchecked", "unchecked" })
-	public final Lock [] grantAccess(Access a) throws LocksExceeded {
+	public final Lock [] grantAccess(final Access a) throws LocksExceeded {
 		
 		while ( readingDefinitions ) {
 			// Wait
@@ -193,20 +197,67 @@ public final class LockManager extends GenericThread implements LockManagerMXBea
 			}
 		}
 		
-		ArrayList lockList = new ArrayList();
-		Iterator iter = lockDefinitions.values().iterator();
+		final ArrayList lockList = new ArrayList();
+		final Iterator iter = lockDefinitions.values().iterator();
 		
-		try {
-			while ( iter.hasNext() ) {
-				Lock l = LockStore.getStore().addLock(a, (LockDefinition) iter.next(), 0 );
-				lockList.add(l);
+		
+		
+		// Try ty acquire locks in parallel.
+		final TotalDefinitions totalDefinitions = new TotalDefinitions();
+		totalDefinitions.count = lockDefinitions.size();
+		//System.err.println("TOTAL NUMBER OF LOCK DEFINITIONS: " + totalDefinitions.count);
+		
+		// Fork for each lockdefinition....
+		while ( iter.hasNext() ) {
+			final LockDefinition ld = (LockDefinition) iter.next();
+			new Thread() {
+				public void run() {
+					Lock l;
+					try {
+						//System.err.println("Trying to acquire lock for: " + ld);
+						l = LockStore.getStore().addLock(a, ld, 0 );
+						if ( l != null && !( a.getException() != null && a.getException() instanceof LocksExceeded )) {
+							lockList.add(l);
+							//System.err.println(">>>> Got lock for: " + ld);
+						} else {
+							//System.err.println("Not lock for: " + ld);
+						}
+					} catch (LocksExceeded e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						//System.err.println(">>>> Locks exceeded lock for: " + ld);
+					} finally {
+						synchronized (totalDefinitions) {
+							totalDefinitions.count--;
+							//System.err.println("DECREASED totalDefinitions, count = " + totalDefinitions.count );
+							totalDefinitions.notifyAll();
+						}	
+					}
+				}
+			}.start();
+		}
+		
+		// Lockdefinition barrier.
+		//System.err.println("ABOUT TO WAIT FOR ALL LOCKS.....");
+		while ( totalDefinitions.count > 0 ) {
+			synchronized (totalDefinitions) {
+				try {
+					totalDefinitions.wait();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
-		} catch (LocksExceeded le) {
+		}
+		//System.err.println("GOT 'M ALL... OR NOT: " + a.getException());
+		
+		// If a LocksExceeded exception was thrown by one of the lock threads, clean up locks and throw exception...
+		if ( a.getException() != null && a.getException() instanceof LocksExceeded ) {
 			// Remove previously set locks and throw exception.
 			for (int i = 0; i < lockList.size(); i++) {
 				LockStore.getStore().removeLock(a, (Lock) lockList.get(i));
 			}
-			throw le;
+			throw (LocksExceeded) a.getException();
 		}
 		
 		if ( lockList.size() == 0) {

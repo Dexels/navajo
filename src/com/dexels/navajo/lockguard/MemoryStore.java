@@ -56,6 +56,12 @@ public final class MemoryStore extends LockStore {
 		store = SharedTribalMap.registerMap(store, false);
 	}
 	
+	private void throwLocksExceededException(Access a, LockDefinition ld) throws LocksExceeded {
+		VERSION.notifyAll(); // notify other waiting lock threads...
+		LocksExceeded le = new LocksExceeded(ld);
+		a.setException(le);
+		throw le;
+	}
 	
 	/**
 	 * Return true is lock is set.
@@ -65,6 +71,10 @@ public final class MemoryStore extends LockStore {
 	 */
 	public final Lock addLock(Access a, LockDefinition ld, long waited) throws LocksExceeded {
 		
+		if ( a.getException() != null && a.getException() instanceof LocksExceeded) {
+			throw (LocksExceeded) a.getException();
+		}
+		
 		synchronized (VERSION) {
 			Lock hl = getLock(a, ld);
 			
@@ -73,7 +83,7 @@ public final class MemoryStore extends LockStore {
 				
 				if ( hl.instanceCount >= ld.maxInstanceCount ) {
 					if ( ld.getWaitTimeOut() != -1 && ( ld.getWaitTimeOut() == 0 || waited >= ld.getWaitTimeOut() ) ) {
-						throw new LocksExceeded(ld);
+						throwLocksExceededException(a, ld);
 					} else {
 						// Keep waiting...
 						System.err.println("Waiting for lock to become available...");
