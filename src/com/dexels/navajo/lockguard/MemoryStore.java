@@ -92,10 +92,8 @@ public final class MemoryStore extends LockStore {
 					}
 				} else {
 					hl.instanceCount++;
-					// Store
-					HashSet s = new HashSet();
-					s.add(hl);
-					store.put( ld.id, s);
+					// Store, update lock.
+					updateLock(hl, a, ld);
 					return hl;
 				}
 			}
@@ -114,6 +112,14 @@ public final class MemoryStore extends LockStore {
 		nl.request = (ld.matchRequest ? a.getInDoc() : null);
 		return nl;
 		
+	}
+	
+	private void updateLock(Lock l, Access a, LockDefinition ld) {
+		if ( Pattern.matches( ld.webservice, a.rpcName ) ) {
+			Set relevantLocks = (Set) store.get( new Integer(ld.id) );
+			relevantLocks.add( l );
+			store.put( new Integer(ld.id), relevantLocks );
+		}
 	}
 	
 	private final Lock getLock(Access a, LockDefinition ld) {
