@@ -186,6 +186,10 @@ public final class MemoryStore extends LockStore {
 		return null;
 	}
 
+	public void removeAllLocks() {
+		store.clear();
+	}
+	
 	public final void removeLock(Access a, Lock l) {
 		
 		if ( l == null ) {
@@ -195,12 +199,12 @@ public final class MemoryStore extends LockStore {
 		synchronized (VERSION) {
 			l.instanceCount--;
 			Set relevantLocks = (Set) store.get( new Integer(l.lockId) );
-			if ( l.instanceCount == 0 ) {
+			if ( relevantLocks != null && l.instanceCount == 0 ) {
 				relevantLocks.remove( l );
 				if ( relevantLocks.size() == 0 ) {
 					store.remove( new Integer(l.lockId) );
 				}
-			} else {
+			} else if ( relevantLocks != null  ){
 				relevantLocks.add(l);
 				store.put( new Integer(l.lockId), relevantLocks);
 			}

@@ -48,6 +48,7 @@ public abstract class LockStore {
 	public abstract void removeLock(Access a, Lock l);
 	public abstract Lock [] getAllLocks();
 	public abstract int getStoreSize();
+	public abstract void removeAllLocks();
 	
 	public boolean matchRequest( Navajo myRequest, Navajo otherRequest, LockDefinition ld ) {
 		return matches(myRequest, otherRequest, ld) && matches(otherRequest, myRequest, ld);

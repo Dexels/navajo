@@ -40,9 +40,10 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.GenericThread;
 import com.dexels.navajo.server.NavajoConfig;
+import com.dexels.navajo.server.jmx.JMXHelper;
 import com.dexels.navajo.util.AuditLog;
 
-public final class LockManager extends GenericThread {
+public final class LockManager extends GenericThread implements LockManagerMXBean {
 
 	public LockDefinition [] definitions;
 	public Lock [] locks;
@@ -156,6 +157,11 @@ public final class LockManager extends GenericThread {
 				instance = new LockManager();
 				instance.myConfig = config;
 				instance.startThread(instance);
+				try {
+					JMXHelper.registerMXBean(instance, JMXHelper.NAVAJO_DOMAIN, id);
+				} catch (Throwable t) {
+					t.printStackTrace(System.err);
+				} 
 			}
 		}
 		return instance;
@@ -296,5 +302,9 @@ public final class LockManager extends GenericThread {
 		lockDefinitions.clear();
 		resetInstance();
 		AuditLog.log(AuditLog.AUDIT_MESSAGE_LOCK_MANAGER, "Killed");	
+	}
+
+	public void clearAllLocks() {
+		LockStore.getStore().removeAllLocks();
 	}
 }
