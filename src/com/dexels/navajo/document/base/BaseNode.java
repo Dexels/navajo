@@ -239,6 +239,15 @@ public abstract class BaseNode implements java.io.Serializable{
  }
  
 
+ public void write(final Writer w) throws NavajoException {
+	 try {
+		 printElement(w,0);
+	 } catch (IOException e) {
+		 throw new NavajoExceptionImpl(e);
+	 }
+ }
+
+ 
   public void write(final OutputStream stream) throws NavajoException {
 	  try {
 		  OutputStreamWriter osw = new OutputStreamWriter(stream,"UTF-8");
