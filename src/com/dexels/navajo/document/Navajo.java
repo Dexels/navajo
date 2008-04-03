@@ -266,6 +266,13 @@ public interface Navajo
    * @throws NavajoException
    */
   public void write(java.io.Writer writer) throws NavajoException;
+  
+  /**
+   * Write the current Navajo object to the given writer
+   * @param writer Writer
+   * @throws NavajoException
+   */
+  public void writeJSON(java.io.Writer writer) throws NavajoException;
 
   /**
    * Write the current Navajo object to the given outputstream

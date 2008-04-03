@@ -260,6 +260,13 @@ public abstract class NavajoFactory {
   public abstract Navajo createNavajo(Reader r);
 	 
   /**
+   * creates a Navajo object directly from a JSON reader
+   * @param r
+   * @return
+   */
+  
+  public abstract Navajo createNavajoJSON(Reader r);
+  /**
    * Create a Navajo object from a given Object
    * @param representation Object
    * @return Navajo
@@ -561,5 +568,57 @@ public boolean isSandboxMode() {
 
 public void removeHandle(String name) {
 	binaryStorage.remove(name);
+}
+
+public static void main(String[] args){
+	try{
+
+		System.setProperty("com.dexels.navajo.DocumentImplementation", "com.dexels.navajo.document.base.BaseNavajoFactoryImpl");
+		//	NavajoFactory.getInstance().setExpressionEvaluator(new DefaultExpressionEvaluator());
+		Navajo n = NavajoFactory.getInstance().createNavajo();
+		Method meth = NavajoFactory.getInstance().createMethod(n, "shell/InitTestJSON", "PROP");
+		meth.addRequired("Visfabriek");
+		n.addMethod(meth);
+		Method meth2 = NavajoFactory.getInstance().createMethod(n, "shell/InitLife", "Worst");
+		meth.addRequired("Testbericht");
+		n.addMethod(meth2);
+		Message m = NavajoFactory.getInstance().createMessage(n, "Testbericht");
+		Property p = NavajoFactory.getInstance().createProperty(n, "Testproperty", "string", "Walvis", 32, "Moby", Property.DIR_OUT);
+		Property sp = NavajoFactory.getInstance().createProperty(n, "SelectFish", "+", "Vis", Property.DIR_IN);
+		Selection s1 = NavajoFactory.getInstance().createSelection(n, "Baars", "BASS",  true);
+		Selection s2 = NavajoFactory.getInstance().createSelection(n, "Snoek", "PIKE",  false);
+		sp.addSelection(s1);
+		sp.addSelection(s2);
+		
+		Message m2 = NavajoFactory.getInstance().createMessage(n, "Visfabriek", Message.MSG_TYPE_ARRAY);
+		Message e1  = NavajoFactory.getInstance().createMessage(n, "Visfabriek");
+		Message e2  = NavajoFactory.getInstance().createMessage(n, "Visfabriek");
+		m2.addElement(e1);
+		m2.addElement(e2);
+		
+		m.addProperty(sp);
+		m.addProperty(p);
+
+		n.addMessage(m2);
+		n.addMessage(m);
+		
+		System.err.println("=================================== ORIGNAL TML ==============================");
+		n.write(System.err);
+		System.err.println("==============================================================================\n\n");
+		StringWriter sw = new StringWriter();
+		n.writeJSON(sw);
+		String json = sw.getBuffer().toString();
+		// revert to navajo
+		System.err.println("================================== GENERATED JSON ============================");
+		System.err.println(json);
+		System.err.println("==============================================================================\n\n");
+		Navajo x = NavajoFactory.getInstance().createNavajoJSON(new StringReader(json));
+		System.err.println("================================= RECONSTRUCTED TML ==========================");
+		x.write(System.err);
+		System.err.println("==============================================================================\n\n");
+	}catch(Exception e){
+		e.printStackTrace();
+	}
+	
 }
 }

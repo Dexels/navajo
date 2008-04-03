@@ -60,3 +60,4 @@ video;MPEG;MPEG video (MPG);video/mpeg;mpg,mpeg;0;000001ba;20;
 doc;MSWORD;MS Word;application/msword;doc;0;fe370023;20;
 doc;MSWORD;MS Word;application/msword;doc;0;d0cf11e0a1b1;20;
 doc;MSWORD;MS Word;application/msword;doc;0;dba52d000000;20;
+rss;XML;Rss feed;application/rss+xml;rss;0;"<rss";10;

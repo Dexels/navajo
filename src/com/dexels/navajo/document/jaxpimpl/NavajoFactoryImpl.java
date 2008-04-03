@@ -157,5 +157,10 @@ public final class NavajoFactoryImpl extends NavajoFactory {
   public LazyMessage createLazyMessage(Navajo tb, String name, int windowSize) {
     throw new java.lang.UnsupportedOperationException("Method createLazyMessage() not yet implemented.");
 }
+  
+  public Navajo createNavajoJSON(Reader r){
+		// First we determine Navajo -> JSON , see BaseNode
+		return null;
+	}
 
 }

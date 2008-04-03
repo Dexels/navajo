@@ -245,4 +245,8 @@ public final class NavajoFactoryImpl extends NavajoFactory {
         "Method createParam() not yet implemented.");
   }
 
+  public Navajo createNavajoJSON(Reader r){
+		// First we determine Navajo -> JSON , see BaseNode
+		return null;
+	}
 }

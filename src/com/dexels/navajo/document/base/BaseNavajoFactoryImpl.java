@@ -4,6 +4,7 @@ import java.lang.reflect.*;
 
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.Method;
+import com.dexels.navajo.document.json.JSONParser;
 import com.dexels.navajo.document.saximpl.*;
 import com.dexels.navajo.document.saximpl.qdxml.*;
 /**
@@ -227,6 +228,15 @@ public Navajo createNavajo(Reader r) {
 	}  
 }
 
+public Navajo createNavajoJSON(Reader r){
+	try{
+		JSONParser jsoParser = new JSONParser();
+		jsoParser.parse(r);
+		return jsoParser.getNavajo();
+	}catch(Exception e){
+		throw new RuntimeException(e);
+	}
+}
 
 public Navajo createNavajo(Object representation) {
     // TODO Auto-generated method stub

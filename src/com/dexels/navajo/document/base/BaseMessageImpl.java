@@ -11,6 +11,7 @@ package com.dexels.navajo.document.base;
  */
 
 import java.beans.*;
+import java.io.Writer;
 import java.util.*;
 import java.util.regex.*;
 
@@ -1288,5 +1289,12 @@ public final Message getParentMessage() {
 	      return (TreeNode) getArrayParentMessage();
 	    }
 
+	    public void write(Writer w){
+	    	try{
+	    		this.printElement(w, 2);
+	    	}catch(Exception e){
+	    		e.printStackTrace();
+	    	}
+	    }
 	
 }

@@ -1179,4 +1179,8 @@ public final class NavajoImpl implements Navajo, java.io.Serializable {
 		return myFactory;
 	}
 
+	public void writeJSON(Writer writer) throws NavajoException {
+		//nop		
+	}
+
 }
