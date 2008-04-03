@@ -590,13 +590,6 @@ public NavajoFactory getNavajoFactory() {
 	return myFactory;
 }
 
-public void write(Writer w) throws NavajoException{
-	try{
-		this.printElement(w, 2);
-	}catch(Exception e){
-		throw new NavajoExceptionImpl(e); 
-	}
-}
 public void writeJSON(Writer w) throws NavajoException{
 	try{
 		this.printElementJSON(w, false);
