@@ -25,7 +25,6 @@
 package com.dexels.navajo.jabber;
 
 import java.io.*;
-import java.util.*;
 import java.util.concurrent.*;
 
 import org.jivesoftware.smack.*;
@@ -36,7 +35,6 @@ import com.dexels.navajo.events.types.*;
 import com.dexels.navajo.scheduler.*;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.server.enterprise.jabber.*;
-import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.util.*;
 
 /**
@@ -149,7 +147,7 @@ public class JabberWorker extends GenericThread implements JabberInterface, Nava
 	public void initialize(String server, int port, String domain, String username, String password) {
 		try {
 			myJabber.initialize(server, port,domain, username, password);
-			System.err.println("Initialized");
+			//System.err.println("Initialized");
 		} catch (XMPPException e) {
 			e.printStackTrace();
 		}		
@@ -157,21 +155,21 @@ public class JabberWorker extends GenericThread implements JabberInterface, Nava
 		afterWebserviceTrigger.setTask(new Task(){
 
 			public void run() {
-				System.err.println("Do some shit!");
+				//System.err.println("Do some shit!");
 				Navajo n = getNavajo();
 				if(n==null) {
 					System.err.println("Whoops");
 				} else {
-					try {
-						n.write(System.err);
+					//try {
+						//n.write(System.err);
 						performTail(n);
-					} catch (NavajoException e) {
-						e.printStackTrace();
-					}
+					//} catch (NavajoException e) {
+					//	e.printStackTrace();
+					//}
 				}
 			}});
 //		WebserviceListenerRegistry.getInstance().registerTrigger(afterWebserviceTrigger);
-		System.err.println("WebserviceListenerRegistry.getInstance() hash: "+WebserviceListenerRegistry.getInstance().hashCode());
+		//System.err.println("WebserviceListenerRegistry.getInstance() hash: "+WebserviceListenerRegistry.getInstance().hashCode());
 
 		  NavajoEventRegistry.getInstance().addListener(NavajoRequestEvent.class, this);
 		  NavajoEventRegistry.getInstance().addListener(NavajoResponseEvent.class,this);
@@ -182,7 +180,7 @@ public class JabberWorker extends GenericThread implements JabberInterface, Nava
 	protected void performTail(Navajo n) {
 		String service = n.getHeader().getRPCName();
 		if(service==null) {
-			System.err.println("DONT know!");
+			//System.err.println("DONT know!");
 		}
 		try {
 			myJabber.fireTail(service, n);
@@ -193,24 +191,13 @@ public class JabberWorker extends GenericThread implements JabberInterface, Nava
 	}
 
 	public final void worker() {
-		System.err.println("\n\nWORKING DA JABBERRRR\n\n");
 		if(!isInstantiated()) {
-			System.err.println("Err! Not yet instantiated...");
 			return;
 		}
 
-//		if(myWaitingQueue.isEmpty()) {
-//			try {
-//				Thread.sleep(1000);
-//			} catch (InterruptedException e) {
-//				e.printStackTraceq();
-//			}
-//		}
-		System.err.println("Queueue size: "+myWaitingQueue.size());
 		Runnable r;
 		try {
 			r = myWaitingQueue.take();
-			System.err.println("Taking something....");
 			r.run();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
@@ -231,16 +218,16 @@ public class JabberWorker extends GenericThread implements JabberInterface, Nava
 
 			public void run() {
 				try {
-					System.err.println("QueueThread: firing for service: "+service);
+					//System.err.println("QueueThread: firing for service: "+service);
 					myJabber.fireTail(service, n);
-					System.err.println("QueueThread: Finished ");
+					//System.err.println("QueueThread: Finished ");
 				} catch (XMPPException e) {
 					e.printStackTrace();
 				}
 			}};
 			boolean offered = myWaitingQueue.offer(r);
 			if(offered) {
-				System.err.println("Successfully added to queue");
+				//System.err.println("Successfully added to queue");
 			} else {
 				System.err.println("Request denied, queue full");
 			}
@@ -271,9 +258,9 @@ public class JabberWorker extends GenericThread implements JabberInterface, Nava
 
 	public void broadcastNavajo(Navajo navajo) throws XMPPException {
 		// TODO Auto-generated method stub
-		System.err.println("Starting broadcast");
+		//System.err.println("Starting broadcast");
 		String service = navajo.getHeader().getRPCName();
-		System.err.println("Starting broadcast: "+service);
+		//System.err.println("Starting broadcast: "+service);
 		StringWriter sw = new StringWriter();
 		try {
 			navajo.write(sw);
@@ -323,7 +310,7 @@ public class JabberWorker extends GenericThread implements JabberInterface, Nava
 
 
 	public void onNavajoEvent(NavajoEvent ne) {
-		System.err.println("Navajo event found..");
+		//System.err.println("Navajo event found..");
 		if(ne instanceof NavajoRequestEvent) {
 			NavajoRequestEvent nre = (NavajoRequestEvent)ne;
 			fireTail(nre.getNavajo().getHeader().getRPCName(), nre.getNavajo() );

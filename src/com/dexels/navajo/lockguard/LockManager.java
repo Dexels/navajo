@@ -200,8 +200,6 @@ public final class LockManager extends GenericThread implements LockManagerMXBea
 		final ArrayList lockList = new ArrayList();
 		final Iterator iter = lockDefinitions.values().iterator();
 		
-		
-		
 		// Try ty acquire locks in parallel.
 		final TotalDefinitions totalDefinitions = new TotalDefinitions();
 		totalDefinitions.count = lockDefinitions.size();
@@ -224,7 +222,7 @@ public final class LockManager extends GenericThread implements LockManagerMXBea
 						}
 					} catch (LocksExceeded e) {
 						// TODO Auto-generated catch block
-						e.printStackTrace();
+						//e.printStackTrace();
 						//System.err.println(">>>> Locks exceeded lock for: " + ld);
 					} finally {
 						synchronized (totalDefinitions) {
@@ -239,7 +237,7 @@ public final class LockManager extends GenericThread implements LockManagerMXBea
 		
 		// Lockdefinition barrier.
 		//System.err.println("ABOUT TO WAIT FOR ALL LOCKS.....");
-		while ( totalDefinitions.count > 0 ) {
+		while ( totalDefinitions.count > 0 ) { // barrier condition.
 			synchronized (totalDefinitions) {
 				try {
 					totalDefinitions.wait();
