@@ -25,9 +25,13 @@
 package com.dexels.navajo.jabber;
 
 import java.io.*;
+import java.util.*;
 import java.util.concurrent.*;
 
 import org.jivesoftware.smack.*;
+import org.jivesoftware.smackx.*;
+import org.jivesoftware.smackx.muc.*;
+import org.jivesoftware.smackx.packet.*;
 
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.events.*;
@@ -35,6 +39,7 @@ import com.dexels.navajo.events.types.*;
 import com.dexels.navajo.scheduler.*;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.server.enterprise.jabber.*;
+
 import com.dexels.navajo.util.*;
 
 /**
@@ -70,11 +75,6 @@ public class JabberWorker extends GenericThread implements JabberInterface, Nava
 
 	private int maxRequestRate = 20;
 	private int maxQueueSize = 100;
-	
-	public JabberWorker() {
-		super();
-	}
-	
 
 	public void configJabber(Message jabberMessage) throws UserException  {
 		Property serverProperty = jabberMessage.getProperty("server");
@@ -195,6 +195,7 @@ public class JabberWorker extends GenericThread implements JabberInterface, Nava
 			return;
 		}
 
+
 		Runnable r;
 		try {
 			r = myWaitingQueue.take();
@@ -218,19 +219,15 @@ public class JabberWorker extends GenericThread implements JabberInterface, Nava
 
 			public void run() {
 				try {
-					//System.err.println("QueueThread: firing for service: "+service);
+
 					myJabber.fireTail(service, n);
-					//System.err.println("QueueThread: Finished ");
+
 				} catch (XMPPException e) {
 					e.printStackTrace();
 				}
 			}};
 			boolean offered = myWaitingQueue.offer(r);
-			if(offered) {
-				//System.err.println("Successfully added to queue");
-			} else {
-				System.err.println("Request denied, queue full");
-			}
+
 	}
 
 
@@ -248,7 +245,6 @@ public class JabberWorker extends GenericThread implements JabberInterface, Nava
 	}
 
 	public void setPresenceStatus(String status) {
-		System.err.println("Setting presence to: "+status);
 		myJabber.setPresenceStatus(status);
 	}
 
@@ -258,9 +254,9 @@ public class JabberWorker extends GenericThread implements JabberInterface, Nava
 
 	public void broadcastNavajo(Navajo navajo) throws XMPPException {
 		// TODO Auto-generated method stub
-		//System.err.println("Starting broadcast");
+
 		String service = navajo.getHeader().getRPCName();
-		//System.err.println("Starting broadcast: "+service);
+
 		StringWriter sw = new StringWriter();
 		try {
 			navajo.write(sw);
@@ -310,7 +306,7 @@ public class JabberWorker extends GenericThread implements JabberInterface, Nava
 
 
 	public void onNavajoEvent(NavajoEvent ne) {
-		//System.err.println("Navajo event found..");
+
 		if(ne instanceof NavajoRequestEvent) {
 			NavajoRequestEvent nre = (NavajoRequestEvent)ne;
 			fireTail(nre.getNavajo().getHeader().getRPCName(), nre.getNavajo() );
@@ -339,5 +335,86 @@ public class JabberWorker extends GenericThread implements JabberInterface, Nava
 		}		
 
 	}
+	public static void  main(String[] args) throws XMPPException, NavajoException {
+		JabberWorker tjc = new JabberWorker();
 
+		tjc.myJabber.initialize("hermes1.dexels.com",5222,"sportlink.com","admin","xxxxxx");
+	
+		Navajo nn = NavajoFactory.getInstance().createNavajo();
+		for (int i = 0; i < 80; i++) {
+			tjc.postRoomMembers(nn,"knvb");
+		}
+
+		nn.write(System.err);
+  
+
+	}
+	private void postRoomMembers(Navajo rootDoc,String roomName) throws XMPPException, NavajoException {
+//	      ServiceDiscoveryManager discoManager = ServiceDiscoveryManager.getInstanceFor(myJabber.connection);
+		long stamp2 = System.currentTimeMillis();
+		Message participants = NavajoFactory.getInstance().createMessage(rootDoc, "Participants", Message.MSG_TYPE_ARRAY);
+		rootDoc.addMessage(participants);
+		List<String> members = new ArrayList<String>();
+		MultiUserChat muc = new MultiUserChat(myJabber.connection, roomName + "@" + "conference.sportlink.com");
+		muc.join("The nabajo");
+		Collection<Occupant> aa = muc.getParticipants();
+		for (Occupant occupant : aa) {
+			Message m = NavajoFactory.getInstance().createMessage(rootDoc,  "Participants", Message.MSG_TYPE_ARRAY_ELEMENT);
+			participants.addMessage(m);
+			Property jid = NavajoFactory.getInstance().createProperty(rootDoc,"Jid",Property.STRING_PROPERTY,occupant.getJid(),0,"",Property.DIR_OUT);
+			m.addProperty(jid);
+			Property affiliation = NavajoFactory.getInstance().createProperty(rootDoc,"Affiliation",Property.STRING_PROPERTY,occupant.getAffiliation(),0,"",Property.DIR_OUT);
+			m.addProperty(affiliation);
+			Property nickName = NavajoFactory.getInstance().createProperty(rootDoc,"Nickname",Property.STRING_PROPERTY,occupant.getNick(),0,"",Property.DIR_OUT);
+			m.addProperty(nickName);
+			Property role = NavajoFactory.getInstance().createProperty(rootDoc,"Role",Property.STRING_PROPERTY,occupant.getRole(),0,"",Property.DIR_OUT);
+			m.addProperty(role);
+			
+			members.add(occupant.getJid());
+		}
+//		muc.leave();
+		long stamp = System.currentTimeMillis();
+		System.err.println("Time taken: "+(stamp2 - stamp));
+//        DiscoverItems items = discoManager.discoverItems("knvb@conference.sportlink.com");
+//        for (Iterator it = items.getItems(); it.hasNext();) {
+//            DiscoverItems.Item item = (DiscoverItems.Item) it.next();
+//            System.out.println("Room occupant: " + item.getEntityID());
+//        }
+//		System.err.println("Time taken2: "+(stamp - System.currentTimeMillis()));
+
+	}
+
+
+	private void postRooms(String roomName) {
+		try {
+			Navajo n = NavajoFactory.getInstance().createNavajo();
+			com.dexels.navajo.document.Message m = NavajoFactory.getInstance().createMessage(n, "Rooms",
+					com.dexels.navajo.document.Message.MSG_TYPE_ARRAY);
+			n.addMessage(m);
+			Collection<HostedRoom> aa = MultiUserChat.getHostedRooms(myJabber.connection, "conference.sportlink.com");
+			for (HostedRoom hostedRoom : aa) {
+				if(!hostedRoom.getName().equals(roomName)) {
+					continue;
+				}
+				
+				System.err.println("DESCRIPTION: " + hostedRoom.getName() + " # of occupants: " + hostedRoom.getJid());
+				com.dexels.navajo.document.Message e = NavajoFactory.getInstance().createMessage(n, "Rooms",
+						com.dexels.navajo.document.Message.MSG_TYPE_ARRAY_ELEMENT);
+				// NavajoFactory.getInstance().createProperty(n,)
+				Property user = NavajoFactory.getInstance().createProperty(n, "Name", Property.STRING_PROPERTY, hostedRoom.getName(), 0,"", Property.DIR_OUT, null);
+				e.addProperty(user);
+				Property name = NavajoFactory.getInstance().createProperty(n, "Jid", Property.STRING_PROPERTY, hostedRoom.getJid(), 0, "",Property.DIR_OUT, null);
+				e.addProperty(name);
+				m.addMessage(e);
+			}
+			n.write(System.err);
+		} catch (NavajoException e1) {
+			e1.printStackTrace();
+		} catch (XMPPException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	
 }

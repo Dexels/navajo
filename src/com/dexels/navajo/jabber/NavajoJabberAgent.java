@@ -56,7 +56,7 @@ public class NavajoJabberAgent  {
 				connection.disconnect();
 			}
 		}
-		config = new ConnectionConfiguration(server, port, chatDomain);
+		config = new ConnectionConfiguration(server, port);
 		connection = new XMPPConnection(config);
 		connection.connect();
 		connection.login(username, password, NavajoClientFactory.getClient().getSessionToken());
