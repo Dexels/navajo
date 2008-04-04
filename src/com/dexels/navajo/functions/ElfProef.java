@@ -29,8 +29,9 @@ public final class ElfProef extends FunctionInterface {
 
         boolean result = false;
 
-        if (nummer.length() != 9)
-            result = false;
+        if (nummer.length() != 9) {
+            return false;
+        }
 
         int total = 0;
 
@@ -63,7 +64,7 @@ public final class ElfProef extends FunctionInterface {
 
     public static void main(String [] args) {
 
-      String n = "307617769";
+      String n = "4511425"; // 4511425
       ElfProef e = new ElfProef();
       System.out.println(e.elfProef(n));
     }
