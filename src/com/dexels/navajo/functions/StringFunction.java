@@ -103,12 +103,12 @@ public final class StringFunction extends FunctionInterface {
 //    Object o = f.evaluate();
 //    System.out.println("o = " + o + ", type = " + o.getClass().getName());
     
-    String noot = "@@@BBFW63X@@@@aap.nl";
+    String noot = "06 - 2322 7572";
     f.reset();
     
     f.insertOperand("replaceAll");
     f.insertOperand(noot);
-    f.insertOperand("^[@]+");
+    f.insertOperand("[ ]+");
     f.insertOperand("");
     Object o = f.evaluate();
     System.out.println("o = " + o + ", type = " + o.getClass().getName());
