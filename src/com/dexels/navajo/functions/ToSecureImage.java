@@ -7,9 +7,8 @@ import java.io.*;
 import java.awt.*;
 import java.awt.geom.*;
 import java.awt.image.*;
-import java.util.*;
-import javax.swing.*;
 import com.dexels.navajo.document.*;
+import java.util.Random;
 
 /**
  * <p>Title: ToSecureImage.java</p>
