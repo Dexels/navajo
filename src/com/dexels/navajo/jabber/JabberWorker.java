@@ -36,6 +36,8 @@ import org.jivesoftware.smackx.packet.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.events.*;
 import com.dexels.navajo.events.types.*;
+import com.dexels.navajo.mapping.Mappable;
+import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.scheduler.*;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.server.enterprise.jabber.*;
@@ -47,7 +49,7 @@ import com.dexels.navajo.util.*;
  * @author Frank
  *
  */
-public class JabberWorker extends GenericThread implements JabberInterface, NavajoListener {
+public class JabberWorker extends GenericThread implements JabberInterface, NavajoListener, Mappable {
 
 
 
@@ -67,7 +69,7 @@ public class JabberWorker extends GenericThread implements JabberInterface, Nava
 	
 //	private final static String id = "Navajo Jabber Interface";
 	
-	private final NavajoJabberAgent myJabber = new NavajoJabberAgent();
+	private NavajoJabberAgent myJabber;
 	private String myRoom;
 	private boolean isInstantiated = false;
 	private int sendCount = 0;
@@ -76,6 +78,8 @@ public class JabberWorker extends GenericThread implements JabberInterface, Nava
 	private int maxRequestRate = 20;
 	private int maxQueueSize = 100;
 
+	private Access myAccess;
+	
 	public void configJabber(Message jabberMessage) throws UserException  {
 		Property serverProperty = jabberMessage.getProperty("server");
 		Property domainProperty = jabberMessage.getProperty("domain");
@@ -131,6 +135,7 @@ public class JabberWorker extends GenericThread implements JabberInterface, Nava
 			}
 			
 			instance = new JabberWorker();
+			instance.myJabber =  new NavajoJabberAgent();
 //			JMXHelper.registerMXBean(instance, JMXHelper.NAVAJO_DOMAIN, id);
 			AuditLog.log("Jabber", "Started jabber connection worker $Id$");
 			//<c.chatclient id="jabber" password="'xxxxxx'" server="'talk.google.com'" username="'dexels'" domain="'gmail.com'" password="'xxxxxxxxx'">
@@ -337,14 +342,20 @@ public class JabberWorker extends GenericThread implements JabberInterface, Nava
 	}
 	public static void  main(String[] args) throws XMPPException, NavajoException {
 		JabberWorker tjc = new JabberWorker();
-
+		tjc.myJabber = new NavajoJabberAgent();
+		
 		tjc.myJabber.initialize("hermes1.dexels.com",5222,"sportlink.com","admin","xxxxxx");
 	
 		Navajo nn = NavajoFactory.getInstance().createNavajo();
-		for (int i = 0; i < 80; i++) {
-			tjc.postRoomMembers(nn,"knvb");
-		}
-
+		//for (int i = 0; i < 80; i++) {
+		//	tjc.postRoomMembers(nn,"knvb");
+		//}
+			MultiUserChat muc = new MultiUserChat(tjc.myJabber.connection, "knvb" + "@" + "conference.sportlink.com");
+			Iterator<String> is = muc.getOccupants();
+			while ( is.hasNext() ) {
+				System.err.println(">>>: " + is.next());
+				
+			}
 		nn.write(System.err);
   
 
@@ -356,7 +367,8 @@ public class JabberWorker extends GenericThread implements JabberInterface, Nava
 		rootDoc.addMessage(participants);
 		List<String> members = new ArrayList<String>();
 		MultiUserChat muc = new MultiUserChat(myJabber.connection, roomName + "@" + "conference.sportlink.com");
-		muc.join("The nabajo");
+		//System.err.println("Trying to join room " +  roomName + "@" + "conference.sportlink.com AS " + Dispatcher.getInstance().getNavajoConfig().getInstanceName());
+		muc.join( Dispatcher.getInstance().getNavajoConfig().getInstanceName() );
 		Collection<Occupant> aa = muc.getParticipants();
 		for (Occupant occupant : aa) {
 			Message m = NavajoFactory.getInstance().createMessage(rootDoc,  "Participants", Message.MSG_TYPE_ARRAY_ELEMENT);
@@ -413,6 +425,21 @@ public class JabberWorker extends GenericThread implements JabberInterface, Nava
 		} catch (XMPPException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+	}
+	
+	public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
+		this.myAccess = access;
+	}
+
+	public void store() throws MappableException, UserException {
+		String room = myAccess.getInDoc().getProperty("/Jabber/Chatroom").getValue();
+		try {
+			getInstance().postRoomMembers(myAccess.getOutputDoc(), room);
+		} catch (XMPPException e) {
+			throw new UserException(-1, e.getMessage(), e);
+		} catch (NavajoException e) {
+			throw new UserException(-1, e.getMessage(), e);
 		}
 	}
 	

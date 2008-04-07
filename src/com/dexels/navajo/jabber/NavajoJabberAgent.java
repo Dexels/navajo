@@ -60,25 +60,25 @@ public class NavajoJabberAgent  {
 		connection = new XMPPConnection(config);
 		connection.connect();
 		connection.login(username, password, NavajoClientFactory.getClient().getSessionToken());
-		System.err.println("Login ok");
+		//System.err.println("Login ok");
 
 		connection.addPacketListener(new PacketListener() {
 			public void processPacket(Packet p) {
 				Message m = (Message) p;
-				System.err.println("Incoming packet from: "+m.getFrom()+" to: "+m.getTo()+" about: "+m.getSubject());
-				System.err.println("BODY: "+m.getBody());
+				//System.err.println("Incoming packet from: "+m.getFrom()+" to: "+m.getTo()+" about: "+m.getSubject());
+				//System.err.println("BODY: "+m.getBody());
 				if(m.getFrom().equals(m.getTo())) {
 					System.err.println("Circular shit!");
 					return;
 				}
-				System.err.println("\nQueuesize: "+ JabberWorker.getInstance().getQueueSize());
+				//System.err.println("\nQueuesize: "+ JabberWorker.getInstance().getQueueSize());
 				String from = m.getFrom();
 				String to = m.getTo();
 				if (from.equals(to)) {
 					return;
 				}
 				if("serverResponse".equals(m.getSubject())) {
-					System.err.println("Ignoring server response!");
+					//System.err.println("Ignoring server response!");
 					return;
 				}
 				
