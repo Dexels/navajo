@@ -9,9 +9,7 @@
 	<classpathentry exported="true" kind="lib" path="lib/activation.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jakarta-poi-1.9.0-dev-20021227.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/mail.jar"/>
-	<classpathentry kind="src" path="/Grus"/>
 	<classpathentry kind="lib" path="lib/hsqldb.jar"/>
-	<classpathentry exported="true" kind="src" path="/NavajoFunctions"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/DexelsVersionControl"/>
 	<classpathentry kind="lib" path="lib/edtftpj.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/NavajoListeners"/>
@@ -23,7 +21,6 @@
 	<classpathentry kind="lib" path="/NavajoListeners/lib/jaxrpc-1_1.jar"/>
 	<classpathentry kind="lib" path="/NavajoListeners/lib/jms.jar"/>
 	<classpathentry kind="lib" path="/NavajoListeners/lib/junit-3_8_1.jar"/>
-	<classpathentry kind="lib" path="/NavajoListeners/lib/kxml.zip"/>
 	<classpathentry kind="lib" path="/NavajoListeners/lib/log4j-1_2_4.jar"/>
 	<classpathentry kind="lib" path="/NavajoListeners/lib/mail.jar"/>
 	<classpathentry kind="lib" path="/NavajoListeners/lib/optional-1_5_1.jar"/>
@@ -34,13 +31,12 @@
 	<classpathentry kind="lib" path="/NavajoListeners/lib/servlet-2_2.jar"/>
 	<classpathentry kind="lib" path="/NavajoListeners/lib/soaprmi-1_1.jar"/>
 	<classpathentry kind="lib" path="/NavajoListeners/lib/wsdl4j-20021124.jar"/>
-	<classpathentry kind="lib" path="/NavajoListeners/lib/wsif.jar"/>
-	<classpathentry kind="lib" path="/NavajoListeners/lib/wsif-j2c.jar"/>
 	<classpathentry kind="lib" path="/NavajoListeners/lib/xercesImpl-2_2_1.jar"/>
 	<classpathentry kind="lib" path="/NavajoListeners/lib/xmlParserAPIs-2_2_1.jar"/>
 	<classpathentry kind="lib" path="lib/Tidy.jar"/>
-	<classpathentry kind="lib" path="/home/arjen/projecten/ibatis/lib/ibatis-2.3.0.677.jar"/>
 	<classpathentry kind="lib" path="lib/rssutils.jar"/>
 	<classpathentry kind="lib" path="lib/ical4j.jar"/>
+	<classpathentry kind="lib" path="lib/ibatis-2.3.0.677.jar"/>
+	<classpathentry kind="lib" path="lib/Grus.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
