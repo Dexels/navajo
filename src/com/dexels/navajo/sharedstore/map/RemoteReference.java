@@ -4,9 +4,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jgroups.Address;
-
-import com.dexels.navajo.tribe.TribeManager;
+import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
 import com.dexels.navajo.util.Util;
 
 /**
@@ -65,7 +63,7 @@ public class RemoteReference implements Serializable {
 		guid = Util.getRandomGuid();
 		System.err.println("IN myObjectRegistry(), GUID = " + guid + ", O = " + o);
 		myObjectRegistry.put(guid, o );
-		host = TribeManager.getInstance().getMyMembership().getAddress();
+		host = TribeManagerFactory.getInstance().getMyMembership().getAddress();
 	}
 	
 	/**
@@ -100,7 +98,7 @@ public class RemoteReference implements Serializable {
 		if ( myObject != null ) {
 			return myObject;
 		} else {
-			GetRemoteObjectAnswer a = (GetRemoteObjectAnswer) TribeManager.getInstance().askSomebody(new GetRemoteObjectRequest(this), host);
+			GetRemoteObjectAnswer a = (GetRemoteObjectAnswer) TribeManagerFactory.getInstance().askSomebody(new GetRemoteObjectRequest(this), host);
 			if ( !keepRemote ) {
 				myObject = a.getObject(); 
 				return myObject;

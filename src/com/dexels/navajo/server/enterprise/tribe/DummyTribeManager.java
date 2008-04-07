@@ -3,7 +3,6 @@ package com.dexels.navajo.server.enterprise.tribe;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.jgroups.Address;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
@@ -65,5 +64,9 @@ public class DummyTribeManager implements TribeManagerInterface {
 				return null;
 			}
 	 }
+
+	public TribeMemberInterface getMyMembership() {
+		return new TribeMemberImpl();
+	}
 
 }

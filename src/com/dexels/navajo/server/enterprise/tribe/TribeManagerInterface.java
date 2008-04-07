@@ -18,5 +18,6 @@ public interface TribeManagerInterface {
 	public Navajo tribalBeforeWebServiceRequest(String service, Access a, HashSet<String> ignoreList);
 	public Set getAllMembers();
     public Answer askSomebody(Request q, Object address);
+    public TribeMemberInterface getMyMembership();
 	
 }
