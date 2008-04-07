@@ -33,7 +33,7 @@ public class RemoteReference implements Serializable {
 	
 	private Object myObject;
 	private String guid;
-	private Address host;
+	private Object host;
 	private boolean keepRemote = false;
 	private volatile static Map myObjectRegistry = new HashMap();
 	
@@ -49,7 +49,7 @@ public class RemoteReference implements Serializable {
 		return new RemoteReference(r.getRef(), r.getHost(), r.isKeepRemote());
 	}
 	
-	private RemoteReference(String ref, Address host, boolean keepRemote) {
+	private RemoteReference(String ref, Object host, boolean keepRemote) {
 		this.guid = ref;
 		this.host = host;
 		this.keepRemote = keepRemote;
@@ -125,7 +125,7 @@ public class RemoteReference implements Serializable {
 	 * 
 	 * @return
 	 */
-	public Address getHost() {
+	public Object getHost() {
 		return host;
 	}
 	
