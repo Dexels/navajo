@@ -41,7 +41,7 @@ public class UserException extends Exception {
     }
 
     public UserException(int code, String message, Throwable t) {
-
+    	super(t);
         this.code = code;
         this.message = message;
         this.t = t;
