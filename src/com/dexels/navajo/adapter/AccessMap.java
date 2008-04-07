@@ -85,7 +85,12 @@ public final class AccessMap implements Mappable {
     addProperty(parent, "Map", m.getMapName(), Property.STRING_PROPERTY, 50);
     addProperty(parent, "Totaltime", new Integer(m.getTotaltime()), Property.STRING_PROPERTY, 50);
 
-    if (myMap instanceof com.dexels.navajo.adapter.SQLMap || myMap instanceof com.dexels.navajo.adapter.SPMap) {
+    Class ccc = null;
+	try {
+		ccc = Class.forName("com.dexels.navajo.adapter.SPMap");
+	} catch (ClassNotFoundException e) {
+	}
+    if (myMap instanceof com.dexels.navajo.adapter.SQLMap || (ccc!=null && (ccc.isInstance(myMap)))) {
       SQLMap mySQL = (SQLMap) myMap;
       Message parameters = getMessage(parent, "MapParameters");
       addProperty(parameters, "Datasource", mySQL.getDatasource(), Property.STRING_PROPERTY, 50);
