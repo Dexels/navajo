@@ -29,9 +29,7 @@ import java.util.*;
 import java.util.concurrent.*;
 
 import org.jivesoftware.smack.*;
-import org.jivesoftware.smackx.*;
 import org.jivesoftware.smackx.muc.*;
-import org.jivesoftware.smackx.packet.*;
 
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.events.*;
