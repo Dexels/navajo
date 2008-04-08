@@ -51,7 +51,7 @@ public class TaskRunnerFactory {
 					m.invoke(dummy, null);
 				} catch (Exception e) {
 					//e.printStackTrace(System.err);
-					AuditLog.log("INIT", "WARNING: Clock not available", Level.WARNING);
+					AuditLog.log("INIT", "WARNING: Workflow not available", Level.WARNING);
 				}	
 				try {
 					Class c = Class.forName("com.dexels.navajo.scheduler.ListenerRunner");
