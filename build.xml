@@ -3,19 +3,131 @@
 <project name="NavajoDocument" default="archive" basedir=".">
 	<property name="tar.archive" value="NavajoServer.tgz" />
 	<property name="zip.archive" value="NavajoServer.zip" />
+	<property name="sourcetar.archive" value="NavajoServerSource.tgz" />
+	<property name="sourcezip.archive" value="NavajoServerSource.zip" />
+	<delete dir="source/">
+	</delete>
+
+	<copy todir="source">
+	<fileset file="sourcebuild.xml">
+	</fileset>
+	</copy>
+	<copy todir="source/Navajo">
+		<fileset dir="${PROJECTHOME}/Navajo/src">
+			<include name="**/*" />
+
+			<!-- enterprise -->
+			<exclude name="com/dexels/navajo/scheduler/**" />
+			<exclude name="com/dexels/navajo/tribe/**" />
+			<exclude name="com/dexels/navajo/workflow/**" />
+			<exclude name="com/dexels/navajo/adapter/**" />
+			<exclude name="com/dexels/navajo/integrity/**" />
+			<exclude name="com/dexels/navajo/jabber/**" />
+			<exclude name="com/dexels/navajo/server/descriptionprovider/**" />
+			<exclude name="com/dexels/navajo/server/statistics/**" />
+
+			<!-- server -->
+
+			<!--
+			<exclude name="com/dexels/navajo/server/Dispatcher.*" />
+			<exclude name="com/dexels/navajo/server/NavajoConfig.*" />
+			<exclude name="com/dexels/navajo/server/Access.*" />
+		    <exclude name="com/dexels/navajo/lockguard/**" />
+		    <exclude name="com/dexels/navajo/server/jmx/**" />
+			<exclude name="com/dexels/navajo/client/**" />
+			<exclude name="com/dexels/navajo/install/**" />
+			<exclude name="com/dexels/navajo/compiler/**" />
+			<exclude name="com/dexels/navajo/mapping/compiler/**" />
+			<exclude name="org/**" />-->
+
+			<!-- source file, never needed. -->
+			<exclude name="**/*.jj" />
+			<exclude name="**/*.jjt" />
+			<exclude name="**/*.bat" />
+
+		</fileset>
+
+	</copy>
+	<copy todir="source/NavajoDocument">
+		<fileset dir="${PROJECTHOME}/NavajoDocument/src" />
+	</copy>
+	<copy todir="source/NavajoClient">
+		<fileset dir="${PROJECTHOME}/NavajoClient/src" />
+	</copy>
+	<copy todir="source/NavajoListeners">
+		<fileset dir="${PROJECTHOME}/NavajoListeners/src">
+		<exclude name="com/dexels/navajo/server/listener/http/LaszloUploadServlet.java" />
+		<exclude name="com/dexels/navajo/server/listener/http/TmlHttpLaszloServlet.java" />
+		<exclude name="com/dexels/navajo/server/listener/soap/**" />
+			<exclude name="com/dexels/navajo/server/listener/smtp/**" />
+		<exclude name="com/dexels/navajo/server/listener/wsdl/**" />
+		</fileset>
+	</copy>
+	<copy todir="source/NavajoFunctions">
+		<fileset dir="${PROJECTHOME}/NavajoFunctions/src">
+			<exclude name="com/dexels/navajo/functions/ExistsWorkflow.java" />
+		</fileset>
+	</copy>
+	<copy todir="source/NavajoAdapters">
+		<fileset dir="${PROJECTHOME}/NavajoAdapters/src">
+			<exclude name="com/dexels/navajo/adapter/descriptionprovider/**" />
+			<exclude name="com/dexels/navajo/adapter/crystal/**" />
+			<exclude name="com/dexels/navajo/adapter/ibatis/**" />
+			<exclude name="com/dexels/navajo/adapter/icalmap/**" />
+			<exclude name="com/dexels/navajo/adapter/ldap/**" />
+			<exclude name="com/dexels/navajo/adapter/poi/**" />
+			<exclude name="com/dexels/navajo/adapter/rss/**" />
+			<exclude name="com/dexels/navajo/adapter/navajostore/**" />
+			<exclude name="com/dexels/navajo/adapter/SheetMap.java" />
+			<exclude name="com/dexels/navajo/adapter/JabberBroadcastMap.java" />
+			<exclude name="com/dexels/navajo/adapter/BabelFishMap.java" />
+			<exclude name="com/dexels/navajo/adapter/FTPMap.java" />
+			<exclude name="com/dexels/navajo/adapter/ICalMap.java" />
+			<exclude name="com/dexels/navajo/adapter/OracleAdministratorMap.java" />
+			<exclude name="com/dexels/navajo/adapter/RSSMap.java" />
+			<exclude name="com/dexels/navajo/adapter/NavajoMap.java" />
+			<exclude name="com/dexels/navajo/adapter/VersionedNavajoMap.java" />
+			<exclude name="com/dexels/navajo/adapter/SOAPMap.java" />
+			<exclude name="com/dexels/navajo/adapter/SPMap.java" />
+			<exclude name="com/dexels/navajo/adapter/MultipleSQLMap.java" />
+			<exclude name="com/dexels/navajo/adapter/html/**" />
+	</fileset>
+
+	</copy>
+	<copy todir="source/DexelsVersionControl">
+		<fileset dir="${PROJECTHOME}/DexelsVersionControl/src" />
+	</copy>
 
 	<target name="tar">
-		<tar tarfile="${tar.archive}" basedir="." excludes="NavajoServer.tgz,NavajoServer.zip,compiled,classes,build.xml">
-
+		<tar tarfile="${tar.archive}" basedir="." excludes="NavajoServerSource.zip, NavajoServerSource.tgz, NavajoServer.tgz,NavajoServer.zip,compiled,classes,source,build.xml">
+			
 		</tar>
 	</target>
 	<target name="zip">
-		<zip zipfile="${zip.archive}" basedir="."  excludes="NavajoServer.tgz,NavajoServer.zip,compiled,classes,build.xml">
+		<zip zipfile="${zip.archive}" basedir="." excludes="NavajoServerSource.zip, NavajoServerSource.tgz, NavajoServer.tgz,NavajoServer.zip,compiled,classes,source,build.xml">
 		</zip>
 	</target>
-	<target name="archive" depends="tar,zip" />
-	<target name="publish">
-		<scp file="" todir=""></scp>
+
+	
+	<target name="sourcetar">
+		<tar tarfile="${sourcetar.archive}" basedir="source" excludes="classes">
+		</tar>
 	</target>
+	<target name="sourcezip">
+		<zip zipfile="${sourcezip.archive}" basedir="source" excludes="NavajoServer.zip,compiled,classes,source,build.xml">
+		</zip>
+	</target>
+
+	
+	
+	<target name="archive" depends="tar,zip,sourcezip,sourcetar,compile" />
+	<target name="compile">
+		<ant antfile="sourcebuild.xml" dir="source"/>
+	</target>
+	<target name="publish">
+		<scp file="" todir="">
+		</scp>
+	</target>
+	
 </project>
 <!-- EOF: $RCSfile$ -->

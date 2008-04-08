@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- $Id$ -->
+<project name="NavajoComplete" default="archive" basedir=".">
+	<property name="build" location="classes"/>
+	<property name="archive" location="NavajoComplete.jar"/>
+	<property name="lib" value="../3rdparty"/>
+	<path id="depend">
+		<fileset dir="${lib}">
+			<include name="**/*.jar"/>
+		</fileset>
+		<pathelement location="${NavajoComplete.build}"/>
+	</path>
+	<target name="init">
+		<tstamp/>
+		<mkdir dir="${build}"/>
+	</target>
+	<target name="clean">
+		<delete file="${archive}"/>
+		<delete dir="${NavajoComplete.build}"/>
+		<delete dir="${build}"/>
+	</target>
+	<target name="resource">
+		<copy includeemptydirs="false" todir="${build}">
+			<fileset dir=".">
+				<exclude name="**/*.java"/>
+				<exclude name="**/javacc"/>
+				<exclude name="**/jjtree"/>
+			</fileset>
+		</copy>
+	</target>
+	<target name="NavajoComplete" depends="init">
+	</target>
+	<target name="compile" depends="NavajoComplete" >
+		<javac destdir="${build}">
+			<src path="DexelsVersionControl" />
+			<src path="Navajo" />
+			<src path="NavajoAdapters" />
+			<src path="NavajoClient" />
+			<src path="NavajoDocument" />
+			<src path="NavajoFunctions" />
+			<src path="NavajoListeners" />
+			<classpath refid="depend" />
+		</javac>
+	</target>
+	<target name="archive" depends="resource,compile">
+		<jar jarfile="${archive}">
+			<fileset dir="${build}" />
+		</jar>
+	</target>
+</project>
