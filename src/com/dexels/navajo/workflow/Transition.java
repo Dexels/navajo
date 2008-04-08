@@ -236,7 +236,7 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 	}
 	
 	private final boolean isBeforeTrigger(Task t) {
-		return t.getTriggerDescription().startsWith("beforenavajo");
+		return t.getTriggerDescription().startsWith("beforenavajo") || t.getTriggerDescription().startsWith("jabber");
 	}
 	
 	/**

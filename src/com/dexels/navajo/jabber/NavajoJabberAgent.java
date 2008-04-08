@@ -19,7 +19,10 @@ import com.dexels.navajo.client.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.events.*;
 import com.dexels.navajo.events.types.*;
+import com.dexels.navajo.scheduler.JabberTrigger;
+import com.dexels.navajo.scheduler.Trigger;
 import com.dexels.navajo.server.*;
+import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
 
 public class NavajoJabberAgent  {
 	protected static String navajoUsername = "ROOT";
@@ -64,38 +67,90 @@ public class NavajoJabberAgent  {
 
 		connection.addPacketListener(new PacketListener() {
 			public void processPacket(Packet p) {
-				Message m = (Message) p;
-				//System.err.println("Incoming packet from: "+m.getFrom()+" to: "+m.getTo()+" about: "+m.getSubject());
-				//System.err.println("BODY: "+m.getBody());
-				if(m.getFrom().equals(m.getTo())) {
-					System.err.println("Circular shit!");
-					return;
-				}
-				//System.err.println("\nQueuesize: "+ JabberWorker.getInstance().getQueueSize());
-				String from = m.getFrom();
-				String to = m.getTo();
-				if (from.equals(to)) {
-					return;
-				}
-				if("serverResponse".equals(m.getSubject())) {
-					//System.err.println("Ignoring server response!");
-					return;
+				
+				if ( p instanceof Message ) {
+					Message m = (Message) p;
+					//System.err.println("Incoming packet from: "+m.getFrom()+" to: "+m.getTo()+" about: "+m.getSubject());
+					System.err.println("------ INCOMING CHAT MESSAGE ----");
+					System.err.println("FROM: " + m.getFrom());
+					System.err.println("TO  : " + m.getTo());
+					System.err.println("SUBJECT: " + m.getSubject());
+
+					//System.err.println("BODY: "+m.getBody());
+					if(m.getFrom().equals(m.getTo())) {
+						System.err.println("Circular shit!");
+						return;
+					}
+					//System.err.println("\nQueuesize: "+ JabberWorker.getInstance().getQueueSize());
+					String from = m.getFrom();
+					String to = m.getTo();
+					if (from.equals(to)) {
+						return;
+					}
+					if("serverResponse".equals(m.getSubject())) {
+						//System.err.println("Ignoring server response!");
+						return;
+					}
+
+					Chat c = connection.getChatManager().getThreadChat(m.getThread());
+					if (c != null) {
+						System.err.println("Chat found");
+					} else {
+						System.err.println("chat not found!");
+					}
+					try {
+						messageReceived(m);
+					} catch (XMPPException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				} else if ( p instanceof Presence){
+					System.err.println("RECEIVED PRESENCE: " + p + "(" + p.getClass() + ")");
+					Presence pr = (Presence ) p;
+					System.err.println("FROM: " + pr.getFrom());
+					System.err.println("STATUS: " + pr.getStatus());
+					System.err.println("TYPE: " + pr.getType());
+				} else {
+					System.err.println("RECEIVED PRESENCE: " + p + "(" + p.getClass() + ")");
 				}
 				
-				Chat c = connection.getChatManager().getThreadChat(m.getThread());
-				if (c != null) {
-					System.err.println("Chat found");
-				} else {
-					System.err.println("chat not found!");
-				}
-				try {
-					messageReceived(m);
-				} catch (XMPPException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				if ( TribeManagerFactory.getInstance().getIsChief() ) { 
+					// Only the chief perform jabber trigger requests, for now... 
+					// rewrite as TimeTrigger using a function that only fires trigger and puts it in a activatedlisteners map.
+					Iterator<JabberTrigger> all = JabberWorker.getInstance().getTriggers().iterator();
+					while ( all.hasNext() ) {
+						JabberTrigger jt = all.next();
+						if ( p instanceof Message ) {
+							try {
+								// Fake access to support Navajo Document in message body...
+								Access newAccess = new Access(-1,-1,-1,"Unknown","Unknown","","","",false,null);
+								Message m = (Message) p;
+								Navajo n = NavajoFactory.getInstance().createNavajo(new StringReader(m.getBody()));
+								newAccess.setInDoc(n);
+								jt.setAccess(newAccess);
+							} catch (Throwable t) {
+								System.err.println("WARNING, INCOMING JABBER MESSAGE DOES NOT CONTAIN VALID NAVAJO: " + t);
+							}
+						}
+						System.err.println("CHECKING TRIGGER: " + jt.getDescription()  + ", type = " + jt.getType());
+						if ( p.getFrom().matches(jt.getFrom() ) ) {
+							if ( jt.getType().equals(JabberTrigger.TYPE_MESSAGE) && (p instanceof Message) ) {
+								System.err.println("Peforming task...");
+								jt.perform();
+							} else if ( jt.getType().equals(JabberTrigger.TYPE_PRESENCE) && ( p instanceof Presence )) {
+								Presence pp = (Presence) p;
+								String stat = pp.getType() + "/" + pp.getStatus();
+								System.err.println("status = " + jt.getStatus() + ", received status: " + stat );
+								if ( jt.getStatus() == null || stat.startsWith(jt.getStatus()) ) {
+									System.err.println("Peforming task...");
+									jt.perform();
+								}
+							}
+						}
+					}
 				}
 			}
-		}, new PacketTypeFilter(Message.class));
+		}, null);
 
 		connection.getRoster().addRosterListener(new RosterListener() {
 			public void entriesAdded(Collection<String> arg0) {

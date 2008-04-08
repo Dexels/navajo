@@ -78,6 +78,9 @@ public class JabberWorker extends GenericThread implements JabberInterface, Nava
 
 	private Access myAccess;
 	
+	// Registered JabberTriggers..
+	private Set<JabberTrigger> triggers = null;
+	
 	public void configJabber(Message jabberMessage) throws UserException  {
 		Property serverProperty = jabberMessage.getProperty("server");
 		Property domainProperty = jabberMessage.getProperty("domain");
@@ -137,9 +140,11 @@ public class JabberWorker extends GenericThread implements JabberInterface, Nava
 //			JMXHelper.registerMXBean(instance, JMXHelper.NAVAJO_DOMAIN, id);
 			AuditLog.log("Jabber", "Started jabber connection worker $Id$");
 			//<c.chatclient id="jabber" password="'xxxxxx'" server="'talk.google.com'" username="'dexels'" domain="'gmail.com'" password="'xxxxxxxxx'">
-			 
+			
+			instance.triggers = new HashSet();
 			instance.setSleepTime(1000);
 			instance.startThread(instance);
+			
 			
 		}
 
@@ -441,5 +446,17 @@ public class JabberWorker extends GenericThread implements JabberInterface, Nava
 		}
 	}
 	
+	public void addTrigger(JabberTrigger jt) {
+		System.err.println("In addTrigger: " + jt);
+		triggers.add(jt);
+	}
 	
+	public void removeTrigger(JabberTrigger jt) {
+		System.err.println("In removeTrigger: " + jt);
+		triggers.remove(jt);
+	}
+	
+	public Set<JabberTrigger> getTriggers() {
+		return triggers;
+	}
 }

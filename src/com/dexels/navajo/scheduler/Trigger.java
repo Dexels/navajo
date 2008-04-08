@@ -86,6 +86,7 @@ public abstract class Trigger implements Listener, Serializable {
 	public final static String AFTER_TASK_TRIGGER   = "aftertask";
 	public final static String SERVER_EVENT_TRIGGER = "serverevent";
 	public final static String IMMEDIATE_TRIGGER    = "immediate";
+	public final static String JABBER_TRIGGER       = "jabber";
 	
 	private Task myTask = null;
 
@@ -156,6 +157,10 @@ public abstract class Trigger implements Listener, Serializable {
 				return t;
 			} else if ( s.startsWith(IMMEDIATE_TRIGGER) ) {
 				t = new ImmediateTrigger();
+				return t;
+			} else if ( s.startsWith(JABBER_TRIGGER) ) {
+				String v = s.substring(JABBER_TRIGGER.length()+1);
+				t = new JabberTrigger(v);
 				return t;
 			}
 			else {
