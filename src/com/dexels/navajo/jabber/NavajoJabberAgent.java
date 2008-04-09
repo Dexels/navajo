@@ -4,10 +4,8 @@ import java.io.*;
 import java.util.*;
 import java.util.Map.*;
 
-import javax.jws.WebParam.*;
 
 import org.jivesoftware.smack.*;
-import org.jivesoftware.smack.filter.*;
 import org.jivesoftware.smack.packet.*;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Message.*;
@@ -17,10 +15,7 @@ import org.jivesoftware.smackx.muc.*;
 
 import com.dexels.navajo.client.*;
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.events.*;
-import com.dexels.navajo.events.types.*;
 import com.dexels.navajo.scheduler.JabberTrigger;
-import com.dexels.navajo.scheduler.Trigger;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
 
@@ -71,10 +66,10 @@ public class NavajoJabberAgent  {
 				if ( p instanceof Message ) {
 					Message m = (Message) p;
 					//System.err.println("Incoming packet from: "+m.getFrom()+" to: "+m.getTo()+" about: "+m.getSubject());
-					System.err.println("------ INCOMING CHAT MESSAGE ----");
-					System.err.println("FROM: " + m.getFrom());
-					System.err.println("TO  : " + m.getTo());
-					System.err.println("SUBJECT: " + m.getSubject());
+//					System.err.println("------ INCOMING CHAT MESSAGE ----");
+//					System.err.println("FROM: " + m.getFrom());
+//					System.err.println("TO  : " + m.getTo());
+//					System.err.println("SUBJECT: " + m.getSubject());
 
 					//System.err.println("BODY: "+m.getBody());
 					if(m.getFrom().equals(m.getTo())) {
@@ -105,13 +100,13 @@ public class NavajoJabberAgent  {
 						e.printStackTrace();
 					}
 				} else if ( p instanceof Presence){
-					System.err.println("RECEIVED PRESENCE: " + p + "(" + p.getClass() + ")");
-					Presence pr = (Presence ) p;
-					System.err.println("FROM: " + pr.getFrom());
-					System.err.println("STATUS: " + pr.getStatus());
-					System.err.println("TYPE: " + pr.getType());
+//					System.err.println("RECEIVED PRESENCE: " + p + "(" + p.getClass() + ")");
+//					Presence pr = (Presence ) p;
+//					System.err.println("FROM: " + pr.getFrom());
+//					System.err.println("STATUS: " + pr.getStatus());
+//					System.err.println("TYPE: " + pr.getType());
 				} else {
-					System.err.println("RECEIVED PRESENCE: " + p + "(" + p.getClass() + ")");
+					//System.err.println("RECEIVED PRESENCE: " + p + "(" + p.getClass() + ")");
 				}
 				
 				if ( TribeManagerFactory.getInstance().getIsChief() ) { 

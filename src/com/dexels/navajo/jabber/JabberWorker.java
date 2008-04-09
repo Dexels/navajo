@@ -27,6 +27,7 @@ package com.dexels.navajo.jabber;
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.logging.Level;
 
 import org.jivesoftware.smack.*;
 import org.jivesoftware.smackx.muc.*;
@@ -81,7 +82,7 @@ public class JabberWorker extends GenericThread implements JabberInterface, Nava
 	// Registered JabberTriggers..
 	private Set<JabberTrigger> triggers = null;
 	
-	public void configJabber(Message jabberMessage) throws UserException  {
+	public void configJabber(Message jabberMessage)   {
 		Property serverProperty = jabberMessage.getProperty("server");
 		Property domainProperty = jabberMessage.getProperty("domain");
 		Property portProperty = jabberMessage.getProperty("port");
@@ -109,7 +110,11 @@ public class JabberWorker extends GenericThread implements JabberInterface, Nava
 		try {
 			joinRoom(roomname,username,conference+"."+domain);
 		} catch (XMPPException e) {
-			throw new UserException(-99,"Jabber problem: ",e);
+			isInstantiated = false;
+			//throw new UserException(-99,"Jabber problem: ",e);
+			AuditLog.log("JABBER", "Could not join chatroom: " + roomname + "(" + e.getMessage() + ")", Level.SEVERE);
+			NavajoEventRegistry.getInstance().publishEvent(new NavajoHealthCheckEvent("Could not join chatroom: " + roomname + "(" + e.getMessage() + ")"));
+			return;
 		}
 		isInstantiated = true;
 	}
