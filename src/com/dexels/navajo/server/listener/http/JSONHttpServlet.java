@@ -36,12 +36,12 @@ import com.jcraft.jzlib.ZOutputStream;
  *
  */
 
-public class TmlHttpServlet extends HttpServlet {
+public class JSONHttpServlet extends HttpServlet {
 
  protected String configurationPath = "";
  protected String rootPath = null;
 
-  public TmlHttpServlet() {}
+  public JSONHttpServlet() {}
 
   public  static final String DOC_IMPL = "com.dexels.navajo.DocumentImplementation";
   public static final String NANO = "com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl";
@@ -241,7 +241,6 @@ public class TmlHttpServlet extends HttpServlet {
       return;
     }
 
-    
     if (username == null) {
     	username = "empty";
     	password = "";
@@ -296,15 +295,15 @@ public class TmlHttpServlet extends HttpServlet {
       Header header = NavajoFactory.getInstance().createHeader(tbMessage,service, username, password,expirationInterval);
       tbMessage.addHeader(header);
       Navajo resultMessage = dis.handle(tbMessage);
-      //System.err.println(resultMessage.toString());
+//      resultMessage.write(System.err);
       //resultMessage.write(out);
       String dataPath = request.getParameter("dataPath");
       if(dataPath!=null) {
     	  Property bin = resultMessage.getProperty(dataPath);
     	  if(bin==null ) {
         	  java.io.OutputStreamWriter out = new java.io.OutputStreamWriter(outputStream,"UTF-8");
-        	  response.setContentType("text/xml; charset=UTF-8");
-        	  resultMessage.write(out);
+        	  response.setContentType("text/plain; charset=UTF-8");
+        	  resultMessage.writeJSONTypeless(out);
         	  out.flush();
         	  out.close();
     	  } else {
@@ -320,8 +319,8 @@ public class TmlHttpServlet extends HttpServlet {
     	  }
       } else {
     	  java.io.OutputStreamWriter out = new java.io.OutputStreamWriter(outputStream,"UTF-8");
-    	  response.setContentType("text/xml; charset=UTF-8");
-    	  resultMessage.write(out);
+    	  response.setContentType("text/plain; charset=UTF-8");
+    	  resultMessage.writeJSONTypeless(out);
     	  out.flush();
     	  out.close();
      }
@@ -425,7 +424,7 @@ public class TmlHttpServlet extends HttpServlet {
 			  else {
 				  r = new BufferedReader(request.getReader());
 			  }
-			  in = NavajoFactory.getInstance().createNavajo(r);
+			  in = NavajoFactory.getInstance().createNavajoJSON(r);
 			  r.close();
 			  r = null;
 		  } else {
@@ -445,7 +444,7 @@ public class TmlHttpServlet extends HttpServlet {
 				  else {
 					  r = new BufferedReader(new java.io.InputStreamReader(new ByteArrayInputStream(bytes)));
 				  }
-				  in = NavajoFactory.getInstance().createNavajo(r);
+				  in = NavajoFactory.getInstance().createNavajoJSON(r);
 				  if ( in == null ) {
 					  throw new Exception("Invalid Navajo");
 				  }
@@ -517,7 +516,7 @@ public class TmlHttpServlet extends HttpServlet {
 			  out = new BufferedWriter(response.getWriter());
 		  }
 		  
-		  outDoc.write(out);
+		  outDoc.writeJSON(out);
 		  out.flush();
 		  out.close();
 		 
