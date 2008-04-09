@@ -109,7 +109,7 @@ public class NavajoJabberAgent  {
 					//System.err.println("RECEIVED PRESENCE: " + p + "(" + p.getClass() + ")");
 				}
 				
-				if ( TribeManagerFactory.getInstance().getIsChief() ) { 
+				//if ( Dispatcher.getInstance() != null && TribeManagerFactory.getInstance().getIsChief() ) { 
 					// Only the chief perform jabber trigger requests, for now... 
 					// rewrite as TimeTrigger using a function that only fires trigger and puts it in a activatedlisteners map.
 					Iterator<JabberTrigger> all = JabberWorker.getInstance().getTriggers().iterator();
@@ -143,7 +143,7 @@ public class NavajoJabberAgent  {
 							}
 						}
 					}
-				}
+				//}
 			}
 		}, null);
 
