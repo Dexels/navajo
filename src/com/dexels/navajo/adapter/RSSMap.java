@@ -500,7 +500,10 @@ public class RSSMap implements Mappable {
 	public void setCategory(String category) {
 		this.category = category;
 		Category c = new Category();
-		c.setText(category);
+		c.setText(category);		
+		Collection<Category> cats = new ArrayList<Category>();		
+		cats.add(c);
+		rss.getChannel().setCategories(cats);
 	}
 
 	public void setGenerator(String generator) {
