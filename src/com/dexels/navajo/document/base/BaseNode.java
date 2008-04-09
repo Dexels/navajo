@@ -123,120 +123,114 @@ public abstract class BaseNode implements java.io.Serializable{
  // {tml : {documentImplementation :  SAXP, methods : {}}
  
  public final void printElementJSON(final Writer sw, boolean arrayElement) throws IOException {
-	 String tagName = getTagName();
-	 
-	 if("tml".equals(tagName)){
-		 writeElement( sw, "{");
-	 }
-	 if(!arrayElement){
-		 writeElement( sw, "\""+tagName+"\"");
-		 writeElement( sw, " : {");
-	 }else{
-		 writeElement( sw, "{");
-	 }
-	 Map<String,String> map = getAttributes();
+		String tagName = getTagName();
+		if ("tml".equals(tagName)) {
+			writeElement(sw, "{");
+		}
+		if (!arrayElement) {
+			writeElement(sw, "\"" + tagName + "\"");
+			writeElement(sw, " : {");
+		} else {
+			writeElement(sw, "{");
+		}
+		Map<String, String> map = getAttributes();
+		if (map != null) {
+			for (Iterator<Entry<String, String>> iter = map.entrySet().iterator(); iter.hasNext();) {
+				Entry<String, String> e = iter.next();
+				String element = e.getKey();
+				String value = e.getValue();
+				/*
+				 * TODO: stream!
+				 */
+				if (value != null) {
+					// optimization: Only escape properties:
+					String sss = element;
+					if (getTagName().equals("property")) {
+						if (element.equals("value")) {
+							sss = XMLEscape(value);
+						}
+					}
+					if (getTagName().equals("option")) {
+						sss = XMLEscape(value);
+					}
+					sss = XMLEscape(value);
+					writeElement(sw, " ");
+					writeElement(sw, "\"" + element + "\"");
+					writeElement(sw, " : ");
+					writeElement(sw, "\"" + sss + "\"");
+					if (iter.hasNext()) {
+						writeElement(sw, ", ");
+					}
+					// System.err.println("||"+value+"||");
+				}
+			}
+		}
+		List<? extends BaseNode> list = getChildren();
+		boolean hasText = hasTextNode();
+		boolean hasChildren = (list != null) && list.size() > 0;
+		if (hasChildren && hasText) {
+			throw new IllegalStateException("Can not have both children AND text");
+		}
+		if (!hasChildren && !hasText) {
+			writeElement(sw, "}");
+			return;
+		}
+		// group the childred to see if JSONArrays must be created
+		HashMap<String, ArrayList> groupedChildren = new HashMap();
+		for (int j = 0; j < list.size(); j++) {
+			BaseNode child = list.get(j);
+			String key = child.getTagName();
+			if (!groupedChildren.containsKey(key)) {
+				groupedChildren.put(key, new ArrayList());
+			}
+			ArrayList l = groupedChildren.get(key);
+			l.add(child);
+		}
+		// Now all children are grouped.
+		Iterator it = groupedChildren.keySet().iterator();
+		while (it.hasNext()) {
+			String key = (String) it.next();
+			list = groupedChildren.get(key);
+			// list should not be null, but to appease the warnings
+			if (list != null) {
+				if (list.size() > 1) {
+					// it is an array
+					if (map != null) {
+						writeElement(sw, ", ");
+					}
+					writeElement(sw, "\"" + key + "\" : [");
+					for (int i = 0; i < list.size(); i++) {
+						BaseNode child = list.get(i);
+						if (i > 0) {
+							writeElement(sw, ", ");
+						}
+						child.printElementJSON(sw, true);
+					}
+					writeElement(sw, "]");
+				} else {
+					BaseNode child = list.get(0);
+					if (map != null) {
+						writeElement(sw, ", ");
+					}
+					child.printElementJSON(sw, false);
+				}
+			}
+		}
+		if (hasText) {
+			writeText(sw);
+		}
+		if (!arrayElement && (hasText || hasChildren)) {
+			writeElement(sw, "}");
+		}
+		writeElement(sw, "}");
+	}
 
-	 if (map != null) {
-		 for (Iterator<Entry<String, String>> iter = map.entrySet().iterator(); iter.hasNext();) {
-			 Entry<String, String> e = iter.next();
-			 String element = e.getKey();
-			 String value = e.getValue();
-			 /*
-			  * TODO: stream!
-			  */
-			  if (value!=null) {
-				  // optimization: Only escape properties:
-				  String sss = element;
-				  if (getTagName().equals("property")) {
-					  if (element.equals("value")) {
-						  sss = XMLEscape(value);
-					  }
-				  }
-				  if (getTagName().equals("option")) {
-					  sss = XMLEscape(value);
-				  }
-
-				  sss = XMLEscape(value);
-		
-				  writeElement( sw," ");
-				  writeElement( sw, "\""+element+"\"");
-				  writeElement( sw, " : ");
-				  writeElement( sw, "\""+sss+"\"");
-				  
-				  if(iter.hasNext()){
-					  writeElement(sw, ", ");
-				  }
-				  
-//				  System.err.println("||"+value+"||");
-			  }
-		 }		 
-	 }
-	 List<? extends BaseNode> list = getChildren();
-	 boolean hasText = hasTextNode();
-	 boolean hasChildren = (list!=null) && list.size()>0;
-	 if (hasChildren && hasText) {
-		 throw new IllegalStateException("Can not have both children AND text");
-	 }
-	 
-	 if (!hasChildren && !hasText) {
-		 writeElement( sw, "}");
-		 return;
-	 }
-	 
-	 // group the childred to see if JSONArrays must be created
-	 HashMap<String, ArrayList> groupedChildren = new HashMap();
-	 
-	 for( int j=0;j<list.size();j++){
-		 
-		 BaseNode child = list.get(j);
-		 String key = child.getTagName();
-
-		 if(!groupedChildren.containsKey(key)){
-			 groupedChildren.put(key, new ArrayList());
-	 	 }
-		 ArrayList l = groupedChildren.get(key);
-		 l.add(child);
-	 }
-
-	 // Now all children are grouped.
-	 Iterator it = groupedChildren.keySet().iterator();
-	 while(it.hasNext()){
-		 String key = (String)it.next();
-		 list = groupedChildren.get(key);
-
-		 // list should not be null, but to appease the warnings
-		 if(list!=null) { 
-			 if(list.size() > 1){
-				 // it is an array
-				 if(map != null){
-					 writeElement(sw, ", ");
-				 }
-				 writeElement(sw, "\"" + key + "\" : ["); 
-				 for (int i = 0; i < list.size(); i++) {
-					 BaseNode child = list.get(i);
-					 if(i > 0){
-						 writeElement(sw, ", ");
-					 }
-					 child.printElementJSON(sw,true);
-				 }
-				 writeElement(sw, "]");				 
-			 }else{
-				 BaseNode child = list.get(0);
-				 if(map != null){
-					 writeElement(sw, ", ");
-				 }
-				 child.printElementJSON(sw, false);
-			 } 
-		 }	 
-	 }
-	 if (hasText) {
-		 writeText(sw);
-	 }
-	 if (!arrayElement && ( hasText || hasChildren) ){
-		 writeElement( sw,"}");
-	 }
-	 writeElement(sw, "}");
- }
+	public void printElementJSONTypeless(final Writer sw) throws IOException {
+		String tagName = getTagName();
+		Map<String, String> map = getAttributes();
+		List<? extends BaseNode> list = getChildren();
+		// all overridden
+	}
  
 
  public void write(final Writer w) throws NavajoException {

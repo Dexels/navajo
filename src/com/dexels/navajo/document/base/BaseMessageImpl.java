@@ -11,6 +11,8 @@ package com.dexels.navajo.document.base;
  */
 
 import java.beans.*;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.*;
 import java.util.regex.*;
 
@@ -1288,5 +1290,66 @@ public final Message getParentMessage() {
 	      return (TreeNode) getArrayParentMessage();
 	    }
 
+	    public void write(Writer w){
+	    	try{
+	    		this.printElement(w, 2);
+	    	}catch(Exception e){
+	    		e.printStackTrace();
+	    	}
+	    }
+	    
+	    public void printElementJSONTypeless(final Writer sw) throws IOException {
+			String tagName = getTagName();			
+			ArrayList<Message>  messages   = getAllMessages();
+			ArrayList<Property> properties = getAllProperties();
+			
+			// all overridden
+			
+			if(getType().equals(Message.MSG_TYPE_ARRAY)){
+				writeElement(sw, "\"" + getName() + "\" : [");
+				int cnt = 0;
+				for(Message m:messages){
+					if(cnt > 0){
+						writeElement(sw, ", ");
+					}
+					((BaseNode)m).printElementJSONTypeless(sw);					
+					cnt++;
+				}				
+				writeElement(sw, "]");
+			} else if (getType().equals(Message.MSG_TYPE_ARRAY_ELEMENT)){
+				writeElement(sw, "{");
+				int cnt = 0;
+				for(Property p:properties){
+					if(cnt > 0){
+						writeElement(sw, ", ");
+					}
+					((BaseNode)p).printElementJSONTypeless(sw);
+					cnt++;
+				}
+				writeElement(sw, "}");				
+				
+			} else if(getType().equals(Message.MSG_TYPE_SIMPLE)){
+				writeElement(sw, "\"" + getName() + "\" : {");
+				int cnt = 0;
+				for(Property p:properties){
+					if(cnt > 0){
+						writeElement(sw, ", ");
+					}
+					((BaseNode)p).printElementJSONTypeless(sw);
+					cnt++;
+				}
+				writeElement(sw, "}");
+				
+				cnt = 0;
+				for(Message m:messages){
+					if(cnt > 0){
+						writeElement(sw, ", ");
+					}
+					((BaseNode)m).printElementJSONTypeless(sw);
+					cnt++;
+				}				
+				writeElement(sw, "}");
+			}
+		}
 	
 }

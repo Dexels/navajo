@@ -598,4 +598,30 @@ public void writeJSON(Writer w) throws NavajoException{
 	}
 }
 
+public void writeJSONTypeless(Writer w) throws NavajoException{
+	try{
+		this.printElementJSONTypeless(w);
+	}catch(Exception e){
+		throw new NavajoExceptionImpl(e); 
+	}
+}
+
+public final void printElementJSONTypeless(final Writer sw) throws IOException {
+	String tagName = getTagName();
+	Map<String, String> map = getAttributes();
+	ArrayList<Message> list = getAllMessages();
+	
+	writeElement(sw, "{");
+	int cnt = 0;
+	for(Message m : list){
+		if(cnt > 0){
+			writeElement(sw, ", ");
+		}
+		((BaseNode)m).printElementJSONTypeless(sw);
+		cnt++;
+	}
+	writeElement(sw, "}");
+
+}
+
 }

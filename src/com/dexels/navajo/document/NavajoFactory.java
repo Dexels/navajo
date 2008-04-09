@@ -576,46 +576,69 @@ public static void main(String[] args){
 		System.setProperty("com.dexels.navajo.DocumentImplementation", "com.dexels.navajo.document.base.BaseNavajoFactoryImpl");
 		//	NavajoFactory.getInstance().setExpressionEvaluator(new DefaultExpressionEvaluator());
 		Navajo n = NavajoFactory.getInstance().createNavajo();
-		Method meth = NavajoFactory.getInstance().createMethod(n, "shell/InitTestJSON", "PROP");
-		meth.addRequired("Visfabriek");
-		n.addMethod(meth);
-		Method meth2 = NavajoFactory.getInstance().createMethod(n, "shell/InitLife", "Worst");
-		meth.addRequired("Testbericht");
-		n.addMethod(meth2);
-		Message m = NavajoFactory.getInstance().createMessage(n, "Testbericht");
-		Property p = NavajoFactory.getInstance().createProperty(n, "Testproperty", "string", "Walvis", 32, "Moby", Property.DIR_OUT);
-		Property sp = NavajoFactory.getInstance().createProperty(n, "SelectFish", "+", "Vis", Property.DIR_IN);
-		Selection s1 = NavajoFactory.getInstance().createSelection(n, "Baars", "BASS",  true);
-		Selection s2 = NavajoFactory.getInstance().createSelection(n, "Snoek", "PIKE",  false);
-		sp.addSelection(s1);
-		sp.addSelection(s2);
 		
-		Message m2 = NavajoFactory.getInstance().createMessage(n, "Visfabriek", Message.MSG_TYPE_ARRAY);
-		Message e1  = NavajoFactory.getInstance().createMessage(n, "Visfabriek");
-		Message e2  = NavajoFactory.getInstance().createMessage(n, "Visfabriek");
+		
+		Message m2 = NavajoFactory.getInstance().createMessage(n, "navigation", Message.MSG_TYPE_ARRAY);
+		Message e1  = NavajoFactory.getInstance().createMessage(n, "navigation");
+		Message e2  = NavajoFactory.getInstance().createMessage(n, "navigation");
+		
+		Property nw1 = NavajoFactory.getInstance().createProperty(n, "nw", "string", "0", 32, "", Property.DIR_OUT);
+		Property nw2 = NavajoFactory.getInstance().createProperty(n, "nw", "string", "0", 32, "", Property.DIR_OUT);
+		
+		Property l1 = NavajoFactory.getInstance().createProperty(n, "label", "string", "My Shell", 32, "", Property.DIR_OUT);
+		Property l2 = NavajoFactory.getInstance().createProperty(n, "label", "string", "HR", 32, "", Property.DIR_OUT);
+		
+		Property u1 = NavajoFactory.getInstance().createProperty(n, "url", "string", "http://www.dexels.com", 32, "", Property.DIR_OUT);
+		Property u2 = NavajoFactory.getInstance().createProperty(n, "url", "string", "http://www.shell.com", 32, "", Property.DIR_OUT);
+		
+		Property f1 = NavajoFactory.getInstance().createProperty(n, "f", "string", "0", 32, "", Property.DIR_OUT);
+		Property f2 = NavajoFactory.getInstance().createProperty(n, "f", "string", "0", 32, "", Property.DIR_OUT);
+		
+		Property p1 = NavajoFactory.getInstance().createProperty(n, "p", "string", "0", 32, "", Property.DIR_OUT);
+		Property p2 = NavajoFactory.getInstance().createProperty(n, "p", "string", "1", 32, "", Property.DIR_OUT);
+		
+		Property i1 = NavajoFactory.getInstance().createProperty(n, "id", "string", "0", 32, "", Property.DIR_OUT);
+		Property i2 = NavajoFactory.getInstance().createProperty(n, "id", "string", "1", 32, "", Property.DIR_OUT);
+		
 		m2.addElement(e1);
 		m2.addElement(e2);
 		
-		m.addProperty(sp);
-		m.addProperty(p);
+		e1.addProperty(nw1);
+		e2.addProperty(nw2);
+		
+		e1.addProperty(l1);
+		e2.addProperty(l2);
+		
+		e1.addProperty(u1);
+		e2.addProperty(u2);
+		
+		e1.addProperty(f1);
+		e2.addProperty(f2);
+		
+		e1.addProperty(p1);
+		e2.addProperty(p2);
+		
+		e1.addProperty(i1);
+		e2.addProperty(i2);
+		
+		
 
 		n.addMessage(m2);
-		n.addMessage(m);
-		
+
 		System.err.println("=================================== ORIGNAL TML ==============================");
 		n.write(System.err);
 		System.err.println("==============================================================================\n\n");
 		StringWriter sw = new StringWriter();
-		n.writeJSON(sw);
+		n.writeJSONTypeless(sw);
 		String json = sw.getBuffer().toString();
 		// revert to navajo
 		System.err.println("================================== GENERATED JSON ============================");
 		System.err.println(json);
-		System.err.println("==============================================================================\n\n");
-		Navajo x = NavajoFactory.getInstance().createNavajoJSON(new StringReader(json));
-		System.err.println("================================= RECONSTRUCTED TML ==========================");
-		x.write(System.err);
-		System.err.println("==============================================================================\n\n");
+//		System.err.println("==============================================================================\n\n");
+//		Navajo x = NavajoFactory.getInstance().createNavajoJSON(new StringReader(json));
+//		System.err.println("================================= RECONSTRUCTED TML ==========================");
+//		x.write(System.err);
+//		System.err.println("==============================================================================\n\n");
 	}catch(Exception e){
 		e.printStackTrace();
 	}

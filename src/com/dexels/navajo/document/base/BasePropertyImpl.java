@@ -1827,5 +1827,16 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	public int getIndex(TreeNode node) {
 		return 0;
 	}
+	
+	public void printElementJSONTypeless(final Writer sw) throws IOException {
+		String value = getValue();
+		if(getType().equals(Property.SELECTION_PROPERTY)){
+			Selection s = getSelected();
+			if(s != null){
+				value = s.getValue();
+			}
+		}
+		writeElement(sw, "\"" + getName() + "\" : \"" + value + "\"");		
+	}
 
 }
