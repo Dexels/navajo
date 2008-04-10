@@ -192,9 +192,7 @@ public class WsdlProducer extends HttpServlet {
 		try {
 
 			Dispatcher dis = Dispatcher.getInstance(configurationPath,null, 
-					new com.dexels.navajo.server.FileInputStreamReader(),
-					request.getServerName() + request.getRequestURI()
-			);
+					new com.dexels.navajo.server.FileInputStreamReader());
 
 			InputStream is = dis.getNavajoConfig().getScript(webservice);
 

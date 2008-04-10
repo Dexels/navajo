@@ -60,13 +60,15 @@ public class TmlHttpServlet extends HttpServlet {
  private static long logfileIndex = 0;
  private static long bytesWritten = 0;
  
- private final Dispatcher initDispatcher(String uniqueName) throws NavajoException {
+ private final Dispatcher initDispatcher() throws NavajoException {
+
 	 if (configurationPath!=null) {
-		  // Old SKOOL. Path provided, notify the dispatcher by passing a null DEFAULT_SERVER_XML
-		  return Dispatcher.getInstance(configurationPath, null, new com.dexels.navajo.server.FileInputStreamReader(), uniqueName);
-	  } else {
-		  return Dispatcher.getInstance(rootPath, DEFAULT_SERVER_XML, new com.dexels.navajo.server.FileInputStreamReader(), uniqueName);
-	  }
+		 // Old SKOOL. Path provided, notify the dispatcher by passing a null DEFAULT_SERVER_XML
+		 return Dispatcher.getInstance(configurationPath, null, new com.dexels.navajo.server.FileInputStreamReader());
+	 } else {
+		 return Dispatcher.getInstance(rootPath, DEFAULT_SERVER_XML, new com.dexels.navajo.server.FileInputStreamReader());
+	 }
+
  }
  
   public void init(ServletConfig config) throws ServletException {
@@ -102,15 +104,12 @@ public class TmlHttpServlet extends HttpServlet {
     System.err.println("Resolved Configuration path: "+configurationPath);
     System.err.println("Resolved Root path: "+rootPath);
 
-    String name = getServletContext().getRealPath("/");
     try {
-		initDispatcher(name);
+		initDispatcher();
 	} catch (NavajoException e) {
 		e.printStackTrace();
 	}
     
-    //    System.err.println("Real: "+config.getServletContext().getRealPath(DEFAULT_SERVER_XML));
-
   }
 
   public void destroy() {
@@ -298,15 +297,7 @@ public class TmlHttpServlet extends HttpServlet {
     Dispatcher dis = null;
 
     try {
-      if (configurationPath!=null) {
-    	  // Old SKOOL. Path provided, notify the dispatcher by passing a null DEFAULT_SERVER_XML
-          dis = Dispatcher.getInstance(configurationPath, null, new com.dexels.navajo.server.FileInputStreamReader(),
-        		  request.getServerName() + request.getRequestURI());
-	} else {
-	      dis = Dispatcher.getInstance(rootPath, DEFAULT_SERVER_XML, new com.dexels.navajo.server.FileInputStreamReader(),
-	    		  request.getServerName() + request.getRequestURI());
- 
-	}
+	   dis = initDispatcher();
     		  	  
       tbMessage = constructFromRequest(request);
       Header header = NavajoFactory.getInstance().createHeader(tbMessage,service, username, password,expirationInterval);
@@ -499,7 +490,7 @@ public class TmlHttpServlet extends HttpServlet {
 			  throw new ServletException("Empty Navajo header.");
 		  }
 
-		  dis = initDispatcher(request.getServerName() + request.getRequestURI());
+		  dis = initDispatcher();
 		  
 		  // Check for certificate.
 		  Object certObject = request.getAttribute( "javax.servlet.request.X509Certificate");

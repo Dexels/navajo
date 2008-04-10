@@ -283,11 +283,9 @@ public class JSONHttpServlet extends HttpServlet {
     try {
       if (configurationPath!=null) {
     	  // Old SKOOL. Path provided, notify the dispatcher by passing a null DEFAULT_SERVER_XML
-          dis = Dispatcher.getInstance(configurationPath, null, new com.dexels.navajo.server.FileInputStreamReader(),
-        		  request.getServerName() + request.getRequestURI());
+          dis = Dispatcher.getInstance(configurationPath, null, new com.dexels.navajo.server.FileInputStreamReader());
 	} else {
-	      dis = Dispatcher.getInstance(rootPath, DEFAULT_SERVER_XML, new com.dexels.navajo.server.FileInputStreamReader(),
-	    		  request.getServerName() + request.getRequestURI());
+	      dis = Dispatcher.getInstance(rootPath, DEFAULT_SERVER_XML, new com.dexels.navajo.server.FileInputStreamReader());
  
 	}
     		  	  
@@ -485,11 +483,9 @@ public class JSONHttpServlet extends HttpServlet {
 		  // Create dispatcher object.
 		  if (configurationPath!=null) {
 			  // Old SKOOL. Path provided, notify the dispatcher by passing a null DEFAULT_SERVER_XML
-			  dis = Dispatcher.getInstance(configurationPath, null, new com.dexels.navajo.server.FileInputStreamReader(),
-					  request.getServerName() + request.getRequestURI());
+			  dis = Dispatcher.getInstance(configurationPath, null, new com.dexels.navajo.server.FileInputStreamReader());
 		  } else {
-			  dis = Dispatcher.getInstance(rootPath, DEFAULT_SERVER_XML, new com.dexels.navajo.server.FileInputStreamReader(),
-					  request.getServerName() + request.getRequestURI());
+			  dis = Dispatcher.getInstance(rootPath, DEFAULT_SERVER_XML, new com.dexels.navajo.server.FileInputStreamReader());
 
 		  }
 
