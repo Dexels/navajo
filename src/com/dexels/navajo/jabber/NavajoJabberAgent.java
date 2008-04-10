@@ -17,7 +17,6 @@ import com.dexels.navajo.client.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.scheduler.JabberTrigger;
 import com.dexels.navajo.server.*;
-import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
 
 public class NavajoJabberAgent  {
 	protected static String navajoUsername = "ROOT";
