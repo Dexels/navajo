@@ -60,6 +60,15 @@ public class TmlHttpServlet extends HttpServlet {
  private static long logfileIndex = 0;
  private static long bytesWritten = 0;
  
+ private final Dispatcher initDispatcher(String uniqueName) throws NavajoException {
+	 if (configurationPath!=null) {
+		  // Old SKOOL. Path provided, notify the dispatcher by passing a null DEFAULT_SERVER_XML
+		  return Dispatcher.getInstance(configurationPath, null, new com.dexels.navajo.server.FileInputStreamReader(), uniqueName);
+	  } else {
+		  return Dispatcher.getInstance(rootPath, DEFAULT_SERVER_XML, new com.dexels.navajo.server.FileInputStreamReader(), uniqueName);
+	  }
+ }
+ 
   public void init(ServletConfig config) throws ServletException {
     super.init(config);
 
@@ -75,8 +84,8 @@ public class TmlHttpServlet extends HttpServlet {
 		configUrl = new URL(configurationPath);
 	    is = configUrl.openStream();
 	    verified = true;
-	    
 	} catch (MalformedURLException e) {
+		//e.printStackTrace(System.err);
 	} catch (IOException e) {
 	} finally {
 		if(is!=null) {
@@ -93,6 +102,13 @@ public class TmlHttpServlet extends HttpServlet {
     System.err.println("Resolved Configuration path: "+configurationPath);
     System.err.println("Resolved Root path: "+rootPath);
 
+    String name = getServletContext().getRealPath("/");
+    try {
+		initDispatcher(name);
+	} catch (NavajoException e) {
+		e.printStackTrace();
+	}
+    
     //    System.err.println("Real: "+config.getServletContext().getRealPath(DEFAULT_SERVER_XML));
 
   }
@@ -483,17 +499,8 @@ public class TmlHttpServlet extends HttpServlet {
 			  throw new ServletException("Empty Navajo header.");
 		  }
 
-		  // Create dispatcher object.
-		  if (configurationPath!=null) {
-			  // Old SKOOL. Path provided, notify the dispatcher by passing a null DEFAULT_SERVER_XML
-			  dis = Dispatcher.getInstance(configurationPath, null, new com.dexels.navajo.server.FileInputStreamReader(),
-					  request.getServerName() + request.getRequestURI());
-		  } else {
-			  dis = Dispatcher.getInstance(rootPath, DEFAULT_SERVER_XML, new com.dexels.navajo.server.FileInputStreamReader(),
-					  request.getServerName() + request.getRequestURI());
-
-		  }
-
+		  dis = initDispatcher(request.getServerName() + request.getRequestURI());
+		  
 		  // Check for certificate.
 		  Object certObject = request.getAttribute( "javax.servlet.request.X509Certificate");
 
