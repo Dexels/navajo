@@ -106,17 +106,8 @@ public class JabberWorker extends GenericThread implements JabberInterface, Nava
 		maxQueueSize = (Integer)maxQueueSizeProperty.getTypedValue();
 		myWaitingQueue = new LinkedBlockingQueue<Runnable>(maxQueueSize);
 		
-		initialize(server, Integer.parseInt(port), domain,username, password);
-		try {
-			joinRoom(roomname,username,conference+"."+domain);
-		} catch (XMPPException e) {
-			isInstantiated = false;
-			//throw new UserException(-99,"Jabber problem: ",e);
-			AuditLog.log("JABBER", "Could not join chatroom: " + roomname + "(" + e.getMessage() + ")", Level.SEVERE);
-			NavajoEventRegistry.getInstance().publishEvent(new NavajoHealthCheckEvent("Could not join chatroom: " + roomname + "(" + e.getMessage() + ")"));
-			return;
-		}
-		isInstantiated = true;
+		initialize(server, Integer.parseInt(port), domain,username, password, roomname, conference);
+	
 	}
 	
 	
@@ -157,38 +148,53 @@ public class JabberWorker extends GenericThread implements JabberInterface, Nava
 	}
 
 
-	public void initialize(String server, int port, String domain, String username, String password) {
-		try {
-			myJabber.initialize(server, port,domain, username, password);
-			//System.err.println("Initialized");
-		} catch (XMPPException e) {
-			e.printStackTrace();
-		}		
-		AfterWebserviceTrigger afterWebserviceTrigger = new AfterWebserviceTrigger("Jabba");
-		afterWebserviceTrigger.setTask(new Task(){
+	public void initialize(final String server, final int port, final String domain, final String username, final String password, final String roomname, final String conference) {
 
+		// Initialize asynchronously.
+
+		new Thread() {
 			public void run() {
-				//System.err.println("Do some shit!");
-				Navajo n = getNavajo();
-				if(n==null) {
-					System.err.println("Whoops");
-				} else {
-					//try {
-						//n.write(System.err);
-						performTail(n);
-					//} catch (NavajoException e) {
-					//	e.printStackTrace();
-					//}
-				}
-			}});
-//		WebserviceListenerRegistry.getInstance().registerTrigger(afterWebserviceTrigger);
-		//System.err.println("WebserviceListenerRegistry.getInstance() hash: "+WebserviceListenerRegistry.getInstance().hashCode());
+				try {
+					myJabber.initialize(server, port,domain, username, password);
+					//System.err.println("Initialized");
+				} catch (XMPPException e) {
+					e.printStackTrace();
+					AuditLog.log("JABBER", "Could not initialize Jabber", Level.SEVERE);
+					return;
+				}		
+				AfterWebserviceTrigger afterWebserviceTrigger = new AfterWebserviceTrigger("Jabba");
+				afterWebserviceTrigger.setTask(new Task(){
 
-		  NavajoEventRegistry.getInstance().addListener(NavajoRequestEvent.class, this);
-		  NavajoEventRegistry.getInstance().addListener(NavajoResponseEvent.class,this);
-}
-	
-	
+					public void run() {
+						Navajo n = getNavajo();
+						if(n==null) {
+							System.err.println("Whoops");
+						} else {
+							//try {
+							//n.write(System.err);
+							performTail(n);
+							//} catch (NavajoException e) {
+							//	e.printStackTrace();
+							//}
+						}
+					}});
+
+				NavajoEventRegistry.getInstance().addListener(NavajoRequestEvent.class, instance);
+				NavajoEventRegistry.getInstance().addListener(NavajoResponseEvent.class,instance);
+				
+				try {
+					joinRoom(roomname,username,conference+"."+domain);
+				} catch (XMPPException e) {
+					isInstantiated = false;
+					//throw new UserException(-99,"Jabber problem: ",e);
+					AuditLog.log("JABBER", "Could not join chatroom: " + roomname + "(" + e.getMessage() + ")", Level.SEVERE);
+					NavajoEventRegistry.getInstance().publishEvent(new NavajoHealthCheckEvent("Could not join chatroom: " + roomname + "(" + e.getMessage() + ")"));
+					return;
+				}
+				isInstantiated = true;
+			}
+		}.start();
+	}
 	
 	protected void performTail(Navajo n) {
 		String service = n.getHeader().getRPCName();
