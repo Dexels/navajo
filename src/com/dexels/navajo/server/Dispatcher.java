@@ -27,7 +27,6 @@ package com.dexels.navajo.server;
 
 import java.io.*;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.net.*;
 
@@ -58,6 +57,7 @@ import com.dexels.navajo.lockguard.LocksExceeded;
 
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
+import com.dexels.navajo.mapping.compiler.TslCompiler;
 
 /**
  * This class implements the general Navajo Dispatcher.
@@ -77,9 +77,7 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
   public static final String vendor  = "Dexels BV";
   public static final String product = "Navajo Service Delivery Platform";
   public static final String version = "Release 2008.01.01";
-  public String serverId = null;
-  public String applicationId = null;
-
+ 
   /**
    * Unique dispatcher instance.
    */
@@ -91,8 +89,7 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
   public final Set<Access> accessSet = new HashSet<Access>();
 
   public  boolean useAuthorisation = true;
-  private  final String defaultDispatcher =
-      "com.dexels.navajo.server.GenericHandler";
+  private  final String defaultDispatcher = "com.dexels.navajo.server.GenericHandler";
   private static final String defaultNavajoDispatcher = "com.dexels.navajo.server.MaintainanceHandler";
   public static java.util.Date startTime = new java.util.Date();
 
@@ -126,8 +123,7 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
   private Dispatcher(URL configurationUrl,
 		  InputStreamReader fileInputStreamReader,
 		  String rootPath,
-		  NavajoClassSupplier cl,
-		  String serverIdentification) throws
+		  NavajoClassSupplier cl) throws
 		  NavajoException {
 	  
 	  instances++;
@@ -142,7 +138,6 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
 		  // Monitor AccessSetSize
 		  // JMXHelper.addGaugeMonitor( NavajoEventRegistry.getInstance(), JMXHelper.NAVAJO_DOMAIN, "Dispatcher", "AccessSetSize", null, new Integer(50), 10000L);
 		  
-		  setServerIdentifier(serverIdentification);
 		  NavajoFactory.getInstance().setTempDir(getTempDir());
 		  
 	  }
@@ -169,10 +164,9 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
    */
   private Dispatcher(URL configurationUrl,
 		  InputStreamReader fileInputStreamReader,
-		  NavajoClassSupplier cl,
-		  String serverIdentification) throws
+		  NavajoClassSupplier cl) throws
 		  NavajoException {
-	  this(configurationUrl, fileInputStreamReader, null, cl, serverIdentification);
+	  this(configurationUrl, fileInputStreamReader, null, cl);
   }
 
   public static Dispatcher getInstance() {
@@ -190,21 +184,21 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
 
   }
   
-  public static Dispatcher getInstance(URL configurationUrl, InputStreamReader fileInputStreamReader,String serverIdentification) throws NavajoException {
+  public static Dispatcher getInstance(URL configurationUrl, InputStreamReader fileInputStreamReader) throws NavajoException {
 	  if ( instance != null ) {
 		  return instance;
 	  }
 
 	  synchronized (semaphore) {
 		  if (instance == null) {
-			  instance = new Dispatcher(configurationUrl, fileInputStreamReader, null, serverIdentification);
+			  instance = new Dispatcher(configurationUrl, fileInputStreamReader, null);
 			  instance.init();
 		  }
 	  }
 	  return instance;
   }
   
-  public static Dispatcher getInstance(String rootPath, String serverXmlPath, InputStreamReader fileInputStreamReader, String serverIdentification) throws NavajoException {
+  public static Dispatcher getInstance(String rootPath, String serverXmlPath, InputStreamReader fileInputStreamReader) throws NavajoException {
 
 		if (instance != null) {
 			return instance;
@@ -238,7 +232,7 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
 		
 		synchronized (semaphore) {
 			if (instance == null) {
-				instance = new Dispatcher(configurationUrl, fileInputStreamReader,rootPath,null,serverIdentification);
+				instance = new Dispatcher(configurationUrl, fileInputStreamReader,rootPath,null);
 				instance.init();
 			}
 		}
@@ -888,7 +882,7 @@ public Access [] getUsers() {
   }
 
   public String getThreadName(Access a) {
-	  return applicationId + "/" + a.accessID;
+	  return getApplicationId() + "/" + a.accessID;
   }
   
   public final boolean isBusy() {
@@ -1257,7 +1251,7 @@ public final Navajo handle(Navajo inMessage, Object userCertificate, ClientInfo 
 	  }
 	  HashMap<String,String> m = new HashMap<String,String>();
 	  m.put("requestRate", ""+getRequestRate());
-	  m.put("serverId", ""+serverId);
+	  m.put("serverId", ""+getServerId() + "/" + getApplicationId());
 	  h.addPiggyBackData(m);
   }
 
@@ -1314,21 +1308,11 @@ public final Navajo handle(Navajo inMessage, Object userCertificate, ClientInfo 
   }
 
   public String getServerId() {
-	if ( serverId == null ) {
-		return "unknown_server_id";
-	}
-	String serverPart = serverId.substring(0, serverId.indexOf("/"));
-	serverPart = serverPart.replace('/', '_');
-    return serverPart;
+	  return TslCompiler.getHostName();
   }
 
   public String getApplicationId() {
-	  if ( serverId == null ) {
-		  return "unknown_application_id";
-	  }
-	  applicationId = serverId.substring(serverId.indexOf("/")+1, serverId.length());
-	  applicationId = applicationId.replace('/', '_');
-	  return applicationId;
+	  return getNavajoConfig().getInstanceName();
   }
   
   public File getTempDir() {
@@ -1344,12 +1328,6 @@ public final Navajo handle(Navajo inMessage, Object userCertificate, ClientInfo 
 	  return f;
   }
   
-  public void setServerIdentifier(String x) {
-    if (serverId == null) {
-      serverId = x;
-    }
-  }
-
   public void setBroadcast(String message, int timeToLive, String recipientExpression) {
 	  BroadcastMessage bm = new BroadcastMessage(message,timeToLive,recipientExpression);
 	  broadcastMessage.add(bm);

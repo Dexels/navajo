@@ -2386,49 +2386,56 @@ public String mapNode(int ident, Element n) throws Exception {
 }
 
   @SuppressWarnings("unchecked")
-private String getHostName() throws SocketException {
-	  
-	 if ( hostname != null ) {
-		 return hostname; 
-	 }
-	 
-	 synchronized (VERSION) {
+  public static String getHostName() {
 
-		 if ( hostname == null ) {
-			 //ArrayList list = new ArrayList();
+	  if ( hostname != null ) {
+		  return hostname; 
+	  }
+
+	  synchronized (VERSION) {
+
+		  if ( hostname == null ) {
+			  //ArrayList list = new ArrayList();
+
+			  hostname = "unknown host";
+			  long start = System.currentTimeMillis();
+
+			  Enumeration all = null;
 			 
-			 hostname = "unknown host";
-			 long start = System.currentTimeMillis();
+			  try {
+				  all = java.net.NetworkInterface.getNetworkInterfaces();
+			  } catch (SocketException e) {
+				  hostname = "generated-host-" + System.currentTimeMillis();
+				  return hostname;
+			  }
 
-			 Enumeration all = java.net.NetworkInterface.getNetworkInterfaces();
+			  while (all.hasMoreElements()) {
+				  java.net.NetworkInterface nic = (java.net.NetworkInterface) all.nextElement();
+				  Enumeration ipaddresses = nic.getInetAddresses();
+				  while (ipaddresses.hasMoreElements()) {
 
-			 while (all.hasMoreElements()) {
-				 java.net.NetworkInterface nic = (java.net.NetworkInterface) all.nextElement();
-				 Enumeration ipaddresses = nic.getInetAddresses();
-				 while (ipaddresses.hasMoreElements()) {
+					  start = System.currentTimeMillis();
 
-					 start = System.currentTimeMillis();
+					  InetAddress ip = (InetAddress) ipaddresses.nextElement();
 
-					 InetAddress ip = (InetAddress) ipaddresses.nextElement();
+					  System.err.println("\t\tCanonical hostname: " + ip.getCanonicalHostName());
+					  System.err.println("\t\tHost address: " + ip.getHostAddress());
+					  System.err.println("\t\tisMCGlobal: " + ip.isMCGlobal());
+					  System.err.println("\t\tisLinkLocalAddress: " + ip.isLinkLocalAddress());
+					  System.err.println("\t\t"+ip.toString());
+					  System.err.println("Getting hostname took: " + ( System.currentTimeMillis() - start ) ) ;
 
-					 System.err.println("\t\tCanonical hostname: " + ip.getCanonicalHostName());
-					 System.err.println("\t\tHost address: " + ip.getHostAddress());
-					 System.err.println("\t\tisMCGlobal: " + ip.isMCGlobal());
-					 System.err.println("\t\tisLinkLocalAddress: " + ip.isLinkLocalAddress());
-					 System.err.println("\t\t"+ip.toString());
-					 System.err.println("Getting hostname took: " + ( System.currentTimeMillis() - start ) ) ;
-					 
-					 hostname =  ip.getCanonicalHostName();
-					
-				 }
-			 }
-		 }
-		
-	 }
-	 
-     return hostname;
+					  hostname =  ip.getCanonicalHostName();
 
-    }
+				  }
+			  }
+		  }
+
+	  }
+
+	  return hostname;
+
+  }
 
 public static void main(String[] args) throws Exception {
 

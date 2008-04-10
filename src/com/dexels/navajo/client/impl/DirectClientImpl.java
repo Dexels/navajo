@@ -337,7 +337,7 @@ public void setDocumentGlobals(final Navajo doc) throws ClientException {
 
       dispatcher = Dispatcher.getInstance( null,null,
                                   new com.dexels.navajo.server.
-                                  ClassloaderInputStreamReader(), null);
+                                  ClassloaderInputStreamReader());
       dispatcher.setUseAuthorisation(false);
     }
     catch (NavajoException ex) {
@@ -351,7 +351,7 @@ public void setDocumentGlobals(final Navajo doc) throws ClientException {
 
 	      dispatcher = Dispatcher.getInstance( rootPath,serverXml,
 	                                  new com.dexels.navajo.server.
-	                                  ClassloaderInputStreamReader(), null);
+	                                  ClassloaderInputStreamReader());
 	      dispatcher.setUseAuthorisation(false);
 	    }
 	    catch (NavajoException ex) {
@@ -371,7 +371,7 @@ public void setDocumentGlobals(final Navajo doc) throws ClientException {
     try {
 
 //    NavajoBasicClassLoader nbcl = new NavajoBasicClassLoader();
-      dispatcher = Dispatcher.getInstance(path, null,new FileInputStreamReader(path),null);
+      dispatcher = Dispatcher.getInstance(path, null,new FileInputStreamReader(path));
 //      dispatcher.setUseAuthorisation(false);
 //      System.err.println("IN INIT of DCI. classloader: "+dispatcher.getNavajoConfig().getClassloader());
 //      dispatcher.getNavajoConfig().setClassloader(cl);
@@ -401,7 +401,7 @@ public void setDocumentGlobals(final Navajo doc) throws ClientException {
     		  System.err.println("Null path in init...");
     	  }
     	  System.err.println("Initializing Direct client with path: "+path);
-        dispatcher = Dispatcher.getInstance(path, "config/server.xml",new FileInputStreamReader(path),null);
+        dispatcher = Dispatcher.getInstance(path, "config/server.xml",new FileInputStreamReader(path));
        
         // dispatcher = Dispatcher.getInstance(config,new FileInputStreamReader(path),null);
       }
