@@ -308,7 +308,7 @@ public class FastDescriptionProvider extends BaseDescriptionProvider {
 				nc = Dispatcher.getInstance().getNavajoConfig();
 			} else {
 				nc = Dispatcher.getInstance(new java.net.URL("file:///home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/config/server.xml"), 
-				  new com.dexels.navajo.server.FileInputStreamReader(), "aap").getNavajoConfig();
+				  new com.dexels.navajo.server.FileInputStreamReader()).getNavajoConfig();
 			}
 			sqlMap.load(null, null, null, Dispatcher.getInstance().getNavajoConfig());
 			
