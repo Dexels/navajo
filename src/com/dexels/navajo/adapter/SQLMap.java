@@ -970,6 +970,8 @@ public class SQLMap implements Mappable, LazyArray {
           if (debug) {
             System.err.println("ADDED BLOB");
           }
+        } else {
+        	throw new SQLException("Unknown type encountered in SQLMap.setStatementParameters(): " + param);
         }
       }
     }

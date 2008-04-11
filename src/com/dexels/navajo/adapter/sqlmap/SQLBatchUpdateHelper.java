@@ -37,8 +37,11 @@ import java.util.ArrayList;
 import java.sql.Types;
 import java.sql.ResultSet;
 import java.sql.SQLWarning;
+
+import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.Money;
+import com.dexels.navajo.document.types.Percentage;
 
 public class SQLBatchUpdateHelper {
 
@@ -246,6 +249,11 @@ public class SQLBatchUpdateHelper {
     }
     else if (param instanceof Money) {
        pre.setDouble(idx + 1, ( (Money) param).doubleValue());
+    }
+    else if (param instanceof Percentage ) {
+    	pre.setDouble(idx + 1, ( (Percentage) param).doubleValue());
+    } else {
+    	throw  new SQLException("Unknown type encountered in SQLBatchUpdateHelder.setParameter(): " + param);
     }
 
   }
