@@ -23,6 +23,7 @@ import com.dexels.navajo.util.*;
 import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.Money;
 import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.document.types.Percentage;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -940,6 +941,9 @@ public class SQLMap implements Mappable, LazyArray {
         }
         else if (param instanceof Double) {
           statement.setDouble(i + 1, ( (Double) param).doubleValue());
+        }
+        else if (param instanceof Percentage ) {
+        	 statement.setDouble(i + 1, ( (Percentage) param).doubleValue());
         }
         else if (param instanceof java.util.Date) {
           java.sql.Date sqlDate = new java.sql.Date( ( (java.util.Date) param).
