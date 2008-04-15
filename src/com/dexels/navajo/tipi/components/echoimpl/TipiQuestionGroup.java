@@ -1,6 +1,7 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
 import nextapp.echo2.app.*;
+import nextapp.echo2.webcontainer.*;
 
 import com.dexels.navajo.tipi.components.core.*;
 import com.dexels.navajo.tipi.components.question.*;
@@ -50,5 +51,5 @@ public class TipiQuestionGroup extends TipiBaseQuestionGroup {
         Component comp = (Component) c;
         myColumn.add(comp);
     }
-
+   
 }

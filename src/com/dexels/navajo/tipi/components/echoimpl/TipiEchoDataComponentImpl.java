@@ -1,8 +1,14 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
+import java.lang.reflect.*;
+
+import javax.swing.*;
+
 import nextapp.echo2.app.*;
+import nextapp.echo2.webcontainer.*;
 
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.echoclient.components.*;
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiContext;
 import com.dexels.navajo.tipi.TipiException;
@@ -58,63 +64,53 @@ public abstract class TipiEchoDataComponentImpl extends TipiDataComponentImpl {
     // return layout;
     // }
 
-    public void removeFromContainer(Object c) {
-        Component cc = (Component) getContainer();
-        Component child = (Component) c;
-        child.dispose();
-        cc.remove(child);
-    }
+
+    
+    public void removeFromContainer(final Object c) {
+		runSyncInEventThread(new Runnable() {
+
+			public void run() {
+
+				Component cc = (Component) getContainer();
+				Component child = (Component) c;
+				child.dispose();
+				cc.remove(child);
+			}
+		});
+	}
 
     public Component getInnerComponent() {
     	return (Component)getContainer();
     }
     
     
-    public void addToContainer(Object c, Object constraints) {
+    public void addToContainer(final Object c, final Object constraints) {
+    	runSyncInEventThread(new Runnable(){
 
-      	Component cc;
-        cc = (Component) getActualComponent();
-        Component child = (Component) c;
-      	System.err.println("\n********************************\nAttempting to add component: "+c.getClass()+" to: "+getClass()+"\n********************************\n");
-                
-        
-//        if (layoutComponent != null) {
-//            cc = layoutComponent;
-//        }
-        
-        
-        
-        if(layoutComponent!=null) {
-        	// do layoutstuff
-        	layoutComponent.setParentComponent(this);
-        	layoutComponent.addChildComponent(child, constraints);
-        } else {
-            if (child instanceof WindowPane) {
-                TipiScreen s = (TipiScreen) getContext().getDefaultTopLevel();
-                // Watch this.
-//                final Window w = (Window) s.getTopLevel();
-//                if(w==null) {
-//                	System.err.println("WARNING: Null toplevel.");
-//                	Thread.dumpStack();
-//                }
-//                if(w.getContent()==null) {
-//                	System.err.println("WARNING: Null toplevel contentpane");
-//                	Thread.dumpStack();
-//                }
-//                w.getContent().add(child);
-                cc.add(child);
-            } else {
-                cc.add(child);
-                if (constraints != null && constraints instanceof LayoutData) {
-                    child.setLayoutData((LayoutData) constraints);
-                }
-                if (getLayout() != null) {
-                    getLayout().childAdded(c);
-                }
-
-            }
-        }
-    
+			public void run() {
+				Component cc;
+		        cc = (Component) getActualComponent();
+		        Component child = (Component) c;
+		          if(layoutComponent!=null) {
+		        	layoutComponent.setParentComponent(TipiEchoDataComponentImpl.this);
+		        	layoutComponent.addChildComponent(child, constraints);
+		        } else {
+		            if (child instanceof WindowPane) {
+		                TipiScreen s = (TipiScreen) getContext().getDefaultTopLevel();
+		                cc.add(child);
+		            } else {
+		                cc.add(child);
+		                if (constraints != null && constraints instanceof LayoutData) {
+		                    child.setLayoutData((LayoutData) constraints);
+		                }
+		                if (getLayout() != null) {
+		                    getLayout().childAdded(c);
+		                }
+		            }
+		        }
+		          }
+    	});
+      	
     }
 
     public void setContainerLayout(Object layout) {
@@ -122,7 +118,6 @@ public abstract class TipiEchoDataComponentImpl extends TipiDataComponentImpl {
     		layoutComponent = null;
     	}
     	if (layout instanceof EchoLayoutImpl) {
-    		System.err.println("Setting layout");
                 layoutComponent = (EchoLayoutImpl) layout;
 //                ((Component) getInnerComponent()).add(layoutComponent);
             }
@@ -141,7 +136,35 @@ public abstract class TipiEchoDataComponentImpl extends TipiDataComponentImpl {
     public void loadData(Navajo n, String method) throws TipiException, TipiBreakException {
         super.loadData(n,  method);
     }
-    
+
+    protected void setComponentValue(final String name, final Object object) {
+        
+    	runSyncInEventThread(new Runnable(){
+
+			public void run() {
+			       if ("border".equals(name)) {
+		            if (getContainer()!=null && getContainer() instanceof Borderable) {
+		                Borderable comp = (Borderable)getContainer();
+		                comp.setBorder((Border)object);
+//		                comp.set
+		            }
+	             }
+		            if ("style".equals(name)) {
+					if (getContainer() instanceof Component) {
+						Component c = (Component) getContainer();
+						c.setStyle(Styles.DEFAULT_STYLE_SHEET.getStyle(c.getClass(), (String) object));
+
+					} else {
+						myContext.showInternalError("NO echo component: " + getContainer());
+					}
+				}
+
+			}
+    	});
+        
+        super.setComponentValue(name, object);
+
+    }
 //    public void processStyles() {
 //        super.processStyles();
 //        if (getContainer()!=null && getContainer() instanceof Positionable) {

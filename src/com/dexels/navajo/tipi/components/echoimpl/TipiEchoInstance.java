@@ -11,10 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.sound.midi.SysexMessage;
 
-import nextapp.echo2.app.ApplicationInstance;
-import nextapp.echo2.app.Style;
-import nextapp.echo2.app.Window;
-import nextapp.echo2.app.WindowPane;
+import nextapp.echo2.app.*;
 import nextapp.echo2.webcontainer.ContainerContext;
 import nextapp.echo2.webcontainer.command.BrowserRedirectCommand;
 import nextapp.echo2.webrender.Connection;
@@ -59,6 +56,7 @@ public class TipiEchoInstance extends ApplicationInstance {
 	public TipiEchoInstance(ServletConfig sc, ServletContext c) throws Exception {
 		myServletConfig = sc;
 		myServletContext = c;
+
 	}
 
 	public URL getLogoutUrl() throws MalformedURLException {
@@ -107,7 +105,7 @@ public class TipiEchoInstance extends ApplicationInstance {
 	}
 
 	private void startup() {
-		String stylePath = myServletContext.getRealPath("WEB-INF/Default.stylesheet");
+		String stylePath = myServletContext.getRealPath("Default.stylesheet");
 		System.err.println("StylePath: "+stylePath);
 		try {
 			FileInputStream fis = new FileInputStream(stylePath);
@@ -126,8 +124,8 @@ public class TipiEchoInstance extends ApplicationInstance {
 		System.err.println("REAL PATH: " + myServletContext.getRealPath("/"));
 		
 		// Title.Sub
-		context = new EchoTipiContext(this);
-		ServletContextResourceLoader servletContextResourceLoader = new ServletContextResourceLoader(myServletContext,"WEB-INF/classes/tipi");
+		context = new EchoTipiContext(this,null);
+		ServletContextResourceLoader servletContextResourceLoader = new ServletContextResourceLoader(myServletContext,"tipi");
 		context.setTipiResourceLoader(servletContextResourceLoader);
 		context.setGenericResourceLoader(servletContextResourceLoader);
 	//	context.setResourceBaseDirectory(new File(myServletContext.getRealPath("/") + "resource/tipi/"));
@@ -214,6 +212,7 @@ public class TipiEchoInstance extends ApplicationInstance {
 			}
 			if ("tipidef".equals(current)) {
 				tipiDef = myServletConfig.getInitParameter(current);
+				System.err.println("Startup def: "+tipiDef);
 				continue;
 			}
 			System.setProperty(current, myServletConfig.getInitParameter(current));

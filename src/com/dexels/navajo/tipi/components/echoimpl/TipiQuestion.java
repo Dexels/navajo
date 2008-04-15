@@ -7,6 +7,7 @@ import com.dexels.navajo.tipi.*;
 import java.util.*;
 
 import nextapp.echo2.app.*;
+import nextapp.echo2.webcontainer.*;
 
 import com.dexels.navajo.tipi.tipixml.*;
 import com.dexels.navajo.tipi.actions.*;
@@ -98,5 +99,6 @@ public class TipiQuestion extends TipiBaseQuestion {
 
     public void setValid(boolean b, String msg) {
     }
+   
 
 }

@@ -12,6 +12,7 @@ import java.awt.*;
 import java.awt.print.*;
 
 import nextapp.echo2.app.*;
+import nextapp.echo2.webcontainer.*;
 
 /**
  * <p>
@@ -52,11 +53,7 @@ public class TipiQuestionList extends TipiBaseQuestionList {
         removeInstantiatedChildren();
     }
 
-    public void runSyncInEventThread(Runnable r) {
-
-        r.run();
-    }
-
+ 
     public Object createContainer() {
         // TODO FIX AND TEST
         return null;

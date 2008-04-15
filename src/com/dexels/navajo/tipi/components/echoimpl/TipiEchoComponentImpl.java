@@ -1,7 +1,9 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
 import nextapp.echo2.app.*;
+import nextapp.echo2.webcontainer.*;
 
+import com.dexels.navajo.echoclient.components.*;
 import com.dexels.navajo.tipi.TipiHelper;
 import com.dexels.navajo.tipi.components.core.TipiComponentImpl;
 import com.dexels.navajo.tipi.components.echoimpl.helpers.EchoTipiHelper;
@@ -34,43 +36,33 @@ public abstract class TipiEchoComponentImpl extends TipiComponentImpl {
         th.initHelper(this);
         addHelper(th);
     }
-//    public void processStyles() {
-//        super.processStyles();
-//        if (getContainer()!=null && getContainer() instanceof Positionable) {
-//            Positionable pos = (Positionable)getContainer();
-//            String s = getStyle("x");
-//            if (s!=null) {
-////                 pos.setLeft(ExtentParser.parseExtent(s));
-////                 pos.setPosition(Positionable.ABSOLUTE);
-//            }
-//            s = getStyle("y");
-//            if (s!=null) {
-////                 pos.setTop(ExtentParser.parseExtent(s));
-////                 pos.setPosition(Positionable.ABSOLUTE);
-//            }
-//         }
-//        if (getContainer()!=null && getContainer() instanceof Sizeable) {
-//            Sizeable pos = (Sizeable)getContainer();
-//            String s = getStyle("w");
-//            if (s!=null) {
-//                 pos.setWidth(ExtentParser.parseExtent(s));
-//             }
-//            s = getStyle("h");
-//            if (s!=null) {
-//                 pos.setHeight(ExtentParser.parseExtent(s));
-//            }
-//         }
-//    }
 
-    protected void setComponentValue(String name, Object object) {
-        if ("border".equals(name)) {
-            if (getContainer()!=null && getContainer() instanceof Borderable) {
-                Borderable comp = (Borderable)getContainer();
-                comp.setBorder((Border)object);
-//                comp.set
-            }
-        }
 
+    protected void setComponentValue(final String name, final Object object) {
+        
+    	runSyncInEventThread(new Runnable(){
+
+			public void run() {
+			       if ("border".equals(name)) {
+		            if (getContainer()!=null && getContainer() instanceof Borderable) {
+		                Borderable comp = (Borderable)getContainer();
+		                comp.setBorder((Border)object);
+//		                comp.set
+		            }
+	             }
+		            if ("style".equals(name)) {
+					if (getContainer() instanceof Component) {
+						Component c = (Component) getContainer();
+						c.setStyle(Styles.DEFAULT_STYLE_SHEET.getStyle(c.getClass(), (String) object));
+
+					} else {
+						myContext.showInternalError("NO echo component: " + getContainer());
+					}
+				}
+
+			}
+    	});
+        
         super.setComponentValue(name, object);
 
     }

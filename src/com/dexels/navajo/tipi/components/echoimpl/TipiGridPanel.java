@@ -60,6 +60,8 @@ public class TipiGridPanel extends TipiEchoDataComponentImpl {
     public Object createContainer() {
         myContainer = new GroupBox("Oega!");
         myContainer.setTitleLabel(null);
+        myContainer.setInsets(new Insets(3,3,3,3));
+//        myContainer.set
         myBorder = myContainer.getBorder();
         myContainer.setBorder(new Border(0,new Color(0,0,0),Border.STYLE_NONE));
         gridComponent = new Grid();

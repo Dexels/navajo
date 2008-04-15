@@ -5,6 +5,7 @@ import com.dexels.navajo.echoclient.components.Styles;
 import nextapp.echo2.app.Insets;
 import nextapp.echo2.app.Row;
 import nextapp.echo2.app.Style;
+import nextapp.echo2.app.layout.*;
 
 public class ToolbarImpl extends Row {
 
@@ -12,7 +13,8 @@ public class ToolbarImpl extends Row {
 		super();
 		Style ss = Styles.DEFAULT_STYLE_SHEET.getStyle(getClass(), "Default");
         setStyle(ss);
-        setInsets(new Insets(3));
+//        setInsets(new Insets(3));
 	}
 
+	
 }

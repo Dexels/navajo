@@ -12,6 +12,7 @@ import java.net.*;
 import javax.swing.*;
 
 import nextapp.echo2.app.*;
+import nextapp.echo2.webcontainer.*;
 
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
@@ -143,11 +144,7 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
         }
     }
 
-    public void runSyncInEventThread(Runnable r) {
-        r.run();
-    }
-
-    
+   
     
     public void removeFromContainer(Object c) {
 		// TODO Auto-generated method stub

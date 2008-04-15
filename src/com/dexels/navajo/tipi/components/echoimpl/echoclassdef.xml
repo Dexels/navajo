@@ -24,6 +24,7 @@
     <tipiaction name="openBrowser" class="TipiOpenBrowser"
         package="com.dexels.navajo.tipi.actions">
         <param name="url" type="string"/>
+        <param name="newWindow" type="boolean"/>
     </tipiaction>
   <!-- NOT IMPLEMENTED YET, USES SHOWQUESTION> -->
     <tipiaction name="askValue" class="TipiEchoShowQuestion"
@@ -75,7 +76,7 @@
             <event name="onLoad">
                 <param name="service" type="string"/>
             </event>
-            <!-- todo: implement -->
+              <!-- todo: implement -->
             <event name="onValueChanged"/>
         </events>
         <values>
@@ -85,7 +86,8 @@
             <value direction="inout" name="columnWidth" type="string"/>
             <value direction="in" name="subQuestionPath" type="string"/>
             <value direction="in" name="background" type="color"/>
-        </values>
+            <value direction="in" name="style" type="string"/>
+      </values>
         <methods>
             <method name="print"/>
             <method name="selectNext"/>
@@ -114,6 +116,7 @@
             <value direction="inout" name="subComponent" type="string"/>
             <!-- with the following constraint -->
             <value direction="inout" name="subConstraint" type="string"/>
+            <value direction="in" name="style" type="string"/>
             <value direction="in" name="subQuestionPath" type="string"/>            
             <value direction="in" name="background" type="color"/>
     </values>
@@ -134,6 +137,7 @@
             <value direction="in" name="valid" type="boolean"/>
             <value direction="out" name="description" type="string"/>
             <value direction="in" name="background" type="color"/>
+            <value direction="in" name="style" type="string"/>
         </values>
     </tipiclass>
         
@@ -158,6 +162,7 @@
             <value direction="in" name="valid" type="boolean"/>
             <value direction="out" name="currentPage" type="integer"/>
     	    <value direction="in" name="background" type="color"/>
+            <value direction="in" name="style" type="string"/>
         </values>
         <methods>
             <method name="flatten">
@@ -200,6 +205,7 @@
             <value direction="in" name="valid" type="boolean"/>
             <value direction="out" name="currentPage" type="integer"/>
             <value direction="in" name="background" type="color"/>
+            <value direction="in" name="style" type="string"/>
         </values>
         <methods>
             <method name="flatten">
@@ -261,9 +267,61 @@
             <value direction="in" name="background" type="color"/>
             <value direction="in" name="foreground" type="color"/>
             <value direction="in" name="border" type="border"/>
+            <value direction="in" name="style" type="string"/>
         </values>
         <methods/>
     </tipiclass>
+    
+    <tipiclass class="TipiAccordionPane" name="accordion" package="com.dexels.navajo.tipi.components.echoimpl" type="tipi" childcount="*" layoutmanager="true" addtocontainer="true">
+        <events>
+            <event name="onInstantiate"/>
+            <event name="onLoad"/>
+            <event name="onGeneratedErrors"/>
+        </events>
+        <values>
+            <value direction="in" name="enabled" type="boolean"/>
+            <value direction="in" name="visible" type="boolean"/>
+            <value direction="inout" name="title" type="string"/>
+            <value direction="in" name="background" type="color"/>
+            <value direction="in" name="foreground" type="color"/>
+            <value direction="in" name="border" type="border"/>
+            <value direction="in" name="style" type="string"/>
+        </values>
+        <methods/>
+    </tipiclass>
+    
+    <tipiclass studio-icon="tipitableprinter.gif" module="extensions" class="TipiEchoEmbedComponent" name="embed" childcount="0" package="com.dexels.navajo.tipi.components.echoimpl"
+      type="tipi" addtocontainer="true" layoutmanager="false">
+      <events>
+         <event name="onInstantiate" />
+         <event name="onLoad" />
+      </events>
+      <values>
+         <value direction="in" name="resourceCodeBase" type="string" />
+         <value direction="in" name="tipiCodeBase" type="string" />
+         <value direction="in" name="background" type="color" />
+         <value direction="in" name="enabled" type="boolean" />
+         <value direction="in" name="visible" type="boolean" />
+         <value direction="in" name="border" type="border" />
+         <value direction="in" name="binaryCodeBase" type="resource" />
+            <value direction="in" name="style" type="string"/>
+      </values>
+      <methods>
+         <method name="switch">
+            <param name="definition" type="string" />
+         </method>
+         <method name="loadDefinition">
+            <param name="location" type="string" />
+         </method>
+         <method name="addStartupProperty">
+            <param name="propertyName" type="string" />
+            <param name="value" type="string" />
+         </method>
+         <method name="loadAllNavajo">
+            <param name="message" type="message" />
+         </method>
+      </methods>
+   </tipiclass>
    <tipiclass class="TipiRow" name="row" package="com.dexels.navajo.tipi.components.echoimpl" type="tipi" childcount="*" layoutmanager="true" addtocontainer="true">
         <events>
             <event name="onInstantiate"/>
@@ -277,6 +335,7 @@
             <value direction="in" name="background" type="color"/>
             <value direction="in" name="foreground" type="color"/>
             <value direction="in" name="border" type="border"/>
+            <value direction="in" name="style" type="string"/>
         </values>
         <methods/>
     </tipiclass>
@@ -292,7 +351,10 @@
             <event name="onSelectionChanged"/>
             <event name="onLoad"/>
 
-           <event name="onSelectionChanged"/>
+          <event name="onSelectionChanged">
+                <param name="selectedMessage" type="message"/>
+                <param name="selectedIndex" type="integer"/>
+            </event>
             <event name="onValueChanged">
                 <param name="name" type="string"/>
                 <!--<param name="old" type="string"/>-->
@@ -331,6 +393,7 @@
             <value direction="in" name="foreground" type="color"/>
              <value direction="inout" name="h" type="integer"/>
              <value direction="inout" name="v" type="integer"/>
+            <value direction="in" name="style" type="string"/>
         </values>
         <methods>
             <method name="selectNext"/>
@@ -365,6 +428,7 @@
             <value direction="in" name="centered" type="boolean"/>
             <value direction="in" name="layout" type="string"/>
             <value direction="in" name="background" type="color"/>
+            <value direction="in" name="style" type="string"/>
         </values>
         <methods/>
     </tipiclass>
@@ -387,6 +451,7 @@
                 <option description="Vertical" value="vertical"/>
             </value>
             <value direction="in" name="indeterminate" type="boolean"/>
+            <value direction="in" name="style" type="string"/>
         </values>
         <methods/>
     </tipiclass>
@@ -401,7 +466,9 @@
             <value direction="in" name="icon" type="resource"/>
             <value direction="inout" name="text" type="string"/>
             <value direction="in" name="tooltip" type="string"/>
+            <value direction="in" name="style" type="string"/>
             <value direction="in" name="enabled" type="boolean"/>
+            <value direction="in" name="visible" type="boolean"/>
             <value direction="in" name="background" type="color"/>
             <value direction="in" name="foreground" type="color"/>
             <value direction="in" name="border" type="border"/>
@@ -422,6 +489,7 @@
             <value direction="inout" name="w" type="integer"/>
             <value direction="in" name="background" type="color"/>
             <value direction="in" name="foreground" type="color"/>
+            <value direction="in" name="style" type="string"/>
         </values>
         <methods/>
     </tipiclass>
@@ -438,6 +506,7 @@
             <value direction="in" name="enabled" type="boolean"/>
             <value direction="in" name="background" type="color"/>
             <value direction="in" name="foreground" type="color"/>
+            <value direction="in" name="style" type="string"/>
         </values>
         <methods/>
     </tipiclass>
@@ -450,6 +519,9 @@
             <value direction="in" name="text" type="string"/>
             <value direction="in" name="border" type="border"/>
             <value direction="in" name="icon" type="object"/>
+            <value direction="in" name="style" type="string"/>
+            <value direction="in" name="visible" type="boolean"/>
+            
     	</values>
         <methods/>
     </tipiclass>
@@ -459,6 +531,7 @@
         </events>
         <values>
             <value direction="in" name="text" type="string"/>
+            <value direction="in" name="style" type="string"/>
     	</values>
         <methods/>
     </tipiclass>
@@ -470,6 +543,7 @@
         <values>
             <value direction="in" name="enabled" type="boolean"/>
             <value direction="in" name="border" type="border"/>
+            <value direction="in" name="style" type="string"/>
 	</values>
         <methods/>
     </tipiclass>
@@ -484,6 +558,7 @@
             <value direction="in" name="enabled" type="boolean"/>
             <value direction="in" name="background" type="color"/>
             <value direction="in" name="foreground" type="color"/>
+            <value direction="in" name="style" type="string"/>
         </values>
         <methods/>
     </tipiclass>
@@ -497,6 +572,7 @@
              <value direction="in" name="enabled" type="boolean"/>
              <value direction="in" name="background" type="color"/>
             <value direction="in" name="foreground" type="color"/>
+            <value direction="in" name="style" type="string"/>
        </values>
         <methods/>
     </tipiclass>
@@ -511,6 +587,7 @@
             <value direction="in" name="enabled" type="boolean"/>
             <value direction="in" name="background" type="color"/>
             <value direction="in" name="foreground" type="color"/>
+            <value direction="in" name="style" type="string"/>
         </values>
         <methods/>
     </tipiclass>
@@ -530,6 +607,7 @@
             <value direction="in" name="background" type="color"/>
             <value direction="in" name="foreground" type="color"/>
             <value direction="in" name="border" type="object"/>
+            <value direction="in" name="style" type="string"/>
         </values>
         <methods/>
     </tipiclass>
@@ -545,6 +623,7 @@
             <value direction="in" name="background" type="color"/>
             <value direction="in" name="foreground" type="color"/>
             <value direction="in" name="border" type="border"/>
+            <value direction="in" name="style" type="string"/>
         </values>
         <methods/>
     </tipiclass>
@@ -566,6 +645,7 @@
             <value direction="in" name="border" type="border"/>
             <!-- not supported yet-->
             <value direction="in" name="logo" type="object"/>
+            <value direction="in" name="style" type="string"/>
         </values>
         <methods/>
     </tipiclass>
@@ -586,6 +666,7 @@
             <value direction="in" name="background" type="color"/>
             <value direction="in" name="border" type="border"/>
             <value direction="in" name="width" type="integer"/>
+            <value direction="in" name="style" type="string"/>
          </values>
         <methods>
         </methods>
@@ -612,6 +693,7 @@
             <value direction="in" name="background" type="color"/>
             <value direction="in" name="foreground" type="color"/>
             <value direction="in" name="border" type="border"/>
+            <value direction="in" name="style" type="string"/>
         </values>
         <methods/>
     </tipiclass>
@@ -630,6 +712,7 @@
             <value direction="in" name="background" type="color"/>
             <value direction="in" name="foreground" type="color"/>
             <value direction="in" name="border" type="object"/>
+            <value direction="in" name="style" type="string"/>
         </values>
         <methods/>
     </tipiclass>
@@ -694,6 +777,7 @@
             </value>
             <value direction="in" name="w" type="integer"/>
     	    <value direction="in" name="h" type="integer"/>
+            <value direction="in" name="style" type="string"/>
     	    
         </values>
         <methods/>
@@ -774,7 +858,8 @@
             <value direction="in" name="verticalScrolls" type="boolean"/>
             <value direction="in" name="maxImageHeight" type="integer"/>
             <value direction="in" name="maxImageWidth" type="integer"/>
-           <value direction="in" name="allowDateOverlay" type="boolean"/>
+            <value direction="in" name="allowDateOverlay" type="boolean"/>
+            <value direction="in" name="style" type="string"/>
 
         </values>
         <methods/>
@@ -800,6 +885,7 @@
             <value direction="in" name="closable" type="boolean"/>
             <value direction="in" name="resizable" type="boolean"/>
             <value direction="in" name="movable" type="boolean"/>
+             <value direction="in" name="style" type="string"/>
         </values>
         <methods>
             <method name="show"/>
@@ -827,6 +913,7 @@
             <value direction="in" name="closable" type="boolean"/>
             <value direction="in" name="resizable" type="boolean"/>
             <value direction="in" name="movable" type="boolean"/>
+             <value direction="in" name="style" type="string"/>
         </values>
         <methods>
 	</methods>
@@ -843,6 +930,7 @@
          <value direction="inout" name="title" type="string"/>
             <value direction="in" name="visible" type="boolean"/>
             <value direction="in" name="background" type="color"/>
+             <value direction="in" name="style" type="string"/>
         </values>
         <methods>
 	</methods>
@@ -865,10 +953,31 @@
             <value direction="in" name="background" type="color"/>
             <value direction="in" name="foreground" type="color"/>
             <value direction="in" name="border" type="border"/>
+             <value direction="in" name="style" type="string"/>
          </values>
         <methods>
         </methods>
     </tipiclass>
+   
+      <tipiclass addtocontainer="true" childcount="1" class="TipiTransitionPane" layoutmanager="false"
+        module="container" name="transitionpane" package="com.dexels.navajo.tipi.components.echoimpl"
+        studio-icon="tabs.gif" type="tipi">
+        <events>
+            <event name="onInstantiate"/>
+            <event name="onTabChanged"/>
+            <event name="onLoad">
+                <param name="service" type="string"/>
+            </event>
+        </events>
+        <values>
+            <value direction="in" name="duration" type="integer"/>
+            <value direction="in" name="effect" type="string"/>
+            <value direction="in" name="style" type="string"/>
+         </values>
+        <methods>
+        </methods>
+    </tipiclass>
+   
     
    <tipiclass addtocontainer="true" childcount="*" class="TipiTest" layoutmanager="false"
         module="container" name="testcontainer" package="com.dexels.navajo.tipi.components.echoimpl"
@@ -926,6 +1035,7 @@
             <value direction="inout" name="useScrollBars" type="boolean" value="true"/>
             <value direction="inout" name="headerVisible" type="boolean" value="true"/>
             <value direction="out" name="currentPage" type="integer"/>
+            <value direction="in" name="style" type="string"/>
         </values>
         <methods>
             <method name="flatten">

@@ -8,15 +8,14 @@ import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
-import nextapp.echo2.app.ApplicationInstance;
-import nextapp.echo2.app.Window;
+import nextapp.echo2.app.*;
 import nextapp.echo2.webcontainer.*;
 import nextapp.echo2.webrender.*;
 
 import com.dexels.navajo.client.NavajoClientFactory;
-import com.dexels.navajo.document.NavajoFactory;
-import com.dexels.navajo.tipi.TipiContext;
-import com.dexels.navajo.tipi.TipiException;
+import com.dexels.navajo.document.*;
+import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.internal.*;
 import com.dexels.navajo.tipi.tipixml.XMLElement;
 
 import echopointng.command.JavaScriptEval;
@@ -44,30 +43,39 @@ public class EchoTipiContext extends TipiContext {
     private static int instanceCount = 0;
     
     private int zIndexCounter = 0;
+
+    
+    private boolean useAsyncThread = false;
     
     private final TipiEchoInstance myInstance;
-    public EchoTipiContext(TipiEchoInstance t) {
+    public EchoTipiContext(TipiEchoInstance t, EchoTipiContext parentContext) {
+    	super(parentContext);
     	instanceCount++;
     	myInstance = t;
 
+    	if(useAsyncThread) {
+    		ContainerContext context =(ContainerContext) t.getContextProperty(ContainerContext.CONTEXT_PROPERTY_NAME);
+    		TaskQueueHandle handle =  t.createTaskQueue();
+
+    		if (null != context) {
+    			context.setTaskQueueCallbackInterval(handle, 3000);
+    		}
+    	}
     }
 
-
-    
+   
     public ApplicationInstance getInstance() {
     	return myInstance;
     }
 
-    public List getRequiredIncludes() {
-        List s = super.getRequiredIncludes();
+    public List<String> getRequiredIncludes() {
+        List<String> s = super.getRequiredIncludes();
         s.add("com/dexels/navajo/tipi/components/echoimpl/echoclassdef.xml");
-        // s.add("com/dexels/navajo/tipi/actions/echoactiondef.xml");
         return s;
     }
     
     public void finalize() {
     	instanceCount--;
-    	System.err.println("EchoTipiContext has been finalized!!! Instancecount now: "+instanceCount);
     	 Window w = (Window) getTopLevel();
     	 w.dispose();
     }
@@ -79,6 +87,75 @@ public class EchoTipiContext extends TipiContext {
          */
     }
 
+//	public void loadNavajo(final Navajo reply, final String method) throws TipiBreakException {
+//		Runnable r = new Runnable(){
+//
+//			public void run() {
+//				try {
+//					EchoTipiContext.super.loadNavajo(reply, method);
+//				} catch (TipiBreakException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//			}};
+//			try {
+//				execute(r);
+//			} catch (TipiException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//	}
+
+	public void execute(Runnable r) throws TipiException {
+		if (useAsyncThread) {
+			ContainerContext context =(ContainerContext) getInstance().getContextProperty(ContainerContext.CONTEXT_PROPERTY_NAME);
+			TaskQueueHandle handle =  getInstance().createTaskQueue();
+
+			if (null != context) {
+				context.setTaskQueueCallbackInterval(handle, 3000);
+			}
+			getInstance().enqueueTask(handle, r);
+		} else {
+			r.run();
+		}
+	}
+	
+	public void enqueueExecutable(final TipiExecutable te) throws TipiException {
+		Runnable r = new Runnable(){
+
+			public void run() {
+				try {
+					te.performAction(null, null, 0);
+				} catch (TipiException e) {
+					e.printStackTrace();
+				} catch (TipiBreakException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
+		};
+		if(Thread.currentThread().getName().indexOf("http")!=-1) {
+			r.run();
+		} else {
+			
+			
+			
+			ContainerContext context =(ContainerContext) getInstance().getContextProperty(ContainerContext.CONTEXT_PROPERTY_NAME);
+			
+						TaskQueueHandle handle =  getInstance().createTaskQueue();
+			
+						if (null != context) {
+							context.setTaskQueueCallbackInterval(handle, 3000);
+						}
+					getInstance().enqueueTask(handle, r);
+			 
+//					myThreadPool.enqueueExecutable(te);
+		}
+		
+	}
+
+    
     public void setSplashVisible(boolean b) {
         /**
          * @todo Implement this com.dexels.navajo.tipi.TipiContext abstract
@@ -109,7 +186,8 @@ public class EchoTipiContext extends TipiContext {
 //    }
 
     public void exit() {
-    	 ApplicationInstance ai = ApplicationInstance.getActive();
+    	shutdown();
+    	ApplicationInstance ai = ApplicationInstance.getActive();
          if (ai instanceof TipiEchoInstance) {
              try {
 				((TipiEchoInstance)ai).exitToUrl();
@@ -117,7 +195,8 @@ public class EchoTipiContext extends TipiContext {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
- 		} }
+ 		} 
+         }
     
 
 
@@ -125,10 +204,7 @@ public class EchoTipiContext extends TipiContext {
         Connection con = WebRenderServlet.getActiveConnection();
         HttpServletRequest req = con.getRequest();
         String url = req.getRequestURL().toString();
-        System.err.println("RequestURL: "+url);
-        System.err.println("Servletinfo: "+ con.getServlet().getServletInfo());
-        System.err.println("Servletname: "+ con.getServlet().getServletName());
-        URL u = new URL(url);
+         URL u = new URL(url);
 //        getServletContext().
         
 
@@ -141,8 +217,7 @@ public class EchoTipiContext extends TipiContext {
 //      System.err.println("Base ATTR: "+base);
 
         URL rootURL =  new URL(u.getProtocol(),u.getHost(),u.getPort(),contextname+"/dynamic/"+path);
-        System.err.println("Resulting url: "+u.toString());
-        return rootURL;
+         return rootURL;
         
     }
     
@@ -168,7 +243,6 @@ public class EchoTipiContext extends TipiContext {
         Connection con = WebRenderServlet.getActiveConnection();
 //   .     HttpServletRequest req = con.getRequest();
         String contextname = con.getRequest().getContextPath();
-        System.err.println("CONTEXTNAME: "+contextname);
         String pathString = "/dynamic";
         String realPath = getServletContext().getRealPath(pathString);
 		File ff = new File(realPath);
@@ -203,23 +277,6 @@ public class EchoTipiContext extends TipiContext {
     	return zIndexCounter++;
     }
     
-//    protected XMLElement getTipiDefinition(String name) throws TipiException {
-//      	XMLElement xe = (XMLElement) staticComponentMap.get(name);
-//      	if (xe==null) {
-//      		return super.getTipiDefinition(name);
-//		} else {
-//
-//			return xe;
-//		}
-//    }
-//    
-//    protected void addComponentDefinition(XMLElement elm) {
-//        String defname = (String) elm.getAttribute("name");
-//        setSplashInfo("Loading statically: " + defname);
-//        staticComponentMap.put(defname, elm);
-////        tipiMap.put(defname, elm);
-//      }
-//
 
 
 	public void showInfo(String text, String title) {
@@ -228,6 +285,35 @@ public class EchoTipiContext extends TipiContext {
 //	Thread.dumpStack();
 	}
 
+	public void setTipiResourceLoader(String tipiCodeBase) throws MalformedURLException {
+		if (tipiCodeBase != null) {
+			if (tipiCodeBase.indexOf("http:/") != -1) {
+				setTipiResourceLoader(new HttpResourceLoader(new URL(tipiCodeBase)));
+			} else {
+				setTipiResourceLoader(new FileResourceLoader(new File(tipiCodeBase)));
+			}
+		} else {
+			// nothing supplied. Use a file loader with fallback to classloader.
+			setTipiResourceLoader(new FileResourceLoader(new File("tipi")));
+		}
+	}
+
+	public void runAsyncInEventThread(Runnable r) {
+		try {
+			execute(r);
+		} catch (TipiException e) {
+			e.printStackTrace();
+		}
+	}
 
 
+	public void runSyncInEventThread(Runnable r) {
+		r.run();
+	}
+
+	public void showInternalError(String errorString, Throwable t) {
+		showInfo("Internal error: "+errorString,"Problem:");
+		super.showInternalError(errorString, t);
+	}
+	
 }

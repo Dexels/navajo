@@ -2,7 +2,7 @@ package com.dexels.navajo.tipi.components.echoimpl;
 
 import java.net.URL;
 
-import com.dexels.navajo.echoclient.components.ButtonImpl;
+import com.dexels.navajo.echoclient.components.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.echoimpl.impl.*;
 import com.dexels.navajo.tipi.components.echoimpl.parsers.*;
@@ -121,24 +121,22 @@ public class TipiButton extends TipiEchoComponentImpl {
         return myButton;
     }
 
-    /**
-     * setComponentValue
-     * 
-     * @param name
-     *            String
-     * @param object
-     *            Object
-     * @todo Implement this
-     *       com.dexels.navajo.tipi.components.core.TipiComponentImpl method
-     */
     protected void setComponentValue(String name, Object object) {
         // Button b = (Button) getContainer();
-        if ("text".equals(name)) {
+       if ("text".equals(name)) {
             myButton.setText("" + object);
         }
+       if ("visible".equals(name)) {
+    	   System.err.println("Setting visible to: "+object);
+           myButton.setVisible((Boolean)object);
+       }
+
         if ("tooltip".equals(name)) {
             myButton.setToolTipText("" + object);
         }
+//        if ("style".equals(name)) {
+//            myButton.setStyle(Styles.DEFAULT_STYLE_SHEET.getStyle(Button.class, (String)object));
+//        }
         if ("icon".equals(name)) {
             if (object instanceof URL) {
                 URL u = (URL) object;

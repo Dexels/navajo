@@ -17,9 +17,13 @@ public class EchoBorderLayoutImpl extends EchoLayoutImpl {
 	public void commitToParent() {
 		Component northComponent = null;
 		Component southComponent = null;
+		Component eastComponent = null;
+		Component westComponent = null;
 		Component centerComponent = null;
 		int northSize = -1;
 		int southSize = -1;
+		int eastSize = -1;
+		int westSize = -1;
 		for (int i = 0; i < childComponents.size(); i++) {
 			Component current = (Component)childComponents.get(i);
 			Object constraint = constraints.get(current);
@@ -44,6 +48,19 @@ public class EchoBorderLayoutImpl extends EchoLayoutImpl {
 					southSize = Integer.parseInt(height);
 				}
 			}
+			if("east".equals(con)) {
+				eastComponent = current;
+				if(height!=null) {
+					eastSize = Integer.parseInt(height);
+				}
+
+			}
+			if("west".equals(con)) {
+				westComponent = current;
+				if(height!=null) {
+					westSize = Integer.parseInt(height);
+				}
+			}
 			if("center".equals(con)) {
 				centerComponent = current;
 			}
@@ -60,13 +77,29 @@ public class EchoBorderLayoutImpl extends EchoLayoutImpl {
 		Component sp = null;
 		if(southComponent!=null) {
 //			southComponent.setBackground(new Color(255,0,0));
-			sp = embedComponents(southComponent,centerComponent,true,southSize);
+			sp = embedComponents(southComponent,centerComponent,southSize, SplitPane.ORIENTATION_VERTICAL_BOTTOM_TOP);
 		} else {
 			sp = centerComponent;
 		}
 		if(northComponent!=null) {
 //			northComponent.setBackground(new Color(255,0,0));
-			sp = embedComponents(northComponent,sp,false,northSize);
+			sp = embedComponents(northComponent,sp,northSize, SplitPane.ORIENTATION_VERTICAL);
+		} else {
+			if(sp==null) {
+			sp = centerComponent;
+			}
+		}
+		if(eastComponent!=null) {
+//			northComponent.setBackground(new Color(255,0,0));
+			sp = embedComponents(eastComponent,sp,eastSize, SplitPane.ORIENTATION_HORIZONTAL_RIGHT_LEFT);
+		} else {
+			if(sp==null) {
+			sp = centerComponent;
+			}
+		}
+		if(westComponent!=null) {
+//			northComponent.setBackground(new Color(255,0,0));
+			sp = embedComponents(westComponent,sp,westSize, SplitPane.ORIENTATION_HORIZONTAL);
 		} else {
 			if(sp==null) {
 			sp = centerComponent;
@@ -78,12 +111,12 @@ public class EchoBorderLayoutImpl extends EchoLayoutImpl {
 		
 	}
 
-	private SplitPane embedComponents(Component firstComponent, Component secondComponent,boolean invert, int size) {
+	private SplitPane embedComponents(Component firstComponent, Component secondComponent, int size, int orientation) {
 		if(size<0) {
 			size = 38; // default size
 		}
 		System.err.println("Using size: "+size);
-		SplitPane sp = new SplitPane(invert?SplitPane.ORIENTATION_VERTICAL_BOTTOM_TOP:SplitPane.ORIENTATION_VERTICAL_TOP_BOTTOM);
+		SplitPane sp = new SplitPane(orientation);
 //		sp.setBackground(new Color(0,0,255));
 		sp.add(firstComponent);
 		sp.add(secondComponent);

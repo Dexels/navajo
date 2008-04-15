@@ -11,8 +11,7 @@ import nextapp.echo2.app.event.WindowPaneEvent;
 import nextapp.echo2.app.event.WindowPaneListener;
 
 import com.dexels.navajo.echoclient.components.Styles;
-import com.dexels.navajo.tipi.TipiComponentMethod;
-import com.dexels.navajo.tipi.TipiHelper;
+import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.echoimpl.helpers.EchoTipiHelper;
 import com.dexels.navajo.tipi.components.echoimpl.impl.layout.EchoLayoutImpl;
 import com.dexels.navajo.tipi.components.echoimpl.parsers.ColorParser;
@@ -127,6 +126,12 @@ public final class TipiWindow
 
     private final void myWindow_internalFrameClosed(WindowPaneEvent arg0) {
     		myWindow.setVisible(false);
+    		try {
+				performTipiEvent("onWindowClosed", null, false);
+			} catch (TipiException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
     	// myContext.disposeTipi(this);
     }
 

@@ -50,6 +50,9 @@ public class TipiLabel extends TipiEchoComponentImpl {
         if ("text".equals(name)) {
             b.setText("" + object);
         }
+        if ("visible".equals(name)) {
+            b.setVisible((Boolean)object);
+        }
         if ("icon".equals(name)) {
             if (object instanceof URL) {
                 URL u = (URL) object;

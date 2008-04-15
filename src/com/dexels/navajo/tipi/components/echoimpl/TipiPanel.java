@@ -80,6 +80,7 @@ public class TipiPanel extends TipiEchoDataComponentImpl {
     public void setComponentValue(final String name, final Object object) {
         if ("background".equals(name)) {
             if (object instanceof Color) {
+            	
                 myContainer.setBackground((Color) object);
         		return;
             }

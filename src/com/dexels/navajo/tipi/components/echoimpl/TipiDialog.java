@@ -1,5 +1,6 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
+import tucana.echo2.app.*;
 import nextapp.echo2.app.*;
 import nextapp.echo2.app.Font.Typeface;
 import nextapp.echo2.app.event.WindowPaneEvent;
@@ -15,7 +16,7 @@ import com.dexels.navajo.tipi.components.echoimpl.helpers.EchoTipiHelper;
 import com.dexels.navajo.tipi.components.echoimpl.parsers.*;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 
-import echopointng.ContainerEx;
+import echopointng.*;
 
 /**
  * <p>
@@ -71,6 +72,8 @@ public class TipiDialog extends TipiEchoDataComponentImpl {
 
 	private boolean movable;
 
+	private ContentPaneEx paneEx;
+
     // headerheight leftheaderinset topheaderinset rightheaderinset bottomheaderinset
     
     // headerfont headerforeground headerbackground
@@ -91,14 +94,24 @@ public class TipiDialog extends TipiEchoDataComponentImpl {
             addHelper(th);
             innerContainer = new ContentPane();
             myWindow.add(innerContainer);
+
+            paneEx = new ContentPaneEx();
+    		final LightBox lightBox = new LightBox();
+            lightBox.setHidden(true);
+            paneEx.add(lightBox);
+
             myWindow.addWindowPaneListener(new WindowPaneListener() {
                 public void windowPaneClosing(WindowPaneEvent arg0) {
                     myWindow_internalFrameClosed(arg0);
+                    lightBox.hide();
                 }
             });
-            myWindow.setDefaultCloseOperation(WindowPane.DO_NOTHING_ON_CLOSE);
-            myWindow.setClosable(false);
-            return myWindow;
+            
+            
+            
+
+            
+            return paneEx;
         }
 
     public Component getInnerComponent() {
@@ -231,12 +244,16 @@ public class TipiDialog extends TipiEchoDataComponentImpl {
         ContentPane content = win.getContent();
 
         content.remove(myWindow);
+        System.err.println("DISPOSED DIALOG!");
         myWindow = null;
    }
 
     private final void constructStandardDialog() {
         TipiScreen s = (TipiScreen) getContext().getDefaultTopLevel();
+        ModalDimmer m = new ModalDimmer();
         final Window win = (Window) s.getTopLevel();
+        
+  //        win.getContent().add(lb);
         if (w == 0) {
             w = 400;
         }
@@ -269,17 +286,6 @@ public class TipiDialog extends TipiEchoDataComponentImpl {
         myWindow.setZIndex(((EchoTipiContext)myContext).acquireHighestZIndex());
         
 
-//        if (headerbackground!=null) {
-//        	myWindow.setTitleBackground(headerbackground);
-//        }
-//        if (headerforeground!=null) {
-//        	myWindow.setTitleForeground(headerforeground);
-//        }
-//        
-////        myWindow.setTitleInsets(new Insets(leftheaderinset, topheaderinset, rightheaderinset, bottomheaderinset));
-//        if (headerheight!=0) {
-//        	myWindow.setTitleHeight(new Extent(headerheight, Extent.PX));
-//        }
         myWindow.setVisible(true);
     }
 //    public void processStyles() {

@@ -32,7 +32,6 @@ public class BorderLayout extends SplitPane {
    public BorderLayout() {
        super(SplitPane.ORIENTATION_VERTICAL, new Extent(80, Extent.PX));
        ContentPane north, south, east, west, center;
-
        setStyleName("DefaultResizable");
        
        SplitPaneLayoutData splitPaneLayoutData;
@@ -92,10 +91,12 @@ public class BorderLayout extends SplitPane {
            southC.add(c);
            break;
        case iEAST :
+    	   setOrientation(ORIENTATION_HORIZONTAL_RIGHT_LEFT);
            eastC.removeAll();
            eastC.add(c);
            break;
        case iWEST :
+    	   setOrientation(ORIENTATION_HORIZONTAL);
            westC.removeAll();
            westC.add(c);
            break;

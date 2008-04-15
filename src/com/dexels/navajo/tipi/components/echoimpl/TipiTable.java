@@ -5,12 +5,14 @@ import java.util.*;
 import nextapp.echo2.app.*;
 import nextapp.echo2.app.event.ActionEvent;
 import nextapp.echo2.app.event.ActionListener;
+import nextapp.echo2.extras.app.*;
 
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.echoclient.components.MessageTable;
 import com.dexels.navajo.echoclient.components.PageNavigator;
 import com.dexels.navajo.echoclient.components.Styles;
 import com.dexels.navajo.echoclient.components.TableEditorListener;
+import com.dexels.navajo.echoclient.components.PageNavigator.*;
 import com.dexels.navajo.tipi.TipiBreakException;
 import com.dexels.navajo.tipi.TipiComponentMethod;
 import com.dexels.navajo.tipi.TipiContext;
@@ -51,33 +53,38 @@ public class TipiTable extends TipiEchoDataComponentImpl {
     private MessageTable myTable;
 
 	private PageNavigator pageNavigator;
+	private TransitionPane myTransitionPane;
 
+	private int currentTableIndex = 1;
+
+	private SplitPane myPane;
     public TipiTable() {
     }
 
     public Object createContainer() {
-//    	ContainerEx myContainer = new ContainerEx();
-    	SplitPane myPane = new SplitPane(SplitPane.ORIENTATION_VERTICAL,new Extent(25,Extent.PX));
-    	pageNavigator = new PageNavigator();
+    	myPane = new SplitPane(SplitPane.ORIENTATION_VERTICAL,new Extent(25,Extent.PX));
+		pageNavigator = new PageNavigator();
 		myTable = new MessageTable();
-
-		
+		myTransitionPane = new TransitionPane();
+		myTransitionPane.setDuration(500);
+        myTransitionPane.setType(TransitionPane.TYPE_FADE_TO_WHITE);
+        ContentPane cp = new ContentPane();
+        myTransitionPane.add(cp);
+        cp.add(myTable);
 		myPane.add(pageNavigator);
-        myPane.add(myTable);
-//        pageNavigator.addPageIndexChangeListener(myTable);
-        //        myTable.setStyleName("Default");
-//        myContainer.setStyleName("Default");
-//        myContainer.setPosition(Positionable.STATIC);
+        myPane.add(myTransitionPane);
+//        myTransitionPane.add(myTable);
     	Style ss = Styles.DEFAULT_STYLE_SHEET.getStyle(MessageTable.class, "Default");
     	myTable.setStyle(ss);
     	myTable.setRolloverEnabled(false);
         myTable.addSelectionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
-                	System.err.println("SEKECTION CHANGE");
-                	Message m = myTable.getSelectedMessage();
-                	System.err.println("M: index: "+m.getIndex());
-//                    performTipiEvent("onSelectionChanged", null, true);
+        			Map<String, Object> tempMap = new HashMap<String, Object>();
+        			tempMap.put("selectedIndex", new Integer(myTable.getSelectedIndex()));
+        			tempMap.put("selectedMessage", myTable.getSelectedMessage());
+        			performTipiEvent("onSelectionChanged", tempMap, false);
+                	
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -87,7 +94,6 @@ public class TipiTable extends TipiEchoDataComponentImpl {
          myTable.addTableEditorListener(new TableEditorListener(){
 
             public void propertyChanged(Property p, String eventType, int column, int row) {
-//            	System.err.println("FIRINGGGGGGGGGG!!!!!!!!!!!");
             	Map event = new HashMap();
                 event.put("column", new Integer(column));
                 event.put("row", new Integer(row));
@@ -101,49 +107,58 @@ public class TipiTable extends TipiEchoDataComponentImpl {
                 }
                 
             }});
-//         myContainer.add(myTable);
-//         myContainer.setBackground(new Color(255,0,0));
+         
+         pageNavigator.addPageIndexChangeListener(new PageIndexChangeListener(){
+
+     		public void pageIndexChanged(PageIndexChangeEvent e) {
+     			int newPage = e.getNewPageIndex();
+     			if(newPage==currentTableIndex) {
+     				return;
+     			}
+     			boolean b = newPage>currentTableIndex;
+     		
+     			System.err.println("Swtitching");
+     			myTransitionPane.setType(!b?TransitionPane.TYPE_CAMERA_PAN_LEFT:TransitionPane.TYPE_CAMERA_PAN_RIGHT);
+     			myTransitionPane.removeAll();
+     			ContentPane cp = new ContentPane();
+//     			myTransitionPane.setType(!b?TransitionPane.TYPE_CAMERA_PAN_LEFT:TransitionPane.TYPE_CAMERA_PAN_RIGHT);
+     			myTransitionPane.add(cp);
+     			cp.add(myTable);
+     			currentTableIndex = newPage;
+     			
+     		}});
     return myPane;
-//         return myTable;
     }
 
     public Object getActualComponent() {
         return myTable;
     }
 
-    public void loadData(Navajo n, String method) throws TipiException, TipiBreakException {
+    public void loadData(final Navajo n, String method) throws TipiException, TipiBreakException {
     	super.loadData(n, method);
-//        ((ContainerEx)getContainer()).setzIndex(0);
-        
-        MessageTable mm = (MessageTable) getActualComponent();
-        // System.err.println("Navajo: ");
-        // try {
-        // n.write(System.err);
-        // } catch (NavajoException e) {
-        // e.printStackTrace();
-        // }
-        // System.err.println("------------------------------------------------------------------------------------>>
-        // Path: " + messagePath);
-        Message m = n.getMessage(messagePath);
-        // System.err.println("------------------------------------------------------------------------------------>>
-        // Got message: " + m);
+    	runAsyncInEventThread(new Runnable(){
 
-        if (m != null) {
-            if (!colDefs) {
-                mm.removeAllColumns();
-                ArrayList props = m.getMessage(0).getAllProperties();
-                for (int i = 0; i < props.size(); i++) {
-                    Property p = (Property) props.get(i);
-                    mm.addColumn(p.getName(), p.getName(), false, -1);
-                }
-            }
-            mm.setMessage(m);
-        }
-        pageNavigator.setTotalPages(myTable.getTotalPages());
-        pageNavigator.addPageIndexChangeListener(myTable);
-        pageNavigator.setPageIndex(0);
-        myTable.setPageNavigator(pageNavigator);
-    }
+			public void run() {
+			       MessageTable mm = (MessageTable) getActualComponent();
+			        Message m = n.getMessage(messagePath);
+			        if (m != null) {
+			            if (!colDefs) {
+			                mm.removeAllColumns();
+			                ArrayList props = m.getMessage(0).getAllProperties();
+			                for (int i = 0; i < props.size(); i++) {
+			                    Property p = (Property) props.get(i);
+			                    mm.addColumn(p.getName(), p.getName(), false, -1);
+			                }
+			            }
+			            mm.setMessage(m);
+			        }
+			        pageNavigator.setTotalPages(myTable.getTotalPages());
+			        pageNavigator.addPageIndexChangeListener(myTable);
+			        pageNavigator.setPageIndex(0);
+			        myTable.setPageNavigator(pageNavigator);
+			}
+    	});
+     }
 
     public Object getComponentValue(String name) {
         MessageTable mm = (MessageTable) getActualComponent();
@@ -156,70 +171,75 @@ public class TipiTable extends TipiEchoDataComponentImpl {
         return super.getComponentValue(name);
     }
 
-    public void load(XMLElement elm, XMLElement instance, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
-        MessageTable mm = (MessageTable) getActualComponent();
-        // TipiSwingColumnAttributeParser cap = new
-        // TipiSwingColumnAttributeParser();
-        
-        boolean editableColumnsFound = false;
-        
-        String rowsPerPage = (String) elm.getAttribute("rowsPerPage");
-        if(rowsPerPage!=null) {
-        	int rpp = Integer.parseInt(rowsPerPage);
-        	  MessageTable xmm = (MessageTable) getActualComponent();
-              if(xmm!=null) {
-            	  xmm.setRowsPerPage(rpp);
-              }
-        }
-        
-        
-        messagePath = (String) elm.getAttribute("messagepath");
-        
-        
-        
-        if (messagePath != null) {
-            if (messagePath.startsWith("'") && messagePath.endsWith("'")) {
-                messagePath = messagePath.substring(1, messagePath.length() - 1);
-            }
-        }
-        super.load(elm, instance, context);
-        List<XMLElement> children = elm.getChildren();
-        for (int i = 0; i < children.size(); i++) {
-            XMLElement child = children.get(i);
-            if (child.getName().equals("column")) {
-                Operand o = evaluate(child.getStringAttribute("label"), this, null);
-                String label = null;
-                if (o == null) {
-                    label = "";
-                } else {
-                    label = (String) o.value;
-                    if (label == null) {
-                        label = "";
-                    }
-                }
-                String name = (String) child.getAttribute("name");
-                String editableString = (String) child.getAttribute("editable");
-                int size = child.getIntAttribute("size", -1);
+    public void load(final XMLElement elm, final XMLElement instance, final TipiContext context) throws com.dexels.navajo.tipi.TipiException {
+       
+    	runSyncInEventThread(new Runnable(){
 
-                boolean editable = "true".equals(editableString);
-                colDefs = true;
-                // System.err.println("Adding column " + name + ", editable: " +
-                // editable);
-                mm.addColumn(name, label, editable, size);
-                editableColumnsFound = editableColumnsFound || editable;
-                // mm.messageChanged();
-            }
-            if (child.getName().equals("column-attribute")) {
-                String name = (String) child.getAttribute("name");
-                String type = (String) child.getAttribute("type");
-                // if (name != null && type != null && !name.equals("") &&
-                // !type.equals("")) {
-                // columnAttributes.put(name, cap.parseAttribute(child));
-                // }
-            }
-        }
-            mm.setSelectionEnabled(!editableColumnsFound);
-        // mm.setColumnAttributes(columnAttributes);
+			public void run() {
+				MessageTable mm = (MessageTable) getActualComponent();
+		        
+		        boolean editableColumnsFound = false;
+		        
+		        String rowsPerPage = (String) elm.getAttribute("rowsPerPage");
+		        if(rowsPerPage!=null) {
+		        	int rpp = Integer.parseInt(rowsPerPage);
+		        	  MessageTable xmm = (MessageTable) getActualComponent();
+		              if(xmm!=null) {
+		        		  pageNavigator.setVisible(rpp==0);
+		        		  myPane.setSeparatorPosition(rpp==0?new Extent(0,Extent.PX):new Extent(25,Extent.PX));
+		        		  if(rpp>0) {
+			        		  xmm.setRowsPerPage(rpp);
+		        		  }
+		              }
+		        }
+		        messagePath = (String) elm.getAttribute("messagepath");
+		        if (messagePath != null) {
+		            if (messagePath.startsWith("'") && messagePath.endsWith("'")) {
+		                messagePath = messagePath.substring(1, messagePath.length() - 1);
+		            }
+		        }
+		        try {
+					TipiTable.super.load(elm, instance, context);
+				} catch (TipiException e) {
+					e.printStackTrace();
+				}
+		        List<XMLElement> children = elm.getChildren();
+		        for (int i = 0; i < children.size(); i++) {
+		            XMLElement child = children.get(i);
+		            if (child.getName().equals("column")) {
+		                Operand o = evaluate(child.getStringAttribute("label"), TipiTable.this, null);
+		                String label = null;
+		                if (o == null) {
+		                    label = "";
+		                } else {
+		                    label = (String) o.value;
+		                    if (label == null) {
+		                        label = "";
+		                    }
+		                }
+		                String name = (String) child.getAttribute("name");
+		                String editableString = (String) child.getAttribute("editable");
+		                int size = child.getIntAttribute("size", -1);
+
+		                boolean editable = "true".equals(editableString);
+		                colDefs = true;
+		                mm.addColumn(name, label, editable, size);
+		                editableColumnsFound = editableColumnsFound || editable;
+		                // mm.messageChanged();
+		            }
+		            if (child.getName().equals("column-attribute")) {
+		                String name = (String) child.getAttribute("name");
+		                String type = (String) child.getAttribute("type");
+		                // if (name != null && type != null && !name.equals("") &&
+		                // !type.equals("")) {
+		                // columnAttributes.put(name, cap.parseAttribute(child));
+		                // }
+		            }
+		        }
+		            mm.setSelectionEnabled(!editableColumnsFound);
+		        // mm.setColumnAttributes(columnAttributes);
+			}});
+    	
     }
 
     public String[] getCustomChildTags() {
