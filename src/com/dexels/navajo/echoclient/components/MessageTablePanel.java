@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Property;
+import com.dexels.navajo.echoclient.components.PageNavigator.*;
 
 import nextapp.echo2.app.Component;
 import nextapp.echo2.app.Extent;
@@ -12,19 +13,25 @@ import nextapp.echo2.app.SplitPane;
 import nextapp.echo2.app.Style;
 import nextapp.echo2.app.event.ActionEvent;
 import nextapp.echo2.app.event.ActionListener;
+import nextapp.echo2.extras.app.*;
 
 public class MessageTablePanel extends SplitPane {
 	private PageNavigator pageNavigator;
 	private MessageTable myTable;
+	private TransitionPane myTransitionPane;
 	
 	
 	public MessageTablePanel() {
     	setOrientation(ORIENTATION_VERTICAL);
     	setSeparatorPosition(new Extent(25));
 		pageNavigator = new PageNavigator();
+		myTransitionPane = new TransitionPane();
 		myTable = new MessageTable();
 		add(pageNavigator);
-        add(myTable);
+        add(myTransitionPane);
+        myTransitionPane.setDuration(2000);
+        myTransitionPane.setType(TransitionPane.TYPE_CAMERA_PAN_RIGHT);
+        myTransitionPane.add(myTable);
     	Style ss = Styles.DEFAULT_STYLE_SHEET.getStyle(MessageTablePanel.class, "Default");
     	myTable.setStyle(ss);
     	myTable.setSelectionEnabled(true);
@@ -39,7 +46,7 @@ public class MessageTablePanel extends SplitPane {
             }
         });
 
-         myTable.addTableEditorListener(new TableEditorListener(){
+        myTable.addTableEditorListener(new TableEditorListener(){
 
             public void propertyChanged(Property p, String eventType, int column, int row) {
             	Map<String,Object> event = new HashMap<String,Object>();
@@ -50,6 +57,16 @@ public class MessageTablePanel extends SplitPane {
                 event.put("name", p.getName());
  
             }});
+        
+        
+       pageNavigator.addPageIndexChangeListener(new PageIndexChangeListener(){
+
+		public void pageIndexChanged(PageIndexChangeEvent e) {
+			System.err.println("Swtitching");
+			myTransitionPane.remove(myTable);
+			myTransitionPane.add(myTable);
+			
+		}});
 	}
 
 //	addColumn(x.id,x.label,x.editable, x.width);

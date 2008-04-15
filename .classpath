@@ -2,20 +2,20 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/commons-fileupload-1.0.jar"/>
-	<classpathentry kind="lib" path="lib/Echo2_App.jar"/>
-	<classpathentry kind="lib" path="lib/Echo2_Extras_App.jar"/>
-	<classpathentry kind="lib" path="lib/Echo2_Extras_WebContainer.jar"/>
-	<classpathentry kind="lib" path="lib/Echo2_FileTransfer_App.jar"/>
-	<classpathentry kind="lib" path="lib/Echo2_FileTransfer_WebContainer.jar"/>
-	<classpathentry kind="lib" path="lib/Echo2_WebContainer.jar"/>
-	<classpathentry kind="lib" path="lib/Echo2_WebRender.jar"/>
-	<classpathentry kind="lib" path="lib/echopointng-2.1.0rc5.jar"/>
-	<classpathentry kind="lib" path="lib/jcommon-1.0.0.jar"/>
-	<classpathentry kind="lib" path="lib/servlet-api.jar"/>
-	<classpathentry kind="lib" path="lib/tucana-20060720.jar"/>
-	<classpathentry kind="lib" path="lib/jzlib.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/NavajoClient"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/NavajoFunctions"/>
+	<classpathentry exported="true" kind="lib" path="lib/commons-fileupload-1.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/Echo2_App.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/Echo2_Extras_App.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/Echo2_Extras_WebContainer.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/Echo2_FileTransfer_App.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/Echo2_FileTransfer_WebContainer.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/Echo2_WebContainer.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/Echo2_WebRender.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/echopointng-2.1.0rc5.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jcommon-1.0.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/servlet-api.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/tucana-20060720.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jzlib.jar"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/NavajoClient"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/NavajoFunctions"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

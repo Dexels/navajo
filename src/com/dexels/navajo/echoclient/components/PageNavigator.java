@@ -91,7 +91,7 @@ public class PageNavigator extends Row {
 	}
 
 	private Label totalPagesLabel;
-	private TextField pageField;
+	private Label pageField;
 	private int pageIndex, totalPages;
 
 	/**
@@ -118,19 +118,19 @@ public class PageNavigator extends Row {
 		Label itemLabel = new Label("Pagina:");
 		entryRow.add(itemLabel);
 
-		pageField = new TextField();
+		pageField = new Label();
 		pageField.setStyleName("PageNavigator.PageField");
-		pageField.setWidth(new Extent(4, Extent.EX));
+//		pageField.setWidth(new Extent(4, Extent.EX));
 		pageField.setText("1");
-		pageField.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
-					setPageIndex(Integer.parseInt(pageField.getText()) - 1);
-				} catch (NumberFormatException ex) {
-					setPageIndex(getPageIndex());
-				}
-			}
-		});
+//		pageField.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent e) {
+//				try {
+//					setPageIndex(Integer.parseInt(pageField.getText()) - 1);
+//				} catch (NumberFormatException ex) {
+//					setPageIndex(getPageIndex());
+//				}
+//			}
+//		});
 		entryRow.add(pageField);
 
 		Label prepositionLabel = new Label("Totaal:");
@@ -166,6 +166,7 @@ public class PageNavigator extends Row {
 	 */
 	private void firePageIndexChanged() {
 		EventListener[] listeners = getEventListenerList().getListeners(PageIndexChangeListener.class);
+		System.err.println("Firing index changed... Listeners count: "+listeners.length);
 		PageIndexChangeEvent e = new PageIndexChangeEvent(getPageIndex());
 		for (int i = 0; i < listeners.length; ++i) {
 			((PageIndexChangeListener) listeners[i]).pageIndexChanged(e);

@@ -4,6 +4,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.*;
 
+import javax.sound.midi.*;
+
 import nextapp.echo2.app.Color;
 import nextapp.echo2.app.Component;
 import nextapp.echo2.app.Extent;
@@ -17,10 +19,7 @@ import nextapp.echo2.app.event.ChangeEvent;
 import nextapp.echo2.app.event.ChangeListener;
 import nextapp.echo2.app.list.DefaultListSelectionModel;
 import nextapp.echo2.app.list.ListSelectionModel;
-import nextapp.echo2.app.table.DefaultTableColumnModel;
-import nextapp.echo2.app.table.TableCellRenderer;
-import nextapp.echo2.app.table.TableColumn;
-import nextapp.echo2.app.table.TableColumnModel;
+import nextapp.echo2.app.table.*;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Property;
@@ -40,7 +39,7 @@ public class MessageTable extends PageableSortableTable implements PageIndexChan
 
 	private int rowsPerPage = DEFAULT_ROWS_PER_PAGE;
 	
-	private static final Extent RADIOSIZE = new Extent(10, Extent.PX);
+//	private static final Extent RADIOSIZE = new Extent(10, Extent.PX);
 
 	private MessageTableModel myModel = null;
 
@@ -72,7 +71,7 @@ public class MessageTable extends PageableSortableTable implements PageIndexChan
 
 	private Color headerPressedForeground = null;
 
-	private int headerHeight = 20;
+	private int headerHeight = 15;
 
 	private SortableTableHeaderRenderer sortableTableHeaderRenderer = new SortableTableHeaderRenderer();
 
@@ -105,6 +104,7 @@ public class MessageTable extends PageableSortableTable implements PageIndexChan
 				
 			}
 		 });
+		 
 		 
 			 //
 		// public void actionPerformed(ActionEvent e) {
@@ -300,23 +300,35 @@ sortablePageableModel = new DefaultPageableSortableTableModel(myModel);
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		return myModel.getMessageRow(pagedSortedIndex);
+		// Actually removed all the above stuff...
+		Message selectedMessage = myModel.getMessageRow(index);
+		if(selectedMessage==null) {
+			System.err.println("WARNING, no MESSAGe sekektet");
+		}
+		return selectedMessage;
 	}
 
 	public int getSelectedIndex() {
-		// System.err.println("GETTING SELECTED MESSAGE: "
-		// + getSelectionModel().getMinSelectedIndex());
-		return getSelectionModel().getMinSelectedIndex();
+
+		int selIndex = getSelectionModel().getMinSelectedIndex();
+		System.err.println("GETING IDEX: "+selIndex);
+		return selIndex;
 	}
 
 	public void setSelectedIndex(int s) {
 		// System.err.println("GETTING SELECTED MESSAGE: "
 		// + getSelectionModel().getMinSelectedIndex());
-		getSelectionModel().clearSelection();
+		int old = getSelectedIndex();
+//		getSelectionModel().clearSelection();
 		getSelectionModel().setSelectedIndex(s, true);
 //		System.err.println("Setting selected index to: "+s);
 //		System.err.println("Set selected index to: "+getSelectionModel().getMinSelectedIndex());
+		firePropertyChange(MessageTable.SELECTION_CHANGED_PROPERTY, old, s);
+		if(old>=0) {
+			((AbstractTableModel)getModel()).fireTableRowsUpdated(old, old);
+		}
+		
+		((AbstractTableModel)getModel()).fireTableRowsUpdated(s, s);
 		fireActionEvents(new ActionEvent(this,""+s));
 	}
 

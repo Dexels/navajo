@@ -17,8 +17,7 @@ import nextapp.echo2.app.event.DocumentListener;
 import nextapp.echo2.app.filetransfer.UploadEvent;
 import nextapp.echo2.app.filetransfer.UploadListener;
 import nextapp.echo2.app.filetransfer.UploadSelect;
-import nextapp.echo2.app.layout.ColumnLayoutData;
-import nextapp.echo2.app.layout.GridLayoutData;
+import nextapp.echo2.app.layout.*;
 import nextapp.echo2.app.list.ListSelectionModel;
 import nextapp.echo2.app.table.TableCellRenderer;
 import nextapp.echo2.app.text.*;
@@ -30,6 +29,7 @@ import com.dexels.navajo.document.types.*;
 
 import echopointng.*;
 import echopointng.able.Sizeable;
+import echopointng.table.*;
 
 public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 
@@ -84,6 +84,8 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 
 	private boolean allowLineWrap = false;
 
+	private List<ActionListener> myActionListeners = new ArrayList<ActionListener>();
+
 	private static final Extent PERCENTAGE = new Extent(97, Extent.PERCENT);
 	private static final Extent SMALL_PERCENTAGE = new Extent(50, Extent.PERCENT);
 
@@ -92,6 +94,22 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 		setInsets(new Insets(3, 3, 3, 3));
 	}
 
+	
+	public final void addActionListener(ActionListener pel) {
+		myActionListeners .add(pel);
+	}
+
+	public final void removeActionListener(ActionListener pel) {
+		myActionListeners.remove(pel);
+	}
+	
+	protected void fireActionEvent(ActionEvent ae) {
+		for (ActionListener al : myActionListeners) {
+			al.actionPerformed(ae);
+		}
+	}
+	
+	
 	public final void addPropertyEventListener(PropertyEventListener pel) {
 		myPropertyEventListeners.add(pel);
 	}
@@ -651,8 +669,12 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 		if (value == null) {
 			value = "";
 		}
-		final Label tf = new Label(value);
+		final Button tf = new Button(value);
 		tf.setBackground(null);
+		tf.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent ae) {
+				fireActionEvent(ae);
+			}});
 		tf.setLineWrap(allowLineWrap );
 		// tf.setStyleName("Default");
 		Style ss = Styles.DEFAULT_STYLE_SHEET.getStyle(tf.getClass(), "Default");
@@ -1143,23 +1165,45 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 
 	public Component getTableCellRendererComponent(final Table table, final Object value, final int column, final int row) {
 		// try {
-		MessageTable myTable = (MessageTable) table;
-		boolean isSelected = table.getSelectionModel().isSelectedIndex(row);
-		if (isSelected) {
-			System.err.println("Setting SELECTED zebra to: " + column + " / " + row);
-		}
+		final MessageTable myTable = (MessageTable) table;
+		DefaultPageableSortableTableModel tp = ((DefaultPageableSortableTableModel)table.getModel());
+		final int sortedIndex = tp.toUnsortedModelRowIndex(row);
+		final int pagedIndex = tp.toUnpagedModelRowIndex(row);
+		final int sortedPagedIndex = tp.toUnpagedModelRowIndex(sortedIndex);
+		final int pagedSortedIndex = tp.toUnsortedModelRowIndex(pagedIndex);
 
+			
+			boolean isSelected = table.getSelectionModel().isSelectedIndex(pagedSortedIndex);
+
+		if (isSelected) {
+//			System.err.println("Setting SELECTED zebra to: " + column + " / " + row);
+		}
 		if (value instanceof Boolean) {
 			final RadioButton rb = new RadioButton();
+//		 	rb.setBackground(new Color(255,0,0));
+
+			if (isSelected) {
+					rb.setStyle(Styles.DEFAULT_STYLE_SHEET.getStyle(RadioButton.class, "SelectedRowHeader"));
+			} else {
+				if (row % 2 == 0) {
+					Style style = Styles.DEFAULT_STYLE_SHEET.getStyle(RadioButton.class, "EvenRowHeader");
+
+					rb.setStyle(style);
+				} else {
+					rb.setStyle(Styles.DEFAULT_STYLE_SHEET.getStyle(RadioButton.class, "OddRowHeader"));
+				}
+			}
 			rb.setSelected(((Boolean) value).booleanValue());
 			rb.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent arg0) {
-					System.err.println("CHAGGA!");
-					((MessageTable) table).setSelectedIndex(row);
+			
+ 					
+ 					((MessageTable) table).setSelectedIndex(pagedSortedIndex);
+//					((DefaultPageableSortableTableModel)((MessageTable) table).getModel()).to
 				}
 			});
-			EchoPropertyComponent.setZebra(rb, column, row, false);
+//			EchoPropertyComponent.setZebra(rb, column, row, false);
 			rb.setEnabled(true);
 			myTable.mapRowSelection(rb, row);
 			return rb;
@@ -1188,6 +1232,13 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 
 			}
 		});
+		
+		epc.addActionListener(new ActionListener(){
+
+			public void actionPerformed(ActionEvent ae) {
+				((MessageTable) table).setSelectedIndex(pagedSortedIndex);
+
+			}});
 		// MessageTable mt = (MessageTable) table;
 		// System.err.println("Sel: "+mt.getSelectedIndex());
 		// System.err.println("row: "+row);
@@ -1213,7 +1264,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 		// }
 		epc.setColumnWidth(0, new Extent(2, Extent.PX));
 		// EchoPropertyComponent.setZebra(this,column, row, isSelected);
-		epc.setZebra(column, row, false);
+		epc.setZebra(column, row, isSelected);
 		// TODO FIX DISABLED ZEBRA
 		// epc.setBackground(null);
 		// epc.currentComponent.setBackground(null);
