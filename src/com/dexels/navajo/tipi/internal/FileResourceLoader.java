@@ -9,11 +9,14 @@ public class FileResourceLoader extends ClassPathResourceLoader {
 	private File baseFile;
 
 	public FileResourceLoader(File baseFile) {
+//		System.err.println("(Constr.) FileResourceLoader: Basefile set to: "+baseFile);
+//		Thread.dumpStack();
 		this.baseFile = baseFile;
 	}
 
 	public void setBaseFile(File baseFile) {
 		this.baseFile = baseFile;
+//		System.err.println("FileResourceLoader: Basefile set to: "+baseFile);
 	}
 
 	public String toString() {
@@ -34,25 +37,29 @@ public class FileResourceLoader extends ClassPathResourceLoader {
 		File f = null;
 		if (baseFile==null) {
 			f = new File(location);
+//			System.err.println("Null basefile, using relative path: "+f);
 		} else {
 			f = new File(baseFile,location);
 		}
+//		System.err.println("Created basefile link: "+f.getAbsolutePath());
 		if(!f.exists()) {
 			return super.getResourceURL(location);
 		}
 		URL u =  f.toURI().toURL();
 		//URL u = new URL(baseURL, location);
-		 System.err.println("FileResourceLoader: Resolved to : "+u);
+//		 System.err.println("FileResourceLoader: Resolved to : "+u);
 		// "+baseURL);
 		if (u == null) {
 			return super.getResourceURL(location);
 		}
+//		System.err.println("Existing & ok: "+u);
 		return u;
 	}
 
 	public InputStream getResourceStream(String location) throws IOException {
 //		System.err.println("Stream: FILE: LOOKING FOR: "+location);
 		URL u = getResourceURL(location);
+//		System.err.println("Url resolved: "+u);
 		if(u==null) {
 			return super.getResourceStream(location);
 	}
@@ -64,7 +71,7 @@ public class FileResourceLoader extends ClassPathResourceLoader {
 		if (is != null) {
 			return is;
 		}
-//		System.err.println("FileResourceLoader failed. Looking in classpath: "+location+" base: "+baseFile);
+		System.err.println("FileResourceLoader failed. Looking in classpath: "+location+" base: "+baseFile);
 		return super.getResourceStream(location);
 	}
 	

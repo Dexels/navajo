@@ -19,12 +19,10 @@ import com.dexels.navajo.tipi.*;
  * @author not attributable
  * @version 1.0
  */
-public class TipiMessageStoreImpl extends TipiDataComponentImpl implements TipiDataComponent {
+public class TipiMessageStoreImpl extends TipiHeadlessDataComponentImpl {
 //	private Object myObject;
 
-	public Object createContainer() {
-		return null;
-	}
+
 
 	public void setComponentValue(String name, Object object) {
 		// selectedMessage is the only name that occurs, I guess.

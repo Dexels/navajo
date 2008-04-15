@@ -211,12 +211,16 @@ public class TipiEvent implements TipiExecutable {
 			// System.err.println("Blocked exception");
 			return;
 		}
+		TipiExecutable last = null;
 		try {
 			for (int i = 0; i < myExecutables.size(); i++) {
-				TipiExecutable current = (TipiExecutable) myExecutables.get(i);
+				TipiExecutable current = myExecutables.get(i);
+				last = current;
 				current.performAction(localInstance, localInstance, i);
+				
 			}
 		} catch (Throwable ex) {
+			getContext().showInternalError("Error performing event: "+getEventName()+" for component: "+getComponent().getPath()+" action: "+last+" : "+ex.getMessage(), ex);
 			ex.printStackTrace();
 		}
 		getContext().debugLog("event   ", "finished event: " + localInstance.getEventName() + " in component" + myComponent.getPath());

@@ -24,13 +24,7 @@ import com.dexels.navajo.tipi.internal.*;
  * @version 1.0
  * 
  */
-public class TipiResourceCopier extends TipiComponentImpl {
-	public TipiResourceCopier() {
-	}
-
-	public Object createContainer() {
-		return null;
-	}
+public class TipiResourceCopier extends TipiHeadlessComponentImpl {
 
 	protected void performComponentMethod(String name, TipiComponentMethod compMeth, TipiEvent event) {
 		if (name.equals("copy")) {

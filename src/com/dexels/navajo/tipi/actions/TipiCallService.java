@@ -27,13 +27,15 @@ public class TipiCallService extends TipiAction {
 		
 		TipiValue parameter = getParameter("input");
 		String unevaluated = null;
-
+		boolean breakOnError = false;
 		if(parameter!=null) {
 			unevaluated = parameter.getValue();
 		}
 		Operand serviceOperand = getEvaluatedParameter("service", event);
 		Operand inputOperand = getEvaluatedParameter("input", event);
+		Operand breakOnErrorOperand = getEvaluatedParameter("breakOnError", event);
 		if (serviceOperand == null || serviceOperand.value == null) {
+			myContext.showInternalError("Error in callService action: service parameter missing!");
 			throw new TipiException("Error in callService action: service parameter missing!");
 		}
 		String service = (String) serviceOperand.value;
@@ -41,8 +43,14 @@ public class TipiCallService extends TipiAction {
 		if(inputOperand!=null) {
 			input = (Navajo) inputOperand.value;
 		}
+		if(breakOnErrorOperand!=null && breakOnErrorOperand.value!=null) {
+			breakOnError = (Boolean)breakOnErrorOperand.value;
+		}
 
+		
+		
 		if(unevaluated!=null && input==null) {
+			myContext.showInternalError("Input navajo not found when calling service: "+service+" supplied input: "+unevaluated);
 			throw new TipiException("Input navajo not found when calling service: "+service+" supplied input: "+unevaluated);
 		}
 		if(input==null) {
@@ -53,13 +61,38 @@ public class TipiCallService extends TipiAction {
 //		myContext.doSimpleSend(input, service, getComponent(), getExecutableChildCount(), false)
 		try {
 			
+			
+			
+			
+			
+			
+			
+			
+			// DEPRECATED NOT USED!!!! CHECK actiondef.xml
+			
+			
+			
+			
+			
+			
+			
+			
 			Navajo nn = input.copy();
 		//nn
 			// Don't let NavajoClient touch your original navajo! It will mess things up.
 			myContext.fireNavajoSent(input, service);
 			
 			Navajo result = NavajoClientFactory.getClient().doSimpleSend(nn, service);
-			
+			if(myContext.hasErrors(result)) {
+				myContext.showInternalError("Service: "+service+" returned errors.");
+				try {
+					result.write(System.err);
+				} catch (NavajoException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+	throw new TipiBreakException(TipiBreakException.BREAK_BLOCK);
+			}
 			myContext.addNavajo(service, result);
 			// is this correct? It is a bit odd.
 			if(result.getHeader()!=null) {
@@ -69,7 +102,7 @@ public class TipiCallService extends TipiAction {
 
 			
 		} catch (ClientException e) {
-			// TODO Auto-generated catch block
+			myContext.showInternalError("Client problem calling: "+service+" problem: "+e.getMessage());
 			e.printStackTrace();
 		}
 		

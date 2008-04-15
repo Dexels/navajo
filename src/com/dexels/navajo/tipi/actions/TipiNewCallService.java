@@ -154,7 +154,16 @@ public class TipiNewCallService extends TipiAction {
 				}
 			}
 			myContext.loadNavajo(result, service);
-
+			if(myContext.hasErrors(result)) {
+				myContext.showInternalError("Service: "+service+" returned errors.");
+				try {
+					result.write(System.err);
+				} catch (NavajoException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+					}
+		
 			if(breakOnError) {
 				if(myContext.hasErrors(result)) {
 					throw new TipiBreakException();

@@ -25,7 +25,6 @@ import com.dexels.navajo.tipi.internal.*;
  */
 public class MessageParser extends BaseTipiParser {
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
-		System.err.println("PAESINGUE " + expression);
 		if (expression.indexOf(":") != -1) {
 			StringTokenizer st = new StringTokenizer(expression, ":");
 			String navajo = st.nextToken();

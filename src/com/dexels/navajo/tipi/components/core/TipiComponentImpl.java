@@ -199,8 +199,7 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 			throw new UnsupportedOperationException("Setting value: " + name + " in: " + getClass() + " is has out direction!");
 		}
 		String type = tv.getType();
-		 //System.err.println("Name: "+name+" Type in TipiValue is: " + type+" value: "+value);
-		// Class c;
+
 		if ((myContext.isValidType(type))) {
 			try {
 				if (!defaultValue) {
@@ -212,8 +211,6 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 						throw new RuntimeException(this.getName() + ": Invalid selection value [" + value + "] for attribute " + name
 								+ ", valid values are: " + tv.getAllSelections());
 					} else {
-						// System.err.println("NOT PARSING VALUE FOR SELECTION
-						// ATTRIBUTE: "+name+" / "+value);
 						setComponentValue(name, value);
 						tv.setAnyValue(value);
 						return;
@@ -224,7 +221,8 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 					
 				}
 				return;
-			} catch (Exception e) {
+			} catch (Throwable e) {
+				myContext.showInternalError("Error in setter: "+name+" for component: "+getPath()+" proposed value: "+value+"\nFaillure: "+e.getMessage());
 				e.printStackTrace();
 			}
 		} else {
@@ -1030,16 +1028,16 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 			if (te.isTrigger(type, myService)) {
 				hasEventType = true;
 				myContext.fireTipiContextEvent(this, type, event, sync);
-
 				if (sync) {
-				
-				
 					try {
 						te.performAction(this, event);
 					} catch (TipiBreakException e) {
 						e.printStackTrace();
+					} catch(Throwable e) {
+						getContext().showInternalError("Error performing event: "+te.getEventName()+" for component: "+te.getComponent().getPath(), e);
+						e.printStackTrace();
 					}
-				} else {
+ 				} else {
 					te.asyncPerformAction(this, event);
 				}
 			}
@@ -1437,5 +1435,11 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 		aliasMap.put(name, value);
 	}
 
+	public void runSyncInEventThread(Runnable r) {
+		  myContext.runSyncInEventThread(r);
+	}
+	  public void runAsyncInEventThread(Runnable r) {
+		  myContext.runAsyncInEventThread(r);
+	  }
 
 }

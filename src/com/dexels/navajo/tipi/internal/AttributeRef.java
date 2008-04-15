@@ -33,12 +33,6 @@ public class AttributeRef implements TipiReference {
 	}
 
 	public void setValue(Object val, TipiComponent source) {
-		/**
-		 * FIIIIIIIIIXED
-		 * 
-		 * @todo Ignores the value operand. Not really beautiful
-		 */
-		// myComponent.setValue(myName, val, source,null);
 		myComponent.setValue(myName, val);
 	}
 

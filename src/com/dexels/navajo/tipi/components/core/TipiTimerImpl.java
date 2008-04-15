@@ -20,7 +20,7 @@ import com.dexels.navajo.tipi.internal.*;
  * @author not attributable
  * @version 1.0
  */
-public class TipiTimerImpl extends TipiComponentImpl implements Runnable {
+public class TipiTimerImpl extends TipiHeadlessComponentImpl implements Runnable {
 	private boolean isRunning;
 	private long interval = 1000; // standard is one second
 	private Thread t;
@@ -40,10 +40,6 @@ public class TipiTimerImpl extends TipiComponentImpl implements Runnable {
 		isRunning = false;
 		t.interrupt();
 		t = null;
-	}
-
-	public Object createContainer() {
-		return null;
 	}
 
 	public void run() {

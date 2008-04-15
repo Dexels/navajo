@@ -1,6 +1,9 @@
 package com.dexels.navajo.tipi;
 
+import java.lang.reflect.*;
 import java.util.*;
+
+import javax.swing.*;
 
 import com.dexels.navajo.client.*;
 import com.dexels.navajo.document.*;
@@ -229,4 +232,9 @@ public interface TipiComponent extends ConditionErrorHandler, TipiEventListener,
 	public Message getStateMessage();
 
 	public Property getAttributeProperty(String value);
+
+	public void runSyncInEventThread(Runnable r);
+	  public void runAsyncInEventThread(Runnable r);
+
+
 }

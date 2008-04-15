@@ -124,10 +124,12 @@ public class TipiThreadPool {
 	}
 
 	public void enqueueExecutable(TipiExecutable exe) throws TipiException {
-		if (poolSize == 0) {
+		if (poolSize == poolSize) {
 			// For echo:
 			try {
-				exe.getEvent().performAction(exe.getEvent(), exe.getEvent(), 0);
+				System.err.println("EXE: "+exe);
+//				exe.getEvent().performAction(exe.getEvent(), exe.getEvent(), 0);
+				exe.performAction(null, null, 0);
 			} catch (TipiBreakException e) {
 				e.printStackTrace();
 			}
@@ -149,7 +151,7 @@ public class TipiThreadPool {
 		// exe, myListenerMap is " + myListenerMap.size()+" thread:
 		// "+Thread.currentThread().getName());
 
-		enqueueExecutable(te);
+		myContext.enqueueExecutable(te);
 	}
 	// public synchronized Thread performAction(final TipiEvent te) {
 	// Thread t = new Thread(myGroup, new Runnable() {

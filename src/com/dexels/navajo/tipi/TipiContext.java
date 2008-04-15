@@ -41,6 +41,11 @@ import com.dexels.navajo.tipi.tipixml.*;
  */
 public abstract class TipiContext implements ActivityController, TypeFormatter {
 
+	
+	
+    public abstract void runSyncInEventThread(Runnable r);
+    public abstract void runAsyncInEventThread(Runnable r);
+
 	/**
 	 * Maps a service to a list of datacomponents. Components register here by
 	 * having a service tag
@@ -141,13 +146,22 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 	private final Map<String, TipiConnector> tipiConnectorMap = new HashMap<String, TipiConnector>();
 	private TipiConnector defaultConnector;
 
+	private final Map<String, String> argumentMap = new HashMap<String, String>();
+
+	
 	private boolean hasDebugger;
 	
 	private final Map<String, List<PropertyChangeListener>> propertyBindMap = new HashMap<String, List<PropertyChangeListener>>();
 
 	private String resourceCodeBase;
 	private String tipiCodeBase;
-	
+
+	private TipiContext myParentContext;
+
+	public TipiContext(TipiContext parent) {
+		this();
+		myParentContext = parent;
+	}
 	public TipiContext() {
 		Iterator<TipiExtension> tt = ServiceRegistry.lookupProviders(TipiExtension.class);
 		initializeExtensions(tt);
@@ -162,14 +176,9 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 		 try {
 			Class c = Class.forName("com.dexels.navajo.tipi.tools.TipiSocketDebugger");
 			hasDebugger = true;
-			// Object o = c.newInstance();
-			// c.getMethod("setContext", new
-			// Class[]{TipiContext.class}).invoke(o, new Object[]{this});
-			// ;
 		} catch (Throwable e) {
-			System.err.println("Kablammo?");
+			System.err.println("Starting without development environment");
 			hasDebugger = false;
-			// System.err.println("Debugger disabled for now");
 		}
 
 	}
@@ -228,7 +237,7 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 		for (String element : includeList) {
 			System.err.println("Include: " + element);
 		}
-		processRequiredIncludes();
+			processRequiredIncludes();
 
 	}
 
@@ -260,6 +269,13 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 
 	public void setGenericResourceLoader(TipiResourceLoader tr) {
 		genericResourceLoader = tr;
+	}
+	public TipiResourceLoader getTipiResourceLoader() {
+		return tipiResourceLoader;
+	}
+
+	public TipiResourceLoader getGenericResourceLoader() {
+		return genericResourceLoader;
 	}
 
 	public void addNavajoListener(TipiNavajoListener tnl) {
@@ -359,8 +375,7 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 		tipiClassDefMap.clear();
 		clearTopScreen();
 		includeList.clear();
-		// System.err.println("clearResources: clearing includeList. ");
-
+	
 		eHandler = null;
 		errorHandler = null;
 		rootPaneList.clear();
@@ -690,7 +705,6 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 		if (tipiResourceLoader != null) {
 			return tipiResourceLoader.getResourceStream(location);
 		} else {
-//			System.err.println("No tipiresourceloader found");
 			URL u = getTipiResourceURL(location);
 			if (u == null) {
 				throw new IOException("Location not found: " + location);
@@ -725,16 +739,11 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 	}
 
 	public URL getTipiResourceURL(String location, ClassLoader cl) {
-		// Try the classloader first, the
-		// System.err.println("WARNING: DEPRECATED! Entering getResourceURL for
-		// location: "+location);
 		if (cl == null) {
 			cl = getClass().getClassLoader();
 		}
 		URL u = cl.getResource(location);
 		if (u == null) {
-			// System.err.println("getResourceURL: "+location+" not found in
-			// classpath, continuing");
 		} else {
 			return u;
 		}
@@ -778,8 +787,13 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 
 	public void processRequiredIncludes() {
 		for (String element : includeList) {
-			parseLibrary(element, false, null, false);
-		}
+			try {
+				parseLibrary(element, false, null, false);
+			} catch (UnsupportedClassVersionError e) {
+				System.err.println("Error parsing extension: " + element + " wrong java version!");
+				throw new UnsupportedClassVersionError(e.getMessage());
+			}
+	}
 		// Thread.dumpStack();
 		// for (Iterator iter = includeList.iterator(); iter.hasNext();) {
 		// String element = (String) iter.next();
@@ -789,7 +803,6 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 	}
 
 	private final void parseLibrary(String location, boolean addToInclude, String definition, boolean isLazy) {
-		// System.err.println("Parsing library: "+location+" dir: "+dir);
 		if (isLazy) {
 			if (definition == null) {
 				throw new IllegalArgumentException("Lazy include, but no definition found. Location: " + location);
@@ -801,7 +814,6 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 			if (location != null) {
 				InputStream in = resolveInclude(location);
 				if (in == null) {
-//					System.err.println("Could not resolve: " + location);
 					return;
 				}
 				XMLElement doc = new CaseSensitiveXMLElement();
@@ -809,11 +821,10 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 					InputStreamReader isr = new InputStreamReader(in, "UTF-8");
 					doc.parseFromReader(isr);
 					isr.close();
-					// System.err.println("Parsed successfully");;
 				}
 				/** @todo Throw these exceptions */
 				catch (XMLParseException ex) {
-					System.err.println("XML parse exception while parsing file: " + location + " at line: " + ex.getLineNr());
+					showInternalError("XML parse exception while parsing file: " + location + " at line: " + ex.getLineNr());
 					ex.printStackTrace();
 					return;
 				} catch (IOException ex) {
@@ -910,7 +921,7 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 		}
 		String name = instance.getStringAttribute("name");
 		if (name == null) {
-			System.err.println("Error instantiating component: " + clas + ". No name supplied. instance: " + instance);
+			showInternalError("Error instantiating component: " + clas + ". No name supplied. instance: " + instance);
 		}
 		if (!clas.equals("")) {
 			TipiComponent tc = (TipiComponent) instantiateClass(clas, name, instance);
@@ -926,15 +937,7 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 			tc.loadMethodDefinitions(this, definition, classDef);
 			// -----------------------------
 			tc.loadStartValues(definition);
-			// boolean se =
-			// Boolean.getBoolean(definition.getStringAttribute("studioelement",
-			// "false"));
 			boolean se = definition.getAttribute("studioelement") != null;
-			// System.err.println("Is studio element? " + se + " (class is:" +
-			// tc.getClass() + ")");
-			// System.err.println("Definition is: " + definition);
-			// System.err.println("Definition built: "+name);
-			// System.err.println("Childcount: "+tc.getChildCount());
 			tc.setStudioElement(se);
 			tc.commitToUi();
 			return tc;
@@ -993,9 +996,7 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 		}
 		tc.loadStartValues(instance);
 		tc.componentInstantiated();
-//		if (tc.getId() == null) {
-//			System.err.println("NULL ID: component: " + tc.store().toString());
-//		}
+
 		return tc;
 	}
 
@@ -1004,9 +1005,8 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 	}
 
 	public void disposeTipiComponent(TipiComponent comp) {
-		System.err.println("Disposing tipicomponent: " + comp.getPath());
 		if (comp.getTipiParent() == null) {
-			System.err.println("Can not dispose tipi: It has no parent!");
+			showInternalError("Can not dispose tipi: It has no parent!");
 			return;
 		}
 		TipiComponent parent = comp.getTipiParent();
@@ -1030,7 +1030,6 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		System.err.println("Parent: " + parent.getPath());
 		parent.removeChild(comp);
 		Message m = stateMessage;
 
@@ -1038,7 +1037,6 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 		if (comp instanceof TipiDataComponent) {
 			removeTipiInstance(comp);
 		} else {
-			// System.err.println("Ignoring non-data component");
 		}
 		if (comp instanceof TipiConnector) {
 			TipiConnector rr = (TipiConnector)comp;
@@ -1047,7 +1045,6 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 				defaultConnector= null;
 			}
 		} else {
-			// System.err.println("Ignoring non-data component");
 		}
 		killComponent(comp);
 		fireTipiStructureChanged(parent);
@@ -1062,13 +1059,11 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 			tipiDefinition = getComponentDefinition(defname);
 		}
 		XMLElement classDef = tipiClassDefMap.get(className);
-		// System.err.println("Classes in map: "+tipiClassDefMap.size());
 		if(classDef==null) {
 			throw new TipiException("Error loading class def: "+className);
 		}
 		String componentType = classDef.getStringAttribute("type");
 		if (c == null) {
-			System.err.println("Classdef: "+tipiClassMap);
 			throw new TipiException("Error retrieving class definition. Looking for class: " + defname + ", classname: " + className);
 		}
 		Object o;
@@ -1181,24 +1176,7 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 		}
 	}
 
-	// public void printTipiInstanceMap() {
-	// System.err.println("=================================Instance map:");
-	// Iterator c = tipiInstanceMap.keySet().iterator();
-	// while (c.hasNext()) {
-	// String currentKey = (String) c.next();
-	// ArrayList current = (ArrayList) tipiInstanceMap.get(currentKey);
-	// System.err.println(" Current service: " + currentKey);
-	// for (int i = 0; i < current.size(); i++) {
-	// TipiComponent tc = (TipiComponent) current.get(i);
-	// System.err.println(" Tipi with path: " + tc.getPath() + " hash: " +
-	// tc.hashCode());
-	// }
-	// System.err.println(" End of Current service: " + currentKey);
-	// }
-	// System.err.println("=================================End of print of tipi
-	// instance map:");
-	// }
-
+	
 	protected XMLElement getTipiDefinition(String name)  {
 		XMLElement xe = tipiComponentMap.get(name);
 		return xe;
@@ -1223,9 +1201,7 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 		}
 		String location = lazyMap.get(componentName);
 		if (location == null) {
-//			System.err.println("No lazy include found. Trying to resolve. Looking for: " + componentName);
-			// no lazy include found. Check the tipi resource
-//			Thread.dumpStack();
+
 			String fullName = null;
 			if (componentName.indexOf(".") != -1) {
 				fullName = componentName.replace(".", "/");
@@ -1238,7 +1214,6 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 			} else {
 				total = fullName + ".xml";
 			}
-			 System.err.println("Looking for location "+total);
 			parseLibrary(total, true, componentName, false);
 			xe = getTipiDefinition(componentName);
 			return xe;
@@ -1306,17 +1281,24 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 			componentDefinition = getComponentDefinition("init");
 		}
 		if (componentDefinition == null) {
-			System.err.println("Available definitions: " + tipiComponentMap.keySet());
+			showInternalError("TipiDefinition not found. Available definitions: " + tipiComponentMap.keySet());
 			throw new TipiException("Fatal tipi error: Can not switch. Unknown definition: " + name);
 		}
 		componentDefinition.setAttribute("id", "init");
 		TipiComponent tc = instantiateComponent(componentDefinition);
 		tc.commitToUi();
 
-		TipiExtension t = extensionMap.get("develop");
-		if (t != null) {
-			TipiComponent dev = instantiateComponent(getComponentDefinition("develop"));
-			tc.addComponent(dev, this, null);
+		
+		
+		try {
+			TipiExtension t = extensionMap.get("develop");
+			if (t != null) {
+				TipiComponent dev = instantiateComponent(getComponentDefinition("develop"));
+				tc.addComponent(dev, this, null);
+			}
+		} catch (Throwable e) {
+			e.printStackTrace();
+			System.err.println("Error instantiating debug component. Continuing");
 		}
 
 		getDefaultTopLevel().addComponent(tc, this, null);
@@ -1494,7 +1476,6 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 			h = NavajoFactory.getInstance().createHeader(reply, method, "unknown","unknown", -1);
 			reply.addHeader(h);
 		}
-		System.err.println("Loading method: "+method);
 		loadNavajo(reply, method, "*", null, false);
 		Navajo compNavajo = null;
 		if(hasDebugger && !"NavajoListNavajo".equals(method)) {
@@ -1607,37 +1588,20 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 	}
 
 	protected Object attemptGenericEvaluate(String expression) {
-		// System.err.println("\n\nAttempting to evaluate: "+expression);
 		Operand o = null;
 		try {
 			o = evaluate(expression, getDefaultTopLevel(), null);
 		} catch (Throwable ex) {
-			// ex.printStackTrace();
-			// System.err.println("Trouble: "+ex.getMessage()+" Returning
-			// original: "+expression);
 			return expression;
 		}
 		if (o == null) {
-			// System.err.println("Null. Returning original: "+expression);
 			return expression;
 		}
 		if (o.value == null) {
-			// System.err.println("Null evaluation. Returning original:
-			// "+expression);
 			return expression;
 		}
-		// System.err.println("returning evaluation: "+o.value);
 		return o.value;
 	}
-
-	//
-	// public void resetConditionRuleById(String id) {
-	// for (int i = 0; i < screenList.size(); i++) {
-	// // Instances
-	// TipiComponent current = (TipiComponent) screenList.get(i);
-	// current.resetComponentValidationStateByRule(id);
-	// }
-	// }
 
 	public Operand evaluate(String expr, TipiComponent tc, TipiEvent event) {
 		return evaluate(expr, tc, event, null);
@@ -1653,11 +1617,6 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 		if (expr == null) {
 			return null;
 		}
-		// System.err.println("Evaluating: "+expr);
-		// if(n != null){
-		// System.err.println("Navajo: " + n.toString().length());
-		// }
-		// System.err.println("Message null? "+currentMessage == null);
 		try {
 			synchronized (tc) {
 				tc.setCurrentEvent(event);
@@ -1669,13 +1628,11 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 			}
 		} catch (Exception ex) {
 			System.err.println("Not happy while evaluating expression: " + expr + " message: " + ex.getMessage());
-//			Operand op = new Operand(expr, Property.STRING_PROPERTY, "");
 			ex.printStackTrace();
 			return o;
 		} catch (Error ex) {
 			System.err.println("Not happy while evaluating expression: " + expr + " message: " + ex.getMessage());
 			ex.printStackTrace();
-//			Operand op = new Operand(expr, Property.STRING_PROPERTY, "");
 			return o;
 		}
 		if (o.type.equals(Property.STRING_PROPERTY)) {
@@ -1795,7 +1752,6 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 			return null;
 		}
 		if (!c.isInstance(o)) {
-			// System.err.println("PRocessing source: " + source.getPath());
 			throw new IllegalArgumentException("Wrong type: Need type: " + name + " (being of class: " + c.toString() + ") but found: "
 					+ o.getClass());
 		}
@@ -1885,7 +1841,6 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 
 	public void storeComponentTree(String name) {
 		try {
-			// System.err.println("NAME: " + name);
 			FileWriter fw = new FileWriter(name);
 			getComponentTree().write(fw);
 			fw.flush();
@@ -1965,8 +1920,13 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 		}
 		try {
 			myThreadPool.performAction(te, listener);
+		} catch (TipiException e) {
+			e.printStackTrace();
+			showInternalError("Error performing action: "+te.getEventName()+" on component: "+te.getComponent().getPath(), e);
 		} catch (Throwable e) {
 			e.printStackTrace();
+			showInternalError("Severe error performing action: "+te.getEventName()+" on component: "+te.getComponent().getPath(), e);
+			
 		}
 	}
 
@@ -1976,20 +1936,11 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 	public void threadEnded(Thread workThread) {
 	}
 
-	// public void createStartupFile(File startupDir, Set jarList, XMLElement
-	// projectSettings) throws IOException {
-	// System.err.println("This implementation can not create a startup file!");
-	// }
-	//
-
 	public void loadServerSettingsFromProperties() {
 		String impl = System.getProperty("tipi.client.impl");
 		if ("direct".equals(impl)) {
 			System.err.println("********* FOR NOW: Only supports indirect client *******");
 		}
-//		String cfg = System.getProperty("tipi.client.config");
-//		String keystore = System.getProperty("tipi.client.keystore");
-//		String storepass = System.getProperty("tipi.client.storepass");
 		String navajoServer = System.getProperty("tipi.client.server");
 		String navajoUsername = System.getProperty("tipi.client.username");
 		String navajoPassword = System.getProperty("tipi.client.password");
@@ -2253,25 +2204,27 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 
 	}
 
-	public String getGenericResourceLoader() {
-		return resourceCodeBase;
-	}
-	
+//	public String getGenericResourceLoader() {
+//		return resourceCodeBase;
+//	}
+//	
 	public void setGenericResourceLoader(String resourceCodeBase) throws MalformedURLException {
 		this.resourceCodeBase = resourceCodeBase;
 		if (resourceCodeBase != null) {
 			if (resourceCodeBase.indexOf("http:/") != -1) {
 				setGenericResourceLoader(new HttpResourceLoader(new URL(resourceCodeBase)));
 			} else {
-				setGenericResourceLoader(new FileResourceLoader(new File(resourceCodeBase)));
+				File res = new File(resourceCodeBase);
+				setGenericResourceLoader(new FileResourceLoader(res));
 			}
 		} else {
-			setGenericResourceLoader(new FileResourceLoader(new File("resource")));
+			File res = new File("resource");
+			setGenericResourceLoader(new FileResourceLoader(res));
 		}
 	}
-	public String getTipiResourceLoader() {
-		return tipiCodeBase;
-	}
+//	public String getTipiResourceLoader() {
+//		return tipiCodeBase;
+//	}
 
 	public void setTipiResourceLoader(String tipiCodeBase) throws MalformedURLException {
 		this.tipiCodeBase = tipiCodeBase;
@@ -2318,8 +2271,6 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 
 	public void fireTipiStructureChanged(TipiComponent tc) {
 		// do nothing
-		// System.err.println("Structure changed: ");
-		// System.err.println(tc.store());
 	}
 
 	public void addTipiEventReporter(TipiEventReporter te) {
@@ -2414,11 +2365,7 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 	}
 
 	public void link(final Property master, final Property slave)  {
-//		System.err.println("Linking properties: "+master.getFullPropertyName()+" with: "+slave.getFullPropertyName());
-		
-//		slave.setAnyValue(master.getTypedValue());
-		
-		// change into copyPropertyValue?
+
 		if(master==slave) {
 			try {
 				System.err.println("F@#$ing hell! You are linking a property to itself! "+master.getFullPropertyName());
@@ -2434,15 +2381,12 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 
 
 	public void unlink(Navajo n) throws NavajoException {
-//		System.err.println("Before unlink: "+getTotalPropertyLinks());
 		for(Message current : n.getAllMessages()) {
 			unlink(current);
 		}
-//		System.err.println("After unlink: "+getTotalPropertyLinks());
 	}	
 
 	public void unlink(Message m) throws NavajoException {
-//		System.err.println("Unlinking message: "+m.getFullMessageName());
 		for (Property p : m.getAllProperties()) {
 				unlink(p);
 		}	
@@ -2488,22 +2432,6 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 		}
 	}
 
-//	public void unlink(Property master, Property slave)  {
-////		System.err.println("Unlinking property: "+master.getFullPropertyName());
-//
-//		List<Property> p =  propertyLinkRegistry.get(master);
-//		if(p==null) {
-//			return;
-//		}
-//		propertyLinkRegistry.remove(master);
-//		for (Property property : p) {
-//			List<Property> q =  propertyLinkRegistry.get(property);
-//			q.remove(master);
-//		}
-//		propertyLinkRegistry.remove(master);
-//		
-//	}	
-	
 	private void doLink(final Property master, final Property slave) {
 
 		PropertyChangeListener propertyChangeListener = new PropertyChangeListener() {
@@ -2566,9 +2494,6 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 		if(!xx.contains(pp)) {
 			xx.add(pp);
 		}
-//		System.err.println("Reg size: "+p.size()+" total: "+propertyLinkRegistry.size());
-//		int total = getTotalPropertyLinks();
-//		System.err.println("EVERYTHING: "+total);
 	}
 
 	private int getTotalPropertyLinks() {
@@ -2707,5 +2632,28 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 			}
 			addNavajo(service, n);
 			loadNavajo(n, service);
+	}
+
+	protected void addArgument(String name, String value) {
+		argumentMap.put(name, value);
+	}
+	
+	public String getArgument(String expression) {
+		return argumentMap.get(expression);
+	}
+	
+	public TipiContext getParentContext() {
+		return myParentContext;
+	}
+	
+	public void showInternalError(String errorString, Throwable t) {
+		System.err.println("Internal error: "+errorString);
+		if(t!=null) {
+			t.printStackTrace();
+		}
+	}
+
+	public final void showInternalError(String errorString) {
+		showInternalError(errorString,null);
 	}
 }

@@ -24,16 +24,10 @@ import com.dexels.navajo.tipi.internal.*;
  * @version 1.0
  */
 
-public class TipiConditionChecker extends TipiDataComponentImpl {
+public class TipiConditionChecker extends TipiHeadlessDataComponentImpl {
 	private String messagePath = null;
 	private final ArrayList<Object> failedList = new ArrayList<Object>();
 
-	public TipiConditionChecker() {
-	}
-
-	public Object createContainer() {
-		return null;
-	}
 
 	public void setComponentValue(String name, Object object) {
 		if ("messagePath".equals(name)) {

@@ -1,12 +1,15 @@
 package com.dexels.navajo.tipi.connectors;
 
+import java.lang.reflect.*;
 import java.util.*;
+
+import javax.swing.*;
 
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.core.*;
 
-public abstract class TipiBaseConnector extends TipiComponentImpl implements TipiConnector {
+public abstract class TipiBaseConnector extends TipiHeadlessComponentImpl implements TipiConnector {
 
 //	protected final Map<String,TipiValue> myEntrypoints = new HashMap<String, TipiValue>();
 
@@ -45,6 +48,5 @@ public abstract class TipiBaseConnector extends TipiComponentImpl implements Tip
 //	public String[] getEntryPoints() {
 //		return null;
 //	}
-
 
 }

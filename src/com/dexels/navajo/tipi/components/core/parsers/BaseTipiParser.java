@@ -15,11 +15,9 @@ abstract class BaseTipiParser extends TipiTypeParser {
 	protected TipiComponent getTipiComponent(TipiComponent source, String totalpath) {
 		String path = getComponentPart(totalpath);
 		if(TIPI_HOME_SYMBOL.equals(path)) {
-			System.err.println("Direct home path:");
 			return source.getHomeComponent();
 		}
 		if(path.startsWith(TIPI_HOME_SYMBOL+"/")) {
-			System.err.println("Indirect home path: "+path);
 			source = source.getHomeComponent();
 			String pathExpression = path.substring(2,path.length());
 //			System.err.println("Home component: "+source.getPath()+" expression: "+pathExpression);
@@ -56,14 +54,19 @@ abstract class BaseTipiParser extends TipiTypeParser {
 	protected Property getPropertyByPath(TipiComponent source, String path) {
 		StringTokenizer counter = new StringTokenizer(path,":");
 		int tokencount = counter.countTokens();
-		if(tokencount==2) {
-			String navajo = counter.nextToken();
+		if(tokencount<=2) {
+			Navajo n = null;
+			if (tokencount==1) {
+				n = source.getNearestNavajo();
+			} else {
+				String navajo = counter.nextToken();
+				n = myContext.getNavajo(navajo);
+			}
 			String propertyPath = counter.nextToken();
-			Navajo n = myContext.getNavajo(navajo);
 			if(n!=null) {
 				return n.getProperty(propertyPath);
 			} else {
-				System.err.println("No navajo found. Available: "+myContext.getNavajoNames());
+				myContext.showInternalError("No navajo found. Available: "+myContext.getNavajoNames(),new Exception());
 				return null;
 			}
 		}

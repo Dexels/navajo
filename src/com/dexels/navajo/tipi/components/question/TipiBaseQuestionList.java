@@ -224,8 +224,6 @@ public abstract class TipiBaseQuestionList extends TipiDataComponentImpl {
 		return answerMessage;
 	}
 
-	public abstract void runSyncInEventThread(Runnable r);
-
 	public void loadData(final Navajo n, final String method) throws TipiException {
 		final TipiBaseQuestionList me = this;
 		myGroups.clear();
