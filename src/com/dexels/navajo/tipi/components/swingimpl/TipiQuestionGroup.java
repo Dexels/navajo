@@ -25,22 +25,28 @@ public class TipiQuestionGroup extends TipiBaseQuestionGroup {
         return j;
     }
 
-     public void runSyncInEventThread(Runnable r) {
-        if (SwingUtilities.isEventDispatchThread() ) {
-          r.run();
-        }
-        else {
-          try {
-            SwingUtilities.invokeAndWait(r);
-          }
-          catch (InvocationTargetException ex) {
-            throw new RuntimeException(ex);
-          }
-          catch (InterruptedException ex) {
-//            System.err.println("Interrupted");
-          }
-        }
-      }
+	public void runAsyncInEventThread(Runnable runnable) {
+		if(SwingUtilities.isEventDispatchThread()) {
+			runnable.run();
+		} else {
+				SwingUtilities.invokeLater(runnable);
+		}
+	}
+
+	public void runSyncInEventThread(Runnable runnable) {
+		if(SwingUtilities.isEventDispatchThread()) {
+			runnable.run();
+		} else {
+			try {
+				SwingUtilities.invokeAndWait(runnable);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 
     public void addToContainer(final Object c, final Object constraints) {
         System.err.println("Adding to TipiTabbedQuestionList container:   "+c+" constraints: "+constraints);

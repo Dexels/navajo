@@ -26,10 +26,11 @@ import com.dexels.navajo.tipi.tipixml.*;
  * @version 1.0
  */
 
-public class EmbeddedContext extends SwingTipiContext {
-	TipiStandaloneToplevel top = new TipiStandaloneToplevel();
+public class SwingEmbeddedContext extends SwingTipiContext {
+	TipiSwingStandaloneToplevel top = new TipiSwingStandaloneToplevel();
 	
-	public EmbeddedContext() {
+	public SwingEmbeddedContext(SwingTipiContext parentContext) {
+		super(parentContext);
 		if (SwingClient.getUserInterface() == null) {
 			SwingTipiUserInterface stui = new SwingTipiUserInterface(this);
 			SwingClient.setUserInterface(stui);
@@ -42,9 +43,9 @@ public class EmbeddedContext extends SwingTipiContext {
 	
 	}
 
-	public EmbeddedContext(String tipiDefinition[], boolean debugMode, String[] definitionName, List<String> libraries, String resourceBaseDirectory)
+	public SwingEmbeddedContext(SwingTipiContext parentContext,String tipiDefinition[], boolean debugMode, String[] definitionName, List<String> libraries, String resourceBaseDirectory)
 			throws TipiException, IOException {
-		this();
+		this(parentContext);
 		for (int i = 0; i < definitionName.length; i++) {
 			loadDefinition(tipiDefinition[i], definitionName[i]);
 		}

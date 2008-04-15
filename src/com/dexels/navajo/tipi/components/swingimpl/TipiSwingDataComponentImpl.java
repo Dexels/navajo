@@ -193,7 +193,14 @@ public abstract class TipiSwingDataComponentImpl
       }
     }
   }
-
+  public void runAsyncInEventThread(Runnable r) {
+	    if (SwingUtilities.isEventDispatchThread()) {
+	      r.run();
+	    }
+	    else {
+	        SwingUtilities.invokeLater(r);
+	      }
+	    }
   protected void performComponentMethod(final String name, final TipiComponentMethod compMeth, TipiEvent event) throws TipiBreakException {
      super.performComponentMethod(name, compMeth, event);
   }

@@ -108,31 +108,7 @@ public abstract class TipiSwingComponentImpl
     });
   }
 
-  public void runSyncInEventThread(Runnable r) {
-    if (SwingUtilities.isEventDispatchThread()) {
-      r.run();
-    }
-    else {
-      try {
-        SwingUtilities.invokeAndWait(r);
-      }
-      catch (InvocationTargetException ex) {
-        throw new RuntimeException(ex);
-      }
-      catch (InterruptedException ex) {
-//        System.err.println("Interrupted");
-      }
-    }
-  }
 
-  public void runASyncInEventThread(Runnable r) {
-    if (SwingUtilities.isEventDispatchThread() || !committedInUI) {
-      r.run();
-    }
-    else {
-      SwingUtilities.invokeLater(r);
-    }
-  }
 
   public void print() {
     if (getSwingContainer()!=null) {

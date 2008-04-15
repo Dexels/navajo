@@ -16,13 +16,13 @@ import com.dexels.navajo.tipi.internal.*;
  * @version 1.0
  */
 
-public class TipiStandaloneToplevel extends TipiPanel
+public class TipiSwingStandaloneToplevel extends TipiPanel
     implements RootPaneContainer {
 
 private final JComponent myPanel; //= new JPanel();
   private final BorderLayout myLayout = new BorderLayout();
 
-  public TipiStandaloneToplevel(JComponent jj) {
+  public TipiSwingStandaloneToplevel(JComponent jj) {
 //    myPanel.setLayout(myLayout);
  	  super.setName("init");
  	  if (jj==null) {
@@ -36,7 +36,7 @@ private final JComponent myPanel; //= new JPanel();
   }
 
 
-  public TipiStandaloneToplevel() {
+  public TipiSwingStandaloneToplevel() {
 	  this(null);
   }
   public void addToContainer(final Object c, final Object constraints) {

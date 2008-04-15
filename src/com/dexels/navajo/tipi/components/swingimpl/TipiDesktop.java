@@ -55,8 +55,7 @@ public class TipiDesktop
     runSyncInEventThread(new Runnable() {
       public void run() {
     	  
-    	  System.err.println("Adding to desktop: "+c);
-			getSwingContainer().add( (Component) c, constraints);
+    	 getSwingContainer().add( (Component) c, constraints);
 			
 			JInternalFrame tw = (JInternalFrame) c;
 	

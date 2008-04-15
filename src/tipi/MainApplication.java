@@ -34,9 +34,7 @@ public class MainApplication {
 		for (int i = 0; i < args.length; i++) {
 			arrrgs.add(args[i]);
 		}
-		System.err.println("Args: "+arrrgs);
-		System.err.println("Definition: "+definition);
-		RepaintManager.setCurrentManager(new CheckThreadViolationRepaintManager());
+//		RepaintManager.setCurrentManager(new CheckThreadViolationRepaintManager());
 		final String def = definition;
 		SwingUtilities.invokeLater(new Runnable(){
 
@@ -79,7 +77,7 @@ public class MainApplication {
 			definitionPath = definition;
 		}
 		SwingTipiContext context = null;
-		context = new SwingTipiContext();
+		context = new SwingTipiContext(null);
 		context.setAppletRoot(appletRoot);
 		context.setOtherRoot(otherRoot);
 		SwingTipiUserInterface stui = new SwingTipiUserInterface(context);

@@ -56,18 +56,29 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 				getAttributeProperty("selectedMessage").setAnyValue(mm.getSelectedMessage());
 			}
 		});
-		
+		mm.setFocusable(false);
 		mm.addFocusListener(new FocusListener(){
 
 			public void focusGained(FocusEvent e) {
-				System.err.println("Table gained: "+e.getOppositeComponent().toString());
+				if(e.getOppositeComponent()!=null) {
+					System.err.println("Table gained: "+e.getOppositeComponent().getClass());
+					System.err.println("Next: "+mm.getNextFocusableComponent());
+				}
+//				System.err.println("NEXT: "+mm.getFocusTraversalPolicy().getComponentAfter(mm.getFocusCycleRootAncestor(), mm));
+//				System.err.println("PREVIOUS: "+mm.getFocusTraversalPolicy().getComponentBefore(mm.getFocusCycleRootAncestor(), mm));
+				//				mm.transferFocus();
 			}
 
 			public void focusLost(FocusEvent e) {
-				System.err.println("Table lost: "+e.getOppositeComponent().toString());
-				
+				if(e.getOppositeComponent()!=null) {
+					System.err.println("Table lost: "+e.getOppositeComponent().getClass());
+					System.err.println("Next: "+mm.getNextFocusableComponent());
+
+				}
 			}});
 			
+//		mm.setBackground(Color.orange);
+//		mm.getTable().setBackground(Color.yellow);
 		mm.addChangeListener(this);
 		TipiHelper th = new TipiSwingHelper();
 		th.initHelper(this);
@@ -91,7 +102,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 		            if (e.getKeyCode()==KeyEvent.VK_ENTER) {
 		                try {
 		                System.err.println("Enterrrr!");
-		                e.consume();
+//		                e.consume();
 		                performTipiEvent("onEnter", m, true);
 		                } catch (TipiException e1) {
 		                    e1.printStackTrace();
@@ -105,7 +116,6 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 		        }
 
 		        public void keyReleased(KeyEvent e) {
-		        	System.err.println("REL!");
 		        	Map<String,Object> m = getEventMap(e);
 		            m.put("mode", "released");
 
@@ -601,6 +611,33 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 				Message m = mm.getSelectedMessage();
 				return m;
 			}
+			if (name.equals("lastMessage")) {
+				Message m = mm.getMessage();
+				if(m==null) {
+					return null;
+				}
+				int count = m.getArraySize();
+				
+				if(count==0) {
+					return null;
+				}
+				return m.getMessage(count-1);
+			}
+			if (name.equals("firstMessage")) {
+				Message m = mm.getMessage();
+				if(m==null) {
+					return null;
+				}
+				int count = m.getArraySize();
+				
+				if(count==0) {
+					return null;
+				}
+				return m.getMessage(0);
+			}
+			
+			
+			
 			if (name.equals("selectedMessages")) {
 				List<Message> all = mm.getSelectedMessages();
 				if (all != null && all.size() > 0) {
@@ -771,6 +808,21 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 				if ("updateConditionalRemarks".equals(name)) {
 					updateConditionalRemarks();
 				}
+				if ("editCell".equals(name)) {
+					Operand property = compMeth.getEvaluatedParameter("property", event);
+					
+					Property value = (Property)property.value;
+					if(value==null) {
+						System.err.println("Error: can not editCell, property null. Expression: "+compMeth.getParameter("property").toString());
+					} else {
+						editCell(value);
+					}
+				}
+				if ("sort".equals(name)) {
+					Operand index = compMeth.getEvaluatedParameter("index", event);
+					Operand direction = compMeth.getEvaluatedParameter("ascending", event);
+					mm.doSort(((Integer)index.value), ((Boolean)direction.value));
+				}
 
 				if ("doRunReport".equals(name)) {
 					Operand format = compMeth.getEvaluatedParameter("format", event);
@@ -802,6 +854,10 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 
 	}
 
+	protected void editCell(Property value) {
+		mm.editCell(value);
+	}
+
 	public void setColumnDefinitionSavePath(String path) {
 		mm.setColumnDefinitionSavePath(path);
 	}
@@ -809,12 +865,27 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 	@SuppressWarnings("unchecked")
 	public void stateChanged(ChangeEvent e) {
 		Map<String, Object> m = (Map<String, Object>) e.getSource();
-		System.err.println("StateChanged in TABLE");
+		Object old =  m.get("old");
+		Object newP = m.get("new");
+
+		System.err.println("StateChanged in TABLE: "+old+" new: "+newP);
+		System.err.println(">> "+m);
 		flushAggregateValues();
 		updateConditionalRemarks();
 		mm.repaint();
 		try {
-			performTipiEvent("onValueChanged", m, false);
+//			System.err.println("Old: "+old+" new: "+newP);
+//			Thread.dumpStack();
+//			System.err.println("CONTENTS: "+m);
+			if(old==null) {
+				if(newP!=null) {
+					performTipiEvent("onValueChanged", m, true);
+				}
+			} else {
+				if(!old.equals(newP)) {
+					performTipiEvent("onValueChanged", m, true);
+				}
+			}
 		} catch (TipiException ex) {
 			ex.printStackTrace();
 		}

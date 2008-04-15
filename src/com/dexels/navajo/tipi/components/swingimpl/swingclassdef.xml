@@ -32,6 +32,9 @@
       <param name="value" type="binary" required="true" />
       <param name="extension" type="string" />
    </tipiaction>
+   <tipiaction name="requestFocus" class="TipiRequestFocus" package="com.dexels.navajo.tipi.components.swingimpl.actions">
+      <param name="component" type="string" required="true" />
+   </tipiaction>
 
    <!-- refactored from NavajoTipi, as it is not applicable to echo
       righght, I think it should be moved back. The exit function is overridden
@@ -169,6 +172,7 @@
             <param name="row" type="string" />
             <param name="column" type="string" />
             <param name="message" type="message" />
+            <param name="property" type="property" />
             <param name="path" type="string" />
          </event>
          <event name="onReportFinished">
@@ -198,6 +202,10 @@
          <value direction="out" name="selectedMessage" type="message" />
          <value direction="out" name="selectedMessages" type="message" />
          <value direction="out" name="filteredMessage" type="message" />
+
+         <value direction="out" name="lastMessage" type="message" />
+         <value direction="out" name="firstMessage" type="message" />
+
          <value direction="in" name="visible" type="boolean" />
          <value direction="in" name="readOnly" type="boolean" />
          <value direction="in" name="border" type="border" property="border"/>
@@ -274,6 +282,13 @@
             <param name="format" type="string" />
             <param name="orientation" type="string" />
             <param name="margins" type="string" />
+         </method>
+         <method name="editCell">
+            <param name="property" type="property" />
+         </method>
+         <method name="sort">
+            <param name="index" type="integer" />
+            <param name="ascending" type="boolean" />
          </method>
       </methods>
    </tipiclass>
@@ -870,6 +885,7 @@
          <value direction="in" name="enabled" type="boolean" property="enabled" />
          <value direction="in" name="visible" type="boolean" property="visible" />
          <value direction="inout" name="mnemonic" type="string" property="stringMnemonic" />
+         <value direction="in" name="accelerator" type="string"/> 
       </values>
       <methods>
          <method name="fireAction" />
@@ -1189,6 +1205,8 @@
             <param name="propertyValue" type="string" />
             <param name="propertyLength" type="integer" />
             <param name="propertyType" type="string" />
+            <param name="old" type="object" />
+            <param name="internalChange" type="boolean" />
          </event>
          <event name="onDirectionChanged">
             <param name="propertyName" type="string" />
@@ -1374,37 +1392,7 @@
       </methods>
    </tipiclass>
 
-   <tipiclass studio-icon="tipitableprinter.gif" module="extensions" class="TipiEmbedComponent" name="embed" childcount="0" package="com.dexels.navajo.tipi.components.swingimpl"
-      type="tipi" addtocontainer="true" layoutmanager="false">
-      <events>
-         <event name="onInstantiate" />
-         <event name="onLoad" />
-      </events>
-      <values>
-         <value direction="in" name="resourceCodeBase" type="string" />
-         <value direction="in" name="tipiCodeBase" type="string" />
-         <value direction="in" name="background" type="color" />
-         <value direction="in" name="enabled" type="boolean" />
-         <value direction="in" name="visible" type="boolean" />
-         <value direction="in" name="border" type="border" />
-         <value direction="in" name="binaryCodeBase" type="resource" />
-      </values>
-      <methods>
-         <method name="switch">
-            <param name="definition" type="string" />
-         </method>
-         <method name="loadDefinition">
-            <param name="location" type="string" />
-         </method>
-         <method name="addStartupProperty">
-            <param name="propertyName" type="string" />
-            <param name="value" type="string" />
-         </method>
-         <method name="loadAllNavajo">
-            <param name="message" type="message" />
-         </method>
-      </methods>
-   </tipiclass>
+
 
    <tipiclass studio-icon="tipitableprinter.gif" module="extensions" class="TipiWindowEmbedComponent" name="windowembed" childcount="0"
       package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" addtocontainer="true" layoutmanager="false">

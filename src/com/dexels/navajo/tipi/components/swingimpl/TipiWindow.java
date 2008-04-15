@@ -367,20 +367,23 @@ public final class TipiWindow
   
   
   public void disposeComponent() {
-//	  System.err.println("Disposing tipi window:");
-      JInternalFrame jj = (JInternalFrame) getContainer();
-      if (jj!=null) {
-//    	  System.err.println("Internal frame found. Disposing....");
-       	  jj.dispose();
-       	 Container parent = jj.getParent();
-    	  if (parent!=null) {
-        	  parent.remove(jj);
-    	  }
-      }
-      
-      clearContainer();
-      myWindow = null;
-	 super.disposeComponent();
+	  runSyncInEventThread(new Runnable(){
+
+		public void run() {
+			JInternalFrame jj = (JInternalFrame) getContainer();
+		      if (jj!=null) {
+		       	  jj.dispose();
+		       	 Container parent = jj.getParent();
+		    	  if (parent!=null) {
+		        	  parent.remove(jj);
+		    	  }
+		      }
+		      
+		      clearContainer();
+		      myWindow = null;
+		}});
+		 TipiWindow.super.disposeComponent();
+			  
 }
 
 public void reUse() {

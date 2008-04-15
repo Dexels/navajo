@@ -39,7 +39,7 @@ public class TipiFrame extends TipiSwingDataComponentImpl {
 	}
 
 	public Object createContainer() {
-		boolean internal = (getContext() instanceof EmbeddedContext) || ((SwingTipiContext) getContext()).getAppletRoot() != null;
+		boolean internal = (getContext() instanceof SwingEmbeddedContext) || ((SwingTipiContext) getContext()).getAppletRoot() != null;
 		TipiHelper th = new TipiSwingHelper();
 		th.initHelper(this);
 		addHelper(th);
@@ -67,7 +67,7 @@ public class TipiFrame extends TipiSwingDataComponentImpl {
 			mySuperPanel = new JPanel();
 			myFrame.getContentPane().add(mySuperPanel ,BorderLayout.CENTER);
 			mySuperPanel.setLayout(new BorderLayout());
-			// myContext.setToplevel(myFrame);
+			 ((SwingTipiContext)myContext).addTopLevel(myFrame);
 			//mySuperPanel.addC
 			return myFrame;
 		}

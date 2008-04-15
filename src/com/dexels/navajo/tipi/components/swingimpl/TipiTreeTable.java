@@ -19,7 +19,7 @@ import com.dexels.navajo.tipi.tipixml.*;
  * @version 1.0
  */
 public class TipiTreeTable
-    extends TipiDataComponentImpl {
+    extends TipiSwingDataComponentImpl {
   private MessageTreeTablePanel myTreeTable;
   private String messagePath;
   private List<String> myColumns = new ArrayList<String>();

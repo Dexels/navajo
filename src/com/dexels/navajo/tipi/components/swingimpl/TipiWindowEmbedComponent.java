@@ -8,6 +8,7 @@ package com.dexels.navajo.tipi.components.swingimpl;
 
 import java.awt.*;
 import java.beans.*;
+import java.lang.reflect.*;
 
 import javax.swing.*;
 import javax.swing.event.*;
@@ -31,9 +32,9 @@ public class TipiWindowEmbedComponent extends TipiEmbedComponent {
 		panel.setLayout(new BorderLayout());
 		panel.setVisible(true);
 		panel.setSize(500, 300);
-		stc = new TipiStandaloneContainer();
+		stc = new TipiSwingStandaloneContainer((SwingTipiContext) getContext());
 		((SwingTipiContext)stc.getContext()).setOtherRoot(panel);
-		
+		stc.getContext().setDefaultTopLevel(this);
 		panel.addInternalFrameListener(new InternalFrameAdapter(){
 			public void internalFrameClosing(InternalFrameEvent arg0) {
 				disposeComponent();
@@ -73,10 +74,34 @@ public class TipiWindowEmbedComponent extends TipiEmbedComponent {
 			}
 
 			public void navajoSent(Navajo n, String service) {
-				// TODO Auto-generated method stub
 				
 			}});
 		//stc.setRootComponent(panel);
 		return panel;
 	}
+
+	public void runAsyncInEventThread(Runnable runnable) {
+		if(SwingUtilities.isEventDispatchThread()) {
+			runnable.run();
+		} else {
+				SwingUtilities.invokeLater(runnable);
+		}
+	}
+
+	public void runSyncInEventThread(Runnable runnable) {
+		if(SwingUtilities.isEventDispatchThread()) {
+			runnable.run();
+		} else {
+			try {
+				SwingUtilities.invokeAndWait(runnable);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	
 }

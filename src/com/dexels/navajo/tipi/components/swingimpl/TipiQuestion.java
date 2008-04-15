@@ -84,7 +84,7 @@ public class TipiQuestion extends TipiBaseQuestion {
     }
   }
 
-  public void runASyncInEventThread(Runnable r) {
+  public void runAsyncInEventThread(Runnable r) {
     if (SwingUtilities.isEventDispatchThread() ) {
       r.run();
     }

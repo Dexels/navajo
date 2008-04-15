@@ -172,8 +172,7 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 	}
 
 	private final void constructDialog() {
-		System.err.println("Otherroot: "+mySwingTipiContext.getOtherRoot());
-		// System.err.println("Constructing: studio? "+isStudioElement());
+			// System.err.println("Constructing: studio? "+isStudioElement());
 		if (mySwingTipiContext.getAppletRoot() != null  || mySwingTipiContext.getOtherRoot() != null
 				|| (mySwingTipiContext.getDefaultDesktop() != null && forceInternal  ==true)) {
 			// System.err.println("Applet root");

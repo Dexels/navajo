@@ -241,11 +241,10 @@ public class TipiProperty extends TipiSwingComponentImpl implements PropertyComp
 	}
 
 	
-	public void propertyEventFired(Property p, String eventType, Validatable ve) {
-		propertyEventFired(p, eventType, ve, null);
+	public void propertyEventFired(Property p, String eventType, Validatable ve, boolean internal) {
+		propertyEventFired(p, eventType, ve, null,internal);
 	}
-	public void propertyEventFired(Property p, String eventType, Validatable v, Object oldValue) {
-//		Thread.dumpStack();
+	public void propertyEventFired(Property p, String eventType, Validatable v, Object oldValue,boolean internal) {
 		if("onValueChanged".equals(eventType)) {
 			Object typedValue = p.getTypedValue();
 			if(typedValue!=null && typedValue.equals(oldValue)) {
@@ -257,6 +256,8 @@ public class TipiProperty extends TipiSwingComponentImpl implements PropertyComp
 				m.put("propertyName", p.getFullPropertyName());
 				m.put("propertyValue", typedValue);
 				m.put("propertyType", p.getType());
+				m.put("internalChange", internal);
+							m.put("old", oldValue);
 				m.put("propertyLength", new Integer(p.getLength()));
 				// PropertyImpl p = (PropertyImpl)myProperty;
 				for (int i = 0; i < myListeners.size(); i++) {
@@ -345,25 +346,25 @@ public class TipiProperty extends TipiSwingComponentImpl implements PropertyComp
 //					System.err.println("NEW: "+e.getNewValue());
 //					Thread.dumpStack();
 					((GenericPropertyComponent) getContainer()).updatePropertyValue(e);
-					propertyEventFired((Property)e.getSource(),"onValueChanged", p,e.getOldValue());
+					propertyEventFired((Property)e.getSource(),"onValueChanged", p,e.getOldValue(),false);
 					myPropertyValue = ((Property)e.getSource()).getTypedValue();
 				} else {
 					// direction, cardinality, length, or description change:
 					((GenericPropertyComponent) getContainer()).setProperty(getProperty());
 					if(e.getPropertyName().equals("cardinality")) {
-						propertyEventFired((Property)e.getSource(), "onCardinalityChanged", p,e.getOldValue());
+						propertyEventFired((Property)e.getSource(), "onCardinalityChanged", p,e.getOldValue(),false);
 					}
 					if(e.getPropertyName().equals("length")) {
-						propertyEventFired((Property)e.getSource(), "onLengthChanged", p,e.getOldValue());
+						propertyEventFired((Property)e.getSource(), "onLengthChanged", p,e.getOldValue(),false);
 					}
 					if(e.getPropertyName().equals("description")) {
-						propertyEventFired((Property)e.getSource(), "onDescriptionChanged", p,e.getOldValue());
+						propertyEventFired((Property)e.getSource(), "onDescriptionChanged", p,e.getOldValue(),false);
 					}
 					if(e.getPropertyName().equals("direction")) {
-						propertyEventFired((Property)e.getSource(), "onDirectionChanged", p,e.getOldValue());
+						propertyEventFired((Property)e.getSource(), "onDirectionChanged", p,e.getOldValue(),false);
 					}
 					if(e.getPropertyName().equals("type")) {
-						propertyEventFired((Property)e.getSource(), "onTypeChanged", p,e.getOldValue());
+						propertyEventFired((Property)e.getSource(), "onTypeChanged", p,e.getOldValue(),false);
 					}
 				}			
 			}

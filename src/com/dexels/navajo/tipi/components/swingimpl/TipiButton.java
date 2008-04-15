@@ -40,14 +40,27 @@ public class TipiButton extends TipiSwingComponentImpl {
 //	private TipiSwingButton myButton;
 
 	private boolean iAmEnabled = true;
+	private AbstractAction buttonAction;
 
 	public Object createContainer() {
 		TipiSwingButton myButton = new TipiSwingButton();
+		buttonAction = new AbstractAction("onActionPerformed"){
 
-		TipiHelper th = new TipiSwingHelper();
-		th.initHelper(this);
-		addHelper(th);
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				try {
+					performTipiEvent("onActionPerformed", null, false);
+				} catch (TipiException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}};
+		myButton.addActionListener(new ActionListener(){
 
+			public void actionPerformed(ActionEvent e) {
+				buttonAction.actionPerformed(e);
+			}});
+		
 		return myButton;
 	}
 
@@ -75,11 +88,25 @@ public class TipiButton extends TipiSwingComponentImpl {
 						iAmEnabled = ((Boolean) object).booleanValue();
 					}
 				}
+				if (name.equals("accelerator")) {
+					setAccelerator((String)object);
+				}
 			}
 		});
 	}
 
-	 protected ImageIcon getIcon(Object u) {
+	 protected void setAccelerator(String text) {
+	        KeyStroke ks = null;
+	       JButton myButton = (JButton)getContainer();
+	        InputMap imap = myButton.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+	        ActionMap amap = myButton.getActionMap();
+	        ks = KeyStroke.getKeyStroke(text);
+	        imap.put(ks, buttonAction.getValue(Action.NAME));
+	        amap.put(buttonAction.getValue(Action.NAME), buttonAction);		
+					
+	}
+
+	protected ImageIcon getIcon(Object u) {
 		 if(u==null) {
 			 return null;
 		 }

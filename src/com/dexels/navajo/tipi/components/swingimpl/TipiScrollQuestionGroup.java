@@ -97,7 +97,7 @@ public class TipiScrollQuestionGroup extends TipiBaseQuestionGroup implements Ti
 	    }
 	  }
 
-	  public void runASyncInEventThread(Runnable r) {
+	  public void runAsyncInEventThread(Runnable r) {
 	    if (SwingUtilities.isEventDispatchThread()) {
 	      r.run();
 	    }
