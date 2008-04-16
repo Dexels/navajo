@@ -38,6 +38,7 @@ import java.util.Vector;
 import java.util.regex.Pattern;
 
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.jaxpimpl.xml.XMLutils;
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.types.Binary;
@@ -91,7 +92,7 @@ public class TagMap implements Mappable {
 	}
 
 	public void setText(String t) {
-		text = t;
+		text = XMLutils.XMLEscape( t );
 	}
 	
 	public void setAttributeText(String t) throws UserException {
@@ -108,7 +109,7 @@ public class TagMap implements Mappable {
 			child.attributes = new HashMap ();
 		}
 
-		child.attributes.put( child.attributeName, t);
+		child.attributes.put( child.attributeName, XMLutils.XMLEscape( t ) );
 
 	}
 	
@@ -235,7 +236,7 @@ public class TagMap implements Mappable {
 	
 	public void setChildText(String s) throws UserException {
 		TagMap t = getChild();
-		t.setText(s);
+		t.setText( XMLutils.XMLEscape( s ) );
 	}
 	
 	public String getAttribute(String a) throws UserException {
