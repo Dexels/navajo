@@ -159,7 +159,7 @@ public class FileStore implements MessageStore {
 		HashSet<QueuedAdapter> deadQueueAdapters = new HashSet<QueuedAdapter>();
 		synchronized (deadQueue) {
 			SharedStoreInterface ssi = SharedStoreFactory.getInstance();
-			String [] files = ssi.getObjects(path);
+			String [] files = ssi.getObjects(deadQueue);
 
 			for (int i = 0; i < files.length; i++) {
 					NavajoObjectInputStream ois;

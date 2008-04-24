@@ -35,7 +35,7 @@ public class JabberFactory {
 						instance = (JabberInterface) m.invoke(dummy, (Object []) null);
 						AuditLog.log(AuditLog.AUDIT_MESSAGE_MONITOR, "Found jabber Agent: " + className);
 					} catch (Throwable e) {
-						AuditLog.log("INIT", "WARNING: Monitoring Agent not available: " + className, Level.WARNING);
+						AuditLog.log("INIT", "WARNING: Jabber not available: " + className, Level.WARNING);
 						instance = new DummyJabberAgent();
 					}	
 				}

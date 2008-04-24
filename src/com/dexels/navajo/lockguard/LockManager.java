@@ -240,7 +240,7 @@ public final class LockManager extends GenericThread implements LockManagerMXBea
 		while ( totalDefinitions.count > 0 ) { // barrier condition.
 			synchronized (totalDefinitions) {
 				try {
-					totalDefinitions.wait();
+					totalDefinitions.wait(1000);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

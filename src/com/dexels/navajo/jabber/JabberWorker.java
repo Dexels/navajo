@@ -77,10 +77,16 @@ public class JabberWorker extends GenericThread implements JabberInterface, Nava
 	private int maxRequestRate = 20;
 	private int maxQueueSize = 100;
 
+	private final static String myId = "Navajo Jabber Worker";
+	
 	private Access myAccess;
 	
 	// Registered JabberTriggers..
 	private Set<JabberTrigger> triggers = null;
+	
+	public JabberWorker() {
+		super(myId);
+	}
 	
 	public void configJabber(Message jabberMessage)   {
 		Property serverProperty = jabberMessage.getProperty("server");
@@ -109,7 +115,6 @@ public class JabberWorker extends GenericThread implements JabberInterface, Nava
 		initialize(server, Integer.parseInt(port), domain,username, password, roomname, conference);
 	
 	}
-	
 	
 	public boolean isInstantiated() {
 		return isInstantiated;
@@ -222,18 +227,15 @@ public class JabberWorker extends GenericThread implements JabberInterface, Nava
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		
-		// Limit the max # of processed..
-		try {
-			Thread.sleep(1000/maxRequestRate);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+			
 	}
 	
 	public void fireTail(final String service,final  Navajo n) {
+		
+		if ( !myJabber.isRegisteredAsTail(service) ) {
+			return;
+		}
+		
 		Runnable r = new Runnable(){
 
 			public void run() {
@@ -330,11 +332,12 @@ public class JabberWorker extends GenericThread implements JabberInterface, Nava
 			NavajoRequestEvent nre = (NavajoRequestEvent)ne;
 			fireTail(nre.getNavajo().getHeader().getRPCName(), nre.getNavajo() );
 		}
+		
 		if(ne instanceof NavajoResponseEvent) {
 			NavajoResponseEvent nre = (NavajoResponseEvent)ne;
 			fireTail(nre.getAccess().getRpcName(), nre.getAccess().getOutputDoc() );
-			
 		}
+		
 		if(ne instanceof NavajoHealthCheckEvent) {
 			NavajoHealthCheckEvent nre = (NavajoHealthCheckEvent)ne;
 			try {

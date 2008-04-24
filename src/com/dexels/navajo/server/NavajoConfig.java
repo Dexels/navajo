@@ -268,6 +268,8 @@ public final class NavajoConfig {
 				
 //				myJabber.configJabber(jabberMessage);
 				
+			} else {
+				AuditLog.log("INIT", "WARNING: Jabber not installed, jabber configuration missing in server.xml.");
 			}
     		
     		

@@ -433,6 +433,10 @@ public class NavajoJabberAgent  {
 
 	}
 
+	public final boolean isRegisteredAsTail(String service) {
+		return myTailMap.containsKey(service);
+	}
+	
 	public void joinRoom(String roomName, String nickName, String conferenceName) throws XMPPException {
 		System.err.println("Getting conference service: " + conferenceName);
 		Collection<HostedRoom> aa = MultiUserChat.getHostedRooms(connection, conferenceName);
