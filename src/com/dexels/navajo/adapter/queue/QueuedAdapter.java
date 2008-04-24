@@ -32,6 +32,7 @@ public class QueuedAdapter extends Thread implements Mappable {
 	public String ref;
 	public boolean delete;
 	public String exception;
+	public String stackTraceMessage;
 	public Date created;
 	private long startTime;
 	protected Queuable handler;
@@ -180,6 +181,19 @@ public class QueuedAdapter extends Thread implements Mappable {
 	public String getException() {
 		if ( handler != null && handler.getAccess() != null ) {
 			return handler.getAccess().getException().getLocalizedMessage();
+		} else {
+			return null;
+		}
+	}
+	
+	public String getStackTraceMessage() {
+		if ( handler != null && handler.getAccess() != null ) {
+			StringBuffer result = new StringBuffer();
+			StackTraceElement [] elt = handler.getAccess().getException().getStackTrace();
+			for ( int i = 0; i < elt.length; i++ ) {
+				result.append(elt[i].getClassName()+"."+elt[i].getMethodName() + " (" + elt[i].getFileName() + ":" + elt[i].getLineNumber() + ")\n");
+			}
+			return result.toString();
 		} else {
 			return null;
 		}
