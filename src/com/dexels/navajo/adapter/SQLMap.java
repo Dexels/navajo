@@ -932,8 +932,7 @@ public class SQLMap implements Mappable, LazyArray {
         if (param == null) {
           statement.setNull(i + 1, Types.VARCHAR);
         }
-
-        if (param instanceof String) {
+        else if (param instanceof String) {
           statement.setString(i + 1, (String) param);
         }
         else if (param instanceof Integer) {
