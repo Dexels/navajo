@@ -21,7 +21,7 @@ public class TipiOpenBrowser extends TipiAction {
 			newWin = b.booleanValue();
 		}
 		if(newWin) {
-			Command brc = new BrowserOpenWindowCommand((String) url.value,"",null);
+			Command brc = new BrowserOpenWindowCommand((String) url.value,"","directories=no,location=yes,menubar=yes,personalbar=yes,resizable=yes,scrollbars=yes,status=yes,titlebar=yes,toolbar=yes, width=640,height=480");
 	        ApplicationInstance.getActive().enqueueCommand(brc);
 		} else {
 			Command brc = new BrowserRedirectCommand((String) url.value);
