@@ -8,7 +8,6 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.*;
 
-import org.eclipse.birt.report.model.api.util.DocumentUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -65,7 +64,7 @@ public class BirtUtils {
 		File source = createDataSource(n);
 		System.err.println("Datasource created.");
 		System.err.println("Creating report: "+reportFile.getAbsolutePath());
-		createReportFile(source, n, reportFile,"navajo",reportTemplateStream);
+		createReportFile(source, n, reportFile,"navajoDataSource",reportTemplateStream);
 	}
 
 	public void setupMasterPage(Document d, int left, int top, int right, int bottom, boolean landscape) {
@@ -88,7 +87,7 @@ public class BirtUtils {
 		File source = createDataSource(n);
 		File reportFile = new File(reportFolder, reportName);
 		FileInputStream templatInput = new FileInputStream(reportTemplateFile);
-		createReportFile(source, n, reportFile, "navajo", templatInput);
+		createReportFile(source, n, reportFile, "navajoDataSource", templatInput);
 	}
 
 	public File createFixedReportDefinition(InputStream rptdesign, File datasource, File tempReportDir) throws NavajoException, IOException {
@@ -364,7 +363,7 @@ public class BirtUtils {
 		}
 
 		if (p.getType().equals(Property.CLOCKTIME_PROPERTY)) {
-			return queryString ? "Timestamp" : "date-time";
+			return queryString ? "String" : "String";
 		}
 		if (p.getType().equals(Property.DATE_PROPERTY)) {
 			return queryString ? "String" : "String";
