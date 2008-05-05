@@ -154,9 +154,9 @@ private void setValue(Double d) {
   public Money(String d) {
     super(Property.MONEY_PROPERTY);
     setupSubtypes();
-    if (d.indexOf(",") != -1) {
-    	d = d.replaceAll("\\.", "");
-    	d = d.replace(',', '.');
+ 	d = d.replaceAll("\\.", "");
+ 	   if (d.indexOf(",") != -1) {
+     	d = d.replace(',', '.');
     }
     try {
       if (d != null && !d.trim().equals("")) {
