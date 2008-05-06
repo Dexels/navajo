@@ -31,7 +31,10 @@ public final static String VERSION = "$Id$";
   public static final int FIXED_DAY = 1;
   //private Date value;
   private Calendar calValue;
-  private static final DateFormat df = SimpleDateFormat.getTimeInstance(2, Locale.GERMAN);
+  // Not thread safe!
+  // TODO fix that
+  private static final DateFormat df = SimpleDateFormat.getTimeInstance(DateFormat.MEDIUM, Locale.GERMAN);
+  private static final DateFormat presentation = SimpleDateFormat.getTimeInstance(DateFormat.SHORT, Locale.GERMAN);
 
   private final void normalize() {
     calValue.set(Calendar.MILLISECOND, 0);
@@ -210,7 +213,7 @@ public final static String VERSION = "$Id$";
    */
   public final String toString() {
     if (calValue != null) {
-      return df.format(calValue.getTime());
+      return presentation.format(calValue.getTime());
     }
     else {
       return null;
@@ -221,7 +224,7 @@ public final static String VERSION = "$Id$";
 
     // Tests.
 
-  ClockTime ck = new ClockTime("12:00:00");
+  ClockTime ck = new ClockTime("12:00:91");
   System.err.println("ck = " + ck);
   }
 
