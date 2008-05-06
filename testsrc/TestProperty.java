@@ -91,10 +91,10 @@ public class TestProperty extends TestCase {
 		assertEquals("Mooie array", expected);
 		
 		// Money
-		p1.setAnyValue(new Money(50));
+		p1.setAnyValue(new Money(5000));
 		assertEquals("money", p1.getType());
-		assertEquals("50.00", p1.getValue());
-		assertTrue(p1.getTypedValue().equals(new Money(50)));
+		assertEquals("5000.00", p1.getValue());
+		assertTrue(p1.getTypedValue().equals(new Money(5000)));
 		
 		// ClockTime
 		Date d1 = new java.util.Date();
@@ -611,6 +611,14 @@ public class TestProperty extends TestCase {
 	     System.err.println("m: "+m.tmlString()+" :: "+m.editingString());
 	     Assert.assertEquals(m.tmlString(), "10.00");
 	     Assert.assertEquals(m.editingString(), "10");
+
+	     m = new Money("10.000");
+		Assert.assertEquals(m.doubleValue(), 10000d);
+		m = new Money("10.000,00");
+		Assert.assertEquals(m.doubleValue(), 10000d);
+		m = new Money("5,00");
+		Assert.assertEquals(m.doubleValue(), 5d);
+
 	}
 
 	
