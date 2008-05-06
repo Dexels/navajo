@@ -33,8 +33,8 @@ public final static String VERSION = "$Id$";
   private Calendar calValue;
   // Not thread safe!
   // TODO fix that
-  private static final DateFormat df = SimpleDateFormat.getTimeInstance(DateFormat.MEDIUM, Locale.GERMAN);
-  private static final DateFormat presentation = SimpleDateFormat.getTimeInstance(DateFormat.SHORT, Locale.GERMAN);
+  //private static final DateFormat df = SimpleDateFormat.getTimeInstance(DateFormat.MEDIUM, Locale.GERMAN);
+  //private static final DateFormat presentation = SimpleDateFormat.getTimeInstance(DateFormat.SHORT, Locale.GERMAN);
 
   private final void normalize() {
     calValue.set(Calendar.MILLISECOND, 0);
@@ -112,7 +112,7 @@ public final static String VERSION = "$Id$";
             //throw new Exception("Invalid clocktime: " + s);
           }
           try {
-            value = df.parse("00:" + s + ":00");
+            value = SimpleDateFormat.getTimeInstance(DateFormat.MEDIUM, Locale.GERMAN).parse("00:" + s + ":00");
           }
           catch (Exception e) {
             calValue = null;
@@ -166,7 +166,7 @@ public final static String VERSION = "$Id$";
         s += ":00";
       }
       try {
-        value = df.parse(s);
+        value = SimpleDateFormat.getTimeInstance(DateFormat.MEDIUM, Locale.GERMAN).parse(s);
         calValue = Calendar.getInstance();
         calValue.setTime(value);
         normalize();
@@ -213,7 +213,7 @@ public final static String VERSION = "$Id$";
    */
   public final String toString() {
     if (calValue != null) {
-      return presentation.format(calValue.getTime());
+      return SimpleDateFormat.getTimeInstance(DateFormat.MEDIUM, Locale.GERMAN).format(calValue.getTime());
     }
     else {
       return null;
@@ -224,7 +224,7 @@ public final static String VERSION = "$Id$";
 
     // Tests.
 
-  ClockTime ck = new ClockTime("12:00:91");
+  ClockTime ck = new ClockTime("12:00:33");
   System.err.println("ck = " + ck);
   }
 
