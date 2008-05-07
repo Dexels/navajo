@@ -34,7 +34,6 @@ public final static String VERSION = "$Id$";
   // Not thread safe!
   // TODO fix that
   //private static final DateFormat df = SimpleDateFormat.getTimeInstance(DateFormat.MEDIUM, Locale.GERMAN);
-  //private static final DateFormat presentation = SimpleDateFormat.getTimeInstance(DateFormat.SHORT, Locale.GERMAN);
 
   private final void normalize() {
     calValue.set(Calendar.MILLISECOND, 0);
@@ -219,6 +218,16 @@ public final static String VERSION = "$Id$";
       return null;
     }
   }
+  public final String toShortString() {
+	    if (calValue != null) {
+	      return SimpleDateFormat.getTimeInstance(DateFormat.SHORT, Locale.GERMAN).format(calValue.getTime());
+	    }
+	    else {
+	      return null;
+	    }
+	  }
+  
+  
 
   public static void main(String [] args) throws Exception {
 
