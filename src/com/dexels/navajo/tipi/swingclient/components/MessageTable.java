@@ -179,7 +179,7 @@ public class MessageTable
     }
   }
 
-  class EditRowDialog
+  public class EditRowDialog
       extends JDialog {
     MessageTable myTable;
     private Message m, backup;
@@ -311,7 +311,7 @@ public class MessageTable
 //        gpc.setHorizontalScrolls(false);
         gpc.setProperty(current);
         gpc.addPropertyEventListener(new PropertyEventListener() {
-          public void propertyEventFired(Property p, String type, Validatable v) {
+          public void propertyEventFired(Property p, String type, Validatable v, boolean internal) {
             mtm.fireTableRowsUpdated(getSelectedRow(), getSelectedRow());
           }
         });
@@ -427,7 +427,7 @@ public class MessageTable
 //          gpc.setHorizontalScrolls(false);
           gpc.setProperty(current);
           gpc.addPropertyEventListener(new PropertyEventListener() {
-            public void propertyEventFired(Property p, String type, Validatable v) {
+            public void propertyEventFired(Property p, String type, Validatable v, boolean internal) {
               mtm.fireTableRowsUpdated(getSelectedRow(), getSelectedRow());
             }
           });
@@ -1536,95 +1536,122 @@ public void updateTableSize() {
   }
 
   public void editingStopped(ChangeEvent parm1) {
-    Property init = myEditor.getInitialProperty();
-    Property current = myEditor.getProperty();
-    //System.err.println("Editing stopped, in MT");
-    changed = true;
-    if (current != null && Property.SELECTION_PROPERTY.equals(current.getType())) {
-      // a selection property
-      if (replacementMap.containsKey(current.getName())) {
-        //System.err.println("You're edititing a cached property");
-        try {
-          getSelectedMessage().getProperty( (String) replacementMap.get(current.getName())).setValue(current.getSelected().getValue());
-        }
-        catch (NavajoException ex3) {
-          ex3.printStackTrace();
-        }
-      }
-      try {
-        Selection initSel = init.getSelected();
-        Selection currentSel = current.getSelected();
-        if (! (initSel != null && currentSel != null && initSel.getValue().equals(currentSel.getValue()))) {
-//          System.err.println("Ready for select");
-          try {
-            fireChangeEvents(init, current);
-            return;
-          }
-          catch (NavajoException ex) {
-            ex.printStackTrace();
-          }
-        }
-      }
-      catch (Exception ex1) {
-        ex1.printStackTrace();
-      }
-    }
-    else {
-      if (init != null && current != null) {
-        if (init.getValue() != null && current.getValue() != null) {
-          if (!init.getValue().equals(current.getValue())) {
-            try {
-              fireChangeEvents(init, current);
-            }
-            catch (NavajoException ex) {
-              ex.printStackTrace();
-            }
-          }
-          else {
-           // System.err.println("Ignoring equal..");
-          }
-        }
-        else {
-          try {
-            fireChangeEvents(init, current);
-          }
-          catch (NavajoException ex) {
-            ex.printStackTrace();
-          }
-        }
-      }
-    }
-    try {
-//      List props = myMessage.getRootDoc().refreshExpression();
+	    Object oldVal = myEditor.getOldValue();
+	    Property current = myEditor.getProperty();
 
-      /** @todo Think this one is redundant in MegaTables, as all tables
-       * will be updated anyway */
-      if (getRefreshAfterEdit()) {
-        // This *MAY* not be enough, as expressions may have references to properties
-        // outside this table. (Only important if these properties also have references
-        // to properties in this table.
-//        List props = myMessage.getRootDoc().refreshExpression();
-//        myMessage.refreshExpression();
-//        NavajoFactory.getInstance().getExpressionEvaluator().
-//        System.err.println("# of properties changed: "+props.size());
+	    if( current==null) {
+	    	return;
+	    }
+
+	    try {
+//	    Object oldVal = init.getTypedValue();
+	    Object newVal = current.getTypedValue();
+	    System.err.println("Current name: "+current.getName()+" oldVal: "+oldVal+" new: "+newVal);
+	    if(oldVal==null) {
+	    	if(newVal==null) {
+	    		// nada
+	    	} else {
+	    		if(!newVal.equals(oldVal)) {
+	    			fireChangeEvents(current, oldVal,newVal);
+	    		}
+	    	}
+	    	
+	    } else {
+			if(!oldVal.equals(newVal)) {
+				fireChangeEvents(current, oldVal,newVal);
+			}
+	    }
+			} catch (NavajoException e1) {
+				e1.printStackTrace();
+			}
+
+	    //System.err.println("Editing stopped, in MT");
+	    changed = true;
+//	    if (current != null && Property.SELECTION_PROPERTY.equals(current.getType())) {
+//	      // a selection property
+//	      if (replacementMap.containsKey(current.getName())) {
+//	        //System.err.println("You're edititing a cached property");
+//	        try {
+//	          getSelectedMessage().getProperty( (String) replacementMap.get(current.getName())).setValue(current.getSelected().getValue());
+//	        }
+//	        catch (NavajoException ex3) {
+//	          ex3.printStackTrace();
+//	        }
+//	      }
+//	      try {
+//	        Selection initSel = init.getSelected();
+//	        Selection currentSel = current.getSelected();
+//	        if (! (initSel != null && currentSel != null && initSel.getValue().equals(currentSel.getValue()))) {
+////	          System.err.println("Ready for select");
+//	          try {
+//	            fireChangeEvents(init, current);
+//	            return;
+//	          }
+//	          catch (NavajoException ex) {
+//	            ex.printStackTrace();
+//	          }
+//	        }
+//	      }
+//	      catch (Exception ex1) {
+//	        ex1.printStackTrace();
+//	      }
+//	    }
+//	    else {
+//	      if (init != null && current != null) {
+//	        if (init.getValue() != null && current.getValue() != null) {
+//	          if (!init.getValue().equals(current.getValue())) {
+//	            try {
+//	              fireChangeEvents(init, current);
+//	            }
+//	            catch (NavajoException ex) {
+//	              ex.printStackTrace();
+//	            }
+//	          }
+//	          else {
+//	           // System.err.println("Ignoring equal..");
+//	          }
+//	        }
+//	        else {
+//	          try {
+//	            fireChangeEvents(init, current);
+//	          }
+//	          catch (NavajoException ex) {
+//	            ex.printStackTrace();
+//	          }
+//	        }
+//	      }
+//	    }
+	    try {
+//	      List props = myMessage.getRootDoc().refreshExpression();
+
+	      /** @todo Think this one is redundant in MegaTables, as all tables
+	       * will be updated anyway */
+	      if (getRefreshAfterEdit()) {
+	        // This *MAY* not be enough, as expressions may have references to properties
+	        // outside this table. (Only important if these properties also have references
+	        // to properties in this table.
+//	        List props = myMessage.getRootDoc().refreshExpression();
+//	        myMessage.refreshExpression();
+//	        NavajoFactory.getInstance().getExpressionEvaluator().
+//	        System.err.println("# of properties changed: "+props.size());
 
 
-//        getMessageModel().updateProperties(props);
+//	        getMessageModel().updateProperties(props);
 
-        updateExpressions();
-//        fireDataChanged();
-      }
-//            System.err.println("refreshed. Items changed: "+props.size());
-//            for (int i = 0; i < props.size(); i++) {
-//              Property currentProp = (Property)props.get(i);
-//             firePropertyChanged(currentProp);
-//            }
-    }
-    catch (Throwable ex2) {
-      ex2.printStackTrace();
-    }
+	        updateExpressions();
+//	        fireDataChanged();
+	      }
+//	            System.err.println("refreshed. Items changed: "+props.size());
+//	            for (int i = 0; i < props.size(); i++) {
+//	              Property currentProp = (Property)props.get(i);
+//	             firePropertyChanged(currentProp);
+//	            }
+	    }
+	    catch (Throwable ex2) {
+	      ex2.printStackTrace();
+	    }
 
-  }
+	  }
 
   public void updateExpressions() throws NavajoException {
     List props = myMessage.getRootDoc().refreshExpression();
