@@ -1409,7 +1409,6 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	public final void setSelected(ArrayList<String> al) throws com.dexels.navajo.document.NavajoException {
 		List<Selection> old = new ArrayList<Selection>(getAllSelectedSelections());
 		setAllSelected(false);
-		System.err.println("Setting selected: "+al);
 		for (int i = 0; i < al.size(); i++) {
 			String s = al.get(i);
 			Selection sl = getSelectionByValue(s);
