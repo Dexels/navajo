@@ -230,14 +230,15 @@ public final class ASTTmlNode extends SimpleNode {
                 resultList.add(null);
               else {
                 try {
-                  Money m = new Money(value);
+                  double d = Double.parseDouble(value);
+                  Money m = new Money(d);
                   if (m.toString() != null) {
-                    resultList.add(new Money(value));
+                    resultList.add(new Money(d));
                   } else {
                     resultList.add(null);
                   }
                 } catch (Throwable t) {
-                  throw new TMLExpressionException("Could not parse percentage property: " + value);
+                  throw new TMLExpressionException("Could not parse money property: " + value);
                 }
               }
             } else
