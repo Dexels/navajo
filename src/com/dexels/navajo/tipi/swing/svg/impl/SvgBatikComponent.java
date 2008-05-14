@@ -327,6 +327,9 @@ public class SvgBatikComponent extends SvgBaseComponent {
 			return;
 		}
 		SVGElement ee = (SVGElement) doc.getElementById(id);
+		if(ee==null) {
+			System.err.println("Unable to register events. Id not found: "+id);
+		}
 		if (ee instanceof SVGAnimationElement) {
 
 		}
@@ -413,9 +416,13 @@ public class SvgBatikComponent extends SvgBaseComponent {
 	}
 	
 	public void setTextContent(final String id, final String value) {
+		System.err.println("Getting component: "+id+" for setting text");
 		runInUpdateQueue(new Runnable() {
 			public void run() {
 				final SVGElement se = (SVGElement) svgCanvas.getSVGDocument().getElementById(id);
+				if(id==null) {
+					System.err.println("Component not found: "+id);
+				}
 				se.setTextContent(value);
 			}
 		});

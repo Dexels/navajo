@@ -36,7 +36,7 @@ public class TipiSvgForm extends TipiSvgComponent implements
 		});
 		
 		
-		myComponent.init(getClass().getClassLoader().getResource("form.svg"));
+		myComponent.init(myContext.getResourceURL("com/dexels/navajo/tipi/swing/svg/form.svg"));
 
 		
 	//	myComponent.getPreferredSize();

@@ -28,7 +28,7 @@ public class TipiSlideshowComponent extends TipiSvgComponent {
 		svgPanel = new SvgBatikComponent();
 		svgPanel.addSvgAnimationListener(this);
 		svgPanel.addSvgMouseListener(this);
-		svgPanel.init(getClass().getResource("picture.svg"));
+		svgPanel.init(myContext.getResourceURL("com/dexels/navajo/tipi/swing/svg/picture.svg"));
 		svgPanel.addSvgDocumentListener(new SvgDocumentAdapter(){
 			@Override
 			public void onDocumentLoadingFinished() {

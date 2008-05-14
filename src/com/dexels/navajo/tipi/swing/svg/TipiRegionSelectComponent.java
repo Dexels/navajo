@@ -60,7 +60,9 @@ public class TipiRegionSelectComponent extends TipiSvgComponent {
 		svgPanel = (SvgBatikComponent) super.createContainer();
 		lp.add(svgPanel,BorderLayout.CENTER);
 		svgPanel.setRegisteredIds(regionString);
-		svgPanel.init(getClass().getClassLoader().getResource("nederland.svg"));
+		svgPanel.init(myContext.getResourceURL("com/dexels/navajo/tipi/swing/svg/nederland.svg"));
+//		svgPanel.init(getContext().);
+				//getClass().getClassLoader().getResource("nederland.svg"));
 		svgPanel.addSvgDocumentListener(new SvgDocumentAdapter(){
 
 			@Override

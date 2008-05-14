@@ -9,7 +9,7 @@ public abstract class SvgBaseComponent extends JPanel {
 
 	
 	public SvgBaseComponent() {
-	
+		setOpaque(false);
 	}
 
 	public abstract void init(URL u);
