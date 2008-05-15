@@ -248,12 +248,12 @@ public class GenericPropertyComponent
 			  myProperty.removePropertyChangeListener(myPropertyChangeListener);
 		  }
 	  }
-	  myPropertyChangeListener = new PropertyChangeListener(){
-
-		public void propertyChange(PropertyChangeEvent evt) {
-			System.err.println("======== Property initiated value change");
-			firePropertyEvents((Property) evt.getSource(),"onValueChanged",null);
-		}};
+//	  myPropertyChangeListener = new PropertyChangeListener(){
+//
+//		public void propertyChange(PropertyChangeEvent evt) {
+//			System.err.println("======== Property initiated value change");
+//			firePropertyEvents((Property) evt.getSource(),"onValueChanged",null,false);
+//		}};
 	  
 //	  p.addPropertyDataListener(new PropertyDataListener(){
 //
@@ -326,7 +326,7 @@ public class GenericPropertyComponent
     currentComponent = c;
 //    add(currentComponent, BorderLayout.CENTER);
     if (verticalWeight) {
-      add(currentComponent, new GridBagConstraints(1, 0, 1, 1, 1, 1.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
+      add(currentComponent, new GridBagConstraints(1, 0, 1, 1, 1, 1.0, GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
     }
     else {
       add(currentComponent, new GridBagConstraints(1, 0, 1, 1, 1, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
@@ -1414,6 +1414,8 @@ public void setFocusable(boolean b) {
     }
     if (!p.isDirIn()) {
       myMemoField.setBackground(Color.lightGray);
+    } else {
+        myMemoField.setBackground(Color.white);
     }
     myMemoField.setLineWrap(true);
     myMemoField.setWrapStyleWord(true);
@@ -1634,7 +1636,7 @@ public void setFocusable(boolean b) {
   }
 
   protected final void fireTipiEvent(String type) {
-    firePropertyEvents(myProperty, type, null);
+    firePropertyEvents(myProperty, type, null,true);
   }
 
   public void setEnabled(boolean value) {
@@ -1777,10 +1779,10 @@ public void setFocusable(boolean b) {
     myPropertyEventListeners.remove(pel);
   }
 
-  protected final void firePropertyEvents(Property p, String eventType, Validatable v) {
+  protected final void firePropertyEvents(Property p, String eventType, Validatable v, boolean internalChange) {
     for (int i = 0; i < myPropertyEventListeners.size(); i++) {
       PropertyEventListener current = (PropertyEventListener) myPropertyEventListeners.get(i);
-      current.propertyEventFired(p, eventType, v);
+      current.propertyEventFired(p, eventType, v,internalChange);
     }
   }
 
@@ -2167,4 +2169,15 @@ public TypeFormatter getFormatter() {
 public void setFormatter(TypeFormatter formatter) {
 	this.formatter = formatter;
 }
+
+// quick hack:
+public void hideBorder() {
+	setBorder(null);
+	if(currentComponent!=null) {
+		currentComponent.setBorder(null);
+		currentComponent.setOpaque(false);
+	}
+	setOpaque(false);
+}
+
 }

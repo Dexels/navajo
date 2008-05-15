@@ -62,11 +62,15 @@ public class MoneyField extends AbstractPropertyField implements PropertyControl
 			return;
 		}
 		if (isEnabled()) {
-			setForeground(value.doubleValue()<0?Color.RED:Color.BLACK);
+			super.setForeground(value.doubleValue()<0?Color.RED:Color.BLACK);
 		} else {
-			setForeground(value.doubleValue()<0?Color.PINK.darker():Color.GRAY);
+			super.setForeground(value.doubleValue()<0?Color.PINK.darker():Color.GRAY);
 		}
 
+	}
+	
+	public void setForeground(Color c) {
+		// ignore, otherwise the money colors get overridden
 	}
 
 

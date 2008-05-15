@@ -5,8 +5,9 @@ import com.dexels.navajo.document.*;
 import java.awt.event.*;
 import java.util.*;
 import java.awt.*;
+import java.beans.*;
 
-public class PropertyBox extends BaseComboBox implements PropertyControlled, Ghostable, Validatable {
+public class PropertyBox extends BaseComboBox implements PropertyControlled, Ghostable, Validatable, PropertyChangeListener {
 	ResourceBundle myResource;
 
 	private boolean ghosted = false;
@@ -16,6 +17,8 @@ public class PropertyBox extends BaseComboBox implements PropertyControlled, Gho
 	private Message validationMsg;
 	private int myValidationState = Validatable.VALID;
 	private ArrayList rules = new ArrayList();
+
+	private Object lastSelection;
 
 	public PropertyBox() {
 		try {
@@ -30,12 +33,13 @@ public class PropertyBox extends BaseComboBox implements PropertyControlled, Gho
 		} catch (Exception e) {
 			// e.printStackTrace();
 		}
-			try {
-				jbInit();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+		
+		this.setRenderer(new PropertyCellRenderer());
+		this.addItemListener(new java.awt.event.ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				this_itemStateChanged(e);
 			}
+		});
 		setBackground(Color.white);
 		setEditable(false);
 	}
@@ -112,10 +116,17 @@ public class PropertyBox extends BaseComboBox implements PropertyControlled, Gho
 	}
 
 	public final void update() {
-		// required method
+		if(myProperty!=null) {
+			lastSelection = myProperty.getTypedValue();
+		}
 	}
 
+	public final Object getLastSelection() {
+		return lastSelection;
+	}
+	
 	public final void loadProperty(Property p) {
+		lastSelection = p.getTypedValue();
 		try {
 			if (p.getEvaluatedType().equals(Property.SELECTION_PROPERTY)) {
 				myProperty = p;
@@ -165,10 +176,16 @@ public class PropertyBox extends BaseComboBox implements PropertyControlled, Gho
 	// }
 
 	public final void setProperty(Property p) {
+		if(myProperty!=null) {
+			myProperty.removePropertyChangeListener(this);
+		}
 		if (p == null) {
 			System.err.println("Resetting property to null.");
 			myValueProperty = null;
 			return;
+		} else {
+			p.addPropertyChangeListener(this);
+
 		}
 
 		if (p.getType().equals(Property.SELECTION_PROPERTY)) {
@@ -186,7 +203,7 @@ public class PropertyBox extends BaseComboBox implements PropertyControlled, Gho
 			myValueProperty = p;
 
 			if (p.getValue() != null) {
-				setToKey(((String) p.getValue()).trim());
+				setToKey((p.getValue()).trim());
 			}
 			setEnabled(p.isDirIn());
 			if (p.isDirOut()) {
@@ -198,14 +215,6 @@ public class PropertyBox extends BaseComboBox implements PropertyControlled, Gho
 		}
 	}
 
-	private final void jbInit() throws Exception {
-		this.setRenderer(new PropertyCellRenderer());
-		this.addItemListener(new java.awt.event.ItemListener() {
-			public void itemStateChanged(ItemEvent e) {
-				this_itemStateChanged(e);
-			}
-		});
-	}
 
 	private final void setSelectionProperty() throws NavajoException {
 		Selection s = (Selection) getSelectedItem();
@@ -244,12 +253,8 @@ public class PropertyBox extends BaseComboBox implements PropertyControlled, Gho
 	}
 
 	final void this_itemStateChanged(ItemEvent e) {
-//		if(e.getStateChange()!=ItemEvent.SELECTED) {
-//			return;
-//		}
 		if (myProperty == null) {
 			System.err.println("Property box changed before it was set!");
-			// return;
 		}
 		if (myValueProperty == null) {
 			try {
@@ -288,6 +293,17 @@ public class PropertyBox extends BaseComboBox implements PropertyControlled, Gho
 
 	public final int getValidationState() {
 		return myValidationState;
+	}
+
+	public void propertyChange(PropertyChangeEvent evt) {
+		if(evt.getSource().equals(myProperty)) {
+			System.err.println("change: "+evt.getOldValue()+" new: "+evt.getNewValue());
+			setProperty(myProperty);
+		} else {
+			//huh?!
+			System.err.println("snappetniet");
+//			myProperty.removePropertyChangeListener(this);
+		}
 	}
 
 }

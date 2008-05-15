@@ -179,7 +179,7 @@ public class MessageTable
     }
   }
 
-  public class EditRowDialog
+  class EditRowDialog
       extends JDialog {
     MessageTable myTable;
     private Message m, backup;

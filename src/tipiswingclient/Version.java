@@ -22,7 +22,7 @@
  * SUCH DAMAGE.
  * ====================================================================
  */
-package navajoswingclient;
+package tipiswingclient;
 /**
  *
  * 2.0.12: Added a nullcheck in the ConditionErrorParser.

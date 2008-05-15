@@ -41,10 +41,10 @@ public class BaseField extends JTextField implements ChangeMonitoring, Validatab
   public BaseField() {
 //    myDocument = getDocument();
 //  	setOpaque(false);
-    try {
+	  this.setMinimumSize(new Dimension(4, ComponentConstants.PREFERRED_HEIGHT));
+	       try {
       res = SwingClient.getUserInterface().getResource("com.dexels.sportlink.client.swing.TextLabels");
-      jbInit();
-    }
+     }
     catch(Exception e) {
       e.printStackTrace();
     }
@@ -63,17 +63,6 @@ public class BaseField extends JTextField implements ChangeMonitoring, Validatab
     //setBackground(b?Color.white:Color.lightGray);
   }
 
-  private final void jbInit() throws Exception {
-
-
-    this.setPreferredSize(new Dimension(4, ComponentConstants.PREFERRED_HEIGHT));
-    this.addFocusListener(new java.awt.event.FocusAdapter() {
-      public void focusGained(FocusEvent e) {
-//        SwingClient.getUserInterface().setStatusText(myName);
-//        selectAll();
-      }
-    });
-  }
 
 
   public void resetChanged() {
@@ -224,22 +213,5 @@ public class BaseField extends JTextField implements ChangeMonitoring, Validatab
     return false;
   }
 //
-
-
-  public static void main(String args[]){
-    JFrame f = new JFrame("aap");
-    f.setSize(800,600);
-    BaseField bf = new BaseField();
-
-
-    bf.setText("klopgeestgeit");
-    bf.setPreferredSize(new Dimension(80, 20));
-    f.getContentPane().setLayout(new FlowLayout());
-    f.getContentPane().add(bf);
-    f.getContentPane().add(new JButton("aap"));
-    f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-    f.setVisible(false);
-  }
-
 
 }

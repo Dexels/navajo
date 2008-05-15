@@ -5,6 +5,7 @@ import com.dexels.navajo.document.*;
 
 import java.util.List;
 import java.awt.*;
+import java.awt.event.*;
 import java.beans.*;
 
 import javax.swing.*;
@@ -55,6 +56,7 @@ public final class MultipleSelectionPropertyList extends JPanel implements Prope
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		setBackground(Color.red);
 	}
 
 	public void setOrderBySelected(boolean b) {
@@ -85,7 +87,7 @@ public final class MultipleSelectionPropertyList extends JPanel implements Prope
 	public void setSelectedColor(Color c) {
 		try {
 			((PropertyCellRenderer) myList.getCellRenderer()).setSelectedColor(c);
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			e.printStackTrace();
 		}
 	}
@@ -107,30 +109,28 @@ public final class MultipleSelectionPropertyList extends JPanel implements Prope
 	}
 
 	private final void jbInit() throws Exception {
-		this.setLayout(new GridBagLayout());
+		this.setLayout(new BorderLayout());
 		myList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
 				this_valueChanged(e);
 			}
 		});
-		// setMinimumSize(new Dimension(1,1));
-		// setMaximumSize(new Dimension(5000,5000));
-		// myList.setMaximumSize(new Dimension(100,100));
-		// myModel.addListDataListener(new ListDataListener() {
-		// public void intervalAdded(ListDataEvent e) {
-		// }
-		// public void intervalRemoved(ListDataEvent e) {
-		// }
-		// public void contentsChanged(ListDataEvent e) {
-		// }
-		// });
+		
+//		myList.addPropertyChangeListener(new PropertyChangeListener(){
+//
+//			public void propertyChange(PropertyChangeEvent evt) {
+//				System.err.println("PROP: "+evt.getPropertyName()+" size: "+getSize()+" pref: "+getPreferredSize());
+//				System.err.println("SCROLLSIZE: "+jScrollPane1.getSize()+" PREFSCROLL: "+jScrollPane1.getPreferredSize());
+//			}});
+
+	
 		jScrollPane1.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		myList.setFixedCellHeight(16);
+//		myList.setFixedCellHeight(16);
 		// jScrollPane1.setPreferredSize(myList.getPreferredSize());
+//		jScrollPane1.add(myList);
 		jScrollPane1.getViewport().setView(myList);
 		// jScrollPane1.add(myList);
-		this.add(jScrollPane1, new GridBagConstraints(0, 0, 1, 1, 1, 1, GridBagConstraints.NORTHWEST, GridBagConstraints.BOTH, new Insets(
-				0, 0, 0, 0), 0, 0));
+		this.add(jScrollPane1, BorderLayout.CENTER);
 
 		// setBackground(Color.CYAN);
 		// System.err.println("*************************************");
@@ -144,7 +144,7 @@ public final class MultipleSelectionPropertyList extends JPanel implements Prope
 		// System.err.println("SETTING ROWCOUNT>> "+i);
 		// Thread.dumpStack();
 		myList.setVisibleRowCount(i);
-		myVisibleRowCount = i;
+//		myVisibleRowCount = i;
 	}
 
 	public final void setProperty(Property p) {
@@ -203,7 +203,7 @@ public final class MultipleSelectionPropertyList extends JPanel implements Prope
 		}
 		isReloading = false;
 
-		setVisibleRowCount(myVisibleRowCount);
+//		setVisibleRowCount(myVisibleRowCount);
 	}
 
 	public final void update() {

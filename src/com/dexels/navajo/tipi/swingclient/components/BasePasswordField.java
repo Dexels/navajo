@@ -24,8 +24,7 @@ import com.dexels.navajo.tipi.swingclient.*;
 
 public class BasePasswordField extends JPasswordField  implements ChangeMonitoring, Validatable {
 
-  ResourceBundle res;
-
+  
   private String myName = "";
   private String myText = "";
   private int validationState = VALID;
@@ -37,69 +36,37 @@ public class BasePasswordField extends JPasswordField  implements ChangeMonitori
   private boolean changed = false;
   public BasePasswordField() {
     myDocument = getDocument();
+    this.setMinimumSize(new Dimension(4, ComponentConstants.PREFERRED_HEIGHT));
     try {
-      res = SwingClient.getUserInterface().getResource("com.dexels.sportlink.client.swing.TextLabels");
-      jbInit();
-    }
-    catch(Exception e) {
-      e.printStackTrace();
-    }
+		jbInit();
+	} catch (Exception e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+    
   }
 
-  public void setLabel(String s) {
-    myName = res.getString(s);
-    setToolTipText(res.getString(s));
-  }
 
-  public void setEnabled(boolean b) {
-    super.setEnabled(b);
-    //setBackground(b?Color.white:Color.lightGray);
-  }
 
   private final void jbInit() throws Exception {
     myDocument.addDocumentListener(new javax.swing.event.DocumentListener() {
       public void insertUpdate(DocumentEvent e) {
-        myDocument_insertUpdate(e);
-      }
+    	    setChanged(true);
+   }
       public void removeUpdate(DocumentEvent e) {
-        myDocument_removeUpdate(e);
-      }
+    	    setChanged(true);
+   }
       public void changedUpdate(DocumentEvent e) {
-        myDocument_changedUpdate(e);
-      }
+    	    setChanged(true);
+   }
     });
-    this.setPreferredSize(new Dimension(4, ComponentConstants.PREFERRED_HEIGHT));
-    this.addFocusListener(new java.awt.event.FocusAdapter() {
+     this.addFocusListener(new java.awt.event.FocusAdapter() {
       public void focusGained(FocusEvent e) {
-        this_focusGained(e);
-      }
-      public void focusLost(FocusEvent e) {
-        this_focusLost(e);
-      }
+    	   selectAll();
+     }
+     
     });
   }
-
-  void this_focusGained(FocusEvent e) {
-//    SwingClient.getUserInterface().setStatusText(myName);
-    this.selectAll();
-  }
-
-  void this_focusLost(FocusEvent e) {
-//    if (!myText.equals(getText())) {
-//      System.err.println("Setting changed = true");
-//      changed = true;
-//    }
-//
-//    SwingClient.getUserInterface().setStatusText("");
-  }
-
-//  public void init(Message msg) {
-//  }
-//  public void load(Message msg) {
-//  }
-//  public void store(Message msg) {
-//  }
-
 
   public void resetChanged() {
     changed = false;
@@ -117,18 +84,6 @@ public class BasePasswordField extends JPasswordField  implements ChangeMonitori
   public void setChanged(boolean b) {
     revalidate();
     changed = b;
-  }
-
-  void myDocument_changedUpdate(DocumentEvent e) {
-    setChanged(true);
-  }
-
-  void myDocument_insertUpdate(DocumentEvent e) {
-    setChanged(true);
-  }
-
-  void myDocument_removeUpdate(DocumentEvent e) {
-    setChanged(true);
   }
 
   public void setValidationState(int state){

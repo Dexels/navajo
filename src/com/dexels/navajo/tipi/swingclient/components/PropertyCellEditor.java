@@ -3,6 +3,8 @@ package com.dexels.navajo.tipi.swingclient.components;
 import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.beans.*;
+
 import javax.swing.*;
 import javax.swing.event.*;
 import com.dexels.navajo.document.*;
@@ -11,8 +13,8 @@ import java.util.*;
 import javax.swing.border.*;
 
 
-public  class PropertyCellEditor
-    implements TableCellEditor, ListSelectionListener {
+public  class PropertyCellEditor 
+    implements TableCellEditor, ListSelectionListener, PropertyChangeListener {
 
   private Property myProperty = null;
 
@@ -24,11 +26,29 @@ public  class PropertyCellEditor
   private int lastRow = -1;
   private int lastColumn = -1;
   private boolean wasSelected = false;
-  private Property copy;
+//  private Property copy;
   private JButton rowButton = new JButton();
   private boolean isChangingSelection = false;
   private int lastSelectedRow = 0;
 
+
+  MultiSelectPropertyBox myMultiSelectPropertyBox = null;
+  String myPropertyType = null;
+  PropertyBox myPropertyBox = null;
+  PropertyField myPropertyField = null;
+  PropertyCheckBox myPropertyCheckBox = null;
+  DatePropertyField myDatePropertyField = null;
+  IntegerPropertyField myIntegerPropertyField = null;
+  FloatPropertyField myFloatPropertyField = null;
+  MoneyField myMoneyPropertyField = null;
+  PercentageField myPercentagePropertyField = null;
+  ClockTimeField myClockTimeField = null;
+  StopwatchTimeField myStopwatchTimeField = null;
+
+private Object myOldValue;
+  
+  
+  
   public PropertyCellEditor() {}
 
   public PropertyCellEditor(MessageTable mm) {
@@ -61,25 +81,17 @@ public  class PropertyCellEditor
   }
 
 private Component doGetEditor(Object value, boolean isSelected, int row, int column) {
-	System.err.println("Starting edit: "+row+" col: "+column+" value: "+value+" selected: "+isSelected);
+//	System.err.println("Starting edit: "+row+" col: "+column+" value: "+value+" selected: "+isSelected);
 	  lastSelectedRow = row;
-    if(Integer.class.isInstance(value)){
+	  if(myProperty!=null) {
+		  myProperty.removePropertyChangeListener(this);
+	  }
+	  if(Integer.class.isInstance(value)){
       rowButton.setText(""+(row+1));
       return rowButton;
     }
 
-    MultiSelectPropertyBox myMultiSelectPropertyBox = null;
-    String myPropertyType = null;
-    PropertyBox myPropertyBox = null;
-    PropertyField myPropertyField = null;
-    PropertyCheckBox myPropertyCheckBox = null;
-    DatePropertyField myDatePropertyField = null;
-    IntegerPropertyField myIntegerPropertyField = null;
-    FloatPropertyField myFloatPropertyField = null;
-    MoneyField myMoneyPropertyField = null;
-    PercentageField myPercentagePropertyField = null;
-    ClockTimeField myClockTimeField = null;
-    StopwatchTimeField myStopwatchTimeField = null;
+
     Border b = new LineBorder(Color.black, 2);
 //    System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>> Editor: " + isSelected + ", " + row + ", " + column);
 //    myTable = (MessageTable) table;
@@ -90,7 +102,8 @@ private Component doGetEditor(Object value, boolean isSelected, int row, int col
 //    myTable.setEditingRow(row);
     if (Property.class.isInstance(value)) {
       myProperty = (Property) value;
-      copy = (Property) myProperty.clone();
+      myOldValue = myProperty.getTypedValue();
+      myProperty.addPropertyChangeListener(this);
       myPropertyType = (String) myProperty.getType();
       if (myPropertyType.equals(Property.SELECTION_PROPERTY)) {
 
@@ -140,19 +153,33 @@ private Component doGetEditor(Object value, boolean isSelected, int row, int col
 
           if (myPropertyBox == null) {
             myPropertyBox = new PropertyBox();
-//            myPropertyBox.addItemListener(new ItemListener() {
-//              public void itemStateChanged(ItemEvent e) {
-//                System.err.println(">>> " + e.getStateChange());
-//                if (e.SELECTED == e.getStateChange()) {
-////                ( (PropertyControlled) e.getSource()).update();
+            myPropertyBox.addKeyListener(new KeyAdapter(){
+
+				public void keyPressed(KeyEvent k) {
+//					if(k.getKeyCode()==KeyEvent.VK_)
+				}
+            	});
+            
+            myPropertyBox.addItemListener(new ItemListener() {
+              public void itemStateChanged(ItemEvent e) {
+                System.err.println(">>> " + e.getStateChange());
+                if (e.SELECTED == e.getStateChange()) {
+//                	( (PropertyControlled) e.getSource()).update();
 //                  if (!isChangingSelection) {
 //                    System.err.println("COMBOBOX FIRED TOWARDS EDITOR");
-//                    stopCellEditing();
+                	//updateProperty();
+                		try {
+                			myTable.fireChangeEvents(myPropertyBox.getProperty(), null, myProperty.getTypedValue());
+//                    		checkPropertyUpdate(myProperty, myPropertyBox.getLastSelection());
+					} catch (NavajoException e1) {
+						e1.printStackTrace();
+					}
+                	stopCellEditing();
 //                  }
 //
-//                }
-//              }
-//            });
+                }
+          }}
+              );
           }
           isChangingSelection = true;
           myPropertyBox.setProperty(myProperty);
@@ -165,7 +192,8 @@ private Component doGetEditor(Object value, boolean isSelected, int row, int col
           SwingUtilities.invokeLater(new Runnable(){
 
 			public void run() {
-		          x.showPopup();
+		          x.setPopupVisible(true);
+		          
 			}});
           
           isChangingSelection = false;
@@ -470,12 +498,17 @@ private Component doGetEditor(Object value, boolean isSelected, int row, int col
   
   public  boolean stopCellEditing() {
 //    System.err.println("--------------------------------------------------------------->> Entering stopCellEditor!!!");
-    if (lastComponent != null) {
-      updateProperty();
-      FocusListener[] fl = lastComponent.getFocusListeners();
-      for (int i = 0; i < fl.length; i++) {
-        lastComponent.removeFocusListener(fl[i]);
-      }
+//    if (lastComponent != null) {
+//		  System.err.println("Editing!");
+	      if(lastComponent!=null && ((PropertyControlled)lastComponent).getProperty()!=null) {
+		      updateProperty();
+	     	  ( (PropertyControlled) lastComponent).setProperty(null);
+	     	  
+	      }
+ 	   //      FocusListener[] fl = lastComponent.getFocusListeners();
+//      for (int i = 0; i < fl.length; i++) {
+//        lastComponent.removeFocusListener(fl[i]);
+//      }
 
       myTable.removeEditor();
 
@@ -486,27 +519,50 @@ private Component doGetEditor(Object value, boolean isSelected, int row, int col
     	  ( (PropertyControlled) lastComponent).setProperty(null);
        
     }
-    }
+    
 
-    if(lastRow > -1){
-      for (int i = 0; i < myListeners.size(); i++) {
-        CellEditorListener ce = (CellEditorListener) myListeners.get(i);
-        ce.editingStopped(new MessageTableChangeEvent(myTable, lastRow, lastColumn));
-      }
-    }
+//    if(lastRow > -1){
+//      for (int i = 0; i < myListeners.size(); i++) {
+//        CellEditorListener ce = (CellEditorListener) myListeners.get(i);
+//        ce.editingStopped(new MessageTableChangeEvent(myTable, lastRow, lastColumn));
+//      }
+//    }
     return true;
   }
 
 	public void updateProperty() {
-
+//		Thread.dumpStack();
 		if (lastComponent != null) {
 			try {
-				((PropertyControlled) lastComponent).update();
+				Property p = ((PropertyControlled)lastComponent).getProperty();
+				if(myProperty == p && myProperty!=null) {
+					checkPropertyUpdate(p,p.getTypedValue());
+				}
 			} catch (PropertyTypeException ex1) {
 				System.err.println(ex1.getMessage());
+			} catch (NavajoException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		} else {
 			System.err.println("Que?");
+		}
+	}
+
+	private void checkPropertyUpdate(Property p, Object old) throws NavajoException {
+//		System.err.println("VALU: "+((PropertyControlled) lastComponent).getProperty().getTypedValue());
+		((PropertyControlled) lastComponent).update();
+//		System.err.println("VALU2: "+((PropertyControlled) lastComponent).getProperty().getTypedValue());
+//		Thread.dumpStack();
+		Object newValue = p.getTypedValue();
+		if (old==null) {
+			if(newValue!=null) {
+				myTable.fireChangeEvents(p, old, newValue);
+			}
+		} else {
+			if(!old.equals(newValue)) {
+				myTable.fireChangeEvents(p, old, newValue);
+			}
 		}
 	}
 
@@ -524,10 +580,14 @@ private Component doGetEditor(Object value, boolean isSelected, int row, int col
 		return false;
 	}
 
-  public  Property getInitialProperty() {
-    return copy;
-  }
+//  public  Property getInitialProperty() {
+//    return copy;
+//  }
 
+  public Object getOldValue() {
+	  return myOldValue;
+  }
+  
   public  Property getProperty() {
     return myProperty;
   }
@@ -558,5 +618,14 @@ private Component doGetEditor(Object value, boolean isSelected, int row, int col
     }
     return false;
   }
+
+public void propertyChange(PropertyChangeEvent p) {
+	PropertyControlled tc = (PropertyControlled)lastComponent;
+	if(lastComponent!=null) {
+		if(myProperty==tc.getProperty()) {
+			tc.setProperty(myProperty);
+		}
+	}
+}
 
 }

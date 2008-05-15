@@ -359,7 +359,7 @@ public class MessageTablePanel
           //!!!comp.requestFocusInWindow(); SETTING FOCUS RESULTS IN UNDESIRED BEHAVIOUR!
           
           comp.addPropertyEventListener(new PropertyEventListener(){
-        		public void propertyEventFired(Property p, String id, Validatable v){
+        		public void propertyEventFired(Property p, String id, Validatable v,boolean internal){
         			if("onActionPerformed".equals(id)){
         				pop.setVisible(false);
         			}
@@ -1127,7 +1127,7 @@ public void updateTableSize() {
 //    if (tableFooter==null) {
 //
 //    }
-    if (tc == null) {
+	  if (tc == null) {
       if (tableFooter != null) {
     	  System.err.println("Removind footer renderer!");
         tableFooter.setDefaultRenderer(tc);
@@ -1137,13 +1137,13 @@ public void updateTableSize() {
       }
     }
     else {
-      tableFooter = new MessageTableFooter();
+      tableFooter = new MessageTableFooter(messageTable,tc);
       
       // changed this:
-      tableFooter.setDefaultRenderer(new CustomTableHeaderRenderer());
+//      tableFooter.setDefaultRenderer(tc);
       messageTable.setMessageTableFooter(tableFooter);
       messageTable.getColumnModel().addColumnModelListener(tableFooter);
-
+      tableFooter.setColumnModel(messageTable.getColumnModel());
       tableFooter.setDefaultRenderer(tc);
       tableFooter.setVisible(true);
       this.add(tableFooter, new GridBagConstraints(0, 2, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(2, 2, 2, 2), 0, 0));

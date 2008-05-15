@@ -2,6 +2,7 @@ package com.dexels.navajo.tipi.swingclient.components.remotecombobox;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.beans.*;
 import java.lang.reflect.*;
 import java.util.*;
 
@@ -15,6 +16,7 @@ import com.dexels.navajo.document.*;
 public class AjaxComboBox extends JComboBox {
 	private String messagePath;
 	private String propertyName;
+	private String valuePropertyName;
 	private int minCharCount = 1;
 	private final Vector propertyList = new Vector();
 
@@ -31,11 +33,12 @@ public class AjaxComboBox extends JComboBox {
 
 	private final ArrayList enterEventListeners = new ArrayList();
 	private boolean invalidFirstItem;
+	private Message loadMessage;
 	
 	public AjaxComboBox() {
 		setEditable(true);
 		final JTextComponent editor = (JTextComponent) getEditor().getEditorComponent();
-
+		editor.setDocument(new AjaxEditorDocument(this));
 		editor.addKeyListener(new KeyListener() {
 
 			public void keyPressed(KeyEvent e) {
@@ -43,39 +46,64 @@ public class AjaxComboBox extends JComboBox {
 
 			public void keyReleased(KeyEvent e) {
 
-				if (!e.isActionKey() || e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
-					// if (propertyList.isEmpty()) {
-					fireAjaxRefresh(editor.getText());
-					// } else {
-					// fireLocalRefresh(editor.getText());
-					// }
+			}
 
-				}
+			public void keyTyped(KeyEvent e) {
 				if(e.getKeyCode()== KeyEvent.VK_ENTER) {
 					int i = getSelectedIndex();
-					// Not checking for invalid first items
 					if(i>0 ) {
 						fireEnterEvent();
 					}
 				    hidePopup();
-				}
-			}
-
-			public void keyTyped(KeyEvent e) {
-			
+				}		
 			}
 
 		
 		});
-		// editor.getDocument().addDocumentListener(d);
+//		editor.addPropertyChangeListener(new PropertyChangeListener(){
+//
+//			public void propertyChange(PropertyChangeEvent evt) {
+//				if(evt.getPropertyName().equals("document")) {
+//					System.err.println("Property CHANGED! "+evt.getNewValue());
+//					Thread.dumpStack();
+//				}
+//			}});
+	}
+	
+	public Document getDocument() {
+		JTextComponent editor = (JTextComponent) getEditor().getEditorComponent();
+		return editor.getDocument();
+	}
+	
+	@Override
+	public void setSelectedItem(Object s) {
+		final JTextComponent editor = (JTextComponent) getEditor().getEditorComponent();
+		Document d = editor.getDocument();
+		if(d instanceof AjaxEditorDocument) {
+			AjaxEditorDocument ae = (AjaxEditorDocument)editor.getDocument();
+			ae.setFireEvents(false);
+			super.setSelectedItem(s);
+			ae.setFireEvents(true);
+		}
+	}
 
+
+	public void setText(String text) {
+		final JTextComponent editor = (JTextComponent) getEditor().getEditorComponent();
+		AjaxEditorDocument ae = (AjaxEditorDocument)editor.getDocument();
+		ae.setFireEvents(false);
+		editor.setText(text);
+		editor.setSelectionStart(0);
+		editor.setSelectionEnd(text.length());
+		editor.setCaretPosition(text.length());
+		ae.setFireEvents(true);
 	}
 	private void fireEnterEvent() {
 		for (int i = 0; i < enterEventListeners.size(); i++) {
 			ActionListener al = (ActionListener)enterEventListeners.get(i);
 			al.actionPerformed(new ActionEvent(this,1,"ENTER"));
 		}
-		
+		System.err.println("Enter fired!");
 	}
 	public String getValue() {
 		if (getSelectedItem() != null) {
@@ -95,8 +123,9 @@ public class AjaxComboBox extends JComboBox {
 	}
 
 	
-	protected void fireAjaxRefresh(final String overrideString) {
+	public void scheduleAjaxRefresh(final String overrideString, final AjaxEditorDocument d) {
 		Navajo nnn = (Navajo) cacheMap.get(overrideString);
+		d.setFireEvents(false);
 		if (nnn != null) {
 			loadData(nnn, overrideString);
 			return;
@@ -149,6 +178,8 @@ public class AjaxComboBox extends JComboBox {
 			myRemoteRefreshThread = new Thread(r);
 			myRemoteRefreshThread.start();
 		}
+		d.setFireEvents(true);
+
 	}
 
 	public void loadData(Navajo n, String select) {
@@ -177,7 +208,7 @@ public class AjaxComboBox extends JComboBox {
 			invalidFirstItem = false;
 		}
 		final int f2 = found;
-		final Message loadMessage = m;
+		loadMessage = m;
 		final Thread t = Thread.currentThread();
 		try {
 			Runnable r = new Runnable() {
@@ -186,7 +217,12 @@ public class AjaxComboBox extends JComboBox {
 					if(t.isInterrupted()) {
 						return;
 					}
-					setModel(new DefaultComboBoxModel(propertyList));
+					DefaultComboBoxModel model = new DefaultComboBoxModel(propertyList);
+					JTextComponent textComponent = ((JTextComponent) getEditor().getEditorComponent());
+					AjaxEditorDocument aed = (AjaxEditorDocument)textComponent.getDocument();
+					aed.setFireEvents(false);
+					setModel(model);
+					textComponent.setDocument(aed);
 					if (f2 == -1) {
 						setSelectedIndex(0);
 
@@ -196,7 +232,29 @@ public class AjaxComboBox extends JComboBox {
 							selectedMessage = loadMessage;
 						}
 					}
-					setPopupVisible(true);
+					final JTextComponent ed = (JTextComponent) getEditor().getEditorComponent();
+					if(ed.hasFocus()) {
+						setPopupVisible(true);
+					} else {
+						setPopupVisible(false);
+					}
+//					ed.setDocument(new AjaxEditorDocument(AjaxComboBox.this));
+					
+					ed.setCaretPosition(ed.getText().length());
+//					ed.getDocument().addDocumentListener(new DocumentListener(){
+//
+//						public void changedUpdate(DocumentEvent e) {
+//							System.err.println("up");
+//						}
+//						public void insertUpdate(DocumentEvent e) {
+//							System.err.println("in");
+//						}
+//						public void removeUpdate(DocumentEvent e) {
+//							System.err.println("re");
+//						}});
+
+					aed.setFireEvents(true);
+					
 				}
 			};
 			if (SwingUtilities.isEventDispatchThread()) {
@@ -237,9 +295,43 @@ public class AjaxComboBox extends JComboBox {
 	public void setPropertyName(String propertyName) {
 		this.propertyName = propertyName;
 	}
+	public void setValuePropertyName(String propertyName) {
+		this.valuePropertyName = propertyName;		
+	}
 
 	public Message getSelectedMessage() {
+		int sel = getSelectedIndex();
+		if(sel>=0) {
+			sel = invalidFirstItem?sel-1:sel;
+			if(sel<0) {
+				return null;
+			}
+			Message message = loadMessage.getMessage(sel);
+//			try {
+//				message.write(System.err);
+//			} catch (NavajoException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+			return message;
+		}
+		System.err.println("huh");
 		return selectedMessage;
+	}
+	
+	public Object getSelectedValue() {
+		if(getSelectedMessage()==null) {
+			return null;
+		}
+		if(valuePropertyName==null) {
+			return null;
+		}
+		Property pp = getSelectedMessage().getProperty(valuePropertyName);
+		if(pp==null) {
+			System.err.println("Warning: property does not exist");
+			return null;
+		}
+		return pp.getTypedValue();
 	}
 
 	public long getDelay() {
@@ -253,7 +345,7 @@ public class AjaxComboBox extends JComboBox {
 	public void flushCache() {
 		cacheMap.clear();
 		final JTextComponent editor = (JTextComponent) getEditor().getEditorComponent();
-		fireAjaxRefresh(editor.getText());
+		scheduleAjaxRefresh(editor.getText(), (AjaxEditorDocument) editor.getDocument());
 	}
 	/**
 	 * Delay is only relevant when syncRefresh = false The delay before a
@@ -302,23 +394,26 @@ public class AjaxComboBox extends JComboBox {
 	}
 	
 	public static void main(String[] args) throws ClientException {
-		AjaxComboBox localCombo;
+		final AjaxComboBox localCombo;
 		JFrame t = new JFrame("Test");
 
-		t.setSize(400, 200);
+		t.setSize(400, 500);
 		t.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		ClientInterface cc = NavajoClientFactory.createDefaultClient();
 		cc.setServerUrl("penelope1.dexels.com/sportlink/knvb/servlet/Postman");
 		cc.setUsername("");
 		cc.setPassword("");
 
+		final JButton myValue = new JButton("nada");
 		final Navajo init = NavajoClientFactory.getClient().doSimpleSend("club/InitSearchClubs");
 		// t.getContentPane().add(new JButton("a"));
 		localCombo = new AjaxComboBox();
 		localCombo.setMessagePath("Club");
+		localCombo.setValuePropertyName("ClubShortName");
 		localCombo.setPropertyName("ClubName");
-		localCombo.setDelay(1000);
+		localCombo.setDelay(500);
 		localCombo.setSyncRefresh(false);
+		localCombo.setText("Abcoude");
 		localCombo.setCurrentRemoteRefresh(new RemoteRefreshFilter() {
 
 			public Navajo getNavajo(String filterString) {
@@ -335,8 +430,16 @@ public class AjaxComboBox extends JComboBox {
 				return null;
 			}
 		});
+		
+		localCombo.addItemListener(new ItemListener(){
+
+			public void itemStateChanged(ItemEvent arg0) {
+				System.err.println("BAAA "+localCombo.getSelectedItem()+" index: "+localCombo.getSelectedIndex());
+				myValue.setText(""+localCombo.getSelectedValue());
+			}});
 
 		t.getContentPane().add(localCombo, BorderLayout.NORTH);
+		t.getContentPane().add(myValue,BorderLayout.CENTER);
 		t.setVisible(true);
 	}
 }

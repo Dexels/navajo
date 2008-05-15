@@ -22,10 +22,14 @@ import com.dexels.navajo.tipi.swingclient.components.sort.*;
  */
 
 public class MessageTableFooter extends JTableHeader {
-   public MessageTableFooter() {
+   public MessageTableFooter(JTable table, TableCellRenderer tc) {
      super.setReorderingAllowed(false);
-     setDefaultRenderer(new CustomTableHeaderRenderer());
-  }
+     super.setTable(table);
+     setDefaultRenderer(tc);
+     setBorder(null);
+     setOpaque(false);
+     table.setOpaque(false);
+   }
 
 }
 

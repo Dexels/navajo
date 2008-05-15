@@ -21,9 +21,11 @@ import java.awt.event.*;
  */
 
 public class CustomTableHeaderRenderer
-    extends JButton implements TableCellRenderer {
+    extends JLabel implements TableCellRenderer {
 
-  public static final int ASCENDING = 1;
+  private static final int DEFAULT_INSET = 3;
+
+public static final int ASCENDING = 1;
 
   public static final int DESCENDING = 2;
 
@@ -51,6 +53,11 @@ public class CustomTableHeaderRenderer
     catch (Exception e) {
       e.printStackTrace();
     }
+    setHorizontalTextPosition(SwingConstants.LEADING);
+    setIconTextGap(10);
+    setHorizontalAlignment(SwingConstants.LEADING);
+    
+//    setBorderPainted(false);
 //    setSortingState(NONE);
 
   }
@@ -72,23 +79,18 @@ public class CustomTableHeaderRenderer
     }
     switch (sortingState) {
       case ASCENDING:
-        changeIcon(down);
+        setIcon(down);
         break;
       case DESCENDING:
-        changeIcon(up);
+    	  setIcon(up);
         break;
       case NONE:
-        changeIcon(none);
+    	  setIcon(none);
         break;
     }
     repaint();
   }
 
-  private final void changeIcon(Icon newIcon) {
-    //Icon oldIcon = getIcon();
-//    firePropertyChange(ICON_CHANGED_PROPERTY,oldIcon,newIcon);
-    setIcon(newIcon);
-  }
 
   public int getSortingState(int column) {
     int sortingState = NONE;
@@ -103,17 +105,22 @@ public class CustomTableHeaderRenderer
                                                  boolean isSelected,
                                                  boolean hasFocus, int row,
                                                  int column) {
-    updateSorting(column);
+	  JPanel myPanel = new JPanel();
+	  myPanel.setLayout(new GridBagLayout());
+	  
+	  updateSorting(column);
      setText("" + table.getModel().getColumnName(column));
+     setBackground(Color.red);
+     myPanel.add(this,new GridBagConstraints(0,0,1,1,1,1,GridBagConstraints.CENTER,GridBagConstraints.BOTH,new Insets(DEFAULT_INSET,DEFAULT_INSET,DEFAULT_INSET,DEFAULT_INSET),0,0));
      revalidate();
-      ((MessageTable)table).setHeaderHeight(getPreferredSize().height);
-    return this;
+      ((MessageTable)table).setHeaderHeight(myPanel.getPreferredSize().height);
+    return myPanel;
   }
 
   private final void jbInit() throws Exception {
     this.setHorizontalAlignment(SwingConstants.LEADING);
     this.setHorizontalTextPosition(SwingConstants.LEADING);
-    this.setMargin(new Insets(0, 3, 0, 0));
+//    this.setMargin(new Insets(0, 3, 0, 0));
   }
 
 //  protected void printComponent(Graphics g) {

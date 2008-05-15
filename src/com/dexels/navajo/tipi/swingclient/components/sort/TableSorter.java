@@ -382,7 +382,7 @@ public class TableSorter
     cth.setSortingState(column,ascending ? CustomTableHeaderRenderer.ASCENDING :
                         CustomTableHeaderRenderer.DESCENDING);
 
-    cth.setSelected(false);
+//    cth.setSelected(false);
     final MessageTable m = (MessageTable)tableView;
     m.repaintHeader();
   }
