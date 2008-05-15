@@ -31,11 +31,18 @@
       <param name="password" type="string" required="true" />
    </tipiaction>
 
-
+   <tipiaction name="injectMessage" class="TipiInjectMessage" package="com.dexels.navajo.tipi.actions">
+      <param name="service" type="string" required="true" />
+      <param name="message" type="message" required="true" />
+   </tipiaction>
+   
    <tipiaction name="setUsername" class="TipiSetUsername" package="com.dexels.navajo.tipi.actions">
       <param name="username" type="string" required="true" />
    </tipiaction>
-
+   
+   <tipiaction name="unloadNavajo" class="TipiUnloadNavajo" package="com.dexels.navajo.tipi.actions">
+      <param name="service" type="string" required="true" />
+   </tipiaction>
 
    <tipiaction name="setPassword" class="TipiSetPassword" package="com.dexels.navajo.tipi.actions">
       <param name="password" type="string" required="true" />
@@ -248,4 +255,9 @@
       <param name="value" type="object" required="true" />
    </tipiaction>
 
+    <tipiaction name="setCookie"  class="TipiSetCookie" package="com.dexels.navajo.tipi.actions">
+        <param name="name" type="string"/>
+        <param name="value" type="string"/>
+    </tipiaction>
+    
 </tid>

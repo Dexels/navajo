@@ -70,7 +70,7 @@ public class TipiThreadPool {
 				return null;
 			}
 
-			TipiExecutable te = (TipiExecutable) myWaitingQueue.get(0);
+			TipiExecutable te = myWaitingQueue.get(0);
 			myWaitingQueue.remove(0);
 			return te;
 		}
@@ -124,11 +124,10 @@ public class TipiThreadPool {
 	}
 
 	public void enqueueExecutable(TipiExecutable exe) throws TipiException {
-		if (poolSize == poolSize) {
+		if (poolSize == 0) {
 			// For echo:
 			try {
-				System.err.println("EXE: "+exe);
-//				exe.getEvent().performAction(exe.getEvent(), exe.getEvent(), 0);
+				exe.getEvent().performAction(exe.getEvent(), exe.getEvent(), 0);
 				exe.performAction(null, null, 0);
 			} catch (TipiBreakException e) {
 				e.printStackTrace();
@@ -145,7 +144,7 @@ public class TipiThreadPool {
 		notifyAll();
 	}
 
-	public void performAction(final TipiEvent te, final TipiEventListener listener) throws TipiException {
+	public void performAction(final TipiEvent te, final TipiEventListener listener) throws TipiException, TipiBreakException {
 		myListenerMap.put(te, listener);
 		// System.err.println(">>>>>>>>> >>>>>>>>>>>>>>>>>>>>>>>>>>>Enqueueing
 		// exe, myListenerMap is " + myListenerMap.size()+" thread:

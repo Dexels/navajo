@@ -39,7 +39,7 @@ public class TipiConvertTipi extends TipiAction {
 
 	protected void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiBreakException, com.dexels.navajo.tipi.TipiException {
 
-		File dir = new File("C:/Program Files/Apache Software Foundation/Tomcat 5.5/webapps/SportlinkMatchForms/tipi");
+		File dir = new File("C:/projecten/TipiSvgDemo/tipi");
 		// processFile(file);
 		processDir(dir, ".xml", "");
 	}

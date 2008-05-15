@@ -1038,7 +1038,12 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 						e.printStackTrace();
 					}
  				} else {
-					te.asyncPerformAction(this, event);
+					try {
+						te.asyncPerformAction(this, event);
+					} catch(Throwable e) {
+						getContext().showInternalError("Error performing event: "+te.getEventName()+" for component: "+te.getComponent().getPath(), e);
+						e.printStackTrace();
+					}
 				}
 			}
 		}

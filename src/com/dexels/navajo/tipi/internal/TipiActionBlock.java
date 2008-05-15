@@ -124,6 +124,10 @@ public class TipiActionBlock implements TipiExecutable {
 					tc.setCurrentEvent(te);
 					o = Expression
 					.evaluate(myExpression, ((TipiComponent) source).getNearestNavajo(), null, null, null, (TipiComponent) source);
+					if(o.value==null) {
+						myContext.showInternalError("Block expression failed: "+myExpression);
+						return false;
+					}
 					if (o.value.toString().equals("true")) {
 						return true;
 					}

@@ -245,7 +245,7 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
 		if (visibleCondition != null) {
 			setQuestionVisible(isRelevant());
 		}
-		System.err.println("In updateQuestions");
+//		System.err.println("In updateQuestions");
 //		Thread.dumpStack();
 		boolean invalidFound = false;
 		List<TipiComponent> subQ = getSubQuestionList();

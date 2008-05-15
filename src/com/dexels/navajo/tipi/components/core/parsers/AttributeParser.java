@@ -29,6 +29,10 @@ public class AttributeParser extends BaseTipiParser {
 		String componentPath = path.substring(0, path.indexOf(":"));
 		String attr = path.substring(path.indexOf(":") + 1);
 		TipiComponent tc = getTipiComponent(source, componentPath);
+		if(tc==null) {
+			myContext.showInternalError("Can not parse attribute: "+path+" component not found.");
+			return null;
+		}
 
 		Object o = tc.getValue(attr);
 
