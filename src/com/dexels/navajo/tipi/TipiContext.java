@@ -46,6 +46,9 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
     public abstract void runSyncInEventThread(Runnable r);
     public abstract void runAsyncInEventThread(Runnable r);
 
+    public abstract void setCookie(String key, String value);
+    public abstract String getCookie(String key);
+    
 	/**
 	 * Maps a service to a list of datacomponents. Components register here by
 	 * having a service tag
@@ -71,7 +74,7 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 	// protected final Map tipiActionDefMap = new HashMap();
 
 	private boolean contextShutdown = false;
-
+	protected boolean fakeJars = false;
 	protected final Map<String, String> lazyMap = new HashMap<String, String>();
 	protected final List<String> includeList = new ArrayList<String>();
 	protected TipiErrorHandler eHandler;
@@ -114,7 +117,7 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 
 	protected DescriptionProvider myDescriptionProvider = null;
 
-	private final Map<String,Object> globalMap = new HashMap<String,Object>();
+	protected final Map<String,Object> globalMap = new HashMap<String,Object>();
 
 	protected final long startTime = System.currentTimeMillis();
 
@@ -167,19 +170,22 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 		initializeExtensions(tt);
 		if (coreExtensionList.isEmpty()) {
 			System.err.println("Beware: no extensions. Running without jars? Entering fake mode...");
+			fakeJars = true;
 			fakeExtensions();
 		}
-
+		System.err.println("extensions loaded");
 		NavajoFactory.getInstance().setExpressionEvaluator(new DefaultExpressionEvaluator());
 		tipiResourceLoader = new ClassPathResourceLoader();
 		setStorageManager(new TipiNullStorageManager());
 		 try {
 			Class c = Class.forName("com.dexels.navajo.tipi.tools.TipiSocketDebugger");
 			hasDebugger = true;
+			System.err.println("debugger loaded");
 		} catch (Throwable e) {
 			System.err.println("Starting without development environment");
 			hasDebugger = false;
 		}
+
 
 	}
 
@@ -824,7 +830,7 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 				}
 				/** @todo Throw these exceptions */
 				catch (XMLParseException ex) {
-					showInternalError("XML parse exception while parsing file: " + location + " at line: " + ex.getLineNr());
+					showInternalError("XML parse exception while parsing file: " + location + " at line: " + ex.getLineNr(),ex);
 					ex.printStackTrace();
 					return;
 				} catch (IOException ex) {
@@ -1923,6 +1929,9 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 		} catch (TipiException e) {
 			e.printStackTrace();
 			showInternalError("Error performing action: "+te.getEventName()+" on component: "+te.getComponent().getPath(), e);
+		} catch (TipiBreakException e) {
+			e.printStackTrace();
+			showInternalError("Error performing action: "+te.getEventName()+" on component: "+te.getComponent().getPath(), e);
 		} catch (Throwable e) {
 			e.printStackTrace();
 			showInternalError("Severe error performing action: "+te.getEventName()+" on component: "+te.getComponent().getPath(), e);
@@ -1976,7 +1985,7 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 		}
 	}
 
-	public void enqueueExecutable(TipiExecutable te) throws TipiException {
+	public void enqueueExecutable(TipiExecutable te) throws TipiException, TipiBreakException {
 		myThreadPool.enqueueExecutable(te);
 	}
 

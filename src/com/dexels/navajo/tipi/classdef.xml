@@ -132,6 +132,9 @@
    <tipi-parser name="alias" type="java.lang.Object" parser="com.dexels.navajo.tipi.components.core.parsers.AliasParser" />
    <tipi-parser name="binary" type="com.dexels.navajo.document.types.Binary" parser="com.dexels.navajo.tipi.components.core.parsers.BinaryParser" />
 
+    <tipi-parser name="cookie" parser="com.dexels.navajo.tipi.components.core.parsers.CookieParser" type="java.lang.String"/>
+    <tipi-parser name="cookieref" parser="com.dexels.navajo.tipi.components.core.parsers.CookieRefParser" type="com.dexels.navajo.tipi.internal.TipiReference"/>
+    
 
    <tipi-parser name="navajo" type="com.dexels.navajo.document.Navajo" parser="com.dexels.navajo.tipi.components.core.parsers.NavajoParser" />
 
