@@ -4,6 +4,9 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 
+import javax.swing.event.*;
+import javax.swing.text.*;
+
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
@@ -32,6 +35,8 @@ public class TipiAjaxCombobox extends TipiSwingDataComponentImpl {
 
 	private String currentSelection = null;
 
+	protected Object selectedValue;
+
 	public Object createContainer() {
 		myCombo = new AjaxComboBox();
 		TipiHelper th = new TipiSwingHelper();
@@ -39,8 +44,12 @@ public class TipiAjaxCombobox extends TipiSwingDataComponentImpl {
 		addHelper(th);
 		myCombo.setCurrentRemoteRefresh(new RemoteRefreshFilter() {
 			public Navajo getNavajo(String filterString) {
+				System.err.println				("Gettin: "+filterString);
 				currentSelection = filterString;
 				Map<String,Object> m = new HashMap<String,Object>();
+				selectedValue = myCombo.getSelectedValue();
+				getAttributeProperty("selectedValue").setAnyValue(selectedValue);
+				m.put("selectedValue", selectedValue);
 				m.put("text", currentSelection);
 				try {
 					performTipiEvent("onChange", m, true);
@@ -55,19 +64,46 @@ public class TipiAjaxCombobox extends TipiSwingDataComponentImpl {
 		myCombo.addItemListener(new ItemListener() {
 
 			public void itemStateChanged(ItemEvent arg0) {
-
 				try {
 					String sel = (String) myCombo.getSelectedItem();
 					Map<String,Object> m = new HashMap<String,Object>();
+					selectedValue = myCombo.getSelectedValue();
+					getAttributeProperty("selectedValue").setAnyValue(selectedValue);
+					m.put("selectedValue", selectedValue);
 					m.put("value", sel);
 					performTipiEvent("onSelect", m, false);
 				} catch (TipiException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
 		});
 
+		myCombo.getDocument().addDocumentListener(new DocumentListener(){
+
+			public void changedUpdate(DocumentEvent de) {
+				try {
+					fireTextChange(de.getDocument().getText(0, de.getDocument().getLength()));
+				} catch (BadLocationException e) {
+					e.printStackTrace();
+				}
+			}
+
+			public void insertUpdate(DocumentEvent de) {
+				try {
+					fireTextChange(de.getDocument().getText(0, de.getDocument().getLength()));
+				} catch (BadLocationException e) {
+					e.printStackTrace();
+				}
+						}
+
+			public void removeUpdate(DocumentEvent de) {
+				try {
+					fireTextChange(de.getDocument().getText(0, de.getDocument().getLength()));
+				} catch (BadLocationException e) {
+					e.printStackTrace();
+				}
+						}});
+		
 		myCombo.addEnterEventListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent arg0) {
@@ -75,6 +111,9 @@ public class TipiAjaxCombobox extends TipiSwingDataComponentImpl {
 					myCombo.hidePopup();
 					String sel = (String) myCombo.getSelectedItem();
 					Map<String,Object> m = new HashMap<String,Object>();
+					selectedValue = myCombo.getSelectedValue();
+					getAttributeProperty("selectedValue").setAnyValue(selectedValue);
+					m.put("selectedValue", selectedValue);
 					m.put("value", sel);
 					performTipiEvent("onEnter", m, false);
 				} catch (TipiException e) {
@@ -86,6 +125,18 @@ public class TipiAjaxCombobox extends TipiSwingDataComponentImpl {
 		return myCombo;
 	}
 
+	public void fireTextChange(String text) {
+		Map<String,Object> m = new HashMap<String,Object>();
+		selectedValue = myCombo.getSelectedValue();
+		getAttributeProperty("selectedValue").setAnyValue(selectedValue);
+		m.put("text", text);
+		try {
+			performTipiEvent("onTextChange", m, false);
+		} catch (TipiException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	// localCombo = new AjaxComboBox();
 	// localCombo.setMessagePath("Club");
 	// localCombo.setPropertyName("ClubName");
@@ -106,11 +157,17 @@ public class TipiAjaxCombobox extends TipiSwingDataComponentImpl {
 		if (name.equals("propertyName")) {
 			myCombo.setPropertyName((String) object);
 		}
+		if (name.equals("valuePropertyName")) {
+			myCombo.setValuePropertyName((String) object);
+		}		
 		if (name.equals("syncRefresh")) {
 			myCombo.setSyncRefresh(((Boolean) object).booleanValue());
 		}
 		if (name.equals("refreshDelay")) {
 			myCombo.setDelay(((Integer) object).intValue());
+		}
+		if (name.equals("text")) {
+			myCombo.setText((String) object);
 		}
 	}
 

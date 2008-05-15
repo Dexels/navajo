@@ -211,9 +211,10 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 		for (Message message : ss) {
 			columnMessage.removeMessage(message);
 		}
-		for (XMLElement child : columnList) {
-			int i = 0;
+		int i = 0;
 
+		for (XMLElement child : columnList) {
+			
 			loadColumn(i++, child,columnMessage);
 		}
 		
@@ -274,6 +275,8 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 			mm.setTypeHint(name, typehint);
 		}
 		if (aggr != null) {
+//			System.err.println("Adding agr: "+aggr+" col: "+i);
+//			Thread.dumpStack();
 			addAggregate(i, aggr);
 		}
 		mm.messageChanged();
@@ -535,7 +538,6 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 
 			runSyncInEventThread(new Runnable() {
 				public void run() {
-					System.err.println("SETTING SAVE PATH: " + object.toString());
 					setColumnDefinitionSavePath(object.toString());
 				}
 			});
@@ -903,12 +905,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 				}});
 		}
 		myFooterRenderer.addAggregate(columnIndex, expression);
-		SwingUtilities.invokeLater(new Runnable(){
-
-			public void run() {
-				System.err.println("Footer size: "+myFooterRenderer.getSize());
-				
-			}});
+	
 	}
 
 	public void flushAggregateValues() {

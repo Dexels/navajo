@@ -44,6 +44,7 @@ public class SwingTipiContext extends TipiContext {
 
 	private final Set<Thread> threadSet = Collections.synchronizedSet(new HashSet<Thread>());
 	private final Set<Thread> dialogThreadSet = Collections.synchronizedSet(new HashSet<Thread>());
+	private final Map<String,String> cookieMap = new HashMap<String, String>();
 	private boolean dialogShowing = false;
 
 //	private JDialog blockingDialog;
@@ -65,7 +66,13 @@ public class SwingTipiContext extends TipiContext {
 		}
 		JFrame.setDefaultLookAndFeelDecorated(true);
 		JDialog.setDefaultLookAndFeelDecorated(true);
-
+		try {
+			loadCookies();
+		} catch (FileNotFoundException e) {
+			// no cookies, no prob
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	  public void runSyncInEventThread(Runnable r) {
@@ -495,4 +502,51 @@ public class SwingTipiContext extends TipiContext {
 		}
 	}
 
+	@Override
+	public String getCookie(String key) {
+		return cookieMap.get(key);
+	}
+
+	@Override
+	public void setCookie(String key, String value) {
+		cookieMap.put(key, value);
+		try {
+			saveCookies();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	private void saveCookies() throws IOException {
+		File tmp = new File(System.getProperty("java.io.tmpdir"));
+		File f = new File(tmp, "tipi.cookie");
+		PrintWriter fw = new PrintWriter(new FileWriter(f,false));
+		Set<String> ss = cookieMap.keySet();
+		for (String key : ss) {
+			fw.println(key+"|"+cookieMap.get(key));
+		}
+		fw.flush();
+		fw.close();
+	}
+
+	private void loadCookies() throws IOException {
+		File tmp = new File(System.getProperty("java.io.tmpdir"));
+		File f = new File(tmp, "tipi.cookie");
+		BufferedReader fw = new BufferedReader( new FileReader(f));
+		String line = fw.readLine();
+		while (line!=null) {
+			StringTokenizer st = new StringTokenizer(line,"|");
+			String key = st.nextToken();
+			String value = st.nextToken();
+			cookieMap.put(key, value);
+			line = fw.readLine();
+		}
+	}
+	public void showInternalError(String errorString, Throwable t) {
+		super.showInternalError(errorString,t);
+		if(fakeJars) {
+			showInfo("Internal error: "+errorString,"Internal error");
+		}
+	}
 }

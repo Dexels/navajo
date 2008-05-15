@@ -20,18 +20,21 @@ import com.dexels.navajo.tipi.swingclient.components.*;
  */
 
 
-public class MessageTableFooterRenderer
-   extends JLabel implements TableCellRenderer {
+public class MessageTableFooterRenderer extends JLabel
+   implements TableCellRenderer {
   private final TipiDataComponent myComponent;
 
  private GenericPropertyComponent myPropComponent = new GenericPropertyComponent();
 
  private boolean initialized = false;
- 
+ private final Map<Integer,String> aggregateMap = new HashMap<Integer,String>();
+ private final Map<Integer,Operand> aggregateValueMap = new HashMap<Integer,Operand>();
+
  public MessageTableFooterRenderer(TipiDataComponent tc) {
    super();
    myComponent = tc;
-
+   setBorder(null);
+   setOpaque(false);
  }
 
 
@@ -39,24 +42,36 @@ public class MessageTableFooterRenderer
                                                 boolean isSelected,
                                                 boolean hasFocus, int row,
                                                 int column) {
-	 if(!initialized) {
-		   myPropComponent.setLabelVisible(false);
-		   myPropComponent.setBorder(null);
-		   try {
-			     jbInit();
-			     initialized = true;
-			   }
-			   catch (Exception e) {
-			     e.printStackTrace();
-			   }
-	 }
-	 setForeground(Color.black);
-   setBackground(Color.blue);
+
+//	 if(true) {
+//		 return new JLabel("MonkeyMonkey");
+//	 }
+	 
+	 if (!initialized) {
+			myPropComponent.setLabelVisible(false);
+//			myPropComponent.setBorder(null);
+			try {
+//				myPropComponent.setHorizontalAlignment(SwingConstants.LEADING);
+//				myPropComponent.setHorizontalTextPosition(SwingConstants.LEADING);
+				initialized = true;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	 myPropComponent.setForeground(Color.black);
+//   setBackground(Color.blue);
+	 myPropComponent.hideBorder();
+	 myPropComponent.setOpaque(false);
    MessageTable mm = (MessageTable)table;
-   Message cc = myComponent.getStateMessage().getMessage("Columns");
-//   System.err.println("ColumnIndex:"+column);
+//   Message cc = myComponent.getStateMessage().getMessage("Columns");
+//   try {
+//   myComponent.getStateMessage().write(System.err);
+//   } catch(Exception e) {
+//	   e.printStackTrace();
+//   }
+//   System.err.println("ColumnIndex:"+column+"value: "+value);
    
-   Message me = cc.getMessage(column);
+//   Message me = cc.getMessage(column);
 
 //  Property name = me.getProperty("Name");
 //   JLabel ll = new JLabel((String) name.getTypedValue());
@@ -65,54 +80,59 @@ public class MessageTableFooterRenderer
 //   }
    Operand val = aggregateValueMap.get(new Integer(column));
    
-   Property aggr = me.getProperty("Aggregate");
-   if(aggr==null) {
-	   setText("");
-	   return this;
-   }
+//   Property aggr = me.getProperty("Aggregate");
+//   if(aggr==null) {
+//	   setText("Oempaloempa");
+//	   return this;
+//   }
 //     setText(""+val.value);
 //     return this;
 //   if(mm.isShowingRowHeaders()) {
 //	   column--;
 //   }
-   myPropComponent.setComponentBorder(null);
-   myPropComponent.setProperty(aggr);
-   String expr = (String) aggr.getTypedValue();
+//   myPropComponent.setComponentBorder(BorderFactory.createEmptyBorder(2,2,2,2));
+//   myPropComponent.setProperty(aggr);
+   
+   String expr = getAggregateFunction(column);
+//   String expr = (String) aggr.getTypedValue();
 //   System.err.println("Column: "+column+" expre: "+expr);
 
    if (expr==null) {
 	   setupProp(mm, new Operand(null,"String",null), column);
 //     setText("");
+//	  return new JLabel("aap"); 
      return myPropComponent;
    } else {
     try {
       Operand o = myComponent.getContext().evaluate(expr,myComponent,null,mm.getMessage());
       if (o==null) {
         setText("null");
+        return this;
       } else {
         setupProp(mm,o,column);
         aggregateValueMap.put(new Integer(column),o);
-        return myPropComponent;
+        myPropComponent.hideBorder();
+    	return myPropComponent;
       }
     }
     catch (Exception ex) {
       ex.printStackTrace();
       setForeground(Color.red);
       setText("error");
+      return this;
     }
    }
-   setBorder(null);
 
-   return this;
- }
+  }
 
  private final void setupProp(MessageTable mm, Operand val, int column) {
    if (val!=null) {
    Property p = null;
    try {
      p = NavajoFactory.getInstance().createProperty(null,
-         mm.getColumnId(column), val.type, "" + val.value, 0,
+         mm.getColumnId(column), val.type, "" , 0,
          mm.getColumnName(column), Property.DIR_OUT);
+     p.setAnyValue(val.value);
    }
    catch (NavajoException ex1) {
      ex1.printStackTrace();
@@ -123,13 +143,6 @@ public class MessageTableFooterRenderer
    }
  }
 
- private final void jbInit() throws Exception {
-   this.setHorizontalAlignment(SwingConstants.LEADING);
-   this.setHorizontalTextPosition(SwingConstants.LEADING);
- }
-
- private final Map<Integer,String> aggregateMap = new HashMap<Integer,String>();
- private final Map<Integer,Operand> aggregateValueMap = new HashMap<Integer,Operand>();
 
  public void addAggregate(int columnIndex, String expression) {
    aggregateMap.put(new Integer(columnIndex),expression);
@@ -149,7 +162,7 @@ public class MessageTableFooterRenderer
  }
 
  public String getAggregateFunction(int column) {
-   return aggregateMap.get(new Integer(column));
+  return aggregateMap.get(new Integer(column));
  }
 
  public Set<Integer> getAggregateFunctions() {

@@ -52,13 +52,13 @@ public class TipiProperty extends TipiSwingComponentImpl implements PropertyComp
 				m.put("mode", "typed");
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 					try {
-						performTipiEvent("onEnter", m, true);
+						performTipiEvent("onEnter", m, false);
 					} catch (TipiException e1) {
 						e1.printStackTrace();
 					}
 				}
 				try {
-					performTipiEvent("onKey", m, true);
+					performTipiEvent("onKey", m, false);
 				} catch (TipiException e1) {
 					e1.printStackTrace();
 				}
@@ -68,7 +68,7 @@ public class TipiProperty extends TipiSwingComponentImpl implements PropertyComp
 				Map<String,Object> m = getEventMap(e);
 				m.put("mode", "typed");
 				try {
-					performTipiEvent("onKey", m, true);
+					performTipiEvent("onKey", m, false);
 				} catch (TipiException e1) {
 					e1.printStackTrace();
 				}
@@ -78,7 +78,7 @@ public class TipiProperty extends TipiSwingComponentImpl implements PropertyComp
 				Map<String,Object> m = getEventMap(e);
 				m.put("mode", "released");
 				try {
-					performTipiEvent("onKey", m, true);
+					performTipiEvent("onKey", m, false);
 				} catch (TipiException e1) {
 					e1.printStackTrace();
 				}

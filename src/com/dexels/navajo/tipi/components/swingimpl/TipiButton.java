@@ -152,19 +152,23 @@ public class TipiButton extends TipiSwingComponentImpl {
 				final int j = i;
 				TipiEvent current = getEventList().get(j);
 				if (current.isTrigger("onActionPerformed", "aap")) {
-					runSyncInEventThread(new Runnable() {
+					try {
+						myContext.execute(new Runnable() {
 
-						public void run() {
-							TipiEvent c2 = getEventList().get(j);
-							try {
-								c2.performAction(c2, c2, 0);
-							} catch (TipiException ex) {
-								ex.printStackTrace();
-							} catch (TipiBreakException e) {
-								e.printStackTrace();
+							public void run() {
+								TipiEvent c2 = getEventList().get(j);
+								try {
+									c2.performAction(c2, c2, 0);
+								} catch (TipiException ex) {
+									ex.printStackTrace();
+								} catch (TipiBreakException e) {
+									e.printStackTrace();
+								}
 							}
-						}
-					});
+						});
+					} catch (TipiException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		}

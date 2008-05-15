@@ -900,7 +900,8 @@
          <event name="onMouseExited" />
       </events>
       <values>
-         <value direction="inout" name="text" type="string" property="text" />
+         <value direction="inout" name="selected" type="string" property="selected" />
+        <value direction="inout" name="text" type="string" property="text" />
          <value direction="in" name="icon" type="resource" property="iconUrl" />
          <value direction="in" name="background" type="color" property="background" />
          <value direction="in" name="foreground" type="color" property="foreground" />
@@ -1434,20 +1435,32 @@
          <!-- When the user edits the combobox, and the combobox needs a refresh -->
          <event name="onChange">
             <param name="text" type="string" />
+            <param name="selectedValue" type="object" />
          </event>
          <!--  when the user selects an item in the combobox -->
          <event name="onSelect">
             <param name="value" type="string" />
+            <param name="selectedValue" type="object" />
          </event>
          <!--  when the user presses enter in the combobox -->
          <event name="onEnter">
             <param name="value" type="string" />
+            <param name="selectedValue" type="object" />
          </event>
+         
+         <event name="onTextChange">
+            <param name="text" type="string" />
+        </event>
       </events>
       <values>
          <value direction="in" name="messagePath" type="string" />
          <value direction="in" name="propertyName" type="string" />
+         <value direction="in" name="valuePropertyName" type="string" />
+         <value direction="out" name="selectedValue" type="object" />
          <value direction="in" name="syncRefresh" type="boolean" />
+         <!--  not sure what this one does.. -->
+         <value direction="in" name="value" type="string" />
+         <value direction="in" name="text" type="string" />
          <value direction="in" name="refreshDelay" type="integer" />
       </values>
       <methods>
@@ -1520,8 +1533,6 @@
    <tipi-parser name="font" parser="com.dexels.navajo.tipi.components.swingimpl.parsers.FontParser" type="java.awt.Font" />
    <tipi-parser name="color" parser="com.dexels.navajo.tipi.components.swingimpl.parsers.ColorParser" type="java.awt.Color" />
    <tipi-parser name="paint" parser="com.dexels.navajo.tipi.components.swingimpl.parsers.PaintParser" type="java.awt.Paint" />
-
-
    <tipi-parser name="cookie" parser="com.dexels.navajo.tipi.components.swingimpl.parsers.CookieParser" type="java.lang.String" />
    <tipi-parser name="cookieref" parser="com.dexels.navajo.tipi.components.swingimpl.parsers.CookieRefParser" type="com.dexels.navajo.tipi.internal.TipiReference" />
 

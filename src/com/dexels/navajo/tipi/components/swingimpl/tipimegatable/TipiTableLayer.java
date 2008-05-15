@@ -233,7 +233,7 @@ private MessageTablePanel myTablePanel;
     mtp.updateTableSize();
     
     remarkPanel.updateConditionalRemarks();
-    System.err.println("MegaTable layer :"+mtp.getPreferredSize());
+//    System.err.println("MegaTable layer :"+mtp.getPreferredSize());
 //    updateConditionalRemarks(remarkPanel, current);
   }
 

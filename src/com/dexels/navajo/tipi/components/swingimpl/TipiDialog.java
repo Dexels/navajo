@@ -319,7 +319,7 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 				bnds.translate(myOffset.x, myOffset.y);
 			}
 			myDialog.setBounds(bnds);
-			System.err.println("Setting bounds: " + bnds + " offset: " + myOffset);
+//			System.err.println("Setting bounds: " + bnds + " offset: " + myOffset);
 
 		} else {
 			System.err.println("Null bounds for dialog.");
