@@ -78,7 +78,7 @@ public class FlipPanel extends JPanel {
 	}
 
 	public void flipForwards() {
-		((RootPaneContainer) getTopLevelAncestor()).getRootPane().setGlassPane(animationPanel);
+//		((RootPaneContainer) getTopLevelAncestor()).getRootPane().setGlassPane(animationPanel);
 		getRootPane().getLayeredPane().add(animationPanel, 0);
 		int idx = components.indexOf(getVisibleComponent());
 		if (idx > -1) {
