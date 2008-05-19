@@ -361,7 +361,6 @@ public class BirtUtils {
 		if (p.getType().equals(Property.FLOAT_PROPERTY)) {
 			return queryString ? "Double" : "float";
 		}
-
 		if (p.getType().equals(Property.CLOCKTIME_PROPERTY)) {
 			return queryString ? "String" : "String";
 		}
