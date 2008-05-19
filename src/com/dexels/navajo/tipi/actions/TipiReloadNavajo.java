@@ -33,6 +33,9 @@ public class TipiReloadNavajo extends TipiAction {
 		if (to == null || from == null) {
 	
 //			System.err.println("Null evaluation in TipiReloadNavajo, new school evaluation");
+			if(service.value instanceof String) {
+				service.value = myContext.getNavajo((String) service.value);
+			}
 			Navajo s = (Navajo) service.value;
 			if(s.getHeader()==null) {
 				System.err.println("Header null!");
