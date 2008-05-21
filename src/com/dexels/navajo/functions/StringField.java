@@ -3,6 +3,7 @@ package com.dexels.navajo.functions;
 
 import com.dexels.navajo.parser.*;
 
+import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 
 
@@ -21,24 +22,27 @@ public final class StringField extends FunctionInterface {
     }
 
     public final Object evaluate() throws com.dexels.navajo.parser.TMLExpressionException {
-        Object a = this.getOperands().get(0);
-        Object b = this.getOperands().get(1);
-        Object c = this.getOperands().get(2);
+		Object a = this.getOperands().get(0);
+		Object b = this.getOperands().get(1);
+		Object c = this.getOperands().get(2);
 
-        if (!(a instanceof String) || !(b instanceof String)
-                || !(c instanceof Integer))
-            throw new TMLExpressionException("StringField(): invalid operand. Usage: " + usage());
-        String text = (String) a;
-        String seperator = (String) b;
-        int field = ((Integer) c).intValue();
-        StringTokenizer tokens = new StringTokenizer(text, seperator);
-        String result = "";
+		if (!(a instanceof String) || !(b instanceof String) || !(c instanceof Integer))
+			throw new TMLExpressionException("StringField(): invalid operand. Usage: " + usage());
+		String text = (String) a;
+		String seperator = (String) b;
+		int field = ((Integer) c).intValue();
+		StringTokenizer tokens = new StringTokenizer(text, seperator);
+		String result = "";
 
-        for (int i = 0; i < field; i++) {
-            result = tokens.nextToken();
-        }
-        return result.trim();
-    }
+		try {
+			for (int i = 0; i < field; i++) {
+				result = tokens.nextToken();
+			}
+		} catch (NoSuchElementException ex) {
+			return null;
+		}
+		return result.trim();
+	}
 
     public String usage() {
         return "StringField(string, seperator, index)";
