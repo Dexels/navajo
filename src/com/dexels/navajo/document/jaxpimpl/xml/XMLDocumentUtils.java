@@ -305,7 +305,9 @@ public class XMLDocumentUtils {
         } else {
             if (n instanceof Text) {
                 Text t = (Text)n;
-                sw.write(t.getData());
+                String s = XMLutils.XMLEscape(t.getData());
+                // Should this be escaped?! &amp; etc.
+                sw.write(s);
             } else if (n  instanceof Comment) {
             	Comment c = (Comment)n;
                 sw.write("<!--"+c.getData()+"-->");
