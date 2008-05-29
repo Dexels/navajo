@@ -40,6 +40,7 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 	private long SLEEPING_TIME = 60000;
 	private int MAX_RETRIES = 10;
 	private static HashSet<Thread> runningThreads = new HashSet<Thread>();
+	private static int workerNotificationCount = 0;
 	
 	// Exposed fields.
 	public int currentThreads = 0;
@@ -150,6 +151,10 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 		RequestResponseQueue rrq = RequestResponseQueue.getInstance();
 		synchronized (instance) {
 			rrq.myStore.putMessage(handler, false);	
+//			System.err.println("REGISTERED: " + handler.hashCode() + ", ABOUT TO NOTIFY WAITING WORKER (" + this.status + "), mt = " +
+//					handler.getMaxRunningInstances() );
+			workerNotificationCount++;
+//			System.err.println("workerNotificationCount = " + workerNotificationCount);
 			instance.notifyAll();
 		}
 	}
@@ -212,7 +217,7 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 						
 					} else {
 						// Put stuff back in queue, unless queue is being emptied.
-						System.err.println("Could not process send() method, putting queued adapter back in queue... emptyqueue: " + emptyQueue);
+						//System.err.println("Could not process send() method, putting queued adapter back in queue... emptyqueue: " + emptyQueue);
 						if ( !emptyQueue ) {
 							handler.setWaitUntil(System.currentTimeMillis() + SLEEPING_TIME);
 							// Put queable in as failure if maxretries has past....
@@ -233,6 +238,10 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 					decreaseThreadCountForHandler(handler);
 					synchronized (runningThreads ) {
 						runningThreads.remove(this);
+					}
+					synchronized (instance) {
+						//System.err.println("NOTIFYING WAITING WORKER....");
+						instance.notifyAll();
 					}
 				}
 				//System.err.println("....Finished asyncwork thread");
@@ -259,53 +268,74 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 	}
 	
 	public void worker() {
+		
+		do {
+			HashSet<Queuable> set = new HashSet<Queuable>();
+			Queuable handler = null;
 
-		//System.err.println("IN requestresponsequeue worker....................");
-		HashSet<Queuable> set = new HashSet<Queuable>();
-		Queuable handler = null;
-		if ( !queueOnly) {
-			// Add all work in private Set.
-			try {
-				myStore.rewind();
-				while ( ( handler = myStore.getNext()) != null && !emptyQueue ) {
-					set.add(handler);	
+			if ( !queueOnly) {
+
+				// Add all work in private Set.
+				try {
+					myStore.rewind();
+					while ( ( handler = myStore.getNext()) != null && !emptyQueue ) {
+						set.add(handler);	
+					}
+					if ( set.size() == 0 ) {
+						workerNotificationCount = 0;
+					}
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace(System.err);
 				}
-			} catch (Exception e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace(System.err);
-			}
-			// Iterate over private set to do work.
-			if ( !emptyQueue ) {
-				Iterator<Queuable> iter = set.iterator();
-				while ( iter.hasNext() && !emptyQueue ) {
-					handler = iter.next();
-					// Only handle MAX_THREADS at a time...
-					while ( currentThreads >= MAX_THREADS ) {
-						try {
-							Thread.sleep(500);
-						} catch (InterruptedException e) {
+				// Iterate over private set to do work.
+				if ( !emptyQueue ) {
+					Iterator<Queuable> iter = set.iterator();
+					
+					while ( iter.hasNext() && !emptyQueue ) {
+						handler = iter.next();
+						// Only handle MAX_THREADS at a time...
+						while ( currentThreads >= MAX_THREADS ) {
+							try {
+								Thread.sleep(500);
+							} catch (InterruptedException e) {
+							}
 						}
+						// Spawn worker thread, check limit on thread count for specific handler(!)
+						if ( handler.getMaxRunningInstances() == -1 || getThreadCountForHandler(handler) < handler.getMaxRunningInstances() ) {
+							asyncwork(handler);
+						} else {
+							// Put back in store(!)
+							myStore.putMessage(handler, false);
+						}
+						workerNotificationCount--;
 					}
-					// Spawn worker thread, check limit on thread count for specific handler(!)
-					if ( handler.getMaxRunningInstances() == -1 || getThreadCountForHandler(handler) < handler.getMaxRunningInstances() ) {
-						asyncwork(handler);	
-					} else {
-						System.err.println("Have to wait for sister handler(s)....");
-					}
+				} else {
+					workerNotificationCount = 0;
 				}
+			} else {
+				workerNotificationCount = 0;
 			}
-		}
+		} while ( workerNotificationCount > 0);
+		workerNotificationCount = 0;
 	}
 
 	public void inactive() {
+		
 		synchronized (instance) {
+			
+			if ( workerNotificationCount > 0 ) {
+				return;
+			}
+			workerNotificationCount = 0;
 			try {
-				//System.err.println("RequestResponseQueue becoming inactive....");
+				//System.err.println("RequestResponseQueue becoming inactive....workerNotificationCount " + workerNotificationCount);
 				instance.wait(60000);
-			} catch (InterruptedException e) {
-
+			} catch (Throwable e) {
+				
 			}
 		}
+		//System.err.println("WOKE UP!!!");
 	}
 	
 	public void emptyQueue() {
@@ -365,7 +395,7 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 	 */
 	public void onNavajoEvent(NavajoEvent ne) {
 		
-		System.err.println("In RequestResponseQueue, event arrived: " + ne.getClass() );
+		//System.err.println("In RequestResponseQueue, event arrived: " + ne.getClass() );
 		if ( ne instanceof TribeMemberDownEvent ) {
 			instance.getMyStore().takeOverPersistedAdapters( ((TribeMemberDownEvent) ne).getTm().getMemberName() );
 		}

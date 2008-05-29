@@ -151,7 +151,9 @@ public class FileStore implements MessageStore {
 	}
 	
 	public int getSize() {
-		return currentObjects.size();
+		SharedStoreInterface ssi = SharedStoreFactory.getInstance();
+		String [] files = ssi.getObjects(path);
+		return files.length;
 	}
 
 	public HashSet<QueuedAdapter> getDeadQueue() {

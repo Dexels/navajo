@@ -54,11 +54,11 @@ public class GenericThread extends NotificationBroadcasterSupport implements Run
 	private Thread thread = null;
 	private int sleepTime = 1000;
 	
-	private final static String EMBRYO = "Embryo";
-	private final static String SLEEPING = "Sleeping";
-	private final static String WORKING = "Working";
-	private final static String DEAD = "Zombie";
-	private final static String NOTSTARTED = "Not running";
+	public final static String EMBRYO = "Embryo";
+	public final static String SLEEPING = "Sleeping";
+	public final static String WORKING = "Working";
+	public final static String DEAD = "Zombie";
+	public final static String NOTSTARTED = "Not running";
 	
 	private static Map<String,GenericThread> threadPool = Collections.synchronizedMap(new HashMap<String,GenericThread>());
 	
