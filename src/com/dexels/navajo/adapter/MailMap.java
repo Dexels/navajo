@@ -71,6 +71,7 @@ public class MailMap implements MailMapInterface, Mappable, com.dexels.navajo.se
     public int maxRetries = 100;
     public boolean queuedSend = false;
 	public long waitUntil = 0;
+	public int maxRunningInstances = -1;
 	
 	private Navajo myNavajo;
 	private Access myAccess;
@@ -373,6 +374,14 @@ public class MailMap implements MailMapInterface, Mappable, com.dexels.navajo.se
 
   public Navajo getNavajo() {
 	  return myNavajo;
+  }
+
+  public int getMaxRunningInstances() {
+	  return maxRunningInstances;
+  }
+
+  public void setMaxRunningInstances(int maxRunningInstances) {
+	  this.maxRunningInstances = maxRunningInstances;
   }
 
 }

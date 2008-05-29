@@ -57,6 +57,8 @@ public class FTPMap  implements Mappable, com.dexels.navajo.server.enterprise.qu
 	private int maxRetries = 100;
 	private Navajo myNavajo;
 	private Access myAccess;
+
+	public int maxRunningInstances = -1;
 	
 	public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
 		myNavajo = inMessage;
@@ -214,6 +216,14 @@ public class FTPMap  implements Mappable, com.dexels.navajo.server.enterprise.qu
 
 	public Navajo getNavajo() {
 		return myNavajo;
+	}
+	
+	public int getMaxRunningInstances() {
+		return maxRunningInstances;
+	}
+
+	public void setMaxRunningInstances(int maxRunningInstances) {
+		this.maxRunningInstances = maxRunningInstances;
 	}
 
 }
