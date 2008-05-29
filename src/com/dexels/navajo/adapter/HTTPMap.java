@@ -75,7 +75,7 @@ public class HTTPMap implements Mappable, Queuable {
 	private Navajo myNavajo;
 	private Access myAccess;
 
-	public int maxRunningInstances = -1;
+	public static int maxRunningInstances = -1;
 	
 	public void load(Parameters parms, Navajo inMessage, Access access,
 			NavajoConfig config) throws MappableException, UserException {

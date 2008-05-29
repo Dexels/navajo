@@ -13,7 +13,13 @@ import com.dexels.navajo.server.enterprise.queue.RequestResponseQueueFactory;
 
 public class TestQueuedAdapter implements Mappable, Queuable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2697339185493595216L;
+	
 	private Access myAccess;
+	public static int maxRunningInstances = 1;
 	
 	public void kill() {
 		// TODO Auto-generated method stub
@@ -44,7 +50,7 @@ public class TestQueuedAdapter implements Mappable, Queuable {
 	}
 
 	public int getMaxRunningInstances() {
-		return 1;
+		return maxRunningInstances;
 	}
 
 	public Navajo getNavajo() {
@@ -95,8 +101,7 @@ public class TestQueuedAdapter implements Mappable, Queuable {
 	}
 
 	public void setMaxRunningInstances(int maxRunningInstances) {
-		// TODO Auto-generated method stub
-
+		this.maxRunningInstances = maxRunningInstances;
 	}
 
 	public void setQueuedSend(boolean b) {

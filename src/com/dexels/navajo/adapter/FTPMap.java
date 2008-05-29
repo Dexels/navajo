@@ -58,7 +58,7 @@ public class FTPMap  implements Mappable, com.dexels.navajo.server.enterprise.qu
 	private Navajo myNavajo;
 	private Access myAccess;
 
-	public int maxRunningInstances = -1;
+	public static int maxRunningInstances = -1;
 	
 	public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
 		myNavajo = inMessage;
