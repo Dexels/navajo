@@ -210,4 +210,5 @@ public class QueuedAdapter extends Thread implements Mappable {
 			return null;
 		}
 	}
+
 }

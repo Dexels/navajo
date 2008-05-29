@@ -68,5 +68,18 @@ public interface Queuable extends Serializable, QueuableMXBean {
 	 * @return
 	 */
 	public int getRetries();
-	
+	/**
+	 * Get the maximum number of specified instances that MAY run simultaneously.
+	 * -1 if there is no limit (default)
+	 * 
+	 * @return
+	 */
+	public int getMaxRunningInstances();
+	/**
+	 * Sets the maximum number of specified instances that MAY run simultaneously.
+	 * -1 if there is no limit (default)
+	 *  
+	 * @param maxRunningInstances
+	 */
+	public void setMaxRunningInstances(int maxRunningInstances);
 }

@@ -1,6 +1,7 @@
 package com.dexels.navajo.adapter.queue;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 
@@ -42,6 +43,8 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 	
 	// Exposed fields.
 	public int currentThreads = 0;
+	public HashMap<Class,Integer> currentThreadsByClass = new HashMap<Class,Integer>();
+	
 	public QueuedAdapter [] runningAdapters;
 	public QueuedAdapter [] queuedAdapters;
 	public QueuedAdapter [] deadQueue;
@@ -151,11 +154,55 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 		}
 	}
 	
+	private int getThreadCountForHandler(final Queuable handler) {
+		synchronized (currentThreadsByClass) {
+			Integer c = currentThreadsByClass.get(handler.getClass());
+			if ( c == null ) {
+				return 0;
+			} else {
+				return c.intValue();
+			}
+		}
+	}
+	
+	private int increaseThreadCountForHandler(final Queuable handler) {
+
+		synchronized (currentThreadsByClass) {
+			Integer c = currentThreadsByClass.get(handler.getClass());
+			if ( c == null ) {
+				c = Integer.valueOf(1);
+			} else {
+				c = Integer.valueOf(c.intValue() + 1);
+			}
+			currentThreadsByClass.put(handler.getClass(), c);
+			return c.intValue();
+		}
+	}
+	
+	private int decreaseThreadCountForHandler(final Queuable handler) {
+		synchronized (currentThreadsByClass) {
+			Integer c = currentThreadsByClass.get(handler.getClass());
+			if ( c == null ) {
+				return 0;
+			} 
+			c = Integer.valueOf(c.intValue() - 1);
+			if ( c.intValue() <= 0 ) {
+				currentThreadsByClass.remove(handler.getClass());
+			} else {
+				currentThreadsByClass.put(handler.getClass(), c);
+			}
+			return c.intValue();
+		}
+	}
+	
 	private final void asyncwork(final Queuable handler) {
+		
+		increaseThreadCountForHandler(handler);
 		QueuedAdapter t = new QueuedAdapter(handler) {
 
 			public void run() {
 				currentThreads++;
+				
 				//String qid = handler.getClass().getName()+"-"+System.currentTimeMillis();
 				//JMXHelper.registerMXBean(handler, JMXHelper.QUEUED_ADAPTER_DOMAIN, qid);
 				try {
@@ -183,6 +230,7 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 				} finally {
 					doingWork = false;
 					currentThreads--;
+					decreaseThreadCountForHandler(handler);
 					synchronized (runningThreads ) {
 						runningThreads.remove(this);
 					}
@@ -238,8 +286,12 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 						} catch (InterruptedException e) {
 						}
 					}
-					// Spawn worker thread.
-					asyncwork(handler);	
+					// Spawn worker thread, check limit on thread count for specific handler(!)
+					if ( handler.getMaxRunningInstances() == -1 || getThreadCountForHandler(handler) < handler.getMaxRunningInstances() ) {
+						asyncwork(handler);	
+					} else {
+						System.err.println("Have to wait for sister handler(s)....");
+					}
 				}
 			}
 		}
