@@ -539,7 +539,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 					(error ? "error" : "ok") + ";" +
 					sdf.format(startedat) + ";" + 
 					sdf.format(new java.util.Date()) + ";" + 
-					( error ? errMsg + ";" : " ;") +
+					( error ? errMsg.replaceAll(";", "#semicolon#") + ";" : " ;") +
 					( t.getWorkflowDefinition() != null ? t.getWorkflowDefinition() : " " ) + ";" +
 					( t.getWorkflowId() != null ? t.getWorkflowId() : " " ) + 
 			"\n"); 
