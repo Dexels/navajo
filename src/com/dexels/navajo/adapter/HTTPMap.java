@@ -63,6 +63,8 @@ public class HTTPMap implements Mappable, Queuable {
 	public String url = null;
 	public boolean doSend = false;
 	public boolean queuedSend = false;
+	public boolean catchConnectionTimeOut = true;
+	public boolean hasConnectionTimeOut = false;
 	public long waitUntil = 0;
 	public Binary result = null;
 	public String textResult = null;
@@ -115,7 +117,7 @@ public class HTTPMap implements Mappable, Queuable {
 	
 	private final void sendOverHTTP() throws UserException {
 		instances++;
-		
+
 		if ( instances > 100 ) {
 			AuditLog.log("HTTPMap", "WARNING: More than 100 waiting HTTP requests");
 		}
@@ -129,8 +131,10 @@ public class HTTPMap implements Mappable, Queuable {
 				con.setReadTimeout(readTimeOut);
 			}
 			con.setRequestMethod(method);
-			con.setDoOutput(true);
-			con.setDoInput(true);
+			if ( method.equals("POST")) {
+				con.setDoOutput(true);
+				con.setDoInput(true);
+			}
 			con.setUseCaches(false);
 			if ( contentType != null ) {
 				con.setRequestProperty("Content-type", contentType);
@@ -158,9 +162,11 @@ public class HTTPMap implements Mappable, Queuable {
 					}
 				}
 			} else {
-				throw new UserException(-1, "Empty content.");
+				if ( method.equals("POST")) {
+					throw new UserException(-1, "Empty content.");
+				}
 			}
-			
+
 			InputStream is = null;
 			is = con.getInputStream();
 			try {
@@ -170,8 +176,14 @@ public class HTTPMap implements Mappable, Queuable {
 					is.close();
 				}
 			}
-			
-			
+
+		} catch (java.net.SocketTimeoutException sto) {
+			// 
+			if (!catchConnectionTimeOut) {
+				throw new UserException(-1, sto.getMessage(), sto);
+			} else {
+				hasConnectionTimeOut = true;
+			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -179,8 +191,6 @@ public class HTTPMap implements Mappable, Queuable {
 		} finally {
 			instances--;
 		}
-		
-		
 	}
 	
 	public String getTextResult() {
@@ -258,22 +268,17 @@ public class HTTPMap implements Mappable, Queuable {
 		"</xml>";
 		
 		HTTPMap hm = new HTTPMap();
-		hm.setUrl("www.dexels.com");
-		hm.setConnectTimeOut(2000);
-		hm.setContentType("text/xml; charset=UTF-8");
-		hm.setTextContent(test);
-		hm.setQueuedSend(true);
-		System.err.println("Initiated queued send");
-		while ( true ) {
-			Thread.sleep(10000);
-		}
-//		String tr = hm.getTextResult();
-//		System.err.println(tr);
-//		Binary b = hm.getResult();
-//		
-//		FileOutputStream fos = new FileOutputStream("/home/arjen/testje");
-//		b.write(fos);
-//		fos.close();	
+		hm.setUrl("ws.geonames.org/findNearByWeatherXML?lat=43&lng=-2");
+		hm.setMethod("GET");
+		hm.setDoSend(true);
+		
+		String tr = hm.getTextResult();
+		System.err.println(tr);
+		Binary b = hm.getResult();
+		
+		FileOutputStream fos = new FileOutputStream("/home/arjen/testje");
+		b.write(fos);
+		fos.close();	
 		
 	}
 
