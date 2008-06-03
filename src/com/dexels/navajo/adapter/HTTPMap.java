@@ -329,5 +329,9 @@ public class HTTPMap implements Mappable, Queuable {
 	public void setMaxRunningInstances(int maxRunningInstances) {
 		this.maxRunningInstances = maxRunningInstances;
 	}
+
+	public void setMethod(String method) {
+		this.method = method;
+	}
 	
 }

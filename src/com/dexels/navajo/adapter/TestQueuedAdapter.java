@@ -19,7 +19,7 @@ public class TestQueuedAdapter implements Mappable, Queuable {
 	private static final long serialVersionUID = 2697339185493595216L;
 	
 	private Access myAccess;
-	public static int maxRunningInstances = 1;
+	public static int maxRunningInstances = -1;
 	
 	public void kill() {
 		// TODO Auto-generated method stub
