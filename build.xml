@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- $Id$ -->
+<project name="TipiGeoSwing" default="archive" basedir=".">
+	<property name="src" location="src" />
+	<property name="build" location="bin" />
+	<property name="lib" value="lib" />
+	<property name="archive" value="TipiGeoSwing.jar" />
+	<target name="check-env">
+		<tstamp />
+		<fail unless="PROJECTHOME"> Set the PROJECTHOME environment variable to the top directory of your CVS projects, for example: export PROJECTHOME=C:\PROJECTS declare -x PROJECTHOME=/home/arjen/las-projectas </fail>
+	</target>
+	<path id="depend">
+		<fileset dir="${lib}">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+
+
+	<target name="init" depends="check-env">
+		<mkdir dir="${build}" />
+	</target>
+	<target name="clean">
+		<delete file="${archive}" />
+		<delete dir="${build}" />
+	</target>
+	<target name="resource">
+		<copy todir="${build}">
+			<fileset dir="${src}">
+				<exclude name="**/startup.fx" />
+				<exclude name="**/*.java" />
+				<exclude name="**/*.properties" />
+				<exclude name="**/*.html" />
+				<exclude name="**/*.stylesheet" />
+				<exclude name="**/*.svg" />
+				<exclude name="**/*.svgz" />
+			</fileset>
+		</copy>
+		<copy todir="${build}">
+			<fileset dir="${build}">
+				<exclude name="**/startup.fx" />
+				<exclude name="**/*.java" />
+				<exclude name="**/*.html" />
+				<exclude name="**/*.stylesheet" />
+				<exclude name="**/*.txt" />
+
+			</fileset>
+		</copy>
+	</target>
+	<target name="compile" depends="init">
+		<javac srcdir="${src}" destdir="${build}">
+			<classpath refid="depend" />
+		</javac>
+	</target>
+	<target name="archive" depends="compile,resource">
+		<jar jarfile="${archive}">
+			<fileset dir="${build}">
+				<exclude name="**/startup.fx" />
+				<exclude name="**/*.java" />
+				<exclude name="**/*.properties" />
+				<exclude name="**/*.html" />
+				<exclude name="**/*.stylesheet" />
+				<exclude name="**/*.txt" />
+			</fileset>
+			<service type="tipi.TipiExtension">
+				<provider classname="tipi.TipiGeoSwingExtension" />
+			</service>
+			<manifest>
+				<attribute name="Built-By" value="Frank Lyaruu" />
+			</manifest>
+
+		</jar>
+
+	</target>
+	<target name="sign" depends="archive">
+			<signjar keystore="dexels_dummy_key" storepass="dexels" verbose="true" keypass="dexels" alias="java">
+				<fileset dir=".">
+					<include name="lib/*.jar"/>
+					<include name="${archive}"/>
+				</fileset>
+			</signjar>
+		</target>
+
+</project>
+<!-- EOF: $RCSfile$ -->

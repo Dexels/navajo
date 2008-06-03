@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tid errorhandler="error">
+
+   <tipiclass addtocontainer="true" childcount="*" class="TipiMapComponent" layoutmanager="false" module="container" name="map" package="com.dexels.navajo.tipi.swing.geo"
+      studio-icon="tabs.gif" type="component">
+      <events>
+         <event name="onInstantiate" />
+         <event name="onClear" />
+         <event name="onDataComponent">
+            <param name="message" type="message"/>
+         </event>
+      </events>
+      <values>
+         <value direction="in" name="lon" type="float" />
+         <value direction="in" name="lat" type="float" />
+         <value direction="in" name="factory" type="string" />
+         <value direction="in" name="zoom" type="integer" />
+      </values>
+      <methods>
+
+      </methods>
+   </tipiclass>
+</tid>
