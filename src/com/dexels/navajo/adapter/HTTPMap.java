@@ -338,5 +338,9 @@ public class HTTPMap implements Mappable, Queuable {
 	public void setMethod(String method) {
 		this.method = method;
 	}
+
+	public void setCatchConnectionTimeOut(boolean catchConnectionTimeOut) {
+		this.catchConnectionTimeOut = catchConnectionTimeOut;
+	}
 	
 }
