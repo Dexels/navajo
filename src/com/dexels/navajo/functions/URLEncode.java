@@ -1,3 +1,4 @@
+package com.dexels.navajo.functions;
 import java.net.URLEncoder;
 
 import com.dexels.navajo.document.Operand;
