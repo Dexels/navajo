@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uitleg_rdf_caching>
+    <!-- Navajo 1 -->
+    <tml>
+        <!-- 
+        Navajo kan RDF smaak krijgen door properties als 'predicate' te beschouwen en 'message' als subject.
+        Een message is een subject met een unieke identifier URI dat in attribuut 'resource' staat.
+        Bestaande property types als, string, integer, float, binary, etc. zijn allemaal 'literals'.
+        Nieuw property type 'resource' is URI verwijzing naar bestaande resource.
+        Submessages zijn dan eigenlijk een soort 'inner' classes waarbij een nieuwe afhankelijke resource kan worden gedefinieerd.
+        De afhankelijkheidsrelatie is weer een 'predicate'. De 'name' van een submessage moet dan ook worden
+        geinterpreteerd als 'predicate'. 
+         -->
+        <!-- Ik schrijf bewust (has)Name in voorbeeld om aan te geven dat bij 'literals' 'has' impliciet
+             kan worden gelezen -->
+        <message name="class:Person" resource="knvb:person/CHGP12Y">
+            <property name="(has)LastName" type="string" value="'Bergman'"/>
+            <property name="(has)FirstName" type="string" value="'Martin'"/>
+            <property name="MemberOf" type="resource" value="knvb:club/BBFW63X"/>
+            <!-- Submessage -->
+            <message name="hasAddress" resource="knvb:address/23213213">
+                <property name="(has)Street" type="string" value="'Nieuwe zijds voorburgwal'"/>
+            </message>
+        </message>
+        <!-- RDF N3 triples:
+            knvb:person/CHGP12Y rdf:type class:Person
+                    LastName 'Bergman'^^xsd:string;
+                    MemberOf knvb:club/BBFW63X;
+                    hasAddress knvb:address/23213213.
+            knvb:address/23213213 rdf:type blank
+                    Street 'Nieuwe zijds voorburgwal'.
+        -->
+    </tml>
+    <!-- Navajo 2: resultaat van e.g. club/ProcessSearchClubs -->
+    <tml>
+        <message name="class:Club" type="array">
+            <message name="class:Club" resource="knvb:club/BBFW63X">
+                <property name="(has)Name" type="string" value="'MOC'"/>
+                <property name="PartOf" type="resource" value="knvb:district/KNVB-DISTRICT-WEST1"/>
+            </message>
+            <message name="class:Club" resource="knvb:club/BBCY229">
+                <property name="(has)Name" type="string" value="'Ajax'"/>
+                <property name="PartOf" type="resource" value="knvb:district/KNVB-DISTRICT-WEST1"/>
+            </message>
+            <message name="class:Club" resource="knvb:club/BBKY84H">
+                <property name="(has)Name" type="string" value="'De Schoof'"/>
+                <property name="PartOf" type="resource" value="knvb:district/KNVB-DISTRICT-OOST"/>
+            </message>
+        </message>
+       
+    </tml>
+    <!-- Server side clear cache workflow op maat gemaakt voor iedere gecachede webservice -->
+    <!-- Twee Navajo funties maken:
+       GetResources([reg. expr.]): geeft gegeven een reg. expr. van een message, alle resource attributes terug uit een Navajo.
+        vb. bovenstaande Navajo 2: GetResources('*') = 'knvb:club/BBFW63X,knvb:club/BBCY229,knvb:club/BBKY84H'.
+       GetResource([string]): geef een message naam op, retourneer resource attribuut
+        vb. bovenstaande Navajo: GetResource(class:Person) = 'knvb:person/CHGP12Y'.
+        Onderstaande workflow cached een service club/ProcessSearchClubs (zie Navajo 2). 
+        Via GetResources('*') worden de unieke 'resources' bepaald die voorkomen in het resultaat van deze service.
+    -->
+    <workflow transient="true">
+        <state id="init">
+            <transition trigger="navajo:club/ProcessSearchClubs" condition="!ExistsWorkflow('clearcache', 'cached', '[/@ServiceName] 
+                == \'club/ProcessQueryClub\' AND [/@ServiceKeyValues] == \'' + GetResource('Club') + '\'')" nextstate="cached" username="ROOT">
+                <param name="ServiceKeyValues">
+                    <!-- Get all the resource attributes from the messages in the Navajo as a comma separated string -->
+                    <expression value="GetResources('*')"/>
+                </param>
+                <param name="ServiceName">
+                    <expression value="'club/ProcessSearchClubs'"/>
+                </param>
+            </transition>
+        </state>
+        <state id="cached">
+            <!-- Check whether the resource attribute of the message 'Club' is contained in the param ServiceKeyValues -->
+            <transition trigger="beforenavajo:club/ProcessUpdateClub" condition="Contains(GetResource('Club'),[/@ServiceKeyValues])" nextstate="clearcache" username="ROOT"/>
+        </state>
+        <state id="clearcache">
+            <task service="navajo/ProcessClearCache"/>
+           <transition trigger="immediate" nextstate="null"/>
+        </state>
+    </workflow>
+    <!-- of meer brute force die ook voor client side clear cache kan worden gebruikt omdat van clients niet bekend
+         is welke webservices allemaal zijn gecached -->
+    <workflow>
+        <!-- op iedere navajoresponse, check of de webservice een updating  webservice is -->
+        <state id="init" trigger="navajoevent:response" condition="IsUpdatingWebservice()" nextstate="clearcache">
+            <param name="ServiceKeyValues">
+                <!-- Bewaar de unieke 'resources' in de parameter ServiceKeyValues -->
+                <expression value="GetResources('*')"/>
+            </param>
+        </state>
+        <state id="clearcache">
+            <!-- Roep service aan die chat message verstuurd met o.a. de waarde van ServiceKeyValues naar
+                alle aangesloten clients zodat deze hun lokale caches op basis van de ServiceKeyValues
+                kunnen 'clearen'-->
+            <task service="navajo/ProcessClearClientCacheViaJabber"/>
+            <transition trigger="immediate" nextstate="null"/>
+        </state>
+    </workflow>
+</uitleg_rdf_caching>
