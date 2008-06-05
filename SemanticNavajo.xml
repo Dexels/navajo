@@ -13,12 +13,12 @@
          -->
         <!-- Ik schrijf bewust (has)Name in voorbeeld om aan te geven dat bij 'literals' 'has' impliciet
              kan worden gelezen -->
-        <message name="class:Person" resource="knvb:person/CHGP12Y">
+        <message name="class:Person" resource="knvb:person/CHGP12Y"> <!-- CHGP12Y is unieke relatiecode -->
             <property name="(has)LastName" type="string" value="'Bergman'"/>
             <property name="(has)FirstName" type="string" value="'Martin'"/>
             <property name="MemberOf" type="resource" value="knvb:club/BBFW63X"/>
             <!-- Submessage -->
-            <message name="hasAddress" resource="knvb:address/23213213">
+            <message name="hasAddress" resource="knvb:address/23213213"> <!-- 23213213 is uniek adres id -->
                 <property name="(has)Street" type="string" value="'Nieuwe zijds voorburgwal'"/>
             </message>
         </message>
@@ -34,7 +34,7 @@
     <!-- Navajo 2: resultaat van e.g. club/ProcessSearchClubs -->
     <tml>
         <message name="class:Club" type="array">
-            <message name="class:Club" resource="knvb:club/BBFW63X">
+            <message name="class:Club" resource="knvb:club/BBFW63X"> 
                 <property name="(has)Name" type="string" value="'MOC'"/>
                 <property name="PartOf" type="resource" value="knvb:district/KNVB-DISTRICT-WEST1"/>
             </message>
@@ -49,6 +49,15 @@
         </message>
        
     </tml>
+    <!-- Ontology gebruiken om naamgeving (message names en property names) recht te trekken dan wel
+        te relateren aan andere ontologien
+    -->
+    <owl>
+        <navajomessage:Person/> <owl:sameAs/> <foaf:Person/>
+        <navajoprop:LastName/> <owl:sameAs/> <foaf:name/>
+        <navajoprop:LastName/> <owl:sameAs/> <navajoprop:Lastname/>
+        <navajoprop:EmailAddress/> <owl:sameAs/> <foaf:mbox/>
+    </owl>
     <!-- Server side clear cache workflow op maat gemaakt voor iedere gecachede webservice -->
     <!-- Twee Navajo funties maken:
        GetResources([reg. expr.]): geeft gegeven een reg. expr. van een message, alle resource attributes terug uit een Navajo.
