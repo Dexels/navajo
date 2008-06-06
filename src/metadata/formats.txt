@@ -17,6 +17,7 @@
 #     hexadecimal string if you need either character.
 # (8) Minimum valid file size for this format
 
+odt;OPENOFFICE;Open Office;application/vnd.oasis.opendocument.text;odt;50;"vnd.oasis.opendocument";40
 archive;BZ2;Bzip2 (bz2);application/x-bzip2;bz2,tbz2;0;425a683931;20;
 archive;GZ;GNU Zip (gz);application/x-gzip;gz,tgz;0;1f8b;20;
 archive;RAR;Rar;application/x-rar-compressed;rar;0;526172211a;20;
