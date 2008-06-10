@@ -318,7 +318,7 @@ public class TmlHttpServlet extends HttpServlet {
     	     // Will throw cce when not a binary?
     		  if ( bin.getTypedValue() instanceof Binary ) {
     			  Binary b = (Binary) bin.getTypedValue();
-    			  response.setContentType(b.getMimeType());
+    			  response.setContentType(b.guessContentType());
     			  copyResource(outputStream, b.getDataAsStream());
     		  } else {
     			 outputStream.write(bin.getValue().getBytes());
