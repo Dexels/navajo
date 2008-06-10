@@ -4,14 +4,13 @@ import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
 
-public class GetMimeType extends FunctionInterface {
+public class GetFileExtension extends FunctionInterface {
 
 	@Override
 	public Object evaluate() throws TMLExpressionException {
-		
 		Binary b = (Binary) getOperand(0);
 		if ( b != null ) {
-			return b.guessContentType();
+			return b.getExtension();
 		} else {
 			return null;
 		}
@@ -19,12 +18,12 @@ public class GetMimeType extends FunctionInterface {
 
 	@Override
 	public String remarks() {
-		return "Guesses mime/type of a binary object";
+		return "Guesses mime/type of a binary object and returns default file extension";
 	}
 
 	@Override
 	public String usage() {
-		return "GetMimeType([binary])";
+		return "GetFileExtension([binary])";
 	}
 
 }
