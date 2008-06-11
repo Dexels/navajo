@@ -147,12 +147,6 @@ public class ImageScaler {
     ImageWriter writer =  null;
     try {
     	BufferedImage scaled = scale(width, height, keepAspect, original);
-    	
-    	// Write the scaled image to a file
-    	// ImageIO.write(scaled, "jpg", outfile);
-    	
-    	// Alternatively set the compression quality and then write
-    	// the image to a file
     	JPEGImageWriteParam param = new JPEGImageWriteParam(null);
     	param.setCompressionMode(JPEGImageWriteParam.MODE_EXPLICIT);
     	param.setCompressionQuality(quality);
@@ -169,9 +163,7 @@ public class ImageScaler {
     }
   }
 
-	public static BufferedImage scale(int width, int height, boolean keepAspect, BufferedImage original) {
-		int originalWidth = original.getWidth();
-		int originalHeight = original.getHeight();
+	public static BufferedImage scale(int width, int height, boolean keepAspect, Image original, int originalWidth, int originalHeight) {
 		
 		if (width > originalWidth) {
 			width = originalWidth;
@@ -198,6 +190,10 @@ public class ImageScaler {
 		producer.startProduction(generator);
 		BufferedImage scaled = generator.getImage();
 		return scaled;
+	}
+  
+	public static BufferedImage scale(int width, int height, boolean keepAspect, BufferedImage original) {
+		return scale(width, height, keepAspect, original, original.getWidth(), original.getHeight());
 	}
   
   /**
