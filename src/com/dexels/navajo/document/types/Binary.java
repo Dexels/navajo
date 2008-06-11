@@ -851,23 +851,10 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     }
      
     public static void main(String [] args) throws Exception {
-    	Binary b1 = new Binary( new File("/home/arjen/Pictures/photo.jpg" ), false );
+    	Binary b1 = new Binary( new File("/home/arjen/Rankovic.wmv" ), false );
     	
-    	Navajo n = NavajoFactory.getInstance().createNavajo();
-    	Message m = NavajoFactory.getInstance().createMessage(n, "Test");
-    	n.addMessage(m);
-    	Property p = NavajoFactory.getInstance().createProperty(n, "Photo", Property.BINARY_PROPERTY, null, 0, "", "");
-    	p.setValue(b1);
-    	m.addProperty(p);
-    	
-    	ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("/home/arjen/serialized"));
-    	oos.writeObject(n);
-    	oos.close();
-    	
-    	ObjectInputStream ois = new ObjectInputStream(new FileInputStream("/home/arjen/serialized"));
-    	Navajo n2 = (Navajo) ois.readObject();
-    	
-    	n2.write(System.err);
+    System.err.println(b1.guessContentType());
+    System.err.println(b1.getExtension());
     	
     	
     	
