@@ -45,7 +45,6 @@ public class TipiNewCallService extends TipiAction {
 		if(destination!=null) {
 			destAddress = (String) destination.value;
 		}
-		System.err.println("oh la la: "+destAddress);
 		if (serviceOperand == null || serviceOperand.value == null) {
 			throw new TipiException("Error in callService action: service parameter missing!");
 		}
@@ -63,9 +62,9 @@ public class TipiNewCallService extends TipiAction {
 				defaultConnector.doTransaction(input, service);
 			}
 			long transaction = System.currentTimeMillis() - timeStamp;
-			System.err.println("Transaction: "+service+" in connector: "+defaultConnector.getConnectorId()+" took: "+transaction+" millis.");
+//			System.err.println("Transaction: "+service+" in connector: "+defaultConnector.getConnectorId()+" took: "+transaction+" millis.");
 		} else {
-			System.err.println("Retrieving connector: "+(String) connector.value);
+//			System.err.println("Retrieving connector: "+(String) connector.value);
 			long timeStamp = System.currentTimeMillis();
 			TipiConnector ttt = myContext.getConnector((String) connector.value);
 			if(ttt==null) {
@@ -76,7 +75,7 @@ public class TipiNewCallService extends TipiAction {
 				ttt.doTransaction(input,service,destAddress);
 			}
 			long transaction = System.currentTimeMillis() - timeStamp;
-			System.err.println("Transaction: "+service+" in connector: "+(String) connector.value+" took: "+transaction+" millis.");
+//			System.err.println("Transaction: "+service+" in connector: "+(String) connector.value+" took: "+transaction+" millis.");
 		}
 //
 //		if(unevaluated!=null && input==null) {

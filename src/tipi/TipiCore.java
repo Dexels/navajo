@@ -2,7 +2,14 @@ package tipi;
 
 import java.util.*;
 
+import com.dexels.navajo.tipi.*;
+
 public class TipiCore implements TipiExtension {
+
+	public void initialize(TipiContext tc) {
+		// Do nothing
+		
+	}
 
 	public String getDescription() {
 		return "Core tipi";
@@ -48,5 +55,9 @@ public class TipiCore implements TipiExtension {
 
 	public String getConnectorId() {
 		return "http";
+	}
+
+	public List<String> getRequiredExtensions() {
+		return null;
 	}
 }

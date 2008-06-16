@@ -170,7 +170,7 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
 					// System.err.println("USING SUBQUESTION COMPONENT:
 					// "+tdc.getPath());
 					TipiBaseQuestion tc = (TipiBaseQuestion) TipiInstantiateTipi.instantiateByDefinition(tdc, false, myId,
-							questionDefinitionName, null);
+							questionDefinitionName, null,null);
 					tc.setValue("messagePath", current.getFullMessageName());
 					tc.setValue("questionDefinitionName", questionDefinitionName);
 					tc.loadData(n, myContext);

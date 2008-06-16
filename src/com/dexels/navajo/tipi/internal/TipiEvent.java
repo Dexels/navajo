@@ -219,7 +219,10 @@ public class TipiEvent implements TipiExecutable {
 				current.performAction(localInstance, localInstance, i);
 				
 			}
-		} catch (Throwable ex) {
+		} catch (TipiBreakException e) {
+			System.err.println("break detected");
+		}
+		catch (Throwable ex) {
 			getContext().showInternalError("Error performing event: "+getEventName()+" for component: "+getComponent().getPath()+" action: "+last+" : "+ex.getMessage(), ex);
 			ex.printStackTrace();
 		}

@@ -15,6 +15,7 @@ import com.dexels.navajo.client.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.types.*;
 import com.dexels.navajo.parser.*;
+import com.dexels.navajo.tipi.actions.*;
 import com.dexels.navajo.tipi.components.core.*;
 import com.dexels.navajo.tipi.connectors.*;
 import com.dexels.navajo.tipi.extension.*;
@@ -161,6 +162,8 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 
 	private TipiContext myParentContext;
 
+	private final List<TipiDefinitionListener> tipiDefinitionListeners = new LinkedList<TipiDefinitionListener>();
+
 	public TipiContext(TipiContext parent) {
 		this();
 		myParentContext = parent;
@@ -168,6 +171,9 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 	public TipiContext() {
 		Iterator<TipiExtension> tt = ServiceRegistry.lookupProviders(TipiExtension.class);
 		initializeExtensions(tt);
+//		getClassLoader().getResources
+	
+//		System.err.println("FORCING FAKE MODE!!! BEWARE!!!!!!!!!!");
 		if (coreExtensionList.isEmpty()) {
 			System.err.println("Beware: no extensions. Running without jars? Entering fake mode...");
 			fakeJars = true;
@@ -202,8 +208,13 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 			fakeExtension(optionalExtensionList,"tipi.TipiGoogleExtension");
 			fakeExtension(optionalExtensionList,"tipi.TipiYoutubeExtension");
 			fakeExtension(optionalExtensionList,"tipi.TipiFlickrExtension");
+			fakeExtension(optionalExtensionList,"tipi.TipiSwingXExtension");
+			fakeExtension(optionalExtensionList,"tipi.TipiGeoSwingExtension");
+			fakeExtension(optionalExtensionList,"tipi.TipiBatikExtension");
+			fakeExtension(optionalExtensionList,"tipi.NavajoRichTipiExtension");
 			
-			// initialize again
+
+				// initialize again
 			appendIncludes(coreExtensionList, includeList);
 			appendIncludes(mainExtensionList, includeList);
 			appendIncludes(optionalExtensionList, includeList);
@@ -212,8 +223,20 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 
 	private void fakeExtension(List<TipiExtension> extensionList, String extensionName) {
 		try {
-			extensionList.add((TipiExtension) Class.forName(extensionName).newInstance());
+			System.err.println("Attempting to load extension: "+extensionName);
+			TipiExtension tipiExtension = (TipiExtension) Class.forName(extensionName).newInstance();
+			checkExtension(tipiExtension,extensionList);
+			extensionList.add(tipiExtension);
+			tipiExtension.initialize(this);
 		} catch (Exception e) {
+			System.err.println("Could not load extension: "+extensionName+" message: "+e.getMessage());
+			if (e instanceof ClassNotFoundException) {
+				System.err.println("Just not found.");
+			} else {
+				System.err.println("Something else: ");
+				e.printStackTrace();
+			}
+
 		}	
 	}
 
@@ -222,11 +245,12 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 		mainExtensionList = new ArrayList<TipiExtension>();
 		optionalExtensionList = new ArrayList<TipiExtension>();
 		// List<String> includeList = new ArrayList<String>();
-
+		int count = 0;
 		while (tt.hasNext()) {
 			TipiExtension element = tt.next();
 			extensionMap.put(element.getId(), element);
 			System.err.println("Description: " + element.getDescription());
+			count++;
 			if (element.requiresMainImplementation() == null) {
 				coreExtensionList.add(element);
 				continue;
@@ -236,7 +260,16 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 			} else {
 				optionalExtensionList.add(element);
 			}
+			// initialize the extension (whatever it may do)
+			element.initialize(this);
 		}
+		System.err.println("Total # of extensions: "+count);
+		List<TipiExtension> allExtensions = new LinkedList<TipiExtension>();
+		allExtensions.addAll(mainExtensionList);
+		allExtensions.addAll(coreExtensionList);
+		allExtensions.addAll(optionalExtensionList);
+		checkExtensions(allExtensions);
+		
 		appendIncludes(coreExtensionList, includeList);
 		appendIncludes(mainExtensionList, includeList);
 		appendIncludes(optionalExtensionList, includeList);
@@ -247,6 +280,20 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 
 	}
 
+	private void checkExtensions(List<TipiExtension> e) {
+		for (TipiExtension tipiExtension : e) {
+			checkExtension(tipiExtension,e);
+		}
+	}
+
+	private void checkExtension(TipiExtension tipiExtension,List<TipiExtension> allExtension) {
+		System.err.println("Checking: "+tipiExtension.getId()+" : "+tipiExtension.getDescription());
+		String main = tipiExtension.requiresMainImplementation();
+		List<String> extensions = tipiExtension.getRequiredExtensions();
+		System.err.println("NEEDS: "+main+" ext: "+extensions);
+	}
+
+	
 	private void appendIncludes(List<TipiExtension> extensionList, List<String> includes) {
 		for (TipiExtension tipiExtension : extensionList) {
 			if (tipiExtension.getIncludes() == null) {
@@ -393,14 +440,18 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 	}
 
 	public void clearLazyDefinitionCache() {
+		System.err.println("Flushing lazy definition cache!");
 		Set<String> iterSet = new HashSet<String>(tipiComponentMap.keySet());
 		for (Iterator<String> iter = iterSet.iterator(); iter.hasNext();) {
 			String definitionName = iter.next();
 			XMLElement def = tipiComponentMap.get(definitionName);
 			String lazyLocation = lazyMap.get(definitionName);
-			if (lazyLocation != null && def != null) {
+//			if (lazyLocation != null && def != null) {
+			System.err.println("Removing: "+definitionName);
 				tipiComponentMap.remove(definitionName);
-			}
+//			} else {
+				
+//			}
 		}
 	}
 
@@ -796,7 +847,8 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 			try {
 				parseLibrary(element, false, null, false);
 			} catch (UnsupportedClassVersionError e) {
-				System.err.println("Error parsing extension: " + element + " wrong java version!");
+				System.err.println("Error parsing extension: " + element + " wrong java version! "+e.getCause());
+				
 				throw new UnsupportedClassVersionError(e.getMessage());
 			}
 	}
@@ -916,7 +968,7 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 	// return instantiateLayout(instance,null);
 	// }
 
-	protected TipiComponent instantiateComponentByDefinition(XMLElement definition, XMLElement instance) throws TipiException {
+	protected TipiComponent instantiateComponentByDefinition(XMLElement definition, XMLElement instance, TipiEvent event) throws TipiException {
 		String clas = definition.getStringAttribute("class");
 		if (clas == null) {
 			clas = definition.getStringAttribute("type");
@@ -942,7 +994,7 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 			tc.loadEventsDefinition(this, definition, classDef);
 			tc.loadMethodDefinitions(this, definition, classDef);
 			// -----------------------------
-			tc.loadStartValues(definition);
+			tc.loadStartValues(definition,event);
 			boolean se = definition.getAttribute("studioelement") != null;
 			tc.setStudioElement(se);
 			tc.commitToUi();
@@ -952,7 +1004,7 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 		}
 	}
 
-	public TipiComponent reloadComponent(TipiComponent comp, XMLElement definition, XMLElement instance) throws TipiException {
+	public TipiComponent reloadComponent(TipiComponent comp, XMLElement definition, XMLElement instance, TipiEvent event) throws TipiException {
 		String clas = definition.getStringAttribute("class", "");
 		if (clas == null || "".equals(clas)) {
 			clas = definition.getStringAttribute("type", "");
@@ -962,7 +1014,7 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 			XMLElement classDef = tipiClassDefMap.get(clas);
 			comp.loadEventsDefinition(this, definition, classDef);
 			comp.loadMethodDefinitions(this, definition, classDef);
-			comp.loadStartValues(definition);
+			comp.loadStartValues(definition,event);
 			boolean se = definition.getAttribute("studioelement") != null;
 			comp.setStudioElement(se);
 			return comp;
@@ -971,7 +1023,7 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 		}
 	}
 
-	public TipiComponent instantiateComponent(XMLElement instance) throws TipiException {
+	public TipiComponent instantiateComponent(XMLElement instance, TipiEvent event,TipiInstantiateTipi t) throws TipiException {
 		String name = (String) instance.getAttribute("name");
 		String tagName = instance.getName();
 		String clas = instance.getStringAttribute("class");
@@ -993,14 +1045,30 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 			if (xx == null) {
 				throw new TipiException("Definition based instance, but no definition found. Definition: " + name);
 			}
-			tc = instantiateComponentByDefinition(xx, instance);
+			tc = instantiateComponentByDefinition(xx, instance,event);
 
 		} else {
 			// Class provided. Not instantiating from a definition, name is
 			// irrelevant.
 			tc = (TipiComponent) instantiateClass(clas, null, instance);
 		}
-		tc.loadStartValues(instance);
+		
+		
+		
+		if (t==null) {
+			tc.loadStartValues(instance,event);
+		} else {
+			Set<String> paramNames = t.getParameterNames();
+			for (String param : paramNames) {
+				if(param.equals("id") || param.equals("name") ||param.equals("class") || param.equals("constraints") || param.equals("location")|| param.equals("force")  ) {
+					continue;
+				}
+				Object o = t.getEvaluatedParameterValue(param, event);
+				tc.setValue(param, o);
+			}
+		}
+		
+		
 		tc.componentInstantiated();
 
 		return tc;
@@ -1084,7 +1152,7 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 			TipiComponent tc = (TipiComponent) o;
 			tc.setContext(this);
 			if(tc.getId()==null) {
-				tc.setId(generateComponentId(null));
+				tc.setId(generateComponentId(null,tc));
 			}
 			// tc.setContainer(tc.createContainer());
 			tc.setPropertyComponent(classDef.getBooleanAttribute("propertycomponent", "true", "false", false));
@@ -1102,9 +1170,13 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 			
 			if("connector".equals(componentType)) {
 				boolean isDefaultConnector = instance.getBooleanAttribute("default", "true", "false", false);
-				registerConnector((TipiConnector)tc);
-				if(isDefaultConnector) {
-					this.defaultConnector = (TipiConnector) tc;
+				if(!(tc instanceof TipiConnector)) {
+					showInternalError("Error: Component: "+className+" is registered as a component, but it does not implement TipiConnector!");
+				} else {
+					registerConnector((TipiConnector)tc);
+					if(isDefaultConnector) {
+						this.defaultConnector = (TipiConnector) tc;
+					}
 				}
 			}
 			
@@ -1121,7 +1193,25 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 	}
 
 	public Class<?> getTipiClass(String name)  {
-		return tipiClassMap.get(name);
+		Class<?> cc = tipiClassMap.get(name);
+		if(cc!=null) {
+			return cc;
+		}
+		XMLElement xe = tipiClassDefMap.get(name);
+		if(xe==null) {
+			return null;
+		}
+		String pack = (String) xe.getAttribute("package");
+		String clas = (String) xe.getAttribute("class");
+		String fullDef = pack + "." + clas;
+//		System.err.println("Adding: "+fullDef);
+		try {
+			cc = Class.forName(fullDef, true, getClassLoader());
+			tipiClassMap.put(name, cc);
+		} catch (ClassNotFoundException ex) {
+			ex.printStackTrace();
+		}
+		return cc;
 	}
 
 	private final void addTipiClassDefinition(XMLElement xe) {
@@ -1131,15 +1221,15 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 		String fullDef = pack + "." + clas;
 		setSplashInfo("Adding: " + fullDef);
 //		System.err.println("Adding: "+fullDef);
-		try {
-			Class<?> c = Class.forName(fullDef, true, getClassLoader());
-			tipiClassMap.put(name, c);
+//		try {
+//			Class<?> c = Class.forName(fullDef, true, getClassLoader());
+//			tipiClassMap.put(name, c);
 			tipiClassDefMap.put(name, xe);
-		} catch (ClassNotFoundException ex) {
-			ex.printStackTrace();
+//		} catch (ClassNotFoundException ex) {
+//			ex.printStackTrace();
 			// throw new TipiException("Trouble loading class. Name: " + clas +
 			// " in package: " + pack);
-		}
+//		}
 	}
 
 	public Iterator<String> getTipiClassDefIterator() {
@@ -1182,12 +1272,23 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 		}
 	}
 
-	
-	protected XMLElement getTipiDefinition(String name)  {
+	/**
+	 * Returns a cached tipi definition. If it is not cached, it will return null.
+	 * Generally, you'll want to use getComponentDefinition(name), which will do
+	 * whatever it can to locate the source.
+	 * @param name
+	 * @return
+	 */
+	public XMLElement getTipiDefinition(String name)  {
 		XMLElement xe = tipiComponentMap.get(name);
 		return xe;
 	}
 
+	/**
+	 * Lists all instantiated components that listen to the specified service
+	 * @param service
+	 * @return
+	 */
 	public List<TipiDataComponent> getTipiInstancesByService(String service)  {
 		// List<TipiDataComponent> x= tipiInstanceMap.get(service);
 		return tipiInstanceMap.get(service);
@@ -1222,19 +1323,33 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 			}
 			parseLibrary(total, true, componentName, false);
 			xe = getTipiDefinition(componentName);
+			fireDefinitionLoaded(componentName, xe);
 			return xe;
 
 			// return null;
+		} else {
+			parseLibrary(location, true, componentName, false);
+			xe = getTipiDefinition(componentName);
+			fireDefinitionLoaded(componentName, xe);
+			return xe;
+			
 		}
-		parseLibrary(location, true, componentName, false);
-		xe = getTipiDefinition(componentName);
-		return xe;
 	}
 
 	protected void addComponentDefinition(XMLElement elm) {
 		String defname = (String) elm.getAttribute("name");
 		setSplashInfo("Loading: " + defname);
+		if(defname.equals("init")) {
+			
+		}
 		tipiComponentMap.put(defname, elm);
+		
+		if(!hasDebugger) {
+			// debug mode, don't cache at all
+			
+//			tipiComponentMap.put(defname, elm);
+			
+		}
 		// tipiMap.put(defname, elm);
 	}
 
@@ -1291,7 +1406,7 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 			throw new TipiException("Fatal tipi error: Can not switch. Unknown definition: " + name);
 		}
 		componentDefinition.setAttribute("id", "init");
-		TipiComponent tc = instantiateComponent(componentDefinition);
+		TipiComponent tc = instantiateComponent(componentDefinition,null,null);
 		tc.commitToUi();
 
 		
@@ -1299,7 +1414,7 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 		try {
 			TipiExtension t = extensionMap.get("develop");
 			if (t != null) {
-				TipiComponent dev = instantiateComponent(getComponentDefinition("develop"));
+				TipiComponent dev = instantiateComponent(getComponentDefinition("develop"),null,null);
 				tc.addComponent(dev, this, null);
 			}
 		} catch (Throwable e) {
@@ -2199,18 +2314,19 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 
 	public abstract void showInfo(final String text, final String title);
 
-	public String generateComponentId(TipiComponent parent) {
-		String generated = "RandomId" + Math.random();
-		if (parent == null) {
-			return generated;
-		}
-		TipiComponent present = parent.getTipiComponent(generated);
-		if (present != null) {
-			// try again
-			return generateComponentId(parent);
-		}
-		return generated;
-
+	public String generateComponentId(TipiComponent parent, TipiComponent component) {
+//		String generated = "RandomId" + Math.random();
+//		if (parent == null) {
+//			return generated;
+//		}
+//		TipiComponent present = parent.getTipiComponent(generated);
+//		if (present != null) {
+//			// try again
+//			return generateComponentId(parent,component);
+//		}
+//		return generated;
+		return component.getClass().getName()+"@"+component.hashCode();
+		
 	}
 
 //	public String getGenericResourceLoader() {
@@ -2220,7 +2336,7 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 	public void setGenericResourceLoader(String resourceCodeBase) throws MalformedURLException {
 		this.resourceCodeBase = resourceCodeBase;
 		if (resourceCodeBase != null) {
-			if (resourceCodeBase.indexOf("http:/") != -1) {
+			if (resourceCodeBase.indexOf("http:/") != -1 || resourceCodeBase.indexOf("file:/") != -1) {
 				setGenericResourceLoader(new HttpResourceLoader(new URL(resourceCodeBase)));
 			} else {
 				File res = new File(resourceCodeBase);
@@ -2238,7 +2354,7 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 	public void setTipiResourceLoader(String tipiCodeBase) throws MalformedURLException {
 		this.tipiCodeBase = tipiCodeBase;
 		if (tipiCodeBase != null) {
-			if (tipiCodeBase.indexOf("http:/") != -1) {
+			if (tipiCodeBase.indexOf("http:/") != -1 || tipiCodeBase.indexOf("file:/") != -1) {
 				setTipiResourceLoader(new HttpResourceLoader(new URL(tipiCodeBase)));
 			} else {
 				setTipiResourceLoader(new FileResourceLoader(new File(tipiCodeBase)));
@@ -2266,6 +2382,7 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 		}
 		String tipiCodeBase = properties.get("tipiCodeBase");
 		String resourceCodeBase = properties.get("resourceCodeBase");
+		System.err.println("Tipi code base: "+tipiCodeBase);
 			setTipiResourceLoader(tipiCodeBase);
 			setGenericResourceLoader(resourceCodeBase);
 	}
@@ -2281,7 +2398,21 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 	public void fireTipiStructureChanged(TipiComponent tc) {
 		// do nothing
 	}
+	public void addDefinitionListener(TipiDefinitionListener te) {
+		tipiDefinitionListeners .add(te);
+	}
 
+	public void removeDefinitionListener(TipiDefinitionListener te) {
+		tipiDefinitionListeners.remove(te);
+	}
+	
+	public void fireDefinitionLoaded(String name, XMLElement definition) {
+		for (TipiDefinitionListener tdl : tipiDefinitionListeners) {
+			tdl.definitionLoaded(name, definition);
+		}
+	}
+
+	
 	public void addTipiEventReporter(TipiEventReporter te) {
 		tipiEventReporterList.add(te);
 	}
@@ -2596,9 +2727,6 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 	
 	public TipiConnector getConnector(String id) {
 		TipiConnector tipiConnector = tipiConnectorMap.get(id);
-		if(tipiConnector!=null) {
-			System.err.println("found!");
-		}
 		return tipiConnector;
 	}
 

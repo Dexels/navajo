@@ -450,8 +450,9 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 //			if(defname!=null) {
 //				id = defname;
 //			}
-			id = myContext.generateComponentId(null);
+			id = myContext.generateComponentId(null,this);
 		}
+		
 //		stateMessage  = getStateMessage();// NavajoFactory.getInstance().createMessage(myContext.getStateNavajo(), id!=null?id:"Unknown");
 		XMLElement definitionXml = null;
 		if (defname != null && !instance.getName().startsWith("c.")) {
@@ -490,7 +491,7 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 	public void initBeforeBuildingChildren(XMLElement instance, XMLElement classdef, XMLElement definition) {
 	}
 
-	public void loadStartValues(XMLElement element) {
+	public void loadStartValues(XMLElement element, TipiEvent event) {
 		Iterator<String> it = componentValues.keySet().iterator();
 		while (it.hasNext()) {
 			String key = it.next();
@@ -501,11 +502,11 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 					throw new RuntimeException(
 							"You cannot pass the value of an 'out' direction value in to an instance or definition in the script");
 				}
-				// System.err.println("About to evaluate value: "+value);
+//				System.err.println("About to evaluate value: "+value);
 
-				Operand o = evaluate(value.toString(), this, null);
+				Operand o = evaluate(value.toString(), this, event);
 				if (o != null && o.value != null) {
-					setValue(key, value, o.value, this, false, null);
+					setValue(key, value, o.value, this, false, event);
 				} else {
 					System.err.println("Evaluation error: " + value);
 					setValue(key, value);
@@ -679,6 +680,9 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 	}
 
 	public String getId() {
+		if(myId==null) {
+			myId = myContext.generateComponentId(getTipiParent(),this);
+		}
 		return myId;
 	}
 	
@@ -688,7 +692,7 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 		}
 		stateMessage = NavajoFactory.getInstance().createMessage(myContext.getStateNavajo(),getId());
 		if(getTipiParent()!=null) {
-//			System.err.println("Adding: "+getId()+" to: "+getTipiParent().getId());
+			System.err.println("Adding: "+getId()+" to: "+getTipiParent().getId());
 			getTipiParent().getStateMessage().addMessage(stateMessage);
 		}
 		return stateMessage;
@@ -1355,10 +1359,11 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 	}
 
 	public TipiComponent addComponentInstance(TipiContext context, XMLElement inst, Object constraints) throws TipiException {
-		TipiComponent ti = (context.instantiateComponent(inst));
+		//TODO add TipiEvent as parameter
+		TipiComponent ti = (context.instantiateComponent(inst,null,null));
 		ti.setConstraints(constraints);
 		if(ti.getId()==null) {
-			ti.setId(myContext.generateComponentId(this));
+			ti.setId(myContext.generateComponentId(this,ti));
 		}
 		addComponent(ti, context, constraints);
 

@@ -82,7 +82,7 @@ public interface TipiComponent extends ConditionErrorHandler, TipiEventListener,
 
 	public void instantiateComponent(XMLElement instance, XMLElement classdef) throws TipiException;
 
-	public void loadStartValues(XMLElement element);
+	public void loadStartValues(XMLElement element,TipiEvent event);
 
 	public boolean isReusable();
 
@@ -110,6 +110,9 @@ public interface TipiComponent extends ConditionErrorHandler, TipiEventListener,
 
 
 	public void disposeComponent();
+	
+	public void removeAllChildren();
+		
 
 	public void removeChild(TipiComponent child);
 

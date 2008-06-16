@@ -28,6 +28,7 @@ public class HttpResourceLoader extends ClassPathResourceLoader {
 		try {
 			is = u.openStream();
 		} catch (IOException e) {
+			e.printStackTrace();
 		}
 		if (is != null) {
 			return is;

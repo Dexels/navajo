@@ -24,6 +24,15 @@
       </entrypoints>
       <methods />
    </tipiclass>
+   
+   <tipiclass class="ResourceNavajoConnector" description="Navajo Resource" name="resource" package="com.dexels.navajo.tipi.connectors" type="connector">
+      <events>
+         <event name="onInstantiate" />
+      </events>
+      <values>
+      </values>
+      <methods />
+   </tipiclass>
 
    <tipiclass studio-icon="messagestore.gif" module="abstract" class="TipiShadowFilterImpl" name="filter" package="com.dexels.navajo.tipi.connectors" type="connector"
       childcount="0" layoutmanager="false" addtocontainer="false">

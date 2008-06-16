@@ -129,6 +129,13 @@
    <tipiaction name="dispose" class="TipiDispose" package="com.dexels.navajo.tipi.actions">
       <param name="path" type="tipi" required="true" />
    </tipiaction>
+
+   <tipiaction name="disposeChildren" class="TipiDisposeChildren" package="com.dexels.navajo.tipi.actions">
+      <param name="path" type="tipi" required="true" />
+   </tipiaction>
+
+   
+   
    <tipiaction name="disposePath" class="TipiDisposePath" package="com.dexels.navajo.tipi.actions">
       <param name="path" type="string" required="true" />
    </tipiaction>

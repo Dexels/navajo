@@ -30,30 +30,30 @@ public class TipiInstantiateTipi extends TipiAction {
 	}
 
 	public static TipiComponent instantiateByDefinition(TipiComponent parent, boolean force, String id, String definitionName,
-			Object constraints) throws TipiException {
+			Object constraints, TipiEvent event) throws TipiException {
 		TipiInstantiateTipi t = new TipiInstantiateTipi();
 		// sort of hackish
 		t.setContext(parent.getContext());
-		return t.instantiateTipi(false, parent, force, id, null, definitionName, null, constraints);
+		return t.instantiateTipi(false, parent, force, id, null, definitionName, null, constraints,  event);
 	}
 
 	protected TipiComponent instantiateTipiByDefinition(TipiComponent parent, boolean force, String id, String className,
-			String definitionName, Object constraints) throws TipiException {
-		return instantiateTipi(false, parent, force, id, className, definitionName, null, constraints);
+			String definitionName, Object constraints,TipiEvent event) throws TipiException {
+		return instantiateTipi(false, parent, force, id, className, definitionName, null, constraints,event);
 	}
 
 	protected TipiComponent instantiateTipiByClass(TipiComponent parent, boolean force, String id, String className, String definitionName,
-			Object constraints) throws TipiException {
-		return instantiateTipi(true, parent, force, id, className, definitionName, null, constraints);
+			Object constraints,TipiEvent event) throws TipiException {
+		return instantiateTipi(true, parent, force, id, className, definitionName, null, constraints,event);
 	}
 
 	protected TipiComponent instantiateTipi(boolean byClass, TipiComponent parent, boolean force, String id, String className,
-			String definitionName, Map<String,TipiValue> paramMap, Object constraints) throws TipiException {
-		return instantiateTipi(myContext, null, byClass, parent, force, id, className, definitionName, null, constraints);
+			String definitionName, Map<String,TipiValue> paramMap, Object constraints,TipiEvent event) throws TipiException {
+		return instantiateTipi(myContext, null, byClass, parent, force, id, className, definitionName, null, constraints,event);
 	}
 	
 	protected TipiComponent instantiateTipi(TipiContext myContext, TipiComponent myComponent, boolean byClass, TipiComponent parent,
-			boolean force, String id, String className, String definitionName, Map<String,TipiValue> paramMap, Object constraints) throws TipiException {
+			boolean force, String id, String className, String definitionName, Map<String,TipiValue> paramMap, Object constraints,TipiEvent event) throws TipiException {
 
 		TipiComponent comp = parent.getTipiComponentByPath(id);
 
@@ -96,9 +96,9 @@ public class TipiInstantiateTipi extends TipiAction {
 		} else {
 			xe.setAttribute("name", definitionName);
 		}
-		if(id==null) {
-			myContext.generateComponentId(parent);
-		}
+//		if(id==null) {
+//			myContextgenerateComponentId(parent);
+//		}
 		xe.setAttribute("id", id);
 		if (paramMap != null) {
 			Iterator<String> it = paramMap.keySet().iterator();
@@ -106,10 +106,11 @@ public class TipiInstantiateTipi extends TipiAction {
 				try {
 					String current = it.next();
 					if (!"location".equals(current)) {
-						Object value = evaluate(getParameter(current).getValue(), null).value;
+						Object value = evaluate(getParameter(current).getValue(), event).value;
 						if("id".equals(current) || "class".equals(current) || "name".equals(current)) {
 							xe.setAttribute(current, value);
 						} else {
+							// TODO THIS IS FILTHY!!!!
 							String vv = getEscapedString(value);
 							xe.setAttribute(current, vv);
 						}
@@ -121,7 +122,7 @@ public class TipiInstantiateTipi extends TipiAction {
 			}
 		}
 		
-		TipiComponent inst = myContext.instantiateComponent(xe);
+		TipiComponent inst = myContext.instantiateComponent(xe,event,this);
 		inst.setHomeComponent(true);
 		inst.setId(id);
 		parent.addComponent(inst, myContext, constraints);
@@ -159,8 +160,7 @@ public class TipiInstantiateTipi extends TipiAction {
 			if (constraints != null) {
 				constraints = ((Operand) constraints).value;
 			}
-			id = (String) evaluate(getParameter("id").getValue(), null).value;
-			
+			id = (String) evaluate(getParameter("id").getValue(), event).value;
 			
 			Object o = evaluate((getParameter("location").getValue()), null).value;
 			if (String.class.isInstance(o)) {
@@ -174,18 +174,28 @@ public class TipiInstantiateTipi extends TipiAction {
 		}
 		if (byClass) {
 			instantiateTipi(myContext, myComponent, byClass, parent, force, id, (String) getEvaluatedParameter("class",event).value, null, parameterMap,
-					constraints);
+					constraints,event);
 		} else {
 			String definitionName = null;
 			try {
 				Operand ooo = getEvaluatedParameter("name", null);
 				definitionName = (String) ooo.value;
 			} catch (Exception ex1) {
-				System.err
-						.println("Trouble instantiating from definition. Actually, this probably means that you did not put quotes around the tipidefinition name,\nwhich is required by the new ISO-TIPI-2004 standard.");
+				myContext.showInternalError("Error loading definition: "+definitionName,ex1);
 				definitionName = getParameter("name").getValue();
 			}
-			instantiateTipi(myContext, myComponent, byClass, parent, force, id, null, definitionName, parameterMap, constraints);
+			try {
+				// retry:
+				instantiateTipi(myContext, myComponent, byClass, parent, force, id, null, definitionName, parameterMap, constraints,event);
+			} catch (Exception ex1) {
+				// still did not work:
+				myContext.showInternalError("Error loading definition: "+definitionName,ex1);
+				if(ex1 instanceof TipiException) {
+					TipiException te = (TipiException)ex1;
+					throw te;
+				}
+			}
+
 		}
 	}
 }

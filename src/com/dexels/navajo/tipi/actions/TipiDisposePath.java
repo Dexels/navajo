@@ -16,7 +16,7 @@ import com.dexels.navajo.tipi.internal.*;
  * <p>
  * Company:
  * </p>
- * 
+ * @deprecated
  * @author not attributable
  * @version 1.0
  */

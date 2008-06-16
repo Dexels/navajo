@@ -249,7 +249,7 @@ public abstract class TipiBaseQuestionList extends TipiDataComponentImpl {
 					TipiDataComponent tc = null;
 					try {
 						tc = (TipiDataComponent) TipiInstantiateTipi.instantiateByDefinition(me, false, id, questionGroupDefinitionName,
-								getGroupConstraints(current));
+								getGroupConstraints(current),null);
 						// System.err.println("Created component:
 						// "+tc.getClass()+" container: "+tc.getContainer());
 						tc.setValue("messagePath", current.getFullMessageName());

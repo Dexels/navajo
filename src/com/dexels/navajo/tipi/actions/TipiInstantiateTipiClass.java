@@ -51,6 +51,6 @@ public class TipiInstantiateTipiClass extends TipiInstantiateTipi {
 		}
 		String className = (String) getEvaluatedParameter("class", event).value;
 		instantiateTipi(myContext, myComponent, byClass, parent, force, id, className, null,
-				parameterMap, constraints);
+				parameterMap, constraints,event);
 	}
 }
