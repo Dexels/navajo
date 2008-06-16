@@ -109,7 +109,9 @@ public final class PropertyCheckBox extends BaseCheckBox implements ChangeMonito
 
   final void this_actionPerformed(ActionEvent e) {
     if (myProperty!=null) {
+    	System.err.println("SETTING PROP: "+myProperty.getTypedValue());
       myProperty.setValue(isSelected());
+  	System.err.println("AFTER SETTING PROP: "+myProperty.getTypedValue());
 //       setSelected(((String)myProperty.getValue()).equals("true"));
     }
     setChanged(true);

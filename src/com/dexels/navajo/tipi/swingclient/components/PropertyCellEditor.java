@@ -76,7 +76,7 @@ private Object myOldValue;
 	  } else {
 		  System.err.println("NOOOOOOOT: "+doGetEditor.getClass());
 	  }
-	  
+	  myTable.setCurrentEditingComponent(doGetEditor);
 	  return doGetEditor;
   }
 
@@ -130,7 +130,7 @@ private Component doGetEditor(Object value, boolean isSelected, int row, int col
 //                ( (PropertyControlled) e.getSource()).update();
                   if (!isChangingSelection) {
                     System.err.println("COMBOBOX FIRED TOWARDS EDITOR");
-                    stopCellEditing();
+//                    stopCellEditing();
                   }
 
                 }
@@ -206,8 +206,16 @@ private Component doGetEditor(Object value, boolean isSelected, int row, int col
           myPropertyCheckBox = new PropertyCheckBox();
           myPropertyCheckBox.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-              stopCellEditing();
+//              stopCellEditing();
               System.err.println("CHECKBOX FIRED TOWARDS EDITOR");
+              
+              try {
+				myTable.fireChangeEvents(getProperty(), !myPropertyCheckBox.isSelected(), myPropertyCheckBox.isSelected());
+			} catch (NavajoException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+
             }
           });
         }
@@ -243,7 +251,10 @@ private Component doGetEditor(Object value, boolean isSelected, int row, int col
         setComponentColor(myDatePropertyField, isSelected, row, column);
         myDatePropertyField.addFocusListener(new FocusAdapter() {
           public void focusLost(FocusEvent e) {
-             ( (PropertyControlled) e.getSource()).update(); stopCellEditing();
+             ( (PropertyControlled) e.getSource()).update();
+       	  if(e.getOppositeComponent()!=myTable) {
+              stopCellEditing();
+    	  }
           }
         });
         myDatePropertyField.setBorder(b);
@@ -263,8 +274,18 @@ private Component doGetEditor(Object value, boolean isSelected, int row, int col
         myIntegerPropertyField.addFocusListener(new FocusAdapter() {
           public void focusLost(FocusEvent e) {
 //                ((PropertyControlled)e.getSource()).update();
-            stopCellEditing();
+//        	  System.err.println("Forcing stopppp: "+e.getOppositeComponent());
+        	  
+        	  if(e.getOppositeComponent()!=myTable) {
+                  stopCellEditing();
+        	  }
           }
+          public void focusGained(FocusEvent e) {
+//            ((PropertyControlled)e.getSource()).update();
+//    	  System.err.println("Gettin FocusEvent: "+e.getOppositeComponent());
+    	  
+//        stopCellEditing();
+      }
         });
 //        myIntegerPropertyField.addKeyListener(new KeyAdapter() {
 //          public void keyPressed(KeyEvent e) {
@@ -302,7 +323,9 @@ private Component doGetEditor(Object value, boolean isSelected, int row, int col
 //               System.err.println("Floatfield focus lost!");
 //               System.err.println(">>>>"+((FloatPropertyField)e.getSource()).getText());
 //               ((FloatPropertyField)e.getSource()).update();
-            stopCellEditing();
+        	  if(e.getOppositeComponent()!=myTable) {
+                  stopCellEditing();
+        	  }
           }
         });
         myFloatPropertyField.selectAll();
@@ -318,14 +341,16 @@ private Component doGetEditor(Object value, boolean isSelected, int row, int col
         }
         myMoneyPropertyField.setEditable(myProperty.isDirIn());
         lastComponent = myMoneyPropertyField;
-        myMoneyPropertyField.setPropertyValue(myProperty);
+        myMoneyPropertyField.setProperty(myProperty);
         setComponentColor(myMoneyPropertyField, isSelected, row, column);
 //        final String contents = myMoneyPropertyField.getText();
         final MoneyField m = myMoneyPropertyField;
         myMoneyPropertyField.addFocusListener(new FocusAdapter() {
           public void focusLost(FocusEvent e) {
         	  m.update();
-            stopCellEditing();
+        	  if(e.getOppositeComponent()!=myTable) {
+                  stopCellEditing();
+        	  }
           }
         });
         myMoneyPropertyField.editProperty();
@@ -347,7 +372,9 @@ private Component doGetEditor(Object value, boolean isSelected, int row, int col
 //         final String contents = myPercentagePropertyField.getText();
         myPercentagePropertyField.addFocusListener(new FocusAdapter() {
           public void focusLost(FocusEvent e) {
-            stopCellEditing();
+        	  if(e.getOppositeComponent()!=myTable) {
+                  stopCellEditing();
+        	  }
           }
         });
 //        myPercentagePropertyField.set(null);
@@ -373,7 +400,9 @@ private Component doGetEditor(Object value, boolean isSelected, int row, int col
 //               System.err.println("Floatfield focus lost!");
 //               System.err.println(">>>>"+((FloatPropertyField)e.getSource()).getText());
 //               ((FloatPropertyField)e.getSource()).update();
-            stopCellEditing();
+        	  if(e.getOppositeComponent()!=myTable) {
+                  stopCellEditing();
+        	  }
           }
         });
 //        myStopwatchTimeField.focusGained(null);
@@ -413,7 +442,9 @@ private Component doGetEditor(Object value, boolean isSelected, int row, int col
 //               System.err.println("Floatfield focus lost!");
 //               System.err.println(">>>>"+((FloatPropertyField)e.getSource()).getText());
 //               ((FloatPropertyField)e.getSource()).update();
-            stopCellEditing();
+        	  if(e.getOppositeComponent()!=myTable) {
+                  stopCellEditing();
+        	  }
           }
         });
 //        myClockTimeField.focusGained(null);
@@ -443,7 +474,9 @@ private Component doGetEditor(Object value, boolean isSelected, int row, int col
         myPropertyField.addFocusListener(new FocusAdapter() {
           public void focusLost(FocusEvent e) {
 //              ((PropertyControlled)e.getSource()).update();
-//            stopCellEditing();
+        	  if(e.getOppositeComponent()!=myTable) {
+                  stopCellEditing();
+        	  }
 //            System.err.println("PROPERTYFIELD FIRED TOWARDS EDITOR");
           }
         });
@@ -545,7 +578,7 @@ private Component doGetEditor(Object value, boolean isSelected, int row, int col
 				e.printStackTrace();
 			}
 		} else {
-			System.err.println("Que?");
+//			System.err.println("Que?");
 		}
 	}
 

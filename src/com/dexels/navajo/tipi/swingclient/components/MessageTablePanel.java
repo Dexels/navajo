@@ -937,6 +937,10 @@ public void updateTableSize() {
   }
 
   public final void setSelectedMessage(Message m) {
+	  if(m==null) {
+		  clearSelection();
+		  return;
+	  }
     for (int i = 0; i < messageTable.getRowCount(); i++) {
       Message msg = messageTable.getMessageRow(i);
       if (msg == m) {
@@ -970,22 +974,11 @@ public void updateTableSize() {
 		  // not enough rows
 		  return;
 	}
+	  if(row==-1) {
+		  clearSelection();
+		  return;
+	  }
     setRowSelectionInterval(row, row);
-
-    //remove that sh$t it flickers like a moonbeam..
-
-    //final Rectangle r = messageTable.getCellRect(row, 0, false);
-    //Rectangle vr = this.getVisibleRect();
-    //if(!vr.contains(r)){
-    //  SwingUtilities.invokeLater(new Runnable(){
-    //    public void run(){
-    //      jScrollPane1.getViewport().setViewPosition(new java.awt.Point(r.x, r.y));
-    //      jScrollPane1.getViewport().repaint();
-    //    }
-    //  });
-
-    //}
-
   }
 
   public void updateProperties(java.util.List l) {

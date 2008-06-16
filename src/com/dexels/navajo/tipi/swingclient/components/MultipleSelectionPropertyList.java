@@ -3,6 +3,7 @@ package com.dexels.navajo.tipi.swingclient.components;
 import javax.swing.event.*;
 import com.dexels.navajo.document.*;
 
+import java.util.*;
 import java.util.List;
 import java.awt.*;
 import java.awt.event.*;
@@ -211,7 +212,7 @@ public final class MultipleSelectionPropertyList extends JPanel implements Prope
 	}
 
 	final void this_valueChanged(ListSelectionEvent e) {
-//		int[] sel = myList.getSelectedIndices();
+		int[] sel = myList.getSelectedIndices();
 //
 //		try {
 //			List<Selection> mySel = myProperty.getAllSelections();
@@ -225,16 +226,24 @@ public final class MultipleSelectionPropertyList extends JPanel implements Prope
 		if(isReloading) {
 			return;
 		}
+		ArrayList<String> selected = new ArrayList<String>();
 		for (int i = 0; i < myModel.size(); i++) {
+			
 //			Thread.dumpStack();
 //			System.err.println("Model size: "+myModel.size());
-			Selection current = (Selection) myModel.get(i);
-			try {
-				myProperty.setSelected(current, myList.isSelectedIndex(i));
-			} catch (NavajoException e1) {
-				e1.printStackTrace();
+			if(myList.isSelectedIndex(i)) {
+				Selection current = (Selection) myModel.get(i);				
+				selected.add(current.getValue());
 			}
 		}
+		try {
+			myProperty.setSelected(selected);
+		} catch (NavajoException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+//		myProperty.setSelected(current, myList.isSelectedIndex(i));
+
 	}
 
 }

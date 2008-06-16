@@ -142,7 +142,6 @@ public class BinaryComponent extends JPanel implements PropertyControlled, Prope
 public static BufferedImage scale(int width, int height, boolean keepAspect, BufferedImage original) {
 	int originalWidth = original.getWidth();
 	int originalHeight = original.getHeight();
-	System.err.println("ORIGW: "+originalWidth+" origw: "+originalHeight);
 	if (width > originalWidth) {
 		width = originalWidth;
 	}

@@ -135,7 +135,6 @@ public class PropertyCellRenderer implements TableCellRenderer, ListCellRenderer
 
 		if (value == null) {
 			setComponentColor(l, isSelected, row, column, false, tm.getRowCount(), disabled);
-			System.err.println("Returning null component");
 			// myPanel.add(l,new
 			// GridBagConstraints(0,0,1,1,1,1,GridBagConstraints.CENTER,GridBagConstraints.BOTH,new
 			// Insets(DEFAULT_INSET,DEFAULT_INSET,DEFAULT_INSET,DEFAULT_INSET),0,0));
@@ -350,7 +349,7 @@ public class PropertyCellRenderer implements TableCellRenderer, ListCellRenderer
 			}
 		}
 
-		if (columnAttributes != null) {
+		if (columnAttributes != null && myProperty!=null) {
 			ColumnAttribute ca = (ColumnAttribute) columnAttributes.get(myProperty.getName());
 			if (ca != null) {
 				if (ca.getType().equals(ColumnAttribute.TYPE_ROWCOLOR)) {

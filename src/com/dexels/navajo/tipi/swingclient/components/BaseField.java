@@ -64,8 +64,10 @@ public class BaseField extends JTextField implements ChangeMonitoring, Validatab
   }
 
 
+  
+  
 
-  public void resetChanged() {
+public void resetChanged() {
     changed = false;
   }
 

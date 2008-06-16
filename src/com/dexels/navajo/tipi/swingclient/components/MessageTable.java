@@ -62,6 +62,10 @@ public class MessageTable
   private AdvancedMessageTablePanel topLevelParent;
   private EditRowDialog bd = null;
 
+  private final ArrayList columnDividers = new ArrayList();
+
+private Component myCurrentEditingComponent;
+	
   public MessageTable() {
     setAutoCreateColumnsFromModel(false);
     myModel = new MessageTableModel();
@@ -98,17 +102,22 @@ public class MessageTable
     });
     addFocusListener(new FocusListener() {
       public void focusLost(FocusEvent e) {
-//  		refreshSelectedCell();
+    	  System.err.println("TABLE: lOST FOCUS: Partner: "+e.getOppositeComponent());
+  		 if(e.getOppositeComponent()==myCurrentEditingComponent) {
+  			 System.err.println("INTERNAL!!!");
+  			 return;
+  		 }
+    	  //  		refreshSelectedCell();
         if (isEditing()) {
-        	System.err.println("Stopping edit!");
+//        	System.err.println("Stopping edit!");
           Property p = myEditor.getProperty();
           myEditor.updateProperty();
-          try {
-			System.err.println("Path: "+p.getFullPropertyName());
-		} catch (NavajoException e1) {
+//          try {
+//			System.err.println("Path: "+p.getFullPropertyName());
+//		} catch (NavajoException e1) {
 			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+//			e1.printStackTrace();
+//		}
 //          if( !(e.getSource() instanceof MessageTable) &&  p!=null && !Property.SELECTION_PROPERTY.equals(p.getType())) {
 //        	  // DON'T DO THIS FOR SELECTION PROPERTIES.
 //        	  System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> STOP EDITING: " + e.getSource());
@@ -117,8 +126,9 @@ public class MessageTable
         }
       }
 
-	public void focusGained(FocusEvent arg0) {
-		refreshSelectedCell();
+	public void focusGained(FocusEvent e) {
+		System.err.println("TABLE: GAINED FOCUS"+e.getOppositeComponent());
+//		refreshSelectedCell();
 	}
     });
     setupTableActions();
@@ -935,7 +945,6 @@ public void updateTableSize() {
     g2.setStroke(s);
   }
 
-  private final ArrayList columnDividers = new ArrayList();
 
   private int getXofColumn(int index) {
     int count = 0;
@@ -2192,6 +2201,8 @@ public void updateTableSize() {
 		if(!hasFocus()) {
 			grabFocus();
 		}
+		System.err.println("I REPEAT Starting edit at row: "+row+" column: "+column+" old sel: "+oldRow+" oldcol: "+oldColumn);
+		requestFocusInWindow();
 		editCellAt(row, column);
 //		getMessageModel().fireTableCellUpdated(oldRow, oldColumn);
 		
@@ -2203,19 +2214,12 @@ public void updateTableSize() {
 		int oldRow = getSelectedRow();
 		getMessageModel().fireTableCellUpdated(oldRow, oldColumn);
 	}
-	
-//	@Override
-//	public boolean requestFocusInWindow() {
-//		System.err.println(getClass().getName()+" REQUESTFOCUS!");
-//		if(isEditing()) {
-//			return myEditor.requestFocusInWindow();
-//			
-//		} else {
-//			return super.requestFocusInWindow();
-//		}
-//	}
 
-	
+	public void setCurrentEditingComponent(Component doGetEditor) {
+		// TODO Auto-generated method stub
+		myCurrentEditingComponent = doGetEditor;
+	}
+
 
 
 }
