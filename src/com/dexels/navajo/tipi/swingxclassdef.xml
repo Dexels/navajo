@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tid errorhandler="error">
+
+   <tipiclass addtocontainer="true" childcount="*" class="TipiJXPanel" layoutmanager="true" module="container" name="jxpanel" package="com.dexels.navajo.tipi.swingx" studio-icon="tabs.gif" type="component">
+      <events>
+         <event name="onInstantiate" />
+         
+      </events>
+      <values>
+       </values>
+      <methods>
+      </methods>
+   </tipiclass>
+</tid>
