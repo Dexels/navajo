@@ -867,7 +867,7 @@ public Access [] getUsers() {
    */
   public final Navajo handle(Navajo inMessage, Object userCertificate) throws
       FatalException {
-    return handle(inMessage, userCertificate, null);
+    return handle(inMessage, userCertificate, null, false);
   }
 
   /**
@@ -877,8 +877,12 @@ public Access [] getUsers() {
    * @return
    * @throws FatalException
    */
+  public final Navajo handle(Navajo inMessage, boolean skipAuth) throws FatalException {
+    return handle(inMessage, null, null, true);
+  }
+  
   public final Navajo handle(Navajo inMessage) throws FatalException {
-    return handle(inMessage, null);
+	  return handle(inMessage, null, null, false);
   }
 
   public String getThreadName(Access a) {
@@ -913,17 +917,22 @@ public Access [] getUsers() {
 
   }
   
+  public final Navajo handle(Navajo inMessage, Object userCertificate, ClientInfo clientInfo) throws FatalException {
+	  return handle(inMessage, userCertificate, clientInfo, false);
+  }
+  
   /**
    * Handle a webservice.
    *
    * @param inMessage
    * @param userCertificate
    * @param clientInfo
+   * @param skipAuth, always skip authorization part.
    * @return
    * @throws FatalException
    */
   @SuppressWarnings("deprecation")
-public final Navajo handle(Navajo inMessage, Object userCertificate, ClientInfo clientInfo) throws
+public final Navajo handle(Navajo inMessage, Object userCertificate, ClientInfo clientInfo, boolean skipAuth) throws
       FatalException {
 
     Access access = null;
@@ -967,7 +976,7 @@ public final Navajo handle(Navajo inMessage, Object userCertificate, ClientInfo 
 
       long startAuth = System.currentTimeMillis();
 
-      if ( useAuthorisation && !(isSpecialwebservice(rpcName) && rpcUser.equals("NAVAJO") ) ) {
+      if ( ( useAuthorisation && !skipAuth) && !(isSpecialwebservice(rpcName) && rpcUser.equals("NAVAJO") ) ) {
         try {
         	
           if ( navajoConfig == null ) {
