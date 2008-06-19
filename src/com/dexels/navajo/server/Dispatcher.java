@@ -76,7 +76,7 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
   public static final String VERSION = "$Id$";
   public static final String vendor  = "Dexels BV";
   public static final String product = "Navajo Service Delivery Platform";
-  public static final String version = "Release 2008.01.01 $tag$";
+  public static final String version = "Release 2008.01.01 $Tag$";
  
   /**
    * Unique dispatcher instance.
