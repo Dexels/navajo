@@ -287,7 +287,7 @@ public final class PersistenceManagerImpl implements PersistenceManager {
 			SoftReference se = (SoftReference) iter.next();
 			if ( se != null ) {
 				PersistentEntry pe = (PersistentEntry) se.get();
-				if ( pe != null && ( serviceKeyValues == null ||  pe.getService().equals(service) && pe.getKeyValues().equals(serviceKeyValues) ) ) {
+				if ( pe != null && (  pe.getService().equals(service) && ( serviceKeyValues == null || pe.getKeyValues().equals(serviceKeyValues) ) ) ) {
 					return true;
 				}
 			}
