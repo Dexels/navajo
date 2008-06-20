@@ -17,6 +17,15 @@ class CacheEntry {
 	public long expirationInterval;
 	public boolean userSpecific;
 	
+	/**
+	 * @param service, the name of service to be cached
+	 * @param serviceKey, the 'key' properties that are contained in the XML returned by the service. The serviceKey MUST
+	 * be in the RESPONSE XML.
+	 * @param persistenceKey, the 'key' properties that can be used to uniquely identify a service call. This key is
+	 * used to identify the cached entry. The persistenceKey MUST be in the request XML.
+	 * @param interval, the validity timeout of the cached entry.
+	 * @param userSpecific, if set to true, the cached entry is cached uniquely for to the calling named 'user'.
+	 */
 	public CacheEntry(String service, String serviceKey, String persistenceKey, long interval, boolean userSpecific) {
 		this.serviceName = service;
 		this.serviceKey = serviceKey;
@@ -102,17 +111,15 @@ public class CacheController extends GenericThread implements CacheControllerMXB
 	}
 	
 	/**
-	 * <message name="Cache">
-	 *   <message name="Entries" type="array">
-	 *      <message name="Entries"> 
-	 *          <property name="Webservice" value="competition/ProcessQueryClub"/>
-	 *          <property name="Timeout" value="60"/>
-	 *      </message>
-	 *   </message>
-	 * <message>
+	 *   <message name="Entries">
+     *      <property name="Webservice" value="club/ProcessQueryClub"/>
+     *      <property name="Timeout" value="6000000"/>
+     *      <property name="UserCache" value="false"/>
+     *      <property name="PersistenceKeys" value="/Club/ClubIdentifier"/>
+     *      <property name="CacheKeys" value="/ClubData/ClubIdentifier"/>
+     *   </message>
 	 */
 	private void readConfig() throws Exception {
-
 
 		Navajo config = Dispatcher.getInstance().getNavajoConfig().readConfig(CACHE_CONFIG);
 
