@@ -52,6 +52,11 @@ public class FTPMap  implements Mappable, com.dexels.navajo.server.enterprise.qu
 	public String password;
 	public String path;
 	public boolean queuedSend = false;
+	
+	public boolean delete = false;
+	public boolean mkdir = false;
+
+	
 	private long waitUntil = 0;
 	private int retries = 0;
 	private int maxRetries = 100;
@@ -59,6 +64,8 @@ public class FTPMap  implements Mappable, com.dexels.navajo.server.enterprise.qu
 	private Access myAccess;
 
 	public static int maxRunningInstances = -1;
+	
+	private String mode = "put";
 	
 	public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
 		myNavajo = inMessage;
@@ -118,10 +125,16 @@ public class FTPMap  implements Mappable, com.dexels.navajo.server.enterprise.qu
 				if ( path != null ) {
 					ftpClient.chdir( path );
 				}
-				InputStream is = content.getDataAsStream();
-				ftpClient.put( content.getDataAsStream(), filename );
-				is.close();
-				ftpClient.quit();
+				if(delete) {
+					ftpClient.delete(filename);
+				} else if(mkdir) {
+					ftpClient.mkdir(filename);
+				} else {
+					InputStream is = content.getDataAsStream();
+					ftpClient.put( content.getDataAsStream(), filename );
+					is.close();
+					ftpClient.quit();
+				}
 			} catch (Exception e) {
 				e.printStackTrace(System.err);
 				throw new UserException( -1, e.getMessage(), e);
@@ -224,6 +237,22 @@ public class FTPMap  implements Mappable, com.dexels.navajo.server.enterprise.qu
 
 	public void setMaxRunningInstances(int maxRunningInstances) {
 		this.maxRunningInstances = maxRunningInstances;
+	}
+
+	public boolean isDelete() {
+		return delete;
+	}
+
+	public void setDelete(boolean delete) {
+		this.delete = delete;
+	}
+
+	public boolean isMkdir() {
+		return mkdir;
+	}
+
+	public void setMkdir(boolean mkdir) {
+		this.mkdir = mkdir;
 	}
 
 }
