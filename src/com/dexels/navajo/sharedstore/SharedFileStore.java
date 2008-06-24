@@ -104,7 +104,7 @@ public class SharedFileStore implements SharedStoreInterface {
 	 */
 	private static String sharedStoreName = "sharedstore";
 	private File sharedStore = null;
-	private static Object lockSemaphore = new Object();
+	private final static Object lockSemaphore = new Object();
 	
 	/**
 	 * Constructs a (lock) name for a SharedStoreLock object.
@@ -177,23 +177,22 @@ public class SharedFileStore implements SharedStoreInterface {
 	 * @throws Exception
 	 */
 	private final void writeLock(SharedStoreLock ssl) throws SharedStoreException {
-		synchronized ( sharedStoreName ) {
-			String name = constructLockName(ssl);
-			File f = new File(sharedStore, name);
-			if ( !f.exists() ) {
-				if ( name.contains("/") ) {
-					f.mkdirs();
-				}
-				try {
-					if (!f.createNewFile()) {
-						throw new SharedStoreException("Could not write lock in shared store: " + ssl.toString());
-					}
-				} catch (IOException e) {
-					throw new SharedStoreException("Could not write lock in shared store: " + ssl.toString() + ", message: " + e.getMessage());
-				}
-			} else {
-				throw new SharedStoreException("Lock already exists");
+
+		String name = constructLockName(ssl);
+		File f = new File(sharedStore, name);
+		if ( !f.exists() ) {
+			if ( name.contains("/") ) {
+				f.mkdirs();
 			}
+			try {
+				if (!f.createNewFile()) {
+					throw new SharedStoreException("Could not write lock in shared store: " + ssl.toString());
+				}
+			} catch (IOException e) {
+				throw new SharedStoreException("Could not write lock in shared store: " + ssl.toString() + ", message: " + e.getMessage());
+			}
+		} else {
+			throw new SharedStoreException("Lock already exists");
 		}
 	}
 	
@@ -317,7 +316,7 @@ public class SharedFileStore implements SharedStoreInterface {
 					if ( !lockExists(ssl) ) {
 						try {
 							writeLock(ssl);
-							//System.err.println("WROTE LOCK, RETURNING LOCK FOR " + ssl.parent + "/" + ssl.name + " TO " + ssl.owner );
+							System.err.println("WROTE LOCK, RETURNING LOCK FOR " + ssl.parent + "/" + ssl.name + " TO " + ssl.owner );
 							return ssl;
 						} catch (Exception e) {
 							e.printStackTrace(System.err);
@@ -342,7 +341,7 @@ public class SharedFileStore implements SharedStoreInterface {
 		} else {
 			synchronized (lockSemaphore) {
 				if ( lock != null ) {
-					//System.err.println("RELEASING LOCK " + lock.parent + "/" + lock.name + " FOR " + lock.owner);
+					System.err.println("RELEASING LOCK " + lock.parent + "/" + lock.name + " FOR " + lock.owner);
 					File f = new File(sharedStore, constructLockName(lock));
 					f.delete();
 				}
