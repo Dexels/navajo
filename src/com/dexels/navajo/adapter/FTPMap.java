@@ -24,7 +24,7 @@
  */
 package com.dexels.navajo.adapter;
 
-import java.io.InputStream;
+import java.io.*;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.mapping.Mappable;
@@ -34,8 +34,7 @@ import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.server.enterprise.queue.RequestResponseQueueFactory;
-import com.enterprisedt.net.ftp.FTPClient;
-import com.enterprisedt.net.ftp.FTPTransferType;
+import com.enterprisedt.net.ftp.*;
 
 
 public class FTPMap  implements Mappable, com.dexels.navajo.server.enterprise.queue.Queuable {
@@ -128,7 +127,13 @@ public class FTPMap  implements Mappable, com.dexels.navajo.server.enterprise.qu
 				if(delete) {
 					ftpClient.delete(filename);
 				} else if(mkdir) {
-					ftpClient.mkdir(filename);
+					try {
+						ftpClient.mkdir(filename);
+					} catch (IOException e) {
+						e.printStackTrace();
+					} catch (FTPException e) {
+						e.printStackTrace();
+					}						
 				} else {
 					InputStream is = content.getDataAsStream();
 					ftpClient.put( content.getDataAsStream(), filename );
