@@ -76,7 +76,8 @@ public final class ListenerStore {
 			if ( a != null ) {
 				return ((LockAnswer) a).acknowledged();
 			} else {
-				return true;
+				System.err.println("GOT NULL LOCKANSWER");
+				return false;
 			}
 		//}
 	}
@@ -189,6 +190,10 @@ public final class ListenerStore {
 					
 					lis = (Trigger) ssi.get(activatedListeners, allNames[i]);
 					
+					//System.err.println("LOCK lisid = " + lis.getListenerId() + ", name =" + allNames[i]);
+					/**
+					 * TODO: CHECK IF LIS STLL EXISTS. MAKE SURE THAT GET RESPECTS LOCKS!!!!
+					 */
 					boolean isWorkflow = ( lis.getTask().getWorkflowId() != null );
 					boolean myWorkflow = ( lis.getTask().getWorkflowId() != null && WorkFlowManager.getInstance().hasWorkflowId(lis.getTask().getWorkflowId()));
 					
@@ -197,12 +202,15 @@ public final class ListenerStore {
 						if (!isWorkflow) {
 							locked = lock(lis.getListenerId(), true);
 							if ( locked ) {
+								// Get trigger again, to make sure it is still present in activatedListeners.
+								lis = (Trigger) ssi.get(activatedListeners, allNames[i]);
 								performed = true;
 								lis.perform();
 								//System.err.println("IN !isWorkflow " + allNames[i] + " WAS PERFORMED");
 							} else {
 								//System.err.println(">>>>>>>>>>>>>>>>>> COULD NOT GET LOCK: " + lis.getListenerId() );
 								//retryList.add(lis);
+								performed = false;
 							}
 						} else {
 							performed = true;
