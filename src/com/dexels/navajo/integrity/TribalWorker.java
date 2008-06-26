@@ -1,61 +1,28 @@
-/**
- * <p>Title: Navajo Product Project</p>
- * <p>Description: This is the official source for the Navajo server</p>
- * <p>Copyright: Copyright (c) 2005</p>
- * <p>Company: Dexels BV</p>
- * @author 
- * @version $Id$.
- *
- * DISCLAIMER
- *
- * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
- * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED.  IN NO EVENT SHALL DEXELS BV OR ITS CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
- * OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
- * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
- * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- * SUCH DAMAGE.
- * ====================================================================
- */
 package com.dexels.navajo.integrity;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.enterprise.integrity.WorkerInterface;
+
 import java.io.IOException;
-import java.util.Collections;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
 
-import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
-import com.dexels.navajo.server.Access;
-import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.GenericThread;
-import com.dexels.navajo.server.enterprise.integrity.WorkerInterface;
 import com.dexels.navajo.server.jmx.JMXHelper;
+import com.dexels.navajo.sharedstore.SharedStoreException;
+import com.dexels.navajo.sharedstore.SharedStoreFactory;
+import com.dexels.navajo.sharedstore.SharedStoreInterface;
+import com.dexels.navajo.sharedstore.SharedStoreLock;
+import com.dexels.navajo.sharedstore.SharedStoreObject;
+import com.dexels.navajo.sharedstore.map.SharedTribalMap;
 import com.dexels.navajo.util.AuditLog;
 
-/**
- * IMPORTANT NOTE: The Integrity Worker does NOT work over cluster members. 
- * Unique requests only work within a single Navajo instance. 
- * 
- * TODO: Make Integrity Worker Cluster Aware such that Service retries are NOT required
- * to go to the same Navajo Instance.
- * 
- * @author arjen
- *
- */
-public class Worker extends GenericThread implements WorkerMXBean, WorkerInterface {
+public class TribalWorker extends GenericThread  implements WorkerInterface {
 
 	/**
 	 * Public fields (used as getters for mappable).
@@ -70,27 +37,42 @@ public class Worker extends GenericThread implements WorkerMXBean, WorkerInterfa
 	
 	public static final String VERSION = "$Id$";
 	
-	private static volatile Worker instance = null;
-	//private static String responseDir = null;
+	private static volatile TribalWorker instance = null;
+	
 	private static Object semaphore = new Object();
 	
 	// Worklist containst responses that still need to be written to a file.
-	private Map<String,Navajo> workList = new HashMap<String,Navajo>();
-	// Integrity cache contains mapping between unique request id and response file.
-	private Map<String,File> integrityCache = new HashMap<String,File>();
-	// Contains all unique request ids that still need to be handled by the worker thread.
-	private Set<String> notWrittenReponses = Collections.synchronizedSet(new HashSet<String>());
-	// Contains all currently running request ids.
-	private Map<String,Access> runningRequestIds = Collections.synchronizedMap(new HashMap<String,Access>());
+	private final SharedTribalMap workList; // = new HashMap<String,Navajo>();
 	
+	// Integrity cache contains mapping between unique request id and response file.
+	private final SharedTribalMap integrityCache;
+	
+	// Contains all unique request ids that still need to be handled by the worker thread.
+	private final SharedTribalMap  notWrittenReponses;
+	
+	// TODO: Create SharedTribalSet.
+	
+	// Contains all currently running request ids.
+	private final SharedTribalMap runningRequestIds;
+	
+	private final static String REQUEST_CACHE = "integrity";
 	private final static String RESPONSE_PREFIX = "navajoresponse_";
-	private final static String myId = "Navajo Integrity Worker";
+	private final static String myId = "Navajo Integrity Worker (Tribal Aware)";
 	
 	private int previousWorkListLevelSize = 0;
 	private int maxWorkLostLevelSize = 30;
 	
-	public Worker() {
+	public TribalWorker() {
 		super(myId);
+		workList = new SharedTribalMap("integrity-worklist");
+		SharedTribalMap.registerMap(workList, false);
+		integrityCache = new SharedTribalMap("integrity-cache");
+		SharedTribalMap.registerMap(integrityCache, false);
+		runningRequestIds = new SharedTribalMap("integrity-running-request-ids");
+		SharedTribalMap.registerMap(runningRequestIds, false);
+		notWrittenReponses = new SharedTribalMap("integrity-not-written-responses");
+		SharedTribalMap.registerMap(notWrittenReponses, false);
+		
 	}
 	
 	/**
@@ -98,47 +80,37 @@ public class Worker extends GenericThread implements WorkerMXBean, WorkerInterfa
 	 * 
 	 * @return
 	 */
-	public static Worker getInstance() {
-		
+	public static TribalWorker getInstance() {
+
 		if ( instance != null ) {
 			return instance;
 		}
-		
+
 		synchronized ( semaphore ) {
-			
+
 			if ( instance != null ) {
 				return instance;
 			}
-			
-			instance = new Worker();
+
+			try {
+				SharedStoreFactory.getInstance().createParent(REQUEST_CACHE);
+			} catch (SharedStoreException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+				AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "getInstance(), Could not Create Integrity Cache in Shared Store");
+				return null;
+			}
+
+			instance = new TribalWorker();
 			JMXHelper.registerMXBean(instance, JMXHelper.NAVAJO_DOMAIN, myId);
 			instance.setSleepTime(50);
 			instance.startThread(instance);
-			// remove all previously stored response files.
-			File f = null;
-			try {
-				f = Dispatcher.getInstance().createTempFile(RESPONSE_PREFIX, ".xml");
-				File dir = f.getParentFile();
-				File [] allResponses = dir.listFiles();
-				for (int i = 0; i < allResponses.length; i++) {
-					File pr = allResponses[i];
-					if ( pr.getName().startsWith(RESPONSE_PREFIX) ) {
-						if ( !pr.delete() ) {
-							AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "getInstance(), Could not delete response file: " + pr.getName());
-						}
-					}
-				}
-			} catch (IOException e) {
-				// TODO Auto-generated catch block	
-				e.printStackTrace();
-			} finally {
-				if ( f != null ) {
-					if ( f.delete() ) {
-						// 
-					}
-				}
+
+			String [] allResponses = SharedStoreFactory.getInstance().getObjects(REQUEST_CACHE);
+			for (int i = 0; i < allResponses.length; i++) {
+				SharedStoreFactory.getInstance().remove(REQUEST_CACHE, allResponses[i]);
 			}
-			
+
 			AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "Started integrity worker $Id$");
 		}
 		return instance;
@@ -153,50 +125,39 @@ public class Worker extends GenericThread implements WorkerMXBean, WorkerInterfa
 	 * @param response
 	 */
 	private void writeFile(String id, Navajo response) {
-		File f = null;
-		FileWriter fw = null;
 		
+		SharedStoreObject sso = null;
+
 		try {
-			
+
 			if ( integrityCache.containsKey(id) ) {
 				AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "Response id " + id + " already cached!");
 				return;
 			}
-			
+
 			fileCount++;
-		
-			
-			f = Dispatcher.getInstance().createTempFile(RESPONSE_PREFIX + id, ".xml");
-			
-			if ( f == null ) {
+
+			sso = new SharedStoreObject(REQUEST_CACHE, RESPONSE_PREFIX + id + ".xml");
+
+			if ( sso == null ) {
 				AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "Could not create temp file");
 				return;
 			}
-			
-			fw = new FileWriter(f);
-			response.write(fw);
-			
-			integrityCache.put(id, f );
-			
-		
+
+			response.write(sso.getOutputStream());
+
+			integrityCache.put(id, sso );
+
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			if ( f != null ) {
-				f.delete();
+			if ( sso != null ) {
+				sso.remove();
 			}
 			fileCount--;
 			integrityCache.remove(id);
 			e.printStackTrace();
 		} finally {
-            // Remove unique request id from notWrittenResponse set to indicate that it's ready to be read.
-			try {
-				if ( fw != null ) {
-					fw.close();
-				}
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 			notWrittenReponses.remove( id );
 		}
 	}
@@ -209,14 +170,28 @@ public class Worker extends GenericThread implements WorkerMXBean, WorkerInterfa
 			sendHealthCheck(level, maxWorkLostLevelSize, "WARNING", "Integrity worker TODO list size is rather large");
 		}
 		previousWorkListLevelSize = level;
-		
+
 		// Check for new access objects in workList.
 		HashMap<String,Navajo> copyOfWorkList = null;
 		Set<String> s = null;
-		synchronized (workList) {
-			copyOfWorkList = new HashMap<String,Navajo>(workList);
-			workList.clear();
+
+		// Lock worklist. Wait until available...
+		SharedStoreLock ssl = SharedStoreFactory.getInstance().lock(REQUEST_CACHE, "worklist", SharedStoreInterface.READ_WRITE_LOCK, true);
+		if ( ssl == null ) {
+			System.err.println("Could not get lock on worklist...");
+			return;
 		}
+
+		try {
+			synchronized (workList) {
+				copyOfWorkList = new HashMap<String,Navajo>(workList);
+				workList.clear();
+			}
+		} finally {
+			// Release lock after copy of worklist has been made.
+			SharedStoreFactory.getInstance().release(ssl);
+		}
+
 		s = new HashSet<String>(copyOfWorkList.keySet());
 		Iterator<String> iter = s.iterator();
 		while (iter.hasNext()) {
@@ -228,51 +203,56 @@ public class Worker extends GenericThread implements WorkerMXBean, WorkerInterfa
 				notWrittenReponses.remove( id );
 			}
 		}
-		
+
 		// Remove 'old' responses.
 		Set<String> s2 = new HashSet<String>(integrityCache.keySet());
 		Iterator<String> i = s2.iterator();
 		long now = System.currentTimeMillis();
 		while ( i.hasNext() ) {
 			String id = i.next();
-			File f = (File) integrityCache.get(id);
+			SharedStoreObject f = (SharedStoreObject) integrityCache.get(id);
 			if ( f != null ) {
-				long birth = f.lastModified();
+				long birth = f.getModificationTime();
 				if ( now - birth > 60000 ) {
 					// remove file reference from integrity cache.
-					if ( !f.delete() ) {
-						AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "worker(): Could not delete response file: " + f.getName());
-					} else {
-						f = null;
-						fileCount--;
-						integrityCache.remove(id);
-					}
+					f.remove();
+					f = null;
+					fileCount--;
+					integrityCache.remove(id);
 				}
 			} else {
 				fileCount--;
 				integrityCache.remove(id);
 			}
 		}
-		
+	
 	}
 	
 	/**
 	 * Clears the entire integrity cache.
 	 */
 	private void clearCache() {
-		Set<String> s = new HashSet<String>(integrityCache.keySet());
-		Iterator<String> i = s.iterator();
-		while ( i.hasNext() ) {
-			String id = i.next();
-			File f = (File) integrityCache.get(id);
-			// remove file reference from integrity cache.
-			if ( !f.delete() ) {
-				AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "clearCache(): Could not delete response file: " + f.getName());
-			} else {
-				fileCount--;
-				integrityCache.remove(id);
+
+		SharedStoreLock ssl = SharedStoreFactory.getInstance().lock(REQUEST_CACHE, "integrityCache", SharedStoreInterface.READ_WRITE_LOCK, true);
+
+		try {
+			Set<String> s = new HashSet<String>(integrityCache.keySet());
+			Iterator<String> i = s.iterator();
+			while ( i.hasNext() ) {
+				String id = i.next();
+				SharedStoreObject f = (SharedStoreObject) integrityCache.get(id);
+				// remove file reference from integrity cache.
+				if ( f != null ) {
+					f.remove();
+					fileCount--;
+					integrityCache.remove(id);
+				}
+				// remove file itself.
 			}
-			// remove file itself.
+		} finally {
+			if ( ssl != null ) {
+				SharedStoreFactory.getInstance().release(ssl);	
+			}
 		}
 	}
 	
@@ -282,26 +262,26 @@ public class Worker extends GenericThread implements WorkerMXBean, WorkerInterfa
 	 * @param fileName
 	 * @return
 	 */
-	private Navajo readFile(File f) {
-		FileInputStream fs = null;
+	private Navajo readFile(SharedStoreObject f) {
+		InputStream fs = null;
 		try {
 			AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "Integrity violation detected, returning previous response from: " + f.getName());
 			violationCount++;
 			// Set modification date to time of last read.
-			f.setLastModified( System.currentTimeMillis() );
-			fs = new FileInputStream( f );
+			f.setModificationTime( System.currentTimeMillis() );
+			fs = f.getInputStream();
 			Navajo n = NavajoFactory.getInstance().createNavajo(fs);
 			return n;
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (SharedStoreException sse) {
+			sse.printStackTrace(System.err);
 			return null;
 		} finally {
 			if ( fs != null ) {
 				try {
 					fs.close();
 				} catch (IOException e) {
-					// NOT INTERESTED.
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 			}
 		}
@@ -369,9 +349,9 @@ public class Worker extends GenericThread implements WorkerMXBean, WorkerInterfa
 		// Check for running request first.
 		if ( !waitedForRunningRequest(a, request, requestId) ) {
 			// Check if request id is in worklist (still) or integreatyCache (already).
-			if ( notWrittenReponses.contains( requestId ) || workList.containsKey( requestId ) || integrityCache.containsKey( requestId ) ) {
+			if ( notWrittenReponses.containsKey( requestId ) ||  workList.containsKey( requestId ) || integrityCache.containsKey( requestId ) ) {
 				// Response file write could be still pending, due to a large workList size and/or large responses.
-				while ( notWrittenReponses.contains( requestId ) ) {
+				while ( notWrittenReponses.containsKey( requestId ) ) {
 					//AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER,"Integrity violation detected: waiting for response file " + fileName + " to become written...");
 					try {
 						Thread.sleep(100);
@@ -380,7 +360,7 @@ public class Worker extends GenericThread implements WorkerMXBean, WorkerInterfa
 						e.printStackTrace();
 					}
 				}
-				return readFile( (File) integrityCache.get( requestId ) );
+				return readFile( (SharedStoreObject) integrityCache.get( requestId ) );
 			} else {
 				return null;
 			}
@@ -397,32 +377,43 @@ public class Worker extends GenericThread implements WorkerMXBean, WorkerInterfa
 	 * @param request
 	 * @param response
 	 */
-	public void setResponse(Navajo request, Navajo response) {
+	public void setResponse(Navajo request, final Navajo response) {
 		
-		String id  = request.getHeader().getRequestId();
+		final String id  = request.getHeader().getRequestId();
 
-		try {
-
-			if ( id != null && !id.trim().equals("") ) {
-				// Immediately add request id to notWrittenResponses.
-				notWrittenReponses.add( id );
-				//  Add response to workList.
+		// Immediately add request id to notWrittenResponses.
+		notWrittenReponses.put( id, id );
+		
+		new Thread() {
+			
+			public void run() {
 				try {
-					//ystem.err.println("Before synchronized in Worker.setResponse(): " + id );
-					synchronized ( workList ) {
-						workList.put( id, response );
+
+					if ( id != null && !id.trim().equals("") ) {
+						
+						//  Add response to workList.
+						SharedStoreLock ssl = null;
+						try {
+							// Lock worklist. Wait until available...
+							ssl = SharedStoreFactory.getInstance().lock(REQUEST_CACHE, "worklist", SharedStoreInterface.READ_WRITE_LOCK, true);
+							workList.put( id, response );
+						} catch (Throwable t) {
+							notWrittenReponses.remove( id );
+							System.err.println("COULD NOT ADD TO WORKLIST");
+							t.printStackTrace(System.err);	
+						} finally {
+							if ( ssl != null ) {
+								SharedStoreFactory.getInstance().release(ssl);
+							}
+						}
 					}
-					//System.err.println("After synchronized in Worker.setResponse(): " + id);
-				} catch (Throwable t) {
-					notWrittenReponses.remove( id );
-					System.err.println("COULD NOT ADD TO WORKLIST");
-					t.printStackTrace(System.err);	
+				} finally {
+					// Return from running request id set.
+					runningRequestIds.remove(id);
 				}
 			}
-		} finally {
-			// Return from running request id set.
-			runningRequestIds.remove(id);
-		}
+		}.start();
+		
 	}
 	
 	/**
@@ -478,6 +469,7 @@ public class Worker extends GenericThread implements WorkerMXBean, WorkerInterfa
 	
 	public void terminate() {
 		if ( instance != null ) {
+			
 			instance.workList.clear();
 			instance.clearCache();
 			instance.notWrittenReponses.clear();
@@ -490,26 +482,6 @@ public class Worker extends GenericThread implements WorkerMXBean, WorkerInterfa
 			}
 			AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "Killed");
 		}
-	}
-
-	public static void main(String [] args) {
-		String aap = "slwebsvr4.sportlink.enovation.net/sportlink/knvb/servlet/Postman";
-		aap = aap.substring(aap.indexOf("/")+1, aap.length());
-		aap = aap.replace('/', '_');
-		try {
-			File tempDir = new File(System.getProperty("java.io.tmpdir") + "/" + aap);
-			tempDir.mkdirs();
-			File f = Dispatcher.getInstance().createTempFile("tijdelijk", ".xml");
-			FileWriter fw = new FileWriter(f);
-			fw.write("apenoot");
-			fw.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		System.err.println(aap);
-		System.getProperties().list(System.err);
 	}
 
 	/**
@@ -536,4 +508,5 @@ public class Worker extends GenericThread implements WorkerMXBean, WorkerInterfa
 	public void setWarningLevelWorkList(int i) {
 		maxWorkLostLevelSize = i;
 	}
+
 }
