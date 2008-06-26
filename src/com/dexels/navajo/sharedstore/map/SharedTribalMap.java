@@ -5,6 +5,9 @@ import java.util.HashMap;
 
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
+import com.dexels.navajo.sharedstore.SharedStoreFactory;
+import com.dexels.navajo.sharedstore.SharedStoreInterface;
+import com.dexels.navajo.sharedstore.SharedStoreLock;
 
 public class SharedTribalMap<K,V> extends HashMap {
 
@@ -12,6 +15,7 @@ public class SharedTribalMap<K,V> extends HashMap {
 	
 	private static volatile HashMap<String,SharedTribalMap> registeredMaps = new HashMap<String,SharedTribalMap>();
 	private String id;
+	private boolean threadSafe = false;
 	
 	private static final Object semaphore = new Object();
 	private static final Object semaphoreLocal = new Object();
@@ -103,15 +107,47 @@ public class SharedTribalMap<K,V> extends HashMap {
 		return registeredMaps.get(id);
 	}
 	
+	private final String getLockName(Object key) {
+		return id + "-" + key.hashCode();
+	}
+	
 	public Object put(Object key, Object value) {
 
-		Object o = putLocal(key, value);
+		SharedStoreLock ssl = null;
+		
+		if ( threadSafe ) {
+			ssl = SharedStoreFactory.getInstance().lock("", getLockName(key) , SharedStoreInterface.READ_WRITE_LOCK, true);
+		}
+		
+		try {
+			Object o = putLocal(key, value);
 
-		SharedTribalElement ste = new SharedTribalElement(getId(), key, value);
-		TribalMapSignal tms = new TribalMapSignal(Dispatcher.getInstance().getNavajoConfig().getInstanceName(), TribalMapSignal.PUT, ste);
-		TribeManagerFactory.getInstance().broadcast(tms);
+			SharedTribalElement ste = new SharedTribalElement(getId(), key, value);
+			TribalMapSignal tms = new TribalMapSignal(Dispatcher.getInstance().getNavajoConfig().getInstanceName(), TribalMapSignal.PUT, ste);
+			TribeManagerFactory.getInstance().broadcast(tms);
 
-		return o;
+			return o;
+			
+		} finally {
+			if ( threadSafe && ssl != null ) {
+				SharedStoreFactory.getInstance().release(ssl);
+			}
+		}
+	}
+	
+	public Object get(Object key) {
+
+		SharedStoreLock ssl = null;
+		if ( threadSafe ) {
+			ssl = SharedStoreFactory.getInstance().lock("", getLockName(key) , SharedStoreInterface.READ_WRITE_LOCK, true);
+		}
+		try {
+			return super.get(key);
+		} finally {
+			if ( threadSafe && ssl != null ) {
+				SharedStoreFactory.getInstance().release(ssl);
+			}
+		}
 	}
 	
 	public void clear() {
@@ -129,6 +165,7 @@ public class SharedTribalMap<K,V> extends HashMap {
 	
 	protected Object putLocal(Object key, Object value) {
 		synchronized (semaphoreLocal) {
+			//System.err.println(Dispatcher.getInstance().getApplicationId() + ": " + id + ": in PutLocal(" + key + ", " + value + ")");
 			Object o = super.put(key, value);
 			return o;
 		}
@@ -136,12 +173,22 @@ public class SharedTribalMap<K,V> extends HashMap {
 	
 	public Object remove(Object key) {
 
-		Object o = removeLocal(key);
-		SharedTribalElement ste = new SharedTribalElement(getId(), key, null);
-		TribalMapSignal tms = new TribalMapSignal(Dispatcher.getInstance().getNavajoConfig().getInstanceName(), TribalMapSignal.REMOVE, ste);
-		TribeManagerFactory.getInstance().broadcast(tms);
-		return o;
+		SharedStoreLock ssl = null;
+		if ( threadSafe ) {
+			ssl = SharedStoreFactory.getInstance().lock("", getLockName(key) , SharedStoreInterface.READ_WRITE_LOCK, true);
+		}
 
+		try {
+			Object o = removeLocal(key);
+			SharedTribalElement ste = new SharedTribalElement(getId(), key, null);
+			TribalMapSignal tms = new TribalMapSignal(Dispatcher.getInstance().getNavajoConfig().getInstanceName(), TribalMapSignal.REMOVE, ste);
+			TribeManagerFactory.getInstance().broadcast(tms);
+			return o;
+		} finally {
+			if ( threadSafe && ssl != null ) {
+				SharedStoreFactory.getInstance().release(ssl);
+			}
+		}
 	}
 	
 	protected Object removeLocal(Object key) {
@@ -152,6 +199,14 @@ public class SharedTribalMap<K,V> extends HashMap {
 	
 	public String getId() {
 		return id;
+	}
+
+	public boolean isThreadSafe() {
+		return threadSafe;
+	}
+
+	public void setThreadSafe(boolean threadSafe) {
+		this.threadSafe = threadSafe;
 	}
 	
 }

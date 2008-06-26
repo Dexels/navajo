@@ -26,7 +26,7 @@ public class WorkerFactory {
 				
 				if ( instance == null ) {
 					try {
-						Class c = Class.forName("com.dexels.navajo.integrity.Worker");
+						Class c = Class.forName("com.dexels.navajo.integrity.TribalWorker");
 						WorkerInterface dummy = (WorkerInterface) c.newInstance();
 						Method m = c.getMethod("getInstance", null);
 						instance = (WorkerInterface) m.invoke(dummy, null);

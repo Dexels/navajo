@@ -24,6 +24,7 @@
  */
 package com.dexels.navajo.sharedstore;
 
+import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.enterprise.tribe.Answer;
 import com.dexels.navajo.server.enterprise.tribe.Request;
 
@@ -43,6 +44,7 @@ public class GetLockRequest extends Request {
 	
 	public String parent;
 	public String name;
+	public String owner;
 	int lockType;
 	private boolean block;
 	
@@ -54,13 +56,14 @@ public class GetLockRequest extends Request {
 		this.name = name;
 		this.lockType = lockType;
 		this.block = block;
-		System.err.println("TRYING TO GET LOCK FOR: " + parent + "/" + name + " (type = " + lockType + ", block = " + block + ")");
+		this.owner = Dispatcher.getInstance().getNavajoConfig().getInstanceName();
+		//System.err.println("TRYING TO GET LOCK FOR: " + parent + "/" + name + " (type = " + lockType + ", block = " + block + ")");
 	}
 	
 	public Answer getAnswer() {
 		
 		SharedStoreInterface ssi = SharedStoreFactory.getInstance();
-		SharedStoreLock ssl = ssi.lock(parent, name, lockType, block);
+		SharedStoreLock ssl = ssi.lock(parent, name, owner, lockType, block);
 		
 		return new LockAnswer(this, ssl);
 		

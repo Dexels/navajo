@@ -1,7 +1,10 @@
 package com.dexels.navajo.integrity;
 
+import com.dexels.navajo.client.ClientInterface;
+import com.dexels.navajo.client.NavajoClientFactory;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.enterprise.integrity.WorkerInterface;
 
 import java.io.IOException;
@@ -66,12 +69,18 @@ public class TribalWorker extends GenericThread  implements WorkerInterface {
 		super(myId);
 		workList = new SharedTribalMap("integrity-worklist");
 		SharedTribalMap.registerMap(workList, false);
+		
 		integrityCache = new SharedTribalMap("integrity-cache");
 		SharedTribalMap.registerMap(integrityCache, false);
+		//integrityCache.setThreadSafe(true);
+		
 		runningRequestIds = new SharedTribalMap("integrity-running-request-ids");
 		SharedTribalMap.registerMap(runningRequestIds, false);
+		//runningRequestIds.setThreadSafe(true);
+		
 		notWrittenReponses = new SharedTribalMap("integrity-not-written-responses");
 		SharedTribalMap.registerMap(notWrittenReponses, false);
+		notWrittenReponses.setThreadSafe(true);
 		
 	}
 	
@@ -103,7 +112,7 @@ public class TribalWorker extends GenericThread  implements WorkerInterface {
 
 			instance = new TribalWorker();
 			JMXHelper.registerMXBean(instance, JMXHelper.NAVAJO_DOMAIN, myId);
-			instance.setSleepTime(50);
+			instance.setSleepTime(1000);
 			instance.startThread(instance);
 
 			String [] allResponses = SharedStoreFactory.getInstance().getObjects(REQUEST_CACHE);
@@ -176,20 +185,20 @@ public class TribalWorker extends GenericThread  implements WorkerInterface {
 		Set<String> s = null;
 
 		// Lock worklist. Wait until available...
-		SharedStoreLock ssl = SharedStoreFactory.getInstance().lock(REQUEST_CACHE, "worklist", SharedStoreInterface.READ_WRITE_LOCK, true);
-		if ( ssl == null ) {
-			System.err.println("Could not get lock on worklist...");
-			return;
-		}
-
-		try {
-			synchronized (workList) {
+		synchronized (workList) {
+			SharedStoreLock ssl = SharedStoreFactory.getInstance().lock(REQUEST_CACHE, "worklist", SharedStoreInterface.READ_WRITE_LOCK, true);
+			if ( ssl == null ) {
+				//System.err.println("Could not get lock on worklist...");
+				return;
+			}
+			try {
 				copyOfWorkList = new HashMap<String,Navajo>(workList);
 				workList.clear();
+				//System.err.println(Dispatcher.getInstance().getApplicationId() + ": cleared worklist");
+			} finally {
+				// Release lock after copy of worklist has been made.
+				SharedStoreFactory.getInstance().release(ssl);
 			}
-		} finally {
-			// Release lock after copy of worklist has been made.
-			SharedStoreFactory.getInstance().release(ssl);
 		}
 
 		s = new HashSet<String>(copyOfWorkList.keySet());
@@ -379,8 +388,9 @@ public class TribalWorker extends GenericThread  implements WorkerInterface {
 	 */
 	public void setResponse(Navajo request, final Navajo response) {
 		
+		
 		final String id  = request.getHeader().getRequestId();
-
+		//System.err.println(Dispatcher.getInstance().getApplicationId() + ": writing response for " + id);
 		// Immediately add request id to notWrittenResponses.
 		notWrittenReponses.put( id, id );
 		
@@ -393,17 +403,23 @@ public class TribalWorker extends GenericThread  implements WorkerInterface {
 						
 						//  Add response to workList.
 						SharedStoreLock ssl = null;
-						try {
-							// Lock worklist. Wait until available...
-							ssl = SharedStoreFactory.getInstance().lock(REQUEST_CACHE, "worklist", SharedStoreInterface.READ_WRITE_LOCK, true);
-							workList.put( id, response );
-						} catch (Throwable t) {
-							notWrittenReponses.remove( id );
-							System.err.println("COULD NOT ADD TO WORKLIST");
-							t.printStackTrace(System.err);	
-						} finally {
-							if ( ssl != null ) {
-								SharedStoreFactory.getInstance().release(ssl);
+						//System.err.println(Dispatcher.getInstance().getApplicationId() + ": Wait for worklist lock...");
+
+						synchronized (workList) {
+							try {
+								// Lock worklist. Wait until available...
+								ssl = SharedStoreFactory.getInstance().lock(REQUEST_CACHE, "worklist", SharedStoreInterface.READ_WRITE_LOCK, true);
+								//System.err.println(Dispatcher.getInstance().getApplicationId() + ": Got worklist lock..." + ssl.parent + "/" + ssl.name );
+								workList.put( id, response );
+							} catch (Throwable t) {
+								notWrittenReponses.remove( id );
+								//System.err.println("COULD NOT ADD TO WORKLIST");
+								t.printStackTrace(System.err);	
+							} finally {
+								if ( ssl != null ) {
+									//System.err.println(Dispatcher.getInstance().getApplicationId() + ": about to release lock " + ssl.parent + "/" + ssl.name );
+									SharedStoreFactory.getInstance().release(ssl);
+								}
 							}
 						}
 					}
@@ -509,4 +525,15 @@ public class TribalWorker extends GenericThread  implements WorkerInterface {
 		maxWorkLostLevelSize = i;
 	}
 
+	public static void main(String [] args) throws Exception {
+		ClientInterface client = NavajoClientFactory.getClient();
+		client.setServers(new String[]{"localhost:8080/NavajoServer/Postman"});
+		client.setUsername("ROOT");
+		client.setPassword("");
+		
+		Navajo r = client.doSimpleSend("InitAap");
+		
+		r.write(System.err);
+		
+	}
 }

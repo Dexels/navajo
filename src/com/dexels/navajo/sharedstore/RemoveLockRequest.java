@@ -24,6 +24,7 @@
  */
 package com.dexels.navajo.sharedstore;
 
+import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.enterprise.tribe.Answer;
 import com.dexels.navajo.server.enterprise.tribe.Request;
 
@@ -36,11 +37,13 @@ public class RemoveLockRequest extends Request {
 	
 	public String parent;
 	public String name;
+	public String owner;
 	int lockType;
 	
 	public RemoveLockRequest(String parent, String name) {
 		this.parent = parent;
 		this.name = name;
+		this.owner = Dispatcher.getInstance().getNavajoConfig().getInstanceName();
 		this.blocking = false;
 	}
 	
@@ -48,7 +51,7 @@ public class RemoveLockRequest extends Request {
 	public Answer getAnswer() {
 		
 		SharedStoreInterface ssi = SharedStoreFactory.getInstance();
-		SharedStoreLock ssl = ssi.getLock(parent, name);
+		SharedStoreLock ssl = ssi.getLock(parent, name, owner);
 		//System.err.println("IN RemoveLockRequest(), getAnswer().....: " + ssl);
 		if ( ssl != null ) {
 			ssi.release(ssl);

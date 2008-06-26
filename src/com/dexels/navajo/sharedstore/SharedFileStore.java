@@ -141,12 +141,15 @@ public class SharedFileStore implements SharedStoreInterface {
 				if ( ( System.currentTimeMillis() - files[i].lastModified() ) > ssl.getLockTimeOut() ) {
 					// Lock has time-out, delete it.
 					files[i].delete();
+					//System.err.println("\nLOCK " + ssl + " HAS AGED OUT: " + files[i].getName());
 					return false;
 				} else {
+					//System.err.println("\nLOCK " + ssl + " EXISTS: " + files[i].getName() + "(" + files[i].lastModified() + ")");
 					return true;
 				}
 			}
 		} 
+		//System.err.println("\nLOCK " + ssl + " DOES NOT EXIST");
 		return false;
 	}
 	
@@ -253,9 +256,9 @@ public class SharedFileStore implements SharedStoreInterface {
 	 * Gets a SharedStoreLock if it exists for a file identified by its parent (path) and its name.
 	 * If it does not exist, null is returned.
 	 */
-	public SharedStoreLock getLock(String parent, String name) {
+	public SharedStoreLock getLock(String parent, String name, String owner) {
 		try {
-			SharedStoreLock ssl = readLock(parent, name, Dispatcher.getInstance().getNavajoConfig().getInstanceName());
+			SharedStoreLock ssl = readLock(parent, name, owner);
 			return ssl;
 		} catch (Exception e) {
 			e.printStackTrace(System.err);
@@ -287,6 +290,10 @@ public class SharedFileStore implements SharedStoreInterface {
 		return result;
 	}
 
+	public SharedStoreLock lock(String parent, String name, int lockType, boolean block) {
+		return lock(parent, name, Dispatcher.getInstance().getNavajoConfig().getInstanceName(), lockType, block);
+	}
+	
 	/**
 	 * Locks an object identified by its parent (path) and name.
 	 * If block is set to true, the method blocks until the lock could be obtained.
@@ -298,7 +305,7 @@ public class SharedFileStore implements SharedStoreInterface {
 	 * @block (see above) 
 	 * 
 	 */
-	public SharedStoreLock lock(String parent, String name, int lockType, boolean block) {
+	public SharedStoreLock lock(String parent, String name, String owner, int lockType, boolean block) {
 		
 		if ( !TribeManagerFactory.getInstance().getIsChief() ) {
 			LockAnswer la = (LockAnswer) TribeManagerFactory.getInstance().askChief(
@@ -308,7 +315,7 @@ public class SharedFileStore implements SharedStoreInterface {
 			//System.err.println("ABOUT TO LOCK: (" + parent + "," + name + "," + lockType + ")");
 			SharedStoreLock ssl = new SharedStoreLock(name, parent);
 			ssl.lockType = lockType;
-			ssl.owner = Dispatcher.getInstance().getNavajoConfig().getInstanceName();
+			ssl.owner = owner;
 
 			synchronized (lockSemaphore) {
 
@@ -321,9 +328,14 @@ public class SharedFileStore implements SharedStoreInterface {
 						} catch (Exception e) {
 							e.printStackTrace(System.err);
 						}
+					} else if ( block ){
+						try {
+							lockSemaphore.wait();
+						} catch (InterruptedException e) {
+						}
 					}
 				} while ( block);
-				System.err.println("LOCK COULD NOT BE OBTAINED FOR: " + parent + "/" + name + " to " + ssl.owner);
+				//System.err.println("LOCK COULD NOT BE OBTAINED FOR: " + parent + "/" + name + " to " + ssl.owner);
 			}
 		}
 
@@ -347,6 +359,7 @@ public class SharedFileStore implements SharedStoreInterface {
 					File f = new File(sharedStore, constructLockName(lock));
 					f.delete();
 				}
+				lockSemaphore.notify();
 			}
 		}
 	}

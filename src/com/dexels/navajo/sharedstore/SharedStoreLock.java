@@ -65,4 +65,12 @@ public class SharedStoreLock implements Serializable {
 	public void setLockTimeOut(int lockTimeOut) {
 		this.lockTimeOut = lockTimeOut;
 	}
+
+	public String getOwner() {
+		return owner;
+	}
+
+	public void setOwner(String owner) {
+		this.owner = owner;
+	}
 }

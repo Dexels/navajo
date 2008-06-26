@@ -122,6 +122,8 @@ public interface SharedStoreInterface {
 	 * @param if block is set to true, method blocks until lock has been obtained.
 	 * @return SharedStoreLock if lock was granted, else null.
 	 */
+	public SharedStoreLock lock(String parent, String name, String owner, int lockType, boolean block);
+	
 	public SharedStoreLock lock(String parent, String name, int lockType, boolean block);
 	
 	/**
@@ -171,7 +173,7 @@ public interface SharedStoreInterface {
 	 * @param name
 	 * @return
 	 */
-	public SharedStoreLock getLock(String parent, String name);
+	public SharedStoreLock getLock(String parent, String name, String owner);
 	
 	/**
 	 * Returns all object names from parent sub that do not have a READ_WRITE_LOCK.
