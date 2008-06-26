@@ -316,16 +316,18 @@ public class SharedFileStore implements SharedStoreInterface {
 					if ( !lockExists(ssl) ) {
 						try {
 							writeLock(ssl);
-							System.err.println("WROTE LOCK, RETURNING LOCK FOR " + ssl.parent + "/" + ssl.name + " TO " + ssl.owner );
+							//System.err.println("WROTE LOCK, RETURNING LOCK FOR " + ssl.parent + "/" + ssl.name + " TO " + ssl.owner );
 							return ssl;
 						} catch (Exception e) {
 							e.printStackTrace(System.err);
 						}
 					}
 				} while ( block);
+				System.err.println("LOCK COULD NOT BE OBTAINED FOR: " + parent + "/" + name + " to " + ssl.owner);
 			}
 		}
 
+		
 		return null;
 	}
 
@@ -341,7 +343,7 @@ public class SharedFileStore implements SharedStoreInterface {
 		} else {
 			synchronized (lockSemaphore) {
 				if ( lock != null ) {
-					System.err.println("RELEASING LOCK " + lock.parent + "/" + lock.name + " FOR " + lock.owner);
+					//System.err.println("RELEASING LOCK " + lock.parent + "/" + lock.name + " FOR " + lock.owner);
 					File f = new File(sharedStore, constructLockName(lock));
 					f.delete();
 				}
@@ -515,6 +517,11 @@ public class SharedFileStore implements SharedStoreInterface {
 		for ( int i = 0; i < s.length; i++ ) {
 			remove(parent, s[i]);
 		}
+	}
+
+	public void setLastModified(String parent, String name, long l) {
+		File f = new File(sharedStore, ( name != null ? parent + "/" + name : parent ) );
+		f.setLastModified(l);
 	}
 
 }

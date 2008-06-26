@@ -94,6 +94,16 @@ public interface SharedStoreInterface {
 	 */
 	public long lastModified(String parent, String name);
 	
+	
+	/**
+	 * Sets the modification time of a sharedstore object.
+	 * 
+	 * @param parent
+	 * @param name
+	 * @param l
+	 */
+	public void setLastModified(String parent, String name, long l);
+	
 	/**
 	 * Check whether object exists in the shared store.
 	 * 
