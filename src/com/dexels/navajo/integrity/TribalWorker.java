@@ -25,6 +25,13 @@ import com.dexels.navajo.sharedstore.SharedStoreObject;
 import com.dexels.navajo.sharedstore.map.SharedTribalMap;
 import com.dexels.navajo.util.AuditLog;
 
+/**
+ * This is a Tribal Aware Integrity Worker. 
+ * It differs from Worker that it respects Tribal Members when determining integrity violations.
+ * 
+ * @author arjen
+ *
+ */
 public class TribalWorker extends GenericThread  implements WorkerInterface {
 
 	/**

@@ -108,7 +108,11 @@ public class SharedTribalMap<K,V> extends HashMap {
 	}
 	
 	private final String getLockName(Object key) {
-		return id + "-" + key.hashCode();
+		if ( key != null ) {
+			return id + "-" + key.hashCode();
+		} else {
+			return id;
+		}
 	}
 	
 	public Object put(Object key, Object value) {
