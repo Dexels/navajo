@@ -50,20 +50,20 @@ public class TribalWorker extends GenericThread  implements WorkerInterface {
 	private static volatile TribalWorker instance = null;
 	
 	private static Object semaphore = new Object();
+		
+	// Tribal Global integrity cache contains mapping between unique request id and response file.
+	private  SharedTribalMap integrityCache;
 	
-	// Worklist containst responses that still need to be written to a file.
-	private final SharedTribalMap workList; // = new HashMap<String,Navajo>();
-	
-	// Integrity cache contains mapping between unique request id and response file.
-	private final SharedTribalMap integrityCache;
-	
-	// Contains all unique request ids that still need to be handled by the worker thread.
-	private final SharedTribalMap  notWrittenReponses;
+	// Contains all unique Tribal Global request ids that still need to be handled by the worker thread.
+	private  SharedTribalMap  notWrittenReponses;
 	
 	// TODO: Create SharedTribalSet.
 	
-	// Contains all currently running request ids.
-	private final SharedTribalMap runningRequestIds;
+	// Worklist containst local responses that still need to be written to a file.
+	private  HashMap workList; // = new HashMap<String,Navajo>();
+	
+	// Contains all currently running request ids on local Navajo instance.
+	private  SharedTribalMap runningRequestIds;
 	
 	private final static String REQUEST_CACHE = "integrity";
 	private final static String RESPONSE_PREFIX = "navajoresponse_";
@@ -74,21 +74,6 @@ public class TribalWorker extends GenericThread  implements WorkerInterface {
 	
 	public TribalWorker() {
 		super(myId);
-		workList = new SharedTribalMap("integrity-worklist");
-		SharedTribalMap.registerMap(workList, false);
-		
-		integrityCache = new SharedTribalMap("integrity-cache");
-		SharedTribalMap.registerMap(integrityCache, false);
-		//integrityCache.setThreadSafe(true);
-		
-		runningRequestIds = new SharedTribalMap("integrity-running-request-ids");
-		SharedTribalMap.registerMap(runningRequestIds, false);
-		//runningRequestIds.setThreadSafe(true);
-		
-		notWrittenReponses = new SharedTribalMap("integrity-not-written-responses");
-		SharedTribalMap.registerMap(notWrittenReponses, false);
-		notWrittenReponses.setThreadSafe(true);
-		
 	}
 	
 	/**
@@ -118,6 +103,21 @@ public class TribalWorker extends GenericThread  implements WorkerInterface {
 			}
 
 			instance = new TribalWorker();
+			
+			instance.integrityCache = new SharedTribalMap("integrity-cache");
+			instance.integrityCache = SharedTribalMap.registerMap(instance.integrityCache, false);
+			
+			instance.notWrittenReponses = new SharedTribalMap("integrity-not-written-responses");
+			instance.notWrittenReponses = SharedTribalMap.registerMap(instance.notWrittenReponses, false);
+			//instance.notWrittenReponses.setTribalSafe(true);
+			
+			instance.runningRequestIds = new SharedTribalMap("integrity-runningrequest-ids");
+			instance.runningRequestIds = SharedTribalMap.registerMap(instance.runningRequestIds, false);
+			
+			// Maybe keep worklist local??
+			instance.workList = new HashMap();
+			
+			
 			JMXHelper.registerMXBean(instance, JMXHelper.NAVAJO_DOMAIN, myId);
 			instance.setSleepTime(1000);
 			instance.startThread(instance);
@@ -193,19 +193,9 @@ public class TribalWorker extends GenericThread  implements WorkerInterface {
 
 		// Lock worklist. Wait until available...
 		synchronized (workList) {
-			SharedStoreLock ssl = SharedStoreFactory.getInstance().lock(REQUEST_CACHE, "worklist", SharedStoreInterface.READ_WRITE_LOCK, true);
-			if ( ssl == null ) {
-				//System.err.println("Could not get lock on worklist...");
-				return;
-			}
-			try {
-				copyOfWorkList = new HashMap<String,Navajo>(workList);
-				workList.clear();
-				//System.err.println(Dispatcher.getInstance().getApplicationId() + ": cleared worklist");
-			} finally {
-				// Release lock after copy of worklist has been made.
-				SharedStoreFactory.getInstance().release(ssl);
-			}
+			copyOfWorkList = new HashMap<String,Navajo>(workList);
+			workList.clear();
+			//System.err.println(Dispatcher.getInstance().getApplicationId() + ": cleared worklist");
 		}
 
 		s = new HashSet<String>(copyOfWorkList.keySet());
@@ -214,9 +204,6 @@ public class TribalWorker extends GenericThread  implements WorkerInterface {
 			String id = iter.next();
 			if ( id != null && !id.trim().equals("") ) {
 				writeFile( id, (Navajo) copyOfWorkList.get(id) );
-			}
-			if ( id != null ) {
-				notWrittenReponses.remove( id );
 			}
 		}
 
@@ -241,7 +228,6 @@ public class TribalWorker extends GenericThread  implements WorkerInterface {
 				integrityCache.remove(id);
 			}
 		}
-	
 	}
 	
 	/**
@@ -313,37 +299,36 @@ public class TribalWorker extends GenericThread  implements WorkerInterface {
 	 */
 	private final boolean waitedForRunningRequest(Access a, Navajo request, String requestId) {
 		
-		Access r = (Access) runningRequestIds.get(requestId);
+		String r = (String) runningRequestIds.get(requestId);
 		//System.err.println("Size of runningRequestIds: " + runningRequestIds.size());
 		
 		if ( r == null ) {
-			//System.err.println("Did not find request id " + requestId + " in running request list");
-			runningRequestIds.put(requestId, a);
+			//System.err.println(Dispatcher.getInstance().getApplicationId() +  ": Did not find request id " + requestId + " in running request list");
+			runningRequestIds.put(requestId, a.getAccessID());
 			return false;
 		} else {
 			
 			try {
 				// Wait until running request is ready.
-				// System.err.println("DID find request id " + id + " in running request list, wait until ready...");
-				a.setWaitingForPreviousResponse(r.accessID);
-				while ( !r.isFinished() ) {
-					try {
-						Thread.sleep(2000);
-						//System.err.println(a.accessID + ": Waiting for currently running access set to become ready.");
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+				//System.err.println(Dispatcher.getInstance().getApplicationId() +  ": DID find request id " + requestId + " in running request list, wait until ready...");
+				a.setWaitingForPreviousResponse(r);
+				boolean finished = false;
+				while ( !finished ) {
+					synchronized (runningRequestIds.semaphoreLocal) {
+						//System.err.println(Dispatcher.getInstance().getApplicationId() +  ": " + a.accessID + ": Waiting for currently running access set to become ready.");
+						try {
+							runningRequestIds.semaphoreLocal.wait();
+						} catch (InterruptedException e) {
+						}
 					}
+					finished = ( runningRequestIds.get(requestId) == null );
 				}
 			} finally {
 				runningRequestIds.remove(requestId);
 			}
 			
-			a.setOutputDoc(r.getOutputDoc());
-		}
-		
-		return true;
-		
+			return false;
+		}		
 	}
 	
 	/**
@@ -354,16 +339,24 @@ public class TribalWorker extends GenericThread  implements WorkerInterface {
 	 */
 	public Navajo getResponse(Access a, Navajo request) {
 
+		//long start = System.currentTimeMillis();
+		
 		/**
 		 * In case there is no request id supplied, always return empty navajo.
 		 */
+		try {
+			
+		
 		String requestId  = request.getHeader().getRequestId();
 		if ( requestId == null || requestId.trim().equals("") ) {
 			return null;
 		}
 
+		
 		// Check for running request first.
 		if ( !waitedForRunningRequest(a, request, requestId) ) {
+			//System.err.println(Dispatcher.getInstance().getApplicationId() + ": in getResponse(), notWrittenReponses.containsKey(" + requestId + ") = " + notWrittenReponses.containsKey(requestId));
+			//System.err.println(Dispatcher.getInstance().getApplicationId() + ": in getResponse(), integrityCache.containsKey(" + requestId + ") = " + integrityCache.containsKey(requestId));
 			// Check if request id is in worklist (still) or integreatyCache (already).
 			if ( notWrittenReponses.containsKey( requestId ) ||  workList.containsKey( requestId ) || integrityCache.containsKey( requestId ) ) {
 				// Response file write could be still pending, due to a large workList size and/or large responses.
@@ -384,6 +377,9 @@ public class TribalWorker extends GenericThread  implements WorkerInterface {
 			// Return response from previously running request.
 			return a.getOutputDoc();
 		}
+		} finally {
+			//System.err.println(Dispatcher.getInstance().getApplicationId() +  ": getResponse() took: " + ( System.currentTimeMillis() - start) + " millis.");
+		}
 	}
 	
 	/**
@@ -395,48 +391,40 @@ public class TribalWorker extends GenericThread  implements WorkerInterface {
 	 */
 	public void setResponse(Navajo request, final Navajo response) {
 		
+		//long start = System.currentTimeMillis();
 		
-		final String id  = request.getHeader().getRequestId();
-		//System.err.println(Dispatcher.getInstance().getApplicationId() + ": writing response for " + id);
-		// Immediately add request id to notWrittenResponses.
-		notWrittenReponses.put( id, id );
-		
-		new Thread() {
-			
-			public void run() {
-				try {
+		try {
+			final String id  = request.getHeader().getRequestId();
+			//System.err.println(Dispatcher.getInstance().getApplicationId() + ": writing response for " + id);
+			// Immediately add request id to notWrittenResponses.
+			notWrittenReponses.put( id, id );
 
-					if ( id != null && !id.trim().equals("") ) {
-						
-						//  Add response to workList.
-						SharedStoreLock ssl = null;
-						//System.err.println(Dispatcher.getInstance().getApplicationId() + ": Wait for worklist lock...");
+			new Thread() {
 
-						synchronized (workList) {
-							try {
-								// Lock worklist. Wait until available...
-								ssl = SharedStoreFactory.getInstance().lock(REQUEST_CACHE, "worklist", SharedStoreInterface.READ_WRITE_LOCK, true);
-								//System.err.println(Dispatcher.getInstance().getApplicationId() + ": Got worklist lock..." + ssl.parent + "/" + ssl.name );
-								workList.put( id, response );
-							} catch (Throwable t) {
-								notWrittenReponses.remove( id );
-								//System.err.println("COULD NOT ADD TO WORKLIST");
-								t.printStackTrace(System.err);	
-							} finally {
-								if ( ssl != null ) {
-									//System.err.println(Dispatcher.getInstance().getApplicationId() + ": about to release lock " + ssl.parent + "/" + ssl.name );
-									SharedStoreFactory.getInstance().release(ssl);
-								}
+				public void run() {
+					try {
+						if ( id != null && !id.trim().equals("") ) {
+							//System.err.println(Dispatcher.getInstance().getApplicationId() + ": Wait for worklist lock...");
+							synchronized (workList) {
+								try {
+									//System.err.println(Dispatcher.getInstance().getApplicationId() + ": Got worklist lock..." + ssl.parent + "/" + ssl.name );
+									workList.put( id, response );
+								} catch (Throwable t) {
+									notWrittenReponses.remove( id );
+									//System.err.println("COULD NOT ADD TO WORKLIST");
+									t.printStackTrace(System.err);	
+								} 
 							}
 						}
+					} finally {
+						// Return from running request id set.
+						runningRequestIds.remove(id);
 					}
-				} finally {
-					// Return from running request id set.
-					runningRequestIds.remove(id);
 				}
-			}
-		}.start();
-		
+			}.start();
+		} finally {
+			//System.err.println(Dispatcher.getInstance().getApplicationId() +  ": setResponse() took: " + ( System.currentTimeMillis() - start) + " millis.");
+		}
 	}
 	
 	/**
@@ -534,7 +522,7 @@ public class TribalWorker extends GenericThread  implements WorkerInterface {
 
 	public static void main(String [] args) throws Exception {
 		ClientInterface client = NavajoClientFactory.getClient();
-		client.setServers(new String[]{"localhost:8080/NavajoServer/Postman"});
+		client.setServers(new String[]{"localhost:8080/NavajoServer2/Postman","localhost:8080/NavajoServer/Postman"});
 		client.setUsername("ROOT");
 		client.setPassword("");
 		
