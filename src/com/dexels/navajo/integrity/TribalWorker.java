@@ -4,7 +4,6 @@ import com.dexels.navajo.client.ClientInterface;
 import com.dexels.navajo.client.NavajoClientFactory;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.server.Access;
-import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.enterprise.integrity.WorkerInterface;
 
 import java.io.IOException;
