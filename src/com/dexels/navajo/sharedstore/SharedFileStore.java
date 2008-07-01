@@ -94,6 +94,8 @@ class FileComparator implements Comparator<File>{
  * It basically assumes some sort of OS-dependend network file system (e.g. NFS) for the "shared" part
  * of the SharedStoreInterface.
  * 
+ * TODO: Create logging mechanism to log SharedFileStore errors/warnings.
+ * 
  * @author arjen
  *
  */
@@ -397,6 +399,10 @@ public class SharedFileStore implements SharedStoreInterface {
 				oos.close();
 			} catch (Exception e) {
 				e.printStackTrace(System.err);
+				// TODO: Log exception!!
+				if ( f != null ) {
+					f.delete();
+				}
 			}
 		} finally {
 			if ( ssl != null ) {
@@ -468,6 +474,10 @@ public class SharedFileStore implements SharedStoreInterface {
 				sw.close();
 			} catch (Exception e) {
 				e.printStackTrace(System.err);
+				if ( f != null ) {
+					f.delete();
+				}
+				// TODO: Log exception.
 			}
 		} finally {
 			if ( ssl != null ) {
