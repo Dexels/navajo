@@ -214,7 +214,8 @@ public class JSONHttpServlet extends HttpServlet {
     String type = request.getParameter("type");
     String username = request.getParameter("username");
     String password = request.getParameter("password");
-
+    String callback = request.getParameter("callback");
+    
     System.err.println("in callDirect(): service = " + service + ", username = " + username);
 
     if (service == null) {
@@ -283,9 +284,9 @@ public class JSONHttpServlet extends HttpServlet {
     try {
       if (configurationPath!=null) {
     	  // Old SKOOL. Path provided, notify the dispatcher by passing a null DEFAULT_SERVER_XML
-          dis = Dispatcher.getInstance(configurationPath, null, new com.dexels.navajo.server.FileInputStreamReader());
+          dis = Dispatcher.getInstance(configurationPath, null, new com.dexels.navajo.server.FileInputStreamReader(), "");
 	} else {
-	      dis = Dispatcher.getInstance(rootPath, DEFAULT_SERVER_XML, new com.dexels.navajo.server.FileInputStreamReader());
+	      dis = Dispatcher.getInstance(rootPath, DEFAULT_SERVER_XML, new com.dexels.navajo.server.FileInputStreamReader(), "");
  
 	}
     		  	  
@@ -301,7 +302,8 @@ public class JSONHttpServlet extends HttpServlet {
     	  if(bin==null ) {
         	  java.io.OutputStreamWriter out = new java.io.OutputStreamWriter(outputStream,"UTF-8");
         	  response.setContentType("text/plain; charset=UTF-8");
-        	  resultMessage.writeJSONTypeless(out);
+        	  
+        	  writeJSON(resultMessage, out, callback, response);
         	  out.flush();
         	  out.close();
     	  } else {
@@ -318,12 +320,12 @@ public class JSONHttpServlet extends HttpServlet {
       } else {
     	  java.io.OutputStreamWriter out = new java.io.OutputStreamWriter(outputStream,"UTF-8");
     	  response.setContentType("text/plain; charset=UTF-8");
-    	  resultMessage.writeJSONTypeless(out);
+    	      	  
+    	  writeJSON(resultMessage, out, callback, response);
     	  out.flush();
     	  out.close();
      }
-      
-      
+
     }
     catch (Exception ce) {
       ce.printStackTrace();
@@ -334,6 +336,21 @@ public class JSONHttpServlet extends HttpServlet {
       dis = null;
     }
   
+  }
+  
+  private void writeJSON(Navajo n, OutputStreamWriter out, String callback, HttpServletResponse response) throws Exception{
+	if(callback != null && !"".equals(callback)){
+	    StringWriter sw = new StringWriter();
+	    n.writeJSONTypeless(sw);
+	    String json = sw.getBuffer().toString();
+	    json = json.substring(json.indexOf(":") + 2);
+	    json = json.substring(0, json.length() - 1);
+	    json = callback + "(" + json + ")";
+	    response.setContentLength(json.getBytes().length);
+	    out.write(json);	    
+	}else{
+		n.writeJSONTypeless(out);
+	}
   }
 
   /**
@@ -412,7 +429,6 @@ public class JSONHttpServlet extends HttpServlet {
 
 		  Navajo in = null;
 		  
-		 
 		  if (streamingMode) {
 			  if ( sendEncoding != null && sendEncoding.equals(COMPRESS_JZLIB)) {			 
 				  r = new BufferedReader(new java.io.InputStreamReader(new ZInputStream(request.getInputStream())));
@@ -483,9 +499,9 @@ public class JSONHttpServlet extends HttpServlet {
 		  // Create dispatcher object.
 		  if (configurationPath!=null) {
 			  // Old SKOOL. Path provided, notify the dispatcher by passing a null DEFAULT_SERVER_XML
-			  dis = Dispatcher.getInstance(configurationPath, null, new com.dexels.navajo.server.FileInputStreamReader());
+			  dis = Dispatcher.getInstance(configurationPath, null, new com.dexels.navajo.server.FileInputStreamReader(), "");
 		  } else {
-			  dis = Dispatcher.getInstance(rootPath, DEFAULT_SERVER_XML, new com.dexels.navajo.server.FileInputStreamReader());
+			  dis = Dispatcher.getInstance(rootPath, DEFAULT_SERVER_XML, new com.dexels.navajo.server.FileInputStreamReader() , "");
 
 		  }
 
