@@ -36,6 +36,7 @@ public class TribalMapSignal extends SmokeSignal {
 			SharedTribalMap stm = SharedTribalMap.getMap(ste.getId());
 			if ( stm != null ) {
 				stm.putLocal(ste.getKey(), ste.getValue());
+				// TODO: make operation tribal safe (complete handshake) by sending message to originating host.
 			}
 		} else if ( key.equals(REMOVE)) {
 			SharedTribalElement ste = (SharedTribalElement) value;

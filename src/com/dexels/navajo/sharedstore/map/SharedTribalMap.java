@@ -15,10 +15,10 @@ public class SharedTribalMap<K,V> extends HashMap {
 	
 	private static volatile HashMap<String,SharedTribalMap> registeredMaps = new HashMap<String,SharedTribalMap>();
 	private String id;
-	private boolean threadSafe = false;
+	private boolean tribalSafe = false;
 	
-	private final static Object semaphore = new Object();
-	public  final Object semaphoreLocal = new Object();
+	private static volatile Object semaphore = new Object();
+	public  volatile Object semaphoreLocal = new Object();
 	
 	public SharedTribalMap() throws InstantiationException {
 		throw new InstantiationException("Instantiate this class as SharedTribalMap(id)");
@@ -119,7 +119,7 @@ public class SharedTribalMap<K,V> extends HashMap {
 
 		SharedStoreLock ssl = null;
 		
-		if ( threadSafe ) {
+		if ( tribalSafe ) {
 			ssl = SharedStoreFactory.getInstance().lock("", getLockName(key) , SharedStoreInterface.READ_WRITE_LOCK, true);
 		}
 		
@@ -134,7 +134,7 @@ public class SharedTribalMap<K,V> extends HashMap {
 			return o;
 			
 		} finally {
-			if ( threadSafe && ssl != null ) {
+			if ( tribalSafe && ssl != null ) {
 				SharedStoreFactory.getInstance().release(ssl);
 			}
 		}
@@ -143,14 +143,14 @@ public class SharedTribalMap<K,V> extends HashMap {
 
 	public boolean containsKey(Object key) {
 		SharedStoreLock ssl = null;
-		if ( threadSafe ) {
+		if ( tribalSafe ) {
 			ssl = SharedStoreFactory.getInstance().lock("", getLockName(key) , SharedStoreInterface.READ_WRITE_LOCK, true);
 		}
 		try {
 			//System.err.println(Dispatcher.getInstance().getApplicationId() + ": id: " + ", containsKey(" + key + ") = " + super.containsKey(key) + ", hash = " + this.hashCode());
 			return super.containsKey(key);
 		} finally {
-			if ( threadSafe && ssl != null ) {
+			if ( tribalSafe && ssl != null ) {
 				SharedStoreFactory.getInstance().release(ssl);
 			}
 		}
@@ -159,13 +159,13 @@ public class SharedTribalMap<K,V> extends HashMap {
 	public Object get(Object key) {
 
 		SharedStoreLock ssl = null;
-		if ( threadSafe ) {
+		if ( tribalSafe ) {
 			ssl = SharedStoreFactory.getInstance().lock("", getLockName(key) , SharedStoreInterface.READ_WRITE_LOCK, true);
 		}
 		try {
 			return super.get(key);
 		} finally {
-			if ( threadSafe && ssl != null ) {
+			if ( tribalSafe && ssl != null ) {
 				SharedStoreFactory.getInstance().release(ssl);
 			}
 		}
@@ -195,7 +195,7 @@ public class SharedTribalMap<K,V> extends HashMap {
 	public Object remove(Object key) {
 
 		SharedStoreLock ssl = null;
-		if ( threadSafe ) {
+		if ( tribalSafe ) {
 			ssl = SharedStoreFactory.getInstance().lock("", getLockName(key) , SharedStoreInterface.READ_WRITE_LOCK, true);
 		}
 
@@ -206,7 +206,7 @@ public class SharedTribalMap<K,V> extends HashMap {
 			TribeManagerFactory.getInstance().broadcast(tms);
 			return o;
 		} finally {
-			if ( threadSafe && ssl != null ) {
+			if ( tribalSafe && ssl != null ) {
 				SharedStoreFactory.getInstance().release(ssl);
 			}
 		}
@@ -225,12 +225,12 @@ public class SharedTribalMap<K,V> extends HashMap {
 		return id;
 	}
 
-	public boolean isThreadSafe() {
-		return threadSafe;
+	public boolean isTribalSafe() {
+		return tribalSafe;
 	}
 
 	public void setTribalSafe(boolean tribalSafe) {
-		this.threadSafe = tribalSafe;
+		this.tribalSafe = tribalSafe;
 	}
 	
 }

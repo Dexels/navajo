@@ -3,6 +3,10 @@ package com.dexels.navajo.sharedstore.map;
 import java.io.Serializable;
 import java.lang.ref.SoftReference;
 
+import org.jgroups.Address;
+
+import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
+
 
 /**
  * 
@@ -18,11 +22,15 @@ public class SharedTribalElement implements Serializable {
 	private String id;
 	private Object key;
 	private Object value;
+	// TODO: Use  originatingHost to complete 'handshake' protocol in order to make SharedTribalMap operations 'tribal safe'.
+	//private Address originatingHost = null;
 	private boolean hasSoftReference = false;
 	
 	public SharedTribalElement(String id, Object key, Object value) {
 		this.id = id;
 		this.key = key;
+		//this.originatingHost = (Address) TribeManagerFactory.getInstance().getMyMembership().getAddress();
+		
 		
 		if ( value instanceof SoftReference<?>) {
 			hasSoftReference = true;
