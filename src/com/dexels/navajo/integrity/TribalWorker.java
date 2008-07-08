@@ -316,7 +316,7 @@ public class TribalWorker extends GenericThread  implements WorkerInterface {
 					synchronized (runningRequestIds.semaphoreLocal) {
 						//System.err.println(Dispatcher.getInstance().getApplicationId() +  ": " + a.accessID + ": Waiting for currently running access set to become ready.");
 						try {
-							runningRequestIds.semaphoreLocal.wait();
+							runningRequestIds.semaphoreLocal.wait(500);
 						} catch (InterruptedException e) {
 						}
 					}
