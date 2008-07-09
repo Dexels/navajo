@@ -1,5 +1,6 @@
 package com.dexels.navajo.tribe;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -8,7 +9,7 @@ import com.dexels.navajo.sharedstore.map.IntroductionRequest;
 import com.dexels.navajo.sharedstore.map.SharedTribalMap;
 import com.dexels.navajo.util.AuditLog;
 
-public class MembershipSmokeSignal extends SmokeSignal {
+public class MembershipSmokeSignal extends SmokeSignal implements Serializable {
 
 	/**
 	 * 
@@ -37,7 +38,7 @@ public class MembershipSmokeSignal extends SmokeSignal {
 				Iterator<SharedTribalMap> iter = c.iterator();
 				while ( iter.hasNext() ) {
 					IntroductionRequest ir = new IntroductionRequest(iter.next());
-					System.err.println("SENDING TRIBALMAP TO NEW MEMBER....");
+					System.err.println("SENDING TRIBALMAP TO NEW MEMBER...." + iter.next().getId());
 					TribeManager.getInstance().askSomebody(ir, tm.getAddress());
 				}
 			}

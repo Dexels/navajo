@@ -1,5 +1,6 @@
 package com.dexels.navajo.sharedstore.map;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 
@@ -17,8 +18,8 @@ public class SharedTribalMap<K,V> extends HashMap {
 	private String id;
 	private boolean tribalSafe = false;
 	
-	private static volatile Object semaphore = new Object();
-	public  volatile Object semaphoreLocal = new Object();
+	private static volatile Object semaphore = new String();
+	public  volatile Object semaphoreLocal = new String();
 	
 	public SharedTribalMap() throws InstantiationException {
 		throw new InstantiationException("Instantiate this class as SharedTribalMap(id)");
@@ -116,7 +117,7 @@ public class SharedTribalMap<K,V> extends HashMap {
 	}
 	
 	public Object put(Object key, Object value) {
-
+		
 		SharedStoreLock ssl = null;
 		
 		if ( tribalSafe ) {

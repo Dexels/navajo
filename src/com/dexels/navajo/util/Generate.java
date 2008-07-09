@@ -349,7 +349,7 @@ public class Generate {
     
       
       // Determine input messages:
-      FileInputStream fis = new FileInputStream("/home/arjen/projecten/NavajoStandardEdition/scripts/person/ProcessSearchPersons.xml");
+      FileInputStream fis = new FileInputStream("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts/external/addressbook_bv/ProcessGetClubsByDivision.xml");
       Navajo inputDoc = gen.getInputPart(null, fis);
       fis.close();
       ArrayList msgs = inputDoc.getAllMessages();
@@ -358,7 +358,7 @@ public class Generate {
         inputMessages.add(((Message) msgs.get(i)).getName());
       }
       //inputDoc.write(System.err);
-      fis = new FileInputStream("/home/arjen/projecten/NavajoStandardEdition/scripts/person/ProcessSearchPersons.xml");
+      fis = new FileInputStream("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts/external/addressbook_bv/ProcessGetClubsByDivision.xml");
       Navajo outputDoc = gen.getOutputPart(fis);
       fis.close();
      
@@ -380,14 +380,17 @@ public class Generate {
       System.err.println("INPUT XML:");
       inputDoc.write(System.err);
       
-      String xmlInput = XMLDocumentUtils.transform(dIn, new File("/home/arjen/projecten/Navajo/soap/tml2xml.xsl"));
-      String xmlOutput = XMLDocumentUtils.transform(dOut, new File("/home/arjen/projecten/Navajo/soap/tml2xml.xsl"));
-
-      System.err.println("XML INPUT:");
-      System.err.println(xmlInput);
-
-      System.err.println("XML OUTPUT:");
-
-      System.err.println(xmlOutput);
+      System.err.println("OUTPUT XML:");
+      outputDoc.write(System.err);
+      
+//      String xmlInput = XMLDocumentUtils.transform(dIn, new File("/home/arjen/projecten/Navajo/soap/tml2xml.xsl"));
+//      String xmlOutput = XMLDocumentUtils.transform(dOut, new File("/home/arjen/projecten/Navajo/soap/tml2xml.xsl"));
+//
+//      System.err.println("XML INPUT:");
+//      System.err.println(xmlInput);
+//
+//      System.err.println("XML OUTPUT:");
+//
+//      System.err.println(xmlOutput);
   }
 }
