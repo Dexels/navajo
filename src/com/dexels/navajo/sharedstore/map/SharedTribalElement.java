@@ -3,10 +3,6 @@ package com.dexels.navajo.sharedstore.map;
 import java.io.Serializable;
 import java.lang.ref.SoftReference;
 
-import org.jgroups.Address;
-
-import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
-
 
 /**
  * 
