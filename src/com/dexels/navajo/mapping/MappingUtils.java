@@ -361,7 +361,7 @@ public final class MappingUtils {
 
     // If existing message is array message, respect this and make
     // this message my parent instead of reusing existing message.
-    if ( existing != null && existing.isArrayMessage() && Message.MSG_TYPE_ARRAY.equals(type) ) {
+    if ( existing != null && existing.isArrayMessage() && !Message.MSG_TYPE_ARRAY.equals(type) ) {
     	parent = existing;
     	existing = null;
     }
