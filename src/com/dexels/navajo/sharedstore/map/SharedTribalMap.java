@@ -12,17 +12,26 @@ import com.dexels.navajo.sharedstore.SharedStoreLock;
 
 public class SharedTribalMap<K,V> extends HashMap {
 
+	public int size;
+	public String id;
+	
+	/**
+	 * Statistics.
+	 */
+	protected long insertCount;
+	protected long deleteCount;
+	protected long getCount;
+	
 	private static final long serialVersionUID = -1122073018927967102L;
 	
 	private static volatile HashMap<String,SharedTribalMap> registeredMaps = new HashMap<String,SharedTribalMap>();
-	private String id;
 	private boolean tribalSafe = false;
 	
 	private static volatile Object semaphore = new String();
 	public  volatile Object semaphoreLocal = new String();
 	
-	public SharedTribalMap() throws InstantiationException {
-		throw new InstantiationException("Instantiate this class as SharedTribalMap(id)");
+	protected SharedTribalMap() throws InstantiationException {
+		//throw new InstantiationException("Instantiate this class as SharedTribalMap(id)");
 	}
 	
 	/**
@@ -164,6 +173,7 @@ public class SharedTribalMap<K,V> extends HashMap {
 			ssl = SharedStoreFactory.getInstance().lock("", getLockName(key) , SharedStoreInterface.READ_WRITE_LOCK, true);
 		}
 		try {
+			getCount++;
 			return super.get(key);
 		} finally {
 			if ( tribalSafe && ssl != null ) {
@@ -189,6 +199,7 @@ public class SharedTribalMap<K,V> extends HashMap {
 		synchronized (semaphoreLocal) {
 			Object o = super.put(key, value);
 			//System.err.println(Dispatcher.getInstance().getApplicationId() + ": " + id + ": in PutLocal(" + key + ", " + value + "), containsKey = " + containsKey(key) + ", hash = " + this.hashCode());
+			insertCount++;
 			return o;
 		}
 	}
@@ -205,6 +216,7 @@ public class SharedTribalMap<K,V> extends HashMap {
 			SharedTribalElement ste = new SharedTribalElement(getId(), key, null);
 			TribalMapSignal tms = new TribalMapSignal(Dispatcher.getInstance().getNavajoConfig().getInstanceName(), TribalMapSignal.REMOVE, ste);
 			TribeManagerFactory.getInstance().broadcast(tms);
+			
 			return o;
 		} finally {
 			if ( tribalSafe && ssl != null ) {
@@ -218,8 +230,13 @@ public class SharedTribalMap<K,V> extends HashMap {
 			//System.err.println(Dispatcher.getInstance().getApplicationId() + ": " + id + ": in removeLocal(" + key + ")");
 			Object o = super.remove(key);
 			semaphoreLocal.notifyAll();
+			deleteCount++;
 			return o;
 		}
+	}
+	
+	public int getSize() {
+		return this.size();
 	}
 	
 	public String getId() {
