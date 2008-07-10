@@ -51,6 +51,13 @@ public abstract class BaseNode implements java.io.Serializable{
  public final void printElement(final Writer sw, int indent) throws IOException {
 	 String tagName = getTagName();
 
+	 if ( this instanceof Message ) {
+		 Message msg = (Message) this;
+		 if ( Message.MSG_MODE_IGNORE.equals(msg.getMode()) ){
+			 return;
+		 }
+	 }
+	 
 	 for (int a = 0; a < indent; a++) {
 		 sw.write(" ");
 	 }
