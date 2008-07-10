@@ -1,5 +1,7 @@
 
 import junit.framework.*;
+
+import java.io.StringWriter;
 import java.util.*;
 
 import com.dexels.navajo.document.*;
@@ -324,7 +326,38 @@ public class TestMessage extends TestCase {
 	  Message m2 = NavajoFactory.getInstance().createMessage(testDoc, "MyIgnoredMessage");
 	  m2.setMode("ignore");
 	  m.addMessage(m2);
-	  assertNull(testDoc.getMessage("/MyTop/MyIgnoredMessage"));
+	  assertNotNull(testDoc.getMessage("/MyTop/MyIgnoredMessage"));
+	  StringWriter sw = new StringWriter();
+	  assertEquals(sw.toString().indexOf("MyIgnoredMessage"), -1);
+  }
+  
+  public void testAddIgnoreArrayMessageElements() throws Exception {
+	  Message m = NavajoFactory.getInstance().createMessage(testDoc, "MyTop");
+	  testDoc.addMessage(m);
+	  Message m2 = NavajoFactory.getInstance().createMessage(testDoc, "MyIgnoredMessage");
+	  m2.setMode("ignore");
+	  m2.setType(Message.MSG_TYPE_ARRAY);
+	  m.addMessage(m2);
+	  assertNotNull(testDoc.getMessage("/MyTop/MyIgnoredMessage"));
+	  StringWriter sw = new StringWriter();
+	  
+	  Message m3 =  NavajoFactory.getInstance().createMessage(testDoc, "MyIgnoredMessage");
+	  m3.setMode("ignore");
+	  m2.addMessage(m3);
+	  Property p1 = NavajoFactory.getInstance().createProperty(testDoc, "MyProp", "string", "AAPJES", 0, "", "in", "");
+	  m3.addProperty(p1);
+	  
+	  Message m4 =  NavajoFactory.getInstance().createMessage(testDoc, "MyIgnoredMessage");
+	  m4.setMode("ignore");
+	  m2.addMessage(m4);
+	  Property p2 = NavajoFactory.getInstance().createProperty(testDoc, "MyProp", "string", "NOOTJES", 0, "", "in", "");
+	  m4.addProperty(p2);
+	  
+	  testDoc.write(sw);
+	  
+	  System.err.println(sw.toString());
+	  assertTrue(sw.toString().indexOf("AAPJES") == -1);
+	  assertTrue(sw.toString().indexOf("NOOTJES") == -1);
   }
 
 }

@@ -7,6 +7,7 @@ import java.util.*;
 
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.base.BaseMessageImpl;
+import com.dexels.navajo.document.base.BaseNavajoFactoryImpl;
 import com.dexels.navajo.document.base.BaseNavajoImpl;
 import com.dexels.navajo.document.base.BasePropertyImpl;
 import com.dexels.navajo.document.base.BaseSelectionImpl;
