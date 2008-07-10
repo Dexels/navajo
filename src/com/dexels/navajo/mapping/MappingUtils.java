@@ -359,6 +359,13 @@ public final class MappingUtils {
       existing = doc.getMessage(message);
     }
 
+    // If existing message is array message, respect this and make
+    // this message my parent instead of reusing existing message.
+    if ( existing != null && existing.isArrayMessage() && Message.MSG_TYPE_ARRAY.equals(type) ) {
+    	parent = existing;
+    	existing = null;
+    }
+    
     if ( mode.equals(Message.MSG_MODE_OVERWRITE ) && existing != null ) {
     	// remove existing message.
     	
@@ -401,28 +408,34 @@ public final class MappingUtils {
       msg.setName(getBaseMessageName(message) + "0");
       msg.setIndex(0);
       //msg.setType(Message.MSG_TYPE_ARRAY);
-      if (!mode.equals(Message.MSG_MODE_IGNORE)) {
+      //if (!mode.equals(Message.MSG_MODE_IGNORE)) {
           if (parent == null) {
             msg = doc.addMessage(msg, false);
           }
           else {
             msg = parent.addMessage(msg, false);
           }
-        }
+        
+      //  }
       messages[index++] = msg;
     } else if (count == 1) {
-      if (!mode.equals(Message.MSG_MODE_IGNORE)) {
+      //if (!mode.equals(Message.MSG_MODE_IGNORE)) {
         if (parent == null) {
           msg = doc.addMessage(msg, false);
         }
         else {
           msg = parent.addMessage(msg, false);
         }
-      }
+       
+      //}
       messages[index++] = msg;
       if (!type.equals("")) {
         msg.setType(type);
       }
+    }
+    
+    if ( mode.equals(Message.MSG_MODE_IGNORE)) {
+  	  msg.setMode(mode);
     }
 
     // Add additional messages based on the first messages that was added.
