@@ -153,10 +153,10 @@ public  class BaseMessageImpl extends BaseNode implements Message, Comparable<Me
             return null;
         }
         // Do not add messages with mode "ignore".
-        if (m.getMode().endsWith(Message.MSG_MODE_IGNORE)) {
-            return null;
-        }
-        if (this.getType().equals(Message.MSG_TYPE_ARRAY)) {
+//        if (m.getMode().endsWith(Message.MSG_MODE_IGNORE)) {
+//            return null;
+//        }
+        if (this.getType().equals(Message.MSG_TYPE_ARRAY) ) {
             return addMessage(m, false);
         } else {
             return addMessage(m, true);
@@ -175,17 +175,18 @@ public  class BaseMessageImpl extends BaseNode implements Message, Comparable<Me
   	 
       String name = m.getName();
 
-      if (getMessage(name) != null && !overwrite && !this.getType().equals(Message.MSG_TYPE_ARRAY)) {
-          return getMessage(name);
+      Message foundMsg = getMessage(name);
+      if (foundMsg != null && !overwrite && !this.getType().equals(Message.MSG_TYPE_ARRAY) && !Message.MSG_MODE_IGNORE.equals(getMode())) {
+          return foundMsg;
       }
 
-      if (getMessage(name) != null && overwrite) {
-          removeChildMessage(getMessage(m.getName()));
+      if (getMessage(name) != null && ( overwrite || Message.MSG_MODE_IGNORE.equals(getMode())) ) {
+          removeChildMessage(foundMsg);
       }
       /**
        * If message is array type, insert new message as "element".
        */
-      messageMap.put(m.getName(), m);
+      messageMap.put(name, m);
       if (getType().equals(MSG_TYPE_ARRAY)) {
       	if ( !m.getType().equals(MSG_TYPE_DEFINITION) ) {
       		m.setIndex(messageList.size());
@@ -625,7 +626,7 @@ public  class BaseMessageImpl extends BaseNode implements Message, Comparable<Me
     }
 
     public final void removeChildMessage(Message msg) {
-       	if (messageList==null || messageMap== null) {
+      	if (messageList==null || messageMap== null) {
        		return;
        	}
         messageList.remove(msg);
@@ -1076,6 +1077,9 @@ public final Message getParentMessage() {
             if (Message.MSG_TYPE_ARRAY_ELEMENT.equals(myType)) {
                 m.put("index", "" + myIndex);
             }
+        }
+        if (myMode != null && !myMode.equals("")) {
+        	m.put("mode", myMode);
         }
         return m;
     }
