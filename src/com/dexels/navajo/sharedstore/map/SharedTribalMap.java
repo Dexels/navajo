@@ -104,7 +104,11 @@ public class SharedTribalMap<K,V> extends HashMap {
 			}
 		}
 	}
-	
+	/**
+	 * Deregisters a shared tribal map.
+	 * 
+	 * @param stm
+	 */
 	public static void deregisterMap(SharedTribalMap stm) {
 		synchronized (semaphore) {
 			deregisterMapLocal(stm.getId());
