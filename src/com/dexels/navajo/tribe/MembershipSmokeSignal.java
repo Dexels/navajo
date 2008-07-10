@@ -32,13 +32,13 @@ public class MembershipSmokeSignal extends SmokeSignal implements Serializable {
 			TribeManager.getInstance().addTribeMember(tm);
 			
 			if ( TribeManager.getInstance().getIsChief() ) {
-				System.err.println("ABOUT TO SHARE GLOBAL STATE............");
+				//System.err.println("ABOUT TO SHARE GLOBAL STATE............");
 				// Share global state.
 				Collection<SharedTribalMap> c = SharedTribalMap.getAllTribalMaps();
 				Iterator<SharedTribalMap> iter = c.iterator();
 				while ( iter.hasNext() ) {
 					IntroductionRequest ir = new IntroductionRequest(iter.next());
-					System.err.println("SENDING TRIBALMAP TO NEW MEMBER...." + iter.next().getId());
+					//System.err.println("SENDING TRIBALMAP TO NEW MEMBER...." + iter.next().getId());
 					TribeManager.getInstance().askSomebody(ir, tm.getAddress());
 				}
 			}
