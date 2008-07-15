@@ -69,7 +69,7 @@ public class TipiMenu
     List<XMLElement> v = def.getChildren();
     for (int i = 0; i < v.size(); i++) {
       XMLElement current = v.get(i);
-      TipiComponent tc = context.instantiateComponent(current);
+      TipiComponent tc = context.instantiateComponent(current,null,null);
       addComponent(tc, context, null);
     }
   }

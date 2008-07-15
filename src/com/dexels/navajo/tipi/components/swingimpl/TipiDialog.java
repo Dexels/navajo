@@ -63,14 +63,18 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 		}
 	}
 
-	protected void createWindowListener(JDialog d) {
+	protected void createWindowListener(final JDialog d) {
 		d.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
+				System.err.println("Dialog closing");
 				dialog_windowClosing();
-			}
+				((SwingTipiContext)myContext).destroyDialog(d);
+				}
 
 			public void windowClosed(WindowEvent e) {
+				System.err.println("Dialog closed");
 				dialog_windowClosing();
+				((SwingTipiContext)myContext).destroyDialog(d);
 			}
 		});
 	}
@@ -156,9 +160,12 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 	}
 
 	public void disposeComponent() {
+		System.err.println("DISPOSING DIALOG");
 		if (getDialogContainer() != null) {
+			System.err.println("Dialogcontainer non-null");
 			if (getDialogContainer() instanceof JDialog) {
-				((JDialog) getDialogContainer()).setVisible(false);
+//				((JDialog) getDialogContainer()).setVisible(false);
+				((SwingTipiContext)myContext).destroyDialog(((JDialog) getDialogContainer()));
 			}
 			if (getDialogContainer() instanceof JInternalFrame) {
 				((JInternalFrame) getDialogContainer()).setVisible(false);
@@ -273,7 +280,8 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 				if (Frame.class.isInstance(r)) {
 					// System.err.println("Creating with frame root");
 					myDialog = new JDialog((Frame) r);
-					myDialog.setUndecorated(true);
+					myDialog = ((SwingTipiContext)myContext).createDialog(title);
+					//					myDialog.setUndecorated(true);
 					myRootPaneContainer = myDialog;
 				} else {
 					if (rootObject instanceof TipiApplet) {
@@ -281,6 +289,9 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 						myDialog = new JDialog();
 						// System.err.println("Root bounds: " +
 						// jap.getBounds());
+						
+						
+						//TODO All use the dialog factory in the SwingTipiContext
 						myDialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 						myOffset = jap.getLocationOnScreen();
 						myDialog.setLocation(jap.getLocationOnScreen());
@@ -296,6 +307,9 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 				myDialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 			}
 		}
+		
+		// Beware of this one: It messes up with some LnFs:
+//		myDialog.setUndecorated(!decorated);
 //		myDialog.setUndecorated(!decorated);
 		createWindowListener(myDialog);
 		myDialog.setTitle(title);
@@ -558,16 +572,16 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 	    dlg.setVisible(true);
 	  }
 
-	  public boolean showQuestionDialog(String s) {
-	    int response = JOptionPane.showConfirmDialog( (Component) myContext.getTopLevel(), s,"",JOptionPane.YES_NO_OPTION,JOptionPane.INFORMATION_MESSAGE);
-	    return response==0;
-	  }
+//	  public boolean showQuestionDialog(String s) {
+//	    int response = JOptionPane.showConfirmDialog( (Component) myContext.getTopLevel(), s,"",JOptionPane.YES_NO_OPTION,JOptionPane.INFORMATION_MESSAGE);
+//	    return response==0;
+//	  }
 
-	  public void showInfoDialog(String s) {
-	    JOptionPane.showConfirmDialog( (Component) myContext.getTopLevel(), s,"",JOptionPane.OK_OPTION,JOptionPane.INFORMATION_MESSAGE);
-	  }
-
-	  public boolean areYouSure() {
-	    return showQuestionDialog("Are you sure?");
-	  }
+//	  public void showInfoDialog(String s) {
+//	    JOptionPane.showConfirmDialog( (Component) myContext.getTopLevel(), s,"",JOptionPane.OK_OPTION,JOptionPane.INFORMATION_MESSAGE);
+//	  }
+//
+//	  public boolean areYouSure() {
+//	    return showQuestionDialog("Are you sure?");
+//	  }
 }

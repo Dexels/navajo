@@ -2,7 +2,14 @@ package tipi;
 
 import java.util.*;
 
+import com.dexels.navajo.tipi.*;
+
 public class TipiSwingExtension implements TipiExtension {
+
+	public void initialize(TipiContext tc) {
+		// Do nothing
+		
+	}
 
 	public String getDescription() {
 		return "Standard swing implementation";
@@ -25,7 +32,7 @@ public class TipiSwingExtension implements TipiExtension {
 	}
 	public List<String> getLibraryJars() {
 		ArrayList<String> jars = new ArrayList<String>();
-		jars.add("NavajoSwingClient.jar");
+		jars.add("TipiSwingClient.jar");
 		jars.add("TimingFrameWork-1.0.jar");
 		jars.add("AnimatedTransitions-0.11.jar");
 		return jars;
@@ -37,6 +44,10 @@ public class TipiSwingExtension implements TipiExtension {
 		return jars;
 	}
 	public String getConnectorId() {
+		return null;
+	}
+
+	public List<String> getRequiredExtensions() {
 		return null;
 	}
 

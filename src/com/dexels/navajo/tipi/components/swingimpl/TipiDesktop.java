@@ -56,12 +56,14 @@ public class TipiDesktop
       public void run() {
     	  
     	 getSwingContainer().add( (Component) c, constraints);
+			if(c instanceof JInternalFrame) {
+				JInternalFrame tw = (JInternalFrame) c;
+		        tw.toFront();
+			} else {
+				((Component)c).setBounds(10,10,100,100);
+			}
 			
-			JInternalFrame tw = (JInternalFrame) c;
-	
-	        tw.toFront();
         getSwingContainer().repaint();
-
         
       }
     });
@@ -73,7 +75,7 @@ public class TipiDesktop
     }
     runSyncInEventThread(new Runnable() {
       public void run() {
-    	  System.err.println("Removing from desktop: "+c);
+//    	  System.err.println("Removing from desktop: "+c);
     	  if (c instanceof JInternalFrame) {
 			((JInternalFrame)c).dispose();
     	  }
@@ -82,39 +84,6 @@ public class TipiDesktop
       }
     });
   }
-
-//  public void setComponentValue(final String name, final Object value) {
-//    if ("logo".equals(name)) {
-//      runSyncInEventThread(new Runnable() {
-//        public void run() {
-//          if (value instanceof URL) {
-//              ( (TipiSwingDesktop) getContainer()).setImage(new ImageIcon(( (URL) value)).getImage());
-//          } else {
-//              if (value instanceof Binary) {
-//                byte[] data = ((Binary)value).getData();
-//                ImageIcon ii = new ImageIcon(data);
-//           
-//                ( (TipiSwingDesktop) getContainer()).setImage(ii.getImage());
-//                getSwingContainer().repaint();
-//                
-//            } else {
-//            	if (value==null) {
-//					System.err.println("Null-type resource ignored");
-//				} else {
-//	                System.err.println("Ignoring strange resource: "+value.getClass());
-//				}
-//            }
-//          }
-//        }
-//      });
-//      
-//    }
-//    if ("alignment".equals(name)) {
-//        ( (TipiSwingDesktop) getContainer()).setAlignment((String)value);
-//    }
-//    
-//    super.setComponentValue(name, value);
-//  }
 
   protected void addedToParent() {
     runSyncInEventThread(new Runnable() {

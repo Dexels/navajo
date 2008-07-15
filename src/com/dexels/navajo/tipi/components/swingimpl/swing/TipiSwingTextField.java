@@ -14,4 +14,20 @@ public class TipiSwingTextField
     extends JTextField
      {
 
+	@Override
+	public void setText(String t) {
+		String old = getText();
+		if(t==null) {
+			if(old==null) {
+				return;
+			}
+		} else {
+			if(t.equals(old)) {
+				return;
+			}
+			
+		}
+		super.setText(t);
+	}
+
 }

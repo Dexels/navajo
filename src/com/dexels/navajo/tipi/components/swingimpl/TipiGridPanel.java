@@ -305,7 +305,14 @@ gridBagLayout = new GridBagLayout();
 //			 parseColumns((String)object);
 
 		 }
-
+	     runSyncInEventThread(new Runnable() {
+			public void run() {
+				if ("visible".equals(name)) {
+					boolean v = ((Boolean) object).booleanValue();
+					gridComponent.setVisible(v);
+				}
+			}
+		});
 		 // Effe denken wat ik hier mee moet.
 		 if ("height".equals(name)) {
 			 int height = ((Integer)object).intValue();

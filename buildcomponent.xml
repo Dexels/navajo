@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- $Id$ -->
+<project name="NavajoSwingTipi" default="publish" basedir=".">
+	
+	<property name="src" location="src" />
+	<property name="build" location="classes" />
+	<property name="lib" value="lib" />
+	<property name="archive" value="${ant.project.name}.jar" />
+	<property name="proxyarchive" value="TipiSwing.jar" />
+
+	
+	<target name="check-env">
+		<tstamp />
+		<echo message="MY PROJECT: ${ant.project.name}"/>
+		<fail unless="PROJECTHOME"> Set the PROJECTHOME environment variable to the top directory of your CVS projects, for example: export PROJECTHOME=C:\PROJECTS declare -x PROJECTHOME=/home/arjen/las-projectas </fail>
+	</target>
+
+	<path id="depend">
+		<!--    <fileset dir="${lib}">
+            <include name="**/*.jar"/>
+        </fileset>-->
+	</path>
+
+
+	<target name="init" depends="check-env">
+		<mkdir dir="${build}" />
+	</target>
+	<target name="clean">
+		<delete file="${archive}" />
+		<delete dir="${build}" />
+	</target>
+	<target name="resource">
+		<copy todir="${build}">
+			<fileset dir="${src}">
+				<exclude name="**/startup.fx" />
+				<exclude name="**/*.java" />
+				<exclude name="**/*.html" />
+				<exclude name="**/*.stylesheet" />
+				<exclude name="**/*.txt" />
+			</fileset>
+		</copy>
+		<copy todir="${build}">
+			<fileset dir="${build}">
+				<exclude name="**/startup.fx" />
+				<exclude name="**/*.java" />
+				<exclude name="**/*.html" />
+				<exclude name="**/*.stylesheet" />
+				<exclude name="**/*.txt" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="compile" depends="init">
+		<javac srcdir="${src}" destdir="${build}">
+			<classpath refid="depend" />
+		</javac>
+	</target>
+	<target name="archive" depends="compile,resource">
+		<jar jarfile="${archive}">
+			<fileset dir="${build}">
+				<exclude name="**/startup.fx" />
+				<exclude name="**/*.java" />
+				<exclude name="**/*.html" />
+				<exclude name="**/*.stylesheet" />
+				<exclude name="**/*.txt" />
+			</fileset>
+			<manifest>
+				<attribute name="Built-By" value="Frank Lyaruu" />
+			</manifest>
+		</jar>
+	</target>
+	<target name="makejars" depends="archive">
+		<ant antfile="build.xml" dir="../NavajoTipi" inheritall="false" />
+		<ant antfile="build.xml" dir="../NavajoClient" inheritall="false" />
+		<ant antfile="build.xml" dir="../Navajo/" inheritall="false" />
+		<ant antfile="build.xml" dir="../NavajoFunctions" inheritall="false" />
+		<ant antfile="build.xml" dir="../NavajoSwingTipi" inheritall="false" />
+		<ant antfile="build.xml" dir="../TipiSwingClient" inheritall="false" />
+		<ant antfile="build.xml" dir="../NavajoRichClient" inheritall="false" />
+		<ant antfile="build.xml" dir="../NavajoRichTipi" inheritall="false" />
+		<ant antfile="build.xml" dir="../TipiFlickr" inheritall="false" />
+		<ant antfile="build.xml" dir="../TipiGeoSwing" inheritall="false" />
+		<ant antfile="build.xml" dir="../AnimatedTransitions" inheritall="false" />
+		<ant antfile="build.xml" dir="../TimingFramework" inheritall="false" />
+		<ant antfile="build.xml" dir="../TipiSubstance" inheritall="false" />
+
+	</target>
+	<target name="grabjars" depends="makejars">
+		<copy todir="lib" file="../NavajoTipi/tipipackage.jar" />
+		<copy todir="lib" file="../NavajoDocument/NavajoDocument.jar" />
+		<copy todir="lib" file="../NavajoDocument/jaxpimpl.jar" />
+		<copy todir="lib" file="../NavajoClient/NavajoClient.jar" />
+		<copy todir="lib" file="../NavajoClient/lib/jzlib.jar" />
+
+
+		<copy todir="lib" file="${proxyarchive}" />
+
+		<copy todir="lib" file="../Navajo/NavajoRuntime.jar" />
+		<copy todir="lib" file="../Navajo/NavajoServer.jar" />
+		<copy todir="lib" file="../NavajoFunctions/NavajoFunctions.jar" />
+		<copy todir="lib" file="../NavajoSwingTipi/NavajoSwingTipi.jar" />
+		<copy todir="lib" file="../TipiSwingClient/TipiSwingClient.jar" />
+		<copy todir="lib" file="../AnimatedTransitions/AnimatedTransitions.jar" />
+		<copy todir="lib" file="../TimingFramework/TimingFramework.jar" />
+
+	
+	</target>
+
+	<target name="sign" depends="grabjars">
+		<signjar keystore="dexels_dummy_key" verbose="true" storepass="dexels" keypass="dexels" alias="java">
+			<fileset dir=".">
+				<include name="lib/*.jar" />
+				<include name="${archive}" />
+				<include name="${proxyarchive}" />
+			</fileset>
+		</signjar>
+	</target>
+
+	
+	<target name="publish" depends="grabjars">
+		<!-- If this command does not work: Add de jsch-0.1.36.jar to the ant jars-->
+		<!-- and add the password to the and ant runtime: srv2pw=password -->
+		<!-- Make sure the dir exists... -->
+		<scp  trust="true" sftp="true" verbose="true" password="${srv2pw}" todir="root@srv2.dexels.com:/home/navajo/domains/navajo.dexels.com/public_html/Tipi/">
+			<fileset dir="..">
+			    <include name="${ant.project.name}/**.jnlp"/>
+			</fileset>
+		</scp>
+		<scp  trust="true" sftp="true" verbose="true" password="${srv2pw}" todir="root@srv2.dexels.com:/home/navajo/domains/navajo.dexels.com/public_html/Tipi/">
+			<fileset dir=".">
+			    <include name="TipiSwing.jar"/>
+			</fileset>
+		</scp>
+		<scp trust="true" sftp="true" verbose="true" password="${srv2pw}" todir="root@srv2.dexels.com:/home/navajo/domains/navajo.dexels.com/public_html/Tipi/${ant.project.name}">
+			<fileset dir=".">
+				<include name="lib/*.jar"/>
+				<include name="${ant.project.name}.jar"/>
+				<include name="${ant.project.name}.jnlp"/>
+			</fileset>
+		</scp>
+		<scp  trust="true" sftp="true" verbose="true" password="${srv2pw}" todir="root@srv2.dexels.com:/home/navajo/domains/navajo.dexels.com/public_html/Tipi/${ant.project.name}/">
+			<fileset dir="../NavajoSwingTipi/">
+				<include name=".htaccess"/>
+			</fileset>
+		</scp>
+	</target>	
+	<!-- -keystore dexels_dummy_key -storepass dexels $1 java
+	-->
+	<!-- Also copy a .htaccess file to the server, to help apache identify jnlp files-->
+
+</project>
+<!-- EOF: $RCSfile$ -->

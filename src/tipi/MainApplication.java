@@ -15,6 +15,15 @@ public class MainApplication {
 
 	static public void main(String[] args) throws Exception {
 		String definition = null;
+		String os = System.getProperty("os.name");
+		if(os.toLowerCase().indexOf("linux")!=-1) {
+			JFrame.setDefaultLookAndFeelDecorated(true);
+			JDialog.setDefaultLookAndFeelDecorated(true);
+		} else {
+//			System.err.println("Ignoring LNF, ON LINUX ONLY!");
+			JFrame.setDefaultLookAndFeelDecorated(true);
+			JDialog.setDefaultLookAndFeelDecorated(true);
+		}
 
 		if (args.length < 1) {
 			definition = "init";
@@ -34,7 +43,7 @@ public class MainApplication {
 		for (int i = 0; i < args.length; i++) {
 			arrrgs.add(args[i]);
 		}
-//		RepaintManager.setCurrentManager(new CheckThreadViolationRepaintManager());
+		RepaintManager.setCurrentManager(new CheckThreadViolationRepaintManager());
 		final String def = definition;
 		SwingUtilities.invokeLater(new Runnable(){
 
@@ -88,7 +97,6 @@ public class MainApplication {
 //		context.processRequiredIncludes();
 
 		context.processProperties(properties);
-		
 		
 		System.err.println("Openingin definition: "+definition);
 		InputStream tipiResourceStream = context.getTipiResourceStream(definitionPath);

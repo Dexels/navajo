@@ -1,6 +1,7 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
 import java.awt.*;
+import java.beans.*;
 import java.net.*;
 
 import javax.swing.*;
@@ -8,6 +9,7 @@ import javax.swing.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.embed.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
+import com.dexels.navajo.tipi.swingclient.components.*;
 
 /**
  * <p>
@@ -65,6 +67,7 @@ public class TipiFrame extends TipiSwingDataComponentImpl {
 			myFrame = new TipiSwingFrameImpl(this);
 			myToplevel = myFrame;
 			mySuperPanel = new JPanel();
+			myFrame.setExtendedState(myFrame.getExtendedState()|JFrame.MAXIMIZED_HORIZ);
 			myFrame.getContentPane().add(mySuperPanel ,BorderLayout.CENTER);
 			mySuperPanel.setLayout(new BorderLayout());
 			 ((SwingTipiContext)myContext).addTopLevel(myFrame);
@@ -96,13 +99,24 @@ public class TipiFrame extends TipiSwingDataComponentImpl {
 		} else {
 			runSyncInEventThread(new Runnable() {
 				public void run() {
-					// System.err.println("Constraints: "+constraints);
-					// if (constraints!=null) {
-					// System.err.println("constraints:
-					// "+constraints.getClass());
-					// }
-					mySuperPanel.add((Component) c, constraints);
-					//myToplevel.getContentPane().add((Component) c, constraints);
+
+				    runSyncInEventThread(new Runnable() {
+						public void run() {
+//							Component comp = (Component) c;
+//							if (c instanceof LayeredPaneable && ((LayeredPaneable) c).wantsToBeInALayer()) {
+//								System.err.println("Adding to layerredpane");
+//								// TODO Fix for all toplevels!
+//								((JFrame) myToplevel).getLayeredPane().add((Component) c, ((LayeredPaneable) c).getPreferredLayer());
+//								((Component) c).setBounds(10, 200, 600, 30);
+//							} else {
+								mySuperPanel.add((Component) c, constraints);
+//							}
+						}
+					});
+					
+					
+					// myToplevel.getContentPane().add((Component) c,
+					// constraints);
 					// myFrame.getContentPane().dispatchEvent(new
 					// ComponentEvent(myFrame.getContentPane(),ComponentEvent.COMPONENT_RESIZED));
 				}
@@ -160,57 +174,41 @@ public class TipiFrame extends TipiSwingDataComponentImpl {
 		return new ImageIcon(u);
 	}
 
-	public void setComponentValue(String name, Object object) {
-		if (name.equals("fullscreen")) {
-			fullscreen = ((Boolean) object).booleanValue();
-		}
-		if (name.equals("visible")) {
-			visible = ((Boolean) object).booleanValue();
-		}
-		if ("icon".equals(name)) {
-			if (object instanceof URL) {
-				setIcon(getIcon((URL) object));
-			} else {
-				System.err.println("Warning setting icon of tipiframe:");
-			}
-		}
-		if ("title".equals(name)) {
-			this.setTitle((String) object);
-		}
-		if (name.equals("x")) {
-			x = ((Integer) object).intValue();
-		}
-		if (name.equals("y")) {
-			y = ((Integer) object).intValue();
-		}
-		if (name.equals("w")) {
-			w = ((Integer) object).intValue();
-		}
-		if (name.equals("h")) {
-			h = ((Integer) object).intValue();
-		}
-		if (name.equals("menubar")) {
-			throw new UnsupportedOperationException("Dont use the menubar attribute. Just add a menubar to the component");
-			// try {
-			// if (object == null || object.equals("")) {
-			// System.err.println("null menu bar. Not instantiating");
-			// return;
-			// }
-			// myMenuBar = (String) object;
-			// XMLElement instance = new CaseSensitiveXMLElement();
-			// instance.setName("component-instance");
-			// instance.setAttribute("name", (String) object);
-			// instance.setAttribute("id", (String) object);
-			// TipiComponent tm = this.addComponentInstance(myContext, instance,
-			// null);
-			// setJMenuBar( (JMenuBar) tm.getContainer());
-			// }
-			// catch (TipiException ex) {
-			// ex.printStackTrace();
-			// setJMenuBar(null);
-			// myMenuBar = "";
-			// }
-		}
+	public void setComponentValue(final String name, final Object object) {
+		
+		runSyncInEventThread(new Runnable(){
+
+			public void run() {
+				if (name.equals("fullscreen")) {
+					fullscreen = ((Boolean) object).booleanValue();
+				}
+				if (name.equals("visible")) {
+					visible = ((Boolean) object).booleanValue();
+				}
+				if ("icon".equals(name)) {
+					if (object instanceof URL) {
+						setIcon(getIcon((URL) object));
+					} else {
+						System.err.println("Warning setting icon of tipiframe:");
+					}
+				}
+				if ("title".equals(name)) {
+					TipiFrame.this.setTitle((String) object);
+				}
+				if (name.equals("x")) {
+					x = ((Integer) object).intValue();
+				}
+				if (name.equals("y")) {
+					y = ((Integer) object).intValue();
+				}
+				if (name.equals("w")) {
+					w = ((Integer) object).intValue();
+				}
+				if (name.equals("h")) {
+					h = ((Integer) object).intValue();
+				}
+			}});
+	
 		super.setComponentValue(name, object);
 	}
 
@@ -282,4 +280,51 @@ public class TipiFrame extends TipiSwingDataComponentImpl {
 
 		}
 	}
+	
+	
+	 public final void performTipiMethod(final String name, TipiComponentMethod compMeth) {
+		 runSyncInEventThread(new Runnable(){
+
+			public void run() {
+				if (name.equals("iconify")) {
+					if(getContainer() instanceof TipiSwingFrameImpl) {
+						try {
+							TipiSwingFrameImpl jj = (TipiSwingFrameImpl) getContainer();
+							jj.setExtendedState(jj.getExtendedState()|JFrame.ICONIFIED);
+						} catch (Exception ex) {
+							ex.printStackTrace();
+						}
+					}
+				}
+				if (name.equals("maximize")) {
+					if(getContainer() instanceof TipiSwingFrameImpl) {
+						try {
+							TipiSwingFrameImpl jj = (TipiSwingFrameImpl) getContainer();
+							jj.setExtendedState(jj.getExtendedState()|JFrame.MAXIMIZED_BOTH);
+						} catch (Exception ex) {
+							ex.printStackTrace();
+						}
+					}
+				}
+				if (name.equals("restore")) {
+//					if(getContainer() instanceof TipiSwingFrameImpl) {
+//						try {
+//							TipiSwingFrameImpl jj = (TipiSwingFrameImpl) getContainer();
+//							jj.setExtendedState(jj.getExtendedState()|JFrame.ICONIFIED);
+//						} catch (Exception ex) {
+//							ex.printStackTrace();
+//						}
+//					}
+				}
+			}});
+	
+	}
+
+	 public static void main(String[] args) {
+		 JFrame j = new JFrame("aap");
+		 
+		 //j.setSize(200,100);
+			j.setExtendedState(j.getExtendedState()|JFrame.MAXIMIZED_BOTH);
+			 j.setVisible(true);
+	 }
 }

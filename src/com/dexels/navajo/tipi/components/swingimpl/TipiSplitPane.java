@@ -23,12 +23,14 @@ public class TipiSplitPane extends TipiSwingDataComponentImpl {
   public TipiSplitPane() {
   }
 
-  private JPanel left = new JPanel();
-  private JPanel right = new JPanel();
+  private JPanel left = null;
+  private JPanel right = null;
   private boolean inverse_oriented = false;
   private int dividerlocation = 0;
 
   public Object createContainer() {
+	left = new JPanel();
+	right = new JPanel();
     left.setLayout(new BorderLayout());
     right.setLayout(new BorderLayout());
     TipiSwingSplitPane sp = new TipiSwingSplitPane(TipiSwingSplitPane.HORIZONTAL_SPLIT,left,right);

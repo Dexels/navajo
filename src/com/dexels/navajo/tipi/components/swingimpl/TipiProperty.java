@@ -108,6 +108,15 @@ public class TipiProperty extends TipiSwingComponentImpl implements PropertyComp
 		});
 	}
 
+	public void setValueWidth(final int width) {
+		runSyncInEventThread(new Runnable() {
+			public void run() {
+				((GenericPropertyComponent) getContainer()).setPropertyWidth(width);
+			}
+		});
+	}
+
+	
 	@Override
 	public void addTipiEvent(TipiEvent te) {
 		myEventList.add(te);
@@ -246,6 +255,20 @@ public class TipiProperty extends TipiSwingComponentImpl implements PropertyComp
 	}
 	public void propertyEventFired(Property p, String eventType, Validatable v, Object oldValue,boolean internal) {
 		if("onValueChanged".equals(eventType)) {
+//			try {
+//				System.err.println("Onvalue Changed: "+oldValue+" new: "+p.getTypedValue()+" path: "+p.getFullPropertyName()+" ");
+//				if(oldValue!=null) {
+//					System.err.println("OLD CLASS: "+p.getTypedValue().getClass());
+//				}
+//				if(p.getTypedValue()!=null) {
+//					System.err.println("NEW CLASS: "+p.getTypedValue().getClass());
+//				}
+//			} catch (NavajoException e) {
+//				e.printStackTrace();
+//			}
+		
+//			Thread.dumpStack();
+
 			Object typedValue = p.getTypedValue();
 			if(typedValue!=null && typedValue.equals(oldValue)) {
 				System.err.println("No real change. Beware:");

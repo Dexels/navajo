@@ -31,7 +31,8 @@ public class TipiOpenBinary extends TipiAction {
     protected void execute(TipiEvent event) throws TipiBreakException, TipiException {
         Operand value  = getEvaluatedParameter("value", event);
         Operand extension  = getEvaluatedParameter("extension", event);
-        if (value==null) {
+        Operand fileName  = getEvaluatedParameter("fileName", event);
+         if (value==null) {
             throw new TipiException("TipiOpenBinary: no value supplied");
         }
         if (value.value==null) {
@@ -44,7 +45,11 @@ public class TipiOpenBinary extends TipiAction {
         if (extension!=null) {
             extString = (String)extension.value;
         }
-        Binary b = (Binary)value.value;
+        String fileNameEval = null;
+        if (fileName!=null) {
+        	fileNameEval = (String)fileName.value;
+        }
+       Binary b = (Binary)value.value;
         if (extString==null) {
             String mime = b.guessContentType();
             if (mime!=null) {
@@ -59,7 +64,10 @@ public class TipiOpenBinary extends TipiAction {
         }
 
             try {
-                File f = File.createTempFile("tipi_", "."+extString);
+            	if(fileNameEval==null) {
+            		fileNameEval = "data_";
+            	}
+                File f = File.createTempFile(fileNameEval, "."+extString);
                 TipiSaveValue.saveFile(b, f);
                 DefaultBrowser.displayURL(f.getAbsolutePath());
             } catch (IOException e) {

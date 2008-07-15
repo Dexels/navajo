@@ -64,6 +64,7 @@ public class TipiLabel
       runSyncInEventThread(new Runnable() {
         public void run() {
           ( (TipiSwingLabel) getContainer()).setIcon(getIcon(object));
+          ( (TipiSwingLabel) getContainer()).revalidate();
         }
       });
       ( (TipiSwingLabel) getContainer()).revalidate();

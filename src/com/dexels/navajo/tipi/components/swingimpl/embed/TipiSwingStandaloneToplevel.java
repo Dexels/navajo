@@ -1,6 +1,7 @@
 package com.dexels.navajo.tipi.components.swingimpl.embed;
 
 import java.awt.*;
+import java.lang.reflect.*;
 
 import javax.swing.*;
 
@@ -19,21 +20,24 @@ import com.dexels.navajo.tipi.internal.*;
 public class TipiSwingStandaloneToplevel extends TipiPanel
     implements RootPaneContainer {
 
-private final JComponent myPanel; //= new JPanel();
+private JComponent myPanel; //= new JPanel();
   private final BorderLayout myLayout = new BorderLayout();
 
-  public TipiSwingStandaloneToplevel(JComponent jj) {
+  public TipiSwingStandaloneToplevel(final JComponent jj) {
 //    myPanel.setLayout(myLayout);
  	  super.setName("init");
- 	  if (jj==null) {
-		myPanel = new JPanel();
-		myPanel.setLayout(new BorderLayout());
-	} else {
-	 	  myPanel = jj;
-	}
- 	  setId("init");
-    initContainer();
-  }
+ 		  runSyncInEventThread(new Runnable(){
+				public void run() {
+				  if (jj==null) {
+						myPanel = new JPanel();
+						myPanel.setLayout(new BorderLayout());
+					} else {
+					 	  myPanel = jj;
+					}
+				 	  setId("init");
+				    initContainer();
+			}});
+	  }
 
 
   public TipiSwingStandaloneToplevel() {

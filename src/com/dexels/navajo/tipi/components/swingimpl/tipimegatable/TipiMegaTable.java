@@ -68,7 +68,7 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
 		mtp.addChangeListener(new ChangeListener() {
 			public void stateChanged(final ChangeEvent ce) {
 
-				Thread t = new Thread() {
+				Runnable t = new Runnable() {
 					@SuppressWarnings("unchecked")
 					public void run() {
 						Map<String, Object> m = null;
@@ -84,7 +84,7 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
 
 					}
 				};
-				t.start();
+				t.run();
 			}
 		});
 	}
@@ -229,7 +229,10 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
 		}
 
 		if ("refreshRemarks".equals(name)) {
-			refreshAllTables();
+			runSyncInEventThread(new Runnable(){
+				public void run() {
+					refreshAllTables();
+				}});
 		}
 		// if ("print".equals(name)) {
 		// Operand printJob = compMeth.getEvaluatedParameter("printJob",event);

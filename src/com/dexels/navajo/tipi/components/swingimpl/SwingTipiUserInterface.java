@@ -33,13 +33,17 @@ public class SwingTipiUserInterface extends DummyUserInterface{
     return (JFrame)myContext.getTopLevel();
   }
 
-  public RootPaneContainer getRootPaneContainer() {
-	    return (RootPaneContainer)myContext.getTopLevel();
+  public JDialog getTopDialog() {
+	    return (JDialog)myContext.getTopDialog();
 	  }
+  
+
+  
 
   public void addDialog(JDialog d) {
 //    d.setLocationRelativeTo(getMainFrame());
-    d.pack();
+	  myContext.addDialog(d);
+	  d.pack();
     showCenteredDialog(d);
   }
 
@@ -61,6 +65,11 @@ public class SwingTipiUserInterface extends DummyUserInterface{
 	    dlg.setVisible(true);
 
   }
+  
+  public RootPaneContainer getRootPaneContainer() {
+	    return (RootPaneContainer) myContext.getTopLevel();
+	  }
+
   
   public void showCenteredDialog(JDialog dlg) {
     Dimension dlgSize = dlg.getBounds().getSize();

@@ -102,7 +102,8 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 		            if (e.getKeyCode()==KeyEvent.VK_ENTER) {
 		                try {
 		                System.err.println("Enterrrr!");
-//		                e.consume();
+//		              Consume is important, otherwise selection will be changed.
+						e.consume();
 		                performTipiEvent("onEnter", m, true);
 		                } catch (TipiException e1) {
 		                    e1.printStackTrace();
@@ -509,6 +510,15 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 			});
 			// setColumnsVisible(Boolean.valueOf(object.toString()).booleanValue());
 		}
+		if (name.equals("selectedMessage")) {
+			final Message m = ((Message) object);
+			runSyncInEventThread(new Runnable() {
+				public void run() {
+					mm.setSelectedMessage(m);
+				}
+			});
+			// setColumnsVisible(Boolean.valueOf(object.toString()).booleanValue());
+		}
 		if (name.equals("rowHeight")) {
 			mm.setRowHeight(((Integer) object).intValue());
 			// setColumnsVisible(Boolean.valueOf(object.toString()).booleanValue());
@@ -856,8 +866,12 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 
 	}
 
-	protected void editCell(Property value) {
-		mm.editCell(value);
+	protected void editCell(final Property value) {
+		SwingUtilities.invokeLater(new Runnable(){
+
+			public void run() {
+				mm.editCell(value);
+			}});
 	}
 
 	public void setColumnDefinitionSavePath(String path) {
@@ -881,6 +895,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 //			System.err.println("CONTENTS: "+m);
 			if(old==null) {
 				if(newP!=null) {
+					// TODO: Should not be in sync mode, right?
 					performTipiEvent("onValueChanged", m, true);
 				}
 			} else {

@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- $Id$ -->
-<project name="NavajoSwingTipi" default="archive" basedir=".">
+<project name="NavajoSwingTipi" default="proxyarchive" basedir=".">
 	<property name="src" location="src" />
 	<property name="build" location="classes" />
 	<property name="lib" value="lib" />
 	<property name="archive" value="${ant.project.name}.jar" />
+	<property name="proxyarchive" value="TipiSwing.jar" />
+	
+	
 	<property name="NavajoClient" value="${PROJECTHOME}/NavajoClient" />
 	<property name="NavajoClient.build" value="${NavajoClient}/classes" />
 	<property name="NavajoDocument" value="${PROJECTHOME}/NavajoDocument" />
@@ -83,6 +86,23 @@
 
 				<attribute name="Built-By" value="Frank" />
 				<attribute name="Class-Path" value="NavajoSwingTipi.jar,tipipackage.jar,NavajoRuntime.jar,NavajoSwingClient.jar,NavajoLigger.jar,NavajoDocument.jar" />
+				<attribute name="Main-Class" value="tipi.MainApplication" />
+			</manifest>
+
+		</jar>
+	</target>
+	<target name="proxyarchive" depends="archive">
+		<jar jarfile="${proxyarchive}">
+
+			<fileset  dir="${build}">
+				<exclude name="com/**"/>
+			</fileset>
+				<fileset  dir="../NavajoTipi/classes">
+					<exclude name="com/**"/>
+				</fileset>
+
+			<manifest>
+				<attribute name="Built-By" value="Frank" />
 				<attribute name="Main-Class" value="tipi.MainApplication" />
 			</manifest>
 

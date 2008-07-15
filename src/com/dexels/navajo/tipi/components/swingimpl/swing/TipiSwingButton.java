@@ -32,6 +32,7 @@ public class TipiSwingButton extends JButton {
 	
 	public TipiSwingButton() {
 	}
+	
 
 	public void setPreferredSize(Dimension d) {
 		// ignore.

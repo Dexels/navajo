@@ -31,6 +31,7 @@
    <tipiaction name="openBinary" class="TipiOpenBinary" package="com.dexels.navajo.tipi.components.swingimpl.actions">
       <param name="value" type="binary" required="true" />
       <param name="extension" type="string" />
+      <param name="extension" type="fileName" />
    </tipiaction>
    <tipiaction name="requestFocus" class="TipiRequestFocus" package="com.dexels.navajo.tipi.components.swingimpl.actions">
       <param name="component" type="string" required="true" />
@@ -208,6 +209,7 @@
 
          <value direction="in" name="visible" type="boolean" />
          <value direction="in" name="readOnly" type="boolean" />
+          <value direction="in" name="opaque" type="boolean" />
          <value direction="in" name="border" type="border" property="border"/>
          <value direction="in" name="rowHeight" type="integer" />
          <value direction="out" name="columnCount" type="integer" />
@@ -536,7 +538,8 @@
       </events>
       <values>
 
-         <value direction="in" name="background" type="color" property="background" />
+       <value direction="in" name="opaque" type="boolean" property="opaque" />
+          <value direction="in" name="background" type="color" property="background" />
          <value direction="in" name="border" type="border" property="border" />
          <value direction="inout" name="tooltip" type="string" property="ToolTipText" />
          <value direction="in" name="visible" type="boolean" property="visible" />
@@ -635,6 +638,36 @@
          <method name="toFront" />
       </methods>
    </tipiclass>
+ 
+ 
+   <tipiclass addtocontainer="true" childcount="*" class="TipiUndecoratedWindow" layoutmanager="true" module="container" name="undecoratedwindow" package="com.dexels.navajo.tipi.components.swingimpl"
+      studio-icon="window.gif" toplevel="true" type="tipi">
+      <events>
+         <event name="onInstantiate" />
+         <event name="onWindowClosed" />
+         <event name="onLoad">
+            <param name="service" type="string" />
+         </event>
+      </events>
+      <values>
+         <!--     <value name="visible" direction="in" type="boolean"/>-->
+         <value direction="inout" name="x" type="integer" value="50" property="x" />
+         <value direction="inout" name="y" type="integer" value="50" property="y" />
+         <value direction="inout" name="h" type="integer" value="50" property="h" />
+         <value direction="inout" name="w" type="integer" value="50" property="w" />
+         <value direction="inout" name="visible" type="boolean" value="false" property="visible" />
+
+         <value direction="inout" name="background" type="color" />
+      </values>
+      <methods>
+         <method name="iconify" />
+         <method name="maximize" />
+         <method name="restore" />
+         <method name="toFront" />
+      </methods>
+   </tipiclass>
+   
+   
    <tipiclass addtocontainer="false" childcount="*" class="TipiScreen" layoutmanager="false" module="container" name="screen" package="com.dexels.navajo.tipi.components.swingimpl"
       studio-icon="screen.gif" type="tipi">
       <events>
@@ -666,7 +699,7 @@
          <value direction="in" name="border" type="border" property="border" />
          <value direction="inout" name="tooltip" type="string" property="ToolTipText" />
          <value direction="in" name="visible" type="boolean" property="visible" />
-         <value direction="in" name="logo" type="resource" property="logoUrl" />
+         <value direction="in" name="logo" type="object" property="logoUrl" />
          <value direction="in" name="image_alignment" type="selection" property="alignment">
             <option description="North" value="north" />
             <option description="East" value="east" />
@@ -703,7 +736,11 @@
          <value direction="in" name="visible" type="boolean" value="false" />
          <value direction="in" name="centered" type="boolean" value="true" />
       </values>
-      <methods />
+      <methods>
+         <method name="iconify" />
+         <method name="maximize" />
+        <!--  <method name="restore" /> -->
+      </methods>
    </tipiclass>
    <tipiclass addtocontainer="true" childcount="0" class="TipiFileChooser" layoutmanager="false" module="component" name="filechooser"
       package="com.dexels.navajo.tipi.components.swingimpl" studio-icon="property.gif" type="component">
@@ -733,6 +770,7 @@
       <values>
          <!--           <value direction="inout" name="selected" type="tipi"/>
             <value direction="inout" name="lastselected" type="tipi"/>-->
+        <value direction="inout" name="selected" type="component" />
          <value direction="inout" name="selectedindex" type="integer" />
          <value direction="out" name="lastselectedindex" type="integer" />
          <value direction="out" name="selectedMessage" type="message" />
@@ -751,6 +789,11 @@
             <param name="tabname" type="string" />
             <param name="value" type="boolean" />
          </method>
+         <method name="showTab">
+            <param name="component" type="component" />
+            <param name="value" type="boolean" />
+         </method>
+         
       </methods>
    </tipiclass>
 
@@ -1115,7 +1158,7 @@
          <event name="onEnter" />
       </events>
       <values>
-         <value direction="inout" name="text" type="string" />
+         <value direction="inout" name="text" type="string" property="text" />
          <value direction="in" name="background" type="color" />
          <value direction="in" name="foreground" type="color" />
          <value direction="in" name="border" type="border" />
@@ -1160,6 +1203,28 @@
             <param name="text" type="string" />
          </method>
       </methods>
+   </tipiclass>
+
+
+   <tipiclass addtocontainer="true" class="TipiSourceViewer" layoutmanager="false" module="component" name="sourceviewer" childcount="0"
+      package="com.dexels.navajo.tipi.components.swingimpl" propertycomponent="false" studio-icon="textarea.gif" type="component">
+      <events>
+         <event name="onInstantiate" />
+       </events>
+      <values>
+         <value direction="inout" name="definition" type="string" />
+         <value direction="in" name="background" type="color" />
+         <value direction="in" name="foreground" type="color" />
+         <value direction="in" name="border" type="border" />
+         <value direction="in" name="font" type="font" />
+         <value direction="inout" name="tooltip" type="string" />
+         <value direction="in" name="enabled" type="boolean" />
+         <value direction="in" name="visible" type="boolean" />
+      </values>
+      <methods>
+          <method name="save"/>
+          <method name="reallySave"/>
+      </methods>
 
    </tipiclass>
 
@@ -1170,6 +1235,7 @@
       </events>
       <values>
          <value direction="in" name="binary" type="resource" property="binary"/>
+
       </values>
       <methods />
    </tipiclass>
@@ -1190,6 +1256,7 @@
          <value direction="inout" name="floatable" type="boolean" />
          <value direction="inout" name="tooltip" type="string" />
          <value direction="in" name="visible" type="boolean" />
+        <value direction="in" name="opaque" type="boolean" property="opaque" />
       </values>
       <methods />
    </tipiclass>
@@ -1203,7 +1270,7 @@
       <events>
          <event name="onValueChanged">
             <param name="propertyName" type="string" />
-            <param name="propertyValue" type="string" />
+            <param name="propertyValue" type="object" />
             <param name="propertyLength" type="integer" />
             <param name="propertyType" type="string" />
             <param name="old" type="object" />
@@ -1259,6 +1326,9 @@
          <value direction="in" name="enabled" type="boolean" property="enabled" />
          <value direction="in" name="visible" type="boolean" property="visible" />
          <value direction="inout" name="mnemonic" type="string" property="stringMnemonic" />
+         <value direction="inout" name="propertyWidth" type="integer" property="propertyWidth" />
+
+
          <!-- todo -->
          <value direction="inout" name="propertyValue" type="object" />
 

@@ -9,6 +9,7 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/DexelsVersionControl"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/AnimatedTransitions"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/TipiSwingClient"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/TipiSubstance"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/TimingFramework"/>
+	<classpathentry kind="lib" path="C:/Program Files/Java/jdk1.5.0_07/sample/jnlp/servlet/jnlp.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

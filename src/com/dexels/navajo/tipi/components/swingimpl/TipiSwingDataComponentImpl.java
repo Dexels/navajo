@@ -232,10 +232,11 @@ public void loadData(final Navajo n, final String method) throws TipiException, 
 				public void run() {
 					try {
 						TipiSwingDataComponentImpl.super.loadData(n, method);
-					} catch (TipiException e) {
+					}  catch (TipiBreakException e) {
 						e.printStackTrace();
-					} catch (TipiBreakException e) {
+					} catch (Throwable e) {
 						e.printStackTrace();
+						myContext.showInternalError("Error loading component: "+getPath()+" message: "+e.getMessage(),e);
 					}
 
 //				JComponent jc = (JComponent)getContainer();
@@ -274,11 +275,11 @@ protected void loadValues(final XMLElement values, final TipiEvent event) throws
 			}
 		}});
 }
-public void loadStartValues(final XMLElement element) {
+public void loadStartValues(final XMLElement element,final TipiEvent event) {
 	runSyncInEventThread(new Runnable(){
 
 		public void run() {
-				TipiSwingDataComponentImpl.super.loadStartValues(element);
+				TipiSwingDataComponentImpl.super.loadStartValues(element,event);
 
 		}});
 }

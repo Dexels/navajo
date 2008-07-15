@@ -75,9 +75,7 @@ public class TipiButton extends TipiSwingComponentImpl {
 					if (object == null) {
 						System.err.println("Ignoring null icon");
 					} else {
-						if (object instanceof URL) {
 							((JButton)getContainer()).setIcon(getIcon(object));
-						}
 					}
 				}
 				if (name.equals("enabled")) {

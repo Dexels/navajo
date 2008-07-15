@@ -67,7 +67,7 @@ public class NullLayout implements LayoutManager2 {
 	}
 
 	public void addLayoutComponent(String name, Component comp) {
-		System.err.println("que?");
+//		System.err.println("que?");
 	}
 
 	

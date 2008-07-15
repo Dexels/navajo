@@ -10,6 +10,7 @@ import javax.swing.event.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.internal.*;
+import com.dexels.navajo.tipi.swingclient.components.*;
 
 /**
  * <p>Title: </p>
@@ -25,20 +26,7 @@ public final class TipiWindow
 //    extends DefaultTipi {
     extends TipiSwingDataComponentImpl {
   private JInternalFrame myWindow;
-//  private String myMenuBar = "";
-//  private String myTitle;
-  
-//  private boolean iconifiable = false;
-//  private boolean closable = false;
-//  private boolean visible = false;
-//  private boolean maximizable = false;
-//  private boolean resizable = false;
-//  private String title = "";
-//  private Color backgroundColor = null;
-//  private Rectangle myBounds;
 
-//  private boolean isDisposing = false;
-  
   private JInternalFrame constructWindow() {
 //	  	isDisposing = false;
 	  	clearContainer();
@@ -49,7 +37,9 @@ public final class TipiWindow
 	    myWindow.setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);  
 	    myWindow.setResizable(true);
 	    myWindow.setSize(100,40);
-
+//	    JLabel label = new JLabel("Monkey");
+//		myWindow.getLayeredPane().add(label, 40000);
+//	    label.setBounds(10,10,50,20);
 	    myWindow.addInternalFrameListener(new InternalFrameAdapter(){
 
 			public void internalFrameClosed(InternalFrameEvent e) {
@@ -75,49 +65,19 @@ public final class TipiWindow
 		mySwingTipiContext.animateDefaultTransition(this,te,executableParent,myWindow.getContentPane(),exe);
 	}
  
-//  public Object getComponentValue(String name) {
-//    if ("visible".equals(name)) {
-//    	if (myWindow==null) {
-//			return new Boolean(false);
-//		}
-//      return new Boolean(myWindow.isVisible());
-//    }
-//    Rectangle r = myWindow.getBounds();
-//    if (name.equals("x")) {
-//      return new Integer(r.x);
-//    }
-//    if (name.equals("y")) {
-//      return new Integer(r.y);
-//    }
-//    if (name.equals("w")) {
-//      return new Integer(r.width);
-//    }
-//    if (name.equals("h")) {
-//      return new Integer(r.height);
-//    }
-//    if (name.equals("iconifiable")) {
-//      return new Boolean(myWindow.isIconifiable());
-//    }
-//    if (name.equals("maximizable")) {
-//      return new Boolean(myWindow.isMaximizable());
-//    }
-//    if (name.equals("closable")) {
-//      return new Boolean(myWindow.isClosable());
-//    }
-//    if (name.equals("resizable")) {
-//      return new Boolean(myWindow.isResizable());
-//    }
-//    if (name.equals("title")) {
-//      return myWindow.getTitle();
-//     }
-//
-//    return super.getComponentValue(name);
-//  }
-
   public void addToContainer(final Object c, final Object constraints) {
     runSyncInEventThread(new Runnable() {
       public void run() {
-        ( (JInternalFrame) getContainer()).getContentPane().add( (Component) c, constraints);
+
+    	  JInternalFrame internalFrame = ( (JInternalFrame) getContainer());
+    	  
+//    	  if (c instanceof LayeredPaneable && ((LayeredPaneable)c).wantsToBeInALayer() ) {
+//    		  System.err.println("Adding to layerredpane");
+//    		  internalFrame.getLayeredPane().add((Component)c, ((LayeredPaneable)c).getPreferredLayer());
+//    		  ((Component)c).setBounds(10,200,600,30);
+//    	  } else {
+			internalFrame.getContentPane().add( (Component) c, constraints);
+//		}
       }
     });
     SwingUtilities.invokeLater(new Runnable(){

@@ -1,10 +1,13 @@
 package com.dexels.navajo.tipi.components.swingimpl.swing;
 
 import java.awt.*;
+import java.io.*;
 import java.net.*;
 
+import javax.imageio.*;
 import javax.swing.*;
 
+import com.dexels.navajo.document.types.*;
 import com.dexels.navajo.tipi.components.swingimpl.parsers.*;
 
 /**
@@ -43,12 +46,35 @@ public class TipiSwingDesktop extends JDesktopPane {
 	private TipiGradientPaint paint = null;
 
 	public TipiSwingDesktop() {
+		
 	}
 
-	public void setLogoUrl(URL u) {
-		myImage = new ImageIcon(u).getImage();
+	public void setLogoUrl(Object o) {
+		ImageIcon imageIcon = getIcon(o);
+		if(imageIcon!=null) {
+			myImage = imageIcon.getImage();
+		}
 	}
-
+	protected ImageIcon getIcon(Object u) {
+		 if(u==null) {
+			 return null;
+		 }
+		 if(u instanceof URL) {
+			   return new ImageIcon((URL) u);
+		 }
+		 if(u instanceof Binary) {
+			 Image i;
+			try {
+				i = ImageIO.read(((Binary) u).getDataAsStream());
+				 ImageIcon ii = new ImageIcon(i);
+				 return ii;
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		 }
+		 return null;
+	  }
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		if (paint != null) {

@@ -139,11 +139,11 @@ public abstract class TipiSwingComponentImpl
 			}});
 	}
   	
-	public void loadStartValues(final XMLElement element) {
+	public void loadStartValues(final XMLElement element, final TipiEvent event) {
 		runSyncInEventThread(new Runnable(){
 
 			public void run() {
-					TipiSwingComponentImpl.super.loadStartValues(element);
+					TipiSwingComponentImpl.super.loadStartValues(element,event);
 		
 			}});
 	}

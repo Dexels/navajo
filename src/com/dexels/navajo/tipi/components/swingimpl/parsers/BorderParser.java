@@ -1,5 +1,6 @@
 package com.dexels.navajo.tipi.components.swingimpl.parsers;
 
+import java.awt.*;
 import java.util.*;
 
 import javax.swing.*;
@@ -38,6 +39,19 @@ public class BorderParser
       String title = st.nextToken();
       return BorderFactory.createTitledBorder(title);
     }
+    if ("loweredtitled".equals(borderName)) {
+        String title = st.nextToken();
+        return BorderFactory.createTitledBorder(BorderFactory.createLoweredBevelBorder(),title);
+      }
+    if ("raisedtitled".equals(borderName)) {
+        String title = st.nextToken();
+        return BorderFactory.createTitledBorder(BorderFactory.createRaisedBevelBorder(),title);
+      }
+    if ("boldtitled".equals(borderName)) {
+        String title = st.nextToken();
+        return BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.darkGray,1),title);
+      }
+    
     if ("indent".equals(borderName)) {
       try {
         int top = Integer.parseInt(st.nextToken());
@@ -51,5 +65,28 @@ public class BorderParser
       }
     }
     return BorderFactory.createEmptyBorder();
+  }
+  
+  public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
+	  UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+	  JFrame aap = new JFrame("test");
+	  
+	  aap.setSize(500,300);
+	  aap.getContentPane().setLayout(new FlowLayout());
+	  addTest(aap,BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),"Test1"),"Test1");
+	  addTest(aap,BorderFactory.createTitledBorder("Test2"),"Test2");
+	  addTest(aap,BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.darkGray,1),"Test3"),"Test3");
+	  addTest(aap,BorderFactory.createTitledBorder(BorderFactory.createLoweredBevelBorder(),"Test1"),"Test1");
+	  
+	  aap.setVisible(true);
+  }
+  private static void addTest(JFrame root, Border b, String label) {
+	  JPanel test = new JPanel();
+	  test.setPreferredSize(new Dimension(170,80));
+	  test.add(new JButton("AAP"));
+	  test.add(new JButton("NOOT"));
+	  test.add(new JButton("MIEs"));
+	  test.setBorder(b);
+	  root.getContentPane().add(test);
   }
 }

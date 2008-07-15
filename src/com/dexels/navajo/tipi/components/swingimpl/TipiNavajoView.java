@@ -9,7 +9,6 @@ package com.dexels.navajo.tipi.components.swingimpl;
 import java.awt.*;
 import java.util.*;
 
-import javax.annotation.*;
 import javax.swing.*;
 
 import com.dexels.navajo.document.*;
@@ -51,11 +50,14 @@ public class TipiNavajoView extends TipiPanel {
 			} catch (NavajoException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			} catch (TipiBreakException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 	}
 
-	private synchronized void createNavajoXML(final Navajo n) throws NavajoException {
+	private synchronized void createNavajoXML(final Navajo n) throws NavajoException, TipiBreakException {
 		for (int i = 0; i < getChildCount(); i++) {
 			TipiComponent c = getTipiComponent(i);
 			myContext.disposeTipiComponent(c);
