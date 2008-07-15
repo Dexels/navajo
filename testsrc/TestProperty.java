@@ -2,6 +2,7 @@
 import junit.framework.*;
 
 import java.beans.*;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -619,6 +620,49 @@ public class TestProperty extends TestCase {
 		Assert.assertEquals(m.doubleValue(), 10000d);
 		m = new Money("5,00");
 		Assert.assertEquals(m.doubleValue(), 5d);
+
+		
+	}
+
+	public void testMoneyProperty() throws NavajoException{
+		BaseNavajoImpl n = new BaseNavajoImpl(NavajoFactory.getInstance());
+		BaseMessageImpl m = new BaseMessageImpl(n, "Aap");
+		n.addMessage(m);
+		BasePropertyImpl p1 = new BasePropertyImpl(n, "Noot");
+		m.addProperty(p1);
+		p1.setType(Property.MONEY_PROPERTY);
+		p1.setValue("10.30");
+		StringWriter sw = new StringWriter();
+		n.write(sw);
+		StringReader sr = new StringReader(sw.toString());
+		Navajo n2 = NavajoFactory.getInstance().createNavajo(sr);
+		Property p2 = n2.getProperty("Aap/Noot");
+//		n2.write(System.err);
+	     Money mon = (Money) p2.getTypedValue(); 
+
+//	     System.err.println("m: "+mon.tmlString()+" :: "+mon.editingString()+" :: "+mon.toString());
+	     Assert.assertEquals(mon.tmlString(), "10.30");
+	     Assert.assertEquals(mon.doubleValue(), 10.30d);
+
+		
+	}
+	
+	public void testMoneyParseTml() {
+		
+		double d = 10.30;
+		Money m = new Money("10.30");
+		// Strange test, but does no harm
+		System.err.println(":: "+m.doubleValue());
+		Assert.assertNotSame(d, m.doubleValue());
+
+	}
+
+	public void testMoneyParsePresentation() {
+
+		double d = 1300.50;
+		Money m = new Money("1.300,50");
+		System.err.println(":: "+m.doubleValue());
+		assertEquals(d, m.doubleValue());
 
 	}
 

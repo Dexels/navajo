@@ -441,7 +441,7 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
 //            System.err.println("Guessed: "+currentFormatDescription.getMimeType());
 //            System.err.println("Guessed: "+currentFormatDescription.getFileExtensions());
             if (currentFormatDescription == null) {
-                return "text/plain";
+                return "application/unknown";
             } else if (currentFormatDescription.getMimeType() != null) {
                 return currentFormatDescription.getMimeType();
             } else {
@@ -642,6 +642,17 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
         return 0;
     }
 
+    public  Binary cloneWithExtension() throws IOException {
+    	File f = File.createTempFile("navajo", "."+getExtension());
+    	FileOutputStream fos = new FileOutputStream(f);
+    	InputStream dataAsStream = getDataAsStream();
+		copyResource("aap", fos, dataAsStream, getLength());
+    	fos.flush();
+    	dataAsStream.close();
+    	fos.close();
+    	return new Binary(f,true);
+    }
+    
     protected void finalize() {
     
     	if (NavajoFactory.getInstance().isSandboxMode()) {
