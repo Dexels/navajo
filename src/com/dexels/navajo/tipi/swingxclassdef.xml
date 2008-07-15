@@ -1,14 +1,81 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tid errorhandler="error">
 
-   <tipiclass addtocontainer="true" childcount="*" class="TipiJXPanel" layoutmanager="true" module="container" name="jxpanel" package="com.dexels.navajo.tipi.swingx" studio-icon="tabs.gif" type="component">
+   <tipiclass addtocontainer="true" childcount="*" class="TipiJXPanel" layoutmanager="true" module="container" name="xpanel" package="com.dexels.navajo.tipi.swingx" studio-icon="tabs.gif" type="component">
       <events>
-         <event name="onInstantiate" />
-         
+         <event name="onInstantiate" />   
       </events>
       <values>
        </values>
       <methods>
       </methods>
    </tipiclass>
+   
+   <tipiclass addtocontainer="true" childcount="*" class="TipiJXTaskPanel" layoutmanager="true" module="container" name="xtask" package="com.dexels.navajo.tipi.swingx" studio-icon="tabs.gif" type="component">
+      <events>
+         <event name="onInstantiate" />   
+      </events>
+      <values>
+       </values>
+      <methods>
+      </methods>
+   </tipiclass>
+
+   <tipiclass addtocontainer="true" childcount="*" class="TipiJXTaskItem" layoutmanager="true" module="container" name="xtaskitem" package="com.dexels.navajo.tipi.swingx" studio-icon="tabs.gif" type="component">
+      <events>
+         <event name="onInstantiate" />   
+      </events>
+      <values>
+         <value direction="in" name="animated" type="boolean" property="animated"/>
+         <value direction="in" name="expanded" type="boolean" property="expanded"/>
+         <value direction="in" name="special" type="boolean" property="special"/>
+         <value direction="in" name="title" type="string" property="title"/>
+       </values>
+      <methods>
+      </methods>
+   </tipiclass>
+
+   <tipiclass addtocontainer="true" childcount="*" class="TipiJXHyperlink" layoutmanager="true" module="container" name="xhyperlink" package="com.dexels.navajo.tipi.swingx" studio-icon="tabs.gif" type="component">
+      <events>
+         <event name="onInstantiate" />   
+         <event name="onActionPerformed" />   
+      </events>
+      <values>
+         <value direction="in" name="text" type="string" property="text"/>
+         <value direction="in" name="icon" type="object" property="icon"/>
+       </values>
+      <methods>
+      </methods>
+   </tipiclass>
+   
+   
+    <tipiclass addtocontainer="true" childcount="0" class="TipiJXDatePicker" layoutmanager="false" module="container" name="xdate" package="com.dexels.navajo.tipi.swingx" studio-icon="tabs.gif" type="component">
+      <events>
+         <event name="onInstantiate" />   
+      </events>
+      <values>
+       </values>
+      <methods>
+      </methods>
+   </tipiclass>  
+   <tipiclass addtocontainer="true" childcount="0" class="TipiTipPanel" layoutmanager="false" module="container" name="tippanel" package="com.dexels.navajo.tipi.swingx" studio-icon="tabs.gif" type="component">
+      <events>
+         <event name="onInstantiate" />   
+      </events>
+      <values>
+       </values>
+      <methods>
+      </methods>
+   </tipiclass>
+   
+      <tipiclass addtocontainer="true" childcount="*" class="TipiExtendedTable" layoutmanager="true" module="container" name="xtable" package="com.dexels.navajo.tipi.swingx" studio-icon="tabs.gif" type="component">
+      <events>
+         <event name="onInstantiate" />   
+      </events>
+      <values>
+       </values>
+      <methods>
+      </methods>
+   </tipiclass>
+   
 </tid>
