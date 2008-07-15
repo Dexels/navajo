@@ -1,6 +1,10 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
-import javax.servlet.http.HttpSessionListener;
+import java.io.*;
+import java.util.*;
+
+import javax.servlet.*;
+import javax.servlet.http.*;
 
 import nextapp.echo2.app.ApplicationInstance;
 import nextapp.echo2.webcontainer.WebContainerServlet;
@@ -39,7 +43,7 @@ public class TipiServlet extends WebContainerServlet {
     	super.destroy();
     }
 
-    public ApplicationInstance newApplicationInstance() {
+	public ApplicationInstance newApplicationInstance() {
       	TipiEchoInstance tp = null;
         try {
          	tp = new TipiEchoInstance(getServletConfig(),getServletContext());

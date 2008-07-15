@@ -2,18 +2,11 @@ package com.dexels.navajo.tipi.components.echoimpl.parsers;
 
 import java.util.StringTokenizer;
 
-import javax.servlet.http.Cookie;
-
-import nextapp.echo2.app.ApplicationInstance;
-import nextapp.echo2.app.Border;
-import nextapp.echo2.app.Color;
-import nextapp.echo2.webcontainer.ContainerContext;
 
 import com.dexels.navajo.tipi.TipiComponent;
 import com.dexels.navajo.tipi.TipiTypeParser;
 import com.dexels.navajo.tipi.internal.TipiEvent;
 
-import echopointng.able.Expandable;
 
 /**
  * <p>
@@ -34,40 +27,10 @@ import echopointng.able.Expandable;
  */
 public class CookieRefParser extends TipiTypeParser {
     public Object parse(TipiComponent source, String expression, TipiEvent event) {
-    	return parseCookie(expression);
-    }
-//    private Object parseBorder(String s) {
-//        return parseBorder(s);
-//    }
+        return new CookieRef(expression,myContext);
+   }
 
-    public Object parseCookie(String s) {
-    	System.err.println("Parsing cookie: "+s);
-    	if(s==null) {
-            return null;
-        }
-        Cookie cc = getCookie(s);
-        if(cc==null) {
-        	cc = createCookie(s);
-        }
-        return new CookieRef(cc);
-    }
     
-private Cookie createCookie(String s) {
-	Cookie cc = new Cookie(s, "");
-	cc.setPath("/");
-	cc.setMaxAge(60*60*24*365);
 
-	return cc;
-}
-private Cookie getCookie(String s) {
-	ContainerContext containerContext = (ContainerContext)ApplicationInstance.getActive().getContextProperty(ContainerContext.CONTEXT_PROPERTY_NAME);
-	Cookie[] cc = containerContext.getCookies();
-	for (int i = 0; i < cc.length; i++) {
-		if(cc[i].getName().equals(s)) {
-			return cc[i];
-		}
-	}
-	return null;
-}
 
 }

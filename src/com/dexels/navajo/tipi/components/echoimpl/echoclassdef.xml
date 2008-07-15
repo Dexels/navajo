@@ -12,11 +12,6 @@
     <param name="text" type="string"/>
   </tipiaction>
 
-    <tipiaction name="setCookie"  class="TipiSetCookie" package="com.dexels.navajo.tipi.actions">
-        <param name="name" type="string"/>
-        <param name="value" type="string"/>
-    </tipiaction>
-    
     
   <tipiaction name="showQuestion"  class="TipiEchoShowQuestion" package="com.dexels.navajo.tipi.actions">
     <param name="text" type="string"/>
@@ -48,6 +43,28 @@
   <tipiaction name="exitsession"  class="TipiEchoExit" package="com.dexels.navajo.tipi.actions">
    <param name="destination" type="string"/>
  </tipiaction>
+
+   <tipiclass addtocontainer="true" class="TipiCheckbox" module="component" name="checkbox" childcount="0" layoutmanager="false"
+      package="com.dexels.navajo.tipi.components.echoimpl" propertycomponent="false" studio-icon="button.gif" type="component">
+      <events>
+         <event name="onInstantiate" />
+         <event name="onActionPerformed" />
+         <event name="onSelectionChanged" />
+         
+      </events>
+      <values>
+         <value direction="inout" name="text" type="string" property="text" />
+         <value direction="in" name="icon" type="resource" property="iconUrl" />
+         <value direction="in" name="background" type="color" property="background" />
+         <value direction="in" name="foreground" type="color" property="foreground" />
+         <value direction="inout" name="tooltip" type="string" property="ToolTipText" />
+         <value direction="in" name="enabled" type="boolean" property="enabled" />
+         <value direction="in" name="visible" type="boolean" property="visible" />
+         <value direction="inout" name="selected" type="boolean"/>
+         
+      </values>
+      <methods />
+   </tipiclass>
 
     <tipiaction name="exit"  class="TipiEchoExit" package="com.dexels.navajo.tipi.actions">
         <!--<param name="destination" type="string"/>-->
@@ -364,6 +381,9 @@
                 <param name="message" type="message"/>
                 <!--<param name="path" type="string"/>-->
             </event>
+            <event name="onReport">
+               <param name="report" type="binary"/>
+            </event>
 
         </events>
         <values>
@@ -407,6 +427,8 @@
             <method name="loadColumns">
                 <param name="filepath" type="string"/>
             </method>
+            <method name="printReport"/>
+ 
         </methods>
     </tipiclass>
 
@@ -1086,9 +1108,7 @@
     </tipiclass>
     
 
-    <tipi-parser name="cookie" parser="com.dexels.navajo.tipi.components.echoimpl.parsers.CookieParser" type="java.lang.String"/>
-    <tipi-parser name="cookieref" parser="com.dexels.navajo.tipi.components.echoimpl.parsers.CookieRefParser" type="com.dexels.navajo.tipi.internal.TipiReference"/>
-    
+
     <tipi-parser name="extent" parser="com.dexels.navajo.tipi.components.echoimpl.parsers.ExtentParser" type="nextapp.echo2.app.Extent"/>
     <tipi-parser name="border" parser="com.dexels.navajo.tipi.components.echoimpl.parsers.BorderParser" type="java.lang.Object"/>
     <tipi-parser name="labelborder" parser="com.dexels.navajo.tipi.components.echoimpl.parsers.LabelBorderParser" type="java.lang.Object"/>

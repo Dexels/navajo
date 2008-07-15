@@ -10,6 +10,7 @@ import javax.servlet.http.*;
 
 import nextapp.echo2.app.*;
 import nextapp.echo2.webcontainer.*;
+import nextapp.echo2.webcontainer.command.*;
 import nextapp.echo2.webrender.*;
 
 import com.dexels.navajo.client.NavajoClientFactory;
@@ -52,9 +53,23 @@ public class EchoTipiContext extends TipiContext {
     	super(parentContext);
     	instanceCount++;
     	myInstance = t;
-
+		ContainerContext context =(ContainerContext) t.getContextProperty(ContainerContext.CONTEXT_PROPERTY_NAME);
+    	Map parameterMap =  context.getInitialRequestParameterMap();
+		System.err.println("request: "+parameterMap);
+		Set s = parameterMap.keySet();
+		Iterator it = s.iterator();
+		while (it.hasNext()) {
+			Object type = it.next();
+			String[] object = (String[]) parameterMap.get(type);
+			System.err.println("Key: "+type+" value: "+object+" type: "+object.getClass());
+			if(object.length==1) {
+				setGlobalValue((String) type, object[0]);
+			}
+		}
+		
+		setGlobalValue("sessionId",context.getSession().getId());
+		
     	if(useAsyncThread) {
-    		ContainerContext context =(ContainerContext) t.getContextProperty(ContainerContext.CONTEXT_PROPERTY_NAME);
     		TaskQueueHandle handle =  t.createTaskQueue();
 
     		if (null != context) {
@@ -216,11 +231,34 @@ public class EchoTipiContext extends TipiContext {
 //        }
 //      System.err.println("Base ATTR: "+base);
 
-        URL rootURL =  new URL(u.getProtocol(),u.getHost(),u.getPort(),contextname+"/dynamic/"+path);
+        URL rootURL =  new URL(u.getProtocol(),getHostname(),u.getPort(),contextname+"/dynamic/"+path);
          return rootURL;
         
     }
-    
+	private String getHostname() throws MalformedURLException {
+		Connection con = WebRenderServlet.getActiveConnection();
+		HttpServletRequest req = con.getRequest();
+		String url = req.getRequestURL().toString();
+
+		URL u = new URL(url);
+		String contextname = con.getRequest().getContextPath();
+		// deprecated the init. The context path should work
+		System.err.println("CONTEXTNAME: "+contextname);
+		String host = con.getServlet().getInitParameter("host");
+//		if (base == null) {
+//			base = contextname;
+//		}
+		if(host==null) {
+			host = u.getHost();
+		}
+
+		URL rootURL = null;
+
+//		rootURL = new URL(u.getProtocol(),host, u.getPort(),path);
+		
+		return host;
+
+	}
     
     public URL getContextURL() throws MalformedURLException {
         Connection con = WebRenderServlet.getActiveConnection();
@@ -316,4 +354,42 @@ public class EchoTipiContext extends TipiContext {
 		super.showInternalError(errorString, t);
 	}
 	
+	private Cookie createCookie(String s) {
+		Cookie cc = new Cookie(s, "");
+		cc.setPath("/");
+		cc.setMaxAge(60*60*24*365);
+
+		return cc;
+	}
+
+	public void setCookie(String name, String value) {
+		Cookie cc = getBrowserCookie(name);
+		if (cc == null) {
+			cc = createCookie(name);
+		}
+		cc.setValue(value);
+		BrowserSetCookieCommand bs = new BrowserSetCookieCommand(cc);
+		ApplicationInstance.getActive().enqueueCommand(bs);
+	}
+	
+	public Cookie getBrowserCookie(String s) {
+		ContainerContext containerContext = (ContainerContext) ApplicationInstance.getActive().getContextProperty(
+				ContainerContext.CONTEXT_PROPERTY_NAME);
+		Cookie[] cc = containerContext.getCookies();
+		for (int i = 0; i < cc.length; i++) {
+			if (cc[i].getName().equals(s)) {
+				return cc[i];
+			}
+		}
+		return null;
+	}
+
+
+	public String getCookie(String key) {
+		Cookie c = getBrowserCookie(key);
+		if(c!=null) {
+			return c.getValue();
+		}
+		return null;
+	}
 }

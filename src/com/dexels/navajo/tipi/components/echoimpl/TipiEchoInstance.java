@@ -129,6 +129,7 @@ public class TipiEchoInstance extends ApplicationInstance {
 		context.setTipiResourceLoader(servletContextResourceLoader);
 		context.setGenericResourceLoader(servletContextResourceLoader);
 	//	context.setResourceBaseDirectory(new File(myServletContext.getRealPath("/") + "resource/tipi/"));
+		
 		getContextProperty(ContainerContext.CONTEXT_PROPERTY_NAME);
 		TipiScreen es = new TipiScreen();
 		context.parseRequiredIncludes();

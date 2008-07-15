@@ -3,11 +3,12 @@ package com.dexels.navajo.tipi.actions;
 import java.io.*;
 import java.net.*;
 
-import javax.servlet.http.Cookie;
+import javax.servlet.http.*;
 
 import nextapp.echo2.app.*;
 import nextapp.echo2.webcontainer.ContainerContext;
 import nextapp.echo2.webcontainer.command.*;
+import nextapp.echo2.webrender.*;
 
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.document.types.*;
@@ -81,7 +82,8 @@ public class TipiServeBinary extends TipiAction {
             b.write(fos);
             fos.flush();
             fos.close();
-            URL result = null;
+           URL result = null;
+            
             if(baseUrl!=null) {
                 result = new URL(baseUrl, xx.getName());
             } else {
@@ -90,6 +92,8 @@ public class TipiServeBinary extends TipiAction {
             
             System.err.println("Resulting url: "+result);
 //            URL result = new URL(baseUrl.toString()+"/binary"+random+"."+extension);
+            
+            
             Command brc = new BrowserOpenWindowCommand(result.toString(),"reports"+random,"_blank");
             ApplicationInstance.getActive().enqueueCommand(brc);
 

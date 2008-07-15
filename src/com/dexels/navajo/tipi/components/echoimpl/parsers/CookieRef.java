@@ -1,11 +1,5 @@
 package com.dexels.navajo.tipi.components.echoimpl.parsers;
 
-import javax.servlet.http.Cookie;
-
-import nextapp.echo2.app.ApplicationInstance;
-import nextapp.echo2.app.Command;
-import nextapp.echo2.webcontainer.command.BrowserOpenWindowCommand;
-import nextapp.echo2.webcontainer.command.BrowserSetCookieCommand;
 
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.internal.TipiReference;
@@ -30,21 +24,17 @@ import com.dexels.navajo.document.*;
  */
 public class CookieRef implements TipiReference {
 
-	private final Cookie myCookie;
-
-	public CookieRef(Cookie c) {
-		myCookie = c;
+	private final TipiContext myContext;
+	private final String myKey;
+	public CookieRef(String key, TipiContext myContext) {
+		this.myContext = myContext;
+		this.myKey = key;
 	}
 
 	public void setValue(Object val, TipiComponent source) {
-		System.err.println("Current cookie: "+myCookie.getName()+" will be set to value: "+val);
-		myCookie.setValue(""+val);
-		BrowserSetCookieCommand bs = new BrowserSetCookieCommand(myCookie);
-		ApplicationInstance.getActive().enqueueCommand(bs);
-//		Command brc = new BrowserOpenWindowCommand("www.hoei.com","www.hoei.com",null);
-//		ApplicationInstance.getActive().enqueueCommand(brc);
-//	    
-	}
+		myContext.setCookie(myKey, (String)val);
+		System.err.println("Current cookie: "+myKey+" will be set to value: "+val);
+		}
 	
 	
 }
