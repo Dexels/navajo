@@ -327,6 +327,7 @@ public interface Property extends java.io.Serializable, Comparable<Property>, Cl
 
   /**
    * Set multiple selections for a selection type Property with a Cardinality '+'
+   * The list should list the property VALUES!
    * @param keys ArrayList
    * @throws NavajoException
    */

@@ -73,6 +73,9 @@ private void setValue(Double d) {
   /**
    * Create a new Money object from an arbitrary Object
    * @param o Object
+   * 
+   * Dit ding is verschrikkelijk, 
+   * 
    */
   public Money(Object o) {
     super(Property.MONEY_PROPERTY);
