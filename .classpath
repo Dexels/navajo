@@ -7,6 +7,6 @@
 	<classpathentry kind="lib" path="lib/jai-1_1_2/lib/jai_codec.jar"/>
 	<classpathentry kind="lib" path="lib/jai-1_1_2/lib/jai_core.jar"/>
 	<classpathentry kind="lib" path="lib/jai-1_1_2/lib/mlibwrapper_jai.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/NavajoSwingClient"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/TipiSwingClient"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
