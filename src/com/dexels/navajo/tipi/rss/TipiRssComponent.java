@@ -21,17 +21,7 @@ import com.sun.cnpi.rss.parser.*;
  */
 public class TipiRssComponent extends TipiBaseConnector implements TipiConnector {
 	//http://search-result.com/directhit/xml/NL_algemeen.xml
-	@Override
-	public Object createContainer() {
-		return null;
-	}
 
-	@Override
-	protected void setComponentValue(String name, Object object) {
-		super.setComponentValue(name, object);
-	
-		
-	}
 
 	protected void performComponentMethod(String name, TipiComponentMethod compMeth, TipiEvent event) throws TipiBreakException {
 		super.performComponentMethod(name, compMeth, event);
@@ -39,11 +29,16 @@ public class TipiRssComponent extends TipiBaseConnector implements TipiConnector
 
 	public void doTransaction(Navajo n, String service, String destination) throws TipiBreakException, TipiException {
 		try {
-			Rss rss = createRssFeed(destination);
-			Navajo nn = getRssNavajo(rss.getChannel(),service);
-
-			myContext.addNavajo(service, nn);
-			myContext.loadNavajo(nn, service);
+			if(service.equals("InitRss")) {
+				Navajo nn = createInitNavajo();
+				injectNavajo(service, nn);
+			}
+			if(service.equals("Rss")) {
+				String url = n.getProperty("Rss/URL").getValue();
+				Rss rss = createRssFeed(url);
+				Navajo nn = getRssNavajo(rss.getChannel(),service);
+				injectNavajo("Rss", nn);			
+			}
 		} catch (Exception e) {
 			throw new TipiException(e);
 		}
@@ -58,6 +53,19 @@ public class TipiRssComponent extends TipiBaseConnector implements TipiConnector
 		return "rss";
 	}
 
+	@SuppressWarnings("unchecked")
+	private Navajo createInitNavajo() throws NavajoException {
+		Navajo n = NavajoFactory.getInstance().createNavajo();
+		Header h =NavajoFactory.getInstance().createHeader(n, "InitRss", "unknown","unknown", -1);
+		n.addHeader(h);
+		Message m = NavajoFactory.getInstance().createMessage(n,"Rss");
+		n.addMessage(m);
+		Property p = NavajoFactory.getInstance().createProperty(n,"URL",Property.STRING_PROPERTY,"",0,null,Property.DIR_IN);
+		m.addProperty(p);
+		Method mm = NavajoFactory.getInstance().createMethod(n,"Rss", null);
+		n.addMethod(mm);
+		return n;
+	}
 	@SuppressWarnings("unchecked")
 	private Navajo getRssNavajo(Channel c, String service) throws NavajoException {
 		Navajo n = NavajoFactory.getInstance().createNavajo();
@@ -139,7 +147,7 @@ public class TipiRssComponent extends TipiBaseConnector implements TipiConnector
 			text = e.getAttribute(attribute);
 		}
 		
-		Property p = NavajoFactory.getInstance().createProperty(n,name,type,text,0,null,Property.DIR_IN);
+		Property p = NavajoFactory.getInstance().createProperty(n,name,type,text,0,null,Property.DIR_OUT);
 		m.addProperty(p);
 	}
 	private void addProperty(Message m, String name, BasicElement e, String type) throws NavajoException {
@@ -167,8 +175,12 @@ public class TipiRssComponent extends TipiBaseConnector implements TipiConnector
 
 	public Set<String> getEntryPoints() {
 		Set<String> s = new HashSet<String>();
-		s.add("*");
+		s.add("InitRss");
 		return s;
+	}
+
+	public String getDefaultEntryPoint() {
+		return "InitRss";
 	}
 	
 	
