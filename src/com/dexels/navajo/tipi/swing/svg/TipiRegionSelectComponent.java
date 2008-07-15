@@ -6,8 +6,6 @@ import java.util.*;
 
 import javax.swing.*;
 
-import org.w3c.dom.svg.*;
-
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.swing.svg.impl.*;
 
@@ -30,8 +28,6 @@ public class TipiRegionSelectComponent extends TipiSvgComponent {
 		comboBox = new JComboBox(regions);
 		lp.add(comboBox,BorderLayout.SOUTH);
 		comboBox.addItemListener(new ItemListener(){
- 
-			@Override
 			public void itemStateChanged(ItemEvent e) {
 				String sel = (String) e.getItem();
 				if(e.getStateChange()==ItemEvent.SELECTED) {
@@ -42,7 +38,7 @@ public class TipiRegionSelectComponent extends TipiSvgComponent {
 					
 					svgPanel.moveToFirst(sel);
 					try {
-						Map m = new HashMap();
+						Map<String,Object> m = new HashMap<String,Object>();
 						m.put("id", sel);
 						performTipiEvent("onSelect", m, true);
 					} catch (TipiException e1) {
@@ -90,9 +86,8 @@ public class TipiRegionSelectComponent extends TipiSvgComponent {
 
 	@Override
 	protected void setComponentValue(String name, Object object) {
-		// TODO Auto-generated method stub
 		if (name.equals("selected")) {
-			comboBox.setSelectedItem((String)object);
+			comboBox.setSelectedItem(object);
 		}
 
 		super.setComponentValue(name, object);
@@ -100,7 +95,6 @@ public class TipiRegionSelectComponent extends TipiSvgComponent {
 
 	@Override
 	protected Object getComponentValue(String name) {
-		// TODO Auto-generated method stub
 		if (name.equals("selected")) {
 			return comboBox.getSelectedItem();
 		}

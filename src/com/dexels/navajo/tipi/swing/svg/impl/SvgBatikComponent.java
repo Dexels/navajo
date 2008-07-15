@@ -4,6 +4,7 @@ package com.dexels.navajo.tipi.swing.svg.impl;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.event.MouseEvent;
+import java.awt.geom.*;
 import java.beans.*;
 import java.net.*;
 import java.util.*;
@@ -24,6 +25,7 @@ import org.w3c.dom.events.EventListener;
 import org.w3c.dom.svg.*;
 
 import com.dexels.navajo.tipi.swing.svg.*;
+import com.dexels.navajo.tipi.swingclient.*;
 
 public class SvgBatikComponent extends SvgBaseComponent {
 	protected final JSVGCanvas svgCanvas;
@@ -39,11 +41,33 @@ public class SvgBatikComponent extends SvgBaseComponent {
 	public SvgBatikComponent() {
 		setLayout(new BorderLayout());
 		svgCanvas = new JSVGCanvas();
+		svgCanvas.setOpaque(false);
+		svgCanvas.setDoubleBufferedRendering(true);
 		add(svgCanvas,BorderLayout.CENTER);
+		addComponentListener(new ComponentListener(){
+
+			public void componentHidden(ComponentEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			public void componentMoved(ComponentEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			public void componentResized(ComponentEvent e) {
+				doLayout();
+				repaint();
+			}
+
+			public void componentShown(ComponentEvent e) {
+				repaint();
+						
+			}});
 	}
 	
 	public void setPreferredSize(Dimension d) {
-		System.err.println("Setting pref: "+d);
 		myPrefsize = d;
 		svgCanvas.setPreferredSize(d);
 		doLayout();
@@ -142,14 +166,15 @@ public class SvgBatikComponent extends SvgBaseComponent {
 
 		svgCanvas.setBackground(new Color(0x0, true));
 		svgCanvas.setOpaque(false);
-		svgCanvas.setRecenterOnResize(true);
-		svgCanvas.setDocumentState(JSVGCanvas.ALWAYS_DYNAMIC);
+//		svgCanvas.setRecenterOnResize(true) ;
 		
+		svgCanvas.setDocumentState(JSVGCanvas.ALWAYS_DYNAMIC);
 		svgCanvas.addSVGDocumentLoaderListener(new SVGDocumentLoaderAdapter() {
 			public void documentLoadingStarted(SVGDocumentLoaderEvent e) {
 				fireDocumentLoadingStarted();
 			}
-
+			
+						
 			public void documentLoadingCompleted(SVGDocumentLoaderEvent e) {
 				if (myRegisteredIdList != null && e.getSVGDocument()!=null) {
 					StringTokenizer st = new StringTokenizer(myRegisteredIdList, ",");
@@ -329,6 +354,7 @@ public class SvgBatikComponent extends SvgBaseComponent {
 		SVGElement ee = (SVGElement) doc.getElementById(id);
 		if(ee==null) {
 			System.err.println("Unable to register events. Id not found: "+id);
+			return;
 		}
 		if (ee instanceof SVGAnimationElement) {
 
@@ -420,8 +446,9 @@ public class SvgBatikComponent extends SvgBaseComponent {
 		runInUpdateQueue(new Runnable() {
 			public void run() {
 				final SVGElement se = (SVGElement) svgCanvas.getSVGDocument().getElementById(id);
-				if(id==null) {
+				if(id==null || se==null) {
 					System.err.println("Component not found: "+id);
+					return;
 				}
 				se.setTextContent(value);
 			}
@@ -454,15 +481,20 @@ public class SvgBatikComponent extends SvgBaseComponent {
 
 	public void runInUpdateQueue(Runnable runnable) {
 		String xlinkNS = "http://www.w3.org/1999/xlink";
-		if(svgCanvas==null || svgCanvas.getSVGDocument()==null) {
+		if(svgCanvas==null ) {
 			System.err.println("Whoops! no svg canvas. Ignoring.");
-//			Thread.dumpStack();
+			Thread.dumpStack();
 		} else {
-			UpdateManager updateManager = svgCanvas.getUpdateManager();
-			if (updateManager != null) {
-				updateManager.getUpdateRunnableQueue().invokeLater(runnable);
+			if(svgCanvas.getSVGDocument()==null) {
+				System.err.println("Whoops! no svg document. Ignoring.");
+//				Thread.dumpStack();
 			} else {
-				runnable.run();
+				UpdateManager updateManager = svgCanvas.getUpdateManager();
+				if (updateManager != null) {
+					updateManager.getUpdateRunnableQueue().invokeLater(runnable);
+				} else {
+					runnable.run();
+				}
 			}
 		}
 	}
@@ -480,6 +512,16 @@ public class SvgBatikComponent extends SvgBaseComponent {
 			return se.getTagName();
 		}
 		return null;
+	}
+
+	public void setScale(double d) {
+//		if(svgCanvas!=null) {
+//			AffineTransform arr = svgCanvas.getRenderingTransform();
+//			if(arr!=null) {
+//				arr.setToScale(d, d);
+//			}
+//			repaint();
+//		}
 	}
 }
 

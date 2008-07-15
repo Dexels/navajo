@@ -1,5 +1,6 @@
 package com.dexels.navajo.tipi.swing.svg;
 
+import java.awt.event.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -73,6 +74,7 @@ public class TipiSvgComponent extends TipiSwingDataComponentImpl implements
 	public Object createContainer() {
 		myComponent = new SvgBatikComponent();
 		myComponent.addSvgAnimationListener(this);
+		myComponent.setDoubleBuffered(true);
 		myComponent.addSvgMouseListener(this);
 		myComponent.addSvgDocumentListener(new SvgDocumentAdapter(){
 
@@ -80,6 +82,31 @@ public class TipiSvgComponent extends TipiSwingDataComponentImpl implements
 				myComponent.setRegisteredIds(registeredIds);
 			}
 		});
+//		myComponent.addMouseListener(new MouseListener(){
+//
+//			public void mouseClicked(MouseEvent e) {
+//				// TODO Auto-generated method stub
+//				
+//			}
+//
+//			public void mouseEntered(MouseEvent e) {
+//				// TODO Auto-generated method stub
+//				
+//			}
+//
+//			public void mouseExited(MouseEvent e) {
+//				// TODO Auto-generated method stub
+//				
+//			}
+//
+//			public void mousePressed(MouseEvent e) {
+//				System.err.println("Mouse DOWN!");
+//			}
+//
+//			public void mouseReleased(MouseEvent e) {
+//				// TODO Auto-generated method stub
+//				
+//			}});
 		//myComponent.add
 		return myComponent;
 	}

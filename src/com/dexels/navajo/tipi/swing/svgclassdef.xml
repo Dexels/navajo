@@ -84,7 +84,8 @@
       <values>
          <value direction="inout" name="tag" type="string" />
          <value direction="inout" name="url" type="string" />
-      </values>
+           <value direction="in" name="ids" type="string" />
+   </values>
       <methods>
          <method name="next" />
          <method name="previous" />
@@ -102,7 +103,8 @@
          <value direction="inout" name="image" type="resource" />
          <value direction="inout" name="width" type="integer" />
          <value direction="inout" name="height" type="integer" />
-         <!-- 
+              <value direction="in" name="ids" type="string" />
+   <!-- 
             <value direction="inout" name="background" type="color" />
             <value direction="inout" name="foreground" type="color" />
             <value direction="inout" name="border" type="border" />

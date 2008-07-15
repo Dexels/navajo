@@ -1,18 +1,7 @@
 package com.dexels.navajo.tipi.swing.svg;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.io.*;
-import java.util.*;
-
-import javax.swing.*;
-
 import org.w3c.dom.svg.*;
-import org.xml.sax.*;
 
-import com.aetrion.flickr.*;
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.flickr.*;
 import com.dexels.navajo.tipi.swing.svg.impl.*;
 
 public class TipiSlideshowComponent extends TipiSvgComponent {
@@ -25,6 +14,8 @@ public class TipiSlideshowComponent extends TipiSvgComponent {
 	@Override
 	
 	public Object createContainer() {
+//		svgCanvas.getSVGDocument().getRootElement().getViewBox();
+
 		svgPanel = new SvgBatikComponent();
 		svgPanel.addSvgAnimationListener(this);
 		svgPanel.addSvgMouseListener(this);
@@ -32,12 +23,11 @@ public class TipiSlideshowComponent extends TipiSvgComponent {
 		svgPanel.addSvgDocumentListener(new SvgDocumentAdapter(){
 			@Override
 			public void onDocumentLoadingFinished() {
-				String loadUrl = loadUrl();
+				String loadUrl = null;
 				if(loadUrl!=null) {
 					updateDom(svgPanel.getDocument(),loadUrl);
 					svgPanel.runInUpdateQueue(new Runnable(){
 
-						@Override
 						public void run() {
 							svgPanel.fireAnimation("animin");
 							
@@ -57,7 +47,6 @@ public class TipiSlideshowComponent extends TipiSvgComponent {
 
 	@Override
 	protected void setComponentValue(String name, final Object object) {
-		// TODO Auto-generated method stub
 		if (name.equals("selected")) {
 		}
 		if (name.equals("tag")) {
@@ -65,14 +54,12 @@ public class TipiSlideshowComponent extends TipiSvgComponent {
 			svgPanel.fireAnimation("animout");
 			Thread t = new Thread(new Runnable(){
 
-				@Override
 				public void run() {
-					// TODO Auto-generated method stub
-					final String uu = loadUrl();
-					if(uu!=null) {
+//					final String uu = loadUrl(myTag);
+					if(myTag!=null) {
 						svgPanel.runInUpdateQueue(new Runnable(){
 								public void run() {
-								updateDom(svgPanel.getDocument(),uu);
+								updateDom(svgPanel.getDocument(),myTag);
 								
 							}});
 					}
@@ -86,26 +73,22 @@ public class TipiSlideshowComponent extends TipiSvgComponent {
 			svgPanel.fireAnimation("animout");
 			Thread t = new Thread(new Runnable(){
 
-				@Override
 				public void run() {
-					// TODO Auto-generated method stub
 					final String uu = (String)object;
 					try {
 						Thread.sleep(350);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					svgPanel.runInUpdateQueue(new Runnable(){
 
-						@Override
 						public void run() {
 							updateDom(svgPanel.getDocument(),uu);
 							
 						}});
 				}});
 			t.start();
-		}		
+		}
 		
 		super.setComponentValue(name, object);
 	}
@@ -114,49 +97,14 @@ public class TipiSlideshowComponent extends TipiSvgComponent {
 		if(loadUrl!=null) {
 			svgPanel.setAttribute("http://www.w3.org/1999/xlink","picture", "xlink:href", loadUrl);
 			System.err.println("URL: "+loadUrl);
-			if(loadUrl!=null) {
-				svgPanel.moveToFirst("picture");
-				svgPanel.runInUpdateQueue(new Runnable(){
+			svgPanel.moveToFirst("picture");
+			svgPanel.runInUpdateQueue(new Runnable() {
 
-					public void run() {
-						svgPanel.fireAnimation("animin");
-					}});
-			}
-				
+				public void run() {
+					svgPanel.fireAnimation("animin");
+				}
+			});
 		}
-	
-//		svgPanel.repaint();
-//		SVGElement se = (SVGElement) document.getRootElement().getElementById("picture");
-//
-//		se.setAttributeNS("xlink", "href", loadUrl);
-//		se.setAttribute("xlink:href", loadUrl);
-	}
-
-
-
-	private String loadUrl() {
-		try {
-			String url =  PhotoManager.getInstance().getUrl(new String[]{myTag}, index);
-			index++;
-			return url;
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (FlickrException e) {
-			e.printStackTrace();
-		} catch (SAXException e) {
-			e.printStackTrace();
-		}
-		return null;
-		
-	}
-
-
-
-	@Override
-	protected Object getComponentValue(String name) {
-		// TODO Auto-generated method stub
-
-		return super.getComponentValue(name);
 	}
 
 }

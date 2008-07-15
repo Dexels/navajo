@@ -1,17 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="lib/xml-apis.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/xml-apis.jar"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/NavajoSwingTipi"/>
 	<classpathentry kind="lib" path="lib/xml-apis-ext.jar"/>
-	<classpathentry kind="lib" path="lib/jzlib.jar"/>
-	<classpathentry kind="lib" path="lib/NavajoClient.jar"/>
-	<classpathentry kind="lib" path="lib/NavajoDocument.jar"/>
-	<classpathentry kind="lib" path="lib/NavajoRuntime.jar"/>
-	<classpathentry kind="lib" path="lib/NavajoSwingTipi.jar"/>
-	<classpathentry kind="lib" path="lib/tipipackage.jar"/>
-	<classpathentry kind="lib" path="lib/NavajoSwingClient.jar"/>
-	<classpathentry kind="lib" path="lib/batik-all.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/flickrapi-1.0b4.jar"/>
+	<classpathentry kind="lib" path="lib/batik-anim.jar"/>
+	<classpathentry kind="lib" path="lib/batik-awt-util.jar"/>
+	<classpathentry kind="lib" path="lib/batik-bridge.jar"/>
+	<classpathentry kind="lib" path="lib/batik-css.jar"/>
+	<classpathentry kind="lib" path="lib/batik-dom.jar"/>
+	<classpathentry kind="lib" path="lib/batik-ext.jar"/>
+	<classpathentry kind="lib" path="lib/batik-gui-util.jar"/>
+	<classpathentry kind="lib" path="lib/batik-gvt.jar"/>
+	<classpathentry kind="lib" path="lib/batik-parser.jar"/>
+	<classpathentry kind="lib" path="lib/batik-script.jar"/>
+	<classpathentry kind="lib" path="lib/batik-svg-dom.jar"/>
+	<classpathentry kind="lib" path="lib/batik-swing.jar"/>
+	<classpathentry kind="lib" path="lib/batik-util.jar"/>
+	<classpathentry kind="lib" path="lib/batik-xml.jar"/>
+	<classpathentry kind="lib" path="lib/js.jar"/>
+	<classpathentry kind="lib" path="/NavajoListeners/lib/log4j-1_2_4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

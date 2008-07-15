@@ -29,11 +29,7 @@ public class TipiSvgButton extends TipiSvgComponent implements
 				myComponent.setTextContent("buttontext",buttonText);
 	}
 		});
-	//	myComponent.getPreferredSize();
 		myComponent.setPreferredSize(new Dimension(20,10));
-		//my
-//		myComponent.init(getClass().getClassLoader());
-		//myComponent.setBackground(Color.black);
 		return o;
 		
 	}
@@ -41,7 +37,6 @@ public class TipiSvgButton extends TipiSvgComponent implements
 	
 	
 	protected void setComponentValue(String name, Object object) {
-		// TODO Auto-generated method stub
 		super.setComponentValue(name, object);
 		if (name.equals("image")) {
 			if (object instanceof URL) {

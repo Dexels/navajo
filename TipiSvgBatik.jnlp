@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jnlp spec="1.0+" codebase="http://www.navajo.nl/Tipi/TipiSvgBatik" href="TipiSvgBatik.jnlp">
+    <information>
+        <title>Tipi Svg Batik component</title>
+        <vendor>Dexels BV</vendor>
+        <homepage href="www.navajo.nl" />
+        <offline-allowed />
+    </information>  
+
+    <security>
+        <all-permissions/>
+    </security>
+    <resources>
+        <j2se version="1.5+" max-heap-size="256m"/>
+        <jar href="lib/batik-anim.jar" main="false"/>
+        <jar href="lib/batik-awt-util.jar" main="false"/>
+        <jar href="lib/batik-bridge.jar" main="false"/>
+        <jar href="lib/batik-css.jar" main="false"/>
+        <jar href="lib/batik-dom.jar" main="false"/>
+        <jar href="lib/batik-ext.jar" main="false"/>
+        <jar href="lib/batik-gui-util.jar" main="false"/>
+        <jar href="lib/batik-gvt.jar" main="false"/>
+        <jar href="lib/batik-parser.jar" main="false"/>
+        <jar href="lib/batik-script.jar" main="false"/>
+        <jar href="lib/batik-svg-dom.jar" main="false"/>
+        <jar href="lib/batik-swing.jar" main="false"/>
+        <jar href="lib/batik-util.jar" main="false"/>
+        <jar href="lib/batik-xml.jar" main="false"/>
+        <jar href="lib/js.jar" main="false"/>
+        <jar href="lib/xml-apis.jar" main="false"/>
+        <jar href="lib/xml-apis-ext.jar" main="false"/>
+        <jar href="TipiSvgBatik.jar" main="false"/>
+    </resources>
+    <component-desc/>
+</jnlp>
