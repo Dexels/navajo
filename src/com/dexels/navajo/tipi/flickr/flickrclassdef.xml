@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tid errorhandler="error">
+
+   <tipiclass addtocontainer="false" childcount="*" class="TipiFlickrConnector" layoutmanager="false" module="container" name="flickr" package="com.dexels.navajo.tipi.flickr" studio-icon="tabs.gif" type="connector">
+      <events>
+         <event name="onInstantiate" />
+      </events>
+      <values>
+         <value direction="in" name="key" type="string" />
+       </values>
+      <methods>
+      </methods>
+   </tipiclass>
+</tid>

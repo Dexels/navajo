@@ -65,7 +65,6 @@ public class PhotoManager {
         rest = new REST();
         rest.setHost(restHost);
         f = new Flickr(properties.getProperty("apiKey"),rest);
-        Flickr.debugStream = false;
         // Set the shared secret which is used for any calls which require signing.
         requestContext = RequestContext.getRequestContext();
         requestContext.setSharedSecret(properties.getProperty("secret"));
@@ -74,7 +73,7 @@ public class PhotoManager {
         auth.setToken(properties.getProperty("token"));
         requestContext.setAuth(auth);
         Flickr.debugRequest = false;
-	    Flickr.debugStream = true;
+	    Flickr.debugStream = false;
     }
 
     public PhotoList getTagList(String[] tags) throws FlickrException, IOException, SAXException {
@@ -131,7 +130,10 @@ public class PhotoManager {
     public List<Photo> getPhotos(String[] tags, int max, int index) throws FlickrException, IOException, SAXException {
     	
         SearchParameters sp = new SearchParameters();
+        sp.setSort(SearchParameters.INTERESTINGNESS_DESC);
+//        sp.setTagMode("all");
         sp.setTags(tags);
+        
         PhotoList pl =  f.getPhotosInterface().search(sp, max, index);
         List<Photo> al = new ArrayList<Photo>();
         for (Iterator<Photo> iterator = pl.iterator(); iterator.hasNext();) {

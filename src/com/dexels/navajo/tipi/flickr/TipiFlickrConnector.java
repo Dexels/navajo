@@ -16,14 +16,23 @@ import com.dexels.navajo.tipi.connectors.*;
 
 public class TipiFlickrConnector extends TipiBaseConnector {
 
-	 
+
+	public TipiFlickrConnector() {
+		System.err.println("FLICKR INSTANTIATED!");
+	}
 	public Set<String> getEntryPoints() {
 		Set<String> s = new HashSet<String>();
-		s.add("InitListFlickr");
+		s.add("InitFlickr");
 		s.add("InitQueryFlickr");
+		s.add("InitListFlickr");
 		return s;
 	}
 
+	public String getDefaultEntryPoint() {
+		return "InitFlickr";
+	}
+
+	
 	private String loadUrl(String tag, int index) {
 		try {
 			String url =  PhotoManager.getInstance().getUrl(new String[]{tag}, index);
@@ -44,7 +53,7 @@ public class TipiFlickrConnector extends TipiBaseConnector {
 		TipiFlickrConnector tipiFlickrConnector = new TipiFlickrConnector();
 		Navajo n = tipiFlickrConnector.createInitListFlickr();
 		n.write(System.err);
-		n.getProperty("Flickr/Tag").setValue("Monkey");
+		n.getProperty("Flickr/Tag").setValue("Omniworld fc voetbal");
 		Navajo mm = tipiFlickrConnector.doListPictures(n);
 		mm.write(System.err);
 //		2298318976		
@@ -63,6 +72,16 @@ public class TipiFlickrConnector extends TipiBaseConnector {
 				throw new TipiException("Error calling service: "+service,e);
 			}
 		}
+		if(service.equals("InitFlickr")) {
+			try {
+				Navajo result = createInitFlickr();
+				injectNavajo(service, result);
+			} catch (NavajoException e) {
+				throw new TipiException("Error calling service: "+service,e);
+			}
+		}
+		
+		
 		if(service.equals("InitQueryFlickr")) {
 			try {
 				Navajo result = createInitQueryFlickr();
@@ -79,6 +98,7 @@ public class TipiFlickrConnector extends TipiBaseConnector {
 				throw new TipiException("Error calling service: "+service,e);
 			}
 		}
+
 		if(service.equals("QueryFlickr")) {
 			try {
 				Navajo result = doQueryPicture(n);
@@ -89,7 +109,14 @@ public class TipiFlickrConnector extends TipiBaseConnector {
 		}
 	}
 
-	
+	private Navajo createInitFlickr() throws NavajoException {
+		Navajo n = NavajoFactory.getInstance().createNavajo();
+		Method list = NavajoFactory.getInstance().createMethod(n, "InitListFlickr", null);
+		Method query = NavajoFactory.getInstance().createMethod(n, "InitQueryFlickr", null);
+		n.addMethod(list);
+		n.addMethod(query);
+		return n;
+	}
 	private Navajo createInitListFlickr() throws NavajoException {
 		Navajo n = NavajoFactory.getInstance().createNavajo();
 		Message m = NavajoFactory.getInstance().createMessage(n, "Flickr");
@@ -97,6 +124,10 @@ public class TipiFlickrConnector extends TipiBaseConnector {
 		addProperty(m, "Tag", null, Property.STRING_PROPERTY);
 		addProperty(m, "Index", null, Property.INTEGER_PROPERTY);
 		addProperty(m, "Max", null, Property.INTEGER_PROPERTY);
+		addProperty(m, "IncludeThumbnail", false, Property.BOOLEAN_PROPERTY);
+		addProperty(m, "IncludePicture", false, Property.BOOLEAN_PROPERTY);
+		addProperty(m, "IncludeMetaData", false, Property.BOOLEAN_PROPERTY);
+		
 		Method go = NavajoFactory.getInstance().createMethod(n, "ListFlickr", null);
 		n.addMethod(go);
 		return n;
@@ -113,6 +144,14 @@ public class TipiFlickrConnector extends TipiBaseConnector {
 	private Navajo doListPictures(Navajo input) throws TipiException, NavajoException {
 		Property tag = input.getProperty("Flickr/Tag");
 		Property max = input.getProperty("Flickr/Max");
+		Property thumbProp = input.getProperty("Flickr/IncludeThumbnail");
+		Property mediumProp = input.getProperty("Flickr/IncludePicture");
+		Boolean includeThumbnails = (Boolean) thumbProp.getTypedValue();
+		Boolean includePicture = (Boolean) mediumProp.getTypedValue();
+
+		Property metaDataProp = input.getProperty("Flickr/IncludeMetaData");
+		Boolean metadata = (Boolean) metaDataProp.getTypedValue();
+
 		Integer maxInt = (Integer) max.getTypedValue();
 		Property index = input.getProperty("Flickr/Index");
 		Integer indexInt = (Integer) index.getTypedValue();
@@ -124,8 +163,15 @@ public class TipiFlickrConnector extends TipiBaseConnector {
 		}
 		String tagString = (String) tag.getTypedValue();
 		List<Photo> tt;
+		StringTokenizer tagger = new StringTokenizer(tagString);
+		String[] tagg = new String[tagger.countTokens()];
+		int i=0;
+		while (tagger.hasMoreTokens()) {
+			tagg[i++]= tagger.nextToken();
+			System.err.println("adding tag: "+tagg[i-1]);
+		}
 		try {
-			tt = PhotoManager.getInstance().getPhotos(new String[]{tagString},10, 0);
+			tt = PhotoManager.getInstance().getPhotos(tagg,maxInt, indexInt);
 		} catch (Exception e) {
 			throw new TipiException("Error connecting to Flickr",e);
 		}
@@ -135,8 +181,18 @@ public class TipiFlickrConnector extends TipiBaseConnector {
 		for (Photo photo : tt) {
 			Message element = NavajoFactory.getInstance().createMessage(n, "Flickr",Message.MSG_TYPE_ARRAY_ELEMENT);
 			m.addMessage(element);
+			if(metadata) {
+				appendPhoto(element,photo);
+			}
 			
-			appendPhoto(element,photo);
+			if(includeThumbnails) {
+				appendThumbnailBinary(element, photo);
+			}
+			if(includePicture) {
+				appendMediumPictureBinary(element, photo);
+			}
+			
+			
 		}
 		return n;
 	}
@@ -179,6 +235,23 @@ public class TipiFlickrConnector extends TipiBaseConnector {
 		}
 		
 	}
+	
+	private void appendThumbnailBinary(Message element, Photo photo) throws NavajoException {
+		try {
+			addProperty(element, "Small", new Binary(photo.getSmallAsInputStream(),false), Property.STRING_PROPERTY);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}	
+	}
+	private void appendMediumPictureBinary(Message element, Photo photo) throws NavajoException {
+		try {
+			addProperty(element, "Medium", new Binary(photo.getMediumAsStream(),false), Property.STRING_PROPERTY);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}	
+	}
+	
+	
 	private void appendPhoto(Message element, Photo photo) throws NavajoException {
 		addProperty(element, "Id", photo.getId(), Property.STRING_PROPERTY);
 		addProperty(element, "Description", photo.getDescription(), Property.STRING_PROPERTY);
