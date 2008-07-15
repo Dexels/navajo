@@ -20,14 +20,19 @@ public class TipiSetTheme extends TipiAction {
 		SwingUtilities.invokeLater(new Runnable(){
 
 			public void run() {
-				String value = null;
-				if(valueOp!=null) {
-					value = (String) valueOp.value;
-				}
-				if (value==null) {
-					setDefaultLnF();
-				} else {
-					setSubstanceTheme(value);
+				try {
+					String value = null;
+					if(valueOp!=null) {
+						value = (String) valueOp.value;
+					}
+					if (value==null) {
+						setDefaultLnF();
+					} else {
+						setSubstanceTheme(value);
+					}
+				} catch (Throwable e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}			
 			}});
 		

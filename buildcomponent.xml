@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- $Id$ -->
+
+
+	<!-- When changing this file for another project:
+		1. Change the project name here:
+		2. That's it!
+	-->
+<project name="TipiSubstance" default="publish" basedir=".">
+	
+	<property name="src" location="src" />
+	<property name="build" location="classes" />
+	<property name="lib" value="lib" />
+	<property name="archive" value="${ant.project.name}.jar" />
+	<target name="check-env">
+		<tstamp />
+		<fail unless="PROJECTHOME"> Set the PROJECTHOME environment variable to the top directory of your CVS projects, for example: export PROJECTHOME=C:\PROJECTS declare -x PROJECTHOME=/home/arjen/las-projectas </fail>
+	</target>
+
+	<path id="depend">
+		<!--    <fileset dir="${lib}">
+            <include name="**/*.jar"/>
+        </fileset>-->
+	</path>
+
+	<target name="init" depends="check-env">
+		<mkdir dir="${build}" />
+	</target>
+	<target name="clean">
+		<delete file="${archive}" />
+		<delete dir="${build}" />
+	</target>
+	<target name="resource">
+		<copy todir="${build}">
+			<fileset dir="${src}">
+				<exclude name="**/*.java" />
+			</fileset>
+		</copy>
+		<copy todir="${build}">
+			<fileset dir="${build}">
+				<exclude name="**/*.java" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="compile" depends="init">
+		<javac srcdir="${src}" destdir="${build}">
+			<classpath refid="depend" />
+		</javac>
+	</target>
+	<target name="archive" depends="compile,resource">
+		<jar jarfile="${archive}">
+			<fileset dir="${build}">
+				<exclude name="**/*.java" />
+			</fileset>
+			<manifest>
+				<attribute name="Built-By" value="${user.name}" />
+			</manifest>
+		</jar>
+	</target>
+	
+	<target name="sign" depends="archive">
+		<signjar keystore="${PROJECTHOME}/NavajoSwingTipi/dexels_dummy_key" verbose="true" storepass="dexels" keypass="dexels" alias="java">
+			<fileset dir=".">
+				<include name="lib/*.jar" />
+				<include name="${archive}" />
+			</fileset>
+		</signjar>
+	</target>
+
+	<target name="publish" depends="sign">
+		<!-- If this command does not work: Add de jsch-0.1.36.jar to the ant jars-->
+		<!-- and add the password to the and ant runtime: srv2pw=password -->
+		<!-- Make sure the dir exists... -->
+		<scp  trust="true" sftp="true" verbose="true" password="${srv2pw}" todir="root@srv2.dexels.com:/home/navajo/domains/navajo.dexels.com/public_html/Tipi/">
+			<fileset dir="..">
+			    <include name="${ant.project.name}/**.jnlp"/>
+			</fileset>
+		</scp>
+		<scp  trust="true" sftp="true" verbose="true" password="${srv2pw}" todir="root@srv2.dexels.com:/home/navajo/domains/navajo.dexels.com/public_html/Tipi/${ant.project.name}/">
+			<fileset dir=".">
+				<include name="lib/*.jar"/>
+				<include name="${ant.project.name}.jar"/>
+				<include name="${ant.project.name}.jnlp"/>
+			</fileset>
+		</scp>
+		<!-- Also copy a .htaccess file to the server, to help apache identify jnlp files-->
+		<scp  trust="true" sftp="true" verbose="true" password="${srv2pw}" todir="root@srv2.dexels.com:/home/navajo/domains/navajo.dexels.com/public_html/Tipi/${ant.project.name}/">
+			<fileset dir="../NavajoSwingTipi/">
+				<include name=".htaccess"/>
+			</fileset>
+		</scp>
+	</target>	
+</project>

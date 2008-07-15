@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jnlp spec="1.0+" codebase="http://www.navajo.nl/Tipi/TipiSubstance" href="TipiSubstance.jnlp">
+    <information>
+        <title>Navajo Substance Tipi component</title>
+        <vendor>Dexels BV</vendor>
+        <homepage href="www.navajo.nl" />
+        <offline-allowed />
+    </information>  
+
+    <resources>
+        <j2se version="1.5+" max-heap-size="256m"/>
+        <jar href="lib/substance.jar" main="false"/>
+        <jar href="TipiSubstance.jar" main="false"/>
+    </resources>
+    <component-desc />
+</jnlp>

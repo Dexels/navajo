@@ -2,7 +2,14 @@ package tipi;
 
 import java.util.*;
 
+import com.dexels.navajo.tipi.*;
+
 public class TipiSubstanceExtension implements TipiExtension {
+
+	public void initialize(TipiContext tc) {
+		// Do nothing
+		
+	}
 
 	public String getDescription() {
 		return "Substance extensions";
@@ -39,6 +46,11 @@ public class TipiSubstanceExtension implements TipiExtension {
 	}
 	
 	public String getConnectorId() {
+		return null;
+	}
+
+	public List<String> getRequiredExtensions() {
+		
 		return null;
 	}
 

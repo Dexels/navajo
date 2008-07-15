@@ -5,6 +5,7 @@ import java.awt.*;
 import javax.swing.*;
 
 import org.jvnet.substance.*;
+import org.jvnet.substance.skin.*;
 
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
@@ -40,7 +41,7 @@ public class TipiSetSkin extends TipiAction {
 		SubstanceLookAndFeel.setSkin(value);
 		Frame[] f = Frame.getFrames();
 		try {
-			UIManager.setLookAndFeel(new SubstanceLookAndFeel());
+			UIManager.setLookAndFeel(new SubstanceBusinessLookAndFeel());
 		} catch (UnsupportedLookAndFeelException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
