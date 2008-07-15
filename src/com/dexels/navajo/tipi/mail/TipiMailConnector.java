@@ -42,6 +42,10 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 		if (service.equals("InitGetMessages")) {
 			injectNavajo(service, createInitGetMessages());
 		}
+		
+		if (service.equals("GetInboxMessages")) {
+			injectNavajo(service, createMessagesNavajo(null));
+		}		
 		if (service.equals("GetMessages")) {
 			injectNavajo(service, createMessagesNavajo(n));
 		}
@@ -51,6 +55,10 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 		if (service.equals("GetMessage")) {
 			injectNavajo(service, createGetMessage(n));
 		}
+	}
+
+	public String getDefaultEntryPoint() {
+		return "InitMail";
 	}
 
 
@@ -77,6 +85,8 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 		Navajo n = NavajoFactory.getInstance().createNavajo();
 		try {
 			n.addMethod(NavajoFactory.getInstance().createMethod(n, "InitGetFolders", null));
+			n.addMethod(NavajoFactory.getInstance().createMethod(n, "GetInboxMessages", null));
+			
 		} catch (NavajoException e) {
 			e.printStackTrace();
 		}
@@ -132,11 +142,7 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 
 	private Navajo createMessagesNavajo(Navajo n) throws TipiException {
 		String name = null;
-		try {
-			n.write(System.err);
-		} catch (NavajoException e1) {
-			e1.printStackTrace();
-		}
+
 		if (n == null) {
 			name = "INBOX";
 		} else {
@@ -146,6 +152,13 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 		System.err.println("Getting fildeR: " + name);
 		Navajo myNavajo = NavajoFactory.getInstance().createNavajo();
 
+		if(store==null) {
+			try {
+				connect();
+			} catch (MessagingException e) {
+				throw new TipiException("WTF? "+e.getMessage(),e);
+			}
+		}
 		Folder fff;
 		try {
 			fff = store.getFolder(name);
@@ -223,6 +236,7 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 			public void closed(ConnectionEvent e) {
 				try {
 					performTipiEvent("onConnectionClosed", null, false);
+					store = null;
 				} catch (TipiException e1) {
 					e1.printStackTrace();
 				}
@@ -231,6 +245,7 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 			public void disconnected(ConnectionEvent arg0) {
 				try {
 					performTipiEvent("onConnectionLost", null, false);
+					store = null;
 				} catch (TipiException e1) {
 					e1.printStackTrace();
 				}
@@ -281,11 +296,19 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 			// Close connection
 			// folder.close(false);
 			store.close();
+			store = null;
 		}
 	}
 
 	public Navajo createFolderNavajo() throws TipiException {
 		Navajo myNavajo;
+		if(store==null) {
+			try {
+				connect();
+			} catch (MessagingException e) {
+				throw new TipiException("Error connecting: "+e.getMessage(),e);
+			}
+		}
 		try {
 			Folder g = store.getDefaultFolder();
 			myNavajo = NavajoFactory.getInstance().createNavajo();
@@ -388,7 +411,11 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 		addProperty(folderMessage, "", c.getName(), Property.STRING_PROPERTY);
 	}
 
+
 	private void addProperty(Message m, String name, Object value, String type) throws NavajoException {
+		addProperty(m, name, value, type, Property.DIR_OUT);
+	}
+	private void addProperty(Message m, String name, Object value, String type, String direction) throws NavajoException {
 		Navajo n = m.getRootDoc();
 		Property p = NavajoFactory.getInstance().createProperty(n, name, type, null, 0, null, Property.DIR_IN);
 		p.setAnyValue(value);

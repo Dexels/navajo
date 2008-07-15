@@ -2,10 +2,17 @@ package tipi;
 
 import java.util.*;
 
+import com.dexels.navajo.tipi.*;
+
 public class TipiMailExtension implements TipiExtension {
 
+	public void initialize(TipiContext tc) {
+		// Do nothing
+		
+	}
+
 	public String getDescription() {
-		return "Mail connector";
+		return "Mail connector. Uses the java mail api to connect to a imap server. TODO: POP support";
 	}
 
 	public String[] getIncludes() {
@@ -32,7 +39,17 @@ public class TipiMailExtension implements TipiExtension {
 	}
 
 	public List<String> getMainJars() {
-			return null;
+		List<String> l = new LinkedList<String>();
+		l.add("TipiMail.jar");
+		return l;
 	} 
+	public String getConnectorId() {
+		return "mail";
+	}
+
+	public List<String> getRequiredExtensions() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }
