@@ -25,8 +25,12 @@ public class MessageTablePanel extends SplitPane {
     	setOrientation(ORIENTATION_VERTICAL);
     	setSeparatorPosition(new Extent(25));
 		pageNavigator = new PageNavigator();
+		pageNavigator.initialize();
+		
 		myTransitionPane = new TransitionPane();
 		myTable = new MessageTable();
+		// ben er klaar mee
+		pageNavigator.setTable(myTable);
 		add(pageNavigator);
         add(myTransitionPane);
         myTransitionPane.setDuration(2000);

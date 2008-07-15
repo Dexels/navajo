@@ -380,10 +380,8 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 		} else {
 			if ((isEdit || !useLabelForReadOnlyProperties)) {
 				createTextField(p);
-
 			} else {
 				createLabel(m.formattedString());
-
 			}
 		}
 	}
@@ -417,12 +415,13 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 			return;
 		}
 		if (alwaysUseLabel) {
-			createLabel(m.toString());
+			createLabel(m.toShortString());
 		} else {
 			if ((isEdit || !useLabelForReadOnlyProperties)) {
 				createTextField(p);
 				// createClocktimeField(p);
 			} else {
+				
 				createLabel(m.toString());
 
 			}

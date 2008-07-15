@@ -4,7 +4,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.*;
 
-import javax.sound.midi.*;
 
 import nextapp.echo2.app.Color;
 import nextapp.echo2.app.Component;
@@ -21,8 +20,9 @@ import nextapp.echo2.app.list.DefaultListSelectionModel;
 import nextapp.echo2.app.list.ListSelectionModel;
 import nextapp.echo2.app.table.*;
 
-import com.dexels.navajo.document.Message;
-import com.dexels.navajo.document.Property;
+import com.dexels.navajo.client.*;
+import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.types.*;
 import com.dexels.navajo.echoclient.components.PageNavigator.PageIndexChangeEvent;
 import com.dexels.navajo.echoclient.components.PageNavigator.PageIndexChangeListener;
 
@@ -54,6 +54,8 @@ public class MessageTable extends PageableSortableTable implements PageIndexChan
 	private final List<Integer> sizes = new ArrayList<Integer>();
 
 	private final List<TableEditorListener> editorListeners = new ArrayList<TableEditorListener>();
+
+	private final List<ActionListener> reportPrintListeners = new ArrayList<ActionListener>();
 
 	private int lastSelectedRow = -1;
 
@@ -538,4 +540,146 @@ sortablePageableModel = new DefaultPageableSortableTableModel(myModel);
 			r.setSelected(element.intValue()==row);
 		}
 	}
+	
+	
+
+	  public Binary getTableReport(String format, String orientation, int[] margins) throws NavajoException {
+		  Message m = getMessageAsPresentedOnTheScreen(false);
+		  if(m==null) {
+			  throw NavajoFactory.getInstance().createNavajoException("No message loaded, can not get message!");
+		  }
+	      int count = getColumnModel().getColumnCount()-1;
+	  
+		  int[] widths = new int[count];
+		  String[] namesarray = new String[count];
+		  String[] titles = new String[count];
+		  // ECHO SPECIFIC: SKIP THE FIRST COLUMN!!!
+		  //
+		  System.err.println("Column count: "+count+" names size: "+names.size()+" idsize: "+ids.size());
+		  for (int i = 0; i < count; i++) {
+			  int j = i;
+//			  TableColumn tt = getColumnModel().getColumn(j);
+			  int width = sizes.get(j);
+			  String name = ids.get(j); // getColumnId(j);
+			  String title =  names.get(j); // ""+tt.getHeaderValue();
+			  widths[i]=width;
+			  namesarray[i]=name;
+			  titles[i]=title;
+			  System.err.println("Adding width: "+width);
+			  System.err.println("Adding name: "+name);
+		  } 
+		  
+		  Binary result = NavajoClientFactory.getClient().getArrayMessageReport(m, namesarray, titles, widths, format, orientation,margins);
+		  firePrintEvent(result);
+		  return result;
+	  }
+	  
+	  public Message getMessageAsPresentedOnTheScreen(boolean includeInvisibleColumns) {
+		    if (myMessage == null) {
+		      return null;
+		    }
+		    Navajo newNavajo = NavajoFactory.getInstance().createNavajo();
+		    Message constructed = NavajoFactory.getInstance().createMessage(newNavajo, myMessage.getName(), Message.MSG_TYPE_ARRAY);
+		    for (int ix = 0; ix < getMessageTableModel().getRowCount(); ix++) {
+		    	int i = sortablePageableModel.toSortedViewRowIndex(ix);
+		    	Message elt = this.getMessageTableModel().getMessageRow(i);
+		      if (Message.MSG_DEFINITION.equals(elt.getType())) {
+		        continue;
+		      }
+		      Message newRow = NavajoFactory.getInstance().createMessage(newNavajo, constructed.getName(), Message.MSG_TYPE_ARRAY_ELEMENT);
+		      if (includeInvisibleColumns) {
+		        ArrayList ps = elt.getAllProperties();
+		        for (int j = 0; j < ps.size(); j++) {
+		          Property p = (Property) ps.get(j);
+
+		          if (p != null) {
+
+		            Property q = null;
+
+		            if (p.getType() == Property.SELECTION_PROPERTY && p.getCardinality().equals("+")) {
+		              try {
+		                q = NavajoFactory.getInstance().createProperty(newNavajo, p.getName(), "string", "", 255, p.getDescription(), "out");
+		                ArrayList sels = p.getAllSelectedSelections();
+		                String value = ( (Selection) sels.get(0)).getName();
+		                for (int g = 1; g < sels.size(); g++) {
+		                  value = value + "/" + ( (Selection) sels.get(g)).getName();
+		                }
+		                q.setValue(value);
+
+		              }
+		              catch (Exception e) {
+		                e.printStackTrace();
+		              }
+		            }
+		            else {
+		              q = p.copy(newNavajo);
+		              q.setAnyValue(p.getTypedValue());
+		              try {
+		                q.setType(p.getEvaluatedType());
+		              }
+		              catch (NavajoException e) {
+		                e.printStackTrace();
+		                q.setType(Property.STRING_PROPERTY);
+		              }
+		            }
+
+		            newRow.addProperty(q);
+		          }
+		        }
+		      }
+		      else {
+		        for (int j = 0; j < getColumnModel().getColumnCount(); j++) {
+		          String prop = getColumnId(j);
+		          Property p = elt.getProperty(prop);
+		          if (p != null) {
+		            Property q = null;
+
+		            if (p.getType() == Property.SELECTION_PROPERTY && p.getCardinality().equals("+")) {
+		              try {
+		                q = NavajoFactory.getInstance().createProperty(newNavajo, p.getName(), "string", "", 255, p.getDescription(), "out");
+		                ArrayList sels = p.getAllSelectedSelections();
+		                String value = ( (Selection) sels.get(0)).getName();
+		                for (int g = 1; g < sels.size(); g++) {
+		                  value = value + "/" + ( (Selection) sels.get(g)).getName();
+		                }
+		                q.setValue(value);
+
+		              }
+		              catch (Exception e) {
+		                e.printStackTrace();
+		              }
+		            }
+		            else {
+		              q = p.copy(newNavajo);
+		              q.setAnyValue(p.getTypedValue());
+		              try {
+		                q.setType(p.getEvaluatedType());
+		              }
+		              catch (NavajoException e) {
+		                e.printStackTrace();
+		                q.setType(Property.STRING_PROPERTY);
+		              }
+		            }
+
+		            newRow.addProperty(q);
+		          }
+		        }
+		      }
+		      constructed.addElement(newRow);
+		    }
+		    return constructed;
+		  }
+	
+	  public void addPrintListener(ActionListener l) {
+		  reportPrintListeners.add(l);
+	  }
+	  public void removePrintListener(ActionListener l) {
+		  reportPrintListeners.remove(l);
+	  }
+	  public void firePrintEvent(Binary b) {
+		  ActionEvent ae = new ActionEvent(b,"print");
+			for (ActionListener r : reportPrintListeners) {
+				r.actionPerformed(ae);
+		}
+	  }
 }

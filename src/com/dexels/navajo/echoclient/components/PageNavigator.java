@@ -33,6 +33,9 @@ import java.io.Serializable;
 import java.util.EventListener;
 import java.util.EventObject;
 
+import com.dexels.navajo.document.*;
+
+
 import nextapp.echo2.app.Button;
 import nextapp.echo2.app.Extent;
 import nextapp.echo2.app.Label;
@@ -93,12 +96,18 @@ public class PageNavigator extends Row {
 	private Label totalPagesLabel;
 	private Label pageField;
 	private int pageIndex, totalPages;
+	private MessageTable myTable;
 
 	/**
 	 * Creates a new <code>PageNavigator</code>.
 	 */
 	public PageNavigator() {
 		super();
+		
+		
+	}
+
+	public void initialize() {
 		setCellSpacing(new Extent(20));
 
 		Button previousPageButton = new Button(Styles.ICON_24_LEFT_ARROW);
@@ -148,8 +157,25 @@ public class PageNavigator extends Row {
 			}
 		});
 		add(nextPageButton);
+		
+		Button printButton = new Button("Print");
+		printButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					myTable.getTableReport("pdf", "horizontal", new int[]{5,5,5,5});
+				} catch (NavajoException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		add(printButton);
 	}
 
+	public void setTable(MessageTable table) {
+		myTable = table;
+	}
+	
 	/**
 	 * Adds a listener to be notified of page index changes.
 	 * 
