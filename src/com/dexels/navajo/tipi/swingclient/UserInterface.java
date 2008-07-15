@@ -34,6 +34,8 @@ public interface UserInterface {
   public void addErrorDialog(String errorMessage);
   public void closeWindow(BaseWindow d);
   public RootPaneContainer getRootPaneContainer();
+  public JDialog getTopDialog();
+
   public JFrame getMainFrame();
 
   //  public void showErrorPopup(String title, String message);

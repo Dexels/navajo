@@ -7,6 +7,8 @@ import java.text.*;
 import java.awt.*;
 import java.beans.*;
 
+import javax.swing.*;
+
 import com.dexels.navajo.tipi.swingclient.*;
 import com.dexels.navajo.tipi.swingclient.components.calendar.*;
 
@@ -257,7 +259,13 @@ public final class DatePropertyField
 		 if (getHeight() > 15) {
     	  System.err.println("noot");
         if (e.getX() > getWidth() - (getHeight() / 2) && e.getX() < getWidth() && e.getY() > 0 && e.getY() < (getHeight() / 2)) {
-          CalendarPickerDialog cpd = new CalendarPickerDialog();
+           JDialog jj =	SwingClient.getUserInterface().getTopDialog();
+           CalendarPickerDialog cpd;
+           if(jj!=null) {
+              	cpd = new CalendarPickerDialog(jj);
+           } else {
+           	cpd = new CalendarPickerDialog();
+           }
           cpd.getMainPanel().setPreferredSize(new Dimension(255,185));
           System.err.println("Entering: checkMouseClick: "+isEditable()+" -- "+showCalendarPickerButton+" >>> "+getHeight());
           

@@ -5,11 +5,9 @@ import java.lang.reflect.*;
 import java.util.*;
 
 import javax.swing.*;
-import javax.swing.event.*;
 import javax.swing.table.*;
 
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.databinding.*;
 import com.dexels.navajo.document.filter.*;
 import com.dexels.navajo.document.lazy.*;
 
@@ -24,7 +22,7 @@ import com.dexels.navajo.document.lazy.*;
 
 public class MessageTableModel
     extends AbstractTableModel
-    implements MessageListener {
+     {
 
   private final ArrayList myColumnIds = new ArrayList();
   private final ArrayList myColumnTitles = new ArrayList();
@@ -35,10 +33,7 @@ public class MessageTableModel
   private boolean isFiltered = false;
   private int[] filterMap = null;
   private int filteredRecordCount = -1;
-  private MessageTable myTable = null;
-
-//  private boolean autoResize = false;
-//  private boolean initialResize = true;
+ 
   private int lastSortedColumn = -1;
   private boolean lastSortedDirection = true;
   private boolean readOnly = false;
@@ -71,9 +66,7 @@ public class MessageTableModel
     return myColumnIds.contains(id);
   }
 
-  public void setMessageTable(MessageTable t) {
-    this.myTable = t;
-  }
+
 
   public void clearMessage() {
     if (myMessage != null) {
@@ -339,20 +332,20 @@ public void removeColumn(int index) {
 //    System.err.println("EditableListSize: " + editableList.size());
 //    System.err.println(editableList.toString());
     if (readOnly) {
-//      System.err.println("Readonly table");
+      System.err.println("Readonly table");
       return false;
     }
   if (!editableMap.containsKey(id)) {
-      //System.err.println("Not in editable list. index too big");
+      System.err.println("Not in editable list. index too big");
       return false;
     }
     Boolean b = (Boolean) editableMap.get(id);
     if (b == null) {
-      //System.err.println("Nothing in editablelist");
+      System.err.println("Nothing in editablelist");
       return false;
     }
     if (b.booleanValue() == false) {
-      //System.err.println("Forced non-editable by table");
+      System.err.println("Forced non-editable by table");
       return false;
     }
     Message m = getMessageRow(rowIndex);
@@ -445,20 +438,18 @@ public void removeColumn(int index) {
 //    }
     if(column>=0) {
     	if(SwingUtilities.isEventDispatchThread()) {
-            fireTableCellUpdated(myTable.mapRowNumber(row), column);
+            fireTableCellUpdated(row, column);
     	} else {
     		try {
 				SwingUtilities.invokeAndWait(new Runnable(){
 
 					public void run() {
-				        fireTableCellUpdated(myTable.mapRowNumber(row), column);
+				        fireTableCellUpdated(row, column);
 				        		
 					}});
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (InvocationTargetException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
     	}
@@ -525,20 +516,7 @@ public void removeColumn(int index) {
     lastSortedDirection = ascending;
   }
 
-//  public void saveColumns() {
-//    if (lastSortedColumn == -1 || lastSortedColumn >= myColumnIds.size()) {
-//      System.err.println("Unsorted");
-//    }
-//    else {
-//      System.err.println("Sorting column: " + myColumnIds.get(lastSortedColumn) + "ascending? : " + lastSortedDirection);
-//    }
-//    MessageTableColumnModel tc = (MessageTableColumnModel) myTable.getColumnModel();
-//    for (int i = 0; i < myColumnIds.size(); i++) {
-//      TableColumn tcm = tc.getColumn(i);
-//      System.err.println("    Column: " + myColumnIds.get(i) + " size: " + tcm.getWidth());
-//    }
-//  }
-//
+
   public int getSortedColumn() {
     return lastSortedColumn;
   }

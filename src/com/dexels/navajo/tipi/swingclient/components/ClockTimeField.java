@@ -103,8 +103,17 @@ public class ClockTimeField extends PropertyField {
   }
 
   public final void setProperty(Property p) {
+	  if(p!=null) {
+		    if ("true".equals(p.getSubType("showseconds"))) {
+				showSeconds(true);
+			} else {
+				showSeconds(false);
+			}
+	  }
     super.setProperty(p);
+	
 //    System.err.println("Setting text = "+p.getTypedValue().toString());
+    
     setFormatText();
   }
 

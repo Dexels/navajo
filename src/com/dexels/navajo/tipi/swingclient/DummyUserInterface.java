@@ -151,4 +151,9 @@ public JFrame getMainFrame() {
 	return null;
 }
 
+public JDialog getTopDialog() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
 }

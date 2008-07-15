@@ -69,7 +69,7 @@ private Component myCurrentEditingComponent;
   public MessageTable() {
     setAutoCreateColumnsFromModel(false);
     myModel = new MessageTableModel();
-    myModel.setMessageTable(this);
+//    myModel.setMessageTable(this);
     mySorter = new TableSorter(myModel);
     setModel(mySorter);
     

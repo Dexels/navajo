@@ -33,19 +33,21 @@ public class StandardDialog extends BaseDialog implements DialogConstants, Respo
   JToolBar dialogToolbar = new JToolBar();
 
   public StandardDialog() {
-    dialogToolbar.setFloatable(false);
-    try {
-      res = SwingClient.getUserInterface().getResource("com.dexels.sportlink.client.swing.dialogs.StandardDialog");
-      jbInit();
-    }
-    catch(Exception e) {
-      e.printStackTrace();
-    }
+    init();
   }
 
   public StandardDialog(JFrame f) {
     super(f);
-    dialogToolbar.setFloatable(false);
+    init();
+  }
+
+  public StandardDialog(JDialog f) {
+	    super(f);
+	    init();
+	  }
+
+private void init() {
+	dialogToolbar.setFloatable(false);
     try {
       res = SwingClient.getUserInterface().getResource("com.dexels.sportlink.client.swing.dialogs.StandardDialog");
       jbInit();
@@ -53,7 +55,7 @@ public class StandardDialog extends BaseDialog implements DialogConstants, Respo
     catch(Exception e) {
       e.printStackTrace();
     }
-  }
+}
 
 
   public void commit(){
