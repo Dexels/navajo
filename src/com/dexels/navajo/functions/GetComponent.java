@@ -26,7 +26,7 @@ public class GetComponent extends FunctionInterface {
 	public String usage() {
 		return "GetComponent(TipiComponent source, String path)";
 	}
-
+// GetComponent({component://init/desktop},{event:/from})
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.parser.FunctionInterface#evaluate()
 	 */
