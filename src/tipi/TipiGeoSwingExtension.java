@@ -2,6 +2,8 @@ package tipi;
 
 import java.util.*;
 
+import com.dexels.navajo.tipi.TipiContext;
+
 public class TipiGeoSwingExtension implements TipiExtension {
 
 	public String getDescription() {
@@ -46,6 +48,11 @@ public class TipiGeoSwingExtension implements TipiExtension {
 		List<String> l = new LinkedList<String>();
 		l.add("swingx");
 		return l;
+	}
+
+	public void initialize(TipiContext tc) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
