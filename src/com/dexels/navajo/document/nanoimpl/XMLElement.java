@@ -2907,7 +2907,33 @@ public class XMLElement implements java.io.Serializable {
 	        return al.get(0);
 	    }
 
-
+		public void addTagKeyValue(String key, String value) {
+			XMLElement keyValue = getElementByTagName(key);
+			if(keyValue!=null) {
+				removeChild(keyValue);
+			}
+			keyValue = new CaseSensitiveXMLElement(key);
+			keyValue.setContent(value);
+			addChild(keyValue);
+			
+		}
 	
+		public void parseFromStream(InputStream in) throws IOException, UnsupportedEncodingException {
+			PushbackInputStream pis = new PushbackInputStream(in,10);
+			byte[] b = new byte[3];
+			
+			int read = pis.read(b);
+			if(read!=3) {
+				throw new IOException("No comprendo!!!");
+			}
+//			System.err.println("Bytes read: "+read);
+			if(b[0]==-17 && b[1]==-69 && b[2]==-65) {
+			} else {
+				pis.unread(b);
+			}
+			InputStreamReader fw = new InputStreamReader(pis,"UTF-8");
+			parseFromReader(fw);
+			in.close();
+		}
 	
 }

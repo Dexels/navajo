@@ -8,7 +8,12 @@ import java.util.*;
 @Deprecated
 public class CaseSensitiveXMLElement extends XMLElement {
 
-  public CaseSensitiveXMLElement() {
+	  public CaseSensitiveXMLElement(String name) {
+		    super(new Hashtable<String,char[]>(),true,false);
+		    setName(name);
+	  }
+	  
+	public CaseSensitiveXMLElement() {
     super(new Hashtable<String,char[]>(),true,false);
   }
   protected XMLElement createAnotherElement()
