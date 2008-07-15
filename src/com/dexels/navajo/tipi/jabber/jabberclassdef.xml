@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tid errorhandler="error">
 
-   <tipiclass addtocontainer="false" childcount="*" class="TipiJabberConnector" layoutmanager="false" module="container" name="chatclient" package="com.dexels.navajo.tipi.xmmp" studio-icon="tabs.gif" type="connector">
+   <tipiclass addtocontainer="false" childcount="*" class="TipiJabberConnector" layoutmanager="false" module="container" name="chatclient" package="com.dexels.navajo.tipi.jabber"
+      studio-icon="tabs.gif" type="connector">
       <events>
          <event name="onInstantiate" />
          <event name="onConnect" />
@@ -9,10 +10,11 @@
          <event name="onMessageReceived">
             <param name="body" type="string" />
             <param name="from" type="string" />
+            <param name="fromJid" type="string" />
             <param name="to" type="string" />
             <param name="subject" type="string" />
             <param name="name" type="string" />
-            
+
          </event>
       </events>
       <values>
@@ -21,17 +23,24 @@
          <value direction="in" name="server" type="string" />
          <value direction="in" name="resource" type="string" />
          <value direction="in" name="domain" type="string" />
+         <value direction="in" name="conferenceName" type="string" />
          <value direction="in" name="currentUser" type="string" />
-       </values>
+      </values>
       <methods>
-         <method name="connect"/>
+         <method name="connect" />
          <method name="disconnect" />
+         <method name="startListener" />
+
          <method name="send">
             <param name="text" type="string" />
             <param name="recipient" type="string" />
          </method>
          <method name="broadcast">
             <param name="text" type="string" />
+         </method>
+         <method name="joinRoom">
+            <param name="nickName" type="string" />
+            <param name="roomName" type="string" />
          </method>
       </methods>
    </tipiclass>
