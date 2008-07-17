@@ -93,15 +93,22 @@ public abstract class AbstractKMLMap {
 		
 		XMLElement markerPlacemark = markerMap.get(markerId);
 		Object value =  null;
+		Property descriptionProperty;
+		String descriptionString = null;
+		double dValue;
 		if (message!=null) {
 			value = message.getProperty("Value").getTypedValue();
+			descriptionProperty = message.getProperty("Description");
+			descriptionString = (String) descriptionProperty.getTypedValue();
+			dValue = Double.parseDouble((String) value);
 		} else {
 			value = "0";
+			dValue = Double.parseDouble((String) value);
+			descriptionString = "Leden per 1000 inwoners: "+(int)(dValue*1000);
+				
 		}
 		
 		XMLElement description = markerPlacemark.getElementByTagName("description");
-		double dValue = Double.parseDouble((String) value);
-		String descriptionString = "Leden per 1000 inwoners: "+(int)(dValue*1000);
 		
 		description.setContent(descriptionString);
 		

@@ -1,4 +1,4 @@
-<tsl>
+<tml documentImplementation="SAXP">
    <message type="array" name="Data">
       <message index="0" type="array_element" name="Data">
          <property value="0060" direction="in" type="string" length="9" description="" name="Key"/>
@@ -2201,7 +2201,5 @@
          <property value="Leden per 1000 inwoners: 46" direction="in" type="string" length="99" description="" name="Description"/>
       </message>
    </message>
-    <methods>
-        <method name="geo/ProcessRenderKml"/>
-    </methods> 
-</tsl>
+   <methods/>
+</tml>
