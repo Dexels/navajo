@@ -3,9 +3,9 @@ import java.util.*;
 /**
  * 
  * @author Frank Lyaruu
- * @deprecated
+ * 
  */
-@Deprecated
+
 public class CaseSensitiveXMLElement extends XMLElement {
 
 	  public CaseSensitiveXMLElement(String name) {
