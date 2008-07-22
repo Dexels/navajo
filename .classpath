@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JRE 6 EA b12"/>
+	<classpathentry exported="true" kind="lib" path="lib/xml-apis-ext.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/xml-apis.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/batik-all.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/NavajoDocument"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
