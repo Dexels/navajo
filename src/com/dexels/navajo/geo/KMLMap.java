@@ -25,7 +25,7 @@ public class KMLMap extends AbstractKMLMap implements Mappable {
 	public void store() throws MappableException, UserException {
 		
 	}
-	
+	 
 	public GeoColorizer getMyColorizer() {
 		return myColorizer;
 	}
@@ -138,6 +138,22 @@ public class KMLMap extends AbstractKMLMap implements Mappable {
 			e.printStackTrace();
 		}
 
+	}
+
+
+
+	public void setMessagePath(String messagePath) {
+		this.messagePath = messagePath;
+	}
+
+
+	public void setMin(double min) {
+		this.min = min;
+	}
+
+
+	public void setMax(double max) {
+		this.max = max;
 	}
 
 

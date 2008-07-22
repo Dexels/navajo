@@ -35,6 +35,11 @@ public abstract class AbstractKMLMap {
 
 
 
+	protected double min = 0;
+	protected double max = 0.11;
+
+
+
 	public XMLElement mapData(Message m) throws XMLParseException, IOException {
 		
 		
@@ -118,7 +123,8 @@ public abstract class AbstractKMLMap {
 		
 		
 		double d = Double.parseDouble((String)value) ;
-		String createColor = getSelectedColorizer().createGeoColorString(d,0,0.11);
+	
+		String createColor = getSelectedColorizer().createGeoColorString(d,min,max);
 		polyStyle.addTagKeyValue("color", createColor);
 		polyStyle.addTagKeyValue("color", createColor);
 	}
