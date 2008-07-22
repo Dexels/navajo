@@ -1,13 +1,16 @@
 package com.dexels.navajo.geo;
 
 import java.io.*;
+import java.util.zip.*;
 
 import metadata.*;
 
+import com.dexels.navajo.adapters.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.nanoimpl.*;
 import com.dexels.navajo.document.types.*;
 import com.dexels.navajo.geo.impl.*;
+import com.dexels.navajo.geo.renderer.*;
 import com.dexels.navajo.geo.test.*;
 import com.dexels.navajo.geo.zipcode.*;
 import com.dexels.navajo.mapping.*;
@@ -17,6 +20,10 @@ public class KMLMap extends AbstractKMLMap implements Mappable {
 
 	Navajo inMessage = null;
 
+	Binary myKmzData = null;
+	Binary mySvgData = null;
+	Binary myBitmapData = null;
+	
 	public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
 		this.inMessage = inMessage;
 	}
@@ -40,6 +47,15 @@ public class KMLMap extends AbstractKMLMap implements Mappable {
 		return useLegend;
 	}
 
+	
+	public void setBitmapHeight(int bitmapHeight) {
+		this.bitmapHeight = bitmapHeight;
+	}
+
+
+	public void setBitmapWidth(int bitmapWidth) {
+		this.bitmapWidth = bitmapWidth;
+	}
 
 	public void setUseLegend(boolean useLegend) {
 		this.useLegend = useLegend;
@@ -82,14 +98,14 @@ public class KMLMap extends AbstractKMLMap implements Mappable {
 	public Binary getKmlData() {
 		try {
 			File kmz = createKmlFile(inMessage,colorizer);
-			Binary b = new Binary(kmz, false);
+			myKmzData = new Binary(kmz, false);
 			kmz.delete();
 			FormatDescription fd = new FormatDescription();
 			fd.addFileExtension("kmz");
 			fd.addMimeType("application/vnd.google-earth.kmz");
-			b.setMimeType("application/vnd.google-earth.kmz");
-			b.setFormatDescriptor(fd);
-			return b;
+			myKmzData.setMimeType("application/vnd.google-earth.kmz");
+			myKmzData.setFormatDescriptor(fd);
+			return myKmzData;
 		} catch (XMLParseException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -99,11 +115,44 @@ public class KMLMap extends AbstractKMLMap implements Mappable {
 		}
 		return null;
 	}
+	
+	public Binary getSvgData() throws IOException {
+		if(myKmzData==null) {
+			getKmlData();
+		}
+		InputStream bis = myKmzData.getDataAsStream();
+		ZipInputStream zis = new ZipInputStream(bis);
+		ZipEntry ze = null;
+		do {
+			ze = zis.getNextEntry();
+			if(ze.getName().equals("doc.kml")) {
+				SvgRenderer sr = new SvgRenderer();
+				mySvgData = sr.renderToBinary(zis);
+				FormatDescription fd = new FormatDescription();
+				fd.addFileExtension("svg");
+				fd.addMimeType("image/svg");
+				myKmzData.setMimeType("image/svg");
 
-
-	public Binary getKmzData() {
-		return kmzData;
+				zis.close();
+				return mySvgData;
+			}
+			
+		} while(ze!=null);
+		zis.close();
+		return null;
 	}
+	
+	public Binary getBitmapData() throws IOException {
+		if(mySvgData==null) {
+			getSvgData();
+		}
+		myBitmapData = new Binary();
+		OutputStream bos = myBitmapData.getOutputStream();
+		NavajoSvgRenderAdapter.render(mySvgData.getDataAsStream(), bos, bitmapWidth, bitmapHeight);
+		return myBitmapData;
+	}
+
+
 
 
 	public void setTitle(String title) {

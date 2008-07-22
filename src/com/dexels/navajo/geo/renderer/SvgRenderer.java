@@ -3,20 +3,53 @@ package com.dexels.navajo.geo.renderer;
 import java.io.*;
 import java.util.*;
 
+import com.dexels.navajo.adapters.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.nanoimpl.*;
+import com.dexels.navajo.document.types.*;
 
 public class SvgRenderer {
 
+	private double centreLon = 5;
+	private double centreLat = 51.5;
+	
+	private double rootX = -1.2;
+	private double rootY = -2.5;
+	private double rootWidth = 3;
+	private double rootHeight = 3.5;
+
+	private String background = "#333399";
+	
 	public static void main(String[] args) throws XMLParseException, IOException {
 		SvgRenderer sv = new SvgRenderer();
 		sv.renderToSvg(new File("locData51652.kml"));
 	}
-	
+
+	public Binary renderToBinary(InputStream is) throws XMLParseException, IOException {
+		XMLElement svgRoot = renderStream(is);
+		Binary result = new Binary();
+		OutputStream os = result.getOutputStream();
+		Writer fw = new OutputStreamWriter(os);
+		svgRoot.write(fw);
+		fw.flush();
+		fw.close();
+		os.close();
+		return result;
+//		renderSvgToPng();
+	}	
 	public void renderToSvg(File kml) throws XMLParseException, IOException {
-	
-		XMLElement xe = new CaseSensitiveXMLElement();
 		FileInputStream fis = new FileInputStream(kml);
+		XMLElement svgRoot = renderStream(fis);
+		FileWriter fw = new FileWriter("output.svg");
+		svgRoot.write(fw);
+		fw.flush();
+		fw.close();
+//		renderSvgToPng();
+	}
+
+
+	private XMLElement renderStream(InputStream fis) throws IOException {
+		XMLElement xe = new CaseSensitiveXMLElement();
 		xe.parseFromReader(new InputStreamReader(fis));
 		fis.close();
 
@@ -27,7 +60,7 @@ public class SvgRenderer {
 			String styleId = element.getStringAttribute("id");
 			styleMap.put(styleId, element);
 		}
-		
+		System.err.println("# of styles: "+styleMap.size());
 		// Create a map of all marker placemarks, for reference
 		Map<String,XMLElement> markerMap = new HashMap<String, XMLElement>();
 
@@ -43,24 +76,42 @@ public class SvgRenderer {
 			XMLElement multi = element.getElementByTagName("MultiGeometry");
 			String styleUrl = element.getElementByTagName("styleUrl").getContent();
 			if(multi!=null) {
-				XMLElement styleElement = styleMap.get(styleUrl);
+				XMLElement styleElement = styleMap.get(styleUrl.substring(1));
 				XMLElement svgElement = createSvgElement(multi,styleElement);
 				svgRoot.addChild(svgElement);
 			}
 		}
-		FileWriter fw = new FileWriter("output.svg");
-		svgRoot.write(fw);
-		fw.flush();
-		fw.close();
-		}
+		return svgRoot;
+	}
+
+
+	private void renderSvgToPng() throws FileNotFoundException, IOException {
+		FileInputStream fizz = new FileInputStream("output.svg");
+		FileOutputStream fozz = new FileOutputStream("output.png");
+		NavajoSvgRenderAdapter.render(fizz, fozz,400,800);
+		fozz.flush();
+		fozz.close();
+		fizz.close();
+	}
 
 
 	private XMLElement createSvgRoot() {
 //		<svg  viewBox="3 50 3 4" width="100%" height="100%" version="1.1" xmlns="http://www.w3.org/2000/svg">
 		XMLElement root = new CaseSensitiveXMLElement("svg");
-		root.setAttribute("viewBox", "3 50 3 4");
+		root.setAttribute("viewBox", ""+rootX+" "+rootY+" "+rootWidth+" "+rootHeight);
 		root.setAttribute("height", "100%");
 		root.setAttribute("width", "100%");
+		root.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+		if(background!=null) {
+			XMLElement backgroundRect = new CaseSensitiveXMLElement("rect");
+			backgroundRect.setAttribute("x", rootX);
+			backgroundRect.setAttribute("y", rootY);
+			backgroundRect.setAttribute("width", rootWidth);
+			backgroundRect.setAttribute("height", rootHeight);
+			backgroundRect.setAttribute("fill", background);
+			root.addChild(backgroundRect);
+		}
+//		<rect x="-2" y="-2" width="4" height="4" fill="#000088"/>
 		return root;
 	}
 
@@ -114,9 +165,33 @@ public class SvgRenderer {
 	
 	private void applyPoints(XMLElement polygon, String coordinates) {
 		StringTokenizer st = new StringTokenizer(coordinates," ");
-		polygon.setAttribute("points", coordinates);
+		StringBuffer sb = new StringBuffer();
+		while (st.hasMoreElements()) {
+			String object = (String) st.nextElement();
+			StringTokenizer coords = new StringTokenizer(object,",");
+			double lon = Double.parseDouble(coords.nextToken());
+			double lat = Double.parseDouble(coords.nextToken());
+			double[] result = normalizeCoordinates(lon,lat);
+			sb.append(result[0]);
+			sb.append(",");
+			sb.append(result[1]);
+			sb.append(" ");
+		}
+		polygon.setAttribute("points", sb.toString());
+		
 	}
 
+
+	private double[] normalizeCoordinates(double lon, double lat) {
+		// TODO Auto-generated method stub
+		double scale = Math.cos(lat * Math.PI /180);
+		double newlat = centreLat - lat;
+		double templon = lon - centreLon;
+		double newlon = templon * scale;
+//		System.err.println("Scale: "+scale);
+		double[] result = new double[] {newlon,newlat};
+		return result;
+	}
 
 	public void applyKmlStyle(XMLElement svgElement, XMLElement kmlStyle) {
 		// assuming fill = 1

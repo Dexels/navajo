@@ -23,6 +23,14 @@ public abstract class AbstractKMLMap {
 	protected boolean useLegend = true;
 	protected int legendHeight = 400;
 	protected int legendWidth = 200;
+
+
+
+	protected int bitmapHeight = 800;
+	protected int bitmapWidth = 500;
+
+	
+	
 	protected int legendSteps = 6;
 	protected String messagePath = "Data";
 	
