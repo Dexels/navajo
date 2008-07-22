@@ -42,9 +42,11 @@ public class SvgRenderer {
 			}
 			XMLElement multi = element.getElementByTagName("MultiGeometry");
 			String styleUrl = element.getElementByTagName("styleUrl").getContent();
-			XMLElement styleElement = styleMap.get(styleUrl);
-			XMLElement svgElement = createSvgElement(multi,styleElement);
-			svgRoot.addChild(svgElement);
+			if(multi!=null) {
+				XMLElement styleElement = styleMap.get(styleUrl);
+				XMLElement svgElement = createSvgElement(multi,styleElement);
+				svgRoot.addChild(svgElement);
+			}
 		}
 		FileWriter fw = new FileWriter("output.svg");
 		svgRoot.write(fw);
@@ -82,7 +84,10 @@ public class SvgRenderer {
 			String coordinates = lin.getElementByTagName("coordinates").getContent();
 			XMLElement polygon = new CaseSensitiveXMLElement("polygon");
 			applyPoints(polygon,coordinates);
-			applyKmlStyle(polygon, styleElement);
+			if(styleElement!=null) {
+				System.err.println("Applying style");
+				applyKmlStyle(polygon, styleElement);
+			}
 			group.addChild(polygon);
 		}
 		
@@ -108,6 +113,7 @@ public class SvgRenderer {
 	}
 	
 	private void applyPoints(XMLElement polygon, String coordinates) {
+		StringTokenizer st = new StringTokenizer(coordinates," ");
 		polygon.setAttribute("points", coordinates);
 	}
 

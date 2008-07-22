@@ -58,7 +58,7 @@ public class Test {
 		}
 		int total = Gemeente2Population.getGemeente(code);
 		int member = Integer.parseInt(members);
-		double res =  (double)member/(double)total;
+		double res =  (double)member/(double)total / 0.12;
 		Navajo navajo = parent.getRootDoc();
 		Message element = NavajoFactory.getInstance().createMessage(navajo,"Data",Message.MSG_TYPE_ARRAY_ELEMENT);
 		parent.addMessage(element);

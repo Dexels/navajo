@@ -7,6 +7,8 @@ import java.text.*;
 
 import javax.imageio.*;
 
+import com.dexels.navajo.geo.color.*;
+
 public class LegendCreator {
 
 //	   <ScreenOverlay id="khScreenOverlay756">
@@ -39,21 +41,24 @@ public class LegendCreator {
 		NumberFormat n = NumberFormat.getNumberInstance();
 		n.setMaximumFractionDigits(1);
 		double bandSize = diffSize / steps;
+		double range = max - min;
+		
 		for (int i = startOffset; i < size.height; i+=bandSize) {
-			double val = (i-bandSize)/diffSize;
-			double valEnd = (double)(i)/(double)diffSize;
-			if(val<min) {
-				val = min;
-			}
-			if(valEnd>max) {
-				valEnd = max;
-			}
+			double val = (double)(i)/diffSize;
+			double valEnd = (double)(i+bandSize)/(double)diffSize;
+//			if(val<min) {
+//				val = min;
+//			}
+//			if(valEnd>max) {
+//				valEnd = max;
+//			}
+			System.err.println("Val: "+val);
 			Color ccc = colorizer.createGeoColor(val, 0, 1);
 			g2d.setColor(ccc);
 			g2d.fillRoundRect(barInset, i, size.width-(barInset*2), (int)bandSize-10, 8, 8);
 			g2d.setColor(Color.white);
 			
-			g2d.drawString(n.format(val*diffSize)+ " - "+n.format(valEnd*diffSize), barInset+inset+20,(int)(i+(bandSize/2)));
+			g2d.drawString(n.format(val*range+min)+ " - "+n.format(valEnd*range+min), barInset+inset+20,(int)(i+(bandSize/2)));
 		}
 		
 		return bi;
@@ -75,4 +80,9 @@ public class LegendCreator {
 		return ff;
 	}
 
+	public static void main(String[] args) throws IOException {
+		LegendCreator lc = new LegendCreator();
+		lc.createLegendImagePath("Title", 5, 1, 10, new Dimension(200,400), new BlueRedGeoColorizer());
+	}
+	
 }

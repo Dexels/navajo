@@ -124,7 +124,11 @@ public class KMLMap extends AbstractKMLMap implements Mappable {
 		hm.setColorizer("whiteorange") ;
 		hm.setLegendHeight(250);
 		hm.setLegendSteps(7);
-		hm.setTitle("Aantal jochies (Per 1000)");
+		hm.setTitle("Aantal mannekes (Per 1000)");
+//		hm.setMin(0.05);
+//		hm.setMax(0.11);
+		hm.setMinLegend(0);
+		hm.setMaxLegend(1000);
 		Gemeente2Population.init();
 		try {
 			Test t = new Test();
@@ -140,21 +144,30 @@ public class KMLMap extends AbstractKMLMap implements Mappable {
 
 	}
 
+	public void setMinLegend(double minLegend) {
+		this.minLegend = minLegend;
+	}
+
+
+	public void setMaxLegend(double maxLegend) {
+		this.maxLegend = maxLegend;
+	}
+
 
 
 	public void setMessagePath(String messagePath) {
 		this.messagePath = messagePath;
 	}
 
-
-	public void setMin(double min) {
-		this.min = min;
-	}
-
-
-	public void setMax(double max) {
-		this.max = max;
-	}
+//
+//	public void setMin(double min) {
+//		this.min = min;
+//	}
+//
+//
+//	public void setMax(double max) {
+//		this.max = max;
+//	}
 
 
 	public void kill() {

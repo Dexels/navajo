@@ -34,9 +34,15 @@ public abstract class AbstractKMLMap {
 	protected String mapPath = "com/dexels/navajo/geo/nederland.kml";
 
 
+//
+//	protected double min = 0;
+//	protected double max = 1;
+//
 
-	protected double min = 0;
-	protected double max = 0.11;
+
+
+	protected double minLegend = 0;
+	protected double maxLegend = 1000d;
 
 
 
@@ -109,7 +115,7 @@ public abstract class AbstractKMLMap {
 		} else {
 			value = "0";
 			dValue = Double.parseDouble((String) value);
-			descriptionString = "Leden per 1000 inwoners: "+(int)(dValue*1000);
+			descriptionString = "Geen data, dat is wel een mooie tekst";
 				
 		}
 		
@@ -124,7 +130,7 @@ public abstract class AbstractKMLMap {
 		
 		double d = Double.parseDouble((String)value) ;
 	
-		String createColor = getSelectedColorizer().createGeoColorString(d,min,max);
+		String createColor = getSelectedColorizer().createGeoColorString(d,0,1);
 		polyStyle.addTagKeyValue("color", createColor);
 		polyStyle.addTagKeyValue("color", createColor);
 	}
@@ -176,7 +182,7 @@ public abstract class AbstractKMLMap {
 		
 		if(useLegend) {
 			LegendCreator lc = new LegendCreator();
-			File imageFile = lc.createLegendImagePath(title, legendSteps, 0, 1000d, new Dimension(legendWidth,legendHeight), colorize);
+			File imageFile = lc.createLegendImagePath(title, legendSteps, minLegend, maxLegend, new Dimension(legendWidth,legendHeight), colorize);
 			System.err.println("Legend link: "+legendHref);
 			zipEntry = new ZipEntry(legendHref);
 			zos.putNextEntry(zipEntry);

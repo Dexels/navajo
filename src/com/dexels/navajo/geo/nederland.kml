@@ -16,9 +16,7 @@
       <b><font color="#CC0000" size="+3">$[name]</font></b>
       <br/><br/>
       <font face="Courier">$[description]</font>
-      <br/><br/>
-      Powered by <a href="www.navajo.nl">Navajo</a>
-      <br/><br/>
+
    </td></tr></table>
       <!-- insert the to/from hyperlinks -->
       
