@@ -869,5 +869,9 @@ public final class Binary extends NavajoType implements Serializable,Comparable<
     	
     	
     	
-    }    	
+    }
+
+	public void setFormatDescriptor(FormatDescription fd) {
+		currentFormatDescription = fd;
+	}    	
 }
