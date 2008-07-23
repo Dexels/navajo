@@ -375,6 +375,8 @@ public class JSONHttpServlet extends HttpServlet {
 		  pw.write("Switched on streaming mode");
 		  pw.close();
 	  } else {
+		  long now = System.currentTimeMillis();
+		  response.setDateHeader("Expires", now + 300000);
 		  callDirect(request, response);
 	  }
   }
