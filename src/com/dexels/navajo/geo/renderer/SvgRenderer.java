@@ -88,7 +88,7 @@ public class SvgRenderer {
 	private void renderSvgToPng() throws FileNotFoundException, IOException {
 		FileInputStream fizz = new FileInputStream("output.svg");
 		FileOutputStream fozz = new FileOutputStream("output.png");
-		NavajoSvgRenderAdapter.render(fizz, fozz,400,800);
+		NavajoSvgRenderAdapter.renderPNG(fizz, fozz,400,800);
 		fozz.flush();
 		fozz.close();
 		fizz.close();

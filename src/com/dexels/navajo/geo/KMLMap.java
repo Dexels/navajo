@@ -148,7 +148,7 @@ public class KMLMap extends AbstractKMLMap implements Mappable {
 		}
 		myBitmapData = new Binary();
 		OutputStream bos = myBitmapData.getOutputStream();
-		NavajoSvgRenderAdapter.render(mySvgData.getDataAsStream(), bos, bitmapWidth, bitmapHeight);
+		NavajoSvgRenderAdapter.renderPNG(mySvgData.getDataAsStream(), bos, bitmapWidth, bitmapHeight);
 		return myBitmapData;
 	}
 

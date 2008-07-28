@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/NavajoDocument"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/Navajo"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/NavajoDocument"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/Navajo"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/NavajoSvgRenderAdapter"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JRE 6 EA b12"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

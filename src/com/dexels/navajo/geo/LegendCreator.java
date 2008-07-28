@@ -40,25 +40,36 @@ public class LegendCreator {
 		int diffSize = size.height - startOffset;
 		NumberFormat n = NumberFormat.getNumberInstance();
 		n.setMaximumFractionDigits(1);
+		NumberFormat perc = NumberFormat.getPercentInstance();
+		n.setMaximumFractionDigits(1);
+		// bandSize in pixels:
+		System.err.println("DiffsizE: "+diffSize);
 		double bandSize = diffSize / steps;
+		System.err.println("BandSize: "+bandSize);
 		double range = max - min;
 		
-		for (int i = startOffset; i < size.height; i+=bandSize) {
+		double stepSize = range / steps;
+
+		for (double j = min; (max - j) > 0.01; j+= stepSize) {
+			double percentage = (j-min) / range;
+			System.err.println("J-min: "+percentage+ " to go: "+(max - j));
+			int i = (int)(startOffset + percentage * diffSize);
 			double val = (double)(i)/diffSize;
-			double valEnd = (double)(i+bandSize)/(double)diffSize;
+//			double valEnd = (double)(i+bandSize)/(double)diffSize;
 //			if(val<min) {
 //				val = min;
 //			}
 //			if(valEnd>max) {
 //				valEnd = max;
 //			}
-			System.err.println("Val: "+val);
+			System.err.println("BandSize: "+bandSize+" j: "+j+" i: "+i);
+//			System.err.println("Val: "+val);
 			Color ccc = colorizer.createGeoColor(val, 0, 1);
 			g2d.setColor(ccc);
 			g2d.fillRoundRect(barInset, i, size.width-(barInset*2), (int)bandSize-10, 8, 8);
 			g2d.setColor(Color.white);
 			
-			g2d.drawString(n.format(val*range+min)+ " - "+n.format(valEnd*range+min), barInset+inset+20,(int)(i+(bandSize/2)));
+			g2d.drawString(n.format(j)+ " - "+n.format(j+stepSize)+" ("+perc.format(percentage)+" - "+perc.format(((j+stepSize)-min) / range) +")", barInset+inset+20,(int)(i+(bandSize/2)));
 		}
 		
 		return bi;
@@ -82,7 +93,7 @@ public class LegendCreator {
 
 	public static void main(String[] args) throws IOException {
 		LegendCreator lc = new LegendCreator();
-		lc.createLegendImagePath("Title", 5, 1, 10, new Dimension(200,400), new BlueRedGeoColorizer());
+		lc.createLegendImagePath("Title", 5, 22,34, new Dimension(200,400), new BlueRedGeoColorizer());
 	}
 	
 }
