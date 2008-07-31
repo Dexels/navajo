@@ -171,7 +171,7 @@ public final class DbConnectionBroker extends Object implements Runnable
 		while(timeoutDays > 0 && available == 0 && current == conns.length ) {
 			try {
 				log("Waiting for connection " + username + "@" + location + " to become available. current = " + current);
-				wait();
+				wait(10000);
 			} catch(InterruptedException e) {
 				// dunno.
 			}
