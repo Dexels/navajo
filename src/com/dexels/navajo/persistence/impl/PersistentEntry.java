@@ -11,12 +11,12 @@ public class PersistentEntry implements Serializable {
 	 */
 	private static final long serialVersionUID = 3339195823232547197L;
 	
-	private Persistable document;
+	//private Persistable document;
 	private String keyValues = "";
 	private String service;
 	
-	public PersistentEntry(Persistable p, String service) {
-		this.document = p;
+	public PersistentEntry(String service) {
+		//this.document = p;
 		this.service = service;
 	}
 
@@ -28,9 +28,9 @@ public class PersistentEntry implements Serializable {
 		this.keyValues = keyValues;
 	}
 
-	public Persistable getDocument() {
-		return document;
-	}
+//	public Persistable getDocument() {
+//		return document;
+//	}
 
 	public String getService() {
 		return service;
