@@ -53,7 +53,7 @@ public class ForAll extends FunctionInterface {
 						"Empty or non existing array message: " +
 						messagePath);
 			}
-			System.err.println("Forall expression: "+expression);
+//			System.err.println("Forall expression: "+expression);
 			
 			for (int i = 0; i < arrayMsg.size(); i++) {
 				Message current = (Message)arrayMsg.get(i);
