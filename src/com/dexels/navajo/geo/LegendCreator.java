@@ -83,11 +83,7 @@ public class LegendCreator {
 		BufferedImage bi = createLegendImage(title, steps, start, end, size, gi);
 		File ff = File.createTempFile("legend", ".png");
 		ImageIO.write(bi, "png",ff);
-		try {
-		ImageIO.write(bi, "png", new File("c:/aap.png"));
-		} catch(Throwable t) {
-			t.printStackTrace();
-		}
+		
 		return ff;
 	}
 
