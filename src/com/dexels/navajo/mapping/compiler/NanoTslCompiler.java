@@ -77,7 +77,7 @@ public class NanoTslCompiler {
     @SuppressWarnings("unchecked")
 	private final Stack<Class> contextClassStack = new Stack<Class>();
 
-    private HashSet included = new HashSet();
+    //private HashSet included = new HashSet();
     
     @SuppressWarnings("unchecked")
 	private Class contextClass = null;
@@ -1766,11 +1766,11 @@ public class NanoTslCompiler {
                     "No script name found in include tag (missing or empty script attribute)", n);
         }
         
-        if ( included.contains(script) ) {
-        	throw new UserException(-1, "Cyclic include detected, this one was already included: " + script);
-        }
-        
-        included.add(script);
+//        if ( included.contains(script) ) {
+//        	throw new UserException(-1, "Cyclic include detected, this one was already included: " + script);
+//        }
+//        
+//        included.add(script);
         
         addScriptIncludes(currentScript, script);
 //        System.err.println("INCLUDING SCRIPT " + script + " @ NODE " + n);
