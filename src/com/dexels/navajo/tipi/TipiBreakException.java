@@ -18,7 +18,7 @@ package com.dexels.navajo.tipi;
  * @author not attributable
  * @version 1.0
  */
-public class TipiBreakException extends Exception {
+public class TipiBreakException extends RuntimeException {
 	public static final int BREAK_BLOCK = 1;
 	public static final int BREAK_EVENT = 2;
 	private int myType = BREAK_BLOCK;

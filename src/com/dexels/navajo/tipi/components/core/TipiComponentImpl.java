@@ -978,6 +978,7 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 			c.performTipiEvent("onInstantiate", null, false);
 		} catch (TipiException ex) {
 			ex.printStackTrace();
+		} catch (TipiBreakException e) {
 		}
 	}
 
@@ -1025,7 +1026,7 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 		}
 	}
  
-	public boolean performTipiEvent(String type, Map<String,Object> event, boolean sync) throws TipiException {
+	public boolean performTipiEvent(String type, Map<String,Object> event, boolean sync) throws TipiException, TipiBreakException {
 		boolean hasEventType = false;
 		for (int i = 0; i < myEventList.size(); i++) {
 			TipiEvent te = myEventList.get(i);
@@ -1034,10 +1035,13 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 				myContext.fireTipiContextEvent(this, type, event, sync);
 				if (sync) {
 					try {
+						System.err.println("Performing: "+te.getEventName());
 						te.performAction(this, event);
 					} catch (TipiBreakException e) {
-						e.printStackTrace();
-					} catch(Throwable e) {
+						System.err.println("Perform action break detected..");
+						//						e.printStackTrace();
+						throw (e);
+					} catch(Exception e) {
 						getContext().showInternalError("Error performing event: "+te.getEventName()+" for component: "+te.getComponent().getPath(), e);
 						e.printStackTrace();
 					}

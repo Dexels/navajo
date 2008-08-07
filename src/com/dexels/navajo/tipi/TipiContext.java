@@ -212,6 +212,7 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 			fakeExtension(optionalExtensionList,"tipi.TipiGeoSwingExtension");
 			fakeExtension(optionalExtensionList,"tipi.TipiBatikExtension");
 			fakeExtension(optionalExtensionList,"tipi.NavajoRichTipiExtension");
+			fakeExtension(optionalExtensionList,"tipi.TipiCalendarExtension");
 			
 
 				// initialize again
@@ -694,6 +695,9 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 			return;
 		}
 		if (childName.startsWith("d.")) {
+			if(child.getAttribute("name")==null) {
+				throw new TipiException("Tipi definition should have a name attribute:"+child.toString());
+			}
 			parseDefinition(child);
 			return;
 		}

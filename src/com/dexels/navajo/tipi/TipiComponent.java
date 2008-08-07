@@ -138,7 +138,7 @@ public interface TipiComponent extends ConditionErrorHandler, TipiEventListener,
 
 	public void refreshParent();
 
-	public boolean performTipiEvent(String type, Map<String,Object> event, boolean sync) throws TipiException;
+	public boolean performTipiEvent(String type, Map<String,Object> event, boolean sync) throws TipiException, TipiBreakException;
  
 	public String getName();
 
