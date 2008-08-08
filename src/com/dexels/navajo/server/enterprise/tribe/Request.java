@@ -36,6 +36,7 @@ public abstract class Request implements Serializable {
 	protected boolean blocking = true;
 	// ignoreRequestOnSender specifies whether the request should NEVER be performed on the server from  which the request originated.
 	private boolean ignoreRequestOnSender = false;
+	private Object recipient;
 	
 	public Request() {
 		owner = Dispatcher.getInstance().getNavajoConfig().getInstanceName();
@@ -74,5 +75,13 @@ public abstract class Request implements Serializable {
 
 	public void setIgnoreRequestOnSender(boolean ignoreRequestOnSender) {
 		this.ignoreRequestOnSender = ignoreRequestOnSender;
+	}
+
+	public Object getRecipient() {
+		return recipient;
+	}
+
+	public void setRecipient(Object recipient) {
+		this.recipient = recipient;
 	}
 }
