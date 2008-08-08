@@ -92,6 +92,7 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 	public String setChief;
 	public String chiefName;
 	public boolean isChief;
+	public int answersWaiting;
 	public String statistics;
 	
 	JChannel channel;
@@ -345,6 +346,19 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 		if ( myMembership.isChief() ) { // Emit TribeMemberDownEvent if I am the chief.
 			NavajoEventRegistry.getInstance().publishEvent(new TribeMemberDownEvent(ptm));
 		}
+
+		// Check anserwaiters and remove all anserwaiters for this particular member.
+		HashSet<Request> copyOfAnserWaiters = new HashSet<Request>(answerWaiters);
+		Iterator<Request> iter = copyOfAnserWaiters.iterator();
+		while ( iter.hasNext() ) {
+			Request q = iter.next();
+			if ( q.getRecipient().equals(ptm.getAddress())) {
+				answerWaiters.remove(q);
+				synchronized (q) {
+					q.notifyAll();
+				}
+			}
+		}
 	}
 	
 	public void kill() {
@@ -438,7 +452,7 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 		}
 		
 	}
-
+	
 	/**
 	 * Send a request on a specific server identified by the address a.
 	 * If a happens to be null, the request is send to each server in the cluster (askAnyBody!). In this case, if the
@@ -451,6 +465,7 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 	public Answer askSomebody(Request q, Object address) {
 		
 		Address a = (Address) address;
+		q.setRecipient(a);
 		// If it's myself.
 		if ( a != null && channel.getLocalAddress().equals(a) && !q.isIgnoreRequestOnSender()) {
 			return q.getAnswer();
@@ -481,27 +496,24 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 	 */
 	public Answer askChief(Request q) {
 
-		if ( initializing ) {
+		
+		while (initializing ) {
 			synchronized (semaphore) {
-				while (initializing ) {
-					if ( initializing ) {
-						try {
-							semaphore.wait();
-						} catch (InterruptedException e) {
-						}
+				if ( initializing ) {
+					try {
+						semaphore.wait(10000);
+					} catch (InterruptedException e) {
 					}
 				}
 			}
 		}
-		
-		if ( theChief == null ) {
+
+		while (theChief == null) {
 			synchronized (state) {
-				while (theChief == null) {
-					try {
-						AuditLog.log(AuditLog.AUDIT_MESSAGE_TRIBEMANAGER, "Waiting for the Chief...");
-						state.wait();
-					} catch (InterruptedException e) {
-					}
+				try {
+					AuditLog.log(AuditLog.AUDIT_MESSAGE_TRIBEMANAGER, "Waiting for the Chief...");
+					state.wait(10000);
+				} catch (InterruptedException e) {
 				}
 			}
 		}
@@ -543,7 +555,7 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 			
 				synchronized (q) {
 					try {
-						q.wait();
+						q.wait(60000);
 						//Thread.sleep(100);
 					} catch (InterruptedException e) {
 						
@@ -674,5 +686,9 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 		}
 		
 		return null;
+	}
+
+	public int getAnswersWaiting() {
+		return answerWaiters.size();
 	}
 }
