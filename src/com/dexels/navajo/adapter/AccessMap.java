@@ -42,10 +42,12 @@ public final class AccessMap implements Mappable {
    */
   
   public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
-    this.myAccess = access;
-    this.myScript = myAccess.getCompiledScript();
-    myScript.load(parms, inMessage, access, config);
-    thisAccess = access;
+	  this.myAccess = access;
+	  this.myScript = myAccess.getCompiledScript();
+	  if ( this.myScript != null) {
+		  myScript.load(parms, inMessage, access, config);
+	  }
+	  thisAccess = access;
   }
 
   public CompiledScript getMyScript() {
