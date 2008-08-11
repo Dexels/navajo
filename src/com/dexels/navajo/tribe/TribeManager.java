@@ -620,7 +620,7 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 		if ( origin == null || origin.equals("")) { // Set origin attribute to prevent broadcast ping-pong....
 			System.err.println("Going to broadcast service to other members....");
 			in.getHeader().setHeaderAttribute("origin", Dispatcher.getInstance().getNavajoConfig().getInstanceName());
-			ServiceRequest sr = new ServiceRequest(in);
+			ServiceRequest sr = new ServiceRequest(in, true);
 			sr.setIgnoreRequestOnSender(true);
 			sr.setBlocking(false);
 			askSomebody(sr, null);
@@ -636,7 +636,7 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 	public Navajo forward(Navajo in) throws Exception {
 		TribeMember alt =  getClusterState().getLeastBusyTribalMember();
 		if ( alt != null ) {
-			ServiceAnswer sa = (ServiceAnswer) askSomebody(new ServiceRequest(in), alt.getAddress());
+			ServiceAnswer sa = (ServiceAnswer) askSomebody(new ServiceRequest(in, false), alt.getAddress());
 			return sa.getResponse();
 		} else {
 			throw new Exception("No available tribe member");

@@ -40,7 +40,7 @@ public class ServiceAnswer extends Answer {
 	public ServiceAnswer(ServiceRequest q) {
 		super(q);
 		try {
-			response = Dispatcher.getInstance().handle(q.getRequest(), true);
+			response = Dispatcher.getInstance().handle(q.getRequest(), q.isSkipAuthorization());
 		} catch (FatalException e) {
 			hasError = true;
 			errorMessage = e.getMessage();

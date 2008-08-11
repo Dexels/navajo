@@ -34,10 +34,12 @@ public class ServiceRequest extends Request {
 	private static final long serialVersionUID = 2821719303061929705L;
 	
 	private final Navajo request;
+	private boolean skipAuthorization = false;
 	
-	public ServiceRequest(Navajo request) {
+	public ServiceRequest(Navajo request, boolean skipAuthorization) {
 		super();
 		this.request = request;
+		this.skipAuthorization = skipAuthorization;
 	}
 	
 	public Answer getAnswer() {
@@ -53,6 +55,10 @@ public class ServiceRequest extends Request {
 
 	public Navajo getRequest() {
 		return request;
+	}
+
+	public boolean isSkipAuthorization() {
+		return skipAuthorization;
 	}
 
 }
