@@ -234,7 +234,9 @@ public class SharedTribalMap<K,V> extends HashMap {
 			//System.err.println(Dispatcher.getInstance().getApplicationId() + ": " + id + ": in removeLocal(" + key + ")");
 			Object o = super.remove(key);
 			semaphoreLocal.notifyAll();
-			deleteCount++;
+			if ( o != null ) {
+				deleteCount++;
+			}
 			return o;
 		}
 	}
