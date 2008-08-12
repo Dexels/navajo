@@ -48,7 +48,7 @@ public class ClusterState implements Serializable {
 		TribeMember lbtm = null;
 		while ( all.hasNext() ) {
 			TribeMember tm = all.next();
-			if ( tm.getStatus().getCpuLoad() < min && !tm.getStatus().isBusy() ) {
+			if ( tm.getStatus().getCpuLoad() < min && !tm.getStatus().isBusy() && !tm.getAddress().equals( TribeManager.getInstance().getMyMembership().getAddress() ) ) {
 				lbtm = tm;
 			}
 		}
