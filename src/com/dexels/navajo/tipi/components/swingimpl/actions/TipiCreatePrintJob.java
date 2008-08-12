@@ -29,7 +29,7 @@ public class TipiCreatePrintJob extends TipiAction {
       myContext.setGlobalValue(""+globalvalue.value,jb);
     } else {
       System.err.println("Breaking on printjob!");
-      throw new TipiBreakException();
+      throw new TipiBreakException(TipiBreakException.USER_BREAK);
     }
 
 

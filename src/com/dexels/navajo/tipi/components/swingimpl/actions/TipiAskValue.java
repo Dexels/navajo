@@ -42,7 +42,7 @@ public class TipiAskValue extends TipiAction {
 //
 //        System.err.println("Response accepted");
       } else {
-          throw new TipiBreakException();
+          throw new TipiBreakException(TipiBreakException.USER_BREAK);
 
       }
 
