@@ -365,8 +365,11 @@
         <events>
             <event name="onInstantiate"/>
             <event name="onActionPerformed"/>
-            <event name="onSelectionChanged"/>
-            <event name="onLoad"/>
+              <event name="onSelectionChanged">
+            <param name="selectedMessage" type="message" />
+            <param name="selectedIndex" type="integer" />
+         </event>
+      <event name="onLoad"/>
 
           <event name="onSelectionChanged">
                 <param name="selectedMessage" type="message"/>
@@ -553,6 +556,7 @@
         </events>
         <values>
             <value direction="in" name="text" type="string"/>
+            <value direction="in" name="binary" type="binary"/>
             <value direction="in" name="style" type="string"/>
     	</values>
         <methods/>
