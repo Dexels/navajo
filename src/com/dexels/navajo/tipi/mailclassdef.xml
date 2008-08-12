@@ -17,6 +17,7 @@
          <value direction="in" name="server" type="string" />
          <value direction="in" name="username" type="string" />
          <value direction="in" name="password" type="string" />
+         <value direction="in" name="mailMode" type="string" />
       </values>
       <methods>
          <method name="connect"/>
