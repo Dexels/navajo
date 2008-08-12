@@ -37,8 +37,9 @@ public abstract class TipiLayoutImpl extends TipiLayout {
 		for (int i = 0; i < v.size(); i++) {
 			XMLElement child = v.get(i);
 			String constraintString = child.getStringAttribute("constraint");
-			if (!child.getName().equals("event")) {
+			if (!child.getName().equals("event") && !child.getName().startsWith("on")) {
 				Object constraint = parseConstraint(constraintString, i);
+				
 				t.addComponentInstance(myContext, child, constraint);
 			} else {
 				System.err.println("Event found within layout. Line: " + def.getLineNr() + "\nNot right, but should work");

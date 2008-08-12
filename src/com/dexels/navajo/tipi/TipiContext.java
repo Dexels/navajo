@@ -1064,11 +1064,17 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 		} else {
 			Set<String> paramNames = t.getParameterNames();
 			for (String param : paramNames) {
-				if(param.equals("id") || param.equals("name") ||param.equals("class") || param.equals("constraints") || param.equals("location")|| param.equals("force")  ) {
+				if(param.equals("id") || param.equals("name") ||param.equals("class") || param.equals("location")|| param.equals("force")  ) {
 					continue;
 				}
 				Object o = t.getEvaluatedParameterValue(param, event);
-				tc.setValue(param, o);
+				if(param.equals("constraint")) {
+					tc.setConstraints(o);
+				} else {
+					tc.setValue(param, o);
+					
+				}
+				
 			}
 		}
 		
@@ -1645,7 +1651,7 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 						eHandler.showError();
 					}
 					if (breakOnError) {
-						throw new TipiBreakException(-1);
+						throw new TipiBreakException(TipiBreakException.WEBSERVICE_BREAK);
 					}
 					return;
 				}
@@ -2317,6 +2323,7 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 	}
 
 	public abstract void showInfo(final String text, final String title);
+	public abstract void showQuestion(final String text, final String title, String[] options) throws TipiBreakException;
 
 	public String generateComponentId(TipiComponent parent, TipiComponent component) {
 //		String generated = "RandomId" + Math.random();

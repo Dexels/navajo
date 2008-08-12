@@ -49,9 +49,9 @@ public abstract class TipiAction implements TipiExecutable {
 		myContext.debugLog("action", myType);
 		myEvent = te;
 		if (myComponent.isDisposed()) {
-			System.err.println("\n**** BREAKING. COMPONENT DISPOSED: " + myComponent.getPath());
+			System.err.println("\n**** BREAKING. COMPONENT DISPOSED: " + myComponent.getPath()+" performing action: "+getClass().getName());
 			// Thread.dumpStack();
-			throw new TipiBreakException();
+			throw new TipiBreakException(TipiBreakException.COMPONENT_DISPOSED);
 		}
 		try {
 			myContext.performedAction(myComponent, this, te);
