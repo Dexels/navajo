@@ -392,4 +392,10 @@ public class EchoTipiContext extends TipiContext {
 		}
 		return null;
 	}
+
+
+	@Override
+	public void showQuestion(String text, String title, String[] options) throws TipiBreakException {
+		showInfo("showQuestion not supported", "Warning");
+	}
 }
