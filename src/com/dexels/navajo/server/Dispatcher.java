@@ -878,7 +878,7 @@ public Access [] getUsers() {
    * @throws FatalException
    */
   public final Navajo handle(Navajo inMessage, boolean skipAuth) throws FatalException {
-    return handle(inMessage, null, null, true);
+    return handle(inMessage, null, null, skipAuth);
   }
   
   public final Navajo handle(Navajo inMessage) throws FatalException {
