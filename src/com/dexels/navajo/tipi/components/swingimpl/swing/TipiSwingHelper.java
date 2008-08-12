@@ -167,17 +167,17 @@ public class TipiSwingHelper
     }
     if (te.isTrigger("onWindowClosed", null)) {
       if (JInternalFrame.class.isInstance(c)) {
-        JInternalFrame jj = (JInternalFrame) c;
-        jj.addInternalFrameListener(new InternalFrameAdapter() {
-          public void internalFrameClosing(InternalFrameEvent e) {
-            try {
-              myComponent.performTipiEvent("onWindowClosed", null, te.isSync());
-            }
-            catch (TipiException ex) {
-              ex.printStackTrace();
-            }
-          }
-        });
+//        JInternalFrame jj = (JInternalFrame) c;
+//        jj.addInternalFrameListener(new InternalFrameAdapter() {
+//          public void internalFrameClosing(InternalFrameEvent e) {
+//            try {
+//              myComponent.performTipiEvent("onWindowClosed", null, te.isSync());
+//            }
+//            catch (TipiException ex) {
+//              ex.printStackTrace();
+//            }
+//          }
+//        });
       }
       else if (JFrame.class.isInstance(c)) {
         JFrame jj = (JFrame) c;
