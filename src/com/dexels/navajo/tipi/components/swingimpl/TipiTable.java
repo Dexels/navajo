@@ -285,6 +285,11 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 
 	}
 
+	 public void setColumnEditable(int columnIndex, boolean value) {
+		 mm.setColumnEditable(columnIndex,value);
+		 mm.fireDataChanged();
+	 }	
+	 
 	private void addProperty(Message m, String name, Object value, String type) throws NavajoException {
 		Navajo n = m.getRootDoc();
 		Property p = NavajoFactory.getInstance().createProperty(n, name, type, null, 0, null, Property.DIR_IN);
@@ -385,6 +390,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 			Map<String, Object> tempMap = new HashMap<String, Object>();
 			tempMap.put("selectedIndex", new Integer(mm.getSelectedRow()));
 			tempMap.put("selectedMessage", mm.getSelectedMessage());
+			System.err.println("Row selected: "+mm.getSelectedRow());
 			performTipiEvent("onSelectionChanged", tempMap, false);
 		} catch (TipiException ex) {
 			ex.printStackTrace();
@@ -835,7 +841,11 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 					Operand direction = compMeth.getEvaluatedParameter("ascending", event);
 					mm.doSort(((Integer)index.value), ((Boolean)direction.value));
 				}
-
+				 if ("setColumnEditable".equals(name)) {
+					Operand index = compMeth.getEvaluatedParameter("index", event);
+					Operand value = compMeth.getEvaluatedParameter("value", event);
+					 setColumnEditable((Integer)index.value, (Boolean)value.value);
+				 }		
 				if ("doRunReport".equals(name)) {
 					Operand format = compMeth.getEvaluatedParameter("format", event);
 					Operand marginsOperand = compMeth.getEvaluatedParameter("margins", event);

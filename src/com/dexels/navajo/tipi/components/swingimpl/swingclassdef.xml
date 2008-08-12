@@ -16,6 +16,14 @@
       <param name="value" type="string" />
    </tipiaction>
 
+   <tipiaction name="saveBinary" class="TipiSaveBinary" package="com.dexels.navajo.tipi.components.swingimpl.actions">
+      <param name="value" type="property" />
+   </tipiaction>
+
+   <tipiaction name="browseBinary" class="TipiBrowseBinary" package="com.dexels.navajo.tipi.components.swingimpl.actions">
+      <param name="value" type="property" />
+   </tipiaction>
+
    <tipiaction name="createPrintJob" class="TipiCreatePrintJob" package="com.dexels.navajo.tipi.components.swingimpl.actions">
       <param name="value" type="reference" />
    </tipiaction>
@@ -162,7 +170,10 @@
       <events>
          <event name="onInstantiate" />
          <event name="onActionPerformed" />
-         <event name="onSelectionChanged" />
+         <event name="onSelectionChanged">
+            <param name="selectedMessage" type="message" />
+            <param name="selectedIndex" type="integer" />
+         </event>
          <event name="onLoad">
             <param name="service" type="string" />
          </event>

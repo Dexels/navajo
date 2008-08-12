@@ -323,7 +323,19 @@ public class SwingTipiContext extends TipiContext {
 		return defaultDesktop;
 	}
 
-	public void showQuestion(final String text, final String title) {
+	public void showQuestion(final String text, final String title, final String[] options) throws TipiBreakException {
+		final Set<Integer> responseSet = new HashSet<Integer>();
+		runSyncInEventThread(new Runnable() {
+			public void run() {
+				int response = JOptionPane.showOptionDialog((Component) getTopDialog(), text, title, JOptionPane.YES_NO_OPTION,
+						JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+				responseSet.add(response);
+			}
+		});
+		int response = responseSet.iterator().next();
+		if (response != 0) {
+			throw new TipiBreakException(TipiBreakException.USER_BREAK);
+		}
 	}
 
 	public void showInfo(final String text, final String title) {
@@ -578,7 +590,7 @@ public class SwingTipiContext extends TipiContext {
 			dialogStack.push(jd);
 			return jd;
 		}
-		JDialog parent = (JDialog)dialogStack.peek();
+		JDialog parent = dialogStack.peek();
 
 		System.err.println("Create dialog: Stack not empty: "+dialogStack.size()+", attaching to dialog with title: "+parent.getTitle());
 
@@ -607,6 +619,9 @@ public class SwingTipiContext extends TipiContext {
 	
 	public void destroyDialog(JDialog j) {
 		System.err.println("Disposing dialog. Current stack size: "+dialogStack.size());
+		for (JDialog ll: dialogStack) {
+			System.err.println("Stack. Dialog with title:  "+ll.getTitle());
+		}
 		if(dialogStack.isEmpty()) {
 			System.err.println("Already popped?! Whatever...");
 			return;
@@ -619,6 +634,12 @@ public class SwingTipiContext extends TipiContext {
 		}
 		if(!dialogStack.contains(j)) {
 			System.err.println("Unknown dialog!!!!");
+		} else {
+			System.err.println("Other dialog found on top: "+dialogStack.peek().getTitle());
+			JDialog sss = dialogStack.pop();
+			sss.dispose();
+			System.err.println("Popped, disposed, and recurring!");
+			destroyDialog(j);
 		}
 		
 	}
