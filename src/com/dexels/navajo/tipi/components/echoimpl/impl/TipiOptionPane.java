@@ -98,7 +98,7 @@ public class TipiOptionPane {
         });
         noButton.setText(no);
         wp.setVisible(true);
-        throw new TipiBreakException();
+        throw new TipiBreakException(TipiBreakException.USER_BREAK);
     }
 
     public static void showInfo(final TipiContext context, final String text, String title, String closeText) {
