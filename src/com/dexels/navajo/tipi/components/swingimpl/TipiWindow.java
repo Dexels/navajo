@@ -34,7 +34,7 @@ public final class TipiWindow
 	    TipiHelper th = new TipiSwingHelper();
 	    th.initHelper(this);
 	    addHelper(th);
-	    myWindow.setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);  
+	    myWindow.setDefaultCloseOperation(JInternalFrame.DO_NOTHING_ON_CLOSE);  
 	    myWindow.setResizable(true);
 	    myWindow.setSize(100,40);
 //	    JLabel label = new JLabel("Monkey");
@@ -52,6 +52,24 @@ public final class TipiWindow
 				}
 			}
 
+			public void internalFrameClosing(InternalFrameEvent e) {
+				try {
+					performTipiEvent("onWindowClosed", null, true);
+					((JInternalFrame) e.getSource()).dispose();
+				} catch (TipiException e1) {
+					((JInternalFrame) e.getSource()).dispose();
+					e1.printStackTrace();
+				} catch (TipiBreakException e2) {
+					System.err.println("Breakie breakie");
+					if(e2.getType()==TipiBreakException.COMPONENT_DISPOSED) {
+						// a component disposed event should still close the window
+						((JInternalFrame) e.getSource()).dispose();
+					}
+				}
+				
+			}
+
+			
 		});
 
 	    return myWindow;
