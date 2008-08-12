@@ -45,10 +45,15 @@ public class TipiBorderLayout
   }
 
   public Object parseConstraint(String text, int index) {
-    if (text == null) {
+
+	  if (text == null) {
       return null;
     }
-    if (text.equals("center") || text.equals(BorderLayout.CENTER)) {
+	  int ind = text.indexOf(":");
+    if(ind!=-1) {
+    	text = text.substring(0,ind);
+    }
+	  if (text.equals("center") || text.equals(BorderLayout.CENTER)) {
       return BorderLayout.CENTER;
     }
     if (text.equals("north") || text.equals(BorderLayout.NORTH)) {
