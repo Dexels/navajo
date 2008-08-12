@@ -36,7 +36,7 @@ public class TipiEchoShowInfo extends TipiAction {
 
         // TipiOptionPane.showInfo(myContext, (String) text.value, "Info:",
         // "Close");
-        myContext.showInfo((String)text.value, "Info");
+        myContext.showInfo(""+text.value, "Info");
 
     }
 
