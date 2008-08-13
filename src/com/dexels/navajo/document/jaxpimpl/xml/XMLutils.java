@@ -62,7 +62,6 @@ public class XMLutils {
     
     	String nodeName = node.getNodeName();
     	nodeName = nodeName.substring( (nodeName.indexOf(":") != -1 ? nodeName.indexOf(":") + 1: 0) );
-    	//System.err.println("nodeName = " + nodeName);
     	
        if (nodeName.equals(name)) {
             return node;
@@ -96,6 +95,7 @@ public class XMLutils {
     {
        String nodeName  = node.getNodeName();
        nodeName = nodeName.substring( (nodeName.indexOf(":") != -1 ? nodeName.indexOf(":") + 1 : 0) );
+       name = name.substring( (name.indexOf(":") != -1 ? name.indexOf(":") + 1 : 0) );
        if (nodeName.equals(name)) {
             return node;
         }
