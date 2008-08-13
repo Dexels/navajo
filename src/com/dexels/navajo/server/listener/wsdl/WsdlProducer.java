@@ -122,9 +122,8 @@ public class WsdlProducer extends HttpServlet {
 		System.err.println("types = " + types);
 		if (types == null) { // Create it.
 			types = d.createElement("types");
-			d.getFirstChild().appendChild(types);
-
-		}
+			d.getDocumentElement().appendChild(types);
+		} 
 
 		Element schema = (Element) XMLutils.findNode(types, "xsd:schema");
 		if ( schema == null) {
@@ -136,11 +135,18 @@ public class WsdlProducer extends HttpServlet {
 		return schema;
 	}
 
-	private ArrayList addMessageDef(Document d, Element root, Navajo n, boolean input) throws Exception {
+	private ArrayList addMessageDef(Document d, Element root, Object n, boolean input) throws Exception {
 
 		Element types = findTypesNode(d);
 
-		ArrayList messages = n.getAllMessages();
+		ArrayList messages = null;
+		if ( n instanceof Navajo ) {
+			messages = ((Navajo) n).getAllMessages();
+		} else if ( n instanceof Message ) {
+			messages = new ArrayList();
+			messages.add(n);
+		}
+		
 		for (int i = 0; i < messages.size(); i++ ) {
 			Message m = (Message) messages.get(i);
 
@@ -175,6 +181,18 @@ public class WsdlProducer extends HttpServlet {
 						part.setAttributeNS(XMLSCHEMA, "type", "xsd:string");
 					}
 				}
+				
+				// Find child messages...
+				ArrayList children = m.getAllMessages();
+				for (int j = 0; j < children.size(); j++ ) {
+					Message c = (Message) children.get(j);
+					Element part = d.createElementNS(XMLSCHEMA, "xsd:element");
+					part.setAttribute("name", c.getName());
+					part.setAttribute("type", "tns:" + c.getName());
+					sequence.appendChild(part);
+					addMessageDef(d, root, c, input);
+				}
+				
 			}
 		}
 		return messages;
