@@ -50,6 +50,7 @@ public class FTPMap  implements Mappable, com.dexels.navajo.server.enterprise.qu
 	public String username;
 	public String password;
 	public String path;
+	public boolean useBinary  = true;
 	public boolean queuedSend = false;
 	
 	public boolean delete = false;
@@ -91,6 +92,10 @@ public class FTPMap  implements Mappable, com.dexels.navajo.server.enterprise.qu
 		path = s;
 	}
 	
+	public void setUseBinary(boolean b) {
+		useBinary = b;
+	}
+	
 	public void setFilename(String s) {
 		filename = s;
 	}
@@ -120,7 +125,7 @@ public class FTPMap  implements Mappable, com.dexels.navajo.server.enterprise.qu
 			try {
 				FTPClient ftpClient = new FTPClient( server );
 				ftpClient.login( username, password );
-				ftpClient.setType(FTPTransferType.BINARY);
+				ftpClient.setType( useBinary ? FTPTransferType.BINARY : FTPTransferType.ASCII );
 				if ( path != null ) {
 					ftpClient.chdir( path );
 				}
