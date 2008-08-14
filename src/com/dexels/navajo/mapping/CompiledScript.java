@@ -84,6 +84,8 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable  
   public String[] ruleArray;
   public String[] codeArray;
 
+  public HashMap userDefinedRules = new HashMap();
+  
   protected boolean kill = false;
 
   private JMXHelper jmx = null;

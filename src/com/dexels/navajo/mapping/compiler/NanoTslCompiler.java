@@ -28,6 +28,7 @@ import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.nanoimpl.*;
 import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.mapping.compiler.meta.*;
+import com.dexels.navajo.server.GenericHandler;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.server.SystemException;
 
@@ -111,22 +112,22 @@ public class NanoTslCompiler {
     // "aap" -> \"aap\"
     private String replaceQuotes(String str) {
 
-        StringBuffer result = new StringBuffer(str.length());
-        for (int i = 0; i < str.length(); i++) {
-
-        	char c = str.charAt(i);
-            
-        	if (c == '"') {
-                result.append("\\\"");
-            } else {
-            	if (c=='\n') {
-					result.append(" ");
-				} else {
-					result.append(c);
-				}
-				}
-        }
-        return result.toString();
+    	  if ( str.startsWith("#")) {
+    		  str = "(String) userDefinedRules.get(\"" + str.substring(1) + "\")";
+    		  return str;
+    	  }   else {
+    		  StringBuffer result = new StringBuffer(str.length());
+    		  for (int i = 0; i < str.length(); i++) {
+    			  char c = str.charAt(i);
+    			  if (c == '"') {
+    				  result.append("\\\"");
+    			  }
+    			  else {
+    				  result.append(c);
+    			  }
+    		  }
+    		  return "\"" + result.toString() + "\"";
+    	  }
     }
 
     private String removeNewLines(String str) {
@@ -382,7 +383,9 @@ public class NanoTslCompiler {
                 // OPTIMIZE EXPRESSION: " + clause);
             } catch (com.dexels.navajo.server.SystemException se) {
                 exact = false;
-                throw new UserException(-1, "Could not compile script, Invalid expression: " + clause);
+                if ( !clause.startsWith("#")) {
+                	throw new UserException(-1, "Could not compile script, Invalid expression: " + clause);
+                }
             } catch (Throwable e) {
                 exact = false;
                 //System.err.println("Throwable, COULD NOT OPTIMIZE EXPRESSION:
@@ -398,8 +401,8 @@ public class NanoTslCompiler {
         // Use Expression.evaluate() if expression could not be executed in an
         // optimized way.
         if (!exact) {
-            result.append(printIdent(ident) + "op = Expression.evaluate(\"" + replaceQuotes(clause)
-                    + "\", inMessage, currentMap, currentInMsg, currentParamMsg, currentSelection, null);\n");
+            result.append(printIdent(ident) + "op = Expression.evaluate(" + replaceQuotes(clause)
+                    + ", inMessage, currentMap, currentInMsg, currentParamMsg, currentSelection, null);\n");
             result.append(printIdent(ident) + "sValue = op.value;\n");
         } else { // USE OUR OPTIMIZATION SCHEME.
             ////System.out.println("CALL = " + call);
@@ -467,8 +470,8 @@ public class NanoTslCompiler {
         //    System.err.println("isStringO: "+isStringOperand+" value: "+value);
         //    System.err.println(">> "+removeNewLines(value)+" <<");
         if (!condition.equals("")) {
-            result.append(printIdent(ident) + "if (Condition.evaluate(\"" + replaceQuotes(condition)
-                    + "\", inMessage, currentMap, currentInMsg, currentParamMsg))");
+            result.append(printIdent(ident) + "if (Condition.evaluate(" + replaceQuotes(condition)
+                    + ", inMessage, currentMap, currentInMsg, currentParamMsg))");
         }
 
         result.append(printIdent(ident) + "{\n");
@@ -517,8 +520,8 @@ public class NanoTslCompiler {
                 condition = (condition == null) ? "" : condition;
                 description = (description == null) ? "" : description;
                 if (!condition.equals("")) {
-                    result.append(printIdent(ident) + "if (Condition.evaluate(\"" + replaceQuotes(condition)
-                            + "\", inMessage, null, null, null)) {\n");
+                    result.append(printIdent(ident) + "if (Condition.evaluate(" + replaceQuotes(condition)
+                            + ", inMessage, null, null, null)) {\n");
                 } else {
                     result.append(printIdent(ident) + "if (true) {\n");
                     // Get required messages.
@@ -576,8 +579,8 @@ public class NanoTslCompiler {
         // If <message> node is conditional:
         if (!condition.equals("")) {
             conditionClause = true;
-            result.append(printIdent(ident) + "if (Condition.evaluate(\"" + replaceQuotes(condition)
-                    + "\", inMessage, currentMap, currentInMsg, currentParamMsg)) { \n");
+            result.append(printIdent(ident) + "if (Condition.evaluate(" + replaceQuotes(condition)
+                    + ", inMessage, currentMap, currentInMsg, currentParamMsg)) { \n");
             ident += 2;
         }
 
@@ -926,8 +929,8 @@ public class NanoTslCompiler {
         boolean conditionClause = false;
         if (!condition.equals("")) {
             conditionClause = true;
-            result.append(printIdent(ident) + "if (Condition.evaluate(\"" + replaceQuotes(condition)
-                    + "\", inMessage, currentMap, currentInMsg, currentParamMsg)) { \n");
+            result.append(printIdent(ident) + "if (Condition.evaluate(" + replaceQuotes(condition)
+                    + ", inMessage, currentMap, currentInMsg, currentParamMsg)) { \n");
             ident += 2;
         }
 
@@ -1159,8 +1162,8 @@ public class NanoTslCompiler {
         Vector children = n.getChildren();
 
         if (!condition.equals("")) {
-            result.append(printIdent(ident) + "if (Condition.evaluate(\"" + replaceQuotes(condition)
-                    + "\", inMessage, currentMap, currentInMsg, currentParamMsg)) { \n");
+            result.append(printIdent(ident) + "if (Condition.evaluate(" + replaceQuotes(condition)
+                    + ", inMessage, currentMap, currentInMsg, currentParamMsg)) { \n");
         } else {
             result.append(printIdent(ident) + "if (true) {\n");
         }
@@ -1448,8 +1451,8 @@ public class NanoTslCompiler {
         if (condition.equals("")) {
             result.append(printIdent(ident) + "if (true) {");
         } else {
-            result.append(printIdent(ident) + "if (Condition.evaluate(\"" + replaceQuotes(condition)
-                    + "\", inMessage, currentMap, currentInMsg, currentParamMsg)) { \n");
+            result.append(printIdent(ident) + "if (Condition.evaluate(" + replaceQuotes(condition)
+                    + ", inMessage, currentMap, currentInMsg, currentParamMsg)) { \n");
 
         }
         result.append(printIdent(ident + 2) + "throw new BreakEvent();\n");
@@ -1486,8 +1489,8 @@ public class NanoTslCompiler {
     public String debugNode(int ident, XMLElement n) throws Exception {
         StringBuffer result = new StringBuffer();
         String value = n.getNonNullStringAttribute("value");
-        result.append(printIdent(ident) + "op = Expression.evaluate(\"" + replaceQuotes(value)
-                + "\", inMessage, currentMap, currentInMsg, currentParamMsg, currentSelection, null);\n");
+        result.append(printIdent(ident) + "op = Expression.evaluate(" + replaceQuotes(value)
+                + ", inMessage, currentMap, currentInMsg, currentParamMsg, currentSelection, null);\n");
         result.append(printIdent(ident) + "System.out.println(\"in PROCESSING SCRIPT: \" + access.rpcName + \" DEBUG INFO: \" + op.value);\n");
         return result.toString();
     }
@@ -1522,8 +1525,8 @@ public class NanoTslCompiler {
         boolean conditionClause = false;
         if (!condition.equals("")) {
             conditionClause = true;
-            result.append(printIdent(ident) + "if (Condition.evaluate(\"" + replaceQuotes(condition)
-                    + "\", inMessage, currentMap, currentInMsg, currentParamMsg)) { \n");
+            result.append(printIdent(ident) + "if (Condition.evaluate(" + replaceQuotes(condition)
+                    + ", inMessage, currentMap, currentInMsg, currentParamMsg)) { \n");
             ident += 2;
         }
 
@@ -1785,10 +1788,22 @@ public class NanoTslCompiler {
         //    Document includeDoc = XMLDocumentUtils.createDocument(new
         // FileInputStream(scriptPath + "/" + script + ".xml"), false);
         FileInputStream fii = null;
-
         XMLElement includeDoc;
+        
+        // Construct scriptName:
+        // First try if applicationGroup specific script exists.
+        String fileName = scriptPath + "/" + script + "_" + GenericHandler.applicationGroup + ".xml";
+        includeDoc = null;
+        File includedFile = new File(fileName);
+        
+        if ( includedFile.exists() ) {
+        	fii = new FileInputStream(includedFile);
+        } else {
+        	includedFile = new File(scriptPath + "/" + script + ".xml");
+        	fii = new FileInputStream(includedFile);
+        }
+        
         try {
-            fii = new FileInputStream(scriptPath + "/" + script + ".xml");
             includeDoc = parseXMLElement(fii);
         } finally {
             if (fii != null) {
@@ -1900,6 +1915,22 @@ public class NanoTslCompiler {
 
     }
 
+    private final void generateRules( XMLElement d, StringBuffer generatedCode ) throws Exception {
+
+    	Vector list = d.getElementsByTagName("defines");
+        for (int i = 0; i < list.size(); i++) {
+        	Vector rules = ((XMLElement) list.get(i)).getChildren();
+            for (int j = 0; j < rules.size(); j++) {
+              if ( ((XMLElement) rules.get(j)).getName().equals("define")) {
+            	  String name = ((XMLElement) rules.get(j)).getNonNullStringAttribute("name");
+            	  String expression = ((XMLElement) rules.get(j)).getContent();
+            	  expression = expression.replace('\n', ' ');
+            	  generatedCode.append("userDefinedRules.put(\"" + name + "\",\"" + expression + "\");\n");
+              }
+            }
+        }
+    }
+    
     /**
      * Check condition/validation rules inside the script.
      * 
@@ -2097,6 +2128,9 @@ public class NanoTslCompiler {
 
             result.append("}// EOM\n");
 
+            // File Rules HashMap
+            generateRules(tslDoc, result);
+  	      
             // Add generated methods.
             for (int i = 0; i < methodClipboard.size(); i++) {
                 StringBuffer methodBuffer = (StringBuffer) methodClipboard.get(i);
