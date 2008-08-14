@@ -24,6 +24,7 @@ import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.jaxpimpl.xml.*;
 import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.mapping.compiler.meta.MapMetaData;
+import com.dexels.navajo.server.GenericHandler;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.server.SystemException;
 import com.dexels.navajo.util.AuditLog;
@@ -88,17 +89,22 @@ public class TslCompiler {
   // "aap" -> \"aap\"
   private String replaceQuotes(String str) {
 
-    StringBuffer result = new StringBuffer(str.length());
-    for (int i = 0; i < str.length(); i++) {
-      char c = str.charAt(i);
-      if (c == '"') {
-        result.append("\\\"");
-      }
-      else {
-        result.append(c);
-      }
-    }
-    return result.toString();
+	  if ( str.startsWith("#")) {
+		  str = "(String) userDefinedRules.get(\"" + str.substring(1) + "\")";
+		  return str;
+	  }   else {
+		  StringBuffer result = new StringBuffer(str.length());
+		  for (int i = 0; i < str.length(); i++) {
+			  char c = str.charAt(i);
+			  if (c == '"') {
+				  result.append("\\\"");
+			  }
+			  else {
+				  result.append(c);
+			  }
+		  }
+		  return "\"" + result.toString() + "\"";
+	  }
   }
 
   private String removeNewLines(String str) {
@@ -371,7 +377,9 @@ public String optimizeExpresssion(int ident, String clause, String className, St
       }
       catch (com.dexels.navajo.server.SystemException se) {
         exact = false;
-        throw new UserException(-1, "Could not compile script, Invalid expression: " + clause);
+        if ( !clause.startsWith("#")) {
+        	throw new UserException(-1, "Could not compile script, Invalid expression: " + clause);
+        }
       }
       catch (Throwable e) {
         exact = false;
@@ -386,9 +394,9 @@ public String optimizeExpresssion(int ident, String clause, String className, St
 
     // Use Expression.evaluate() if expression could not be executed in an optimized way.
     if (!exact) {
-      result.append(printIdent(ident) + "op = Expression.evaluate(\"" +
+      result.append(printIdent(ident) + "op = Expression.evaluate(" +
                     replaceQuotes(clause) +
-                    "\", inMessage, currentMap, currentInMsg, currentParamMsg, currentSelection, null);\n");
+                    ", inMessage, currentMap, currentInMsg, currentParamMsg, currentSelection, null);\n");
       result.append(printIdent(ident) + "sValue = op.value;\n");
     }
     else { // USE OUR OPTIMIZATION SCHEME.
@@ -464,7 +472,7 @@ public String optimizeExpresssion(int ident, String clause, String className, St
     }
 
         if (!condition.equals("")) {
-          result.append(printIdent(ident) + "if (Condition.evaluate(\"" + replaceQuotes(condition) + "\", inMessage, currentMap, currentInMsg, currentParamMsg))");
+          result.append(printIdent(ident) + "if (Condition.evaluate(" + replaceQuotes(condition) + ", inMessage, currentMap, currentInMsg, currentParamMsg))");
         }
 
         result.append(printIdent(ident) + "{\n");
@@ -505,9 +513,9 @@ public String optimizeExpresssion(int ident, String clause, String className, St
         condition = (condition == null) ? "" : condition;
         description = (description == null) ? "" : description;
         if (!condition.equals("")) {
-          result.append(printIdent(ident) + "if (Condition.evaluate(\"" +
+          result.append(printIdent(ident) + "if (Condition.evaluate(" +
                         replaceQuotes(condition) +
-                        "\", inMessage, null, null, null)) {\n");
+                        ", inMessage, null, null, null)) {\n");
         }
         else {
           result.append(printIdent(ident) + "if (true) {\n");
@@ -561,9 +569,9 @@ public String messageNode(int ident, Element n, String className, String objectN
     // If <message> node is conditional:
     if (!condition.equals("")) {
       conditionClause = true;
-      result.append(printIdent(ident) + "if (Condition.evaluate(\"" +
+      result.append(printIdent(ident) + "if (Condition.evaluate(" +
                     replaceQuotes(condition) +
-                    "\", inMessage, currentMap, currentInMsg, currentParamMsg)) { \n");
+                    ", inMessage, currentMap, currentInMsg, currentParamMsg)) { \n");
       ident += 2;
     }
 
@@ -933,9 +941,9 @@ public String propertyNode(int ident, Element n, boolean canBeSubMapped, String 
     boolean conditionClause = false;
     if (!condition.equals("")) {
       conditionClause = true;
-      result.append(printIdent(ident) + "if (Condition.evaluate(\"" +
+      result.append(printIdent(ident) + "if (Condition.evaluate(" +
                     replaceQuotes(condition) +
-                    "\", inMessage, currentMap, currentInMsg, currentParamMsg)) { \n");
+                    ", inMessage, currentMap, currentInMsg, currentParamMsg)) { \n");
       ident += 2;
     }
 
@@ -1179,9 +1187,9 @@ public String fieldNode(int ident, Element n, String className,
     NodeList children = n.getChildNodes();
 
     if (!condition.equals("")) {
-      result.append(printIdent(ident) + "if (Condition.evaluate(\"" +
+      result.append(printIdent(ident) + "if (Condition.evaluate(" +
                     replaceQuotes(condition) +
-                    "\", inMessage, currentMap, currentInMsg, currentParamMsg)) { \n");
+                    ", inMessage, currentMap, currentInMsg, currentParamMsg)) { \n");
     }
     else {
       result.append(printIdent(ident) + "if (true) {\n");
@@ -1506,9 +1514,9 @@ public String fieldNode(int ident, Element n, String className,
       result.append(printIdent(ident) + "if (true) {");
     }
     else {
-      result.append(printIdent(ident) + "if (Condition.evaluate(\"" +
+      result.append(printIdent(ident) + "if (Condition.evaluate(" +
                     replaceQuotes(condition) +
-                    "\", inMessage, currentMap, currentInMsg, currentParamMsg)) { \n");
+                    ", inMessage, currentMap, currentInMsg, currentParamMsg)) { \n");
 
     }
     result.append(printIdent(ident + 2) + "throw new BreakEvent();\n");
@@ -1520,9 +1528,9 @@ public String fieldNode(int ident, Element n, String className,
   public String debugNode(int ident, Element n) throws Exception {
     StringBuffer result = new StringBuffer();
     String value = n.getAttribute("value");
-    result.append(printIdent(ident) + "op = Expression.evaluate(\"" +
+    result.append(printIdent(ident) + "op = Expression.evaluate(" +
                   replaceQuotes(value) +
-                  "\", inMessage, currentMap, currentInMsg, currentParamMsg, currentSelection, null);\n");
+                  ", inMessage, currentMap, currentInMsg, currentParamMsg, currentSelection, null);\n");
     result.append(printIdent(ident) + "System.err.println(\"in PROCESSING SCRIPT: \" + access.rpcName + \" DEBUG INFO: \" + op.value);\n");
     return result.toString();
   }
@@ -1558,9 +1566,9 @@ public String mapNode(int ident, Element n) throws Exception {
     boolean conditionClause = false;
     if (!condition.equals("")) {
       conditionClause = true;
-      result.append(printIdent(ident) + "if (Condition.evaluate(\"" +
+      result.append(printIdent(ident) + "if (Condition.evaluate(" +
                     replaceQuotes(condition) +
-                    "\", inMessage, currentMap, currentInMsg, currentParamMsg)) { \n");
+                    ", inMessage, currentMap, currentInMsg, currentParamMsg)) { \n");
       ident += 2;
     }
 
@@ -1829,8 +1837,19 @@ public String mapNode(int ident, Element n) throws Exception {
         
   //  System.err.println("INCLUDING SCRIPT " + script + " @ NODE " + n);
 
-    Document includeDoc = XMLDocumentUtils.createDocument(new FileInputStream(scriptPath + "/" + script + ".xml"), false);
-
+    // Construct scriptName:
+    // First try if applicationGroup specific script exists.
+    String fileName = scriptPath + "/" + script + "_" + GenericHandler.applicationGroup + ".xml";
+    Document includeDoc = null;
+    File includedFile = new File(fileName);
+    
+    if ( includedFile.exists() ) {
+    	includeDoc = XMLDocumentUtils.createDocument(new FileInputStream(includedFile), false);
+    } else {
+    	includedFile = new File(scriptPath + "/" + script + ".xml");
+    	includeDoc = XMLDocumentUtils.createDocument(new FileInputStream(includedFile), false);
+    }
+    
     NodeList content = includeDoc.getElementsByTagName("tsl").item(0).getChildNodes();
     Node nextNode = n.getNextSibling();
     while ( nextNode != null && !(nextNode instanceof Element) ) {
@@ -1929,6 +1948,28 @@ public String mapNode(int ident, Element n) throws Exception {
 
   }
 
+  /**
+   * Check condition/validation rules inside the script.
+   * @param f
+   * @return
+   * @throws Exception
+   */
+  private final void generateRules( Document d, StringBuffer generatedCode ) throws Exception {
+
+    NodeList list = d.getElementsByTagName("defines");
+    for (int i = 0; i < list.getLength(); i++) {
+        NodeList rules = list.item(i).getChildNodes();
+        for (int j = 0; j < rules.getLength(); j++) {
+          if (rules.item(j).getNodeName().equals("define")) {
+        	  String name = ((Element) rules.item(j)).getAttribute("name");
+        	  String expression = rules.item(j).getFirstChild().getNodeValue();
+        	  expression = expression.replace('\n', ' ');
+        	  generatedCode.append("userDefinedRules.put(\"" + name + "\",\"" + expression + "\");\n");
+          }
+        }
+    }
+  }
+  
   /**
   * Check condition/validation rules inside the script.
   * @param f
@@ -2088,6 +2129,9 @@ public String mapNode(int ident, Element n) throws Exception {
 	        includeNode(scriptPath, includeArray[i], tslDoc);
 	      }
 
+	      // File Rules HashMap
+	      generateRules(tslDoc, result);
+	      
 	      NodeList children = tslDoc.getElementsByTagName("tsl").item(0).getChildNodes();
 	      //System.err.println("FOUND " + children.getLength() + " CHILDREN");
 	      for (int i = 0; i < children.getLength(); i++) {
