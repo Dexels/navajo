@@ -349,7 +349,7 @@ public class Generate {
     
       
       // Determine input messages:
-      FileInputStream fis = new FileInputStream("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts/external/addressbook_bv/ProcessGetClubsByDivision.xml");
+      FileInputStream fis = new FileInputStream("/home/arjen/projecten/NavajoStandardEdition/scripts/holiday/ProcessHolidayRequest.xml");
       Navajo inputDoc = gen.getInputPart(null, fis);
       fis.close();
       ArrayList msgs = inputDoc.getAllMessages();
@@ -358,7 +358,7 @@ public class Generate {
         inputMessages.add(((Message) msgs.get(i)).getName());
       }
       //inputDoc.write(System.err);
-      fis = new FileInputStream("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/scripts/external/addressbook_bv/ProcessGetClubsByDivision.xml");
+      fis = new FileInputStream("/home/arjen/projecten/NavajoStandardEdition/scripts/holiday/ProcessHolidayRequest.xml");
       Navajo outputDoc = gen.getOutputPart(fis);
       fis.close();
      
