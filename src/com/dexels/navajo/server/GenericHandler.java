@@ -44,6 +44,8 @@ public final class GenericHandler extends ServiceHandler {
     private static Object mutex1 = new Object();
     private static Object mutex2 = new Object();
    
+    public static final String applicationGroup = Dispatcher.getInstance().getNavajoConfig().getInstanceGroup();
+    
     @SuppressWarnings("unchecked")
 	public GenericHandler() {
 
@@ -93,20 +95,26 @@ public final class GenericHandler extends ServiceHandler {
               pathPrefix = access.rpcName.substring(0, strip) + "/";
             }
       
-            File scriptFile = new File(scriptPath + "/" + access.rpcName + ( access.betaUser ? "_beta" : "" ) + ".xml" );
+            // First check whether applicationId specific script exists.
+            File scriptFile = null;
             
-            if ( access.betaUser && !scriptFile.exists() ) {
-            	// Try normal webservice.
-            	scriptFile = new File(scriptPath + "/" + access.rpcName + ".xml" );
-            } else if ( access.betaUser ) {
-            	serviceName += "_beta";
-            } 
-            
+            scriptFile = new File(scriptPath + "/" + access.rpcName + "_" + applicationGroup + ".xml");
+            if (scriptFile.exists()) {
+            	serviceName += "_" + applicationGroup;
+            } else {
+            	scriptFile = new File(scriptPath + "/" + access.rpcName + ( access.betaUser ? "_beta" : "" ) + ".xml" );
+            	if ( access.betaUser && !scriptFile.exists() ) {
+            		// Try normal webservice.
+            		scriptFile = new File(scriptPath + "/" + access.rpcName + ".xml" );
+            	} else if ( access.betaUser ) {
+            		serviceName += "_beta";
+            	} 
+            }
+
             String className = (pathPrefix.equals("") ? serviceName : MappingUtils.createPackageName(pathPrefix) + "." + serviceName);
 
             //System.err.println("scriptFile is " + scriptFile.getName());
             
-         
             newLoader = (NavajoClassLoader) loadedClasses.get(className);
          
             if (properties.compileScripts) {
