@@ -256,15 +256,7 @@ public class AdminMap implements Mappable {
     return com.dexels.navajo.server.Dispatcher.vendor;
   }
   public String getVersion() {
-    String main = com.dexels.navajo.server.Dispatcher.version;
-    String sub = "";
-    try {
-		Class.forName("com.dexels.navajo.tribe.TribeManager");
-		sub = " (Enterprise Edition)";
-	} catch (ClassNotFoundException e) {
-		sub = " (Standard Edition)";
-	}
-	return main + sub;
+	return Dispatcher.getVersion() + " (" + Dispatcher.getEdition() + ")";
   }
   public String getRepository() {
     if (com.dexels.navajo.server.Dispatcher.getInstance().getRepository() != null) {
