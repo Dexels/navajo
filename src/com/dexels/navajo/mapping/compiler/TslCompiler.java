@@ -666,7 +666,7 @@ public String messageNode(int ident, Element n, String className, String objectN
     
     
     String orderbyExpression =  ("".equals(orderby) ? "\"\"" :
-                "(String) Expression.evaluate(\"" + orderby + "\", inMessage, currentMap, currentInMsg, currentParamMsg).value"
+                "(String) Expression.evaluate(" + replaceQuotes(orderby) + ", inMessage, currentMap, currentInMsg, currentParamMsg).value"
     );
     
     if (n.getNodeName().equals("message")) {
@@ -763,9 +763,9 @@ public String messageNode(int ident, Element n, String className, String objectN
 
       // If filter is specified, evaluate filter first:
       if (!filter.equals("")) {
-        result.append(printIdent(ident + 4) + "if (Condition.evaluate(\"" +
+        result.append(printIdent(ident + 4) + "if (Condition.evaluate(" +
                       replaceQuotes(filter) +
-                      "\", inMessage, currentMap, currentInMsg, currentParamMsg)) {\n");
+                      ", inMessage, currentMap, currentInMsg, currentParamMsg)) {\n");
         ident += 2;
       }
 
@@ -976,7 +976,7 @@ public String propertyNode(int ident, Element n, boolean canBeSubMapped, String 
         type = "selection";
         // Created condition statement if condition is given!
         String conditional = (optionCondition != null && !optionCondition.equals("")) ?
-                             "if (Condition.evaluate(\"" + replaceQuotes(optionCondition) + "\", inMessage, currentMap, currentInMsg, currentParamMsg))\n" : "";
+                             "if (Condition.evaluate(" + replaceQuotes(optionCondition) + ", inMessage, currentMap, currentInMsg, currentParamMsg))\n" : "";
         optionItems.append(conditional+
             "p.addSelection(NavajoFactory.getInstance().createSelection(access.getOutputDoc(), \"" +
             optionName + "\", \"" + optionValue + "\", " + selected + "));\n");
@@ -1056,9 +1056,9 @@ public String propertyNode(int ident, Element n, boolean canBeSubMapped, String 
       
       // If filter is specified, evaluate filter first (31/1/2007)
       if (!filter.equals("")) {
-        result.append(printIdent(ident + 4) + "if (Condition.evaluate(\"" +
+        result.append(printIdent(ident + 4) + "if (Condition.evaluate(" +
                       replaceQuotes(filter) +
-                      "\", inMessage, currentMap, currentInMsg, currentParamMsg)) {\n");
+                      ", inMessage, currentMap, currentInMsg, currentParamMsg)) {\n");
         ident += 2;
       } 
       
@@ -1350,7 +1350,7 @@ public String fieldNode(int ident, Element n, String className,
         // CONDITION.EVALUATE()!!!!!!!!!!!! {
         // If filter is specified, evaluate filter first:
         if (!filter.equals("")) {
-          result.append(printIdent(ident + 4) + "if (inSelectionRef || Condition.evaluate(\"" + replaceQuotes(filter) + "\", inMessage, currentMap, currentInMsg, currentParamMsg)) {\n");
+          result.append(printIdent(ident + 4) + "if (inSelectionRef || Condition.evaluate(" + replaceQuotes(filter) + ", inMessage, currentMap, currentInMsg, currentParamMsg)) {\n");
           ident += 2;
         }
 

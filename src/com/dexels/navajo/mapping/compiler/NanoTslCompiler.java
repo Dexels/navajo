@@ -664,7 +664,7 @@ public class NanoTslCompiler {
         result.append(printIdent(ident) + "Message [] " + messageList + " = null;\n");
 
         String orderbyExpression =  ("".equals(orderby) ? "\"\"" :
-        	"(String) Expression.evaluate(\"" + orderby + "\", inMessage, currentMap, currentInMsg, currentParamMsg).value"
+        	"(String) Expression.evaluate(" + replaceQuotes(orderby) + ", inMessage, currentMap, currentInMsg, currentParamMsg).value"
         );
 
         if (n.getName().equals("message")) {
@@ -766,8 +766,8 @@ public class NanoTslCompiler {
 
             // If filter is specified, evaluate filter first:
             if (!filter.equals("")) {
-                result.append(printIdent(ident + 4) + "if (Condition.evaluate(\"" + replaceQuotes(filter)
-                        + "\", inMessage, currentMap, currentInMsg, currentParamMsg)) {\n");
+                result.append(printIdent(ident + 4) + "if (Condition.evaluate(" + replaceQuotes(filter)
+                        + ", inMessage, currentMap, currentInMsg, currentParamMsg)) {\n");
                 ident += 2;
             }
 
@@ -961,8 +961,8 @@ public class NanoTslCompiler {
                 boolean selected = (selectedValue.equals("1"));
                 type = "selection";
                 // Created condition statement if condition is given!
-                String conditional = (optionCondition != null && !optionCondition.equals("")) ? "if (Condition.evaluate(\""
-                        + replaceQuotes(optionCondition) + "\", inMessage, currentMap, currentInMsg, currentParamMsg))\n" : "";
+                String conditional = (optionCondition != null && !optionCondition.equals("")) ? "if (Condition.evaluate("
+                        + replaceQuotes(optionCondition) + ", inMessage, currentMap, currentInMsg, currentParamMsg))\n" : "";
                 optionItems.append(conditional + "p.addSelection(NavajoFactory.getInstance().createSelection(access.getOutputDoc(), \"" + optionName + "\", \""
                         + optionValue + "\", " + selected + "));\n");
             } else if (((XMLElement) children.get(i)).getName().equals("map")) { // ABout
@@ -1055,9 +1055,9 @@ public class NanoTslCompiler {
             
             // If filter is specified, evaluate filter first (27/1/2006)
             if (!filter.equals("")) {
-              result.append(printIdent(ident + 4) + "if (Condition.evaluate(\"" +
+              result.append(printIdent(ident + 4) + "if (Condition.evaluate(" +
                             replaceQuotes(filter) +
-                            "\", inMessage, currentMap, currentInMsg, currentParamMsg)) {\n");
+                            ", inMessage, currentMap, currentInMsg, currentParamMsg)) {\n");
               ident += 2;
             } 
             
@@ -1328,8 +1328,8 @@ public class NanoTslCompiler {
                 // CONDITION.EVALUATE()!!!!!!!!!!!! {
                 // If filter is specified, evaluate filter first:
                 if (!filter.equals("")) {
-                    result.append(printIdent(ident + 4) + "if (inSelectionRef || Condition.evaluate(\"" + replaceQuotes(filter)
-                            + "\", inMessage, currentMap, currentInMsg, currentParamMsg)) {\n");
+                    result.append(printIdent(ident + 4) + "if (inSelectionRef || Condition.evaluate(" + replaceQuotes(filter)
+                            + ", inMessage, currentMap, currentInMsg, currentParamMsg)) {\n");
                     ident += 2;
                 }
 
