@@ -75,10 +75,20 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
    * Fields accessable by webservices
    */
   public Access [] users;
-  public static final String VERSION = "$Id$";
+  public static final String FILE_VERSION = "$Id$";
   public static final String vendor  = "Dexels BV";
   public static final String product = "Navajo Service Delivery Platform";
   public static final String version = Version.getDescription();
+  public volatile static String edition;
+  
+  static {
+	  try {
+			Class.forName("com.dexels.navajo.tribe.TribeManager");
+			edition = "Enterprise Edition";
+		} catch (ClassNotFoundException e) {
+			edition = "Standard Edition";
+		}
+  }
  
   /**
    * Unique dispatcher instance.
@@ -1468,4 +1478,20 @@ public final Navajo handle(Navajo inMessage, Object userCertificate, ClientInfo 
 
 		return result;
 	}
+
+  public static String getVersion() {
+	  return version;
+  }
+
+  public static String getVendor() {
+	  return vendor;
+  }
+
+  public static String getProduct() {
+	  return product;
+  }
+
+  public static String getEdition() {
+	  return edition;
+  }
 }
