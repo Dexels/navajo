@@ -84,6 +84,9 @@ public abstract class CompiledScript implements CompiledScriptMXBean, Mappable  
   public String[] ruleArray;
   public String[] codeArray;
 
+  /**
+   * This HashMap is used for user defined expressions in <definitions> section of a script.
+   */
   public HashMap userDefinedRules = new HashMap();
   
   protected boolean kill = false;

@@ -30,6 +30,8 @@ import java.io.*;
 import java.util.*;
 import java.net.*;
 
+import navajo.Version;
+
 import com.dexels.navajo.server.enterprise.monitoring.AgentFactory;
 import com.dexels.navajo.server.enterprise.queue.RequestResponseQueueFactory;
 import com.dexels.navajo.server.enterprise.scheduler.TaskInterface;
@@ -76,7 +78,7 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
   public static final String VERSION = "$Id$";
   public static final String vendor  = "Dexels BV";
   public static final String product = "Navajo Service Delivery Platform";
-  public static final String version = "Release 2008.01.01_R77_1";
+  public static final String version = Version.getDescription();
  
   /**
    * Unique dispatcher instance.

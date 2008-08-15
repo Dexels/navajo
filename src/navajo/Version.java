@@ -27,6 +27,11 @@ package navajo;
 /**
  * VERSION HISTORY
  * 
+ * 6.5.2 Improved versioning information
+ * 
+ * 6.5.1 Added support for <defines> section in scripts.
+ * 		 Added support for groupInstance specific scripts (using _[groupinstance name] postfix in script name).
+ * 
  * 6.0.0 Strict separation of standard (free) and enterprise edition functionality
  * 
  * 5.1.2 Change in TslCompiler and NanoTslCompiler: when calling getXYZ() method that returns a mappable Array (Mappable []),
@@ -42,8 +47,10 @@ package navajo;
  * 
  * 5.1.5 Minor fix for global messages. Directclient uses system props. Listeners use application.properties.
  *       direct client works now for both types. 
+ *       
  * 5.1.6 Compiler fixes. The navajo plugin had trouble loading the javacompiler class, because of different
  *       class loaders. Also removed debug data.
+ *       
  * 5.1.7 Added some classloader functionality. Now the script classes can get reloaded separately from the jarfiles. Should help performance of the plugin remote runner.
  * 
  * 5.2.0 Added Task Scheduler functionality.
@@ -103,11 +110,11 @@ package navajo;
 public class Version extends dexels.Version {
 
 	public static final int MAJOR = 6;
-	public static final int MINOR = 0;
-	public static final int PATCHLEVEL = 0;
+	public static final int MINOR = 5;
+	public static final int PATCHLEVEL = 2;
 	public static final String VENDOR = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Kernel";
-	public static final String RELEASEDATE = "2007-06-06";
+	public static final String RELEASEDATE = "2008-08-15";
 	
 //	 Included packages.
 	String [] includes = {"navajodocument.Version"};
@@ -136,7 +143,11 @@ public class Version extends dexels.Version {
 	public String getProductName() {
 		return PRODUCTNAME;
 	}
-
+	
+	public static String getDescription() {
+		return MAJOR + "." + MINOR + "." + PATCHLEVEL;
+	}
+	
 	public static void main(String [] args) {
 		Version v = new Version();
 		System.err.println(v.toString());
