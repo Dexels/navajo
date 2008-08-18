@@ -156,6 +156,7 @@
 
    <tipiaction name="dumpNavajo" class="TipiDumpNavajo" package="com.dexels.navajo.tipi.actions">
       <param name="input" type="navajo" required="true" />
+      <param name="fileName" type="string" required="false" />
    </tipiaction>
 
    <tipiaction name="dumpStack" class="TipiDumpStack" package="com.dexels.navajo.tipi.actions"/>
@@ -195,6 +196,7 @@
 
    <tipiaction name="callService" class="TipiNewCallService" package="com.dexels.navajo.tipi.actions">
       <param name="service" type="string" required="true" />
+      <param name="cached" type="boolean" required="false" />
       <param name="connector" type="string" required="false" />
       <param name="destination" type="string" required="false" />
       <param name="input" type="navajo" />

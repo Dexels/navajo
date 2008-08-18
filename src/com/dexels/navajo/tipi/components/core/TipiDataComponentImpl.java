@@ -289,13 +289,14 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 			}
 		}
 		// hmmmmmmmmm
-		doPerformOnLoad(method);
+		doPerformOnLoad(method,n);
 		doLayout();
 	}
 
-	protected void doPerformOnLoad(String method) throws TipiException {
+	protected void doPerformOnLoad(String method, Navajo n) throws TipiException {
 		Map<String,Object> m = new HashMap<String,Object>();
 		m.put("service", method);
+		m.put("navajo", n);
 		performTipiEvent("onLoad", m, true);
 	}
 

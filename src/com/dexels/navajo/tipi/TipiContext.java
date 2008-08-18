@@ -1738,9 +1738,14 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 		return evaluate(expr, tc, event, null);
 	}
 
-	public Operand evaluate(String expr, TipiComponent tc, TipiEvent event, Message currentMessage) {
+	public Operand evaluate(String expr, TipiComponent tc, TipiEvent event,
+			Message currentMessage) {
 
-		return evaluate(expr, tc, event, tc.getNearestNavajo(), currentMessage);
+		Navajo nearestNavajo = null;
+		if (tc != null) {
+			nearestNavajo = tc.getNearestNavajo();
+		}
+		return evaluate(expr, tc, event, nearestNavajo, currentMessage);
 	}
 
 	public Operand evaluate(String expr, TipiComponent tc, TipiEvent event, Navajo n, Message currentMessage) {

@@ -27,16 +27,18 @@ public class TipiNewCallService extends TipiAction {
 	public void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
 		
 		TipiValue parameter = getParameter("input");
-		String unevaluated = null;
+		//String unevaluated = null;
 
 		if(parameter!=null) {
-			unevaluated = parameter.getValue();
+			//unevaluated = parameter.getValue();
 		}
 		Operand serviceOperand = getEvaluatedParameter("service", event);
 		Operand inputOperand = getEvaluatedParameter("input", event);
 		Operand destination = getEvaluatedParameter("destination", event);
 		Operand connector = getEvaluatedParameter("connector", event);
-		
+		Object cached = getEvaluatedParameterValue("cached", event);
+//		Object silentValue = getEvaluatedParameterValue("silent", event);
+//		Boolean silent = (Boolean)silentValue;
 		if(connector==null || connector.value==null) {
 			oldExecute(event);
 			return;
@@ -49,23 +51,39 @@ public class TipiNewCallService extends TipiAction {
 			throw new TipiException("Error in callService action: service parameter missing!");
 		}
 		String service = (String) serviceOperand.value;
+		
+		if(cached!=null && cached instanceof Boolean) {
+			boolean c = (Boolean)cached;
+			if(c) {
+				Navajo n = myContext.getNavajo(service);
+				if(n!=null) {	
+					System.err.println("Returning CACHED service : "+service);
+						myContext.loadNavajo(n, service);
+					return;
+					//return n;
+				}
+			}
+		}
+		
 		Navajo input = null;
 		if(inputOperand!=null) {
 			input = (Navajo) inputOperand.value;
 		}
 		TipiConnector defaultConnector = myContext.getDefaultConnector();
 		if(connector==null || connector.value==null) {
-			long timeStamp = System.currentTimeMillis();
+			//long timeStamp = System.currentTimeMillis();
 			System.err.println("No connector");
 			if(defaultConnector==null) {
+				throw new IllegalStateException("No default tipi connector found!");
 			} else {
 				defaultConnector.doTransaction(input, service);
 			}
-			long transaction = System.currentTimeMillis() - timeStamp;
+		//	long transaction = System.currentTimeMillis() - timeStamp;
 //			System.err.println("Transaction: "+service+" in connector: "+defaultConnector.getConnectorId()+" took: "+transaction+" millis.");
 		} else {
 //			System.err.println("Retrieving connector: "+(String) connector.value);
-			long timeStamp = System.currentTimeMillis();
+//			long timeStamp = System.currentTimeMillis();
+//			
 			TipiConnector ttt = myContext.getConnector((String) connector.value);
 			if(ttt==null) {
 				System.err.println("Warning: connector: "+(String) connector.value+" not found, reverting to default connector");
@@ -74,33 +92,7 @@ public class TipiNewCallService extends TipiAction {
 			} else {
 				ttt.doTransaction(input,service,destAddress);
 			}
-			long transaction = System.currentTimeMillis() - timeStamp;
-//			System.err.println("Transaction: "+service+" in connector: "+(String) connector.value+" took: "+transaction+" millis.");
 		}
-//
-//		if(unevaluated!=null && input==null) {
-//			throw new TipiException("Input navajo not found when calling service: "+service+" supplied input: "+unevaluated);
-//		}
-//		if(input==null) {
-//			input = NavajoFactory.getInstance().createNavajo();
-//		}
-//		try {
-//			// Don't let NavajoClient touch your original navajo! It will mess things up.
-//			Navajo nn = input.copy();
-//			myContext.fireNavajoSent(input, service);
-//			
-//			Navajo result = NavajoClientFactory.getClient().doSimpleSend(nn, service);
-//			myContext.fireNavajoReceived(result, service);
-//			if(result.getHeader()!=null) {
-//				result.getHeader().setHeaderAttribute("sourceScript", result.getHeader().getRPCName());
-//			}
-//			myContext.loadNavajo(result, service);
-//
-//			
-//		} catch (ClientException e) {
-//			throw new TipiException("Error calling service: "+service,e);
-//		}
-		
 	}
 	
 	public void oldExecute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
@@ -158,7 +150,6 @@ public class TipiNewCallService extends TipiAction {
 				try {
 					result.write(System.err);
 				} catch (NavajoException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 					}
@@ -171,7 +162,6 @@ public class TipiNewCallService extends TipiAction {
 			
 			
 		} catch (ClientException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

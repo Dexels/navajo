@@ -26,7 +26,7 @@ public class TipiDumpNavajo extends TipiAction {
 	public void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
 		
 		Operand navajo = getEvaluatedParameter("input", event);
-		Operand filename = getEvaluatedParameter("filename", event);
+		Operand filename = getEvaluatedParameter("fileName", event);
 		String file = null;
 		PrintStream w = null;
 		
@@ -36,7 +36,9 @@ public class TipiDumpNavajo extends TipiAction {
 		try {
 			// if (evalTipi == null) {
 			if (file != null) {
-				w = new PrintStream(new FileOutputStream(file));
+				File f = new File(file);
+		//		 myContext.showInfo("Dumping navajo in file: "+f.getAbsolutePath(),"aapje");
+				w = new PrintStream(new FileOutputStream(f));
 			} else {
 				w = System.err;
 			}
