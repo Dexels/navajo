@@ -993,7 +993,7 @@ private final Navajo retryTransaction(String server, Navajo out, boolean useComp
     	System.err.println("Did: "+pastAttempts+" retries. Switching server");
     	disabledServers.put(getCurrentHost(), new Long(System.currentTimeMillis()));
     	System.err.println("Disabled server: "+getCurrentHost()+" for "+serverDisableTimeout+" millis." );
-    	switchServer(currentServerIndex,true);
+    	switchServer(currentServerIndex,false);
     	server = getCurrentHost();
 	}
     
@@ -1600,11 +1600,8 @@ public final String getCurrentHost(int serverIndex) {
 }
 
 public final void switchServer(int startIndex, boolean forceChange) {
-	if (serverUrls==null || serverUrls.length==0) {
-		return;
-	}
-	if (serverUrls.length==1) {
-		// Nothing to switch
+	
+	if (serverUrls==null || serverUrls.length == 0 || serverUrls.length == 1) {
 		return;
 	}
 	
@@ -1612,35 +1609,22 @@ public final void switchServer(int startIndex, boolean forceChange) {
 	int candidate = -1;
 	
 	for (int i = 0; i < serverUrls.length; i++) {
-		if ( serverLoads[i] < minload && serverLoads[i] != -1.0 ) { // If there is really a server with a lower load, use this server as candidate.
+		if ( serverLoads[i] < minload && serverLoads[i] != -1.0 && (!forceChange || i != currentServerIndex) ) { // If there is really a server with a lower load, use this server as candidate.
 			minload = serverLoads[i];
 			candidate = i;
 		}
 	}
 	
 	if ( candidate == -1 ) {
-		// Round robin...
-		if (currentServerIndex==(serverUrls.length-1)) {
-			currentServerIndex = 0;
-		} else {
-			currentServerIndex++;
-		}
+		throw new RuntimeException("No enabled servers left!");
 	} else {
 		currentServerIndex = candidate;
 	}
 	
 	System.err.println("currentServer = " + serverUrls[currentServerIndex] + " with load: " + serverLoads[currentServerIndex]);
 	
-	if (startIndex == currentServerIndex) {
-		//System.err.println("BACK AT THE ORIGINAL SERVER!!!!");
-//		if (!forceChange) {
-			return;
-//		}
-//		throw new RuntimeException("No enabled servers left!");
-	}
 	String nextServer = serverUrls[currentServerIndex];
-	//System.err.println("Current Server now: "+nextServer);
-
+	
 	if (disabledServers.containsKey(nextServer)) {
 		Long timeout = disabledServers.get(nextServer);
 		long t = timeout.longValue();
@@ -1650,7 +1634,7 @@ public final void switchServer(int startIndex, boolean forceChange) {
 			disabledServers.remove(nextServer);
 			return;
 		} else {
-			switchServer(startIndex,forceChange);
+			switchServer(startIndex, true);
 		}
 	}
 	
