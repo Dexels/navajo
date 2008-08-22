@@ -20,6 +20,9 @@ import com.dexels.navajo.tipi.*;
  * @version 1.0
  */
 public class TipiThread extends Thread {
+	private static final String IDLE = "idle";
+	private static final String BUSY = "busy";
+	private static final String WAITING = "waiting";
 	private final TipiThreadPool myPool;
 	private final String myName;
 	private final TipiContext myContext;
@@ -32,12 +35,19 @@ public class TipiThread extends Thread {
 		myContext = context;
 	}
 
+	public void setThreadState(String state) {
+		myPool.setThreadState(state);
+	}
+	
 	public void run() {
 		while (true) {
 			try {
 				try {
 					while (true) {
+						myPool.setThreadState(TipiThread.IDLE);
 						TipiExecutable te = myPool.blockingGetExecutable();
+						myPool.setThreadState(TipiThread.BUSY);
+
 						myContext.debugLog("event", "Thread: " + myName + " got an executable. Performing now");
 						try {
 							myPool.getContext().threadStarted(Thread.currentThread());

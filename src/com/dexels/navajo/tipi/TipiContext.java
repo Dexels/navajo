@@ -78,6 +78,9 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 	protected boolean fakeJars = false;
 	protected final Map<String, String> lazyMap = new HashMap<String, String>();
 	protected final List<String> includeList = new ArrayList<String>();
+
+	protected final List<ThreadActivityListener> threadStateListenerList = new ArrayList<ThreadActivityListener>();
+	
 	protected TipiErrorHandler eHandler;
 	protected String errorHandler;
 
@@ -1115,7 +1118,7 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 				e.printStackTrace();
 			}
 		parent.removeChild(comp);
-		Message m = stateMessage;
+//		Message m = stateMessage;
 
 //		pp.removeMessage(m);
 		if (comp instanceof TipiDataComponent) {
@@ -2808,5 +2811,25 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 
 	public final void showInternalError(String errorString) {
 		showInternalError(errorString,null);
+	}
+	
+	public String createExpressionUrl(String expression) throws TipiException {
+		throw new TipiException("Not implemented in this implementation"); 
+	}
+	public void fireThreadStateEvent(Map<TipiThread, String> threadStateMap, TipiThread tt, String state) {
+		// TODO Auto-generated method stub
+		for (ThreadActivityListener al :threadStateListenerList) {
+			al.threadActivity(threadStateMap, tt, state);
+		}
+		
+	}
+
+	public void addThreadStateListener(ThreadActivityListener ta) {
+		threadStateListenerList.add(ta);
+	}
+
+
+	public void removeThreadStateListener(ThreadActivityListener ta) {
+		threadStateListenerList.remove(ta);
 	}
 }

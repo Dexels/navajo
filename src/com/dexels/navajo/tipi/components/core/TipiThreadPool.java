@@ -31,6 +31,7 @@ public class TipiThreadPool {
 	private final TipiContext myContext;
 	private final Map<TipiExecutable,TipiEventListener> myListenerMap = Collections.synchronizedMap(new HashMap<TipiExecutable,TipiEventListener>());
 	private List<TipiThread> myThreadCollection = Collections.synchronizedList(new ArrayList<TipiThread>());
+	private final Map<TipiThread,String> threadStateMap = Collections.synchronizedMap(new HashMap<TipiThread,String>());
 
 	private boolean running = true;
 
@@ -94,7 +95,9 @@ public class TipiThreadPool {
 			TipiThread item = iter.next();
 			// item.shutdown();
 			item.interrupt();
+			
 		}
+		
 	}
 
 	public synchronized TipiExecutable blockingGetExecutable() throws ThreadShutdownException {
@@ -146,28 +149,15 @@ public class TipiThreadPool {
 
 	public void performAction(final TipiEvent te, final TipiEventListener listener) throws TipiException, TipiBreakException {
 		myListenerMap.put(te, listener);
-		// System.err.println(">>>>>>>>> >>>>>>>>>>>>>>>>>>>>>>>>>>>Enqueueing
-		// exe, myListenerMap is " + myListenerMap.size()+" thread:
-		// "+Thread.currentThread().getName());
-
 		myContext.enqueueExecutable(te);
 	}
-	// public synchronized Thread performAction(final TipiEvent te) {
-	// Thread t = new Thread(myGroup, new Runnable() {
-	// public void run() {
-	// try {
-	// te.performAction();
-	// myContext.threadEnded(te, Thread.currentThread());
-	// }
-	// catch (Exception ex) {
-	// ex.printStackTrace();
-	// }
-	// finally {
-	// System.err.println("Freeing thread");
-	// }
-	// }
-	// },"TipiThread");
-	// System.err.println("Thread deployed successfully");
-	// }
-	//
+
+	public void setThreadState(String state) {
+		Thread t = Thread.currentThread();
+		if(t instanceof TipiThread) {
+			TipiThread tt = (TipiThread)t;
+			threadStateMap.put(tt,state);
+			myContext.fireThreadStateEvent(threadStateMap,tt,state);
+		}
+	}
 }
