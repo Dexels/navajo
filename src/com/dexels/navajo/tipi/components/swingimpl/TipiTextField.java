@@ -104,6 +104,29 @@ public class TipiTextField extends TipiSwingComponentImpl {
 						
 			}});
 	
+		
+		myField.addFocusListener(new FocusListener(){
+
+			public void focusGained(FocusEvent e) {
+				try {
+					performTipiEvent("onFocusGained", null, false);
+				} catch (TipiBreakException e1) {
+					e1.printStackTrace();
+				} catch (TipiException e1) {
+					e1.printStackTrace();
+				}
+			}
+
+			public void focusLost(FocusEvent e) {
+				try {
+					performTipiEvent("onFocusLost", null, false);
+				} catch (TipiBreakException e1) {
+					e1.printStackTrace();
+				} catch (TipiException e1) {
+					e1.printStackTrace();
+				}
+				
+			}});
 		return myField;
 	}
 
@@ -137,7 +160,14 @@ public class TipiTextField extends TipiSwingComponentImpl {
 				myField.setText(myField.getText() + result);
 			}
 		}
-
+		if (name.equals("selectAll")) {
+			Operand o = compMeth.getEvaluatedParameter("text", event);
+			runSyncInEventThread(new Runnable(){
+				public void run() {
+					myField.selectAll();
+				}});
+				//setText(myField.getText() + result);
+		}
 	}
 
 }

@@ -1064,6 +1064,16 @@
       <methods />
    </tipiclass>
 
+   <tipiclass addtocontainer="true" class="TipiThreadActivityLogger" module="component" name="threadlogger" layoutmanager="false" package="com.dexels.navajo.tipi.components.swingimpl"
+      propertycomponent="false" studio-icon="label.gif" type="component" childcount="0">
+      <events>
+         <event name="onInstantiate" />
+      </events>
+      <values>
+      </values>
+      <methods />
+   </tipiclass>
+
    <tipiclass addtocontainer="true" class="TipiLabel" module="component" name="label" layoutmanager="false" package="com.dexels.navajo.tipi.components.swingimpl"
       propertycomponent="false" studio-icon="label.gif" type="component" childcount="0">
       <events>
@@ -1167,6 +1177,8 @@
             <param name="mode" type="string" />
          </event>
          <event name="onEnter" />
+          <event name="onFocusGained" />
+          <event name="onFocusLost" />
       </events>
       <values>
          <value direction="inout" name="text" type="string" property="text" />
@@ -1179,6 +1191,8 @@
          <value direction="in" name="visible" type="boolean" />
       </values>
       <methods>
+               <method name="selectAll"/>
+   
          <method name="append">
             <param name="text" type="string" />
          </method>
@@ -1207,6 +1221,7 @@
          <value direction="in" name="visible" type="boolean" />
       </values>
       <methods>
+         <method name="selectAll"/>
          <method name="append">
             <param name="text" type="string" />
          </method>
