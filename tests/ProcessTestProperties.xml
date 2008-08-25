@@ -1,0 +1,328 @@
+<tsl debug="request">
+  <message name="ResultsDate">
+     <property name="EmptyDate" direction="out">
+        <expression value="!?[/TestProperties/Date/EmptyTestDateProperty]"/>
+     </property>
+     <property name="NullDate" direction="out">
+        <expression value="[/TestProperties/Date/EmptyTestDateProperty] == null"/>
+     </property>
+     <property name="FullDate" direction="out">
+        <expression value="?[/TestProperties/Date/FullTestDateProperty]"/>
+     </property>
+     <property name="WrongDate" direction="out">
+        <expression value="!?[/TestProperties/Date/WrongTestDateProperty]"/>
+     </property>
+     <property name="DateYearAddition1" direction="out">
+        <expression value="([/TestProperties/Date/FullTestDateProperty] + 5#0#0#0#0#0) == ParseDate('2013-06-17', 'yyyy-MM-dd')"/>
+     </property>
+     <property name="DateYearAddition2" direction="out">
+        <expression value="([/TestProperties/Date/FullTestDateProperty] + 0#5#0#0#0#0) == ParseDate('2008-11-17', 'yyyy-MM-dd')"/>
+     </property>
+     <property name="DateYearAddition3" direction="out">
+        <expression value="(0#5#0#0#0#0 + [/TestProperties/Date/FullTestDateProperty]) == ParseDate('2008-11-17', 'yyyy-MM-dd')"/>
+     </property>
+     <property name="DateYearSubstraction1" direction="out">
+        <expression value="([/TestProperties/Date/FullTestDateProperty] - 5#0#0#0#0#0) == ParseDate('2003-06-17', 'yyyy-MM-dd')"/>
+     </property>
+     <property name="DateYearSubstraction2" direction="out">
+        <expression value="([/TestProperties/Date/FullTestDateProperty] - 0#6#0#0#0#0) == ParseDate('2007-12-17', 'yyyy-MM-dd')"/>
+     </property>
+     <property name="CompareDatesEqual" direction="out">
+        <expression value="[/TestProperties/Date/FullTestDateProperty] == ParseDate('2008-06-17', 'yyyy-MM-dd')"/>
+     </property>
+     <property name="CompareDatesNotEqual" direction="out">
+        <expression value="[/TestProperties/Date/FullTestDateProperty] != ParseDate('2008-05-17', 'yyyy-MM-dd')"/>
+     </property>
+     <property name="CompareDatesLess" direction="out">
+        <expression value="[/TestProperties/Date/FullTestDateProperty] &lt; ParseDate('2008-06-18', 'yyyy-MM-dd')"/>
+     </property>
+     <property name="CompareDatesGreater" direction="out">
+        <expression value="[/TestProperties/Date/FullTestDateProperty] &gt; ParseDate('2008-06-16', 'yyyy-MM-dd')"/>
+     </property>
+     <property name="CompareDatesLessOrEqual1" direction="out">
+        <expression value="[/TestProperties/Date/FullTestDateProperty] &lt;= ParseDate('2008-06-18', 'yyyy-MM-dd')"/>
+     </property>
+     <property name="CompareDatesGreaterOrEqual1" direction="out">
+        <expression value="[/TestProperties/Date/FullTestDateProperty] &gt;= ParseDate('2008-06-16', 'yyyy-MM-dd')"/>
+     </property>
+     <property name="CompareDatesLessOrEqual2" direction="out">
+        <expression value="[/TestProperties/Date/FullTestDateProperty] &lt;= ParseDate('2008-06-17', 'yyyy-MM-dd')"/>
+     </property>
+     <property name="CompareDatesGreaterOrEqual2" direction="out">
+        <expression value="[/TestProperties/Date/FullTestDateProperty] &gt;= ParseDate('2008-06-17', 'yyyy-MM-dd')"/>
+     </property>
+     <!-- What to do with this?? -->
+     <!--<property name="DateYearSubstraction3" direction="out">
+        <expression value="( 6#0#0#0#0#0 - [/TestProperties/Date/FullTestDateProperty] )"/>
+     </property>-->
+  </message>
+  <message name="ResultsInteger">
+     <property name="EmptyInteger" direction="out">
+        <expression value="!?[/TestProperties/Integer/EmptyTestIntegerProperty]"/>
+     </property>
+     <property name="NullInteger" direction="out">
+        <expression value="[/TestProperties/Integer/EmptyTestIntegerProperty] == null"/>
+     </property>
+     <property name="FullInteger" direction="out">
+        <expression value="?[/TestProperties/Integer/FullTestIntegerProperty]"/>
+     </property>
+     <property name="WrongInteger" direction="out">
+        <expression value="!?[/TestProperties/Integer/WrongTestIntegerProperty]"/>
+     </property>
+     <property name="IntegerGreater" direction="out">
+        <expression value="[/TestProperties/Integer/FullTestIntegerProperty] &gt; 12344"/>
+     </property>
+     <property name="IntegerLess" direction="out">
+        <expression value="[/TestProperties/Integer/FullTestIntegerProperty] &lt; 12346"/>
+     </property>
+     <property name="IntegerEquals" direction="out">
+        <expression value="[/TestProperties/Integer/FullTestIntegerProperty] == 12345"/>
+     </property>
+     <property name="IntegerNotEquals" direction="out">
+        <expression value="[/TestProperties/Integer/FullTestIntegerProperty] != 11345"/>
+     </property>
+     <property name="IntegerAddition1" direction="out">
+        <expression value="[/TestProperties/Integer/FullTestIntegerProperty] + 1000 == 13345"/>
+     </property>
+     <property name="IntegerAddition2" direction="out">
+        <expression value="[/TestProperties/Integer/FullTestIntegerProperty] + 1000.0 == 13345.0"/>
+     </property>
+     <property name="IntegerSubstraction1" direction="out">
+        <expression value="[/TestProperties/Integer/FullTestIntegerProperty] - 1000 == 11345"/>
+     </property>
+     <property name="IntegerSubstraction2" direction="out">
+        <expression value="[/TestProperties/Integer/FullTestIntegerProperty] - 1000.0 == 11345.0"/>
+     </property>
+     <property name="IntegerDivision1" direction="out">
+        <expression value="[/TestProperties/Integer/FullTestIntegerProperty] / 1000 == 12"/>
+     </property>
+     <property name="IntegerDivision2" direction="out">
+        <expression value="[/TestProperties/Integer/FullTestIntegerProperty] / 1000.0 == 12.345"/>
+     </property>
+     <property name="IntegerMultiplication1" direction="out">
+        <expression value="[/TestProperties/Integer/FullTestIntegerProperty] * 1000 == 12345000"/>
+     </property>
+     <property name="IntegerMultiplication2" direction="out">
+        <expression value="[/TestProperties/Integer/FullTestIntegerProperty] * 1000.0 == 12345000.0"/>
+     </property>
+     <property name="IntegerCastToString" direction="out">
+        <expression value="[/TestProperties/Integer/FullTestIntegerProperty] + '1000' == '123451000'"/>
+     </property>
+  </message>
+  <message name="ResultsBoolean">
+     <property name="EmptyBoolean" direction="out">
+        <!-- If the value attribute of a boolean property is not given, exists operator returns false! -->
+        <expression value="!?[/TestProperties/Boolean/EmptyTestBooleanProperty]"/>
+     </property>
+     <property name="FullBoolean" direction="out">
+        <expression value="?[/TestProperties/Boolean/FullTestBooleanProperty] AND [/TestProperties/Boolean/FullTestBooleanProperty]"/>
+     </property>
+     <property name="WrongBoolean" direction="out">
+        <expression value="!?[/TestProperties/Boolean/WrongTestBooleanProperty]"/>
+     </property>
+     <property name="BooleanOperation1" direction="out">
+        <expression value="([/TestProperties/Boolean/FullTestBooleanProperty] AND true)"/>
+     </property>
+  </message>
+  <message name="ResultsFloat">
+     <property name="EmptyFloat" direction="out">
+        <expression value="!?[/TestProperties/Float/EmptyTestFloatProperty]"/>
+     </property>
+     <property name="NullFloat" direction="out">
+        <expression value="[/TestProperties/Float/EmptyTestFloatProperty] == null"/>
+     </property>
+     <property name="FullFloat" direction="out">
+        <expression value="?[/TestProperties/Float/FullTestFloatProperty]"/>
+     </property>
+     <property name="WrongFloat" direction="out">
+        <expression value="!?[/TestProperties/Float/WrongTestFloatProperty]"/>
+     </property>
+     <property name="FloatAddition1" direction="out">
+        <expression value="[/TestProperties/Float/FullTestFloatProperty] + 1000.0 == 1010.0"/>
+     </property>
+     <property name="FloatAddition2" direction="out">
+        <expression value="[/TestProperties/Float/FullTestFloatProperty] + 1000 == 1010.0"/>
+     </property>
+     <property name="FloatDivision1" direction="out">
+        <expression value="[/TestProperties/Float/FullTestFloatProperty] / 10.0 == 1.0"/>
+     </property>
+     <property name="FloatDivision2" direction="out">
+        <expression value="[/TestProperties/Float/FullTestFloatProperty] / 10 == 1.0"/>
+     </property>
+     <property name="FloatEquals" direction="out">
+        <expression value="[/TestProperties/Float/FullTestFloatProperty] == 10.0"/>
+     </property>
+     <property name="FloatNotEquals" direction="out">
+        <expression value="[/TestProperties/Float/FullTestFloatProperty] != 10.1"/>
+     </property>
+     <property name="FloatGreater1" direction="out">
+        <expression value="[/TestProperties/Float/FullTestFloatProperty] &gt; 9.0"/>
+     </property>
+     <property name="FloatGreater2" direction="out">
+        <expression value="[/TestProperties/Float/FullTestFloatProperty] &gt; 9"/>
+     </property>
+     <property name="FloatLess1" direction="out">
+        <expression value="[/TestProperties/Float/FullTestFloatProperty] &lt; 11.0"/>
+     </property>
+     <property name="FloatLess2" direction="out">
+        <expression value="[/TestProperties/Float/FullTestFloatProperty] &lt; 11"/>
+     </property>
+     <property name="FloatCastToString" direction="out">
+        <expression value="[/TestProperties/Float/FullTestFloatProperty] + '1000' == '10.01000'"/>
+     </property>
+  </message>
+  <message name="ResultsMoney">
+     <property name="EmptyMoney" direction="out">
+        <!-- Unlike float, date, boolean and integer, an exists operator on an existing money property ALWAYS returns true! -->
+        <expression value="?[/TestProperties/Money/EmptyTestMoneyProperty]"/>
+     </property>
+     <property name="NullMoney" direction="out">
+        <expression value="[/TestProperties/Money/EmptyTestMoneyProperty] == null"/>
+     </property>
+     <property name="FullMoney" direction="out">
+        <expression value="?[/TestProperties/Money/FullTestMoneyProperty]"/>
+     </property>
+     <property name="WrongMoney" direction="out">
+        <!-- Unlike float, date, boolean and integer, an exists operator on an existing money property ALWAYS returns true! -->
+        <expression value="?[/TestProperties/Money/WrongTestMoneyProperty]"/>
+     </property>
+     <property name="MoneyAddition1" direction="out">
+        <expression value="[/TestProperties/Money/FullTestMoneyProperty] + 1000.0 == ToMoney(1010)"/>
+     </property>
+     <property name="MoneyAddition2" direction="out">
+        <expression value="[/TestProperties/Money/FullTestMoneyProperty] + 1000 == ToMoney(1010)"/>
+     </property>
+  </message>
+  <message name="ResultsString">
+     <property name="EmptyString" direction="out">
+        <expression value="?[/TestProperties/String/EmptyTestStringProperty] AND [/TestProperties/String/EmptyTestStringProperty] == ''"/>
+     </property>
+     <property name="FullString" direction="out">
+        <expression value="?[/TestProperties/String/FullTestStringProperty] AND [/TestProperties/String/FullTestStringProperty] == 'noot'"/>
+     </property>
+     <property name="NoNullString" direction="out">
+        <expression value="[/TestProperties/String/EmptyTestStringProperty] != null"/>
+     </property>
+     <property name="NotEqualsString" direction="out">
+        <expression value="[/TestProperties/String/FullTestStringProperty] != 'aap'"/>
+     </property>
+     <property name="StringConcatenation1" direction="out">
+        <expression value="'ape' + [/TestProperties/String/FullTestStringProperty] == 'apenoot'"/>
+     </property>
+     <property name="StringConcatenation2" direction="out">
+        <expression value="[/TestProperties/Float/FullTestFloatProperty] + [/TestProperties/String/FullTestStringProperty] == '10.0noot'"/>
+     </property>
+     <property name="StringConcatenation3" direction="out">
+        <expression value="[/TestProperties/Date/FullTestDateProperty] + [/TestProperties/String/FullTestStringProperty] == '2008-06-17 00:00:00.00noot'"/>
+     </property>
+     <property name="StringConcatenation4" direction="out">
+        <expression value="[/TestProperties/Integer/FullTestIntegerProperty] + [/TestProperties/String/FullTestStringProperty] == '12345noot'"/>
+     </property>
+  </message>
+  <message name="ResultsClocktime">
+     <property name="EmptyClocktime" direction="out">
+        <expression value="!?[/TestProperties/Clocktime/EmptyTestClocktimeProperty]"/>
+     </property>
+     <property name="NullClocktime" direction="out">
+        <expression value="[/TestProperties/Clocktime/EmptyTestClocktimeProperty] == null"/>
+     </property>
+     <property name="FullClocktime" direction="out">
+        <expression value="?[/TestProperties/Clocktime/FullTestClocktimeProperty]"/>
+     </property>
+     <property name="WrongClocktime" direction="out">
+        <expression value="!?[/TestProperties/Clocktime/WrongTestClocktimeProperty]"/>
+     </property>
+     <property name="ClocktimeAddition1" direction="out">
+        <expression value="[/TestProperties/Clocktime/FullTestClocktimeProperty] + 0#0#0#3#0#0 ==  ToClockTime('15:00:00')"/>
+     </property>
+     <property name="ClocktimeAddition2" direction="out">
+        <expression value="[/TestProperties/Clocktime/FullTestClocktimeProperty] + 0#0#0#0#10#0 ==  ToClockTime('12:10:00')"/>
+     </property>
+     <property name="EqualsClocktime1" direction="out">
+        <expression value="[/TestProperties/Clocktime/FullTestClocktimeProperty] == ToClockTime('12:00:00')"/>
+     </property>
+     <property name="EqualsClocktime2" direction="out">
+        <expression value="[/TestProperties/Clocktime/FullTestClocktimeProperty] == ToClockTime('12:00:01')"/>
+     </property>
+     <property name="NotEqualsClocktime1" direction="out">
+        <expression value="[/TestProperties/Clocktime/FullTestClocktimeProperty] != ToClockTime('12:01:00')"/>
+     </property>
+     <property name="ClocktimeLess" direction="out">
+        <expression value="[/TestProperties/Clocktime/FullTestClocktimeProperty] &lt; ToClockTime('12:01:00')"/>
+     </property>
+     <property name="ClocktimeLessEquals1" direction="out">
+        <expression value="[/TestProperties/Clocktime/FullTestClocktimeProperty] &lt;= ToClockTime('12:01:00')"/>
+     </property>
+     <property name="ClocktimeLessEquals2" direction="out">
+        <expression value="[/TestProperties/Clocktime/FullTestClocktimeProperty] &lt;= ToClockTime('12:00:00')"/>
+     </property>
+     <property name="ClocktimeGreater" direction="out">
+        <expression value="[/TestProperties/Clocktime/FullTestClocktimeProperty] &gt; ToClockTime('11:59:00')"/>
+     </property>
+     <property name="ClocktimeGreaterEquals1" direction="out">
+        <expression value="[/TestProperties/Clocktime/FullTestClocktimeProperty] &gt;= ToClockTime('11:59:00')"/>
+     </property>
+     <property name="ClocktimeGreaterEquals2" direction="out">
+        <expression value="[/TestProperties/Clocktime/FullTestClocktimeProperty] &gt;= ToClockTime('12:00:00')"/>
+     </property>
+  </message>
+  <message name="ResultsBinary">
+     <property name="EmptyBinary" direction="out">
+        <expression value="!?[/TestProperties/Binary/EmptyTestBinaryProperty]"/>
+     </property>
+     <property name="NullBinary" direction="out">
+        <expression value="[/TestProperties/Binary/EmptyTestBinaryProperty] == null"/>
+     </property>
+     <property name="FullBinary" direction="out">
+        <expression value="?[/TestProperties/Binary/FullTestBinaryProperty]"/>
+     </property>
+     <property name="EqualsBinary" direction="out">
+        <expression value="ToString([/TestProperties/Binary/FullTestBinaryProperty]) == 'apenoot'"/>
+     </property>
+     <property name="NotEqualsBinary" direction="out">
+        <expression value="ToString([/TestProperties/Binary/FullTestBinaryProperty]) != 'bpenoot'"/>
+     </property>
+  </message>
+  <message name="ResultsSelection">
+     <property name="EmptySingleSelection" direction="out">
+        <expression value="Size([/TestProperties/Selections/EmptySingleSelection]) == 0"/>
+     </property>
+     <property name="EmptyMultipleSelection" direction="out">
+        <expression value="Size([/TestProperties/Selections/EmptyMultipleSelection]) == 0"/>
+     </property>
+     <property name="FilledSingleSelectionSelected" direction="out">
+        <expression value="[/TestProperties/Selections/FilledSingleSelection] == 'val1'"/>
+     </property>
+     <property name="FilledSingleSelection" direction="out">
+        <!-- Note that the size of a singleselection return the size of the selected item!!!,
+             because only a multiple selection returns an arraylist of selected items -->  
+        <expression value="Size([/TestProperties/Selections/FilledSingleSelection]) == 4"/>
+     </property>
+     <property name="FilledMultipleSelection" direction="out">
+        <expression value="Size([/TestProperties/Selections/FilledMultipleSelection]) == 2"/>
+     </property>
+     <!-- Map selected options to multiple empty map -->
+     <param name="CheckMappedMultipleSelections">
+        <expression value="false"/>
+     </param>
+     <param name="Index">
+        <expression value="0"/>
+     </param>
+     <map object="com.dexels.navajo.adapter.MultipleEmptyMap">
+        <field name="emptyMaps">
+           <map ref="/TestProperties/Selections/FilledMultipleSelection">
+              <param name="CheckMappedMultipleSelections">
+                 <expression condition="[/@Index] == 0" value="[value] == 'val1'"/>
+                 <expression value="[value] == 'val2'"/>
+              </param>
+              <param name="Index">
+                 <expression value="[/@Index] + 1"/>
+              </param>
+           </map>
+        </field>
+     </map>
+     <property name="CheckMappedMultipleSelections" direction="out">
+        <expression value="[/@CheckMappedMultipleSelections]"/>
+     </property>
+  </message>
+</tsl>

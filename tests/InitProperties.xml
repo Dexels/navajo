@@ -1,0 +1,80 @@
+<tsl>
+ <message name="TestProperties">
+    <!-- dates -->
+    <message name="Date">
+       <property name="EmptyTestDateProperty" type="date" direction="in"/>
+       <property name="FullTestDateProperty" type="date" direction="in" value="2008-06-17"/>
+       <property name="WrongTestDateProperty" type="date" direction="in" value=""/>
+    </message>
+    <!-- integers -->
+    <message name="Integer">
+       <property name="EmptyTestIntegerProperty" type="integer" direction="in"/>
+       <property name="FullTestIntegerProperty" type="integer" direction="in" value="12345"/>
+       <property name="WrongTestIntegerProperty" type="integer" direction="in" value="aap"/>
+    </message>
+    <!-- boolean -->
+    <message name="Boolean">
+       <property name="EmptyTestBooleanProperty" type="boolean" direction="in"/>
+       <property name="FullTestBooleanProperty" type="boolean" direction="in" value="true"/>
+       <property name="WrongTestBooleanProperty" type="boolean" direction="in"/>
+    </message>
+    <!-- floats -->
+    <message name="Float">
+       <property name="EmptyTestFloatProperty" type="float" direction="in"/>
+       <property name="FullTestFloatProperty" type="float" direction="in" value="10.0"/>
+       <property name="WrongTestFloatProperty" type="float" direction="in" value="aap"/>
+    </message>
+    <!-- money -->
+    <message name="Money">
+       <property name="EmptyTestMoneyProperty" type="money" direction="in"/>
+       <property name="FullTestMoneyProperty" type="money" direction="in" value="10.0"/>
+       <property name="WrongTestMoneyProperty" type="money" direction="in" value="aap"/>
+    </message>
+    <!-- string -->
+    <message name="String">
+       <property name="EmptyTestStringProperty" type="string" direction="in"/>
+       <property name="FullTestStringProperty" type="string" direction="in" value="noot"/>
+    </message>
+    <!-- clocktime -->
+    <message name="Clocktime">
+       <property name="EmptyTestClocktimeProperty" type="clocktime" direction="in"/>
+       <property name="FullTestClocktimeProperty" type="clocktime" direction="in" value="12:00:00"/>
+       <property name="WrongTestClocktimeProperty" type="clocktime" direction="in" value="aap"/>
+    </message>
+    <!-- binary -->
+    <message name="Binary">
+       <property name="EmptyTestBinaryProperty" type="binary" direction="in"/>
+       <property name="FullTestBinaryProperty" type="binary" direction="out">
+          <expression value="ToBinary('apenoot')"/>
+       </property>
+    </message>
+    <!-- selection properties -->
+    <message name="Selections">
+       <property name="EmptySingleSelection" type="selection" direction="in" cardinality="1"/>
+       <property name="EmptyMultipleSelection" type="selection" direction="in" cardinality="+"/>
+       <property name="FilledSingleSelection" type="selection" direction="in" cardinality="1">
+          <option name="name1" value="val1" selected="1"/>
+          <option name="name2" value="val2" selected="0"/>
+          <option name="name3" value="val3" selected="0"/>
+       </property>
+       <property name="FilledMultipleSelection" type="selection" direction="in" cardinality="+">
+          <option name="name1" value="val1" selected="1"/>
+          <option name="name2" value="val2" selected="1"/>
+          <option name="name3" value="val3" selected="0"/>
+       </property>
+    </message>
+    <!-- array message -->
+    <message name="Array" type="array">
+       <message name="Array">
+           <property name="TestProperty" type="string" direction="in" value="vuur"/>
+       </message>
+       <message name="Array">
+           <property name="TestProperty" type="string" direction="in" value="teun"/>
+       </message>
+    </message>
+ </message>
+ <methods>
+   <method name="tests/ProcessTestProperties"/>
+   <method name="tests/ProcessTestFields"/>
+ </methods>
+</tsl>

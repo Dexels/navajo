@@ -1,0 +1,75 @@
+<tsl>
+  <map object="com.dexels.navajo.adapter.NavajoMap">
+     <field name="doSend">
+        <expression value="'tests/InitProperties'"/>
+     </field>
+     <message name="Results1">
+        <property name="ProxiedFullTestIntegerProperty1" direction="in">
+            <expression value="$property('/TestProperties/Integer/FullTestIntegerProperty') == 12345"/>
+        </property>
+        <property name="ProxiedFullTestDateProperty1" direction="in">
+            <expression value="$property('/TestProperties/Date/FullTestDateProperty') == ParseDate('17-06-2008', 'dd-MM-yyyy')"/>
+        </property>
+        <property name="ProxiedFullTestIntegerProperty2" direction="in">
+            <expression value="$integerProperty('/TestProperties/Integer/FullTestIntegerProperty') == 12345"/>
+        </property>
+        <property name="ProxiedFullTestDateProperty2" direction="in">
+            <expression value="$dateProperty('/TestProperties/Date/FullTestDateProperty') == ParseDate('17-06-2008', 'dd-MM-yyyy')"/>
+        </property>
+     </message>
+     <field name="messagePointer">
+        <expression value="'TestProperties/Date'"/>
+     </field>
+     <message name="Results2">
+        <map ref="message">
+            <property name="ProxiedFullTestDateProperty1" direction="in">
+                <expression value="$property('FullTestDateProperty') == ParseDate('17-06-2008', 'dd-MM-yyyy')"/>
+            </property>
+            <property name="ProxiedFullTestDateProperty2" direction="in">
+                <expression value="$dateProperty('FullTestDateProperty') == ParseDate('17-06-2008', 'dd-MM-yyyy')"/>
+            </property>
+        </map>
+     </message>
+     <field name="messagePointer">
+        <expression value="'/TestProperties/Integer'"/>
+     </field>
+     <message name="Results3">
+        <map ref="message">
+            <property name="ProxiedFullTestIntegerProperty1" direction="in">
+                <expression value="$property('FullTestIntegerProperty') == 12345"/>
+            </property>
+            <property name="ProxiedFullTestIntegerProperty2" direction="in">
+                <expression value="$integerProperty('FullTestIntegerProperty') == 12345"/>
+            </property>
+        </map>
+     </message>
+  </map>
+  <map object="com.dexels.navajo.adapter.NavajoMap">
+     <field name="doSend">
+        <expression value="'tests/InitProperties'"/>
+     </field>
+     <field name="propertyName">
+        <expression value="'/TestProperties/Date/FullTestDateProperty'"/>
+     </field>
+     <field name="dateProperty">
+        <expression value="TODAY"/>
+     </field>
+     <field name="propertyName">
+        <expression value="'/TestProperties/Date/EmptyTestDateProperty'"/>
+     </field>
+     <field name="dateProperty">
+        <expression value="null"/>
+     </field>
+     <field name="doSend">
+        <expression value="'tests/ProcessTestProperties'"/>
+     </field>
+     <message name="Results4">
+        <property name="CheckFullTestDateProperty" direction="in">
+            <expression value="$property('/ResultsDate/FullDate')"/>
+        </property>
+        <property name="CheckEmptyTestDateProperty" direction="in">
+            <expression value="$property('/ResultsDate/EmptyDate')"/>
+        </property>
+     </message>
+  </map>
+</tsl>

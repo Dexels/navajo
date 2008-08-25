@@ -1,0 +1,293 @@
+<tsl debug="response">
+ <map object="com.dexels.navajo.test.TestBean">
+    <field name="stringField">
+       <expression value="[/TestProperties/String/FullTestStringProperty]"/>
+    </field>
+    <field name="integerField">
+       <expression value="[/TestProperties/Integer/FullTestIntegerProperty]"/>
+    </field>
+    <field name="primitiveInt">
+       <expression value="[/TestProperties/Integer/FullTestIntegerProperty]"/>
+    </field>
+    <field name="floatField">
+       <expression value="[/TestProperties/Float/FullTestFloatProperty]"/>
+    </field>
+    <field name="primitiveFloat">
+       <expression value="[/TestProperties/Float/FullTestFloatProperty]"/>
+    </field>
+    <field name="doubleField">
+       <expression value="[/TestProperties/Float/FullTestFloatProperty]"/>
+    </field>
+    <field name="primitiveDouble">
+       <expression value="[/TestProperties/Float/FullTestFloatProperty]"/>
+    </field>
+    <field name="dateField">
+       <expression value="[/TestProperties/Date/FullTestDateProperty]"/>
+    </field>
+    <field name="booleanField">
+       <expression value="[/TestProperties/Boolean/FullTestBooleanProperty]"/>
+    </field>
+    <field name="primitiveBoolean">
+       <expression value="[/TestProperties/Boolean/FullTestBooleanProperty]"/>
+    </field>
+    <field name="moneyField">
+       <expression value="[/TestProperties/Money/FullTestMoneyProperty]"/>
+    </field>
+    <field name="clocktimeField">
+       <expression value="[/TestProperties/Clocktime/FullTestClocktimeProperty]"/>
+    </field>
+    <field name="binaryField">
+       <expression value="[/TestProperties/Binary/FullTestBinaryProperty]"/>
+    </field>
+    <!-- Results -->
+    <message name="Results1">
+        <property name="StringField1" direction="out">
+           <expression value="$stringField"/>
+        </property>
+        <property name="IntegerField1" direction="out">
+           <expression value="$integerField"/>
+        </property>
+        <property name="PrimitiveInteger1" direction="out">
+           <expression value="$primitiveInt"/>
+        </property>
+        <property name="FloatField1" direction="out">
+           <expression value="$floatField"/>
+        </property>
+        <property name="PrimitiveFloat1" direction="out">
+           <expression value="$primitiveFloat"/>
+        </property>
+        <property name="DoubleField1" direction="out">
+           <expression value="$doubleField"/>
+        </property>
+        <property name="PrimitiveDouble1" direction="out">
+           <expression value="$primitiveDouble"/>
+        </property>
+        <property name="DateField1" direction="out">
+           <expression value="$dateField"/>
+        </property>
+        <property name="BooleanField1" direction="out">
+           <expression value="$booleanField"/>
+        </property>
+        <property name="PrimitiveBoolean1" direction="out">
+           <expression value="$primitiveBoolean"/>
+        </property>
+        <property name="MoneyField1" direction="out">
+           <expression value="$moneyField"/>
+        </property>
+        <property name="ClocktimeField1" direction="out">
+           <expression value="$clocktimeField"/>
+        </property>
+        <property name="BinaryField1" direction="out">
+           <expression value="$binaryField"/>
+        </property>
+    </message>
+    <map object="com.dexels.navajo.adapter.NavajoMap">
+       <field name="useCurrentOutDoc">
+          <expression value="true"/>
+       </field>
+       <field name="doSend">
+          <expression value="'tests/ProcessCheckTypes'"/>
+       </field>
+       <field name="append">
+          <expression value="'/'"/>
+       </field>
+    </map>
+    <!-- Bean tests -->
+    <message name="Results3">
+       <map object="com.dexels.navajo.test.TestBean">
+           <!-- Single Bean -->
+           <message name="SubBean">
+              <map ref="subBean">
+                  <property name="BeanName1" direction="in"> 
+                     <expression value="$beanName == 'MyBean'"/>
+                  </property>
+                  <field name="beanName">
+                     <expression value="'AnotherName'"/>
+                  </field>
+                  <property name="BeanName2" direction="in">
+                     <expression value="$beanName == 'AnotherName'"/>
+                  </property>
+              </map>
+           </message>
+           <!-- Multiple Beans -->
+           <param name="Index">
+              <expression value="0"/>
+           </param>
+           <message name="SubBeans">
+              <map ref="subBeans">
+                 <property name="BeanName" direction="in">
+                    <expression condition="[/@Index] == 0" value="$beanName == 'aap'"/>
+                    <expression condition="[/@Index] == 1" value="$beanName == 'noot'"/>
+                    <expression value="$beanName == 'mies'"/>
+                 </property>
+                 <param name="Index">
+                   <expression value="[/@Index] + 1"/>
+                 </param>
+              </map>
+           </message>
+           <property name="BeanCounts1" direction="in">
+              <expression value="[/@Index] == 3"/>
+           </property>
+           <!-- Param array -->
+           <param name="Index">
+              <expression value="0"/>
+           </param>
+           <param name="SubBeans" type="array">
+               <map ref="subBeans">
+                  <param name="BeanName">
+                    <expression value="$beanName"/>
+                 </param>
+                 <param name="../Index">
+                   <expression value="[/@Index] + 1"/>
+                 </param>
+               </map>
+           </param>
+           <property name="BeanCounts2" direction="in">
+              <expression value="[/@Index] == 3"/>
+           </property>
+           <!-- Processing param array, method 1 -->
+           <param name="Index">
+              <expression value="0"/>
+           </param>
+           <param name="TestParamArray1">
+              <expression value="false"/>
+           </param>
+           <message name="ProcessParams1" type="array" >
+             <map object="com.dexels.navajo.adapter.MultipleEmptyMap">
+               <field name="emptyMaps">
+                  <map ref="/@SubBeans">
+                     <message name="ProcessParams">
+                        <param name="../TestParamArray1">
+                           <expression condition="[/@Index] == 0" value="[@BeanName] == 'aap'"/>
+                           <expression condition="[/@Index] == 1" value="[@BeanName] == 'noot'"/>
+                           <expression value="[@BeanName] == 'mies'"/>
+                        </param>
+                        <property name="BeanName" direction="in">
+                           <expression condition="[/@Index] == 0" value="[@BeanName] == 'aap'"/>
+                           <expression condition="[/@Index] == 1" value="[@BeanName] == 'noot'"/>
+                           <expression value="[@BeanName] == 'mies'"/>
+                        </property>
+                     </message> 
+                     <param name="../Index">
+                       <expression value="[/@Index] + 1"/>
+                     </param>
+                  </map>
+               </field>
+             </map>
+           </message>
+           <property name="BeanCounts3" direction="in">
+              <expression value="[/@Index] == 3"/>
+           </property>
+           <property name="TestParamArray1" direction="in">
+              <expression value="[/@TestParamArray1]"/>
+           </property>
+           <!-- Processing param array, method 2 -->
+           <param name="Index">
+              <expression value="0"/>
+           </param>
+           <message name="ProcessParams2" type="array" mode="ignore"/>
+           <map object="com.dexels.navajo.adapter.MultipleEmptyMap">
+               <field name="emptyMaps">
+                  <map ref="/@SubBeans">
+                     <message name="ProcessParams2"/>
+                     <param name="../Index">
+                       <expression value="[/@Index] + 1"/>
+                     </param>
+                  </map>
+               </field>
+           </map>
+           <property name="BeanCounts4" direction="in">
+              <expression value="[/@Index] == 3"/>
+           </property>
+           <param name="SingleBeanFieldTest">
+              <expression value="false"/>
+           </param>
+           <!-- Map array message to single bean -->
+           <field name="subBean">
+              <map ref="/TestProperties/String">
+                 <field name="beanName">
+                    <expression value="[FullTestStringProperty]"/>
+                 </field>
+                 <param name="SingleBeanFieldTest">
+                    <expression value="$beanName == 'noot'"/>
+                 </param>
+              </map>
+           </field>
+           <property name="SingleBeanFieldTest" direction="in">
+              <expression value="[/@SingleBeanFieldTest]"/>
+           </property>
+           <!-- Map array message to beans -->
+           <param name="ArrayPropertyTest">
+              <expression value="false"/>
+           </param>
+           <param name="MultipleBeanFieldTest">
+              <expression value="false"/>
+           </param>
+           <param name="Index">
+              <expression value="0"/>
+           </param>
+           <field name="subBeans">
+              <map ref="/TestProperties/Array">
+                 <param name="ArrayPropertyTest">
+                    <expression condition="[/@Index] == 0" value="[TestProperty] == 'vuur'"/>
+                    <expression value="[TestProperty] == 'teun'"/>
+                 </param>
+                 <field name="beanName">
+                    <expression value="[TestProperty]"/>
+                 </field>
+                 <param name="MultipleBeanFieldTest">
+                    <expression condition="[/@Index] == 0" value="$beanName == 'vuur'"/>
+                    <expression value="$beanName == 'teun'"/>
+                 </param>
+                 <param name="Index">
+                    <expression value="[/@Index] + 1"/>
+                 </param>
+              </map>
+           </field>
+           <property name="ArrayPropertyTest" direction="in">
+              <expression value="[/@ArrayPropertyTest]"/>
+           </property>
+           <property name="MultipleBeanFieldTest" direction="in">
+              <expression value="[/@MultipleBeanFieldTest]"/>
+           </property>
+           <property name="BeanCounts5" direction="in">
+              <expression value="[/@Index] == 2"/>
+           </property>
+           <!-- Map array message to beans with filter -->
+           <param name="Index">
+              <expression value="0"/>
+           </param>
+           <field name="subBeans">
+              <map ref="/TestProperties/Array" filter="[TestProperty] == 'vuur'">
+                 <param name="ArrayPropertyTest">
+                    <expression value="[TestProperty] == 'vuur'"/>
+                 </param>
+                 <param name="Index">
+                    <expression value="[/@Index] + 1"/>
+                 </param>
+              </map>
+           </field>
+           <property name="BeanCounts6" direction="in">
+              <expression value="[/@Index] == 1"/>
+           </property>
+           <!-- Map beans to array message with filter --> 
+           <param name="Index">
+              <expression value="0"/>
+           </param>
+           <message name="SubBeans">
+              <map ref="subBeans" filter="$beanName == 'aap'">
+                 <property name="BeanName" direction="in">
+                    <expression value="$beanName == 'aap'"/>
+                 </property>
+                 <param name="Index">
+                   <expression value="[/@Index] + 1"/>
+                 </param>
+              </map>
+           </message>
+           <property name="BeanCounts7" direction="in">
+              <expression value="[/@Index] == 1"/>
+           </property>
+       </map> 
+    </message>
+ </map>
+</tsl>
