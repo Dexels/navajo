@@ -45,6 +45,13 @@ public interface StoreInterface {
    * @param a
    */
   public void storeAccess(final Map accessMap);
+  
+  /**
+   * Method to store multiple access objects in the (persistent) Navajo store.
+   *
+   * @param a
+   */
+  public void storeAuditLogs(final Set auditLogSet);
 
   /**
    * Set the url for the database.

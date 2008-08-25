@@ -2,6 +2,7 @@ package com.dexels.navajo.server.statistics;
 
 import com.dexels.navajo.events.NavajoEvent;
 import com.dexels.navajo.events.NavajoEventRegistry;
+import com.dexels.navajo.events.types.AuditLogEvent;
 import com.dexels.navajo.events.types.NavajoRequestEvent;
 import com.dexels.navajo.events.types.NavajoResponseEvent;
 import com.dexels.navajo.mapping.AsyncMappable;
@@ -15,7 +16,9 @@ import com.dexels.navajo.server.jmx.NavajoNotification;
 import com.dexels.navajo.util.AuditLog;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import javax.management.AttributeChangeNotification;
 import javax.management.Notification;
@@ -57,6 +60,7 @@ public final class StatisticsRunner extends GenericThread implements StatisticsR
   private StoreInterface myStore = null;
   @SuppressWarnings("unchecked")
   private Map todo = new HashMap();
+  private Set auditlogs = new HashSet();
   private static String id = "Navajo StatisticsRunner";
   
   private static Object semaphore = new Object();
@@ -111,6 +115,7 @@ public final class StatisticsRunner extends GenericThread implements StatisticsR
 			  
 			  NavajoEventRegistry.getInstance().addListener(NavajoRequestEvent.class, instance);
 			  NavajoEventRegistry.getInstance().addListener(NavajoResponseEvent.class, instance);
+			  NavajoEventRegistry.getInstance().addListener(AuditLogEvent.class, instance);
 			  
 			  System.err.println("Started StatisticsRunner version $Id$ using store: " + instance.myStore.getClass().getName());
 		  }
@@ -134,6 +139,7 @@ public final class StatisticsRunner extends GenericThread implements StatisticsR
   public final void worker() {
 
 	  HashMap copyOfTodo = null;
+	  HashSet copyOfAuditLogs = null;
 	  synchronized ( semaphore ) {
 		  if ( todo.size() == 0 ) {
 			  return;
@@ -144,10 +150,12 @@ public final class StatisticsRunner extends GenericThread implements StatisticsR
 		  }
 		  previousSize = level;
 		  copyOfTodo = new HashMap(todo);
+		  copyOfAuditLogs = new HashSet(auditlogs);
 		  todo.clear();
-		  
+		  auditlogs.clear();
 	  }
 	  myStore.storeAccess(copyOfTodo);
+	  myStore.storeAuditLogs(copyOfAuditLogs);
   }
 
   /**
@@ -162,6 +170,18 @@ public final class StatisticsRunner extends GenericThread implements StatisticsR
 	  }
 	  synchronized (this ) {
 		  if ( todo.size() > 10 ) {
+			  notifyAll();
+		  }
+	  }
+  }
+  
+  @SuppressWarnings("unchecked")
+  public final void addAuditLog(final AuditLogEvent ale) {
+	  synchronized ( semaphore ) {
+		  auditlogs.add( ale );
+	  }
+	  synchronized (this ) {
+		  if ( auditlogs.size() > 1 ) {
 			  notifyAll();
 		  }
 	  }
@@ -254,6 +274,10 @@ public final class StatisticsRunner extends GenericThread implements StatisticsR
 		  NavajoResponseEvent nre = (NavajoResponseEvent) ne;
 		  if (  isEnabled() && !Dispatcher.isSpecialwebservice( nre.getAccess().getRpcName() )) {
 			  addAccess(nre.getAccess(), nre.getException(), null);
+		  }
+	  } else if ( ne instanceof AuditLogEvent ) {
+		  if (  isEnabled() ) {
+			 addAuditLog( (AuditLogEvent) ne);
 		  }
 	  } else if ( ne instanceof NavajoRequestEvent ) {
 		  NavajoRequestEvent nre = (NavajoRequestEvent) ne;
