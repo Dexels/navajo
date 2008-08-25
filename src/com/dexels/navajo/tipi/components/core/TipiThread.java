@@ -19,7 +19,7 @@ import com.dexels.navajo.tipi.*;
  * @author not attributable
  * @version 1.0
  */
-public class TipiThread extends Thread {
+public class TipiThread extends Thread implements Comparable<TipiThread>{
 	private static final String IDLE = "idle";
 	private static final String BUSY = "busy";
 	private static final String WAITING = "waiting";
@@ -81,5 +81,9 @@ public class TipiThread extends Thread {
 				// System.err.println("Reviving dying thread...");
 			}
 		}
+	}
+
+	public int compareTo(TipiThread o) {
+		return getName().compareTo(o.getName());
 	}
 }

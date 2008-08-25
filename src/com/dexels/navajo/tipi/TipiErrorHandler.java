@@ -21,14 +21,11 @@ import com.dexels.navajo.document.*;
  * @version 1.0
  */
 public interface TipiErrorHandler {
-	public boolean hasErrors(Navajo n);
+	public String hasErrors(Navajo n);
 
-	public void showError();
-
-	public void showError(String text);
-
-	public void showError(Exception e);
-
+	
+	public void initResource();
+		
 	// public Object createContainer();
 	public void setContext(TipiContext c);
 

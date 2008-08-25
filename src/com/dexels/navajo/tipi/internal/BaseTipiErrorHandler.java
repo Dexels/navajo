@@ -24,35 +24,33 @@ import com.dexels.navajo.tipi.*;
  * @author not attributable
  * @version 1.0
  */
-public abstract class BaseTipiErrorHandler implements TipiErrorHandler {
-	private String errorCode, errorMessage;
+public class BaseTipiErrorHandler implements TipiErrorHandler {
+	private String  errorMessage;
 	private TipiContext context;
-	private ResourceBundle res;
+	private ResourceBundle errorMessageBundle;
 
 	public BaseTipiErrorHandler() {
-		initResource();
+//		initResource();
 	}
 
-	private void initResource() {
+	public void initResource() {
 		try {
-			res = ResourceBundle.getBundle("tipi.validation");
-			
+			errorMessageBundle = new PropertyResourceBundle( context.getTipiResourceStream("validation.properties"));
+//			errorMessageBundle = ResourceBundle.getBundle("tipi.validation");
 		} catch (Exception ex) {
-//			System.err.println("No tipi.validation resource found.");
-			res = null;
+//			ex.printStackTrace();
+			System.err.println("No validation bundle found.");
+			errorMessageBundle = null;
 		}
 	}
 
-	public boolean hasErrors(Navajo n) {
+	public String hasErrors(Navajo n) {
 		if (n != null) {
-			// System.err.println("Checking for errors");
 			Message error = n.getMessage("error");
 			Message conditions = n.getMessage("ConditionErrors");
 			if (error != null) {
-				errorCode = error.getProperty("code").getValue();
 				errorMessage = error.getProperty("message").getValue();
-				// System.err.println("Found:" + getErrorMessage());
-				return true;
+				return errorMessage;
 			} else if (conditions != null) {
 				ArrayList<Message> failures = conditions.getAllMessages();
 				errorMessage = "Conditionele fouten:\n";
@@ -60,42 +58,48 @@ public abstract class BaseTipiErrorHandler implements TipiErrorHandler {
 					Message current = failures.get(i);
 //					String expression = current.getProperty("FailedExpression").getValue();
 					String id = current.getProperty("Id").getValue();
-					errorMessage = errorMessage + getConditionErrorDescription(id) + "\n";
+					errorMessage = errorMessage + getConditionErrorDescription(id,current) + "\n";
 					// current.write(System.err);
 
 				}
 				// System.err.println("Message: "+errorMessage);
 				// Thread.dumpStack();
-				return true;
+				return errorMessage;
 			} else {
-				return false;
+				return null;
 			}
 		} else {
-			return false;
+			return null;
 		}
 	}
 
-	private String getConditionErrorDescription(String id) {
-		String description = id;
+	private String getConditionErrorDescription(String id, Message current) {
+//		String description = id;
 		try {
-			if(res!=null) {
-				String found = res.getString(id);
-				description = found;
+			if(errorMessageBundle!=null) {
+				String found = errorMessageBundle.getString(id);
+				if(found!=null) {
+					return found;
+				}
 			}
 		} catch (MissingResourceException ex) {
 			System.err.println("----> Cannot find reference for condition errorId: " + id);
 		}
-		return description;
+		Property description = current.getProperty("Description");
+		if(description!=null) {
+			return ""+description.getTypedValue();
+		}
+		return id;
 	}
 
 	public void setContext(TipiContext c) {
 		context = c;
-		if(res==null) {
+		if(errorMessageBundle==null) {
 			// attempt remote propertyresource bundle;
 			try {
 				InputStream tipiResourceStream = c.getTipiResourceStream("validation.properties");
 				if(tipiResourceStream!=null) {
-					res = new PropertyResourceBundle(tipiResourceStream);
+					errorMessageBundle = new PropertyResourceBundle(tipiResourceStream);
 				} else {
 //					System.err.println("Remote retrieve of validation.properties failed.");
 				}
@@ -113,7 +117,6 @@ public abstract class BaseTipiErrorHandler implements TipiErrorHandler {
 		return errorMessage;
 	}
 
-	public String getErrorCode() {
-		return errorCode;
-	}
+
+
 }

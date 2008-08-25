@@ -47,13 +47,13 @@ public class TipiEvent implements TipiExecutable {
 		ti.mySource = this.mySource;
 		ti.myComponent = this.myComponent;
 		ti.myExecutables = this.myExecutables;
-		ti.eventParameterMap = new HashMap();
+		ti.eventParameterMap = new HashMap<String,TipiValue>();
 
-		Iterator iter = this.eventParameterMap.keySet().iterator();
+		Iterator<String> iter = this.eventParameterMap.keySet().iterator();
 
 		while ( iter.hasNext() ) {
-			String key = (String) iter.next();
-			TipiValue tv = (TipiValue) ((TipiValue) this.eventParameterMap.get(key)).clone();
+			String key = iter.next();
+			TipiValue tv = (TipiValue) this.eventParameterMap.get(key).clone();
 			ti.eventParameterMap.put(key, tv);
 		}
 		
@@ -161,12 +161,15 @@ public class TipiEvent implements TipiExecutable {
 		performAction(myComponent, null);
 	}
 
-	public void performAction(TipiEventListener listener) throws TipiException, TipiBreakException {
+	public void performAction(TipiEventListener listener) throws TipiBreakException {
 		performAction(listener, null);
 	}
 
 	public TipiValue getEventParameter(String name) {
 		return eventParameterMap.get(name);
+	}
+	public void addEventParameter(String myKey, TipiValue tv) {
+		eventParameterMap.put(myKey,tv);
 	}
 
 	public String getBlockParam(String name) {
@@ -297,5 +300,6 @@ public class TipiEvent implements TipiExecutable {
 	public Map<String,TipiValue> getParameters() {
 		return new HashMap<String,TipiValue>(eventParameterMap);
 	}
+
 
 }

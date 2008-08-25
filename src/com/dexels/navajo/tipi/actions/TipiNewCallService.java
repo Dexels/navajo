@@ -28,7 +28,7 @@ public class TipiNewCallService extends TipiAction {
 		
 		TipiValue parameter = getParameter("input");
 		//String unevaluated = null;
-
+		
 		if(parameter!=null) {
 			//unevaluated = parameter.getValue();
 		}
@@ -69,6 +69,7 @@ public class TipiNewCallService extends TipiAction {
 		if(inputOperand!=null) {
 			input = (Navajo) inputOperand.value;
 		}
+		setThreadState("waiting");
 		TipiConnector defaultConnector = myContext.getDefaultConnector();
 		if(connector==null || connector.value==null) {
 			//long timeStamp = System.currentTimeMillis();
@@ -93,6 +94,8 @@ public class TipiNewCallService extends TipiAction {
 				ttt.doTransaction(input,service,destAddress);
 			}
 		}
+		setThreadState("busy");
+
 	}
 	
 	public void oldExecute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {

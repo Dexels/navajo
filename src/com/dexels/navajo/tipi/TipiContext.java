@@ -175,7 +175,8 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 		Iterator<TipiExtension> tt = ServiceRegistry.lookupProviders(TipiExtension.class);
 		initializeExtensions(tt);
 //		getClassLoader().getResources
-	
+
+
 //		System.err.println("FORCING FAKE MODE!!! BEWARE!!!!!!!!!!");
 		if (coreExtensionList.isEmpty()) {
 			System.err.println("Beware: no extensions. Running without jars? Entering fake mode...");
@@ -191,7 +192,6 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 			hasDebugger = true;
 			System.err.println("debugger loaded");
 		} catch (Throwable e) {
-			System.err.println("Starting without development environment");
 			hasDebugger = false;
 		}
 
@@ -235,7 +235,6 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 		} catch (Exception e) {
 			System.err.println("Could not load extension: "+extensionName+" message: "+e.getMessage());
 			if (e instanceof ClassNotFoundException) {
-				System.err.println("Just not found.");
 			} else {
 				System.err.println("Something else: ");
 				e.printStackTrace();
@@ -367,9 +366,7 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 	}
 
 	public void handleException(Exception e) {
-		if (eHandler != null) {
-			eHandler.showError(e);
-		}
+		showInternalError("Error", e);
 	}
 
 	public int getPoolSize() {
@@ -616,11 +613,13 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 		switchToDefinition(definitionName);
 		if (errorHandler != null) {
 			try {
-				Class<TipiErrorHandler> c = (Class<TipiErrorHandler>) getTipiClass(errorHandler);
-				if (c != null) {
-					eHandler = c.newInstance();
-					eHandler.setContext(this);
-				}
+				System.err.println("Error handlers are deprecated remove 'error' attribute!");
+//				Class<TipiErrorHandler> c = (Class<TipiErrorHandler>) getTipiClass(errorHandler);
+//				if (c != null) {
+//					eHandler = c.newInstance();
+//					eHandler.setContext(this);
+//					eHandler.initResource();
+//				}
 			} catch (Exception e) {
 				System.err.println("Error instantiating TipiErrorHandler!");
 				e.printStackTrace();
@@ -656,6 +655,7 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 			// if (!"__ignore".equals(dir)) {
 			createClient(child);
 			// }
+			return;
 		}
 		// if (childName.equals("tipi-config")) {
 		// configureTipi(child);
@@ -684,6 +684,27 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 			parseParser(child);
 			return;
 		}
+		
+		if (childName.equals("tml") ) {
+			String service = child.getStringAttribute("service");
+			if(service==null) {
+				throw new TipiException("Inline tml needs a 'service' attribute");
+			}
+			StringWriter sw = new StringWriter();
+			try {
+				child.write(sw);
+				StringReader sr = new StringReader(sw.toString());
+				Navajo n = NavajoFactory.getInstance().createNavajo(sr);
+				addNavajo(service, n);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			return;
+		}
+		
+		
 		// if (childName.equals("tipi-resource")) {
 		// parseResource(child);
 		// return;
@@ -704,7 +725,7 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 			parseDefinition(child);
 			return;
 		}
-
+		throw new TipiException("Wtf? What is this tag: "+childName);
 	}
 
 	private void parseStorage(XMLElement child) {
@@ -1550,7 +1571,7 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 			ex.printStackTrace();
 			if (eHandler != null && Exception.class.isInstance(ex)) {
 				debugLog("data", "send error occurred:" + ex.getMessage() + " method: " + service);
-				eHandler.showError((Exception) ex);
+				showInternalError("Probleem:",(Exception) ex);
 				if (breakOnError) {
 					throw new TipiBreakException(TipiBreakException.BREAK_EVENT);
 				}
@@ -1631,8 +1652,9 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 	public void loadNavajo(Navajo reply, String method, String tipiDestinationPath, TipiEvent event, boolean breakOnError)
 			throws TipiBreakException {
 		if (reply != null) {
-			if (eHandler != null) {
-				if (eHandler.hasErrors(reply)) {
+//			if (eHandler != null) {
+				String errorMessage = eHandler.hasErrors(reply);
+				if (errorMessage!=null) {
 					System.err.println("Errors detected. ");
 					boolean hasUserDefinedErrorHandler = false;
 						List<TipiDataComponent> tipis = getTipiInstancesByService(method);
@@ -1651,16 +1673,16 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 							}
 						}
 					if (!hasUserDefinedErrorHandler) {
-						eHandler.showError();
+						showInternalError(errorMessage);
 					}
 					if (breakOnError) {
 						throw new TipiBreakException(TipiBreakException.WEBSERVICE_BREAK);
 					}
 					return;
 				}
-			} else {
-//				System.err.println("No error handler!");
-			}
+//			} else {
+////				System.err.println("No error handler!");
+//			}
 			try {
 				loadTipiMethod(reply, method);
 			} catch (Exception ex) {
@@ -2404,6 +2426,11 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 		System.err.println("Tipi code base: "+tipiCodeBase);
 			setTipiResourceLoader(tipiCodeBase);
 			setGenericResourceLoader(resourceCodeBase);
+
+	
+			eHandler = new BaseTipiErrorHandler();
+			eHandler.setContext(this);
+			eHandler.initResource();
 	}
 
 	public void fireTipiContextEvent(TipiComponent source, String type, Map<String,Object> event, boolean sync) {
@@ -2803,7 +2830,6 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 	}
 	
 	public void showInternalError(String errorString, Throwable t) {
-		System.err.println("Internal error: "+errorString);
 		if(t!=null) {
 			t.printStackTrace();
 		}
@@ -2816,12 +2842,15 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 	public String createExpressionUrl(String expression) throws TipiException {
 		throw new TipiException("Not implemented in this implementation"); 
 	}
-	public void fireThreadStateEvent(Map<TipiThread, String> threadStateMap, TipiThread tt, String state) {
-		// TODO Auto-generated method stub
+	public void fireThreadStateEvent(Map<TipiThread, String> threadStateMap, TipiThread tt, String state, int queueSize) {
 		for (ThreadActivityListener al :threadStateListenerList) {
-			al.threadActivity(threadStateMap, tt, state);
+			al.threadActivity(threadStateMap, tt, state,queueSize);
 		}
 		
+	}
+	
+	public void setThreadState(String state) {
+		myThreadPool.setThreadState(state);
 	}
 
 	public void addThreadStateListener(ThreadActivityListener ta) {

@@ -44,6 +44,10 @@ public abstract class TipiAction implements TipiExecutable {
 		// Thread.dumpStack();
 		parameterMap.put(tv.getName(), tv);
 	}
+	
+	public void setThreadState(String state) {
+		myContext.setThreadState(state);
+	}
 
 	public void performAction(TipiEvent te, TipiExecutable parent, int index) throws TipiBreakException, TipiException {
 		myContext.debugLog("action", myType);

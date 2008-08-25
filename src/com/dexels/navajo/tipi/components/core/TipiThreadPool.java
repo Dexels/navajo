@@ -29,9 +29,10 @@ public class TipiThreadPool {
 	// HashSet());
 	private final List<TipiExecutable> myWaitingQueue = new ArrayList<TipiExecutable>();
 	private final TipiContext myContext;
-	private final Map<TipiExecutable,TipiEventListener> myListenerMap = Collections.synchronizedMap(new HashMap<TipiExecutable,TipiEventListener>());
+	private final Map<TipiExecutable, TipiEventListener> myListenerMap = Collections
+			.synchronizedMap(new HashMap<TipiExecutable, TipiEventListener>());
 	private List<TipiThread> myThreadCollection = Collections.synchronizedList(new ArrayList<TipiThread>());
-	private final Map<TipiThread,String> threadStateMap = Collections.synchronizedMap(new HashMap<TipiThread,String>());
+	private final Map<TipiThread, String> threadStateMap = Collections.synchronizedMap(new TreeMap<TipiThread, String>());
 
 	private boolean running = true;
 
@@ -95,9 +96,9 @@ public class TipiThreadPool {
 			TipiThread item = iter.next();
 			// item.shutdown();
 			item.interrupt();
-			
+
 		}
-		
+
 	}
 
 	public synchronized TipiExecutable blockingGetExecutable() throws ThreadShutdownException {
@@ -116,7 +117,6 @@ public class TipiThreadPool {
 		}
 		throw new ThreadShutdownException();
 	}
-
 
 	public TipiEventListener getEventListener(TipiExecutable te) {
 		return myListenerMap.get(te);
@@ -152,12 +152,13 @@ public class TipiThreadPool {
 		myContext.enqueueExecutable(te);
 	}
 
-	public void setThreadState(String state) {
-		Thread t = Thread.currentThread();
-		if(t instanceof TipiThread) {
-			TipiThread tt = (TipiThread)t;
-			threadStateMap.put(tt,state);
-			myContext.fireThreadStateEvent(threadStateMap,tt,state);
+	public void setThreadState(final String state) {
+		final Thread t = Thread.currentThread();
+		if (t instanceof TipiThread) {
+			TipiThread tt = (TipiThread) t;
+			threadStateMap.put(tt, state);
+			myContext.fireThreadStateEvent(threadStateMap, tt, state,myWaitingQueue.size());
+
 		}
 	}
 }

@@ -14,11 +14,6 @@ public class HttpResourceLoader extends ClassPathResourceLoader {
 
 	public URL getResourceURL(String location) throws MalformedURLException {
 		URL u = new URL(baseURL, location);
-		// System.err.println("HttpResourceLoader: Resolved to : "+u+" base:
-		// "+baseURL);
-		if (u == null) {
-			return super.getResourceURL(location);
-		}
 		return u;
 	}
 
