@@ -722,6 +722,8 @@ public String messageNode(int ident, Element n, String className, String objectN
       
       String mappableArrayName = "mappableObject" + (objectCounter++);
       
+      // Extract ref....
+      
       if ( mapPath == null ) {
     	  result.append(printIdent(ident + 2) + mappableArrayName +
     			  " = ((" + className + ") currentMap.myObject).get" +
@@ -1245,8 +1247,8 @@ public String fieldNode(int ident, Element n, String className,
         else if (type.equals("boolean")) {
           castedValue = "((Boolean) sValue).booleanValue()";
         }
-        else if (type.equals("float")) {
-          castedValue = "((Double) sValue).doubleValue()";
+        else if (type.equals("float")) { // sValue is never float, internally always Double!
+          castedValue = "(new Float(sValue+\"\")).floatValue()";
         }
         else if (type.equals("com.dexels.navajo.document.types.Binary")) {
           castedValue = "((com.dexels.navajo.document.types.Binary) sValue)";
@@ -1256,6 +1258,21 @@ public String fieldNode(int ident, Element n, String className,
         }
         else if (type.equals("com.dexels.navajo.document.types.Percentage")) {
           castedValue = "((com.dexels.navajo.document.types.Percentage) sValue)";
+        }
+        else if (type.equals("java.lang.Integer")) {
+        	castedValue = "((Integer) sValue)";
+        }
+        else if (type.equals("java.lang.Long")) {
+        	castedValue = "((Long) sValue)";
+        }
+        else if (type.equals("java.lang.Float")) { // sValue is never float, internally always Double!
+        	castedValue = "new Float(sValue+\"\")";
+        }
+        else if (type.equals("java.lang.Double")) {
+        	castedValue = "((Double) sValue)";
+        }
+        else if (type.equals("java.lang.Boolean")) {
+        	castedValue = "((Boolean) sValue)";
         }
         else {
           castedValue = "sValue";
