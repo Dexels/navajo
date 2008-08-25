@@ -154,6 +154,15 @@ public final class Access implements java.io.Serializable, Mappable {
 		return this.myException;
 	}
 
+	private final void setCurrentSystemLoads() {
+		try {
+			this.cpuload = NavajoConfig.getInstance().getCurrentCPUload();
+			this.threadCount = Dispatcher.getInstance().getAccessSetSize();
+		} catch (Throwable t) {
+			// Do nothing...
+		}
+	}
+	
 	public Access(int accessID, int userID, int serviceID, String rpcUser,
 			String rpcName, String userAgent, String ipAddress,
 			String hostName,
@@ -176,6 +185,7 @@ public final class Access implements java.io.Serializable, Mappable {
 		this.ipAddress = ipAddress;
 		this.betaUser = betaUser;
 		this.userCertificate = certificate;
+		setCurrentSystemLoads();
 
 	}
 
@@ -200,7 +210,8 @@ public final class Access implements java.io.Serializable, Mappable {
 		this.ipAddress = ipAddress;
 		this.betaUser = false;
 		this.userCertificate = certificate;
-
+		setCurrentSystemLoads();
+		
 	}
 
 	protected final void setUserCertificate(Object cert) {
