@@ -511,7 +511,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 			try {
 				parse = fn.parse(val);
 			} catch (ParseException e) {
-				e.printStackTrace();
+				//e.printStackTrace();
 				return null;
 			}
 			return new Money(parse.doubleValue(), getSubType());
@@ -560,7 +560,7 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 				return new Integer(Integer.parseInt(getValue().trim()));
 			} catch (NumberFormatException ex3) {
 				System.err.println("Numberformat exception...:"+getValue().trim());
-				ex3.printStackTrace();
+				//ex3.printStackTrace();
 				return null;
 			}
 		} else if (getType().equals(Property.LONG_PROPERTY)) {
