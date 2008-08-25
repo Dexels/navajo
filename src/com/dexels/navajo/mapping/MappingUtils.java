@@ -16,6 +16,7 @@ import com.dexels.navajo.parser.*;
 
 import java.lang.reflect.*;
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.dexels.navajo.document.types.Memo;
@@ -176,8 +177,6 @@ public final class MappingUtils {
     return newMsg;
   }
 
-
-
    public static final Property setProperty(boolean parameter, Message msg, String name,
                                             Object value, String type, String subtype, String direction,
                                             String description,
@@ -185,7 +184,6 @@ public final class MappingUtils {
        throws NavajoException, MappingException {
 
     Message ref = null;
-
 
     if (parameter) {
       if (msg == null) {
@@ -196,10 +194,7 @@ public final class MappingUtils {
     else {
       ref = getMessageObject(name, msg, false, outputDoc, false, "", -1);
     }
-
-    String sValue = (value != null ? Util.toString(value, type) : null);
-
-
+  
     if (ref == null) {
       ref = msg;
     }
@@ -236,10 +231,12 @@ public final class MappingUtils {
     		} 
     		else {
     			// Legacy mode hack, many scripts do not expect null valued string properties.
-    			if ( type.equals(Property.STRING_PROPERTY) && sValue == null ) {
-    				sValue = "";
+    			if ( type.equals(Property.STRING_PROPERTY) && value == null ) {
+    				value = "";
     			}
-    			prop = ref.getRootDoc().getNavajoFactory().createProperty(outputDoc, actualName, type, sValue, length, description, direction);
+    			prop = ref.getRootDoc().getNavajoFactory().createProperty(outputDoc, actualName, type, "", length, description, direction);
+    			prop.setAnyValue(value);
+    			prop.setType(type);
     		}
     	}
     	else {
@@ -256,7 +253,9 @@ public final class MappingUtils {
     			}
     		}
     		else {
-    			prop = ref.getRootDoc().getNavajoFactory().createProperty(tmlDoc, actualName, type, sValue, length, description, direction);
+    			prop = ref.getRootDoc().getNavajoFactory().createProperty(tmlDoc, actualName, type, "", length, description, direction);
+    			prop.setAnyValue(value);
+    			prop.setType(type);
     		}
     	}
     	ref.addProperty(prop);
@@ -273,8 +272,8 @@ public final class MappingUtils {
     		prop.setCardinality("+");
     		prop.setValue((Selection []) value);
     	} else {
-    		if (sValue != null) {
-    			prop.setValue(sValue);
+    		if (value != null) {
+    			prop.setAnyValue(value);
     		}
     		else {
     			prop.clearValue();
@@ -580,6 +579,13 @@ public static final ArrayList getMessageList(Message msg, Navajo doc, String str
   
   public static final String getFieldType(Class c, String field, String methodName) throws UserException {
 
+	  /**
+	   * Check whether field contains arguments...
+	   */
+	  if ( field.indexOf("(") != -1 ) {
+		  field = field.substring(0, field.indexOf("("));
+	  }
+	  
 	  try {
 		  String type = c.getField(field).getType().getName();
 		  if (type.startsWith("[L")) { // We have an array determine member type.
@@ -656,8 +662,13 @@ public static final ArrayList getMessageList(Message msg, Navajo doc, String str
 
   public static final boolean isArrayAttribute(Class c, String field) throws  MappingException {
 
-	  String objectType;
+	  String objectType; 
+	  if ( field.indexOf("(") != -1 ) {
+		  field = field.substring(0, field.indexOf("("));
+	  }
+	  
 	  try {
+		 
 		  objectType = c.getField(field).getType().getName();
 		  return objectType.startsWith("[L");
 	  } catch (Exception e) {
@@ -666,7 +677,7 @@ public static final ArrayList getMessageList(Message msg, Navajo doc, String str
 			  return objectType.startsWith("[L");
 		  } catch (Exception e1) {
 			  // TODO Auto-generated catch block
-			  throw new MappingException(e1.getMessage());
+			  throw new MappingException(e1.getMessage() + ": " + field );
 		  } 
 	  } 
   }
@@ -807,18 +818,21 @@ public static final ArrayList getMessageList(Message msg, Navajo doc, String str
   }
   
   public static void main(String [] args) throws Exception {
-	  Navajo n = NavajoFactory.getInstance().createNavajo();
-	  setProperty(false, null, "/Aap/Aap@0/NootProp", "Apenoot", "string", "", "in", "", 20, n, null, false);
-	  setProperty(false, null, "/Aap/Aap@0/Allemaal", "Beestjes", "string", "", "in", "", 20, n, null, false);
+//	  Navajo n = NavajoFactory.getInstance().createNavajo();
+//	  setProperty(false, null, "/Aap/Aap@0/NootProp", "Apenoot", "string", "", "in", "", 20, n, null, false);
+//	  setProperty(false, null, "/Aap/Aap@0/Allemaal", "Beestjes", "string", "", "in", "", 20, n, null, false);
+//	  
+//	  setProperty(false, null, "/Kibbeling/NemoProp", "Is gek", "string", "", "in", "", 20, n, null, false);
+//	  setProperty(false, null, "/Kibbeling/Kibbeling/WalvisProp", "Moby", "string", "", "in", "", 20, n, null, false);
+//	  
+//	  setProperty(false, null, "/Worstebroodje/@0/Worst/Hema", "Moby", "string", "", "in", "", 20, n, null, false);
+//	  setProperty(false, null, "/Worstebroodje/@0/Worst/CenA", "Moby", "string", "", "in", "", 20, n, null, false);
+//	  
+//	 
+//	  n.write(System.err);
 	  
-	  setProperty(false, null, "/Kibbeling/NemoProp", "Is gek", "string", "", "in", "", 20, n, null, false);
-	  setProperty(false, null, "/Kibbeling/Kibbeling/WalvisProp", "Moby", "string", "", "in", "", 20, n, null, false);
-	  
-	  setProperty(false, null, "/Worstebroodje/@0/Worst/Hema", "Moby", "string", "", "in", "", 20, n, null, false);
-	  setProperty(false, null, "/Worstebroodje/@0/Worst/CenA", "Moby", "string", "", "in", "", 20, n, null, false);
-	  
-	 
-	  n.write(System.err);
+	  SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+	  System.err.println(sdf.format(new Date()));
 	  
   }
 }
