@@ -53,15 +53,16 @@ public class QueryMap extends SQLMap {
             Object value = columns[j].getRecordValue();
             String type = (value != null ?
                            MappingUtils.determineNavajoType(value) : "unknown");
-            String sValue = (value != null ? Util.toString(value, type) : "");
+            //String sValue = (value != null ? Util.toString(value, type) : "");
             Property prop = NavajoFactory.getInstance().createProperty(
                 outputDoc,
                 columns[j].recordName,
                 type,
-                sValue,
-                sValue.length(),
+                null,
+                0,
                 "",
                 Property.DIR_IN);
+            prop.setAnyValue(value);
             record.addProperty(prop);
           }
           catch (Exception ex1) {

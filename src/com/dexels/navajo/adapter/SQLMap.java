@@ -207,23 +207,23 @@ public class SQLMap implements Mappable, LazyArray {
 		autoCommitMap = Collections.synchronizedMap(new HashMap());
 	}
 
-    driver = NavajoUtils.getPropertyValue(body, "driver", true);
-    url = NavajoUtils.getPropertyValue(body, "url", true);
+    driver = body.getProperty("driver").getValue(); //NavajoUtils.getPropertyValue(body, "driver", true);
+    url =  body.getProperty("url").getValue(); // NavajoUtils.getPropertyValue(body, "url", true);
 
     final String username = (this.username != null) ? this.username :
-        NavajoUtils.getPropertyValue(body, "username", true);
+    	body.getProperty("username").getValue();
     final String password = (this.password != null) ? this.password :
-        NavajoUtils.getPropertyValue(body, "password", true);
+    	body.getProperty("password").getValue();
 
     String logFile = config.getRootPath() + "/log/"
-        + NavajoUtils.getPropertyValue(body, "logfile", true);
-    double refresh = Double.parseDouble(NavajoUtils.getPropertyValue(body,
-        "refresh", true));
-    String min = NavajoUtils.getPropertyValue(body, "min_connections", false);
+        + body.getProperty("logfile").getValue();
+    double refresh = Double.parseDouble(body.getProperty("refresh").getValue());
+    
+    String min = ( body.getProperty("min_connections") != null ? body.getProperty("min_connections").getValue() : "" ); // NavajoUtils.getPropertyValue(body, "min_connections", false);
     int minConnections = (min.equals("")) ? 5 : Integer.parseInt(min);
-    String max = NavajoUtils.getPropertyValue(body, "max_connections", false);
+    String max = ( body.getProperty("max_connections") != null ? body.getProperty("max_connections").getValue() : "" ); 
     int maxConnections = (max.equals("")) ? 20 : Integer.parseInt(max);
-    String autoCommitStr = NavajoUtils.getPropertyValue(body, "autocommit", false);
+    String autoCommitStr = ( body.getProperty("autocommit") != null ? body.getProperty("autocommit").getValue() : "" ); 
     boolean ac = (autoCommitStr.equals("") ||
                   autoCommitStr.equalsIgnoreCase("true"));
     DbConnectionBroker myBroker = null;

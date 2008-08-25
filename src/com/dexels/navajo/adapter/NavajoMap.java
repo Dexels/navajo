@@ -317,7 +317,7 @@ public class NavajoMap extends AsyncMappable  implements Mappable {
     //System.out.println("setDateProperty() = " + d);
     currentProperty.setType(Property.DATE_PROPERTY);
     if (d != null)
-      currentProperty.setValue(com.dexels.navajo.util.Util.formatDate(d));
+      currentProperty.setValue(d);
     else
       currentProperty.setValue("");
     addProperty(currentFullName, currentProperty);
@@ -655,7 +655,7 @@ public class NavajoMap extends AsyncMappable  implements Mappable {
     Property p = getPropertyObject(fullName);
     if (p.getType().equals(Property.DATE_PROPERTY)) {
         if (p.getValue() != null && !p.getValue().equals(""))
-          return com.dexels.navajo.util.Util.getDate(p.getValue());
+          return (Date) p.getTypedValue();
         else
           return null;
     }
