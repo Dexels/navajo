@@ -37,9 +37,5 @@ public final class Guid {
 		return Math.abs(rand.nextLong() * System.currentTimeMillis()) + "";
 	}
 	
-	public static void main(String [] args) throws Exception {
-		for (int i = 0; i < 10; i++) {
-			System.err.println("id = " + Guid.create());
-		}
-	}
+	
 }
