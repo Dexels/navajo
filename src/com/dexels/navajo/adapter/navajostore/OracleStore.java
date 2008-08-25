@@ -523,8 +523,6 @@ public final class OracleStore implements StoreInterface {
 				
 				while ( iter.hasNext() ) { 
 					AuditLogEvent ale = iter.next();
-					System.err.println("ABOUT TO INSERT INTO AUDITLOG: ");
-					System.err.println(ale.getInstanceName() + "," + ale.getSubSystem() + "," + ale.getMessage() + "," + ale.getLevel());
 					ps.setString(1, ale.getInstanceName());
 					ps.setString(2, ale.getSubSystem());
 					ps.setString(3, ale.getMessage());
