@@ -47,7 +47,7 @@ public final class DatePattern {
 
         // System.out.println("in parseDatePattern(Date)");
         Calendar cal = Calendar.getInstance();
-
+        
         cal.setTime(datum);
         int yearT = cal.get(Calendar.YEAR);
         int monthT = cal.get(Calendar.MONTH);
@@ -56,7 +56,9 @@ public final class DatePattern {
         int minT = cal.get(Calendar.MINUTE);
         int secT = cal.get(Calendar.SECOND);
 
-
+        // reset milis.
+        cal.set(Calendar.MILLISECOND, 0);
+        
         // System.out.println("leaving");
         return new DatePattern(yearT, monthT, dayT, hourT, minT, secT, false);
     }
@@ -105,6 +107,10 @@ public final class DatePattern {
             cal.set(Calendar.HOUR_OF_DAY, this.hour);
             cal.set(Calendar.MINUTE, this.minute);
             cal.set(Calendar.SECOND, this.second);
+            
+            // reset milis.
+            cal.set(Calendar.MILLISECOND, 0);
+            
             return cal.getTime();
         } else {
             return null;
@@ -138,6 +144,9 @@ public final class DatePattern {
         cal.add(Calendar.MINUTE, this.minute);
         cal.add(Calendar.SECOND, this.second);
 
+        // reset milis.
+        cal.set(Calendar.MILLISECOND, 0);
+        
         this.year = cal.get(Calendar.YEAR);
         this.month = cal.get(Calendar.MONTH);
         this.day = cal.get(Calendar.DAY_OF_MONTH);
@@ -164,6 +173,9 @@ public final class DatePattern {
         cal.add(Calendar.MINUTE, this.minute);
         cal.add(Calendar.SECOND, this.second);
 
+        // reset milis.
+        cal.set(Calendar.MILLISECOND, 0);
+        
         this.year = cal.get(Calendar.YEAR);
         this.month = cal.get(Calendar.MONTH);
         this.day = cal.get(Calendar.DAY_OF_MONTH);
@@ -205,6 +217,9 @@ public final class DatePattern {
         cal.add(Calendar.MINUTE, -another.minute);
         cal.add(Calendar.SECOND, -another.second);
 
+        // reset milis.
+        cal.set(Calendar.MILLISECOND, 0);
+        
         this.year = cal.get(Calendar.YEAR);
         this.month = cal.get(Calendar.MONTH);
         this.day = cal.get(Calendar.DAY_OF_MONTH);
@@ -232,6 +247,9 @@ public final class DatePattern {
         cal.add(Calendar.MINUTE, -another.minute);
         cal.add(Calendar.SECOND, -another.second);
 
+        // reset milis.
+        cal.set(Calendar.MILLISECOND, 0);
+        
         this.year = cal.get(Calendar.YEAR);
         this.month = cal.get(Calendar.MONTH);
         this.day = cal.get(Calendar.DAY_OF_MONTH);
