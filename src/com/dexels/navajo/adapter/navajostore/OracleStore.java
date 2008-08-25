@@ -1,8 +1,10 @@
 package com.dexels.navajo.adapter.navajostore;
 
 import com.dexels.navajo.mapping.AsyncMappable;
+import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.Dispatcher;
+import com.dexels.navajo.server.UserException;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -10,6 +12,7 @@ import java.sql.*;
 import java.io.StringWriter;
 import java.io.PrintWriter;
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.events.types.AuditLogEvent;
 import com.dexels.navajo.server.enterprise.statistics.MapStatistics;
 import com.dexels.navajo.server.enterprise.statistics.StoreInterface;
 import com.dexels.navajo.server.statistics.*;
@@ -58,6 +61,9 @@ public final class OracleStore implements StoreInterface {
 	private static String insertAccessSQL = "insert into navajoaccess " +
 	"(access_id, webservice, username, threadcount, cpuload, totaltime, parsetime, authorisationtime, clienttime, requestsize, requestencoding, compressedrecv, compressedsnd, ip_address, hostname, created, clientid) " +
 	"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	
+	private static String insertAuditLog = "insert into auditlog " + 
+	"(instance, subsystem, message, auditlevel, lastupdate) values (?, ?, ?, ?, ?)";
 	
 	private static String updateEmbryoAccessSQL = "update navajoaccess " +
 	"set webservice = ?, username = ?, threadcount = ?, cpuload = ?, totaltime = ?, parsetime = ?, " + 
@@ -446,7 +452,7 @@ public final class OracleStore implements StoreInterface {
 							asyncps.setString(3, am.getClass().getName());
 							asyncps.setInt(4, a.getTotaltime());
 							asyncps.setString(5, ( a.getException() != null ? a.getException().getMessage() : "" ) );
-							asyncps.setTimestamp(6, new java.sql.Timestamp(a.created.getTime()));
+							//asyncps.setTimestamp(6, new java.sql.Timestamp(a.created.getTime()));
 							asyncps.executeUpdate();
 							
 						}
@@ -493,6 +499,57 @@ public final class OracleStore implements StoreInterface {
 				}
 			}
 		}
+	}
+
+	public void storeAuditLogs(Set auditLogSet) {
+		// TODO Auto-generated method stub
+		SQLMap sqlMap = createConnection(false, false, false);
+		
+		Connection con = null;
+		try {
+			con = sqlMap.getConnection();
+		} catch (SQLException e) {
+			e.printStackTrace(System.err);
+		}
+		
+		if (con != null) {
+			PreparedStatement ps = null;
+			
+			try {
+				
+				ps = con.prepareStatement(insertAuditLog);
+				
+				Iterator<AuditLogEvent> iter = auditLogSet.iterator();
+				
+				while ( iter.hasNext() ) { 
+					AuditLogEvent ale = iter.next();
+					System.err.println("ABOUT TO INSERT INTO AUDITLOG: ");
+					System.err.println(ale.getInstanceName() + "," + ale.getSubSystem() + "," + ale.getMessage() + "," + ale.getLevel());
+					ps.setString(1, ale.getInstanceName());
+					ps.setString(2, ale.getSubSystem());
+					ps.setString(3, ale.getMessage());
+					ps.setString(4, ale.getLevel());
+					ps.setTimestamp(5, new java.sql.Timestamp(ale.getCreated().getTime()));
+					ps.executeUpdate();
+				}
+			} catch (Throwable t) {
+				System.err.println("COULD NOT WRITE AUDITLOG: " + t.getLocalizedMessage());
+			} finally {
+				if (ps != null) {
+					try {
+						ps.close();
+					} catch (SQLException e) {
+					}
+				}
+				if ( con != null )  {
+					try {
+						sqlMap.store();
+					} catch (Exception e) {
+					} 
+				}
+			}
+		}
+				
 	}
 	
 

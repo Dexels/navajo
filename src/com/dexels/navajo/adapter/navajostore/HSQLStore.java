@@ -11,6 +11,7 @@ import java.io.PrintWriter;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.adapter.SQLMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * <p>Title: Navajo Product Project</p>
@@ -279,6 +280,11 @@ public final class HSQLStore implements StoreInterface {
   }
 
 public void storeAccess(Map accessMap) {
+	// TODO Auto-generated method stub
+	
+}
+
+public void storeAuditLogs(Set auditLogSet) {
 	// TODO Auto-generated method stub
 	
 }
