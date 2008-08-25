@@ -88,7 +88,9 @@
 				<include name="**/*" />
 
 				<!-- enterprise -->
-				<exclude name="com/dexels/navajo/scheduler/**" />
+			    <exclude name="com/crazysquirrel/**" />
+			    <exclude name="com/dexels/navajo/monitor/**" />
+			    <exclude name="com/dexels/navajo/scheduler/**" />
 			    <exclude name="com/dexels/navajo/tribe/**" />
 			    <exclude name="com/dexels/navajo/workflow/**" />
 				<exclude name="com/dexels/navajo/adapter/**" />
@@ -109,6 +111,7 @@
 				<exclude name="com/dexels/navajo/client/**" />
 				<exclude name="com/dexels/navajo/install/**" />
 				<exclude name="com/dexels/navajo/compiler/**" />
+			    <exclude name="com/dexels/navajo/sharedstore/**" />
 				<exclude name="com/dexels/navajo/mapping/compiler/**" />
 				<exclude name="org/**" />
 
@@ -125,6 +128,8 @@
 	<target name="enterprise" depends="compile,resource">
 		<jar jarfile="NavajoEnterprise.jar">
 			<fileset dir="${build}">
+			    <include name="com/crazysquirrel/**" />
+			    <include name="com/dexels/navajo/monitor/**" />
 				<include name="com/dexels/navajo/scheduler/**" />
 			    <include name="com/dexels/navajo/workflow/**" />
 			    <include name="com/dexels/navajo/tribe/**" />
@@ -151,6 +156,7 @@
 				<include name="com/dexels/navajo/mapping/compiler/**" />
 				<include name="com/dexels/navajo/compiler/**" />
 			    <include name="com/dexels/navajo/lockguard/**" />
+			    <include name="com/dexels/navajo/sharedstore/**" />
 			    <include name="com/dexels/navajo/server/jmx/**" />
 			    <include name="com/dexels/navajo/server/enterprise/**" />
 				<include name="org/**" />
