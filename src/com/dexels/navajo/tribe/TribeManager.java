@@ -551,17 +551,33 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 
 	private final Answer waitForAnswer(Request q) {
 
-		while (containsWaitingRequest(q) ) {
-			
-				synchronized (q) {
-					try {
-						q.wait(60000);
-						//Thread.sleep(100);
-					} catch (InterruptedException e) {
-						
+		long start = System.currentTimeMillis();
+		boolean timedout = false;
+		
+		while (containsWaitingRequest(q) && !timedout ) {
+
+			synchronized (q) {
+				try {
+					if ( q.getTimeout() == -1 ) {
+						q.wait(10000);
+					} else {
+						q.wait(q.getTimeout());
 					}
+					//Thread.sleep(100);
+				} catch (InterruptedException e) {
+
 				}
-			
+			}
+			// Check time-out.
+			if ( q.getTimeout() != -1 ) {
+
+				if ( ( System.currentTimeMillis() - start ) > q.getTimeout() ) {
+					timedout = true;
+					removeWaitingRequest(q);
+					AuditLog.log(AuditLog.AUDIT_MESSAGE_TRIBEMANAGER, "WAITFORANSWER TIMED-OUT: " + q.getClass().getName());
+				}
+			}
+
 		}
 
 		return q.getPredefinedAnswer();

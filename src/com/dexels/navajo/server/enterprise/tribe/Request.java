@@ -34,6 +34,7 @@ public abstract class Request implements Serializable {
 	public Answer predefined = null;
 	private String guid = null;
 	protected boolean blocking = true;
+	protected long timeout = -1;
 	// ignoreRequestOnSender specifies whether the request should NEVER be performed on the server from  which the request originated.
 	private boolean ignoreRequestOnSender = false;
 	private Object recipient;
@@ -43,45 +44,121 @@ public abstract class Request implements Serializable {
 		guid = hashCode() + "-" + System.currentTimeMillis();
 	}
 	
+	/**
+	 * Gets the original sender/creator of this request.
+	 * 
+	 * @return
+	 */
 	public String getOwner() {
 		return owner;
 	}
 	
+	/**
+	 * This method is used by the Tribal Manager to inject the received answer of the recipient in
+	 * the original request.
+	 * 
+	 * @param a
+	 */
 	public void setPredefinedAnswer(Answer a) {
 		predefined = a;
 	}
 	
+	/**
+	 * The sender of the request can use this method to get the supplied answer of the recipient.
+	 * 
+	 * @return
+	 */
 	public Answer getPredefinedAnswer() {
 		return predefined;
 	}
 	
+	/**
+	 * This method MUST BE called by the recipient of this request.
+	 * 
+	 * @return
+	 */
 	public abstract Answer getAnswer();
 
+	/**
+	 * Get the unique GUID associated with this request.
+	 * 
+	 * @return
+	 */
 	public String getGuid() {
 		return guid;
 	}
 	
+	/**
+	 * Specifies whether this request is either blocking or non-blocking.
+	 * 
+	 * @return
+	 */
 	public boolean isBlocking() {
 		return blocking;
 	}
 
+	/**
+	 * Use to set request either in blocking or non-blocking mode. Blocking means wait for the answer.
+	 * 
+	 * @param blocking
+	 */
 	public void setBlocking(boolean blocking) {
 		this.blocking = blocking;
 	}
 
+	/**
+	 * Specifies whether or not to ignore processing this request on the originator.
+	 * 
+	 * @return
+	 */
 	public boolean isIgnoreRequestOnSender() {
 		return ignoreRequestOnSender;
 	}
 
+	/**
+	 * Specify whether or not to ignore processing this request on the originator.
+	 * 
+	 * @param ignoreRequestOnSender
+	 */
 	public void setIgnoreRequestOnSender(boolean ignoreRequestOnSender) {
 		this.ignoreRequestOnSender = ignoreRequestOnSender;
 	}
 
+	/**
+	 * Gets the address of the recipient.
+	 * 
+	 * @return
+	 */
 	public Object getRecipient() {
 		return recipient;
 	}
 
+	/**
+	 * Sets the address of the recipient of this request.
+	 * 
+	 * @param recipient
+	 */
 	public void setRecipient(Object recipient) {
 		this.recipient = recipient;
+	}
+
+	/**
+	 * Get the timeout in millis that specifies the maximum amount of
+	 * time the request should wait for the answer (assuming blocking = true!).
+	 * 
+	 * @param timeout
+	 */
+	public long getTimeout() {
+		return timeout;
+	}
+
+	/**
+	 * Set the timeout in millis to specify the maximum amount of
+	 * time the request should wait for the answer (assuming blocking = true!).
+	 * 
+	 * @param timeout
+	 */
+	public void setTimeout(long timeout) {
+		this.timeout = timeout;
 	}
 }
