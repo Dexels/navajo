@@ -12,7 +12,7 @@ import com.dexels.navajo.document.*;
 /**
  * Title:        Navajo
  * Description:
- * Copyright:    Copyright (c) 2001
+ * Copyright:    Copyright (c) 2001 - 2008
  * Company:      Dexels
  * @author Arjen Schoneveld en Martin Bergman
  * @version $Id$

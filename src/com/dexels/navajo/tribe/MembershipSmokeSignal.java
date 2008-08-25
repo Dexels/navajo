@@ -9,6 +9,12 @@ import com.dexels.navajo.sharedstore.map.IntroductionRequest;
 import com.dexels.navajo.sharedstore.map.SharedTribalMap;
 import com.dexels.navajo.util.AuditLog;
 
+/**
+ * The MembershipSmokeSignal is used by a new Tribal Member to introduce itself.
+ * 
+ * @author arjen
+ *
+ */
 public class MembershipSmokeSignal extends SmokeSignal implements Serializable {
 
 	/**
@@ -31,6 +37,11 @@ public class MembershipSmokeSignal extends SmokeSignal implements Serializable {
 			TribeMember tm = (TribeMember) getValue();
 			TribeManager.getInstance().addTribeMember(tm);
 			
+			/**
+			 * The Chief is responsible to sharing the active 'tribal maps' by sending an IntroductionRequest
+			 * to the new member.
+			 * 
+			 */
 			if ( TribeManager.getInstance().getIsChief() ) {
 				//System.err.println("ABOUT TO SHARE GLOBAL STATE............");
 				// Share global state.

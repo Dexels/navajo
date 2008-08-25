@@ -5,6 +5,13 @@ import java.lang.ref.SoftReference;
 import com.dexels.navajo.server.enterprise.tribe.Answer;
 import com.dexels.navajo.server.enterprise.tribe.Request;
 
+/**
+ * An IntroductionRequest is used to inform a new member of active 'tribal maps'.
+ * An IntroductionRequest is ALWAYS issued by the chief.
+ * 
+ * @author arjen
+ *
+ */
 public class IntroductionRequest extends Request {
 
 	/**
@@ -59,6 +66,10 @@ public class IntroductionRequest extends Request {
 		}
 	}
 	
+	/**
+	 * The getAnswer() is ALWAYS executed on the new member to register a tribal map.
+	 * 
+	 */
 	@Override
 	public Answer getAnswer() {
 		if ( !hasSoftReferences ) {
