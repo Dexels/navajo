@@ -41,7 +41,7 @@ public final class AuditLog implements Mappable {
 	public final static String AUDIT_MESSAGE_SHAREDSTORE = "SharedStore";
 	public final static String AUDIT_MESSAGE_MONITOR = "Monitoring Agent";
 	public final static String AUDIT_MESSAGE_QUEUEDADAPTERS = "Queued Adapters";
-	public final static String AUDIT_MESSAGE_USER = "User";
+	public final static String AUDIT_MESSAGE_USER = "USER";
 
 	private static volatile String instanceName;
 	

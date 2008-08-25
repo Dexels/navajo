@@ -123,6 +123,10 @@ public final class StatisticsRunner extends GenericThread implements StatisticsR
 	  return instance;
   }
 
+  /**
+   * Override the inactive() method of GenericThread. Use wait/notify mechanism for activation instead of default sleep.
+   * 
+   */
   public synchronized void inactive() {
 	  try {
 		wait(60000);
@@ -188,6 +192,10 @@ public final class StatisticsRunner extends GenericThread implements StatisticsR
 	 
   }
   
+  /**
+   * This method is used by JMX gauge to measure StatisticsRunner 'health'.
+   * 
+   */
   public int getTodoCount() {
 	  if ( getInstance() != null ) {
 		  return getInstance().todo.size();
@@ -221,6 +229,9 @@ public final class StatisticsRunner extends GenericThread implements StatisticsR
 	  AuditLog.log(AuditLog.AUDIT_MESSAGE_STAT_RUNNER, "Killed");
   }
 
+  /**
+   * 
+   */
   public void setEnabled(boolean b) {
 	  boolean previousValue = enabled;
 	  enabled = b;
@@ -243,6 +254,7 @@ public final class StatisticsRunner extends GenericThread implements StatisticsR
 
   /**
    * Handle JMX notifications.
+   * 
    * If todo size becomes too high, switch off statistics.
    */
   public void handleNotification(Notification notification, Object handback) {
@@ -266,7 +278,7 @@ public final class StatisticsRunner extends GenericThread implements StatisticsR
   }
 
   /**
-   * Handle Navajo Events: request and response.
+   * Handle Navajo Events: request, response and auditlog events.
    */
   public void onNavajoEvent(NavajoEvent ne) {
 
