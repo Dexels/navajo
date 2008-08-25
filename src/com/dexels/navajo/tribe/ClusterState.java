@@ -28,7 +28,12 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Iterator;
 
-
+/**
+ * The ClusterState contains the state of the Tribal Members for a Navajo Instance.
+ * 
+ * @author arjen
+ *
+ */
 public class ClusterState implements Serializable {
 
 	private static final long serialVersionUID = -6046777687660294098L;
@@ -48,7 +53,7 @@ public class ClusterState implements Serializable {
 		TribeMember lbtm = null;
 		while ( all.hasNext() ) {
 			TribeMember tm = all.next();
-			if ( tm.getStatus().getCpuLoad() < min && !tm.getStatus().isBusy() && !tm.getAddress().equals( TribeManager.getInstance().getMyMembership().getAddress() ) ) {
+			if ( tm != null && tm.getStatus() != null && tm.getStatus().getCpuLoad() < min && !tm.getStatus().isBusy() && !tm.getAddress().equals( TribeManager.getInstance().getMyMembership().getAddress() ) ) {
 				lbtm = tm;
 			}
 		}
