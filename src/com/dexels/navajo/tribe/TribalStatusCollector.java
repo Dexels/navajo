@@ -27,6 +27,7 @@ package com.dexels.navajo.tribe;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.GenericThread;
 import com.dexels.navajo.server.enterprise.tribe.PingAnswer;
 import com.dexels.navajo.server.jmx.JMXHelper;
@@ -77,8 +78,12 @@ public class TribalStatusCollector extends GenericThread implements TribalStatus
 		Iterator<TribeMember> members = copyOf.iterator();
 		while ( members.hasNext() ) {
 			TribeMember tm = members.next();
-			PingAnswer pa = (PingAnswer) TribeManager.getInstance().askSomebody(new PingRequest(), tm.getAddress());
-			tm.setStatus(pa);
+			PingRequest pr = new PingRequest();
+			pr.setTimeout(1000);
+			PingAnswer pa = (PingAnswer) TribeManager.getInstance().askSomebody(pr, tm.getAddress());
+			if ( pa != null ) {
+				tm.setStatus(pa);
+			}
 		}
 	}
 
