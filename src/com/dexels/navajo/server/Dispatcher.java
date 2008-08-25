@@ -525,6 +525,7 @@ public Access [] getUsers() {
   }
 
   @SuppressWarnings("unchecked")
+  @Deprecated
   private final void addParameters(Navajo doc, Parameters parms) throws
   NavajoException {
 
@@ -533,20 +534,7 @@ public Access [] getUsers() {
 		  msg = NavajoFactory.getInstance().createMessage(doc, "__parms__");
 		  doc.addMessage(msg);
 	  }
-
-	  if (parms != null) {
-		  Enumeration all = parms.keys();
-
-		  // "Enrich" document with paramater message block "__parms__"
-		  while (all.hasMoreElements()) {
-			  String key = (String) all.nextElement();
-			  Object value = parms.getValue(key);
-			  String type = parms.getType(key);
-			  Property prop = NavajoFactory.getInstance().createProperty(doc, key,
-					  type, Util.toString(value, type), 0, "", Property.DIR_OUT);
-			  msg.addProperty(prop);
-		  }
-	  }
+	  
   }
 
   public  final boolean doMatchCN() {
@@ -879,7 +867,7 @@ public Access [] getUsers() {
    */
   public final Navajo handle(Navajo inMessage, Object userCertificate) throws
       FatalException {
-    return handle(inMessage, userCertificate, null, false);
+    return processNavajo(inMessage, userCertificate, null, false);
   }
 
   /**
@@ -890,11 +878,11 @@ public Access [] getUsers() {
    * @throws FatalException
    */
   public final Navajo handle(Navajo inMessage, boolean skipAuth) throws FatalException {
-    return handle(inMessage, null, null, skipAuth);
+    return processNavajo(inMessage, null, null, skipAuth);
   }
   
   public final Navajo handle(Navajo inMessage) throws FatalException {
-	  return handle(inMessage, null, null, false);
+	  return processNavajo(inMessage, null, null, false);
   }
 
   public String getThreadName(Access a) {
@@ -929,8 +917,19 @@ public Access [] getUsers() {
 
   }
   
+  /**
+   * Entry point for HTTP Servlet Listener.
+   * 
+   * @param inMessage, the Navajo request message 
+   * @param userCertificate, optionally a certificate
+   * @param clientInfo, a client info structure
+   * @return
+   * @throws FatalException
+   */
   public final Navajo handle(Navajo inMessage, Object userCertificate, ClientInfo clientInfo) throws FatalException {
-	  return handle(inMessage, userCertificate, clientInfo, false);
+	  // Maybe use event to trigger handle event.... such that NavajoRequest events can be proxied/intercepted by
+	  // other classes.
+	  return processNavajo(inMessage, userCertificate, clientInfo, false);
   }
   
   /**
@@ -944,7 +943,7 @@ public Access [] getUsers() {
    * @throws FatalException
    */
   @SuppressWarnings("deprecation")
-public final Navajo handle(Navajo inMessage, Object userCertificate, ClientInfo clientInfo, boolean skipAuth) throws
+private final Navajo processNavajo(Navajo inMessage, Object userCertificate, ClientInfo clientInfo, boolean skipAuth) throws
       FatalException {
 
     Access access = null;
@@ -1062,10 +1061,7 @@ public final Navajo handle(Navajo inMessage, Object userCertificate, ClientInfo 
         synchronized ( accessSet ) {
         	accessSet.add(access);
         }
-         
-        access.setThreadCount(accessSetSize);
-        access.setCpuload(NavajoConfig.getInstance().getCurrentCPUload());
-        
+            
         // Check for lazy message control.
         access.setLazyMessages(header.getLazyMessages());
 
