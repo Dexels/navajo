@@ -15,7 +15,7 @@ public class TipiThreadActivityLogger extends TipiSwingComponentImpl {
 		tja = new JTextArea();
 		myContext.addThreadStateListener(new ThreadActivityListener(){
 
-			public void threadActivity(Map<TipiThread, String> threadStateMap, TipiThread tt, String state) {
+			public void threadActivity(Map<TipiThread, String> threadStateMap, TipiThread tt, String state, int queueSize) {
 				System.err.println("Thread activity: "+threadStateMap);
 				tja.append(threadStateMap.toString());
 			}});

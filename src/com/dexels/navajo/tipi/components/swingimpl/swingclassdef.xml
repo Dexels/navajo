@@ -16,8 +16,13 @@
       <param name="value" type="string" />
    </tipiaction>
 
-   <tipiaction name="saveBinary" class="TipiSaveBinary" package="com.dexels.navajo.tipi.components.swingimpl.actions">
+<!--<tipiaction name="saveBinary" class="TipiSaveBinary" package="com.dexels.navajo.tipi.components.swingimpl.actions">
       <param name="value" type="property" />
+   </tipiaction>-->
+   <tipiaction name="saveBinary" class="TipiSaveBinary" package="com.dexels.navajo.tipi.components.swingimpl.actions">
+      <param name="value" type="binary" required="true" />
+      <param name="extension" type="string" />
+      <param name="fileName" type="string" />
    </tipiaction>
 
    <tipiaction name="browseBinary" class="TipiBrowseBinary" package="com.dexels.navajo.tipi.components.swingimpl.actions">
@@ -39,8 +44,9 @@
    <tipiaction name="openBinary" class="TipiOpenBinary" package="com.dexels.navajo.tipi.components.swingimpl.actions">
       <param name="value" type="binary" required="true" />
       <param name="extension" type="string" />
-      <param name="extension" type="fileName" />
+      <param name="fileName" type="string" />
    </tipiaction>
+   
    <tipiaction name="requestFocus" class="TipiRequestFocus" package="com.dexels.navajo.tipi.components.swingimpl.actions">
       <param name="component" type="string" required="true" />
    </tipiaction>
@@ -1073,7 +1079,15 @@
       </values>
       <methods />
    </tipiclass>
-
+  <tipiclass addtocontainer="true" class="TipiThreadActivityMonitor" module="component" name="threadmonitor" layoutmanager="false" package="com.dexels.navajo.tipi.components.swingimpl"
+      propertycomponent="false" studio-icon="label.gif" type="component" childcount="0">
+      <events>
+         <event name="onInstantiate" />
+      </events>
+      <values>
+      </values>
+      <methods />
+   </tipiclass>
    <tipiclass addtocontainer="true" class="TipiLabel" module="component" name="label" layoutmanager="false" package="com.dexels.navajo.tipi.components.swingimpl"
       propertycomponent="false" studio-icon="label.gif" type="component" childcount="0">
       <events>

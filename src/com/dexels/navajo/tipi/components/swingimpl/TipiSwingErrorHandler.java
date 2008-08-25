@@ -13,7 +13,9 @@ import com.dexels.navajo.tipi.swingclient.*;
  * <p>Company: </p>
  * @author not attributable
  * @version 1.0
+ * @deprecated
  */
+@Deprecated
 public class TipiSwingErrorHandler
     extends BaseTipiErrorHandler {
   public TipiSwingErrorHandler() {
@@ -50,20 +52,20 @@ public class TipiSwingErrorHandler
     }
   }
 
-  public void showErrorDialog(String error) {
-    Object toplevel = getContext().getDefaultTopLevel().getContainer();
-    final String errorString = error;
+  public void showErrorDialog(final String error) {
+    RootPaneContainer toplevel = ((SwingTipiContext)getContext()).getTopDialog();
 
     if (toplevel instanceof JFrame) {
       final JFrame top = (JFrame) toplevel;
       SwingUtilities.invokeLater(new Runnable() {
         public void run() {
-          JOptionPane.showMessageDialog(top, errorString, "Error", JOptionPane.ERROR_MESSAGE);
+          JOptionPane.showMessageDialog(top, error, "Error", JOptionPane.ERROR_MESSAGE);
         }
       });
       return;
     }
-    SwingClient.getUserInterface().addErrorDialog(errorString);
+    
+    SwingClient.getUserInterface().addErrorDialog(error);
 
 
   }

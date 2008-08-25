@@ -34,7 +34,11 @@ public class SwingTipiUserInterface extends DummyUserInterface{
   }
 
   public JDialog getTopDialog() {
-	    return (JDialog)myContext.getTopDialog();
+	    RootPaneContainer topDialog = myContext.getTopDialog();
+	    if(topDialog instanceof JDialog) {
+			return (JDialog)topDialog;
+	    } 
+	    return null;
 	  }
   
 

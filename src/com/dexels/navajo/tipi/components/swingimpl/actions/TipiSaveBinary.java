@@ -8,12 +8,17 @@ package com.dexels.navajo.tipi.components.swingimpl.actions;
 
 import java.awt.*;
 import java.io.*;
+import java.util.*;
+import java.util.List;
 
 import javax.swing.*;
+
+import metadata.*;
 
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.types.*;
 import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.internal.*;
 
 /**
@@ -35,53 +40,102 @@ public class TipiSaveBinary extends TipiAction {
 	private int result;
 	protected void execute(TipiEvent event) throws TipiBreakException, TipiException {
 
-		Operand propertyO = getEvaluatedParameter("property", event);
-
-		Object value = propertyO.value;
+		Operand value = getEvaluatedParameter("value", event);
+		Operand extension = getEvaluatedParameter("extension", event);
+		Operand fileName = getEvaluatedParameter("fileName", event);
 		if (value == null) {
-			throw new TipiBreakException(-4);
+			throw new TipiException("TipiOpenBinary: no value supplied");
 		}
-		if (!(value instanceof Property)) {
-			throw new TipiException("TipiSaveBinary needs a property parameter of type property");
+		if (value.value == null) {
+			throw new TipiException("TipiOpenBinary: null value supplied");
 		}
-		final Property pp = (Property) value;
-		if (!(pp.getType().equals(Property.BINARY_PROPERTY))) {
-			throw new TipiException("TipiSaveBinary only works for binary properties!");
+		if (!(value.value instanceof Binary)) {
+			throw new TipiException("TipiOpenBinary: Type of value is not Binary, but: " + value.value.getClass());
 		}
-		Binary b = (Binary) pp.getTypedValue();
-		myContext.runAsyncInEventThread(new Runnable() {
+		String extString = null;
+		if (extension != null) {
+			extString = (String) extension.value;
+		}
+		String fileNameEval = null;
+		if (fileName != null) {
+			fileNameEval = (String) fileName.value;
+		} else {
+			throw new TipiException("TipiOpenBinary: fileName value required");
+		}
+		Binary b = (Binary) value.value;
+		if (extString == null) {
+			String mime = b.guessContentType();
+			String ext = null;
+			FormatDescription fd = b.getFormatDescription();
+			if(fd!=null) {
+				List<String> extensions = fd.getFileExtensions();
+				if(!extensions.isEmpty()) {
+					ext = extensions.get(0);
+
+				}
+			}
+			if (mime != null) {
+				if (mime.indexOf("/") != -1) {
+					StringTokenizer st = new StringTokenizer(mime, "/");
+					String major = st.nextToken();
+					String minor = st.nextToken();
+					System.err.println("Binary type: " + major + " and minor: " + minor);
+					if(ext!=null) {
+						extString = ext;
+					} else {
+						extString = minor;
+					}
+				}
+			}
+		}
+		final String fname = fileNameEval;
+		final String e = extString;
+		if (fileNameEval == null) {
+			fileNameEval = "data_";
+		}
+		myContext.runSyncInEventThread(new Runnable() {
 
 			public void run() {
 				Container c = null;
-
-				JFileChooser jf = new JFileChooser();
-				jf.setCurrentDirectory(new File(System.getProperty("user.home")));
-				String description = pp.getSubType("description");
-				if (description != null) {
-					jf.setSelectedFile(new File(description));
-				}
-				result = jf.showSaveDialog(c);
-				f = jf.getSelectedFile();
+				doShowSaveDialog(c, fname+"."+e);
 
 			}
 		});
 		if (result != JFileChooser.APPROVE_OPTION) {
 			throw new TipiBreakException(-2);
 		}
-	
+
 		saveFile(b, f);
+		
+		
+		
+		
+		
+		
+		
+		
 
 	}
 
+	private void doShowSaveDialog(Container c, String description) {
+		JFileChooser jf = new JFileChooser();
+		jf.setCurrentDirectory(new File(System.getProperty("user.home")));
+		if (description != null) {
+			jf.setSelectedFile(new File(description));
+		}
+		result = jf.showSaveDialog(c);
+		f = jf.getSelectedFile();
+	}
+
 	public static void saveFile(Binary value, File f) throws TipiBreakException, TipiException {
+		System.err.println("Saving: "+f.getAbsolutePath());
 		if (f == null) {
 			throw new TipiBreakException(-3);
 		}
 		FileOutputStream fos = null;
 		try {
 			fos = new FileOutputStream(f);
-			Binary b = (Binary) value;
-			b.write(fos);
+			value.write(fos);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			throw new TipiException("File not found: " + e);

@@ -34,8 +34,8 @@ public class SpringGlassPane extends JComponent {
             Graphics2D g2 = (Graphics2D) g.create();
             g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
                     RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-            
-            g2.setComposite(AlphaComposite.SrcOver.derive(1.0f - getZoom()));
+    // Commented out for java 1.5 compat         
+//            g2.setComposite(AlphaComposite.SrcOver.derive(1.0f - getZoom()));
             g2.drawImage(image, x + bounds.x, y + bounds.y,
                     width, height, null);
         }
