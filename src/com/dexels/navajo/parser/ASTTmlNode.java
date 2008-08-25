@@ -152,12 +152,15 @@ public final class ASTTmlNode extends SimpleNode {
                           return Boolean.valueOf(false);
                        }
                     } else if (type.equals(Property.DATE_PROPERTY)) {
-                      try {
-                          com.dexels.navajo.util.Util.getDate(prop.getValue());
-                          return Boolean.valueOf(true);
-                       } catch (Exception e) {
-                          return Boolean.valueOf(false);
-                       }
+                    	try {
+                    		if ( prop != null && prop.getTypedValue() instanceof Date ) {
+                    			return Boolean.valueOf(true);
+                    		} else {
+                    			return Boolean.valueOf(false);
+                    		}
+                    	} catch (Exception e) {
+                    		return Boolean.valueOf(false);
+                    	}
                     } else if ( type.equals(Property.CLOCKTIME_PROPERTY)) {
                     	try {
                             ClockTime ct = new ClockTime(prop.getValue());
@@ -341,7 +344,7 @@ public final class ASTTmlNode extends SimpleNode {
                 else {
                   if (!option.equals("")) {
                     try {
-                      Date a = com.dexels.navajo.util.Util.getDate(prop.getValue());
+                      Date a = (Date) prop.getTypedValue();
                       Calendar cal = Calendar.getInstance();
 
                       cal.setTime(a);
@@ -376,14 +379,14 @@ public final class ASTTmlNode extends SimpleNode {
                         throw new TMLExpressionException(e.getMessage());
                       }
                     }
-                    catch (com.dexels.navajo.server.UserException ue) {
+                    catch (Exception ue) {
                       throw new TMLExpressionException("Invalid date: " + prop.getValue());
                     }
                   }
                   else {
 
                     try {
-                      Date a = com.dexels.navajo.util.Util.getDate(prop.getValue());
+                      Date a = (Date) prop.getTypedValue();
                       resultList.add(a);
                     }
                     catch (java.lang.Exception pe) {

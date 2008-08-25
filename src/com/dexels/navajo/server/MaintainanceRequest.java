@@ -28,7 +28,7 @@ public class MaintainanceRequest extends Request {
     public void addServicesToMessage(Access access, Parameters parms, Navajo inMessage, boolean multiple) 
          throws SystemException, UserException, java.io.IOException, NavajoException {
 
-        Message services = Util.getMessage(inMessage, "services", true);
+        Message services = inMessage.getMessage("services");
 
         String all[] = repository.getServices(access);
 
@@ -55,16 +55,16 @@ public class MaintainanceRequest extends Request {
     	
         Navajo outMessage = null;
 
-        Message identification = Util.getMessage(inMessage, "identification", true);
-        String username = Util.getProperty(identification, "username", true).getValue();
-        String password = Util.getProperty(identification, "password", true).getValue();
+        Message identification = inMessage.getMessage("identification");
+        String username = identification.getProperty("username").getValue();
+        String password = identification.getProperty("password").getValue();
 
-        Message services = Util.getMessage(inMessage, "services", true);
-        Property serviceProp = Util.getProperty(services, "all_services", false);
+        Message services = inMessage.getMessage("services");
+        Property serviceProp = services.getProperty("all_services");
         String service = "";
 
         if (serviceProp == null) {
-            service = Util.getProperty(services, "service", true).getValue();
+            service = services.getProperty("service").getValue();
         } else {
             ArrayList<Selection> selectedServices = serviceProp.getAllSelectedSelections();
 
