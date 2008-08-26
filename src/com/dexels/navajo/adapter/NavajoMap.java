@@ -4,6 +4,7 @@ import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.scheduler.TaskMap;
 import com.dexels.navajo.scheduler.TaskRunnerMap;
 import com.dexels.navajo.server.*;
+import com.dexels.navajo.util.AuditLog;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.adapter.navajomap.MessageMap;
 import com.dexels.navajo.client.*;
@@ -12,6 +13,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.*;
+import java.util.logging.Level;
+
 import com.dexels.navajo.document.types.ClockTime;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.document.types.Money;
@@ -476,17 +479,20 @@ public class NavajoMap extends AsyncMappable  implements Mappable {
         authenticationError = true;
       }
       if (aaaError != null) {
-        System.err.println("THROWING AUTHORIZATIONEXCEPTION IN NAVAJOMAP....");
+    	AuditLog.log("NavajoMap", "THROWING AUTHORIZATIONEXCEPTION IN NAVAJOMAP" + aaaError.getProperty("User").getValue(), Level.WARNING, access.accessID);
+        //System.err.println("THROWING AUTHORIZATIONEXCEPTION IN NAVAJOMAP....");
         throw new AuthorizationException(authenticationError, !authenticationError,
                                          aaaError.getProperty("User").getValue(),
                                          aaaError.getProperty("Message").getValue());
       }
 
       if (breakOnConditionError && inDoc.getMessage("ConditionErrors") != null) {
-    	  System.err.println("BREAKONCONDITIONERROR WAS SET TO TRUE, RETURNING CONDITION ERROR");
+    	  AuditLog.log("NavajoMap", "BREAKONCONDITIONERROR WAS SET TO TRUE, RETURNING CONDITION ERROR", Level.INFO, access.accessID);
+    	  //System.err.println("BREAKONCONDITIONERROR WAS SET TO TRUE, RETURNING CONDITION ERROR");
           throw new ConditionErrorException(inDoc);
       } else if (inDoc.getMessage("ConditionErrors") != null) {
-    	  System.err.println("BREAKONCONDITIONERROR WAS SET TO FALSE, RETURNING....");
+    	  AuditLog.log("NavajoMap", "BREAKONCONDITIONERROR WAS SET TO FALSE, RETURNING....", Level.INFO, access.accessID);
+    	  //System.err.println("");
     	  return;
       }
       
@@ -498,15 +504,15 @@ public class NavajoMap extends AsyncMappable  implements Mappable {
         Message other = inMessage.getMessage(compare);
         Message rec = inDoc.getMessage(compare);
 
-        System.err.println("other = " + other);
-        System.err.println("rec = " + rec);
-        System.err.println("skipProperties = " + skipProperties);
+        //System.err.println("other = " + other);
+        //System.err.println("rec = " + rec);
+        //System.err.println("skipProperties = " + skipProperties);
         if (other == null || rec == null)
           isEqual = false;
         else
           isEqual = other.isEqual(rec, this.skipProperties);
 
-        System.err.println("IN NAVAJOMAP(), ISEQUAL = " + isEqual);
+        //System.err.println("IN NAVAJOMAP(), ISEQUAL = " + isEqual);
       } else {
         outDoc = inDoc;
       }
@@ -589,7 +595,7 @@ public class NavajoMap extends AsyncMappable  implements Mappable {
     if (!p.getType().equals(Property.BINARY_PROPERTY)) {
       throw new UserException(-1, "Property " + fullName + " not of type binary");
     }
-    System.err.println("Returning Binary property: ");
+    //System.err.println("Returning Binary property: ");
     return (Binary) p.getTypedValue();
   }
 
@@ -598,7 +604,7 @@ public class NavajoMap extends AsyncMappable  implements Mappable {
    if (!p.getType().equals(Property.CLOCKTIME_PROPERTY)) {
      throw new UserException(-1, "Property " + fullName + " not of type clocktime");
    }
-   System.err.println("Returning clocktime property: ");
+   //System.err.println("Returning clocktime property: ");
    return (ClockTime) p.getTypedValue();
  }
 
@@ -607,7 +613,7 @@ public class NavajoMap extends AsyncMappable  implements Mappable {
   if (!p.getType().equals(Property.MONEY_PROPERTY)) {
     throw new UserException(-1, "Property " + fullName + " not of type money");
   }
-  System.err.println("Returning money property: ");
+  //System.err.println("Returning money property: ");
   return (Money) p.getTypedValue();
 }
 
@@ -800,7 +806,7 @@ public class NavajoMap extends AsyncMappable  implements Mappable {
 
   public void setSkipProperties(String list) {
     this.skipProperties = list;
-    System.err.println("in setSkipProperties(): " + list);
+    //System.err.println("in setSkipProperties(): " + list);
   }
 
   public boolean getIsEqual() {
@@ -883,7 +889,7 @@ public class NavajoMap extends AsyncMappable  implements Mappable {
 	      e.printStackTrace();
 	      throw new UserException(-1, e.getMessage());
 	    } finally {
-	    	System.err.println("Setting set is finished.");
+	    	//System.err.println("Setting set is finished.");
 	    	setIsFinished();
 	    }
 	    
@@ -906,7 +912,7 @@ public class NavajoMap extends AsyncMappable  implements Mappable {
 	  while ( tm == null ) {
 		  tm = trm.getFinishedTask();
 		  if ( tm == null) {
-			  System.err.println("Waiting for task to finish....");
+			  //System.err.println("Waiting for task to finish....");
 			  try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {

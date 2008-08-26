@@ -35,6 +35,7 @@ import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.logging.Level;
 
 import com.dexels.navajo.server.enterprise.queue.Queuable;
 import com.dexels.navajo.server.enterprise.queue.RequestResponseQueueInterface;
@@ -119,10 +120,10 @@ public class HTTPMap implements Mappable, Queuable {
 		instances++;
 
 		if ( instances > 100 ) {
-			AuditLog.log("HTTPMap", "WARNING: More than 100 waiting HTTP requests");
+			AuditLog.log("HTTPMap", "WARNING: More than 100 waiting HTTP requests", Level.WARNING, myAccess.accessID);
 		}
 		try {
-			System.err.println("About to send to: " + url);
+			AuditLog.log("HTTPMap", "About to send to: " + url, Level.INFO, myAccess.accessID);
 			URL u = new URL("http://" + url);
 			HttpURLConnection con = null;
 			con = (HttpURLConnection) u.openConnection();
@@ -140,7 +141,7 @@ public class HTTPMap implements Mappable, Queuable {
 				con.setRequestProperty("Content-type", contentType);
 			}
 			if ( textContent != null ) {
-				System.err.println("textContent: " + textContent);
+				//System.err.println("textContent: " + textContent);
 				OutputStreamWriter osw = null;
 				osw = new OutputStreamWriter(con.getOutputStream());
 				try {
@@ -152,7 +153,7 @@ public class HTTPMap implements Mappable, Queuable {
 				}
 			} else if ( content != null ) {
 				OutputStream os = null;
-				System.err.println("content: "  + content);
+				//System.err.println("content: "  + content);
 				os = con.getOutputStream();
 				try {
 					content.write(os);
@@ -163,7 +164,8 @@ public class HTTPMap implements Mappable, Queuable {
 				}
 			} else {
 				if ( method.equals("POST")) {
-					throw new UserException(-1, "Empty content.");
+					AuditLog.log("HTTPMap", "Empty content.", Level.INFO, myAccess.accessID);
+					throw new UserException(-1, "");
 				}
 			}
 
@@ -210,7 +212,7 @@ public class HTTPMap implements Mappable, Queuable {
 			try {
 				RequestResponseQueueFactory.getInstance().send(this, 100);
 			} catch (Exception e) {
-				System.err.println(e.getMessage());
+				AuditLog.log("HTTPMap", e.getMessage(), Level.WARNING, myAccess.accessID);
 			}
 		}
 	}

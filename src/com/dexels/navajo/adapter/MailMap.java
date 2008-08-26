@@ -9,11 +9,14 @@ import com.dexels.navajo.document.*;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.enterprise.queue.RequestResponseQueueFactory;
+import com.dexels.navajo.util.AuditLog;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.*;
+import java.util.logging.Level;
+
 import javax.mail.*;
 import javax.activation.*;
 import javax.mail.internet.*;
@@ -94,8 +97,9 @@ public class MailMap implements MailMapInterface, Mappable, com.dexels.navajo.se
     		try {
     			RequestResponseQueueFactory.getInstance().send( this, 100);
     		} catch (Exception e) {
-    			e.printStackTrace(System.err);
-    			System.err.println(e.getMessage());
+    			AuditLog.log("MailMap", e.getMessage(), Level.WARNING, myAccess.accessID);
+    			//e.printStackTrace(System.err);
+    			//System.err.println(e.getMessage());
     		}
     	}
     }
@@ -105,7 +109,8 @@ public class MailMap implements MailMapInterface, Mappable, com.dexels.navajo.se
     	try {
     		sendMail();
     	} catch (Exception e) {
-    		e.printStackTrace(System.err);
+    		AuditLog.log("MailMap", e.getMessage(), Level.WARNING, myAccess.accessID);
+    		//e.printStackTrace(System.err);
     		if ( myAccess != null ) {
 				myAccess.setException(e);
 			}
@@ -138,7 +143,7 @@ public class MailMap implements MailMapInterface, Mappable, com.dexels.navajo.se
 
     			for (int i = 0; i < this.recipientArray.length; i++) {
     				addresses[i] = new InternetAddress(this.recipientArray[i]);
-    				System.err.println("Set recipient " + i + ": " + this.recipientArray[i]);
+    				//System.err.println("Set recipient " + i + ": " + this.recipientArray[i]);
     			}
 
     			msg.setRecipients(javax.mail.Message.RecipientType.TO, addresses);
@@ -147,7 +152,7 @@ public class MailMap implements MailMapInterface, Mappable, com.dexels.navajo.se
     				InternetAddress[] extra = new InternetAddress[this.ccArray.length];
     				for (int i = 0; i < this.ccArray.length; i++) {
     					extra[i] = new InternetAddress(this.ccArray[i]);
-    					System.err.println("Set cc " + i + ": " + this.ccArray[i]);
+    					//System.err.println("Set cc " + i + ": " + this.ccArray[i]);
     				}
     				msg.setRecipients(javax.mail.Message.RecipientType.CC, extra);
     			}
@@ -156,7 +161,7 @@ public class MailMap implements MailMapInterface, Mappable, com.dexels.navajo.se
     				InternetAddress[] extra = new InternetAddress[this.bccArray.length];
     				for (int i = 0; i < this.bccArray.length; i++) {
     					extra[i] = new InternetAddress(this.bccArray[i]);
-    					System.err.println("Set cc " + i + ": " + this.bccArray[i]);
+    					//System.err.println("Set cc " + i + ": " + this.bccArray[i]);
     				}
     				msg.setRecipients(javax.mail.Message.RecipientType.BCC, extra);
     			}
@@ -229,10 +234,12 @@ public class MailMap implements MailMapInterface, Mappable, com.dexels.navajo.se
 
     		} catch (Exception e) {
     			if(ignoreFailures){
-    				System.err.println("MailMap: Failure logged: " + e.getMessage());
+    				AuditLog.log("MailMap", e.getMessage(), Level.WARNING, myAccess.accessID);
+    				//System.err.println("MailMap: Failure logged: " + e.getMessage());
     				failure = e.getMessage();
     			}else{
-    				e.printStackTrace();
+    				AuditLog.log("MailMap", e.getMessage(), Level.SEVERE, myAccess.accessID);
+    				//e.printStackTrace();
     				throw new UserException( -1, e.getMessage());
     			}
     		}
@@ -324,7 +331,7 @@ public class MailMap implements MailMapInterface, Mappable, com.dexels.navajo.se
   }
 
   public void setAttachment(AttachmentMapInterface m) {
-	  System.err.println(">>>>>>>>>>>>>>>>>>>>>> in setAttachment");
+	  //System.err.println(">>>>>>>>>>>>>>>>>>>>>> in setAttachment");
 	  //this.attachment = (AttachementMap) m;
 	  if (attachments == null) {
 		  attachments = new ArrayList();

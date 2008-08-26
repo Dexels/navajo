@@ -26,7 +26,6 @@ package com.dexels.navajo.adapter;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.io.StringWriter;
 import java.util.*;
 
 import com.dexels.navajo.adapter.xmlmap.TagMap;

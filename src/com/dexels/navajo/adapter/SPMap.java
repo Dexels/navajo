@@ -382,7 +382,7 @@ public class SPMap extends SQLMap {
     }
     catch (SQLException sqle) {
       sqle.printStackTrace();
-      AuditLog.log("SPMap", sqle.getLocalizedMessage() + "/" + sqle.getSQLState(), Level.SEVERE);
+      AuditLog.log("SPMap", sqle.getLocalizedMessage() + "/" + sqle.getSQLState(), Level.SEVERE, myAccess.accessID);
       
       throw new UserException( -1,  sqle.getLocalizedMessage() + "/" + sqle.getSQLState());
     }
@@ -543,7 +543,7 @@ public class SPMap extends SQLMap {
         }
       }
       catch (SQLException sqle) {
-    	  AuditLog.log("SPMap", sqle.getLocalizedMessage() + "/" + sqle.getSQLState(), Level.SEVERE);
+    	  AuditLog.log("SPMap", sqle.getLocalizedMessage() + "/" + sqle.getSQLState(), Level.SEVERE, myAccess.accessID);
         throw new com.dexels.navajo.server.UserException( -1, sqle.getMessage());
       }
       return value;
@@ -564,7 +564,7 @@ public class SPMap extends SQLMap {
       }
     }
     catch (SQLException sqle) {
-    	AuditLog.log("SPMap", sqle.getLocalizedMessage() + "/" + sqle.getSQLState(), Level.SEVERE);
+    	AuditLog.log("SPMap", sqle.getLocalizedMessage() + "/" + sqle.getSQLState(), Level.SEVERE, myAccess.accessID);
       sqle.printStackTrace();
     }
     super.store();
@@ -579,7 +579,7 @@ public class SPMap extends SQLMap {
       }
     }
     catch (SQLException sqle) {
-    	AuditLog.log("SPMap", sqle.getLocalizedMessage() + "/" + sqle.getSQLState(), Level.SEVERE);
+    	AuditLog.log("SPMap", sqle.getLocalizedMessage() + "/" + sqle.getSQLState(), Level.SEVERE, myAccess.accessID);
       sqle.printStackTrace();
     }
     super.kill();

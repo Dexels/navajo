@@ -25,6 +25,8 @@
 package com.dexels.navajo.adapter;
 
 import java.io.*;
+import java.util.logging.Level;
+
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.mapping.Mappable;
@@ -34,6 +36,7 @@ import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.server.enterprise.queue.RequestResponseQueueFactory;
+import com.dexels.navajo.util.AuditLog;
 import com.enterprisedt.net.ftp.*;
 
 
@@ -146,7 +149,7 @@ public class FTPMap  implements Mappable, com.dexels.navajo.server.enterprise.qu
 					ftpClient.quit();
 				}
 			} catch (Exception e) {
-				e.printStackTrace(System.err);
+				AuditLog.log("FTPMap", e.getMessage(), Level.SEVERE, myAccess.accessID);
 				throw new UserException( -1, e.getMessage(), e);
 			}
 		}

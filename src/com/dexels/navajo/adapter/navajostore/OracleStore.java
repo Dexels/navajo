@@ -63,7 +63,7 @@ public final class OracleStore implements StoreInterface {
 	"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	
 	private static String insertAuditLog = "insert into auditlog " + 
-	"(instance, subsystem, message, auditlevel, lastupdate) values (?, ?, ?, ?, ?)";
+	"(instance, subsystem, message, auditlevel, accessid, lastupdate) values (?, ?, ?, ?, ?, ?)";
 	
 	private static String updateEmbryoAccessSQL = "update navajoaccess " +
 	"set webservice = ?, username = ?, threadcount = ?, cpuload = ?, totaltime = ?, parsetime = ?, " + 
@@ -527,7 +527,8 @@ public final class OracleStore implements StoreInterface {
 					ps.setString(2, ale.getSubSystem());
 					ps.setString(3, ale.getMessage());
 					ps.setString(4, ale.getLevel());
-					ps.setTimestamp(5, new java.sql.Timestamp(ale.getCreated().getTime()));
+					ps.setString(5, ale.getAccessId());
+					ps.setTimestamp(6, new java.sql.Timestamp(ale.getCreated().getTime()));
 					ps.executeUpdate();
 				}
 			} catch (Throwable t) {

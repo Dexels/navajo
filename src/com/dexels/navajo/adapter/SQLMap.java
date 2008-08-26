@@ -189,7 +189,7 @@ public class SQLMap implements Mappable, LazyArray {
   private SQLBatchUpdateHelper helper = null;
 
   private static int openResultSets = 0;
-  private Access myAccess;
+  protected Access myAccess;
   
   public int instances;
   
@@ -336,18 +336,18 @@ public class SQLMap implements Mappable, LazyArray {
 		  }
 		  catch (NavajoException ne) {
 			  ne.printStackTrace(System.err);
-			  AuditLog.log("SQLMap", ne.getMessage(), Level.SEVERE);
+			  AuditLog.log("SQLMap", ne.getMessage(), Level.SEVERE, myAccess.accessID);
 			  throw new MappableException(ne.getMessage());
 		  }
 		  catch (java.io.IOException fnfe) {
 			  fnfe.printStackTrace(System.err);
-			  AuditLog.log("SQLMap", fnfe.getMessage(), Level.SEVERE);
+			  AuditLog.log("SQLMap", fnfe.getMessage(), Level.SEVERE, myAccess.accessID);
 			  throw new MappableException(
 					  "Could not load configuration file for SQLMap object: " +
 					  fnfe.getMessage());
 		  } catch (Throwable t) {
 			  t.printStackTrace(System.err);
-			  AuditLog.log("SQLMap", t.getMessage(), Level.SEVERE);
+			  AuditLog.log("SQLMap", t.getMessage(), Level.SEVERE, myAccess.accessID);
 			  throw new MappableException(t.getMessage());
 		  }
 	  //}
@@ -425,7 +425,7 @@ public class SQLMap implements Mappable, LazyArray {
       }
     }
     catch (SQLException sqle) {
-    	AuditLog.log("SQLMap", sqle.getMessage(), Level.SEVERE);
+    	AuditLog.log("SQLMap", sqle.getMessage(), Level.SEVERE, myAccess.accessID);
     	sqle.printStackTrace();
     }
   }
@@ -457,7 +457,7 @@ public class SQLMap implements Mappable, LazyArray {
 				  //System.err.println("SQLMAP, SETTING AUTOCOMMIT TO TRUE AGAIN");
 			  }
 			  catch (SQLException sqle) {
-				  AuditLog.log("SQLMap", sqle.getMessage(), Level.SEVERE);
+				  AuditLog.log("SQLMap", sqle.getMessage(), Level.SEVERE, myAccess.accessID);
 				  throw new UserException( -1, sqle.getMessage(), sqle);
 			  }
 			  if (transactionContextMap != null) {
@@ -491,7 +491,7 @@ public class SQLMap implements Mappable, LazyArray {
 		  }
 	  }
 	  catch (SQLException sqle) {
-		  AuditLog.log("SQLMap", sqle.getMessage(), Level.SEVERE);
+		  AuditLog.log("SQLMap", sqle.getMessage(), Level.SEVERE, myAccess.accessID);
 		  throw new UserException( -1, sqle.getMessage(), sqle);
 	  }
 	  overideAutoCommit = true;
@@ -512,7 +512,7 @@ public class SQLMap implements Mappable, LazyArray {
 
     }
     if (con == null) {
-    	AuditLog.log("SQLMap", "Invalid transaction context: " + i, Level.SEVERE);
+    	AuditLog.log("SQLMap", "Invalid transaction context: " + i, Level.SEVERE,myAccess.accessID);
       throw new UserException( -1, "Invalid transaction context set");
     }
   }
@@ -852,7 +852,7 @@ public class SQLMap implements Mappable, LazyArray {
       con = myConnectionBroker.getConnection();
 
       if (con == null) {
-    	  AuditLog.log("SQLMap", "Could not connect to database: " + datasource +  ", one more try with fresh broker....", Level.WARNING);
+    	  AuditLog.log("SQLMap", "Could not connect to database: " + datasource +  ", one more try with fresh broker....", Level.WARNING, myAccess.accessID);
         
         Message msg = configFile.getMessage("/datasources/" + datasource);
         try {
@@ -1004,7 +1004,7 @@ private void setBlob(PreparedStatement statement, int i, Binary b) throws SQLExc
 
     if (con == null) {
     	AuditLog.log("SQLMap",   "Could not connect to database: " + datasource +
-                ", check your connection", Level.SEVERE);
+                ", check your connection", Level.SEVERE, myAccess.accessID);
     
       throw new UserException( -1,
           "in SQLMap. Could not open database connection [driver = " + driver +
@@ -1344,7 +1344,7 @@ private void setBlob(PreparedStatement statement, int i, Binary b) throws SQLExc
     }
     catch (SQLException sqle) {
       sqle.printStackTrace();
-      AuditLog.log("SQLMap", sqle.getMessage(), Level.SEVERE);
+      AuditLog.log("SQLMap", sqle.getMessage(), Level.SEVERE, myAccess.accessID);
       throw new UserException( -1, sqle.getMessage());
     }
     finally {
@@ -1385,7 +1385,7 @@ private void setBlob(PreparedStatement statement, int i, Binary b) throws SQLExc
 
     }
     catch (Exception e) {
-    	AuditLog.log("SQLMap", e.getMessage(), Level.SEVERE);
+    	AuditLog.log("SQLMap", e.getMessage(), Level.SEVERE, myAccess.accessID);
       throw new UserException( -1, e.getMessage());
     }
     //System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> OPEN RESULT SETS: " + openResultSets);
@@ -1535,7 +1535,7 @@ private void setBlob(PreparedStatement statement, int i, Binary b) throws SQLExc
           ", url = " + url + ", username = '" + username +
           "', password = '" + password + "']";
 
-      AuditLog.log("SQLMap", msg, Level.WARNING);
+      AuditLog.log("SQLMap", msg, Level.WARNING, myAccess.accessID);
      
       if (debug) {
         System.err.println(this.getClass() + ": " + msg);
