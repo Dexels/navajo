@@ -6,10 +6,15 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.logging.Level;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.events.NavajoEvent;
+import com.dexels.navajo.events.NavajoEventRegistry;
+import com.dexels.navajo.events.NavajoListener;
+import com.dexels.navajo.events.types.NavajoCompileScriptEvent;
 import com.dexels.navajo.persistence.*;
 import com.dexels.navajo.server.CacheController;
 import com.dexels.navajo.server.Dispatcher;
@@ -17,6 +22,7 @@ import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
 import com.dexels.navajo.sharedstore.SharedStoreFactory;
 import com.dexels.navajo.sharedstore.SharedStoreInterface;
 import com.dexels.navajo.sharedstore.map.SharedTribalMap;
+import com.dexels.navajo.util.AuditLog;
 
 
 
@@ -62,7 +68,7 @@ class Frequency implements Serializable {
 	
 }
 
-public final class PersistenceManagerImpl implements PersistenceManager {
+public final class PersistenceManagerImpl implements PersistenceManager, NavajoListener {
 
 	/**
 	 * Public bean properties
@@ -110,6 +116,9 @@ public final class PersistenceManagerImpl implements PersistenceManager {
 					accessFrequency = new SharedTribalMap<String,Frequency>(FREQUENCE_MAP_ID);
 					inMemoryCache = SharedTribalMap.registerMap(inMemoryCache, false);
 					accessFrequency = SharedTribalMap.registerMap(accessFrequency, false);
+					// Register myself to the NavajoCompileScriptEvent in order to detect script recompiles and removed
+					// cached scripts accordingly.
+					NavajoEventRegistry.getInstance().addListener(NavajoCompileScriptEvent.class, this);
 				}
 			}
 		}
@@ -344,5 +353,24 @@ public final class PersistenceManagerImpl implements PersistenceManager {
 
 	public void clearCache() {
 		setDoClear(true);
+	}
+
+	public void onNavajoEvent(NavajoEvent ne) {
+		
+		if ( ne instanceof NavajoCompileScriptEvent ) {
+			NavajoCompileScriptEvent ncse = (NavajoCompileScriptEvent) ne;
+			AuditLog.log("PERSISTENCEMANAGER", "Received NavajoCompileScriptEvent for " + ncse.getWebservice(), Level.INFO);
+			PersistenceManagerImpl p;
+			try {
+				p = new PersistenceManagerImpl();
+				p.setKey(ncse.getWebservice());
+				p.setDoClear(true);
+			} catch (InstantiationException e) {
+				// TODO Auto-generated catch block
+				AuditLog.log("PERSISTENCEMANAGER", e.getMessage(), Level.SEVERE);
+			}
+			
+		}
+		
 	}
 }
