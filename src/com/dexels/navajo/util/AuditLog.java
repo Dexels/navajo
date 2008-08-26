@@ -42,8 +42,11 @@ public final class AuditLog implements Mappable {
 	public final static String AUDIT_MESSAGE_MONITOR = "Monitoring Agent";
 	public final static String AUDIT_MESSAGE_QUEUEDADAPTERS = "Queued Adapters";
 	public final static String AUDIT_MESSAGE_USER = "USER";
+	public final static String AUDIT_MESSAGE_SCRIPTCOMPILER = "Script Compiler";
 
 	private static volatile String instanceName;
+	
+	private String accessId;
 	
 	private final static Logger logger = Logger.getLogger("com.dexels.navajo.AuditLog");
 	
@@ -60,8 +63,18 @@ public final class AuditLog implements Mappable {
 			instanceName = Dispatcher.getInstance().getNavajoConfig().getInstanceName();
 		}
 		logger.info(instanceName + ":" + subsystem + message);
-		
+
 		NavajoEventRegistry.getInstance().publishEvent(new AuditLogEvent(subsystem.toUpperCase(), message, Level.INFO.getLocalizedName()));
+	}
+	
+	public final static void log(final String subsystem, final String message,  Level level, String accessId) {
+		if ( instanceName == null && Dispatcher.getInstance() != null ) {
+			instanceName = Dispatcher.getInstance().getNavajoConfig().getInstanceName();
+		}
+		logger.info(instanceName + ":" + subsystem + message);
+		AuditLogEvent ale = new AuditLogEvent(subsystem.toUpperCase(), message, level.getLocalizedName());
+		ale.setAccessId(accessId);
+		NavajoEventRegistry.getInstance().publishEvent(ale);
 	}
 
 	public String getMessage() {
@@ -84,12 +97,15 @@ public final class AuditLog implements Mappable {
 		
 	}
 
-	public void load(Parameters parms, Navajo inMessage, Access access,
-			NavajoConfig config) throws MappableException, UserException {
-		
+	public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
+		if ( access != null ) {
+			accessId = access.accessID;
+		}
 	}
 
 	public void store() throws MappableException, UserException {
-		NavajoEventRegistry.getInstance().publishEvent(new AuditLogEvent(AUDIT_MESSAGE_USER, getMessage(), getLevel()));
+		AuditLogEvent ale = new AuditLogEvent(AUDIT_MESSAGE_USER, getMessage(), getLevel());
+		ale.setAccessId(accessId);
+		NavajoEventRegistry.getInstance().publishEvent(ale);
 	}
 }

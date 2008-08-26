@@ -11,6 +11,7 @@ public class AuditLogEvent implements NavajoEvent {
 	private String subSystem;
 	private String message;
 	private String level;
+	private String accessId;
 	private Date created;
 	
 	public AuditLogEvent(String subSystem, String msg, String level) {
@@ -49,5 +50,13 @@ public class AuditLogEvent implements NavajoEvent {
 
 	public Date getCreated() {
 		return created;
+	}
+
+	public String getAccessId() {
+		return accessId;
+	}
+
+	public void setAccessId(String accessId) {
+		this.accessId = accessId;
 	}
 }
