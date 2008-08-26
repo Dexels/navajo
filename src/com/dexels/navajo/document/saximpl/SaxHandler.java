@@ -293,7 +293,9 @@ public final class SaxHandler implements DocHandler {
 //          System.err.println("ILLEGAL LENGTH IN PROPERTY " + myName + ": " +
 //                             sLength);
         }
-
+        if(myName==null) {
+        	throw NavajoFactory.getInstance().createNavajoException("Can not parse property without a name ");
+        }
       
         boolean isListType = (type != null && type.equals(Property.SELECTION_PROPERTY));
        
