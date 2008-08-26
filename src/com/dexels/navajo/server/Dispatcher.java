@@ -486,14 +486,17 @@ public Access [] getUsers() {
 		  
 		  sh.setInput(in, access, parms, navajoConfig);
 		
-		  long expirationInterval = CacheController.getInstance().getExpirationInterval(access.rpcName);
+		  // If recompile is needed ALWAYS set expirationInterval to -1.
+		  long expirationInterval = GenericHandler.needsRecompile(access) ? -1 : CacheController.getInstance().getExpirationInterval(access.rpcName);
 		  
 		  // Remove password from in to create password independend persistenceKey.
 		  in.getHeader().setRPCPassword("");
 		
 		  out = (Navajo) navajoConfig.getPersistenceManager().get(sh,  
-				  CacheController.getInstance().getCacheKey( access.rpcUser, access.rpcName, in), access.rpcName,
-				  expirationInterval, (expirationInterval != -1) );
+				  CacheController.getInstance().getCacheKey( access.rpcUser, access.rpcName, in), 
+				  access.rpcName,
+				  expirationInterval, 
+				  (expirationInterval != -1) );
 		  
 		  access.setOutputDoc(out);
 		  
