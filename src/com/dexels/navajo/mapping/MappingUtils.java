@@ -260,7 +260,7 @@ public final class MappingUtils {
     	}
     	ref.addProperty(prop);
     }
-    else {
+    else { // Existing property.
     	prop.setType(type);
     	if (type.equals(Property.BINARY_PROPERTY)) {
     		if (value != null && (value instanceof Binary)) {
@@ -271,7 +271,7 @@ public final class MappingUtils {
     	}  else if ( type.equals(Property.SELECTION_PROPERTY) && value != null && value instanceof Selection [] ) {
     		prop.setCardinality("+");
     		prop.setValue((Selection []) value);
-    	} else {
+    	}  else if ( !type.equals(Property.SELECTION_PROPERTY) ) {
     		if (value != null) {
     			prop.setAnyValue(value);
     		}
