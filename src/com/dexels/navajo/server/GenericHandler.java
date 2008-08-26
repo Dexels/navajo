@@ -1,13 +1,17 @@
 package com.dexels.navajo.server;
 
 import java.util.*;
+import java.util.logging.Level;
 
 import java.io.File;
 
 import com.dexels.navajo.mapping.*;
+import com.dexels.navajo.util.AuditLog;
 import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.loader.NavajoClassSupplier;
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.events.NavajoEventRegistry;
+import com.dexels.navajo.events.types.NavajoCompileScriptEvent;
 
 /**
  * Title:        Navajo
@@ -66,6 +70,84 @@ public final class GenericHandler extends ServiceHandler {
        loadedClasses = new HashMap();
     }
 
+    private static final Object[] getScriptPathServiceNameAndScriptFile(Access a) {
+    	String scriptPath = NavajoConfig.getInstance().getScriptPath();
+    	
+    	int strip = a.rpcName.lastIndexOf("/");
+        String pathPrefix = "";
+        String serviceName = a.rpcName;
+        if (strip != -1) {
+          serviceName = a.rpcName.substring(strip+1);
+          pathPrefix = a.rpcName.substring(0, strip) + "/";
+        }
+        
+    	File scriptFile = new File(scriptPath + "/" + a.rpcName + "_" + applicationGroup + ".xml");
+    	if (scriptFile.exists()) {
+    		serviceName += "_" + applicationGroup;
+    	} else {
+    		scriptFile = new File(scriptPath + "/" + a.rpcName + ( a.betaUser ? "_beta" : "" ) + ".xml" );
+    		if ( a.betaUser && !scriptFile.exists() ) {
+    			// Try normal webservice.
+    			scriptFile = new File(scriptPath + "/" + a.rpcName + ".xml" );
+    		} else if ( a.betaUser ) {
+    			serviceName += "_beta";
+    		} 
+    	}
+    	String sourceFileName = NavajoConfig.getInstance().getCompiledScriptPath() + "/" + pathPrefix + serviceName + ".java";
+    	String classFileName =  NavajoConfig.getInstance().getCompiledScriptPath() + "/" + pathPrefix + serviceName + ".class";
+    	String className = (pathPrefix.equals("") ? serviceName : MappingUtils.createPackageName(pathPrefix) + "." + serviceName);
+    	 
+    	System.err.println("in getScriptPathServiceNameAndScriptFile()");
+    	System.err.println("pathPrefix = " + pathPrefix);
+    	System.err.println("serviceName = " + serviceName);
+    	System.err.println("scriptFile = " + scriptFile.getName());
+    	System.err.println("sourceFileName = " + sourceFileName);
+    	System.err.println("classFileName = " + classFileName);
+    	System.err.println("className = " + className);
+    	
+    	return new Object[]{pathPrefix,serviceName,scriptFile,sourceFileName,new File(sourceFileName),className,classFileName,new File(classFileName)};
+    }
+    
+    /**
+     * Check whether Navajo script file needs to be recompiled.
+     * 
+     * @param scriptFile
+     * @param sourceFile
+     * @return
+     */
+    private final static boolean checkScriptRecompile(File scriptFile, File sourceFile) {
+    	boolean b = (!sourceFile.exists() || (scriptFile.lastModified() > sourceFile.lastModified()) || sourceFile.length() == 0);
+    	return b;
+    }
+    
+    /**
+     * Check whether Java class file needs to be recompiled.
+     * 
+     * @param serviceName
+     * @param sourceFile
+     * @param targetFile
+     * @return
+     */
+    private final static boolean checkJavaRecompile(File sourceFile, File targetFile) {
+    	boolean b = !targetFile.exists() || (sourceFile.lastModified() > targetFile.lastModified());
+    	return b;
+    }
+    
+    /**
+     * Check whether web service Access needs recompile.
+     * Can be used by interested parties, e.g. Dispatcher.
+     * 
+     * @param a
+     * @return
+     */
+    public final static boolean needsRecompile(Access a) {
+    	Object [] all = getScriptPathServiceNameAndScriptFile(a);
+    	File scriptFile = (File) all[2];
+    	File sourceFile = (File) all[4];
+    	File targetFile = (File) all[7];
+    	return ( checkScriptRecompile(scriptFile, sourceFile) || checkJavaRecompile(sourceFile, targetFile) );
+    }
+    
     /**
      * doService() is called by Dispatcher to perform web service.
      *
@@ -86,117 +168,77 @@ public final class GenericHandler extends ServiceHandler {
 
           try {
 
-            // Strip any paths definitions that are present in script name
-            int strip = access.rpcName.lastIndexOf("/");
-            String pathPrefix = "";
-            String serviceName = access.rpcName;
-            if (strip != -1) {
-              serviceName = access.rpcName.substring(strip+1);
-              pathPrefix = access.rpcName.substring(0, strip) + "/";
-            }
-      
-            // First check whether applicationId specific script exists.
-            File scriptFile = null;
-            
-            scriptFile = new File(scriptPath + "/" + access.rpcName + "_" + applicationGroup + ".xml");
-            if (scriptFile.exists()) {
-            	serviceName += "_" + applicationGroup;
-            } else {
-            	scriptFile = new File(scriptPath + "/" + access.rpcName + ( access.betaUser ? "_beta" : "" ) + ".xml" );
-            	if ( access.betaUser && !scriptFile.exists() ) {
-            		// Try normal webservice.
-            		scriptFile = new File(scriptPath + "/" + access.rpcName + ".xml" );
-            	} else if ( access.betaUser ) {
-            		serviceName += "_beta";
-            	} 
-            }
-
-            String className = (pathPrefix.equals("") ? serviceName : MappingUtils.createPackageName(pathPrefix) + "." + serviceName);
-
-            //System.err.println("scriptFile is " + scriptFile.getName());
-            
+        	Object [] all = getScriptPathServiceNameAndScriptFile(access);
+        	String pathPrefix = (String) all[0];
+        	String serviceName = (String) all[1];
+        	File scriptFile = (File) all[2];
+        	String sourceFileName = (String) all[3];
+        	File sourceFile = (File) all[4];
+        	String className = (String) all[5];
+        	String classFileName = (String) all[6];
+        	File targetFile = (File) all[7];
+        	  
             newLoader = (NavajoClassLoader) loadedClasses.get(className);
          
             if (properties.compileScripts) {
             	if (scriptFile.exists()) {
-            		
-            		String sourceFileName = properties.getCompiledScriptPath() + "/" + pathPrefix + serviceName + ".java";
-            		File sourceFile = null;
-            	
-            		
-            		// Use if-synchronized-if construction.
-            		// 12/11/2006: If-sync-if does NOT work here for obvious reasons. The second
-            		// if can evaluate to true even before the entire work done in the
-            		// sync block is finished.
-            		
-            		//synchronized (mutex1) {
-            			
-            			sourceFile = new File(sourceFileName);
-            			
-            			if (!sourceFile.exists() || (scriptFile.lastModified() > sourceFile.lastModified()) || sourceFile.length() == 0 ) {
 
-            				synchronized (mutex1) { // Check for outdated compiled script Java source.
+            		if ( checkScriptRecompile(scriptFile, sourceFile) ) {
 
-            				if (!sourceFile.exists() || (scriptFile.lastModified() > sourceFile.lastModified()) || sourceFile.length() == 0  ) {
-            					
+            			synchronized (mutex1) { // Check for outdated compiled script Java source.
+
+            				if ( checkScriptRecompile(scriptFile, sourceFile) ) {
+
             					com.dexels.navajo.mapping.compiler.TslCompiler tslCompiler = new
             					com.dexels.navajo.mapping.compiler.TslCompiler(properties.getClassloader());
-            					
+
             					try {
-            							tslCompiler.compileScript(serviceName, 
-				            									  scriptPath,
-				            									  properties.getCompiledScriptPath(),
-				            									  pathPrefix);
+            						tslCompiler.compileScript(serviceName, 
+            								scriptPath,
+            								properties.getCompiledScriptPath(),
+            								pathPrefix);
             					} catch (SystemException ex) {
             						sourceFile.delete();
+            						AuditLog.log(AuditLog.AUDIT_MESSAGE_SCRIPTCOMPILER , ex.getMessage(), Level.SEVERE, access.accessID);
             						throw ex;
             					}
             				}
             			}
             		} // end of sync block.
-            		
-            		String classFileName = properties.getCompiledScriptPath() + "/" + pathPrefix + serviceName + ".class";
-            		File targetFile = null;
-            		
-//            		// 12/11/2006: If-sync-if does NOT work here for obvious reasons. The second
-            		// if can evaluate to true even before the entire work done in the
-            		// sync block is finished.
-            		//synchronized(mutex2) { // Check for outdated class file.
-            			targetFile = new File(classFileName);
-            			
-            			if (!targetFile.exists() || (sourceFile.lastModified() > targetFile.lastModified())) { // Create class file
 
-            				synchronized(mutex2) {
-            					
-            					if (!targetFile.exists() || (sourceFile.lastModified() > targetFile.lastModified())) {
-            						
-            						if (newLoader != null) {
-            							loadedClasses.remove(className);
-            							newLoader = null;
-            							//System.gc();
-            						}
-            					
-            						com.dexels.navajo.compiler.NavajoCompiler compiler = new com.dexels.navajo.compiler.NavajoCompiler();
-            						try {
-            							compiler.compile(access, properties, sourceFileName);
-            							compilerErrors = compiler.errors;
-            						}
-            						catch (Throwable t) {
-            							//t.printStackTrace();
-            							System.err.println("Could not run-time compile Java file: " + sourceFileName + " (" + t.getMessage() + "). It may be compiled already");
-            						}
+
+            		if ( checkJavaRecompile(sourceFile, targetFile) ) { // Create class file
+
+            			synchronized(mutex2) {
+
+            				if ( checkJavaRecompile(sourceFile, targetFile) ) {
+
+            					if (newLoader != null) {
+            						loadedClasses.remove(className);
+            						newLoader = null;
+            					}
+
+            					com.dexels.navajo.compiler.NavajoCompiler compiler = new com.dexels.navajo.compiler.NavajoCompiler();
+            					try {
+            						compiler.compile(access, properties, sourceFileName);
+            						compilerErrors = compiler.errors;
+            						NavajoEventRegistry.getInstance().publishEvent(new NavajoCompileScriptEvent(access.rpcName));
+            					}
+            					catch (Throwable t) {
+            						AuditLog.log(AuditLog.AUDIT_MESSAGE_SCRIPTCOMPILER, "Could not run-time compile Java file: " + sourceFileName + " (" + t.getMessage() + "). It may be compiled already", Level.WARNING, access.accessID);
             					}
             				}
-            			} // end of sync block.
+            			}
+            		} // end of sync block.
             		//}
-            		
+
             	} else {
+            		AuditLog.log(AuditLog.AUDIT_MESSAGE_SCRIPTCOMPILER, "SCRIPT FILE DOES NOT EXISTS, I WILL TRY TO LOAD THE CLASS FILE ANYWAY....", Level.WARNING, access.accessID);
             		//System.out.println("SCRIPT FILE DOES NOT EXISTS, I WILL TRY TO LOAD THE CLASS FILE ANYWAY....");
             	}
             }
             
             // Synchronized check for classloader of this script.
-            //synchronized (mutex3) {
             newLoader = (NavajoClassLoader) loadedClasses.get(className);
             if (newLoader == null ) {
             	newLoader = new NavajoClassLoader(null, properties.getCompiledScriptPath(), 
@@ -233,8 +275,9 @@ public final class GenericHandler extends ServiceHandler {
               throw (AuthorizationException) e;
             }
             else {
-              e.printStackTrace();
-              throw new SystemException( -1, e.getMessage() + (!compilerErrors.trim().equals("") ? (", java compile errors: " + compilerErrors) : ""), e);
+            	AuditLog.log(AuditLog.AUDIT_MESSAGE_SCRIPTCOMPILER, e.getMessage() + (!compilerErrors.trim().equals("") ? (", java compile errors: " + compilerErrors) : ""), Level.SEVERE, access.accessID);
+            	e.printStackTrace();
+            	throw new SystemException( -1, e.getMessage() + (!compilerErrors.trim().equals("") ? (", java compile errors: " + compilerErrors) : ""), e);
             }
           }
         }
