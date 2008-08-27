@@ -873,7 +873,6 @@ public class GenericPropertyComponent extends JPanel implements PropertyValidata
 	}
 
 	protected final void addPropertyComponent(JComponent c, boolean verticalWeight) {
-		System.err.println("Setting value size: "+propertyWidth+" == "+myProperty.getName());
 		if (currentPropertyComponent != null) {
 			clearPropertyKeyListeners(currentPropertyComponent);
 		}
