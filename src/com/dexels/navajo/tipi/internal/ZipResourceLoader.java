@@ -28,7 +28,7 @@ public class ZipResourceLoader extends ClassPathResourceLoader {
 		zipFile = new ZipFile(tipiDefFile);
 	}
 
-	public URL getResourceURL(String location) throws MalformedURLException {
+	public URL getResourceURL(String location) throws IOException {
 		System.err.println("Trying to locate in zip: "+location);
 		ZipEntry z = zipFile.getEntry(location);
 		InputStream is;

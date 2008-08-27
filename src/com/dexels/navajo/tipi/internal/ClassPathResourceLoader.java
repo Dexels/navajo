@@ -6,7 +6,7 @@ import java.util.*;
 
 public class ClassPathResourceLoader implements TipiResourceLoader {
 
-	public URL getResourceURL(String location) throws MalformedURLException {
+	public URL getResourceURL(String location) throws IOException {
 
 		return getClassResourceURL(location);
 	}

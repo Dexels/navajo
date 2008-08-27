@@ -33,7 +33,7 @@ public class FileResourceLoader extends ClassPathResourceLoader {
 
 	
 	
-	public URL getResourceURL(String location) throws MalformedURLException {
+	public URL getResourceURL(String location) throws IOException {
 		File f = null;
 		if (baseFile==null) {
 			f = new File(location);

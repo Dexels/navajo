@@ -12,7 +12,7 @@ public interface TipiResourceLoader {
 	 * @return
 	 * @throws MalformedURLException
 	 */
-	public URL getResourceURL(String location) throws MalformedURLException;
+	public URL getResourceURL(String location) throws IOException;
 
 	/**
 	 * Reads a resource to a stream.

@@ -13,7 +13,7 @@ public class TmlResourceLoader extends ClassPathResourceLoader {
 		myZipResourceLoader = z;
 	}
 
-	public URL getResourceURL(String loc) throws MalformedURLException {
+	public URL getResourceURL(String loc) throws IOException {
 		String location = myPrefix + loc;
 		System.err.println("Trying to locate in zip: "+location);
 		return myZipResourceLoader.getResourceURL(location);

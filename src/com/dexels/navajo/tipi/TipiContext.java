@@ -812,7 +812,7 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 		if (genericResourceLoader != null) {
 			try {
 				return genericResourceLoader.getResourceURL(location);
-			} catch (MalformedURLException e) {
+			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
@@ -842,7 +842,7 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 		if (tipiResourceLoader != null) {
 			try {
 				return tipiResourceLoader.getResourceURL(location);
-			} catch (MalformedURLException e) {
+			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
@@ -2370,10 +2370,38 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 		
 	}
 
-//	public String getGenericResourceLoader() {
-//		return resourceCodeBase;
+	// Cached versions, disabled for now
+
+//	public void setGenericResourceLoader(String resourceCodeBase) throws MalformedURLException {
+//		this.resourceCodeBase = resourceCodeBase;
+//		if (resourceCodeBase != null) {
+//			if (resourceCodeBase.indexOf("http:/") != -1 || resourceCodeBase.indexOf("file:/") != -1) {
+//				setGenericResourceLoader(new CachedHttpResourceLoader(new File("c:/aap"),new URL(resourceCodeBase)));
+//			} else {
+//				File res = new File(resourceCodeBase);
+//				setGenericResourceLoader(new CachedFileResourceLoader(new File("c:/aap"),res));
+//			}
+//		} else {
+//			File res = new File("resource");
+//			setGenericResourceLoader(new CachedFileResourceLoader(new File("c:/aap"),res));
+//		}
 //	}
-//	
+//
+//	public void setTipiResourceLoader(String tipiCodeBase) throws MalformedURLException {
+//		this.tipiCodeBase = tipiCodeBase;
+//		if (tipiCodeBase != null) {
+//			if (tipiCodeBase.indexOf("http:/") != -1 || tipiCodeBase.indexOf("file:/") != -1) {
+//				setTipiResourceLoader(new CachedHttpResourceLoader(new File("c:/aap"), new URL(tipiCodeBase)));
+//			} else {
+//				setTipiResourceLoader(new CachedFileResourceLoader(new File("c:/aap"),new File(tipiCodeBase)));
+//			}
+//		} else {
+//			// nothing supplied. Use a file loader with fallback to classloader.
+//			setTipiResourceLoader(new CachedFileResourceLoader(new File("c:/aap"),new File("tipi")));
+//		}
+//	}
+	
+
 	public void setGenericResourceLoader(String resourceCodeBase) throws MalformedURLException {
 		this.resourceCodeBase = resourceCodeBase;
 		if (resourceCodeBase != null) {
@@ -2388,9 +2416,6 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 			setGenericResourceLoader(new FileResourceLoader(res));
 		}
 	}
-//	public String getTipiResourceLoader() {
-//		return tipiCodeBase;
-//	}
 
 	public void setTipiResourceLoader(String tipiCodeBase) throws MalformedURLException {
 		this.tipiCodeBase = tipiCodeBase;
