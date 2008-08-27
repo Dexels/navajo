@@ -260,11 +260,13 @@ public final class DatePropertyField
     	  System.err.println("noot");
         if (e.getX() > getWidth() - (getHeight() / 2) && e.getX() < getWidth() && e.getY() > 0 && e.getY() < (getHeight() / 2)) {
            JDialog jj =	SwingClient.getUserInterface().getTopDialog();
+           JFrame ff =	SwingClient.getUserInterface().getMainFrame();
+
            CalendarPickerDialog cpd;
            if(jj!=null) {
               	cpd = new CalendarPickerDialog(jj);
            } else {
-           	cpd = new CalendarPickerDialog();
+           	cpd = new CalendarPickerDialog(ff);
            }
           cpd.getMainPanel().setPreferredSize(new Dimension(255,185));
           System.err.println("Entering: checkMouseClick: "+isEditable()+" -- "+showCalendarPickerButton+" >>> "+getHeight());
