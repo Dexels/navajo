@@ -2,6 +2,7 @@ package com.dexels.navajo.events.types;
 
 import java.util.Date;
 
+import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.events.NavajoEvent;
 import com.dexels.navajo.server.Dispatcher;
 
@@ -58,5 +59,10 @@ public class AuditLogEvent implements NavajoEvent {
 
 	public void setAccessId(String accessId) {
 		this.accessId = accessId;
+	}
+
+	public Navajo getEventNavajo() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

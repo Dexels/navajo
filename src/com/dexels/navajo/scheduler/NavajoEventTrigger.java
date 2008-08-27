@@ -4,7 +4,8 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.events.NavajoEvent;
 import com.dexels.navajo.events.NavajoEventRegistry;
 import com.dexels.navajo.events.NavajoListener;
-import com.dexels.navajo.events.types.NavajoHealthCheckEvent;
+import com.dexels.navajo.events.types.NavajoEventMap;
+import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.GenericThread;
 
 public class NavajoEventTrigger extends Trigger implements NavajoListener {
@@ -22,14 +23,12 @@ public class NavajoEventTrigger extends Trigger implements NavajoListener {
 	
 	@Override
 	public void activateTrigger() {
-		if ( myDescription.equalsIgnoreCase("healthcheckevent") ) {
-			NavajoEventRegistry.getInstance().addListener(NavajoHealthCheckEvent.class, this);
-		}
+		NavajoEventRegistry.getInstance().addListener(NavajoEventMap.getEventClass(myDescription), this);
 	}
 
 	@Override
 	public String getDescription() {
-		return myDescription;
+		return Trigger.SERVER_EVENT_TRIGGER + ":" + myDescription;
 	}
 
 	@Override
@@ -39,7 +38,7 @@ public class NavajoEventTrigger extends Trigger implements NavajoListener {
 
 	@Override
 	public void removeTrigger() {
-		NavajoEventRegistry.getInstance().removeListener(NavajoHealthCheckEvent.class, this);
+		NavajoEventRegistry.getInstance().removeListener(NavajoEventMap.getEventClass(myDescription), this);
 	}
 
 	@Override
@@ -81,6 +80,11 @@ public class NavajoEventTrigger extends Trigger implements NavajoListener {
 	}
 
 	public void onNavajoEvent(NavajoEvent ne) {
+		// Create Access object and Navajo Input document to store 'event' parameters.
+		Access a = new Access();
+		Navajo input = ne.getEventNavajo();
+		a.setInDoc(input);
+		setAccess(a);
 		perform();
 	}
 

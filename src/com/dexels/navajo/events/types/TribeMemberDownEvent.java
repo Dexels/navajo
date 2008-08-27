@@ -1,5 +1,6 @@
 package com.dexels.navajo.events.types;
 
+import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.events.NavajoEvent;
 import com.dexels.navajo.server.enterprise.tribe.TribeMemberInterface;
 
@@ -19,5 +20,10 @@ public class TribeMemberDownEvent implements NavajoEvent {
 
 	public TribeMemberInterface getTm() {
 		return tm;
+	}
+
+	public Navajo getEventNavajo() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

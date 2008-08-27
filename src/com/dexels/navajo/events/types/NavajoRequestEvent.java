@@ -24,4 +24,9 @@ public class NavajoRequestEvent implements NavajoEvent {
 	public Navajo getNavajo() {
 		return navajo;
 	}
+
+	public Navajo getEventNavajo() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
