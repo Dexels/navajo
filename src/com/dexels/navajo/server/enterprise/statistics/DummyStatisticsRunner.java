@@ -34,7 +34,7 @@ public class DummyStatisticsRunner implements StatisticsRunnerInterface, NavajoL
 
 	public void onNavajoEvent(NavajoEvent ne) {
 		if ( ne instanceof AuditLogEvent ) {
-			System.err.println("DummyStatisticsRunner: " + ne);
+			//System.err.println("DummyStatisticsRunner: " + ne);
 		}
 	}
 

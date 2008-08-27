@@ -69,4 +69,9 @@ public class DummyTribeManager implements TribeManagerInterface {
 		return new TribeMemberImpl();
 	}
 
+	public void multicast(Object[] recipients, SmokeSignal m) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

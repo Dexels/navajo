@@ -12,6 +12,11 @@ import com.dexels.navajo.server.enterprise.tribe.TribeMemberInterface;
  */
 public class TribeMemberDownEvent implements NavajoEvent {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3054541910381762664L;
+	
 	private TribeMemberInterface tm;
 	
 	public TribeMemberDownEvent(TribeMemberInterface tm) {

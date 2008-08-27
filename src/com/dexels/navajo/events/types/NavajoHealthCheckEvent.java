@@ -5,6 +5,11 @@ import com.dexels.navajo.events.NavajoEvent;
 
 public class NavajoHealthCheckEvent implements NavajoEvent {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3917699466935141060L;
+	
 	private String message;
 	
 	public NavajoHealthCheckEvent(String msg) {

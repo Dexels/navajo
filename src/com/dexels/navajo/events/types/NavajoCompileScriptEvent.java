@@ -9,6 +9,11 @@ import com.dexels.navajo.events.NavajoEvent;
 
 public class NavajoCompileScriptEvent implements NavajoEvent {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1224320416969244502L;
+	
 	private String webservice;
 	
 	public NavajoCompileScriptEvent(String webservice) {

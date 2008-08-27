@@ -1,5 +1,7 @@
 package com.dexels.navajo.events;
 
+import java.io.Serializable;
+
 import com.dexels.navajo.document.Navajo;
 
 /**
@@ -11,7 +13,7 @@ import com.dexels.navajo.document.Navajo;
  * @author arjen
  *
  */
-public interface NavajoEvent {
+public interface NavajoEvent extends Serializable {
 
 	/**
 	 * Returns a Navajo object with the relevant event parameters as properties in

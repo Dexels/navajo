@@ -6,6 +6,11 @@ import com.dexels.navajo.server.Access;
 
 public class NavajoResponseEvent implements NavajoEvent {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8810423005552534253L;
+	
 	private Access myAccess;
 	private Exception myException;
 	

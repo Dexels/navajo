@@ -12,6 +12,7 @@ public interface TribeManagerInterface {
 	public Navajo forward(Navajo in) throws Exception;
 	public void broadcast(Navajo in) throws Exception;
 	public void broadcast(SmokeSignal m);
+	public void multicast(Object [] recipients, SmokeSignal m);
 	public boolean getIsChief();
 	public Answer askChief(Request q);
 	public void tribalAfterWebServiceRequest(String service, Access a, HashSet<String> ignoreTaskIds);

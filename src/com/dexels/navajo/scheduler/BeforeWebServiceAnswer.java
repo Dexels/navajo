@@ -9,6 +9,7 @@ public class BeforeWebServiceAnswer extends Answer {
 	
 	public BeforeWebServiceAnswer(BeforeWebServiceRequest q) {
 		super(q);
+		// Emit 'beforeWebservice'.
 		myNavajo = WebserviceListenerRegistry.getInstance().beforeWebservice(q.getWebservice(), q.getMyAccess(), q.getIgnoreTaskIds(), true);
 	}
 

@@ -15,6 +15,11 @@ import com.dexels.navajo.events.NavajoEvent;
  */
 public class NavajoRequestEvent implements NavajoEvent {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8719913277992819515L;
+	
 	private Navajo navajo;
 
 	public NavajoRequestEvent(Navajo n) {

@@ -387,6 +387,25 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 		}
 	}
 	
+	/**
+	 * Broadcast a message to all tribe members.
+	 * 
+	 * @param q
+	 */
+	public void multicast(Object [] recipients, SmokeSignal m) {
+		try {
+			for ( int i = 0; i < recipients.length; i++ ) {
+				channel.send((Address) recipients[i], channel.getLocalAddress(), m);
+			}
+		} catch (ChannelNotConnectedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ChannelClosedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	private final void increaseCount(String name) {
 
 		synchronized (counts) {

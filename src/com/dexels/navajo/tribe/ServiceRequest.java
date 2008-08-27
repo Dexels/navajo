@@ -39,6 +39,8 @@ public class ServiceRequest extends Request {
 	public ServiceRequest(Navajo request, boolean skipAuthorization) {
 		super();
 		this.request = request;
+		// Set timout to 25 secs. (arbitrary) to prevent 'hanging' service requests on busy servers.
+		setTimeout(25000);
 		this.skipAuthorization = skipAuthorization;
 	}
 	

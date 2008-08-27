@@ -14,6 +14,12 @@ import com.dexels.navajo.sharedstore.SharedStoreFactory;
 import com.dexels.navajo.sharedstore.SharedStoreInterface;
 import com.dexels.navajo.workflow.WorkFlowManager;
 
+/**
+ * The ListenerStore is ONLY used to store Webservice triggers and Time triggers.
+ * 
+ * @author arjen
+ *
+ */
 public final class ListenerStore {
 
 	public final static Object semaphore = new Object();
@@ -150,7 +156,7 @@ public final class ListenerStore {
 	}
 
 	/**
-	 * Activate trigger. 
+	 * Activate trigger. ONLY USED FOR ACTIVATING TIMETRIGGER OBJECTS.
 	 * Notice: do not forget to set proper lock before calling this method.
 	 * 
 	 * @param t
@@ -172,7 +178,7 @@ public final class ListenerStore {
 	}
 	
 	/**
-	 * Peform listeners that are in 'activated' state.
+	 * Peform listeners (ONLY TIMETRIGGERs) that are in 'activated' state.
 	 * Before performing an activated listener, try to get a lock. Ignore if lock was already set..
 	 * 
 	 */

@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
 
+import com.dexels.navajo.scheduler.NavajoEventProxy;
 import com.dexels.navajo.server.enterprise.tribe.SmokeSignal;
 import com.dexels.navajo.sharedstore.map.IntroductionRequest;
 import com.dexels.navajo.sharedstore.map.SharedTribalMap;
@@ -53,6 +54,7 @@ public class MembershipSmokeSignal extends SmokeSignal implements Serializable {
 					TribeManager.getInstance().askSomebody(ir, tm.getAddress());
 				}
 			}
+			
 		}
 	}
 
