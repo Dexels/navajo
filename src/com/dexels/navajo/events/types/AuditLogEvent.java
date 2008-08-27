@@ -8,7 +8,12 @@ import com.dexels.navajo.server.Dispatcher;
 
 public class AuditLogEvent implements NavajoEvent {
 
-	private static String instanceName = null; //Dispatcher.getInstance().getNavajoConfig().getInstanceName();
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2957804056238962208L;
+	
+	private static String instanceName = null;
 	private String subSystem;
 	private String message;
 	private String level;
