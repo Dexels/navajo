@@ -50,7 +50,7 @@ public class MessageTablePanel
   private boolean enabled = true;
   private boolean showColumnEditDialog = false;
   final FilterPanel filterPanel = new FilterPanel();
-  private Map columnAttributes;
+  private Map<String,ColumnAttribute> columnAttributes;
   private ArrayList headerMenuListeners = new ArrayList();
   private boolean copyMenuVisible = false;
 
@@ -498,12 +498,12 @@ public class MessageTablePanel
   }
 
   private final void setSelectAll(int column, boolean value) {
-	  ArrayList selected = getSelectedMessages();
+	  ArrayList<Message> selected = getSelectedMessages();
 	  if (selected != null && selected.size() > 0) {
 		  for (int i = 0; i < selected.size(); i++) {
 			  Object o = messageTable.getValueAt(i, column);
 			  Property q = (Property) o;
-			  Message m = (Message) selected.get(i);
+			  Message m =  selected.get(i);
 			  Property p = m.getProperty(q.getName());
 			  if ( ((Boolean) p.getTypedValue()).booleanValue() != value ) {
 				  try {
@@ -524,7 +524,7 @@ public class MessageTablePanel
 		  final int rowCount = getRowCount();
 		  for (int i = 0; i < rowCount; i++) {
 			  Object o = messageTable.getValueAt(i, column);
-			  Message m = (Message) selected.get(i);
+			  Message m = selected.get(i);
 			  Property p = m.getProperty( ((Property) o).getName() );
 			  if ( ((Boolean) p.getTypedValue()).booleanValue() != value ) {
 				  try {
@@ -556,7 +556,7 @@ public class MessageTablePanel
     return messageTable.getRowColor(row);
   }
 
-  public final void setColumnAttributes(Map m) {
+  public final void setColumnAttributes(Map<String,ColumnAttribute> m) {
     columnAttributes = m;
     messageTable.setColumnAttributes(columnAttributes);
   }
@@ -683,13 +683,13 @@ public void updateTableSize() {
     messageTable.exportTable(fw, delimiter, useSortedClone);
   }
 
-  /**
-   * @deprecated
-   */
-
-  public final void addColumn(String id, String title, Class c, boolean editable) {
-    addColumn(id, title, editable);
-  }
+//  /**
+//   * @deprecated
+//   */
+//
+//  public final void addColumn(String id, String title, Class c, boolean editable) {
+//    addColumn(id, title, editable);
+//  }
 
   public final void removeColumn(String id) {
     messageTable.removeColumn(id);
@@ -759,9 +759,9 @@ public void updateTableSize() {
       }
     }
     removeAllColumns();
-    ArrayList al = def.getAllProperties();
+    ArrayList<Property> al = def.getAllProperties();
     for (int i = 0; i < al.size(); i++) {
-      Property current = (Property) al.get(i);
+      Property current = al.get(i);
       String desc = current.getDescription();
       if (desc == null) {
         desc = current.getName();
@@ -776,9 +776,9 @@ public void updateTableSize() {
       return;
     }
     removeAllColumns();
-    ArrayList al = def.getAllProperties();
+    ArrayList<Property> al = def.getAllProperties();
     for (int i = 0; i < al.size(); i++) {
-      Property current = (Property) al.get(i);
+      Property current = al.get(i);
       String desc = current.getDescription();
       if (desc == null) {
         desc = current.getName();
@@ -806,21 +806,8 @@ public void updateTableSize() {
   public final FilterPanel getFilterPanel() {
     return filterPanel;
   }
-
-  /**
-   * @deprecated
-   */
-
-  public final void loadSelectedRowInMap(Map m) {
-    Message msg = getSelectedMessage();
-    if (msg == null) {
-      return;
-    }
-    ArrayList al = msg.getAllProperties();
-    for (int i = 0; i < al.size(); i++) {
-      Property p = (Property) al.get(i);
-      m.put(p.getName(), p.getValue());
-    }
+  public void setColumnEditable(int columnIndex, boolean value) {
+	  messageTable.setColumnEditable(columnIndex, value);
   }
 
   public Message getMessageAsPresentedOnTheScreen(boolean includeInvisibleColumns) {
@@ -863,7 +850,7 @@ public void updateTableSize() {
     return messageTable.getSelectedRow();
   }
 
-  public final ArrayList getSelectedMessages() {
+  public final ArrayList<Message> getSelectedMessages() {
     return messageTable.getSelectedMessages();
   }
 
@@ -981,7 +968,7 @@ public void updateTableSize() {
     setRowSelectionInterval(row, row);
   }
 
-  public void updateProperties(java.util.List l) {
+  public void updateProperties(java.util.List<Property> l) {
     messageTable.updateProperties(l);
   }
 
