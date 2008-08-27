@@ -1114,7 +1114,7 @@ private final int jjMoveNfa_0(int startState, int curPos)
                      jjCheckNAddStates(84, 89);
                   break;
                case 77:
-                  if ((0x38000000f8000001L & l) != 0L)
+                  if ((0x78000000f8000001L & l) != 0L)
                      jjCheckNAddStates(27, 31);
                   break;
                case 82:
