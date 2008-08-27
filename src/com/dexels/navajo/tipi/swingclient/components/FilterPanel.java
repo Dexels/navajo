@@ -313,7 +313,7 @@ public class FilterPanel
         myTable.performFilters();    
         try {
 			myTable.loadColumnsNavajo();
-			myTable.resizeColumns(null);
+			myTable.resizeColumns(myTable.getMessage());
 		} catch (FileNotFoundException e1) {
 			e1.printStackTrace();
 		}
