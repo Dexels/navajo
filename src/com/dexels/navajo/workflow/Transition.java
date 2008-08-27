@@ -262,7 +262,6 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 			return true;
 		}
 		
-		System.err.println(t.getId() +  ": IN enterNextState().............................");
 		Navajo n = ( isBeforeTrigger(t) ? t.getTrigger().getAccess().getInDoc() : t.getTrigger().getAccess().getOutputDoc() );
 		
 		// Merge this Navajo with localNavajo store of the workflow instance to use local workflow parameters.
