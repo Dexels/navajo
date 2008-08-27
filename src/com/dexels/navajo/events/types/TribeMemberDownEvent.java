@@ -23,6 +23,11 @@ public class TribeMemberDownEvent implements NavajoEvent {
 		this.tm = tm;
 	}
 
+	/**
+	 * Gets the TribeMember that went down.
+	 * 
+	 * @return
+	 */
 	public TribeMemberInterface getTm() {
 		return tm;
 	}

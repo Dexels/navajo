@@ -20,10 +20,19 @@ public class NavajoCompileScriptEvent implements NavajoEvent {
 		this.webservice = webservice;
 	}
 
+	/**
+	 * Get the name of the webservice that was compiled.
+	 * 
+	 * @return
+	 */
 	public String getWebservice() {
 		return webservice;
 	}
 	
+	/**
+	 * Return the event parameters as a Navajo object with a message __event__.
+	 * 
+	 */
 	public Navajo getEventNavajo() {
 		Navajo input = NavajoFactory.getInstance().createNavajo();
 		Message event = NavajoFactory.getInstance().createMessage(input, "__event__");
