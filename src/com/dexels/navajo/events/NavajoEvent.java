@@ -1,5 +1,7 @@
 package com.dexels.navajo.events;
 
+import com.dexels.navajo.document.Navajo;
+
 /**
  * A NavajoEvent is used as a means of communicating between different parts (modules) of a Navajo server.
  * A NavajoEvents enables a flexible a modularized architecture for the Navajo 2.0 system.
@@ -11,6 +13,12 @@ package com.dexels.navajo.events;
  */
 public interface NavajoEvent {
 
-	// Don't know yet.
+	/**
+	 * Returns a Navajo object with the relevant event parameters as properties in
+	 * a message named "__event__".
+	 * 
+	 * @return
+	 */
+	public Navajo getEventNavajo();
 	
 }
