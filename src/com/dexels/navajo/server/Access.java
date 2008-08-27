@@ -186,9 +186,8 @@ public final class Access implements java.io.Serializable, Mappable {
 		this.betaUser = betaUser;
 		this.userCertificate = certificate;
 		setCurrentSystemLoads();
-
 	}
-
+	
 	public Access(int accessID, int userID, int serviceID, String rpcUser,
 			String rpcName, String userAgent, String ipAddress,
 			String hostName, Object certificate) {
@@ -214,6 +213,13 @@ public final class Access implements java.io.Serializable, Mappable {
 		
 	}
 
+	/**
+	 * Dummy access.
+	 */
+	public Access() {
+		myThread = Thread.currentThread();
+	}
+	
 	protected final void setUserCertificate(Object cert) {
 		userCertificate = cert;
 	}
