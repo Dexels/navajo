@@ -408,7 +408,8 @@ public class Task implements Runnable, TaskMXBean, TaskInterface, Serializable {
 				}
 
 				try {
-					result = Dispatcher.getInstance().handle(request);
+					// Handle request, skip authorization!!
+					result = Dispatcher.getInstance().handle(request, true);
 					this.setResponse(result);
 				} catch (FatalException e) {
 					e.printStackTrace(System.err);
