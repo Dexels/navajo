@@ -97,13 +97,13 @@ public final class GenericHandler extends ServiceHandler {
     	String classFileName =  NavajoConfig.getInstance().getCompiledScriptPath() + "/" + pathPrefix + serviceName + ".class";
     	String className = (pathPrefix.equals("") ? serviceName : MappingUtils.createPackageName(pathPrefix) + "." + serviceName);
     	 
-    	System.err.println("in getScriptPathServiceNameAndScriptFile()");
-    	System.err.println("pathPrefix = " + pathPrefix);
-    	System.err.println("serviceName = " + serviceName);
-    	System.err.println("scriptFile = " + scriptFile.getName());
-    	System.err.println("sourceFileName = " + sourceFileName);
-    	System.err.println("classFileName = " + classFileName);
-    	System.err.println("className = " + className);
+//    	System.err.println("in getScriptPathServiceNameAndScriptFile()");
+//    	System.err.println("pathPrefix = " + pathPrefix);
+//    	System.err.println("serviceName = " + serviceName);
+//    	System.err.println("scriptFile = " + scriptFile.getName());
+//    	System.err.println("sourceFileName = " + sourceFileName);
+//    	System.err.println("classFileName = " + classFileName);
+//    	System.err.println("className = " + className);
     	
     	return new Object[]{pathPrefix,serviceName,scriptFile,sourceFileName,new File(sourceFileName),className,classFileName,new File(classFileName)};
     }
