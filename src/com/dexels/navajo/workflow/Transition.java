@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.parser.Condition;
 import com.dexels.navajo.parser.Expression;
@@ -14,6 +15,7 @@ import com.dexels.navajo.scheduler.IllegalTrigger;
 import com.dexels.navajo.scheduler.Task;
 import com.dexels.navajo.scheduler.TaskListener;
 import com.dexels.navajo.scheduler.TaskRunner;
+import com.dexels.navajo.scheduler.Trigger;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.Parameters;
@@ -235,8 +237,16 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 		TaskRunner.getInstance().removeTask(myTask.getId(), true);
 	}
 	
+	/**
+	 * isBeforeTrigger return true for all triggers that have an associated input Navajo.
+	 * 
+	 * @param t
+	 * @return
+	 */
 	private final boolean isBeforeTrigger(Task t) {
-		return t.getTriggerDescription().startsWith("beforenavajo") || t.getTriggerDescription().startsWith("jabber");
+		return t.getTriggerDescription().startsWith(Trigger.WS_BEFORE_TRIGGER) || 
+		       t.getTriggerDescription().startsWith(Trigger.JABBER_TRIGGER) || 
+		       t.getTriggerDescription().startsWith(Trigger.SERVER_EVENT_TRIGGER);
 	}
 	
 	/**
@@ -251,7 +261,10 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 		if ( myCondition == null || myCondition.equals("") || t.getTrigger().getAccess() == null ) {
 			return true;
 		}
+		
+		System.err.println(t.getId() +  ": IN enterNextState().............................");
 		Navajo n = ( isBeforeTrigger(t) ? t.getTrigger().getAccess().getInDoc() : t.getTrigger().getAccess().getOutputDoc() );
+		
 		// Merge this Navajo with localNavajo store of the workflow instance to use local workflow parameters.
 		if ( myState != null ) {
 			myState.getWorkFlow().mergeWithParameters(n);
