@@ -41,7 +41,7 @@ public class MessageTable
   private MouseAdapter headerMouseAdapter = null;
   private final ArrayList actionListeners = new ArrayList();
   private boolean doRepaint = true;
-  private Map columnAttributes;
+  private Map<String,ColumnAttribute> columnAttributes;
   private final Map rowColorMap = new HashMap();
   protected String columnPathString = null;
   private boolean changed;
@@ -732,7 +732,7 @@ private Component myCurrentEditingComponent;
       Property p = m.getProperty(key);
 //      System.err.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~>>> Looking for color of row: " + key);
       if (p != null) {
-        ColumnAttribute ca = (ColumnAttribute) columnAttributes.get(key);
+        ColumnAttribute ca = columnAttributes.get(key);
         if (ca != null) {
 //          System.err.println("Got column atributes");
           if (ca.getType().equals(ColumnAttribute.TYPE_ROWCOLOR)) {
@@ -1055,7 +1055,7 @@ public void updateTableSize() {
   }
 
   public final void setDefaultColumnSizes(Message m) {
-    if (m.getArraySize() == 0) {
+    if (m==null || m.getArraySize() == 0) {
       MessageTableColumnModel tcm = new MessageTableColumnModel();
       createDefaultFromModel(null);
       setMessage(m);
@@ -1216,12 +1216,12 @@ public void updateTableSize() {
     }
   }
 
-  public final void setColumnAttributes(Map m) {
+  public final void setColumnAttributes(Map<String,ColumnAttribute> m) {
 //    System.err.println("MessageTable columnAttributes set.");
     columnAttributes = m;
   }
 
-  public Map getColumnAttributes() {
+  public Map<String,ColumnAttribute> getColumnAttributes() {
     return columnAttributes;
   }
 
@@ -1238,6 +1238,9 @@ public void updateTableSize() {
 //    setColumnWidth();
   }
 
+  public void setColumnEditable(int columnIndex, boolean value) {
+	  getMessageModel().setColumnEditable(columnIndex, value);
+  }
   public void setTypeHint(String id, String type) {
     MessageTableModel mtm = getMessageModel();
     mtm.setTypeHint(id, type);
