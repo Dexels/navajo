@@ -25,8 +25,8 @@ public class URIPropertyField extends TextPropertyField {
   private static final String WIN_ID = "Windows";
   private static final String WIN_PATH = "rundll32";
   private static final String WIN_FLAG = "url.dll,FileProtocolHandler";
-  private static final String UNIX_PATH = "netscape";
-  private static final String UNIX_FLAG = "-remote openURL";
+  private static final String UNIX_PATH = "mozilla";
+  private static final String UNIX_FLAG = "";
 
 
   public URIPropertyField() {
@@ -126,7 +126,7 @@ public class URIPropertyField extends TextPropertyField {
           Process p = Runtime.getRuntime().exec(cmd);
         }
         else {
-          cmd = UNIX_PATH + " " + UNIX_FLAG + "(" + url + ")";
+          cmd = UNIX_PATH + " " + UNIX_FLAG + "'" + url + "'";
           System.err.println("Executing UNIX command: " + cmd);
           Process p = Runtime.getRuntime().exec(cmd);
         }
