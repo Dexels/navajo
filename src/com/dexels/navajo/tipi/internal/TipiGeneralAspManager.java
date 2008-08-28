@@ -96,16 +96,13 @@ public class TipiGeneralAspManager implements TipiStorageManager {
 		Navajo n = constructRequest(id);
 		Binary b = new Binary();
 		OutputStream baos = b.getOutputStream();
-		// ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		contents.write(baos);
 		try {
 			baos.flush();
 			baos.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		// Binary b = new Binary(baos.toByteArray());
 		Message document = n.getMessage("Document");
 		Property contentProp = NavajoFactory.getInstance().createProperty(n, "Data", Property.BINARY_PROPERTY, "", 0, "", Property.DIR_IN,
 				null);

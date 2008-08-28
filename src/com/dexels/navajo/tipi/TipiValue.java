@@ -49,7 +49,7 @@ public class TipiValue {
 		tv.defaultValue = this.defaultValue;
 		tv.required = this.required;
 		if ( this.selectionMap != null ) {
-			tv.selectionMap = new HashMap( this.selectionMap );
+			tv.selectionMap = new HashMap<String,String>( this.selectionMap );
 		}
 		return tv;
 	}
@@ -232,7 +232,7 @@ public class TipiValue {
 		return value;
 	}
 
-	public void typeCheck(Object value) throws TipiException {
+	public void typeCheck(Object value) {
 		/** @todo Implement this */
 	}
 }

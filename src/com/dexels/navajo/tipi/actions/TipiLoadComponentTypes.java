@@ -50,7 +50,6 @@ public class TipiLoadComponentTypes extends TipiAction {
 			Navajo compNavajo = context.createComponentNavajo();
 			context.loadNavajo(compNavajo, service);
 		} catch (NavajoException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

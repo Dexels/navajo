@@ -53,7 +53,6 @@ public class TipiLoadNavajoList extends TipiAction {
 			context.loadNavajo(compNavajo, service);
 			compNavajo.write(System.err);
 		} catch (NavajoException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

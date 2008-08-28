@@ -21,6 +21,7 @@ public class TipiShowQuestion extends TipiAction {
 		Operand o = getEvaluatedParameter("text",event);
 		if(o==null) {
 			myContext.showInternalError("showQuestion requires 'text' param");
+			return;
 		}
 		final String title = "Vraag";
 		myContext.showQuestion((String) o.value,title,options);

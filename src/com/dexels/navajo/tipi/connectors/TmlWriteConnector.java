@@ -34,7 +34,6 @@ public class TmlWriteConnector extends TipiBaseConnector implements TipiConnecto
 			try {
 				n.write(os);
 			} catch (NavajoException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} finally {
 				os.flush();

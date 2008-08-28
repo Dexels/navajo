@@ -8,7 +8,6 @@ import java.io.*;
 
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.parser.*;
-import com.dexels.navajo.tipi.*;
 
 /**
  * @author frank
@@ -49,7 +48,6 @@ public class GetSource extends FunctionInterface {
 			sw.close();
 			return sw.toString();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw new TMLExpressionException("Error writing navajo: ",e);
 		}

@@ -20,6 +20,7 @@ import com.dexels.navajo.tipi.internal.*;
  * @author not attributable
  * @version 1.0
  */
+@Deprecated
 public class TipiDisposePath extends TipiAction {
 	public void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
 		try {

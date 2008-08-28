@@ -9,15 +9,11 @@ package com.dexels.navajo.tipi;
 
 import java.io.*;
 import java.net.*;
-import java.util.List;
-
-//import javax.swing.*;
+import java.util.*;
 
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.types.*;
-import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.core.*;
-
 import com.dexels.navajo.tipi.internal.*;
 
 public abstract class TipiEmbedComponent extends TipiDataComponentImpl {
@@ -212,7 +208,7 @@ public abstract class TipiEmbedComponent extends TipiDataComponentImpl {
 
 	}
 
-	protected void switchToDefinition(final String nameVal) throws TipiException {
+	protected void switchToDefinition(final String nameVal) {
 		runSyncInEventThread(new Runnable(){
 			public void run() {
 				stc.getContext().setTopLevelContainer(getContainer());
@@ -230,7 +226,7 @@ public abstract class TipiEmbedComponent extends TipiDataComponentImpl {
 		stc.getContext().parseStream(tipiResourceStream);
 	}
 
-	private void loadNavajo(Navajo n, String method) throws TipiException {
+	private void loadNavajo(Navajo n, String method) {
 		try {
 			stc.getContext().loadNavajo(n.copy(), method);
 		} catch (TipiBreakException e) {

@@ -4,8 +4,6 @@
  */
 package com.dexels.navajo.functions;
 
-import java.util.*;
-
 import com.dexels.navajo.parser.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.connectors.*;

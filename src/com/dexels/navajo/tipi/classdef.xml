@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <tid errorhandler="error">
    <tipi-include location="com/dexels/navajo/tipi/actions/actiondef.xml" />
    <tipiclass class="HttpNavajoConnector" description="Navajo HTTP" name="http" package="com.dexels.navajo.tipi.connectors" type="connector">
@@ -24,7 +23,6 @@
       </entrypoints>
       <methods />
    </tipiclass>
-   
    <tipiclass class="ResourceNavajoConnector" description="Navajo Resource" name="resource" package="com.dexels.navajo.tipi.connectors" type="connector">
       <events>
          <event name="onInstantiate" />
@@ -33,7 +31,6 @@
       </values>
       <methods />
    </tipiclass>
-
    <tipiclass class="TmlWriteConnector" description="Tml resource writer" name="tmlwriter" package="com.dexels.navajo.tipi.connectors" type="connector">
       <events>
          <event name="onInstantiate" />
@@ -42,14 +39,10 @@
       </values>
       <methods />
    </tipiclass>
-   
-   
-
    <tipiclass studio-icon="messagestore.gif" module="abstract" class="TipiShadowFilterImpl" name="filter" package="com.dexels.navajo.tipi.connectors" type="connector"
       childcount="0" layoutmanager="false" addtocontainer="false">
-
-     <events>
-        <event name="onInstantiate" />
+      <events>
+         <event name="onInstantiate" />
          <event name="onServiceSent">
             <param name="service" type="string" />
          </event>
@@ -57,10 +50,9 @@
             <param name="service" type="string" />
          </event>
       </events>
-      
       <values>
-        <value direction="in" name="messagePath" type="string"/>
-        <value direction="in" name="simpleFilter" type="string"/>
+         <value direction="in" name="messagePath" type="string" />
+         <value direction="in" name="simpleFilter" type="string" />
       </values>
       <methods />
    </tipiclass>
@@ -81,11 +73,8 @@
       </values>
       <methods />
    </tipiclass>
-
-
-
-   <tipiclass studio-icon="messagestore.gif" module="abstract" class="TipiConditionChecker" name="conditionchecker" package="com.dexels.navajo.tipi.components.core" type="tipi"
-      childcount="0" layoutmanager="false" addtocontainer="false">
+   <tipiclass studio-icon="messagestore.gif" module="abstract" class="TipiConditionChecker" name="conditionchecker" package="com.dexels.navajo.tipi.components.core"
+      type="tipi" childcount="0" layoutmanager="false" addtocontainer="false">
       <events>
          <event name="onGeneratedErrors">
             <param name="id" type="string" />
@@ -101,8 +90,8 @@
       </values>
       <methods />
    </tipiclass>
-   <tipiclass studio-icon="messagestore.gif" module="abstract" class="TipiTimerImpl" name="timer" package="com.dexels.navajo.tipi.components.core" type="tipi" childcount="0"
-      layoutmanager="false" addtocontainer="false">
+   <tipiclass studio-icon="messagestore.gif" module="abstract" class="TipiTimerImpl" name="timer" package="com.dexels.navajo.tipi.components.core" type="tipi"
+      childcount="0" layoutmanager="false" addtocontainer="false">
       <events>
          <event name="onTimer" />
          <event name="onInstantiate" />
@@ -115,8 +104,8 @@
          <method name="stop" />
       </methods>
    </tipiclass>
-   <tipiclass studio-icon="resourcecopy.gif" module="extensions" class="TipiResourceCopier" name="copy" package="com.dexels.navajo.tipi.components.core" propertycomponent="false"
-      type="component" addtocontainer="false">
+   <tipiclass studio-icon="resourcecopy.gif" module="extensions" class="TipiResourceCopier" name="copy" package="com.dexels.navajo.tipi.components.core"
+      propertycomponent="false" type="component" addtocontainer="false">
       <events>
          <event name="onInstantiate" />
       </events>
@@ -152,14 +141,9 @@
    <tipi-parser name="label" type="java.lang.String" parser="com.dexels.navajo.tipi.components.core.parsers.LabelParser" />
    <tipi-parser name="alias" type="java.lang.Object" parser="com.dexels.navajo.tipi.components.core.parsers.AliasParser" />
    <tipi-parser name="binary" type="com.dexels.navajo.document.types.Binary" parser="com.dexels.navajo.tipi.components.core.parsers.BinaryParser" />
-
-    <tipi-parser name="cookie" parser="com.dexels.navajo.tipi.components.core.parsers.CookieParser" type="java.lang.String"/>
-    <tipi-parser name="cookieref" parser="com.dexels.navajo.tipi.components.core.parsers.CookieRefParser" type="com.dexels.navajo.tipi.internal.TipiReference"/>
-    
-
+   <tipi-parser name="cookie" parser="com.dexels.navajo.tipi.components.core.parsers.CookieParser" type="java.lang.String" />
+   <tipi-parser name="cookieref" parser="com.dexels.navajo.tipi.components.core.parsers.CookieRefParser" type="com.dexels.navajo.tipi.internal.TipiReference" />
    <tipi-parser name="navajo" type="com.dexels.navajo.document.Navajo" parser="com.dexels.navajo.tipi.components.core.parsers.NavajoParser" />
-
    <tipi-parser name="selection" type="java.lang.String" parser="com.dexels.navajo.tipi.components.core.parsers.StringParser" />
    <tipi-parser type="java.lang.Object" name="object" parser="com.dexels.navajo.tipi.components.core.parsers.ObjectParser" />
-
 </tid>

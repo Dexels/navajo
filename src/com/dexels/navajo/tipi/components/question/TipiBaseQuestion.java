@@ -145,15 +145,13 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
 				public void eventFinished(TipiExecutable te, Object event) {
 				}
 			});
-			// o.validate();
-			// System.err.println("Property: "+o);
 		}
 		// TODO: Change this to a recursive search:
 		TipiDataComponent tdc = null;
 		if (subQuestionPath != null) {
 			tdc = (TipiDataComponent) getTipiComponentByPath(subQuestionPath);
 		} else {
-			System.err.println("NO SUBQUESTION PANEL DEFINED");
+//			System.err.println("NO SUBQUESTION PANEL DEFINED");
 		}
 		Message question = m.getMessage("Question");
 

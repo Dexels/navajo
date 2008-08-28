@@ -1,11 +1,9 @@
 package com.dexels.navajo.tipi;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeEvent;
+import java.beans.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-import java.util.Map.*;
 
 import javax.imageio.spi.*;
 
@@ -15,6 +13,7 @@ import com.dexels.navajo.client.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.types.*;
 import com.dexels.navajo.parser.*;
+import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.tipi.actions.*;
 import com.dexels.navajo.tipi.components.core.*;
 import com.dexels.navajo.tipi.connectors.*;
@@ -94,9 +93,8 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 	private final List<ActivityController> activityListenerList = new ArrayList<ActivityController>();
 
 	private final List<TipiNavajoListener> navajoListenerList = new ArrayList<TipiNavajoListener>();
-	private final List<TipiNavajoListener> eventListenerList = new ArrayList<TipiNavajoListener>();
+//	private final List<TipiNavajoListener> eventListenerList = new ArrayList<TipiNavajoListener>();
 
-	protected final HashMap clientConfigMap = new HashMap();
 
 	protected final Map<String, Navajo> navajoMap = new HashMap<String, Navajo>();
 
@@ -160,8 +158,6 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 	
 	private final Map<String, List<PropertyChangeListener>> propertyBindMap = new HashMap<String, List<PropertyChangeListener>>();
 
-	private String resourceCodeBase;
-	private String tipiCodeBase;
 
 	private TipiContext myParentContext;
 
@@ -188,7 +184,7 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 		tipiResourceLoader = new ClassPathResourceLoader();
 		setStorageManager(new TipiNullStorageManager());
 		 try {
-			Class c = Class.forName("com.dexels.navajo.tipi.tools.TipiSocketDebugger");
+			Class.forName("com.dexels.navajo.tipi.tools.TipiSocketDebugger");
 			hasDebugger = true;
 			System.err.println("debugger loaded");
 		} catch (Throwable e) {
@@ -402,13 +398,13 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 		parseStream(new FileInputStream(location), dir, studioMode);
 	}
 
-	public void parseURL(URL location, boolean studioMode) throws IOException, XMLParseException, TipiException {
-		try {
-			parseStream(location.openStream(), location.toString(), studioMode);
-		} catch (IOException e) {
-			throw new TipiException("Can not resolve URL: " + location + " or other IO error.", e);
-		}
-	}
+//	public void parseURL(URL location, boolean studioMode) throws IOException, XMLParseException, TipiException {
+//		try {
+//			parseStream(location.openStream(), location.toString(), studioMode);
+//		} catch (IOException e) {
+//			throw new TipiException("Can not resolve URL: " + location + " or other IO error.", e);
+//		}
+//	}
 
 	public void parseURL(URL location, boolean studioMode, String definitionName) throws IOException, XMLParseException, TipiException {
 		parseStream(location.openStream(), location.toString(), definitionName, studioMode);
@@ -445,10 +441,10 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 		Set<String> iterSet = new HashSet<String>(tipiComponentMap.keySet());
 		for (Iterator<String> iter = iterSet.iterator(); iter.hasNext();) {
 			String definitionName = iter.next();
-			XMLElement def = tipiComponentMap.get(definitionName);
-			String lazyLocation = lazyMap.get(definitionName);
+//			XMLElement def = tipiComponentMap.get(definitionName);
+//			String lazyLocation = lazyMap.get(definitionName);
 //			if (lazyLocation != null && def != null) {
-			System.err.println("Removing: "+definitionName);
+//			System.err.println("Removing: "+definitionName);
 				tipiComponentMap.remove(definitionName);
 //			} else {
 				
@@ -502,7 +498,6 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 	}
 
 	protected void createClient(XMLElement config) throws TipiException {
-		String name = config.getStringAttribute("name");
 		String impl = (String) attemptGenericEvaluate(config.getStringAttribute("impl", "'indirect'"));
 		setSystemProperty("tipi.client.impl", impl, false);
 		String cfg = (String) attemptGenericEvaluate(config.getStringAttribute("config", "'server.xml'"));
@@ -542,9 +537,7 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 			NavajoClientFactory.getClient().setServerUrl(navajoServer);
 			NavajoClientFactory.getClient().setUsername(navajoUsername);
 			NavajoClientFactory.getClient().setPassword(navajoPassword);
-			if (name != null) {
-				clientConfigMap.put(name, NavajoClientFactory.getClient());
-			}
+			
 		} else {
 			NavajoClientFactory.resetClient();
 			// deprecated
@@ -697,7 +690,6 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 				Navajo n = NavajoFactory.getInstance().createNavajo(sr);
 				addNavajo(service, n);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
@@ -860,7 +852,7 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 		boolean isLazy = "true".equals(lazy);
 		String componentName = (String) lib.getAttribute("definition");
 		if (componentName == null && isLazy) {
-			throw new IllegalArgumentException("Lazy include, but no definition found. Location: " + location);
+			throw new TipiException("Lazy include, but no definition found. Location: " + location);
 		}
 		if (isLazy && getTipiDefinition(componentName) != null) {
 			// already present.
@@ -1135,7 +1127,6 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 			try {
 				execute(r);
 			} catch (TipiException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		parent.removeChild(comp);
@@ -1571,7 +1562,7 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 			ex.printStackTrace();
 			if (eHandler != null && Exception.class.isInstance(ex)) {
 				debugLog("data", "send error occurred:" + ex.getMessage() + " method: " + service);
-				showInternalError("Probleem:",(Exception) ex);
+				showInternalError("Probleem:",ex);
 				if (breakOnError) {
 					throw new TipiBreakException(TipiBreakException.BREAK_EVENT);
 				}
@@ -2403,7 +2394,6 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 	
 
 	public void setGenericResourceLoader(String resourceCodeBase) throws MalformedURLException {
-		this.resourceCodeBase = resourceCodeBase;
 		if (resourceCodeBase != null) {
 			if (resourceCodeBase.indexOf("http:/") != -1 || resourceCodeBase.indexOf("file:/") != -1) {
 				setGenericResourceLoader(new HttpResourceLoader(new URL(resourceCodeBase)));
@@ -2418,7 +2408,6 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 	}
 
 	public void setTipiResourceLoader(String tipiCodeBase) throws MalformedURLException {
-		this.tipiCodeBase = tipiCodeBase;
 		if (tipiCodeBase != null) {
 			if (tipiCodeBase.indexOf("http:/") != -1 || tipiCodeBase.indexOf("file:/") != -1) {
 				setTipiResourceLoader(new HttpResourceLoader(new URL(tipiCodeBase)));
@@ -2697,7 +2686,6 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 			try {
 				propertyBindMap.put(service+":"+master.getFullPropertyName(), xx);
 			} catch (NavajoException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 		}
@@ -2707,15 +2695,6 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 		}
 	}
 
-	private int getTotalPropertyLinks() {
-		int total = 0;
-		for (Iterator<Entry<Property,List<Property>>> iterator = propertyLinkRegistry.entrySet().iterator(); iterator.hasNext();) {
-			Entry<Property,List<Property>> e = iterator.next();
-			total += e.getValue().size();
-			
-		}
-		return total;
-	}
 
 	// TODO: Add support for other attributes? type,cardinality,description,length,direction
 	private void copyPropertyValue(final Property master, Property slave) {

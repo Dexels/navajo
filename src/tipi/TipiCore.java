@@ -16,15 +16,11 @@ public class TipiCore implements TipiExtension {
 	}
 
 	public String[] getIncludes() {
-		// TODO Auto-generated method stub
-//		s.add("com/dexels/navajo/tipi/classdef.xml");
-//		s.add("com/dexels/navajo/tipi/actions/actiondef.xml");
 	
 		return new String[]{"com/dexels/navajo/tipi/classdef.xml","com/dexels/navajo/tipi/actions/actiondef.xml"};
 	}
 
 	public boolean isMainImplementation() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -33,7 +29,6 @@ public class TipiCore implements TipiExtension {
 	}
 
 	public String requiresMainImplementation() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 	public List<String> getLibraryJars() {

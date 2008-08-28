@@ -1,7 +1,5 @@
 package com.dexels.navajo.tipi;
 
-import java.util.*;
-
 import com.dexels.navajo.tipi.tipixml.*;
 
 /**

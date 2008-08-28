@@ -66,10 +66,8 @@ public class TipiAddProperty extends TipiAction {
 			try {
 				n.addMessage(parentMessage);
 			} catch (NavajoException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-//			throw new TipiException("Error in addProperty action: Path not found: " + path);
 		}
 
 		String direction = (String) directionOperand.value;

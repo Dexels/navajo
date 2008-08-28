@@ -71,7 +71,7 @@ public class TipiNewCallService extends TipiAction {
 		}
 		setThreadState("waiting");
 		TipiConnector defaultConnector = myContext.getDefaultConnector();
-		if(connector==null || connector.value==null) {
+		if(connector.value==null) {
 			//long timeStamp = System.currentTimeMillis();
 			System.err.println("No connector");
 			if(defaultConnector==null) {

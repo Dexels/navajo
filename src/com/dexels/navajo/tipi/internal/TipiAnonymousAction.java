@@ -12,27 +12,22 @@ public class TipiAnonymousAction  implements TipiExecutable {
 	}
 
 	public String getBlockParam(String key) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public TipiComponent getComponent() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public TipiEvent getEvent() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public TipiExecutable getExecutableChild(int index) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public int getExecutableChildCount() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
@@ -43,12 +38,10 @@ public class TipiAnonymousAction  implements TipiExecutable {
 	}
 
 	public void setEvent(TipiEvent e) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	public XMLElement store() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

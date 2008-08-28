@@ -31,7 +31,6 @@ public class PropertyParser extends BaseTipiParser {
 			try {
 				return getAttributePropertyValueByPath(source, expression.substring(1));
 			} catch (TipiException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				return null;
 			}

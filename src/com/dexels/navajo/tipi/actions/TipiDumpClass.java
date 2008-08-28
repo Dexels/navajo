@@ -38,19 +38,12 @@ public final class TipiDumpClass extends TipiAction {
 				dumpDef(mm, element, def);
 			}
 		} catch (NavajoException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
 
-//	  <tipiaction name="setStorageInstanceId"  class="TipiSetStorageInstanceId" package="com.dexels.navajo.tipi.actions">
-//	    <param name="id" type="string" required="true"/>
-//	  </tipiaction>
-
 	  private void dumpDef(Message msg, String element, XMLElement def) {
-		// TODO Auto-generated method stub
-//		Message elt = NavajoFactory.getInstance().createMessage(n, "Class", Message.MSG_TYPE_ARRAY_ELEMENT);
 		if(def.getName().equals("tipiaction")) {
 			System.err.println("Action: "+def.getStringAttribute("name"));
 			

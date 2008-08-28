@@ -829,7 +829,6 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 //		try {
 //			myContext.unlink(getStateMessage());
 //		} catch (NavajoException e) {
-//			// TODO Auto-generated catch block
 //			e.printStackTrace();
 //		}
 		removeAllChildren();

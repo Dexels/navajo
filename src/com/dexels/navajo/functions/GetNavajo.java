@@ -33,8 +33,8 @@ public class GetNavajo extends FunctionInterface {
 	public Object evaluate() throws TMLExpressionException {
 		Object pp = getOperand(0);
 		if (pp == null) {
-		//	return null;
-		}
+			throw new TMLExpressionException(this, "Invalid operand: null context " );
+			}
 		if(!(pp instanceof TipiContext)) {
 			throw new TMLExpressionException(this, "Invalid operand: " + pp.getClass().getName());
 		}
