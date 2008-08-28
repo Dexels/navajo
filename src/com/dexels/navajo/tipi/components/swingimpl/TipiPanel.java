@@ -4,7 +4,6 @@ import java.awt.*;
 
 import javax.swing.*;
 
-import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 
@@ -24,30 +23,9 @@ public class TipiPanel
     TipiHelper th = new TipiSwingHelper();
     th.initHelper(this);
     addHelper(th);
-//    myPanel.setOpaque(false);
 	
     return myPanel;
   }
-
-///**
-// * This method is only overridden to be performed in the event thread.
-// */
-//  public void loadData(final Navajo n, final String method) throws TipiException {
-//      myNavajo = n;
-//      myMethod = method;
-//     runSyncInEventThread(new Runnable(){
-//        public void run() {
-//            try {
-//                TipiPanel.super.loadData(n,method);
-//            } catch (TipiException e) {
-//                e.printStackTrace();
-//            } catch (TipiBreakException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			} 
-//            
-//        }});
-//  }
 
   public static void main(String[] args) {
 	  JFrame jf = new JFrame("Aap");

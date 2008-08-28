@@ -109,27 +109,22 @@ public class TipiScrollQuestionGroup extends TipiBaseQuestionGroup implements Ti
 	
 	
 	public void setCursor(Cursor c) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	public void setPaint(Paint p) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	public void setWaitCursor(boolean b) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	public void showPopup(MouseEvent e) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	public void animateTransition(TipiEvent te, TipiExecutable executableParent, List<TipiExecutable> exe) {
-		// TODO Auto-generated method stub
 		
 	}
 

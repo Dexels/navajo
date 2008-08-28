@@ -7,7 +7,6 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
 import java.awt.*;
-import java.beans.*;
 import java.lang.reflect.*;
 
 import javax.swing.*;
@@ -95,7 +94,6 @@ public class TipiWindowEmbedComponent extends TipiEmbedComponent {
 			try {
 				SwingUtilities.invokeAndWait(runnable);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (InvocationTargetException e) {
 				e.printStackTrace();

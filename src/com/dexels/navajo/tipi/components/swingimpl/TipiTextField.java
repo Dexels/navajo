@@ -1,7 +1,6 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
 import java.awt.event.*;
-import java.beans.*;
 import java.util.*;
 
 import javax.swing.event.*;
@@ -161,12 +160,10 @@ public class TipiTextField extends TipiSwingComponentImpl {
 			}
 		}
 		if (name.equals("selectAll")) {
-			Operand o = compMeth.getEvaluatedParameter("text", event);
 			runSyncInEventThread(new Runnable(){
 				public void run() {
 					myField.selectAll();
 				}});
-				//setText(myField.getText() + result);
 		}
 	}
 

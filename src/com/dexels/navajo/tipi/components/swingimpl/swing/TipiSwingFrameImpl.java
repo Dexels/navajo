@@ -83,17 +83,14 @@ public class TipiSwingFrameImpl extends JFrame implements TopLevel, TipiSwingFra
 				animator.addTarget(new TimingTarget(){
 
 					public void begin() {
-						// TODO Auto-generated method stub
 						
 					}
 
 					public void end() {
-						// TODO Auto-generated method stub
 						
 					}
 
 					public void repeat() {
-						// TODO Auto-generated method stub
 						
 					}
 

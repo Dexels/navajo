@@ -154,7 +154,7 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
 	}
 
 	public void flatten(String serviceName, String hostUrl, String username, String password, String pincode, String keystore,
-			String keypass) throws NavajoException, TipiException, TipiBreakException {
+			String keypass) throws NavajoException, TipiBreakException {
 		Navajo out = NavajoFactory.getInstance().createNavajo();
 		Message outResult = NavajoFactory.getInstance().createMessage(out, "Answers", Message.MSG_TYPE_ARRAY);
 		Message formData = myNavajo.getMessage("FormData");
@@ -198,8 +198,6 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
 			try {
 				flatten(serviceName, hostUrl, username, password, pincode, keystore, keypass);
 			} catch (NavajoException ex) {
-				ex.printStackTrace();
-			} catch (TipiException ex) {
 				ex.printStackTrace();
 			}
 		}

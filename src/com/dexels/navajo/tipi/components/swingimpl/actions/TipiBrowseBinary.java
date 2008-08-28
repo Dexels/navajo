@@ -8,7 +8,6 @@ package com.dexels.navajo.tipi.components.swingimpl.actions;
 
 import java.awt.*;
 import java.io.*;
-import java.util.*;
 
 import javax.swing.*;
 
@@ -78,7 +77,6 @@ public class TipiBrowseBinary extends TipiAction {
 			}
 			System.err.println("Sub: "+pp.getSubType());
         } catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     }

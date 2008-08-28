@@ -2,10 +2,6 @@ package com.dexels.navajo.tipi.components.swingimpl;
 
 import java.awt.*;
 
-import org.jdesktop.animation.transitions.*;
-import org.jdesktop.animation.transitions.EffectsManager.*;
-import org.jdesktop.animation.transitions.effects.*;
-
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 

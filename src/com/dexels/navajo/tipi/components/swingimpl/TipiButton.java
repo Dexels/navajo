@@ -7,15 +7,9 @@ import java.net.*;
 
 import javax.imageio.*;
 import javax.swing.*;
-import javax.swing.event.*;
-
-import org.jdesktop.animation.transitions.*;
-import org.jdesktop.animation.transitions.EffectsManager.*;
-import org.jdesktop.animation.transitions.effects.*;
 
 import com.dexels.navajo.document.types.*;
 import com.dexels.navajo.tipi.*;
-
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.internal.*;
 
@@ -37,8 +31,6 @@ import com.dexels.navajo.tipi.internal.*;
  * @version 1.0
  */
 public class TipiButton extends TipiSwingComponentImpl {
-//	private TipiSwingButton myButton;
-
 	private boolean iAmEnabled = true;
 	private AbstractAction buttonAction;
 
@@ -47,11 +39,9 @@ public class TipiButton extends TipiSwingComponentImpl {
 		buttonAction = new AbstractAction("onActionPerformed"){
 
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
 				try {
 					performTipiEvent("onActionPerformed", null, false);
 				} catch (TipiException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			}};
@@ -118,7 +108,6 @@ public class TipiButton extends TipiSwingComponentImpl {
 				 ImageIcon ii = new ImageIcon(i);
 				 return ii;
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		 }

@@ -9,7 +9,6 @@ import javax.swing.event.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.internal.*;
-import com.dexels.navajo.tipi.swingclient.*;
 
 /**
  * <p>
@@ -29,8 +28,8 @@ import com.dexels.navajo.tipi.swingclient.*;
  * @version 1.0
  */
 public class TipiDialog extends TipiSwingDataComponentImpl {
-	// private JDialog myDialog = null;
 	private boolean modal = false;
+	@SuppressWarnings("unused")
 	private boolean decorated = true;
 	private boolean showing = false;
 	private String title = "";
@@ -98,7 +97,8 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 	protected void createWindowListener(final JInternalFrame d) {
 		// d.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 		d.addInternalFrameListener(new InternalFrameAdapter() {
-			public void internalFrameClosing(WindowEvent e) {
+		
+			public void internalFrameClosing(InternalFrameEvent e) {
 				System.err.println("Dialog closing");
 				try {
 					dialog_windowClosing();

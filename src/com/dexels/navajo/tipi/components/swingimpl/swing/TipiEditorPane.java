@@ -1,9 +1,9 @@
 package com.dexels.navajo.tipi.components.swingimpl.swing;
 
 import java.io.*;
-import java.net.*;
 
 import javax.swing.*;
+
 import com.dexels.navajo.document.types.*;
 
 public class TipiEditorPane extends JEditorPane {

@@ -43,64 +43,22 @@ public class MessageTableFooterRenderer extends JLabel
                                                 boolean hasFocus, int row,
                                                 int column) {
 
-//	 if(true) {
-//		 return new JLabel("MonkeyMonkey");
-//	 }
-	 
 	 if (!initialized) {
 			myPropComponent.setLabelVisible(false);
-//			myPropComponent.setBorder(null);
 			try {
-//				myPropComponent.setHorizontalAlignment(SwingConstants.LEADING);
-//				myPropComponent.setHorizontalTextPosition(SwingConstants.LEADING);
 				initialized = true;
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 	 myPropComponent.setForeground(Color.black);
-//   setBackground(Color.blue);
 	 myPropComponent.hideBorder();
 	 myPropComponent.setOpaque(false);
    MessageTable mm = (MessageTable)table;
-//   Message cc = myComponent.getStateMessage().getMessage("Columns");
-//   try {
-//   myComponent.getStateMessage().write(System.err);
-//   } catch(Exception e) {
-//	   e.printStackTrace();
-//   }
-//   System.err.println("ColumnIndex:"+column+"value: "+value);
-   
-//   Message me = cc.getMessage(column);
-
-//  Property name = me.getProperty("Name");
-//   JLabel ll = new JLabel((String) name.getTypedValue());
-//   if(true) {
-//   return ll;
-//   }
-   Operand val = aggregateValueMap.get(new Integer(column));
-   
-//   Property aggr = me.getProperty("Aggregate");
-//   if(aggr==null) {
-//	   setText("Oempaloempa");
-//	   return this;
-//   }
-//     setText(""+val.value);
-//     return this;
-//   if(mm.isShowingRowHeaders()) {
-//	   column--;
-//   }
-//   myPropComponent.setComponentBorder(BorderFactory.createEmptyBorder(2,2,2,2));
-//   myPropComponent.setProperty(aggr);
-   
+ 
    String expr = getAggregateFunction(column);
-//   String expr = (String) aggr.getTypedValue();
-//   System.err.println("Column: "+column+" expre: "+expr);
-
    if (expr==null) {
 	   setupProp(mm, new Operand(null,"String",null), column);
-//     setText("");
-//	  return new JLabel("aap"); 
      return myPropComponent;
    } else {
     try {

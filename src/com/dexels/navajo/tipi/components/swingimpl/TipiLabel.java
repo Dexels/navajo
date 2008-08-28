@@ -43,7 +43,6 @@ public class TipiLabel
 			 ImageIcon ii = new ImageIcon(i);
 			 return ii;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	 }

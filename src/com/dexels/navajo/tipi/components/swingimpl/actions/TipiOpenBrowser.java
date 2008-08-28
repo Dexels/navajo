@@ -35,7 +35,6 @@ public class TipiOpenBrowser extends TipiAction {
         	try {
 				rr.getAppletContext().showDocument(new URL(urlVal), "_blank");
 			} catch (MalformedURLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
         }else {

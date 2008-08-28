@@ -1,7 +1,6 @@
 package com.dexels.navajo.tipi.components.swingimpl.embed;
 
 import java.awt.*;
-import java.lang.reflect.*;
 
 import javax.swing.*;
 

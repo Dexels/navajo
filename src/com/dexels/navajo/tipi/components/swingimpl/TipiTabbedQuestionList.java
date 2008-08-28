@@ -21,7 +21,6 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
     private JTabbedPane tabbedPane;
 
     protected Object getGroupConstraints(Message groupMessage) {
-        // TODO Auto-generated method stub
         Property name = groupMessage.getProperty("Name");
         if (name==null) {
             return "Unknown tab";
@@ -49,7 +48,6 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
 			try {
 				SwingUtilities.invokeAndWait(runnable);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (InvocationTargetException e) {
 				e.printStackTrace();
@@ -94,10 +92,7 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
             }});
        }
 
-    public void removeFromContainer(Object c) {
-        // TODO Auto-generated method stub
-        super.removeFromContainer(c);
-    }
+
     public void setGroupValid(boolean valid, TipiBaseQuestionGroup group) {
         super.setGroupValid(valid, group);
         int i = myGroups.indexOf(group);

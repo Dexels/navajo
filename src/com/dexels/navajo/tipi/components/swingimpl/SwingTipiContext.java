@@ -47,7 +47,6 @@ public class SwingTipiContext extends TipiContext {
 	private final Set<Thread> dialogThreadSet = Collections.synchronizedSet(new HashSet<Thread>());
 	private final Map<String, String> cookieMap = new HashMap<String, String>();
 	private final Stack<JDialog> dialogStack = new Stack<JDialog>();
-	private boolean dialogShowing = false;
 
 	// private JDialog blockingDialog;
 
@@ -68,6 +67,9 @@ public class SwingTipiContext extends TipiContext {
 		}
 		// JFrame.setDefaultLookAndFeelDecorated(true);
 		// JDialog.setDefaultLookAndFeelDecorated(true);
+		
+		appendJnlpCodeBase(null);
+		
 		try {
 			loadCookies();
 		} catch (FileNotFoundException e) {
@@ -122,7 +124,7 @@ public class SwingTipiContext extends TipiContext {
 			getAppletRoot().setCursor(b ? Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR) : Cursor.getDefaultCursor());
 		}
 		for (int i = 0; i < rootPaneList.size(); i++) {
-			Object obj = rootPaneList.get(i);
+//			Object obj = rootPaneList.get(i);
 			// if (TipiSwingComponent.class.isInstance(obj)) {
 			// TipiSwingComponent tc = (TipiSwingComponent) obj;
 			// tc.setWaitCursor(b);
@@ -203,16 +205,13 @@ public class SwingTipiContext extends TipiContext {
 	}
 
 	public void dialogShowing(boolean b) {
-		dialogShowing = b;
 		if (!SwingUtilities.isEventDispatchThread()) {
 			if (b) {
 				dialogThreadSet.add(Thread.currentThread());
 			} else {
 				dialogThreadSet.remove(Thread.currentThread());
 			}
-			dialogShowing = b;
 		} else {
-			dialogShowing = false;
 		}
 		updateWaiting();
 	}
@@ -395,7 +394,7 @@ public class SwingTipiContext extends TipiContext {
 	private void appendJnlpCodeBase(Map<String, String> properties) {
 
 		try {
-			Class c = Class.forName("javax.jnlp.ServiceManager");
+			Class.forName("javax.jnlp.ServiceManager");
 			WebStartProxy.appendJnlpCodeBase(properties);
 
 		} catch (ClassNotFoundException e) {
@@ -445,21 +444,11 @@ public class SwingTipiContext extends TipiContext {
 		final JComponent jjj = (JComponent) swingContainer;
 		int delay = 1500;
 		final Animator animator = new Animator(delay);
-		final int iii = jjj.getComponentListeners().length;
-		// try {
-		// SwingUtilities.invokeAndWait(new Runnable(){
-		//
-		// public void run() {
-		//					
 
 		final ScreenTransition transition = new ScreenTransition(jjj, new TransitionTarget() {
 
 			public void setupNextScreen() {
-				// System.err.println(">>>>>ThreaD: " +
-				// Thread.currentThread().getName()+" hash: "+this.hashCode());
-
-				// animator.pause();
-				try {
+					try {
 					int i = 0;
 					for (TipiExecutable current : exe) {
 						current.performAction(te, exeParent, i++);
@@ -468,17 +457,12 @@ public class SwingTipiContext extends TipiContext {
 					ex.printStackTrace();
 				}
 				// animator.resume();
-				long ll = animator.getCycleElapsedTime();
-				// System.err.println("Elapsed during setup: " + ll);
-				// System.err.println("Free memory:
-				// "+Runtime.getRuntime().freeMemory());
+				animator.getCycleElapsedTime();
 				jjj.revalidate();
 			}
 		}, animator);
 		animator.addTarget(new TimingTargetAdapter() {
 			public void end() {
-				// System.err.println("Finished:
-				// "+jjj.getComponentListeners().length+" before: "+iii);
 				transition.dispose();
 			}
 
@@ -489,46 +473,16 @@ public class SwingTipiContext extends TipiContext {
 		try {
 			Thread.sleep(delay);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-		// System.gc();
-		// TODO only continue when the animation has finished
-		// }});
-		// } catch (InterruptedException e) {
-		// e.printStackTrace();
-		// } catch (InvocationTargetException e) {
-		// e.printStackTrace();
-		// }
 	}
 
 	public void injectApplication(String definition, List<String> arrrgs, String sandBoxPath) {
 		TipiComponent sandbox = getDefaultTopLevel().getTipiComponentByPath(sandBoxPath);
 		final XMLElement inst = new CaseSensitiveXMLElement();
 		inst.setName("c.windowembed");
-
-		// <instantiateClass id="'club'" location="{component://init/desktop}"
-		// class="'windowembed'"
-		// tipiCodeBase="'c:/projecten/SportlinkClubStudio/tipi/'"
-		// resourceCodeBase="'c:/projecten/SportlinkClubStudio/resource/'" />
-
-		// inst.setAttribute("resourceCodeBase", "app");
-		// inst.setAttribute("tipiCodeBase", "app");
 		inst.setAttribute("id", "app");
-		//
-		// try {
-		// sandbox.addComponentInstance(this, inst, null);
-		// } catch (TipiException e1) {
-		// // TODO Auto-generated catch block
-		// e1.printStackTrace();
-		// }
-		// TipiComponent application = sandbox.getTipiComponent("app");
-		// <performTipiMethod path="{component://init/desktop/club}"
-		// name="'loadDefinition'" location="'start.xml'" />
-		// <performTipiMethod path="{component://init/desktop/club}"
-		// name="'switch'" definition="'init'" />
-
 		if (sandbox != null) {
 			System.err.println("SANDBOX FOUND!");
 		}
@@ -545,7 +499,6 @@ public class SwingTipiContext extends TipiContext {
 		try {
 			saveCookies();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

@@ -36,7 +36,6 @@ public class TipiSwingWindow extends JInternalFrame {
 			}
 
 			public void componentMoved(ComponentEvent c) {
-				// TODO Auto-generated method stub
 				int oldX = position != null ? position.x : -1;
 				int x = getLocation().x;
 				if (oldX != x) {
@@ -51,7 +50,6 @@ public class TipiSwingWindow extends JInternalFrame {
 			}
 
 			public void componentResized(ComponentEvent c) {
-				// TODO Auto-generated method stub
 				int oldWidth = oldSize != null ? oldSize.width : -1;
 				int w = getSize().width;
 				if (oldWidth != w) {

@@ -9,8 +9,6 @@ package com.dexels.navajo.tipi.components.swingimpl;
 import java.awt.*;
 import java.util.*;
 
-import javax.swing.*;
-
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
@@ -43,15 +41,11 @@ public class TipiNavajoView extends TipiPanel {
 			Navajo n = (Navajo)object;
 			System.err.println("Loading service: "+n.getHeader().getRPCName());
 			try {
-//				if(n!=myNavajo) {
 					createNavajoXML(n);
 					myNavajo = n;
-//				}
 			} catch (NavajoException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (TipiBreakException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -81,21 +75,14 @@ public class TipiNavajoView extends TipiPanel {
 				try {
 					addComponentInstance(myContext, inst, "Center");
 				} catch (TipiException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 				
 					try {
 						loadData(n, "NavajoView");
 					} catch (TipiException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-			
-//				JComponent j = (JComponent)getContainer();
-//				j.revalidate();
-//				j.repaint();		
-//			}});
 
 	}
 
@@ -251,12 +238,10 @@ public class TipiNavajoView extends TipiPanel {
 	}
 
 	private void appendProperty(XMLElement layout, Property p, int index) throws NavajoException {
-		// TODO Auto-generated method stub
 		XMLElement e = new CaseSensitiveXMLElement();
 		e.setName("c.property");
 		e.setAttribute("propertyname", "'"+p.getFullPropertyName()+"'");
 		e.setAttribute("constraint", "0,"+index+",1,1,1.0,1.0,"+GridBagConstraints.CENTER+","+GridBagConstraints.BOTH+",0,0,0,0,0,0");
-				//e.setAttribute("id","NavajoView");
 		layout.addChild(e);
 	}
 }

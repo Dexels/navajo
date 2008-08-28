@@ -21,10 +21,8 @@ public class TipiSwingMessageView extends TipiSwingDataComponentImpl {
 						setMessage((Message) object);
 					}});
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (InvocationTargetException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

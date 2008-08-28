@@ -1,12 +1,8 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
-import java.awt.*;
 import java.io.*;
 
-import javax.swing.*;
-
 import com.dexels.navajo.document.types.*;
-import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 
 /**

@@ -1,7 +1,5 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
-import java.net.*;
-
 import javax.swing.*;
 
 import com.dexels.navajo.tipi.*;
@@ -45,10 +43,10 @@ public class TipiActivityBar
   public void setComponentValue(String name, Object object) {
     super.setComponentValue(name, object);
     if (name.equals("freeicon")) {
-      freeIcon = getIcon( (URL) object);
+      freeIcon = getIcon( object);
     }
     if (name.equals("busyicon")) {
-      busyIcon = getIcon( (URL) object);
+      busyIcon = getIcon( object);
     }
   }
 

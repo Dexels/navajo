@@ -45,16 +45,12 @@ public class TipiSwingColorButton extends JTextField {
 			myProperty.setAnyValue(null);
 			return;
 		}
-//		public Object parse(TipiComponent source, String name, String expression, TipiEvent te) {
-		System.err.println("Pars: "+text);
 		Color c;
 		try {
 			c = (Color) myComponent.getContext().evaluateExpression(text,myComponent, null);
-			System.err.println("CCC: "+c);
 			setBackground(c);
 			myProperty.setAnyValue(c);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

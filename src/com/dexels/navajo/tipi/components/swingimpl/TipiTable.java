@@ -61,8 +61,8 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 
 			public void focusGained(FocusEvent e) {
 				if(e.getOppositeComponent()!=null) {
-					System.err.println("Table gained: "+e.getOppositeComponent().getClass());
-					System.err.println("Next: "+mm.getNextFocusableComponent());
+//					System.err.println("Table gained: "+e.getOppositeComponent().getClass());
+//					System.err.println("Next: "+mm.getNextFocusableComponent());
 				}
 //				System.err.println("NEXT: "+mm.getFocusTraversalPolicy().getComponentAfter(mm.getFocusCycleRootAncestor(), mm));
 //				System.err.println("PREVIOUS: "+mm.getFocusTraversalPolicy().getComponentBefore(mm.getFocusCycleRootAncestor(), mm));
@@ -71,8 +71,8 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 
 			public void focusLost(FocusEvent e) {
 				if(e.getOppositeComponent()!=null) {
-					System.err.println("Table lost: "+e.getOppositeComponent().getClass());
-					System.err.println("Next: "+mm.getNextFocusableComponent());
+//					System.err.println("Table lost: "+e.getOppositeComponent().getClass());
+//					System.err.println("Next: "+mm.getNextFocusableComponent());
 
 				}
 			}});
@@ -482,7 +482,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 	 * 
 	 * @see com.dexels.navajo.tipi.components.core.TipiDataComponentImpl#doPerformOnLoad(java.lang.String)
 	 */
-	protected void doPerformOnLoad(String method) throws TipiException {
+	protected void doPerformOnLoad(String method) {
 	}
 
 	public void setComponentValue(final String name, final Object object) {

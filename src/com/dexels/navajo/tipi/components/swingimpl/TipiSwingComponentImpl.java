@@ -2,12 +2,10 @@ package com.dexels.navajo.tipi.components.swingimpl;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.lang.reflect.*;
 import java.util.List;
 
 import javax.swing.*;
 
-import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.core.*;
 import com.dexels.navajo.tipi.components.swingimpl.parsers.*;
@@ -26,7 +24,7 @@ public abstract class TipiSwingComponentImpl
     extends TipiComponentImpl implements TipiSwingComponent {
   protected TipiGradientPaint myPaint;
   protected TipiPopupMenu myPopupMenu = null;
-  private boolean committedInUI;
+//  private boolean committedInUI;
   protected SwingTipiContext mySwingTipiContext;
 
   public void showPopup(MouseEvent e) {
@@ -118,11 +116,7 @@ public abstract class TipiSwingComponentImpl
     }
   }
   
-  public void commitToUi() {
-      super.commitToUi();
-      committedInUI = true;
-  }
-
+ 
   	public void animateTransition(TipiEvent te, TipiExecutable executableParent, List<TipiExecutable> exe) throws TipiBreakException {
 		mySwingTipiContext.animateDefaultTransition(this,te,executableParent,getSwingContainer(),exe);
 	}

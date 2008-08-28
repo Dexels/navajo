@@ -49,15 +49,12 @@ public class TipiSwingPaintEditor extends JTextField {
 			myProperty.setAnyValue(null);
 			return;
 		}
-		System.err.println("Pars: " + text);
 		TipiGradientPaint c;
 		try {
 			c = (TipiGradientPaint) myComponent.getContext().evaluateExpression(text, myComponent, null);
-			System.err.println("CCC: " + c);
 			setPaint(c);
 			myProperty.setAnyValue(c);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

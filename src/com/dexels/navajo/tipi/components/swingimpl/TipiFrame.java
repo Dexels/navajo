@@ -1,7 +1,6 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
 import java.awt.*;
-import java.beans.*;
 import java.net.*;
 
 import javax.swing.*;
@@ -9,7 +8,6 @@ import javax.swing.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.embed.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
-import com.dexels.navajo.tipi.swingclient.components.*;
 
 /**
  * <p>
@@ -47,38 +45,38 @@ public class TipiFrame extends TipiSwingDataComponentImpl {
 		addHelper(th);
 		if (internal) {
 			TipiApplet ta = ((SwingTipiContext) getContext()).getAppletRoot();
-			if(ta!=null) {
+			if (ta != null) {
 				myToplevel = ta;
 				return ta;
 			}
 			RootPaneContainer or = ((SwingTipiContext) getContext()).getOtherRoot();
 			myToplevel = or;
 			mySuperPanel = new JPanel();
-			or.getContentPane().add(mySuperPanel ,BorderLayout.CENTER);
+			or.getContentPane().add(mySuperPanel, BorderLayout.CENTER);
 			mySuperPanel.setLayout(new BorderLayout());
 			return or;
-//			if (getContext() instanceof EmbeddedContext) {
-		//		EmbeddedContext ec = (EmbeddedContext) getContext();
-	//			myToplevel = (RootPaneContainer) ec.getRootComponent();
-//				return ec.getRootComponent();
-	//		}
+			// if (getContext() instanceof EmbeddedContext) {
+			// EmbeddedContext ec = (EmbeddedContext) getContext();
+			// myToplevel = (RootPaneContainer) ec.getRootComponent();
+			// return ec.getRootComponent();
+			// }
 		} else {
 			TipiSwingFrameImpl myFrame;
 			myFrame = new TipiSwingFrameImpl(this);
 			myToplevel = myFrame;
 			mySuperPanel = new JPanel();
-			myFrame.setExtendedState(myFrame.getExtendedState()|JFrame.MAXIMIZED_HORIZ);
-			myFrame.getContentPane().add(mySuperPanel ,BorderLayout.CENTER);
+			myFrame.setExtendedState(myFrame.getExtendedState() | JFrame.MAXIMIZED_HORIZ);
+			myFrame.getContentPane().add(mySuperPanel, BorderLayout.CENTER);
 			mySuperPanel.setLayout(new BorderLayout());
-			 ((SwingTipiContext)myContext).addTopLevel(myFrame);
-			//mySuperPanel.addC
+			((SwingTipiContext) myContext).addTopLevel(myFrame);
+			// mySuperPanel.addC
 			return myFrame;
 		}
 	}
 
 	public void addToContainer(final Object c, final Object constraints) {
-		if(	this.getClass().getName().contains("Embed")) {
-			
+		if (this.getClass().getName().contains("Embed")) {
+
 			return;
 		}
 		// final TipiSwingFrame myFrame = (TipiSwingFrame) getContainer();
@@ -100,25 +98,12 @@ public class TipiFrame extends TipiSwingDataComponentImpl {
 			runSyncInEventThread(new Runnable() {
 				public void run() {
 
-				    runSyncInEventThread(new Runnable() {
+					runSyncInEventThread(new Runnable() {
 						public void run() {
-//							Component comp = (Component) c;
-//							if (c instanceof LayeredPaneable && ((LayeredPaneable) c).wantsToBeInALayer()) {
-//								System.err.println("Adding to layerredpane");
-//								// TODO Fix for all toplevels!
-//								((JFrame) myToplevel).getLayeredPane().add((Component) c, ((LayeredPaneable) c).getPreferredLayer());
-//								((Component) c).setBounds(10, 200, 600, 30);
-//							} else {
-								mySuperPanel.add((Component) c, constraints);
-//							}
+							mySuperPanel.add((Component) c, constraints);
 						}
 					});
-					
-					
-					// myToplevel.getContentPane().add((Component) c,
-					// constraints);
-					// myFrame.getContentPane().dispatchEvent(new
-					// ComponentEvent(myFrame.getContentPane(),ComponentEvent.COMPONENT_RESIZED));
+
 				}
 			});
 		}
@@ -164,10 +149,10 @@ public class TipiFrame extends TipiSwingDataComponentImpl {
 	}
 
 	public void setContainerLayout(Object layout) {
-		
-//		myToplevel.getContentPane().setLayout((LayoutManager) layout);
 
-			mySuperPanel.setLayout((LayoutManager) layout);
+		// myToplevel.getContentPane().setLayout((LayoutManager) layout);
+
+		mySuperPanel.setLayout((LayoutManager) layout);
 	}
 
 	private ImageIcon getIcon(URL u) {
@@ -175,8 +160,8 @@ public class TipiFrame extends TipiSwingDataComponentImpl {
 	}
 
 	public void setComponentValue(final String name, final Object object) {
-		
-		runSyncInEventThread(new Runnable(){
+
+		runSyncInEventThread(new Runnable() {
 
 			public void run() {
 				if (name.equals("fullscreen")) {
@@ -207,8 +192,9 @@ public class TipiFrame extends TipiSwingDataComponentImpl {
 				if (name.equals("h")) {
 					h = ((Integer) object).intValue();
 				}
-			}});
-	
+			}
+		});
+
 		super.setComponentValue(name, object);
 	}
 
@@ -280,51 +266,53 @@ public class TipiFrame extends TipiSwingDataComponentImpl {
 
 		}
 	}
-	
-	
-	 public final void performTipiMethod(final String name, TipiComponentMethod compMeth) {
-		 runSyncInEventThread(new Runnable(){
+
+	public final void performTipiMethod(final String name, TipiComponentMethod compMeth) {
+		runSyncInEventThread(new Runnable() {
 
 			public void run() {
 				if (name.equals("iconify")) {
-					if(getContainer() instanceof TipiSwingFrameImpl) {
+					if (getContainer() instanceof TipiSwingFrameImpl) {
 						try {
 							TipiSwingFrameImpl jj = (TipiSwingFrameImpl) getContainer();
-							jj.setExtendedState(jj.getExtendedState()|JFrame.ICONIFIED);
+							jj.setExtendedState(jj.getExtendedState() | JFrame.ICONIFIED);
 						} catch (Exception ex) {
 							ex.printStackTrace();
 						}
 					}
 				}
 				if (name.equals("maximize")) {
-					if(getContainer() instanceof TipiSwingFrameImpl) {
+					if (getContainer() instanceof TipiSwingFrameImpl) {
 						try {
 							TipiSwingFrameImpl jj = (TipiSwingFrameImpl) getContainer();
-							jj.setExtendedState(jj.getExtendedState()|JFrame.MAXIMIZED_BOTH);
+							jj.setExtendedState(jj.getExtendedState() | JFrame.MAXIMIZED_BOTH);
 						} catch (Exception ex) {
 							ex.printStackTrace();
 						}
 					}
 				}
 				if (name.equals("restore")) {
-//					if(getContainer() instanceof TipiSwingFrameImpl) {
-//						try {
-//							TipiSwingFrameImpl jj = (TipiSwingFrameImpl) getContainer();
-//							jj.setExtendedState(jj.getExtendedState()|JFrame.ICONIFIED);
-//						} catch (Exception ex) {
-//							ex.printStackTrace();
-//						}
-//					}
+					// if(getContainer() instanceof TipiSwingFrameImpl) {
+					// try {
+					// TipiSwingFrameImpl jj = (TipiSwingFrameImpl)
+					// getContainer();
+					//jj.setExtendedState(jj.getExtendedState()|JFrame.ICONIFIED
+					// );
+					// } catch (Exception ex) {
+					// ex.printStackTrace();
+					// }
+					// }
 				}
-			}});
-	
+			}
+		});
+
 	}
 
-	 public static void main(String[] args) {
-		 JFrame j = new JFrame("aap");
-		 
-		 //j.setSize(200,100);
-			j.setExtendedState(j.getExtendedState()|JFrame.MAXIMIZED_BOTH);
-			 j.setVisible(true);
-	 }
+	public static void main(String[] args) {
+		JFrame j = new JFrame("aap");
+
+		// j.setSize(200,100);
+		j.setExtendedState(j.getExtendedState() | JFrame.MAXIMIZED_BOTH);
+		j.setVisible(true);
+	}
 }

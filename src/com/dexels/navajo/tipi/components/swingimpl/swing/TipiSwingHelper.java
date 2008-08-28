@@ -2,7 +2,6 @@ package com.dexels.navajo.tipi.components.swingimpl.swing;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.lang.reflect.*;
 import java.util.*;
 
 import javax.swing.*;
@@ -30,74 +29,9 @@ public class TipiSwingHelper
   }
 
   public void setComponentValue(String name, Object object) {
-//    if (!JComponent.class.isInstance(myComponent.getContainer())) {
-//      if (name.equals("visible")) {
-//        ( (Container) myComponent.getContainer()).setVisible( ( (Boolean) object).booleanValue());
-//      }
-//      return;
-//    }
-//    JComponent c = (JComponent) myComponent.getContainer();
-//    if (name.equals("background")) {
-//      if(TipiGradientPaint.class.isInstance(object)){
-//        TipiGradientPaint tgp = (TipiGradientPaint)object;
-//        myComponent.setPaint(tgp);
-//      }else{
-//        c.setBackground( (Color) object);
-//      }
-//    }
-//    if (name.equals("foreground")) {
-//      c.setForeground( (Color) object);
-//    }
-//    if (name.equals("font")) {
-//      c.setFont( (Font) object);
-//    }
-//    if (name.equals("tooltip")) {
-//      c.setToolTipText( (String) object);
-//    }
-//    if (name.equals("border")) {
-//   
-//      c.setBorder( (Border) object);
-//    }
-//    if (name.equals("visible")) {
-//      c.setVisible( ( (Boolean) object).booleanValue());
-//    }
-//    if (name.equals("enabled")) {
-//    	if (object instanceof String) {
-//    	      c.setEnabled( object.equals("true"));
-//		} else {
-//		      c.setEnabled( ( (Boolean) object).booleanValue());
-//		}
-//    }
-    // SHOULD CALL myCOmponent.setComponentValue, I guess.
   }
 
   public Object getComponentValue(String name) {
-//    if (!JComponent.class.isInstance(myComponent.getContainer())) {
-//      System.err.println("Sorry, only use JComponent decendants. No awt stuff. Ignoring. Class: "+myComponent.getContainer().getClass());
-//      return null;
-//    }
-//    JComponent c = (JComponent) myComponent.getContainer();
-//    if (name.equals("tooltip")) {
-//      return c.getToolTipText();
-//    }
-//    if (name.equals("visible")) {
-//      return new Boolean( ( (Component) myComponent.getContainer()).isVisible());
-//    }
-//    if (name.equals("background")) {
-//      return c.getBackground();
-//    }
-//    if (name.equals("foreground")) {
-//      return c.getForeground();
-//    }
-//    if (name.equals("font")) {
-//      return c.getFont();
-//    }
-//    if (name.equals("border")) {
-//      return c.getBorder();
-//    }
-//    if (name.equals("enabled")) {
-//      return new Boolean(c.isEnabled());
-//    }
     return null;
   }
 

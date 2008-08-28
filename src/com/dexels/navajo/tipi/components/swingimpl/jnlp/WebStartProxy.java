@@ -13,18 +13,14 @@ public class WebStartProxy {
 			System.err.println("BS: "+bs.getCodeBase());
 			URL tipiCodeBase = new URL(bs.getCodeBase(),"tipi");
 			System.err.println("TipiBS: "+bs.getCodeBase());
-//			properties.put("tipiCodeBase", tipiCodeBase.toString());
-			URL resourceCodeBase = new URL(bs.getCodeBase(),"resource");
-//			properties.put("tipiCodeBase", tipiCodeBase.toString());
-//			properties.put("resourceCodeBase", resourceCodeBase.toString());
+//			URL resourceCodeBase = new URL(bs.getCodeBase(),"resource");
 			
-			
+			System.err.println("WEBSTARTPROXY found: "+tipiCodeBase);
 	      } catch (UnavailableServiceException e) {
 			System.err.println("Service unavailable");
 			e.printStackTrace();
 		} catch (MalformedURLException e) {
 			System.err.println("URL trouble");
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
 	      

@@ -333,7 +333,6 @@ public class TipiProperty extends TipiSwingComponentImpl implements PropertyComp
 					myProperty.setSelected(s);
 					setProperty(myProperty);
 				} catch (NavajoException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -345,7 +344,6 @@ public class TipiProperty extends TipiSwingComponentImpl implements PropertyComp
 					myProperty.setSelected(selectionValue);
 					setProperty(myProperty);
 				} catch (NavajoException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}

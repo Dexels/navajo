@@ -8,8 +8,6 @@ package com.dexels.navajo.tipi.components.swingimpl.swing;
 
 import java.io.*;
 
-import javax.swing.*;
-
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.swingclient.components.*;
@@ -34,8 +32,6 @@ public class TipiMessageTable extends MessageTable {
 
 
     public void loadColumnsNavajo() {
-        // TODO Auto-generated method stub
-//        super.loadColumnsNavajo();
         if(columnPathString==null) {
             // ignoring, but should not happen at all, I think
             return;

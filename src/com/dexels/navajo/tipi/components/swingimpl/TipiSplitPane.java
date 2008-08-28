@@ -1,9 +1,7 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
 import java.awt.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
+import java.awt.event.*;
 
 import javax.swing.*;
 

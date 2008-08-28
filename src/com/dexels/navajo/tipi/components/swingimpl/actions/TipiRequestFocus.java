@@ -48,10 +48,8 @@ public final class TipiRequestFocus extends TipiAction {
 						
 					}});
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (InvocationTargetException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		} else {

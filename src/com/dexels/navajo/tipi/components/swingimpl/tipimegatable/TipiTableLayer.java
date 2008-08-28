@@ -131,10 +131,9 @@ private MessageTablePanel myTablePanel;
 			public void run() {
 				  mtp.createColumnModel();
 				    for (int i = 0; i < columnSize.size(); i++) {
-				      int ii = ( (Integer) columnSize.get(i)).intValue();
+				      int ii = columnSize.get(i).intValue();
 				      final int index = i;
 				      final int value = ii;
-				    //  System.err.println("Setting column: " + i + " to: " + ii);
 				      mtp.setColumnWidth(index, value);
 				    }
 //				    mtp.getTable().loadColumnSizes();

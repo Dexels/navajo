@@ -16,7 +16,6 @@ public class TipiApplet extends JApplet {
 			UIManager.setLookAndFeel("org.jvnet.substance.SubstanceLookAndFeel");
 			SwingUtilities.updateComponentTreeUI(this);
 		} catch (Throwable e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} }
 
@@ -62,7 +61,6 @@ public class TipiApplet extends JApplet {
 				UIManager.setLookAndFeel(laf);
 				SwingUtilities.updateComponentTreeUI(this);
 			} catch (Throwable e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} 
 		}
@@ -71,7 +69,6 @@ public class TipiApplet extends JApplet {
 		try {
 			myContext = MainApplication.initialize(init, null,arguments,this,null);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

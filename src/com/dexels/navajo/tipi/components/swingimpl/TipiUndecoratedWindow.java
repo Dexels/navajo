@@ -1,7 +1,6 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
 import java.awt.*;
-import java.beans.*;
 
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
@@ -72,7 +71,6 @@ public class TipiUndecoratedWindow extends TipiSwingDataComponentImpl {
 				} catch (TipiException e) {
 					e.printStackTrace();
 				} catch (TipiBreakException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 

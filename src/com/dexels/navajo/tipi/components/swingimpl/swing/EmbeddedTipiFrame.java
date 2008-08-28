@@ -6,10 +6,7 @@ public class EmbeddedTipiFrame extends JInternalFrame {
 
 
 	public void setVisible(boolean arg0) {
-//		// TODO Auto-generated method stub
 		System.err.println("setVisible: "+arg0);
-//		
-//		Thread.dumpStack();
 		super.setVisible(true);
 	}
 

@@ -18,7 +18,6 @@ import metadata.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.types.*;
 import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.internal.*;
 
 /**
@@ -128,7 +127,6 @@ public class TipiSaveBinary extends TipiAction {
 	}
 
 	public static void saveFile(Binary value, File f) throws TipiBreakException, TipiException {
-		System.err.println("Saving: "+f.getAbsolutePath());
 		if (f == null) {
 			throw new TipiBreakException(-3);
 		}

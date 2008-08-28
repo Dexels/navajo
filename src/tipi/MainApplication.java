@@ -5,11 +5,9 @@ import java.util.*;
 
 import javax.swing.*;
 
-import com.dexels.navajo.tipi.actions.*;
 import com.dexels.navajo.tipi.components.swingimpl.*;
 import com.dexels.navajo.tipi.swingclient.*;
 import com.dexels.navajo.tipi.swingclient.components.*;
-import com.dexels.navajo.tipi.tipixml.*;
 
 public class MainApplication {
 

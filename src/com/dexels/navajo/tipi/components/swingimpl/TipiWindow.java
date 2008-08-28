@@ -10,7 +10,6 @@ import javax.swing.event.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.internal.*;
-import com.dexels.navajo.tipi.swingclient.components.*;
 
 /**
  * <p>Title: </p>
@@ -105,7 +104,6 @@ public final class TipiWindow
 				( (JInternalFrame) getContainer()).setSelected(true);
 				( (JInternalFrame) getContainer()).requestFocus();
 			} catch (PropertyVetoException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}});
@@ -128,102 +126,6 @@ public final class TipiWindow
       }
     });
   }
-
-//  public final void setComponentValue(final String name, final Object object) {
-//	  if(name.equals("selected")) {
-//		  System.err.println("Holadie! "+object);
-//		  Thread.dumpStack();
-//		  try {
-//			myWindow.setSelected(true);
-//		} catch (PropertyVetoException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		  return;
-//	  }
-//	  super.setComponentValue(name, object);
-//  }
-	  //    super.setComponentValue(name, object);
-//    if (object==null) {
-//      System.err.println("Null object. Name = "+name);
-//    } else {
-//    }
-// 	  checkContainerInstance();
-// 	 
-//    runSyncInEventThread(new Runnable() {
-// 
-//	public void run() {
-//        if (name.equals("iconifiable")) {
-//      	  checkContainerInstance();
-//          boolean b = ( (Boolean) object).booleanValue();
-//          iconifiable = b;
-//          ((JInternalFrame) getContainer()).setIconifiable(b);
-//        }
-//        if (name.equals("background")) {
-//      	  checkContainerInstance();
-//        	backgroundColor = (Color) object;
-//        	((JInternalFrame) getContainer()).setBackground(backgroundColor );
-//        }
-//        if (name.equals("maximizable")) {
-//      	  checkContainerInstance();
-//          maximizable = ( (Boolean) object).booleanValue();
-//          ((JInternalFrame) getContainer()).setMaximizable(maximizable);
-//        }
-//        if (name.equals("closable")) {
-//      	  checkContainerInstance();
-//          closable = ( (Boolean) object).booleanValue();
-//          ((JInternalFrame) getContainer()).setClosable(closable);
-//        }
-//        if (name.equals("resizable")) {
-//      	  checkContainerInstance();
-//          resizable = ( (Boolean) object).booleanValue();
-//          ((JInternalFrame) getContainer()).setResizable(resizable);
-//        }
-//        if (name.equals("selected")) {
-//          boolean b = ( (Boolean) object).booleanValue();
-//          try {
-//        	  checkContainerInstance();
-//        	  ((JInternalFrame) getContainer()).setSelected(b);
-//          }
-//          catch (PropertyVetoException ex) {
-//            System.err.println("Tried to select a window, but someone did not agree");
-//            ex.printStackTrace();
-//          }
-//          // hihihiihi
-//          if (name.equals("visible")) {
-//        	  ((JInternalFrame) getContainer()).invalidate();
-//        	  checkContainerInstance();
-//        	  ((JInternalFrame) getContainer()).setVisible( ( (Boolean) object).booleanValue());
-//          }
-//        }
-//        final Rectangle r = getBounds();
-//
-//      if (name.equals("x")) {
-//          r.x = ( (Integer) object).intValue();
-//        }
-//        if (name.equals("y")) {
-//          r.y = ( (Integer) object).intValue();
-//        }
-//        if (name.equals("w")) {
-//          r.width = ( (Integer) object).intValue();
-//        }
-//        if (name.equals("h")) {
-//          r.height = ( (Integer) object).intValue();
-//        }
-//        if (name.equals("title")) {
-//          myTitle = object.toString();
-//          setTitle(myTitle);
-//        }
-//        if (name.equals("icon")) {
-//            if (object instanceof URL) {
-//                setIcon(getIcon( (URL) object));
-//            }
-//        }
-//        myBounds = r;
-//        setBounds(r);
-//      }
-//    });
-//  }
   
   public Container getSwingContainer() {
 	  checkContainerInstance();
@@ -235,30 +137,6 @@ public final class TipiWindow
 	}
   }
   
-//  private ImageIcon getIcon(final URL u) {
-//    return new ImageIcon(u);
-//  }
-
-//  protected void setTitle(final String s) {
-//    myWindow.setTitle(s);
-//  }
-
-//  protected void setBounds(final Rectangle r) {
-////	  System.err.println("Setting bounds: "+r);
-//	  myWindow.setBounds(r);
-//  }
-
-//  protected Rectangle getBounds() {
-//    return myWindow.getBounds();
-//  }
-//
-//  protected void setIcon(final ImageIcon ic) {
-//    myWindow.setFrameIcon(ic);
-//  }
-
-//  protected void setJMenuBar(JMenuBar ic) {
-//    myWindow.setJMenuBar(ic);
-//  }
 
   private final void doPerformMethod(String name, TipiComponentMethod compMeth) {
 	  

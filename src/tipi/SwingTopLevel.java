@@ -13,10 +13,6 @@ public class SwingTopLevel implements TipiStandaloneToplevelContainer {
 		return myContext;
 	}
 
-//	public ArrayList getListeningServices() {
-//		return getListeningServices();
-//	}
-
 	public void loadClassPathLib(String location) {
 
 			System.err.println("Adding location. Thought it was deprecated.");
@@ -35,7 +31,6 @@ public class SwingTopLevel implements TipiStandaloneToplevelContainer {
 
 
 	public void loadDefinition(String tipiPath, String definitionName, String resourceBaseDirectory) throws IOException, TipiException {
-		// TODO Auto-generated method stub
 		
 	}
 

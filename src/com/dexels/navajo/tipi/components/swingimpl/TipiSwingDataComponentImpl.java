@@ -66,23 +66,6 @@ public abstract class TipiSwingDataComponentImpl
   }
 
   public void addToContainer(final Object c, final Object constraints) {
-      boolean noPrefSizes = false;
-	try {
-		noPrefSizes = "true".equals(System
-				.getProperty("com.dexels.navajo.swingclient.NoPreferredSizes"));
-	} catch (SecurityException e) {
-		// assume false;
-	}      
-//	if (noPrefSizes) {
-//          if (getContainer() instanceof JComponent) {
-//              JComponent cc = (JComponent)getContainer();
-//              LayoutManager m = cc.getLayout();
-//              if (m instanceof GridBagLayout) {
-//                cc.setPreferredSize(new Dimension(0,0));
-//            }
-//          }
-//      }
-
     try {
     	runSyncInEventThread(new Runnable(){
 
