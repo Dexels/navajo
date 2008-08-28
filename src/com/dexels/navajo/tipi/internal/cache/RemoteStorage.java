@@ -2,7 +2,6 @@ package com.dexels.navajo.tipi.internal.cache;
 
 import java.io.*;
 import java.net.*;
-import java.util.*;
 
 public interface RemoteStorage {
 	public long getRemoteModificationDate(String location) throws IOException;

@@ -1,6 +1,5 @@
 package com.dexels.navajo.tipi.components.core;
 
-import com.dexels.navajo.tipi.*;
 
 /**
  * <p>

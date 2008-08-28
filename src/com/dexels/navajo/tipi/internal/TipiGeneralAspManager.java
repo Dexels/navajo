@@ -46,9 +46,6 @@ public class TipiGeneralAspManager implements TipiStorageManager {
 			e.printStackTrace();
 			throw new TipiException("Client side exception while preparing to store settings: ", e);
 		}
-		if (reply == null) {
-			throw new TipiException("Unknown problem while storing settings. ");
-		}
 
 		Message document = reply.getMessage("Document");
 		if (document == null) {

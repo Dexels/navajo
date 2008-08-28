@@ -5,8 +5,6 @@ import java.util.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.filter.*;
 import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.core.*;
-import com.dexels.navajo.tipi.components.core.impl.*;
 
 /**
  * <p>

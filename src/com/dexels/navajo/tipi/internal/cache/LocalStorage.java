@@ -2,7 +2,6 @@ package com.dexels.navajo.tipi.internal.cache;
 
 import java.io.*;
 import java.net.*;
-import java.util.*;
 
 public interface LocalStorage {
 	public boolean hasLocal(String location) throws IOException;

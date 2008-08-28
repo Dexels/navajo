@@ -1,9 +1,9 @@
 package com.dexels.navajo.tipi.connectors;
 
 import java.util.*;
+
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.tipixml.*;
 
 public interface TipiConnector {
 	

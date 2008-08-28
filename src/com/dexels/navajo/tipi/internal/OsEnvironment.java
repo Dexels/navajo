@@ -76,9 +76,12 @@ public class OsEnvironment {
 				p = r.exec("/bin/env");
 			} else {
 				System.out.println("OS not known: " + OS);
+				return null;
 			}
 		} catch (java.io.IOException e) {
 			e.printStackTrace();
+			System.err.println("Ï could not determine the OS. Perhaps a security issue?");
+			return null;
 		}
 		java.io.BufferedReader br = new java.io.BufferedReader(new java.io.InputStreamReader(p.getInputStream()));
 		String line;

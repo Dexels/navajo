@@ -3,10 +3,8 @@ package com.dexels.navajo.tipi.connectors;
 import java.io.*;
 import java.util.*;
 
-import com.dexels.navajo.client.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.tipixml.*;
 
 public class TmlWriteConnector extends TipiBaseConnector implements TipiConnector {
 

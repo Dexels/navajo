@@ -11,7 +11,7 @@ public class ClassPathResourceLoader implements TipiResourceLoader {
 		return getClassResourceURL(location);
 	}
 
-	private URL getClassResourceURL(String location) throws MalformedURLException {
+	private URL getClassResourceURL(String location) {
 		return getClass().getClassLoader().getResource(location);
 	}
 

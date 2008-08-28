@@ -2,7 +2,6 @@ package com.dexels.navajo.tipi.internal.cache.impl;
 
 import java.io.*;
 import java.net.*;
-import java.util.*;
 
 import com.dexels.navajo.tipi.internal.cache.*;
 

@@ -68,7 +68,7 @@ public abstract class TipiLayout {
 	public void loadClassDef() {
 	}
 
-	public void initializeLayout(XMLElement def) throws TipiException {
+	public void initializeLayout(XMLElement def)  {
 		myDefinition = def;
 	}
 
@@ -93,20 +93,20 @@ public abstract class TipiLayout {
 	public void setLayout(Object l) {
 		myLayout = l;
 	}
-
-	private final void loadValues(XMLElement values) {
-		List<XMLElement> children = values.getChildren();
-		for (int i = 0; i < children.size(); i++) {
-			XMLElement xx = children.get(i);
-			String valueName = xx.getStringAttribute("name");
-			TipiValue tv = new TipiValue(myComponent);
-			tv.load(xx);
-			componentValues.put(valueName, tv);
-			if (tv.getValue() != null && !"".equals(tv.getValue())) {
-				setValue(tv.getName(), tv);
-			}
-		}
-	}
+//
+//	private final void loadValues(XMLElement values) {
+//		List<XMLElement> children = values.getChildren();
+//		for (int i = 0; i < children.size(); i++) {
+//			XMLElement xx = children.get(i);
+//			String valueName = xx.getStringAttribute("name");
+//			TipiValue tv = new TipiValue(myComponent);
+//			tv.load(xx);
+//			componentValues.put(valueName, tv);
+//			if (tv.getValue() != null && !"".equals(tv.getValue())) {
+//				setValue(tv.getName(), tv);
+//			}
+//		}
+//	}
 
 	public void childAdded(Object c) {
 	}

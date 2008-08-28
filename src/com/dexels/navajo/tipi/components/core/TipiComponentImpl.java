@@ -713,7 +713,6 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 		return tcm;
 	}
 
-	@SuppressWarnings("unused")
 	protected void performComponentMethod(String name, TipiComponentMethod compMeth, TipiEvent event) throws TipiBreakException {
 	}
 
@@ -822,7 +821,7 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 		}
 		for (String ss : myDataListeners.keySet()) {
 			Property p = getAttributeProperty(ss);
-			if(p==null) {
+			if(p!=null) {
 				p.removePropertyChangeListener(myDataListeners.get(ss));
 			}
 		}

@@ -8,7 +8,7 @@ public class TmlResourceLoader extends ClassPathResourceLoader {
 	private ZipResourceLoader myZipResourceLoader;
 	private String myPrefix;
 	
-	public TmlResourceLoader(ZipResourceLoader z, String prefix) throws IOException {
+	public TmlResourceLoader(ZipResourceLoader z, String prefix) {
 		myPrefix = prefix;
 		myZipResourceLoader = z;
 	}

@@ -20,9 +20,9 @@ import com.dexels.navajo.tipi.*;
  * @version 1.0
  */
 public class TipiThread extends Thread implements Comparable<TipiThread>{
-	private static final String IDLE = "idle";
-	private static final String BUSY = "busy";
-	private static final String WAITING = "waiting";
+	public static final String IDLE = "idle";
+	public static final String BUSY = "busy";
+	public static final String WAITING = "waiting";
 	private final TipiThreadPool myPool;
 	private final String myName;
 	private final TipiContext myContext;
@@ -69,7 +69,6 @@ public class TipiThread extends Thread implements Comparable<TipiThread>{
 						}
 					}
 				} finally {
-					// System.err.println("Ayyyyy this thread is dying!");
 					myPool.getContext().threadEnded(Thread.currentThread());
 				}
 			} catch (ThreadShutdownException t) {

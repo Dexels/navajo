@@ -33,7 +33,7 @@ public class TipiActionBlock implements TipiExecutable {
 	private String myExpressionSource = "";
 	// private TipiActionBlock myActionBlockParent = null;
 	// private TipiEvent myEvent = null;
-	private boolean conditionStyle = false;
+//	private boolean conditionStyle = false;
 	private boolean multithread = false;
 	private TipiEvent myEvent = null;
 
@@ -114,8 +114,8 @@ public class TipiActionBlock implements TipiExecutable {
 		}
 	}
 
-	private boolean evaluateBlock(TipiContext context, Object source, TipiEvent te) throws TipiException {
-		boolean valid = false;
+	private boolean evaluateBlock(TipiContext context, Object source, TipiEvent te) {
+//		boolean valid = false;
 		Operand o;
 		try {
 			if ((TipiComponent) source != null) {
@@ -153,7 +153,6 @@ public class TipiActionBlock implements TipiExecutable {
 	// }
 	//
 	public void load(XMLElement elm, TipiComponent parent) {
-		conditionStyle = false;
 		myComponent = parent;
 		for (Iterator<String> iterator = elm.enumerateAttributeNames(); iterator.hasNext();) {
 			String n= iterator.next();
@@ -208,7 +207,7 @@ public class TipiActionBlock implements TipiExecutable {
 		// System.err.println("New count: "+myExecutables.size());
 	}
 
-	public boolean checkCondition(TipiEvent te) throws TipiException, TipiBreakException {
+	public boolean checkCondition(TipiEvent te) throws TipiBreakException {
 		if (myExpression == null || myExpression.equals("")) {
 			return true;
 		}

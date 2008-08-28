@@ -2,7 +2,6 @@ package com.dexels.navajo.tipi.internal;
 
 import java.io.*;
 import java.net.*;
-import java.util.*;
 import java.util.zip.*;
 
 import com.dexels.navajo.document.types.*;
@@ -12,7 +11,7 @@ public class ZipResourceLoader extends ClassPathResourceLoader {
 	//private final Navajo navajoDefinition;
 	//private final Property tipiDef;
 	private File tipiDefFile;
-	private final Map myResources = new HashMap<String, byte[]>();
+//	private final Map myResources = new HashMap<String, byte[]>();
 	final int BUFFERSIZE = 2048;
 	private ZipFile zipFile;
 

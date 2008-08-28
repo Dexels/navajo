@@ -25,7 +25,7 @@ public class TipiFileStorageManager implements TipiStorageManager {
 			File f = new File(System.getProperty("user.home"));
 			savingFolder = new File(f, "sportlink-club");
 		}
-		if (savingFolder != null && !savingFolder.exists()) {
+		if (!savingFolder.exists()) {
 			savingFolder.mkdirs();
 		}
 	}

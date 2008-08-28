@@ -141,8 +141,8 @@ public class TipiPathParser {
 
 	private String getMessagePath(String path) {
 		StringTokenizer tok = new StringTokenizer(path, ":");
-		String typeId = tok.nextToken();
-		String tipiPath = tok.nextToken();
+		tok.nextToken();
+		tok.nextToken();
 		String messagePath = tok.nextToken();
 		if (".".equals(messagePath) && myType == PATH_TO_MESSAGE) {
 			messagePath = ".:" + tok.nextToken();
@@ -270,13 +270,13 @@ public class TipiPathParser {
 		return getPropertyByPath(myPath);
 	}
 
-	private Object getPropertyValue(String path) {
-		Property p = getPropertyByPath(path);
-		if (p != null) {
-			return p.getTypedValue();
-		}
-		return null;
-	}
+//	private Object getPropertyValue(String path) {
+//		Property p = getPropertyByPath(path);
+//		if (p != null) {
+//			return p.getTypedValue();
+//		}
+//		return null;
+//	}
 
 	public URL getResource() {
 		return getResource(myPath);
