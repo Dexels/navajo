@@ -8,12 +8,13 @@
 	<property name="archive" value="${ant.project.name}.jar" />
 	<property name="proxyarchive" value="TipiSwing.jar" />
 
+	<property name="dist" value="dist" />
+	<property name="currentProject" value="${ant.project.name}" />
+	<property file="../TipiBuild/jnlpbuild/antbuild.properties" />
+
+
+
 	
-	<target name="check-env">
-		<tstamp />
-		<echo message="MY PROJECT: ${ant.project.name}"/>
-		<fail unless="PROJECTHOME"> Set the PROJECTHOME environment variable to the top directory of your CVS projects, for example: export PROJECTHOME=C:\PROJECTS declare -x PROJECTHOME=/home/arjen/las-projectas </fail>
-	</target>
 
 	<path id="depend">
 		<!--    <fileset dir="${lib}">
@@ -22,7 +23,7 @@
 	</path>
 
 
-	<target name="init" depends="check-env">
+	<target name="init" >
 		<mkdir dir="${build}" />
 	</target>
 	<target name="clean">
@@ -85,38 +86,37 @@
 
 	</target>
 	<target name="grabjars" depends="makejars">
-		<copy todir="lib" file="../NavajoTipi/tipipackage.jar" />
-		<copy todir="lib" file="../NavajoDocument/NavajoDocument.jar" />
-		<copy todir="lib" file="../NavajoDocument/jaxpimpl.jar" />
-		<copy todir="lib" file="../NavajoClient/NavajoClient.jar" />
-		<copy todir="lib" file="../NavajoClient/lib/jzlib.jar" />
-
-
-		<copy todir="lib" file="${proxyarchive}" />
-
-		<copy todir="lib" file="../Navajo/NavajoRuntime.jar" />
-		<copy todir="lib" file="../Navajo/NavajoServer.jar" />
-		<copy todir="lib" file="../NavajoFunctions/NavajoFunctions.jar" />
-		<copy todir="lib" file="../NavajoSwingTipi/NavajoSwingTipi.jar" />
-		<copy todir="lib" file="../TipiSwingClient/TipiSwingClient.jar" />
-		<copy todir="lib" file="../AnimatedTransitions/AnimatedTransitions.jar" />
-		<copy todir="lib" file="../TimingFramework/TimingFramework.jar" />
-
-	
+		<mkdir dir="${dist}"/>
+		<mkdir dir="${dist}/${lib}"/>
+		<copy todir="${dist}/${lib}" file="../NavajoTipi/tipipackage.jar" />
+		<copy todir="${dist}/${lib}" file="../NavajoDocument/NavajoDocument.jar" />
+		<copy todir="${dist}/${lib}" file="../NavajoDocument/jaxpimpl.jar" />
+		<copy todir="${dist}/${lib}" file="../NavajoClient/NavajoClient.jar" />
+		<copy todir="${dist}/${lib}" file="../NavajoClient/lib/jzlib.jar" />
+		<copy todir="${dist}/${lib}" file="${proxyarchive}" />
+		<copy todir="${dist}/${lib}" file="../Navajo/NavajoRuntime.jar" />
+		<copy todir="${dist}/${lib}" file="../Navajo/NavajoServer.jar" />
+		<copy todir="${dist}/${lib}" file="../NavajoFunctions/NavajoFunctions.jar" />
+		<copy todir="${dist}/${lib}" file="../NavajoSwingTipi/NavajoSwingTipi.jar" />
+		<copy todir="${dist}/${lib}" file="../TipiSwingClient/TipiSwingClient.jar" />
+		<copy todir="${dist}/${lib}" file="../AnimatedTransitions/AnimatedTransitions.jar" />
+		<copy todir="${dist}/${lib}" file="../TimingFramework/TimingFramework.jar" />
 	</target>
 
 	<target name="sign" depends="grabjars">
-		<signjar keystore="dexels_dummy_key" verbose="true" storepass="dexels" keypass="dexels" alias="java">
+
+	 	<signjar keystore="dexels_dummy_key" verbose="true" storepass="dexels" keypass="dexels" alias="java">
 			<fileset dir=".">
-				<include name="lib/*.jar" />
-				<include name="${archive}" />
-				<include name="${proxyarchive}" />
+				<include name="${dist}/${lib}/*.jar" />
 			</fileset>
 		</signjar>
 	</target>
-
+	
+	
 	
 	<target name="publish" depends="grabjars">
+		
+		<ant antfile="../TipiBuild/jnlpbuild/antinclude.xml" dir="." inheritall="true" inheritrefs="true" target="publish" />
 		<!-- If this command does not work: Add de jsch-0.1.36.jar to the ant jars-->
 		<!-- and add the password to the and ant runtime: srv2pw=password -->
 		<!-- Make sure the dir exists... -->
@@ -127,7 +127,7 @@
 		</scp>
 		<scp  trust="true" sftp="true" verbose="true" password="${srv2pw}" todir="root@srv2.dexels.com:/home/navajo/domains/navajo.dexels.com/public_html/Tipi/">
 			<fileset dir=".">
-			    <include name="TipiSwing.jar"/>
+			    <include name="${proxyarchive}"/>
 			</fileset>
 		</scp>
 		<scp trust="true" sftp="true" verbose="true" password="${srv2pw}" todir="root@srv2.dexels.com:/home/navajo/domains/navajo.dexels.com/public_html/Tipi/${ant.project.name}">
