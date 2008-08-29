@@ -40,7 +40,9 @@ public class FileString extends FunctionInterface {
 
       do {
     	  line = fis.readLine();
-    	  sb.append(sb);
+    	  if(line!=null) {
+        	  sb.append(line);
+    	  }
     	  sb.append("\n");
       } while(line!=null);
       fis.close();
