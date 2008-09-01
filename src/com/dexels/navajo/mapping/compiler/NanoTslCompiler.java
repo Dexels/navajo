@@ -45,6 +45,12 @@ import java.util.HashSet;
 
 import com.dexels.navajo.loader.*;
 
+/**
+ * @TODO: synchronize TslCompiler with NanoTslCompiler again.
+ * 
+ * @author arjen
+ *
+ */
 public class NanoTslCompiler {
 
     private final ClassLoader loader;
@@ -2112,6 +2118,10 @@ public class NanoTslCompiler {
                 includeNode(scriptPath, includeArray[i], tslDoc);
             }
 
+            // File Rules HashMap
+            generateRules(tslDoc, result);
+  	      
+            
             Vector children = tslDoc.getChildren();
             //System.err.println("FOUND " + children.getLength() + "
             // CHILDREN");
@@ -2128,9 +2138,6 @@ public class NanoTslCompiler {
 
             result.append("}// EOM\n");
 
-            // File Rules HashMap
-            generateRules(tslDoc, result);
-  	      
             // Add generated methods.
             for (int i = 0; i < methodClipboard.size(); i++) {
                 StringBuffer methodBuffer = (StringBuffer) methodClipboard.get(i);
