@@ -53,7 +53,8 @@ public class NavajoHTMLClient extends NavajoClient {
 //        System.err.println("CREATED FORM--------------------");
 //        tbMessage.write(System.err);
 //        System.err.println("END OF FORM --------------------");
-        return s;
+        //return s;
+    	return s;
     }
 
     private StringBuffer generateErrorMessage(Message msg) {

@@ -208,6 +208,7 @@ public class HTMLutils {
     
     public static String readHTMLForm(Navajo tbMessage, HttpServletRequest request) throws NavajoException {
 
+    
         String rawName, value, type, cardinality = "";
         ArrayList v;
         StringBuffer dummy = new StringBuffer();
@@ -258,11 +259,11 @@ public class HTMLutils {
         
         while (allParameters.hasMoreElements()) {
             rawName = (String) allParameters.nextElement();
-            //System.out.println("Raw parameter: " + rawName);
             if (rawName.endsWith(YEAR)) {
                 int end = rawName.indexOf(YEAR);
                 rawName = rawName.substring(0, end);
             }
+            
             Property prop = tbMessage.getProperty(rawName);
 
             if (prop != null) {
@@ -286,7 +287,10 @@ public class HTMLutils {
 
             Property prop = tbMessage.getProperty(rawName);
             Selection mySel = tbMessage.getSelection(rawName);
-
+            System.out.println("Raw parameter: " + rawName);
+            if ( prop != null ) {
+            	System.out.println(" prop = " + prop.getName() + ", type = " + prop.getType() + ", card = " + prop.getCardinality());
+            }
             dummy.append(rawName);
             dummy.append("\n");
 
@@ -303,7 +307,8 @@ public class HTMLutils {
                 // Process selection from Checklists and radiobuttons
                 if (type.equals("selection") && cardinality.equals("1")) {
                     value = request.getParameter(rawName);
-
+                    System.err.println("SELECTION, rawName =" + rawName);
+                    System.err.println("PROPERTY, property =" + value);
                     v = prop.getAllSelections();
                     for (int k = 0; k < v.size(); k++) {
                         Selection sel = (Selection) v.get(k);
@@ -340,7 +345,7 @@ public class HTMLutils {
                     String month = request.getParameter(rawName + MONTH);
                     String day = request.getParameter(rawName + DAY);
 
-                    if (year.equals("") || month.equals("") || day.equals("")) {
+                    if ( year == null || month == null || day == null || year.equals("") || month.equals("") || day.equals("")) {
                         System.out.println("EMPTY DATE GIVEN IN HTML CLIENT");
                         prop.setValue("");
                     } else

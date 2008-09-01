@@ -36,108 +36,39 @@ import com.jcraft.jzlib.ZOutputStream;
  *
  */
 
-public class JSONHttpServlet extends HttpServlet {
+public class JSONHttpServlet extends TmlHttpServlet {
 
- protected String configurationPath = "";
- protected String rootPath = null;
+ /**
+	 * 
+	 */
+	private static final long serialVersionUID = 2834711637989589874L;
+	
+	protected String configurationPath = "";
+	protected String rootPath = null;
 
-  public JSONHttpServlet() {}
+	public JSONHttpServlet() {}
 
-  public  static final String DOC_IMPL = "com.dexels.navajo.DocumentImplementation";
-  public static final String NANO = "com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl";
-  public static final String JAXP = "com.dexels.navajo.document.jaxpimpl.NavajoFactoryImpl";
-  public static final String QDSAX = "com.dexels.navajo.document.base.BaseNavajoFactoryImpl";
+	public  static final String DOC_IMPL = "com.dexels.navajo.DocumentImplementation";
+	public static final String NANO = "com.dexels.navajo.document.nanoimpl.NavajoFactoryImpl";
+	public static final String JAXP = "com.dexels.navajo.document.jaxpimpl.NavajoFactoryImpl";
+	public static final String QDSAX = "com.dexels.navajo.document.base.BaseNavajoFactoryImpl";
 
-  public static final String COMPRESS_GZIP = "gzip";
-  public static final String COMPRESS_JZLIB = "jzlib";
-  
-  
- public static final String COMPRESS_NONE = "";
-  
- public static final String DEFAULT_SERVER_XML = "config/server.xml";
+	public static final String COMPRESS_GZIP = "gzip";
+	public static final String COMPRESS_JZLIB = "jzlib";
 
- private static boolean streamingMode = true; 
- private static long logfileIndex = 0;
- private static long bytesWritten = 0;
+
+	public static final String COMPRESS_NONE = "";
+
+	public static final String DEFAULT_SERVER_XML = "config/server.xml";
+
+	private static boolean streamingMode = true; 
+	private static long logfileIndex = 0;
+	private static long bytesWritten = 0;
  
   public void init(ServletConfig config) throws ServletException {
     super.init(config);
-
-    configurationPath = config.getInitParameter("configuration");
-    System.setProperty(DOC_IMPL,QDSAX);
-    System.err.println("Configuration path: "+configurationPath);
-   
-    boolean verified = false;
-
-    URL configUrl;
-    InputStream is = null;
-    try {
-		configUrl = new URL(configurationPath);
-	    is = configUrl.openStream();
-	    verified = true;
-	    
-	} catch (MalformedURLException e) {
-	} catch (IOException e) {
-	} finally {
-		if(is!=null) {
-			try {
-				is.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-    if( configurationPath==null || "".equals(configurationPath)|| !verified) {
-    	rootPath = config.getServletContext().getRealPath("");
-    }
-    System.err.println("Resolved Configuration path: "+configurationPath);
-    System.err.println("Resolved Root path: "+rootPath);
-
-    //    System.err.println("Real: "+config.getServletContext().getRealPath(DEFAULT_SERVER_XML));
-
   }
-
-  public void destroy() {
-    System.err.println("In TmlHttpServlet destroy()");
-    // Kill Dispatcher.
-    Dispatcher.killMe();
-  }
-
-  protected void finalize() {
-    System.err.println("In TmlHttpServlet finalize(), thread = " + Thread.currentThread().hashCode());
-    //logger.log(Priority.INFO, "In TmlHttpServlet finalize()");
-  }
-
-  private final void dumHttp(HttpServletRequest request, long index, File dir) {
-		// Dump stuff.
-		if (request != null) {
-			StringBuffer sb = new StringBuffer();
-
-			sb.append("HTTP DUMP (" + request.getRemoteAddr() + "/"
-					+ request.getRequestURI());
-			Enumeration e = request.getHeaderNames();
-			while (e.hasMoreElements()) {
-				String headerName = (String) e.nextElement();
-				sb.append(headerName + "=" + request.getHeader(headerName) + "\n");
-			}
-			try {
-
-				if (dir != null) {
-					FileWriter fw = new FileWriter(new File(dir, "httpdump-"
-							+ index));
-					fw.write(sb.toString());
-					fw.close();
-				} else {
-					System.err.println(sb.toString());
-				}
-			} catch (IOException ioe) {
-				ioe.printStackTrace(System.err);
-			}
-		} else {
-			System.err.println("EMPTY REQUEST OBJECT!!");
-		}
-	}
-  
+ 
   private final Navajo constructFromRequest(HttpServletRequest request) throws
       NavajoException {
 
@@ -282,14 +213,8 @@ public class JSONHttpServlet extends HttpServlet {
     Dispatcher dis = null;
 
     try {
-      if (configurationPath!=null) {
-    	  // Old SKOOL. Path provided, notify the dispatcher by passing a null DEFAULT_SERVER_XML
-          dis = Dispatcher.getInstance(configurationPath, null, new com.dexels.navajo.server.FileInputStreamReader(), "");
-	} else {
-	      dis = Dispatcher.getInstance(rootPath, DEFAULT_SERVER_XML, new com.dexels.navajo.server.FileInputStreamReader(), "");
- 
-	}
-    		  	  
+      dis = initDispatcher();
+      
       tbMessage = constructFromRequest(request);
       Header header = NavajoFactory.getInstance().createHeader(tbMessage,service, username, password,expirationInterval);
       tbMessage.addHeader(header);
@@ -380,34 +305,6 @@ public class JSONHttpServlet extends HttpServlet {
 		  callDirect(request, response);
 	  }
   }
-
-  private final void copyResource(OutputStream out, InputStream in){
-	  BufferedInputStream bin = new BufferedInputStream(in);
-	  BufferedOutputStream bout = new BufferedOutputStream(out);
-	  byte[] buffer = new byte[1024];
-	  int read = -1;
-	  boolean ready = false;
-	  while (!ready) {
-		  try {
-			  read = bin.read(buffer);
-			  if ( read > -1 ) {
-				  bout.write(buffer,0,read);
-			  }
-		  } catch (IOException e) {
-		  }
-		  if ( read <= -1) {
-			  ready = true;
-		  }
-	  }
-	  try {
-		  bin.close();
-		  bout.flush();
-		  bout.close();
-	  } catch (IOException e) {
-
-	  }
-  }
-  
   /**
    * Handle a request.
    *
@@ -499,13 +396,7 @@ public class JSONHttpServlet extends HttpServlet {
 		  }
 
 		  // Create dispatcher object.
-		  if (configurationPath!=null) {
-			  // Old SKOOL. Path provided, notify the dispatcher by passing a null DEFAULT_SERVER_XML
-			  dis = Dispatcher.getInstance(configurationPath, null, new com.dexels.navajo.server.FileInputStreamReader(), "");
-		  } else {
-			  dis = Dispatcher.getInstance(rootPath, DEFAULT_SERVER_XML, new com.dexels.navajo.server.FileInputStreamReader() , "");
-
-		  }
+		  dis = initDispatcher();
 
 		  // Check for certificate.
 		  Object certObject = request.getAttribute( "javax.servlet.request.X509Certificate");

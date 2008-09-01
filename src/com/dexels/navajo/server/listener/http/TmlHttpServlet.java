@@ -38,8 +38,13 @@ import com.jcraft.jzlib.ZOutputStream;
 
 public class TmlHttpServlet extends HttpServlet {
 
- protected String configurationPath = "";
- protected String rootPath = null;
+   /**
+	 * 
+	 */
+	private static final long serialVersionUID = 7121511406958498528L;
+	
+	protected String configurationPath = "";
+	protected String rootPath = null;
 
   public TmlHttpServlet() {}
 
@@ -60,7 +65,7 @@ public class TmlHttpServlet extends HttpServlet {
  private static long logfileIndex = 0;
  private static long bytesWritten = 0;
  
- private final Dispatcher initDispatcher() throws NavajoException {
+ protected final Dispatcher initDispatcher() throws NavajoException {
 
 	 if (configurationPath!=null) {
 		 // Old SKOOL. Path provided, notify the dispatcher by passing a null DEFAULT_SERVER_XML
@@ -75,6 +80,11 @@ public class TmlHttpServlet extends HttpServlet {
     super.init(config);
 
     configurationPath = config.getInitParameter("configuration");
+    // Check whether defined bootstrap webservice is present.
+    String bootstrapService = config.getInitParameter("bootstrap_service");
+    String bootstrapUser = config.getInitParameter("bootstrap_user");
+    String bootstrapPassword = config.getInitParameter("bootstrap_password");
+    
     System.setProperty(DOC_IMPL,QDSAX);
     System.err.println("Configuration path: "+configurationPath);
    
@@ -104,11 +114,22 @@ public class TmlHttpServlet extends HttpServlet {
     System.err.println("Resolved Configuration path: "+configurationPath);
     System.err.println("Resolved Root path: "+rootPath);
 
+    // Startup Navajo instance.
     try {
-		initDispatcher();
-	} catch (NavajoException e) {
-		e.printStackTrace();
-	}
+    	Dispatcher d = initDispatcher();
+    	Navajo n = NavajoFactory.getInstance().createNavajo();
+    	if ( bootstrapService == null ) {
+    		Header h = NavajoFactory.getInstance().createHeader(n, MaintainanceRequest.METHOD_NAVAJO_PING, "", "", -1);
+    		n.addHeader(h);
+    	} else {
+    		Header h = NavajoFactory.getInstance().createHeader(n, bootstrapService, bootstrapUser, bootstrapPassword, -1);
+    		n.addHeader(h);
+    	}
+    	d.handle(n);
+    	System.err.println("NAVAJO INSTANCE " +  d.getNavajoConfig().getInstanceName() + " BOOTSTRAPPED BY " + n.getHeader().getRPCName());
+    } catch (Exception e) {
+    	e.printStackTrace(System.err);
+    }
     
   }
 
@@ -123,7 +144,7 @@ public class TmlHttpServlet extends HttpServlet {
     //logger.log(Priority.INFO, "In TmlHttpServlet finalize()");
   }
 
-  private final void dumHttp(HttpServletRequest request, long index, File dir) {
+  protected final void dumHttp(HttpServletRequest request, long index, File dir) {
 		// Dump stuff.
 		if (request != null) {
 			StringBuffer sb = new StringBuffer();
@@ -354,7 +375,7 @@ public class TmlHttpServlet extends HttpServlet {
    * @throws IOException
    * @throws ServletException
    */
-  public final void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
 	  // Check for streamingmode toggle.
 	  if ( request.getParameter("streaming") != null && request.getParameter("streaming").equals("no")) {
@@ -372,7 +393,7 @@ public class TmlHttpServlet extends HttpServlet {
 	  }
   }
 
-  private final void copyResource(OutputStream out, InputStream in){
+  protected final void copyResource(OutputStream out, InputStream in){
 	  BufferedInputStream bin = new BufferedInputStream(in);
 	  BufferedOutputStream bout = new BufferedOutputStream(out);
 	  byte[] buffer = new byte[1024];

@@ -24,9 +24,10 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLutils;
 import com.dexels.navajo.server.Dispatcher;
+import com.dexels.navajo.server.listener.http.TmlHttpServlet;
 import com.dexels.navajo.util.Generate;
 
-public class WsdlProducerDotNet extends HttpServlet {
+public class WsdlProducerDotNet extends TmlHttpServlet {
 	protected String configurationPath = "";
 	public static final String DOC_IMPL = "com.dexels.navajo.DocumentImplementation";
 	public static final String QDSAX = "com.dexels.navajo.document.base.BaseNavajoFactoryImpl";
@@ -43,7 +44,6 @@ public class WsdlProducerDotNet extends HttpServlet {
 
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
-		configurationPath = config.getInitParameter("configuration");
 	}
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -213,7 +213,7 @@ public class WsdlProducerDotNet extends HttpServlet {
 		System.err.println("webservice = " + webservice);
 		System.err.println("in WsdlProducer doPost()");
 		try {
-			Dispatcher dis = Dispatcher.getInstance(configurationPath, null, new com.dexels.navajo.server.FileInputStreamReader(), request.getServerName() + request.getRequestURI());
+			Dispatcher dis =  initDispatcher(); // Dispatcher.getInstance(configurationPath, null, new com.dexels.navajo.server.FileInputStreamReader(), request.getServerName() + request.getRequestURI());
 			InputStream is = dis.getNavajoConfig().getScript(webservice);
 			Generate gen = new Generate();
 			// Get input message.

@@ -323,20 +323,12 @@ public class HTMLClientServlet extends HttpServlet {
         } else {
             try {
                 gc.readHTMLForm(tbMessage, request);
-                //System.err.println("READ HTML FORM: " + result);
+                System.err.println("READ HTML FORM................");
+                //tbMessage.write(System.err);
             } catch (NavajoException e) {
                 throw new ServletException(e);
             }
         }
-//        if (tbMessage!=null) {
-//            out.write("out message...");
-//            try {
-//            tbMessage.write(out);
-//            } catch(Exception e) {
-//                e.printStackTrace();
-//            }
-//            out.write("end of out message...");
-//        }
 
         Navajo resultDoc = null;
         if (request.getParameter("command") != null) {

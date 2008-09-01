@@ -27,11 +27,6 @@ package com.dexels.navajo.server;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import java.io.*;
-import java.util.*;
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.util.NavajoUtils;
-import com.dexels.navajo.server.Dispatcher;
-
 
 public class AdminServlet extends HttpServlet {
 
