@@ -112,7 +112,7 @@ public final class JMXHelper  {
 				if ( ti.getThreadName().equals(t.getName() ) )  {
 					//System.err.println("Found thread: " + t.getName());
 					target[0] = all[i];
-					myThread = mxthread.getThreadInfo(target, true, true)[0];
+					myThread = mxthread.getThreadInfo(target )[0];
 					return myThread;
 				}
 			}
