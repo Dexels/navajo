@@ -49,7 +49,6 @@ import com.dexels.navajo.events.types.ServerTooBusyEvent;
 import com.dexels.navajo.server.jmx.JMXHelper;
 import com.dexels.navajo.server.jmx.SNMPManager;
 import com.dexels.navajo.util.AuditLog;
-import com.dexels.navajo.util.Util;
 import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.loader.NavajoClassSupplier;
 import com.dexels.navajo.lockguard.Lock;
@@ -1301,27 +1300,26 @@ private final Navajo processNavajo(Navajo inMessage, Object userCertificate, Cli
   public static void killMe() {
 	  if ( instance != null ) {
 		  
-		  // Kill tribe manager.
-		  TribeManagerFactory.getInstance().terminate();
-		  
-		  // Kill all supporting threads.
+		  // 1. Kill all supporting threads.
 		  GenericThread.killAllThreads();
 		  
-		  // Clear all classloaders.
+		  // 2. Clear all classloaders.
 		  GenericHandler.doClearCache();
 		  
+	      // 3. Shutdown monitoring agent.
+		  AgentFactory.getInstance().stop();
+		  
+		  // 4. Kill tribe manager.
+		  TribeManagerFactory.getInstance().terminate();
+		  
+		  // 5. Finally kill myself
+		  instance = null;
 		  try {
 			  JMXHelper.deregisterMXBean(JMXHelper.NAVAJO_DOMAIN, "Dispatcher");
 		  } catch (Throwable e) {
 			  // TODO Auto-generated catch block
 			  e.printStackTrace();
 		  }
-		  
-		  // Shutdown monitoring agent.
-		  AgentFactory.getInstance().stop();
-		  
-		  // Finally kill myself
-		  instance = null;
 		  AuditLog.log(AuditLog.AUDIT_MESSAGE_DISPATCHER, "Navajo Dispatcher terminated.");
 			 
 	  }  
