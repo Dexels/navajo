@@ -12,10 +12,8 @@ import com.dexels.navajo.document.*;
  * @author Arjen Schoneveld
  * @version $Id$
  *
- */
-
-/** 
- * TODO: Extend functionality of repository interface:
+ *
+ * @TODO: Extend functionality of repository interface:
  * addService(service_name, group)
  * addGroup(group_name, handler)
  * addUser(username, password)

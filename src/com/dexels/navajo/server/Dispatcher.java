@@ -314,6 +314,10 @@ public Access [] getUsers() {
     return keyPassword;
   }
 
+  /*
+   * (non-Javadoc)
+   * @see com.dexels.navajo.server.DispatcherMXBean#getRequestRate()
+   */
   public  float getRequestRate() {
     if(rateWindow[0] > 0){
       float time = (float)(rateWindow[rateWindowSize - 1] - rateWindow[0]) / (float)1000.0;
@@ -324,8 +328,7 @@ public Access [] getUsers() {
   }
 
   /**
-   * Clears all Navajo classloaders.
-   *
+   * Clears all instantiated Navajo Classloaders to support a reload of Navajo Adapters.
    */
   public synchronized  final void doClearCache() {
     navajoConfig.doClearCache();
@@ -336,9 +339,7 @@ public Access [] getUsers() {
 
   /**
    * Clears only the script Navajo classloaders, and leaves the jar cache alone
-   *
    */
-
   public synchronized  final void doClearScriptCache() {
       navajoConfig.doClearScriptCache();
       GenericHandler.doClearCache();
@@ -370,7 +371,7 @@ public Access [] getUsers() {
     }
   }
 
-  /**
+  /*
    * Get the (singleton) NavajoConfig object reference.
    *
    * @return
@@ -379,7 +380,7 @@ public Access [] getUsers() {
     return navajoConfig;
   }
 
-  /**
+  /*
    * Get the default NavajoClassLoader. Note that when hot-compile is enabled each webservice context uses
    * its own NavajoClassLoader instance.
    *
@@ -394,7 +395,7 @@ public Access [] getUsers() {
     }
   }
 
-  /**
+  /*
    * Get a reference to the Navajo repository object.
    *
    * @return
@@ -403,7 +404,7 @@ public Access [] getUsers() {
     return navajoConfig.getRepository();
   }
 
-  /**
+  /*
    * Process a webservice using a special handler class.
    *
    * @param handler the class the will process the webservice.
@@ -1381,14 +1382,26 @@ private final Navajo processNavajo(Navajo inMessage, Object userCertificate, Cli
   public void store() throws MappableException, UserException {
   }
 
+  /*
+   * (non-Javadoc)
+   * @see com.dexels.navajo.server.DispatcherMXBean#getPeakAccessSetSize()
+   */
   public int getPeakAccessSetSize() {
 	  return peakAccessSetSize;
   }
 
+  /*
+   * (non-Javadoc)
+   * @see com.dexels.navajo.server.DispatcherMXBean#resetAccessSetPeakSize()
+   */
   public void resetAccessSetPeakSize() {
 	  peakAccessSetSize = 0;
   }
 
+  /*
+   * (non-Javadoc)
+   * @see com.dexels.navajo.server.DispatcherMXBean#getStarttime()
+   */
   public Date getStarttime() {
 	  return startTime;
   }
@@ -1396,11 +1409,19 @@ private final Navajo processNavajo(Navajo inMessage, Object userCertificate, Cli
   public static int getInstances() {
 	  return instances;
   }
-  
+
+  /*
+   * (non-Javadoc)
+   * @see com.dexels.navajo.server.DispatcherMXBean#getUptime()
+   */
   public long getUptime() {
 	  return ( System.currentTimeMillis() - startTime.getTime() );
   }
 
+  /*
+   * (non-Javadoc)
+   * @see com.dexels.navajo.server.DispatcherMXBean#getSnmpManangers()
+   */
   public String getSnmpManangers() {
 	  StringBuffer s = new StringBuffer();
 	  for (int i = 0; i < snmpManagers.size(); i++ ) {
@@ -1413,6 +1434,10 @@ private final Navajo processNavajo(Navajo inMessage, Object userCertificate, Cli
 	  return result;
   }
 
+  /*
+   * (non-Javadoc)
+   * @see com.dexels.navajo.server.DispatcherMXBean#setSnmpManagers(java.lang.String)
+   */
   public void setSnmpManagers(String s) {
 	  StringTokenizer st = new StringTokenizer(s, ",");
 	  while ( st.hasMoreTokens() ) {
@@ -1420,6 +1445,10 @@ private final Navajo processNavajo(Navajo inMessage, Object userCertificate, Cli
 	  }
   }
 
+  /*
+   * (non-Javadoc)
+   * @see com.dexels.navajo.server.DispatcherMXBean#getRequestCount()
+   */
   public long getRequestCount() {
 	  return requestCount;
   }
