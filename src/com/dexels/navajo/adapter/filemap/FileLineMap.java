@@ -16,33 +16,43 @@ import com.dexels.navajo.server.UserException;
 
 /**
  * @author arjen
- *
+ * 
  */
 public class FileLineMap implements Mappable {
 
 	public String line;
-	public FileRecordMap [] columns;
+
+	public FileRecordMap[] columns;
+
 	public String column;
-	public String separator = ";";
-	public String delimiter = null;
+	public String separator   = ";";
+	public String delimiter   = null;
+
 	public String columnSeparator;
 
 	private ArrayList recordList;
 
-	/* (non-Javadoc)
-	 * @see com.dexels.navajo.mapping.Mappable#load(com.dexels.navajo.server.Parameters, com.dexels.navajo.document.Navajo, com.dexels.navajo.server.Access, com.dexels.navajo.server.NavajoConfig)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.dexels.navajo.mapping.Mappable#load(com.dexels.navajo.server.Parameters,
+	 *      com.dexels.navajo.document.Navajo, com.dexels.navajo.server.Access,
+	 *      com.dexels.navajo.server.NavajoConfig)
 	 */
-	public void load(Parameters parms, Navajo inMessage, Access access,
-			NavajoConfig config) throws MappableException, UserException {
+	public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.dexels.navajo.mapping.Mappable#store()
 	 */
 	public void store() throws MappableException, UserException {
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.dexels.navajo.mapping.Mappable#kill()
 	 */
 	public void kill() {
@@ -75,9 +85,9 @@ public class FileLineMap implements Mappable {
 	public String getLine() {
 		if (columns != null) {
 			line = generateRecords();
-		} else if ( recordList != null ) {
+		} else if (recordList != null) {
 			columns = new FileRecordMap[recordList.size()];
-			columns = (FileRecordMap []) recordList.toArray(columns);
+			columns = (FileRecordMap[]) recordList.toArray(columns);
 			line = generateRecords();
 		}
 		return line;
@@ -87,14 +97,14 @@ public class FileLineMap implements Mappable {
 		this.line = l + "\n";
 	}
 
-	public void setColumns(FileRecordMap [] r) {
+	public void setColumns(FileRecordMap[] r) {
 		this.columns = r;
 	}
 
 	public void setColumn(String r) {
 		FileRecordMap frm = new FileRecordMap();
 		frm.setRecord(r);
-		if ( recordList == null ) {
+		if (recordList == null) {
 			recordList = new ArrayList();
 		}
 		recordList.add(frm);
