@@ -199,6 +199,9 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
 				flatten(serviceName, hostUrl, username, password, pincode, keystore, keypass);
 			} catch (NavajoException ex) {
 				ex.printStackTrace();
+				if(compMeth.getAction()!=null) {
+					compMeth.getAction().dumpStack("Error performing flatten");
+				}
 			}
 		}
 		if ("showEditDialog".equals(name)) {

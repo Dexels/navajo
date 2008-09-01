@@ -66,7 +66,6 @@ public class TipiSwingFrameImpl extends JFrame implements TopLevel, TipiSwingFra
 //				JComponent jj = 
 	//			System.err.println(">>>"+getClass());
 				JComponent jjj = (JComponent) getContentPane().getComponent(0);
-				System.err.println("JJJJJJJJJJ: "+jjj);
 				Animator animator = new Animator(2500);
 				ScreenTransition transition = new ScreenTransition(jjj,new TransitionTarget(){
 					
@@ -77,6 +76,7 @@ public class TipiSwingFrameImpl extends JFrame implements TopLevel, TipiSwingFra
 								current.performAction(te, te, i);
 							}
 						} catch (Throwable ex) {
+							te.dumpStack(ex.getMessage());
 							ex.printStackTrace();
 						}
 					}}, animator);

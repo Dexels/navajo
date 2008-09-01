@@ -20,6 +20,8 @@ import com.dexels.navajo.tipi.components.swingimpl.formatters.*;
 import com.dexels.navajo.tipi.components.swingimpl.jnlp.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.internal.*;
+import com.dexels.navajo.tipi.internal.cookie.*;
+import com.dexels.navajo.tipi.internal.cookie.impl.*;
 import com.dexels.navajo.tipi.swingclient.*;
 import com.dexels.navajo.tipi.tipixml.*;
 
@@ -45,7 +47,6 @@ public class SwingTipiContext extends TipiContext {
 
 	private final Set<Thread> threadSet = Collections.synchronizedSet(new HashSet<Thread>());
 	private final Set<Thread> dialogThreadSet = Collections.synchronizedSet(new HashSet<Thread>());
-	private final Map<String, String> cookieMap = new HashMap<String, String>();
 	private final Stack<JDialog> dialogStack = new Stack<JDialog>();
 
 	// private JDialog blockingDialog;
@@ -67,17 +68,33 @@ public class SwingTipiContext extends TipiContext {
 		}
 		// JFrame.setDefaultLookAndFeelDecorated(true);
 		// JDialog.setDefaultLookAndFeelDecorated(true);
+
+		if(hasJnlpContext()) {
+			appendJnlpCodeBase();
+			createJnlpCookieManager();
+		} else {
+			createTmpCookieManager();
+		}
 		
-		appendJnlpCodeBase(null);
 		
+	}
+
+	private void createJnlpCookieManager() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void createTmpCookieManager() {
+		CookieManager cm = new TmpFileCookieManager();
+		setCookieManager(cm);
 		try {
-			loadCookies();
-		} catch (FileNotFoundException e) {
-			// no cookies, no prob
+			cm.loadCookies();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
+	
+	
 
 	public void runSyncInEventThread(Runnable r) {
 		if (SwingUtilities.isEventDispatchThread()) {
@@ -391,18 +408,22 @@ public class SwingTipiContext extends TipiContext {
 		}
 	}
 
-	private void appendJnlpCodeBase(Map<String, String> properties) {
-
-		try {
-			Class.forName("javax.jnlp.ServiceManager");
-			WebStartProxy.appendJnlpCodeBase(properties);
-
-		} catch (ClassNotFoundException e) {
-			System.err.println("Not running in WebStart");
+	private void appendJnlpCodeBase() {
+		if(hasJnlpContext()) {
+			WebStartProxy.appendJnlpCodeBase(this);
+			
 		}
-
 	}
 
+	public boolean hasJnlpContext() {
+		try {
+			Class.forName("javax.jnlp.ServiceManager");
+			return true;
+		} catch (ClassNotFoundException e) {
+			return false;
+		}
+	}
+	
 	public void animateProperty(Property p, int duration, Object target) {
 		if (TipiAnimationManager.isAnimatable(p.getTypedValue(), target)) {
 			PropertyAnimator pa = new PropertyAnimator();
@@ -454,6 +475,7 @@ public class SwingTipiContext extends TipiContext {
 						current.performAction(te, exeParent, i++);
 					}
 				} catch (Throwable ex) {
+					te.dumpStack(ex.getMessage());
 					ex.printStackTrace();
 				}
 				// animator.resume();
@@ -488,46 +510,6 @@ public class SwingTipiContext extends TipiContext {
 		}
 	}
 
-	@Override
-	public String getCookie(String key) {
-		return cookieMap.get(key);
-	}
-
-	@Override
-	public void setCookie(String key, String value) {
-		cookieMap.put(key, value);
-		try {
-			saveCookies();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	private void saveCookies() throws IOException {
-		File tmp = new File(System.getProperty("java.io.tmpdir"));
-		File f = new File(tmp, "tipi.cookie");
-		PrintWriter fw = new PrintWriter(new FileWriter(f, false));
-		Set<String> ss = cookieMap.keySet();
-		for (String key : ss) {
-			fw.println(key + "|" + cookieMap.get(key));
-		}
-		fw.flush();
-		fw.close();
-	}
-
-	private void loadCookies() throws IOException {
-		File tmp = new File(System.getProperty("java.io.tmpdir"));
-		File f = new File(tmp, "tipi.cookie");
-		BufferedReader fw = new BufferedReader(new FileReader(f));
-		String line = fw.readLine();
-		while (line != null) {
-			StringTokenizer st = new StringTokenizer(line, "|");
-			String key = st.nextToken();
-			String value = st.nextToken();
-			cookieMap.put(key, value);
-			line = fw.readLine();
-		}
-	}
 
 	public void showInternalError(String errorString, Throwable t) {
 		super.showInternalError(errorString, t);
