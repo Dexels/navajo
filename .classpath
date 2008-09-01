@@ -5,6 +5,5 @@
 	<classpathentry kind="src" path="/Navajo"/>
 	<classpathentry kind="src" path="/NavajoDocument"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/DexelsVersionControl"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/NavajoAdapters"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
