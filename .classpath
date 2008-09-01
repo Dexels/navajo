@@ -20,6 +20,6 @@
 	<classpathentry kind="lib" path="lib/batik-util.jar"/>
 	<classpathentry kind="lib" path="lib/batik-xml.jar"/>
 	<classpathentry kind="lib" path="lib/js.jar"/>
-	<classpathentry kind="lib" path="/NavajoListeners/lib/log4j-1_2_4.jar"/>
+	<classpathentry kind="lib" path="lib/log4j-1_2_4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
