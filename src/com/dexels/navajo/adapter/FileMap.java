@@ -28,11 +28,15 @@ import com.dexels.navajo.server.UserException;
 public class FileMap implements Mappable {
 
 	public String fileName;
+	public String charsetName = null;
 	public String separator;
+
 	public FileLineMap line;
-	public FileLineMap [] lines;
+	public FileLineMap[] lines;
+
 	public boolean persist = true;
 	public boolean exists = false;
+
 	public Binary content;
 
 	private ArrayList lineArray = null;
@@ -40,17 +44,15 @@ public class FileMap implements Mappable {
 	/* (non-Javadoc)
 	 * @see com.dexels.navajo.mapping.Mappable#load(com.dexels.navajo.server.Parameters, com.dexels.navajo.document.Navajo, com.dexels.navajo.server.Access, com.dexels.navajo.server.NavajoConfig)
 	 */
-	public void load(Parameters parms, Navajo inMessage, Access access,
-			NavajoConfig config) throws MappableException, UserException {
-
+	public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
 	}
 
-	private byte [] getBytes() throws Exception {
+	private byte[] getBytes() throws Exception {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		for (int i = 0; i < lineArray.size(); i++) {
 			FileLineMap flm = (FileLineMap) lineArray.get(i);
 			if (flm.getLine() != null) {
-				baos.write(flm.getLine().getBytes());
+				baos.write( ( charsetName == null ) ? flm.getLine().getBytes() : flm.getLine().getBytes( charsetName ) );
 			}
 		}
 		baos.close();
@@ -62,8 +64,7 @@ public class FileMap implements Mappable {
 			Binary b = new Binary(getBytes());
 			b.setMimeType("application/text");
 			return b;
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			throw new UserException(-1, e.getMessage());
 		}
 	}
@@ -74,7 +75,7 @@ public class FileMap implements Mappable {
 	public void store() throws MappableException, UserException {
 		if (persist && fileName != null) {
 			File f = new File(fileName);
-			if ( f.exists() ) {
+			if (f.exists()) {
 				System.err.println("Deleting existing file");
 				f.delete();
 			}
@@ -85,7 +86,7 @@ public class FileMap implements Mappable {
 			} catch (Exception e) {
 				throw new UserException(-1, e.getMessage());
 			} finally {
-				if ( bos != null ) {
+				if (bos != null) {
 					try {
 						bos.close();
 					} catch (IOException e) {
@@ -101,11 +102,9 @@ public class FileMap implements Mappable {
 	 * @see com.dexels.navajo.mapping.Mappable#kill()
 	 */
 	public void kill() {
-
-
 	}
 
-	public void setLines(FileLineMap [] l) {
+	public void setLines(FileLineMap[] l) {
 		if (lineArray == null) {
 			lineArray = new ArrayList();
 		}
@@ -125,30 +124,33 @@ public class FileMap implements Mappable {
 		this.fileName = f;
 	}
 
-       public void setContent(Binary b) throws UserException {
-    	  
-    	 if ( fileName == null ) {
-    		 throw new UserException(-1, "Set filename before setting content");
-    	 }
-    	 if ( b == null ) {
-    		 throw new UserException(-1, "No or empty content specified");
-    	 }
-    	 
-         this.content = b;
-         try {
-           FileOutputStream fo = new FileOutputStream(this.fileName);
+	public void setCharsetName(String charset) {
+		this.charsetName = charset;
+	}
 
-           b.write(fo);
-           fo.flush();
-           fo.close();
+	public void setContent(Binary b) throws UserException {
 
-           this.fileName = null;
-         }
-         catch (Exception e) {
-           // TODO Auto-generated catch block
-           e.printStackTrace();
-         }
-       }
+		if (fileName == null) {
+			throw new UserException(-1, "Set filename before setting content");
+		}
+		if (b == null) {
+			throw new UserException(-1, "No or empty content specified");
+		}
+
+		this.content = b;
+		try {
+			FileOutputStream fo = new FileOutputStream(this.fileName);
+
+			b.write(fo);
+			fo.flush();
+			fo.close();
+
+			this.fileName = null;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 	public void setSeparator(String s) {
 		this.separator = s;
@@ -157,10 +159,10 @@ public class FileMap implements Mappable {
 	public boolean getExists() {
 		return new File(fileName).exists();
 	}
-	
+
 	public static void main(String[] args) throws Exception {
 		FileMap fm = new FileMap();
-		FileLineMap [] flm = new FileLineMap[2];
+		FileLineMap[] flm = new FileLineMap[2];
 		flm[0] = new FileLineMap();
 		flm[0].setLine("apenoot");
 		flm[1] = new FileLineMap();
