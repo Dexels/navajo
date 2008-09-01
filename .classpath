@@ -3,7 +3,6 @@
 	<classpathentry exported="true" kind="src" path="/NavajoDocument"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/DexelsVersionControl"/>
-		<classpathentry kind="lib" path="lib/jzlib.jar"/>
+	<classpathentry kind="lib" path="lib/jzlib.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
