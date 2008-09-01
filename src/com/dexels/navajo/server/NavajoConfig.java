@@ -51,6 +51,7 @@ import com.dexels.navajo.lockguard.LockManager;
 import java.io.*;
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
+import java.lang.reflect.Method;
 
 import com.dexels.navajo.parser.DefaultExpressionEvaluator;
 import com.dexels.navajo.persistence.*;
@@ -931,7 +932,10 @@ public final class NavajoConfig {
 	public double getCurrentCPUload() {
 		if ( myOs != null ) {
 			try {
-			return myOs.getSystemLoadAverage();
+				// Refactored to use reflection. 
+				Method m = myOs.getClass().getMethod("getSystemLoadAverage", new Class[]{});
+				Double d = (Double) m.invoke(myOs, new Object[]{});
+				return d;
 			} catch (Throwable t) {
 				System.err.println("Upgrade to Java 1.6 for supporting cpu load statistics");
 				return -1.0;
@@ -943,6 +947,12 @@ public final class NavajoConfig {
 
 	public String getInstanceGroup() {
 		return instanceGroup;
+	}
+	
+
+	public static void main(String[] args) throws SystemException {
+		NavajoConfig nc = new NavajoConfig(null,null);
+		System.err.println(":: "+nc.getCurrentCPUload());
 	}
 	
 }
