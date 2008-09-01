@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry path="src" kind="src"/>
-	<classpathentry path="org.eclipse.jdt.launching.JRE_CONTAINER" kind="con"/>
-	<classpathentry path="/NavajoLogger" kind="src"/>
-	<classpathentry path="/Navajo" kind="src"/>
-	<classpathentry path="/SmtpServlet" kind="src"/>
-	<classpathentry path="/DexelsVersionControl" combineaccessrules="false" kind="src"/>
-	<classpathentry path="lib/saaj-api.jar" kind="lib"/>
-	<classpathentry path="lib/saaj-impl.jar" kind="lib"/>
-	<classpathentry path="lib/multipartrequest.jar" kind="lib"/>
-	<classpathentry path="lib/wsdl4j-20021124.jar" kind="lib"/>
-	<classpathentry path="lib/axis-1_0.jar" kind="lib"/>
-	<classpathentry path="lib/axis-1_0-ant.jar" kind="lib"/>
-	<classpathentry path="lib/jaxrpc-1_1.jar" kind="lib"/>
-	<classpathentry path="lib/jzlib.jar" kind="lib"/>
-	<classpathentry path="classes" kind="output"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry exported="true" kind="src" path="/NavajoLogger"/>
+	<classpathentry exported="true" kind="src" path="/Navajo"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/DexelsVersionControl"/>
+	<classpathentry exported="true" kind="lib" path="lib/saaj-api.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/saaj-impl.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/multipartrequest.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/wsdl4j-20021124.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/axis-1_0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/axis-1_0-ant.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jaxrpc-1_1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/servlet-2_2.jar"/>
+	<classpathentry kind="output" path="classes"/>
 </classpath>
