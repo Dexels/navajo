@@ -11,6 +11,10 @@ import com.dexels.navajo.document.*;
  * @author Arjen Schoneveld
  * @version $Id$
  *
+ * The NavajoConfig object is a singleton object that is used to specify
+ * several Navajo Instance specific settings. It parses the server.xml file
+ * specified in the Navajo config path.
+ * 
  * DISCLAIMER
  *
  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
@@ -29,7 +33,6 @@ import com.dexels.navajo.document.*;
  */
 
 import java.util.*;
-import java.util.logging.Level;
 
 import com.dexels.navajo.server.enterprise.descriptionprovider.DescriptionProviderInterface;
 import com.dexels.navajo.server.enterprise.integrity.WorkerFactory;
@@ -400,6 +403,9 @@ public final class NavajoConfig {
     	//System.out.println("COMPILE SCRIPTS: " + compileScripts);
     }
 
+    /*
+     * Get the Navajo TaskRunner instance. If no instance exists, it is started.
+     */
     public TaskRunnerInterface getTaskRunner() {
     	// Startup task scheduler
     	try {
@@ -410,16 +416,22 @@ public final class NavajoConfig {
 		}  
     }
     
+    /*
+     * Check whether the integrity module is operational.
+     */
     public boolean isIntegrityWorkerEnabled() {
     	return enableIntegrityWorker;
     }
     
+    /*
+     * Check whether the service lock module is operational.
+     */
     public boolean isLockManagerEnabled() {
     	return enableLockManager;
     }
     
-    /**
-     * Function to enable/disable statisticsrunner on the fly.
+    /*
+     * Function to enable/disable statistics runner on the fly.
      * 
      * @param b
      */
@@ -431,6 +443,9 @@ public final class NavajoConfig {
  
     }
     
+    /*
+     * Check whether the statistics runner is enabled.
+     */
     public boolean isStatisticsRunnerEnabled() {
     	if ( statisticsRunner != null ) {
     		return statisticsRunner.isEnabled();
@@ -439,6 +454,10 @@ public final class NavajoConfig {
     	}
     }
     
+    /*
+     * Gets the Integrity Worker instance (if enabled).
+     * If it does not exist, the Integrity Worker is started.
+     */
     public WorkerInterface getIntegrityWorker() {
     	
     	if ( !enableIntegrityWorker ) {
@@ -450,6 +469,10 @@ public final class NavajoConfig {
     	
     }
     
+    /*
+     * Gets the lock manager instance (if enabled).
+     * If it does not exist, the lock manager is started.
+     */
     public LockManager getLockManager() {
     	
     	if ( !enableLockManager ) {
@@ -462,35 +485,58 @@ public final class NavajoConfig {
     	return lockManager;
     }
     
+    /*
+     * Check whether asynchronous services are enabled.
+     */
     public final boolean isAsyncEnabled() {
       return enableAsync;
     }
 
+    /*
+     * Gets the class path to be used for the compiling scripts.
+     */
     public final String getClassPath() {
       return this.classPath;
     }
 
+    /*
+     * Returns the server.xml Navajo configuration document.
+     */
     public final Navajo getConfiguration() {
         return configuration;
     }
 
+    /*
+     * Returns the specific version of the scripting engine.
+     */
     public final String getScriptVersion() {
       return scriptVersion;
     }
 
+    /*
+     * Gets the path where the compiled scripts are stored.
+     */
     public final String getCompiledScriptPath() {
         return compiledScriptPath;
     }
 
+    /*
+     * Not used yet.
+     */
     public final String getHibernatePath() {
       return ( this.hibernatePath );
     }
 
-
+    /*
+     * Gets the path to the user adapter library.
+     */
     public final String getAdapterPath() {
         return adapterPath;
     }
 
+    /*
+     * Gets the path where the scripts are located.
+     */
     public final String getScriptPath() {
         return scriptPath;
     }
@@ -503,6 +549,9 @@ public final class NavajoConfig {
         return properties;
     }
 
+    /*
+     * Gets the configuration path to the Navajo Instance.
+     */
     public final String getConfigPath() {
         return configPath;
     }
@@ -516,25 +565,44 @@ public final class NavajoConfig {
     	return (NavajoClassSupplier) adapterClassloader;
     }
 
+    /*
+     * Gets the BETA user post fix for scripts.
+     */
     public final String getBetaUser() {
     	return betaUser;
     }
 
+    /*
+     * Sets the Authentication/Authorization module that will be used by the Navajo Instance.
+     */
     public final void setRepository(com.dexels.navajo.server.Repository newRepository) {
         repository = newRepository;
     }
 
+    /*
+     * Gets the Authentication/Authorization module that will be used by the Navajo Instance.
+     */
     public final com.dexels.navajo.server.Repository getRepository() {
         return repository;
     }
 
+    /*
+     * Returns the instance of the Persistence Manager.
+     */
     public final PersistenceManager getPersistenceManager() {
       return persistenceManager;
     }
+    
+    /*
+     * Get the root path for the Navajo Installation.
+     */
     public final String getRootPath() {
         return this.rootPath;
     }
     
+    /*
+     * Gets the root path of the Navajo Installation if it exists.
+     */
     private final File getRootDirectory() {
     	File f = new File(getRootPath());
     	if (f.exists()) {
@@ -545,10 +613,12 @@ public final class NavajoConfig {
     	return rootDir;
     }
     
-    /**
+    /*
 	 * Gets a resource from the 'navajo-tester' dir. For example authorization/authorization.xml
 	 * Its preferrable to the other filthy accessors, like:
 	 * new FileInputStream(new File(configPath + "/authorization/InputData.xml") )
+	 * 
+	 * @path
 	 */
     public final InputStream getResource(String path) {
     	try {
@@ -559,20 +629,33 @@ public final class NavajoConfig {
 		return null;
     }
     
-    /** Same as the getResource(path), only it returns a file. It would be cleaner not to use this function,
-     * to make the navajo-config pure inputstream-based. */
+    /* 
+     * Same as the getResource(path), only it returns a file. It would be cleaner not to use this function,
+     * to make the navajo-config pure inputstream-based. 
+     * 
+     */
     public final File getResourceFile(String path) {
     	return new File(getRootDirectory(),path);
     }
-    	
+    
+    /*
+     * Gets the asynchronous service store instance.
+     */
     public final com.dexels.navajo.mapping.AsyncStore getAsyncStore() {
       return this.asyncStore;
     }
 
+    /*
+     * Gets the statistics runnner instance.
+     */
     public final StatisticsRunnerInterface getStatisticsRunner() {
      return this.statisticsRunner;
    }
 
+    /*
+     * Gets an input stream for a specified script.
+     * 
+     */
     public final InputStream getScript(String name) throws IOException {
       return getScript(name,false);
     }
@@ -649,6 +732,10 @@ public final class NavajoConfig {
         return result;
     }
 
+    /*
+     * Clears all NavajoClassLoaders instances. Both the general classloader as well as each instantiated script
+     * classloader.
+     */
     public final synchronized void doClearCache() {
 
     	adapterClassloader = new NavajoClassLoader(adapterPath, null, getClass().getClassLoader());
@@ -657,10 +744,16 @@ public final class NavajoConfig {
 
     }
     
+    /*
+     * Clears all script classloaders.
+     */
     public final synchronized void doClearScriptCache() {
     	GenericHandler.doClearCache();
     }
 
+    /*
+     * Not used.
+     */
     public final synchronized void setNoScriptCaching() {
         if (adapterClassloader instanceof NavajoClassLoader) {
             if (adapterClassloader != null)
@@ -675,7 +768,7 @@ public final class NavajoConfig {
      *
      */
 
-    /**
+    /*
      * Determine if a value matches any of the regexps in a list.
      *
      * @param value
@@ -695,7 +788,7 @@ public final class NavajoConfig {
       return false;
     }
 
-    /**
+    /*
      * Determine if access object needs full access log.
      *
      * @param a the full access log candidate
@@ -734,7 +827,7 @@ public final class NavajoConfig {
       this.monitorOn = monitorOn;
     }
 
-    /**
+    /*
      * Get r.e. for user monitor filter. If null is returned all users should be logged.
      *
      * @return the current filter
@@ -743,7 +836,7 @@ public final class NavajoConfig {
       return monitorUsers;
     }
 
-    /**
+    /*
      * Set r.e. for user monitor filter. Null or empty string means no filter.
      *
      * @param monitorUsers
@@ -765,7 +858,7 @@ public final class NavajoConfig {
       }
     }
 
-    /**
+    /*
       * Set r.e. for webservice monitor filter. Null or empty string means no filter.
       *
       * @param monitorWebservices
@@ -788,7 +881,7 @@ public final class NavajoConfig {
       }
     }
 
-    /**
+    /*
      * Get r.e. for webservice monitor filter. If null is returned all users should be logged.
      *
      * @return the current filter
@@ -796,8 +889,8 @@ public final class NavajoConfig {
     public final String getMonitorWebservices() {
       return monitorWebservices;
     }
-
-    /**
+    
+    /*
      * Get the time in millis over which an access needs to be fully logged.
      *
      * @return

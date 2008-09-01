@@ -53,6 +53,8 @@ public interface MessageStore {
 	public HashSet<QueuedAdapter> getDeadQueue();
 	
 	/**
+	 * This method can be used to take over control of persisted workflow of another server.
+	 * TODO: Figure out how to move Binary objects (file references!).
 	 * 
 	 * @param fromServer
 	 */

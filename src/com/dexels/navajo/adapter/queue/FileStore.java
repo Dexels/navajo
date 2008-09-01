@@ -46,6 +46,10 @@ public class FileStore implements MessageStore {
 		}
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see com.dexels.navajo.adapter.queue.MessageStore#rewind()
+	 */
 	public void rewind() {
 		currentObjects.clear();
 		SharedStoreInterface ssi = SharedStoreFactory.getInstance();
@@ -56,6 +60,10 @@ public class FileStore implements MessageStore {
 		objectPointer = currentObjects.iterator();
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see com.dexels.navajo.adapter.queue.MessageStore#getQueuedAdapters()
+	 */
 	public HashSet<QueuedAdapter> getQueuedAdapters() {
 		HashSet<QueuedAdapter> queuedAdapters = new HashSet<QueuedAdapter>();
 		synchronized ( path ) {
@@ -81,7 +89,11 @@ public class FileStore implements MessageStore {
 		}
 		return queuedAdapters;
 	}
-	
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.dexels.navajo.adapter.queue.MessageStore#getNext()
+	 */
 	public Queuable getNext() throws Exception {
 
 		//System.err.println("In filestore getNext()");
@@ -121,6 +133,10 @@ public class FileStore implements MessageStore {
 		return getNext();
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see com.dexels.navajo.adapter.queue.MessageStore#putMessage(com.dexels.navajo.server.enterprise.queue.Queuable, boolean)
+	 */
 	public void putMessage(Queuable handler, boolean failure) {
 		//System.err.println(">> Putting work in store: " + handler.getClass().getName());
 		
@@ -140,6 +156,10 @@ public class FileStore implements MessageStore {
 		}
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see com.dexels.navajo.adapter.queue.MessageStore#emptyQueue()
+	 */
 	public void emptyQueue() {
 		synchronized ( path ) {
 			SharedStoreInterface ssi = SharedStoreFactory.getInstance();
@@ -150,12 +170,20 @@ public class FileStore implements MessageStore {
 		}
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see com.dexels.navajo.adapter.queue.MessageStore#getSize()
+	 */
 	public int getSize() {
 		SharedStoreInterface ssi = SharedStoreFactory.getInstance();
 		String [] files = ssi.getObjects(path);
 		return files.length;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.dexels.navajo.adapter.queue.MessageStore#getDeadQueue()
+	 */
 	public HashSet<QueuedAdapter> getDeadQueue() {
 
 		HashSet<QueuedAdapter> deadQueueAdapters = new HashSet<QueuedAdapter>();
@@ -183,11 +211,9 @@ public class FileStore implements MessageStore {
 
 	}
 	
-	/**
-	 * This method can be used to take over control of persisted workflow of another server.
-	 * TODO: Figure out how to move Binary objects (file references!).
-	 * 
-	 * @param fromServer
+	/*
+	 * (non-Javadoc)
+	 * @see com.dexels.navajo.adapter.queue.MessageStore#takeOverPersistedAdapters(java.lang.String)
 	 */
 	public void takeOverPersistedAdapters(String fromServer) {
 		System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> In FileStore: takeOverPersistedWorkFlows(" + fromServer + ")");
