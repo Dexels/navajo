@@ -99,7 +99,7 @@ public class TipiNewCallService extends TipiAction {
 	}
 	
 	public void oldExecute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
-		
+		System.err.println("Öld school");
 		TipiValue parameter = getParameter("input");
 		String unevaluated = null;
 		boolean breakOnError = false;
@@ -150,11 +150,12 @@ public class TipiNewCallService extends TipiAction {
 			myContext.loadNavajo(result, service);
 			if(myContext.hasErrors(result)) {
 				myContext.showInternalError("Service: "+service+" returned errors.");
-				try {
-					result.write(System.err);
-				} catch (NavajoException e) {
-					e.printStackTrace();
-				}
+				dumpStack("Server error detected: "+service);
+//				try {
+//					result.write(System.err);
+//				} catch (NavajoException e) {
+//					e.printStackTrace();
+//				}
 					}
 		
 			if(breakOnError) {

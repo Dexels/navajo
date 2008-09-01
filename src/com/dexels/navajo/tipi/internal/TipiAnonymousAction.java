@@ -45,4 +45,19 @@ public class TipiAnonymousAction  implements TipiExecutable {
 		return null;
 	}
 
+	public TipiStackElement getStackElement() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void setStackElement(TipiStackElement myStackElement) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void dumpStack(String message) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

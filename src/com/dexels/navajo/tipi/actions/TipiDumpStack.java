@@ -21,6 +21,10 @@ import com.dexels.navajo.tipi.internal.*;
  */
 public class TipiDumpStack extends TipiAction {
 	public void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
+		System.err.println("JAVA SAYS:");
 		Thread.dumpStack();
+		System.err.println("TIPI SAYS:");
+		dumpStack("Dumpstack");
 	}
+
 }

@@ -22,6 +22,7 @@ public abstract class TipiAction implements TipiExecutable {
 
 	protected int counter = 0;
 
+	private TipiStackElement stackElement = null;
 
 	/**
 	 * Not 'really' supported, gets a bit difficult in the xml to distinguish
@@ -63,7 +64,19 @@ public abstract class TipiAction implements TipiExecutable {
 			System.err.println("Blocked exception");
 			return;
 		}
-		execute(te);
+		try {
+			execute(te);
+		} catch (Throwable e) {
+			dumpStack(e.getMessage());
+			if(e instanceof RuntimeException) {
+				throw (RuntimeException)e;
+			}
+			if(e instanceof TipiException) {
+				throw (TipiException)e;
+			}
+			System.err.println("Uncaught exception: ");
+			e.printStackTrace();
+		}
 		myEvent = null;
 	}
 
@@ -203,6 +216,17 @@ public abstract class TipiAction implements TipiExecutable {
 	public void setEvent(TipiEvent e) {
 		myEvent = e;
 
+	}
+	public TipiStackElement getStackElement() {
+		return stackElement;
+	}
+
+	public void setStackElement(TipiStackElement myStackElement) {
+		stackElement = myStackElement;
+	}
+
+	public void dumpStack(String message) {
+		getStackElement().dumpStack(message);
 	}
 
 }

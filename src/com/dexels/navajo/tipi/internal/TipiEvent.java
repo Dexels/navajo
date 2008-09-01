@@ -36,6 +36,16 @@ public class TipiEvent implements TipiExecutable {
 	private Map<String,TipiValue> eventParameterMap = new HashMap<String,TipiValue>();
 	private Map<String,String> eventPropertyMap = new HashMap<String, String>();
 
+	private TipiStackElement stackElement = null;
+	
+	public TipiStackElement getStackElement() {
+		return stackElement;
+	}
+
+	public void setStackElement(TipiStackElement myStackElement) {
+		this.stackElement = myStackElement;
+	}
+
 	public TipiEvent() {
 	}
 
@@ -84,6 +94,7 @@ public class TipiEvent implements TipiExecutable {
 			myEventService = (String) elm.getAttribute("service");
 			mySource = (String) elm.getAttribute("listen");
 
+			setStackElement(new TipiStackElement(myEventName+":",elm,getStackElement()));
 			
 			for (Iterator<String> iterator =  elm.enumerateAttributeNames(); iterator.hasNext();) {
 				String n = iterator.next();
@@ -95,11 +106,11 @@ public class TipiEvent implements TipiExecutable {
 
 				if (current.getName().equals("block")) {
 					TipiActionBlock ta = context.instantiateDefaultTipiActionBlock(myComponent);
-					ta.load(current, myComponent);
+					ta.load(current, myComponent,this);
 					myExecutables.add(ta);
 					continue;
 				}
-					TipiAction ta = context.instantiateTipiAction(current, myComponent);
+					TipiAction ta = context.instantiateTipiAction(current, myComponent,this);
 					myExecutables.add(ta);
 			}
 	}
@@ -227,6 +238,7 @@ public class TipiEvent implements TipiExecutable {
 			throw e;
 		}
 		catch (Throwable ex) {
+			dumpStack(ex.getMessage());
 			getContext().showInternalError("Error performing event: "+getEventName()+" for component: "+getComponent().getPath()+" action: "+last+" : "+ex.getMessage(), ex);
 			ex.printStackTrace();
 		}
@@ -301,5 +313,12 @@ public class TipiEvent implements TipiExecutable {
 		return new HashMap<String,TipiValue>(eventParameterMap);
 	}
 
+	public void dumpStack(String message) {
+		if(getStackElement()!=null) {
+			getStackElement().dumpStack(message);			
+		} else {
+			System.err.println("Tipi event has no stack element: "+myEventName);
+		}
+	}
 
 }

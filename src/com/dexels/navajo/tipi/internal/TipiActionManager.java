@@ -39,13 +39,13 @@ public class TipiActionManager {
 		return taf;
 	}
 
-	public TipiAction instantiateAction(XMLElement instance, TipiComponent tc) throws TipiException {
+	public TipiAction instantiateAction(XMLElement instance, TipiComponent tc, TipiExecutable parentExe) throws TipiException {
 		String name = (String) instance.getAttribute("type");
 		if(name==null) {
 			name = instance.getName();
 		}
 		TipiActionFactory taf = getActionFactory(name);
-		return taf.instantateAction(instance, tc);
+		return taf.instantateAction(instance, tc,parentExe);
 	}
 
 }

@@ -39,6 +39,7 @@ public class TipiActionBlock implements TipiExecutable {
 
 	private final TipiContext myContext;
 	private Map<String,String> eventPropertyMap = new HashMap<String, String>();
+	private TipiStackElement stackElement = null;
 
 	public TipiActionBlock(TipiContext tc) {
 		myContext = tc;
@@ -152,7 +153,7 @@ public class TipiActionBlock implements TipiExecutable {
 	// return myEvent;
 	// }
 	//
-	public void load(XMLElement elm, TipiComponent parent) {
+	public void load(XMLElement elm, TipiComponent parent, TipiExecutable parentExe) {
 		myComponent = parent;
 		for (Iterator<String> iterator = elm.enumerateAttributeNames(); iterator.hasNext();) {
 			String n= iterator.next();
@@ -161,7 +162,9 @@ public class TipiActionBlock implements TipiExecutable {
 							
 			}
 		}
+		
 		// myEvent = event;
+		
 		if (elm.getName().equals("block")) {
 			myExpression = (String) elm.getAttribute("expression");
 			myExpressionSource = (String) elm.getAttribute("source");
@@ -170,8 +173,12 @@ public class TipiActionBlock implements TipiExecutable {
 				System.err.println("Load multithread block!");
 				multithread = true;
 			}
+			setStackElement(new TipiStackElement("if: ("+myExpression+")",elm,parentExe.getStackElement()));
+
 			List<XMLElement> temp = elm.getChildren();
 			parseActions(temp);
+		} else {
+			System.err.println("WTF?! WHAT IS THIS ELEMENT?!");
 		}
 	}
 
@@ -220,10 +227,11 @@ public class TipiActionBlock implements TipiExecutable {
 		try {
 			for (XMLElement current : temp) {
 				if (current.getName().equals("block")) {
-					TipiActionBlock con = myContext.instantiateTipiActionBlock(current, myComponent);
+					TipiActionBlock con = myContext.instantiateTipiActionBlock(current, myComponent,this);
+					
 					appendTipiExecutable(con);
 				}else {
-					TipiAction action = myContext.instantiateTipiAction(current, myComponent);
+					TipiAction action = myContext.instantiateTipiAction(current, myComponent,this);
 					appendTipiExecutable(action);
 				}				
 			}
@@ -313,5 +321,17 @@ public class TipiActionBlock implements TipiExecutable {
 
 	public String getBlockParam(String key) {
 		return eventPropertyMap.get(key);
+	}
+
+	public TipiStackElement getStackElement() {
+		return stackElement;
+	}
+
+	public void setStackElement(TipiStackElement s) {
+		stackElement = s;
+	}
+
+	public void dumpStack(String message) {
+		getStackElement().dumpStack(message);
 	}
 }

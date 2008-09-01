@@ -68,6 +68,10 @@ public class TipiComponentMethod {
 		}
 	}
 
+	public TipiAction getAction() {
+		return myTipiAction;
+	}
+	
 	public boolean checkFormat(String name, XMLElement invocation) {
 		return true;
 	}

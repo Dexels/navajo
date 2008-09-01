@@ -35,4 +35,9 @@ public interface TipiExecutable {
 
 	public String getBlockParam(String key);
 
+	public TipiStackElement getStackElement();
+
+	public void setStackElement(TipiStackElement myStackElement);
+
+	public void dumpStack(String message);
 }

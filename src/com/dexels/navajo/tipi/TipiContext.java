@@ -19,6 +19,7 @@ import com.dexels.navajo.tipi.components.core.*;
 import com.dexels.navajo.tipi.connectors.*;
 import com.dexels.navajo.tipi.extension.*;
 import com.dexels.navajo.tipi.internal.*;
+import com.dexels.navajo.tipi.internal.cookie.*;
 import com.dexels.navajo.tipi.studio.*;
 import com.dexels.navajo.tipi.tipixml.*;
 
@@ -46,9 +47,8 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
     public abstract void runSyncInEventThread(Runnable r);
     public abstract void runAsyncInEventThread(Runnable r);
 
-    public abstract void setCookie(String key, String value);
-    public abstract String getCookie(String key);
-    
+  
+
 	/**
 	 * Maps a service to a list of datacomponents. Components register here by
 	 * having a service tag
@@ -96,6 +96,9 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 //	private final List<TipiNavajoListener> eventListenerList = new ArrayList<TipiNavajoListener>();
 
 
+	private CookieManager myCookieManager;
+
+	
 	protected final Map<String, Navajo> navajoMap = new HashMap<String, Navajo>();
 
 	protected TipiThreadPool myThreadPool;
@@ -169,11 +172,16 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 	}
 	public TipiContext() {
 		Iterator<TipiExtension> tt = ServiceRegistry.lookupProviders(TipiExtension.class);
+		System.err.println("phase 1");
 		initializeExtensions(tt);
-//		getClassLoader().getResources
+		System.err.println("phase 2");
+		tt = ServiceRegistry.lookupProviders(TipiExtension.class, Thread.currentThread().getContextClassLoader());
+		initializeExtensions(tt);
+		System.err.println("phase 3");
 
+		tt = ServiceRegistry.lookupProviders(TipiExtension.class, ClassLoader.getSystemClassLoader());
+		initializeExtensions(tt);
 
-//		System.err.println("FORCING FAKE MODE!!! BEWARE!!!!!!!!!!");
 		if (coreExtensionList.isEmpty()) {
 			System.err.println("Beware: no extensions. Running without jars? Entering fake mode...");
 			fakeJars = true;
@@ -223,13 +231,13 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 
 	private void fakeExtension(List<TipiExtension> extensionList, String extensionName) {
 		try {
-			System.err.println("Attempting to load extension: "+extensionName);
+//			System.err.println("Attempting to load extension: "+extensionName);
 			TipiExtension tipiExtension = (TipiExtension) Class.forName(extensionName).newInstance();
 			checkExtension(tipiExtension,extensionList);
 			extensionList.add(tipiExtension);
 			tipiExtension.initialize(this);
 		} catch (Exception e) {
-			System.err.println("Could not load extension: "+extensionName+" message: "+e.getMessage());
+//			System.err.println("Could not load extension: "+extensionName+" message: "+e.getMessage());
 			if (e instanceof ClassNotFoundException) {
 			} else {
 				System.err.println("Something else: ");
@@ -574,6 +582,8 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 		XMLElement doc = new CaseSensitiveXMLElement();
 		InputStreamReader isr = new InputStreamReader(in, "UTF-8");
 		doc.parseFromReader(isr);
+		doc.setTitle("Unknown");
+		
 		isr.close();
 		parseXMLElement(doc);
 	}
@@ -583,6 +593,8 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 		XMLElement doc = new CaseSensitiveXMLElement();
 		InputStreamReader isr = new InputStreamReader(in, "UTF-8");
 		doc.parseFromReader(isr);
+		doc.setTitle(definitionName);
+		
 		isr.close();
 		parseXMLElement(doc);
 		// Class initClass = (Class) tipiClassMap.get(definitionName);
@@ -898,6 +910,7 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 				try {
 					InputStreamReader isr = new InputStreamReader(in, "UTF-8");
 					doc.parseFromReader(isr);
+					doc.setTitle(definition);
 					isr.close();
 				}
 				/** @todo Throw these exceptions */
@@ -928,9 +941,9 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 		return null;
 	}
 
-	public TipiActionBlock instantiateTipiActionBlock(XMLElement definition, TipiComponent parent) {
+	public TipiActionBlock instantiateTipiActionBlock(XMLElement definition, TipiComponent parent, TipiExecutable parentExe) {
 		TipiActionBlock c = createTipiActionBlockCondition();
-		c.load(definition, parent);
+		c.load(definition, parent,parentExe);
 		return c;
 	}
 
@@ -939,7 +952,7 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 		return c;
 	}
 
-	public TipiAction instantiateTipiAction(XMLElement definition, TipiComponent parent) throws TipiException {
+	public TipiAction instantiateTipiAction(XMLElement definition, TipiComponent parent, TipiExecutable parentExe) throws TipiException {
 		String type = (String) definition.getAttribute("type");
 		if (type == null) {
 			type = definition.getName();
@@ -947,7 +960,7 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 		if (type == null) {
 			throw new TipiException("Undefined action type in: " + definition.toString());
 		}
-		return myActionManager.instantiateAction(definition, parent);
+		return myActionManager.instantiateAction(definition, parent,parentExe);
 	}
 
 	public TipiActionManager getActionManager() {
@@ -1383,6 +1396,8 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 	}
 
 	private TipiActionBlock createTipiActionBlockCondition() {
+		System.err.println("Deprecated method. Beware");
+//		Thread.dumpStack();
 		return new TipiActionBlock(this);
 	}
 
@@ -2438,8 +2453,12 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 		String tipiCodeBase = properties.get("tipiCodeBase");
 		String resourceCodeBase = properties.get("resourceCodeBase");
 		System.err.println("Tipi code base: "+tipiCodeBase);
+//		if(tipiCodeBase!=null) {
 			setTipiResourceLoader(tipiCodeBase);
+//		}
+//		if(resourceCodeBase!=null) {
 			setGenericResourceLoader(resourceCodeBase);
+//		}
 
 	
 			eHandler = new BaseTipiErrorHandler();
@@ -2865,4 +2884,25 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 	public void removeThreadStateListener(ThreadActivityListener ta) {
 		threadStateListenerList.remove(ta);
 	}
+	
+    public CookieManager getCookieManager() {
+    	return myCookieManager;
+    }
+    public void setCookieManager(CookieManager m) {
+    	myCookieManager = m;
+    }
+    
+    public final void setCookie(String key, String value) {
+    	if(myCookieManager==null) {
+    		return;
+    	}
+    	myCookieManager.setCookie(key, value);
+    }
+    public final String getCookie(String key) {
+    	if(myCookieManager==null) {
+    		return null;
+    	}
+    	return myCookieManager.getCookie(key);
+    }
+    
 }

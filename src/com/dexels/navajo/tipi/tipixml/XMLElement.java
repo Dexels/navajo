@@ -269,6 +269,12 @@ public class XMLElement implements java.io.Serializable {
 	 */
 	private int lineNr;
 
+	
+	/**
+	 * I added the possiblity to add a title to an element, for example a filename.
+	 */
+	private String title = null;
+	
 	private XMLElement parent = null;
 
 	private int startOffset;
@@ -2889,4 +2895,22 @@ public class XMLElement implements java.io.Serializable {
 		return ii.intValue();
 	}
 
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String findTitle() {
+		if(getTitle()!=null) {
+			return getTitle();
+		}
+		if(getParent()!=null) {
+			return getParent().findTitle();
+		}
+		return null;
+	}
+	
 }
