@@ -85,7 +85,7 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
 	  try {
 			Class.forName("com.dexels.navajo.tribe.TribeManager");
 			edition = "Enterprise Edition";
-		} catch (ClassNotFoundException e) {
+		} catch (Throwable e) {
 			edition = "Standard Edition";
 		}
   }
