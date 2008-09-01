@@ -27,6 +27,8 @@ package navajo;
 /**
  * VERSION HISTORY
  * 
+ * 6.5.3 Fixed proper initialization of Navajo instance under heavy load.
+ * 
  * 6.5.2 Improved versioning information
  * 
  * 6.5.1 Added support for <defines> section in scripts.
@@ -111,10 +113,10 @@ public class Version extends dexels.Version {
 
 	public static final int MAJOR = 6;
 	public static final int MINOR = 5;
-	public static final int PATCHLEVEL = 2;
+	public static final int PATCHLEVEL = 3;
 	public static final String VENDOR = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Kernel";
-	public static final String RELEASEDATE = "2008-08-15";
+	public static final String RELEASEDATE = "2008-09-01";
 	
 //	 Included packages.
 	String [] includes = {"navajodocument.Version"};
