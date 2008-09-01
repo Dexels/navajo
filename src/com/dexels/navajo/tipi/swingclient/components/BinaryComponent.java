@@ -5,6 +5,7 @@ import java.awt.event.*;
 import java.awt.image.*;
 import java.beans.*;
 import java.io.*;
+import java.lang.reflect.*;
 
 import javax.imageio.*;
 import javax.imageio.stream.*;
@@ -61,68 +62,26 @@ public class BinaryComponent extends JPanel implements PropertyControlled, Prope
 	}
 	
 	
-	private void setBinary(Binary b) {
-		removeAll();
-	    if (b == null || b.getLength()<=0) {
-//	        System.err.println("Null-binary found!");
-	        myBinaryLabel = new JButton();
-	        add(myBinaryLabel,BorderLayout.CENTER);
-	      ( (JButton) myBinaryLabel).addActionListener(this);
-	      if(myProperty==null) {
-	    	  myBinaryLabel.setEnabled(false);
-	      } else {
-		      myBinaryLabel.setEnabled(myProperty.isDirIn());
-	      }
-	      ( (JButton) myBinaryLabel).setText("<html>-</html>"); 
-	      //addPropertyComponent(myBinaryLabel, true);
-	      myBinaryLabel.setToolTipText(myProperty.getDescription());
-	      return;
-	    }
-	 //   System.err.println("Getting binary data!");
-//	    byte[] data = b.getData();
-	    String mime = b.guessContentType();
-	    if (mime.indexOf("image") != -1) {
-	        InputStream inp = b.getDataAsStream(); 
-	        BufferedImage mm;
-	        try {
-	            mm = ImageIO.read(inp);
-	            //ImageIcon img = new ImageIcon(mm);
-	            System.err.println("WIDTH: "+maxImgWidth+" height: "+maxImgHeight);
-	            myBinaryLabel = new JButton();
-//	            ((JButton)myBinaryLabel).setUI(new ButtonUI(){
-//	            	
-//	            });
-	            myBinaryLabel.setBackground(new Color(1.0f,1.0f,1.0f,0.0f));
-	            myBinaryLabel.setOpaque(false);
-	            myBinaryLabel.setBorder(null);
-	  	      ( (JButton) myBinaryLabel).addActionListener(this);
-	            
-	            ( (JButton) myBinaryLabel).setHorizontalAlignment(JLabel.CENTER); 
-	            ( (JButton) myBinaryLabel).setVerticalAlignment(JLabel.CENTER); 
-	            ( (JButton) myBinaryLabel).setIcon(getScaled(mm,maxImgWidth,maxImgHeight)); 
-//	            ( (BaseLabel) myBinaryLabel).setIcon(img);
-	            add(myBinaryLabel,BorderLayout.CENTER);
-	       } catch (IOException e) {
-	            e.printStackTrace();
-	        }
-	       return;
-	    }
-	    if (mime.indexOf("text") != -1) {
-	      myBinaryLabel = new JTextArea();
-	      ( (JTextArea) myBinaryLabel).setText(new String(b.getData())); 
-	      add(myBinaryLabel,BorderLayout.CENTER);
-	      return;
-	    }
-//	    if (mime.indexOf("text") != -1) {
-            myBinaryLabel = new JButton();
-		      ( (JButton) myBinaryLabel).setText(new String(b.getMimeType())); 
-		      ( (JButton) myBinaryLabel).addActionListener(new ActionListener(){
-				public void actionPerformed(ActionEvent e) {
-					
-				}});
-		      add(myBinaryLabel,BorderLayout.CENTER);
-		      return;
-//		    }
+	private void setBinary(final Binary b) {
+		try {
+			if(SwingUtilities.isEventDispatchThread()) {
+				setSyncBinary(b);
+			} else {
+				SwingUtilities.invokeAndWait(new Runnable(){
+
+					public void run() {
+						
+				setSyncBinary(b);
+					}});
+				
+			}
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 
@@ -235,6 +194,70 @@ public static BufferedImage scale(int width, int height, boolean keepAspect, Buf
           catch (Exception ex) {
             ex.printStackTrace();
           }		
+	}
+
+	private void setSyncBinary(final Binary b) {
+		removeAll();
+		if (b == null || b.getLength()<=0) {
+//	        System.err.println("Null-binary found!");
+		    myBinaryLabel = new JButton();
+		    add(myBinaryLabel,BorderLayout.CENTER);
+		  ( (JButton) myBinaryLabel).addActionListener(BinaryComponent.this);
+		  if(myProperty==null) {
+			  myBinaryLabel.setEnabled(false);
+		  } else {
+		      myBinaryLabel.setEnabled(myProperty.isDirIn());
+		  }
+		  ( (JButton) myBinaryLabel).setText("<html>-</html>"); 
+		  //addPropertyComponent(myBinaryLabel, true);
+		  myBinaryLabel.setToolTipText(myProperty.getDescription());
+		  return;
+		}
+ //   System.err.println("Getting binary data!");
+//	    byte[] data = b.getData();
+		String mime = b.guessContentType();
+		if (mime.indexOf("image") != -1) {
+		    InputStream inp = b.getDataAsStream(); 
+		    BufferedImage mm;
+		    try {
+		        mm = ImageIO.read(inp);
+		        //ImageIcon img = new ImageIcon(mm);
+		        System.err.println("WIDTH: "+maxImgWidth+" height: "+maxImgHeight);
+		        myBinaryLabel = new JButton();
+//	            ((JButton)myBinaryLabel).setUI(new ButtonUI(){
+//	            	
+//	            });
+		        myBinaryLabel.setBackground(new Color(1.0f,1.0f,1.0f,0.0f));
+		        myBinaryLabel.setOpaque(false);
+		        myBinaryLabel.setBorder(null);
+		      ( (JButton) myBinaryLabel).addActionListener(BinaryComponent.this);
+		        
+		        ( (JButton) myBinaryLabel).setHorizontalAlignment(JLabel.CENTER); 
+		        ( (JButton) myBinaryLabel).setVerticalAlignment(JLabel.CENTER); 
+		        ( (JButton) myBinaryLabel).setIcon(getScaled(mm,maxImgWidth,maxImgHeight)); 
+//	            ( (BaseLabel) myBinaryLabel).setIcon(img);
+		        add(myBinaryLabel,BorderLayout.CENTER);
+		   } catch (IOException e) {
+		        e.printStackTrace();
+		    }
+		   return;
+		}
+		if (mime.indexOf("text") != -1) {
+		  myBinaryLabel = new JTextArea();
+		  ( (JTextArea) myBinaryLabel).setText(new String(b.getData())); 
+		  add(myBinaryLabel,BorderLayout.CENTER);
+		  return;
+		}
+//	    if (mime.indexOf("text") != -1) {
+		    myBinaryLabel = new JButton();
+		      ( (JButton) myBinaryLabel).setText(new String(b.getMimeType())); 
+		      ( (JButton) myBinaryLabel).addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e) {
+					
+				}});
+		      add(myBinaryLabel,BorderLayout.CENTER);
+		      return;
+//		    }
 	}
 	
 	

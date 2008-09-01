@@ -321,6 +321,11 @@ public void removeColumn(int index) {
     return b.booleanValue();
   }
 
+  
+  public void setColumnEditable(int columnIndex, boolean value) {
+	  	String id = (String)myColumnIds.get(columnIndex - subsractColumnCount);
+	  	editableMap.put(id, value);
+  }
   public boolean isCellEditable(int rowIndex, int columnIndex) {
 	  
     int column = columnIndex - subsractColumnCount;

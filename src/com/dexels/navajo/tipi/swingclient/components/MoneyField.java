@@ -33,7 +33,7 @@ public class MoneyField extends AbstractPropertyField implements PropertyControl
 	}
 
 	protected Object parseProperty(String text) {
-		text = text.replaceAll(".", ",");
+		text = text.replaceAll("\\.", ",");
 		try {
 			Number b = myEditFormat.parse(text);
 			Money money = new Money(b.doubleValue());
