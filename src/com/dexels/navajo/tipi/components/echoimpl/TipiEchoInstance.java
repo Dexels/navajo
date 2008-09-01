@@ -144,9 +144,9 @@ public class TipiEchoInstance extends ApplicationInstance {
 		}
 	}
 
-	public void loadTipi(URL tipidef) throws IOException, TipiException {
-		context.parseURL(tipidef, false);
-	}
+//	public void loadTipi(URL tipidef) throws IOException, TipiException {
+//		context.parseURL(tipidef, false);
+//	}
 
 	public void loadTipi(String fileName) throws IOException, TipiException {
 		InputStream in = context.getTipiResourceStream(fileName);

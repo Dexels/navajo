@@ -71,10 +71,7 @@ public class EchoTipiContext extends TipiContext {
 		
     	if(useAsyncThread) {
     		TaskQueueHandle handle =  t.createTaskQueue();
-
-    		if (null != context) {
-    			context.setTaskQueueCallbackInterval(handle, 3000);
-    		}
+    		context.setTaskQueueCallbackInterval(handle, 3000);
     	}
     }
 
@@ -102,24 +99,6 @@ public class EchoTipiContext extends TipiContext {
          */
     }
 
-//	public void loadNavajo(final Navajo reply, final String method) throws TipiBreakException {
-//		Runnable r = new Runnable(){
-//
-//			public void run() {
-//				try {
-//					EchoTipiContext.super.loadNavajo(reply, method);
-//				} catch (TipiBreakException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//			}};
-//			try {
-//				execute(r);
-//			} catch (TipiException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//	}
 
 	public void execute(Runnable r) throws TipiException {
 		if (useAsyncThread) {
@@ -144,7 +123,6 @@ public class EchoTipiContext extends TipiContext {
 				} catch (TipiException e) {
 					e.printStackTrace();
 				} catch (TipiBreakException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				
@@ -207,7 +185,6 @@ public class EchoTipiContext extends TipiContext {
              try {
 				((TipiEchoInstance)ai).exitToUrl();
 			} catch (MalformedURLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
  		} 
@@ -252,10 +229,6 @@ public class EchoTipiContext extends TipiContext {
 			host = u.getHost();
 		}
 
-		URL rootURL = null;
-
-//		rootURL = new URL(u.getProtocol(),host, u.getPort(),path);
-		
 		return host;
 
 	}
@@ -323,6 +296,7 @@ public class EchoTipiContext extends TipiContext {
 //	Thread.dumpStack();
 	}
 
+	// TODO What's different?
 	public void setTipiResourceLoader(String tipiCodeBase) throws MalformedURLException {
 		if (tipiCodeBase != null) {
 			if (tipiCodeBase.indexOf("http:/") != -1) {
@@ -362,6 +336,7 @@ public class EchoTipiContext extends TipiContext {
 		return cc;
 	}
 
+	// TODO refactor into cookiemanager
 	public void setCookie(String name, String value) {
 		Cookie cc = getBrowserCookie(name);
 		if (cc == null) {
@@ -372,6 +347,7 @@ public class EchoTipiContext extends TipiContext {
 		ApplicationInstance.getActive().enqueueCommand(bs);
 	}
 	
+	// TODO refactor into cookiemanager
 	public Cookie getBrowserCookie(String s) {
 		ContainerContext containerContext = (ContainerContext) ApplicationInstance.getActive().getContextProperty(
 				ContainerContext.CONTEXT_PROPERTY_NAME);

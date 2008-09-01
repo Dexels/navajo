@@ -153,6 +153,7 @@ public class TipiMegaTable extends TipiEchoDataComponentImpl {
         out.write(System.err);
 //        System.err.println("END OF NAVAJO ****************************************");
         myContext.performTipiMethod(this, out, "*", serviceName, true, null, -1, hostUrl, username, password, keystore, keypass);
+
     }
 
     protected void performComponentMethod(final String name, final TipiComponentMethod compMeth, TipiEvent event) throws TipiBreakException {
@@ -175,10 +176,12 @@ public class TipiMegaTable extends TipiEchoDataComponentImpl {
 
             try {
                 flatten(serviceName, hostUrl, username, password, pincode, keystore, keypass);
-            } catch (NavajoException ex) {
+            } catch (Exception ex) {
                 ex.printStackTrace();
-            } catch (TipiException ex) {
-                ex.printStackTrace();
+                if(compMeth.getAction()!=null) {
+                	compMeth.getAction().dumpStack(ex.getMessage());
+                	
+                }
             }
         }
         /*
