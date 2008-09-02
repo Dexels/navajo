@@ -2,6 +2,8 @@ package org.dexels.grus;
 
 import java.sql.*;
 
+import com.dexels.navajo.util.AuditLog;
+
 public final class DbConnectionBroker extends Object implements Runnable
 {
 	private String location, username, password;
@@ -22,7 +24,7 @@ public final class DbConnectionBroker extends Object implements Runnable
 	private static long createdInstances = 0;
 	
 	private final void log(String message) {
-		System.err.println("DBConnectionBroker (" + Thread.currentThread().getName() + "): " + message);
+		AuditLog.log("GRUS", Thread.currentThread().getName() + ": (url = " + location + ", user = " + username + ")" + message);
 	}
 	
 	public DbConnectionBroker(String dbDriver,
