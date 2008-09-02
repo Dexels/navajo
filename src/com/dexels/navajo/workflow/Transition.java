@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.parser.Condition;
 import com.dexels.navajo.parser.Expression;
@@ -26,7 +25,8 @@ import com.dexels.navajo.mapping.MappableException;
 
 /**
  * A Transition is basically contains a task/trigger, next state value and a condition.
- * Within a transition local workflow parameters can be set.
+ * 
+ * Within a transition local work flow parameters can be set.
  * 
  * @author arjen
  *
@@ -275,6 +275,7 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 		} catch (Throwable e) {
 			// Could not evaluate condition, hence must return false.
 			e.printStackTrace(System.err);
+			
 			return false;
 		}
 	}
@@ -306,6 +307,9 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 		
 	}
 	
+	/**
+	 * Method to be called by the TaskRunner after the execution of a Task
+	 */
 	public final void afterTask(Task t, Navajo request) {
 
 		if ( !isBeforeTrigger(t) && isMyTransitionTaskTrigger(t) && enterNextState(t) ) {
@@ -316,6 +320,9 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 
 	}
 
+	/**
+	 * Method to be called by the TaskRunner before the execution of a Task
+	 */
 	public final boolean beforeTask(Task t, Navajo request) {
 
 		if ( isBeforeTrigger(t) && isMyTransitionTaskTrigger(t) && enterNextState(t) ) {
@@ -329,6 +336,10 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 
 	}
 
+	/**
+	 * Check whether this is the special "init" Transition, i.e. the activation transition of a work flow.
+	 * @return true if this activation transition
+	 */
 	public final boolean isActivationTranstion() {
 		return activationTranstion;
 	}

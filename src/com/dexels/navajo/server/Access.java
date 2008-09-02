@@ -38,6 +38,15 @@ import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.enterprise.statistics.MapStatistics;
 
+/**
+ * An Access object is created for each web service access to the Navajo server.
+ * An Access object is a handle for all relevant information relating to a specific web service access:
+ * the request Navajo, the response Navajo, but also basic information like the username, web service name,
+ * time of creation, processing times, etc.
+ * 
+ * @author arjen
+ *
+ */
 public final class Access implements java.io.Serializable, Mappable {
 
 	/**
@@ -113,43 +122,83 @@ public final class Access implements java.io.Serializable, Mappable {
 
 	}
 
+	/**
+	 * Return the Navajo response (being) created.
+	 * @return
+	 */
 	public Navajo getOutputDoc() {
 		return outputDoc;
 	}
 
+	/**
+	 * Checks whether a security token was used for this access.
+	 * @return
+	 */
 	public boolean hasCertificate() {
 		return (userCertificate != null);
 	}
 
+	/**
+	 * Sets the response Navajo to be used for generating the response.
+	 * @param n
+	 */
 	public void setOutputDoc(Navajo n) {
 		outputDoc = n;
 	}
 
+	/**
+	 * Inform the access object that it is waiting for the termination of a previous access.
+	 * @param id, a unique access id
+	 */
 	public void setWaitingForPreviousResponse(String id) {
 		this.waitingForPreviousRequest = id;
 	}
 
+	/**
+	 * Returns the access id for which this access is waiting
+	 * @return, a unique access id
+	 */
 	public String getWaitingForPreviousResponse() {
 		return this.waitingForPreviousRequest;
 	}
 
+	/**
+	 * Sets the compiled script that is used to handle this access.
+	 * @param cs
+	 */
 	public void setCompiledScript(CompiledScript cs) {
 		this.myScript = cs;
 	}
 
+	/**
+	 * Get the compiled script used for handling this access.
+	 * (Used from within scripts)
+	 * @return
+	 */
 	public CompiledScript getMyScript() {
-		System.err.println("In getMyScript: " + myScript);
 		return myScript;
 	}
 
+	/**
+	 * Get the compiled script used for handling this access.
+	 * @return
+	 */
 	public CompiledScript getCompiledScript() {
 		return myScript;
 	}
 
+	/**
+	 * Method to be used when an exception has occurred while processing this access.
+	 * @param e
+	 */
 	public void setException(Throwable e) {
 		this.myException = e;
 	}
 
+	/**
+	 * Optionally returns an exception if one occurred.
+	 * @return
+	 */
 	public Throwable getException() {
 		return this.myException;
 	}
@@ -228,10 +277,15 @@ public final class Access implements java.io.Serializable, Mappable {
 		return userCertificate;
 	}
 
+	/*
+	 * 
+	 */
+	@Deprecated
 	public final void setLazyMessages(LazyMessageImpl h) {
 		this.lazyMap = h;
 	}
 
+	@Deprecated
 	public final LazyMessageImpl getLazyMessages() {
 		return this.lazyMap;
 	}

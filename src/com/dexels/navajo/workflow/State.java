@@ -86,6 +86,17 @@ public final class State implements Serializable, Mappable {
 		myTasks.add(wft);
 	}
 	
+	/**
+	 * Create a new work flow Transition.
+	 * 
+	 * @param nextState, name of the next state when transition is performed
+	 * @param trigger, the description of the trigger for activating this Transition
+	 * @param condition, an optional condition 
+	 * @param webservice, an optional webservice to be executed when the transition is made
+	 * @return a Transition object
+	 * @throws IllegalTrigger
+	 * @throws IllegalTask
+	 */
 	public Transition addTransition(String nextState, String trigger, String condition, String webservice) throws IllegalTrigger, IllegalTask  {
 		
 		WorkFlow wf = getWorkFlow();
@@ -102,6 +113,16 @@ public final class State implements Serializable, Mappable {
 		return t;
 	}
 	
+	/**
+	 * Create a new work flow Transition.
+	 * 
+	 * @param nextState, name of the next state when transition is performed
+	 * @param trigger, the description of the trigger for activating this Transition
+	 * @param condition, an optional condition 
+	 * @return
+	 * @throws IllegalTrigger
+	 * @throws IllegalTask
+	 */
 	public Transition addTransition(String nextState, String trigger, String condition) throws IllegalTrigger, IllegalTask  {
 		
 		WorkFlow wf = getWorkFlow();
@@ -155,8 +176,7 @@ public final class State implements Serializable, Mappable {
 	}
 	
 	/**
-	 * Method to be called when this is the initial state of a workflow.
-	 *
+	 * Method to be called when this is the initial state of a work flow.
 	 */
 	public void waitForAction() {
         // Activate transitions.
@@ -169,7 +189,6 @@ public final class State implements Serializable, Mappable {
 	
 	/**
 	 * Method to be called when leaving this state.
-	 *
 	 */
 	public void leave() {
 		// Clean up all tasks/triggers.
