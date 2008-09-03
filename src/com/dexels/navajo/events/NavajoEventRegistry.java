@@ -10,6 +10,8 @@ import javax.management.NotificationBroadcasterSupport;
 import javax.management.NotificationListener;
 import javax.management.monitor.MonitorNotification;
 
+import com.dexels.navajo.events.types.TribeMemberDownEvent;
+import com.dexels.navajo.scheduler.NavajoEventProxy;
 import com.dexels.navajo.server.GenericThread;
 import com.dexels.navajo.server.jmx.JMXHelper;
 
@@ -144,7 +146,7 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 	 * 
 	 * @param ne
 	 */
-	public void publishEvent(NavajoEvent ne) {
+	public void publishEvent(NavajoEvent ne, boolean ignoreProxyListeners) {
 
 		//System.err.println("Synchronous Event Triggered: " + ne.getClass());
 		publishMonitoredEvent(ne);
@@ -154,12 +156,18 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 			Iterator<NavajoListener> i = copy.iterator();
 			while ( i.hasNext() ) {
 				try {
-					i.next().onNavajoEvent(ne);
+					NavajoListener nl = i.next();
+					if ( !ignoreProxyListeners || !( nl instanceof NavajoEventProxy ))
+					nl.onNavajoEvent(ne);
 				} catch (Throwable t) {
 					t.printStackTrace(System.err);
 				}
 			}
 		}
+	}
+	
+	public void publishEvent(NavajoEvent ne) {
+		publishEvent(ne, false);
 	}
 	
 	private final Set<NavajoListener> getInterestedParties(NavajoEvent ne) {
@@ -176,6 +184,30 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 		}
 	}
 
+	/**
+	 * Checks whether a certain event is monitored.
+	 * @param type, the NavajoEvent class to which NavajoListener instances are attached.
+	 * @param ignoreEventProxy, if set to true NavajoEventProxy instances are ignored as 'real' listeners.
+	 * @return
+	 */
+	public boolean isMonitoredEvent(Class<? extends NavajoEvent> type, boolean ignoreEventProxy) {
+		Iterator iter = registry.keySet().iterator();
+		while ( iter.hasNext() ) {
+			Class s = (Class) iter.next();
+			if ( s.equals(type) ) {
+				HashSet listeners = registry.get(s);
+				Iterator all = listeners.iterator();
+				while ( all.hasNext() ) {
+					NavajoListener nl = (NavajoListener) all.next();
+					if ( !ignoreEventProxy || !( nl instanceof NavajoEventProxy ) ) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+	
 	public void addMonitoredEvent(String type) {
 		monitoredEvents.add(type);
 	}
@@ -212,4 +244,11 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 		return registry.size();
 	}
 	
+	public static void main(String [] args) {
+		NavajoEventRegistry n = NavajoEventRegistry.getInstance();
+		n.addListener(NavajoEvent.class, new NavajoEventProxy());
+		n.addListener(NavajoEvent.class, null);
+		System.err.println(">>>> " + n.isMonitoredEvent(NavajoEvent.class, true));
+		System.err.println(">>>> " + n.isMonitoredEvent(TribeMemberDownEvent.class, true));
+	}
 }
