@@ -100,6 +100,10 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 	}
 
 	private void addConnectionListener() {
+		if(!connection.isConnected()) {
+			System.err.println("Connection not connected. skipping registration of listeners");
+			return;
+		}
 		connection.addPacketListener(new PacketListener() {
 
 			public void processPacket(Packet p) {
