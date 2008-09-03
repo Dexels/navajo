@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jnlp spec="1.0+" codebase="http://www.navajo.nl/Tipi/TipiJabber" href="TipiJabber.jnlp">
     <information>
-        <title>Navajo Mail Tipi component</title>
+        <title>Navajo Mail Jabber component</title>
         <vendor>Dexels BV</vendor>
         <homepage href="www.navajo.nl" />
         <offline-allowed />
@@ -15,7 +15,7 @@
         <jar href="lib/smack.jar" main="false"/>
         <jar href="lib/smackx.jar" main="false"/>
         <jar href="lib/smackx.jar" main="false"/>
-        <jar href="TipiJabber.jar" main="false"/>
+        <jar href="lib/TipiJabber.jar" main="false"/>
         
 <!--    <jar href="lib/smackx-debug.jar" main="false"/>
         <jar href="lib/smackx-jingle.jar" main="false"/>-->
