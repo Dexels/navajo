@@ -56,6 +56,10 @@ public class CSVEntryMap implements Mappable {
        return "";
   }
 
+  public int getEntrySize() {
+	  return entries.length;
+  }
+  
   public void store() throws MappableException, UserException {
       if (update) {
           entries = new String[max+1];
