@@ -9,10 +9,8 @@ import org.jivesoftware.smack.packet.*;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Message.*;
 import org.jivesoftware.smackx.*;
-import org.jivesoftware.smackx.FormField.*;
 import org.jivesoftware.smackx.muc.*;
 
-//import com.dexels.navajo.document.*;
 import com.dexels.navajo.client.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
@@ -36,8 +34,8 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 	// public abstract void appendMessage(String msg);
 
 	private final Map<String, String> userMap = new HashMap<String, String>();
-	
-	private String nickname = null;
+
+	// private String nickname = null;
 	private String conferenceName;
 
 	public TipiJabberConnector() {
@@ -70,8 +68,8 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 		} catch (TipiException e) {
 			e.printStackTrace();
 		}
-//		System.err.println("Connect ok");
-		
+		// System.err.println("Connect ok");
+
 		connection.login(username, password, NavajoClientFactory.getClient().getSessionToken());
 
 		System.err.println("Login ok");
@@ -100,7 +98,7 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 	}
 
 	private void addConnectionListener() {
-		if(!connection.isConnected()) {
+		if (!connection.isConnected()) {
 			System.err.println("Connection not connected. skipping registration of listeners");
 			return;
 		}
@@ -127,36 +125,37 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 						e.printStackTrace();
 					}
 				}
-				System.err.println("Received. Thread: " + m.getThread() + " subject: " + m.getSubject()+" from: "+m.getFrom());
+				System.err.println("Received. Thread: " + m.getThread() + " subject: " + m.getSubject() + " from: " + m.getFrom());
 				messageReceived(m);
 			}
 		}, new PacketTypeFilter(Message.class));
 
-		myContext.addShutdownListener(new ShutdownListener(){
+		myContext.addShutdownListener(new ShutdownListener() {
 
 			public void contextShutdown() {
-				if(connection!=null) {
+				if (connection != null) {
 					connection.disconnect();
 				}
-			}});
+			}
+		});
 	}
 
-	public static void  main(String[] args) throws XMPPException, InterruptedException {
+	public static void main(String[] args) throws XMPPException {
 		TipiJabberConnector tjc = new TipiJabberConnector();
 		tjc.initialize();
 		tjc.conferenceName = "conference.sportlink.com";
-//		tjc.postRoomMembers("serverroom");
-//		tjc.postRooms();
+		// tjc.postRoomMembers("serverroom");
+		// tjc.postRooms();
 		tjc.createRoom("Den_aepenrots", "Albertus den Aep");
-//		Thread.sleep(20000);
+		// Thread.sleep(20000);
 
 		String jid = "dashboard@sportlink.com/matthijs";
-		String jidUser = jid.substring(0,jid.indexOf("@"));
-		System.err.println("Jod: "+jidUser);
+		String jidUser = jid.substring(0, jid.indexOf("@"));
+		System.err.println("Jod: " + jidUser);
 
 	}
-	
-	private void postRooms() {
+
+	protected void postRooms() {
 		try {
 			Navajo n = NavajoFactory.getInstance().createNavajo();
 			com.dexels.navajo.document.Message m = NavajoFactory.getInstance().createMessage(n, "Rooms",
@@ -164,25 +163,25 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 			n.addMessage(m);
 			Collection<String> services = MultiUserChat.getServiceNames(connection);
 			for (String string : services) {
-				System.err.println("Service: "+string);
+				System.err.println("Service: " + string);
 			}
 			Collection<HostedRoom> aa = MultiUserChat.getHostedRooms(connection, conferenceName);
 			for (HostedRoom hostedRoom : aa) {
-				System.err.println("DESCRIPTION: " + hostedRoom.getName() + " # of occupants: " + hostedRoom.getJid()+" conference name: "+conferenceName);
-					com.dexels.navajo.document.Message e = NavajoFactory.getInstance().createMessage(n, "Rooms",
-							com.dexels.navajo.document.Message.MSG_TYPE_ARRAY_ELEMENT);
-					// NavajoFactory.getInstance().createProperty(n,)
-					Property user = NavajoFactory.getInstance().createProperty(n, "Name", Property.STRING_PROPERTY, hostedRoom.getName(), 0,
-							"", Property.DIR_OUT, null);
-					e.addProperty(user);
-					Property name = NavajoFactory.getInstance().createProperty(n, "Jid", Property.STRING_PROPERTY, hostedRoom.getJid(), 0, "",
-							Property.DIR_OUT, null);
-					e.addProperty(name);
-					m.addMessage(e);
-					joinRoom(hostedRoom.getName(), "den aep" );
+				System.err.println("DESCRIPTION: " + hostedRoom.getName() + " # of occupants: " + hostedRoom.getJid()
+						+ " conference name: " + conferenceName);
+				com.dexels.navajo.document.Message e = NavajoFactory.getInstance().createMessage(n, "Rooms",
+						com.dexels.navajo.document.Message.MSG_TYPE_ARRAY_ELEMENT);
+				// NavajoFactory.getInstance().createProperty(n,)
+				Property user = NavajoFactory.getInstance().createProperty(n, "Name", Property.STRING_PROPERTY, hostedRoom.getName(), 0,
+						"", Property.DIR_OUT, null);
+				e.addProperty(user);
+				Property name = NavajoFactory.getInstance().createProperty(n, "Jid", Property.STRING_PROPERTY, hostedRoom.getJid(), 0, "",
+						Property.DIR_OUT, null);
+				e.addProperty(name);
+				m.addMessage(e);
+				joinRoom(hostedRoom.getName(), "den aep");
 			}
-//			n.write(System.err);
-			if(myContext!=null) {
+			if (myContext != null) {
 				getContext().loadNavajo(n, "JabberRooms");
 			}
 		} catch (NavajoException e1) {
@@ -190,14 +189,13 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 		} catch (TipiBreakException e) {
 			e.printStackTrace();
 		} catch (XMPPException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void joinRoom(String roomName, String nickName) throws XMPPException {
 
-		if(connection==null || !connection.isConnected() || !connection.isAuthenticated()) {
+		if (connection == null || !connection.isConnected() || !connection.isAuthenticated()) {
 			System.err.println("Can not join room: not connected");
 			return;
 		}
@@ -219,9 +217,9 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 		if (!found) {
 			createRoom(roomName, nickName);
 		}
-//		postRooms();
-//		postRoomMembers(roomName);
-		
+		// postRooms();
+		// postRoomMembers(roomName);
+
 	}
 
 	private void createRoom(String roomName, String nickName) throws XMPPException {
@@ -231,61 +229,58 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 		// Create the room
 		muc.create(roomJid);
 		Form form = muc.getConfigurationForm();
-	      // Create a new form to submit based on the original form
-	      Form submitForm = form.createAnswerForm();
-	      // Add default answers to the form to submit
-	      for (Iterator fields = form.getFields(); fields.hasNext();) {
-	          FormField field = (FormField) fields.next();
-				Iterator<String> values = field.getValues();
-			//	System.err.println("F: " +field.getVariable()+ "  - " + field.getLabel() + " name: " + field.getDescription());
-				while (values.hasNext()) {
-					String val = values.next();
-//					System.err.println("VAL: "+val);
+		// Create a new form to submit based on the original form
+		Form submitForm = form.createAnswerForm();
+		// Add default answers to the form to submit
+		for (Iterator<FormField> fields = form.getFields(); fields.hasNext();) {
+			FormField field = fields.next();
+			Iterator<String> values = field.getValues();
+			while (values.hasNext()) {
+				// String val = values.next();
+			}
+			if (!FormField.TYPE_HIDDEN.equals(field.getType()) && field.getVariable() != null) {
+			}
+			if ("muc#roomconfig_maxusers".equals(field.getVariable())) {
+				System.err.println("type: " + field.getType());
+				List<String> l = new ArrayList<String>();
+				l.add("20");
+				submitForm.setAnswer(field.getVariable(), l);
+				Iterator<String> it = submitForm.getField("muc#roomconfig_maxusers").getValues();
+				while (it.hasNext()) {
+					String string = it.next();
+					System.err.println("String>>>   >" + string + "<");
+
 				}
-				if (!FormField.TYPE_HIDDEN.equals(field.getType()) && field.getVariable() != null) {
-	              // Sets the default value as the answer
-	            //  submitForm.setDefaultAnswer(field.getVariable());
-	          }
-	          if("muc#roomconfig_maxusers".equals(field.getVariable())) {
-	        	  System.err.println("type: "+field.getType());
-	        	  List<String> l = new ArrayList<String>();
-	        	  l.add("20");
-	        	  submitForm.setAnswer(field.getVariable(), l);
-	        	  Iterator<String> it = submitForm.getField("muc#roomconfig_maxusers").getValues();
-	        	  while (it.hasNext()) {
-						String string = it.next();
-						System.err.println("String>>>   >"+string+"<");
-						
-					}
-	          }
-	          if("muc#roomconfig_persistentroom".equals(field.getVariable())) {
-	        	  System.err.println("muc#roomconfig_persistentroom: type: "+field.getType());
-	        	  
-	          	  submitForm.setAnswer(field.getVariable(), false);
-	          }
-	          
-	      }
-		      
-//		Form form = new Form(Form.TYPE_SUBMIT);
-		Iterator<FormField> it = form.getFields();
-		while (it.hasNext()) {
-			FormField f = it.next();
+			}
+			if ("muc#roomconfig_persistentroom".equals(field.getVariable())) {
+				System.err.println("muc#roomconfig_persistentroom: type: " + field.getType());
+
+				submitForm.setAnswer(field.getVariable(), false);
+			}
+
 		}
+
+		// Form form = new Form(Form.TYPE_SUBMIT);
+//		Iterator<FormField> it = form.getFields();
+		// while (it.hasNext()) {
+		// FormField f = it.next();
+		// }
 		muc.sendConfigurationForm(submitForm);
 		joinRoom(nickName, muc);
 	}
 
 	private void joinRoom(String nickName, MultiUserChat muc) throws XMPPException {
 		muc.join(nickName);
-		muc.addParticipantListener(new PacketListener(){
+		muc.addParticipantListener(new PacketListener() {
 
 			public void processPacket(Packet pp) {
-				System.err.println("pp: "+pp.getClass()+" qq: "+pp.getPropertyNames()+ "" + pp);
-				if(pp instanceof Presence) {
-					Presence q = (Presence)pp;
-					System.err.println("Mode: "+q.getMode()+" status: "+q.getStatus());
+				System.err.println("pp: " + pp.getClass() + " qq: " + pp.getPropertyNames() + "" + pp);
+				if (pp instanceof Presence) {
+					Presence q = (Presence) pp;
+					System.err.println("Mode: " + q.getMode() + " status: " + q.getStatus());
 				}
-			}});
+			}
+		});
 	}
 
 	protected void postRoster(Roster roster) {
@@ -294,7 +289,7 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 			com.dexels.navajo.document.Message m = NavajoFactory.getInstance().createMessage(n, "Roster",
 					com.dexels.navajo.document.Message.MSG_TYPE_ARRAY);
 			n.addMessage(m);
-			
+
 			for (RosterEntry rr : roster.getEntries()) {
 				Presence presence = roster.getPresence(rr.getUser());
 
@@ -318,11 +313,11 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 				e.addProperty(status);
 				m.addMessage(e);
 			}
-//			 n.write(System.err);
-			 // to allow it to run straight from main:
-			 if(myContext!=null) {
-					getContext().loadNavajo(n, "JabberRoster");
-			 }
+			// n.write(System.err);
+			// to allow it to run straight from main:
+			if (myContext != null) {
+				getContext().loadNavajo(n, "JabberRoster");
+			}
 		} catch (NavajoException e1) {
 			e1.printStackTrace();
 		} catch (TipiBreakException e) {
@@ -369,7 +364,7 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 			currentUser = (String) object;
 		}
 		if (name.equals("nickname")) {
-			nickname = (String) object;
+			// nickname = (String) object;
 		}
 		if (name.equals("conferenceName")) {
 			conferenceName = (String) object;
@@ -398,7 +393,7 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 		Map<String, Object> m = new HashMap<String, Object>();
 		m.put("body", message.getBody());
 		String fromJid = message.getFrom();
-		String from = message.getFrom().substring(0,fromJid.indexOf("@"));
+		String from = message.getFrom().substring(0, fromJid.indexOf("@"));
 		StringTokenizer st = new StringTokenizer(fromJid, "/");
 		String usr = st.nextToken();
 		m.put("fromJid", fromJid);
@@ -420,17 +415,11 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 		super.performComponentMethod(name, compMeth, event);
 		if (name.equals("connect")) {
 			try {
-//				myContext.execute(new Runnable(){
-//
-//					public void run() {
-						try {
-							initialize();
-						} catch (XMPPException e) {
-							// TODO Auto-generated catch block
-//							e.printStackTrace();
-							throw new TipiException("Error connecting jabber: "+e.getMessage(),e);
-						}
-//				}});
+				try {
+					initialize();
+				} catch (XMPPException e) {
+					throw new TipiException("Error connecting jabber: " + e.getMessage(), e);
+				}
 			} catch (TipiException e) {
 				e.printStackTrace();
 			}
@@ -486,10 +475,9 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 
 	}
 
-	private void postRoomMembers(String roomName) {
+	protected void postRoomMembers(String roomName) {
 		try {
-			
-			
+
 			Navajo n = NavajoFactory.getInstance().createNavajo();
 			com.dexels.navajo.document.Message m = NavajoFactory.getInstance().createMessage(n, "RoomMembers",
 					com.dexels.navajo.document.Message.MSG_TYPE_ARRAY);
@@ -506,22 +494,21 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 				Property name = NavajoFactory.getInstance().createProperty(n, "Jid", Property.STRING_PROPERTY, hostedRoom.getJid(), 0, "",
 						Property.DIR_OUT, null);
 				e.addProperty(name);
-				Property nick = NavajoFactory.getInstance().createProperty(n, "Nickname", Property.STRING_PROPERTY, hostedRoom.getJid(), 0, "",
-						Property.DIR_OUT, null);
+				Property nick = NavajoFactory.getInstance().createProperty(n, "Nickname", Property.STRING_PROPERTY, hostedRoom.getJid(), 0,
+						"", Property.DIR_OUT, null);
 				e.addProperty(nick);
 
 				m.addMessage(e);
 			}
 			n.write(System.err);
-//			getContext().loadNavajo(n, "JabberRoomMembers");
+			// getContext().loadNavajo(n, "JabberRoomMembers");
 		} catch (NavajoException e1) {
 			e1.printStackTrace();
-//		} catch (TipiBreakException e) {
-//			e.printStackTrace();
+			// } catch (TipiBreakException e) {
+			// e.printStackTrace();
 		} catch (XMPPException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}		
+		}
 	}
 
 	private void disconnect() {
