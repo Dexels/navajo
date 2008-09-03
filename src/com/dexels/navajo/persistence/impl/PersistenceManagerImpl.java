@@ -359,7 +359,7 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
 		
 		if ( ne instanceof NavajoCompileScriptEvent ) {
 			NavajoCompileScriptEvent ncse = (NavajoCompileScriptEvent) ne;
-			AuditLog.log("PERSISTENCEMANAGER", "Received NavajoCompileScriptEvent for " + ncse.getWebservice(), Level.INFO);
+			//AuditLog.log("PERSISTENCEMANAGER", "Received NavajoCompileScriptEvent for " + ncse.getWebservice(), Level.INFO);
 			PersistenceManagerImpl p;
 			try {
 				p = new PersistenceManagerImpl();
