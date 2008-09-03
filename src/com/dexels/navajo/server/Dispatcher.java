@@ -80,6 +80,8 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
   public static final String version = Version.getDescription();
   public volatile static String edition;
   
+  public boolean enabled = true;
+  
   static {
 	  try {
 			Class.forName("com.dexels.navajo.tribe.TribeManager");
@@ -164,6 +166,13 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
 			}
 		  }
 	  }
+  }
+  
+  /**
+   * Constructor for usage in web service scripts.
+   */
+  public Dispatcher() {
+	  navajoConfig = null;
   }
   
   /**
@@ -976,6 +985,12 @@ private final Navajo processNavajo(Navajo inMessage, Object userCertificate, Cli
     	}
     }
     
+    // Check whether server is disabled...
+    if ( !enabled && !inMessage.getHeader().hasCallBackPointers() && !isSpecialwebservice(inMessage.getHeader().getRPCName())) {
+    	System.err.println("DISPATCHER DISABLED, TRY OTHER NAVAJO INSTANCE/SE");
+    	throw new FatalException("500.14");
+    }
+    
       Header header = inMessage.getHeader();
       rpcName = header.getRPCName();
       rpcUser = header.getRPCUser();
@@ -1519,5 +1534,29 @@ private final Navajo processNavajo(Navajo inMessage, Object userCertificate, Cli
 
   public static String getEdition() {
 	  return edition;
+  }
+
+  public boolean getEnabled() {
+	  return Dispatcher.getInstance().enabled;
+  }
+
+  public void setEnabled(boolean enabled) {
+	  Dispatcher.getInstance().enabled = enabled;
+  }
+
+  /*
+   * (non-Javadoc)
+   * @see com.dexels.navajo.server.DispatcherMXBean#disableDispatcher()
+   */
+  public void disableDispatcher() {
+	  setEnabled(false);
+  }
+
+  /*
+   * (non-Javadoc)
+   * @see com.dexels.navajo.server.DispatcherMXBean#enableDispatcher()
+   */
+  public void enableDispatcher() {
+	  setEnabled(true);
   }
 }

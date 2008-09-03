@@ -68,4 +68,15 @@ public interface DispatcherMXBean {
 	 */
 	public void setSnmpManagers(String s);
 	
+	/**
+	 * Disable Dispatcher for new incoming requests, only handle requests currently being processed.
+	 * Requests for asynchronous web services are passed.
+	 */
+	public void disableDispatcher();
+	
+	/**
+	 * Enable a Dispatcher, i.e. accept new incoming requests.
+	 */
+	public void enableDispatcher();
+	
 }
