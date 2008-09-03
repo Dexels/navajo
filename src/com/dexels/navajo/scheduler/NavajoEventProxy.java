@@ -9,6 +9,7 @@ import com.dexels.navajo.events.NavajoListener;
 import com.dexels.navajo.events.types.TribeMemberDownEvent;
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
+import com.dexels.navajo.tribe.TribeManager;
 import com.dexels.navajo.util.Util;
 
 /**
@@ -33,6 +34,9 @@ public class NavajoEventProxy implements Serializable, NavajoListener {
 	
 	private String guid;
 	
+	public NavajoEventProxy() {
+		
+	}
 	/**
 	 * Create a new NavajoEventProxy object
 	 * 
@@ -119,7 +123,7 @@ public class NavajoEventProxy implements Serializable, NavajoListener {
 		// Inform interested tribal member of event occurrence by emitting same event via multicast.
 		TribeManagerFactory.getInstance().multicast(new Object[]{getInterestedParty()},
 				new NavajoServerEventSignal(Dispatcher.getInstance().getNavajoConfig().getInstanceName(),
-						NavajoServerEventSignal.BROADCAST_SERVER_EVENT, ne));
+						NavajoServerEventSignal.BROADCAST_SERVER_EVENT, ne) );
 		
 		
 	}

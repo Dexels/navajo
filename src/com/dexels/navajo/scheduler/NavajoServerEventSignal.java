@@ -24,8 +24,10 @@ public class NavajoServerEventSignal extends SmokeSignal {
 	public void processMessage() {
 		if ( !iAmTheSender() && key.equals(BROADCAST_SERVER_EVENT)) {
 			// Publish event has if it actually happened on this tribal member.
-			//AuditLog.log("","RECEIVED MULTICASTED NAVAJO SERVER EVENT: " + getValue() + " FROM " + getSender() );
-			NavajoEventRegistry.getInstance().publishEvent( ((NavajoEvent) getValue()) );
+			NavajoEvent realEvent = (NavajoEvent) getValue();
+			// Do not publish event to registered proxies again to prevent ping-pong.
+			NavajoEventRegistry.getInstance().publishEvent( realEvent, true );
+			
 		}
 		if ( !iAmTheSender() && key.equals(ADD_SERVER_EVENTPROXY) ) {
 			//AuditLog.log("","ABOUT TO CREATE REMOTE PROXY FOR: " + ((NavajoEventProxy) getValue()).getInterestedParty() + "(" + ((NavajoEventProxy) getValue()).getGuid() + ")"  );
