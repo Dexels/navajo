@@ -27,7 +27,7 @@ public class MessageTableModel
   private final ArrayList myColumnIds = new ArrayList();
   private final ArrayList myColumnTitles = new ArrayList();
   //private final ArrayList editableList = new ArrayList();
-  private final HashMap editableMap = new HashMap();
+  private final HashMap<String,Boolean> editableMap = new HashMap<String,Boolean>();
   private Message myMessage;
   private final ArrayList filterList = new ArrayList();
   private boolean isFiltered = false;
@@ -337,7 +337,6 @@ public void removeColumn(int index) {
 //    System.err.println("EditableListSize: " + editableList.size());
 //    System.err.println(editableList.toString());
     if (readOnly) {
-      System.err.println("Readonly table");
       return false;
     }
   if (!editableMap.containsKey(id)) {
@@ -350,7 +349,6 @@ public void removeColumn(int index) {
       return false;
     }
     if (b.booleanValue() == false) {
-      System.err.println("Forced non-editable by table");
       return false;
     }
     Message m = getMessageRow(rowIndex);
