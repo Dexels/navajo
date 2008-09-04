@@ -38,7 +38,7 @@ public class NavajoClient implements ClientInterface {
 
   public static final int DIRECT_PROTOCOL = 0;
   public static final int HTTP_PROTOCOL = 1;
-  public static final int CONNECT_TIMEOUT = 3000;
+  public static final int CONNECT_TIMEOUT = 2500;
   
 //  private String host = null;
   private String username = null;
@@ -72,7 +72,7 @@ public class NavajoClient implements ClientInterface {
   //private String keystore, passphrase;
   private long retryInterval = 500; // default retry interval is 1000 milliseconds
   private int retryAttempts = 10; // default three retry attempts
-  private int switchServerAfterRetries = 4; /** If same as retry attempts, never switch between servers, while in retry attempt. FOR NOW
+  private int switchServerAfterRetries = 3; /** If same as retry attempts, never switch between servers, while in retry attempt. FOR NOW
   THIS IS A SAFE VALUE CAUSE INTEGRITY WORKER DOES NOT YET WORKER OVER MULTIPLE SERVER INSTANCES!!! */
   
   private int currentServerIndex;
