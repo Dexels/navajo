@@ -40,7 +40,6 @@ public abstract class AbstractPropertyField extends JTextField implements FocusL
 	}
 	
 	public void setEnabled(boolean b) {
-		System.err.println("Ignoring set enabled!");
 	}
 
 	public void setProperty(Property p) {
@@ -72,6 +71,10 @@ public abstract class AbstractPropertyField extends JTextField implements FocusL
 		AbstractPropertyField.super.setEnabled(myProperty.isDirIn());
 		String s = getPresentationFormat(myProperty.getTypedValue());
 		setText(s);
+		setEditing(false);
+		if(hasFocus()) {
+			editProperty();
+		}
 	}
 	
 	public void focusGained(FocusEvent e) {
@@ -99,26 +102,32 @@ public abstract class AbstractPropertyField extends JTextField implements FocusL
 			} catch (InvocationTargetException e) {
 				e.printStackTrace();
 			}
+		} else {
+			setEditing(true);
 		}
 	}
 
 	public void focusLost(FocusEvent e) {
+	
 		if (myProperty != null) {
 			updateProperty();
 		}
+		setEditing(false);
+
 	}
 
 	protected void updateProperty() {
+		
 		if(!isEditing()) {
-			System.err.println("Not editing");
 			return;
 		}
-		System.err.println("Editing");
+		Thread.dumpStack();
+		if(myProperty==null) {
+			return;
+		}
 		Object value = parseProperty(getText());
 		myProperty.setAnyValue(value);
 		presentObject(value);
-		System.err.println("Value: " + myProperty.getValue());
-		setEditing(false);
 	}
 
 	public void propertyChange(PropertyChangeEvent e) {
