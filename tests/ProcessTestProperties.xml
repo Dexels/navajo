@@ -1,4 +1,4 @@
-<tsl debug="request">
+<tsl>
   <message name="ResultsDate">
      <property name="EmptyDate" direction="out">
         <expression value="!?[/TestProperties/Date/EmptyTestDateProperty]"/>
@@ -323,6 +323,28 @@
      </map>
      <property name="CheckMappedMultipleSelections" direction="out">
         <expression value="[/@CheckMappedMultipleSelections]"/>
+     </property>
+     <!-- Map selected options to multiple empty map -->
+     <param name="CheckMappedMultipleSelections2">
+        <expression value="false"/>
+     </param>
+     <param name="Index">
+        <expression value="0"/>
+     </param>
+     <map object="com.dexels.navajo.adapter.MultipleEmptyMap">
+        <field name="emptyMaps">
+           <map ref="/TestProperties/Selections/ConstructedSelection">
+              <param name="CheckMappedMultipleSelections2">
+                 <expression value="[value] == 'aap'"/>
+              </param>
+              <param name="Index">
+                 <expression value="[/@Index] + 1"/>
+              </param>
+           </map>
+        </field>
+     </map>
+     <property name="CheckMappedMultipleSelections2" direction="out">
+        <expression value="[/@CheckMappedMultipleSelections2]"/>
      </property>
   </message>
 </tsl>

@@ -1,0 +1,11 @@
+<tsl>
+<message name="Input">
+   <property name="d" type="float" direction="in" length="10"/>
+   <property name="iter" type="integer" direction="in" length="20" value="1000000"/>
+</message>
+<methods>
+ <method name="ProcessAsyncTest">
+    <required message="Input"/>
+  </method>
+</methods>
+</tsl>

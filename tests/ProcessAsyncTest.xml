@@ -1,0 +1,23 @@
+<tsl>
+  <map name="async" object="com.dexels.navajo.mapping.AsyncTest">
+    <request>
+      <field name="d">
+        <expression value="[/Input/d]"/>
+      </field>
+      <field name="iter">
+        <expression value="[/Input/iter]"/>
+      </field>
+      <message name="StartedThread"/>
+    </request>
+    <response while_running="false">
+      <message name="Finished">
+        <property name="result" direction="out">
+          <expression value="$result"/>
+        </property>
+      </message>
+    </response>
+    <running>
+      <message name="Running"/>
+    </running>
+  </map>
+</tsl>

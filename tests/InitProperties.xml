@@ -62,6 +62,41 @@
           <option name="name2" value="val2" selected="1"/>
           <option name="name3" value="val3" selected="0"/>
        </property>
+       <!-- Construct new selection property -->
+       <property cardinality="+" description="Cat." direction="in" length="10" name="ConstructedSelection" type="selection">
+          <option name="-" value="-1"/>
+       </property>
+       <map object="com.dexels.navajo.test.TestBean">
+         <property cardinality="+" description="Cat." direction="in" length="10" name="ConstructedSelection" type="selection">
+            <map ref="subBeans">
+                <property name="name">
+                    <expression value="$beanName"/>
+                </property>
+                <property name="value">
+                    <expression value="$beanName"/>
+                </property>
+                <property name="selected">
+                    <expression value="$beanName == 'aap'"/>
+                </property>
+            </map>
+         </property>
+       </map>
+       <!-- Construct empty selection property -->
+       <property cardinality="1" description="Cat." direction="in" length="10" name="ConstructedEmptySelection" type="selection">
+          <option name="-" value="-1"/>
+       </property>
+       <map object="com.dexels.navajo.test.TestBean">
+         <property cardinality="1" description="Cat." direction="in" length="10" name="ConstructedEmptySelection" type="selection">
+            <map ref="subBeans" filter="$beanName == 'kibbeling'">
+                <property name="name">
+                    <expression value="$beanName"/>
+                </property>
+                <property name="value">
+                    <expression value="$beanName"/>
+                </property>
+            </map>
+         </property>
+       </map>
     </message>
     <!-- array message -->
     <message name="Array" type="array">
