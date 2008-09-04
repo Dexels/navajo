@@ -59,9 +59,7 @@
    <tipiaction name="exit" class="TipiExit" package="com.dexels.navajo.tipi.actions" />
 
    <!-- the actual classes should be refactored too! -->
-   <tipiaction name="showInfo" class="TipiShowInfo" package="com.dexels.navajo.tipi.actions">
-      <param name="text" type="string" required="true" />
-   </tipiaction>
+
 
    <tipiaction name="showQuestion" class="TipiShowQuestion" package="com.dexels.navajo.tipi.actions">
       <param name="text" type="string" required="true" />
@@ -72,7 +70,10 @@
    <tipiclass class="TipiColumn" name="column" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="*" layoutmanager="false" addtocontainer="true">
       <events>
          <event name="onInstantiate" />
-         <event name="onLoad" />
+         <event name="onLoad">
+            <param name="service" type="string" />
+            <param name="navajo" type="navajo"/>
+         </event>
          <event name="onGeneratedErrors" />
       </events>
       <values>
@@ -102,7 +103,10 @@
    <tipiclass class="TipiRow" name="row" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="*" layoutmanager="false" addtocontainer="true">
       <events>
          <event name="onInstantiate" />
-         <event name="onLoad" />
+         <event name="onLoad">
+            <param name="service" type="string" />
+            <param name="navajo" type="navajo"/>
+         </event>
          <event name="onGeneratedErrors" />
       </events>
       <values>
@@ -132,8 +136,9 @@
       package="com.dexels.navajo.tipi.components.swingimpl" studio-icon="tabs.gif" type="tipi">
       <events>
          <event name="onInstantiate" />
-         <event name="onLoad">
+          <event name="onLoad">
             <param name="service" type="string" />
+            <param name="navajo" type="navajo"/>
          </event>
          <event name="onGeneratedErrors" />
       </events>
@@ -153,7 +158,10 @@
       <events>
       <event name="onInstantiate"/>
       <event name="onWindowClosed"/>
-      <event name="onLoad"/>
+         <event name="onLoad">
+            <param name="service" type="string" />
+            <param name="navajo" type="navajo"/>
+         </event>
       <event name="onGeneratedErrors"/>
       </events>
       <values>
@@ -182,6 +190,7 @@
          </event>
          <event name="onLoad">
             <param name="service" type="string" />
+            <param name="navajo" type="navajo"/>
          </event>
          <event name="onValueChanged">
             <param name="name" type="string" />
@@ -318,6 +327,7 @@
          <event name="onInstantiate" />
          <event name="onLoad">
             <param name="service" type="string" />
+            <param name="navajo" type="navajo"/>
          </event>
          <event name="onActionPerformed">
             <param name="table" type="object" />
@@ -383,6 +393,7 @@
          <event name="onInstantiate" />
          <event name="onLoad">
             <param name="service" type="string" />
+            <param name="navajo" type="navajo"/>
          </event>
       </events>
       <values>
@@ -404,6 +415,7 @@
          <event name="onInstantiate" />
          <event name="onLoad">
             <param name="service" type="string" />
+            <param name="navajo" type="navajo"/>
          </event>
          <!-- todo: implement -->
          <event name="onValueChanged" />
@@ -425,6 +437,7 @@
          <event name="onInstantiate" />
          <event name="onLoad">
             <param name="service" type="string" />
+            <param name="navajo" type="navajo"/>
          </event>
       </events>
       <values>
@@ -445,8 +458,9 @@
       package="com.dexels.navajo.tipi.components.swingimpl" studio-icon="tipitable.gif" type="tipi">
       <events>
          <event name="onInstantiate" />
-         <event name="onLoad">
+          <event name="onLoad">
             <param name="service" type="string" />
+            <param name="navajo" type="navajo"/>
          </event>
       </events>
       <values>
@@ -465,8 +479,9 @@
          <event name="onInstantiate" />
          <event name="onLoad">
             <param name="service" type="string" />
+            <param name="navajo" type="navajo"/>
          </event>
-         <event name="onValidationChanged">
+        <event name="onValidationChanged">
             <param name="valid" type="boolean" />
          </event>
       </events>
@@ -505,6 +520,7 @@
          <event name="onInstantiate" />
          <event name="onLoad">
             <param name="service" type="string" />
+            <param name="navajo" type="navajo"/>
          </event>
          <event name="onValidationChanged">
             <param name="valid" type="boolean" />
@@ -547,6 +563,7 @@
          <event name="onInstantiate" />
          <event name="onLoad">
             <param name="service" type="string" />
+            <param name="navajo" type="navajo"/>
          </event>
          <event name="onGeneratedErrors">
             <param name="id" type="string" />
@@ -585,8 +602,9 @@
          <event name="onInstantiate" />
          <event name="onLoad">
             <param name="service" type="string" />
+            <param name="navajo" type="navajo"/>
          </event>
-      </events>
+     </events>
       <values>
          <value direction="in" name="enabled" type="boolean" />
          <value direction="in" name="visible" type="boolean" />
@@ -598,6 +616,7 @@
       <events>
          <event name="onLoad">
             <param name="service" type="string" />
+            <param name="navajo" type="navajo"/>
          </event>
          <event name="onInstantiate" />
          <event name="onWindowClosed" />
@@ -624,10 +643,11 @@
       <events>
          <event name="onInstantiate" />
          <event name="onWindowClosed" />
-         <event name="onLoad">
+           <event name="onLoad">
             <param name="service" type="string" />
+            <param name="navajo" type="navajo"/>
          </event>
-      </events>
+     </events>
       <values>
          <!--     <value name="visible" direction="in" type="boolean"/>-->
          <value direction="in" name="icon" type="resource" property="iconUrl" />
@@ -662,8 +682,9 @@
       <events>
          <event name="onInstantiate" />
          <event name="onWindowClosed" />
-         <event name="onLoad">
+          <event name="onLoad">
             <param name="service" type="string" />
+            <param name="navajo" type="navajo"/>
          </event>
       </events>
       <values>
@@ -691,6 +712,7 @@
          <event name="onInstantiate" />
          <event name="onLoad">
             <param name="service" type="string" />
+            <param name="navajo" type="navajo"/>
          </event>
       </events>
       <values />
@@ -702,8 +724,9 @@
          <event name="onInstantiate" />
          <event name="onLoad">
             <param name="service" type="string" />
+            <param name="navajo" type="navajo"/>
          </event>
-         <event name="onMouseClicked">
+        <event name="onMouseClicked">
             <param name="x" type="integer" />
             <param name="y" type="integer" />
             <param name="button" type="integer" />
@@ -736,10 +759,11 @@
       studio-icon="frame.gif" toplevel="true" type="tipi">
       <events>
          <event name="onInstantiate" />
-         <event name="onLoad">
+          <event name="onLoad">
             <param name="service" type="string" />
+            <param name="navajo" type="navajo"/>
          </event>
-         <event name="onWindowClosed" />
+        <event name="onWindowClosed" />
       </events>
       <values>
          <value direction="in" name="icon" type="resource" />
@@ -782,6 +806,7 @@
          <event name="onTabChanged" />
          <event name="onLoad">
             <param name="service" type="string" />
+            <param name="navajo" type="navajo"/>
          </event>
       </events>
       <values>
@@ -821,6 +846,7 @@
          <event name="onInstantiate" />
          <event name="onLoad">
             <param name="service" type="string" />
+            <param name="navajo" type="navajo"/>
          </event>
       </events>
       <values>
@@ -838,8 +864,9 @@
       package="com.dexels.navajo.tipi.components.swingimpl" studio-icon="hidden.gif" type="tipi">
       <events>
          <event name="onInstantiate" />
-         <event name="onLoad">
+          <event name="onLoad">
             <param name="service" type="string" />
+            <param name="navajo" type="navajo"/>
          </event>
       </events>
       <values>
@@ -868,8 +895,9 @@
          <event name="onWindowClosed" />
          <event name="onLoad">
             <param name="service" type="string" />
+            <param name="navajo" type="navajo"/>
          </event>
-         <event name="onGeneratedErrors">
+        <event name="onGeneratedErrors">
             <param name="id" type="string" />
             <param name="description" type="string" />
          </event>
@@ -1106,7 +1134,20 @@
       </values>
       <methods />
    </tipiclass>
-
+   <tipiclass addtocontainer="true" class="TipiHtmlLabel" module="component" name="htmllabel" layoutmanager="false" package="com.dexels.navajo.tipi.components.swingimpl"
+      propertycomponent="false" studio-icon="label.gif" type="component" childcount="0">
+      <events>
+         <event name="onInstantiate" />
+      </events>
+      <values>
+         <value direction="inout" name="text" type="string" property="text" />
+         <value direction="in" name="border" type="border" property="border" />
+         <value direction="in" name="font" type="font" property="font" />
+         <value direction="inout" name="tooltip" type="string" property="ToolTipText" />
+         <value direction="in" name="visible" type="boolean" property="visible" />
+      </values>
+      <methods />
+   </tipiclass>
    <tipiclass addtocontainer="true" class="TipiProgressBar" module="component" name="progressbar" childcount="0" layoutmanager="false"
       package="com.dexels.navajo.tipi.components.swingimpl" propertycomponent="false" studio-icon="progressbar.gif" type="component">
       <events>
@@ -1437,7 +1478,10 @@
       addtocontainer="true">
       <events>
          <event name="onInstantiate" />
-         <event name="onLoad" />
+         <event name="onLoad">
+            <param name="service" type="string" />
+            <param name="navajo" type="navajo"/>
+         </event>
          <event name="onGeneratedErrors" />
          <event name="onComponentSelected">
              <param name="selectedPath" type="string" />
@@ -1456,7 +1500,10 @@
       addtocontainer="true">
       <events>
          <event name="onInstantiate" />
-         <event name="onLoad" />
+          <event name="onLoad">
+            <param name="service" type="string" />
+            <param name="navajo" type="navajo"/>
+         </event>
          <event name="onGeneratedErrors" />
 
       </events>
@@ -1471,7 +1518,10 @@
       addtocontainer="true">
       <events>
          <event name="onInstantiate" />
-         <event name="onLoad" />
+         <event name="onLoad">
+            <param name="service" type="string" />
+            <param name="navajo" type="navajo"/>
+         </event>
          <event name="onGeneratedErrors" />
       </events>
       <values>
@@ -1491,7 +1541,10 @@
       package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" addtocontainer="false" layoutmanager="false">
       <events>
          <event name="onInstantiate" />
-         <event name="onLoad" />
+          <event name="onLoad">
+            <param name="service" type="string" />
+            <param name="navajo" type="navajo"/>
+         </event>
       </events>
       <values />
       <methods>
@@ -1509,7 +1562,10 @@
       package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" addtocontainer="true" layoutmanager="false">
       <events>
          <event name="onInstantiate" />
-         <event name="onLoad" />
+          <event name="onLoad">
+            <param name="service" type="string" />
+            <param name="navajo" type="navajo"/>
+         </event>
       </events>
       <values>
          <value direction="in" name="resourceCodeBase" type="string" />
@@ -1541,7 +1597,10 @@
       package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" addtocontainer="true">
       <events>
          <event name="onInstantiate" />
-         <event name="onLoad" />
+         <event name="onLoad">
+            <param name="service" type="string" />
+            <param name="navajo" type="navajo"/>
+         </event>
          <!-- When the user edits the combobox, and the combobox needs a refresh -->
          <event name="onChange">
             <param name="text" type="string" />
@@ -1584,8 +1643,11 @@
    <tipiclass class="TipiNavajoView" name="navajoviewer" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="*" layoutmanager="false" addtocontainer="true">
       <events>
          <event name="onInstantiate" />
-         <event name="onLoad" />
-         <event name="onGeneratedErrors" />
+          <event name="onLoad">
+            <param name="service" type="string" />
+            <param name="navajo" type="navajo"/>
+         </event>
+        <event name="onGeneratedErrors" />
       </events>
       <values>
            <value direction="in" name="background" type="color" property="background" />
