@@ -70,9 +70,9 @@ public class NavajoClient implements ClientInterface {
   private boolean setSecure = false;
   private SSLSocketFactory sslFactory = null;
   //private String keystore, passphrase;
-  private long retryInterval = 1000; // default retry interval is 1000 milliseconds
+  private long retryInterval = 500; // default retry interval is 1000 milliseconds
   private int retryAttempts = 10; // default three retry attempts
-  private int switchServerAfterRetries = 5; /** If same as retry attempts, never switch between servers, while in retry attempt. FOR NOW
+  private int switchServerAfterRetries = 4; /** If same as retry attempts, never switch between servers, while in retry attempt. FOR NOW
   THIS IS A SAFE VALUE CAUSE INTEGRITY WORKER DOES NOT YET WORKER OVER MULTIPLE SERVER INSTANCES!!! */
   
   private int currentServerIndex;
@@ -915,7 +915,7 @@ public class NavajoClient implements ClientInterface {
         fireBroadcastEvents(n);
         
         // ROUND ROBIN FOR NOW:
-        switchServer(currentServerIndex,false);
+        switchServer(currentServerIndex);
         
         return n;
       }
@@ -993,7 +993,7 @@ private final Navajo retryTransaction(String server, Navajo out, boolean useComp
     	System.err.println("Did: "+pastAttempts+" retries. Switching server");
     	disabledServers.put(getCurrentHost(), new Long(System.currentTimeMillis()));
     	System.err.println("Disabled server: "+getCurrentHost()+" for "+serverDisableTimeout+" millis." );
-    	switchServer(currentServerIndex,false);
+    	switchServer(currentServerIndex);
     	server = getCurrentHost();
 	}
     
@@ -1021,7 +1021,7 @@ private final Navajo retryTransaction(String server, Navajo out, boolean useComp
     	if (attemptsLeft == 0) {
     		disabledServers.put(getCurrentHost(), new Long(System.currentTimeMillis()));
     		System.err.println("Disabled server: "+getCurrentHost()+" for "+serverDisableTimeout+" millis." );
-    		switchServer(currentServerIndex,true);
+    		switchServer(currentServerIndex);
     		generateConnectionError(n, 4444, "Could not connect to server (network problem?) " + uhe.getMessage());
     	}
     	else {
@@ -1034,7 +1034,7 @@ private final Navajo retryTransaction(String server, Navajo out, boolean useComp
     	if (attemptsLeft == 0) {
     		disabledServers.put(getCurrentHost(), new Long(System.currentTimeMillis()));
     		System.err.println("Disabled server: "+getCurrentHost()+" for "+serverDisableTimeout+" millis." );
-    		switchServer(currentServerIndex,true);
+    		switchServer(currentServerIndex);
     		generateConnectionError(n, 4444, "Could not connect to server (network problem?) " + uhe.getMessage());
     	}
     	else {
@@ -1561,14 +1561,21 @@ private final void ping() {
 									String load =  h.getHeaderAttribute("cpuload");
 									serverLoads[i] = Double.parseDouble(load);
 									System.err.println(serverUrls[i] + "=" + serverLoads[i]);
+									// If I got an answer from this server, and it was on the disabled server list, remove it.
+									if ( disabledServers.containsKey(serverUrls[i]) ) {
+										disabledServers.remove(serverUrls[i]);
+									}
+								} else {
+									disabledServers.put(serverUrls[i], new Long(120000));
 								}
 							} catch (Throwable e) {
-								e.printStackTrace(System.err);
+								//e.printStackTrace(System.err);
+								disabledServers.put(serverUrls[i], new Long(120000));
 							}
 							
 						}
 					} catch (InterruptedException e) {
-						e.printStackTrace(System.err);
+						//e.printStackTrace(System.err);
 					}
 				}
 
@@ -1599,7 +1606,7 @@ public final String getCurrentHost(int serverIndex) {
 		return serverUrls[serverIndex];
 }
 
-public final void switchServer(int startIndex, boolean forceChange) {
+public final void switchServer(int startIndex) {
 	
 	if (serverUrls==null || serverUrls.length == 0 || serverUrls.length == 1) {
 		return;
@@ -1609,7 +1616,7 @@ public final void switchServer(int startIndex, boolean forceChange) {
 	int candidate = -1;
 	
 	for (int i = 0; i < serverUrls.length; i++) {
-		if ( serverLoads[i] < minload && serverLoads[i] != -1.0 && (!forceChange || i != currentServerIndex) ) { // If there is really a server with a lower load, use this server as candidate.
+		if ( serverLoads[i] < minload && serverLoads[i] != -1.0 && !disabledServers.containsKey(serverUrls[i]) ) { // If there is really a server with a lower load, use this server as candidate.
 			minload = serverLoads[i];
 			candidate = i;
 		}
@@ -1622,21 +1629,6 @@ public final void switchServer(int startIndex, boolean forceChange) {
 	}
 	
 	System.err.println("currentServer = " + serverUrls[currentServerIndex] + " with load: " + serverLoads[currentServerIndex]);
-	
-	String nextServer = serverUrls[currentServerIndex];
-	
-	if (disabledServers.containsKey(nextServer)) {
-		Long timeout = disabledServers.get(nextServer);
-		long t = timeout.longValue();
-		if (t+serverDisableTimeout<System.currentTimeMillis()) {
-			// The disabling time has passed.
-			System.err.println("Reinstating server: "+ nextServer+" its timeout has passed.");
-			disabledServers.remove(nextServer);
-			return;
-		} else {
-			switchServer(startIndex, true);
-		}
-	}
 	
 }
 
