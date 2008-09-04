@@ -9,7 +9,6 @@ import javax.swing.table.*;
 
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.filter.*;
-import com.dexels.navajo.document.lazy.*;
 
 /**
  * <p>Title: </p>
@@ -24,12 +23,12 @@ public class MessageTableModel
     extends AbstractTableModel
      {
 
-  private final ArrayList myColumnIds = new ArrayList();
-  private final ArrayList myColumnTitles = new ArrayList();
+  private final List<String> myColumnIds = new ArrayList<String>();
+  private final List<String> myColumnTitles = new ArrayList<String>();
   //private final ArrayList editableList = new ArrayList();
   private final HashMap<String,Boolean> editableMap = new HashMap<String,Boolean>();
   private Message myMessage;
-  private final ArrayList filterList = new ArrayList();
+  private final List<PropertyFilter> filterList = new ArrayList<PropertyFilter>();
   private boolean isFiltered = false;
   private int[] filterMap = null;
   private int filteredRecordCount = -1;
@@ -40,7 +39,7 @@ public class MessageTableModel
   private int subsractColumnCount = 1;
   private boolean rowHeadersVisible = true;
 
-  private final Map myTypeMap = new HashMap();
+  private final Map<String,String> myTypeMap = new HashMap<String,String>();
 
   public MessageTableModel() {
   }
@@ -138,7 +137,7 @@ public class MessageTableModel
   }
 
   public String getTypeHint(String id) {
-    return (String) myTypeMap.get(id);
+    return myTypeMap.get(id);
   }
 
   public void setTypeHint(String id, String type) {
@@ -176,7 +175,7 @@ public class MessageTableModel
   }
 
 public void removeColumn(int index) {
-      String id = (String) myColumnIds.get(index);
+      String id = myColumnIds.get(index);
       myColumnIds.remove(index);
       myColumnTitles.remove(index);
       myTypeMap.remove(id);
@@ -215,7 +214,7 @@ public void removeColumn(int index) {
         return null;
       }
 
-      String columnName = (String) myColumnIds.get(column-subsractColumnCount);
+      String columnName = myColumnIds.get(column-subsractColumnCount);
       if (columnName == null) {
         return null;
       }
@@ -280,14 +279,14 @@ public void removeColumn(int index) {
       if(column-subsractColumnCount >= myColumnIds.size()){
         return "ERROR!";
       }
-      String s = (String) myColumnIds.get(column-subsractColumnCount);
+      String s = myColumnIds.get(column-subsractColumnCount);
     return s;
     }
   }
 
   public int getColumnIndex(String id){
     for(int i=0;i<myColumnIds.size();i++){
-      String mId = (String) myColumnIds.get(i);
+      String mId = myColumnIds.get(i);
       if(id.equals(mId)){
         return i + subsractColumnCount;
       }
@@ -311,19 +310,19 @@ public void removeColumn(int index) {
     return myMessage.getMessage(row);
   }
 
-  public Class getColumnClass(int columnIndex) {
+  public Class<?> getColumnClass(int columnIndex) {
     return Property.class;
   }
 
   public boolean isColumnEditable(int columnIndex) {
-  	String id = (String)myColumnIds.get(columnIndex - subsractColumnCount);
-    Boolean b = (Boolean) editableMap.get(id);
+  	String id = myColumnIds.get(columnIndex - subsractColumnCount);
+    Boolean b = editableMap.get(id);
     return b.booleanValue();
   }
 
   
   public void setColumnEditable(int columnIndex, boolean value) {
-	  	String id = (String)myColumnIds.get(columnIndex - subsractColumnCount);
+	  	String id = myColumnIds.get(columnIndex - subsractColumnCount);
 	  	editableMap.put(id, value);
   }
   public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -332,10 +331,7 @@ public void removeColumn(int index) {
     if (column < 0) {
       return true;
     }
-    String id =  (String)myColumnIds.get(column);
-//    System.err.println("In isCelleditable in MessageTableModel ("+rowIndex+","+column+")");
-//    System.err.println("EditableListSize: " + editableList.size());
-//    System.err.println(editableList.toString());
+    String id =  myColumnIds.get(column);
     if (readOnly) {
       return false;
     }
@@ -343,7 +339,7 @@ public void removeColumn(int index) {
       System.err.println("Not in editable list. index too big");
       return false;
     }
-    Boolean b = (Boolean) editableMap.get(id);
+    Boolean b = editableMap.get(id);
     if (b == null) {
       System.err.println("Nothing in editablelist");
       return false;
@@ -419,26 +415,17 @@ public void removeColumn(int index) {
   public final void firePropertyChanged(Property p,String beanPropertyName) {
 	  
     Message parent = p.getParentMessage();
-    if (parent == null || myMessage == null) {
-      System.err.println("Null parents involved. Bad news.");
-    }
     if (parent.getArrayParentMessage() != myMessage) {
-//      System.err.println("Wrong parent: "+parent.getFullMessageName()+" instead of "+myMessage.getFullMessageName());
       return;
     }
 
-//    System.err.println("Yes. Right parent.");
     final int row = getRowOfMessage(parent);
     if (row == -1) {
       System.err.println("Trouble locating message");
       return;
     }
     final int column = getColumnOfProperty(row, p);
-//    try {
-//      System.err.println("Property: " + p.getFullPropertyName() + " row: " + row + " column: " + column);
-//    }
-//    catch (NavajoException ex) {
-//    }
+
     if(column>=0) {
     	if(SwingUtilities.isEventDispatchThread()) {
             fireTableCellUpdated(row, column);
@@ -483,10 +470,8 @@ public void removeColumn(int index) {
       for (int i = 0; i < myMessage.getArraySize(); i++) {
         Message current = myMessage.getMessage(i);
         boolean complying = true;
-//      System.err.println("Checking row: " + i);
         for (int j = 0; j < filterList.size(); j++) {
-          PropertyFilter currentFilter = (PropertyFilter) filterList.get(j);
-//        System.err.println("Got filter");
+          PropertyFilter currentFilter = filterList.get(j);
           if (currentFilter.compliesWith(current)) {
           }
           else {
@@ -531,7 +516,6 @@ public void removeColumn(int index) {
 
 
 public void propertyChange(PropertyChangeEvent arg0) {
-	// TODO Auto-generated method stub
 	
 }
 
