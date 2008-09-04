@@ -9,6 +9,7 @@ import javax.swing.*;
 import javax.swing.event.*;
 import com.dexels.navajo.document.*;
 
+import java.lang.reflect.*;
 import java.util.*;
 import javax.swing.border.*;
 
@@ -653,12 +654,31 @@ private Component doGetEditor(Object value, boolean isSelected, int row, int col
   }
 
 public void propertyChange(PropertyChangeEvent p) {
-	PropertyControlled tc = (PropertyControlled)lastComponent;
+	final PropertyControlled tc = (PropertyControlled)lastComponent;
 	if(lastComponent!=null) {
 		if(myProperty==tc.getProperty()) {
-			tc.setProperty(myProperty);
+			runSyncInEventThread(new Runnable(){
+				public void run() {
+					tc.setProperty(myProperty);
+				}});
 		}
 	}
 }
+
+public void runSyncInEventThread(Runnable r) {
+    if (SwingUtilities.isEventDispatchThread()) {
+      r.run();
+    }
+    else {
+      try {
+        SwingUtilities.invokeAndWait(r);
+      }
+      catch (InvocationTargetException ex) {
+        throw new RuntimeException(ex);
+      }
+      catch (InterruptedException ex) {
+      }
+    }
+  }
 
 }
