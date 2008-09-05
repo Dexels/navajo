@@ -27,6 +27,10 @@ package navajoclient;
 /**
  * VERSION HISTORY
  * 
+ * 3.0.0  -Added support for Flexible Load Balancing.
+ *        - Async Runner is server agnostic. It does not need to send the request
+ *        - to the server that actually runs the async thread. This is handled by
+ *        - the Dispatcher (TAG: NavajoRelease6_5_5)
  * 2.0.3. -Added more verbose timing information
  * 2.1.0. Added support for setting unique request id.
  * 2.2.0. -Support for text nodes within binary properties
@@ -43,9 +47,9 @@ package navajoclient;
  */
 public class Version extends dexels.Version {
 
-	public static final int MAJOR = 2;
-	public static final int MINOR = 2;
-	public static final int PATCHLEVEL = 4;
+	public static final int MAJOR = 3;
+	public static final int MINOR = 0;
+	public static final int PATCHLEVEL = 0;
 	public static final String VENDOR = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Client";
 	
