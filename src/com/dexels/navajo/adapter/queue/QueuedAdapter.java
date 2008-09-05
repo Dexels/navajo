@@ -43,6 +43,25 @@ public class QueuedAdapter extends Thread implements Mappable {
 	}
 	
 	/**
+	 * Generate a log message for a Queuable object.
+	 * 
+	 * @param h
+	 * @param message
+	 * @return
+	 */
+	public final static String generateLogMessage(Queuable h, String message) {
+		String msg = ( h != null ? h.getClass().getName() : "[empty handler]");
+		if ( h.getAccess() != null ) {
+			msg += " (service=" + h.getAccess().getRpcName() + ", user=" + h.getAccess().getRpcUser() + 
+				   ", accessid=" + h.getAccess().getAccessID() + "), message: " + message + ".\nException:\n" +
+				   getException(h) +
+				   "\nStacktrace:\n" +
+				   getStackTraceMessage(h);
+		}
+		return msg;
+	}
+	
+	/**
 	 * Returns timestamp when thread was started.
 	 * 
 	 * @return
@@ -173,23 +192,27 @@ public class QueuedAdapter extends Thread implements Mappable {
 		
 	}
 
+	private static final String getException(Queuable q) {
+		if ( q != null && q.getAccess() != null && q.getAccess().getException() != null ) {
+			return q.getAccess().getException().getLocalizedMessage();
+		} else {
+			return null;
+		}
+	}
+	
 	/**
 	 * Returns the exception message (if present).
 	 * 
 	 * @return
 	 */
 	public String getException() {
-		if ( handler != null && handler.getAccess() != null ) {
-			return handler.getAccess().getException().getLocalizedMessage();
-		} else {
-			return null;
-		}
+		return getException(handler);
 	}
 	
-	public String getStackTraceMessage() {
-		if ( handler != null && handler.getAccess() != null ) {
+	private static final String getStackTraceMessage(Queuable q) {
+		if ( q != null && q.getAccess() != null && q.getAccess().getException() != null ) {
 			StringBuffer result = new StringBuffer();
-			StackTraceElement [] elt = handler.getAccess().getException().getStackTrace();
+			StackTraceElement [] elt = q.getAccess().getException().getStackTrace();
 			for ( int i = 0; i < elt.length; i++ ) {
 				result.append(elt[i].getClassName()+"."+elt[i].getMethodName() + " (" + elt[i].getFileName() + ":" + elt[i].getLineNumber() + ")\n");
 			}
@@ -197,6 +220,10 @@ public class QueuedAdapter extends Thread implements Mappable {
 		} else {
 			return null;
 		}
+	}
+	
+	public String getStackTraceMessage() {
+		return getStackTraceMessage(handler);
 	}
 
 	/**

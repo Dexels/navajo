@@ -2,6 +2,8 @@ package com.dexels.navajo.adapter.queue;
 
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.logging.Level;
+
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.enterprise.queue.Queuable;
@@ -40,7 +42,7 @@ public class FileStore implements MessageStore {
 				try {
 					setup();
 				} catch (SharedStoreException e) {
-					AuditLog.log(AuditLog.AUDIT_MESSAGE_SHAREDSTORE, e.getMessage());
+					AuditLog.log(AuditLog.AUDIT_MESSAGE_QUEUEDADAPTERS, e.getMessage(), Level.SEVERE);
 				}
 			}
 		}
@@ -81,7 +83,7 @@ public class FileStore implements MessageStore {
 						qa.ref = files[i];
 						queuedAdapters.add(qa);
 					} catch (Exception e) {
-						// TODO Auto-generated catch block
+						AuditLog.log(AuditLog.AUDIT_MESSAGE_QUEUEDADAPTERS, e.getMessage(), Level.SEVERE);
 						e.printStackTrace();
 					}
 				
@@ -115,18 +117,15 @@ public class FileStore implements MessageStore {
 			NavajoObjectInputStream ois = new NavajoObjectInputStream(ssi.getStream(path, f), NavajoConfig.getInstance().getClassloader());
 			q = (Queuable) ois.readObject();
 			ois.close();
-			//System.err.println("Read object: " + q.getClass().getName() + ", retries " + q.getRetries() + ", max retries " + q.getMaxRetries());
 			// Only return object if it is not sleeping
 			if ( q.getWaitUntil() < System.currentTimeMillis() ) {
 				ssi.remove(path, f);
-//				System.err.println("Read object: " + q.getClass().getName() + ", retries " + q.getRetries() + ", max retries " + q.getMaxRetries());
-//				System.err.println("Delete file");
 				return q;
 			}
 			//System.err.println("This one is sleeping, try next object");
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			System.err.println("Could not read file: " + f + " from filestore: " + e.getMessage());
+			AuditLog.log(AuditLog.AUDIT_MESSAGE_QUEUEDADAPTERS, 
+					QueuedAdapter.generateLogMessage(q, "Could not read file: " + f + " from filestore: " + e.getMessage()), Level.SEVERE );
 			e.printStackTrace();
 		} 
 
@@ -143,6 +142,8 @@ public class FileStore implements MessageStore {
 		synchronized ( path ) {
 			if ( failure ) {
 				// Reset retries if failure, such that it can easily be put back into normal queue..
+				AuditLog.log(AuditLog.AUDIT_MESSAGE_QUEUEDADAPTERS, 
+						QueuedAdapter.generateLogMessage(handler, "put in failure queue"), Level.WARNING );
 				handler.resetRetries();
 			}
 			String f = handler.hashCode() + "_" + System.currentTimeMillis() + ".queue";
@@ -150,7 +151,8 @@ public class FileStore implements MessageStore {
 			try {
 				ssi.store( ( failure ? deadQueue : path ), f, handler, false, false);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
+				AuditLog.log(AuditLog.AUDIT_MESSAGE_QUEUEDADAPTERS, 
+						QueuedAdapter.generateLogMessage(handler, e.getMessage()), Level.SEVERE );
 				e.printStackTrace();
 			} 
 		}
@@ -216,17 +218,20 @@ public class FileStore implements MessageStore {
 	 * @see com.dexels.navajo.adapter.queue.MessageStore#takeOverPersistedAdapters(java.lang.String)
 	 */
 	public void takeOverPersistedAdapters(String fromServer) {
-		System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> In FileStore: takeOverPersistedWorkFlows(" + fromServer + ")");
+		AuditLog.log(AuditLog.AUDIT_MESSAGE_QUEUEDADAPTERS, 
+				">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> In FileStore: takeOverPersistedWorkFlows(" + fromServer + ")", Level.WARNING );
 		String [] queuedAdapters = SharedStoreFactory.getInstance().getObjects("/adapterqueue/" + fromServer);
 		for (int i = 0; i < queuedAdapters.length; i++) {
 			try {
 				Queuable wf = (Queuable) SharedStoreFactory.getInstance().get("/adapterqueue/" + fromServer, queuedAdapters[i]);
-				System.err.println(">>>>>>>>>>>>> MOVING WORKFLOW: " + wf.getClass().getName() + " FROM SERVER " + fromServer);
+				AuditLog.log(AuditLog.AUDIT_MESSAGE_QUEUEDADAPTERS, 
+					 QueuedAdapter.generateLogMessage(wf, "MOVING QUEUED ADAPTER FROM SERVER " + fromServer), Level.WARNING );
 				// TODO: HOWTO MOVE Binary objects with their file references??
 				putMessage(wf, false);
 				SharedStoreFactory.getInstance().remove("/adapterqueue/" + fromServer, queuedAdapters[i]);
 			} catch (SharedStoreException e) {
 				// TODO Auto-generated catch block
+				AuditLog.log(AuditLog.AUDIT_MESSAGE_QUEUEDADAPTERS, e.getMessage(), Level.SEVERE );
 				e.printStackTrace();
 			}
 		}

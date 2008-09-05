@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.logging.Level;
 
 import com.dexels.navajo.events.NavajoEvent;
 import com.dexels.navajo.events.NavajoEventRegistry;
@@ -218,6 +219,8 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 					} else {
 						// Put stuff back in queue, unless queue is being emptied.
 						//System.err.println("Could not process send() method, putting queued adapter back in queue... emptyqueue: " + emptyQueue);
+						AuditLog.log(AuditLog.AUDIT_MESSAGE_QUEUEDADAPTERS, 
+								QueuedAdapter.generateLogMessage(handler, "Could not process send() method, putting queued adapter back in queue") );
 						if ( !emptyQueue ) {
 							handler.setWaitUntil(System.currentTimeMillis() + SLEEPING_TIME);
 							// Put queable in as failure if maxretries has past....
@@ -264,7 +267,7 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 		} catch (Throwable e) {
 		}
 		resetInstance();
-		AuditLog.log("Adapter Queue", "Killed");
+		AuditLog.log(AuditLog.AUDIT_MESSAGE_QUEUEDADAPTERS, "Killed");
 	}
 	
 	public void worker() {
@@ -286,6 +289,8 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 					}
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
+					AuditLog.log(AuditLog.AUDIT_MESSAGE_QUEUEDADAPTERS, 
+							QueuedAdapter.generateLogMessage(handler, e1.getMessage() ), Level.SEVERE );
 					e1.printStackTrace(System.err);
 				}
 				// Iterate over private set to do work.
