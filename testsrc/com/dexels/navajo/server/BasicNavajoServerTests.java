@@ -31,7 +31,6 @@ public class BasicNavajoServerTests extends TestCase implements ServerAsyncListe
 	public boolean finished = false;
 	
 	private Navajo received = null;
-	private boolean whileRunningAssert = false;
 	
 	/**
 	 * @throws java.lang.Exception
@@ -39,11 +38,11 @@ public class BasicNavajoServerTests extends TestCase implements ServerAsyncListe
 	public void setUp() throws Exception {
 		System.err.println("=============================== TEST SETUP ============================================");
 		myClient = NavajoClientFactory.getClient();
+		// Use manual load balancing in order to fully control scenario's to enable/disable servers.
 		myClient.setLoadBalancingMode(ClientInterface.LBMODE_MANUAL);
 		myClient.setServers(new String[]{"localhost:8080/NavajoServer/Postman","localhost:8080/NavajoServer2/Postman"});
 		myClient.setCurrentHost("localhost:8080/NavajoServer/Postman");
 		received = null;
-		whileRunningAssert = false;
 		finished = false;
 		System.err.println("=======================================================================================");
 	}
