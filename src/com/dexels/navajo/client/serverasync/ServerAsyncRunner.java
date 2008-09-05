@@ -52,7 +52,8 @@ public class ServerAsyncRunner
   }
 
   private Navajo doSimpleSend(Navajo n, String method) throws ClientException {
-    return myClientInterface.doSpecificSend(n, method,serverIndex);
+    //return myClientInterface.doSpecificSend(n, method,serverIndex);
+	 return myClientInterface.doSimpleSend(n, method);
   }
 
   /**
