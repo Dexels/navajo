@@ -41,6 +41,7 @@ public class NavajoClient implements ClientInterface {
   public static final int CONNECT_TIMEOUT = 2500;
   
 //  private String host = null;
+  private int loadBalancingMode = LBMODE_STATIC_MINLOAD;
   private String username = null;
   private String password = null;
   protected boolean condensed = true;
@@ -248,6 +249,7 @@ public class NavajoClient implements ClientInterface {
 //	  System.err.println("Warning: setServerURL is deprecated!");
 	  serverUrls = new String[]{url};
 	  serverLoads = new double[serverUrls.length];
+	  determineServerLoadsAndSetCurrentServer(true);
   }
 
   /**
@@ -913,10 +915,7 @@ public class NavajoClient implements ClientInterface {
         
         // Process broadcasts
         fireBroadcastEvents(n);
-        
-        // ROUND ROBIN FOR NOW:
-        switchServer(currentServerIndex);
-        
+            
         return n;
       }
       else {
@@ -993,7 +992,7 @@ private final Navajo retryTransaction(String server, Navajo out, boolean useComp
     	System.err.println("Did: "+pastAttempts+" retries. Switching server");
     	disabledServers.put(getCurrentHost(), new Long(System.currentTimeMillis()));
     	System.err.println("Disabled server: "+getCurrentHost()+" for "+serverDisableTimeout+" millis." );
-    	switchServer(currentServerIndex);
+    	switchServer(true);
     	server = getCurrentHost();
 	}
     
@@ -1021,7 +1020,7 @@ private final Navajo retryTransaction(String server, Navajo out, boolean useComp
     	if (attemptsLeft == 0) {
     		disabledServers.put(getCurrentHost(), new Long(System.currentTimeMillis()));
     		System.err.println("Disabled server: "+getCurrentHost()+" for "+serverDisableTimeout+" millis." );
-    		switchServer(currentServerIndex);
+    		switchServer(true);
     		generateConnectionError(n, 4444, "Could not connect to server (network problem?) " + uhe.getMessage());
     	}
     	else {
@@ -1034,7 +1033,7 @@ private final Navajo retryTransaction(String server, Navajo out, boolean useComp
     	if (attemptsLeft == 0) {
     		disabledServers.put(getCurrentHost(), new Long(System.currentTimeMillis()));
     		System.err.println("Disabled server: "+getCurrentHost()+" for "+serverDisableTimeout+" millis." );
-    		switchServer(currentServerIndex);
+    		switchServer(true);
     		generateConnectionError(n, 4444, "Could not connect to server (network problem?) " + uhe.getMessage());
     	}
     	else {
@@ -1539,46 +1538,54 @@ public void destroy() {
 		
 }
 
+private final void determineServerLoadsAndSetCurrentServer(boolean init) {
+
+	System.err.println("Started ping thread.");
+	Navajo out = NavajoFactory.getInstance().createNavajo();
+	Header outHeader = NavajoFactory.getInstance().createHeader(out, "navajo_ping", "NAVAJO", "", -1);
+	out.addHeader(outHeader);
+
+	System.err.println("servers: " + serverUrls.length);
+	boolean disabledServer = false;
+	for (int i = 0; i < serverUrls.length; i++) {
+		try {
+			Navajo n  = doTransaction(serverUrls[i], out, false, false);
+			if ( n != null ) {
+				Header h = n.getHeader();
+				String load =  h.getHeaderAttribute("cpuload");
+				serverLoads[i] = Double.parseDouble(load);
+				System.err.println(serverUrls[i] + "=" + serverLoads[i]);
+				// If I got an answer from this server, and it was on the disabled server list, remove it.
+				if ( disabledServers.containsKey(serverUrls[i]) ) {
+					disabledServers.remove(serverUrls[i]);
+				}
+			} else {
+				disabledServers.put(serverUrls[i], new Long(120000));
+				disabledServer = true;
+			}
+		} catch (Throwable e) {
+			//e.printStackTrace(System.err);
+			disabledServers.put(serverUrls[i], new Long(120000));
+			disabledServer = true;
+		}
+
+	}
+	// ROUND ROBIN FOR NOW:
+	switchServer(disabledServer || ( init && loadBalancingMode != LBMODE_MANUAL ) );
+}
+
 private final void ping() {
 	// Start thread to periodically check servers.
 	if ( !pingStarted) {
 		new Thread() {
 			public void run() {
-
-				System.err.println("Started ping thread.");
-				Navajo out = NavajoFactory.getInstance().createNavajo();
-				Header outHeader = NavajoFactory.getInstance().createHeader(out, "navajo_ping", "NAVAJO", "", -1);
-				out.addHeader(outHeader);
 				while (!killed) {
+					determineServerLoadsAndSetCurrentServer(false);
 					try {
 						Thread.sleep(60000);
-						System.err.println("servers: " + serverUrls.length);
-						for (int i = 0; i < serverUrls.length; i++) {
-							try {
-								Navajo n  = doTransaction(serverUrls[i], out, false, false);
-								if ( n != null ) {
-									Header h = n.getHeader();
-									String load =  h.getHeaderAttribute("cpuload");
-									serverLoads[i] = Double.parseDouble(load);
-									System.err.println(serverUrls[i] + "=" + serverLoads[i]);
-									// If I got an answer from this server, and it was on the disabled server list, remove it.
-									if ( disabledServers.containsKey(serverUrls[i]) ) {
-										disabledServers.remove(serverUrls[i]);
-									}
-								} else {
-									disabledServers.put(serverUrls[i], new Long(120000));
-								}
-							} catch (Throwable e) {
-								//e.printStackTrace(System.err);
-								disabledServers.put(serverUrls[i], new Long(120000));
-							}
-							
-						}
 					} catch (InterruptedException e) {
-						//e.printStackTrace(System.err);
 					}
 				}
-
 			}
 		}.start();
 		pingStarted = true;
@@ -1592,7 +1599,10 @@ public void setServers(String[] servers) {
 		currentServerIndex = randomize.nextInt(servers.length);
 		System.err.println("Starting at server # "+currentServerIndex);
 	}
-	ping();
+	if ( loadBalancingMode != LBMODE_MANUAL ) {
+		determineServerLoadsAndSetCurrentServer(true);
+		ping();
+	}
 }
 
 public String getCurrentHost() {
@@ -1602,11 +1612,37 @@ public String getCurrentHost() {
 	return null;
 }
 
+public void setCurrentHost(String host) {
+	for (int i = 0; i < serverUrls.length; i++) {
+		if ( serverUrls[i].equals(host) ) {
+			currentServerIndex = i;
+			System.err.println("SET CURRENT SERVER TO: " + host + "(" + currentServerIndex + ")");
+			break;
+		}
+	}
+}
+
 public final String getCurrentHost(int serverIndex) {
 		return serverUrls[serverIndex];
 }
 
-public final void switchServer(int startIndex) {
+/**
+ * Switch the current server.
+ * If force flag is set. The server with the minimum load is ALWAYS set as the current server.
+ * For LBMODE_MANUAL and LBMODE_STATIC_MINLOAD the server is ONLY switched if force flag is set.
+ * For LBMODE_DYNAMIC_MINLOAD the server is ALWAYS switched.
+ * @param force
+ */
+public final void switchServer(boolean force) {
+	
+	if ( loadBalancingMode == LBMODE_MANUAL ) {
+		return;
+	}
+	
+	if ( !force &&  loadBalancingMode == LBMODE_STATIC_MINLOAD ) {
+		return;
+	}
+	
 	
 	if (serverUrls==null || serverUrls.length == 0 || serverUrls.length == 1) {
 		return;
@@ -1877,4 +1913,13 @@ public final void switchServer(int startIndex) {
 			throw NavajoFactory.getInstance().createNavajoException(e);
 		}
 	}
+
+	public int getLoadBalancingMode() {
+		return loadBalancingMode;
+	}
+
+	public void setLoadBalancingMode(int i) {
+		loadBalancingMode = i;
+	}
+
 }
