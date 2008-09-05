@@ -30,15 +30,22 @@ public class BasicNavajoServerTests extends TestCase implements ServerAsyncListe
 	
 	public boolean finished = false;
 	
-	private Navajo received;
+	private Navajo received = null;
 	private boolean whileRunningAssert = false;
 	
 	/**
 	 * @throws java.lang.Exception
 	 */
 	public void setUp() throws Exception {
+		System.err.println("=============================== TEST SETUP ============================================");
 		myClient = NavajoClientFactory.getClient();
-		myClient.setServerUrl("localhost:8080/NavajoServer/Postman");
+		myClient.setLoadBalancingMode(ClientInterface.LBMODE_MANUAL);
+		myClient.setServers(new String[]{"localhost:8080/NavajoServer/Postman","localhost:8080/NavajoServer2/Postman"});
+		myClient.setCurrentHost("localhost:8080/NavajoServer/Postman");
+		received = null;
+		whileRunningAssert = false;
+		finished = false;
+		System.err.println("=======================================================================================");
 	}
 
 	public void testAlive() throws Exception {
@@ -57,6 +64,21 @@ public class BasicNavajoServerTests extends TestCase implements ServerAsyncListe
 		while (!finished) {
 			synchronized (myClient) {
 		
+			myClient.wait();
+			}
+		}
+		Assert.assertNotNull(received.getMessage("Finished"));
+	}
+	
+	public void testAsyncServiceWithSuddenlyUnavailableTribalMember() throws Exception {
+		Navajo in = myClient.doSimpleSend("tests/InitAsync");
+		myClient.doServerAsyncSend(in, "tests/ProcessAsyncTest", this, "test-client", 1000);
+		
+		// Switch to other server.
+		myClient.setCurrentHost("localhost:8080/NavajoServer2/Postman");
+		
+		while (!finished) {
+			synchronized (myClient) {
 			myClient.wait();
 			}
 		}
