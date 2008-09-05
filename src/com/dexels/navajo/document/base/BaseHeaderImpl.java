@@ -246,6 +246,22 @@ public final void setRequestData(String ipAddress, String host) {
 	  return null;
   }
 
+  public String[] getCallBackPointers() {
+	  
+	  if ( myCallback != null && myCallback.getObjects() != null ) {
+		  String [] all = new String[myCallback.getObjects().size()];
+		  
+		  for (int i = 0; i < myCallback.getObjects().size(); i++ ) {
+			  BaseObjectImpl boi = (BaseObjectImpl) myCallback.getObjects().get(i);
+			  all[i] = boi.getRef();
+		  }
+		  
+		  return all;
+	  }
+	  return null;
+	}
+
+  
   public final void setRPCPassword(String s) {
     myTransaction.setRpc_pwd(s);
   }
@@ -450,5 +466,6 @@ public boolean hasCallBackPointers() {
 public String getCallBackSignature() {
 	return getRPCUser() + "@" + getRPCName() + "-" + getCallback().getSignature();
 }
+
 
 }

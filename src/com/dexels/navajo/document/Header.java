@@ -134,6 +134,14 @@ public interface Header extends java.io.Serializable {
      * @return
      */
     public String getCallBackPointer(String object);
+    
+    /**
+     * Returns all callback pointers
+     * 
+     * @return
+     */
+    public String [] getCallBackPointers();
+    
 
     /**
      * Check whether an interrupt is requested for a callback object.

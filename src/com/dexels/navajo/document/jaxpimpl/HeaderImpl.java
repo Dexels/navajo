@@ -15,6 +15,8 @@ import javax.xml.transform.stream.*;
 
 import org.w3c.dom.*;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.jaxpimpl.xml.*;
 
@@ -322,6 +324,10 @@ public final class HeaderImpl implements Header {
       else
         return object.getAttribute("ref");
     }
+    
+    public String[] getCallBackPointers() {
+		throw new NotImplementedException();
+	}
 
     public void removeCallBackPointers() {
       Element n = (Element) XMLutils.findNode(ref, "callback");
@@ -452,5 +458,7 @@ public final class HeaderImpl implements Header {
 		XMLutils.findNode(ref, "callback");
 		return n.toString();
 	}
+
+	
 
 }
