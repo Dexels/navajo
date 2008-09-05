@@ -10,6 +10,7 @@ package com.dexels.navajo.document;
  */
 
 public class Operand {
+	
   public String type;
   public String option;
   public Object value;
