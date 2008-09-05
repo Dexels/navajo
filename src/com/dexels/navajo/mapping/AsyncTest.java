@@ -52,17 +52,13 @@ public class AsyncTest extends AsyncMappable {
       for (int i = 0; i < iter; i++) {
         a = a/d;
         ready = (float) i / (float) (iter+1) * 100;
-        
-        if ( i == 40 ) {
-        	throw new UserException(-1, "I am dead");
-        }
         if (this.isStopped()) {
           System.out.println("KILLING THREAD...");
           i = iter + 1;
         } else if (this.isInterrupted()) {
           goToSleep();
         }
-        if (i % 10000 == 0)
+        if (i % 1000000 == 0)
           System.out.print(".");
         result = a;
       }

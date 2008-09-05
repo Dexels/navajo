@@ -25,7 +25,7 @@ public class NavajoServerEventSignal extends SmokeSignal {
 		if ( !iAmTheSender() && key.equals(BROADCAST_SERVER_EVENT)) {
 			// Publish event has if it actually happened on this tribal member.
 			NavajoEvent realEvent = (NavajoEvent) getValue();
-			// Do not publish event to registered proxies again to prevent ping-pong.
+			// Do not publish event to registered proxies again to prevent ping-pong(!!!)
 			NavajoEventRegistry.getInstance().publishEvent( realEvent, true );
 			
 		}
