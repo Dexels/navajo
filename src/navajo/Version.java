@@ -27,7 +27,11 @@ package navajo;
 /**
  * VERSION HISTORY
  * 
- * 6.5.3 Fixed proper initialization of Navajo instance under heavy load.
+ * 6.5.4-5 Added support for enabling/disabling and shutting down Navajo Server. Added support for forwarding
+ *       Async Request to proper Tribal Member. 
+ * 
+ * 6.5.3 Fixed proper initialization of Navajo instance under heavy load. 
+ * 		 Minor refactorings and additional code comments added.
  * 
  * 6.5.2 Improved versioning information
  * 
@@ -113,7 +117,7 @@ public class Version extends dexels.Version {
 
 	public static final int MAJOR = 6;
 	public static final int MINOR = 5;
-	public static final int PATCHLEVEL = 3;
+	public static final int PATCHLEVEL = 5;
 	public static final String VENDOR = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Kernel";
 	public static final String RELEASEDATE = "2008-09-01";
