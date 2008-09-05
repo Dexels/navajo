@@ -636,4 +636,24 @@ public Binary getArrayMessageReport(Message m, String[] propertyNames, String[] 
 	// TODO Auto-generated method stub
 	return null;
 }
+
+public String getCurrentHost() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+public int getLoadBalancingMode() {
+	// TODO Auto-generated method stub
+	return 0;
+}
+
+public void setCurrentHost(String host) {
+	// TODO Auto-generated method stub
+	
+}
+
+public void setLoadBalancingMode(int i) {
+	// TODO Auto-generated method stub
+	
+}
 }
