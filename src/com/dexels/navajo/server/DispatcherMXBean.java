@@ -79,4 +79,10 @@ public interface DispatcherMXBean {
 	 */
 	public void enableDispatcher();
 	
+	/**
+	 * Gracefully shutdown a Dispatcher, finishing already running tasks.
+	 * 
+	 */
+	public void shutdown();
+	
 }
