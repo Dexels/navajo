@@ -117,8 +117,9 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 	 * Publish an event and handle the listeners asynchronously
 	 * 
 	 * @param ne
+	 * @param ignoreProxyListeners, if set to true, listeners of class NavajoEventProxy are ignored to prevent event ping-pong.
 	 */
-	public void publishAsynchronousEvent(final NavajoEvent ne) {
+	public void publishAsynchronousEvent(final NavajoEvent ne, boolean ignoreProxyListeners) {
 
 		//System.err.println("Asynchronous Event Triggered: " + ne.getClass());
 		publishMonitoredEvent(ne);
@@ -140,11 +141,21 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 			}
 		}
 	}
+
+	/**
+	 * Publish an event and handle the listeners asynchronously
+	 * 
+	 * @param ne
+	 */
+	public void publishAsynchronousEvent(final NavajoEvent ne) {
+		publishAsynchronousEvent(ne, false);
+	}
 	
 	/**
 	 * Publish an event and handle the listeners synchronously
 	 * 
 	 * @param ne
+	 * @param ignoreProxyListeners, if set to true, listeners of class NavajoEventProxy are ignored to prevent event ping-pong.
 	 */
 	public void publishEvent(NavajoEvent ne, boolean ignoreProxyListeners) {
 
@@ -166,6 +177,11 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 		}
 	}
 	
+	/**
+	 * Publish an event and handle the listeners synchronously
+	 * 
+	 * @param ne
+	 */
 	public void publishEvent(NavajoEvent ne) {
 		publishEvent(ne, false);
 	}
