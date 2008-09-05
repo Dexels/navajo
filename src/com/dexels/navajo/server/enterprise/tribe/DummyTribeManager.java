@@ -15,11 +15,11 @@ public class DummyTribeManager implements TribeManagerInterface {
 	}
 
 	public Navajo forward(Navajo in) throws Exception {
-		throw new NotImplementedException();
+		return null;
 	}
 
 	public void broadcast(Navajo in) throws Exception {
-		throw new NotImplementedException();
+		
 	}
 
 	public void broadcast(SmokeSignal m) {
@@ -72,6 +72,16 @@ public class DummyTribeManager implements TribeManagerInterface {
 	public void multicast(Object[] recipients, SmokeSignal m) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	public Answer askAnybody(Request q) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Navajo forward(Navajo in, Object address) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

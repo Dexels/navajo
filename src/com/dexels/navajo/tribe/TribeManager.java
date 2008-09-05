@@ -60,6 +60,7 @@ import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.server.enterprise.tribe.Answer;
+import com.dexels.navajo.server.enterprise.tribe.PingAnswer;
 import com.dexels.navajo.server.enterprise.tribe.Request;
 import com.dexels.navajo.server.enterprise.tribe.SmokeSignal;
 import com.dexels.navajo.server.enterprise.tribe.TribeManagerInterface;
@@ -677,6 +678,17 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 			throw new Exception("No available tribe member");
 		}
 	}
+	
+	/**
+	 * Forward a Navajo service request to a specific tribe member.
+	 * 
+	 * @param in the request document
+	 * @return the response document
+	 */
+	public Navajo forward(Navajo in, Object address) throws Exception {
+		ServiceAnswer sa = (ServiceAnswer) askSomebody(new ServiceRequest(in, false), address);
+		return sa.getResponse();
+	}
 
 	/**
 	 * Get my instance name.
@@ -726,4 +738,23 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 	public int getAnswersWaiting() {
 		return answerWaiters.size();
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.dexels.navajo.server.enterprise.tribe.TribeManagerInterface#askAnybody(com.dexels.navajo.server.enterprise.tribe.Request)
+	 */
+	public Answer askAnybody(Request q) {
+		ClusterState cs = TribeManager.getInstance().getClusterState();
+		HashSet<TribeMember> copyOf = new HashSet<TribeMember>(cs.clusterMembers);
+		Iterator<TribeMember> members = copyOf.iterator();
+		while ( members.hasNext() ) {
+			TribeMember tm = members.next();
+			Answer pa = TribeManager.getInstance().askSomebody(q, tm.getAddress());
+			if ( pa.acknowledged() ) {
+				return pa;
+			}
+		}
+		return null;
+	}
+
 }
