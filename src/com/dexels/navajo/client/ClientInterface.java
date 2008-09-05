@@ -21,6 +21,10 @@ public interface ClientInterface {
 
   public static final String GLOBALSNAME = "__globals__";
   public static final String GLOBALSPREFIX = "navajo.globals.";
+  
+  public final static int LBMODE_MANUAL = 0;
+  public final static int LBMODE_DYNAMIC_MINLOAD = 1;
+  public final static int LBMODE_STATIC_MINLOAD = 2;
 
   public String getClientName();
 
@@ -72,6 +76,9 @@ public void init(URL config) throws ClientException;
    */
   public void init(String rootPath, String serverXmlPath) throws ClientException;
 
+  public void setLoadBalancingMode(int i);
+  
+  public int getLoadBalancingMode();
   
   public String getUsername();
 
@@ -192,6 +199,10 @@ public void setLocaleCode(String locale);
 public String getLocaleCode();
 
 public void setSubLocaleCode(String locale);
+
+public String getCurrentHost();
+
+public void setCurrentHost(String host);
 
 
 }
