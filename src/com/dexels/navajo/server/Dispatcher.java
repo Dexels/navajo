@@ -48,6 +48,7 @@ import com.dexels.navajo.events.types.NavajoResponseEvent;
 import com.dexels.navajo.events.types.ServerTooBusyEvent;
 import com.dexels.navajo.server.jmx.JMXHelper;
 import com.dexels.navajo.server.jmx.SNMPManager;
+import com.dexels.navajo.tribe.TribeManager;
 import com.dexels.navajo.util.AuditLog;
 import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.loader.NavajoClassSupplier;
@@ -56,8 +57,12 @@ import com.dexels.navajo.lockguard.LockDefinition;
 import com.dexels.navajo.lockguard.LockManager;
 import com.dexels.navajo.lockguard.LocksExceeded;
 
+import com.dexels.navajo.mapping.AsyncMappable;
+import com.dexels.navajo.mapping.AsyncStore;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
+import com.dexels.navajo.mapping.RemoteAsyncAnswer;
+import com.dexels.navajo.mapping.RemoteAsyncRequest;
 import com.dexels.navajo.mapping.compiler.TslCompiler;
 
 /**
@@ -81,6 +86,8 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
   public volatile static String edition;
   
   public boolean enabled = true;
+  public boolean disabled = false;
+  public boolean shutdown = false;
   
   static {
 	  try {
@@ -957,7 +964,7 @@ public Access [] getUsers() {
   @SuppressWarnings("deprecation")
 private final Navajo processNavajo(Navajo inMessage, Object userCertificate, ClientInfo clientInfo, boolean skipAuth) throws
       FatalException {
-
+	
     Access access = null;
     Navajo outMessage = null;
     String rpcName = "";
@@ -971,8 +978,13 @@ private final Navajo processNavajo(Navajo inMessage, Object userCertificate, Cli
     int accessSetSize = accessSet.size();
     setRequestRate(clientInfo, accessSetSize);
      
+    // Check whether service is  disabled (FORCED). Only accept special web services.
+    if ( disabled && !isSpecialwebservice(inMessage.getHeader().getRPCName()) ) {
+    	throw new FatalException("500");
+    }
+    
     // Check whether server is too busy...
-    if ( isBusy() && !inMessage.getHeader().hasCallBackPointers() ) {
+    if ( isBusy() && !isSpecialwebservice(inMessage.getHeader().getRPCName()) && !inMessage.getHeader().hasCallBackPointers() ) {
     	try {
     		Navajo result = TribeManagerFactory.getInstance().forward(inMessage);
     		return result;
@@ -991,6 +1003,29 @@ private final Navajo processNavajo(Navajo inMessage, Object userCertificate, Cli
     	throw new FatalException("500.14");
     }
     
+    // Check whether unkown callbackpointers are present that need to be handled by another instance.
+    if ( inMessage.getHeader().hasCallBackPointers() ) {
+    	String [] allRefs = inMessage.getHeader().getCallBackPointers();
+    	if ( AsyncStore.getInstance().getInstance(allRefs[0]) == null ) {
+    		RemoteAsyncRequest rasr = new RemoteAsyncRequest(allRefs[0]);
+    		RemoteAsyncAnswer rasa = (RemoteAsyncAnswer) TribeManager.getInstance().askAnybody(rasr);
+    		if ( rasa != null ) {
+    			System.err.println("ASYNC OWNER: " + rasa.getOwnerOfRef() + "(" + rasa.getHostNameOwnerOfRef() + ")" + " FOR REF " + allRefs[0]);
+    			try {
+    				Navajo result = TribeManagerFactory.getInstance().forward(inMessage, rasa.getOwnerOfRef());
+    				return result;
+    			} catch (Exception e) {
+    				// TODO Auto-generated catch block
+    				e.printStackTrace();
+    			}
+
+    		} else {
+    			System.err.println("DID NOT FIND ANY OWNERS OF ASYNCREF...");
+    		}
+    	} else {
+    		System.err.println("FOUND ASYNCREF: " + allRefs[0] + " ON MYSELF!!");
+    	}
+    }
       Header header = inMessage.getHeader();
       rpcName = header.getRPCName();
       rpcUser = header.getRPCUser();
@@ -1329,7 +1364,7 @@ private final Navajo processNavajo(Navajo inMessage, Object userCertificate, Cli
 		  TribeManagerFactory.getInstance().terminate();
 		  
 		  // 5. Finally kill myself
-		  instance = null;
+		  //instance = null;
 		  try {
 			  JMXHelper.deregisterMXBean(JMXHelper.NAVAJO_DOMAIN, "Dispatcher");
 		  } catch (Throwable e) {
@@ -1558,5 +1593,67 @@ private final Navajo processNavajo(Navajo inMessage, Object userCertificate, Cli
    */
   public void enableDispatcher() {
 	  setEnabled(true);
+  }
+
+  /**
+   * Use this method to FORCE a server to be disabled. Do NOT ACCEPT ANY requests anymore even
+   * for async web service polling.
+   * 
+   * @param b
+   */
+  public void setDisabled(boolean b) {
+	  Dispatcher.getInstance().disabled = b;
+  }
+  
+  public void setShutdown(boolean b) {
+	  if ( b ) {
+		  shutdown();
+	  }
+  }
+  
+  /*
+   * (non-Javadoc)
+   * @see com.dexels.navajo.server.DispatcherMXBean#shutdown()
+   */
+  public void shutdown() {
+	  disableDispatcher();
+	  // Wait for all synchronous web service tasks to finish...
+	  boolean finished = false;
+	  while (!finished) {
+		  int size = 0;
+		  Iterator<Access> iter = Dispatcher.getInstance().accessSet.iterator();
+		  while ( iter.hasNext() ) {
+			  Access a = iter.next();
+			  // Do not count maintenance services...
+			  if ( !isSpecialwebservice(a.rpcName) ) {
+				  size++;
+			  }
+		  }
+		  AuditLog.log(AuditLog.AUDIT_MESSAGE_DISPATCHER, "Shutdown in progress, active services: " + size);
+		  if ( size == 0 ) {
+			  finished = true;
+		  } else {
+			  try {
+				  Thread.sleep(2000);
+			  } catch (InterruptedException e) {
+			  }
+		  }
+	  }
+	  // Wait for all asynchronous web service tasks to finish...
+	  finished = false;
+	  while (!finished) {
+		  int size = com.dexels.navajo.mapping.AsyncStore.getInstance().objectStore.size();
+		  AuditLog.log(AuditLog.AUDIT_MESSAGE_DISPATCHER, "Shutdown in progress, active async services: " + size);
+		  if ( size ==  0 ) {
+			  finished = true;
+		  } else {
+			  try {
+				  Thread.sleep(2000);
+			  } catch (InterruptedException e) {
+			  }
+		  }
+	  }
+	  Dispatcher.killMe();
+	  
   }
 }
