@@ -131,7 +131,6 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
 			}
 			o.addTipiEventListener(new TipiEventListener() {
 				public boolean performTipiEvent(String eventtype, Map<String,Object> source, boolean sync) throws TipiException {
-					System.err.println("TYPE: "+eventtype+" DELTA: "+source);
 					updateQuestionList();
 //					System.err.println("Forwarding tipi event");
 		

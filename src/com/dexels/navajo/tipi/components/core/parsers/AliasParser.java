@@ -45,7 +45,6 @@ public class AliasParser extends BaseTipiParser {
 //		System.err.println("Found alias: "+alias);
 		try {
 			Operand evaluate = myContext.evaluate(alias, source, event);
-			System.err.println("Evaluate: "+evaluate.value);
 			return evaluate.value;
 		} catch (Exception e) {
 			e.printStackTrace();
