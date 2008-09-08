@@ -105,26 +105,23 @@ class TestQueuable implements Queuable {
 
 public class RequestResponseQueueTest extends TestCase implements NavajoListener {
 
-	final static RequestResponseQueue myQueue;
-	
-	static {
-		myQueue = RequestResponseQueue.getInstance(new MemoryStore());
-	}
+	static RequestResponseQueue myQueue = null;
 	
 	static Object semaphore = new Object();
 	
-	public RequestResponseQueueTest() {
-		NavajoEventRegistry.getInstance().addListener(QueuableFinishedEvent.class, this);
-		NavajoEventRegistry.getInstance().addListener(QueuableFailureEvent.class, this);
-	}
-	
 	protected void setUp() throws Exception {
 		super.setUp();
+		myQueue = RequestResponseQueue.getInstance(new MemoryStore());
 		myQueue.emptyQueue();
+		NavajoEventRegistry.getInstance().addListener(QueuableFinishedEvent.class, this);
+		NavajoEventRegistry.getInstance().addListener(QueuableFailureEvent.class, this);
 	}
 
 	protected void tearDown() throws Exception {
 		super.tearDown();
+		myQueue.emptyQueue();
+		NavajoEventRegistry.getInstance().removeListener(QueuableFinishedEvent.class, this);
+		NavajoEventRegistry.getInstance().removeListener(QueuableFailureEvent.class, this);
 	}
 
 	public void testGetInstance() {
@@ -133,26 +130,52 @@ public class RequestResponseQueueTest extends TestCase implements NavajoListener
 	
 	public void testSend() throws Exception {
 		TestQueuable q = new TestQueuable();
-		Assert.assertEquals(new String(q.getResponse().getData()), "NOK");
+		Assert.assertEquals("NOK", new String(q.getResponse().getData()));
 		myQueue.send(q, 1);
 		synchronized (semaphore) {
 			semaphore.wait();
 		}
-		Assert.assertEquals(new String(q.getResponse().getData()), "OK");
+		Assert.assertEquals("OK", new String(q.getResponse().getData()));
 	}
 	
 	public void testSendFailure() throws Exception {
 		TestQueuable q = new TestQueuable();
 		q.setFailure(true);
 		q.setMaxRetries(1);
-		Assert.assertEquals(new String(q.getResponse().getData()), "NOK");
+		Assert.assertEquals("NOK", new String(q.getResponse().getData()));
 		myQueue.send(q, 1);
 		synchronized (semaphore) {
 			semaphore.wait();
 		}
-		Assert.assertEquals(new String(q.getResponse().getData()), "NOK");
+		Assert.assertEquals("NOK", new String(q.getResponse().getData()));
 	}
 
+	public void testSendFailureRetries() throws Exception {
+		myQueue.setSleepingTime(1000);
+		TestQueuable q = new TestQueuable();
+		Assert.assertEquals("NOK", new String(q.getResponse().getData()));
+		q.setFailure(true);
+		q.setMaxRetries(5);
+		q.setWaitUntil(2000);
+		myQueue.send(q, 5);
+		
+		boolean finished = false;
+		int count = 0;
+		while (!finished ) {
+			synchronized (semaphore) {
+				count++;
+				semaphore.wait();
+			}
+			System.err.println("count = " + count);
+			if ( count == 6 ) {
+				finished = true;
+			}
+		}
+		Thread.sleep(1500);
+		Assert.assertEquals(0, myQueue.getSize());
+		Assert.assertEquals(1, myQueue.getDeadQueueSize());
+	}
+	
 	public void testEmptyQueue() throws Exception {
 		myQueue.setSleepingTime(1000);
 		TestQueuable q = new TestQueuable();
@@ -161,16 +184,14 @@ public class RequestResponseQueueTest extends TestCase implements NavajoListener
 		q.setMaxRetries(5);
 		q.setWaitUntil(2000);
 		myQueue.send(q, 5);
-		
-		Thread.sleep(3000);
+		Thread.sleep(1000);
 		myQueue.emptyQueue();
-		Thread.sleep(2000);
-		
-		
-		Assert.assertEquals(myQueue.getSize(), 0);
+		Thread.sleep(1000);
+		Assert.assertEquals(0, myQueue.getSize());
+		Assert.assertEquals("NOK", new String(q.getResponse().getData()));
 		
 	}
-	
+		
 	public void onNavajoEvent(NavajoEvent ne) {
 		System.err.println("RECEIVED EVENT: " + ne);
 		if ( ne instanceof QueuableFinishedEvent ) {
@@ -186,7 +207,7 @@ public class RequestResponseQueueTest extends TestCase implements NavajoListener
 	
 	public static void main(String [] args) throws Exception {
 		RequestResponseQueueTest t = new RequestResponseQueueTest();
-		
-		t.testEmptyQueue();
+		t.setUp();
+		t.testSendFailureRetries();
 	}
 }
