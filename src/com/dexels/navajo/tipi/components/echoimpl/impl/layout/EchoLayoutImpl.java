@@ -2,10 +2,9 @@ package com.dexels.navajo.tipi.components.echoimpl.impl.layout;
 
 import java.util.*;
 
-import com.dexels.navajo.tipi.TipiComponent;
-import com.dexels.navajo.tipi.components.echoimpl.TipiEchoDataComponentImpl;
+import nextapp.echo2.app.*;
 
-import nextapp.echo2.app.Component;
+import com.dexels.navajo.tipi.*;
 
 public abstract class EchoLayoutImpl {
 	

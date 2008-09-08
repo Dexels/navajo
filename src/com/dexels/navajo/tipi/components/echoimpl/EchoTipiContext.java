@@ -255,7 +255,6 @@ public class EchoTipiContext extends TipiContext {
 
     public File getDynamicResourceBaseDir() {
         Connection con = WebRenderServlet.getActiveConnection();
-//   .     HttpServletRequest req = con.getRequest();
         String contextname = con.getRequest().getContextPath();
         String pathString = "/dynamic";
         String realPath = getServletContext().getRealPath(pathString);
@@ -270,10 +269,7 @@ public class EchoTipiContext extends TipiContext {
      
         long stamp = System.currentTimeMillis()-startTime;
         SimpleDateFormat inputFormat1 = new SimpleDateFormat("HH:mm:ss S");
-
         Date d = new Date(stamp);
-
-          System.err.println(category + ", " + inputFormat1.format(d) + ", "  + "," + event+"\n");
       }
     public ServletContext getServletContext() {
  

@@ -1,12 +1,7 @@
 package com.dexels.navajo.tipi.components.echoimpl.impl.layout;
 
-import java.awt.*;
-
-import nextapp.echo2.app.layout.GridLayoutData;
-
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.core.*;
-
 import com.dexels.navajo.tipi.tipixml.*;
 
 /**

@@ -1,6 +1,7 @@
 package com.dexels.navajo.tipi.components.echoimpl.impl.layout;
 
 import java.awt.*;
+
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.core.*;
 import com.dexels.navajo.tipi.tipixml.*;

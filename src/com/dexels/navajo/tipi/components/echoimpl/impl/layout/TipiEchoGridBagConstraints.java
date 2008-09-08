@@ -2,12 +2,8 @@ package com.dexels.navajo.tipi.components.echoimpl.impl.layout;
 
 import java.util.*;
 
-import echopointng.able.Sizeable;
-
-import nextapp.echo2.app.Component;
-import nextapp.echo2.app.Extent;
-import nextapp.echo2.app.Insets;
-import nextapp.echo2.app.layout.GridLayoutData;
+import nextapp.echo2.app.*;
+import nextapp.echo2.app.layout.*;
 
 /**
  * <p>Title: </p>

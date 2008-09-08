@@ -76,8 +76,6 @@ public class TipiServeBinary extends TipiAction {
             String extension = b.getExtension();
             String random = new String(""+Math.random()).substring(2,7);
             File xx = new File(baseDir,"binary"+random+"."+extension);
-            System.err.println("CREATING FILE: "+xx.getAbsolutePath());
-            System.err.println("BINARY SIZE: "+b.getLength());
             FileOutputStream fos = new FileOutputStream(xx);
             b.write(fos);
             fos.flush();
@@ -100,7 +98,6 @@ public class TipiServeBinary extends TipiAction {
         } catch (MalformedURLException e1) {
               e1.printStackTrace();
         } catch (IOException ex) {
-            // TODO Auto-generated catch block
             ex.printStackTrace();
         }
     }
