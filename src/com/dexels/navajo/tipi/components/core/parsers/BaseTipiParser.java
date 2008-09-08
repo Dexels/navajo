@@ -66,7 +66,7 @@ abstract class BaseTipiParser extends TipiTypeParser {
 			if(n!=null) {
 				return n.getProperty(propertyPath);
 			} else {
-				myContext.showInternalError("No navajo found. Available: "+myContext.getNavajoNames(),new Exception());
+				myContext.showInternalError("No navajo found, while looking for path: "+path+" Available: "+myContext.getNavajoNames(),new Exception());
 				return null;
 			}
 		}
