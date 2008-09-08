@@ -22,6 +22,17 @@
    <tipiaction name="setStorageInstanceId" class="TipiSetStorageInstanceId" package="com.dexels.navajo.tipi.actions">
       <param name="id" type="string" required="true" />
    </tipiaction>
+   
+      <tipiaction name="showInfo" class="TipiShowInfo" package="com.dexels.navajo.tipi.actions">
+      <param name="text" type="string" required="true" />
+   </tipiaction>
+      <tipiaction name="showError" class="TipiShowError" package="com.dexels.navajo.tipi.actions">
+      <param name="text" type="string" required="true" />
+   </tipiaction>
+      <tipiaction name="showWarning" class="TipiShowWarning" package="com.dexels.navajo.tipi.actions">
+      <param name="text" type="string" required="true" />
+   </tipiaction>
+   
    <tipiaction name="setPostman" class="TipiSetPostman" package="com.dexels.navajo.tipi.actions">
       <param name="server" type="string" required="true" />
       <param name="username" type="string" required="true" />
