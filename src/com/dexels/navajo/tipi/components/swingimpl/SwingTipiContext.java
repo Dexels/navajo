@@ -21,6 +21,7 @@ import com.dexels.navajo.tipi.components.swingimpl.jnlp.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.internal.*;
 import com.dexels.navajo.tipi.internal.cookie.*;
+import com.dexels.navajo.tipi.internal.cookie.CookieManager;
 import com.dexels.navajo.tipi.internal.cookie.impl.*;
 import com.dexels.navajo.tipi.swingclient.*;
 import com.dexels.navajo.tipi.tipixml.*;
