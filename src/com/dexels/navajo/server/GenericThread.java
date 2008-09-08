@@ -246,6 +246,10 @@ public class GenericThread extends NotificationBroadcasterSupport implements Run
             new MBeanNotificationInfo(types2, name2, description2);
         
         return new MBeanNotificationInfo[] {info, info2}; 
-    } 
+    }
+
+	public Thread getThread() {
+		return thread;
+	} 
 
 }
