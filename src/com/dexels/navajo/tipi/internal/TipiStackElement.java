@@ -6,6 +6,16 @@ public class TipiStackElement {
 	private String title;
 	private int lineNr;
 	private TipiStackElement parent;
+	private TipiStackElement rootCause;
+	public TipiStackElement getRootCause() {
+		return rootCause;
+	}
+
+	public void setRootCause(TipiStackElement rootCause) {
+		if(rootCause!=this) {
+			this.rootCause = rootCause;
+		}
+	}
 	private String name;
 	
 
@@ -57,11 +67,16 @@ public class TipiStackElement {
 		dumpStack();
 	}
 	public void dumpStack() {
+//		Thread.dumpStack();
 		System.err.println(createLine());
 		if(getParent()!=null) {
 			getParent().dumpStack();
 		} else {
-			System.err.println("No more parents");
+			if(rootCause!=null && rootCause!=this) {
+				System.err.println("Caused by:");
+				rootCause.dumpStack();
+			}
+//			System.err.println("No more parents");
 		}
 		
 	}
