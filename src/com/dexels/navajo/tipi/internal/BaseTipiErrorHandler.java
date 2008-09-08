@@ -53,7 +53,7 @@ public class BaseTipiErrorHandler implements TipiErrorHandler {
 				return errorMessage;
 			} else if (conditions != null) {
 				ArrayList<Message> failures = conditions.getAllMessages();
-				errorMessage = "Conditionele fouten:\n";
+				errorMessage = "";
 				for (int i = 0; i < failures.size(); i++) {
 					Message current = failures.get(i);
 //					String expression = current.getProperty("FailedExpression").getValue();
