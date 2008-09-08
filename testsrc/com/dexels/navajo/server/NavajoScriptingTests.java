@@ -240,5 +240,17 @@ public class NavajoScriptingTests extends BasicTest {
 		}
 		
 	}
+	
+	public void testNavajoMap() throws Exception {
+
+		Navajo result = myClient.doSimpleSend(input, "tests/InitNavajoMapTest");
+		
+		ArrayList<Message> allMessages = result.getAllMessages();
+		for (int i = 0; i < allMessages.size(); i++) {
+			Message m = allMessages.get(i);
+			checkBooleans(m);
+		}
+
+	}
 
 }
