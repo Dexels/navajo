@@ -1,6 +1,9 @@
 package com.dexels.navajo.tipi.components.core;
 
+import java.util.*;
+
 import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.internal.*;
 
 /**
  * <p>
@@ -46,15 +49,18 @@ public class TipiThread extends Thread implements Comparable<TipiThread>{
 					while (true) {
 						myPool.setThreadState(TipiThread.IDLE);
 						TipiExecutable te = myPool.blockingGetExecutable();
-						myPool.setThreadState(TipiThread.BUSY);
 
+						myPool.setThreadState(TipiThread.BUSY);
+						TipiExecutable parentEvent = null;
+						final Stack<TipiExecutable> s = myPool.getThreadStack(this);
+						if(s!=null && !s.isEmpty()) {
+							parentEvent = s.peek();
+						} 
+						myPool.pushCurrentEvent(te);
 						myContext.debugLog("event", "Thread: " + myName + " got an executable. Performing now");
 						try {
 							myPool.getContext().threadStarted(Thread.currentThread());
-							te.performAction(te.getEvent(), null, 0);
-							// te.performAction(te.getEvent());
-							// System.err.println("Thread: "+myName+"
-							// finished");
+							te.performAction(te.getEvent(), parentEvent, 0);
 						} catch (Throwable ex) {
 							ex.printStackTrace();
 						} finally {
@@ -67,9 +73,12 @@ public class TipiThread extends Thread implements Comparable<TipiThread>{
 							}
 							myPool.removeEventListener(te.getEvent());
 						}
+						Stack<TipiExecutable> ss = myPool.getThreadStack(this);
+						ss.clear();
 					}
-				} finally {
+				} finally { 
 					myPool.getContext().threadEnded(Thread.currentThread());
+				
 				}
 			} catch (ThreadShutdownException t) {
 				System.err.println("Thread received a shutdown request. Farewell..");

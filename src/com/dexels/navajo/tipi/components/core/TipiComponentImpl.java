@@ -692,7 +692,6 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 		}
 		stateMessage = NavajoFactory.getInstance().createMessage(myContext.getStateNavajo(),getId());
 		if(getTipiParent()!=null) {
-			System.err.println("Adding: "+getId()+" to: "+getTipiParent().getId());
 			getTipiParent().getStateMessage().addMessage(stateMessage);
 		}
 		return stateMessage;
@@ -1030,13 +1029,15 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 			TipiEvent te = myEventList.get(i);
 			if (te.isTrigger(type, myService)) {
 				hasEventType = true;
+				TipiExecutable parentEvent = null;
+
+				
 				myContext.fireTipiContextEvent(this, type, event, sync);
+				
 				if (sync) {
 					try {
-						System.err.println("Performing: "+te.getEventName());
-						te.performAction(this, event);
+						te.performAction(this,parentEvent, event);
 					} catch (TipiBreakException e) {
-						System.err.println("Perform action break detected..");
 						//						e.printStackTrace();
 						throw (e);
 					} catch(Exception e) {
@@ -1045,7 +1046,7 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 					}
  				} else {
 					try {
-						te.asyncPerformAction(this, event);
+						te.asyncPerformAction(this, parentEvent, event);
 					} catch(Throwable e) {
 						getContext().showInternalError("Error performing event: "+te.getEventName()+" for component: "+te.getComponent().getPath(), e);
 						e.printStackTrace();

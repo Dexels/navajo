@@ -25,6 +25,12 @@ public class TipiDumpStack extends TipiAction {
 		Thread.dumpStack();
 		System.err.println("TIPI SAYS:");
 		dumpStack("Dumpstack");
+		
+		System.err.println("Event params: ");
+		for (String s : event.getEventKeySet()) {
+			System.err.println("Param: "+s+" value: "+event.getEventParameter(s));
+			
+		}
 	}
 
 }
