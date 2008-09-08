@@ -1,34 +1,22 @@
 package com.dexels.navajo.echoclient.components;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.beans.*;
+import java.text.*;
 import java.util.*;
 
 import nextapp.echo2.app.*;
-import nextapp.echo2.app.button.*;
-import nextapp.echo2.app.event.ActionEvent;
-import nextapp.echo2.app.event.ActionListener;
-import nextapp.echo2.app.event.ChangeEvent;
-import nextapp.echo2.app.event.ChangeListener;
-import nextapp.echo2.app.event.DocumentEvent;
-import nextapp.echo2.app.event.DocumentListener;
-import nextapp.echo2.app.filetransfer.UploadEvent;
-import nextapp.echo2.app.filetransfer.UploadListener;
-import nextapp.echo2.app.filetransfer.UploadSelect;
+import nextapp.echo2.app.event.*;
+import nextapp.echo2.app.filetransfer.*;
 import nextapp.echo2.app.layout.*;
-import nextapp.echo2.app.list.ListSelectionModel;
-import nextapp.echo2.app.table.TableCellRenderer;
+import nextapp.echo2.app.list.*;
+import nextapp.echo2.app.table.*;
 import nextapp.echo2.app.text.*;
 
-import com.dexels.navajo.document.NavajoException;
-import com.dexels.navajo.document.Property;
-import com.dexels.navajo.document.Selection;
+import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.types.*;
 
 import echopointng.*;
-import echopointng.able.Sizeable;
+import echopointng.able.*;
 import echopointng.table.*;
 
 public class EchoPropertyComponent extends Grid implements TableCellRenderer {
@@ -41,7 +29,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 
 	private static final int SELECTIONMODE_LIST = 3;
 
-	public static final String PROPERTY_BACKGROUND = "propertyBackground";
+//	public static final String PROPERTY_BACKGROUND = "propertyBackground";
 	private Property myProperty = null;
 
 	private boolean showLabel = true;
@@ -62,11 +50,11 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 
 	private boolean alwaysUseLabel = false;
 
-	private boolean useCheckBoxes = false;
+//	private boolean useCheckBoxes = false;
 
 	protected boolean doUpdateRadioButtons = true;
 
-	private int checkboxGroupColumnCount = 0;
+//	private int checkboxGroupColumnCount = 0;
 
 	private int memoColumnCount = 0;
 
@@ -130,13 +118,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 	}
 
 	public final void fireTipiEvent(String type) {
-		// try {
-		// System.err.println("Firing tipi event from property: "+type+" myProp:
-		// "+myProperty.getFullPropertyName());
-		// } catch (NavajoException e) {
-		// TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
+
 		firePropertyEvents(myProperty, type);
 	}
 
@@ -203,11 +185,6 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 	}
 
 	public void setProperty(Property p) {
-		if (p != null) {
-			// System.err.println("Setting property: "+p.getName()+" type:
-			// "+p.getType()+" value: "+p.getTypedValue());
-
-		}
 		myProperty = p;
 		removeAll();
 		addPropertyLabel(p);
@@ -415,22 +392,25 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 			return;
 		}
 		if (alwaysUseLabel) {
-			createLabel(m.toShortString());
+			if (m==null) {
+				createLabel("-");
+			} else {
+				createLabel(m.toShortString());
+			}
 		} else {
 			if ((isEdit || !useLabelForReadOnlyProperties)) {
 				createTextField(p);
-				// createClocktimeField(p);
 			} else {
-				
-				createLabel(m.toString());
-
+				if (m==null) {
+					createLabel("-");
+				} else {
+					createLabel(m.toShortString());
+				}
 			}
 		}
 	}
 
 	private void createBooleanProperty(Property p) {
-		// StreamImageReference rir = new StreamImageReference();
-
 		if (p.isDirIn()) {
 			if (alwaysUseLabel) {
 				createBooleanLabel(p);
@@ -451,7 +431,6 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 				} else {
 					tf.setWidth(PERCENTAGE);
 				}
-				// tf.setStyleName("Default");
 				tf.setEnabled(false);
 				tf.setForeground(new Color(90, 90, 90));
 				boolean res = ((Boolean) p.getTypedValue()).booleanValue();
@@ -517,11 +496,9 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 	private void createBinaryImage(final Property p) {
 		Column g = new Column();
 		final Button ll = new Button();
-		// ll.setStyleName("Default");
 		final UploadSelect bb = new UploadSelect();
 		bb.setSendButtonDisplayed(false);
 		bb.setWidth(new Extent(Math.max(150, maxImageWidth), Extent.PX));
-		int cc = bb.getComponentCount();
 		final Binary b = (Binary) p.getTypedValue();
 		bb.setVisible(false);
 		Style ss = Styles.DEFAULT_STYLE_SHEET.getStyle(ll.getClass(), "BinaryImage");
@@ -576,7 +553,6 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 				}
 			});
 		} catch (TooManyListenersException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		addPropertyComponent(g);
@@ -840,9 +816,8 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 
 	}
 
-	private void createClocktimeField(final Property p) {
+	protected void createClocktimeField(final Property p) {
 		final TipiEchoTextField tf = new TipiEchoTextField(p.getValue());
-		// tf.setStyleName("Default");
 		Style ss = Styles.DEFAULT_STYLE_SHEET.getStyle(tf.getClass(), "Default");
 		tf.setStyle(ss);
 
@@ -861,7 +836,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 			public void documentUpdate(DocumentEvent e) {
 				String text = tf.getText();
 				ClockTime ct = new ClockTime(text);
-				String oldVal = p.getValue();
+//				String oldVal = p.getValue();
 				String ser = ct.toString();
 				if (!text.equals(ser)) {
 					tf.setText(ser);
@@ -875,7 +850,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 			public void actionPerformed(ActionEvent e) {
 				String text = tf.getText();
 				ClockTime ct = new ClockTime(text);
-				String oldVal = p.getValue();
+//				String oldVal = p.getValue();
 				String ser = ct.toString();
 				if (!text.equals(ser)) {
 					tf.setText(ser);
@@ -907,19 +882,17 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 
 		lb.setSelectionMode(ListSelectionModel.MULTIPLE_SELECTION);
 		for (int i = 0; i < p.getAllSelections().size(); i++) {
-			Selection current = (Selection) p.getAllSelections().get(i);
+			Selection current = p.getAllSelections().get(i);
 			lb.setSelectedIndex(i, current.isSelected());
 		}
 		lb.getSelectionModel().addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent ce) {
 				try {
 					for (int i = 0; i < p.getAllSelections().size(); i++) {
-						Selection current = (Selection) p.getAllSelections().get(i);
+						Selection current = p.getAllSelections().get(i);
 						current.setSelected(lb.isSelectedIndex(i));
-						// .setSelectedIndex(i, current.isSelected());
 					}
 				} catch (NavajoException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 
@@ -1019,7 +992,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 		addPropertyComponent(r);
 		ArrayList<Selection> ss = p.getAllSelections();
 		for (int i = 0; i < ss.size(); i++) {
-			Selection cc = (Selection) ss.get(i);
+			Selection cc = ss.get(i);
 			final CheckBox rb = new CheckBox();
 			rb.setLineWrap(false);
 			// rb.setModel(model);
@@ -1109,7 +1082,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 				}
 			}
 			if (p.getAllSelectedSelections().size() == 0) {
-				p.setSelected((Selection) ss.get(0));
+				p.setSelected(ss.get(0));
 			}
 			lb.addActionListener(new ActionListener() {
 
@@ -1166,9 +1139,9 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 		// try {
 		final MessageTable myTable = (MessageTable) table;
 		DefaultPageableSortableTableModel tp = ((DefaultPageableSortableTableModel)table.getModel());
-		final int sortedIndex = tp.toUnsortedModelRowIndex(row);
+//		final int sortedIndex = tp.toUnsortedModelRowIndex(row);
 		final int pagedIndex = tp.toUnpagedModelRowIndex(row);
-		final int sortedPagedIndex = tp.toUnpagedModelRowIndex(sortedIndex);
+//		final int sortedPagedIndex = tp.toUnpagedModelRowIndex(sortedIndex);
 		final int pagedSortedIndex = tp.toUnsortedModelRowIndex(pagedIndex);
 
 			
@@ -1264,7 +1237,6 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 		epc.setColumnWidth(0, new Extent(2, Extent.PX));
 		// EchoPropertyComponent.setZebra(this,column, row, isSelected);
 		epc.setZebra(column, row, isSelected);
-		// TODO FIX DISABLED ZEBRA
 		// epc.setBackground(null);
 		// epc.currentComponent.setBackground(null);
 		return epc;
@@ -1352,7 +1324,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 	}
 
 	public void setUseCheckBoxes(boolean b) {
-		this.useCheckBoxes = b;
+//		this.useCheckBoxes = b;
 	}
 
 	public void setStyle(Style s) {
@@ -1429,7 +1401,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 	// return getBackground();
 	// }
 
-	public void setSelectiontype(String type) throws NavajoException {
+	public void setSelectiontype(String type) {
 		if ("radio".equals(type)) {
 			selectionMode = SELECTIONMODE_RADIO;
 		} else if ("checkbox".equals(type)) {
