@@ -21,6 +21,8 @@ public class NavajoEventMap {
 	public static final String RESPONSE_EVENT = "respons";
 	public static final String TRIBEMEMBER_DOWN_EVENT = "tribememberdown";
 	public static final String AUDITLOG_EVENT = "auditlog";
+	public static final String QUEUABLE_FINISHED_EVENT = "queuablefinished";
+	public static final String QUEUABLE_FAILURE_EVENT = "queuablefailure";
 	
 	static {
 		
@@ -33,6 +35,8 @@ public class NavajoEventMap {
 		navajoEvents.put(RESPONSE_EVENT, NavajoResponseEvent.class);
 		navajoEvents.put(TRIBEMEMBER_DOWN_EVENT, TribeMemberDownEvent.class);
 		navajoEvents.put(AUDITLOG_EVENT, AuditLogEvent.class);
+		navajoEvents.put(QUEUABLE_FINISHED_EVENT, QueuableFinishedEvent.class);
+		navajoEvents.put(QUEUABLE_FAILURE_EVENT, QueuableFailureEvent.class);
 		
 	}
 	
