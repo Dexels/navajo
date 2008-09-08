@@ -38,7 +38,7 @@ public class BaseTipiErrorHandler implements TipiErrorHandler {
 			errorMessageBundle = new PropertyResourceBundle( context.getTipiResourceStream("validation.properties"));
 //			errorMessageBundle = ResourceBundle.getBundle("tipi.validation");
 		} catch (Exception ex) {
-//			ex.printStackTrace();
+			ex.printStackTrace();
 			System.err.println("No validation bundle found.");
 			errorMessageBundle = null;
 		}
