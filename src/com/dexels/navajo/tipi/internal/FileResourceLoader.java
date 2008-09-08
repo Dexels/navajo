@@ -33,6 +33,12 @@ public class FileResourceLoader extends ClassPathResourceLoader {
 
 	
 	
+	
+	@Override
+	public boolean isReadOnly() {
+		return false;
+	}
+
 	public URL getResourceURL(String location) throws IOException {
 		File f = null;
 		if (baseFile==null) {
