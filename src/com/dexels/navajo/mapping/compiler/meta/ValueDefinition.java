@@ -95,7 +95,7 @@ public class ValueDefinition {
 	 * @param in
 	 * @param out
 	 */
-	public XMLElement generateCode(String setterValue, String condition, XMLElement out, boolean append, String filename) throws Exception {
+	public XMLElement generateCode(XMLElement currentIn, String setterValue, String condition, XMLElement out, boolean append, String filename) throws Exception {
 		
 		if ( ( direction.equals("in") || direction.equals("automatic") ) && !type.startsWith("map:")) { // generate <field name=""><expression value=""/></field> construction
 					
@@ -112,6 +112,9 @@ public class ValueDefinition {
 			if ( type.equals("stringliteral") && !setterValue.startsWith("{") ) {
 				expression.setContent(setterValue);
 			} else {
+				if ( type.equals("string") && !setterValue.startsWith("{") && setterValue.indexOf("'") != -1) {
+					throw new MetaCompileException(filename, currentIn, "Invalid ' character for string type: " + setterValue);
+				}
 				if ( type.equals("string") && !setterValue.startsWith("{") ) {
 					setterValue = "'" + setterValue + "'";
 				}
@@ -152,7 +155,7 @@ public class ValueDefinition {
 			out.addChild(field);
 			return mapref;
 		} else {
-			throw new Exception("Unknown value tag");
+			throw new MetaCompileException(filename, currentIn, "Unknown value tag for setter value: " + setterValue + ", tagname = " + currentIn.getName());
 		}
 		
 	}
@@ -164,7 +167,7 @@ public class ValueDefinition {
 		StringWriter sw = new StringWriter();
 		XMLElement start = new CaseSensitiveXMLElement();
 		start.setName("tsl");
-		vd.generateCode("sportlinkkernel", null, start, true, "aap.xml");
+		vd.generateCode(null, "sportlinkkernel", null, start, true, "aap.xml");
 		sw = new StringWriter();
 		start.write(sw);
 		System.err.println(sw.toString());

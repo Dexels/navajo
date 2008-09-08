@@ -74,7 +74,7 @@ public class MethodDefinition {
 		while ( auto.hasNext() )  {
 			ParameterDefinition pd = auto.next();
 			if ( pd.getRequired().equals("automatic") ) {
-				XMLElement pdx = pd.generateCode(pd.getValue(), ( hasCondition ? "[/@" + tempParamName + "]" : null ), out, false, filename);
+				XMLElement pdx = pd.generateCode(in, pd.getValue(), ( hasCondition ? "[/@" + tempParamName + "]" : null ), out, false, filename);
 				orderedParameters.put(new Integer(pd.getOrder()), pdx);
 			} else if ( pd.getRequired().equals("true") ) {
 				required.add(pd.getName());
@@ -89,7 +89,7 @@ public class MethodDefinition {
 				throw new UnknownParameterException(getName(), attribName, in, filename );
 			}
 			if ( pd != null && !pd.getRequired().equals("automatic")) {
-				XMLElement pdx = pd.generateCode(attribValue, ( hasCondition ? "[/@" + tempParamName + "]" : null ), out, false, filename);
+				XMLElement pdx = pd.generateCode(in, attribValue, ( hasCondition ? "[/@" + tempParamName + "]" : null ), out, false, filename);
 				orderedParameters.put(new Integer(pd.getOrder()), pdx);
 				required.remove(pd.getName());
 			}

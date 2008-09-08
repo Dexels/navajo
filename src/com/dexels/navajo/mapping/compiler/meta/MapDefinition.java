@@ -97,7 +97,7 @@ public class MapDefinition {
 		XMLElement map = null;
 		
 		//System.err.println("IN GENERATECODE FOR : " + in.getName() + ", tagname is: " + tagName );
-		if ( in.getName().equals("map:"+tagName)  ) {
+		if ( in.getName().equals("map."+tagName)  ) {
 			map = new CaseSensitiveXMLElement();
 			map.setName("map");
 			map.setAttribute("object", objectName);
@@ -115,7 +115,7 @@ public class MapDefinition {
 				ValueDefinition pd = auto.next();
 				if ( pd.getRequired().equals("automatic") ) {
 					System.err.println("AUTOMATIC!!!!!!!!!!" + pd.getName());
-					pd.generateCode(pd.getValue(), null, map, true, filename);
+					pd.generateCode(in, pd.getValue(), null, map, true, filename);
 					//out.addChild(pdx);
 				} else if ( pd.getRequired().equals("true") ) {
 					required.add(pd.getName());
@@ -130,10 +130,10 @@ public class MapDefinition {
 				ValueDefinition vd = getValueDefinition(attribName);
 				//System.err.println("Found vd: " + vd);
 				if ( vd != null ) {
-					vd.generateCode(attribValue, null, map, true, filename);
+					vd.generateCode(in, attribValue, null, map, true, filename);
 					required.remove(attribName);
 				} else if ( !attribName.equals("condition") ){
-					throw new UnknownMapInitializationParameterException("map:"+tagName, attribName, in, filename);
+					throw new UnknownMapInitializationParameterException("map."+tagName, attribName, in, filename);
 				}
 			}
 			
@@ -149,7 +149,7 @@ public class MapDefinition {
 		Vector v = in.getChildren();
 		for ( int i = 0; i < v.size(); i++ ) {
 			XMLElement child = (XMLElement) v.get(i);
-			if ( child.getName().equals(tagName + ":set") ) {
+			if ( child.getName().equals(tagName + ".set") ) {
 				
 				if ( child.getChildren().size() > 0 && (String) child.getAttribute("ref") == null ) {
 					throw new MetaCompileException(filename, child, "Illegal children tags defined for tag <" + child.getName() + "/>");
@@ -165,7 +165,7 @@ public class MapDefinition {
 				//System.err.println("field: " + field + ", vd = " + vd);
 				XMLElement remainder = null;
 				if ( vd != null ) {
-					remainder = vd.generateCode(setterValue, condition, ( map != null ? map : out ), true, filename );
+					remainder = vd.generateCode(child, setterValue, condition, ( map != null ? map : out ), true, filename );
 				} else {
 					throw new UnknownValueException(child.getName(), field, child, filename);
 				}
@@ -180,9 +180,9 @@ public class MapDefinition {
 					}
 				}
 				
-			} else if ( child.getName().startsWith(tagName + ":")) {
+			} else if ( child.getName().startsWith(tagName + ".")) {
 				// Could be a method or a map ref getter.
-				String method = child.getName().substring(child.getName().indexOf(":") + 1);
+				String method = child.getName().substring(child.getName().indexOf(".") + 1);
 				//System.err.println("method: " + method);
 				String filter = (String) child.getAttribute("filter");
 				if ( getMethodDefinition(method) != null ) {
@@ -196,17 +196,20 @@ public class MapDefinition {
 						if (  ! ( child.getParent().getName().equals("message") || child.getParent().getName().equals("property") ) ) {
 							throw new MetaCompileException(filename, child, "Illegal tag <" + child.getName() + "/> encountered");
 						}
-						XMLElement out2 = vd.generateCode(method, filter, ( map != null ? map : out ), true, filename );
+						XMLElement out2 = vd.generateCode(child, method, filter, ( map != null ? map : out ), true, filename );
 						generateCode(child, out2, filename);
 					} else {
 						//System.err.println("Parent of " + child.getName() + " IS " + child.getParent().getName());
 						throw new UnknownMethodException(child.getName(), (XMLElement) v.get(i), filename);
 					}
 				}
-			} else if ( child.getName().equals("map:" + tagName ) ) {
+			} else if ( child.getName().equals("map." + tagName ) ) {
 				generateCode(child, ( map != null ? map : out ), filename );
-			} else if ( child.getName().startsWith("map:" ) ) {
+			} else if ( child.getName().startsWith("map." ) ) {
 				MapDefinition md = myMetaData.getMapDefinition(child.getName().substring(4));
+				if ( md == null ) {
+					throw new MetaCompileException(filename, child, "Could not find map definition for: " + child.getName().substring(4));
+				}
 				if ( md.abstractMap ) {
 					throw new MetaCompileException(filename, child, "Illegal declaration of abstract adapter: " + md.tagName);
 				}
