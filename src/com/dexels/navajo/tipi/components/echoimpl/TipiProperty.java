@@ -258,11 +258,8 @@ public class TipiProperty extends TipiEchoComponentImpl implements PropertyCompo
         }
         if ("selectiontype".equals(name)) {
             EchoPropertyComponent me = (EchoPropertyComponent) getActualComponent();
-            try {
-                me.setSelectiontype("" + object);
-            } catch (NavajoException e) {
-                e.printStackTrace();
-            }
+              me.setSelectiontype("" + object);
+            
         	return;
         }
         if ("useLabelsForReadOnly".equals(name)) {
