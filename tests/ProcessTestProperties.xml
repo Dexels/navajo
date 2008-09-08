@@ -183,8 +183,7 @@
         <expression value="?[/TestProperties/Money/FullTestMoneyProperty]"/>
      </property>
      <property name="WrongMoney" direction="out">
-        <!-- Unlike float, date, boolean and integer, an exists operator on an existing money property ALWAYS returns true! -->
-        <expression value="?[/TestProperties/Money/WrongTestMoneyProperty]"/>
+        <expression value="!?[/TestProperties/Money/WrongTestMoneyProperty]"/>
      </property>
      <property name="MoneyAddition1" direction="out">
         <expression value="[/TestProperties/Money/FullTestMoneyProperty] + 1000.0 == ToMoney(1010)"/>

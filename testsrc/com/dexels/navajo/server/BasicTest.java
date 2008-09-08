@@ -6,6 +6,12 @@ import com.dexels.navajo.document.Navajo;
 
 import junit.framework.TestCase;
 
+/**
+ * Tests to be run an an active cluster of Navajo Instances.
+ * 
+ * @author arjen
+ *
+ */
 public class BasicTest extends TestCase {
 
 	protected ClientInterface myClient;
