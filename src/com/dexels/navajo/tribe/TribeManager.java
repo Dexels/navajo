@@ -170,7 +170,7 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 						// TODO:
 						// GET GROUP NAME TO SPECIFY SPECIFIC TRIBE GROUP..
 						instance.channel.connect( Dispatcher.getInstance().getNavajoConfig().getInstanceGroup() );
-						instance.channel.getState(null, 1000);
+						instance.channel.getState(null, 30000);
 						AuditLog.log(AuditLog.AUDIT_MESSAGE_TRIBEMANAGER, "MyAddress = " + ((IpAddress) instance.channel.getLocalAddress()).getIpAddress() + ", port = " + 
 								((IpAddress) instance.channel.getLocalAddress()).getPort());
 						AuditLog.log(AuditLog.AUDIT_MESSAGE_TRIBEMANAGER, "=================================================================================================");
@@ -241,6 +241,8 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 	}
 	
 	public byte[] getState() {
+		
+		AuditLog.log("**************************************", "in JGROUPS.getState()");
 		try {
 			synchronized (state) {
 				return Util.objectToByteBuffer(state);
@@ -253,6 +255,7 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 	}
 	 
 	public void setState(byte[] new_state) {
+		AuditLog.log("**************************************", "in JGROUPS.setState()");
 		try {
 			ClusterState cs = (ClusterState) Util.objectFromByteBuffer(new_state);
 			HashSet<TribeMember> tribalMap= cs.clusterMembers;
@@ -279,26 +282,38 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 		AuditLog.log(AuditLog.AUDIT_MESSAGE_TRIBEMANAGER, "In updatestate....");
 		synchronized (state) {
 			// Set chief correctly and myMembership correctly.
-			View w = channel.getView();
 			
-			Iterator<TribeMember> iter = state.clusterMembers.iterator();
-			while ( iter.hasNext() ) {
-				TribeMember mbr = iter.next();
-				AuditLog.log(AuditLog.AUDIT_MESSAGE_TRIBEMANAGER, "Processing: " + mbr.getAddress() + ", chief address is " + w.getMembers().get(0));
-				if ( mbr.getAddress().equals(w.getMembers().get(0))) {
-					mbr.setChief(true);
-					theChief = mbr;
-					state.notifyAll();
-				} else {
-					mbr.setChief(false);
+			do {
+				View w = channel.getView();
+
+				Iterator<TribeMember> iter = state.clusterMembers.iterator();
+				while ( iter.hasNext() ) {
+					TribeMember mbr = iter.next();
+					AuditLog.log(AuditLog.AUDIT_MESSAGE_TRIBEMANAGER, "Processing: " + mbr.getAddress() + ", chief address is " + w.getMembers().get(0));
+					if ( mbr.getAddress().equals(w.getMembers().get(0))) {
+						mbr.setChief(true);
+						theChief = mbr;
+						state.notifyAll();
+					} else {
+						mbr.setChief(false);
+					}
+					if ( mbr.getAddress().equals(channel.getLocalAddress() ) ) {
+						myMembership = mbr;
+					}
+					AuditLog.log(AuditLog.AUDIT_MESSAGE_TRIBEMANAGER,"Current cluster view: " + mbr.getMemberName() + ": " + mbr.getAddress() + ": " + mbr.isChief() + 
+							( mbr.getAddress().equals(channel.getLocalAddress()) ? " (ME) " : "") );
 				}
-				if ( mbr.getAddress().equals(channel.getLocalAddress() ) ) {
-					myMembership = mbr;
+				
+				if ( theChief == null ) {
+					try {
+						AuditLog.log(AuditLog.AUDIT_MESSAGE_TRIBEMANAGER, ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Did not get Chief yet, MemberShipSmokeSignal was faster than view update, wait a bit");
+						state.wait(500);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
-				AuditLog.log(AuditLog.AUDIT_MESSAGE_TRIBEMANAGER,"Current cluster view: " + mbr.getMemberName() + ": " + mbr.getAddress() + ": " + mbr.isChief() + 
-						( mbr.getAddress().equals(channel.getLocalAddress()) ? " (ME) " : "") );
-			}
-			
+			} while ( theChief == null);
 		}
 	}
 	
