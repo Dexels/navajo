@@ -56,6 +56,7 @@ public abstract class TipiAction implements TipiExecutable {
 		if (myComponent.isDisposed()) {
 			System.err.println("\n**** BREAKING. COMPONENT DISPOSED: " + myComponent.getPath()+" performing action: "+getClass().getName());
 			// Thread.dumpStack();
+			getStackElement().dumpStack("Component disposed: ");
 			throw new TipiBreakException(TipiBreakException.COMPONENT_DISPOSED);
 		}
 		try {
@@ -73,6 +74,10 @@ public abstract class TipiAction implements TipiExecutable {
 			}
 			if(e instanceof TipiException) {
 				throw (TipiException)e;
+			}
+			if(e instanceof TipiBreakException) {
+				getStackElement().dumpStack("Break detected in action");
+				throw (TipiBreakException)e;
 			}
 			System.err.println("Uncaught exception: ");
 			e.printStackTrace();
