@@ -1,10 +1,8 @@
 package com.dexels.navajo.tipi.components.echoimpl;
 
-import com.dexels.navajo.echoclient.components.*;
-
 import nextapp.echo2.app.*;
-import echopointng.ContainerEx;
-import echopointng.able.Positionable;
+
+import com.dexels.navajo.echoclient.components.*;
 
 /**
  * <p>
@@ -35,7 +33,7 @@ public class TipiDesktop extends TipiEchoDataComponentImpl {
         myContainer = new ContentPane();
         Style ss = Styles.DEFAULT_STYLE_SHEET.getStyle(ContentPane.class, "Desktop");
         myContainer.setStyle(ss);
-        myContainer.setBackground(new Color(180,180,240));
+//        myContainer.setBackground(new Color(180,180,240));
 //		myContainer.setPosition(Positionable.STATIC);
         return myContainer;
     }
