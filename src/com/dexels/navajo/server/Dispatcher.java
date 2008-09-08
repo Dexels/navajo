@@ -57,7 +57,6 @@ import com.dexels.navajo.lockguard.LockDefinition;
 import com.dexels.navajo.lockguard.LockManager;
 import com.dexels.navajo.lockguard.LocksExceeded;
 
-import com.dexels.navajo.mapping.AsyncMappable;
 import com.dexels.navajo.mapping.AsyncStore;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
@@ -85,8 +84,8 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
   public static final String version = Version.getDescription();
   public volatile static String edition;
   
-  public boolean enabled = true;
-  public boolean disabled = false;
+  public boolean enabled = false;
+  public boolean disabled = true;
   public boolean shutdown = false;
   
   static {
@@ -151,17 +150,12 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
 	  try {
 		  // Read configuration file.
 		  is = configurationUrl.openStream();
-		  navajoConfig = new NavajoConfig(fileInputStreamReader, cl); 
-		  navajoConfig.loadConfig(is,rootPath);
+		  navajoConfig = new NavajoConfig(fileInputStreamReader, cl, is, rootPath); 
 		  JMXHelper.registerMXBean(this, JMXHelper.NAVAJO_DOMAIN, "Dispatcher");
-		  
 		  // Monitor AccessSetSize
 		  // JMXHelper.addGaugeMonitor( NavajoEventRegistry.getInstance(), JMXHelper.NAVAJO_DOMAIN, "Dispatcher", "AccessSetSize", null, new Integer(50), 10000L);
-		  
 		  NavajoFactory.getInstance().setTempDir(getTempDir());
-		  
 	  }
-	  
 	  catch (Exception se) {
 		  throw NavajoFactory.getInstance().createNavajoException(se);
 	  } finally {
@@ -279,6 +273,10 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
 		  servicesStarted = true;
 		  servicesBeingStarted = false;
 	  }
+	  
+	  // Enable all incoming traffic.
+	  enabled = true;
+	  disabled = false;
 
   }
 
