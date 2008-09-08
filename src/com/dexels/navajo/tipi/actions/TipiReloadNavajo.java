@@ -29,18 +29,23 @@ public class TipiReloadNavajo extends TipiAction {
 		Operand to = getEvaluatedParameter("to", event);
 		Operand from = getEvaluatedParameter("from", event);
 		Operand service = getEvaluatedParameter("service", event);
-		
+		String serviceName = null;
+		Navajo actualNavajo = null;
 		if (to == null || from == null) {
 	
 //			System.err.println("Null evaluation in TipiReloadNavajo, new school evaluation");
 			if(service.value instanceof String) {
-				service.value = myContext.getNavajo((String) service.value);
+				serviceName = (String) service.value;
+							
+				service.value = myContext.getNavajo(serviceName);
+				actualNavajo = (Navajo) service.value;
+			} else {
+				if(service.value instanceof Navajo) {
+					actualNavajo = (Navajo) service.value;
+					serviceName = actualNavajo.getHeader().getRPCName();
+				}
 			}
-			Navajo s = (Navajo) service.value;
-			if(s.getHeader()==null) {
-				System.err.println("Header null!");
-			}
-			myContext.loadNavajo(s, s.getHeader().getRPCName());
+			myContext.loadNavajo(actualNavajo, serviceName);
 			return;
 		}
 //		System.err.println("Old school navajoReload found!");
