@@ -54,7 +54,7 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 	public QueuedAdapter [] deadQueue;
 	
 	public String accessId;
-
+	
 	public RequestResponseQueue() {
 		super(id);
 	}
@@ -126,7 +126,7 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 		if ( instance != null ) {
 			return instance;
 		}
-		synchronized (instance) {
+		synchronized (semaphore) {
 			if ( instance != null ) {
 				return instance;
 			} else {
@@ -291,7 +291,7 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 	
 	public void worker() {
 		
-		do {
+		do { 
 			HashSet<Queuable> set = new HashSet<Queuable>();
 			Queuable handler = null;
 
