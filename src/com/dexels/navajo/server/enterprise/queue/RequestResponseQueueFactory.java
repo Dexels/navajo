@@ -28,7 +28,7 @@ public class RequestResponseQueueFactory {
 						Method m = c.getMethod("getInstance", null);
 						instance = (RequestResponseQueueInterface) m.invoke(dummy, null);
 					} catch (Exception e) {
-						//e.printStackTrace(System.err);
+						e.printStackTrace(System.err);
 						AuditLog.log("INIT", "Queueable adapters not available", Level.WARNING);
 						instance = new DummyRequestResponseQueue();
 					}	
