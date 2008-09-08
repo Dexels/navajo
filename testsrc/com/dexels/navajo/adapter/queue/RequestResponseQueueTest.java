@@ -154,7 +154,7 @@ public class RequestResponseQueueTest extends TestCase implements NavajoListener
 	}
 
 	public void testEmptyQueue() throws Exception {
-		myQueue.setSLEEPING_TIME(1000);
+		myQueue.setSleepingTime(1000);
 		TestQueuable q = new TestQueuable();
 		Assert.assertEquals(new String(q.getResponse().getData()), "NOK");
 		q.setFailure(true);

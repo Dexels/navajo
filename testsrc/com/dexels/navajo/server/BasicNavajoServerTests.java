@@ -24,28 +24,8 @@ import com.dexels.navajo.document.NavajoFactory;
  * @author arjen
  *
  */
-public class BasicNavajoServerTests extends TestCase implements ServerAsyncListener  {
+public class BasicNavajoServerTests extends BasicTest implements ServerAsyncListener  {
 
-	ClientInterface myClient;
-	
-	public boolean finished = false;
-	
-	private Navajo received = null;
-	
-	/**
-	 * @throws java.lang.Exception
-	 */
-	public void setUp() throws Exception {
-		System.err.println("=============================== TEST SETUP ============================================");
-		myClient = NavajoClientFactory.getClient();
-		// Use manual load balancing in order to fully control scenario's to enable/disable servers.
-		myClient.setLoadBalancingMode(ClientInterface.LBMODE_MANUAL);
-		myClient.setServers(new String[]{"localhost:8080/NavajoServer/Postman","localhost:8080/NavajoServer2/Postman"});
-		myClient.setCurrentHost("localhost:8080/NavajoServer/Postman");
-		received = null;
-		finished = false;
-		System.err.println("=======================================================================================");
-	}
 
 	public void testAlive() throws Exception {
 		Navajo n = myClient.doSimpleSend("navajo_ping");
@@ -113,12 +93,6 @@ public class BasicNavajoServerTests extends TestCase implements ServerAsyncListe
 		Assert.assertEquals(n.getProperty("ConditionErrors@0/Id").getValue(), "4444");
 	}
 	
-	/**
-	 * @throws java.lang.Exception
-	 */
-	public void tearDown() throws Exception {
-	}
-
 	public void handleException(Exception e) {
 		// TODO Auto-generated method stub
 		
