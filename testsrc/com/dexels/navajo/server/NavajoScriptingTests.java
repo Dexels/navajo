@@ -201,19 +201,42 @@ public class NavajoScriptingTests extends BasicTest {
 		}
 	}
 	
+	private void checkBooleans(Message m) throws Exception {
+		ArrayList<Property> allProperties = m.getAllProperties();
+		for (int j = 0; j < allProperties.size(); j++) {
+			Property p = allProperties.get(j);
+			if ( p.getTypedValue() instanceof Boolean && !((Boolean) p.getTypedValue()).booleanValue() ) {
+				Assert.fail("Something wrong with: " + p.getFullPropertyName());
+			} else {
+				System.err.println("ok: " + p.getFullPropertyName());
+			}
+		}
+		ArrayList<Message> children = m.getAllMessages();
+		for (int j = 0; j < children.size(); j++) {
+			checkBooleans(children.get(j));
+		}
+	}
+	
 	public void testPropertyExpressions() throws Exception {
 	
 		Navajo result = myClient.doSimpleSend(input, "tests/ProcessTestProperties");
 		ArrayList<Message> allMessages = result.getAllMessages();
 		for (int i = 0; i < allMessages.size(); i++) {
 			Message m = allMessages.get(i);
-			ArrayList<Property> allProperties = m.getAllProperties();
-			for (int j = 0; j < allProperties.size(); j++) {
-				Property p = allProperties.get(j);
-				if ( !((Boolean) p.getTypedValue()).booleanValue() ) {
-					Assert.fail("Something wrong with: " + p.getFullPropertyName());
-				}
-			}
+			checkBooleans(m);
+		}
+		
+	}
+	
+	public void testPropertyTypes() throws Exception {
+		
+		Navajo b = myClient.doSimpleSend(input, "tests/ProcessTestProperties");
+		Navajo result = myClient.doSimpleSend(input, "tests/ProcessTestFields");
+		
+		ArrayList<Message> allMessages = result.getAllMessages();
+		for (int i = 0; i < allMessages.size(); i++) {
+			Message m = allMessages.get(i);
+			checkBooleans(m);
 		}
 		
 	}
