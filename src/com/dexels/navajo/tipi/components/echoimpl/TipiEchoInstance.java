@@ -112,7 +112,6 @@ public class TipiEchoInstance extends ApplicationInstance {
 			Styles.loadStyleSheet(fis);
 			fis.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -125,8 +124,9 @@ public class TipiEchoInstance extends ApplicationInstance {
 		
 		// Title.Sub
 		context = new EchoTipiContext(this,null);
-		ServletContextResourceLoader servletContextResourceLoader = new ServletContextResourceLoader(myServletContext,"tipi");
-		context.setTipiResourceLoader(servletContextResourceLoader);
+		ServletContextResourceLoader servletContextTipiLoader = new ServletContextResourceLoader(myServletContext,"tipi");
+		context.setTipiResourceLoader(servletContextTipiLoader);
+		ServletContextResourceLoader servletContextResourceLoader = new ServletContextResourceLoader(myServletContext,"resource");
 		context.setGenericResourceLoader(servletContextResourceLoader);
 	//	context.setResourceBaseDirectory(new File(myServletContext.getRealPath("/") + "resource/tipi/"));
 		
