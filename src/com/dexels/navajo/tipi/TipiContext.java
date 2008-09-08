@@ -19,7 +19,7 @@ import com.dexels.navajo.tipi.components.core.*;
 import com.dexels.navajo.tipi.connectors.*;
 import com.dexels.navajo.tipi.extension.*;
 import com.dexels.navajo.tipi.internal.*;
-import com.dexels.navajo.tipi.internal.cookie.*;
+import com.dexels.navajo.tipi.internal.cookie.CookieManager;
 import com.dexels.navajo.tipi.studio.*;
 import com.dexels.navajo.tipi.tipixml.*;
 
