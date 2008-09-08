@@ -113,12 +113,13 @@ public final class NavajoConfig {
 	
 	private OperatingSystemMXBean myOs = null;
     
-	public NavajoConfig(InputStreamReader inputStreamReader, NavajoClassSupplier ncs)  throws SystemException {
+	public NavajoConfig(InputStreamReader inputStreamReader, NavajoClassSupplier ncs, InputStream in, String externalRootPath)  throws SystemException {
 
 		this.inputStreamReader = inputStreamReader;
 		classPath = System.getProperty("java.class.path");
 		adapterClassloader = ncs;
 		instance = this;
+		loadConfig(in, externalRootPath);
 		myOs = ManagementFactory.getOperatingSystemMXBean();
 
 	}
@@ -127,12 +128,8 @@ public final class NavajoConfig {
     	return instance;
     }
       
-    public void loadConfig(InputStream in)  throws SystemException{
-    	loadConfig(in, null);
-    }
-    
     @SuppressWarnings("unchecked")
-	public void loadConfig(InputStream in, String externalRootPath)  throws SystemException{
+	private void loadConfig(InputStream in, String externalRootPath)  throws SystemException{
     	
     	configuration = NavajoFactory.getInstance().createNavajo(in);
     	
@@ -951,7 +948,7 @@ public final class NavajoConfig {
 	
 
 	public static void main(String[] args) throws SystemException {
-		NavajoConfig nc = new NavajoConfig(null,null);
+		NavajoConfig nc = new NavajoConfig(null,null,null,null);
 		System.err.println(":: "+nc.getCurrentCPUload());
 	}
 	
