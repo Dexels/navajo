@@ -1,0 +1,92 @@
+<adapterdef>
+    <map>
+        <tagname>mailmap</tagname>
+        <object>com.dexels.navajo.adapter.MailMap</object>
+        <values>
+            <value name="mailServer" type="string" required="true" direction="in"/>
+            <value name="queuedSend" type="boolean" required="false" direction="in"/>
+            <value name="ignoreFailures" type="boolean" required="false" direction="in"/>
+            <value name="sender" type="string" required="false" direction="in"/>
+            <value name="subject" type="string" required="false" direction="in"/>
+            <value name="text" type="string" required="false" direction="in"/>
+            <value name="recipients" type="string" required="false" direction="in"/>
+            <value name="attachment" type="map:attachmentmap []" required="false" direction="in"/>
+        </values>
+    </map>
+    <map>
+        <tagname>navajomap</tagname>
+        <object>com.dexels.navajo.adapter.NavajoMap</object>
+        <description>This adapter can be used to call other Navajo services, either synchronously, asynchronously or scheduled</description>
+        <values>
+            <value name="trigger" type="string" required="false" direction="in"/>
+            <value name="sendThrough" type="boolean" required="false" direction="in"/>
+            <value name="server" type="string" required="false" direction="in"/>
+            <value name="username" type="string" required="false" direction="in"/>
+            <value name="password" type="string" required="false" direction="in"/>
+            <value name="useCurrentOutDoc" type="boolean" required="false" direction="in"/>
+            <value name="message" type="map:messagemap" required="false" direction="out"/>
+            <value name="messages" type="map:messagemap []" required="false" direction="out"/>
+        </values>
+        <methods>
+            <method name="createproperty">
+                <param name="name" field="propertyName" type="string" required="true"/>
+                <param name="value" field="property" type="object" required="true"/>
+            </method>
+            <method name="callwebservice">
+                <param name="server" field="server" type="string" required="false"/>
+                <param name="username" field="username" type="string" required="false"/>
+                <param name="password" field="password" type="string" required="false"/>
+                <param name="name" field="doSend" type="string" required="true"/>
+                <param name="append" field="append" type="string" required="false"/>
+            </method>
+        </methods>
+    </map>
+    <map>
+        <tagname>messagemap</tagname>
+        <abstract>false</abstract>
+        <object>com.dexels.navajo.adapter.navajomap.MessageMap</object>
+    </map>
+    <map>
+        <tagname>rss</tagname>
+        <object>com.dexels.navajo.adapter.RSSMap</object>
+        <description>This adapter can be used to parse or generate RSS feeds</description>
+        <values>
+            <value name="rssFeed" type="string" required="false" direction="in"/>
+        </values>
+        <methods>
+            <method name="setTitle">
+                <param name="name" field="title" type="string" required="true"/>
+            </method>
+        </methods>
+    </map>
+    <map>
+        <tagname>navajolistener</tagname>
+        <object>com.dexels.navajo.adapter.NavajoMap</object>
+        <values>
+            <value name="taskId" type="string" required="true" direction="in"/>
+        </values>
+    </map>
+    <map>
+        <tagname>sqlquery</tagname>
+        <object>com.dexels.navajo.adapter.SQLMap</object>
+        <values>
+            <value name="query" type="stringliteral" required="true" direction="in"/>
+            <value name="update" type="stringliteral" required="true" direction="in"/>
+            <value name="datasource" type="string" required="false" direction="in"/>
+            <value name="resultSet" type="map:resultrow []" required="false" direction="out"/>
+        </values>
+        <methods>
+            <method name="addParameter">
+                <param name="value" field="parameter" type="object" required="false"/>
+            </method>
+            <method name="doUpdate">
+                <param name="value" field="doUpdate" type="object" required="automatic" value="true"/>
+            </method>
+        </methods>
+    </map>
+    <map>
+        <tagname>resultrow</tagname>
+        <abstract>false</abstract>
+        <object>com.dexels.navajo.adapter.ResultSetMap</object>
+    </map>
+</adapterdef>
