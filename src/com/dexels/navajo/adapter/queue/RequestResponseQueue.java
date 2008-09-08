@@ -9,6 +9,8 @@ import java.util.logging.Level;
 import com.dexels.navajo.events.NavajoEvent;
 import com.dexels.navajo.events.NavajoEventRegistry;
 import com.dexels.navajo.events.NavajoListener;
+import com.dexels.navajo.events.types.QueuableFailureEvent;
+import com.dexels.navajo.events.types.QueuableFinishedEvent;
 import com.dexels.navajo.events.types.TribeMemberDownEvent;
 import com.dexels.navajo.server.GenericThread;
 import com.dexels.navajo.server.enterprise.queue.Queuable;
@@ -115,36 +117,52 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 		queueOnly = b;
 	}
 
+	/**
+	 * The instantiation method to be used by the Navajo Server.
+	 * 
+	 * @return
+	 */
 	public static RequestResponseQueue getInstance() {
-		
-		if (instance!=null) {
+		if ( instance != null ) {
 			return instance;
 		}
-		
-		synchronized (semaphore) {
+		synchronized (instance) {
 			if ( instance != null ) {
 				return instance;
+			} else {
+				instance = getInstance(new FileStore());
+				try {
+					JMXHelper.registerMXBean(instance, JMXHelper.NAVAJO_DOMAIN, id);
+				} catch (Throwable t) {
+					//t.printStackTrace(System.err);
+				} 
+				// Register for interesting events.
+				NavajoEventRegistry.getInstance().addListener(TribeMemberDownEvent.class, instance);
+				
+				AuditLog.log(AuditLog.AUDIT_MESSAGE_QUEUEDADAPTERS, "Started message queue process $Id$");
+			
+				return instance;
 			}
-			
-			instance = new RequestResponseQueue();	
-			instance.myStore = new FileStore();
-			try {
-				JMXHelper.registerMXBean(instance, JMXHelper.NAVAJO_DOMAIN, id);
-			} catch (Throwable t) {
-				t.printStackTrace(System.err);
-			} 
-			instance.myId = id;
-			instance.setSleepTime(5000);
-			instance.startThread(instance);
-			
-			// Register for interesting events.
-			System.err.println("EVENT REGISTRY: " + NavajoEventRegistry.getInstance());
-			NavajoEventRegistry.getInstance().addListener(TribeMemberDownEvent.class, instance);
-			
-			AuditLog.log(AuditLog.AUDIT_MESSAGE_QUEUEDADAPTERS, "Started message queue process $Id$");
-			
-			return instance;
 		}
+	}
+	
+	/**
+	 * Use this method ONLY directly for testing purposes.
+	 * 
+	 * @param ms, specify what MesssageStore to use.
+	 * @return
+	 */
+	protected static RequestResponseQueue getInstance(MessageStore ms) {
+
+		instance = new RequestResponseQueue();	
+		instance.myStore = ms;
+		
+		instance.myId = id;
+		instance.setSleepTime(5000);
+		instance.startThread(instance);
+
+		return instance;
+
 	}
 	
 	public void send(Queuable handler, int maxretries) throws Exception {
@@ -213,16 +231,16 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 				//JMXHelper.registerMXBean(handler, JMXHelper.QUEUED_ADAPTER_DOMAIN, qid);
 				try {
 					doingWork = true;
-					//System.err.println("About to perform handler: " + handler.getClass().getName());
 					if ( handler.send() && !emptyQueue) {
-						
+						NavajoEventRegistry.getInstance().publishAsynchronousEvent(new QueuableFinishedEvent(handler));
 					} else {
 						// Put stuff back in queue, unless queue is being emptied.
 						//System.err.println("Could not process send() method, putting queued adapter back in queue... emptyqueue: " + emptyQueue);
+						
 						AuditLog.log(AuditLog.AUDIT_MESSAGE_QUEUEDADAPTERS, 
 								QueuedAdapter.generateLogMessage(handler, "Could not process send() method, putting queued adapter back in queue") );
 						if ( !emptyQueue ) {
-							handler.setWaitUntil(System.currentTimeMillis() + SLEEPING_TIME);
+							handler.setWaitUntil(System.currentTimeMillis() + SLEEPING_TIME );
 							// Put queable in as failure if maxretries has past....
 							int maxRetries = handler.getMaxRetries();
 							if ( maxRetries == 0 ) {
@@ -230,10 +248,11 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 							}
 							if ( handler.getRetries() > maxRetries ) {
 								sendHealthCheck(handler.getRetries(), maxRetries, "ERROR", "Could not process queued adapter, service = " + 
-										handler.getAccess().getRpcName() + ", adapter = " + handler.getClass().getName());
+									( handler.getAccess() != null ?	handler.getAccess().getRpcName() : "" ) + ", adapter = " + handler.getClass().getName());
 							}
 							myStore.putMessage(handler, ( handler.getRetries() > maxRetries ));
 						}
+						NavajoEventRegistry.getInstance().publishAsynchronousEvent(new QueuableFailureEvent(handler));
 					}
 				} finally {
 					doingWork = false;
@@ -335,7 +354,7 @@ public class RequestResponseQueue extends GenericThread implements RequestRespon
 			workerNotificationCount = 0;
 			try {
 				//System.err.println("RequestResponseQueue becoming inactive....workerNotificationCount " + workerNotificationCount);
-				instance.wait(60000);
+				instance.wait(SLEEPING_TIME);
 			} catch (Throwable e) {
 				
 			}
