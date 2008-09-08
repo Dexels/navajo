@@ -38,4 +38,6 @@ public interface TipiResourceLoader {
 	 * @throws IOException
 	 */
 	public List<File> getAllResources() throws IOException;
+
+	public boolean isReadOnly();
 }

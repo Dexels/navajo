@@ -32,4 +32,8 @@ public class ClassPathResourceLoader implements TipiResourceLoader {
 	public List<File> getAllResources() throws IOException {
 		throw new UnsupportedOperationException("The classpath resource loader is unable to enumerate resources");
 }
+
+	public boolean isReadOnly() {
+		return true;
+	}
 }
