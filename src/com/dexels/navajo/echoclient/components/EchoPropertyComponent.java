@@ -986,7 +986,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 	}
 
 	private void createCheckBoxes(final Property p) throws NavajoException {
-		final ContainerEx r = new ContainerEx();
+		final Column r = new Column();
 
 		final Map<Selection,CheckBox> buttons = new HashMap<Selection,CheckBox>();
 		addPropertyComponent(r);
@@ -1003,7 +1003,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 			buttons.put(cc, rb);
 			r.add(rb);
 			rb.setText(cc.getName());
-			rb.setWidth(new Extent(value_size, Extent.PX));
+			rb.setWidth(new Extent(150, Extent.PX));
 			rb.setActionCommand(cc.getValue());
 			rb.setSelected(cc.isSelected());
 			rb.setEnabled(p.isDirIn());
@@ -1011,7 +1011,6 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 			// "+cc.getValue());
 			rb.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
-					// System.err.println("checkbox activity!");
 					try {
 						updateCheckboxButtonList(rb, buttons, p);
 						fireTipiEvent("onStateChanged");
