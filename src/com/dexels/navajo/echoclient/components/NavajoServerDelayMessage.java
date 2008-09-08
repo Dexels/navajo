@@ -8,14 +8,12 @@ package com.dexels.navajo.echoclient.components;
 
 import java.io.*;
 
-import org.w3c.dom.*;
-
-import echopointng.image.*;
-
 import nextapp.echo2.app.util.*;
 import nextapp.echo2.webcontainer.*;
 import nextapp.echo2.webrender.*;
 import nextapp.echo2.webrender.output.*;
+
+import org.w3c.dom.*;
 
 public class NavajoServerDelayMessage extends ServerDelayMessage {
 

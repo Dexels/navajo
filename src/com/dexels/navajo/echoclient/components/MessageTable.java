@@ -1,38 +1,18 @@
 package com.dexels.navajo.echoclient.components;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.*;
 
-
-import nextapp.echo2.app.Color;
-import nextapp.echo2.app.Component;
-import nextapp.echo2.app.Extent;
-import nextapp.echo2.app.RadioButton;
-import nextapp.echo2.app.Style;
-import nextapp.echo2.app.StyleSheet;
-import nextapp.echo2.app.Table;
-import nextapp.echo2.app.event.ActionEvent;
-import nextapp.echo2.app.event.ActionListener;
-import nextapp.echo2.app.event.ChangeEvent;
-import nextapp.echo2.app.event.ChangeListener;
-import nextapp.echo2.app.list.DefaultListSelectionModel;
-import nextapp.echo2.app.list.ListSelectionModel;
+import nextapp.echo2.app.*;
+import nextapp.echo2.app.event.*;
+import nextapp.echo2.app.list.*;
 import nextapp.echo2.app.table.*;
 
 import com.dexels.navajo.client.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.types.*;
-import com.dexels.navajo.echoclient.components.PageNavigator.PageIndexChangeEvent;
-import com.dexels.navajo.echoclient.components.PageNavigator.PageIndexChangeListener;
+import com.dexels.navajo.echoclient.components.PageNavigator.*;
 
-import echopointng.PushButton;
-import echopointng.table.DefaultPageableSortableTableModel;
-import echopointng.table.DefaultSortableTableModel;
-import echopointng.table.PageableSortableTable;
-import echopointng.table.SortableTable;
-import echopointng.table.SortableTableColumn;
-import echopointng.table.SortableTableHeaderRenderer;
+import echopointng.table.*;
 
 public class MessageTable extends PageableSortableTable implements PageIndexChangeListener {
 	private static final int DEFAULT_ROWS_PER_PAGE = 20;

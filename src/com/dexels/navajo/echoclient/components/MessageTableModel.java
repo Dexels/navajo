@@ -2,22 +2,11 @@ package com.dexels.navajo.echoclient.components;
 
 import java.util.*;
 
-import nextapp.echo2.app.Table;
-import nextapp.echo2.app.list.ListSelectionModel;
-import nextapp.echo2.app.table.AbstractTableModel;
-import nextapp.echo2.app.table.DefaultTableModel;
-import nextapp.echo2.app.table.TableCellRenderer;
-import nextapp.echo2.app.table.TableColumn;
-import nextapp.echo2.app.table.TableColumnModel;
+import nextapp.echo2.app.list.*;
+import nextapp.echo2.app.table.*;
 
-import com.dexels.navajo.document.Message;
-import com.dexels.navajo.document.Property;
-import com.dexels.navajo.document.lazy.MessageListener;
-
-import echopointng.table.DefaultPageableSortableTableModel;
-import echopointng.table.DefaultSortableTableModel;
-import echopointng.table.SortableTableColumn;
-import echopointng.table.SortableTableModel;
+import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.lazy.*;
 
 /**
  * <p>

@@ -1,19 +1,13 @@
 package com.dexels.navajo.echoclient.components;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Random;
-
-import com.dexels.navajo.document.NavajoException;
-import com.dexels.navajo.document.Property;
-import com.dexels.navajo.document.types.Binary;
-import com.dexels.navajo.functions.scale.*;
-
-import echopointng.image.URLImageReference;
+import java.io.*;
+import java.util.*;
 
 import nextapp.echo2.app.*;
+
+import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.types.*;
+import com.dexels.navajo.functions.scale.*;
 
 public class BinaryPropertyImage extends StreamImageReference {
 
