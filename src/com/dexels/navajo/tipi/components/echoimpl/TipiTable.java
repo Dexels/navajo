@@ -166,7 +166,7 @@ public class TipiTable extends TipiEchoDataComponentImpl {
 				pageNavigator.setTotalPages(myTable.getTotalPages());
 				pageNavigator.addPageIndexChangeListener(myTable);
 				pageNavigator.setPageIndex(0);
-				myTable.setPageNavigator(pageNavigator);
+//				myTable.setPageNavigator(pageNavigator);
 			}
 		});
 	}
