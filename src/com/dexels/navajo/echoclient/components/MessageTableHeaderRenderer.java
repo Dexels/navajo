@@ -28,23 +28,11 @@
  */
 package com.dexels.navajo.echoclient.components;
 
-import echopointng.*;
-import echopointng.table.DefaultSortableTableModel;
-import echopointng.table.SortableTableModel;
-import nextapp.echo2.app.Alignment;
-import nextapp.echo2.app.Button;
-import nextapp.echo2.app.Color;
-import nextapp.echo2.app.Component;
-import nextapp.echo2.app.Extent;
-import nextapp.echo2.app.ImageReference;
-import nextapp.echo2.app.Insets;
-import nextapp.echo2.app.LayoutData;
-import nextapp.echo2.app.ResourceImageReference;
-import nextapp.echo2.app.Table;
-import nextapp.echo2.app.event.ActionEvent;
-import nextapp.echo2.app.event.ActionListener;
-import nextapp.echo2.app.layout.TableLayoutData;
-import nextapp.echo2.app.table.TableCellRenderer;
+import nextapp.echo2.app.*;
+import nextapp.echo2.app.event.*;
+import nextapp.echo2.app.layout.*;
+import nextapp.echo2.app.table.*;
+import echopointng.table.*;
 
 /**
  * Default renderer for <code>SortableTableModel</code> backed Tables.
@@ -130,14 +118,11 @@ public class MessageTableHeaderRenderer implements TableCellRenderer {
         return new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             	System.err.println("Boioioioin!");
-                Button button = (Button) e.getSource();
                 int currentSort = model.getCurrentSortColumn();
                 int ascending = SortableTableModel.ASCENDING;
                 if(currentSort>=0) {
                     ascending = model.getSortDirective(currentSort);
                 }
-//                ascending = model.getCurrentSortColumn() == column?!ascending:ascending;
-                
                 model.sortByColumn(column, ascending==SortableTableModel.ASCENDING?SortableTableModel.DESCENDING:SortableTableModel.ASCENDING);
             }
         };

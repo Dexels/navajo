@@ -1,19 +1,13 @@
 package com.dexels.navajo.echoclient.components;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
-import com.dexels.navajo.document.Message;
-import com.dexels.navajo.document.Property;
-import com.dexels.navajo.echoclient.components.PageNavigator.*;
-
-import nextapp.echo2.app.Component;
-import nextapp.echo2.app.Extent;
-import nextapp.echo2.app.SplitPane;
-import nextapp.echo2.app.Style;
-import nextapp.echo2.app.event.ActionEvent;
-import nextapp.echo2.app.event.ActionListener;
+import nextapp.echo2.app.*;
+import nextapp.echo2.app.event.*;
 import nextapp.echo2.extras.app.*;
+
+import com.dexels.navajo.document.*;
+import com.dexels.navajo.echoclient.components.PageNavigator.*;
 
 public class MessageTablePanel extends SplitPane {
 	private PageNavigator pageNavigator;
@@ -40,15 +34,15 @@ public class MessageTablePanel extends SplitPane {
     	myTable.setStyle(ss);
     	myTable.setSelectionEnabled(true);
     	myTable.setRolloverEnabled(false);
-        myTable.addSelectionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                try {
-                	Message m = myTable.getSelectedMessage();
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            }
-        });
+//        myTable.addSelectionListener(new ActionListener() {
+//            public void actionPerformed(ActionEvent e) {
+//                try {
+//                	Message m = myTable.getSelectedMessage();
+//                } catch (Exception ex) {
+//                    ex.printStackTrace();
+//                }
+//            }
+//        });
 
         myTable.addTableEditorListener(new TableEditorListener(){
 

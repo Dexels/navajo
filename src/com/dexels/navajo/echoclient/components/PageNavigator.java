@@ -29,20 +29,13 @@
 
 package com.dexels.navajo.echoclient.components;
 
-import java.io.Serializable;
-import java.util.EventListener;
-import java.util.EventObject;
+import java.io.*;
+import java.util.*;
+
+import nextapp.echo2.app.*;
+import nextapp.echo2.app.event.*;
 
 import com.dexels.navajo.document.*;
-
-
-import nextapp.echo2.app.Button;
-import nextapp.echo2.app.Extent;
-import nextapp.echo2.app.Label;
-import nextapp.echo2.app.Row;
-import nextapp.echo2.app.TextField;
-import nextapp.echo2.app.event.ActionEvent;
-import nextapp.echo2.app.event.ActionListener;
 
 /**
  * A component which provides navigation between pages.
@@ -164,7 +157,6 @@ public class PageNavigator extends Row {
 				try {
 					myTable.getTableReport("pdf", "horizontal", new int[]{5,5,5,5});
 				} catch (NavajoException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			}

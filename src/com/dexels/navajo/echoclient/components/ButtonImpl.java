@@ -6,7 +6,6 @@
  */
 package com.dexels.navajo.echoclient.components;
 
-import echopointng.*;
 import nextapp.echo2.app.*;
 
 public class ButtonImpl extends Button {

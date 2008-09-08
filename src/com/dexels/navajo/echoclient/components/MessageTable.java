@@ -37,21 +37,21 @@ public class MessageTable extends PageableSortableTable implements PageIndexChan
 
 	private final List<ActionListener> reportPrintListeners = new ArrayList<ActionListener>();
 
-	private int lastSelectedRow = -1;
-
-	private int currentSelectedRow = -1;
-
-	private Color headerForeground = null;
-
-	private Color headerBackground = null;
-
-	private Color headerRolloverForeground = null;
-
-	private Color headerRolloverBackground = null;
-
-	private Color headerPressedBackground = null;
-
-	private Color headerPressedForeground = null;
+//	private int lastSelectedRow = -1;
+//
+//	private int currentSelectedRow = -1;
+//
+//	private Color headerForeground = null;
+//
+//	private Color headerBackground = null;
+//
+//	private Color headerRolloverForeground = null;
+//
+//	private Color headerRolloverBackground = null;
+//
+//	private Color headerPressedBackground = null;
+//
+//	private Color headerPressedForeground = null;
 
 	private int headerHeight = 15;
 
@@ -59,7 +59,7 @@ public class MessageTable extends PageableSortableTable implements PageIndexChan
 
 	private DefaultPageableSortableTableModel sortablePageableModel;
 
-	private PageNavigator myPageNavigator;
+//	private PageNavigator myPageNavigator;
 
 	private Message myMessage;
 	
@@ -68,26 +68,18 @@ public class MessageTable extends PageableSortableTable implements PageIndexChan
 	private final Map<Integer,RadioButton> rowSelectMap = new HashMap<Integer,RadioButton>();
 
 	public MessageTable() {
-		StyleSheet sh = Styles.DEFAULT_STYLE_SHEET;
-		if (sh!=null) {
-			Style ss = sh.getStyle(this.getClass(), "Default");
-		}
-		
-		Style ss=null;
-		if(ss!=null) {
-			ss = Styles.DEFAULT_STYLE_SHEET.getStyle(this.getClass(), "Default");
-			setStyle(ss);
-		}
+//		StyleSheet sh = Styles.DEFAULT_STYLE_SHEET;
+//		if (sh!=null) {
+//			Style ss = sh.getStyle(this.getClass(), "Default");
+//		}
+//		
+//		Style ss=null;
+//		if(ss!=null) {
+//			ss = Styles.DEFAULT_STYLE_SHEET.getStyle(this.getClass(), "Default");
+//			setStyle(ss);
+//		}
 
-		 super.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-		 });
-		 
-		 
+	
 			 //
 		// public void actionPerformed(ActionEvent e) {
 		// lastSelectedRow = currentSelectedRow;
@@ -96,7 +88,6 @@ public class MessageTable extends PageableSortableTable implements PageIndexChan
 		// lastSelectedRow = -1;
 		// }
 		// for (int i = 0; i < getColumnModel().getColumnCount(); i++) {
-		// // TODO Ewwwwww
 		// // System.err.println("Last row: "+lastSelectedRow);
 		// // System.err.println("Current row: "+currentSelectedRow);
 		// Component lastc = getCellComponent(i, lastSelectedRow);
@@ -207,10 +198,6 @@ sortablePageableModel = new DefaultPageableSortableTableModel(myModel);
 	}
 
 	public void removeAllColumns() {
-		for (int i = 0; i < ids.size(); i++) {
-			String id = ids.get(i);
-			// removeColumn(id);
-		}
 		ids.clear();
 		names.clear();
 		editables.clear();
@@ -267,26 +254,23 @@ sortablePageableModel = new DefaultPageableSortableTableModel(myModel);
 			return null;
 		}
 		System.err.println("INDEX: " + index);
-		int sortedPagedIndex= -1;
-		int pagedSortedIndex= -1;
+//		int sortedPagedIndex= -1;
+//		int pagedSortedIndex= -1;
 		try {
-			int sortedIndex = sortablePageableModel.toUnsortedModelRowIndex(index);
+//			int sortedIndex = sortablePageableModel.toUnsortedModelRowIndex(index);
 //			System.err.println("sorted: " + sortedIndex);
-			int pagedIndex = sortablePageableModel.toUnpagedModelRowIndex(index);
+//			int pagedIndex = sortablePageableModel.toUnpagedModelRowIndex(index);
 //			System.err.println("pagedIndex: " + pagedIndex);
-			sortedPagedIndex = sortablePageableModel.toUnpagedModelRowIndex(sortedIndex);
+//			sortedPagedIndex = sortablePageableModel.toUnpagedModelRowIndex(sortedIndex);
 //			System.err.println("sortedPagedIndex: " + sortedPagedIndex);
-			pagedSortedIndex = sortablePageableModel.toUnsortedModelRowIndex(pagedIndex);
+//			pagedSortedIndex = sortablePageableModel.toUnsortedModelRowIndex(pagedIndex);
 //			System.err.println("pagedSortedIndex: " + pagedSortedIndex);
 		} catch (Throwable e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		// Actually removed all the above stuff...
 		Message selectedMessage = myModel.getMessageRow(index);
-		if(selectedMessage==null) {
-			System.err.println("WARNING, no MESSAGe sekektet");
-		}
+
 		return selectedMessage;
 	}
 
@@ -494,9 +478,9 @@ sortablePageableModel = new DefaultPageableSortableTableModel(myModel);
 	}
 
 
-	public void setPageNavigator(PageNavigator pageNavigator) {
-		myPageNavigator = pageNavigator;
-	}
+//	public void setPageNavigator(PageNavigator pageNavigator) {
+//		myPageNavigator = pageNavigator;
+//	}
 
 
 	public Message getMessage() {
@@ -568,9 +552,9 @@ sortablePageableModel = new DefaultPageableSortableTableModel(myModel);
 		      }
 		      Message newRow = NavajoFactory.getInstance().createMessage(newNavajo, constructed.getName(), Message.MSG_TYPE_ARRAY_ELEMENT);
 		      if (includeInvisibleColumns) {
-		        ArrayList ps = elt.getAllProperties();
+		        List<Property> ps = elt.getAllProperties();
 		        for (int j = 0; j < ps.size(); j++) {
-		          Property p = (Property) ps.get(j);
+		          Property p = ps.get(j);
 
 		          if (p != null) {
 
@@ -579,10 +563,10 @@ sortablePageableModel = new DefaultPageableSortableTableModel(myModel);
 		            if (p.getType() == Property.SELECTION_PROPERTY && p.getCardinality().equals("+")) {
 		              try {
 		                q = NavajoFactory.getInstance().createProperty(newNavajo, p.getName(), "string", "", 255, p.getDescription(), "out");
-		                ArrayList sels = p.getAllSelectedSelections();
-		                String value = ( (Selection) sels.get(0)).getName();
+		                List<Selection> sels = p.getAllSelectedSelections();
+		                String value = sels.get(0).getName();
 		                for (int g = 1; g < sels.size(); g++) {
-		                  value = value + "/" + ( (Selection) sels.get(g)).getName();
+		                  value = value + "/" + sels.get(g).getName();
 		                }
 		                q.setValue(value);
 
@@ -617,10 +601,10 @@ sortablePageableModel = new DefaultPageableSortableTableModel(myModel);
 		            if (p.getType() == Property.SELECTION_PROPERTY && p.getCardinality().equals("+")) {
 		              try {
 		                q = NavajoFactory.getInstance().createProperty(newNavajo, p.getName(), "string", "", 255, p.getDescription(), "out");
-		                ArrayList sels = p.getAllSelectedSelections();
-		                String value = ( (Selection) sels.get(0)).getName();
+		                List<Selection> sels = p.getAllSelectedSelections();
+		                String value = sels.get(0).getName();
 		                for (int g = 1; g < sels.size(); g++) {
-		                  value = value + "/" + ( (Selection) sels.get(g)).getName();
+		                  value = value + "/" + sels.get(g).getName();
 		                }
 		                q.setValue(value);
 
