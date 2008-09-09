@@ -69,8 +69,10 @@ public final class NavajoConfig {
 	public String compiledScriptPath;
 	public String hibernatePath;
 	public String scriptPath;
-	public String dbPath;
+	private String dbPath;
+	private HashMap dbProperties = new HashMap();
 	public String store;
+	
 	private String resourcePath;
 	public int dbPort = -1;
 	public boolean compileScripts = false;
@@ -82,13 +84,13 @@ public final class NavajoConfig {
 	protected Navajo configuration;
     public int maxAccessSetSize = MAX_ACCESS_SET_SIZE;
     
+    private Message jabberMessage;
+    private boolean jabberStarted = false;
+    private boolean statisticsRunnerStarted = false;
+    
     /**
      * Several supporting threads.
      */
-    protected com.dexels.navajo.mapping.AsyncStore asyncStore = null;
-    protected StatisticsRunnerInterface statisticsRunner = null;
-    //protected TaskRunnerInterface taskRunner = null;
-    protected LockManager lockManager = null;
     protected DescriptionProviderInterface myDescriptionProvider = null;
         
     public String rootPath;
@@ -101,6 +103,7 @@ public final class NavajoConfig {
     private boolean enableIntegrityWorker = true;
     private boolean enableLockManager = true;
     private boolean enableStatisticsRunner = true;
+    private float asyncTimeout;
     
     public boolean monitorOn;
     public String monitorUsers = null;
@@ -274,19 +277,8 @@ public final class NavajoConfig {
 				}
 			} 
 			
-			Message jabberMessage = body.getMessage("jabber");
-			if(jabberMessage!=null) {
-				// Ewwww
-				JabberInterface ji = JabberFactory.getInstance();
-				ji.configJabber(jabberMessage);
-				
-//				myJabber.configJabber(jabberMessage);
-				
-			} else {
-				AuditLog.log("INIT", "WARNING: Jabber not installed, jabber configuration missing in server.xml.");
-			}
-    		
-    		
+			jabberMessage = body.getMessage("jabber");
+					
     		String repositoryClass = body.getProperty("repository/class").getValue();
     		repository = RepositoryFactory.getRepository(repositoryClass, this);
     		
@@ -306,14 +298,13 @@ public final class NavajoConfig {
     				body.getProperty("parameters/enable_statistics").getValue().equals("true"));
     		
 
-    		HashMap p = new HashMap();
+    		
     		if (dbPort != -1) {
     			System.err.println("PUTTING PORT = " + dbPort + " IN MAP");
-    			p.put("port", new Integer(dbPort));
+    			dbProperties.put("port", new Integer(dbPort));
     		}
     		
-    		statisticsRunner = StatisticsRunnerFactory.getInstance(dbPath, p, store);
-    		statisticsRunner.setEnabled(enableStatisticsRunner);
+    		
     		
     		//System.err.println("USing repository = " + repository);
     		Message maintenance = body.getMessage("maintenance-services");
@@ -331,7 +322,7 @@ public final class NavajoConfig {
     		}
     		
     		Property s = body.getProperty("parameters/async_timeout");
-    		float asyncTimeout = 3600 * 1000; // default 1 hour.
+    		asyncTimeout = 3600 * 1000; // default 1 hour.
     		if (s != null) {
     			asyncTimeout = Float.parseFloat(s.getValue()) * 1000;
     			System.out.println("SETTING ASYNC TIMEOUT: " + asyncTimeout);
@@ -340,9 +331,6 @@ public final class NavajoConfig {
     		enableAsync = (body.getProperty("parameters/enable_async") == null ||
     				body.getProperty("parameters/enable_async").getValue().
     				equals("true"));
-    		if (enableAsync) {
-    			asyncStore = com.dexels.navajo.mapping.AsyncStore.getInstance(asyncTimeout);
-    		}
     		
     		enableIntegrityWorker = (body.getProperty("parameters/enable_integrity") == null ||
     				body.getProperty("parameters/enable_integrity").getValue().equals("true"));
@@ -415,15 +403,14 @@ public final class NavajoConfig {
     }
 
     /*
-     * Get the Navajo TaskRunner instance. If no instance exists, it is started.
+     * Startup the Navajo TaskRunner instance. If no instance exists, it is started.
      */
-    public TaskRunnerInterface getTaskRunner() {
-    	// Startup task scheduler
+    public void startTaskRunner() {
+    	// Bootstrap task scheduler
     	try {
-			return TaskRunnerFactory.getInstance();
+			TaskRunnerFactory.getInstance();
 		} catch (RuntimeException e) {
 			System.err.println("No taskrunner found.");
-			return null;
 		}  
     }
     
@@ -448,8 +435,8 @@ public final class NavajoConfig {
      */
     public synchronized void setStatisticsRunnerEnabled(boolean b) {
     	
-    	if ( statisticsRunner != null ) {
-    		statisticsRunner.setEnabled(b);
+    	if ( getStatisticsRunner() != null ) {
+    		getStatisticsRunner().setEnabled(b);
     	}
  
     }
@@ -458,10 +445,10 @@ public final class NavajoConfig {
      * Check whether the statistics runner is enabled.
      */
     public boolean isStatisticsRunnerEnabled() {
-    	if ( statisticsRunner != null ) {
-    		return statisticsRunner.isEnabled();
+    	if ( getStatisticsRunner() != null ) {
+    		return getStatisticsRunner().isEnabled();
     	} else {
-    		return enableStatisticsRunner;
+    		return false;
     	}
     }
     
@@ -472,28 +459,21 @@ public final class NavajoConfig {
     public WorkerInterface getIntegrityWorker() {
     	
     	if ( !enableIntegrityWorker ) {
-    		
     		return null;
     	}
-    	
     	return WorkerFactory.getInstance();
-    	
+   
     }
     
     /*
      * Gets the lock manager instance (if enabled).
      * If it does not exist, the lock manager is started.
      */
-    public LockManager getLockManager() {
-    	
+    public LockManager getLockManager() {    	
     	if ( !enableLockManager ) {
     		return null;
     	}
-    	
-    	if ( lockManager == null ) {
-    		lockManager = LockManager.getInstance(this);
-    	}
-    	return lockManager;
+    	return LockManager.getInstance();
     }
     
     /*
@@ -653,14 +633,52 @@ public final class NavajoConfig {
      * Gets the asynchronous service store instance.
      */
     public final com.dexels.navajo.mapping.AsyncStore getAsyncStore() {
-      return this.asyncStore;
+    	if ( isEnableAsync() ) {
+    		return com.dexels.navajo.mapping.AsyncStore.getInstance(asyncTimeout);
+    	} else {
+    		return null;
+    	}
     }
 
+    /**
+     * Get the Jabber instance.
+     * 
+     * @return
+     */
+    public void startJabber() {
+    	
+    	if( jabberMessage!=null && !jabberStarted ) {
+    		JabberInterface ji = JabberFactory.getInstance();
+    		try {
+				ji.configJabber(jabberMessage);
+				jabberStarted = true;
+			} catch (UserException e) {
+				AuditLog.log("INIT", "WARNING: Jabber not installed, configuration problem: " + e.getMessage());
+				
+			}
+    	} else {
+    		AuditLog.log("INIT", "WARNING: Jabber not installed, jabber configuration missing in server.xml.");
+    	}
+    }
+    
+    /*
+     * Start statistics runner.
+     */
+    public void startStatisticsRunner() {
+    	if ( !statisticsRunnerStarted ) {
+    		StatisticsRunnerInterface statisticsRunner = getStatisticsRunner();
+    		if ( statisticsRunner != null ) {
+    			statisticsRunner.setEnabled(isEnableStatisticsRunner());
+    		}
+    		statisticsRunnerStarted = true;
+    	}
+    }
+    
     /*
      * Gets the statistics runnner instance.
      */
     public final StatisticsRunnerInterface getStatisticsRunner() {
-     return this.statisticsRunner;
+       return StatisticsRunnerFactory.getInstance(dbPath, dbProperties, store);
    }
 
     /*
@@ -963,6 +981,22 @@ public final class NavajoConfig {
 	public static void main(String[] args) throws SystemException {
 		NavajoConfig nc = new NavajoConfig(null,null,null,null);
 		System.err.println(":: "+nc.getCurrentCPUload());
+	}
+
+	public float getAsyncTimeout() {
+		return asyncTimeout;
+	}
+
+	public boolean isEnableAsync() {
+		return enableAsync;
+	}
+
+	public boolean isEnableStatisticsRunner() {
+		return enableStatisticsRunner;
+	}
+
+	public String getDbPath() {
+		return dbPath;
 	}
 	
 }
