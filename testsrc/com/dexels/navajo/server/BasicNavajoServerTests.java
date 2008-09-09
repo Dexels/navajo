@@ -152,16 +152,16 @@ public class BasicNavajoServerTests extends BasicTest implements ServerAsyncList
 		
 	}
 	
-//	public void testShutdown() throws Exception {
-//		// Async start sleep service to test proper termination...
-//		myClient.doAsyncSend(NavajoFactory.getInstance().createNavajo(), "tests/InitSleep", null, (ConditionErrorHandler) null);
-//		myClient.doSimpleSend("navajo/InitShutdownServer");
-//		// Call service.
-//		Navajo n = myClient.doSimpleSend("tests/InitUnit");
-//		Assert.assertNotNull(n.getMessage("ConditionErrors"));
-//		Assert.assertNotNull(n.getProperty("ConditionErrors@0/Id"));
-//		Assert.assertEquals(n.getProperty("ConditionErrors@0/Id").getValue(), "4444");
-//	}
+	public void testShutdown() throws Exception {
+		// Async start sleep service to test proper termination...
+		myClient.doAsyncSend(NavajoFactory.getInstance().createNavajo(), "tests/InitSleep", null, (ConditionErrorHandler) null);
+		myClient.doSimpleSend("navajo/InitShutdownServer");
+		// Call service.
+		Navajo n = myClient.doSimpleSend("tests/InitUnit");
+		Assert.assertNotNull(n.getMessage("ConditionErrors"));
+		Assert.assertNotNull(n.getProperty("ConditionErrors@0/Id"));
+		Assert.assertEquals(n.getProperty("ConditionErrors@0/Id").getValue(), "4444");
+	}
 	
 	public void handleException(Exception e) {
 		// TODO Auto-generated method stub

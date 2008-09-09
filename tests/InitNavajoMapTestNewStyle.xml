@@ -1,0 +1,59 @@
+<navascript>
+  <map.navajomap>
+     <navajomap.callwebservice name="tests/InitProperties"/>
+     <message name="Results1">
+        <property name="ProxiedFullTestIntegerProperty1" direction="in">
+            <expression value="$property('/TestProperties/Integer/FullTestIntegerProperty') == 12345"/>
+        </property>
+        <property name="ProxiedFullTestDateProperty1" direction="in">
+            <expression value="$property('/TestProperties/Date/FullTestDateProperty') == ParseDate('17-06-2008', 'dd-MM-yyyy')"/>
+        </property>
+        <property name="ProxiedFullTestIntegerProperty2" direction="in">
+            <expression value="$integerProperty('/TestProperties/Integer/FullTestIntegerProperty') == 12345"/>
+        </property>
+        <property name="ProxiedFullTestDateProperty2" direction="in">
+            <expression value="$dateProperty('/TestProperties/Date/FullTestDateProperty') == ParseDate('17-06-2008', 'dd-MM-yyyy')"/>
+        </property>
+     </message>
+      <field name="messagePointer">
+        <expression value="'TestProperties/Date'"/>
+     </field>
+     <message name="Results2">
+        <navajomap.message>
+            <property name="ProxiedFullTestDateProperty1" direction="in">
+                <expression value="$property('FullTestDateProperty') == ParseDate('17-06-2008', 'dd-MM-yyyy')"/>
+            </property>
+            <property name="ProxiedFullTestDateProperty2" direction="in">
+                <expression value="$dateProperty('FullTestDateProperty') == ParseDate('17-06-2008', 'dd-MM-yyyy')"/>
+            </property>
+        </navajomap.message>
+     </message>
+     <field name="messagePointer">
+        <expression value="'/TestProperties/Integer'"/>
+     </field>
+     <message name="Results3">
+        <navajomap.message>
+            <property name="ProxiedFullTestIntegerProperty1" direction="in">
+                <expression value="$property('FullTestIntegerProperty') == 12345"/>
+            </property>
+            <property name="ProxiedFullTestIntegerProperty2" direction="in">
+                <expression value="$integerProperty('FullTestIntegerProperty') == 12345"/>
+            </property>
+        </navajomap.message>
+     </message>
+  </map.navajomap>
+  <map.navajomap>
+     <navajomap.callwebservice name="tests/InitProperties"/>
+     <navajomap.createproperty name="/TestProperties/Date/FullTestDateProperty" value="TODAY"/>
+     <navajomap.createproperty name="/TestProperties/Date/EmptyTestDateProperty" value="null"/>
+     <navajomap.callwebservice name="tests/ProcessTestProperties"/>
+     <message name="Results4">
+        <property name="CheckFullTestDateProperty" direction="in">
+            <expression value="$property('/ResultsDate/FullDate')"/>
+        </property>
+        <property name="CheckEmptyTestDateProperty" direction="in">
+            <expression value="$property('/ResultsDate/EmptyDate')"/>
+        </property>
+     </message>
+  </map.navajomap>
+</navascript>
