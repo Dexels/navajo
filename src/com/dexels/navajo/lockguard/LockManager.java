@@ -59,7 +59,6 @@ public final class LockManager extends GenericThread implements LockManagerMXBea
 	static volatile LockManager instance = null;
 	boolean readingDefinitions = true;
 	private long configTimestamp = -1;
-	private NavajoConfig myConfig;
 	
 	private final static String id = "Navajo LockManager";
 	
@@ -72,8 +71,8 @@ public final class LockManager extends GenericThread implements LockManagerMXBea
 	private final static String LOCKS_CONFIG = "locks.xml";
 
 	private final long getConfigTimeStamp() {
-		if ( myConfig != null ) {
-			java.io.File f = new java.io.File(myConfig.getConfigPath() + "/" + LOCKS_CONFIG);
+		if ( NavajoConfig.getInstance() != null ) {
+			java.io.File f = new java.io.File(NavajoConfig.getInstance().getConfigPath() + "/" + LOCKS_CONFIG);
 			if ( f != null && f.exists() ) {
 				return f.lastModified();
 			} else {
@@ -106,8 +105,8 @@ public final class LockManager extends GenericThread implements LockManagerMXBea
 			readingDefinitions = true;
 			lockDefinitions.clear();
 			
-			in = (myConfig == null ? new FileInputStream("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/config/locks.xml")
-					: new FileInputStream(myConfig.getConfigPath() + "/" + LOCKS_CONFIG));
+			in = (NavajoConfig.getInstance() == null ? new FileInputStream("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/config/locks.xml")
+					: new FileInputStream(NavajoConfig.getInstance().getConfigPath() + "/" + LOCKS_CONFIG));
 			
 			Navajo definition = NavajoFactory.getInstance().createNavajo( in  );
 								
@@ -150,7 +149,7 @@ public final class LockManager extends GenericThread implements LockManagerMXBea
 		}
 	}
 	
-	public static LockManager getInstance(NavajoConfig config) {
+	public static LockManager getInstance() {
 		
 		if ( instance != null ) {
 			return instance;
@@ -159,7 +158,6 @@ public final class LockManager extends GenericThread implements LockManagerMXBea
 		synchronized ( semaphore ) {
 			if ( instance == null ) {
 				instance = new LockManager();
-				instance.myConfig = config;
 				instance.startThread(instance);
 				try {
 					JMXHelper.registerMXBean(instance, JMXHelper.NAVAJO_DOMAIN, id);
@@ -283,7 +281,7 @@ public final class LockManager extends GenericThread implements LockManagerMXBea
 		m2.addProperty(p2);
 		
 		// Test.
-		LockManager lm = LockManager.getInstance(null);
+		LockManager lm = LockManager.getInstance();
 		Access a = new Access(1, 1, 2, "arjen", "ProcessWhatever", "", "", "", null);
 		a.setInDoc(n1);
 		
