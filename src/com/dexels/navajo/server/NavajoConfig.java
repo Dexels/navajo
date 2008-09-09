@@ -57,6 +57,10 @@ import com.dexels.navajo.parser.DefaultExpressionEvaluator;
 import com.dexels.navajo.persistence.*;
 import com.dexels.navajo.util.AuditLog;
 
+/*
+ * The default NavajoConfig class.
+ * 
+ */
 public final class NavajoConfig {
 
 	private static final int MAX_ACCESS_SET_SIZE = 50;
@@ -113,15 +117,24 @@ public final class NavajoConfig {
 	
 	private OperatingSystemMXBean myOs = null;
     
+	/**
+	 * Creates a fresh NavajoConfig object.
+	 * 
+	 * @param inputStreamReader, the reader object to be used to read the config inputstream is
+	 * @param ncs, the classloader to be used for the scripts.
+	 * @param in, the inpustream containing the xml configuration.
+	 * @param externalRootPath, optionally an external rootpath can be supplied (e.g. from a Servlet Context).
+	 * 
+	 * @throws SystemException
+	 */
 	public NavajoConfig(InputStreamReader inputStreamReader, NavajoClassSupplier ncs, InputStream in, String externalRootPath)  throws SystemException {
 
 		this.inputStreamReader = inputStreamReader;
 		classPath = System.getProperty("java.class.path");
 		adapterClassloader = ncs;
-		instance = this;
 		loadConfig(in, externalRootPath);
 		myOs = ManagementFactory.getOperatingSystemMXBean();
-
+		instance = this;
 	}
     
     public static NavajoConfig getInstance() {
