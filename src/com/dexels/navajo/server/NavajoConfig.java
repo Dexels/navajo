@@ -135,11 +135,20 @@ public final class NavajoConfig {
 		this.inputStreamReader = inputStreamReader;
 		classPath = System.getProperty("java.class.path");
 		adapterClassloader = ncs;
+		// BIG NOTE: instance SHOULD be set at this point since instance needs to be known by classes
+		// called during loadConfig()!!
+		instance = this;
 		loadConfig(in, externalRootPath);
 		myOs = ManagementFactory.getOperatingSystemMXBean();
-		instance = this;
+		
 	}
     
+	/**
+	 * Use Dispatcher to fetch reference to NavajoConfig.
+	 * 
+	 * @return
+	 */
+	@Deprecated
     public static NavajoConfig getInstance() {
     	return instance;
     }
