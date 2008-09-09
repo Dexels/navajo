@@ -217,12 +217,29 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
 	  return instance;
   }
   
-  public final void startUpServices() {
+  private final void startUpServices() {
 
+	  // Bootstrap async store.
+	  instance.navajoConfig.getAsyncStore();
+	  
+	  // Startup statistics runnner.
+	  instance.navajoConfig.startStatisticsRunner();
+	  
+	  // Startup Jabber.
+	  instance.navajoConfig.startJabber();
+	  
 	  // Startup task runner.
-	  instance.navajoConfig.getTaskRunner();
+	  instance.navajoConfig.startTaskRunner();
+	  
 	  // Startup queued adapter.
 	  RequestResponseQueueFactory.getInstance();
+	  
+	  // Bootstrap lock manager.
+	  instance.navajoConfig.getLockManager();
+	  
+	  // Bootstrap integrity worker.
+	  instance.navajoConfig.getIntegrityWorker();
+	  
 	  // Startup tribal status collector.
 	  TribeManagerFactory.startStatusCollector();
 
@@ -498,7 +515,7 @@ public Access [] getUsers() {
 	  }
 	  
 	  // Check for locks.
-	  LockManager lm = navajoConfig.getLockManager( );
+	  LockManager lm = navajoConfig.getLockManager();
 	  Lock [] locks = null;
 	  if ( lm != null ) {
 		  try {
