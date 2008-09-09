@@ -27,6 +27,8 @@ package navajo;
 /**
  * VERSION HISTORY
  * 
+ * 6.5.6 Some restructuring of Dispatcher/NavajoConfig. Better deadlock prevention for waiting for the chief in TribeManager.
+ * 
  * 6.5.4-5 Added support for enabling/disabling and shutting down Navajo Server. Added support for forwarding
  *       Async Request to proper Tribal Member. 
  * 
@@ -117,10 +119,10 @@ public class Version extends dexels.Version {
 
 	public static final int MAJOR = 6;
 	public static final int MINOR = 5;
-	public static final int PATCHLEVEL = 5;
+	public static final int PATCHLEVEL = 6;
 	public static final String VENDOR = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Kernel";
-	public static final String RELEASEDATE = "2008-09-01";
+	public static final String RELEASEDATE = "2008-09-09";
 	
 //	 Included packages.
 	String [] includes = {"navajodocument.Version"};
