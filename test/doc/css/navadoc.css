@@ -1,0 +1,37 @@
+body {
+background:#FFFBFF none repeat scroll 0% 50%;
+}
+a:link {
+color:#35262D;
+}
+a:visited {
+color:#76A0B0;
+text-decoration:none;
+}
+a:active {
+color:#444444;
+text-decoration:none;
+}
+a:hover {
+color:#76A0B0;
+text-decoration:underline;
+}
+
+td {
+background:#E8ECED none repeat scroll 0% 50%;
+color:#000000;
+font-family:"Arial";
+font-size:12px;
+}
+th {
+background:#35262D none repeat scroll 0% 50%;
+color:#FFFBFF;
+font-family:"Arial";
+font-size:12px;
+}
+select, option, textarea, input {
+background:#EEEEEE none repeat scroll 0% 50%;
+color:#000000;
+font-family:Verdana,arial,helvetica,sans-serif;
+font-size:11px;
+}
