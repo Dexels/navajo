@@ -797,7 +797,18 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 
 		if (genericResourceLoader != null) {
 			try {
-				return genericResourceLoader.getResourceURL(location);
+				URL resourceURL = genericResourceLoader.getResourceURL(location);
+				if(resourceURL!=null) {
+					return resourceURL;
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		if (tipiResourceLoader != null) {
+			try {
+				return tipiResourceLoader.getResourceURL(location);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
