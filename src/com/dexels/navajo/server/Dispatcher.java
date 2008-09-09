@@ -176,6 +176,10 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
 	  navajoConfig = null;
   }
   
+  private Dispatcher(NavajoConfig injected) {
+	  navajoConfig = injected;
+  }
+  
   /**
    * Constructor for URL based configuration.
    *
@@ -190,6 +194,25 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
 	  this(configurationUrl, fileInputStreamReader, null, cl);
   }
 
+  /**
+   * Returns a Dispatcher instance if it exists. If it does not exist an instance is created
+   * with the injected NavajoConfig class.
+   * 
+   * @param nc
+   * @return
+   */
+  public static Dispatcher getInstance(NavajoConfig nc) {
+	  if ( instance == null ) {
+		 instance = new Dispatcher(nc);
+	  }
+	  return instance;
+  }
+  
+  /**
+   * Only returns an "existing" instance. If instance does not exist, null is returned.
+   * 
+   * @return
+   */
   public static Dispatcher getInstance() {
 	  return instance;
   }
