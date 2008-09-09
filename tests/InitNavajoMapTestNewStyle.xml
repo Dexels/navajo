@@ -15,9 +15,7 @@
             <expression value="$dateProperty('/TestProperties/Date/FullTestDateProperty') == ParseDate('17-06-2008', 'dd-MM-yyyy')"/>
         </property>
      </message>
-      <field name="messagePointer">
-        <expression value="'TestProperties/Date'"/>
-     </field>
+     <navajomap.set field="messagePointer" value="TestProperties/Date"/>
      <message name="Results2">
         <navajomap.message>
             <property name="ProxiedFullTestDateProperty1" direction="in">
@@ -28,9 +26,7 @@
             </property>
         </navajomap.message>
      </message>
-     <field name="messagePointer">
-        <expression value="'/TestProperties/Integer'"/>
-     </field>
+     <navajomap.set field="messagePointer" value="/TestProperties/Integer"/>
      <message name="Results3">
         <navajomap.message>
             <property name="ProxiedFullTestIntegerProperty1" direction="in">
@@ -40,6 +36,22 @@
                 <expression value="$integerProperty('FullTestIntegerProperty') == 12345"/>
             </property>
         </navajomap.message>
+     </message>
+     <navajomap.set field="messagePointer" value="/TestProperties/Array"/>
+     <param name="Count">
+        <expression value="0"/>
+     </param>
+     <message name="ResultsArray3" mode="ignore">
+        <navajomap.messages>
+           <param name="Count">
+             <expression value="[/@Count] + 1"/>
+           </param>
+        </navajomap.messages>
+     </message>
+     <message name="Results3">
+        <property name="ProxiedArrayMessage" direction="in">
+           <expression value="[/@Count] == 2"/>
+        </property>
      </message>
   </map.navajomap>
   <map.navajomap>

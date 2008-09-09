@@ -43,6 +43,24 @@
             </property>
         </map>
      </message>
+     <field name="messagePointer">
+        <expression value="'/TestProperties/Array'"/>
+     </field>
+     <param name="Count">
+        <expression value="0"/>
+     </param>
+     <message name="ResultsArray3" mode="ignore">
+        <map ref="messages">
+           <param name="Count">
+             <expression value="[/@Count] + 1"/>
+           </param>
+        </map>
+     </message>
+     <message name="Results3">
+        <property name="ProxiedArrayMessage" direction="in">
+                <expression value="[/@Count] == 2"/>
+        </property>
+     </message>
   </map>
   <map object="com.dexels.navajo.adapter.NavajoMap">
      <field name="doSend">
