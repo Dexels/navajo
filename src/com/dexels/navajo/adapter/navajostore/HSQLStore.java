@@ -190,7 +190,7 @@ public final class HSQLStore implements StoreInterface {
    * @param a
    */
   protected void addAccess(final Access a, final AsyncMappable am) {
-    if (Dispatcher.getInstance().getNavajoConfig().dbPath != null) {
+    if (Dispatcher.getInstance().getNavajoConfig().getDbPath() != null) {
       Connection con = createConnection(false, false, false);
       if (con != null) {
         try {

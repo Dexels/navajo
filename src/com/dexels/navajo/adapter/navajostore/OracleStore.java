@@ -329,7 +329,7 @@ public final class OracleStore implements StoreInterface {
 			}	
 		}
 		
-		if (Dispatcher.getInstance().getNavajoConfig().dbPath != null) {
+		if (Dispatcher.getInstance().getNavajoConfig().getDbPath() != null) {
 			
 			// Check for piggy back data.
 			Iterator iter = accessMap.values().iterator();
