@@ -271,6 +271,11 @@
     </tipiclass>
 
 
+    <tipiclass class="TipiVerticalBoxLayout" name="verticalbox"
+        package="com.dexels.navajo.tipi.components.echoimpl.impl.layout" type="layout">
+        <values/>
+    </tipiclass>
+
     <tipiclass class="TipiColumn" name="column" package="com.dexels.navajo.tipi.components.echoimpl" type="tipi" childcount="*" layoutmanager="true" addtocontainer="true">
         <events>
             <event name="onInstantiate"/>
@@ -617,7 +622,18 @@
         </values>
         <methods/>
     </tipiclass>
-
+    <tipiclass class="TipiBrowser" name="browser" package="com.dexels.navajo.tipi.components.echoimpl" type="tipi" childcount="0" layoutmanager="false" addtocontainer="true">
+        <events>
+            <event name="onInstantiate"/>
+            <event name="onLoad"/>
+            <event name="onGeneratedErrors"/>
+        </events>
+        <values>
+            <value direction="in" name="visible" type="boolean"/>
+            <value direction="inout" name="url" type="string"/>
+        </values>
+        <methods/>
+    </tipiclass>
     <tipiclass class="TipiPanel" name="tipi" package="com.dexels.navajo.tipi.components.echoimpl" type="tipi" childcount="*" layoutmanager="true" addtocontainer="true">
         <events>
             <event name="onInstantiate"/>

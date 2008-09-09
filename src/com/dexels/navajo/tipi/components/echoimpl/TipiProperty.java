@@ -343,7 +343,11 @@ public class TipiProperty extends TipiEchoComponentImpl implements PropertyCompo
         	myPropertyComponent.setAllowLineWrap(((Boolean)object).booleanValue());
         	return;
         }
- 
+        if ("visible".equals(name)) {
+        	myPropertyComponent.setVisible(((Boolean)object).booleanValue());
+        	return;
+        }
+
         super.setComponentValue(name, object);
     }
 

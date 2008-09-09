@@ -47,6 +47,8 @@ public class TipiServeBinary extends TipiAction {
             	binary = getEvaluatedParameter("value", e);
             }
             URL baseUrl = null;
+
+            System.err.println("Opening binary: "+binary.value);
             
             Operand baseUrlOperand = getEvaluatedParameter("baseUrl", e);
             if(baseUrlOperand!=null && baseUrlOperand.value!=null &&!"".equals(baseUrlOperand.value)) {

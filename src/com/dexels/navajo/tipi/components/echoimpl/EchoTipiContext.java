@@ -74,6 +74,10 @@ public class EchoTipiContext extends TipiContext {
     		TaskQueueHandle handle =  t.createTaskQueue();
     		context.setTaskQueueCallbackInterval(handle, 3000);
     	}
+		eHandler = new BaseTipiErrorHandler();
+		eHandler.setContext(this);
+		eHandler.initResource();
+
     	
     	setCookieManager(new BrowserCookieManager());
     }
@@ -124,13 +128,16 @@ public class EchoTipiContext extends TipiContext {
 				try {
 					te.performAction(null, null, 0);
 				} catch (TipiException e) {
+					System.err.println("tipi exception caught");
 					e.printStackTrace();
+					showInternalError(e.getMessage(),e);
 				} catch (TipiBreakException e) {
 					e.printStackTrace();
 				}
 				
 			}
 		};
+		// TODO Remove, document or do something with this strange name dependancy
 		if(Thread.currentThread().getName().indexOf("http")!=-1) {
 			r.run();
 		} else {
@@ -153,17 +160,10 @@ public class EchoTipiContext extends TipiContext {
 
     
     public void setSplashVisible(boolean b) {
-        /**
-         * @todo Implement this com.dexels.navajo.tipi.TipiContext abstract
-         *       method
-         */
-    }
+      }
 
     public void setSplash(Object s) {
-        /**
-         * @todo Implement this com.dexels.navajo.tipi.TipiContext abstract
-         *       method
-         */
+
     }
 
     public void clearTopScreen() {
@@ -290,6 +290,8 @@ public class EchoTipiContext extends TipiContext {
 
 
 	public void showInfo(String text, String title) {
+		System.err.println("ALERTING: "+text);
+		text = text.replaceAll("\n", " ");
         ApplicationInstance.getActive().enqueueCommand(new JavaScriptEval("alert('" + text + "')"));
 	//System.err.println("Show info found: ");
 //	Thread.dumpStack();
@@ -322,6 +324,7 @@ public class EchoTipiContext extends TipiContext {
 		r.run();
 	}
 
+	
 	public void showInternalError(String errorString, Throwable t) {
 		showInfo("Internal error: "+errorString,"Problem:");
 		super.showInternalError(errorString, t);
@@ -331,5 +334,15 @@ public class EchoTipiContext extends TipiContext {
 	@Override
 	public void showQuestion(String text, String title, String[] options) throws TipiBreakException {
 		showInfo("showQuestion not supported", "Warning");
+	}
+
+
+	public String createExpressionUrl(String expression) {
+		// TODO Auto-generated method stub
+		Connection con = WebRenderServlet.getActiveConnection();
+		HttpServletRequest req = con.getRequest();
+		String url = req.getRequestURL().toString();
+		
+		return url + "?evaluate="+expression;
 	}
 }

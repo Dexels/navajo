@@ -226,4 +226,8 @@ public class TipiEchoInstance extends ApplicationInstance {
 			context.exit();
 		}
 	}
+	
+	public TipiContext getTipiContext() {
+		return context;
+	}
 }

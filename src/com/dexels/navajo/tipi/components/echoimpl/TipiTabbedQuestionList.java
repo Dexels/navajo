@@ -15,6 +15,7 @@ import nextapp.echo2.app.*;
 import nextapp.echo2.webcontainer.*;
 
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.echoclient.components.Styles;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.echoimpl.helpers.*;
 import com.dexels.navajo.tipi.components.question.*;
@@ -34,6 +35,9 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
 
     private ImageReference inValidImage;
 
+    private Style validStyle;
+    private Style invalidStyle;
+    
     protected Object getGroupConstraints(Message groupMessage) {
         // TODO Auto-generated method stub
         Property name = groupMessage.getProperty("Name");
@@ -73,6 +77,15 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
         final TipiComponent me = this;
         myTabbedPane = new TabbedPane();
         myTabbedPane.setStyleName("Default");
+        
+    	Style sss = Styles.DEFAULT_STYLE_SHEET.getStyle(myTabbedPane.getClass(), "Default");
+    	myTabbedPane.setStyle(sss);
+    	System.err.println("Looking for style for class: "+myTabbedPane.getClass());
+    	if (sss!=null) {
+        	System.err.println("Style found : "+sss);
+		} else {
+			System.err.println("Style not found");
+		}
         defaultTabModel = new DefaultTabModel();
 //        defaultTabModel.setSelectedBackground(new Color(255, 255, 255));
 //        defaultTabModel.setSelectedForeground(new Color(0, 0, 0));
@@ -89,7 +102,8 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
         TipiHelper th = new EchoTipiHelper();
         th.initHelper(this);
         addHelper(th);
-        myTabbedPane.setTabSpacing(0);
+       // myTabbedPane.setTabSpacing(2);
+//        myTabbedPane.setFont(new Font(Font.ARIAL,Font.PLAIN,new Extent(10, Extent.PT)));
 //        myTabbedPane.addPropertyChangeListener(new PropertyChangeListener() {
 //
 //            public void propertyChange(PropertyChangeEvent evt) {
@@ -99,6 +113,11 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
 //            });
         validImage = new URLImageReference(getClass().getClassLoader().getResource("com/dexels/navajo/tipi/components/echoimpl/ok.gif"));
         inValidImage = new URLImageReference(getClass().getClassLoader().getResource("com/dexels/navajo/tipi/components/echoimpl/cancel.gif"));
+
+        
+        validStyle = Styles.DEFAULT_STYLE_SHEET.getStyle(ButtonEx.class, "ValidQuestionGroupTab");
+        invalidStyle = Styles.DEFAULT_STYLE_SHEET.getStyle(ButtonEx.class, "InvalidQuestionGroupTab");
+
         return myTabbedPane;
     }
     
@@ -107,7 +126,9 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
     	String tabName = ""+constraints;
 //    	PushButton pb = new PushButton(tabName);
         defaultTabModel.addTab(tabName, (Component) c);
-//        if (lastSelectedTab == null) {
+        myTabbedPane.setFont(new Font(Font.VERDANA, Font.PLAIN, new Extent(10, Extent.PT)));
+
+        //        if (lastSelectedTab == null) {
 //            lastSelectedTab = (Component) c;
 //        }
         // System.err.println("WIDTH: " + myTabbedPane.getWidth());
@@ -162,7 +183,11 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
         }
         ButtonEx selected = (ButtonEx) defaultTabModel.getTabAt(myTabbedPane,i, true);
         selected.setIcon(valid ? validImage : inValidImage);
-    }
+        selected.setFont(new Font(Font.VERDANA,Font.PLAIN, new Extent(10,Extent.PX)));
+        //        selected.setProperty("icon", /)
+//        selected.setStyle(valid? validStyle: invalidStyle);
+        System.err.println("SETTING VALIDITY "+valid+" style: "+validStyle+" inv: "+invalidStyle);
+	}
 
     public void setComponentValue(String name, Object object) {
         if (name.equals("background")) {

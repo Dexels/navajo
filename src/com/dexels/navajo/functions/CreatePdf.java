@@ -33,7 +33,22 @@ public class CreatePdf extends FunctionInterface {
 				throw new TMLExpressionException("Problem evaluating CreatePdf function: ",e);
 			}
 		}
-		throw new TMLExpressionException("CreatePdf needs ONE string parameter.");
+		if (oo != null && oo instanceof Binary) {
+			Binary b = (Binary)oo;
+			String res = new String(b.getData());
+			System.err.println("Converting: "+res);
+			try {
+				return convertHtml(res);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+				throw new TMLExpressionException("Problem evaluating CreatePdf function: ",e);
+			} catch (DocumentException e) {
+				throw new TMLExpressionException("Problem evaluating CreatePdf function: ",e);
+			} catch (IOException e) {
+				throw new TMLExpressionException("Problem evaluating CreatePdf function: ",e);
+			}
+		}
+		throw new TMLExpressionException("CreatePdf needs ONE string|binary parameter.");
 	}
 
 	@Override

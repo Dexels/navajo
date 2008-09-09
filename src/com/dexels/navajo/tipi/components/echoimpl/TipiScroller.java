@@ -2,6 +2,8 @@ package com.dexels.navajo.tipi.components.echoimpl;
 
 import java.awt.*;
 
+import com.dexels.navajo.tipi.TipiException;
+
 import nextapp.echo2.app.*;
 
 import echopointng.*;
@@ -26,20 +28,22 @@ import echopointng.able.*;
  */
 
 public class TipiScroller extends TipiPanel {
-    public TipiScroller() {
-    }
+	public TipiScroller() {
+	}
 
-     public void setComponentValue(final String name, final Object object) {
+	public void setComponentValue(final String name, final Object object) {
 
-          if ("w".equals(name)) {
-          ContainerEx cont = (ContainerEx) getContainer();
-          cont.setWidth( new Extent(( (Integer) object).intValue(),Extent.PX));
-          }
-          if ("h".equals(name)) {
-          ContainerEx cont = (ContainerEx) getContainer();
-          cont.setHeight(  new Extent(( (Integer) object).intValue(),Extent.PX));
-          }
-         super.setComponentValue(name, object);
-     }
+		if ("w".equals(name)) {
+				ContainerEx cont = (ContainerEx) getContainer();
+			cont.setWidth(new Extent(((Integer) object).intValue(), Extent.PX));
+		}
+		if ("h".equals(name)) {
+			ContainerEx cont = (ContainerEx) getContainer();
+			cont
+					.setHeight(new Extent(((Integer) object).intValue(),
+							Extent.PX));
+		}
+		super.setComponentValue(name, object);
+	}
 
 }

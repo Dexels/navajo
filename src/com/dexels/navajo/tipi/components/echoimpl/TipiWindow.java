@@ -125,10 +125,14 @@ public final class TipiWindow
     }
 
     private final void myWindow_internalFrameClosed(WindowPaneEvent arg0) {
-    		myWindow.setVisible(false);
     		try {
 				performTipiEvent("onWindowClosed", null, false);
-			} catch (TipiException e) {
+				myWindow.setVisible(false);
+			    
+    		} catch (TipiException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+    		} catch (TipiBreakException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
