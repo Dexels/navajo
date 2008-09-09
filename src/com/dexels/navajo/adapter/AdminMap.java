@@ -89,7 +89,7 @@ public class AdminMap implements Mappable {
     supportsStatistics = nc.isStatisticsRunnerEnabled();
     supportsLocks = nc.isLockManagerEnabled();
     
-    storeLocation = nc.dbPath;
+    storeLocation = nc.getDbPath();
     serverId = Dispatcher.getInstance().getApplicationId();
     
     myConfig = config;
