@@ -160,7 +160,6 @@ public final class TipiWindow
      	 
       JInternalFrame jj = (JInternalFrame) getContainer();
       if (jj.isMaximum()) {
-        System.err.println("Ignoring: Nothing to maximize");
         return;
       }
       try {
