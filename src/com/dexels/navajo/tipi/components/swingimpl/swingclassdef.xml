@@ -297,8 +297,8 @@
             <param name="footer" type="string" />
          </method>
          <method name="setAllSelected">
-            <param name="propertyName" type="string" />
-            <param name="value" type="object" />
+            <param name="propertyName" type="string" required="true"/>
+            <param name="value" type="object" required="true"/>
          </method>
          <method name="doEmail" />
          <method name="doWord" />
@@ -312,10 +312,10 @@
             <param name="margins" type="string" />
          </method>
          <method name="editCell">
-            <param name="property" type="property" />
+            <param name="property" type="property" required="true"/>
          </method>
          <method name="sort">
-            <param name="index" type="integer" />
+            <param name="index" type="integer" required="true"/>
             <param name="ascending" type="boolean" />
          </method>
       </methods>
