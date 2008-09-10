@@ -9,8 +9,6 @@ import javax.imageio.*;
 import javax.swing.*;
 
 import org.jdesktop.swingx.*;
-import org.jdesktop.swingx.JXLoginPanel.JXLoginDialog;
-import org.jdesktop.swingx.action.*;
 
 import com.dexels.navajo.document.types.*;
 import com.dexels.navajo.tipi.*;

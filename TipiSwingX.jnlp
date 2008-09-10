@@ -12,7 +12,7 @@
     </security>
     <resources>
         <jar href="lib/swingx.jar" main="false"/>
-        <jar href="TipiSwingX.jar" main="false"/>
+        <jar href="lib/TipiSwingX.jar" main="false"/>
     </resources>
     <component-desc/>
 </jnlp>

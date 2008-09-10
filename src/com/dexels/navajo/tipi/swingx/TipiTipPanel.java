@@ -5,7 +5,6 @@ import java.util.*;
 import org.jdesktop.swingx.*;
 import org.jdesktop.swingx.tips.*;
 
-import com.dexels.navajo.server.statistics.*;
 import com.dexels.navajo.tipi.components.swingimpl.*;
 
 public class TipiTipPanel extends TipiSwingDataComponentImpl {

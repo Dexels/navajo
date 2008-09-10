@@ -1,11 +1,9 @@
 package com.dexels.navajo.tipi.swingx;
 
-import java.awt.Color;
 import java.util.*;
 import java.util.regex.*;
 
 import javax.swing.*;
-import javax.swing.table.*;
 
 import org.jdesktop.swingx.*;
 import org.jdesktop.swingx.decorator.*;
