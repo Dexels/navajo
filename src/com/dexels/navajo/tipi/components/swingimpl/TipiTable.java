@@ -450,6 +450,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 	    
 		Map<String, Object> m = new HashMap<String, Object>();
 		m.put("service", method);
+		m.put("navajo", n);
 		performTipiEvent("onLoad", m, true);
 		mm.repaint();
 	}
@@ -482,7 +483,9 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 	 * 
 	 * @see com.dexels.navajo.tipi.components.core.TipiDataComponentImpl#doPerformOnLoad(java.lang.String)
 	 */
-	protected void doPerformOnLoad(String method) {
+	
+	@Override
+	protected void doPerformOnLoad(String method, Navajo n, boolean sync) {
 	}
 
 	public void setComponentValue(final String name, final Object object) {
