@@ -7,7 +7,7 @@
       <description></description>
       <path base="/home/aphilip/workspace">
         <services value="sportlink-serv/navajo-tester/auxilary/scripts"/>
-        <stylesheet value="NavaDoc/xsl/navadocweb.xsl"/>
+        <stylesheet value="NavaDoc/xsl/navadoc.xsl"/>
         <target value="NavaDoc/test/doc"/>
       </path>
       <property name="base-uri" value="./"/>
