@@ -94,37 +94,37 @@ private void init() {
     iconButtonPanel.setAllVisible(false);
     switch (mode) {
       case MODE_OK_CANCEL:
-        iconButtonPanel.setButtonVisible(iconButtonPanel.OK_BUTTON,true);
-        iconButtonPanel.setButtonVisible(iconButtonPanel.CANCEL_BUTTON,true);
+        iconButtonPanel.setButtonVisible(IconButtonPanel.OK_BUTTON,true);
+        iconButtonPanel.setButtonVisible(IconButtonPanel.CANCEL_BUTTON,true);
         break;
       case MODE_CONFIRM:
       case MODE_CLOSE:
-        iconButtonPanel.setButtonVisible(iconButtonPanel.OK_BUTTON,true);
-        iconButtonPanel.setButtonVisible(iconButtonPanel.CANCEL_BUTTON,false);
+        iconButtonPanel.setButtonVisible(IconButtonPanel.OK_BUTTON,true);
+        iconButtonPanel.setButtonVisible(IconButtonPanel.CANCEL_BUTTON,false);
         break;
       case MODE_OK_CANCEL_APPLY:
-        iconButtonPanel.setButtonVisible(iconButtonPanel.SAVE_BUTTON,true);
-        iconButtonPanel.setButtonVisible(iconButtonPanel.OK_BUTTON,true);
-        iconButtonPanel.setButtonVisible(iconButtonPanel.CANCEL_BUTTON,true);
+        iconButtonPanel.setButtonVisible(IconButtonPanel.SAVE_BUTTON,true);
+        iconButtonPanel.setButtonVisible(IconButtonPanel.OK_BUTTON,true);
+        iconButtonPanel.setButtonVisible(IconButtonPanel.CANCEL_BUTTON,true);
         break;
       case MODE_OK_CANCEL_APPLY_INSERT:
-        iconButtonPanel.setButtonVisible(iconButtonPanel.SAVE_BUTTON,true);
-        iconButtonPanel.setButtonVisible(iconButtonPanel.OK_BUTTON,true);
-        iconButtonPanel.setButtonVisible(iconButtonPanel.CANCEL_BUTTON,true);
-        iconButtonPanel.setButtonVisible(iconButtonPanel.INSERT_BUTTON,true);
+        iconButtonPanel.setButtonVisible(IconButtonPanel.SAVE_BUTTON,true);
+        iconButtonPanel.setButtonVisible(IconButtonPanel.OK_BUTTON,true);
+        iconButtonPanel.setButtonVisible(IconButtonPanel.CANCEL_BUTTON,true);
+        iconButtonPanel.setButtonVisible(IconButtonPanel.INSERT_BUTTON,true);
         break;
       case MODE_OK_CANCEL_INSERT_DELETE:
-        iconButtonPanel.setButtonVisible(iconButtonPanel.DELETE_BUTTON,true);
-        iconButtonPanel.setButtonVisible(iconButtonPanel.OK_BUTTON,true);
-        iconButtonPanel.setButtonVisible(iconButtonPanel.CANCEL_BUTTON,true);
-        iconButtonPanel.setButtonVisible(iconButtonPanel.INSERT_BUTTON,true);
+        iconButtonPanel.setButtonVisible(IconButtonPanel.DELETE_BUTTON,true);
+        iconButtonPanel.setButtonVisible(IconButtonPanel.OK_BUTTON,true);
+        iconButtonPanel.setButtonVisible(IconButtonPanel.CANCEL_BUTTON,true);
+        iconButtonPanel.setButtonVisible(IconButtonPanel.INSERT_BUTTON,true);
         break;
       case MODE_OK_CANCEL_APPLY_INSERT_DELETE:
-        iconButtonPanel.setButtonVisible(iconButtonPanel.SAVE_BUTTON,true);
-        iconButtonPanel.setButtonVisible(iconButtonPanel.DELETE_BUTTON,true);
-        iconButtonPanel.setButtonVisible(iconButtonPanel.OK_BUTTON,true);
-        iconButtonPanel.setButtonVisible(iconButtonPanel.CANCEL_BUTTON,true);
-        iconButtonPanel.setButtonVisible(iconButtonPanel.INSERT_BUTTON,true);
+        iconButtonPanel.setButtonVisible(IconButtonPanel.SAVE_BUTTON,true);
+        iconButtonPanel.setButtonVisible(IconButtonPanel.DELETE_BUTTON,true);
+        iconButtonPanel.setButtonVisible(IconButtonPanel.OK_BUTTON,true);
+        iconButtonPanel.setButtonVisible(IconButtonPanel.CANCEL_BUTTON,true);
+        iconButtonPanel.setButtonVisible(IconButtonPanel.INSERT_BUTTON,true);
         break;
     }
 //
@@ -143,12 +143,12 @@ private void init() {
 
     InputMap im = getLayeredPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
     ActionMap am = getLayeredPane().getActionMap();
-    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_MASK), "Save");
-    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_T, KeyEvent.CTRL_MASK), "Insert");
-    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_E, KeyEvent.CTRL_MASK), "SaveExit");
-    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_Q, KeyEvent.CTRL_DOWN_MASK), "Exit");
+    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK), "Save");
+    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_T, InputEvent.CTRL_MASK), "Insert");
+    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_E, InputEvent.CTRL_MASK), "SaveExit");
+    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_Q, InputEvent.CTRL_DOWN_MASK), "Exit");
     im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "Exit");
-    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.CTRL_MASK), "Fetch");
+    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_MASK), "Fetch");
     im.put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), "Delete");
     im.put(KeyStroke.getKeyStroke(KeyEvent.VK_F11, 0), "Clear");
     am.put("Save", new KeyEventHandler(this, "Save"));
@@ -162,7 +162,8 @@ private void init() {
     this.getContentPane().setLayout(borderLayout1);
     setModal(true);
     this.addWindowListener(new java.awt.event.WindowAdapter() {
-      public void windowClosing(WindowEvent e) {
+      @Override
+	public void windowClosing(WindowEvent e) {
         this_windowClosing(e);
       }
     });
@@ -238,12 +239,14 @@ private void init() {
 
   }
 
-  public void setVisible(boolean parm1) {
+  @Override
+public void setVisible(boolean parm1) {
     super.setVisible( parm1);
     iconButtonPanel.requestFocus();
   }
 
-  public void showDialog() {
+  @Override
+public void showDialog() {
     setCommitted(false);
     super.showDialog();
   }

@@ -54,7 +54,7 @@ public final class PercentagePropertyField extends PropertyField {
         return;
       }
       System.err.println("BRAAAA: "+text);
-      DecimalFormat numberInstance = (DecimalFormat) DecimalFormat.getInstance();
+      DecimalFormat numberInstance = (DecimalFormat) NumberFormat.getInstance();
       numberInstance.setGroupingUsed(true);
       numberInstance.getDecimalFormatSymbols().setDecimalSeparator(',');
       Number value = numberInstance.parse(text);
@@ -82,7 +82,8 @@ public final class PercentagePropertyField extends PropertyField {
   }
 
 
-  public void update() {
+  @Override
+public void update() {
 //	  doFocusLost(null);
   }
   
@@ -104,7 +105,7 @@ public final class PercentagePropertyField extends PropertyField {
       return;
     }
       Percentage mon = new Percentage(value.doubleValue()*100);
-      DecimalFormat nf = (DecimalFormat)DecimalFormat.getInstance();
+      DecimalFormat nf = (DecimalFormat)NumberFormat.getInstance();
       nf.getDecimalFormatSymbols().setDecimalSeparator(',');
        String myVal = nf.format(mon.doubleValue());
 
@@ -113,10 +114,11 @@ public final class PercentagePropertyField extends PropertyField {
       selectAll();
   }
 
-  public final void setProperty(Property p) {
+  @Override
+public final void setProperty(Property p) {
 //    super.setProperty(p);
  if(getForcedAlignment()==null) {
-	  setHorizontalAlignment(JTextField.RIGHT);
+	  setHorizontalAlignment(SwingConstants.RIGHT);
   }
    if (p == null) {
       return;
@@ -206,10 +208,12 @@ public final class PercentagePropertyField extends PropertyField {
       }
     });
     this.addFocusListener(new java.awt.event.FocusAdapter() {
-      public void focusLost(FocusEvent e) {
+      @Override
+	public void focusLost(FocusEvent e) {
         doFocusLost(e);
       }
-      public void focusGained(FocusEvent e){
+      @Override
+	public void focusGained(FocusEvent e){
         this_focusGained(e);
       }
     });
@@ -224,7 +228,8 @@ public final class PercentagePropertyField extends PropertyField {
 final class PercentageNumberDocument extends PlainDocument {
   boolean hasFocus = false;
 
-  public final void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
+  @Override
+public final void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
     if (hasFocus) {
       insertFocusString(offs,str,a);
     } else {
@@ -236,7 +241,7 @@ final class PercentageNumberDocument extends PlainDocument {
     char[] source = str.toCharArray();
     char[] result = new char[source.length];
     int j = 0;
-    DecimalFormat nf = (DecimalFormat)DecimalFormat.getPercentInstance();
+    DecimalFormat nf = (DecimalFormat)NumberFormat.getPercentInstance();
     char decSep = nf.getDecimalFormatSymbols().getDecimalSeparator();
     for (int i = 0; i < result.length; i++) {
       if (Character.isDigit(source[i]) || (i==0 && source[i] == '-') || source[i]==decSep || source[i]=='.') {

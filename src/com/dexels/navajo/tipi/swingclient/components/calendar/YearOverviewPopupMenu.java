@@ -33,7 +33,7 @@ public class YearOverviewPopupMenu
       }
     });
 
-    mySlider.setOrientation(JSlider.VERTICAL);
+    mySlider.setOrientation(SwingConstants.VERTICAL);
     this.add(mySlider);
   }
 }

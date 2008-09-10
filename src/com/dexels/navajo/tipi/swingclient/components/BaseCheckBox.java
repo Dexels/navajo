@@ -1,9 +1,6 @@
 package com.dexels.navajo.tipi.swingclient.components;
 import javax.swing.*;
 import java.awt.event.*;
-//import com.dexels.sportlink.client.swing.*;
-import java.awt.*;
-//import com.dexels.sportlink.client.swing.components.*;
 
 public class BaseCheckBox extends JCheckBox implements ChangeMonitoring {
 
@@ -44,7 +41,8 @@ public class BaseCheckBox extends JCheckBox implements ChangeMonitoring {
   private final void this_actionPerformed(ActionEvent e) {
     changed = true;
   }
-  public void setSelected(boolean b) {
+  @Override
+public void setSelected(boolean b) {
     super.setSelected( b);
     changed = false;
   }

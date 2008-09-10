@@ -36,7 +36,7 @@ public class CalendarTableModel
 //    System.err.println("First day of month: " + myCalendar.get(myCalendar.DAY_OF_WEEK));
 //    System.err.println("First day of a week: " + myCalendar.getFirstDayOfWeek());
     myCalendar.setFirstDayOfWeek(firstDayOfWeek);
-    myMonth = myCalendar.get(myCalendar.MONTH);
+    myMonth = myCalendar.get(Calendar.MONTH);
     myYear = myCalendar.get(Calendar.YEAR);
     fillMap(myMonth, myYear);
   }
@@ -71,7 +71,7 @@ public class CalendarTableModel
       ArrayList kids = myData.getAllMessages();
       for (int i = 0; i < kids.size(); i++) {
         Message current = (Message) kids.get(i);
-        Date d = navajoDateFormat.parse( (String) current.getProperty("CalendarDate").getValue());
+        Date d = navajoDateFormat.parse( current.getProperty("CalendarDate").getValue());
         c.setTime(d);
         String key = "" + c.get(Calendar.DAY_OF_YEAR) + c.get(Calendar.YEAR);
         //System.err.println("Key: " + key);
@@ -134,13 +134,13 @@ public class CalendarTableModel
       int yd_of_first = myCalendar.get(Calendar.DAY_OF_YEAR);
       int lastDay = myCalendar.getActualMaximum(Calendar.DATE);
       int yd_of_last = yd_of_first + lastDay;
-      myCalendar.set(myCalendar.WEEK_OF_MONTH, week);
+      myCalendar.set(Calendar.WEEK_OF_MONTH, week);
 
       if (day > 0) {
         day = day - 1;
 
         myCalendar.set(Calendar.DAY_OF_WEEK, ( (firstDayOfWeek + day) % 7));
-        int date = myCalendar.get(myCalendar.DATE);
+        int date = myCalendar.get(Calendar.DATE);
 
         // Now we know the date of the current location.
         // We return either a saved day or a new one.
@@ -160,7 +160,7 @@ public class CalendarTableModel
       }
       else {
         d.setDate(myCalendar.getTime());
-        d.setWeekOfYear(myCalendar.get(myCalendar.WEEK_OF_YEAR));
+        d.setWeekOfYear(myCalendar.get(Calendar.WEEK_OF_YEAR));
       }
     }
     else {

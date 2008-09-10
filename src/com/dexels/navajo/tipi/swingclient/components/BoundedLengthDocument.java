@@ -23,7 +23,8 @@ class BoundedLengthDocument extends PlainDocument {
     myProperty = p;
   }
 
-  public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
+  @Override
+public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
 //    getLength()
 //    System.err.println("Insert");
     if (myProperty != null) {
@@ -53,11 +54,13 @@ class BoundedLengthDocument extends PlainDocument {
       }
     }
   }
-  protected void postRemoveUpdate(DefaultDocumentEvent chng) {
+  @Override
+protected void postRemoveUpdate(DefaultDocumentEvent chng) {
     super.postRemoveUpdate(chng);
     updateCapitalization();
   }
-  protected void insertUpdate(DefaultDocumentEvent chng, AttributeSet attr) {
+  @Override
+protected void insertUpdate(DefaultDocumentEvent chng, AttributeSet attr) {
     super.insertUpdate(chng, attr);
     updateCapitalization();
   }

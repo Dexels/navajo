@@ -1,8 +1,6 @@
 package com.dexels.navajo.tipi.swingclient.components.remotecombobox;
 
-import javax.swing.*;
 import javax.swing.text.*;
-import javax.swing.text.AbstractDocument.*;
 
 public class AjaxEditorDocument extends PlainDocument {
 
@@ -52,6 +50,7 @@ public class AjaxEditorDocument extends PlainDocument {
 		// }
 	}
 
+	@Override
 	protected void removeUpdate(final DefaultDocumentEvent chng) {
 		String text;
 //		try {

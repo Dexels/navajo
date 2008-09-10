@@ -18,8 +18,6 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.tipi.swingclient.*;
 
 import java.beans.*;
-import java.awt.geom.*;
-import java.awt.font.*;
 
 //import com.dexels.sportlink.client.swing.dialogs.*;
 
@@ -36,17 +34,15 @@ public class StandardWindow
   private String windowId = "";
   private Navajo myData = null;
   private Rectangle preferredBounds;
-  private int earLocation = 0;
-  private int earSize = 0;
   private String stickDir = BorderLayout.WEST;
   private boolean isSticky = false;
   private boolean isCollapsed = false;
   private String myGroup = null;
-  private ArrayList keyListeners = new ArrayList();
+  private ArrayList<KeyListener> keyListeners = new ArrayList<KeyListener>();
 
   private final static Object showWindowSemaphore = new Object();
 
-  private Map localWindowProperties = null;
+  private Map<String,Object> localWindowProperties = null;
 
   public StandardWindow() {
     try {
@@ -58,24 +54,26 @@ public class StandardWindow
     }
   }
 
-  public void addKeyListener(KeyListener k) {
+  @Override
+public void addKeyListener(KeyListener k) {
     keyListeners.add(k);
   }
 
-  public void removeKeyListener(KeyListener k) {
+  @Override
+public void removeKeyListener(KeyListener k) {
     keyListeners.remove(k);
   }
 
   public void performKeyEvent(KeyEvent e) {
     for (int i = 0; i < keyListeners.size(); i++) {
-      KeyListener kl = (KeyListener) keyListeners.get(i);
-      if (e.getID() == e.KEY_PRESSED) {
+      KeyListener kl = keyListeners.get(i);
+      if (e.getID() == KeyEvent.KEY_PRESSED) {
         kl.keyPressed(e);
       }
-      if (e.getID() == e.KEY_TYPED) {
+      if (e.getID() == KeyEvent.KEY_TYPED) {
         kl.keyTyped(e);
       }
-      if (e.getID() == e.KEY_RELEASED) {
+      if (e.getID() == KeyEvent.KEY_RELEASED) {
         kl.keyReleased(e);
       }
     }
@@ -103,7 +101,8 @@ public class StandardWindow
     return isCollapsed;
   }
 
-  public void setSelected(boolean value) throws PropertyVetoException {
+  @Override
+public void setSelected(boolean value) throws PropertyVetoException {
     super.setSelected(value);
     repaint();
   }
@@ -132,7 +131,8 @@ public class StandardWindow
     }
   }
 
-  public void showWindow() {
+  @Override
+public void showWindow() {
 
     synchronized (showWindowSemaphore) {
       if (isSticky()) {
@@ -211,11 +211,11 @@ public class StandardWindow
     InputMap im = getLayeredPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
     ActionMap am = getLayeredPane().getActionMap();
 
-    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_MASK), "Save");
-    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_T, KeyEvent.CTRL_MASK), "Insert");
-    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_E, KeyEvent.CTRL_MASK), "SaveExit");
-    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_Q, KeyEvent.CTRL_DOWN_MASK), "Exit");
-    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.CTRL_MASK), "Fetch");
+    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK), "Save");
+    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_T, InputEvent.CTRL_MASK), "Insert");
+    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_E, InputEvent.CTRL_MASK), "SaveExit");
+    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_Q, InputEvent.CTRL_DOWN_MASK), "Exit");
+    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_MASK), "Fetch");
     im.put(KeyStroke.getKeyStroke(KeyEvent.VK_F11, 0), "Clear");
 
     im.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0, false), "UpPressed");
@@ -377,13 +377,13 @@ public class StandardWindow
     return saveButton;
   }
 
-  public Map getLocalWindowState() {
+  public Map<String,Object> getLocalWindowState() {
     return localWindowProperties;
   }
 
   public void putLocalWindowProperty(String name, Object value) {
     if (localWindowProperties == null) {
-      localWindowProperties = new HashMap();
+      localWindowProperties = new HashMap<String,Object>();
     }
     localWindowProperties.put(name, value);
   }

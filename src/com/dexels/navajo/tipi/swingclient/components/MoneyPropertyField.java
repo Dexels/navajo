@@ -3,7 +3,6 @@ package com.dexels.navajo.tipi.swingclient.components;
 import javax.swing.text.*;
 import java.text.*;
 import java.util.*;
-import javax.swing.event.*;
 import java.awt.event.*;
 
 import com.dexels.navajo.document.types.*;
@@ -23,6 +22,7 @@ import java.awt.*;
  * @deprecated
  */
 
+@Deprecated
 public class MoneyPropertyField extends PropertyField {
   private boolean isEditing = false;
 //  private Property myProperty = null;
@@ -96,7 +96,8 @@ public class MoneyPropertyField extends PropertyField {
 //        }
 //      }
 //  }
-  public void update() {
+  @Override
+public void update() {
 	  doFocusLost(null);
   }
 
@@ -119,10 +120,11 @@ public class MoneyPropertyField extends PropertyField {
       selectAll();
   }
 
-  public final void setProperty(Property p) {
+  @Override
+public final void setProperty(Property p) {
 //    super.setProperty(p);
 	     if(getForcedAlignment()==null) {
-	    	  setHorizontalAlignment(JTextField.RIGHT);
+	    	  setHorizontalAlignment(SwingConstants.RIGHT);
 	      }
     if (p == null) {
       return;
@@ -190,6 +192,7 @@ private void updateColor(Money value) {
     setDisabledTextColor(getOriginalDisabledColor());
 }
 
+@Override
 public void focusLost(FocusEvent e) {
 	// this is actually important!
   }
@@ -199,10 +202,12 @@ public void focusLost(FocusEvent e) {
   protected void jbInit() throws Exception {
 
     this.addFocusListener(new java.awt.event.FocusAdapter() {
-      public void focusLost(FocusEvent e) {
+      @Override
+	public void focusLost(FocusEvent e) {
         doFocusLost(e);
       }
-      public void focusGained(FocusEvent e){
+      @Override
+	public void focusGained(FocusEvent e){
         this_focusGained(e);
       }
     });
@@ -213,7 +218,8 @@ public void focusLost(FocusEvent e) {
 class MoneyNumberDocument extends PlainDocument {
   boolean hasFocus = false;
 
-  public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
+  @Override
+public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
     if (hasFocus) {
       insertFocusString(offs,str,a);
     } else {
@@ -225,7 +231,7 @@ class MoneyNumberDocument extends PlainDocument {
     char[] source = str.toCharArray();
     char[] result = new char[source.length];
     int j = 0;
-    DecimalFormat nf = (DecimalFormat)DecimalFormat.getCurrencyInstance();
+    DecimalFormat nf = (DecimalFormat)NumberFormat.getCurrencyInstance();
     char decSep = nf.getDecimalFormatSymbols().getDecimalSeparator();
     for (int i = 0; i < result.length; i++) {
       if (Character.isDigit(source[i]) || (i==0 && source[i] == '-') || source[i]==decSep || source[i]=='.') {

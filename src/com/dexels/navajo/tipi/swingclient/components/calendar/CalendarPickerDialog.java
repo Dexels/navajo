@@ -59,10 +59,11 @@ public class CalendarPickerDialog extends StandardDialog implements CalendarMana
 		calendar.setCalendarConstants(constants);
 		calendar.getConstants().setColumnWidth(22);
 		calendar.getConstants().setRowHeight(22);
-		calendar.getConstants().setColorScheme(CalendarConstants.COLORSCHEME_SPORTLINK);
+		calendar.getConstants();
+		CalendarConstants.setColorScheme(CalendarConstants.COLORSCHEME_SPORTLINK);
 		calendar.rebuildUI();
 		setTitle("Selecteer datum");
-		setMode(StandardDialog.MODE_OK_CANCEL);
+		setMode(DialogConstants.MODE_OK_CANCEL);
 		calendar.setBorder(BorderFactory.createEtchedBorder());
 
 		nextMonthButton.setIcon(new ImageIcon(CalendarPickerDialog.class.getResource("next-small.gif")));

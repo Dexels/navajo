@@ -4,16 +4,10 @@ package com.dexels.navajo.tipi.swingclient.components;
 import com.dexels.navajo.document.*;
 import java.awt.event.*;
 import java.util.*;
-//import com.dexels.sportlink.client.swing.*;
-import com.dexels.navajo.tipi.swingclient.*;
-
 import javax.swing.ActionMap;
 import javax.swing.InputMap;
 import javax.swing.JComponent;
 import javax.swing.KeyStroke;
-import javax.swing.border.*;
-import javax.swing.event.*;
-
 import java.awt.*;
 //import com.dexels.sportlink.client.swing.components.*;
 
@@ -87,17 +81,20 @@ private void updateText(Property p, String currentText) {
     }
   }
 
-  public Dimension getMinimumSize() {
+  @Override
+public Dimension getMinimumSize() {
       return getPreferredSize();
   }
   
   private final void jbInit() throws Exception {
 //    setBorder(new EtchedBorder(EtchedBorder.LOWERED));
     this.addFocusListener(new java.awt.event.FocusAdapter() {
-      public void focusGained(FocusEvent e) {
+      @Override
+	public void focusGained(FocusEvent e) {
         this_focusGained(e);
       }
-      public void focusLost(FocusEvent e) {
+      @Override
+	public void focusLost(FocusEvent e) {
         this_focusLost(e);
       }
     });
@@ -105,9 +102,9 @@ private void updateText(Property p, String currentText) {
     InputMap im = getInputMap(JComponent.WHEN_FOCUSED);
     ActionMap am = getActionMap();
 
-    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, KeyEvent.SHIFT_DOWN_MASK), "ShiftEnterReleased");  
+    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.SHIFT_DOWN_MASK), "ShiftEnterReleased");  
     am.put("ShiftEnterReleased", new KeyEventHandler(this, "ShiftEnterReleased"));
-    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, KeyEvent.SHIFT_DOWN_MASK), "ShiftTabReleased");  
+    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, InputEvent.SHIFT_DOWN_MASK), "ShiftTabReleased");  
     am.put("ShiftTabReleased", new KeyEventHandler(this, "ShiftTabReleased"));
 
 //    myDocument.addDocumentListener(new DocumentListener(){
@@ -148,7 +145,8 @@ private void updateText(Property p, String currentText) {
     super.setEnabled(enabled && (!ghosted));
   }
 
-  public void setEnabled(boolean e) {
+  @Override
+public void setEnabled(boolean e) {
     enabled = e;
     super.setEnabled(enabled && (!ghosted));
   }

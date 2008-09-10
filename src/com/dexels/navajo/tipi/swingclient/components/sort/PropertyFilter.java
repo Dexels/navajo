@@ -16,6 +16,7 @@ import com.dexels.navajo.document.*;
 /**
  * @deprecated
  */
+@Deprecated
 public class PropertyFilter {
   private Property myProperty;
   private String myValue;

@@ -50,7 +50,8 @@ public class MessageTreeTablePanel
     filterPanel.setVisible(b);
   }
 
-  public void commit() {
+  @Override
+public void commit() {
     super.commit();
     Message m = getMessage();
   }
@@ -260,7 +261,8 @@ public class MessageTreeTablePanel
     super.setEnabled(enabled && (!ghosted));
   }
 
-  public void setEnabled(boolean e) {
+  @Override
+public void setEnabled(boolean e) {
     enabled = e;
     messageTable.setEnabled(enabled && (!ghosted));
     super.setEnabled(enabled && (!ghosted));

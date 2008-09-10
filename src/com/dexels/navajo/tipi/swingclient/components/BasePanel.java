@@ -12,10 +12,6 @@ import javax.swing.border.*;
 import com.dexels.navajo.client.*;
 import com.dexels.navajo.document.*;
 
-import java.awt.Point;
-import javax.swing.event.*;
-import java.beans.*;
-
 /**
  * <p>Title: SportLink Client:</p>
  * <p>Description: </p>
@@ -66,7 +62,8 @@ public class BasePanel
     }
   }
 
-  public void paintComponent(Graphics g) {
+  @Override
+public void paintComponent(Graphics g) {
     super.paintComponent(g);
 //    Rectangle bounds = getBounds();
 //    Graphics2D g2 = (Graphics2D) g;
@@ -510,7 +507,8 @@ public class BasePanel
     return al;
   }
 
-  public void setEnabled(boolean b) {
+  @Override
+public void setEnabled(boolean b) {
     super.setEnabled(b);
     for (int i = 0; i < getComponentCount(); i++) {
       Component c = getComponent(i);
@@ -518,7 +516,8 @@ public class BasePanel
     }
   }
 
-  public boolean hasFocus() {
+  @Override
+public boolean hasFocus() {
     for (int i = 0; i < getComponentCount(); i++) {
       Component c = getComponent(i);
       if (ChangeMonitoring.class.isInstance(c)) {
@@ -647,7 +646,7 @@ public class BasePanel
         System.err.println("Validating: " + c.getClass());
         Validatable current = (Validatable) c;
         current.checkValidation(msg);
-        if (current.getValidationState() == current.INVALID) {
+        if (current.getValidationState() == Validatable.INVALID) {
           //System.err.println("--> This component was INVALID: " + c.getClass());
           System.err.println("Detected conditionerror!");
           hasConditionErrors = true;
@@ -685,7 +684,7 @@ public class BasePanel
         }
         if (Validatable.class.isInstance(c)) {
           Validatable current = (Validatable) c;
-          if (current.getValidationState() == current.INVALID) {
+          if (current.getValidationState() == Validatable.INVALID) {
             System.err.println("---> Found an invalid component " + current + " in " + getPanelTitle());
             return true;
           }
@@ -764,12 +763,14 @@ public class BasePanel
 
   private final void jbInit() throws Exception {
     this.addMouseListener(new java.awt.event.MouseAdapter() {
-      public void mouseClicked(MouseEvent e) {
+      @Override
+	public void mouseClicked(MouseEvent e) {
         this_mouseClicked(e);
       }
     });
     this.addFocusListener(new java.awt.event.FocusAdapter() {
-      public void focusGained(FocusEvent e) {
+      @Override
+	public void focusGained(FocusEvent e) {
         this_focusGained(e);
       }
     });

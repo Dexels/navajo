@@ -105,7 +105,7 @@ private Component doGetEditor(Object value, boolean isSelected, int row, int col
       myProperty = (Property) value;
       myOldValue = myProperty.getTypedValue();
       myProperty.addPropertyChangeListener(this);
-      myPropertyType = (String) myProperty.getType();
+      myPropertyType = myProperty.getType();
       if (myPropertyType.equals(Property.SELECTION_PROPERTY)) {
 
         try {
@@ -127,7 +127,7 @@ private Component doGetEditor(Object value, boolean isSelected, int row, int col
             myMultiSelectPropertyBox.addItemListener(new ItemListener() {
               public void itemStateChanged(ItemEvent e) {
                 System.err.println(">>> " + e.getStateChange());
-                if (e.SELECTED == e.getStateChange()) {
+                if (ItemEvent.SELECTED == e.getStateChange()) {
 //                ( (PropertyControlled) e.getSource()).update();
                   if (!isChangingSelection) {
                     System.err.println("COMBOBOX FIRED TOWARDS EDITOR");
@@ -156,6 +156,7 @@ private Component doGetEditor(Object value, boolean isSelected, int row, int col
             myPropertyBox = new PropertyBox();
             myPropertyBox.addKeyListener(new KeyAdapter(){
 
+				@Override
 				public void keyPressed(KeyEvent k) {
 //					if(k.getKeyCode()==KeyEvent.VK_)
 				}
@@ -164,7 +165,7 @@ private Component doGetEditor(Object value, boolean isSelected, int row, int col
             myPropertyBox.addItemListener(new ItemListener() {
               public void itemStateChanged(ItemEvent e) {
                 System.err.println(">>> " + e.getStateChange());
-                if (e.SELECTED == e.getStateChange()) {
+                if (ItemEvent.SELECTED == e.getStateChange()) {
 //                	( (PropertyControlled) e.getSource()).update();
 //                  if (!isChangingSelection) {
 //                    System.err.println("COMBOBOX FIRED TOWARDS EDITOR");
@@ -251,7 +252,8 @@ private Component doGetEditor(Object value, boolean isSelected, int row, int col
         lastComponent = myDatePropertyField;
         setComponentColor(myDatePropertyField, isSelected, row, column);
         myDatePropertyField.addFocusListener(new FocusAdapter() {
-          public void focusLost(FocusEvent e) {
+          @Override
+		public void focusLost(FocusEvent e) {
              ( (PropertyControlled) e.getSource()).update();
        	  if(e.getOppositeComponent()!=myTable) {
               stopCellEditing();
@@ -273,7 +275,8 @@ private Component doGetEditor(Object value, boolean isSelected, int row, int col
         lastComponent = myIntegerPropertyField;
         setComponentColor(myIntegerPropertyField, isSelected, row, column);
         myIntegerPropertyField.addFocusListener(new FocusAdapter() {
-          public void focusLost(FocusEvent e) {
+          @Override
+		public void focusLost(FocusEvent e) {
 //                ((PropertyControlled)e.getSource()).update();
 //        	  System.err.println("Forcing stopppp: "+e.getOppositeComponent());
         	  
@@ -281,7 +284,8 @@ private Component doGetEditor(Object value, boolean isSelected, int row, int col
                   stopCellEditing();
         	  }
           }
-          public void focusGained(FocusEvent e) {
+          @Override
+		public void focusGained(FocusEvent e) {
 //            ((PropertyControlled)e.getSource()).update();
 //    	  System.err.println("Gettin FocusEvent: "+e.getOppositeComponent());
     	  
@@ -320,7 +324,8 @@ private Component doGetEditor(Object value, boolean isSelected, int row, int col
         myFloatPropertyField.setProperty(myProperty);
         setComponentColor(myFloatPropertyField, isSelected, row, column);
         myFloatPropertyField.addFocusListener(new FocusAdapter() {
-          public void focusLost(FocusEvent e) {
+          @Override
+		public void focusLost(FocusEvent e) {
 //               System.err.println("Floatfield focus lost!");
 //               System.err.println(">>>>"+((FloatPropertyField)e.getSource()).getText());
 //               ((FloatPropertyField)e.getSource()).update();
@@ -347,7 +352,8 @@ private Component doGetEditor(Object value, boolean isSelected, int row, int col
 //        final String contents = myMoneyPropertyField.getText();
         final MoneyField m = myMoneyPropertyField;
         myMoneyPropertyField.addFocusListener(new FocusAdapter() {
-          public void focusLost(FocusEvent e) {
+          @Override
+		public void focusLost(FocusEvent e) {
         	  m.update();
         	  if(e.getOppositeComponent()!=myTable) {
                   stopCellEditing();
@@ -372,7 +378,8 @@ private Component doGetEditor(Object value, boolean isSelected, int row, int col
         setComponentColor(myPercentagePropertyField, isSelected, row, column);
 //         final String contents = myPercentagePropertyField.getText();
         myPercentagePropertyField.addFocusListener(new FocusAdapter() {
-          public void focusLost(FocusEvent e) {
+          @Override
+		public void focusLost(FocusEvent e) {
         	  if(e.getOppositeComponent()!=myTable) {
                   stopCellEditing();
         	  }
@@ -397,7 +404,8 @@ private Component doGetEditor(Object value, boolean isSelected, int row, int col
         myStopwatchTimeField.setProperty(myProperty);
         setComponentColor(myStopwatchTimeField, isSelected, row, column);
         myStopwatchTimeField.addFocusListener(new FocusAdapter() {
-          public void focusLost(FocusEvent e) {
+          @Override
+		public void focusLost(FocusEvent e) {
 //               System.err.println("Floatfield focus lost!");
 //               System.err.println(">>>>"+((FloatPropertyField)e.getSource()).getText());
 //               ((FloatPropertyField)e.getSource()).update();
@@ -439,7 +447,8 @@ private Component doGetEditor(Object value, boolean isSelected, int row, int col
         myClockTimeField.setProperty(myProperty);
         setComponentColor(myClockTimeField, isSelected, row, column);
         myClockTimeField.addFocusListener(new FocusAdapter() {
-          public void focusLost(FocusEvent e) {
+          @Override
+		public void focusLost(FocusEvent e) {
 //               System.err.println("Floatfield focus lost!");
 //               System.err.println(">>>>"+((FloatPropertyField)e.getSource()).getText());
 //               ((FloatPropertyField)e.getSource()).update();
@@ -473,7 +482,8 @@ private Component doGetEditor(Object value, boolean isSelected, int row, int col
       if (myPropertyField == null) {
         myPropertyField = new TextPropertyField();
         myPropertyField.addFocusListener(new FocusAdapter() {
-          public void focusLost(FocusEvent e) {
+          @Override
+		public void focusLost(FocusEvent e) {
 //              ((PropertyControlled)e.getSource()).update();
         	  if(e.getOppositeComponent()!=myTable) {
                   stopCellEditing();

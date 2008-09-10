@@ -7,7 +7,6 @@ import javax.swing.RootPaneContainer;
 
 import com.dexels.navajo.tipi.swingclient.components.*;
 
-import javax.swing.JDialog;
 import com.dexels.navajo.document.Message;
 import javax.swing.JFrame;
 import java.util.*;
@@ -130,11 +129,11 @@ public class DummyUserInterface
   public void showCenteredDialog(JDialog bw) {
   }
 
-  public void rebuildMenu(Map localWindowState) {
+  public void rebuildMenu(Map<String,Object> localWindowState) {
 
   }
 
-  public void updateMenu(String id, Map localWindowState) {
+  public void updateMenu(String id, Map<String,Object> localWindowState) {
 
   }
 
@@ -147,12 +146,10 @@ public void showDialogAt(JDialog dlg, int x, int y) {
 }
 
 public JFrame getMainFrame() {
-	// TODO Auto-generated method stub
 	return null;
 }
 
 public JDialog getTopDialog() {
-	// TODO Auto-generated method stub
 	return null;
 }
 

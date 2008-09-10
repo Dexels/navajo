@@ -2,12 +2,10 @@ package com.dexels.navajo.tipi.swingclient.components.remotecombobox;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.beans.*;
 import java.lang.reflect.*;
 import java.util.*;
 
 import javax.swing.*;
-import javax.swing.event.*;
 import javax.swing.text.*;
 
 import com.dexels.navajo.client.*;
@@ -389,6 +387,7 @@ public class AjaxComboBox extends JComboBox {
 		this.currentRemoteRefresh = currentRemoteRefresh;
 	}
 
+	@Override
 	public void setEnabled(boolean b) {
 		
 	}
@@ -398,7 +397,7 @@ public class AjaxComboBox extends JComboBox {
 		JFrame t = new JFrame("Test");
 
 		t.setSize(400, 500);
-		t.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		t.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		ClientInterface cc = NavajoClientFactory.createDefaultClient();
 		cc.setServerUrl("penelope1.dexels.com/sportlink/knvb/servlet/Postman");
 		cc.setUsername("");

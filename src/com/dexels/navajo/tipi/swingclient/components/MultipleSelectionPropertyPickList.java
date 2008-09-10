@@ -7,7 +7,6 @@ import com.dexels.navajo.document.*;
 
 import java.util.*;
 
-import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.base.*;
 
 import java.awt.event.*;
@@ -251,7 +250,7 @@ public final class MultipleSelectionPropertyPickList extends JPanel implements P
 
 			JFrame frame = new JFrame("Test");
 			frame.setSize(800, 600);
-			frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+			frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 			frame.getContentPane().setLayout(new BorderLayout());
 			MultipleSelectionPropertyPickList msppl = new MultipleSelectionPropertyPickList();
 			frame.getContentPane().add(msppl, BorderLayout.CENTER);

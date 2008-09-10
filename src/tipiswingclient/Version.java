@@ -52,22 +52,27 @@ public class Version extends dexels.Version {
 		setReleaseDate(RELEASEDATE);
 	}
 
+	@Override
 	public int getMajor() {
 		return MAJOR;
 	}
 
+	@Override
 	public int getMinor() {
 		return MINOR;
 	}
 
+	@Override
 	public int getPatchLevel() {
 		return PATCHLEVEL;
 	}
 
+	@Override
 	public String getVendor() {
 		return VENDOR;
 	}
 
+	@Override
 	public String getProductName() {
 		return PRODUCTNAME;
 	}
@@ -75,7 +80,7 @@ public class Version extends dexels.Version {
 	public static void main(String [] args) {
 		Version v = new Version();
 		System.err.println(v.toString());
-		dexels.Version [] d = (dexels.Version [] ) v.getIncludePackages();
+		dexels.Version [] d = v.getIncludePackages();
 		for (int i = 0; i < d.length; i++) {
 			System.err.println("\t"+d[i].toString());
 		}

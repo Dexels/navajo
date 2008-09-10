@@ -252,7 +252,8 @@ public void removeColumn(int index) {
     return myMessage.getArraySize();
   }
 
-  public String getColumnName(int column) {
+  @Override
+public String getColumnName(int column) {
     if (column == 0 && rowHeadersVisible) {
       return "";
     }
@@ -294,7 +295,8 @@ public void removeColumn(int index) {
     return -1;
   }
 
-  public void setValueAt(Object aValue, int row, int column) {
+  @Override
+public void setValueAt(Object aValue, int row, int column) {
   }
 
   public Message getMessageRow(int row) {
@@ -310,7 +312,8 @@ public void removeColumn(int index) {
     return myMessage.getMessage(row);
   }
 
-  public Class<?> getColumnClass(int columnIndex) {
+  @Override
+public Class<?> getColumnClass(int columnIndex) {
     return Property.class;
   }
 
@@ -325,7 +328,8 @@ public void removeColumn(int index) {
 	  	String id = myColumnIds.get(columnIndex - subsractColumnCount);
 	  	editableMap.put(id, value);
   }
-  public boolean isCellEditable(int rowIndex, int columnIndex) {
+  @Override
+public boolean isCellEditable(int rowIndex, int columnIndex) {
 	  
     int column = columnIndex - subsractColumnCount;
     if (column < 0) {

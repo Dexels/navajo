@@ -67,7 +67,8 @@ public class PlayingDayRenderer
     isAnchor = value;
   }
 
-  public void paintComponent(Graphics g) {
+  @Override
+public void paintComponent(Graphics g) {
 
     BufferedImage img = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_INT_RGB);
     Graphics2D offScreen = (Graphics2D) img.getGraphics();

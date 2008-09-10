@@ -159,7 +159,7 @@ public class ColumnManagementDialog
     DefaultListModel model2 = (DefaultListModel) availableColumnList.getModel();
     for (int j = 0; j < availableItems.size(); j++) {
       String id = (String) availableItems.get(j);
-      String name = (String) nameIdMap.getById(id);
+      String name = nameIdMap.getById(id);
       model2.addElement(name);
     }
   }
@@ -246,7 +246,7 @@ public class ColumnManagementDialog
     while (m.hasMoreElements()) {
       String name = (String) m.nextElement();
       System.err.println("Name: " + name);
-      String id = (String) nameIdMap.getByName(name);
+      String id = nameIdMap.getByName(name);
       if (id != null && !id.equals("") && !id.equals("ERROR!")) {
         boolean editable = false;
         if(editableMap.get(id) != null){

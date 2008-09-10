@@ -1,9 +1,9 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
 import java.awt.event.*;
+
 import javax.swing.*;
 import java.awt.*;
-import javax.swing.event.*;
 
 /**
  * <p>Title: Seperate project for Navajo Swing client</p>
@@ -85,7 +85,7 @@ public class KeyEventHandler
         sw.performKeyEvent(new KeyEvent(sw, KeyEvent.KEY_RELEASED, System.currentTimeMillis(), 0, KeyEvent.VK_ENTER, '.'));
       }
       if ("ShiftEnterReleased".equals(myMod)) {
-          sw.performKeyEvent(new KeyEvent(sw, KeyEvent.KEY_RELEASED, System.currentTimeMillis(), KeyEvent.SHIFT_DOWN_MASK, KeyEvent.VK_ENTER, '.'));
+          sw.performKeyEvent(new KeyEvent(sw, KeyEvent.KEY_RELEASED, System.currentTimeMillis(), InputEvent.SHIFT_DOWN_MASK, KeyEvent.VK_ENTER, '.'));
         }
       if ("WPressed".equals(myMod)) {
         sw.performKeyEvent(new KeyEvent(sw, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_W, '.'));

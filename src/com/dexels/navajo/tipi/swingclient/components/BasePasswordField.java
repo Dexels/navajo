@@ -6,12 +6,8 @@ import java.util.*;
 import java.awt.event.*;
 //import com.dexels.sportlink.client.swing.*;
 import com.dexels.navajo.document.*;
-//import com.dexels.navajo.nanoclient.NavajoLoadable;
-import java.beans.*;
 import javax.swing.text.*;
 import javax.swing.event.*;
-//import com.dexels.sportlink.client.swing.components.validation.*;
-import com.dexels.navajo.tipi.swingclient.*;
 
 /**
  * <p>Title: </p>
@@ -61,7 +57,8 @@ public class BasePasswordField extends JPasswordField  implements ChangeMonitori
    }
     });
      this.addFocusListener(new java.awt.event.FocusAdapter() {
-      public void focusGained(FocusEvent e) {
+      @Override
+	public void focusGained(FocusEvent e) {
     	   selectAll();
      }
      
@@ -75,7 +72,8 @@ public class BasePasswordField extends JPasswordField  implements ChangeMonitori
   public boolean hasChanged() {
      return changed;
   }
-  public void setText(String t) {
+  @Override
+public void setText(String t) {
     myText = t;
     super.setText( t);
     changed = false;
@@ -151,7 +149,7 @@ public class BasePasswordField extends JPasswordField  implements ChangeMonitori
     for(int i=0;i<conditions.size();i++){
       Message current = (Message) conditions.get(i);
       Property conditionCode = current.getProperty("Id");
-      int code = Integer.parseInt((String)conditionCode.getValue());
+      int code = Integer.parseInt(conditionCode.getValue());
       for(int j=0;j<rules.size();j++){
         int rule = ((Integer)rules.get(j)).intValue();
         if(rule == code){

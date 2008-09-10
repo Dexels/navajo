@@ -4,6 +4,7 @@ import com.dexels.navajo.document.*;
 
 import java.util.*;
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.Point;
 import javax.swing.event.*;
@@ -20,8 +21,6 @@ import java.awt.print.Printable;
 import java.awt.print.PageFormat;
 import java.awt.print.PrinterException;
 import com.dexels.navajo.tipi.swingclient.*;
-import com.dexels.navajo.tipi.swingclient.components.*;
-import com.dexels.navajo.tipi.swingclient.components.sort.*;
 
 //import com.dexels.navajo.tipi.tipixml.*;
 
@@ -38,7 +37,7 @@ public class MessageTablePanel
     extends BasePanel
     implements MessageListener, Ghostable, CopyCompatible, Printable {
 
-  final JScrollPane jScrollPane1 = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED) {
+  final JScrollPane jScrollPane1 = new JScrollPane(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED) {
 
   };
 
@@ -93,26 +92,30 @@ public class MessageTablePanel
     filterPanel.setMessageTable(messageTable);
     JTableHeader th = messageTable.getTableHeader();
     th.addMouseListener(new MouseAdapter() {
-      public final void mousePressed(MouseEvent e) {
+      @Override
+	public final void mousePressed(MouseEvent e) {
         if (e.isPopupTrigger()) {
           firePopupEvent(e);
         }
       }
 
-      public final void mouseReleased(MouseEvent e) {
+      @Override
+	public final void mouseReleased(MouseEvent e) {
         if (e.isPopupTrigger()) {
           firePopupEvent(e);
         }
       }
     });
     messageTable.addMouseListener(new MouseAdapter() {
-      public final void mousePressed(MouseEvent e) {
+      @Override
+	public final void mousePressed(MouseEvent e) {
         if (e.isPopupTrigger()) {
           popupInTable(e);
         }
       }
 
-      public final void mouseReleased(MouseEvent e) {
+      @Override
+	public final void mouseReleased(MouseEvent e) {
         if (e.isPopupTrigger()) {
           popupInTable(e);
         }
@@ -129,11 +132,13 @@ public class MessageTablePanel
     showColumnEditDialog = b;
   }
 
-  public void resetChanged() {
+  @Override
+public void resetChanged() {
     messageTable.resetChanged();
   }
 
-  public boolean hasChanged() {
+  @Override
+public boolean hasChanged() {
     return messageTable.hasChanged();
   }
 
@@ -345,7 +350,7 @@ public class MessageTablePanel
         	final int[] selectedRows = messageTable.getSelectedRows();
         	System.err.println("Selected rows: " + selectedRows);
         	final GenericPropertyComponent comp = new GenericPropertyComponent();
-        	Property clone = (Property)p.copy(NavajoFactory.getInstance().createNavajo());
+        	Property clone = p.copy(NavajoFactory.getInstance().createNavajo());
         	clone.setValue("");
         	
         	comp.setProperty(clone);
@@ -879,7 +884,8 @@ public void updateTableSize() {
     super.setEnabled(enabled && (!ghosted));
   }
 
-  public final void setEnabled(boolean e) {
+  @Override
+public final void setEnabled(boolean e) {
     enabled = e;
     super.setEnabled(enabled && (!ghosted));
   }
@@ -1087,12 +1093,12 @@ public void updateTableSize() {
   public void setUseScrollBars(boolean b) {
     useScroll = b;
     if (b) {
-      jScrollPane1.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-      jScrollPane1.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+      jScrollPane1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+      jScrollPane1.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     }
     else {
-      jScrollPane1.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
-      jScrollPane1.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+      jScrollPane1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+      jScrollPane1.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
       jScrollPane1.setPreferredSize(messageTable.getPreferredSize());
     }
   }
@@ -1190,7 +1196,8 @@ public void updateTableSize() {
     }
   }
 
-  public Dimension getPreferredSize() {
+  @Override
+public Dimension getPreferredSize() {
       return checkMaxMin(super.getPreferredSize(), getMaximumSize(), getMinimumSize());
   }
 

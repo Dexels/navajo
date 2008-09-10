@@ -16,63 +16,75 @@ public class FilteredMessageTreeTableModel
     super(NavajoFactory.getInstance().createMessage(NavajoFactory.getInstance().createNavajo(), ""));
   }
 
-  public void setRoot(Message m) {
+  @Override
+public void setRoot(Message m) {
     super.setRoot(m);
   }
 
-  public void setHeaderTextResource(ResourceBundle res) {
+  @Override
+public void setHeaderTextResource(ResourceBundle res) {
     myBundle = res;
   }
 
-  public void addExclusion(String s) {
+  @Override
+public void addExclusion(String s) {
     exclusionList.add(s);
   }
 
-  public void addPropertyColumn(String s) {
+  @Override
+public void addPropertyColumn(String s) {
     propertyList.add(s);
     delayedFireTableStructureChanged();
   }
 
-  public void clearPropertyColumns() {
+  @Override
+public void clearPropertyColumns() {
     propertyList.clear();
   }
 
-  public void clearExclusions() {
+  @Override
+public void clearExclusions() {
     exclusionList.clear();
   }
 
-  public void reset() {
+  @Override
+public void reset() {
     Message m = NavajoFactory.getInstance().createMessage(NavajoFactory.getInstance().createNavajo(), "");
     reset(m);
     fireTreeStructureChanged();
   }
 
-  public void reset(Message newRoot) {
+  @Override
+public void reset(Message newRoot) {
     setRoot(newRoot);
     clearExclusions();
     clearPropertyColumns();
     fireTreeStructureChanged();
   }
 
-  public void reset(Message newRoot, String[] props) {
+  @Override
+public void reset(Message newRoot, String[] props) {
     reset(newRoot);
     for (int i = 0; i < props.length; i++) {
       addPropertyColumn(props[i]);
     }
   }
 
-  public void reset(Message newRoot, String[] props, String[] exclusions) {
+  @Override
+public void reset(Message newRoot, String[] props, String[] exclusions) {
     reset(newRoot, props);
     for (int i = 0; i < exclusions.length; i++) {
       addExclusion(exclusions[i]);
     }
   }
 
-  public int getColumnCount() {
+  @Override
+public int getColumnCount() {
     return propertyList.size() + 1;
   }
 
-  public String getColumnName(int index) {
+  @Override
+public String getColumnName(int index) {
     if (index == 0) {
       return " ";
     }
@@ -87,7 +99,8 @@ public class FilteredMessageTreeTableModel
     return ( (String) propertyList.get(index - 1));
   }
 
-  public int getChildCount(Object msg) {
+  @Override
+public int getChildCount(Object msg) {
     Message mm = (Message) msg;
     ArrayList al = mm.getAllMessages();
     int count = 0;
@@ -111,7 +124,8 @@ public class FilteredMessageTreeTableModel
     return count;
   }
 
-  public Object getChild(Object msg, int childIndex) {
+  @Override
+public Object getChild(Object msg, int childIndex) {
     ArrayList al = ( (Message) msg).getAllMessages();
     int count = 0;
     for (int i = 0; i < al.size(); i++) {
@@ -143,7 +157,8 @@ public class FilteredMessageTreeTableModel
     return null;
   }
 
-  public Object getValueAt(Object msg, int prop) {
+  @Override
+public Object getValueAt(Object msg, int prop) {
     Message m = (Message) msg;
     if (prop == 0) {
       return null;
@@ -172,14 +187,16 @@ public class FilteredMessageTreeTableModel
     }
   }
 
-  public Class getColumnClass(int column) {
+  @Override
+public Class getColumnClass(int column) {
     if (column == 0) {
       return TreeTableModel.class;
     }
     return Property.class;
   }
 
-  public void messageLoaded(int startIndex, int endIndex, int newTotal) {
+  @Override
+public void messageLoaded(int startIndex, int endIndex, int newTotal) {
     super.messageLoaded(startIndex, endIndex, newTotal);
   }
 }

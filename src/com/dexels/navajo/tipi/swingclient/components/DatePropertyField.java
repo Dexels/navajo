@@ -52,12 +52,14 @@ public final class DatePropertyField
     try {
 
       this.addMouseMotionListener(new MouseMotionAdapter() {
-        public void mouseMoved(MouseEvent e) {
+        @Override
+		public void mouseMoved(MouseEvent e) {
           checkMousePos(e);
         }
       });
       this.addMouseListener(new MouseAdapter() {
-        public void mouseClicked(MouseEvent e) {
+        @Override
+		public void mouseClicked(MouseEvent e) {
           checkMouseClick(e);
         }
       });
@@ -68,7 +70,8 @@ public final class DatePropertyField
     }
   }
 
-  public final void setProperty(Property p) {
+  @Override
+public final void setProperty(Property p) {
 //	if(initProperty!=null) {
 //		initProperty.removePropertyChangeListener(this);
 //	}
@@ -197,7 +200,8 @@ public final class DatePropertyField
     this.column = column;
   }
 
-  public final void paintComponent(Graphics g) {
+  @Override
+public final void paintComponent(Graphics g) {
     super.paintComponent(g);
     if (showCalendarPickerButton) {
       Graphics2D g2 = (Graphics2D) g;
@@ -328,7 +332,8 @@ public final class DatePropertyField
     return displayDateFormat.format(d);
   }
 
-  public final String toString() {
+  @Override
+public final String toString() {
     return this.getText();
   }
 
@@ -354,12 +359,14 @@ public final class DatePropertyField
     }
   }
 
-  public final void update() {
+  @Override
+public final void update() {
 //    System.err.println("YOU FILTHY BASTARD! YOU SHOULD NOT CALL THIS FUNCTION! LUCKILY, WE CAUGHT YOUR ERROR! " + getClass());
     dateUpdate();
   }
 
-  public final void focusLost(FocusEvent e) {
+  @Override
+public final void focusLost(FocusEvent e) {
 	  // No call to super. Good.
     dateUpdate();
   }

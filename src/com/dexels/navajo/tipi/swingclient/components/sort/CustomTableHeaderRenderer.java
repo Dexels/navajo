@@ -9,8 +9,6 @@ import java.util.*;
 
 import com.dexels.navajo.tipi.swingclient.components.*;
 
-import java.awt.event.*;
-
 /**
  * <p>Title: ShellApplet</p>
  * <p>Description: </p>

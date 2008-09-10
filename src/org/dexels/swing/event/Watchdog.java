@@ -47,7 +47,8 @@ import java.util.TimerTask;
       this.repetitive = repetitive;
     }
 
-    public void run() {
+    @Override
+	public void run() {
       long time;
       AWTEvent currentEvent;
 

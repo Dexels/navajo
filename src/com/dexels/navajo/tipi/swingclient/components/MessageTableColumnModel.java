@@ -46,14 +46,16 @@ public final class MessageTableColumnModel
 
   }
 
-  protected final void fireColumnMoved(TableColumnModelEvent e) {
+  @Override
+protected final void fireColumnMoved(TableColumnModelEvent e) {
     /**@todo Override this javax.swing.table.DefaultTableColumnModel method*/
     super.fireColumnMoved(e);
 //    dumpColumnWidths();
   }
 
 
-  public final void setColumnMargin(int newMargin) {
+  @Override
+public final void setColumnMargin(int newMargin) {
     super.setColumnMargin(newMargin);
     /**@todo Implement this javax.swing.table.TableColumnModel abstract method*/
   }
@@ -96,7 +98,8 @@ public final class MessageTableColumnModel
     }
   }
 
-  public TableColumn getColumn(int columnIndex) {
+  @Override
+public TableColumn getColumn(int columnIndex) {
     if (getColumnCount()==0) {
       return null;
     }
@@ -152,7 +155,8 @@ public final class MessageTableColumnModel
     addColumn(tc);
   }
 
-  public void valueChanged(ListSelectionEvent e) {
+  @Override
+public void valueChanged(ListSelectionEvent e) {
     //System.err.println("Column selection changed!");
        super.valueChanged(e);
    }

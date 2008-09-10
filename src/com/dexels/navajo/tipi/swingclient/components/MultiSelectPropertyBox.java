@@ -68,7 +68,7 @@ public class MultiSelectPropertyBox extends BaseComboBox
      for(int i=0;i<conditions.size();i++){
        Message current = (Message) conditions.get(i);
        Property conditionCode = current.getProperty("Id");
-       int code = Integer.parseInt((String)conditionCode.getValue());
+       int code = Integer.parseInt(conditionCode.getValue());
        for(int j=0;j<rules.size();j++){
          int rule = ((Integer)rules.get(j)).intValue();
          if(rule == code){
@@ -80,7 +80,8 @@ public class MultiSelectPropertyBox extends BaseComboBox
      }
      setValidationState(VALID);
    }
-   public final void addValidationRule(int state){
+   @Override
+public final void addValidationRule(int state){
      System.out.println("Adding validation rule: " + state);
      rules.add(new Integer(state));
    }
@@ -162,7 +163,8 @@ public class MultiSelectPropertyBox extends BaseComboBox
      }
    }
 
-   public final void setEditable(boolean b) {
+   @Override
+public final void setEditable(boolean b) {
      setEnabled(b);
    }
 
@@ -191,7 +193,7 @@ public class MultiSelectPropertyBox extends BaseComboBox
        myValueProperty = p;
 
        if(p.getValue() != null){
-         setToKey(((String)p.getValue()).trim());
+         setToKey((p.getValue()).trim());
        }
        setEnabled(p.isDirIn());
        if(p.isDirOut()){
@@ -273,7 +275,8 @@ public class MultiSelectPropertyBox extends BaseComboBox
      super.setEnabled(enabled && (!ghosted));
    }
 
-   public final void setEnabled(boolean e) {
+   @Override
+public final void setEnabled(boolean e) {
      enabled = e;
      super.setEnabled(enabled && (!ghosted));
    }
@@ -288,7 +291,8 @@ public class MultiSelectPropertyBox extends BaseComboBox
    *
    * @todo Implement this javax.swing.JComboBox method
    */
-  public void hidePopup() {
+  @Override
+public void hidePopup() {
 //    System.err.println("..errr..I'll hide u");
   }
 

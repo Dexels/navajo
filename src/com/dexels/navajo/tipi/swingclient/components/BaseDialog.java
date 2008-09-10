@@ -69,6 +69,7 @@ public class BaseDialog extends JDialog implements MouseGestureListener {
 		System.err.println("IN BaseDialog jbInit()..............");
 		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		this.addWindowListener(new java.awt.event.WindowAdapter() {
+			@Override
 			public void windowClosed(WindowEvent e) {
 				this_windowClosed(e);
 			}

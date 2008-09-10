@@ -7,7 +7,6 @@ import java.lang.reflect.*;
 import javax.swing.*;
 
 import com.dexels.navajo.document.*;
-import com.sun.corba.se.spi.legacy.connection.*;
 
 public abstract class AbstractPropertyField extends JTextField implements FocusListener, PropertyChangeListener {
 
@@ -32,6 +31,7 @@ public abstract class AbstractPropertyField extends JTextField implements FocusL
 		return isEditing;
 	}
 	
+	@Override
 	public boolean isOpaque() {
 		return true;
 	}
@@ -39,6 +39,7 @@ public abstract class AbstractPropertyField extends JTextField implements FocusL
 		isEditing = b;
 	}
 	
+	@Override
 	public void setEnabled(boolean b) {
 	}
 

@@ -546,7 +546,8 @@ class OperatorItem {
     this.value = both;
   }
 
-  public String toString() {
+  @Override
+public String toString() {
     return name;
   }
 

@@ -2,15 +2,11 @@ package com.dexels.navajo.tipi.swingclient.components;
 
 import javax.swing.JPanel;
 import com.dexels.navajo.document.Property;
-import java.awt.event.FocusListener;
-import java.awt.event.FocusEvent;
 import javax.swing.*;
 import java.util.*;
 import com.dexels.navajo.document.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import javax.swing.event.*;
-import java.awt.event.*;
 import java.awt.*;
 
 /**

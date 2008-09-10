@@ -2,9 +2,6 @@ package com.dexels.navajo.tipi.swingclient.components;
 
 import java.awt.*;
 
-import javax.imageio.*;
-import javax.imageio.plugins.jpeg.*;
-import javax.imageio.stream.*;
 import javax.swing.*;
 
 import com.dexels.navajo.tipi.swingclient.components.validation.*;
@@ -13,20 +10,12 @@ import java.util.*;
 import com.dexels.navajo.document.*;
 
 import java.awt.event.*;
-import java.awt.image.*;
 import java.beans.*;
 
-import com.dexels.navajo.document.databinding.*;
 import com.dexels.navajo.document.types.*;
 
 import javax.swing.border.*;
 import javax.swing.event.*;
-import javax.swing.text.JTextComponent;
-
-import sun.security.provider.SystemSigner;
-
-import java.io.*;
-import java.net.*;
 
 /**
  * <p>

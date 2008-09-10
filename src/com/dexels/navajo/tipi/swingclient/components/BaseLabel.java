@@ -2,7 +2,6 @@ package com.dexels.navajo.tipi.swingclient.components;
 
 import javax.swing.JLabel;
 import java.util.*;
-import java.awt.*;
 //import com.dexels.sportlink.client.swing.*;
 import com.dexels.navajo.tipi.swingclient.*;
 /**
@@ -42,7 +41,8 @@ public class BaseLabel extends JLabel implements Ghostable {
     super.setEnabled(enabled && (!ghosted));
   }
 
-  public void setEnabled(boolean e) {
+  @Override
+public void setEnabled(boolean e) {
     enabled = e;
     super.setEnabled(enabled && (!ghosted));
   }

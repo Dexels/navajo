@@ -1,9 +1,6 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
 import javax.swing.*;
-import java.awt.*;
-//import com.dexels.sportlink.client.swing.*;
-import javax.swing.event.*;
 import java.awt.event.*;
 import java.util.*;
 
@@ -52,12 +49,14 @@ public class BaseButton extends JButton implements Ghostable, ActionListener {
     super.setEnabled(enabled && (!ghosted));
   }
 
-  public void setEnabled(boolean e) {
+  @Override
+public void setEnabled(boolean e) {
     enabled = e;
     super.setEnabled(enabled && (!ghosted));
   }
 
-  public void addActionListener(ActionListener l) {
+  @Override
+public void addActionListener(ActionListener l) {
     super.addActionListener(this);
     myListeners.add(l);
   }

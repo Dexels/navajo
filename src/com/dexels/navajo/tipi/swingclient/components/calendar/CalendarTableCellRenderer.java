@@ -3,7 +3,6 @@ package com.dexels.navajo.tipi.swingclient.components.calendar;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.table.*;
-import java.util.*;
 
 /**
  * <p>Title: </p>
@@ -21,8 +20,8 @@ public class CalendarTableCellRenderer
   MultipleDayRenderer md = new MultipleDayRenderer();
 
   public CalendarTableCellRenderer() {
-    week.setHorizontalAlignment(JLabel.CENTER);
-    week.setHorizontalTextPosition(JLabel.CENTER);
+    week.setHorizontalAlignment(SwingConstants.CENTER);
+    week.setHorizontalTextPosition(SwingConstants.CENTER);
     week.setFont(new java.awt.Font("Dialog", 1, 11));
     week.setOpaque(true);
   }

@@ -3,22 +3,17 @@ package com.dexels.navajo.tipi.swingclient.components;
 import javax.swing.*;
 
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.tipi.swingclient.*;
-
 import java.awt.event.*;
 
 import javax.swing.text.*;
-import java.awt.*;
 import javax.swing.event.*;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.MissingResourceException;
-import java.text.*;
-import javax.swing.*;
 
 public class FloatPropertyField extends PropertyField implements PropertyControlled, Validatable {
   protected Document myDocument = null;
-  protected int validationState = BaseField.VALID;
+  protected int validationState = Validatable.VALID;
   protected ArrayList myConditionRuleIds = new ArrayList();
   protected ArrayList rules = new ArrayList();
   protected Message validationMsg;
@@ -37,7 +32,7 @@ public class FloatPropertyField extends PropertyField implements PropertyControl
       setDocument(myDocument);
       jbInit();
       if(getForcedAlignment()==null) {
-    	  setHorizontalAlignment(JTextField.RIGHT);
+    	  setHorizontalAlignment(SwingConstants.RIGHT);
       }
     } catch(Exception e) {
       e.printStackTrace();
@@ -60,7 +55,8 @@ public class FloatPropertyField extends PropertyField implements PropertyControl
 //    }
   }
 
-  public void setProperty(Property p) {
+  @Override
+public void setProperty(Property p) {
 
     initProperty = p;
     if(p == null) {
@@ -128,11 +124,13 @@ public class FloatPropertyField extends PropertyField implements PropertyControl
       }
     });
     this.addFocusListener(new java.awt.event.FocusAdapter() {
-      public void focusLost(FocusEvent e) {
+      @Override
+	public void focusLost(FocusEvent e) {
         moneyFocusLost(e);
       }
 
-      public void focusGained(FocusEvent e) {
+      @Override
+	public void focusGained(FocusEvent e) {
         this_focusGained(e);
       }
     });
@@ -177,7 +175,7 @@ public class FloatPropertyField extends PropertyField implements PropertyControl
 //        initProperty.setValue(getText());
       }
       if(getText() != null && !getText().equals("")) {
-        setValidationState(BaseField.VALID);
+        setValidationState(Validatable.VALID);
       }
     }
   }
@@ -192,15 +190,17 @@ public class FloatPropertyField extends PropertyField implements PropertyControl
 //      initProperty.setValue(getText());
     }
     if(getText() != null && !getText().equals("")) {
-      setValidationState(BaseField.VALID);
+      setValidationState(Validatable.VALID);
     }
   }
 
-  public final void setGhosted(boolean b) {
+  @Override
+public final void setGhosted(boolean b) {
     this.setEnabled(!b);
   }
 
-  public final boolean isGhosted() {
+  @Override
+public final boolean isGhosted() {
     return!this.isEnabled();
   }
 
@@ -208,7 +208,8 @@ public class FloatPropertyField extends PropertyField implements PropertyControl
     readOnly = b;
   }
 
-  public void update() {
+  @Override
+public void update() {
 //    super.update();
 //    try {
 //      commitEdit();
@@ -232,7 +233,7 @@ public class FloatPropertyField extends PropertyField implements PropertyControl
       updateChanged(initProperty);
       initProperty.setValue(Double.toString(d));
       if (getText() != null && !getText().equals("")) {
-        setValidationState(BaseField.VALID);
+        setValidationState(Validatable.VALID);
       }
     }
   }
@@ -246,7 +247,8 @@ public void focusLost(FocusEvent e) {
 
 final class FloatNumberDocument extends PlainDocument {
 
-  public final void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
+  @Override
+public final void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
     char[] source = str.toCharArray();
     char[] result = new char[source.length];
     int j = 0;

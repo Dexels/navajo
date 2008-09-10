@@ -6,7 +6,6 @@ import com.dexels.navajo.document.*;
 import java.util.*;
 import java.util.List;
 import java.awt.*;
-import java.awt.event.*;
 import java.beans.*;
 
 import javax.swing.*;
@@ -72,6 +71,7 @@ public final class MultipleSelectionPropertyList extends JPanel implements Prope
 		myList.removeListSelectionListener(l);
 	}
 
+	@Override
 	public Dimension getPreferredSize() {
 		return jScrollPane1.getPreferredSize();
 		// return new Dimension(80,100);
@@ -94,11 +94,11 @@ public final class MultipleSelectionPropertyList extends JPanel implements Prope
 	}
 
 	public final void setVerticalScrolls(boolean b) {
-		jScrollPane1.setVerticalScrollBarPolicy(b ? JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED : JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+		jScrollPane1.setVerticalScrollBarPolicy(b ? ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED : ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 	}
 
 	public final void setHorizontalScrolls(boolean b) {
-		jScrollPane1.setHorizontalScrollBarPolicy(b ? JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED : JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		jScrollPane1.setHorizontalScrollBarPolicy(b ? ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED : ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 	}
 
 	public final boolean isGhosted() {
@@ -125,7 +125,7 @@ public final class MultipleSelectionPropertyList extends JPanel implements Prope
 //			}});
 
 	
-		jScrollPane1.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		jScrollPane1.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 //		myList.setFixedCellHeight(16);
 		// jScrollPane1.setPreferredSize(myList.getPreferredSize());
 //		jScrollPane1.add(myList);

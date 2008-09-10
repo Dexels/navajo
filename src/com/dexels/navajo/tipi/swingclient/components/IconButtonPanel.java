@@ -183,7 +183,8 @@ public class IconButtonPanel extends JPanel {
   void okButton_actionPerformed(ActionEvent e) {
     buttonPressed(e);
   }
-  public void requestFocus() {
+  @Override
+public void requestFocus() {
     okButton.requestFocus();
   }
 }

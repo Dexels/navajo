@@ -41,8 +41,8 @@ public class ConditionErrorParser {
       ArrayList failures = msg.getAllMessages();
       for (int i = 0; i < failures.size(); i++) {
         Message current = (Message) failures.get(i);
-        String expression = (String) current.getProperty("FailedExpression").getValue();
-        String id = (String) current.getProperty("Id").getValue();
+        String expression = current.getProperty("FailedExpression").getValue();
+        String id = current.getProperty("Id").getValue();
         parseExpression(expression, id);
       }
       return failedProperties;
@@ -78,7 +78,7 @@ public class ConditionErrorParser {
         return "Unknown error.";
     }
     String id = (String) failureMap.get(propertyPath);
-    String description = (String) res.getString(id);
+    String description = res.getString(id);
     return description;
   }
 }

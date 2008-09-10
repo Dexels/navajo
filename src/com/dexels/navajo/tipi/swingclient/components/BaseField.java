@@ -3,16 +3,10 @@ package com.dexels.navajo.tipi.swingclient.components;
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
-import java.awt.event.*;
 //import com.dexels.sportlink.client.swing.*;
 import com.dexels.navajo.document.*;
-//import com.dexels.navajo.nanoclient.NavajoLoadable;
-import java.beans.*;
-import javax.swing.text.*;
-import javax.swing.event.*;
 //import com.dexels.sportlink.client.swing.components.validation.*;
 import com.dexels.navajo.tipi.swingclient.*;
-import com.dexels.navajo.tipi.swingclient.components.validation.*;
 
 
 /**
@@ -55,7 +49,8 @@ public class BaseField extends JTextField implements ChangeMonitoring, Validatab
     setToolTipText(res.getString(s));
   }
 
-  public void setEnabled(boolean b) {
+  @Override
+public void setEnabled(boolean b) {
 
     //System.err.println("==================================> SetEnabled called in BaseField: " + this.getText());
 
@@ -176,7 +171,7 @@ public void resetChanged() {
     for(int i=0;i<conditions.size();i++){
       Message current = (Message) conditions.get(i);
       Property conditionCode = current.getProperty("Id");
-      int code = Integer.parseInt((String)conditionCode.getValue());
+      int code = Integer.parseInt(conditionCode.getValue());
       for(int j=0;j<rules.size();j++){
         int rule = ((Integer)rules.get(j)).intValue();
         if(rule == code){
@@ -211,7 +206,8 @@ public void resetChanged() {
 //    isManagingFocus = value;
 //  }
 //
-  public boolean isManagingFocus(){
+  @Override
+public boolean isManagingFocus(){
     return false;
   }
 //

@@ -6,15 +6,8 @@ import java.awt.*;
 import javax.swing.*;
 
 import java.util.*;
-import javax.swing.event.CellEditorListener;
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.types.*;
-
-import javax.swing.tree.TreeCellRenderer;
 import javax.swing.border.*;
-import java.awt.event.*;
-import java.beans.*;
-
 import javax.swing.border.LineBorder;
 import java.text.*;
 
@@ -72,6 +65,7 @@ public class PropertyCellRenderer implements TableCellRenderer, ListCellRenderer
 		//
 		myPropertyField = new TextPropertyField();
 		l = new JLabel() {
+			@Override
 			public boolean isOpaque() {
 				return true;
 			}

@@ -2,7 +2,6 @@ package com.dexels.navajo.tipi.swingclient.components;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.lang.reflect.*;
 import java.util.*;
 
 import javax.swing.*;
@@ -11,7 +10,6 @@ import javax.swing.text.*;
 
 import com.dexels.navajo.client.*;
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.tipi.swingclient.components.remotecombobox.*;
 
 public class EditableComboBox extends JComboBox {
 
@@ -167,6 +165,7 @@ public class EditableComboBox extends JComboBox {
 		return currentProperty;
 	}
 
+	@Override
 	public void setEnabled(boolean b) {
 
 	}
@@ -194,7 +193,7 @@ public class EditableComboBox extends JComboBox {
 		JFrame t = new JFrame("Test");
 
 		t.setSize(400, 200);
-		t.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		t.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		ClientInterface cc = NavajoClientFactory.createDefaultClient();
 		cc.setServerUrl("penelope1.dexels.com/sportlink/knvb/servlet/Postman");
 		cc.setUsername("");

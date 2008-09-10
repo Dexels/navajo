@@ -3,6 +3,7 @@ package com.dexels.navajo.tipi.swingclient.components.mousegestures;
 import java.awt.*;
 import java.util.*;
 import java.awt.event.*;
+
 import javax.swing.*;
 import com.dexels.navajo.tipi.swingclient.*;
 import com.dexels.navajo.tipi.swingclient.components.*;
@@ -38,12 +39,14 @@ public class MouseGestureParser {
       public void mouseMoved(MouseEvent e){}
     });
     c.addMouseListener(new MouseAdapter(){
-      public void mousePressed(MouseEvent e){
+      @Override
+	public void mousePressed(MouseEvent e){
         points.add(e.getPoint());
-        shouldAddPoints = (e.getButton() == e.BUTTON3);
+        shouldAddPoints = (e.getButton() == MouseEvent.BUTTON3);
 //        redirectEvent(e, e.getPoint());
       }
-      public void mouseReleased(MouseEvent e){
+      @Override
+	public void mouseReleased(MouseEvent e){
         shouldAddPoints = false;
         if(gestureStack.size() >0){
           fireGestureEvent();
@@ -100,7 +103,7 @@ public class MouseGestureParser {
         if(gestureStack.size() == 0) {
           gestureStack.push(gesture);
         } else {
-          if(!gesture.equals((String)gestureStack.peek())) {
+          if(!gesture.equals(gestureStack.peek())) {
             gestureStack.push(gesture);
           }
         }

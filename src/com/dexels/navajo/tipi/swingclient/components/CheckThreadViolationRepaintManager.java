@@ -14,12 +14,14 @@ public class CheckThreadViolationRepaintManager extends RepaintManager {
         this.completeCheck = completeCheck;
     }
 
-    public synchronized void addInvalidComponent(JComponent component) {
+    @Override
+	public synchronized void addInvalidComponent(JComponent component) {
         checkThreadViolations(component);
         super.addInvalidComponent(component);
     }
 
-    public void addDirtyRegion(JComponent component, int x, int y, int w, int h) {
+    @Override
+	public void addDirtyRegion(JComponent component, int x, int y, int w, int h) {
         checkThreadViolations(component);
         super.addDirtyRegion(component, x, y, w, h);
     }

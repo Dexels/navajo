@@ -1,10 +1,8 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
-import javax.swing.event.*;
 import java.awt.event.*;
 import javax.swing.text.*;
 import com.dexels.navajo.document.types.*;
-import java.util.*;
 import com.dexels.navajo.document.*;
 
 /**
@@ -19,14 +17,14 @@ import com.dexels.navajo.document.*;
 public class StopwatchTimeField extends PropertyField {
 
   private Document myDocument = null;
-  private String format = null;
 
   public StopwatchTimeField() {
     super();
     myDocument = new StopwatchTimeDocument();
     setDocument(myDocument);
   }
-  public final void focusLost(FocusEvent e) {
+  @Override
+public final void focusLost(FocusEvent e) {
 
     try{
       if (getText() == null || "".equals(getText().trim())) {
@@ -49,7 +47,8 @@ public class StopwatchTimeField extends PropertyField {
     }
   }
 
-  public final void focusGained(FocusEvent e){
+  @Override
+public final void focusGained(FocusEvent e){
   }
 
   private final void setFormatText() {
@@ -68,19 +67,22 @@ public class StopwatchTimeField extends PropertyField {
     setText(getProperty().getTypedValue().toString());
   }
 
-  public final void setProperty(Property p) {
+  @Override
+public final void setProperty(Property p) {
     super.setProperty(p);
     setFormatText();
   }
 
-  public final void update() {
+  @Override
+public final void update() {
     focusLost(null);
   }
 }
 
 final class StopwatchTimeDocument extends PlainDocument {
 
-  public final void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
+  @Override
+public final void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
     char[] source = str.toCharArray();
      char[] result = new char[source.length];
      int j = 0;

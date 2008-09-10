@@ -4,13 +4,9 @@ import com.dexels.navajo.document.*;
 import java.awt.event.*;
 import java.util.*;
 import java.awt.*;
-import com.dexels.navajo.tipi.swingclient.*;
 import com.dexels.navajo.tipi.swingclient.components.validation.*;
 
 import javax.swing.*;
-import javax.swing.text.*;
-import javax.swing.event.*;
-import java.text.*;
 
 /**
  * <p>Title: SportLink Client:</p>
@@ -62,13 +58,13 @@ public class PropertyField
 	  String old = forcedAlignment;
 	  forcedAlignment = align;
 	  if("left".equals(align)) {
-		  setHorizontalAlignment(JTextField.LEFT);
+		  setHorizontalAlignment(SwingConstants.LEFT);
 	  }
 	  if("right".equals(align)) {
-		  setHorizontalAlignment(JTextField.RIGHT);
+		  setHorizontalAlignment(SwingConstants.RIGHT);
 	  }
 	  if("center".equals(align)) {
-		  setHorizontalAlignment(JTextField.CENTER);
+		  setHorizontalAlignment(SwingConstants.CENTER);
 	  }
 	  if(align!=null) {
 		  if(!align.equals(old)) {
@@ -81,11 +77,12 @@ public class PropertyField
   }
 
   
-  public Dimension getMinimumSize() {
+  @Override
+public Dimension getMinimumSize() {
       return getPreferredSize();
   }
   public void setProperty(Property p) {
-    setValidationState(BaseField.VALID);
+    setValidationState(Validatable.VALID);
     if (p == null) {
       //System.err.println("Setting to null property. Ignoring");
       return;
@@ -94,7 +91,7 @@ public class PropertyField
 //    textValue = (String) p.getValue();
 //    setText(textValue);
     // Validation and enabled settings
-    if (getValidationState() == BaseField.VALID) {
+    if (getValidationState() == Validatable.VALID) {
       setDescription();
     }
     setEditable(p.isDirIn());
@@ -106,6 +103,7 @@ public class PropertyField
 
     setChanged(false);
   }
+	@Override
 	public boolean isOpaque() {
 		return true;
 	}
@@ -182,7 +180,7 @@ public class PropertyField
 
   public void focusGained(FocusEvent e) {
     if (isEditable()) {
-      setValidationState(BaseField.VALID);
+      setValidationState(Validatable.VALID);
       setDescription();
     }
     Component c = getParent();
@@ -223,7 +221,8 @@ public class PropertyField
     /** @todo Fix this one again, mmm.. needed? */
   }
 
-  public void checkValidation(Message msg) {
+  @Override
+public void checkValidation(Message msg) {
     try {
       super.checkValidation(msg);
       if (getProperty() != null) {
@@ -233,14 +232,14 @@ public class PropertyField
           for (int i = 0; i < failures.size(); i++) {
             String failedPropName = (String) failures.get(i);
             if (failedPropName.equals(getProperty().getFullPropertyName())) {
-              this.setValidationState(BaseField.INVALID);
+              this.setValidationState(Validatable.INVALID);
               System.err.println("Failed Property: " + failedPropName);
               return;
             }
           }
         }
       }
-      this.setValidationState(BaseField.VALID);
+      this.setValidationState(Validatable.VALID);
     }
     catch (Exception e) {
       e.printStackTrace();
@@ -256,7 +255,8 @@ public class PropertyField
     super.setEnabled(enabled && (!ghosted));
   }
 
-  public void setEnabled(boolean e) {
+  @Override
+public void setEnabled(boolean e) {
     enabled = e;
     super.setEnabled(enabled && (!ghosted));
   }

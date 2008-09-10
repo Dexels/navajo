@@ -42,7 +42,8 @@ public class BaseGlassPane extends JComponent{
     return myBusyPanels.size();
   }
 
-  public void update(Graphics g) {
+  @Override
+public void update(Graphics g) {
     paint(g);
   }
 
@@ -53,7 +54,8 @@ public class BaseGlassPane extends JComponent{
 
 
 
-  public void paintComponent(Graphics g) {
+  @Override
+public void paintComponent(Graphics g) {
     for (int i = 0; i < myBusyPanels.size(); i++) {
       BasePanel current = (BasePanel)myBusyPanels.get(i);
       Dimension screenSize = current.getSize();

@@ -33,7 +33,7 @@ public class ErrorHandler {
       SwingClient.getUserInterface().addErrorDialog(conditionErrors);
     }else if(exceptions != null){
       errorOccured = true;
-      String code = (String)exceptions.getProperty("code").getValue();
+      String code = exceptions.getProperty("code").getValue();
       if(code.trim().equals("10")){
 //        AuthorisationDialog.
 //        AuthorisationDialog.getInstance().showDialog();

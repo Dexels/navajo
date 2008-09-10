@@ -14,10 +14,6 @@ package com.dexels.navajo.tipi.swingclient.components.sort;
 import javax.swing.table.*;
 import javax.swing.event.TableModelListener;
 import javax.swing.event.TableModelEvent;
-import com.dexels.navajo.document.*;
-import java.util.*;
-
-import com.dexels.navajo.tipi.swingclient.components.*;
 
 public class TableMap
     extends AbstractTableModel
@@ -39,7 +35,8 @@ public class TableMap
     return model.getValueAt(aRow, aColumn);
   }
 
-  public void setValueAt(Object aValue, int aRow, int aColumn) {
+  @Override
+public void setValueAt(Object aValue, int aRow, int aColumn) {
     model.setValueAt(aValue, aRow, aColumn);
   }
 
@@ -52,15 +49,18 @@ public class TableMap
     return columncount;
   }
 
-  public String getColumnName(int aColumn) {
+  @Override
+public String getColumnName(int aColumn) {
     return model.getColumnName(aColumn);
   }
 
-  public Class getColumnClass(int aColumn) {
+  @Override
+public Class getColumnClass(int aColumn) {
     return model.getColumnClass(aColumn);
   }
 
-  public boolean isCellEditable(int row, int column) {
+  @Override
+public boolean isCellEditable(int row, int column) {
     return model.isCellEditable(row, column);
   }
 

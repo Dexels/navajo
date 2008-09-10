@@ -1,17 +1,13 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
-import javax.swing.JFormattedTextField;
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.tipi.swingclient.*;
+import javax.swing.*;
 
+import com.dexels.navajo.document.*;
 import java.awt.event.*;
 import javax.swing.text.*;
 import java.awt.*;
-import javax.swing.event.*;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.MissingResourceException;
-import javax.swing.*;
 
 /**
  * <p>Title: Seperate project for Navajo Swing client</p>
@@ -50,7 +46,7 @@ public final class IntegerPropertyField
       setDocument(myDocument);
       jbInit();
       if(getForcedAlignment()==null) {
-    	  setHorizontalAlignment(JTextField.RIGHT);
+    	  setHorizontalAlignment(SwingConstants.RIGHT);
       }
       //      getDocument().addDocumentListener(new MyDocumentListener());
     }
@@ -68,7 +64,8 @@ public final class IntegerPropertyField
 	  this.longMode = longMode;
   }
   
-  public final void setProperty(Property p) {
+  @Override
+public final void setProperty(Property p) {
 
     if (p == null) {
       return;
@@ -109,13 +106,15 @@ public final class IntegerPropertyField
 
   private final void jbInit() throws Exception {
     this.addFocusListener(new java.awt.event.FocusAdapter() {
-      public void focusLost(FocusEvent e) {
+      @Override
+	public void focusLost(FocusEvent e) {
         this_focusLost(e);
       }
     });
   }
 
-  public final void focusLost(FocusEvent e) {
+  @Override
+public final void focusLost(FocusEvent e) {
 	  // No call to super. Good.
  }
 
@@ -152,11 +151,13 @@ public final class IntegerPropertyField
     }
   }
 
-  public final void setGhosted(boolean b) {
+  @Override
+public final void setGhosted(boolean b) {
     this.setEnabled(!b);
   }
 
-  public final boolean isGhosted() {
+  @Override
+public final boolean isGhosted() {
     return!this.isEnabled();
   }
 
@@ -164,7 +165,8 @@ public final class IntegerPropertyField
     readOnly = b;
   }
 
-  public final void update() {
+  @Override
+public final void update() {
     super.update();
     if ( (initProperty == null) || readOnly) {
       return;
@@ -179,7 +181,7 @@ public final class IntegerPropertyField
     }
 
     if (getText() != null && !getText().equals("")) {
-      setValidationState(BaseField.VALID);
+      setValidationState(Validatable.VALID);
     }
   }
 
@@ -187,7 +189,8 @@ public final class IntegerPropertyField
 
 final class WholeNumberDocument
     extends PlainDocument {
-  public final void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
+  @Override
+public final void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
     char[] source = str.toCharArray();
     char[] result = new char[source.length];
     int j = 0;

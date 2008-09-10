@@ -1,11 +1,8 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
 import javax.swing.*;
-import java.awt.*;
 import com.dexels.navajo.document.*;
 import javax.swing.tree.*;
-import java.awt.dnd.DragGestureListener;
-import java.awt.dnd.DragGestureEvent;
 import java.util.*;
 
 /**

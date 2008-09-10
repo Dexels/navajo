@@ -1,10 +1,8 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
-import javax.swing.event.*;
 import java.awt.event.*;
 import javax.swing.text.*;
 import com.dexels.navajo.document.types.*;
-import java.util.*;
 import com.dexels.navajo.document.*;
 
 /**
@@ -37,7 +35,8 @@ public class ClockTimeField extends PropertyField {
 //      }
 //    });
   }
-  public final void focusLost(FocusEvent e) {
+  @Override
+public final void focusLost(FocusEvent e) {
 
     try{
       if (getText() == null || "".equals(getText().trim())) {
@@ -60,7 +59,8 @@ public class ClockTimeField extends PropertyField {
     }
   }
 
-  public final void focusGained(FocusEvent e){
+  @Override
+public final void focusGained(FocusEvent e){
 
   }
 
@@ -102,7 +102,8 @@ public class ClockTimeField extends PropertyField {
 
   }
 
-  public final void setProperty(Property p) {
+  @Override
+public final void setProperty(Property p) {
 	  if(p!=null) {
 		    if ("true".equals(p.getSubType("showseconds"))) {
 				showSeconds(true);
@@ -117,7 +118,8 @@ public class ClockTimeField extends PropertyField {
     setFormatText();
   }
 
-  public final void update() {
+  @Override
+public final void update() {
     focusLost(null);
   }
 
@@ -129,7 +131,8 @@ final class ClockTimeDocument extends PlainDocument {
 
   private boolean showSeconds = true;
 
-  public final void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
+  @Override
+public final void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
     char[] source = str.toCharArray();
      char[] result = new char[source.length];
      int j = 0;

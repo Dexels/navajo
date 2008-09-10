@@ -3,17 +3,12 @@ package com.dexels.navajo.tipi.swingclient.components;
 
 import java.awt.*;
 import javax.swing.*;
-import java.awt.event.*;
 //import com.dexels.sportlink.client.swing.*;
 //import com.dexels.sportlink.client.swing.components.*;
 import javax.swing.event.*;
 import java.beans.PropertyVetoException;
 import com.dexels.navajo.tipi.swingclient.*;
-import com.dexels.navajo.tipi.swingclient.components.*;
 import com.dexels.navajo.tipi.swingclient.components.mousegestures.*;
-
-import java.text.*;
-import javax.swing.text.*;
 
 /**
  * <p>Title: SportLink Client:</p>
@@ -100,13 +95,15 @@ public class BaseWindow extends JInternalFrame implements MouseGestureListener {
     this.setFrameIcon(myIcon);
 
     this.addInternalFrameListener(new InternalFrameAdapter() {
-      public void internalFrameDeactivated(InternalFrameEvent e){
+      @Override
+	public void internalFrameDeactivated(InternalFrameEvent e){
         deactivateFrame();
       }
     });
 
   }
-  protected void paintComponent(Graphics parm1) {
+  @Override
+protected void paintComponent(Graphics parm1) {
     super.paintComponent( parm1);
   }
   public void showWindow() {

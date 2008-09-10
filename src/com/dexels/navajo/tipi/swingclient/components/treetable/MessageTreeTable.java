@@ -3,15 +3,11 @@ package com.dexels.navajo.tipi.swingclient.components.treetable;
 import java.util.*;
 
 import java.awt.event.*;
-import javax.swing.*;
 import javax.swing.table.*;
 import javax.swing.tree.*;
 
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.swingclient.components.*;
-import com.dexels.navajo.tipi.swingclient.components.sort.*;
-
-import java.awt.*;
 
 public class MessageTreeTable extends JTreeTable {
 
@@ -23,7 +19,8 @@ public class MessageTreeTable extends JTreeTable {
     super.setDefaultEditor(Property.class, new PropertyCellEditor(null));
     super.setDefaultRenderer(Property.class, new PropertyCellRenderer());
     addMouseListener(new MouseAdapter() {
-      public void mouseClicked(MouseEvent m) {
+      @Override
+	public void mouseClicked(MouseEvent m) {
         if (m.getClickCount() > 1) {
           fireActionEvent();
         }
@@ -62,7 +59,8 @@ public class MessageTreeTable extends JTreeTable {
     getColumnModel().getColumn(index).setPreferredWidth(width);
   }
 
-  public void createDefaultColumnsFromModel() {
+  @Override
+public void createDefaultColumnsFromModel() {
       TableModel m = getModel();
       if (m != null) {
           // Remove any current columns
@@ -147,7 +145,8 @@ public class MessageTreeTable extends JTreeTable {
     }
   }
 
-  public void setModel(TreeTableModel treeTableModel) {
+  @Override
+public void setModel(TreeTableModel treeTableModel) {
      ( (MessageTreeTableModel) treeTableModel).setTreeTable(this); super.setModel(treeTableModel);
   }
 

@@ -1,10 +1,9 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.*;
-
-import com.dexels.navajo.tipi.swingclient.components.mousegestures.*;
 
 /**
  * <p>Title: </p>
@@ -34,19 +33,22 @@ public class SportlinkBusyPanel extends BaseGlassPane implements Runnable {
       t = new Thread(this);
     }
     this.addMouseListener(new MouseAdapter() {
-      public void mousePressed(MouseEvent e) {
+      @Override
+	public void mousePressed(MouseEvent e) {
         System.err.println(">>>>>>>>>>>>>>>>-- You clicked on Glass --<<<<<<<<<<<<<<<<<<");
       }
     });
   }
 
-  public void addBusyPanel(BasePanel p, int mode) {
+  @Override
+public void addBusyPanel(BasePanel p, int mode) {
     super.addBusyPanel(p, mode);
     isRunning = true;
     start();
   }
 
-  public void removeBusyPanel(BasePanel p) {
+  @Override
+public void removeBusyPanel(BasePanel p) {
     super.removeBusyPanel(p);
     isRunning = false;
   }
@@ -76,7 +78,7 @@ public class SportlinkBusyPanel extends BaseGlassPane implements Runnable {
   public void run() {
     while (isRunning) {
       try {
-        t.sleep(150);
+        Thread.sleep(150);
         rotateComposites();
         repaint();
       }
@@ -90,11 +92,13 @@ public class SportlinkBusyPanel extends BaseGlassPane implements Runnable {
     isRunning = false;
   }
 
-  public void update(Graphics g) {
+  @Override
+public void update(Graphics g) {
     paint(g);
   }
 
-  public void paintComponent(Graphics g) {
+  @Override
+public void paintComponent(Graphics g) {
     int width = this.getWidth();
     int height = this.getHeight();
     Graphics2D g2 = (Graphics2D) g;
@@ -152,7 +156,7 @@ public class SportlinkBusyPanel extends BaseGlassPane implements Runnable {
     aap.getContentPane().add(sbp);
     sbp.start();
     aap.setSize(800, 600);
-    aap.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    aap.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
     aap.setVisible(true);
   }
 }

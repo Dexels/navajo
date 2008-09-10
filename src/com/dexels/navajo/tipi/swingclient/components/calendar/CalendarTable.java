@@ -9,8 +9,6 @@ import javax.swing.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.swingclient.components.*;
 
-import javax.swing.table.*;
-
 
 /**
  * <p>Title: </p>
@@ -66,7 +64,7 @@ public class CalendarTable extends JTable {
     this.setTableHeader(null);
     this.setRowHeight(myConstants.getRowHeight());
     this.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-    this.setBackground(myConstants.getColor(myConstants.BACKGROUND_COLOR));
+    this.setBackground(CalendarConstants.getColor(CalendarConstants.BACKGROUND_COLOR));
 
     this.addKeyListener(new KeyListener() {
       public void keyPressed(KeyEvent e) {
@@ -171,7 +169,8 @@ public class CalendarTable extends JTable {
   }
 
 
-  public boolean isCellSelected(int row, int col) {
+  @Override
+public boolean isCellSelected(int row, int col) {
     Object o = myDefaultModel.getValueAt(row, col);
     if(Day.class.isInstance(o)) {
       Day d = (Day)o;
@@ -265,7 +264,8 @@ public class CalendarTable extends JTable {
     return myDefaultModel.getDay(dayOfYear);
   }
 
-  public void setSelectionMode(int mode) {
+  @Override
+public void setSelectionMode(int mode) {
     selectionMode = mode;
   }
 

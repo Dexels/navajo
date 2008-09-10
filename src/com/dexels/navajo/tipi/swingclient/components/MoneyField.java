@@ -1,7 +1,6 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
 import java.awt.*;
-import java.beans.*;
 import java.text.*;
 
 import javax.swing.*;
@@ -9,7 +8,7 @@ import javax.swing.*;
 import com.dexels.navajo.document.types.Money;
 
 public class MoneyField extends AbstractPropertyField implements PropertyControlled {
-	private DecimalFormat myEditFormat = (DecimalFormat) DecimalFormat.getInstance();
+	private DecimalFormat myEditFormat = (DecimalFormat) NumberFormat.getInstance();
 	public MoneyField() {
 		myEditFormat.setGroupingUsed(false);
 		myEditFormat.setDecimalSeparatorAlwaysShown(false);
@@ -17,12 +16,13 @@ public class MoneyField extends AbstractPropertyField implements PropertyControl
 		myEditFormat.getDecimalFormatSymbols().setGroupingSeparator('.');
 		myEditFormat.setMaximumFractionDigits(2);
 		myEditFormat.setMinimumFractionDigits(2);
-		setHorizontalAlignment(JTextField.RIGHT);
+		setHorizontalAlignment(SwingConstants.RIGHT);
 		setOpaque(true);
 		
 		
 	}
 	
+	@Override
 	protected String getEditingFormat(Object o) {
 		Money p = (Money)o;
 		if(p.isEmpty()) {
@@ -32,6 +32,7 @@ public class MoneyField extends AbstractPropertyField implements PropertyControl
 		return myEditFormat.format(d);
 	}
 
+	@Override
 	protected Object parseProperty(String text) {
 		text = text.replaceAll("\\.", ",");
 		try {
@@ -45,6 +46,7 @@ public class MoneyField extends AbstractPropertyField implements PropertyControl
 	}
 
 	
+	@Override
 	protected String getPresentationFormat(Object newValue) {
 		if(newValue instanceof Money) {
 			Money p = (Money)newValue;
@@ -70,6 +72,7 @@ public class MoneyField extends AbstractPropertyField implements PropertyControl
 
 	}
 	
+	@Override
 	public void setForeground(Color c) {
 		// ignore, otherwise the money colors get overridden
 	}

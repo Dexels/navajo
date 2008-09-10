@@ -7,8 +7,6 @@ import java.util.Map.Entry;
 import java.awt.event.*;
 //import com.dexels.sportlink.client.swing.*;
 import java.awt.*;
-import javax.swing.border.*;
-
 import com.dexels.navajo.tipi.swingclient.*;
 
 //import com.dexels.navajo.document.nanoimpl.*;
@@ -45,6 +43,7 @@ public abstract class BaseComboBox
       e.printStackTrace();
     }
   }
+	@Override
 	public boolean isOpaque() {
 		return true;
 	}
@@ -148,11 +147,13 @@ public abstract class BaseComboBox
       }
     });
     this.addFocusListener(new java.awt.event.FocusAdapter() {
-      public void focusGained(FocusEvent e) {
+      @Override
+	public void focusGained(FocusEvent e) {
         this_focusGained(e);
       }
 
-      public void focusLost(FocusEvent e) {
+      @Override
+	public void focusLost(FocusEvent e) {
         this_focusLost(e);
       }
     });

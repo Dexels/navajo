@@ -32,8 +32,6 @@ import java.awt.event.MouseAdapter;
 
 import java.awt.event.MouseEvent;
 
-import java.awt.event.InputEvent;
-
 import javax.swing.JTable;
 
 import javax.swing.table.JTableHeader;
@@ -41,8 +39,6 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
 
 import com.dexels.navajo.tipi.swingclient.components.*;
-
-import javax.swing.table.*;
 
 //import com.dexels.navajo.document.*;
 
@@ -71,7 +67,8 @@ public class TableSorter
 
   }
   
-  public boolean isCellEditable(int row, int column) {
+  @Override
+public boolean isCellEditable(int row, int column) {
 	  checkModel();
 	  if(model==null || row<0) {
 		  return false;
@@ -84,7 +81,8 @@ public class TableSorter
 	  return false;
   }
 
-  public void setModel(TableModel model) {
+  @Override
+public void setModel(TableModel model) {
     super.setModel(model);
     reallocateIndexes();
 
@@ -236,7 +234,8 @@ public class TableSorter
 
   }
 
-  public void tableChanged(TableModelEvent e) {
+  @Override
+public void tableChanged(TableModelEvent e) {
      //System.out.println("Sorter: tableChanged");
     reallocateIndexes();
     sort(this);
@@ -338,7 +337,8 @@ public class TableSorter
 
   // Pass all requests to these rows through the mapping array: "indexes".
 
-  public Object getValueAt(int aRow, int aColumn) {
+  @Override
+public Object getValueAt(int aRow, int aColumn) {
     checkModel();
     if (indexes != null && ( aRow < indexes.length ) ) {
       return model.getValueAt(indexes[aRow], aColumn);
@@ -347,7 +347,8 @@ public class TableSorter
     }
   }
 
-  public void setValueAt(Object aValue, int aRow, int aColumn) {
+  @Override
+public void setValueAt(Object aValue, int aRow, int aColumn) {
     checkModel();
     if (indexes != null && ( aRow < indexes.length ) ) {
       model.setValueAt(aValue, indexes[aRow], aColumn);
@@ -424,11 +425,12 @@ public class TableSorter
 //    tableView.setColumnSelectionAllowed(false);
     MouseAdapter listMouseListener = new MouseAdapter() {
 
-      public void mouseClicked(MouseEvent e) {
+      @Override
+	public void mouseClicked(MouseEvent e) {
         TableColumnModel columnModel = tableView.getColumnModel();
         int viewColumn = columnModel.getColumnIndexAtX(e.getX());
         Rectangle headerRect = tableView.getTableHeader().getHeaderRect(viewColumn);
-        if(e.getClickCount() > 1 && e.getButton() == e.BUTTON1){
+        if(e.getClickCount() > 1 && e.getButton() == MouseEvent.BUTTON1){
           if(headerRect != null){
             if(e.getX() > (headerRect.x + headerRect.width - 4)){
               tableView.determineMinumumColumnWidth(viewColumn);
@@ -436,7 +438,7 @@ public class TableSorter
           }
           e.consume();
           return;
-        } else if(!e.isPopupTrigger() && e.getButton() == e.BUTTON1 && tableView.isSortingAllowed() && e.getX() > (headerRect.x + 4) && e.getX() < (headerRect.x + headerRect.width - 4)){
+        } else if(!e.isPopupTrigger() && e.getButton() == MouseEvent.BUTTON1 && tableView.isSortingAllowed() && e.getX() > (headerRect.x + 4) && e.getX() < (headerRect.x + headerRect.width - 4)){
 
           boolean ascending = sortedAscending;
           if (sortedColumn == viewColumn) {

@@ -76,7 +76,8 @@ public class EventQueueWithWD extends EventQueue {
    *
    * @param anEvent event to dispatch.
    */
-  protected void dispatchEvent(AWTEvent anEvent) {
+  @Override
+protected void dispatchEvent(AWTEvent anEvent) {
     setEventDispatchingStart(anEvent, System.currentTimeMillis());
     super.dispatchEvent(anEvent);
     setEventDispatchingStart(null, -1);

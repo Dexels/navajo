@@ -113,7 +113,8 @@ public class MessageTreeNode
     return new Vector(myChildren).elements();
   }
 
-  public String toString() {
+  @Override
+public String toString() {
     if (myMessage == null) {
       return "..";
     }

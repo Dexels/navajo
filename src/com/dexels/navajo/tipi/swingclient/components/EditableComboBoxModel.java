@@ -3,9 +3,6 @@ package com.dexels.navajo.tipi.swingclient.components;
 import java.util.*;
 
 import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.text.*;
-
 import com.dexels.navajo.document.*;
 
 public class EditableComboBoxModel extends AbstractListModel implements ComboBoxModel {

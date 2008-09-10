@@ -5,10 +5,6 @@ import java.awt.event.*;
 import java.util.*;
 //import com.dexels.sportlink.client.swing.*;
 import java.awt.*;
-//import com.dexels.sportlink.client.swing.components.validation.*;
-//import com.dexels.navajo.document.nanoimpl.*;
-//import com.dexels.sportlink.client.swing.components.*;
-import com.dexels.navajo.tipi.swingclient.*;
 import com.dexels.navajo.tipi.swingclient.components.validation.*;
 
 /**
@@ -58,7 +54,8 @@ public class PropertyPasswordField extends BasePasswordField implements Property
   }
 
 
-  public void checkValidation(Message msg) {
+  @Override
+public void checkValidation(Message msg) {
     try{
       //setValidationState(BaseField.VALID);
       super.checkValidation(msg);
@@ -71,13 +68,13 @@ public class PropertyPasswordField extends BasePasswordField implements Property
 //            System.err.println("myProp    : " + getProperty().getFullPropertyName());
 //            System.err.println("failedProp: " + failedPropName);
             if (failedPropName.equals(getProperty().getFullPropertyName())) {
-              this.setValidationState(BaseField.INVALID);
+              this.setValidationState(Validatable.INVALID);
               return;
             }
           }
         }
       }
-      this.setValidationState(BaseField.VALID);
+      this.setValidationState(Validatable.VALID);
     }catch(Exception e){
       e.printStackTrace();
     }
@@ -122,10 +119,12 @@ public class PropertyPasswordField extends BasePasswordField implements Property
 
   private final void jbInit() throws Exception {
     this.addFocusListener(new java.awt.event.FocusAdapter() {
-      public void focusLost(FocusEvent e) {
+      @Override
+	public void focusLost(FocusEvent e) {
         this_focusLost(e);
       }
-      public void focusGained(FocusEvent e) {
+      @Override
+	public void focusGained(FocusEvent e) {
         this_focusGained(e);
       }
     });
@@ -141,7 +140,7 @@ public class PropertyPasswordField extends BasePasswordField implements Property
 
   public void this_focusGained(FocusEvent e) {
     if(isEditable()){
-      setValidationState(BaseField.VALID);
+      setValidationState(Validatable.VALID);
     }
     Component c = getParent();
     if(BasePanel.class.isInstance(c)){
@@ -174,7 +173,8 @@ public class PropertyPasswordField extends BasePasswordField implements Property
     super.setEnabled(enabled && (!ghosted));
   }
 
-  public void setEnabled(boolean e) {
+  @Override
+public void setEnabled(boolean e) {
     enabled = e;
     super.setEnabled(enabled && (!ghosted));
   }

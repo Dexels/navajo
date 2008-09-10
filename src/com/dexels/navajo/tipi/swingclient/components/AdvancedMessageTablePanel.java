@@ -11,10 +11,6 @@ import javax.swing.*;
 import java.awt.*;
 import javax.swing.table.*;
 import com.dexels.navajo.tipi.swingclient.*;
-import com.dexels.navajo.tipi.swingclient.components.*;
-import com.dexels.navajo.tipi.swingclient.components.validation.*;
-
-import java.io.*;
 
 //import com.dexels.navajo.document.nanoimpl.*;
 
@@ -84,12 +80,14 @@ implements ResponseListener, ListSelectionListener, ChangeListener {
 		//});
 		JTableHeader th = getTable().getTableHeader();
 		th.addMouseListener(new MouseAdapter() {
+			@Override
 			public final void mousePressed(MouseEvent e) {
 				if (e.isPopupTrigger()) {
 					firePopupEvent(e);
 				}
 			}
 
+			@Override
 			public final void mouseReleased(MouseEvent e) {
 				if (e.isPopupTrigger()) {
 					firePopupEvent(e);
@@ -105,7 +103,7 @@ implements ResponseListener, ListSelectionListener, ChangeListener {
 		if (e.getFirstIndex() >= 0 && e.getSource() == messageTable.getColumnModel().getSelectionModel()) {
 			// Get the data model for this table
 			if (messageTable.getSelectedRow() > -1 && messageTable.getSelectedColumn() > -1) {
-				TableModel model = (TableModel) messageTable.getModel();
+				TableModel model = messageTable.getModel();
 				previousValue = model.getValueAt(messageTable.getSelectedRow(), messageTable.getSelectedColumn());
 				if(Property.class.isInstance(previousValue)){
 					//System.err.println("It's a property");
@@ -118,12 +116,14 @@ implements ResponseListener, ListSelectionListener, ChangeListener {
 	}
 
 	// Added by Arjen (18/11/2004 to support IGNORING changed functionality).
+	@Override
 	public void resetChanged() {
 //		doResetChanged = true;
 		changedMessages.clear();
 		messageTable.resetChanged();
 	}
 
+	@Override
 	public final boolean hasChanged() {
 		if (changedMessages.size() > 0 || insertedMessages.size() >0) {
 			return true;
@@ -132,6 +132,7 @@ implements ResponseListener, ListSelectionListener, ChangeListener {
 //		return messageTable.hasChanged();
 	}
 
+	@Override
 	public final void firePopupEvent(MouseEvent e) {
 		super.firePopupEvent(e);
 
@@ -225,6 +226,7 @@ implements ResponseListener, ListSelectionListener, ChangeListener {
 
 	}
 
+	@Override
 	public final void addToolbar(JToolBar b) {
 		setToolbar(b);
 		b.setFloatable(false);
@@ -236,6 +238,7 @@ implements ResponseListener, ListSelectionListener, ChangeListener {
 		setToolbarEnabled(false);
 	}
 
+	@Override
 	public final void clearTable() {
 		super.clearTable();
 		setToolbarEnabled(false);
@@ -276,10 +279,12 @@ implements ResponseListener, ListSelectionListener, ChangeListener {
 		return getMessage().getRootDoc().getMessage(requiredMessagePath);
 	}
 
+	@Override
 	public boolean hasConditionErrors() {
 		return hasConditionErrors;
 	}
 
+	@Override
 	public void setAllUpdateFlags() {
 		ArrayList selectedMessages = getSelectedMessages();
 		if (selectedMessages != null && selectedMessages.size() > 0) {
@@ -298,6 +303,7 @@ implements ResponseListener, ListSelectionListener, ChangeListener {
 		}
 	}
 
+	@Override
 	public final void commit() {
 		if (!toolbarEnabled) {
 			//System.err.println("WARNING: Not commmitting AMTP, my toolbar is disabled, so I assume I'm read-only");
@@ -439,6 +445,7 @@ implements ResponseListener, ListSelectionListener, ChangeListener {
 		reload();
 	}
 
+	@Override
 	public final void delete() {
 		Navajo rootDoc = null;
 		ArrayList methods = null;
@@ -566,6 +573,7 @@ implements ResponseListener, ListSelectionListener, ChangeListener {
 		}
 	}
 
+	@Override
 	public final void insert() {
 		if (insertMessagePath != null) {
 			Message insertMessage = myNavajo.getMessage(insertMessagePath);
@@ -607,6 +615,7 @@ implements ResponseListener, ListSelectionListener, ChangeListener {
 		}
 	}
 
+	@Override
 	public final Navajo insert(Message msg) {
 		// System.err.println("Inserting external message");
 		insertedMessages.add(msg);
@@ -642,6 +651,7 @@ implements ResponseListener, ListSelectionListener, ChangeListener {
 		}
 	}
 
+	@Override
 	public final void receive(final Navajo n, final String method, final String id) {
 		//System.err.println("AMTP Received: " + id + ", from service: " + method);
 		removeBusyPanel();
@@ -782,10 +792,12 @@ implements ResponseListener, ListSelectionListener, ChangeListener {
 		this.insertMessagePath = newDataPath;
 	}
 
+	@Override
 	public final Message getInitMessage() {
 		return initMessage;
 	}
 
+	@Override
 	public final void setMessage(Message m) {
 		if (m != null) {
 			setToolbarEnabled(true);
@@ -803,6 +815,7 @@ implements ResponseListener, ListSelectionListener, ChangeListener {
 	}
 
 	// overridden
+	@Override
 	public final void rowSelected(ListSelectionEvent e) {
 		fireRowSelected(getSelectedMessage());
 	}
@@ -851,6 +864,7 @@ implements ResponseListener, ListSelectionListener, ChangeListener {
 		}
 	}
 
+	@Override
 	public final void handleException(Exception e) {
 		//System.err.println("--> An exception is passed to AdvancedMessageTablePanel it was: " + e.toString());
 		removeBusyPanel();

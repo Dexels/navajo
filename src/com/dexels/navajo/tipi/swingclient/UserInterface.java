@@ -3,10 +3,6 @@ package com.dexels.navajo.tipi.swingclient;
 import javax.swing.*;
 
 import com.dexels.navajo.document.*;
-//import com.dexels.sportlink.client.swing.member.*;
-import java.awt.*;
-import javax.swing.plaf.metal.*;
-
 import com.dexels.navajo.tipi.swingclient.components.*;
 
 import java.util.*;
@@ -54,8 +50,8 @@ public interface UserInterface {
   public void setLocale(Locale l);
   public Locale getLocale();
   public void rebuildWindow();
-  public void rebuildMenu(Map localWindowState);
-  public void updateMenu(String id, Map localWindowState);
+  public void rebuildMenu(Map<String,Object> localWindowState);
+  public void updateMenu(String id, Map<String,Object> localWindowState);
   public void addStickyFrame(StandardWindow sw, String direction);
   public void addStickyness(StandardWindow sw, String dir);
   public void removeStickyness(StandardWindow sw, String dir);

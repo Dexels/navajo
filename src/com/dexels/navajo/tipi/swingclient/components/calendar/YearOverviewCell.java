@@ -39,7 +39,7 @@ public class YearOverviewCell
     this.setLayout(borderLayout1);
     this.add(jLabel1, BorderLayout.NORTH);
     this.add(calendarTable1, BorderLayout.CENTER);
-    this.setBackground(myConstants.getColor(CalendarConstants.BACKGROUND_COLOR));
+    this.setBackground(CalendarConstants.getColor(CalendarConstants.BACKGROUND_COLOR));
     myConstants.setRowHeight(20);
     myConstants.setColumnWidth(20);
     calendarTable1.setCalendarConstants(myConstants);
@@ -82,7 +82,8 @@ public class YearOverviewCell
     selected = state;
   }
 
-  public void paintComponent(Graphics g) {
+  @Override
+public void paintComponent(Graphics g) {
     super.paintComponent(g);
     if (selected) {
       Graphics2D g2 = (Graphics2D) g;

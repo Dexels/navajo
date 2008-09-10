@@ -1,9 +1,7 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
-import javax.swing.event.*;
 import javax.swing.text.*;
 import com.dexels.navajo.document.*;
-import java.awt.*;
 import java.awt.event.*;
 
 /**
@@ -20,17 +18,20 @@ public class TextPropertyField extends PropertyField {
   public TextPropertyField() {
     setDocument(myDocument);
     this.addFocusListener(new java.awt.event.FocusAdapter() {
-      public void focusLost(FocusEvent e) {
+      @Override
+	public void focusLost(FocusEvent e) {
         lostFocus(e);
       }
       
-      public void focusGained(FocusEvent e) {
+      @Override
+	public void focusGained(FocusEvent e) {
     	  selectAll();
       }
     });
    
   }
-  public void focusLost(FocusEvent e) {
+  @Override
+public void focusLost(FocusEvent e) {
     // overridden, to fix the klopgeest-aap bug
   }
 
@@ -60,12 +61,14 @@ public class TextPropertyField extends PropertyField {
 
   }
 
-  public final void update() {
+  @Override
+public final void update() {
 //    System.err.println("Update in property");
     lostFocus(null);
   }
 
-  public void setProperty(Property p) {
+  @Override
+public void setProperty(Property p) {
     myDocument.setProperty(p);
     if(p != null){
       if (!(p.getType().equals(Property.STRING_PROPERTY) || p.getType().equals(Property.EXPRESSION_PROPERTY) || p.getType().equals(Property.MEMO_PROPERTY)|| p.getType().equals(Property.TIPI_PROPERTY))) {
@@ -90,7 +93,7 @@ public class TextPropertyField extends PropertyField {
           }
         }
         if (o!=null) {
-          textValue = (String) o.toString();
+          textValue = o.toString();
         } else {
           textValue = "";
         }
@@ -125,7 +128,8 @@ public class TextPropertyField extends PropertyField {
 //    update();
   }
 
-  public final void updateProperty() {
+  @Override
+public final void updateProperty() {
     if (initProperty==null) {
       return;
     }
@@ -139,8 +143,9 @@ public class TextPropertyField extends PropertyField {
     }
   }
 
-  public void setText(String s) {
-	  String old = getText();
+  @Override
+public void setText(String s) {
+//	  String old = getText();
 	  try {
       myDocument.remove(0, myDocument.getLength());
       myDocument.insertString(0, s, null);

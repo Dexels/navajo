@@ -1,14 +1,8 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
 import java.awt.event.*;
-import java.net.*;
 import java.awt.*;
 import java.awt.font.*;
-import java.util.*;
-import java.text.*;
-import javax.swing.text.html.*;
-import javax.swing.text.*;
-import java.io.*;
 import com.dexels.navajo.document.*;
 
 /**
@@ -33,14 +27,16 @@ public class URIPropertyField extends TextPropertyField {
     super();
 
     this.addMouseListener(new MouseAdapter() {
-      public void mouseClicked(MouseEvent e) {
+      @Override
+	public void mouseClicked(MouseEvent e) {
         if (e.getClickCount() > 1 && clickable) {
           String uri = createURI();
           System.err.println("Click!! -> URI: " + uri);
           loadURI(uri);
         }
       }
-      public void mouseEntered(MouseEvent e){
+      @Override
+	public void mouseEntered(MouseEvent e){
         if(isURI()){
           setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         }else{
@@ -50,7 +46,8 @@ public class URIPropertyField extends TextPropertyField {
     });
   }
 
-  public void paintComponent(Graphics g){
+  @Override
+public void paintComponent(Graphics g){
     super.paintComponent(g);
     if(isURI()){
       this.setForeground(Color.blue);
@@ -78,7 +75,8 @@ public class URIPropertyField extends TextPropertyField {
     clickable = isClickable;
   }
 
-  public void setProperty(Property p){
+  @Override
+public void setProperty(Property p){
     super.setProperty(p);
     if(isURI()){
       setToolTipText(p.getDescription() + " (Dubbelklik om te openen)");

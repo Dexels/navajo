@@ -65,7 +65,7 @@ public class PropertyBox extends BaseComboBox implements PropertyControlled, Gho
 		for (int i = 0; i < conditions.size(); i++) {
 			Message current = (Message) conditions.get(i);
 			Property conditionCode = current.getProperty("Id");
-			int code = Integer.parseInt((String) conditionCode.getValue());
+			int code = Integer.parseInt(conditionCode.getValue());
 			for (int j = 0; j < rules.size(); j++) {
 				int rule = ((Integer) rules.get(j)).intValue();
 				if (rule == code) {
@@ -80,6 +80,7 @@ public class PropertyBox extends BaseComboBox implements PropertyControlled, Gho
 		setValidationState(VALID);
 	}
 
+	@Override
 	public final void addValidationRule(int state) {
 		System.out.println("Adding validation rule: " + state);
 		rules.add(new Integer(state));
@@ -163,6 +164,7 @@ public class PropertyBox extends BaseComboBox implements PropertyControlled, Gho
 		}
 	}
 
+	@Override
 	public void setEditable(boolean b) {
 		setEnabled(b);
 	}
@@ -286,6 +288,7 @@ public class PropertyBox extends BaseComboBox implements PropertyControlled, Gho
 		super.setEnabled(enabled && (!ghosted));
 	}
 
+	@Override
 	public  void setEnabled(boolean e) {
 		enabled = e;
 		super.setEnabled(enabled && (!ghosted));

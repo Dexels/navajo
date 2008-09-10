@@ -3,7 +3,6 @@ package com.dexels.navajo.tipi.swingclient.components.calendar;
 import java.util.*;
 
 import java.awt.*;
-import javax.swing.*;
 
 /**
  * <p>Title: </p>

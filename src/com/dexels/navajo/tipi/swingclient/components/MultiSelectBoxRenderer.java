@@ -4,7 +4,6 @@ import javax.swing.ListCellRenderer;
 import java.awt.Component;
 import javax.swing.*;
 import com.dexels.navajo.document.*;
-import java.awt.event.*;
 
 /**
  * <p>Title: Seperate project for Navajo Swing client</p>

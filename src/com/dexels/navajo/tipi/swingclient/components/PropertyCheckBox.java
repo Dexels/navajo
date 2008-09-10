@@ -3,10 +3,7 @@ import com.dexels.navajo.document.*;
 import java.awt.event.*;
 import java.util.ResourceBundle;
 
-import com.dexels.navajo.tipi.swingclient.*;
-
 import java.util.MissingResourceException;
-import java.awt.*;
 
 //import com.dexels.sportlink.client.swing.components.*;
 
@@ -59,7 +56,8 @@ public final class PropertyCheckBox extends BaseCheckBox implements ChangeMonito
     setChanged(true);
   }
 
-  public boolean isOpaque() {
+  @Override
+public boolean isOpaque() {
 	  return false;
   }
   public final void setProperty(Property p) {
@@ -128,7 +126,8 @@ public final class PropertyCheckBox extends BaseCheckBox implements ChangeMonito
     super.setEnabled(enabled && (!ghosted));
   }
 
-  public final void setEnabled(boolean e) {
+  @Override
+public final void setEnabled(boolean e) {
     enabled = e;
 //    System.err.println("--> Setting enabled: " + e);
     super.setEnabled(enabled && (!ghosted));

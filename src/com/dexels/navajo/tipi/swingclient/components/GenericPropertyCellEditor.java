@@ -34,7 +34,8 @@ public class GenericPropertyCellEditor
     myComponent.setLabelVisible(false);
     myComponent.revalidate();
     myComponent.addCustomFocusListener(new FocusAdapter() {
-      public void focusLost(FocusEvent e) {
+      @Override
+	public void focusLost(FocusEvent e) {
         stopCellEditing();
       }
     });

@@ -1,8 +1,6 @@
 package com.dexels.navajo.tipi.swingclient;
 
 import java.awt.BorderLayout;
-import java.awt.HeadlessException;
-
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;

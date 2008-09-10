@@ -1,7 +1,6 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
 import com.dexels.navajo.document.*;
-import java.awt.*;
 import java.util.*;
 
 /**
@@ -27,7 +26,8 @@ public class PropertyHiddenField extends PropertyPasswordField {
 
   }
 
-  public void setProperty(Property p) {
+  @Override
+public void setProperty(Property p) {
     if (p == null) {
       //System.err.println("Setting to null property. Ignoring");
       return;

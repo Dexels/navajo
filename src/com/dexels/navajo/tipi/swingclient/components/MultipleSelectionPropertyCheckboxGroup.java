@@ -7,12 +7,8 @@ import java.util.*;
 import java.awt.*;
 
 import com.dexels.navajo.document.*;
-import javax.swing.event.*;
 import java.awt.event.*;
 import java.beans.*;
-
-import javax.swing.*;
-//import com.dexels.navajo.tipi.components.*;
 
 /**
  * <p>Title: </p>

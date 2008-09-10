@@ -10,8 +10,6 @@ import java.lang.reflect.*;
 import javax.imageio.*;
 import javax.imageio.stream.*;
 import javax.swing.*;
-import javax.swing.plaf.*;
-
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.types.*;
 
@@ -232,8 +230,8 @@ public static BufferedImage scale(int width, int height, boolean keepAspect, Buf
 		        myBinaryLabel.setBorder(null);
 		      ( (JButton) myBinaryLabel).addActionListener(BinaryComponent.this);
 		        
-		        ( (JButton) myBinaryLabel).setHorizontalAlignment(JLabel.CENTER); 
-		        ( (JButton) myBinaryLabel).setVerticalAlignment(JLabel.CENTER); 
+		        ( (JButton) myBinaryLabel).setHorizontalAlignment(SwingConstants.CENTER); 
+		        ( (JButton) myBinaryLabel).setVerticalAlignment(SwingConstants.CENTER); 
 		        ( (JButton) myBinaryLabel).setIcon(getScaled(mm,maxImgWidth,maxImgHeight)); 
 //	            ( (BaseLabel) myBinaryLabel).setIcon(img);
 		        add(myBinaryLabel,BorderLayout.CENTER);

@@ -8,7 +8,7 @@ import javax.swing.text.*;
 import com.dexels.navajo.document.types.*;
 
 public class PercentageField extends AbstractPropertyField implements PropertyControlled {
-	private DecimalFormat myEditFormat = (DecimalFormat) DecimalFormat.getInstance();
+	private DecimalFormat myEditFormat = (DecimalFormat) NumberFormat.getInstance();
 	public PercentageField() {
 		myEditFormat.setGroupingUsed(false);
 		myEditFormat.setDecimalSeparatorAlwaysShown(false);
@@ -16,9 +16,10 @@ public class PercentageField extends AbstractPropertyField implements PropertyCo
 		myEditFormat.getDecimalFormatSymbols().setGroupingSeparator('.');
 		myEditFormat.setMaximumFractionDigits(2);
 		myEditFormat.setMinimumFractionDigits(2);
-		setHorizontalAlignment(JTextField.RIGHT);
+		setHorizontalAlignment(SwingConstants.RIGHT);
 	}
 	
+	@Override
 	protected String getEditingFormat(Object o) {
 		Percentage p = (Percentage)o;
 		double d = p.doubleValue();
@@ -26,6 +27,7 @@ public class PercentageField extends AbstractPropertyField implements PropertyCo
 		return myEditFormat.format(d*100);
 	}
 
+	@Override
 	protected Object parseProperty(String text) {
 		try {
 			Number b = myEditFormat.parse(text);
@@ -35,6 +37,7 @@ public class PercentageField extends AbstractPropertyField implements PropertyCo
 		}
 	}
 	
+	@Override
 	protected String getPresentationFormat(Object newValue) {
 		Percentage p = (Percentage)newValue;
 		return p.formattedString();
@@ -63,7 +66,8 @@ public class PercentageField extends AbstractPropertyField implements PropertyCo
 	final class PercentageNumberDocument extends PlainDocument {
 		  boolean hasFocus = false;
 
-		  public final void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
+		  @Override
+		public final void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
 		    if (hasFocus) {
 		      insertFocusString(offs,str,a);
 		    } else {
@@ -75,7 +79,7 @@ public class PercentageField extends AbstractPropertyField implements PropertyCo
 		    char[] source = str.toCharArray();
 		    char[] result = new char[source.length];
 		    int j = 0;
-		    DecimalFormat nf = (DecimalFormat)DecimalFormat.getPercentInstance();
+		    DecimalFormat nf = (DecimalFormat)NumberFormat.getPercentInstance();
 		    char decSep = nf.getDecimalFormatSymbols().getDecimalSeparator();
 		    for (int i = 0; i < result.length; i++) {
 		      if (Character.isDigit(source[i]) || (i==0 && source[i] == '-') || source[i]==decSep || source[i]=='.') {
