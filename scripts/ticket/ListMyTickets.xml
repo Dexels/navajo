@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tsl author="Erik van der Weijden" id="ticket/ListMyTickets" notes="" repository="$Id$" xmlns="http://www.dexels.com/navascript"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dexels.com/navascript http://www.dexels.com/schema/navascript.xsd ">
+    <methods>
+        <method name="ticket/showTicketInfo">
+            <required message="TicketList" />
+        </method>
+        <method name="ticket/ShowTicket" />
+    </methods>
+    <map object="com.dexels.navajo.adapter.SQLMap">
+        <field name="datasource">
+            <expression value="'ticket'" />
+        </field>
+        <field name="query">
+            <expression xml:space="preserve">
+                SELECT distinct t.ticketid, concat(subm.firstname,' ',subm.infix,' ',subm.lastname) as name, t.submitdate, t.description
+                FROM ticket t, person subm, person supp
+                WHERE t.initsupportpersonid = 1
+                  AND subm.personid = t.submitterid
+                  AND t.status != 'gesloten' 
+            </expression>
+        </field>
+        <message name="TicketList" type="array">
+            <map ref="resultSet">
+                <property name="TicketId" direction="in">
+                    <expression value="$columnValue('ticketid')" />
+                </property>
+                <property name="Name" direction="in">
+                    <expression value="$columnValue('name')" />
+                </property>
+                <property name="SubmitDate" direction="in">
+                    <expression value="$columnValue('submitdate')" />
+                </property>
+                <property name="Description" direction="in">
+                    <expression value="$columnValue('description')" />
+                </property>         
+  
+            </map>
+        </message>
+        <message name="Ticket">
+          <property name="TicketId"/>
+        </message>
+      
+    </map>
+</tsl>

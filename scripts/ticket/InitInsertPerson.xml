@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tsl author="Erik van der Weijden" id="ticket/InitInsertTicket" notes="" repository="$Id$" xmlns="http://www.dexels.com/navascript"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dexels.com/navascript http://www.dexels.com/schema/navascript.xsd ">
+    <methods>
+        <method name="ticket/ProcessInsertPerson">
+            <required message="Person" />
+        </method>
+    </methods>
+    <message name="Person">
+        <property name="FirstName" type="string" direction="in" description="voornaam"/>
+        <property name="Initials" type="string" direction="in" description="initialen"/>
+        <property name="Infix" type="string" direction="in" description="infix"/>
+        <property name="LastName" type="string" direction="in" description="achternaam"/>
+        <property name="Tel" type="string" direction="in" description="telefoonnummer"/>
+        <property name="Email" type="string" direction="in" description="email"/>
+        <property name="SupportGroupId" type="selection" direction="in" description="supportgroepmedewerker">
+            <option name="-" value="-1" selected="1" />
+        </property>
+        <map object="com.dexels.navajo.adapter.SQLMap">
+            <field name="datasource">
+                <expression value="'ticket'" />
+            </field>
+            <field name="query">
+                <expression xml:space="preserve">
+                SELECT supportgroupid, supportgroupname FROM supportgroup order by supportgroupname
+            </expression>
+            </field>
+            <property name="SupportGroupId" type="selection" direction="in">
+                <map ref="resultSet">
+                    <property name="name">
+                        <expression value="$columnValue('supportgroupname')" />
+                    </property>
+                    <property name="value">
+                        <expression value="$columnValue('supportgroupid')" />
+                    </property>
+                </map>
+            </property>
+        </map>
+        <property name="Organization" type="selection" direction="in" description="Werkzaam bij">
+            <option name="-" value="-1" selected="1" />
+        </property>
+        
+        <map object="com.dexels.navajo.adapter.SQLMap">
+            <field name="datasource">
+                <expression value="'ticket'" />
+            </field>
+            <field name="query">
+                <expression xml:space="preserve">
+                SELECT organizationid, organizationname FROM organization order by organizationname
+            </expression>
+            </field>
+            <property name="Organization" type="selection" direction="in">
+                <map ref="resultSet">
+                    <property name="name">
+                        <expression value="$columnValue('organizationname')" />
+                    </property>
+                    <property name="value">
+                        <expression value="$columnValue('organizationid')" />
+                    </property>
+                </map>
+            </property>
+        </map>
+        <property name="OrganizationRole" type="string" direction="in" description="Rol in de organisatie"/>
+    </message>
+</tsl>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tsl author="Erik" id="ticket/InitInsertTicket" notes="" repository="$Id$" xmlns="http://www.dexels.com/navascript" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dexels.com/navascript http://www.dexels.com/schema/navascript.xsd ">
+    <methods>
+        <method name="ticket/ProcessInsertCategory">
+            <required message="Category"/>
+        </method>
+    </methods>
+    <message name="Category">
+        <property name="CategoryName" type="string" direction="in" description="Categorie beschrijving" />
+        <property name="SubCategoryName" type="string" direction="in" description="Subcategorie beschrijving" />
+    </message>
+</tsl>

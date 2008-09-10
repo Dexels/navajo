@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tsl author="Erik" id="ticket/InitInsertTicket" notes="" repository="$Id$" xmlns="http://www.dexels.com/navascript" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.dexels.com/navascript http://www.dexels.com/schema/navascript.xsd ">
+    <methods>
+        <method name="ticket/ProcessInsertTicketTreat">
+            <required message="Ticket" />
+        </method>
+    </methods>
+    <message name="TicketTreat">
+        <property name="TicketDescription" type="selection" direction="in">
+            <option name="-" value="-1" />
+        </property>
+        <map object="com.dexels.navajo.adapter.SQLMap">
+            <field name="datasource">
+                <expression value="'ticket'" />
+            </field>
+            <field name="query">
+            <expression xml:space="preserve">
+                SELECT ticketid, description FROM ticket order by submitdate
+            </expression>
+            </field>
+            <property name="TicketDescription" type="selection" direction="in">
+                <map ref="resultSet">
+                    <property name="name">
+                        <expression value="$columnValue('ticketid') + ' - ' +$columnValue('description')" />
+                    </property>
+                    <property name="value">
+                        <expression value="$columnValue('ticketid')" />
+                    </property>
+                </map>
+            </property>
+        </map>
+        
+       
+            <property name="Treater" type="selection" direction="in">
+                <option name="-" value="-1" selected="1"/>
+            </property>
+            <map object="com.dexels.navajo.adapter.SQLMap">
+                <field name="datasource">
+                    <expression value="'ticket'" />
+                </field>
+                <field name="query">
+                    <expression xml:space="preserve">
+                SELECT P.personid, P.firstname, P.initials, P.infix, P.lastname 
+                FROM person P, personsupportgroup PSG 
+                WHERE P.personid=PSG.personid
+                order by P.lastname
+            </expression>
+                </field>
+                <property name="Treater" type="selection" direction="in">
+                    <map ref="resultSet">
+                        <property name="name">
+                            <expression value="$columnValue('lastname') + ', ' + $columnValue('firstname') + ' ' + $columnValue('infix')" />
+                        </property>
+                        <property name="value">
+                            <expression value="$columnValue('personid')" />
+                        </property>
+                    </map>
+                </property>
+            </map>
+            <property name="TreatDate" type="date" direction="in">
+                <expression value="TODAY" />
+            </property>
+            <property name="NotificationSendTo" type="string" direction="in" />
+            <property name="NotificationSendVia" type="string" direction="in" />
+            <property name="NotificationContent" type="string" direction="in" />
+            <property name="Priority" type="selection" direction="in">
+                <option name="-" value="-1" selected="1"/>
+            </property>
+            <property name="Priority" type="selection" direction="in">
+                <option name="VeryUrgent" value="veryurgent" selected="0" />
+                <option name="wens" value="wens" selected="0" />
+                <option name="problemen" value="problemen" selected="0" />
+                <option name="Urgent" value="urgent" selected="0" />
+                <option name="CanWait" value="canwait" selected="0" />
+                <option name="Ignore" value="ignore" selected="0" />
+            </property>
+            <property name="Status" type="selection" direction="in">
+                <option name="-" value="-1" selected="1"/>
+            </property>
+            <property name="Status" type="selection" direction="in">
+                <option name="niet_toegewezen" value="niet_toegewezen" selected="0" />
+                <option name="toegewezen" value="toegewezen" selected="0" />
+                <option name="acceptatie" value="acceptatie" selected="0" />
+                <option name="in_behandeling" value="in_behandeling" selected="0" />
+                <option name="gesloten" value="gesloten" selected="0" />
+            </property>
+            <property name="Attachment" type="string" direction="in" />
+       </message> 
+</tsl>

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tsl author="Erik van der Weijden" id="person/ProcessUpdatePerson" notes="" repository="$Id$" xmlns="http://www.dexels.com/navascript" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dexels.com/navascript http://www.dexels.com/schema/navascript.xsd ">
+    <param name="UpdateCount">
+        <expression value="0"/>
+    </param>
+    <map object="com.dexels.navajo.adapter.SQLMap">
+        <field name="datasource">
+            <expression value="'ticket'"/>
+        </field>
+        <field name="update">
+            <expression xml:space="preserve">
+                UPDATE person 
+                SET    firstname        = ?
+                ,      initials         = ?
+                ,      infix            = ?                 
+                ,      lastname         = ?
+                ,      tel              = ?
+                ,      email            = ?
+                WHERE  personid         = ?                            
+            </expression>
+        </field>        
+        <field name="parameter">
+            <expression value="[/Person/FirstName]"/>
+        </field>
+        <field name="parameter">
+            <expression value="[/Person/Initials]"/>
+        </field>
+        <field name="parameter">
+            <expression value="[/Person/Infix]"/>
+        </field>
+        <field name="parameter">
+            <expression value="[/Person/LastName]"/>
+        </field>
+        <field name="parameter">
+            <expression value="[/Person/Tel]"/>
+        </field>
+        <field name="parameter">
+            <expression value="[/Person/Email]"/>
+        </field>
+        <field name="parameter">
+             <expression value="[/Person/PersonId]" />
+        </field>
+        <field name="doUpdate">
+            <expression value="true"/>
+        </field>
+        <param name="UpdateCount">
+            <expression value="[/@UpdateCount] + $updateCount"/>
+        </param>
+        
+        
+        <message name="InsertSupportGroup" condition="[/Person/SupportGroupId] != '-1'" mode="ignore">       
+        <field name="update">
+            <expression xml:space="preserve">
+                UPDATE personsupportgroup 
+                SET    supportgroupid   = ?
+                WHERE  personid         = ?
+            </expression>
+        </field>        
+        <field name="parameter">
+             <expression value="[/Person/SupportGroupId]" />
+        </field>
+        <field name="parameter">
+            <expression value="[/Person/PersonId]"/>
+        </field> 
+        <field name="doUpdate">
+            <expression value="true"/>
+        </field>
+        <param name="UpdateCount">
+            <expression value="[/@UpdateCount] + $updateCount"/>
+        </param>
+        </message>
+        
+        <message name="InsertSupportGroup" condition="[/Person/Organization] != '-1'" mode="ignore">                             
+        <field name="update">
+            <expression xml:space="preserve">
+                UPDATE personorganization 
+                SET    organizationid         = ?
+                ,      role                   = ?
+                WHERE  personid               = ?
+            </expression>
+        </field>        
+        <field name="parameter">
+            <expression value="[/Person/Organization]"/>
+        </field>
+        <field name="parameter">
+            <expression value="[/Person/OrganizationRole]"/>
+        </field>
+        <field name="parameter">
+             <expression value="[/Person/PersonId]" />
+        </field>        
+           
+        <field name="doUpdate">
+            <expression value="true"/>
+        </field>
+        <param name="UpdateCount">
+            <expression value="[/@UpdateCount] + $updateCount"/>
+        </param>
+        </message>
+                
+    </map>
+    <message name="Person">
+        <property name="PersonId" direction="out" type="integer" description="PersonData">
+            <expression value="[/Person/PersonId]"/>
+        </property>
+    </message>
+    <message name="Result">
+        <property name="UpdateCount" direction="out" type="integer" description="Wijzigingen">
+            <expression condition="?[/@UpdateCount] AND [/@UpdateCount] &gt; 0" value="[/@UpdateCount]"/>
+            <expression value="0"/>
+        </property>
+    </message>
+</tsl>

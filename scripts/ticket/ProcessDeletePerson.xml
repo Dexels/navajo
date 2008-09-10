@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tsl author="Erik van der Weijden" id="person/ProcessDeletePerson" notes="" repository="$Id$" xmlns="http://www.dexels.com/navascript"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dexels.com/navascript http://www.dexels.com/schema/navascript.xsd ">
+    <param name="UpdateCount">
+        <expression value="0" />
+    </param>
+    <map object="com.dexels.navajo.adapter.SQLMap">
+        <field name="datasource">
+            <expression value="'ticket'" />
+        </field>
+        <message name="getPersonName">
+             <field name="query">
+                <expression xml:space="preserve">
+                select firstname, lastname FROM person  
+                WHERE  personid   = ?
+            </expression>
+            </field>
+            <field name="parameter">
+                <expression value="[/Person/PersonId]" />
+            </field>
+            <param name="PersonNameParam">
+              <expression value="$columnValue('firstname') + ' ' + $columnValue('lastname')" />
+            </param>   
+        </message>  
+             <!-- Delete person from person table -->    
+             <field name="update">
+                <expression xml:space="preserve">
+                delete FROM person  
+                WHERE  personid   = ?
+            </expression>
+            </field>
+            <field name="parameter">
+                <expression value="[/Person/PersonId]" />
+            </field>
+            
+            <!-- Delete person from personsupportgroup table --> 
+            <field name="update">
+                <expression xml:space="preserve">
+                delete FROM personsupportgroup  
+                WHERE  personid   = ?
+            </expression>
+            </field>
+            <field name="parameter">
+                <expression value="[/Person/PersonId]" />
+            </field>
+            
+            <!-- Delete person from personorganizationgroup table --> 
+            <field name="update">
+                <expression xml:space="preserve">
+                delete FROM personorganization  
+                WHERE  personid   = ?
+            </expression>
+            </field>
+            <field name="parameter">
+                <expression value="[/Person/PersonId]" />
+            </field>            
+            <field name="doUpdate">
+                <expression value="true" />
+            </field>
+            <param name="UpdateCount">
+                <expression value="[/@UpdateCount] + $updateCount" />
+            </param>
+                
+    </map>
+    <message name="Person">
+        <property name="DeletedPersonName" direction="out" type="string" description="Deleted person">
+            <expression value="[/@PersonNameParam]" />
+        </property>
+    </message>
+    <message name="Result">
+        <property name="UpdateCount" direction="out" type="integer" description="Wijzigingen">
+            <expression condition="?[/@UpdateCount] AND [/@UpdateCount] &gt; 0" value="[/@UpdateCount]" />
+            <expression value="0" />
+        </property>
+    </message>
+</tsl>

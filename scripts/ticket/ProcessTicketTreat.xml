@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tsl author="Erik van der Weijden" id="ticket/ProcessInsertTicket" notes="" repository="$Id$" xmlns="http://www.dexels.com/navascript"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dexels.com/navascript http://www.dexels.com/schema/navascript.xsd">
+    <param name="UpdateCount">
+        <expression value="0" />
+    </param>   
+    <map object="com.dexels.navajo.adapter.SQLMap">
+        <field name="datasource">
+            <expression value="'ticket'" />
+        </field>
+        <field name="update">
+            <expression xml:space="preserve">
+                INSERT INTO tickettreat (  
+                         ticketid
+                ,        personid
+                ,        treatdate
+                ,        treatdescription
+                ,        notificationsendto
+                ,        notificationsendvia
+                ,        notificationcontent
+                ,        priority
+                )
+                VALUES ( ?, ?, ?, ?, ?, ?, ?, ?)
+            </expression>
+        </field>
+        <!-- <message name="SubmitterCondition" condition="[/Person/SubmitterId] != '-1'" mode="ignore"> -->
+        
+        <field name="parameter">
+            <expression value="[/Ticket/TicketId]" />
+        </field>
+        <field name="parameter">
+            <expression value="[/Ticket/PersonId]" />
+        </field>
+        <field name="parameter">
+            <expression value="[/Ticket/TreatDate]" />
+        </field>
+        <field name="parameter">
+            <expression value="[/Ticket/TreatDescription]" />
+        </field>
+        <field name="parameter">
+            <expression value="[/Ticket/Notificated]" />
+        </field>
+        <field name="parameter">
+            <expression value="[/Ticket/NotificationVia]" />
+        </field>
+        <field name="parameter">
+            <expression value="[/Ticket/NotificationMessage]" />
+        </field>
+        <field name="parameter">
+            <expression value="[/Ticket/Priority]" />
+        </field>
+                <field name="doUpdate">
+            <expression value="true" />
+        </field>
+        <param name="UpdateCount">
+            <expression value="[/@UpdateCount] + $updateCount" />
+        </param>
+        
+        
+        <!-- Update status of Ticket after tickettreat -->      
+        <field name="update">
+            <expression xml:space="preserve">
+                UPDATE ticket set status  = ? 
+                where ticketid = ?  
+                
+            </expression>
+        </field>
+        <field name="parameter">
+            <expression value="[/Ticket/Status]" />
+        </field>        
+        <field name="parameter">
+            <expression value="[/Ticket/TicketId]" />
+        </field>
+
+        <field name="doUpdate">
+            <expression value="true" />
+        </field>
+        <param name="UpdateCount">
+            <expression value="[/@UpdateCount] + $updateCount" />
+        </param>
+        
+        
+        
+        <!--  Get last inserted tickettreat and add attachment-->
+        <field name="query">
+            <expression xml:space="preserve">
+                SELECT MAX(tickettreatid) as tickettreatid FROM tickettreat 
+            </expression>
+        </field>
+        <param name="ThisTicketTreatId">
+            <expression value="$columnValue('tickettreatid')" />
+        </param>
+         <field name="update">
+            <expression xml:space="preserve">
+                INSERT INTO attachment (
+                         tickettreatid  
+                ,        attachmentname
+                ,        attachmentcontents
+                )
+                VALUES ( ?, ?, ?)
+            </expression>
+        </field>
+        <field name="parameter">
+            <expression value="[/@ThisTicketTreatId]" />
+        </field>
+        <field name="parameter">
+            <expression value="[/Ticket/FileName]" />
+        </field>
+        <field name="parameter">
+            <expression value="[/Ticket/Attachment]" />
+        </field>
+        <field name="doUpdate">
+            <expression value="true" />
+        </field>
+        <param name="UpdateCount">
+            <expression value="[/@UpdateCount] + $updateCount" />
+        </param>
+        
+               
+        
+    </map>
+    <message name="Result">
+        <property name="UpdateCount" direction="out" type="integer" description="Wijzigingen">
+            <expression condition="?[/@UpdateCount] AND [/@UpdateCount] &gt; 0" value="[/@UpdateCount]" />
+            <expression value="0" />
+        </property>
+    </message>
+</tsl>

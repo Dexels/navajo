@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tsl author="Erik van der Weijden" id="ticket/InitDeleteTicket" notes="" repository="$Id$" xmlns="http://www.dexels.com/navascript"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dexels.com/navascript http://www.dexels.com/schema/navascript.xsd ">
+    <methods>
+        <method name="ticket/ProcessDeleteTicket" />
+    </methods>
+    <message name="Ticket">
+
+        <property name="TicketId" type="selection" direction="in">
+            <option name="-" value="-1" selected="1" />
+        </property>
+        <map object="com.dexels.navajo.adapter.SQLMap">
+            <field name="datasource">
+                <expression value="'ticket'" />
+            </field>
+            <field name="query">
+                <expression xml:space="preserve">
+                  SELECT ticketid, description FROM ticket
+                </expression>
+            </field>
+            <property name="TicketId" type="selection" direction="in">
+                <map ref="resultSet">
+                    <property name="name">
+                        <expression value="$columnValue('description') " />
+                    </property>
+                    <property name="value">
+                        <expression value="$columnValue('ticketid')" />
+                    </property>
+                </map>
+            </property>
+        </map>
+    </message>
+</tsl>

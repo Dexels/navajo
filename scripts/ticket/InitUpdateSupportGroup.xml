@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tsl author="Erik van der Weijden" id="ticket/InitUpdateSupportGroup" notes="" repository="$Id$" xmlns="http://www.dexels.com/navascript"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dexels.com/navascript http://www.dexels.com/schema/navascript.xsd ">
+    <methods>
+        <method name="ticket/ProcessUpdateSupportGroup" >
+          <required message="SupportGroup" />
+        </method>  
+    </methods>
+    <message name="SupportGroup">
+
+        <property name="SupportGroupId" type="selection" direction="in">
+            <option name="-" value="-1" selected="1" />
+        </property>
+        <map object="com.dexels.navajo.adapter.SQLMap">
+            <field name="datasource">
+                <expression value="'ticket'" />
+            </field>
+            <field name="query">
+                <expression xml:space="preserve">
+                SELECT supportgroupid, supportgroupname FROM supportgroup
+            </expression>
+            </field>
+            <property name="SupportGroupId" type="selection" direction="in">
+                <map ref="resultSet">
+                    <property name="name">
+                        <expression value="$columnValue('supportgroupname')" />
+                    </property>
+                    <property name="value">
+                        <expression value="$columnValue('supportgroupid')" />
+                    </property>
+                </map>
+            </property>
+        </map>
+        <property name="NewSupportGroupName" type="string" direction="in" description="NewSupportGroupName" />
+    </message>
+</tsl>

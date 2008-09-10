@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tsl author="Erik van der Weijden" id="ticket/ShowTicket" notes="" xmlns="http://www.dexels.com/navascript" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.dexels.com/navascript http://www.dexels.com/schema/navascript.xsd ">
+    <map object="com.dexels.navajo.adapter.SQLMap">
+        <field name="datasource">
+            <expression value="'ticket'" />
+        </field>
+        <field name="query">
+            <expression xml:space="preserve">
+                SELECT distinct subm.personid, concat(subm.firstname,' ',subm.infix,' ',subm.lastname) as name, t.submitdate, t.description, t.request, c.categoryname, c.subcategoryname
+                FROM ticket t, person subm, person supp, category c
+                WHERE t.initsupportpersonid = 1
+                  AND subm.personid = t.submitterid
+                  AND t.status != 'gesloten'
+                  AND t.initcategoryid = c.categoryid
+                  AND t.ticketid = ? 
+            </expression>
+        </field>
+        <field name="parameter">
+            <expression value="[/Ticket/TicketId]" />
+        </field>
+        <message name="Ticket">
+            <property name="TicketId" direction="out" description="code">
+                <expression value="[/Ticket/TicketId]" />
+            </property>
+            <property name="Name" direction="out" description="Indiener">
+                <expression value="$columnValue('name')" />
+            </property>
+            <property name="PersonId" direction="out" description="IndienerID" visible="false">
+                <expression value="$columnValue('personid')" />
+            </property>
+            <property name="SubmitDate" direction="out" description="Aanmaakdatum">
+                <expression value="$columnValue('submitdate')" />
+            </property>
+            <!-- 
+            <property name="Description" direction="in" description="Beschrijving">
+                <expression value="$columnValue('description')" />
+            </property>
+             -->
+            <property name="TreatDate" type="date" direction="in" description="Behandeldatum">
+                <expression value="TODAY" />
+            </property>
+            <property name="Request" type="memo" direction="in" description="Vraag">
+                <expression value="$columnValue('request')" />
+            </property>
+            <property name="InitCategoryName" direction="in" description="categorie">
+                <expression value="$columnValue('categoryname') + ' ' + $columnValue('subcategoryname')" />
+            </property>
+            <property name="TreatDescription" type="memo" direction="in" description="Afhandeling" />
+            
+            <!-- select notificatedperson    -->
+            <map object="com.dexels.navajo.adapter.SQLMap">
+                <field name="datasource">
+                    <expression value="'ticket'" />
+                </field>
+                <field name="query">
+                    <expression xml:space="preserve">
+                SELECT '-1' AS personid
+                ,      '-' AS notificated
+                FROM DUAL
+                UNION
+                SELECT P.personid, concat(P.firstname, ' ', P.initials,' ', P.infix,' ', P.lastname) as notificated 
+                FROM person P               
+            </expression>
+                </field>
+                <property name="Notificated" type="selection" direction="in" description="Notificatie verstuurd aan">
+                    <map ref="resultSet">
+                        <property name="name">
+                            <expression value="$columnValue('notificated')" />
+                        </property>
+                        <property name="value">
+                            <expression value="$columnValue('personid')" />
+                        </property>
+                    </map>
+                </property>
+            </map>
+            <property name="NotificationMessage" type="memo" direction="in" description="Notificatie melding" />
+            <property name="NotificationVia" type="selection" direction="in" description="via">
+                <option name="-" value="'-1'" selected="1" />
+                <option name="email" value="email" selected="0" />
+                <option name="telefoon" value="telefoon" selected="0" />
+                <option name="ticket" value="ticket" selected="0" />
+                <option name="Bezoek_consultant" value="bezoek_consultant" selected="0" />
+            </property>
+            <property name="Priority" type="selection" direction="in" description="Prioriteit">
+                <option name="-" value="'-1'" selected="1" />
+                <option name="VeryUrgent" value="veryurgent" selected="0" />
+                <option name="wens" value="wens" selected="0" />
+                <option name="problemen" value="problemen" selected="0" />
+                <option name="Urgent" value="urgent" selected="0" />
+                <option name="CanWait" value="canwait" selected="0" />
+                <option name="Ignore" value="ignore" selected="0" />
+            </property>
+            <property name="Status" type="selection" direction="in" description="Update status">
+                <option name="-" value="'-1'" selected="1" />
+                <option name="open" value="open" selected="0" />
+                <option name="doorverwezen" value="doorverwezen" selected="0" />
+                <option name="gesloten" value="gesloten" selected="0" />
+            </property>
+            <property name="FileName" type="string" length="100" direction="in" description="Bijlage toevoegen" />
+            <property name="Attachment" type="binary" direction="in" description="Bijlage" />
+                                  
+            <!-- select preferred supporter    -->
+            <map object="com.dexels.navajo.adapter.SQLMap">
+                <field name="datasource">
+                    <expression value="'ticket'" />
+                </field>
+                <field name="query">
+                    <expression xml:space="preserve">
+                SELECT '-1' AS personid
+                ,      '-' AS supporter
+                FROM DUAL
+                UNION
+                SELECT P.personid, concat(P.firstname, ' ', P.initials,' ', P.infix,' ', P.lastname) as supporter 
+                FROM person P, personsupportgroup PSG 
+                WHERE P.personid = PSG.personid                 
+            </expression>
+                </field>
+                <property name="SupportPerson" type="selection" direction="in" description="Nieuwe behandelaar">
+                    <map ref="resultSet">
+                        <property name="name">
+                            <expression value="$columnValue('supporter')" />
+                        </property>
+                        <property name="value">
+                            <expression value="$columnValue('personid')" />
+                        </property>
+                    </map>
+                </property>
+            </map>
+        </message>
+    </map>
+</tsl>

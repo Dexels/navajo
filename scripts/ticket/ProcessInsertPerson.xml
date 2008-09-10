@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tsl author="Erik" id="ticket/ProcessInsertTicket" notes="" repository="$Id$" xmlns="http://www.dexels.com/navascript" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.dexels.com/navascript http://www.dexels.com/schema/navascript.xsd">
+    <param name="UpdateCount">
+        <expression value="0" />
+    </param>
+    <map object="com.dexels.navajo.adapter.SQLMap">
+        <field name="datasource">
+            <expression value="'ticket'" />
+        </field>
+        <field name="update">
+            <expression xml:space="preserve">
+                INSERT INTO person (firstname, initials, infix, lastname, tel, email)
+                VALUES ( ?, ?, ?, ?, ?, ?)
+            </expression>
+        </field>
+        <field name="parameter">
+            <expression  value="[/Person/FirstName]" />
+        </field>
+        <field name="parameter">
+            <expression value="[/Person/Initials]" />
+        </field>
+        <field name="parameter">
+            <expression value="[/Person/Infix]" />
+        </field>
+        <field name="parameter">
+            <expression value="[/Person/LastName]" />
+        </field>
+        <field name="parameter">
+            <expression value="[/Person/Tel]" />
+        </field>
+        <field name="parameter">
+            <expression value="[/Person/Email]" />
+        </field>
+        <field name="doUpdate">
+            <expression value="true" />
+        </field>
+        <param name="UpdateCount">
+            <expression value="[/@UpdateCount] + $updateCount" />
+        </param>
+        
+       <!--  Get last inserted personid -->
+        <field name="query">
+            <expression xml:space="preserve">
+                SELECT MAX(personid) as personid FROM person 
+            </expression>
+        </field>
+        <param name="ThisPersonId">
+            <expression value="$columnValue('personid')" />
+        </param>
+        
+        <!--  insert personsupportgroupdata if supportgroupid exists-->
+        <message name="InsertSupportGroup" condition="[/Person/SupportGroupId] != '-1'" mode="ignore">             
+            <field name="update">
+                <expression xml:space="preserve">
+                    INSERT INTO personsupportgroup (personid, supportgroupid)
+                    VALUES ( ?, ?)
+                </expression>
+            </field>
+            <field name="parameter">
+                <expression value="[/@ThisPersonId]" />
+            </field>
+            <field name="parameter">
+                <expression value="[/Person/SupportGroupId]" />
+            </field>
+            <field name="doUpdate">
+                <expression value="true" />
+            </field>
+            <param name="UpdateCount">
+                <expression value="[/@UpdateCount] + $updateCount" />
+            </param>
+        </message>
+        
+           <!--  insert organizationinfo for persons if organization id exists -->
+        <message name="InsertOrganization" condition="[/Person/Organization] != '-1'" mode="ignore"  >  
+        <field name="update">
+            <expression xml:space="preserve">
+                INSERT INTO personorganization (personid, organizationid, role)
+                VALUES ( ?, ?, ?)
+            </expression>
+        </field>
+        <field name="parameter">
+            <expression value="[/@ThisPersonId]" />
+        </field>
+        <field name="parameter">
+            <expression value="[/Person/Organization]" />
+        </field>
+        <field name="parameter">
+            <expression value="[/Person/OrganizationRole]" />
+        </field>
+        <field name="doUpdate">
+            <expression value="true" />
+        </field>
+        <param name="UpdateCount">
+            <expression value="[/@UpdateCount] + $updateCount" />
+        </param>
+        </message>
+    </map>
+    
+    
+    <message name="Result">
+        <property name="UpdateCount" direction="out" type="integer" description="Wijzigingen">
+            <expression condition="?[/@UpdateCount] AND [/@UpdateCount] &gt; 0" value="[/@UpdateCount]" />
+            <expression value="0" />
+        </property>
+    </message>
+</tsl>

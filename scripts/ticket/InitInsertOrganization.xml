@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tsl author="Erik" id="ticket/InitInsertOrganization" notes="" repository="$Id$" xmlns="http://www.dexels.com/navascript" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.dexels.com/navascript http://www.dexels.com/schema/navascript.xsd ">
+	<methods>
+		<method name="ticket/ProcessInsertOrganization">
+			<required message="Organization" />
+		</method>
+	</methods>
+	<message name="Organization">
+		<property name="OrganizationName" type="string" direction="in" description="Naam van de Organizatie" />
+		<map object="com.dexels.navajo.adapter.SQLMap">
+			<field name="datasource">
+				<expression value="'ticket'" />
+			</field>			
+		</map>
+	</message>
+</tsl>

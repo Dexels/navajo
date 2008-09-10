@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tsl author="Erik van der Weijden" id="ticket/AddResources" notes="" xmlns="http://www.dexels.com/navascript" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.dexels.com/navascript http://www.dexels.com/schema/navascript.xsd ">
+    <param name="UpdateCount">
+        <expression value="0" />
+    </param>
+    <map object="com.dexels.navajo.adapter.SQLMap">
+        <field name="datasource">
+            <expression value="'ticket'" />
+        </field>
+        <field name="update">
+            <expression xml:space="preserve">
+                INSERT INTO Changes (tickettreatid, typeofchange, resourceid, resourceversionid)   
+                values
+                WHERE  categoryid          = ?
+            </expression>
+            <field name="parameter">
+                <expression value="[/Ticket/TicketTreatId]" />
+            </field>
+            <field name="doUpdate">
+                <expression value="true" />
+            </field>
+            <param name="UpdateCount">
+                <expression value="[/@UpdateCount] + $updateCount" />
+            </param>
+    </map>
+    <message name="Category">
+        <property name="CategoryName" direction="out" type="integer" description="Changed category">
+            <expression value="[/Category/NewCategoryName]" />
+        </property>
+    </message>
+    <message name="Result">
+        <property name="UpdateCount" direction="out" type="integer" description="Wijzigingen">
+            <expression condition="?[/@UpdateCount] AND [/@UpdateCount] &gt; 0" value="[/@UpdateCount]" />
+            <expression value="0" />
+        </property>
+    </message>
+</tsl>

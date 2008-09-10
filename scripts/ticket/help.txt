@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+               <!--  Get last inserted ticketid -->
+        <field name="query">
+            <expression xml:space="preserve">
+                SELECT MAX(ticketid) as ticketid FROM ticket 
+            </expression>
+        </field>
+        <param name="ThisTicketId">
+            <expression value="$columnValue('ticketid')" />
+        </param>
+        
+                         <!--  and insert ticketsubjectdata -->
+        <field name="update">
+            <expression xml:space="preserve">
+                INSERT INTO ticketsubject (subjectid, ticketid)
+                VALUES ( ?, ?)
+            </expression>
+        </field>
+        <field name="parameter">
+            <expression value="[/@ThisTicketId]" />
+        </field>
+        <field name="parameter">
+            <expression value="[/@ThisSubjectId]" />
+        </field>
+
+        <field name="doUpdate">
+            <expression value="true" />
+        </field>
+        <param name="UpdateCount">
+            <expression value="[/@UpdateCount] + $updateCount" />
+        </param> 
+        
+ </xml>       

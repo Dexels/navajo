@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tsl author="Erik" id="ticket/InitInsertTicket" notes="" repository="$Id$" xmlns="http://www.dexels.com/navascript" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.dexels.com/navascript http://www.dexels.com/schema/navascript.xsd ">
+    <methods>
+        <method name="ticket/ProcessInsertTicket">
+            <required message="Ticket" />
+        </method>
+    </methods>
+    <message name="Ticket">
+        <map object="com.dexels.navajo.adapter.SQLMap">
+            <field name="datasource">
+                <expression value="'ticket'" />
+            </field>
+            <field name="query">
+                <expression xml:space="preserve">
+                SELECT '-1' AS personid
+                ,      '-' AS person
+                FROM DUAL
+                UNION
+                SELECT personid
+                ,      concat(firstname , ' ', infix, ' ' ,lastname) AS person FROM person
+            </expression>
+            </field>
+            <property name="Submitter" type="selection" direction="in" description="Gebruiker">
+                <map ref="resultSet">
+                    <property name="name">
+                        <expression value="$columnValue('person')" />
+                    </property>
+                    <property name="value">
+                        <expression value="$columnValue('personid')" />
+                    </property>
+                </map>
+            </property>
+        </map>
+        <property name="SubmitVia" type="selection" direction="in" description="Ingedient via">
+            <option name="-" value="'-1'" selected="1" />
+            <option name="email" value="email" selected="0" />
+            <option name="telefoon" value="telefoon" selected="0" />
+            <option name="ticket" value="ticket" selected="0" />
+            <option name="Bezoek_consultant" value="bezoek_consultant" selected="0" />
+        </property>
+        <property name="SubmitDate" type="date" direction="in" description="Invoerdatum">
+            <expression value="TODAY" />
+        </property>
+        <property name="Priority" type="selection" direction="in" description="Prioriteit">
+            <option name="-" value="'-1'" selected="1" />
+            <option name="VeryUrgent" value="veryurgent" selected="0" />
+            <option name="wens" value="wens" selected="0" />
+            <option name="problemen" value="problemen" selected="0" />
+            <option name="Urgent" value="urgent" selected="0" />
+            <option name="CanWait" value="canwait" selected="0" />
+            <option name="Ignore" value="ignore" selected="0" />
+        </property>
+
+        <!--  Select supportgroup -->
+        <map object="com.dexels.navajo.adapter.SQLMap">
+            <field name="datasource">
+                <expression value="'ticket'" />
+            </field>
+            <field name="query">
+                <expression xml:space="preserve">
+                SELECT '-1' AS supportgroupid
+                ,      '-' AS supportgroupname
+                FROM DUAL
+                UNION
+                SELECT supportgroupid, supportgroupname FROM supportgroup
+            </expression>
+            </field>
+            <property name="SupportGroup" type="selection" direction="in" description="Bestemd voor">
+                <map ref="resultSet">
+                    <property name="name">
+                        <expression value="$columnValue('supportgroupname')" />
+                    </property>
+                    <property name="value">
+                        <expression value="$columnValue('supportgroupid')" />
+                    </property>
+                </map>
+            </property>
+        </map>
+        
+        
+        <!-- select preferred supporter    -->
+        <map object="com.dexels.navajo.adapter.SQLMap">
+            <field name="datasource">
+                <expression value="'ticket'" />
+            </field>
+            <field name="query">
+                <expression xml:space="preserve">
+                SELECT '-1' AS personid
+                ,      '-' AS supporter
+                FROM DUAL
+                UNION
+                SELECT P.personid, concat(P.firstname, ' ', P.initials,' ', P.infix,' ', P.lastname) as supporter 
+                FROM person P, personsupportgroup PSG 
+                WHERE P.personid = PSG.personid                 
+            </expression>
+            </field>
+            <property name="SupportPerson" type="selection" direction="in" description="helper">
+                <map ref="resultSet">
+                    <property name="name">
+                        <expression value="$columnValue('supporter')" />
+                    </property>
+                    <property name="value">
+                        <expression value="$columnValue('personid')" />
+                    </property>
+                </map>
+            </property>
+        </map>
+        <property name="Description" type="string" direction="in" description="korte omschrijving" />
+        <property name="Request" type="memo" direction="in" description="Vraag:" />
+        
+        <!-- Select initial (sub)category -->
+        <map object="com.dexels.navajo.adapter.SQLMap">
+            <field name="datasource">
+                <expression value="'ticket'" />
+            </field>
+            <field name="query">
+                <expression xml:space="preserve">
+                SELECT '-1' AS categoryid
+                ,      '-' AS categoryname
+                ,      '' AS subcategoryname
+                FROM DUAL
+                UNION
+                SELECT categoryid, categoryname, subcategoryname
+                FROM category
+            </expression>
+            </field>
+            <property name="Category" type="selection" direction="in">
+                <map ref="resultSet">
+                    <property name="name">
+                        <expression value="$columnValue('categoryname') + ' ' + $columnValue('subcategoryname')" />
+                    </property>
+                    <property name="value">
+                        <expression value="$columnValue('categoryid')" />
+                    </property>
+                </map>
+            </property>
+        </map>
+        <property name="Status" type="selection" direction="in" description="Status">
+            <option name="-" value="'-1'" selected="1" />
+            <option name="niet_toegewezen" value="niet_toegewezen" selected="0" />
+            <option name="toegewezen" value="toegewezen" selected="0" />
+            <option name="acceptatie" value="acceptatie" selected="0" />
+            <option name="in_behandeling" value="in_behandeling" selected="0" />
+            <option name="gesloten" value="gesloten" selected="0" />
+        </property>
+        <property name="FileName" type="string" length="100" direction="in" description="Bestandsnaam" />
+        <property name="Attachment" type="binary" direction="in" description="Bijlage" />
+    </message>
+</tsl>
