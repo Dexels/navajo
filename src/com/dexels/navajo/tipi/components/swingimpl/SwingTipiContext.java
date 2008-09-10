@@ -70,13 +70,22 @@ public class SwingTipiContext extends TipiContext {
 		// JFrame.setDefaultLookAndFeelDecorated(true);
 		// JDialog.setDefaultLookAndFeelDecorated(true);
 
-		if(hasJnlpContext()) {
+
+	//hasJnlpContext(
+		if(false) {
 			appendJnlpCodeBase();
 			createJnlpCookieManager();
 		} else {
 			createTmpCookieManager();
 		}
 		
+//		if(hasJnlpContext()) {
+//			appendJnlpCodeBase();
+//			createJnlpCookieManager();
+//		} else {
+//			createTmpCookieManager();
+//		}
+//		
 		
 	}
 
@@ -355,27 +364,44 @@ public class SwingTipiContext extends TipiContext {
 		}
 	}
 
-	public void showInfo(final String text, final String title) {
+	private void showInfo(final String text, final String title,final int messageType) {
 		// swing implementation.
 		runSyncInEventThread(new Runnable() {
 
 			public void run() {
 				if (getOtherRoot() != null) {
 					TipiModalInternalFrame.showInternalMessage(getOtherRoot().getRootPane(), getOtherRoot().getContentPane(), title, text,
-							getPoolSize());
+							getPoolSize(),messageType);
 				} else if (getAppletRoot() != null && getDefaultDesktop() != null) {
 
 					TipiModalInternalFrame.showInternalMessage(getAppletRoot().getRootPane(), getDefaultDesktop(), title, text,
-							getPoolSize());
+							getPoolSize(),messageType);
 				} else {
-					JOptionPane.showMessageDialog((Component) getTopDialog(), text, title, JOptionPane.PLAIN_MESSAGE);
-
+					JOptionPane.showMessageDialog((Component) getTopDialog(), text, title, messageType);
+					
+			
 				}
 			}
 		});
 
 	}
+	
+	@Override
+	public void showInfo(final String text, final String title) {
+		showInfo(text, title, JOptionPane.INFORMATION_MESSAGE);
+	}
+	
+	@Override
+	public void showError(final String text, final String title) {
+		showInfo(text, title, JOptionPane.ERROR_MESSAGE);
+	}
 
+	@Override
+	public void showWarning(final String text, final String title) {
+		showInfo(text, title, JOptionPane.WARNING_MESSAGE);
+	}
+
+	
 	public void processProperties(Map<String, String> properties) throws MalformedURLException {
 		// appendJnlpCodeBase(properties);
 		super.processProperties(properties);
