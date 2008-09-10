@@ -285,7 +285,7 @@ public class TipiProperty extends TipiSwingComponentImpl implements PropertyComp
 				// PropertyImpl p = (PropertyImpl)myProperty;
 				for (int i = 0; i < myListeners.size(); i++) {
 					TipiEventListener current = myListeners.get(i);
-					current.performTipiEvent(eventType, m, false);
+					current.performTipiEvent(eventType, m, true);
 		
 				}
 //				performTipiEvent(eventType, m, false);
