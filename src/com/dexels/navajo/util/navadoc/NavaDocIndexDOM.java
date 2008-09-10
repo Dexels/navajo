@@ -50,7 +50,7 @@ public class NavaDocIndexDOM extends NavaDocBaseDOM {
 		// Breadcrumb
 		this.breadcrumb = this.dom.createElement("div");
 		breadcrumb.setAttribute("class", "breadcrumb");
-		this.bodyWrapper.appendChild(breadcrumb);
+		this.divBreadcrumb.appendChild(breadcrumb);
 		//
 
 		// Page Body Header
@@ -58,7 +58,7 @@ public class NavaDocIndexDOM extends NavaDocBaseDOM {
 		final Text titleText = this.dom.createTextNode(title);
 
 		h1.appendChild(titleText);
-		this.bodyWrapper.appendChild(h1);
+		this.divHeader.appendChild(h1);
 
 		// Project Description
 		final Element desc = this.dom.createElement("div");
@@ -75,7 +75,7 @@ public class NavaDocIndexDOM extends NavaDocBaseDOM {
 		this.table.setAttribute("cellspacing", "0");
 		this.table.setAttribute("cellpadding", "3");
 		this.table.setAttribute("class", "tablesorter");
-		this.bodyWrapper.appendChild(this.table);
+		this.divMain.appendChild(this.table);
 	
 		Element tableSorter = this.dom.createElement("script");
 		tableSorter.setAttribute("type", "text/javascript");

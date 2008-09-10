@@ -41,6 +41,12 @@ public class NavaDocBaseDOM {
   protected Element root = null;
   protected Element body = null;
   protected Element bodyWrapper = null;
+  protected Element divHeader = null; //hold title
+  protected Element divBreadcrumb = null;
+  protected Element divMain = null;
+  protected Element divDescription = null;
+  protected Element divFooter = null;
+  protected Element divCopyright = null;
 
   // optional properties for XHTML document headers
   protected String projectName = null;
@@ -301,6 +307,29 @@ public class NavaDocBaseDOM {
     this.bodyWrapper = this.dom.createElement("div");
     bodyWrapper.setAttribute("id", "wrapper");
     this.body.appendChild(bodyWrapper);
+    
+    this.divHeader = this.dom.createElement("div");
+    divHeader.setAttribute("id", "header");
+    this.bodyWrapper.appendChild(divHeader);
+    
+    this.divBreadcrumb = this.dom.createElement("div");
+    divBreadcrumb.setAttribute("id", "breadcrumb");
+    this.bodyWrapper.appendChild(divBreadcrumb);
+    
+    this.divMain = this.dom.createElement("div");
+    divMain.setAttribute("id", "main");
+    this.bodyWrapper.appendChild(divMain);    
+    this.divDescription = this.dom.createElement("div");
+    divDescription.setAttribute("id", "description");
+    this.divMain.appendChild(divDescription);
+    
+    this.divFooter = this.dom.createElement("div");
+    divFooter.setAttribute("id", "footer");
+    this.bodyWrapper.appendChild(divFooter);
+    
+    this.divCopyright = this.dom.createElement("div");
+    divCopyright.setAttribute("id", "copyright");
+    this.bodyWrapper.appendChild(divCopyright);
 
   } // protected void addBody()
 
