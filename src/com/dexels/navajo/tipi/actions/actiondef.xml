@@ -1,5 +1,7 @@
 <tid errorhandler="error">
-   <tipiaction name="break" class="TipiBreak" package="com.dexels.navajo.tipi.actions" />
+   <tipiaction name="break" class="TipiBreak" package="com.dexels.navajo.tipi.actions">
+      Bla bla bla bla
+   </tipiaction>
    <tipiaction name="breakEvent" class="TipiBreakEvent" package="com.dexels.navajo.tipi.actions" />
    <tipiaction name="clearCache" class="TipiClearCache" package="com.dexels.navajo.tipi.actions" />
    <tipiaction name="performMethod" class="TipiPerformMethod" package="com.dexels.navajo.tipi.actions">
@@ -102,6 +104,7 @@
    </tipiaction>
    <tipiaction name="instantiate" class="TipiInstantiateTipi" package="com.dexels.navajo.tipi.actions">
       <param name="name" type="string" required="true" />
+      <param name="expectType" type="string" required="false" />
       <param name="id" type="string" required="true" />
       <param name="location" type="tipi" required="true" />
       <param name="force" type="boolean" default="false" />

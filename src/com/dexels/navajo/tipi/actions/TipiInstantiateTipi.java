@@ -57,25 +57,6 @@ public class TipiInstantiateTipi extends TipiAction {
 
 		TipiComponent comp = parent.getTipiComponentByPath(id);
 
-		// ALTERNATIVE: this complains a lot.
-
-		// String componentPath;
-		// if (parent != null) {
-		// componentPath = parent.getPath("component:/") + "/" + id;
-		// }
-		// else {
-		// componentPath = "component://" + id;
-		// }
-		// /** @todo Should we allow null events? */
-		// Operand op = evaluate("{" + componentPath + "}",null);
-		//
-		// TipiComponent comp = null;
-		// if (op!=null) {
-		//        
-		// comp = (TipiComponent)op.value;
-		// }
-
-		// All this to check for existing components
 		if (comp != null) {
 
 			if (force) {
@@ -96,9 +77,7 @@ public class TipiInstantiateTipi extends TipiAction {
 		} else {
 			xe.setAttribute("name", definitionName);
 		}
-//		if(id==null) {
-//			myContextgenerateComponentId(parent);
-//		}
+
 		xe.setAttribute("id", id);
 		if (paramMap != null) {
 			Iterator<String> it = paramMap.keySet().iterator();
@@ -160,7 +139,11 @@ public class TipiInstantiateTipi extends TipiAction {
 			if (constraints != null) {
 				constraints = ((Operand) constraints).value;
 			}
-			id = (String) evaluate(getParameter("id").getValue(), event).value;
+			Operand expectTypeOperand  = getEvaluatedParameter("expectType", event);
+			String expectType = null;
+			if(expectTypeOperand!=null) {
+				expectType = (String) expectTypeOperand.value;
+			}
 			
 			Object o = evaluate((getParameter("location").getValue()), null).value;
 			if (String.class.isInstance(o)) {
@@ -168,6 +151,24 @@ public class TipiInstantiateTipi extends TipiAction {
 				o = evaluate("{" + o.toString() + "}", null).value;
 			}
 			parent = (TipiComponent) o;
+			System.err.println("PArent: "+parent);
+			if(parent==null) {
+				throw new TipiException("Can not instantiate component. Parent not found: "+getParameter("location").getValue());
+			}
+			System.err.println("Whoopsa: "+store());
+			TipiValue suppliedId = getParameter("id");
+			System.err.println("PPPPP: "+suppliedId);
+			String proposedId = null;
+			if (suppliedId==null) {
+				// using parent here is odd, but it does not really matter
+				id = myContext.generateComponentId(parent, parent);
+			} else {
+				proposedId = suppliedId.getValue();
+				id = (String) evaluate(proposedId, event).value;
+				
+			}
+			System.err.println("QQQQ: "+id);
+			
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			System.err.println("OOps: " + ex.getMessage());
