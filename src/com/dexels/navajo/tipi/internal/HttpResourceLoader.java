@@ -23,17 +23,17 @@ public class HttpResourceLoader extends ClassPathResourceLoader {
 		try {
 			is = u.openStream();
 		} catch (IOException e) {
-			//e.printStackTrace();
+			// e.printStackTrace();
 		}
 		if (is != null) {
 			return is;
 		}
-		System.err.println("HttpResourceLoader failed. Looking in classpath: "+location+" base: "+baseURL);
+		System.err.println("HttpResourceLoader failed. Looking in classpath: " + location + " base: " + baseURL);
 		return super.getResourceStream(location);
 	}
 
 	public List<File> getAllResources() throws IOException {
 		throw new UnsupportedOperationException("The http resource loader is unable to enumerate resources");
-}
-	
+	}
+
 }

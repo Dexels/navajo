@@ -18,7 +18,7 @@ public abstract class TipiAction implements TipiExecutable {
 
 	protected String myType;
 
-	protected Map<String,TipiValue> parameterMap = new HashMap<String,TipiValue>();
+	protected Map<String, TipiValue> parameterMap = new HashMap<String, TipiValue>();
 
 	protected int counter = 0;
 
@@ -45,7 +45,7 @@ public abstract class TipiAction implements TipiExecutable {
 		// Thread.dumpStack();
 		parameterMap.put(tv.getName(), tv);
 	}
-	
+
 	public void setThreadState(String state) {
 		myContext.setThreadState(state);
 	}
@@ -54,7 +54,8 @@ public abstract class TipiAction implements TipiExecutable {
 		myContext.debugLog("action", myType);
 		myEvent = te;
 		if (myComponent.isDisposed()) {
-			System.err.println("\n**** BREAKING. COMPONENT DISPOSED: " + myComponent.getPath()+" performing action: "+getClass().getName());
+			System.err.println("\n**** BREAKING. COMPONENT DISPOSED: " + myComponent.getPath() + " performing action: "
+					+ getClass().getName());
 			// Thread.dumpStack();
 			getStackElement().dumpStack("Component disposed: ");
 			throw new TipiBreakException(TipiBreakException.COMPONENT_DISPOSED);
@@ -69,15 +70,15 @@ public abstract class TipiAction implements TipiExecutable {
 			execute(te);
 		} catch (Throwable e) {
 			dumpStack(e.getMessage());
-			if(e instanceof RuntimeException) {
-				throw (RuntimeException)e;
+			if (e instanceof RuntimeException) {
+				throw (RuntimeException) e;
 			}
-			if(e instanceof TipiException) {
-				throw (TipiException)e;
+			if (e instanceof TipiException) {
+				throw (TipiException) e;
 			}
-			if(e instanceof TipiBreakException) {
+			if (e instanceof TipiBreakException) {
 				getStackElement().dumpStack("Break detected in action");
-				throw (TipiBreakException)e;
+				throw (TipiBreakException) e;
 			}
 			System.err.println("Uncaught exception: ");
 			e.printStackTrace();
@@ -88,7 +89,7 @@ public abstract class TipiAction implements TipiExecutable {
 	public XMLElement store() {
 		XMLElement xe = new CaseSensitiveXMLElement();
 		xe.setName(getType());
-//		xe.setAttribute("type", getType());
+		// xe.setAttribute("type", getType());
 		Iterator<String> it = parameterMap.keySet().iterator();
 		while (it.hasNext()) {
 			String name = it.next();
@@ -181,13 +182,12 @@ public abstract class TipiAction implements TipiExecutable {
 
 	public Object getEvaluatedParameterValue(String name, TipiEvent event) {
 		Operand o = getEvaluatedParameter(name, event);
-		if(o!=null) {
+		if (o != null) {
 			return o.value;
 		}
 		return null;
 	}
 
-	
 	public void setContext(TipiContext tc) {
 		myContext = tc;
 	}
@@ -222,6 +222,7 @@ public abstract class TipiAction implements TipiExecutable {
 		myEvent = e;
 
 	}
+
 	public TipiStackElement getStackElement() {
 		return stackElement;
 	}

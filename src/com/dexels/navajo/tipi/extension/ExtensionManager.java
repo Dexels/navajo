@@ -9,17 +9,18 @@ import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.connectors.*;
 
 public class ExtensionManager {
-	public static void addExtensionMessage(TipiContext tc, Navajo parent, List<TipiExtension> extensionList, String name) throws NavajoException {
+	public static void addExtensionMessage(TipiContext tc, Navajo parent, List<TipiExtension> extensionList, String name)
+			throws NavajoException {
 		Message arr = NavajoFactory.getInstance().createMessage(parent, name, Message.MSG_TYPE_ARRAY);
 		parent.addMessage(arr);
 		for (TipiExtension tipiExtension : extensionList) {
 			System.err.println("Adding extension: " + tipiExtension.getDescription());
-			createExtension(tc,tipiExtension, arr);
+			createExtension(tc, tipiExtension, arr);
 		}
 		return;
 	}
 
-	private static void createExtension(TipiContext tc,TipiExtension tipiExtension, Message arr) throws NavajoException {
+	private static void createExtension(TipiContext tc, TipiExtension tipiExtension, Message arr) throws NavajoException {
 		Message m = NavajoFactory.getInstance().createMessage(arr.getRootDoc(), arr.getName());
 		arr.addMessage(m);
 		addProperty("Id", tipiExtension.getId(), Property.STRING_PROPERTY, m);
@@ -27,9 +28,9 @@ public class ExtensionManager {
 		addProperty("RequiresMain", tipiExtension.requiresMainImplementation(), Property.STRING_PROPERTY, m);
 		addProperty("IsMain", tipiExtension.isMainImplementation(), Property.BOOLEAN_PROPERTY, m);
 		addProperty("ConnectorId", tipiExtension.getConnectorId(), Property.BOOLEAN_PROPERTY, m);
-		addProperty("IsInstantiated", tc.getConnector(tipiExtension.getConnectorId())!=null, Property.BOOLEAN_PROPERTY, m);
-		
-			createIncludes(tipiExtension.getIncludes(), m);
+		addProperty("IsInstantiated", tc.getConnector(tipiExtension.getConnectorId()) != null, Property.BOOLEAN_PROPERTY, m);
+
+		createIncludes(tipiExtension.getIncludes(), m);
 
 	}
 
@@ -39,7 +40,7 @@ public class ExtensionManager {
 		for (int i = 0; i < includes.length; i++) {
 			Message elt = NavajoFactory.getInstance().createMessage(m.getRootDoc(), "Includes", Message.MSG_TYPE_ARRAY_ELEMENT);
 			mm.addMessage(elt);
-				addProperty("Id", includes[i], Property.STRING_PROPERTY, elt);
+			addProperty("Id", includes[i], Property.STRING_PROPERTY, elt);
 		}
 	}
 
@@ -56,17 +57,16 @@ public class ExtensionManager {
 			for (String connectorId : keySet) {
 				Message elt = NavajoFactory.getInstance().createMessage(mm.getRootDoc(), "Connectors", Message.MSG_TYPE_ARRAY_ELEMENT);
 				mm.addMessage(elt);
-					addProperty("Id", connectorId, Property.STRING_PROPERTY, elt);
-					TipiConnector connector = tipiContext.getConnector(connectorId);
-					String defEntry = connector.getDefaultEntryPoint();
-					addProperty("EntryPoint", defEntry, Property.STRING_PROPERTY, elt);
-					
+				addProperty("Id", connectorId, Property.STRING_PROPERTY, elt);
+				TipiConnector connector = tipiContext.getConnector(connectorId);
+				String defEntry = connector.getDefaultEntryPoint();
+				addProperty("EntryPoint", defEntry, Property.STRING_PROPERTY, elt);
+
 			}
 		} catch (NavajoException e) {
 			e.printStackTrace();
 		}
-		
-		
+
 	}
 
 }

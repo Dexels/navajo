@@ -3,7 +3,6 @@ package com.dexels.navajo.tipi.components.core.parsers;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.internal.*;
 
-
 /**
  * <p>
  * Title:
@@ -22,11 +21,8 @@ import com.dexels.navajo.tipi.internal.*;
  * @version 1.0
  */
 public class CookieRefParser extends TipiTypeParser {
-    public Object parse(TipiComponent source, String expression, TipiEvent event) {
-        return new CookieRef(expression,myContext);
-   }
-
-    
-
+	public Object parse(TipiComponent source, String expression, TipiEvent event) {
+		return new CookieRef(expression, myContext);
+	}
 
 }

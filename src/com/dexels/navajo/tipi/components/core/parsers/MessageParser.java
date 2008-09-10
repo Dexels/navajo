@@ -35,7 +35,7 @@ public class MessageParser extends BaseTipiParser {
 				return myMessage;
 			} catch (Throwable e) {
 				e.printStackTrace();
-				System.err.println("MESSAGE NOT FOUND: "+expression);
+				System.err.println("MESSAGE NOT FOUND: " + expression);
 				return null;
 			}
 		}

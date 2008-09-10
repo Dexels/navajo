@@ -23,32 +23,32 @@ import com.dexels.navajo.tipi.internal.*;
  */
 
 public class AliasParser extends BaseTipiParser {
-	
+
 	private String findAlias(TipiComponent current, String expression) {
-		if(current==null) {
+		if (current == null) {
 			return null;
 		}
 		String alias = current.getAlias(expression);
-		if(alias!=null) {
+		if (alias != null) {
 			return alias;
 		}
 		return findAlias(current.getTipiParent(), expression);
-		
+
 	}
-	
+
 	@Override
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
 		String alias = findAlias(source, expression);
-		if(alias==null) {
-			throw new RuntimeException("Error. Can not find alias: "+expression);
+		if (alias == null) {
+			throw new RuntimeException("Error. Can not find alias: " + expression);
 		}
-//		System.err.println("Found alias: "+alias);
+		// System.err.println("Found alias: "+alias);
 		try {
 			Operand evaluate = myContext.evaluate(alias, source, event);
 			return evaluate.value;
 		} catch (Exception e) {
 			e.printStackTrace();
-			
+
 		}
 		return null;
 	}

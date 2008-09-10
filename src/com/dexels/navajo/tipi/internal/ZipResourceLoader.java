@@ -8,18 +8,19 @@ import com.dexels.navajo.document.types.*;
 
 public class ZipResourceLoader extends ClassPathResourceLoader {
 
-	//private final Navajo navajoDefinition;
-	//private final Property tipiDef;
+	// private final Navajo navajoDefinition;
+	// private final Property tipiDef;
 	private File tipiDefFile;
-//	private final Map myResources = new HashMap<String, byte[]>();
+	// private final Map myResources = new HashMap<String, byte[]>();
 	final int BUFFERSIZE = 2048;
 	private ZipFile zipFile;
 
 	public ZipResourceLoader(Binary b) throws IOException {
 		InputStream tipiZippedStream = b.getDataAsStream();
-		//navajoDefinition = NavajoFactory.getInstance().createNavajo(is);
-		//tipiDef = navajoDefinition.getProperty("/Aap");
-		//InputStream tipiZippedStream = ((Binary) tipiDef.getTypedValue()).getDataAsStream();
+		// navajoDefinition = NavajoFactory.getInstance().createNavajo(is);
+		// tipiDef = navajoDefinition.getProperty("/Aap");
+		// InputStream tipiZippedStream = ((Binary)
+		// tipiDef.getTypedValue()).getDataAsStream();
 		tipiDefFile = File.createTempFile("tipi", "zip");
 		tipiDefFile.deleteOnExit();
 		FileOutputStream fos = new FileOutputStream(tipiDefFile);
@@ -28,14 +29,14 @@ public class ZipResourceLoader extends ClassPathResourceLoader {
 	}
 
 	public URL getResourceURL(String location) throws IOException {
-		System.err.println("Trying to locate in zip: "+location);
+		System.err.println("Trying to locate in zip: " + location);
 		ZipEntry z = zipFile.getEntry(location);
 		InputStream is;
 		try {
 			is = zipFile.getInputStream(z);
 			File f = File.createTempFile("tipi", "temp");
 			f.deleteOnExit();
-			FileOutputStream fos =  new FileOutputStream(f);
+			FileOutputStream fos = new FileOutputStream(f);
 			copyResource(fos, is);
 			URL u = f.toURI().toURL();
 			if (u == null) {
@@ -51,14 +52,14 @@ public class ZipResourceLoader extends ClassPathResourceLoader {
 
 	public InputStream getResourceStream(String location) throws IOException {
 		// System.err.println("Stream: FILE: LOOKING FOR: "+location);
-		System.err.println("Trying to locate in zip: "+location);
+		System.err.println("Trying to locate in zip: " + location);
 		ZipEntry z = zipFile.getEntry(location);
 		InputStream is;
-	    is = zipFile.getInputStream(z);
-	    if(is!=null) {
-	    	return is;
-	    	// "+location+" base: "+baseFile);
-	    }
+		is = zipFile.getInputStream(z);
+		if (is != null) {
+			return is;
+			// "+location+" base: "+baseFile);
+		}
 		return super.getResourceStream(location);
 	}
 

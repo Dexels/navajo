@@ -8,7 +8,7 @@ public class TipiCore implements TipiExtension {
 
 	public void initialize(TipiContext tc) {
 		// Do nothing
-		
+
 	}
 
 	public String getDescription() {
@@ -16,8 +16,8 @@ public class TipiCore implements TipiExtension {
 	}
 
 	public String[] getIncludes() {
-	
-		return new String[]{"com/dexels/navajo/tipi/classdef.xml","com/dexels/navajo/tipi/actions/actiondef.xml"};
+
+		return new String[] { "com/dexels/navajo/tipi/classdef.xml", "com/dexels/navajo/tipi/actions/actiondef.xml" };
 	}
 
 	public boolean isMainImplementation() {
@@ -31,6 +31,7 @@ public class TipiCore implements TipiExtension {
 	public String requiresMainImplementation() {
 		return null;
 	}
+
 	public List<String> getLibraryJars() {
 		ArrayList<String> jars = new ArrayList<String>();
 		jars.add("NavajoClient.jar");

@@ -26,10 +26,11 @@ import com.dexels.navajo.tipi.internal.*;
 public class TipiDisposeChildren extends TipiAction {
 	public void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
 		try {
-//			String pathVal = getParameter("path").getValue();
-//			TipiComponent tp = (TipiComponent) evaluate(pathVal, event).value;
+			// String pathVal = getParameter("path").getValue();
+			// TipiComponent tp = (TipiComponent) evaluate(pathVal,
+			// event).value;
 			Operand evaluatedParameter = getEvaluatedParameter("path", event);
-			if(evaluatedParameter==null || evaluatedParameter.value==null) {
+			if (evaluatedParameter == null || evaluatedParameter.value == null) {
 				throw new TipiException("Could not locate path!");
 			}
 
@@ -40,7 +41,7 @@ public class TipiDisposeChildren extends TipiAction {
 			}
 			for (TipiComponent tipiComponent : children) {
 				myContext.disposeTipiComponent(tipiComponent);
-				
+
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();

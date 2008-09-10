@@ -29,26 +29,25 @@ public class TipiShadowFilterImpl extends TipiBaseConnector implements TipiConne
 	protected final List<PropertyFilter> propertyFilters = new ArrayList<PropertyFilter>();
 
 	public Object createContainer() {
-	//	return new ShadowFilter();
+		// return new ShadowFilter();
 		System.err.println("CREATING A TIPI FILTER!!!\n\n");
 		return null;
 	}
 
-
 	public void setComponentValue(String name, Object object) {
-		if("messagePath".equalsIgnoreCase(name)) {
+		if ("messagePath".equalsIgnoreCase(name)) {
 			messagePath = (String) object;
 		}
 
-		if("simpleFilter".equalsIgnoreCase(name)) {
-			System.err.println("Adding filter: "+object);
+		if ("simpleFilter".equalsIgnoreCase(name)) {
+			System.err.println("Adding filter: " + object);
 			propertyFilters.clear();
 			try {
-				propertyFilters.add(new PropertyFilter("*", (String)object, "string", "contains"));
-//				reloadNavajo();
+				propertyFilters.add(new PropertyFilter("*", (String) object, "string", "contains"));
+				// reloadNavajo();
 			} catch (NavajoException e) {
 				e.printStackTrace();
-			} 
+			}
 		}
 		super.setComponentValue(name, object);
 	}
@@ -57,15 +56,12 @@ public class TipiShadowFilterImpl extends TipiBaseConnector implements TipiConne
 		return super.getComponentValue(name);
 	}
 
-	
-
-
 	public void doTransaction(Navajo n, String service, String destination) throws TipiBreakException, TipiException {
-//		super.loadData(n, method);
+		// super.loadData(n, method);
 		Navajo result = n.copy();
 		Message currentSet = result.getMessage(messagePath);
 		Set<Message> toBeRemoved = new HashSet<Message>();
-		System.err.println("Working: # of filters: "+propertyFilters.size());
+		System.err.println("Working: # of filters: " + propertyFilters.size());
 		try {
 			for (PropertyFilter pf : propertyFilters) {
 				long s = System.currentTimeMillis();
@@ -75,7 +71,7 @@ public class TipiShadowFilterImpl extends TipiBaseConnector implements TipiConne
 						toBeRemoved.add(c);
 					}
 				}
-				System.err.println("Scan took: "+(System.currentTimeMillis()-s));
+				System.err.println("Scan took: " + (System.currentTimeMillis() - s));
 			}
 		} catch (NavajoException e) {
 			e.printStackTrace();
@@ -85,21 +81,17 @@ public class TipiShadowFilterImpl extends TipiBaseConnector implements TipiConne
 		}
 		long s = System.currentTimeMillis();
 		injectNavajo(service, n);
-		System.err.println("Load took: "+(System.currentTimeMillis()-s));
-		
+		System.err.println("Load took: " + (System.currentTimeMillis() - s));
+
 	}
-
-
 
 	public String getConnectorId() {
 		return "filter";
 	}
 
-
 	public Set<String> getEntryPoints() {
 		return null;
 	}
-
 
 	public String getDefaultEntryPoint() {
 		return "*";

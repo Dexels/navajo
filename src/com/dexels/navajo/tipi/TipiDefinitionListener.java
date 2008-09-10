@@ -21,5 +21,5 @@ import com.dexels.navajo.tipi.tipixml.*;
  */
 public interface TipiDefinitionListener {
 	public void definitionLoaded(String definitionName, XMLElement definition);
-	
+
 }

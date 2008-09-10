@@ -23,8 +23,7 @@ import com.dexels.navajo.tipi.internal.*;
  */
 
 public class TipiUpdateAllExpressions extends TipiAction {
-	
-	
+
 	public TipiUpdateAllExpressions() {
 	}
 
@@ -35,7 +34,7 @@ public class TipiUpdateAllExpressions extends TipiAction {
 		}
 		TipiDataComponent toData = (TipiDataComponent) to.value;
 		doRefresh(toData);
-	
+
 	}
 
 	private void doRefresh(TipiDataComponent toData) {
@@ -44,7 +43,7 @@ public class TipiUpdateAllExpressions extends TipiAction {
 		try {
 			n.refreshExpression();
 		} catch (NavajoException e) {
-				e.printStackTrace();
+			e.printStackTrace();
 		}
 	}
 

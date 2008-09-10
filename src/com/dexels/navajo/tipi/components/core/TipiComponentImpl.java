@@ -44,16 +44,16 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 	private String className;
 	protected boolean isHomeComponent = false;
 
-	private final Map<String,TipiComponent> tipiComponentMap = new HashMap<String,TipiComponent>();
+	private final Map<String, TipiComponent> tipiComponentMap = new HashMap<String, TipiComponent>();
 	protected final List<PropertyComponent> properties = new ArrayList<PropertyComponent>();
 	protected final List<TipiEvent> myEventList = new ArrayList<TipiEvent>();
 	private final List<TipiComponent> tipiComponentList = new ArrayList<TipiComponent>();
-	private final Map<String,String> detectedExpressions = new HashMap<String,String>();
+	private final Map<String, String> detectedExpressions = new HashMap<String, String>();
 	private final List<String> componentEvents = new ArrayList<String>();
-	private final Map<String,TipiValue> componentValues = new HashMap<String,TipiValue>();
-	private final Map<String,TipiComponentMethod> componentMethods = new HashMap<String,TipiComponentMethod>();
+	private final Map<String, TipiValue> componentValues = new HashMap<String, TipiValue>();
+	private final Map<String, TipiComponentMethod> componentMethods = new HashMap<String, TipiComponentMethod>();
 	private final List<TipiHelper> myHelpers = new ArrayList<TipiHelper>();
-	protected final Map<String,String> aliasMap = new HashMap<String,String>();
+	protected final Map<String, String> aliasMap = new HashMap<String, String>();
 
 	private boolean hadConditionErrors = false;
 	private boolean isVisibleElement = false;
@@ -65,7 +65,7 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 	private final Map<String, Property> componentAttributes = new HashMap<String, Property>();
 	protected Message stateMessage = null;
 	private final List<PropertyChangeListener> myContainerListeners = new LinkedList<PropertyChangeListener>();
-	private final Map<String,PropertyChangeListener> myDataListeners = new HashMap<String,PropertyChangeListener>();
+	private final Map<String, PropertyChangeListener> myDataListeners = new HashMap<String, PropertyChangeListener>();
 
 	public void removeFromContainer(Object c) {
 		System.err.println("REMOVE FROM CONTAINER IGNORED: NOT IMPLEMENTED. CLASS: " + getClass());
@@ -138,7 +138,6 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 		}
 	}
 
-
 	public void deregisterEvent(TipiEvent e) {
 		this.removeTipiEvent(e);
 		helperDeregisterEvent(e);
@@ -180,8 +179,9 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 	public void setValue(String name, Object value) {
 		setValue(name, value, this, false, null);
 	}
+
 	public void animateValue(String name, Object value) {
-		getContext().animateProperty(getAttributeProperty(name), 1000, value) ;
+		getContext().animateProperty(getAttributeProperty(name), 1000, value);
 		setValue(name, value, this, false, null);
 	}
 
@@ -191,7 +191,7 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 
 	private final void setValue(String name, String expression, Object value, TipiComponent source, boolean defaultValue, TipiEvent event) {
 		Property tv = getAttributeProperty(name);
-		
+
 		if (tv == null) {
 			throw new UnsupportedOperationException("Setting value: " + name + " in: " + getClass() + " is not supported!");
 		}
@@ -217,12 +217,13 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 					}
 				} else {
 					setComponentValue(name, value);
-							tv.setAnyValue(value);
-					
+					tv.setAnyValue(value);
+
 				}
 				return;
 			} catch (Throwable e) {
-				myContext.showInternalError("Error in setter: "+name+" for component: "+getPath()+" proposed value: "+value+"\nFaillure: "+e.getMessage());
+				myContext.showInternalError("Error in setter: " + name + " for component: " + getPath() + " proposed value: " + value
+						+ "\nFaillure: " + e.getMessage());
 				e.printStackTrace();
 			}
 		} else {
@@ -243,21 +244,21 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 		}
 		Object propval = getAttributeProperty(name).getTypedValue();
 		Object oo = getComponentValue(name);
-		if(oo==null) {
-			if(propval!=null) {
-				System.err.println("Value mismatch detected in: "+getClass()+" attribute: "+name +" class: "+propval.getClass());
-				System.err.println("Component says null, property says: "+propval);
+		if (oo == null) {
+			if (propval != null) {
+				System.err.println("Value mismatch detected in: " + getClass() + " attribute: " + name + " class: " + propval.getClass());
+				System.err.println("Component says null, property says: " + propval);
 			} else {
 				return null;
 			}
 		} else {
-			if(!oo.equals(propval)) {
-				System.err.println("Value mismatch detected in: "+getClass()+" attribute: "+name);
-				System.err.println("Component says "+oo +", property says: "+propval);
+			if (!oo.equals(propval)) {
+				System.err.println("Value mismatch detected in: " + getClass() + " attribute: " + name);
+				System.err.println("Component says " + oo + ", property says: " + propval);
 				getAttributeProperty(name).setAnyValue(oo);
 			}
 		}
-		
+
 		return getAttributeProperty(name).getTypedValue();
 	}
 
@@ -301,7 +302,7 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 		List<XMLElement> defChildren = definition.getChildren();
 		for (int i = 0; i < defChildren.size(); i++) {
 			XMLElement xx = defChildren.get(i);
-//			String[] s = getCustomChildTags();
+			// String[] s = getCustomChildTags();
 			if (!xx.getName().equals("layout") && !xx.getName().equals("tipi-instance") && !xx.getName().equals("component-instance")
 					&& !xx.getName().equals("component") && !xx.getName().startsWith("c.")) {
 				String type = xx.getStringAttribute("type");
@@ -341,14 +342,12 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 		return null;
 	}
 
-
-
 	public void loadMethodDefinitions(TipiContext context, XMLElement definition, XMLElement classDef) throws TipiException {
 		List<XMLElement> defChildren = definition.getChildren();
 		for (int i = 0; i < defChildren.size(); i++) {
 			XMLElement xx = defChildren.get(i);
 			if (xx.getName().equals("method")) {
-//				String type = xx.getStringAttribute("type");
+				// String type = xx.getStringAttribute("type");
 				TipiComponentMethod tcm = new TipiComponentMethod(this);
 				tcm.load(xx);
 			}
@@ -444,16 +443,18 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 		isVisibleElement = classdef.getStringAttribute("addtocontainer", "false").equals("true");
 		isToplevel = classdef.getStringAttribute("toplevel", "false").equals("true");
 		myService = instance.getStringAttribute("service", null);
-		
+
 		if (id == null || "".equals(id)) {
 			// pretty deprecated. I don't like it.
-//			if(defname!=null) {
-//				id = defname;
-//			}
-			id = myContext.generateComponentId(null,this);
+			// if(defname!=null) {
+			// id = defname;
+			// }
+			id = myContext.generateComponentId(null, this);
 		}
-		
-//		stateMessage  = getStateMessage();// NavajoFactory.getInstance().createMessage(myContext.getStateNavajo(), id!=null?id:"Unknown");
+
+		// stateMessage = getStateMessage();//
+		// NavajoFactory.getInstance().createMessage(myContext.getStateNavajo(),
+		// id!=null?id:"Unknown");
 		XMLElement definitionXml = null;
 		if (defname != null && !instance.getName().startsWith("c.")) {
 			definitionXml = myContext.getComponentDefinition(defname);
@@ -474,9 +475,8 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 				loadMethods(xx);
 			}
 		}
-			
-	}
 
+	}
 
 	/**
 	 * If you want to do something (retrieve some data from this instance, or
@@ -502,7 +502,7 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 					throw new RuntimeException(
 							"You cannot pass the value of an 'out' direction value in to an instance or definition in the script");
 				}
-//				System.err.println("About to evaluate value: "+value);
+				// System.err.println("About to evaluate value: "+value);
 
 				Operand o = evaluate(value.toString(), this, event);
 				if (o != null && o.value != null) {
@@ -549,11 +549,11 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 		// no action
 	}
 
-	public void bind(final Object c, final String propertyName, final String containerPropertyName) throws TipiException  {
+	public void bind(final Object c, final String propertyName, final String containerPropertyName) throws TipiException {
 		final Property p = getAttributeProperty(propertyName);
 		PropertyChangeListener pcl = new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent e) {
-				if(containerPropertyName.equals(e.getPropertyName())) {
+				if (containerPropertyName.equals(e.getPropertyName())) {
 					p.setAnyValue(e.getNewValue());
 				}
 
@@ -564,18 +564,17 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 		try {
 			m = c.getClass().getMethod("addPropertyChangeListener", new Class[] { PropertyChangeListener.class });
 			m.invoke(c, new Object[] { pcl });
-		}	catch (NoSuchMethodException e1) {
+		} catch (NoSuchMethodException e1) {
 			e1.printStackTrace();
 		} catch (Exception e) {
-			throw new TipiException("Trouble binding: "+this+" conainerProperty: "+containerPropertyName,e);
+			throw new TipiException("Trouble binding: " + this + " conainerProperty: " + containerPropertyName, e);
 		}
-
 
 		PropertyChangeListener propListener = new PropertyChangeListener() {
 
 			public void propertyChange(PropertyChangeEvent e) {
 				Object value = e.getNewValue();
-					if(value!=null) {
+				if (value != null) {
 					try {
 						doCallSetter(c, containerPropertyName, value);
 					} catch (Throwable ee) {
@@ -583,10 +582,10 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 					}
 				}
 			}
-			
+
 			public String toString() {
 				try {
-					return "TipiComponentBoundProp: "+p.getFullPropertyName()+":"+p.hashCode();
+					return "TipiComponentBoundProp: " + p.getFullPropertyName() + ":" + p.hashCode();
 				} catch (NavajoException e) {
 					e.printStackTrace();
 				}
@@ -600,7 +599,6 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 		return "set" + propertyName.substring(0, 1).toUpperCase() + propertyName.substring(1, propertyName.length());
 	}
 
-	
 	protected void doCallSetter(Object component, String propertyName, Object param) {
 		try {
 			callSetter(component, propertyName, param);
@@ -608,12 +606,12 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void callSetter(Object component, String propertyName, Object param) throws SecurityException, IllegalArgumentException,
 			IllegalAccessException, InvocationTargetException {
 		String b = getSetterName(propertyName);
 		Class<?> paramType = param.getClass();
-		
+
 		// Isn't there some clever autoboxing to this kind of sh!t?
 		if (paramType.equals(Integer.class)) {
 			paramType = int.class;
@@ -647,8 +645,9 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 					}
 				}
 			}
-//			System.err.println("NO METHOD FOUND: "+propertyName+" in class:"+ component.getClass());
-//			e.printStackTrace();
+			// System.err.println("NO METHOD FOUND: "+propertyName+" in class:"+
+			// component.getClass());
+			// e.printStackTrace();
 		}
 	}
 
@@ -672,26 +671,26 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 			}
 			String containerProperty = xx.getStringAttribute("property");
 			if (containerProperty != null) {
-					bind(getContainer(), valueName, containerProperty);
-			
+				bind(getContainer(), valueName, containerProperty);
+
 			}
 			attrProp.forcePropertyChange();
 		}
 	}
 
 	public String getId() {
-		if(myId==null) {
-			myId = myContext.generateComponentId(getTipiParent(),this);
+		if (myId == null) {
+			myId = myContext.generateComponentId(getTipiParent(), this);
 		}
 		return myId;
 	}
-	
+
 	public Message getStateMessage() {
-		if(stateMessage!=null) {
+		if (stateMessage != null) {
 			return stateMessage;
 		}
-		stateMessage = NavajoFactory.getInstance().createMessage(myContext.getStateNavajo(),getId());
-		if(getTipiParent()!=null) {
+		stateMessage = NavajoFactory.getInstance().createMessage(myContext.getStateNavajo(), getId());
+		if (getTipiParent() != null) {
 			getTipiParent().getStateMessage().addMessage(stateMessage);
 		}
 		return stateMessage;
@@ -798,37 +797,38 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 	}
 
 	/**
-	 * Disposes this component: Beware: Should not be called directly. To programatically dispose
-	 * a component, call TipiContext.disposeComponent(component)
+	 * Disposes this component: Beware: Should not be called directly. To
+	 * programatically dispose a component, call
+	 * TipiContext.disposeComponent(component)
 	 */
 	public void disposeComponent() {
-		if(getContainer()!=null) {
-		for (PropertyChangeListener p : myContainerListeners) {
-			try {
-				Object c = getContainer();
-				Method m = c.getClass().getMethod("removePropertyChangeListener", new Class[] { PropertyChangeListener.class });
-				if(m==null) {
-					continue;
+		if (getContainer() != null) {
+			for (PropertyChangeListener p : myContainerListeners) {
+				try {
+					Object c = getContainer();
+					Method m = c.getClass().getMethod("removePropertyChangeListener", new Class[] { PropertyChangeListener.class });
+					if (m == null) {
+						continue;
+					}
+					m.invoke(c, new Object[] { p });
+				} catch (NoSuchMethodException e1) {
+					e1.printStackTrace();
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
-				m.invoke(c, new Object[] { p });
-			}	catch (NoSuchMethodException e1) {
-				e1.printStackTrace();
-			} catch (Exception e) {
-				e.printStackTrace();
 			}
-		}
 		}
 		for (String ss : myDataListeners.keySet()) {
 			Property p = getAttributeProperty(ss);
-			if(p!=null) {
+			if (p != null) {
 				p.removePropertyChangeListener(myDataListeners.get(ss));
 			}
 		}
-//		try {
-//			myContext.unlink(getStateMessage());
-//		} catch (NavajoException e) {
-//			e.printStackTrace();
-//		}
+		// try {
+		// myContext.unlink(getStateMessage());
+		// } catch (NavajoException e) {
+		// e.printStackTrace();
+		// }
 		removeAllChildren();
 		clearAllComponents();
 		helperDispose();
@@ -845,8 +845,8 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 		ArrayList<TipiComponent> backup = new ArrayList<TipiComponent>(tipiComponentList);
 		for (int i = 0; i < backup.size(); i++) {
 			TipiComponent current = backup.get(i);
-			 //myContext.disposeTipiComponent(current);
-			 current.disposeComponent();
+			// myContext.disposeTipiComponent(current);
+			current.disposeComponent();
 		}
 		clearAllComponents();
 	}
@@ -897,7 +897,7 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 			removeFromContainer(c);
 		}
 		if (PropertyComponent.class.isInstance(child)) {
-//			PropertyComponent pc = (PropertyComponent) child;
+			// PropertyComponent pc = (PropertyComponent) child;
 			properties.remove(child);
 		}
 		removeChildComponent(child);
@@ -924,7 +924,7 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 				c.setConstraints(td);
 			}
 		}
-		if(c.getId()==null) {
+		if (c.getId() == null) {
 			System.err.println("Warning: null id.");
 		}
 		/**
@@ -937,10 +937,10 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 		}
 		addChildComponent(c);
 		c.setParent(this);
-		
-//		if(getStateMessage()!=null) {
-			getStateMessage().addMessage(c.getStateMessage());
-//		}
+
+		// if(getStateMessage()!=null) {
+		getStateMessage().addMessage(c.getStateMessage());
+		// }
 		// if (getContainer() == null && c.isVisibleElement()) {
 		// System.err.println("THIS IS WEIRD: COMPONENT: " + c.getPath() + " has
 		// no container, but it is visible.");
@@ -956,10 +956,9 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 		if (isStudioElement) {
 			c.setStudioElement(true);
 		}
-		
-			getStateMessage().addMessage(c.getStateMessage());
-		
-		
+
+		getStateMessage().addMessage(c.getStateMessage());
+
 		/**
 		 * @todo Beware: I think this means that the onInstantiate event is
 		 *       never called on a toplevel component
@@ -1022,8 +1021,8 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 			System.err.println("Can not refresh parent: Parent is not a tipi. THIS is a bit weird, actually.");
 		}
 	}
- 
-	public boolean performTipiEvent(String type, Map<String,Object> event, boolean sync) throws TipiException, TipiBreakException {
+
+	public boolean performTipiEvent(String type, Map<String, Object> event, boolean sync) throws TipiException, TipiBreakException {
 		boolean hasEventType = false;
 		for (int i = 0; i < myEventList.size(); i++) {
 			TipiEvent te = myEventList.get(i);
@@ -1031,24 +1030,25 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 				hasEventType = true;
 				TipiExecutable parentEvent = null;
 
-				
 				myContext.fireTipiContextEvent(this, type, event, sync);
-				
+
 				if (sync) {
 					try {
-						te.performAction(this,parentEvent, event);
+						te.performAction(this, parentEvent, event);
 					} catch (TipiBreakException e) {
-						//						e.printStackTrace();
+						// e.printStackTrace();
 						throw (e);
-					} catch(Exception e) {
-						getContext().showInternalError("Error performing event: "+te.getEventName()+" for component: "+te.getComponent().getPath(), e);
+					} catch (Exception e) {
+						getContext().showInternalError(
+								"Error performing event: " + te.getEventName() + " for component: " + te.getComponent().getPath(), e);
 						e.printStackTrace();
 					}
- 				} else {
+				} else {
 					try {
 						te.asyncPerformAction(this, parentEvent, event);
-					} catch(Throwable e) {
-						getContext().showInternalError("Error performing event: "+te.getEventName()+" for component: "+te.getComponent().getPath(), e);
+					} catch (Throwable e) {
+						getContext().showInternalError(
+								"Error performing event: " + te.getEventName() + " for component: " + te.getComponent().getPath(), e);
 						e.printStackTrace();
 					}
 				}
@@ -1091,13 +1091,12 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 	}
 
 	protected void setComponentValue(String name, Object object) {
-//		myContext.animateProperty(getAttributeProperty(name), 1000, object);
+		// myContext.animateProperty(getAttributeProperty(name), 1000, object);
 		getAttributeProperty(name).setAnyValue(object);
-//		valuesSet.add(name);
-//		helperSetComponentValue(name, object);
+		// valuesSet.add(name);
+		// helperSetComponentValue(name, object);
 	}
 
-	
 	protected Object getComponentValue(String name) {
 		return helperGetComponentValue(name);
 	}
@@ -1362,11 +1361,11 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 	}
 
 	public TipiComponent addComponentInstance(TipiContext context, XMLElement inst, Object constraints) throws TipiException {
-		//TODO add TipiEvent as parameter
-		TipiComponent ti = (context.instantiateComponent(inst,null,null));
+		// TODO add TipiEvent as parameter
+		TipiComponent ti = (context.instantiateComponent(inst, null, null));
 		ti.setConstraints(constraints);
-		if(ti.getId()==null) {
-			ti.setId(myContext.generateComponentId(this,ti));
+		if (ti.getId() == null) {
+			ti.setId(myContext.generateComponentId(this, ti));
 		}
 		addComponent(ti, context, constraints);
 
@@ -1449,10 +1448,11 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 	}
 
 	public void runSyncInEventThread(Runnable r) {
-		  myContext.runSyncInEventThread(r);
+		myContext.runSyncInEventThread(r);
 	}
-	  public void runAsyncInEventThread(Runnable r) {
-		  myContext.runAsyncInEventThread(r);
-	  }
+
+	public void runAsyncInEventThread(Runnable r) {
+		myContext.runAsyncInEventThread(r);
+	}
 
 }

@@ -41,7 +41,7 @@ public abstract class TipiBaseQuestionGroup extends TipiDataComponentImpl {
 
 	private String subConstraint = null;
 
-//	private String subQuestionPath;
+	// private String subQuestionPath;
 
 	public TipiBaseQuestionGroup() {
 	}
@@ -71,9 +71,9 @@ public abstract class TipiBaseQuestionGroup extends TipiDataComponentImpl {
 			subConstraint = (String) object;
 		}
 
-//		if (name.equals("subQuestionPath")) {
-//			subQuestionPath = (String) object;
-//		}
+		// if (name.equals("subQuestionPath")) {
+		// subQuestionPath = (String) object;
+		// }
 
 		super.setComponentValue(name, object);
 	}
@@ -90,7 +90,7 @@ public abstract class TipiBaseQuestionGroup extends TipiDataComponentImpl {
 
 	private void recursiveListQuestions(TipiComponent start, List<TipiBaseQuestion> result) {
 		if (start instanceof TipiBaseQuestion) {
-			result.add((TipiBaseQuestion)start);
+			result.add((TipiBaseQuestion) start);
 		}
 		for (int i = 0; i < start.getChildCount(); i++) {
 			recursiveListQuestions(start.getTipiComponent(i), result);
@@ -147,7 +147,7 @@ public abstract class TipiBaseQuestionGroup extends TipiDataComponentImpl {
 				Message current = question.getMessage(i);
 				String id = current.getProperty("Id").getValue();
 				TipiBaseQuestion tc = (TipiBaseQuestion) TipiInstantiateTipi.instantiateByDefinition(currentComponent, false, id,
-						questionDefinitionName, subConstraint,null);
+						questionDefinitionName, subConstraint, null);
 				tc.setValue("messagePath", current.getFullMessageName());
 				tc.setValue("questionDefinitionName", questionDefinitionName);
 				tc.setQuestionGroup(this);

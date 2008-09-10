@@ -16,6 +16,7 @@ import com.dexels.navajo.tipi.internal.*;
  * <p>
  * Company:
  * </p>
+ * 
  * @deprecated
  * @author not attributable
  * @version 1.0
@@ -24,7 +25,7 @@ import com.dexels.navajo.tipi.internal.*;
 public class TipiDisposePath extends TipiAction {
 	public void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
 		try {
-			String pathVal = (String) getEvaluatedParameter("path",event).value;
+			String pathVal = (String) getEvaluatedParameter("path", event).value;
 			TipiComponent tp = myContext.getTipiComponentByPath(pathVal);
 			if (tp != null) {
 				// System.err.println("ATTEMPTING TO DISPOSE: " + tp.getPath());

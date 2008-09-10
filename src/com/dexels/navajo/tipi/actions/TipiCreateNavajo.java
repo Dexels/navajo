@@ -29,7 +29,7 @@ public class TipiCreateNavajo extends TipiAction {
 		}
 		String name = (String) nameOperand.value;
 		Navajo newNavajo = NavajoFactory.getInstance().createNavajo();
-		Header newHeader = NavajoFactory.getInstance().createHeader(newNavajo,name,null,null,-1);
+		Header newHeader = NavajoFactory.getInstance().createHeader(newNavajo, name, null, null, -1);
 		newNavajo.addHeader(newHeader);
 		myContext.addNavajo(name, newNavajo);
 		myContext.loadNavajo(newNavajo, name);

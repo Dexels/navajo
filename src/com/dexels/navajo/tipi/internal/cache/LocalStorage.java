@@ -16,5 +16,5 @@ public interface LocalStorage {
 
 	public void flushAll(String location) throws IOException;
 
-	public URL getURL(String location)  throws IOException;
+	public URL getURL(String location) throws IOException;
 }

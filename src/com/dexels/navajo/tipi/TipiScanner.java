@@ -10,8 +10,8 @@ import com.dexels.navajo.document.jaxpimpl.xml.*;
 
 public class TipiScanner {
 
-	private static HashMap<String,String> results = new HashMap<String,String>();
-	private static HashMap<String,String> revResults = new HashMap<String,String>();
+	private static HashMap<String, String> results = new HashMap<String, String>();
+	private static HashMap<String, String> revResults = new HashMap<String, String>();
 
 	private static HashSet<String> preloadSet = new HashSet<String>();
 	private static int conflictcount = 0;

@@ -1,6 +1,5 @@
 package com.dexels.navajo.tipi.actions;
 
-
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.internal.*;
 
@@ -27,16 +26,13 @@ public final class TipiSetCookie extends TipiAction {
 
 		Operand nameO = getEvaluatedParameter("name", event);
 		Operand valueO = getEvaluatedParameter("value", event);
-		if(nameO==null || valueO==null) {
+		if (nameO == null || valueO == null) {
 			return;
 		}
 		String name = (String) nameO.value;
 		String value = (String) valueO.value;
-		
+
 		myContext.setCookie(name, value);
 	}
-
-
-
 
 }

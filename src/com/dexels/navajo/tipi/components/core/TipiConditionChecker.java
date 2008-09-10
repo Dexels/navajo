@@ -28,7 +28,6 @@ public class TipiConditionChecker extends TipiHeadlessDataComponentImpl {
 	private String messagePath = null;
 	private final ArrayList<Object> failedList = new ArrayList<Object>();
 
-
 	public void setComponentValue(String name, Object object) {
 		if ("messagePath".equals(name)) {
 			messagePath = (String) object;
@@ -77,7 +76,7 @@ public class TipiConditionChecker extends TipiHeadlessDataComponentImpl {
 		}
 	}
 
-	public void loadData(Navajo n,  String method) throws TipiException {
+	public void loadData(Navajo n, String method) throws TipiException {
 		if (messagePath == null) {
 			return;
 		}

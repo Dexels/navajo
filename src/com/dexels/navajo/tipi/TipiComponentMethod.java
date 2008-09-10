@@ -24,7 +24,7 @@ import com.dexels.navajo.tipi.tipixml.*;
  * @version 1.0
  */
 public class TipiComponentMethod {
-	private Map<String,TipiValue> myArgs = new HashMap<String,TipiValue>();
+	private Map<String, TipiValue> myArgs = new HashMap<String, TipiValue>();
 	// private Map myInstanceArgs = new HashMap();
 	private TipiAction myTipiAction = null;
 	private final TipiComponent myComponent;
@@ -71,7 +71,7 @@ public class TipiComponentMethod {
 	public TipiAction getAction() {
 		return myTipiAction;
 	}
-	
+
 	public boolean checkFormat(String name, XMLElement invocation) {
 		return true;
 	}

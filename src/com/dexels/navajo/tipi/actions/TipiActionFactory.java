@@ -23,7 +23,7 @@ import com.dexels.navajo.tipi.tipixml.*;
  */
 public class TipiActionFactory {
 	protected String myName = null;
-	protected Map<String,TipiValue> myDefinedParams = new HashMap<String,TipiValue>();
+	protected Map<String, TipiValue> myDefinedParams = new HashMap<String, TipiValue>();
 	protected TipiContext myContext = null;
 	private Class<?> myActionClass = null;
 
@@ -44,8 +44,8 @@ public class TipiActionFactory {
 		String clas = (String) actionDef.getAttribute("class");
 		String fullDef = pack + "." + clas;
 		context.setSplashInfo("Adding action: " + fullDef);
-//		System.err.println("Adding action: " + fullDef);
-//		context.setSplashInfo("Adding action: " + fullDef);
+		// System.err.println("Adding action: " + fullDef);
+		// context.setSplashInfo("Adding action: " + fullDef);
 		try {
 			myActionClass = Class.forName(fullDef, true, getClass().getClassLoader());
 		} catch (ClassNotFoundException ex) {
@@ -77,13 +77,14 @@ public class TipiActionFactory {
 		newAction.setContext(myContext);
 		newAction.setComponent(tc);
 		newAction.setType(myName);
-//		if(parentExe.getStackElement()==null) {
-//			throw new RuntimeException("ACtion sin parentes?");
-//		} else {
-//			System.err.println("PARENT STACKELEMENT: "+parentExe.getStackElement().createLine());
-//		}
-		newAction.setStackElement(new TipiStackElement(myName, instance,parentExe.getStackElement()));
-		
+		// if(parentExe.getStackElement()==null) {
+		// throw new RuntimeException("ACtion sin parentes?");
+		// } else {
+		//System.err.println("PARENT STACKELEMENT: "+parentExe.getStackElement()
+		// .createLine());
+		// }
+		newAction.setStackElement(new TipiStackElement(myName, instance, parentExe.getStackElement()));
+
 		// Check presence of supplied parameters in the defined parameters
 		List<XMLElement> c = instance.getChildren();
 
@@ -92,7 +93,7 @@ public class TipiActionFactory {
 
 		for (int i = 0; i < c.size(); i++) {
 			XMLElement x = c.get(i);
-			TipiValue instanceValue = new TipiValue(tc,x);
+			TipiValue instanceValue = new TipiValue(tc, x);
 			// System.err.println("ADDING INSTANCE: "+x.toString());
 			TipiValue defined = myDefinedParams.get(x.getAttribute("name"));
 			String val = (String) x.getAttribute("value");
@@ -125,11 +126,11 @@ public class TipiActionFactory {
 			newAction.addParameter(instanceValue);
 		}
 
-//		Enumeration ee = instance.enumerateAttributeNames();
-			
-//		}
-	for (Iterator<String> iterator = instance.enumerateAttributeNames(); iterator.hasNext();) {
-		String element = iterator.next();
+		// Enumeration ee = instance.enumerateAttributeNames();
+
+		// }
+		for (Iterator<String> iterator = instance.enumerateAttributeNames(); iterator.hasNext();) {
+			String element = iterator.next();
 			// System.err.println("Checking inline element: "+element);
 			if ("type".equals(element)) {
 				continue;

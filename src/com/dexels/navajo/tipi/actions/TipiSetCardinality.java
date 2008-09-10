@@ -25,7 +25,7 @@ public class TipiSetCardinality extends TipiAction {
 	public void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
 		Operand o = getEvaluatedParameter("property", event);
 		Operand q = getEvaluatedParameter("cardinality", event);
-		Property p = (Property)o.value;
+		Property p = (Property) o.value;
 		if (p != null) {
 			p.setCardinality((String) q.value);
 		} else {

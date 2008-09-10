@@ -1,6 +1,5 @@
 package com.dexels.navajo.tipi.components.core.parsers;
 
-
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.internal.*;
 
@@ -25,6 +24,7 @@ public class EventRef implements TipiReference {
 
 	private final TipiEvent myEvent;
 	private final String myKey;
+
 	public EventRef(String key, TipiEvent myEvent) {
 		this.myEvent = myEvent;
 		this.myKey = key;
@@ -33,9 +33,8 @@ public class EventRef implements TipiReference {
 	public void setValue(Object val, TipiComponent source) {
 		TipiValue tv = new TipiValue(null);
 		tv.setValue(val);
-		
-		myEvent.addEventParameter(myKey,tv);
-		}
-	
-	
+
+		myEvent.addEventParameter(myKey, tv);
+	}
+
 }

@@ -6,7 +6,6 @@
  */
 package com.dexels.navajo.tipi;
 
-
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -24,11 +23,9 @@ public abstract class TipiEmbedComponent extends TipiDataComponentImpl {
 	private static final String NAVAJONAME_PROPERTY_NAME = null;
 	protected TipiStandaloneToplevelContainer stc = null;
 
-	
 	private String tipiCodeBase;
 	private String resourceCodeBase;
-	
-	
+
 	// public void loadDefinition(String tipiPath, String definitionName, String
 	// resourceBaseDirectory) throws IOException, TipiException;
 	// public void loadClassPathLib(String location);
@@ -41,7 +38,8 @@ public abstract class TipiEmbedComponent extends TipiDataComponentImpl {
 	// setGenericResourceLoader(resourceCodeBase);
 
 	public TipiEmbedComponent() {
-		// jf.getContentPane().add((Container)stc.getContext().getTopLevel(),BorderLayout.CENTER);
+		// jf.getContentPane().add((Container)stc.getContext().getTopLevel(),
+		// BorderLayout.CENTER);
 	}
 
 	public void loadData(Navajo n, String method) throws TipiException {
@@ -83,8 +81,6 @@ public abstract class TipiEmbedComponent extends TipiDataComponentImpl {
 		return false;
 	}
 
-				
-
 	@Override
 	public void setComponentValue(String name, Object value) {
 
@@ -121,10 +117,8 @@ public abstract class TipiEmbedComponent extends TipiDataComponentImpl {
 		super.setComponentValue(name, value);
 	}
 
-	
-	
 	protected Object getComponentValue(String name) {
-		if(name.equals("context")) {
+		if (name.equals("context")) {
 			return myContext;
 		}
 		return super.getComponentValue(name);
@@ -133,10 +127,10 @@ public abstract class TipiEmbedComponent extends TipiDataComponentImpl {
 	protected void performComponentMethod(final String name, final TipiComponentMethod compMeth, TipiEvent event) {
 		if ("loadDefinition".equals(name)) {
 			try {
-				if(resourceCodeBase==null) {
+				if (resourceCodeBase == null) {
 					stc.getContext().setGenericResourceLoader(myContext.getGenericResourceLoader());
 				}
-				if(tipiCodeBase==null) {
+				if (tipiCodeBase == null) {
 					stc.getContext().setTipiResourceLoader(myContext.getTipiResourceLoader());
 				}
 				Operand oo = compMeth.getEvaluatedParameter("location", event);
@@ -148,10 +142,10 @@ public abstract class TipiEmbedComponent extends TipiDataComponentImpl {
 		}
 		if ("switch".equals(name)) {
 			try {
-				if(resourceCodeBase==null) {
+				if (resourceCodeBase == null) {
 					stc.getContext().setGenericResourceLoader(myContext.getGenericResourceLoader());
 				}
-				if(tipiCodeBase==null) {
+				if (tipiCodeBase == null) {
 					stc.getContext().setTipiResourceLoader(myContext.getTipiResourceLoader());
 				}
 				Operand oo = compMeth.getEvaluatedParameter("definition", event);
@@ -209,7 +203,7 @@ public abstract class TipiEmbedComponent extends TipiDataComponentImpl {
 	}
 
 	protected void switchToDefinition(final String nameVal) {
-		runSyncInEventThread(new Runnable(){
+		runSyncInEventThread(new Runnable() {
 			public void run() {
 				stc.getContext().setTopLevelContainer(getContainer());
 				try {
@@ -217,11 +211,12 @@ public abstract class TipiEmbedComponent extends TipiDataComponentImpl {
 				} catch (TipiException e) {
 					e.printStackTrace();
 				}
-			}});
+			}
+		});
 	}
 
 	private void parseLocation(String loc) throws IOException, TipiException {
-		System.err.println("Parsing: "+loc);
+		System.err.println("Parsing: " + loc);
 		InputStream tipiResourceStream = stc.getContext().getTipiResourceStream(loc);
 		stc.getContext().parseStream(tipiResourceStream);
 	}

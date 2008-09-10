@@ -3,10 +3,10 @@ package com.dexels.navajo.tipi.internal;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.tipixml.*;
 
-public class TipiAnonymousAction  implements TipiExecutable {
+public class TipiAnonymousAction implements TipiExecutable {
 
 	private final Runnable myRunnable;
-	
+
 	public TipiAnonymousAction(Runnable r) {
 		myRunnable = r;
 	}
@@ -34,11 +34,10 @@ public class TipiAnonymousAction  implements TipiExecutable {
 	public void performAction(TipiEvent te, TipiExecutable parent, int index) throws TipiBreakException, TipiException {
 		myRunnable.run();
 
-		
 	}
 
 	public void setEvent(TipiEvent e) {
-		
+
 	}
 
 	public XMLElement store() {
@@ -52,12 +51,12 @@ public class TipiAnonymousAction  implements TipiExecutable {
 
 	public void setStackElement(TipiStackElement myStackElement) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void dumpStack(String message) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

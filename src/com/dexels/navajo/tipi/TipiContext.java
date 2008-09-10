@@ -19,7 +19,7 @@ import com.dexels.navajo.tipi.components.core.*;
 import com.dexels.navajo.tipi.connectors.*;
 import com.dexels.navajo.tipi.extension.*;
 import com.dexels.navajo.tipi.internal.*;
-import com.dexels.navajo.tipi.internal.cookie.CookieManager;
+import com.dexels.navajo.tipi.internal.cookie.*;
 import com.dexels.navajo.tipi.studio.*;
 import com.dexels.navajo.tipi.tipixml.*;
 
@@ -598,7 +598,7 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 
 		isr.close();
 		parseXMLElement(doc);
-		
+
 		switchToDefinition(definitionName);
 		if (errorHandler != null) {
 			try {
@@ -798,7 +798,7 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 		if (genericResourceLoader != null) {
 			try {
 				URL resourceURL = genericResourceLoader.getResourceURL(location);
-				if(resourceURL!=null) {
+				if (resourceURL != null) {
 					return resourceURL;
 				}
 			} catch (IOException e) {
@@ -1086,8 +1086,8 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 		} else {
 			Set<String> paramNames = t.getParameterNames();
 			for (String param : paramNames) {
-				if (param.equals("id") || param.equals("name") || param.equals("class") || param.equals("location") || param.equals("expectType")
-						|| param.equals("force")) {
+				if (param.equals("id") || param.equals("name") || param.equals("class") || param.equals("location")
+						|| param.equals("expectType") || param.equals("force")) {
 					continue;
 				}
 				Object o = t.getEvaluatedParameterValue(param, event);

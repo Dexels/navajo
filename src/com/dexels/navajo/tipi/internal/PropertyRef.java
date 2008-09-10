@@ -24,10 +24,10 @@ import com.dexels.navajo.tipi.*;
 
 @Deprecated
 public class PropertyRef implements TipiReference {
-//	private final Property myProperty;
+	// private final Property myProperty;
 
 	public PropertyRef(Property p) {
-//		myProperty = p;
+		// myProperty = p;
 	}
 
 	public void setValue(Object expression, TipiComponent tc) {

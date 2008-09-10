@@ -25,7 +25,7 @@ public class TipiBreakException extends RuntimeException {
 	public static final int COMPONENT_DISPOSED = 3;
 	public static final int USER_BREAK = 4;
 	public static final int WEBSERVICE_BREAK = 5;
-	
+
 	private int myType = BREAK_BLOCK;
 
 	public TipiBreakException() {

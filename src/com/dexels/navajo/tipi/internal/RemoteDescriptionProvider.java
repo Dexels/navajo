@@ -26,5 +26,4 @@ public class RemoteDescriptionProvider extends BaseDescriptionProvider {
 		System.err.println("# of descriptions: " + myDescriptionMap.size());
 	}
 
-
 }

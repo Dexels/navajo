@@ -3,7 +3,6 @@ package com.dexels.navajo.tipi.components.core;
 import java.util.*;
 
 import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.internal.*;
 
 /**
  * <p>
@@ -22,7 +21,7 @@ import com.dexels.navajo.tipi.internal.*;
  * @author not attributable
  * @version 1.0
  */
-public class TipiThread extends Thread implements Comparable<TipiThread>{
+public class TipiThread extends Thread implements Comparable<TipiThread> {
 	public static final String IDLE = "idle";
 	public static final String BUSY = "busy";
 	public static final String WAITING = "waiting";
@@ -41,7 +40,7 @@ public class TipiThread extends Thread implements Comparable<TipiThread>{
 	public void setThreadState(String state) {
 		myPool.setThreadState(state);
 	}
-	
+
 	public void run() {
 		while (true) {
 			try {
@@ -53,18 +52,18 @@ public class TipiThread extends Thread implements Comparable<TipiThread>{
 						myPool.setThreadState(TipiThread.BUSY);
 						TipiExecutable parentEvent = null;
 						final Stack<TipiExecutable> s = myPool.getThreadStack(this);
-						if(s!=null && !s.isEmpty()) {
+						if (s != null && !s.isEmpty()) {
 							parentEvent = s.peek();
-						} 
+						}
 						myPool.pushCurrentEvent(te);
 						myContext.debugLog("event", "Thread: " + myName + " got an executable. Performing now");
 						try {
 							myPool.getContext().threadStarted(Thread.currentThread());
 							te.performAction(te.getEvent(), parentEvent, 0);
 						} catch (Throwable ex) {
-							if(!(ex instanceof TipiBreakException)) {
+							if (!(ex instanceof TipiBreakException)) {
 								ex.printStackTrace();
-								te.dumpStack("Problem: "+ex.getMessage());
+								te.dumpStack("Problem: " + ex.getMessage());
 							}
 						} finally {
 							TipiEventListener tel = myPool.getEventListener(te);
@@ -79,9 +78,9 @@ public class TipiThread extends Thread implements Comparable<TipiThread>{
 						Stack<TipiExecutable> ss = myPool.getThreadStack(this);
 						ss.clear();
 					}
-				} finally { 
+				} finally {
 					myPool.getContext().threadEnded(Thread.currentThread());
-				
+
 				}
 			} catch (ThreadShutdownException t) {
 				System.err.println("Thread received a shutdown request. Farewell..");

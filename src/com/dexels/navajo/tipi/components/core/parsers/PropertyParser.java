@@ -27,7 +27,7 @@ public class PropertyParser extends BaseTipiParser {
 	}
 
 	private Object getPropertyValue(TipiComponent source, String expression) {
-		if(expression.startsWith("!")) {
+		if (expression.startsWith("!")) {
 			try {
 				return getAttributePropertyValueByPath(source, expression.substring(1));
 			} catch (TipiException e) {
@@ -42,7 +42,7 @@ public class PropertyParser extends BaseTipiParser {
 		}
 		return null;
 	}
-	
+
 	public String toString(Object o, TipiComponent source) {
 		return "Not possible";
 	}

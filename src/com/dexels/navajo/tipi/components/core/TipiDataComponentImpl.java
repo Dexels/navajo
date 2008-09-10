@@ -30,7 +30,8 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 	// private String autoLoad = null;
 	// private String autoLoadDestination = null;
 	protected String myMethod;
-//	private String myServer;
+
+	// private String myServer;
 
 	public TipiDataComponentImpl() {
 	}
@@ -53,8 +54,6 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 	// }
 	// }
 
-	
-	
 	private final void loadServices(String myService) {
 		if (myService != null) {
 			// myContext.clearTipiAllInstances();
@@ -76,16 +75,16 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 		}
 	}
 
-//	protected Object getComponentValue(String name) {
-//		if ("server".equals(name)) {
-//			return myServer;
-//		}
-//		return super.getComponentValue(name);
-//	}
-//
-//	public String getServer() {
-//		return myServer;
-//	}
+	// protected Object getComponentValue(String name) {
+	// if ("server".equals(name)) {
+	// return myServer;
+	// }
+	// return super.getComponentValue(name);
+	// }
+	//
+	// public String getServer() {
+	// return myServer;
+	// }
 
 	public void load(XMLElement definition, XMLElement instance, TipiContext context) throws TipiException {
 		super.load(definition, instance, context);
@@ -105,7 +104,7 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 		}
 		// System.err.println("MY CONSTRIANT::::::::::::::::: " + constraint);
 		List<XMLElement> children = null;
-		if (instance.getAttribute("class") != null || instance.getAttribute("type")!=null ) {
+		if (instance.getAttribute("class") != null || instance.getAttribute("type") != null) {
 			// System.err.println("Instantiating from instance");
 			children = instance.getChildren();
 		} else {
@@ -117,8 +116,9 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 			if (child.getName().equals("layout") || child.getName().startsWith("l.")) {
 				instantiateWithLayout(child);
 			} else {
-//				System.err.println("Checkin.");
-				if (child.getName().equals("tipi-instance") || child.getName().equals("component-instance") ||  child.getName().equals("component")||  child.getName().startsWith("c.")) {
+				// System.err.println("Checkin.");
+				if (child.getName().equals("tipi-instance") || child.getName().equals("component-instance")
+						|| child.getName().equals("component") || child.getName().startsWith("c.")) {
 					addComponentInstance(myContext, child, child.getAttribute("constraint"));
 				}
 			}
@@ -240,12 +240,12 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 		return myMethod;
 	}
 
-	public void loadData(Navajo n,String method) throws TipiException, TipiBreakException {
+	public void loadData(Navajo n, String method) throws TipiException, TipiBreakException {
 		myMethod = method;
 		if (n == null) {
 			throw new TipiException("Loading with null Navajo! ");
 		}
-		
+
 		for (int i = 0; i < properties.size(); i++) {
 			PropertyComponent current = properties.get(i);
 			Property p;
@@ -289,12 +289,12 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 			}
 		}
 		// hmmmmmmmmm
-		doPerformOnLoad(method,n,true);
+		doPerformOnLoad(method, n, true);
 		doLayout();
 	}
 
-	protected void doPerformOnLoad(String method, Navajo n,boolean sync) throws TipiException {
-		Map<String,Object> m = new HashMap<String,Object>();
+	protected void doPerformOnLoad(String method, Navajo n, boolean sync) throws TipiException {
+		Map<String, Object> m = new HashMap<String, Object>();
 		m.put("service", method);
 		m.put("navajo", n);
 		performTipiEvent("onLoad", m, sync);
@@ -340,7 +340,7 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 						}
 					}
 				}
-				Map<String,Object> param = new HashMap<String,Object>();
+				Map<String, Object> param = new HashMap<String, Object>();
 				param.put("id", ids.toString());
 				param.put("description", descs.toString());
 				param.put("service", method);
@@ -383,7 +383,7 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 
 	public XMLElement store() {
 		XMLElement IamThereforeIcanbeStored = super.store();
-//		IamThereforeIcanbeStored.setName("tipi-instance");
+		// IamThereforeIcanbeStored.setName("tipi-instance");
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < myServices.size(); i++) {
 			sb.append(myServices.get(i));
@@ -394,9 +394,9 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 		if (myServices.size() > 0) {
 			IamThereforeIcanbeStored.setAttribute("service", sb.toString());
 		}
-//		if (prefix != null) {
-//			IamThereforeIcanbeStored.setAttribute("prefix", prefix);
-//		}
+		// if (prefix != null) {
+		// IamThereforeIcanbeStored.setAttribute("prefix", prefix);
+		// }
 		return IamThereforeIcanbeStored;
 	}
 

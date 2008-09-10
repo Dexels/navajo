@@ -25,7 +25,7 @@ public class TipiSetDescription extends TipiAction {
 	public void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
 		Operand o = getEvaluatedParameter("property", event);
 		Operand q = getEvaluatedParameter("description", event);
-		Property p = (Property)o.value;
+		Property p = (Property) o.value;
 		if (p != null) {
 			p.setDescription((String) q.value);
 		} else {

@@ -14,8 +14,8 @@ public class FileLocalStorage implements LocalStorage {
 	}
 
 	public void flush(String location) {
-		if(hasLocal(location)) {
-			File f = new File(baseFile,convertPath(location));
+		if (hasLocal(location)) {
+			File f = new File(baseFile, convertPath(location));
 			f.delete();
 		}
 	}
@@ -25,8 +25,8 @@ public class FileLocalStorage implements LocalStorage {
 	}
 
 	public InputStream getLocalData(String location) throws IOException {
-		if(hasLocal(location)) {
-			File f = new File(baseFile,convertPath(location));
+		if (hasLocal(location)) {
+			File f = new File(baseFile, convertPath(location));
 			FileInputStream fis = new FileInputStream(f);
 			return fis;
 		}
@@ -34,23 +34,23 @@ public class FileLocalStorage implements LocalStorage {
 	}
 
 	public long getLocalModificationDate(String location) throws IOException {
-		if(hasLocal(location)) {
-			File f = new File(baseFile,convertPath(location));
+		if (hasLocal(location)) {
+			File f = new File(baseFile, convertPath(location));
 			return f.lastModified();
 		}
 		throw new IOException("File not found. Shouldn't happen");
 	}
 
 	public boolean hasLocal(String location) {
-		File f = new File(baseFile,convertPath(location));
+		File f = new File(baseFile, convertPath(location));
 		return f.exists();
 	}
 
 	public void storeData(String location, InputStream data) throws IOException {
-		File f = new File(baseFile,convertPath(location));
+		File f = new File(baseFile, convertPath(location));
 		FileOutputStream fos = new FileOutputStream(f);
 		copyResource(fos, data);
-		
+
 	}
 
 	private final void copyResource(OutputStream out, InputStream in) throws IOException {
@@ -71,9 +71,8 @@ public class FileLocalStorage implements LocalStorage {
 	}
 
 	public URL getURL(String location) throws IOException {
-		File f = new File(baseFile,convertPath(location));
+		File f = new File(baseFile, convertPath(location));
 		return f.toURL();
 	}
-
 
 }

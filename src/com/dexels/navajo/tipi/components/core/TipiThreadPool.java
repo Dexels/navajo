@@ -27,7 +27,7 @@ public class TipiThreadPool {
 	private final ThreadGroup myGroup = new ThreadGroup("TipiThreadGroup");
 	// private final Set myThreadSet = Collections.synchronizedSet(new
 	// HashSet());
-	private final Map<TipiThread, Stack<TipiExecutable> > eventStackMap = new HashMap<TipiThread, Stack<TipiExecutable>>();
+	private final Map<TipiThread, Stack<TipiExecutable>> eventStackMap = new HashMap<TipiThread, Stack<TipiExecutable>>();
 	private final List<TipiExecutable> myWaitingQueue = new ArrayList<TipiExecutable>();
 	private final TipiContext myContext;
 	private final Map<TipiExecutable, TipiEventListener> myListenerMap = Collections
@@ -159,7 +159,7 @@ public class TipiThreadPool {
 		if (t instanceof TipiThread) {
 			TipiThread tt = (TipiThread) t;
 			threadStateMap.put(tt, state);
-			myContext.fireThreadStateEvent(threadStateMap, tt, state,myWaitingQueue.size());
+			myContext.fireThreadStateEvent(threadStateMap, tt, state, myWaitingQueue.size());
 
 		}
 	}
@@ -167,10 +167,10 @@ public class TipiThreadPool {
 	public Stack<TipiExecutable> getThreadStack(Thread currentThread) {
 		return eventStackMap.get(currentThread);
 	}
-	
+
 	public void pushCurrentEvent(TipiExecutable te) {
 		Thread t = Thread.currentThread();
-		if(!myThreadCollection.contains(t)) {
+		if (!myThreadCollection.contains(t)) {
 			return;
 		}
 		Stack<TipiExecutable> eventStack = getThreadStack(t);
@@ -180,15 +180,14 @@ public class TipiThreadPool {
 	public void dumpEventStacks() {
 		for (TipiThread t : myThreadCollection) {
 			Stack<TipiExecutable> te = eventStackMap.get(t);
-			System.err.println("Dumping: "+t.getName());
+			System.err.println("Dumping: " + t.getName());
 			for (TipiExecutable tipiExecutable : te) {
-				System.err.println("EXE: "+tipiExecutable.getEvent().getEventName());
-				
+				System.err.println("EXE: " + tipiExecutable.getEvent().getEventName());
+
 			}
-			System.err.println("End of dump: "+t.getName());
+			System.err.println("End of dump: " + t.getName());
 		}
-		
+
 	}
-    
 
 }

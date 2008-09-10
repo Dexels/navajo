@@ -24,6 +24,7 @@ import com.dexels.navajo.tipi.*;
  */
 public class PropertyListRef implements TipiReference {
 	private final List<Property> propertyList = new ArrayList<Property>();
+
 	public PropertyListRef(List<Property> in) {
 		propertyList.addAll(in);
 	}
@@ -33,7 +34,5 @@ public class PropertyListRef implements TipiReference {
 			p.setAnyValue(val);
 		}
 	}
-
-
 
 }

@@ -38,7 +38,7 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
 
 	// private final ArrayList mySubQuestions = new ArrayList();
 
-//	private String enabledCondition = null;
+	// private String enabledCondition = null;
 
 	private String visibleCondition = null;
 
@@ -48,7 +48,7 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
 
 	private String myId;
 
-//	private PropertyComponent valueComponent = null;
+	// private PropertyComponent valueComponent = null;
 
 	private String subQuestionPath;
 
@@ -89,7 +89,7 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
 		}
 	}
 
-	public void loadData(final Navajo n, final TipiContext context)  {
+	public void loadData(final Navajo n, final TipiContext context) {
 		visibleCondition = null;
 		validationCondition = null;
 		//
@@ -109,10 +109,11 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
 		if (visibleConditionProperty != null) {
 			visibleCondition = visibleConditionProperty.getValue();
 		}
-//		Property enabledConditionProperty = m.getProperty("EnabledCondition");
-//		if (enabledConditionProperty != null) {
-//			enabledCondition = enabledConditionProperty.getValue();
-//		}
+		// Property enabledConditionProperty =
+		// m.getProperty("EnabledCondition");
+		// if (enabledConditionProperty != null) {
+		// enabledCondition = enabledConditionProperty.getValue();
+		// }
 		Property validationConditionProperty = m.getProperty("ValidationCondition");
 		if (validationConditionProperty != null) {
 			validationCondition = validationConditionProperty.getValue();
@@ -127,14 +128,14 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
 				System.err.println("No such property");
 			}
 			if ("Value".equals(o.getPropertyName())) {
-//				valueComponent = o;
+				// valueComponent = o;
 			}
 			o.addTipiEventListener(new TipiEventListener() {
-				public boolean performTipiEvent(String eventtype, Map<String,Object> source, boolean sync) throws TipiException {
+				public boolean performTipiEvent(String eventtype, Map<String, Object> source, boolean sync) throws TipiException {
 					updateQuestionList();
-//					System.err.println("Forwarding tipi event");
-		
-//					performTipiEvent(eventtype, source, sync);
+					// System.err.println("Forwarding tipi event");
+
+					// performTipiEvent(eventtype, source, sync);
 					return true;
 				}
 
@@ -150,7 +151,7 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
 		if (subQuestionPath != null) {
 			tdc = (TipiDataComponent) getTipiComponentByPath(subQuestionPath);
 		} else {
-//			System.err.println("NO SUBQUESTION PANEL DEFINED");
+			// System.err.println("NO SUBQUESTION PANEL DEFINED");
 		}
 		Message question = m.getMessage("Question");
 
@@ -167,7 +168,7 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
 					// System.err.println("USING SUBQUESTION COMPONENT:
 					// "+tdc.getPath());
 					TipiBaseQuestion tc = (TipiBaseQuestion) TipiInstantiateTipi.instantiateByDefinition(tdc, false, myId,
-							questionDefinitionName, null,null);
+							questionDefinitionName, null, null);
 					tc.setValue("messagePath", current.getFullMessageName());
 					tc.setValue("questionDefinitionName", questionDefinitionName);
 					tc.loadData(n, myContext);
@@ -242,8 +243,8 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
 		if (visibleCondition != null) {
 			setQuestionVisible(isRelevant());
 		}
-//		System.err.println("In updateQuestions");
-//		Thread.dumpStack();
+		// System.err.println("In updateQuestions");
+		// Thread.dumpStack();
 		boolean invalidFound = false;
 		List<TipiComponent> subQ = getSubQuestionList();
 		for (int i = 0; i < subQ.size(); i++) {
@@ -272,7 +273,7 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
 			tdc = getTipiComponentByPath(subQuestionPath);
 			if (tdc == null) {
 				System.err.println("::: NULL subcomponent");
-			} else { 
+			} else {
 				recursiveListQuestions(tdc, subQ);
 			}
 		} else {

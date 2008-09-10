@@ -7,9 +7,9 @@ public class ComponentFormatter extends TipiFormatter {
 
 	@Override
 	public String format(Object o) {
-		TipiComponent tc = (TipiComponent)o;
-		
-		return "{component://"+tc.getPath()+"}";
+		TipiComponent tc = (TipiComponent) o;
+
+		return "{component://" + tc.getPath() + "}";
 	}
 
 	@Override

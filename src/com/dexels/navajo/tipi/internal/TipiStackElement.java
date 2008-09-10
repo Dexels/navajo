@@ -7,31 +7,31 @@ public class TipiStackElement {
 	private int lineNr;
 	private TipiStackElement parent;
 	private TipiStackElement rootCause;
+
 	public TipiStackElement getRootCause() {
 		return rootCause;
 	}
 
 	public void setRootCause(TipiStackElement rootCause) {
-		if(rootCause!=this) {
+		if (rootCause != this) {
 			this.rootCause = rootCause;
 		}
 	}
-	private String name;
-	
 
+	private String name;
 
 	public TipiStackElement(TipiStackElement parent) {
 		// def
 		setParent(parent);
 	}
-	
-	public TipiStackElement(String name,XMLElement me, TipiStackElement parent) {
+
+	public TipiStackElement(String name, XMLElement me, TipiStackElement parent) {
 		setTitle(me.findTitle());
 		setLineNr(me.getStartLineNr());
 		setName(name);
 		setParent(parent);
 	}
-	
+
 	public String getName() {
 		return name;
 	}
@@ -39,45 +39,52 @@ public class TipiStackElement {
 	public void setName(String name) {
 		this.name = name;
 	}
+
 	public String getTitle() {
 		return title;
 	}
+
 	public void setTitle(String title) {
 		this.title = title;
 	}
+
 	public int getLineNr() {
 		return lineNr;
 	}
+
 	public void setLineNr(int lineNr) {
 		this.lineNr = lineNr;
 	}
+
 	public TipiStackElement getParent() {
 		return parent;
 	}
+
 	public void setParent(TipiStackElement parent) {
 		this.parent = parent;
 	}
 
 	public String createLine() {
-		return "       at "+getName()+" ("+getTitle()+":"+(getLineNr()+1)+")";
+		return "       at " + getName() + " (" + getTitle() + ":" + (getLineNr() + 1) + ")";
 	}
 
 	public void dumpStack(String message) {
-		System.err.println("Exception: "+message);
+		System.err.println("Exception: " + message);
 		dumpStack();
 	}
+
 	public void dumpStack() {
-//		Thread.dumpStack();
+		// Thread.dumpStack();
 		System.err.println(createLine());
-		if(getParent()!=null) {
+		if (getParent() != null) {
 			getParent().dumpStack();
 		} else {
-			if(rootCause!=null && rootCause!=this) {
+			if (rootCause != null && rootCause != this) {
 				System.err.println("Caused by:");
 				rootCause.dumpStack();
 			}
-//			System.err.println("No more parents");
+			// System.err.println("No more parents");
 		}
-		
+
 	}
 }

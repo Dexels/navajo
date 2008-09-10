@@ -33,10 +33,10 @@ public class TipiValue {
 
 	private String defaultValue = null;
 	private boolean required = false;
-	private HashMap<String,String> selectionMap;
+	private HashMap<String, String> selectionMap;
 
 	private final TipiComponent myComponent;
-	
+
 	// / private Object rawValue = null;
 
 	// private XMLElement myXml = null;
@@ -48,12 +48,12 @@ public class TipiValue {
 		tv.value = this.value;
 		tv.defaultValue = this.defaultValue;
 		tv.required = this.required;
-		if ( this.selectionMap != null ) {
-			tv.selectionMap = new HashMap<String,String>( this.selectionMap );
+		if (this.selectionMap != null) {
+			tv.selectionMap = new HashMap<String, String>(this.selectionMap);
 		}
 		return tv;
 	}
-	
+
 	public TipiValue(TipiComponent tc) {
 		myComponent = tc;
 	}
@@ -90,7 +90,7 @@ public class TipiValue {
 		if ("selection".equals(this.type)) {
 			List<XMLElement> options = xe.getChildren();
 			if (options.size() > 0) {
-				selectionMap = new HashMap<String,String>();
+				selectionMap = new HashMap<String, String>();
 				for (int i = 0; i < options.size(); i++) {
 					XMLElement option = options.get(i);
 					String value = option.getStringAttribute("value");
@@ -105,16 +105,17 @@ public class TipiValue {
 
 	public Property getProperty(Object object) {
 		try {
-			Property p = NavajoFactory.getInstance().createProperty(myComponent.getContext().getStateNavajo(), getName(), getType(), "", 0, "", getDirection());
+			Property p = NavajoFactory.getInstance().createProperty(myComponent.getContext().getStateNavajo(), getName(), getType(), "", 0,
+					"", getDirection());
 			p.setAnyValue(object);
-			p.setSubType("tipitype="+type);
+			p.setSubType("tipitype=" + type);
 			return p;
 		} catch (NavajoException e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
-	
+
 	public String toString() {
 		// if (myXml!=null) {
 		// return myXml.toString();
@@ -136,7 +137,7 @@ public class TipiValue {
 		if (direction != null) {
 			xe.setAttribute("direction", direction);
 		}
-		if(type!=null) {
+		if (type != null) {
 			xe.setAttribute("type", type);
 		}
 		return xe;
@@ -162,7 +163,7 @@ public class TipiValue {
 		required = r;
 	}
 
-	public void setSelectionMap(HashMap<String,String> m) {
+	public void setSelectionMap(HashMap<String, String> m) {
 		selectionMap = m;
 	}
 
@@ -216,6 +217,7 @@ public class TipiValue {
 			return null;
 		}
 	}
+
 	public String getValue() {
 		return value == null ? null : value.toString();
 	}

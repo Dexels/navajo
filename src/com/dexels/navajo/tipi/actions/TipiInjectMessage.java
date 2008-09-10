@@ -23,28 +23,27 @@ import com.dexels.navajo.tipi.internal.*;
  */
 public class TipiInjectMessage extends TipiAction {
 	public void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
-		
+
 		Operand messageOperand = getEvaluatedParameter("message", event);
 		Operand serviceOperand = getEvaluatedParameter("service", event);
 
-		if(messageOperand==null || messageOperand.value==null) {
+		if (messageOperand == null || messageOperand.value == null) {
 			throw new TipiException("Error injecting message: No message supplied!");
 		}
-		if(serviceOperand==null || serviceOperand.value==null) {
+		if (serviceOperand == null || serviceOperand.value == null) {
 			throw new TipiException("Error injecting message: No service supplied!");
 		}
 		Message message = (Message) messageOperand.value;
 		String service = (String) serviceOperand.value;
-		
+
 		Navajo nn = NavajoFactory.getInstance().createNavajo();
 		try {
 			nn.addMessage(message);
 		} catch (NavajoException e) {
-				throw new TipiException("Error injecting message: No service supplied!",e);
+			throw new TipiException("Error injecting message: No service supplied!", e);
 		}
-		
-		myContext.injectNavajo(service, nn);
 
+		myContext.injectNavajo(service, nn);
 
 	}
 }

@@ -24,7 +24,7 @@ import com.dexels.navajo.tipi.internal.*;
  */
 public class TipiDebugNavajo extends TipiAction {
 	public void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
-//		Operand tipi = getEvaluatedParameter("tipipath", event);
+		// Operand tipi = getEvaluatedParameter("tipipath", event);
 		Operand filename = getEvaluatedParameter("filename", event);
 		String file = null;
 		PrintStream w = null;
@@ -57,7 +57,7 @@ public class TipiDebugNavajo extends TipiAction {
 			e.printStackTrace();
 		} finally {
 			if (file != null) {
-				if(w!=null) {
+				if (w != null) {
 					w.close();
 				}
 			}

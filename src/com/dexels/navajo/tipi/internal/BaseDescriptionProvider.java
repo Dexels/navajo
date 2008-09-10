@@ -6,7 +6,7 @@ import com.dexels.navajo.tipi.*;
 
 public abstract class BaseDescriptionProvider implements DescriptionProvider {
 
-	protected final Map<String,String> myDescriptionMap = new HashMap<String,String>();
+	protected final Map<String, String> myDescriptionMap = new HashMap<String, String>();
 	protected final TipiContext myContext;
 
 	public BaseDescriptionProvider(TipiContext myContext) {

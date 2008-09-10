@@ -22,14 +22,12 @@ import com.dexels.navajo.tipi.internal.*;
  * @version 1.0
  */
 
-
-//<tipiaction name="insertMessage" class="TipiInsertMessage"
-//package="com.dexels.navajo.tipi.actions">
-//<param name="path" type="string" required="true"/>
-//<param name="value" type="object" required="true"/>
-//<param name="message" type="message" required="true"/>
-//</tipiaction>
-
+// <tipiaction name="insertMessage" class="TipiInsertMessage"
+// package="com.dexels.navajo.tipi.actions">
+// <param name="path" type="string" required="true"/>
+// <param name="value" type="object" required="true"/>
+// <param name="message" type="message" required="true"/>
+// </tipiaction>
 public class TipiRemoveMessage extends TipiAction {
 	public void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
 		Operand messageOperand = getEvaluatedParameter("message", event);
@@ -38,21 +36,21 @@ public class TipiRemoveMessage extends TipiAction {
 		}
 
 		Message arrayMessage = (Message) messageOperand.value;
-		if(!Message.MSG_TYPE_ARRAY.equals(arrayMessage.getType())) {
+		if (!Message.MSG_TYPE_ARRAY.equals(arrayMessage.getType())) {
 			throw new TipiException("Error in insertMessage. InsertMessage only works for array messages!");
 		}
 		Operand index = getEvaluatedParameter("index", event);
 		Integer ii = (Integer) index.value;
-		
+
 		// TODO: Perhaps refactor into NavajoDocument
-		Message mm= arrayMessage.getMessage(ii.intValue());
+		Message mm = arrayMessage.getMessage(ii.intValue());
 		arrayMessage.removeMessage(mm);
 		try {
 			myContext.unlink(mm);
 		} catch (NavajoException e) {
-			throw new TipiException("Error unlinking message: "+mm.getFullMessageName(),e);
+			throw new TipiException("Error unlinking message: " + mm.getFullMessageName(), e);
 		}
-		
+
 	}
 
 	public static void main(String[] args) {
@@ -65,4 +63,3 @@ public class TipiRemoveMessage extends TipiAction {
 
 	}
 }
-

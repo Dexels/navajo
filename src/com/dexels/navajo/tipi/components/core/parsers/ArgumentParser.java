@@ -27,7 +27,7 @@ public class ArgumentParser extends TipiTypeParser {
 
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
 		String arg = myContext.getArgument(expression);
-		System.err.println("Parsed argument: "+expression+" into: "+arg);
+		System.err.println("Parsed argument: " + expression + " into: " + arg);
 		return arg;
 	}
 

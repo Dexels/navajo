@@ -36,7 +36,7 @@ import java.util.*;
  * <P>
  * <DL>
  * <DT><B>Parsing XML Data</B></DT>
- * <DD> You can parse XML data using the following code:
+ * <DD>You can parse XML data using the following code:
  * <UL>
  * <CODE> XMLElement xml = new XMLElement();<BR>
  * FileReader reader = new FileReader("filename.xml");<BR>
@@ -46,7 +46,7 @@ import java.util.*;
  * </DL>
  * <DL>
  * <DT><B>Retrieving Attributes</B></DT>
- * <DD> You can enumerate the attributes of an element using the method
+ * <DD>You can enumerate the attributes of an element using the method
  * {@link #enumerateAttributeNames() enumerateAttributeNames}. The attribute
  * values can be retrieved using the method
  * {@link #getStringAttribute(java.lang.String) getStringAttribute}. The
@@ -64,13 +64,13 @@ import java.util.*;
  * </DL>
  * <DL>
  * <DT><B>Retrieving Child Elements</B></DT>
- * <DD> You can enumerate the children of an element using
+ * <DD>You can enumerate the children of an element using
  * {@link #enumerateChildren() enumerateChildren}. The number of child elements
- * can be retrieved using {@link #countChildren() countChildren}. </DD>
+ * can be retrieved using {@link #countChildren() countChildren}.</DD>
  * </DL>
  * <DL>
  * <DT><B>Elements Containing Character Data</B></DT>
- * <DD> If an elements contains character data, like in the following example:
+ * <DD>If an elements contains character data, like in the following example:
  * <UL>
  * <CODE> &lt;title&gt;The Title&lt;/title&gt; </CODE>
  * </UL>
@@ -79,9 +79,9 @@ import java.util.*;
  * </DL>
  * <DL>
  * <DT><B>Subclassing XMLElement</B></DT>
- * <DD> When subclassing XMLElement, you need to override the method
+ * <DD>When subclassing XMLElement, you need to override the method
  * {@link #createAnotherElement() createAnotherElement} which has to return a
- * new copy of the receiver. </DD>
+ * new copy of the receiver.</DD>
  * </DL>
  * <P>
  * 
@@ -122,29 +122,25 @@ public class XMLElement implements java.io.Serializable {
 	 * The attributes given to the element.
 	 * 
 	 * <dl>
-	 * <dt><b>Invariants:</b></dt>
-	 * <dd>
+	 * <dt><b>Invariants:</b></dt> <dd>
 	 * <ul>
-	 * <li>The field can be empty.
-	 * <li>The field is never <code>null</code>.
+	 * <li>The field can be empty. <li>The field is never <code>null</code>. 
 	 * <li>The keys and the values are strings.
 	 * </ul>
 	 * </dd>
 	 * </dl>
 	 */
-	private Map<String,String> attributes;
+	private Map<String, String> attributes;
 
 	/**
 	 * Child elements of the element.
 	 * 
 	 * <dl>
-	 * <dt><b>Invariants:</b></dt>
-	 * <dd>
+	 * <dt><b>Invariants:</b></dt> <dd>
 	 * <ul>
-	 * <li>The field can be empty.
-	 * <li>The field is never <code>null</code>.
-	 * <li>The elements are instances of <code>XMLElement</code> or a
-	 * subclass of <code>XMLElement</code>.
+	 * <li>The field can be empty. <li>The field is never <code>null</code>. 
+	 * <li>The elements are instances of <code>XMLElement</code> or a subclass
+	 * of <code>XMLElement</code>.
 	 * </ul>
 	 * </dd>
 	 * </dl>
@@ -155,14 +151,12 @@ public class XMLElement implements java.io.Serializable {
 	 * The name of the element.
 	 * 
 	 * <dl>
-	 * <dt><b>Invariants:</b></dt>
-	 * <dd>
+	 * <dt><b>Invariants:</b></dt> <dd>
 	 * <ul>
-	 * <li>The field is <code>null</code> iff the element is not initialized
-	 * by either parse or setName.
-	 * <li>If the field is not <code>null</code>, it's not empty.
-	 * <li>If the field is not <code>null</code>, it contains a valid XML
-	 * identifier.
+	 * <li>The field is <code>null</code> iff the element is not initialized by
+	 * either parse or setName. <li>If the field is not <code>null</code>, it's
+	 * not empty. <li>If the field is not <code>null</code>, it contains a valid
+	 * XML identifier.
 	 * </ul>
 	 * </dd>
 	 * </dl>
@@ -173,12 +167,10 @@ public class XMLElement implements java.io.Serializable {
 	 * The #PCDATA content of the object.
 	 * 
 	 * <dl>
-	 * <dt><b>Invariants:</b></dt>
-	 * <dd>
+	 * <dt><b>Invariants:</b></dt> <dd>
 	 * <ul>
 	 * <li>The field is <code>null</code> iff the element is not a #PCDATA
-	 * element.
-	 * <li>The field can be any string, including the empty string.
+	 * element. <li>The field can be any string, including the empty string.
 	 * </ul>
 	 * </dd>
 	 * </dl>
@@ -190,28 +182,24 @@ public class XMLElement implements java.io.Serializable {
 	 * without the &amp; and ; delimiters.
 	 * 
 	 * <dl>
-	 * <dt><b>Invariants:</b></dt>
-	 * <dd>
+	 * <dt><b>Invariants:</b></dt> <dd>
 	 * <ul>
-	 * <li>The field is never <code>null</code>.
-	 * <li>The field always contains the following associations:
-	 * "lt"&nbsp;=&gt;&nbsp;"&lt;", "gt"&nbsp;=&gt;&nbsp;"&gt;",
-	 * "quot"&nbsp;=&gt;&nbsp;"\"", "apos"&nbsp;=&gt;&nbsp;"'",
-	 * "amp"&nbsp;=&gt;&nbsp;"&amp;"
-	 * <li>The keys are strings
-	 * <li>The values are char arrays
+	 * <li>The field is never <code>null</code>. <li>The field always contains
+	 * the following associations: "lt"&nbsp;=&gt;&nbsp;"&lt;",
+	 * "gt"&nbsp;=&gt;&nbsp;"&gt;", "quot"&nbsp;=&gt;&nbsp;"\"",
+	 * "apos"&nbsp;=&gt;&nbsp;"'", "amp"&nbsp;=&gt;&nbsp;"&amp;" <li>The keys
+	 * are strings <li>The values are char arrays
 	 * </ul>
 	 * </dd>
 	 * </dl>
 	 */
-	private Hashtable<String,char[]> entities;
+	private Hashtable<String, char[]> entities;
 
 	/**
 	 * The line number where the element starts.
 	 * 
 	 * <dl>
-	 * <dt><b>Invariants:</b></dt>
-	 * <dd>
+	 * <dt><b>Invariants:</b></dt> <dd>
 	 * <ul>
 	 * <li><code>lineNr &gt= 0</code>
 	 * </ul>
@@ -220,8 +208,8 @@ public class XMLElement implements java.io.Serializable {
 	 */
 	// private int lineNr;
 	/**
-	 * <code>true</code> if the case of the element and attribute names are
-	 * case insensitive.
+	 * <code>true</code> if the case of the element and attribute names are case
+	 * insensitive.
 	 */
 	private boolean ignoreCase;
 
@@ -242,11 +230,9 @@ public class XMLElement implements java.io.Serializable {
 	 * The reader provided by the caller of the parse method.
 	 * 
 	 * <dl>
-	 * <dt><b>Invariants:</b></dt>
-	 * <dd>
+	 * <dt><b>Invariants:</b></dt> <dd>
 	 * <ul>
-	 * <li>The field is not <code>null</code> while the parse method is
-	 * running.
+	 * <li>The field is not <code>null</code> while the parse method is running.
 	 * </ul>
 	 * </dd>
 	 * </dl>
@@ -259,8 +245,7 @@ public class XMLElement implements java.io.Serializable {
 	 * The current line number in the source content.
 	 * 
 	 * <dl>
-	 * <dt><b>Invariants:</b></dt>
-	 * <dd>
+	 * <dt><b>Invariants:</b></dt> <dd>
 	 * <ul>
 	 * <li>parserLineNr &gt; 0 while the parse method is running.
 	 * </ul>
@@ -269,18 +254,18 @@ public class XMLElement implements java.io.Serializable {
 	 */
 	private int lineNr;
 
-	
 	/**
-	 * I added the possiblity to add a title to an element, for example a filename.
+	 * I added the possiblity to add a title to an element, for example a
+	 * filename.
 	 */
 	private String title = null;
-	
+
 	private XMLElement parent = null;
 
 	private int startOffset;
 
-	private final Map<String,Integer> startOffsetMap = new HashMap<String,Integer>();
-	private final Map<String,Integer> endOffsetMap = new HashMap<String,Integer>();
+	private final Map<String, Integer> startOffsetMap = new HashMap<String, Integer>();
+	private final Map<String, Integer> endOffsetMap = new HashMap<String, Integer>();
 
 	// private final Stack parseStack = new Stack();
 
@@ -288,21 +273,16 @@ public class XMLElement implements java.io.Serializable {
 	 * Creates and initializes a new XML element. Calling the construction is
 	 * equivalent to:
 	 * <ul>
-	 * <code>new XMLElement(new Hashtable(), false, true)
-	 * </code>
+	 * <code>new XMLElement(new Hashtable(), false, true) </code>
 	 * </ul>
 	 * 
 	 * <dl>
-	 * <dt><b>Postconditions:</b></dt>
-	 * <dd>
+	 * <dt><b>Postconditions:</b></dt> <dd>
 	 * <ul>
-	 * <li>countChildren() => 0
-	 * <li>enumerateChildren() => empty enumeration
-	 * <li>enumeratePropertyNames() => empty enumeration
-	 * <li>getChildren() => empty vector
-	 * <li>getContent() => ""
-	 * <li>getLineNr() => 0
-	 * <li>getName() => null
+	 * <li>countChildren() => 0 <li>enumerateChildren() => empty enumeration 
+	 * <li>enumeratePropertyNames() => empty enumeration <li>getChildren() =>
+	 * empty vector <li>getContent() => "" <li>getLineNr() => 0 <li>getName() =>
+	 * null
 	 * </ul>
 	 * </dd>
 	 * </dl>
@@ -314,52 +294,46 @@ public class XMLElement implements java.io.Serializable {
 	 *      XMLElement(Hashtable, boolean)
 	 */
 	public XMLElement() {
-		this(new Hashtable<String,char[]>(), false, true, true);
+		this(new Hashtable<String, char[]>(), false, true, true);
 	}
 
 	/**
 	 * Creates and initializes a new XML element. Calling the construction is
 	 * equivalent to:
 	 * <ul>
-	 * <code>new XMLElement(entities, false, true)
-	 * </code>
+	 * <code>new XMLElement(entities, false, true) </code>
 	 * </ul>
 	 * 
 	 * @param entities
 	 *            The entity conversion table.
 	 * 
-	 * </dl>
-	 * <dl>
-	 * <dt><b>Preconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li><code>entities != null</code>
-	 * </ul>
-	 * </dd>
-	 * </dl>
+	 *            </dl>
+	 *            <dl>
+	 *            <dt><b>Preconditions:</b></dt> <dd>
+	 *            <ul>
+	 *            <li><code>entities != null</code>
+	 *            </ul>
+	 *            </dd>
+	 *            </dl>
 	 * 
-	 * <dl>
-	 * <dt><b>Postconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li>countChildren() => 0
-	 * <li>enumerateChildren() => empty enumeration
-	 * <li>enumeratePropertyNames() => empty enumeration
-	 * <li>getChildren() => empty vector
-	 * <li>getContent() => ""
-	 * <li>getLineNr() => 0
-	 * <li>getName() => null
-	 * </ul>
-	 * </dd>
-	 * </dl>
-	 * <dl>
+	 *            <dl>
+	 *            <dt><b>Postconditions:</b></dt> <dd>
+	 *            <ul>
+	 *            <li>countChildren() => 0 <li>enumerateChildren() => empty
+	 *            enumeration <li>enumeratePropertyNames() => empty enumeration
+	 *            <li>getChildren() => empty vector <li>getContent() => "" <li>
+	 *            getLineNr() => 0 <li>getName() => null
+	 *            </ul>
+	 *            </dd>
+	 *            </dl>
+	 *            <dl>
 	 * 
 	 * @see nanoxml.XMLElement#XMLElement()
 	 * @see nanoxml.XMLElement#XMLElement(boolean)
 	 * @see nanoxml.XMLElement#XMLElement(java.util.Hashtable,boolean)
 	 *      XMLElement(Hashtable, boolean)
 	 */
-	public XMLElement(Hashtable<String,char[]> entities) {
+	public XMLElement(Hashtable<String, char[]> entities) {
 		this(entities, false, true, true);
 	}
 
@@ -372,25 +346,21 @@ public class XMLElement implements java.io.Serializable {
 	 * </ul>
 	 * 
 	 * @param skipLeadingWhitespace
-	 *            <code>true</code> if leading and trailing whitespace in
-	 *            PCDATA content has to be removed.
+	 *            <code>true</code> if leading and trailing whitespace in PCDATA
+	 *            content has to be removed.
 	 * 
-	 * </dl>
-	 * <dl>
-	 * <dt><b>Postconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li>countChildren() => 0
-	 * <li>enumerateChildren() => empty enumeration
-	 * <li>enumeratePropertyNames() => empty enumeration
-	 * <li>getChildren() => empty vector
-	 * <li>getContent() => ""
-	 * <li>getLineNr() => 0
-	 * <li>getName() => null
-	 * </ul>
-	 * </dd>
-	 * </dl>
-	 * <dl>
+	 *            </dl>
+	 *            <dl>
+	 *            <dt><b>Postconditions:</b></dt> <dd>
+	 *            <ul>
+	 *            <li>countChildren() => 0 <li>enumerateChildren() => empty
+	 *            enumeration <li>enumeratePropertyNames() => empty enumeration
+	 *            <li>getChildren() => empty vector <li>getContent() => "" <li>
+	 *            getLineNr() => 0 <li>getName() => null
+	 *            </ul>
+	 *            </dd>
+	 *            </dl>
+	 *            <dl>
 	 * 
 	 * @see nanoxml.XMLElement#XMLElement()
 	 * @see nanoxml.XMLElement#XMLElement(java.util.Hashtable)
@@ -399,55 +369,49 @@ public class XMLElement implements java.io.Serializable {
 	 *      XMLElement(Hashtable, boolean)
 	 */
 	public XMLElement(boolean skipLeadingWhitespace) {
-		this(new Hashtable<String,char[]>(), skipLeadingWhitespace, true, true);
+		this(new Hashtable<String, char[]>(), skipLeadingWhitespace, true, true);
 	}
 
 	/**
 	 * Creates and initializes a new XML element. Calling the construction is
 	 * equivalent to:
 	 * <ul>
-	 * <code>new XMLElement(entities, skipLeadingWhitespace, true)
-	 * </code>
+	 * <code>new XMLElement(entities, skipLeadingWhitespace, true) </code>
 	 * </ul>
 	 * 
 	 * @param entities
 	 *            The entity conversion table.
 	 * @param skipLeadingWhitespace
-	 *            <code>true</code> if leading and trailing whitespace in
-	 *            PCDATA content has to be removed.
+	 *            <code>true</code> if leading and trailing whitespace in PCDATA
+	 *            content has to be removed.
 	 * 
-	 * </dl>
-	 * <dl>
-	 * <dt><b>Preconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li><code>entities != null</code>
-	 * </ul>
-	 * </dd>
-	 * </dl>
+	 *            </dl>
+	 *            <dl>
+	 *            <dt><b>Preconditions:</b></dt> <dd>
+	 *            <ul>
+	 *            <li><code>entities != null</code>
+	 *            </ul>
+	 *            </dd>
+	 *            </dl>
 	 * 
-	 * <dl>
-	 * <dt><b>Postconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li>countChildren() => 0
-	 * <li>enumerateChildren() => empty enumeration
-	 * <li>enumeratePropertyNames() => empty enumeration
-	 * <li>getChildren() => empty vector
-	 * <li>getContent() => ""
-	 * <li>getLineNr() => 0
-	 * <li>getName() => null
-	 * </ul>
-	 * </dd>
-	 * </dl>
-	 * <dl>
+	 *            <dl>
+	 *            <dt><b>Postconditions:</b></dt> <dd>
+	 *            <ul>
+	 *            <li>countChildren() => 0 <li>enumerateChildren() => empty
+	 *            enumeration <li>enumeratePropertyNames() => empty enumeration
+	 *            <li>getChildren() => empty vector <li>getContent() => "" <li>
+	 *            getLineNr() => 0 <li>getName() => null
+	 *            </ul>
+	 *            </dd>
+	 *            </dl>
+	 *            <dl>
 	 * 
 	 * @see nanoxml.XMLElement#XMLElement()
 	 * @see nanoxml.XMLElement#XMLElement(boolean)
 	 * @see nanoxml.XMLElement#XMLElement(java.util.Hashtable)
 	 *      XMLElement(Hashtable)
 	 */
-	public XMLElement(Hashtable<String,char[]> entities, boolean skipLeadingWhitespace) {
+	public XMLElement(Hashtable<String, char[]> entities, boolean skipLeadingWhitespace) {
 		this(entities, skipLeadingWhitespace, true, true);
 	}
 
@@ -457,37 +421,32 @@ public class XMLElement implements java.io.Serializable {
 	 * @param entities
 	 *            The entity conversion table.
 	 * @param skipLeadingWhitespace
-	 *            <code>true</code> if leading and trailing whitespace in
-	 *            PCDATA content has to be removed.
+	 *            <code>true</code> if leading and trailing whitespace in PCDATA
+	 *            content has to be removed.
 	 * @param ignoreCase
 	 *            <code>true</code> if the case of element and attribute names
 	 *            have to be ignored.
 	 * 
-	 * </dl>
-	 * <dl>
-	 * <dt><b>Preconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li><code>entities != null</code>
-	 * </ul>
-	 * </dd>
-	 * </dl>
+	 *            </dl>
+	 *            <dl>
+	 *            <dt><b>Preconditions:</b></dt> <dd>
+	 *            <ul>
+	 *            <li><code>entities != null</code>
+	 *            </ul>
+	 *            </dd>
+	 *            </dl>
 	 * 
-	 * <dl>
-	 * <dt><b>Postconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li>countChildren() => 0
-	 * <li>enumerateChildren() => empty enumeration
-	 * <li>enumeratePropertyNames() => empty enumeration
-	 * <li>getChildren() => empty vector
-	 * <li>getContent() => ""
-	 * <li>getLineNr() => 0
-	 * <li>getName() => null
-	 * </ul>
-	 * </dd>
-	 * </dl>
-	 * <dl>
+	 *            <dl>
+	 *            <dt><b>Postconditions:</b></dt> <dd>
+	 *            <ul>
+	 *            <li>countChildren() => 0 <li>enumerateChildren() => empty
+	 *            enumeration <li>enumeratePropertyNames() => empty enumeration
+	 *            <li>getChildren() => empty vector <li>getContent() => "" <li>
+	 *            getLineNr() => 0 <li>getName() => null
+	 *            </ul>
+	 *            </dd>
+	 *            </dl>
+	 *            <dl>
 	 * 
 	 * @see nanoxml.XMLElement#XMLElement()
 	 * @see nanoxml.XMLElement#XMLElement(boolean)
@@ -496,7 +455,7 @@ public class XMLElement implements java.io.Serializable {
 	 * @see nanoxml.XMLElement#XMLElement(java.util.Hashtable,boolean)
 	 *      XMLElement(Hashtable, boolean)
 	 */
-	public XMLElement(Hashtable<String,char[]> entities, boolean skipLeadingWhitespace, boolean ignoreCase) {
+	public XMLElement(Hashtable<String, char[]> entities, boolean skipLeadingWhitespace, boolean ignoreCase) {
 		this(entities, skipLeadingWhitespace, true, ignoreCase);
 	}
 
@@ -510,8 +469,8 @@ public class XMLElement implements java.io.Serializable {
 	 * @param entities
 	 *            The entity conversion table.
 	 * @param skipLeadingWhitespace
-	 *            <code>true</code> if leading and trailing whitespace in
-	 *            PCDATA content has to be removed.
+	 *            <code>true</code> if leading and trailing whitespace in PCDATA
+	 *            content has to be removed.
 	 * @param fillBasicConversionTable
 	 *            <code>true</code> if the basic entities need to be added to
 	 *            the entity list.
@@ -519,47 +478,43 @@ public class XMLElement implements java.io.Serializable {
 	 *            <code>true</code> if the case of element and attribute names
 	 *            have to be ignored.
 	 * 
-	 * </dl>
-	 * <dl>
-	 * <dt><b>Preconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li><code>entities != null</code>
-	 * <li>if <code>fillBasicConversionTable == false</code> then
-	 * <code>entities</code> contains at least the following entries:
-	 * <code>amp</code>, <code>lt</code>, <code>gt</code>,
-	 * <code>apos</code> and <code>quot</code>
-	 * </ul>
-	 * </dd>
-	 * </dl>
+	 *            </dl>
+	 *            <dl>
+	 *            <dt><b>Preconditions:</b></dt> <dd>
+	 *            <ul>
+	 *            <li><code>entities != null</code> <li>if <code>
+	 *            fillBasicConversionTable == false</code> then <code>entities
+	 *            </code> contains at least the following entries: <code>amp
+	 *            </code>, <code>lt</code>, <code>gt</code>, <code>apos</code>
+	 *            and <code>quot</code>
+	 *            </ul>
+	 *            </dd>
+	 *            </dl>
 	 * 
-	 * <dl>
-	 * <dt><b>Postconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li>countChildren() => 0
-	 * <li>enumerateChildren() => empty enumeration
-	 * <li>enumeratePropertyNames() => empty enumeration
-	 * <li>getChildren() => empty vector
-	 * <li>getContent() => ""
-	 * <li>getLineNr() => 0
-	 * <li>getName() => null
-	 * </ul>
-	 * </dd>
-	 * </dl>
-	 * <dl>
+	 *            <dl>
+	 *            <dt><b>Postconditions:</b></dt> <dd>
+	 *            <ul>
+	 *            <li>countChildren() => 0 <li>enumerateChildren() => empty
+	 *            enumeration <li>enumeratePropertyNames() => empty enumeration
+	 *            <li>getChildren() => empty vector <li>getContent() => "" <li>
+	 *            getLineNr() => 0 <li>getName() => null
+	 *            </ul>
+	 *            </dd>
+	 *            </dl>
+	 *            <dl>
 	 * 
 	 * @see nanoxml.XMLElement#createAnotherElement()
 	 */
-	protected XMLElement(Hashtable<String,char[]> entities, boolean skipLeadingWhitespace, boolean fillBasicConversionTable, boolean ignoreCase) {
+	protected XMLElement(Hashtable<String, char[]> entities, boolean skipLeadingWhitespace, boolean fillBasicConversionTable,
+			boolean ignoreCase) {
 		this.ignoreWhitespace = skipLeadingWhitespace;
 		this.ignoreCase = ignoreCase;
 		this.name = null;
 		this.contents = "";
-		this.attributes = new Hashtable<String,String>();
+		this.attributes = new Hashtable<String, String>();
 		this.children = new Vector<XMLElement>();
 		this.entities = entities;
-//		Enumeration<String> en = this.entities.keys();
+		// Enumeration<String> en = this.entities.keys();
 		if (fillBasicConversionTable) {
 			this.entities.put("amp", new char[] { '&' });
 			this.entities.put("quot", new char[] { '"' });
@@ -575,29 +530,27 @@ public class XMLElement implements java.io.Serializable {
 	 * @param child
 	 *            The child element to add.
 	 * 
-	 * </dl>
-	 * <dl>
-	 * <dt><b>Preconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li><code>child != null</code>
-	 * <li><code>child.getName() != null</code>
-	 * <li><code>child</code> does not have a parent element
-	 * </ul>
-	 * </dd>
-	 * </dl>
+	 *            </dl>
+	 *            <dl>
+	 *            <dt><b>Preconditions:</b></dt> <dd>
+	 *            <ul>
+	 *            <li><code>child != null</code> <li><code>child.getName() !=
+	 *            null</code> <li><code>child</code> does not have a parent
+	 *            element
+	 *            </ul>
+	 *            </dd>
+	 *            </dl>
 	 * 
-	 * <dl>
-	 * <dt><b>Postconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li>countChildren() => old.countChildren() + 1
-	 * <li>enumerateChildren() => old.enumerateChildren() + child
-	 * <li>getChildren() => old.enumerateChildren() + child
-	 * </ul>
-	 * </dd>
-	 * </dl>
-	 * <dl>
+	 *            <dl>
+	 *            <dt><b>Postconditions:</b></dt> <dd>
+	 *            <ul>
+	 *            <li>countChildren() => old.countChildren() + 1 <li>
+	 *            enumerateChildren() => old.enumerateChildren() + child <li>
+	 *            getChildren() => old.enumerateChildren() + child
+	 *            </ul>
+	 *            </dd>
+	 *            </dl>
+	 *            <dl>
 	 * 
 	 * @see nanoxml.XMLElement#countChildren()
 	 * @see nanoxml.XMLElement#enumerateChildren()
@@ -618,28 +571,25 @@ public class XMLElement implements java.io.Serializable {
 	 * @param value
 	 *            The value of the attribute.
 	 * 
-	 * </dl>
-	 * <dl>
-	 * <dt><b>Preconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li><code>name != null</code>
-	 * <li><code>name</code> is a valid XML identifier
-	 * <li><code>value != null</code>
-	 * </ul>
-	 * </dd>
-	 * </dl>
+	 *            </dl>
+	 *            <dl>
+	 *            <dt><b>Preconditions:</b></dt> <dd>
+	 *            <ul>
+	 *            <li><code>name != null</code> <li><code>name</code> is a valid
+	 *            XML identifier <li><code>value != null</code>
+	 *            </ul>
+	 *            </dd>
+	 *            </dl>
 	 * 
-	 * <dl>
-	 * <dt><b>Postconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li>enumerateAttributeNames() => old.enumerateAttributeNames() + name
-	 * <li>getAttribute(name) => value
-	 * </ul>
-	 * </dd>
-	 * </dl>
-	 * <dl>
+	 *            <dl>
+	 *            <dt><b>Postconditions:</b></dt> <dd>
+	 *            <ul>
+	 *            <li>enumerateAttributeNames() => old.enumerateAttributeNames()
+	 *            + name <li>getAttribute(name) => value
+	 *            </ul>
+	 *            </dd>
+	 *            </dl>
+	 *            <dl>
 	 * 
 	 * @see nanoxml.XMLElement#setDoubleAttribute(java.lang.String, double)
 	 *      setDoubleAttribute(String, double)
@@ -668,7 +618,6 @@ public class XMLElement implements java.io.Serializable {
 		this.attributes.put(name, value.toString());
 	}
 
-
 	/**
 	 * Adds or modifies an attribute.
 	 * 
@@ -677,27 +626,25 @@ public class XMLElement implements java.io.Serializable {
 	 * @param value
 	 *            The value of the attribute.
 	 * 
-	 * </dl>
-	 * <dl>
-	 * <dt><b>Preconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li><code>name != null</code>
-	 * <li><code>name</code> is a valid XML identifier
-	 * </ul>
-	 * </dd>
-	 * </dl>
+	 *            </dl>
+	 *            <dl>
+	 *            <dt><b>Preconditions:</b></dt> <dd>
+	 *            <ul>
+	 *            <li><code>name != null</code> <li><code>name</code> is a valid
+	 *            XML identifier
+	 *            </ul>
+	 *            </dd>
+	 *            </dl>
 	 * 
-	 * <dl>
-	 * <dt><b>Postconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li>enumerateAttributeNames() => old.enumerateAttributeNames() + name
-	 * <li>getIntAttribute(name) => value
-	 * </ul>
-	 * </dd>
-	 * </dl>
-	 * <dl>
+	 *            <dl>
+	 *            <dt><b>Postconditions:</b></dt> <dd>
+	 *            <ul>
+	 *            <li>enumerateAttributeNames() => old.enumerateAttributeNames()
+	 *            + name <li>getIntAttribute(name) => value
+	 *            </ul>
+	 *            </dd>
+	 *            </dl>
+	 *            <dl>
 	 * 
 	 * @see nanoxml.XMLElement#setDoubleAttribute(java.lang.String, double)
 	 *      setDoubleAttribute(String, double)
@@ -721,7 +668,6 @@ public class XMLElement implements java.io.Serializable {
 		this.attributes.put(name, Integer.toString(value));
 	}
 
-
 	/**
 	 * Adds or modifies an attribute.
 	 * 
@@ -730,27 +676,25 @@ public class XMLElement implements java.io.Serializable {
 	 * @param value
 	 *            The value of the attribute.
 	 * 
-	 * </dl>
-	 * <dl>
-	 * <dt><b>Preconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li><code>name != null</code>
-	 * <li><code>name</code> is a valid XML identifier
-	 * </ul>
-	 * </dd>
-	 * </dl>
+	 *            </dl>
+	 *            <dl>
+	 *            <dt><b>Preconditions:</b></dt> <dd>
+	 *            <ul>
+	 *            <li><code>name != null</code> <li><code>name</code> is a valid
+	 *            XML identifier
+	 *            </ul>
+	 *            </dd>
+	 *            </dl>
 	 * 
-	 * <dl>
-	 * <dt><b>Postconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li>enumerateAttributeNames() => old.enumerateAttributeNames() + name
-	 * <li>getDoubleAttribute(name) => value
-	 * </ul>
-	 * </dd>
-	 * </dl>
-	 * <dl>
+	 *            <dl>
+	 *            <dt><b>Postconditions:</b></dt> <dd>
+	 *            <ul>
+	 *            <li>enumerateAttributeNames() => old.enumerateAttributeNames()
+	 *            + name <li>getDoubleAttribute(name) => value
+	 *            </ul>
+	 *            </dd>
+	 *            </dl>
+	 *            <dl>
 	 * 
 	 * @see nanoxml.XMLElement#setIntAttribute(java.lang.String, int)
 	 *      setIntAttribute(String, int)
@@ -774,13 +718,11 @@ public class XMLElement implements java.io.Serializable {
 		this.attributes.put(name, Double.toString(value));
 	}
 
-
 	/**
 	 * Returns the number of child elements of the element.
 	 * 
 	 * <dl>
-	 * <dt><b>Postconditions:</b></dt>
-	 * <dd>
+	 * <dt><b>Postconditions:</b></dt> <dd>
 	 * <ul>
 	 * <li><code>result >= 0</code>
 	 * </ul>
@@ -801,8 +743,7 @@ public class XMLElement implements java.io.Serializable {
 	 * Enumerates the attribute names.
 	 * 
 	 * <dl>
-	 * <dt><b>Postconditions:</b></dt>
-	 * <dd>
+	 * <dt><b>Postconditions:</b></dt> <dd>
 	 * <ul>
 	 * <li><code>result != null</code>
 	 * </ul>
@@ -853,14 +794,11 @@ public class XMLElement implements java.io.Serializable {
 		return this.attributes.keySet().iterator();
 	}
 
-
-
 	/**
 	 * Enumerates the child elements.
 	 * 
 	 * <dl>
-	 * <dt><b>Postconditions:</b></dt>
-	 * <dd>
+	 * <dt><b>Postconditions:</b></dt> <dd>
 	 * <ul>
 	 * <li><code>result != null</code>
 	 * </ul>
@@ -881,8 +819,7 @@ public class XMLElement implements java.io.Serializable {
 	 * Returns the child elements as a Vector. It is safe to modify this Vector.
 	 * 
 	 * <dl>
-	 * <dt><b>Postconditions:</b></dt>
-	 * <dd>
+	 * <dt><b>Postconditions:</b></dt> <dd>
 	 * <ul>
 	 * <li><code>result != null</code>
 	 * </ul>
@@ -900,7 +837,6 @@ public class XMLElement implements java.io.Serializable {
 		return children;
 	}
 
-
 	/**
 	 * Returns the PCDATA content of the object. If there is no such content,
 	 * <CODE>null</CODE> is returned.
@@ -916,8 +852,7 @@ public class XMLElement implements java.io.Serializable {
 	 * This method returns <code>0</code> there is no associated source data.
 	 * 
 	 * <dl>
-	 * <dt><b>Postconditions:</b></dt>
-	 * <dd>
+	 * <dt><b>Postconditions:</b></dt> <dd>
 	 * <ul>
 	 * <li><code>result >= 0</code>
 	 * </ul>
@@ -966,17 +901,16 @@ public class XMLElement implements java.io.Serializable {
 	 * @param name
 	 *            The name of the attribute.
 	 * 
-	 * </dl>
-	 * <dl>
-	 * <dt><b>Preconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li><code>name != null</code>
-	 * <li><code>name</code> is a valid XML identifier
-	 * </ul>
-	 * </dd>
-	 * </dl>
-	 * <dl>
+	 *            </dl>
+	 *            <dl>
+	 *            <dt><b>Preconditions:</b></dt> <dd>
+	 *            <ul>
+	 *            <li><code>name != null</code> <li><code>name</code> is a valid
+	 *            XML identifier
+	 *            </ul>
+	 *            </dd>
+	 *            </dl>
+	 *            <dl>
 	 * 
 	 * @see nanoxml.XMLElement#setAttribute(java.lang.String, java.lang.Object)
 	 *      setAttribute(String, Object)
@@ -1002,17 +936,16 @@ public class XMLElement implements java.io.Serializable {
 	 * @param defaultValue
 	 *            Key to use if the attribute is missing.
 	 * 
-	 * </dl>
-	 * <dl>
-	 * <dt><b>Preconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li><code>name != null</code>
-	 * <li><code>name</code> is a valid XML identifier
-	 * </ul>
-	 * </dd>
-	 * </dl>
-	 * <dl>
+	 *            </dl>
+	 *            <dl>
+	 *            <dt><b>Preconditions:</b></dt> <dd>
+	 *            <ul>
+	 *            <li><code>name != null</code> <li><code>name</code> is a valid
+	 *            XML identifier
+	 *            </ul>
+	 *            </dd>
+	 *            </dl>
+	 *            <dl>
 	 * 
 	 * @see nanoxml.XMLElement#setAttribute(java.lang.String, java.lang.Object)
 	 *      setAttribute(String, Object)
@@ -1036,7 +969,6 @@ public class XMLElement implements java.io.Serializable {
 		return value;
 	}
 
-
 	/**
 	 * Returns an attribute of the element. If the attribute doesn't exist,
 	 * <code>null</code> is returned.
@@ -1044,17 +976,16 @@ public class XMLElement implements java.io.Serializable {
 	 * @param name
 	 *            The name of the attribute.
 	 * 
-	 * </dl>
-	 * <dl>
-	 * <dt><b>Preconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li><code>name != null</code>
-	 * <li><code>name</code> is a valid XML identifier
-	 * </ul>
-	 * </dd>
-	 * </dl>
-	 * <dl>
+	 *            </dl>
+	 *            <dl>
+	 *            <dt><b>Preconditions:</b></dt> <dd>
+	 *            <ul>
+	 *            <li><code>name != null</code> <li><code>name</code> is a valid
+	 *            XML identifier
+	 *            </ul>
+	 *            </dd>
+	 *            </dl>
+	 *            <dl>
 	 * 
 	 * @see nanoxml.XMLElement#setAttribute(java.lang.String, java.lang.Object)
 	 *      setAttribute(String, Object)
@@ -1080,17 +1011,16 @@ public class XMLElement implements java.io.Serializable {
 	 * @param defaultValue
 	 *            Key to use if the attribute is missing.
 	 * 
-	 * </dl>
-	 * <dl>
-	 * <dt><b>Preconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li><code>name != null</code>
-	 * <li><code>name</code> is a valid XML identifier
-	 * </ul>
-	 * </dd>
-	 * </dl>
-	 * <dl>
+	 *            </dl>
+	 *            <dl>
+	 *            <dt><b>Preconditions:</b></dt> <dd>
+	 *            <ul>
+	 *            <li><code>name != null</code> <li><code>name</code> is a valid
+	 *            XML identifier
+	 *            </ul>
+	 *            </dd>
+	 *            </dl>
+	 *            <dl>
 	 * 
 	 * @see nanoxml.XMLElement#setAttribute(java.lang.String, java.lang.Object)
 	 *      setAttribute(String, Object)
@@ -1107,7 +1037,6 @@ public class XMLElement implements java.io.Serializable {
 		return (String) this.getAttribute(name, defaultValue);
 	}
 
-
 	/**
 	 * Returns an attribute of the element. If the attribute doesn't exist,
 	 * <code>0</code> is returned.
@@ -1115,17 +1044,16 @@ public class XMLElement implements java.io.Serializable {
 	 * @param name
 	 *            The name of the attribute.
 	 * 
-	 * </dl>
-	 * <dl>
-	 * <dt><b>Preconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li><code>name != null</code>
-	 * <li><code>name</code> is a valid XML identifier
-	 * </ul>
-	 * </dd>
-	 * </dl>
-	 * <dl>
+	 *            </dl>
+	 *            <dl>
+	 *            <dt><b>Preconditions:</b></dt> <dd>
+	 *            <ul>
+	 *            <li><code>name != null</code> <li><code>name</code> is a valid
+	 *            XML identifier
+	 *            </ul>
+	 *            </dd>
+	 *            </dl>
+	 *            <dl>
 	 * 
 	 * @see nanoxml.XMLElement#setIntAttribute(java.lang.String, int)
 	 *      setIntAttribute(String, int)
@@ -1149,17 +1077,16 @@ public class XMLElement implements java.io.Serializable {
 	 * @param defaultValue
 	 *            Key to use if the attribute is missing.
 	 * 
-	 * </dl>
-	 * <dl>
-	 * <dt><b>Preconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li><code>name != null</code>
-	 * <li><code>name</code> is a valid XML identifier
-	 * </ul>
-	 * </dd>
-	 * </dl>
-	 * <dl>
+	 *            </dl>
+	 *            <dl>
+	 *            <dt><b>Preconditions:</b></dt> <dd>
+	 *            <ul>
+	 *            <li><code>name != null</code> <li><code>name</code> is a valid
+	 *            XML identifier
+	 *            </ul>
+	 *            </dd>
+	 *            </dl>
+	 *            <dl>
 	 * 
 	 * @see nanoxml.XMLElement#setIntAttribute(java.lang.String, int)
 	 *      setIntAttribute(String, int)
@@ -1186,7 +1113,6 @@ public class XMLElement implements java.io.Serializable {
 		}
 	}
 
-
 	/**
 	 * Returns an attribute of the element. If the attribute doesn't exist,
 	 * <code>0.0</code> is returned.
@@ -1194,17 +1120,16 @@ public class XMLElement implements java.io.Serializable {
 	 * @param name
 	 *            The name of the attribute.
 	 * 
-	 * </dl>
-	 * <dl>
-	 * <dt><b>Preconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li><code>name != null</code>
-	 * <li><code>name</code> is a valid XML identifier
-	 * </ul>
-	 * </dd>
-	 * </dl>
-	 * <dl>
+	 *            </dl>
+	 *            <dl>
+	 *            <dt><b>Preconditions:</b></dt> <dd>
+	 *            <ul>
+	 *            <li><code>name != null</code> <li><code>name</code> is a valid
+	 *            XML identifier
+	 *            </ul>
+	 *            </dd>
+	 *            </dl>
+	 *            <dl>
 	 * 
 	 * @see nanoxml.XMLElement#setDoubleAttribute(java.lang.String, double)
 	 *      setDoubleAttribute(String, double)
@@ -1228,17 +1153,16 @@ public class XMLElement implements java.io.Serializable {
 	 * @param defaultValue
 	 *            Key to use if the attribute is missing.
 	 * 
-	 * </dl>
-	 * <dl>
-	 * <dt><b>Preconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li><code>name != null</code>
-	 * <li><code>name</code> is a valid XML identifier
-	 * </ul>
-	 * </dd>
-	 * </dl>
-	 * <dl>
+	 *            </dl>
+	 *            <dl>
+	 *            <dt><b>Preconditions:</b></dt> <dd>
+	 *            <ul>
+	 *            <li><code>name != null</code> <li><code>name</code> is a valid
+	 *            XML identifier
+	 *            </ul>
+	 *            </dd>
+	 *            </dl>
+	 *            <dl>
 	 * 
 	 * @see nanoxml.XMLElement#setDoubleAttribute(java.lang.String, double)
 	 *      setDoubleAttribute(String, double)
@@ -1265,15 +1189,13 @@ public class XMLElement implements java.io.Serializable {
 		}
 	}
 
-
 	/**
 	 * Returns an attribute of the element. If the attribute doesn't exist,
 	 * <code>defaultValue</code> is returned. If the value of the attribute is
-	 * equal to <code>trueValue</code>, <code>true</code> is returned. If
-	 * the value of the attribute is equal to <code>falseValue</code>,
-	 * <code>false</code> is returned. If the value doesn't match
-	 * <code>trueValue</code> or <code>falseValue</code>, an exception is
-	 * thrown.
+	 * equal to <code>trueValue</code>, <code>true</code> is returned. If the
+	 * value of the attribute is equal to <code>falseValue</code>, <code>false
+	 * </code> is returned. If the value doesn't match <code>trueValue</code> or
+	 * <code>falseValue</code>, an exception is thrown.
 	 * 
 	 * @param name
 	 *            The name of the attribute.
@@ -1284,19 +1206,17 @@ public class XMLElement implements java.io.Serializable {
 	 * @param defaultValue
 	 *            Value to use if the attribute is missing.
 	 * 
-	 * </dl>
-	 * <dl>
-	 * <dt><b>Preconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li><code>name != null</code>
-	 * <li><code>name</code> is a valid XML identifier
-	 * <li><code>trueValue</code> and <code>falseValue</code> are different
-	 * strings.
-	 * </ul>
-	 * </dd>
-	 * </dl>
-	 * <dl>
+	 *            </dl>
+	 *            <dl>
+	 *            <dt><b>Preconditions:</b></dt> <dd>
+	 *            <ul>
+	 *            <li><code>name != null</code> <li><code>name</code> is a valid
+	 *            XML identifier <li><code>trueValue</code> and <code>falseValue
+	 *            </code> are different strings.
+	 *            </ul>
+	 *            </dd>
+	 *            </dl>
+	 *            <dl>
 	 * 
 	 * @see nanoxml.XMLElement#setAttribute(java.lang.String, java.lang.Object)
 	 *      setAttribute(String, Object)
@@ -1320,12 +1240,6 @@ public class XMLElement implements java.io.Serializable {
 		}
 	}
 
-
-
-
-
-
-
 	/**
 	 * Returns the name of the element.
 	 * 
@@ -1335,36 +1249,33 @@ public class XMLElement implements java.io.Serializable {
 		return this.name;
 	}
 
-
 	/**
 	 * Reads one XML element from a java.io.Reader and parses it.
 	 * 
 	 * @param reader
 	 *            The reader from which to retrieve the XML data.
 	 * 
-	 * </dl>
-	 * <dl>
-	 * <dt><b>Preconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li><code>reader != null</code>
-	 * <li><code>reader</code> is not closed
-	 * </ul>
-	 * </dd>
-	 * </dl>
+	 *            </dl>
+	 *            <dl>
+	 *            <dt><b>Preconditions:</b></dt> <dd>
+	 *            <ul>
+	 *            <li><code>reader != null</code> <li><code>reader</code> is not
+	 *            closed
+	 *            </ul>
+	 *            </dd>
+	 *            </dl>
 	 * 
-	 * <dl>
-	 * <dt><b>Postconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li>the state of the receiver is updated to reflect the XML element
-	 * parsed from the reader
-	 * <li>the reader points to the first character following the last '&gt;'
-	 * character of the XML element
-	 * </ul>
-	 * </dd>
-	 * </dl>
-	 * <dl>
+	 *            <dl>
+	 *            <dt><b>Postconditions:</b></dt> <dd>
+	 *            <ul>
+	 *            <li>the state of the receiver is updated to reflect the XML
+	 *            element parsed from the reader <li>the reader points to the
+	 *            first character following the last '&gt;' character of the XML
+	 *            element
+	 *            </ul>
+	 *            </dd>
+	 *            </dl>
+	 *            <dl>
 	 * 
 	 * @throws java.io.IOException
 	 *             If an error occured while reading the input.
@@ -1383,29 +1294,27 @@ public class XMLElement implements java.io.Serializable {
 	 * @param startingLineNr
 	 *            The line number of the first line in the data.
 	 * 
-	 * </dl>
-	 * <dl>
-	 * <dt><b>Preconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li><code>reader != null</code>
-	 * <li><code>reader</code> is not closed
-	 * </ul>
-	 * </dd>
-	 * </dl>
+	 *            </dl>
+	 *            <dl>
+	 *            <dt><b>Preconditions:</b></dt> <dd>
+	 *            <ul>
+	 *            <li><code>reader != null</code> <li><code>reader</code> is not
+	 *            closed
+	 *            </ul>
+	 *            </dd>
+	 *            </dl>
 	 * 
-	 * <dl>
-	 * <dt><b>Postconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li>the state of the receiver is updated to reflect the XML element
-	 * parsed from the reader
-	 * <li>the reader points to the first character following the last '&gt;'
-	 * character of the XML element
-	 * </ul>
-	 * </dd>
-	 * </dl>
-	 * <dl>
+	 *            <dl>
+	 *            <dt><b>Postconditions:</b></dt> <dd>
+	 *            <ul>
+	 *            <li>the state of the receiver is updated to reflect the XML
+	 *            element parsed from the reader <li>the reader points to the
+	 *            first character following the last '&gt;' character of the XML
+	 *            element
+	 *            </ul>
+	 *            </dd>
+	 *            </dl>
+	 *            <dl>
 	 * 
 	 * @throws java.io.IOException
 	 *             If an error occured while reading the input.
@@ -1444,27 +1353,25 @@ public class XMLElement implements java.io.Serializable {
 	 * @param reader
 	 *            The reader from which to retrieve the XML data.
 	 * 
-	 * </dl>
-	 * <dl>
-	 * <dt><b>Preconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li><code>string != null</code>
-	 * <li><code>string.length() &gt; 0</code>
-	 * </ul>
-	 * </dd>
-	 * </dl>
+	 *            </dl>
+	 *            <dl>
+	 *            <dt><b>Preconditions:</b></dt> <dd>
+	 *            <ul>
+	 *            <li><code>string != null</code> <li><code>string.length() &gt;
+	 *            0</code>
+	 *            </ul>
+	 *            </dd>
+	 *            </dl>
 	 * 
-	 * <dl>
-	 * <dt><b>Postconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li>the state of the receiver is updated to reflect the XML element
-	 * parsed from the reader
-	 * </ul>
-	 * </dd>
-	 * </dl>
-	 * <dl>
+	 *            <dl>
+	 *            <dt><b>Postconditions:</b></dt> <dd>
+	 *            <ul>
+	 *            <li>the state of the receiver is updated to reflect the XML
+	 *            element parsed from the reader
+	 *            </ul>
+	 *            </dd>
+	 *            </dl>
+	 *            <dl>
 	 * 
 	 * @throws nanoxml.XMLParseException
 	 *             If an error occured while parsing the string.
@@ -1486,28 +1393,25 @@ public class XMLElement implements java.io.Serializable {
 	 * @param offset
 	 *            The first character in <code>string</code> to scan.
 	 * 
-	 * </dl>
-	 * <dl>
-	 * <dt><b>Preconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li><code>string != null</code>
-	 * <li><code>offset &lt; string.length()</code>
-	 * <li><code>offset &gt;= 0</code>
-	 * </ul>
-	 * </dd>
-	 * </dl>
+	 *            </dl>
+	 *            <dl>
+	 *            <dt><b>Preconditions:</b></dt> <dd>
+	 *            <ul>
+	 *            <li><code>string != null</code> <li><code>offset &lt;
+	 *            string.length()</code> <li><code>offset &gt;= 0</code>
+	 *            </ul>
+	 *            </dd>
+	 *            </dl>
 	 * 
-	 * <dl>
-	 * <dt><b>Postconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li>the state of the receiver is updated to reflect the XML element
-	 * parsed from the reader
-	 * </ul>
-	 * </dd>
-	 * </dl>
-	 * <dl>
+	 *            <dl>
+	 *            <dt><b>Postconditions:</b></dt> <dd>
+	 *            <ul>
+	 *            <li>the state of the receiver is updated to reflect the XML
+	 *            element parsed from the reader
+	 *            </ul>
+	 *            </dd>
+	 *            </dl>
+	 *            <dl>
 	 * 
 	 * @throws nanoxml.XMLParseException
 	 *             If an error occured while parsing the string.
@@ -1527,29 +1431,26 @@ public class XMLElement implements java.io.Serializable {
 	 *            The character where to stop scanning. This character is not
 	 *            scanned.
 	 * 
-	 * </dl>
-	 * <dl>
-	 * <dt><b>Preconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li><code>string != null</code>
-	 * <li><code>end &lt;= string.length()</code>
-	 * <li><code>offset &lt; end</code>
-	 * <li><code>offset &gt;= 0</code>
-	 * </ul>
-	 * </dd>
-	 * </dl>
+	 *            </dl>
+	 *            <dl>
+	 *            <dt><b>Preconditions:</b></dt> <dd>
+	 *            <ul>
+	 *            <li><code>string != null</code> <li><code>end &lt;=
+	 *            string.length()</code> <li><code>offset &lt; end</code> <li>
+	 *            <code>offset &gt;= 0</code>
+	 *            </ul>
+	 *            </dd>
+	 *            </dl>
 	 * 
-	 * <dl>
-	 * <dt><b>Postconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li>the state of the receiver is updated to reflect the XML element
-	 * parsed from the reader
-	 * </ul>
-	 * </dd>
-	 * </dl>
-	 * <dl>
+	 *            <dl>
+	 *            <dt><b>Postconditions:</b></dt> <dd>
+	 *            <ul>
+	 *            <li>the state of the receiver is updated to reflect the XML
+	 *            element parsed from the reader
+	 *            </ul>
+	 *            </dd>
+	 *            </dl>
+	 *            <dl>
 	 * 
 	 * @throws nanoxml.XMLParseException
 	 *             If an error occured while parsing the string.
@@ -1571,29 +1472,26 @@ public class XMLElement implements java.io.Serializable {
 	 * @param startingLineNr
 	 *            The line number of the first line in the data.
 	 * 
-	 * </dl>
-	 * <dl>
-	 * <dt><b>Preconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li><code>string != null</code>
-	 * <li><code>end &lt;= string.length()</code>
-	 * <li><code>offset &lt; end</code>
-	 * <li><code>offset &gt;= 0</code>
-	 * </ul>
-	 * </dd>
-	 * </dl>
+	 *            </dl>
+	 *            <dl>
+	 *            <dt><b>Preconditions:</b></dt> <dd>
+	 *            <ul>
+	 *            <li><code>string != null</code> <li><code>end &lt;=
+	 *            string.length()</code> <li><code>offset &lt; end</code> <li>
+	 *            <code>offset &gt;= 0</code>
+	 *            </ul>
+	 *            </dd>
+	 *            </dl>
 	 * 
-	 * <dl>
-	 * <dt><b>Postconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li>the state of the receiver is updated to reflect the XML element
-	 * parsed from the reader
-	 * </ul>
-	 * </dd>
-	 * </dl>
-	 * <dl>
+	 *            <dl>
+	 *            <dt><b>Postconditions:</b></dt> <dd>
+	 *            <ul>
+	 *            <li>the state of the receiver is updated to reflect the XML
+	 *            element parsed from the reader
+	 *            </ul>
+	 *            </dd>
+	 *            </dl>
+	 *            <dl>
 	 * 
 	 * @throws nanoxml.XMLParseException
 	 *             If an error occured while parsing the string.
@@ -1618,29 +1516,26 @@ public class XMLElement implements java.io.Serializable {
 	 *            The character where to stop scanning. This character is not
 	 *            scanned.
 	 * 
-	 * </dl>
-	 * <dl>
-	 * <dt><b>Preconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li><code>input != null</code>
-	 * <li><code>end &lt;= input.length</code>
-	 * <li><code>offset &lt; end</code>
-	 * <li><code>offset &gt;= 0</code>
-	 * </ul>
-	 * </dd>
-	 * </dl>
+	 *            </dl>
+	 *            <dl>
+	 *            <dt><b>Preconditions:</b></dt> <dd>
+	 *            <ul>
+	 *            <li><code>input != null</code> <li><code>end &lt;=
+	 *            input.length</code> <li><code>offset &lt; end</code> <li>
+	 *            <code>offset &gt;= 0</code>
+	 *            </ul>
+	 *            </dd>
+	 *            </dl>
 	 * 
-	 * <dl>
-	 * <dt><b>Postconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li>the state of the receiver is updated to reflect the XML element
-	 * parsed from the reader
-	 * </ul>
-	 * </dd>
-	 * </dl>
-	 * <dl>
+	 *            <dl>
+	 *            <dt><b>Postconditions:</b></dt> <dd>
+	 *            <ul>
+	 *            <li>the state of the receiver is updated to reflect the XML
+	 *            element parsed from the reader
+	 *            </ul>
+	 *            </dd>
+	 *            </dl>
+	 *            <dl>
 	 * 
 	 * @throws nanoxml.XMLParseException
 	 *             If an error occured while parsing the string.
@@ -1662,29 +1557,26 @@ public class XMLElement implements java.io.Serializable {
 	 * @param startingLineNr
 	 *            The line number of the first line in the data.
 	 * 
-	 * </dl>
-	 * <dl>
-	 * <dt><b>Preconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li><code>input != null</code>
-	 * <li><code>end &lt;= input.length</code>
-	 * <li><code>offset &lt; end</code>
-	 * <li><code>offset &gt;= 0</code>
-	 * </ul>
-	 * </dd>
-	 * </dl>
+	 *            </dl>
+	 *            <dl>
+	 *            <dt><b>Preconditions:</b></dt> <dd>
+	 *            <ul>
+	 *            <li><code>input != null</code> <li><code>end &lt;=
+	 *            input.length</code> <li><code>offset &lt; end</code> <li>
+	 *            <code>offset &gt;= 0</code>
+	 *            </ul>
+	 *            </dd>
+	 *            </dl>
 	 * 
-	 * <dl>
-	 * <dt><b>Postconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li>the state of the receiver is updated to reflect the XML element
-	 * parsed from the reader
-	 * </ul>
-	 * </dd>
-	 * </dl>
-	 * <dl>
+	 *            <dl>
+	 *            <dt><b>Postconditions:</b></dt> <dd>
+	 *            <ul>
+	 *            <li>the state of the receiver is updated to reflect the XML
+	 *            element parsed from the reader
+	 *            </ul>
+	 *            </dd>
+	 *            </dl>
+	 *            <dl>
 	 * 
 	 * @throws nanoxml.XMLParseException
 	 *             If an error occured while parsing the string.
@@ -1704,28 +1596,26 @@ public class XMLElement implements java.io.Serializable {
 	 * @param child
 	 *            The child element to remove.
 	 * 
-	 * </dl>
-	 * <dl>
-	 * <dt><b>Preconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li><code>child != null</code>
-	 * <li><code>child</code> is a child element of the receiver
-	 * </ul>
-	 * </dd>
-	 * </dl>
+	 *            </dl>
+	 *            <dl>
+	 *            <dt><b>Preconditions:</b></dt> <dd>
+	 *            <ul>
+	 *            <li><code>child != null</code> <li><code>child</code> is a
+	 *            child element of the receiver
+	 *            </ul>
+	 *            </dd>
+	 *            </dl>
 	 * 
-	 * <dl>
-	 * <dt><b>Postconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li>countChildren() => old.countChildren() - 1
-	 * <li>enumerateChildren() => old.enumerateChildren() - child
-	 * <li>getChildren() => old.enumerateChildren() - child
-	 * </ul>
-	 * </dd>
-	 * </dl>
-	 * <dl>
+	 *            <dl>
+	 *            <dt><b>Postconditions:</b></dt> <dd>
+	 *            <ul>
+	 *            <li>countChildren() => old.countChildren() - 1 <li>
+	 *            enumerateChildren() => old.enumerateChildren() - child <li>
+	 *            getChildren() => old.enumerateChildren() - child
+	 *            </ul>
+	 *            </dd>
+	 *            </dl>
+	 *            <dl>
 	 * 
 	 * @see nanoxml.XMLElement#addChild(nanoxml.XMLElement) addChild(XMLElement)
 	 * @see nanoxml.XMLElement#countChildren()
@@ -1742,27 +1632,25 @@ public class XMLElement implements java.io.Serializable {
 	 * @param name
 	 *            The name of the attribute.
 	 * 
-	 * </dl>
-	 * <dl>
-	 * <dt><b>Preconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li><code>name != null</code>
-	 * <li><code>name</code> is a valid XML identifier
-	 * </ul>
-	 * </dd>
-	 * </dl>
+	 *            </dl>
+	 *            <dl>
+	 *            <dt><b>Preconditions:</b></dt> <dd>
+	 *            <ul>
+	 *            <li><code>name != null</code> <li><code>name</code> is a valid
+	 *            XML identifier
+	 *            </ul>
+	 *            </dd>
+	 *            </dl>
 	 * 
-	 * <dl>
-	 * <dt><b>Postconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li>enumerateAttributeNames() => old.enumerateAttributeNames() - name
-	 * <li>getAttribute(name) => <code>null</code>
-	 * </ul>
-	 * </dd>
-	 * </dl>
-	 * <dl>
+	 *            <dl>
+	 *            <dt><b>Postconditions:</b></dt> <dd>
+	 *            <ul>
+	 *            <li>enumerateAttributeNames() => old.enumerateAttributeNames()
+	 *            - name <li>getAttribute(name) => <code>null</code>
+	 *            </ul>
+	 *            </dd>
+	 *            </dl>
+	 *            <dl>
 	 * 
 	 * @see nanoxml.XMLElement#enumerateAttributeNames()
 	 * @see nanoxml.XMLElement#setDoubleAttribute(java.lang.String, double)
@@ -1830,23 +1718,21 @@ public class XMLElement implements java.io.Serializable {
 		this.contents = content;
 	}
 
-
 	/**
 	 * Changes the name of the element.
 	 * 
 	 * @param name
 	 *            The new name.
 	 * 
-	 * </dl>
-	 * <dl>
-	 * <dt><b>Preconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li><code>name != null</code>
-	 * <li><code>name</code> is a valid XML identifier
-	 * </ul>
-	 * </dd>
-	 * </dl>
+	 *            </dl>
+	 *            <dl>
+	 *            <dt><b>Preconditions:</b></dt> <dd>
+	 *            <ul>
+	 *            <li><code>name != null</code> <li><code>name</code> is a valid
+	 *            XML identifier
+	 *            </ul>
+	 *            </dd>
+	 *            </dl>
 	 * 
 	 * @see nanoxml.XMLElement#getName()
 	 */
@@ -1948,16 +1834,15 @@ public class XMLElement implements java.io.Serializable {
 	 * @param writer
 	 *            The writer to write the XML data to.
 	 * 
-	 * </dl>
-	 * <dl>
-	 * <dt><b>Preconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li><code>writer != null</code>
-	 * <li><code>writer</code> is not closed
-	 * </ul>
-	 * </dd>
-	 * </dl>
+	 *            </dl>
+	 *            <dl>
+	 *            <dt><b>Preconditions:</b></dt> <dd>
+	 *            <ul>
+	 *            <li><code>writer != null</code> <li><code>writer</code> is not
+	 *            closed
+	 *            </ul>
+	 *            </dd>
+	 *            </dl>
 	 * 
 	 * @throws java.io.IOException
 	 *             If the data could not be written to the writer.
@@ -1989,7 +1874,7 @@ public class XMLElement implements java.io.Serializable {
 				writer.write('"');
 				this.writeEncoded(writer, value);
 				writer.write('"');
-				
+
 			}
 		}
 		if ((this.contents != null) && (this.contents.length() > 0)) {
@@ -2008,7 +1893,7 @@ public class XMLElement implements java.io.Serializable {
 		} else {
 			writer.write('>');
 			writer.write('\n');
-			
+
 			for (XMLElement child : getChildren()) {
 				child.write(writer, indent + 1);
 			}
@@ -2031,17 +1916,15 @@ public class XMLElement implements java.io.Serializable {
 	 * @param str
 	 *            The string to write encoded.
 	 * 
-	 * </dl>
-	 * <dl>
-	 * <dt><b>Preconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li><code>writer != null</code>
-	 * <li><code>writer</code> is not closed
-	 * <li><code>str != null</code>
-	 * </ul>
-	 * </dd>
-	 * </dl>
+	 *            </dl>
+	 *            <dl>
+	 *            <dt><b>Preconditions:</b></dt> <dd>
+	 *            <ul>
+	 *            <li><code>writer != null</code> <li><code>writer</code> is not
+	 *            closed <li><code>str != null</code>
+	 *            </ul>
+	 *            </dd>
+	 *            </dl>
 	 */
 	protected void writeEncoded(Writer writer, String str) throws IOException {
 		for (int i = 0; i < str.length(); i += 1) {
@@ -2104,28 +1987,26 @@ public class XMLElement implements java.io.Serializable {
 	 * @param result
 	 *            The buffer in which the scanned identifier will be put.
 	 * 
-	 * </dl>
-	 * <dl>
-	 * <dt><b>Preconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li><code>result != null</code>
-	 * <li>The next character read from the reader is a valid first character
-	 * of an XML identifier.
-	 * </ul>
-	 * </dd>
-	 * </dl>
+	 *            </dl>
+	 *            <dl>
+	 *            <dt><b>Preconditions:</b></dt> <dd>
+	 *            <ul>
+	 *            <li><code>result != null</code> <li>The next character read
+	 *            from the reader is a valid first character of an XML
+	 *            identifier.
+	 *            </ul>
+	 *            </dd>
+	 *            </dl>
 	 * 
-	 * <dl>
-	 * <dt><b>Postconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li>The next character read from the reader won't be an identifier
-	 * character.
-	 * </ul>
-	 * </dd>
-	 * </dl>
-	 * <dl>
+	 *            <dl>
+	 *            <dt><b>Postconditions:</b></dt> <dd>
+	 *            <ul>
+	 *            <li>The next character read from the reader won't be an
+	 *            identifier character.
+	 *            </ul>
+	 *            </dd>
+	 *            </dl>
+	 *            <dl>
 	 */
 	protected void scanIdentifier(StringBuffer result) throws IOException {
 		for (;;) {
@@ -2165,15 +2046,14 @@ public class XMLElement implements java.io.Serializable {
 	 * 
 	 * @return the next character following the whitespace.
 	 * 
-	 * </dl>
-	 * <dl>
-	 * <dt><b>Preconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li><code>result != null</code>
-	 * </ul>
-	 * </dd>
-	 * </dl>
+	 *         </dl>
+	 *         <dl>
+	 *         <dt><b>Preconditions:</b></dt> <dd>
+	 *         <ul>
+	 *         <li><code>result != null</code>
+	 *         </ul>
+	 *         </dd>
+	 *         </dl>
 	 */
 	protected char scanWhitespace(StringBuffer result) throws IOException {
 		for (;;) {
@@ -2197,11 +2077,10 @@ public class XMLElement implements java.io.Serializable {
 	 * 
 	 * </dl>
 	 * <dl>
-	 * <dt><b>Preconditions:</b></dt>
-	 * <dd>
+	 * <dt><b>Preconditions:</b></dt> <dd>
 	 * <ul>
-	 * <li><code>string != null</code>
-	 * <li>the next char read is the string delimiter
+	 * <li><code>string != null</code> <li>the next char read is the string
+	 * delimiter
 	 * </ul>
 	 * </dd>
 	 * </dl>
@@ -2230,8 +2109,7 @@ public class XMLElement implements java.io.Serializable {
 	 * 
 	 * </dl>
 	 * <dl>
-	 * <dt><b>Preconditions:</b></dt>
-	 * <dd>
+	 * <dt><b>Preconditions:</b></dt> <dd>
 	 * <ul>
 	 * <li><code>data != null</code>
 	 * </ul>
@@ -2263,11 +2141,9 @@ public class XMLElement implements java.io.Serializable {
 	 * 
 	 * </dl>
 	 * <dl>
-	 * <dt><b>Preconditions:</b></dt>
-	 * <dd>
+	 * <dt><b>Preconditions:</b></dt> <dd>
 	 * <ul>
-	 * <li><code>buf != null</code>
-	 * <li>The first &lt; has already been read.
+	 * <li><code>buf != null</code> <li>The first &lt; has already been read.
 	 * </ul>
 	 * </dd>
 	 * </dl>
@@ -2323,8 +2199,7 @@ public class XMLElement implements java.io.Serializable {
 	 * 
 	 * </dl>
 	 * <dl>
-	 * <dt><b>Preconditions:</b></dt>
-	 * <dd>
+	 * <dt><b>Preconditions:</b></dt> <dd>
 	 * <ul>
 	 * <li>The first &lt;!-- has already been read.
 	 * </ul>
@@ -2353,16 +2228,15 @@ public class XMLElement implements java.io.Serializable {
 	 *            The number of open square brackets ([) that have already been
 	 *            read.
 	 * 
-	 * </dl>
-	 * <dl>
-	 * <dt><b>Preconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li>The first &lt;! has already been read.
-	 * <li><code>bracketLevel >= 0</code>
-	 * </ul>
-	 * </dd>
-	 * </dl>
+	 *            </dl>
+	 *            <dl>
+	 *            <dt><b>Preconditions:</b></dt> <dd>
+	 *            <ul>
+	 *            <li>The first &lt;! has already been read. <li><code>
+	 *            bracketLevel >= 0</code>
+	 *            </ul>
+	 *            </dd>
+	 *            </dl>
 	 */
 	protected void skipSpecialTag(int bracketLevel) throws IOException {
 		int tagLevel = 1; // <
@@ -2415,15 +2289,14 @@ public class XMLElement implements java.io.Serializable {
 	 * @param literal
 	 *            the literal to check.
 	 * 
-	 * </dl>
-	 * <dl>
-	 * <dt><b>Preconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li><code>literal != null</code>
-	 * </ul>
-	 * </dd>
-	 * </dl>
+	 *            </dl>
+	 *            <dl>
+	 *            <dt><b>Preconditions:</b></dt> <dd>
+	 *            <ul>
+	 *            <li><code>literal != null</code>
+	 *            </ul>
+	 *            </dd>
+	 *            </dl>
 	 */
 	protected boolean checkLiteral(String literal) throws IOException {
 		int length = literal.length();
@@ -2463,16 +2336,15 @@ public class XMLElement implements java.io.Serializable {
 	 * @param elt
 	 *            The element that will contain the result.
 	 * 
-	 * </dl>
-	 * <dl>
-	 * <dt><b>Preconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li>The first &lt; has already been read.
-	 * <li><code>elt != null</code>
-	 * </ul>
-	 * </dd>
-	 * </dl>
+	 *            </dl>
+	 *            <dl>
+	 *            <dt><b>Preconditions:</b></dt> <dd>
+	 *            <ul>
+	 *            <li>The first &lt; has already been read. <li><code>elt !=
+	 *            null</code>
+	 *            </ul>
+	 *            </dd>
+	 *            </dl>
 	 */
 	protected void scanElement(XMLElement elt) throws IOException {
 		StringBuffer buf = new StringBuffer();
@@ -2603,16 +2475,15 @@ public class XMLElement implements java.io.Serializable {
 	 * @param buf
 	 *            Where to put the entity value.
 	 * 
-	 * </dl>
-	 * <dl>
-	 * <dt><b>Preconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li>The first &amp; has already been read.
-	 * <li><code>buf != null</code>
-	 * </ul>
-	 * </dd>
-	 * </dl>
+	 *            </dl>
+	 *            <dl>
+	 *            <dt><b>Preconditions:</b></dt> <dd>
+	 *            <ul>
+	 *            <li>The first &amp; has already been read. <li><code>buf !=
+	 *            null</code>
+	 *            </ul>
+	 *            </dd>
+	 *            </dl>
 	 */
 	protected void resolveEntity(StringBuffer buf) throws IOException {
 		char ch = '\0';
@@ -2651,16 +2522,14 @@ public class XMLElement implements java.io.Serializable {
 	 * @param ch
 	 *            The character to push back.
 	 * 
-	 * </dl>
-	 * <dl>
-	 * <dt><b>Preconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li>The read-back buffer is empty.
-	 * <li><code>ch != '\0'</code>
-	 * </ul>
-	 * </dd>
-	 * </dl>
+	 *            </dl>
+	 *            <dl>
+	 *            <dt><b>Preconditions:</b></dt> <dd>
+	 *            <ul>
+	 *            <li>The read-back buffer is empty. <li><code>ch != '\0'</code>
+	 *            </ul>
+	 *            </dd>
+	 *            </dl>
 	 */
 	protected void unreadChar(char ch) {
 		this.charReadTooMuch = ch;
@@ -2673,15 +2542,14 @@ public class XMLElement implements java.io.Serializable {
 	 * @param name
 	 *            The name of the entity.
 	 * 
-	 * </dl>
-	 * <dl>
-	 * <dt><b>Preconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li><code>name != null</code>
-	 * </ul>
-	 * </dd>
-	 * </dl>
+	 *            </dl>
+	 *            <dl>
+	 *            <dt><b>Preconditions:</b></dt> <dd>
+	 *            <ul>
+	 *            <li><code>name != null</code>
+	 *            </ul>
+	 *            </dd>
+	 *            </dl>
 	 */
 	protected XMLParseException invalidValueSet(String name) {
 		String msg = "Invalid value set (entity name = \"" + name + "\")";
@@ -2696,16 +2564,14 @@ public class XMLElement implements java.io.Serializable {
 	 * @param value
 	 *            The value of the entity.
 	 * 
-	 * </dl>
-	 * <dl>
-	 * <dt><b>Preconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li><code>name != null</code>
-	 * <li><code>value != null</code>
-	 * </ul>
-	 * </dd>
-	 * </dl>
+	 *            </dl>
+	 *            <dl>
+	 *            <dt><b>Preconditions:</b></dt> <dd>
+	 *            <ul>
+	 *            <li><code>name != null</code> <li><code>value != null</code>
+	 *            </ul>
+	 *            </dd>
+	 *            </dl>
 	 */
 	protected XMLParseException invalidValue(String name, String value) {
 		String msg = "Attribute \"" + name + "\" does not contain a valid " + "value (\"" + value + "\")";
@@ -2727,16 +2593,15 @@ public class XMLElement implements java.io.Serializable {
 	 * @param context
 	 *            The context in which the error occured.
 	 * 
-	 * </dl>
-	 * <dl>
-	 * <dt><b>Preconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li><code>context != null</code>
-	 * <li><code>context.length() &gt; 0</code>
-	 * </ul>
-	 * </dd>
-	 * </dl>
+	 *            </dl>
+	 *            <dl>
+	 *            <dt><b>Preconditions:</b></dt> <dd>
+	 *            <ul>
+	 *            <li><code>context != null</code> <li><code>context.length()
+	 *            &gt; 0</code>
+	 *            </ul>
+	 *            </dd>
+	 *            </dl>
 	 */
 	protected XMLParseException syntaxError(String context) {
 		String msg = "Syntax error while parsing " + context;
@@ -2751,16 +2616,15 @@ public class XMLElement implements java.io.Serializable {
 	 *            The set of characters (in human readable form) that was
 	 *            expected.
 	 * 
-	 * </dl>
-	 * <dl>
-	 * <dt><b>Preconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li><code>charSet != null</code>
-	 * <li><code>charSet.length() &gt; 0</code>
-	 * </ul>
-	 * </dd>
-	 * </dl>
+	 *            </dl>
+	 *            <dl>
+	 *            <dt><b>Preconditions:</b></dt> <dd>
+	 *            <ul>
+	 *            <li><code>charSet != null</code> <li><code>charSet.length()
+	 *            &gt; 0</code>
+	 *            </ul>
+	 *            </dd>
+	 *            </dl>
 	 */
 	protected XMLParseException expectedInput(String charSet) {
 		String msg = "Expected: " + charSet;
@@ -2773,16 +2637,15 @@ public class XMLElement implements java.io.Serializable {
 	 * @param name
 	 *            The name of the entity.
 	 * 
-	 * </dl>
-	 * <dl>
-	 * <dt><b>Preconditions:</b></dt>
-	 * <dd>
-	 * <ul>
-	 * <li><code>name != null</code>
-	 * <li><code>name.length() &gt; 0</code>
-	 * </ul>
-	 * </dd>
-	 * </dl>
+	 *            </dl>
+	 *            <dl>
+	 *            <dt><b>Preconditions:</b></dt> <dd>
+	 *            <ul>
+	 *            <li><code>name != null</code> <li><code>name.length() &gt; 0
+	 *            </code>
+	 *            </ul>
+	 *            </dd>
+	 *            </dl>
 	 */
 	protected XMLParseException unknownEntity(String name) {
 		String msg = "Unknown or invalid entity: &" + name + ";";
@@ -2868,8 +2731,6 @@ public class XMLElement implements java.io.Serializable {
 		return res;
 	}
 
-
-
 	public void setAttributeOffset(String attributeName, int value) {
 		startOffsetMap.put(attributeName, new Integer(value));
 	}
@@ -2904,15 +2765,15 @@ public class XMLElement implements java.io.Serializable {
 	}
 
 	public String findTitle() {
-		if(getTitle()!=null) {
+		if (getTitle() != null) {
 			return getTitle();
 		}
-		if(getParent()!=null) {
+		if (getParent() != null) {
 			return getParent().findTitle();
 		}
 		return null;
 	}
-	
+
 	public XMLElement copy() {
 		XMLElement xe = new CaseSensitiveXMLElement();
 		xe.setName(getName());

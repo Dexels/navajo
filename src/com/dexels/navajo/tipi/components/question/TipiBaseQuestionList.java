@@ -161,8 +161,7 @@ public abstract class TipiBaseQuestionList extends TipiDataComponentImpl {
 		if (clubMsg != null) {
 			n.addMessage(clubMsg.copy(n));
 		}
-		Property pin = NavajoFactory.getInstance().createProperty(n, "Pincode", Property.STRING_PROPERTY, pincode, 16, "",
-				Property.DIR_IN);
+		Property pin = NavajoFactory.getInstance().createProperty(n, "Pincode", Property.STRING_PROPERTY, pincode, 16, "", Property.DIR_IN);
 		m.addProperty(pin);
 
 		Property date = NavajoFactory.getInstance().createProperty(n, "TimeStamp", Property.DATE_PROPERTY, "", 0, "", Property.DIR_IN);
@@ -249,7 +248,7 @@ public abstract class TipiBaseQuestionList extends TipiDataComponentImpl {
 					TipiDataComponent tc = null;
 					try {
 						tc = (TipiDataComponent) TipiInstantiateTipi.instantiateByDefinition(me, false, id, questionGroupDefinitionName,
-								getGroupConstraints(current),null);
+								getGroupConstraints(current), null);
 						// System.err.println("Created component:
 						// "+tc.getClass()+" container: "+tc.getContainer());
 						tc.setValue("messagePath", current.getFullMessageName());
@@ -266,7 +265,7 @@ public abstract class TipiBaseQuestionList extends TipiDataComponentImpl {
 						} else {
 							System.err.println("This is _not_ good");
 						}
-						tc.loadData(n,  method);
+						tc.loadData(n, method);
 					} catch (TipiException e) {
 						e.printStackTrace();
 					} catch (TipiBreakException e) {
@@ -299,7 +298,7 @@ public abstract class TipiBaseQuestionList extends TipiDataComponentImpl {
 
 	private void updateValidity() {
 		boolean valid = myValidGroups.containsAll(myGroups);
-		Map<String,Object> m = new HashMap<String,Object>();
+		Map<String, Object> m = new HashMap<String, Object>();
 		m.put("valid", new Boolean(valid));
 		try {
 			performTipiEvent("onValidationChanged", m, true);

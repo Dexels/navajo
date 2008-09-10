@@ -17,6 +17,7 @@ import com.dexels.navajo.tipi.internal.*;
  * <p>
  * Company:
  * </p>
+ * 
  * @author not attributable
  * @version 1.0
  */
@@ -32,15 +33,16 @@ public class TipiReloadNavajo extends TipiAction {
 		String serviceName = null;
 		Navajo actualNavajo = null;
 		if (to == null || from == null) {
-	
-//			System.err.println("Null evaluation in TipiReloadNavajo, new school evaluation");
-			if(service.value instanceof String) {
+
+			// System.err.println(
+			// "Null evaluation in TipiReloadNavajo, new school evaluation");
+			if (service.value instanceof String) {
 				serviceName = (String) service.value;
-							
+
 				service.value = myContext.getNavajo(serviceName);
 				actualNavajo = (Navajo) service.value;
 			} else {
-				if(service.value instanceof Navajo) {
+				if (service.value instanceof Navajo) {
 					actualNavajo = (Navajo) service.value;
 					serviceName = actualNavajo.getHeader().getRPCName();
 				}
@@ -48,7 +50,7 @@ public class TipiReloadNavajo extends TipiAction {
 			myContext.loadNavajo(actualNavajo, serviceName);
 			return;
 		}
-//		System.err.println("Old school navajoReload found!");
+		// System.err.println("Old school navajoReload found!");
 		TipiDataComponent toData = (TipiDataComponent) to.value;
 		TipiDataComponent fromData = (TipiDataComponent) from.value;
 

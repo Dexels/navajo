@@ -42,11 +42,10 @@ public final class TipiDumpClass extends TipiAction {
 		}
 	}
 
+	private void dumpDef(Message msg, String element, XMLElement def) {
+		if (def.getName().equals("tipiaction")) {
+			System.err.println("Action: " + def.getStringAttribute("name"));
 
-	  private void dumpDef(Message msg, String element, XMLElement def) {
-		if(def.getName().equals("tipiaction")) {
-			System.err.println("Action: "+def.getStringAttribute("name"));
-			
 		}
 	}
 

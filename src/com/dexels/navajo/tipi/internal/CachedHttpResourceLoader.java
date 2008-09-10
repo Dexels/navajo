@@ -9,9 +9,9 @@ import com.dexels.navajo.tipi.internal.cache.impl.*;
 public class CachedHttpResourceLoader extends CachedResourceLoader {
 
 	protected final CacheManager cache;
-	
+
 	public CachedHttpResourceLoader(File baseDir, URL baseUrl) {
-		cache = new GeneralCacheManager(new FileLocalStorage(baseDir),new HttpRemoteStorage(baseUrl));
+		cache = new GeneralCacheManager(new FileLocalStorage(baseDir), new HttpRemoteStorage(baseUrl));
 	}
 
 	public CacheManager getCacheManager() {

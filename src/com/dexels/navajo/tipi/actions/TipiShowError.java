@@ -19,7 +19,7 @@ public class TipiShowError extends TipiAction {
 		final Operand op = getEvaluatedParameter("text", event);
 		Object oo = op.value;
 		String result = "";
-		if(oo==null) {
+		if (oo == null) {
 			result = "Null value!";
 		} else {
 			result = oo.toString();

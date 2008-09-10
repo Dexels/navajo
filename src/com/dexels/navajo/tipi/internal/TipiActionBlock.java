@@ -33,12 +33,12 @@ public class TipiActionBlock implements TipiExecutable {
 	private String myExpressionSource = "";
 	// private TipiActionBlock myActionBlockParent = null;
 	// private TipiEvent myEvent = null;
-//	private boolean conditionStyle = false;
+	// private boolean conditionStyle = false;
 	private boolean multithread = false;
 	private TipiEvent myEvent = null;
 
 	private final TipiContext myContext;
-	private Map<String,String> eventPropertyMap = new HashMap<String, String>();
+	private Map<String, String> eventPropertyMap = new HashMap<String, String>();
 	private TipiStackElement stackElement = null;
 
 	public TipiActionBlock(TipiContext tc) {
@@ -70,22 +70,22 @@ public class TipiActionBlock implements TipiExecutable {
 	}
 
 	public void performAction(TipiEvent te, TipiExecutable parent, int index) throws TipiBreakException, TipiException {
-//		 System.err.println("PERFORMING BLOCK with expression "+myExpression);
+		// System.err.println("PERFORMING BLOCK with expression "+myExpression);
 		myEvent = te;
 		boolean evaluated;
 		evaluated = checkCondition(te);
 		try {
 			myContext.performedBlock(myComponent, this, myExpression, myExpressionSource, evaluated, te);
 		} catch (BlockActivityException ex1) {
-			 System.err.println("Blocked exception");
+			System.err.println("Blocked exception");
 			return;
 		}
 		if (!evaluated) {
-//			 System.err.println("Expression failed: Not executing children");
+			// System.err.println("Expression failed: Not executing children");
 			return;
 		}
-//		 System.err.println("Succeeded.");
-//		 System.err.println("MY # of executables: "+myExecutables.size());
+		// System.err.println("Succeeded.");
+		// System.err.println("MY # of executables: "+myExecutables.size());
 		// Allright, now we can execute:
 		try {
 			if (multithread) {
@@ -96,12 +96,13 @@ public class TipiActionBlock implements TipiExecutable {
 					myContext.enqueueExecutable(current);
 				}
 			} else {
-				myContext.doActions(te,myComponent,this,myExecutables);
-//				
-//				for (int i = 0; i < myExecutables.size(); i++) {
-//					TipiExecutable current = (TipiExecutable) myExecutables.get(i);
-//					current.performAction(te, this, i);
-//				}
+				myContext.doActions(te, myComponent, this, myExecutables);
+				//				
+				// for (int i = 0; i < myExecutables.size(); i++) {
+				// TipiExecutable current = (TipiExecutable)
+				// myExecutables.get(i);
+				// current.performAction(te, this, i);
+				// }
 			}
 			myEvent = null;
 		} catch (TipiBreakException ex) {
@@ -116,17 +117,17 @@ public class TipiActionBlock implements TipiExecutable {
 	}
 
 	private boolean evaluateBlock(TipiContext context, Object source, TipiEvent te) {
-//		boolean valid = false;
+		// boolean valid = false;
 		Operand o;
 		try {
 			if ((TipiComponent) source != null) {
 				TipiComponent tc = (TipiComponent) source;
 				synchronized (tc) {
 					tc.setCurrentEvent(te);
-					o = Expression
-					.evaluate(myExpression, ((TipiComponent) source).getNearestNavajo(), null, null, null, (TipiComponent) source);
-					if(o.value==null) {
-						myContext.showInternalError("Block expression failed: "+myExpression);
+					o = Expression.evaluate(myExpression, ((TipiComponent) source).getNearestNavajo(), null, null, null,
+							(TipiComponent) source);
+					if (o.value == null) {
+						myContext.showInternalError("Block expression failed: " + myExpression);
 						return false;
 					}
 					if (o.value.toString().equals("true")) {
@@ -147,7 +148,6 @@ public class TipiActionBlock implements TipiExecutable {
 		return false;
 	}
 
-
 	//
 	// public TipiEvent getEvent() {
 	// return myEvent;
@@ -156,15 +156,15 @@ public class TipiActionBlock implements TipiExecutable {
 	public void load(XMLElement elm, TipiComponent parent, TipiExecutable parentExe) {
 		myComponent = parent;
 		for (Iterator<String> iterator = elm.enumerateAttributeNames(); iterator.hasNext();) {
-			String n= iterator.next();
-			if(!n.equals("expression")) {
-				eventPropertyMap.put(n,elm.getStringAttribute(n));
-							
+			String n = iterator.next();
+			if (!n.equals("expression")) {
+				eventPropertyMap.put(n, elm.getStringAttribute(n));
+
 			}
 		}
-		
+
 		// myEvent = event;
-		
+
 		if (elm.getName().equals("block")) {
 			myExpression = (String) elm.getAttribute("expression");
 			myExpressionSource = (String) elm.getAttribute("source");
@@ -173,7 +173,7 @@ public class TipiActionBlock implements TipiExecutable {
 				System.err.println("Load multithread block!");
 				multithread = true;
 			}
-			setStackElement(new TipiStackElement("if: ("+myExpression+")",elm,parentExe.getStackElement()));
+			setStackElement(new TipiStackElement("if: (" + myExpression + ")", elm, parentExe.getStackElement()));
 
 			List<XMLElement> temp = elm.getChildren();
 			parseActions(temp);
@@ -208,7 +208,7 @@ public class TipiActionBlock implements TipiExecutable {
 	}
 
 	public void appendTipiExecutable(TipiExecutable tp) {
-//		 System.err.println("ADDING EXECUTABLE. Class: "+tp.getClass());
+		// System.err.println("ADDING EXECUTABLE. Class: "+tp.getClass());
 		//
 		myExecutables.add(tp);
 		// System.err.println("New count: "+myExecutables.size());
@@ -219,7 +219,7 @@ public class TipiActionBlock implements TipiExecutable {
 			return true;
 		}
 		return evaluateBlock(myContext, myComponent, te);
-	
+
 	}
 
 	private final void parseActions(List<XMLElement> temp) {
@@ -227,13 +227,13 @@ public class TipiActionBlock implements TipiExecutable {
 		try {
 			for (XMLElement current : temp) {
 				if (current.getName().equals("block")) {
-					TipiActionBlock con = myContext.instantiateTipiActionBlock(current, myComponent,this);
-					
+					TipiActionBlock con = myContext.instantiateTipiActionBlock(current, myComponent, this);
+
 					appendTipiExecutable(con);
-				}else {
-					TipiAction action = myContext.instantiateTipiAction(current, myComponent,this);
+				} else {
+					TipiAction action = myContext.instantiateTipiAction(current, myComponent, this);
 					appendTipiExecutable(action);
-				}				
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -313,7 +313,9 @@ public class TipiActionBlock implements TipiExecutable {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.dexels.navajo.tipi.TipiExecutable#setEvent(com.dexels.navajo.tipi.internal.TipiEvent)
+	 * @see
+	 * com.dexels.navajo.tipi.TipiExecutable#setEvent(com.dexels.navajo.tipi
+	 * .internal.TipiEvent)
 	 */
 	public void setEvent(TipiEvent e) {
 		myEvent = e;

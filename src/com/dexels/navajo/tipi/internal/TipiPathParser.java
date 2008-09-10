@@ -270,13 +270,13 @@ public class TipiPathParser {
 		return getPropertyByPath(myPath);
 	}
 
-//	private Object getPropertyValue(String path) {
-//		Property p = getPropertyByPath(path);
-//		if (p != null) {
-//			return p.getTypedValue();
-//		}
-//		return null;
-//	}
+	// private Object getPropertyValue(String path) {
+	// Property p = getPropertyByPath(path);
+	// if (p != null) {
+	// return p.getTypedValue();
+	// }
+	// return null;
+	// }
 
 	public URL getResource() {
 		return getResource(myPath);

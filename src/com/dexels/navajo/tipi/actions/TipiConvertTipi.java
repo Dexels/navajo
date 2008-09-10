@@ -65,7 +65,7 @@ public class TipiConvertTipi extends TipiAction {
 		try {
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder = factory.newDocumentBuilder();
-//			DOMImplementation impl = builder.getDOMImplementation();
+			// DOMImplementation impl = builder.getDOMImplementation();
 			Document d = builder.parse(file);
 
 			int i = 0;
@@ -196,7 +196,7 @@ public class TipiConvertTipi extends TipiAction {
 				cls = element.getAttribute("type");
 			}
 			if (cls != null) {
-				
+
 				if (((Element) element.getParentNode()).getNodeName().equals("tid")) {
 					Element e = cloneElementWithNewName(d, element, "d." + cls);
 					e.removeAttribute("class");

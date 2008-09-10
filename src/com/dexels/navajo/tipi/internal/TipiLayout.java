@@ -23,7 +23,7 @@ import com.dexels.navajo.tipi.tipixml.*;
  * @version 1.0
  */
 public abstract class TipiLayout {
-	protected Map<String,TipiValue> componentValues = new HashMap<String,TipiValue>();
+	protected Map<String, TipiValue> componentValues = new HashMap<String, TipiValue>();
 	protected String layoutName = null;
 	protected Object myLayout;
 	protected XMLElement myDefinition;
@@ -49,7 +49,6 @@ public abstract class TipiLayout {
 
 	protected abstract void loadLayout(XMLElement def, TipiComponent current) throws TipiException;
 
-
 	public void loadLayout(TipiComponent current) throws TipiException {
 		loadLayout(myDefinition, current);
 	}
@@ -68,7 +67,7 @@ public abstract class TipiLayout {
 	public void loadClassDef() {
 	}
 
-	public void initializeLayout(XMLElement def)  {
+	public void initializeLayout(XMLElement def) {
 		myDefinition = def;
 	}
 
@@ -93,20 +92,21 @@ public abstract class TipiLayout {
 	public void setLayout(Object l) {
 		myLayout = l;
 	}
-//
-//	private final void loadValues(XMLElement values) {
-//		List<XMLElement> children = values.getChildren();
-//		for (int i = 0; i < children.size(); i++) {
-//			XMLElement xx = children.get(i);
-//			String valueName = xx.getStringAttribute("name");
-//			TipiValue tv = new TipiValue(myComponent);
-//			tv.load(xx);
-//			componentValues.put(valueName, tv);
-//			if (tv.getValue() != null && !"".equals(tv.getValue())) {
-//				setValue(tv.getName(), tv);
-//			}
-//		}
-//	}
+
+	//
+	// private final void loadValues(XMLElement values) {
+	// List<XMLElement> children = values.getChildren();
+	// for (int i = 0; i < children.size(); i++) {
+	// XMLElement xx = children.get(i);
+	// String valueName = xx.getStringAttribute("name");
+	// TipiValue tv = new TipiValue(myComponent);
+	// tv.load(xx);
+	// componentValues.put(valueName, tv);
+	// if (tv.getValue() != null && !"".equals(tv.getValue())) {
+	// setValue(tv.getName(), tv);
+	// }
+	// }
+	// }
 
 	public void childAdded(Object c) {
 	}

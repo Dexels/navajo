@@ -20,7 +20,7 @@ import java.util.*;
  * @version 1.0
  */
 public interface TipiEventListener {
-	public boolean performTipiEvent(String eventtype, Map<String,Object> source, boolean sync) throws TipiException, TipiBreakException;
+	public boolean performTipiEvent(String eventtype, Map<String, Object> source, boolean sync) throws TipiException, TipiBreakException;
 
 	public void eventStarted(TipiExecutable te, Object event);
 

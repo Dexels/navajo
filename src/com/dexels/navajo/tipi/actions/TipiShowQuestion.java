@@ -13,17 +13,17 @@ import com.dexels.navajo.tipi.internal.*;
  */
 /** @todo Refactor, move to NavajoSwingTipi */
 public class TipiShowQuestion extends TipiAction {
-	
+
 	int response = 0;
-	
+
 	public void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
 		final String[] options = { "Ja", "Nee" };
-		Operand o = getEvaluatedParameter("text",event);
-		if(o==null) {
+		Operand o = getEvaluatedParameter("text", event);
+		if (o == null) {
 			myContext.showInternalError("showQuestion requires 'text' param");
 			return;
 		}
 		final String title = "Vraag";
-		myContext.showQuestion((String) o.value,title,options);
+		myContext.showQuestion((String) o.value, title, options);
 	}
 }

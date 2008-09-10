@@ -47,5 +47,4 @@ public class TmpFileCookieManager implements CookieManager {
 		}
 	}
 
-
 }

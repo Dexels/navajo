@@ -78,12 +78,12 @@ public class TipiAddProperty extends TipiAction {
 			direction = Property.DIR_IN;
 		}
 		String description = null;
-		if(descriptionOperand!=null) {
+		if (descriptionOperand != null) {
 			description = (String) descriptionOperand.value;
 		}
 		try {
-			Property q = NavajoFactory.getInstance().createProperty(n, propertyName, Property.STRING_PROPERTY, null, 0,
-					description, direction);
+			Property q = NavajoFactory.getInstance().createProperty(n, propertyName, Property.STRING_PROPERTY, null, 0, description,
+					direction);
 			q.setAnyValue(valueOperand.value);
 			parentMessage.addProperty(q);
 		} catch (NavajoException e) {

@@ -9,25 +9,31 @@ import com.dexels.navajo.tipi.*;
 
 /**
  * @author frank
- *
+ * 
  */
 public class GetComponentId extends FunctionInterface {
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.dexels.navajo.parser.FunctionInterface#remarks()
 	 */
 	public String remarks() {
 		return "Returns the id of a TipiComponent. ";
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.dexels.navajo.parser.FunctionInterface#usage()
 	 */
 	public String usage() {
 		return "GetComponentId(TipiComponent source)";
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.dexels.navajo.parser.FunctionInterface#evaluate()
 	 */
 	public Object evaluate() throws TMLExpressionException {
@@ -35,10 +41,10 @@ public class GetComponentId extends FunctionInterface {
 		if (pp == null) {
 			return null;
 		}
-		if(!(pp instanceof TipiComponent)) {
+		if (!(pp instanceof TipiComponent)) {
 			throw new TMLExpressionException(this, "Invalid operand: " + pp.getClass().getName());
 		}
-		TipiComponent tc = (TipiComponent)pp;
+		TipiComponent tc = (TipiComponent) pp;
 		return tc.getId();
 	}
 

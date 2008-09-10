@@ -20,7 +20,7 @@ import com.dexels.navajo.tipi.tipixml.*;
  * different action type.
  */
 public class TipiActionManager {
-	private Map<String,TipiActionFactory> actionFactoryMap = new HashMap<String, TipiActionFactory>();
+	private Map<String, TipiActionFactory> actionFactoryMap = new HashMap<String, TipiActionFactory>();
 
 	public TipiActionManager() {
 	}
@@ -41,11 +41,11 @@ public class TipiActionManager {
 
 	public TipiAction instantiateAction(XMLElement instance, TipiComponent tc, TipiExecutable parentExe) throws TipiException {
 		String name = (String) instance.getAttribute("type");
-		if(name==null) {
+		if (name == null) {
 			name = instance.getName();
 		}
 		TipiActionFactory taf = getActionFactory(name);
-		return taf.instantateAction(instance, tc,parentExe);
+		return taf.instantateAction(instance, tc, parentExe);
 	}
 
 }

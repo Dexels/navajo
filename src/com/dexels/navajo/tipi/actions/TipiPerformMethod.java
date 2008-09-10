@@ -105,11 +105,11 @@ public class TipiPerformMethod extends TipiAction {
 			throw new IllegalArgumentException("Error performing method. Method evaluated to null.");
 		}
 		setThreadState("waiting");
-		
+
 		if (evalTipi == null) {
 			if (myComponent.getNearestNavajo() != null) {
 				Navajo n = myComponent.getNearestNavajo();
-					myContext.performTipiMethod(null, n, destination, method.value.toString(), breakOnError, event, expirationInterval,
+				myContext.performTipiMethod(null, n, destination, method.value.toString(), breakOnError, event, expirationInterval,
 						hostUrl, username, password, keystore, keypass);
 			} else {
 				myContext.performTipiMethod(null, NavajoFactory.getInstance().createNavajo(), destination, method.value.toString(),
@@ -118,7 +118,7 @@ public class TipiPerformMethod extends TipiAction {
 			return;
 		}
 		setThreadState("busy");
-		
+
 		evalTipi.performService(myContext, destination, method.value.toString(), breakOnError, event, expirationInterval, hostUrl,
 				username, password, keystore, keypass);
 

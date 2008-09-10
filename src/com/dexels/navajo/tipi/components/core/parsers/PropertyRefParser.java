@@ -23,7 +23,7 @@ import com.dexels.navajo.tipi.internal.*;
 public class PropertyRefParser extends BaseTipiParser {
 	public Object parse(TipiComponent source, String expression, TipiEvent event) {
 		// return new PropertyRef(getPropertyByPath(source, expression));
-		if(expression.startsWith("!")) {
+		if (expression.startsWith("!")) {
 			try {
 				return getAttributePropertyByPath(source, expression.substring(1));
 			} catch (TipiException e) {

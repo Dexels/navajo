@@ -57,7 +57,6 @@ public interface TipiComponent extends ConditionErrorHandler, TipiEventListener,
 
 	public void setValue(String name, Object value);
 
-
 	public Object getValue(String name);
 
 	public String getStringValue(String name);
@@ -79,7 +78,7 @@ public interface TipiComponent extends ConditionErrorHandler, TipiEventListener,
 
 	public void instantiateComponent(XMLElement instance, XMLElement classdef) throws TipiException;
 
-	public void loadStartValues(XMLElement element,TipiEvent event);
+	public void loadStartValues(XMLElement element, TipiEvent event);
 
 	public boolean isReusable();
 
@@ -105,11 +104,9 @@ public interface TipiComponent extends ConditionErrorHandler, TipiEventListener,
 
 	public TipiComponent getTipiComponent(int i);
 
-
 	public void disposeComponent();
-	
+
 	public void removeAllChildren();
-		
 
 	public void removeChild(TipiComponent child);
 
@@ -135,8 +132,8 @@ public interface TipiComponent extends ConditionErrorHandler, TipiEventListener,
 
 	public void refreshParent();
 
-	public boolean performTipiEvent(String type, Map<String,Object> event, boolean sync) throws TipiException, TipiBreakException;
- 
+	public boolean performTipiEvent(String type, Map<String, Object> event, boolean sync) throws TipiException, TipiBreakException;
+
 	public String getName();
 
 	public Object getContainer();
@@ -213,7 +210,6 @@ public interface TipiComponent extends ConditionErrorHandler, TipiEventListener,
 
 	public TipiComponent getHomeComponent();
 
-	
 	/*
 	 * gets all the property components under this property, and also under its
 	 * (recursive) children
@@ -234,7 +230,7 @@ public interface TipiComponent extends ConditionErrorHandler, TipiEventListener,
 	public Property getAttributeProperty(String value);
 
 	public void runSyncInEventThread(Runnable r);
-	  public void runAsyncInEventThread(Runnable r);
 
+	public void runAsyncInEventThread(Runnable r);
 
 }
