@@ -1086,7 +1086,7 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 		} else {
 			Set<String> paramNames = t.getParameterNames();
 			for (String param : paramNames) {
-				if (param.equals("id") || param.equals("name") || param.equals("class") || param.equals("location")
+				if (param.equals("id") || param.equals("name") || param.equals("class") || param.equals("location") || param.equals("expectType")
 						|| param.equals("force")) {
 					continue;
 				}
