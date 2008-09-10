@@ -32,7 +32,8 @@ public class MainApplication {
 		boolean studio;
 		try {
 			Class.forName("tipi.TipiDevelopTools");
-			studio = true;
+			System.err.println("Tipi studio disabled for now");
+			studio = false;
 		} catch (ClassNotFoundException e) {
 			studio = false;
 		}	
