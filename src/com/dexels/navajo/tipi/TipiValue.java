@@ -93,9 +93,9 @@ public class TipiValue {
 				selectionMap = new HashMap<String, String>();
 				for (int i = 0; i < options.size(); i++) {
 					XMLElement option = options.get(i);
-					String value = option.getStringAttribute("value");
-					String description = option.getStringAttribute("description", value);
-					selectionMap.put(value, description);
+					String selectionValue = option.getStringAttribute("value");
+					String description = option.getStringAttribute("description", selectionValue);
+					selectionMap.put(selectionValue, description);
 				}
 			} else {
 				throw new RuntimeException("One or more options expected for selection value [" + this.name + "]");
@@ -191,17 +191,17 @@ public class TipiValue {
 		return required;
 	}
 
-	public boolean isValidSelectionValue(String value) {
+	public boolean isValidSelectionValue(String selectionValue) {
 		if (selectionMap != null) {
-			if (selectionMap.get(value) != null) {
+			if (selectionMap.get(selectionValue) != null) {
 				return true;
 			}
 		}
 		return false;
 	}
 
-	public String getSelectionDescription(String value) {
-		return selectionMap.get(value);
+	public String getSelectionDescription(String selectionValue) {
+		return selectionMap.get(selectionValue);
 	}
 
 	public String getValidSelectionValues() {
@@ -234,7 +234,7 @@ public class TipiValue {
 		return value;
 	}
 
-	public void typeCheck(Object value) {
+	public void typeCheck(Object typeValue) {
 		/** @todo Implement this */
 	}
 }

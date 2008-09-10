@@ -23,7 +23,7 @@ import com.dexels.navajo.tipi.*;
  * @author not attributable
  * @version 1.0
  */
-public class TipiShadowFilterImpl extends TipiBaseConnector implements TipiConnector {
+public class TipiShadowFilterImpl extends TipiBaseConnector {
 
 	protected String messagePath = null;
 	protected final List<PropertyFilter> propertyFilters = new ArrayList<PropertyFilter>();

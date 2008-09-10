@@ -18,18 +18,17 @@ abstract class BaseTipiParser extends TipiTypeParser {
 			return source.getHomeComponent();
 		}
 		if (path.startsWith(TIPI_HOME_SYMBOL + "/")) {
-			source = source.getHomeComponent();
+			TipiComponent sourceComponent = source.getHomeComponent();
 			String pathExpression = path.substring(2, path.length());
 			// System.err.println("Home component: "+source.getPath()+
 			// " expression: "+pathExpression);
 			// myContext.debugTipiComponentTree(source, 5);
-			return source.getTipiComponentByPath(pathExpression);
+			return sourceComponent.getTipiComponentByPath(pathExpression);
 		}
 		if (path.startsWith(".")) { // Relative path
 			return source.getTipiComponentByPath(path);
-		} else { // Absolute path
-			return myContext.getTipiComponentByPath(path);
 		}
+		return myContext.getTipiComponentByPath(path);
 	}
 
 	protected Object getAttributePropertyValueByPath(TipiComponent source, String path) throws TipiException {

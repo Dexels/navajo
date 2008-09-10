@@ -923,8 +923,8 @@ public class XMLElement implements java.io.Serializable {
 	 *      java.util.Hashtable, java.lang.String, boolean) getAttribute(String,
 	 *      Hashtable, String, boolean)
 	 */
-	public Object getAttribute(String name) {
-		return this.getAttribute(name, null);
+	public Object getAttribute(String attributeName) {
+		return this.getAttribute(attributeName, null);
 	}
 
 	/**
@@ -958,11 +958,11 @@ public class XMLElement implements java.io.Serializable {
 	 *      java.util.Hashtable, java.lang.String, boolean) getAttribute(String,
 	 *      Hashtable, String, boolean)
 	 */
-	public Object getAttribute(String name, Object defaultValue) {
+	public Object getAttribute(String attributeName, Object defaultValue) {
 		if (this.ignoreCase) {
-			name = name.toUpperCase();
+			attributeName = attributeName.toUpperCase();
 		}
-		Object value = this.attributes.get(name);
+		Object value = this.attributes.get(attributeName);
 		if (value == null) {
 			value = defaultValue;
 		}
@@ -998,8 +998,8 @@ public class XMLElement implements java.io.Serializable {
 	 *      java.util.Hashtable, java.lang.String, boolean)
 	 *      getStringAttribute(String, Hashtable, String, boolean)
 	 */
-	public String getStringAttribute(String name) {
-		return this.getStringAttribute(name, null);
+	public String getStringAttribute(String attributeName) {
+		return this.getStringAttribute(attributeName, null);
 	}
 
 	/**
@@ -1033,8 +1033,8 @@ public class XMLElement implements java.io.Serializable {
 	 *      java.util.Hashtable, java.lang.String, boolean)
 	 *      getStringAttribute(String, Hashtable, String, boolean)
 	 */
-	public String getStringAttribute(String name, String defaultValue) {
-		return (String) this.getAttribute(name, defaultValue);
+	public String getStringAttribute(String attributeName, String defaultValue) {
+		return (String) this.getAttribute(attributeName, defaultValue);
 	}
 
 	/**
@@ -1064,8 +1064,8 @@ public class XMLElement implements java.io.Serializable {
 	 *      java.util.Hashtable, java.lang.String, boolean)
 	 *      getIntAttribute(String, Hashtable, String, boolean)
 	 */
-	public int getIntAttribute(String name) {
-		return this.getIntAttribute(name, 0);
+	public int getIntAttribute(String attributeName) {
+		return this.getIntAttribute(attributeName, 0);
 	}
 
 	/**
@@ -1097,18 +1097,18 @@ public class XMLElement implements java.io.Serializable {
 	 *      java.util.Hashtable, java.lang.String, boolean)
 	 *      getIntAttribute(String, Hashtable, String, boolean)
 	 */
-	public int getIntAttribute(String name, int defaultValue) {
+	public int getIntAttribute(String attributeName, int defaultValue) {
 		if (this.ignoreCase) {
-			name = name.toUpperCase();
+			attributeName = attributeName.toUpperCase();
 		}
-		String value = this.attributes.get(name);
+		String value = this.attributes.get(attributeName);
 		if (value == null) {
 			return defaultValue;
 		} else {
 			try {
 				return Integer.parseInt(value);
 			} catch (NumberFormatException e) {
-				throw this.invalidValue(name, value);
+				throw this.invalidValue(attributeName, value);
 			}
 		}
 	}
@@ -1140,8 +1140,8 @@ public class XMLElement implements java.io.Serializable {
 	 *      java.util.Hashtable, java.lang.String, boolean)
 	 *      getDoubleAttribute(String, Hashtable, String, boolean)
 	 */
-	public double getDoubleAttribute(String name) {
-		return this.getDoubleAttribute(name, 0.);
+	public double getDoubleAttribute(String attributeName) {
+		return this.getDoubleAttribute(attributeName, 0.);
 	}
 
 	/**
@@ -1173,18 +1173,18 @@ public class XMLElement implements java.io.Serializable {
 	 *      java.util.Hashtable, java.lang.String, boolean)
 	 *      getDoubleAttribute(String, Hashtable, String, boolean)
 	 */
-	public double getDoubleAttribute(String name, double defaultValue) {
+	public double getDoubleAttribute(String attributeName, double defaultValue) {
 		if (this.ignoreCase) {
-			name = name.toUpperCase();
+			attributeName = attributeName.toUpperCase();
 		}
-		String value = this.attributes.get(name);
+		String value = this.attributes.get(attributeName);
 		if (value == null) {
 			return defaultValue;
 		} else {
 			try {
 				return Double.valueOf(value).doubleValue();
 			} catch (NumberFormatException e) {
-				throw this.invalidValue(name, value);
+				throw this.invalidValue(attributeName, value);
 			}
 		}
 	}
@@ -1224,11 +1224,11 @@ public class XMLElement implements java.io.Serializable {
 	 *      removeAttribute(String)
 	 * @see nanoxml.XMLElement#enumerateAttributeNames()
 	 */
-	public boolean getBooleanAttribute(String name, String trueValue, String falseValue, boolean defaultValue) {
+	public boolean getBooleanAttribute(String attributeName, String trueValue, String falseValue, boolean defaultValue) {
 		if (this.ignoreCase) {
-			name = name.toUpperCase();
+			attributeName = attributeName.toUpperCase();
 		}
-		Object value = this.attributes.get(name);
+		Object value = this.attributes.get(attributeName);
 		if (value == null) {
 			return defaultValue;
 		} else if (value.equals(trueValue)) {
@@ -1236,7 +1236,7 @@ public class XMLElement implements java.io.Serializable {
 		} else if (value.equals(falseValue)) {
 			return false;
 		} else {
-			throw this.invalidValue(name, (String) value);
+			throw this.invalidValue(attributeName, (String) value);
 		}
 	}
 
@@ -1282,8 +1282,8 @@ public class XMLElement implements java.io.Serializable {
 	 * @throws nanoxml.XMLParseException
 	 *             If an error occured while parsing the read data.
 	 */
-	public void parseFromReader(Reader reader) throws IOException, XMLParseException {
-		this.parseFromReader(reader, /* startingLineNr */1, 0);
+	public void parseFromReader(Reader parseReader) throws IOException, XMLParseException {
+		this.parseFromReader(parseReader, /* startingLineNr */1, 0);
 	}
 
 	/**
@@ -1321,9 +1321,9 @@ public class XMLElement implements java.io.Serializable {
 	 * @throws nanoxml.XMLParseException
 	 *             If an error occured while parsing the read data.
 	 */
-	public void parseFromReader(Reader reader, int startingLineNr, int offSet) throws IOException, XMLParseException {
+	public void parseFromReader(Reader parseReader, int startingLineNr, int offSet) throws IOException, XMLParseException {
 		this.charReadTooMuch = '\0';
-		this.reader = reader;
+		this.reader = parseReader;
 		// this.offset = offSet;
 		// this.startOffset = offSet;
 		// this.parserLineNr = startingLineNr;
@@ -1416,8 +1416,8 @@ public class XMLElement implements java.io.Serializable {
 	 * @throws nanoxml.XMLParseException
 	 *             If an error occured while parsing the string.
 	 */
-	public void parseString(String string, int offset) throws XMLParseException {
-		this.parseString(string.substring(offset));
+	public void parseString(String string, int parseOffset) throws XMLParseException {
+		this.parseString(string.substring(parseOffset));
 	}
 
 	/**
@@ -1455,8 +1455,8 @@ public class XMLElement implements java.io.Serializable {
 	 * @throws nanoxml.XMLParseException
 	 *             If an error occured while parsing the string.
 	 */
-	public void parseString(String string, int offset, int end) throws XMLParseException {
-		this.parseString(string.substring(offset, end));
+	public void parseString(String string, int parseOffset, int end) throws XMLParseException {
+		this.parseString(string.substring(parseOffset, end));
 	}
 
 	/**
@@ -1496,10 +1496,10 @@ public class XMLElement implements java.io.Serializable {
 	 * @throws nanoxml.XMLParseException
 	 *             If an error occured while parsing the string.
 	 */
-	public void parseString(String string, int offset, int end, int startingLineNr) throws XMLParseException {
-		string = string.substring(offset, end);
+	public void parseString(String string, int parseOffset, int end, int startingLineNr) throws XMLParseException {
+		string = string.substring(parseOffset, end);
 		try {
-			this.parseFromReader(new StringReader(string), startingLineNr, offset);
+			this.parseFromReader(new StringReader(string), startingLineNr, parseOffset);
 		} catch (IOException e) {
 			// Java exception handling suxx
 		}
@@ -1540,8 +1540,8 @@ public class XMLElement implements java.io.Serializable {
 	 * @throws nanoxml.XMLParseException
 	 *             If an error occured while parsing the string.
 	 */
-	public void parseCharArray(char[] input, int offset, int end) throws XMLParseException {
-		this.parseCharArray(input, offset, end, /* startingLineNr */1);
+	public void parseCharArray(char[] input, int parseOffset, int end) throws XMLParseException {
+		this.parseCharArray(input, parseOffset, end, /* startingLineNr */1);
 	}
 
 	/**
@@ -1581,10 +1581,10 @@ public class XMLElement implements java.io.Serializable {
 	 * @throws nanoxml.XMLParseException
 	 *             If an error occured while parsing the string.
 	 */
-	public void parseCharArray(char[] input, int offset, int end, int startingLineNr) throws XMLParseException {
+	public void parseCharArray(char[] input, int parseOffset, int end, int startingLineNr) throws XMLParseException {
 		try {
-			Reader reader = new CharArrayReader(input, offset, end);
-			this.parseFromReader(reader, startingLineNr, offset);
+			Reader parseReader = new CharArrayReader(input, parseOffset, end);
+			this.parseFromReader(parseReader, startingLineNr, parseOffset);
 		} catch (IOException e) {
 			// This exception will never happen.
 		}
@@ -1691,11 +1691,11 @@ public class XMLElement implements java.io.Serializable {
 	 *      java.lang.String, java.lang.String, boolean)
 	 *      getBooleanAttribute(String, String, String, boolean)
 	 */
-	public void removeAttribute(String name) {
+	public void removeAttribute(String attributeName) {
 		if (this.ignoreCase) {
-			name = name.toUpperCase();
+			attributeName = attributeName.toUpperCase();
 		}
-		this.attributes.remove(name);
+		this.attributes.remove(attributeName);
 	}
 
 	/**
@@ -1863,7 +1863,6 @@ public class XMLElement implements java.io.Serializable {
 		writer.write('<');
 		writer.write(this.name);
 		if (!this.attributes.isEmpty()) {
-			;
 			// Enumeration enum = attributeList.elements();
 			for (Iterator<String> en = this.attributes.keySet().iterator(); en.hasNext();) {
 				writer.write(' ');
@@ -2063,6 +2062,7 @@ public class XMLElement implements java.io.Serializable {
 			case '\t':
 			case '\n':
 				result.append(ch);
+				break;
 			case '\r':
 				break;
 			default:
@@ -2349,8 +2349,8 @@ public class XMLElement implements java.io.Serializable {
 	protected void scanElement(XMLElement elt) throws IOException {
 		StringBuffer buf = new StringBuffer();
 		this.scanIdentifier(buf);
-		String name = buf.toString();
-		elt.setName(name);
+		String identName = buf.toString();
+		elt.setName(identName);
 		char ch = this.scanWhitespace();
 		while ((ch != '>') && (ch != '/')) {
 			buf.setLength(0);
@@ -2460,8 +2460,8 @@ public class XMLElement implements java.io.Serializable {
 			throw this.expectedInput("/");
 		}
 		this.unreadChar(this.scanWhitespace());
-		if (!this.checkLiteral(name)) {
-			throw this.expectedInput(name);
+		if (!this.checkLiteral(identName)) {
+			throw this.expectedInput(identName);
 		}
 		if (this.scanWhitespace() != '>') {
 			throw this.expectedInput(">");
@@ -2551,8 +2551,8 @@ public class XMLElement implements java.io.Serializable {
 	 *            </dd>
 	 *            </dl>
 	 */
-	protected XMLParseException invalidValueSet(String name) {
-		String msg = "Invalid value set (entity name = \"" + name + "\")";
+	protected XMLParseException invalidValueSet(String valueName) {
+		String msg = "Invalid value set (entity name = \"" + valueName + "\")";
 		return new XMLParseException(this, msg);
 	}
 
@@ -2573,8 +2573,8 @@ public class XMLElement implements java.io.Serializable {
 	 *            </dd>
 	 *            </dl>
 	 */
-	protected XMLParseException invalidValue(String name, String value) {
-		String msg = "Attribute \"" + name + "\" does not contain a valid " + "value (\"" + value + "\")";
+	protected XMLParseException invalidValue(String valueName, String value) {
+		String msg = "Attribute \"" + valueName + "\" does not contain a valid " + "value (\"" + value + "\")";
 		return new XMLParseException(this, msg);
 	}
 
@@ -2647,8 +2647,8 @@ public class XMLElement implements java.io.Serializable {
 	 *            </dd>
 	 *            </dl>
 	 */
-	protected XMLParseException unknownEntity(String name) {
-		String msg = "Unknown or invalid entity: &" + name + ";";
+	protected XMLParseException unknownEntity(String entityName) {
+		String msg = "Unknown or invalid entity: &" + entityName + ";";
 		return new XMLParseException(this, msg);
 	}
 
@@ -2664,8 +2664,8 @@ public class XMLElement implements java.io.Serializable {
 		return al;
 	}
 
-	public boolean isCalled(String name) {
-		return name.equals(getName());
+	public boolean isCalled(String tagName) {
+		return tagName.equals(getName());
 	}
 
 	public void setParent(XMLElement parent) {
@@ -2720,8 +2720,8 @@ public class XMLElement implements java.io.Serializable {
 		System.err.println("WARNING: ELEMENT NOT FOUND!");
 	}
 
-	public String getNonNullStringAttribute(String name) {
-		String attr = getStringAttribute(name, "");
+	public String getNonNullStringAttribute(String attributeName) {
+		String attr = getStringAttribute(attributeName, "");
 		String res1 = attr.replace('\n', ' ');
 		String res = res1.replace('\r', ' ');
 

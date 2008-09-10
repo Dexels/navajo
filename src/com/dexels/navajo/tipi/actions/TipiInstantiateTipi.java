@@ -52,7 +52,7 @@ public class TipiInstantiateTipi extends TipiAction {
 		return instantiateTipi(myContext, null, byClass, parent, force, id, className, definitionName, null, constraints, event);
 	}
 
-	protected TipiComponent instantiateTipi(TipiContext myContext, TipiComponent myComponent, boolean byClass, TipiComponent parent,
+	protected TipiComponent instantiateTipi(TipiContext context, TipiComponent component, boolean byClass, TipiComponent parent,
 			boolean force, String id, String className, String definitionName, Map<String, TipiValue> paramMap, Object constraints,
 			TipiEvent event) throws TipiException {
 
@@ -64,7 +64,7 @@ public class TipiInstantiateTipi extends TipiAction {
 				// System.err.println("Calling dispose from instantiate, with
 				// force= true");
 				// System.err.println("Component path: "+comp.getPath());
-				myContext.disposeTipiComponent(comp);
+				context.disposeTipiComponent(comp);
 			} else {
 				comp.performTipiEvent("onInstantiate", null, false);
 				comp.reUse();
@@ -102,12 +102,12 @@ public class TipiInstantiateTipi extends TipiAction {
 			}
 		}
 
-		TipiComponent inst = myContext.instantiateComponent(xe, event, this);
+		TipiComponent inst = context.instantiateComponent(xe, event, this);
 		inst.setHomeComponent(true);
 		inst.setId(id);
-		parent.addComponent(inst, myContext, constraints);
+		parent.addComponent(inst, context, constraints);
 
-		myContext.fireTipiStructureChanged(inst);
+		context.fireTipiStructureChanged(inst);
 		return inst;
 	}
 

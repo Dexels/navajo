@@ -160,17 +160,6 @@ public class TipiConvertTipi extends TipiAction {
 	}
 
 	private void checkElement(Document d, Element element, String relativePath) throws TipiBreakException {
-		// DeferredElementImpl element = (DeferredElementImpl)e;
-		// Element e2 = (Element) element.cloneNode(true);
-		//		
-
-		// System.err.println("element: "+element.getClass());
-		// element.set
-		// System.err.println("Element: "+element.getNodeName()+"" +count ++);
-		;
-
-		// xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		// xsi:noNamespaceSchemaLocation="tipi.xsd"
 
 		if (element.getNodeName().equals("tid")) {
 			element.setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");

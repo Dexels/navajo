@@ -49,9 +49,7 @@ public class GetConnectorInit extends FunctionInterface {
 		if (o == null) {
 			return null;
 		}
-		if (o instanceof String) {
-
-		} else {
+		if (!(o instanceof String)) {
 			throw new TMLExpressionException(this, "Invalid operand: " + o.getClass().getName());
 		}
 		TipiComponent tc = (TipiComponent) pp;

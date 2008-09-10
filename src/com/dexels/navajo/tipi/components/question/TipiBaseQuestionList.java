@@ -190,10 +190,10 @@ public abstract class TipiBaseQuestionList extends TipiDataComponentImpl {
 		}
 	}
 
-	private final void flattenQuestion(Message questionMessage, Message answerMessage, String prefix) throws NavajoException {
+	private final void flattenQuestion(Message questionMessage, Message answerMessage, String prefixString) throws NavajoException {
 		Property value = questionMessage.getProperty("Value");
 		Property id = questionMessage.getProperty("Id");
-		Message answer = createAnswerMessage(answerMessage.getRootDoc(), prefix + "/" + id.getValue(), value);
+		Message answer = createAnswerMessage(answerMessage.getRootDoc(), prefixString + "/" + id.getValue(), value);
 		answerMessage.addMessage(answer);
 		Message subQuestions = questionMessage.getMessage("Question");
 		if (subQuestions == null) {
@@ -201,7 +201,7 @@ public abstract class TipiBaseQuestionList extends TipiDataComponentImpl {
 		}
 		for (int i = 0; i < subQuestions.getArraySize(); i++) {
 			Message current = subQuestions.getMessage(i);
-			flattenQuestion(current, answerMessage, prefix + "/" + id.getValue());
+			flattenQuestion(current, answerMessage, prefixString + "/" + id.getValue());
 		}
 	}
 

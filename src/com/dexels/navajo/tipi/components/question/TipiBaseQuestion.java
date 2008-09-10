@@ -118,9 +118,9 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
 		if (validationConditionProperty != null) {
 			validationCondition = validationConditionProperty.getValue();
 		}
-		List<TipiComponent> properties = getRecursiveProperties();
-		for (int i = 0; i < properties.size(); i++) {
-			PropertyComponent o = (PropertyComponent) properties.get(i);
+		List<TipiComponent> propertyList = getRecursiveProperties();
+		for (int i = 0; i < propertyList.size(); i++) {
+			PropertyComponent o = (PropertyComponent) propertyList.get(i);
 			Property pp = m.getProperty(o.getPropertyName());
 			if (pp != null) {
 				o.setProperty(pp);
@@ -323,13 +323,11 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
 			if (o != null) {
 				boolean result = ((Boolean) o.value).booleanValue();
 				return result;
-			} else {
-				System.err.println("No evaluation. Shit.");
-				return true;
 			}
-		} else {
+			System.err.println("No evaluation. Shit.");
 			return true;
 		}
+		return true;
 	}
 
 	public void load(XMLElement def, XMLElement instance, TipiContext context) throws TipiException {

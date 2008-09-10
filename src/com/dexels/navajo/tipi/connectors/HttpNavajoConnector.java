@@ -6,7 +6,7 @@ import com.dexels.navajo.client.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
 
-public class HttpNavajoConnector extends TipiBaseConnector implements TipiConnector {
+public class HttpNavajoConnector extends TipiBaseConnector  {
 
 	public void doTransaction(Navajo input, String service) throws TipiBreakException, TipiException {
 		if (input == null) {

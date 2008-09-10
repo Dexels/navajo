@@ -108,9 +108,8 @@ public class TipiActionFactory {
 
 				newAction.addParameter(instanceValue);
 				continue;
-			} else {
-				defined.typeCheck(val);
 			}
+			defined.typeCheck(val);
 
 			// if (instanceValue==null) {
 			// continue;
@@ -153,10 +152,9 @@ public class TipiActionFactory {
 			if (defined == null) {
 				newAction.addParameter(instanceValue);
 				continue;
-			} else {
-				newAction.addParameter(instanceValue);
-				defined.typeCheck(value);
 			}
+			newAction.addParameter(instanceValue);
+			defined.typeCheck(value);
 		}
 
 		// Check presence of required parameters.

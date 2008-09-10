@@ -2094,12 +2094,15 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 		if ("direct".equals(impl)) {
 			System.err.println("********* FOR NOW: Only supports indirect client *******");
 		}
-		String navajoServer = System.getProperty("tipi.client.server");
-		String navajoUsername = System.getProperty("tipi.client.username");
-		String navajoPassword = System.getProperty("tipi.client.password");
-		NavajoClientFactory.getClient().setUsername(navajoUsername);
-		NavajoClientFactory.getClient().setPassword(navajoPassword);
-		NavajoClientFactory.getClient().setServerUrl(navajoServer);
+		String navajoServerProperty = System.getProperty("tipi.client.server");
+		String navajoUsernameProperty = System.getProperty("tipi.client.username");
+		String navajoPasswordProperty = System.getProperty("tipi.client.password");
+		navajoServer = navajoServerProperty;
+		navajoPassword = navajoPasswordProperty;
+		navajoUsername = navajoUsernameProperty;
+		NavajoClientFactory.getClient().setUsername(navajoUsernameProperty);
+		NavajoClientFactory.getClient().setPassword(navajoPasswordProperty);
+		NavajoClientFactory.getClient().setServerUrl(navajoServerProperty);
 	}
 
 	public void addTipiActivityListener(TipiActivityListener listener) {
@@ -2677,8 +2680,8 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 
 		PropertyChangeListener propertyChangeListener = new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent e) {
-				Property master = (Property) e.getSource();
-				copyPropertyValue(master, slave);
+				Property masterSource = (Property) e.getSource();
+				copyPropertyValue(masterSource, slave);
 			}
 
 			public String toString() {

@@ -6,7 +6,7 @@ import java.util.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
 
-public class ResourceNavajoConnector extends TipiBaseConnector implements TipiConnector {
+public class ResourceNavajoConnector extends TipiBaseConnector {
 
 	// assume a load:
 	public void doTransaction(Navajo input, String service) throws TipiBreakException, TipiException {
