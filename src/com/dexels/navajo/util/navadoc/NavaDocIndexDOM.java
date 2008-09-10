@@ -76,11 +76,13 @@ public class NavaDocIndexDOM extends NavaDocBaseDOM {
 		this.table.setAttribute("cellpadding", "3");
 		this.table.setAttribute("class", "tablesorter");
 		this.divMain.appendChild(this.table);
+		
+		String jsPath = dset.getProperty(NavaDocConstants.JS_URI_PROPERTY);
 	
 		Element tableSorter = this.dom.createElement("script");
 		tableSorter.setAttribute("type", "text/javascript");
-		final Text sortScriptText = this.dom.createTextNode("$(document).ready(function() { $(\"#service-list\").tablesorter({widgets : ['zebra'], sortList : [[0,1]] }); });");
-		tableSorter.appendChild(sortScriptText);
+		tableSorter.setAttribute("src", jsPath+"footer.js");
+	
 		bodyWrapper.appendChild(tableSorter);
 		
 		// Table Header

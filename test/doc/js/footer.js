@@ -1,0 +1,1 @@
+$(document).ready(function() { $(\"#service-list\").tablesorter({widgets : ['zebra'], sortList : [[0,1]] }); });
