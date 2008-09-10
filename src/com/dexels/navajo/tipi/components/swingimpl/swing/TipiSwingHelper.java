@@ -38,7 +38,7 @@ public class TipiSwingHelper
   public void deregisterEvent(TipiEvent e) {
 	    Component c = (Component) myComponent.getContainer();
 	    if (c == null) {
-	      System.err.println("Cannot register swing event: Container is null!");
+	      System.err.println("Cannot deregister swing event: Container is null! Component class: "+myComponent.getClass());
 	      return;
 	    }
 	    try {
