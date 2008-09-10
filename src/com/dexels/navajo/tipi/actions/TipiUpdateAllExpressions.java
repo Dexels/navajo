@@ -39,7 +39,6 @@ public class TipiUpdateAllExpressions extends TipiAction {
 
 	private void doRefresh(TipiDataComponent toData) {
 		Navajo n = toData.getNearestNavajo();
-
 		try {
 			n.refreshExpression();
 		} catch (NavajoException e) {
