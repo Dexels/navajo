@@ -82,7 +82,8 @@ public class NavaDocIndexDOM extends NavaDocBaseDOM {
 		Element tableSorter = this.dom.createElement("script");
 		tableSorter.setAttribute("type", "text/javascript");
 		tableSorter.setAttribute("src", jsPath+"footer.js");
-	
+		final Text dummyText = this.dom.createTextNode(" ");
+		tableSorter.appendChild(dummyText);
 		bodyWrapper.appendChild(tableSorter);
 		
 		// Table Header
