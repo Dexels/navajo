@@ -5,8 +5,7 @@ import java.util.*;
 
 import javax.swing.*;
 
-import com.dexels.navajo.tipi.components.core.ThreadActivityListener;
-import com.dexels.navajo.tipi.components.core.TipiThread;
+import com.dexels.navajo.tipi.components.core.*;
 
 public class TipiThreadActivityMonitor extends TipiSwingComponentImpl {
 

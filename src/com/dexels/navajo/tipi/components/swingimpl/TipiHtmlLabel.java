@@ -1,14 +1,10 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
 import java.awt.*;
-import java.io.*;
-import java.net.*;
 
-import javax.imageio.*;
 import javax.swing.*;
 import javax.swing.text.*;
 
-import com.dexels.navajo.document.types.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 

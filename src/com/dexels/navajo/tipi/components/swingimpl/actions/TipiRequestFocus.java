@@ -2,10 +2,11 @@ package com.dexels.navajo.tipi.components.swingimpl.actions;
 
 import java.lang.reflect.*;
 
+import javax.swing.*;
+
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.internal.*;
-import javax.swing.*;
 /**
  * <p>
  * Title:
