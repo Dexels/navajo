@@ -13,12 +13,14 @@ package com.dexels.navajo.util.navadoc;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringBufferInputStream;
+import java.io.StringWriter;
 import java.util.Enumeration;
 import java.util.Properties;
 
@@ -42,6 +44,7 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
 //import com.dexels.navajo.server.listener.soap.wsdl.Generate;
 import com.dexels.navajo.util.Generate;
+import com.dexels.navajo.util.navadoc.config.DocumentSet;
 
 
 public class NavaDocTransformer extends NavaDocBaseDOM {
@@ -51,8 +54,7 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
   // paths
   private File styleSheetPath = null;
   private File servicesPath = null;
-  public static File basePath = null;
-  
+    
   // current service we last worked on
   private String serviceName = null;
 
@@ -84,7 +86,6 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
     this.servicesPath = svcPath;
 
     // get an XSLT transformer for our style sheet
-    System.err.println("stylesheetpath: " + this.styleSheetPath);
     this.transformer =
         tFactory.newTransformer( new StreamSource( this.styleSheetPath ) );
    
@@ -104,13 +105,11 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
     // path housekeeping
     this.styleSheetPath = styPath;
     this.servicesPath = svcPath;
-    this.basePath = this.styleSheetPath.getParentFile().getParentFile();
-    
+        
     // set indentation
     this.setIndent( ind );
 
     // get an XSLT transformer for our style sheet
-    System.err.println("stylesheetpath: " + this.styleSheetPath);
     this.transformer =
         tFactory.newTransformer( new StreamSource( this.styleSheetPath ) );
 
@@ -266,6 +265,10 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
 	
   }
   
+  public void setDset(DocumentSet dset){
+  	this.dset = dset;
+  }
+  
   public void transformWebService( final String sname ) {
 
     this.setOutputProperties();
@@ -283,7 +286,6 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
 
     final File sFileOrig = new File( this.servicesPath  + File.separator + sname + "." + NavaDocConstants.NAVASCRIPT_EXT );
     
-    System.err.println("sFileOrig: "  + sFileOrig.getAbsolutePath());
     File tempsFile = null;
   
     
@@ -332,23 +334,32 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
     	Generate gen = new Generate();
     	
     	// Generate input TML:
-    	FileInputStream fis = new FileInputStream(this.servicesPath  + File.separator + sname  + ".xml");
+    	FileInputStream fis = new FileInputStream(this.servicesPath  + File.separator + sname + ".xml");
     	inDoc = gen.getInputPart( null,  fis ); 
     	fis.close();
-    	
+    	    	    	
     	final Element inputNavajo = this.domIn.createElement( "span" );
     	this.domIn.getDocumentElement().appendChild( inputNavajo );
     	
-    	Document inSrc = (Document) inDoc.getMessageBuffer();
+    	StringWriter sw = new StringWriter();
+    	inDoc.write(sw);
+    	
+//    	System.err.println("InDOC: " + sw.toString());
+    	ByteArrayInputStream bin = new ByteArrayInputStream(sw.toString().getBytes());    	
+    	Document inSrc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(bin);
+    	
     	Element scriptTag = inSrc.createElement("script");
     	inSrc.getDocumentElement().appendChild(scriptTag);
     	scriptTag.setAttribute("name", NavaDoc.replaceString( sFileOrig.getName(), ".xml", "" ) );
     	scriptTag.setAttribute("type", "in");
     	
+//    	System.err.println("Template: " + this.styleSheetPath);
+    	
     	DOMSource domSrcIn = new DOMSource( inSrc.getDocumentElement() );
     	DOMResult domResIn = new DOMResult( inputNavajo );
     	this.transformer.transform( domSrcIn, domResIn );
     
+    	
         // Generate output TML:
     	fis = new FileInputStream(this.servicesPath  + File.separator + sname + ".xml");
     	outDoc = gen.getOutputPart( fis );
@@ -357,16 +368,23 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
     	final Element outputNavajo = this.domOut.createElement( "span" );
     	this.domOut.getDocumentElement().appendChild( outputNavajo );
     	
-    	Document outSrc = (Document) outDoc.getMessageBuffer();
-    	scriptTag = outSrc.createElement("script");
-    	outSrc.getDocumentElement().appendChild(scriptTag);
+    	StringWriter swo = new StringWriter();
+    	outDoc.write(swo);
+    	ByteArrayInputStream bino = new ByteArrayInputStream(swo.toString().getBytes());    	
+    	Document outSrc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(bino);
+    	  
+    	Element scriptTagOut = outSrc.createElement("script");
+    	outSrc.getDocumentElement().appendChild(scriptTagOut);
+    	scriptTagOut.setAttribute("name", NavaDoc.replaceString( sFileOrig.getName(), ".xml", "" ) );
+    	scriptTagOut.setAttribute("type", "in");
+    
     	scriptTag.setAttribute("name", NavaDoc.replaceString( sFileOrig.getName(), ".xml", "" ) );
     	scriptTag.setAttribute("type", "out");
     	
-    	DOMSource domSrcOut = new DOMSource( ((Document) outDoc.getMessageBuffer()).getDocumentElement() );
+    	DOMSource domSrcOut = new DOMSource( outSrc.getDocumentElement() );
     	DOMResult domResOut = new DOMResult( outputNavajo );
     	this.transformer.transform( domSrcOut, domResOut );
-    	
+//    	this.transformer.transform(domSrcOut, new StreamResult(System.err));
     	
     } catch ( Exception e ) {
     	

@@ -78,8 +78,7 @@ public class NavaDoc {
       this.setTransformer(dset);
       this.document(dset);
 
-      // output index pages
-     System.err.println("Ouput: " + dset.getPathConfiguration().getPath(NavaDocConstants.TARGET_PATH_ELEMENT) );
+      // output index pages     
      NavaDocOutputter idxOut =
           new NavaDocOutputter(this.index,   
         		               dset.getPathConfiguration().getPath(NavaDocConstants.TARGET_PATH_ELEMENT));
@@ -165,6 +164,7 @@ public class NavaDoc {
    
       //System.err.println("in setTransformer(), sPath = " + sPath);
       this.transformer = new NavaDocTransformer( tempStyleSheet, sPath, indent );
+      this.transformer.setDset(dset);
       this.list = new ServicesList(sPath);
 
       // set optional parameters, nulls OK
@@ -226,8 +226,7 @@ public class NavaDoc {
     while (iter.hasNext()) {
     	NavaDocIndexDOM currentindex = index;
       final String sname = (String) iter.next();
-      
-           
+                 
       /*
        * Check for subfolders, for subfolders we make new index files.
        */
