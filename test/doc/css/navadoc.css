@@ -1,37 +1,39 @@
-body {
-background:#FFFBFF none repeat scroll 0% 50%;
+/* tables */
+table.tablesorter {
+	font-family:arial;
+	background-color: #CDCDCD;
+	margin:10px 0pt 15px;
+	font-size: 8pt;
+	width: 100%;
+	text-align: left;
 }
-a:link {
-color:#35262D;
+table.tablesorter thead tr th, table.tablesorter tfoot tr th {
+	background-color: #e6EEEE;
+	border: 1px solid #FFF;
+	font-size: 8pt;
+	padding: 4px;
 }
-a:visited {
-color:#76A0B0;
-text-decoration:none;
+table.tablesorter thead tr .header {
+	background-image: url(bg.gif);
+	background-repeat: no-repeat;
+	background-position: center right;
+	cursor: pointer;
 }
-a:active {
-color:#444444;
-text-decoration:none;
+table.tablesorter tbody td {
+	color: #3D3D3D;
+	padding: 4px;
+	background-color: #FFF;
+	vertical-align: top;
 }
-a:hover {
-color:#76A0B0;
-text-decoration:underline;
+table.tablesorter tbody tr.odd td {
+	background-color:#F0F0F6;
 }
-
-td {
-background:#E8ECED none repeat scroll 0% 50%;
-color:#000000;
-font-family:"Arial";
-font-size:12px;
+table.tablesorter thead tr .headerSortUp {
+	background-image: url(asc.gif);
 }
-th {
-background:#35262D none repeat scroll 0% 50%;
-color:#FFFBFF;
-font-family:"Arial";
-font-size:12px;
+table.tablesorter thead tr .headerSortDown {
+	background-image: url(desc.gif);
 }
-select, option, textarea, input {
-background:#EEEEEE none repeat scroll 0% 50%;
-color:#000000;
-font-family:Verdana,arial,helvetica,sans-serif;
-font-size:11px;
+table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSortUp {
+background-color: #8dbdd8;
 }

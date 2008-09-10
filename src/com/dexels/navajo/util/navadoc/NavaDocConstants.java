@@ -24,6 +24,8 @@ public class NavaDocConstants {
   public static final String PROPERTY_ELEMENT = "property";
 
   public static final String CSS_URI_PROPERTY = "css-uri";
+  public static final String JS_URI_PROPERTY = "js-uri";
+  public static final String IMAGES_URI_PROPERTY = "images-uri";
   public static final String BASE_URI_PROPERTY = "base-uri";
 
   public static final String BASE_SYS_PROPERTY = "base";

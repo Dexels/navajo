@@ -3,23 +3,25 @@
 <navadoc xmlns="http://www.dexels.com/NavaDoc"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dexels.com/NavaDoc http://dexels.durgerlan.nl:8080/schema/navadoc-config.xsd">
   <configuration>
-    <document-set name="Test Project">
-      <description> Test NavaDoc system </description>
-      <path base="/home/meichler/projects">
-        <services value="NavaDoc/test/services"/>
-        <stylesheet value="NavaDoc/test/xsl/navadoc.xsl"/>
+    <document-set name="Sportlink">
+      <description></description>
+      <path base="/home/aphilip/workspace">
+        <services value="sportlink-serv/navajo-tester/auxilary/scripts"/>
+        <stylesheet value="NavaDoc/xsl/navadocweb.xsl"/>
         <target value="NavaDoc/test/doc"/>
       </path>
       <property name="base-uri" value="./"/>
-      <property name="css-uri" value="./this/bogus.css"/>
+      <property name="css-uri" value="/home/aphilip/workspace/NavaDoc/test/doc/css/navadoc.css"/>
+      <property name="js-uri" value="/home/aphilip/workspace/NavaDoc/test/doc/js/"/>
+      <property name="images-uri" value="/home/aphilip/workspace/NavaDoc/test/doc/images/"/>
       <property name="indent" value="2"/>
     </document-set>
-  </configuration>
+    </configuration>
   <configuration
     log4j:schemaLocation="http://jakarta.apache.org/log4j/ http://dexels.durgerlan.nl:8080/schema/log4j.xsd"
     xmlns="http://jakarta.apache.org/log4j/" xmlns:log4j="http://www.w3.org/2001/XMLSchema-instance">
     <appender class="org.apache.log4j.RollingFileAppender" name="R">
-      <param name="File" value="/home/meichler/projects/NavaDoc/log/navadoc.log"/>
+      <param name="File" value="/home/aphilip/workspace/NavaDoc/log/navadoc.log"/>
       <param name="MaxFileSize" value="100KB"/>
       <param name="MaxBackupIndex" value="1"/>
       <layout class="org.apache.log4j.PatternLayout">

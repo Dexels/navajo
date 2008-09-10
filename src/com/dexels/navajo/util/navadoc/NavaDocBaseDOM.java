@@ -28,6 +28,9 @@ public class NavaDocBaseDOM {
 
   public static final String vcIdent =
       "$Id$";
+  
+	private final String jsJQueryLatest = "jquery-latest.js";
+	private final String jsJQueryTableSorter = "jquery-tablesorter.js";
 
   // DOM Document Builder
   protected DocumentBuilder dBuilder = null;
@@ -37,6 +40,7 @@ public class NavaDocBaseDOM {
   
   protected Element root = null;
   protected Element body = null;
+  protected Element bodyWrapper = null;
 
   // optional properties for XHTML document headers
   protected String projectName = null;
@@ -181,7 +185,27 @@ public class NavaDocBaseDOM {
 	  this.domIn = domImpl.createDocument( 	NavaDocConstants.XHTML_NAMESPACE, "html", null );
 	  this.domOut = domImpl.createDocument( 	NavaDocConstants.XHTML_NAMESPACE, "html", null );
 	  
+	  String jsPath = dset.getProperty(NavaDocConstants.JS_URI_PROPERTY);
+	  
 	  Element headerIn = this.domIn.createElement("head");
+	  
+	  Element scriptOne = this.domIn.createElement("script");
+	  Element scriptTwo = this.domIn.createElement("script");
+	  final Text sText = this.domIn.createTextNode(" ");
+	  final Text qText = this.domIn.createTextNode(" ");
+	  
+	  scriptOne.appendChild(sText);
+	  scriptTwo.appendChild(qText);
+	  
+	  scriptOne.setAttribute("type", "text/javascript");
+	  scriptOne.setAttribute("src", jsPath+jsJQueryLatest);
+	  
+	  scriptTwo.setAttribute("type", "text/javascript");
+	  scriptTwo.setAttribute("src", jsPath+jsJQueryTableSorter);
+	  
+	  headerIn.appendChild(scriptOne);
+	  headerIn.appendChild(scriptTwo);
+	  
 	  domIn.getDocumentElement().appendChild(headerIn);
 	  if ( (this.cssUri != null) && (this.cssUri.length() > 0)) {
 		  Element css = this.domIn.createElement("link");
@@ -220,7 +244,26 @@ public class NavaDocBaseDOM {
     this.root.setAttribute("class", "navadoc");
     this.root.setAttribute("xmlns", "http://www.w3.org/1999/xhtml");
 
-    Element header = this.dom.createElement("head");
+    String jsPath = dset.getProperty(NavaDocConstants.JS_URI_PROPERTY);
+	  
+	  Element header = this.dom.createElement("head");
+	  
+	  Element scriptOne = this.dom.createElement("script");
+	  Element scriptTwo = this.dom.createElement("script");
+	  
+	  final Text sText = this.dom.createTextNode(" ");
+	  final Text qText = this.dom.createTextNode(" ");
+	  scriptOne.appendChild(sText);
+	  scriptTwo.appendChild(qText);
+	  
+	  scriptOne.setAttribute("type", "text/javascript");
+	  scriptOne.setAttribute("src", jsPath+jsJQueryLatest);
+	  
+	  scriptTwo.setAttribute("type", "text/javascript");
+	  scriptTwo.setAttribute("src", jsPath+jsJQueryTableSorter);
+	  
+	  header.appendChild(scriptOne);
+	  header.appendChild(scriptTwo);
 
     Element metaGen = this.dom.createElement("meta");
 
@@ -251,9 +294,13 @@ public class NavaDocBaseDOM {
   // adds body node to the document when we're ready
   protected void addBody(String cname) {
 
-    this.body = this.dom.createElement("body");
+    this.body = this.dom.createElement("body");    
     body.setAttribute("class", cname);
     this.root.appendChild(body);
+    
+    this.bodyWrapper = this.dom.createElement("div");
+    bodyWrapper.setAttribute("id", "wrapper");
+    this.body.appendChild(bodyWrapper);
 
   } // protected void addBody()
 
