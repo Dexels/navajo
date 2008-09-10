@@ -94,18 +94,14 @@ public class TipiEvent implements TipiExecutable {
 
 	public void load(TipiComponent tc, XMLElement elm, TipiContext context) throws TipiException {
 		myComponent = tc;
-//		if (elm.getName().equals("event")) {
 			String stringType = (String) elm.getAttribute("type");
 			if(stringType==null) {
 				stringType = elm.getName();
 			}
-			
 			myEventName = stringType;
 			myEventService = (String) elm.getAttribute("service");
 			mySource = (String) elm.getAttribute("listen");
-
 			setStackElement(new TipiStackElement(myEventName+":",elm,getStackElement()));
-			
 			for (Iterator<String> iterator =  elm.enumerateAttributeNames(); iterator.hasNext();) {
 				String n = iterator.next();
 				eventPropertyMap .put(n,elm.getStringAttribute(n));
@@ -128,25 +124,20 @@ public class TipiEvent implements TipiExecutable {
 					StringTokenizer st = new StringTokenizer(current.getName(),".");
 					String classType = st.nextToken();
 					String method = st.nextToken();
-					System.err.println("DETECTED NEW STYLE METHOD: "+classType);
-
 					if(method.equals("instantiate")) {
 						XMLElement newCopy = current.copy();
 						newCopy.setName("instantiate");
-//						newCopy.setAttribute("name", "'"+method+"'");
-						System.err.println("AAP:\n"+newCopy);
+						newCopy.setAttribute("expectType", "'"+classType+"'");
 						TipiAction ta = context.instantiateTipiAction(newCopy, myComponent,this);
 						myExecutables.add(ta);
 					} else {
 						XMLElement xxx = context.getComponentDefinition(classType);
-						System.err.println("xx: "+xxx);
 						XMLElement newCopy = current.copy();
 						newCopy.setName("performTipiMethod");
 						newCopy.setAttribute("name", "'"+method+"'");
 						TipiAction ta = context.instantiateTipiAction(newCopy, myComponent,this);
 						myExecutables.add(ta);
 					}
-					
 				}
 			}
 	}
