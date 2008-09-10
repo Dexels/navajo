@@ -1,7 +1,6 @@
 package com.dexels.navajo.tipi.components.swingimpl.jnlp;
 
 import java.net.*;
-import java.util.*;
 
 import javax.jnlp.*;
 
