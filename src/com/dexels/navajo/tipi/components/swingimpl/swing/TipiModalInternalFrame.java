@@ -121,8 +121,8 @@ public TipiModalInternalFrame(String title, JRootPane
     frame.setVisible(true);
   }
 
-public static void showInternalMessage(JRootPane rootPane, Component defaultDesktop, String title, String text, int poolSize) {
-	JOptionPane.showInternalMessageDialog(defaultDesktop,text,title,JOptionPane.INFORMATION_MESSAGE);
+public static void showInternalMessage(JRootPane rootPane, Component defaultDesktop, String title, String text, int poolSize, int messageType) {
+	JOptionPane.showInternalMessageDialog(defaultDesktop,text,title,messageType);
 }
   
 //public static void showInternalFrame(JRootPane root, JDesktopPane pane, JComponent contents, String title, String text, int type) {
