@@ -62,7 +62,10 @@ public class TipiThread extends Thread implements Comparable<TipiThread>{
 							myPool.getContext().threadStarted(Thread.currentThread());
 							te.performAction(te.getEvent(), parentEvent, 0);
 						} catch (Throwable ex) {
-							ex.printStackTrace();
+							if(!(ex instanceof TipiBreakException)) {
+								ex.printStackTrace();
+								te.dumpStack("Problem: "+ex.getMessage());
+							}
 						} finally {
 							TipiEventListener tel = myPool.getEventListener(te);
 							if (tel != null) {
