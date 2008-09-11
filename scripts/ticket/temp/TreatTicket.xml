@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tsl author="Erik van der Weijden" id="ticket/ShowTicket" notes="" xmlns="http://www.dexels.com/navascript" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<tsl author="Erik van der Weijden" id="ticket/TreatTicket" notes="" xmlns="http://www.dexels.com/navascript" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.dexels.com/navascript http://www.dexels.com/schema/navascript.xsd ">
-    <methods>
-        <method name="ticket/ProcessTicketTreat" />
-    </methods>
     <map object="com.dexels.navajo.adapter.SQLMap">
         <field name="datasource">
             <expression value="'ticket'" />
+        </field>
+        <field name="debug">
+            <expression value="true"/>
         </field>
         <field name="query">
             <expression xml:space="preserve">
@@ -14,17 +14,17 @@
                 FROM ticket t, person subm, person supp, category c
                 WHERE t.initsupportpersonid = 1
                   AND subm.personid = t.submitterid
-                  AND t.status != 'gesloten'
+                  AND t.status != 'gesloten' 
                   AND t.initcategoryid = c.categoryid
-                  AND t.ticketid = ?  
+                  AND t.ticketid = ? 
             </expression>
         </field>
         <field name="parameter">
-            <expression value="[/Ticket/TicketId]" />
+            <expression value="[/Ticket/TicketCode]" />
         </field>
         <message name="Ticket">
-            <property name="TicketCode" direction="out" description="Ticketcode">
-                <expression value="[/Ticket/TicketId]" />
+            <property name="TicketId" direction="out" description="Ticketcode">
+                <expression value="[/Ticket/TicketCode]" />
             </property>
             <property name="Name" direction="out" description="Indiener">
                 <expression value="$columnValue('name')" />
@@ -35,45 +35,21 @@
             <property name="SubmitDate" direction="out" description="Aanmaakdatum">
                 <expression value="$columnValue('submitdate')" />
             </property>
-            <!--
-                <property name="Description" direction="in" description="Beschrijving"> <expression value="$columnValue('description')" /> </property> <property name="TreatDate" type="date"
-                direction="in" description="Behandeldatum"> <expression value="TODAY" /> </property>
-            -->
-            <property name="Request" type="memo" direction="out" description="Vraag">
-                <expression value="$columnValue('request')" />
+            <!-- 
+            <property name="Description" direction="in" description="Beschrijving">
+                <expression value="$columnValue('description')" />
             </property>
-            <property name="InitCategoryName" direction="out" description="categorie">
-                <expression value="$columnValue('categoryname') + ' ' + $columnValue('subcategoryname')" />
-            </property>
+             -->
             <property name="TreatDate" type="date" direction="in" description="Behandeldatum">
                 <expression value="TODAY" />
             </property>
-        </message>
-        <field name="query">
-            <expression xml:space="preserve">
-                SELECT distinct concat(p.firstname,' ',p.infix,' ',p.lastname) as name, tt.treatdate, tt.treatdescription
-                FROM tickettreat tt, person p
-                WHERE p.personid = tt.personid 
-                and tt.ticketid = ? 
-            </expression>
-        </field>
-        <field name="parameter">
-            <expression value="[/Ticket/TicketId]" />
-        </field>
-        <message name="TicketTreats">
-            <map ref="resultSet">
-                <property name="SuppName" direction="out" description="Supporter">
-                    <expression value="$columnValue('name')" />
-                </property>
-                <property name="TreatDate" direction="out" description="Behandeldatum">
-                    <expression value="$columnValue('treatdate')" />
-                </property>
-                <property name="TreatDescription" type="memo" direction="out" description="Behandeling">
-                    <expression value="$columnValue('treatdescription')" />
-                </property>
-            </map>
-        </message>
-        <message name="TicketProcess">
+            <property name="Request" type="memo" direction="in" description="Vraag">
+                <expression value="$columnValue('request')" />
+            </property>
+            <property name="InitCategoryName" direction="in" description="categorie">
+                <expression value="$columnValue('categoryname') + ' ' + $columnValue('subcategoryname')" />
+            </property>
+            
             <property name="TreatDescription" type="memo" direction="in" description="Afhandeling" />
             
             <!-- select notificatedperson    -->
@@ -91,7 +67,7 @@
                         FROM person P               
                     </expression>
                 </field>
-                <property name="Notificated" type="selection" direction="in" description="Notificatie naar">
+                <property name="Notificated" type="selection" direction="in" description="Notificatie verstuurd aan">
                     <map ref="resultSet">
                         <property name="name">
                             <expression value="$columnValue('notificated')" />
@@ -108,14 +84,15 @@
                 <option name="email" value="email" selected="0" />
                 <option name="telefoon" value="telefoon" selected="0" />
                 <option name="ticket" value="ticket" selected="0" />
+                <option name="Bezoek_consultant" value="bezoek_consultant" selected="0" />
             </property>
-            <property name="Priority" type="selection" direction="in" description="Prioriteit">
-                <option name="-" value="'-1'" selected="1" />
-                <option name="onmiddelijk afhandelen" value="onmiddelijk afhandelen" selected="0" />
-                <option name="wens" value="wens" selected="0" />
-                <option name="ter kennisgeving" value="ter kennisgeving" selected="0" />
-                <option name="wacht op informatie" value="wacht op informatie" selected="0" />
-            </property>
+        <property name="Priority" type="selection" direction="in" description="Prioriteit">
+            <option name="-" value="'-1'" selected="1" />
+            <option name="onmiddelijk afhandelen" value="onmiddelijk afhandelen" selected="0" />
+            <option name="wens" value="wens" selected="0" />
+            <option name="ter kennisgeving" value="ter kennisgeving" selected="0" />
+            <option name="wacht op informatie" value="wacht op informatie" selected="0" />          
+        </property>
             <property name="Status" type="selection" direction="in" description="Update status">
                 <option name="-" value="'-1'" selected="1" />
                 <option name="open" value="open" selected="0" />
@@ -141,7 +118,7 @@
                         WHERE P.personid = PSG.personid                 
                     </expression>
                 </field>
-                <property name="SupportPerson" type="selection" direction="in" description="wijzig behandelaar">
+                <property name="SupportPerson" type="selection" direction="in" description="Nieuwe behandelaar">
                     <map ref="resultSet">
                         <property name="name">
                             <expression value="$columnValue('supporter')" />
@@ -153,8 +130,57 @@
                 </property>
             </map>
         </message>
-        <message name="CurrTicketId">
-            <property name="TicketCode" type="integer" direction="in" />
+        
+        
+        
+        
+        <message name="Resources">
+            <property name="ProjectId" type="selection" direction="in">
+                <option name="-" value="-1" selected="1" />
+            </property>
+            <map object="com.dexels.navajo.adapter.SQLMap">
+                <field name="datasource">
+                    <expression value="'ticket'" />
+                </field>
+                <field name="query">
+                    <expression xml:space="preserve">
+                SELECT projectid, projectname FROM project
+            </expression>
+                </field>
+                <property name="ProjectId" type="selection" direction="in">
+                    <map ref="resultSet">
+                        <property name="name">
+                            <expression value="$columnValue('projectname')" />
+                        </property>
+                        <property name="value">
+                            <expression value="$columnValue('projectid')" />
+                        </property>
+                    </map>
+                </property>
+            </map>
+            <property name="ResourceType" type="selection" direction="in">
+                <option name="-" value="-1" selected="1" />
+            </property>
+            <map object="com.dexels.navajo.adapter.SQLMap">
+                <field name="datasource">
+                    <expression value="'ticket'" />
+                </field>
+                <field name="query">
+                    <expression xml:space="preserve">
+                SELECT typeofresource FROM resources
+            </expression>
+                </field>
+                <property name="ResourceType" type="selection" direction="in">
+                    <map ref="resultSet">
+                        <property name="name">
+                            <expression value="$columnValue('typeofresource')" />
+                        </property>
+                        <property name="value">
+                            <expression value="$columnValue('typeofresource')" />
+                        </property>
+                    </map>
+                </property>
+            </map>
         </message>
     </map>
 </tsl>

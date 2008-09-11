@@ -2,9 +2,6 @@
 <tsl author="Erik van der Weijden" id="ticket/ListMyTickets" notes="" repository="$Id$" xmlns="http://www.dexels.com/navascript"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dexels.com/navascript http://www.dexels.com/schema/navascript.xsd ">
     <methods>
-        <method name="ticket/showTicketInfo">
-            <required message="TicketList" />
-        </method>
         <method name="ticket/ShowTicket" />
     </methods>
     <map object="com.dexels.navajo.adapter.SQLMap">
@@ -38,7 +35,7 @@
             </map>
         </message>
         <message name="Ticket">
-          <property name="TicketId"/>
+          <property name="TicketId" type="integer" direction="in"/>
         </message>
       
     </map>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tsl author="Erik" id="ticket/InitInsertResources" notes="" repository="$Id$" xmlns="http://www.dexels.com/navascript"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dexels.com/navascript http://www.dexels.com/schema/navascript.xsd ">
+    <methods>
+        <method name="ticket/ProcessInsertResources">
+            <required message="Resources" />
+        </method>
+    </methods>
+    <message name="Resources">
+        <property name="ResourceName" type="string" direction="in" description="Resourcenaam" />
+        <property name="ResourceType" type="string" direction="in" description="Resourcetype">
+            <option name="-" value="-1" selected="1" />
+            <option name="webservice" value="webservice" selected="0" />
+            <option name="tipifile" value="tipifile" selected="0" />
+            <option name="javafile" value="javafile" selected="0" />
+            <option name="sqlscript" value="sqlscript" selected="0" />           
+        </property>
+        <property name="ResourcePath" type="string" direction="in" description="Resourcepad" />
+        <property name="ResourceServer" type="string" direction="in" description="Resourceserver" >
+            <option name="-" value="-1" selected="1" />
+            <option name="hermes" value="hermes" selected="0" />
+            <option name="laurier" value="laurier" selected="0" />
+            <option name="atlas" value="atlas" selected="0" />
+            <option name="odysseus" value="odysseus" selected="0" />           
+        </property>
+        <property name="Project" type="selection" direction="in" description="Project">
+            <option name="-" value="-1" selected="1" />
+        </property>
+        <map object="com.dexels.navajo.adapter.SQLMap">
+            <field name="datasource">
+                <expression value="'ticket'" />
+            </field>
+            <field name="query">
+                <expression xml:space="preserve">
+                SELECT projectid, projectname FROM project 
+            </expression>
+            </field>
+            <property name="Project" type="selection" direction="in">
+                <map ref="resultSet">
+                    <property name="name">
+                        <expression value="$columnValue('projectname')" />
+                    </property>
+                    <property name="value">
+                        <expression value="$columnValue('projectid')" />
+                    </property>
+                </map>
+            </property>
+        </map>
+        <map object="com.dexels.navajo.adapter.SQLMap">
+            <field name="datasource">
+                <expression value="'ticket'" />
+            </field>
+        </map>
+    </message>
+</tsl>

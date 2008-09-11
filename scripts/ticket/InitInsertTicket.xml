@@ -44,12 +44,10 @@
         </property>
         <property name="Priority" type="selection" direction="in" description="Prioriteit">
             <option name="-" value="'-1'" selected="1" />
-            <option name="VeryUrgent" value="veryurgent" selected="0" />
+            <option name="onmiddelijk afhandelen" value="onmiddelijk afhandelen" selected="0" />
             <option name="wens" value="wens" selected="0" />
-            <option name="problemen" value="problemen" selected="0" />
-            <option name="Urgent" value="urgent" selected="0" />
-            <option name="CanWait" value="canwait" selected="0" />
-            <option name="Ignore" value="ignore" selected="0" />
+            <option name="ter kennisgeving" value="ter kennisgeving" selected="0" />
+            <option name="wacht op informatie" value="wacht op informatie" selected="0" />          
         </property>
 
         <!--  Select supportgroup -->

@@ -26,7 +26,7 @@
         <!-- <message name="SubmitterCondition" condition="[/Person/SubmitterId] != '-1'" mode="ignore"> -->
         
         <field name="parameter">
-            <expression value="[/Ticket/TicketId]" />
+            <expression value="[/Ticket/TicketCode]" />
         </field>
         <field name="parameter">
             <expression value="[/Ticket/PersonId]" />
@@ -35,19 +35,19 @@
             <expression value="[/Ticket/TreatDate]" />
         </field>
         <field name="parameter">
-            <expression value="[/Ticket/TreatDescription]" />
+            <expression value="[/TicketProcess/TreatDescription]" />
         </field>
         <field name="parameter">
-            <expression value="[/Ticket/Notificated]" />
+            <expression value="[/TicketProcess/Notificated]" />
         </field>
         <field name="parameter">
-            <expression value="[/Ticket/NotificationVia]" />
+            <expression value="[/TicketProcess/NotificationVia]" />
         </field>
         <field name="parameter">
-            <expression value="[/Ticket/NotificationMessage]" />
+            <expression value="[/TicketProcess/NotificationMessage]" />
         </field>
         <field name="parameter">
-            <expression value="[/Ticket/Priority]" />
+            <expression value="[/TicketProcess/Priority]" />
         </field>
                 <field name="doUpdate">
             <expression value="true" />
@@ -66,10 +66,10 @@
             </expression>
         </field>
         <field name="parameter">
-            <expression value="[/Ticket/Status]" />
+            <expression value="[/TicketProcess/Status]" />
         </field>        
         <field name="parameter">
-            <expression value="[/Ticket/TicketId]" />
+            <expression value="[/Ticket/TicketCode]" />
         </field>
 
         <field name="doUpdate">
@@ -104,10 +104,10 @@
             <expression value="[/@ThisTicketTreatId]" />
         </field>
         <field name="parameter">
-            <expression value="[/Ticket/FileName]" />
+            <expression value="[/TicketProcess/FileName]" />
         </field>
         <field name="parameter">
-            <expression value="[/Ticket/Attachment]" />
+            <expression value="[/TicketProcess/Attachment]" />
         </field>
         <field name="doUpdate">
             <expression value="true" />

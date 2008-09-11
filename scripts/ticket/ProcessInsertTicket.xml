@@ -4,7 +4,6 @@
     <param name="UpdateCount">
         <expression value="0" />
     </param>   
-<!-- TREAT ATTACHMENTS NOT IMPLEMENTED -->
     <map object="com.dexels.navajo.adapter.SQLMap">
         <field name="datasource">
             <expression value="'ticket'" />

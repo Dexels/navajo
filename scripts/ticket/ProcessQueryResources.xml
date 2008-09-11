@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tsl author="Erik van der Weijden" id="ticket/ProcessQueryResources" notes="" repository="$Id$" xmlns="http://www.dexels.com/navascript"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dexels.com/navascript http://www.dexels.com/schema/navascript.xsd ">
+    <param name="UpdateCount">
+        <expression value="0" />
+    </param>
+    <map object="com.dexels.navajo.adapter.SQLMap">
+        <field name="datasource">
+            <expression value="'ticket'" />
+        </field>
+        <field name="query">
+            <expression xml:space="preserve">
+                SELECT R.resourceid, R.resourcename, R.typeofresource, R.resourcepath, R.resourceserver 
+                FROM resources R, project P
+                WHERE R.projectid = P.projectid
+                AND P.projectid = ?
+                AND R.typeofresource = ?     
+            </expression>
+        </field>
+        <field name="parameter">
+            <expression value="[/Resources/ProjectId]" />
+        </field>
+        <field name="parameter">
+            <expression value="[/Resources/ResourceType]" />
+        </field>
+     </map>
+        <message name="ResourcesDetails">
+            <map ref="resultSet">
+                <property name="ResourceId">
+                    <expression value="$columnValue('resourceid')" />
+                </property>
+                <property name="TypeOfResource">
+                    <expression value="$columnValue('typeofresource')" />
+                </property>
+                <property name="ResourceName">
+                    <expression value="$columnValue('resourcename')" />
+                </property>
+                <property name="ResourcePath">
+                    <expression value="$columnValue('resourcepath')" />
+                </property>
+                <property name="ResourceServer">
+                    <expression value="$columnValue('resourceserver')" />
+                </property>
+            </map>
+        </message>
+
+</tsl>

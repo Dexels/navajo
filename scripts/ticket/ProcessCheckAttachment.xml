@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tsl author="Erik van der Weijden" id="ticket/ProcessCheckattachment" notes="Check duplicate attachments" repository="$Id$" xmlns="http://www.dexels.com/navascript" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dexels.com/navascript http://www.dexels.com/schema/navascript.xsd">
+    <map object="com.dexels.navajo.adapter.SQLMap">
+        <field name="datasource">
+            <expression value="'sportlinkkernel'" />
+        </field>
+        <field name="query">
+            <expression xml:space="preserve">
+                SELECT COUNT(*) AS cnt
+                FROM   attachment
+                WHERE  LOWER(name) = ?
+            </expression>
+        </field>
+        <field name="parameter">
+            <expression value="ToLower([/Ticket/FileName])" />
+        </field>
+        <message name="Result">
+            <property name="PossibleDuplicate" direction="out" description="Mogelijk dubbel bestand?">
+                <expression value="$columnValue('cnt') &gt; 0" />
+            </property>
+        </message>
+    </map>
+</tsl>
