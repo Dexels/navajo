@@ -280,9 +280,7 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
     this.setHeaders();
     this.addBody( "document-body" );
 
-    final Element span = this.dom.createElement( "span" );
-
-    span.setAttribute( "class", "navascript" );
+    
 
     final File sFileOrig = new File( this.servicesPath  + File.separator + sname + "." + NavaDocConstants.NAVASCRIPT_EXT );
     
@@ -316,14 +314,14 @@ public class NavaDocTransformer extends NavaDocBaseDOM {
     	//TransformerFactory.newInstance().newTransformer().transform( domSrc, new StreamResult(System.err));
     	
     	
-    	DOMResult domRes = new DOMResult( span );
+    	DOMResult domRes = new DOMResult( divMain );
     	//StreamResult sr = new StreamResult(new File("/home/arjen/aap"));
     	
     	this.errorText = null;
     	//System.err.println("About to generate doc for: " + sname);
     	
     	this.transformer.transform( domSrc, domRes );
-    	this.body.appendChild( span );
+//    	this.divMain.appendChild( span );
     	
     	final Element root = sDoc.getDocumentElement();
     	this.notes = root.getAttribute( NavaDocConstants.NOTES_ATTR );
