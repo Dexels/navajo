@@ -1,39 +1,189 @@
-/* tables */
-table.tablesorter {
-	font-family:arial;
-	background-color: #CDCDCD;
-	margin:10px 0pt 15px;
-	font-size: 8pt;
-	width: 100%;
+/* @override http://diomedes.dexels.nl/NavaDoc/test/doc/css/navadoc.css */
+
+html {
+	font-size: 100%;
+    height:100%;
+}
+
+body {
+	background: url(s2-bg.png) repeat scroll 50% 0pt;
+	color: #444444;
+	font-family: georgia,serif;
+	font-size: 1em;
+	margin: 0;
+	padding: 0;
+	text-align: center;
+    height: 100%;
+}
+
+#wrapper {
+    width: 100%;    
+}
+
+#header {
+	margin: 0;
+	height: 3em;
+}
+
+#breadcrumb {
+	margin: 0;
+	line-height: 2em;
+}
+#breadcrumb a {
+	color: #333;
+}
+
+#main {
+    background: #FFFFFF none repeat scroll 0% 0%;
+	border: 0.063em solid #CCCCCC;
 	text-align: left;
+	width: 46.25em;
+	margin: 0 auto;
 }
+#footer {
+    width: 100%;
+	height: 2em;
+}
+p {
+	font-size: 0.825em;
+	line-height: 1.75em;
+	margin: 1.5em;
+}
+
+h1 {
+	background: url(header-bar-bg.jpg) repeat scroll 50% 0pt;
+	font-size: 1.25em;
+	font-weight: 300;
+	width: 100%;
+	color: white;
+	text-align: right;
+	margin: 0;
+	line-height: 3em;
+	vertical-align: middle;
+}
+
+h2 {
+	font-size: 1.125em;
+	font-style: italic;
+	font-weight: 300;
+	line-height: 1em;
+	margin: 1em;
+	text-align: center;
+}
+
+fieldset {
+	border: 0.063em solid #CCCCCC;
+	font-size: 0.825em;
+	margin: 1em;
+	width: 49em;
+}
+
+fieldset ol {
+	list-style-image: none;
+	list-style-position: outside;
+	list-style-type: none;
+	padding: 0pt;
+}
+
+fieldset li {
+	float: left;
+	line-height: 2em;
+	width: 40em;
+}
+
+label {
+	display: block;
+	float: left;
+	margin-right: 1em;
+	width: 15em;
+}
+
+.error {
+	color: red;
+	font-weight: bold;
+}
+
+.warning {
+	background-color: #EEEEEE;
+}
+
+.small {
+	font-size: 0.75em;
+}
+
+input, select, textarea {
+	background-color: #FAFAFA;
+	border: 0.063em solid #CCCCCC;
+	font-family: georgia,serif;
+	padding: 0.15em 0pt 0.15em 0.25em;
+}
+
+select {
+	width: 11.65em;
+}
+
+input.text {
+	width: 20em;
+}
+
+input.checkbox {
+	width: 1em;
+}
+
+input.hidden {
+	visibility: hidden;
+}
+
+div.breadcrumb {
+	font-size: 0.75em;
+	margin: 1em;
+}
+table.tablesorter {
+	background-color: #CDCDCD;
+	margin: 0.5em 0em 0.5em;
+	text-align: left;
+	font-size: 0.75em;
+	width: 100%;
+}
+
 table.tablesorter thead tr th, table.tablesorter tfoot tr th {
-	background-color: #e6EEEE;
-	border: 1px solid #FFF;
-	font-size: 8pt;
-	padding: 4px;
+	background-color: #E6EEEE;
+	border: 1px solid #FFFFFF;
+	font-size: 1em;
+	padding: 0.25em;
 }
+
 table.tablesorter thead tr .header {
 	background-image: url(bg.gif);
+	background-position: right center;
 	background-repeat: no-repeat;
-	background-position: center right;
 	cursor: pointer;
 }
+
 table.tablesorter tbody td {
+	background-color: #FFFFFF;
 	color: #3D3D3D;
-	padding: 4px;
-	background-color: #FFF;
+	padding: 0.25em;
 	vertical-align: top;
 }
+
 table.tablesorter tbody tr.odd td {
-	background-color:#F0F0F6;
+	background-color: #F0F0F6;
 }
+
+table.tablesorter td a {
+	text-decoration: none;
+	color: #333;
+}
+
 table.tablesorter thead tr .headerSortUp {
 	background-image: url(asc.gif);
 }
+
 table.tablesorter thead tr .headerSortDown {
 	background-image: url(desc.gif);
 }
+
 table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSortUp {
-background-color: #8dbdd8;
+	background-color: #8DBDD8;
 }
