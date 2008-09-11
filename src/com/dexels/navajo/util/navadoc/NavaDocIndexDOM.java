@@ -42,6 +42,8 @@ public class NavaDocIndexDOM extends NavaDocBaseDOM {
 
 	public NavaDocIndexDOM(final DocumentSet dset) throws ParserConfigurationException {
 		super(dset);
+		
+		final Text tText = this.dom.createTextNode(" ");
 
 		this.title = "NavaDoc";
 		this.setHeaders(this.title);
@@ -50,6 +52,7 @@ public class NavaDocIndexDOM extends NavaDocBaseDOM {
 		// Breadcrumb
 		this.breadcrumb = this.dom.createElement("div");
 		breadcrumb.setAttribute("class", "breadcrumb");
+		breadcrumb.appendChild(tText);
 		this.divBreadcrumb.appendChild(breadcrumb);
 		//
 
@@ -214,6 +217,7 @@ public class NavaDocIndexDOM extends NavaDocBaseDOM {
 		Element img = this.dom.createElement("img");
 		img.setAttribute("src", imagesRoot + "document.png");
 		img.setAttribute("border", "0");
+		img.setAttribute("alt", "script");
 		tdRowIndex.appendChild(img);
 		
 		final Element tdLeft = this.dom.createElement("td");
@@ -255,6 +259,7 @@ public class NavaDocIndexDOM extends NavaDocBaseDOM {
 		Element img = this.dom.createElement("img");
 		img.setAttribute("src", imagesRoot + "folder.png");
 		img.setAttribute("border", "0");
+		img.setAttribute("alt", "folder");
 		tdRowIndex.appendChild(img);
 
 		

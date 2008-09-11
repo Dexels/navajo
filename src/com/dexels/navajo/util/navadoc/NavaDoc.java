@@ -109,7 +109,7 @@ public class NavaDoc {
   public static void main(String[] args) throws Exception {
 	  
 	  NavaDoc documenter = null;
-	  System.setProperty("configUri", "/home/aphilip/workspace/NavaDoc/test/config/navadoc.xml");
+	  System.setProperty("configUri", "/home/matthijs/workspace/NavaDoc/test/config/navadoc.xml");
 	  System.setProperty("com.dexels.navajo.DocumentImplementation", "com.dexels.navajo.document.base.BaseNavajoFactoryImpl"); 
 	  try {
 		  documenter = new NavaDoc(); 

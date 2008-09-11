@@ -173,7 +173,6 @@ public class NavaDocBaseDOM {
 
 		final DocumentType dtype = domImpl.createDocumentType("html", NavaDocConstants.XHTML_PUBLICID, NavaDocConstants.XHTML_SYSTEMID);
 		this.dom = domImpl.createDocument(NavaDocConstants.XHTML_NAMESPACE, "html", dtype);
-//		this.dom = domImpl.createDocument("sauspan", "html", dtype);
 		this.root = this.dom.getDocumentElement();
 	}
 
@@ -238,9 +237,9 @@ public class NavaDocBaseDOM {
 
 		Comment cvsId = this.dom.createComment(" $Id$ ");
 
-		// this.root.appendChild(cvsId);
-
-  	this.root.setAttribute("xmlns", "http://www.w3.org/1999/xhtml");
+  	    this.root.setAttribute("xmlns", "http://www.w3.org/1999/xhtml");
+  	    this.root.setAttribute("lang", "nl-nl");
+  	    this.root.setAttribute("xml:lang", "nl-nl");
 		
 		String jsPath = dset.getProperty(NavaDocConstants.JS_URI_PROPERTY);
 
@@ -265,9 +264,13 @@ public class NavaDocBaseDOM {
 
 		Element metaGen = this.dom.createElement("meta");
 
-		metaGen.setAttribute("name", "generator");
-		metaGen.setAttribute("content", this.filterDollarSigns(NavaDoc.vcIdent));
-		header.appendChild(metaGen);
+		//metaGen.setAttribute("name", "generator");
+		//metaGen.setAttribute("content", this.filterDollarSigns(NavaDoc.vcIdent));
+		metaGen.setAttribute("http-equiv", "Content-Type");
+		metaGen.setAttribute("content", "text/html;charset=utf-8");
+		
+		header.appendChild(metaGen);	
+		
 
 		Element title = this.dom.createElement("title");
 		Text tText = this.dom.createTextNode(t);
@@ -291,6 +294,8 @@ public class NavaDocBaseDOM {
 	// adds body node to the document when we're ready
 	protected void addBody(String cname) {
 
+		final Text tText = this.dom.createTextNode(" ");
+	
 		this.body = this.dom.createElement("body");
 		body.setAttribute("class", cname);
 		this.root.appendChild(body);
@@ -305,14 +310,18 @@ public class NavaDocBaseDOM {
 
 		this.divBreadcrumb = this.dom.createElement("div");
 		divBreadcrumb.setAttribute("id", "breadcrumb");
+		divBreadcrumb.appendChild(tText);		
+
 		this.bodyWrapper.appendChild(divBreadcrumb);
 
 		this.divMain = this.dom.createElement("div");
 		divMain.setAttribute("id", "main");
 		this.bodyWrapper.appendChild(divMain);
+		
 		this.divDescription = this.dom.createElement("div");
 		divDescription.setAttribute("id", "description");
-		this.divMain.appendChild(divDescription);
+		divDescription.appendChild(tText);		
+		this.divMain.appendChild(divDescription);			
 
 		this.divFooter = this.dom.createElement("div");
 		divFooter.setAttribute("id", "footer");
