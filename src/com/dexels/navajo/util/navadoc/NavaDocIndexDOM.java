@@ -23,7 +23,7 @@ import com.dexels.navajo.util.navadoc.config.DocumentSet;
 public class NavaDocIndexDOM extends NavaDocBaseDOM {
 
 	public static final String vcIdent = "$Id$";
-
+	private CVSChecker cvsCheck;
 	private String title = null;
 	private Element table = null;
 	private Element tbody = null;
@@ -42,9 +42,9 @@ public class NavaDocIndexDOM extends NavaDocBaseDOM {
 
 	public NavaDocIndexDOM(final DocumentSet dset) throws ParserConfigurationException {
 		super(dset);
-		
-		final Text tText = this.dom.createTextNode(" ");
 
+	final Text tText = this.dom.createTextNode(" ");
+	
 		this.title = "NavaDoc";
 		this.setHeaders(this.title);
 		this.addBody("navadoc");
@@ -95,23 +95,32 @@ public class NavaDocIndexDOM extends NavaDocBaseDOM {
 		Element thRowIndex = this.dom.createElement("th");
 		Element thLeft = this.dom.createElement("th");
 		Element thRight = this.dom.createElement("th");
+		Element thStatus = this.dom.createElement("th");
 
 		Text textLeft = this.dom.createTextNode("Service");
 		Text textRight = this.dom.createTextNode("Description");
+		Text textStatus = this.dom.createTextNode("CVS Status");
 		Text textRowIndex = this.dom.createTextNode("T");
 		
 		thRowIndex.appendChild(textRowIndex);
 		thLeft.appendChild(textLeft);
 		thRight.appendChild(textRight);
+		thStatus.appendChild(textStatus);
 		thRow.appendChild(thRowIndex);
 		thRow.appendChild(thLeft);
 		thRow.appendChild(thRight);
+		thRow.appendChild(thStatus);
 		thead.appendChild(thRow);
 		this.table.appendChild(thead);
 
 		// Table body
 		this.tbody = this.dom.createElement("tbody");
 		this.table.appendChild(this.tbody);
+		
+		
+		String path = dset.getPathConfiguration().getPath(  NavaDocConstants.SVC_PATH_ELEMENT).getAbsolutePath();
+		
+		cvsCheck = new CVSChecker(path);
 
 	} // public NavaDocIndexDOM()
 
@@ -175,7 +184,10 @@ public class NavaDocIndexDOM extends NavaDocBaseDOM {
 			sname = sname.substring(sname.lastIndexOf(File.separator) + 1);
 		}
 		final String href = this.baseUri + sname + ".html";
-		this.addEntryRow(sname, notes, href);
+		
+		String status = cvsCheck.getScriptStatus(sname + ".xml");
+		
+		this.addEntryRow(sname, notes, href, status);
 
 	} // public void addEntry()
 
@@ -210,6 +222,10 @@ public class NavaDocIndexDOM extends NavaDocBaseDOM {
 	 */
 
 	public void addEntryRow(String sname, String notes, String href) {
+		addEntryRow(sname, notes, href, null);
+	}
+	
+	public void addEntryRow(String sname, String notes, String href, String status) {
 		final Element tr = this.dom.createElement("tr");
 		
 		final Element tdRowIndex = this.dom.createElement("td");
@@ -239,10 +255,25 @@ public class NavaDocIndexDOM extends NavaDocBaseDOM {
 		}
 		Text notesText = this.dom.createTextNode(notes);
 
+		
+		
 		tdLeft.appendChild(a);
 		tdRight.appendChild(notesText);
 		tr.appendChild(tdLeft);
 		tr.appendChild(tdRight);
+		
+		
+			final Element tdStatus = this.dom.createElement("td");
+			tdStatus.setAttribute("class", "service-status");
+			
+			if(status == null){
+				status = "&nbsp;";
+			}
+			Text statusText = this.dom.createTextNode(status);
+			tdStatus.appendChild(statusText);
+			tr.appendChild(tdStatus);
+		
+		
 		this.tbody.appendChild(tr);
 
 		if (this.firstRefRow == null) {
@@ -284,6 +315,16 @@ public class NavaDocIndexDOM extends NavaDocBaseDOM {
 
 		tdLeft.appendChild(a);
 		tdRight.appendChild(notesText);
+		
+		final Element tdStatus = this.dom.createElement("td");
+		tdStatus.setAttribute("class", "service-status");
+		
+		String status = "&nbsp;";
+		
+		Text statusText = this.dom.createTextNode(status);
+		tdStatus.appendChild(statusText);
+		tr.appendChild(tdStatus);
+				
 		tr.appendChild(tdLeft);
 		tr.appendChild(tdRight);
 		this.tbody.appendChild(tr);
