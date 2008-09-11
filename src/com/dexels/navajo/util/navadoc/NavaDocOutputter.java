@@ -74,7 +74,9 @@ public class NavaDocOutputter {
   public NavaDocOutputter(final NavaDocBaseDOM d, final PrintWriter out)   {
     this.dom = d;
     try {
-    	String result = toString ( this.dom.getDocument().getDocumentElement() );
+    	String result = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\"> \n";
+    	System.err.println("result: " + result);
+    	result = result + toString ( this.dom.getDocument().getDocumentElement() );
     	out.write( result );
     	out.close();
     	    	  
@@ -178,23 +180,26 @@ public class NavaDocOutputter {
     // Instantiate an Xalan XML serializer and use it
     // to serialize the output DOM to a file
     // using a default output format.
-
+  	
     try {
       FileWriter fw = new FileWriter(targetFile);
-      String result = toString ( dom.getDocument().getDocumentElement() );
+      String result = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\"> \n";
+      result = result + toString ( dom.getDocument().getDocumentElement() );
       fw.write( result );
       fw.close();
       
       if ( dom.domIn != null ) {
     	  fw = new FileWriter(targetFileIn);
-          result = toString (  dom.domIn.getDocumentElement() );
+    	  	result = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\"> \n";
+          result = result + toString (  dom.domIn.getDocumentElement() );
           fw.write( result );
           fw.close();
       }
       
       if ( dom.domOut != null ) {
     	  fw = new FileWriter(targetFileOut);
-          result = toString (  dom.domOut.getDocumentElement() );
+    	  result = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\"> \n";
+          result = result + toString (  dom.domOut.getDocumentElement() );
           fw.write( result );
           fw.close();
       }
