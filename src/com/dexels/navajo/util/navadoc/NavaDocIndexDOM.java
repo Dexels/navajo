@@ -92,10 +92,15 @@ public class NavaDocIndexDOM extends NavaDocBaseDOM {
 		// Table Header
 		Element thead = this.dom.createElement("thead");
 		Element thRow = this.dom.createElement("tr");
+		
 		Element thRowIndex = this.dom.createElement("th");
+		thRowIndex.setAttribute("class", "th-index-icon");
 		Element thLeft = this.dom.createElement("th");
+		thLeft.setAttribute("class", "th-index-name");
 		Element thRight = this.dom.createElement("th");
+		thRight.setAttribute("class", "th-index-description");
 		Element thStatus = this.dom.createElement("th");
+		thStatus.setAttribute("class", "th-index-cvs");
 
 		Text textLeft = this.dom.createTextNode("Service");
 		Text textRight = this.dom.createTextNode("Description");
@@ -323,10 +328,12 @@ public class NavaDocIndexDOM extends NavaDocBaseDOM {
 		
 		Text statusText = this.dom.createTextNode(status);
 		tdStatus.appendChild(statusText);
-		tr.appendChild(tdStatus);
+		
 				
 		tr.appendChild(tdLeft);
 		tr.appendChild(tdRight);
+		tr.appendChild(tdStatus);
+		
 		this.tbody.appendChild(tr);
 
 		if (this.firstRefRow == null) {
