@@ -387,6 +387,9 @@ public class NavajoMap extends AsyncMappable  implements Mappable {
   public void setDoSend(String method) throws UserException, ConditionErrorException, SystemException, AuthorizationException {
 
     //System.err.println("IN NAVAJOMAP, SETDOSEND(), METHOD = " + method);
+	 
+	// Reset current msgPointer when performing new doSend.
+	  msgPointer = null;
     try {
       username = (username == null) ? this.access.rpcUser : username;
       password = (password == null) ? this.access.rpcPwd : password;
