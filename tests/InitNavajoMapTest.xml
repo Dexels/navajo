@@ -30,6 +30,9 @@
             </property>
         </map>
      </message>
+     <field name="doSend">
+        <expression value="'tests/InitProperties'"/>
+     </field>
      <field name="messagePointer">
         <expression value="'/TestProperties/Integer'"/>
      </field>
@@ -40,6 +43,19 @@
             </property>
             <property name="ProxiedFullTestIntegerProperty2" direction="in">
                 <expression value="$integerProperty('FullTestIntegerProperty') == 12345"/>
+            </property>
+        </map>
+     </message>
+     <field name="messagePointer">
+        <expression value="'/TestProperties/String'"/>
+     </field>
+     <message name="Results3b">
+        <map ref="message">
+            <property name="ProxiedFullTestStringProperty1" direction="in">
+                <expression value="$property('FullTestStringProperty') == 'noot'"/>
+            </property>
+            <property name="ProxiedFullTestStringProperty2" direction="in">
+                <expression value="$stringProperty('/TestProperties/String/FullTestStringProperty') == 'noot'"/>
             </property>
         </map>
      </message>

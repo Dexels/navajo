@@ -1,0 +1,27 @@
+<tsl>
+    <map object="com.dexels.navajo.adapter.NavajoMap">
+        <field name="doSend">
+            <expression value="'tests/InitInputData'"/>
+        </field>
+        <field name="messagePointer">
+            <expression value="'/MyMessage'"/>
+        </field>
+        <field name="propertyName">
+            <expression value="'/MyMessage/MyProperty'"/>
+        </field>
+        <field name="stringProperty">
+            <expression value="'MyValue'"/>
+        </field>
+        <field name="doSend">
+            <expression value="'tests/ProcessInputData'"/>
+        </field>
+        <field name="messagePointer">
+            <expression value="'/Result'"/>
+        </field>
+        <message name="Processed">
+            <property direction="out" name="Status">
+                <expression value="$stringProperty('/Result/Status')"/>
+            </property>
+        </message>
+    </map>
+</tsl>

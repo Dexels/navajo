@@ -1,0 +1,6 @@
+<tsl>
+    <message name="MyMessage">
+        <property name="MyProperty" type="string" direction="in"/>
+    </message>
+</tsl>
+
