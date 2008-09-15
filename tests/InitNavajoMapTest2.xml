@@ -19,8 +19,8 @@
             <expression value="'/Result'"/>
         </field>
         <message name="Processed">
-            <property direction="out" name="Status">
-                <expression value="$stringProperty('/Result/Status')"/>
+            <property direction="in" name="Status">
+                <expression value="$stringProperty('/Result/Status') == 'done'"/>
             </property>
         </message>
     </map>
