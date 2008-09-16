@@ -81,7 +81,7 @@
             <property name="Status" type="selection" direction="in">
                 <option name="niet_toegewezen" value="niet_toegewezen" selected="0" />
                 <option name="toegewezen" value="toegewezen" selected="0" />
-                <option name="acceptatie" value="acceptatie" selected="0" />
+                <option name="geaccepteed" value="geaccepteerd" selected="0" />
                 <option name="in_behandeling" value="in_behandeling" selected="0" />
                 <option name="gesloten" value="gesloten" selected="0" />
             </property>

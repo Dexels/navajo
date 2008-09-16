@@ -10,19 +10,23 @@
         </field>
         <field name="query">
             <expression xml:space="preserve">
-                SELECT distinct subm.personid, concat(subm.firstname,' ',subm.infix,' ',subm.lastname) as name, t.submitdate, t.description, t.request, c.categoryname, c.subcategoryname
-                FROM ticket t, person subm, person supp, category c
+                SELECT distinct  (select subm.personid from person subm where subm.personid = t.submitterid) as personid
+                , (select concat(subm.firstname,' ',subm.infix,' ',subm.lastname) from person subm where subm.personid = t.submitterid) as name
+                , (select c.categoryname from category c where t.initcategoryid = c.categoryid) as categoryname
+                , (select c1.subcategoryname from category c1 where t.initcategoryid = c1.categoryid) as subcategoryname
+                , t.submitdate
+                , t.description
+                , t.request 
+                FROM ticket t
                 WHERE t.initsupportpersonid = 1
-                  AND subm.personid = t.submitterid
                   AND t.status != 'gesloten'
-                  AND t.initcategoryid = c.categoryid
                   AND t.ticketid = ?  
             </expression>
         </field>
         <field name="parameter">
             <expression value="[/Ticket/TicketId]" />
         </field>
-        <message name="Ticket">
+        <message name="Ticket" condition="$rowCount &gt; 0">
             <property name="TicketCode" direction="out" description="Ticketcode">
                 <expression value="[/Ticket/TicketId]" />
             </property>
@@ -152,9 +156,6 @@
                     </map>
                 </property>
             </map>
-        </message>
-        <message name="CurrTicketId">
-            <property name="TicketCode" type="integer" direction="in" />
         </message>
     </map>
 </tsl>

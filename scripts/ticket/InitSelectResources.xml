@@ -15,7 +15,8 @@
             </expression>
         </field>
         <field name="parameter">
-            <expression value="[/CurrTicketId/TicketCode]" />
+            <expression condition="?[/Ticket/TicketCode]" value="[/Ticket/TicketCode]" />
+            <expression value="null"></expression>
         </field>
         <message name="CurrTicketTreatId">
             <property name="CurrTreatId">
@@ -77,4 +78,10 @@
             <option name="modified" value="modified" selected="0" />
         </property>
     </message>
+    <message name="Ticket">
+        <property name="TicketCode" direction="in" description="Ticketcode" />
+    </message>
+    <methods>
+        <method name="ticket/InitSelectResources" />
+    </methods>
 </tsl>

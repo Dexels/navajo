@@ -23,18 +23,6 @@
                 VALUES ( ?, ?, ?, ?, ?, ?, ?)
             </expression>
         </field>
-        <!-- <message name="SubmitterCondition" condition="[/Person/SubmitterId] != '-1'" mode="ignore"> -->
-        
-        <!-- 
-        TicketData
-Treater
-TreatDate
-NotificationSendTo
-NotificationSendVia
-NotificationContent
-Priority
-Status
-Attachment -->
 
         <field name="parameter">
             <expression value="[/TicketTreat/TicketDescription]" />
