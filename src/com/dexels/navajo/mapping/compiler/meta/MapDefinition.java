@@ -190,11 +190,13 @@ public class MapDefinition {
 					// Maybe an out ValueDefinition, map ref stuff...
 					ValueDefinition vd = getValueDefinition(method);
 					if ( vd != null ) {
-						if (  ! ( child.getParent().getName().equals("message") || child.getParent().getName().equals("property") ) ) {
-							throw new MetaCompileException(filename, child, "Illegal tag <" + child.getName() + "/> encountered");
+						if (  ! ( child.getFirstChild().getName().equals("map") || child.getParent().getName().equals("message") || child.getParent().getName().equals("property") ) ) {
+							throw new MetaCompileException(filename, child, "Illegal construction <" + child.getName() + "/> encountered");
 						}
+						
 						XMLElement out2 = vd.generateCode(child, method, filter, ( map != null ? map : out ), true, filename );
 						generateCode(child, out2, filename);
+
 					} else {
 						//System.err.println("Parent of " + child.getName() + " IS " + child.getParent().getName());
 						throw new UnknownMethodException(child.getName(), (XMLElement) v.get(i), filename);
