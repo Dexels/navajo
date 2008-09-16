@@ -96,10 +96,9 @@ public class MapDefinition {
 		
 		XMLElement map = null;
 		
-		//System.err.println("IN GENERATECODE FOR : " + in.getName() + ", tagname is: " + tagName );
+		//System.err.println("IN GENERATECODE FOR : " + in.getName() + ", tagname is: " + tagName + ", linenr: " + in.getLineNr());
 		if ( in.getName().equals("map."+tagName)  ) {
-			map = new CaseSensitiveXMLElement();
-			map.setName("map");
+			map = new TSLElement(in, "map");
 			map.setAttribute("object", objectName);
 			String condition = (String) in.getAttribute("condition");
 			if (  condition != null && !condition.equals("") ) {
@@ -236,13 +235,12 @@ public class MapDefinition {
 			}
 			else {
 				// Copy it.
-				XMLElement copy = new CaseSensitiveXMLElement();
+				XMLElement copy = new TSLElement(child, child.getName());
 				if ( map != null) { 
 					map.addChild(copy);
 				} else {
 					out.addChild(copy);
 				}
-				copy.setName(child.getName());
 				Iterator<String> allAttribs =  child.enumerateAttributeNames();
 				while ( allAttribs.hasNext() ) {
 					String name = allAttribs.next();

@@ -99,14 +99,12 @@ public class ValueDefinition {
 		
 		if ( ( direction.equals("in") || direction.equals("automatic") ) && !type.startsWith("map:")) { // generate <field name=""><expression value=""/></field> construction
 					
-			XMLElement field = new CaseSensitiveXMLElement();
-			field.setName("field");
+			XMLElement field = new TSLElement(currentIn, "field");
 			field.setAttribute("name", ( this.getClass().getName().equals("com.dexels.navajo.mapping.compiler.meta.ValueDefinition") ? name : ((ParameterDefinition) this).getField() ) );
 			if ( condition != null && !condition.equals("") ) {
 				field.setAttribute("condition", condition);
 			}
-			XMLElement expression = new CaseSensitiveXMLElement();
-			expression.setName("expression");
+			XMLElement expression = new TSLElement(currentIn, "expression");
 			field.addChild(expression);
 			expression.setAttribute("xml:space", "preserve");
 			if ( type.equals("stringliteral") && !setterValue.startsWith("{") ) {
@@ -123,8 +121,7 @@ public class ValueDefinition {
 					setterValue = setterValue.replace('{', ' ');
 					setterValue = setterValue.replace('}', ' ');
 				}
-				XMLElement value = new CaseSensitiveXMLElement();
-				value.setName("value");
+				XMLElement value = new TSLElement(currentIn, "value");
 				expression.addChild(value);
 				value.setContent(setterValue);
 			}
@@ -133,8 +130,7 @@ public class ValueDefinition {
 			}
 			return field;
 		} else if ( direction.equals("out") && type.startsWith("map:") ){ // Generate <map ref=""> construction
-			XMLElement mapref = new CaseSensitiveXMLElement();
-			mapref.setName("map");
+			XMLElement mapref = new TSLElement(currentIn, "map");
 			mapref.setAttribute("ref", setterValue);
 			if ( condition != null && !condition.equals("") ) {
 				mapref.setAttribute("filter", condition);
@@ -142,14 +138,12 @@ public class ValueDefinition {
 			out.addChild(mapref);
 			return mapref;
 		} else if ( direction.equals("in") && type.startsWith("map:") ) { // Generate <field name=""><map ref=""></field> construction...
-			XMLElement field = new CaseSensitiveXMLElement();
-			field.setName("field");
+			XMLElement field = new TSLElement(currentIn, "field");
 			field.setAttribute("name", ( this.getClass().getName().equals("com.dexels.navajo.mapping.compiler.meta.ValueDefinition") ? name : ((ParameterDefinition) this).getField() ) );
 			if ( condition != null && !condition.equals("") ) {
 				field.setAttribute("condition", condition);
 			}
-			XMLElement mapref = new CaseSensitiveXMLElement();
-			mapref.setName("map");
+			XMLElement mapref = new TSLElement(currentIn, "map");
 			mapref.setAttribute("ref", setterValue);
 			field.addChild(mapref);
 			out.addChild(field);

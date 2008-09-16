@@ -56,12 +56,10 @@ public class MethodDefinition {
 		String tempParamName = null;
 		if ( condition != null && !condition.equals("condition")) {
 			// Generate a temp. param to evaluate the condition expression.
-			XMLElement c = new CaseSensitiveXMLElement();
-			c.setName("param");
+			XMLElement c = new TSLElement(in, "param");
 			tempParamName = generateParamName();
 			c.setAttribute("name", tempParamName);
-			XMLElement exp = new CaseSensitiveXMLElement();
-			exp.setName("expression");
+			XMLElement exp = new TSLElement(in, "expression");
 			exp.setAttribute("value", condition);
 			c.addChild(exp);
 			out.addChild(c);
