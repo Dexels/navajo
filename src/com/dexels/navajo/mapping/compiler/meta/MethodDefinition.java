@@ -1,6 +1,5 @@
 package com.dexels.navajo.mapping.compiler.meta;
 
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -8,7 +7,6 @@ import java.util.Random;
 import java.util.TreeMap;
 import java.util.Vector;
 
-import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 
 @SuppressWarnings("unchecked")
