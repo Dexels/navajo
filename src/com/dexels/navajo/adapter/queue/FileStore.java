@@ -126,7 +126,9 @@ public class FileStore implements MessageStore {
 		} catch (Exception e) {
 			AuditLog.log(AuditLog.AUDIT_MESSAGE_QUEUEDADAPTERS, 
 					QueuedAdapter.generateLogMessage(q, "Could not read file: " + f + " from filestore: " + e.getMessage()), Level.SEVERE );
-			e.printStackTrace();
+			// Remove files that could not be read.
+			// ssi.remove(path, f);
+			//e.printStackTrace();
 		} 
 
 		return getNext();
