@@ -33,7 +33,7 @@ public class MetaCompileException extends Exception {
 	}
 	
 	public String getMessage() {
-		return message + " (" + fileName + ":" + (offendingTag.getLineNr()+1) + ")";
+		return message + " (" + fileName + ":" + (offendingTag.getStartLineNr()+1) + ")";
 	}
 	
 	public void setMessage(String message) {

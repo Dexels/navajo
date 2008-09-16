@@ -128,7 +128,7 @@ public class ValueDefinition {
 				out.addChild(field);
 			}
 			return field;
-		} else if ( direction.equals("out") && type.startsWith("map:") ){ // Generate <map ref=""> construction
+		} else if ( ( currentIn.getParent().getName().equals("message") || currentIn.getParent().getName().equals("property") ) && type.startsWith("map:") ){ // Generate <map ref=""> construction
 			XMLElement mapref = new TSLElement(currentIn, "map");
 			mapref.setAttribute("ref", setterValue);
 			if ( condition != null && !condition.equals("") ) {
@@ -136,17 +136,18 @@ public class ValueDefinition {
 			}
 			out.addChild(mapref);
 			return mapref;
-		} else if ( direction.equals("in") && type.startsWith("map:") ) { // Generate <field name=""><map ref=""></field> construction...
+		} else if ( currentIn.getFirstChild().getName().equals("map") && type.startsWith("map:") ) { // Generate <field name=""><map ref=""></field> construction...
 			XMLElement field = new TSLElement(currentIn, "field");
 			field.setAttribute("name", ( this.getClass().getName().equals("com.dexels.navajo.mapping.compiler.meta.ValueDefinition") ? name : ((ParameterDefinition) this).getField() ) );
 			if ( condition != null && !condition.equals("") ) {
 				field.setAttribute("condition", condition);
 			}
-			XMLElement mapref = new TSLElement(currentIn, "map");
-			mapref.setAttribute("ref", setterValue);
-			field.addChild(mapref);
+			//XMLElement mapref = new TSLElement(currentIn, "map");
+			//mapref.setAttribute("ref", setterValue);
+			//field.addChild(mapref);
 			out.addChild(field);
-			return mapref;
+			//return mapref;
+			return field;
 		} else {
 			throw new MetaCompileException(filename, currentIn, "Unknown value tag for setter value: " + setterValue + ", tagname = " + currentIn.getName());
 		}
