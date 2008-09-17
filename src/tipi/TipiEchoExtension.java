@@ -58,5 +58,16 @@ public class TipiEchoExtension implements TipiExtension {
 	public List<String> getRequiredExtensions() {
 		return null;
 	}
+	public String getProjectName() {
+		return "NavajoEchoTipi";
+	}
 
+	public String getDeploymentDescriptor() {
+		return null;
+	}
+	public List<String> getDependingProjectUrls() {
+		List<String> l = new LinkedList<String>();
+		l.add("http://echo.nextapp.com/site/");
+		return l;
+	}
 }
