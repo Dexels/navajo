@@ -55,7 +55,7 @@
         </message>
         <field name="query">
             <expression xml:space="preserve">
-                SELECT distinct concat(p.firstname,' ',p.infix,' ',p.lastname) as name, tt.treatdate, tt.treatdescription
+                SELECT distinct tickettreatid, concat(p.firstname,' ',p.infix,' ',p.lastname) as name, tt.treatdate, tt.treatdescription
                 FROM tickettreat tt, person p
                 WHERE p.personid = tt.personid 
                 and tt.ticketid = ? 
@@ -66,6 +66,9 @@
         </field>
         <message name="TicketTreats">
             <map ref="resultSet">
+                <property name="TreatId" direction="out" description="BehandelCode">
+                    <expression value="$columnValue('tickettreatid')" />
+                </property>
                 <property name="SuppName" direction="out" description="Supporter">
                     <expression value="$columnValue('name')" />
                 </property>
@@ -156,6 +159,9 @@
                     </map>
                 </property>
             </map>
+        </message>
+        <message name="TicketSend">
+            <property name="TreatId" />
         </message>
     </map>
 </tsl>
