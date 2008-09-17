@@ -109,9 +109,8 @@ public class TipiButton extends TipiEchoComponentImpl {
               catch (TipiException ex) {
                 ex.printStackTrace();
               } catch (TipiBreakException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+            	  System.err.println("Break in event");
+              }
             }
           }
         }
