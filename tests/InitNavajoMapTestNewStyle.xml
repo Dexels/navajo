@@ -15,7 +15,7 @@
             <expression value="$dateProperty('/TestProperties/Date/FullTestDateProperty') == ParseDate('17-06-2008', 'dd-MM-yyyy')"/>
         </property>
      </message>
-     <navajomap.set field="messagePointer" value="TestProperties/Date"/>
+     <navajomap.messagePointer value="TestProperties/Date"/>
      <message name="Results2">
         <navajomap.message>
             <property name="ProxiedFullTestDateProperty1" direction="in">
@@ -26,7 +26,7 @@
             </property>
         </navajomap.message>
      </message>
-     <navajomap.set field="messagePointer" value="/TestProperties/Integer"/>
+     <navajomap.messagePointer value="/TestProperties/Integer"/>
      <message name="Results3">
         <navajomap.message>
             <property name="ProxiedFullTestIntegerProperty1" direction="in">
@@ -37,20 +37,33 @@
             </property>
         </navajomap.message>
      </message>
-     <navajomap.set field="messagePointer" value="/TestProperties/Array"/>
+     <navajomap.messagePointer value="/TestProperties/Array"/>
      <param name="Count">
         <expression value="0"/>
      </param>
      <message name="ResultsArray3" mode="ignore">
-        <navajomap.messages>
+        <navajomap.messages filter="true">
            <param name="Count">
              <expression value="[/@Count] + 1"/>
+           </param>
+        </navajomap.messages>
+     </message>
+     <param name="Count2">
+        <expression value="0"/>
+     </param>
+     <message name="ResultsArray4" mode="ignore">
+        <navajomap.messages filter="false">
+           <param name="Count2">
+             <expression value="[/@Count2] + 1"/>
            </param>
         </navajomap.messages>
      </message>
      <message name="Results3">
         <property name="ProxiedArrayMessage" direction="in">
            <expression value="[/@Count] == 2"/>
+        </property>
+        <property name="ProxiedArrayMessageFalseFilter" direction="in">
+           <expression value="[/@Count2] == 0"/>
         </property>
      </message>
   </map.navajomap>
