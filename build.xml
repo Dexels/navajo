@@ -43,7 +43,7 @@
 		<delete dir="${build}" />
 	</target>
 	<target name="Navajo" depends="init">
-		<ant dir="${Navajo}" target="compile" inheritAll="false">
+		<ant dir="${Navajo}" target="archive" inheritAll="false">
 			<property name="PROJECTHOME" value="${PROJECTHOME}" />
 		</ant>
 	</target>
