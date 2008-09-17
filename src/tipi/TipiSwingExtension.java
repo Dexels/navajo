@@ -50,5 +50,16 @@ public class TipiSwingExtension implements TipiExtension {
 	public List<String> getRequiredExtensions() {
 		return null;
 	}
+	public String getProjectName() {
+		return "NavajoSwingTipi";
+	}
 
+	public String getDeploymentDescriptor() {
+		return "NavajoSwingTipi.jnlp";
+	}
+	public List<String> getDependingProjectUrls() {
+		List<String> l = new LinkedList<String>();
+		l.add("http://java.sun.com/");
+		return l;
+	}
 }
