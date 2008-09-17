@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tsl author="Erik van der Weijden" id="ticket/ShowTreatInfo" notes="" xmlns="http://www.dexels.com/navascript" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" debug="response"
+    xsi:schemaLocation="http://www.dexels.com/navascript http://www.dexels.com/schema/navascript.xsd ">
+    <map object="com.dexels.navajo.adapter.SQLMap">
+        <field name="datasource">
+            <expression value="'ticket'" />
+        </field>
+        <field name="query">
+            <expression xml:space="preserve">
+                select distinct (select subm.personid from person subm where subm.personid = t.submitterid) as submitterid
+                , (select concat(subm.firstname,' ',subm.infix,' ',subm.lastname) from person subm where subm.personid = t.submitterid) as submitter
+                , (select c.categoryname from category c where t.initcategoryid = c.categoryid) as categoryname
+                , (select c1.subcategoryname from category c1 where t.initcategoryid = c1.categoryid) as subcategoryname
+                , t.submitdate
+                , t.description
+                , t.request
+                , t.status
+                , tt.ticketid
+                , tt.treatdate
+                , tt.treatdescription
+                , (select concat(notif.firstname,' ',notif.infix,' ',notif.lastname) from person notif where notif.personid = tt.notificationsendto) as notificated        
+                , tt.notificationsendvia
+                , tt.notificationcontent
+                , (select concat(supp.firstname,' ',supp.infix,' ',supp.lastname) from person supp where supp.personid = tt.personid) as supporter
+                , tt.priority
+                FROM tickettreat tt, ticket t
+                WHERE tt.ticketid = t.ticketid
+                    AND tt.tickettreatid = ?  
+            </expression>
+        </field>
+        <field name="parameter">
+            <expression value="[/TicketSend/TreatId]" />
+        </field>
+        <message name="Ticket">
+            <property name="TicketCode" direction="out" description="Ticketcode">
+                <expression value="$columnValue('ticketid')" />
+            </property>
+            <property name="Submitter" direction="out" description="Indiener">
+                <expression value="$columnValue('submitter')" />
+            </property>
+            <property name="PersonId" direction="out" description="IndienerID" visible="false">
+                <expression value="$columnValue('submitterid')" />
+            </property>
+            <property name="SubmitDate" direction="out" description="Aanmaakdatum">
+                <expression value="$columnValue('submitdate')" />
+            </property>
+            <!--
+                <property name="Description" direction="in" description="Beschrijving"> <expression value="$columnValue('description')" /> </property> <property name="TreatDate" type="date"
+                direction="in" description="Behandeldatum"> <expression value="TODAY" /> </property>
+            -->
+            <property name="Request" type="memo" direction="out" description="Vraag">
+                <expression value="$columnValue('request')" />
+            </property>
+            <property name="InitCategoryName" direction="out" description="categorie">
+                <expression value="$columnValue('categoryname') + ' ' + $columnValue('subcategoryname')" />
+            </property>
+            <property name="Status" type="string" direction="out" description="Status">
+                <expression value="$columnValue('status')" />
+            </property>
+            <property name="TreatDate" type="date" direction="out" description="Behandeldatum">
+                <expression value="TODAY" />
+            </property>
+            <property name="SuppName" direction="out" description="Supporter">
+                <expression value="$columnValue('supporter')" />
+            </property>
+            <property name="TreatDate" direction="out" description="Behandeldatum">
+                <expression value="$columnValue('treatdate')" />
+            </property>
+            <property name="TreatDescription" type="memo" direction="out" description="Behandeling">
+                <expression value="$columnValue('treatdescription')" />
+            </property>
+            <property name="Notificated" direction="out" description="Notificatie naar">
+                <expression value="$columnValue('notificated')" />
+            </property>
+            <property name="NotificationVia" direction="out" description="Notificatie via">
+                <expression value="$columnValue('notificationsendvia')" />
+            </property>
+            <property name="NotificationContent" direction="out" description="Notificatie inhoud">
+                <expression value="$columnValue('notificationcontent')" />
+            </property>
+            <property name="Priority" type="string" direction="out" description="Prioriteit">
+                <expression value="$columnValue('priority')" />
+            </property>
+        </message>
+        
+        <!--  Get attachments associated with ticket -->
+        <field name="query">
+            <expression xml:space="preserve">
+                select distinct 
+                 a.attachmentid
+                , a.attachmentname
+                , a.attachmentcontents    
+                FROM tickettreat tt, attachment a
+                WHERE tt.ticketid = a.ticketid
+                    AND tt.tickettreatid = ?  
+            </expression>
+        </field>
+        <field name="parameter">
+            <expression value="[/TicketSend/TreatId]" />
+        </field>
+        <message name="TicketAttachments" type="array">
+            <map ref="resultSet">
+                <property name="AttachmentId" direction="out" description="AttachmentId">
+                    <expression value="$columnValue('attachmentid')" />
+                </property>
+                <property name="AttachmentName" direction="out" description="Attachmentnaam">
+                    <expression value="$columnValue('attachmentname')" />
+                </property>
+                <property name="AttachmentContents" direction="out" description="AttachmentContents">
+                    <expression value="$columnValue('attachmentcontents')" />
+                </property>
+            </map>
+        </message>
+         <!--  Get attachments associated with ticket -->
+        <field name="query">
+            <expression xml:space="preserve">
+                select distinct 
+                 a.attachmentid
+                , a.attachmentname
+                , a.attachmentcontents    
+                FROM attachment a
+                WHERE a.tickettreatid = ?  
+            </expression>
+        </field>
+        <field name="parameter">
+            <expression value="[/TicketSend/TreatId]" />
+        </field>
+        <message name="TreatAttachments" type="array">
+            <map ref="resultSet">
+                <property name="TreatAttachmentId" direction="out" description="AttachmentId">
+                    <expression value="$columnValue('attachmentid')" />
+                </property>
+                <property name="TreatAttachmentName" direction="out" description="Attachmentnaam">
+                    <expression value="$columnValue('attachmentname')" />
+                </property>
+                <property name="TreatAttachmentContents" direction="out" description="AttachmentContents">
+                    <expression value="$columnValue('attachmentcontents')" />
+                </property>
+            </map>
+        </message>
+    </map>
+</tsl>
