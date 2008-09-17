@@ -77,6 +77,7 @@ public class TipiValue {
 
 	public void load(XMLElement xe) {
 		// myXml = xe;
+		assert xe.getName().equals("value") || xe.getName().equals("param") : "Illegal tag detected: "+xe.getName();
 		if (!xe.getName().equals("value") && !xe.getName().equals("param")) {
 			System.err.println("A tipi value element is supposed to be called: 'value' or even 'param', but definitely not '"
 					+ xe.getName() + "' you wobbling chincilla");
