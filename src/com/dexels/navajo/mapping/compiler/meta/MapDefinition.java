@@ -171,12 +171,18 @@ public class MapDefinition {
 				String filter = (String) child.getAttribute("filter");
 				ValueDefinition vd = getValueDefinition(field);
 				// It is either <field><map ref=""> or <message><map ref=""/> or <property><map ref=""/>
-				XMLElement out2 = vd.generateCode(child, field, filter, ( map != null ? map : out ), true, filename );
-				generateCode(child, out2, filename);
+				
+				MapDefinition md = myMetaData.getMapDefinition(vd.getMapType());
+				if ( md != null ) {
+					XMLElement out2 = vd.generateCode(child, field, filter, ( map != null ? map : out ), true, filename );
+					md.generateCode(child, out2, filename );
+				} else {
+					throw new UnknownAdapterException(child.getName(), child, filename);
+				}
 	        // Case II: a simple field construct.
 			} else if ( child.getName().indexOf(".") != -1 && getValueDefinition(stripDot(child)) != null ) {
 				
-				if ( child.getChildren().size() > 0 && (String) child.getAttribute("ref") == null ) {
+				if ( child.getChildren().size() > 0 && !child.getFirstChild().getName().equals("value") ) {
 					throw new MetaCompileException(filename, child, "Illegal children tags defined for tag <" + child.getName() + "/>");
 				}
 				
@@ -188,16 +194,14 @@ public class MapDefinition {
 				}
 				ValueDefinition vd = getValueDefinition(field);
 				//System.err.println("field: " + field + ", vd = " + vd);
-				XMLElement remainder = null;
-				remainder = vd.generateCode(child, setterValue, condition, ( map != null ? map : out ), true, filename );
-				if ( (String) child.getAttribute("ref") != null && remainder != null ) {
-					MapDefinition md = myMetaData.getMapDefinition(vd.getMapType());
-					if ( md != null ) {
-						md.generateCode(child, remainder, filename );
-					} else {
-						throw new UnknownAdapterException(child.getName(), child, filename);
-					}
+				
+				if ( setterValue != null ) {
+					XMLElement remainder = null;
+					remainder = vd.generateCode(child, setterValue, condition, ( map != null ? map : out ), true, filename );
+				} else {
+
 				}
+			
 		    // Case III: a multiple-field aka method construct.		
 			} else if ( child.getName().indexOf(".") != -1 && getMethodDefinition(stripDot(child)) != null ) {
 				String method = stripDot(child);
