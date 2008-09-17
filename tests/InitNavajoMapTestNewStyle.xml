@@ -1,6 +1,6 @@
 <navascript>
   <map.navajomap>
-     <navajomap.callwebservice name="tests/InitProperties"/>
+     <navajomap.callwebservice name="tests/InitProperties" condition="true"/>
      <message name="Results1">
         <property name="ProxiedFullTestIntegerProperty1" direction="in">
             <expression value="$property('/TestProperties/Integer/FullTestIntegerProperty') == 12345"/>
@@ -69,7 +69,7 @@
   </map.navajomap>
   <map.navajomap>
      <navajomap.callwebservice name="tests/InitProperties"/>
-     <navajomap.createproperty name="/TestProperties/Date/FullTestDateProperty" value="TODAY"/>
+     <navajomap.createproperty name="/TestProperties/Date/FullTestDateProperty" value="TODAY" condition="true"/>
      <navajomap.createproperty name="/TestProperties/Date/EmptyTestDateProperty" value="null"/>
      <navajomap.callwebservice name="tests/ProcessTestProperties"/>
      <message name="Results4">
