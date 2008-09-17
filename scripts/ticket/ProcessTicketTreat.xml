@@ -3,7 +3,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dexels.com/navascript http://www.dexels.com/schema/navascript.xsd">
     <param name="UpdateCount">
         <expression value="0" />
-    </param>   
+    </param>
     <map object="com.dexels.navajo.adapter.SQLMap">
         <field name="datasource">
             <expression value="'ticket'" />
@@ -24,7 +24,6 @@
             </expression>
         </field>
         <!-- <message name="SubmitterCondition" condition="[/Person/SubmitterId] != '-1'" mode="ignore"> -->
-        
         <field name="parameter">
             <expression value="[/Ticket/TicketCode]" />
         </field>
@@ -49,7 +48,7 @@
         <field name="parameter">
             <expression value="[/TicketProcess/Priority]" />
         </field>
-                <field name="doUpdate">
+        <field name="doUpdate">
             <expression value="true" />
         </field>
         <param name="UpdateCount">
@@ -57,7 +56,7 @@
         </param>
         
         
-        <!-- Update status of Ticket after tickettreat -->      
+        <!-- Update status of Ticket after tickettreat -->
         <field name="update">
             <expression xml:space="preserve">
                 UPDATE ticket set status  = ? 
@@ -67,11 +66,10 @@
         </field>
         <field name="parameter">
             <expression value="[/TicketProcess/Status]" />
-        </field>        
+        </field>
         <field name="parameter">
             <expression value="[/Ticket/TicketCode]" />
         </field>
-
         <field name="doUpdate">
             <expression value="true" />
         </field>
@@ -90,14 +88,14 @@
         <param name="ThisTicketTreatId">
             <expression value="$columnValue('tickettreatid')" />
         </param>
-         <field name="update">
+        <field name="update">
             <expression xml:space="preserve">
                 INSERT INTO attachment (
                          tickettreatid  
                 ,        attachmentname
                 ,        attachmentcontents
                 )
-                VALUES ( ?, ?, ?)
+                VALUES (?, ?, ?)
             </expression>
         </field>
         <field name="parameter">
@@ -115,10 +113,31 @@
         <param name="UpdateCount">
             <expression value="[/@UpdateCount] + $updateCount" />
         </param>
-        
-               
-        
     </map>
+    <map object="com.dexels.navajo.adapter.SQLMap">
+        <field name="datasource">
+            <expression value="'ticket'" />
+        </field>
+        <field name="query">
+            <expression xml:space="preserve">
+                SELECT MAX(tickettreatid) as ttid FROM tickettreat where ticketid = ?
+            </expression>
+        </field>
+        <field name="parameter">
+            <expression condition="?[/Ticket/TicketCode]" value="[/Ticket/TicketCode]" />
+            <expression value="null"></expression>
+        </field>
+        <message name="CurrTicketTreatId">
+            <property name="CurrTreatId">
+                <expression value="$columnValue('ttid')" />
+            </property>
+        </message>
+    </map>
+    <message name="Ticket">
+        <property name="TicketCode" direction="in" description="Ticketcode">
+            <expression value="[/Ticket/TicketCode]" />
+        </property>
+    </message>
     <message name="Result">
         <property name="UpdateCount" direction="out" type="integer" description="Wijzigingen">
             <expression condition="?[/@UpdateCount] AND [/@UpdateCount] &gt; 0" value="[/@UpdateCount]" />

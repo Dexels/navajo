@@ -8,6 +8,9 @@
         <field name="datasource">
             <expression value="'ticket'" />
         </field>
+        <field name="debug">
+            <expression value="true"/>
+        </field>
         <field name="query">
             <expression xml:space="preserve">
                 SELECT R.resourceid, R.resourcename, R.typeofresource, R.resourcepath, R.resourceserver 
@@ -25,6 +28,9 @@
         </field>
         <message name="ResourcesDetails">
             <map ref="resultSet">
+                <property name="Insert" type="boolean" direction="in">
+                    <expression value="false" />
+                </property>
                 <property name="ResourceId">
                     <expression value="$columnValue('resourceid')" />
                 </property>
@@ -42,41 +48,10 @@
                 </property>
             </map>
         </message>
-        
-        
-        <field name="query">
-            <expression xml:space="preserve">
-                INSERT INTO Changes (tickettreatid, typeofchange, resourceid) 
-                VALUES      
-            </expression>
-        </field>
-        <field name="parameter">
-            <expression value="[/Resources/ProjectId]" />
-        </field>
-        <field name="parameter">
-            <expression value="[/Resources/ResourceType]" />
-        </field>
-        <message name="ResourcesDetails">
-            <map ref="resultSet">
-                <property name="ResourceId">
-                    <expression value="$columnValue('resourceid')" />
-                </property>
-                <property name="TypeOfResource">
-                    <expression value="$columnValue('typeofresource')" />
-                </property>
-                <property name="ResourceName">
-                    <expression value="$columnValue('resourcename')" />
-                </property>
-                <property name="ResourcePath">
-                    <expression value="$columnValue('resourcepath')" />
-                </property>
-                <property name="ResourceServer">
-                    <expression value="$columnValue('resourceserver')" />
-                </property>
-            </map>
+        <message name="CurrTicketTreatId">
+            <property name="CurrTreatId" direction="out" description="Ticketcode">
+                <expression value="[/CurrTicketTreatId/CurrTreatId]"/>
+            </property>
         </message>
-        
-        
-        
     </map>
 </tsl>

@@ -1,29 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tsl author="Erik van der Weijden" id="ticket/InitSelectResources" notes="" repository="$Id$" xmlns="http://www.dexels.com/navascript"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dexels.com/navascript http://www.dexels.com/schema/navascript.xsd ">
-   <!--  <methods>
-        <method name="ticket/TicketProcess" />
-    </methods>
-     -->
-    <map object="com.dexels.navajo.adapter.SQLMap">
-        <field name="datasource">
-            <expression value="'ticket'" />
-        </field>
-        <field name="query">
-            <expression xml:space="preserve">
-                SELECT MAX(tickettreatid) as ttid FROM tickettreat where ticketid = ?
-            </expression>
-        </field>
-        <field name="parameter">
-            <expression condition="?[/Ticket/TicketCode]" value="[/Ticket/TicketCode]" />
-            <expression value="null"></expression>
-        </field>
-        <message name="CurrTicketTreatId">
-            <property name="CurrTreatId">
-                <expression value="$columnValue('ttid')" />
-            </property>
-        </message>
-    </map>
     <message name="Resources">
         <property name="ProjectId" type="selection" direction="in" description="Projectnaam">
             <option name="-" value="-1" selected="1" />
@@ -78,10 +55,18 @@
             <option name="modified" value="modified" selected="0" />
         </property>
     </message>
+    <message name="CurrTicketTreatId">
+        <property name="CurrTreatId" direction="out" description="CurrentTicketTreatId">
+            <expression value="[/CurrTicketTreatId/CurrTreatId]"/>
+        </property>
+    </message>
     <message name="Ticket">
-        <property name="TicketCode" direction="in" description="Ticketcode" />
+        <property name="TicketCode" direction="in" description="Ticketcode">
+            <expression value="[/Ticket/TicketCode]"/>
+        </property>
     </message>
     <methods>
         <method name="ticket/InitSelectResources" />
+        <method name="ticket/ProcessQueryResources" />
     </methods>
 </tsl>
