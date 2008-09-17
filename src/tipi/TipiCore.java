@@ -56,4 +56,14 @@ public class TipiCore implements TipiExtension {
 	public List<String> getRequiredExtensions() {
 		return null;
 	}
+	public String getProjectName() {
+		return "NavajoTipi";
+	}
+
+	public String getDeploymentDescriptor() {
+		return null;
+	}
+	public List<String> getDependingProjectUrls() {
+		return null;
+	}
 }

@@ -4,7 +4,7 @@ import java.util.*;
 
 import com.dexels.navajo.tipi.*;
 
-public interface TipiExtension {
+public interface TipiExtension  {
 
 	public void initialize(TipiContext tc);
 
@@ -46,5 +46,8 @@ public interface TipiExtension {
 	public List<String> getRequiredExtensions();
 
 	public String getConnectorId();
+	public String getProjectName();
+	public String getDeploymentDescriptor();
+	public List<String> getDependingProjectUrls();
 
 }
