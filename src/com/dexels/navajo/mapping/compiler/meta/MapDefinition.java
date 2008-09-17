@@ -171,7 +171,7 @@ public class MapDefinition {
 				String filter = (String) child.getAttribute("filter");
 				ValueDefinition vd = getValueDefinition(field);
 				// It is either <field><map ref=""> or <message><map ref=""/> or <property><map ref=""/>
-				
+				//System.err.println("Tag: " + child.getName() + ", field " + field + ", type =" + vd.getType());
 				MapDefinition md = myMetaData.getMapDefinition(vd.getMapType());
 				if ( md != null ) {
 					XMLElement out2 = vd.generateCode(child, field, filter, ( map != null ? map : out ), true, filename );

@@ -61,7 +61,11 @@ public class ValueDefinition {
 	}
 	
 	public String getMapType() {
-		return type.substring(type.indexOf("map:") + 4, type.indexOf(" "));
+		if ( type.indexOf(" ") != -1 ) {
+			return type.substring(type.indexOf("map:") + 4, type.indexOf(" "));
+		} else {
+			return type.substring(type.indexOf("map:") + 4);
+		}
 	}
 	
 	public void setType(String type) {
@@ -106,9 +110,14 @@ public class ValueDefinition {
 			XMLElement expression = new TSLElement(currentIn, "expression");
 			field.addChild(expression);
 			expression.setAttribute("xml:space", "preserve");
+			// Case Ia: stringliteral, create construct <expression>[STRING CONTENT]<expression>
 			if ( type.equals("stringliteral") && !setterValue.startsWith("{") ) {
 				expression.setContent(setterValue);
-			} else {
+			} 
+			// Case Ib: other, if string type automatically put quotes (') around string.
+			//                 if string type surrounded by {} or any other type, assume normal expression, 
+			//                      use <expression><value>[EXPRESSION]</value></expression> construct.
+			else {
 				if ( type.equals("string") && !setterValue.startsWith("{") && setterValue.indexOf("'") != -1) {
 					throw new MetaCompileException(filename, currentIn, "Invalid ' character for string type: " + setterValue);
 				}
