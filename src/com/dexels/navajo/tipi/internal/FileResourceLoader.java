@@ -28,6 +28,9 @@ public class FileResourceLoader extends ClassPathResourceLoader {
 	@Override
 	public OutputStream writeResource(String resourceName) throws IOException {
 		File res = new File(baseFile, resourceName);
+		if(!res.getParentFile().exists()) {
+			res.getParentFile().mkdirs();
+		}
 		FileOutputStream fos = new FileOutputStream(res);
 		return fos;
 	}
