@@ -38,6 +38,20 @@ public class MapDefinition {
 		return methods.get(name);
 	}
 	
+	/**
+	 * Strips the dot in a tag name.
+	 * 
+	 * @param e
+	 * @return
+	 */
+	private final String stripDot(XMLElement e) {
+		if ( e.getName().indexOf(".") == -1 ) {
+			return e.getName();
+		}
+		String value = e.getName().substring(e.getName().indexOf(".") + 1);
+		return value;
+	}
+	
 	public static MapDefinition parseDef(XMLElement e) throws Exception {
 
 		MapDefinition md = new MapDefinition(MapMetaData.getInstance());
@@ -146,13 +160,27 @@ public class MapDefinition {
 		Vector v = in.getChildren();
 		for ( int i = 0; i < v.size(); i++ ) {
 			XMLElement child = (XMLElement) v.get(i);
-			if ( child.getName().equals(tagName + ".set") ) {
+			// Case I: a non-primitive map ref construct:
+			// <field><map ref=""> or <message><map ref=""> or <property><map ref="">
+			if ( child.getName().indexOf(".") != -1 && getValueDefinition(stripDot(child)) != null && 
+				  (	( child.getChildren().size() > 0 && child.getFirstChild().getName().equals("map") ) ||
+				    ( child.getParent().getName().equals("message") || child.getParent().getName().equals("property") ) )
+			   ) {
+				// Maybe an out ValueDefinition, map ref stuff...
+				String field = stripDot(child);
+				String filter = (String) child.getAttribute("filter");
+				ValueDefinition vd = getValueDefinition(field);
+				// It is either <field><map ref=""> or <message><map ref=""/> or <property><map ref=""/>
+				XMLElement out2 = vd.generateCode(child, field, filter, ( map != null ? map : out ), true, filename );
+				generateCode(child, out2, filename);
+	        // Case II: a simple field construct.
+			} else if ( child.getName().indexOf(".") != -1 && getValueDefinition(stripDot(child)) != null ) {
 				
 				if ( child.getChildren().size() > 0 && (String) child.getAttribute("ref") == null ) {
 					throw new MetaCompileException(filename, child, "Illegal children tags defined for tag <" + child.getName() + "/>");
 				}
 				
-				String field = (String) child.getAttribute("field");
+				String field = stripDot(child);
 				String setterValue = ( child.getAttribute("value") != null ? (String) child.getAttribute("value") : (String) child.getAttribute("ref") );
 				String condition = (String) child.getAttribute("condition");
 				if ( setterValue == null ) {
@@ -161,14 +189,8 @@ public class MapDefinition {
 				ValueDefinition vd = getValueDefinition(field);
 				//System.err.println("field: " + field + ", vd = " + vd);
 				XMLElement remainder = null;
-				if ( vd != null ) {
-					remainder = vd.generateCode(child, setterValue, condition, ( map != null ? map : out ), true, filename );
-				} else {
-					throw new UnknownValueException(child.getName(), field, child, filename);
-				}
-				
+				remainder = vd.generateCode(child, setterValue, condition, ( map != null ? map : out ), true, filename );
 				if ( (String) child.getAttribute("ref") != null && remainder != null ) {
-					//System.err.println("MAPTYPE: " + vd.getMapType());
 					MapDefinition md = myMetaData.getMapDefinition(vd.getMapType());
 					if ( md != null ) {
 						md.generateCode(child, remainder, filename );
@@ -176,34 +198,15 @@ public class MapDefinition {
 						throw new UnknownAdapterException(child.getName(), child, filename);
 					}
 				}
-				
-			} else if ( child.getName().startsWith(tagName + ".")) {
-				// Could be a method or a map ref getter.
-				String method = child.getName().substring(child.getName().indexOf(".") + 1);
-				//System.err.println("method: " + method);
-				String filter = (String) child.getAttribute("filter");
-				if ( getMethodDefinition(method) != null ) {
-					MethodDefinition md = getMethodDefinition(method);
-					md.generateCode(child, ( map != null ? map : out ), filename );
-					//System.err.println("Generated code for method");
-				} else {
-					// Maybe an out ValueDefinition, map ref stuff...
-					ValueDefinition vd = getValueDefinition(method);
-					if ( vd != null ) {
-						if (  ! ( child.getFirstChild().getName().equals("map") || child.getParent().getName().equals("message") || child.getParent().getName().equals("property") ) ) {
-							throw new MetaCompileException(filename, child, "Illegal construction <" + child.getName() + "/> encountered");
-						}
-						
-						XMLElement out2 = vd.generateCode(child, method, filter, ( map != null ? map : out ), true, filename );
-						generateCode(child, out2, filename);
-
-					} else {
-						//System.err.println("Parent of " + child.getName() + " IS " + child.getParent().getName());
-						throw new UnknownMethodException(child.getName(), (XMLElement) v.get(i), filename);
-					}
-				}
-			} else if ( child.getName().equals("map." + tagName ) ) {
-				generateCode(child, ( map != null ? map : out ), filename );
+		    // Case III: a multiple-field aka method construct.		
+			} else if ( child.getName().indexOf(".") != -1 && getMethodDefinition(stripDot(child)) != null ) {
+				String method = stripDot(child);
+				MethodDefinition md = getMethodDefinition(method);
+				md.generateCode(child, ( map != null ? map : out ), filename );
+		    // Case IV: ?
+//			} else if ( child.getName().equals("map." + tagName ) ) {
+//				generateCode(child, ( map != null ? map : out ), filename );
+		    // Case V: a new map initialization construct.
 			} else if ( child.getName().startsWith("map." ) ) {
 				MapDefinition md = myMetaData.getMapDefinition(child.getName().substring(4));
 				if ( md == null ) {
@@ -231,7 +234,7 @@ public class MapDefinition {
 					    child.getName().equals("method") ||
 					    child.getName().equals("validations") ||
 					    child.getName().equals("check") ) ) {
-				throw new MetaCompileException(filename, child, "Unknown tag <" + child.getName() + "/> encountered");
+				throw new MetaCompileException(filename, child, "Unknown tag/method <" + child.getName() + "/> encountered");
 			}
 			else {
 				// Copy it.
