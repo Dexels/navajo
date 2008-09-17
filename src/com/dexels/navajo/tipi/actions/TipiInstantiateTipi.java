@@ -153,13 +153,10 @@ public class TipiInstantiateTipi extends TipiAction {
 				o = evaluate("{" + o.toString() + "}", null).value;
 			}
 			parent = (TipiComponent) o;
-			System.err.println("PArent: " + parent);
 			if (parent == null) {
 				throw new TipiException("Can not instantiate component. Parent not found: " + getParameter("location").getValue());
 			}
-			System.err.println("Whoopsa: " + store());
 			TipiValue suppliedId = getParameter("id");
-			System.err.println("PPPPP: " + suppliedId);
 			String proposedId = null;
 			if (suppliedId == null) {
 				// using parent here is odd, but it does not really matter
@@ -169,11 +166,9 @@ public class TipiInstantiateTipi extends TipiAction {
 				id = (String) evaluate(proposedId, event).value;
 
 			}
-			System.err.println("QQQQ: " + id);
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			System.err.println("OOps: " + ex.getMessage());
 		}
 		if (byClass) {
 			instantiateTipi(myContext, myComponent, byClass, parent, force, id, (String) getEvaluatedParameter("class", event).value, null,
