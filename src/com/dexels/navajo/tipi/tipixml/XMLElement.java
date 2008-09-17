@@ -2652,6 +2652,27 @@ public class XMLElement implements java.io.Serializable {
 		return new XMLParseException(this, msg);
 	}
 
+	public List<XMLElement> getChildrenByTagName(String tag) {
+		List<XMLElement> al = new ArrayList<XMLElement>();
+		for (Iterator<XMLElement> iter = children.iterator(); iter.hasNext();) {
+			XMLElement element = iter.next();
+			if (tag.equals(element.getName())) {
+				al.add(element);
+			}
+		}
+		return al;
+	}
+	public XMLElement getChildByTagName(String tag) {
+		for (Iterator<XMLElement> iter = children.iterator(); iter.hasNext();) {
+			XMLElement element = iter.next();
+			if (tag.equals(element.getName())) {
+				return element;
+			}
+		}
+		return null;
+		}
+
+	
 	public List<XMLElement> getElementsByTagName(String tag) {
 		List<XMLElement> al = new ArrayList<XMLElement>();
 		for (Iterator<XMLElement> iter = children.iterator(); iter.hasNext();) {
