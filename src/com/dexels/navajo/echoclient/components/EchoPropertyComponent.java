@@ -1,6 +1,7 @@
 package com.dexels.navajo.echoclient.components;
 
 import java.beans.*;
+import java.io.*;
 import java.text.*;
 import java.util.*;
 
@@ -13,6 +14,7 @@ import nextapp.echo2.app.table.*;
 import nextapp.echo2.app.text.*;
 
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.base.*;
 import com.dexels.navajo.document.types.*;
 
 import echopointng.*;
@@ -1007,6 +1009,7 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 			rb.setActionCommand(cc.getValue());
 			rb.setSelected(cc.isSelected());
 			rb.setEnabled(p.isDirIn());
+			System.err.println("Item: "+cc.getName()+" value: "+cc.getValue()+" selected: "+cc.isSelected());
 			// System.err.println("Created checkbox, actionCommand:
 			// "+cc.getValue());
 			rb.addActionListener(new ActionListener() {
@@ -1043,14 +1046,33 @@ public class EchoPropertyComponent extends Grid implements TableCellRenderer {
 				s.setSelected(false);
 			}
 		}
+		System.err.println("Resulting property:");
+		if(p instanceof BasePropertyImpl) {
+			BasePropertyImpl bpi = (BasePropertyImpl)p;
+			StringWriter sw = new StringWriter();
+			bpi.write(sw);
+			System.err.println("PROP: "+sw.toString());
+		}
 	}
 
 	protected void updateCheckboxButtonList(CheckBox rb, Map<Selection,CheckBox> buttons, Property p) throws NavajoException {
-		p.clearSelections();
+//		p.clearSelections();
+		ArrayList<String> selectedKeys = new ArrayList<String>();
 		for (Iterator<Selection> iter = buttons.keySet().iterator(); iter.hasNext();) {
 			Selection sel = iter.next();
 			CheckBox element = buttons.get(sel);
-			sel.setSelected(element.isSelected());
+//			sel.setSelected(element.isSelected());
+			if(element.isSelected()) {
+				selectedKeys.add(sel.getValue());
+			}
+		}
+		p.setSelected(selectedKeys);
+		System.err.println("Resulting property:");
+		if(p instanceof BasePropertyImpl) {
+			BasePropertyImpl bpi = (BasePropertyImpl)p;
+			StringWriter sw = new StringWriter();
+			bpi.write(sw);
+			System.err.println("PROP: "+sw.toString());
 		}
 	}
 
