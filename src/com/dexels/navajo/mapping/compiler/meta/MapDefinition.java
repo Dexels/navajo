@@ -189,18 +189,17 @@ public class MapDefinition {
 				String field = stripDot(child);
 				String setterValue = ( child.getAttribute("value") != null ? (String) child.getAttribute("value") : (String) child.getAttribute("ref") );
 				String condition = (String) child.getAttribute("condition");
+				// Maybe value is given as tag content?
 				if ( setterValue == null ) {
 					setterValue = child.getContent();
+					if ( setterValue == null || "".equals(setterValue) ) {
+						throw new MetaCompileException(filename, child, "Did not find any value that could be set for setter <" + child.getName() + "/>");
+					}
 				}
 				ValueDefinition vd = getValueDefinition(field);
-				//System.err.println("field: " + field + ", vd = " + vd);
-				
-				if ( setterValue != null ) {
-					XMLElement remainder = null;
-					remainder = vd.generateCode(child, setterValue, condition, ( map != null ? map : out ), true, filename );
-				} else {
-
-				}
+					
+				XMLElement remainder = null;
+				remainder = vd.generateCode(child, setterValue, condition, ( map != null ? map : out ), true, filename );
 			
 		    // Case III: a multiple-field aka method construct.		
 			} else if ( child.getName().indexOf(".") != -1 && getMethodDefinition(stripDot(child)) != null ) {
