@@ -948,6 +948,7 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 		if (getContainer() != null && c.isVisibleElement()) {
 			addToContainer(c.getContainer(), td);
 			addedToParent();
+			c.addedToParentContainer(getContainer(), c.getContainer(), td);
 		} else {
 		}
 		if (c.isPropertyComponent() && c instanceof PropertyComponent) {
@@ -976,6 +977,10 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 			ex.printStackTrace();
 		} catch (TipiBreakException e) {
 		}
+	}
+	
+	public void addedToParentContainer(Object parentContainer, Object container, Object constriants) {
+		
 	}
 
 	public Navajo getNavajo() {

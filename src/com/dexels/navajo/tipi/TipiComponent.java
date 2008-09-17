@@ -232,5 +232,5 @@ public interface TipiComponent extends ConditionErrorHandler, TipiEventListener,
 	public void runSyncInEventThread(Runnable r);
 
 	public void runAsyncInEventThread(Runnable r);
-
+	public void addedToParentContainer(Object parentContainer, Object container, Object constriants);
 }
