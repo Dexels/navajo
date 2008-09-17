@@ -67,7 +67,7 @@
 
 
    <!-- Actually a copy of tipi, with a forced layout, used for echo compatibility -->
-   <tipiclass class="TipiColumn" name="column" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="*" layoutmanager="false" addtocontainer="true">
+   <tipiclass class="TipiColumn" deprecated="true" name="column" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="*" layoutmanager="false" addtocontainer="true">
       <events>
          <event name="onInstantiate" />
          <event name="onLoad">
@@ -100,7 +100,7 @@
    </tipiclass>
    
    <!-- Actually a copy of tipi, with a forced layout, used for echo compatibility -->
-   <tipiclass class="TipiRow" name="row" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="*" layoutmanager="false" addtocontainer="true">
+   <tipiclass class="TipiRow" deprecated="true" name="row" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="*" layoutmanager="false" addtocontainer="true">
       <events>
          <event name="onInstantiate" />
          <event name="onLoad">
@@ -134,6 +134,11 @@
 
    <tipiclass addtocontainer="true" childcount="*" class="TipiSwitchPanel" layoutmanager="false" module="container" name="switchpanel"
       package="com.dexels.navajo.tipi.components.swingimpl" studio-icon="tabs.gif" type="tipi">
+      <description>
+         The switchpanel allows you to add multiple components to it. Only one component will be visible at the time
+         It uses the Swing cardlayout, and you can compare it to a tabpane without the tabs.
+         You can switch between the tabs by setting the selected or selectedindex attribute
+      </description>
       <events>
          <event name="onInstantiate" />
           <event name="onLoad">
@@ -143,8 +148,17 @@
          <event name="onGeneratedErrors" />
       </events>
       <values>
-         <value direction="inout" name="selectedindex" type="integer" />
-         <value direction="inout" name="selected" type="string" />
+         <value direction="inout" name="selectedindex" type="integer">
+            <description>
+               Set the selected tab based on the index of that component
+            </description>
+         </value>
+         <value direction="inout" name="selected" type="string">
+            <description>
+               Set the selected tab based on a string. The string can be supplied by adding
+               a constraint when adding the child.
+            </description>
+         </value>
          <value direction="in" name="background" type="color" />
          <value direction="in" name="border" type="border" />
          <value direction="in" name="width" type="integer" />
@@ -153,38 +167,34 @@
       <methods></methods>
    </tipiclass>
 
-   <!--
-      <tipiclass class="TipiFixedPane" name="fixedpane" package="com.dexels.navajo.tipi.components.swingimpl" type="tipi" childcount="*" layoutmanager="true" addtocontainer="true" toplevel="false">
-      <events>
-      <event name="onInstantiate"/>
-      <event name="onWindowClosed"/>
-         <event name="onLoad">
-            <param name="service" type="string" />
-            <param name="navajo" type="navajo"/>
-         </event>
-      <event name="onGeneratedErrors"/>
-      </events>
-      <values>
-      <value direction="inout" name="title" type="string"/>
-      <value direction="in" name="visible" type="boolean"/>
-      <value direction="in" name="background" type="color"/>
-      </values>
-      <methods>
-      </methods>
-      </tipiclass>
-   -->
+
 
 
    <!-- This is not a tipi component. Need to look into this one. -->
-   <tipiclass addtocontainer="true" childcount="0" class="TipiSwingErrorHandler" layoutmanager="false" module="abstract" name="error"
-      package="com.dexels.navajo.tipi.components.swingimpl" studio-icon="property.gif" type="tipi" />
+   <tipiclass addtocontainer="true" deprecated="true" childcount="0" class="TipiSwingErrorHandler" layoutmanager="false" module="abstract" name="error"
+      package="com.dexels.navajo.tipi.components.swingimpl" studio-icon="property.gif" type="tipi">
+         <description>This component is not used in its current form</description>
+      </tipiclass>
 
    <tipiclass addtocontainer="true" childcount="0" class="TipiTable" layoutmanager="false" module="data" name="tipitable" package="com.dexels.navajo.tipi.components.swingimpl"
       studio-icon="tipitable.gif" type="tipi" customstructure="true">
+      <description>
+         A versatile component for displaying arraymessages in a table.
+         At the moment this is the only component using a custom component loader.
+         Add column tags to display columns.
+      </description>
       <events>
          <event name="onInstantiate" />
-         <event name="onActionPerformed" />
+         <event name="onActionPerformed">
+            <description>
+               Fired when a table row is double clicked
+            </description>
+         </event>
          <event name="onSelectionChanged">
+            <description>
+               Fired when a table row is selected or deselected.
+               Use the selectedMessage and selectedIndex to check.
+            </description>
             <param name="selectedMessage" type="message" />
             <param name="selectedIndex" type="integer" />
          </event>
@@ -193,6 +203,10 @@
             <param name="navajo" type="navajo"/>
          </event>
          <event name="onValueChanged">
+          <description>
+               Fired when any value has been changed in the table.
+               Use the event parameters to filter the exact changes you are interested in.
+            </description>
             <param name="name" type="string" />
             <param name="old" type="string" />
             <param name="new" type="string" />
@@ -203,6 +217,10 @@
             <param name="path" type="string" />
          </event>
          <event name="onReportFinished">
+          <description>
+               Fired when a generic BIRT report is finished. 
+               Use the binary event parameter to serve it to the user (or something)
+            </description>
             <param name="format" type="string" />
             <param name="report" type="binary" />
          </event>
@@ -262,59 +280,141 @@
       </values>
       <methods>
          <method name="showEditDialog">
+            <description>
+               Shows a dialog depicting a single row of the table, using regular property components.
+            </description>
             <param name="title" type="string" value="'Edit'" />
+            <description>
+               The title of the dialog
+            </description>
+
          </method>
          <method name="selectByValue">
+            <description>
+               Select the rows with the following condition:
+               Property named propertyName has the supplied value
+            </description>
             <param name="propertyName" type="string"/>
             <param name="value" type="object"/>
          </method>
-         <method name="updateConditionalRemarks" />
-         <method name="stopCellEditing" />
+         <method name="updateConditionalRemarks">
+            <description>
+               Refreshes the conditional remarks.
+            </description>
+         </method>
+         <method name="stopCellEditing">
+            <description> 
+               Forces editing to commit its current value.
+            </description>
+         </method>
          <method name="repaint" />
-         <method name="selectNext" />
-         <method name="selectPrevious" />
-         <method name="selectFirst" />
-         <method name="selectLast" />
-         <method name="fireAction" />
+         <method name="selectNext">
+            <description> 
+               Next row.
+            </description>
+         </method>
+         <method name="selectPrevious">
+            <description> 
+               Previous row.
+            </description>
+         </method>
+         <method name="selectFirst" >
+            <description> 
+               First row.
+            </description>
+         </method>
+         <method name="selectLast">
+            <description> 
+               First row.
+            </description>
+         </method>
+         <method name="fireAction">
+            <description> 
+               Programmatically fire an 'onActionPerformed', effectively the same as a double click
+            </description>
+         </method>
+
          <method name="saveColumns">
+            <description> 
+               Save the column configuration to the supplied path. Note that the actual storage
+               implementation depends on the tipi-storage manager.
+            </description>
             <param name="filepath" type="string" />
          </method>
          <method name="loadColumns">
+            <description> 
+               Load the column configuration from the supplied path. Note that the actual storage
+               implementation depends on the tipi-storage manager.
+            </description>
             <param name="filepath" type="string" />
          </method>
          <method name="print">
+            <description deprecated="true">
+               Not used.
+            </description>
             <param name="printJob" type="object" />
             <param name="header" type="string" />
             <param name="footer" type="string" />
          </method>
          <method name="export">
+            <description>
+               Export as CSV (or another separator)
+            </description>
             <param name="filename" type="string" />
             <param name="delimiter" type="string" />
          </method>
-         <method name="printpreview">
+         <method name="printpreview" deprecated="true">
+            <description>
+               Not used.
+            </description>
             <param name="printJob" type="object" />
             <param name="header" type="string" />
             <param name="footer" type="string" />
          </method>
          <method name="setAllSelected">
+           <description>
+               Select all rows with the following condition:
+               Property named propertyName has the supplied value
+            </description>
             <param name="propertyName" type="string" required="true"/>
             <param name="value" type="object" required="true"/>
          </method>
-         <method name="doEmail" />
-         <method name="doWord" />
-         <method name="doExcel" />
-         <method name="doSaveColumns" />
-         <method name="doChooseColumns" />
+         <method name="doEmail" deprecated="true"/>
+         <method name="doWord"  deprecated="true"/>
+         <method name="doExcel"  deprecated="true"/>
+         <method name="doSaveColumns">
+            <description>
+               Save the columns to the present path
+            </description>
+           </method>
+         <method name="doChooseColumns">
+            <description>
+               Opens the column selection dialog.
+            </description>
+           </method>
+         
          <method name="doExportAll" />
          <method name="doRunReport">
+            <description>
+               Initiates a BIRT report run, and returns immediately.
+               onReportFinished will fire when the run is finished
+            </description>
+
             <param name="format" type="string" />
             <param name="orientation" type="string" />
             <param name="margins" type="string" />
          </method>
          <method name="editCell">
+           <description>
+               Programmatically start editing a specific cell. Supply the property you want to edit
+            </description>
             <param name="property" type="property" required="true"/>
          </method>
          <method name="sort">
+            <description>
+               Sort the table on the supplied index
+            </description>
+            
             <param name="index" type="integer" required="true"/>
             <param name="ascending" type="boolean" />
          </method>
@@ -323,6 +423,10 @@
 
    <tipiclass addtocontainer="true" childcount="0" class="TipiMegaTable" layoutmanager="false" module="data" name="tipimegatable"
       package="com.dexels.navajo.tipi.components.swingimpl.tipimegatable" studio-icon="tipitable.gif" type="tipi" customstructure="true">
+          <description>
+            The mega table is an n-dimensional data grid. It has a custom component loader, defining the layers.
+            </description>
+ 
       <events>
          <event name="onInstantiate" />
          <event name="onLoad">
@@ -679,6 +783,10 @@
  
    <tipiclass addtocontainer="true" childcount="*" class="TipiUndecoratedWindow" layoutmanager="true" module="container" name="undecoratedwindow" package="com.dexels.navajo.tipi.components.swingimpl"
       studio-icon="window.gif" toplevel="true" type="tipi">
+      <description>
+        The undecorated window behaves like a regular window (JInternalFrame) only without the normal window controls.
+        Useful for transparent controls
+      </description>
       <events>
          <event name="onInstantiate" />
          <event name="onWindowClosed" />
@@ -689,11 +797,21 @@
       </events>
       <values>
          <!--     <value name="visible" direction="in" type="boolean"/>-->
-         <value direction="inout" name="x" type="integer" value="50" property="x" />
-         <value direction="inout" name="y" type="integer" value="50" property="y" />
-         <value direction="inout" name="h" type="integer" value="50" property="h" />
-         <value direction="inout" name="w" type="integer" value="50" property="w" />
-         <value direction="inout" name="visible" type="boolean" value="false" property="visible" />
+         <value direction="inout" name="x" type="integer" value="50" property="x" >
+            <description>X position of the window</description>
+         </value>
+         <value direction="inout" name="y" type="integer" value="50" property="y">
+            <description>Y position of the window</description>
+         </value>
+         <value direction="inout" name="h" type="integer" value="50" property="h">
+            <description>Height of the window</description>
+         </value>
+         <value direction="inout" name="w" type="integer" value="50" property="w">
+            <description>Width of the window</description>
+         </value>
+         <value direction="inout" name="visible" type="boolean" value="false" property="visible" >
+            <description>Visibility</description>
+         </value>
 
          <value direction="inout" name="background" type="color" />
       </values>
@@ -1081,7 +1199,7 @@
       </values>
       <methods />
    </tipiclass>
-   <tipiclass addtocontainer="false" class="TipiPopupMenu" module="menu" name="popupmenu" layoutmanager="false" package="com.dexels.navajo.tipi.components.swingimpl"
+   <tipiclass addtocontainer="true" class="TipiPopupMenu" module="menu" name="popupmenu" layoutmanager="false" package="com.dexels.navajo.tipi.components.swingimpl"
       propertycomponent="false" studio-icon="popupmenu.gif" childcount="*" type="component">
       <events>
          <event name="onInstantiate" />
