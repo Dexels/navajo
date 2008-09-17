@@ -58,23 +58,26 @@ public class TipiTabbedQuestionList extends TipiBaseQuestionList {
     
     public Object createContainer() {
         final TipiComponent me = this;
-        final JTabbedPane jt = new JTabbedPane();
-//        TipiHelper th = new TipiSwingHelper();
-//        th.initHelper(this);
-//        addHelper(th);
-        jt.addChangeListener(new ChangeListener() {
-          public void stateChanged(ChangeEvent ce) {
-            try {
-              me.performTipiEvent("onTabChanged", null, false);
-              lastSelectedTab = jt.getSelectedComponent();
-            }
-            catch (TipiException ex) {
-              System.err.println("Exception while switching tabs.");
-              ex.printStackTrace();
-            }
-          }
-        });
-        return jt;
+//        JTabbedPane jt = null;
+        runSyncInEventThread(new Runnable(){
+
+			public void run() {
+				tabbedPane = new JTabbedPane();
+				tabbedPane.addChangeListener(new ChangeListener() {
+		             public void stateChanged(ChangeEvent ce) {
+		               try {
+		                 me.performTipiEvent("onTabChanged", null, false);
+		                 lastSelectedTab = tabbedPane.getSelectedComponent();
+		               }
+		               catch (TipiException ex) {
+		                 System.err.println("Exception while switching tabs.");
+		                 ex.printStackTrace();
+		               }
+		             }
+		           });
+			}});
+
+        return tabbedPane;
       }
 
     public void addToContainer(final Object c, final Object constraints) {
