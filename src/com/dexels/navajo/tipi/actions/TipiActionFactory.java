@@ -57,6 +57,7 @@ public class TipiActionFactory {
 		for (int i = 0; i < children.size(); i++) {
 			XMLElement currentParam = children.get(i);
 			TipiValue tv = new TipiValue(null);
+			assert "param".equals(currentParam.getName());
 			tv.load(currentParam);
 			myDefinedParams.put(tv.getName(), tv);
 		}
