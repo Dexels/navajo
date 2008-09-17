@@ -40,6 +40,9 @@ public class TipiComponentMethod {
 		List<XMLElement> v = x.getChildren();
 		for (int i = 0; i < v.size(); i++) {
 			XMLElement child = v.get(i);
+			if(child.getName().equals("description")) {
+				continue;
+			}
 			String argName = child.getStringAttribute("name");
 			TipiValue tv = new TipiValue(myComponent, child);
 			// tv.load(child);
