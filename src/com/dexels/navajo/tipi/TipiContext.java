@@ -190,13 +190,13 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 		NavajoFactory.getInstance().setExpressionEvaluator(new DefaultExpressionEvaluator());
 		tipiResourceLoader = new ClassPathResourceLoader();
 		setStorageManager(new TipiNullStorageManager());
-		// try {
-		// Class.forName("com.dexels.navajo.tipi.tools.TipiSocketDebugger");
-		// hasDebugger = true;
-		// System.err.println("debugger loaded");
-		// } catch (Throwable e) {
-		// hasDebugger = false;
-		// }
+		 try {
+		 Class.forName("com.dexels.navajo.tipi.tools.TipiEventDumpDebugger");
+		 hasDebugger = true;
+		 System.err.println("debugger loaded");
+		 } catch (Throwable e) {
+		 hasDebugger = false;
+		 }
 
 	}
 
@@ -218,6 +218,7 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 		fakeExtension(optionalExtensionList, "tipi.TipiBatikExtension");
 		fakeExtension(optionalExtensionList, "tipi.NavajoRichTipiExtension");
 		fakeExtension(optionalExtensionList, "tipi.TipiCalendarExtension");
+		fakeExtension(mainExtensionList, "tipi.TipiEchoExtension");
 
 		// initialize again
 		appendIncludes(coreExtensionList, includeList);
@@ -314,6 +315,17 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 
 	}
 
+	public List<TipiExtension> getExtensions() {
+		// want them sorted
+		List<TipiExtension> result = new ArrayList<TipiExtension>();
+		result.addAll(coreExtensionList);
+		result.addAll(mainExtensionList);
+		result.addAll(optionalExtensionList);
+		
+		return result;
+
+	}
+	
 	protected void clearLogFile() {
 	}
 
@@ -870,7 +882,7 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 	public void processRequiredIncludes() {
 		for (String element : includeList) {
 			try {
-				parseLibrary(element, false, null, false);
+				parseLibrary(element, false, element, false);
 			} catch (UnsupportedClassVersionError e) {
 				System.err.println("Error parsing extension: " + element + " wrong java version! " + e.getCause());
 
