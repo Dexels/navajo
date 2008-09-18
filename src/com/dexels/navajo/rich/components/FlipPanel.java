@@ -44,19 +44,19 @@ public class FlipPanel extends JPanel {
 		
 		if("up".equals(direction)){
 			setDirection(PerspectiveTransform.FLIP_UP);
-			System.err.println("Direction set: " + direction);
+//			System.err.println("Direction set: " + direction);
 		}
 		if("down".equals(direction)){
 			setDirection(PerspectiveTransform.FLIP_DOWN);
-			System.err.println("Direction set: " + direction);
+//			System.err.println("Direction set: " + direction);
 		}
 		if("left".equals(direction)){
 			setDirection(PerspectiveTransform.FLIP_LEFT);
-			System.err.println("Direction set: " + direction);
+//			System.err.println("Direction set: " + direction);
 		}
 		if("right".equals(direction)){
 			setDirection(PerspectiveTransform.FLIP_RIGHT);
-			System.err.println("Direction set: " + direction);
+//			System.err.println("Direction set: " + direction);
 		}
 	}
 	
