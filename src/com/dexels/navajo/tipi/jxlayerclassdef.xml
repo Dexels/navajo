@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tid errorhandler="error">
+   <tipiclass addtocontainer="true" childcount="*" class="TipiJXLayer" layoutmanager="true" module="container" name="greypanel" package="com.dexels.navajo.tipi.jxlayer"
+      studio-icon="tabs.gif" type="component">
+      <events>
+         <event name="onInstantiate" />
+      </events>
+      <values></values>
+      <methods></methods>
+   </tipiclass>
+   <tipiclass addtocontainer="true" childcount="*" class="TipiLockedPanel" layoutmanager="true" module="container" name="lockpanel" package="com.dexels.navajo.tipi.jxlayer"
+      studio-icon="tabs.gif" type="component">
+      <events>
+         <event name="onInstantiate" />
+      </events>
+      <values>
+         <value direction="inout" name="lock" type="boolean" />
+      </values>
+      <methods></methods>
+   </tipiclass>
+</tid>
