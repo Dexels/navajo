@@ -3,21 +3,14 @@ package com.dexels.navajo.tipi.swing.svg.impl;
 //import java.awt.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.event.MouseEvent;
-import java.awt.geom.*;
-import java.beans.*;
 import java.net.*;
 import java.util.*;
 
-import org.apache.batik.anim.timing.*;
 import org.apache.batik.bridge.*;
-import org.apache.batik.bridge.SVGAnimationEngine.*;
 import org.apache.batik.dom.anim.*;
 import org.apache.batik.dom.svg.*;
 import org.apache.batik.swing.*;
-import org.apache.batik.swing.gvt.*;
 import org.apache.batik.swing.svg.*;
-import org.apache.batik.util.*; //import org.w3c.dom.events.*;
 import org.w3c.dom.*;
 import org.w3c.dom.events.*;
 import org.w3c.dom.events.Event;
@@ -25,7 +18,6 @@ import org.w3c.dom.events.EventListener;
 import org.w3c.dom.svg.*;
 
 import com.dexels.navajo.tipi.swing.svg.*;
-import com.dexels.navajo.tipi.swingclient.*;
 
 public class SvgBatikComponent extends SvgBaseComponent {
 	protected final JSVGCanvas svgCanvas;
@@ -33,7 +25,7 @@ public class SvgBatikComponent extends SvgBaseComponent {
 	private final ArrayList<SvgMouseListener> mySvgMouseListeners = new ArrayList<SvgMouseListener>();
 	private final ArrayList<SvgDocumentListener> mySvgDocumentListeners = new ArrayList<SvgDocumentListener>();
 
-	private BridgeContext bridgeContext;
+//	private BridgeContext bridgeContext;
 	private String myRegisteredIdList;
 	private SVGSVGElement myRootElement;
 	private Dimension myPrefsize;
@@ -47,13 +39,9 @@ public class SvgBatikComponent extends SvgBaseComponent {
 		addComponentListener(new ComponentListener(){
 
 			public void componentHidden(ComponentEvent e) {
-				// TODO Auto-generated method stub
-				
 			}
 
 			public void componentMoved(ComponentEvent e) {
-				// TODO Auto-generated method stub
-				
 			}
 
 			public void componentResized(ComponentEvent e) {
@@ -82,9 +70,6 @@ public class SvgBatikComponent extends SvgBaseComponent {
 	}
 
 	public void setBounds(Rectangle r) {
-		// TODO Auto-generated method stub
-		System.err.println("Setting bounds: "+r);
-		System.err.println("Preferred: "+getPreferredSize());
 		super.setBounds(r);
 		if (svgCanvas != null) {
 			svgCanvas.setBounds(r);
@@ -105,69 +90,24 @@ public class SvgBatikComponent extends SvgBaseComponent {
 		System.err.println("SETTING SIZE: "+d);
 	}
 
-//	@Override
-//	public void setSize(int arg0, int arg1) {
-//		// TODO Auto-generated method stub
-//		super.setSize(arg0, arg1);
-//	}
-
 	public SVGDocument getDocument() {
 		return svgCanvas.getSVGDocument();
 	}
 
 	public void fireAnimation(String animId) {
-		// TODO Auto-generated method stub
 		SVGOMAnimationElement ee = (SVGOMAnimationElement) svgCanvas.getSVGDocument().getElementById(animId);
-		// svgCanvas.getSVGDocument().get
 		UpdateManager um = svgCanvas.getUpdateManager();
 		if (um == null) {
 			return;
 		}
 
-		// SVGContext s = ee.getSVGContext();
-		// System.err.println("S: "+s+" "+s.getClass());
-		bridgeContext = um.getBridgeContext();
-		// SVGAnimationElementBridge saeb = (SVGAnimationElementBridge)s;
-		// saeb.initializeAnimation();
-		// saeb.initializeTimedEvent();
-		// System.err.println("CONTEXT:
-		// "+bridgeContext.getAnimationEngine().hasStarted());
-		// boolean b3= ee.endElement();
-		// bridgeContext.getAnimationEngine().
-		// bridgeContext.getAnimationEngine().setCurrentTime(bridgeContext.getAnimationEngine().getCurrentTime());
-		// System.err.println("getCurrentTime: "+ee.getCurrentTime());
-		// System.err.println("getStartTime: "+ee.getStartTime());
-		// ee.setAttribute("begin", "0");
-		// System.err.println("stop "+b3);
-		boolean b = ee.beginElement();
-		// TimedElement te = AnimationSupport.getTimedElementById(animId, ee);
-		// System.err.println("TE: "+te);
-		// System.err.println("boing? "+b);
-		// bridgeContext.getAnimationEngine().startElement(animId);
-		// te.beginElement();
-
-		// if (um != null) {
-		// RunnableQueue q = um.getUpdateRunnableQueue();
-		// AnimationTickRunnable animationTickRunnable = new
-		// AnimationTickRunnable(q, this);
-		// q.setIdleRunnable(animationTickRunnable);
-		// }
-		// svgCanvas.getUpdateManager().
-
-		// ee.beginElement();
-		// bridgeContext.getAnimationEngine().addAnimation(arg0, arg1, arg2,
-		// arg3, arg4)
+		ee.beginElement();
+		
 	}
 
 	public void init(URL u) {
-//		if (svgCanvas != null) {
-//			remove(svgCanvas);
-//		}
-
 		svgCanvas.setBackground(new Color(0x0, true));
 		svgCanvas.setOpaque(false);
-//		svgCanvas.setRecenterOnResize(true) ;
-		
 		svgCanvas.setDocumentState(JSVGCanvas.ALWAYS_DYNAMIC);
 		svgCanvas.addSVGDocumentLoaderListener(new SVGDocumentLoaderAdapter() {
 			public void documentLoadingStarted(SVGDocumentLoaderEvent e) {
@@ -200,7 +140,6 @@ public class SvgBatikComponent extends SvgBaseComponent {
 
 			@Override
 			public void documentLoadingFailed(SVGDocumentLoaderEvent e) {
-				// TODO Auto-generated method stub
 				fireDocumentLoadingFailed();
 			}
 
@@ -423,7 +362,6 @@ public class SvgBatikComponent extends SvgBaseComponent {
 
 	@Override
 	public void setRegisteredIds(String object) {
-		// TODO Auto-generated method stub
 		myRegisteredIdList = object;
 
 	}
@@ -480,14 +418,13 @@ public class SvgBatikComponent extends SvgBaseComponent {
 	}
 
 	public void runInUpdateQueue(Runnable runnable) {
-		String xlinkNS = "http://www.w3.org/1999/xlink";
+//		String xlinkNS = "http://www.w3.org/1999/xlink";
 		if(svgCanvas==null ) {
 			System.err.println("Whoops! no svg canvas. Ignoring.");
 			Thread.dumpStack();
 		} else {
 			if(svgCanvas.getSVGDocument()==null) {
 				System.err.println("Whoops! no svg document. Ignoring.");
-//				Thread.dumpStack();
 			} else {
 				UpdateManager updateManager = svgCanvas.getUpdateManager();
 				if (updateManager != null) {

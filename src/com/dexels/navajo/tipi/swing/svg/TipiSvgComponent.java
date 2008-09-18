@@ -1,16 +1,12 @@
 package com.dexels.navajo.tipi.swing.svg;
 
-import java.awt.event.*;
-import java.io.*;
 import java.net.*;
 import java.util.*;
 
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.types.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.*;
 import com.dexels.navajo.tipi.internal.*;
-import com.dexels.navajo.tipi.swing.svg.*;
 import com.dexels.navajo.tipi.swing.svg.impl.*;
 
 public class TipiSvgComponent extends TipiSwingDataComponentImpl implements
@@ -19,10 +15,7 @@ public class TipiSvgComponent extends TipiSwingDataComponentImpl implements
 
 	protected SvgBaseComponent myComponent = null;
 	private String registeredIds;
-//
-//	private int preferredHeight = 20;
-//	private int preferredWidth = 20;
-//	
+
 	@Override
 	protected void performComponentMethod(String name,
 			TipiComponentMethod compMeth, TipiEvent event)
@@ -39,36 +32,18 @@ public class TipiSvgComponent extends TipiSwingDataComponentImpl implements
 
 	@Override
 	protected void setComponentValue(String name, Object object) {
-		// TODO Auto-generated method stub
 		super.setComponentValue(name, object);
 		if (name.equals("image")) {
 			if (object instanceof URL) {
 					URL u = (URL) object;
 					myComponent.init(u);
 			}
-//			if (object instanceof Binary) {
-//				try {
-//					Binary u = (Binary) object;
-//					InputStream is = u.getDataAsStream();
-//					myComponent.init(is);
-//					is.close();
-//				} catch (IOException e) {
-//					e.printStackTrace();
-//				}
-//			}
 			
 		}
 		if(name.equals("ids")) {
 			registeredIds = (String)object;
 			myComponent.setRegisteredIds((String)object);
 		}
-//		if(name.equals("preferredHeight")) {
-//			myComponent.setRegisteredIds((String)object);
-//		}
-//		if(name.equals("preferredWidth")) {
-//			myComponent.setRegisteredIds((String)object);
-//		}
-
 	}
 
 	public Object createContainer() {
@@ -82,38 +57,13 @@ public class TipiSvgComponent extends TipiSwingDataComponentImpl implements
 				myComponent.setRegisteredIds(registeredIds);
 			}
 		});
-//		myComponent.addMouseListener(new MouseListener(){
-//
-//			public void mouseClicked(MouseEvent e) {
-//				// TODO Auto-generated method stub
-//				
-//			}
-//
-//			public void mouseEntered(MouseEvent e) {
-//				// TODO Auto-generated method stub
-//				
-//			}
-//
-//			public void mouseExited(MouseEvent e) {
-//				// TODO Auto-generated method stub
-//				
-//			}
-//
-//			public void mousePressed(MouseEvent e) {
-//				System.err.println("Mouse DOWN!");
-//			}
-//
-//			public void mouseReleased(MouseEvent e) {
-//				// TODO Auto-generated method stub
-//				
-//			}});
 		//myComponent.add
 		return myComponent;
 	}
 
 	public void onClick(String targetId) {
 		System.err.println("On click detected!");
-		Map m = new HashMap();
+		Map<String,Object> m = new HashMap<String,Object>();
 		m.put("id", targetId);
 		try {
 			performTipiEvent("onClick", m, true);
@@ -123,7 +73,7 @@ public class TipiSvgComponent extends TipiSwingDataComponentImpl implements
 	}
 
 	public void onMouseDown(String targetId) {
-		Map m = new HashMap();
+		Map<String,Object> m = new HashMap<String,Object>();
 		m.put("id", targetId);
 		try {
 			System.err.println("Mouse down: "+targetId);
@@ -135,7 +85,7 @@ public class TipiSvgComponent extends TipiSwingDataComponentImpl implements
 	
 	public void onActivate(String targetId) {
 		System.err.println("Activate!!!!!!");
-		Map m = new HashMap();
+		Map<String,Object> m = new HashMap<String,Object>();
 		m.put("id", targetId);
 		try {
 			System.err.println("onActivate "+targetId);
@@ -146,7 +96,7 @@ public class TipiSvgComponent extends TipiSwingDataComponentImpl implements
 	}
 
 	public void onMouseMove(String targetId) {
-		Map m = new HashMap();
+		Map<String,Object> m = new HashMap<String,Object>();
 		m.put("id", targetId);
 		try {
 			performTipiEvent("onMouseMove", m, true);
@@ -156,7 +106,7 @@ public class TipiSvgComponent extends TipiSwingDataComponentImpl implements
 	}
 
 	public void onMouseOut(String targetId) {
-		Map m = new HashMap();
+		Map<String,Object> m = new HashMap<String,Object>();
 		m.put("id", targetId);
 		try {
 			performTipiEvent("onMouseOut", m, true);
@@ -166,7 +116,7 @@ public class TipiSvgComponent extends TipiSwingDataComponentImpl implements
 	}
 
 	public void onMouseOver(String targetId) {
-		Map m = new HashMap();
+		Map<String,Object> m = new HashMap<String,Object>();
 		m.put("id", targetId);
 		try {
 			performTipiEvent("onMouseOver", m, true);
@@ -176,7 +126,7 @@ public class TipiSvgComponent extends TipiSwingDataComponentImpl implements
 	}
 
 	public void onMouseUp(String targetId) {
-		Map m = new HashMap();
+		Map<String,Object> m = new HashMap<String,Object>();
 		m.put("id", targetId);
 		try {
 			performTipiEvent("onMouseUp", m, true);
@@ -188,7 +138,7 @@ public class TipiSvgComponent extends TipiSwingDataComponentImpl implements
 	public void onAnimationEnded(String animationId, String targetId) {
 		System.err.print("*");
 		//Thread.dumpStack();
-		Map m = new HashMap();
+		Map<String,Object> m = new HashMap<String,Object>();
 		m.put("id", animationId);
 		m.put("targetId", targetId);
 		try {
@@ -199,7 +149,7 @@ public class TipiSvgComponent extends TipiSwingDataComponentImpl implements
 	}
 
 	public void onAnimationStarted(String animationId, String targetId) {
-		Map m = new HashMap();
+		Map<String,Object> m = new HashMap<String,Object>();
 		m.put("id", animationId);
 		m.put("targetId", targetId);
 		try {

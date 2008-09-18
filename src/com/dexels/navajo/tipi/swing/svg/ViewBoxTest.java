@@ -1,35 +1,17 @@
 package com.dexels.navajo.tipi.swing.svg;
 
-import java.awt.Dimension;
-import java.awt.GraphicsEnvironment;
-import java.awt.Point;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.io.File;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.*;
 
-import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 
-import org.apache.batik.bridge.UpdateManager;
-import org.apache.batik.bridge.UpdateManagerEvent;
-import org.apache.batik.bridge.UpdateManagerListener;
-import org.apache.batik.swing.JSVGCanvas;
-import org.apache.batik.swing.gvt.GVTTreeRendererEvent;
-import org.apache.batik.swing.gvt.GVTTreeRendererListener;
-import org.apache.batik.swing.svg.GVTTreeBuilderEvent;
-import org.apache.batik.swing.svg.GVTTreeBuilderListener;
-import org.apache.batik.swing.svg.SVGDocumentLoaderEvent;
-import org.apache.batik.swing.svg.SVGDocumentLoaderListener;
-import org.apache.batik.swing.svg.SVGLoadEventDispatcherEvent;
-import org.apache.batik.swing.svg.SVGLoadEventDispatcherListener;
-import org.apache.batik.util.RunnableQueue;
-import org.apache.log4j.BasicConfigurator;
-import org.apache.log4j.ConsoleAppender;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PatternLayout;
-import org.w3c.dom.svg.SVGDocument;
-import org.w3c.dom.svg.SVGElement;
+import org.apache.batik.bridge.*;
+import org.apache.batik.swing.*;
+import org.apache.batik.swing.gvt.*;
+import org.apache.batik.swing.svg.*;
+import org.apache.log4j.*;
+import org.w3c.dom.svg.*;
 
 public class ViewBoxTest extends WindowAdapter implements
   SVGDocumentLoaderListener, GVTTreeBuilderListener,

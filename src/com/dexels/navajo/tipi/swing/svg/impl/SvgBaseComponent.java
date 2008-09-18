@@ -1,7 +1,9 @@
 package com.dexels.navajo.tipi.swing.svg.impl;
 
 import java.net.*;
+
 import javax.swing.*;
+
 import com.dexels.navajo.tipi.swing.svg.*;
 
 

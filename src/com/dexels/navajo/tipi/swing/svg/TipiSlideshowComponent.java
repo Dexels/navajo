@@ -9,7 +9,6 @@ public class TipiSlideshowComponent extends TipiSvgComponent {
 	 
 	
 	private SvgBatikComponent svgPanel;
-	private int index = 0;
 	private String myTag = null;
 	@Override
 	
@@ -24,16 +23,14 @@ public class TipiSlideshowComponent extends TipiSvgComponent {
 			@Override
 			public void onDocumentLoadingFinished() {
 				String loadUrl = null;
-				if(loadUrl!=null) {
-					updateDom(svgPanel.getDocument(),loadUrl);
-					svgPanel.runInUpdateQueue(new Runnable(){
+				updateDom(svgPanel.getDocument(),loadUrl);
+				svgPanel.runInUpdateQueue(new Runnable(){
 
-						public void run() {
-							svgPanel.fireAnimation("animin");
-							
-						}});
-					
-				}
+					public void run() {
+						svgPanel.fireAnimation("animin");
+						
+					}});
+				
 
 			}});
 		//myComponent.add
