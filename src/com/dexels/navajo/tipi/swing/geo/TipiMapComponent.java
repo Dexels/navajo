@@ -1,7 +1,6 @@
 package com.dexels.navajo.tipi.swing.geo;
 
 import java.awt.*;
-
 import java.awt.Point;
 import java.awt.event.*;
 import java.awt.geom.*;
@@ -10,15 +9,12 @@ import java.util.*;
 
 import javax.swing.*;
 
-import org.jdesktop.swingx.*;
 import org.jdesktop.swingx.mapviewer.*;
 
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.*;
 import com.dexels.navajo.tipi.swing.geo.impl.*;
-import com.dexels.navajo.tipi.swing.geo.impl.tilefactory.*;
-import com.dexels.navajo.tipi.swingclient.*;
 
 public class TipiMapComponent extends TipiSwingDataComponentImpl {
 
@@ -279,7 +275,7 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 		runSyncInEventThread(new Runnable(){
 
 			public void run() {
-				mapComponents.remove((Component) c);
+				mapComponents.remove(c);
 				overlayPanel.remove((Component) c);
 				overlayPanel.repaint();
 			}});

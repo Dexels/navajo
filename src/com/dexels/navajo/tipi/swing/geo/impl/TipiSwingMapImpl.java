@@ -1,12 +1,10 @@
 package com.dexels.navajo.tipi.swing.geo.impl;
 
-import java.awt.*;
 import java.beans.*;
 
 import org.jdesktop.swingx.*;
 import org.jdesktop.swingx.mapviewer.*;
 
-import com.dexels.navajo.tipi.swing.geo.*;
 import com.dexels.navajo.tipi.swing.geo.impl.tilefactory.*;
 
 public class TipiSwingMapImpl extends JXMapKit {
@@ -67,7 +65,7 @@ public class TipiSwingMapImpl extends JXMapKit {
 			}
 		}
 		if(factory.equals("openstreetmap")) {
-			setTileFactory(new DefaultTileFactory(new DexelsProxySteetMapTileFactoryInfo(17)));
+			setTileFactory(new DefaultTileFactory(new OpenStreetMapTileFactoryInfo(17)));
 			// zoom and center is lost after switching:
 			if(myCenter!=null) {
 				setCenterPosition(myCenter);

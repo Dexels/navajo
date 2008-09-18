@@ -1,8 +1,5 @@
 package com.dexels.navajo.tipi.swing.geo.impl.tilefactory;
 
-import java.net.*;
-
-import org.dexels.utils.*;
 import org.jdesktop.swingx.mapviewer.*;
 
 public class DexelsProxySteetMapTileFactoryInfo extends TileFactoryInfo {
@@ -17,13 +14,13 @@ public class DexelsProxySteetMapTileFactoryInfo extends TileFactoryInfo {
 	}
     public String getTileUrl(int x, int y, int zoom) {
         zoom = max-zoom;
-        String tileString = "http://tile.openstreetmap.org" +"/"+zoom+"/"+x+"/"+y+".png";
-        String res = Base64.encode(tileString.getBytes());
-        String resss = URLEncoder.encode(tileString);
-        System.err.println("AAP: "+resss);
-        System.err.println("RES: "+res.replaceAll("=", "|"));
-        return "http://distel:8080/MapTileProxy/Tile?tile="+resss;
-//        return tileString;
+//        String tileString = "http://tile.openstreetmap.org" +"/"+zoom+"/"+x+"/"+y+".png";
+//        String res = Base64.encode(tileString.getBytes());
+//        String resss = URLEncoder.encode(tileString);
+//        System.err.println("AAP: "+resss);
+//        System.err.println("RES: "+res.replaceAll("=", "|"));
+//        return "http://distel:8080/MapTileProxy/Tile?tile="+resss;
+        return null;
     }
 }
 
