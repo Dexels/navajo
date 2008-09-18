@@ -8,7 +8,7 @@ import javax.swing.*;
 public class FlipPanel extends JPanel {
 	private int direction = PerspectiveTransform.FLIP_LEFT;
 	private PerspectiveImagePanel animationPanel = new PerspectiveImagePanel();
-	private ArrayList<JComponent> components = new ArrayList();
+	private ArrayList<JComponent> components = new ArrayList<JComponent>();
 	private BorderLayout layout = new BorderLayout();
 	JComponent visibleComponent = null;
 
@@ -123,7 +123,6 @@ public class FlipPanel extends JPanel {
 
 	public JComponent getVisibleComponent() {
 		for (int i = 0; i < components.size(); i++) {
-			JComponent current = components.get(i);
 			if (components.get(i).isVisible()) {
 				return components.get(i);
 			}

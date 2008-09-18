@@ -141,7 +141,7 @@ public class PerspectiveTransform {
 	}
 
 	private static BufferedImage transformYaxis(BufferedImage input, double degrees, boolean keepcenter, boolean to_left) {
-		long st = System.currentTimeMillis();
+//		long st = System.currentTimeMillis();
 		int width = input.getWidth();
 		int height = input.getHeight();
 		double rad_a = degrees * (Math.PI / 180.0);

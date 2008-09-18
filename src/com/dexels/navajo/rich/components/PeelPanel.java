@@ -8,7 +8,6 @@ import javax.swing.*;
 
 public class PeelPanel extends JPanel {
 	private double peel = 0.0;
-	private Point mouseLoc = null;
 
 	public PeelPanel() {
 		setBackground(Color.white);
@@ -19,7 +18,7 @@ public class PeelPanel extends JPanel {
 		});
 		this.addMouseMotionListener(new MouseMotionAdapter() {
 			public void mouseMoved(MouseEvent e) {
-				mouseLoc = e.getPoint();
+//				mouseLoc = e.getPoint();
 				repaint();
 			}
 		});
@@ -100,8 +99,8 @@ public class PeelPanel extends JPanel {
 		repaint();
 	}
 
-	private void setPeel(double d) {
-		repaint();
-	}
+//	private void setPeel(double d) {
+//		repaint();
+//	}
 
 }

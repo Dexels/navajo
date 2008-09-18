@@ -15,7 +15,6 @@ public class GreyFadeButton extends JButton {
 	private float factor = 1.0f;
 	private ImageIcon myIcon;
 	private int reflectionSize = 15;
-	private Dimension defaultSize = new Dimension(48, 48);
 	private boolean mouseover = false;
 	private boolean animating = false;
 
@@ -154,7 +153,7 @@ public class GreyFadeButton extends JButton {
 
 	private BufferedImage createReflection(BufferedImage img) {
 		int height = img.getHeight();
-		BufferedImage result = new BufferedImage(img.getWidth(), (int) (height + reflectionSize), BufferedImage.TYPE_INT_ARGB);
+		BufferedImage result = new BufferedImage(img.getWidth(), (height + reflectionSize), BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2 = result.createGraphics();
 
 		g2.drawImage(img, 0, 0, null);

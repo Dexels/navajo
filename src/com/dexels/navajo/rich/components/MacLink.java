@@ -14,7 +14,6 @@ public class MacLink extends JButton {
 	private float min_scale = 0.5f;
 	private float scale = 0.5f;
 	private float max_scale = 1.0f;
-	private float zoom = 0.0f;
 	private ImageIcon myIcon;
 	private int reflectionSize = 15;
 	private Dimension defaultSize = new Dimension(48, 48);
@@ -184,7 +183,7 @@ public class MacLink extends JButton {
 			g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 			icG.drawImage(image, 0, 0, iconImage.getWidth(), iconImage.getHeight(), null);
 
-			BufferedImage reflection = createReflection(iconImage);
+//			BufferedImage reflection = createReflection(iconImage);
 			g2.drawImage(createReflection(iconImage), 0, 0, null);
 			g2.dispose();
 		} else {
@@ -194,7 +193,7 @@ public class MacLink extends JButton {
 
 	private BufferedImage createReflection(BufferedImage img) {
 		int height = img.getHeight();
-		BufferedImage result = new BufferedImage(img.getWidth(), (int) (height + reflectionSize), BufferedImage.TYPE_INT_ARGB);
+		BufferedImage result = new BufferedImage(img.getWidth(), (height + reflectionSize), BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2 = result.createGraphics();
 
 		g2.drawImage(img, 0, 0, null);

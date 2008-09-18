@@ -18,11 +18,11 @@ public class PerspectiveImagePanel extends JPanel {
 	private BufferedImage currentImg;
 	private int direction = PerspectiveTransform.FLIP_RIGHT;
 	private Animator a;
-	private JComponent c1, c2, set_visible;
+	private JComponent c2;
 	private int speed = 500;
 
 	public void setComponents(JComponent c1, JComponent c2) {
-		this.c1 = c1;
+//		this.c1 = c1;
 		this.c2 = c2;
 
 		getGraphicsConfiguration().createCompatibleImage(c1.getWidth(), c1.getHeight());
@@ -31,10 +31,10 @@ public class PerspectiveImagePanel extends JPanel {
 		Graphics2D b1g = b1.createGraphics();
 		Graphics2D b2g = b2.createGraphics();
 
-		Rectangle c1Bounds = c1.getBounds();
-		Rectangle c2Bounds = c2.getBounds();
-
-		Graphics c1g = c1.getGraphics();
+//		Rectangle c1Bounds = c1.getBounds();
+//		Rectangle c2Bounds = c2.getBounds();
+//
+//		Graphics c1g = c1.getGraphics();
 
 		c1.print(b1g);
 		b1g.dispose();
@@ -109,7 +109,7 @@ public class PerspectiveImagePanel extends JPanel {
 		Graphics2D graf = (Graphics2D) g;
 		Graphics2D g2 = (Graphics2D) graf.create();
 
-		float grey_factor = (float) angle * 1.0f / 80.0f;
+//		float grey_factor = (float) angle * 1.0f / 80.0f;
 		if (currentImg != null && angle == previousAngle) {
 			g2.drawImage(currentImg, 0, 0, currentImg.getWidth(), currentImg.getHeight(), null);
 		} else if (img != null) {
@@ -133,25 +133,25 @@ public class PerspectiveImagePanel extends JPanel {
 		g2.dispose();
 	}
 
-	private BufferedImage createReflection(BufferedImage img, int reflectionSize) {
-		int height = img.getHeight();
-		BufferedImage result = new BufferedImage(img.getWidth(), (int) (height + reflectionSize), BufferedImage.TYPE_INT_ARGB);
-		Graphics2D g2 = result.createGraphics();
-
-		g2.drawImage(img, 0, 0, null);
-		g2.scale(1.0, -1.01);
-		g2.drawImage(img, 0, -height - height, null);
-		g2.scale(1.0, -1.0);
-		g2.translate(0, height);
-
-		GradientPaint mask = new GradientPaint(0, 0, new Color(1.0f, 1.0f, 1.0f, 0.5f), 0, reflectionSize,
-				new Color(1.0f, 1.0f, 1.0f, 0.0f));
-		g2.setPaint(mask);
-		g2.setComposite(AlphaComposite.DstIn);
-		g2.fillRect(0, 0, img.getWidth(), reflectionSize);
-		g2.dispose();
-		return result;
-	}
+//	private BufferedImage createReflection(BufferedImage img, int reflectionSize) {
+//		int height = img.getHeight();
+//		BufferedImage result = new BufferedImage(img.getWidth(), (height + reflectionSize), BufferedImage.TYPE_INT_ARGB);
+//		Graphics2D g2 = result.createGraphics();
+//
+//		g2.drawImage(img, 0, 0, null);
+//		g2.scale(1.0, -1.01);
+//		g2.drawImage(img, 0, -height - height, null);
+//		g2.scale(1.0, -1.0);
+//		g2.translate(0, height);
+//
+//		GradientPaint mask = new GradientPaint(0, 0, new Color(1.0f, 1.0f, 1.0f, 0.5f), 0, reflectionSize,
+//				new Color(1.0f, 1.0f, 1.0f, 0.0f));
+//		g2.setPaint(mask);
+//		g2.setComposite(AlphaComposite.DstIn);
+//		g2.fillRect(0, 0, img.getWidth(), reflectionSize);
+//		g2.dispose();
+//		return result;
+//	}
 
 	public void setDirection(int direction) {
 		this.direction = direction;
@@ -209,7 +209,7 @@ public class PerspectiveImagePanel extends JPanel {
 		 * final JSlider slide = new JSlider(0,84); slide.setBounds(0, 580, 180,
 		 * 30); slide.setValue(0); slide.addChangeListener(new ChangeListener(){
 		 * 
-		 * public void stateChanged(ChangeEvent e) { // TODO Auto-generated
+		 * public void stateChanged(ChangeEvent e) { 
 		 * method stub p.setAngle(slide.getValue()); } });
 		 * frame.getContentPane().add(slide); // JPanel p1 = new JPanel(); //
 		 * JPanel p2 = new JPanel(); // // JButton apenoot = new

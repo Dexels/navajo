@@ -217,7 +217,7 @@ public class DesktopButton extends JButton {
 
 	private BufferedImage createReflection(BufferedImage img) {
 		int height = img.getHeight();
-		BufferedImage result = new BufferedImage(img.getWidth(), (int) (height + reflectionSize), BufferedImage.TYPE_INT_ARGB);
+		BufferedImage result = new BufferedImage(img.getWidth(), (height + reflectionSize), BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2 = result.createGraphics();
 
 		g2.drawImage(img, 0, 0, null);
