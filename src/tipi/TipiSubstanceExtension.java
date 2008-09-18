@@ -8,7 +8,7 @@ public class TipiSubstanceExtension implements TipiExtension {
 
 	public void initialize(TipiContext tc) {
 		// Do nothing
-		
+
 	}
 
 	public String getDescription() {
@@ -16,7 +16,7 @@ public class TipiSubstanceExtension implements TipiExtension {
 	}
 
 	public String[] getIncludes() {
-		return new String[]{"com/dexels/navajo/tipi/swing/substance/substanceclassdef.xml"};
+		return new String[] { "com/dexels/navajo/tipi/swing/substance/substanceclassdef.xml" };
 	}
 
 	public boolean isMainImplementation() {
@@ -24,12 +24,10 @@ public class TipiSubstanceExtension implements TipiExtension {
 	}
 
 	public String getId() {
-		// TODO Auto-generated method stub
 		return "substance";
 	}
 
 	public String requiresMainImplementation() {
-		// TODO Auto-generated method stub
 		return "swing";
 	}
 
@@ -44,14 +42,28 @@ public class TipiSubstanceExtension implements TipiExtension {
 		jars.add("TipiSubstance.jar");
 		return jars;
 	}
-	
+
 	public String getConnectorId() {
 		return null;
 	}
 
 	public List<String> getRequiredExtensions() {
-		
+
 		return null;
+	}
+
+	public String getProjectName() {
+		return "TipiSubstance";
+	}
+
+	public String getDeploymentDescriptor() {
+		return "TipiSubstance.jnlp";
+	}
+
+	public List<String> getDependingProjectUrls() {
+		List<String> l = new LinkedList<String>();
+		l.add("https://substance.dev.java.net/");
+		return l;
 	}
 
 }

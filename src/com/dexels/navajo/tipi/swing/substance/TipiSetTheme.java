@@ -15,17 +15,16 @@ public class TipiSetTheme extends TipiAction {
 
 	protected void execute(TipiEvent event) throws TipiBreakException, TipiException {
 		final Operand valueOp = getEvaluatedParameter("value", event);
-		
-		
-		SwingUtilities.invokeLater(new Runnable(){
+
+		SwingUtilities.invokeLater(new Runnable() {
 
 			public void run() {
 				try {
 					String value = null;
-					if(valueOp!=null) {
+					if (valueOp != null) {
 						value = (String) valueOp.value;
 					}
-					if (value==null) {
+					if (value == null) {
 						setDefaultLnF();
 					} else {
 						setSubstanceTheme(value);
@@ -33,9 +32,10 @@ public class TipiSetTheme extends TipiAction {
 				} catch (Throwable e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}			
-			}});
-		
+				}
+			}
+		});
+
 	}
 
 	private void setDefaultLnF() {
@@ -57,13 +57,13 @@ public class TipiSetTheme extends TipiAction {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		if(((SwingTipiContext)myContext).getAppletRoot()!=null) {
+		if (((SwingTipiContext) myContext).getAppletRoot() != null) {
 		} else {
 			for (int i = 0; i < f.length; i++) {
 				SwingUtilities.updateComponentTreeUI(f[i]);
 			}
 		}
-		
+
 	}
 
 }

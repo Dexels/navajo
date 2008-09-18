@@ -17,10 +17,10 @@ public class TipiSetSkin extends TipiAction {
 	protected void execute(TipiEvent event) throws TipiBreakException, TipiException {
 		Operand valueOp = getEvaluatedParameter("value", event);
 		String value = null;
-		if(valueOp!=null) {
+		if (valueOp != null) {
 			value = (String) valueOp.value;
 		}
-		if (value==null) {
+		if (value == null) {
 			setDefaultSkin();
 		} else {
 			setSubstanceSkin(value);
@@ -46,13 +46,13 @@ public class TipiSetSkin extends TipiAction {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		if(((SwingTipiContext)myContext).getAppletRoot()!=null) {
+		if (((SwingTipiContext) myContext).getAppletRoot() != null) {
 		} else {
 			for (int i = 0; i < f.length; i++) {
 				SwingUtilities.updateComponentTreeUI(f[i]);
 			}
 		}
-		
+
 	}
 
 }
