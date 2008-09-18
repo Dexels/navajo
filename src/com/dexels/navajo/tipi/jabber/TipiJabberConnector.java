@@ -202,8 +202,7 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 		Collection<HostedRoom> aa = MultiUserChat.getHostedRooms(connection, conferenceName);
 		boolean found = false;
 		for (HostedRoom hostedRoom : aa) {
-			System.err.println("DESCRIPTION: " + hostedRoom.getName() + " # of occupants: " + hostedRoom.getJid());
-			if (roomName.equals(hostedRoom.getName())) {
+			if (roomName.toLowerCase().equals(hostedRoom.getName().toLowerCase())) {
 				MultiUserChat myMultiuserChat = new MultiUserChat(connection, hostedRoom.getJid());
 				try {
 					joinRoom(nickName, myMultiuserChat);
@@ -463,7 +462,7 @@ public class TipiJabberConnector extends TipiBaseConnector implements TipiConnec
 				String result = (String) o.value;
 				String nick = (String) op.value;
 				try {
-					joinRoom(result, nick);
+					joinRoom(result.toLowerCase(), nick);
 				} catch (XMPPException e) {
 					e.printStackTrace();
 				}
