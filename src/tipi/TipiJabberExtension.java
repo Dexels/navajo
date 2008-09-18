@@ -52,5 +52,16 @@ public class TipiJabberExtension implements TipiExtension {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	public String getProjectName() {
+		return "TipiJabber";
+	}
 
+	public String getDeploymentDescriptor() {
+		return "TipiJabber.jnlp";
+	}
+	public List<String> getDependingProjectUrls() {
+		List<String> l = new LinkedList<String>();
+		l.add("http://www.igniterealtime.org/projects/smack/index.jsp");
+		return l;
+	}	
 }
