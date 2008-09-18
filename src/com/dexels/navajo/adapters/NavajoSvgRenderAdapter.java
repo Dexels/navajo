@@ -26,7 +26,7 @@ public class NavajoSvgRenderAdapter {
         ostream.close();
 }
 
-	public Binary renderSvg(Binary svg, double width, double height) throws TranscoderException, IOException {
+	public Binary renderSvg(Binary svg, double width, double height) throws IOException {
 		Binary b = new Binary();
 		renderPNG(svg.getDataAsStream(), b.getOutputStream(),(float)width,(float)height);
 		return b;
