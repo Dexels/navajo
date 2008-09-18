@@ -1,36 +1,14 @@
 package com.dexels.navajo.rich.components;
 
-import java.awt.AlphaComposite;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.GradientPaint;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.RenderingHints;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
-import java.awt.image.BufferedImageOp;
-import java.awt.image.ConvolveOp;
-import java.awt.image.Kernel;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.image.*;
 import java.net.*;
 
-import javax.swing.Action;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.RootPaneContainer;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 
-import org.jdesktop.animation.timing.Animator;
-import org.jdesktop.animation.timing.TimingTargetAdapter;
-import org.jdesktop.animation.timing.interpolation.PropertySetter;
+import org.jdesktop.animation.timing.*;
+import org.jdesktop.animation.timing.interpolation.*;
 
 public class DesktopButton extends JButton {
 	private ImageIcon myIcon;
@@ -160,7 +138,8 @@ public class DesktopButton extends JButton {
 		g2.setFont(fB);
 
 		if (toolTip != null && !"".equals(toolTip)) {
-			g2.drawString(toolTip, (myIcon != null ? myIcon.getIconWidth() : 0) + icon_offset_x + text_offset_x, text_offset_y + text_b_offset_y + 2 * fontsize_a);
+			g2.drawString(toolTip, (myIcon != null ? myIcon.getIconWidth() : 0) + icon_offset_x + text_offset_x, text_offset_y
+					+ text_b_offset_y + 2 * fontsize_a);
 		}
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
@@ -218,7 +197,8 @@ public class DesktopButton extends JButton {
 		if (showSpring) {
 			SpringGlassPane glassPane = new SpringGlassPane();
 			((RootPaneContainer) getTopLevelAncestor()).getRootPane().setGlassPane(glassPane);
-			glassPane.setSize(((RootPaneContainer) getTopLevelAncestor()).getRootPane().getWidth(), ((RootPaneContainer) getTopLevelAncestor()).getRootPane().getHeight());
+			glassPane.setSize(((RootPaneContainer) getTopLevelAncestor()).getRootPane().getWidth(),
+					((RootPaneContainer) getTopLevelAncestor()).getRootPane().getHeight());
 
 			SpringGlassPane cc = (SpringGlassPane) ((RootPaneContainer) getTopLevelAncestor()).getGlassPane();
 			cc.setVisible(true);
@@ -246,7 +226,8 @@ public class DesktopButton extends JButton {
 		g2.scale(1.0, -1.0);
 		g2.translate(0, height);
 
-		GradientPaint mask = new GradientPaint(0, 0, new Color(1.0f, 1.0f, 1.0f, 0.5f), 0, reflectionSize, new Color(1.0f, 1.0f, 1.0f, 0.0f));
+		GradientPaint mask = new GradientPaint(0, 0, new Color(1.0f, 1.0f, 1.0f, 0.5f), 0, reflectionSize,
+				new Color(1.0f, 1.0f, 1.0f, 0.0f));
 		g2.setPaint(mask);
 		g2.setComposite(AlphaComposite.DstIn);
 		g2.fillRect(0, 0, img.getWidth(), reflectionSize);

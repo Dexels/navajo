@@ -1,8 +1,7 @@
 package com.dexels.navajo.rich.components;
 
 import java.awt.*;
-import java.awt.event.*;
-import java.util.ArrayList;
+import java.util.*;
 
 import javax.swing.*;
 
@@ -31,36 +30,36 @@ public class FlipPanel extends JPanel {
 		}
 		c.setVisible(true);
 	}
-	
-	public void setBounds(int x, int y, int width, int height){
+
+	public void setBounds(int x, int y, int width, int height) {
 		super.setBounds(x, y, width, height);
 		for (int i = 0; i < components.size(); i++) {
 			components.get(i).setSize(width, height);
-//			components.get(i).setBounds(x, y, width, height);
-		}		
+			// components.get(i).setBounds(x, y, width, height);
+		}
 	}
-	
-	public void setDirection(String direction){
-		
-		if("up".equals(direction)){
+
+	public void setDirection(String direction) {
+
+		if ("up".equals(direction)) {
 			setDirection(PerspectiveTransform.FLIP_UP);
-//			System.err.println("Direction set: " + direction);
+			// System.err.println("Direction set: " + direction);
 		}
-		if("down".equals(direction)){
+		if ("down".equals(direction)) {
 			setDirection(PerspectiveTransform.FLIP_DOWN);
-//			System.err.println("Direction set: " + direction);
+			// System.err.println("Direction set: " + direction);
 		}
-		if("left".equals(direction)){
+		if ("left".equals(direction)) {
 			setDirection(PerspectiveTransform.FLIP_LEFT);
-//			System.err.println("Direction set: " + direction);
+			// System.err.println("Direction set: " + direction);
 		}
-		if("right".equals(direction)){
+		if ("right".equals(direction)) {
 			setDirection(PerspectiveTransform.FLIP_RIGHT);
-//			System.err.println("Direction set: " + direction);
+			// System.err.println("Direction set: " + direction);
 		}
 	}
-	
-	public void setDirection(int direction){
+
+	public void setDirection(int direction) {
 		this.direction = direction;
 	}
 
@@ -78,7 +77,8 @@ public class FlipPanel extends JPanel {
 	}
 
 	public void flipForwards() {
-//		((RootPaneContainer) getTopLevelAncestor()).getRootPane().setGlassPane(animationPanel);
+		// ((RootPaneContainer)
+		// getTopLevelAncestor()).getRootPane().setGlassPane(animationPanel);
 		getRootPane().getLayeredPane().add(animationPanel, 0);
 		int idx = components.indexOf(getVisibleComponent());
 		if (idx > -1) {

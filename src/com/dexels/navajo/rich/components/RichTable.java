@@ -1,22 +1,16 @@
 package com.dexels.navajo.rich.components;
 
-import java.awt.Component;
-import java.awt.Dimension;
+import java.awt.*;
 import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
+import java.awt.event.*;
 
-import javax.swing.JTable;
-import javax.swing.JViewport;
+import javax.swing.*;
 
-import org.jdesktop.animation.timing.Animator;
-import org.jdesktop.animation.timing.interpolation.PropertySetter;
+import org.jdesktop.animation.timing.*;
+import org.jdesktop.animation.timing.interpolation.*;
 
-import com.dexels.navajo.document.Message;
-import com.dexels.navajo.document.Property;
-import com.dexels.navajo.tipi.swingclient.components.MessageTableModel;
-
+import com.dexels.navajo.document.*;
+import com.dexels.navajo.tipi.swingclient.components.*;
 
 public class RichTable extends JTable {
 	private MessageTableModel myModel = new MessageTableModel();
@@ -38,8 +32,8 @@ public class RichTable extends JTable {
 			}
 		});
 	}
-	
-	public Message getSelectedMessage(){
+
+	public Message getSelectedMessage() {
 		return myModel.getMessageRow(getSelectedRow());
 	}
 
@@ -88,7 +82,7 @@ public class RichTable extends JTable {
 	public void setMessage(Message m) {
 		myModel.setMessage(m);
 		createDefaultColumnsFromModel();
-		
+
 	}
 
 	public int addColumn(String id, String title, boolean editable) {

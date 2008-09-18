@@ -2,13 +2,13 @@ package com.dexels.navajo.rich.components;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.image.BufferedImage;
+import java.awt.image.*;
 import java.net.*;
 
 import javax.swing.*;
-import org.jdesktop.animation.timing.Animator;
-import org.jdesktop.animation.timing.TimingTargetAdapter;
-import org.jdesktop.animation.timing.interpolation.PropertySetter;
+
+import org.jdesktop.animation.timing.*;
+import org.jdesktop.animation.timing.interpolation.*;
 
 public class MacLink extends JButton {
 	private float min_scale = 0.5f;
@@ -63,8 +63,8 @@ public class MacLink extends JButton {
 		});
 
 		addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {			
-					fireSpring();			
+			public void actionPerformed(ActionEvent e) {
+				fireSpring();
 			}
 		});
 	}
@@ -94,29 +94,30 @@ public class MacLink extends JButton {
 	}
 
 	public void drawHint(String hint) {
-//		if (showSpring) {
-			SpringGlassPane glassPane = new SpringGlassPane();
-			((RootPaneContainer) getTopLevelAncestor()).getRootPane().setGlassPane(glassPane);
-			SpringGlassPane cc = (SpringGlassPane) ((RootPaneContainer) getTopLevelAncestor()).getGlassPane();
-			cc.setVisible(true);
-			Rectangle bounds = getBounds();
-			Point location = new Point(0, 0);
-			location = SwingUtilities.convertPoint(this, location, ((RootPaneContainer) getTopLevelAncestor()).getRootPane());
-			bounds.setLocation(location);
-			cc.showHint(this, hint);
-			cc.getAnimator().addTarget(new TimingTargetAdapter() {
-				public void end() {
-					// animating = false;
-				}
-			});
-//		}
+		// if (showSpring) {
+		SpringGlassPane glassPane = new SpringGlassPane();
+		((RootPaneContainer) getTopLevelAncestor()).getRootPane().setGlassPane(glassPane);
+		SpringGlassPane cc = (SpringGlassPane) ((RootPaneContainer) getTopLevelAncestor()).getGlassPane();
+		cc.setVisible(true);
+		Rectangle bounds = getBounds();
+		Point location = new Point(0, 0);
+		location = SwingUtilities.convertPoint(this, location, ((RootPaneContainer) getTopLevelAncestor()).getRootPane());
+		bounds.setLocation(location);
+		cc.showHint(this, hint);
+		cc.getAnimator().addTarget(new TimingTargetAdapter() {
+			public void end() {
+				// animating = false;
+			}
+		});
+		// }
 	}
 
 	public void fireSpring() {
 		if (showSpring) {
 			SpringGlassPane glassPane = new SpringGlassPane();
 			((RootPaneContainer) getTopLevelAncestor()).getRootPane().setGlassPane(glassPane);
-			glassPane.setSize(((RootPaneContainer) getTopLevelAncestor()).getRootPane().getWidth(), ((RootPaneContainer) getTopLevelAncestor()).getRootPane().getHeight());
+			glassPane.setSize(((RootPaneContainer) getTopLevelAncestor()).getRootPane().getWidth(),
+					((RootPaneContainer) getTopLevelAncestor()).getRootPane().getHeight());
 
 			SpringGlassPane cc = (SpringGlassPane) ((RootPaneContainer) getTopLevelAncestor()).getGlassPane();
 			cc.setVisible(true);
@@ -202,7 +203,8 @@ public class MacLink extends JButton {
 		g2.scale(1.0, -1.0);
 		g2.translate(0, height);
 
-		GradientPaint mask = new GradientPaint(0, 0, new Color(1.0f, 1.0f, 1.0f, 0.5f), 0, reflectionSize, new Color(1.0f, 1.0f, 1.0f, 0.0f));
+		GradientPaint mask = new GradientPaint(0, 0, new Color(1.0f, 1.0f, 1.0f, 0.5f), 0, reflectionSize,
+				new Color(1.0f, 1.0f, 1.0f, 0.0f));
 		g2.setPaint(mask);
 		g2.setComposite(AlphaComposite.DstIn);
 		g2.fillRect(0, 0, img.getWidth(), reflectionSize);
@@ -210,5 +212,4 @@ public class MacLink extends JButton {
 		return result;
 	}
 
-	
 }

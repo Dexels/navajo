@@ -2,13 +2,13 @@ package com.dexels.navajo.rich.components;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.image.BufferedImage;
+import java.awt.image.*;
 import java.net.*;
 
 import javax.swing.*;
-import org.jdesktop.animation.timing.Animator;
-import org.jdesktop.animation.timing.TimingTargetAdapter;
-import org.jdesktop.animation.timing.interpolation.PropertySetter;
+
+import org.jdesktop.animation.timing.*;
+import org.jdesktop.animation.timing.interpolation.*;
 
 public class GreyFadeButton extends JButton {
 	private float start_factor = 1.0f;
@@ -19,13 +19,13 @@ public class GreyFadeButton extends JButton {
 	private boolean mouseover = false;
 	private boolean animating = false;
 
-	public GreyFadeButton(URL imagepath, String text){
+	public GreyFadeButton(URL imagepath, String text) {
 		this(imagepath);
 		setText(text);
 	}
-	
+
 	public GreyFadeButton(URL imagepath) {
-  	myIcon = new ImageIcon(imagepath);
+		myIcon = new ImageIcon(imagepath);
 		setBorderPainted(false);
 		setOpaque(false);
 
@@ -46,7 +46,6 @@ public class GreyFadeButton extends JButton {
 			}
 		});
 
-		
 	}
 
 	public void setIcon(ImageIcon icon) {
@@ -62,10 +61,10 @@ public class GreyFadeButton extends JButton {
 	public float getFactor() {
 		return factor;
 	}
-	
-	public Dimension getPreferredSize(){
+
+	public Dimension getPreferredSize() {
 		int width = myIcon.getIconWidth();
-		int height = myIcon.getIconHeight()+reflectionSize;
+		int height = myIcon.getIconHeight() + reflectionSize;
 		return new Dimension(width, height);
 	}
 
@@ -104,7 +103,7 @@ public class GreyFadeButton extends JButton {
 					if (!mouseover) {
 						animate(false);
 					} else {
-//						drawHint(getText());
+						// drawHint(getText());
 						// animating = true;
 					}
 				}
@@ -145,7 +144,7 @@ public class GreyFadeButton extends JButton {
 
 			BufferedImage grey = GrayScaleTransform.getFadedImage(iconImage, factor);
 			BufferedImage reflection = createReflection(grey);
-			
+
 			g2.drawImage(reflection, 0, 0, null);
 
 		} else {
@@ -164,7 +163,8 @@ public class GreyFadeButton extends JButton {
 		g2.scale(1.0, -1.0);
 		g2.translate(0, height);
 
-		GradientPaint mask = new GradientPaint(0, 0, new Color(1.0f, 1.0f, 1.0f, 0.5f), 0, reflectionSize, new Color(1.0f, 1.0f, 1.0f, 0.0f));
+		GradientPaint mask = new GradientPaint(0, 0, new Color(1.0f, 1.0f, 1.0f, 0.5f), 0, reflectionSize,
+				new Color(1.0f, 1.0f, 1.0f, 0.0f));
 		g2.setPaint(mask);
 		g2.setComposite(AlphaComposite.DstIn);
 		g2.fillRect(0, 0, img.getWidth(), reflectionSize);
