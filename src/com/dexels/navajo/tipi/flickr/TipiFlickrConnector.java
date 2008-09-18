@@ -3,10 +3,6 @@ package com.dexels.navajo.tipi.flickr;
 import java.io.*;
 import java.util.*;
 
-import org.xml.sax.*;
-
-
-import com.aetrion.flickr.*;
 import com.aetrion.flickr.people.*;
 import com.aetrion.flickr.photos.*;
 import com.dexels.navajo.document.*;
@@ -33,23 +29,22 @@ public class TipiFlickrConnector extends TipiBaseConnector {
 	}
 
 	
-	private String loadUrl(String tag, int index) {
-		try {
-			String url =  PhotoManager.getInstance().getUrl(new String[]{tag}, index);
-			return url;
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (FlickrException e) {
-			e.printStackTrace();
-		} catch (SAXException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
-		
-	}
+//	private String loadUrl(String tag, int index) {
+//		try {
+//			String url =  PhotoManager.getInstance().getUrl(new String[]{tag}, index);
+//			return url;
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		} catch (FlickrException e) {
+//			e.printStackTrace();
+//		} catch (SAXException e) {
+//			e.printStackTrace();
+//		}
+//		return null;
+//		
+//	}
 
-	public static void main(String[] args) throws InterruptedException, NavajoException, TipiException {
+	public static void main(String[] args) throws NavajoException, TipiException {
 		TipiFlickrConnector tipiFlickrConnector = new TipiFlickrConnector();
 		Navajo n = tipiFlickrConnector.createInitListFlickr();
 		n.write(System.err);

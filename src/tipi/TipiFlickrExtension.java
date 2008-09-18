@@ -49,5 +49,18 @@ public class TipiFlickrExtension implements TipiExtension {
 	public List<String> getRequiredExtensions() {
 		return null;
 	}
+	public String getProjectName() {
+		return "TipiFlickr";
+	}
 
+	public String getDeploymentDescriptor() {
+		return "TipiFlickr.jnlp";
+	}
+
+	public List<String> getDependingProjectUrls() {
+		List<String> l = new LinkedList<String>();
+		l.add("http://flickrj.sourceforge.net/");
+		return l;
+
+	}
 }

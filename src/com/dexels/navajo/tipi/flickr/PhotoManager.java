@@ -1,25 +1,16 @@
 package com.dexels.navajo.tipi.flickr;
 
 import java.io.*;
-import java.net.*;
 import java.util.*;
 
-import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.*;
 
-import org.xml.sax.SAXException;
+import org.xml.sax.*;
 
-import com.aetrion.flickr.Flickr;
-import com.aetrion.flickr.FlickrException;
-import com.aetrion.flickr.REST;
-import com.aetrion.flickr.RequestContext;
-import com.aetrion.flickr.activity.ActivityInterface;
-import com.aetrion.flickr.activity.Event;
-import com.aetrion.flickr.activity.Item;
-import com.aetrion.flickr.activity.ItemList;
-import com.aetrion.flickr.auth.Auth;
-import com.aetrion.flickr.auth.Permission;
+import com.aetrion.flickr.*;
+import com.aetrion.flickr.auth.*;
 import com.aetrion.flickr.photos.*;
-import com.aetrion.flickr.util.IOUtilities;
+import com.aetrion.flickr.util.*;
 
 /**
  * Demonstration of howto use the ActivityInterface.
@@ -127,7 +118,8 @@ public class PhotoManager {
 //        System.exit(0);
 //    }
 
-    public List<Photo> getPhotos(String[] tags, int max, int index) throws FlickrException, IOException, SAXException {
+    @SuppressWarnings("unchecked")
+	public List<Photo> getPhotos(String[] tags, int max, int index) throws FlickrException, IOException, SAXException {
     	
         SearchParameters sp = new SearchParameters();
         sp.setSort(SearchParameters.INTERESTINGNESS_DESC);
@@ -170,21 +162,11 @@ public class PhotoManager {
     	return f.toURI().toURL().toString();
     }
     
-    public List<Photo>  getUrls(PhotoList pl) throws IOException {
+    @SuppressWarnings("unchecked")
+	public List<Photo>  getUrls(PhotoList pl) {
     	List<Photo> al = new ArrayList<Photo>();
     	for (Iterator iterator = pl.iterator(); iterator.hasNext();) {
 			Photo p = (Photo) iterator.next();
-//		    try {
-//				GeoData gg =  f.getPhotosInterface().getGeoInterface().getLocation(p.getId());
-//				if(gg!=null) {
-//					System.err.println("GEO FOUND: "+gg.getLatitude()+" long:" +gg.getLongitude());
-//				}
-//		    } catch (SAXException e) {
-//				e.printStackTrace();
-//			} catch (FlickrException e) {
-//				e.printStackTrace();
-//			}
-
 			al.add(p);
     	}
     	return al;
