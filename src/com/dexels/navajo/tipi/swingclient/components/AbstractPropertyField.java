@@ -122,7 +122,6 @@ public abstract class AbstractPropertyField extends JTextField implements FocusL
 		if(!isEditing()) {
 			return;
 		}
-		Thread.dumpStack();
 		if(myProperty==null) {
 			return;
 		}
