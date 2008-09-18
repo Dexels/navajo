@@ -8,7 +8,7 @@ public class TipiSwingXExtension implements TipiExtension {
 
 	public void initialize(TipiContext tc) {
 		// Do nothing
-		
+
 	}
 
 	public String getDescription() {
@@ -16,19 +16,17 @@ public class TipiSwingXExtension implements TipiExtension {
 	}
 
 	public String[] getIncludes() {
-		return new String[]{"com/dexels/navajo/tipi/swingxclassdef.xml"};
+		return new String[] { "com/dexels/navajo/tipi/swingxclassdef.xml" };
 	}
 
 	public boolean isMainImplementation() {
 		return false;
 	}
 
-
 	public String getId() {
-		
+
 		return "swingx";
 	}
-
 
 	public String requiresMainImplementation() {
 		return "swing";
@@ -37,7 +35,7 @@ public class TipiSwingXExtension implements TipiExtension {
 	public List<String> getLibraryJars() {
 		List<String> l = new LinkedList<String>();
 		l.add("swingx.jar");
-		
+
 		return l;
 	}
 
@@ -45,7 +43,8 @@ public class TipiSwingXExtension implements TipiExtension {
 		List<String> l = new LinkedList<String>();
 		l.add("TipiSwingX.jar");
 		return l;
-	} 
+	}
+
 	public String getConnectorId() {
 		return null;
 	}
@@ -61,11 +60,11 @@ public class TipiSwingXExtension implements TipiExtension {
 	public String getDeploymentDescriptor() {
 		return "TipiSwingX.jnlp";
 	}
-	
+
 	public List<String> getDependingProjectUrls() {
 		List<String> l = new LinkedList<String>();
 		l.add("https://swingx.dev.java.net/");
 		return l;
-	}	
-	
+	}
+
 }
