@@ -5,7 +5,8 @@
     <property name="build" location="bin"/>
     <property name="lib" value="lib"/>
     <property name="archive" value="TipiMail.jar"/>
-    <target name="check-env">
+	<property name="dist" location="dist"/>
+	<target name="check-env">
         <tstamp/>
         <fail unless="PROJECTHOME"> Set the PROJECTHOME environment variable to the top directory of your CVS projects, for example: export PROJECTHOME=C:\PROJECTS declare -x PROJECTHOME=/home/arjen/las-projectas </fail>
     </target>
@@ -22,6 +23,7 @@
     <target name="clean">
         <delete file="${archive}"/>
         <delete dir="${build}"/>
+	    <delete dir="${dist}"/>
     </target>
     <target name="resource">
         <copy todir="${build}">

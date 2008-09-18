@@ -13,6 +13,7 @@
     <resources>
         <j2se version="1.5+" max-heap-size="256m"/>
         <jar href="lib/mail.jar" main="false"/>
+        <jar href="lib/TipiMail.jar" main="false"/>
         
     </resources>
     <component-desc />
