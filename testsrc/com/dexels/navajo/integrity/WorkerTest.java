@@ -147,6 +147,7 @@ public class WorkerTest extends TestCase {
 		
 		Worker w = Worker.getInstance();
 		w.setSleepTime(500);
+		String rand = new Random(System.currentTimeMillis()).nextInt()+"";
 		
 		final Access a = new Access(1,1,1,"","","","","",false,null);
 		a.isFinished = false;
@@ -163,11 +164,11 @@ public class WorkerTest extends TestCase {
 			}
 		}.start();
 		
-		Assert.assertFalse(w.waitedForRunningRequest(a, createNiceNavajo("348"), "348"));
-		Assert.assertTrue(w.waitedForRunningRequest(a, createNiceNavajo("348"), "348"));
+		Assert.assertFalse(w.waitedForRunningRequest(a, createNiceNavajo(rand), rand));
+		Assert.assertTrue(w.waitedForRunningRequest(a, createNiceNavajo(rand), rand));
 		// Sleep longer than 2000 millis.
 		Thread.sleep(2200);
-		Assert.assertFalse(w.waitedForRunningRequest(a, createNiceNavajo("348"), "348"));
+		Assert.assertFalse(w.waitedForRunningRequest(a, createNiceNavajo(rand), rand));
 		
 	}
 	
@@ -175,6 +176,26 @@ public class WorkerTest extends TestCase {
 		Worker w = Worker.getInstance();
 		w.setSleepTime(500);
 		simulateIntegrityViolation(w, true);
+	}
+	
+	public void testGetResponseWithDifferentRequestId() throws Exception {
+		Worker w = Worker.getInstance();
+		w.setSleepTime(500);
+		
+		String rand = new Random(System.currentTimeMillis()).nextInt()+"";
+
+		Navajo request = createNiceNavajo(rand);
+
+		Navajo response = NavajoFactory.getInstance().createNavajo();
+		Message m = NavajoFactory.getInstance().createMessage(response, "Result");
+		response.addMessage(m);
+
+		w.setResponse(request, response);
+		
+		final Access a = new Access(1,1,1,"","","","","",false,null);
+		Navajo n = w.getResponse(a, createNiceNavajo(rand+"2"));
+		Assert.assertNull(n);
+		
 	}
 
 }
