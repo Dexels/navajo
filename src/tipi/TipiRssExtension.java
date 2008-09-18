@@ -51,5 +51,18 @@ public class TipiRssExtension implements TipiExtension {
 	public List<String> getRequiredExtensions() {
 		return null;
 	}
+	public String getProjectName() {
+		return "TipiRss";
+	}
 
+	public String getDeploymentDescriptor() {
+		return "TipiRss.jnlp";
+	}
+	public List<String> getDependingProjectUrls() {
+		List<String> l = new LinkedList<String>();
+		l.add("http://java.sun.com/developer/technicalArticles/javaserverpages/rss_utilities/");
+		
+		return l;
+	}	
+	
 }
