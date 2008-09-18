@@ -4,9 +4,6 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
-
-
-//import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.types.*;
 import com.dexels.navajo.tipi.*;
@@ -53,7 +50,6 @@ public class TipiRssComponent extends TipiBaseConnector implements TipiConnector
 		return "rss";
 	}
 
-	@SuppressWarnings("unchecked")
 	private Navajo createInitNavajo() throws NavajoException {
 		Navajo n = NavajoFactory.getInstance().createNavajo();
 		Header h =NavajoFactory.getInstance().createHeader(n, "InitRss", "unknown","unknown", -1);
