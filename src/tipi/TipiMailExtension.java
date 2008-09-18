@@ -35,7 +35,10 @@ public class TipiMailExtension implements TipiExtension {
 	}
 
 	public List<String> getLibraryJars() {
-		return null;
+		List<String> l = new LinkedList<String>();
+		l.add("mail.jar");
+		l.add("activation.jar");
+		return l;
 	}
 
 	public List<String> getMainJars() {
@@ -51,5 +54,18 @@ public class TipiMailExtension implements TipiExtension {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	public String getProjectName() {
+		return "TipiMail";
+	}
 
+	public String getDeploymentDescriptor() {
+		return "TipiMail.jnlp";
+	}
+	public List<String> getDependingProjectUrls() {
+		List<String> l = new LinkedList<String>();
+		l.add("http://java.sun.com/javase/technologies/desktop/javabeans/jaf/");
+		l.add("http://java.sun.com/products/javamail/");
+		
+		return l;
+	}	
 }
