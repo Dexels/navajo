@@ -17,7 +17,9 @@ import java.util.ArrayList;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
-public class MacBar extends JPanel {
+import com.dexels.navajo.tipi.swingclient.components.*;
+
+public class MacBar extends JPanel  {
 	public final static String  BAR_TOP = "top";
 	public final static String  BAR_BOTTOM = "bottom";
 	public final static String  BAR_LEFT = "left";
@@ -27,6 +29,7 @@ public class MacBar extends JPanel {
 
 	public MacBar() {
 		setLayout(new GridBagLayout());
+		setOpaque(false);
 	}
 
 	public void add(JComponent link) {
