@@ -54,4 +54,18 @@ public class TipiSwingXExtension implements TipiExtension {
 		return null;
 	}
 
+	public String getProjectName() {
+		return "TipiSwingX";
+	}
+
+	public String getDeploymentDescriptor() {
+		return "TipiSwingX.jnlp";
+	}
+	
+	public List<String> getDependingProjectUrls() {
+		List<String> l = new LinkedList<String>();
+		l.add("https://swingx.dev.java.net/");
+		return l;
+	}	
+	
 }
