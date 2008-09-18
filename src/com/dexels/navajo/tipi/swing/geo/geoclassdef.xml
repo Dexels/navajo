@@ -6,6 +6,9 @@
       <events>
          <event name="onInstantiate" />
          <event name="onClear" />
+         <event name="onLoad">
+            <param name="service" type="string"/>
+         </event>
          <event name="onDataComponent">
             <param name="message" type="message"/>
          </event>
@@ -14,6 +17,7 @@
          <value direction="in" name="lon" type="float" />
          <value direction="in" name="lat" type="float" />
          <value direction="in" name="factory" type="string" />
+         <value direction="in" name="messagePath" type="string" />
          <value direction="in" name="zoom" type="integer" />
       </values>
       <methods>

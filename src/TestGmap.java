@@ -6,13 +6,11 @@ import javax.swing.*;
 import org.jdesktop.swingx.*;
 import org.jdesktop.swingx.mapviewer.*;
 
-import com.dexels.navajo.tipi.swing.geo.*;
-import com.dexels.navajo.tipi.swing.geo.impl.*;
 import com.dexels.navajo.tipi.swing.geo.impl.tilefactory.*;
 
  
 public class TestGmap {
-	public static void main(String[] args) throws UnsupportedLookAndFeelException {
+	public static void main(String[] args)  {
 //	 UIManager.setLookAndFeel(new SubstanceLookAndFeel());
 		JXMapKit j = new JXMapKit();
 		JFrame jf = new JFrame("Google map");

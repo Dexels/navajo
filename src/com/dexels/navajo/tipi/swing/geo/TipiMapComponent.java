@@ -18,6 +18,7 @@ import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.*;
 import com.dexels.navajo.tipi.swing.geo.impl.*;
 import com.dexels.navajo.tipi.swing.geo.impl.tilefactory.*;
+import com.dexels.navajo.tipi.swingclient.*;
 
 public class TipiMapComponent extends TipiSwingDataComponentImpl {
 
@@ -27,8 +28,10 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 	private JLayeredPane jp = new JLayeredPane();
 	private TipiSwingMapImpl myMapKit;
 	private final Map<Component,GeoPosition> mapComponents = new HashMap<Component,GeoPosition>();
-	private final Set<Waypoint> waypoints = new HashSet<Waypoint>();
-		 
+	private Map<Component, GeoPosition> mapComponentSizes = new HashMap<Component,GeoPosition>();
+		
+	private String messagePath = null; 
+	
 	private final JPanel overlayPanel = new JPanel();
 	@Override
 	public Object createContainer() {
@@ -48,8 +51,7 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 			}});
 		
 	    //crate a WaypointPainter to draw the points
-	    WaypointPainter painter = new WaypointPainter();
-	    painter.setWaypoints(waypoints);
+//	    WaypointPainter painter = new WaypointPainter();
 	    jp.addComponentListener(new ComponentListener(){
 			public void componentHidden(ComponentEvent arg0) {}
 			public void componentMoved(ComponentEvent arg0) {}
@@ -64,8 +66,8 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 				overlayPanel.setBounds(new Rectangle(new Point(0,0),jp.getSize()));
 				layoutChildren();
 			}});
-	    myMapKit.getMainMap().setOverlayPainter(painter);
-	    myMapKit.setBounds(new Rectangle(0,0, 100,100));
+//	    myMapKit.getMainMap().setOverlayPainter(painter);
+//	    myMapKit.setBounds(new Rectangle(0,0, 100,100));
 	    jp.add(myMapKit,new Integer(100));
 	    jp.add(overlayPanel,new Integer(101));
 	    
@@ -78,13 +80,16 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 	public void loadData(Navajo n, String method) throws TipiException, TipiBreakException {
 		super.loadData(n, method);
 
-		final Message m = n.getMessage("Clubs");
+		if(messagePath==null) {
+			return;
+		}
+		final Message m = n.getMessage(messagePath);
 //		List m = m.getAllMessages();
 		runSyncInEventThread(new Runnable(){
 
 			public void run() {
 				ArrayList<Message> al = m.getAllMessages();
-				waypoints.clear();
+//				waypoints.clear();
 				try {
 					performTipiEvent("onClear", null, true);
 				} catch (TipiException e) {
@@ -131,7 +136,7 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 
 	protected void layoutChildren() {
 		for (Component c : mapComponents.keySet()) {
-			positionComponent(c, mapComponents.get(c));
+			positionComponent(c, mapComponents.get(c),mapComponentSizes.get(c));
 		}
 	}
 
@@ -161,45 +166,124 @@ public class TipiMapComponent extends TipiSwingDataComponentImpl {
 		if(name.equals("factory")) {
 			myMapKit.setMapFactory((String)object);
 		}
+		if(name.equals("messagePath")) {
+			messagePath = (String)object;
+		}
 		super.setComponentValue(name, object);
 	}
 
 	@Override
 	public void addToContainer(Object c, Object constraints) {
+
+		myMapKit.setBounds(new Rectangle(new Point(0,0),jp.getSize()));
+		overlayPanel.setBounds(new Rectangle(new Point(0,0),jp.getSize()));
+
 		String con = (String) constraints;
 		StringTokenizer st = new StringTokenizer(con,",");
-		String lon = st.nextToken();
 		String lat = st.nextToken();
+		String lon = st.nextToken();
 		double lonF = Double.parseDouble(lon);
 		double latF = Double.parseDouble(lat);
-		GeoPosition gp = new GeoPosition(lonF,latF);
+		
+		GeoPosition gp = new GeoPosition(latF,lonF);
+		GeoPosition rightB = null;
 		mapComponents.put((Component) c, gp);
 		overlayPanel.add((Component) c);
-        if(c instanceof JComponent) {
-        	JComponent jc = (JComponent)c;
-        	jc.setSize(jc.getPreferredSize());
-        }
-        positionComponent(c, gp);
+		if(st.hasMoreTokens()) {
+			String latRightBottom = null;
+			String lonRightBottom = null;
+			double latRB;
+			double lonRB;
+			latRightBottom = st.nextToken();
+			lonRightBottom = st.nextToken();
+
+			if(latRightBottom.startsWith("+")) {
+				System.err.println("REL LAT:"+latRightBottom);
+				double rel = Double.parseDouble(latRightBottom.substring(1));
+				latRB = latF + rel;
+				System.err.println("REsults: "+latRB);
+			} else {
+				latRB = Double.parseDouble(latRightBottom);
+			}
+
+			if(lonRightBottom.startsWith("+")) {
+				System.err.println("REL LON:"+lonRightBottom);
+				double rel = Double.parseDouble(lonRightBottom.substring(1));
+				lonRB = lonF + rel;
+				System.err.println("REsults: "+lonRB);
+			} else {
+				lonRB = Double.parseDouble(lonRightBottom);
+			}
+
+			//latRB = Double.parseDouble(latRightBottom);
+			rightB = new GeoPosition(latRB,lonRB);
+		}
+		if (rightB!=null) {
+			Dimension calcDimension = calcDimension(gp, rightB);
+			System.err.println("DIMENSION:" +calcDimension);
+			((JComponent)c).setPreferredSize(calcDimension);
+			mapComponentSizes.put((Component) c, rightB);
+			
+		} else {
+			if(c instanceof JComponent) {
+	        	JComponent jc = (JComponent)c;
+	        	System.err.println("Adding with default size: "+jc.getPreferredSize());
+	        	jc.setSize(jc.getPreferredSize());
+	        } else {
+	        	((Component)c).setSize(100,100);
+	        }
+		}
+        positionComponent(c, gp,rightB);
         jp.repaint();
         //        layoutChildren();
         	
 	}
 
-	private void positionComponent(Object c, GeoPosition gp) {
-		Point2D gp_pt = myMapKit.getMainMap().getTileFactory().geoToPixel(gp, myMapKit.getMainMap().getZoom());
-        //convert to screen
+	private void positionComponent(Object c, GeoPosition gp, GeoPosition rightB) {
+		Component comp = (Component)c;
+        Point2D gp_pt = myMapKit.getMainMap().getTileFactory().geoToPixel(gp, myMapKit.getMainMap().getZoom());
+		System.err.println("TOPLEFT: "+gp+" == "+rightB);
+		Point2D gp_pt_rb = null;
+        Dimension d = null;
         Rectangle rect = myMapKit.getMainMap().getViewportBounds();
         Point converted_gp_pt = new Point((int)gp_pt.getX()-rect.x,
-                                          (int)gp_pt.getY()-rect.y);
-        Component comp = (Component)c;
-        Dimension d = comp.getSize();
-        
-        comp.setLocation(converted_gp_pt.x-(d.width/2),converted_gp_pt.y-(d.height/2));
+                (int)gp_pt.getY()-rect.y);
+        if(rightB!=null) {
+			gp_pt_rb = myMapKit.getMainMap().getTileFactory().geoToPixel(rightB, myMapKit.getMainMap().getZoom());
+			Point converted_gp_pt_rb = new Point((int)gp_pt_rb.getX()-rect.x,
+                    (int)gp_pt_rb.getY()-rect.y);
+			d = new Dimension(Math.abs(converted_gp_pt_rb.x - converted_gp_pt.x),Math.abs(converted_gp_pt_rb.y - converted_gp_pt.y));
+			System.err.println("Pixeldim: "+d);
+        } else {
+			d = comp.getPreferredSize();
+		}
+
+        if(rightB==null) {
+        	// use center, if no offset is given
+        	comp.setBounds(converted_gp_pt.x-(d.width/2),converted_gp_pt.y-(d.height/2),d.width,d.height);
+        } else {
+            comp.setBounds(converted_gp_pt.x,converted_gp_pt.y,d.width,d.height);
+        	
+        }
 	}
 
+	private Dimension calcDimension(GeoPosition lt, GeoPosition rb) {
+		Point2D topLeft = myMapKit.getMainMap().getTileFactory().geoToPixel(lt, myMapKit.getMainMap().getZoom());
+		Point2D bottomRight = myMapKit.getMainMap().getTileFactory().geoToPixel(rb, myMapKit.getMainMap().getZoom());
+		return new Dimension((int)Math.abs(topLeft.getX()-bottomRight.getX()),(int)Math.abs(topLeft.getY()-bottomRight.getY()));
+	}
+	
 	@Override
-	public void removeFromContainer(Object c) {
-		super.removeFromContainer(c);
+	public void removeFromContainer(final Object c) {
+//		super.removeFromContainer(c);
+		runSyncInEventThread(new Runnable(){
+
+			public void run() {
+				mapComponents.remove((Component) c);
+				overlayPanel.remove((Component) c);
+				overlayPanel.repaint();
+			}});
+		
 	}
 
 }

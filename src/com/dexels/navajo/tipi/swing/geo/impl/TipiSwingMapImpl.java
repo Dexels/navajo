@@ -67,7 +67,7 @@ public class TipiSwingMapImpl extends JXMapKit {
 			}
 		}
 		if(factory.equals("openstreetmap")) {
-			setTileFactory(new DefaultTileFactory(new OpenStreetMapTileFactoryInfo(17)));
+			setTileFactory(new DefaultTileFactory(new DexelsProxySteetMapTileFactoryInfo(17)));
 			// zoom and center is lost after switching:
 			if(myCenter!=null) {
 				setCenterPosition(myCenter);

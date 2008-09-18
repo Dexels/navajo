@@ -2,9 +2,16 @@ package tipi;
 
 import java.util.*;
 
+
 import com.dexels.navajo.tipi.TipiContext;
 
+
 public class TipiGeoSwingExtension implements TipiExtension {
+
+	public void initialize(TipiContext tc) {
+		// Do nothing
+		
+	}
 
 	public String getDescription() {
 		return "Geographic tipi swing extensions";
@@ -49,10 +56,16 @@ public class TipiGeoSwingExtension implements TipiExtension {
 		l.add("swingx");
 		return l;
 	}
-
-	public void initialize(TipiContext tc) {
-		// TODO Auto-generated method stub
-		
+	public String getProjectName() {
+		return "TipiGeoSwing";
 	}
 
+	public String getDeploymentDescriptor() {
+		return "TipiGeoSwing.jnlp";
+	}
+	public List<String> getDependingProjectUrls() {
+		List<String> l = new LinkedList<String>();
+		l.add("https://swingx-ws.dev.java.net/");
+		return l;
+	}
 }
