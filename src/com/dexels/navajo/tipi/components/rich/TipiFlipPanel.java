@@ -9,7 +9,6 @@ import com.dexels.navajo.tipi.internal.*;
 
 public class TipiFlipPanel extends TipiPanel {
 	private FlipPanel myPanel;
-	private String direction;
 	private int speed = 750;
 
 	public TipiFlipPanel() {
