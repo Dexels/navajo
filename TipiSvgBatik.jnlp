@@ -29,7 +29,7 @@
         <jar href="lib/js.jar" main="false"/>
         <jar href="lib/xml-apis.jar" main="false"/>
         <jar href="lib/xml-apis-ext.jar" main="false"/>
-        <jar href="TipiSvgBatik.jar" main="false"/>
+        <jar href="lib/TipiSvgBatik.jar" main="false"/>
     </resources>
     <component-desc/>
 </jnlp>
