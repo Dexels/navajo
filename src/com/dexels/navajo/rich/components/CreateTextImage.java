@@ -1,26 +1,17 @@
 package com.dexels.navajo.rich.components;
 
-import java.awt.AlphaComposite;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.GradientPaint;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.awt.RenderingHints;
-import java.awt.geom.Rectangle2D;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.OutputStream;
+import java.awt.*;
+import java.awt.geom.*;
+import java.awt.image.*;
+import java.io.*;
 
-import javax.imageio.ImageIO;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
+import javax.imageio.*;
+import javax.swing.*;
 
-import com.dexels.navajo.document.types.Binary;
+import com.dexels.navajo.document.types.*;
 
 public class CreateTextImage {
-	private static final int max_fontsize = 40;
+//	private static final int max_fontsize = 40;
 	private static int reflectionSize = 18; 
 	public static int height = 60;
 	public static int width = 265;
@@ -68,7 +59,7 @@ public class CreateTextImage {
 	
 	private static BufferedImage createReflection(BufferedImage img) {
 		int height = img.getHeight();
-		BufferedImage result = new BufferedImage(img.getWidth(), (int) (height + reflectionSize), BufferedImage.TYPE_INT_ARGB);
+		BufferedImage result = new BufferedImage(img.getWidth(), (height + reflectionSize), BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2 = result.createGraphics();
 
 		g2.drawImage(img, 0, 0, null);
