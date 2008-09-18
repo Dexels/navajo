@@ -197,5 +197,47 @@ public class WorkerTest extends TestCase {
 		Assert.assertNull(n);
 		
 	}
+	
+	public void testClearCache() throws Exception {
+		Worker w = Worker.getInstance();
+		w.setSleepTime(500);
+		
+		String rand = new Random(System.currentTimeMillis()).nextInt()+"";
+		
+		Navajo request = createNiceNavajo(rand);
+
+		Navajo response = NavajoFactory.getInstance().createNavajo();
+		Message m = NavajoFactory.getInstance().createMessage(response, "Result");
+		response.addMessage(m);
+
+		w.setResponse(request, response);
+		w.clearCache();
+		
+		Assert.assertEquals(0, w.getFileCount());
+		Assert.assertEquals(0, w.getCacheSize());
+		
+	}
+	
+	public void testTerminate() throws Exception {
+		Worker w = Worker.getInstance();
+		w.setSleepTime(500);
+		
+		String rand = new Random(System.currentTimeMillis()).nextInt()+"";
+		
+		Navajo request = createNiceNavajo(rand);
+
+		Navajo response = NavajoFactory.getInstance().createNavajo();
+		Message m = NavajoFactory.getInstance().createMessage(response, "Result");
+		response.addMessage(m);
+
+		w.setResponse(request, response);
+		w.terminate();
+		
+		Assert.assertEquals(0, w.getFileCount());
+		Assert.assertEquals(0, w.getCacheSize());
+		Assert.assertEquals(0, w.getWorkSize());
+		Assert.assertEquals(0, w.notWrittenSize);
+		
+	}
 
 }
