@@ -51,6 +51,23 @@ public class TipiBatikExtension implements TipiExtension {
 
 	public List<String> getRequiredExtensions() {
 		return null;
+	}
+
+	public int compareTo(TipiExtension o) {
+		// TODO Auto-generated method stub
+		return 0;
 	} 
- 
+	public String getProjectName() {
+		return "TipiSvgBatik";
+	}
+
+	public String getDeploymentDescriptor() {
+		return "TipiSvgBatik.jnlp";
+	}
+	public List<String> getDependingProjectUrls() {
+		List<String> l = new LinkedList<String>();
+		l.add("http://xmlgraphics.apache.org/batik/");
+		return l;
+
+	}
 }
