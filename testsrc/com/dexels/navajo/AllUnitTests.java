@@ -9,7 +9,7 @@ import com.dexels.navajo.events.types.NavajoEventMapTest;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-public class AllTests {
+public class AllUnitTests {
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite(

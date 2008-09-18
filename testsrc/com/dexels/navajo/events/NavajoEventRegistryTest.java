@@ -130,7 +130,7 @@ public class NavajoEventRegistryTest extends TestCase {
 			public void onNavajoEvent(NavajoEvent ne) {
 				message = "Received AuditLogEvent!";
 				try {
-					Thread.sleep(500);
+					Thread.sleep(1000);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -147,7 +147,7 @@ public class NavajoEventRegistryTest extends TestCase {
 		
 		synchronized (semaphore) {
 			try {
-				semaphore.wait(1000);
+				semaphore.wait(2000);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
