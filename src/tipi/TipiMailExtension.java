@@ -8,7 +8,7 @@ public class TipiMailExtension implements TipiExtension {
 
 	public void initialize(TipiContext tc) {
 		// Do nothing
-		
+
 	}
 
 	public String getDescription() {
@@ -16,19 +16,17 @@ public class TipiMailExtension implements TipiExtension {
 	}
 
 	public String[] getIncludes() {
-		return new String[]{"com/dexels/navajo/tipi/mailclassdef.xml"};
+		return new String[] { "com/dexels/navajo/tipi/mailclassdef.xml" };
 	}
 
 	public boolean isMainImplementation() {
 		return false;
 	}
 
-
 	public String getId() {
-		
+
 		return "mail";
 	}
-
 
 	public String requiresMainImplementation() {
 		return null;
@@ -45,7 +43,8 @@ public class TipiMailExtension implements TipiExtension {
 		List<String> l = new LinkedList<String>();
 		l.add("TipiMail.jar");
 		return l;
-	} 
+	}
+
 	public String getConnectorId() {
 		return "mail";
 	}
@@ -54,6 +53,7 @@ public class TipiMailExtension implements TipiExtension {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 	public String getProjectName() {
 		return "TipiMail";
 	}
@@ -61,11 +61,12 @@ public class TipiMailExtension implements TipiExtension {
 	public String getDeploymentDescriptor() {
 		return "TipiMail.jnlp";
 	}
+
 	public List<String> getDependingProjectUrls() {
 		List<String> l = new LinkedList<String>();
 		l.add("http://java.sun.com/javase/technologies/desktop/javabeans/jaf/");
 		l.add("http://java.sun.com/products/javamail/");
-		
+
 		return l;
-	}	
+	}
 }

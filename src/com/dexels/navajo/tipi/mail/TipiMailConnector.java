@@ -5,14 +5,10 @@ import java.util.*;
 
 import javax.mail.*;
 import javax.mail.event.*;
-import javax.naming.*;
 
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.*;
-import com.dexels.navajo.document.types.*;
 import com.dexels.navajo.document.Message;
-import com.dexels.navajo.document.NavajoException;
-
+import com.dexels.navajo.document.types.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.connectors.*;
 import com.dexels.navajo.tipi.internal.*;
@@ -28,7 +24,6 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 	private StoreListener myStoreListener = null;
 	private String mailMode = "imap";
 
-
 	public void doTransaction(Navajo n, String service, String destination) throws TipiBreakException, TipiException {
 		if (service == null) {
 			service = "InitMail";
@@ -43,10 +38,10 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 		if (service.equals("InitGetMessages")) {
 			injectNavajo(service, createInitGetMessages());
 		}
-		
+
 		if (service.equals("GetInboxMessages")) {
 			injectNavajo(service, createMessagesNavajo(null));
-		}		
+		}
 		if (service.equals("GetMessages")) {
 			injectNavajo(service, createMessagesNavajo(n));
 		}
@@ -62,7 +57,6 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 		return "InitMail";
 	}
 
-
 	private Navajo createInitGetMessages() throws TipiException {
 
 		try {
@@ -77,7 +71,6 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 			Property end = NavajoFactory.getInstance().createProperty(n, "End", Property.INTEGER_PROPERTY, "", 0, "", Property.DIR_IN);
 			m.addProperty(end);
 
-			
 			Property q = NavajoFactory.getInstance().createProperty(n, "MessageNumber", Property.INTEGER_PROPERTY, "", 0, "",
 					Property.DIR_IN);
 			m.addProperty(q);
@@ -94,7 +87,7 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 		try {
 			n.addMethod(NavajoFactory.getInstance().createMethod(n, "InitGetFolders", null));
 			n.addMethod(NavajoFactory.getInstance().createMethod(n, "GetInboxMessages", null));
-			
+
 		} catch (NavajoException e) {
 			e.printStackTrace();
 		}
@@ -110,11 +103,11 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 		}
 		name = (String) n.getProperty("/Folder/Name").getTypedValue();
 
-		if("POP3".equalsIgnoreCase(mailMode)) {
+		if ("POP3".equalsIgnoreCase(mailMode)) {
 			name = "INBOX";
 		}
 		int messageNumber = (Integer) n.getProperty("/Folder/MessageNumber").getTypedValue();
-		System.err.println("Getting message: " + name+" nr. "+messageNumber);
+		System.err.println("Getting message: " + name + " nr. " + messageNumber);
 		return createSingleMessageNavajo(name, messageNumber);
 	}
 
@@ -127,7 +120,7 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 			throw new TipiException("Error opening mailbox: " + name, e);
 		}
 		if (fff == null) {
-			throw new TipiException("Mailbox not found: " +name);
+			throw new TipiException("Mailbox not found: " + name);
 		}
 		try {
 			fff.open(Folder.READ_ONLY);
@@ -135,42 +128,44 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 			Navajo myNavajo = NavajoFactory.getInstance().createNavajo();
 			Message mm = addMessageProperties(m, myNavajo);
 			myNavajo.addMessage(mm);
-//			System.err.println("Content class: "+m.getInputStream().getClass());
-			Binary b = new Binary(m.getInputStream(),false);
-			addProperty(mm, "Content",b, name);
-			//addProperty(current, "ContentType", currentImapMessage.getContentType(), Property.STRING_PROPERTY);
+			//System.err.println("Content class: "+m.getInputStream().getClass()
+			// );
+			Binary b = new Binary(m.getInputStream(), false);
+			addProperty(mm, "Content", b, name);
+			// addProperty(current, "ContentType",
+			// currentImapMessage.getContentType(), Property.STRING_PROPERTY);
 			myNavajo.write(System.err);
 			fff.close(false);
 			return myNavajo;
 		} catch (MessagingException e) {
-			throw new TipiException("Error getting message: " + messageNumber+" from box: "+ name, e);
+			throw new TipiException("Error getting message: " + messageNumber + " from box: " + name, e);
 		} catch (NavajoException e) {
-			throw new TipiException("Error getting message: " + messageNumber+" from box: "+ name, e);
+			throw new TipiException("Error getting message: " + messageNumber + " from box: " + name, e);
 		} catch (IOException e) {
-			throw new TipiException("Error getting message: " + messageNumber+" from box: "+ name, e);
-				}
+			throw new TipiException("Error getting message: " + messageNumber + " from box: " + name, e);
+		}
 	}
 
 	private Navajo createMessagesNavajo(Navajo n) throws TipiException {
 		String name = null;
 
-		System.err.println("F0lder Name: "+name);
+		System.err.println("F0lder Name: " + name);
 		if (n == null) {
 			name = "INBOX";
 		} else {
 			name = (String) n.getProperty("/Folder/Name").getTypedValue();
 		}
 
-		if("POP3".equalsIgnoreCase(mailMode)) {
+		if ("POP3".equalsIgnoreCase(mailMode)) {
 			name = "INBOX";
 		}
 		Navajo myNavajo = NavajoFactory.getInstance().createNavajo();
 
-		if(store==null) {
+		if (store == null) {
 			try {
 				connect();
 			} catch (MessagingException e) {
-				throw new TipiException("WTF? "+e.getMessage(),e);
+				throw new TipiException("WTF? " + e.getMessage(), e);
 			}
 		}
 		Folder fff;
@@ -183,7 +178,7 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 			throw new TipiException("Mailbox not found: " + n);
 		}
 
-		addFolderToNavajo(fff, myNavajo, "MailBox",n);
+		addFolderToNavajo(fff, myNavajo, "MailBox", n);
 		return myNavajo;
 	}
 
@@ -247,7 +242,7 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 		Properties props = new Properties();
 
 		session = Session.getDefaultInstance(props, null);
-		store = session.getStore(mailMode );
+		store = session.getStore(mailMode);
 		store.connect(host, username, password);
 		myConnectionListener = new ConnectionListener() {
 			public void closed(ConnectionEvent e) {
@@ -319,11 +314,11 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 
 	public Navajo createFolderNavajo() throws TipiException {
 		Navajo myNavajo;
-		if(store==null) {
+		if (store == null) {
 			try {
 				connect();
 			} catch (MessagingException e) {
-				throw new TipiException("Error connecting: "+e.getMessage(),e);
+				throw new TipiException("Error connecting: " + e.getMessage(), e);
 			}
 		}
 		try {
@@ -349,7 +344,7 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 		addFolderToMessage(element, folder);
 	}
 
-	public void testMessage() throws MessagingException,TipiBreakException, TipiException {
+	public void testMessage() throws MessagingException, TipiBreakException, TipiException {
 		connect();
 		doTransaction("InitGetFolders");
 		doTransaction("InitGetDefaultMessages");
@@ -368,21 +363,21 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 			Message mailMessages = NavajoFactory.getInstance().createMessage(myNavajo, "Mail", Message.MSG_TYPE_ARRAY);
 			folderMessage.addMessage(mailMessages);
 			inputNavajo.write(System.err);
-			Integer start = (Integer)inputNavajo.getProperty("Folder/Start").getTypedValue();
-			Integer end   = (Integer)inputNavajo.getProperty("Folder/End").getTypedValue();
+			Integer start = (Integer) inputNavajo.getProperty("Folder/Start").getTypedValue();
+			Integer end = (Integer) inputNavajo.getProperty("Folder/End").getTypedValue();
 			int startInt = 0;
-			if(start!=null){
+			if (start != null) {
 				startInt = start;
 			}
 			int endInt = message.length;
-			if(end!=null){
+			if (end != null) {
 				endInt = end;
 			}
 			for (int i = startInt; i < endInt; i++) {
 				addMessages(mailMessages, message[i]);
-				
+
 			}
-			System.err.println("Start: "+startInt+" end: "+endInt);
+			System.err.println("Start: " + startInt + " end: " + endInt);
 			f.close(false);
 		} catch (Exception e) {
 			throw new TipiException("Error getting messages from folder: " + folderName + " problem: " + e.getMessage(), e);
@@ -392,12 +387,10 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 	private void addMessages(Message imapFolder, javax.mail.Message currentImapMessage) throws NavajoException, MessagingException {
 		Navajo n = imapFolder.getRootDoc();
 		Message current = addMessageProperties(currentImapMessage, n);
-		
-		
+
 		imapFolder.addMessage(current);
 
 	}
-
 
 	private Message addMessageProperties(javax.mail.Message currentImapMessage, Navajo n) throws NavajoException, MessagingException {
 		Message current = NavajoFactory.getInstance().createMessage(n, "Mail", Message.MSG_TYPE_ARRAY_ELEMENT);
@@ -408,7 +401,7 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 		addProperty(current, "FileName", currentImapMessage.getFileName(), Property.STRING_PROPERTY);
 		addProperty(current, "Date", currentImapMessage.getSentDate(), Property.DATE_PROPERTY);
 		addProperty(current, "MessageNumber", currentImapMessage.getMessageNumber(), Property.INTEGER_PROPERTY);
-		
+
 		addAddressProperty(current, "From", currentImapMessage.getFrom());
 		addAddressProperty(current, "ReplyTo", currentImapMessage.getReplyTo());
 		addAddressProperty(current, "To", currentImapMessage.getRecipients(javax.mail.Message.RecipientType.TO));
@@ -439,10 +432,10 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 		addProperty(folderMessage, "", c.getName(), Property.STRING_PROPERTY);
 	}
 
-
 	private void addProperty(Message m, String name, Object value, String type) throws NavajoException {
 		addProperty(m, name, value, type, Property.DIR_OUT);
 	}
+
 	private void addProperty(Message m, String name, Object value, String type, String direction) throws NavajoException {
 		Navajo n = m.getRootDoc();
 		Property p = NavajoFactory.getInstance().createProperty(n, name, type, null, 0, null, Property.DIR_IN);
@@ -450,10 +443,11 @@ public class TipiMailConnector extends TipiBaseConnector implements TipiConnecto
 		m.addProperty(p);
 	}
 
-	public static void main(String[] args) throws MessagingException,TipiBreakException, TipiException {
+	public static void main(String[] args) throws MessagingException, TipiBreakException, TipiException {
 		TipiMailConnector ttt = new TipiMailConnector();
 		ttt.testMessage();
 	}
+
 	public Set<String> getEntryPoints() {
 		Set<String> s = new HashSet<String>();
 		s.add("InitMail");
