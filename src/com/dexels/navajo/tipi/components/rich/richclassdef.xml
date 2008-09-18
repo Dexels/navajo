@@ -17,6 +17,7 @@
       </values>
       <methods>
          <method name="flip"/>
+         <method name="flipBackwards"/>
       </methods>
    </tipiclass>
    <tipiclass addtocontainer="true" childcount="*" class="TipiRichPanel" layoutmanager="false" module="container" name="richtipi" package="com.dexels.navajo.tipi.components.rich" studio-icon="tabs.gif" type="tipi">
@@ -36,6 +37,20 @@
       </values>
       <methods/>
    </tipiclass>
+   <tipiclass addtocontainer="true" childcount="*" class="TipiLayeredPanel" layoutmanager="false" module="container" name="layeredpane" package="com.dexels.navajo.tipi.components.rich" studio-icon="tabs.gif" type="tipi">
+      <events>
+         <event name="onInstantiate"/>
+         <event name="onLoad">
+            <param name="service" type="string"/>
+         </event>
+      </events>
+      <values>
+      </values>
+      <methods/>
+   </tipiclass>
+   
+   
+   
    <tipiclass addtocontainer="true" childcount="0" class="TipiMapHollandPanel" layoutmanager="false" module="container" name="mapholland" package="com.dexels.navajo.tipi.components.rich" studio-icon="tabs.gif" type="tipi">
       <events>
          <event name="onInstantiate"/>
@@ -105,6 +120,7 @@
          <value direction="in" name="foreground" type="color"/>
          <value direction="in" name="border" type="border"/>
          <value direction="in" name="text" type="string" property="text"/>
+         <value direction="in" name="defaultSize" type="integer" property="defaultSize"/>
          <value direction="in" name="tooltiptext" type="string" property="toolTipText"/>
          <value direction="in" name="icon" type="url" property="iconUrl"/>
          <value direction="in" name="showSpring" type="boolean" property="showSpring"/>

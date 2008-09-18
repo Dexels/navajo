@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- $Id$ -->
+
+
+<!-- When changing this file for another project:
+		1. Change the project name here:
+		2. That's it!
+	-->
+<project name="NavajoRichTipi" default="publish" basedir=".">
+	<property name="dist" value="dist" />
+	<property name="lib" value="lib" />
+	<property name="currentProject" value="${ant.project.name}" />
+	<property name="archive" value="${ant.project.name}.jar" />
+	<property file="../TipiBuild/jnlpbuild/antbuild.properties" />
+
+	<target name="buildrichclient">
+		<ant antfile="../NavajoRichClient/build.xml" dir="../NavajoRichClient" inheritall="true" inheritrefs="true" target="archive" />
+		<copy todir="lib">
+			<fileset dir="../NavajoRichClient">
+				<include name="NavajoRichClient.jar" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="publish" depends="buildrichclient">
+
+		<ant antfile="../TipiBuild/jnlpbuild/antinclude.xml" dir="." inheritall="true" inheritrefs="true" target="publish" />
+	</target>
+
+</project>

@@ -77,6 +77,13 @@ public class TipiFlipPanel extends TipiPanel {
 				}
 			});			
 		}
+		if("flipBackwards".equals(name)){
+			runSyncInEventThread(new Runnable(){
+				public void run(){
+					myPanel.flipBackwards();
+}
+			});			
+		}
 
 	}
 	
