@@ -35,6 +35,10 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 	
 	private static Object semaphore = new Object();
 	
+	public static void clearInstance() {
+		instance = null;
+	}
+	
 	/**
 	 * Return a (singleton) instance of the NavajoEventRegistry.
 	 * 
@@ -44,23 +48,18 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 		if ( instance != null ) {
 			return instance;
 		} else {
-			System.err.println(">>>>>>>>>>>>> waiting for semaphore ");
 			synchronized (semaphore ) {
 				
 				if ( instance != null ) {
 					return instance;
 				}
 				
-				System.err.println("Creating NavajoEventRegistry()....");
 				instance = new NavajoEventRegistry();
 				try {
 					JMXHelper.registerMXBean(instance, JMXHelper.NAVAJO_DOMAIN, "Navajo Event Registry");
 				} catch (Throwable t) {
 					//t.printStackTrace(System.err);
 				} 
-				
-				
-				System.err.println("Returning instance = " + instance);
 			}
 			return instance;
 		}
@@ -74,7 +73,6 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 	 */
 	public void addListener(Class<? extends NavajoEvent> type, NavajoListener l) {
 		
-		//System.err.println("Event Listener Added for: " + type + ", l = " + l.getClass());
 		synchronized (semaphore) {
 			
 			HashSet<NavajoListener> registered = registry.get(type);
@@ -101,10 +99,8 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 
 	private void publishMonitoredEvent(final NavajoEvent ne) {
 
-		//System.err.println("In publishMonitoredEvent(" + ne.getClass().getName() + ")");
 		if ( monitoredEvents.contains( ne.getClass().getName() )) {
 			
-			//System.err.println("About to send JMX notification....");
 			Notification n = 
 				new Notification(ne.getClass().getName(), "Navajo Event Registry", GenericThread.notificationSequence++,
 								 System.currentTimeMillis(), ne.toString());
