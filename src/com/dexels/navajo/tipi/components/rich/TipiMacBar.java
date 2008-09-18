@@ -1,21 +1,20 @@
 package com.dexels.navajo.tipi.components.rich;
 
-import javax.swing.JComponent;
+import javax.swing.*;
 
-import com.dexels.navajo.rich.components.LushContainer;
-import com.dexels.navajo.rich.components.MacBar;
-import com.dexels.navajo.tipi.components.swingimpl.TipiPanel;
+import com.dexels.navajo.rich.components.*;
+import com.dexels.navajo.tipi.components.swingimpl.*;
 
 public class TipiMacBar extends TipiPanel {
-private MacBar myPanel;
-	
+	private MacBar myPanel;
+
 	public Object createContainer() {
-	  myPanel = new MacBar();
-	  return myPanel;
-  }
-	
+		myPanel = new MacBar();
+		return myPanel;
+	}
+
 	@Override
 	public void addToContainer(Object c, Object constraints) {
-		myPanel.add((JComponent)c);
+		myPanel.add((JComponent) c);
 	}
 }

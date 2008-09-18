@@ -8,16 +8,15 @@ public class NavajoRichTipiExtension implements TipiExtension {
 
 	public void initialize(TipiContext tc) {
 		// Do nothing
-		
+
 	}
 
-	
 	public String getDescription() {
 		return "Rich Tipi extensions";
 	}
 
 	public String[] getIncludes() {
-		return new String[]{"com/dexels/navajo/tipi/components/rich/richclassdef.xml"};
+		return new String[] { "com/dexels/navajo/tipi/components/rich/richclassdef.xml" };
 	}
 
 	public boolean isMainImplementation() {
@@ -45,7 +44,7 @@ public class NavajoRichTipiExtension implements TipiExtension {
 		jars.add("NavajoRichTipi.jar");
 		return jars;
 	}
-	
+
 	public String getConnectorId() {
 		return null;
 	}
@@ -63,6 +62,7 @@ public class NavajoRichTipiExtension implements TipiExtension {
 	public String getDeploymentDescriptor() {
 		return "NavajoRichTipi.jnlp";
 	}
+
 	public List<String> getDependingProjectUrls() {
 		// TODO Auto-generated method stub
 		List<String> l = new LinkedList<String>();

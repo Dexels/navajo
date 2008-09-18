@@ -1,18 +1,17 @@
 package com.dexels.navajo.tipi.components.rich;
 
-import java.net.URL;
+import java.net.*;
 
-import com.dexels.navajo.rich.components.DesktopButton;
-import com.dexels.navajo.rich.components.MacLink;
-import com.dexels.navajo.tipi.TipiHelper;
-import com.dexels.navajo.tipi.components.swingimpl.TipiButton;
-import com.dexels.navajo.tipi.components.swingimpl.swing.TipiSwingHelper;
+import com.dexels.navajo.rich.components.*;
+import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.components.swingimpl.*;
+import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 
 public class TipiMacLink extends TipiButton {
 	private MacLink myButton;
 	private URL icon;
-	
-	public Object createContainer(){
+
+	public Object createContainer() {
 		myButton = new MacLink();
 		TipiHelper th = new TipiSwingHelper();
 		th.initHelper(this);

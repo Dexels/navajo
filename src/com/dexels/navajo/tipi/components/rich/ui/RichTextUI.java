@@ -1,24 +1,17 @@
 package com.dexels.navajo.tipi.components.rich.ui;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.Rectangle;
+import java.awt.*;
 
-import javax.swing.JComponent;
-import javax.swing.plaf.TextUI;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.EditorKit;
-import javax.swing.text.JTextComponent;
-import javax.swing.text.View;
-import javax.swing.text.Position.Bias;
+import javax.swing.*;
+import javax.swing.plaf.*;
+import javax.swing.text.*;
+import javax.swing.text.Position.*;
 
 public class RichTextUI extends TextUI {
 
 	@Override
 	public void paint(Graphics g, JComponent c) {
-		Graphics2D g2 = (Graphics2D)g.create();
+		Graphics2D g2 = (Graphics2D) g.create();
 		Rectangle bounds = c.getBounds();
 		g2.setColor(Color.red);
 		g2.fillRect(0, 0, bounds.width, bounds.height);
@@ -27,7 +20,7 @@ public class RichTextUI extends TextUI {
 	@Override
 	public void damageRange(JTextComponent t, int p0, int p1) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
