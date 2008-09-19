@@ -20,7 +20,7 @@ public class AjaxComboBox extends JComboBox {
 
 	private Message selectedMessage;
 
-	private final Map cacheMap = new HashMap();
+	private final Map<String,Navajo> cacheMap = new HashMap<String,Navajo>();
 	private boolean syncRefresh = false;
 
 	private Thread myRemoteRefreshThread = null;
@@ -29,7 +29,7 @@ public class AjaxComboBox extends JComboBox {
 	// private RefreshFilter currentLocalRefresh = null;
 	private RemoteRefreshFilter currentRemoteRefresh = null;
 
-	private final ArrayList enterEventListeners = new ArrayList();
+	private final ArrayList<ActionListener> enterEventListeners = new ArrayList<ActionListener>();
 	private boolean invalidFirstItem;
 	private Message loadMessage;
 	
@@ -98,7 +98,7 @@ public class AjaxComboBox extends JComboBox {
 	}
 	private void fireEnterEvent() {
 		for (int i = 0; i < enterEventListeners.size(); i++) {
-			ActionListener al = (ActionListener)enterEventListeners.get(i);
+			ActionListener al = enterEventListeners.get(i);
 			al.actionPerformed(new ActionEvent(this,1,"ENTER"));
 		}
 		System.err.println("Enter fired!");
@@ -122,7 +122,7 @@ public class AjaxComboBox extends JComboBox {
 
 	
 	public void scheduleAjaxRefresh(final String overrideString, final AjaxEditorDocument d) {
-		Navajo nnn = (Navajo) cacheMap.get(overrideString);
+		Navajo nnn = cacheMap.get(overrideString);
 		d.setFireEvents(false);
 		if (nnn != null) {
 			loadData(nnn, overrideString);

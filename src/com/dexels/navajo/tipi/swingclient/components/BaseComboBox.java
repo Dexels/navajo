@@ -50,11 +50,11 @@ public abstract class BaseComboBox
   public void loadCombobox(Property p) {
     try {
       defaultComboBoxModel = new DefaultComboBoxModel();
-      ArrayList a = p.getAllSelections();
+      ArrayList<Selection> a = p.getAllSelections();
       //removeAllItems();
       Selection selectedSelection = null;
       for (int i = 0; i < a.size(); i++) {
-        Selection s = (Selection) a.get(i);
+        Selection s = a.get(i);
         defaultComboBoxModel.addElement(s);
         selectedSelection = (s.isSelected() ? s : selectedSelection);
       }
