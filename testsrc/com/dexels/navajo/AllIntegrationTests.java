@@ -12,8 +12,8 @@ public class AllIntegrationTests {
 		TestSuite suite = new TestSuite("Integration tests for com.dexels.navajo");
 		//$JUnit-BEGIN$
 		
-		suite.addTestSuite(BasicNavajoServerTests.class);
 		suite.addTestSuite(NavajoScriptingTests.class);
+		suite.addTestSuite(BasicNavajoServerTests.class);
 		
 		//$JUnit-END$
 		return suite;
