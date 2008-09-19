@@ -101,9 +101,9 @@ private Component myCurrentEditingComponent;
     });
     addFocusListener(new FocusListener() {
       public void focusLost(FocusEvent e) {
-    	  System.err.println("TABLE: lOST FOCUS: Partner: "+e.getOppositeComponent());
+ //   	  System.err.println("TABLE: lOST FOCUS: Partner: "+e.getOppositeComponent());
   		 if(e.getOppositeComponent()==myCurrentEditingComponent) {
-  			 System.err.println("INTERNAL!!!");
+ // 			 System.err.println("INTERNAL!!!");
   			 return;
   		 }
     	  //  		refreshSelectedCell();

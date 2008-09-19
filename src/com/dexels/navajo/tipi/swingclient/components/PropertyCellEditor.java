@@ -354,7 +354,7 @@ private Component doGetEditor(Object value, boolean isSelected, int row, int col
         myMoneyPropertyField.addFocusListener(new FocusAdapter() {
           @Override
 		public void focusLost(FocusEvent e) {
-        	  m.update();
+        	  m.focusLost(e);
         	  if(e.getOppositeComponent()!=myTable) {
                   stopCellEditing();
         	  }

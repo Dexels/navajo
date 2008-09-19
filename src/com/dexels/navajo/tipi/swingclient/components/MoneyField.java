@@ -88,8 +88,5 @@ public class MoneyField extends AbstractPropertyField implements PropertyControl
 	}
 
 
-	public void update() {
-		updateProperty();
-	}
 	
 }

@@ -128,6 +128,7 @@ public abstract class AbstractPropertyField extends JTextField implements FocusL
 		Object value = parseProperty(getText());
 		myProperty.setAnyValue(value);
 		presentObject(value);
+		setEditing(false);
 	}
 
 	public void propertyChange(PropertyChangeEvent e) {
@@ -164,5 +165,8 @@ public abstract class AbstractPropertyField extends JTextField implements FocusL
 		}
 		return newValue.toString();
 	}
-
+	public void update() {
+		updateProperty();
+	}
+	
 }
