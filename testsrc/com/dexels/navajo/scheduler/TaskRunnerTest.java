@@ -59,7 +59,7 @@ public class TaskRunnerTest extends TestCase {
 		test.setUp();
 		test.createTaskConfig();
 		Navajo config = DispatcherFactory.getInstance().getNavajoConfig().readConfig("tasks.xml");
-		test.testAddTaskTaskInterfaceForUserTask();
+		test.testAddTaskTaskInterfaceForWorkflowTask();
 	}
 
 	public void testWorker() {
@@ -87,6 +87,18 @@ public class TaskRunnerTest extends TestCase {
 		t.setWorkflowDefinition("testworkflow");
 		t.setWorkflowId("23232");
 		tr.addTask(t);
+		
+		// Verify that task is NOT written to tasks.xml:
+		Navajo config = DispatcherFactory.getInstance().getNavajoConfig().readConfig("tasks.xml");
+		Message newTask = config.getMessage("/tasks@1");
+		Assert.assertNull(newTask);
+		
+		// Verify that trigger is up and running.
+		Assert.assertTrue(WebserviceListenerRegistry.getInstance().isRegisteredWebservice("navajo_test"));
+		
+		// Clean up.
+		tr.removeTask(t);
+		Assert.assertFalse(WebserviceListenerRegistry.getInstance().isRegisteredWebservice("navajo_test"));
 		
 	}
 	
