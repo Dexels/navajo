@@ -7,19 +7,36 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.dexels.navajo.document.Header;
+import com.dexels.navajo.document.Message;
+import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.document.Property;
+import com.dexels.navajo.events.NavajoEvent;
+import com.dexels.navajo.events.NavajoEventRegistry;
+import com.dexels.navajo.events.NavajoListener;
+import com.dexels.navajo.events.types.NavajoResponseEvent;
 import com.dexels.navajo.scheduler.triggers.AfterWebserviceTrigger;
 import com.dexels.navajo.scheduler.triggers.IllegalTrigger;
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.TestNavajoConfig;
+import com.dexels.navajo.server.enterprise.scheduler.TaskInterface;
 
-public class TaskTest extends TestCase {
+public class TaskTest extends TestCase implements NavajoListener, TaskListener  {
 
+	private boolean received = false;
+	private boolean receivedAfterTask = false;
+	private boolean receivedBeforeTask = false;
+	private String sourceService = "navajo_ping";
+	private String sourceTaskId;
+	
 	@Before
 	public void setUp() throws Exception {
 		super.setUp();
 		DispatcherFactory df = new DispatcherFactory(new Dispatcher(new TestNavajoConfig()));
 		df.getInstance().setUseAuthorisation(false);
+		receivedAfterTask = receivedBeforeTask = received = false;
 	}
 
 	@After
@@ -116,158 +133,180 @@ public class TaskTest extends TestCase {
 	}
 
 	@Test
-	public void testSetTrigger() {
-		fail("Not yet implemented");
+	public void testSetTrigger() throws Exception {
+		Task t = new Task(null, null, null, null, "navajo:aap", null);
+		t.setTrigger("navajo:noot");
+		Assert.assertEquals(t.getTriggerDescription(), "navajo:noot");
 	}
 
 	@Test
-	public void testGetId() {
-		fail("Not yet implemented");
+	public void testGetId() throws Exception  {
+		Task t = new Task(null, null, null, null, "navajo:aap", null);
+		t.setId("12345");
+		Assert.assertEquals("12345", t.getId());
 	}
 
 	@Test
-	public void testGetWebservice() {
-		fail("Not yet implemented");
+	public void testGetWebservice() throws Exception {
+		Task t = new Task("webservice", "username", "password", null, "navajo:aap", null);
+		Assert.assertEquals("webservice", t.getWebservice());
 	}
 
 	@Test
-	public void testGetClientId() {
-		fail("Not yet implemented");
+	public void testGetClientId() throws Exception  {
+		Task t = new Task("webservice", "username", "password", null, "navajo:aap", null);
+		t.setClientId("memyselfandi");
+		Assert.assertEquals("memyselfandi", t.getClientId());
 	}
 
 	@Test
-	public void testGetTaskDescription() {
-		fail("Not yet implemented");
+	public void testSetRemove() throws Exception {
+		Task t = new Task("webservice", "username", "password", null, "navajo:aap", null);
+		t.getTrigger().activateTrigger();
+		Assert.assertTrue(WebserviceListenerRegistry.getInstance().isRegisteredWebservice("aap"));
+		t.setRemove(true, false);
+		Assert.assertFalse(WebserviceListenerRegistry.getInstance().isRegisteredWebservice("aap"));
+	}
+	
+	@Test
+	public void testSetNavajo() throws Exception {
+		Task t = new Task("webservice", "username", "password", null, "navajo:aap", null);
+		t.setKeepRequestResponse(false);
+		t.setClientId(null);
+		t.setTaskDescription(null);
+		Navajo n = NavajoFactory.getInstance().createNavajo();
+		Header h = NavajoFactory.getInstance().createHeader(n, "noot", "testuser", "testpassword", -1);
+		h.setHeaderAttribute("description", "mydescription");
+		h.setHeaderAttribute("clientid", "myclientid");
+		h.setHeaderAttribute("keeprequestresponse", "true");
+		n.addHeader(h);
+		t.setNavajo(n);
+		Assert.assertEquals("mydescription", t.getTaskDescription());
+		Assert.assertEquals("myclientid", t.getClientId());
+		Assert.assertTrue(t.isKeepRequestResponse());
+		
+		Assert.assertEquals("noot", t.getWebservice());
+		Assert.assertEquals("testuser",t.getUsername());
+		Assert.assertEquals("testpassword", t.getPassword());
+		
+		Assert.assertNotNull(t.getNavajo());
+		Assert.assertEquals(n.getHeader().getRPCName(), t.getNavajo().getHeader().getRPCName());
+		// Check whether Navajo is cloned.
+		Assert.assertNotSame(n.hashCode(), t.getNavajo().hashCode());
 	}
 
 	@Test
-	public void testSetWebservice() {
-		fail("Not yet implemented");
+	public void testSetRequest() throws Exception {
+		Task t = new Task("webservice", "username", "password", null, "navajo:aap", null);
+		t.setKeepRequestResponse(false);
+		t.setClientId(null);
+		t.setTaskDescription(null);
+		Navajo n = NavajoFactory.getInstance().createNavajo();
+		Header h = NavajoFactory.getInstance().createHeader(n, "noot", "testuser", "testpassword", -1);
+		Message m = NavajoFactory.getInstance().createMessage(n, "Apenoot");
+		n.addMessage(m);
+		t.setRequest(n);
+		Assert.assertNotNull(t.getNavajo());
+		Assert.assertNotNull(t.getNavajo().getMessage("Apenoot"));
+		// Check whether Navajo is cloned.
+		Assert.assertNotSame(n.hashCode(), t.getNavajo().hashCode());
 	}
 
 	@Test
-	public void testGetUsername() {
-		fail("Not yet implemented");
+	public void testRunWithWebserviceWithEmptyRequest() throws Exception {
+		Task t = new Task("navajo_ping", "username", "password", null, "navajo:aap", null);
+		NavajoEventRegistry.getInstance().addListener(NavajoResponseEvent.class, this);
+		Assert.assertFalse(received);
+		t.run();
+		Assert.assertTrue(received);
+		Navajo response = t.getResponse();
+		Assert.assertNotNull(response);
+		Assert.assertNotNull(response.getMessage("ping"));
+	}
+	
+	@Test
+	public void testRunWithWebserviceWithFullRequestNavajo() throws Exception {
+		Task t = new Task(null, null, null, null, "navajo:aap", null);
+		Navajo n = NavajoFactory.getInstance().createNavajo();
+		Header h = NavajoFactory.getInstance().createHeader(n, "navajo_ping", "testuser", "testpassword", -1);
+		n.addHeader(h);
+		// By setting request, the orginal service to be called SHOULD BE OVERWRITTEN.
+		t.setNavajo(n);
+		NavajoEventRegistry.getInstance().addListener(NavajoResponseEvent.class, this);
+		Assert.assertFalse(received);
+		t.run();
+		Assert.assertTrue(received);
+		Navajo response = t.getResponse();
+		Assert.assertNotNull(response);
+		Assert.assertNotNull(response.getMessage("ping"));
+	}
+	
+	@Test
+	public void testRunWithWebserviceWithRequest() throws Exception {
+		Task t = new Task("navajo_hello", "username", "password", null, "navajo:aap", null);
+		Navajo n = NavajoFactory.getInstance().createNavajo();
+		Header h = NavajoFactory.getInstance().createHeader(n, "navajo_test", "testuser", "testpassword", -1);
+		Message m = NavajoFactory.getInstance().createMessage(n, "from");
+		n.addMessage(m);
+		Property p = NavajoFactory.getInstance().createProperty(n, "name", Property.STRING_PROPERTY, "harry", -1, "", Property.DIR_OUT);
+		m.addProperty(p);
+		n.addHeader(h);
+		// By setting request, the orginal service to be called SHOULD NOT BE OVERWRITTEN.
+		t.setRequest(n);
+		
+		sourceService = "navajo_hello";
+		NavajoEventRegistry.getInstance().addListener(NavajoResponseEvent.class, this);
+		Assert.assertFalse(received);
+		t.run();
+		Assert.assertTrue(received);
+		Navajo response = t.getResponse();
+		Assert.assertNotNull(response);
+		Assert.assertNotNull(response.getMessage("hello"));
+		Assert.assertEquals("harry", response.getProperty("hello/world").getValue());
+	}
+	
+	@Test
+	public void testRunWithoutWebservice() throws Exception {
+		Task t = new Task("navajo_ping", "username", "password", null, "navajo:aap", null);
+		String taskid = "mytask-1";
+		t.setId(taskid);
+		sourceTaskId = taskid;
+		TaskRunner.getInstance().addTaskListener(this);
+		
+		Assert.assertFalse(receivedAfterTask);
+		Assert.assertFalse(receivedBeforeTask);
+		t.run();
+		Assert.assertTrue(receivedAfterTask);
+		Assert.assertTrue(receivedBeforeTask);
 	}
 
 	@Test
-	public void testSetUsername() {
-		fail("Not yet implemented");
+	public void testGetTriggerDescription() throws Exception {
+		Task t = new Task("navajo_ping", "username", "password", null, "navajo:aap", null);
+		Assert.assertEquals("navajo:aap", t.getTriggerDescription());
 	}
 
 	@Test
-	public void testGetPassword() {
-		fail("Not yet implemented");
+	public void testSetProxy() throws Exception {
+		Task t = new Task("navajo_test", "username", "password", null, "beforenavajo:navajo_ping", null);
+		String taskid = "mytask-1";
+		t.setId(taskid);
+		sourceTaskId = taskid;
+		t.setProxy(true);
+		sourceService = "navajo_test";
+		NavajoEventRegistry.getInstance().addListener(NavajoResponseEvent.class, this);
+		Assert.assertFalse(received);
+		t.run();
+		Assert.assertTrue(received);
+		Navajo response = t.getResponse();
+		Assert.assertNotNull(response);
+		Assert.assertNotNull(response.getMessage("test"));
 	}
-
-	@Test
-	public void testSetPassword() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testSetId() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testSetClientId() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testSetTaskDescription() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testSetRemove() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testSetInactive() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testIsActive() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testIsRunning() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testSetNavajo() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testSetRequest() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetNavajo() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testSetResponse() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetResponse() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testRun() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetTriggerDescription() {
-		fail("Not yet implemented");
-	}
-
+	
 	@Test
 	public void testGetInstance() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testIsFinished() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testSetFinished() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetFinishedTime() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testSetFinishedTime() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetStartTime() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testSetStartTime() {
-		fail("Not yet implemented");
+		TaskInterface ti = new Task().getInstance();
+		Assert.assertNotNull(ti);
 	}
 
 	@Test
@@ -311,16 +350,6 @@ public class TaskTest extends TestCase {
 	}
 
 	@Test
-	public void testIsProxy() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testSetProxy() {
-		fail("Not yet implemented");
-	}
-
-	@Test
 	public void testIsKeepRequestResponse() {
 		fail("Not yet implemented");
 	}
@@ -343,6 +372,34 @@ public class TaskTest extends TestCase {
 	@Test
 	public void testSetPersisted() {
 		fail("Not yet implemented");
+	}
+
+	/*
+	 * LISTENER METHODS:
+	 */
+	public void onNavajoEvent(NavajoEvent ne) {
+		NavajoResponseEvent nre = (NavajoResponseEvent) ne;
+		if ( nre.getAccess().getRpcName().equals(sourceService) ) {
+			received = true;
+		}
+	}
+
+	public void afterTask(Task t, Navajo response) {
+		if ( t.getId().equals(sourceTaskId) ) {
+			receivedAfterTask = true;
+		}
+	}
+
+	public boolean beforeTask(Task t, Navajo request) {
+		if ( t.getId().equals(sourceTaskId) ) {
+			receivedBeforeTask = true;
+		}
+		return true;
+	}
+
+	public String getDescription() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
