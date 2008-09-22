@@ -310,68 +310,24 @@ public class TaskTest extends TestCase implements NavajoListener, TaskListener  
 	}
 
 	@Test
-	public void testGetErrorMessage() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testSetErrorMessage() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetStatus() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testSetStatus() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetWorkflowDefinition() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testSetWorkflowDefinition() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetWorkflowId() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testSetWorkflowId() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testIsKeepRequestResponse() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testSetKeepRequestResponse() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testIsPersisted() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testNeedsPersistence() {
-		fail("Not yet implemented");
+	public void testNeedsPersistence() throws Exception {
+		Task t = new Task("navajo_test", "username", "password", null, "beforenavajo:navajo_ping", null);
+		// Default behaviour:
+		Assert.assertTrue(t.needsPersistence());
+		t.setWorkflowDefinition("aap");
+		t.setWorkflowId("323232");
+		// Default behaviour for workflow tasks:
+		Assert.assertFalse(t.needsPersistence());
+		
 	}
 
 	@Test
 	public void testSetPersisted() {
-		fail("Not yet implemented");
+		Task t = new Task();
+		t.setPersisted(true);
+		Assert.assertTrue(t.isPersisted());
+		t.setPersisted(false);
+		Assert.assertFalse(t.isPersisted());
 	}
 
 	/*
