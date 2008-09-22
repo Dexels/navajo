@@ -70,7 +70,7 @@
 		</jar>
 	</target>
 	<target name="makejars" depends="archive">
-		<ant antfile="build.xml" dir="../NavajoTipi" inheritall="false" />
+	<!--	<ant antfile="build.xml" dir="../NavajoTipi" inheritall="false" />
 		<ant antfile="build.xml" dir="../NavajoClient" inheritall="false" />
 		<ant antfile="build.xml" dir="../Navajo/" inheritall="false" />
 		<ant antfile="build.xml" dir="../NavajoFunctions" inheritall="false" />
@@ -83,7 +83,7 @@
 		<ant antfile="build.xml" dir="../AnimatedTransitions" inheritall="false" />
 		<ant antfile="build.xml" dir="../TimingFramework" inheritall="false" />
 		<ant antfile="build.xml" dir="../TipiSubstance" inheritall="false" />
-
+-->	
 	</target>
 	<target name="grabjars" depends="makejars">
 		<mkdir dir="${dist}"/>
