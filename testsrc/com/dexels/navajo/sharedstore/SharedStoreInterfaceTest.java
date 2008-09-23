@@ -55,6 +55,8 @@ public class SharedStoreInterfaceTest {
 	
 	@Before
 	public void setUp() throws Exception {
+		DispatcherFactory df = new DispatcherFactory(new Dispatcher(new TestNavajoConfig()));
+		df.getInstance().setUseAuthorisation(false);
 		si = SharedStoreFactory.getInstance();
 	}
 
@@ -75,6 +77,7 @@ public class SharedStoreInterfaceTest {
 	public void tearDown() throws Exception {
 		File f = new File("/tmp/sharedstore");
 		deleteFiles(f);
+		SharedStoreFactory.clear();
 	}
 
 	public static void main(String [] args) throws Exception {
@@ -82,7 +85,7 @@ public class SharedStoreInterfaceTest {
 		df.getInstance().setUseAuthorisation(false);
 		SharedStoreInterfaceTest t = new SharedStoreInterfaceTest();
 		t.setUp();
-		t.testStoreWithLockFailure();
+		t.testStoreWithLock();
 		t.tearDown();
 	}
 	
