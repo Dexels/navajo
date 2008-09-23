@@ -4,7 +4,10 @@ import static org.junit.Assert.*;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.io.StringReader;
 
@@ -34,6 +37,11 @@ class SerializableObject implements Serializable {
 	public void setField(String field) {
 		this.field = field;
 	}
+	
+	private void writeObject(ObjectOutputStream aStream) throws IOException {
+    	aStream.defaultWriteObject();
+    	System.err.println("IN WRITEOBJECT(): " + this.hashCode() + ", field " + field);
+    }
 	
 }
 
@@ -74,7 +82,7 @@ public class SharedStoreInterfaceTest {
 		df.getInstance().setUseAuthorisation(false);
 		SharedStoreInterfaceTest t = new SharedStoreInterfaceTest();
 		t.setUp();
-		t.testLockStringStringStringIntBooleanWithMultipleThreadsAndWaits();
+		t.testStoreWithLockFailure();
 		t.tearDown();
 	}
 	
@@ -92,10 +100,12 @@ public class SharedStoreInterfaceTest {
 		o2.setField("SECOND");
 		final SerializableObject o3 = new SerializableObject();
 		o3.setField("THIRD");
+		locks = 0;
 		Thread t1 = new Thread() {
 			public void run() {
 				try {
 					si.store("myparent", "mystoredobject", o1, false, true);
+					locks++;
 				} catch (SharedStoreException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -107,6 +117,7 @@ public class SharedStoreInterfaceTest {
 			public void run() {
 				try {
 					si.store("myparent", "mystoredobject", o2, false, true);
+					locks++;
 				} catch (SharedStoreException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -118,6 +129,7 @@ public class SharedStoreInterfaceTest {
 			public void run() {
 				try {
 					si.store("myparent", "mystoredobject", o3, false, true);
+					locks++;
 				} catch (SharedStoreException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -131,9 +143,71 @@ public class SharedStoreInterfaceTest {
 		t3.join();
 		
 		SerializableObject o4 = (SerializableObject) si.get("myparent", "mystoredobject");
+		Assert.assertEquals(3, locks);
 		Assert.assertNotNull(o4.getField());
 	}
 
+	/**
+	 * TODO: FIGURE OUT HOW TO FORCE OBJECT SERIALIZATION FAILURE!!!!!!
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testStoreWithLockFailure() throws Exception {
+		final SerializableObject o1 = new SerializableObject();
+		o1.setField("FIRST");
+		final SerializableObject o2 = new SerializableObject();
+		o2.setField("SECOND");
+		final SerializableObject o3 = new SerializableObject();
+		o3.setField("THIRD");
+		locks = 0;
+		Thread t1 = new Thread() {
+			public void run() {
+				try {
+					si.store("myparent", "mystoredobject", o1, false, false);
+					locks++;
+				} catch (SharedStoreException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		};
+		t1.start();
+		Thread t2 = new Thread() {
+			public void run() {
+				try {
+					si.store("myparent", "mystoredobject", o2, false, false);
+					locks++;
+				} catch (SharedStoreException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		};
+		t2.start();
+		Thread t3 = new Thread() {
+			public void run() {
+				try {
+					si.store("myparent", "mystoredobject", o3, false, false);
+					locks++;
+				} catch (SharedStoreException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		};
+		t3.start();
+		
+		t1.join();
+		t2.join();
+		t3.join();
+		
+		SerializableObject o4 = (SerializableObject) si.get("myparent", "mystoredobject");
+		System.err.println("locks = " + locks + ", o4.getField() =" + o4.getField());
+		Assert.assertEquals(3, locks);
+		Assert.assertNotNull(o4.getField());
+	}
+	
 	@Test
 	public void testRemove() throws Exception{
 		si.store("myparent", "mystoredobject", new SerializableObject(), false, false);
@@ -314,24 +388,44 @@ public class SharedStoreInterfaceTest {
 
 	@Test
 	public void testLockStringStringIntBoolean() {
-		fail("Not yet implemented");
+		String instance = DispatcherFactory.getInstance().getNavajoConfig().getInstanceName();
+		System.err.println("instance = " + instance);
+		SharedStoreLock ssl = si.lock("myparent", "mylock", SharedFileStore.READ_WRITE_LOCK, false);
+		// instance name is used as owner:
+		Assert.assertNotNull(ssl);
+		Assert.assertTrue(ssl.toString().indexOf(instance) != -1);
 	}
 
 	@Test
 	public void testRelease() {
-		fail("Not yet implemented");
+		SharedStoreLock ssl = si.lock("myparent", "mylockfile", "owner", SharedFileStore.READ_WRITE_LOCK, false);
+		Assert.assertTrue(new File("/tmp/sharedstore/owner_myparent_mylockfile.lock").exists());
+		si.release(ssl);
+		Assert.assertFalse(new File("/tmp/sharedstore/owner_myparent_mylockfile.lock").exists());
 	}
 
 	@Test
 	public void testGetLock() throws Exception {
-		si.store("myparent", "mystoredobject", new SerializableObject(), false, false);
-		si.lock("myparent", "mystoredobject", SharedFileStore.READ_WRITE_LOCK, false);
-		SharedStoreLock ssl =  si.getLock("myparent", "myparent", "owner");
+		si.lock("myparent", "mylockfile", "owner", SharedFileStore.READ_WRITE_LOCK, false);
+		SharedStoreLock ssl =  si.getLock("myparent", "mylockfile", "owner");
+		Assert.assertNotNull(ssl);
+		
+		SharedStoreLock ssl2 =  si.getLock("myparent", "mylockfile2", "owner");
+		Assert.assertNull(ssl2);
+		
+		SharedStoreLock ssl3 =  si.getLock("myparent", "mylockfile", "owner2");
+		Assert.assertNull(ssl3);
 	}
 	
 	@Test
-	public void testLastModified() {
-		fail("Not yet implemented");
+	public void testLastModified() throws Exception {
+		si.store("myparent", "myobject", new SerializableObject(), false, false);
+		long l1 = si.lastModified("myparent", "myobject");
+		Thread.sleep(1000);
+		si.store("myparent", "myobject", new SerializableObject(), false, false);
+		long l2 = si.lastModified("myparent", "myobject");
+		Assert.assertTrue(l2 > l1);
+		
 	}
 
 	@Test
