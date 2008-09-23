@@ -2,13 +2,21 @@ package com.dexels.navajo.sharedstore;
 
 import static org.junit.Assert.*;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.Serializable;
+import java.io.StringBufferInputStream;
 import java.io.StringReader;
 
 import junit.framework.Assert;
@@ -19,6 +27,7 @@ import org.junit.Test;
 
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.DispatcherFactory;
+import com.dexels.navajo.server.InputStreamReader;
 import com.dexels.navajo.server.TestNavajoConfig;
 
 class SerializableObject implements Serializable {
@@ -85,7 +94,7 @@ public class SharedStoreInterfaceTest {
 		df.getInstance().setUseAuthorisation(false);
 		SharedStoreInterfaceTest t = new SharedStoreInterfaceTest();
 		t.setUp();
-		t.testStoreWithLock();
+		t.testGetObjects();
 		t.tearDown();
 	}
 	
@@ -432,33 +441,140 @@ public class SharedStoreInterfaceTest {
 	}
 
 	@Test
-	public void testSetLastModified() {
-		fail("Not yet implemented");
+	public void testSetLastModified() throws Exception {
+		si.store("myparent", "myobject", new SerializableObject(), false, false);
+		si.setLastModified("myparent", "myobject", Long.parseLong("1222180873000"));
+		long l1 = si.lastModified("myparent", "myobject");
+		Assert.assertEquals(Long.parseLong("1222180873000"), l1); 
+	}
+	
+	@Test
+	public void testSetLastModifiedUnknownObject() throws Exception {
+		boolean exception = false;
+		try {
+			si.setLastModified("myparet", "myobject", Long.parseLong("1222180873000"));
+		} catch (Exception e) {
+			exception = true;
+		}
+		Assert.assertTrue(exception);
 	}
 
 	@Test
-	public void testExists() {
-		fail("Not yet implemented");
+	public void testExists() throws Exception {
+		si.store("myparent", "myobject", new SerializableObject(), false, false);
+		Assert.assertTrue(si.exists("myparent", "myobject"));
+		Assert.assertFalse(si.exists("myparet", "myobject"));
+		Assert.assertFalse(si.exists("myparent", "myoect"));
 	}
 
 	@Test
-	public void testGet() {
-		fail("Not yet implemented");
+	public void testGet() throws Exception {
+		si.store("myparent", "myobject", new SerializableObject(), false, false);
+		Object o = si.get("myparent", "myobject");
+		Assert.assertNotNull(o);
+		Assert.assertTrue(o instanceof SerializableObject);
+		
+		// Unknown object.
+		boolean exception = false;
+		Object o2 = null;
+		try {
+			o2 = si.get("myparent", "myobct");
+		} catch (Exception e) {
+			exception = true;
+		}
+		Assert.assertTrue(exception);
+		Assert.assertNull(o2);
+		// Invalid object.
+		si.storeText("myparent", "mytext", "some text", false, false);
+		exception = false;
+		try {
+			Object o4 = si.get("myparent", "mytext");
+		} catch (Exception e) {
+			exception = true;
+		}
+		Assert.assertTrue(exception);
+
 	}
 
 	@Test
-	public void testGetStream() {
-		fail("Not yet implemented");
+	public void testGetStream() throws Exception {
+		si.store("myparent", "myobject", new SerializableObject(), false, false);
+		ObjectInputStream ois = new ObjectInputStream(si.getStream("myparent", "myobject"));
+		Object o = ois.readObject();
+		Assert.assertNotNull(o);
+		Assert.assertTrue(o instanceof SerializableObject);
+		// Test text stream.
+		si.storeText("myparent", "mytext", "some text", false, false);
+		java.io.BufferedReader is = new BufferedReader( new java.io.InputStreamReader( si.getStream("myparent", "mytext") ) );
+		Assert.assertEquals("some text", is.readLine());
+		// Unknown object.
+		boolean exception = false;
+		InputStream o2 = null;
+		try {
+			o2 = si.getStream("myparent", "myobct");
+		} catch (Exception e) {
+			exception = true;
+		}
+		Assert.assertTrue(exception);
+		Assert.assertNull(o2);
+		
+		
 	}
 
 	@Test
-	public void testGetOutputStream() {
-		fail("Not yet implemented");
+	public void testGetOutputStream() throws Exception {
+		OutputStream os = si.getOutputStream("myparent", "myobject", false);
+		SerializableObject o = new SerializableObject();
+		ObjectOutputStream oos = new ObjectOutputStream(os);
+		oos.writeObject(o);
+		oos.close();
+		// Assert that object was created.
+		Object o2 = si.get("myparent", "myobject");
+		Assert.assertNotNull(o2);
+		Assert.assertTrue(o2 instanceof SerializableObject);
+		
+		// Write plain text.
+		OutputStreamWriter os2 = new OutputStreamWriter( si.getOutputStream("myparent", "mytext", false) );
+		String s = "some text";
+		os2.write(s);
+		os2.close();
+		java.io.BufferedReader is = new BufferedReader( new java.io.InputStreamReader( si.getStream("myparent", "mytext") ) );
+		Assert.assertNotNull(is);
+		Assert.assertEquals(s, is.readLine());
 	}
 
 	@Test
-	public void testGetObjects() {
-		fail("Not yet implemented");
+	public void testGetObjects() throws Exception {
+		SerializableObject s1 = new SerializableObject();s1.setField("ONE");
+		SerializableObject s2 = new SerializableObject();s2.setField("TWO");
+		SerializableObject s3 = new SerializableObject();s3.setField("THREE");
+		si.store("myparent", "myobject1", s1, false, false);
+		si.store("myparent", "myobject2", s2, false, false);
+		si.store("myparent", "myobject3", s3, false, false);
+		String [] obs = si.getObjects("myparent");
+		Assert.assertNotNull(obs);
+		Assert.assertEquals(3, obs.length);
+		int count = 0;
+		System.err.println("count: " + obs.length);
+		for (int i = 0; i < obs.length; i++) {
+			System.err.println("obs[" + i + "]=" + obs[i]);
+			SerializableObject so = (SerializableObject) si.get("myparent", obs[i]);
+			Assert.assertNotNull(so);
+			if ( so.getField().equals("ONE") ) {
+				count++;
+			}
+			if ( so.getField().equals("TWO") ) {
+				count++;
+			}
+			if (so.getField().equals("THREE") ) {
+				count++;
+			}
+		}
+		Assert.assertEquals(3, count);
+		// No objects..
+		obs = si.getObjects("myparet");
+		Assert.assertNotNull(obs);
+		Assert.assertEquals(0, obs.length);
 	}
 
 }

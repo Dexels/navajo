@@ -121,6 +121,64 @@ public class TaskRunnerTest extends TestCase {
 		Assert.assertFalse(WebserviceListenerRegistry.getInstance().isRegisteredWebservice("navajo_test"));
 	}
 	
+	public void testAddTaskTaskInterfaceForUserTaskMultipleThreads() throws Exception {
+		final TaskRunner tr = TaskRunner.getInstance();
+		tr.worker();
+		final Task t = new Task("navajo_ping", "testuser", "testpassword", null, "navajo:navajo_test", null);
+		final Task t2 = new Task("navajo_hello", "testuser", "testpassword", null, "navajo:navajo_ping", null);
+		final Task t3 = new Task("aap", "testuser", "testpassword", null, "navajo:noot", null);
+		
+		new Thread() {
+			public void run() {
+				tr.addTask(t);
+			}
+		}.start();
+		
+		new Thread() {
+			public void run() {
+				tr.addTask(t2);
+			}
+		}.start();
+		
+		new Thread() {
+			public void run() {
+				tr.addTask(t3);
+			}
+		}.start();
+		
+		// Verify that tasks are written to tasks.xml:
+		int allPresent = 0;
+		Navajo config = DispatcherFactory.getInstance().getNavajoConfig().readConfig("tasks.xml");
+		Message tasks = config.getMessage("/tasks");
+		// Check presence of all three tasks...
+		for (int i = 0; i < tasks.getArraySize(); i++) {
+			Message m = tasks.getMessage(i);
+			if ( m.getProperty("webservice").getValue().equals("navajo_ping")) {
+				allPresent++;
+			}
+			if ( m.getProperty("webservice").getValue().equals("navajo_hello")) {
+				allPresent++;
+			}
+			if ( m.getProperty("webservice").getValue().equals("aap")) {
+				allPresent++;
+			}
+		}
+		Assert.assertEquals(3, allPresent);
+		
+		// Verify that trigger is up and running.
+		Assert.assertTrue(WebserviceListenerRegistry.getInstance().isRegisteredWebservice("navajo_test"));
+		Assert.assertTrue(WebserviceListenerRegistry.getInstance().isRegisteredWebservice("navajo_ping"));
+		Assert.assertTrue(WebserviceListenerRegistry.getInstance().isRegisteredWebservice("noot"));
+		
+		// Clean up.
+		tr.removeTask(t);
+		tr.removeTask(t2);
+		tr.removeTask(t3);
+		Assert.assertFalse(WebserviceListenerRegistry.getInstance().isRegisteredWebservice("navajo_test"));
+		Assert.assertFalse(WebserviceListenerRegistry.getInstance().isRegisteredWebservice("navajo_ping"));
+		Assert.assertFalse(WebserviceListenerRegistry.getInstance().isRegisteredWebservice("noot"));
+	}
+	
 	public void testTerminate() {
 		fail("Not yet implemented");
 	}
