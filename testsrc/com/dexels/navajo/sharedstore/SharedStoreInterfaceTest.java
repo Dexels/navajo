@@ -41,6 +41,7 @@ public class SharedStoreInterfaceTest {
 
 	private SharedStoreInterface si;
 	boolean locked = false;
+	boolean threadAssertFailed = false;
 	SharedStoreLock myssl;
 	int locks = 0;
 	
@@ -73,7 +74,7 @@ public class SharedStoreInterfaceTest {
 		df.getInstance().setUseAuthorisation(false);
 		SharedStoreInterfaceTest t = new SharedStoreInterfaceTest();
 		t.setUp();
-		t.testLockStringStringStringIntBooleanWithMultipleThreads();
+		t.testLockStringStringStringIntBooleanWithMultipleThreadsAndWaits();
 		t.tearDown();
 	}
 	
@@ -228,6 +229,86 @@ public class SharedStoreInterfaceTest {
 		
 		System.err.println(myssl.toString());
 		Assert.assertEquals(1, locks);
+		Assert.assertTrue(locked);
+	}
+	
+	@Test
+	public void testLockStringStringStringIntBooleanWithMultipleThreadsAndWaits() throws Exception {
+		
+		locked = false;
+		locks = 0;
+		
+		Thread t1 = new Thread() {
+			public void run() {
+				SharedStoreLock ssl = si.lock("myparent", "mylockfile", "owner1", SharedFileStore.READ_WRITE_LOCK, true);
+				if (ssl != null) {
+					locked = true;
+					Assert.assertTrue(new File("/tmp/sharedstore/owner1_myparent_mylockfile.lock").exists());
+					Assert.assertFalse(new File("/tmp/sharedstore/owner2_myparent_mylockfile.lock").exists());
+					Assert.assertFalse(new File("/tmp/sharedstore/owner3_myparent_mylockfile.lock").exists());
+					myssl = ssl;
+					locks++;
+					// wait a bit.
+					try {
+						Thread.sleep(500);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					si.release(ssl);
+					System.err.println("RELEASED: " + ssl);
+				}
+			}
+		};
+		
+		Thread t2 = new Thread() {
+			public void run() {
+				SharedStoreLock ssl = si.lock("myparent", "mylockfile", "owner2", SharedFileStore.READ_WRITE_LOCK, true);
+				if (ssl != null) {
+					locked = true;
+					Assert.assertFalse(new File("/tmp/sharedstore/owner1_myparent_mylockfile.lock").exists());
+					Assert.assertTrue(new File("/tmp/sharedstore/owner2_myparent_mylockfile.lock").exists());
+					Assert.assertFalse(new File("/tmp/sharedstore/owner3_myparent_mylockfile.lock").exists());
+					myssl = ssl;
+					locks++;
+					try {
+						Thread.sleep(500);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					si.release(ssl);
+					System.err.println("RELEASED: " + ssl);
+				}
+			}
+		};
+		
+		Thread t3 = new Thread() {
+			public void run() {
+				SharedStoreLock ssl = si.lock("myparent", "mylockfile", "owner3", SharedFileStore.READ_WRITE_LOCK, true);
+				if (ssl != null) {
+					Assert.assertFalse(new File("/tmp/sharedstore/owner1_myparent_mylockfile.lock").exists());
+					Assert.assertFalse(new File("/tmp/sharedstore/owner2_myparent_mylockfile.lock").exists());
+					Assert.assertTrue(new File("/tmp/sharedstore/owner3_myparent_mylockfile.lock").exists());
+					locked = true;
+					myssl = ssl;
+					locks++;
+					try {
+						Thread.sleep(500);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					si.release(ssl);
+					System.err.println("RELEASED: " + ssl);
+				}
+			}
+		};
+		t1.start();t2.start();t3.start();
+		t1.join(2000);t2.join(2000);t3.join(2000);
+		
+		System.err.println(myssl.toString());
+		Assert.assertEquals(3, locks);
 		Assert.assertTrue(locked);
 	}
 
