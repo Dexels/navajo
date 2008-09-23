@@ -1,13 +1,7 @@
 package com.dexels.navajo.sharedstore;
 
-import static org.junit.Assert.*;
-
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,8 +10,6 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Serializable;
-import java.io.StringBufferInputStream;
-import java.io.StringReader;
 
 import junit.framework.Assert;
 
@@ -27,7 +19,6 @@ import org.junit.Test;
 
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.DispatcherFactory;
-import com.dexels.navajo.server.InputStreamReader;
 import com.dexels.navajo.server.TestNavajoConfig;
 
 class SerializableObject implements Serializable {
