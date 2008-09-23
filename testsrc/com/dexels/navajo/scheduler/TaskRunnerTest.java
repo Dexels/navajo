@@ -50,11 +50,13 @@ public class TaskRunnerTest extends TestCase {
 		super.setUp();
 		DispatcherFactory df = new DispatcherFactory(new Dispatcher(new TestNavajoConfig()));
 		df.getInstance().setUseAuthorisation(false);
+		TaskRunner.getInstance();
 		createTaskConfig();
 	}
 
 	protected void tearDown() throws Exception {
 		super.tearDown();
+		TaskRunner.getInstance().kill();
 		new File("/tmp/tasks.xml").delete();
 	}
 
@@ -128,37 +130,26 @@ public class TaskRunnerTest extends TestCase {
 	public void testAddTaskTaskInterfaceForUserTaskMultipleThreads() throws Exception {
 		final TaskRunner tr = TaskRunner.getInstance();
 		tr.worker();
-		final Task t = new Task("navajo_ping", "testuser", "testpassword", null, "navajo:navajo_test", null);
-		final Task t2 = new Task("navajo_hello", "testuser", "testpassword", null, "navajo:navajo_ping", null);
-		final Task t3 = new Task("aap", "testuser", "testpassword", null, "navajo:noot", null);
-		
-		Thread tr1 = new Thread() {
-			public void run() {
-				tr.addTask(t);
-			}
-		};
-		tr1.setName("thread-1");
-		
-		Thread tr2 = new Thread() {
-			public void run() {
-				tr.addTask(t2);
-			}
-		};
-		tr2.setName("thread-2");
-		
-		Thread tr3 = new Thread() {
-			public void run() {
-				tr.addTask(t3);
-			}
-		};
-		tr3.setName("thread-3");
-		
-		tr1.start();
-		tr2.start();
-		tr3.start();
-		tr1.join(1000);
-		tr2.join(1000);
-		tr3.join(1000);
+		int MAXTHREADS = 25;
+		final Task [] taskArray = new Task[MAXTHREADS];
+		for (int i = 0; i < taskArray.length; i++) {
+			taskArray[i] = new Task("navajo_ping"+i, "testuser", "testpassword", null, "navajo:navajo_test"+i, null);
+		}
+		Thread [] threads = new Thread[MAXTHREADS];
+		for (int i = 0; i < taskArray.length; i++) {
+			final int index = i;
+			threads[i] = new Thread() {
+				public void run() {
+					tr.addTask(taskArray[index]);
+				}
+			};
+		}
+		for (int i = 0; i < taskArray.length; i++) {
+			threads[i].start();
+		}
+		for (int i = 0; i < taskArray.length; i++) {
+			threads[i].join(1000);
+		}
 		
 		// Verify that tasks are written to tasks.xml:
 		int allPresent = 0;
@@ -167,31 +158,30 @@ public class TaskRunnerTest extends TestCase {
 		// Check presence of all three tasks...
 		for (int i = 0; i < tasks.getArraySize(); i++) {
 			Message m = tasks.getMessage(i);
-			if ( m.getProperty("webservice").getValue().equals("navajo_ping")) {
-				allPresent++;
-			}
-			if ( m.getProperty("webservice").getValue().equals("navajo_hello")) {
-				allPresent++;
-			}
-			if ( m.getProperty("webservice").getValue().equals("aap")) {
-				allPresent++;
+			for (int j = 0; j < MAXTHREADS; j++) {
+				if ( m.getProperty("webservice").getValue().equals("navajo_ping"+j)) {
+					allPresent++;
+				}
 			}
 		}
-		Assert.assertEquals(3, allPresent);
+		Assert.assertEquals(MAXTHREADS, allPresent);
 		
 		// Verify that trigger is up and running.
-		Assert.assertTrue(WebserviceListenerRegistry.getInstance().isRegisteredWebservice("navajo_test"));
-		Assert.assertTrue(WebserviceListenerRegistry.getInstance().isRegisteredWebservice("navajo_ping"));
-		Assert.assertTrue(WebserviceListenerRegistry.getInstance().isRegisteredWebservice("noot"));
+		for (int j = 0; j < MAXTHREADS; j++) {
+			System.err.println("REGISTERED: navajo_ping"+j);
+			Assert.assertTrue(WebserviceListenerRegistry.getInstance().isRegisteredWebservice("navajo_test"+j));
+		}
 		
 		// Clean up.
-		tr.removeTask(t);
-		tr.removeTask(t2);
-		tr.removeTask(t3);
-
-		Assert.assertFalse(WebserviceListenerRegistry.getInstance().isRegisteredWebservice("navajo_test"));
-		Assert.assertFalse(WebserviceListenerRegistry.getInstance().isRegisteredWebservice("navajo_ping"));
-		Assert.assertFalse(WebserviceListenerRegistry.getInstance().isRegisteredWebservice("noot"));
+		for (int i = 0; i < taskArray.length; i++) {
+			tr.removeTask(taskArray[i]);
+		}
+	
+		// Final asserts.
+		for (int j = 0; j < MAXTHREADS; j++) {
+			Assert.assertFalse(WebserviceListenerRegistry.getInstance().isRegisteredWebservice("navajo_test"+j));
+		}
+	
 	}
 	
 //	public void testTerminate() {

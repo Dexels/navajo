@@ -86,7 +86,7 @@ public class SharedStoreInterfaceTest extends TestCase {
 		df.getInstance().setUseAuthorisation(false);
 		SharedStoreInterfaceTest t = new SharedStoreInterfaceTest();
 		t.setUp();
-		t.testGetObjects();
+		t.testStoreWithLock();
 		t.tearDown();
 	}
 	
@@ -98,57 +98,51 @@ public class SharedStoreInterfaceTest extends TestCase {
 	
 	@Test
 	public void testStoreWithLock() throws Exception {
-		final SerializableObject o1 = new SerializableObject();
-		o1.setField("FIRST");
-		final SerializableObject o2 = new SerializableObject();
-		o2.setField("SECOND");
-		final SerializableObject o3 = new SerializableObject();
-		o3.setField("THIRD");
+		
+		int MAXTHREADS = 1000;
+		final SerializableObject [] objects = new SerializableObject[MAXTHREADS];
+		for (int i = 0; i < MAXTHREADS; i++) {
+			objects[i] = new SerializableObject();
+			objects[i].setField("field-"+i);
+		}
+		
+		// Define threads.
 		locks = 0;
-		Thread t1 = new Thread() {
-			public void run() {
-				try {
-					si.store("myparent", "mystoredobject", o1, false, true);
-					locks++;
-				} catch (SharedStoreException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+		Thread [] threads = new Thread[MAXTHREADS];
+		for (int i = 0; i < MAXTHREADS; i++) {
+			final int index = i;
+			threads[i] = new Thread() {
+				public void run() {
+					try {
+						si.store("myparent", "mystoredobject"+index, objects[index], false, true);
+						locks++;
+					} catch (SharedStoreException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
-			}
-		};
-		t1.start();
-		Thread t2 = new Thread() {
-			public void run() {
-				try {
-					si.store("myparent", "mystoredobject", o2, false, true);
-					locks++;
-				} catch (SharedStoreException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		};
-		t2.start();
-		Thread t3 = new Thread() {
-			public void run() {
-				try {
-					si.store("myparent", "mystoredobject", o3, false, true);
-					locks++;
-				} catch (SharedStoreException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		};
-		t3.start();
+			};
+		}
 		
-		t1.join();
-		t2.join();
-		t3.join();
+		// Start threads.
+		for (int i = 0; i < MAXTHREADS; i++) {
+			threads[i].start();
+		}
 		
-		SerializableObject o4 = (SerializableObject) si.get("myparent", "mystoredobject");
-		Assert.assertEquals(3, locks);
-		Assert.assertNotNull(o4.getField());
+		// Join threads.
+		for (int i = 0; i < MAXTHREADS; i++) {
+			threads[i].join();
+		}
+
+		// Asserts
+		Assert.assertEquals(MAXTHREADS, locks);
+		
+		for (int i = 0; i < MAXTHREADS; i++) {
+			SerializableObject o = (SerializableObject) si.get("myparent", "mystoredobject"+i);
+			Assert.assertNotNull(o.getField());
+			Assert.assertEquals("field-"+i, o.getField());
+		}
+
 	}
 
 	/**
@@ -158,58 +152,51 @@ public class SharedStoreInterfaceTest extends TestCase {
 	 */
 	@Test
 	public void testStoreWithLockFailure() throws Exception {
-		final SerializableObject o1 = new SerializableObject();
-		o1.setField("FIRST");
-		final SerializableObject o2 = new SerializableObject();
-		o2.setField("SECOND");
-		final SerializableObject o3 = new SerializableObject();
-		o3.setField("THIRD");
+		
+		int MAXTHREADS = 1000;
+		final SerializableObject [] objects = new SerializableObject[MAXTHREADS];
+		for (int i = 0; i < MAXTHREADS; i++) {
+			objects[i] = new SerializableObject();
+			objects[i].setField("field-"+i);
+		}
+		
+		// Define threads.
 		locks = 0;
-		Thread t1 = new Thread() {
-			public void run() {
-				try {
-					si.store("myparent", "mystoredobject", o1, false, false);
-					locks++;
-				} catch (SharedStoreException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+		Thread [] threads = new Thread[MAXTHREADS];
+		for (int i = 0; i < MAXTHREADS; i++) {
+			final int index = i;
+			threads[i] = new Thread() {
+				public void run() {
+					try {
+						si.store("myparent", "mystoredobject"+index, objects[index], false, false);
+						locks++;
+					} catch (SharedStoreException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
-			}
-		};
-		t1.start();
-		Thread t2 = new Thread() {
-			public void run() {
-				try {
-					si.store("myparent", "mystoredobject", o2, false, false);
-					locks++;
-				} catch (SharedStoreException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		};
-		t2.start();
-		Thread t3 = new Thread() {
-			public void run() {
-				try {
-					si.store("myparent", "mystoredobject", o3, false, false);
-					locks++;
-				} catch (SharedStoreException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		};
-		t3.start();
+			};
+		}
 		
-		t1.join();
-		t2.join();
-		t3.join();
+		// Start threads.
+		for (int i = 0; i < MAXTHREADS; i++) {
+			threads[i].start();
+		}
 		
-		SerializableObject o4 = (SerializableObject) si.get("myparent", "mystoredobject");
-		System.err.println("locks = " + locks + ", o4.getField() =" + o4.getField());
-		Assert.assertEquals(3, locks);
-		Assert.assertNotNull(o4.getField());
+		// Join threads.
+		for (int i = 0; i < MAXTHREADS; i++) {
+			threads[i].join();
+		}
+
+		// Asserts
+		Assert.assertEquals(MAXTHREADS, locks);
+		
+		for (int i = 0; i < MAXTHREADS; i++) {
+			SerializableObject o = (SerializableObject) si.get("myparent", "mystoredobject"+i);
+			Assert.assertNotNull(o.getField());
+			Assert.assertEquals("field-"+i, o.getField());
+		}
+
 	}
 	
 	@Test
