@@ -1,5 +1,6 @@
 package com.dexels.navajo.scheduler;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.Map;
@@ -38,6 +39,7 @@ public class TaskRunnerTest extends TestCase {
 		Navajo config = NavajoFactory.getInstance().createNavajo(new StringReader(sampleConfig));
 		try {
 			DispatcherFactory.getInstance().getNavajoConfig().writeConfig("tasks.xml", config);
+			System.err.println("WROTE TASK CONFIG.");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -48,18 +50,20 @@ public class TaskRunnerTest extends TestCase {
 		super.setUp();
 		DispatcherFactory df = new DispatcherFactory(new Dispatcher(new TestNavajoConfig()));
 		df.getInstance().setUseAuthorisation(false);
+		createTaskConfig();
 	}
 
 	protected void tearDown() throws Exception {
 		super.tearDown();
+		new File("/tmp/tasks.xml").delete();
 	}
 
 	public static void main(String [] args) throws Exception {
 		TaskRunnerTest test = new TaskRunnerTest();
 		test.setUp();
-		test.createTaskConfig();
 		Navajo config = DispatcherFactory.getInstance().getNavajoConfig().readConfig("tasks.xml");
-		test.testAddTaskTaskInterfaceForWorkflowTask();
+		test.testAddTaskTaskInterfaceForUserTaskMultipleThreads();
+		test.tearDown();
 	}
 
 	public void testWorker() {
@@ -128,23 +132,33 @@ public class TaskRunnerTest extends TestCase {
 		final Task t2 = new Task("navajo_hello", "testuser", "testpassword", null, "navajo:navajo_ping", null);
 		final Task t3 = new Task("aap", "testuser", "testpassword", null, "navajo:noot", null);
 		
-		new Thread() {
+		Thread tr1 = new Thread() {
 			public void run() {
 				tr.addTask(t);
 			}
-		}.start();
+		};
+		tr1.setName("thread-1");
 		
-		new Thread() {
+		Thread tr2 = new Thread() {
 			public void run() {
 				tr.addTask(t2);
 			}
-		}.start();
+		};
+		tr2.setName("thread-2");
 		
-		new Thread() {
+		Thread tr3 = new Thread() {
 			public void run() {
 				tr.addTask(t3);
 			}
-		}.start();
+		};
+		tr3.setName("thread-3");
+		
+		tr1.start();
+		tr2.start();
+		tr3.start();
+		tr1.join(1000);
+		tr2.join(1000);
+		tr3.join(1000);
 		
 		// Verify that tasks are written to tasks.xml:
 		int allPresent = 0;
