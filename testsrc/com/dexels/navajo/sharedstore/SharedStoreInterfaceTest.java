@@ -12,6 +12,7 @@ import java.io.OutputStreamWriter;
 import java.io.Serializable;
 
 import junit.framework.Assert;
+import junit.framework.TestCase;
 
 import org.junit.After;
 import org.junit.Before;
@@ -45,7 +46,7 @@ class SerializableObject implements Serializable {
 	
 }
 
-public class SharedStoreInterfaceTest {
+public class SharedStoreInterfaceTest extends TestCase {
 
 	private SharedStoreInterface si;
 	boolean locked = false;

@@ -188,109 +188,110 @@ public class TaskRunnerTest extends TestCase {
 		tr.removeTask(t);
 		tr.removeTask(t2);
 		tr.removeTask(t3);
+
 		Assert.assertFalse(WebserviceListenerRegistry.getInstance().isRegisteredWebservice("navajo_test"));
 		Assert.assertFalse(WebserviceListenerRegistry.getInstance().isRegisteredWebservice("navajo_ping"));
 		Assert.assertFalse(WebserviceListenerRegistry.getInstance().isRegisteredWebservice("noot"));
 	}
 	
-	public void testTerminate() {
-		fail("Not yet implemented");
-	}
-
-	public void testTaskRunner() {
-		fail("Not yet implemented");
-	}
-
-	public void testContainsTask() {
-		fail("Not yet implemented");
-	}
-
-	public void testWriteTaskInput() {
-		fail("Not yet implemented");
-	}
-
-	public void testWriteTaskOutput() {
-		fail("Not yet implemented");
-	}
-
-	public void testGetTaskOutput() {
-		fail("Not yet implemented");
-	}
-
-	public void testReadTaskInput() {
-		fail("Not yet implemented");
-	}
-
-	public void testRemoveTaskInput() {
-		fail("Not yet implemented");
-	}
-
-	public void testRemoveTaskOutput() {
-		fail("Not yet implemented");
-	}
-
-	public void testReadConfig() {
-		fail("Not yet implemented");
-	}
-
-	public void testGetInstance() {
-		fail("Not yet implemented");
-	}
-
-	public void testGetTaskListSize() {
-		fail("Not yet implemented");
-	}
-
-	public void testGetConfigLock() {
-		fail("Not yet implemented");
-	}
-
-	public void testReleaseConfigLock() {
-		fail("Not yet implemented");
-	}
-
-	public void testWriteTaskConfig() {
-		fail("Not yet implemented");
-	}
-
-	public void testRemoveTaskStringBoolean() {
-		fail("Not yet implemented");
-	}
-
-	public void testGetFinishedTasks() {
-		fail("Not yet implemented");
-	}
-
-	public void testLog() {
-		fail("Not yet implemented");
-	}
-
-	public void testUpdateTask() {
-		fail("Not yet implemented");
-	}
-
-	public void testAddTaskStringTaskBoolean() {
-		fail("Not yet implemented");
-	}
-
-	public void testAddTaskListener() {
-		fail("Not yet implemented");
-	}
-
-	public void testRemoveTaskListener() {
-		fail("Not yet implemented");
-	}
-
-	public void testFireAfterTaskEvent() {
-		fail("Not yet implemented");
-	}
-
-	public void testFireBeforeTaskEvent() {
-		fail("Not yet implemented");
-	}
-
-	public void testRemoveTaskTaskInterface() {
-		fail("Not yet implemented");
-	}
+//	public void testTerminate() {
+//		fail("Not yet implemented");
+//	}
+//
+//	public void testTaskRunner() {
+//		fail("Not yet implemented");
+//	}
+//
+//	public void testContainsTask() {
+//		fail("Not yet implemented");
+//	}
+//
+//	public void testWriteTaskInput() {
+//		fail("Not yet implemented");
+//	}
+//
+//	public void testWriteTaskOutput() {
+//		fail("Not yet implemented");
+//	}
+//
+//	public void testGetTaskOutput() {
+//		fail("Not yet implemented");
+//	}
+//
+//	public void testReadTaskInput() {
+//		fail("Not yet implemented");
+//	}
+//
+//	public void testRemoveTaskInput() {
+//		fail("Not yet implemented");
+//	}
+//
+//	public void testRemoveTaskOutput() {
+//		fail("Not yet implemented");
+//	}
+//
+//	public void testReadConfig() {
+//		fail("Not yet implemented");
+//	}
+//
+//	public void testGetInstance() {
+//		fail("Not yet implemented");
+//	}
+//
+//	public void testGetTaskListSize() {
+//		fail("Not yet implemented");
+//	}
+//
+//	public void testGetConfigLock() {
+//		fail("Not yet implemented");
+//	}
+//
+//	public void testReleaseConfigLock() {
+//		fail("Not yet implemented");
+//	}
+//
+//	public void testWriteTaskConfig() {
+//		fail("Not yet implemented");
+//	}
+//
+//	public void testRemoveTaskStringBoolean() {
+//		fail("Not yet implemented");
+//	}
+//
+//	public void testGetFinishedTasks() {
+//		fail("Not yet implemented");
+//	}
+//
+//	public void testLog() {
+//		fail("Not yet implemented");
+//	}
+//
+//	public void testUpdateTask() {
+//		fail("Not yet implemented");
+//	}
+//
+//	public void testAddTaskStringTaskBoolean() {
+//		fail("Not yet implemented");
+//	}
+//
+//	public void testAddTaskListener() {
+//		fail("Not yet implemented");
+//	}
+//
+//	public void testRemoveTaskListener() {
+//		fail("Not yet implemented");
+//	}
+//
+//	public void testFireAfterTaskEvent() {
+//		fail("Not yet implemented");
+//	}
+//
+//	public void testFireBeforeTaskEvent() {
+//		fail("Not yet implemented");
+//	}
+//
+//	public void testRemoveTaskTaskInterface() {
+//		fail("Not yet implemented");
+//	}
 
 }

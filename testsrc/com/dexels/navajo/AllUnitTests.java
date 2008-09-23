@@ -6,8 +6,10 @@ import com.dexels.navajo.events.types.AuditLogEventTest;
 import com.dexels.navajo.events.types.NavajoCompileScriptEventTest;
 import com.dexels.navajo.events.types.NavajoEventMapTest;
 import com.dexels.navajo.integrity.WorkerTest;
+import com.dexels.navajo.scheduler.TaskRunnerTest;
 import com.dexels.navajo.scheduler.TaskTest;
 import com.dexels.navajo.scheduler.triggers.TriggerTest;
+import com.dexels.navajo.sharedstore.SharedStoreInterfaceTest;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -25,6 +27,8 @@ public class AllUnitTests {
 		suite.addTestSuite(WorkerTest.class);
 		suite.addTestSuite(TaskTest.class);
 		suite.addTestSuite(TriggerTest.class);
+		suite.addTestSuite(SharedStoreInterfaceTest.class);
+		suite.addTestSuite(TaskRunnerTest.class);
 		//$JUnit-END$
 		return suite;
 	}
