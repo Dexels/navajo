@@ -17,6 +17,7 @@ public class ListenerRunnerTest extends TestCase {
 
 	protected void tearDown() throws Exception {
 		super.tearDown();
+		ListenerRunner.getInstance().kill();
 	}
 
 	public void testGetInstance() throws Exception {

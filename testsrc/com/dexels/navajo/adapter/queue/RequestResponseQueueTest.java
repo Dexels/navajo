@@ -122,6 +122,7 @@ public class RequestResponseQueueTest extends TestCase implements NavajoListener
 		myQueue.emptyQueue();
 		NavajoEventRegistry.getInstance().removeListener(QueuableFinishedEvent.class, this);
 		NavajoEventRegistry.getInstance().removeListener(QueuableFailureEvent.class, this);
+		myQueue.kill();
 	}
 
 	public void testGetInstance() {

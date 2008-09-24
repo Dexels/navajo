@@ -65,6 +65,7 @@ public class PersistenceManagerImplTest extends CacheControllerTest {
 		super.tearDown();
 		PersistenceManagerImpl pm =  (PersistenceManagerImpl) PersistenceManagerFactory.getInstance("com.dexels.navajo.persistence.impl.PersistenceManagerImpl", "");
 		pm.clearCache();
+		CacheController.getInstance().kill();
 	}
 
 	public static void main(String [] args) throws Exception {

@@ -27,6 +27,7 @@ public class NavajoEventRegistryTest extends TestCase {
 
 	protected void tearDown() throws Exception {
 		super.tearDown();
+		NavajoEventRegistry.clearInstance();
 	}
 	
 	public void testClearInstance() throws Exception {

@@ -24,21 +24,21 @@ public class CacheControllerTest extends TestCase {
         "       <property name=\"Timeout\" value=\"6000000\"/>" + 
         "       <property name=\"UserCache\" value=\"false\"/>" +
         "       <property name=\"PersistenceKeys\" value=\"/Request/MyRequestPropertyKey\"/>" + 
-        "       <property name=\"CacheKeys\" value=\"/Response/MyResultPropertyKey\"/>" +
+        "       <property name=\"CacheKeys\" value=\"/Request/MyResultPropertyKey\"/>" +
         "    </message>" + 
         "    <message name=\"Entries\">" + 
         "       <property name=\"Webservice\" value=\"MyTestWebservice2\"/>" + 
         "       <property name=\"Timeout\" value=\"6000000\"/>" + 
         "       <property name=\"UserCache\" value=\"true\"/>" +
         "       <property name=\"PersistenceKeys\" value=\"/Request/MyRequestPropertyKey\"/>" + 
-        "       <property name=\"CacheKeys\" value=\"/Response/MyResultPropertyKey\"/>" +
+        "       <property name=\"CacheKeys\" value=\"/Request/MyResultPropertyKey\"/>" +
         "    </message>" + 
         "    <message name=\"Entries\">" + 
         "       <property name=\"Webservice\" value=\"MyTestWebservice3\"/>" + 
         "       <property name=\"Timeout\" value=\"6000000\"/>" + 
         "       <property name=\"UserCache\" value=\"false\"/>" +
         "       <property name=\"PersistenceKeys\" value=\"/Request/MyRequestPropertyKeytje\"/>" + 
-        "       <property name=\"CacheKeys\" value=\"/Response/MyResultPropertyKeytje\"/>" +
+        "       <property name=\"CacheKeys\" value=\"/Request/MyResultPropertyKeytje\"/>" +
         "    </message>" + 
         "  </message>" +
         "</message>" + 
@@ -55,7 +55,16 @@ public class CacheControllerTest extends TestCase {
 	 * @return
 	 * @throws Exception
 	 */
-	private Navajo createTestNavajo() throws Exception {
+	protected Navajo createTestNavajo(int i) throws Exception {
+		Navajo doc = NavajoFactory.getInstance().createNavajo();
+		Message m = NavajoFactory.getInstance().createMessage(doc, "Request");
+		doc.addMessage(m);
+		Property p = NavajoFactory.getInstance().createProperty(doc, "MyRequestPropertyKey", Property.STRING_PROPERTY, "AAP-"+i, 0, "", "");
+		m.addProperty(p);
+		return doc;
+	}
+	
+	protected Navajo createTestNavajo() throws Exception {
 		Navajo doc = NavajoFactory.getInstance().createNavajo();
 		Message m = NavajoFactory.getInstance().createMessage(doc, "Request");
 		doc.addMessage(m);
@@ -144,7 +153,7 @@ public class CacheControllerTest extends TestCase {
 
 	public void testGetServiceKeys() {
 		CacheController cc = CacheController.getInstance();
-		Assert.assertEquals("/Response/MyResultPropertyKey", cc.getServiceKeys("MyTestWebservice"));
+		Assert.assertEquals("/Request/MyResultPropertyKey", cc.getServiceKeys("MyTestWebservice"));
 		// Not defined WS:
 		Assert.assertNull(cc.getServiceKeys("dsdss"));
 	}
