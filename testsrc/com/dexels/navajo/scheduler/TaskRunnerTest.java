@@ -10,6 +10,7 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.DispatcherFactory;
+import com.dexels.navajo.server.TestDispatcher;
 import com.dexels.navajo.server.TestNavajoConfig;
 
 import junit.framework.Assert;
@@ -48,7 +49,7 @@ public class TaskRunnerTest extends TestCase {
 	
 	protected void setUp() throws Exception {
 		super.setUp();
-		DispatcherFactory df = new DispatcherFactory(new Dispatcher(new TestNavajoConfig()));
+		DispatcherFactory df = new DispatcherFactory(new TestDispatcher(new TestNavajoConfig()));
 		df.getInstance().setUseAuthorisation(false);
 		TaskRunner.getInstance();
 		createTaskConfig();
