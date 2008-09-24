@@ -24,6 +24,10 @@ class TestConstructor1 implements Constructor {
 	}
 	
 	public Persistable construct() throws Exception {
+		Navajo n = (Navajo) myPersistable;
+		Property p = NavajoFactory.getInstance().createProperty((Navajo) myPersistable, "MyResultPropertyKey", 
+				Property.STRING_PROPERTY, n.getProperty("/Request/MyRequestPropertyKey").getValue(), 0, "", "out");
+		n.getMessage("Request").addProperty(p);
 		return myPersistable;
 	}
 	
@@ -66,7 +70,7 @@ public class PersistenceManagerImplTest extends CacheControllerTest {
 	public static void main(String [] args) throws Exception {
 		PersistenceManagerImplTest pt = new PersistenceManagerImplTest();
 		pt.setUp();
-		pt.testWriteMultipleKeys();
+		pt.testIsCached();
 		pt.tearDown();
 	}
 	
@@ -184,22 +188,47 @@ public class PersistenceManagerImplTest extends CacheControllerTest {
 //		fail("Not yet implemented");
 //	}
 //
-//	public void testGetKey() {
-//		fail("Not yet implemented");
-//	}
-//
-//	public void testSetKey() {
-//		fail("Not yet implemented");
-//	}
-//
-//	public void testIsCached() {
-//		fail("Not yet implemented");
-//	}
-//
-//	public void testSetDoClear() {
-//		fail("Not yet implemented");
-//	}
-//
+	public void testGetSetKey() {
+		final PersistenceManagerImpl pm =  (PersistenceManagerImpl) PersistenceManagerFactory.getInstance("com.dexels.navajo.persistence.impl.PersistenceManagerImpl", "");
+		pm.setKey("aap");
+		Assert.assertEquals("aap", pm.getKey());
+		boolean exception = false;
+		try {
+			pm.setKey(null);
+		} catch (Throwable t) {
+			exception = true;
+		}
+		// Assert that exception occurred when trying to set null value.
+		Assert.assertTrue(exception);
+	}
+
+	public void testIsCached() throws Exception {
+		final PersistenceManagerImpl pm =  (PersistenceManagerImpl) PersistenceManagerFactory.getInstance("com.dexels.navajo.persistence.impl.PersistenceManagerImpl", "");
+		pm.init();
+		
+		TestConstructor1 tc1 = new TestConstructor1(createTestNavajo());
+		Navajo tp2 = (Navajo) pm.get(tc1,  "TestKietje" , "MyTestWebservice", 434343,  true);
+		
+		Assert.assertTrue(pm.isCached("MyTestWebservice", "AAP"));
+		Assert.assertFalse(pm.isCached("MyTestWebservice", "NOOT"));
+		Assert.assertFalse(pm.isCached("MyTestWebservice2", "AAP"));
+		
+	}
+
+	public void testSetDoClear() throws Exception {
+		final PersistenceManagerImpl pm =  (PersistenceManagerImpl) PersistenceManagerFactory.getInstance("com.dexels.navajo.persistence.impl.PersistenceManagerImpl", "");
+		pm.init();
+		
+		TestConstructor1 tc1 = new TestConstructor1(createTestNavajo());
+		Navajo tp2 = (Navajo) pm.get(tc1,  "TestKietje" , "MyTestWebservice", 434343,  true);
+		
+		Assert.assertTrue(pm.isCached("MyTestWebservice", "AAP"));
+		pm.setKey("TestKietje");
+		pm.setDoClear(true);
+		Assert.assertFalse(pm.isCached("MyTestWebservice", "AAP"));
+		
+	}
+
 //	public void testGetHitratio() {
 //		fail("Not yet implemented");
 //	}
