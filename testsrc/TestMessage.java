@@ -219,6 +219,12 @@ public class TestMessage extends TestCase {
       Assert.assertEquals("testmessage_sub1_subje", ((Message) all.get(2)).getName());
       Assert.assertEquals("testmessage_sub1_sub3", ((Message) all.get(3)).getName());
 
+      all = m.getMessages("testmessage_sub1/(testmessage){0,1}_sub1_sub.*");
+      Assert.assertEquals(4, all.size());
+      Assert.assertEquals("testmessage_sub1_sub1", ((Message) all.get(0)).getName());
+      Assert.assertEquals("testmessage_sub1_sub2", ((Message) all.get(1)).getName());
+      Assert.assertEquals("testmessage_sub1_subje", ((Message) all.get(2)).getName());
+      Assert.assertEquals("testmessage_sub1_sub3", ((Message) all.get(3)).getName());
 
   }
 
