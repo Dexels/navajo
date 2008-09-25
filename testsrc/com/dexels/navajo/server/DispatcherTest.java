@@ -3,6 +3,7 @@ package com.dexels.navajo.server;
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.server.test.TestNavajoConfig;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;

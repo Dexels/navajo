@@ -10,8 +10,8 @@ import com.dexels.navajo.persistence.PersistenceManagerFactory;
 import com.dexels.navajo.server.CacheController;
 import com.dexels.navajo.server.CacheControllerTest;
 import com.dexels.navajo.server.DispatcherFactory;
-import com.dexels.navajo.server.TestDispatcher;
-import com.dexels.navajo.server.TestNavajoConfig;
+import com.dexels.navajo.server.test.TestDispatcher;
+import com.dexels.navajo.server.test.TestNavajoConfig;
 
 import junit.framework.Assert;
 

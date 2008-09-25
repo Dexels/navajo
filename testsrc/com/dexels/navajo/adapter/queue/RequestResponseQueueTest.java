@@ -132,8 +132,8 @@ public class RequestResponseQueueTest extends TestCase implements NavajoListener
 	public void testSend() throws Exception {
 		TestQueuable q = new TestQueuable();
 		Assert.assertEquals("NOK", new String(q.getResponse().getData()));
-		myQueue.send(q, 1);
 		synchronized (semaphore) {
+			myQueue.send(q, 1);
 			semaphore.wait();
 		}
 		Assert.assertEquals("OK", new String(q.getResponse().getData()));
@@ -144,8 +144,8 @@ public class RequestResponseQueueTest extends TestCase implements NavajoListener
 		q.setFailure(true);
 		q.setMaxRetries(1);
 		Assert.assertEquals("NOK", new String(q.getResponse().getData()));
-		myQueue.send(q, 1);
 		synchronized (semaphore) {
+			myQueue.send(q, 1);
 			semaphore.wait();
 		}
 		Assert.assertEquals("NOK", new String(q.getResponse().getData()));

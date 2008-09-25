@@ -8,6 +8,8 @@ import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
+import com.dexels.navajo.server.test.TestDispatcher;
+import com.dexels.navajo.server.test.TestNavajoConfig;
 
 
 import junit.framework.Assert;

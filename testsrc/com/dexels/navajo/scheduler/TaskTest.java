@@ -20,8 +20,8 @@ import com.dexels.navajo.scheduler.triggers.AfterWebserviceTrigger;
 import com.dexels.navajo.scheduler.triggers.IllegalTrigger;
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.DispatcherFactory;
-import com.dexels.navajo.server.TestNavajoConfig;
 import com.dexels.navajo.server.enterprise.scheduler.TaskInterface;
+import com.dexels.navajo.server.test.TestNavajoConfig;
 
 public class TaskTest extends TestCase implements NavajoListener, TaskListener  {
 

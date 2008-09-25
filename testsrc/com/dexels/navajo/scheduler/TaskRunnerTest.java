@@ -10,8 +10,8 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.DispatcherFactory;
-import com.dexels.navajo.server.TestDispatcher;
-import com.dexels.navajo.server.TestNavajoConfig;
+import com.dexels.navajo.server.test.TestDispatcher;
+import com.dexels.navajo.server.test.TestNavajoConfig;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;

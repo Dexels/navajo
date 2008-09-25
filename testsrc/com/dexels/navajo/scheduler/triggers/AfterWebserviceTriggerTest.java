@@ -12,7 +12,7 @@ import com.dexels.navajo.scheduler.TaskListener;
 import com.dexels.navajo.scheduler.TaskRunner;
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.DispatcherFactory;
-import com.dexels.navajo.server.TestNavajoConfig;
+import com.dexels.navajo.server.test.TestNavajoConfig;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;

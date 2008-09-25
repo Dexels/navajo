@@ -20,7 +20,7 @@ import org.junit.Test;
 
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.DispatcherFactory;
-import com.dexels.navajo.server.TestNavajoConfig;
+import com.dexels.navajo.server.test.TestNavajoConfig;
 
 class SerializableObject implements Serializable {
 
