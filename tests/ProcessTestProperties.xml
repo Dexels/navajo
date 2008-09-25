@@ -289,6 +289,9 @@
      <property name="EmptyMultipleSelection" direction="out">
         <expression value="Size([/TestProperties/Selections/EmptyMultipleSelection]) == 0"/>
      </property>
+     <property name="EmptyMultipleSelection2" direction="out">
+        <expression value="Size([/TestProperties/Selections/EmptyMultipleSelection2]) == 0"/>
+     </property>
      <property name="FilledSingleSelectionSelected" direction="out">
         <expression value="[/TestProperties/Selections/FilledSingleSelection] == 'val1'"/>
      </property>
