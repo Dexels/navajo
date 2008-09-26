@@ -1,13 +1,16 @@
 package com.dexels.navajo.tipi.components.swingimpl.parsers;
 
 import java.awt.*;
+import java.awt.event.*;
 import java.util.*;
 
 import javax.swing.*;
 import javax.swing.border.*;
 
 import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.internal.*;
+import com.dexels.navajo.tipi.swingclient.components.*;
 
 /**
  * <p>Title: </p>
@@ -37,7 +40,8 @@ public class BorderParser
     }
     if ("titled".equals(borderName)) {
       String title = st.nextToken();
-      return BorderFactory.createTitledBorder(title);
+      return BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.darkGray,1),title);
+//      return BorderFactory.createTitledBorder(title);
     }
     if ("loweredtitled".equals(borderName)) {
         String title = st.nextToken();
@@ -68,7 +72,11 @@ public class BorderParser
   }
   
   public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
-	  UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+//	  UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+          UIManager.setLookAndFeel(
+                  "com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
+      
+	  
 	  JFrame aap = new JFrame("test");
 	  
 	  aap.setSize(500,300);
@@ -77,15 +85,39 @@ public class BorderParser
 	  addTest(aap,BorderFactory.createTitledBorder("Test2"),"Test2");
 	  addTest(aap,BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.darkGray,1),"Test3"),"Test3");
 	  addTest(aap,BorderFactory.createTitledBorder(BorderFactory.createLoweredBevelBorder(),"Test1"),"Test1");
-	  
+	  JComboBox comp = new JComboBox(new String[]{"Aap","Noot"});
+	  comp.setEnabled(false);
+	  aap.getContentPane().add(comp);
 	  aap.setVisible(true);
   }
   private static void addTest(JFrame root, Border b, String label) {
 	  JPanel test = new JPanel();
 	  test.setPreferredSize(new Dimension(170,80));
-	  test.add(new JButton("AAP"));
-	  test.add(new JButton("NOOT"));
-	  test.add(new JButton("MIEs"));
+	  final JButton comp22 = new JButton("AAP");
+	comp22.addActionListener(new ActionListener(){
+
+		public void actionPerformed(ActionEvent e) {
+			comp22.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+			Thread t = new Thread(){
+				public void run(){
+					try {
+						Thread.sleep(2000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					comp22.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+					
+				};
+				
+			};
+			t.start();
+		}});
+	  test.add(comp22);
+	
+	test.add(new JButton("NOOT"));
+	  PropertyField comp = new PropertyField();
+	  comp.setText("aaap");
+	  test.add(comp);
 	  test.setBorder(b);
 	  root.getContentPane().add(test);
   }

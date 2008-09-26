@@ -104,17 +104,26 @@ public TipiTextArea() {
 		super.performComponentMethod(name, compMeth, event);
 
 		if (name.equals("append")) {
-			Operand o = compMeth.getEvaluatedParameter("text", event);
+			final Operand o = compMeth.getEvaluatedParameter("text", event);
 			if (o != null) {
-				String result = (String) o.value;
-				myTextArea.append(result);
+				runSyncInEventThread(new Runnable(){
+
+					public void run() {
+						String result = (String) o.value;
+						myTextArea.append(result);
+					}});
+			
 			}
 		}
 		if (name.equals("appendLine")) {
-			Operand o = compMeth.getEvaluatedParameter("text", event);
+			final Operand o = compMeth.getEvaluatedParameter("text", event);
 			if (o != null) {
-				String result = (String) o.value;
-				myTextArea.setText(myTextArea.getText()+result+"\n");
+				runSyncInEventThread(new Runnable(){
+
+					public void run() {
+						String result = (String) o.value;
+						myTextArea.setText(myTextArea.getText()+result+"\n");
+					}});
 			}
 		}
 

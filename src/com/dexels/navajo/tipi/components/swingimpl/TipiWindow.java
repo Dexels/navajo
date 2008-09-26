@@ -85,16 +85,8 @@ public final class TipiWindow
   public void addToContainer(final Object c, final Object constraints) {
     runSyncInEventThread(new Runnable() {
       public void run() {
-
     	  JInternalFrame internalFrame = ( (JInternalFrame) getContainer());
-    	  
-//    	  if (c instanceof LayeredPaneable && ((LayeredPaneable)c).wantsToBeInALayer() ) {
-//    		  System.err.println("Adding to layerredpane");
-//    		  internalFrame.getLayeredPane().add((Component)c, ((LayeredPaneable)c).getPreferredLayer());
-//    		  ((Component)c).setBounds(10,200,600,30);
-//    	  } else {
 			internalFrame.getContentPane().add( (Component) c, constraints);
-//		}
       }
     });
     SwingUtilities.invokeLater(new Runnable(){

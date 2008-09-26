@@ -62,19 +62,7 @@ public class TipiMultiTable
     }
   }
 
-  public XMLElement store() {
-    XMLElement xx = super.store();
-    for (int i = 0; i < columns.size(); i++) {
-      XMLElement columnDefinition = new CaseSensitiveXMLElement();
-      String cc = columns.get(i);
-      columnDefinition.setName("column");
-      columnDefinition.setAttribute("name", cc);
-      columnDefinition.setIntAttribute("size",
-                                       columnSize.get(i).intValue());
-      xx.addChild(columnDefinition);
-    }
-    return xx;
-  }
+ 
 
   private final void reload() {
     try {

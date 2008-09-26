@@ -129,6 +129,15 @@ public class TipiSwingPropertyComponent extends GenericPropertyComponent {
 	public void setLabelVAlign(String labelVAlign) {
 		String old = getLabelVAlign();
 		this.labelVAlign = labelVAlign;
+		if("top".equals(labelVAlign)) {
+			super.setVerticalLabelAlignment(SwingConstants.TOP);
+		}
+		if("bottom".equals(labelVAlign)) {
+			super.setVerticalLabelAlignment(SwingConstants.BOTTOM);
+		}
+		if("center".equals(labelVAlign)) {
+			super.setVerticalLabelAlignment(SwingConstants.CENTER);
+		}
 		firePropertyChange(LABELVALIGN, old, labelVAlign);
 	}
 	public int getMaxImageHeight() {
@@ -223,7 +232,7 @@ public class TipiSwingPropertyComponent extends GenericPropertyComponent {
 	
 	public void setEnabled(boolean b) {
 		//super.setEnabled(b);
-//		System.err.println("IN SETENABLED. IGNORING");
+		System.err.println("IN SETENABLED. IGNORING");
 //		Thread.dumpStack();
 	}
 

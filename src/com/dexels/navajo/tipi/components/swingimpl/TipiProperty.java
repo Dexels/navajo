@@ -10,7 +10,7 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.internal.*;
 import com.dexels.navajo.tipi.swingclient.components.*;
 
-public class TipiProperty extends TipiSwingComponentImpl implements PropertyComponent, PropertyChangeListener, PropertyValidatable, PropertyEventListener {
+public class TipiProperty extends TipiSwingComponentImpl implements PropertyComponent, PropertyChangeListener, PropertyEventListener {
 	private Property myProperty = null;
 	private Object myPropertyValue = null;
 	private List<TipiEventListener> myListeners = new ArrayList<TipiEventListener>();
@@ -41,7 +41,6 @@ public class TipiProperty extends TipiSwingComponentImpl implements PropertyComp
 		p = new TipiSwingPropertyComponent(this);
 		p.addPropertyEventListener(this);
 
-		p.setFormatter(getContext());
 		TipiHelper th = new TipiSwingHelper();
 		th.initHelper(this);
 		addHelper(th);
@@ -172,67 +171,14 @@ public class TipiProperty extends TipiSwingComponentImpl implements PropertyComp
 					p.addPropertyChangeListener(TipiProperty.this);
 				}
 				myProperty = p;
-//				myContext.link(myProperty, getAttributeProperty("propertyValue"));
-//					System.err.println("My attributeListenerprop has: "+getAttributeProperty("propertyValue").l);
-					// getAttributeProperty("propertyValue").setAnyValue(myProperty);
-
-//				myProperty.addPropertyChangeListener(new PropertyChangeListener() {
-//
-//					public void propertyChange(PropertyChangeEvent arg0) {
-//						GenericPropertyComponent gp = (GenericPropertyComponent) getContainer();
-//						gp.setProperty(myProperty);
-//					}
-//				});
-
 				if (p == null) {
 					return;
 				}
-				
-//				if(getAttributeProperty("propertyValue")==null) {
-//					System.err.println("BAMMMM! BOMMM!");
-//				} else {
-//					getAttributeProperty("propertyValue").addPropertyChangeListener(TipiProperty.this);
-//					System.err.println("Linkt to prop!: "+TipiProperty.this);
-//				}				
-				// currentType = p.getType();
 				((GenericPropertyComponent) getContainer()).setProperty(p);
-
-				// Based on 'legacy behaviour' Removed this behaviour from
-				// swingclient, but would require
-				// a lot of fixes in tipi code, so replaced it here.
-
-				// Extra fix for binaries: getValue() causes the binary to
-				// serialize to an in memory string
-				// if (!Property.BINARY_PROPERTY.equals(p.getType()) &&
-				// p.getValue()!=null) {
-				// ( (GenericPropertyComponent)
-				// getContainer()).setTextFieldColumns(p.getValue().length());
-				// } else {
-				// ( (GenericPropertyComponent)
-				// getContainer()).setTextFieldColumns(3);
-				// }
-				if (getEnabledState() != null) {
-					((GenericPropertyComponent) getContainer()).setHardEnabled(getEnabledState().booleanValue());
-				}
-				//((GenericPropertyComponent) getContainer()).addt
 			}
-
-			private Boolean getEnabledState() {
-				return new Boolean(TipiProperty.this.p.isEnabled());
-			}
-
 		});
 	}
 
-	public void resetComponentValidationStateByRule(final String id) {
-		GenericPropertyComponent tpp = (GenericPropertyComponent) getContainer();
-		tpp.resetComponentValidationStateByRule(id);
-	}
-
-	public void checkForConditionErrors(Message msg) {
-		GenericPropertyComponent tpp = (GenericPropertyComponent) getContainer();
-		tpp.checkForConditionErrors(msg);
-	}
 
 	public void addTipiEventListener(TipiEventListener listener) {
 		if (listener == null) {
@@ -250,10 +196,10 @@ public class TipiProperty extends TipiSwingComponentImpl implements PropertyComp
 	}
 
 	
-	public void propertyEventFired(Property p, String eventType, Validatable ve, boolean internal) {
-		propertyEventFired(p, eventType, ve, null,internal);
+	public void propertyEventFired(Property p, String eventType, boolean internal) {
+		propertyEventFired(p, eventType, null,internal);
 	}
-	public void propertyEventFired(Property p, String eventType, Validatable v, Object oldValue,boolean internal) {
+	public void propertyEventFired(Property p, String eventType,  Object oldValue,boolean internal) {
 		if("onValueChanged".equals(eventType)) {
 //			try {
 //				System.err.println("Onvalue Changed: "+oldValue+" new: "+p.getTypedValue()+" path: "+p.getFullPropertyName()+" ");
@@ -367,25 +313,25 @@ public class TipiProperty extends TipiSwingComponentImpl implements PropertyComp
 //					System.err.println("NEW: "+e.getNewValue());
 //					Thread.dumpStack();
 					((GenericPropertyComponent) getContainer()).updatePropertyValue(e);
-					propertyEventFired((Property)e.getSource(),"onValueChanged", p,e.getOldValue(),false);
+					propertyEventFired((Property)e.getSource(),"onValueChanged", e.getOldValue(),false);
 					myPropertyValue = ((Property)e.getSource()).getTypedValue();
 				} else {
 					// direction, cardinality, length, or description change:
 					((GenericPropertyComponent) getContainer()).setProperty(getProperty());
 					if(e.getPropertyName().equals("cardinality")) {
-						propertyEventFired((Property)e.getSource(), "onCardinalityChanged", p,e.getOldValue(),false);
+						propertyEventFired((Property)e.getSource(), "onCardinalityChanged",e.getOldValue(),false);
 					}
 					if(e.getPropertyName().equals("length")) {
-						propertyEventFired((Property)e.getSource(), "onLengthChanged", p,e.getOldValue(),false);
+						propertyEventFired((Property)e.getSource(), "onLengthChanged",e.getOldValue(),false);
 					}
 					if(e.getPropertyName().equals("description")) {
-						propertyEventFired((Property)e.getSource(), "onDescriptionChanged", p,e.getOldValue(),false);
+						propertyEventFired((Property)e.getSource(), "onDescriptionChanged", e.getOldValue(),false);
 					}
 					if(e.getPropertyName().equals("direction")) {
-						propertyEventFired((Property)e.getSource(), "onDirectionChanged", p,e.getOldValue(),false);
+						propertyEventFired((Property)e.getSource(), "onDirectionChanged", e.getOldValue(),false);
 					}
 					if(e.getPropertyName().equals("type")) {
-						propertyEventFired((Property)e.getSource(), "onTypeChanged", p,e.getOldValue(),false);
+						propertyEventFired((Property)e.getSource(), "onTypeChanged", e.getOldValue(),false);
 					}
 				}			
 			}

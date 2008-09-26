@@ -700,21 +700,7 @@
 
    </tipiclass>
 
-   <tipiclass addtocontainer="true" childcount="0" class="TipiCalendar" module="component" name="calendar" layoutmanager="false"
-      package="com.dexels.navajo.tipi.components.swingimpl" studio-icon="calendar.gif" type="tipi">
-      <events>
-         <event name="onInstantiate" />
-         <event name="onLoad">
-            <param name="service" type="string" />
-            <param name="navajo" type="navajo"/>
-         </event>
-     </events>
-      <values>
-         <value direction="in" name="enabled" type="boolean" />
-         <value direction="in" name="visible" type="boolean" />
-      </values>
-      <methods />
-   </tipiclass>
+
    <tipiclass addtocontainer="false" childcount="0" layoutmanager="false" class="TipiExportDialog" module="dialogs" name="exportdialog"
       package="com.dexels.navajo.tipi.components.swingimpl" studio-icon="exportdialog.gif" toplevel="true" type="tipi">
       <events>
@@ -1061,16 +1047,6 @@
    </tipiclass>
 
 
-   <!-- This one looks pretty dysfunctional -->
-   <tipiclass addtocontainer="true" childcount="0" class="TipiTreeTable" layoutmanager="false" module="data" name="treetable" package="com.dexels.navajo.tipi.components.swingimpl"
-      studio-icon="treetable.gif" type="tipi">
-      <events>
-         <event name="onInstantiate" />
-         <event name="onSelectionChanged" />
-      </events>
-      <values />
-      <methods />
-   </tipiclass>
    <tipiclass addtocontainer="true" class="TipiButton" module="component" name="button" childcount="0" package="com.dexels.navajo.tipi.components.swingimpl"
       propertycomponent="false" studio-icon="button.gif" type="component">
       <events>
@@ -1199,7 +1175,7 @@
       </values>
       <methods />
    </tipiclass>
-   <tipiclass addtocontainer="true" class="TipiPopupMenu" module="menu" name="popupmenu" layoutmanager="false" package="com.dexels.navajo.tipi.components.swingimpl"
+   <tipiclass addtocontainer="false" class="TipiPopupMenu" module="menu" name="popupmenu" layoutmanager="false" package="com.dexels.navajo.tipi.components.swingimpl"
       propertycomponent="false" studio-icon="popupmenu.gif" childcount="*" type="component">
       <events>
          <event name="onInstantiate" />

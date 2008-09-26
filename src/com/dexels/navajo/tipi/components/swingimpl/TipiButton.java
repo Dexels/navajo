@@ -33,17 +33,13 @@ import com.dexels.navajo.tipi.internal.*;
 public class TipiButton extends TipiSwingComponentImpl {
 	private boolean iAmEnabled = true;
 	private AbstractAction buttonAction;
-
+	private long lastEventStart;
 	public Object createContainer() {
-		TipiSwingButton myButton = new TipiSwingButton();
+		final TipiSwingButton myButton = new TipiSwingButton();
 		buttonAction = new AbstractAction("onActionPerformed"){
 
 			public void actionPerformed(ActionEvent e) {
-				try {
-					performTipiEvent("onActionPerformed", null, false);
-				} catch (TipiException e1) {
-					e1.printStackTrace();
-				}
+				doFireAction(myButton);
 			}};
 		myButton.addActionListener(new ActionListener(){
 
@@ -121,17 +117,7 @@ public class TipiButton extends TipiSwingComponentImpl {
 		return super.getComponentValue(name);
 	}
 
-	// private boolean enabled = false;
-	public void eventStarted(TipiExecutable te, Object event) {
-		if (Container.class.isInstance(getContainer())) {
-			runSyncInEventThread(new Runnable() {
-				public void run() {
-					// enabled = ( (Container) getContainer()).isEnabled();
-					getSwingContainer().setEnabled(false);
-				}
-			});
-		}
-	}
+
 
 	protected void performComponentMethod(String name, TipiComponentMethod compMeth, TipiEvent event) {
 		if ("fireAction".equals(name)) {
@@ -139,35 +125,66 @@ public class TipiButton extends TipiSwingComponentImpl {
 				final int j = i;
 				TipiEvent current = getEventList().get(j);
 				if (current.isTrigger("onActionPerformed", "aap")) {
-					try {
-						myContext.execute(new Runnable() {
-
-							public void run() {
-								TipiEvent c2 = getEventList().get(j);
-								try {
-									c2.performAction(c2, c2, 0);
-								} catch (TipiException ex) {
-									ex.printStackTrace();
-								} catch (TipiBreakException e) {
-									e.printStackTrace();
-								}
-							}
-						});
-					} catch (TipiException e) {
-						e.printStackTrace();
-					}
+					doFireAction((TipiSwingButton) getSwingContainer());
+//					try {
+//						myContext.execute(new Runnable() {
+//
+//							public void run() {
+//								TipiEvent c2 = getEventList().get(j);
+//								try {
+//									c2.performAction(c2, c2, 0);
+//								} catch (TipiException ex) {
+//									ex.printStackTrace();
+//								} catch (TipiBreakException e) {
+//									e.printStackTrace();
+//								}
+//							}
+//						});
+//					} catch (TipiException e) {
+//						e.printStackTrace();
+//					}
 				}
 			}
 		}
 	}
-
+	// private boolean enabled = false;
+	public void eventStarted(TipiExecutable te, Object event) {
+		System.err.println("Start thred:" +Thread.currentThread());
+		if (Container.class.isInstance(getContainer())) {
+			runSyncInEventThread(new Runnable() {
+				public void run() {
+					// enabled = ( (Container) getContainer()).isEnabled();
+					getSwingContainer().setEnabled(false);
+//					setCursor(Cursor.WAIT_CURSOR);
+				}
+			});
+		}
+	}
 	public void eventFinished(TipiExecutable te, Object event) {
+		System.err.println("Finish thred:" +Thread.currentThread());
+		
 		if (Container.class.isInstance(getContainer())) {
 			runSyncInEventThread(new Runnable() {
 				public void run() {
 					((Container) getContainer()).setEnabled(iAmEnabled);
+//					setCursor(Cursor.DEFAULT_CURSOR);
 				}
 			});
+		}
+	}
+
+	private void doFireAction(final TipiSwingButton myButton) {
+		try {
+			
+			setWaitCursor(true);
+			
+			performTipiEvent("onActionPerformed", null, false
+			, new Runnable(){
+				public void run() {
+					setWaitCursor(false);
+				}});
+		} catch (TipiException e1) {
+			e1.printStackTrace();
 		}
 	}
 }

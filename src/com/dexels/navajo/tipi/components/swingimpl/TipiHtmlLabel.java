@@ -1,7 +1,5 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
-import java.awt.*;
-
 import javax.swing.*;
 import javax.swing.text.*;
 
@@ -25,8 +23,9 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.*;
  * @author not attributable
  * @version 1.0
  */
-public class TipiHtmlLabel extends TipiSwingComponentImpl {
+public class TipiHtmlLabel extends TipiSwingDataComponentImpl {
 	private JEditorPane myLabel;
+	private JScrollPane jsp;
 
 	public Object createContainer() {
 	    myLabel = new JEditorPane();
@@ -40,18 +39,26 @@ public class TipiHtmlLabel extends TipiSwingComponentImpl {
 	    myLabel.setEditable(false);
 	    myLabel.setEnabled(false);
 	    addHelper(th);
-	     JScrollPane jsp = new JScrollPane(myLabel);
+	     jsp = new JScrollPane(myLabel);
 //	     jsp.getViewport().
 	     jsp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		return jsp;
 	}
+
+	
+	
+	public Object getActualComponent() {
+		return myLabel;
+	}
+
+
 
 	public void setComponentValue(final String name, final Object object) {
 		if (name.equals("text")) {
 			runSyncInEventThread(new Runnable() {
 				public void run() {
 					myLabel.setText("" + object);
-				    myLabel.scrollRectToVisible(new Rectangle(0,0,1,1));
+					myLabel.setCaretPosition(0);
 				}
 			});
 //			((TipiSwingLabel) getContainer()).revalidate();

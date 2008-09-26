@@ -1,10 +1,12 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
 import java.awt.*;
+import java.util.*;
 
 import javax.swing.*;
 
 import com.dexels.navajo.tipi.swingclient.*;
+import com.dexels.navajo.tipi.swingclient.components.*;
 
 /**
  * <p>Title: </p>
@@ -15,7 +17,7 @@ import com.dexels.navajo.tipi.swingclient.*;
  * @version 1.0
  */
 
-public class SwingTipiUserInterface extends DummyUserInterface{
+public class SwingTipiUserInterface implements UserInterface{
   private final SwingTipiContext myContext;
 
   /**
@@ -48,6 +50,7 @@ public class SwingTipiUserInterface extends DummyUserInterface{
 //    d.setLocationRelativeTo(getMainFrame());
 	  myContext.addDialog(d);
 	  d.pack();
+	  d.getContentPane().repaint();
     showCenteredDialog(d);
   }
 
@@ -111,5 +114,30 @@ public class SwingTipiUserInterface extends DummyUserInterface{
   public boolean areYouSure() {
     return showQuestionDialog("Are you sure?");
   }
+
+public void clearClipboard() {
+	// TODO Auto-generated method stub
+	
+}
+
+public void closeWindow(BaseWindow d) {
+	// TODO Auto-generated method stub
+	
+}
+
+public void copyToClipBoard(CopyCompatible cc) {
+	// TODO Auto-generated method stub
+	
+}
+
+public Locale getLocale() {
+	// TODO Auto-generated method stub
+	return null;
+}
+
+public Object pasteFromClipBoard(PasteCompatible pc) {
+	// TODO Auto-generated method stub
+	return null;
+}
 
 }

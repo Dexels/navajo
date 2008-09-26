@@ -29,7 +29,6 @@ public class TipiSwingWindow extends JInternalFrame {
 	private Dimension oldSize = null;
 
 	public TipiSwingWindow() {
-		// setBackground(new Color(0.0f,0.8f,0.0f,0.2f));
 		addComponentListener(new ComponentListener() {
 
 			public void componentHidden(ComponentEvent c) {

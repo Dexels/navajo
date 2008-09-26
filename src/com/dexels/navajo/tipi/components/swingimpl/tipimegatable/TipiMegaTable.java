@@ -143,15 +143,7 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
 		}
 	}
 
-	public XMLElement store() {
-		XMLElement xx = super.store();
-		for (int i = layers.size() - 1; i >= 0; i--) {
-			TipiTableBaseLayer tmtl = layers.get(i);
-			XMLElement cc = tmtl.store();
-			xx.addChild(cc);
-		}
-		return xx;
-	}
+
 
 	public void flatten(String serviceName, String hostUrl, String username, String password, String pincode, String keystore,
 			String keypass) throws NavajoException, TipiBreakException {
@@ -288,9 +280,9 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
 				if (type.equals("table")) {
 					tmtl = new TipiTableLayer(this);
 				}
-				if (type.equals("treetable")) {
-					tmtl = new TipiTreeTableLayer(this);
-				}
+//				if (type.equals("treetable")) {
+//					tmtl = new TipiTreeTableLayer(this);
+//				}
 				if (tmtl != null) {
 					tmtl.loadLayer(child);
 					layers.add(tmtl);

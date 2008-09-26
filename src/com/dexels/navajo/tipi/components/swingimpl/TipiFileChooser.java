@@ -27,11 +27,11 @@ public class TipiFileChooser
 
   public TipiFileChooser() {
   }
-  public void setWaitCursor(boolean b) {
-    super.setWaitCursor(b);
-    fileNameField.setCursor(Cursor.getPredefinedCursor(b?Cursor.WAIT_CURSOR:Cursor.DEFAULT_CURSOR));
-    selectButton.setCursor(Cursor.getPredefinedCursor(b?Cursor.WAIT_CURSOR:Cursor.DEFAULT_CURSOR));
-  }
+//  public void setWaitCursor(boolean b) {
+//    super.setWaitCursor(b);
+//    fileNameField.setCursor(Cursor.getPredefinedCursor(b?Cursor.WAIT_CURSOR:Cursor.DEFAULT_CURSOR));
+//    selectButton.setCursor(Cursor.getPredefinedCursor(b?Cursor.WAIT_CURSOR:Cursor.DEFAULT_CURSOR));
+//  }
 
   public Object createContainer() {
     final JPanel p = new JPanel();

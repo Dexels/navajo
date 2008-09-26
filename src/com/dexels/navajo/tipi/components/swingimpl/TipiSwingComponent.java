@@ -17,11 +17,11 @@ import com.dexels.navajo.tipi.internal.*;
  */
 
 public interface TipiSwingComponent extends TipiComponent{
-   public void setCursor(int cursorid);
-  public void setCursor(Cursor c);
+//   public void setCursor(int cursorid);
+//  public void setCursor(Cursor c);
   public Container getSwingContainer();
   public void showPopup(MouseEvent e);
-  public void setWaitCursor(boolean b);
+//  public void setWaitCursor(boolean b);
   public void setPaint(Paint p);
 
   public void runSyncInEventThread(Runnable r);

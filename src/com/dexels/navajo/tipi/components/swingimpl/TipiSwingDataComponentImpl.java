@@ -52,18 +52,28 @@ public abstract class TipiSwingDataComponentImpl
     }
   }
 
-  public void setWaitCursor(boolean b) {
-    Container cc = getSwingContainer();
-    if (cc != null) {
-       (cc).setCursor(b ? Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR) : Cursor.getDefaultCursor());
-    }
-    for (int i = 0; i < getChildCount(); i++) {
-      TipiComponent current = getTipiComponent(i);
-      if (TipiSwingComponent.class.isInstance(current)) {
-         ( (TipiSwingComponent) current).setWaitCursor(b);
-      }
-    }
-  }
+  public void setWaitCursor(final boolean b) {
+	 runSyncInEventThread(new Runnable(){
+
+		public void run() {
+		    Container cc = getSwingContainer();
+		    if(!(cc instanceof JComponent)) {
+		    	return;
+		    }
+		    JComponent jj = (JComponent)cc;
+		    if(jj.getRootPane()!=null) {
+			      jj.getRootPane().setCursor(b ? Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR) : Cursor.getDefaultCursor());
+		    }
+		}});
+		 
+	 }
+
+//    for (int i = 0; i < getChildCount(); i++) {
+//      TipiComponent current = getTipiComponent(i);
+//      if (TipiSwingComponent.class.isInstance(current)) {
+//         ( (TipiSwingComponent) current).setWaitCursor(b);
+//      }
+//    }
 
   public void addToContainer(final Object c, final Object constraints) {
     try {
@@ -94,11 +104,11 @@ public abstract class TipiSwingDataComponentImpl
     });
   }
 
-  public void setCursor(Cursor c) {
-    if (getSwingContainer() != null) {
-      getSwingContainer().setCursor(c);
-    }
-  }
+//  public void setCursor(Cursor c) {
+//    if (getSwingContainer() != null) {
+//      getSwingContainer().setCursor(c);
+//    }
+//  }w
 
   protected Object getComponentValue(String name) {
     if (name != null) {

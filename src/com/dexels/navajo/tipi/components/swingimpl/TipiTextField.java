@@ -152,6 +152,7 @@ public class TipiTextField extends TipiSwingComponentImpl {
 	protected void performComponentMethod(String name, TipiComponentMethod compMeth, TipiEvent event) throws TipiBreakException {
 		super.performComponentMethod(name, compMeth, event);
 
+		// TODO Place in runSync
 		if (name.equals("append")) {
 			Operand o = compMeth.getEvaluatedParameter("text", event);
 			if (o != null) {

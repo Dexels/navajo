@@ -34,11 +34,7 @@ public class TipiSwingStandaloneContainer implements TipiStandaloneToplevelConta
       embeddedContext.setUserInterface(u);
     }
   }
-//  public void setResourceBaseDirectory(File f) {
-//      if (embeddedContext!=null) {
-//          embeddedContext.setResourceBaseDirectory(f);
-//        }
-//  }
+
 
   public void loadDefinition(String tipiPath, String definitionName,String resourceBaseDirectory) throws IOException, TipiException {
 	 // System.err.println("Loading def: "+definitionName+" tipipath: "+tipiPath+" resbase: "+resourceBaseDirectory);

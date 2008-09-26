@@ -1,13 +1,10 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
 import java.awt.*;
-import java.util.List;
-
 import javax.swing.*;
 
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
-import com.dexels.navajo.tipi.tipixml.*;
 
 /**
  * <p>Title: </p>
@@ -62,17 +59,6 @@ public class TipiMenu
   }
 //
 
-  // Why is it still necessary to do this manually here?
-  // TODO: Fix this.
-  public void load(XMLElement def, XMLElement instance, TipiContext context) throws com.dexels.navajo.tipi.TipiException {
-    super.load(def, instance, context);
-    List<XMLElement> v = def.getChildren();
-    for (int i = 0; i < v.size(); i++) {
-      XMLElement current = v.get(i);
-      TipiComponent tc = context.instantiateComponent(current,null,null);
-      addComponent(tc, context, null);
-    }
-  }
 
  
 }

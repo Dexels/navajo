@@ -42,7 +42,7 @@ public class TipiSwingPanel extends JPanel implements Scrollable {
 	private final String SOUTHWEST = "southwest";
 
 	private String alignment = CENTER;
-	private String title = null;
+//	private String title = null;
 
 	public TipiSwingPanel() {
 //		setBackground(new Color(0.0f,0.8f,0.0f,0.2f));
@@ -165,13 +165,13 @@ public class TipiSwingPanel extends JPanel implements Scrollable {
 		return 20;
 	}
 	
-	public String getTitle() {
-		return title;
-	}
+//	public String getTitle() {
+//		return title;
+//	}
 
-	public void setTitle(String title) {
-		this.title = title;
-		setBorder(BorderFactory.createTitledBorder(title));
-	}
+//	public void setTitle(String title) {
+//		this.title = title;
+//		setBorder(BorderFactory.createTitledBorder(title));
+//	}
 	
 }

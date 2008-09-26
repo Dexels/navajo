@@ -128,9 +128,7 @@ public class TipiScreen
   public void clearTopScreen() {
     for (int i = getChildCount() - 1; i >= 0; i--) {
       TipiComponent current = getTipiComponent(i);
-      if (!current.isStudioElement()) {
         myContext.disposeTipiComponent(current);
-      }
     }
   }
 

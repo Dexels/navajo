@@ -1,10 +1,7 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
-import javax.swing.*;
-
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.internal.*;
-import com.dexels.navajo.tipi.swingclient.*;
 
 /**
  * <p>Title: </p>
@@ -33,41 +30,16 @@ public class TipiSwingErrorHandler
   }
 
   public void showError(String text) {
-    TipiContext c = getContext();
-    if (c != null) {
-      showErrorDialog(text);
-    }
-    else {
-      System.err.println("DefaultTipiErrorHandler, context not set!! ");
-    }
+    showErrorDialog(text);
   }
 
   public void showError(Exception e) {
     TipiContext c = getContext();
-    if (c != null) {
-      showErrorDialog(e.getMessage());
-    }
-    else {
-      System.err.println("DefaultTipiErrorHandler, context not set!! ");
-    }
+    c.showError(e.getMessage(), "");
   }
 
   public void showErrorDialog(final String error) {
-    RootPaneContainer toplevel = ((SwingTipiContext)getContext()).getTopDialog();
-
-    if (toplevel instanceof JFrame) {
-      final JFrame top = (JFrame) toplevel;
-      SwingUtilities.invokeLater(new Runnable() {
-        public void run() {
-          JOptionPane.showMessageDialog(top, error, "Error", JOptionPane.ERROR_MESSAGE);
-        }
-      });
-      return;
-    }
-    
-    SwingClient.getUserInterface().addErrorDialog(error);
-
-
+	  getContext().showError(error, "");
   }
 //  public Object createContainer(){
 //    return new JPanel();

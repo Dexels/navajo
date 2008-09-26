@@ -38,6 +38,16 @@ public class TipiSwingButton extends JButton {
 		// ignore.
 	}
 
+	
+	
+	@Override
+	public void setCursor(Cursor cursor) {
+		System.err.println("Setting cursor: "+cursor.getName());
+		Thread.dumpStack();
+		super.setCursor(cursor);
+	}
+
+
 	public Dimension getMinimumSize() {
 		return getPreferredSize();
 	}

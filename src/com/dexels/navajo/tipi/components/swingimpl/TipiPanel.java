@@ -19,8 +19,9 @@ public class TipiPanel
     extends TipiSwingDataComponentImpl {
 
   public Object createContainer() {
-	  TipiSwingPanel myPanel = new TipiSwingPanel();
-    TipiHelper th = new TipiSwingHelper();
+//	  TipiSwingPanel myPanel = new TipiSwingPanel();
+	  JPanel myPanel = new JPanel();
+	    TipiHelper th = new TipiSwingHelper();
     th.initHelper(this);
     addHelper(th);
 	

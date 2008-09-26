@@ -81,7 +81,18 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 				}
 				try {
 					System.err.println("Type: " + ce);
-					TipiTabs.this.performTipiEvent("onTabChanged", null, false);
+					setWaitCursor(true);
+					System.err.println("Startomg da tabbbbb");
+					TipiTabs.this.performTipiEvent("onTabChanged", null, false, new Runnable(){
+
+						public void run() {
+							System.err.println("Ending da tabbbbb");
+							setWaitCursor(false);
+							
+						}});
+					
+					
+					
 					if (lastSelectedTab == null) {
 						System.err.println("last selected was null");
 
