@@ -7,6 +7,7 @@ import javax.swing.*;
 
 import org.jdesktop.swingx.*;
 import org.jdesktop.swingx.decorator.*;
+import org.jdesktop.swingx.search.*;
 
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
@@ -25,7 +26,7 @@ public class TipiExtendedTable extends TipiSwingDataComponentImpl {
 		// myTable.getColumnModel().addColumn(new TableColumn(3,100));
 		JScrollPane js = new JScrollPane(myTable);
 		myTable.setColumnControlVisible(true);
-		myTable.setHighlighters(new HighlighterPipeline(new Highlighter[] { AlternateRowHighlighter.classicLinePrinter }));
+//		myTable.setHighlighters(new HighlighterPipeline(new Highlighter[] { AlternateRowHighlighter.classicLinePrinter }));
 		// myTable.getHighlighters().addHighlighter(new
 		// RolloverHighlighter(Color.BLACK, Color.WHITE ));
 		myTable.setRolloverEnabled(true);
