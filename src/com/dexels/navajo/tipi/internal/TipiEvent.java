@@ -3,7 +3,6 @@ package com.dexels.navajo.tipi.internal;
 import java.util.*;
 
 import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.studio.*;
 import com.dexels.navajo.tipi.tipixml.*;
 
 /**
@@ -27,6 +26,10 @@ public class TipiEvent implements TipiExecutable {
 	private String myEventName;
 	private String myEventService;
 	private String mySource;
+	
+	private Runnable afterEvent = null;
+	
+
 	// private ArrayList myActions;
 	// private Navajo myNavajo;
 	private TipiComponent myComponent;
@@ -69,6 +72,8 @@ public class TipiEvent implements TipiExecutable {
 		ti.myExecutables = this.myExecutables;
 		ti.eventParameterMap = new HashMap<String, TipiValue>();
 		ti.setStackElement(getStackElement());
+		ti.setAfterEvent(getAfterEvent());
+		
 		Iterator<String> iter = this.eventParameterMap.keySet().iterator();
 
 		while (iter.hasNext()) {
@@ -179,12 +184,13 @@ public class TipiEvent implements TipiExecutable {
 		return myComponent.getContext();
 	}
 
-	public void asyncPerformAction(final TipiEventListener listener, TipiExecutable parentExecutable, final Map<String, Object> event) {
+	public void asyncPerformAction(final TipiEventListener listener, TipiExecutable parentExecutable, final Map<String, Object> event, Runnable afterEventParam) {
 
 		TipiEvent localEvent = (TipiEvent) this.clone();
 		localEvent.loadEventValues(event);
 		// final TipiEvent te = this;
 		try {
+			localEvent.setAfterEvent(afterEventParam);
 			// listener.eventStarted(this, event);
 			getContext().debugLog("event   ", "enqueueing (in event) async event: " + localEvent);
 
@@ -276,12 +282,7 @@ public class TipiEvent implements TipiExecutable {
 		getContext().debugLog("event   ", "performing event: " + localInstance.getEventName());
 
 		listener.eventStarted(localInstance, event);
-		try {
-			getContext().performedEvent(myComponent, localInstance);
-		} catch (BlockActivityException ex1) {
-			// System.err.println("Blocked exception");
-			return;
-		}
+
 		TipiExecutable last = null;
 		try {
 			for (int i = 0; i < myExecutables.size(); i++) {
@@ -328,17 +329,7 @@ public class TipiEvent implements TipiExecutable {
 		return mySource;
 	}
 
-	public XMLElement store() {
-		// throw new RuntimeException("Todo: check and reimplement");
-		XMLElement s = new CaseSensitiveXMLElement();
-		s.setName(myEventName);
-		// s.setAttribute("type", myEventName);
-		for (int i = 0; i < myExecutables.size(); i++) {
-			TipiExecutable current = myExecutables.get(i);
-			s.addChild(current.store());
-		}
-		return s;
-	}
+
 
 	public int getExecutableChildCount() {
 		return myExecutables.size();
@@ -377,6 +368,13 @@ public class TipiEvent implements TipiExecutable {
 		} else {
 			System.err.println("Tipi event has no stack element: " + myEventName);
 		}
+	}
+	public Runnable getAfterEvent() {
+		return afterEvent;
+	}
+
+	public void setAfterEvent(Runnable afterEvent) {
+		this.afterEvent = afterEvent;
 	}
 
 }

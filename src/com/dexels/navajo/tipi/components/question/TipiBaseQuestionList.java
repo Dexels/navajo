@@ -252,7 +252,7 @@ public abstract class TipiBaseQuestionList extends TipiDataComponentImpl {
 						// System.err.println("Created component:
 						// "+tc.getClass()+" container: "+tc.getContainer());
 						tc.setValue("messagePath", current.getFullMessageName());
-						tc.setPrefix(current.getFullMessageName());
+//						tc.setPrefix(current.getFullMessageName());
 						tc.setValue("questionDefinitionName", questionDefinitionName);
 						tc.setValue("questionGroupDefinitionName", questionGroupDefinitionName);
 						tc.setValue("subQuestionPath", subQuestionPath);

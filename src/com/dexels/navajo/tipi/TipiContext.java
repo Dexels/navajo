@@ -20,7 +20,6 @@ import com.dexels.navajo.tipi.connectors.*;
 import com.dexels.navajo.tipi.extension.*;
 import com.dexels.navajo.tipi.internal.*;
 import com.dexels.navajo.tipi.internal.cookie.*;
-import com.dexels.navajo.tipi.studio.*;
 import com.dexels.navajo.tipi.tipixml.*;
 
 /**
@@ -40,7 +39,7 @@ import com.dexels.navajo.tipi.tipixml.*;
  * @author not attributable
  * @version 1.0
  */
-public abstract class TipiContext implements ActivityController, TypeFormatter {
+public abstract class TipiContext {
 
 	public abstract void runSyncInEventThread(Runnable r);
 
@@ -87,7 +86,6 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 	private final TipiActionManager myActionManager = new TipiActionManager();
 
 	protected final List<TipiActivityListener> myActivityListeners = new ArrayList<TipiActivityListener>();
-	private final List<ActivityController> activityListenerList = new ArrayList<ActivityController>();
 
 	private final List<TipiNavajoListener> navajoListenerList = new ArrayList<TipiNavajoListener>();
 	// private final List<TipiNavajoListener> eventListenerList = new
@@ -167,12 +165,9 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 
 	public TipiContext() {
 		Iterator<TipiExtension> tt = ServiceRegistry.lookupProviders(TipiExtension.class);
-		System.err.println("phase 1");
 		initializeExtensions(tt);
-		System.err.println("phase 2");
 		tt = ServiceRegistry.lookupProviders(TipiExtension.class, Thread.currentThread().getContextClassLoader());
 		initializeExtensions(tt);
-		System.err.println("phase 3");
 
 		tt = ServiceRegistry.lookupProviders(TipiExtension.class, ClassLoader.getSystemClassLoader());
 		initializeExtensions(tt);
@@ -183,6 +178,7 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 
 		if (coreExtensionList.isEmpty()) {
 			System.err.println("Beware: no extensions. Running without jars? Entering fake mode...");
+			System.err.println("CORE: "+coreExtensionList.size()+" MAIN: "+mainExtensionList.size()+" OPTIONAL: "+optionalExtensionList.size());
 			fakeJars = true;
 			fakeExtensions();
 		}
@@ -190,13 +186,16 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 		NavajoFactory.getInstance().setExpressionEvaluator(new DefaultExpressionEvaluator());
 		tipiResourceLoader = new ClassPathResourceLoader();
 		setStorageManager(new TipiNullStorageManager());
-		 try {
-		 Class.forName("com.dexels.navajo.tipi.tools.TipiEventDumpDebugger");
-		 hasDebugger = true;
-		 System.err.println("debugger loaded");
-		 } catch (Throwable e) {
-		 hasDebugger = false;
-		 }
+		try {
+			Class<? extends TipiContextListener> cc = (Class<? extends TipiContextListener>) Class.forName("com.dexels.navajo.tipi.tools.TipiEventDumpDebugger");
+			TipiContextListener tcl = cc.newInstance();
+			tcl.setContext(this);
+			hasDebugger = true;
+			System.err.println("debugger loaded");
+		} catch (Throwable e) {
+			hasDebugger = false;
+			System.err.println("debugger NOT loaded");
+		}
 
 	}
 
@@ -218,6 +217,9 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 		fakeExtension(optionalExtensionList, "tipi.TipiBatikExtension");
 		fakeExtension(optionalExtensionList, "tipi.NavajoRichTipiExtension");
 		fakeExtension(optionalExtensionList, "tipi.TipiCalendarExtension");
+		fakeExtension(optionalExtensionList, "tipi.TipiFacilityOccupationExtension");
+		fakeExtension(optionalExtensionList, "tipi.TipiJxLayerExtension");
+
 		fakeExtension(mainExtensionList, "tipi.TipiEchoExtension");
 
 		// initialize again
@@ -1034,8 +1036,7 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 			tc.loadMethodDefinitions(this, definition, classDef);
 			// -----------------------------
 			tc.loadStartValues(definition, event);
-			boolean se = definition.getAttribute("studioelement") != null;
-			tc.setStudioElement(se);
+
 			tc.commitToUi();
 			return tc;
 		} else {
@@ -1055,8 +1056,6 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 			comp.loadEventsDefinition(this, definition, classDef);
 			comp.loadMethodDefinitions(this, definition, classDef);
 			comp.loadStartValues(definition, event);
-			boolean se = definition.getAttribute("studioelement") != null;
-			comp.setStudioElement(se);
 			return comp;
 		} else {
 			throw new TipiException("Problems reloading TipiComponent class: " + definition.toString());
@@ -1730,10 +1729,7 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 			} catch (TipiBreakException e) {
 				System.err.println("Data refused by component");
 			}
-			if (t.getContainer() != null) {
-				t.tipiLoaded();
 			}
-		}
 
 		fireNavajoReceived(reply, method);
 	}
@@ -2009,65 +2005,8 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 		}
 	}
 
-	// EOF
-	public void addActivityListener(ActivityController al) {
-		activityListenerList.add(al);
-	}
 
-	public void removeActivityListener(ActivityController al) {
-		activityListenerList.remove(al);
-	}
 
-	private boolean isStudioElement(TipiComponent tc) {
-		if (tc.isStudioElement()) {
-			return true;
-		}
-		return tc.getPath().indexOf("//studio") != -1;
-	}
-
-	public void performedEvent(TipiComponent tc, TipiEvent e) throws BlockActivityException {
-		boolean blocked = false;
-		for (ActivityController current : activityListenerList) {
-			try {
-				current.performedEvent(tc, e);
-			} catch (BlockActivityException ex) {
-				blocked = true;
-			}
-		}
-		if (blocked && !isStudioElement(tc)) {
-			throw new BlockActivityException();
-		}
-	}
-
-	public void performedBlock(TipiComponent tc, TipiActionBlock tab, String expression, String exprPath, boolean passed, TipiEvent te)
-			throws BlockActivityException {
-		boolean blocked = false;
-
-		for (ActivityController current : activityListenerList) {
-			try {
-				current.performedBlock(tc, tab, expression, exprPath, passed, te);
-			} catch (BlockActivityException ex) {
-				blocked = true;
-			}
-			if (blocked && !isStudioElement(tc)) {
-				throw new BlockActivityException();
-			}
-		}
-	}
-
-	public void performedAction(TipiComponent tc, TipiAction ta, TipiEvent te) throws BlockActivityException {
-		boolean blocked = false;
-		for (ActivityController current : activityListenerList) {
-			try {
-				current.performedAction(tc, ta, te);
-			} catch (BlockActivityException ex) {
-				blocked = true;
-			}
-		}
-		if (blocked && !isStudioElement(tc)) {
-			throw new BlockActivityException();
-		}
-	}
 
 	public void performAction(final TipiEvent te, TipiExecutable parentExecutable, TipiEventListener listener) {
 
@@ -2077,7 +2016,6 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 			myThreadPool = new TipiThreadPool(this, getPoolSize());
 		}
 		try {
-			// aaap Doe iets met de stacktraces, en de rootcause
 			if (parentExecutable != null) {
 				te.getStackElement().setRootCause(parentExecutable.getStackElement());
 			}
@@ -2784,11 +2722,6 @@ public abstract class TipiContext implements ActivityController, TypeFormatter {
 		p.setAnyValue(target);
 	}
 
-	public String formatObject(Object o, Class<?> c) {
-		System.err.println("Gormat: " + o);
-		Thread.dumpStack();
-		return "hopla";
-	}
 
 	public Navajo createNavajoListNavajo() throws NavajoException {
 		Navajo n = NavajoFactory.getInstance().createNavajo();

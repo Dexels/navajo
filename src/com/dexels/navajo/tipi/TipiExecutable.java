@@ -20,8 +20,7 @@ public interface TipiExecutable {
 	// TipiException;
 	public void performAction(TipiEvent te, TipiExecutable parent, int index) throws TipiBreakException, TipiException;
 
-	public XMLElement store();
-
+	
 	public int getExecutableChildCount();
 
 	public TipiExecutable getExecutableChild(int index);

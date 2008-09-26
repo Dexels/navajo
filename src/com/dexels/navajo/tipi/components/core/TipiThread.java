@@ -3,6 +3,7 @@ package com.dexels.navajo.tipi.components.core;
 import java.util.*;
 
 import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.internal.*;
 
 /**
  * <p>
@@ -49,6 +50,7 @@ public class TipiThread extends Thread implements Comparable<TipiThread> {
 						myPool.setThreadState(TipiThread.IDLE);
 						TipiExecutable te = myPool.blockingGetExecutable();
 
+						final long t = System.currentTimeMillis();
 						myPool.setThreadState(TipiThread.BUSY);
 						TipiExecutable parentEvent = null;
 						final Stack<TipiExecutable> s = myPool.getThreadStack(this);
@@ -64,9 +66,12 @@ public class TipiThread extends Thread implements Comparable<TipiThread> {
 							if (!(ex instanceof TipiBreakException)) {
 								ex.printStackTrace();
 								te.dumpStack("Problem: " + ex.getMessage());
+								System.err.println("Exception caught: "+ ex.getMessage());
 							}
 						} finally {
 							TipiEventListener tel = myPool.getEventListener(te);
+							long t2 = System.currentTimeMillis();
+							System.err.println("Event took: "+(t2-t)+" millis ");
 							if (tel != null) {
 								tel.eventFinished(te, null);
 							}
@@ -74,6 +79,13 @@ public class TipiThread extends Thread implements Comparable<TipiThread> {
 								te.getComponent().eventFinished(te, te);
 							}
 							myPool.removeEventListener(te.getEvent());
+							
+							if(te instanceof TipiEvent) {
+								TipiEvent tev = (TipiEvent)te;
+								if(tev.getAfterEvent()!=null) {
+									tev.getAfterEvent().run();
+								}
+							}
 						}
 						Stack<TipiExecutable> ss = myPool.getThreadStack(this);
 						ss.clear();

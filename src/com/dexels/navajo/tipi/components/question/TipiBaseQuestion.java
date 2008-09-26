@@ -186,27 +186,7 @@ public abstract class TipiBaseQuestion extends TipiDataComponentImpl {
 
 	protected abstract void setQuestionBorder(String val);
 
-	public void oldLoadData(Navajo n, TipiContext tc) throws TipiException {
-		if (n == null) {
-			throw new TipiException("Loading with null Navajo! ");
-		}
-		for (int i = 0; i < properties.size(); i++) {
-			PropertyComponent current = properties.get(i);
-			Property p;
-			if (prefix != null) {
-				p = n.getProperty(prefix + "/" + current.getPropertyName());
-				current.setProperty(p);
-			} else {
-				p = n.getProperty(current.getPropertyName());
-				if (p != null) {
-					current.setProperty(p);
-				}
-			}
-		}
-
-		myNavajo = n;
-	}
-
+	
 	public void updateQuestionGroup() {
 		if (questionGroup != null) {
 			questionGroup.updateQuestions();

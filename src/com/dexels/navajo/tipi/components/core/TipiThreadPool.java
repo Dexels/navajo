@@ -149,7 +149,7 @@ public class TipiThreadPool {
 		notifyAll();
 	}
 
-	public void performAction(final TipiEvent te, final TipiEventListener listener) throws TipiException, TipiBreakException {
+	public void performAction(final TipiExecutable te, final TipiEventListener listener) throws TipiException, TipiBreakException {
 		myListenerMap.put(te, listener);
 		myContext.enqueueExecutable(te);
 	}

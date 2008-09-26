@@ -5,7 +5,6 @@ import java.util.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.parser.*;
 import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.studio.*;
 import com.dexels.navajo.tipi.tipixml.*;
 
 /**
@@ -74,12 +73,7 @@ public class TipiActionBlock implements TipiExecutable {
 		myEvent = te;
 		boolean evaluated;
 		evaluated = checkCondition(te);
-		try {
-			myContext.performedBlock(myComponent, this, myExpression, myExpressionSource, evaluated, te);
-		} catch (BlockActivityException ex1) {
-			System.err.println("Blocked exception");
-			return;
-		}
+
 		if (!evaluated) {
 			// System.err.println("Expression failed: Not executing children");
 			return;
@@ -182,30 +176,7 @@ public class TipiActionBlock implements TipiExecutable {
 		}
 	}
 
-	// public abstract boolean evaluate(Navajo n, TipiContext context, Object
-	// source, Object event) throws TipiBreakException, TipiException;
-	public XMLElement store() {
-		XMLElement cond = new CaseSensitiveXMLElement();
-		cond.setName("block");
-		// Iterator it = myParams.keySet().iterator();
-		if (myExpression != null && !myExpression.equals("")) {
-			cond.setAttribute("expression", myExpression);
-		}
-		if (myExpressionSource != null && !myExpressionSource.equals("")) {
-			cond.setAttribute("source", myExpressionSource);
-		}
-		if (multithread) {
-			cond.setAttribute("multithread", "true");
-		}
 
-		for (int i = 0; i < myExecutables.size(); i++) {
-			TipiExecutable current = myExecutables.get(i);
-			XMLElement parm = current.store();
-			// parm.setName("param");
-			cond.addChild(parm);
-		}
-		return cond;
-	}
 
 	public void appendTipiExecutable(TipiExecutable tp) {
 		// System.err.println("ADDING EXECUTABLE. Class: "+tp.getClass());

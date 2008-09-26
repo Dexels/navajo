@@ -34,14 +34,11 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 	private Object myContainer = null;
 	private Object myConstraints;
 	private String myService;
-	private boolean isStudioElement = false;
-	// protected ArrayList propertyNames = new ArrayList();
 	protected TipiContext myContext = null;
 	protected Navajo myNavajo = null;
 	protected String myName;
 	protected String myId;
 	protected TipiComponent myParent = null;
-	private String className;
 	protected boolean isHomeComponent = false;
 
 	private final Map<String, TipiComponent> tipiComponentMap = new HashMap<String, TipiComponent>();
@@ -91,39 +88,6 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 		// override to be useful
 	}
 
-	public boolean isGridShowing() {
-		if (TipiDesignable.class.isInstance(getContainer())) {
-			TipiDesignable d = (TipiDesignable) getContainer();
-			return d.isGridShowing();
-		} else {
-			return false;
-		}
-	}
-
-	public void setHighlighted(boolean value) {
-		if (TipiDesignable.class.isInstance(getContainer())) {
-			TipiDesignable d = (TipiDesignable) getContainer();
-			d.setHighlighted(value);
-			d.repaint();
-		}
-	}
-
-	public boolean isHighlighted() {
-		if (TipiDesignable.class.isInstance(getContainer())) {
-			TipiDesignable d = (TipiDesignable) getContainer();
-			return d.isHighlighted();
-		} else {
-			return false;
-		}
-	}
-
-	public void showGrid(boolean value) {
-		if (TipiDesignable.class.isInstance(getContainer())) {
-			TipiDesignable d = (TipiDesignable) getContainer();
-			d.showGrid(value);
-			d.repaint();
-		}
-	}
 
 	public TipiContext getContext() {
 		if (myContext == null) {
@@ -151,21 +115,21 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 		myContext = tc;
 	}
 
-	public void setTransient(boolean b) {
-		isTransient = b;
-	}
-
-	public boolean isTransient() {
-		return isTransient;
-	}
+//	public void setTransient(boolean b) {
+//		isTransient = b;
+//	}
+//
+//	public boolean isTransient() {
+//		return isTransient;
+//	}
 
 	public boolean isPropertyComponent() {
 		return isPropertyComponent;
 	}
 
-	public boolean isValueSet(String name) {
-		return detectedExpressions.containsKey(name);
-	}
+//	public boolean isValueSet(String name) {
+//		return detectedExpressions.containsKey(name);
+//	}
 
 	// public void unSetValue(String name) {
 	// setValue(name, getTipiValue(name).getDefaultValue(), this, true, null);
@@ -269,31 +233,31 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 	private Property createAttributeProperty(TipiValue tv) {
 		return tv.getProperty(null);
 	}
+//
+//	public String getStringValue(String name) {
+//		TipiValue tv = componentValues.get(name);
+//		if (tv == null) {
+//			throw new UnsupportedOperationException("Getting value: " + name + " in: " + getClass() + " is not supported!");
+//		}
+//		Object obj = getComponentValue(name);
+//		if (obj != null) {
+//			String result = myContext.toString(this, tv.getType(), obj);
+//			if (result != null) {
+//				return result;
+//			}
+//
+//			return obj.toString();
+//		}
+//		return null;
+//	}
 
-	public String getStringValue(String name) {
-		TipiValue tv = componentValues.get(name);
-		if (tv == null) {
-			throw new UnsupportedOperationException("Getting value: " + name + " in: " + getClass() + " is not supported!");
-		}
-		Object obj = getComponentValue(name);
-		if (obj != null) {
-			String result = myContext.toString(this, tv.getType(), obj);
-			if (result != null) {
-				return result;
-			}
+//	public String getExpression(String name) {
+//		return detectedExpressions.get(name);
+//	}
 
-			return obj.toString();
-		}
-		return null;
-	}
-
-	public String getExpression(String name) {
-		return detectedExpressions.get(name);
-	}
-
-	public TipiValue getTipiValue(String name) {
-		return componentValues.get(name);
-	}
+//	public TipiValue getTipiValue(String name) {
+//		return componentValues.get(name);
+//	}
 
 	/**
 	 * Loads an event definition from the component definition
@@ -354,13 +318,10 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 		}
 	}
 
-	public void load(XMLElement def, XMLElement instance, TipiContext context) throws TipiException {
+	public void load(XMLElement definition, XMLElement instance, TipiContext context) throws TipiException {
 		setContext(context);
 		String id = instance.getStringAttribute("id");
 		String name = instance.getStringAttribute("name");
-		boolean studioelt = instance.getBooleanAttribute("studioelement", "true", "false", false);
-		boolean studioelt2 = def.getBooleanAttribute("studioelement", "true", "false", false);
-		setStudioElement(studioelt || studioelt2);
 		setName(name);
 		if (id == null || id.equals("")) {
 			myId = name;
@@ -370,8 +331,47 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 		} else {
 			myId = id;
 		}
-	}
+		String constraint = (String) instance.getAttribute("constraint");
+		if (constraint == null) {
+			constraint = (String) definition.getAttribute("constraint");
+		}
+		if (constraint != null) {
+			setConstraints(constraint);
+		}
+		List<XMLElement> children = null;
+		if (instance.getAttribute("class") != null || instance.getAttribute("type") != null) {
+			children = instance.getChildren();
+		} else {
+			children = definition.getChildren();
+		}
+		for (int i = 0; i < children.size(); i++) {
+			XMLElement child = children.get(i);
+			if (child.getName().equals("layout") || child.getName().startsWith("l.")) {
+				instantiateWithLayout(child);
+			} else {
+				if (child.getName().equals("tipi-instance") || child.getName().equals("component-instance")
+						|| child.getName().equals("component") || child.getName().startsWith("c.")) {
+					addComponentInstance(myContext, child, child.getAttribute("constraint"));
+				}
+			}
+		}
 
+	}
+	private final void instantiateWithLayout(XMLElement x) throws TipiException {
+		TipiLayout tl = myContext.instantiateLayout(x, this);
+		if (tl == null) {
+			throw new RuntimeException("Trying to instantiate with layout, but the layout == null");
+		}
+		tl.setComponent(this);
+		setLayout(tl);
+		tl.createLayout();
+		tl.initializeLayout(x);
+		if (getContainer() != null) {
+			setContainerLayout(tl.getLayout());
+		}
+		tl.loadLayout(this);
+		tl.commitLayout();
+	}
 	public void setId(String id) {
 		// System.err.println("CHANGING ID. FROM: "+myId+" to: "+id+".........
 		// VERIFYING PARENT. ");
@@ -396,7 +396,7 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 
 	}
 
-	private void removeChildComponent(TipiComponent tc) {
+	private final void removeChildComponent(TipiComponent tc) {
 		if (!tipiComponentMap.containsValue(tc)) {
 			System.err.println("!!!!!!   Can not update id: Component not found.");
 		}
@@ -410,7 +410,7 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 		tipiComponentMap.remove(tc.getId());
 	}
 
-	private void addChildComponent(TipiComponent tc) {
+	private final void addChildComponent(TipiComponent tc) {
 		if (tipiComponentList.contains(tc)) {
 			System.err.println("!!!!!!   Can not add child with id: " + tc.getId() + " component already in list.");
 			tipiComponentList.remove(tc);
@@ -423,23 +423,22 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 		tipiComponentList.add(tc);
 	}
 
-	public void clearAllComponents() {
+	public final void clearAllComponents() {
 		tipiComponentMap.clear();
 		tipiComponentList.clear();
 	}
 
-	public boolean isVisibleElement() {
+	public final boolean isVisibleElement() {
 		return isVisibleElement;
 	}
 
-	public boolean isTopLevel() {
+	public final boolean isTopLevel() {
 		return isToplevel;
 	}
 
-	public void instantiateComponent(XMLElement instance, XMLElement classdef) throws TipiException {
+	public final void instantiateComponent(XMLElement instance, XMLElement classdef) throws TipiException {
 		String id = (String) instance.getAttribute("id");
 		String defname = (String) instance.getAttribute("name");
-		className = (String) classdef.getAttribute("name");
 		isVisibleElement = classdef.getStringAttribute("addtocontainer", "false").equals("true");
 		isToplevel = classdef.getStringAttribute("toplevel", "false").equals("true");
 		myService = instance.getStringAttribute("service", null);
@@ -651,6 +650,13 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 		}
 	}
 
+	/**
+	 * Loads the attributes of an instance into a component.
+	 * You may need to override it if your instance 
+	 * @param values
+	 * @param event
+	 * @throws TipiException
+	 */
 	protected void loadValues(XMLElement values, TipiEvent event) throws TipiException {
 		List<XMLElement> children = values.getChildren();
 		for (int i = 0; i < children.size(); i++) {
@@ -678,14 +684,14 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 		}
 	}
 
-	public String getId() {
+	public final String getId() {
 		if (myId == null) {
 			myId = myContext.generateComponentId(getTipiParent(), this);
 		}
 		return myId;
 	}
 
-	public Message getStateMessage() {
+	public final Message getStateMessage() {
 		if (stateMessage != null) {
 			return stateMessage;
 		}
@@ -696,7 +702,7 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 		return stateMessage;
 	}
 
-	public void performMethod(String methodName, TipiAction invocation, TipiEvent event) throws TipiBreakException {
+	public final void performMethod(String methodName, TipiAction invocation, TipiEvent event) throws TipiBreakException {
 		TipiComponentMethod tcm = componentMethods.get(methodName);
 		if (tcm == null) {
 			System.err.println("Could not find component method: " + methodName + " component: " + getPath() + " class: " + getClass());
@@ -706,7 +712,7 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 		}
 	}
 
-	public TipiComponentMethod getTipiComponentMethod(String methodName) {
+	public final TipiComponentMethod getTipiComponentMethod(String methodName) {
 		TipiComponentMethod tcm = componentMethods.get(methodName);
 		return tcm;
 	}
@@ -746,36 +752,32 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 			// System.err.println("First part getting: "+name);
 			TipiComponent t = getTipiComponent(name);
 			if (t == null) {
-				throw new NullPointerException("Did not find Tipi: " + name + ". I am: " + getPath() + " with children: "
-						+ getChildComponentIdList() + "classname: " + getClass());
+				throw new NullPointerException("Did not find Tipi: " + name );
 			}
 			return t.getTipiComponentByPath(rest);
 		}
 	}
 
-	public void setLayout(TipiLayout tl) {
+	public  void setLayout(TipiLayout tl) {
 		currentLayout = tl;
 	}
 
-	public TipiLayout getLayout() {
+	public final TipiLayout getLayout() {
 		return currentLayout;
 	}
 
-	public TipiComponent getTipiComponent(String s) {
-		// if (tipiComponentMap.size()!=tipiComponentList.size()) {
-		// System.err.println("PROBLEMS: Mapsize: "+tipiComponentMap.size()+"
-		// LIST: "+tipiComponentList.size()+" component: "+getPath());
-		// }
+	public final TipiComponent getTipiComponent(String s) {
+	
 		return tipiComponentMap.get(s);
 	}
 
-	public TipiComponent getTipiComponent(int i) {
+	public final TipiComponent getTipiComponent(int i) {
 		// if (tipiComponentMap.size()!=tipiComponentList.size()) {
 		// }
 		return tipiComponentList.get(i);
 	}
 
-	public TipiComponent getChildByContainer(Object container) {
+	protected final TipiComponent getChildByContainer(Object container) {
 		for (int i = 0; i < getChildCount(); i++) {
 			TipiComponent child = getTipiComponent(i);
 			if (child != null) {
@@ -787,14 +789,6 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 		return null;
 	}
 
-	protected List<String> getChildComponentIdList() {
-		List<String> l = new ArrayList<String>();
-		for (int i = 0; i < tipiComponentList.size(); i++) {
-			TipiComponent current = getTipiComponent(i);
-			l.add(current.getId());
-		}
-		return l;
-	}
 
 	/**
 	 * Disposes this component: Beware: Should not be called directly. To
@@ -837,11 +831,11 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 
 	}
 
-	public boolean isDisposed() {
+	public final boolean isDisposed() {
 		return isDisposed;
 	}
 
-	public void removeAllChildren() {
+	public final void removeAllChildren() {
 		ArrayList<TipiComponent> backup = new ArrayList<TipiComponent>(tipiComponentList);
 		for (int i = 0; i < backup.size(); i++) {
 			TipiComponent current = backup.get(i);
@@ -851,26 +845,7 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 		clearAllComponents();
 	}
 
-	/**
-	 * Similar to remove all children, but it will only remove the components
-	 * instantiated using the InstantiateTipi action, not components added 'by
-	 * class'
-	 */
-	public void removeInstantiatedChildren() {
-		ArrayList<TipiComponent> backup = new ArrayList<TipiComponent>(tipiComponentList);
-		for (int i = 0; i < backup.size(); i++) {
-			TipiComponent current = backup.get(i);
-			if (!myContext.isDefined(current)) {
-				if (!current.isTransient()) {
-					current.disposeComponent();
-					// removeChild(current);
-				}
-			}
-			// myContext.disposeTipiComponent(current);
-		}
-		// tipiComponentList.clear();
-		// tipiComponentMap.clear();
-	}
+
 
 	public List<TipiComponent> getRecursiveProperties() {
 		List<TipiComponent> al = new ArrayList<TipiComponent>();
@@ -882,7 +857,7 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 		return al;
 	}
 
-	public void removeChild(TipiComponent child) {
+	public  void removeChild(TipiComponent child) {
 		if (child == null) {
 			System.err.println("Null child... Can not proceed with deleting.");
 			return;
@@ -901,7 +876,6 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 			properties.remove(child);
 		}
 		removeChildComponent(child);
-		childDisposed();
 	}
 
 	public void setParent(TipiComponent tc) {
@@ -948,14 +922,11 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 		if (getContainer() != null && c.isVisibleElement()) {
 			addToContainer(c.getContainer(), td);
 			addedToParent();
-			c.addedToParentContainer(getContainer(), c.getContainer(), td);
-		} else {
+			} else {
 		}
-		if (c.isPropertyComponent() && c instanceof PropertyComponent) {
+		c.addedToParentContainer(getActualComponent(), c.getContainer(), td);
+	if (c.isPropertyComponent() && c instanceof PropertyComponent) {
 			properties.add((PropertyComponent) c);
-		}
-		if (isStudioElement) {
-			c.setStudioElement(true);
 		}
 
 		getStateMessage().addMessage(c.getStateMessage());
@@ -1028,14 +999,17 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 	}
 
 	public boolean performTipiEvent(String type, Map<String, Object> event, boolean sync) throws TipiException, TipiBreakException {
+		return performTipiEvent(type, event, sync,null);
+	}
+	
+	public boolean performTipiEvent(String type, Map<String, Object> event, boolean sync, Runnable afterEvent) throws  TipiBreakException {
 		boolean hasEventType = false;
 		for (int i = 0; i < myEventList.size(); i++) {
 			TipiEvent te = myEventList.get(i);
 			if (te.isTrigger(type, myService)) {
+				myContext.fireTipiContextEvent(this, type, event, sync);
 				hasEventType = true;
 				TipiExecutable parentEvent = null;
-
-				myContext.fireTipiContextEvent(this, type, event, sync);
 
 				if (sync) {
 					try {
@@ -1047,16 +1021,25 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 						getContext().showInternalError(
 								"Error performing event: " + te.getEventName() + " for component: " + te.getComponent().getPath(), e);
 						e.printStackTrace();
+					} finally {
+						if(afterEvent!=null) {
+							afterEvent.run();
+						}
 					}
 				} else {
 					try {
-						te.asyncPerformAction(this, parentEvent, event);
+						te.asyncPerformAction(this, parentEvent, event, afterEvent);
 					} catch (Throwable e) {
 						getContext().showInternalError(
 								"Error performing event: " + te.getEventName() + " for component: " + te.getComponent().getPath(), e);
 						e.printStackTrace();
 					}
 				}
+			}
+		}
+		if(!hasEventType) {
+			if(afterEvent!=null) {
+				afterEvent.run();
 			}
 		}
 		return hasEventType;
@@ -1109,100 +1092,6 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 	public void setCursor(int cursorid) {
 	}
 
-	public XMLElement store() {
-
-		XMLElement IamThereforeIcanbeStored = new CaseSensitiveXMLElement();
-
-		IamThereforeIcanbeStored.setName("c." + className);
-		if (myName != null) {
-			IamThereforeIcanbeStored.setAttribute("name", myName);
-		}
-		if (myId != null) {
-			IamThereforeIcanbeStored.setAttribute("id", myId);
-		}
-		// if (className != null) {
-		// IamThereforeIcanbeStored.setAttribute("class", className);
-		// }
-		// if (className != null && myName!=null) {
-		// System.err.println("THERE IS BOTH A CLASS AND A NAME SET. THIS IS
-		// EVIL, BUT I AM GETTING USED TO IT");
-		// }
-		// Iterator pipo = componentValues.keySet().iterator();
-		// while (pipo.hasNext()) {
-		// String name = (String) pipo.next();
-		// if (!valuesSet.contains(name)) {
-		// System.err.println("Skipping value: " + name);
-		// continue;
-		// }
-		// String expr = (String) detectedExpressions.get(name);
-		// Object o = getComponentValue(name);
-		// if (expr != null) {
-		// IamThereforeIcanbeStored.setAttribute(name, expr);
-		// }
-		// else {
-		// if (o != null) {
-		// IamThereforeIcanbeStored.setAttribute(name, o.toString());
-		// }
-		// }
-		// }
-
-		Iterator<String> it2 = detectedExpressions.keySet().iterator();
-		while (it2.hasNext()) {
-			String name = it2.next();
-			String expression = detectedExpressions.get(name);
-			if (expression != null && !"".equals(expression)) {
-				IamThereforeIcanbeStored.setAttribute(name, expression);
-			}
-		}
-		Object myc = this.getConstraints();
-		if (myc != null) {
-			// System.err.println("Storing constraint of type: " +
-			// myc.getClass());
-			IamThereforeIcanbeStored.setAttribute("constraint", myc.toString());
-		}
-		TipiLayout myLayout = getLayout();
-		if (myLayout != null) {
-			XMLElement layout = myLayout.store();
-			// Iterator it = tipiComponentMap.keySet().iterator();
-			Iterator<TipiComponent> it = tipiComponentList.iterator();
-			while (it.hasNext()) {
-				TipiComponent current = it.next();
-				if (!myContext.isDefined(current)) {
-					if (!current.isTransient()) {
-						layout.addChild(current.store());
-
-					}
-				}
-			}
-			for (int i = 0; i < myEventList.size(); i++) {
-				TipiEvent current = myEventList.get(i);
-				IamThereforeIcanbeStored.addChild(current.store());
-			}
-			IamThereforeIcanbeStored.addChild(layout);
-		} else {
-			Iterator<TipiComponent> it = tipiComponentList.iterator();
-			while (it.hasNext()) {
-				TipiComponent current = it.next();
-				if (!myContext.isDefined(current)) {
-					if (!current.isTransient()) {
-						IamThereforeIcanbeStored.addChild(current.store());
-					}
-				}
-			}
-			for (int i = 0; i < myEventList.size(); i++) {
-				TipiEvent current = myEventList.get(i);
-				IamThereforeIcanbeStored.addChild(current.store());
-			}
-			if (myConstraints != null) {
-				// System.err.println("My contraints: " +
-				// myConstraints.toString() + " cLASS:" +
-				// myConstraints.getClass());
-			}
-		}
-		// System.err.println("PResent: "+IamThereforeIcanbeStored.toString());
-
-		return IamThereforeIcanbeStored;
-	}
 
 	public void checkValidation(Message msg) {
 		Iterator<TipiComponent> it = tipiComponentList.iterator();
@@ -1277,38 +1166,13 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 		return new AttributeRef(this, name);
 	}
 
-	// public void setChildIndex(TipiComponent child, int index) {
-	// if (!tipiComponentList.contains(child)) {
-	// return;
-	// }
-	// tipiComponentList.remove(child);
-	// tipiComponentList.add(index,child);
-	// }
-
-	public int getIndexOfComponent(TipiComponent source) {
-		return tipiComponentList.indexOf(source);
-	}
-
 	public List<TipiEvent> getEventList() {
 		return myEventList;
-	}
-
-	public void tipiLoaded() {
-	}
-
-	public void childDisposed() {
 	}
 
 	public void componentInstantiated() {
 	}
 
-	public boolean isStudioElement() {
-		return isStudioElement;
-	}
-
-	public void setStudioElement(boolean b) {
-		isStudioElement = b;
-	}
 
 	public void addHelper(TipiHelper th) {
 		myHelpers.add(th);
@@ -1382,13 +1246,6 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 	private TipiEvent lastEvent = null;
 
 	public void setCurrentEvent(TipiEvent event) {
-		// if (event!=null) {
-		// System.err.println("Setting last event to: "+event.getEventName());
-		// } else {
-		// System.err.println("Setting last event to: nullevent");
-		// }
-		// System.err.println("SETTINg EVENT");
-		// Thread.dumpStack();
 		lastEvent = event;
 	}
 

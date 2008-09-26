@@ -67,19 +67,10 @@ public class TipiTimerImpl extends TipiHeadlessComponentImpl implements Runnable
 		}
 	}
 
-	/**
-	 * performMethod
-	 * 
-	 * @param methodName
-	 *            String
-	 * @param invocation
-	 *            TipiAction
-	 * @param event
-	 *            TipiEvent
-	 * @throws TipiBreakException
-	 * @todo Implement this com.dexels.navajo.tipi.TipiComponent method
-	 */
-	public void performMethod(String methodName, TipiAction invocation, TipiEvent event) throws TipiBreakException {
+
+
+	@Override
+	protected void performComponentMethod(String methodName, TipiComponentMethod compMeth, TipiEvent event) throws TipiBreakException {
 		if ("start".equals(methodName)) {
 			start();
 		}
@@ -87,4 +78,6 @@ public class TipiTimerImpl extends TipiHeadlessComponentImpl implements Runnable
 			stop();
 		}
 	}
+	
+	
 }

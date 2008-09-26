@@ -5,7 +5,6 @@ import java.util.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.actions.*;
-import com.dexels.navajo.tipi.studio.*;
 import com.dexels.navajo.tipi.tipixml.*;
 
 public abstract class TipiAction implements TipiExecutable {
@@ -60,12 +59,7 @@ public abstract class TipiAction implements TipiExecutable {
 			getStackElement().dumpStack("Component disposed: ");
 			throw new TipiBreakException(TipiBreakException.COMPONENT_DISPOSED);
 		}
-		try {
-			myContext.performedAction(myComponent, this, te);
-		} catch (BlockActivityException ex1) {
-			System.err.println("Blocked exception");
-			return;
-		}
+
 		try {
 			execute(te);
 		} catch (Throwable e) {
@@ -150,25 +144,13 @@ public abstract class TipiAction implements TipiExecutable {
 	}
 
 	public Operand evaluate(String expr, TipiEvent event) {
-		// if (event==null) {
-		// System.err.println("EVALUATING: "+expr+" No event. ");
-		// } else {
-		// System.err.println("EVALUATING: "+expr+" event:
-		// "+event.getEventName());
-		// }
+
 		Message m = null;
 		Navajo n = null;
 		if (myComponent != null) {
 			n = myComponent.getNearestNavajo();
 		}
-		if (TipiDataComponent.class.isInstance(myComponent)) {
-			TipiDataComponent tdc = (TipiDataComponent) myComponent;
-			// n = tdc.getNavajo();
-			String prefix = tdc.getPrefix();
-			if (n != null && prefix != null) {
-				m = n.getMessage(prefix);
-			}
-		}
+
 		return myContext.evaluate(expr, myComponent, event, n, m);
 	}
 

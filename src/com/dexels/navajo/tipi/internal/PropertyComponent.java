@@ -31,7 +31,7 @@ public interface PropertyComponent extends TipiComponent {
 
 	public void setProperty(Property p);
 
-	public void checkForConditionErrors(Message m);
+//	public void checkForConditionErrors(Message m);
 
 	// public void validate();
 

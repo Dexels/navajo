@@ -19,8 +19,11 @@
       <param name="condense" type="boolean" default="true" />
    </tipiaction>
 
-   <!-- REMOVED THE SHOWINFO / SHOWQUESTION ENTRIES -->
-   <!-- they are in swingtipi/ echotipi now -->
+
+     <tipiaction name="sleep" class="TipiSleep" package="com.dexels.navajo.tipi.actions">
+      <param name="time" type="integer" required="true" />
+   </tipiaction>
+
    <tipiaction name="setStorageInstanceId" class="TipiSetStorageInstanceId" package="com.dexels.navajo.tipi.actions">
       <param name="id" type="string" required="true" />
    </tipiaction>
