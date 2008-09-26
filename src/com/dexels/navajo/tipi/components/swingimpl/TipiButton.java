@@ -174,8 +174,6 @@ public class TipiButton extends TipiSwingComponentImpl {
 	}
 
 	private void doFireAction(final TipiSwingButton myButton) {
-		try {
-			
 			setWaitCursor(true);
 			
 			performTipiEvent("onActionPerformed", null, false
@@ -183,8 +181,6 @@ public class TipiButton extends TipiSwingComponentImpl {
 				public void run() {
 					setWaitCursor(false);
 				}});
-		} catch (TipiException e1) {
-			e1.printStackTrace();
-		}
+	
 	}
 }

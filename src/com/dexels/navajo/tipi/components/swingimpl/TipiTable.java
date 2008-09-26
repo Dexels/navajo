@@ -320,19 +320,17 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 	}
 
 	public void messageTableActionPerformed(ActionEvent ae) {
-		try {
-			MessageTablePanel mm = (MessageTablePanel) getContainer();
-			Map<String, Object> tempMap = new HashMap<String, Object>();
-			tempMap.put("selectedIndex", new Integer(mm.getSelectedRow()));
-			tempMap.put("selectedMessage", mm.getSelectedMessage());
-			setWaitCursor(true);
-			performTipiEvent("onActionPerformed", tempMap, false, new Runnable(){
-				public void run() {
-					setWaitCursor(false);
-				}});
-		} catch (TipiException ex) {
-			ex.printStackTrace();
-		}
+		MessageTablePanel mm = (MessageTablePanel) getContainer();
+		Map<String, Object> tempMap = new HashMap<String, Object>();
+		tempMap.put("selectedIndex", new Integer(mm.getSelectedRow()));
+		tempMap.put("selectedMessage", mm.getSelectedMessage());
+		setWaitCursor(true);
+		performTipiEvent("onActionPerformed", tempMap, false, new Runnable() {
+			public void run() {
+				setWaitCursor(false);
+			}
+		});
+
 	}
 
 	@Override

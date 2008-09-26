@@ -79,8 +79,6 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 				if (isRebuilding) {
 					return;
 				}
-				try {
-					System.err.println("Type: " + ce);
 					setWaitCursor(true);
 					System.err.println("Startomg da tabbbbb");
 					TipiTabs.this.performTipiEvent("onTabChanged", null, false, new Runnable(){
@@ -105,10 +103,7 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 						getAttributeProperty("selectedindex").setAnyValue(jt.getSelectedIndex());
 						lastSelectedTab.doLayout();
 					}
-				} catch (TipiException ex) {
-					System.err.println("Exception while switching tabs.");
-					ex.printStackTrace();
-				}
+			
 			}
 		});
 		return jt;
