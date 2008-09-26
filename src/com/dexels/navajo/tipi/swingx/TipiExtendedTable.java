@@ -6,7 +6,6 @@ import java.util.regex.*;
 import javax.swing.*;
 
 import org.jdesktop.swingx.*;
-import org.jdesktop.swingx.decorator.*;
 import org.jdesktop.swingx.search.*;
 
 import com.dexels.navajo.document.*;
@@ -40,27 +39,22 @@ public class TipiExtendedTable extends TipiSwingDataComponentImpl {
 			}
 
 			public int search(Pattern arg0) {
-				// TODO Auto-generated method stub
 				return 0;
 			}
 
 			public int search(String arg0, int arg1) {
-				// TODO Auto-generated method stub
 				return 0;
 			}
 
 			public int search(Pattern arg0, int arg1) {
-				// TODO Auto-generated method stub
 				return 0;
 			}
 
 			public int search(String arg0, int arg1, boolean arg2) {
-				// TODO Auto-generated method stub
 				return 0;
 			}
 
 			public int search(Pattern arg0, int arg1, boolean arg2) {
-				// TODO Auto-generated method stub
 				return 0;
 			}
 		});
