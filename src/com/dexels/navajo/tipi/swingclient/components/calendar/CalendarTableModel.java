@@ -20,13 +20,13 @@ import com.dexels.navajo.document.*;
 public class CalendarTableModel
     implements TableModel {
   private Calendar myCalendar;
-  private ArrayList myListeners = new ArrayList();
+  private ArrayList<TableModelListener> myListeners = new ArrayList<TableModelListener>();
   //private int myDay;
   private int myMonth;
   private int myYear;
   private int firstDayOfWeek = Calendar.MONDAY;
-  private HashMap dayMap = new HashMap();
-  private CalendarManager myManager;
+  private HashMap<String,Day> dayMap = new HashMap<String,Day>();
+//  private CalendarManager myManager;
   private Message myData;
   private CalendarConstants myConstants = new CalendarConstants();
 
@@ -54,10 +54,10 @@ public class CalendarTableModel
     int weeks = myCalendar.getActualMaximum(Calendar.WEEK_OF_MONTH);
     return weeks + 1; // The one extra is for the day-headers table-row
   }
-
-  public void setManager(CalendarManager m) {
-    myManager = m;
-  }
+//
+//  public void setManager(CalendarManager m) {
+//    myManager = m;
+//  }
 
   public void clearDayMap(){
     dayMap.clear();
@@ -68,26 +68,20 @@ public class CalendarTableModel
       myData = msg;
       SimpleDateFormat navajoDateFormat = new SimpleDateFormat("yyyy-MM-dd");
       Calendar c = Calendar.getInstance();
-      ArrayList kids = myData.getAllMessages();
+      ArrayList<Message> kids = myData.getAllMessages();
       for (int i = 0; i < kids.size(); i++) {
-        Message current = (Message) kids.get(i);
+        Message current = kids.get(i);
         Date d = navajoDateFormat.parse( current.getProperty("CalendarDate").getValue());
         c.setTime(d);
         String key = "" + c.get(Calendar.DAY_OF_YEAR) + c.get(Calendar.YEAR);
-        //System.err.println("Key: " + key);
-
-        Day day = (Day) dayMap.get(key);
+        Day day = dayMap.get(key);
         if (day == null) {
           day = new Day();
           day.setDate(c.get(Calendar.DATE));
           day.setWeekOfMonth(c.get(Calendar.WEEK_OF_MONTH));
-          day.setWeekOfYear(c.get(Calendar.WEEK_OF_YEAR));
           dayMap.put(key, day);
         }
         day.addMessage(current);
-//        String name = current.getProperty("DayCode").getValue();
-//        String value = current.getProperty("DayCodeDescription").getValue();
-//        day.addAttribute(name, value);
       }
     }
     catch (Exception e) {
@@ -107,7 +101,7 @@ public class CalendarTableModel
 
   public void fireTableEvent(TableModelEvent e) {
     for (int i = 0; i < myListeners.size(); i++) {
-      TableModelListener current = (TableModelListener) myListeners.get(i);
+      TableModelListener current = myListeners.get(i);
       current.tableChanged(e);
     }
   }
@@ -118,7 +112,7 @@ public class CalendarTableModel
 
   public Day getDay(String dayOfYear) {
     //System.err.println("Getting: " + dayOfYear);
-    return (Day) dayMap.get(dayOfYear);
+    return dayMap.get(dayOfYear);
   }
 
   public Object getValueAt(int week, int day) {
@@ -140,14 +134,14 @@ public class CalendarTableModel
         day = day - 1;
 
         myCalendar.set(Calendar.DAY_OF_WEEK, ( (firstDayOfWeek + day) % 7));
-        int date = myCalendar.get(Calendar.DATE);
+//        int date = myCalendar.get(Calendar.DATE);
 
         // Now we know the date of the current location.
         // We return either a saved day or a new one.
         int doy = myCalendar.get(Calendar.DAY_OF_YEAR);
         String day_in_year = String.valueOf(doy);
         String year = String.valueOf(myCalendar.get(Calendar.YEAR));
-        Day dayM = (Day) dayMap.get(day_in_year + year);
+        Day dayM = dayMap.get(day_in_year + year);
         if (dayM != null) {
 //          System.err.println("For " + doy + ", day object = " + dayM.hashCode());
         }
@@ -160,7 +154,7 @@ public class CalendarTableModel
       }
       else {
         d.setDate(myCalendar.getTime());
-        d.setWeekOfYear(myCalendar.get(Calendar.WEEK_OF_YEAR));
+//        d.setWeekOfYear(myCalendar.get(Calendar.WEEK_OF_YEAR));
       }
     }
     else {
@@ -189,7 +183,7 @@ public class CalendarTableModel
       d.setDate(cc.getTime());
       d.setDate(i);
       d.setWeekOfMonth(cc.get(Calendar.WEEK_OF_MONTH));
-      d.setWeekOfYear(cc.get(Calendar.WEEK_OF_YEAR));
+//      d.setWeekOfYear(cc.get(Calendar.WEEK_OF_YEAR));
       String key = "" + cc.get(Calendar.DAY_OF_YEAR) + year;
       if (dayMap.get(key) == null) {
         dayMap.put(key, d);
@@ -229,7 +223,7 @@ public class CalendarTableModel
     myListeners.add(l);
   }
 
-  public Class getColumnClass(int columnIndex) {
+  public Class<?> getColumnClass(int columnIndex) {
     return Object.class;
   }
 

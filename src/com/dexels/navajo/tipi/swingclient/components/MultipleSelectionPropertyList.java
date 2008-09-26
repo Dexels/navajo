@@ -1,14 +1,14 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
-import javax.swing.event.*;
-import com.dexels.navajo.document.*;
-
-import java.util.*;
-import java.util.List;
 import java.awt.*;
 import java.beans.*;
+import java.util.*;
+import java.util.List;
 
 import javax.swing.*;
+import javax.swing.event.*;
+
+import com.dexels.navajo.document.*;
 
 /**
  * <p>
@@ -40,11 +40,11 @@ public final class MultipleSelectionPropertyList extends JPanel implements Prope
 	private final JList myList = new JList(myModel);
 
 	// private final BorderLayout borderLayout1 = new BorderLayout();
-	private final JScrollPane jScrollPane1 = new JScrollPane();
-	private boolean isGhosted = false;
-	private int myVisibleRowCount = 8;
+	private JScrollPane jScrollPane1; // = new JScrollPane();
+//	private int myVisibleRowCount = 8;
 //	private ArrayList listeners = new ArrayList();
 	private boolean orderBySelected = false;
+	// TODO Fix property listener
 	private PropertyChangeListener myPropertyChangeListener = null;
 
 	private boolean isReloading = false;
@@ -56,7 +56,6 @@ public final class MultipleSelectionPropertyList extends JPanel implements Prope
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		setBackground(Color.red);
 	}
 
 	public void setOrderBySelected(boolean b) {
@@ -71,19 +70,13 @@ public final class MultipleSelectionPropertyList extends JPanel implements Prope
 		myList.removeListSelectionListener(l);
 	}
 
-	@Override
-	public Dimension getPreferredSize() {
-		return jScrollPane1.getPreferredSize();
-		// return new Dimension(80,100);
-	}
+//	@Override
+//	public Dimension getPreferredSize() {
+//		return jScrollPane1.getPreferredSize();
+//		// return new Dimension(80,100);
+//	}
 
-	public final void setGhosted(boolean b) {
-		isGhosted = b;
-	}
 
-	public void gainFocus() {
-		// gar nichts
-	}
 
 	public void setSelectedColor(Color c) {
 		try {
@@ -101,9 +94,6 @@ public final class MultipleSelectionPropertyList extends JPanel implements Prope
 		jScrollPane1.setHorizontalScrollBarPolicy(b ? ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED : ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 	}
 
-	public final boolean isGhosted() {
-		return isGhosted;
-	}
 
 	public final Property getProperty() {
 		return myProperty;
@@ -116,54 +106,19 @@ public final class MultipleSelectionPropertyList extends JPanel implements Prope
 				this_valueChanged(e);
 			}
 		});
-		
-//		myList.addPropertyChangeListener(new PropertyChangeListener(){
-//
-//			public void propertyChange(PropertyChangeEvent evt) {
-//				System.err.println("PROP: "+evt.getPropertyName()+" size: "+getSize()+" pref: "+getPreferredSize());
-//				System.err.println("SCROLLSIZE: "+jScrollPane1.getSize()+" PREFSCROLL: "+jScrollPane1.getPreferredSize());
-//			}});
 
-	
+		jScrollPane1 = new JScrollPane(myList);
 		jScrollPane1.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-//		myList.setFixedCellHeight(16);
-		// jScrollPane1.setPreferredSize(myList.getPreferredSize());
-//		jScrollPane1.add(myList);
-		jScrollPane1.getViewport().setView(myList);
-		// jScrollPane1.add(myList);
+//		jScrollPane1.getViewport().setView(myList);
 		this.add(jScrollPane1, BorderLayout.CENTER);
 
-		// setBackground(Color.CYAN);
-		// System.err.println("*************************************");
-		// System.err.println("scroll: "+jScrollPane1.getPreferredSize());
-		// System.err.println("myList: "+myList.getPreferredSize());
-		// System.err.println("this: "+this.getPreferredSize());
-		// System.err.println("*************************************");
 	}
 
 	public final void setVisibleRowCount(int i) {
-		// System.err.println("SETTING ROWCOUNT>> "+i);
-		// Thread.dumpStack();
 		myList.setVisibleRowCount(i);
-//		myVisibleRowCount = i;
 	}
 
 	public final void setProperty(Property p) {
-		// myList.setModel(myModel);
-		// System.err.println("Setting property in MulitpleDinges: " +
-		// p.getName());
-//		if(myProperty!=p) {
-//			if(myProperty!=null) {
-//				myProperty.removePropertyChangeListener(myPropertyChangeListener );
-//			}
-//			myPropertyChangeListener = new PropertyChangeListener(){
-//
-//				public void propertyChange(PropertyChangeEvent ppp) {
-//					System.err.println("Bomchicka: "+ppp.getOldValue()+" new: "+ppp.getNewValue());
-//				}};
-//			
-//			p.addPropertyChangeListener(myPropertyChangeListener);
-//		}
 		isReloading = true;
 		myProperty = p;
 		try {
@@ -174,7 +129,6 @@ public final class MultipleSelectionPropertyList extends JPanel implements Prope
 				myList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 			}
 			List<Selection> selections = myProperty.getAllSelections();
-//			System.err.println("# of selections: "+selections.size());
 			if (selections.size() <= 0) {
 				System.err.println("Watch it! No selection property, or selection property without selections!");
 			} else {
@@ -194,7 +148,6 @@ public final class MultipleSelectionPropertyList extends JPanel implements Prope
 							myList.addSelectionInterval(i, i);
 						}
 					}
-					// SelectionCheckBox cb = new SelectionCheckBox();
 				}
 			}
 			
@@ -204,7 +157,6 @@ public final class MultipleSelectionPropertyList extends JPanel implements Prope
 		}
 		isReloading = false;
 
-//		setVisibleRowCount(myVisibleRowCount);
 	}
 
 	public final void update() {
@@ -212,25 +164,12 @@ public final class MultipleSelectionPropertyList extends JPanel implements Prope
 	}
 
 	final void this_valueChanged(ListSelectionEvent e) {
-		int[] sel = myList.getSelectedIndices();
-//
-//		try {
-//			List<Selection> mySel = myProperty.getAllSelections();
-//			for (Selection selection : mySel) {
-//				
-//			}
-//		} catch (NavajoException e2) {
-//			e2.printStackTrace();
-//		}
-//		
+
 		if(isReloading) {
 			return;
 		}
 		ArrayList<String> selected = new ArrayList<String>();
 		for (int i = 0; i < myModel.size(); i++) {
-			
-//			Thread.dumpStack();
-//			System.err.println("Model size: "+myModel.size());
 			if(myList.isSelectedIndex(i)) {
 				Selection current = (Selection) myModel.get(i);				
 				selected.add(current.getValue());
@@ -239,11 +178,8 @@ public final class MultipleSelectionPropertyList extends JPanel implements Prope
 		try {
 			myProperty.setSelected(selected);
 		} catch (NavajoException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-//		myProperty.setSelected(current, myList.isSelectedIndex(i));
-
 	}
 
 }

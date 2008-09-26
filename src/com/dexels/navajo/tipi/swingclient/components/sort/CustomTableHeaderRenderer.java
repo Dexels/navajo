@@ -1,11 +1,10 @@
 package com.dexels.navajo.tipi.swingclient.components.sort;
 
-import javax.swing.table.*;
-
-import javax.swing.*;
-
 import java.awt.*;
 import java.util.*;
+
+import javax.swing.*;
+import javax.swing.table.*;
 
 import com.dexels.navajo.tipi.swingclient.components.*;
 
@@ -108,7 +107,6 @@ public static final int ASCENDING = 1;
 	  
 	  updateSorting(column);
      setText("" + table.getModel().getColumnName(column));
-     setBackground(Color.red);
      myPanel.add(this,new GridBagConstraints(0,0,1,1,1,1,GridBagConstraints.CENTER,GridBagConstraints.BOTH,new Insets(DEFAULT_INSET,DEFAULT_INSET,DEFAULT_INSET,DEFAULT_INSET),0,0));
      revalidate();
       ((MessageTable)table).setHeaderHeight(myPanel.getPreferredSize().height);
@@ -120,13 +118,6 @@ public static final int ASCENDING = 1;
     this.setHorizontalTextPosition(SwingConstants.LEADING);
 //    this.setMargin(new Insets(0, 3, 0, 0));
   }
-
-//  protected void printComponent(Graphics g) {
-//    Color c = getBackground();
-//    setBackground(Color.white);
-//    super.printComponent(g);
-//    setBackground(c);
-//  }
 
 
 }

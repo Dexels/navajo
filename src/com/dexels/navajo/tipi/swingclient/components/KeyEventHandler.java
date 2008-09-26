@@ -1,9 +1,9 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
+import java.awt.*;
 import java.awt.event.*;
 
 import javax.swing.*;
-import java.awt.*;
 
 /**
  * <p>Title: Seperate project for Navajo Swing client</p>

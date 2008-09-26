@@ -10,6 +10,7 @@ import java.lang.reflect.*;
 import javax.imageio.*;
 import javax.imageio.stream.*;
 import javax.swing.*;
+
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.types.*;
 
@@ -24,21 +25,11 @@ public class BinaryComponent extends JPanel implements PropertyControlled, Prope
 	public BinaryComponent() {
 		setLayout(new BorderLayout());
 	}
-	
-	public void gainFocus() {
-	}
 
 	public Property getProperty() {
 		return null;
 	}
 
-	public boolean isGhosted() {
-		return false;
-	}
-
-	public void setGhosted(boolean b) {
-		
-	}
 
 
 	public void setProperty(Property p) {
@@ -74,10 +65,8 @@ public class BinaryComponent extends JPanel implements PropertyControlled, Prope
 				
 			}
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -139,8 +128,6 @@ public static BufferedImage scale(int width, int height, boolean keepAspect, Buf
 
 
 	public void update() {
-		// TODO Auto-generated method stub
-
 	}
 
 	public void propertyChange(PropertyChangeEvent e) {
@@ -225,7 +212,7 @@ public static BufferedImage scale(int width, int height, boolean keepAspect, Buf
 //	            ((JButton)myBinaryLabel).setUI(new ButtonUI(){
 //	            	
 //	            });
-		        myBinaryLabel.setBackground(new Color(1.0f,1.0f,1.0f,0.0f));
+//		        myBinaryLabel.setBackground(new Color(1.0f,1.0f,1.0f,0.0f));
 		        myBinaryLabel.setOpaque(false);
 		        myBinaryLabel.setBorder(null);
 		      ( (JButton) myBinaryLabel).addActionListener(BinaryComponent.this);

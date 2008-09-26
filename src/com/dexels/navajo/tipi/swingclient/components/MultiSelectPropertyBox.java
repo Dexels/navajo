@@ -1,9 +1,10 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
-import com.dexels.navajo.document.*;
+import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
-import java.awt.*;
+
+import com.dexels.navajo.document.*;
 
 
 /**
@@ -16,16 +17,13 @@ import java.awt.*;
  */
 
 public class MultiSelectPropertyBox extends BaseComboBox
-    implements PropertyControlled, Ghostable, Validatable {
+    implements PropertyControlled {
 
   ResourceBundle myResource;
 
-   private boolean ghosted = false;
-   private boolean enabled = true;
    private Property myProperty = null;
    private Property myValueProperty = null;
    private Message validationMsg;
-   private int myValidationState = Validatable.VALID;
    private ArrayList rules = new ArrayList();
 
 
@@ -50,63 +48,6 @@ public class MultiSelectPropertyBox extends BaseComboBox
 
    public void gainFocus(){
      // gar nichts
-   }
-
-   public final void setValidationMessage(Message msg) {
-     validationMsg = msg;
-   }
-   public final void checkValidation(){
-     if(validationMsg!=null && validationMsg.getName().equals("ConditionErrors")){
-       checkValidation(validationMsg);
-     }else{
-       setValidationState(VALID);
-     }
-   }
-
-   public final void checkValidation(Message msg){
-     ArrayList conditions = msg.getAllMessages();
-     for(int i=0;i<conditions.size();i++){
-       Message current = (Message) conditions.get(i);
-       Property conditionCode = current.getProperty("Id");
-       int code = Integer.parseInt(conditionCode.getValue());
-       for(int j=0;j<rules.size();j++){
-         int rule = ((Integer)rules.get(j)).intValue();
-         if(rule == code){
-           setValidationState(INVALID);
-           System.err.println("-------------------------------------------------------------------------------==>> I am invalid!! : " + this);
-           return;
-         }
-       }
-     }
-     setValidationState(VALID);
-   }
-   @Override
-public final void addValidationRule(int state){
-     System.out.println("Adding validation rule: " + state);
-     rules.add(new Integer(state));
-   }
-
-   public final void clearValidationRules(){
-     rules.clear();
-   }
-
-   public final void setValidationState(int state) {
-     myValidationState = state;
-     switch (myValidationState){
-       case VALID:
-   //      myConditionRuleIds.clear();
-         this.setBackground(Color.white);
-         break;
-       case INVALID:
-         this.setBackground(Color.red);
-         break;
-       case EMPTY:
-         this.setBackground(Color.blue);
-         break;
-       case ADJUSTED:
-         this.setBackground(Color.yellow);
-         break;
-     }
    }
 
    public final Property getProperty() {
@@ -137,10 +78,10 @@ public final void addValidationRule(int state){
        System.err.println("Attempting to load property box from non-selection property");
      }
      setEnabled(p.isDirIn());
-     if(p.isDirOut()){
-       setForeground(Color.darkGray);
-       setBackground(SystemColor.control);
-     }
+//     if(p.isDirOut()){
+//       setForeground(Color.darkGray);
+//       setBackground(SystemColor.control);
+//     }
 //    updateUI();
     String toolTipText;
      try{
@@ -196,10 +137,10 @@ public final void setEditable(boolean b) {
          setToKey((p.getValue()).trim());
        }
        setEnabled(p.isDirIn());
-       if(p.isDirOut()){
-         setForeground(Color.black);
-         setBackground(SystemColor.control);
-       }
+//       if(p.isDirOut()){
+//         setForeground(Color.black);
+//         setBackground(SystemColor.control);
+//       }
 //      updateUI();
 //      setEditable(p.isDirIn());
      }
@@ -245,11 +186,6 @@ public final void setEditable(boolean b) {
 
    }
 
-   public final void setSelection(Selection s) {
-     removeAllItems();
-     addSelection(s);
-     this.setToValue(s);
-   }
 
    final void this_itemStateChanged(ItemEvent e) {
      if (myProperty==null) {
@@ -263,29 +199,9 @@ public final void setEditable(boolean b) {
      } else {
        setValueProperty();
      }
-     setChanged(true);
    }
 
-   public final boolean isGhosted() {
-     return ghosted;
-   }
-
-   public final void setGhosted(boolean g) {
-     ghosted = g;
-     super.setEnabled(enabled && (!ghosted));
-   }
-
-   @Override
-public final void setEnabled(boolean e) {
-     enabled = e;
-     super.setEnabled(enabled && (!ghosted));
-   }
-
-
-   public final int getValidationState() {
-     return myValidationState;
-   }
-
+ 
   /**
    * Causes the combo box to close its popup window.
    *

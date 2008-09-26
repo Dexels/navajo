@@ -1,7 +1,6 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
-import javax.swing.table.JTableHeader;
-import javax.swing.JTable;
+import javax.swing.*;
 import javax.swing.table.*;
 
 /**
@@ -18,9 +17,9 @@ public class MessageTableFooter extends JTableHeader {
      super.setReorderingAllowed(false);
      super.setTable(table);
      setDefaultRenderer(tc);
-     setBorder(null);
-     setOpaque(false);
-     table.setOpaque(false);
+//     setBorder(null);
+     setOpaque(true);
+//     table.setOpaque(false);
    }
 
 }

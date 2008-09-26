@@ -1,9 +1,10 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
-import javax.swing.JCheckBox;
-import com.dexels.navajo.document.*;
-
 import java.awt.event.*;
+
+import javax.swing.*;
+
+import com.dexels.navajo.document.*;
 
 /**
  * <p>Title: </p>
@@ -20,12 +21,23 @@ public final class SelectionCheckBox extends JCheckBox {
 private Property myProperty;
 
   public SelectionCheckBox() {
-    try {
-      jbInit();
-    }
-    catch(Exception e) {
-      e.printStackTrace();
-    }
+	  this.addActionListener(new ActionListener(){
+
+
+			public void actionPerformed(ActionEvent arg0) {
+				System.err.println("Bim!");
+//		    	System.err.println("Check changed");
+				if(mySelection.isSelected()!=isSelected()) {
+					try {
+						myProperty.setSelected(mySelection, isSelected());
+					} catch (NavajoException e) {
+						e.printStackTrace();
+					}
+				}
+		    	System.err.println("Bom!");
+		    	repaint();
+			}
+	  });
   }
 
 
@@ -33,24 +45,6 @@ public final void setSelection(Selection s, Property p){
     mySelection = s;
     myProperty = p;
     this.setText(s.getName());
-  }
-  private final void jbInit() throws Exception {
-      this.addActionListener(new ActionListener(){
-
-
-		public void actionPerformed(ActionEvent arg0) {
-			System.err.println("Bim!");
-//	    	System.err.println("Check changed");
-			if(mySelection.isSelected()!=isSelected()) {
-				try {
-					myProperty.setSelected(mySelection, isSelected());
-				} catch (NavajoException e) {
-					e.printStackTrace();
-				}
-			}
-	    	System.err.println("Bom!");
-	    	repaint();
-		}});
   }
 
 

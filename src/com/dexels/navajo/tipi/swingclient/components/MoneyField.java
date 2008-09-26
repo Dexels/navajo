@@ -5,7 +5,7 @@ import java.text.*;
 
 import javax.swing.*;
 
-import com.dexels.navajo.document.types.Money;
+import com.dexels.navajo.document.types.*;
 
 public class MoneyField extends AbstractPropertyField implements PropertyControlled {
 	private DecimalFormat myEditFormat = (DecimalFormat) NumberFormat.getInstance();
@@ -56,10 +56,6 @@ public class MoneyField extends AbstractPropertyField implements PropertyControl
 		}
 	}
 
-	public void gainFocus() {
-		
-	}
-	
 	public void updateColor(Money value) {
 		if(getProperty()==null) {
 			return;
@@ -78,14 +74,7 @@ public class MoneyField extends AbstractPropertyField implements PropertyControl
 	}
 
 
-	public boolean isGhosted() {
-		return false;
-	}
 
-
-	public void setGhosted(boolean b) {
-		
-	}
 
 
 	

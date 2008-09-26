@@ -1,15 +1,14 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
-import javax.swing.table.TableCellEditor;
-import java.awt.Component;
-import javax.swing.JTable;
-import java.util.EventObject;
-import javax.swing.event.CellEditorListener;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.ListSelectionEvent;
-import com.dexels.navajo.document.*;
-import java.util.*;
+import java.awt.*;
 import java.awt.event.*;
+import java.util.*;
+
+import javax.swing.*;
+import javax.swing.event.*;
+import javax.swing.table.*;
+
+import com.dexels.navajo.document.*;
 
 /**
  * <p>Title: Seperate project for Navajo Swing client</p>
@@ -54,7 +53,7 @@ public class GenericPropertyCellEditor
       lastColumn = column;
 //      myTable.setEditingColumn(column);
 //      myTable.setEditingRow(row);
-      myComponent.gainFocus();
+//      myComponent.gainFocus();
 //      myComponent.requestFocus();
       myComponent.doLayout();
       return myComponent;

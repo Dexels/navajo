@@ -16,25 +16,28 @@ import javax.swing.event.*;
 
 public class MultiCalendarModel
     extends CalendarTableModel {
-  private ArrayList myModels = new ArrayList();
+  private ArrayList<CalendarTableModel> myModels = new ArrayList<CalendarTableModel>();
   private JTable myTable;
-  private boolean columnsSized = false;
+//  private boolean columnsSized = false;
   private CalendarTableModel myDefaultModel;
   private CalendarConstants myConstants = new CalendarConstants();
 
   public MultiCalendarModel() {
+		 System.err.println("Multi created");
   }
 
   @Override
 public void setCalendarConstants(CalendarConstants cc) {
     myConstants = cc;
     for (int i = 0; i < myModels.size(); i++) {
-      CalendarTableModel current = (CalendarTableModel) myModels.get(i);
+      CalendarTableModel current = myModels.get(i);
       current.setCalendarConstants(myConstants);
     }
   }
 
   public MultiCalendarModel(JTable t) {
+	  
+	 System.err.println("Multi created");
     setTable(t);
   }
 
@@ -56,7 +59,7 @@ public void setCalendarConstants(CalendarConstants cc) {
   @Override
 public int getRowCount() {
     if (myModels.size() > 0) {
-      CalendarTableModel base = (CalendarTableModel) myModels.get(0);
+      CalendarTableModel base = myModels.get(0);
       return base.getRowCount();
     }
     else {
@@ -68,7 +71,7 @@ public int getRowCount() {
   @Override
 public int getColumnCount() {
     if (myModels.size() > 0) {
-      CalendarTableModel base = (CalendarTableModel) myModels.get(0);
+      CalendarTableModel base = myModels.get(0);
       return base.getColumnCount();
     }
     else {
@@ -81,7 +84,7 @@ public int getColumnCount() {
   @Override
 public String getColumnName(int parm1) {
     if (myModels.size() > 0) {
-      CalendarTableModel base = (CalendarTableModel) myModels.get(0);
+      CalendarTableModel base = myModels.get(0);
       return base.getColumnName(parm1);
     }
     else {
@@ -94,7 +97,7 @@ public String getColumnName(int parm1) {
   @Override
 public void fireStructureChanged() {
     for (int i = 0; i < myModels.size(); i++) {
-      CalendarTableModel current = (CalendarTableModel) myModels.get(i);
+      CalendarTableModel current = myModels.get(i);
       current.fireStructureChanged();
     }
   }
@@ -110,7 +113,7 @@ public int getYear() {
   }
 
   @Override
-public Class getColumnClass(int parm1) {
+public Class<?> getColumnClass(int parm1) {
     return Object.class;
   }
 
@@ -128,7 +131,7 @@ public Object getValueAt(int week, int day) {
           MultipleDayContainer mDay = new MultipleDayContainer();
           Day[] days = new Day[size];
           for (int i = 0; i < size; i++) {
-            CalendarTableModel current = (CalendarTableModel) myModels.get(i);
+            CalendarTableModel current = myModels.get(i);
             days[i] = (Day) current.getValueAt(week, day);
           }
           mDay.setDays(days);
@@ -158,7 +161,7 @@ public void setValueAt(Object value, int row, int column) {
   @Override
 public void addTableModelListener(TableModelListener parm1) {
     for (int i = 0; i < myModels.size(); i++) {
-      CalendarTableModel current = (CalendarTableModel) myModels.get(i);
+      CalendarTableModel current = myModels.get(i);
       current.addTableModelListener(parm1);
     }
   }
@@ -166,7 +169,7 @@ public void addTableModelListener(TableModelListener parm1) {
   @Override
 public void removeTableModelListener(TableModelListener parm1) {
     for (int i = 0; i < myModels.size(); i++) {
-      CalendarTableModel current = (CalendarTableModel) myModels.get(i);
+      CalendarTableModel current = myModels.get(i);
       current.removeTableModelListener(parm1);
     }
 

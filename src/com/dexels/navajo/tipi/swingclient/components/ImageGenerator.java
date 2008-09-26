@@ -14,8 +14,7 @@ package com.dexels.navajo.tipi.swingclient.components;
 
 // Standard imports
 import java.awt.image.*;
-
-import java.util.Hashtable;
+import java.util.*;
 
 // Application specific imports
 // none

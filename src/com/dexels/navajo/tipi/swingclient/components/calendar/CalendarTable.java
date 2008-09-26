@@ -1,9 +1,9 @@
 package com.dexels.navajo.tipi.swingclient.components.calendar;
 
-import java.util.*;
-
 import java.awt.*;
 import java.awt.event.*;
+import java.util.*;
+
 import javax.swing.*;
 
 import com.dexels.navajo.document.*;
@@ -103,14 +103,7 @@ public class CalendarTable extends JTable {
       }
     });
 
-    this.addMouseMotionListener(new MouseMotionListener(){
-      public void mouseDragged(MouseEvent e){
-
-      }
-      public void mouseMoved(MouseEvent e){
-        cellClicked(e);
-      }
-    });
+  
   }
 
   public void setCalendarConstants(CalendarConstants cc) {
@@ -140,8 +133,8 @@ public class CalendarTable extends JTable {
     selectAllImageVisible = value;
   }
 
-  public ArrayList getSelectedDays() {
-    ArrayList selected = new ArrayList();
+  public ArrayList<Day> getSelectedDays() {
+    ArrayList<Day> selected = new ArrayList<Day>();
     for(int i = 1;i < this.getRowCount();i++) {
       for(int j = 1;j < this.getColumnCount();j++) {
         if(isCellSelected(i, j)) {
@@ -205,7 +198,7 @@ public boolean isCellSelected(int row, int col) {
         int anchorRow = getSelectionModel().getAnchorSelectionIndex();
         int leadRow = getSelectionModel().getLeadSelectionIndex();
 
-        boolean toRight = leadCol > anchorCol;
+//        boolean toRight = leadCol > anchorCol;
         boolean toBottom = leadRow > anchorRow;
 
         if(toBottom) {
@@ -276,7 +269,7 @@ public void setSelectionMode(int mode) {
   public void setCalendarManager(CalendarManager m) {
     myManager = m;
     myManager.setSource(this);
-    myDefaultModel.setManager(myManager);
+//    myDefaultModel.setManager(myManager);
   }
 
   public CalendarManager getManager() {

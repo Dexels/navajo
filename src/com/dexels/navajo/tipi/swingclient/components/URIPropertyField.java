@@ -1,8 +1,9 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
-import java.awt.event.*;
 import java.awt.*;
+import java.awt.event.*;
 import java.awt.font.*;
+
 import com.dexels.navajo.document.*;
 
 /**
@@ -16,7 +17,7 @@ import com.dexels.navajo.document.*;
 
 public class URIPropertyField extends TextPropertyField {
   private boolean clickable = true;
-  private static final String WIN_ID = "Windows";
+//  private static final String WIN_ID = "Windows";
   private static final String WIN_PATH = "rundll32";
   private static final String WIN_FLAG = "url.dll,FileProtocolHandler";
   private static final String UNIX_PATH = "mozilla";
@@ -110,7 +111,7 @@ public void setProperty(Property p){
 
   private final void loadURI(String url) {
     if (url != null) {
-      boolean result = true;
+//      boolean result = true;
       boolean windows = false;
       String os = System.getProperty("os.name").toLowerCase();
       if (os.indexOf("windows") >= 0) {
@@ -121,16 +122,16 @@ public void setProperty(Property p){
         if (windows) {
           cmd = WIN_PATH + " " + WIN_FLAG + " " + url;
           System.err.println("Executing Windows command: " + cmd);
-          Process p = Runtime.getRuntime().exec(cmd);
+          Runtime.getRuntime().exec(cmd);
         }
         else {
           cmd = UNIX_PATH + " " + UNIX_FLAG + "'" + url + "'";
           System.err.println("Executing UNIX command: " + cmd);
-          Process p = Runtime.getRuntime().exec(cmd);
+          Runtime.getRuntime().exec(cmd);
         }
       }
       catch (java.io.IOException ex) {
-        result = false;
+//        result = false;
         System.err.println("Could not invoke browser, command=" + cmd);
         System.err.println("Caught: " + ex);
       }

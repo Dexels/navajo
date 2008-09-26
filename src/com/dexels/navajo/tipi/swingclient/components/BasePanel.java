@@ -1,10 +1,9 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.*;
-
 import java.awt.*;
 import java.awt.event.*;
+import java.lang.reflect.*;
+import java.util.*;
 
 import javax.swing.*;
 import javax.swing.border.*;
@@ -23,7 +22,7 @@ import com.dexels.navajo.document.*;
 
 public class BasePanel
     extends JPanel
-    implements ChangeMonitoring, ConditionErrorHandler, ResponseListener {
+      {
 
   private Message loadMessage = null;
   private Message initMessage = null;
@@ -40,15 +39,14 @@ public class BasePanel
   public static final int UPDATED = 3;
   public static final int INSERTED = 4;
   public static final int DELETED = 5;
-  private boolean hasConditionErrors = false;
   private boolean hasExceptions = false;
   public static final int FOCUS_REQUEST = 0;
   public static final int FOCUS_GAINED = 1;
   public static final int FOCUS_LOST = 2;
   private int focusState = FOCUS_LOST;
-
-  private static int busyPanelCount = 0;
-  private static Object busyPanelSemaphore = new Object();
+//
+//  private static int busyPanelCount = 0;
+//  private static Object busyPanelSemaphore = new Object();
  // private Paint myPaint = SystemColor.getColor("control");
 
   protected void init(Message msg) {
@@ -56,23 +54,11 @@ public class BasePanel
     for (int i = 0; i < getComponentCount(); i++) {
       Component c = getComponent(i);
       if (BasePanel.class.isInstance(c)) {
-//        System.err.println("Initializing BasePanel");
          ( (BasePanel) c).init(msg);
       }
     }
   }
 
-  @Override
-public void paintComponent(Graphics g) {
-    super.paintComponent(g);
-//    Rectangle bounds = getBounds();
-//    Graphics2D g2 = (Graphics2D) g;
-//    Paint old = g2.getPaint();
-//    GradientPaint gp = new GradientPaint(bounds.x, 0, Color.lightGray, bounds.width, 0, Color.white);
-//    g2.setPaint(gp);
-//    g2.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
-//    g2.setPaint(old);
-  }
 
   protected void load(Message msg) {
     loadMessage = msg;
@@ -105,12 +91,10 @@ public void paintComponent(Graphics g) {
       case FOCUS_LOST:
         setFocusState(FOCUS_LOST);
         setBorder(null);
-        //System.err.println("lost -> lost");
         break;
       case FOCUS_GAINED:
         setFocusState(FOCUS_LOST);
         setBorder(null);
-        //System.err.println("gained -> lost");
         break;
     }
   }
@@ -119,62 +103,7 @@ public void paintComponent(Graphics g) {
     focusState = state;
   }
 
-  public void addGlassPane(int type) {
-//    setPanelGhosted(true);
-    if (getRootPane() != null) {
-      if (BaseWindow.class.isInstance(getRootPane().getParent())) {
-        BaseWindow myWindow = (BaseWindow) getRootPane().getParent();
 
-        BaseGlassPane bgp = myWindow.getBaseGlassPane();
-        if (bgp.getBusyPanelCount() == 0) {
-          bgp.addBusyPanel(this, type);
-        }
-      }
-
-      if (BaseDialog.class.isInstance(getRootPane().getParent())) {
-        BaseDialog myDialog = (BaseDialog) getRootPane().getParent();
-        BaseGlassPane bgp = myDialog.getBaseGlassPane();
-        if (bgp.getBusyPanelCount() == 0) {
-          bgp.addBusyPanel(this, type);
-        }
-      }
-    }
-  }
-
-
-  public final void removeBusyPanel() {
-    synchronized (busyPanelSemaphore) {
-      removeGlassPanel();
-      busyPanelCount--;
-    }
-  }
-
-  public final void removeGlassPanel() {
-    setPanelGhosted(false);
-    if (getRootPane() != null) {
-      if (BaseWindow.class.isInstance(getRootPane().getParent())) {
-
-        final BaseWindow myWindow = (BaseWindow) getRootPane().getParent();
-        BaseGlassPane bgp = myWindow.getBaseGlassPane();
-        bgp.removeBusyPanel(this);
-        if (bgp.getBusyPanelCount() == 0) {
-          getRootPane().remove(getRootPane().getGlassPane());
-          getRootPane().setGlassPane(myWindow.getOldGlassPane());
-          myWindow.invalidate();
-        }
-      }
-      if (BaseDialog.class.isInstance(getRootPane().getParent())) {
-        BaseDialog myDialog = (BaseDialog) getRootPane().getParent();
-        BaseGlassPane bgp = myDialog.getBaseGlassPane();
-        bgp.removeBusyPanel(this);
-        if (bgp.getBusyPanelCount() == 0) {
-          JPanel jp = new JPanel();
-          jp.setOpaque(false);
-          getRootPane().setGlassPane(jp);
-        }
-      }
-    }
-  }
 
   public void load() {
 	
@@ -190,11 +119,7 @@ public void paintComponent(Graphics g) {
     if (loadMessage != null) {
       Navajo n = store(loadMessage);
       if (n != null) {
-        Message condition = n.getMessage("ConditionErrors");
         Message exception = n.getMessage("error");
-        if (condition != null) {
-          checkValidation(condition);
-        }
         if (exception != null) {
           hasExceptions = true;
         }
@@ -211,9 +136,6 @@ public void paintComponent(Graphics g) {
 		  if (initMessage != null) {
 			  init(initMessage);
 		  }
-		  else {
-			  //System.err.println("Warning: Attempting to init without initMessage");
-		  }
 	  } else {
 		  try {
 			  SwingUtilities.invokeAndWait(new Runnable(){
@@ -229,10 +151,8 @@ public void paintComponent(Graphics g) {
 			  }
 			  );
 		  } catch (InterruptedException e) {
-			  // TODO Auto-generated catch block
 			  e.printStackTrace();
 		  } catch (InvocationTargetException e) {
-			  // TODO Auto-generated catch block
 			  e.printStackTrace();
 		  }
 	  }
@@ -241,12 +161,8 @@ public void paintComponent(Graphics g) {
   public void insert() {
     if (initMessage != null) {
       Navajo n = insert(initMessage);
-      Message condition = n.getMessage("ConditionErrors");
       Message exception = n.getMessage("error");
-      if (condition != null) {
-        checkValidation(condition);
-      }
-      if (exception != null) {
+        if (exception != null) {
         hasExceptions = true;
       }
     }
@@ -258,12 +174,8 @@ public void paintComponent(Graphics g) {
   public void delete() {
     if (loadMessage != null) {
       Navajo n = delete(loadMessage);
-      Message condition = n.getMessage("ConditionErrors");
       Message exception = n.getMessage("error");
-      if (condition != null) {
-        checkValidation(condition);
-      }
-      if (exception != null) {
+        if (exception != null) {
         hasExceptions = true;
       }
     }
@@ -437,8 +349,6 @@ public void paintComponent(Graphics g) {
 
   public void commit() {
     hasExceptions = false;
-//    System.err.println("State: " + panelState);
-    checkUpdate();
     switch (panelState) {
       case INITIALIZED:
         System.err.println("Store: Discarding initialized panel");
@@ -459,7 +369,7 @@ public void paintComponent(Graphics g) {
         delete();
         break;
     }
-    ArrayList al = getAllPanels();
+    ArrayList<Component> al = getAllPanels();
     if (al.size() > 0) {
 //      System.err.println("End of commit panel. Now committing subpanels.");
       for (int i = 0; i < al.size(); i++) {
@@ -468,7 +378,7 @@ public void paintComponent(Graphics g) {
       }
 //      System.err.println("Committed subpanels.");
     }
-    if (!hasConditionErrors() && !hasExceptions()) {
+    if (!hasExceptions()) {
       setPanelState(LOADED);
     }
     else {
@@ -484,7 +394,7 @@ public void paintComponent(Graphics g) {
     hostingPanel = p;
   }
 
-  protected Component findParentComponent(Class type) {
+  protected Component findParentComponent(Class<?> type) {
     Component c = getParent();
     while (c != null) {
       if (type.isInstance(c)) {
@@ -495,8 +405,8 @@ public void paintComponent(Graphics g) {
     return null;
   }
 
-  public ArrayList getAllPanels() {
-    ArrayList al = new ArrayList();
+  public ArrayList<Component> getAllPanels() {
+    ArrayList<Component> al = new ArrayList<Component>();
     for (int i = 0; i < getComponentCount(); i++) {
       Component c = getComponent(i);
       if (BasePanel.class.isInstance(c)) {
@@ -516,23 +426,6 @@ public void setEnabled(boolean b) {
     }
   }
 
-  @Override
-public boolean hasFocus() {
-    for (int i = 0; i < getComponentCount(); i++) {
-      Component c = getComponent(i);
-      if (ChangeMonitoring.class.isInstance(c)) {
-        ChangeMonitoring current = (ChangeMonitoring) c;
-        if (current.hasFocus()) {
-//          System.err.println("Component hasfocus: "+current.getClass());
-          return true;
-        }
-      }
-    }
-    if (focusState == FOCUS_GAINED) {
-      return true;
-    }
-    return false;
-  }
 
   public void setFocus() {
     focusState = FOCUS_REQUEST;
@@ -541,37 +434,7 @@ public boolean hasFocus() {
     }
   }
 
-  public void resetChanged() {
-    for (int i = 0; i < getComponentCount(); i++) {
-      Component c = getComponent(i);
-      if (ChangeMonitoring.class.isInstance(c)) {
-        ChangeMonitoring current = (ChangeMonitoring) c;
-        current.resetChanged();
-      }
-    }
-  }
 
-  public boolean hasChanged() {
-    for (int i = 0; i < getComponentCount(); i++) {
-      Component c = getComponent(i);
-      if (ChangeMonitoring.class.isInstance(c)) {
-        ChangeMonitoring current = (ChangeMonitoring) c;
-        if (MessageTable.class.isInstance(c)) {
-
-          try {
-             ( (MessageTable) c).saveColumnsNavajo();
-          }
-          catch (Exception e) {
-            System.err.println("WARNING: Could not save columns...");
-          }
-        }
-        if (current.hasChanged()) {
-          return true;
-        }
-      }
-    }
-    return false;
-  }
 
   // Required for V1 !!
   public Navajo createMemberMessage(String id) {
@@ -592,107 +455,11 @@ public boolean hasFocus() {
 //    }
   }
 
-  /*public boolean isValid() {
-    int invalidCount = 0;
-    for (int i = 0; i < getComponentCount(); i++) {
-      Component c = getComponent(i);
-      if (Validatable.class.isInstance(c)) {
-        Validatable current = (Validatable)c;
-        current.checkValidation();
-        if (current.getValidationState() == current.INVALID) {
-          System.err.println("Invalid state found: "+current.getClass());
-          invalidCount++;
-        }
-      }
-    }
-    if(invalidCount > 0){
-      return false;
-    }else{
-      return true;
-    }
-     }*/
 
-  public void checkValidation(Message msg) {
-    String pmn = "";
-    int state = getPanelState();
-    if (hasConditionErrors) {
-      System.err.println("Resetting hasConditionErrors: " + this.getPanelTitle());
-    }
-    hasConditionErrors = false;
-    if (msg == null) {
-      return;
-    }
-    System.err.println("MESSAGENAME: " + msg.getName());
-    if (msg.getName().equals("ConditionErrors")) {
-      hasConditionErrors = true;
 
-    }
 
-//    System.err.println("Checking conditionerrors");
-    if (msg == null) {
-      return;
-    }
-    for (int i = 0; i < getComponentCount(); i++) {
-      Component c = getComponent(i);
-      if (ConditionErrorHandler.class.isInstance(c)) {
-        ConditionErrorHandler handler = (ConditionErrorHandler) c;
-        handler.checkValidation(msg);
-        if (handler.hasConditionErrors()) {
-          System.err.println("Detected conditionerror!");
-          hasConditionErrors = true;
-        }
-      }
-      if (Validatable.class.isInstance(c)) {
-        System.err.println("Validating: " + c.getClass());
-        Validatable current = (Validatable) c;
-        current.checkValidation(msg);
-        if (current.getValidationState() == Validatable.INVALID) {
-          //System.err.println("--> This component was INVALID: " + c.getClass());
-          System.err.println("Detected conditionerror!");
-          hasConditionErrors = true;
-        }
-      }
-    }
-  }
 
-  public void clearConditionErrors() {
-    for (int i = 0; i < getComponentCount(); i++) {
-      Component c = getComponent(i);
-      if (ConditionErrorHandler.class.isInstance(c)) {
-        ConditionErrorHandler handler = (ConditionErrorHandler) c;
-        handler.clearConditionErrors();
-      }
-      if (Validatable.class.isInstance(c)) {
-        Validatable current = (Validatable) c;
-        current.setValidationState(Validatable.VALID);
-      }
-    }
-    hasConditionErrors = false;
-  }
 
-  public boolean hasConditionErrors() {
-    if(!hasConditionErrors){
-      for (int i = 0; i < getComponentCount(); i++) {
-        Component c = getComponent(i);
-        if (ConditionErrorHandler.class.isInstance(c)) {
-          ConditionErrorHandler handler = (ConditionErrorHandler) c;
-          //System.err.println("Checking: " + c.getClass() + ", errors: " + handler.hasConditionErrors());
-          if (handler.hasConditionErrors()) {
-            System.err.println("----> BasePanel " + getPanelTitle() + " found ConditionErrors in a SubPanel");
-            return true;
-          }
-        }
-        if (Validatable.class.isInstance(c)) {
-          Validatable current = (Validatable) c;
-          if (current.getValidationState() == Validatable.INVALID) {
-            System.err.println("---> Found an invalid component " + current + " in " + getPanelTitle());
-            return true;
-          }
-        }
-      }
-    }
-    return hasConditionErrors;
-  }
 
   public boolean hasExceptions() {
     if (hasExceptions) {
@@ -712,12 +479,7 @@ public boolean hasFocus() {
     return false;
   }
 
-  public void checkUpdate() {
-    if (hasChanged()) {
-      System.err.println("Switching to updated!");
-      setStateUpdated();
-    }
-  }
+ 
 
   public String getPanelTitle() {
     return panelTitle;
@@ -740,17 +502,6 @@ public boolean hasFocus() {
     setEnabled(state);
   }
 
-  public void setPanelGhosted(boolean state) {
-    Component[] components = getComponents();
-    for (int i = 0; i < components.length; i++) {
-      if (Ghostable.class.isInstance(components[i])) {
-         ( (Ghostable) components[i]).setGhosted(state);
-      }
-      if (BasePanel.class.isInstance(components[i])) {
-         ( (BasePanel) components[i]).setPanelGhosted(state);
-      }
-    }
-  }
 
   public BasePanel() {
     try {
@@ -785,78 +536,12 @@ public boolean hasFocus() {
   }
 
   void this_mouseClicked(MouseEvent e) {
-//    System.err.println("Klik in BasePanel");
-//    final BaseWindow myWindow = (BaseWindow) getRootPane().getParent();
-//    if (myWindow != null) {
-//      try {
-//        myWindow.setSelected(true);
-//      }
-//      catch (PropertyVetoException ex) {
-//      }
-//    }
     setFocus();
   }
 
-  public void handleException(Exception e) {
-    System.err.println("--> An exception is passed to BasePanel it was: " + e.toString());
-    removeBusyPanel();
-  }
   public StandardWindow getHostingWindow() {
     return this.myWindow;
   }
 
-public void receive(Navajo n, String method, String id) {
-	// TODO Auto-generated method stub
-	throw new UnsupportedOperationException("Basepanel does not implement receive()");
-}
-
-public void swingSafeReceive(final Navajo n, final String method, final String id) {
-	// TODO Auto-generated method stub
-	if ( SwingUtilities.isEventDispatchThread() ) {
-		receive(n, method, id);
-	} else {
-		try {
-			SwingUtilities.invokeAndWait(new Runnable(){
-
-				public void run() {
-					receive(n, method, id);
-				}
-			}
-			);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-}
-
-//  /**
-//   * Adds the specified component to this container at the specified index.
-//   *
-//   * @param comp the component to be added
-//   * @param constraints an object expressing layout constraints for this component
-//   * @param index the position in the container's list at which to insert the component, where <code>-1</code> means append to the end
-//   * @todo Implement this java.awt.Container method
-//   */
-//  protected void addImpl(Component comp, Object constraints, int index) {
-//    super.addImpl(comp, constraints, index);
-//
-//    comp.addFocusListener(new FocusAdapter() {
-//      public void focusGained(FocusEvent fe) {
-//        final BaseWindow myWindow = (BaseWindow) getRootPane().getParent();
-//        if (myWindow != null) {
-//          try {
-//            myWindow.setSelected(true);
-//          }
-//          catch (PropertyVetoException ex) {
-//          }
-//        }
-//      }
-//    });
-//
-//  }
 
 }

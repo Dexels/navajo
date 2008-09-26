@@ -1,7 +1,6 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
 import com.dexels.navajo.document.*;
-import java.util.*;
 
 /**
  * <p>Title: Seperate project for Navajo Swing client</p>
@@ -14,17 +13,6 @@ import java.util.*;
 
 public class PropertyHiddenField extends PropertyPasswordField {
 
-  public PropertyHiddenField() {
-    try {
-		if (System.getProperty("com.dexels.navajo.propertyMap") != null) {
-		  localResource = ResourceBundle.getBundle(System.getProperty("com.dexels.navajo.propertyMap"));
-		}
-	} catch (Exception e) {
-		// TODO Auto-generated catch block
-//		e.printStackTrace();
-	}
-
-  }
 
   @Override
 public void setProperty(Property p) {
@@ -40,15 +28,7 @@ public void setProperty(Property p) {
     setText("xxxxx");
     setEnabled(false);
     setEditable(false);
-//    setBackground(SystemColor.control);
 
-    try {
-      if (localResource != null) {
-        toolTipText = localResource.getString(p.getName());
-      }
-      setToolTipText(toolTipText);
-    }
-    catch (MissingResourceException e) {
       if ( (toolTipText = p.getDescription()) != null) {
         setToolTipText(toolTipText);
       }
@@ -58,7 +38,5 @@ public void setProperty(Property p) {
       }
 
     }
-    setChanged(false);
-  }
 
 }

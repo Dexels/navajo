@@ -1,23 +1,18 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
 
-import com.dexels.navajo.document.*;
-import java.awt.event.*;
-import java.util.*;
-import javax.swing.ActionMap;
-import javax.swing.InputMap;
-import javax.swing.JComponent;
-import javax.swing.KeyStroke;
 import java.awt.*;
-//import com.dexels.sportlink.client.swing.components.*;
+import java.awt.event.*;
 
-public class PropertyTextArea extends BaseTextArea implements PropertyControlled, Ghostable  {
+import javax.swing.*;
+
+import com.dexels.navajo.document.*;
+
+public class PropertyTextArea extends JTextArea implements PropertyControlled   {
   private String textValue;
   private Property initProperty = null;
-  ResourceBundle res;
   private String toolTipText = "";
-  private boolean ghosted = false;
-  private boolean enabled = true;
+ 
   private BoundedLengthDocument myDocument = new BoundedLengthDocument();
 
 
@@ -30,12 +25,6 @@ public class PropertyTextArea extends BaseTextArea implements PropertyControlled
   }
 
 private void updateText(Property p, String currentText) {
-   try{
-      if(res != null){
-        toolTipText = res.getString(p.getName());
-        setToolTipText(toolTipText);
-      }
-    }catch(MissingResourceException e){
       if((toolTipText = p.getDescription()) != null){
         setToolTipText(toolTipText);
       }else{
@@ -43,7 +32,6 @@ private void updateText(Property p, String currentText) {
         setToolTipText(toolTipText);
       }
 
-    }
     setEditable(p.isDirIn());
     if(!currentText.equals(textValue)) {
     	setText(textValue);
@@ -56,20 +44,30 @@ private void updateText(Property p, String currentText) {
 
   public PropertyTextArea() {
     setDocument(myDocument);
-    try {
-      if(System.getProperty("com.dexels.navajo.propertyMap") != null){
-        res = ResourceBundle.getBundle(System.getProperty("com.dexels.navajo.propertyMap"));
-      }
-      jbInit();
-    }
-    catch(Exception e) {
- //     e.printStackTrace();
-    }
-  }
+          this.addFocusListener(new java.awt.event.FocusAdapter() {
+          @Override
+    	public void focusGained(FocusEvent e) {
+          }
+          @Override
+    	public void focusLost(FocusEvent e) {
+        	    textValue = getText();
+        	    System.err.println("MEMO FIELD: "+textValue);
+        	    if(textValue != null){
+        	      initProperty.setValue(textValue);
+        	    }
+         }
+        });
+        
+        InputMap im = getInputMap(JComponent.WHEN_FOCUSED);
+        ActionMap am = getActionMap();
 
-  public void gainFocus(){
-    // affe
-  }
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.SHIFT_DOWN_MASK), "ShiftEnterReleased");  
+        am.put("ShiftEnterReleased", new KeyEventHandler(this, "ShiftEnterReleased"));
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, InputEvent.SHIFT_DOWN_MASK), "ShiftTabReleased");  
+        am.put("ShiftTabReleased", new KeyEventHandler(this, "ShiftTabReleased"));
+        }
+  
+
 
   public void update(){
     if (initProperty==null) {
@@ -85,70 +83,6 @@ private void updateText(Property p, String currentText) {
 public Dimension getMinimumSize() {
       return getPreferredSize();
   }
-  
-  private final void jbInit() throws Exception {
-//    setBorder(new EtchedBorder(EtchedBorder.LOWERED));
-    this.addFocusListener(new java.awt.event.FocusAdapter() {
-      @Override
-	public void focusGained(FocusEvent e) {
-        this_focusGained(e);
-      }
-      @Override
-	public void focusLost(FocusEvent e) {
-        this_focusLost(e);
-      }
-    });
-    
-    InputMap im = getInputMap(JComponent.WHEN_FOCUSED);
-    ActionMap am = getActionMap();
 
-    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.SHIFT_DOWN_MASK), "ShiftEnterReleased");  
-    am.put("ShiftEnterReleased", new KeyEventHandler(this, "ShiftEnterReleased"));
-    im.put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, InputEvent.SHIFT_DOWN_MASK), "ShiftTabReleased");  
-    am.put("ShiftTabReleased", new KeyEventHandler(this, "ShiftTabReleased"));
-
-//    myDocument.addDocumentListener(new DocumentListener(){
-//
-//		public void changedUpdate(DocumentEvent arg0) {
-//			this_focusLost(null);
-//		}
-//
-//		public void insertUpdate(DocumentEvent arg0) {
-//			this_focusLost(null);
-//		}
-//
-//		public void removeUpdate(DocumentEvent arg0) {
-//			myDocument.
-//			this_focusLost(null);
-//		}});
-  }
-  
-
-  void this_focusGained(FocusEvent e) {
-//    SwingClient.getUserInterface().setStatusText(toolTipText);
-  }
-
-  void this_focusLost(FocusEvent e) {
-    textValue = getText();
-    System.err.println("MEMO FIELD: "+textValue);
-    if(textValue != null){
-      initProperty.setValue(textValue);
-    }
-  }
-
-  public boolean isGhosted() {
-    return ghosted;
-  }
-
-  public void setGhosted(boolean g) {
-    ghosted = g;
-    super.setEnabled(enabled && (!ghosted));
-  }
-
-  @Override
-public void setEnabled(boolean e) {
-    enabled = e;
-    super.setEnabled(enabled && (!ghosted));
-  }
 
 }

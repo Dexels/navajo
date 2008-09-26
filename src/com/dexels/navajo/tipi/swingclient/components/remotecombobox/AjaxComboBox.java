@@ -16,7 +16,7 @@ public class AjaxComboBox extends JComboBox {
 	private String propertyName;
 	private String valuePropertyName;
 	private int minCharCount = 1;
-	private final Vector propertyList = new Vector();
+	private final Vector<String> propertyList = new Vector<String>();
 
 	private Message selectedMessage;
 
@@ -188,9 +188,9 @@ public class AjaxComboBox extends JComboBox {
 
 		if (n != null) {
 			m = n.getMessage(messagePath);
-			ArrayList ll = m.getAllMessages();
+			ArrayList<Message> ll = m.getAllMessages();
 			for (int i = 0; i < ll.size(); i++) {
-				Message current = (Message) ll.get(i);
+				Message current = ll.get(i);
 				Property pp = current.getProperty(propertyName);
 				if (select.equals(pp.getValue())) {
 					found = i;
@@ -305,12 +305,6 @@ public class AjaxComboBox extends JComboBox {
 				return null;
 			}
 			Message message = loadMessage.getMessage(sel);
-//			try {
-//				message.write(System.err);
-//			} catch (NavajoException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
 			return message;
 		}
 		System.err.println("huh");
@@ -423,7 +417,6 @@ public class AjaxComboBox extends JComboBox {
 					nn = NavajoClientFactory.getClient().doSimpleSend(init, "club/ProcessSearchClubs");
 					return nn;
 				} catch (ClientException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				return null;
@@ -433,7 +426,6 @@ public class AjaxComboBox extends JComboBox {
 		localCombo.addItemListener(new ItemListener(){
 
 			public void itemStateChanged(ItemEvent arg0) {
-				System.err.println("BAAA "+localCombo.getSelectedItem()+" index: "+localCombo.getSelectedIndex());
 				myValue.setText(""+localCombo.getSelectedValue());
 			}});
 

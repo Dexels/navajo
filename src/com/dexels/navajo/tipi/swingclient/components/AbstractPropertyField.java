@@ -31,10 +31,10 @@ public abstract class AbstractPropertyField extends JTextField implements FocusL
 		return isEditing;
 	}
 	
-	@Override
-	public boolean isOpaque() {
-		return true;
-	}
+//	@Override
+//	public boolean isOpaque() {
+//		return true;
+//	}
 	public void setEditing(boolean b) {
 		isEditing = b;
 	}

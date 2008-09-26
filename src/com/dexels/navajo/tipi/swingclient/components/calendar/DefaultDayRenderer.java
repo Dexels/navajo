@@ -2,8 +2,9 @@ package com.dexels.navajo.tipi.swingclient.components.calendar;
 
 import java.awt.*;
 import java.awt.image.*;
-import javax.swing.*;
 import java.util.*;
+
+import javax.swing.*;
 
 /**
  * <p>Title: </p>
@@ -17,7 +18,7 @@ import java.util.*;
 public class DefaultDayRenderer
     extends JPanel
     implements DayRendererInterface {
-  private Day myDay;
+//  private Day myDay;
   private boolean isSelected = false;
   private boolean isAnchor = false;
   private String myLabel;
@@ -34,7 +35,7 @@ public class DefaultDayRenderer
   }
 
   public void setDay(Day d) {
-    myDay = d;
+//    myDay = d;
     myLabel = d.getDateString();
     myFromTime = (String) d.getAttribute("from");
     myToTime = (String) d.getAttribute("CATCHUPDAY");

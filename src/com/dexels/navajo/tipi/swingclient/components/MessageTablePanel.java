@@ -1,25 +1,20 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
-import com.dexels.navajo.document.*;
-
-import java.util.*;
-import javax.swing.*;
-
 import java.awt.*;
 import java.awt.Point;
-import javax.swing.event.*;
-
 import java.awt.event.*;
+import java.awt.print.*;
+import java.io.*;
+import java.util.*;
+import java.util.List;
 
+import javax.swing.*;
+import javax.swing.event.*;
+import javax.swing.table.*;
+
+import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.lazy.*;
 import com.dexels.navajo.document.types.*;
-
-import java.io.*;
-
-import javax.swing.table.*;
-import java.awt.print.Printable;
-import java.awt.print.PageFormat;
-import java.awt.print.PrinterException;
 import com.dexels.navajo.tipi.swingclient.*;
 
 //import com.dexels.navajo.tipi.tipixml.*;
@@ -35,7 +30,7 @@ import com.dexels.navajo.tipi.swingclient.*;
 
 public class MessageTablePanel
     extends BasePanel
-    implements MessageListener, Ghostable, CopyCompatible, Printable {
+    implements MessageListener, CopyCompatible, Printable {
 
   final JScrollPane jScrollPane1 = new JScrollPane(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED) {
 
@@ -50,11 +45,10 @@ public class MessageTablePanel
   private boolean showColumnEditDialog = false;
   final FilterPanel filterPanel = new FilterPanel();
   private Map<String,ColumnAttribute> columnAttributes;
-  private ArrayList headerMenuListeners = new ArrayList();
+  private List<HeaderMenuListener> headerMenuListeners = new ArrayList<HeaderMenuListener>();
   private boolean copyMenuVisible = false;
 
   private MessageTableFooter tableFooter = null;
-  private boolean refreshAfterEdit = false;
 
   public MessageTablePanel() {
     this(null);
@@ -68,19 +62,11 @@ public class MessageTablePanel
     else {
       messageTable = t;
     }
-    jScrollPane1.setViewport(new JViewport() {
-//      protected void printComponent(Graphics g) {
-//        Color cc = g.getColor();
-//        g.setColor(Color.white);
-//        g.fillRect(0, 0, getWidth(), getHeight());
-//        g.setColor(cc);
-//        Color c = getBackground();
-//        setBackground(Color.white);
-//        super.printComponent(g);
-//        setBackground(c);
-//      }
-
-    });
+    jScrollPane1.add(messageTable);
+    // TODO Remove suspicious construction
+//    jScrollPane1.setViewport(new JViewport() {
+//
+//    });
     try {
       jbInit();
     }
@@ -132,12 +118,7 @@ public class MessageTablePanel
     showColumnEditDialog = b;
   }
 
-  @Override
-public void resetChanged() {
-    messageTable.resetChanged();
-  }
-
-  @Override
+  
 public boolean hasChanged() {
     return messageTable.hasChanged();
   }
@@ -172,7 +153,7 @@ public boolean hasChanged() {
 
   public void fireHeaderMenuEvent() {
     for (int i = 0; i < headerMenuListeners.size(); i++) {
-      HeaderMenuListener h = (HeaderMenuListener) headerMenuListeners.get(i);
+      HeaderMenuListener h = headerMenuListeners.get(i);
       h.fireHeaderMenuEvent();
     }
   }
@@ -364,7 +345,7 @@ public boolean hasChanged() {
           //!!!comp.requestFocusInWindow(); SETTING FOCUS RESULTS IN UNDESIRED BEHAVIOUR!
           
           comp.addPropertyEventListener(new PropertyEventListener(){
-        		public void propertyEventFired(Property p, String id, Validatable v,boolean internal){
+        		public void propertyEventFired(Property p, String id, boolean internal){
         			if("onActionPerformed".equals(id)){
         				pop.setVisible(false);
         			}
@@ -384,10 +365,9 @@ public boolean hasChanged() {
   
   private final void setColumnValue(String column, String value){
   	try {
-      final int rowCount = getRowCount();
-      ArrayList selected = getSelectedMessages();
+      List<Message> selected = getSelectedMessages();
       for (int i = 0; i < selected.size(); i++) {
-        Message row = (Message)selected.get(i);
+        Message row = selected.get(i);
         Property p = row.getProperty(column);
         if (p.isDirIn()) {
           p.setValue(value);
@@ -404,71 +384,21 @@ public boolean hasChanged() {
     }
   }
 
-  private final void setSelectedColumnValue(int column, String name) {
-    try {
-      final int rowCount = getRowCount();
-      for (int i = 0; i < rowCount; i++) {
-        Object o = messageTable.getValueAt(i, column);
-        Property p = (Property) o;
-        if (p.isDirIn()) {
-          p.clearSelections();
-          p.getSelection(name).setSelected(true);
-          Message row = getMessageRow(i);
-          if (row.getProperty("Update") != null) {
-            System.err.println("Setting row " + i + " to updated");
-            row.getProperty("Update").setValue(true);
-          }
-        }
-      }
-//      clearPropertyFilters();
-      fireDataChanged();
-      fireHeaderMenuEvent();
-    }
-    catch (Exception ex) {
-      ex.printStackTrace();
-    }
-  }
+
 
   public final void setAutoStoreColumnSizes(String path, boolean value) {
     messageTable.setAutoStoreColumnSizes(path, value);
   }
 
-  private final void resetSelections(int column) {
-    try {
-      ArrayList selected = getSelectedMessages();
-      if (selected != null && selected.size() > 0) {
-        for (int i = 0; i < selected.size(); i++) {
-          Object o = messageTable.getValueAt(i, column);
-          Property q = (Property) o;
-          Message m = (Message) selected.get(i);
-          Property p = m.getProperty(q.getName());
-          p.setSelected("-1");
-        }
-      }
-      else {
-        final int rowCount = getRowCount();
-        for (int i = 0; i < rowCount; i++) {
-          Object o = messageTable.getValueAt(i, column);
-          Property p = (Property) o;
-          p.setSelected("-1");
-        }
-      }
-      fireDataChanged();
-      fireHeaderMenuEvent();
-      doSort(getSortedColumn(), getSortingDirection());
-    }
-    catch (Exception ex) {
-      ex.printStackTrace();
-    }
-  }
+
 
   private final void invertSelection(int column) {
-	  ArrayList selected = getSelectedMessages();
+	  List<Message> selected = getSelectedMessages();
 	  if (selected != null && selected.size() > 0) {
 		  for (int i = 0; i < selected.size(); i++) {
 			  Object o = messageTable.getValueAt(i, column);
 			  Property q = (Property) o;
-			  Message m = (Message) selected.get(i);
+			  Message m = selected.get(i);
 			  Property p = m.getProperty(q.getName());
 			  boolean value = ( (Boolean) p.getTypedValue()).booleanValue();
 			  p.setValue(!value);
@@ -663,7 +593,7 @@ public boolean hasChanged() {
 public void updateTableSize() {
 	if (!useScroll) {
       Dimension pref = messageTable.getPreferredSize();
-      pref.height = messageTable.getRowHeight() * (getRowCount() + 1) + 10 + messageTable.getTableHeader().getHeight() + messageTable.getHeaderHeight();
+      pref.height = messageTable.getRowHeight() * (getRowCount() + 1) + 16 + messageTable.getTableHeader().getHeight() + messageTable.getHeaderHeight();
       if (tableFooter != null) {
         pref.height += tableFooter.getHeight();
       }
@@ -715,13 +645,6 @@ public void updateTableSize() {
     }
   }
 
-  public final void addTablePrinter(TablePrintInterface pi) {
-    filterPanel.addTablePrinter(pi);
-  }
-
-  public final void removeTablePrinter(TablePrintInterface pi) {
-    filterPanel.removeTablePrinter(pi);
-  }
 
   public final void addSubMessage(Message msg) {
     if (getMessage() == null) {
@@ -819,9 +742,6 @@ public void updateTableSize() {
     return messageTable.getMessageAsPresentedOnTheScreen(includeInvisibleColumns);
   }
 
-  public void setCachedSelectionColumn(String name, String new_name, String column_name) {
-    messageTable.setCachedSelectionColumn(name, new_name, column_name);
-  }
 
   public final void addListSelectionListener(ListSelectionListener l) {
     messageTable.addListSelectionListener(l);
@@ -875,14 +795,6 @@ public void updateTableSize() {
     messageTable.doSort(columnIndex, ascending);
   }
 
-  public final boolean isGhosted() {
-    return ghosted;
-  }
-
-  public final void setGhosted(boolean g) {
-    ghosted = g;
-    super.setEnabled(enabled && (!ghosted));
-  }
 
   @Override
 public final void setEnabled(boolean e) {

@@ -1,6 +1,7 @@
 package com.dexels.navajo.tipi.swingclient.components.calendar;
 
 import java.awt.*;
+
 import javax.swing.*;
 import javax.swing.table.*;
 
@@ -26,13 +27,7 @@ public class CalendarTableCellRenderer
     week.setOpaque(true);
   }
 
-  public void setDayRenderer(DayRendererInterface ren) {
-    dd = ren;
-  }
 
-  public DayRendererInterface getDayRenderer(){
-    return dd;
-  }
 
   public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 

@@ -1,16 +1,16 @@
 package com.dexels.navajo.tipi.swingclient.components;
-import com.dexels.navajo.document.*;
 import java.awt.event.*;
-import java.util.ResourceBundle;
+import java.util.*;
 
-import java.util.MissingResourceException;
+import javax.swing.*;
+
+import com.dexels.navajo.document.*;
 
 //import com.dexels.sportlink.client.swing.components.*;
 
-public final class PropertyCheckBox extends BaseCheckBox implements ChangeMonitoring, PropertyControlled, Ghostable {
+public final class PropertyCheckBox extends JCheckBox implements  PropertyControlled {
   private Property myProperty = null;
-  private boolean ghosted = false;
-  private boolean enabled = true;
+ 
   private ResourceBundle res;
 
   public PropertyCheckBox() {
@@ -24,26 +24,15 @@ public final class PropertyCheckBox extends BaseCheckBox implements ChangeMonito
         }
       }
       jbInit();
+      this.setHorizontalTextPosition(SwingConstants.LEADING);
+      
     }
     catch(Exception e) {
 //      e.printStackTrace();
     }
   }
 
-  public void gainFocus(){
-    // gar nichts
-  }
 
-//  protected void printComponent(Graphics g) {
-//    Color cc = g.getColor();
-//    g.setColor(Color.white);
-//    g.fillRect(0,0,getWidth(),getHeight());
-//    g.setColor(cc);
-//    Color c = getBackground();
-//    setBackground(Color.white);
-//    super.printComponent(g);
-//    setBackground(c);
-//  }
 
   public final Property getProperty() {
     return myProperty;
@@ -51,18 +40,13 @@ public final class PropertyCheckBox extends BaseCheckBox implements ChangeMonito
 
   public final void update(){
     if (myProperty!=null) {
-      myProperty.setValue(isSelected()?"true":"false");
+      myProperty.setAnyValue(isSelected());
     }
-    setChanged(true);
   }
 
-  @Override
-public boolean isOpaque() {
-	  return false;
-  }
+
   public final void setProperty(Property p) {
     myProperty = p;
-//    this_actionPerformed(null);
     if (p==null) {
       return;
     }
@@ -107,29 +91,9 @@ public boolean isOpaque() {
 
   final void this_actionPerformed(ActionEvent e) {
     if (myProperty!=null) {
-    	System.err.println("SETTING PROP: "+myProperty.getTypedValue());
       myProperty.setValue(isSelected());
-  	System.err.println("AFTER SETTING PROP: "+myProperty.getTypedValue());
-//       setSelected(((String)myProperty.getValue()).equals("true"));
     }
-    setChanged(true);
-//    fireStateChanged();
   }
 
-  public final boolean isGhosted() {
-    return ghosted;
-  }
 
-  public final void setGhosted(boolean g) {
-//    System.err.println("--> Setting cb to ghosted!!");
-    ghosted = g;
-    super.setEnabled(enabled && (!ghosted));
-  }
-
-  @Override
-public final void setEnabled(boolean e) {
-    enabled = e;
-//    System.err.println("--> Setting enabled: " + e);
-    super.setEnabled(enabled && (!ghosted));
-  }
 }

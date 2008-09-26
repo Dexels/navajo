@@ -1,16 +1,13 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
 import java.awt.*;
+import java.awt.event.*;
+import java.lang.reflect.*;
+
 import javax.swing.*;
 
-import java.awt.event.*;
-//import com.dexels.sportlink.client.swing.*;
-//import com.dexels.sportlink.client.swing.components.*;
-import java.lang.reflect.InvocationTargetException;
-import java.util.*;
-
-import com.dexels.navajo.client.ResponseListener;
-import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.client.*;
+import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.swingclient.*;
 //import com.dexels.sportlink.client.swing.dialogs.*;
 /**
@@ -22,15 +19,52 @@ import com.dexels.navajo.tipi.swingclient.*;
  * @version 1.0
  */
 
-public class StandardDialog extends BaseDialog implements DialogConstants, ResponseListener {
+public class StandardDialog extends JDialog implements DialogConstants, ResponseListener {
 
   private boolean doWindowClose = true;
 
-  ResourceBundle res;
   private boolean isCommitted = false;
   BorderLayout borderLayout1 = new BorderLayout();
   public IconButtonPanel iconButtonPanel = new IconButtonPanel();
   JToolBar dialogToolbar = new JToolBar();
+	protected BasePanel mainPanel = new BasePanel();
+	
+	// BaseGlassPane myGlassPane = new BaseGlassPane();
+
+	
+
+
+	public JPanel getMainPanel() {
+		return mainPanel;
+	}
+
+	public void closeWindow() {
+		setVisible(false);
+		// Dispose() is neccessary for V2 client!
+		dispose();
+	}
+
+	public void init(Message msg) {
+	}
+
+	public void load(Message msg) {
+	}
+
+	public void store(Message msg) {
+	}
+
+	public void insert(Message msg) {
+	}
+
+
+
+	void this_windowClosed(WindowEvent e) {
+	}
+
+	public void showDialog() {
+		  setCommitted(false);
+		  	SwingClient.getUserInterface().addDialog(this);
+	}
 
   public StandardDialog() {
     init();
@@ -38,34 +72,61 @@ public class StandardDialog extends BaseDialog implements DialogConstants, Respo
 
   public StandardDialog(JFrame f) {
     super(f);
+    baseinit();
     init();
   }
 
   public StandardDialog(JDialog f) {
 	    super(f);
+	    baseinit();
 	    init();
 	  }
 
 private void init() {
 	dialogToolbar.setFloatable(false);
     try {
-      res = SwingClient.getUserInterface().getResource("com.dexels.sportlink.client.swing.dialogs.StandardDialog");
       jbInit();
     }
     catch(Exception e) {
       e.printStackTrace();
     }
 }
+private void baseinit() {
+	getContentPane().add(mainPanel);
+	getContentPane().add(dialogToolbar,BorderLayout.SOUTH);
+	getContentPane().addKeyListener(new KeyListener() {
+		public void keyPressed(KeyEvent e) {
+			System.err.println("Pressed dialog");
+		}
+
+		public void keyReleased(KeyEvent e) {
+			System.err.println("Released dialog");
+		}
+
+		public void keyTyped(KeyEvent e) {
+			System.err.println("Typed dialog");
+		}
+	});
+	mainPanel.setLayout(borderLayout1);
+	this.setResizable(true);
+	System.err.println("IN BaseDialog jbInit()..............");
+	this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+	this.addWindowListener(new java.awt.event.WindowAdapter() {
+		@Override
+		public void windowClosed(WindowEvent e) {
+			this_windowClosed(e);
+		}
+	});
+}
 
 
   public void commit(){
     if(BasePanel.class.isInstance(mainPanel)){
-      BasePanel myBase = (BasePanel) mainPanel;
+      BasePanel myBase = mainPanel;
       // Reset condition errors.
 
-      myBase.checkUpdate();
       myBase.commit();
-      if (myBase.hasConditionErrors() || myBase.hasExceptions()) {
+      if (myBase.hasExceptions()) {
         setDoWindowClose(false);
         setCommitted(false);
       }
@@ -245,12 +306,6 @@ public void setVisible(boolean parm1) {
     iconButtonPanel.requestFocus();
   }
 
-  @Override
-public void showDialog() {
-    setCommitted(false);
-    super.showDialog();
-  }
-  
   public void handleException(Exception e) {
 		throw new UnsupportedOperationException("MenuAction does not implement handleException()");
 	}
@@ -264,7 +319,6 @@ public void showDialog() {
 	}
 
 	public void swingSafeReceive(final Navajo n, final String method, final String id) {
-//		 TODO Auto-generated method stub
 		if ( SwingUtilities.isEventDispatchThread() ) {
 			receive(n, method, id);
 		} else {
@@ -277,10 +331,8 @@ public void showDialog() {
 				}
 				);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (InvocationTargetException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

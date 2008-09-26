@@ -1,7 +1,5 @@
 package com.dexels.navajo.tipi.swingclient.components.calendar;
 
-import java.util.*;
-
 import java.awt.*;
 
 /**
@@ -69,17 +67,6 @@ public class CalendarConstants {
     else {
       return DEFAULT[colorId];
     }
-  }
-
-  public static Vector getColorSchemas() {
-    Vector v = new Vector();
-    v.addElement(COLORSCHEME_DEFAULT);
-    // Add additional schemas below
-    v.addElement(COLORSCHEME_CONTRAST);
-    v.addElement(COLORSCHEME_UNDERWORLD);
-    v.addElement(COLORSCHEME_RETRO);
-    v.addElement(COLORSCHEME_SPORTLINK);
-    return v;
   }
 
   public int getColumnWidth() {

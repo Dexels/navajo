@@ -1,8 +1,10 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
-import javax.swing.text.*;
-import com.dexels.navajo.document.*;
 import java.awt.event.*;
+
+import javax.swing.text.*;
+
+import com.dexels.navajo.document.*;
 
 /**
  * <p>Title: Seperate project for Navajo Swing client</p>
@@ -44,15 +46,12 @@ public void focusLost(FocusEvent e) {
       }
 
       if (initProperty!=null) {
-        //System.err.println("initProperty is niet nulll hoor..: " + getText() + " = " + initProperty.getValue());
         if(!getText().equals(initProperty.getValue())){
           initProperty.setValue(getText());
           String s = initProperty.getValue();
           if (!s.equals(getText())) {
             setText(s);
           }
-//          System.err.println("Setting changed for textprop");
-          setChanged(true);
         }
       }
     }catch(Exception ex){
@@ -128,33 +127,17 @@ public void setProperty(Property p) {
 //    update();
   }
 
-  @Override
-public final void updateProperty() {
-    if (initProperty==null) {
-      return;
-    }
-    String value = initProperty.getValue();
-    try {
-      myDocument.remove(0,myDocument.getLength());
-      myDocument.insertString(0, value, null);
-    }
-    catch (BadLocationException ex) {
-      ex.printStackTrace();
-    }
-  }
 
   @Override
+  // TODO Check for length
 public void setText(String s) {
-//	  String old = getText();
 	  try {
       myDocument.remove(0, myDocument.getLength());
       myDocument.insertString(0, s, null);
     }
     catch (BadLocationException ex) {
       System.err.println("Error setting text: "+s+" in propertyfield");
-      //Toolkit.getDefaultToolkit().beep();
     }
- //   firePropertyChange("text", old,s);
     super.setText(s);
   }
 

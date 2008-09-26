@@ -1,17 +1,17 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
-import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.beans.*;
-
-import javax.swing.*;
-import javax.swing.event.*;
-import com.dexels.navajo.document.*;
-
 import java.lang.reflect.*;
 import java.util.*;
+
+import javax.swing.*;
 import javax.swing.border.*;
+import javax.swing.event.*;
+import javax.swing.table.*;
+
+import com.dexels.navajo.document.*;
 
 
 public  class PropertyCellEditor 
@@ -19,14 +19,14 @@ public  class PropertyCellEditor
 
   private Property myProperty = null;
 
-  private final ArrayList myListeners = new ArrayList();
+  private final ArrayList<CellEditorListener> myListeners = new ArrayList<CellEditorListener>();
 
   private JComponent lastComponent = null;
   private MessageTable myTable;
-
-  private int lastRow = -1;
-  private int lastColumn = -1;
-  private boolean wasSelected = false;
+//
+//  private int lastRow = -1;
+//  private int lastColumn = -1;
+//  private boolean wasSelected = false;
 //  private Property copy;
   private JButton rowButton = new JButton();
   private boolean isChangingSelection = false;
@@ -96,9 +96,9 @@ private Component doGetEditor(Object value, boolean isSelected, int row, int col
     Border b = new LineBorder(Color.black, 2);
 //    System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>> Editor: " + isSelected + ", " + row + ", " + column);
 //    myTable = (MessageTable) table;
-    lastRow = row;
-    lastColumn = column;
-    wasSelected = isSelected;
+//    lastRow = row;
+//    lastColumn = column;
+//    wasSelected = isSelected;
 //    myTable.setEditingColumn(column);
 //    myTable.setEditingRow(row);
     if (Property.class.isInstance(value)) {
@@ -214,7 +214,6 @@ private Component doGetEditor(Object value, boolean isSelected, int row, int col
               try {
 				myTable.fireChangeEvents(getProperty(), !myPropertyCheckBox.isSelected(), myPropertyCheckBox.isSelected());
 			} catch (NavajoException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 
@@ -517,22 +516,14 @@ private Component doGetEditor(Object value, boolean isSelected, int row, int col
     else {
       cc.setBorder(null);
     }
-//    if (isSelected) {
- //   c.setBackground(new Color(200, 200, 235));
-//    } else {
-//      if (row%2==0) {
-//        c.setBackground(Color.white);
-//      } else {
-//        c.setBackground(new Color(240,240,240));
-//      }
-//    }
+
   }
 
 //  private fireUpdate(
 
   public  void cancelCellEditing() {
     for (int i = 0; i < myListeners.size(); i++) {
-      CellEditorListener ce = (CellEditorListener) myListeners.get(i);
+      CellEditorListener ce = myListeners.get(i);
       ce.editingCanceled(new ChangeEvent(myTable));
     }
   }
@@ -585,7 +576,6 @@ private Component doGetEditor(Object value, boolean isSelected, int row, int col
 			} catch (PropertyTypeException ex1) {
 				System.err.println(ex1.getMessage());
 			} catch (NavajoException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		} else {

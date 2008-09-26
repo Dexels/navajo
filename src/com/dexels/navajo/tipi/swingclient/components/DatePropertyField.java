@@ -1,14 +1,14 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
-import com.dexels.navajo.document.*;
-import java.awt.event.*;
-import java.util.*;
-import java.text.*;
 import java.awt.*;
+import java.awt.event.*;
 import java.beans.*;
+import java.text.*;
+import java.util.*;
 
 import javax.swing.*;
 
+import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.swingclient.*;
 import com.dexels.navajo.tipi.swingclient.components.calendar.*;
 
@@ -29,7 +29,7 @@ public final class DatePropertyField
   ResourceBundle myResource;
   private String tooltip = null;
 
-  private static SimpleDateFormat displayDateFormat = new SimpleDateFormat("dd-MMM-yyyy", SwingClient.getUserInterface().getLocale());
+  private static SimpleDateFormat displayDateFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault());
   private static SimpleDateFormat inputFormat1 = new SimpleDateFormat("dd-MM-yy");
   private static SimpleDateFormat inputFormat2 = new SimpleDateFormat("dd/MM/yy");
   private static SimpleDateFormat inputFormat3 = new SimpleDateFormat("ddMMyy");
@@ -41,7 +41,8 @@ public final class DatePropertyField
   private int row, column;
 
   public DatePropertyField() {
-    try {
+	  setColumns(10);
+	  try {
       if (System.getProperty("com.dexels.navajo.propertyMap") != null) {
         myResource = ResourceBundle.getBundle(System.getProperty("com.dexels.navajo.propertyMap"));
       }
@@ -72,26 +73,16 @@ public final class DatePropertyField
 
   @Override
 public final void setProperty(Property p) {
-//	if(initProperty!=null) {
-//		initProperty.removePropertyChangeListener(this);
-//	}
     if (p == null) {
       return;
     }
     if (!p.getType().equals(Property.DATE_PROPERTY)) {
       System.err.println("Warning: Setting date field to non date property of type: " + p.getType());
     }
-//    setValidationState(BaseField.VALID);
     initProperty = p;
-//    if (getValidationState() == BaseField.VALID) {
-//      setDescription();
-//    }
+
     setEditable(p.isDirIn());
-//    if (p.isDirOut()) {
-//      setForeground(Color.darkGray);
-//      setBackground(SystemColor.control);
-//    }
-    setChanged(false);
+
      try {
       setDate( (Date) p.getTypedValue());
     }
@@ -99,8 +90,8 @@ public final void setProperty(Property p) {
       e.printStackTrace();
     }
     setDescription();
-    setChanged(false);
      tooltip = getToolTipText();
+     super.setProperty(p);
   }
 
   public final void setReadOnly(boolean b) {
@@ -195,6 +186,11 @@ public final void setProperty(Property p) {
     myTable = t;
   }
 
+  /**
+   * Stores the row/column, if this is a table editor
+   * @param row
+   * @param column
+   */
   public final void setSelectedCell(int row, int column) {
     this.row = row;
     this.column = column;
@@ -259,9 +255,7 @@ public final void paintComponent(Graphics g) {
 
   private final void checkMouseClick(MouseEvent e) {
 	 if (showCalendarPickerButton && isEditable()) {
-		 System.err.println("aap");
 		 if (getHeight() > 15) {
-    	  System.err.println("noot");
         if (e.getX() > getWidth() - (getHeight() / 2) && e.getX() < getWidth() && e.getY() > 0 && e.getY() < (getHeight() / 2)) {
            JDialog jj =	SwingClient.getUserInterface().getTopDialog();
            JFrame ff =	SwingClient.getUserInterface().getMainFrame();
@@ -274,7 +268,7 @@ public final void paintComponent(Graphics g) {
            }
           cpd.getMainPanel().setPreferredSize(new Dimension(255,185));
           System.err.println("Entering: checkMouseClick: "+isEditable()+" -- "+showCalendarPickerButton+" >>> "+getHeight());
-          
+          System.err.println("ThreaD: "+Thread.currentThread().getName());
           Property pp = getProperty();
           if (pp != null && pp.getType().equals(Property.DATE_PROPERTY)) {
             cpd.setDate( (Date) pp.getTypedValue());
@@ -344,7 +338,6 @@ public final String toString() {
     try {
       if (initProperty != null) {
         if ( ( (initProperty.getValue() == null || initProperty.getValue().equals("")) && getDate() != null) || (! (initProperty.getValue() == null || initProperty.getValue().equals("")) && getDate() == null) || ( (initProperty.getTypedValue() != null && getDate() != null && !initProperty.getTypedValue().equals(getDate())))) {
-          setChanged(true);
           initProperty.setValue(getDate());
           if (getDate() != null) {
             setText(displayDateFormat.format(getDate()));

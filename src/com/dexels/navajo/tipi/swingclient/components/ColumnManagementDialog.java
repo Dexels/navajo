@@ -1,10 +1,12 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
-import javax.swing.*;
 import java.awt.*;
-import com.dexels.navajo.document.*;
-import java.util.*;
 import java.awt.event.*;
+import java.util.*;
+
+import javax.swing.*;
+
+import com.dexels.navajo.document.*;
 /**
  * <p>Title: Seperate project for Navajo Swing client</p>
  * <p>Description: </p>

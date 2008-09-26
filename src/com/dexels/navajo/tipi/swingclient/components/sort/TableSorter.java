@@ -18,25 +18,13 @@
 
 package com.dexels.navajo.tipi.swingclient.components.sort;
 
+import java.awt.*;
+import java.awt.event.*;
 import java.util.*;
 
-import javax.swing.table.TableModel;
-
-import javax.swing.event.TableModelEvent;
-
-import java.awt.*;
-
-// Imports for picking up mouse events from the JTable.
-
-import java.awt.event.MouseAdapter;
-
-import java.awt.event.MouseEvent;
-
-import javax.swing.JTable;
-
-import javax.swing.table.JTableHeader;
-
-import javax.swing.table.TableColumnModel;
+import javax.swing.*;
+import javax.swing.event.*;
+import javax.swing.table.*;
 
 import com.dexels.navajo.tipi.swingclient.components.*;
 

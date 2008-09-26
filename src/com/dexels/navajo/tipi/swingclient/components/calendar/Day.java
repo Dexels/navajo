@@ -17,12 +17,12 @@ import com.dexels.navajo.document.*;
 
 public class Day {
   private int myDate = -1;
-  private int myWeekOfYear = -1;
+//  private int myWeekOfYear = -1;
   private int myWeekOfMonth = -1;
-  private Map myAttributes = new HashMap();
+  private Map<String,Object> myAttributes = new HashMap<String,Object>();
   //private JComponent myInfo = new JLabel();
   private Date myRealDate;
-  private HashSet myMessages = new HashSet();
+  private Set<Message> myMessages = new HashSet<Message>();
 
   public Day() {
   }
@@ -52,9 +52,9 @@ public class Day {
     return myRealDate;
   }
 
-  public void setWeekOfYear(int week) {
-    myWeekOfYear = week;
-  }
+//  public void setWeekOfYear(int week) {
+//    myWeekOfYear = week;
+//  }
 
   public int getDayOfMonth(){
     Calendar c = Calendar.getInstance();
@@ -80,7 +80,7 @@ public class Day {
     return myWeekOfMonth;
   }
 
-  public void setAttributes(Map attr) {
+  public void setAttributes(Map<String,Object> attr) {
     myAttributes = attr;
   }
 
@@ -93,7 +93,7 @@ public class Day {
     myMessages.add(m);
   }
 
-  public HashSet getMessages() {
+  public Set<Message> getMessages() {
     return myMessages;
   }
 
@@ -110,7 +110,7 @@ public class Day {
     myMessages.clear();
   }
 
-  public Map getAttributes() {
+  public Map<String,Object> getAttributes() {
     return myAttributes;
   }
 

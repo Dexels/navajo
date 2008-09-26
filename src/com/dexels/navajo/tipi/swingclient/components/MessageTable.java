@@ -1,11 +1,13 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
+import java.awt.*;
+import java.awt.Point;
+import java.awt.event.*;
 import java.beans.*;
 import java.io.*;
 import java.text.*;
 import java.util.*;
-import java.awt.*;
-import java.awt.event.*;
+import java.util.List;
 
 import javax.swing.*;
 import javax.swing.event.*;
@@ -18,9 +20,6 @@ import com.dexels.navajo.document.types.*;
 import com.dexels.navajo.tipi.swingclient.*;
 import com.dexels.navajo.tipi.swingclient.components.sort.*;
 
-import java.util.List;
-import java.awt.Point;
-
 /**
  * <p>Title: </p>
  * <p>Description: </p>
@@ -31,7 +30,7 @@ import java.awt.Point;
  */
 public class MessageTable
     extends JTable
-    implements MessageListener, CellEditorListener, Ghostable, ChangeMonitoring, PropertyChangeListener, ListSelectionListener, CopyCompatible {
+    implements MessageListener, CellEditorListener,  PropertyChangeListener, ListSelectionListener, CopyCompatible {
   private final PropertyCellEditor myEditor = new PropertyCellEditor(this);
 
   private PropertyCellRenderer myRenderer = new PropertyCellRenderer();
@@ -51,15 +50,13 @@ public class MessageTable
   private boolean showHeader = true;
   private final ArrayList changelisteners = new ArrayList();
   private boolean enabled;
-  private boolean ghosted;
   private MessageTableFooter tableFooter = null;
   protected final Map columnSizeMap = new HashMap();
   private final HashMap cachedColumns = new HashMap();
   private final Map replacementMap = new HashMap();
   private final TableSorter mySorter;
   private boolean refreshAfterEdit = false;
-  private AdvancedMessageTablePanel topLevelParent;
-  private EditRowDialog bd = null;
+   private EditRowDialog bd = null;
 
   private final ArrayList columnDividers = new ArrayList();
 
@@ -71,7 +68,7 @@ private Component myCurrentEditingComponent;
 //    myModel.setMessageTable(this);
     mySorter = new TableSorter(myModel);
     setModel(mySorter);
-    
+    setOpaque(true);
     setColumnModel(new MessageTableColumnModel());
     setDefaultEditor(Property.class, myEditor);
     setDefaultRenderer(Property.class, myRenderer);
@@ -101,27 +98,13 @@ private Component myCurrentEditingComponent;
     });
     addFocusListener(new FocusListener() {
       public void focusLost(FocusEvent e) {
- //   	  System.err.println("TABLE: lOST FOCUS: Partner: "+e.getOppositeComponent());
   		 if(e.getOppositeComponent()==myCurrentEditingComponent) {
- // 			 System.err.println("INTERNAL!!!");
   			 return;
   		 }
-    	  //  		refreshSelectedCell();
         if (isEditing()) {
-//        	System.err.println("Stopping edit!");
           Property p = myEditor.getProperty();
           myEditor.updateProperty();
-//          try {
-//			System.err.println("Path: "+p.getFullPropertyName());
-//		} catch (NavajoException e1) {
-			// TODO Auto-generated catch block
-//			e1.printStackTrace();
-//		}
-//          if( !(e.getSource() instanceof MessageTable) &&  p!=null && !Property.SELECTION_PROPERTY.equals(p.getType())) {
-//        	  // DON'T DO THIS FOR SELECTION PROPERTIES.
-//        	  System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> STOP EDITING: " + e.getSource());
-//        	  myEditor.stopCellEditing();
-//          } 
+
         }
       }
 
@@ -141,9 +124,6 @@ private Component myCurrentEditingComponent;
     return myModel.isShowingRowHeaders();
   }
 
-  public void setTopLevelParent(AdvancedMessageTablePanel amtp) {
-    topLevelParent = amtp;
-  }
 
   public void determineMinumumColumnWidth(int column) {
     if (getMessage() != null) {
@@ -222,27 +202,11 @@ private Component myCurrentEditingComponent;
       }
     }
 
-    private boolean anythingChanged() {
-      Component[] comps = mp.getComponents();
-      for (int i = 0; i < comps.length; i++) {
-        if (GenericPropertyComponent.class.isInstance(comps[i])) {
-          GenericPropertyComponent gpc = (GenericPropertyComponent) comps[i];
-          if (gpc.hasChanged()) {
-            return true;
-          }
-        }
-      }
-      return false;
-    }
+
 
     private void nextRow() {
       try {
-        if (anythingChanged() && topLevelParent != null) {
-//          System.err.println("Something got changed!!");
-          topLevelParent.getSelectedMessage().getProperty("Update").setValue("true");
-          topLevelParent.getChangedMessages().add(topLevelParent.getSelectedMessage());
-        }
-        if (myTable.getSelectedRow() + 1 < myTable.getRowCount()) {
+         if (myTable.getSelectedRow() + 1 < myTable.getRowCount()) {
           row = myTable.getSelectedRow() + 1;
           myTable.setRowSelectionInterval(row, row);
           m = myTable.getSelectedMessage();
@@ -257,12 +221,7 @@ private Component myCurrentEditingComponent;
 
     private void previousRow() {
       try {
-        if (anythingChanged() && topLevelParent != null) {
-//          System.err.println("Something got changed!!");
-          topLevelParent.getSelectedMessage().getProperty("Update").setValue("true");
-          topLevelParent.getChangedMessages().add(topLevelParent.getSelectedMessage());
-        }
-        if (myTable.getSelectedRow() > 0) {
+         if (myTable.getSelectedRow() > 0) {
           row = myTable.getSelectedRow() - 1;
           myTable.setRowSelectionInterval(row, row);
           m = myTable.getSelectedMessage();
@@ -280,30 +239,11 @@ private Component myCurrentEditingComponent;
       if (myTable.getSelectedRow() > -1) {
         row = myTable.getSelectedRow();
       }
-      if (topLevelParent != null) {
-        if (m.getProperty("Update") != null) {
-          m.getProperty("Update").setValue("true");
-          topLevelParent.getChangedMessages().add(m);
-          topLevelParent.setStateUpdated();
-          topLevelParent.commit();
-          if (!topLevelParent.hasConditionErrors()) {
-            try {
-              backup = m.copy();
-            }
-            catch (Exception e) {
-              e.printStackTrace();
-            }
-          }
-        }
       }
-    }
 
     public void setMessage() {
       m = myMessage.getMessage(row);
-      if(topLevelParent!=null) {
-          topLevelParent.setRowSelectionInterval(row, row);
-      }
-      final MessageTableModel mtm = getMessageModel();
+         final MessageTableModel mtm = getMessageModel();
       mp.removeAll();
       for (int i = 0; i < mtm.getColumnCount(); i++) {
         String columnId = mtm.getColumnId(i);
@@ -320,7 +260,7 @@ private Component myCurrentEditingComponent;
 //        gpc.setHorizontalScrolls(false);
         gpc.setProperty(current);
         gpc.addPropertyEventListener(new PropertyEventListener() {
-          public void propertyEventFired(Property p, String type, Validatable v, boolean internal) {
+          public void propertyEventFired(Property p, String type, boolean internal) {
             mtm.fireTableRowsUpdated(getSelectedRow(), getSelectedRow());
           }
         });
@@ -436,7 +376,7 @@ private Component myCurrentEditingComponent;
 //          gpc.setHorizontalScrolls(false);
           gpc.setProperty(current);
           gpc.addPropertyEventListener(new PropertyEventListener() {
-            public void propertyEventFired(Property p, String type, Validatable v, boolean internal) {
+            public void propertyEventFired(Property p, String type, boolean internal) {
               mtm.fireTableRowsUpdated(getSelectedRow(), getSelectedRow());
             }
           });
@@ -794,14 +734,7 @@ private Component myCurrentEditingComponent;
     myModel.fireTableStructureChanged();
   }
 
-  public void setCachedSelectionColumn(String name, String new_name, String column_name) {
-    // Alleen nog met landen, dit moet worden uitgebreid in MainFrame!!!
-    cachedColumns.put(name, SwingClient.getUserInterface().getCachedSelectionProperty(new_name));
-    this.addColumn(new_name, column_name, true);
-    this.removeColumn(name);
-    replacementMap.put(new_name, name);
 
-  }
 
   private final void replaceProperties() {
     try {
@@ -928,7 +861,7 @@ private Component myCurrentEditingComponent;
 
 public void updateTableSize() {
 //	   createDefaultColumnsFromModel();
-	   setPreferredScrollableViewportSize(new Dimension(getColumnModel().getTotalColumnWidth(), getRowHeight() * getRowCount()));
+	   setPreferredScrollableViewportSize(new Dimension(getColumnModel().getTotalColumnWidth(), getRowHeight() * getRowCount()+6));
   }
   
   public void paintComponent(Graphics g) {
@@ -1743,19 +1676,7 @@ public void updateTableSize() {
     }
   }
 
-  public boolean isGhosted() {
-    return ghosted;
-  }
 
-  public final void setGhosted(boolean g) {
-    ghosted = g;
-    super.setEnabled(enabled && (!ghosted));
-  }
-
-  public final void setEnabled(boolean e) {
-    enabled = e;
-    super.setEnabled(enabled && (!ghosted));
-  }
 
   public final void addPropertyFilter(String propName, Property value) {
     addPropertyFilter(propName, value, "==");
@@ -2162,16 +2083,7 @@ public void updateTableSize() {
     }
   }
 
-//  protected void printComponent(Graphics g) {
-//    Color cc = g.getColor();
-//    g.setColor(Color.white);
-//    g.fillRect(0, 0, getWidth(), getHeight());
-//    g.setColor(cc);
-//    Color c = getBackground();
-//    setBackground(Color.white);
-//    super.printComponent(g);
-//    setBackground(c);
-//  }
+
 
   public int getSelectedIndex() {
 	  return getSelectedRow();

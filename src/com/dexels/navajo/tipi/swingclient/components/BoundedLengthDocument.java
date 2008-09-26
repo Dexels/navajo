@@ -1,7 +1,7 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
-import javax.swing.text.PlainDocument;
 import javax.swing.text.*;
+
 import com.dexels.navajo.document.*;
 
 /**

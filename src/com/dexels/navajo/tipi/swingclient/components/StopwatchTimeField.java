@@ -1,9 +1,11 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
 import java.awt.event.*;
+
 import javax.swing.text.*;
-import com.dexels.navajo.document.types.*;
+
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.types.*;
 
 /**
  * <p>Title: Seperate project for Navajo Swing client</p>
@@ -28,14 +30,12 @@ public final void focusLost(FocusEvent e) {
 
     try{
       if (getText() == null || "".equals(getText().trim())) {
-        setChanged(true);
         getProperty().setValue((StopwatchTime) null);
         return;
       }
       StopwatchTime ct = new StopwatchTime(getText(), getProperty().getSubType());
       StopwatchTime oldTime = (StopwatchTime)getProperty().getTypedValue();
       if (!ct.equals(oldTime)) {
-        setChanged(true);
         getProperty().setValue(ct);
       }
       setText(ct.toString());

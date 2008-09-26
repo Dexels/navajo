@@ -1,10 +1,8 @@
 package com.dexels.navajo.tipi.swingclient;
 
-import java.awt.BorderLayout;
-import javax.swing.JDesktopPane;
-import javax.swing.JFrame;
-import javax.swing.JInternalFrame;
-import javax.swing.UIManager;
+import java.awt.*;
+
+import javax.swing.*;
 
 
 
@@ -14,9 +12,9 @@ public class SwingClient {
 
   private static UserInterface userInterface;
 
-  static {
-    setUserInterface(new DummyUserInterface());
-  }
+//  static {
+//    setUserInterface(new DummyUserInterface());
+//  }
 
   public static UserInterface getUserInterface() {
     return userInterface;

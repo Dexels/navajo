@@ -1,13 +1,12 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
-import javax.swing.JPanel;
-import com.dexels.navajo.document.Property;
-import javax.swing.*;
-import java.util.*;
-import com.dexels.navajo.document.*;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 import java.awt.*;
+import java.awt.event.*;
+import java.util.*;
+
+import javax.swing.*;
+
+import com.dexels.navajo.document.*;
 
 /**
  * <p>Title: Seperate project for Navajo Swing client</p>
@@ -19,13 +18,13 @@ import java.awt.*;
  */
 
 public final class PropertyRadioSelection extends JPanel
-    implements PropertyControlled, Ghostable, ActionListener {
+    implements PropertyControlled, ActionListener {
   private Property myProperty = null;
   private final ButtonGroup myGroup = new ButtonGroup();
 
   private final Map selectionMap = new HashMap();
   private final ArrayList buttonList = new ArrayList();
-  private final ArrayList myActionListeners = new ArrayList();
+  private final ArrayList<ActionListener> myActionListeners = new ArrayList<ActionListener>();
 
   private static final int VERTICAL = 1;
   private static final int HORIZONTAL = 2;
@@ -50,20 +49,11 @@ public final class PropertyRadioSelection extends JPanel
     doLayout();
   }
 
-  public void gainFocus(){
-    // gar nichts
-  }
 
   public final Property getProperty() {
     return myProperty;
   }
 
-  public final boolean isGhosted() {
-    return false;
-  }
-
-  public final void setGhosted(boolean b) {
-  }
 
   public final void setProperty(Property p) {
     removeAll();
@@ -139,16 +129,7 @@ public final class PropertyRadioSelection extends JPanel
 	  System.err.println("Radio action performed");
     updateProperty((JRadioButton)e.getSource());
   }
-//  protected void printComponent(Graphics g) {
-//    Color cc = g.getColor();
-//    g.setColor(Color.white);
-//    g.fillRect(0,0,getWidth(),getHeight());
-//    g.setColor(cc);
-//    Color c = getBackground();
-//    setBackground(Color.white);
-//    super.printComponent(g);
-//    setBackground(c);
-//  }
+
 
   private final void updateProperty(JRadioButton source) {
     if (myProperty==null) {

@@ -41,15 +41,14 @@ public class Version extends dexels.Version {
 	public static final int MINOR = 0;
 	public static final int PATCHLEVEL = 1;
 	public static final String VENDOR = "Dexels";
-	public static final String PRODUCTNAME = "Navajo Swing Client";
-	public static final String RELEASEDATE = "2006-06-29";
+	public static final String PRODUCTNAME = "Tipi Swing Client";
 
 	//Included packages.
 	String [] includes = {"navajodocument.Version"};
 
 	public Version() {
 		addIncludes(includes);
-		setReleaseDate(RELEASEDATE);
+		setReleaseDate("2006-06-29");
 	}
 
 	@Override

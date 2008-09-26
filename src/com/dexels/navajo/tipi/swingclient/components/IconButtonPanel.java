@@ -1,10 +1,11 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
-//import com.dexels.sportlink.client.swing.*;
+
+import javax.swing.*;
+
 import com.dexels.navajo.tipi.swingclient.*;
 
 /**

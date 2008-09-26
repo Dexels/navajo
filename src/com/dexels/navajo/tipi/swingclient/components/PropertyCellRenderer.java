@@ -1,15 +1,14 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
-import javax.swing.table.*;
 import java.awt.*;
+import java.text.*;
+import java.util.*;
 
 import javax.swing.*;
-
-import java.util.*;
-import com.dexels.navajo.document.*;
 import javax.swing.border.*;
-import javax.swing.border.LineBorder;
-import java.text.*;
+import javax.swing.table.*;
+
+import com.dexels.navajo.document.*;
 
 //import com.dexels.navajo.document.nanoimpl.*;
 //import com.dexels.sportlink.client.swing.components.treetable.*;
@@ -44,19 +43,19 @@ public class PropertyCellRenderer implements TableCellRenderer, ListCellRenderer
 	private IntegerPropertyField myIntegerPropertyField = null;
 	private FloatPropertyField myFloatPropertyField = null;
 	private MoneyField myMoneyPropertyField = null;
-	private PercentagePropertyField myPercentagePropertyField = null;
+	private PercentageField myPercentagePropertyField = null;
 	private ClockTimeField myClockTimeField = null;
 	private StopwatchTimeField myStopwatchTimeField = null;
 	private PropertyPasswordField myPasswordField = null;
 	private Property myProperty = null;
-	private Map columnAttributes;
+	private Map<String,ColumnAttribute> columnAttributes;
 	private MessageTable myTable;
-	private TableCellRenderer def = new DefaultTableCellRenderer();
+//	private TableCellRenderer def = new DefaultTableCellRenderer();
 	private final JLabel l;
 	private JButton rowButton = new JButton();
 	JLabel readOnlyField = new JLabel();
 
-	private static final int DEFAULT_INSET = 1;
+//	private static final int DEFAULT_INSET = 1;
 
 	Border b = new LineBorder(Color.black, 2);
 	Border c = new LineBorder(Color.lightGray, 2);
@@ -220,7 +219,7 @@ public class PropertyCellRenderer implements TableCellRenderer, ListCellRenderer
       }
       if(type.equals(Property.PERCENTAGE_PROPERTY)) {
           if(myPercentagePropertyField == null) {
-        	  myPercentagePropertyField = new PercentagePropertyField();
+        	  myPercentagePropertyField = new PercentageField();
           }
           return myPercentagePropertyField;
       }
@@ -318,20 +317,22 @@ public class PropertyCellRenderer implements TableCellRenderer, ListCellRenderer
            
   }
 
-	private void updateComponentBorder(JComponent vc, boolean hasFocus, int row, int column) {
-		if (hasFocus) {
-			if (myTable != null && myTable.isCellEditable(row, column)) {
-				vc.setBorder(b);
-			} else {
-				vc.setBorder(c);
-			}
-		} else {
-			vc.setBorder(new CompoundBorder(new EmptyBorder(new Insets(0, 2, 0, 2)), null));
-		}
-	}
+//	private void updateComponentBorder(JComponent vc, boolean hasFocus, int row, int column) {
+//		if (hasFocus) {
+//			if (myTable != null && myTable.isCellEditable(row, column)) {
+//				vc.setBorder(b);
+//			} else {
+//				vc.setBorder(c);
+//			}
+//		} else {
+//			vc.setBorder(new CompoundBorder(new EmptyBorder(new Insets(0, 2, 0, 2)), null));
+//		}
+//	}
 
 	public void setComponentColor(Component c, boolean isSelected, int row, int col, boolean loading, int rowcount, boolean isDisabled) {
+		
 		JComponent cc = (JComponent) c;
+		cc.setOpaque(true);
 		if (isSelected) {
 
 			c.setBackground(selectedColor);
@@ -344,7 +345,7 @@ public class PropertyCellRenderer implements TableCellRenderer, ListCellRenderer
 		}
 
 		if (columnAttributes != null && myProperty!=null) {
-			ColumnAttribute ca = (ColumnAttribute) columnAttributes.get(myProperty.getName());
+			ColumnAttribute ca = columnAttributes.get(myProperty.getName());
 			if (ca != null) {
 				if (ca.getType().equals(ColumnAttribute.TYPE_ROWCOLOR)) {
 					String color = ca.getParam(myProperty.getValue());
@@ -384,7 +385,7 @@ public class PropertyCellRenderer implements TableCellRenderer, ListCellRenderer
 	// JTreeTable.TreeTableCellRenderer tt;
 	// }
 
-	private String listPropertyType = null;
+//	private String listPropertyType = null;
 
 	public void setPropertyTypeForListCell(String s) {
 

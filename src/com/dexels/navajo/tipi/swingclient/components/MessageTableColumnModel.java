@@ -1,12 +1,13 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
-import javax.swing.table.*;
+import java.util.*;
+import java.util.Map.*;
+
 import javax.swing.event.*;
+import javax.swing.table.*;
+
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.swingclient.components.sort.*;
-
-import java.util.*;
-import java.util.Map.Entry;
 
 /**
  * <p>Title: Seperate project for Navajo Swing client</p>

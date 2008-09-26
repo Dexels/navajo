@@ -1,8 +1,9 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
-import javax.swing.ListCellRenderer;
-import java.awt.Component;
+import java.awt.*;
+
 import javax.swing.*;
+
 import com.dexels.navajo.document.*;
 
 /**

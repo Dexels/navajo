@@ -1,13 +1,11 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
+import java.awt.event.*;
+
 import javax.swing.*;
+import javax.swing.text.*;
 
 import com.dexels.navajo.document.*;
-import java.awt.event.*;
-import javax.swing.text.*;
-import java.awt.*;
-import java.util.ResourceBundle;
-import java.util.MissingResourceException;
 
 /**
  * <p>Title: Seperate project for Navajo Swing client</p>
@@ -20,31 +18,26 @@ import java.util.MissingResourceException;
 
 public final class IntegerPropertyField
     extends PropertyField
-    implements PropertyControlled, Validatable {
+    implements PropertyControlled {
 //  private Property myProperty;
   private WholeNumberDocument myDocument = null;
 
   
   private boolean longMode = false;
-//  private int validationState = BaseField.VALID;
-//  private ArrayList myConditionRuleIds = new ArrayList();
-//  private ArrayList rules = new ArrayList();
-//  private Message validationMsg;
-  private ResourceBundle res;
+
   private boolean readOnly = false;
 
   public IntegerPropertyField() {
-    try {
-      if (System.getProperty("com.dexels.navajo.propertyMap") != null) {
-        res = ResourceBundle.getBundle(System.getProperty("com.dexels.navajo.propertyMap"));
-      }
-    }
-    catch (Exception e) {
-    }
+
     try {
       myDocument = new WholeNumberDocument();
       setDocument(myDocument);
-      jbInit();
+      this.addFocusListener(new java.awt.event.FocusAdapter() {
+          @Override
+    	public void focusLost(FocusEvent e) {
+            this_focusLost(e);
+          }
+        });
       if(getForcedAlignment()==null) {
     	  setHorizontalAlignment(SwingConstants.RIGHT);
       }
@@ -86,32 +79,15 @@ public final void setProperty(Property p) {
     setText("" + val);
     String toolTipText = "";
     setEditable(p.isDirIn());
-    try {
-      if (res != null) {
-        toolTipText = res.getString(p.getName());
-        this.setToolTipText(toolTipText);
-      }
-    }
-    catch (MissingResourceException e) {
-      toolTipText = p.getDescription();
-      if (toolTipText != null && !toolTipText.equals("")) {
-        this.setToolTipText(toolTipText);
-      }
-      else {
-        this.setToolTipText(p.getName());
-      }
-    }
-//    super.setProperty(p);
+        toolTipText = p.getDescription();
+		if (toolTipText != null && !toolTipText.equals("")) {
+			this.setToolTipText(toolTipText);
+		} else {
+			this.setToolTipText(p.getName());
+		}
   }
 
-  private final void jbInit() throws Exception {
-    this.addFocusListener(new java.awt.event.FocusAdapter() {
-      @Override
-	public void focusLost(FocusEvent e) {
-        this_focusLost(e);
-      }
-    });
-  }
+
 
   @Override
 public final void focusLost(FocusEvent e) {
@@ -120,46 +96,32 @@ public final void focusLost(FocusEvent e) {
 
   final void this_focusLost(FocusEvent e) {
 //    try{
-      updateChanged(initProperty);
     if (getText() == null || "".equals(getText()) && initProperty != null) {
-      initProperty.setValue( (String)null);
-      return;
-    }
-    try {
-      if (initProperty != null) {
-        //initProperty.setValue(getText());
-    	  if (longMode) {
-    	       initProperty.setAnyValue(new Long(Long.parseLong(getText())));
-    	       		
-		} else {
-		       initProperty.setAnyValue(new Integer(Integer.parseInt(getText())));
-		       
+      initProperty.setValue((String) null);
+			return;
 		}
-     	  setChanged(true);
-      }
-    }
-    catch (PropertyTypeException ex1) {
-      if (longMode) {
-    	  initProperty.setValue( (Long)null);
-    	     		
-	} else {
-		 initProperty.setValue( (Integer)null);
+		try {
+			if (initProperty != null) {
+				if (longMode) {
+					initProperty.setAnyValue(new Long(Long.parseLong(getText())));
+					initProperty.setType(Property.LONG_PROPERTY);
+				} else {
+					initProperty.setAnyValue(new Integer(Integer.parseInt(getText())));
+
+				}
+			}
+		} catch (PropertyTypeException ex1) {
+			if (longMode) {
+				initProperty.setValue((Long) null);
+
+			} else {
+				initProperty.setValue((Integer) null);
+			}
+			setText("");
+			ex1.printStackTrace();
+		}
 	}
-      setText("");
-      Toolkit.getDefaultToolkit().beep();
-      ex1.printStackTrace();
-    }
-  }
 
-  @Override
-public final void setGhosted(boolean b) {
-    this.setEnabled(!b);
-  }
-
-  @Override
-public final boolean isGhosted() {
-    return!this.isEnabled();
-  }
 
   public final void setReadOnly(boolean b) {
     readOnly = b;
@@ -171,7 +133,7 @@ public final void update() {
     if ( (initProperty == null) || readOnly) {
       return;
     }
-    updateChanged(initProperty);
+//    updateChanged(initProperty);
     try {
       initProperty.setValue(getText());
 
@@ -180,9 +142,7 @@ public final void update() {
       ex1.printStackTrace();
     }
 
-    if (getText() != null && !getText().equals("")) {
-      setValidationState(Validatable.VALID);
-    }
+  
   }
 
 }

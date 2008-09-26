@@ -2,13 +2,12 @@ package com.dexels.navajo.tipi.swingclient.components;
 
 
 
-import java.util.*;
-
 import java.awt.*;
-
-import com.dexels.navajo.document.*;
 import java.awt.event.*;
 import java.beans.*;
+import java.util.*;
+
+import com.dexels.navajo.document.*;
 
 /**
  * <p>Title: </p>
@@ -19,7 +18,7 @@ import java.beans.*;
  * @version 1.0
  */
 
-public final class MultipleSelectionPropertyCheckboxGroup extends BasePanel implements ChangeMonitoring, Ghostable, PropertyControlled, PropertyChangeListener {
+public final class MultipleSelectionPropertyCheckboxGroup extends BasePanel implements PropertyControlled, PropertyChangeListener {
   private Property myProperty;
 //  private ArrayList mySelectionList = new ArrayList();
   private ArrayList myListeners = new ArrayList();
@@ -62,17 +61,9 @@ public final class MultipleSelectionPropertyCheckboxGroup extends BasePanel impl
     // ignore
   }
 
-  public void gainFocus(){
-    // gar nichts
-  }
 
   /** @todo Add action / changelisteners to this class */
-  public final void setGhosted(boolean b) {
-    // dummy
-  }
-  public final boolean isGhosted() {
-    return false;
-  }
+
   public final Property getProperty() {
     return myProperty;
   }
@@ -96,17 +87,8 @@ public final class MultipleSelectionPropertyCheckboxGroup extends BasePanel impl
           Selection current = selections.get(i);
           SelectionCheckBox cb = new SelectionCheckBox();
           cb.setOpaque(false);
-          //cb.setBackground(Color.blue);
-//          mySelectionList.add(cb);
           cb.setSelection(current,myProperty);
           cb.setSelected(current.isSelected());
-//          cb.addItemListener(new ItemListener() {
-//            /** @todo Add some listenerfunctions, to keep the property updated.
-//             *  I started it, but I have no time now. Frank*/
-//            public void itemStateChanged(ItemEvent ce) {
-//               fireListeners(ce);
-//            }
-//          });
           if(columnMode){
             int req = (int) Math.ceil(selections.size() / columns)-1; // offset with 1 because gridbag starts at 0
             if(row+1 > req){

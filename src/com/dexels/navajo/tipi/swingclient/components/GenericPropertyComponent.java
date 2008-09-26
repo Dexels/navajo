@@ -1,21 +1,17 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
 import java.awt.*;
-
-import javax.swing.*;
-
-import com.dexels.navajo.tipi.swingclient.components.validation.*;
-
-import java.util.*;
-import com.dexels.navajo.document.*;
-
 import java.awt.event.*;
 import java.beans.*;
+import java.util.*;
+import java.util.List;
 
-import com.dexels.navajo.document.types.*;
-
+import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.event.*;
+
+import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.types.*;
 
 /**
  * <p>
@@ -35,9 +31,8 @@ import javax.swing.event.*;
  * @version 1.0
  */
 
-public class GenericPropertyComponent extends JPanel implements PropertyValidatable, ChangeMonitoring, Validatable {
+public class GenericPropertyComponent extends JPanel  {
 	private JComponent currentComponent = null;
-	private ConditionErrorParser cep = new ConditionErrorParser();
 	private int labelWidth = 0;
 	private int valign = SwingConstants.CENTER;
 	private int halign = SwingConstants.LEADING;
@@ -53,9 +48,9 @@ public class GenericPropertyComponent extends JPanel implements PropertyValidata
 	private JLabel myLabel = null;
 
 	// BorderLayout borderLayout = new BorderLayout();
-	private Map failedPropertyIdMap = null;
+//	private Map failedPropertyIdMap = null;
 	private ResourceBundle res = null;
-	private final ArrayList focusListeners = new ArrayList();
+	private final List<FocusListener> focusListeners = new ArrayList<FocusListener>();
 	private int checkboxGroupColumnCount = 0;
 	private int memoColumnCount = 0;
 	private int memoRowCount = 0;
@@ -78,37 +73,24 @@ public class GenericPropertyComponent extends JPanel implements PropertyValidata
 	PropertyHiddenField myHiddenField = null;
 	MultipleSelectionPropertyPickList myPickList = null;
 	URIPropertyField myURIField = null;
-	MultiSelectPropertyBox myMultiSelectBox = null;
+//	MultiSelectPropertyBox myMultiSelectBox = null;
 	PropertyBox myBox = null;
 	BinaryComponent myBinaryLabel = null;
 
 	private boolean verticalScrolls = true;
 	private boolean horizontalScrolls = false;
-	private InputValidator myInputValidator = null;
 
-	// private ArrayList myListeners = new ArrayList();
-
-	// private int default_label_width = 50;
-	// private int default_property_width = 50;
 	private boolean hardEnabled = false;
-	private boolean myVisibleState = true;
 	private boolean myEnableState = true;
 	private boolean use_checkbox = false;
 	private JComponent currentPropertyComponent = null;
 	private String myCapitalization = "off";
-	private String myPropertyName = null;
-	private int PREVIOUS_SELECTION_INDEX = -1;
 	private boolean setPropFlag = false;
-	private String vAlign = null;
-	private String hAlign = null;
-	private boolean isLoading = false;
-	private String currentType = "";
 	private boolean isLabelSet = false;
 	private Property myProperty;
 	private boolean isFocusable = false;
-	private final ArrayList myPropertyEventListeners = new ArrayList();
+	private final ArrayList<PropertyEventListener> myPropertyEventListeners = new ArrayList<PropertyEventListener>();
 	private boolean alwaysUseLabel = false;
-	private Object evaluatedValue = null;
 	private Dimension myPreferredSize = null;
 	private Component currentLabelIndentStrut = null;
 	private int forcedTotalWidth = -1;
@@ -118,7 +100,7 @@ public class GenericPropertyComponent extends JPanel implements PropertyValidata
 	private Color listSelectionColor = new Color(220, 220, 255);
 	private boolean orderListBySelected = false;
 
-	private final ArrayList myKeyListeners = new ArrayList();
+	private final List<KeyListener> myKeyListeners = new ArrayList<KeyListener>();
 	private String forceFieldAlignment = null;
 	private int limitFieldWidth = -1;
 
@@ -168,14 +150,14 @@ public class GenericPropertyComponent extends JPanel implements PropertyValidata
 
 	private void setPropertyKeyListeners(JComponent c) {
 		for (int i = 0; i < myKeyListeners.size(); i++) {
-			KeyListener kl = (KeyListener) myKeyListeners.get(i);
+			KeyListener kl = myKeyListeners.get(i);
 			c.addKeyListener(kl);
 		}
 	}
 
 	private void clearPropertyKeyListeners(JComponent currentPropertyComponent) {
 		for (int i = 0; i < myKeyListeners.size(); i++) {
-			KeyListener kl = (KeyListener) myKeyListeners.get(i);
+			KeyListener kl = myKeyListeners.get(i);
 			currentPropertyComponent.removeKeyListener(kl);
 		}
 
@@ -220,11 +202,11 @@ public class GenericPropertyComponent extends JPanel implements PropertyValidata
 		}
 	}
 
-	public void setHardEnabled(boolean b) {
-		myEnableState = b;
-		hardEnabled = true;
-		setEnabled(myEnableState);
-	}
+//	public void setHardEnabled(boolean b) {
+//		myEnableState = b;
+//		hardEnabled = true;
+//		setEnabled(myEnableState);
+//	}
 
 	public final Property getProperty() {
 		return myProperty;
@@ -241,21 +223,7 @@ public class GenericPropertyComponent extends JPanel implements PropertyValidata
 				myProperty.removePropertyChangeListener(myPropertyChangeListener);
 			}
 		}
-		// myPropertyChangeListener = new PropertyChangeListener(){
-		//
-		// public void propertyChange(PropertyChangeEvent evt) {
-		// System.err.println("======== Property initiated value change");
-		// firePropertyEvents((Property)
-		// evt.getSource(),"onValueChanged",null,false);
-		// }};
-
-		// p.addPropertyDataListener(new PropertyDataListener(){
-		//
-		// public void propertyDataChanged(Property p, String oldValue, String
-		// newValue) {
-		// // TODO Auto-generated method stub
-		//			
-		// }});
+		
 		myProperty = p;
 		if (p == null) {
 			return;
@@ -265,7 +233,6 @@ public class GenericPropertyComponent extends JPanel implements PropertyValidata
 			setCapitalization(caps);
 		}
 
-		currentType = p.getType();
 		setPropFlag = true;
 		String description = p.getDescription();
 		if (description == null || "".equals(description)) {
@@ -425,12 +392,7 @@ public class GenericPropertyComponent extends JPanel implements PropertyValidata
 		}
 	}
 
-	public void gainFocus() {
-		if (PropertyControlled.class.isInstance(currentComponent)) {
-			PropertyControlled pc = (PropertyControlled) currentComponent;
-			pc.gainFocus();
-		}
-	}
+
 
 	public final void setHorizontalLabelAlignment(final int alignment) {
 		SwingUtilities.invokeLater(new Runnable() {
@@ -453,80 +415,6 @@ public class GenericPropertyComponent extends JPanel implements PropertyValidata
 		});
 	}
 
-	public final void checkForConditionErrors(Message msg) {
-		if (PropertyControlled.class.isInstance(currentComponent)) {
-			PropertyControlled pc = (PropertyControlled) currentComponent;
-			if (pc.getProperty() == null) {
-				System.err.println("Checking error for unloaded property!");
-				Thread.dumpStack();
-				try {
-					msg.write(System.err);
-				} catch (NavajoException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				return;
-			}
-			String myName = pc.getProperty().getName();
-			ArrayList errors = cep.getFailures(msg);
-			/** @todo ADD NULL POINTER CHECK */
-			failedPropertyIdMap = cep.getFailedPropertyIdMap();
-			for (int i = 0; i < errors.size(); i++) {
-				final String current = (String) errors.get(i);
-				final String id = (String) failedPropertyIdMap.get(current);
-				if ((current.indexOf(myName) > -1)) {
-					if (Validatable.class.isInstance(currentComponent)) {
-						final Validatable f = (Validatable) currentComponent;
-						SwingUtilities.invokeLater(new Runnable() {
-							public void run() {
-								f.setValidationState(BaseField.INVALID);
-								f.setToolTipText(cep.getDescription(current));
-								f.addConditionRuleId(id);
-							}
-						});
-					}
-					return;
-				}
-			}
-		}
-	}
-
-	public final void resetComponentValidationStateByRule(final String id) {
-		if (failedPropertyIdMap != null && id != null) {
-			Iterator it = failedPropertyIdMap.keySet().iterator();
-			final PropertyControlled pc = (PropertyControlled) currentComponent;
-			String myName = pc.getProperty().getName();
-			while (it.hasNext()) {
-				String current = (String) it.next();
-				if (current.indexOf(myName) > -1) {
-					// I am invalid.
-					final String current_id = (String) failedPropertyIdMap.get(current);
-					SwingUtilities.invokeLater(new Runnable() {
-						public void run() {
-							if (id.equals(current_id)) {
-								if (Validatable.class.isInstance(currentComponent)) {
-									Validatable f = (Validatable) currentComponent;
-									f.setValidationState(BaseField.VALID);
-									f.setToolTipText(getToolTipText(pc.getProperty()));
-								}
-								if (IntegerPropertyField.class.isInstance(currentComponent)) { // Mmmm..
-																								// shouldn't
-																								// be
-																								// like
-																								// this
-																								// I
-																								// guess,..
-									IntegerPropertyField f = (IntegerPropertyField) currentComponent;
-									f.setValidationState(BaseField.VALID);
-									f.setToolTipText(getToolTipText(pc.getProperty()));
-								}
-							}
-						}
-					});
-				}
-			}
-		}
-	}
 
 	public final String getToolTipText(Property p) {
 		String toolTip = "";
@@ -599,9 +487,8 @@ public class GenericPropertyComponent extends JPanel implements PropertyValidata
 		if (type.equals(Property.EXPRESSION_PROPERTY)) {
 			try {
 				type = p.getEvaluatedType();
-				evaluatedValue = p.getTypedValue();
-				// System.err.println("Found evaluated type: " + type+ " vAL:
-				// "+evaluatedValue );
+				// make sure it got evaluated
+				p.getTypedValue();
 			} catch (NavajoException ex) {
 				ex.printStackTrace();
 			}
@@ -626,7 +513,8 @@ public class GenericPropertyComponent extends JPanel implements PropertyValidata
 				return;
 			} else {
 				if ("dropdown".equals(mySelectionType)) {
-					createMultiSelectPropertyBox(p);
+//					createMultiSelectPropertyBox(p);
+					throw new UnsupportedOperationException("I removed the dropdown for cardinality+ selections. I thought nobody used them");
 				} else if ("checkbox".equals(mySelectionType)) {
 					createPropertyCheckboxList(p);
 				} else if ("picklist".equals(mySelectionType)) {
@@ -851,11 +739,11 @@ public class GenericPropertyComponent extends JPanel implements PropertyValidata
 		myBinaryLabel.setProperty(p);
 	}
 
-	public void setComponentBackground(Color c) {
-		if (currentPropertyComponent != null) {
-			currentPropertyComponent.setBackground(c);
-		}
-	}
+//	public void setComponentBackground(Color c) {
+//		if (currentPropertyComponent != null) {
+//			currentPropertyComponent.setBackground(c);
+//		}
+//	}
 
 	protected final void addPropertyComponent(JComponent c) {
 		addPropertyComponent(c, false);
@@ -873,14 +761,14 @@ public class GenericPropertyComponent extends JPanel implements PropertyValidata
 			c.addFocusListener(new FocusAdapter() {
 				public void focusGained(FocusEvent e) {
 					for (int i = 0; i < focusListeners.size(); i++) {
-						FocusListener fl = (FocusListener) focusListeners.get(i);
+						FocusListener fl = focusListeners.get(i);
 						fl.focusGained(e);
 					}
 				}
 
 				public void focusLost(FocusEvent e) {
 					for (int i = 0; i < focusListeners.size(); i++) {
-						FocusListener fl = (FocusListener) focusListeners.get(i);
+						FocusListener fl = focusListeners.get(i);
 						fl.focusLost(e);
 					}
 				}
@@ -906,7 +794,7 @@ public class GenericPropertyComponent extends JPanel implements PropertyValidata
 					// jj.getPreferredSize().height));
 					jj.setColumns(limitFieldWidth);
 
-					jj.setBackground(new Color(255, 0, 0));
+//					jj.setBackground(new Color(255, 0, 0));
 					this.doLayout();
 				}
 			}
@@ -1008,32 +896,7 @@ public class GenericPropertyComponent extends JPanel implements PropertyValidata
 		}
 	}
 
-	private final void createMultiSelectPropertyBox(Property p) {
-		if (myMultiSelectBox == null) {
-			myMultiSelectBox = new MultiSelectPropertyBox();
-			myMultiSelectBox.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					myMultiSelectBox_actionPerformed(e);
-				}
-			});
-			myMultiSelectBox.addFocusListener(new java.awt.event.FocusAdapter() {
-				public void focusGained(FocusEvent e) {
-					myBox_focusGained(e);
-				}
 
-				public void focusLost(FocusEvent e) {
-					myBox_focusLost(e);
-				}
-			});
-			myMultiSelectBox.addItemListener(new java.awt.event.ItemListener() {
-				public void itemStateChanged(ItemEvent e) {
-					myBox_itemStateChanged(e);
-				}
-			});
-		}
-		addPropertyComponent(myMultiSelectBox, true);
-		myMultiSelectBox.loadProperty(p);
-	}
 
 	private final void createPickList(Property p) {
 		if (myPickList == null) {
@@ -1192,7 +1055,6 @@ public class GenericPropertyComponent extends JPanel implements PropertyValidata
 			});
 			myField.setCapitalizationMode(myCapitalization);
 		}
-		myField.setInputValidator(myInputValidator);
 		myField.setProperty(p);
 		myField.setCaretPosition(0);
 		if (alwaysUseLabel) {
@@ -1222,7 +1084,6 @@ public class GenericPropertyComponent extends JPanel implements PropertyValidata
 			});
 			myURIField.setCapitalizationMode(myCapitalization);
 		}
-		myURIField.setInputValidator(myInputValidator);
 		myURIField.setProperty(p);
 		addPropertyComponent(myURIField);
 	}
@@ -1245,7 +1106,6 @@ public class GenericPropertyComponent extends JPanel implements PropertyValidata
 				}
 			});
 		}
-		myPasswordField.setInputValidator(myInputValidator);
 		myPasswordField.setProperty(p);
 		addPropertyComponent(myPasswordField);
 	}
@@ -1268,7 +1128,6 @@ public class GenericPropertyComponent extends JPanel implements PropertyValidata
 				}
 			});
 		}
-		myHiddenField.setInputValidator(myInputValidator);
 		myHiddenField.setProperty(p);
 		addPropertyComponent(myHiddenField);
 	}
@@ -1420,11 +1279,11 @@ public class GenericPropertyComponent extends JPanel implements PropertyValidata
 		} else {
 			myMemoField.setRows(8);
 		}
-		if (!p.isDirIn()) {
-			myMemoField.setBackground(Color.lightGray);
-		} else {
-			myMemoField.setBackground(Color.white);
-		}
+//		if (!p.isDirIn()) {
+//			myMemoField.setBackground(Color.lightGray);
+//		} else {
+//			myMemoField.setBackground(Color.white);
+//		}
 		myMemoField.setLineWrap(true);
 		myMemoField.setWrapStyleWord(true);
 		// myMemoField.setMinimumSize(new Dimension(100,16));
@@ -1472,7 +1331,7 @@ public class GenericPropertyComponent extends JPanel implements PropertyValidata
 		if (!setPropFlag) {
 			if (e.getActionCommand().equals("comboBoxChanged")) {
 				fireTipiEvent("onValueChanged");
-				PREVIOUS_SELECTION_INDEX = myBox.getSelectedIndex();
+//				PREVIOUS_SELECTION_INDEX = myBox.getSelectedIndex();
 			} else {
 				fireTipiEvent("onActionPerformed");
 			}
@@ -1500,15 +1359,12 @@ public class GenericPropertyComponent extends JPanel implements PropertyValidata
 	}
 
 	final void myRadioButtonField_actionPerformed(ActionEvent e) {
-		// System.err.println("RadioButton. Event: " + e.getActionCommand());
 		if (!setPropFlag) {
-			// if (e.getActionCommand().equals("comboBoxChanged")) {
 			fireTipiEvent("onValueChanged");
-			PREVIOUS_SELECTION_INDEX = myRadioButtonField.getSelectedIndex();
+//			PREVIOUS_SELECTION_INDEX = myRadioButtonField.getSelectedIndex();
 		} else {
 			fireTipiEvent("onActionPerformed");
 		}
-		// }
 	}
 
 	final void myRadioButtonField_itemStateChanged(ItemEvent e) {
@@ -1646,7 +1502,7 @@ public class GenericPropertyComponent extends JPanel implements PropertyValidata
 	}
 
 	protected final void fireTipiEvent(String type) {
-		firePropertyEvents(myProperty, type, null, true);
+		firePropertyEvents(myProperty, type,  true);
 	}
 
 	public void setEnabled(boolean value) {
@@ -1788,10 +1644,10 @@ public class GenericPropertyComponent extends JPanel implements PropertyValidata
 		myPropertyEventListeners.remove(pel);
 	}
 
-	protected final void firePropertyEvents(Property p, String eventType, Validatable v, boolean internalChange) {
+	protected final void firePropertyEvents(Property p, String eventType,  boolean internalChange) {
 		for (int i = 0; i < myPropertyEventListeners.size(); i++) {
-			PropertyEventListener current = (PropertyEventListener) myPropertyEventListeners.get(i);
-			current.propertyEventFired(p, eventType, v, internalChange);
+			PropertyEventListener current = myPropertyEventListeners.get(i);
+			current.propertyEventFired(p, eventType, internalChange);
 		}
 	}
 
@@ -1861,18 +1717,6 @@ public class GenericPropertyComponent extends JPanel implements PropertyValidata
 	public void resetChanged() {
 	}
 
-	public final boolean hasChanged() {
-		if (ChangeMonitoring.class.isInstance(currentComponent)) {
-			return ((ChangeMonitoring) currentComponent).hasChanged();
-		}
-		System.err.println("Returning true by default... Should this happen? ..no I changed it to false");
-		if (currentComponent == null) {
-			System.err.println("No current component");
-		} else {
-			System.err.println("Current component class: " + currentComponent.getClass());
-		}
-		return false;
-	}
 
 	public final boolean hasFocus() {
 		if (currentComponent != null) {
@@ -1881,161 +1725,6 @@ public class GenericPropertyComponent extends JPanel implements PropertyValidata
 		return false;
 	}
 
-	public boolean doValidate() {
-		if (currentComponent == null) {
-			return true;
-		} else {
-			if (currentComponent instanceof InputValidator) {
-				return ((PropertyField) currentComponent).doValidate();
-			}
-			if (currentComponent instanceof PropertyPasswordField) {
-				return ((PropertyPasswordField) currentComponent).doValidate();
-			}
-			return true;
-		}
-	}
-
-	public final void setInputValidator(InputValidator iv) {
-		myInputValidator = iv;
-	}
-
-	/**
-	 * addValidationRule
-	 * 
-	 * @param state
-	 *            int
-	 * @todo Implement this com.dexels.navajo.swingclient.components.Validatable
-	 *       method
-	 */
-	public void addValidationRule(int state) {
-		if (Validatable.class.isInstance(currentComponent)) {
-			((Validatable) currentComponent).addValidationRule(state);
-		}
-
-	}
-
-	/**
-	 * setValidationMessage
-	 * 
-	 * @param msg
-	 *            Message
-	 * @todo Implement this com.dexels.navajo.swingclient.components.Validatable
-	 *       method
-	 */
-	public final void setValidationMessage(Message msg) {
-		if (Validatable.class.isInstance(currentComponent)) {
-			((Validatable) currentComponent).setValidationMessage(msg);
-		}
-
-	}
-
-	/**
-	 * checkValidation
-	 * 
-	 * @todo Implement this com.dexels.navajo.swingclient.components.Validatable
-	 *       method
-	 */
-	public final void checkValidation() {
-		if (Validatable.class.isInstance(currentComponent)) {
-			((Validatable) currentComponent).checkValidation();
-		}
-	}
-
-	/**
-	 * checkValidation
-	 * 
-	 * @param msg
-	 *            Message
-	 * @todo Implement this com.dexels.navajo.swingclient.components.Validatable
-	 *       method
-	 */
-	public final void checkValidation(Message msg) {
-		if (Validatable.class.isInstance(currentComponent)) {
-			((Validatable) currentComponent).checkValidation(msg);
-		}
-	}
-
-	/**
-	 * clearValidationRules
-	 * 
-	 * @todo Implement this com.dexels.navajo.swingclient.components.Validatable
-	 *       method
-	 */
-	public final void clearValidationRules() {
-		if (Validatable.class.isInstance(currentComponent)) {
-			((Validatable) currentComponent).clearValidationRules();
-		}
-	}
-
-	/**
-	 * setValidationState
-	 * 
-	 * @param state
-	 *            int
-	 * @todo Implement this com.dexels.navajo.swingclient.components.Validatable
-	 *       method
-	 */
-	public final void setValidationState(int state) {
-		if (Validatable.class.isInstance(currentComponent)) {
-			((Validatable) currentComponent).setValidationState(state);
-		}
-	}
-
-	/**
-	 * getValidationState
-	 * 
-	 * @return int
-	 * @todo Implement this com.dexels.navajo.swingclient.components.Validatable
-	 *       method
-	 */
-	public final int getValidationState() {
-		if (Validatable.class.isInstance(currentComponent)) {
-			return ((Validatable) currentComponent).getValidationState();
-		}
-		return 0;
-	}
-
-	/**
-	 * setToolTipText
-	 * 
-	 * @param text
-	 *            String
-	 * @todo Implement this com.dexels.navajo.swingclient.components.Validatable
-	 *       method
-	 */
-	public final void setToolTipText(String text) {
-		if (Validatable.class.isInstance(currentComponent)) {
-			((Validatable) currentComponent).setToolTipText(text);
-		}
-	}
-
-	/**
-	 * addConditionRuleId
-	 * 
-	 * @param id
-	 *            String
-	 * @todo Implement this com.dexels.navajo.swingclient.components.Validatable
-	 *       method
-	 */
-	public final void addConditionRuleId(String id) {
-		if (Validatable.class.isInstance(currentComponent)) {
-			((Validatable) currentComponent).addConditionRuleId(id);
-		}
-	}
-
-	/**
-	 * getConditionRuleIds
-	 * 
-	 * @return ArrayList
-	 * @todo Implement this com.dexels.navajo.swingclient.components.Validatable
-	 *       method
-	 */
-	public final ArrayList getConditionRuleIds() {
-		if (Validatable.class.isInstance(currentComponent)) {
-			return ((Validatable) currentComponent).getConditionRuleIds();
-		}
-		return null;
-	}
 
 	public void setAlwaysUseLabel(boolean b) {
 		alwaysUseLabel = b;
@@ -2160,22 +1849,18 @@ public class GenericPropertyComponent extends JPanel implements PropertyValidata
 	}
 
 	public int getMaxImageHeight() {
-		// TODO Auto-generated method stub
 		return max_img_height;
 	}
 
 	public int getMaxImageWidth() {
-		// TODO Auto-generated method stub
 		return max_img_width;
 	}
 
 	public int getMaxWidth() {
-		// TODO Auto-generated method stub
 		return Integer.MAX_VALUE;
 	}
 
 	public int getMemoColumnCount() {
-		// TODO Auto-generated method stub
 		return memoColumnCount;
 	}
 
@@ -2184,7 +1869,6 @@ public class GenericPropertyComponent extends JPanel implements PropertyValidata
 	}
 
 	public boolean hasShowDatePicker() {
-		// TODO Auto-generated method stub
 		return showDatePicker;
 	}
 

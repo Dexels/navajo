@@ -14,8 +14,6 @@ import com.dexels.navajo.document.*;
 public interface PropertyControlled {
   public Property getProperty();
   public void setProperty(Property p);
-  public void setGhosted(boolean b);
-  public boolean isGhosted();
+
   public void update();
-  public void gainFocus();
 }

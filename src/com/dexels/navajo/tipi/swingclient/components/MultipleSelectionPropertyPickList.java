@@ -1,17 +1,15 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
 import java.awt.*;
-import javax.swing.*;
-
-import com.dexels.navajo.document.*;
-
-import java.util.*;
-
-import com.dexels.navajo.document.base.*;
-
 import java.awt.event.*;
 import java.beans.*;
 import java.io.*;
+import java.util.*;
+
+import javax.swing.*;
+
+import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.base.*;
 
 /**
  * <p>
@@ -56,13 +54,10 @@ public final class MultipleSelectionPropertyPickList extends JPanel implements P
 		}
 	}
 
-	public void gainFocus() {
-		// gar nichts
-	}
+
 
 	private final void jbInit() throws Exception {
 		this.setLayout(gridBagLayout1);
-		// setBackground(Color.red);
 		selectButton.setText("");
 		selectButton.addActionListener(new MultipleSelectionPropertyPickList_selectButton_actionAdapter(this));
 		selectButton.setInputVerifier(null);
@@ -163,12 +158,6 @@ public final class MultipleSelectionPropertyPickList extends JPanel implements P
 		}
 	}
 
-	public final void setGhosted(boolean b) {
-	}
-
-	public final boolean isGhosted() {
-		return false;
-	}
 
 	public final void update() {
 	}

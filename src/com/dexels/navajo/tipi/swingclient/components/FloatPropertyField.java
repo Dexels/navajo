@@ -1,32 +1,19 @@
 package com.dexels.navajo.tipi.swingclient.components;
 
-import javax.swing.*;
-
-import com.dexels.navajo.document.*;
 import java.awt.event.*;
 
-import javax.swing.text.*;
+import javax.swing.*;
 import javax.swing.event.*;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
-import java.util.MissingResourceException;
+import javax.swing.text.*;
 
-public class FloatPropertyField extends PropertyField implements PropertyControlled, Validatable {
+import com.dexels.navajo.document.*;
+
+public class FloatPropertyField extends PropertyField implements PropertyControlled {
   protected Document myDocument = null;
-  protected int validationState = Validatable.VALID;
-  protected ArrayList myConditionRuleIds = new ArrayList();
-  protected ArrayList rules = new ArrayList();
-  protected Message validationMsg;
-  protected ResourceBundle res;
   protected boolean readOnly = false;
 
   public FloatPropertyField() {
-    try {
-      if(System.getProperty("com.dexels.navajo.propertyMap") != null) {
-        res = ResourceBundle.getBundle(System.getProperty("com.dexels.navajo.propertyMap"));
-      }
-    } catch(Exception e) {
-    }
+
     try {
       myDocument = new FloatNumberDocument();
       setDocument(myDocument);
@@ -39,21 +26,6 @@ public class FloatPropertyField extends PropertyField implements PropertyControl
     }
   }
 
-  public FloatPropertyField(Document d) {
-    try {
-		if(System.getProperty("com.dexels.navajo.propertyMap") != null) {
-		  res = ResourceBundle.getBundle(System.getProperty("com.dexels.navajo.propertyMap"));
-		}
-	} catch (Exception e) {}
-    myDocument = d;
-    setDocument(d);
-//    try {
-//      jbInit();
-//    }
-//    catch (Exception ex) {
-//      ex.printStackTrace();
-//    }
-  }
 
   @Override
 public void setProperty(Property p) {
@@ -92,20 +64,6 @@ public void setProperty(Property p) {
     }
     String toolTipText = "";
     setEditable(p.isDirIn());
-    //setEnabled(p.isDirIn());
-    try {
-      if(res != null) {
-        toolTipText = res.getString(p.getName());
-        this.setToolTipText(toolTipText);
-      }
-    } catch(MissingResourceException e) {
-      toolTipText = p.getDescription();
-      if(toolTipText != null && !toolTipText.equals("")) {
-        this.setToolTipText(toolTipText);
-      } else {
-        this.setToolTipText(p.getName());
-      }
-    }
     super.setProperty(p);
   }
 
@@ -150,7 +108,7 @@ public void setProperty(Property p) {
 
   final void moneyFocusLost(FocusEvent e) {
     try {
-      updateChanged(initProperty);
+//      updateChanged(initProperty);
       if(getText() == null || "".equals(getText())) {
         return;
       }
@@ -171,11 +129,9 @@ public void setProperty(Property p) {
   void myDocument_insertUpdate(DocumentEvent e) {
     if(initProperty != null) {
       if(!initProperty.getType().equals(Property.EXPRESSION_PROPERTY)) {
-//        updateChanged(initProperty);
-//        initProperty.setValue(getText());
       }
       if(getText() != null && !getText().equals("")) {
-        setValidationState(Validatable.VALID);
+//        setValidationState(Validatable.VALID);
       }
     }
   }
@@ -189,19 +145,7 @@ public void setProperty(Property p) {
 //      updateChanged(initProperty);
 //      initProperty.setValue(getText());
     }
-    if(getText() != null && !getText().equals("")) {
-      setValidationState(Validatable.VALID);
-    }
-  }
 
-  @Override
-public final void setGhosted(boolean b) {
-    this.setEnabled(!b);
-  }
-
-  @Override
-public final boolean isGhosted() {
-    return!this.isEnabled();
   }
 
   public final void setReadOnly(boolean b) {
@@ -230,11 +174,11 @@ public void update() {
       if (initProperty.getType().equals(Property.EXPRESSION_PROPERTY)) {
         return;
       }
-      updateChanged(initProperty);
+//      updateChanged(initProperty);
       initProperty.setValue(Double.toString(d));
-      if (getText() != null && !getText().equals("")) {
-        setValidationState(Validatable.VALID);
-      }
+//      if (getText() != null && !getText().equals("")) {
+//        setValidationState(Validatable.VALID);
+//      }
     }
   }
 

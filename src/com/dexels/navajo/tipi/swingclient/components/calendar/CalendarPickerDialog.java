@@ -1,11 +1,12 @@
 package com.dexels.navajo.tipi.swingclient.components.calendar;
 
-import com.dexels.navajo.tipi.swingclient.components.*;
-
 import java.awt.*;
-import javax.swing.*;
 import java.awt.event.*;
 import java.util.*;
+
+import javax.swing.*;
+
+import com.dexels.navajo.tipi.swingclient.components.*;
 
 /**
  * <p>
@@ -30,9 +31,9 @@ public class CalendarPickerDialog extends StandardDialog implements CalendarMana
 	BasePanel controlPanel = new BasePanel();
 	CalendarTable calendar = new CalendarTable();
 	CalendarConstants constants = new CalendarConstants();
-	BaseButton nextMonthButton = new BaseButton();
-	BaseButton previousMonthButton = new BaseButton();
-	BaseLabel monthLabel = new BaseLabel();
+	JButton nextMonthButton = new JButton();
+	JButton previousMonthButton = new JButton();
+	JLabel monthLabel = new JLabel();
 	Date selected = null;
 
 	public void load(Date d) {
@@ -91,6 +92,11 @@ public class CalendarPickerDialog extends StandardDialog implements CalendarMana
 		calendar.setCalendarManager(this);
 		mainPanel.setPreferredSize(new Dimension(250, 180));
 		// setUndecorated(true);
+		SwingUtilities.invokeLater(new Runnable(){
+
+			public void run() {
+				((JComponent)getContentPane()).revalidate();
+			}});
 	}
 
 	/** @todo Add day selection. Not a clue how to set a day. Ask Arnoud. */
@@ -133,14 +139,12 @@ public class CalendarPickerDialog extends StandardDialog implements CalendarMana
 	 *       method
 	 */
 	public void fireCalendarEvent(CalendarEvent e) {
-		ArrayList days = calendar.getSelectedDays();
+		ArrayList<Day>  days = calendar.getSelectedDays();
 		if (days.size() > 0) {
-			Day d = (Day) days.get(0);
+			Day d = days.get(0);
 			selected = d.getDate();
 			if (MouseEvent.class.isInstance(e.getEvent())) {
-				System.err.println("Was a mouse event!");
 				MouseEvent me = (MouseEvent) e.getEvent();
-				System.err.println("Clicks: " + me.getClickCount());
 				if (me.getClickCount() == 2) {
 					super.commit();
 					setCommitted(true);

@@ -1,20 +1,12 @@
 package com.dexels.navajo.swingclient.ui;
 
-import java.awt.AlphaComposite;
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.GradientPaint;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.awt.RenderingHints;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import java.awt.*;
+import java.beans.*;
 
-import javax.swing.JComponent;
-import javax.swing.plaf.basic.BasicTextFieldUI;
-import com.dexels.navajo.tipi.swingclient.components.PropertyField;
+import javax.swing.*;
+import javax.swing.plaf.basic.*;
+
+import com.dexels.navajo.tipi.swingclient.components.*;
 
 public class RichTextFieldUI extends BasicTextFieldUI {
 	private final JComponent me;

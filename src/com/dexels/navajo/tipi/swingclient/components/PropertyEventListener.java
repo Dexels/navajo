@@ -12,5 +12,5 @@ import com.dexels.navajo.document.*;
  */
 
 public interface PropertyEventListener {
-  public void propertyEventFired(Property p, String eventType, Validatable v, boolean internal);
+  public void propertyEventFired(Property p, String eventType,  boolean internal);
 }

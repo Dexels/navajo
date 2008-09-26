@@ -9,27 +9,25 @@ package com.dexels.navajo.tipi.swingclient.components;
  * @version 1.0
  */
 import java.awt.*;
-import javax.swing.*;
 import java.awt.event.*;
-//import com.dexels.sportlink.client.swing.*;
-//import com.dexels.sportlink.client.swing.components.*;
-import java.util.*;
-import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.tipi.swingclient.*;
-
 import java.beans.*;
+import java.util.*;
+
+import javax.swing.*;
+
+import com.dexels.navajo.document.*;
+import com.dexels.navajo.tipi.swingclient.*;
 
 //import com.dexels.sportlink.client.swing.dialogs.*;
 
 public class StandardWindow
     extends BaseWindow
     implements DialogConstants {
-  private ResourceBundle res;
   protected JToolBar dialogToolbar = new JToolBar();
-  protected BaseButton closeButton = new BaseButton();
-  protected BaseButton insertButton = new BaseButton();
-  protected BaseButton saveButton = new BaseButton();
-  protected BaseButton clearButton = new BaseButton();
+  protected JButton closeButton = new JButton();
+  protected JButton insertButton = new JButton();
+  protected JButton saveButton = new JButton();
+  protected JButton clearButton = new JButton();
   private BasePanel myPanel = null;
   private String windowId = "";
   private Navajo myData = null;
@@ -40,13 +38,12 @@ public class StandardWindow
   private String myGroup = null;
   private ArrayList<KeyListener> keyListeners = new ArrayList<KeyListener>();
 
-  private final static Object showWindowSemaphore = new Object();
+//  private final static Object showWindowSemaphore = new Object();
 
   private Map<String,Object> localWindowProperties = null;
 
   public StandardWindow() {
     try {
-      res = SwingClient.getUserInterface().getResource("com.dexels.sportlink.client.swing.dialogs");
       jbInit();
     }
     catch (Exception e) {
@@ -107,11 +104,6 @@ public void setSelected(boolean value) throws PropertyVetoException {
     repaint();
   }
 
-  public void showWindow(String direction) {
-    setStickyDirection(direction);
-    setSticky(true);
-    showWindow();
-  }
 
   public void setStickyDirection(String dir) {
     stickDir = dir;
@@ -131,25 +123,6 @@ public void setSelected(boolean value) throws PropertyVetoException {
     }
   }
 
-  @Override
-public void showWindow() {
-
-    synchronized (showWindowSemaphore) {
-      if (isSticky()) {
-        SwingClient.getUserInterface().addStickyFrame(this, getStickyDirection());
-      }
-      else {
-        SwingClient.getUserInterface().addFrame(this);
-      }
-      toFront();
-      try {
-        setSelected(true);
-      }
-      catch (Exception ex) {
-        ex.printStackTrace();
-      }
-    }
-  }
 
   public String getStickyDirection() {
     return stickDir;
@@ -187,7 +160,7 @@ public void showWindow() {
     preferredBounds = r;
   }
 
-  public void addButtonToBar(BaseButton but) {
+  public void addButtonToBar(JButton but) {
     dialogToolbar.add(but);
   }
 
@@ -276,26 +249,22 @@ public void showWindow() {
 
 
 
-    closeButton.setText(res.getString("StandardWindow_close"));
     closeButton.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(ActionEvent e) {
         closeButton_actionPerformed(e);
       }
     });
-    insertButton.setText(res.getString("StandardWindow_insert"));
     insertButton.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(ActionEvent e) {
         insertButton_actionPerformed(e);
       }
     });
-    saveButton.setText(res.getString("StandardWindow_save"));
     saveButton.setEnabled(false);
     saveButton.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(ActionEvent e) {
         saveButton_actionPerformed(e);
       }
     });
-    clearButton.setText(res.getString("StandardWindow_clear"));
     clearButton.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(ActionEvent e) {
         clearButton_actionPerformed(e);
@@ -369,11 +338,11 @@ public void showWindow() {
     saveButton.setEnabled(false);
   }
 
-  public BaseButton getInsertButton() {
+  public JButton getInsertButton() {
     return insertButton;
   }
 
-  public BaseButton getSaveButton() {
+  public JButton getSaveButton() {
     return saveButton;
   }
 
@@ -395,13 +364,12 @@ public void showWindow() {
     localWindowProperties.remove(name);
   }
 
-  public void updateMenu() {
-    SwingClient.getUserInterface().updateMenu(getWindowId(), getLocalWindowState());
-  }
-
-  public void rebuildMenu() {
-//    SwingClient.getUserInterface().updateMenu(getWindowId(),getLocalWindowState());
-    SwingClient.getUserInterface().rebuildMenu(getLocalWindowState());
-  }
+//  public void updateMenu() {
+//    SwingClient.getUserInterface().updateMenu(getWindowId(), getLocalWindowState());
+//  }
+//
+//  public void rebuildMenu() {
+//    SwingClient.getUserInterface().rebuildMenu(getLocalWindowState());
+//  }
 
 }

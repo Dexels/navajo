@@ -43,21 +43,8 @@ public class PercentageField extends AbstractPropertyField implements PropertyCo
 		return p.formattedString();
 	}
 
-	public void gainFocus() {
-		
-	}
 
 
-	public boolean isGhosted() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-
-	public void setGhosted(boolean b) {
-		// TODO Auto-generated method stub
-		
-	}
 
 
 	public void update() {
