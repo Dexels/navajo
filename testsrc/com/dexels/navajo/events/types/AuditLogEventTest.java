@@ -19,7 +19,7 @@ public class AuditLogEventTest extends TestCase {
 		AuditLogEvent aul = new AuditLogEvent("subsystem", "msg", Level.INFO);
 		Assert.assertEquals(aul.getSubSystem(), "subsystem");
 		Assert.assertEquals(aul.getMessage(), "msg");
-		Assert.assertEquals("INFO", aul.getLevel());
+		Assert.assertEquals("INFO", aul.getLevel().getName());
 	}
 
 }
