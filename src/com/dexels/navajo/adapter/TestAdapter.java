@@ -21,7 +21,7 @@ public class TestAdapter implements Mappable {
 
     public TestAdapter() {}
 
-    public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
+    public void load(Access access) throws MappableException, UserException {
        testAdapters = new TestAdapter[5];
        for (int i = 0; i < 5; i++) {
         testAdapters[i] = new TestAdapter();

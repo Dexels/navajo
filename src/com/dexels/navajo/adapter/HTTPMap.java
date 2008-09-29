@@ -45,8 +45,6 @@ import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.Access;
-import com.dexels.navajo.server.NavajoConfig;
-import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.util.AuditLog;
 
@@ -80,9 +78,8 @@ public class HTTPMap implements Mappable, Queuable {
 
 	public static int maxRunningInstances = -1;
 	
-	public void load(Parameters parms, Navajo inMessage, Access access,
-			NavajoConfig config) throws MappableException, UserException {
-		myNavajo = inMessage;
+	public void load(Access access) throws MappableException, UserException {
+		myNavajo = access.getInDoc();
 		myAccess = access;
 	}
 

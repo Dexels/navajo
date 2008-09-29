@@ -2,13 +2,13 @@ package com.dexels.navajo.adapter;
 
 import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.mapping.Mappable;
-import com.dexels.navajo.server.Parameters;
-import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.Dispatcher;
+import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.GenericHandler;
 import com.dexels.navajo.server.NavajoConfig;
+import com.dexels.navajo.server.NavajoConfigInterface;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.mapping.MappableException;
 
@@ -71,11 +71,11 @@ public class AdminMap implements Mappable {
   // RequestRate windowSize
   public int requestRateWindowSize;
 
-  private NavajoConfig myConfig = null;
+  private NavajoConfigInterface myConfig = null;
   private Access myAccess = null;
 
-  public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
-    NavajoConfig nc = Dispatcher.getInstance().getNavajoConfig();
+  public void load(Access access) throws MappableException, UserException {
+	NavajoConfigInterface nc = DispatcherFactory.getInstance().getNavajoConfig();
     scriptPath = nc.getScriptPath();
     configPath = nc.getConfigPath();
     adapterPath = nc.getAdapterPath();
@@ -90,9 +90,9 @@ public class AdminMap implements Mappable {
     supportsLocks = nc.isLockManagerEnabled();
     
     storeLocation = nc.getDbPath();
-    serverId = Dispatcher.getInstance().getApplicationId();
+    serverId = DispatcherFactory.getInstance().getApplicationId();
     
-    myConfig = config;
+    myConfig = DispatcherFactory.getInstance().getNavajoConfig();
     myAccess = access;
   }
 
@@ -129,7 +129,7 @@ public class AdminMap implements Mappable {
 		SQLMap sql = new SQLMap();
 		try {
 
-			sql.load(null, null, myAccess, myConfig);
+			sql.load(myAccess);
 			sql.setDatasource(datasource);
 			sql.createConnection();
 			if (sql.con == null) {
@@ -170,7 +170,7 @@ public class AdminMap implements Mappable {
    }
 
    public int getRequestCount() {
-     return (int) com.dexels.navajo.server.Dispatcher.getInstance().requestCount;
+     return (int) com.dexels.navajo.server.DispatcherFactory.getInstance().getRequestCount();
    }
 
    public AsyncProxy [] getAsyncThreads() {
@@ -211,14 +211,14 @@ public class AdminMap implements Mappable {
    }
 
    public AccessMap [] getUsers() {
-      Set all = new HashSet(com.dexels.navajo.server.Dispatcher.getInstance().accessSet);
+      Set all = new HashSet(com.dexels.navajo.server.DispatcherFactory.getInstance().getAccessSet());
       Iterator iter = all.iterator();
       ArrayList d = new ArrayList();
       while (iter.hasNext()) {
         Access a = (Access) iter.next();
         AccessMap am = new AccessMap();
         try {
-          am.load(null, null, a, null);
+          am.load(a);
           d.add(am);
         }
         catch (Exception ex) {
@@ -240,27 +240,27 @@ public class AdminMap implements Mappable {
     this.asyncThreads = asyncThreads;
   }
   public Date getStartTime() {
-    return com.dexels.navajo.server.Dispatcher.startTime;
+    return com.dexels.navajo.server.DispatcherFactory.getInstance().getStartTime();
   }
   public float getRequestRate() {
-    return Dispatcher.getInstance().getRequestRate();
+    return DispatcherFactory.getInstance().getRequestRate();
 
-//    float timespan =  ( new java.util.Date().getTime() - com.dexels.navajo.server.Dispatcher.startTime.getTime() ) / (float) 1000.0;
+//    float timespan =  ( new java.util.Date().getTime() - com.dexels.navajo.server.DispatcherFactory.startTime.getTime() ) / (float) 1000.0;
 //    return ((float) getRequestCount() / timespan );
   }
 
   public String getProductName() {
-    return com.dexels.navajo.server.Dispatcher.product;
+    return com.dexels.navajo.server.DispatcherFactory.getInstance().getProduct();
   }
   public String getVendor() {
-    return com.dexels.navajo.server.Dispatcher.vendor;
+    return com.dexels.navajo.server.DispatcherFactory.getInstance().getVendor();
   }
   public String getVersion() {
-	return Dispatcher.getVersion() + " (" + Dispatcher.getEdition() + ")";
+	return DispatcherFactory.getInstance().getVersion() + " (" + DispatcherFactory.getInstance().getEdition() + ")";
   }
   public String getRepository() {
-    if (com.dexels.navajo.server.Dispatcher.getInstance().getRepository() != null) {
-      return com.dexels.navajo.server.Dispatcher.getInstance().getRepository().getClass().
+    if (com.dexels.navajo.server.DispatcherFactory.getInstance().getNavajoConfig().getRepository() != null) {
+      return com.dexels.navajo.server.DispatcherFactory.getInstance().getNavajoConfig().getRepository().getClass().
           getName();
     } else {
       return "No repository configured";
@@ -291,7 +291,7 @@ public class AdminMap implements Mappable {
 	  return supportsStatistics;
   }
   public void setSupportsStatistics(boolean b) {
-		  Dispatcher.getInstance().getNavajoConfig().setStatisticsRunnerEnabled(b);
+		  DispatcherFactory.getInstance().getNavajoConfig().setStatisticsRunnerEnabled(b);
   }
   public boolean getSupportsLocks() {
 	  return supportsLocks;
@@ -316,11 +316,11 @@ public class AdminMap implements Mappable {
   }
 
   public int getRequestRateWindowSize(){
-    return Dispatcher.rateWindowSize;
+    return DispatcherFactory.getInstance().getRateWindowSize();
   }
 
   public boolean getMonitorOn() {
-    return Dispatcher.getInstance().getNavajoConfig().isMonitorOn();
+    return DispatcherFactory.getInstance().getNavajoConfig().isMonitorOn();
   }
 
   /**
@@ -331,34 +331,34 @@ public class AdminMap implements Mappable {
   public void setMonitorOn(boolean monitorOn) {
     System.err.println("Setting monitor to: " + monitorOn);
     this.monitorOn = monitorOn;
-    Dispatcher.getInstance().getNavajoConfig().setMonitorOn(monitorOn);
+    DispatcherFactory.getInstance().getNavajoConfig().setMonitorOn(monitorOn);
   }
 
   public int getMonitorTotaltime() {
-    return Dispatcher.getInstance().getNavajoConfig().getMonitorExceedTotaltime();
+    return DispatcherFactory.getInstance().getNavajoConfig().getMonitorExceedTotaltime();
   }
 
   public String getMonitorUsers() {
-    return Dispatcher.getInstance().getNavajoConfig().getMonitorUsers();
+    return DispatcherFactory.getInstance().getNavajoConfig().getMonitorUsers();
   }
 
   public String getMonitorWS() {
-    return Dispatcher.getInstance().getNavajoConfig().getMonitorWebservices();
+    return DispatcherFactory.getInstance().getNavajoConfig().getMonitorWebservices();
   }
 
   public void setMonitorWS(String monitorWS) {
     this.monitorWS = monitorWS;
-    Dispatcher.getInstance().getNavajoConfig().setMonitorWebservices(monitorWS);
+    DispatcherFactory.getInstance().getNavajoConfig().setMonitorWebservices(monitorWS);
   }
 
   public void setMonitorUsers(String monitorUsers) {
     this.monitorUsers = monitorUsers;
-    Dispatcher.getInstance().getNavajoConfig().setMonitorUsers(monitorUsers);
+    DispatcherFactory.getInstance().getNavajoConfig().setMonitorUsers(monitorUsers);
   }
 
   public void setMonitorTotaltime(int monitorTotaltime) {
     this.monitorTotaltime = monitorTotaltime;
-    Dispatcher.getInstance().getNavajoConfig().setMonitorExceedTotaltime(monitorTotaltime);
+    DispatcherFactory.getInstance().getNavajoConfig().setMonitorExceedTotaltime(monitorTotaltime);
   }
 
   public void setWebservice(String w) {
@@ -380,7 +380,7 @@ public class AdminMap implements Mappable {
 	  this.resetAdapters = b;
 	  if ( resetAdapters ) {
 		  System.err.println("Resetting adapters...");
-		  NavajoConfig.getInstance().doClearCache();
+		  DispatcherFactory.getInstance().getNavajoConfig().doClearCache();
 	  }
   }
   
@@ -392,15 +392,16 @@ public class AdminMap implements Mappable {
 	  }
 	  System.setProperty("com.dexels.navajo.DocumentImplementation", s);
 	  NavajoFactory.resetImplementation();
-	  NavajoFactory.getInstance().setTempDir(Dispatcher.getInstance().getTempDir());
+	  NavajoFactory.getInstance().setTempDir(DispatcherFactory.getInstance().getTempDir());
 		NavajoFactory.getInstance().setExpressionEvaluator(new DefaultExpressionEvaluator());
 	  System.err.println("Document class is now: " + getDocumentClass());
   }
   
+  @Deprecated
   public ClassCount [] getClassCounts() {
 	  ClassCount [] cc = new ClassCount[1];
 	  cc[0].className = "com.dexels.navajo.server.Dispatcher";
-	  cc[0].count = com.dexels.navajo.server.Dispatcher.getInstances();
+	  cc[0].count = -1;
 	  return cc;
   }
   

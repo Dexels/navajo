@@ -81,16 +81,16 @@ public class NavajoMap extends AsyncMappable  implements Mappable {
   private Property currentProperty;
   private String currentFullName;
   protected Access access;
-  protected NavajoConfig config;
+  protected NavajoConfigInterface config;
   protected Navajo inMessage;
   protected Message msgPointer;
 
   public String method;
   
-  public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
+  public void load(Access access) throws MappableException, UserException {
     this.access = access;
-    this.config = config;
-    this.inMessage = inMessage;
+    this.config = DispatcherFactory.getInstance().getNavajoConfig();
+    this.inMessage = access.getInDoc();
     killOnFinnish = true;
     try {
       outDoc = NavajoFactory.getInstance().createNavajo();
@@ -438,7 +438,7 @@ public class NavajoMap extends AsyncMappable  implements Mappable {
     		  h.setSchedule(trigger);
     		  h.setHeaderAttribute("keeprequestresponse", "true");
     	  }
-    	  inDoc = Dispatcher.getInstance().handle(outDoc, access.getUserCertificate());
+    	  inDoc = DispatcherFactory.getInstance().handle(outDoc, access.getUserCertificate());
       }
 
       // Get task if if trigger was specified.
@@ -867,7 +867,7 @@ public class NavajoMap extends AsyncMappable  implements Mappable {
 	  return 0;
   }
 
-  public void beforeResponse(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) {
+  public void beforeResponse(Access access) {
 	  access.setOutputDoc(inDoc);
 	  System.out.println("NavajoMap: in beforeResponse()");
 	  System.out.println("INDOC = " + access.getOutputDoc());
@@ -887,7 +887,7 @@ public class NavajoMap extends AsyncMappable  implements Mappable {
 	    // Clear request id.
 	    h.setRequestId(null);
 	    try {
-	      inDoc = Dispatcher.getInstance().handle(outDoc);
+	      inDoc = DispatcherFactory.getInstance().handle(outDoc);
 	    } catch (Exception e) {
 	      e.printStackTrace();
 	      throw new UserException(-1, e.getMessage());

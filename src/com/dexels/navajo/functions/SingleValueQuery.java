@@ -2,7 +2,6 @@ package com.dexels.navajo.functions;
 
 import com.dexels.navajo.parser.*;
 import com.dexels.navajo.adapter.SQLMap;
-import com.dexels.navajo.server.Dispatcher;
 import java.util.*;
 
 /**
@@ -57,7 +56,7 @@ public class SingleValueQuery extends FunctionInterface {
 
 	  //sql.setDebug(true);
 	  try {
-		  sql.load(null, null, null, Dispatcher.getInstance().getNavajoConfig());
+		  sql.load(null);
 		  if (query.indexOf(DATASOURCEDELIMITER) != -1) {
 			  // Contains datasource specification
 			  datasource = query.substring(0, query.indexOf(DATASOURCEDELIMITER));

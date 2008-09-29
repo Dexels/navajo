@@ -3,6 +3,7 @@ package com.dexels.navajo.adapter.navajostore;
 import com.dexels.navajo.mapping.AsyncMappable;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.Dispatcher;
+import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.enterprise.statistics.StoreInterface;
 
 import java.sql.*;
@@ -170,7 +171,7 @@ public final class HSQLStore implements StoreInterface {
     Connection myConnection = null;
 
     try {
-      sqlMap.load(null, null, null, Dispatcher.getInstance().getNavajoConfig());
+      sqlMap.load(null);
       sqlMap.setDatasource("navajostore");
       myConnection = sqlMap.getConnection();
       ready = true;
@@ -190,7 +191,7 @@ public final class HSQLStore implements StoreInterface {
    * @param a
    */
   protected void addAccess(final Access a, final AsyncMappable am) {
-    if (Dispatcher.getInstance().getNavajoConfig().getDbPath() != null) {
+    if (DispatcherFactory.getInstance().getNavajoConfig().getDbPath() != null) {
       Connection con = createConnection(false, false, false);
       if (con != null) {
         try {
@@ -213,7 +214,7 @@ public final class HSQLStore implements StoreInterface {
           ps.executeUpdate();
           ps.close();
           // Only log details if exception occured or if full accesslog monitoring is enabled.
-          if (a.getException() != null || Dispatcher.getInstance().getNavajoConfig().needsFullAccessLog(a) ) {
+          if (a.getException() != null || DispatcherFactory.getInstance().getNavajoConfig().needsFullAccessLog(a) ) {
             addLog(con, a);
           }
         }

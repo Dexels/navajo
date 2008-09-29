@@ -3,7 +3,8 @@ package com.dexels.navajo.adapter.sqlmap;
 import com.dexels.navajo.adapter.*;
 import java.sql.Connection;
 import com.dexels.navajo.server.Access;
-import java.sql.CallableStatement;
+import com.dexels.navajo.server.DispatcherFactory;
+
 import java.sql.*;
 import com.dexels.navajo.server.Dispatcher;
 
@@ -48,7 +49,7 @@ public final class SessionIdentification {
     if (dbIdentifier.equals("Oracle") && access != null) {
       SQLMap sql = new SQLMap();
       try {
-        sql.load(null, null, access, Dispatcher.getInstance().getNavajoConfig());
+        sql.load(access);
         sql.setDatasource(datasource);
         sql.setQuery(oracleSid);
         sql.setParameter(access.accessID);
@@ -74,7 +75,7 @@ public final class SessionIdentification {
       try {
         CallableStatement cstmt = con.prepareCall(
             "Call DBMS_APPLICATION_INFO.SET_MODULE(?, ?)");
-        cstmt.setString(1, Dispatcher.getInstance().getServerId() + "/" + Dispatcher.getInstance().getApplicationId());
+        cstmt.setString(1, DispatcherFactory.getInstance().getServerId() + "/" + DispatcherFactory.getInstance().getApplicationId());
         cstmt.setString(2, access.rpcName);
         cstmt.executeUpdate();
         cstmt.close();

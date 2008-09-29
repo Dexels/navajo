@@ -26,7 +26,7 @@ public class CellMap implements Mappable {
     this.id = id;
   }
 
-  public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
+  public void load(Access access) throws MappableException, UserException {
   }
 
 

@@ -2,7 +2,6 @@ package com.dexels.navajo.adapter.sqlmap;
 
 import com.dexels.navajo.document.*;
 
-import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.server.*;
 import java.util.*;
@@ -31,7 +30,7 @@ public class ResultSetMap implements Mappable {
     private HashMap values = new HashMap();
     private ArrayList order = new ArrayList();
 
-    public final void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {}
+    public final void load(Access access) throws MappableException, UserException {}
 
     public final void store() throws MappableException, UserException {}
 

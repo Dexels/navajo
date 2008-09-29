@@ -18,13 +18,10 @@ import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.property.*;
 
 import com.dexels.navajo.mapping.Mappable;
-import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.adapter.icalmap.ICalEvent;
-import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.adapter.icalmap.RandomString;
 import com.dexels.navajo.server.Access;
-import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.UserException;
 
@@ -322,8 +319,7 @@ BEGIN:VEVENT
 		return null;
 	}
 
-	public void load(Parameters parms, Navajo inMessage, Access access,
-			NavajoConfig config) throws MappableException, UserException {
+	public void load(Access access) throws MappableException, UserException {
 
 	}
 

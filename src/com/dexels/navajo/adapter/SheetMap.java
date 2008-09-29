@@ -90,7 +90,7 @@ public class SheetMap implements Mappable {
     }
   }
   
-  public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
+  public void load(Access access) throws MappableException, UserException {
   }
 
   /**

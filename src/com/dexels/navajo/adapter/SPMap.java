@@ -19,7 +19,6 @@ import java.util.logging.Level;
 import java.io.OutputStream;
 import java.sql.*;
 
-import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.adapter.sqlmap.ResultSetMap;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.server.*;
@@ -48,11 +47,10 @@ public class SPMap extends SQLMap {
 
   private static Object semaphore = new Object();
   
-  public void load(Parameters parms, Navajo inMessage, Access access,
-		  NavajoConfig config) throws com.dexels.navajo.server.
+  public void load(Access access) throws com.dexels.navajo.server.
 		  UserException, com.dexels.navajo.mapping.MappableException {
 	  
-	  super.load(parms, inMessage, access, config);
+	  super.load(access);
 	  synchronized ( semaphore  ) {
 		  if (lookupTable == null) {
 			  lookupTable = new HashMap();

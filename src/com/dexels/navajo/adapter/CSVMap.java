@@ -45,7 +45,7 @@ public class CSVMap implements Mappable {
 	private boolean update = false;
 	private ArrayList draftEntries = null;
 
-	public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
+	public void load(Access access) throws MappableException, UserException {
 
 	}
 

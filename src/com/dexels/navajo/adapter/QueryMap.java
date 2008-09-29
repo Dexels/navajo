@@ -22,9 +22,8 @@ public class QueryMap extends SQLMap {
 
   Navajo outputDoc;
 
-  public void load(Parameters parms, Navajo inMessage, Access access,
-                   NavajoConfig config) throws MappableException, UserException {
-    super.load(parms, inMessage, access, config);
+  public void load(Access access) throws MappableException, UserException {
+    super.load(access);
     outputDoc = access.getOutputDoc();
   }
 

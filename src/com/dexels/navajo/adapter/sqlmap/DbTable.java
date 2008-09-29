@@ -1,10 +1,7 @@
 package com.dexels.navajo.adapter.sqlmap;
 
 import com.dexels.navajo.mapping.Mappable;
-import com.dexels.navajo.server.Parameters;
-import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.server.Access;
-import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.mapping.MappableException;
 import java.util.ArrayList;
@@ -49,8 +46,7 @@ public class DbTable implements Mappable {
 
   public DbColumn[] columns;
 
-  public void load(Parameters parms, Navajo inMessage, Access access,
-                   NavajoConfig config) throws MappableException, UserException {
+  public void load(Access access) throws MappableException, UserException {
   }
 
   public void store() throws MappableException, UserException {
@@ -82,7 +78,7 @@ public class DbTable implements Mappable {
   protected final void setColumns() throws Exception {
 
     SQLMap sqlMap = new SQLMap();
-    sqlMap.load(null, null, null, Dispatcher.getInstance().getNavajoConfig());
+    sqlMap.load(null);
     sqlMap.setDatasource(datasource);
     Connection c = sqlMap.getConnection();
     ArrayList l = new ArrayList();

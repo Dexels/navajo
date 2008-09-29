@@ -12,9 +12,9 @@ public class CopyMessage implements Mappable {
   public String copyMessageFrom = "";
   public String copyMessageTo = "";
 
-  public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
+  public void load(Access access) throws MappableException, UserException {
     outputDoc = access.getOutputDoc();
-    inDoc = inMessage;
+    inDoc = access.getInDoc();
   }
 
   public void store() throws MappableException, UserException {

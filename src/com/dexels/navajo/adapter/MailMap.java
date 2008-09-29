@@ -2,12 +2,10 @@ package com.dexels.navajo.adapter;
 
 import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.server.UserException;
-import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.adapter.mailmap.AttachementMap;
 import com.dexels.navajo.adapter.mailmap.AttachmentMapInterface;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.server.Access;
-import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.enterprise.queue.RequestResponseQueueFactory;
 import com.dexels.navajo.util.AuditLog;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
@@ -83,9 +81,9 @@ public class MailMap implements MailMapInterface, Mappable, com.dexels.navajo.se
 
     public void kill() {}
 
-    public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException {
-        doc = inMessage;
-        myNavajo = inMessage;
+    public void load(Access access) throws MappableException {
+        doc = access.getInDoc();
+        myNavajo = access.getInDoc();
 		myAccess = access;
     }
 

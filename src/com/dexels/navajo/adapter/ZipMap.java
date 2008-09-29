@@ -32,14 +32,11 @@ import java.io.IOException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.FileInputStreamReader;
-import com.dexels.navajo.server.NavajoConfig;
-import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.server.UserException;
 
 public class ZipMap implements Mappable {
@@ -51,8 +48,7 @@ public class ZipMap implements Mappable {
 	ByteArrayOutputStream baos = null;
 	ZipOutputStream zo = null;
 
-	public void load(Parameters parms, Navajo inMessage, Access access,
-			NavajoConfig config) throws MappableException, UserException {
+	public void load(Access access) throws MappableException, UserException {
 		baos = new ByteArrayOutputStream();
 		zo = new ZipOutputStream(baos);
 	}
@@ -108,7 +104,7 @@ public class ZipMap implements Mappable {
 		FileInputStream fi = new FileInputStream(new File("/home/arjen/dbvis.license"));
 		Binary b = new Binary(fi);
 		ZipMap zm = new ZipMap();
-		zm.load(null, null, null, null);
+		zm.load(null);
 		zm.setName("dbvis.license");
 		zm.setContent(b);
 		fi = new FileInputStream(new File("/home/arjen/INDEX"));

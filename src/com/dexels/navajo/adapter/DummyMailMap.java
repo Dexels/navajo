@@ -4,13 +4,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import com.dexels.navajo.adapter.mailmap.AttachmentMapInterface;
-import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.Dispatcher;
-import com.dexels.navajo.server.NavajoConfig;
-import com.dexels.navajo.server.Parameters;
+import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.UserException;
 
 public class DummyMailMap implements MailMapInterface, Mappable {
@@ -94,14 +92,13 @@ public class DummyMailMap implements MailMapInterface, Mappable {
 		
 	}
 
-	public void load(Parameters parms, Navajo inMessage, Access access,
-			NavajoConfig config) throws MappableException, UserException {
+	public void load(Access access) throws MappableException, UserException {
 		// TODO Auto-generated method stub
 		
 	}
 
 	public void store() throws MappableException, UserException {
-		String mailStore = Dispatcher.getInstance().getNavajoConfig().getRootPath() + "/log/dummymailmap.log";
+		String mailStore = DispatcherFactory.getInstance().getNavajoConfig().getRootPath() + "/log/dummymailmap.log";
 		try {
 			FileWriter fw = new FileWriter(mailStore, true);
 			fw.write(this.sender + "," + this.recipients + "," + this.cc + "," + this.bcc + "," + this.subject + "," + this.text + "\n");

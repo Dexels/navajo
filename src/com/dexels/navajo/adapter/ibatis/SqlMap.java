@@ -4,12 +4,11 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.NavajoConfig;
-import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.server.UserException;
 import com.ibatis.sqlmap.client.SqlMapClient;
 import com.ibatis.sqlmap.client.SqlMapClientBuilder;
@@ -28,7 +27,7 @@ public abstract class SqlMap implements Mappable {
 	   */
 	  static {
 	    try {
-	    	InputStream is = ( NavajoConfig.getInstance() != null ? NavajoConfig.getInstance().getConfig("SqlMapConfig.xml") : null);
+	    	InputStream is = ( DispatcherFactory.getInstance().getNavajoConfig() != null ? DispatcherFactory.getInstance().getNavajoConfig().getConfig("SqlMapConfig.xml") : null);
 	    	if ( is == null ) {
 	    		is = new FileInputStream("/home/arjen/projecten/NavajoStandardEdition/config/SqlMapConfig.xml");
 	    	}
@@ -43,7 +42,7 @@ public abstract class SqlMap implements Mappable {
 	public void kill() {
 	}
 
-	public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
+	public void load(Access access) throws MappableException, UserException {
 	}
 
 	public void store() throws MappableException, UserException {

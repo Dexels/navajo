@@ -4,6 +4,7 @@ import com.dexels.navajo.mapping.AsyncMappable;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.Dispatcher;
+import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.UserException;
 
 import java.net.InetAddress;
@@ -114,7 +115,7 @@ public final class OracleStore implements StoreInterface {
 		SQLMap sqlMap = new SQLMap();
 		//sqlMap.debug = true;
 		try {
-			sqlMap.load(null, null, null, Dispatcher.getInstance().getNavajoConfig());
+			sqlMap.load(null);
 			sqlMap.setDatasource("navajostore");
 		}
 		catch (Exception ex) {
@@ -322,14 +323,14 @@ public final class OracleStore implements StoreInterface {
 		
 		if ( hostName == null ) {
 			try {
-				hostName = InetAddress.getLocalHost().getHostName()+" - "+Dispatcher.getInstance().getNavajoConfig().getInstanceName();
+				hostName = InetAddress.getLocalHost().getHostName()+" - "+DispatcherFactory.getInstance().getNavajoConfig().getInstanceName();
 			} catch (UnknownHostException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}	
 		}
 		
-		if (Dispatcher.getInstance().getNavajoConfig().getDbPath() != null) {
+		if (DispatcherFactory.getInstance().getNavajoConfig().getDbPath() != null) {
 			
 			// Check for piggy back data.
 			Iterator iter = accessMap.values().iterator();
@@ -435,7 +436,7 @@ public final class OracleStore implements StoreInterface {
 							}
 							
 //							 Only log details if exception occured or if full accesslog monitoring is enabled.
-							if (a.getException() != null || Dispatcher.getInstance().getNavajoConfig().needsFullAccessLog(a) ) {
+							if (a.getException() != null || DispatcherFactory.getInstance().getNavajoConfig().needsFullAccessLog(a) ) {
 								addLog(con, a);
 							}
 							
@@ -526,7 +527,7 @@ public final class OracleStore implements StoreInterface {
 					ps.setString(1, ale.getInstanceName());
 					ps.setString(2, ale.getSubSystem());
 					ps.setString(3, ale.getMessage());
-					ps.setString(4, ale.getLevel());
+					ps.setString(4, ale.getLevel().getName());
 					ps.setString(5, ale.getAccessId());
 					ps.setTimestamp(6, new java.sql.Timestamp(ale.getCreated().getTime()));
 					ps.executeUpdate();

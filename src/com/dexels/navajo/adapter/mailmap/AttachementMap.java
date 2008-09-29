@@ -3,11 +3,8 @@ package com.dexels.navajo.adapter.mailmap;
 import java.io.Serializable;
 
 import com.dexels.navajo.mapping.Mappable;
-import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.adapter.MailMap;
-import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.server.Access;
-import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.document.types.Binary;
@@ -39,7 +36,7 @@ public class AttachementMap implements Mappable, Serializable, AttachmentMapInte
   // Encoding is e.g. base64
   public String encoding = null;
 
-  public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
+  public void load(Access access) throws MappableException, UserException {
   }
 
   public void store() throws MappableException, UserException {

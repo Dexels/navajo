@@ -19,7 +19,7 @@ public class RecordMap implements Mappable {
   public Object recordValue;
   public String recordName = "";
 
-  public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config)
+  public void load(Access access)
         throws MappableException, UserException {
   }
 

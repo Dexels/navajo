@@ -30,7 +30,7 @@ public class CSVEntryMap implements Mappable {
   private int max = -1;
   private boolean update = false;
 
-  public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
+  public void load(Access access) throws MappableException, UserException {
     newEntries = new HashMap();
   }
 

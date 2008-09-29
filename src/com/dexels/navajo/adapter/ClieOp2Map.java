@@ -10,13 +10,10 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import com.dexels.navajo.adapter.clieop.ClieOp2Post;
-import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.Access;
-import com.dexels.navajo.server.NavajoConfig;
-import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.server.UserException;
 
 public class ClieOp2Map implements Mappable {
@@ -63,7 +60,7 @@ public class ClieOp2Map implements Mappable {
 		this.posts = posts;
 	}
 
-	public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
+	public void load(Access access) throws MappableException, UserException {
 	}
 
 	public Binary getContent() throws UserException {

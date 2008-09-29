@@ -24,7 +24,7 @@ public class ProxyMap implements Mappable {
   private Access access;
   private Navajo inMessage;
 
-  public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
+  public void load(Access access) throws MappableException, UserException {
     this.access = access;
     this.inMessage = inMessage;
   }

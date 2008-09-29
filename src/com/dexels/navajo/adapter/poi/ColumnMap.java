@@ -18,7 +18,7 @@ public class ColumnMap implements Mappable {
 
   public CellMap [] row;
 
-  public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
+  public void load(Access access) throws MappableException, UserException {
 
   }
 

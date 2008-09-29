@@ -31,11 +31,11 @@ public class SQLMaintenanceMap implements Mappable {
   private Parameters parms;
   private Navajo inMessage;
   private Access access;
-  private NavajoConfig config;
+  private NavajoConfigInterface config;
 
   private static boolean noAccess = false;
 
-  public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
+  public void load(Access access) throws MappableException, UserException {
 
       //if (noAccess)
       //  throw new MappableException("Cannot enter maintenance object, already in use");
@@ -43,10 +43,9 @@ public class SQLMaintenanceMap implements Mappable {
       noAccess = true;
       System.out.println("In SQLMaintenanceMap");
 
-      this.parms = parms;
-      this.inMessage = inMessage;
+      this.inMessage = access.getInDoc();
       this.access = access;
-      this.config = config;
+      this.config = DispatcherFactory.getInstance().getNavajoConfig();
 
       try {
 //        sqlMapConfigFile = XMLutils.createNavajoInstance(config. getConfigPath() + "/sqlmap.xml");
@@ -179,7 +178,7 @@ public class SQLMaintenanceMap implements Mappable {
         saveConfigFile(false);
         // reload sqlmap.xml
         SQLMap sqlMap = new SQLMap();
-        sqlMap.load(parms, inMessage, access, config);
+        sqlMap.load(access);
         sqlMap.setReload(datasource.datasourceName);
       }
     }

@@ -29,15 +29,12 @@ import java.io.StringReader;
 import java.util.*;
 
 import com.dexels.navajo.adapter.xmlmap.TagMap;
-import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.Access;
-import com.dexels.navajo.server.NavajoConfig;
-import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.server.UserException;
 
 public class XMLMap extends TagMap implements Mappable {
@@ -47,8 +44,7 @@ public class XMLMap extends TagMap implements Mappable {
 	public String stringContent = null;
 	public boolean debug = false;
 	
-	public void load(Parameters parms, Navajo inMessage, Access access,
-			NavajoConfig config) throws MappableException, UserException {
+	public void load(Access access) throws MappableException, UserException {
 	}
 	
 	public void store() throws MappableException, UserException {

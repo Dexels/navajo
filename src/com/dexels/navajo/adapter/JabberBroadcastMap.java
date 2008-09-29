@@ -22,13 +22,13 @@ public class JabberBroadcastMap implements Mappable {
 
 	}
 
-	public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
+	public void load(Access access) throws MappableException, UserException {
 		try {
 			StringWriter sw = new StringWriter();
 			Navajo n = null;
 			
 			if(useIn) {
-				n = inMessage;
+				n = access.getInDoc();
 			} else {
 				n = access.getOutputDoc();
 			}

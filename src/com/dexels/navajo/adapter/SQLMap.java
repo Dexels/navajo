@@ -15,7 +15,6 @@ import java.util.StringTokenizer;
 
 import org.dexels.grus.DbConnectionBroker;
 
-import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.server.*;
@@ -182,7 +181,7 @@ public class SQLMap implements Mappable, LazyArray {
 
   private int connectionId = -1;
 
-  protected NavajoConfig navajoConfig = null;
+  protected NavajoConfigInterface navajoConfig = null;
 
   // handling batch mode, multiple SQL statements
   private boolean batchMode = false;
@@ -195,7 +194,7 @@ public class SQLMap implements Mappable, LazyArray {
   
   private static Object semaphore = new Object();
   
-  private void createDataSource(Message body, NavajoConfig config) throws Throwable {
+  private void createDataSource(Message body, NavajoConfigInterface config) throws Throwable {
 
     String dataSourceName = body.getName();
 
@@ -369,10 +368,9 @@ public class SQLMap implements Mappable, LazyArray {
 	  binaryStreamList.clear();
   }
 
-  public void load(Parameters parms, Navajo inMessage, Access access,
-                   NavajoConfig config) throws MappableException, UserException {
+  public void load(Access access) throws MappableException, UserException {
     // Check whether property file sqlmap.properties exists.
-    navajoConfig = config;
+    navajoConfig = DispatcherFactory.getInstance().getNavajoConfig();
     myAccess = access;
     setReload("");
     if (debug) {

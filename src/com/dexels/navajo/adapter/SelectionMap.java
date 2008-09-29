@@ -12,6 +12,9 @@ package com.dexels.navajo.adapter;
  * $Id$
  *
  * $Log$
+ * Revision 1.3  2008/09/29 10:33:28  arjen
+ * Several changes for Navajo Refactor (The NavaUnitTest Version)
+ *
  * Revision 1.2  2004/05/05 12:17:51  arjen
  * Added support for killing async threads remotely.
  * Fixed bug in InitNavajoStatus causing unwanted duplication
@@ -40,10 +43,8 @@ package com.dexels.navajo.adapter;
  */
 
 import com.dexels.navajo.mapping.Mappable;
-import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.server.Access;
-import com.dexels.navajo.server.NavajoConfig;
 
 import java.util.*;
 
@@ -56,7 +57,7 @@ public class SelectionMap implements Mappable {
 
     public SelectionMap() {}
 
-    public void load(Parameters parm2, Navajo parm3, Access parm4, NavajoConfig parm5) throws com.dexels.navajo.server.UserException, com.dexels.navajo.mapping.MappableException {
+    public void load(Access parm4) throws com.dexels.navajo.server.UserException, com.dexels.navajo.mapping.MappableException {
         optionsList = new ArrayList();
     }
 

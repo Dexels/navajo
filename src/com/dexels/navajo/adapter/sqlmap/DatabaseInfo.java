@@ -1,12 +1,8 @@
 package com.dexels.navajo.adapter.sqlmap;
 
 import com.dexels.navajo.adapter.*;
-import java.sql.DatabaseMetaData;
 import java.sql.*;
-import com.dexels.navajo.server.Parameters;
-import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.server.Access;
-import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.mapping.Mappable;
@@ -65,7 +61,7 @@ public class DatabaseInfo implements Mappable {
       DatabaseMetaData metaData = null;
 
       try {
-        sqlMap.load(null, null, null, Dispatcher.getInstance().getNavajoConfig());
+        sqlMap.load(null);
         sqlMap.setDatasource(datasource);
         Connection c = sqlMap.getConnection();
         metaData = c.getMetaData();
@@ -189,7 +185,7 @@ public class DatabaseInfo implements Mappable {
     return this.version;
   }
 
-  public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
+  public void load(Access access) throws MappableException, UserException {
   }
 
   public void store() throws MappableException, UserException {

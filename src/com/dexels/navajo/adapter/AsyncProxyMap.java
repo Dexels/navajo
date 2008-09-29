@@ -23,11 +23,11 @@ public class AsyncProxyMap extends AsyncMappable {
   private Navajo inDoc;
   private Access access;
 
-  public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws com.dexels.navajo.server.UserException, com.dexels.navajo.mapping.MappableException {
+  public void load(Access access) throws com.dexels.navajo.server.UserException, com.dexels.navajo.mapping.MappableException {
     username = access.rpcUser;
     password = access.rpcPwd;
     this.access = access;
-    outDoc = inMessage.copy();
+    outDoc = access.getInDoc().copy();
     killOnFinnish = true;
   }
 
@@ -49,7 +49,7 @@ public class AsyncProxyMap extends AsyncMappable {
     return 0;
   }
 
-  public void beforeResponse(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) {
+  public void beforeResponse(Access access) {
     access.setOutputDoc(inDoc);
     System.out.println("AsyncProxyMap: in beforeResponse()");
     System.out.println("INDOC = " + access.getOutputDoc());
@@ -73,7 +73,7 @@ public class AsyncProxyMap extends AsyncMappable {
     // Clear request id.
     h.setRequestId(null);
     try {
-      inDoc = Dispatcher.getInstance().handle(outDoc);
+      inDoc = DispatcherFactory.getInstance().handle(outDoc);
     } catch (Exception e) {
       e.printStackTrace();
       throw new UserException(-1, e.getMessage());

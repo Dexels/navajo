@@ -17,7 +17,7 @@ import com.dexels.navajo.server.*;
 public class NavajoAccess implements Mappable {
 
     private Access access;
-    private NavajoConfig config;
+    private NavajoConfigInterface config;
 
     public String rpcName;
     public String rpcUser;
@@ -26,7 +26,7 @@ public class NavajoAccess implements Mappable {
 
     public NavajoAccess() {}
 
-    public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
+    public void load(Access access) throws MappableException, UserException {
         this.access = access;
         this.config = config;
     }

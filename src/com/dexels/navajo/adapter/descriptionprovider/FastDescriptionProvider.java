@@ -13,8 +13,9 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.Dispatcher;
+import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.NavajoConfig;
-import com.dexels.navajo.server.Parameters;
+import com.dexels.navajo.server.NavajoConfigInterface;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.server.descriptionprovider.BaseDescriptionProvider;
 import com.dexels.navajo.server.enterprise.descriptionprovider.PropertyDescription;
@@ -53,7 +54,7 @@ public class FastDescriptionProvider extends BaseDescriptionProvider {
 	private String datasource;
 	private Access myAccess;
 	
-	public void load(Parameters parms, Navajo inMessage, Access access,	NavajoConfig config) throws MappableException, UserException {
+	public void load(Access access) throws MappableException, UserException {
 		myAccess = access;
 	}
 	
@@ -303,14 +304,12 @@ public class FastDescriptionProvider extends BaseDescriptionProvider {
 		// sqlMap.debug = true;
 		try {
 			
-			NavajoConfig nc = null;
-			if ( Dispatcher.getInstance() != null ) {
-				nc = Dispatcher.getInstance().getNavajoConfig();
-			} else {
-				nc = Dispatcher.getInstance(new java.net.URL("file:///home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/config/server.xml"), 
-				  new com.dexels.navajo.server.FileInputStreamReader()).getNavajoConfig();
-			}
-			sqlMap.load(null, null, null, Dispatcher.getInstance().getNavajoConfig());
+			NavajoConfigInterface nc = null;
+			if ( DispatcherFactory.getInstance() != null ) {
+				nc = DispatcherFactory.getInstance().getNavajoConfig();
+			} 
+			
+			sqlMap.load(null);
 			
 			datasource = "navajostore";
 			if(getDescriptionMessage()!=null) {

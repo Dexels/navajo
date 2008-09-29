@@ -20,7 +20,7 @@ public class LogMap implements Mappable {
   public String message;
 
 
-  public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
+  public void load(Access access) throws MappableException, UserException {
   }
 
   public void setMessage(String msg) {

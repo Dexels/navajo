@@ -5,19 +5,19 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
-import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.NavajoConfig;
-import com.dexels.navajo.server.Parameters;
+import com.dexels.navajo.server.NavajoConfigInterface;
 import com.dexels.navajo.server.UserException;
 
 public class DescriptionCacheMap implements Mappable {
 
 	public boolean dumpCache = false;
 	private Access myAccess;
-	private NavajoConfig myConfig;
+	private NavajoConfigInterface myConfig;
 	public boolean doFlushCache = false;
 //	public String doFlushUser = null;
 	public int cacheSize = 0;
@@ -31,12 +31,11 @@ public class DescriptionCacheMap implements Mappable {
 
 	}
 
-	public void load(Parameters parms, Navajo inMessage, Access access,
-			NavajoConfig config) throws MappableException, UserException {
+	public void load(Access access) throws MappableException, UserException {
 		// TODO Auto-generated method stub
 		myAccess = access;
-		username = inMessage.getHeader().getRPCUser();
-		myConfig = config;
+		username = access.getInDoc().getHeader().getRPCUser();
+		myConfig = DispatcherFactory.getInstance().getNavajoConfig();
 	}
 
 //	public void setDumpCache(boolean b) {

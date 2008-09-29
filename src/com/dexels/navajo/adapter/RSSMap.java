@@ -1,12 +1,9 @@
 package com.dexels.navajo.adapter;
 
 import com.dexels.navajo.mapping.Mappable;
-import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.adapter.rss.RSSItem;
-import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.server.Access;
-import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.UserException;
 import com.sun.cnpi.rss.parser.*;
@@ -68,7 +65,7 @@ public class RSSMap implements Mappable {
 	public void kill() {
 	}
 
-	public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
+	public void load(Access access) throws MappableException, UserException {
 		channel = new Channel();
 		rss = new Rss("version 2.0");
 		rss.setChannel(channel);
@@ -246,7 +243,7 @@ public class RSSMap implements Mappable {
 		try {
 			RSSMap m = new RSSMap();
 			// m.setRssFeed(m.rssFeed);
-			m.load(null, null, null, null);
+			m.load(null);
 			m.setTitle("Dexels News");
 			m.setCopyright("CNN");
 			m.setLanguage("en");

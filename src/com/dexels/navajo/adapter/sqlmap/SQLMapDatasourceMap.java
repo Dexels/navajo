@@ -44,7 +44,7 @@ public class SQLMapDatasourceMap implements Mappable {
   public int max_connections;
   public String driver;
 
-  public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
+  public void load(Access access) throws MappableException, UserException {
 
   }
 

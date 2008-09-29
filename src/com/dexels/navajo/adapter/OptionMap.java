@@ -11,6 +11,9 @@ package com.dexels.navajo.adapter;
  * $Id$
  *
  * $Log$
+ * Revision 1.3  2008/09/29 10:33:28  arjen
+ * Several changes for Navajo Refactor (The NavaUnitTest Version)
+ *
  * Revision 1.2  2005/06/04 08:43:52  arjen
  * Removed redundant imports.
  *
@@ -43,7 +46,7 @@ public class OptionMap implements Mappable {
 
     public OptionMap() {}
 
-    public void load(Parameters parm2, Navajo parm3, Access parm4, NavajoConfig config) throws com.dexels.navajo.server.UserException, com.dexels.navajo.mapping.MappableException {}
+    public void load(Access parm4) throws com.dexels.navajo.server.UserException, com.dexels.navajo.mapping.MappableException {}
 
     public void store() throws com.dexels.navajo.server.UserException, com.dexels.navajo.mapping.MappableException {}
 

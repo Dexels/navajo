@@ -244,7 +244,7 @@ public class DatabaseDescriptionProvider extends CachedDescriptionProvider {
 		SQLMap sqlMap = new SQLMap();
 		// sqlMap.debug = true;
 		try {
-			sqlMap.load(null, null, null, Dispatcher.getInstance().getNavajoConfig());
+			sqlMap.load(null);
 			sqlMap.setDatasource("navajostore");
 		}
 		catch (Exception ex) {

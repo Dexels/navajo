@@ -6,12 +6,9 @@ package com.dexels.navajo.adapter.filemap;
 
 import java.util.ArrayList;
 
-import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.server.Access;
-import com.dexels.navajo.server.NavajoConfig;
-import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.server.UserException;
 
 /**
@@ -39,7 +36,7 @@ public class FileLineMap implements Mappable {
 	 *      com.dexels.navajo.document.Navajo, com.dexels.navajo.server.Access,
 	 *      com.dexels.navajo.server.NavajoConfig)
 	 */
-	public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
+	public void load(Access access) throws MappableException, UserException {
 	}
 
 	/*
