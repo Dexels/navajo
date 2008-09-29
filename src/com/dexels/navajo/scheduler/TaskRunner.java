@@ -37,14 +37,16 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.Semaphore;
 import java.util.logging.Level;
 
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
+import com.dexels.navajo.scheduler.triggers.IllegalTrigger;
 import com.dexels.navajo.server.Access;
-import com.dexels.navajo.server.Dispatcher;
+import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.GenericThread;
 import com.dexels.navajo.server.enterprise.scheduler.TaskInterface;
 import com.dexels.navajo.server.enterprise.scheduler.TaskRunnerInterface;
@@ -56,7 +58,7 @@ import com.dexels.navajo.sharedstore.SharedStoreLock;
 import com.dexels.navajo.util.AuditLog;
 
 /**
- * The TaskRunner controls the set of tasks and offers logging functionality to tasks.
+ * The TaskRunner controls the set of user defined tasks (in tasks.xml) and offers logging functionality to tasks.
  * 
  * Tasks can be scheduled from the Dispatcher if the header of the requests contains a definition to do this:
  * 
@@ -84,7 +86,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 	private final static String TASK_INPUT_DIR = "tasks";
 	private final static String TASK_LOG_FILE = "tasks.log";
 	
-	//private static Object semaphore = new Object();
+	private static Object semaphore = new Object();
 	private static Object initialization = new Object();
 	private static String id = "Navajo TaskRunner";
 	
@@ -107,7 +109,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 	 * 
 	 * @param t
 	 */
-	protected void writeTaskInput(Task t) {
+	private void writeTaskInput(Task t) {
 		
 		// TODO: Make sure that the task input gets written in a shared store.
 		
@@ -164,7 +166,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 	 * 
 	 * @param t
 	 */
-	protected void readTaskInput(Task t) {
+	private void readTaskInput(Task t) {
 		try {
 			SharedStoreInterface si = SharedStoreFactory.getInstance();
 			InputStream is = si.getStream(TASK_INPUT_DIR, t.getId() + "_request.xml");
@@ -206,8 +208,8 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 	}
 	
 	private long getConfigTimeStamp() {
-		if (  Dispatcher.getInstance() != null && Dispatcher.getInstance().getNavajoConfig() != null ) {
-			java.io.File f = new java.io.File(Dispatcher.getInstance().getNavajoConfig().getConfigPath() + "/" + TASK_CONFIG);
+		if (  DispatcherFactory.getInstance() != null && DispatcherFactory.getInstance().getNavajoConfig() != null ) {
+			java.io.File f = new java.io.File(DispatcherFactory.getInstance().getNavajoConfig().getConfigPath() + "/" + TASK_CONFIG);
 			if ( f != null && f.exists() ) {
 				return f.lastModified();
 			}
@@ -246,13 +248,12 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 	 */
 	protected Navajo readConfig(boolean init, boolean readonly) {
 		// Read task configuration file to read predefined tasks config/tasks.xml
-		
 		HashSet<String> currentTasks = new HashSet<String>();
 		
 		Navajo taskDoc = null;
 		try {
 
-			taskDoc = Dispatcher.getInstance().getNavajoConfig().readConfig(TASK_CONFIG);
+			taskDoc = DispatcherFactory.getInstance().getNavajoConfig().readConfig(TASK_CONFIG);
 			setConfigTimeStamp();
 			
 			if ( taskDoc != null ) {
@@ -305,7 +306,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 				
 				// Write task definition file back (in case of workflow tasks that were skipped).
 				if ( init ) {
-					Dispatcher.getInstance().getNavajoConfig().writeConfig(TASK_CONFIG, taskDoc);
+					DispatcherFactory.getInstance().getNavajoConfig().writeConfig(TASK_CONFIG, taskDoc);
 				}
 			}
 
@@ -364,8 +365,8 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 	public final void worker() {
 		synchronized (initialization) {
 			// Check whether tasks.xml has gotten updated
-//			System.err.println("IN WORKER, isConfigModified = " + isConfigModified() + ", CHIEF = " +  TribeManager.getInstance().getIsChief() +
-//			   ", configIsBeingUpdated = " + instance.configIsBeingUpdated + ", beingInitialized = " + beingInitialized);
+			//System.err.println("IN WORKER, isConfigModified = " + isConfigModified() + ", CHIEF = " +  TribeManagerFactory.getInstance().getIsChief() +
+			//   ", configIsBeingUpdated = " + instance.configIsBeingUpdated + ", beingInitialized = " + beingInitialized);
 			if ( isConfigModified() &&   TribeManagerFactory.getInstance().getIsChief() && !instance.configIsBeingUpdated && !beingInitialized ) {
 				AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Task configuration is modified, re-initializing");
 				readConfig(false, false);
@@ -377,7 +378,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 		return tasks.size();
 	}
 	
-	protected synchronized SharedStoreLock getConfigLock() {
+	protected SharedStoreLock getConfigLock() {
 
 		SharedStoreInterface si = SharedStoreFactory.getInstance();
 		SharedStoreLock ssl = si.lock("config", "tasks.xml", SharedStoreInterface.READ_WRITE_LOCK, true);
@@ -385,10 +386,11 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 
 	}
 	
-	protected synchronized void releaseConfigLock(SharedStoreLock ssl) {
+	protected void releaseConfigLock(SharedStoreLock ssl) {
 
 		SharedStoreInterface si = SharedStoreFactory.getInstance();
 		si.release(ssl);
+		System.err.println("RELEASED LOCK: " + ssl);
 
 	}
 	
@@ -396,7 +398,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 
 		configIsBeingUpdated = true;
 		try {
-			Dispatcher.getInstance().getNavajoConfig().writeConfig(TASK_CONFIG, taskDoc);
+			DispatcherFactory.getInstance().getNavajoConfig().writeConfig(TASK_CONFIG, taskDoc);
 		} catch (Exception e) {
 			e.printStackTrace(System.err);
 		}
@@ -528,7 +530,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 			StringBuffer contentLine = new StringBuffer();
 
 			contentLine.append(
-					Dispatcher.getInstance().getNavajoConfig().getInstanceName() + ";" + 
+					DispatcherFactory.getInstance().getNavajoConfig().getInstanceName() + ";" + 
 					t.getId() + ";" + 
 					t.getWebservice() + ";" + 
 					t.getUsername() + ";" + 
@@ -564,7 +566,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 		addTask(id, t, true);
 	}
 	
-	private final String generateTaskId() {
+	private synchronized final String generateTaskId() {
 		long l = rand.nextLong() + System.currentTimeMillis();
 		return "scheduled_task"+l;
 	}
@@ -610,7 +612,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 					ssl = getConfigLock();
 
 					// Read current version of tasks.xml.
-					taskDoc = Dispatcher.getInstance().getNavajoConfig().readConfig(TASK_CONFIG);
+					taskDoc = DispatcherFactory.getInstance().getNavajoConfig().readConfig(TASK_CONFIG);
 
 					// Create empty tasks.xml if it did not yet exist.
 					if (taskDoc == null) {

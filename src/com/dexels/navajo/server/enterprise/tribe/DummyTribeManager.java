@@ -3,11 +3,9 @@ package com.dexels.navajo.server.enterprise.tribe;
 import java.util.HashSet;
 import java.util.Set;
 
-
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.DispatcherFactory;
 
 public class DummyTribeManager implements TribeManagerInterface {
 
@@ -82,6 +80,15 @@ public class DummyTribeManager implements TribeManagerInterface {
 	public Navajo forward(Navajo in, Object address) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public void addTribeMember(TribeMemberInterface tm) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public String getMyName() {
+		return DispatcherFactory.getInstance().getNavajoConfig().getInstanceName();
 	}
 
 }

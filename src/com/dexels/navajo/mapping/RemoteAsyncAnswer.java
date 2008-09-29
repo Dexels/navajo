@@ -1,6 +1,7 @@
 package com.dexels.navajo.mapping;
 
 import com.dexels.navajo.server.enterprise.tribe.Answer;
+import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
 import com.dexels.navajo.tribe.TribeManager;
 
 public class RemoteAsyncAnswer extends Answer {
@@ -21,8 +22,8 @@ public class RemoteAsyncAnswer extends Answer {
 		String ref = rasr.getRef();
 		if (AsyncStore.getInstance().getInstance(ref) != null ) {
 			acknowledged = true;
-			ownerOfRef = TribeManager.getInstance().getMyMembership().getAddress();
-			hostNameOwnerOfRef = TribeManager.getInstance().getMyMembership().getMemberName();
+			ownerOfRef = TribeManagerFactory.getInstance().getMyMembership().getAddress();
+			hostNameOwnerOfRef = TribeManagerFactory.getInstance().getMyMembership().getMemberName();
 		}
 	}
 

@@ -4,6 +4,7 @@ import com.dexels.navajo.document.*;
 
 import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.server.Dispatcher;
+import com.dexels.navajo.server.DispatcherFactory;
 
 import java.util.*;
 
@@ -520,6 +521,6 @@ public final class DefaultExpressionEvaluator
   }
 
   public ClassLoader getScriptClassLoader() {
-	  return Dispatcher.getInstance().getNavajoConfig().getClassloader();
+	  return DispatcherFactory.getInstance().getNavajoConfig().getClassloader();
   }
 }

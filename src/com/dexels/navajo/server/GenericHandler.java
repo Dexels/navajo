@@ -48,7 +48,7 @@ public final class GenericHandler extends ServiceHandler {
     private static Object mutex1 = new Object();
     private static Object mutex2 = new Object();
    
-    public static final String applicationGroup = Dispatcher.getInstance().getNavajoConfig().getInstanceGroup();
+    public static final String applicationGroup = DispatcherFactory.getInstance().getNavajoConfig().getInstanceGroup();
     
     @SuppressWarnings("unchecked")
 	public GenericHandler() {
@@ -71,7 +71,7 @@ public final class GenericHandler extends ServiceHandler {
     }
 
     private static final Object[] getScriptPathServiceNameAndScriptFile(Access a) {
-    	String scriptPath = NavajoConfig.getInstance().getScriptPath();
+    	String scriptPath = DispatcherFactory.getInstance().getNavajoConfig().getScriptPath();
     	
     	int strip = a.rpcName.lastIndexOf("/");
         String pathPrefix = "";
@@ -93,8 +93,8 @@ public final class GenericHandler extends ServiceHandler {
     			serviceName += "_beta";
     		} 
     	}
-    	String sourceFileName = NavajoConfig.getInstance().getCompiledScriptPath() + "/" + pathPrefix + serviceName + ".java";
-    	String classFileName =  NavajoConfig.getInstance().getCompiledScriptPath() + "/" + pathPrefix + serviceName + ".class";
+    	String sourceFileName = DispatcherFactory.getInstance().getNavajoConfig().getCompiledScriptPath() + "/" + pathPrefix + serviceName + ".java";
+    	String classFileName =  DispatcherFactory.getInstance().getNavajoConfig().getCompiledScriptPath() + "/" + pathPrefix + serviceName + ".class";
     	String className = (pathPrefix.equals("") ? serviceName : MappingUtils.createPackageName(pathPrefix) + "." + serviceName);
     	 
 //    	System.err.println("in getScriptPathServiceNameAndScriptFile()");
@@ -180,7 +180,7 @@ public final class GenericHandler extends ServiceHandler {
         	  
             newLoader = (NavajoClassLoader) loadedClasses.get(className);
          
-            if (properties.compileScripts) {
+            if (properties.isCompileScripts()) {
             	if (scriptFile.exists()) {
 
             		if ( checkScriptRecompile(scriptFile, sourceFile) ) {
@@ -242,8 +242,8 @@ public final class GenericHandler extends ServiceHandler {
             newLoader = (NavajoClassLoader) loadedClasses.get(className);
             if (newLoader == null ) {
             	newLoader = new NavajoClassLoader(null, properties.getCompiledScriptPath(), 
-            			( access.betaUser ? NavajoConfig.getInstance().getBetaClassLoader() : 
-            				NavajoConfig.getInstance().adapterClassloader) );
+            			( access.betaUser ? DispatcherFactory.getInstance().getNavajoConfig().getBetaClassLoader() : 
+            				DispatcherFactory.getInstance().getNavajoConfig().getClassloader() ) );
             	loadedClasses.put(className, newLoader);
             }
             
@@ -260,7 +260,7 @@ public final class GenericHandler extends ServiceHandler {
 
             access.setCompiledScript(cso);
             cso.setClassLoader(newLoader);
-            cso.run(parms, requestDocument, access, properties);
+            cso.run(access);
 
             return access.getOutputDoc();
           } catch (Throwable e) {

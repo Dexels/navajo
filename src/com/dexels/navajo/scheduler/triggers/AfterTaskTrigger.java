@@ -1,8 +1,11 @@
-package com.dexels.navajo.scheduler;
+package com.dexels.navajo.scheduler.triggers;
 
 import java.io.Serializable;
 
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.scheduler.Task;
+import com.dexels.navajo.scheduler.TaskListener;
+import com.dexels.navajo.scheduler.TaskRunner;
 import com.dexels.navajo.server.GenericThread;
 
 /**

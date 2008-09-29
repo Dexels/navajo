@@ -15,7 +15,7 @@ import com.dexels.navajo.loader.NavajoClassLoader;
 
 public class RepositoryFactory {
 
-    public static Repository getRepository(String className, NavajoConfig config) {
+    public static Repository getRepository(String className, NavajoConfigInterface config) {
         try {
             Repository rp = (Repository) config.getClassloader().getClass(className).newInstance();
             rp.setNavajoConfig(config);
@@ -33,7 +33,7 @@ public class RepositoryFactory {
     }
 
     @SuppressWarnings("unchecked")
-	public static Repository getRepository(NavajoClassLoader loader, String repositoryClass, NavajoConfig config) {
+	public static Repository getRepository(NavajoClassLoader loader, String repositoryClass, NavajoConfigInterface config) {
         try {
             Class c = loader.getClass(repositoryClass);
             Repository rp = (Repository) c.newInstance();

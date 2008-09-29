@@ -35,11 +35,13 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.Dispatcher;
+import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.GenericThread;
 import com.dexels.navajo.server.enterprise.integrity.WorkerInterface;
 import com.dexels.navajo.server.jmx.JMXHelper;
@@ -75,13 +77,13 @@ public class Worker extends GenericThread implements WorkerMXBean, WorkerInterfa
 	private static Object semaphore = new Object();
 	
 	// Worklist containst responses that still need to be written to a file.
-	private Map<String,Navajo> workList = new HashMap<String,Navajo>();
+	protected Map<String,Navajo> workList = new HashMap<String,Navajo>();
 	// Integrity cache contains mapping between unique request id and response file.
-	private Map<String,File> integrityCache = new HashMap<String,File>();
+	protected Map<String,File> integrityCache = new HashMap<String,File>();
 	// Contains all unique request ids that still need to be handled by the worker thread.
-	private Set<String> notWrittenReponses = Collections.synchronizedSet(new HashSet<String>());
+	protected Set<String> notWrittenReponses = Collections.synchronizedSet(new HashSet<String>());
 	// Contains all currently running request ids.
-	private Map<String,Access> runningRequestIds = Collections.synchronizedMap(new HashMap<String,Access>());
+	protected Map<String,Access> runningRequestIds = Collections.synchronizedMap(new HashMap<String,Access>());
 	
 	private final static String RESPONSE_PREFIX = "navajoresponse_";
 	private final static String myId = "Navajo Integrity Worker";
@@ -117,7 +119,7 @@ public class Worker extends GenericThread implements WorkerMXBean, WorkerInterfa
 			// remove all previously stored response files.
 			File f = null;
 			try {
-				f = Dispatcher.getInstance().createTempFile(RESPONSE_PREFIX, ".xml");
+				f = DispatcherFactory.getInstance().createTempFile(RESPONSE_PREFIX, ".xml");
 				File dir = f.getParentFile();
 				File [] allResponses = dir.listFiles();
 				for (int i = 0; i < allResponses.length; i++) {
@@ -152,7 +154,7 @@ public class Worker extends GenericThread implements WorkerMXBean, WorkerInterfa
 	 * @param id
 	 * @param response
 	 */
-	private void writeFile(String id, Navajo response) {
+	protected void writeFile(String id, Navajo response) {
 		File f = null;
 		FileWriter fw = null;
 		
@@ -166,7 +168,7 @@ public class Worker extends GenericThread implements WorkerMXBean, WorkerInterfa
 			fileCount++;
 		
 			
-			f = Dispatcher.getInstance().createTempFile(RESPONSE_PREFIX + id, ".xml");
+			f = DispatcherFactory.getInstance().createTempFile(RESPONSE_PREFIX + id, ".xml");
 			
 			if ( f == null ) {
 				AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "Could not create temp file");
@@ -206,7 +208,7 @@ public class Worker extends GenericThread implements WorkerMXBean, WorkerInterfa
 		int level = workList.size();
 		if ( ( level !=  previousWorkListLevelSize) && workList.size() > maxWorkLostLevelSize ) {
 			AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "WARNING: Integrity Worker TODO list size:  " + workList.size());
-			sendHealthCheck(level, maxWorkLostLevelSize, "WARNING", "Integrity worker TODO list size is rather large");
+			sendHealthCheck(level, maxWorkLostLevelSize, Level.WARNING, "Integrity worker TODO list size is rather large");
 		}
 		previousWorkListLevelSize = level;
 		
@@ -259,7 +261,7 @@ public class Worker extends GenericThread implements WorkerMXBean, WorkerInterfa
 	/**
 	 * Clears the entire integrity cache.
 	 */
-	private void clearCache() {
+	protected void clearCache() {
 		Set<String> s = new HashSet<String>(integrityCache.keySet());
 		Iterator<String> i = s.iterator();
 		while ( i.hasNext() ) {
@@ -282,7 +284,7 @@ public class Worker extends GenericThread implements WorkerMXBean, WorkerInterfa
 	 * @param fileName
 	 * @return
 	 */
-	private Navajo readFile(File f) {
+	protected Navajo readFile(File f) {
 		FileInputStream fs = null;
 		try {
 			AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "Integrity violation detected, returning previous response from: " + f.getName());
@@ -315,7 +317,7 @@ public class Worker extends GenericThread implements WorkerMXBean, WorkerInterfa
 	 * @param request
 	 * @return
 	 */
-	private final boolean waitedForRunningRequest(Access a, Navajo request, String requestId) {
+	protected final boolean waitedForRunningRequest(Access a, Navajo request, String requestId) {
 		
 		Access r = (Access) runningRequestIds.get(requestId);
 		//System.err.println("Size of runningRequestIds: " + runningRequestIds.size());
@@ -499,7 +501,7 @@ public class Worker extends GenericThread implements WorkerMXBean, WorkerInterfa
 		try {
 			File tempDir = new File(System.getProperty("java.io.tmpdir") + "/" + aap);
 			tempDir.mkdirs();
-			File f = Dispatcher.getInstance().createTempFile("tijdelijk", ".xml");
+			File f = DispatcherFactory.getInstance().createTempFile("tijdelijk", ".xml");
 			FileWriter fw = new FileWriter(f);
 			fw.write("apenoot");
 			fw.close();

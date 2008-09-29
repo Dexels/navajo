@@ -53,7 +53,7 @@ public class DirectClientImpl implements ClientInterface {
 
   @SuppressWarnings("unchecked")
   private final Map propertyMap = new HashMap();
-  private Dispatcher dispatcher;
+  private DispatcherInterface dispatcher;
   private ErrorResponder myErrorResponder;
   @SuppressWarnings("unchecked")
   private final ArrayList myActivityListeners = new ArrayList();
@@ -147,7 +147,7 @@ public final Navajo doSimpleSend(Navajo out, String server, String method, Strin
 		}
     	
     	
-      NavajoConfig navajoConfig = Dispatcher.getInstance().getNavajoConfig();
+      NavajoConfigInterface navajoConfig = DispatcherFactory.getInstance().getNavajoConfig();
 
 // ADDED THIS STUFF:
 //      System.err.println("USER: "+user);
@@ -335,7 +335,7 @@ public void setDocumentGlobals(final Navajo doc) throws ClientException {
   public void init(URL config) throws ClientException {
     try {
 
-      dispatcher = Dispatcher.getInstance( null,null,
+      dispatcher = DispatcherFactory.getInstance( null,null,
                                   new com.dexels.navajo.server.
                                   ClassloaderInputStreamReader());
       dispatcher.setUseAuthorisation(false);
@@ -349,7 +349,7 @@ public void setDocumentGlobals(final Navajo doc) throws ClientException {
   public void init(String rootPath, String serverXml) throws ClientException {
 	    try {
 
-	      dispatcher = Dispatcher.getInstance( rootPath,serverXml,
+	      dispatcher = DispatcherFactory.getInstance( rootPath,serverXml,
 	                                  new com.dexels.navajo.server.
 	                                  ClassloaderInputStreamReader());
 	      dispatcher.setUseAuthorisation(false);
@@ -371,7 +371,7 @@ public void setDocumentGlobals(final Navajo doc) throws ClientException {
     try {
 
 //    NavajoBasicClassLoader nbcl = new NavajoBasicClassLoader();
-      dispatcher = Dispatcher.getInstance(path, null,new FileInputStreamReader(path));
+      dispatcher = DispatcherFactory.getInstance(path, null,new FileInputStreamReader(path));
 //      dispatcher.setUseAuthorisation(false);
 //      System.err.println("IN INIT of DCI. classloader: "+dispatcher.getNavajoConfig().getClassloader());
 //      dispatcher.getNavajoConfig().setClassloader(cl);
@@ -384,7 +384,7 @@ public void setDocumentGlobals(final Navajo doc) throws ClientException {
 
   public void clearClassCache() {
       if (dispatcher!=null) {
-        Dispatcher.getInstance().doClearCache();
+    	  DispatcherFactory.getInstance().doClearCache();
     }
   }
   
@@ -401,7 +401,7 @@ public void setDocumentGlobals(final Navajo doc) throws ClientException {
     		  System.err.println("Null path in init...");
     	  }
     	  System.err.println("Initializing Direct client with path: "+path);
-        dispatcher = Dispatcher.getInstance(path, "config/server.xml",new FileInputStreamReader(path));
+        dispatcher = DispatcherFactory.getInstance(path, "config/server.xml",new FileInputStreamReader(path));
        
         // dispatcher = Dispatcher.getInstance(config,new FileInputStreamReader(path),null);
       }

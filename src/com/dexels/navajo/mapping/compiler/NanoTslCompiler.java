@@ -28,6 +28,7 @@ import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.nanoimpl.*;
 import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.mapping.compiler.meta.*;
+import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.GenericHandler;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.server.SystemException;
@@ -408,7 +409,7 @@ public class NanoTslCompiler {
         // optimized way.
         if (!exact) {
             result.append(printIdent(ident) + "op = Expression.evaluate(" + replaceQuotes(clause)
-                    + ", inMessage, currentMap, currentInMsg, currentParamMsg, currentSelection, null);\n");
+                    + ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg, currentSelection, null);\n");
             result.append(printIdent(ident) + "sValue = op.value;\n");
         } else { // USE OUR OPTIMIZATION SCHEME.
             ////System.out.println("CALL = " + call);
@@ -477,7 +478,7 @@ public class NanoTslCompiler {
         //    System.err.println(">> "+removeNewLines(value)+" <<");
         if (!condition.equals("")) {
             result.append(printIdent(ident) + "if (Condition.evaluate(" + replaceQuotes(condition)
-                    + ", inMessage, currentMap, currentInMsg, currentParamMsg))");
+                    + ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg))");
         }
 
         result.append(printIdent(ident) + "{\n");
@@ -527,7 +528,7 @@ public class NanoTslCompiler {
                 description = (description == null) ? "" : description;
                 if (!condition.equals("")) {
                     result.append(printIdent(ident) + "if (Condition.evaluate(" + replaceQuotes(condition)
-                            + ", inMessage, null, null, null)) {\n");
+                            + ", access.getInDoc(), null, null, null)) {\n");
                 } else {
                     result.append(printIdent(ident) + "if (true) {\n");
                     // Get required messages.
@@ -586,7 +587,7 @@ public class NanoTslCompiler {
         if (!condition.equals("")) {
             conditionClause = true;
             result.append(printIdent(ident) + "if (Condition.evaluate(" + replaceQuotes(condition)
-                    + ", inMessage, currentMap, currentInMsg, currentParamMsg)) { \n");
+                    + ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg)) { \n");
             ident += 2;
         }
 
@@ -665,12 +666,12 @@ public class NanoTslCompiler {
         result.append(printIdent(ident)
                 + "count = "
                 + (count.equals("1") ? "1" : "((Integer) Expression.evaluate(\"" + count
-                        + "\", inMessage, currentMap, currentInMsg, currentParamMsg).value).intValue()") + ";\n");
+                        + "\", access.getInDoc(), currentMap, currentInMsg, currentParamMsg).value).intValue()") + ";\n");
         String messageList = "messageList" + (messageListCounter++);
         result.append(printIdent(ident) + "Message [] " + messageList + " = null;\n");
 
         String orderbyExpression =  ("".equals(orderby) ? "\"\"" :
-        	"(String) Expression.evaluate(" + replaceQuotes(orderby) + ", inMessage, currentMap, currentInMsg, currentParamMsg).value"
+        	"(String) Expression.evaluate(" + replaceQuotes(orderby) + ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg).value"
         );
 
         if (n.getName().equals("message")) {
@@ -680,7 +681,7 @@ public class NanoTslCompiler {
               "\", " + orderbyExpression + ");\n");
         } else { // must be parammessage.
 
-            result.append(printIdent(ident) + messageList + " = MappingUtils.addMessage(inMessage, currentParamMsg, \"" + messageName
+            result.append(printIdent(ident) + messageList + " = MappingUtils.addMessage(access.getInDoc(), currentParamMsg, \"" + messageName
                     + "\", \"\", count, \"" + type + "\", \"" + mode + "\");\n");
         }
 
@@ -749,13 +750,13 @@ public class NanoTslCompiler {
                     + startElementVar
                     + " = "
                     + (startElement.equals("") ? "0" : "((Integer) Expression.evaluate(\"" + startElement
-                            + "\", inMessage, currentMap, currentInMsg, currentParamMsg).value).intValue()") + ";\n");
+                            + "\", access.getInDoc(), currentMap, currentInMsg, currentParamMsg).value).intValue()") + ";\n");
             result.append(printIdent(ident + 2)
                     + "int "
                     + offsetElementVar
                     + " = "
                     + (elementOffset.equals("") ? "1" : "((Integer) Expression.evaluate(\"" + elementOffset
-                            + "\", inMessage, currentMap, currentInMsg, currentParamMsg).value).intValue()") + ";\n");
+                            + "\", access.getInDoc(), currentMap, currentInMsg, currentParamMsg).value).intValue()") + ";\n");
 
             result.append(printIdent(ident + 2) + "for (int i" + (ident + 2) + " = " + startElementVar + "; i" + (ident + 2) + " < " + lengthName
                     + "; i" + (ident + 2) + " = i" + (ident + 2) + "+" + offsetElementVar + ") {\n if (!kill) {\n");
@@ -773,7 +774,7 @@ public class NanoTslCompiler {
             // If filter is specified, evaluate filter first:
             if (!filter.equals("")) {
                 result.append(printIdent(ident + 4) + "if (Condition.evaluate(" + replaceQuotes(filter)
-                        + ", inMessage, currentMap, currentInMsg, currentParamMsg)) {\n");
+                        + ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg)) {\n");
                 ident += 2;
             }
 
@@ -785,7 +786,7 @@ public class NanoTslCompiler {
             } else { // parammessage.
                 result.append(printIdent(ident + 4) + "paramMsgStack.push(currentParamMsg);\n");
                 result.append(printIdent(ident + 4) + "currentParamMsg = MappingUtils.getMessageObject(\"" + MappingUtils.getBaseMessageName(messageName)
-                        + "\", currentParamMsg, true, inMessage, false, \"\", " + ((startIndex == -1) ? "-1" : startIndexVar + "++") + ");\n");
+                        + "\", currentParamMsg, true, access.getInDoc(), false, \"\", " + ((startIndex == -1) ? "-1" : startIndexVar + "++") + ");\n");
             }
 
             contextClassStack.push(contextClass);
@@ -936,7 +937,7 @@ public class NanoTslCompiler {
         if (!condition.equals("")) {
             conditionClause = true;
             result.append(printIdent(ident) + "if (Condition.evaluate(" + replaceQuotes(condition)
-                    + ", inMessage, currentMap, currentInMsg, currentParamMsg)) { \n");
+                    + ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg)) { \n");
             ident += 2;
         }
 
@@ -968,7 +969,7 @@ public class NanoTslCompiler {
                 type = "selection";
                 // Created condition statement if condition is given!
                 String conditional = (optionCondition != null && !optionCondition.equals("")) ? "if (Condition.evaluate("
-                        + replaceQuotes(optionCondition) + ", inMessage, currentMap, currentInMsg, currentParamMsg))\n" : "";
+                        + replaceQuotes(optionCondition) + ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg))\n" : "";
                 optionItems.append(conditional + "p.addSelection(NavajoFactory.getInstance().createSelection(access.getOutputDoc(), \"" + optionName + "\", \""
                         + optionValue + "\", " + selected + "));\n");
             } else if (((XMLElement) children.get(i)).getName().equals("map")) { // ABout
@@ -1006,11 +1007,11 @@ public class NanoTslCompiler {
         if (n.getName().equals("property")) {
             result.append(printIdent(ident) + "p = MappingUtils.setProperty(false, currentOutMsg, \"" + propertyName
                     + "\", sValue, type, subtype, \"" + direction + "\", \"" + description + "\", " + length
-                    + ", access.getOutputDoc(), inMessage, !matchingConditions);\n");
+                    + ", access.getOutputDoc(), access.getInDoc(), !matchingConditions);\n");
         } else { // parameter
             result.append(printIdent(ident) + "p = MappingUtils.setProperty(true, currentParamMsg, \"" + propertyName
                     + "\", sValue, type, subtype, \"" + direction + "\", \"" + description + "\", " + length
-                    + ", access.getOutputDoc(), inMessage, !matchingConditions);\n");
+                    + ", access.getOutputDoc(), access.getInDoc(), !matchingConditions);\n");
         }
 
         if (isMapped) {
@@ -1063,7 +1064,7 @@ public class NanoTslCompiler {
             if (!filter.equals("")) {
               result.append(printIdent(ident + 4) + "if (Condition.evaluate(" +
                             replaceQuotes(filter) +
-                            ", inMessage, currentMap, currentInMsg, currentParamMsg)) {\n");
+                            ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg)) {\n");
               ident += 2;
             } 
             
@@ -1169,7 +1170,7 @@ public class NanoTslCompiler {
 
         if (!condition.equals("")) {
             result.append(printIdent(ident) + "if (Condition.evaluate(" + replaceQuotes(condition)
-                    + ", inMessage, currentMap, currentInMsg, currentParamMsg)) { \n");
+                    + ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg)) { \n");
         } else {
             result.append(printIdent(ident) + "if (true) {\n");
         }
@@ -1277,12 +1278,12 @@ public class NanoTslCompiler {
             String messageListName = "messages" + ident;
 
             result.append(printIdent(ident + 2) + "ArrayList " + messageListName + " = null;\n");
-            result.append(printIdent(ident + 2) + "inSelectionRef = MappingUtils.isSelection(currentInMsg, inMessage, \"" + ref + "\");\n");
+            result.append(printIdent(ident + 2) + "inSelectionRef = MappingUtils.isSelection(currentInMsg, access.getInDoc(), \"" + ref + "\");\n");
             result.append(printIdent(ident + 2) + "if (!inSelectionRef)\n");
-            result.append(printIdent(ident + 4) + messageListName + " = MappingUtils.getMessageList(currentInMsg, inMessage, \"" + ref + "\", \""
+            result.append(printIdent(ident + 4) + messageListName + " = MappingUtils.getMessageList(currentInMsg, access.getInDoc(), \"" + ref + "\", \""
                     + "" + "\", currentMap, currentParamMsg);\n");
             result.append(printIdent(ident + 2) + "else\n");
-            result.append(printIdent(ident + 4) + messageListName + " = MappingUtils.getSelectedItems(currentInMsg, inMessage, \"" + ref + "\");\n");
+            result.append(printIdent(ident + 4) + messageListName + " = MappingUtils.getSelectedItems(currentInMsg, access.getInDoc(), \"" + ref + "\");\n");
 
             Class contextClass = null;
             try {
@@ -1335,7 +1336,7 @@ public class NanoTslCompiler {
                 // If filter is specified, evaluate filter first:
                 if (!filter.equals("")) {
                     result.append(printIdent(ident + 4) + "if (inSelectionRef || Condition.evaluate(" + replaceQuotes(filter)
-                            + ", inMessage, currentMap, currentInMsg, currentParamMsg)) {\n");
+                            + ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg)) {\n");
                     ident += 2;
                 }
 
@@ -1343,7 +1344,7 @@ public class NanoTslCompiler {
                 result.append(printIdent(ident) + "currentMap = new MappableTreeNode(currentMap, classLoader.getClass(\"" + type
                         + "\").newInstance());\n");
 
-                result.append(printIdent(ident) + "if ( currentMap.myObject instanceof Mappable) { ((Mappable) currentMap.myObject).load(parms, inMessage, access, config);}\n");
+                result.append(printIdent(ident) + "if ( currentMap.myObject instanceof Mappable) { ((Mappable) currentMap.myObject).load(access);}\n");
                 result.append(printIdent(ident) + subObjectsName + "[" + loopCounterName + "] = (" + type + ") currentMap.myObject;\n");
                 result.append(printIdent(ident) + "try {\n");
                 ident = ident + 2;
@@ -1412,7 +1413,7 @@ public class NanoTslCompiler {
 
                 // Call load on object.
                 result.append(printIdent(ident) +            
-                		"if ( currentMap.myObject instanceof Mappable ) { ((Mappable) currentMap.myObject).load(parms, inMessage, access, config);}\n");     
+                		"if ( currentMap.myObject instanceof Mappable ) { ((Mappable) currentMap.myObject).load(access);}\n");     
                 // Assign local variable reference.
                 result.append(printIdent(ident) + type + " " + 
                 		subObjectsName + " = (" + type +                
@@ -1458,7 +1459,7 @@ public class NanoTslCompiler {
             result.append(printIdent(ident) + "if (true) {");
         } else {
             result.append(printIdent(ident) + "if (Condition.evaluate(" + replaceQuotes(condition)
-                    + ", inMessage, currentMap, currentInMsg, currentParamMsg)) { \n");
+                    + ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg)) { \n");
 
         }
         result.append(printIdent(ident + 2) + "throw new BreakEvent();\n");
@@ -1496,7 +1497,7 @@ public class NanoTslCompiler {
         StringBuffer result = new StringBuffer();
         String value = n.getNonNullStringAttribute("value");
         result.append(printIdent(ident) + "op = Expression.evaluate(" + replaceQuotes(value)
-                + ", inMessage, currentMap, currentInMsg, currentParamMsg, currentSelection, null);\n");
+                + ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg, currentSelection, null);\n");
         result.append(printIdent(ident) + "System.out.println(\"in PROCESSING SCRIPT: \" + access.rpcName + \" DEBUG INFO: \" + op.value);\n");
         return result.toString();
     }
@@ -1532,7 +1533,7 @@ public class NanoTslCompiler {
         if (!condition.equals("")) {
             conditionClause = true;
             result.append(printIdent(ident) + "if (Condition.evaluate(" + replaceQuotes(condition)
-                    + ", inMessage, currentMap, currentInMsg, currentParamMsg)) { \n");
+                    + ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg)) { \n");
             ident += 2;
         }
 
@@ -1595,9 +1596,9 @@ public class NanoTslCompiler {
 
             result
                     .append(printIdent(ident)
-                            + "if (!config.isAsyncEnabled()) throw new UserException(-1, \"Set enable_async = true in server.xml to use asynchronous objects\");");
+                            + "if (!DispatcherFactory.getInstance().getNavajoConfig().isAsyncEnabled()) throw new UserException(-1, \"Set enable_async = true in server.xml to use asynchronous objects\");");
             result.append(printIdent(ident) + asyncMapName + " = true;\n");
-            result.append(printIdent(ident) + headerName + " = inMessage.getHeader();\n");
+            result.append(printIdent(ident) + headerName + " = access.getInDoc().getHeader();\n");
             result.append(printIdent(ident) + callbackRefName + " = " + headerName + ".getCallBackPointer(\"" + name + "\");\n");
             result.append(printIdent(ident) + aoName + " = null;\n");
             result.append(printIdent(ident) + asyncMapFinishedName + " = false;\n");
@@ -1605,7 +1606,7 @@ public class NanoTslCompiler {
             result.append(printIdent(ident) + asyncStatusName + " = \"request\";\n\n");
             result.append(printIdent(ident) + "if (" + callbackRefName + " != null) {\n");
             ident += 2;
-            result.append(printIdent(ident) + aoName + " = (" + className + ") config.getAsyncStore().getInstance(" + callbackRefName + ");\n");
+            result.append(printIdent(ident) + aoName + " = (" + className + ") DispatcherFactory.getInstance().getNavajoConfig().getAsyncStore().getInstance(" + callbackRefName + ");\n");
             result.append(printIdent(ident) + interruptTypeName + " = " + headerName + ".getCallBackInterupt(\"" + name + "\");\n");
 
             result
@@ -1615,15 +1616,15 @@ public class NanoTslCompiler {
                             + " == null) {\n "
                             + "  throw new UserException( -1, \"Asynchronous object reference instantiation error: no sych instance (perhaps cleaned up?)\");\n}\n");
             result.append(printIdent(ident) + "if (" + interruptTypeName + ".equals(\"kill\")) { // Kill thread upon client request.\n" + "   "
-                    + aoName + ".stop();\n" + "   config.getAsyncStore().removeInstance(" + callbackRefName + ");\n" + "   return;\n" + "} else if ("
+                    + aoName + ".stop();\n" + "   DispatcherFactory.getInstance().getNavajoConfig().getAsyncStore().removeInstance(" + callbackRefName + ");\n" + "   return;\n" + "} else if ("
                     + interruptTypeName + ".equals(\"interrupt\")) {\n" + "   " + aoName + ".interrupt();\n " + "   return;\n" + "} else if ("
                     + interruptTypeName + ".equals(\"resume\")) { " + "  " + aoName + ".resume();\n" + "return;\n" + "}\n");
             ident -= 2;
             result.append(printIdent(ident) + "} else { // New instance!\n");
 
             result.append(printIdent(ident) + aoName + " = (" + className + ") classLoader.getClass(\"" + object + "\").newInstance();\n"
-                    + "  // Call load method for async map in advance:\n" + "  " + aoName + ".load(parms, inMessage, access, config);\n" + "  "
-                    + callbackRefName + " = config.getAsyncStore().addInstance( " + aoName + ", access );\n" + "}\n");
+                    + "  // Call load method for async map in advance:\n" + "  " + aoName + ".load(access);\n" + "  "
+                    + callbackRefName + " = DispatcherFactory.getInstance().getNavajoConfig().getAsyncStore().addInstance( " + aoName + ", access );\n" + "}\n");
 
             result.append(printIdent(ident) + "treeNodeStack.push(currentMap);\n");
             result.append(printIdent(ident) + "currentMap = new MappableTreeNode(currentMap, " + aoName + ");\n");
@@ -1654,7 +1655,7 @@ public class NanoTslCompiler {
             result.append(printIdent(ident) + "if (" + asyncMapFinishedName + " || (" + aoName + ".isActivated() && " + hasResponseNode + " && "
                     + whileRunning + ")) {\n");
             result.append(printIdent(ident) + "  " + asyncStatusName + " = \"response\";\n");
-            result.append(printIdent(ident) + "  " + aoName + ".beforeResponse(parms, inMessage, access, config);\n");
+            result.append(printIdent(ident) + "  " + aoName + ".beforeResponse(access);\n");
             result.append(printIdent(ident) + "  if (" + aoName + ".isActivated() && " + whileRunning + ") {\n");
             //result.append(printIdent(ident) + " "+aoName+".interrupt();\n");
             result.append(printIdent(ident) + "     " + resumeAsyncName + " = true;\n");
@@ -1699,13 +1700,13 @@ public class NanoTslCompiler {
                     + ".afterRequest(); " + aoName + ".runThread(); }\n");
             result.append(printIdent(ident + 2) + "} else {\n");
             result.append(printIdent(ident + 4) + "if ( currentMap.myObject instanceof Mappable ) { ((Mappable) currentMap.myObject).store();}\n");
-            result.append(printIdent(ident + 4) + "config.getAsyncStore().removeInstance(currentMap.ref);\n");
+            result.append(printIdent(ident + 4) + "DispatcherFactory.getInstance().getNavajoConfig().getAsyncStore().removeInstance(currentMap.ref);\n");
             result.append(printIdent(ident + 2) + "}\n");
             result.append(printIdent(ident) + "}\n");
 
             result.append(printIdent(ident) + "} catch (Exception e" + ident + ") {\n");
             result.append(printIdent(ident) + " if ( currentMap.myObject instanceof Mappable ) { ((Mappable) currentMap.myObject).kill();}\n");
-            result.append(printIdent(ident) + " config.getAsyncStore().removeInstance(currentMap.ref);\n");
+            result.append(printIdent(ident) + " DispatcherFactory.getInstance().getNavajoConfig().getAsyncStore().removeInstance(currentMap.ref);\n");
 
             result.append(printIdent(ident) + "  throw e" + ident + ";\n");
             result.append(printIdent(ident) + "}\n");
@@ -1721,7 +1722,7 @@ public class NanoTslCompiler {
                     + "\").newInstance());\n");
             String objectName = "mappableObject" + (objectCounter++);
             result.append(printIdent(ident) + objectName + " = (" + className + ") currentMap.myObject;\n");
-            result.append(printIdent(ident) + "if ( currentMap.myObject instanceof Mappable ) {" + objectName + ".load(parms, inMessage, access, config);}\n");
+            result.append(printIdent(ident) + "if ( currentMap.myObject instanceof Mappable ) {" + objectName + ".load(access);}\n");
 
             String objectDefinition = className + " " + objectName + " = null;\n";
             variableClipboard.add(objectDefinition);
@@ -1866,12 +1867,12 @@ public class NanoTslCompiler {
 
         else if (n.getName().equals("message") || (n.getName().equals("param") && ((XMLElement) n).getNonNullStringAttribute("type").equals("array"))) {
             String methodName = "execute_sub" + (methodCounter++);
-            result.append(printIdent(ident) + "if (!kill) { " + methodName + "(parms, inMessage, access, config); }\n");
+            result.append(printIdent(ident) + "if (!kill) { " + methodName + "(access); }\n");
 
             StringBuffer methodBuffer = new StringBuffer();
 
             methodBuffer.append(printIdent(ident) + "private final void " + methodName
-                    + "(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws Exception {\n\n");
+                    + "(Access access) throws Exception {\n\n");
             ident += 2;
             methodBuffer.append(printIdent(ident) + "if (!kill) {\n");
             methodBuffer.append(messageNode(ident, (XMLElement) n, className, objectName));
@@ -1905,7 +1906,7 @@ public class NanoTslCompiler {
     @SuppressWarnings("unchecked")
 	private final void generateFinalBlock(XMLElement d, StringBuffer generatedCode) throws Exception {
         generatedCode
-                .append("public final void finalBlock(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws Exception {\n");
+                .append("public final void finalBlock(Access access) throws Exception {\n");
 
         Vector list = d.getElementsByTagName("finally");
 
@@ -2091,17 +2092,17 @@ public class NanoTslCompiler {
             // Generate final block code.
             generateFinalBlock(tslDoc, result);
 
-            String methodDef = "public final void execute(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws Exception { \n\n";
+            String methodDef = "public final void execute(Access access) throws Exception { \n\n";
             result.append(methodDef);
 
             if (debugInput) {
                 result.append("System.err.println(\"\\n --------- BEGIN NAVAJO REQUEST ---------\\n\");\n");
-                result.append("inMessage.write(System.err);\n");
+                result.append("access.getInDoc().write(System.err);\n");
                 result.append("System.err.println(\"\\n --------- END NAVAJO REQUEST ---------\\n\");\n");
             }
 
 //            result.append("outDoc = access.getOutputDoc();\n");
-            result.append("inDoc = inMessage;\n");
+            result.append("inDoc = access.getInDoc();\n");
 
             // First resolve includes.
             Vector includes = tslDoc.getElementsByTagName("include");

@@ -30,6 +30,7 @@ package com.dexels.navajo.loader;
 
 import org.dexels.utils.*;
 
+import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.util.AuditLog;
 
@@ -83,6 +84,10 @@ public class NavajoClassLoader extends MultiClassLoader {
      */
     private boolean beta;
 
+    public NavajoClassLoader(ClassLoader parent) {
+    	super(parent);
+    }
+    
     public NavajoClassLoader(String adapterPath, String compiledScriptPath, boolean beta, ClassLoader parent) {
     	super(parent);
         this.adapterPath = adapterPath;
@@ -231,7 +236,7 @@ public class NavajoClassLoader extends MultiClassLoader {
     	synchronized (mutex2) {
 
     		// Do nothing if there is no dispatcher available.
-    		if ( NavajoConfig.getInstance() == null ) {
+    		if ( DispatcherFactory.getInstance() == null ) {
     			return;
     		}
     		
@@ -353,7 +358,7 @@ public class NavajoClassLoader extends MultiClassLoader {
 
         //initializeJarResources();
 
-        if ( NavajoConfig.getInstance() == null ) {
+        if ( DispatcherFactory.getInstance().getNavajoConfig() == null ) {
         	//System.err.println("... NavajoConfig.getInstance() is null, not found!");
         	return null;
         }

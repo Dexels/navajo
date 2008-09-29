@@ -1,5 +1,6 @@
 package com.dexels.navajo.sharedstore;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
@@ -23,7 +24,7 @@ public class SharedStoreObject implements Serializable {
 		return SharedStoreFactory.getInstance().lastModified(this.parent, this.name);
 	}
 	
-	public void setModificationTime(long l) {
+	public void setModificationTime(long l) throws IOException {
 		SharedStoreFactory.getInstance().setLastModified(this.parent, this.name, l);
 	}
 	

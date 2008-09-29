@@ -1,15 +1,16 @@
-package com.dexels.navajo.scheduler;
+package com.dexels.navajo.scheduler.triggers;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.events.NavajoEvent;
 import com.dexels.navajo.events.NavajoEventRegistry;
 import com.dexels.navajo.events.NavajoListener;
 import com.dexels.navajo.events.types.NavajoEventMap;
+import com.dexels.navajo.scheduler.tribe.NavajoEventProxy;
+import com.dexels.navajo.scheduler.tribe.NavajoServerEventSignal;
 import com.dexels.navajo.server.Access;
-import com.dexels.navajo.server.Dispatcher;
+import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.GenericThread;
 import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
-import com.dexels.navajo.tribe.TribeManager;
 
 /**
  * This class can be used to create objects that behave as NavajoListeners and can be used to activate Tasks.
@@ -41,13 +42,19 @@ public class NavajoEventTrigger extends Trigger implements NavajoListener {
 	@Override
 	public void activateTrigger() {
 		NavajoEventRegistry.getInstance().addListener(NavajoEventMap.getEventClass(myDescription), this);
-		NavajoEventProxy nep = new NavajoEventProxy(NavajoEventMap.getEventClass(myDescription),
-				TribeManager.getInstance().getMyMembership().getAddress());
-		associatedProxyGuid = nep.getGuid();
-		TribeManagerFactory.getInstance().broadcast(
-				new NavajoServerEventSignal(Dispatcher.getInstance().getNavajoConfig().getInstanceName(),
-											NavajoServerEventSignal.ADD_SERVER_EVENTPROXY, 
-											nep));
+		
+		// Only create proxy listeners if this trigger belongs to an not-init state workflow.
+		if ( getTask().getWorkflowDefinition() != null && getTask().getWorkflowId() != null ) {
+			
+			NavajoEventProxy nep = new NavajoEventProxy(NavajoEventMap.getEventClass(myDescription),
+					TribeManagerFactory.getInstance().getMyMembership().getAddress());
+			associatedProxyGuid = nep.getGuid();
+			TribeManagerFactory.getInstance().broadcast(
+					new NavajoServerEventSignal(DispatcherFactory.getInstance().getNavajoConfig().getInstanceName(),
+							NavajoServerEventSignal.ADD_SERVER_EVENTPROXY, 
+							nep));
+			
+		}
 	}
 
 	@Override
@@ -72,10 +79,15 @@ public class NavajoEventTrigger extends Trigger implements NavajoListener {
 	@Override
 	public void removeTrigger() {
 		NavajoEventRegistry.getInstance().removeListener(NavajoEventMap.getEventClass(myDescription), this);
-		TribeManagerFactory.getInstance().broadcast(
-				new NavajoServerEventSignal(Dispatcher.getInstance().getNavajoConfig().getInstanceName(),
-											NavajoServerEventSignal.REMOVE_SERVER_EVENTPROXY, 
-											associatedProxyGuid));
+
+		// Only remove proxy listeners if this trigger belongs to an not-init state workflow.
+		if ( getTask().getWorkflowDefinition() != null && getTask().getWorkflowId() != null ) {
+			TribeManagerFactory.getInstance().broadcast(
+					new NavajoServerEventSignal(DispatcherFactory.getInstance().getNavajoConfig().getInstanceName(),
+							NavajoServerEventSignal.REMOVE_SERVER_EVENTPROXY, 
+							associatedProxyGuid));
+		}
+
 	}
 
 	/**

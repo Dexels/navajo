@@ -16,6 +16,8 @@ public class MaintainanceRequest extends Request {
     public static final String METHOD_NAVAJO_LOGON_SEND = METHOD_NAVAJO
             + "_logon_send";
     public static final String METHOD_NAVAJO_PING = METHOD_NAVAJO + "_ping";
+    public static final String METHOD_NAVAJO_TEST = "navajo_test";
+    public static final String METHOD_NAVAJO_HELLO = "navajo_hello";
 
     private Repository repository = null;
 

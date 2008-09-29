@@ -32,16 +32,20 @@ import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
+import com.dexels.navajo.scheduler.triggers.IllegalTrigger;
+import com.dexels.navajo.scheduler.triggers.Trigger;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.Dispatcher;
+import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.FatalException;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.server.enterprise.scheduler.TaskInterface;
 import com.dexels.navajo.sharedstore.SharedStoreLock;
 
 /**
- * Defines the task object that describes among other things, the webservice
- * that needs to be triggered.
+ * Defines the task object that describes among other things, (optionally) the web service
+ * that needs to be triggered. A task can also be 'empty'. Empty tasks are useful for trigger aftertask events that
+ * can be used in work flows.
  * 
  * @author Arjen
  *
@@ -100,7 +104,7 @@ public class Task implements Runnable, TaskMXBean, TaskInterface, Serializable {
 				Navajo requestNavajo) throws IllegalTrigger, IllegalTask {
 		
 		this.webservice = webservice;
-		if ( username == null || password == null ) {
+		if ( webservice != null && ( username == null || password == null ) ) {
 			throw new IllegalTask("No username/password specified");
 		}
 		this.username = username;
@@ -354,6 +358,7 @@ public class Task implements Runnable, TaskMXBean, TaskInterface, Serializable {
 	 */
 	public void run() {
 
+		System.err.println("IN TASK RUN================================================================" + getId());
 		//AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, " trigger " + getTriggerDescription() + " activated task: " + getId() );
 		
 		Navajo result = null;
@@ -366,8 +371,10 @@ public class Task implements Runnable, TaskMXBean, TaskInterface, Serializable {
 		Navajo request = null;
 		Access access = myTrigger.getAccess();
 		
+		// Determine what Navajo to use as a Request Navajo:
 		if ( access != null && navajo == null ) {
-			request = ( myTrigger.swapInOut() ? access.getOutputDoc() :  access.getInDoc() );
+			// Make sure to make copy of the Navajo since we are going to manipulate the Header object...
+			request = ( myTrigger.swapInOut() ? access.getOutputDoc().copy() :  access.getInDoc().copy() );
 		} else if ( navajo != null ) {
 			request = navajo;
 		} else {
@@ -387,6 +394,7 @@ public class Task implements Runnable, TaskMXBean, TaskInterface, Serializable {
 				java.util.Date now = new java.util.Date();
 
 				Header h = request.getHeader();
+				System.err.println("HEADER: " + h);
 				if (h == null) {
 					h = NavajoFactory.getInstance().createHeader(request, webservice, username, password, -1);
 					request.addHeader(h);
@@ -402,14 +410,14 @@ public class Task implements Runnable, TaskMXBean, TaskInterface, Serializable {
 				//Dispatcher.getInstance().setUseAuthorisation(false);
 
 				// Dispatcher is dead, exit.
-				if ( Dispatcher.getInstance() == null ) {
+				if ( DispatcherFactory.getInstance() == null ) {
 					System.err.println("ERROR: Dead dispatcher, trying to execute task");
 					return;
 				}
 
 				try {
 					// Handle request, skip authorization!!
-					result = Dispatcher.getInstance().handle(request, true);
+					result = DispatcherFactory.getInstance().handle(request, true);
 					this.setResponse(result);
 				} catch (FatalException e) {
 					e.printStackTrace(System.err);

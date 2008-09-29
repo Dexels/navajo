@@ -4,8 +4,9 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
 
-import com.dexels.navajo.scheduler.NavajoEventProxy;
+import com.dexels.navajo.scheduler.tribe.NavajoEventProxy;
 import com.dexels.navajo.server.enterprise.tribe.SmokeSignal;
+import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
 import com.dexels.navajo.sharedstore.map.IntroductionRequest;
 import com.dexels.navajo.sharedstore.map.SharedTribalMap;
 import com.dexels.navajo.util.AuditLog;
@@ -36,14 +37,14 @@ public class MembershipSmokeSignal extends SmokeSignal implements Serializable {
 
 		if ( getKey().equals(INTRODUCTION)  ) {
 			TribeMember tm = (TribeMember) getValue();
-			TribeManager.getInstance().addTribeMember(tm);
+			TribeManagerFactory.getInstance().addTribeMember(tm);
 			
 			/**
 			 * The Chief is responsible to sharing the active 'tribal maps' by sending an IntroductionRequest
 			 * to the new member.
 			 * 
 			 */
-			if ( TribeManager.getInstance().getIsChief() ) {
+			if ( TribeManagerFactory.getInstance().getIsChief() ) {
 				//System.err.println("ABOUT TO SHARE GLOBAL STATE............");
 				// Share global state.
 				Collection<SharedTribalMap> c = SharedTribalMap.getAllTribalMaps();
@@ -51,7 +52,7 @@ public class MembershipSmokeSignal extends SmokeSignal implements Serializable {
 				while ( iter.hasNext() ) {
 					IntroductionRequest ir = new IntroductionRequest(iter.next());
 					//System.err.println("SENDING TRIBALMAP TO NEW MEMBER...." + iter.next().getId());
-					TribeManager.getInstance().askSomebody(ir, tm.getAddress());
+					TribeManagerFactory.getInstance().askSomebody(ir, tm.getAddress());
 				}
 			}
 			

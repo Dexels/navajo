@@ -1,5 +1,6 @@
-package com.dexels.navajo.scheduler;
+package com.dexels.navajo.scheduler.tribe;
 
+import com.dexels.navajo.scheduler.triggers.WebserviceTrigger;
 import com.dexels.navajo.server.enterprise.tribe.Answer;
 import com.dexels.navajo.server.enterprise.tribe.Request;
 

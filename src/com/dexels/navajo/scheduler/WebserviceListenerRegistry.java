@@ -24,11 +24,15 @@
  */
 package com.dexels.navajo.scheduler;
 
+import java.util.HashMap;
 import java.util.HashSet;
 
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.scheduler.tribe.ServiceEventsSmokeSignal;
+import com.dexels.navajo.scheduler.triggers.AfterWebserviceTrigger;
+import com.dexels.navajo.scheduler.triggers.BeforeWebserviceTrigger;
 import com.dexels.navajo.server.Access;
-import com.dexels.navajo.server.Dispatcher;
+import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.enterprise.scheduler.WebserviceListenerRegistryInterface;
 import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
 import com.dexels.navajo.workflow.WorkFlowManager;
@@ -42,11 +46,34 @@ import com.dexels.navajo.workflow.WorkFlowManager;
  */
 public final class WebserviceListenerRegistry implements WebserviceListenerRegistryInterface {
 
-	static WebserviceListenerRegistry instance = null;
+	static volatile WebserviceListenerRegistry instance = null;
+	private final HashMap<String,Integer> registeredWebservices = new HashMap<String,Integer>();
+	private static Object semaphore = new Object();
+	
+	/**
+	 * Register already persisted web service triggers from the ListenerStore.
+	 */
+	private void init() {
+		// Register already present webservices.
+		Listener [] l =  ListenerStore.getInstance().getListeners(AfterWebserviceTrigger.class.getName());
+		for (int i = 0; i < l.length; i++) {
+			addRegisteredWebservice( ((AfterWebserviceTrigger) l[i]).getWebservicePattern());
+		}
+		Listener [] lb = ListenerStore.getInstance().getListeners(BeforeWebserviceTrigger.class.getName());
+		for (int i = 0; i < lb.length; i++) {
+			addRegisteredWebservice( ((BeforeWebserviceTrigger) lb[i]).getWebservicePattern());
+		}
+	}
 	
 	public final static WebserviceListenerRegistry getInstance() {
-		if ( instance == null ) {
-			instance = new WebserviceListenerRegistry();
+		if ( instance != null) {
+			return instance;
+		}
+		synchronized (semaphore) {
+			if ( instance == null ) {
+				instance = new WebserviceListenerRegistry();
+				instance.init();
+			}
 		}
 		return instance;
 	}
@@ -59,20 +86,19 @@ public final class WebserviceListenerRegistry implements WebserviceListenerRegis
 	 */
 	public final void registerBeforeTrigger(BeforeWebserviceTrigger t) {
 
-		ListenerStore.getInstance().addListener(t,BeforeWebserviceTrigger.class.getName(), true);
+		ListenerStore.getInstance().addListener(t);
 		// Broadcast..
-		TribeManagerFactory.getInstance().broadcast(new ServiceEventsSmokeSignal(Dispatcher.getInstance().getNavajoConfig().getInstanceName(), ServiceEventsSmokeSignal.ADD_WEBSERVICE, t.getWebservicePattern()));
-		ListenerStore.getInstance().addRegisteredWebservice(t.getWebservicePattern());
+		TribeManagerFactory.getInstance().broadcast(new ServiceEventsSmokeSignal(DispatcherFactory.getInstance().getNavajoConfig().getInstanceName(), ServiceEventsSmokeSignal.ADD_WEBSERVICE, t.getWebservicePattern()));
+		addRegisteredWebservice(t.getWebservicePattern());
 		
-
 	}
 	
 	public final void removeBeforeTrigger(BeforeWebserviceTrigger t) {
 
-		ListenerStore.getInstance().removeListener(t,BeforeWebserviceTrigger.class.getName(), false);
+		ListenerStore.getInstance().removeListener(t);
 		// Broadcast..
-		TribeManagerFactory.getInstance().broadcast(new ServiceEventsSmokeSignal(Dispatcher.getInstance().getNavajoConfig().getInstanceName(), ServiceEventsSmokeSignal.REMOVE_WEBSERVICE, t.getWebservicePattern()));
-		ListenerStore.getInstance().removeRegisteredWebservice(t.getWebservicePattern());
+		TribeManagerFactory.getInstance().broadcast(new ServiceEventsSmokeSignal(DispatcherFactory.getInstance().getNavajoConfig().getInstanceName(), ServiceEventsSmokeSignal.REMOVE_WEBSERVICE, t.getWebservicePattern()));
+		removeRegisteredWebservice(t.getWebservicePattern());
 		
 	}
 	
@@ -83,10 +109,10 @@ public final class WebserviceListenerRegistry implements WebserviceListenerRegis
 	 */
 	public final void registerTrigger(AfterWebserviceTrigger t) {
 
-		ListenerStore.getInstance().addListener(t,AfterWebserviceTrigger.class.getName(), true);
+		ListenerStore.getInstance().addListener(t);
 		// Broadcast..
-		TribeManagerFactory.getInstance().broadcast(new ServiceEventsSmokeSignal(Dispatcher.getInstance().getNavajoConfig().getInstanceName(), ServiceEventsSmokeSignal.ADD_WEBSERVICE, t.getWebservicePattern()));
-		ListenerStore.getInstance().addRegisteredWebservice(t.getWebservicePattern());
+		TribeManagerFactory.getInstance().broadcast(new ServiceEventsSmokeSignal(DispatcherFactory.getInstance().getNavajoConfig().getInstanceName(), ServiceEventsSmokeSignal.ADD_WEBSERVICE, t.getWebservicePattern()));
+		addRegisteredWebservice(t.getWebservicePattern());
 		
 	}
 	
@@ -97,10 +123,10 @@ public final class WebserviceListenerRegistry implements WebserviceListenerRegis
 	 */
 	public final void removeTrigger(AfterWebserviceTrigger t) {
 
-		ListenerStore.getInstance().removeListener(t,AfterWebserviceTrigger.class.getName(), false);
-		ListenerStore.getInstance().removeRegisteredWebservice(t.getWebservicePattern());
+		ListenerStore.getInstance().removeListener(t);
+		removeRegisteredWebservice(t.getWebservicePattern());
 		// Broadcast..
-		TribeManagerFactory.getInstance().broadcast(new ServiceEventsSmokeSignal(Dispatcher.getInstance().getNavajoConfig().getInstanceName(), ServiceEventsSmokeSignal.REMOVE_WEBSERVICE, t.getWebservicePattern()));
+		TribeManagerFactory.getInstance().broadcast(new ServiceEventsSmokeSignal(DispatcherFactory.getInstance().getNavajoConfig().getInstanceName(), ServiceEventsSmokeSignal.REMOVE_WEBSERVICE, t.getWebservicePattern()));
 
 	}
 	
@@ -121,7 +147,7 @@ public final class WebserviceListenerRegistry implements WebserviceListenerRegis
 		
 		// Return immediately if webservice is not contained in afterWebservices set, i.e. there is
 		// no listener interested in this webservice.
-		if ( !ListenerStore.getInstance().isRegisteredWebservice(webservice) ) {
+		if ( !isRegisteredWebservice(webservice) ) {
 			return;
 		} 
 
@@ -181,7 +207,7 @@ public final class WebserviceListenerRegistry implements WebserviceListenerRegis
 
 		// Return immediately if webservice is not contained in beforeWebservices set, i.e. there is
 		// no listener interested in this webservice.
-		if ( !ListenerStore.getInstance().isRegisteredWebservice(webservice) ) {
+		if ( !isRegisteredWebservice(webservice) ) {
 			return null;
 		} 
 
@@ -232,6 +258,64 @@ public final class WebserviceListenerRegistry implements WebserviceListenerRegis
 
 		} finally {
 			//AuditLog.log("SERVICEVENT", ":  beforeWebservice(" + webservice + ") took " + ( System.currentTimeMillis() - start ) + " millis." + ", locally = " + locally + ", processed = " + count + ", leftOvers =" + leftOvers );
+		}
+	}
+	
+	/**
+	 * Add a note that webservice name need to be listened to.
+	 * 
+	 * @param name
+	 */
+	public final void addRegisteredWebservice(String name) {
+		
+		// Send broadcast message to other tribal managers for notification of new webservice to be listened for....
+		synchronized (registeredWebservices) {
+			Integer i = registeredWebservices.get(name);
+			if ( i == null ) {
+				i = Integer.valueOf(1);
+			} else {
+				i =  Integer.valueOf(i.intValue() + 1);
+			}
+			registeredWebservices.put(name, i);
+		}
+	}
+	
+	/**
+	 * Add a note that webservice name does not need to be listened to.
+	 * 
+	 * @param name
+	 */
+	public final void removeRegisteredWebservice(String name) {
+		
+		// Send broadcast message to other tribal managers for notification of new webservice to be listened for....
+		synchronized (registeredWebservices) {
+			Integer i = (Integer) registeredWebservices.get(name);
+			if ( i == null ) {
+				return;
+			}
+			i = Integer.valueOf(i.intValue() -1 );
+			if ( i.intValue() > 0 ) {
+				registeredWebservices.put(name, i);
+			} else {
+				registeredWebservices.remove(name);
+			}
+		}
+	}
+	
+	public final HashMap<String,Integer> getRegisteredWebservices() {
+		return registeredWebservices;
+	}
+	
+	/**
+	 * Caching service.
+	 * Check whether a webservice is registered as being listened to.
+	 * 
+	 * @param name
+	 * @return
+	 */
+	public final boolean isRegisteredWebservice(String name) {
+		synchronized (registeredWebservices) {
+			return registeredWebservices.containsKey(name);
 		}
 	}
 }

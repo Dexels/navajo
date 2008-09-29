@@ -1,5 +1,7 @@
-package com.dexels.navajo.scheduler;
+package com.dexels.navajo.scheduler.tribe;
 
+import com.dexels.navajo.scheduler.WebserviceListenerRegistry;
+import com.dexels.navajo.scheduler.triggers.AfterWebserviceTrigger;
 import com.dexels.navajo.server.enterprise.tribe.SmokeSignal;
 import com.dexels.navajo.workflow.WorkFlowManager;
 
@@ -23,7 +25,7 @@ public class ServiceEventsSmokeSignal extends SmokeSignal {
 		// Do not process this smokesignal if I am the sender.
 		if ( !iAmTheSender() ) {
 			
-			ListenerStore ls = ListenerStore.getInstance();
+			WebserviceListenerRegistry ls = WebserviceListenerRegistry.getInstance();
 			// Determine key.
 			if ( getKey().equals(ADD_WEBSERVICE)) {
 				String value = (String) getValue();

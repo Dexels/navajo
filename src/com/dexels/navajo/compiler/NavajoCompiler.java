@@ -28,6 +28,7 @@ package com.dexels.navajo.compiler;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.NavajoConfigInterface;
 
 import org.apache.jasper.compiler.*;
 
@@ -39,7 +40,7 @@ public class NavajoCompiler
 	
 		public String errors;
 		
-        public void compile(Access access, NavajoConfig config, String source) throws Throwable{
+        public void compile(Access access, NavajoConfigInterface config, String source) throws Throwable{
 
         	try {
 				Class.forName("com.sun.tools.javac.Main");

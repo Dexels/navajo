@@ -22,13 +22,14 @@
  * SUCH DAMAGE.
  * ====================================================================
  */
-package com.dexels.navajo.scheduler;
+package com.dexels.navajo.scheduler.triggers;
 
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.scheduler.WebserviceListenerRegistry;
 import com.dexels.navajo.server.GenericThread;
 import com.dexels.navajo.util.AuditLog;
 
@@ -84,6 +85,7 @@ public class AfterWebserviceTrigger extends WebserviceTrigger implements Seriali
 	
 	public void removeTrigger() {
 		// Remove myself from the listener list.
+		System.err.println("**********************************************: removeTrigger()" + getDescription());
 		WebserviceListenerRegistry.getInstance().removeTrigger(this);
 	}
 	
@@ -147,7 +149,9 @@ public class AfterWebserviceTrigger extends WebserviceTrigger implements Seriali
 	}
 	
 	public void activateTrigger() {
+		System.err.println(">>>>>>>>>>>>>>>>>>>>>>>  ABOUT TO ACTIVATE WEBSERVICETRIGGER: " + webservicePattern);
 		AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, "Activating webservice trigger: " + myDescription);	
+		
 		WebserviceListenerRegistry.getInstance().registerTrigger(this);
 	}
 }

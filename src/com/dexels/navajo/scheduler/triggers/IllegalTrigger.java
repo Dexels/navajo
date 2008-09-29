@@ -4,7 +4,7 @@
  * @author Dexels developer
  * @version $Id$
  */
-package com.dexels.navajo.scheduler;
+package com.dexels.navajo.scheduler.triggers;
 
 import java.io.Serializable;
 

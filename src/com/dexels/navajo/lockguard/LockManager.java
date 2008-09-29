@@ -38,8 +38,8 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.Property;
 import com.dexels.navajo.server.Access;
+import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.GenericThread;
-import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.jmx.JMXHelper;
 import com.dexels.navajo.util.AuditLog;
 
@@ -71,8 +71,8 @@ public final class LockManager extends GenericThread implements LockManagerMXBea
 	private final static String LOCKS_CONFIG = "locks.xml";
 
 	private final long getConfigTimeStamp() {
-		if ( NavajoConfig.getInstance() != null ) {
-			java.io.File f = new java.io.File(NavajoConfig.getInstance().getConfigPath() + "/" + LOCKS_CONFIG);
+		if (DispatcherFactory.getInstance().getNavajoConfig() != null ) {
+			java.io.File f = new java.io.File(DispatcherFactory.getInstance().getNavajoConfig() + "/" + LOCKS_CONFIG);
 			if ( f != null && f.exists() ) {
 				return f.lastModified();
 			} else {
@@ -105,8 +105,8 @@ public final class LockManager extends GenericThread implements LockManagerMXBea
 			readingDefinitions = true;
 			lockDefinitions.clear();
 			
-			in = (NavajoConfig.getInstance() == null ? new FileInputStream("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/config/locks.xml")
-					: new FileInputStream(NavajoConfig.getInstance().getConfigPath() + "/" + LOCKS_CONFIG));
+			in = (DispatcherFactory.getInstance().getNavajoConfig() == null ? new FileInputStream("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/config/locks.xml")
+					: new FileInputStream(DispatcherFactory.getInstance().getNavajoConfig().getConfigPath() + "/" + LOCKS_CONFIG));
 			
 			Navajo definition = NavajoFactory.getInstance().createNavajo( in  );
 								

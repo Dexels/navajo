@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.logging.Level;
 
 import com.dexels.navajo.server.Dispatcher;
+import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.enterprise.queue.Queuable;
 import com.dexels.navajo.sharedstore.SharedStoreException;
@@ -28,7 +29,7 @@ public class FileStore implements MessageStore {
 	
 	private final static void setup() throws SharedStoreException {
 		SharedStoreInterface ssi = SharedStoreFactory.getInstance();
-		path = "/adapterqueue/" + Dispatcher.getInstance().getNavajoConfig().getInstanceName();
+		path = "/adapterqueue/" + DispatcherFactory.getInstance().getNavajoConfig().getInstanceName();
 		ssi.createParent(path);
 		// Define deadqueue to put in failures that have more than max retries. 
 		// If some problem was solved in the mean time, simply put back file into normal queue.
@@ -76,7 +77,7 @@ public class FileStore implements MessageStore {
 			for (int i = 0; i < files.length; i++) {
 					NavajoObjectInputStream ois;
 					try {
-						ois = new NavajoObjectInputStream(ssi.getStream(path, files[i]), NavajoConfig.getInstance().getClassloader());
+						ois = new NavajoObjectInputStream(ssi.getStream(path, files[i]), DispatcherFactory.getInstance().getNavajoConfig().getClassloader());
 						Queuable q = (Queuable) ois.readObject();
 						ois.close();
 						QueuedAdapter qa = new QueuedAdapter(q);
@@ -114,7 +115,7 @@ public class FileStore implements MessageStore {
 		String f = objectPointer.next();
 		SharedStoreInterface ssi = SharedStoreFactory.getInstance();
 		try {
-			NavajoObjectInputStream ois = new NavajoObjectInputStream(ssi.getStream(path, f), NavajoConfig.getInstance().getClassloader());
+			NavajoObjectInputStream ois = new NavajoObjectInputStream(ssi.getStream(path, f), DispatcherFactory.getInstance().getNavajoConfig().getClassloader());
 			q = (Queuable) ois.readObject();
 			ois.close();
 			// Only return object if it is not sleeping
@@ -198,7 +199,7 @@ public class FileStore implements MessageStore {
 			for (int i = 0; i < files.length; i++) {
 					NavajoObjectInputStream ois;
 					try {
-						ois = new NavajoObjectInputStream(ssi.getStream(deadQueue, files[i]), NavajoConfig.getInstance().getClassloader());
+						ois = new NavajoObjectInputStream(ssi.getStream(deadQueue, files[i]), DispatcherFactory.getInstance().getNavajoConfig().getClassloader());
 						Queuable q = (Queuable) ois.readObject();
 						ois.close();
 						QueuedAdapter qa = new QueuedAdapter(q);
@@ -221,7 +222,7 @@ public class FileStore implements MessageStore {
 	 */
 	public void takeOverPersistedAdapters(String fromServer) {
 		AuditLog.log(AuditLog.AUDIT_MESSAGE_QUEUEDADAPTERS, 
-				">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> In FileStore: takeOverPersistedWorkFlows(" + fromServer + ")", Level.WARNING );
+				"In FileStore: takeOverPersistedWorkFlows(" + fromServer + ")", Level.WARNING );
 		String [] queuedAdapters = SharedStoreFactory.getInstance().getObjects("/adapterqueue/" + fromServer);
 		for (int i = 0; i < queuedAdapters.length; i++) {
 			try {

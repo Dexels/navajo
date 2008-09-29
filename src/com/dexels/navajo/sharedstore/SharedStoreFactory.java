@@ -31,6 +31,10 @@ public class SharedStoreFactory {
 	private static volatile SharedStoreInterface instance = null;
 	private static Object semaphore = new Object();
 	
+	public final static void clear() {
+		instance = null;
+	}
+	
 	public final static SharedStoreInterface getInstance() {
 		
 		if ( instance != null ) {
@@ -44,6 +48,7 @@ public class SharedStoreFactory {
 			try {
 				instance = new SharedFileStore();
 			} catch (Exception e) {
+				e.printStackTrace(System.err);
 				AuditLog.log(AuditLog.AUDIT_MESSAGE_SHAREDSTORE, e.getMessage());
 			}
 		}

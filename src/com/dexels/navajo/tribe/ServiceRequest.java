@@ -26,6 +26,7 @@ package com.dexels.navajo.tribe;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.server.Dispatcher;
+import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.enterprise.tribe.Answer;
 import com.dexels.navajo.server.enterprise.tribe.Request;
 
@@ -48,7 +49,7 @@ public class ServiceRequest extends Request {
 		
 		String origin = request.getHeader().getHeaderAttribute("origin");
 		if ( origin != null && !origin.equals("")) {
-			if ( origin.equals(Dispatcher.getInstance().getNavajoConfig().getInstanceName())) {
+			if ( origin.equals(DispatcherFactory.getInstance().getNavajoConfig().getInstanceName())) {
 				return null;
 			}
 		}

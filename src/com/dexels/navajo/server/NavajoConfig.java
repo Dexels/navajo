@@ -40,7 +40,6 @@ import com.dexels.navajo.server.enterprise.integrity.WorkerInterface;
 import com.dexels.navajo.server.enterprise.jabber.*;
 import com.dexels.navajo.server.enterprise.monitoring.AgentFactory;
 import com.dexels.navajo.server.enterprise.scheduler.TaskRunnerFactory;
-import com.dexels.navajo.server.enterprise.scheduler.TaskRunnerInterface;
 import com.dexels.navajo.server.enterprise.statistics.StatisticsRunnerFactory;
 import com.dexels.navajo.server.enterprise.statistics.StatisticsRunnerInterface;
 
@@ -61,7 +60,7 @@ import com.dexels.navajo.util.AuditLog;
  * The default NavajoConfig class.
  * 
  */
-public final class NavajoConfig {
+public final class NavajoConfig implements NavajoConfigInterface {
 
 	private static final int MAX_ACCESS_SET_SIZE = 50;
 	
@@ -69,6 +68,8 @@ public final class NavajoConfig {
 	public String compiledScriptPath;
 	public String hibernatePath;
 	public String scriptPath;
+	
+	private String repositoryClass = "com.dexels.navajo.server.SimpleRepository";
 	private String dbPath;
 	private HashMap dbProperties = new HashMap();
 	public String store;
@@ -80,7 +81,7 @@ public final class NavajoConfig {
 	private String configPath;
 	protected NavajoClassLoader betaClassloader;
 	protected NavajoClassSupplier adapterClassloader;
-	protected com.dexels.navajo.server.Repository repository;
+	protected volatile com.dexels.navajo.server.Repository repository = null;
 	protected Navajo configuration;
     public int maxAccessSetSize = MAX_ACCESS_SET_SIZE;
     
@@ -94,7 +95,6 @@ public final class NavajoConfig {
     protected DescriptionProviderInterface myDescriptionProvider = null;
         
     public String rootPath;
-    private String scriptVersion = "";
     private PersistenceManager persistenceManager;
     private String betaUser;
     private InputStreamReader inputStreamReader = null;
@@ -149,7 +149,7 @@ public final class NavajoConfig {
 	 * @return
 	 */
 	@Deprecated
-    public static NavajoConfig getInstance() {
+    private static NavajoConfig getInstance() {
     	return instance;
     }
       
@@ -225,15 +225,6 @@ public final class NavajoConfig {
     			System.err.println("WARNING: Using DEPRECATED navajostore configuration, use message based configuration instead.");
     		}
     		
-    		this.hibernatePath = (body.getProperty("paths/hibernate-mappings") != null ?
-    				properDir(rootPath +
-    						body.getProperty("paths/hibernate-mappings").
-    						getValue()) : "");
-    		
-    		
-    		if (body.getProperty("parameters/script_version") != null)
-    			scriptVersion = body.getProperty("parameters/script_version").getValue();
-    		
     		persistenceManager = PersistenceManagerFactory.getInstance("com.dexels.navajo.persistence.impl.PersistenceManagerImpl", configPath);
     		
     		if(adapterClassloader == null) {
@@ -254,7 +245,6 @@ public final class NavajoConfig {
     				String [] keyValue = properties[i].split("=");
     				String key = ( keyValue.length > 1) ? keyValue[0] : "";
     				String value = ( keyValue.length > 1) ? keyValue[1] : "";
-    				AuditLog.log(AuditLog.AUDIT_MESSAGE_DISPATCHER, "Setting system property, key = " + key + ", value = " + value);
     				System.setProperty(key, value);
     			}
     		}
@@ -288,9 +278,10 @@ public final class NavajoConfig {
 			
 			jabberMessage = body.getMessage("jabber");
 					
-    		String repositoryClass = body.getProperty("repository/class").getValue();
-    		repository = RepositoryFactory.getRepository(repositoryClass, this);
-    		
+			if ( body.getProperty("repository/class") != null ) {
+				repositoryClass = body.getProperty("repository/class").getValue();
+			}
+			
     		// Read navajostore parameters.
     		Message navajostore = body.getMessage("navajostore");
     		if (navajostore != null) {
@@ -303,32 +294,32 @@ public final class NavajoConfig {
     			}
     		}
     		
-    		enableStatisticsRunner = (body.getProperty("parameters/enable_statistics") == null ||
-    				body.getProperty("parameters/enable_statistics").getValue().equals("true"));
-    		
-
-    		
     		if (dbPort != -1) {
     			System.err.println("PUTTING PORT = " + dbPort + " IN MAP");
     			dbProperties.put("port", new Integer(dbPort));
     		}
     		
+    		enableStatisticsRunner = (body.getProperty("parameters/enable_statistics") == null ||
+    				body.getProperty("parameters/enable_statistics").getValue().equals("true"));
     		
-    		
+	
     		//System.err.println("USing repository = " + repository);
     		Message maintenance = body.getMessage("maintenance-services");
-    		ArrayList propertyList = maintenance.getAllProperties();
-    		for (int i = 0; i < propertyList.size(); i++) {
-    			Property prop = (Property) propertyList.get(i);
-    			properties.put(prop.getName(), scriptPath + prop.getValue());
+    		
+    		if ( maintenance != null ) {
+    			ArrayList propertyList = maintenance.getAllProperties();
+    			for (int i = 0; i < propertyList.size(); i++) {
+    				Property prop = (Property) propertyList.get(i);
+    				properties.put(prop.getName(), scriptPath + prop.getValue());
+    			}
     		}
     		
-    		Message security = body.getMessage("security");
-    		if (security != null) {
-    			Property matchCn = security.getProperty("match_cn");
-    			if (matchCn != null)
-    				Dispatcher.getInstance().matchCN = matchCn.getValue().equals("true");
-    		}
+//    		Message security = body.getMessage("security");
+//    		if (security != null) {
+//    			Property matchCn = security.getProperty("match_cn");
+//    			if (matchCn != null)
+//    				DispatcherFactory.getInstance().matchCN = matchCn.getValue().equals("true");
+//    		}
     		
     		Property s = body.getProperty("parameters/async_timeout");
     		asyncTimeout = 3600 * 1000; // default 1 hour.
@@ -400,7 +391,6 @@ public final class NavajoConfig {
     			NavajoFactory.resetImplementation();
     			NavajoFactory.getInstance();
     			NavajoFactory.getInstance().setExpressionEvaluator(new DefaultExpressionEvaluator());
-    			AuditLog.log(AuditLog.AUDIT_MESSAGE_DISPATCHER, "Documentclass is now: " + documentClass);
     		} 
 
     		
@@ -507,13 +497,6 @@ public final class NavajoConfig {
     }
 
     /*
-     * Returns the specific version of the scripting engine.
-     */
-    public final String getScriptVersion() {
-      return scriptVersion;
-    }
-
-    /*
      * Gets the path where the compiled scripts are stored.
      */
     public final String getCompiledScriptPath() {
@@ -583,7 +566,18 @@ public final class NavajoConfig {
      * Gets the Authentication/Authorization module that will be used by the Navajo Instance.
      */
     public final com.dexels.navajo.server.Repository getRepository() {
-        return repository;
+
+    	if ( repository != null ) {
+    		return repository;
+    	}
+
+    	synchronized (instance) {
+    		if ( repository == null ) {
+    			repository = RepositoryFactory.getRepository(repositoryClass, this);
+    		} 
+    	}
+
+    	return repository;
     }
 
     /*
@@ -1006,6 +1000,18 @@ public final class NavajoConfig {
 
 	public String getDbPath() {
 		return dbPath;
+	}
+
+	public boolean isCompileScripts() {
+		return compileScripts;
+	}
+
+	public int getMaxAccessSetSize() {
+		return maxAccessSetSize;
+	}
+
+	public void setMaxAccessSetSize(int maxAccessSetSize) {
+		this.maxAccessSetSize = maxAccessSetSize;
 	}
 	
 }

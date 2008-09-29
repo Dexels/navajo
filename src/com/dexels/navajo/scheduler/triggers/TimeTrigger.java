@@ -22,7 +22,7 @@
  * SUCH DAMAGE.
  * ====================================================================
  */
-package com.dexels.navajo.scheduler;
+package com.dexels.navajo.scheduler.triggers;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -30,6 +30,8 @@ import java.util.Calendar;
 import java.util.StringTokenizer;
 
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.scheduler.Clock;
+import com.dexels.navajo.scheduler.ClockListener;
 import com.dexels.navajo.server.GenericThread;
 
 public class TimeTrigger extends Trigger implements Serializable, ClockListener {

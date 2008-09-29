@@ -16,7 +16,7 @@ import com.dexels.navajo.document.*;
 
 public class SimpleRepository implements Repository {
 
-	public NavajoConfig config;
+	public NavajoConfigInterface config;
 
 	// name of the message containing globals
 	public static final String GLOBALSMSGNAME = "__globals__";
@@ -24,7 +24,7 @@ public class SimpleRepository implements Repository {
 	public SimpleRepository() {
 	}
 
-	public void setNavajoConfig(NavajoConfig config) {
+	public void setNavajoConfig(NavajoConfigInterface config) {
 		this.config = config;
 	}
 

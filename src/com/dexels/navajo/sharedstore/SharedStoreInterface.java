@@ -24,6 +24,7 @@
  */
 package com.dexels.navajo.sharedstore;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -101,8 +102,9 @@ public interface SharedStoreInterface {
 	 * @param parent
 	 * @param name
 	 * @param l
+	 * @throws SharedStoreException if object does not exist.
 	 */
-	public void setLastModified(String parent, String name, long l);
+	public void setLastModified(String parent, String name, long l) throws IOException;
 	
 	/**
 	 * Check whether object exists in the shared store.

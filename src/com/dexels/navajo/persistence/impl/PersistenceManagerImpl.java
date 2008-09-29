@@ -18,6 +18,7 @@ import com.dexels.navajo.events.types.NavajoCompileScriptEvent;
 import com.dexels.navajo.persistence.*;
 import com.dexels.navajo.server.CacheController;
 import com.dexels.navajo.server.Dispatcher;
+import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
 import com.dexels.navajo.sharedstore.SharedStoreFactory;
 import com.dexels.navajo.sharedstore.SharedStoreInterface;
@@ -104,7 +105,7 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
 		}
 	}
 	
-	private void init() {
+	public void init() {
 		if ( this.sharedPersistenceStore == null ) {
 			synchronized ( semaphore ) {
 				if ( this.sharedPersistenceStore == null ) {
@@ -116,6 +117,11 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
 					accessFrequency = new SharedTribalMap<String,Frequency>(FREQUENCE_MAP_ID);
 					inMemoryCache = SharedTribalMap.registerMap(inMemoryCache, false);
 					accessFrequency = SharedTribalMap.registerMap(accessFrequency, false);
+					System.err.println("============================================================================");
+					System.err.println("inMemoryCache = " + inMemoryCache);
+					System.err.println("accessFrequency = " + accessFrequency);
+					System.err.println("sharedPersistenceStore = " + sharedPersistenceStore);
+					System.err.println("============================================================================");
 					// Register myself to the NavajoCompileScriptEvent in order to detect script recompiles and removed
 					// cached scripts accordingly.
 					NavajoEventRegistry.getInstance().addListener(NavajoCompileScriptEvent.class, this);
@@ -152,7 +158,8 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
     	return result;
     }
 
-    private final String constructServiceKeyValues(String serviceKeys, Navajo in) {
+    private final String constructServiceKeyValues(String serviceKeys, Navajo in) throws Exception {
+    	
     	String [] properties = serviceKeys.split(",");
     	StringBuffer result = new StringBuffer();
     	
@@ -166,7 +173,7 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
     	return result.toString();
     }
     
-    private final Persistable memoryOperation(String key, String service, Persistable document, long expirationInterval, boolean read ) {
+    private final Persistable memoryOperation(String key, String service, Persistable document, long expirationInterval, boolean read ) throws Exception {
 
     	if (read) {
 //    		SoftReference<PersistentEntry> pc = null;
@@ -288,7 +295,7 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
 
 
 	public boolean isCached(String service, String serviceKeyValues) {
-		PersistenceManagerImpl pm = (PersistenceManagerImpl) Dispatcher.getInstance().getNavajoConfig().getPersistenceManager();
+		PersistenceManagerImpl pm = (PersistenceManagerImpl) DispatcherFactory.getInstance().getNavajoConfig().getPersistenceManager();
 		Iterator iter = pm.inMemoryCache.values().iterator();
 		while ( iter.hasNext() ) {
 			PersistentEntry pe = (PersistentEntry) iter.next();
@@ -300,7 +307,7 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
 	}
 	
 	public void setDoClear(boolean doClear) {
-		PersistenceManagerImpl pm = (PersistenceManagerImpl) Dispatcher.getInstance().getNavajoConfig().getPersistenceManager();
+		PersistenceManagerImpl pm = (PersistenceManagerImpl) DispatcherFactory.getInstance().getNavajoConfig().getPersistenceManager();
 
 		if ( doClear && pm.inMemoryCache != null && pm.sharedPersistenceStore != null ) {
 			Set keys = new HashSet( pm.inMemoryCache.keySet() );
@@ -332,7 +339,7 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
 	}
 
 	public double getHitratio() {
-		PersistenceManagerImpl pm = (PersistenceManagerImpl) Dispatcher.getInstance().getNavajoConfig().getPersistenceManager();
+		PersistenceManagerImpl pm = (PersistenceManagerImpl) DispatcherFactory.getInstance().getNavajoConfig().getPersistenceManager();
 		return ( (double) pm.cachehits / (double) pm.totalhits );
 	}
 

@@ -24,7 +24,7 @@
  */
 package com.dexels.navajo.sharedstore;
 
-import com.dexels.navajo.server.Dispatcher;
+import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.enterprise.tribe.Answer;
 import com.dexels.navajo.server.enterprise.tribe.Request;
 
@@ -43,7 +43,7 @@ public class RemoveLockRequest extends Request {
 	public RemoveLockRequest(String parent, String name) {
 		this.parent = parent;
 		this.name = name;
-		this.owner = Dispatcher.getInstance().getNavajoConfig().getInstanceName();
+		this.owner = DispatcherFactory.getInstance().getNavajoConfig().getInstanceName();
 		this.blocking = false;
 	}
 	

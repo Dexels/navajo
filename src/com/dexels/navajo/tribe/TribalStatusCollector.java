@@ -27,7 +27,6 @@ package com.dexels.navajo.tribe;
 import java.util.HashSet;
 import java.util.Iterator;
 
-import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.GenericThread;
 import com.dexels.navajo.server.enterprise.tribe.PingAnswer;
 import com.dexels.navajo.server.jmx.JMXHelper;

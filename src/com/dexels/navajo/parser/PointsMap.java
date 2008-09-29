@@ -2,7 +2,6 @@ package com.dexels.navajo.parser;
 
 import com.dexels.navajo.mapping.*;
 
-import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.server.*;
 import java.util.*;
@@ -24,7 +23,7 @@ public class PointsMap implements Mappable {
 
     public PointsMap() {}
 
-    public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException {
+    public void load(Access access) throws MappableException {
         myPoints = new Vector[2];
         myPoints[0] = new Vector();
         myPoints[0].add(new Integer(0));

@@ -16,6 +16,7 @@ public class NavajoEventMap {
 	
 	public static final String HEALTH_CHECK_EVENT = "healthcheck";
 	public static final String COMPILESCRIPT_EVENT = "compilescript";
+	public static final String EXCEPTION_EVENT = "exception";
 	public static final String SERVER_TOO_BUSY_EVENT = "servertoobusy";
 	public static final String REQUEST_EVENT = "request";
 	public static final String RESPONSE_EVENT = "respons";
@@ -24,12 +25,14 @@ public class NavajoEventMap {
 	public static final String QUEUABLE_FINISHED_EVENT = "queuablefinished";
 	public static final String QUEUABLE_FAILURE_EVENT = "queuablefailure";
 	
+	
 	static {
 		
 		navajoEvents = new HashMap<String,Class<? extends NavajoEvent>>();
 		
 		navajoEvents.put(HEALTH_CHECK_EVENT, NavajoHealthCheckEvent.class);
 		navajoEvents.put(COMPILESCRIPT_EVENT, NavajoCompileScriptEvent.class);
+		navajoEvents.put(EXCEPTION_EVENT, NavajoExceptionEvent.class);
 		navajoEvents.put(SERVER_TOO_BUSY_EVENT, ServerTooBusyEvent.class);
 		navajoEvents.put(REQUEST_EVENT, NavajoRequestEvent.class);
 		navajoEvents.put(RESPONSE_EVENT, NavajoResponseEvent.class);

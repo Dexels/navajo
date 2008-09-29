@@ -20,4 +20,8 @@ public abstract class NavajoClassSupplier extends ClassLoader {
     public NavajoClassSupplier(ClassLoader parent) {
     	super(parent);
     }
+    
+	public NavajoClassSupplier() {
+		// TODO Auto-generated constructor stub
+	}
 }

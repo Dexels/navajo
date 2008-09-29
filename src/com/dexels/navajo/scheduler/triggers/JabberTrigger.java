@@ -1,4 +1,4 @@
-package com.dexels.navajo.scheduler;
+package com.dexels.navajo.scheduler.triggers;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.jabber.JabberWorker;

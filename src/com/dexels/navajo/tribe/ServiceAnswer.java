@@ -26,6 +26,7 @@ package com.dexels.navajo.tribe;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.server.Dispatcher;
+import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.FatalException;
 import com.dexels.navajo.server.enterprise.tribe.Answer;
 
@@ -40,7 +41,7 @@ public class ServiceAnswer extends Answer {
 	public ServiceAnswer(ServiceRequest q) {
 		super(q);
 		try {
-			response = Dispatcher.getInstance().handle(q.getRequest(), q.isSkipAuthorization());
+			response = DispatcherFactory.getInstance().handle(q.getRequest(), q.isSkipAuthorization());
 		} catch (FatalException e) {
 			hasError = true;
 			errorMessage = e.getMessage();

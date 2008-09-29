@@ -3,6 +3,7 @@ package com.dexels.navajo.server.enterprise.tribe;
 import java.io.Serializable;
 
 import com.dexels.navajo.server.Dispatcher;
+import com.dexels.navajo.server.DispatcherFactory;
 
 /**
  * Title:        Navajo<p>
@@ -40,7 +41,7 @@ public abstract class Request implements Serializable {
 	private Object recipient;
 	
 	public Request() {
-		owner = Dispatcher.getInstance().getNavajoConfig().getInstanceName();
+		owner = DispatcherFactory.getInstance().getNavajoConfig().getInstanceName();
 		guid = hashCode() + "-" + System.currentTimeMillis();
 	}
 	

@@ -51,19 +51,17 @@ import com.dexels.navajo.events.NavajoEventRegistry;
 import com.dexels.navajo.events.types.TribeMemberDownEvent;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
-import com.dexels.navajo.scheduler.AfterWebServiceRequest;
-import com.dexels.navajo.scheduler.BeforeWebServiceAnswer;
-import com.dexels.navajo.scheduler.BeforeWebServiceRequest;
+import com.dexels.navajo.scheduler.tribe.AfterWebServiceRequest;
+import com.dexels.navajo.scheduler.tribe.BeforeWebServiceAnswer;
+import com.dexels.navajo.scheduler.tribe.BeforeWebServiceRequest;
 import com.dexels.navajo.server.Access;
-import com.dexels.navajo.server.Dispatcher;
-import com.dexels.navajo.server.NavajoConfig;
-import com.dexels.navajo.server.Parameters;
+import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.server.enterprise.tribe.Answer;
-import com.dexels.navajo.server.enterprise.tribe.PingAnswer;
 import com.dexels.navajo.server.enterprise.tribe.Request;
 import com.dexels.navajo.server.enterprise.tribe.SmokeSignal;
 import com.dexels.navajo.server.enterprise.tribe.TribeManagerInterface;
+import com.dexels.navajo.server.enterprise.tribe.TribeMemberInterface;
 import com.dexels.navajo.util.AuditLog;
 
 /**
@@ -107,90 +105,84 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 	private static String myName;
 	private volatile static boolean initializing = false;
 	private static TribeManager instance = null;
+	
 	private final static Object semaphore = new Object();
 	private final static HashMap<String,Integer> counts = new HashMap<String,Integer>();
 	
 	public TribeMember [] members = null;
+		
+	public TribeManager() {
+		// For use in scripts.
+	}
 	
-	//private static String configuration = "state_transfer():frag2(frag_size=60000):fc(min_threshold=0.10, max_credits=20000000):gms(shun=false, print_local_addr=true, view_bundling=true, join_timeout=3000, join_retry_timeout=2000):view_sync(avg_send_interval=60000):stable(max_bytes=400000, stability_delay=1000, desired_avg_gossip=50000):unicast(timeout=300,600,1200,2400,3600):nakack(max_xmit_size=60000, retransmit_timeout=300,600,1200,2400,4800, use_mcast_xmit=false, discard_delivered_msgs=true, gc_lag=0):barrier():verify_suspect(timeout=1500):fd(max_tries=5, shun=true, timeout=10000):fd_sock():merge2(max_interval=30000, min_interval=10000):ping(num_initial_members=3, timeout=2000):";
-	//private static String updConfiguration = "udp(mcast_port=45588, oob_thread_pool.enabled=true, ucast_recv_buf_size=20000000, thread_pool.enabled=true, loopback=false, thread_pool.rejection_policy=Run, max_bundle_timeout=30, thread_pool.queue_max_size=100, oob_thread_pool.min_threads=1, oob_thread_pool.keep_alive_time=5000, oob_thread_pool.rejection_policy=Run, thread_naming_pattern=cl, thread_pool.queue_enabled=false, ucast_send_buf_size=640000, max_bundle_size=64000, enable_bundling=true, thread_pool.max_threads=25, ip_ttl=2, mcast_recv_buf_size=25000000, tos=8, use_incoming_packet_handler=true, thread_pool.keep_alive_time=5000, oob_thread_pool.queue_max_size=100, use_concurrent_stack=true, discard_incompatible_packets=true, enable_diagnostics=true, oob_thread_pool.max_threads=8, mcast_send_buf_size=640000, thread_pool.min_threads=1, oob_thread_pool.queue_enabled=false, mcast_addr=228.10.10.10)";
+	protected TribeManager(String jgroupsconfigfile) {
+		
+		// Switch of warning messages (to prevent WARNING messages when different JChannel names are used.
+		Logger.getLogger("org.jgroups.protocols").setLevel(Level.SEVERE);
+		
+		myName = DispatcherFactory.getInstance().getNavajoConfig().getInstanceName();
+
+		state.firstMember = myName;
+
+		try {
+			AuditLog.log(AuditLog.AUDIT_MESSAGE_TRIBEMANAGER, "=================================== SETTING UP JGROUPS CHANNEL ==================================");
+			System.setProperty("java.net.preferIPv4Stack", "true");
+
+			File xmlConfig = new File(DispatcherFactory.getInstance().getNavajoConfig().getConfigPath() + "/" + jgroupsconfigfile);
+
+			if ( xmlConfig.exists() ) {
+
+				AuditLog.log("TRIBEMANAGER", "Using CUSTOMIZED jgroups configuration");
+				Document xml = XMLDocumentUtils.createDocument(new FileInputStream(xmlConfig), false);
+				xml.getDocumentElement().normalize();
+				channel=new JChannel( xml.getDocumentElement()  );
+				
+			} else {
+				
+				AuditLog.log("TRIBEMANAGER", "Using DEFAULT jgroups configuration");
+				channel=new JChannel();
+				
+			}
+			
+			channel.setReceiver(this);
+
+			// TODO:
+			// GET GROUP NAME TO SPECIFY SPECIFIC TRIBE GROUP..
+			channel.connect( DispatcherFactory.getInstance().getNavajoConfig().getInstanceGroup() );
+			channel.getState(null, 30000);
+			AuditLog.log(AuditLog.AUDIT_MESSAGE_TRIBEMANAGER, "MyAddress = " + ((IpAddress) channel.getLocalAddress()).getIpAddress() + ", port = " + 
+					((IpAddress) channel.getLocalAddress()).getPort());
+			AuditLog.log(AuditLog.AUDIT_MESSAGE_TRIBEMANAGER, "=================================================================================================");
+
+
+		} catch (Exception e) {
+			e.printStackTrace(System.err);
+		}
+
+		// Broadcast alive status and get registered web services from the chief (TODO)
+		IpAddress ip = (IpAddress) channel.getLocalAddress();
+		TribeMember candidate = new TribeMember(myName, ip);
+		myMembership = candidate;
+		broadcast(new MembershipSmokeSignal(myName, MembershipSmokeSignal.INTRODUCTION, candidate));
+		initializing = false;
+	}
 	
 	public static TribeManager getInstance() {
 	
 		if ( instance != null && !initializing ) {
 			return instance;
 		}
-		
-		// Switch of warning messages (to prevent WARNING messages when different JChannel names are used.
-		Logger.getLogger("org.jgroups.protocols").setLevel(Level.SEVERE);
-		
-		while ( initializing ) {
-			System.err.println(Dispatcher.getInstance().getNavajoConfig().getInstanceName() + ": Tribemanager is still initializing...");
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-			}
-		}
-			
+	
 		if (instance == null) {
-
 			synchronized (semaphore) {
-
-				initializing = true;
-				
 				if ( instance == null ) {
-
-					myName = Dispatcher.getInstance().getNavajoConfig().getInstanceName();
-					instance = new TribeManager();
-					state.firstMember = myName;
-					
-					try {
-						AuditLog.log(AuditLog.AUDIT_MESSAGE_TRIBEMANAGER, "=================================== SETTING UP JGROUPS CHANNEL ==================================");
-						System.setProperty("java.net.preferIPv4Stack", "true");
-						
-						File xmlConfig = new File(Dispatcher.getInstance().getNavajoConfig().getConfigPath() + "/jgroups.xml");
-						
-						if ( xmlConfig.exists() ) {
-							
-							AuditLog.log("TRIBEMANAGER", "Using CUSTOMIZED jgroups configuration");
-							Document xml = XMLDocumentUtils.createDocument(new FileInputStream(xmlConfig), false);
-							xml.getDocumentElement().normalize();
-							
-							instance.channel=new JChannel( xml.getDocumentElement()  );
-						} else {
-							
-							AuditLog.log("TRIBEMANAGER", "Using DEFAULT jgroups configuration");
-							
-							instance.channel=new JChannel();
-						}
-						
-						instance.channel.setReceiver(instance);
-						
-						
-						// TODO:
-						// GET GROUP NAME TO SPECIFY SPECIFIC TRIBE GROUP..
-						instance.channel.connect( Dispatcher.getInstance().getNavajoConfig().getInstanceGroup() );
-						instance.channel.getState(null, 30000);
-						AuditLog.log(AuditLog.AUDIT_MESSAGE_TRIBEMANAGER, "MyAddress = " + ((IpAddress) instance.channel.getLocalAddress()).getIpAddress() + ", port = " + 
-								((IpAddress) instance.channel.getLocalAddress()).getPort());
-						AuditLog.log(AuditLog.AUDIT_MESSAGE_TRIBEMANAGER, "=================================================================================================");
-					
-						
-					} catch (Exception e) {
-						e.printStackTrace(System.err);
-					}
+					initializing = true;
+					instance = new TribeManager("jgroups.xml");
+					semaphore.notify();
 				}
-				
-				// Broadcast alive status and get registered web services from the chief (TODO)
-				IpAddress ip = (IpAddress) instance.channel.getLocalAddress();
-				TribeMember candidate = new TribeMember(myName, ip);
-				instance.myMembership = candidate;
-				instance.broadcast(new MembershipSmokeSignal(myName, MembershipSmokeSignal.INTRODUCTION, candidate));
-				semaphore.notify();
-				initializing = false;
 			}		
 		}
-	
+		
 		return instance;
 	}
 	
@@ -269,10 +261,10 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 		}
 	}
 	
-	protected void addTribeMember(TribeMember tm) {
+	public void addTribeMember(TribeMemberInterface tm) {
 		AuditLog.log(AuditLog.AUDIT_MESSAGE_TRIBEMANAGER, "In addTribeMember");
 		synchronized (state) {
-			state.clusterMembers.add(tm);
+			state.clusterMembers.add( (TribeMember) tm);
 		}
 		updateState();
 	}
@@ -306,7 +298,7 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 				
 				if ( theChief == null ) {
 					try {
-						AuditLog.log(AuditLog.AUDIT_MESSAGE_TRIBEMANAGER, ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Did not get Chief yet, MemberShipSmokeSignal was faster than view update, wait a bit");
+						AuditLog.log(AuditLog.AUDIT_MESSAGE_TRIBEMANAGER, "Did not get Chief yet, MemberShipSmokeSignal was faster than view update, wait a bit");
 						state.wait(500);
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
@@ -380,7 +372,7 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 	public void kill() {
 	}
 
-	public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
+	public void load(Access access) throws MappableException, UserException {
 	}
 
 	public void store() throws MappableException, UserException {
@@ -553,10 +545,8 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 			}
 		}
 		
-		//System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>  In AskChief(), q = " + q);
 		if ( instance != null && !initializing ) {
 			if ( myMembership.isChief() ) {
-				//System.err.println("I Am the Chief, hence I'll answer");
 				return q.getAnswer();
 			}
 			return askSomebody(q, theChief.getAddress());
@@ -624,8 +614,8 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 	 */
 	public void terminate() {
 		AuditLog.log(AuditLog.AUDIT_MESSAGE_TRIBEMANAGER, "Closing JGROUPS channel...");
-		instance.channel.disconnect();
-		instance.channel.close();
+		channel.disconnect();
+		channel.close();
 	}
 	
 	/**
@@ -670,7 +660,7 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 		String origin = in.getHeader().getHeaderAttribute("origin");
 		if ( origin == null || origin.equals("")) { // Set origin attribute to prevent broadcast ping-pong....
 			System.err.println("Going to broadcast service to other members....");
-			in.getHeader().setHeaderAttribute("origin", Dispatcher.getInstance().getNavajoConfig().getInstanceName());
+			in.getHeader().setHeaderAttribute("origin", DispatcherFactory.getInstance().getNavajoConfig().getInstanceName());
 			ServiceRequest sr = new ServiceRequest(in, true);
 			sr.setIgnoreRequestOnSender(true);
 			sr.setBlocking(false);
@@ -724,7 +714,7 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 		boolean acknowledged = false;
 		while ( iter.hasNext() && !acknowledged ) {
 			TribeMember tm = iter.next();
-			if ( !tm.getMemberName().equals(Dispatcher.getInstance().getNavajoConfig().getInstanceName()) ) {
+			if ( !tm.getMemberName().equals(DispatcherFactory.getInstance().getNavajoConfig().getInstanceName()) ) {
 				AfterWebServiceRequest bwsr = new AfterWebServiceRequest(service, a, ignoreTaskIds);
 				TribeManager.getInstance().askSomebody(bwsr, tm.getAddress());		
 			}
@@ -737,7 +727,7 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 		boolean acknowledged = false;
 		while ( iter.hasNext() && !acknowledged ) {
 			TribeMember tm = iter.next();
-			if ( !tm.getMemberName().equals(Dispatcher.getInstance().getNavajoConfig().getInstanceName()) ) {
+			if ( !tm.getMemberName().equals(DispatcherFactory.getInstance().getNavajoConfig().getInstanceName()) ) {
 				BeforeWebServiceRequest bwsr = new BeforeWebServiceRequest(service, a, ignoreList);
 				BeforeWebServiceAnswer bwsa = (BeforeWebServiceAnswer) TribeManager.getInstance().askSomebody(bwsr, tm.getAddress());
 				if ( bwsa.getMyNavajo() != null ) {

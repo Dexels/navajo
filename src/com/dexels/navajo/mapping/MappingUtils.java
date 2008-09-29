@@ -544,7 +544,7 @@ public static final ArrayList getMessageList(Message msg, Navajo doc, String str
      
   public static final boolean isObjectMappable(String className) throws UserException {
 	  try {
-		  Class c = Class.forName(className, true, NavajoConfig.getInstance().getClassloader());
+		  Class c = Class.forName(className, true, DispatcherFactory.getInstance().getNavajoConfig().getClassloader());
 		  return ( c.newInstance() instanceof Mappable );
 	  } catch (Exception e) {
 		  e.printStackTrace(System.err);

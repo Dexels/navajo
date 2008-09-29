@@ -11,6 +11,7 @@ import java.io.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.loader.NavajoBasicClassLoader;
 import com.dexels.navajo.server.Dispatcher;
+import com.dexels.navajo.server.DispatcherFactory;
 
 /**
  * @author Administrator
@@ -55,7 +56,7 @@ public class NavajoRunner {
 			dci.setUsername(username);
 			dci.setPassword(password);
 			dci.init(server.toURL(),NavajoRunner.class.getClassLoader(),System.getProperty("user.dir"));
-		      Dispatcher.getInstance().getNavajoConfig().setClassloader(new NavajoBasicClassLoader(dci.getClass().getClassLoader()));
+		      DispatcherFactory.getInstance().getNavajoConfig().setClassloader(new NavajoBasicClassLoader(dci.getClass().getClassLoader()));
 
 		    Navajo n = null;
 			if (args.length>3) {

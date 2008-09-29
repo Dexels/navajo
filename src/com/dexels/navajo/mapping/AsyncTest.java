@@ -20,7 +20,7 @@ public class AsyncTest extends AsyncMappable {
 
   private float ready = (float) 0.0;
 
-  public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws com.dexels.navajo.server.UserException, com.dexels.navajo.mapping.MappableException {
+  public void load(Access access) throws com.dexels.navajo.server.UserException, com.dexels.navajo.mapping.MappableException {
     System.out.println("in AsyncTest load()");
   }
 
@@ -73,7 +73,7 @@ public class AsyncTest extends AsyncMappable {
     System.out.println("AsyncTest: in afterReqeust()");
   }
 
-  public void beforeResponse(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) {
+  public void beforeResponse(Access access) {
     System.out.println("AsyncTest: in beforeResponse()");
   }
 

@@ -5,14 +5,16 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import javax.management.AttributeChangeNotification;
+import javax.management.MBeanNotificationInfo;
 import javax.management.Notification;
 import javax.management.NotificationBroadcasterSupport;
 import javax.management.NotificationListener;
-import javax.management.monitor.MonitorNotification;
 
+import com.dexels.navajo.events.types.ChangeNotificationEvent;
+import com.dexels.navajo.events.types.LevelEvent;
 import com.dexels.navajo.events.types.TribeMemberDownEvent;
-import com.dexels.navajo.scheduler.NavajoEventProxy;
-import com.dexels.navajo.server.GenericThread;
+import com.dexels.navajo.scheduler.tribe.NavajoEventProxy;
 import com.dexels.navajo.server.jmx.JMXHelper;
 
 /**
@@ -32,8 +34,12 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 	 * Map contains JMX monitored eventtypes.
 	 */
 	private final HashSet<String> monitoredEvents = new HashSet<String>();
+	private final HashMap<String,HashSet<String>> monitorLeveledEvents = new HashMap<String,HashSet<String>>();
 	
-	private static Object semaphore = new Object();
+	private final static Object semaphore = new Object();
+	public static long notificationSequence = 0;
+	
+	private final static String id = "Navajo Event Registry";
 	
 	public static void clearInstance() {
 		instance = null;
@@ -49,17 +55,15 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 			return instance;
 		} else {
 			synchronized (semaphore ) {
-				
-				if ( instance != null ) {
-					return instance;
+
+				if ( instance == null ) {
+					instance = new NavajoEventRegistry();
+					try {
+						JMXHelper.registerMXBean(instance, JMXHelper.NAVAJO_DOMAIN, id);
+					} catch (Throwable t) {
+						t.printStackTrace(System.err);
+					} 
 				}
-				
-				instance = new NavajoEventRegistry();
-				try {
-					JMXHelper.registerMXBean(instance, JMXHelper.NAVAJO_DOMAIN, "Navajo Event Registry");
-				} catch (Throwable t) {
-					//t.printStackTrace(System.err);
-				} 
 			}
 			return instance;
 		}
@@ -99,14 +103,36 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 
 	private void publishMonitoredEvent(final NavajoEvent ne) {
 
-		if ( monitoredEvents.contains( ne.getClass().getName() )) {
+		if ( ne instanceof ChangeNotificationEvent ) {
+			ChangeNotificationEvent cne = (ChangeNotificationEvent) ne;
+			sendNotification(cne.getJMXNotification());
+		}
+
+		boolean notificationsend = false;
+		
+		if ( ne instanceof LevelEvent ) {
+
+			HashSet<String> levelEvents = monitorLeveledEvents.get( ((LevelEvent) ne).getLevel().getName() );
+			if ( levelEvents != null && levelEvents.contains( ne.getClass().getName() )) {
+				
+				Notification n = 
+					new Notification(ne.getClass().getName(), "Navajo Event Registry", notificationSequence++,
+							System.currentTimeMillis(), ne.toString());
+				notificationsend = true;
+				sendNotification(n); 
+			}
 			
+		} 
+		
+		if ( !notificationsend && monitoredEvents.contains( ne.getClass().getName() )) {
+
 			Notification n = 
-				new Notification(ne.getClass().getName(), "Navajo Event Registry", GenericThread.notificationSequence++,
-								 System.currentTimeMillis(), ne.toString());
+				new Notification(ne.getClass().getName(), "Navajo Event Registry", notificationSequence++,
+						System.currentTimeMillis(), ne.toString());
 
 			sendNotification(n); 
 		}
+		
 	}
 	
 	/**
@@ -223,6 +249,17 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 	public void addMonitoredEvent(String type) {
 		monitoredEvents.add(type);
 	}
+	
+	public void addMonitoredEvent(String type, String level) {
+		synchronized ( monitorLeveledEvents ) {
+			HashSet<String> levelSet = monitorLeveledEvents.get(level);
+			if ( levelSet == null ) {
+				levelSet = new HashSet<String>();
+				monitorLeveledEvents.put(level, levelSet);
+			}
+			levelSet.add(type);
+		}
+	}
 
 	public void removeMonitoredEvent(String type) {
 		monitoredEvents.remove(type);
@@ -237,21 +274,26 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 	 */
 	public void handleNotification(Notification notification, Object handback) {
 
-		if (notification instanceof MonitorNotification) { 
-			
-			System.err.println(">>>>>>>>>>>> RECEIVED NOTIFICATION: " + notification.getType() );
-			System.err.println(">>>>>>>>>>>> RECEIVED NOTIFICATION: " + notification.getMessage() );
-			System.err.println(">>>>>>>>>>>> RECEIVED NOTIFICATION: " + notification.getSequenceNumber() );
-			System.err.println(">>>>>>>>>>>> RECEIVED NOTIFICATION: " + notification.getTimeStamp() );
-			System.err.println(">>>>>>>>>>>> RECEIVED NOTIFICATION: " + notification.getSource() );		
-			System.err.println(">>>>>>>>>>>> RECEIVED NOTIFICATION: " + ((MonitorNotification) notification).getObservedObject() );
-			System.err.println(">>>>>>>>>>>> RECEIVED NOTIFICATION: " + ((MonitorNotification) notification).getObservedAttribute() );
-			System.err.println(">>>>>>>>>>>> RECEIVED NOTIFICATION: " + ((MonitorNotification) notification).getTrigger() );
-			
-		}
+		System.err.println(">>>>>>>>>>>> RECEIVED NOTIFICATION: " + notification.getType() );
+		System.err.println(">>>>>>>>>>>> RECEIVED NOTIFICATION: " + notification.getMessage() );
+		System.err.println(">>>>>>>>>>>> RECEIVED NOTIFICATION: " + notification.getSequenceNumber() );
+		System.err.println(">>>>>>>>>>>> RECEIVED NOTIFICATION: " + notification.getTimeStamp() );
+		System.err.println(">>>>>>>>>>>> RECEIVED NOTIFICATION: " + notification.getSource() );		
 
 	}
 
+	public MBeanNotificationInfo[] getNotificationInfo() { 
+		String[] types = new String[] { 
+				AttributeChangeNotification.ATTRIBUTE_CHANGE
+		}; 
+		String name = AttributeChangeNotification.class.getName(); 
+		String description = "An attribute of this MBean has changed"; 
+		MBeanNotificationInfo info = 
+			new MBeanNotificationInfo(types, name, description); 
+		
+		return new MBeanNotificationInfo[] {info}; 
+	} 
+	 
 	public int getNumberOfRegisteredListeners() {
 		return registry.size();
 	}
@@ -263,4 +305,5 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 		System.err.println(">>>> " + n.isMonitoredEvent(NavajoEvent.class, true));
 		System.err.println(">>>> " + n.isMonitoredEvent(TribeMemberDownEvent.class, true));
 	}
+
 }

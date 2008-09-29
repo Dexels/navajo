@@ -15,7 +15,7 @@ import org.jivesoftware.smackx.muc.*;
 
 import com.dexels.navajo.client.*;
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.scheduler.JabberTrigger;
+import com.dexels.navajo.scheduler.triggers.JabberTrigger;
 import com.dexels.navajo.server.*;
 
 public class NavajoJabberAgent  {
@@ -519,7 +519,7 @@ public class NavajoJabberAgent  {
 		Navajo in = NavajoFactory.getInstance().createNavajo();
 		Header h = NavajoFactory.getInstance().createHeader(in, service, "unknown", "unknown", -1);
 		in.addHeader(h);
-		Navajo reply = Dispatcher.getInstance().handle(in);
+		Navajo reply = DispatcherFactory.getInstance().handle(in);
 		return reply;
 	}
 

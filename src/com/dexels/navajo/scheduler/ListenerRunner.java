@@ -12,10 +12,10 @@ import com.dexels.navajo.server.GenericThread;
  */
 public class ListenerRunner extends GenericThread {
 
-	private static Object semaphore = new Object();
+	private static final Object semaphore = new Object();
 	private static volatile ListenerRunner instance = null;
-	private static String id = "Navajo ListenerRunner";
-	public static String VERSION = "$Id$";
+	private static final String id = "Navajo ListenerRunner";
+	public static final String VERSION = "$Id$";
 	
 	private static final int CLOCK_RESOLUTION = 5000;
 	

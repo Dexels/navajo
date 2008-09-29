@@ -24,10 +24,22 @@ public class MaintainanceHandler extends ServiceHandler {
 
             
             MaintainanceRequest maintain = new MaintainanceRequest(properties.getProperties(),
-                                                                   Dispatcher.getInstance().getRepository());
+            		DispatcherFactory.getInstance().getNavajoConfig().getRepository());
 
            
-            if (access.rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_PING)) {
+            if (access.rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_HELLO)) {
+          	  outMessage = NavajoFactory.getInstance().createNavajo();
+                Message msg = NavajoFactory.getInstance().createMessage(outMessage, "hello");
+                outMessage.addMessage(msg);
+               String value = access.getInDoc().getProperty("from/name").getValue();
+               Property p = NavajoFactory.getInstance().createProperty(outMessage, "world", Property.STRING_PROPERTY, value, -1, "", Property.DIR_OUT);
+               msg.addProperty(p);
+            } else 
+            if (access.rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_TEST)) {
+            	  outMessage = NavajoFactory.getInstance().createNavajo();
+                  Message msg = NavajoFactory.getInstance().createMessage(outMessage, "test");
+                  outMessage.addMessage(msg);
+            } else if (access.rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_PING)) {
                 // return ping message.
                 outMessage = NavajoFactory.getInstance().createNavajo();
                 Message msg = NavajoFactory.getInstance().createMessage(outMessage, "ping");

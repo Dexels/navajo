@@ -30,7 +30,7 @@ public interface Repository {
 	 * Sets the NavajoConfig instance.
 	 * @param config
 	 */
-    public void setNavajoConfig(NavajoConfig config);
+    public void setNavajoConfig(NavajoConfigInterface config);
 
     /**
      * Authorize a Navajo user based on username, password and service name. An Access object is returned that can

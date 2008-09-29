@@ -18,11 +18,14 @@ import javax.management.NotCompliantMBeanException;
 import javax.management.NotificationListener;
 import javax.management.ObjectName;
 import javax.management.monitor.GaugeMonitor;
+import javax.management.monitor.Monitor;
+import javax.management.monitor.MonitorNotification;
 import javax.management.remote.JMXConnector;
 import javax.management.remote.rmi.RMIConnector;
 import javax.management.remote.rmi.RMIServer;
 
 import com.dexels.navajo.events.NavajoEventRegistry;
+import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.NavajoConfig;
 
 public final class JMXHelper  {
@@ -128,7 +131,7 @@ public final class JMXHelper  {
 	public final static ObjectName getObjectName(String domain, String type) {
 		if ( applicationPrefix == null ) {
 			synchronized ( NAVAJO_DOMAIN ) {
-				applicationPrefix = NavajoConfig.getInstance().getInstanceName();
+				applicationPrefix = DispatcherFactory.getInstance().getNavajoConfig().getInstanceName();
 				if ( applicationPrefix  == null ) {
 					applicationPrefix = "unnamedapplication";
 				} 
@@ -174,6 +177,38 @@ public final class JMXHelper  {
 		if ( name != null ) {
 			mbs.unregisterMBean(name);
 		}
+	}
+		
+	public final static Monitor addMonitor(NotificationListener listener, String domain, String type, String attributeName, long frequency) {
+		
+		final Monitor monitor = new Monitor() {
+
+			@Override
+			public void start() {
+				System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Started monitor");
+			}
+
+			@Override
+			public void stop() {
+				System.err.println("Stopped monitor");
+			}
+			
+		};
+		
+		monitor.addObservedObject( getObjectName(domain, type) );
+		monitor.setGranularityPeriod(1000L);
+		monitor.addNotificationListener(listener, null, null);
+		
+		 MBeanServer mbs = ManagementFactory.getPlatformMBeanServer(); 
+	        try {
+				mbs.registerMBean(monitor, getObjectName( MONITOR_DOMAIN, "NotificationMonitor-" + monitor.hashCode()));
+				monitor.addNotificationListener( listener, null, null);
+				monitor.start();
+			} catch (Exception e) {
+				e.printStackTrace(System.err);
+			}
+		
+		return monitor;
 	}
 	
 	public final static void addGaugeMonitor(NotificationListener listener, String domain, String type, String attributeName, Number low, Number high, long frequency) {

@@ -1,6 +1,8 @@
 package com.dexels.navajo.scheduler;
 
 import java.util.Calendar;
+
+import com.dexels.navajo.scheduler.triggers.TimeTrigger;
 import com.dexels.navajo.server.GenericThread;
 import com.dexels.navajo.server.enterprise.scheduler.ClockInterface;
 import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
@@ -43,13 +45,13 @@ public class Clock extends GenericThread implements ClockMXBean, ClockInterface 
 	
 	public final void addClockListener(TimeTrigger cl) {
 		synchronized ( semaphore ) {
-			ListenerStore.getInstance().addListener(cl,TimeTrigger.class.getName(), false);
+			ListenerStore.getInstance().addListener(cl);
 		}
 	}
 	
 	public final void removeClockListener(TimeTrigger cl) {
 		synchronized ( semaphore ) {
-			ListenerStore.getInstance().removeListener(cl,TimeTrigger.class.getName(), false);
+			ListenerStore.getInstance().removeListener(cl);
 		}
 	}
 	
@@ -72,7 +74,7 @@ public class Clock extends GenericThread implements ClockMXBean, ClockInterface 
 					if ( cl.timetick(c) ) {
 						ListenerStore.getInstance().activate(cl);
 						if ( cl.isSingleEvent() ) { // Remove blue print also, do not wait for lock!
-							ListenerStore.getInstance().removeListener(cl, TimeTrigger.class.getName(), true);
+							ListenerStore.getInstance().removeListener(cl);
 						}
 					}
 				}

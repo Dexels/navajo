@@ -37,9 +37,7 @@ public class ZapcatZabbixAgent implements AgentInterface {
 
 	public void start() {
 		if ( instance.myAgent == null ) {
-			AuditLog.log(AuditLog.AUDIT_MESSAGE_MONITOR, "Started Zapcat Monitoring Agent");
 			instance.myAgent = new ZabbixAgent();
-			
 		}
 	}
 	

@@ -111,7 +111,7 @@ private boolean keepJMXConnectionAlive = false;
   }
   
   public String getThreadName() {
-	  return Dispatcher.getInstance().getThreadName(myAccess);
+	  return DispatcherFactory.getInstance().getThreadName(myAccess);
   }
   
   public boolean isWaiting() {
@@ -205,7 +205,7 @@ private boolean keepJMXConnectionAlive = false;
     this.classLoader = loader;
      }
 
-  public abstract void finalBlock(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws Exception;
+  public abstract void finalBlock(Access access) throws Exception;
 
   /**
    * Generated code for validations.
@@ -244,7 +244,7 @@ private boolean keepJMXConnectionAlive = false;
 
   
   
-  public final void run(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws Exception {
+  public final void run(Access access) throws Exception {
 
 	  myAccess = access;
 	  @SuppressWarnings("unused")
@@ -256,14 +256,13 @@ private boolean keepJMXConnectionAlive = false;
 	  try {
 		  setValidations();
 
-		  currentParamMsg = inMessage.getMessage("__parms__");
+		  currentParamMsg = access.getInDoc().getMessage("__parms__");
 
-		  ConditionData[] conditions = checkValidations(inMessage);
+		  ConditionData[] conditions = getValidationRules(access.getInDoc());
 		  boolean conditionsFailed = false;
 		  if (conditions != null && conditions.length > 0) {
 			  Navajo outMessage = access.getOutputDoc();
-			  Message[] failed = Dispatcher.getInstance().checkConditions(conditions, inMessage,
-					  outMessage);
+			  Message[] failed = checkValidationRules(conditions, access.getInDoc(), outMessage);
 			  if (failed != null) {
 				  conditionsFailed = true;
 				  Message msg = NavajoFactory.getInstance().createMessage(outMessage,
@@ -277,7 +276,7 @@ private boolean keepJMXConnectionAlive = false;
 		  }
 		  if (!conditionsFailed) {
 			  try {
-				  execute(parms, inMessage, access, config);
+				  execute(access);
 			  }
 			  catch (com.dexels.navajo.mapping.BreakEvent be) {
 				  // Be sure that all maps are killed()!
@@ -292,7 +291,7 @@ private boolean keepJMXConnectionAlive = false;
 				  }
 				  throw e;
 			  } finally {
-				  finalBlock(parms, inMessage, access, config);
+				  finalBlock(access);
 			  }
 		  }
 	  } finally {
@@ -305,7 +304,81 @@ private boolean keepJMXConnectionAlive = false;
 	  }
   }
 
-  public final ConditionData[] checkValidations(Navajo inMessage) throws
+  /**
+   * Deprecated method to check validation errors. Use <validations> block inside webservice script instead.
+   *
+   * @param conditions
+   * @param inMessage
+   * @param outMessage
+   * @return
+   * @throws NavajoException
+   * @throws SystemException
+   * @throws UserException
+   */
+  private final Message[] checkValidationRules(ConditionData[] conditions,
+                                                Navajo inMessage,
+                                                Navajo outMessage) throws
+      NavajoException, SystemException, UserException {
+
+    if (conditions == null) {
+      return null;
+    }
+
+    ArrayList<Message> messages = new ArrayList<Message>();
+    int index = 0;
+
+    for (int i = 0; i < conditions.length; i++) {
+      ConditionData condition = conditions[i];
+      boolean valid = false;
+
+      try {
+    	  valid = com.dexels.navajo.parser.Condition.evaluate(condition.condition,
+    			  inMessage);
+      }
+      catch (com.dexels.navajo.parser.TMLExpressionException ee) {
+    	  throw new UserException( -1, "Invalid condition: " + ee.getMessage());
+      }
+      
+      if (!valid) {
+
+    	  String eval = com.dexels.navajo.parser.Expression.replacePropertyValues(
+    			  condition.condition, inMessage);
+    	  Message msg = NavajoFactory.getInstance().createMessage(outMessage,
+    			  "failed" + (index++));
+    	  Property prop0 = NavajoFactory.getInstance().createProperty(outMessage,
+    			  "Id", Property.STRING_PROPERTY,
+    			  condition.id + "", 0, "", Property.DIR_OUT);
+    	  Property prop1 = NavajoFactory.getInstance().createProperty(outMessage,
+    			  "Description", Property.STRING_PROPERTY,
+    			  condition.comment, 0, "", Property.DIR_OUT);
+    	  Property prop2 = NavajoFactory.getInstance().createProperty(outMessage,
+    			  "FailedExpression", Property.STRING_PROPERTY,
+    			  condition.condition, 0, "", Property.DIR_OUT);
+    	  Property prop3 = NavajoFactory.getInstance().createProperty(outMessage,
+    			  "EvaluatedExpression", Property.STRING_PROPERTY,
+    			  eval, 0, "", Property.DIR_OUT);
+
+    	  msg.addProperty(prop0);
+    	  msg.addProperty(prop1);
+    	  msg.addProperty(prop2);
+    	  msg.addProperty(prop3);
+    	  messages.add(msg);
+      }
+    }
+
+    if (messages.size() > 0) {
+      Message[] msgArray = new Message[messages.size()];
+
+      messages.toArray(msgArray);
+      return msgArray;
+    }
+    else {
+      return null;
+    }
+  }
+
+  
+  private final ConditionData[] getValidationRules(Navajo inMessage) throws
       Exception {
     if (conditionArray != null) {
       //System.err.println("CHECKING CONDITIONS......, conditionArray = " + conditionArray.length);
@@ -331,8 +404,7 @@ private boolean keepJMXConnectionAlive = false;
     }
   }
 
-  public abstract void execute(Parameters parms, Navajo inMessage,
-                               Access access, NavajoConfig config) throws
+  public abstract void execute(Access access) throws
       Exception;
 
   /**
@@ -399,7 +471,7 @@ private boolean keepJMXConnectionAlive = false;
 	  }
   }
   
-  public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
+  public void load(Access access) throws MappableException, UserException {
 	  keepJMXConnectionAlive = true;
 	  //connectJMX();
   }

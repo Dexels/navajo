@@ -12,9 +12,9 @@ public class NavajoResponseEvent implements NavajoEvent {
 	private static final long serialVersionUID = -8810423005552534253L;
 	
 	private Access myAccess;
-	private Exception myException;
+	private Throwable myException;
 	
-	public NavajoResponseEvent(Access a, Exception e) {
+	public NavajoResponseEvent(Access a, Throwable e) {
 		this.myAccess = a;
 		this.myException = e;
 	}
@@ -23,7 +23,7 @@ public class NavajoResponseEvent implements NavajoEvent {
 		return myAccess;
 	}
 
-	public Exception getException() {
+	public Throwable getException() {
 		return myException;
 	}
 

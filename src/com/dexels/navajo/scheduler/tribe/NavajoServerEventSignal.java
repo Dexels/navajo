@@ -1,4 +1,4 @@
-package com.dexels.navajo.scheduler;
+package com.dexels.navajo.scheduler.tribe;
 
 import com.dexels.navajo.events.NavajoEvent;
 import com.dexels.navajo.events.NavajoEventRegistry;

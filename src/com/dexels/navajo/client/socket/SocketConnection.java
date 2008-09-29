@@ -47,7 +47,7 @@ public class SocketConnection implements Runnable {
             while (true) {
 //                Dispatcher.doClearScriptCache();
                 long time1 = System.currentTimeMillis();
-                Dispatcher.getInstance().doClearScriptCache();
+                DispatcherFactory.getInstance().doClearScriptCache();
                 long time2 = System.currentTimeMillis();               
                 Navajo n = NavajoFactory.getInstance().createNavajo(in);   
                 if (n == null) {

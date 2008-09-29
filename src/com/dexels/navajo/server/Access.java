@@ -205,8 +205,8 @@ public final class Access implements java.io.Serializable, Mappable {
 
 	private final void setCurrentSystemLoads() {
 		try {
-			this.cpuload = NavajoConfig.getInstance().getCurrentCPUload();
-			this.threadCount = Dispatcher.getInstance().getAccessSetSize();
+			this.cpuload = DispatcherFactory.getInstance().getNavajoConfig().getCurrentCPUload();
+			this.threadCount = DispatcherFactory.getInstance().getAccessSet().size();
 		} catch (Throwable t) {
 			// Do nothing...
 		}
@@ -235,6 +235,12 @@ public final class Access implements java.io.Serializable, Mappable {
 		this.betaUser = betaUser;
 		this.userCertificate = certificate;
 		setCurrentSystemLoads();
+	}
+	
+	public Access(int userID, int serviceID, String rpcUser,
+			String rpcName, String userAgent, String ipAddress,
+			String hostName, Object certificate) {
+		this(0, userID, serviceID, rpcUser, rpcName, userAgent, ipAddress, hostName, certificate);
 	}
 	
 	public Access(int accessID, int userID, int serviceID, String rpcUser,
@@ -374,8 +380,8 @@ public final class Access implements java.io.Serializable, Mappable {
 		myScript.kill();
 	}
 
-	public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
-		myScript.load(null, null, null, null);
+	public void load(Access access) throws MappableException, UserException {
+		myScript.load(null);
 	}
 
 	public void store() throws MappableException, UserException {

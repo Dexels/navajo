@@ -28,6 +28,8 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
+
 /**
  * The ClusterState contains the state of the Tribal Members for a Navajo Instance.
  * 
@@ -53,7 +55,8 @@ public class ClusterState implements Serializable {
 		TribeMember lbtm = null;
 		while ( all.hasNext() ) {
 			TribeMember tm = all.next();
-			if ( tm != null && tm.getStatus() != null && tm.getStatus().getCpuLoad() < min && !tm.getStatus().isBusy() && !tm.getAddress().equals( TribeManager.getInstance().getMyMembership().getAddress() ) ) {
+			if ( tm != null && tm.getStatus() != null && tm.getStatus().getCpuLoad() < min && !tm.getStatus().isBusy() && 
+					!tm.getAddress().equals( TribeManagerFactory.getInstance().getMyMembership().getAddress() ) ) {
 				lbtm = tm;
 			}
 		}

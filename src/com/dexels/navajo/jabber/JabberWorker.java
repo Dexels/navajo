@@ -38,6 +38,8 @@ import com.dexels.navajo.events.types.*;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
 import com.dexels.navajo.scheduler.*;
+import com.dexels.navajo.scheduler.triggers.AfterWebserviceTrigger;
+import com.dexels.navajo.scheduler.triggers.JabberTrigger;
 import com.dexels.navajo.server.*;
 import com.dexels.navajo.server.enterprise.jabber.*;
 
@@ -193,7 +195,7 @@ public class JabberWorker extends GenericThread implements JabberInterface, Nava
 					isInstantiated = false;
 					//throw new UserException(-99,"Jabber problem: ",e);
 					AuditLog.log("JABBER", "Could not join chatroom: " + roomname + "(" + e.getMessage() + ")", Level.SEVERE);
-					NavajoEventRegistry.getInstance().publishEvent(new NavajoHealthCheckEvent("Could not join chatroom: " + roomname + "(" + e.getMessage() + ")"));
+					NavajoEventRegistry.getInstance().publishEvent(new NavajoHealthCheckEvent(Level.SEVERE, "Could not join chatroom: " + roomname + "(" + e.getMessage() + ")"));
 					return;
 				}
 				isInstantiated = true;
@@ -385,7 +387,7 @@ public class JabberWorker extends GenericThread implements JabberInterface, Nava
 		List<String> members = new ArrayList<String>();
 		MultiUserChat muc = new MultiUserChat(myJabber.connection, roomName + "@" + "conference.sportlink.com");
 		//System.err.println("Trying to join room " +  roomName + "@" + "conference.sportlink.com AS " + Dispatcher.getInstance().getNavajoConfig().getInstanceName());
-		muc.join( Dispatcher.getInstance().getNavajoConfig().getInstanceName() );
+		muc.join( DispatcherFactory.getInstance().getNavajoConfig().getInstanceName() );
 		Collection<Occupant> aa = muc.getParticipants();
 		for (Occupant occupant : aa) {
 			Message m = NavajoFactory.getInstance().createMessage(rootDoc,  "Participants", Message.MSG_TYPE_ARRAY_ELEMENT);
@@ -445,7 +447,7 @@ public class JabberWorker extends GenericThread implements JabberInterface, Nava
 		}
 	}
 	
-	public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
+	public void load(Access access) throws MappableException, UserException {
 		this.myAccess = access;
 	}
 

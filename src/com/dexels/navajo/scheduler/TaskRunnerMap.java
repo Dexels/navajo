@@ -36,10 +36,8 @@ import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
+import com.dexels.navajo.scheduler.triggers.IllegalTrigger;
 import com.dexels.navajo.server.Access;
-import com.dexels.navajo.server.Dispatcher;
-import com.dexels.navajo.server.NavajoConfig;
-import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.sharedstore.SharedStoreLock;
 import com.dexels.navajo.util.AuditLog;
@@ -82,10 +80,9 @@ public class TaskRunnerMap implements Mappable {
 	private Access myAccess;
 	private Navajo myRequest;
 	
-	public void load(Parameters parms, Navajo inMessage, Access access,
-			NavajoConfig config) throws MappableException, UserException {
+	public void load(Access access) throws MappableException, UserException {
 		myAccess = access;
-		myRequest = inMessage;
+		myRequest = access.getInDoc();
 	}
 
 	public void setTrigger(String s) {
@@ -135,14 +132,13 @@ public class TaskRunnerMap implements Mappable {
 		if ( !b || id == null ) {
 			return;
 		}
-		System.err.println("In setUpdate(" + b + ")");
+		
 		TaskRunner tr = TaskRunner.getInstance();
 		if ( ! tr.getTasks().containsKey(id) ) {
 			return;
 		}
 		Task t = (Task) tr.getTasks().get(id);
 		t.setWebservice(this.webservice);
-		System.err.println(">>>>>>>>>>>>>>>>>>> NEW TRIGGER: " + this.trigger );
 		t.setTrigger(this.trigger);
 		if ( this.taskDescription != null ) {
 			t.setTaskDescription(this.taskDescription);
@@ -202,7 +198,7 @@ public class TaskRunnerMap implements Mappable {
 			Task t = (Task) iter.next();
 			if ( t.needsPersistence() ) {
 				TaskMap taskM = new TaskMap(t);
-				taskM.load(null, myRequest, myAccess, Dispatcher.getInstance().getNavajoConfig() );
+				taskM.load(myAccess );
 				taskList.add(taskM);
 			}
 		}
@@ -239,7 +235,7 @@ public class TaskRunnerMap implements Mappable {
 			if ( o instanceof Task ) {
 				Task t = (Task) o;
 				tm[index] = new TaskMap(t);
-				tm[index].load(null, myRequest, myAccess, Dispatcher.getInstance().getNavajoConfig() );
+				tm[index].load(myAccess );
 			} else {
 				tm[index] = (TaskMap) o;
 			}

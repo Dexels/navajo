@@ -2,6 +2,12 @@ package com.dexels.navajo.scheduler;
 
 import com.dexels.navajo.document.Navajo;
 
+/**
+ * The Listener interface.
+ * 
+ * @author arjen
+ *
+ */
 public interface Listener  {
 	
 	public String getListenerId();

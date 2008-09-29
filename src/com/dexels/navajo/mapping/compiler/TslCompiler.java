@@ -27,7 +27,6 @@ import com.dexels.navajo.mapping.compiler.meta.MapMetaData;
 import com.dexels.navajo.server.GenericHandler;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.server.SystemException;
-import com.dexels.navajo.util.AuditLog;
 
 import org.apache.jasper.compiler.*;
 
@@ -35,7 +34,6 @@ import java.io.*;
 
 import org.w3c.dom.*;
 
-import java.util.HashSet;
 import java.util.Stack;
 import java.util.StringTokenizer;
 import com.dexels.navajo.parser.Expression;
@@ -396,7 +394,7 @@ public String optimizeExpresssion(int ident, String clause, String className, St
     if (!exact) {
       result.append(printIdent(ident) + "op = Expression.evaluate(" +
                     replaceQuotes(clause) +
-                    ", inMessage, currentMap, currentInMsg, currentParamMsg, currentSelection, null);\n");
+                    ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg, currentSelection, null);\n");
       result.append(printIdent(ident) + "sValue = op.value;\n");
     }
     else { // USE OUR OPTIMIZATION SCHEME.
@@ -472,7 +470,7 @@ public String optimizeExpresssion(int ident, String clause, String className, St
     }
 
         if (!condition.equals("")) {
-          result.append(printIdent(ident) + "if (Condition.evaluate(" + replaceQuotes(condition) + ", inMessage, currentMap, currentInMsg, currentParamMsg))");
+          result.append(printIdent(ident) + "if (Condition.evaluate(" + replaceQuotes(condition) + ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg))");
         }
 
         result.append(printIdent(ident) + "{\n");
@@ -515,7 +513,7 @@ public String optimizeExpresssion(int ident, String clause, String className, St
         if (!condition.equals("")) {
           result.append(printIdent(ident) + "if (Condition.evaluate(" +
                         replaceQuotes(condition) +
-                        ", inMessage, null, null, null)) {\n");
+                        ", access.getInDoc(), null, null, null)) {\n");
         }
         else {
           result.append(printIdent(ident) + "if (true) {\n");
@@ -571,7 +569,7 @@ public String messageNode(int ident, Element n, String className, String objectN
       conditionClause = true;
       result.append(printIdent(ident) + "if (Condition.evaluate(" +
                     replaceQuotes(condition) +
-                    ", inMessage, currentMap, currentInMsg, currentParamMsg)) { \n");
+                    ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg)) { \n");
       ident += 2;
     }
 
@@ -658,7 +656,7 @@ public String messageNode(int ident, Element n, String className, String objectN
     result.append(printIdent(ident) + "count = " +
                   (count.equals("1") ? "1" :
                    "((Integer) Expression.evaluate(\"" + count +
-                   "\", inMessage, currentMap, currentInMsg, currentParamMsg).value).intValue()") +
+                   "\", access.getInDoc(), currentMap, currentInMsg, currentParamMsg).value).intValue()") +
                   ";\n");
     String messageList = "messageList" + (messageListCounter++);
     result.append(printIdent(ident) + "Message [] " + messageList +
@@ -666,7 +664,7 @@ public String messageNode(int ident, Element n, String className, String objectN
     
     
     String orderbyExpression =  ("".equals(orderby) ? "\"\"" :
-                "(String) Expression.evaluate(" + replaceQuotes(orderby) + ", inMessage, currentMap, currentInMsg, currentParamMsg).value"
+                "(String) Expression.evaluate(" + replaceQuotes(orderby) + ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg).value"
     );
     
     if (n.getNodeName().equals("message")) {
@@ -678,7 +676,7 @@ public String messageNode(int ident, Element n, String className, String objectN
     } else { // must be parammessage.
     	 
     	 result.append(printIdent(ident) + messageList +
-                " = MappingUtils.addMessage(inMessage, currentParamMsg, \"" +
+                " = MappingUtils.addMessage(access.getInDoc(), currentParamMsg, \"" +
                 messageName + "\", \"\", count, \"" + type + "\", \"" + mode +
                 "\");\n");
     }
@@ -751,9 +749,9 @@ public String messageNode(int ident, Element n, String className, String objectN
         // result.append(printIdent(ident) + "count = " +
 
       result.append(printIdent(ident + 2) + "int " + startElementVar + " = " +
-      (startElement.equals("") ? "0" : "((Integer) Expression.evaluate(\"" + startElement + "\", inMessage, currentMap, currentInMsg, currentParamMsg).value).intValue()") + ";\n");
+      (startElement.equals("") ? "0" : "((Integer) Expression.evaluate(\"" + startElement + "\", access.getInDoc(), currentMap, currentInMsg, currentParamMsg).value).intValue()") + ";\n");
       result.append(printIdent(ident + 2) + "int " + offsetElementVar + " = " +
-      (elementOffset.equals("") ? "1" : "((Integer) Expression.evaluate(\"" + elementOffset + "\", inMessage, currentMap, currentInMsg, currentParamMsg).value).intValue()") + ";\n");
+      (elementOffset.equals("") ? "1" : "((Integer) Expression.evaluate(\"" + elementOffset + "\", access.getInDoc(), currentMap, currentInMsg, currentParamMsg).value).intValue()") + ";\n");
 
       result.append(printIdent(ident + 2) + "for (int i" + (ident + 2) +
                     " = " + startElementVar + "; i" + (ident + 2) + " < " + lengthName + "; i" +
@@ -767,7 +765,7 @@ public String messageNode(int ident, Element n, String className, String objectN
       if (!filter.equals("")) {
         result.append(printIdent(ident + 4) + "if (Condition.evaluate(" +
                       replaceQuotes(filter) +
-                      ", inMessage, currentMap, currentInMsg, currentParamMsg)) {\n");
+                      ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg)) {\n");
         ident += 2;
       }
 
@@ -786,7 +784,7 @@ public String messageNode(int ident, Element n, String className, String objectN
 result.append(printIdent(ident + 4) +
         "currentParamMsg = MappingUtils.getMessageObject(\"" +
         MappingUtils.getBaseMessageName(messageName) +
-        "\", currentParamMsg, true, inMessage, false, \"\", " + ((startIndex == -1) ? "-1" : startIndexVar + "++") + ");\n");
+        "\", currentParamMsg, true, access.getInDoc(), false, \"\", " + ((startIndex == -1) ? "-1" : startIndexVar + "++") + ");\n");
       }
 
       contextClassStack.push(contextClass);
@@ -945,7 +943,7 @@ public String propertyNode(int ident, Element n, boolean canBeSubMapped, String 
       conditionClause = true;
       result.append(printIdent(ident) + "if (Condition.evaluate(" +
                     replaceQuotes(condition) +
-                    ", inMessage, currentMap, currentInMsg, currentParamMsg)) { \n");
+                    ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg)) { \n");
       ident += 2;
     }
 
@@ -978,7 +976,7 @@ public String propertyNode(int ident, Element n, boolean canBeSubMapped, String 
         type = "selection";
         // Created condition statement if condition is given!
         String conditional = (optionCondition != null && !optionCondition.equals("")) ?
-                             "if (Condition.evaluate(" + replaceQuotes(optionCondition) + ", inMessage, currentMap, currentInMsg, currentParamMsg))\n" : "";
+                             "if (Condition.evaluate(" + replaceQuotes(optionCondition) + ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg))\n" : "";
         optionItems.append(conditional+
             "p.addSelection(NavajoFactory.getInstance().createSelection(access.getOutputDoc(), \"" +
             optionName + "\", \"" + optionValue + "\", " + selected + "));\n");
@@ -1021,7 +1019,7 @@ public String propertyNode(int ident, Element n, boolean canBeSubMapped, String 
                     propertyName + "\", sValue, type, subtype, \"" + direction +
                     "\", \"" + description + "\", " +
                     length +
-                    ", access.getOutputDoc(), inMessage, !matchingConditions);\n");
+                    ", access.getOutputDoc(), access.getInDoc(), !matchingConditions);\n");
     }
     else { // parameter
       result.append(printIdent(ident) +
@@ -1029,7 +1027,7 @@ public String propertyNode(int ident, Element n, boolean canBeSubMapped, String 
                     propertyName + "\", sValue, type, subtype, \"" + direction +
                     "\", \"" + description + "\", " +
                     length +
-                    ", access.getOutputDoc(), inMessage, !matchingConditions);\n");
+                    ", access.getOutputDoc(), access.getInDoc(), !matchingConditions);\n");
     }
 
     if (isMapped) {
@@ -1060,7 +1058,7 @@ public String propertyNode(int ident, Element n, boolean canBeSubMapped, String 
       if (!filter.equals("")) {
         result.append(printIdent(ident + 4) + "if (Condition.evaluate(" +
                       replaceQuotes(filter) +
-                      ", inMessage, currentMap, currentInMsg, currentParamMsg)) {\n");
+                      ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg)) {\n");
         ident += 2;
       } 
       
@@ -1191,7 +1189,7 @@ public String fieldNode(int ident, Element n, String className,
     if (!condition.equals("")) {
       result.append(printIdent(ident) + "if (Condition.evaluate(" +
                     replaceQuotes(condition) +
-                    ", inMessage, currentMap, currentInMsg, currentParamMsg)) { \n");
+                    ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg)) { \n");
     }
     else {
       result.append(printIdent(ident) + "if (true) {\n");
@@ -1307,14 +1305,14 @@ public String fieldNode(int ident, Element n, String className,
       String messageListName = "messages" + ident;
 
       result.append(printIdent(ident + 2) + "ArrayList " + messageListName + " = null;\n");
-      result.append(printIdent(ident + 2) + "inSelectionRef = MappingUtils.isSelection(currentInMsg, inMessage, \"" + ref + "\");\n");
+      result.append(printIdent(ident + 2) + "inSelectionRef = MappingUtils.isSelection(currentInMsg, access.getInDoc(), \"" + ref + "\");\n");
       result.append(printIdent(ident + 2) + "if (!inSelectionRef)\n");
       result.append(printIdent(ident + 4) + messageListName +
-          " = MappingUtils.getMessageList(currentInMsg, inMessage, \"" + ref +
+          " = MappingUtils.getMessageList(currentInMsg, access.getInDoc(), \"" + ref +
                     "\", \"" + "" + "\", currentMap, currentParamMsg);\n");
       result.append(printIdent(ident + 2) + "else\n");
       result.append(printIdent(ident + 4) + messageListName +
-         " = MappingUtils.getSelectedItems(currentInMsg, inMessage, \"" + ref + "\");\n");
+         " = MappingUtils.getSelectedItems(currentInMsg, access.getInDoc(), \"" + ref + "\");\n");
 
      
       contextClassStack.push(contextClass);
@@ -1367,7 +1365,7 @@ public String fieldNode(int ident, Element n, String className,
         // CONDITION.EVALUATE()!!!!!!!!!!!! {
         // If filter is specified, evaluate filter first:
         if (!filter.equals("")) {
-          result.append(printIdent(ident + 4) + "if (inSelectionRef || Condition.evaluate(" + replaceQuotes(filter) + ", inMessage, currentMap, currentInMsg, currentParamMsg)) {\n");
+          result.append(printIdent(ident + 4) + "if (inSelectionRef || Condition.evaluate(" + replaceQuotes(filter) + ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg)) {\n");
           ident += 2;
         }
 
@@ -1377,7 +1375,7 @@ public String fieldNode(int ident, Element n, String className,
                       type + "\").newInstance(), false);\n");
 
         result.append(printIdent(ident) +
-            "if ( currentMap.myObject instanceof Mappable ) {  ((Mappable) currentMap.myObject).load(parms, inMessage, access, config);}\n");
+            "if ( currentMap.myObject instanceof Mappable ) {  ((Mappable) currentMap.myObject).load(access);}\n");
         result.append(printIdent(ident) + subObjectsName + "[" +
                       loopCounterName + "] = (" + type +
                       ") currentMap.myObject;\n");
@@ -1453,7 +1451,7 @@ public String fieldNode(int ident, Element n, String className,
 
         // Call load on object.
         result.append(printIdent(ident) +            
-        		"if ( currentMap.myObject instanceof Mappable) { ((Mappable) currentMap.myObject).load(parms, inMessage, access, config);}\n");     
+        		"if ( currentMap.myObject instanceof Mappable) { ((Mappable) currentMap.myObject).load(access);}\n");     
         // Assign local variable reference.
         result.append(printIdent(ident) + type + " " + 
         		subObjectsName + " = (" + type +                
@@ -1533,7 +1531,7 @@ public String fieldNode(int ident, Element n, String className,
     else {
       result.append(printIdent(ident) + "if (Condition.evaluate(" +
                     replaceQuotes(condition) +
-                    ", inMessage, currentMap, currentInMsg, currentParamMsg)) { \n");
+                    ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg)) { \n");
 
     }
     result.append(printIdent(ident + 2) + "throw new BreakEvent();\n");
@@ -1547,7 +1545,7 @@ public String fieldNode(int ident, Element n, String className,
     String value = n.getAttribute("value");
     result.append(printIdent(ident) + "op = Expression.evaluate(" +
                   replaceQuotes(value) +
-                  ", inMessage, currentMap, currentInMsg, currentParamMsg, currentSelection, null);\n");
+                  ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg, currentSelection, null);\n");
     result.append(printIdent(ident) + "System.err.println(\"in PROCESSING SCRIPT: \" + access.rpcName + \" DEBUG INFO: \" + op.value);\n");
     return result.toString();
   }
@@ -1585,7 +1583,7 @@ public String mapNode(int ident, Element n) throws Exception {
       conditionClause = true;
       result.append(printIdent(ident) + "if (Condition.evaluate(" +
                     replaceQuotes(condition) +
-                    ", inMessage, currentMap, currentInMsg, currentParamMsg)) { \n");
+                    ", access.getInDoc(), currentMap, currentInMsg, currentParamMsg)) { \n");
       ident += 2;
     }
 
@@ -1630,9 +1628,10 @@ public String mapNode(int ident, Element n) throws Exception {
       variableClipboard.add("String " + asyncStatusName + ";\n");
       variableClipboard.add("String " + interruptTypeName + ";\n");
 
-      result.append(printIdent(ident) + "if (!config.isAsyncEnabled()) throw new UserException(-1, \"Set enable_async = true in server.xml to use asynchronous objects\");");
+      
+      result.append(printIdent(ident) + "if (!DispatcherFactory.getInstance().getNavajoConfig().isAsyncEnabled()) throw new UserException(-1, \"Set enable_async = true in server.xml to use asynchronous objects\");");
       result.append(printIdent(ident) + asyncMapName +" = true;\n");
-      result.append(printIdent(ident) + headerName + " = inMessage.getHeader();\n");
+      result.append(printIdent(ident) + headerName + " = access.getInDoc().getHeader();\n");
       result.append(printIdent(ident) + callbackRefName + " = " + headerName + ".getCallBackPointer(\""+name+"\");\n");
       result.append(printIdent(ident) + aoName + " = null;\n");
       result.append(printIdent(ident) + asyncMapFinishedName + " = false;\n");
@@ -1640,7 +1639,7 @@ public String mapNode(int ident, Element n) throws Exception {
       result.append(printIdent(ident) + asyncStatusName + " = \"request\";\n\n");
       result.append(printIdent(ident) + "if (" + callbackRefName + " != null) {\n");
       ident+=2;
-      result.append(printIdent(ident) + aoName + " = (" + className + ") config.getAsyncStore().getInstance(" + callbackRefName + ");\n");
+      result.append(printIdent(ident) + aoName + " = (" + className + ") DispatcherFactory.getInstance().getNavajoConfig().getAsyncStore().getInstance(" + callbackRefName + ");\n");
       result.append(printIdent(ident) + interruptTypeName + " = " + headerName + ".getCallBackInterupt(\""+name+"\");\n");
 
       result.append(printIdent(ident) + " if (" + aoName + " == null) {\n " +
@@ -1648,12 +1647,12 @@ public String mapNode(int ident, Element n) throws Exception {
       result.append(printIdent(ident) + "if (" + interruptTypeName +
           ".equals(\"kill\")) { // Kill thread upon client request.\n" +
                     "   " + aoName + ".stop();\n" +
-                    "   config.getAsyncStore().removeInstance(" +
+                    "   DispatcherFactory.getInstance().getNavajoConfig().getAsyncStore().removeInstance(" +
                     callbackRefName + ");\n" +
                     "   return;\n" +
                     "} else if ( " + aoName + ".isKilled() ) " + 
                     "{ " + 
-                    "     config.getAsyncStore().removeInstance(" + callbackRefName + ");\n" +
+                    "     DispatcherFactory.getInstance().getNavajoConfig().getAsyncStore().removeInstance(" + callbackRefName + ");\n" +
                     "     throw new UserException(-1, " + aoName + ".getException().getMessage()," + aoName + ".getException());\n" +
                     "} else if (" + interruptTypeName +
                     ".equals(\"interrupt\")) {\n" +
@@ -1668,8 +1667,8 @@ public String mapNode(int ident, Element n) throws Exception {
 
       result.append(printIdent(ident) + aoName + " = (" + className + ") classLoader.getClass(\"" + object + "\").newInstance();\n" +
                                         "  // Call load method for async map in advance:\n" +
-                                        "  " + aoName + ".load(parms, inMessage, access, config);\n" +
-                                        "  " + callbackRefName + " = config.getAsyncStore().addInstance( " + aoName + ", access );\n" +
+                                        "  " + aoName + ".load(access);\n" +
+                                        "  " + callbackRefName + " = DispatcherFactory.getInstance().getNavajoConfig().getAsyncStore().addInstance( " + aoName + ", access );\n" +
                                         "}\n");
 
       result.append(printIdent(ident) + "treeNodeStack.push(currentMap);\n");
@@ -1706,7 +1705,7 @@ public String mapNode(int ident, Element n) throws Exception {
       boolean whileRunning = ((Element) response.item(0)).getAttribute("while_running").equals("true");
       result.append(printIdent(ident) + "if ("+ asyncMapFinishedName + " || ("+aoName+".isActivated() && " + hasResponseNode + " && " + whileRunning + ")) {\n");
       result.append(printIdent(ident) + "  " +asyncStatusName+ " = \"response\";\n");
-      result.append(printIdent(ident) + "  "+aoName+".beforeResponse(parms, inMessage, access, config);\n");
+      result.append(printIdent(ident) + "  "+aoName+".beforeResponse(access);\n");
       result.append(printIdent(ident) + "  if ("+aoName+".isActivated() && " + whileRunning + ") {\n");
       //result.append(printIdent(ident) + "     "+aoName+".interrupt();\n");
       result.append(printIdent(ident) + "     "+resumeAsyncName+" = true;\n");
@@ -1763,7 +1762,7 @@ public String mapNode(int ident, Element n) throws Exception {
       result.append(printIdent(ident + 4) +
                     "MappingUtils.callStoreMethod(currentMap.myObject);\n");
       result.append(printIdent(ident + 4) +
-                    "config.getAsyncStore().removeInstance(currentMap.ref);\n");
+                    "DispatcherFactory.getInstance().getNavajoConfig().getAsyncStore().removeInstance(currentMap.ref);\n");
       result.append(printIdent(ident + 2) + "}\n");
       result.append(printIdent(ident) + "}\n");
 
@@ -1772,7 +1771,7 @@ public String mapNode(int ident, Element n) throws Exception {
       result.append(printIdent(ident) +
                     " MappingUtils.callKillMethod(currentMap.myObject);\n");
       result.append(printIdent(ident) +
-                    " config.getAsyncStore().removeInstance(currentMap.ref);\n");
+                    " DispatcherFactory.getInstance().getNavajoConfig().getAsyncStore().removeInstance(currentMap.ref);\n");
 
       result.append(printIdent(ident) + "  throw e" + ident + ";\n");
       result.append(printIdent(ident) + "}\n");
@@ -1791,7 +1790,7 @@ public String mapNode(int ident, Element n) throws Exception {
       result.append(printIdent(ident) + objectName + " = (" +
                     className + ") currentMap.myObject;\n");
       if ( MappingUtils.isObjectMappable(className)) {
-    	  result.append(printIdent(ident) + objectName + ".load(parms, inMessage, access, config);\n");
+    	  result.append(printIdent(ident) + objectName + ".load(access);\n");
       }
 
       String objectDefinition = className + " " + objectName + " = null;\n";
@@ -1919,11 +1918,11 @@ public String mapNode(int ident, Element n) throws Exception {
     else if (n.getNodeName().equals("message") || 
     		(n.getNodeName().equals("param") && ((Element) n).getAttribute("type").equals("array")  )) {
       String methodName = "execute_sub"+(methodCounter++);
-      result.append(printIdent(ident) + "if (!kill) { " + methodName + "(parms, inMessage, access, config); }\n");
+      result.append(printIdent(ident) + "if (!kill) { " + methodName + "(access); }\n");
 
       StringBuffer methodBuffer = new StringBuffer();
 
-      methodBuffer.append(printIdent(ident) + "private final void " + methodName + "(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws Exception {\n\n");
+      methodBuffer.append(printIdent(ident) + "private final void " + methodName + "(Access access) throws Exception {\n\n");
       ident+=2;
       methodBuffer.append(printIdent(ident) + "if (!kill) {\n");
       methodBuffer.append(messageNode(ident, (Element) n, className, objectName));
@@ -1948,7 +1947,7 @@ public String mapNode(int ident, Element n) throws Exception {
   }
 
   private final void generateFinalBlock( Document d, StringBuffer generatedCode ) throws Exception {
-      generatedCode.append("public final void finalBlock(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws Exception {\n");
+      generatedCode.append("public final void finalBlock(Access access) throws Exception {\n");
 
       NodeList list = d.getElementsByTagName("finally");
 
@@ -2121,17 +2120,17 @@ public String mapNode(int ident, Element n) throws Exception {
 	      // Generate final block code.
 	      generateFinalBlock(tslDoc, result);
 
-	      String methodDef = "public final void execute(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws Exception { \n\n";
+	      String methodDef = "public final void execute(Access access) throws Exception { \n\n";
 	      result.append(methodDef);
 
 	      if (debugInput) {
 	       result.append("System.err.println(\"\\n --------- BEGIN NAVAJO REQUEST ---------\\n\");\n");
-	       result.append("inMessage.write(System.err);\n");
+	       result.append("access.getInDoc().write(System.err);\n");
 	       result.append("System.err.println(\"\\n --------- END NAVAJO REQUEST ---------\\n\");\n");
 	     }
 
 //	      result.append("outDoc = access.getOutputDoc();\n");
-	      result.append("inDoc = inMessage;\n");
+	      result.append("inDoc = access.getInDoc();\n");
 
 	      // First resolve includes.
 	      NodeList includes = tslDoc.getElementsByTagName("include");
@@ -2479,12 +2478,12 @@ public String mapNode(int ident, Element n) throws Exception {
 
 					  InetAddress ip = (InetAddress) ipaddresses.nextElement();
 
-					  System.err.println("\t\tCanonical hostname: " + ip.getCanonicalHostName());
-					  System.err.println("\t\tHost address: " + ip.getHostAddress());
-					  System.err.println("\t\tisMCGlobal: " + ip.isMCGlobal());
-					  System.err.println("\t\tisLinkLocalAddress: " + ip.isLinkLocalAddress());
-					  System.err.println("\t\t"+ip.toString());
-					  System.err.println("Getting hostname took: " + ( System.currentTimeMillis() - start ) ) ;
+//					  System.err.println("\t\tCanonical hostname: " + ip.getCanonicalHostName());
+//					  System.err.println("\t\tHost address: " + ip.getHostAddress());
+//					  System.err.println("\t\tisMCGlobal: " + ip.isMCGlobal());
+//					  System.err.println("\t\tisLinkLocalAddress: " + ip.isLinkLocalAddress());
+//					  System.err.println("\t\t"+ip.toString());
+//					  System.err.println("Getting hostname took: " + ( System.currentTimeMillis() - start ) ) ;
 
 					  hostname =  ip.getCanonicalHostName();
 

@@ -1,8 +1,9 @@
-package com.dexels.navajo.scheduler;
+package com.dexels.navajo.scheduler.triggers;
 
 import java.io.Serializable;
 
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.scheduler.WebserviceListenerRegistry;
 
 public class BeforeWebserviceTrigger extends AfterWebserviceTrigger implements Serializable {
 

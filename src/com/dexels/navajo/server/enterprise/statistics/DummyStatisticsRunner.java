@@ -28,7 +28,7 @@ public class DummyStatisticsRunner implements StatisticsRunnerInterface, NavajoL
 		
 	}
 
-	public void addAccess(Access a, Exception e, AsyncMappable am) {
+	public void addAccess(Access a, Throwable e, AsyncMappable am) {
 		
 	}
 

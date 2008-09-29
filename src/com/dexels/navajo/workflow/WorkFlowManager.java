@@ -9,13 +9,12 @@ import java.util.Iterator;
 import java.util.Random;
 
 import com.dexels.navajo.document.Navajo;
-import com.dexels.navajo.document.NavajoException;
 import com.dexels.navajo.events.NavajoEvent;
 import com.dexels.navajo.events.NavajoEventRegistry;
 import com.dexels.navajo.events.NavajoListener;
 import com.dexels.navajo.events.types.TribeMemberDownEvent;
 import com.dexels.navajo.parser.Condition;
-import com.dexels.navajo.server.Dispatcher;
+import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.server.GenericThread;
 import com.dexels.navajo.server.jmx.JMXHelper;
@@ -120,7 +119,7 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 			
 			// Create workflow definitions dir.
 			if ( instance.workflowDefinitionPath == null ) {
-				instance.workflowDefinitionPath = Dispatcher.getInstance().getNavajoConfig().getRootPath() + "/workflows/definitions/";
+				instance.workflowDefinitionPath = DispatcherFactory.getInstance().getNavajoConfig().getRootPath() + "/workflows/definitions/";
 				File f1 = new File(instance.workflowDefinitionPath);
 				if ( !f1.exists() ) {
 					if (!f1.mkdirs()) {
@@ -133,7 +132,7 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 			// Create workflow persistence dir.
 			if ( instance.workflowPath == null ) {
 				instance.baseWorkflowPath = "workflows/instances";
-				instance.workflowPath = instance.baseWorkflowPath + "/" + Dispatcher.getInstance().getNavajoConfig().getInstanceName();
+				instance.workflowPath = instance.baseWorkflowPath + "/" + DispatcherFactory.getInstance().getNavajoConfig().getInstanceName();
 				try {
 					ssi.createParent(instance.workflowPath);
 				} catch (SharedStoreException e) {
@@ -247,7 +246,7 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 				wf.historicStates.get(i).removePersistedAccess();
 			}
 			SharedStoreFactory.getInstance().remove(workflowPath, wf.getMyId());
-			System.err.println(">>>>>>>>>>>>>>> REMOVE PERSISTED WORKFLOW: " + workflowPath + "/" + wf.getMyId());
+			
 			workflowInstances.remove(wf.getMyId());
 			WorkFlowDefinition wdf = workflowDefinitions.get(wf.getDefinition());
 			if ( wdf != null ) {
@@ -393,7 +392,7 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 	}
 	
 	private final long getConfigTimeStamp() {
-		if (  Dispatcher.getInstance() != null && Dispatcher.getInstance().getNavajoConfig() != null ) {
+		if (  DispatcherFactory.getInstance() != null && DispatcherFactory.getInstance().getNavajoConfig() != null ) {
 			java.io.File f = new java.io.File(workflowDefinitionPath);
 			if ( f != null && f.exists() ) {
 				return f.lastModified();
@@ -456,7 +455,7 @@ public final class WorkFlowManager extends GenericThread implements WorkFlowMana
 			StringBuffer contentLine = new StringBuffer();
 
 			contentLine.append(
-					Dispatcher.getInstance().getNavajoConfig().getInstanceName() + ";" +
+					DispatcherFactory.getInstance().getNavajoConfig().getInstanceName() + ";" +
 					sdf.format(new java.util.Date()) + ";" + 
 					wf.getDefinition() + ";" +
 					wf.getMyId() + ";" +

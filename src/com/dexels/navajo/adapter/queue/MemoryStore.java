@@ -27,7 +27,6 @@ public class MemoryStore implements MessageStore {
 	}
 	
 	public void putMessage(Queuable handler, boolean failure) {
-		System.err.println(">>>>>>>>>>>>>>> Putting work in store: " + handler.getClass().getName() + ", failure = " + failure);
 		if ( !failure ) {
 			synchronized (store ) {
 				store.push(handler);

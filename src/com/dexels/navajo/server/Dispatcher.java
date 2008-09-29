@@ -26,9 +26,8 @@ package com.dexels.navajo.server;
  */
 
 import java.io.*;
-
 import java.util.*;
-import java.net.*;
+import java.util.logging.Level;
 
 import navajo.Version;
 
@@ -44,11 +43,12 @@ import com.dexels.navajo.server.enterprise.integrity.WorkerInterface;
 import com.dexels.navajo.broadcast.BroadcastMessage;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.events.NavajoEventRegistry;
+import com.dexels.navajo.events.types.ChangeNotificationEvent;
+import com.dexels.navajo.events.types.NavajoExceptionEvent;
 import com.dexels.navajo.events.types.NavajoResponseEvent;
 import com.dexels.navajo.events.types.ServerTooBusyEvent;
 import com.dexels.navajo.server.jmx.JMXHelper;
 import com.dexels.navajo.server.jmx.SNMPManager;
-import com.dexels.navajo.tribe.TribeManager;
 import com.dexels.navajo.util.AuditLog;
 import com.dexels.navajo.loader.NavajoClassLoader;
 import com.dexels.navajo.loader.NavajoClassSupplier;
@@ -70,7 +70,7 @@ import com.dexels.navajo.mapping.compiler.TslCompiler;
  * finally dispatching to the proper dispatcher class.
  */
 
-public final class Dispatcher implements Mappable, DispatcherMXBean {
+public final class Dispatcher implements Mappable, DispatcherMXBean, DispatcherInterface {
 
   protected static int instances = 0;
   
@@ -100,7 +100,7 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
   /**
    * Unique dispatcher instance.
    */
-  private static volatile Dispatcher instance = null;
+  //private static volatile Dispatcher instance = null;
   private static boolean servicesBeingStarted = false;
   private static boolean servicesStarted = false;
   
@@ -113,7 +113,7 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
   public static java.util.Date startTime = new java.util.Date();
 
   public  long requestCount = 0;
-  private final NavajoConfig navajoConfig;
+  private final NavajoConfigInterface navajoConfig;
  
   private  String keyStore;
   private  String keyPassword;
@@ -132,41 +132,8 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
    */
   private ArrayList<SNMPManager> snmpManagers = new ArrayList<SNMPManager>(); 
    
-  /**
-   * Constructor for URL based configuration.
-   *
-   * @param configurationUrl
-   * @param fileInputStreamReader
-   * @throws NavajoException
-   */
-  private Dispatcher(URL configurationUrl,
-		  InputStreamReader fileInputStreamReader,
-		  String rootPath,
-		  NavajoClassSupplier cl) throws
-		  NavajoException {
-	  
-	  instances++;
-	  InputStream is = null; 
-	  try {
-		  // Read configuration file.
-		  is = configurationUrl.openStream();
-		  navajoConfig = new NavajoConfig(fileInputStreamReader, cl, is, rootPath); 
-		  JMXHelper.registerMXBean(this, JMXHelper.NAVAJO_DOMAIN, "Dispatcher");
-		  // Monitor AccessSetSize
-		  // JMXHelper.addGaugeMonitor( NavajoEventRegistry.getInstance(), JMXHelper.NAVAJO_DOMAIN, "Dispatcher", "AccessSetSize", null, new Integer(50), 10000L);
-		  NavajoFactory.getInstance().setTempDir(getTempDir());
-	  }
-	  catch (Exception se) {
-		  throw NavajoFactory.getInstance().createNavajoException(se);
-	  } finally {
-		  if ( is != null ) {
-			  try {
-				is.close();
-			} catch (IOException e) {
-				// NOT INTERESTED.
-			}
-		  }
-	  }
+  public Dispatcher(NavajoConfigInterface nc) {
+	  navajoConfig = nc;
   }
   
   /**
@@ -175,140 +142,46 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
   public Dispatcher() {
 	  navajoConfig = null;
   }
-  
-  private Dispatcher(NavajoConfig injected) {
-	  navajoConfig = injected;
-  }
-  
-  /**
-   * Constructor for URL based configuration.
-   *
-   * @param configurationUrl
-   * @param fileInputStreamReader
-   * @throws NavajoException
-   */
-  private Dispatcher(URL configurationUrl,
-		  InputStreamReader fileInputStreamReader,
-		  NavajoClassSupplier cl) throws
-		  NavajoException {
-	  this(configurationUrl, fileInputStreamReader, null, cl);
-  }
-
-  /**
-   * Returns a Dispatcher instance if it exists. If it does not exist an instance is created
-   * with the injected NavajoConfig class.
-   * 
-   * @param nc
-   * @return
-   */
-  public static Dispatcher getInstance(NavajoConfig nc) {
-	  if ( instance == null ) {
-		 instance = new Dispatcher(nc);
-	  }
-	  return instance;
-  }
-  
-  /**
-   * Only returns an "existing" instance. If instance does not exist, null is returned.
-   * 
-   * @return
-   */
-  public static Dispatcher getInstance() {
-	  return instance;
-  }
-  
+   
   private final void startUpServices() {
 
+	  // Bootstrap event registry.
+	  NavajoEventRegistry.getInstance();
+	  
 	  // Bootstrap async store.
-	  instance.navajoConfig.getAsyncStore();
+	  navajoConfig.getAsyncStore();
 	  
 	  // Startup statistics runnner.
-	  instance.navajoConfig.startStatisticsRunner();
+	  navajoConfig.startStatisticsRunner();
 	  
 	  // Startup Jabber.
-	  instance.navajoConfig.startJabber();
+	  navajoConfig.startJabber();
 	  
 	  // Startup task runner.
-	  instance.navajoConfig.startTaskRunner();
+	  navajoConfig.startTaskRunner();
 	  
 	  // Startup queued adapter.
 	  RequestResponseQueueFactory.getInstance();
 	  
 	  // Bootstrap lock manager.
-	  instance.navajoConfig.getLockManager();
+	  navajoConfig.getLockManager();
 	  
 	  // Bootstrap integrity worker.
-	  instance.navajoConfig.getIntegrityWorker();
+	  navajoConfig.getIntegrityWorker();
 	  
 	  // Startup tribal status collector.
 	  TribeManagerFactory.startStatusCollector();
 
   }
-  
-  public static Dispatcher getInstance(URL configurationUrl, InputStreamReader fileInputStreamReader) throws NavajoException {
-	  if ( instance != null ) {
-		  return instance;
-	  }
-
-	  synchronized (semaphore) {
-		  if (instance == null) {
-			  instance = new Dispatcher(configurationUrl, fileInputStreamReader, null);
-			  instance.init();
-		  }
-	  }
-	  return instance;
-  }
-  
-  public static Dispatcher getInstance(String rootPath, String serverXmlPath, InputStreamReader fileInputStreamReader) throws NavajoException {
-
-		if (instance != null) {
-			return instance;
-		}
-		if(!rootPath.endsWith("/")) {
-			rootPath = rootPath+"/";
-		}
-
-		URL configurationUrl;
-		if(serverXmlPath==null) {
-			System.err.println("Old skool configuration detected.");
-			// old skool, the passed url is the configurationUrl (from web.xml):
-				try {
-					configurationUrl = new URL(rootPath);
-					rootPath = null;
-				} catch (MalformedURLException e) {
-					throw NavajoFactory.getInstance().createNavajoException(e);
-				}
-		} else {
-			// new-style: rootUrl is the root of the installation, serverXmlPath is the relative path to the server.xml file
-			System.err.println("Newskool configuration detected.");
-			try {
-				File f = new File(rootPath);
-				URL rootUrl = f.toURI().toURL();
-				configurationUrl = new URL(rootUrl, serverXmlPath);
-			} catch (MalformedURLException e) {
-				throw NavajoFactory.getInstance().createNavajoException(e);
-			}
-			
-		}
-		
-		synchronized (semaphore) {
-			if (instance == null) {
-				instance = new Dispatcher(configurationUrl, fileInputStreamReader,rootPath,null);
-				instance.init();
-			}
-		}
-		
-		return instance;
-	}
-   
-  private final void init() {
+    
+  protected final void init() {
 	  
 	  // Init tribe, if initializing it returns null, should not matter, let it do its thing.
 	  if ( !servicesBeingStarted && !servicesStarted ) {
 		  servicesBeingStarted = true;
 		  if (TribeManagerFactory.getInstance() != null) {
 			  // After tribe exists, start other service (there are dependencies on existence of tribe!).
-			  Dispatcher.getInstance().startUpServices();
+			  startUpServices();
 		  }
 		  servicesStarted = true;
 		  servicesBeingStarted = false;
@@ -320,8 +193,8 @@ public final class Dispatcher implements Mappable, DispatcherMXBean {
 
   }
 
-public Access [] getUsers() {
-	  Set<Access> all = new HashSet<Access>(com.dexels.navajo.server.Dispatcher.getInstance().accessSet);
+  public Access [] getUsers() {
+	  Set<Access> all = new HashSet<Access>(com.dexels.navajo.server.DispatcherFactory.getInstance().getAccessSet());
 	  Iterator<Access> iter = all.iterator();
 	  ArrayList<Access> d = new ArrayList<Access>();
 	  while (iter.hasNext()) {
@@ -430,7 +303,7 @@ public Access [] getUsers() {
    *
    * @return
    */
-  public  final NavajoConfig getNavajoConfig() {
+  public  final NavajoConfigInterface getNavajoConfig() {
     return navajoConfig;
   }
 
@@ -840,80 +713,7 @@ public Access [] getUsers() {
   public final void setUseAuthorisation(boolean a) {
     useAuthorisation = a;
   }
-
-  /**
-   * Deprecated method to check validation errors. Use <validations> block inside webservice script instead.
-   *
-   * @param conditions
-   * @param inMessage
-   * @param outMessage
-   * @return
-   * @throws NavajoException
-   * @throws SystemException
-   * @throws UserException
-   */
-  public  final Message[] checkConditions(ConditionData[] conditions,
-                                                Navajo inMessage,
-                                                Navajo outMessage) throws
-      NavajoException, SystemException, UserException {
-
-    if (conditions == null) {
-      return null;
-    }
-
-    ArrayList<Message> messages = new ArrayList<Message>();
-    int index = 0;
-
-    for (int i = 0; i < conditions.length; i++) {
-      ConditionData condition = conditions[i];
-      boolean valid = false;
-
-      try {
-    	  valid = com.dexels.navajo.parser.Condition.evaluate(condition.condition,
-    			  inMessage);
-      }
-      catch (com.dexels.navajo.parser.TMLExpressionException ee) {
-    	  throw new UserException( -1, "Invalid condition: " + ee.getMessage());
-      }
-      
-      if (!valid) {
-
-    	  String eval = com.dexels.navajo.parser.Expression.replacePropertyValues(
-    			  condition.condition, inMessage);
-    	  Message msg = NavajoFactory.getInstance().createMessage(outMessage,
-    			  "failed" + (index++));
-    	  Property prop0 = NavajoFactory.getInstance().createProperty(outMessage,
-    			  "Id", Property.STRING_PROPERTY,
-    			  condition.id + "", 0, "", Property.DIR_OUT);
-    	  Property prop1 = NavajoFactory.getInstance().createProperty(outMessage,
-    			  "Description", Property.STRING_PROPERTY,
-    			  condition.comment, 0, "", Property.DIR_OUT);
-    	  Property prop2 = NavajoFactory.getInstance().createProperty(outMessage,
-    			  "FailedExpression", Property.STRING_PROPERTY,
-    			  condition.condition, 0, "", Property.DIR_OUT);
-    	  Property prop3 = NavajoFactory.getInstance().createProperty(outMessage,
-    			  "EvaluatedExpression", Property.STRING_PROPERTY,
-    			  eval, 0, "", Property.DIR_OUT);
-
-    	  msg.addProperty(prop0);
-    	  msg.addProperty(prop1);
-    	  msg.addProperty(prop2);
-    	  msg.addProperty(prop3);
-    	  messages.add(msg);
-      }
-    }
-
-    if (messages.size() > 0) {
-      Message[] msgArray = new Message[messages.size()];
-
-      messages.toArray(msgArray);
-      return msgArray;
-    }
-    else {
-      return null;
-    }
-  }
-
+  
   /**
    * Handle a webservice (without ClientInfo object given).
    *
@@ -947,7 +747,7 @@ public Access [] getUsers() {
   }
   
   public final boolean isBusy() {
-	  return  ( accessSet.size() > navajoConfig.maxAccessSetSize );
+	  return  ( accessSet.size() > navajoConfig.getMaxAccessSetSize() );
 	  //return ( !TribeManager.getInstance().getIsChief() );
   }
 
@@ -1009,7 +809,7 @@ private final Navajo processNavajo(Navajo inMessage, Object userCertificate, Cli
     String rpcUser = "";
     String rpcPassword = "";
    
-    Exception myException = null;
+    Throwable myException = null;
     String origThreadName = null;
     boolean scheduledWebservice = false;
     
@@ -1029,7 +829,6 @@ private final Navajo processNavajo(Navajo inMessage, Object userCertificate, Cli
     	} catch (Exception e) {
     		// Server too busy!
     		NavajoEventRegistry.getInstance().publishEvent(new ServerTooBusyEvent());
-    		e.printStackTrace(System.err);
     		System.err.println(">> SERVER TOO BUSY!!!!!");
     		throw new FatalException("500.13");
     	}
@@ -1046,7 +845,7 @@ private final Navajo processNavajo(Navajo inMessage, Object userCertificate, Cli
     	String [] allRefs = inMessage.getHeader().getCallBackPointers();
     	if ( AsyncStore.getInstance().getInstance(allRefs[0]) == null ) {
     		RemoteAsyncRequest rasr = new RemoteAsyncRequest(allRefs[0]);
-    		RemoteAsyncAnswer rasa = (RemoteAsyncAnswer) TribeManager.getInstance().askAnybody(rasr);
+    		RemoteAsyncAnswer rasa = (RemoteAsyncAnswer) TribeManagerFactory.getInstance().askAnybody(rasr);
     		if ( rasa != null ) {
     			System.err.println("ASYNC OWNER: " + rasa.getOwnerOfRef() + "(" + rasa.getHostNameOwnerOfRef() + ")" + " FOR REF " + allRefs[0]);
     			try {
@@ -1108,15 +907,15 @@ private final Navajo processNavajo(Navajo inMessage, Object userCertificate, Cli
           }
         }
         catch (AuthorizationException ex) {
-          //System.err.println("IN LINE 487 OF DISPATCHER, CAUGHT AUTHORIZATIONEXCEPTION");
           outMessage = generateAuthorizationErrorMessage(access, ex, rpcName);
-         
+          AuditLog.log(AuditLog.AUDIT_MESSAGE_AUTHORISATION, "(service=" + rpcName + ", user=" + rpcUser + ", message=" + ex.getMessage(), Level.WARNING);
           return outMessage;
         }
         catch (SystemException se) {
           outMessage = generateErrorMessage(access, se.getMessage(),
                                             SystemException.NOT_AUTHORISED, 1,
                                             new Exception("NOT AUTHORISED"));
+          AuditLog.log(AuditLog.AUDIT_MESSAGE_AUTHORISATION, "(service=" + rpcName + ", user=" + rpcUser + ", message=" + se.getMessage(), Level.WARNING);
           return outMessage;
         }
       } 
@@ -1219,10 +1018,8 @@ private final Navajo processNavajo(Navajo inMessage, Object userCertificate, Cli
     			}
         	}
         	else {
-        		if (rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_LOGON) || 
-        				rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_LOGON_SEND) ||
-        				rpcName.equals(MaintainanceRequest.METHOD_NAVAJO_PING)  
-        		) {
+        		if (rpcName.startsWith(MaintainanceRequest.METHOD_NAVAJO))  
+        	    {
         			outMessage = dispatch(defaultNavajoDispatcher, inMessage, access, parms);
         		}
         		else {
@@ -1240,10 +1037,10 @@ private final Navajo processNavajo(Navajo inMessage, Object userCertificate, Cli
         // Call after web service event...
         if ( access != null && !scheduledWebservice ) {
     		access.setInDoc(inMessage);
-    		if (!isSpecialwebservice(rpcName)  ) {
+    		//if (!isSpecialwebservice(rpcName)  ) {
     			// Register webservice call to WebserviceListener if it was not a scheduled webservice.
     			WebserviceListenerFactory.getInstance().afterWebservice(rpcName, access);
-    		}
+    		//}
         }
         
         return outMessage;
@@ -1251,6 +1048,7 @@ private final Navajo processNavajo(Navajo inMessage, Object userCertificate, Cli
     }
     catch (AuthorizationException aee) {
     	outMessage = generateAuthorizationErrorMessage(access, aee, rpcName);
+    	AuditLog.log(AuditLog.AUDIT_MESSAGE_AUTHORISATION, "(service=" + rpcName + ", user=" + rpcUser + ", message=" + aee.getMessage(), Level.WARNING);
     	return outMessage;
     }
     catch (UserException ue) {
@@ -1285,6 +1083,7 @@ private final Navajo processNavajo(Navajo inMessage, Object userCertificate, Cli
     	return errorHandler(access, e, inMessage);
     } catch (Throwable e) {
     	e.printStackTrace(System.err);
+    	myException = e;
     	return errorHandler(access, e, inMessage);
     }
     finally {
@@ -1310,6 +1109,11 @@ private final Navajo processNavajo(Navajo inMessage, Object userCertificate, Cli
     		
     	    // Call Navajoresponse event.
     	    NavajoEventRegistry.getInstance().publishEvent(new NavajoResponseEvent(access, myException));
+    	    
+    	    // Publish exception event if exception occurred.
+    	    if ( myException != null ) {
+    	    	NavajoEventRegistry.getInstance().publishEvent(new NavajoExceptionEvent(rpcName, access.getAccessID(), rpcUser, myException));
+    	    }
     	    
     		appendServerBroadCast(access, inMessage,h);
     	}
@@ -1387,7 +1191,7 @@ private final Navajo processNavajo(Navajo inMessage, Object userCertificate, Cli
   }
   
   public static void killMe() {
-	  if ( instance != null ) {
+	  if ( DispatcherFactory.getInstance() != null ) {
 		  
 		  // 1. Kill all supporting threads.
 		  GenericThread.killAllThreads();
@@ -1457,13 +1261,13 @@ private final Navajo processNavajo(Navajo inMessage, Object userCertificate, Cli
   }
 
   public int getAccessSetSize() {
-	  return Dispatcher.getInstance().accessSet.size();
+	  return DispatcherFactory.getInstance().getAccessSet().size();
   }
 
   public void kill() {
   }
 
-  public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
+  public void load(Access access) throws MappableException, UserException {
 
   }
 
@@ -1593,28 +1397,28 @@ private final Navajo processNavajo(Navajo inMessage, Object userCertificate, Cli
 		return result;
 	}
 
-  public static String getVersion() {
+  public  String getVersion() {
 	  return version;
   }
 
-  public static String getVendor() {
+  public  String getVendor() {
 	  return vendor;
   }
 
-  public static String getProduct() {
+  public  String getProduct() {
 	  return product;
   }
 
-  public static String getEdition() {
+  public  String getEdition() {
 	  return edition;
   }
 
   public boolean getEnabled() {
-	  return Dispatcher.getInstance().enabled;
+	  return ((Dispatcher) DispatcherFactory.getInstance()).enabled;
   }
 
-  public void setEnabled(boolean enabled) {
-	  Dispatcher.getInstance().enabled = enabled;
+  private void setEnabled(boolean enabled) {
+	  ((Dispatcher) DispatcherFactory.getInstance()).enabled = enabled;
   }
 
   /*
@@ -1622,6 +1426,15 @@ private final Navajo processNavajo(Navajo inMessage, Object userCertificate, Cli
    * @see com.dexels.navajo.server.DispatcherMXBean#disableDispatcher()
    */
   public void disableDispatcher() {
+	  
+	  ChangeNotificationEvent cne = 
+		  new ChangeNotificationEvent(AuditLog.AUDIT_MESSAGE_DISPATCHER,
+				  "Dispatcher disabled",
+			      "enabled", "boolean", 
+			      Boolean.valueOf(((Dispatcher) DispatcherFactory.getInstance()).enabled), Boolean.valueOf(false));
+	  
+	  NavajoEventRegistry.getInstance().publishEvent(cne);
+	  
 	  setEnabled(false);
   }
 
@@ -1630,6 +1443,15 @@ private final Navajo processNavajo(Navajo inMessage, Object userCertificate, Cli
    * @see com.dexels.navajo.server.DispatcherMXBean#enableDispatcher()
    */
   public void enableDispatcher() {
+	  
+	  ChangeNotificationEvent cne = 
+		  new ChangeNotificationEvent(AuditLog.AUDIT_MESSAGE_DISPATCHER,
+				  "Dispatcher enabled",
+			      "enabled", "boolean", 
+			      Boolean.valueOf(((Dispatcher) DispatcherFactory.getInstance()).enabled), Boolean.valueOf(true));
+	  
+	  NavajoEventRegistry.getInstance().publishEvent(cne);
+	  
 	  setEnabled(true);
   }
 
@@ -1640,7 +1462,16 @@ private final Navajo processNavajo(Navajo inMessage, Object userCertificate, Cli
    * @param b
    */
   public void setDisabled(boolean b) {
-	  Dispatcher.getInstance().disabled = b;
+	 
+	  ChangeNotificationEvent cne = 
+		  new ChangeNotificationEvent(AuditLog.AUDIT_MESSAGE_DISPATCHER,
+				  (b ? "Dispatcher unset disabled" : "Dispatcher set disabled"),
+			      "disabled", "boolean", 
+			      Boolean.valueOf(((Dispatcher) DispatcherFactory.getInstance()).disabled), Boolean.valueOf(b));
+	  
+	  NavajoEventRegistry.getInstance().publishEvent(cne);
+	  
+	  ((Dispatcher) DispatcherFactory.getInstance()).disabled = b;
   }
   
   public void setShutdown(boolean b) {
@@ -1659,7 +1490,7 @@ private final Navajo processNavajo(Navajo inMessage, Object userCertificate, Cli
 	  boolean finished = false;
 	  while (!finished) {
 		  int size = 0;
-		  Iterator<Access> iter = Dispatcher.getInstance().accessSet.iterator();
+		  Iterator<Access> iter = ((Dispatcher) DispatcherFactory.getInstance()).accessSet.iterator();
 		  while ( iter.hasNext() ) {
 			  Access a = iter.next();
 			  // Do not count maintenance services...
@@ -1693,5 +1524,17 @@ private final Navajo processNavajo(Navajo inMessage, Object userCertificate, Cli
 	  }
 	  Dispatcher.killMe();
 	  
+  }
+
+  public Set<Access> getAccessSet() {
+	  return accessSet;
+  }
+
+  public java.util.Date getStartTime() {
+	  return startTime;
+  }
+
+  public int getRateWindowSize() {
+	  return rateWindowSize;
   }
 }

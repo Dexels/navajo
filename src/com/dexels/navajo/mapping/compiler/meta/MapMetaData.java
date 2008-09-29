@@ -14,6 +14,7 @@ import java.util.logging.Level;
 import com.dexels.navajo.document.nanoimpl.CaseSensitiveXMLElement;
 import com.dexels.navajo.document.nanoimpl.XMLElement;
 import com.dexels.navajo.server.Dispatcher;
+import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.util.AuditLog;
 
 /**
@@ -41,8 +42,8 @@ public class MapMetaData {
 		try {
 			
 			BufferedReader br = 
-				( Dispatcher.getInstance() != null ) ?
-				new BufferedReader(new FileReader(new File(Dispatcher.getInstance().getNavajoConfig().getConfigPath() + "/adapters.xml")))
+				( DispatcherFactory.getInstance() != null ) ?
+				new BufferedReader(new FileReader(new File(DispatcherFactory.getInstance().getNavajoConfig().getConfigPath() + "/adapters.xml")))
 			:
 				new BufferedReader(new FileReader("/home/arjen/projecten/Navajo/adapters.xml"));
 				

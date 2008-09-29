@@ -8,5 +8,5 @@ public interface StatisticsRunnerInterface extends NavajoListener {
 
 	public void setEnabled(boolean b);
 	public boolean isEnabled();
-	public void addAccess(final Access a, final Exception e, AsyncMappable am);
+	public void addAccess(final Access a, final Throwable e, AsyncMappable am);
 }

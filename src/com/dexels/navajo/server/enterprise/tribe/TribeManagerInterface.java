@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.server.Access;
+import com.dexels.navajo.tribe.TribeMember;
 
 public interface TribeManagerInterface {
 
@@ -115,5 +116,13 @@ public interface TribeManagerInterface {
      * @return
      */
     public TribeMemberInterface getMyMembership();
+    
+    /**
+     * Add e new Tribe Member.
+     * @param tm
+     */
+    public void addTribeMember(TribeMemberInterface tm);
 	
+    public String getMyName();
+    
 }

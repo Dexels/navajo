@@ -175,7 +175,7 @@ public abstract class AsyncMappable implements Mappable, AsyncMappableMXBean {
   }
 
   public abstract void store() throws MappableException, UserException;
-  public abstract void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException;
+  public abstract void load(Access access) throws MappableException, UserException;
   public abstract int getPercReady()  throws UserException;
   /**
    * The method afterRequest() is executed right after the </request> tag.
@@ -184,7 +184,7 @@ public abstract class AsyncMappable implements Mappable, AsyncMappableMXBean {
   /**
    * The method beforeResponse() is excecuted right before the <response> tag.
    */
-  public abstract void beforeResponse(Parameters parms, Navajo inMessage, Access access, NavajoConfig config)  throws UserException;
+  public abstract void beforeResponse(Access access)  throws UserException;
   /**
    * The method afterResponse() is executed right after the </response> tag.
    */
@@ -370,7 +370,7 @@ public abstract class AsyncMappable implements Mappable, AsyncMappableMXBean {
 
   private final void log() {
 	  // TODO IMPLEMENT LOG FOR ASYNC MAPPABLE.
-	  if ( Dispatcher.getInstance().getNavajoConfig().getStatisticsRunner() != null && !logged ) {
+	  if ( DispatcherFactory.getInstance().getNavajoConfig().getStatisticsRunner() != null && !logged ) {
 		  Access a = AsyncStore.getInstance().getAccessObject(this.pointer);
 		  if ( a != null ) {
 			  // determine total time.
@@ -385,7 +385,7 @@ public abstract class AsyncMappable implements Mappable, AsyncMappableMXBean {
 				  }
 			  }
 			  logged = true;
-			  Dispatcher.getInstance().getNavajoConfig().getStatisticsRunner().addAccess(a, ue, this);
+			  DispatcherFactory.getInstance().getNavajoConfig().getStatisticsRunner().addAccess(a, ue, this);
 		  } else {
 			  AuditLog.log(AuditLog.AUDIT_MESSAGE_ASYNC_RUNNER, "Warning: could not log async access due to missing access object!");
 		  }

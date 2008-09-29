@@ -1,9 +1,11 @@
 package com.dexels.navajo.scheduler;
 
-import java.util.HashMap;
 import java.util.HashSet;
 
-import com.dexels.navajo.server.Dispatcher;
+import com.dexels.navajo.scheduler.tribe.ListenerRunnerActivationSmokeSignal;
+import com.dexels.navajo.scheduler.triggers.TimeTrigger;
+import com.dexels.navajo.scheduler.triggers.Trigger;
+import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.enterprise.tribe.Answer;
 import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
 import com.dexels.navajo.sharedstore.GetLockRequest;
@@ -15,7 +17,8 @@ import com.dexels.navajo.sharedstore.SharedStoreInterface;
 import com.dexels.navajo.workflow.WorkFlowManager;
 
 /**
- * The ListenerStore is ONLY used to store Webservice triggers and Time triggers.
+ * The ListenerStore is used for persisting triggers.
+ * The ListenerStore is currently ONLY used to store Web service triggers and Time triggers.
  * 
  * @author arjen
  *
@@ -24,13 +27,11 @@ public final class ListenerStore {
 
 	public final static Object semaphore = new Object();
 	private final static Object semaphore_init = new Object();
-	private final static Object semaphore_lock = new Object();
 	private final static String storeLocation = "listeners";
 	public final static  String activatedListeners = "listeners/activated";
 	private volatile static ListenerStore instance = null;
 	
 	private SharedStoreInterface ssi = null;
-	private HashMap<String,Integer> registeredWebservices = null;
 	
 	public final static ListenerStore getInstance() {
 		
@@ -50,24 +51,15 @@ public final class ListenerStore {
 				instance.ssi.removeAll(activatedListeners);
 				instance.ssi.removeAll(storeLocation);
 			} 
-
-				instance.registeredWebservices = new HashMap<String,Integer>();
-				// Register already present webservices.
-				Listener [] l =  instance.getListeners(AfterWebserviceTrigger.class.getName());
-				for (int i = 0; i < l.length; i++) {
-					instance.addRegisteredWebservice( ((AfterWebserviceTrigger) l[i]).getWebservicePattern());
-				}
-				Listener [] lb = instance.getListeners(BeforeWebserviceTrigger.class.getName());
-				for (int i = 0; i < lb.length; i++) {
-					instance.addRegisteredWebservice( ((BeforeWebserviceTrigger) lb[i]).getWebservicePattern());
-				}
-			
-			
 		}
 		
 		return instance;
 	}
 		
+	public void terminate() {
+		instance = null;
+	}
+	
 	/**
 	 * Lock store for listeners of type.
 	 * 
@@ -100,7 +92,7 @@ public final class ListenerStore {
 		//}
 	}
 	
-	public final void addListener(Listener l, String type, boolean nolock) {
+	public final void addListener(Listener l) {
 
 			//synchronized (semaphore) {
 
@@ -113,7 +105,7 @@ public final class ListenerStore {
 			//}
 	}
 	
-	public final void removeListener(Listener l, String type, boolean nolock) {
+	public final void removeListener(Listener l) {
 
 			//synchronized (semaphore) {
 				try {
@@ -156,12 +148,13 @@ public final class ListenerStore {
 	}
 
 	/**
-	 * Activate trigger. ONLY USED FOR ACTIVATING TIMETRIGGER OBJECTS.
+	 * Activate listener. ONLY USED FOR ACTIVATING TIMETRIGGER OBJECTS.
 	 * Notice: do not forget to set proper lock before calling this method.
 	 * 
 	 * @param t
 	 */
-	public final void activate(Trigger t) {
+	public final void activate(Listener t) {
+		
 		synchronized (semaphore) {
 			try {
 				// Update blue-print listener.
@@ -172,9 +165,13 @@ public final class ListenerStore {
 				e.printStackTrace(System.err);
 			}
 			// NOTIFY ALL OTHER TRIBE MEMBERS.
-			TribeManagerFactory.getInstance().broadcast(new ListenerRunnerActivationSmokeSignal(Dispatcher.getInstance().getNavajoConfig().getInstanceName(), "DOIT", "NOW"));
+			TribeManagerFactory.getInstance().broadcast(new ListenerRunnerActivationSmokeSignal(DispatcherFactory.getInstance().getNavajoConfig().getInstanceName(), "DOIT", "NOW"));
 			semaphore.notifyAll();
 		}
+	}
+	
+	protected final String [] getActivatedListeners() {
+		return ssi.getObjects(activatedListeners);
 	}
 	
 	/**
@@ -186,7 +183,7 @@ public final class ListenerStore {
 
 		
 		synchronized (semaphore) {
-			String [] allNames = ssi.getObjects(activatedListeners);
+			String [] allNames = getActivatedListeners();
 			for (int i = 0; i < allNames.length; i++ ) {
 				//System.err.println(Dispatcher.getInstance().getNavajoConfig().getInstanceName() + ": In performActivatedListeners() Checking: "  + allNames[i]);
 				Trigger lis = null;
@@ -247,63 +244,5 @@ public final class ListenerStore {
 			semaphore.notifyAll();
 		}
 			
-	}
-
-	public final HashMap<String,Integer> getRegisteredWebservices() {
-		return registeredWebservices;
-	}
-	
-	/**
-	 * Caching service.
-	 * Check whether a webservice is registered as being listened to.
-	 * 
-	 * @param name
-	 * @return
-	 */
-	public final boolean isRegisteredWebservice(String name) {
-		synchronized (registeredWebservices) {
-			return registeredWebservices.containsKey(name);
-		}
-	}
-	
-	/**
-	 * Add a note that webservice name need to be listened to.
-	 * 
-	 * @param name
-	 */
-	public final void addRegisteredWebservice(String name) {
-		
-		// Send broadcast message to other tribal managers for notification of new webservice to be listened for....
-		synchronized (registeredWebservices) {
-			Integer i = registeredWebservices.get(name);
-			if ( i == null ) {
-				i = Integer.valueOf(1);
-			} else {
-				i =  Integer.valueOf(i.intValue() + 1);
-			}
-			registeredWebservices.put(name, i);
-		}
-	}
-	
-	/**
-	 * Add a note that webservice name does not need to be listened to.
-	 * 
-	 * @param name
-	 */
-	public final void removeRegisteredWebservice(String name) {
-		
-		// Send broadcast message to other tribal managers for notification of new webservice to be listened for....
-		synchronized (registeredWebservices) {
-			Integer i = (Integer) registeredWebservices.get(name);
-			if ( i == null ) {
-				return;
-			}
-			i = Integer.valueOf(i.intValue() -1 );
-			if ( i.intValue() > 0 ) {
-				registeredWebservices.put(name, i);
-			} else {
-				registeredWebservices.remove(name);
-			}
-		}
 	}
 }

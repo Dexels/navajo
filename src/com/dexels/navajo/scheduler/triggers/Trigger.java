@@ -22,7 +22,7 @@
  * SUCH DAMAGE.
  * ====================================================================
  */
-package com.dexels.navajo.scheduler;
+package com.dexels.navajo.scheduler.triggers;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -31,6 +31,8 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Calendar;
 
+import com.dexels.navajo.scheduler.Listener;
+import com.dexels.navajo.scheduler.Task;
 import com.dexels.navajo.server.Access;
 
 public abstract class Trigger implements Listener, Serializable {
@@ -120,11 +122,11 @@ public abstract class Trigger implements Listener, Serializable {
 		
 		Trigger t = null;
 		try {
-			if (s.startsWith(TIME_TRIGGER)) {
+			if (s.startsWith(TIME_TRIGGER + ":")) {
 				String v = s.substring(TIME_TRIGGER.length()+1);
 				t = new TimeTrigger(v);
 				return t;
-			} else if (s.startsWith(OFFSETTIME_TRIGGER)) {
+			} else if (s.startsWith(OFFSETTIME_TRIGGER + ":")) {
 				String v = s.substring(OFFSETTIME_TRIGGER.length()+1);
 				String field = v.substring(v.length() - 1);
 				String offset = v.substring(0, v.length() - 1);
@@ -139,26 +141,26 @@ public abstract class Trigger implements Listener, Serializable {
 				}
 				return t;
 			}  
-			else if (s.startsWith(WS_TRIGGER)) {
+			else if (s.startsWith(WS_TRIGGER + ":")) {
 				String v = s.substring(WS_TRIGGER.length()+1);
 				t = new AfterWebserviceTrigger(v);
 				return t;
-			} else if (s.startsWith(AFTER_TASK_TRIGGER)) {
+			} else if (s.startsWith(AFTER_TASK_TRIGGER + ":")) {
 				String v = s.substring(AFTER_TASK_TRIGGER.length()+1);
 				t = new AfterTaskTrigger(v);
 				return t;
-			} else if (s.startsWith(WS_BEFORE_TRIGGER)) {
+			} else if (s.startsWith(WS_BEFORE_TRIGGER + ":")) {
 				String v = s.substring(WS_BEFORE_TRIGGER.length()+1);
 				t = new BeforeWebserviceTrigger(v);
 				return t;
-			}  else if (s.startsWith(SERVER_EVENT_TRIGGER)) {
+			}  else if (s.startsWith(SERVER_EVENT_TRIGGER + ":")) {
 				String v = s.substring(SERVER_EVENT_TRIGGER.length()+1);
 				t = new NavajoEventTrigger(v);
 				return t;
 			} else if ( s.startsWith(IMMEDIATE_TRIGGER) ) {
 				t = new ImmediateTrigger();
 				return t;
-			} else if ( s.startsWith(JABBER_TRIGGER) ) {
+			} else if ( s.startsWith(JABBER_TRIGGER + ":") ) {
 				String v = s.substring(JABBER_TRIGGER.length()+1);
 				t = new JabberTrigger(v);
 				return t;
@@ -218,8 +220,15 @@ public abstract class Trigger implements Listener, Serializable {
 		}
 	}
 		
+	/**
+	 * Listener id must be unique.
+	 */
 	public String getListenerId() {
-		return this.getClass().getName() + "-" + this.myTask.getId();
+		if ( this.myTask != null ) {
+			return this.getClass().getName() + "-" + this.myTask.getId();
+		} else {
+			return this.getClass().getName() + "-null";
+		}
 	}
 	
 	public Trigger clone() {

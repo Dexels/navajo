@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.logging.Level;
 
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.server.GenericThread;
@@ -182,7 +183,7 @@ public class TribalWorker extends GenericThread  implements WorkerInterface {
 		int level = workList.size();
 		if ( ( level !=  previousWorkListLevelSize) && workList.size() > maxWorkLostLevelSize ) {
 			AuditLog.log(AuditLog.AUDIT_MESSAGE_INTEGRITY_WORKER, "WARNING: Integrity Worker TODO list size:  " + workList.size());
-			sendHealthCheck(level, maxWorkLostLevelSize, "WARNING", "Integrity worker TODO list size is rather large");
+			sendHealthCheck(level, maxWorkLostLevelSize, Level.WARNING, "Integrity worker TODO list size is rather large");
 		}
 		previousWorkListLevelSize = level;
 
@@ -273,7 +274,7 @@ public class TribalWorker extends GenericThread  implements WorkerInterface {
 			fs = f.getInputStream();
 			Navajo n = NavajoFactory.getInstance().createNavajo(fs);
 			return n;
-		} catch (SharedStoreException sse) {
+		} catch (Exception sse) {
 			sse.printStackTrace(System.err);
 			return null;
 		} finally {

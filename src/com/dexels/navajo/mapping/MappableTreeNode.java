@@ -13,10 +13,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.io.Serializable;
 import java.lang.reflect.*;
-import com.dexels.navajo.server.Parameters;
-import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.server.Access;
-import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.server.enterprise.statistics.MapStatistics;
 
@@ -259,7 +256,7 @@ public final class MappableTreeNode implements Mappable, Serializable {
             return m;
         }
        
-  public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
+  public void load(Access access) throws MappableException, UserException {
   }
 
   public void store() throws MappableException, UserException {

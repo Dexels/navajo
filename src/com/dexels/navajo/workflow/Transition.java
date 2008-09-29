@@ -10,14 +10,12 @@ import com.dexels.navajo.parser.Expression;
 import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.document.Operand;
 import com.dexels.navajo.scheduler.IllegalTask;
-import com.dexels.navajo.scheduler.IllegalTrigger;
 import com.dexels.navajo.scheduler.Task;
 import com.dexels.navajo.scheduler.TaskListener;
 import com.dexels.navajo.scheduler.TaskRunner;
-import com.dexels.navajo.scheduler.Trigger;
+import com.dexels.navajo.scheduler.triggers.IllegalTrigger;
+import com.dexels.navajo.scheduler.triggers.Trigger;
 import com.dexels.navajo.server.Access;
-import com.dexels.navajo.server.NavajoConfig;
-import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.server.SystemException;
 import com.dexels.navajo.server.UserException;
 import com.dexels.navajo.mapping.Mappable;
@@ -355,7 +353,7 @@ public final class Transition implements TaskListener, Serializable, Mappable {
 	public void kill() {
 	}
 
-	public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
+	public void load(Access access) throws MappableException, UserException {
 	}
 
 	public void store() throws MappableException, UserException {

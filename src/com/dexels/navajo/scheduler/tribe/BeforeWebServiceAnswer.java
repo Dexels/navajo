@@ -1,6 +1,7 @@
-package com.dexels.navajo.scheduler;
+package com.dexels.navajo.scheduler.tribe;
 
 import com.dexels.navajo.document.Navajo;
+import com.dexels.navajo.scheduler.WebserviceListenerRegistry;
 import com.dexels.navajo.server.enterprise.tribe.Answer;
 
 public class BeforeWebServiceAnswer extends Answer {

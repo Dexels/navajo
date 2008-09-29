@@ -40,7 +40,10 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
 
+import org.junit.Assert;
+
 import com.dexels.navajo.server.Dispatcher;
+import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
 import com.dexels.navajo.util.AuditLog;
 
@@ -137,7 +140,7 @@ public class SharedFileStore implements SharedStoreInterface {
 	private final boolean lockExists(SharedStoreLock ssl) {
 		//System.err.println("Check if lock exists: " + ssl);
 		File [] files = sharedStore.listFiles(new LockFiles(ssl.parent, ssl.name));
-		if ( files.length > 0 ) {
+		if ( files != null && files.length > 0 ) {
 			// Check age of lock.
 			for (int i = 0; i < files.length; i++) {
 				if ( ( System.currentTimeMillis() - files[i].lastModified() ) > ssl.getLockTimeOut() ) {
@@ -207,8 +210,8 @@ public class SharedFileStore implements SharedStoreInterface {
 	 * @throws Exception when SharedFileStore could not be created.
 	 */
 	public SharedFileStore() throws Exception {
-		if ( Dispatcher.getInstance() != null ) {
-			sharedStore = new File(Dispatcher.getInstance().getNavajoConfig().getRootPath() + "/" + sharedStoreName);
+		if ( DispatcherFactory.getInstance() != null ) {
+			sharedStore = new File(DispatcherFactory.getInstance().getNavajoConfig().getRootPath() + "/" + sharedStoreName);
 			if ( !sharedStore.exists() ) {
 				if ( !sharedStore.mkdirs() ) {
 					throw new SharedStoreException("Could not create SharedFileStore");
@@ -263,7 +266,7 @@ public class SharedFileStore implements SharedStoreInterface {
 			SharedStoreLock ssl = readLock(parent, name, owner);
 			return ssl;
 		} catch (Exception e) {
-			e.printStackTrace(System.err);
+			//e.printStackTrace(System.err);
 			return null;
 		}
 	}
@@ -293,7 +296,7 @@ public class SharedFileStore implements SharedStoreInterface {
 	}
 
 	public SharedStoreLock lock(String parent, String name, int lockType, boolean block) {
-		return lock(parent, name, Dispatcher.getInstance().getNavajoConfig().getInstanceName(), lockType, block);
+		return lock(parent, name, DispatcherFactory.getInstance().getNavajoConfig().getInstanceName(), lockType, block);
 	}
 	
 	/**
@@ -314,7 +317,7 @@ public class SharedFileStore implements SharedStoreInterface {
 					new GetLockRequest( parent, name, lockType, block));
 			return la.mySsl;
 		} else {
-			//System.err.println("ABOUT TO LOCK: (" + parent + "," + name + "," + lockType + ")");
+			System.err.println("ABOUT TO LOCK: (" + parent + "," + name + "," + lockType + ")");
 			SharedStoreLock ssl = new SharedStoreLock(name, parent);
 			ssl.lockType = lockType;
 			ssl.owner = owner;
@@ -386,11 +389,13 @@ public class SharedFileStore implements SharedStoreInterface {
 		SharedStoreLock ssl = null;
 		try {
 			if (requireLock) {
+				System.err.println("Waiting for lock....");
 				ssl = lock(parent, name, SharedFileStore.READ_WRITE_LOCK, true);
 			}
 			File p = new File(sharedStore, parent);
 			if (!p.exists()) {
 				p.mkdirs();
+				System.err.println("CREATED PARENT");
 			}
 			File f = new File(p, name);
 			try {
@@ -404,6 +409,7 @@ public class SharedFileStore implements SharedStoreInterface {
 					f.delete();
 				}
 			}
+			f.setLastModified(System.currentTimeMillis());
 		} finally {
 			if ( ssl != null ) {
 				release(ssl);
@@ -479,6 +485,7 @@ public class SharedFileStore implements SharedStoreInterface {
 				}
 				// TODO: Log exception.
 			}
+			f.setLastModified(System.currentTimeMillis());
 		} finally {
 			if ( ssl != null ) {
 				release(ssl);
@@ -542,8 +549,12 @@ public class SharedFileStore implements SharedStoreInterface {
 		}
 	}
 
-	public void setLastModified(String parent, String name, long l) {
+	public void setLastModified(String parent, String name, long l) throws IOException {
 		File f = new File(sharedStore, ( name != null ? parent + "/" + name : parent ) );
+		if ( !f.exists() ) {
+			throw new FileNotFoundException(f.getAbsolutePath());
+		}
+		System.err.println(f.getAbsolutePath() + ", lastmodified:" + l);
 		f.setLastModified(l);
 	}
 

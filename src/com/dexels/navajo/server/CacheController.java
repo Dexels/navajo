@@ -89,8 +89,8 @@ public class CacheController extends GenericThread implements CacheControllerMXB
 	}
 
 	private long getConfigTimeStamp() {
-		if (  Dispatcher.getInstance() != null && Dispatcher.getInstance().getNavajoConfig() != null ) {
-			java.io.File f = new java.io.File(Dispatcher.getInstance().getNavajoConfig().getConfigPath() + "/" + CACHE_CONFIG);
+		if (  DispatcherFactory.getInstance() != null && DispatcherFactory.getInstance().getNavajoConfig() != null ) {
+			java.io.File f = new java.io.File(DispatcherFactory.getInstance().getNavajoConfig().getConfigPath() + "/" + CACHE_CONFIG);
 			if ( f != null && f.exists() ) {
 				return f.lastModified();
 			}
@@ -121,7 +121,7 @@ public class CacheController extends GenericThread implements CacheControllerMXB
 	 */
 	private void readConfig() throws Exception {
 
-		Navajo config = Dispatcher.getInstance().getNavajoConfig().readConfig(CACHE_CONFIG);
+		Navajo config = DispatcherFactory.getInstance().getNavajoConfig().readConfig(CACHE_CONFIG);
 
 		if ( config != null ) {
 			ArrayList<Message> messages = config.getMessages("Cache/Entries");
@@ -221,20 +221,22 @@ public class CacheController extends GenericThread implements CacheControllerMXB
 
 	@Override
 	public void terminate() {
-		// TODO Auto-generated method stub
-		
+		instance = null;
 	}
 
 	public int cachedEntries() {
 		return expirations.size();
 	}
 
+	/**
+	 * Those methods are use by the JMX interface:
+	 */
 	public double getHitRate() {
-		return Dispatcher.getInstance().getNavajoConfig().getPersistenceManager().getHitratio();
+		return DispatcherFactory.getInstance().getNavajoConfig().getPersistenceManager().getHitratio();
 	}
 
 	public void clearCache() {
-		Dispatcher.getInstance().getNavajoConfig().getPersistenceManager().clearCache();
+		DispatcherFactory.getInstance().getNavajoConfig().getPersistenceManager().clearCache();
 	}
 
 }

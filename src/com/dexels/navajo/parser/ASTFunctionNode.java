@@ -4,6 +4,15 @@ package com.dexels.navajo.parser;
 /**
  * $Id$
  * $Log$
+ * Revision 1.26  2008/09/29 09:48:15  arjen
+ * Major changes:
+ * 1. Better testability.
+ * 2. Support for auditlog events
+ * 3. Support for exception events
+ * 4. More JMX support
+ * 5. Restructuring of NavajoConfig
+ * 6. ...
+ *
  * Revision 1.25  2008/02/08 14:57:13  arjen
  * Added empty header check.
  *
@@ -92,6 +101,7 @@ package com.dexels.navajo.parser;
  */
 
 import com.dexels.navajo.server.Dispatcher;
+import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.document.*;
 
@@ -115,13 +125,13 @@ public final class ASTFunctionNode extends SimpleNode {
 		try {
 
 			Class c;
-			if (Dispatcher.getInstance()==null) {
+			if (DispatcherFactory.getInstance()==null) {
 				c = Class.forName("com.dexels.navajo.functions."+functionName);
 			} else {
-				if ( doc != null && doc.getHeader() != null && doc.getHeader().getRPCUser() != null && !doc.getHeader().getRPCUser().endsWith(NavajoConfig.getInstance().getBetaUser())) {
-					c = NavajoConfig.getInstance().getClassloader().getClass("com.dexels.navajo.functions."+functionName);
+				if ( doc != null && doc.getHeader() != null && doc.getHeader().getRPCUser() != null && !doc.getHeader().getRPCUser().endsWith(DispatcherFactory.getInstance().getNavajoConfig().getBetaUser())) {
+					c = DispatcherFactory.getInstance().getNavajoConfig().getClassloader().getClass("com.dexels.navajo.functions."+functionName);
 				} else {
-					c = NavajoConfig.getInstance().getBetaClassLoader().getClass("com.dexels.navajo.functions."+functionName);
+					c = DispatcherFactory.getInstance().getNavajoConfig().getBetaClassLoader().getClass("com.dexels.navajo.functions."+functionName);
 				}
 			}
 

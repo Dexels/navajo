@@ -3,6 +3,7 @@ package com.dexels.navajo.server.statistics;
 import com.dexels.navajo.events.NavajoEvent;
 import com.dexels.navajo.events.NavajoEventRegistry;
 import com.dexels.navajo.events.types.AuditLogEvent;
+import com.dexels.navajo.events.types.ChangeNotificationEvent;
 import com.dexels.navajo.events.types.NavajoRequestEvent;
 import com.dexels.navajo.events.types.NavajoResponseEvent;
 import com.dexels.navajo.mapping.AsyncMappable;
@@ -19,6 +20,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
 
 import javax.management.AttributeChangeNotification;
 import javax.management.Notification;
@@ -150,7 +152,7 @@ public final class StatisticsRunner extends GenericThread implements StatisticsR
 		  }
 		  int level = todo.size();
 		  if ( level != previousSize && level > 30 ) {
-			  sendHealthCheck(level, 30, NavajoNotification.WARNING, "Todo list of statistics is rather large");
+			  sendHealthCheck(level, 30, Level.WARNING, "Todo list of statistics is rather large");
 		  }
 		  previousSize = level;
 		  copyOfTodo = new HashMap(todo);
@@ -168,7 +170,7 @@ public final class StatisticsRunner extends GenericThread implements StatisticsR
    * @param a
    */
   @SuppressWarnings("unchecked")
-  public final void addAccess(final Access a, final Exception e, AsyncMappable am) {
+  public final void addAccess(final Access a, final Throwable e, AsyncMappable am) {
 	  synchronized ( semaphore ) {
 		  todo.put( a.accessID, new TodoItem(a, am) );
 	  }
@@ -235,17 +237,14 @@ public final class StatisticsRunner extends GenericThread implements StatisticsR
   public void setEnabled(boolean b) {
 	  boolean previousValue = enabled;
 	  enabled = b;
-	  Notification n = 
-          new AttributeChangeNotification(this, 
-					    GenericThread.notificationSequence++, 
-					    System.currentTimeMillis(), 
-					    (b ? "Statistics runner enabled" : "Statistics runner disabled"), 
-					    "enabled", 
-					    "boolean", 
-					    Boolean.valueOf(previousValue), 
-					    Boolean.valueOf(enabled)); 
-
-	sendNotification(n); 
+	  
+	  ChangeNotificationEvent cne = 
+		  new ChangeNotificationEvent(AuditLog.AUDIT_MESSAGE_STAT_RUNNER,
+				  (b ? "Statistics runner enabled" : "Statistics runner disabled"),
+			      "enabled", "boolean", Boolean.valueOf(previousValue), Boolean.valueOf(enabled));
+	  
+	  NavajoEventRegistry.getInstance().publishEvent(cne);
+	 
   }
   
   public boolean isEnabled() {
@@ -289,7 +288,7 @@ public final class StatisticsRunner extends GenericThread implements StatisticsR
 		  }
 	  } else if ( ne instanceof AuditLogEvent ) {
 		  if (  isEnabled() ) {
-			 addAuditLog( (AuditLogEvent) ne);
+			  addAuditLog( (AuditLogEvent) ne);
 		  }
 	  } else if ( ne instanceof NavajoRequestEvent ) {
 		  NavajoRequestEvent nre = (NavajoRequestEvent) ne;
