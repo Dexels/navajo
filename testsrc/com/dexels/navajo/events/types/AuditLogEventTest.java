@@ -1,5 +1,7 @@
 package com.dexels.navajo.events.types;
 
+import java.util.logging.Level;
+
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
@@ -14,7 +16,7 @@ public class AuditLogEventTest extends TestCase {
 	}
 	
 	public void test() {
-		AuditLogEvent aul = new AuditLogEvent("subsystem", "msg", "level");
+		AuditLogEvent aul = new AuditLogEvent("subsystem", "msg", Level.INFO);
 		Assert.assertEquals(aul.getSubSystem(), "subsystem");
 		Assert.assertEquals(aul.getMessage(), "msg");
 		Assert.assertEquals(aul.getLevel(), "level");

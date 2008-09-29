@@ -1,5 +1,7 @@
 package com.dexels.navajo.events;
 
+import java.util.logging.Level;
+
 import com.dexels.navajo.events.types.AuditLogEvent;
 
 import junit.framework.Assert;
@@ -118,7 +120,7 @@ public class NavajoEventRegistryTest extends TestCase {
 				System.err.println(message);
 			} } 
 		);
-		instance.publishEvent(new AuditLogEvent("","",""));
+		instance.publishEvent(new AuditLogEvent("","",Level.INFO));
 		Assert.assertEquals(message, "Received AuditLogEvent!");
 	}
 	
@@ -142,7 +144,7 @@ public class NavajoEventRegistryTest extends TestCase {
 				}
 			} } 
 		);
-		instance.publishAsynchronousEvent(new AuditLogEvent("","",""));
+		instance.publishAsynchronousEvent(new AuditLogEvent("","",Level.INFO));
 		// Should still be null....
 		Assert.assertNull(message);
 		
