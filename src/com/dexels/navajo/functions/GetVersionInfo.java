@@ -27,6 +27,7 @@ package com.dexels.navajo.functions;
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
 import com.dexels.navajo.server.Dispatcher;
+import com.dexels.navajo.server.DispatcherFactory;
 
 import dexels.Version;
 
@@ -46,12 +47,12 @@ public final class GetVersionInfo extends FunctionInterface {
 		try {
 			
 			Class c = null;
-			if (Dispatcher.getInstance().getNavajoClassLoader()==null) {
+			if (DispatcherFactory.getInstance().getNavajoConfig().getClassloader() ==null) {
 				System.err.println("GetVersionInfo: Using system classloader");
 				c = Class.forName(packageName+".Version");
 			} else {
 				System.err.println("GetVersionInfo: Using Navajo classloader");
-				c = Dispatcher.getInstance().getNavajoClassLoader().getClass(packageName+".Version");
+				c = DispatcherFactory.getInstance().getNavajoConfig().getClassloader().getClass(packageName+".Version");
 			}
 			
 			Version v = (Version) c.newInstance();

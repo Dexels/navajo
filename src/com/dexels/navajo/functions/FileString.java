@@ -32,7 +32,7 @@ public class FileString extends FunctionInterface {
 
     try {
     	 //gh.setInput(this.inMessage, access, null, Dispatcher.getInstance().getNavajoConfig());
-    String path = Dispatcher.getInstance().getNavajoConfig().getScriptPath();
+    String path = DispatcherFactory.getInstance().getNavajoConfig().getScriptPath();
       java.io.File f = new java.io.File(new java.io.File(path),fileName);
       BufferedReader fis = new BufferedReader(new FileReader(f));
       StringBuffer sb = new StringBuffer();

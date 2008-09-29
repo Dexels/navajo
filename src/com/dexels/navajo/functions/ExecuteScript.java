@@ -29,7 +29,7 @@ public class ExecuteScript extends FunctionInterface {
     String script = (String) getOperand(0);
     Access access = new Access(1, 1, 1, "ANONYMOUS", script, "", "", "", false, null);
     inMessage.getHeader().setRequestId("");
-    gh.setInput(this.inMessage, access, null, Dispatcher.getInstance().getNavajoConfig());
+    gh.setInput(this.inMessage, access, null, DispatcherFactory.getInstance().getNavajoConfig());
     Navajo result = null;
     try {
       result = gh.doService();
