@@ -1417,7 +1417,7 @@ private final Navajo processNavajo(Navajo inMessage, Object userCertificate, Cli
 	  return ((Dispatcher) DispatcherFactory.getInstance()).enabled;
   }
 
-  private void setEnabled(boolean enabled) {
+  public void setEnabled(boolean enabled) {
 	  ((Dispatcher) DispatcherFactory.getInstance()).enabled = enabled;
   }
 
