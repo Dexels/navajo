@@ -20,8 +20,8 @@ public class CreateBirtMap implements Mappable {
 	}
 	//Property marginProperty = inNavajo.getProperty("/__ReportDefinition/Margin");
 	
-	public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
-		myNavajo = inMessage;
+	public void load(Access access) throws MappableException, UserException {
+		myNavajo = access.getInDoc();
 	}
 
 	public void store() throws MappableException, UserException {

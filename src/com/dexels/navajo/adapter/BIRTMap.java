@@ -294,15 +294,15 @@ public class BIRTMap implements Mappable {
    * @throws UserException
    * @todo Implement this com.dexels.navajo.mapping.Mappable method
    */
-  public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
+  public void load(Access access) throws MappableException, UserException {
     // paths
-    reportDir = inMessage.getMessage("__globals__").getProperty("BIRTReportDir").getValue();
-    engineDir = inMessage.getMessage("__globals__").getProperty("BIRTEngineDir").getValue();
+    reportDir = access.getInDoc().getMessage("__globals__").getProperty("BIRTReportDir").getValue();
+    engineDir = access.getInDoc().getMessage("__globals__").getProperty("BIRTEngineDir").getValue();
 //    birtDatasourceUrl = inMessage.getMessage("__globals__").getProperty("BIRTKernelDatasourceUrl").getValue();
 //    birtDatasourceUrl = inMessage.getMessage("__globals__").getProperty("BIRTClubDatasourceUrl").getValue();
 
-    birtDataSources.put("kernel", inMessage.getMessage("__globals__").getProperty("BIRTKernelDatasourceUrl").getValue());
-    birtDataSources.put("club", inMessage.getMessage("__globals__").getProperty("BIRTClubDatasourceUrl").getValue());
+    birtDataSources.put("kernel", access.getInDoc().getMessage("__globals__").getProperty("BIRTKernelDatasourceUrl").getValue());
+    birtDataSources.put("club", access.getInDoc().getMessage("__globals__").getProperty("BIRTClubDatasourceUrl").getValue());
     
     System.err.println("BIRTReportDir: " + reportDir);
     System.err.println("BIRTEngineDir: " + engineDir);

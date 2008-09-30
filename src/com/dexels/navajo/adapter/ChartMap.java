@@ -56,11 +56,11 @@ public class ChartMap implements Mappable{
 //		return outputFile; 
 //	}
 	
-	public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
+	public void load(Access access) throws MappableException, UserException {
 
 		
 	    // paths
-	    engineDir = inMessage.getMessage("__globals__").getProperty("BIRTEngineDir").getValue();
+	    engineDir = access.getInDoc().getMessage("__globals__").getProperty("BIRTEngineDir").getValue();
 	    System.err.println("BIRTEngineDir: " + engineDir);
 
 	    platformConfig = new PlatformConfig();
@@ -69,8 +69,8 @@ public class ChartMap implements Mappable{
 	    try{
 
 			// we expect the Result message to be incoming..
-			inMessage.write(System.err);
-			data = inMessage.getMessage("Result");
+	    	access.getInDoc().write(System.err);
+			data = access.getInDoc().getMessage("Result");
 		}catch(Exception e){
 			e.printStackTrace();
 		}

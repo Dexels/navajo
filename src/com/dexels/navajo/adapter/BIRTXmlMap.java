@@ -6,6 +6,7 @@ package com.dexels.navajo.adapter;
 
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.Dispatcher;
+import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.Parameters;
 import com.dexels.navajo.server.UserException;
@@ -244,9 +245,9 @@ public class BIRTXmlMap implements Mappable {
 	 * @throws UserException
 	 * @todo Implement this com.dexels.navajo.mapping.Mappable method
 	 */
-	public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
+	public void load(Access access) throws MappableException, UserException {
 		// paths
-		inNavajo = inMessage;
+		inNavajo = access.getInDoc();
 		// reportDir =
 
 		// inMessage.getMessage("__globals__").getProperty("BIRTReportDir").getValue();
@@ -264,7 +265,7 @@ public class BIRTXmlMap implements Mappable {
 		// "+Dispatcher.getInstance().getNavajoConfig().getRootPath());
 		InputStream in = null;
 		try {
-			in = Dispatcher.getInstance().getNavajoConfig().getConfig("birt.xml");
+			in = DispatcherFactory.getInstance().getNavajoConfig().getConfig("birt.xml");
 		} catch (IOException e) {
 			throw new MappableException("No birt.xml configuration file found!");
 		}
