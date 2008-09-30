@@ -3,7 +3,6 @@ package com.dexels.navajo.events;
 import java.util.logging.Level;
 
 import com.dexels.navajo.events.types.AuditLogEvent;
-import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.test.TestDispatcher;
 import com.dexels.navajo.server.test.TestNavajoConfig;
