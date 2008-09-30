@@ -86,7 +86,7 @@ public class DispatcherFactory {
 						  try {
 							is.close();
 						} catch (IOException e) {
-							// NOT INTERESTED.
+							throw new RuntimeException(e);
 						}
 					  }
 				  }
@@ -94,8 +94,6 @@ public class DispatcherFactory {
 				instance = new Dispatcher(nc);
 				((Dispatcher) instance).init();
 				JMXHelper.registerMXBean(instance, JMXHelper.NAVAJO_DOMAIN, "Dispatcher");
-				// Monitor AccessSetSize
-				// JMXHelper.addGaugeMonitor( NavajoEventRegistry.getInstance(), JMXHelper.NAVAJO_DOMAIN, "Dispatcher", "AccessSetSize", null, new Integer(50), 10000L);
 				NavajoFactory.getInstance().setTempDir(instance.getTempDir());
 				
 			}

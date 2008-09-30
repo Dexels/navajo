@@ -27,6 +27,15 @@ package navajo;
 /**
  * VERSION HISTORY
  * 
+ * 7.0.0 Lot's of refactoring.
+ * 	     Changed interface of Mappable, now load(Access) instead of redundant load(Parameter, Navajo, Access, NavajoConfig)
+ *       NavajoConfigInterface/TestNavajoConfig and DispatcherInterface/TestDispatcher/DispatcherFactory created for better testability.
+ *       Moved lot's of functionality away from NavajoConfig initialization to prevent weird Dispatcher loops.
+ *       Created testsrc structure and started working on unit tests, especially focusing on threading issues.
+ *       Fixed problem with NavajoEventTrigger being evaluated each Tribal Member in case of workflow initialization.
+ *       Added NavajoExceptionEvent 
+ *       Publish AuditLog Event in case of Authentication/Autorization exception. 
+ *       
  * 6.5.6 Some restructuring of Dispatcher/NavajoConfig. Better deadlock prevention for waiting for the chief in TribeManager.
  * 
  * 6.5.4-5 Added support for enabling/disabling and shutting down Navajo Server. Added support for forwarding
@@ -122,7 +131,7 @@ public class Version extends dexels.Version {
 	public static final int PATCHLEVEL = 0;
 	public static final String VENDOR = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Kernel";
-	public static final String RELEASEDATE = "2008-09-09";
+	public static final String RELEASEDATE = "2008-09-30";
 	
 //	 Included packages.
 	String [] includes = {"navajodocument.Version"};
@@ -130,6 +139,7 @@ public class Version extends dexels.Version {
 	public Version() {
 		addIncludes(includes);
 		setReleaseDate(RELEASEDATE);
+		setSpecialVersion("(The Terminator Edition)");
 	}
 	
 	public int getMajor() {

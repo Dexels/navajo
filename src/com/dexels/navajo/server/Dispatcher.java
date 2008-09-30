@@ -91,9 +91,9 @@ public final class Dispatcher implements Mappable, DispatcherMXBean, DispatcherI
   static {
 	  try {
 			Class.forName("com.dexels.navajo.tribe.TribeManager");
-			edition = "Enterprise Edition";
+			edition = "Enterprise";
 		} catch (Throwable e) {
-			edition = "Standard Edition";
+			edition = "Standard";
 		}
   }
  
