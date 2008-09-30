@@ -17,6 +17,8 @@ import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLutils;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.server.Dispatcher;
+import com.dexels.navajo.server.DispatcherFactory;
+import com.dexels.navajo.server.DispatcherInterface;
 import com.dexels.navajo.server.FatalException;
 
 public class TmlSoapServlet extends HttpServlet {
@@ -81,7 +83,7 @@ public class TmlSoapServlet extends HttpServlet {
 			StringWriter w = new StringWriter();
 			XMLDocumentUtils.write(docIn, w, false);
 			
-			Document tmlIn = XMLDocumentUtils.transformToDocument(docIn, new File(Dispatcher.getInstance().getNavajoConfig().getRootPath() + "/soap/xml2tml.xsl"));
+			Document tmlIn = XMLDocumentUtils.transformToDocument(docIn, new File(DispatcherFactory.getInstance().getNavajoConfig().getRootPath() + "/soap/xml2tml.xsl"));
 			
 			w = new StringWriter();
 			XMLDocumentUtils.write(tmlIn, w, false);
@@ -100,7 +102,7 @@ public class TmlSoapServlet extends HttpServlet {
 
 
 			// Create dispatcher object and handle request.
-			Dispatcher dis = Dispatcher.getInstance(configurationPath,null, new com.dexels.navajo.server.FileInputStreamReader());
+			DispatcherInterface dis = DispatcherFactory.getInstance(configurationPath,null, new com.dexels.navajo.server.FileInputStreamReader());
 			Navajo navajoOut = dis.handle(navajoIn);
 
 			// Check for errors.
@@ -113,7 +115,7 @@ public class TmlSoapServlet extends HttpServlet {
 			javax.xml.parsers.DocumentBuilderFactory builderFactory  = DocumentBuilderFactory.newInstance();
 			javax.xml.parsers.DocumentBuilder builder = builderFactory.newDocumentBuilder();
 			Document between = builder.parse(new java.io.StringBufferInputStream(navajoOut.toString()));
-			Document docOut = XMLDocumentUtils.transformToDocument(between, new File(Dispatcher.getInstance().getNavajoConfig().getRootPath() + "/soap/tml2xml.xsl"));
+			Document docOut = XMLDocumentUtils.transformToDocument(between, new File(DispatcherFactory.getInstance().getNavajoConfig().getRootPath() + "/soap/tml2xml.xsl"));
 
 			// Get output stream.
 			response.setContentType("text/xml; charset=UTF-8");

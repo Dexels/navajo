@@ -27,6 +27,8 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLutils;
 import com.dexels.navajo.server.Dispatcher;
+import com.dexels.navajo.server.DispatcherFactory;
+import com.dexels.navajo.server.DispatcherInterface;
 import com.dexels.navajo.util.Generate;
 
 public class WsdlProducer extends HttpServlet {
@@ -209,7 +211,7 @@ public class WsdlProducer extends HttpServlet {
 		System.err.println("in WsdlProducer doPost()");
 		try {
 
-			Dispatcher dis = Dispatcher.getInstance(configurationPath,null, 
+			DispatcherInterface dis = DispatcherFactory.getInstance(configurationPath,null, 
 					new com.dexels.navajo.server.FileInputStreamReader());
 
 			InputStream is = dis.getNavajoConfig().getScript(webservice);

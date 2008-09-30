@@ -65,7 +65,7 @@ public final class TmlHttpLaszloServlet extends TmlHttpServlet {
 		boolean useSendCompression = ((sendEncoding != null) && (sendEncoding.indexOf("zip") != -1));
 		boolean useRecvCompression = ((recvEncoding != null) && (recvEncoding.indexOf("zip") != -1));
 
-		Dispatcher dis = null;
+		DispatcherInterface dis = null;
 		BufferedInputStream is = null;
 		try {
 
@@ -94,7 +94,7 @@ public final class TmlHttpLaszloServlet extends TmlHttpServlet {
 
 			String serviceName = header.getRPCName();
 			// Create dispatcher object.
-			dis = Dispatcher.getInstance(configurationPath,null, new com.dexels.navajo.server.FileInputStreamReader());
+			dis = DispatcherFactory.getInstance(configurationPath,null, new com.dexels.navajo.server.FileInputStreamReader());
 
 			// Check for certificate.
 			Object certObject = request.getAttribute("javax.servlet.request.X509Certificate");

@@ -210,7 +210,7 @@ public class JSONHttpServlet extends TmlHttpServlet {
     // PrintWriter out = response.getWriter();
  
     Navajo tbMessage = null;
-    Dispatcher dis = null;
+    DispatcherInterface dis = null;
 
     try {
       dis = initDispatcher();
@@ -321,7 +321,7 @@ public class JSONHttpServlet extends TmlHttpServlet {
 	  String sendEncoding = request.getHeader("Accept-Encoding");
 	  String recvEncoding = request.getHeader("Content-Encoding");
 
-	  Dispatcher dis = null;
+	  DispatcherInterface dis = null;
 	  BufferedReader r = null;
 	  BufferedWriter out = null;
 	  try {

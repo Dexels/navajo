@@ -65,13 +65,13 @@ public class TmlHttpServlet extends HttpServlet {
  private static long logfileIndex = 0;
  private static long bytesWritten = 0;
  
- protected final Dispatcher initDispatcher() throws NavajoException {
+ protected final DispatcherInterface initDispatcher() throws NavajoException {
 
 	 if (configurationPath!=null) {
 		 // Old SKOOL. Path provided, notify the dispatcher by passing a null DEFAULT_SERVER_XML
-		 return Dispatcher.getInstance(configurationPath, null, new com.dexels.navajo.server.FileInputStreamReader());
+		 return DispatcherFactory.getInstance(configurationPath, null, new com.dexels.navajo.server.FileInputStreamReader());
 	 } else {
-		 return Dispatcher.getInstance(rootPath, DEFAULT_SERVER_XML, new com.dexels.navajo.server.FileInputStreamReader());
+		 return DispatcherFactory.getInstance(rootPath, DEFAULT_SERVER_XML, new com.dexels.navajo.server.FileInputStreamReader());
 	 }
 
  }
@@ -116,7 +116,7 @@ public class TmlHttpServlet extends HttpServlet {
 
     // Startup Navajo instance.
     try {
-    	Dispatcher d = initDispatcher();
+    	DispatcherInterface d = initDispatcher();
     	Navajo n = NavajoFactory.getInstance().createNavajo();
     	if ( bootstrapService == null ) {
     		Header h = NavajoFactory.getInstance().createHeader(n, MaintainanceRequest.METHOD_NAVAJO_PING, "", "", -1);
@@ -315,7 +315,7 @@ public class TmlHttpServlet extends HttpServlet {
     // PrintWriter out = response.getWriter();
  
     Navajo tbMessage = null;
-    Dispatcher dis = null;
+    DispatcherInterface dis = null;
 
     try {
 	   dis = initDispatcher();
@@ -436,7 +436,7 @@ public class TmlHttpServlet extends HttpServlet {
 	  String sendEncoding = request.getHeader("Accept-Encoding");
 	  String recvEncoding = request.getHeader("Content-Encoding");
 
-	  Dispatcher dis = null;
+	  DispatcherInterface dis = null;
 	  BufferedReader r = null;
 	  BufferedWriter out = null;
 	  try {

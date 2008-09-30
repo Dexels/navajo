@@ -24,6 +24,7 @@ import com.dexels.navajo.document.Property;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLDocumentUtils;
 import com.dexels.navajo.document.jaxpimpl.xml.XMLutils;
 import com.dexels.navajo.server.Dispatcher;
+import com.dexels.navajo.server.DispatcherInterface;
 import com.dexels.navajo.server.listener.http.TmlHttpServlet;
 import com.dexels.navajo.util.Generate;
 
@@ -213,7 +214,7 @@ public class WsdlProducerDotNet extends TmlHttpServlet {
 		System.err.println("webservice = " + webservice);
 		System.err.println("in WsdlProducer doPost()");
 		try {
-			Dispatcher dis =  initDispatcher(); // Dispatcher.getInstance(configurationPath, null, new com.dexels.navajo.server.FileInputStreamReader(), request.getServerName() + request.getRequestURI());
+			DispatcherInterface dis =  initDispatcher(); // Dispatcher.getInstance(configurationPath, null, new com.dexels.navajo.server.FileInputStreamReader(), request.getServerName() + request.getRequestURI());
 			InputStream is = dis.getNavajoConfig().getScript(webservice);
 			Generate gen = new Generate();
 			// Get input message.
