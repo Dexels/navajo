@@ -3,6 +3,10 @@ package com.dexels.navajo.events;
 import java.util.logging.Level;
 
 import com.dexels.navajo.events.types.AuditLogEvent;
+import com.dexels.navajo.server.Dispatcher;
+import com.dexels.navajo.server.DispatcherFactory;
+import com.dexels.navajo.server.test.TestDispatcher;
+import com.dexels.navajo.server.test.TestNavajoConfig;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
@@ -17,6 +21,7 @@ public class NavajoEventRegistryTest extends TestCase {
 	static String message;
 	
 	protected void setUp() throws Exception {
+		DispatcherFactory df = new DispatcherFactory(new TestDispatcher(new TestNavajoConfig()));
 		super.setUp();
 		NavajoEventRegistry.clearInstance();
 		message = null;
@@ -144,6 +149,7 @@ public class NavajoEventRegistryTest extends TestCase {
 				}
 			} } 
 		);
+		message = null;
 		instance.publishAsynchronousEvent(new AuditLogEvent("","",Level.INFO));
 		// Should still be null....
 		Assert.assertNull(message);
