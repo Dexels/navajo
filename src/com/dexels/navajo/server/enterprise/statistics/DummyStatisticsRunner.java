@@ -43,4 +43,14 @@ public class DummyStatisticsRunner implements StatisticsRunnerInterface, NavajoL
 		
 	}
 
+	public int getAuditLevel() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public void setAuditLevel(int l) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

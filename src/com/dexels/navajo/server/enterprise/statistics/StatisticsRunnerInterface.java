@@ -9,4 +9,7 @@ public interface StatisticsRunnerInterface extends NavajoListener {
 	public void setEnabled(boolean b);
 	public boolean isEnabled();
 	public void addAccess(final Access a, final Throwable e, AsyncMappable am);
+	public int getAuditLevel();
+	public void setAuditLevel(int l);
+	
 }

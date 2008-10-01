@@ -33,6 +33,7 @@ import com.dexels.navajo.document.*;
  */
 
 import java.util.*;
+import java.util.logging.Level;
 
 import com.dexels.navajo.server.enterprise.descriptionprovider.DescriptionProviderInterface;
 import com.dexels.navajo.server.enterprise.integrity.WorkerFactory;
@@ -71,6 +72,7 @@ public final class NavajoConfig implements NavajoConfigInterface {
 	
 	private String repositoryClass = "com.dexels.navajo.server.SimpleRepository";
 	private String dbPath;
+	private String auditLevel;
 	private HashMap dbProperties = new HashMap();
 	public String store;
 	
@@ -225,6 +227,7 @@ public final class NavajoConfig implements NavajoConfigInterface {
     			System.err.println("WARNING: Using DEPRECATED navajostore configuration, use message based configuration instead.");
     		}
     		
+    		
     		persistenceManager = PersistenceManagerFactory.getInstance("com.dexels.navajo.persistence.impl.PersistenceManagerImpl", configPath);
     		
     		if(adapterClassloader == null) {
@@ -292,6 +295,8 @@ public final class NavajoConfig implements NavajoConfigInterface {
     				dbPort = Integer.parseInt(p);
     				System.err.println("SETTING DBPORT TO " + dbPort);
     			}
+    			auditLevel = ( navajostore.getProperty("auditlevel") != null ? navajostore.getProperty("auditlevel").getValue() : Level.WARNING.getName() );
+    			dbProperties.put("auditlevel", auditLevel);
     		}
     		
     		if (dbPort != -1) {

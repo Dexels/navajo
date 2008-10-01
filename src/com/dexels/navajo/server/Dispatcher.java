@@ -1048,7 +1048,7 @@ private final Navajo processNavajo(Navajo inMessage, Object userCertificate, Cli
     }
     catch (AuthorizationException aee) {
     	outMessage = generateAuthorizationErrorMessage(access, aee, rpcName);
-    	AuditLog.log(AuditLog.AUDIT_MESSAGE_AUTHORISATION, "(service=" + rpcName + ", user=" + rpcUser + ", message=" + aee.getMessage(), Level.WARNING);
+    	AuditLog.log(AuditLog.AUDIT_MESSAGE_AUTHORISATION, "(service=" + rpcName + ", user=" + rpcUser + ", message=" + aee.getMessage() + ")", Level.WARNING);
     	return outMessage;
     }
     catch (UserException ue) {

@@ -63,6 +63,7 @@ public final class StatisticsRunner extends GenericThread implements StatisticsR
   @SuppressWarnings("unchecked")
   private Map todo = new HashMap();
   private Set auditlogs = new HashSet();
+  private int minAuditLevel = Level.WARNING.intValue();
   private static String id = "Navajo StatisticsRunner";
   
   private static Object semaphore = new Object();
@@ -111,7 +112,13 @@ public final class StatisticsRunner extends GenericThread implements StatisticsR
 			  instance.myStore.setDatabaseParameters((parameters == null ? new HashMap() : parameters));
 			  instance.myStore.setDatabaseUrl(storePath);
 			  instance.storeClass = storeClass;
-
+			  // Determine initial audit level.
+			  String level = (String) parameters.get("auditlevel");
+			  if ( level == null || level.equals("") ) {
+				  level = Level.WARNING.getName();
+			  }
+			  instance.minAuditLevel =  Level.parse(level).intValue();
+			  
 			  instance.setSleepTime(100);
 			  instance.startThread(instance);
 			  
@@ -218,6 +225,16 @@ public final class StatisticsRunner extends GenericThread implements StatisticsR
 	  return VERSION;
   }
   
+  /**
+   * Returns the minimum audit level that we want to log.
+   * Default is WARNING.
+   * 
+   * @return
+   */
+  public int getAuditLevel() {
+	  return minAuditLevel;
+  }
+  
   public void terminate() {
 	  todo.clear();
 	  instance.enabled = false;
@@ -287,11 +304,16 @@ public final class StatisticsRunner extends GenericThread implements StatisticsR
 			  addAccess(nre.getAccess(), nre.getException(), null);
 		  }
 	  } else if ( ne instanceof AuditLogEvent ) {
-		  if (  isEnabled() ) {
+		  if (  isEnabled() && ((AuditLogEvent) ne).getLevel().intValue() >= getAuditLevel() ) {
 			  addAuditLog( (AuditLogEvent) ne);
 		  }
 	  } else if ( ne instanceof NavajoRequestEvent ) {
 		  NavajoRequestEvent nre = (NavajoRequestEvent) ne;
 	  }
   }
+
+  public void setAuditLevel(int l) {
+	  minAuditLevel = l;
+  }
+  
 }
