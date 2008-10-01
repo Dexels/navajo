@@ -111,10 +111,7 @@ public class NavajoClassLoader extends MultiClassLoader {
     }
     
     public synchronized void clearCache(String className) {
-//      Class c = (Class) classes.get(className);
-//      if (c != null) {
-//        classes.remove(className);
-//      }
+
     }
     
     
@@ -194,7 +191,6 @@ public class NavajoClassLoader extends MultiClassLoader {
      */
     @SuppressWarnings("unchecked")
 	public Class getClass(String className) throws ClassNotFoundException {
-    	//System.err.println("in getClass("+className+")");
     	try {
     		return Class.forName(className, false, this);
     	} catch (ClassNotFoundException cnfe) {
@@ -210,7 +206,6 @@ public class NavajoClassLoader extends MultiClassLoader {
     		 if ( getParent() instanceof NavajoClassLoader ) {
     			 return  ( (NavajoClassLoader) getParent() ).getJarFiles(path, beta);
     		 } else {
-    			 //System.err.println("Cound not find Jars ");
     			 return null;
     		 }
     	 }
@@ -225,7 +220,6 @@ public class NavajoClassLoader extends MultiClassLoader {
 
     private final void initializeJarResources() {
 
-    	//System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> IN initializeJarResources()!!!!!!!!!!!!!!!!!!!!: " + adapterPath);
     	if ( adapterPath == null || !new File(adapterPath).exists() ) {
     		return;
     	}
@@ -275,7 +269,6 @@ public class NavajoClassLoader extends MultiClassLoader {
 
     public InputStream getResourceAsStream(String name) {
 
-      //System.err.println("in NavajoClassLoader (v2). getResourceAsStream(" + name + ")");
       if ( jarResources == null || betaJarResources == null ) {
     	initializeJarResources();
       }
@@ -287,15 +280,12 @@ public class NavajoClassLoader extends MultiClassLoader {
       // If beta classloader first try betaJarResources.
       if ( beta ) {
     	  Iterator<JarResources> allResources = betaJarResources.iterator();
-          /// for (int i = 0; i < files.length; i++) {
-          //System.err.println("NavajoClassLoader: Locating " + name + " in beta jar file");
           while (allResources.hasNext()) {
 
         	  JarResources d = allResources.next();
 
         	  try {
 
-        		  //JarResources d = new JarResources(files[i]);
         		  byte [] resource = d.getResource(name);
         		  if (resource != null) {
         			  return new java.io.ByteArrayInputStream(resource);
@@ -305,20 +295,16 @@ public class NavajoClassLoader extends MultiClassLoader {
         	  }
           }
 
-          //System.err.println("Did not find resource, trying parent classloader....: " + this.getClass().getClassLoader() );
           return this.getClass().getClassLoader().getResourceAsStream(name);
       }
       
       Iterator<JarResources> allResources = jarResources.iterator();
-      /// for (int i = 0; i < files.length; i++) {
-      //System.err.println("NavajoClassLoader: Locating " + name + " in normal jar file");
       while (allResources.hasNext()) {
 
     	  JarResources d = allResources.next();
 
     	  try {
 
-    		  //JarResources d = new JarResources(files[i]);
     		  byte [] resource = d.getResource(name);
     		  if (resource != null) {
     			  return new java.io.ByteArrayInputStream(resource);
@@ -328,7 +314,6 @@ public class NavajoClassLoader extends MultiClassLoader {
     	  }
       }
 
-      //System.err.println("Did not find resource, trying parent classloader....: " + this.getClass().getClassLoader() );
       return this.getClass().getClassLoader().getResourceAsStream(name);
     }
 
@@ -339,18 +324,11 @@ public class NavajoClassLoader extends MultiClassLoader {
      */
     protected byte[] loadClassBytes(String className) {
 
-        //System.err.print("NavajoClassLoader " + ( this.hashCode() ) + ": in loadClassBytes(), className = " + className);
-        
         // Support the MultiClassLoader's class name munging facility.
         className = formatClassName(className);
         byte[] resource = null;
-
-        //initializeJarResources();
-       
-        //HashSet jarResources = NavajoConfig.getInstance().getJarResources();
         
         if (jarResources == null) {
-        	//System.err.println("... jarResources is null, not found!");
         	return null;
         }
 
@@ -358,23 +336,20 @@ public class NavajoClassLoader extends MultiClassLoader {
         if ( beta && betaJarResources != null ) {
 
         	   Iterator<JarResources> allResources = betaJarResources.iterator();
-               /// for (int i = 0; i < files.length; i++) {
                
-               //System.err.println("Message: NavajoClassLoader: Locating " + className + " in beta jar file");
-               while (allResources.hasNext()) {
+        	   while (allResources.hasNext()) {
 
                   JarResources d = allResources.next();
 
                     try {
                         
-                        //JarResources d = new JarResources(files[i]);
                         resource = d.getResource(className);
 
                         if (resource != null) {
                            return resource;
                         }
                     } catch (Exception e) {
-                        //System.err.println("ERROR: " + e.getMessage());
+                      
                     }
                 }
                
@@ -384,70 +359,34 @@ public class NavajoClassLoader extends MultiClassLoader {
         if (resource == null) {
 
            Iterator<JarResources> allResources = jarResources.iterator();
-           /// for (int i = 0; i < files.length; i++) {
-           
-           //System.err.println("Message: NavajoClassLoader: Locating " + className + " in normal jar file");
+         
            while (allResources.hasNext()) {
 
               JarResources d = allResources.next();
 
                 try {
-                    
-                    //JarResources d = new JarResources(files[i]);
+                   
                     resource = d.getResource(className);
 
                     if (resource != null) {
                         break;
                     }
                 } catch (Exception e) {
-                    //System.err.println("ERROR: " + e.getMessage());
+                  
                 }
             }
         }
-
-        //System.err.println("NavajoClassLoader: resource = " + resource);
-
-     
+    
         return resource;
 
     }
 
     protected void finalize() {
-        //System.out.println("In NavajoClassLoader finalize(): Killing class loader");
-    	instances--;
+        instances--;
     }
 
     public static int getIntances() {
     	return instances;
     }
     
-    public static void main(String [] args) throws Exception {
-    	
-//    	int total = 2;
-//    	if ( args.length > 0 ) {
-//    		 total = Integer.parseInt(args[0]);
-//    	}
-//    	
-//    	NavajoConfig nc = new NavajoConfig(null, null);
-//    	
-//    	NavajoClassLoader [] ncl = new NavajoClassLoader[total];
-//    	NavajoClassLoader parent = new NavajoClassLoader("/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/adapters", "/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/classes", nc.getClass().getClassLoader());
-//    	
-//    	
-//    	for (int i = 0; i < total; i++) {
-//    		
-//    		
-//    		ncl[i] = new NavajoClassLoader(null, "/home/arjen/projecten/sportlink-serv/navajo-tester/auxilary/classes", parent);
-//    		System.err.println("ncl["+i+"] = " + ncl[i].hashCode());
-//    		Class c3 = Class.forName("com.dexels.navajo.functions.ParseDouble", true, ncl[i]);
-//    		
-//    		Class c = ncl[i].getCompiledNavaScript("club.InitUpdateClub");
-//    		Class c2 = Class.forName("java.lang.String", true, ncl[i]);
-//    		System.err.println(i + ": club.InitUpdateClub = " + c.hashCode() + ", java.lang.String = " + c2.hashCode() + ", ParseDouble = " + c3.hashCode());
-//    		Class c5 = ncl[i].getCompiledNavaScript("club.InitUpdateClub");
-//    		Class c6 = Class.forName("com.dexels.navajo.functions.ParseDouble", true, ncl[i]);
-//    	}
-//    	
-    	
-    }
 }
