@@ -84,7 +84,9 @@ public final class AuditLog implements Mappable {
 	}
 
 	public Level getLevel() {
-		if ( level.equals(Level.INFO.getLocalizedName() )) {
+		if ( level == null) {
+			return Level.INFO;
+		} else if ( level.equals(Level.INFO.getLocalizedName() )) {
 			return Level.INFO;
 		} else if ( level.equals(Level.SEVERE.getLocalizedName() )) {
 			return Level.SEVERE;
