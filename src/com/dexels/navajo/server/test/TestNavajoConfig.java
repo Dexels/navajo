@@ -54,7 +54,10 @@ public class TestNavajoConfig implements NavajoConfigInterface {
 	}
 
 	public PersistenceManager getPersistenceManager() {
-		return (PersistenceManagerImpl) PersistenceManagerFactory.getInstance("com.dexels.navajo.persistence.impl.PersistenceManagerImpl", "");
+		if ( myPersistenceManager == null ) {
+			myPersistenceManager = PersistenceManagerFactory.getInstance("com.dexels.navajo.persistence.impl.PersistenceManagerImpl", "");
+		}
+		return myPersistenceManager;
 	}
 
 	public Navajo readConfig(String s) throws IOException {
