@@ -29,11 +29,6 @@ package com.dexels.navajo.loader;
  */
 
 import org.dexels.utils.*;
-
-import com.dexels.navajo.server.DispatcherFactory;
-import com.dexels.navajo.server.NavajoConfig;
-import com.dexels.navajo.util.AuditLog;
-
 import java.io.*;
 import java.util.*;
 
@@ -98,8 +93,9 @@ public class NavajoClassLoader extends MultiClassLoader {
     }
 
     public NavajoClassLoader(String adapterPath, String compiledScriptPath, ClassLoader parent) {
+    	
     	super(parent);
-        this.adapterPath = adapterPath;
+    	this.adapterPath = adapterPath;
         this.beta = false;
         this.compiledScriptPath = compiledScriptPath;
         instances++;
@@ -229,22 +225,15 @@ public class NavajoClassLoader extends MultiClassLoader {
 
     private final void initializeJarResources() {
 
+    	//System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> IN initializeJarResources()!!!!!!!!!!!!!!!!!!!!: " + adapterPath);
     	if ( adapterPath == null || !new File(adapterPath).exists() ) {
     		return;
     	}
     	
     	synchronized (mutex2) {
-
-    		// Do nothing if there is no dispatcher available.
-    		if ( DispatcherFactory.getInstance() == null ) {
-    			return;
-    		}
-    		
     	
     		if (jarResources == null) {
 
-    			AuditLog.log(AuditLog.AUDIT_MESSAGE_DISPATCHER, "Initializing adapter resources");
-    			
     			File[] files = getJarFiles(adapterPath, false);
     			if (files == null) {
     				jarResources = null;
@@ -357,12 +346,7 @@ public class NavajoClassLoader extends MultiClassLoader {
         byte[] resource = null;
 
         //initializeJarResources();
-
-        if ( DispatcherFactory.getInstance().getNavajoConfig() == null ) {
-        	//System.err.println("... NavajoConfig.getInstance() is null, not found!");
-        	return null;
-        }
-        
+       
         //HashSet jarResources = NavajoConfig.getInstance().getJarResources();
         
         if (jarResources == null) {
