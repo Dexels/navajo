@@ -10,6 +10,7 @@ import com.dexels.navajo.persistence.PersistenceManagerFactory;
 import com.dexels.navajo.server.CacheController;
 import com.dexels.navajo.server.CacheControllerTest;
 import com.dexels.navajo.server.DispatcherFactory;
+import com.dexels.navajo.server.NavajoConfig;
 import com.dexels.navajo.server.test.TestDispatcher;
 import com.dexels.navajo.server.test.TestNavajoConfig;
 
@@ -57,13 +58,20 @@ public class PersistenceManagerImplTest extends CacheControllerTest {
 	protected void setUp() throws Exception {
 		
 		super.setUp();
+		CacheController.getInstance().kill();
+		PersistenceManagerFactory.clearInstance();
+		PersistenceManagerImpl pm =  (PersistenceManagerImpl) PersistenceManagerFactory.getInstance("com.dexels.navajo.persistence.impl.PersistenceManagerImpl", "");
+		pm.init();
+		pm.clearCache();
+		TestNavajoConfig tnc = new TestNavajoConfig();
+		tnc.setMyPersistenceManager(pm);
 		DispatcherFactory df = new DispatcherFactory(new TestDispatcher(new TestNavajoConfig()));
 		df.getInstance().setUseAuthorisation(false);
 	}
 
 	protected void tearDown() throws Exception {
 		super.tearDown();
-		PersistenceManagerImpl pm =  (PersistenceManagerImpl) PersistenceManagerFactory.getInstance("com.dexels.navajo.persistence.impl.PersistenceManagerImpl", "");
+		PersistenceManagerImpl pm =   (PersistenceManagerImpl) DispatcherFactory.getInstance().getNavajoConfig().getPersistenceManager();
 		pm.clearCache();
 		CacheController.getInstance().kill();
 	}
@@ -82,7 +90,7 @@ public class PersistenceManagerImplTest extends CacheControllerTest {
 		TestConstructor1 tc1 = new TestConstructor1(tp);
 		TestConstructor2 tc2 = new TestConstructor2(tp);
 		
-		PersistenceManager pm =  PersistenceManagerFactory.getInstance("com.dexels.navajo.persistence.impl.PersistenceManagerImpl", "");
+		PersistenceManager pm =   (PersistenceManagerImpl) DispatcherFactory.getInstance().getNavajoConfig().getPersistenceManager();
 		
 		Navajo tp2 = (Navajo) pm.get(tc1,  "TestKey" , "MyTestWebservice", 434343,  true);
 		Navajo tp3 = (Navajo) pm.get(tc2,  "TestKey" , "MyTestWebservice", 434343,  true);
@@ -110,8 +118,7 @@ public class PersistenceManagerImplTest extends CacheControllerTest {
 
 	public void testWrite() throws Exception {
 		int MAXTHREADS = 1000;
-		final PersistenceManagerImpl pm =  (PersistenceManagerImpl) PersistenceManagerFactory.getInstance("com.dexels.navajo.persistence.impl.PersistenceManagerImpl", "");
-		pm.init();
+		final PersistenceManagerImpl pm =  (PersistenceManagerImpl) DispatcherFactory.getInstance().getNavajoConfig().getPersistenceManager();
 		Thread [] threads = new Thread[MAXTHREADS];
 		final Navajo [] navajos = new Navajo[MAXTHREADS];
 		for ( int i = 0; i < MAXTHREADS; i++ ) {
@@ -147,8 +154,7 @@ public class PersistenceManagerImplTest extends CacheControllerTest {
 	
 	public void testWriteMultipleKeys() throws Exception {
 		int MAXTHREADS = 1000;
-		final PersistenceManagerImpl pm =  (PersistenceManagerImpl) PersistenceManagerFactory.getInstance("com.dexels.navajo.persistence.impl.PersistenceManagerImpl", "");
-		pm.init();
+		final PersistenceManagerImpl pm =   (PersistenceManagerImpl) DispatcherFactory.getInstance().getNavajoConfig().getPersistenceManager();
 		Thread [] threads = new Thread[MAXTHREADS];
 		final Navajo [] navajos = new Navajo[MAXTHREADS];
 		for ( int i = 0; i < MAXTHREADS; i++ ) {
@@ -190,7 +196,7 @@ public class PersistenceManagerImplTest extends CacheControllerTest {
 //	}
 //
 	public void testGetSetKey() {
-		final PersistenceManagerImpl pm =  (PersistenceManagerImpl) PersistenceManagerFactory.getInstance("com.dexels.navajo.persistence.impl.PersistenceManagerImpl", "");
+		final PersistenceManagerImpl pm =  (PersistenceManagerImpl) DispatcherFactory.getInstance().getNavajoConfig().getPersistenceManager();
 		pm.setKey("aap");
 		Assert.assertEquals("aap", pm.getKey());
 		boolean exception = false;
@@ -204,9 +210,9 @@ public class PersistenceManagerImplTest extends CacheControllerTest {
 	}
 
 	public void testIsCached() throws Exception {
-		final PersistenceManagerImpl pm =  (PersistenceManagerImpl) PersistenceManagerFactory.getInstance("com.dexels.navajo.persistence.impl.PersistenceManagerImpl", "");
-		pm.init();
 		
+		final PersistenceManagerImpl pm = (PersistenceManagerImpl) DispatcherFactory.getInstance().getNavajoConfig().getPersistenceManager();
+	
 		TestConstructor1 tc1 = new TestConstructor1(createTestNavajo());
 		Navajo tp2 = (Navajo) pm.get(tc1,  "TestKietje" , "MyTestWebservice", 434343,  true);
 		
@@ -217,8 +223,7 @@ public class PersistenceManagerImplTest extends CacheControllerTest {
 	}
 
 	public void testSetDoClear() throws Exception {
-		final PersistenceManagerImpl pm =  (PersistenceManagerImpl) PersistenceManagerFactory.getInstance("com.dexels.navajo.persistence.impl.PersistenceManagerImpl", "");
-		pm.init();
+		final PersistenceManagerImpl pm =  (PersistenceManagerImpl) DispatcherFactory.getInstance().getNavajoConfig().getPersistenceManager();
 		
 		TestConstructor1 tc1 = new TestConstructor1(createTestNavajo());
 		Navajo tp2 = (Navajo) pm.get(tc1,  "TestKietje" , "MyTestWebservice", 434343,  true);

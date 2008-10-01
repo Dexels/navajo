@@ -135,13 +135,14 @@ public class NavajoEventRegistryTest extends TestCase {
 		NavajoEventRegistry instance = NavajoEventRegistry.getInstance();
 		instance.addListener(AuditLogEvent.class, new NavajoListener() {
 			public void onNavajoEvent(NavajoEvent ne) {
-				message = "Received AuditLogEvent!";
+				
 				try {
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				message = "Received AuditLogEvent!";
 				System.err.println(message);
 				synchronized (semaphore) {
 					semaphore.notify();
