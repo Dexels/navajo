@@ -15,6 +15,10 @@ public class PersistenceManagerFactory {
 	static volatile PersistenceManager instance;
 	final static Object object = new Object();
 	
+	public static void clearInstance() {
+		instance = null;
+	}
+	
 	public static PersistenceManager getInstance() {
 		if ( instance != null ) {
 			return instance;
