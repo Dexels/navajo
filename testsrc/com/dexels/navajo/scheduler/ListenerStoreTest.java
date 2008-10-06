@@ -41,6 +41,7 @@ public class ListenerStoreTest extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
+		ListenerStore.getInstance().terminate();
 		DispatcherFactory df = new DispatcherFactory(new TestDispatcher(new TestNavajoConfig()));
 		df.getInstance().setUseAuthorisation(false);
 	}
@@ -48,6 +49,7 @@ public class ListenerStoreTest extends TestCase {
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		ListenerStore.getInstance().terminate();
+		ListenerStore.getInstance();
 	}
 
 	public void testGetInstance() throws Exception {
