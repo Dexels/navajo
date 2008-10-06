@@ -27,6 +27,9 @@ package navajo;
 /**
  * VERSION HISTORY
  * 
+ * 7.0.1 Statistics Runner is now more GC friendly: Persists access object and restore objecstream instead of
+         putting Access object in Map.
+
  * 7.0.0 Lot's of refactoring.
  * 	     Changed interface of Mappable, now load(Access) instead of redundant load(Parameter, Navajo, Access, NavajoConfig)
  *       NavajoConfigInterface/TestNavajoConfig and DispatcherInterface/TestDispatcher/DispatcherFactory created for better testability.
@@ -139,7 +142,7 @@ public class Version extends dexels.Version {
 	public Version() {
 		addIncludes(includes);
 		setReleaseDate(RELEASEDATE);
-		setSpecialVersion("(The Terminator Edition)");
+		setSpecialVersion("The Terminator Edition");
 	}
 	
 	public int getMajor() {
