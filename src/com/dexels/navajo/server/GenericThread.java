@@ -30,16 +30,18 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.Level;
 
-import javax.management.AttributeChangeNotification;
-import javax.management.MBeanNotificationInfo;
-import javax.management.Notification;
-
 import com.dexels.navajo.events.NavajoEventRegistry;
 import com.dexels.navajo.events.types.NavajoHealthCheckEvent;
 import com.dexels.navajo.mapping.Mappable;
 import com.dexels.navajo.mapping.MappableException;
-import com.dexels.navajo.server.jmx.NavajoNotification;
 
+/**
+ * NOTE: This is NOT an abstract class since it can be used by a web service as an adapter to introspect the running
+ * threads.
+ * 
+ * @author arjen
+ *
+ */
 public class GenericThread implements Runnable, Mappable {
 
 	public String myId;
@@ -91,6 +93,10 @@ public class GenericThread implements Runnable, Mappable {
 		}
 	}
 	
+	/**
+	 * Replace this with something more intelligent in your actual thread.
+	 * 
+	 */
 	public void inactive() {
 		// Sleep for a while.
 		try {
@@ -131,15 +137,21 @@ public class GenericThread implements Runnable, Mappable {
 	}
 	
 	/**
-	 * Implements work.
+	 * Implements the "work".
 	 */
-	public  void worker() {};
+	public void worker() {};
 	 
 	/**
 	 * Implements what to do in case of termination.
+	 * Override this method if you want to do something special.
+	 * 
 	 */
-	public  void terminate() {};
+	public void terminate() {};
 	 
+	/**
+	 * Called if killed by some life cycle manager.
+	 * 
+	 */
 	public void kill() {
 		killed = true;
 		if ( thread != null ) {
@@ -148,6 +160,10 @@ public class GenericThread implements Runnable, Mappable {
 		terminate();
 	}
 	
+	/**
+	 * Kills ALL GenericThreads.
+	 * 
+	 */
 	public static void killAllThreads() {
 
 		HashMap<String, GenericThread> copyOfThreadPool = new HashMap<String, GenericThread>(threadPool); 
