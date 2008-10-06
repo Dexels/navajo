@@ -145,6 +145,9 @@ public final class Dispatcher implements Mappable, DispatcherMXBean, DispatcherI
    
   private final void startUpServices() {
 
+	  // Clear temp space.
+	  clearTempSpace();
+	  
 	  // Bootstrap event registry.
 	  NavajoEventRegistry.getInstance();
 	  
@@ -1230,6 +1233,22 @@ private final Navajo processNavajo(Navajo inMessage, Object userCertificate, Cli
 	  File tempDir = new File(System.getProperty("java.io.tmpdir") + "/" + getApplicationId());
 	  tempDir.mkdirs();
 	  return tempDir;
+  }
+  
+  private void deleteFiles(File f) {
+	  if ( f.isDirectory() ) {
+		  File [] dirs = f.listFiles();
+	  } else {
+		  f.delete();
+	  }
+  }
+  
+  private void clearTempSpace() {
+	  File tempDir = new File(System.getProperty("java.io.tmpdir") + "/" + getApplicationId());
+	  File [] dirs = tempDir.listFiles();
+	  for (int i = 0; i < dirs.length; i++) {
+		  deleteFiles(dirs[i]);
+	  }
   }
   
   public File createTempFile(String prefix, String suffix) throws IOException {  
