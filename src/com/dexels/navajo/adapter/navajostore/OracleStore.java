@@ -257,8 +257,9 @@ public final class OracleStore implements StoreInterface {
 		TodoItem ti = (TodoItem) accessMap.get(accessId);
 		if ( ti != null ) {
 			
-			if ( ti.access != null ) {
-				ti.access.clientTime = clientTime;
+			Access access = ti.getAccessObject();
+			if ( access != null ) {
+				access.clientTime = clientTime;
 			} else {
 				System.err.println("EMPTY ACCESS FOUND IN TODO!");
 			}
@@ -347,7 +348,7 @@ public final class OracleStore implements StoreInterface {
 			
 			while ( iter.hasNext() ) { 
 				TodoItem ti = (TodoItem) iter.next();
-				Access a = ti.access;
+				Access a = ti.getAccessObject();
 				  //System.err.println("Checking piggyback: "+a.accessID);
 
 				if ( a.getPiggybackData() != null ) {
@@ -378,7 +379,7 @@ public final class OracleStore implements StoreInterface {
 					
 					while ( iter.hasNext() ) { 
 						TodoItem ti = (TodoItem) iter.next();
-						Access a = ti.access;
+						Access a = ti.getAccessObject();
 
 						if ( ti.asyncobject == null ) {
 							
