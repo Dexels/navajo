@@ -35,7 +35,10 @@ public class Abs extends FunctionInterface {
 		if (o == null) {
 			return null;
 		}
-		if (o instanceof Double) {
+		
+		if (o instanceof Float) {
+			return new Float(Math.abs(((Float) o).floatValue()));
+		} else if (o instanceof Double) {
 			return new Double(Math.abs(((Double) o).doubleValue()));
 		} else if (o instanceof Integer) {
 			return new Integer(Math.abs(((Integer) o).intValue()));
