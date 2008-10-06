@@ -3,12 +3,8 @@
  */
 package com.dexels.navajo.server;
 
-import static org.junit.Assert.*;
 import junit.framework.Assert;
 import junit.framework.TestCase;
-
-import org.junit.After;
-import org.junit.Before;
 
 import com.dexels.navajo.client.ClientException;
 import com.dexels.navajo.client.ClientInterface;

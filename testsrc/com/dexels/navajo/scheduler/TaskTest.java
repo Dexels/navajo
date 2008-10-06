@@ -3,10 +3,6 @@ package com.dexels.navajo.scheduler;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
 import com.dexels.navajo.document.Header;
 import com.dexels.navajo.document.Message;
 import com.dexels.navajo.document.Navajo;
@@ -31,7 +27,7 @@ public class TaskTest extends TestCase implements NavajoListener, TaskListener  
 	private String sourceService = "navajo_ping";
 	private String sourceTaskId;
 	
-	@Before
+	
 	public void setUp() throws Exception {
 		super.setUp();
 		DispatcherFactory df = new DispatcherFactory(new Dispatcher(new TestNavajoConfig()));
@@ -39,17 +35,17 @@ public class TaskTest extends TestCase implements NavajoListener, TaskListener  
 		receivedAfterTask = receivedBeforeTask = received = false;
 	}
 
-	@After
+	
 	public void tearDown() throws Exception {
 	}
 
-	@Test
+	
 	public void testTask() {
 		Task t = new Task();
 		Assert.assertNull(t.getTrigger());
 	}
 
-	@Test
+	
 	public void testTaskStringStringStringAccessStringNavajo() {
 		// Case I
 		boolean failure = false;
@@ -125,41 +121,41 @@ public class TaskTest extends TestCase implements NavajoListener, TaskListener  
 		Assert.assertFalse(failure);
 	}
 
-	@Test
+	
 	public void testGetTrigger() throws Exception {
 		Task t = new Task(null, null, null, null, "navajo:aap", null);
 		Assert.assertNotNull(t.getTrigger());
 		Assert.assertEquals(t.getTrigger().getClass(), AfterWebserviceTrigger.class);
 	}
 
-	@Test
+	
 	public void testSetTrigger() throws Exception {
 		Task t = new Task(null, null, null, null, "navajo:aap", null);
 		t.setTrigger("navajo:noot");
 		Assert.assertEquals(t.getTriggerDescription(), "navajo:noot");
 	}
 
-	@Test
+	
 	public void testGetId() throws Exception  {
 		Task t = new Task(null, null, null, null, "navajo:aap", null);
 		t.setId("12345");
 		Assert.assertEquals("12345", t.getId());
 	}
 
-	@Test
+	
 	public void testGetWebservice() throws Exception {
 		Task t = new Task("webservice", "username", "password", null, "navajo:aap", null);
 		Assert.assertEquals("webservice", t.getWebservice());
 	}
 
-	@Test
+	
 	public void testGetClientId() throws Exception  {
 		Task t = new Task("webservice", "username", "password", null, "navajo:aap", null);
 		t.setClientId("memyselfandi");
 		Assert.assertEquals("memyselfandi", t.getClientId());
 	}
 
-	@Test
+	
 	public void testSetRemove() throws Exception {
 		Task t = new Task("webservice", "username", "password", null, "navajo:aap", null);
 		t.getTrigger().activateTrigger();
@@ -168,7 +164,7 @@ public class TaskTest extends TestCase implements NavajoListener, TaskListener  
 		Assert.assertFalse(WebserviceListenerRegistry.getInstance().isRegisteredWebservice("aap"));
 	}
 	
-	@Test
+	
 	public void testSetNavajo() throws Exception {
 		Task t = new Task("webservice", "username", "password", null, "navajo:aap", null);
 		t.setKeepRequestResponse(false);
@@ -195,7 +191,7 @@ public class TaskTest extends TestCase implements NavajoListener, TaskListener  
 		Assert.assertNotSame(n.hashCode(), t.getNavajo().hashCode());
 	}
 
-	@Test
+	
 	public void testSetRequest() throws Exception {
 		Task t = new Task("webservice", "username", "password", null, "navajo:aap", null);
 		t.setKeepRequestResponse(false);
@@ -212,7 +208,7 @@ public class TaskTest extends TestCase implements NavajoListener, TaskListener  
 		Assert.assertNotSame(n.hashCode(), t.getNavajo().hashCode());
 	}
 
-	@Test
+	
 	public void testRunWithWebserviceWithEmptyRequest() throws Exception {
 		Task t = new Task("navajo_ping", "username", "password", null, "navajo:aap", null);
 		NavajoEventRegistry.getInstance().addListener(NavajoResponseEvent.class, this);
@@ -224,7 +220,7 @@ public class TaskTest extends TestCase implements NavajoListener, TaskListener  
 		Assert.assertNotNull(response.getMessage("ping"));
 	}
 	
-	@Test
+	
 	public void testRunWithWebserviceWithFullRequestNavajo() throws Exception {
 		Task t = new Task(null, null, null, null, "navajo:aap", null);
 		Navajo n = NavajoFactory.getInstance().createNavajo();
@@ -241,7 +237,7 @@ public class TaskTest extends TestCase implements NavajoListener, TaskListener  
 		Assert.assertNotNull(response.getMessage("ping"));
 	}
 	
-	@Test
+	
 	public void testRunWithWebserviceWithRequest() throws Exception {
 		Task t = new Task("navajo_hello", "username", "password", null, "navajo:aap", null);
 		Navajo n = NavajoFactory.getInstance().createNavajo();
@@ -265,7 +261,7 @@ public class TaskTest extends TestCase implements NavajoListener, TaskListener  
 		Assert.assertEquals("harry", response.getProperty("hello/world").getValue());
 	}
 	
-	@Test
+	
 	public void testRunWithoutWebservice() throws Exception {
 		Task t = new Task("navajo_ping", "username", "password", null, "navajo:aap", null);
 		String taskid = "mytask-1";
@@ -280,13 +276,13 @@ public class TaskTest extends TestCase implements NavajoListener, TaskListener  
 		Assert.assertTrue(receivedBeforeTask);
 	}
 
-	@Test
+	
 	public void testGetTriggerDescription() throws Exception {
 		Task t = new Task("navajo_ping", "username", "password", null, "navajo:aap", null);
 		Assert.assertEquals("navajo:aap", t.getTriggerDescription());
 	}
 
-	@Test
+	
 	public void testSetProxy() throws Exception {
 		Task t = new Task("navajo_test", "username", "password", null, "beforenavajo:navajo_ping", null);
 		String taskid = "mytask-1";
@@ -303,13 +299,13 @@ public class TaskTest extends TestCase implements NavajoListener, TaskListener  
 		Assert.assertNotNull(response.getMessage("test"));
 	}
 	
-	@Test
+	
 	public void testGetInstance() {
 		TaskInterface ti = new Task().getInstance();
 		Assert.assertNotNull(ti);
 	}
 
-	@Test
+	
 	public void testNeedsPersistence() throws Exception {
 		Task t = new Task("navajo_test", "username", "password", null, "beforenavajo:navajo_ping", null);
 		// Default behaviour:
@@ -321,7 +317,7 @@ public class TaskTest extends TestCase implements NavajoListener, TaskListener  
 		
 	}
 
-	@Test
+	
 	public void testSetPersisted() {
 		Task t = new Task();
 		t.setPersisted(true);
