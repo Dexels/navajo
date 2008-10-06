@@ -90,6 +90,31 @@ public abstract class Trigger implements Listener, Serializable {
 	public final static String IMMEDIATE_TRIGGER    = "immediate";
 	public final static String JABBER_TRIGGER       = "jabber";
 	
+	/**
+	 * IMPORTANT NOTES:
+	 * 
+	 * The following triggers may occur simultaneously at different tribal members, but should actually be interpreted as
+	 * a "single" trigger. For those trigger it is IMPORTANT that only the chief accepts them. Actually performing an
+	 * associated Task with those kinds of trigger may be propagated to SOME tribal member:
+	 * 
+	 * TYPE I: TIME_TRIGGER, OFFSETTIME_TRIGGER, JABBER_TRIGGER
+	 * 
+	 * The following triggers have different meanings when they occur simultaneously at different tribal members. Hence,
+	 * they SHOULD be interpreted as different triggers:
+	 * 
+	 * TYPE II: WS_TRIGGER, WS_BEFORE_TRIGGER, SERVER_EVENT_TRIGGER
+	 * 
+	 * The following triggers can ONLY occur at once at a single tribal member:
+	 * 
+	 * Type III: AFTER_TASK_TRIGGER, IMMEDIATE_TRIGGER
+	 * 
+	 * TODO: Create different Trigger Interfaces to denote this important difference. A single Trigger Registry should be
+	 * enough instead of registries and other methods per trigger.
+	 * 
+	 * WORKFLOW ASPECTS:
+	 * A trigger of Type II may have to be propagated to another tribal member if the handling member does not own an associated workflow.
+	 * 
+	 */
 	private Task myTask = null;
 
 	private String owner = null;
