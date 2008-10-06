@@ -1235,19 +1235,34 @@ private final Navajo processNavajo(Navajo inMessage, Object userCertificate, Cli
 	  return tempDir;
   }
   
+  /**
+   * Recursively delete files including directories.
+   * 
+   * @param f
+   */
   private void deleteFiles(File f) {
-	  if ( f.isDirectory() ) {
+	  if ( f != null && f.isDirectory() ) {
 		  File [] dirs = f.listFiles();
-	  } else {
+		  if ( dirs != null && dirs.length > 0 ) {
+			  for (int i = 0; i < dirs.length; i++) {
+				  deleteFiles(dirs[i]);
+			  }
+		  }
+		  f.delete();
+	  } else if ( f != null ) {
 		  f.delete();
 	  }
   }
   
   private void clearTempSpace() {
 	  File tempDir = new File(System.getProperty("java.io.tmpdir") + "/" + getApplicationId());
-	  File [] dirs = tempDir.listFiles();
-	  for (int i = 0; i < dirs.length; i++) {
-		  deleteFiles(dirs[i]);
+	  if ( tempDir != null ) {
+		  File [] dirs = tempDir.listFiles();
+		  if ( dirs != null && dirs.length > 0 ) {
+			  for (int i = 0; i < dirs.length; i++) {
+				  deleteFiles(dirs[i]);
+			  }
+		  }
 	  }
   }
   
