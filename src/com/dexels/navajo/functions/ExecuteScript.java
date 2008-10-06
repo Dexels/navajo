@@ -28,6 +28,7 @@ public class ExecuteScript extends FunctionInterface {
     GenericHandler gh = new GenericHandler();
     String script = (String) getOperand(0);
     Access access = new Access(1, 1, 1, "ANONYMOUS", script, "", "", "", false, null);
+    access.setInDoc(inMessage);
     inMessage.getHeader().setRequestId("");
     gh.setInput(this.inMessage, access, null, DispatcherFactory.getInstance().getNavajoConfig());
     Navajo result = null;
