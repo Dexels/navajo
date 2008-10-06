@@ -16,6 +16,7 @@ import com.dexels.navajo.server.jmx.JMXHelper;
 import com.dexels.navajo.server.jmx.NavajoNotification;
 import com.dexels.navajo.util.AuditLog;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -52,6 +53,12 @@ import javax.management.monitor.MonitorNotification;
  * ====================================================================
  */
 
+/**
+ * TODO:
+ * Statistic Runner is responsible for storing Access objects AND for cleaning up Access, e.g. helping the Garbage Collector
+ * a bit by e.g. nullifying unused objects.
+ * 
+ */
 public final class StatisticsRunner extends GenericThread implements StatisticsRunnerMXBean, StatisticsRunnerInterface, NotificationListener {
 
   public int todoCount;
@@ -145,7 +152,8 @@ public final class StatisticsRunner extends GenericThread implements StatisticsR
   }
     
   /**
-   * Main thread. Responsible for persisting queued access objects.
+   * Main thread. Responsible for persisting queued access objects AND cleaning up
+   * Access objects and explicitly activating GC.
    *
    */
   @SuppressWarnings("unchecked")
@@ -169,6 +177,9 @@ public final class StatisticsRunner extends GenericThread implements StatisticsR
 	  }
 	  myStore.storeAccess(copyOfTodo);
 	  myStore.storeAuditLogs(copyOfAuditLogs);
+	  copyOfTodo.clear();
+	  copyOfAuditLogs.clear();
+	
   }
 
   /**
@@ -178,8 +189,14 @@ public final class StatisticsRunner extends GenericThread implements StatisticsR
    */
   @SuppressWarnings("unchecked")
   public final void addAccess(final Access a, final Throwable e, AsyncMappable am) {
+	  
 	  synchronized ( semaphore ) {
+		  try {
 		  todo.put( a.accessID, new TodoItem(a, am) );
+		  } catch (IOException ioe) {
+			  //AuditLog.log("STATISTICS", "Could not wri)
+			  System.err.println("Could not write todoitem..." + ioe.getMessage());
+		  }
 	  }
 	  synchronized (this ) {
 		  if ( todo.size() > 10 ) {
