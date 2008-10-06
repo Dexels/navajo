@@ -26,7 +26,7 @@ public class ProxyMap implements Mappable {
 
   public void load(Access access) throws MappableException, UserException {
     this.access = access;
-    this.inMessage = inMessage;
+    this.inMessage = access.getInDoc();
   }
 
   public void setMethod(String u) {

@@ -28,7 +28,7 @@ public class NavajoAccess implements Mappable {
 
     public void load(Access access) throws MappableException, UserException {
         this.access = access;
-        this.config = config;
+        this.config = DispatcherFactory.getInstance().getNavajoConfig();
     }
 
     public String getRpcName() {

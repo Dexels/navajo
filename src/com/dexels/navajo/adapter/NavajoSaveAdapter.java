@@ -89,7 +89,7 @@ public class NavajoSaveAdapter
   }
 
   public void load(Access access) throws MappableException, UserException {
-    this.inMessage = inMessage;
+    this.inMessage = access.getInDoc();
 //    System.err.println("\n\nMY NAVAJO: \n\n");
 //    try {
 //      inMessage.write(System.err);

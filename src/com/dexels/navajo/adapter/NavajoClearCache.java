@@ -24,7 +24,7 @@ public class NavajoClearCache implements Mappable {
   }
 
   public void load(Access access) throws MappableException, UserException {
-      this.config = config;
+      this.config = DispatcherFactory.getInstance().getNavajoConfig();
   }
 
   public void store() throws MappableException, UserException {
