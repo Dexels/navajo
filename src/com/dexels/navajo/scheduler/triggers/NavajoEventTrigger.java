@@ -137,12 +137,14 @@ public class NavajoEventTrigger extends Trigger implements NavajoListener {
 	 * 
 	 */
 	public void onNavajoEvent(NavajoEvent ne) {
+
 		// Create Access object and Navajo Input document to store 'event' parameters.
 		Access a = new Access();
 		Navajo input = ne.getEventNavajo();
 		a.setInDoc(input);
 		setAccess(a);
 		perform();		
+
 	}
 
 }

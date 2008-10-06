@@ -160,23 +160,23 @@ public final class WebserviceListenerRegistry implements WebserviceListenerRegis
 		
 		for (int i = 0; i < all.length; i++) {
 			try {
-			AfterWebserviceTrigger cl = (AfterWebserviceTrigger) all[i];
-			if ( cl.getWebservicePattern().equals(webservice) && !ignoreTaskList.contains(cl.getTask().getId()) ) {
+				AfterWebserviceTrigger cl = (AfterWebserviceTrigger) all[i];
+				if ( cl.getWebservicePattern().equals(webservice) && !ignoreTaskList.contains(cl.getTask().getId()) ) {
 
-				AfterWebserviceTrigger t2 = (AfterWebserviceTrigger) cl.clone();
-				t2.setAccess(a);
-				boolean initializingWorkflow = ( t2.getTask().getWorkflowDefinition() != null && t2.getTask().getWorkflowId() == null );
-				boolean myWorkflow = ( t2.getTask().getWorkflowId() != null && WorkFlowManager.getInstance().hasWorkflowId(t2.getTask().getWorkflowId()));
-				boolean isWorkflow = ( t2.getTask().getWorkflowDefinition() != null );
-				
-				if ( !isWorkflow || initializingWorkflow || myWorkflow) {
-					t2.perform();
-					ignoreTheseTaskOnOtherMembers.add(t2.getTask().getId());
-					count++;
-				} else {
-					leftOvers = true;
+					AfterWebserviceTrigger t2 = (AfterWebserviceTrigger) cl.clone();
+					t2.setAccess(a);
+					boolean initializingWorkflow = ( t2.getTask().getWorkflowDefinition() != null && t2.getTask().getWorkflowId() == null );
+					boolean myWorkflow = ( t2.getTask().getWorkflowId() != null && WorkFlowManager.getInstance().hasWorkflowId(t2.getTask().getWorkflowId()));
+					boolean isWorkflow = ( t2.getTask().getWorkflowDefinition() != null );
+
+					if ( !isWorkflow || initializingWorkflow || myWorkflow) {
+						t2.perform();
+						ignoreTheseTaskOnOtherMembers.add(t2.getTask().getId());
+						count++;
+					} else {
+						leftOvers = true;
+					}
 				}
-			}
 			} catch (Throwable tr) { tr.printStackTrace(System.err); } 
 		}
 		
