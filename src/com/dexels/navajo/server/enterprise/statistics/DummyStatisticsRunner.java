@@ -29,13 +29,17 @@ public class DummyStatisticsRunner implements StatisticsRunnerInterface, NavajoL
 	}
 
 	public void addAccess(Access a, Throwable e, AsyncMappable am) {
-		
+		// Do nothing.
+		a = null;
+		e = null;
+		am = null;
 	}
 
 	public void onNavajoEvent(NavajoEvent ne) {
 		if ( ne instanceof AuditLogEvent ) {
 			//System.err.println("DummyStatisticsRunner: " + ne);
 		}
+		ne = null;
 	}
 
 	public void addAuditLog(String subsystem, String message, String level) {
