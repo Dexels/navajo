@@ -67,6 +67,9 @@ public class TslCompiler {
   private Class contextClass = null;
   private int included = 0;
 
+  private JavaCompiler compiler;
+
+  
   private static String hostname = null;
   
   private static String VERSION = "$Id$";
@@ -1789,7 +1792,15 @@ public String mapNode(int ident, Element n) throws Exception {
       String objectName = "mappableObject" + (objectCounter++);
       result.append(printIdent(ident) + objectName + " = (" +
                     className + ") currentMap.myObject;\n");
-      if ( MappingUtils.isObjectMappable(className)) {
+      boolean objectMappable = false;
+      
+      try {
+		objectMappable = MappingUtils.isObjectMappable(className);
+	} catch (UserException e) {
+		objectMappable = MappingUtils.isObjectMappable(className,loader);
+	}
+	
+      if ( objectMappable) {
     	  result.append(printIdent(ident) + objectName + ".load(access);\n");
       }
 
@@ -2524,5 +2535,64 @@ public static void main(String[] args) throws Exception {
      compileDirectory(scriptDir, outDir, "",null);
    }
  }
+
+@SuppressWarnings("unchecked")
+public void initJavaCompiler( String outputPath, ArrayList classpath, Class javaCompilerClass) {
+    StringBuffer cpbuffer = new StringBuffer();
+          if (classpath != null) {
+        for (int i = 0; i < classpath.size(); i++) {
+             cpbuffer.append(classpath.get(i));
+             if (i<classpath.size()-1) {
+                 cpbuffer.append(System.getProperty("path.separator"));
+            }
+       }
+    }
+  compiler = new EclipseCompiler();
+    compiler.setClasspath(cpbuffer.toString());
+    compiler.setOutputDir(outputPath);
+    compiler.setClassDebugInfo(true);
+    compiler.setEncoding("UTF8");
+    compiler.setMsgOutput(System.out);
+    compiler.setCompilerClass(javaCompilerClass);
+
+}
+
+
+@SuppressWarnings("unchecked")
+public void compileAllTslToJava(ArrayList elements)  throws Exception {
+      removeDuplicates(elements);
+    
+    compiler.compile(elements);
+}
+@SuppressWarnings("unchecked")
+public void compileAllTslToJava(ArrayList elements, Class compilerClass)  throws Exception {
+    removeDuplicates(elements);
+  
+  compiler.compile(elements );
+}
+
+public void setCompileClassLoader( ClassLoader cl  ) {
+    if (compiler!=null) {
+        compiler.setCompileClassLoader(cl);
+    } else {
+        System.err.println("Warning: No java compiler present!");
+    }
+}
+
+@SuppressWarnings("unchecked")
+private void removeDuplicates(ArrayList elements) {
+    for (int i = elements.size()-1; i >=0; i--) {
+        String element = (String)elements.get(i);
+        File f = new File(element);
+        if (!f.exists()) {
+            elements.remove(i);
+            continue;
+        }
+        if (f.length()==0) {
+            elements.remove(i);
+      }
+    }
+}
+
 
   }
