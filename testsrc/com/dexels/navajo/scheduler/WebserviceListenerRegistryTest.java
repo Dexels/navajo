@@ -1,11 +1,14 @@
 package com.dexels.navajo.scheduler;
 
+import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
+
 import junit.framework.TestCase;
 
 public class WebserviceListenerRegistryTest extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
+		TribeManagerFactory.useTestVersion();
 	}
 
 	protected void tearDown() throws Exception {

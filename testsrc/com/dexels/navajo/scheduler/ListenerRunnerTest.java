@@ -1,6 +1,7 @@
 package com.dexels.navajo.scheduler;
 
 import com.dexels.navajo.server.DispatcherFactory;
+import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
 import com.dexels.navajo.server.test.TestDispatcher;
 import com.dexels.navajo.server.test.TestNavajoConfig;
 
@@ -11,6 +12,7 @@ public class ListenerRunnerTest extends TestCase {
 
 	protected void setUp() throws Exception {
 		super.setUp();
+		TribeManagerFactory.useTestVersion();
 		DispatcherFactory df = new DispatcherFactory(new TestDispatcher(new TestNavajoConfig()));
 		df.getInstance().setUseAuthorisation(false);
 	}

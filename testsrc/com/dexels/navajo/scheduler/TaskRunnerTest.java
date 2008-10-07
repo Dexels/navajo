@@ -10,6 +10,7 @@ import com.dexels.navajo.document.Navajo;
 import com.dexels.navajo.document.NavajoFactory;
 import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.DispatcherFactory;
+import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
 import com.dexels.navajo.server.test.TestDispatcher;
 import com.dexels.navajo.server.test.TestNavajoConfig;
 
@@ -49,6 +50,7 @@ public class TaskRunnerTest extends TestCase {
 	
 	protected void setUp() throws Exception {
 		super.setUp();
+		TribeManagerFactory.useTestVersion();
 		DispatcherFactory df = new DispatcherFactory(new TestDispatcher(new TestNavajoConfig()));
 		df.getInstance().setUseAuthorisation(false);
 		TaskRunner.getInstance();
