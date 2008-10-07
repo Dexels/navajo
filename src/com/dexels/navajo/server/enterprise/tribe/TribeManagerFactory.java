@@ -11,6 +11,10 @@ public class TribeManagerFactory {
 	private static Object semaphore = new Object();
 	private static volatile boolean tribeManagerFound = false;
 	
+	public static void useTestVersion() {
+		instance = new DummyTribeManager();
+	}
+	
 	@SuppressWarnings("unchecked")
 	public static TribeManagerInterface getInstance() {
 		
