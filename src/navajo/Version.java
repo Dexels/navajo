@@ -27,6 +27,8 @@ package navajo;
 /**
  * VERSION HISTORY
  * 
+ * 7.0.3 Removed NanoTslCompiler. Now using TslCompiler also for plug in.
+ * 
  * 7.0.2 Delete "Temp Space" files when starting Dispatcher to clean up remains of files after crash/kill/stop of Dispatcher.
  * 
  * 7.0.1 Statistics Runner is now more GC friendly: Persists access object and restore objecstream instead of
@@ -133,7 +135,7 @@ public class Version extends dexels.Version {
 
 	public static final int MAJOR = 7;
 	public static final int MINOR = 0;
-	public static final int PATCHLEVEL = 2;
+	public static final int PATCHLEVEL = 3;
 	public static final String VENDOR = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Kernel";
 	public static final String RELEASEDATE = "2008-10-06";
