@@ -2078,8 +2078,8 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
         compilerProviderMap.remove(project);
     }
     
-    public NanoTslCompiler getNavajoCompiler(IProject project) {
-        NanoTslCompiler p = (NanoTslCompiler)compilerProviderMap.get(project);
+    public TslCompiler getNavajoCompiler(IProject project) {
+        TslCompiler p = (TslCompiler)compilerProviderMap.get(project);
         if (p!=null) {
 //            log("Using existing compiler.");
             return p;
@@ -2097,7 +2097,7 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
 //            log("Error instantiating compiler",e);
 //        }
 
-         p = new NanoTslCompiler(provider);
+         p = new TslCompiler(provider);
          
         // ======================= SETUP METADATA HANDLER
         InputStream metaIn = null;
@@ -2121,7 +2121,7 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
         }
         // =====================
         
-        p.addMetaDataListener(metaDataHandler);
+//        p.addMetaDataListener(metaDataHandler);
         
 //         p = new NanoTslCompiler(provider);
         ArrayList cpe = new ArrayList();
@@ -2162,6 +2162,7 @@ public class NavajoScriptPluginPlugin extends AbstractUIPlugin {
             log("Error saving preferences. ",e1);
         }
         try {
+        	
             p.initJavaCompiler(NavajoScriptPluginPlugin.getDefault().getCompiledScriptFolder(project).getRawLocation().toOSString(), cpe,Main.class);
         } catch (NavajoPluginException e) {
             log("Error initializing java compiler. ",e);

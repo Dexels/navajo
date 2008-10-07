@@ -534,7 +534,7 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
                 
                 
                 ArrayList compiledFiles = new ArrayList();
-                NanoTslCompiler navajoCompiler = NavajoScriptPluginPlugin.getDefault().getNavajoCompiler(getProject());
+                TslCompiler navajoCompiler = NavajoScriptPluginPlugin.getDefault().getNavajoCompiler(getProject());
                 ClassProvider cp = NavajoScriptPluginPlugin.getDefault().getClassProvider(getProject(), false);
 //                System.err.println("ClassPro: "+cp.toString());
 //                System.err.println("navavcomp: "+navajoCompiler.toString());
@@ -558,8 +558,24 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
                             }
                             ifi.deleteMarkers(IMarker.PROBLEM, true, 0);// monitor.worked(1);
                             long cc = System.currentTimeMillis();
-                            int lines = navajoCompiler.compileTsl(current.getScript(), current.getScriptDir(), current.getCompileDir(), current
-                                    .getScriptPackage(), true);
+                            int lines = 0;
+                            
+//                            navajoCompiler.compileTsl(current.getScript(), current.getScriptDir(), current.getCompileDir(), current.getScriptPackage(), true);
+                      
+                            System.err.println("Script: "+current.getScript());
+                            System.err.println("getScriptDir: "+current.getScriptDir());
+                            System.err.println("getCompileDir: "+current.getCompileDir());
+                            System.err.println("getScriptPackage: "+current.getScriptPackage());
+                            String strippedScript = null;
+                            if (current.getScript().indexOf("/")!=-1) {
+                                strippedScript = current.getScript().substring(current.getScript().indexOf("/")+1,current.getScript().length());
+								
+							} else {
+	                            strippedScript = current.getScript();
+							}
+                            System.err.println("strippedScript: "+strippedScript);
+                            
+                            navajoCompiler.compileScript(strippedScript, current.getScriptDir(), current.getCompileDir(), current.getScriptPackage());
                             totalLines += lines;
                             totalNew += (System.currentTimeMillis() - cc);
                                     totalJava += (System.currentTimeMillis() - cc);
@@ -627,7 +643,7 @@ public class NavajoBuilder extends org.eclipse.core.resources.IncrementalProject
                 monitor.worked(1);
                 monitor.setTaskName("Compiling "+javaCompilations.size()+" java files...");
               if (javaCompilations.size()>0) {
-                    try {
+                    try { 
                         Class cc = Class.forName("org.eclipse.jdt.internal.compiler.batch.Main",true,NavajoScriptPluginPlugin.class.getClassLoader());
                         if (cc!=null) {
                             navajoCompiler.setCompileClassLoader(cc.getClass().getClassLoader());
