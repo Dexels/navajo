@@ -44,8 +44,10 @@ public final class ListenerStore {
 				return instance;
 			}
 			
+			SharedStoreInterface sharedstore = SharedStoreFactory.getInstance();
+			
 			instance = new ListenerStore();
-			instance.ssi = SharedStoreFactory.getInstance();
+			instance.ssi = sharedstore;
 			
 			if ( TribeManagerFactory.getInstance().getIsChief() ) {  // Clear everything is the chief is started (complete reboot of system).
 				instance.ssi.removeAll(activatedListeners);
