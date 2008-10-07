@@ -48,7 +48,15 @@ public final class GenericHandler extends ServiceHandler {
     private static Object mutex1 = new Object();
     private static Object mutex2 = new Object();
    
-    public static final String applicationGroup = DispatcherFactory.getInstance().getNavajoConfig().getInstanceGroup();
+    public static String applicationGroup = "";
+    
+    static {
+    	try {
+    		applicationGroup = DispatcherFactory.getInstance().getNavajoConfig().getInstanceGroup();
+    	} catch (Throwable t) {
+    		applicationGroup = "";
+    	}
+    }
     
     @SuppressWarnings("unchecked")
 	public GenericHandler() {
