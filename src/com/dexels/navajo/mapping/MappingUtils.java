@@ -523,53 +523,32 @@ public static final ArrayList getMessageList(Message msg, Navajo doc, String str
       }
   }
 
-//  public static final boolean isMappable(Class c, String field, ClassLoader loader) throws UserException, ClassNotFoundException {
-//	  Class mappable = Class.forName("com.dexels.navajo.mapping.Mappable",true,loader);
-//
-//	  try {
-//		  if (c.getField(field) == null) {
-//			  throw new UserException(-1, "No such field: " + field);
-//		  }
-//		  return mappable.isAssignableFrom(c.getField(field).getType());
-//	  } catch (NoSuchFieldException nsfe) {
-//		  try {
-//			  return mappable.isAssignableFrom(c.getDeclaredField(field).getType());
-//		  } catch (SecurityException e) {
-//			  throw new UserException(-1, "Could not find field " + field + " in class " + c.getName());
-//		  } catch (NoSuchFieldException e) {
-//			  throw new UserException(-1, "Could not find field " + field + " in class " + c.getName());
-//		  }
-//	  }    
-//  }
      
-  public static final boolean isObjectMappable(String className) throws UserException {
-	  try {
-		  DispatcherInterface instance = DispatcherFactory.getInstance();
-		  
-   		Class c = null;
-   			if (instance==null) {
-   		   		c = Class.forName(className);
-			} else {
-		   		c = Class.forName(className, true, instance.getNavajoConfig().getClassloader());
-			}
-		  return ( c.newInstance() instanceof Mappable );
-	  } catch (Exception e) {
-//		  e.printStackTrace(System.err);
-		  throw new UserException(-1, "Could not handle class as either mappable or POJO bean: " + className + ", cause: " + e.getMessage(),e);
-	  }
-  }
+public static final boolean isObjectMappable(String className) throws UserException {
+	try {
+		DispatcherInterface instance = DispatcherFactory.getInstance();
+
+		Class c = null;
+		if (instance==null) {
+			c = Class.forName(className);
+		} else {
+			c = Class.forName(className, true, instance.getNavajoConfig().getClassloader());
+		}
+		return ( Mappable.class.isAssignableFrom(c) );
+	} catch (Exception e) {
+		throw new UserException(-1, "Could not handle class as either mappable or POJO bean: " + className + ", cause: " + e.getMessage(),e);
+	}
+}
   
   public static final boolean isObjectMappable(String className, ClassLoader cls) throws UserException {
 	  try {
 
-//		  DispatcherInterface instance = DispatcherFactory.getInstance();
+		  Class c = Class.forName(className, true, cls);
+		  Class mappable = Class.forName("com.dexels.navajo.mapping.Mappable",true,cls);
+
+		  return (mappable.isAssignableFrom(c) );
 		  
-   		Class c = Class.forName(className, true, cls);
-   		Class mappable = Class.forName("com.dexels.navajo.mapping.Mappable",true,cls);
-//   		;
-   		return (mappable.isAssignableFrom(c) );
 	  } catch (Exception e) {
-//		  e.printStackTrace(System.err);
 		  throw new UserException(-1, "Could not handle class as either mappable or POJO bean: " + className + ", cause: " + e.getMessage(),e);
 	  }
   }
