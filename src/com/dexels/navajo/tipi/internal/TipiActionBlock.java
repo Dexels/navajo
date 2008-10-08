@@ -26,13 +26,8 @@ import com.dexels.navajo.tipi.tipixml.*;
  */
 public class TipiActionBlock implements TipiExecutable {
 	protected TipiComponent myComponent = null;
-	// protected Map myParams = new HashMap();
 	private final List<TipiExecutable> myExecutables = new ArrayList<TipiExecutable>();
 	private String myExpression = "";
-	private String myExpressionSource = "";
-	// private TipiActionBlock myActionBlockParent = null;
-	// private TipiEvent myEvent = null;
-	// private boolean conditionStyle = false;
 	private boolean multithread = false;
 	private TipiEvent myEvent = null;
 
@@ -56,31 +51,20 @@ public class TipiActionBlock implements TipiExecutable {
 		return myComponent;
 	}
 
-	public String getExpressionSource() {
-		return myExpressionSource;
-	}
 
 	public void setExpression(String ex) {
 		myExpression = ex;
 	}
 
-	public void setExpressionSource(String exs) {
-		myExpressionSource = exs;
-	}
 
 	public void performAction(TipiEvent te, TipiExecutable parent, int index) throws TipiBreakException, TipiException {
-		// System.err.println("PERFORMING BLOCK with expression "+myExpression);
 		myEvent = te;
 		boolean evaluated;
 		evaluated = checkCondition(te);
 
 		if (!evaluated) {
-			// System.err.println("Expression failed: Not executing children");
 			return;
 		}
-		// System.err.println("Succeeded.");
-		// System.err.println("MY # of executables: "+myExecutables.size());
-		// Allright, now we can execute:
 		try {
 			if (multithread) {
 				for (int i = 0; i < myExecutables.size(); i++) {
@@ -91,12 +75,6 @@ public class TipiActionBlock implements TipiExecutable {
 				}
 			} else {
 				myContext.doActions(te, myComponent, this, myExecutables);
-				//				
-				// for (int i = 0; i < myExecutables.size(); i++) {
-				// TipiExecutable current = (TipiExecutable)
-				// myExecutables.get(i);
-				// current.performAction(te, this, i);
-				// }
 			}
 			myEvent = null;
 		} catch (TipiBreakException ex) {
@@ -142,11 +120,7 @@ public class TipiActionBlock implements TipiExecutable {
 		return false;
 	}
 
-	//
-	// public TipiEvent getEvent() {
-	// return myEvent;
-	// }
-	//
+
 	public void load(XMLElement elm, TipiComponent parent, TipiExecutable parentExe) {
 		myComponent = parent;
 		for (Iterator<String> iterator = elm.enumerateAttributeNames(); iterator.hasNext();) {
@@ -161,7 +135,6 @@ public class TipiActionBlock implements TipiExecutable {
 
 		if (elm.getName().equals("block")) {
 			myExpression = (String) elm.getAttribute("expression");
-			myExpressionSource = (String) elm.getAttribute("source");
 			String multi = elm.getStringAttribute("multithread");
 			if ("true".equals(multi)) {
 				System.err.println("Load multithread block!");
@@ -231,39 +204,7 @@ public class TipiActionBlock implements TipiExecutable {
 		}
 	}
 
-	// public TipiActionBlock getActionBlockParent() {
-	// return myActionBlockParent;
-	// }
 
-	// public TreeNode getChildAt(int parm1) {
-	// return (TreeNode)myExecutables.get(parm1);
-	// }
-	// public int getChildCount() {
-	// return myExecutables.size();
-	// }
-	// public TreeNode getParent() {
-	// if (myActionBlockParent!=null) {
-	// return myActionBlockParent;
-	// } else {
-	// return myEvent;
-	// }
-	// }
-	//
-	// public int getIndex(TreeNode parm1) {
-	// return -1;
-	// }
-	// public boolean getAllowsChildren() {
-	// return true;
-	// }
-	// public boolean isLeaf() {
-	// return myExecutables.size()==0;
-	// }
-	// public Enumeration children() {
-	// return new Vector(myExecutables).elements();
-	// }
-	// public void addAction(TipiAction ta) {
-	// myActions.add(ta);
-	// }
 	public int getExecutableChildCount() {
 		return myExecutables.size();
 	}
@@ -273,6 +214,7 @@ public class TipiActionBlock implements TipiExecutable {
 	}
 
 	/*
+	 * 
 	 * (non-Javadoc)
 	 * 
 	 * @see com.dexels.navajo.tipi.TipiExecutable#getEvent()

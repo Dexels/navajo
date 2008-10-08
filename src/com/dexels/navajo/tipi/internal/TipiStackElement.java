@@ -74,7 +74,6 @@ public class TipiStackElement {
 	}
 
 	public void dumpStack() {
-		// Thread.dumpStack();
 		System.err.println(createLine());
 		if (getParent() != null) {
 			getParent().dumpStack();
@@ -83,7 +82,6 @@ public class TipiStackElement {
 				System.err.println("Caused by:");
 				rootCause.dumpStack();
 			}
-			// System.err.println("No more parents");
 		}
 
 	}

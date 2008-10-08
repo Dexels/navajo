@@ -43,8 +43,6 @@ public class TipiFileStorageManager implements TipiStorageManager {
 		}
 		File in = new File(base, id);
 		if (!in.exists()) {
-			// throw new TipiException("File setting not found:
-			// "+in.getAbsolutePath());
 			return null;
 		}
 		FileInputStream fis = null;
@@ -84,7 +82,6 @@ public class TipiFileStorageManager implements TipiStorageManager {
 			base.mkdirs();
 		}
 		if (debugMode) {
-			// Thread.dumpStack();
 			System.err.println("Saving navajo to file: " + out);
 			try {
 				n.write(System.err);
