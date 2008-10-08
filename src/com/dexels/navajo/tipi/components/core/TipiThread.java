@@ -42,6 +42,7 @@ public class TipiThread extends Thread implements Comparable<TipiThread> {
 		myPool.setThreadState(state);
 	}
 
+	@SuppressWarnings("null")
 	public void run() {
 		while (true) {
 			try {
@@ -50,7 +51,7 @@ public class TipiThread extends Thread implements Comparable<TipiThread> {
 						myPool.setThreadState(TipiThread.IDLE);
 						TipiExecutable te = myPool.blockingGetExecutable();
 
-						final long t = System.currentTimeMillis();
+//						final long t = System.currentTimeMillis();
 						myPool.setThreadState(TipiThread.BUSY);
 						TipiExecutable parentEvent = null;
 						final Stack<TipiExecutable> s = myPool.getThreadStack(this);
@@ -70,8 +71,7 @@ public class TipiThread extends Thread implements Comparable<TipiThread> {
 							}
 						} finally {
 							TipiEventListener tel = myPool.getEventListener(te);
-							long t2 = System.currentTimeMillis();
-							System.err.println("Event took: "+(t2-t)+" millis ");
+//							long t2 = System.currentTimeMillis();
 							if (tel != null) {
 								tel.eventFinished(te, null);
 							}
