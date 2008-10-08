@@ -30,17 +30,11 @@ public class TipiEvent implements TipiExecutable {
 	private Runnable afterEvent = null;
 	
 
-	// private ArrayList myActions;
-	// private Navajo myNavajo;
 	private TipiComponent myComponent;
-	// private TipiActionBlock myTopActionBlock = null;
 	private List<TipiExecutable> myExecutables = new ArrayList<TipiExecutable>();
-
 	private Map<String, TipiValue> eventParameterMap = new HashMap<String, TipiValue>();
 	private Map<String, String> eventPropertyMap = new HashMap<String, String>();
-
 	private TipiStackElement stackElement = null;
-
 	private TipiExecutable rootCause = null;
 
 	public TipiExecutable getRootCause() {
@@ -135,7 +129,15 @@ public class TipiEvent implements TipiExecutable {
 					newCopy.setAttribute("expectType", "'" + classType + "'");
 					TipiAction ta = context.instantiateTipiAction(newCopy, myComponent, this);
 					myExecutables.add(ta);
-				} else {
+				} else if(method.equals("attribute")) {
+					//XMLElement xxx = context.getComponentDefinition(classType);
+					// TODO Do an extra check if all attributes exist.
+					XMLElement newCopy = current.copy();
+					newCopy.setName("attribute");
+					TipiAction ta = context.instantiateTipiAction(newCopy, myComponent, this);
+					myExecutables.add(ta);
+					
+				} else{
 					//XMLElement xxx = context.getComponentDefinition(classType);
 					// TODO Do an extra check if this method exists.
 					
@@ -188,12 +190,9 @@ public class TipiEvent implements TipiExecutable {
 
 		TipiEvent localEvent = (TipiEvent) this.clone();
 		localEvent.loadEventValues(event);
-		// final TipiEvent te = this;
 		try {
 			localEvent.setAfterEvent(afterEventParam);
-			// listener.eventStarted(this, event);
 			getContext().debugLog("event   ", "enqueueing (in event) async event: " + localEvent);
-
 			myComponent.getContext().performAction(localEvent, parentExecutable, listener);
 		} catch (Throwable ex) {
 			ex.printStackTrace();
@@ -207,11 +206,6 @@ public class TipiEvent implements TipiExecutable {
 	public void performAction(TipiEvent te, TipiExecutable parent, int index) throws TipiException, TipiBreakException {
 		performAction(myComponent, parent, null);
 	}
-
-	// public void performAction(TipiEventListener listener) throws
-	// TipiBreakException {
-	// performAction(listener, null);
-	// }
 
 	public TipiValue getEventParameter(String name) {
 		return eventParameterMap.get(name);
@@ -252,9 +246,6 @@ public class TipiEvent implements TipiExecutable {
 			localInstance.loadEventValues(event);
 		}
 
-		// eventParameterMap.clear();
-		// eventParameterMap.putAll(event);
-
 		Thread currentThread = Thread.currentThread();
 		final Stack<TipiExecutable> s = getContext().getThreadPool().getThreadStack(currentThread);
 		TipiExecutable parentEvent = null;
@@ -262,23 +253,14 @@ public class TipiEvent implements TipiExecutable {
 		if (s != null && !s.isEmpty()) {
 			parentEvent = s.peek();
 			s.push(this);
-			// } else {
-			// if(getStackElement()==null) {
-			// } else {
-			// getStackElement().dumpStack();
-			// }
 		}
 		getContext().getThreadPool().pushCurrentEvent(this);
 		TipiStackElement te = getStackElement();
 		if (te != null) {
 			if (parentEvent != null) {
-				// getStackElement().dumpStack();
-				// parentEvent.getStackElement().dumpStack();
 				te.setRootCause(parentEvent.getStackElement());
 			}
 		}
-		//		
-
 		getContext().debugLog("event   ", "performing event: " + localInstance.getEventName());
 
 		listener.eventStarted(localInstance, event);
@@ -317,10 +299,6 @@ public class TipiEvent implements TipiExecutable {
 		return false;
 	}
 
-	// public void setNavajo(Navajo n) {
-	// myNavajo = n;
-	// }
-
 	public String getEventName() {
 		return myEventName;
 	}
@@ -348,13 +326,7 @@ public class TipiEvent implements TipiExecutable {
 		return this;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.dexels.navajo.tipi.TipiExecutable#setEvent(com.dexels.navajo.tipi
-	 * .internal.TipiEvent)
-	 */
+
 	public void setEvent(TipiEvent e) {
 	}
 
