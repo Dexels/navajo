@@ -2,7 +2,6 @@ package com.dexels.navajo.tipi;
 
 import java.util.*;
 
-import com.dexels.navajo.client.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.internal.*;
 import com.dexels.navajo.tipi.tipixml.*;
@@ -24,7 +23,7 @@ import com.dexels.navajo.tipi.tipixml.*;
  * @author not attributable
  * @version 1.0
  */
-public interface TipiComponent extends ConditionErrorHandler, TipiEventListener, TipiLink {
+public interface TipiComponent extends TipiEventListener, TipiLink {
 	public void removeFromContainer(Object c);
 
 	public void addToContainer(Object c, Object constraints);
@@ -49,6 +48,8 @@ public interface TipiComponent extends ConditionErrorHandler, TipiEventListener,
 
 	public Object getValue(String name);
 
+	public Iterable<TipiComponent> getChildren();
+	
 //	public String getStringValue(String name);
 
 //	public TipiValue getTipiValue(String name);
@@ -155,7 +156,7 @@ public interface TipiComponent extends ConditionErrorHandler, TipiEventListener,
 	public void setCursor(int cursorid);
 
 
-	public void checkValidation(Message msg);
+//	public void checkValidation(Message msg);
 
 	public void resetComponentValidationStateByRule(String id);
 
