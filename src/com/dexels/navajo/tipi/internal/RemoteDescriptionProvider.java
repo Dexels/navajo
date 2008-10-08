@@ -21,6 +21,7 @@ public class RemoteDescriptionProvider extends BaseDescriptionProvider {
 			Message current = al.get(i);
 			String name = current.getProperty("Name").getValue();
 			String value = current.getProperty("Description").getValue();
+			value = myContext.XMLUnescape(value);
 			addDescription(name, value);
 		}
 		System.err.println("# of descriptions: " + myDescriptionMap.size());
