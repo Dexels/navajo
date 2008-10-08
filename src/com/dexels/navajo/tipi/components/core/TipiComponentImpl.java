@@ -5,7 +5,6 @@ import java.lang.reflect.*;
 import java.lang.reflect.Method;
 import java.util.*;
 
-import com.dexels.navajo.client.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.internal.*;
@@ -28,7 +27,7 @@ import com.dexels.navajo.tipi.tipixml.*;
  * @author not attributable
  * @version 1.0
  */
-public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEventListener, TipiComponent, TipiLink {
+public abstract class TipiComponentImpl implements TipiEventListener, TipiComponent, TipiLink {
 	public abstract Object createContainer();
 
 	private Object myContainer = null;
@@ -661,6 +660,9 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 		List<XMLElement> children = values.getChildren();
 		for (int i = 0; i < children.size(); i++) {
 			XMLElement xx = children.get(i);
+//			System.err.println("Values: "+values);
+//			assert "param".equals(xx.getName());
+
 			String valueName = xx.getStringAttribute("name");
 			TipiValue tv = new TipiValue(this);
 			tv.load(xx);
@@ -695,7 +697,8 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 		if (stateMessage != null) {
 			return stateMessage;
 		}
-		stateMessage = NavajoFactory.getInstance().createMessage(myContext.getStateNavajo(), getId());
+		Navajo stateNavajo = myContext.getStateNavajo();
+		stateMessage = NavajoFactory.getInstance().createMessage(stateNavajo, getId());
 		if (getTipiParent() != null) {
 			getTipiParent().getStateMessage().addMessage(stateMessage);
 		}
@@ -777,6 +780,11 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 		return tipiComponentList.get(i);
 	}
 
+	public Iterable<TipiComponent> getChildren() {
+		return new ArrayList<TipiComponent>( tipiComponentList);
+	}
+
+	
 	protected final TipiComponent getChildByContainer(Object container) {
 		for (int i = 0; i < getChildCount(); i++) {
 			TipiComponent child = getTipiComponent(i);
@@ -1093,23 +1101,23 @@ public abstract class TipiComponentImpl implements ConditionErrorHandler, TipiEv
 	}
 
 
-	public void checkValidation(Message msg) {
-		Iterator<TipiComponent> it = tipiComponentList.iterator();
-		while (it.hasNext()) {
-			TipiComponent next = it.next();
-			next.checkValidation(msg);
-		}
-		if (myContainer != null) {
-			hadConditionErrors = true;
-			// System.err.println("CHECKING VALIDATION: ");
-			// msg.write(System.err);
-			/** @todo Rewrite check for propertycomponent flag in classdef */
-			if (PropertyValidatable.class.isInstance(myContainer)) {
-				PropertyValidatable p = (PropertyValidatable) myContainer;
-				p.checkForConditionErrors(msg);
-			}
-		}
-	}
+//	public void checkValidation(Message msg) {
+//		Iterator<TipiComponent> it = tipiComponentList.iterator();
+//		while (it.hasNext()) {
+//			TipiComponent next = it.next();
+//			next.checkValidation(msg);
+//		}
+//		if (myContainer != null) {
+//			hadConditionErrors = true;
+//			// System.err.println("CHECKING VALIDATION: ");
+//			// msg.write(System.err);
+//			/** @todo Rewrite check for propertycomponent flag in classdef */
+//			if (PropertyValidatable.class.isInstance(myContainer)) {
+//				PropertyValidatable p = (PropertyValidatable) myContainer;
+//				p.checkForConditionErrors(msg);
+//			}
+//		}
+//	}
 
 	public void resetComponentValidationStateByRule(String id) {
 		if (myContainer != null) {
