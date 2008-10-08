@@ -20,7 +20,11 @@ import com.dexels.navajo.tipi.internal.*;
  * 
  * @author not attributable
  * @version 1.0
+ * @deprecated
  */
+
+
+@Deprecated
 
 public class TipiReloadNavajo extends TipiAction {
 	public TipiReloadNavajo() {
