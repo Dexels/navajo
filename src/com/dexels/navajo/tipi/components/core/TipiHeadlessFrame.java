@@ -1,0 +1,39 @@
+package com.dexels.navajo.tipi.components.core;
+
+
+import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.tipixml.*;
+
+/**
+ * <p>
+ * Title:
+ * </p>
+ * <p>
+ * Description:
+ * </p>
+ * <p>
+ * Copyright: Copyright (c) 2003
+ * </p>
+ * <p>
+ * Company:
+ * </p>
+ * 
+ * @author not attributable
+ * @version 1.0
+ */
+public class TipiHeadlessFrame extends TipiDataComponentImpl {
+	public TipiHeadlessFrame() {
+	}
+
+	public Object createContainer() {
+		return null;
+	}
+
+	@Override
+	public void load(XMLElement definition, XMLElement instance, TipiContext context) throws TipiException {
+		super.load(definition, instance, context);
+	}
+
+	
+	
+}
