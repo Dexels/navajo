@@ -20,7 +20,7 @@ import com.dexels.navajo.tipi.tipixml.*;
  * different action type.
  */
 public class TipiActionManager {
-	private Map<String, TipiActionFactory> actionFactoryMap = new HashMap<String, TipiActionFactory>();
+	private final  Map<String, TipiActionFactory> actionFactoryMap = new HashMap<String, TipiActionFactory>();
 
 	public TipiActionManager() {
 	}
