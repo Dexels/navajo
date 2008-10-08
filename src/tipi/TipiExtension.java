@@ -4,7 +4,7 @@ import java.util.*;
 
 import com.dexels.navajo.tipi.*;
 
-public interface TipiExtension  {
+public interface TipiExtension extends Comparable<TipiExtension> {
 
 	public void initialize(TipiContext tc);
 
