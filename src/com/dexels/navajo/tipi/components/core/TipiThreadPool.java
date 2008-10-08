@@ -43,26 +43,17 @@ public class TipiThreadPool {
 		this.poolSize = initSize;
 		myContext = context;
 		String maxThreads = context.getSystemProperty("com.dexels.navajo.tipi.maxthreads");
-		// System.err.println("MAX THREADS::::::: "+maxThreads+"\n\n"+"
-		// poolsize: "+initSize);
-
-		// HACK!
-		// this.poolSize = 1;
-
 		if (maxThreads != null && !"".equals(maxThreads)) {
 			int i = Integer.parseInt(maxThreads);
-			// System.err.println("Using maxthread: " + i);
 			this.poolSize = i;
 		}
 		for (int i = 0; i < this.poolSize; i++) {
 			createThread("TipiThread #" + i);
 		}
-		// System.err.println("Available threads: "+myThreadCollection.size());
 	}
 
 	private final void createThread(String name) {
 		TipiThread tt = new TipiThread(myContext, name, myGroup, this);
-		// System.err.println("Creating thread: "+name);
 		myThreadCollection.add(tt);
 		eventStackMap.put(tt, new Stack<TipiExecutable>());
 		tt.start();
@@ -132,6 +123,7 @@ public class TipiThreadPool {
 		if (poolSize == 0) {
 			// For echo:
 			try {
+				System.err.println("Linear enqueue!");
 				exe.getEvent().performAction(exe.getEvent(), exe.getEvent(), 0);
 				exe.performAction(null, null, 0);
 			} catch (TipiBreakException e) {
