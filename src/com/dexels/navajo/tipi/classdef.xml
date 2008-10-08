@@ -56,6 +56,41 @@
       </values>
       <methods />
    </tipiclass>
+   <!--     -->
+      <tipiclass studio-icon="messagestore.gif" module="abstract" class="TipiHeadlessFrame" name="headless" package="com.dexels.navajo.tipi.components.core" type="tipi"
+      childcount="*" layoutmanager="false" addtocontainer="false">
+      <events>
+         <event name="onGeneratedErrors">
+            <param name="id" type="string" />
+            <param name="description" type="string" />
+         </event>
+         <event name="onInstantiate" />
+         <event name="onLoad">
+            <param name="service" type="string" />
+         </event>
+      </events>
+      <values>
+         <value direction="out" name="selectedMessage" type="message" />
+      </values>
+      <methods />
+   </tipiclass>
+
+      <tipiclass studio-icon="messagestore.gif" module="abstract" class="TipiHeadlessButton" name="headlessbutton" package="com.dexels.navajo.tipi.components.core" type="component"
+      childcount="0" layoutmanager="false" addtocontainer="false">
+      <events>
+             <event name="onInstantiate" />
+            <event name="onActionPerformed" />
+      </events>
+      <values>
+      </values>
+      <methods >
+       <method name="fireAction">
+          </method>
+
+      </methods>
+   </tipiclass>
+
+
    <tipiclass studio-icon="messagestore.gif" module="abstract" class="TipiMessageStoreImpl" name="messagestore" package="com.dexels.navajo.tipi.components.core" type="tipi"
       childcount="0" layoutmanager="false" addtocontainer="false">
       <events>
