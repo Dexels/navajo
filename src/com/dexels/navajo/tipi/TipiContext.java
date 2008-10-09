@@ -80,6 +80,8 @@ public abstract class TipiContext {
 	protected TipiErrorHandler eHandler;
 	protected String errorHandler;
 
+	
+	
 	/**
 	 * Lists the toplevel components in the current implementation
 	 */
@@ -121,10 +123,10 @@ public abstract class TipiContext {
 
 	protected final long startTime = System.currentTimeMillis();
 
-	protected File resourceBaseDirectory = null;
-	protected File tipiBaseDirectory = null;
+//	protected File resourceBaseDirectory = null;
+//	protected File tipiBaseDirectory = null;
 
-	protected boolean allowLazyIncludes = true;
+//	protected boolean allowLazyIncludes = true;
 	// private boolean isSwitching = false;
 	private ClassLoader tipiClassLoader = null;
 	private ClassLoader resourceClassLoader = null;
@@ -133,7 +135,9 @@ public abstract class TipiContext {
 	private TipiResourceLoader tipiResourceLoader;
 	private TipiResourceLoader genericResourceLoader;
 
-	private final Map<String, String> systemPropertyMap = new HashMap<String, String>();
+	// for now...
+	public  final Map<String, String> systemPropertyMap = new HashMap<String, String>();
+	
 	private Object myToplevelContainer;
 	private String navajoServer;
 	private String navajoUsername;
@@ -158,6 +162,9 @@ public abstract class TipiContext {
 	private final List<TipiDefinitionListener> tipiDefinitionListeners = new LinkedList<TipiDefinitionListener>();
 
 	private TipiValidationDecorator tipiValidationManager;
+	// Temp construct, until the connector pattern is fully functional
+	// TODO, fix and remove
+	protected final ClientInterface clientInterface;
 
 	public TipiContext(TipiContext parent) {
 		this();
@@ -175,6 +182,8 @@ public abstract class TipiContext {
 		tt = ServiceRegistry.lookupProviders(TipiExtension.class, ClassLoader.getSystemClassLoader());
 		initializeExtensions(tt);
 
+		clientInterface = NavajoClientFactory.createDefaultClient();
+		
 		if (myThreadPool == null) {
 			myThreadPool = new TipiThreadPool(this, getPoolSize());
 		}
@@ -284,10 +293,8 @@ public abstract class TipiContext {
 	}
 
 	private void checkExtension(TipiExtension tipiExtension, List<TipiExtension> allExtension) {
-		System.err.println("Checking: " + tipiExtension.getId() + " : " + tipiExtension.getDescription());
 		String main = tipiExtension.requiresMainImplementation();
 		List<String> extensions = tipiExtension.getRequiredExtensions();
-		System.err.println("NEEDS: " + main + " ext: " + extensions);
 	}
 
 	private void appendIncludes(List<TipiExtension> extensionList, List<String> includes) {
@@ -324,7 +331,6 @@ public abstract class TipiContext {
 	// }
 
 	public void getTipiValidationDecorator(TipiValidationDecorator tv) {
-		System.err.println("Setting validationmanager: "+tv.getClass());
 		tipiValidationManager = tv;
 	}
 	
@@ -493,6 +499,7 @@ public abstract class TipiContext {
 
 	public final void setSystemPropertyLocal(String name, String value) {
 		systemPropertyMap.put(name, value);
+		System.err.println("Local properties for context: "+getClass()+" hash: "+hashCode()+" map: "+systemPropertyMap);
 	}
 
 	public final void setSystemProperty(String name, String value) {
@@ -500,9 +507,11 @@ public abstract class TipiContext {
 	}
 
 	public final String getSystemProperty(String name) {
+			
 		String value = systemPropertyMap.get(name);
 		String sysVal = null;
 		if (value != null) {
+			System.err.println("Local value: "+value);
 			return value;
 		}
 		try {
@@ -517,6 +526,7 @@ public abstract class TipiContext {
 	}
 
 	protected void createClient(XMLElement config) throws TipiException {
+		System.err.println("Parsing client: "+config);
 		String impl = (String) attemptGenericEvaluate(config.getStringAttribute("impl", "'indirect'"));
 		setSystemProperty("tipi.client.impl", impl, false);
 		String cfg = (String) attemptGenericEvaluate(config.getStringAttribute("config", "'server.xml'"));
@@ -547,15 +557,18 @@ public abstract class TipiContext {
 
 		if (!impl.equals("direct")) {
 			if (impl.equals("socket")) {
-				NavajoClientFactory.resetClient();
-				NavajoClientFactory.createClient("com.dexels.navajo.client.NavajoSocketClient", null, null);
-			} else {
-				NavajoClientFactory.resetClient();
-				NavajoClientFactory.createDefaultClient();
+				throw new UnsupportedOperationException("Sorry, I deprecated the direct client for tipi usage");
+			
+//				NavajoClientFactory.resetClient();
+//				NavajoClientFactory.createClient("com.dexels.navajo.client.NavajoSocketClient", null, null);
+//			} else {
+//				throw new UnsupportedOperationException("Sorry, I deprecated the direct client for tipi usage");
+//				NavajoClientFactory.resetClient();
+//				NavajoClientFactory.createDefaultClient();
 			}
-			NavajoClientFactory.getClient().setServerUrl(navajoServer);
-			NavajoClientFactory.getClient().setUsername(navajoUsername);
-			NavajoClientFactory.getClient().setPassword(navajoPassword);
+			getClient().setServerUrl(navajoServer);
+			getClient().setUsername(navajoUsername);
+			getClient().setPassword(navajoPassword);
 
 		} else {
 			NavajoClientFactory.resetClient();
@@ -566,17 +579,17 @@ public abstract class TipiContext {
 			// getClass().getClassLoader().getResource(cfg));
 		}
 
-		NavajoClientFactory.getClient().setLocaleCode(locale);
-		NavajoClientFactory.getClient().setSubLocaleCode(sublocale);
+		getClient().setLocaleCode(locale);
+		getClient().setSubLocaleCode(sublocale);
 		if (secureBoolean) {
 			if (storepass != null && keystore != null) {
 				try {
 					if (keystore instanceof URL) {
-						NavajoClientFactory.getClient().setSecure(((URL) keystore).openStream(), storepass, true);
+						getClient().setSecure(((URL) keystore).openStream(), storepass, true);
 
 					} else {
 						String keys = "" + keystore;
-						NavajoClientFactory.getClient().setSecure(keys, storepass, true);
+						getClient().setSecure(keys, storepass, true);
 					}
 				} catch (Exception ex) {
 					ex.printStackTrace();
@@ -732,7 +745,7 @@ public abstract class TipiContext {
 		if ("asp".equals(type)) {
 			String instanceId = child.getStringAttribute("instanceId");
 			String scriptPrefix = child.getStringAttribute("scriptPrefix");
-			setStorageManager(new TipiGeneralAspManager(scriptPrefix, instanceId));
+			setStorageManager(new TipiGeneralAspManager(this, scriptPrefix, instanceId));
 		}
 		if ("file".equals(type)) {
 			String basePath = child.getStringAttribute("dir");
@@ -1246,7 +1259,12 @@ public abstract class TipiContext {
 			cc = Class.forName(fullDef, true, getClassLoader());
 			tipiClassMap.put(name, cc);
 		} catch (ClassNotFoundException ex) {
+			System.err.println("Error loading class: "+fullDef);
 			ex.printStackTrace();
+		} catch (SecurityException ex) {
+			System.err.println("Security Error loading class: "+fullDef);
+			ex.printStackTrace();
+			
 		}
 		return cc;
 	}
@@ -1511,7 +1529,7 @@ public abstract class TipiContext {
 	}
 
 	public void setHTTPS(String passphrase, Binary keystore) throws ClientException {
-		NavajoClientFactory.getClient().setSecure(keystore.getDataAsStream(), passphrase, true);
+		getClient().setSecure(keystore.getDataAsStream(), passphrase, true);
 	}
 
 	/**
@@ -1524,7 +1542,7 @@ public abstract class TipiContext {
 		Navajo reply = null;
 		try {
 			if (hosturl != null && !"".equals(hosturl)) {
-				if ("direct".equals(NavajoClientFactory.getClient().getClientName())) {
+				if ("direct".equals(getClient().getClientName())) {
 					ClientInterface ci = NavajoClientFactory.createDefaultClient();
 					ci.setServerUrl(hosturl);
 					// System.err.println("Specifically sending to: "+hosturl);
@@ -1545,19 +1563,19 @@ public abstract class TipiContext {
 					username = navajoUsername;
 					password = navajoPassword;
 
-					String url = NavajoClientFactory.getClient().getServerUrl();
-					NavajoClientFactory.getClient().setServerUrl(hosturl);
-					NavajoClientFactory.getClient().setUsername(username);
-					NavajoClientFactory.getClient().setPassword(password);
-					reply = NavajoClientFactory.getClient().doSimpleSend(n, service, ch, expirtationInterval);
-					NavajoClientFactory.getClient().setServerUrl(url);
+					String url = getClient().getServerUrl();
+					getClient().setServerUrl(hosturl);
+					getClient().setUsername(username);
+					getClient().setPassword(password);
+					reply = getClient().doSimpleSend(n, service, ch, expirtationInterval);
+					getClient().setServerUrl(url);
 					debugLog("data", "simpleSend to host: " + hosturl + " username: " + username + " password: " + password + " method: "
 							+ service);
 				}
 
 			} else {
-				reply = NavajoClientFactory.getClient().doSimpleSend(n, service, ch, expirtationInterval);
-				debugLog("data", "simpleSend client: " + NavajoClientFactory.getClient().getClientName() + " method: " + service);
+				reply = getClient().doSimpleSend(n, service, ch, expirtationInterval);
+				debugLog("data", "simpleSend client: " + getClient().getClientName() + " method: " + service);
 			}
 		} catch (Throwable ex) {
 			ex.printStackTrace();
@@ -1646,7 +1664,13 @@ public abstract class TipiContext {
 	public void loadNavajo(Navajo reply, String method, String tipiDestinationPath, TipiEvent event, boolean breakOnError)
 			throws TipiBreakException {
 		if (reply != null) {
-			// if (eHandler != null) {
+			// TODO Put this in a more elegant place
+			 if (eHandler == null) {
+					eHandler = new BaseTipiErrorHandler();
+					eHandler.setContext(this);
+					eHandler.initResource();
+
+			 }
 			String errorMessage = eHandler.hasErrors(reply);
 			if (errorMessage != null) {
 				System.err.println("Errors detected. ");
@@ -2028,9 +2052,9 @@ public abstract class TipiContext {
 		navajoServer = navajoServerProperty;
 		navajoPassword = navajoPasswordProperty;
 		navajoUsername = navajoUsernameProperty;
-		NavajoClientFactory.getClient().setUsername(navajoUsernameProperty);
-		NavajoClientFactory.getClient().setPassword(navajoPasswordProperty);
-		NavajoClientFactory.getClient().setServerUrl(navajoServerProperty);
+		getClient().setUsername(navajoUsernameProperty);
+		getClient().setPassword(navajoPasswordProperty);
+		getClient().setServerUrl(navajoServerProperty);
 	}
 
 	public void addTipiActivityListener(TipiActivityListener listener) {
@@ -2164,7 +2188,7 @@ public abstract class TipiContext {
 		m.addProperty(l);
 		// n.write(System.err);
 		// TODO This is not the official way to use the client. Can cause problems in Echo
-		Navajo res = NavajoClientFactory.getClient().doSimpleSend(n, "navajo/description/ProcessGetContextResources");
+		Navajo res = getClient().doSimpleSend(n, "navajo/description/ProcessGetContextResources");
 		
 		// res.write(System.err);
 		Message descr = res.getMessage("Descriptions");
@@ -2272,7 +2296,7 @@ public abstract class TipiContext {
 	}
 
 	public URL getBinaryUrl(Binary b) {
-		String url = NavajoClientFactory.getClient().getServerUrl();
+		String url = getClient().getServerUrl();
 		URL u;
 		try {
 			u = new URL(url + "?GetBinary=true&handle=" + b.getHandle());
@@ -2812,6 +2836,10 @@ public abstract class TipiContext {
 
 	public String getDescription(String expression) {
 		return "I am a monkey";
+	}
+
+	public ClientInterface getClient() {
+		return clientInterface;
 	}
 
 }
