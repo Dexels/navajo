@@ -8,7 +8,6 @@ import java.util.*;
 import javax.swing.*;
 
 import com.dexels.navajo.document.*;
-import com.dexels.navajo.tipi.swingclient.*;
 
 /**
  * <p>
@@ -30,31 +29,24 @@ import com.dexels.navajo.tipi.swingclient.*;
 
 public class FilterPanel extends JPanel {
 	static ResourceBundle res = ResourceBundle.getBundle("com.dexels.navajo.tipi.swingclient.components.filterpanelstrings");
-	JPanel flipPanel = new JPanel();
-	JPanel columnPanel = new JPanel();
-	JComboBox columnSelectBox = new JComboBox();
-	GenericPropertyComponent valueField = new GenericPropertyComponent();
-	JButton addButton = new JButton();
-	JButton clearButton = new JButton();
-	String[] ignoreList;
+	private JPanel flipPanel = new JPanel();
+	private JPanel columnPanel = new JPanel();
+	private JComboBox columnSelectBox = new JComboBox();
+	private GenericPropertyComponent valueField = new GenericPropertyComponent();
+	private JButton addButton = new JButton();
+	private JButton clearButton = new JButton();
+	private String[] ignoreList;
 	private int filterCount = 0;
 	private String templateDir, mergedataDir, emailColumn;
 	JLabel filteredRowCountLabel = new JLabel();
-	// Specifiy merge data file.
-
-	// public static final String mergeDataFile =
-	// System.getProperty("user.home") + System.getProperty("file.separator") +
-	// ( (System.getProperty("os.name").toLowerCase().indexOf("windows") >= 0) ?
-	// "" : ".") + "sl-excel-export.csv";
-
 	private MessageTable myTable;
-	JButton columnsButton = new JButton();
-	JButton columnsSaveButton = new JButton();
-	JButton excelButton = new JButton();
-	JButton wordButton = new JButton();
-	JButton emailButton = new JButton();
+	private JButton columnsButton = new JButton();
+	private JButton columnsSaveButton = new JButton();
+	private JButton excelButton = new JButton();
+	private JButton wordButton = new JButton();
+	private JButton emailButton = new JButton();
 
-	private HashMap nameIdMap = new HashMap();
+	private HashMap<String,String> nameIdMap = new HashMap<String,String>();
 	JComboBox operatorBox = new JComboBox();
 
 	private boolean babyMode = false;
@@ -274,7 +266,7 @@ public class FilterPanel extends JPanel {
 	void addButton_actionPerformed(ActionEvent e) {
 		String selected = (String) columnSelectBox.getSelectedItem();
 		if (selected != null) {
-			String propId = (String) nameIdMap.get(selected);
+			String propId = nameIdMap.get(selected);
 			if (propId != null) {
 				myTable.resetColorMap();
 				/** @todo Fix */
@@ -414,7 +406,7 @@ public class FilterPanel extends JPanel {
 	private final void loadPanel() {
 		if (referenceMessage != null) {
 			String prop = (String) columnSelectBox.getSelectedItem();
-			String id = (String) nameIdMap.get(prop);
+			String id = nameIdMap.get(prop);
 //			valueField.setHardEnabled(true);
 			Property p;
 			if (referenceMessage.getProperty(id) != null) {
@@ -428,21 +420,21 @@ public class FilterPanel extends JPanel {
 			if (p != null && p.getType().equals(Property.SELECTION_PROPERTY)) {
 				try {
 					Message table = myTable.getMessage();
-					Set s = new TreeSet();
+					Set<Selection> s = new TreeSet<Selection>();
 					Navajo dumm = NavajoFactory.getInstance().createNavajo();
 					for (int i = 0; i < table.getArraySize(); i++) {
 						Message cur = table.getMessage(i);
 						Property selProp = cur.getProperty(id).copy(dumm);
-						ArrayList sels = selProp.getAllSelections();
+						ArrayList<Selection> sels = selProp.getAllSelections();
 						for (int j = 0; j < sels.size(); j++) {
-							Selection sel = (Selection) sels.get(j);
+							Selection sel = sels.get(j);
 							s.add(sel);
 						}
 					}
 					Property q = NavajoFactory.getInstance().createProperty(dumm, id, "1", id, "in");
-					Iterator it = s.iterator();
+					Iterator<Selection> it = s.iterator();
 					while (it.hasNext()) {
-						Selection qs = (Selection) it.next();
+						Selection qs = it.next();
 						q.addSelection(qs);
 					}
 					valueField.setProperty(q);
