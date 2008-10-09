@@ -4,7 +4,7 @@ import java.util.*;
 
 import com.dexels.navajo.tipi.*;
 
-public class TipiJabberExtension implements TipiExtension {
+public class TipiJabberExtension extends AbstractTipiExtension implements TipiExtension {
 
 	public void initialize(TipiContext tc) {
 		// Do nothing
@@ -12,7 +12,7 @@ public class TipiJabberExtension implements TipiExtension {
 	}
 
 	public String getDescription() {
-		return "Jabber extensions. Swing component for now, can easily be refactored to core";
+		return "Jabber extensions. Non ui component";
 	}
 
 	public String[] getIncludes() {
