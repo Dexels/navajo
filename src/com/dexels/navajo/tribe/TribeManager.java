@@ -104,7 +104,7 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 	
 	private static String myName;
 	private volatile static boolean initializing = false;
-	private static TribeManager instance = null;
+	private volatile static TribeManager instance = null;
 	
 	private final static Object semaphore = new Object();
 	private final static HashMap<String,Integer> counts = new HashMap<String,Integer>();
@@ -236,9 +236,9 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 		
 		AuditLog.log("**************************************", "in JGROUPS.getState()");
 		try {
-			synchronized (state) {
+			//synchronized (state) {
 				return Util.objectToByteBuffer(state);
-			}
+			//}
 		}
 		catch(Exception e) {
 			e.printStackTrace();
@@ -251,10 +251,10 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 		try {
 			ClusterState cs = (ClusterState) Util.objectFromByteBuffer(new_state);
 			HashSet<TribeMember> tribalMap= cs.clusterMembers;
-			synchronized (state) {
+			//synchronized (state) {
 				state.clusterMembers.clear();
 				state.clusterMembers.addAll(tribalMap);
-			}
+			//}
 		}
 		catch(Exception e) {
 			e.printStackTrace();
@@ -263,16 +263,16 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 	
 	public void addTribeMember(TribeMemberInterface tm) {
 		AuditLog.log(AuditLog.AUDIT_MESSAGE_TRIBEMANAGER, "In addTribeMember");
-		synchronized (state) {
+		//synchronized (state) {
 			state.clusterMembers.add( (TribeMember) tm);
-		}
+		//}
 		updateState();
 	}
 	
 	private final void updateState() {
 		
 		AuditLog.log(AuditLog.AUDIT_MESSAGE_TRIBEMANAGER, "In updatestate....");
-		synchronized (state) {
+		//synchronized (state) {
 			// Set chief correctly and myMembership correctly.
 			
 			do {
@@ -285,7 +285,7 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 					if ( mbr.getAddress().equals(w.getMembers().get(0))) {
 						mbr.setChief(true);
 						theChief = mbr;
-						state.notifyAll();
+						//state.notifyAll();
 					} else {
 						mbr.setChief(false);
 					}
@@ -297,16 +297,16 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 				}
 				
 				if ( theChief == null ) {
-					try {
+					//try {
 						AuditLog.log(AuditLog.AUDIT_MESSAGE_TRIBEMANAGER, "Did not get Chief yet, MemberShipSmokeSignal was faster than view update, wait a bit");
-						state.wait(500);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+						//state.wait(500);
+//					} catch (InterruptedException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					}
 				}
 			} while ( theChief == null);
-		}
+		//}
 	}
 	
 	public void viewAccepted(View new_view) {
@@ -324,7 +324,7 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 			for ( int i = 0; i < pv.size(); i++ ) {
 				if (!new_view.containsMember( pv.get(i) ) ) {
 					System.err.println(myName + "THIS ONE DIED: " + ((IpAddress) pv.get(i)).getPort() );
-					synchronized (state) {
+					//synchronized (state) {
 						Set<TribeMember> copyOf = new HashSet<TribeMember>(state.clusterMembers);
 						Iterator<TribeMember> iter = copyOf.iterator();
 						while ( iter.hasNext() ) {
@@ -336,7 +336,7 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 								deActivateMember(mbr);
 							}
 						}
-					}
+					//}
 				}
 			}
 			updateState();
@@ -538,8 +538,10 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 		while (theChief == null) {
 			synchronized (state) {
 				try {
-					AuditLog.log(AuditLog.AUDIT_MESSAGE_TRIBEMANAGER, "Waiting for the Chief...");
-					state.wait(10000);
+					if ( theChief == null ) {
+						AuditLog.log(AuditLog.AUDIT_MESSAGE_TRIBEMANAGER, "Waiting for the Chief...");
+						state.wait(2000);
+					}
 				} catch (InterruptedException e) {
 				}
 			}
