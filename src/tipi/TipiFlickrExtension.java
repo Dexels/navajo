@@ -4,7 +4,7 @@ import java.util.*;
 
 import com.dexels.navajo.tipi.*;
 
-public class TipiFlickrExtension implements TipiExtension {
+public class TipiFlickrExtension extends AbstractTipiExtension implements TipiExtension {
 
 	public void initialize(TipiContext tc) {
 		// Do nothing
