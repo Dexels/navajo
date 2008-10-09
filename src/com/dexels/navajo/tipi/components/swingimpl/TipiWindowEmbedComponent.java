@@ -19,63 +19,67 @@ import com.dexels.navajo.tipi.components.swingimpl.embed.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 
 public class TipiWindowEmbedComponent extends TipiEmbedComponent {
-
-	public Object createContainer() {
+	private JInternalFrame panel = null;
 	
-		final JInternalFrame panel;
-		panel = new EmbeddedTipiFrame();
-		panel.setClosable(true);
-		panel.setMaximizable(true);
-		panel.setIconifiable(true);
-		panel.setResizable(true);
-		panel.setLayout(new BorderLayout());
-		panel.setVisible(true);
-		panel.setSize(500, 300);
-		stc = new TipiSwingStandaloneContainer((SwingTipiContext) getContext());
-		((SwingTipiContext)stc.getContext()).setOtherRoot(panel);
-		stc.getContext().setDefaultTopLevel(this);
-		panel.addInternalFrameListener(new InternalFrameAdapter(){
-			public void internalFrameClosing(InternalFrameEvent arg0) {
-				disposeComponent();
-				stc.shutDownTipi();
-				getContext().disposeTipiComponent(TipiWindowEmbedComponent.this);
-			}
+	public Object createContainer() {
+		runSyncInEventThread(new Runnable(){
 
-		});
-		stc.getContext().addShutdownListener(new ShutdownListener(){
+			public void run() {
+				panel = new EmbeddedTipiFrame();
+				panel.setClosable(true);
+				panel.setMaximizable(true);
+				panel.setIconifiable(true);
+				panel.setResizable(true);
+				panel.setLayout(new BorderLayout());
+				panel.setVisible(true);
+				panel.setSize(500, 300);
+				stc = new TipiSwingStandaloneContainer((SwingTipiContext) getContext());
+				((SwingTipiContext)stc.getContext()).setOtherRoot(panel);
+//				stc.getContext().setDefaultTopLevel(TipiWindowEmbedComponent.this);
+				panel.addInternalFrameListener(new InternalFrameAdapter(){
+					public void internalFrameClosing(InternalFrameEvent arg0) {
+						disposeComponent();
+						stc.shutDownTipi();
+						getContext().disposeTipiComponent(TipiWindowEmbedComponent.this);
+					}
 
-			public void contextShutdown() {
-				runSyncInEventThread(new Runnable(){
+				});
+				stc.getContext().addShutdownListener(new ShutdownListener(){
 
-					public void run() {
-						panel.setVisible(false);
-						panel.dispose();
+					public void contextShutdown() {
+						runSyncInEventThread(new Runnable(){
+
+							public void run() {
+								panel.setVisible(false);
+								panel.dispose();
+							}});
+						
 					}});
 				
+			
+//				stc.getContext().addNavajoListener(new TipiNavajoListener(){
+//
+//					public void navajoReceived(Navajo n, String service) {
+//						System.err.println("Nabacho: "+service);
+//						try {
+//							myContext.injectNavajo(service, n);
+//							Navajo navajoList = myContext.createNavajoListNavajo();
+//							myContext.injectNavajo("NavajoListNavajo", navajoList);
+//							
+//						} catch (TipiBreakException e) {
+//							e.printStackTrace();
+//						} catch (NavajoException e) {
+//							e.printStackTrace();
+//						}
+//						
+//					}
+//
+//					public void navajoSent(Navajo n, String service) {
+//						
+//					}});
+				//stc.setRootComponent(panel);				
 			}});
-		
-	
-		stc.getContext().addNavajoListener(new TipiNavajoListener(){
 
-			public void navajoReceived(Navajo n, String service) {
-				System.err.println("Nabacho: "+service);
-				try {
-					myContext.injectNavajo(service, n);
-					Navajo navajoList = myContext.createNavajoListNavajo();
-					myContext.injectNavajo("NavajoListNavajo", navajoList);
-					
-				} catch (TipiBreakException e) {
-					e.printStackTrace();
-				} catch (NavajoException e) {
-					e.printStackTrace();
-				}
-				
-			}
-
-			public void navajoSent(Navajo n, String service) {
-				
-			}});
-		//stc.setRootComponent(panel);
 		return panel;
 	}
 
