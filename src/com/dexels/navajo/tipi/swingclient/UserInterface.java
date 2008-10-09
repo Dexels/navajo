@@ -4,7 +4,6 @@ import java.util.*;
 
 import javax.swing.*;
 
-import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.swingclient.components.*;
 /**
  * <p>Title: SportLink Client:</p>

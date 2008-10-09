@@ -53,16 +53,13 @@ public void setProperty(Property p) {
             text = ""+d;
         }
         if(text.equals(inText)) {
-//        	System.err.println("Californiasoep");
         } else {
             myDocument.remove(0, myDocument.getLength());
             myDocument.insertString(0, "" + val, null);
         }
     } catch(BadLocationException ex1) {
       ex1.printStackTrace();
-//      System.err.println("Oh dear");
     }
-    String toolTipText = "";
     setEditable(p.isDirIn());
     super.setProperty(p);
   }
