@@ -17,8 +17,8 @@ import com.dexels.navajo.document.*;
  */
 
 class NameIdMap {
-  HashMap propertyNameIdMap = new HashMap();
-  HashMap propertyIdNameMap = new HashMap();
+  HashMap<String,String> propertyNameIdMap = new HashMap<String,String>();
+  HashMap<String,String> propertyIdNameMap = new HashMap<String,String>();
 
   public void put(String id, String name) {
     propertyNameIdMap.put(name, id);
@@ -26,11 +26,11 @@ class NameIdMap {
   }
 
   public String getById(String id) {
-    return (String) propertyIdNameMap.get(id);
+    return propertyIdNameMap.get(id);
   }
 
   public String getByName(String name) {
-    return (String) propertyNameIdMap.get(name);
+    return propertyNameIdMap.get(name);
   }
 
   public void clear() {
@@ -41,27 +41,27 @@ class NameIdMap {
 
 public class ColumnManagementDialog
     extends JDialog {
-  JList availableColumnList = new JList();
-  JList visibleColumnList = new JList();
-  JButton hideButton = new JButton();
-  JButton showButton = new JButton();
-  JLabel jLabel1 = new JLabel();
-  JLabel jLabel2 = new JLabel();
-  GridBagLayout gridBagLayout1 = new GridBagLayout();
-  MessageTable myTable;
-  NameIdMap nameIdMap = new NameIdMap();
-  JScrollPane scroll1 = new JScrollPane();
-  JScrollPane scroll2 = new JScrollPane();
-  ArrayList availableItems = new ArrayList();
-  ArrayList visibleItems = new ArrayList();
-  JButton okButton = new JButton();
-  JButton cancelButton = new JButton();
-  JButton jButton1 = new JButton();
-  JButton upButton = new JButton();
-  JButton downButton = new JButton();
-  String[] ignoreList;
+	private JList availableColumnList = new JList();
+  private JList visibleColumnList = new JList();
+  private JButton hideButton = new JButton();
+  private JButton showButton = new JButton();
+  private JLabel jLabel1 = new JLabel();
+  private JLabel jLabel2 = new JLabel();
+  private GridBagLayout gridBagLayout1 = new GridBagLayout();
+  private MessageTable myTable;
+  private NameIdMap nameIdMap = new NameIdMap();
+  private JScrollPane scroll1 = new JScrollPane();
+  private JScrollPane scroll2 = new JScrollPane();
+  private ArrayList<String> availableItems = new ArrayList<String>();
+  private ArrayList<String> visibleItems = new ArrayList<String>();
+  private JButton okButton = new JButton();
+  private JButton cancelButton = new JButton();
+  private JButton jButton1 = new JButton();
+  private JButton upButton = new JButton();
+  private JButton downButton = new JButton();
+  private String[] ignoreList;
   private Container myToplevel;
-  HashMap editableMap = new HashMap();
+  private HashMap<String,Boolean> editableMap = new HashMap<String,Boolean>();
 
   public ColumnManagementDialog(Dialog toplevel) {
     super(toplevel, true);
@@ -113,10 +113,10 @@ public class ColumnManagementDialog
 
     Message m = mt.getMessage();
     Message first = m.getMessage(0);
-    ArrayList props = first.getAllProperties();
+    ArrayList<Property> props = first.getAllProperties();
 
     for (int i = 0; i < props.size(); i++) {
-      Property current = (Property) props.get(i);
+      Property current = props.get(i);
       String name = current.getDescription();
       String id = current.getName();
 
@@ -160,7 +160,7 @@ public class ColumnManagementDialog
 
     DefaultListModel model2 = (DefaultListModel) availableColumnList.getModel();
     for (int j = 0; j < availableItems.size(); j++) {
-      String id = (String) availableItems.get(j);
+      String id = availableItems.get(j);
       String name = nameIdMap.getById(id);
       model2.addElement(name);
     }
@@ -242,9 +242,8 @@ public class ColumnManagementDialog
       myTable.removeColumn(item);
     }
     DefaultListModel vm = (DefaultListModel) visibleColumnList.getModel();
-    Enumeration m = vm.elements();
+    Enumeration<?> m = vm.elements();
     myTable.removeAllColumns();
-    int i = 0;
     while (m.hasMoreElements()) {
       String name = (String) m.nextElement();
       System.err.println("Name: " + name);
@@ -252,7 +251,7 @@ public class ColumnManagementDialog
       if (id != null && !id.equals("") && !id.equals("ERROR!")) {
         boolean editable = false;
         if(editableMap.get(id) != null){
-          editable = ((Boolean)editableMap.get(id)).booleanValue();
+          editable = editableMap.get(id).booleanValue();
         }
         myTable.addColumn(id, name, editable);
       }
