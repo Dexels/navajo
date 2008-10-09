@@ -6,7 +6,7 @@ import java.util.*;
 import com.dexels.navajo.tipi.TipiContext;
 
 
-public class TipiGeoSwingExtension implements TipiExtension {
+public class TipiGeoSwingExtension extends AbstractTipiExtension implements TipiExtension {
 
 	public void initialize(TipiContext tc) {
 		// Do nothing
