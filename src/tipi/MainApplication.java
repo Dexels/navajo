@@ -1,6 +1,7 @@
 package tipi;
 
 import java.io.*;
+import java.net.*;
 import java.util.*;
 
 import javax.swing.*;
@@ -13,26 +14,31 @@ public class MainApplication {
 
 	static public void main(String[] args) throws Exception {
 		String definition = null;
-		String os = System.getProperty("os.name");
-		if(os.toLowerCase().indexOf("linux")!=-1) {
-			JFrame.setDefaultLookAndFeelDecorated(true);
-			JDialog.setDefaultLookAndFeelDecorated(true);
-		} else {
+//		String os = System.getProperty("os.name");
+//		if(os.toLowerCase().indexOf("linux")!=-1) {
+//			JFrame.setDefaultLookAndFeelDecorated(true);
+//			JDialog.setDefaultLookAndFeelDecorated(true);
+//		} else {
 //			System.err.println("Ignoring LNF, ON LINUX ONLY!");
 			JFrame.setDefaultLookAndFeelDecorated(true);
 			JDialog.setDefaultLookAndFeelDecorated(true);
-		}
+//		}
 
 		if (args.length < 1) {
 			definition = "init";
 		}  else {
 			definition = args[args.length - 1];
 		}
-
+		String[] appArgs = new String[]{};
+		if(definition.endsWith(".properties")) {
+			// Newstyle property initializer
+			System.err.println("New style initialization!");
+			appArgs = parseBundle(definition);
+		}
 		boolean studio;
 		try {
 			Class.forName("tipi.TipiDevelopTools");
-			System.err.println("Tipi studio disabled for now");
+			System.err.println("Tipi studio found, but disabled for now");
 			studio = false;
 		} catch (ClassNotFoundException e) {
 			studio = false;
@@ -40,7 +46,22 @@ public class MainApplication {
 		final boolean studioMode = studio;
 		final List<String> arrrgs = new ArrayList<String>();
 		for (int i = 0; i < args.length; i++) {
+			System.err.println("Arrg:" +args[i]);
 			arrrgs.add(args[i]);
+		}
+		for (int i = 0; i < appArgs.length; i++) {
+			System.err.println("Arrg:" +args[i]);
+			arrrgs.add(appArgs[i]);
+		}
+		
+		if(definition.endsWith(".properties")) {
+			if(!args[args.length-1].startsWith("-D")) {
+				definition = args[args.length-1];
+			} else {
+				System.err.println("Nothing found nulling def!");
+				definition = null;
+			}
+			System.err.println("Again new style: Set definition to: "+definition);
 		}
 		RepaintManager.setCurrentManager(new CheckThreadViolationRepaintManager());
 		final String def = definition;
@@ -52,10 +73,14 @@ public class MainApplication {
 						SwingTipiContext s = initialize("develop","tipi/develop.xml",arrrgs,null,null);
 						s.injectApplication(def,arrrgs,"/init/tipi/sandbox");
 					} else {
-						if (def.endsWith(".xml")) {
-							initialize("init",def,arrrgs,null,null);
+						if(def==null) {
+							initialize("init","init.xml",arrrgs,null,null);
 						} else {
-							initialize(def,"start.xml",arrrgs,null,null);
+							if (def.endsWith(".xml")) {
+								initialize("init",def,arrrgs,null,null);
+							} else {
+								initialize(def,"start.xml",arrrgs,null,null);
+							}
 						}
 					}
 					
@@ -68,6 +93,32 @@ public class MainApplication {
 
 
 	
+private static String[] parseBundle(String definition) throws IOException {
+	URL u = new URL(definition);
+	
+	InputStream openStream = u.openStream();
+	InputStreamReader appUrl = new InputStreamReader(openStream);
+	BufferedReader br = new BufferedReader(appUrl);
+	String line = null;
+	List<String> result = new LinkedList<String>();
+	do {
+		line = br.readLine();
+		if(line!=null) {
+			result.add(line);
+		}
+	} while(line!=null);
+	String[] arr = new String[result.size()];
+	int i=0;
+	for (String string : result) {
+		arr[i++] = string;
+		System.err.println("Parsing: "+string);
+	}
+	openStream.close();
+	return arr;
+}
+
+
+
 /**
  * Definitionpath allows a non standard definition path
  * @param definition
