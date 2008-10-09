@@ -116,7 +116,8 @@ public abstract class TipiEmbedComponent extends TipiDataComponentImpl {
 
 		super.setComponentValue(name, value);
 	}
-
+	public void addToContainer(Object c, Object constraints) {
+	}
 	protected Object getComponentValue(String name) {
 		if (name.equals("context")) {
 			return myContext;
