@@ -37,7 +37,6 @@ public class TipiBatikExtension implements TipiExtension {
 	public List<String> getLibraryJars() {
 		List<String> l = new LinkedList<String>();
 		l.add("xml-apis.jar");
-		System.err.println("WARNING, OUTDATED!");
 		l.add("batik-all.jar");
 		l.add("xml-apis-ext.jar");
 		return l;
