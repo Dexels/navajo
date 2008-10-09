@@ -1342,7 +1342,7 @@ public void updateTableSize() {
 		  System.err.println("Adding width: "+width);
 		  System.err.println("Adding name: "+name);
 	  } 
-	  
+	  System.err.println("USING NAVAJOCLIENTFACTORY. This will stop working pretty soon.");
 	  Binary result = NavajoClientFactory.getClient().getArrayMessageReport(m, names, titles, widths, format, orientation,margins);
 	  return result;
   }
