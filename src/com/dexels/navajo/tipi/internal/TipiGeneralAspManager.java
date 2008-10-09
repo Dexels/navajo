@@ -20,10 +20,12 @@ public class TipiGeneralAspManager implements TipiStorageManager {
 	public final String scriptPrefix;
 	// public final String authorId;
 	private String instanceId;
+	private final TipiContext myContext;
 
 	public static final String TYPE_SETTING = "TIPI_SETTING";
 
-	public TipiGeneralAspManager(String scriptPrefix, String instanceId) {
+	public TipiGeneralAspManager(TipiContext tc, String scriptPrefix, String instanceId) {
+		this.myContext = tc;
 		this.scriptPrefix = scriptPrefix;
 		this.instanceId = instanceId;
 	}
@@ -32,7 +34,7 @@ public class TipiGeneralAspManager implements TipiStorageManager {
 		Navajo reply = null;
 		try {
 			Navajo request = constructRequest(id);
-			reply = NavajoClientFactory.getClient().doSimpleSend(request, scriptPrefix + STORAGE_QUERY_SERVICE);
+			reply = myContext.getClient().doSimpleSend(request, scriptPrefix + STORAGE_QUERY_SERVICE);
 			Message err = reply.getMessage("error");
 			if (err != null) {
 				System.err.println("SERVER ERROR: ");
@@ -72,7 +74,7 @@ public class TipiGeneralAspManager implements TipiStorageManager {
 	public void setStorageDocument(String id, Navajo n) throws TipiException {
 		try {
 			Navajo request = constructUpdateRequest(id, n);
-			Navajo reply = NavajoClientFactory.getClient().doSimpleSend(request, scriptPrefix + STORAGE_UPDATE_SERVICE);
+			Navajo reply = myContext.getClient().doSimpleSend(request, scriptPrefix + STORAGE_UPDATE_SERVICE);
 			Message err = reply.getMessage("error");
 			if (err != null) {
 				System.err.println("SERVER ERROR: ");

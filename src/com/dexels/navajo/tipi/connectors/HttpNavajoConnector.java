@@ -20,7 +20,7 @@ public class HttpNavajoConnector extends TipiBaseConnector  {
 			Map<String, Object> s = new HashMap<String, Object>();
 			s.put("service", service);
 			performTipiEvent("onServiceSent", s, false);
-			Navajo result = NavajoClientFactory.getClient().doSimpleSend(nn, service);
+			Navajo result = myContext.getClient().doSimpleSend(nn, service);
 			performTipiEvent("onServiceReceived", s, false);
 			if (result.getHeader() != null) {
 				result.getHeader().setHeaderAttribute("sourceScript", result.getHeader().getRPCName());
@@ -34,13 +34,13 @@ public class HttpNavajoConnector extends TipiBaseConnector  {
 
 	protected void setComponentValue(String name, Object object) {
 		if (name.equals("server")) {
-			NavajoClientFactory.getClient().setServerUrl((String) object);
+			myContext.getClient().setServerUrl((String) object);
 		}
 		if (name.equals("username")) {
-			NavajoClientFactory.getClient().setUsername((String) object);
+			myContext.getClient().setUsername((String) object);
 		}
 		if (name.equals("password")) {
-			NavajoClientFactory.getClient().setPassword((String) object);
+			myContext.getClient().setPassword((String) object);
 		}
 
 		super.setComponentValue(name, object);

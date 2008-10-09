@@ -27,11 +27,11 @@ public class TipiSetPostman extends TipiAction {
 		final Operand serv = getEvaluatedParameter("server", event);
 		final Operand user = getEvaluatedParameter("username", event);
 		final Operand pass = getEvaluatedParameter("password", event);
-		NavajoClientFactory.resetClient();
-		NavajoClientFactory.createDefaultClient();
-		NavajoClientFactory.getClient().setServerUrl("" + serv.value);
-		NavajoClientFactory.getClient().setUsername("" + user.value);
-		NavajoClientFactory.getClient().setPassword("" + pass.value);
+//		NavajoClientFactory.resetClient();
+//		NavajoClientFactory.createDefaultClient();
+		myContext.getClient().setServerUrl("" + serv.value);
+		myContext.getClient().setUsername("" + user.value);
+		myContext.getClient().setPassword("" + pass.value);
 		System.err.println("Created new client pointing to: " + serv.value + " using username: " + user.value);
 	}
 }

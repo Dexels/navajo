@@ -28,6 +28,6 @@ public class TipiSetLocale extends TipiAction {
 		// final Operand context = getEvaluatedParameter("context", event);
 		// myContext.initRemoteDescriptionProvider((String)context.value,
 		// (String)locale.value);
-		NavajoClientFactory.getClient().setLocaleCode("" + locale.value);
+		myContext.getClient().setLocaleCode("" + locale.value);
 	}
 }

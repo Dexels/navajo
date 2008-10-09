@@ -137,7 +137,7 @@ public class TipiNewCallService extends TipiAction {
 			// things up.
 			myContext.fireNavajoSent(input, service);
 
-			Navajo result = NavajoClientFactory.getClient().doSimpleSend(nn, service);
+			Navajo result = myContext.getClient().doSimpleSend(nn, service);
 
 			myContext.addNavajo(service, result);
 			// is this correct? It is a bit odd.

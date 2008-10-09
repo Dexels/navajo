@@ -100,7 +100,7 @@ public class TipiPerformMethod extends TipiAction {
 		if (tipi != null) {
 			evalTipi = (TipiDataComponent) tipi.value;
 		}
-		NavajoClientFactory.getClient().setCondensed(condenseCheck);
+		myContext.getClient().setCondensed(condenseCheck);
 		if (method == null) {
 			throw new IllegalArgumentException("Error performing method. Method evaluated to null.");
 		}

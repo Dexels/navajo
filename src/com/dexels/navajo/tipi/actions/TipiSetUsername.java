@@ -25,6 +25,6 @@ public class TipiSetUsername extends TipiAction {
 	public void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
 		// TODO Add support for multi-servers
 		final Operand user = getEvaluatedParameter("username", event);
-		NavajoClientFactory.getClient().setUsername("" + user.value);
+		myContext.getClient().setUsername("" + user.value);
 	}
 }
