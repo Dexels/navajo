@@ -10,7 +10,11 @@ import com.dexels.navajo.tipi.*;
 /**
  * @author frank
  * 
+ * This thing is silly. Use the constant: {navajo:/...}
+ * @deprecated
+ * 
  */
+@Deprecated
 public class GetNavajo extends FunctionInterface {
 
 	/*
