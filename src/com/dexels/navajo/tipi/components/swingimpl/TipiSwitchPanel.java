@@ -27,23 +27,20 @@ import com.dexels.navajo.tipi.*;
 public class TipiSwitchPanel extends TipiPanel {
 
     private CardLayout cardLayout;
-
 	private final Map<Object,String> componentMap = new HashMap<Object,String>();
-
     private String selectedId;
-
     private Integer selectedIndex;
 	public TipiSwitchPanel() {
 	}
 
 	public Object createContainer() {
-//		myContainer = new Grid(1);
         Container c = (Container)super.createContainer();
         cardLayout = new CardLayout();
         c.setLayout(cardLayout);
         return c;
 	}
 
+	@Override
 	 public void addComponent(TipiComponent c, int index, TipiContext context, Object td) {
          System.err.println("Trapped an addcomponent!");
         if (c.getContainer()!=null) {
@@ -51,8 +48,12 @@ public class TipiSwitchPanel extends TipiPanel {
         }
         super.addComponent(c, index, context, td);
     }
-      public void addToContainer(final Object c, final Object constraints) {
+
+	@Override
+
+	public void addToContainer(final Object c, final Object constraints) {
           String name = componentMap.get(c);
+          System.err.println("Adding to switch with name: "+name);
           if (name==null) {
               getSwingContainer().add( (Component) c, name);
               if (getChildCount()<=1) {
@@ -62,20 +63,18 @@ public class TipiSwitchPanel extends TipiPanel {
 			}
           } else {
         	  System.err.println("Component: "+c+" not found");
+              getSwingContainer().add( (Component) c, name);
           }
           updateSelected();
         }
 	 
 	public void setComponentValue(String name, Object object) {
 		super.setComponentValue(name, object);
-		if (name.equals("selected")) {
+		if (name.equals("selectedId")) {
 		    selectedId = (String) object;
             selectedIndex = null;
  		}
-		if (name.equals("selectedindex")) {
-			selectedIndex = (Integer) object;
-            selectedId = null;
-		}
+
 		updateSelected();
         /** @todo Override this com.dexels.navajo.tipi.TipiComponent method */
 	}
@@ -88,14 +87,23 @@ public class TipiSwitchPanel extends TipiPanel {
             tc = getTipiComponent(selectedIndex.intValue());
         } 
         if (selectedId!=null) {
+        	System.err.println("Switchin 2: "+selectedId);
             tc = getTipiComponent(selectedId);
+        	System.err.println("Switchin... "+tc.getPath());
+
         } 
         
         if (tc==null) {
-            System.err.println("Oh @#$#@$");
+            System.err.println("Oh @#$#@$ couldnt find: "+selectedId);
             return;
         }
-        cardLayout.show(getSwingContainer(), tc.getId());
-        
+        final TipiComponent tc2 = tc;
+        runSyncInEventThread(new Runnable(){
+
+			public void run() {
+			    cardLayout.show(getSwingContainer(), tc2.getId());
+			    
+			}});
+          
     }
 }
