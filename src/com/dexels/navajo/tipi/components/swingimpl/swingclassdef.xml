@@ -137,7 +137,7 @@
       <description>
          The switchpanel allows you to add multiple components to it. Only one component will be visible at the time
          It uses the Swing cardlayout, and you can compare it to a tabpane without the tabs.
-         You can switch between the tabs by setting the selected or selectedindex attribute
+         You can switch between the tabs by setting the selectedId attribute
       </description>
       <events>
          <event name="onInstantiate" />
@@ -148,12 +148,7 @@
          <event name="onGeneratedErrors" />
       </events>
       <values>
-         <value direction="inout" name="selectedindex" type="integer">
-            <description>
-               Set the selected tab based on the index of that component
-            </description>
-         </value>
-         <value direction="inout" name="selected" type="string">
+          <value direction="inout" name="selectedId" type="string">
             <description>
                Set the selected tab based on a string. The string can be supplied by adding
                a constraint when adding the child.
@@ -1140,15 +1135,14 @@
       </values>
       <methods />
    </tipiclass>
-   
-   
-   <tipiclass addtocontainer="true" class="TipiMenuSeparator" module="menu" childcount="0" name="separator" package="com.dexels.navajo.tipi.components.swingimpl" layoutmanager="false"
-      propertycomponent="false" studio-icon="menu.gif" type="component">
+   <tipiclass addtocontainer="true" class="TipiMenuSeparator" module="menu" childcount="0" name="separator" package="com.dexels.navajo.tipi.components.swingimpl"
+      layoutmanager="false" propertycomponent="false" studio-icon="menu.gif" type="component">
       <events>
          <event name="onInstantiate" />
-       </events>
+      </events>
       <values>
-         </values>
+         <value direction="in" name="visible" type="boolean" property="visible" />
+      </values>
       <methods />
    </tipiclass>
  
