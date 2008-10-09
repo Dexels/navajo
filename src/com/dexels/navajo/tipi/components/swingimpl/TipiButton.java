@@ -33,7 +33,6 @@ import com.dexels.navajo.tipi.internal.*;
 public class TipiButton extends TipiSwingComponentImpl {
 	private boolean iAmEnabled = true;
 	private AbstractAction buttonAction;
-	private long lastEventStart;
 	public Object createContainer() {
 		final TipiSwingButton myButton = new TipiSwingButton();
 		buttonAction = new AbstractAction("onActionPerformed"){

@@ -68,8 +68,6 @@ public class TipiMenuItem extends TipiSwingComponentImpl {
 				}
 				JMenuItem jj = (JMenuItem) cc;
 				// jj.getTopLevelAncestor()
-				System.err.println("My toplevel: " + jj.getTopLevelAncestor());
-				Thread.dumpStack();
 				if (jj.getTopLevelAncestor() != null) {
 
 					jj.getTopLevelAncestor().setCursor(b ? Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR) : Cursor.getDefaultCursor());
