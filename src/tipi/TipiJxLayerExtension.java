@@ -3,20 +3,20 @@ package tipi;
 import java.util.*;
 
 import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.jxlayer.impl.*;
 
-public class TipiJxLayerExtension implements TipiExtension {
+public class TipiJxLayerExtension extends AbstractTipiExtension implements TipiExtension {
 
 	public void initialize(TipiContext tc) {
-		// Do nothing
-		
+		tc.getTipiValidationDecorator(new JxValidationDecorator());
 	}
 
 	public String getDescription() {
-		return "SwingX extended libraries";
+		return "JXLayer extended libraries";
 	}
 
 	public String[] getIncludes() {
-		return new String[]{"com/dexels/navajo/tipi/swingxclassdef.xml"};
+		return new String[]{"com/dexels/navajo/tipi/jxlayerclassdef.xml"};
 	}
 
 	public boolean isMainImplementation() {
@@ -52,7 +52,9 @@ public class TipiJxLayerExtension implements TipiExtension {
 	}
 
 	public List<String> getRequiredExtensions() {
-		return null;
+		List<String> l = new LinkedList<String>();
+		l.add("swingx");
+		return l;
 	}
 	public String getProjectName() {
 		return "TipiJxLayer";
