@@ -145,6 +145,7 @@ public class TipiMegaTable extends TipiSwingDataComponentImpl {
 
 
 
+	@SuppressWarnings("deprecation")
 	public void flatten(String serviceName, String hostUrl, String username, String password, String pincode, String keystore,
 			String keypass) throws NavajoException, TipiBreakException {
 		Navajo out = NavajoFactory.getInstance().createNavajo();
