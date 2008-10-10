@@ -187,7 +187,7 @@ public final class StatisticsRunner extends GenericThread implements StatisticsR
    * @param a
    */
   @SuppressWarnings("unchecked")
-  public final void addAccess(final Access a, final Throwable e, AsyncMappable am) {
+  public final void addAccess(final Access a, AsyncMappable am) {
 	  
 	  Access myAccess;
 	  
@@ -328,7 +328,7 @@ public final class StatisticsRunner extends GenericThread implements StatisticsR
 	  if ( ne instanceof NavajoResponseEvent ) {
 		  NavajoResponseEvent nre = (NavajoResponseEvent) ne;
 		  if (  isEnabled() && !Dispatcher.isSpecialwebservice( nre.getAccess().getRpcName() )) {
-			  addAccess(nre.getAccess(), nre.getException(), null);
+			  addAccess(nre.getAccess(), null);
 		  }
 	  } else if ( ne instanceof AuditLogEvent ) {
 		  if (  isEnabled() && ((AuditLogEvent) ne).getLevel().intValue() >= getAuditLevel() ) {
