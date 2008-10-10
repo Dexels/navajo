@@ -1112,7 +1112,9 @@ private final Navajo processNavajo(Navajo inMessage, Object userCertificate, Cli
     	    access.storeStatistics(h);
     		
     	    // Call Navajoresponse event.
-    	    NavajoEventRegistry.getInstance().publishEvent(new NavajoResponseEvent(access, myException));
+    	    access.setException(myException);
+    	    
+    	    NavajoEventRegistry.getInstance().publishEvent(new NavajoResponseEvent(access));
     	    
     	    // Publish exception event if exception occurred.
     	    if ( myException != null ) {
