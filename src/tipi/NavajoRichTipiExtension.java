@@ -4,7 +4,7 @@ import java.util.*;
 
 import com.dexels.navajo.tipi.*;
 
-public class NavajoRichTipiExtension implements TipiExtension {
+public class NavajoRichTipiExtension extends AbstractTipiExtension implements TipiExtension {
 
 	public void initialize(TipiContext tc) {
 		// Do nothing
@@ -24,12 +24,10 @@ public class NavajoRichTipiExtension implements TipiExtension {
 	}
 
 	public String getId() {
-		// TODO Auto-generated method stub
 		return "rich";
 	}
 
 	public String requiresMainImplementation() {
-		// TODO Auto-generated method stub
 		return "swing";
 	}
 
@@ -64,7 +62,6 @@ public class NavajoRichTipiExtension implements TipiExtension {
 	}
 
 	public List<String> getDependingProjectUrls() {
-		// TODO Auto-generated method stub
 		List<String> l = new LinkedList<String>();
 		l.add("https://timingframework.dev.java.net/");
 		l.add("https://animatedtransitions.dev.java.net/");
@@ -72,5 +69,6 @@ public class NavajoRichTipiExtension implements TipiExtension {
 		return l;
 
 	}
+
 
 }
