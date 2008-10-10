@@ -263,6 +263,7 @@ public final class OracleStore implements StoreInterface {
 			} else {
 				System.err.println("EMPTY ACCESS FOUND IN TODO!");
 			}
+			access = null;
 		} else {
 			// Did not find in accessMap, creating embryo access.
 			if (con != null) {
@@ -440,6 +441,8 @@ public final class OracleStore implements StoreInterface {
 							if (a.getException() != null || DispatcherFactory.getInstance().getNavajoConfig().needsFullAccessLog(a) ) {
 								addLog(con, a);
 							}
+							
+							a = null;
 							
 						} else {
 							
