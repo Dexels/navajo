@@ -9,11 +9,11 @@ import com.dexels.navajo.events.types.NavajoResponseEvent;
 import com.dexels.navajo.mapping.AsyncMappable;
 import com.dexels.navajo.server.Access;
 import com.dexels.navajo.server.Dispatcher;
+import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.GenericThread;
 import com.dexels.navajo.server.enterprise.statistics.StatisticsRunnerInterface;
 import com.dexels.navajo.server.enterprise.statistics.StoreInterface;
 import com.dexels.navajo.server.jmx.JMXHelper;
-import com.dexels.navajo.server.jmx.NavajoNotification;
 import com.dexels.navajo.util.AuditLog;
 
 import java.io.IOException;
@@ -23,7 +23,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 
-import javax.management.AttributeChangeNotification;
 import javax.management.Notification;
 import javax.management.NotificationListener;
 import javax.management.monitor.MonitorNotification;
@@ -190,9 +189,20 @@ public final class StatisticsRunner extends GenericThread implements StatisticsR
   @SuppressWarnings("unchecked")
   public final void addAccess(final Access a, final Throwable e, AsyncMappable am) {
 	  
+	  Access myAccess;
+	  
+	  if (a.getException() == null && !DispatcherFactory.getInstance().getNavajoConfig().needsFullAccessLog(a) ) {
+		  // Clone Access, do not include Navajo Request and Navajo Response objects.
+		  myAccess = a.cloneWithoutNavajos();
+	  } else {
+		  myAccess = a.cloneWithoutNavajos();
+		  myAccess.setInDoc(a.getInDoc());
+		  myAccess.setOutputDoc(a.getOutputDoc());
+	  }
+	  
 	  synchronized ( semaphore ) {
 		  try {
-		  todo.put( a.accessID, new TodoItem(a, am) );
+		  todo.put( myAccess.accessID, new TodoItem(myAccess, am) );
 		  } catch (IOException ioe) {
 			  //AuditLog.log("STATISTICS", "Could not wri)
 			  System.err.println("Could not write todoitem..." + ioe.getMessage());

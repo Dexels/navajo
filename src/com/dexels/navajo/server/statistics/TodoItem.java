@@ -37,39 +37,44 @@ import com.dexels.navajo.server.DispatcherFactory;
 
 public final class TodoItem {
 	
+	Access myAccess;
+	
 	public TodoItem(final Access a, final AsyncMappable am) throws IOException {
 		asyncobject = am;
-		File f = DispatcherFactory.getInstance().createTempFile(a.accessID, "log-todoitem");
-		persistedFileName = f.getAbsolutePath();
-		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(f));
-		oos.writeObject(a);
-		oos.close();
+//		File f = DispatcherFactory.getInstance().createTempFile(a.accessID, "log-todoitem");
+//		persistedFileName = f.getAbsolutePath();
+//		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(f));
+//		oos.writeObject(a);
+//		oos.close();
+		myAccess = a;
 	}
 	
 	public Access getAccessObject()  {
-		ObjectInputStream ois = null;
-		try {
-			File f = new File(persistedFileName);
-			ois = new ObjectInputStream(new FileInputStream(f));
-			Access a = (Access) ois.readObject();
-			return a;
-		} catch (Exception e) {
-			return null;
-		} finally {
-			if ( ois != null ) {
-				try {
-					ois.close();
-				} catch (IOException e) {}
-			}
-		}
+//		ObjectInputStream ois = null;
+//		try {
+//			File f = new File(persistedFileName);
+//			ois = new ObjectInputStream(new FileInputStream(f));
+//			Access a = (Access) ois.readObject();
+//			return a;
+//		} catch (Exception e) {
+//			return null;
+//		} finally {
+//			if ( ois != null ) {
+//				try {
+//					ois.close();
+//				} catch (IOException e) {}
+//			}
+//		}
+		return myAccess;
 	}
 	
 	public void finalize() {
-		if ( persistedFileName != null ) {
-			new File(persistedFileName).delete();
-		}
+		myAccess = null;
+//		if ( persistedFileName != null ) {
+//			new File(persistedFileName).delete();
+//		}
 	}
 	
-	private final String persistedFileName;
+	//private final String persistedFileName;
 	public final AsyncMappable asyncobject;
 }
