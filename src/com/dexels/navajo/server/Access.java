@@ -277,6 +277,7 @@ public final class Access implements java.io.Serializable, Mappable {
 	public Access cloneWithoutNavajos() {
 		Access a = new Access();
 		
+		a.created = this.created;
 		a.threadCount = this.threadCount;
 		a.cpuload = this.cpuload;
 		a.accessID = this.accessID;
@@ -302,6 +303,8 @@ public final class Access implements java.io.Serializable, Mappable {
 		a.clientToken = this.clientToken;
 		a.userCertificate = this.userCertificate;
 		a.piggyBackData = this.piggyBackData;
+		a.myException = this.myException;
+		a.mapStatistics = this.mapStatistics;
 		
 		return a;
 	}
