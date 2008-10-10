@@ -385,7 +385,7 @@ public abstract class AsyncMappable implements Mappable, AsyncMappableMXBean {
 				  }
 			  }
 			  logged = true;
-			  DispatcherFactory.getInstance().getNavajoConfig().getStatisticsRunner().addAccess(a, ue, this);
+			  DispatcherFactory.getInstance().getNavajoConfig().getStatisticsRunner().addAccess(a, this);
 		  } else {
 			  AuditLog.log(AuditLog.AUDIT_MESSAGE_ASYNC_RUNNER, "Warning: could not log async access due to missing access object!");
 		  }
