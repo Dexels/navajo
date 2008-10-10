@@ -236,9 +236,9 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 		
 		AuditLog.log("**************************************", "in JGROUPS.getState()");
 		try {
-			//synchronized (state) {
+			synchronized (state) {
 				return Util.objectToByteBuffer(state);
-			//}
+			}
 		}
 		catch(Exception e) {
 			e.printStackTrace();
@@ -251,10 +251,10 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 		try {
 			ClusterState cs = (ClusterState) Util.objectFromByteBuffer(new_state);
 			HashSet<TribeMember> tribalMap= cs.clusterMembers;
-			//synchronized (state) {
+			synchronized (state) {
 				state.clusterMembers.clear();
 				state.clusterMembers.addAll(tribalMap);
-			//}
+			}
 		}
 		catch(Exception e) {
 			e.printStackTrace();
@@ -263,9 +263,9 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 	
 	public void addTribeMember(TribeMemberInterface tm) {
 		AuditLog.log(AuditLog.AUDIT_MESSAGE_TRIBEMANAGER, "In addTribeMember");
-		//synchronized (state) {
+		synchronized (state) {
 			state.clusterMembers.add( (TribeMember) tm);
-		//}
+		}
 		updateState();
 	}
 	
@@ -536,15 +536,15 @@ public final class TribeManager extends ReceiverAdapter implements Mappable, Tri
 		}
 
 		while (theChief == null) {
-			synchronized (state) {
+			//synchronized (state) {
 				try {
 					if ( theChief == null ) {
 						AuditLog.log(AuditLog.AUDIT_MESSAGE_TRIBEMANAGER, "Waiting for the Chief...");
-						state.wait(2000);
+						Thread.sleep(2000);
 					}
 				} catch (InterruptedException e) {
 				}
-			}
+			//}
 		}
 		
 		if ( instance != null && !initializing ) {
