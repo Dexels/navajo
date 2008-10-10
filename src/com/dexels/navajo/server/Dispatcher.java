@@ -815,6 +815,7 @@ private final Navajo processNavajo(Navajo inMessage, Object userCertificate, Cli
     Throwable myException = null;
     String origThreadName = null;
     boolean scheduledWebservice = false;
+    boolean afterWebServiceActivated = false;
     
     int accessSetSize = accessSet.size();
     setRequestRate(clientInfo, accessSetSize);
@@ -1039,11 +1040,11 @@ private final Navajo processNavajo(Navajo inMessage, Object userCertificate, Cli
        
         // Call after web service event...
         if ( access != null && !scheduledWebservice ) {
-    		access.setInDoc(inMessage);
-    		//if (!isSpecialwebservice(rpcName)  ) {
-    			// Register webservice call to WebserviceListener if it was not a scheduled webservice.
-    			WebserviceListenerFactory.getInstance().afterWebservice(rpcName, access);
-    		//}
+        	access.setInDoc(inMessage);
+        	//if (!isSpecialwebservice(rpcName)  ) {
+        	// Register webservice call to WebserviceListener if it was not a scheduled webservice.
+        	afterWebServiceActivated = WebserviceListenerFactory.getInstance().afterWebservice(rpcName, access);
+        	//}
         }
         
         return outMessage;
@@ -1119,6 +1120,10 @@ private final Navajo processNavajo(Navajo inMessage, Object userCertificate, Cli
     	    }
     	    
     		appendServerBroadCast(access, inMessage,h);
+    		
+    		if ( !afterWebServiceActivated ) { // Nullify Access object if it did not result in an After Webservice action...s
+    			access = null;
+    		}
     	}
     	
     	if ( origThreadName != null ) {
