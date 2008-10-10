@@ -268,6 +268,43 @@ public final class Access implements java.io.Serializable, Mappable {
 		
 	}
 
+	
+	/**
+	 * Clone an Access object without cloning requestNavajo and responseNavajo.
+	 * 
+	 * @return
+	 */
+	public Access cloneWithoutNavajos() {
+		Access a = new Access();
+		
+		a.threadCount = this.threadCount;
+		a.cpuload = this.cpuload;
+		a.accessID = this.accessID;
+		a.userID = this.userID;
+		a.serviceID = this.serviceID;
+		a.rpcName = this.rpcName;
+		a.rpcPwd = this.rpcPwd;
+		a.rpcUser = this.rpcUser;
+		a.userAgent = this.userAgent;
+		a.ipAddress = this.ipAddress;
+		a.hostName = this.hostName;
+		a.betaUser = this.betaUser;
+		a.totaltime = this.totaltime;
+		a.parseTime = this.parseTime;
+		a.authorisationTime = this.authorisationTime;
+		a.clientTime = this.clientTime;
+		a.processingTime = this.processingTime;
+		a.requestEncoding = this.requestEncoding;
+		a.compressedReceive = this.compressedReceive;
+		a.compressedSend = this.compressedSend;
+		a.isFinished = this.isFinished;
+		a.contentLength = this.contentLength;
+		a.clientToken = this.clientToken;
+		a.userCertificate = this.userCertificate;
+		a.piggyBackData = this.piggyBackData;
+		
+		return a;
+	}
 	/**
 	 * Dummy access.
 	 */
