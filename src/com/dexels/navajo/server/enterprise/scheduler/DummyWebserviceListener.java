@@ -5,9 +5,9 @@ import com.dexels.navajo.server.Access;
 
 public class DummyWebserviceListener implements WebserviceListenerRegistryInterface {
 
-	public void afterWebservice(String webservice, Access a) {
+	public boolean afterWebservice(String webservice, Access a) {
 		// TODO Auto-generated method stub
-		
+		return false;
 	}
 
 	public Navajo beforeWebservice(String webservice, Access a) {

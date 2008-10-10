@@ -138,17 +138,17 @@ public final class WebserviceListenerRegistry implements WebserviceListenerRegis
 	 * @param webservice the name of the webservice that was invoked
 	 * @param a the access object of the caller
 	 */
-	public final void afterWebservice(String webservice, Access a) {
-		afterWebservice(webservice, a, new HashSet(), false);
+	public final boolean afterWebservice(String webservice, Access a) {
+		return afterWebservice(webservice, a, new HashSet(), false);
 	}
 	
-	public final void afterWebservice(String webservice, Access a, HashSet<String> ignoreTaskList, boolean locally) {
+	public final boolean afterWebservice(String webservice, Access a, HashSet<String> ignoreTaskList, boolean locally) {
 
 		
 		// Return immediately if webservice is not contained in afterWebservices set, i.e. there is
 		// no listener interested in this webservice.
 		if ( !isRegisteredWebservice(webservice) ) {
-			return;
+			return false;
 		} 
 
 		long start = System.currentTimeMillis();
@@ -184,6 +184,7 @@ public final class WebserviceListenerRegistry implements WebserviceListenerRegis
 			TribeManagerFactory.getInstance().tribalAfterWebServiceRequest(webservice, a, ignoreTheseTaskOnOtherMembers);
 		}
 		
+		return true;
 		//AuditLog.log("SERVICEVENT", ":  afterWebservice(" + webservice + ") took " + ( System.currentTimeMillis() - start ) + " millis." + ", locally = " + locally + ", processed = " + count + ", leftOvers =" + leftOvers);
 		
 	}

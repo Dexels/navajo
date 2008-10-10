@@ -5,7 +5,7 @@ import com.dexels.navajo.server.Access;
 
 public interface WebserviceListenerRegistryInterface {
 
-	public void afterWebservice(String webservice, Access a);
+	public boolean afterWebservice(String webservice, Access a);
 	public Navajo beforeWebservice(String webservice, Access a);
 	
 }
