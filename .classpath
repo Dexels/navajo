@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/NavajoSwingTipi"/>
-	<classpathentry kind="lib" path="lib/substance4.jar"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/NavajoSwingTipi"/>
+	<classpathentry exported="true" kind="lib" path="lib/substance4.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/substance5.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
