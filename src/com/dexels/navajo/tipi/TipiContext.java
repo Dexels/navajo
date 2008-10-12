@@ -20,6 +20,7 @@ import com.dexels.navajo.tipi.connectors.*;
 import com.dexels.navajo.tipi.extension.*;
 import com.dexels.navajo.tipi.internal.*;
 import com.dexels.navajo.tipi.internal.cookie.*;
+import com.dexels.navajo.tipi.internal.cookie.CookieManager;
 import com.dexels.navajo.tipi.tipixml.*;
 import com.dexels.navajo.tipi.validation.*;
 
@@ -179,8 +180,13 @@ public abstract class TipiContext {
 		tt = ServiceRegistry.lookupProviders(TipiExtension.class, Thread.currentThread().getContextClassLoader());
 		initializeExtensions(tt);
 
-		tt = ServiceRegistry.lookupProviders(TipiExtension.class, ClassLoader.getSystemClassLoader());
-		initializeExtensions(tt);
+		try {
+			tt = ServiceRegistry.lookupProviders(TipiExtension.class, ClassLoader.getSystemClassLoader());
+			initializeExtensions(tt);
+		} catch (SecurityException e1) {
+			// TODO Auto-generated catch block
+			System.err.println("No access to system classloader. Continuing.");
+		}
 
 		clientInterface = NavajoClientFactory.createDefaultClient();
 		
