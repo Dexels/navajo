@@ -21,6 +21,7 @@ import com.dexels.navajo.tipi.components.swingimpl.jnlp.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.internal.*;
 import com.dexels.navajo.tipi.internal.cookie.*;
+import com.dexels.navajo.tipi.internal.cookie.CookieManager;
 import com.dexels.navajo.tipi.internal.cookie.impl.*;
 import com.dexels.navajo.tipi.swingclient.*;
 import com.dexels.navajo.tipi.tipixml.*;
@@ -99,7 +100,10 @@ public class SwingTipiContext extends TipiContext {
 		try {
 			cm.loadCookies();
 		} catch (IOException e) {
-			e.printStackTrace();
+//			e.printStackTrace();
+			System.err.println("No cookies found. Continuing");
+		} catch (SecurityException e) {
+			System.err.println("No permission for temp cookies. Cookies disabled, use JNLP Cookies!");
 		}
 	}
 	
