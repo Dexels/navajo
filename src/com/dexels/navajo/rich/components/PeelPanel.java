@@ -1,106 +1,185 @@
 package com.dexels.navajo.rich.components;
 
 import java.awt.*;
-import java.awt.event.*;
-import java.awt.geom.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.util.*;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
-public class PeelPanel extends JPanel {
-	private double peel = 0.0;
+public class PeelPanel extends JPanel implements PeelListener{
+	
+	private int direction = 1;
+	private PeelImagePanel animationPanel = new PeelImagePanel();
+	private ArrayList<JComponent> components = new ArrayList<JComponent>();
+	private BorderLayout layout = new BorderLayout();
+	private Color backSideColor = Color.decode("#97CCC2");
+	private BufferedImage backSideImage = null;
+	private boolean bottom_only = true;
+	JComponent visibleComponent = null;
+	JComponent next = null;
+	
+	private double mouseDistance = 0.0;
+	private double max_mouseDistance = 50.0;
 
 	public PeelPanel() {
-		setBackground(Color.white);
-		this.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent e) {
-				peel();
+		setLayout(layout);
+		animationPanel.addPeelListener(this);
+		
+		addMouseMotionListener(new MouseMotionListener() {
+
+			public void mouseDragged(MouseEvent e) {
+				
 			}
-		});
-		this.addMouseMotionListener(new MouseMotionAdapter() {
+
 			public void mouseMoved(MouseEvent e) {
-//				mouseLoc = e.getPoint();
-				repaint();
+				if (animationPanel.isAnimating) {
+					return;
+				}
+				boolean valid = true;
+				Point cornerLocation = new Point(0, 0);
+				Rectangle bounds = getBounds();
+				if (e.getPoint().y < bounds.height / 2) {					
+					cornerLocation.y = bounds.y;
+					if(bottom_only){
+						valid = false;
+					}
+				} else {
+					cornerLocation.y = bounds.y + bounds.height;
+				}
+				if (e.getPoint().x < bounds.width / 2) {
+					cornerLocation.x = bounds.x;
+					direction = -1;
+				} else {
+					cornerLocation.x = bounds.x + bounds.width;
+					direction = 1;
+				}
+
+				double dx = cornerLocation.x - e.getPoint().x;
+				double dy = cornerLocation.y - e.getPoint().y;
+
+				mouseDistance = Math.sqrt((Math.pow(dx, 2.0) + Math.pow(dy, 2.0)));
+				if (valid && mouseDistance < max_mouseDistance) {
+					startPeel();
+				}
 			}
 		});
 	}
 
-	public void paintComponent(Graphics g) {
-		super.paintComponent(g);
-		Graphics2D g2 = (Graphics2D) g.create();
-		// paintChildren(g2);
-		Rectangle bounds = getBounds();
-		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-		Polygon p = new Polygon(new int[] { 0, 0, (int) (2 * peel) - 2 }, new int[] { 0, (int) (2 * peel) - 1, 0 }, 3);
-		GradientPaint gpb = new GradientPaint(0, 0, Color.white, (float) peel - 1, (float) peel - 1, Color.black);
-		g2.setPaint(gpb);
-		g2.fill(p);
-
-		p = new Polygon(new int[] { 0, 0, (int) (2 * peel) }, new int[] { 0, (int) (2 * peel), 0 }, 3);
-		QuadCurve2D c1 = new QuadCurve2D.Double(bounds.x, bounds.y + 2 * peel, bounds.x, bounds.y + peel, bounds.x + peel, bounds.y + peel);
-		QuadCurve2D c2 = new QuadCurve2D.Double(bounds.x + peel, bounds.y + peel, bounds.x + peel, bounds.y, bounds.x + 2 * peel, bounds.y);
-		Line2D l1 = new Line2D.Double(peel / 4.0, peel * 1.25, peel * 1.25, peel / 4.0);
-
-		Area leaf = new Area(c1);
-		Area ac2 = new Area(c2);
-		Area line = new Area(l1);
-
-		leaf.add(ac2);
-		leaf.add(line);
-
-		GradientPaint gp = new GradientPaint((float) (peel / 2), (float) (peel / 2), Color.darkGray, (float) peel, (float) peel,
-				Color.white);
-		g2.setPaint(gp);
-		g2.fill(leaf);
-
-		Area triaMax = new Area(p); // total
-		Rectangle2D r1 = new Rectangle2D.Double(0, 0, 2 * peel, peel / 4);
-		Rectangle2D r2 = new Rectangle2D.Double(0, 0, peel / 4, 2 * peel);
-
-		triaMax.subtract(new Area(r1));
-		triaMax.subtract(new Area(r2));
-
-		Polygon toEdge = new Polygon(new int[] { 0, 0, (int) (1.5 * peel) }, new int[] { 0, (int) (1.5 * peel), 0 }, 3);
-		Area edge = new Area(toEdge);
-		triaMax.subtract(edge);
-		triaMax.subtract(leaf);
-
-		GradientPaint gpeel = new GradientPaint((float) (peel * 0.75), (float) (peel * 0.75), Color.lightGray, (float) peel, (float) peel,
-				Color.white);
-		g2.setPaint(gpeel);
-		g2.fill(triaMax);
-
-		g2.setStroke(new BasicStroke(1.0f));
-		g2.setColor(Color.darkGray);
-		g2.draw(c1);
-		g2.draw(c2);
-		g2.draw(l1);
-
-		// GradientPaint gppaper = new
-		// GradientPaint((float)(peel),(float)(peel),Color.lightGray,
-		// bounds.width, bounds.height, Color.white);
-		Area rect = new Area(bounds);
-		Area tria = new Area(p);
-		rect.subtract(tria);
-		g2.setColor(Color.white);
-		// g2.setPaint(gppaper);
-		g2.fill(rect);
-
-		// if(mouseLoc != null){
-		// g2.setColor(Color.black);
-		// g2.drawString("Mouse at " + mouseLoc.x + ", "+ mouseLoc.y +
-		// ", peel: " + peel, 100, 100);
-		// }
-		g2.dispose();
+	public void removeComponent(JComponent c) {
+		components.remove(c);
 	}
 
-	private void peel() {
-		peel += 20.0;
-		repaint();
+	public void addComponent(JComponent c) {
+		components.add(c);
+		c.doLayout();
+		visibleComponent = c;
+		add(c, BorderLayout.CENTER);
+		for (int i = 0; i < components.size(); i++) {
+			components.get(i).setVisible(false);
+		}
+		c.setVisible(true);
 	}
 
-//	private void setPeel(double d) {
-//		repaint();
-//	}
+	public void setBounds(int x, int y, int width, int height) {
+
+		super.setBounds(x, y, width, height);
+		for (int i = 0; i < components.size(); i++) {
+			components.get(i).setSize(width, height);
+		}
+		
+	}
+	
+	private void startPeel() {	
+		// Indices: red = 0, green = 1, yellow = 2
+		getRootPane().getLayeredPane().add(animationPanel, 0);
+		int idx = components.indexOf(visibleComponent);
+		if (idx > -1) {
+			int nextComp = idx + direction;
+			if(nextComp == -1){
+				nextComp = components.size()-1;
+			}else if(nextComp == components.size()){
+				nextComp = 0;
+			}
+			next = components.get(nextComp);
+
+			next.setBounds(visibleComponent.getBounds());
+			animationPanel.setBackSideColor(backSideColor);
+			animationPanel.setBackSideImage(backSideImage);
+			animationPanel.setComponents(visibleComponent, next);
+			animationPanel.setVisible(true);
+			
+			add(animationPanel, BorderLayout.CENTER);
+		}
+	}
+	
+	 public void peelStopped(boolean full_peel) {
+		animationPanel.setVisible(false);
+		for(int i=0;i<components.size();i++){
+			components.get(i).setVisible(false);
+		}
+		if(!full_peel){
+			next.setVisible(false);
+			visibleComponent.setVisible(true);
+		} else{
+			visibleComponent.setVisible(false);
+			visibleComponent =  next;
+			visibleComponent.setVisible(true);
+		}
+	}
+	 
+	public void setBackSideColor(Color c){
+		this.backSideColor = c;
+	}
+	
+	public void setBackSideImage(BufferedImage img){
+		this.backSideImage = img;
+	}
+	
+	public Color setBackSideColor(){
+		return backSideColor;
+	}
+	
+	public BufferedImage getBackSideImage(){
+		return backSideImage;
+	}
+	
+	public static void main(String[] args){
+		JFrame aap= new JFrame("Monkey");
+		aap.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		aap.setSize(new Dimension(800,600));
+		JPanel p1 = new JPanel();
+		p1.setBackground(Color.red);
+		JPanel p2 = new JPanel();
+		p2.setBackground(Color.green);
+		JPanel p3 = new JPanel();
+		p3.setBackground(Color.yellow);
+		aap.getContentPane().setLayout(new BorderLayout());
+		PeelPanel peel = new PeelPanel();
+		peel.addComponent(p1);
+		peel.addComponent(p2);
+		peel.addComponent(p3);
+		peel.setBackSideColor(Color.decode("#000000"));
+		
+		try{
+			BufferedImage img = ImageIO.read(new File("c:/workspace/Ticketing/resource/desktop.png"));
+			peel.setBackSideImage(img);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		
+		for(int i=0;i<20;i++){
+			p1.add(new JButton("Knop " + i));
+			p2.add(new JCheckBox("Check " + i));
+			p3.add(new JLabel("Label " + i));
+		}
+		aap.getContentPane().add(peel, BorderLayout.CENTER);
+		aap.setVisible(true);
+	}
+
 
 }
