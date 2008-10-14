@@ -5,6 +5,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.net.URL;
 import java.util.*;
 
 import javax.imageio.ImageIO;
@@ -135,8 +136,13 @@ public class PeelPanel extends JPanel implements PeelListener{
 		this.backSideColor = c;
 	}
 	
-	public void setBackSideImage(BufferedImage img){
-		this.backSideImage = img;
+	public void setBackSideImage(URL img){
+		try{
+			backSideImage = ImageIO.read(img);
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+
 	}
 	
 	public Color setBackSideColor(){
@@ -164,12 +170,12 @@ public class PeelPanel extends JPanel implements PeelListener{
 		peel.addComponent(p3);
 		peel.setBackSideColor(Color.decode("#000000"));
 		
-		try{
-			BufferedImage img = ImageIO.read(new File("c:/workspace/Ticketing/resource/desktop.png"));
-			peel.setBackSideImage(img);
-		}catch(Exception e){
-			e.printStackTrace();
-		}
+//		try{
+//			BufferedImage img = ImageIO.read(new File("c:/workspace/Ticketing/resource/desktop.png"));
+//			peel.setBackSideImage();
+//		}catch(Exception e){
+//			e.printStackTrace();
+//		}
 		
 		
 		for(int i=0;i<20;i++){
