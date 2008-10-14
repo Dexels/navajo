@@ -18,4 +18,11 @@
       </values>
       <methods></methods>
    </tipiclass>
+
+ <tipiaction name="lock" class="Lock" package="com.dexels.navajo.tipi.jxlayer.actions">
+      <param name="target" type="component" required="true"/>
+      <param name="value" type="boolean" required="true"/>
+      <param name="effect" type="string" required="false"/>
+  </tipiaction>
+
 </tid>
