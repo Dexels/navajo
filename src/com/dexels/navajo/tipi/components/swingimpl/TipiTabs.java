@@ -187,11 +187,13 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 				childList.add(jc);
 				constraintMap.put(jc, stringConstraints);
 				Dimension d = jc.getPreferredSize();
-				if (d.width <= 0 || d.height <= 0) {
-					jc.setPreferredSize(null);
-				}
-				jc.revalidate();
+				if(d!=null) {
+					if (d.width <= 0 || d.height <= 0) {
+						jc.setPreferredSize(null);
+					}
+					jc.revalidate();
 
+				}
 				((JTabbedPane) getContainer()).addTab(stringConstraints, jc);
 				// System.err.println("Preferred size: "+jc.getPreferredSize()+
 				// " component: "

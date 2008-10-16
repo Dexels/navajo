@@ -10,6 +10,7 @@ package com.dexels.navajo.tipi.components.swingimpl;
  */
 import java.awt.*;
 import java.awt.event.*;
+import java.beans.*;
 import java.util.*;
 import java.util.List;
 
@@ -359,12 +360,15 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 						if (columnSize.size() == 0) {
 							mtp.createColumnsFromDef(m);
 						}
+						int selectedIndex = mtp.getSelectedRow();
 						mtp.setMessage(m);
 						mtp.getTable().updateTableSize();
 						mtp.updateTableSize();
 						updateColumnVisibility();
 						mtp.updateColumnSizes();
-		    		     
+						if(selectedIndex<mtp.getRowCount()) {
+							mtp.setSelectedRow(selectedIndex);
+						}
 					}
 				});
 			}

@@ -14,27 +14,32 @@ public class MainApplication {
 
 	static public void main(String[] args) throws Exception {
 		String definition = null;
-//		String os = System.getProperty("os.name");
-//		if(os.toLowerCase().indexOf("linux")!=-1) {
-//			JFrame.setDefaultLookAndFeelDecorated(true);
-//			JDialog.setDefaultLookAndFeelDecorated(true);
-//		} else {
-//			System.err.println("Ignoring LNF, ON LINUX ONLY!");
-			JFrame.setDefaultLookAndFeelDecorated(true);
-			JDialog.setDefaultLookAndFeelDecorated(true);
-//		}
+		System.err.println("Working dir: "+System.getProperty("user.dir"));
+		List<String> arrrgs = new ArrayList<String>();
+		if(args.length>1 && "-open".equals(args[0])) {
+				String path = args[1];
+				File f = new File(path);
+				System.setProperty("user.dir", f.getParent());
+				arrrgs = parseBundleFile(path);
+				definition = arrrgs.get(arrrgs.size()-1);
+		} else {
 
-		if (args.length < 1) {
-			definition = "init";
-		}  else {
-			definition = args[args.length - 1];
+			if(args.length>0) {
+				definition = args[args.length - 1];
+			}
+			for (int i = 0; i < args.length; i++) {
+				System.err.println("Original argument: "+args[i]);
+				arrrgs.add(args[i]);
+			}
+			
 		}
-		String[] appArgs = new String[]{};
-		if(definition.endsWith(".properties")) {
-			// Newstyle property initializer
-			System.err.println("New style initialization!");
-			appArgs = parseBundle(definition);
-		}
+		initialize(checkStudio(), arrrgs, definition);
+	}
+
+	/**
+	 * @return
+	 */
+	private static boolean checkStudio() {
 		boolean studio;
 		try {
 			Class.forName("tipi.TipiDevelopTools");
@@ -42,97 +47,96 @@ public class MainApplication {
 			studio = false;
 		} catch (ClassNotFoundException e) {
 			studio = false;
-		}	
-		final boolean studioMode = studio;
-		final List<String> arrrgs = new ArrayList<String>();
-		for (int i = 0; i < args.length; i++) {
-			System.err.println("Arrg:" +args[i]);
-			arrrgs.add(args[i]);
 		}
-		for (int i = 0; i < appArgs.length; i++) {
-			System.err.println("Arrg:" +args[i]);
-			arrrgs.add(appArgs[i]);
-		}
-		
-		if(definition.endsWith(".properties")) {
-			if(!args[args.length-1].startsWith("-D")) {
-				definition = args[args.length-1];
-			} else {
-				System.err.println("Nothing found nulling def!");
-				definition = null;
-			}
-			System.err.println("Again new style: Set definition to: "+definition);
-		}
+		return studio;
+	}
+
+	/**
+	 * @param studioMode
+	 * @param arrrgs
+	 * @param def
+	 */
+	private static void initialize(final boolean studioMode, final List<String> arrrgs, final String def) {
 		RepaintManager.setCurrentManager(new CheckThreadViolationRepaintManager());
-		final String def = definition;
-		SwingUtilities.invokeLater(new Runnable(){
+		System.err.println("Initialize: "+def+" == "+arrrgs);
+		SwingUtilities.invokeLater(new Runnable() {
 
 			public void run() {
 				try {
 					if (studioMode) {
-						SwingTipiContext s = initialize("develop","tipi/develop.xml",arrrgs,null,null);
-						s.injectApplication(def,arrrgs,"/init/tipi/sandbox");
+						SwingTipiContext s = initialize("develop", "tipi/develop.xml", arrrgs, null, null);
+						s.injectApplication(def, arrrgs, "/init/tipi/sandbox");
 					} else {
-						if(def==null) {
-							initialize("init","init.xml",arrrgs,null,null);
+						if (def == null) {
+							initialize("init", "init.xml", arrrgs, null, null);
 						} else {
 							if (def.endsWith(".xml")) {
-								initialize("init",def,arrrgs,null,null);
+								initialize("init", def, arrrgs, null, null);
 							} else {
-								initialize(def,"start.xml",arrrgs,null,null);
+								initialize(def, "start.xml", arrrgs, null, null);
 							}
 						}
 					}
-					
+
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				
-			}});
+
+			}
+		});
 	}
 
-
-	
-private static String[] parseBundle(String definition) throws IOException {
-	URL u = new URL(definition);
-	
-	InputStream openStream = u.openStream();
-	InputStreamReader appUrl = new InputStreamReader(openStream);
-	BufferedReader br = new BufferedReader(appUrl);
-	String line = null;
-	List<String> result = new LinkedList<String>();
-	do {
-		line = br.readLine();
-		if(line!=null) {
-			result.add(line);
-		}
-	} while(line!=null);
-	String[] arr = new String[result.size()];
-	int i=0;
-	for (String string : result) {
-		arr[i++] = string;
-		System.err.println("Parsing: "+string);
+	private static List<String> parseBundleFile(String path) throws IOException {
+		File f = new File(path);
+		InputStream openStream = new FileInputStream(f);
+		return parseBundleStream(openStream);
 	}
-	openStream.close();
-	return arr;
-}
 
+	private static List<String> parseBundleUrl(String path) throws IOException {
+		URL u = new URL(path);
+		InputStream openStream = u.openStream();
+		return parseBundleStream(openStream);
+	}
 
+	/**
+	 * Beware: Will close stream
+	 * @param openStream
+	 * @return list of params.
+	 * @throws IOException
+	 */
+	private static List<String> parseBundleStream(InputStream openStream) throws IOException {
+		List<String> result = new LinkedList<String>();
 
-/**
- * Definitionpath allows a non standard definition path
- * @param definition
- * @param definitionPath
- * @param args
- * @param appletRoot
- * @param otherRoot
- * @return
- * @throws Exception
- */
-	public static  SwingTipiContext initialize(String definition,String definitionPath, List<String> args, TipiApplet appletRoot, RootPaneContainer otherRoot) throws Exception {
+		InputStreamReader appUrl = new InputStreamReader(openStream);
+		BufferedReader br = new BufferedReader(appUrl);
+		String line = null;
+		do {
+			line = br.readLine();
+			if (line != null) {
+				result.add(line);
+			}
+		} while (line != null);
+
+		openStream.close();
+		return result;
+	}
+
+	/**
+	 * Definitionpath allows a non standard definition path
+	 * 
+	 * @param definition
+	 * @param definitionPath
+	 * @param args
+	 * @param appletRoot
+	 * @param otherRoot
+	 * @return
+	 * @throws Exception
+	 */
+	public static SwingTipiContext initialize(String definition, String definitionPath, List<String> args, TipiApplet appletRoot,
+			RootPaneContainer otherRoot) throws Exception {
 		Map<String, String> properties = parseProperties(args);
 
-		if(definitionPath==null) {
+		if (definitionPath == null) {
 			definitionPath = definition;
 		}
 		SwingTipiContext context = null;
@@ -143,14 +147,14 @@ private static String[] parseBundle(String definition) throws IOException {
 		SwingClient.setUserInterface(stui);
 		context.setDefaultTopLevel(new TipiScreen());
 		context.getDefaultTopLevel().setContext(context);
-//		context.parseRequiredIncludes();
-//		context.processRequiredIncludes();
+		// context.parseRequiredIncludes();
+		// context.processRequiredIncludes();
 
 		context.processProperties(properties);
-		
-		System.err.println("Openingin definition: "+definition);
+
+		System.err.println("Openingin definition: " + definition);
 		InputStream tipiResourceStream = context.getTipiResourceStream(definitionPath);
-		if(tipiResourceStream==null) {
+		if (tipiResourceStream == null) {
 			System.err.println("Error starting up: Can not load tipi");
 		} else {
 			context.parseStream(tipiResourceStream, definition, false);
@@ -158,21 +162,21 @@ private static String[] parseBundle(String definition) throws IOException {
 		return context;
 	}
 
-	public static Map<String,String> parseProperties(String gsargs) {
+	public static Map<String, String> parseProperties(String gsargs) {
 		StringTokenizer st = new StringTokenizer(gsargs);
 		ArrayList<String> a = new ArrayList<String>();
-		while(st.hasMoreTokens()) {
+		while (st.hasMoreTokens()) {
 			String next = st.nextToken();
 			a.add(next);
 		}
 		return parseProperties(a);
 	}
 
-	public static Map<String,String> parseProperties(List<String> args) {
-		Map<String,String> result = new HashMap<String,String>();
+	public static Map<String, String> parseProperties(List<String> args) {
+		Map<String, String> result = new HashMap<String, String>();
 		for (String current : args) {
-			if (current.startsWith("-D")) {
-				String prop = current.substring(2);
+			if (current.indexOf("=")!=-1) {
+				String prop = current;
 				try {
 					StringTokenizer st = new StringTokenizer(prop, "=");
 					String name = st.nextToken();
@@ -190,7 +194,7 @@ private static String[] parseBundle(String definition) throws IOException {
 					System.err.println("Security exception: " + se.getMessage());
 					se.printStackTrace();
 				}
-			}			
+			}
 		}
 
 		return result;
