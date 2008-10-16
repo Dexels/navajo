@@ -700,6 +700,10 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 					System.err.println("Value: " + value.value);
 					System.err.println("PropertyName: " + propertyName.value);
 					ArrayList<Message> al = mm.getSelectedMessages();
+					if(al==null) {
+						// Nothing is selected
+						return;
+					}
 					System.err.println("# of selected msgs: " + al.size());
 					for (int i = 0; i < al.size(); i++) {
 						Message current = al.get(i);
