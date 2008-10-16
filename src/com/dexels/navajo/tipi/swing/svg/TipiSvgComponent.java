@@ -3,6 +3,8 @@ package com.dexels.navajo.tipi.swing.svg;
 import java.net.*;
 import java.util.*;
 
+import org.w3c.dom.svg.SVGDocument;
+
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.*;
@@ -55,6 +57,10 @@ public class TipiSvgComponent extends TipiSwingDataComponentImpl implements
 			registeredIds = (String)object;
 			myComponent.setRegisteredIds((String)object);
 		}
+	}
+	
+	public void setDocument(SVGDocument doc){		
+		((SvgBatikComponent)myComponent).setDocument(doc);
 	}
 
 	public Object createContainer() {

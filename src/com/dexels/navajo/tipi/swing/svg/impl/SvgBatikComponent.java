@@ -53,6 +53,7 @@ public class SvgBatikComponent extends SvgBaseComponent {
 				repaint();
 						
 			}});
+		
 	}
 	
 	public void setPreferredSize(Dimension d) {
@@ -94,6 +95,11 @@ public class SvgBatikComponent extends SvgBaseComponent {
 		return svgCanvas.getSVGDocument();
 	}
 
+	public void setDocument(SVGDocument doc) {
+		init();
+		svgCanvas.setDocument(doc);
+	}
+	
 	public void fireAnimation(String animId) {
 		SVGOMAnimationElement ee = (SVGOMAnimationElement) svgCanvas.getSVGDocument().getElementById(animId);
 		UpdateManager um = svgCanvas.getUpdateManager();
@@ -105,7 +111,7 @@ public class SvgBatikComponent extends SvgBaseComponent {
 		
 	}
 
-	public void init(URL u) {
+	public void init() {
 		svgCanvas.setBackground(new Color(0x0, true));
 		svgCanvas.setOpaque(false);
 		svgCanvas.setDocumentState(JSVGCanvas.ALWAYS_DYNAMIC);
@@ -145,9 +151,14 @@ public class SvgBatikComponent extends SvgBaseComponent {
 			}
 
 		});
-		svgCanvas.setURI(u.toString());
+		
 	}
 
+	public void init(URL u) {
+		init();
+		svgCanvas.setURI(u.toString());
+	}
+	
 	protected void registerAnimationEvents(SVGElement ee) {
 		((EventTarget) ee).addEventListener("endEvent", new EventListener() {
 
