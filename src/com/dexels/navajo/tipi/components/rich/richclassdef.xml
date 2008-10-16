@@ -20,6 +20,20 @@
          <method name="flipBackwards"/>
       </methods>
    </tipiclass>
+   <tipiclass addtocontainer="true" childcount="*" class="TipiPeelPanel" layoutmanager="false" module="container" name="peelpanel" package="com.dexels.navajo.tipi.components.rich" studio-icon="tabs.gif" type="tipi">
+      <events>
+         <event name="onInstantiate"/>
+         <event name="onLoad">
+            <param name="service" type="string"/>
+         </event>
+      </events>
+      <values>
+         <value direction="in" name="backsidecolor" type="color" property="backSideColor"/>
+         <value direction="in" name="backsideimage" type="resource" property="backSideImage"/>
+         <value direction="in" name="visible" type="boolean" property="visible"/>
+      </values>
+      <methods/>
+   </tipiclass>
    <tipiclass addtocontainer="true" childcount="*" class="TipiRichPanel" layoutmanager="false" module="container" name="richtipi" package="com.dexels.navajo.tipi.components.rich" studio-icon="tabs.gif" type="tipi">
       <events>
          <event name="onInstantiate"/>
