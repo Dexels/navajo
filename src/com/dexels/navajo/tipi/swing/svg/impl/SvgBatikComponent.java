@@ -120,6 +120,7 @@ public class SvgBatikComponent extends SvgBaseComponent {
 					StringTokenizer st = new StringTokenizer(myRegisteredIdList, ",");
 					while (st.hasMoreElements()) {
 						String elem = (String) st.nextElement();
+						System.err.println("Registering: "+elem);
 						registerId(elem, e.getSVGDocument());
 					}
 				}
@@ -153,6 +154,7 @@ public class SvgBatikComponent extends SvgBaseComponent {
 			public void handleEvent(Event oy) {
 				String targetId = ((AnimationTarget) oy.getCurrentTarget()).getElement().getAttribute("id");
 				String animationId = ((AnimationTarget) oy.getTarget()).getElement().getAttribute("id");
+				System.err.println("endEvent");
 				fireOnAnimationEnded(animationId, targetId);
 
 			}
@@ -362,6 +364,7 @@ public class SvgBatikComponent extends SvgBaseComponent {
 
 	@Override
 	public void setRegisteredIds(String object) {
+		System.err.println("Registered IDS SET: "+object);
 		myRegisteredIdList = object;
 
 	}
@@ -371,6 +374,7 @@ public class SvgBatikComponent extends SvgBaseComponent {
 			public void run() {
 				final SVGElement se = (SVGElement) svgCanvas.getSVGDocument().getElementById(item);
 				if (xlinkNS == null) {
+					System.err.println("No namespace. Setting: "+attributeName+" to: "+value);
 					se.setAttribute(attributeName, value);
 				} else {
 					se.setAttributeNS(xlinkNS, "xlink:href", value);

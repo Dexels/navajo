@@ -28,6 +28,17 @@ public class TipiSvgComponent extends TipiSwingDataComponentImpl implements
 				myComponent.fireAnimation(id);
 			}
 		}
+		if("setValue".equals(name)) {
+			String id = (String) compMeth.getEvaluatedParameter("id", event).value;
+			String attrName = (String) compMeth.getEvaluatedParameter("attributeName", event).value;
+			String value = (String) compMeth.getEvaluatedParameter("value", event).value;
+			setAttribute(null, id, attrName, value);
+		}
+		//        <method name="setValue">
+//        <param name="id" type="string" />
+//        <param name="name" type="string" />
+//        <param name="value" type="string" />
+//     </method>
 	} 
 
 	@Override
@@ -54,6 +65,7 @@ public class TipiSvgComponent extends TipiSwingDataComponentImpl implements
 		myComponent.addSvgDocumentListener(new SvgDocumentAdapter(){
 
 			public void onDocumentLoadingFinished() {
+				System.err.println("Loading finished detected@");
 				myComponent.setRegisteredIds(registeredIds);
 			}
 		});
@@ -61,6 +73,10 @@ public class TipiSvgComponent extends TipiSwingDataComponentImpl implements
 		return myComponent;
 	}
 
+	public void setAttribute(final String xlinkNS, final String id, final String attributeName, final String value) {
+		myComponent.setAttribute(xlinkNS, id, attributeName, value);
+	}
+	
 	public void onClick(String targetId) {
 		System.err.println("On click detected!");
 		Map<String,Object> m = new HashMap<String,Object>();

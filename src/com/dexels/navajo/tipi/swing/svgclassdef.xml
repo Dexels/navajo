@@ -38,6 +38,11 @@
          <method name="fireAnimation">
             <param name="id" type="string" />
          </method>
+         <method name="setValue">
+            <param name="id" type="string" />
+            <param name="attributeName" type="string" />
+            <param name="value" type="string" />
+         </method>
       </methods>
    </tipiclass>
    <tipiclass addtocontainer="true" childcount="*" class="TipiRegionSelectComponent" layoutmanager="false" module="container" name="svgregion" package="com.dexels.navajo.tipi.swing.svg" studio-icon="tabs.gif" type="tipi">
