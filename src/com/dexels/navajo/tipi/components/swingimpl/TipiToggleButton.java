@@ -48,6 +48,10 @@ public class TipiToggleButton extends TipiSwingComponentImpl {
         if (name.equals("selected")) {
           myButton.setSelected(((Boolean)object).booleanValue());
          }
+        if (name.equals("buttongroup")) {
+            TipiButtonGroup group = (TipiButtonGroup)object;
+            group.getButtonGroup().add(myButton);
+        }
       }
     });
   }

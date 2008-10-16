@@ -1093,6 +1093,40 @@
       </values>
       <methods />
    </tipiclass>
+   <tipiclass addtocontainer="true" class="TipiToggleButton" module="component" name="togglebutton" childcount="0" layoutmanager="false"
+      package="com.dexels.navajo.tipi.components.swingimpl" propertycomponent="false" studio-icon="button.gif" type="component">
+      <events>
+         <event name="onInstantiate" />
+         <event name="onActionPerformed" />
+         <event name="onMouseEntered" />
+         <event name="onMouseExited" />
+      </events>
+      <values>
+         <value direction="inout" name="selected" type="string" property="selected" />
+        <value direction="inout" name="text" type="string" property="text" />
+         <value direction="in" name="icon" type="resource" property="iconUrl" />
+         <value direction="in" name="background" type="color" property="background" />
+         <value direction="in" name="foreground" type="color" property="foreground" />
+         <value direction="in" name="border" type="border" property="border" />
+         <value direction="in" name="font" type="font" property="font" />
+         <value direction="inout" name="tooltip" type="string" property="ToolTipText" />
+         <value direction="in" name="enabled" type="boolean" property="enabled" />
+         <value direction="in" name="visible" type="boolean" property="visible" />
+         <value direction="in" name="accelerator" type="string" property="accelerator" />
+         <value direction="inout" name="mnemonic" type="string" property="stringMnemonic" />
+         <value direction="inout" name="buttongroup" type="component"/>         
+      </values>
+      <methods />
+   </tipiclass>
+   <tipiclass addtocontainer="false" class="TipiButtonGroup" module="component" name="buttongroup" childcount="0" layoutmanager="false"
+      package="com.dexels.navajo.tipi.components.swingimpl" propertycomponent="false" studio-icon="button.gif" type="component">
+      <events>
+         <event name="onInstantiate" />
+         <event name="onActionPerformed" />
+      </events>
+      <values/>
+      <methods/>
+   </tipiclass>
    <tipiclass addtocontainer="true" class="TipiMenubar" module="menu" childcount="*" name="menubar" package="com.dexels.navajo.tipi.components.swingimpl" propertycomponent="false"
       studio-icon="menubar.gif" layoutmanager="false" type="component">
       <events>
