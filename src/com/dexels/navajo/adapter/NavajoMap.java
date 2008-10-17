@@ -438,7 +438,7 @@ public class NavajoMap extends AsyncMappable  implements Mappable {
     		  h.setSchedule(trigger);
     		  h.setHeaderAttribute("keeprequestresponse", "true");
     	  }
-    	  inDoc = DispatcherFactory.getInstance().handle(outDoc, access.getUserCertificate());
+    	  inDoc = DispatcherFactory.getInstance().handle(outDoc, true);
       }
 
       // Get task if if trigger was specified.
@@ -887,7 +887,7 @@ public class NavajoMap extends AsyncMappable  implements Mappable {
 	    // Clear request id.
 	    h.setRequestId(null);
 	    try {
-	      inDoc = DispatcherFactory.getInstance().handle(outDoc);
+	      inDoc = DispatcherFactory.getInstance().handle(outDoc, true);
 	    } catch (Exception e) {
 	      e.printStackTrace();
 	      throw new UserException(-1, e.getMessage());
