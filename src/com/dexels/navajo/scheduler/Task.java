@@ -358,7 +358,7 @@ public class Task implements Runnable, TaskMXBean, TaskInterface, Serializable {
 	 */
 	public void run() {
 
-		System.err.println("IN TASK RUN================================================================" + getId());
+		System.err.println("IN TASK RUN" + getId() + ", TRIGGER: " + getTriggerDescription() + ", WS: " + webservice );
 		//AuditLog.log(AuditLog.AUDIT_MESSAGE_TASK_SCHEDULER, " trigger " + getTriggerDescription() + " activated task: " + getId() );
 		
 		Navajo result = null;
