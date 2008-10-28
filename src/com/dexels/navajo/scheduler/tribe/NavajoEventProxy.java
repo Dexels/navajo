@@ -7,10 +7,8 @@ import com.dexels.navajo.events.NavajoEvent;
 import com.dexels.navajo.events.NavajoEventRegistry;
 import com.dexels.navajo.events.NavajoListener;
 import com.dexels.navajo.events.types.TribeMemberDownEvent;
-import com.dexels.navajo.server.Dispatcher;
 import com.dexels.navajo.server.DispatcherFactory;
 import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
-import com.dexels.navajo.tribe.TribeManager;
 import com.dexels.navajo.util.Util;
 
 /**
@@ -104,7 +102,9 @@ public class NavajoEventProxy implements Serializable, NavajoListener {
 	 */
 	public static void removeProxy(String guid) {
 		NavajoEventProxy nep = registeredProxies.get(guid);
-		removeProxy(nep);
+		if ( nep != null ) {
+			removeProxy(nep);
+		}
 	}
 
 	/**
