@@ -10,7 +10,6 @@ package com.dexels.navajo.tipi.components.swingimpl;
  */
 import java.awt.*;
 import java.awt.event.*;
-import java.beans.*;
 import java.util.*;
 import java.util.List;
 
