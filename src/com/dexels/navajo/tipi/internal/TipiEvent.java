@@ -112,41 +112,51 @@ public class TipiEvent implements TipiExecutable {
 			if (current.getName().equals("block")) {
 				TipiActionBlock ta = context.instantiateDefaultTipiActionBlock(myComponent);
 				ta.load(current, myComponent, this);
+				
 				myExecutables.add(ta);
 				continue;
 			}
-			if (current.getName().indexOf(".") == -1) {
-				TipiAction ta = context.instantiateTipiAction(current, myComponent, this);
-				myExecutables.add(ta);
+			parseActions(context, current);
+		}
+	}
 
-			} else {
-				StringTokenizer st = new StringTokenizer(current.getName(), ".");
-				String classType = st.nextToken();
-				String method = st.nextToken();
-				if (method.equals("instantiate")) {
-					XMLElement newCopy = current.copy();
-					newCopy.setName("instantiate");
-					newCopy.setAttribute("expectType", "'" + classType + "'");
-					TipiAction ta = context.instantiateTipiAction(newCopy, myComponent, this);
-					myExecutables.add(ta);
-				} else if(method.equals("attribute")) {
-					//XMLElement xxx = context.getComponentDefinition(classType);
-					// TODO Do an extra check if all attributes exist.
-					XMLElement newCopy = current.copy();
-					newCopy.setName("attribute");
-					TipiAction ta = context.instantiateTipiAction(newCopy, myComponent, this);
-					myExecutables.add(ta);
-					
-				} else{
-					//XMLElement xxx = context.getComponentDefinition(classType);
-					// TODO Do an extra check if this method exists.
-					
-					XMLElement newCopy = current.copy();
-					newCopy.setName("performTipiMethod");
-					newCopy.setAttribute("name", "'" + method + "'");
-					TipiAction ta = context.instantiateTipiAction(newCopy, myComponent, this);
-					myExecutables.add(ta);
-				}
+	/**
+	 * @param context
+	 * @param current
+	 * @throws TipiException
+	 */
+	private void parseActions(TipiContext context, XMLElement current) throws TipiException {
+		if (current.getName().indexOf(".") == -1) {
+			TipiAction ta = context.instantiateTipiAction(current, myComponent, this);
+			myExecutables.add(ta);
+
+		} else {
+			StringTokenizer st = new StringTokenizer(current.getName(), ".");
+			String classType = st.nextToken();
+			String method = st.nextToken();
+			if (method.equals("instantiate")) {
+				XMLElement newCopy = current.copy();
+				newCopy.setName("instantiate");
+				newCopy.setAttribute("expectType", "'" + classType + "'");
+				TipiAction ta = context.instantiateTipiAction(newCopy, myComponent, this);
+				myExecutables.add(ta);
+			} else if(method.equals("attribute")) {
+				//XMLElement xxx = context.getComponentDefinition(classType);
+				// TODO Do an extra check if all attributes exist.
+				XMLElement newCopy = current.copy();
+				newCopy.setName("attribute");
+				TipiAction ta = context.instantiateTipiAction(newCopy, myComponent, this);
+				myExecutables.add(ta);
+				
+			} else{
+				//XMLElement xxx = context.getComponentDefinition(classType);
+				// TODO Do an extra check if this method exists.
+				
+				XMLElement newCopy = current.copy();
+				newCopy.setName("performTipiMethod");
+				newCopy.setAttribute("name", "'" + method + "'");
+				TipiAction ta = context.instantiateTipiAction(newCopy, myComponent, this);
+				myExecutables.add(ta);
 			}
 		}
 	}
@@ -267,8 +277,10 @@ public class TipiEvent implements TipiExecutable {
 
 		TipiExecutable last = null;
 		try {
+			System.err.println("Executing event: "+getEventName());
 			for (int i = 0; i < myExecutables.size(); i++) {
 				TipiExecutable current = myExecutables.get(i);
+				System.err.println("Executing subevent: "+current.toString());
 				last = current;
 				current.performAction(localInstance, executableParent, i);
 

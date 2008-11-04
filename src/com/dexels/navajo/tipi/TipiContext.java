@@ -20,7 +20,6 @@ import com.dexels.navajo.tipi.connectors.*;
 import com.dexels.navajo.tipi.extension.*;
 import com.dexels.navajo.tipi.internal.*;
 import com.dexels.navajo.tipi.internal.cookie.*;
-import com.dexels.navajo.tipi.internal.cookie.CookieManager;
 import com.dexels.navajo.tipi.tipixml.*;
 import com.dexels.navajo.tipi.validation.*;
 
@@ -961,7 +960,7 @@ public abstract class TipiContext {
 		return null;
 	}
 
-	public TipiActionBlock instantiateTipiActionBlock(XMLElement definition, TipiComponent parent, TipiExecutable parentExe) {
+	public TipiActionBlock instantiateTipiActionBlock(XMLElement definition, TipiComponent parent, TipiExecutable parentExe) throws TipiException {
 		TipiActionBlock c = createTipiActionBlockCondition();
 		c.load(definition, parent, parentExe);
 		return c;
@@ -2384,6 +2383,9 @@ public abstract class TipiContext {
 		for (Iterator<String> iter = properties.keySet().iterator(); iter.hasNext();) {
 			String element = iter.next();
 			String value = properties.get(element);
+			if(element.startsWith("-D")) {
+				element = element.substring(2);
+			}
 			setSystemProperty(element, value);
 		}
 		String tipiCodeBase = properties.get("tipiCodeBase");

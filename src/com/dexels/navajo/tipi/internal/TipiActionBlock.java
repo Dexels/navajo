@@ -143,12 +143,56 @@ public class TipiActionBlock implements TipiExecutable {
 			setStackElement(new TipiStackElement("if: (" + myExpression + ")", elm, parentExe.getStackElement()));
 
 			List<XMLElement> temp = elm.getChildren();
+//			for (XMLElement element : temp) {
+//				parseActions(myContext, element);
+//			}
 			parseActions(temp);
 		} else {
 			System.err.println("WTF?! WHAT IS THIS ELEMENT?!");
 		}
 	}
 
+	/**
+	 * DUPLICATE, copied from TipiEvent
+	 * @param context
+	 * @param current
+	 * @throws TipiException
+	 */
+	private void parseActions(TipiContext context, XMLElement current) throws TipiException {
+		if (current.getName().indexOf(".") == -1) {
+			TipiAction ta = context.instantiateTipiAction(current, myComponent, this);
+			myExecutables.add(ta);
+
+		} else {
+			StringTokenizer st = new StringTokenizer(current.getName(), ".");
+			String classType = st.nextToken();
+			String method = st.nextToken();
+			if (method.equals("instantiate")) {
+				XMLElement newCopy = current.copy();
+				newCopy.setName("instantiate");
+				newCopy.setAttribute("expectType", "'" + classType + "'");
+				TipiAction ta = context.instantiateTipiAction(newCopy, myComponent, this);
+				myExecutables.add(ta);
+			} else if(method.equals("attribute")) {
+				//XMLElement xxx = context.getComponentDefinition(classType);
+				// TODO Do an extra check if all attributes exist.
+				XMLElement newCopy = current.copy();
+				newCopy.setName("attribute");
+				TipiAction ta = context.instantiateTipiAction(newCopy, myComponent, this);
+				myExecutables.add(ta);
+				
+			} else{
+				//XMLElement xxx = context.getComponentDefinition(classType);
+				// TODO Do an extra check if this method exists.
+				
+				XMLElement newCopy = current.copy();
+				newCopy.setName("performTipiMethod");
+				newCopy.setAttribute("name", "'" + method + "'");
+				TipiAction ta = context.instantiateTipiAction(newCopy, myComponent, this);
+				myExecutables.add(ta);
+			}
+		}
+	}
 
 
 	public void appendTipiExecutable(TipiExecutable tp) {
@@ -167,7 +211,6 @@ public class TipiActionBlock implements TipiExecutable {
 	}
 
 	private final void parseActions(List<XMLElement> temp) {
-		// TipiActionBlock currentBlock = parentBlock;
 		try {
 			for (XMLElement current : temp) {
 				if (current.getName().equals("block")) {
@@ -175,8 +218,9 @@ public class TipiActionBlock implements TipiExecutable {
 
 					appendTipiExecutable(con);
 				} else {
-					TipiAction action = myContext.instantiateTipiAction(current, myComponent, this);
-					appendTipiExecutable(action);
+					parseActions(myContext, current);
+					//TipiAction action = myContext.instantiateTipiAction(current, myComponent, this);
+					//appendTipiExecutable(action);
 				}
 			}
 		} catch (Exception e) {
