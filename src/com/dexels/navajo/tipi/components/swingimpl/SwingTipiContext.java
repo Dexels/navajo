@@ -67,8 +67,8 @@ public class SwingTipiContext extends TipiContext {
 			Locale.setDefault(new Locale("nl", "NL"));
 		} catch (SecurityException se) {
 		}
-		// JFrame.setDefaultLookAndFeelDecorated(true);
-		// JDialog.setDefaultLookAndFeelDecorated(true);
+		 JFrame.setDefaultLookAndFeelDecorated(true);
+		 JDialog.setDefaultLookAndFeelDecorated(true);
 
 
 	//hasJnlpContext(

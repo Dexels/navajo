@@ -52,20 +52,25 @@ public class TipiSwitchPanel extends TipiPanel {
 	@Override
 
 	public void addToContainer(final Object c, final Object constraints) {
-          String name = componentMap.get(c);
-          System.err.println("Adding to switch with name: "+name);
-          if (name==null) {
-              getSwingContainer().add( (Component) c, name);
-              if (getChildCount()<=1) {
-                  selectedIndex = new Integer(0);
-//                  cardLayout.show(myPanel,name);
-//				System.err.println("Showing component: "+name);
-			}
-          } else {
-        	  System.err.println("Component: "+c+" not found");
-              getSwingContainer().add( (Component) c, name);
-          }
-          updateSelected();
+          final String name = componentMap.get(c);
+          runSyncInEventThread(new Runnable(){
+
+			public void run() {
+		          System.err.println("Adding to switch with name: "+name);
+		          if (name==null) {
+		              getSwingContainer().add( (Component) c, name);
+		              if (getChildCount()<=1) {
+		                  selectedIndex = new Integer(0);
+//		                  cardLayout.show(myPanel,name);
+//						System.err.println("Showing component: "+name);
+					}
+		          } else {
+		        	  System.err.println("Component: "+c+" not found");
+		              getSwingContainer().add( (Component) c, name);
+		          }
+		          updateSelected();
+			}});
+   
         }
 	 
 	public void setComponentValue(String name, Object object) {

@@ -152,7 +152,7 @@ public class MainApplication {
 
 		context.processProperties(properties);
 
-		System.err.println("Openingin definition: " + definition);
+//		System.err.println("Openingin definition: " + definition);
 		InputStream tipiResourceStream = context.getTipiResourceStream(definitionPath);
 		if (tipiResourceStream == null) {
 			System.err.println("Error starting up: Can not load tipi");

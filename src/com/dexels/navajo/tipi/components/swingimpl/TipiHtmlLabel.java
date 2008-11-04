@@ -1,7 +1,10 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
+import java.awt.*;
+
 import javax.swing.*;
 import javax.swing.text.*;
+import javax.swing.text.html.*;
 
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
@@ -36,6 +39,14 @@ public class TipiHtmlLabel extends TipiSwingDataComponentImpl {
 //	    myLabel.setFont(new Font("Sans", Font.ITALIC,20));
 	    myLabel.setContentType("text/html");
 //	    myLabel.setText("some very very very long text  ....");
+
+	    
+	    Font font = UIManager.getFont("Label.font");
+        String bodyRule = "body { font-family: " + font.getFamily() + "; " +
+                "font-size: " + font.getSize() + "pt; }";
+        ((HTMLDocument)myLabel.getDocument()).getStyleSheet().addRule(bodyRule);
+
+
 	    myLabel.setEditable(false);
 	    myLabel.setEnabled(false);
 	    addHelper(th);

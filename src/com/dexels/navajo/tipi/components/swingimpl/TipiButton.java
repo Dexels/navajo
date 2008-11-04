@@ -148,7 +148,6 @@ public class TipiButton extends TipiSwingComponentImpl {
 	}
 	// private boolean enabled = false;
 	public void eventStarted(TipiExecutable te, Object event) {
-		System.err.println("Start thred:" +Thread.currentThread());
 		if (Container.class.isInstance(getContainer())) {
 			runSyncInEventThread(new Runnable() {
 				public void run() {
@@ -160,8 +159,6 @@ public class TipiButton extends TipiSwingComponentImpl {
 		}
 	}
 	public void eventFinished(TipiExecutable te, Object event) {
-		System.err.println("Finish thred:" +Thread.currentThread());
-		
 		if (Container.class.isInstance(getContainer())) {
 			runSyncInEventThread(new Runnable() {
 				public void run() {
