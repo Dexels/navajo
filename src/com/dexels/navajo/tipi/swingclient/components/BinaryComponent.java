@@ -131,14 +131,16 @@ public static BufferedImage scale(int width, int height, boolean keepAspect, Buf
 	}
 
 	public void propertyChange(PropertyChangeEvent e) {
-		Binary old = (Binary)e.getOldValue();
-		Binary newValue = (Binary)e.getNewValue();
-		if(old!=null && newValue!=null) {
-			System.err.println("Old size: "+old.getLength()+" new size: "+newValue.getLength());
-		} else {
-			System.err.println("Null detected!");
+		if("value".equals(e.getPropertyName())) {
+			Binary old = (Binary)e.getOldValue();
+			Binary newValue = (Binary)e.getNewValue();
+			if(old!=null && newValue!=null) {
+				System.err.println("Old size: "+old.getLength()+" new size: "+newValue.getLength());
+			} else {
+				System.err.println("Null detected!");
+			}
+			setBinary(newValue);
 		}
-		setBinary(newValue);
 		
 	}
 

@@ -3,6 +3,7 @@ package com.dexels.navajo.tipi.swingclient.components;
 import java.awt.*;
 import java.awt.event.*;
 import java.beans.*;
+import java.lang.reflect.*;
 import java.util.*;
 import java.util.List;
 
@@ -223,11 +224,26 @@ public class GenericPropertyComponent extends JPanel  {
 				myProperty.removePropertyChangeListener(myPropertyChangeListener);
 			}
 		}
-		
 		myProperty = p;
 		if (p == null) {
 			return;
 		}
+		myPropertyChangeListener = new PropertyChangeListener(){
+
+			public void propertyChange(final PropertyChangeEvent evt) {
+				if(evt.getPropertyName().equals("description")) {
+					runSyncInEventThread(new Runnable(){
+
+						public void run() {
+							setLabel((String) evt.getNewValue());
+						}});
+				}
+			}};
+			
+		myProperty.addPropertyChangeListener(myPropertyChangeListener);
+
+		
+		
 		String caps = p.getSubType("capitalization");
 		if (caps != null) {
 			setCapitalization(caps);
@@ -415,6 +431,26 @@ public class GenericPropertyComponent extends JPanel  {
 		});
 	}
 
+	public void runSyncInEventThread(Runnable r) {
+		if (SwingUtilities.isEventDispatchThread()) {
+			r.run();
+		} else {
+			try {
+				SwingUtilities.invokeAndWait(r);
+			} catch (InvocationTargetException ex) {
+				throw new RuntimeException(ex);
+			} catch (InterruptedException ex) {
+			}
+		}
+	}
+
+	public void runAsyncInEventThread(Runnable r) {
+		if (SwingUtilities.isEventDispatchThread()) {
+			r.run();
+		} else {
+			SwingUtilities.invokeLater(r);
+		}
+	}
 
 	public final String getToolTipText(Property p) {
 		String toolTip = "";
