@@ -137,6 +137,8 @@ public class SQLMap implements Mappable, LazyArray {
   public boolean doUpdate;
   // Set autoCommit to true to overide default settings from sqlmap.xml configuration file!
   public boolean autoCommit = true;
+  public boolean replaceQueryDoubleQuotes = true;
+
   private boolean overideAutoCommit = false;
   public int transactionIsolation = -1;
   public int rowCount = 0;
@@ -658,7 +660,7 @@ public class SQLMap implements Mappable, LazyArray {
 		throw new UserException(-1, "Use of semicolon in query fields is not allowed, maybe you meant to use an update field?");
 	}
 	
-    query = newQuery.replace('"', '\'');
+    query = newQuery.replace('"', ( this.replaceQueryDoubleQuotes ) ? '\'' : '\"');
     if (debug) {
       System.err.println("SQLMap(): query = " + query);
     }
@@ -1459,6 +1461,10 @@ private void setBlob(PreparedStatement statement, int i, Binary b) throws SQLExc
 
   }
 
+  public void setReplaceQueryDoubleQuotes( boolean b ) {
+    this.replaceQueryDoubleQuotes = b;
+  }
+
   public int getStartIndex(String s) {
     return startIndex;
   }
@@ -1688,33 +1694,40 @@ private void setBlob(PreparedStatement statement, int i, Binary b) throws SQLExc
    * @return
    */
   public Binary getRecords() throws UserException {
-	  
+
 	  java.io.File tempFile = null;
 	  ResultSet rs = null;
 	  try {
 		  Binary b = null;
 		  rs = getDBResultSet(false);
+
 		  tempFile = File.createTempFile("sqlmap_records", "navajo");
 		  FileOutputStream fos = new FileOutputStream( tempFile );
 		  OutputStreamWriter fw = new OutputStreamWriter( fos, "UTF-8" );
+
 		  int columns = 0;
 		  ResultSetMetaData meta = null;
+
 		  try {
 			  meta = rs.getMetaData();
 			  columns = meta.getColumnCount();
-			  for (int j = 0; j < columns; j++) {
-				  String column = meta.getColumnLabel(j+1);
-				  if ( j == 0 ) {
-					  fw.write(column);
-				  } else {
-					  fw.write(this.separator + column);
+
+			  if ( this.showHeader ) {
+				  for (int j = 0; j < columns; j++) {
+					  String column = meta.getColumnLabel(j+1);
+					  if ( j == 0 ) {
+						  fw.write(column);
+					  } else {
+						  fw.write(this.separator + column);
+					  }
 				  }
+				  fw.write("\n");
 			  }
-			  fw.write("\n");
 		  }
 		  catch (Exception e) {
 			  e.printStackTrace(System.err);
 		  }
+
 		  while ( rs.next() ) {
 			  for (int j = 1; j <= columns; j++) {
 				  String value = ( rs.getObject(j)  != null ?  rs.getString(j) +"" : "");
@@ -1728,26 +1741,26 @@ private void setBlob(PreparedStatement statement, int i, Binary b) throws SQLExc
 		  }
 		  fw.flush();
 		  fw.close();
-		
+
 		  b = new Binary( tempFile, false );
-		  
+
 		  if ( fos != null ) {
 			  fos.close();
 		  }
-		  
+
 		  return b;
 	  } catch ( Exception ioe ) {
 		  throw new UserException( -1, ioe.getMessage(), ioe );
 	  } finally {
 		  if ( rs != null ) {
 			  try {
-				rs.close();
-				rs = null;
-				resetAll();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+				  rs.close();
+				  rs = null;
+				  resetAll();
+			  } catch (SQLException e) {
+				  // TODO Auto-generated catch block
+				  e.printStackTrace();
+			  }
 		  }
 		  if ( tempFile != null ) {
 			  try {
