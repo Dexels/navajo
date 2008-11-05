@@ -137,6 +137,16 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 				}
 				if (name.equals("title")) {
 					title = object.toString();
+					if(myRootPaneContainer!=null) {
+						if( myRootPaneContainer instanceof JDialog) {
+							JDialog jd = (JDialog)myRootPaneContainer;
+							jd.setTitle(title);
+						}
+						if( myRootPaneContainer instanceof JInternalFrame) {
+							JInternalFrame jd = (JInternalFrame)myRootPaneContainer;
+							jd.setTitle(title);
+						}
+					}
 					return;
 				}
 				if (name.equals("x")) {
