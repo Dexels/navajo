@@ -2,9 +2,13 @@ package com.dexels.navajo.tipi.components.swingimpl.swing;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.*;
 import java.net.*;
 
+import javax.imageio.*;
 import javax.swing.*;
+
+import com.dexels.navajo.document.types.*;
 
 /**
  * <p>
@@ -110,5 +114,31 @@ public class TipiSwingWindow extends JInternalFrame {
 		setBounds(r);
 		firePropertyChange("w", oldW, w);
 	}
+		
 
+	public void setIconUrl(Object u) {
+		setFrameIcon(getIcon(u));
+	}
+
+	 protected ImageIcon getIcon(Object u) {
+		 if(u==null) {
+			 return null;
+		 }
+		 if(u instanceof URL) {
+			   return new ImageIcon((URL) u);
+		 }
+		 if(u instanceof Binary) {
+			 Image i;
+			try {
+				i = ImageIO.read(((Binary) u).getDataAsStream());
+				 ImageIcon ii = new ImageIcon(i);
+				 return ii;
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		 }
+		 return null;
+	  }
+
+ 
 }
