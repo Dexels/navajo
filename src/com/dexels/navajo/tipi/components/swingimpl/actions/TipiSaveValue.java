@@ -32,7 +32,7 @@ public class TipiSaveValue extends TipiAction {
     protected void execute(TipiEvent event) throws TipiBreakException, TipiException {
         Operand globalvalue = getEvaluatedParameter("value", event);
         JFileChooser jf = new JFileChooser();
-        Object o = myComponent.getContainer();
+        Object o = getComponent().getContainer();
         Container c = null;
         if (o instanceof Container) {
             c = (Container) o;

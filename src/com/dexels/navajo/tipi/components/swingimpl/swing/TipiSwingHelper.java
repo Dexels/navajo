@@ -80,7 +80,7 @@ public class TipiSwingHelper
       System.err.println("Cannot register swing event: Container is null!");
       return;
     }
-    if (te.isTrigger("onActionPerformed", null)) {
+    if (te.isTrigger("onActionPerformed")) {
       try {
         java.lang.reflect.Method m = c.getClass().getMethod("addActionListener", new Class[] {ActionListener.class});
         ActionListener bert = new ActionListener() {
@@ -99,7 +99,7 @@ public class TipiSwingHelper
         exe.printStackTrace();
       }
     }
-    if (te.isTrigger("onWindowClosed", null)) {
+    if (te.isTrigger("onWindowClosed")) {
       if (JInternalFrame.class.isInstance(c)) {
 //        JInternalFrame jj = (JInternalFrame) c;
 //        jj.addInternalFrameListener(new InternalFrameAdapter() {
@@ -133,7 +133,7 @@ public class TipiSwingHelper
         throw new RuntimeException("Can not fire onWindowClosed event from class: " + c.getClass());
       }
     }
-    if (te.isTrigger("onMouseEntered", null)) {
+    if (te.isTrigger("onMouseEntered")) {
       c.addMouseListener(new MouseAdapter() {
         public void mouseEntered(MouseEvent e) {
           Map<String,Object> m = new HashMap<String,Object>();
@@ -150,7 +150,7 @@ public class TipiSwingHelper
         }
       });
     }
-    if (te.isTrigger("onMouseExited", null)) {
+    if (te.isTrigger("onMouseExited")) {
       c.addMouseListener(new MouseAdapter() {
         public void mouseExited(MouseEvent e) {
           try {
@@ -165,7 +165,7 @@ public class TipiSwingHelper
         }
       });
     }
-    if (te.isTrigger("onMouseClicked", null)) {
+    if (te.isTrigger("onMouseClicked")) {
       c.addMouseListener(new MouseAdapter() {
         public void mouseClicked(MouseEvent e) {
           try {
@@ -182,7 +182,7 @@ public class TipiSwingHelper
         }
       });
     }
-    if (te.isTrigger("onMousePressed", null)) {
+    if (te.isTrigger("onMousePressed")) {
       c.addMouseListener(new MouseAdapter() {
         public void mouseReleased(MouseEvent e) {
           try {
@@ -198,7 +198,7 @@ public class TipiSwingHelper
         }
       });
     }
-    if (te.isTrigger("onMouseReleased", null)) {
+    if (te.isTrigger("onMouseReleased")) {
       c.addMouseListener(new MouseAdapter() {
         public void mouseReleased(MouseEvent e) {
           try {

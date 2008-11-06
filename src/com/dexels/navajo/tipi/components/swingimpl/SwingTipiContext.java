@@ -467,7 +467,6 @@ public class SwingTipiContext extends TipiContext {
 	@Override
 	public void doActions(TipiEvent te, TipiComponent comp, TipiExecutable executableParent, List<TipiExecutable> exe)
 			throws TipiBreakException {
-		te.getEventKeySet();
 
 		String component = executableParent.getBlockParam("animationComponent");
 		if (component == null) {

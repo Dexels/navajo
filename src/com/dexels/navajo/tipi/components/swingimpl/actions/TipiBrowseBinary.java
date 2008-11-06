@@ -48,7 +48,7 @@ public class TipiBrowseBinary extends TipiAction {
         if(!pp.getType().equals(Property.BINARY_PROPERTY)) {
             throw new TipiException("TipiOpenBinary: Property is not type binary , but: "+pp.getType());
         }
-        myComponent.runSyncInEventThread(new Runnable(){
+        getComponent().runSyncInEventThread(new Runnable(){
 
 			public void run() {
 		        JFileChooser jf = new JFileChooser(System.getProperty("user.home"));
