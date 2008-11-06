@@ -20,11 +20,12 @@ public interface TipiExecutable {
 	public void performAction(TipiEvent te, TipiExecutable parent, int index) throws TipiBreakException, TipiException;
 
 	
-	public int getExecutableChildCount();
+//	public int getExecutableChildCount();
 
-	public TipiExecutable getExecutableChild(int index);
+//	public TipiExecutable getExecutableChild(int index);
 
 	public TipiComponent getComponent();
+	public void setComponent(TipiComponent c);
 
 	public TipiEvent getEvent();
 

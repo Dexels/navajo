@@ -65,7 +65,7 @@ public class TipiStackElement {
 	}
 
 	public String createLine() {
-		return "       at " + getName() + " (" + getTitle() + ":" + (getLineNr() + 1) + ")";
+		return "       at " + getName() + " (" + (getTitle()==null?"init":getTitle()) + ":" + (getLineNr() + 1) + ")";
 	}
 
 	public void dumpStack(String message) {

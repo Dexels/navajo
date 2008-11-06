@@ -27,7 +27,7 @@ public class TipiPerformTipiMethod extends TipiAction {
 		String path = null;
 		try {
 			path = getParameter("path").getValue();
-			t = (TipiComponent) myContext.evaluate(path, myComponent, event).value;
+			t = (TipiComponent) myContext.evaluate(path, getComponent(), event).value;
 			name = (String) evaluate(getParameter("name").getValue(), event).value;
 		} catch (Exception ex) {
 			ex.printStackTrace();

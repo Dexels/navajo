@@ -2,18 +2,18 @@ package com.dexels.navajo.tipi.internal;
 
 import java.util.*;
 
+import org.omg.CosNaming.*;
+
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.actions.*;
-import com.dexels.navajo.tipi.tipixml.*;
 
-public abstract class TipiAction implements TipiExecutable {
+public abstract class TipiAction extends TipiAbstractExecutable  {
 	protected TipiContext myContext;
 
 	protected TipiActionFactory myActionFactory;
 
 	// protected TipiEvent myEvent;
-	protected TipiComponent myComponent;
 
 	protected String myType;
 
@@ -34,7 +34,6 @@ public abstract class TipiAction implements TipiExecutable {
 	// protected TipiCondition myCondition;
 	protected abstract void execute(TipiEvent event) throws TipiBreakException, TipiException;
 
-	private TipiEvent myEvent = null;
 	// protected TipiActionBlock myActionBlock;
 
 	public static final boolean INLINE_ACTIONS = true;
@@ -51,13 +50,16 @@ public abstract class TipiAction implements TipiExecutable {
 
 	public void performAction(TipiEvent te, TipiExecutable parent, int index) throws TipiBreakException, TipiException {
 		myContext.debugLog("action", myType);
-		myEvent = te;
-		if (myComponent.isDisposed()) {
-			System.err.println("\n**** BREAKING. COMPONENT DISPOSED: " + myComponent.getPath() + " performing action: "
+		setEvent(te);
+		if (getComponent().isDisposed()) {
+			System.err.println("\n**** BREAKING. COMPONENT DISPOSED: " + getComponent().getPath() + " performing action: "
 					+ getClass().getName());
 			// Thread.dumpStack();
 			getStackElement().dumpStack("Component disposed: ");
 			throw new TipiBreakException(TipiBreakException.COMPONENT_DISPOSED);
+		}
+		if(!checkCondition(te)) {
+			return;
 		}
 
 		try {
@@ -77,46 +79,10 @@ public abstract class TipiAction implements TipiExecutable {
 			System.err.println("Uncaught exception: ");
 			e.printStackTrace();
 		}
-		myEvent = null;
+		setEvent(null);
 	}
 
-	public XMLElement store() {
-		XMLElement xe = new CaseSensitiveXMLElement();
-		xe.setName(getType());
-		// xe.setAttribute("type", getType());
-		Iterator<String> it = parameterMap.keySet().iterator();
-		while (it.hasNext()) {
-			String name = it.next();
-			// System.err.println("Storing: " + name);
-			TipiValue value = parameterMap.get(name);
 
-			// System.err.println("DefaultValue: " + value.getValue() + "
-			// default: " + value.getDefaultValue());
-			if (value.getValue() == null) {
-				// System.err.println("Skipping null: " + value.getName());
-				continue;
-			}
-			if (value.getValue().equals(value.getDefaultValue())) {
-				// System.err.println("Skipping default.");
-				continue;
-			}
-			// System.err.println("Storing action. value: " + value.getValue() +
-			// " defaultValue: " + value.getDefaultValue());
-			if (INLINE_ACTIONS) {
-				xe.setAttribute(name, value.getValue());
-			} else {
-				XMLElement pr = new CaseSensitiveXMLElement();
-				pr.setName("param");
-				pr.setAttribute("name", name);
-				pr.setAttribute("value", value.getValue());
-				xe.addChild(pr);
-			}
-
-		}
-		// System.err.println("Stored actiontype: " + getType() + " # of params:
-		// " + xe.getChildren().size());
-		return xe;
-	}
 
 	public void setType(String type) {
 		myType = type;
@@ -147,11 +113,11 @@ public abstract class TipiAction implements TipiExecutable {
 
 		Message m = null;
 		Navajo n = null;
-		if (myComponent != null) {
-			n = myComponent.getNearestNavajo();
+		if (getComponent() != null) {
+			n = getComponent().getNearestNavajo();
 		}
 
-		return myContext.evaluate(expr, myComponent, event, n, m);
+		return myContext.evaluate(expr, getComponent(), event, n, m);
 	}
 
 	public Operand getEvaluatedParameter(String name, TipiEvent event) {
@@ -174,47 +140,5 @@ public abstract class TipiAction implements TipiExecutable {
 		myContext = tc;
 	}
 
-	public void setComponent(TipiComponent tc) {
-		myComponent = tc;
-	}
-
-	public TipiComponent getComponent() {
-		return myComponent;
-	}
-
-	//
-	// public void setEvent(TipiEvent te) {
-	// myEvent = te;
-	// }
-
-	public int getExecutableChildCount() {
-		return 0;
-	}
-
-	public TipiExecutable getExecutableChild(int index) {
-		return null;
-	}
-
-	public TipiEvent getEvent() {
-		return myEvent;
-
-	}
-
-	public void setEvent(TipiEvent e) {
-		myEvent = e;
-
-	}
-
-	public TipiStackElement getStackElement() {
-		return stackElement;
-	}
-
-	public void setStackElement(TipiStackElement myStackElement) {
-		stackElement = myStackElement;
-	}
-
-	public void dumpStack(String message) {
-		getStackElement().dumpStack(message);
-	}
 
 }

@@ -2017,7 +2017,7 @@ public abstract class TipiContext {
 
 	public void performAction(final TipiEvent te, TipiExecutable parentExecutable, TipiEventListener listener) {
 
-		te.setRootCause(parentExecutable);
+//		te.setRootCause(parentExecutable);
 		debugLog("event   ", "enqueueing async event: " + te.getEventName());
 		if (myThreadPool == null) {
 			myThreadPool = new TipiThreadPool(this, getPoolSize());

@@ -32,7 +32,7 @@ public class TipiHeadlessButton extends TipiComponentImpl {
 			for (int i = 0; i < getEventList().size(); i++) {
 				final int j = i;
 				TipiEvent current = getEventList().get(j);
-				if (current.isTrigger("onActionPerformed", "aap")) {
+				if (current.isTrigger("onActionPerformed")) {
 					try {
 						doFireAction(event);
 					} catch (TipiBreakException e) {

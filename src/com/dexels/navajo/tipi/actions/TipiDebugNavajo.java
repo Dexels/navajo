@@ -39,8 +39,8 @@ public class TipiDebugNavajo extends TipiAction {
 			} else {
 				w = System.err;
 			}
-			if (myComponent.getNearestNavajo() != null) {
-				Navajo n = myComponent.getNearestNavajo();
+			if (getComponent().getNearestNavajo() != null) {
+				Navajo n = getComponent().getNearestNavajo();
 				w.println("********** DEBUG ************* ");
 				w.println("NEAREST NAVAJO: ");
 				try {

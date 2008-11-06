@@ -1014,7 +1014,7 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 		boolean hasEventType = false;
 		for (int i = 0; i < myEventList.size(); i++) {
 			TipiEvent te = myEventList.get(i);
-			if (te.isTrigger(type, myService)) {
+			if (te.isTrigger(type)) {
 				myContext.fireTipiContextEvent(this, type, event, sync);
 				hasEventType = true;
 				TipiExecutable parentEvent = null;
@@ -1036,7 +1036,9 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 					}
 				} else {
 					try {
-						te.asyncPerformAction(this, parentEvent, event, afterEvent);
+						if(te.checkCondition(te)) {
+							te.asyncPerformAction(this, parentEvent, event, afterEvent);
+								}
 					} catch (Throwable e) {
 						getContext().showInternalError(
 								"Error performing event: " + te.getEventName() + " for component: " + te.getComponent().getPath(), e);

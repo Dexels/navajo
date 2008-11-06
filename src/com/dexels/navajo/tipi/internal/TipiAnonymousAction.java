@@ -59,4 +59,9 @@ public class TipiAnonymousAction implements TipiExecutable {
 
 	}
 
+	public void setComponent(TipiComponent c) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

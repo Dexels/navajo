@@ -171,7 +171,7 @@ public class TipiInstantiateTipi extends TipiAction {
 			ex.printStackTrace();
 		}
 		if (byClass) {
-			instantiateTipi(myContext, myComponent, byClass, parent, force, id, (String) getEvaluatedParameter("class", event).value, null,
+			instantiateTipi(myContext, getComponent(), byClass, parent, force, id, (String) getEvaluatedParameter("class", event).value, null,
 					parameterMap, constraints, event);
 		} else {
 			String definitionName = null;
@@ -184,7 +184,7 @@ public class TipiInstantiateTipi extends TipiAction {
 			}
 			try {
 				// retry:
-				instantiateTipi(myContext, myComponent, byClass, parent, force, id, null, definitionName, parameterMap, constraints, event);
+				instantiateTipi(myContext, getComponent(), byClass, parent, force, id, null, definitionName, parameterMap, constraints, event);
 			} catch (Exception ex1) {
 				// still did not work:
 				myContext.showInternalError("Error loading definition: " + definitionName, ex1);

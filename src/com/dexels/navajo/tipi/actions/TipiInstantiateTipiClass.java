@@ -43,13 +43,13 @@ public class TipiInstantiateTipiClass extends TipiInstantiateTipi {
 			if (location.startsWith("/")) {
 				parent = myContext.getTipiComponentByPath(location);
 			} else {
-				parent = myComponent.getTipiComponentByPath(location);
+				parent = getComponent().getTipiComponentByPath(location);
 			}
 
 		} else {
 			parent = (TipiComponent) eval;
 		}
 		String className = (String) getEvaluatedParameter("class", event).value;
-		instantiateTipi(myContext, myComponent, byClass, parent, force, id, className, null, parameterMap, constraints, event);
+		instantiateTipi(myContext, getComponent(), byClass, parent, force, id, className, null, parameterMap, constraints, event);
 	}
 }

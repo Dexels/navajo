@@ -1,6 +1,5 @@
 package com.dexels.navajo.tipi.actions;
 
-import com.dexels.navajo.client.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.internal.*;
@@ -107,8 +106,8 @@ public class TipiPerformMethod extends TipiAction {
 		setThreadState("waiting");
 
 		if (evalTipi == null) {
-			if (myComponent.getNearestNavajo() != null) {
-				Navajo n = myComponent.getNearestNavajo();
+			if (getComponent().getNearestNavajo() != null) {
+				Navajo n = getComponent().getNearestNavajo();
 				myContext.performTipiMethod(null, n, destination, method.value.toString(), breakOnError, event, expirationInterval,
 						hostUrl, username, password, keystore, keypass);
 			} else {

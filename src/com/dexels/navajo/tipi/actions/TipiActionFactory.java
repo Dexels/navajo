@@ -63,6 +63,14 @@ public class TipiActionFactory {
 		}
 	}
 
+	/**
+	 * 
+	 * @param instance is the actual action instance in the script
+	 * @param tc
+	 * @param parentExe
+	 * @return
+	 * @throws TipiException
+	 */
 	public TipiAction instantateAction(XMLElement instance, TipiComponent tc, TipiExecutable parentExe) throws TipiException {
 		// todo:
 		// Instantiate the class.
@@ -75,17 +83,17 @@ public class TipiActionFactory {
 		} catch (InstantiationException ex) {
 			throw new TipiException("Can not instantiate actionclass: " + newAction + " problem: " + ex.getMessage());
 		}
+
 		newAction.setContext(myContext);
 		newAction.setComponent(tc);
 		newAction.setType(myName);
-		// if(parentExe.getStackElement()==null) {
-		// throw new RuntimeException("ACtion sin parentes?");
-		// } else {
-		//System.err.println("PARENT STACKELEMENT: "+parentExe.getStackElement()
-		// .createLine());
-		// }
-		newAction.setStackElement(new TipiStackElement(myName, instance, parentExe.getStackElement()));
 
+		String condition = instance.getStringAttribute("condition");
+		if(condition!=null) {
+			newAction.setExpression(condition);
+		}
+		
+		newAction.setStackElement(new TipiStackElement(myName, instance, parentExe.getStackElement()));
 		// Check presence of supplied parameters in the defined parameters
 		List<XMLElement> c = instance.getChildren();
 
