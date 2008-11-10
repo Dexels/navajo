@@ -36,6 +36,7 @@ public class TipiThreadPool {
 	private final Map<TipiThread, String> threadStateMap = Collections.synchronizedMap(new TreeMap<TipiThread, String>());
 
 	private boolean running = true;
+	private Thread myShutdownThread = null;
 
 	// for use with echo
 
@@ -175,11 +176,27 @@ public class TipiThreadPool {
 			System.err.println("Dumping: " + t.getName());
 			for (TipiExecutable tipiExecutable : te) {
 				System.err.println("EXE: " + tipiExecutable.getEvent().getEventName());
-
 			}
 			System.err.println("End of dump: " + t.getName());
 		}
 
+	}
+
+
+	public void waitForAllThreads() {
+		myShutdownThread = Thread.currentThread();
+		while(myGroup.activeCount()>1) {
+			System.err.println("Active threads: "+myGroup.activeCount());
+			System.err.println("waiting..");
+			dumpEventStacks();
+			synchronized (this) {
+				try {
+					wait();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 
 }

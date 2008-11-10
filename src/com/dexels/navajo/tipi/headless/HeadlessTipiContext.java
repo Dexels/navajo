@@ -8,6 +8,20 @@ public class HeadlessTipiContext extends TipiContext {
 
 	StringBuffer infoBuffer = new StringBuffer();
 	Queue<String> infoQueue = new LinkedList<String>();
+	private final Thread myInvokingThread;
+
+	
+	public HeadlessTipiContext() {
+		super();
+		myInvokingThread = Thread.currentThread(); 
+	}
+	
+	public void exit() {
+		shutdown();
+		//myInvokingThread.interrupt();
+	}
+
+	
 	@Override
 	public void clearTopScreen() {
 

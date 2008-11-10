@@ -96,6 +96,7 @@ public class TipiThread extends Thread implements Comparable<TipiThread> {
 				}
 			} catch (ThreadShutdownException t) {
 				System.err.println("Thread received a shutdown request. Farewell..");
+				shutdown();
 				return;
 			} catch (Throwable t) {
 				System.err.println("Caught uncaught exception in thread:");
@@ -103,6 +104,14 @@ public class TipiThread extends Thread implements Comparable<TipiThread> {
 				// System.err.println("Reviving dying thread...");
 			}
 		}
+	}
+
+	private void shutdown() {
+			System.err.println("entering");
+			synchronized (myPool) {
+				System.err.println("notifying");
+				myPool.notify();
+			}
 	}
 
 	public int compareTo(TipiThread o) {
