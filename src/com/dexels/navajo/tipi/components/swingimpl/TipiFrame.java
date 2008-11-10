@@ -47,6 +47,8 @@ public class TipiFrame extends TipiSwingDataComponentImpl {
 			TipiApplet ta = ((SwingTipiContext) getContext()).getAppletRoot();
 			if (ta != null) {
 				myToplevel = ta;
+				mySuperPanel = new JPanel();
+				ta.getContentPane().add(mySuperPanel, BorderLayout.CENTER);
 				return ta;
 			}
 			RootPaneContainer or = ((SwingTipiContext) getContext()).getOtherRoot();

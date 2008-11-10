@@ -12,12 +12,7 @@ import tipi.*;
 public class TipiApplet extends JApplet {
 	private SwingTipiContext myContext;
 	public TipiApplet() throws Exception {
-		try {
-			UIManager.setLookAndFeel("org.jvnet.substance.SubstanceLookAndFeel");
-			SwingUtilities.updateComponentTreeUI(this);
-		} catch (Throwable e) {
-			e.printStackTrace();
-		} }
+ }
 
 	public void destroy() {
 		myContext.shutdown();
@@ -33,15 +28,16 @@ public class TipiApplet extends JApplet {
 		String tipiCodeBase = this.getParameter("tipiCodeBase");
 		String resourceCodeBase = this.getParameter("resourceCodeBase");
 		String switches = getParameter("switch");
-		StringTokenizer st = new StringTokenizer(switches," ");
-		while (st.hasMoreTokens()) {
-			arguments.add(st.nextToken());
+		if(switches!=null) {
+			StringTokenizer st = new StringTokenizer(switches," ");
+			while (st.hasMoreTokens()) {
+				arguments.add(st.nextToken());
+			}
 		}
-
 		if(tipiCodeBase!=null) {
 			try {
 				String tipiCode = new URL(getCodeBase(),tipiCodeBase).toString();
-				arguments.add("-DtipiCodeBase="+tipiCode);
+				arguments.add("tipiCodeBase="+tipiCode);
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
 			}
@@ -50,7 +46,7 @@ public class TipiApplet extends JApplet {
 		if(resourceCodeBase!=null) {
 			try {
 				String resourceCode = new URL(getCodeBase(),resourceCodeBase).toString();
-				arguments.add("-DresourceCodeBase="+resourceCode);
+				arguments.add("resourceCodeBase="+resourceCode);
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
 			}
@@ -64,8 +60,11 @@ public class TipiApplet extends JApplet {
 				e.printStackTrace();
 			} 
 		}
-
-		arguments.add(init);
+		if (init!=null) {
+			arguments.add(init);
+		} else {
+			throw new IllegalArgumentException("Missing argument: Add 'init' argument to applet.");
+		}
 		try {
 			myContext = MainApplication.initialize(init, null,arguments,this,null);
 		} catch (Exception e) {

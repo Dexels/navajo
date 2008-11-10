@@ -51,12 +51,8 @@
       <param name="component" type="string" required="true" />
    </tipiaction>
 
-   <!-- refactored from NavajoTipi, as it is not applicable to echo
-      righght, I think it should be moved back. The exit function is overridden
-      in de contexts. Echo considers it a 'destroy session'
-   -->
 
-   <tipiaction name="exit" class="TipiExit" package="com.dexels.navajo.tipi.actions" />
+
 
    <!-- the actual classes should be refactored too! -->
 
@@ -655,9 +651,13 @@
    </tipiclass>
 
 
-
-   <tipiclass addtocontainer="true" childcount="*" class="TipiPanel" layoutmanager="true" module="container" name="tipi" package="com.dexels.navajo.tipi.components.swingimpl"
+   <!-- Use panel instead -->
+      <!-- Identical to panel -->
+   <tipiclass addtocontainer="true" deprecated="true" childcount="*" class="TipiPanel" layoutmanager="true" module="container" name="tipi" package="com.dexels.navajo.tipi.components.swingimpl"
       studio-icon="tipi.gif" type="tipi">
+      <description>
+         Deprecated, use panel instead. They use the same java class
+      </description>
       <events>
          <event name="onInstantiate" />
          <event name="onLoad">
@@ -670,7 +670,6 @@
          </event>
       </events>
       <values>
-
        <value direction="in" name="opaque" type="boolean" property="opaque" />
           <value direction="in" name="background" type="color" property="background" />
          <value direction="in" name="border" type="border" property="border" />
@@ -692,7 +691,48 @@
          </value>
       </values>
       <methods />
+   </tipiclass>
 
+
+   <!-- Identical to tipi -->
+   <tipiclass addtocontainer="true" deprecated="true" childcount="*" class="TipiPanel" layoutmanager="true" module="container" name="panel" package="com.dexels.navajo.tipi.components.swingimpl"
+      studio-icon="tipi.gif" type="tipi">
+      <description>
+         Deprecated, use panel instead. They use the same java class
+      </description>
+      <events>
+         <event name="onInstantiate" />
+         <event name="onLoad">
+            <param name="service" type="string" />
+            <param name="navajo" type="navajo"/>
+         </event>
+         <event name="onGeneratedErrors">
+            <param name="id" type="string" />
+            <param name="description" type="string" />
+         </event>
+      </events>
+      <values>
+       <value direction="in" name="opaque" type="boolean" property="opaque" />
+          <value direction="in" name="background" type="color" property="background" />
+         <value direction="in" name="border" type="border" property="border" />
+         <value direction="inout" name="tooltip" type="string" property="ToolTipText" />
+         <value direction="in" name="visible" type="boolean" property="visible" />
+         <value direction="in" name="paint" type="paint" property="paint" />
+
+         <value direction="in" name="image" type="resource" property="imageUrl" />
+         <value direction="in" name="image_alignment" type="selection" property="alignment">
+            <option description="North" value="north" />
+            <option description="East" value="east" />
+            <option description="South" value="south" />
+            <option description="West" value="west" />
+            <option description="Center" value="center" />
+            <option description="NorthEast" value="northeast" />
+            <option description="SouthEast" value="southeast" />
+            <option description="NorthWest" value="northwest" />
+            <option description="SouthWest" value="southwest" />
+         </value>
+      </values>
+      <methods />
    </tipiclass>
 
 
