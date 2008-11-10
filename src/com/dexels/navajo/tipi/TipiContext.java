@@ -176,16 +176,14 @@ public abstract class TipiContext {
 	public TipiContext() {
 		Iterator<TipiExtension> tt = ServiceRegistry.lookupProviders(TipiExtension.class);
 		initializeExtensions(tt);
-		tt = ServiceRegistry.lookupProviders(TipiExtension.class, Thread.currentThread().getContextClassLoader());
-		initializeExtensions(tt);
-
-		try {
-			tt = ServiceRegistry.lookupProviders(TipiExtension.class, ClassLoader.getSystemClassLoader());
-			initializeExtensions(tt);
-		} catch (SecurityException e1) {
-			// TODO Auto-generated catch block
-			System.err.println("No access to system classloader. Continuing.");
-		}
+		
+//		try {
+//			tt = ServiceRegistry.lookupProviders(TipiExtension.class, ClassLoader.getSystemClassLoader());
+//			initializeExtensions(tt);
+//		} catch (SecurityException e1) {
+//			// TODO Auto-generated catch block
+//			System.err.println("No access to system classloader. Continuing.");
+//		}
 
 		clientInterface = NavajoClientFactory.createDefaultClient();
 		
@@ -194,7 +192,7 @@ public abstract class TipiContext {
 		}
 
 		if (coreExtensionList.isEmpty()) {
-//			System.err.println("Beware: no extensions. Running without jars? Entering fake mode...");
+			System.err.println("Beware: no extensions. Running without jars? Entering fake mode...");
 			fakeJars = true;
 			fakeExtensions();
 		}
@@ -2169,6 +2167,12 @@ public abstract class TipiContext {
 			s.contextShutdown();
 		}
 		contextShutdown = true;
+		Thread shutdownThread = new Thread("TipiShutdown"){
+			public void run(){
+				myThreadPool.waitForAllThreads();
+			}
+		};
+		shutdownThread.start();
 	}
 
 	public DescriptionProvider getDescriptionProvider() {
