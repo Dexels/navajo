@@ -116,8 +116,8 @@ public class AfterWebserviceTrigger extends WebserviceTrigger implements Seriali
 
 	public Navajo perform() {
 		
-        // Spawn task asynchronously. If there is no web service to run, invoke task synchronously.
-		if ( getTask().getWebservice() != null ) {
+        // Spawn task asynchronously. If there is no web service to run, invoke task synchronously (or if forceSync is set).
+		if ( getTask().getWebservice() != null && !getTask().isForceSync() ) {
 			
 			GenericThread taskThread = new GenericThread("task:" + getTask().getId() ) {
 

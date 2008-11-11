@@ -68,6 +68,8 @@ public class Task implements Runnable, TaskMXBean, TaskInterface, Serializable {
 	public String errorMessage;
 	public String workflowDefinition = null;
 	public String workflowId = null;
+	// Force synchronous execution, overriding default behaviour.
+	public boolean forceSync = false;
 	
     private Trigger myTrigger = null;
     @SuppressWarnings("unused")
@@ -592,5 +594,13 @@ public class Task implements Runnable, TaskMXBean, TaskInterface, Serializable {
 	
 	public void setPersisted(boolean persisted) {
 		this.persisted = persisted;
+	}
+
+	public void setForceSync(boolean forceSync) {
+		this.forceSync = forceSync;
+	}
+
+	public boolean isForceSync() {
+		return forceSync;
 	}
 }

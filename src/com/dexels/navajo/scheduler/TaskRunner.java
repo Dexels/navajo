@@ -274,7 +274,9 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 							(Boolean) m.getProperty("keeprequestresponse").getTypedValue() : Boolean.FALSE );
 					Boolean persistedFlag = ( m.getProperty("persisted") != null  ? 
 							(Boolean) m.getProperty("persisted").getTypedValue() : Boolean.FALSE );
-
+					Boolean forceSync = ( m.getProperty("forcesync") != null  ? 
+							(Boolean) m.getProperty("forcesync").getTypedValue() : Boolean.FALSE );
+					
 					Access newAcces = new Access(-1, -1, -1, username, webservice, "Taskrunner", "127.0.0.1", "localhost", false, null);
 
 					// Do not add tasks from previous workflow instances when server is started. Workflow instance tasks
@@ -289,6 +291,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 							t.setId(id);
 							t.setKeepRequestResponse(keeprequestresponse.booleanValue());
 							t.setPersisted(persistedFlag.booleanValue());
+							t.setForceSync(forceSync.booleanValue());
 							readTaskInput(t);
 							currentTasks.add(t.getId());
 							// Remove previous version of this task.
@@ -648,6 +651,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 						Property propTaskDescription = NavajoFactory.getInstance().createProperty(taskDoc, "taskdescription", Property.STRING_PROPERTY, t.getTaskDescription(), 0, "", Property.DIR_OUT);
 						Property propClientId = NavajoFactory.getInstance().createProperty(taskDoc, "clientid", Property.STRING_PROPERTY, t.getClientId(), 0, "", Property.DIR_OUT);
 						Property persistedFlag = NavajoFactory.getInstance().createProperty(taskDoc, "persisted", Property.BOOLEAN_PROPERTY, t.isPersisted() + "", 0, "", Property.DIR_OUT);
+						Property forceSync = NavajoFactory.getInstance().createProperty(taskDoc, "forcesync", Property.BOOLEAN_PROPERTY, t.isPersisted() + "", 0, "", Property.DIR_OUT);
 						
 						newTask.addProperty(propId);
 						newTask.addProperty(propUser);
@@ -661,6 +665,7 @@ public class TaskRunner extends GenericThread implements TaskRunnerMXBean, TaskR
 						newTask.addProperty(propTaskDescription);
 						newTask.addProperty(propClientId);
 						newTask.addProperty(persistedFlag);
+						newTask.addProperty(forceSync);
 
 						// Persist task request Navajo and tasks.xml
 						writeTaskConfig(taskDoc);
