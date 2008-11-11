@@ -89,7 +89,7 @@ public abstract class AsyncMappable implements Mappable, AsyncMappableMXBean {
   public String pointer;
   public java.util.Date startDate;
   public boolean kill = false;
-  public int percReady;
+  public int percReady = 0;
   public String accessId;
   public String webservice;
   public String user;
