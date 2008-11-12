@@ -86,14 +86,17 @@ public class TipiFrame extends TipiSwingDataComponentImpl {
 			runSyncInEventThread(new Runnable() {
 				public void run() {
 					if (myToplevel instanceof JFrame) {
-						((JFrame) myToplevel).setJMenuBar((JMenuBar) c);
+						((JFrame) myToplevel).getRootPane().setJMenuBar((JMenuBar) c);
+						((JFrame) myToplevel).repaint();
+						((JMenuBar) c).revalidate();
 					}
 					if (myToplevel instanceof JApplet) {
-						((JApplet) myToplevel).setJMenuBar((JMenuBar) c);
+						((JApplet) myToplevel).getRootPane().setJMenuBar((JMenuBar) c);
 					}
 					if (myToplevel instanceof JInternalFrame) {
-						((JInternalFrame) myToplevel).setJMenuBar((JMenuBar) c);
+						((JInternalFrame) myToplevel).getRootPane().setJMenuBar((JMenuBar) c);
 					}
+					
 				}
 			});
 		} else {

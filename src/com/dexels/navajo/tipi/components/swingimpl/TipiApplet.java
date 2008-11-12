@@ -1,6 +1,7 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
 import java.awt.*;
+import java.io.*;
 import java.net.*;
 import java.util.*;
 import java.util.List;
@@ -22,9 +23,24 @@ public class TipiApplet extends JApplet {
 	public void init() {
 		super.init();
 		List<String> arguments = new ArrayList<String>();
+		String tipiFile=getParameter("tipiFile");
+		List<String> arrrgs = null;
+		String definition = null;
+		if(tipiFile!=null) {
+			URL f;
+			try {
+				f = new URL(tipiFile);
+				arrrgs = MainApplication.parseBundleUrl(f);
+				definition = arrrgs.get(arrrgs.size()-1);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+				} 
 		String init = this.getParameter("init");
 	//		System.err.println("LocationOnScreen: "+getLocationOnScreen());
 		String laf = this.getParameter("tipilaf");
+		System.err.println("Applet init laf: "+laf);
 		String tipiCodeBase = this.getParameter("tipiCodeBase");
 		String resourceCodeBase = this.getParameter("resourceCodeBase");
 		String switches = getParameter("switch");
@@ -34,6 +50,7 @@ public class TipiApplet extends JApplet {
 				arguments.add(st.nextToken());
 			}
 		}
+	
 		if(tipiCodeBase!=null) {
 			try {
 				String tipiCode = new URL(getCodeBase(),tipiCodeBase).toString();
@@ -51,9 +68,10 @@ public class TipiApplet extends JApplet {
 				e.printStackTrace();
 			}
 		}
-
+		System.err.println("Laf: "+laf);
 		if(laf!=null) {
 			try {
+				arguments.add("tipilaf="+laf);
 				UIManager.setLookAndFeel(laf);
 				SwingUtilities.updateComponentTreeUI(this);
 			} catch (Throwable e) {

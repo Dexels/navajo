@@ -375,10 +375,13 @@ public class SwingTipiContext extends TipiContext {
 				if (getOtherRoot() != null) {
 					TipiModalInternalFrame.showInternalMessage(getOtherRoot().getRootPane(), getOtherRoot().getContentPane(), title, text,
 							getPoolSize(),messageType);
-				} else if (getAppletRoot() != null && getDefaultDesktop() != null) {
+					// FIXME
+				} else if (false&& getAppletRoot() != null && getDefaultDesktop() != null) {
 
-					TipiModalInternalFrame.showInternalMessage(getAppletRoot().getRootPane(), getDefaultDesktop(), title, text,
-							getPoolSize(),messageType);
+//					TipiModalInternalFrame.showInternalMessage(getAppletRoot().getRootPane(), getDefaultDesktop(), title, text,
+//							getPoolSize(),messageType);
+					JOptionPane.showMessageDialog((Component) getTopDialog(), text, title, messageType);
+					
 				} else {
 					JOptionPane.showMessageDialog((Component) getTopDialog(), text, title, messageType);
 					
@@ -420,6 +423,7 @@ public class SwingTipiContext extends TipiContext {
 		}
 
 		try {
+			System.err.println("Using tipilaf: "+tipiLaf);
 			if (tipiLaf == null) {
 				UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 				// UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
@@ -549,8 +553,27 @@ public class SwingTipiContext extends TipiContext {
 
 	public JDialog createDialog(String title) {
 		if(dialogStack.isEmpty()) {
-			System.err.println("Create dialog: Stack empty, attaching to frame");
-			JDialog jd = new JDialog((JFrame)getTopLevel(),title);
+			if(getTopLevel() instanceof JFrame) {
+				System.err.println("Create dialog: Stack empty, attaching to frame");
+				JDialog jd = new JDialog((JFrame)getTopLevel(),title);
+				dialogStack.push(jd);
+				return jd;
+			}
+			if(getAppletRoot()!=null) {
+				System.err.println("Create dialog: Stack empty, attaching to Applet");
+				Frame rootFrame = JOptionPane.getFrameForComponent(getAppletRoot()); 
+				JDialog jd = new JDialog(rootFrame,title);
+				dialogStack.push(jd);
+				return jd;
+			}
+			if( getTopLevel() instanceof JPanel) {
+					Frame rootFrame = JOptionPane.getFrameForComponent( (JPanel)getTopLevel()); 
+					JDialog jd = new JDialog(rootFrame,title);
+					dialogStack.push(jd);
+					return jd;
+			}
+			System.err.println("Trouble creating dialog");
+			JDialog jd = new JDialog((Frame)null,title);
 			dialogStack.push(jd);
 			return jd;
 		}
