@@ -86,14 +86,14 @@ public class MainApplication {
 		});
 	}
 
-	private static List<String> parseBundleFile(String path) throws IOException {
+	public static List<String> parseBundleFile(String path) throws IOException {
 		File f = new File(path);
 		InputStream openStream = new FileInputStream(f);
 		return parseBundleStream(openStream);
 	}
 
-	private static List<String> parseBundleUrl(String path) throws IOException {
-		URL u = new URL(path);
+	public static List<String> parseBundleUrl(URL u) throws IOException {
+//		URL u = new URL(path);
 		InputStream openStream = u.openStream();
 		return parseBundleStream(openStream);
 	}
