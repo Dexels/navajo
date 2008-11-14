@@ -1,5 +1,11 @@
 package com.dexels.navajo.events;
 
+/**
+ * Interface that is used to implement a Navajo Event Listener.
+ * 
+ * @author arjen
+ *
+ */
 public interface NavajoListener {
 
 	/**

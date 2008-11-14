@@ -9,6 +9,13 @@ import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
 import com.dexels.navajo.server.jmx.JMXHelper;
 import com.dexels.navajo.util.AuditLog;
 
+/**
+ * A Singleton Class that is used to implement a global Clock.
+ * Clock can be used to register Trigger objects that use time as a trigger.
+ * 
+ * @author arjen
+ *
+ */
 public class Clock extends GenericThread implements ClockMXBean, ClockInterface {
 
 	private static volatile Clock instance = null;
@@ -56,7 +63,8 @@ public class Clock extends GenericThread implements ClockMXBean, ClockInterface 
 	}
 	
 	/**
-	 * Worker checks whether timetriggers should be set to 'fired'.
+	 * Worker checks whether timetriggers should be set to 'fired' and 'activates' those timetriggers.
+	 * 
 	 */
 	public final void worker() {
 
