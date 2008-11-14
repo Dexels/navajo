@@ -230,6 +230,11 @@ public class MapDefinition {
 					    child.getName().equals("debug") ||
 					    child.getName().equals("param") || 
 					    child.getName().equals("include") ||
+					    child.getName().equals("break") ||
+					    child.getName().equals("required") ||
+					    child.getName().equals("request") ||
+					    child.getName().equals("response") ||
+					    child.getName().equals("running") ||
 					    child.getName().equals("option") ||
 					    child.getName().equals("expression") ||
 					    child.getName().equals("map") ||
