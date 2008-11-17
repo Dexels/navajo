@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- $Id$ -->
-<project name="NavajoComplete" default="archive" basedir=".">
+<project name="NavajoComplete" default="compile" basedir=".">
 	<property name="build" location="classes"/>
-	<property name="archive" location="NavajoComplete.jar"/>
-	<property name="lib" value="../3rdparty"/>
+	<property name="archive" location="../NavajoComplete.jar"/>
+	<property name="lib" value="3rdparty"/>
+	<property name="dist" value="dist"/>
 	<path id="depend">
 		<fileset dir="${lib}">
 			<include name="**/*.jar"/>
@@ -13,13 +14,15 @@
 	<target name="init">
 		<tstamp/>
 		<mkdir dir="${build}"/>
+		<mkdir dir="${dist}"/>
 	</target>
 	<target name="clean">
 		<delete file="${archive}"/>
 		<delete dir="${NavajoComplete.build}"/>
 		<delete dir="${build}"/>
+		<delete dir="${dist}"/>
 	</target>
-	<target name="resource">
+	<!--<target name="resource">
 		<copy includeemptydirs="false" todir="${build}">
 			<fileset dir=".">
 				<exclude name="**/*.java"/>
@@ -27,24 +30,20 @@
 				<exclude name="**/jjtree"/>
 			</fileset>
 		</copy>
-	</target>
+	</target>-->
 	<target name="NavajoComplete" depends="init">
 	</target>
 	<target name="compile" depends="NavajoComplete" >
-		<javac destdir="${build}">
-			<src path="DexelsVersionControl" />
-			<src path="Navajo" />
-			<src path="NavajoAdapters" />
-			<src path="NavajoClient" />
-			<src path="NavajoDocument" />
-			<src path="NavajoFunctions" />
-			<src path="NavajoListeners" />
+		<javac destdir="${build}" nowarn="true" failonerror="false">
+			<src path="source/DexelsVersionControl" />
+			<src path="source/Navajo" />
+			<src path="source/NavajoAdapters" />
+			<src path="source/NavajoClient" />
+			<src path="source/NavajoDocument" />
+			<src path="source/NavajoFunctions" />
+			<src path="source/NavajoListeners" />
 			<classpath refid="depend" />
 		</javac>
 	</target>
-	<target name="archive" depends="resource,compile">
-		<jar jarfile="${archive}">
-			<fileset dir="${build}" />
-		</jar>
-	</target>
+
 </project>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tsl author="Matthijs Philip" id="person/InitInsertPerson" notes="" repository="$Id$" xmlns="http://www.dexels.com/navascript" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dexels.com/navascript http://www.dexels.com/schema/navascript.xsd ">
+    <methods>
+        <method name="person/ProcessInsertPerson">
+            <required message="Person"/>
+        </method>
+    </methods>
+    <message name="Person">
+        <property name="LastName" type="string" direction="in" description="Lastname"/>
+        <property name="Infix" type="string" direction="in" description="Infix"/>
+        <property name="Initials" type="string" direction="in" description="Initials"/>
+        <property name="FirstName" type="string" direction="in" description="Firstname"/>
+        <property name="DateOfBirth" type="date" direction="in" description="Birthdate"/>
+        <property name="Age" type="integer" direction="out" description="Age"/>
+        <property name="Nationality" type="string" direction="in" description="Nationality"/>
+        <property name="Sex" type="selection" direction="in" description="Sex">
+            <option name="Unknown" value="0" selected="0"/>
+            <option name="Male" value="1" selected="0"/>
+            <option name="Female" value="2" selected="0"/>
+        </property>
+	<property name="StreetName" type="string" direction="in" description="Streetname"/>
+        <property name="HouseNumber" type="integer" direction="in" description="Housenumber"/>
+        <property name="NumberAppendix" type="string" direction="in" description="Nr. appendix"/>
+        <property name="City" type="string" direction="in" description="City"/>
+        <property name="ZipCode" type="string" direction="in" description="Zipcode"/>
+        <property name="CountryCode" type="string" direction="in" description="Countrycode"/>
+        <property name="TelephoneNumber" type="string" direction="in" description="Telephone"/>
+        <property name="MobileNumber" type="string" direction="in" description="Mobile"/>
+        <property name="EmailAddress" type="string" direction="in" description="Emailaddress"/>
+        <property name="Photo" type="binary" direction="in" description="Photo"/>
+    </message>
+</tsl>

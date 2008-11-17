@@ -1,0 +1,8 @@
+<birt>
+  <!-- This is the standard folder where the BIRT reports are stored. -->
+  <reportDir value="C:\Program Files\Apache Software Foundation\Tomcat 5.5\webapps\NavajoStandardEdition\reports\"/>
+  <!-- This is the URL to the BIRT Viewer. You can verify this in a browser. -->
+  <viewerUrl value="http://localhost:8080/birt"/>
+  <!-- This is the default report location of the BIRT viewer. Typically it is the same directory as the Report Viewer application itself. -->
+  <viewerReportDir value="C:\Program Files\Apache Software Foundation\Tomcat 5.5\webapps\birt\"/>
+</birt>
