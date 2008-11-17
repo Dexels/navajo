@@ -2,6 +2,8 @@ package com.dexels.navajo.tipi.swingclient.components;
 
 import java.awt.*;
 import java.awt.Point;
+import java.awt.datatransfer.*;
+import java.awt.dnd.*;
 import java.awt.event.*;
 import java.beans.*;
 import java.io.*;
@@ -14,6 +16,8 @@ import javax.swing.event.*;
 import javax.swing.table.*;
 
 import com.dexels.navajo.client.*;
+import com.dexels.navajo.dnd.*;
+import com.dexels.navajo.dnd.TestDragTable.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.lazy.*;
 import com.dexels.navajo.document.types.*;
@@ -71,8 +75,29 @@ private Component myCurrentEditingComponent;
     setOpaque(true);
     setColumnModel(new MessageTableColumnModel());
     setDefaultEditor(Property.class, myEditor);
+    setDragEnabled(true);
+    setFillsViewportHeight(true);
+//    
+//    try {
+//		DataFlavor df = new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType +";class=com.dexels.navajo.document.Message");
+//	    TransferHandler newHandler = new TransferHandler("message");
+//	    
+//	    newHandler.canImport(this, new DataFlavor[]{df});
+//
+//    } catch (ClassNotFoundException e1) {
+//		// TODO Auto-generated catch block
+//		e1.printStackTrace();
+//	}
+//      setDropMode(DropMode.ON); 
+//    setTransferHandler(new MessageTransferHandler());
+
+    
+
+    
+//    setDropTarget(dt);
+    
     setDefaultRenderer(Property.class, myRenderer);
-    setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+//    setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
     setPreferredScrollableViewportSize(getPreferredSize());
 //    setSurrendersFocusOnKeystroke(true);
     getTableHeader().setDefaultRenderer(new CustomTableHeaderRenderer());
@@ -114,8 +139,51 @@ private Component myCurrentEditingComponent;
 	}
     });
     setupTableActions();
+    
+//    
+//    DropTarget dt = new DropTarget(this, new DropTargetAdapter() {
+//
+//		public void dragEnter(DropTargetDragEvent dtde) {
+//			// TODO Auto-generated method stub
+//			System.err.println("Entering table");
+//		}
+//
+//		public void dragExit(DropTargetEvent dte) {
+//			// TODO Auto-generated method stub
+//			
+//		}
+//
+//		public void dragOver(DropTargetDragEvent dtde) {
+//			// TODO Auto-generated method stub
+//			
+//		}
+//
+//		public void drop(DropTargetDropEvent dtde) {
+//			DataFlavor[] df = dtde.getCurrentDataFlavors();
+//			for (int i = 0; i < df.length; i++) {
+//				System.err.println("Flavor: "+df[i].getHumanPresentableName());
+//				System.err.println("Fla: "+df[i].getDefaultRepresentationClass());
+//				System.err.println("Flaa: "+df[i].getRepresentationClass());
+//
+//				if(df[i].isFlavorRemoteObjectType()) {
+//					System.err.println("Rmov");
+//				}
+//				if(df[i].isFlavorSerializedObjectType()) {
+//					System.err.println("ser");
+//				}
+//			}
+//			
+//		}
+//
+//		public void dropActionChanged(DropTargetDragEvent dtde) {
+//			// TODO Auto-generated method stub
+//			
+//		}});
+//    
   }
 
+  
+  
   public void setShowRowHeaders(boolean b) {
     myModel.setShowRowHeaders(b);
   }
@@ -793,6 +861,8 @@ private Component myCurrentEditingComponent;
   }
 
   public void setMessage(Message m) {
+	  System.err.println("Setting message");
+	  Message myOldMessage = myMessage;
 	if(myMessage!=null) {
 		myMessage.removePropertyChangeListener(this);
 	}
@@ -852,7 +922,7 @@ private Component myCurrentEditingComponent;
     
 
 	myMessage.addPropertyChangeListener(this);
-
+	firePropertyChange("message", myOldMessage, myMessage);
   }
 
   public void createDefaultColumnsFromMessageModel() {

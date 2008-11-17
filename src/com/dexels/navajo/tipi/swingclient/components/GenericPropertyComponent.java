@@ -32,7 +32,7 @@ import com.dexels.navajo.document.types.*;
  * @version 1.0
  */
 
-public class GenericPropertyComponent extends JPanel  {
+public class GenericPropertyComponent extends JPanel {
 	private JComponent currentComponent = null;
 	private int labelWidth = 0;
 	private int valign = SwingConstants.CENTER;
@@ -46,10 +46,10 @@ public class GenericPropertyComponent extends JPanel  {
 	// private int height
 	private int propertyWidth = 0;
 	private boolean showLabel = true;
-	private JLabel myLabel = null;
+	private JLabel myLabel = new JLabel();
 
 	// BorderLayout borderLayout = new BorderLayout();
-//	private Map failedPropertyIdMap = null;
+	// private Map failedPropertyIdMap = null;
 	private ResourceBundle res = null;
 	private final List<FocusListener> focusListeners = new ArrayList<FocusListener>();
 	private int checkboxGroupColumnCount = 0;
@@ -74,9 +74,9 @@ public class GenericPropertyComponent extends JPanel  {
 	PropertyHiddenField myHiddenField = null;
 	MultipleSelectionPropertyPickList myPickList = null;
 	URIPropertyField myURIField = null;
-//	MultiSelectPropertyBox myMultiSelectBox = null;
+	// MultiSelectPropertyBox myMultiSelectBox = null;
 	PropertyBox myBox = null;
-	BinaryComponent myBinaryLabel = null;
+	BinaryEditor myBinaryLabel = null;
 
 	private boolean verticalScrolls = true;
 	private boolean horizontalScrolls = false;
@@ -130,6 +130,13 @@ public class GenericPropertyComponent extends JPanel  {
 		}
 	}
 
+	protected JLabel getLabel() {
+		if(myLabel==null) {
+			myLabel = new JLabel();
+		}
+		return myLabel;
+	}
+	
 	public void addPropertyKeyListener(KeyListener kl) {
 		myKeyListeners.add(kl);
 	}
@@ -203,11 +210,11 @@ public class GenericPropertyComponent extends JPanel  {
 		}
 	}
 
-//	public void setHardEnabled(boolean b) {
-//		myEnableState = b;
-//		hardEnabled = true;
-//		setEnabled(myEnableState);
-//	}
+	// public void setHardEnabled(boolean b) {
+	// myEnableState = b;
+	// hardEnabled = true;
+	// setEnabled(myEnableState);
+	// }
 
 	public final Property getProperty() {
 		return myProperty;
@@ -228,22 +235,22 @@ public class GenericPropertyComponent extends JPanel  {
 		if (p == null) {
 			return;
 		}
-		myPropertyChangeListener = new PropertyChangeListener(){
+		myPropertyChangeListener = new PropertyChangeListener() {
 
 			public void propertyChange(final PropertyChangeEvent evt) {
-				if(evt.getPropertyName().equals("description")) {
-					runSyncInEventThread(new Runnable(){
+				if (evt.getPropertyName().equals("description")) {
+					runSyncInEventThread(new Runnable() {
 
 						public void run() {
 							setLabel((String) evt.getNewValue());
-						}});
+						}
+					});
 				}
-			}};
-			
+			}
+		};
+
 		myProperty.addPropertyChangeListener(myPropertyChangeListener);
 
-		
-		
 		String caps = p.getSubType("capitalization");
 		if (caps != null) {
 			setCapitalization(caps);
@@ -293,9 +300,9 @@ public class GenericPropertyComponent extends JPanel  {
 	}
 
 	public final void setPropertyComponent(JComponent c, boolean verticalWeight) {
-//		if (currentComponent == c) {
-//			return;
-//		}
+		// if (currentComponent == c) {
+		// return;
+		// }
 		if (currentComponent != null) {
 			remove(currentComponent);
 			// System.err.println("Removing component: " +
@@ -327,7 +334,6 @@ public class GenericPropertyComponent extends JPanel  {
 		revalidate();
 	}
 
-
 	public final void setListSelectionColor(Color c) {
 		listSelectionColor = c;
 	}
@@ -338,49 +344,54 @@ public class GenericPropertyComponent extends JPanel  {
 
 	public final void setLabel(final String s) {
 		myLabelText = s;
-		if (myLabel == null) {
-			myLabel = new JLabel(s);
-			// myLabel.setVerticalAlignment(JLabel.CENTER_ALIGNMENT);
-			myLabel.setOpaque(false);
-			// add(myLabel, BorderLayout.WEST);
-			add(myLabel, new GridBagConstraints(0, 0, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(0, 0,
+ 		if(getLabel().getParent()!=this) {
+ 			add(getLabel(), new GridBagConstraints(0, 0, 1, 1, 0, 0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(0, 0,
 					0, 0), 0, 0));
-		} else {
-			myLabel.setText(s);
-		}
+			System.err.println("Adding label: "+s);
+ 		} else {
+ 			System.err.println("Already present!");
+ 		}
+//		if (myLabel == null) {
+//			myLabel = new JLabel();
+ 		getLabel().setVisible(true);
+			// myLabel.setVerticalAlignment(JLabel.CENTER_ALIGNMENT);
+ 		getLabel().setOpaque(false);
+			// add(myLabel, BorderLayout.WEST);
+ 		getLabel().setText(s);
+//		}
 		if (labelWidth != 0) {
 			setLabelIndent(labelWidth);
 		}
-		myLabel.setHorizontalAlignment(halign);
-		myLabel.setVerticalAlignment(valign);
-		myLabel.setVisible(showLabel);
+		getLabel().setHorizontalAlignment(halign);
+		getLabel().setVerticalAlignment(valign);
+		getLabel().setVisible(showLabel);
 		isLabelSet = true;
 	}
 
 	public final void showLabel() {
 		showLabel = true;
-		if (myLabel != null) {
-			myLabel.setVisible(showLabel);
-		}
+//		if (myLabel != null) {
+			getLabel().setVisible(showLabel);
+//		}
 	}
 
 	public final void hideLabel() {
 		showLabel = false;
-		if (myLabel != null) {
-			remove(myLabel);
-		}
+//		if (myLabel != null) {
+//			remove(myLabel);
+//		}
 		if (currentLabelIndentStrut != null) {
 			remove(currentLabelIndentStrut);
 		}
-		myLabel = null;
+//		myLabel = null;
 	}
 
 	public final void setVerticalLabelAlignment(final int alignment) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				valign = alignment;
-				if (myLabel != null) {
-					myLabel.setVerticalAlignment(alignment);
+				if (getLabel() != null) {
+					getLabel().setVerticalAlignment(alignment);
 				}
 			}
 		});
@@ -408,14 +419,12 @@ public class GenericPropertyComponent extends JPanel  {
 		}
 	}
 
-
-
 	public final void setHorizontalLabelAlignment(final int alignment) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				halign = alignment;
-				if (myLabel != null) {
-					myLabel.setHorizontalAlignment(alignment);
+				if (getLabel() != null) {
+					getLabel().setHorizontalAlignment(alignment);
 				}
 			}
 		});
@@ -479,7 +488,7 @@ public class GenericPropertyComponent extends JPanel  {
 
 	public void setLabelIndent(final int lindent) {
 		labelWidth = lindent;
-		if (myLabel == null) {
+		if (getLabel() == null) {
 			return;
 		}
 		if (currentLabelIndentStrut != null) {
@@ -507,8 +516,8 @@ public class GenericPropertyComponent extends JPanel  {
 	}
 
 	public final boolean isLabelVisible() {
-		if (myLabel != null) {
-			return myLabel.isVisible();
+		if (getLabel() != null) {
+			return getLabel().isVisible();
 		}
 		return false;
 	}
@@ -549,8 +558,9 @@ public class GenericPropertyComponent extends JPanel  {
 				return;
 			} else {
 				if ("dropdown".equals(mySelectionType)) {
-//					createMultiSelectPropertyBox(p);
-					throw new UnsupportedOperationException("I removed the dropdown for cardinality+ selections. I thought nobody used them");
+					// createMultiSelectPropertyBox(p);
+					throw new UnsupportedOperationException(
+							"I removed the dropdown for cardinality+ selections. I thought nobody used them");
 				} else if ("checkbox".equals(mySelectionType)) {
 					createPropertyCheckboxList(p);
 				} else if ("picklist".equals(mySelectionType)) {
@@ -767,7 +777,7 @@ public class GenericPropertyComponent extends JPanel  {
 		// }
 		// System.err.println("Length: "+p.getLength());
 		if (myBinaryLabel == null) {
-			myBinaryLabel = new BinaryComponent();
+			myBinaryLabel = new BinaryEditor();
 			myBinaryLabel.setMaxImgWidth(max_img_width);
 			myBinaryLabel.setMaxImgHeight(max_img_height);
 			addPropertyComponent(myBinaryLabel);
@@ -775,11 +785,11 @@ public class GenericPropertyComponent extends JPanel  {
 		myBinaryLabel.setProperty(p);
 	}
 
-//	public void setComponentBackground(Color c) {
-//		if (currentPropertyComponent != null) {
-//			currentPropertyComponent.setBackground(c);
-//		}
-//	}
+	// public void setComponentBackground(Color c) {
+	// if (currentPropertyComponent != null) {
+	// currentPropertyComponent.setBackground(c);
+	// }
+	// }
 
 	protected final void addPropertyComponent(JComponent c) {
 		addPropertyComponent(c, false);
@@ -830,7 +840,7 @@ public class GenericPropertyComponent extends JPanel  {
 					// jj.getPreferredSize().height));
 					jj.setColumns(limitFieldWidth);
 
-//					jj.setBackground(new Color(255, 0, 0));
+					// jj.setBackground(new Color(255, 0, 0));
 					this.doLayout();
 				}
 			}
@@ -931,8 +941,6 @@ public class GenericPropertyComponent extends JPanel  {
 			setProperty(getProperty());
 		}
 	}
-
-
 
 	private final void createPickList(Property p) {
 		if (myPickList == null) {
@@ -1315,11 +1323,11 @@ public class GenericPropertyComponent extends JPanel  {
 		} else {
 			myMemoField.setRows(8);
 		}
-//		if (!p.isDirIn()) {
-//			myMemoField.setBackground(Color.lightGray);
-//		} else {
-//			myMemoField.setBackground(Color.white);
-//		}
+		// if (!p.isDirIn()) {
+		// myMemoField.setBackground(Color.lightGray);
+		// } else {
+		// myMemoField.setBackground(Color.white);
+		// }
 		myMemoField.setLineWrap(true);
 		myMemoField.setWrapStyleWord(true);
 		// myMemoField.setMinimumSize(new Dimension(100,16));
@@ -1367,7 +1375,7 @@ public class GenericPropertyComponent extends JPanel  {
 		if (!setPropFlag) {
 			if (e.getActionCommand().equals("comboBoxChanged")) {
 				fireTipiEvent("onValueChanged");
-//				PREVIOUS_SELECTION_INDEX = myBox.getSelectedIndex();
+				// PREVIOUS_SELECTION_INDEX = myBox.getSelectedIndex();
 			} else {
 				fireTipiEvent("onActionPerformed");
 			}
@@ -1397,7 +1405,7 @@ public class GenericPropertyComponent extends JPanel  {
 	final void myRadioButtonField_actionPerformed(ActionEvent e) {
 		if (!setPropFlag) {
 			fireTipiEvent("onValueChanged");
-//			PREVIOUS_SELECTION_INDEX = myRadioButtonField.getSelectedIndex();
+			// PREVIOUS_SELECTION_INDEX = myRadioButtonField.getSelectedIndex();
 		} else {
 			fireTipiEvent("onActionPerformed");
 		}
@@ -1538,7 +1546,7 @@ public class GenericPropertyComponent extends JPanel  {
 	}
 
 	protected final void fireTipiEvent(String type) {
-		firePropertyEvents(myProperty, type,  true);
+		firePropertyEvents(myProperty, type, true);
 	}
 
 	public void setEnabled(boolean value) {
@@ -1680,7 +1688,7 @@ public class GenericPropertyComponent extends JPanel  {
 		myPropertyEventListeners.remove(pel);
 	}
 
-	protected final void firePropertyEvents(Property p, String eventType,  boolean internalChange) {
+	protected final void firePropertyEvents(Property p, String eventType, boolean internalChange) {
 		for (int i = 0; i < myPropertyEventListeners.size(); i++) {
 			PropertyEventListener current = myPropertyEventListeners.get(i);
 			current.propertyEventFired(p, eventType, internalChange);
@@ -1753,7 +1761,6 @@ public class GenericPropertyComponent extends JPanel  {
 	public void resetChanged() {
 	}
 
-
 	public final boolean hasFocus() {
 		if (currentComponent != null) {
 			return currentComponent.hasFocus();
@@ -1761,30 +1768,29 @@ public class GenericPropertyComponent extends JPanel  {
 		return false;
 	}
 
-
 	public void setAlwaysUseLabel(boolean b) {
 		alwaysUseLabel = b;
 		setProperty(getProperty());
 	}
 
-//	public Dimension getMinimumSize() {
-//		return getPreferredSize();
-//	}
+	// public Dimension getMinimumSize() {
+	// return getPreferredSize();
+	// }
 	public Dimension getMaximumSize() {
-		  return new Dimension(super.getMaximumSize().width,super.getMaximumSize().height);
-		  //	return super.getMaximumSize();
+		return new Dimension(super.getMaximumSize().width, super.getMaximumSize().height);
+		// return super.getMaximumSize();
 	}
 
 	public Dimension getPreferredSize() {
-		if(true) {
+		if (true) {
 			return limitTo(super.getPreferredSize(), getMaximumSize());
-			}
+		}
 		if (myProperty == null || currentComponent == null) {
 			// System.err.println("no prop or no component");
 		}
 		Dimension labelDimension = null;
-		if (showLabel && myLabel != null) {
-			labelDimension = myLabel.getPreferredSize();
+		if (showLabel && getLabel() != null) {
+			labelDimension = getLabel().getPreferredSize();
 			if (currentLabelIndentStrut != null) {
 				labelDimension = new Dimension(Math.max(labelDimension.width, labelWidth), labelDimension.height);
 			}
@@ -1943,25 +1949,26 @@ public class GenericPropertyComponent extends JPanel  {
 		// ComponentConstants.PREFERRED_HEIGHT));
 		// }
 
-//		if (propertyWidth > 0) {
-//			if (valueStrut != null) {
-//				remove(valueStrut);
-//			}
-//			valueStrut = Box.createHorizontalStrut(propertyWidth);
-//			add(valueStrut, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
-//					new Insets(0, 0, 0, 0), propertyWidth, 0));
-//
-//		}
+		// if (propertyWidth > 0) {
+		// if (valueStrut != null) {
+		// remove(valueStrut);
+		// }
+		// valueStrut = Box.createHorizontalStrut(propertyWidth);
+		// add(valueStrut, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
+		// GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
+		// new Insets(0, 0, 0, 0), propertyWidth, 0));
+		//
+		// }
 		setComponentWidth();
 	}
 
 	private void setComponentWidth() {
-		System.err.println("MONKEEEY: "+propertyWidth);
+		System.err.println("MONKEEEY: " + propertyWidth);
 		valueStrut = Box.createHorizontalStrut(propertyWidth);
-		add(valueStrut, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
-				new Insets(0, 0, 0, 0), propertyWidth, 0));
-		currentComponent.setMaximumSize(new Dimension(propertyWidth,Integer.MAX_VALUE));
-		valueStrut.setMaximumSize(new Dimension(propertyWidth,Integer.MAX_VALUE));
+		add(valueStrut, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(0,
+				0, 0, 0), propertyWidth, 0));
+		currentComponent.setMaximumSize(new Dimension(propertyWidth, Integer.MAX_VALUE));
+		valueStrut.setMaximumSize(new Dimension(propertyWidth, Integer.MAX_VALUE));
 	}
 
 }
