@@ -154,6 +154,8 @@ public class HTMLClientServlet extends HttpServlet {
             }
 
             try {
+            	// This fails with a NPE, if the last attached navajo was an error navajo.
+            	
                 tbMessage.getMessage("identification").getProperty("username").setValue(username);
                 tbMessage.getMessage("identification").getProperty("password").setValue(password);
                 if (!freefield)
@@ -225,7 +227,10 @@ public class HTMLClientServlet extends HttpServlet {
 //                  writer.close();
 //                }
 //
-                session.setAttribute("NAVAJO_MESSAGE", resultDoc);
+                if(resultDoc.getMessage("error")==null) {
+                    session.setAttribute("NAVAJO_MESSAGE", resultDoc);
+                }
+                    
             } catch (Exception e) {
                 throw new ServletException(e);
             }
@@ -388,7 +393,9 @@ public class HTMLClientServlet extends HttpServlet {
         
         
         // Store Navajo Messsage
-        session.setAttribute("NAVAJO_MESSAGE", tbMessage);
+        if(tbMessage.getMessage("error")==null) {
+            session.setAttribute("NAVAJO_MESSAGE", tbMessage);
+        }
         out.flush();
         out.close();
     }
