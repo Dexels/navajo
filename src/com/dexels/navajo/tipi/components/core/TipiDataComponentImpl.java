@@ -124,6 +124,7 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 		for (int i = 0; i < properties.size(); i++) {
 			PropertyComponent current = properties.get(i);
 			Property p;
+			System.err.println("Current: "+current);
 			p = n.getProperty(current.getPropertyName());
 			if (p != null) {
 				try {

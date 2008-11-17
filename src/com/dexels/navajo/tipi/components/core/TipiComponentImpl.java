@@ -32,7 +32,6 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 
 	private Object myContainer = null;
 	private Object myConstraints;
-	private String myService;
 	protected TipiContext myContext = null;
 	protected Navajo myNavajo = null;
 	protected String myName;
@@ -44,7 +43,7 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 	protected final List<PropertyComponent> properties = new ArrayList<PropertyComponent>();
 	protected final List<TipiEvent> myEventList = new ArrayList<TipiEvent>();
 	private final List<TipiComponent> tipiComponentList = new ArrayList<TipiComponent>();
-	private final Map<String, String> detectedExpressions = new HashMap<String, String>();
+//	private final Map<String, String> detectedExpressions = new HashMap<String, String>();
 	private final List<String> componentEvents = new ArrayList<String>();
 	private final Map<String, TipiValue> componentValues = new HashMap<String, TipiValue>();
 	private final Map<String, TipiComponentMethod> componentMethods = new HashMap<String, TipiComponentMethod>();
@@ -165,9 +164,9 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 
 		if ((myContext.isValidType(type))) {
 			try {
-				if (!defaultValue) {
-					detectedExpressions.put(name, expression);
-				}
+//				if (!defaultValue) {
+//					detectedExpressions.put(name, expression);
+//				}
 				if ("selection".equals(type)) {
 					Selection ss = tv.getSelection((String) value);
 					if (ss == null) {
@@ -208,12 +207,12 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 		Object propval = getAttributeProperty(name).getTypedValue();
 		Object oo = getComponentValue(name);
 		if (oo == null) {
-			if (propval != null) {
-				System.err.println("Value mismatch detected in: " + getClass() + " attribute: " + name + " class: " + propval.getClass());
-				System.err.println("Component says null, property says: " + propval);
-			} else {
-				return null;
-			}
+//			if (propval != null) {
+//				System.err.println("Value mismatch detected in: " + getClass() + " attribute: " + name + " class: " + propval.getClass());
+//				System.err.println("Component says null, property says: " + propval);
+//			} else {
+//				return null;
+//			}
 		} else {
 			if (!oo.equals(propval)) {
 				System.err.println("Value mismatch detected in: " + getClass() + " attribute: " + name);
@@ -221,7 +220,9 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 				getAttributeProperty(name).setAnyValue(oo);
 			}
 		}
-
+		/**
+		 * I should do an extra typecheck here, to check the supplied type against the TipiValue.
+		 */
 		return getAttributeProperty(name).getTypedValue();
 	}
 
@@ -230,7 +231,7 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 	}
 
 	private Property createAttributeProperty(TipiValue tv) {
-		return tv.getProperty(null);
+		return tv.createProperty();
 	}
 //
 //	public String getStringValue(String name) {
@@ -440,7 +441,6 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 		String defname = (String) instance.getAttribute("name");
 		isVisibleElement = classdef.getStringAttribute("addtocontainer", "false").equals("true");
 		isToplevel = classdef.getStringAttribute("toplevel", "false").equals("true");
-		myService = instance.getStringAttribute("service", null);
 
 		if (id == null || "".equals(id)) {
 			// pretty deprecated. I don't like it.

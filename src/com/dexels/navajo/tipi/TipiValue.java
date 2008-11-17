@@ -104,11 +104,11 @@ public class TipiValue {
 		}
 	}
 
-	public Property getProperty(Object object) {
+	public Property createProperty() {
 		try {
 			Property p = NavajoFactory.getInstance().createProperty(myComponent.getContext().getStateNavajo(), getName(), getType(), "", 0,
 					"", getDirection());
-			p.setAnyValue(object);
+			p.setAnyValue(null);
 			p.setSubType("tipitype=" + type);
 			return p;
 		} catch (NavajoException e) {
