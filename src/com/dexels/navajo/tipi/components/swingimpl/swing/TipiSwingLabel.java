@@ -8,6 +8,8 @@ import javax.imageio.*;
 import javax.swing.*;
 
 import com.dexels.navajo.document.types.*;
+import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.swingimpl.dnd.*;
 
 /**
  * <p>Title: </p>
@@ -18,8 +20,10 @@ import com.dexels.navajo.document.types.*;
  * @version 1.0
  */
 public class TipiSwingLabel
-    extends JLabel {
-  public TipiSwingLabel() {
+    extends JLabel implements TipiDndCapable {
+	final TipiDndManager myDndManager;
+	public TipiSwingLabel(TipiComponent tc) {
+		myDndManager = new TipiDndManager(this,tc);
   }
   
 
@@ -49,5 +53,10 @@ public class TipiSwingLabel
 		 }
 		 return null;
 	  }
+
+
+	public TipiDndManager getDndManager() {
+		return myDndManager;
+	}
 
 }

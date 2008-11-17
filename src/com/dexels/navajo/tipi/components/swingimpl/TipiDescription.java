@@ -7,9 +7,11 @@ import java.net.*;
 import javax.imageio.*;
 import javax.swing.*;
 
+import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.types.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
+import com.dexels.navajo.tipi.internal.*;
 
 /**
  * <p>Title: </p>
@@ -19,10 +21,14 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.*;
  * @author not attributable
  * @version 1.0
  */
-public class TipiLabel
-    extends TipiSwingComponentImpl {
-  public Object createContainer() {
-    TipiSwingLabel myLabel = new TipiSwingLabel(this);
+public class TipiDescription
+    extends TipiSwingComponentImpl implements PropertyComponent{
+  private TipiSwingLabel myLabel;
+private String myPropertyName;
+private Property myProperty;
+
+public Object createContainer() {
+    myLabel = new TipiSwingLabel(this);
     TipiHelper th = new TipiSwingHelper();
     th.initHelper(this);
      addHelper(th);
@@ -51,35 +57,30 @@ public class TipiLabel
   }
 
   public void setComponentValue(final String name, final Object object) {
-    if (name.equals("text")) {
-      runSyncInEventThread(new Runnable() {
-        public void run() {
-          ( (TipiSwingLabel) getContainer()).setText("" + object);
-        }
-      });
-      ( (TipiSwingLabel) getContainer()).revalidate();
+    if (name.equals("propertyName")) {
+    	myPropertyName = (String) object;
       return;
     }
-    if (name.equals("icon")) {
-      runSyncInEventThread(new Runnable() {
-        public void run() {
-          ( (TipiSwingLabel) getContainer()).setIcon(getIcon(object));
-          ( (TipiSwingLabel) getContainer()).revalidate();
-        }
-      });
-      ( (TipiSwingLabel) getContainer()).getParent();
-      return;
-    }
+   
     super.setComponentValue(name, object);
   }
 
-  public Object getComponentValue(String name) {
-    if (name.equals("text")) {
-      return ( (TipiSwingLabel) getContainer()).getText();
-    }
-    if (name.equals("icon")) {
-      return ( (TipiSwingLabel) getContainer()).getIcon();
-    }
-    return super.getComponentValue(name);
-  }
+
+public void addTipiEventListener(TipiEventListener listener) {
+	// TODO Auto-generated method stub
+	
+}
+
+public Property getProperty() {
+	return myProperty;
+}
+
+public String getPropertyName() {
+	return myPropertyName;
+}
+
+public void setProperty(Property p) {
+	myProperty = p;
+	myLabel.setText(p.getDescription());
+}
 }

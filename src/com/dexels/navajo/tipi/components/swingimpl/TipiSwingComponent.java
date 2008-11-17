@@ -24,7 +24,7 @@ public interface TipiSwingComponent extends TipiComponent{
 //  public void setWaitCursor(boolean b);
   public void setPaint(Paint p);
 
-  public void runSyncInEventThread(Runnable r);
+//  public void runSyncInEventThread(Runnable r);
 //  public void runASyncInEventThread(Runnable r) ;
 public void animateTransition(TipiEvent te, TipiExecutable executableParent, List<TipiExecutable> exe) throws TipiBreakException ;
 }

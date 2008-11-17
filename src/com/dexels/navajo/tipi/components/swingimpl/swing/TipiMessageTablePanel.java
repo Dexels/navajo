@@ -12,8 +12,8 @@ import com.dexels.navajo.tipi.swingclient.components.*;
 public class TipiMessageTablePanel extends MessageTablePanel {
     private String messagePath;
 
-	public TipiMessageTablePanel(TipiContext tc) {
-        super(new TipiMessageTable(tc));
+	public TipiMessageTablePanel(TipiContext tc, TipiComponent component) {
+        super(new TipiMessageTable(tc,component));
 	}
 
 	

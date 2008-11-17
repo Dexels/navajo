@@ -46,7 +46,7 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 	private List<XMLElement> columnList = new ArrayList<XMLElement>();
 
 	public Object createContainer() {
-		final TipiMessageTablePanel mm = new TipiMessageTablePanel(myContext);
+		final TipiMessageTablePanel mm = new TipiMessageTablePanel(myContext,this);
 		mm.setShowRowHeaders(false);
 		// Don't register actionPerformed, that is done elsewhere.
 		mm.addListSelectionListener(new ListSelectionListener() {

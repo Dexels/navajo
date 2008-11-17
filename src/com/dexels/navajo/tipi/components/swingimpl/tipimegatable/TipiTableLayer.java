@@ -144,7 +144,7 @@ private MessageTablePanel myTablePanel;
   }
   public void loadData(final Navajo n, final Message current, Stack<TipiTableBaseLayer> layerStack, JComponent currentPanel) {
     final MessageTableFooterRenderer myFooterRenderer = new MessageTableFooterRenderer(myTable);
-    final TipiMessageTablePanel mtp = new TipiMessageTablePanel(myTable.getContext());
+    final TipiMessageTablePanel mtp = new TipiMessageTablePanel(myTable.getContext(),myTable);
     myTablePanel = mtp;
     JPanel inbetweenPanel = new JPanel();
     inbetweenPanel.setLayout(new BorderLayout());

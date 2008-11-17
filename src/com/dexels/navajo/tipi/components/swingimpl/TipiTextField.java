@@ -34,7 +34,7 @@ public class TipiTextField extends TipiSwingComponentImpl {
 	}
 
 	public Object createContainer() {
-		myField = new TipiSwingTextField();
+		myField = new TipiSwingTextField(this);
 		TipiHelper th = new TipiSwingHelper();
 		th.initHelper(this);
 		addHelper(th);
@@ -128,18 +128,18 @@ public class TipiTextField extends TipiSwingComponentImpl {
 			}});
 		return myField;
 	}
-
-	public void setComponentValue(final String name, final Object object) {
-		if (name.equals("text")) {
-			runSyncInEventThread(new Runnable() {
-				public void run() {
-					myField.setText(object.toString());
-					return;
-				}
-			});
-		}
-		super.setComponentValue(name, object);
-	}
+//
+//	public void setComponentValue(final String name, final Object object) {
+//		if (name.equals("text")) {
+//			runSyncInEventThread(new Runnable() {
+//				public void run() {
+//					myField.setText(object.toString());
+//					return;
+//				}
+//			});
+//		}
+//		super.setComponentValue(name, object);
+//	}
 
 	//
 	// public Object getComponentValue(String name) {

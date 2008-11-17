@@ -12,6 +12,7 @@ import com.dexels.navajo.document.types.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.internal.*;
+import com.dexels.navajo.tipi.swingimpl.dnd.*;
 
 /**
  * <p>
@@ -34,7 +35,7 @@ public class TipiButton extends TipiSwingComponentImpl {
 	private boolean iAmEnabled = true;
 	private AbstractAction buttonAction;
 	public Object createContainer() {
-		final TipiSwingButton myButton = new TipiSwingButton();
+		final TipiSwingButton myButton = new TipiSwingButton(this);
 		buttonAction = new AbstractAction("onActionPerformed"){
 
 			public void actionPerformed(ActionEvent e) {
@@ -74,6 +75,8 @@ public class TipiButton extends TipiSwingComponentImpl {
 				if (name.equals("accelerator")) {
 					setAccelerator((String)object);
 				}
+				
+				// Don't need to setDragCategory: It will pull from the prop as necessary
 			}
 		});
 	}

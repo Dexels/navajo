@@ -8,29 +8,17 @@ import javax.imageio.*;
 import javax.swing.*;
 
 import com.dexels.navajo.document.types.*;
+import com.dexels.navajo.tipi.*;
+import com.dexels.navajo.tipi.swingimpl.dnd.*;
 
-/**
- * <p>
- * Title:
- * </p>
- * <p>
- * Description:
- * </p>
- * <p>
- * Copyright: Copyright (c) 2003
- * </p>
- * <p>
- * Company:
- * </p>
- * 
- * @author not attributable
- * @version 1.0
- */
-public class TipiSwingButton extends JButton {
+public class TipiSwingButton extends JButton implements TipiDndCapable {
 	
 	public static String STRINGMNEMONIC_CHANGED_PROPERTY = "string_mnemonic"; 
 	
-	public TipiSwingButton() {
+	private final TipiDndManager myDndManager;
+	
+	public TipiSwingButton(TipiComponent component) {
+		myDndManager = new TipiDndManager(this,component);
 	}
 	
 
@@ -88,6 +76,11 @@ public class TipiSwingButton extends JButton {
 
 	public void setMnemonic(String s) {
 		setMnemonic(s.charAt(0));
+	}
+
+
+	public TipiDndManager getDndManager() {
+		return myDndManager;
 	}
 
 }

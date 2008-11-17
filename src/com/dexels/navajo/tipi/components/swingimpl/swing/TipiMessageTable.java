@@ -11,13 +11,16 @@ import java.io.*;
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.swingclient.components.*;
+import com.dexels.navajo.tipi.swingimpl.dnd.*;
 
-public class TipiMessageTable extends MessageTable {
+public class TipiMessageTable extends MessageTable implements TipiDndCapable {
 
     final TipiContext myContext;
+	private final TipiDndManager myDndManager;
     
-    public TipiMessageTable(TipiContext tc) {
+    public TipiMessageTable(TipiContext tc, TipiComponent component) {
         myContext = tc;
+    	myDndManager = new TipiDndManager(this,component);
     }
     
     public synchronized void setMessage(Message m) {
@@ -26,8 +29,6 @@ public class TipiMessageTable extends MessageTable {
             loadColumnsNavajo();
         } 
        super.setMessage(m);
-    
-
     }
 
 
@@ -36,7 +37,6 @@ public class TipiMessageTable extends MessageTable {
             // ignoring, but should not happen at all, I think
             return;
         }
-
         Navajo n;
         try {
             n = myContext.getStorageManager().getStorageDocument(columnPathString);
@@ -45,9 +45,7 @@ public class TipiMessageTable extends MessageTable {
             return;
         }
         if (n!=null) {
- 
             loadColumnsNavajo(n);
-//            refreshColumnSizes();
             
         } else {
         	createDefaultColumnsFromModel();
@@ -66,7 +64,10 @@ public class TipiMessageTable extends MessageTable {
                 throw new IOException("Errrorrrr saving columns. columnPath: "+columnPathString);
             }
         }
-//        super.saveColumnsNavajo();
     }
+
+	public TipiDndManager getDndManager() {
+		return myDndManager;
+	}
 
 }

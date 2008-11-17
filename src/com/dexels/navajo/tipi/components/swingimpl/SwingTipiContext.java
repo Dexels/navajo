@@ -471,7 +471,7 @@ public class SwingTipiContext extends TipiContext {
 	@Override
 	public void doActions(TipiEvent te, TipiComponent comp, TipiExecutable executableParent, List<TipiExecutable> exe)
 			throws TipiBreakException {
-
+System.err.println("Donint");
 		String component = executableParent.getBlockParam("animationComponent");
 		if (component == null) {
 			super.doActions(te, comp, executableParent, exe);
@@ -491,6 +491,7 @@ public class SwingTipiContext extends TipiContext {
 
 	public void animateDefaultTransition(TipiSwingComponent tipiSwingComponentImpl, final TipiEvent te, final TipiExecutable exeParent,
 			Container swingContainer, final List<TipiExecutable> exe) throws TipiBreakException {
+		System.err.println("Animating: "+swingContainer.getBounds());
 		if (!(swingContainer instanceof JComponent)) {
 			super.doActions(te, tipiSwingComponentImpl, exeParent, exe);
 			return;
@@ -512,6 +513,8 @@ public class SwingTipiContext extends TipiContext {
 					ex.printStackTrace();
 				}
 				// animator.resume();
+				System.err.println("sssss  : "+jjj.getBounds());
+				
 				animator.getCycleElapsedTime();
 				jjj.revalidate();
 			}

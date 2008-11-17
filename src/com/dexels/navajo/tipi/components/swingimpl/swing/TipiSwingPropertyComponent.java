@@ -1,12 +1,15 @@
 package com.dexels.navajo.tipi.components.swingimpl.swing;
 
+import java.awt.*;
+
 import javax.swing.*;
 
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.swingclient.components.*;
+import com.dexels.navajo.tipi.swingimpl.dnd.*;
 
-public class TipiSwingPropertyComponent extends GenericPropertyComponent {
+public class TipiSwingPropertyComponent extends GenericPropertyComponent implements TipiDndCapable {
 	
 	private static final String CAPITALIZATION = "capitalization";
 	private static final String CHECKBOXGROUPCOLUMNCOUNT = "checkboxGroupColumnCount";
@@ -31,10 +34,13 @@ public class TipiSwingPropertyComponent extends GenericPropertyComponent {
 	private String labelVAlign;
 	private boolean alwaysUseLabel;
 	private TipiComponent myComponent;
-	
+	private TipiSwingPropertyDescriptionLabel myLabel ;
+	private final TipiDndManager myTipiDndManager;
 	
 	public TipiSwingPropertyComponent(TipiComponent tc) {
 		myComponent = tc;
+		myTipiDndManager = new TipiDndManager(this,tc);
+		setBackground(Color.red);
 	}
 	
 	public boolean isAlwaysUseLabel() {
@@ -236,5 +242,14 @@ public class TipiSwingPropertyComponent extends GenericPropertyComponent {
 //		Thread.dumpStack();
 	}
 
+	protected JLabel getLabel() {
+		if(myLabel==null) {
+			myLabel = new TipiSwingPropertyDescriptionLabel(this,myComponent);
+		}
+		return myLabel;
+	}
 
+	public TipiDndManager getDndManager() {
+		return myTipiDndManager;
+	}
 }
