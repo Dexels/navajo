@@ -21,7 +21,7 @@ CREATED 	TIMESTAMP WITH TIME ZONE DEFAULT SYSTIMESTAMP NOT NULL,
 	CONSTRAINT NAVAJOACCESS_PK primary key (ACCESS_ID) 
 		using index
 pctfree 10
-       tablespace USERS
+       tablespace XXXINDX
        storage
        (
            initial 1024K
@@ -37,7 +37,7 @@ storage
     next 1024K
     pctincrease 0
 )
-tablespace USERS
+tablespace XXXKERN
 /
 
 DROP TABLE NAVAJOMAP
@@ -54,7 +54,7 @@ CREATE TABLE NAVAJOMAP (
   CREATED         TIMESTAMP WITH TIME ZONE DEFAULT SYSTIMESTAMP NOT NULL,
   CONSTRAINT NAVAJOMAP_PK primary key (ACCESS_ID, SEQUENCE_ID, LEVEL_ID) using index
     pctfree 10
-       tablespace USERS
+       tablespace XXXINDX
        storage
        (
            initial 1024K
@@ -70,7 +70,7 @@ storage
     next 1024K
     pctincrease 0
 )
-tablespace USERS
+tablespace XXXKERN
 /
 
 DROP TABLE NAVAJOASYNC 
@@ -85,7 +85,7 @@ CREATE TABLE NAVAJOASYNC (
   CREATED         TIMESTAMP WITH TIME ZONE DEFAULT SYSTIMESTAMP NOT NULL,
   CONSTRAINT NAVAJOASYNC_PK primary key (ACCESS_ID, REF_ID) using index
       pctfree 10
-       tablespace USERS
+       tablespace XXXINDX
        storage
        (
            initial 1024K
@@ -101,7 +101,7 @@ storage
     next 1024K
     pctincrease 0
 )
-tablespace USERS
+tablespace XXXKERN
 /
 
 DROP TABLE NAVAJOLOG
@@ -123,7 +123,7 @@ storage
     next 1024K
     pctincrease 0
 )
-tablespace USERS
+tablespace XXXKERN
 /
 
 DROP INDEX navajoaccess_indx
@@ -140,7 +140,7 @@ storage
     next 1024K
     pctincrease 0
 )
-tablespace USERS
+tablespace XXXINDX
 /
 
 DROP INDEX NAVAJOACCCESS_INDX_WS
@@ -156,7 +156,7 @@ storage
     next 1024K
     pctincrease 0
 )
-tablespace USERS
+tablespace XXXINDX
 /
 
 DROP INDEX NAVAJOACCCESS_INDX_US
@@ -172,7 +172,7 @@ storage
     next 1024K
     pctincrease 0
 )
-tablespace USERS
+tablespace XXXINDX
 /
 
 DROP TABLE auditlog
@@ -194,6 +194,77 @@ storage
     next 1024K
     pctincrease 0
 )
-tablespace USERS
+tablespace XXXKERN
+/
 
+DROP TABLE PROPERTYDESCRIPTION
+/
+
+CREATE TABLE PROPERTYDESCRIPTION  (
+   DESCRIPTIONID        NUMBER(9)                       not null,
+   LOCALE               VARCHAR2(32)                    not null,
+   SUBLOCALE            VARCHAR2(32),
+   NAME                 VARCHAR2(255)                   not null,
+   CONTEXT              VARCHAR2(255),
+   OBJECTID             VARCHAR2(32),
+   OBJECTTYPE           VARCHAR2(32),
+   DESCRIPTION          VARCHAR2(255),
+   UPDATEBY             VARCHAR2(32)                   default USER not null,
+   LASTUPDATE           DATE                           default SYSDATE not null,
+   constraint PROPERTYDESCRIPTION_PK primary key (DESCRIPTIONID)
+         using index
+       pctfree 10
+       tablespace XXXINDX
+       storage
+       (
+           initial 64K
+           next 64K
+           pctincrease 0
+       )
+)
+pctfree 20
+pctused 40
+storage
+(
+    initial 64K
+    next 64K
+    pctincrease 0
+)
+tablespace XXXKERN;
+
+comment on table PROPERTYDESCRIPTION is
+'Table for defining property descriptions using locales';
+
+comment on column PROPERTYDESCRIPTION.DESCRIPTIONID is
+'A unique, sequenced identifier for the property description';
+
+comment on column PROPERTYDESCRIPTION.LOCALE is
+'The locale for the property description';
+
+comment on column PROPERTYDESCRIPTION.SUBLOCALE is
+'SubLocale';
+
+comment on column PROPERTYDESCRIPTION.NAME is
+'The name of a property';
+
+comment on column PROPERTYDESCRIPTION.CONTEXT is
+'Context';
+
+comment on column PROPERTYDESCRIPTION.OBJECTID is
+'The relation code of a person or club to whom the property applies';
+
+comment on column PROPERTYDESCRIPTION.OBJECTTYPE is
+'The type of object for the objectid';
+
+comment on column PROPERTYDESCRIPTION.DESCRIPTION is
+'A description for a property';
+
+comment on column PROPERTYDESCRIPTION.UPDATEBY is
+'User identifier for the person that last updated the row';
+
+comment on column PROPERTYDESCRIPTION.LASTUPDATE is
+'last time the row was updated';
+/
+
+SHOW ERRORS
 QUIT
