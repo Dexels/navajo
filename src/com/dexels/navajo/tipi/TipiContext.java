@@ -20,6 +20,7 @@ import com.dexels.navajo.tipi.connectors.*;
 import com.dexels.navajo.tipi.extension.*;
 import com.dexels.navajo.tipi.internal.*;
 import com.dexels.navajo.tipi.internal.cookie.*;
+import com.dexels.navajo.tipi.internal.cookie.CookieManager;
 import com.dexels.navajo.tipi.tipixml.*;
 import com.dexels.navajo.tipi.validation.*;
 
@@ -529,7 +530,6 @@ public abstract class TipiContext {
 	}
 
 	protected void createClient(XMLElement config) throws TipiException {
-		System.err.println("Parsing client: "+config);
 		String impl = (String) attemptGenericEvaluate(config.getStringAttribute("impl", "'indirect'"));
 		setSystemProperty("tipi.client.impl", impl, false);
 		String cfg = (String) attemptGenericEvaluate(config.getStringAttribute("config", "'server.xml'"));
