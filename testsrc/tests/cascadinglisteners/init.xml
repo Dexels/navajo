@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<tid xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="tipi.xsd">
+   <tml service="InlineTml">
+      <message name="aaaa">
+         <property description="Holadie!" name="bbbb" type="date" direction="in" />
+      </message>
+
+   </tml>
+   <d.headless name="init" service="InlineTml">
+      <onInstantiate>
+         <!-- <showInfo text="{system:/cascadingLoading}" condition="{system:/cascadingLoading}!=null"/> -->
+         <injectNavajo navajo="{navajo:/InlineTml}" service="'InlineTml'" />
+      </onInstantiate>
+      <c.headless>
+         <onLoad>
+            <showInfo text="'loaded'" />
+         </onLoad>
+      </c.headless>
+   </d.headless>
+</tid>

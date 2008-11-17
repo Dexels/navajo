@@ -20,6 +20,7 @@
       <onLoad>
          <showInfo text="'event2'"/>
          <showInfo text="{property:/InlineTml:Table@0/Money}"/>
+         <exit/>
       </onLoad>
 
     </d.headless>

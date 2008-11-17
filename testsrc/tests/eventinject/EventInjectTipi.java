@@ -16,18 +16,26 @@ public class EventInjectTipi extends AbstractTipiTest {
 		setContext("tests/eventinject/init", new File("testsrc/tests/eventinject"));
 	}
 
-	public void testTipi() throws InterruptedException, TipiBreakException, TipiException{
+	public void testTipi() throws  TipiBreakException, TipiException{
 //		Thread.sleep(500);
 		System.err.println("USERDIR: "+System.getProperty("user.dir"));
 		injectEvent("/init/button", "onActionPerformed");
-		Thread.sleep(500);
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e1) {
+		}
+		
 		assertEquals("event1", getContext().expect());
 		assertEquals("event2", getContext().expect());
 		assertEquals("event3", getContext().expect());
 		assertEquals("event2", getContext().expect());
 		assertEquals("event3", getContext().expect());
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+		}
 		injectEvent("/init/hbuttonid2", "onActionPerformed");
-		Thread.sleep(500);
+
 		assertEquals("event3", getContext().expect());
 
 		assertEquals(null, getContext().expect());

@@ -15,8 +15,11 @@ public class CoreTipi extends AbstractTipiTest {
 		setContext("tests/core/init", new File("testsrc/tests/core"));
 	}
 
-	public void testTipi() throws InterruptedException{
-		Thread.sleep(500);
+	public void testTipi() {
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+		}
 		String xx = getContext().getInfoBuffer();
 		assertEquals(xx, "event1\nevent2\n0.99\n");
 

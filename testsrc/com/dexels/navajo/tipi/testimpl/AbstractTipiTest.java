@@ -20,17 +20,12 @@ public class AbstractTipiTest extends TestCase {
 		super(name);
 	}
 	
-	protected void setUp() throws Exception {
-		super.setUp();
-
-	}
-
-	protected void tearDown() throws Exception {
-		super.tearDown();
-	}
-
 	public void setContext(String definition, File tipiDir) throws Exception {
-		myContext = (HeadlessTipiContext) HeadlessApplicationInstance.initialize(definition,tipiDir);
+		setContext(definition,tipiDir,new String[]{});
+	}	
+
+	public void setContext(String definition, File tipiDir, String[] properties) throws Exception {
+		myContext = (HeadlessTipiContext) HeadlessApplicationInstance.initialize(definition,tipiDir,properties);
 		FileResourceLoader frl = new FileResourceLoader(tipiDir);
 		myContext.setTipiResourceLoader(frl);
 	}
