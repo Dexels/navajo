@@ -8,7 +8,6 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.logging.Level;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.events.NavajoEvent;
@@ -355,7 +354,7 @@ public final class PersistenceManagerImpl implements PersistenceManager, NavajoL
 
 	public Persistable get(Constructor c, String key, long expirationInterval,
 			boolean persist) throws Exception {
-		throw new NotImplementedException();
+		throw new IllegalStateException("Persistable implentation error");
 	}
 
 	public void clearCache() {

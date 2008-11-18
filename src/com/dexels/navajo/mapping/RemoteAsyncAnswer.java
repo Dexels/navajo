@@ -1,8 +1,6 @@
 package com.dexels.navajo.mapping;
 
-import com.dexels.navajo.server.enterprise.tribe.Answer;
-import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
-import com.dexels.navajo.tribe.TribeManager;
+import com.dexels.navajo.server.enterprise.tribe.*;
 
 public class RemoteAsyncAnswer extends Answer {
 
