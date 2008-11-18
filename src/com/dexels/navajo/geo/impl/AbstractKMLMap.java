@@ -123,7 +123,7 @@ public abstract class AbstractKMLMap {
 		} else {
 			value = "0";
 			dValue = Double.parseDouble((String) value);
-			descriptionString = "Geen data, dat is wel een mooie tekst";
+			descriptionString = "Geen data.";
 				
 		}
 		
@@ -142,6 +142,99 @@ public abstract class AbstractKMLMap {
 		polyStyle.addTagKeyValue("color", createColor);
 		polyStyle.addTagKeyValue("color", createColor);
 	}
+
+	public XMLElement createPointKmlFile(Navajo n, String messagePath) throws IOException, XMLParseException, NavajoException {
+		Message m = n.getMessage(messagePath);
+		List<Message> ll = m.getAllMessages();
+		XMLElement kml = new CaseSensitiveXMLElement("kml");
+		XMLElement document = new CaseSensitiveXMLElement("Document");
+		kml.addChild(document);
+
+		XMLElement style = new CaseSensitiveXMLElement("Style");
+		XMLElement iconStyle = new CaseSensitiveXMLElement("IconStyle");
+		document.addChild(style);
+		style.setAttribute("id", "clubStyle");
+		style.addChild(iconStyle);
+		
+		iconStyle.addTagKeyValue("colorMode", "random");
+
+		XMLElement icon = new CaseSensitiveXMLElement("Icon");
+		iconStyle.addChild(icon);
+		icon.addTagKeyValue("href","http://maps.google.com/mapfiles/kml/shapes/play.png");
+		document.addChild(style);
+		
+		
+		for (Message message : ll) {
+			XMLElement placemark = createPointPlaceMark(message);
+			if(placemark!=null) {
+				document.addChild(placemark);
+			}
+		}
+		return kml;
+	}
+	
+	
+//    <message index="0" name="Clubs" type="array_element">
+//    <property description="" direction="out" name="OrganizationId" value="BBBG72T" length="" type="string" cardinality="1"/>
+//    <property description="" direction="out" name="Name" value="De Griffioen" length="" type="string" cardinality="1"/>
+//    <property description="" direction="out" name="StreetName" value="Kuipenstreek" length="" type="string" cardinality="1"/>
+//    <property description="" direction="out" name="HouseNumber" value="13" length="" type="string" cardinality="1"/>
+//    <property description="" direction="out" name="City" value="OOSTERWOLDE FR" length="" type="string" cardinality="1"/>
+//    <property description="" direction="out" name="ZipCode" value="8431NH" length="" type="string" cardinality="1"/>
+//    <property description="" direction="out" name="Latitude" value="52.9970846763942" length="" type="float" cardinality="1"/>
+//    <property description="" direction="out" name="Longitude" value="6.29860034500982" length="" type="float" cardinality="1"/>
+//    <property description="" direction="" name="MemberCount" value="316" length="" type="integer" cardinality="1"/>
+// </message>	
+	private XMLElement createPointPlaceMark(Message message) {
+		XMLElement placemark = new CaseSensitiveXMLElement("Placemark");
+		placemark.setAttribute("id", message.getProperty("OrganizationId").getTypedValue());
+		XMLElement point = new CaseSensitiveXMLElement("Point");
+		placemark.addChild(point);
+		String lon = message.getProperty("Longitude").getValue();
+		String lat = message.getProperty("Latitude").getValue();
+		if(lon.equals("-1.0") || lat.equals("-1.0")) {
+			return null;
+		}
+		point.addTagKeyValue("coordinates", lon+","+lat);
+		placemark.addTagKeyValue("name", message.getProperty("Name").getValue());
+		StringBuffer descr = new StringBuffer();
+		descr.append(message.getProperty("Name").getValue()+"<br/>");
+		descr.append(message.getProperty("StreetName").getValue()+" ");
+		descr.append(message.getProperty("HouseNumber").getValue()+"<br/>");
+		descr.append(message.getProperty("ZipCode").getValue()+" ");
+		descr.append(message.getProperty("City").getValue()+"<br/>");
+		descr.append("Members: ");
+		descr.append(message.getProperty("MemberCount").getValue()+"<br/>");
+		descr.append("Women: ");
+		descr.append(message.getProperty("WomenMemberCount").getValue()+"<br/>");
+
+		placemark.addTagKeyValue("description", descr.toString());
+		System.err.println("descr: "+descr);
+		
+		XMLElement region = new CaseSensitiveXMLElement("Region");
+		placemark.addChild(region);
+		XMLElement latLonAltBox = new CaseSensitiveXMLElement("LatLonAltBox");
+		region.addChild(latLonAltBox);
+		latLonAltBox.addTagKeyValue("north", lat);
+		latLonAltBox.addTagKeyValue("south", ""+(Double.parseDouble(lat)-0.1));
+		latLonAltBox.addTagKeyValue("east", lon);
+		latLonAltBox.addTagKeyValue("west", ""+(Double.parseDouble(lon)-0.1));
+
+		XMLElement lod = new CaseSensitiveXMLElement("Lod");
+		lod.addTagKeyValue("minLodPixels", "64");
+//		lod.addTagKeyValue("maxLodPixels", "5024");
+		lod.addTagKeyValue("minFadeExtent", "828");
+		lod.addTagKeyValue("maxFadeExtent", "428");
+		region.addChild(lod);
+		
+		placemark.addTagKeyValue("styleUrl","#clubStyle");
+		
+		
+		
+		return placemark;
+		
+	}
+
 
 	public File createKmlFile(Navajo n, String filePrefix) throws IOException, XMLParseException, NavajoException {
 		messagePath = "Data";
