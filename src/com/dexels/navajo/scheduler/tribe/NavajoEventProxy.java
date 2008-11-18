@@ -8,6 +8,7 @@ import com.dexels.navajo.events.NavajoEventRegistry;
 import com.dexels.navajo.events.NavajoListener;
 import com.dexels.navajo.events.types.TribeMemberDownEvent;
 import com.dexels.navajo.server.DispatcherFactory;
+import com.dexels.navajo.server.enterprise.scheduler.tribe.*;
 import com.dexels.navajo.server.enterprise.tribe.TribeManagerFactory;
 import com.dexels.navajo.util.Util;
 
@@ -19,7 +20,7 @@ import com.dexels.navajo.util.Util;
  * @author arjen
  *
  */
-public class NavajoEventProxy implements Serializable, NavajoListener {
+public class NavajoEventProxy implements Serializable, NavajoListener, NavajoEventProxyInterface {
 
 	/**
 	 * 

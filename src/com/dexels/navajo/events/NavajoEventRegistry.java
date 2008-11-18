@@ -14,7 +14,7 @@ import javax.management.NotificationListener;
 import com.dexels.navajo.events.types.ChangeNotificationEvent;
 import com.dexels.navajo.events.types.LevelEvent;
 import com.dexels.navajo.events.types.TribeMemberDownEvent;
-import com.dexels.navajo.scheduler.tribe.NavajoEventProxy;
+import com.dexels.navajo.server.enterprise.scheduler.tribe.*;
 import com.dexels.navajo.server.jmx.JMXHelper;
 
 /**
@@ -190,8 +190,11 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 			while ( i.hasNext() ) {
 				try {
 					NavajoListener nl = i.next();
-					if ( !ignoreProxyListeners || !( nl instanceof NavajoEventProxy ))
-					nl.onNavajoEvent(ne);
+					if ( ignoreProxyListeners && ( nl instanceof NavajoEventProxyInterface )) {
+						
+					} else {
+						nl.onNavajoEvent(ne);
+					}
 				} catch (Throwable t) {
 					t.printStackTrace(System.err);
 				}
@@ -237,7 +240,7 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 				Iterator all = listeners.iterator();
 				while ( all.hasNext() ) {
 					NavajoListener nl = (NavajoListener) all.next();
-					if ( !ignoreEventProxy || !( nl instanceof NavajoEventProxy ) ) {
+					if ( !ignoreEventProxy || !( nl instanceof NavajoEventProxyInterface ) ) {
 						return true;
 					}
 				}
@@ -298,12 +301,12 @@ public class NavajoEventRegistry extends NotificationBroadcasterSupport implemen
 		return registry.size();
 	}
 	
-	public static void main(String [] args) {
-		NavajoEventRegistry n = NavajoEventRegistry.getInstance();
-		n.addListener(NavajoEvent.class, new NavajoEventProxy());
-		n.addListener(NavajoEvent.class, null);
-		System.err.println(">>>> " + n.isMonitoredEvent(NavajoEvent.class, true));
-		System.err.println(">>>> " + n.isMonitoredEvent(TribeMemberDownEvent.class, true));
-	}
+//	public static void main(String [] args) {
+//		NavajoEventRegistry n = NavajoEventRegistry.getInstance();
+//		n.addListener(NavajoEvent.class, new NavajoEventProxy());
+//		n.addListener(NavajoEvent.class, null);
+//		System.err.println(">>>> " + n.isMonitoredEvent(NavajoEvent.class, true));
+//		System.err.println(">>>> " + n.isMonitoredEvent(TribeMemberDownEvent.class, true));
+//	}
 
 }
