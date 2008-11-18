@@ -5,15 +5,20 @@
 	<property file="build.properties" />
 	<taskdef name="deploy" classname="org.apache.catalina.ant.DeployTask" />
 	<taskdef name="undeploy" classname="org.apache.catalina.ant.UndeployTask" />
+	<taskdef name="start" classname="org.apache.catalina.ant.StartTask" />
 
 	<property name="tar.archive" value="NavajoServer.tgz" />
 	<property name="zip.archive" value="NavajoServer.zip" />
 	<property name="war.archive" value="NavajoServer.war" />
 
+	<property name="classes" value="classes" />
+
+	<property name="navajoTomcatServerManager" value="${navajoTomcatServer}/manager" />
+	
+	
 	<property name="enterprisetar.archive" value="NavajoEnterprise.tgz" />
 	<property name="enterprisezip.archive" value="NavajoEnterprise.zip" />
 	<property name="enterprisewar.archive" value="NavajoEnterprise.war" />
-
 
 	<property name="publish.dir" value="publish" />
 	<property name="enterprisepublish.dir" value="enterprisepublish" />
@@ -125,6 +130,7 @@
 		<delete dir="enterprisedist" />
 		<delete dir="${publish.dir}" />
 		<delete dir="${enterprisepublish.dir}" />
+		<delete file="${classes}/**"/>
 	</target>
 
 
@@ -238,7 +244,7 @@
 
 	<target name="archive" depends="binarybuild,sourcebuild" />
 
-
+ 
 	<target name="publish" depends="archive">
 		<echo message="${deployRoot}" />
 		<scp trust="true" sftp="true" verbose="true" password="${navajoScpPassword}" todir="${deployRoot}">
@@ -248,9 +254,12 @@
 		</scp>
 	</target>
 	<target name="deploy" depends="archive">
-		<deploy url="${navajoTomcatServer}" update="true" username="${navajoTomcatUser}" password="${navajoTomcatPassword}" path="${navajoTomcatContext}" war="${publish.dir}/${war.archive}" />
-		<deploy url="${navajoTomcatServer}" update="true" username="${navajoTomcatUser}" password="${navajoTomcatPassword}" path="${navajoTomcatEnterpriseContext}" war="${publish.dir}/${enterprisewar.archive}" />
-	</target>
+		<echo message="${navajoTomcatServer}${navajoTomcatContext}${navajoServletPath}${navajoTesterCommand}"/>
+		<deploy url="${navajoTomcatServerManager}" update="true" username="${navajoTomcatUser}" password="${navajoTomcatPassword}" path="${navajoTomcatContext}" war="${publish.dir}/${war.archive}" />
+		<deploy url="${navajoTomcatServerManager}" update="true" username="${navajoTomcatUser}" password="${navajoTomcatPassword}" path="${navajoTomcatEnterpriseContext}" war="${publish.dir}/${enterprisewar.archive}" />
+		<get dest="classes/temp" src="${navajoTomcatServer}${navajoTomcatContext}${navajoServletPath}${navajoTesterCommand}"/>
+		<get dest="classes/temp" src="${navajoTomcatServer}${navajoTomcatEnterpriseContext}${navajoServletPath}${navajoTesterCommand}"/>
+	</target> 
 
 	<target name="all" depends="publish,deploy" />
 

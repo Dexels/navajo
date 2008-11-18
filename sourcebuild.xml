@@ -22,18 +22,60 @@
 		<delete dir="${build}" />
 		<delete dir="${dist}" />
 	</target>
-	<!--<target name="resource">
+	<target name="resource">
 		<copy includeemptydirs="false" todir="${build}">
-			<fileset dir=".">
-				<exclude name="**/*.java"/>
-				<exclude name="**/javacc"/>
-				<exclude name="**/jjtree"/>
+			<fileset dir="source/DexelsVersionControl">
+				<exclude name="**/*.java" />
+				<exclude name="**/javacc" />
+				<exclude name="**/jjtree" />
 			</fileset>
 		</copy>
-	</target>-->
+		<copy includeemptydirs="false" todir="${build}">
+			<fileset dir="source/Navajo">
+				<exclude name="**/*.java" />
+				<exclude name="**/javacc" />
+				<exclude name="**/jjtree" />
+			</fileset>
+		</copy>
+		<copy includeemptydirs="false" todir="${build}">
+			<fileset dir="source/NavajoAdapters">
+				<exclude name="**/*.java" />
+				<exclude name="**/javacc" />
+				<exclude name="**/jjtree" />
+			</fileset>
+		</copy>
+		<copy includeemptydirs="false" todir="${build}">
+			<fileset dir="source/NavajoClient">
+				<exclude name="**/*.java" />
+				<exclude name="**/javacc" />
+				<exclude name="**/jjtree" />
+			</fileset>
+		</copy>
+		<copy includeemptydirs="false" todir="${build}">
+			<fileset dir="source/NavajoDocument">
+				<exclude name="**/*.java" />
+				<exclude name="**/javacc" />
+				<exclude name="**/jjtree" />
+			</fileset>
+		</copy>
+		<copy includeemptydirs="false" todir="${build}">
+			<fileset dir="source/NavajoFunctions">
+				<exclude name="**/*.java" />
+				<exclude name="**/javacc" />
+				<exclude name="**/jjtree" />
+			</fileset>
+		</copy>
+		<copy includeemptydirs="false" todir="${build}">
+			<fileset dir="source/NavajoListeners">
+				<exclude name="**/*.java" />
+				<exclude name="**/javacc" />
+				<exclude name="**/jjtree" />
+			</fileset>
+		</copy>
+	</target>
 
 	<target name="compile">
-		<javac destdir="${build}" nowarn="true" failonerror="false">
+		<javac destdir="${build}" nowarn="true" failonerror="true" debug="true">
 			<src path="source/DexelsVersionControl" />
 			<src path="source/Navajo" />
 			<src path="source/NavajoAdapters" />
@@ -44,7 +86,7 @@
 			<classpath refid="depend" />
 		</javac>
 	</target>
-	<target name="NavajoComplete" depends="compile">
+	<target name="NavajoComplete" depends="compile,resource">
 		<jar destfile="${archive}" basedir="classes">
 		</jar>
 	</target>
