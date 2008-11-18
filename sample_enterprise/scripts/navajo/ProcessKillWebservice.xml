@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tsl>
+    <message name="Killed" type="array">
+        <map object="com.dexels.navajo.adapter.MultipleEmptyMap">
+            <field name="emptyMaps">
+                <map ref="/NavajoStatus/Kernel/Users" filter="[Kill] == true">
+                    <map object="com.dexels.navajo.adapter.AccessMap">
+                        <field name="accessId">
+                            <expression value="[AccessId]"/>
+                        </field>
+                        <field name="killed">
+                            <expression value="true"/>
+                        </field>
+                    </map>
+                </map>
+            </field>
+        </map>
+    </message>
+</tsl>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tsl>
+    <methods>
+        <method name="navajo/tasks/ProcessGetTaskDetails"/>
+    </methods>
+    <message name="Task">
+        <property name="Id" type="integer" direction="in" length="32" value=""/>
+    </message>
+    <message name="Tasks" type="array">
+        <message name="Task">
+            <property name="Id" type="integer">
+                <expression value="1"/>
+            </property>
+            <property name="Name" type="string">
+                <expression value="'My first task'"/>
+            </property>
+            <property name="Created" type="date">
+                <expression value="TODAY"/>
+            </property>
+            <property name="LatestAccess" type="date">
+                <expression value="TODAY"/>
+            </property>
+            <property name="Category" type="string">
+                <expression value="'Hot'"/>
+            </property>
+            <property name="RoleId" type="string">
+                <expression value="'Sales'"/>
+            </property>
+            <property name="Username" type="string">
+                <expression value="'hank'"/>
+            </property>
+        </message>
+    </message>
+</tsl>

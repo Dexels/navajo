@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tsl xmlns="http://www.dexels.com/navascript" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dexels.com/navascript http://mail.dexels.com:8080/schema/navascript.xsd">
+    <!-- NB! this script is also used by the SLC. Don't change any of the default values!!! --> 
+    <methods>
+        <method name="navajo/description/ProcessUpdateDescriptions">
+            <required message="Descriptions"/>
+        </method>
+    </methods>
+    <param name="NameCondition">
+        <expression condition="?[/Description/Name] AND Trim([/Description/Name]) != ''" value="' AND UPPER(propertydescription.name) LIKE ?'"/>
+        <expression value="''"/>
+    </param>
+    <param name="DescriptionCondition">
+        <expression condition="?[/Description/Description] AND Trim([/Description/Description]) != ''" value="' AND UPPER(propertydescription.description) LIKE ?'"/>
+        <expression value="''"/>
+    </param>
+    <param name="ObjectIdCondition">
+        <expression condition="?[/Description/ObjectId] AND Trim([/Description/ObjectId]) != ''" value="' AND UPPER(propertydescription.objectid) = ?'"/>
+        <expression value="''"/>
+    </param>
+    <param name="SubLocaleCondition">
+        <expression condition="?[/Description/SubLocale] AND Trim([/Description/SubLocale]) != ''" value="' AND UPPER(propertydescription.sublocale) = ?'"/>
+        <expression value="''"/>
+    </param>
+    <param name="ContextCondition">
+        <expression condition="?[/Description/Context] AND Trim([/Description/Context]) != ''" value="' AND UPPER(propertydescription.context) = ?'"/>
+        <expression value="''"/>
+    </param>
+    <map object="com.dexels.navajo.adapter.SQLMap">        
+        <field name="datasource">
+            <expression value="'navajostore'"/>
+        </field>
+        <param name="Query">
+            <expression xml:space="preserve">
+                SELECT descriptionid
+                ,      name
+                ,      context
+                ,      locale
+                ,      sublocale
+                ,      objectid
+                ,      objecttype
+                ,      description
+                FROM   propertydescription 
+                WHERE  locale = ?                 
+            </expression>
+        </param>
+        <field name="query">
+            <expression value="[/@Query] + ' ' + [/@NameCondition] + ' ' + [/@DescriptionCondition] + ' ' + [/@ObjectIdCondition] + ' ' + [/@SubLocaleCondition] + ' ' + [/@ContextCondition] + ' ORDER BY description'"/>
+        </field>
+        <field name="parameter">
+            <expression value="[/Description/Locale]"/>
+        </field>
+        <field name="parameter" condition="?[/Description/Name] AND Trim([/Description/Name]) != ''">
+            <expression value="ToUpper([/Description/Name]) + '%'"/>
+        </field>
+        <field name="parameter" condition="?[/Description/Description] AND Trim([/Description/Description]) != ''">
+            <expression value="ToUpper([/Description/Description]) + '%'"/>
+        </field>
+        <field name="parameter" condition="?[/Description/ObjectId] AND Trim([/Description/ObjectId]) != ''">
+            <expression value="ToUpper([/Description/ObjectId])"/>
+        </field>
+        <field name="parameter" condition="?[/Description/SubLocale] AND Trim([/Description/SubLocale]) != ''">
+            <expression value="ToUpper([/Description/SubLocale])"/>
+        </field>
+        <field name="parameter" condition="?[/Description/Context] AND Trim([/Description/Context]) != ''">
+            <expression value="ToUpper([/Description/Context])"/>
+        </field>
+        <message name="Descriptions">
+            <map ref="resultSet">
+                <!-- use the insert option to add a new description (e.g. for a specific objectid) -->
+                <property name="Insert" direction="in">
+                    <expression value="false"/>
+                </property>
+                <property name="Update" direction="in">
+                    <expression condition="?[/Description/ObjectId] AND Trim([/Description/ObjectId]) != ''" value="true"/>
+                    <expression value="false"/>                   
+                </property>
+                <property name="DescriptionId" direction="out">
+                    <expression value="$columnValue('descriptionid')"/>
+                </property>
+                <property name="Name" direction="in">
+                    <expression value="$columnValue('name')"/>
+                </property>
+                <property name="Locale" direction="out">
+                    <expression value="$columnValue('locale')"/>
+                </property>
+                <property name="SubLocale" direction="out">
+                    <expression value="$columnValue('sublocale')"/>
+                </property>
+                <property name="Context" direction="out">
+                    <expression value="$columnValue('context')"/>
+                </property>
+                <property name="ObjectId" direction="out">
+                    <expression value="$columnValue('objectid')"/>
+                </property>
+                <property name="ObjectType" direction="out">
+                    <expression value="$columnValue('objecttype')"/>
+                </property>
+                <property name="Description" direction="in">
+                    <expression value="$columnValue('description')"/>
+                </property>
+            </map>
+        </message>
+    </map>
+</tsl>

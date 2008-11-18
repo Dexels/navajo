@@ -1,0 +1,43 @@
+<tsl>
+  <map object="com.dexels.navajo.adapter.SQLMaintenanceMap">
+    <field name="datasources">
+      <map ref="/SQLMap/NewDatasource">
+        <field name="max_connections">
+          <expression value="[MaxConnections]" condition=""/>
+        </field>
+        <field name="url">
+          <expression value="[Url]" condition=""/>
+        </field>
+        <field name="driver">
+          <expression value="[Username]" condition=""/>
+        </field>
+        <field name="password">
+          <expression value="[Password]" condition=""/>
+        </field>
+        <field name="datasourceName">
+          <expression value="[Name]" condition=""/>
+        </field>
+        <field name="min_connections">
+          <expression value="[MinConnections]" condition=""/>
+        </field>
+        <field name="refresh">
+          <expression value="[Refresh]" condition=""/>
+        </field>
+        <field name="username">
+          <expression value="[Username]" condition=""/>
+        </field>
+        <field name="driver">
+          <expression value="[Driver]" condition=""/>
+        </field>
+        <field name="logfile">
+          <expression value="[LogFile]" condition=""/>
+        </field>
+      </map>
+    </field>
+  </map>
+  <message name="Result">
+    <property name="Status" type="string" value="Done" direction="out">
+      <expression value="&apos;1&apos;"/>
+    </property>
+  </message>
+</tsl>

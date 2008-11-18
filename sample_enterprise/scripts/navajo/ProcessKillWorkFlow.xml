@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tsl>
+    <map object="com.dexels.navajo.workflow.WorkFlowManager">
+        <field name="workflowId">
+            <expression value="[/WorkFlow/Id]"/>
+        </field>
+        <message name="Dummy">
+            <map ref="workflow">
+                <property name="Id" direction="out">
+                    <expression value="$myId"/>
+                </property>
+                <field name="kill">
+                    <expression value="true"/>
+                </field>
+            </map>
+        </message>
+    </map>
+</tsl>

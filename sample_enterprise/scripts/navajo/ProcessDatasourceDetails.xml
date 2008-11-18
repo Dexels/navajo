@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tsl author="Arjen Schoneveld" id="ProcessDatasourceDetails"
+    repository="$Id$"
+    xmlns="http://www.dexels.com/navascript" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.dexels.com/navascript http://www.dexels.nl:8080/schema/navascript.xsd">
+    <methods>
+        <method name="navajo/ProcessDatasourceTableDetails"/>
+    </methods>
+    <message name="TabelInfo"/>
+    <map object="com.dexels.navajo.adapter.SQLMap">
+        <field name="datasource" condition="?[/Datasource/Name] AND [/Datasource/Name] != ''">
+            <expression value="[/Datasource/Name]"/>
+        </field>
+        <param name="TransactionContext">
+            <expression value="$transactionContext"/>
+        </param>
+        <message name="DatabaseInfo">
+            <map ref="databaseInfo">
+                <field name="catalogName"
+                    condition="[/DatasourceDetails/CatalogName] != null AND Trim([/DatasourceDetails/CatalogName]) != ''">
+                    <expression value="[/DatasourceDetails/CatalogName]"/>
+                </field>
+                <field name="schemaName"
+                    condition="[/DatasourceDetails/SchemaName] != null AND Trim([/DatasourceDetails/SchemaName]) != ''">
+                    <expression value="[/DatasourceDetails/SchemaName]"/>
+                </field>
+                <message name="Schema">
+                    <map ref="schema">
+                        <property name="Name" direction="out">
+                            <expression value="$name"/>
+                        </property>
+                        <message name="Tables">
+                            <map ref="tables">
+                                <property name="Name" direction="out">
+                                    <expression value="$name"/>
+                                </property>
+                                <!--<message name="Columns">
+                                    <map ref="columns">
+                                        <property name="Name" direction="out">
+                                            <expression value="$name"/>
+                                        </property>
+                                        <property name="Type" direction="out">
+                                            <expression value="$type"/>
+                                        </property>
+                                    </map>
+                                </message>-->
+                            </map>
+                        </message>
+                    </map>
+                </message>
+            </map>
+        </message>
+    </map>
+</tsl>

@@ -1,0 +1,17 @@
+<tsl>
+  <methods>
+    <method name="navajo/ProcessCollectGarbage"/>
+  </methods>
+  <map object="com.dexels.navajo.adapter.AdminMap">
+      <message name="MemoryCounts">
+                   <map ref="classCounts">
+                      <property name="ClassName" direction="out" length="64">
+                         <expression value="$className"/>
+                      </property>
+                      <property name="ClassCount" direction="out" length="32">
+                         <expression value="$count"/>
+                      </property>
+                   </map>
+                </message>
+  </map>
+</tsl>

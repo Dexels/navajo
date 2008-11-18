@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tsl author="Arnoud Philip" id="ProcessGetScriptList"
+  notes="Process script for retreiving the list of scripts on the server"
+  xmlns="http://www.dexels.com/navascript" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dexels.com/navascript http://www.dexels.nl:8080/schemas/navascript.xsd">
+  <map condition="[QueryScriptList/UseCVS] == true" object="com.dexels.navajo.adapter.CVSMap">
+    <param name="IsInit">
+      <expression condition="Size([QueryScriptList/SelectType:value]) == 2" value="true"/>
+      <expression condition="[QueryScriptList/SelectType:value] == 'Init'" value="true"/>
+      <expression value="false"/>
+    </param>
+    <param name="IsProcess">
+      <expression condition="Size([QueryScriptList/SelectType:value]) == 2" value="true"/>
+      <expression condition="[QueryScriptList/SelectType:value] == 'Process'" value="true"/>
+      <expression value="false"/>
+    </param>
+    <message name="InitScripts" type="array">
+      <map filter="$isinitscript == true AND [/__parms__/IsInit] == true" ref="scriptlist">
+        <property description="Name" direction="out" name="Name">
+          <expression value="$name"/>
+        </property>
+        <property description="LastModified" direction="out" name="LastModified">
+          <expression value="$date"/>
+        </property>
+        <property direction="out" name="Status">
+          <expression value="$status"/>
+        </property>
+        <property direction="out" name="Revision">
+          <expression value="$revision"/>
+        </property>
+      </map>
+    </message>
+    <message name="ProcessScripts" type="array">
+      <map filter="$isinitscript == false AND [/__parms__/IsProcess] == true" ref="scriptlist">
+        <property description="Name" direction="out" name="Name">
+          <expression value="$name"/>
+        </property>
+        <property description="LastModified" direction="out" name="LastModified">
+          <expression value="$date"/>
+        </property>
+        <property direction="out" name="Status">
+          <expression value="$status"/>
+        </property>
+        <property direction="out" name="Revision">
+          <expression value="$revision"/>
+        </property>
+      </map>
+    </message>
+  </map>
+  <map condition="[QueryScriptList/UseCVS] == false" object="com.dexels.navajo.adapter.ScriptListMap">
+    <param name="IsInit">
+      <expression condition="Size([QueryScriptList/SelectType:value]) == 2" value="true"/>
+      <expression condition="[QueryScriptList/SelectType:value] == 'Init'" value="true"/>
+      <expression value="false"/>
+    </param>
+    <param name="IsProcess">
+      <expression condition="Size([QueryScriptList/SelectType:value]) == 2" value="true"/>
+      <expression condition="[QueryScriptList/SelectType:value] == 'Process'" value="true"/>
+      <expression value="false"/>
+    </param>
+    <message name="InitScripts" type="array">
+      <map filter="$isinitscript == true AND [/__parms__/IsInit] == true" ref="scriptlist">
+        <property description="Name" direction="out" name="Name">
+          <expression value="$name"/>
+        </property>
+        <property description="LastModified" direction="out" name="LastModified">
+          <expression value="$date"/>
+        </property>
+      </map>
+    </message>
+    <message name="ProcessScripts" type="array">
+      <map filter="$isinitscript == false AND [/__parms__/IsProcess] == true" ref="scriptlist">
+        <property description="Name" direction="out" name="Name">
+          <expression value="$name"/>
+        </property>
+        <property description="LastModified" direction="out" name="LastModified">
+          <expression value="$date"/>
+        </property>
+      </map>
+    </message>
+  </map>
+</tsl>

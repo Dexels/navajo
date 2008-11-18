@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tsl xmlns="http://www.dexels.com/navascript" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.dexels.com/navascript http://www.dexels.nl:8080/schema/navascript.xsd">
+    <map object="com.dexels.navajo.adapter.AdminMap">
+        <field name="supportsStatistics">
+            <expression value="[/NavajoStatus/Kernel/Configuration/StatisticsEnabled]"/>
+        </field>
+        <field name="monitorOn">
+            <expression value="[/NavajoStatus/Kernel/Configuration/FullAccessLogMonitorOn]"/>
+        </field>
+        <field name="monitorUsers">
+            <expression value="[/NavajoStatus/Kernel/Configuration/UsernameFilter]"/>
+        </field>
+        <field name="monitorWS">
+            <expression value="[/NavajoStatus/Kernel/Configuration/WebserviceFilter]"/>
+        </field>
+        <field name="monitorTotaltime">
+            <expression condition="!?[/NavajoStatus/Kernel/Configuration/MaxTotaltimeAlert]" value="-1"/>
+            <expression value="[/NavajoStatus/Kernel/Configuration/MaxTotaltimeAlert] * 1000"/>
+        </field>
+    </map>
+    <message name="ConfigurationUpdated"/>
+</tsl>

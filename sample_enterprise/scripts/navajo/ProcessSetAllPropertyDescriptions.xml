@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tsl xmlns="http://www.dexels.com/navascript" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dexels.com/navascript http://mail.dexels.com:8080/schema/navascript.xsd">
+    <map object="com.dexels.navajo.adapter.SQLMap">
+        <field name="datasource">
+            <expression value="'navajostore'"/>
+        </field>
+        <field name="query">
+            <expression xml:space="preserve">
+                DELETE FROM 
+                propertydescription
+                WHERE name = ?                        
+            </expression>
+        </field>
+        <field name="parameter">
+            <expression value="[/Property/Name]"/>
+        </field>
+        <field name="doUpdate">
+            <expression value="true"/>
+        </field>
+    </map>
+    <map object="com.dexels.navajo.adapter.SQLMap">
+        <field name="datasource">
+            <expression value="'navajostore'"/>
+        </field>
+        <field name="query">
+            <expression xml:space="preserve">
+                 INSERT 
+                 
+                into propertydescription (locale,name,description)
+                 VALUES(?, ? , ?)                        
+            </expression>
+        </field>
+        <field name="parameter">
+            <expression value="[/Property/Locale]"/>
+        </field>
+        <field name="parameter">
+            <expression value="[/Property/Name]"/>
+        </field>
+        <field name="parameter">
+            <expression value="[/Property/Description]"/>
+        </field>
+        <field name="doUpdate">
+            <expression value="true"/>
+        </field>
+    </map>
+    <map object="com.dexels.navajo.adapter.DescriptionMap">
+        <field name="doFlushCache">
+            <expression value="true"/>
+        </field>
+    </map>
+    
+</tsl>

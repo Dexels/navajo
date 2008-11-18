@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tsl>
+    <param name="TipletPath">
+        <expression value="'/home/knvb/navajo/tiplet/'"/>
+    </param>
+    <message name="Task">
+        <property name="Id" type="integer">
+            <expression value="1"/>
+        </property>
+        <property name="Name" type="string">
+            <expression value="'My first task'"/>
+        </property>
+        <property name="Created" type="date">
+            <expression value="TODAY"/>
+        </property>
+        <property name="LatestAccess" type="date">
+            <expression value="TODAY"/>
+        </property>
+        <property name="TipiApplication" type="binary" subtype="application/zip">
+            <expression value="ZipArchive([/@TipletPath] + 'parkedmembers/process')"/>
+        </property>
+        <property name="TipiStartupScreen" type="string"/>
+        <property name="Role" type="string"/>
+        <property name="Username" type="string"/>
+        <property name="Category" type="string"/>
+        <!-- Test -->
+        <map object="com.dexels.navajo.adapter.NavajoMap">
+            <param name="NavajoContent">
+                <expression value="$navajo"/>
+            </param>
+        </map>
+        <message name="NavajoObjects" type="array">
+            <message name="NavajoObjects">
+                <property name="Navajo" type="binary">
+                    <expression value="[/@NavajoContent]"/>
+                </property>
+            </message>
+        </message>
+    </message>
+</tsl>

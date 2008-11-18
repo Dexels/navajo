@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tsl author="Frank Lyaruu" xmlns="http://www.dexels.com/navascript" id="navajo/InitFlushDecriptionCache"
+    repository="$Id$"
+    notes="Cleans up changelog tables for already finished matches"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.dexels.com/navascript http://www.dexels.nl/schema/navascript.xsd">
+    <!-- Includes -->
+    <map object="com.dexels.navajo.adapter.descriptionprovider.DescriptionCacheMap">
+        <field name="doFlushCache">
+            <expression value="true"/>
+        </field>
+    </map>
+</tsl>

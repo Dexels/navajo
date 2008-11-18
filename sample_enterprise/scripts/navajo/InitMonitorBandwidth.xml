@@ -1,0 +1,49 @@
+<tsl>
+  <map object="com.dexels.navajo.monitor.BandwidthMonitor">
+     <field name="interfaceName">
+        <expression value="'eth0'"/>
+     </field> 
+     <message name="Bandwidth">
+        <field name="measure">
+           <expression value="'received'"/>
+        </field>
+        <message name="dummy" mode="ignore">
+           <map ref="bandwidth">
+               <property name="../Received" direction="out">
+                   <expression value="$bandwidth + ' ' + $units"/>
+               </property>
+           </map>
+        </message>
+        <field name="measure">
+           <expression value="'transmitted'"/>
+        </field>
+        <message name="dummy" mode="ignore">
+           <map ref="bandwidth">
+               <property name="../Transmitted" direction="out">
+                   <expression value="$bandwidth + ' ' + $units"/>
+               </property> 
+           </map>
+        </message>
+        <field name="measure">
+           <expression value="'maxreceived'"/>
+        </field>
+        <message name="dummy" mode="ignore">
+           <map ref="bandwidth">
+               <property name="../MaxReceived" direction="out">
+                   <expression value="$bandwidth + ' ' + $units"/>
+               </property> 
+           </map>
+        </message>
+        <field name="measure">
+           <expression value="'maxtransmitted'"/>
+        </field>
+        <message name="dummy" mode="ignore">
+           <map ref="bandwidth">
+               <property name="../MaxTransmitted" direction="out">
+                   <expression value="$bandwidth + ' ' + $units"/>
+               </property> 
+           </map>
+        </message>
+     </message>
+  </map>
+</tsl>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tsl>
+    <map object="com.dexels.navajo.integrity.Worker">
+        <field name="requestId">
+            <expression value="[/Introspect/RequestId]"/>
+        </field>
+        <message name="Result">
+            <property name="IsRunning" direction="out">
+                <expression value="$isRunning"/>
+            </property>
+        </message>
+    </map>
+</tsl>

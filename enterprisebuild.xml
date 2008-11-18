@@ -2,11 +2,15 @@
 <!-- $Id$ -->
 <project name="NavajoComplete" default="NavajoComplete" basedir=".">
 	<property name="build" location="classes" />
-	<property name="archive" location="dist/WEB-INF/lib/NavajoComplete.jar" />
+	<property name="archive" location="enterprisedist/NavajoEnterpriseExtension.jar" />
 	<property name="lib" value="3rdparty" />
+		<property name="enterpriselib" value="3rdparty/enterprise" />
 	<property name="dist" value="dist" />
 	<path id="depend">
 		<fileset dir="${lib}">
+			<include name="**/*.jar" />
+		</fileset>
+		<fileset dir="${enterpriselib}">
 			<include name="**/*.jar" />
 		</fileset>
 		<pathelement location="${NavajoComplete.build}" />
@@ -41,6 +45,7 @@
 			<src path="source/NavajoDocument" />
 			<src path="source/NavajoFunctions" />
 			<src path="source/NavajoListeners" />
+			<src path="source/NavajoEnterprise" />
 			<classpath refid="depend" />
 		</javac>
 	</target>

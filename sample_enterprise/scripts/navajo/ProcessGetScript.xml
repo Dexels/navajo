@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tsl xmlns="http://www.dexels.com/navascript" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dexels.com/navascript file:/home/arjen/projecten/Navajo/schemas/navascript.xsd">
+  <map object="com.dexels.navajo.adapter.ScriptMap">
+    <message name="NavajoScript">
+      <property direction="out" name="Script" type="binary" description="Script">
+        <expression value="$script"/>
+      </property>
+    </message>
+  </map>
+</tsl>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tsl>
+    <message name="StatisticsRunner">
+        <map object="com.dexels.navajo.server.statistics.StatisticsRunner">
+            <property name="Version" direction="out">
+                <expression value="$VERSION"/>
+            </property>
+            <property name="StoreClass" direction="out" description="Store class">
+                <expression value="$storeClass"/>
+            </property>
+            <property name="TodoCount" direction="out" description="Todo count">
+                <expression value="$todoCount"/>
+            </property>
+        </map>
+    </message>
+</tsl>

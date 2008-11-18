@@ -1,0 +1,54 @@
+<tsl author="Arjen Schoneveld" id="ProcessDatasourceInfo" notes=""
+    repository="$Id$"
+    xmlns="http://www.dexels.com/navascript" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dexels.com/navascript http://www.dexels.nl:8080/schema/navascript.xsd">
+    <methods>
+        <method name="navajo/ProcessDatasourceDetails">
+            <required message="DatasourceDetails"/>
+            <required message="Datasource"/>
+        </method>
+    </methods>
+    <message name="Datasource">
+        <property name="Name" direction="out" type="string" length="50">
+            <expression value="[/QueryTool/Datasource]"/>
+        </property>
+    </message>
+    <message name="DatasourceDetails">
+        <property name="CatalogName" direction="in" length="50" type="string"/>
+        <property name="SchemaName" direction="in" length="50" type="string"/>
+    </message>
+    <map object="com.dexels.navajo.adapter.SQLMap">
+        <field name="datasource" condition="?[/QueryTool/Datasource] AND [/QueryTool/Datasource] != ''">
+            <expression value="[/QueryTool/Datasource]"/>
+        </field>
+        <field name="debug">
+            <expression value="true"/>
+        </field>
+        <param name="TransactionContext">
+            <expression value="$transactionContext"/>
+        </param>
+        <message name="DatabaseInfo">
+            <map ref="databaseInfo">
+                <property name="Info" direction="out">
+                    <expression value="$vendor"/>
+                </property>
+                <property name="Version" direction="out">
+                    <expression value="$version"/>
+                </property>
+                <message name="Catalogs">
+                    <map ref="catalogs">
+                        <property name="Name" direction="out" type="string">
+                            <expression value="$name"/>
+                        </property>
+                        <message name="Schemas">
+                            <map ref="schemas" filter="$dummy == false">
+                                <property name="Name" direction="out">
+                                    <expression value="$name"/>
+                                </property>
+                            </map>
+                        </message>
+                    </map>
+                </message>
+            </map>
+        </message>
+    </map>
+</tsl>

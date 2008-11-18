@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tsl>
+    <message name="WorkFlowInstance">
+        <property name="Id" direction="in" type="string" length="100"/>
+    </message>
+    <map object="com.dexels.navajo.workflow.WorkFlowManager">
+        <field name="workflowDef" condition="?[/WorkFlowDefinition/Name]">
+            <expression value="[/WorkFlowDefinition/Name]"/>
+        </field>
+        <message name="WorkFlowInstances">
+            <map ref="workflows">
+                <property name="Definition" direction="out">
+                    <expression value="$definition"/>
+                </property>
+                <property name="Id" direction="out">
+                    <expression value="$myId"/>
+                </property>
+            </map>
+        </message>
+    </map>
+    <methods>
+        <method name="navajo/ProcessGetWorkFlowDetail"/>
+    </methods>
+</tsl>

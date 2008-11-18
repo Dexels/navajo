@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tsl author="Arjen Schoneveld" xmlns="http://www.dexels.com/navascript" id="navajo/InitUpload" repository="$Id$" notes="Cleans up changelog tables for already finished matches" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dexels.com/navascript http://www.dexels.nl/schema/navascript.xsd">
+    <!-- Includes -->
+    <methods>
+        <method name="navajo/ProcessUpload"/>
+    </methods>
+    <message name="FileInfo">
+        <property name="FileType" type="selection" direction="in" cardinality="1">
+            <option name="Adapter" value="ADAPTER" selected="1"/>
+            <option name="Script" value="SCRIPT" selected="0"/>
+        </property>
+        <property name="FileName" direction="in" type="string" length="100"/>
+        <property name="FileContent" direction="in" type="binary"/>
+        <property name="UseCVS" type="boolean" value="false" direction="in"/>
+        <property name="CVSComment" direction="in" type="string" length="100"/>
+    </message>
+</tsl>

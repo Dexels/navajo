@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tsl xmlns="http://www.dexels.com/navascript" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dexels.com/navascript http://mail.dexels.com:8080/schema/navascript.xsd">
+    <methods>
+        <method name="navajo/ProcessBroadcastMessage">
+            <required message="Broadcast"/>
+        </method>
+    </methods>
+    <message name="Broadcast">
+        <property name="Message" direction="in" type="string" length="80"/>
+        <property name="Time" direction="in" type="integer" length="80"/>
+    </message>
+</tsl>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tsl author="Frank Lyaruu" xmlns="http://www.dexels.com/navascript" id="navajo/InitFlushDecriptionCache" repository="$Id$" notes="Cleans up changelog tables for already finished matches" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dexels.com/navascript http://www.dexels.nl/schema/navascript.xsd">
+    <methods>
+        <method name="navajo/description/ProcessDeleteDescription">
+            <required message="Description"/>
+        </method>
+        <method name="navajo/description/ProcessSearchDescriptions">
+            <required message="Description"/>
+        </method>
+        <method name="navajo/description/ProcessInsertDescription">
+            <required message="Description"/>
+        </method>
+        <method name="navajo/description/ProcessInsertExclusiveDescription">
+            <required message="Description"/>
+        </method>
+        <method name="navajo/description/ProcessGetContextResources">
+            <required message="Description"/>
+        </method>
+        <method name="navajo/description/ProcessReloadResource">
+            <required message="Description"/>
+        </method>        
+    </methods>
+    <message name="Description">
+        <property name="Name" type="string" direction="in"/>
+        <property name="Locale" type="selection" direction="in">
+            <option name="NL" value="nl" selected="1"/>
+            <option name="EN" value="en" selected="0"/>
+            <option name="ES" value="es" selected="0"/>
+            <option name="FR" value="fr" selected="0"/>
+        </property>
+        <property name="SubLocale" type="string" direction="in"/>
+        <property name="Context" type="string" direction="in"/>
+        <property name="ObjectId" type="string" direction="in"/>
+        <property name="ObjectType" type="string" direction="in"/>
+        <property name="Description" type="string" direction="in"/>
+    </message>
+</tsl>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tsl author="Matthijs Philip" id="navajo/description/ProcessUpdateDescriptions" notes="" repository="$Id$" xmlns="http://www.dexels.com/navascript" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.dexels.com/navascript http://www.dexels.com/schema/navascript.xsd">
+    <map object="com.dexels.navajo.adapter.NavajoAccess">
+        <param name="NavajoUser">
+            <expression value="$rpcUser"/>
+        </param>
+    </map>
+    <map object="com.dexels.navajo.adapter.MultipleEmptyMap">
+        <field name="emptyMaps">
+            <!-- update propertydescription -->
+            <map filter="[Update]" ref="/Descriptions">
+                <map object="com.dexels.navajo.adapter.descriptionprovider.FastDescriptionProvider">
+                    <field name="propertyDescription">
+                       <map ref=".">
+                           <field name="name">
+                               <expression value="[Name]"/>
+                           </field>
+                           <field name="locale">
+                               <expression value="[Locale]"/>
+                           </field>
+                           <field name="subLocale">
+                               <expression value="[SubLocale]"/>
+                           </field>
+                           <field name="context">
+                               <expression value="[Context]"/>
+                           </field>
+                           <field name="username">
+                               <expression value="[ObjectId]"/>
+                           </field>
+                           <field name="description">
+                               <expression value="[Description]"/>
+                           </field>
+                           <field name="id">
+                               <expression value="[DescriptionId]"/>
+                           </field>
+                       </map>
+                    </field>
+                </map>
+            </map>
+        </field>
+    </map>
+</tsl>

@@ -2,28 +2,52 @@
 <!-- $Id$ -->
 
 <project name="NavajoServer" default="all" basedir=".">
-
+	<property file="build.properties" />
 	<taskdef name="deploy" classname="org.apache.catalina.ant.DeployTask" />
 	<taskdef name="undeploy" classname="org.apache.catalina.ant.UndeployTask" />
 
 	<property name="tar.archive" value="NavajoServer.tgz" />
-
 	<property name="zip.archive" value="NavajoServer.zip" />
 	<property name="war.archive" value="NavajoServer.war" />
-	<property name="publish" value="publish" />
+
+	<property name="enterprisetar.archive" value="NavajoEnterprise.tgz" />
+	<property name="enterprisezip.archive" value="NavajoEnterprise.zip" />
+	<property name="enterprisewar.archive" value="NavajoEnterprise.war" />
+
+
+	<property name="publish.dir" value="publish" />
+	<property name="enterprisepublish.dir" value="enterprisepublish" />
+	<property name="dist.dir" value="dist" />
+	<property name="enterprisedist.dir" value="enterprisedist" />
+
 	<property name="sourcetar.archive" value="NavajoServerSource.tgz" />
 	<property name="sourcezip.archive" value="NavajoServerSource.zip" />
-	<property name="deployRoot" value="${deployUser}@${deployServer}:${deployPath}/Navajo" />
-	<echo message="${deployRoot}">
-	</echo>
-	<delete dir="source/"/>
+	<property name="deployRoot" value="${navajoScpUser}@${navajoScpServer}:${navajoScpPath}" />
+	<delete dir="source/" />
 
 	<copy todir="source">
 		<fileset file="sourcebuild.xml">
 		</fileset>
 	</copy>
+	<copy todir="source/NavajoEnterprise">
+		<fileset dir="../Navajo/src">
+
+			<!-- enterprise -->
+			<include name="com/dexels/navajo/scheduler/**" />
+			<include name="com/dexels/navajo/tribe/**" />
+			<include name="com/dexels/navajo/workflow/**" />
+			<include name="com/dexels/navajo/adapter/**" />
+			<include name="com/dexels/navajo/integrity/**" />
+			<include name="com/dexels/navajo/jabber/**" />
+			<include name="com/dexels/navajo/server/descriptionprovider/**" />
+			<include name="com/dexels/navajo/server/statistics/**" />
+			<include name="com/dexels/navajo/server/monitoring/**" />
+
+		</fileset>
+	</copy>
+
 	<copy todir="source/Navajo">
-		<fileset dir="${PROJECTHOME}/Navajo/src">
+		<fileset dir="../Navajo/src">
 			<include name="**/*" />
 
 			<!-- enterprise -->
@@ -37,22 +61,6 @@
 			<exclude name="com/dexels/navajo/server/statistics/**" />
 			<exclude name="com/dexels/navajo/server/monitoring/**" />
 
-			<!-- server -->
-
-			<!--
-			<exclude name="com/dexels/navajo/server/Dispatcher.*" />
-			<exclude name="com/dexels/navajo/server/NavajoConfig.*" />
-			<exclude name="com/dexels/navajo/server/Access.*" />
-		    <exclude name="com/dexels/navajo/lockguard/**" />
-		    <exclude name="com/dexels/navajo/server/jmx/**" />
-			<exclude name="com/dexels/navajo/client/**" />
-			<exclude name="com/dexels/navajo/install/**" />
-			<exclude name="com/dexels/navajo/compiler/**" />
-			<exclude name="com/dexels/navajo/mapping/compiler/**" />
-			<exclude name="org/**" />-->
-
-			<!-- source file, never needed. -->
-			<!--	<exclude name="**/*.jj" />-->
 			<exclude name="**/*.jjt" />
 			<exclude name="**/*.bat" />
 
@@ -61,13 +69,13 @@
 	</copy>
 
 	<copy todir="source/NavajoDocument">
-		<fileset dir="${PROJECTHOME}/NavajoDocument/src" />
+		<fileset dir="../NavajoDocument/src" />
 	</copy>
 	<copy todir="source/NavajoClient">
-		<fileset dir="${PROJECTHOME}/NavajoClient/src" />
+		<fileset dir="../NavajoClient/src" />
 	</copy>
 	<copy todir="source/NavajoListeners">
-		<fileset dir="${PROJECTHOME}/NavajoListeners/src">
+		<fileset dir="../NavajoListeners/src">
 			<exclude name="com/dexels/navajo/server/listener/http/LaszloUploadServlet.java" />
 			<exclude name="com/dexels/navajo/server/listener/soap/**" />
 			<exclude name="com/dexels/navajo/server/listener/smtp/**" />
@@ -75,14 +83,13 @@
 		</fileset>
 	</copy>
 	<copy todir="source/NavajoFunctions">
-		<fileset dir="${PROJECTHOME}/NavajoFunctions/src">
+		<fileset dir="../NavajoFunctions/src">
 			<exclude name="com/dexels/navajo/functions/ExistsWorkflow.java" />
 		</fileset>
 	</copy>
 	<copy todir="source/NavajoAdapters">
-		<fileset dir="${PROJECTHOME}/NavajoAdapters/src">
+		<fileset dir="../NavajoAdapters/src">
 			<exclude name="com/dexels/navajo/adapter/descriptionprovider/**" />
-			<exclude name="com/dexels/navajo/adapter/crystal/**" />
 			<exclude name="com/dexels/navajo/adapter/ibatis/**" />
 			<exclude name="com/dexels/navajo/adapter/icalmap/**" />
 			<exclude name="com/dexels/navajo/adapter/ldap/**" />
@@ -103,40 +110,73 @@
 			<exclude name="com/dexels/navajo/adapter/MultipleSQLMap.java" />
 			<exclude name="com/dexels/navajo/adapter/html/**" />
 		</fileset>
-
 	</copy>
+	
+	
+	
 	<copy todir="source/DexelsVersionControl">
-		<fileset dir="${PROJECTHOME}/DexelsVersionControl/src" />
+		<fileset dir="../DexelsVersionControl/src" />
 	</copy>
 	<target name="clean">
 		<delete dir="WEB-INF/lib">
 			<include name="*.jar" />
 		</delete>
-		<delete dir="dist">
-		</delete>
+		<delete dir="${dist.dir}" />
+		<delete dir="enterprisedist" />
+		<delete dir="${publish.dir}" />
+		<delete dir="${enterprisepublish.dir}" />
 	</target>
 
 
 	<target name="tar" depends="compile">
-		<tar tarfile="${tar.archive}" longfile="gnu" basedir="dist">
+		<tar tarfile="${publish.dir}/${tar.archive}" longfile="gnu" basedir="${dist.dir}">
 		</tar>
 	</target>
 	<target name="war" depends="compile">
-		<war destfile="${publish}/${war.archive}" basedir="dist" webxml="dist/WEB-INF/web.xml">
+		<war destfile="${publish.dir}/${war.archive}" basedir="${dist.dir}" webxml="dist/WEB-INF/web.xml">
 		</war>
 	</target>
 	<target name="zip" depends="compile">
-		<zip zipfile="${publish}/${zip.archive}" basedir="dist">
+		<zip zipfile="${publish.dir}/${zip.archive}" basedir="${dist.dir}">
 		</zip>
 	</target>
 
+	<target name="enterprisewar" depends="compile">
+		<mkdir dir="${enterprisepublish.dir}" />
+		<copy todir="${enterprisepublish.dir}">
+			<fileset file="dist/**" />
+		</copy>
+		<copy todir="${enterprisepublish.dir}/WEB-INF/lib">
+			<fileset file="${enterprisedist.dir}/lib/*.jar" />
+			<fileset file="${enterprisedist.dir}/NavajoEnterpriseExtension.jar" />
+		</copy>
+		<copy todir="${enterprisepublish.dir}" overwrite="true">
+			<fileset file="sample_enterprise/**" />
+		</copy>
+
+
+
+		<war destfile="${publish.dir}/${enterprisewar.archive}" basedir="${enterprisepublish.dir}" webxml="${dist.dir}/WEB-INF/web.xml">
+		</war>
+	</target>
+
+
+	<target name="enterprisezip" depends="compile">
+		<zip zipfile="${publish.dir}/${enterprisezip.archive}" basedir="${enterprisedist.dir}">
+		</zip>
+	</target>
+
+	<target name="enterprisetar" depends="compile">
+		<tar tarfile="${publish.dir}/${enterprisetar.archive}" longfile="gnu" basedir="${enterprisedist.dir}">
+		</tar>
+	</target>
 
 	<target name="sourcetar">
-		<tar tarfile="${publish}/${sourcetar.archive}" basedir="source">
+		<tar tarfile="${publish.dir}/${sourcetar.archive}" basedir="source">
 		</tar>
 	</target>
 	<target name="sourcezip">
-		<zip zipfile="${publish}/${sourcezip.archive}" basedir="source">
+		<zip zipfile="${publish.dir}/${sourcezip.archive}" basedir="source">
 		</zip>
 	</target>
 
@@ -144,80 +184,75 @@
 
 
 	<target name="grab" depends="clean">
-		<ant antfile="build.xml" dir="../NavajoClient" />
-		<ant antfile="build.xml" dir="../Navajo" />
-		<ant antfile="build.xml" dir="../NavajoLogger" />
-		<ant antfile="build.xml" dir="../NavajoFunctions" />
-		<ant antfile="build.xml" dir="../NavajoAdapters" />
-		<mkdir dir="${publish}" />
 
-		<copy todir="dist/WEB-INF/lib">
+		<mkdir dir="${publish.dir}" />
 
-			<fileset file="../NavajoClient/NavajoClient.jar" />
-			<fileset file="../NavajoAdapters/NavajoAdapters.jar" />
-			<fileset file="../NavajoDocument/*.jar" />
-			<fileset file="../NavajoBirt/*.jar" />
-			<fileset file="../Navajo/NavajoRuntime.jar" />
-			<fileset file="../Navajo/NavajoServer.jar" />
-			<fileset file="../NavajoFunctions/NavajoFunctions.jar" />
-			<fileset file="../NavajoLogger/NavajoLogger.jar" />
-			<fileset file="../NavajoListeners/NavajoListeners.jar" />
-			<fileset file="3rdparty/**">
+		<copy todir="${dist.dir}/WEB-INF/lib">
+			<fileset file="3rdparty/*.jar">
 				<exclude name="servlet**" />
 			</fileset>
-			<fileset file="sample/3rdparty/**"/>
-						
+			<fileset file="sample/3rdparty/**" />
 		</copy>
-		<copy todir="dist/WEB-INF">
+		<copy todir="enterprisedist/lib">
+
+			<fileset file="3rdparty/enterprise/*.jar">
+				<exclude name="servlet**" />
+			</fileset>
+
+		</copy>
+
+		<copy todir="${dist.dir}/WEB-INF">
 			<fileset file="sample/WEB-INF/web.xml" />
 		</copy>
-		<copy todir="dist/config">
+		<copy todir="${dist.dir}/config">
 			<fileset file="sample/config/**" />
 		</copy>
-		<copy todir="dist/adapters">
+		<copy todir="${dist.dir}/adapters">
 			<fileset file="sample/adapters/*.jar" />
 		</copy>
-		<copy todir="dist/scripts">
+		<copy todir="${dist.dir}/scripts">
 			<fileset file="sample/scripts/**" />
 		</copy>
-		<copy todir="dist/resource">
+		<copy todir="${dist.dir}/resource">
 			<fileset file="sample/resource/**" />
 		</copy>
-		<copy todir="dist/resource">
+		<copy todir="${dist.dir}/resource">
 			<fileset file="resource/**" />
 		</copy>
-		<copy todir="dist/">
+		<copy todir="${dist.dir}/">
 			<fileset file="sample/index.html" />
 			<fileset file="sample/logo-dexels.gif" />
 		</copy>
-
-
-
-
-
 	</target>
 	<target name="compile" depends="grab">
+		<mkdir dir="${dist.dir}" />
+		<mkdir dir="${dist.dir}/WEB-INF" />
+		<mkdir dir="${dist.dir}/WEB-INF/lib" />
 		<ant antfile="sourcebuild.xml" dir="." />
+		<ant antfile="enterprisebuild.xml" dir="." />
 	</target>
 
-	<target name="sourcebuild" depends="sourcezip,sourcetar"/>
-			
-	<target name="archive" depends="war,tar,zip,sourcebuild" />
+	<target name="sourcebuild" depends="sourcezip,sourcetar" />
+	<target name="binarybuild" depends="war,tar,zip,enterprisewar,enterprisetar,enterprisezip" />
+
+
+	<target name="archive" depends="binarybuild,sourcebuild" />
 
 
 	<target name="publish" depends="archive">
-		<echo message="${deployRoot}"/>
-		<scp trust="true" sftp="true" verbose="true" todir="${deployRoot}">
-			<fileset dir="${publish}">
+		<echo message="${deployRoot}" />
+		<scp trust="true" sftp="true" verbose="true" password="${navajoScpPassword}" todir="${deployRoot}">
+			<fileset dir="${publish.dir}">
 				<include name="**" />
 			</fileset>
 		</scp>
 	</target>
 	<target name="deploy" depends="archive">
-		<deploy  url="http://spiritus.dexels.nl:8080/manager" update="true" username="navajo" path="/${ant.project.name}" war="${publish}/NavajoServer.war" />
+		<deploy url="${navajoTomcatServer}" update="true" username="${navajoTomcatUser}" password="${navajoTomcatPassword}" path="${navajoTomcatContext}" war="${publish.dir}/${war.archive}" />
+		<deploy url="${navajoTomcatServer}" update="true" username="${navajoTomcatUser}" password="${navajoTomcatPassword}" path="${navajoTomcatEnterpriseContext}" war="${publish.dir}/${enterprisewar.archive}" />
 	</target>
 
-	<target name="all" depends="publish,deploy"/>
+	<target name="all" depends="publish,deploy" />
 
 </project>
 <!-- EOF: $RCSfile$ -->

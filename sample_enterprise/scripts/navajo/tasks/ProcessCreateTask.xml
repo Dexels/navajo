@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tsl>
+    <!-- 
+    Tiplet name: parkedmembers/process: [/@TipletName]
+     -->
+    <param name="TipletPath">
+        <expression value="'/home/knvb/navajo/tiplet/'"/>
+    </param>
+    <map object="com.dexels.navajo.adapter.NavajoMap">
+        <param name="NavajoContent">
+            <expression value="$navajo"/>
+        </param>
+    </map>
+    <message name="Content">
+        <property name="RequestNavajo" direction="out">
+            <expression value="[/@NavajoContent]"/>
+        </property>
+    </message>
+</tsl>

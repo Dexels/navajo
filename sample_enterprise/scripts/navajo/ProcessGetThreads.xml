@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tsl>
+    <message name="NavajoThreads">
+        <map object="com.dexels.navajo.server.GenericThread">
+            <message name="List">
+                <map ref="allThreads">
+                    <property name="Id" direction="out">
+                        <expression value="$myId"/>
+                    </property>
+                    <property name="Status" direction="out">
+                        <expression value="$status"/>
+                    </property>
+                    <property name="TotalWorkTime" direction="out">
+                        <expression value="$totalWorkTime"/>
+                    </property>
+                    <property name="TotalSleepTime" direction="out">
+                        <expression value="$totalSleepTime"/>
+                    </property>
+                    <property name="TotalTime" direction="out">
+                        <expression value="$totalSleepTime + $totalWorkTime"/>
+                    </property>
+                    <property name="PercentageWorking" direction="out">
+                        <expression value="FormatDecimal(100.0 * $totalWorkTime / ToDouble(( $totalSleepTime + $totalWorkTime )), '#.##')"/>
+                    </property>
+                </map>
+            </message>
+        </map>
+    </message>
+</tsl>

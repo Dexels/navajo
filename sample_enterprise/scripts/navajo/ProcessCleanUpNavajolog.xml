@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tsl author="Arjen Schoneveld" xmlns="http://www.dexels.com/navascript" id="match/changes/ProcessCleanUpChangeLog"
+    repository="$Id$"
+    notes="Cleans up changelog tables for already finished matches"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.dexels.com/navascript http://www.dexels.nl/schema/navascript.xsd">
+    <!-- Includes -->
+    <map object="com.dexels.navajo.adapter.SPMap">
+        <field name="datasource">
+            <expression value="'navajostore'"/>
+        </field>
+        <field name="debug">
+            <expression value="true"/>
+        </field>
+        <field name="update">
+            <expression xml:space="preserve"
+            >
+                CALL sp_processcleanupnavajolog(?)
+            </expression>
+        </field>
+        <field name="outputParameterType">
+            <expression value="'INTEGER'"/>
+        </field>
+        <param name="DeleteCount">
+            <expression value="$outputParameter(1)"/>
+        </param>
+        <message name="Update">
+            <property name="Deleted" direction="out">
+                <expression value="[/@DeleteCount]"/>
+            </property>
+        </message>
+        <field name="doUpdate">
+            <expression value="true"/>
+        </field>
+    </map>
+</tsl>
