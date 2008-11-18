@@ -4,7 +4,6 @@ import java.io.*;
 import java.util.*;
 
 import com.dexels.navajo.adapters.*;
-import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.nanoimpl.*;
 import com.dexels.navajo.document.types.*;
 
@@ -23,6 +22,8 @@ public class SvgRenderer {
 	public static void main(String[] args) throws XMLParseException, IOException {
 		SvgRenderer sv = new SvgRenderer();
 		sv.renderToSvg(new File("locData51652.kml"));
+		sv.renderSvgToPng();
+		
 	}
 
 	public Binary renderToBinary(InputStream is) throws XMLParseException, IOException {
@@ -34,8 +35,8 @@ public class SvgRenderer {
 		fw.flush();
 		fw.close();
 		os.close();
+		
 		return result;
-//		renderSvgToPng();
 	}	
 	public void renderToSvg(File kml) throws XMLParseException, IOException {
 		FileInputStream fis = new FileInputStream(kml);
@@ -183,7 +184,6 @@ public class SvgRenderer {
 
 
 	private double[] normalizeCoordinates(double lon, double lat) {
-		// TODO Auto-generated method stub
 		double scale = Math.cos(lat * Math.PI /180);
 		double newlat = centreLat - lat;
 		double templon = lon - centreLon;
@@ -197,7 +197,7 @@ public class SvgRenderer {
 		// assuming fill = 1
 //		style="fill:blue;stroke:red;stroke-width:20;fill-opacity:0.2;stroke-opacity:0.8"/>
 		XMLElement poly = kmlStyle.getElementByTagName("PolyStyle");
-		XMLElement line = kmlStyle.getElementByTagName("LineStyle");
+//		XMLElement line = kmlStyle.getElementByTagName("LineStyle");
 		String polyColor = poly.getElementByTagName("color").getContent();
 		double opacity = getOpacity(polyColor);
 		svgElement.setAttribute("opacity", opacity);

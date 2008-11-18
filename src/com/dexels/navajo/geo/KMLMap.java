@@ -11,7 +11,6 @@ import com.dexels.navajo.document.nanoimpl.*;
 import com.dexels.navajo.document.types.*;
 import com.dexels.navajo.geo.impl.*;
 import com.dexels.navajo.geo.renderer.*;
-import com.dexels.navajo.geo.test.*;
 import com.dexels.navajo.geo.zipcode.*;
 import com.dexels.navajo.mapping.*;
 import com.dexels.navajo.server.*;
@@ -23,9 +22,11 @@ public class KMLMap extends AbstractKMLMap implements Mappable {
 	Binary myKmzData = null;
 	Binary mySvgData = null;
 	Binary myBitmapData = null;
-	
-	public void load(Parameters parms, Navajo inMessage, Access access, NavajoConfig config) throws MappableException, UserException {
-		this.inMessage = inMessage;
+
+
+
+	public void load( Access access) {
+		this.inMessage = access.getInDoc();
 	}
 
 
@@ -110,12 +111,11 @@ public class KMLMap extends AbstractKMLMap implements Mappable {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
-		} catch (NavajoException e) {
-			e.printStackTrace();
-		}
+		} 
 		return null;
 	}
 	
+	@SuppressWarnings("null")
 	public Binary getSvgData() throws IOException {
 		if(myKmzData==null) {
 			getKmlData();
@@ -168,7 +168,7 @@ public class KMLMap extends AbstractKMLMap implements Mappable {
 		this.mapPath = mapPath;
 	}
 	
-	public static void main(String[] args) throws NavajoException {
+	public static void main(String[] args) {
 		KMLMap hm = new KMLMap();
 		hm.setColorizer("whiteorange") ;
 		hm.setLegendHeight(250);
@@ -180,9 +180,20 @@ public class KMLMap extends AbstractKMLMap implements Mappable {
 		hm.setMaxLegend(1000);
 		Gemeente2Population.init();
 		try {
-			Test t = new Test();
-			hm.inMessage = t.createTestMessage();
-			File res = hm.createKmlFile(hm.inMessage, "KnvbMember");
+//			Test t = new Test();
+//			hm.inMessage = t.createTestMessage();
+			FileInputStream fis = new FileInputStream("InitGenerateClubDataKnkv.tml");
+			Navajo n = NavajoFactory.getInstance().createNavajo(fis);
+			fis.close();
+			hm.inMessage = n;
+			
+			XMLElement xxx = hm.createPointKmlFile(hm.inMessage, "Clubs");
+
+			File res = new File("clubs.kml");
+			FileWriter fw = new FileWriter(res);
+			xxx.write(fw);
+			fw.flush();
+			fw.close();
 			System.err.println("KML Run finished...: "+res); 
 			
 			} catch (XMLParseException e) {
@@ -221,6 +232,7 @@ public class KMLMap extends AbstractKMLMap implements Mappable {
 
 	public void kill() {
 	}
+
 
 
 

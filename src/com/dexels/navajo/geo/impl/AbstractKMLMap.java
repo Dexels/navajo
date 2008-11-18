@@ -114,15 +114,15 @@ public abstract class AbstractKMLMap {
 		Object value =  null;
 		Property descriptionProperty;
 		String descriptionString = null;
-		double dValue;
+//		double dValue;
 		if (message!=null) {
 			value = message.getProperty("Value").getTypedValue();
 			descriptionProperty = message.getProperty("Description");
 			descriptionString = (String) descriptionProperty.getTypedValue();
-			dValue = Double.parseDouble((String) value);
+//			dValue = Double.parseDouble((String) value);
 		} else {
 			value = "0";
-			dValue = Double.parseDouble((String) value);
+//			dValue = Double.parseDouble((String) value);
 			descriptionString = "Geen data.";
 				
 		}
@@ -143,7 +143,7 @@ public abstract class AbstractKMLMap {
 		polyStyle.addTagKeyValue("color", createColor);
 	}
 
-	public XMLElement createPointKmlFile(Navajo n, String messagePath) throws IOException, XMLParseException, NavajoException {
+	public XMLElement createPointKmlFile(Navajo n, String messagePath) throws XMLParseException {
 		Message m = n.getMessage(messagePath);
 		List<Message> ll = m.getAllMessages();
 		XMLElement kml = new CaseSensitiveXMLElement("kml");
@@ -236,7 +236,7 @@ public abstract class AbstractKMLMap {
 	}
 
 
-	public File createKmlFile(Navajo n, String filePrefix) throws IOException, XMLParseException, NavajoException {
+	public File createKmlFile(Navajo n, String filePrefix) throws IOException, XMLParseException {
 		messagePath = "Data";
 //		workingDir.mkdirs();
 		XMLElement xx = mapData(n.getMessage(messagePath));
