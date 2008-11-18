@@ -39,7 +39,7 @@
          <property name="domain" value="dexels.nl" />
          <property name="username" value="demo" />
          <property name="password" value="demo" />
-         <property name="chatroom" value="developmentServer" />
+         <property name="chatroom" value="developmentserver" />
          <property name="conferenceService" value="conference" />
          <property name="maxRequestRate" value="20" type="integer" />
          <property name="maxQueueSize" value="100" type="integer" />
