@@ -24,6 +24,8 @@
  */
 package com.dexels.navajo.functions;
 
+import java.io.*;
+
 import com.dexels.navajo.document.types.Binary;
 import com.dexels.navajo.parser.FunctionInterface;
 import com.dexels.navajo.parser.TMLExpressionException;
@@ -52,12 +54,18 @@ public class Base64Encode extends FunctionInterface {
 		} else if ( o instanceof String ) {
 			data = (String) o;
 		}
-		sun.misc.BASE64Encoder enc = new sun.misc.BASE64Encoder();	
-		String encoded = enc.encode(data.getBytes());
-		
-		Binary b = new Binary(encoded.getBytes());
-		b.setMimeType("application/octet-stream");
-		return b;
+//		sun.misc.BASE64Encoder enc = new sun.misc.BASE64Encoder();	
+//		String encoded = enc.encode(data.getBytes());
+//		
+		Binary b;
+		try {
+			b = new Binary(new StringReader(data));
+			b.setMimeType("application/octet-stream");
+			return b;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
 		
 	}
 
