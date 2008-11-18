@@ -7,7 +7,6 @@
 	<classpathentry kind="src" path="source/Navajo"/>
 	<classpathentry kind="src" path="source/DexelsVersionControl"/>
 	<classpathentry kind="src" path="source/NavajoListeners"/>
-	<classpathentry kind="src" path="scripts"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Servlet engine"/>
 	<classpathentry kind="lib" path="3rdparty/jzlib.jar"/>
