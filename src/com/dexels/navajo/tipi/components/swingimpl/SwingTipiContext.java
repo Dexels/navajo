@@ -565,6 +565,7 @@ public class SwingTipiContext extends TipiContext {
 			if(getTopLevel() instanceof JFrame) {
 				System.err.println("Create dialog: Stack empty, attaching to frame");
 				JDialog jd = new JDialog((JFrame)getTopLevel(),title);
+				((JComponent)jd.getContentPane()).setOpaque(false);
 				dialogStack.push(jd);
 				return jd;
 			}

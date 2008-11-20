@@ -39,6 +39,7 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 	private Point myOffset;
 	private RootPaneContainer myRootPaneContainer;
 	private boolean forceInternal = false;
+	private float opacity = 1.0f;
 
 	public TipiDialog() {
 	}
@@ -126,6 +127,8 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 	// }
 	public void setComponentValue(final String name, final Object object) {
 		runSyncInEventThread(new Runnable() {
+			
+
 			public void run() {
 				if (name.equals("modal")) {
 					modal = ((Boolean) object).booleanValue();
@@ -133,6 +136,18 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 				}
 				if (name.equals("decorated")) {
 					decorated = ((Boolean) object).booleanValue();
+					return;
+				}
+				if (name.equals("opacity")) {
+					opacity = ((Double) object).floatValue();
+					if(myRootPaneContainer!=null) {
+						if( myRootPaneContainer instanceof JDialog) {
+							JDialog jd = (JDialog)myRootPaneContainer;
+							jd.setTitle(title);
+							com.sun.awt.AWTUtilities.setWindowOpacity(jd, opacity);
+
+						}
+					}
 					return;
 				}
 				if (name.equals("title")) {
@@ -362,6 +377,9 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 		if (!(rootObject instanceof TipiApplet)) {
 			myDialog.setModal(modal);
 		}
+
+		
+		com.sun.awt.AWTUtilities.setWindowOpacity(myDialog, opacity);
 
 		// myDialog.setVisible(true);
 		myDialog.getContentPane().setLayout(new BorderLayout());

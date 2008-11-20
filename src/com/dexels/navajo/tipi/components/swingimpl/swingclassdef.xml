@@ -1118,6 +1118,7 @@
          <value direction="in" name="background" type="color" />
          <value direction="inout" name="tooltip" type="string" />
          <value direction="in" name="layout" type="string" />
+         <value direction="in" name="opacity" type="float" />
       </values>
       <methods>
          <method name="show" />
@@ -1557,6 +1558,33 @@
          <method name="reallySave" />
       </methods>
 
+   </tipiclass>
+   <tipiclass addtocontainer="true" class="TipiSlider" module="component" name="slider" childcount="0" layoutmanager="false"
+      package="com.dexels.navajo.tipi.components.swingimpl" propertycomponent="false" studio-icon="textfield.gif" type="component">
+      <events>
+         <event name="onInstantiate" />
+        <event name="onValueChanged"/>
+         <event name="onFocusGained" />
+         <event name="onFocusLost" />
+      </events>
+      <values>
+         <value direction="inout" name="tooltip" type="string" />
+         <value direction="inout" name="value" type="integer" />
+         <value direction="in" name="min" type="integer" />
+         <value direction="in" name="max" type="integer" />
+         <value direction="in" name="enabled" type="boolean" />
+         <value direction="in" name="visible" type="boolean" />
+         <value direction="in" name="snaptoticks" type="boolean" />
+         <value direction="in" name="showticks" type="boolean" />
+         <value direction="in" name="minortick" type="integer" />
+         <value direction="in" name="majortick" type="integer" />
+         <value direction="in" name="orientation" type="selection">
+            <option description="Horizontal" value="horizontal" />
+            <option description="Vertical" value="vertical" />
+         </value>
+      </values>
+      <methods>        
+      </methods>
    </tipiclass>
 
    <tipiclass addtocontainer="true" class="TipiBrowser" layoutmanager="false" module="container" name="browser" package="com.dexels.navajo.tipi.components.swingimpl"
