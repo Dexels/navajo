@@ -1006,6 +1006,23 @@ public final class NavajoImpl implements Navajo, java.io.Serializable {
 
         return message;
     }
+    
+    /**
+     * Add a message to the Navajo document. If the message name already exists, replace the old one.
+     */
+    public Message replaceMessage(Message newMsg) throws NavajoException {
+
+
+        Node body = XMLutils.findNode(docBuffer, myBodyDefinition);
+        Message dummy = this.getMessage(body, newMsg.getName());
+
+        if ( dummy != null ) {
+        	body.replaceChild((Node) newMsg.getRef(), (Node) dummy.getRef());
+        	return newMsg;
+        } else {
+        	return null;
+        }
+    }
 
     public void removeMessage(Message message) {
         if (message != null) {
@@ -1185,6 +1202,31 @@ public final class NavajoImpl implements Navajo, java.io.Serializable {
 	
 	public void writeJSONTypeless(Writer writer) throws NavajoException {
 		//nop		
+	}
+
+	public Message replaceMessage(Message prevMg, Message newMsg)
+			throws NavajoException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Navajo merge(Navajo with) throws NavajoException {
+		// Find duplicate messages.
+		ArrayList<Message> superMessages = this.getAllMessages();
+		ArrayList<Message> subMessages = with.getAllMessages();
+
+		for (int i = 0; i < superMessages.size(); i++) {
+			Message superMsg = superMessages.get(i);
+			for (int j = 0; j < subMessages.size(); j++) {
+				Message subMsg = subMessages.get(j);
+				if ( superMsg.getName().equals(subMsg.getName()) ) {
+					// Found duplicate!
+					Message newMsg = subMsg.copy(superMsg.getRootDoc());
+					this.replaceMessage(newMsg);
+				}
+			}
+		}
+		return this;
 	}
 
 }

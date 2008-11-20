@@ -229,6 +229,10 @@ public LazyMessagePath getLazyMessagePath(String path) {
   public Message addMessage(Message m, boolean b) {
     return rootMessage.addMessage(m,b);
   }
+  
+  public Message replaceMessage(Message m) {
+	    return rootMessage.replaceMessage(m);
+	  }
 
   public Message copyMessage(String s, Navajo n) {
     Message m = getMessage(s);
@@ -621,6 +625,44 @@ public final void printElementJSONTypeless(final Writer sw) throws IOException {
 		cnt++;
 	}
 	writeElement(sw, "}");
+
+}
+
+public Navajo merge(Navajo with) throws NavajoException {
+
+	// Find duplicate messages.
+	ArrayList<Message> superMessages = this.getAllMessages();
+	ArrayList<Message> subMessages = with.getAllMessages();
+
+	for (int i = 0; i < superMessages.size(); i++) {
+		Message superMsg = superMessages.get(i);
+		for (int j = 0; j < subMessages.size(); j++) {
+			Message subMsg = subMessages.get(j);
+			if ( superMsg.getName().equals(subMsg.getName()) ) {
+				// Found duplicate!
+				Message newMsg = subMsg.copy(this);
+				this.replaceMessage(newMsg);
+			}
+		}
+	}
+
+	// Find new messages.
+	for (int i = 0; i < subMessages.size(); i++) {
+		Message subMsg = subMessages.get(i);
+		boolean newMsg = true;
+		for (int j = 0; j < subMessages.size(); j++) {
+			Message superMsg = superMessages.get(j);
+			if ( superMsg.getName().equals(subMsg.getName()) ) {
+				newMsg = false;
+				j = subMessages.size() + 1;
+			}
+		}
+		if ( newMsg ) {
+			this.addMessage(subMsg.copy(this));
+		}
+	}
+
+	return this;
 
 }
 

@@ -864,4 +864,20 @@ public void removePropertyChangeListener(PropertyChangeListener p) {
 	// TODO Auto-generated method stub
 	
 }
+
+public Message replaceMessage(Message m) {
+	if (m == null) {
+		return null;
+
+	}
+
+	Message dummy = this.getMessage(m.getName());
+	if ( dummy != null ) {
+		ref.replaceChild((Node) m.getRef(), (Node) dummy.getRef());
+		return m;
+	} else {
+		return null;
+	}	
+}
+
 }

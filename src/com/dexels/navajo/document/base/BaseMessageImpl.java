@@ -632,6 +632,51 @@ public  class BaseMessageImpl extends BaseNode implements Message, Comparable<Me
         messageList.remove(msg);
         messageMap.remove(msg.getName());
     }
+    
+    public final void replaceChildMessage(Message prevMsg, Message newMsg) {
+      	if (messageList==null || messageMap== null) {
+       		return;
+       	}
+      	// Find index of prevMsg.
+      	int index = 0;
+      	for (int i = 0; i < messageList.size(); i++) {
+      		if ( messageList.get(i).equals(prevMsg) ) {
+      			index = i;
+      			break;
+      		}
+      	}
+      	if ( prevMsg.getAllMessages().size() == 0 ) { // Replace immediately if prevMsg does not have any children..
+      		messageList.remove(index);
+      		messageList.add(index, newMsg);
+      	} else {
+      		// Find overlapping children.
+      		ArrayList<Message> childrenPrev = prevMsg.getAllMessages();
+      		ArrayList<Message> childrenNew = newMsg.getAllMessages();
+      		for (int i = 0; i < childrenPrev.size(); i++) {
+      			Message childPrev = childrenPrev.get(i);
+      			for (int j = 0; j < childrenNew.size(); j++) {
+      				if ( childrenNew.get(j).getName().equals(childPrev.getName()) ) {
+      					prevMsg.replaceMessage(childrenNew.get(j));
+      					j = childrenNew.size() + 1;
+      				}
+      			}
+      		}
+      		// Find additonal children.
+      		for (int i = 0; i < childrenNew.size(); i++) {
+      			Message childNew = childrenNew.get(i);
+      			boolean checkNew = true;
+      			for (int j = 0; j < childrenPrev.size(); j++) {
+      				if ( childrenPrev.get(j).getName().equals(childNew.getName()) ) {
+      					checkNew = false;
+      					j = childrenPrev.size() + 1;
+      				}
+      			}
+      			if ( checkNew ) {
+      				prevMsg.addMessage(childNew);
+      			}
+      		}
+      	}
+    }
 
     private int currentTotal = -1;
 
@@ -1354,6 +1399,17 @@ public final Message getParentMessage() {
 				}				
 				writeElement(sw, "}");
 			}
+		}
+
+		public Message replaceMessage(Message m) {
+			Message prevMsg = getMessage(m.getName());
+			if ( prevMsg != null ) {
+				replaceChildMessage(prevMsg, m);
+				return m;
+			} else {
+				return null;
+			}
+			
 		}
 	
 }
