@@ -12,7 +12,6 @@ import com.dexels.navajo.document.types.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 import com.dexels.navajo.tipi.internal.*;
-import com.dexels.navajo.tipi.swingimpl.dnd.*;
 
 /**
  * <p>

@@ -42,7 +42,6 @@ public class TipiSwitchPanel extends TipiPanel {
 
 	@Override
 	 public void addComponent(TipiComponent c, int index, TipiContext context, Object td) {
-         System.err.println("Trapped an addcomponent!");
         if (c.getContainer()!=null) {
             componentMap.put(c.getContainer(), c.getId());
         }
@@ -56,7 +55,6 @@ public class TipiSwitchPanel extends TipiPanel {
           runSyncInEventThread(new Runnable(){
 
 			public void run() {
-		          System.err.println("Adding to switch with name: "+name);
 		          if (name==null) {
 		              getSwingContainer().add( (Component) c, name);
 		              if (getChildCount()<=1) {
@@ -65,7 +63,6 @@ public class TipiSwitchPanel extends TipiPanel {
 //						System.err.println("Showing component: "+name);
 					}
 		          } else {
-		        	  System.err.println("Component: "+c+" not found");
 		              getSwingContainer().add( (Component) c, name);
 		          }
 		          updateSelected();
