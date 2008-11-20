@@ -14,7 +14,6 @@ public class MainApplication {
 
 	static public void main(String[] args) throws Exception {
 		String definition = null;
-		System.err.println("Working dir: "+System.getProperty("user.dir"));
 		List<String> arrrgs = new ArrayList<String>();
 		if(args.length>1 && "-open".equals(args[0])) {
 				String path = args[1];
@@ -28,7 +27,6 @@ public class MainApplication {
 				definition = args[args.length - 1];
 			}
 			for (int i = 0; i < args.length; i++) {
-				System.err.println("Original argument: "+args[i]);
 				arrrgs.add(args[i]);
 			}
 			
@@ -58,7 +56,6 @@ public class MainApplication {
 	 */
 	private static void initialize(final boolean studioMode, final List<String> arrrgs, final String def) {
 		RepaintManager.setCurrentManager(new CheckThreadViolationRepaintManager());
-		System.err.println("Initialize: "+def+" == "+arrrgs);
 		SwingUtilities.invokeLater(new Runnable() {
 
 			public void run() {
