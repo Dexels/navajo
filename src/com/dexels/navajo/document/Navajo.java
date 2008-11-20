@@ -201,6 +201,13 @@ public interface Navajo
    */
   public Message addMessage(Message message, boolean overwrite) throws
       NavajoException;
+  
+  /**
+   * Replaces a message to the Navajo document. If original does not exist, do nothing and return null.
+   * 
+   */
+  public Message replaceMessage(Message newMsg) throws
+      NavajoException;
 
   /**
    * Removes the given Message from the current Navajo
@@ -354,5 +361,17 @@ public interface Navajo
   public void firePropertyDataChanged(Property p,Object oldValue, Object newValue);
 
   public NavajoFactory getNavajoFactory();
+  
+  /**
+   * Merge Navajo with other Navajo. Navajo is merged by merging Messages.
+   * Messages in the current Navajo are replaced with messages in Navajo with.
+   * Basically the Navajo with is "laid over" the current Navajo, i.e. it is a kind
+   * of Message based inheritance.
+   * 
+   * @param with
+   * @return
+   * @throws NavajoException
+   */
+  public Navajo merge(Navajo with) throws NavajoException;
   
 }
