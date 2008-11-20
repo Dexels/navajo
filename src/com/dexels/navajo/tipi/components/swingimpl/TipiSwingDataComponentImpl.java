@@ -212,8 +212,8 @@ public abstract class TipiSwingDataComponentImpl
       super.commitToUi();
    }
 
-	public void animateTransition(TipiEvent te, TipiExecutable executableParent, List<TipiExecutable> exe) throws TipiBreakException {
-		mySwingTipiContext.animateDefaultTransition(this,te,executableParent,getSwingContainer(),exe);
+	public void animateTransition(TipiEvent te, TipiExecutable executableParent, List<TipiExecutable> exe, int duration) throws TipiBreakException {
+		mySwingTipiContext.animateDefaultTransition(this,te,executableParent,getSwingContainer(),exe,duration);
 	}
 
 @Override

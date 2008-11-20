@@ -123,8 +123,8 @@ public abstract class TipiSwingComponentImpl extends TipiComponentImpl implement
 		}
 	}
 
-	public void animateTransition(TipiEvent te, TipiExecutable executableParent, List<TipiExecutable> exe) throws TipiBreakException {
-		mySwingTipiContext.animateDefaultTransition(this, te, executableParent, getSwingContainer(), exe);
+	public void animateTransition(TipiEvent te, TipiExecutable executableParent, List<TipiExecutable> exe, int duration) throws TipiBreakException {
+		mySwingTipiContext.animateDefaultTransition(this, te, executableParent, getSwingContainer(), exe,duration);
 	}
 
 	protected void loadValues(final XMLElement values, final TipiEvent event) throws TipiException {

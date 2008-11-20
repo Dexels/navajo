@@ -463,6 +463,7 @@ public class SwingTipiContext extends TipiContext {
 			PropertyAnimator pa = new PropertyAnimator();
 			pa.animateProperty(p, duration, target);
 		} else {
+			System.err.println("No, not animatable");
 			super.animateProperty(p, duration, target);
 		}
 
@@ -471,7 +472,6 @@ public class SwingTipiContext extends TipiContext {
 	@Override
 	public void doActions(TipiEvent te, TipiComponent comp, TipiExecutable executableParent, List<TipiExecutable> exe)
 			throws TipiBreakException {
-System.err.println("Donint");
 		String component = executableParent.getBlockParam("animationComponent");
 		if (component == null) {
 			super.doActions(te, comp, executableParent, exe);
@@ -484,21 +484,27 @@ System.err.println("Donint");
 			return;
 		}
 		TipiSwingComponent ttt = (TipiSwingComponent) tc;
-
-		ttt.animateTransition(te, executableParent, exe);
+		String durationString = executableParent.getBlockParam("duration");
+		int duration=1500;
+		if (durationString==null) {
+			//
+		} else {
+			duration = Integer.parseInt(durationString);
+		}
+		ttt.animateTransition(te, executableParent, exe,duration);
 
 	}
 
 	public void animateDefaultTransition(TipiSwingComponent tipiSwingComponentImpl, final TipiEvent te, final TipiExecutable exeParent,
-			Container swingContainer, final List<TipiExecutable> exe) throws TipiBreakException {
+			Container swingContainer, final List<TipiExecutable> exe, int duration) throws TipiBreakException {
 		System.err.println("Animating: "+swingContainer.getBounds());
 		if (!(swingContainer instanceof JComponent)) {
 			super.doActions(te, tipiSwingComponentImpl, exeParent, exe);
 			return;
 		}
 		final JComponent jjj = (JComponent) swingContainer;
-		int delay = 1500;
-		final Animator animator = new Animator(delay);
+//		int delay = 1500;
+		final Animator animator = new Animator(duration);
 
 		final ScreenTransition transition = new ScreenTransition(jjj, new TransitionTarget() {
 
@@ -529,7 +535,7 @@ System.err.println("Donint");
 		animator.setDeceleration(.4f); // Decelerate for last 40%
 		transition.start();
 		try {
-			Thread.sleep(delay);
+			Thread.sleep(duration);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

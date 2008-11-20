@@ -78,8 +78,8 @@ public final class TipiWindow
 	  return constructWindow();
   }
   
-	public void animateTransition(TipiEvent te, TipiExecutable executableParent, List<TipiExecutable> exe) throws TipiBreakException {
-		mySwingTipiContext.animateDefaultTransition(this,te,executableParent,myWindow.getContentPane(),exe);
+	public void animateTransition(TipiEvent te, TipiExecutable executableParent, List<TipiExecutable> exe, int duration) throws TipiBreakException {
+		mySwingTipiContext.animateDefaultTransition(this,te,executableParent,myWindow.getContentPane(),exe, duration);
 	}
  
   public void addToContainer(final Object c, final Object constraints) {

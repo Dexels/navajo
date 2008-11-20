@@ -124,7 +124,7 @@ public class TipiScrollQuestionGroup extends TipiBaseQuestionGroup implements Ti
 		
 	}
 
-	public void animateTransition(TipiEvent te, TipiExecutable executableParent, List<TipiExecutable> exe) {
+	public void animateTransition(TipiEvent te, TipiExecutable executableParent, List<TipiExecutable> exe, int duration) {
 		
 	}
 
