@@ -213,6 +213,13 @@ public interface Message
    * @return Message
    */
   public Message addMessage(Message m, boolean overwrite);
+  
+  /**
+   * Replaces a message with messsage m. The location of the message in the XML will NOT change.
+   * 
+   * @return Message
+   */
+  public Message replaceMessage(Message m);
 
   /**
    * Adds a message to an array message at a specific location in the array
