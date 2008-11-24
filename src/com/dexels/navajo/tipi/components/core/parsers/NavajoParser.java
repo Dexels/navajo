@@ -42,6 +42,9 @@ public class NavajoParser extends TipiTypeParser {
 				throw new IllegalArgumentException("Error addressing navajo: Component not found: " + componentPath
 						+ " original expression: " + expression);
 			}
+			if(".".equals(attribute)) {
+				return tc.getNavajo();
+			}
 			return tc.getValue(attribute);
 		}
 		return myContext.getNavajo(expression);
