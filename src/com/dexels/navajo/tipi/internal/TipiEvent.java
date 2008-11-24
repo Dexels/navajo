@@ -217,10 +217,8 @@ public class TipiEvent extends TipiAbstractExecutable implements TipiExecutable 
 
 		TipiExecutable last = null;
 		try {
-			System.err.println("Executing event: "+getEventName());
 			for (int i = 0; i < getExecutables().size(); i++) {
 				TipiExecutable current = getExecutables().get(i);
-				System.err.println("Executing subevent: "+current.toString());
 				last = current;
 				current.performAction(localInstance, executableParent, i);
 
