@@ -23,7 +23,7 @@ public class GetNavajo extends FunctionInterface {
 	 * @see com.dexels.navajo.parser.FunctionInterface#remarks()
 	 */
 	public String remarks() {
-		return "Resolves a navajo name. Source component is required to resolve context data.";
+		return "Resolves a navajo name. Source component is required.";
 	}
 
 	/*
@@ -32,7 +32,7 @@ public class GetNavajo extends FunctionInterface {
 	 * @see com.dexels.navajo.parser.FunctionInterface#usage()
 	 */
 	public String usage() {
-		return "GetNavajo(TipiContext context, String navajoName)";
+		return "GetNavajo(TipiComponent)";
 	}
 
 	/*
@@ -45,19 +45,12 @@ public class GetNavajo extends FunctionInterface {
 		if (pp == null) {
 			throw new TMLExpressionException(this, "Invalid operand: null context ");
 		}
-		if (!(pp instanceof TipiContext)) {
+		if (!(pp instanceof TipiComponent)) {
 			throw new TMLExpressionException(this, "Invalid operand: " + pp.getClass().getName());
 		}
-		Object o = getOperand(1);
-		if (o == null) {
-			return null;
-		}
-		if (!(o instanceof String)) {
-			throw new TMLExpressionException(this, "Invalid operand: " + o.getClass().getName());
-		}
-		TipiContext tc = (TipiContext) pp;
-		String path = (String) o;
-		return tc.getNavajo(path);
+	
+		TipiComponent tc = (TipiComponent) pp;
+		return tc.getNavajo();
 	}
 
 }
