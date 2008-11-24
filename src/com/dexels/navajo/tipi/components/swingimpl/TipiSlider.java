@@ -67,7 +67,6 @@ public class TipiSlider extends TipiSwingComponentImpl {
 
 		mySlide.addChangeListener(new ChangeListener() {
 
-			@Override
 			public void stateChanged(ChangeEvent e) {
 				try {
 					performTipiEvent("onValueChanged", null, false);
