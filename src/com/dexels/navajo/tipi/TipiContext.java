@@ -1033,6 +1033,7 @@ public abstract class TipiContext {
 		}
 		if (!clas.equals("")) {
 			TipiComponent tc = (TipiComponent) instantiateClass(clas, name, instance);
+			tc.setHomeComponent(true);
 			// System.err.println("Instantiating component by definition:
 			// "+clas);
 			XMLElement classDef = tipiClassDefMap.get(clas);
