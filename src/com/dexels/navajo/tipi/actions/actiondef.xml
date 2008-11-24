@@ -21,24 +21,24 @@
 
    <tipiaction name="exit" class="TipiExit" package="com.dexels.navajo.tipi.actions" />
 
-     <tipiaction name="sleep" class="TipiSleep" package="com.dexels.navajo.tipi.actions">
+   <tipiaction name="sleep" class="TipiSleep" package="com.dexels.navajo.tipi.actions">
       <param name="time" type="integer" required="true" />
    </tipiaction>
 
    <tipiaction name="setStorageInstanceId" class="TipiSetStorageInstanceId" package="com.dexels.navajo.tipi.actions">
       <param name="id" type="string" required="true" />
    </tipiaction>
-   
-      <tipiaction name="showInfo" class="TipiShowInfo" package="com.dexels.navajo.tipi.actions">
+
+   <tipiaction name="showInfo" class="TipiShowInfo" package="com.dexels.navajo.tipi.actions">
       <param name="text" type="string" required="true" />
    </tipiaction>
-      <tipiaction name="showError" class="TipiShowError" package="com.dexels.navajo.tipi.actions">
+   <tipiaction name="showError" class="TipiShowError" package="com.dexels.navajo.tipi.actions">
       <param name="text" type="string" required="true" />
    </tipiaction>
-      <tipiaction name="showWarning" class="TipiShowWarning" package="com.dexels.navajo.tipi.actions">
+   <tipiaction name="showWarning" class="TipiShowWarning" package="com.dexels.navajo.tipi.actions">
       <param name="text" type="string" required="true" />
    </tipiaction>
-   
+
    <tipiaction name="setPostman" class="TipiSetPostman" package="com.dexels.navajo.tipi.actions">
       <param name="server" type="string" required="true" />
       <param name="username" type="string" required="true" />
@@ -88,11 +88,19 @@
       <param name="from" type="string" required="true" />
    </tipiaction>
 
+   <tipiaction name="set" class="TipiSet" package="com.dexels.navajo.tipi.actions">
+      <param name="element" type="reference" required="true" />
+      <param name="value" type="object" required="false" />
+      <param name="propertyType" type="string" required="false" />
+      <param name="direction" type="string" required="false" />
+      <param name="description" type="string" required="false" />
+   </tipiaction>
+
    <tipiaction name="attribute" class="TipiSetAttributes" package="com.dexels.navajo.tipi.actions">
       <param name="path" type="component" required="true" />
    </tipiaction>
 
-   
+
    <tipiaction name="setSelectedValue" class="TipiSelectValue" package="com.dexels.navajo.tipi.actions">
       <param name="property" type="reference" required="true" />
       <param name="value" type="string" required="false" />
@@ -240,6 +248,12 @@
    </tipiaction>
    <tipiaction name="animate" class="TipiAnimate" package="com.dexels.navajo.tipi.actions">
       <param name="target" type="property" required="true" />
+      <param name="value" type="object" required="true" />
+   </tipiaction>
+   <tipiaction name="animateAttribute" class="TipiAnimateAttribute" package="com.dexels.navajo.tipi.actions">
+      <param name="target" type="component" required="true" />
+      <param name="attribute" type="string" required="true" />
+      <param name="duration" type="integer" required="true" />
       <param name="value" type="object" required="true" />
    </tipiaction>
    <tipiaction name="setCookie" class="TipiSetCookie" package="com.dexels.navajo.tipi.actions">

@@ -59,11 +59,9 @@ public class TipiInstantiateTipi extends TipiAction {
 		TipiComponent comp = parent.getTipiComponentByPath(id);
 
 		if (comp != null) {
-
+			// Component exists:
 			if (force) {
-				// System.err.println("Calling dispose from instantiate, with
-				// force= true");
-				// System.err.println("Component path: "+comp.getPath());
+				
 				context.disposeTipiComponent(comp);
 			} else {
 				comp.performTipiEvent("onInstantiate", null, false);
@@ -101,9 +99,8 @@ public class TipiInstantiateTipi extends TipiAction {
 				}
 			}
 		}
-
+		System.err.println("XE: "+xe);
 		TipiComponent inst = context.instantiateComponent(xe, event, this);
-		inst.setHomeComponent(true);
 		inst.setId(id);
 		parent.addComponent(inst, context, constraints);
 
