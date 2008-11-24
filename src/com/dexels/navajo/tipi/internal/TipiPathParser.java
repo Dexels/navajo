@@ -26,7 +26,9 @@ import com.dexels.navajo.tipi.*;
  * 
  * @author not attributable
  * @version 1.0
+ * @deprecated
  */
+@Deprecated
 public class TipiPathParser {
 	public static final int PATH_TO_TIPI = 0;
 	public static final int PATH_TO_MESSAGE = 1;
