@@ -78,4 +78,12 @@ public class TipiComponentMethod {
 	public boolean checkFormat(String name, XMLElement invocation) {
 		return true;
 	}
+
+	public Object getEvaluatedParameterValue(String string, TipiEvent event) {
+		Operand o = getEvaluatedParameter(string, event);
+		if(o==null) {
+			return null;
+		}
+		return o.value;
+	}
 }
