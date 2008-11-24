@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- $Id$ -->
 <project name="NavajoSwingTipi" default="publish" basedir=".">
-	
+
 	<property name="src" location="src" />
 	<property name="build" location="classes" />
 	<property name="lib" value="lib" />
@@ -14,7 +14,7 @@
 
 
 
-	
+
 
 	<path id="depend">
 		<!--    <fileset dir="${lib}">
@@ -23,13 +23,18 @@
 	</path>
 
 
-	<target name="init" >
+	<target name="init">
 		<mkdir dir="${build}" />
 	</target>
 	<target name="clean">
 		<delete file="${archive}" />
 		<delete dir="${build}" />
+		<delete dir="dist" />
 	</target>
+	<target name="cleandistribution">
+		<delete dir="dist" />
+	</target>
+
 	<target name="resource">
 		<copy todir="${build}">
 			<fileset dir="${src}">
@@ -69,7 +74,7 @@
 			</manifest>
 		</jar>
 	</target>
-	<target name="makejars" depends="archive">
+	<target name="makejars" depends="cleandistribution,archive">
 		<ant antfile="build.xml" dir="../NavajoTipi" inheritall="false" />
 		<ant antfile="build.xml" dir="../NavajoClient" inheritall="false" />
 		<ant antfile="build.xml" dir="../Navajo/" inheritall="false" />
@@ -83,14 +88,13 @@
 		<ant antfile="build.xml" dir="../AnimatedTransitions" inheritall="false" />
 		<ant antfile="build.xml" dir="../TimingFramework" inheritall="false" />
 		<ant antfile="build.xml" dir="../TipiSubstance" inheritall="false" />
-<!---->	
+		<!---->
 	</target>
 	<target name="grabjars" depends="makejars">
-		<mkdir dir="${dist}"/>
-		<mkdir dir="${dist}/${lib}"/>
+		<mkdir dir="${dist}" />
+		<mkdir dir="${dist}/${lib}" />
 		<copy todir="${dist}/${lib}" file="../NavajoTipi/tipipackage.jar" />
 		<copy todir="${dist}/${lib}" file="../NavajoDocument/NavajoDocument.jar" />
-		<copy todir="${dist}/${lib}" file="../NavajoDocument/jaxpimpl.jar" />
 		<copy todir="${dist}/${lib}" file="../NavajoClient/NavajoClient.jar" />
 		<copy todir="${dist}/${lib}" file="../NavajoClient/lib/jzlib.jar" />
 		<copy todir="${dist}/${lib}" file="${proxyarchive}" />
@@ -101,48 +105,56 @@
 		<copy todir="${dist}/${lib}" file="../TipiSwingClient/TipiSwingClient.jar" />
 		<copy todir="${dist}/${lib}" file="../AnimatedTransitions/AnimatedTransitions.jar" />
 		<copy todir="${dist}/${lib}" file="../TimingFramework/TimingFramework.jar" />
+		<copy todir="${dist}/unsigned">
+			<fileset dir="${dist}/${lib}">
+				<include name="**" />
+				<exclude name="javaws.jar" />
+			</fileset>
+		</copy>
+
 	</target>
 
 	<target name="sign" depends="grabjars">
 
-	 	<signjar keystore="dexels_dummy_key" verbose="true" storepass="dexels" keypass="dexels" alias="java">
+		<signjar keystore="dexels_dummy_key" verbose="false" storepass="dexels" keypass="dexels" alias="java">
 			<fileset dir=".">
 				<include name="${dist}/${lib}/*.jar" />
+				<exclude name="javaws.jar" />
 			</fileset>
 		</signjar>
 	</target>
-	
-	
-	
-	<target name="publish" depends="grabjars">
-		
+
+
+
+	<target name="publish" depends="sign">
+
 		<ant antfile="../TipiBuild/jnlpbuild/antinclude.xml" dir="." inheritall="true" inheritrefs="true" target="publish" />
 		<!-- If this command does not work: Add de jsch-0.1.36.jar to the ant jars-->
 		<!-- and add the password to the and ant runtime: srv2pw=password -->
 		<!-- Make sure the dir exists... -->
-		<scp  trust="true" sftp="true" verbose="true" password="${srv2pw}" todir="root@srv2.dexels.com:/home/navajo/domains/navajo.dexels.com/public_html/Tipi/">
+		<scp trust="true" sftp="true" verbose="true" password="${srv2pw}" todir="root@srv2.dexels.com:/home/navajo/domains/navajo.dexels.com/public_html/Tipi/">
 			<fileset dir="..">
-			    <include name="${ant.project.name}/**.jnlp"/>
+				<include name="${ant.project.name}/**.jnlp" />
 			</fileset>
 		</scp>
-		<scp  trust="true" sftp="true" verbose="true" password="${srv2pw}" todir="root@srv2.dexels.com:/home/navajo/domains/navajo.dexels.com/public_html/Tipi/">
-			<fileset dir=".">
-			    <include name="${proxyarchive}"/>
+		<scp trust="true" sftp="true" verbose="true" password="${srv2pw}" todir="root@srv2.dexels.com:/home/navajo/domains/navajo.dexels.com/public_html/Tipi/">
+			<fileset dir="./dist/lib/">
+				<include name="${proxyarchive}" />
 			</fileset>
 		</scp>
 		<scp trust="true" sftp="true" verbose="true" password="${srv2pw}" todir="root@srv2.dexels.com:/home/navajo/domains/navajo.dexels.com/public_html/Tipi/${ant.project.name}">
 			<fileset dir=".">
-				<include name="lib/*.jar"/>
-				<include name="${ant.project.name}.jar"/>
-				<include name="${ant.project.name}.jnlp"/>
+				<include name="lib/*.jar" />
+				<include name="${ant.project.name}.jar" />
+				<include name="${ant.project.name}.jnlp" />
 			</fileset>
 		</scp>
-		<scp  trust="true" sftp="true" verbose="true" password="${srv2pw}" todir="root@srv2.dexels.com:/home/navajo/domains/navajo.dexels.com/public_html/Tipi/${ant.project.name}/">
+		<scp trust="true" sftp="true" verbose="true" password="${srv2pw}" todir="root@srv2.dexels.com:/home/navajo/domains/navajo.dexels.com/public_html/Tipi/${ant.project.name}/">
 			<fileset dir="../NavajoSwingTipi/">
-				<include name=".htaccess"/>
+				<include name=".htaccess" />
 			</fileset>
 		</scp>
-	</target>	
+	</target>
 	<!-- -keystore dexels_dummy_key -storepass dexels $1 java
 	-->
 	<!-- Also copy a .htaccess file to the server, to help apache identify jnlp files-->

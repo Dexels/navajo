@@ -15,9 +15,10 @@
 	<property name="Navajo" value="${PROJECTHOME}/Navajo" />
 	<property name="Navajo.build" value="${Navajo}/classes" />
 	<property name="TipiSwingClient" value="${PROJECTHOME}/TipiSwingClient" />
+	<property name="TipiSwingClient.build" value="${TipiSwingClient}/classes" />
 	<property name="AnimatedTransitions" value="${PROJECTHOME}/AnimatedTransitions" />
 	<property name="AnimatedTransitions.build" value="${AnimatedTransitions}/classes" />
-	<property name="TimingFramework" value="${TimingFramework}/TimingFramework" />
+	<property name="TimingFramework" value="${PROJECTHOME}/TimingFramework" />
 	<property name="TimingFramework.build" value="${TimingFramework}/classes" />
 	<property name="NavajoTipi" value="${PROJECTHOME}/NavajoTipi" />
 	<property name="NavajoTipi.build" value="${NavajoTipi}/classes" />
@@ -64,10 +65,11 @@
 		<!-- NavajoSwingClient sub-project should build NavajoDocument, 
 		 NavajoClient, Navajo, NavajoSwingClient and NavajoTipi
 		 sub-projects if necessary -->
-		<ant dir="${NavajoTipi}" target="archive" inheritAll="false">
+	<!--	<ant dir="${NavajoTipi}" target="archive" inheritAll="false">
 			<property name="PROJECTHOME" value="${PROJECTHOME}" />
-		</ant>
+		</ant>-->
 		<ant dir="${AnimatedTransitions}" target="archive" inheritAll="false"/>
+		<ant dir="${TimingFramework}" target="archive" inheritAll="false"/>
 
 	</target>
 	<target name="resource">
@@ -94,8 +96,8 @@
 			<manifest>
 
 				<attribute name="Built-By" value="Frank" />
-				<attribute name="Class-Path" value="NavajoSwingTipi.jar,tipipackage.jar,NavajoRuntime.jar,NavajoSwingClient.jar,NavajoLigger.jar,NavajoDocument.jar" />
-				<attribute name="Main-Class" value="tipi.MainApplication" />
+<!--				<attribute name="Class-Path" value="NavajoSwingTipi.jar,tipipackage.jar,NavajoRuntime.jar,NavajoSwingClient.jar,NavajoLogger.jar,NavajoDocument.jar" />
+-->				<attribute name="Main-Class" value="tipi.MainApplication" />
 			</manifest>
 
 		</jar>
@@ -108,6 +110,9 @@
 			</fileset>
 			<fileset dir="../NavajoTipi/classes">
 				<exclude name="com/**" />
+				<exclude name="AllTests.class" />
+				<exclude name="tests/**" />
+				<exclude name="tipipackage/**" />
 			</fileset>
 
 			<manifest>
