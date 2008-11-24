@@ -49,9 +49,14 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 
 	public void load(XMLElement definition, XMLElement instance, TipiContext context) throws TipiException {
 		super.load(definition, instance, context);
-
-		loadServices((String) definition.getAttribute("service"));
-
+		if (definition.equals(instance)) {
+			loadServices((String) definition.getAttribute("service"));
+		} else {
+			setHomeComponent(true);
+			if(instance.getAttribute("service")!=null) {
+				loadServices((String) instance.getAttribute("service"));
+			}
+		}
 	}
 
 	public String getName() {
@@ -142,7 +147,6 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 		}
 		myNavajo = n;
 		/** @TODO Maybe it is not a good idea that it is recursive. */
-		System.err.println("Casc: " + myContext.getSystemProperty("noCascadedLoading"));
 		if ("true".equals(myContext.getSystemProperty("noCascadedLoading"))) {
 			// new style
 			System.err.println("New school mode, ignoring children.");

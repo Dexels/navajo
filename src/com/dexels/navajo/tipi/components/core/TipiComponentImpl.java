@@ -600,8 +600,9 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 	protected void doCallSetter(Object component, String propertyName, Object param) {
 		try {
 			callSetter(component, propertyName, param);
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			e.printStackTrace();
+			myContext.showInternalError("Error setting value: "+propertyName+" to: "+param, e);
 		}
 	}
 
@@ -951,7 +952,7 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 		// As far as I know, it only happens when the performTipiEvent is called
 		// from the main thread
 		try {
-			c.performTipiEvent("onInstantiate", null, false);
+			c.performTipiEvent("onInstantiate", null, true);
 		} catch (TipiException ex) {
 			ex.printStackTrace();
 		} catch (TipiBreakException e) {
