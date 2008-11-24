@@ -89,17 +89,11 @@ public class TipiSwitchPanel extends TipiPanel {
             tc = getTipiComponent(selectedIndex.intValue());
         } 
         if (selectedId!=null) {
-        	System.err.println("Switchin 2: "+selectedId);
             tc = getTipiComponent(selectedId);
-            if(tc!=null) {
-            	System.err.println("Switchin... "+tc.getPath());
-            	
-            }
 
         } 
         
         if (tc==null) {
-            System.err.println("Oh @#$#@$ couldnt find: "+selectedId);
             return;
         }
         final TipiComponent tc2 = tc;

@@ -1,6 +1,7 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
 import java.awt.*;
+import java.beans.*;
 import java.util.*;
 import java.util.List;
 
@@ -79,31 +80,40 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 				if (isRebuilding) {
 					return;
 				}
-					setWaitCursor(true);
-					System.err.println("Startomg da tabbbbb");
-					TipiTabs.this.performTipiEvent("onTabChanged", null, false, new Runnable(){
+				setWaitCursor(true);
+				TipiTabs.this.performTipiEvent("onTabChanged", null, false, new Runnable() {
 
-						public void run() {
-							System.err.println("Ending da tabbbbb");
-							setWaitCursor(false);
-							
-						}});
-					
-					
-					
-					if (lastSelectedTab == null) {
-						System.err.println("last selected was null");
+					public void run() {
+						setWaitCursor(false);
 
 					}
-					lastSelectedTab = jt.getSelectedComponent();
-					if (lastSelectedTab == null) {
-						System.err.println("last selected is null");
-						getAttributeProperty("selectedindex").setAnyValue(-1);
-					} else {
-						getAttributeProperty("selectedindex").setAnyValue(jt.getSelectedIndex());
-						lastSelectedTab.doLayout();
-					}
-			
+				});
+
+				if (lastSelectedTab == null) {
+					System.err.println("last selected was null");
+
+				}
+				lastSelectedTab = jt.getSelectedComponent();
+				if (lastSelectedTab == null) {
+					System.err.println("last selected is null");
+					getAttributeProperty("selectedindex").setAnyValue(-1);
+				} else {
+					getAttributeProperty("selectedindex").setAnyValue(jt.getSelectedIndex());
+					lastSelectedTab.doLayout();
+				}
+				System.err.println("Top: "+ myContext.getTopLevel());
+				if(myContext.getTopLevel() instanceof TipiApplet) {
+					TipiApplet ta = (TipiApplet)myContext.getTopLevel();
+					System.err.println("Size: "+ta.getSize());
+					System.err.println("CPSize: "+ta.getContentPane().getSize());
+					JPanel component = (JPanel) ta.getContentPane().getComponent(0);
+					System.err.println("Children "+component);
+					System.err.println("Children "+component.getSize());
+					System.err.println("LA "+component);
+					System.err.println("lay: "+component.getLayout());
+					System.err.println("pref: "+component.getPreferredSize());
+
+				}
 			}
 		});
 		return jt;
@@ -187,18 +197,48 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 				childList.add(jc);
 				constraintMap.put(jc, stringConstraints);
 				Dimension d = jc.getPreferredSize();
-				if(d!=null) {
+				if (d != null) {
 					if (d.width <= 0 || d.height <= 0) {
 						jc.setPreferredSize(null);
 					}
 					jc.revalidate();
 
 				}
-				((JTabbedPane) getContainer()).addTab(stringConstraints, jc);
-				// System.err.println("Preferred size: "+jc.getPreferredSize()+
-				// " component: "
-				// +jc.getClass()+" layout: "+jc.getLayout().getClass());
+				int nextIndex = childList.size()-1;
 				JTabbedPane pane = (JTabbedPane) getContainer();
+				if (jc instanceof TipiTabbable) {
+					TipiTabbable tb = (TipiTabbable) jc;
+					Icon tabIcon = tb.getTabIcon();
+					Color back = tb.getTabBackgroundColor();
+					Color fore = tb.getTabForegroundColor();
+					String tip = tb.getTabTooltip();
+					
+					if (tabIcon != null) {
+						pane.addTab(stringConstraints, tabIcon,jc,tip);
+					} else {
+						pane.addTab(stringConstraints, jc);
+					}
+					if (back != null) {
+						pane.setBackgroundAt(nextIndex, back);					
+					}
+					if (fore != null) {
+						pane.setBackgroundAt(nextIndex, fore);					
+					}
+					tb.setIndex(nextIndex);
+					System.err.println("Addinggggg");
+					if(tabIcon!=null) {
+						System.err.println("icon: "+tabIcon.getIconHeight());
+					}
+					tb.addPropertyChangeListener(new PropertyChangeListener()  {
+
+						public void propertyChange(PropertyChangeEvent evt) {
+							
+						}});
+					 
+				} else {
+					pane.addTab(stringConstraints, jc);
+				}
+
 				pane.setEnabledAt(pane.indexOfComponent(jc), jc.isEnabled());
 				if (lastSelectedTab == null) {
 					lastSelectedTab = jc;
@@ -234,7 +274,7 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 					setTabPlacement(sel);
 				}
 			});
-			//((JTabbedPane)getContainer()).setSelectedComponent(tc.getContainer
+			// ((JTabbedPane)getContainer()).setSelectedComponent(tc.getContainer
 			// ());
 		}
 		/** @todo Override this com.dexels.navajo.tipi.TipiComponent method */
@@ -321,12 +361,12 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 						System.err.println("last selected null!");
 						boolean found = false;
 						for (int i = 0; i < jt.getComponentCount(); i++) {
-							if(jt.getComponent(i)==lastSelectedTab) {
+							if (jt.getComponent(i) == lastSelectedTab) {
 								found = true;
 								break;
 							}
 						}
-						if(found) {
+						if (found) {
 							jt.setSelectedComponent(lastSelectedTab);
 						}
 					} else {

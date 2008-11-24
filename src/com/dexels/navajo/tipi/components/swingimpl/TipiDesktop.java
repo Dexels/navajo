@@ -30,26 +30,7 @@ public class TipiDesktop
     return jp;
   }
 
-//	public void setVisible(final boolean flag) {
-//		Runnable doIt = new Runnable(){
-//
-//			public void run() {
-//				Animator animator = new Animator(500);
-//			    System.err.println("Animating: TipiSwingWindow");
-//			    ScreenTransition transition = new ScreenTransition(TipiSwingWindow.this,new TransitionTarget(){
-//
-//					public void setupNextScreen() {
-//						TipiSwingWindow.super.setVisible(flag);
-//					}}, animator);
-//			    animator.setAcceleration(.5f);  // Accelerate for first 20%
-//			       animator.setDeceleration(.5f);  // Decelerate for last 40%
-//			    transition.start();			
-//			    }};
-//	//	SwingUtilities.invokeAndWait(doIt);
-//			    doIt.run();
-//	
-//	
-//}
+
   
   public void addToContainer(final Object c, final Object constraints) {
     runSyncInEventThread(new Runnable() {

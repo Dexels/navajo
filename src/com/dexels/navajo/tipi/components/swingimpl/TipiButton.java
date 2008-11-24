@@ -2,6 +2,7 @@ package com.dexels.navajo.tipi.components.swingimpl;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.*;
 import java.io.*;
 import java.net.*;
 
@@ -31,7 +32,10 @@ import com.dexels.navajo.tipi.internal.*;
  * @version 1.0
  */
 public class TipiButton extends TipiSwingComponentImpl {
+
 	private boolean iAmEnabled = true;
+	private boolean verticalButton = false;
+	
 	private AbstractAction buttonAction;
 	public Object createContainer() {
 		final TipiSwingButton myButton = new TipiSwingButton(this);
@@ -75,11 +79,18 @@ public class TipiButton extends TipiSwingComponentImpl {
 					setAccelerator((String)object);
 				}
 				
+//				if(name.equals("vertical")) {
+//					if(Boolean.TRUE.equals(object)) {
+//						((TipiSwingButton)getContainer()).setVertical(true);
+//					}
+//				}
 				// Don't need to setDragCategory: It will pull from the prop as necessary
 			}
 		});
 	}
 
+
+	
 	 protected void setAccelerator(String text) {
 	        KeyStroke ks = null;
 	       JButton myButton = (JButton)getContainer();

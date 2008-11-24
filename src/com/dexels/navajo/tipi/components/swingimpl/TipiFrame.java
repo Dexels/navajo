@@ -1,6 +1,7 @@
 package com.dexels.navajo.tipi.components.swingimpl;
 
 import java.awt.*;
+import java.beans.*;
 import java.net.*;
 
 import javax.swing.*;
@@ -47,15 +48,23 @@ public class TipiFrame extends TipiSwingDataComponentImpl {
 			TipiApplet ta = ((SwingTipiContext) getContext()).getAppletRoot();
 			if (ta != null) {
 				myToplevel = ta;
+				ta.getContentPane().setLayout(new BorderLayout());
 				mySuperPanel = new JPanel();
+				mySuperPanel.setLayout(new BorderLayout());
+//				mySuperPanel.addPropertyChangeListener(new PropertyChangeListener(){
+//					public void propertyChange(PropertyChangeEvent evt) {
+//						System.err.println("Changed: "+evt.getPropertyName()+" old: "+evt.getOldValue()+" new: "+evt.getNewValue());
+//					}});
 				ta.getContentPane().add(mySuperPanel, BorderLayout.CENTER);
+				
 				return ta;
 			}
+
 			RootPaneContainer or = ((SwingTipiContext) getContext()).getOtherRoot();
 			myToplevel = or;
 			mySuperPanel = new JPanel();
-			or.getContentPane().add(mySuperPanel, BorderLayout.CENTER);
 			mySuperPanel.setLayout(new BorderLayout());
+			or.getContentPane().add(mySuperPanel, BorderLayout.CENTER);
 			return or;
 			// if (getContext() instanceof EmbeddedContext) {
 			// EmbeddedContext ec = (EmbeddedContext) getContext();
@@ -106,6 +115,9 @@ public class TipiFrame extends TipiSwingDataComponentImpl {
 					runSyncInEventThread(new Runnable() {
 						public void run() {
 							mySuperPanel.add((Component) c, constraints);
+							mySuperPanel.doLayout();
+							System.err.println("Size: "+mySuperPanel.getLayout());
+							
 						}
 					});
 
@@ -156,7 +168,7 @@ public class TipiFrame extends TipiSwingDataComponentImpl {
 	public void setContainerLayout(Object layout) {
 
 		// myToplevel.getContentPane().setLayout((LayoutManager) layout);
-
+		System.err.println("Setting toplevel layout:: "+layout);
 		mySuperPanel.setLayout((LayoutManager) layout);
 	}
 

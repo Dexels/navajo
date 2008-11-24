@@ -8,6 +8,7 @@ import javax.swing.*;
 import javax.swing.text.*;
 
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
+import com.dexels.navajo.tipi.tipixml.*;
 
 /**
  * <p>
@@ -29,16 +30,19 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.*;
 
 public class TipiViewport extends TipiSwingDataComponentImpl {
 
+
 	public TipiViewport() {
 	}
 
 	private JPanel left = null;
 	private JPanel right = null;
 	private int axis = BoxLayout.X_AXIS;
-	private BoxLayout layout;
+	private LayoutManager layout;
 	private JPanel clientPanel;
 	private JViewport view;
 
+	
+	
 	public Object createContainer() {
 		view = new TipiSwingViewport();
 		left = new JPanel();
@@ -46,42 +50,40 @@ public class TipiViewport extends TipiSwingDataComponentImpl {
 		left.setLayout(new BorderLayout());
 		right.setLayout(new BorderLayout());
 		clientPanel = new JPanel();
-		layout = new BoxLayout(clientPanel, axis);
+		layout = new GridLayout();
+//		layout = new BoxLayout(clientPanel, axis);
 		clientPanel.setLayout(layout);
 		clientPanel.add(left);
 		clientPanel.add(right);
 		view.setOpaque(false);
-		view.addComponentListener(new ComponentListener() {
-
-			public void componentHidden(ComponentEvent e) {
-				// TODO Auto-generated method stub
-
-			}
-
-			public void componentMoved(ComponentEvent e) {
-				// TODO Auto-generated method stub
-
-			}
+		view.addComponentListener(new ComponentAdapter() {
 
 			public void componentResized(ComponentEvent e) {
 				updateClientSize(view);
-
 			}
 
-			public void componentShown(ComponentEvent e) {
-			}
 		});
-		
-		view.addPropertyChangeListener(new PropertyChangeListener(){
-
-			public void propertyChange(PropertyChangeEvent evt) {
-				System.err.println("PROP: "+evt.getPropertyName()+" old: "+evt.getOldValue()+" new: "+evt.getNewValue());
-			}});
 		
 		view.setView(clientPanel);
 		return view;
 	}
 
+	public void initBeforeBuildingChildren(XMLElement instance, XMLElement classdef, XMLElement definition) {
+		String constraint = null;
+		if(definition!=null) {
+			constraint = definition.getStringAttribute("constraint");
+		}
+		if(instance!=null) {
+			String c = instance.getStringAttribute("constraint");
+			if(c!=null) {
+				c = constraint;
+			}
+		}
+		System.err.println("Consttraints::: "+constraint);
+		super.initBeforeBuildingChildren(instance, classdef, definition);
+	}
+
+	
 	protected void updateClientSize(JViewport view) {
 		Dimension d = view.getSize();
 		if (axis == BoxLayout.Y_AXIS) {

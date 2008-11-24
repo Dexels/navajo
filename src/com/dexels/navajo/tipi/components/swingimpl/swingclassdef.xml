@@ -486,7 +486,6 @@
             <param name="header" type="string" />
             <param name="footer" type="string" />
          </method>
-         <method name="printpreview" />
          <method name="export">
             <param name="filename" type="string" />
             <param name="delimiter" type="string" />
@@ -747,7 +746,7 @@
       <methods />
    </tipiclass>
 
-    <tipiclass addtocontainer="true" deprecated="true" childcount="*" class="TipiOffsetPanel" layoutmanager="true" module="container" name="offsetpanel"
+   <tipiclass addtocontainer="true" deprecated="true" childcount="*" class="TipiOffsetPanel" layoutmanager="true" module="container" name="offsetpanel"
       package="com.dexels.navajo.tipi.components.swingimpl" studio-icon="tipi.gif" type="tipi">
       <description>
          Use it for animation purposes
@@ -1019,6 +1018,28 @@
       </methods>
    </tipiclass>
 
+   <tipiclass addtocontainer="true" childcount="*" class="TipiTab" layoutmanager="true" module="container" name="tab" package="com.dexels.navajo.tipi.components.swingimpl"
+      studio-icon="tabs.gif" type="tipi">
+      <events>
+         <event name="onInstantiate" />
+         <event name="onLoad">
+            <param name="service" type="string" />
+            <param name="navajo" type="navajo" />
+         </event>
+      </events>
+      <values>
+         <value direction="in" name="tabForeground" type="color" property="tabForegroundColor" />
+         <value direction="in" name="tabBackground" type="color" property="tabBackgroundColor" />
+         <value direction="in" name="tabIcon" type="resource" property="iconUrl" />
+         <value direction="in" name="border" type="border" />
+      </values>
+      <methods>
+
+      </methods>
+   </tipiclass>
+
+
+
 
    <tipiclass addtocontainer="true" childcount="*" class="TipiCardPanel" layoutmanager="false" module="container" name="cardpanel" package="com.dexels.navajo.tipi.components.swingimpl"
       studio-icon="tabs.gif" type="tipi">
@@ -1068,7 +1089,7 @@
    </tipiclass>
 
 
-   <tipiclass addtocontainer="true" childcount="2" class="TipiViewport" layoutmanager="false" module="container" name="viewport" package="com.dexels.navajo.tipi.components.swingimpl"
+   <tipiclass addtocontainer="true" childcount="2" class="TipiSlottedViewport" layoutmanager="true" module="container" name="viewport" package="com.dexels.navajo.tipi.components.swingimpl"
       studio-icon="hidden.gif" type="tipi">
       <events>
          <event name="onInstantiate" />
@@ -1078,14 +1099,27 @@
          </event>
       </events>
       <values>
+         <value direction="in" name="width" type="integer" property="x" />
+         <value direction="in" name="height" type="integer" property="y" />
          <value direction="in" name="orientation" type="selection">
             <option description="Vertical" value="vertical" />
             <option description="Horizontal" value="horizontal" />
          </value>
-           <value direction="in" name="x" type="integer" property="x" />
+         <value direction="in" name="x" type="integer" property="x" />
          <value direction="in" name="y" type="integer" property="y" />
-   </values>
+         <value direction="in" name="gridWidth" type="integer" property="gridWidth" />
+         <value direction="in" name="gridHeight" type="integer" property="gridHeight" />
+
+
+      </values>
       <methods>
+         <method name="show">
+            <param name="component" type="component" />
+         </method>
+         <method name="showAnimated">
+            <param name="duration" type="int" />
+            <param name="component" type="component" />
+         </method>
 
       </methods>
    </tipiclass>
@@ -1175,6 +1209,7 @@
          <value direction="in" name="dragValue" type="object" />
          <value direction="in" name="dragCategory" type="string" />
          <value direction="in" name="dropCategory" type="string" />
+           <value direction="in" name="vertical" type="boolean" property="vertical" />
       </values>
       <methods>
          <method name="fireAction" />
@@ -1371,6 +1406,20 @@
          <value direction="inout" name="tooltip" type="string" property="ToolTipText" />
          <value direction="in" name="enabled" type="boolean" property="enabled" />
          <value direction="in" name="visible" type="boolean" property="visible" />
+ 	     <value direction="in" name="vertical" type="boolean" property="vertical" />
+
+         <value direction="in" name="horizontalAlignment" type="string" property="tipiHorizontalAlignment">
+            <option description="Left" value="left" />
+            <option description="Center" value="center" />
+            <option description="Right" value="right" />
+            <option description="Leading" value="leading" />
+            <option description="Trailing" value="trailing" />
+         </value>
+         <value direction="in" name="verticalAlignment" type="string" property="tipiVerticalAlignment">
+            <option description="Center" value="center" />
+            <option description="Top" value="top" />
+            <option description="Bottom" value="bottom" />
+         </value>
          <value direction="in" name="dragValue" type="object" />
          <value direction="in" name="dragCategory" type="string" />
          <value direction="in" name="dropCategory" type="string" />

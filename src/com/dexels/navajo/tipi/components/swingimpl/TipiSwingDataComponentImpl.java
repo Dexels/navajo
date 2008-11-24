@@ -232,23 +232,6 @@ public void loadData(final Navajo n, final String method) throws TipiException, 
 						myContext.showInternalError("Error loading component: "+getPath()+" message: "+e.getMessage(),e);
 					}
 
-//				JComponent jc = (JComponent)getContainer();
-//				Animator animator = new Animator(1500);
-//			    System.err.println("Animating: "+getContainer().getClass());
-//			    ScreenTransition transition = new ScreenTransition(jc,new TransitionTarget(){
-//
-//					public void setupNextScreen() {
-//						try {
-//							TipiSwingDataComponentImpl.super.loadData(n, method);
-//						} catch (TipiException e) {
-//							e.printStackTrace();
-//						} catch (TipiBreakException e) {
-//							e.printStackTrace();
-//						}
-//					}}, animator);
-//			    animator.setAcceleration(.5f);  // Accelerate for first 20%
-//			       animator.setDeceleration(.5f);  // Decelerate for last 40%
-//			    transition.start();			
 				    }});
 	
 	} else {
