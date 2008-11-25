@@ -2,6 +2,7 @@ package com.dexels.navajo.tipi.components.swingimpl;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.*;
 
 import javax.swing.*;
 import javax.swing.event.*;
@@ -144,7 +145,7 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 						if( myRootPaneContainer instanceof JDialog) {
 							JDialog jd = (JDialog)myRootPaneContainer;
 							jd.setTitle(title);
-							com.sun.awt.AWTUtilities.setWindowOpacity(jd, opacity);
+//							com.sun.awt.AWTUtilities.setWindowOpacity(jd, opacity);
 
 						}
 					}
@@ -230,6 +231,17 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 	private RootPaneContainer getDialogContainer() {
 		return myRootPaneContainer;
 	}
+
+//	
+//	public boolean performTipiEvent(String type, Map<String, Object> event, boolean sync) throws TipiException, TipiBreakException {
+//		// TODO Auto-generated method stub
+//		if(type.equals("onInstantiate")) {
+//				System.err.println("Calling onInstantiate in dialog");
+//					return super.performTipiEvent(type, null, false);
+//		}
+//		
+//		return super.performTipiEvent(type, event, sync);
+//	}
 
 	private final void constructDialog() {
 			// System.err.println("Constructing: studio? "+isStudioElement());
@@ -379,7 +391,7 @@ public class TipiDialog extends TipiSwingDataComponentImpl {
 		}
 
 		
-		com.sun.awt.AWTUtilities.setWindowOpacity(myDialog, opacity);
+//		com.sun.awt.AWTUtilities.setWindowOpacity(myDialog, opacity);
 
 		// myDialog.setVisible(true);
 		myDialog.getContentPane().setLayout(new BorderLayout());
