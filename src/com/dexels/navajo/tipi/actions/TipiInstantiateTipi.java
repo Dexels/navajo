@@ -101,6 +101,7 @@ public class TipiInstantiateTipi extends TipiAction {
 		}
 		System.err.println("XE: "+xe);
 		TipiComponent inst = context.instantiateComponent(xe, event, this);
+		inst.setHomeComponent(true);
 		inst.setId(id);
 		parent.addComponent(inst, context, constraints);
 

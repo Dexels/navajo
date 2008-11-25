@@ -56,6 +56,9 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 			if(instance.getAttribute("service")!=null) {
 				loadServices((String) instance.getAttribute("service"));
 			}
+			if(definition.getAttribute("service")!=null) {
+				loadServices((String) definition.getAttribute("service"));
+			}
 		}
 	}
 
