@@ -589,12 +589,17 @@ public class TipiTable extends TipiSwingDataComponentImpl implements ChangeListe
 				List<Message> all = mm.getSelectedMessages();
 				if (all != null && all.size() > 0) {
 					Navajo n = NavajoFactory.getInstance().createNavajo();
+					n.addHeader(NavajoFactory.getInstance().createHeader(n, "Anonymous", "unknown", "unknown", -1));
 					Message array = NavajoFactory.getInstance().createMessage(n, all.get(0).getName(), Message.MSG_TYPE_ARRAY);
 					for (int i = 0; i < all.size(); i++) {
 						Message cur = all.get(i);
 						array.addMessage(cur);
 					}
-					// array.write(System.err);
+					try {
+						n.addMessage(array);
+					} catch (NavajoException e) {
+						e.printStackTrace();
+					}
 					return array;
 				} else {
 					System.err.println("AAp.. all is null of 0");
