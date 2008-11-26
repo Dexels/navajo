@@ -26,20 +26,7 @@ public abstract class TipiEmbedComponent extends TipiDataComponentImpl {
 	private String tipiCodeBase;
 	private String resourceCodeBase;
 
-	// public void loadDefinition(String tipiPath, String definitionName, String
-	// resourceBaseDirectory) throws IOException, TipiException;
-	// public void loadClassPathLib(String location);
-	// public TipiContext getContext();
-	// public void shutDownTipi();
-
-	// String tipiCodeBase = (String) properties.get("tipiCodeBase");
-	// String resourceCodeBase = (String) properties.get("resourceCodeBase");
-	// setTipiResourceLoader(tipiCodeBase);
-	// setGenericResourceLoader(resourceCodeBase);
-
 	public TipiEmbedComponent() {
-		// jf.getContentPane().add((Container)stc.getContext().getTopLevel(),
-		// BorderLayout.CENTER);
 	}
 
 	public void loadData(Navajo n, String method) throws TipiException {

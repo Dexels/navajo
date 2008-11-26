@@ -11,6 +11,7 @@ import tipi.*;
 
 import com.dexels.navajo.client.*;
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.document.base.*;
 import com.dexels.navajo.document.types.*;
 import com.dexels.navajo.parser.*;
 import com.dexels.navajo.parser.Expression;
@@ -118,17 +119,11 @@ public abstract class TipiContext {
 	// private final List packageReferenceList = new ArrayList();
 	// private final Map packageReferenceMap = new HashMap();
 
-	protected final Stack<DescriptionProvider> descriptionProviderStack = new Stack<DescriptionProvider>(); 
+	protected final Stack<DescriptionProvider> descriptionProviderStack = new Stack<DescriptionProvider>();
 
 	protected final Map<String, Object> globalMap = new HashMap<String, Object>();
 
 	protected final long startTime = System.currentTimeMillis();
-
-//	protected File resourceBaseDirectory = null;
-//	protected File tipiBaseDirectory = null;
-
-//	protected boolean allowLazyIncludes = true;
-	// private boolean isSwitching = false;
 	private ClassLoader tipiClassLoader = null;
 	private ClassLoader resourceClassLoader = null;
 	private final List<ShutdownListener> shutdownListeners = new ArrayList<ShutdownListener>();
@@ -137,8 +132,8 @@ public abstract class TipiContext {
 	private TipiResourceLoader genericResourceLoader;
 
 	// for now...
-	public  final Map<String, String> systemPropertyMap = new HashMap<String, String>();
-	
+	public final Map<String, String> systemPropertyMap = new HashMap<String, String>();
+
 	private Object myToplevelContainer;
 	private String navajoServer;
 	private String navajoUsername;
@@ -177,14 +172,6 @@ public abstract class TipiContext {
 	public TipiContext() {
 		Iterator<TipiExtension> tt = ServiceRegistry.lookupProviders(TipiExtension.class);
 		initializeExtensions(tt);
-		
-//		try {
-//			tt = ServiceRegistry.lookupProviders(TipiExtension.class, ClassLoader.getSystemClassLoader());
-//			initializeExtensions(tt);
-//		} catch (SecurityException e1) {
-//			// TODO Auto-generated catch block
-//			System.err.println("No access to system classloader. Continuing.");
-//		}
 
 		clientInterface = NavajoClientFactory.createDefaultClient();
 		
@@ -201,7 +188,8 @@ public abstract class TipiContext {
 		tipiResourceLoader = new ClassPathResourceLoader();
 		setStorageManager(new TipiNullStorageManager());
 		try {
-			Class<? extends TipiContextListener> cc = (Class<? extends TipiContextListener>) Class.forName("com.dexels.navajo.tipi.tools.TipiEventDumpDebugger");
+			Class<? extends TipiContextListener> cc = (Class<? extends TipiContextListener>) Class
+					.forName("com.dexels.navajo.tipi.tools.TipiEventDumpDebugger");
 			TipiContextListener tcl = cc.newInstance();
 			tcl.setContext(this);
 			hasDebugger = true;
@@ -503,7 +491,7 @@ public abstract class TipiContext {
 
 	public final void setSystemPropertyLocal(String name, String value) {
 		systemPropertyMap.put(name, value);
-		System.err.println("Local properties for context: "+getClass()+" hash: "+hashCode()+" map: "+systemPropertyMap);
+		System.err.println("Local properties for context: " + getClass() + " hash: " + hashCode() + " map: " + systemPropertyMap);
 	}
 
 	public final void setSystemProperty(String name, String value) {
@@ -511,11 +499,11 @@ public abstract class TipiContext {
 	}
 
 	public final String getSystemProperty(String name) {
-			
+
 		String value = systemPropertyMap.get(name);
 		String sysVal = null;
 		if (value != null) {
-			System.err.println("Local value: "+value);
+			System.err.println("Local value: " + value);
 			return value;
 		}
 		try {
@@ -561,13 +549,6 @@ public abstract class TipiContext {
 		if (!impl.equals("direct")) {
 			if (impl.equals("socket")) {
 				throw new UnsupportedOperationException("Sorry, I deprecated the direct client for tipi usage");
-			
-//				NavajoClientFactory.resetClient();
-//				NavajoClientFactory.createClient("com.dexels.navajo.client.NavajoSocketClient", null, null);
-//			} else {
-//				throw new UnsupportedOperationException("Sorry, I deprecated the direct client for tipi usage");
-//				NavajoClientFactory.resetClient();
-//				NavajoClientFactory.createDefaultClient();
 			}
 			getClient().setServerUrl(navajoServer);
 			getClient().setUsername(navajoUsername);
@@ -899,7 +880,8 @@ public abstract class TipiContext {
 			try {
 				parseLibrary(element, false, element, false);
 			} catch (UnsupportedClassVersionError e) {
-				throw new UnsupportedClassVersionError("Error parsing extension: " + element + " wrong java version! " + e.getCause()+" - "+e.getMessage());
+				throw new UnsupportedClassVersionError("Error parsing extension: " + element + " wrong java version! " + e.getCause()
+						+ " - " + e.getMessage());
 			}
 		}
 		// Thread.dumpStack();
@@ -958,7 +940,8 @@ public abstract class TipiContext {
 		return null;
 	}
 
-	public TipiActionBlock instantiateTipiActionBlock(XMLElement definition, TipiComponent parent, TipiExecutable parentExe) throws TipiException {
+	public TipiActionBlock instantiateTipiActionBlock(XMLElement definition, TipiComponent parent, TipiExecutable parentExe)
+			throws TipiException {
 		TipiActionBlock c = createTipiActionBlockCondition();
 		c.load(definition, parent, parentExe);
 		return c;
@@ -1033,7 +1016,7 @@ public abstract class TipiContext {
 		}
 		if (!clas.equals("")) {
 			TipiComponent tc = (TipiComponent) instantiateClass(clas, name, instance);
-//			tc.setHomeComponent(true);
+			// tc.setHomeComponent(true);
 			// System.err.println("Instantiating component by definition:
 			// "+clas);
 			XMLElement classDef = tipiClassDefMap.get(clas);
@@ -1145,7 +1128,7 @@ public abstract class TipiContext {
 
 			public void run() {
 				try {
-					unlink(stateMessage);
+					unlink(getStateNavajo(), stateMessage);
 				} catch (NavajoException e) {
 					e.printStackTrace();
 				}
@@ -1263,12 +1246,12 @@ public abstract class TipiContext {
 			cc = Class.forName(fullDef, true, getClassLoader());
 			tipiClassMap.put(name, cc);
 		} catch (ClassNotFoundException ex) {
-			System.err.println("Error loading class: "+fullDef);
+			System.err.println("Error loading class: " + fullDef);
 			ex.printStackTrace();
 		} catch (SecurityException ex) {
-			System.err.println("Security Error loading class: "+fullDef);
+			System.err.println("Security Error loading class: " + fullDef);
 			ex.printStackTrace();
-			
+
 		}
 		return cc;
 	}
@@ -1594,6 +1577,8 @@ public abstract class TipiContext {
 		}
 		if (reply == null) {
 			reply = NavajoFactory.getInstance().createNavajo();
+			reply.addHeader(NavajoFactory.getInstance().createHeader(reply, service, "", "", -1));
+			
 		}
 
 		return reply;
@@ -1611,7 +1596,6 @@ public abstract class TipiContext {
 			TipiEvent event, long expirationInterval, String hosturl, String username, String password, String keystore, String keypass)
 			throws TipiBreakException {
 
-//		ConditionErrorHandler ch = t;
 		fireNavajoSent(n, method);
 		Navajo reply = doSimpleSend(n, method, null, expirationInterval, hosturl, username, password, keystore, keypass, breakOnError);
 		fireNavajoReceived(reply, method);
@@ -1663,18 +1647,20 @@ public abstract class TipiContext {
 		if (compNavajo != null) {
 			fireNavajoReceived(compNavajo, "NavajoListNavajo");
 		}
+
+		assert (reply.getHeader() != null);
 	}
 
 	public void loadNavajo(Navajo reply, String method, String tipiDestinationPath, TipiEvent event, boolean breakOnError)
 			throws TipiBreakException {
 		if (reply != null) {
 			// TODO Put this in a more elegant place
-			 if (eHandler == null) {
-					eHandler = new BaseTipiErrorHandler();
-					eHandler.setContext(this);
-					eHandler.initResource();
+			if (eHandler == null) {
+				eHandler = new BaseTipiErrorHandler();
+				eHandler.setContext(this);
+				eHandler.initResource();
 
-			 }
+			}
 			String errorMessage = eHandler.hasErrors(reply);
 			if (errorMessage != null) {
 				System.err.println("Errors detected. ");
@@ -1731,8 +1717,7 @@ public abstract class TipiContext {
 	protected void loadTipiMethod(Navajo reply, String method) throws TipiException, NavajoException {
 
 		Navajo oldNavajo = getNavajo(method);
-
-		if (oldNavajo != null) {
+		if (oldNavajo != null && oldNavajo != reply) {
 			unloadNavajo(oldNavajo, method);
 		}
 		addNavajo(method, reply);
@@ -1752,13 +1737,19 @@ public abstract class TipiContext {
 			} catch (TipiBreakException e) {
 				System.err.println("Data refused by component");
 			}
-			}
+		}
 
 		fireNavajoReceived(reply, method);
 	}
 
 	private void unloadNavajo(Navajo reply, String method) throws NavajoException {
-		unlink(reply);
+		if (reply.getHeader() == null) {
+			Thread.dumpStack();
+			System.err.println("WTF!!!!! WHY DOESN'T IT HAVE A HEADER?!");
+		} else {
+			unlink(reply);
+
+		}
 		removeNavajo(method);
 	}
 
@@ -2011,12 +2002,9 @@ public abstract class TipiContext {
 		}
 	}
 
-
-
-
 	public void performAction(final TipiEvent te, TipiExecutable parentExecutable, TipiEventListener listener) {
 
-//		te.setRootCause(parentExecutable);
+		// te.setRootCause(parentExecutable);
 		debugLog("event   ", "enqueueing async event: " + te.getEventName());
 		if (myThreadPool == null) {
 			myThreadPool = new TipiThreadPool(this, getPoolSize());
@@ -2168,8 +2156,8 @@ public abstract class TipiContext {
 			s.contextShutdown();
 		}
 		contextShutdown = true;
-		Thread shutdownThread = new Thread("TipiShutdown"){
-			public void run(){
+		Thread shutdownThread = new Thread("TipiShutdown") {
+			public void run() {
 				myThreadPool.waitForAllThreads();
 			}
 		};
@@ -2177,12 +2165,12 @@ public abstract class TipiContext {
 	}
 
 	public DescriptionProvider getDescriptionProvider() {
-		if(descriptionProviderStack.isEmpty()) {
+		if (descriptionProviderStack.isEmpty()) {
 			return null;
 		}
 		return descriptionProviderStack.peek();
 	}
-	
+
 	private void pushDescriptionProvider(DescriptionProvider descriptionProvider) {
 		descriptionProviderStack.push(descriptionProvider);
 	}
@@ -2197,9 +2185,10 @@ public abstract class TipiContext {
 		Property l = NavajoFactory.getInstance().createProperty(n, "Locale", Property.STRING_PROPERTY, locale, 99, "", Property.DIR_IN);
 		m.addProperty(l);
 		// n.write(System.err);
-		// TODO This is not the official way to use the client. Can cause problems in Echo
+		// TODO This is not the official way to use the client. Can cause
+		// problems in Echo
 		Navajo res = getClient().doSimpleSend(n, "navajo/description/ProcessGetContextResources");
-		
+
 		// res.write(System.err);
 		Message descr = res.getMessage("Descriptions");
 		DescriptionProvider descriptionProvider = new RemoteDescriptionProvider(this);
@@ -2207,7 +2196,6 @@ public abstract class TipiContext {
 		// myDescriptionProvider.init(locale, context);
 		((RemoteDescriptionProvider) descriptionProvider).setMessage(descr);
 	}
-
 
 	public String XMLUnescape(String s) {
 		if ((s == null) || (s.length() == 0)) {
@@ -2346,8 +2334,6 @@ public abstract class TipiContext {
 
 	}
 
-	
-
 	public void setGenericResourceLoader(String resourceCodeBase) throws MalformedURLException {
 		if (resourceCodeBase != null) {
 			if (resourceCodeBase.indexOf("http:/") != -1 || resourceCodeBase.indexOf("file:/") != -1) {
@@ -2388,7 +2374,7 @@ public abstract class TipiContext {
 		for (Iterator<String> iter = properties.keySet().iterator(); iter.hasNext();) {
 			String element = iter.next();
 			String value = properties.get(element);
-			if(element.startsWith("-D")) {
+			if (element.startsWith("-D")) {
 				element = element.substring(2);
 			}
 			setSystemProperty(element, value);
@@ -2408,7 +2394,7 @@ public abstract class TipiContext {
 			tca.execute(this);
 			System.err.println("xsd builder loaded");
 		} catch (Throwable e) {
-//			System.err.println("No xsdbuilder found!");
+			// System.err.println("No xsdbuilder found!");
 		}
 
 	}
@@ -2488,6 +2474,7 @@ public abstract class TipiContext {
 	public Navajo createExtensionNavajo() throws NavajoException {
 		// Overview/InjectionName
 		Navajo n = NavajoFactory.getInstance().createNavajo();
+		n.addHeader(NavajoFactory.getInstance().createHeader(n, "Extension", "", "", -1));
 		Message overview = NavajoFactory.getInstance().createMessage(n, "Overview");
 		n.addMessage(overview);
 		Property overviewProperty = NavajoFactory.getInstance().createProperty(n, "Overview", Property.CARDINALITY_MULTIPLE, "",
@@ -2549,21 +2536,26 @@ public abstract class TipiContext {
 
 	public void unlink(Navajo n) throws NavajoException {
 		for (Message current : n.getAllMessages()) {
-			unlink(current);
+			unlink(n,current);
 		}
 	}
 
-	public void unlink(Message m) throws NavajoException {
+	public void unlink(Navajo n, Message m) throws NavajoException {
 		for (Property p : m.getAllProperties()) {
-			unlink(p);
+			unlink(n,p);
 		}
 		for (Message current : m.getAllMessages()) {
-			unlink(current);
+			unlink(n,current);
 		}
 	}
 
-	public void unlink(Property master) {
-		Navajo rootDoc = master.getRootDoc();
+	public void unlink(Navajo rootDoc, Property master) {
+		if (rootDoc == null) {
+
+			return;
+		}
+		BasePropertyImpl ppp = (BasePropertyImpl) master;
+
 		String service = rootDoc.getHeader().getRPCName();
 		List<PropertyChangeListener> pref;
 		try {
@@ -2585,7 +2577,7 @@ public abstract class TipiContext {
 		propertyLinkRegistry.remove(master);
 		if (p != null) {
 			for (Property property : p) {
-				unlink(property);
+				unlink(rootDoc,property);
 				List<Property> q = propertyLinkRegistry.get(property);
 				//				
 				if (q != null) {
@@ -2694,10 +2686,11 @@ public abstract class TipiContext {
 		p.setAnyValue(target);
 	}
 
-
 	public Navajo createNavajoListNavajo() throws NavajoException {
 		Navajo n = NavajoFactory.getInstance().createNavajo();
+		n.addHeader(NavajoFactory.getInstance().createHeader(n, "NavajoListNavajo", "", "", -1));
 		Message tipiClasses = NavajoFactory.getInstance().createMessage(n, "Navajo", Message.MSG_TYPE_ARRAY);
+		n.addHeader(NavajoFactory.getInstance().createHeader(n, "NavajoListNavajo", "", "", -1));
 		n.addMessage(tipiClasses);
 		for (String s : navajoMap.keySet()) {
 
@@ -2774,6 +2767,15 @@ public abstract class TipiContext {
 
 	public void injectNavajo(String service, Navajo n) throws TipiBreakException {
 
+		Navajo old = getNavajo(service);
+		if (old != null && old != n) {
+			try {
+				unloadNavajo(old, service);
+			} catch (NavajoException e) {
+				e.printStackTrace();
+			}
+		}
+
 		if (n.getHeader() == null) {
 			Header h = NavajoFactory.getInstance().createHeader(n, service, "unknown", "unknown", -1);
 			n.addHeader(h);
@@ -2781,8 +2783,6 @@ public abstract class TipiContext {
 		addNavajo(service, n);
 		loadNavajo(n, service);
 	}
-
-
 
 	public TipiContext getParentContext() {
 		return myParentContext;

@@ -50,10 +50,6 @@ public interface TipiComponent extends TipiEventListener, TipiLink {
 
 	public Iterable<TipiComponent> getChildren();
 	
-//	public String getStringValue(String name);
-
-//	public TipiValue getTipiValue(String name);
-
 	/**
 	 * Loads an event definition from the component definition
 	 */
