@@ -22,6 +22,9 @@ import com.dexels.navajo.tipi.*;
  * @author not attributable
  * @version 1.0
  */
+
+// -- this is a weird contraption
+
 public class PropertyListRef implements TipiReference {
 	private final List<Property> propertyList = new ArrayList<Property>();
 
@@ -29,10 +32,14 @@ public class PropertyListRef implements TipiReference {
 		propertyList.addAll(in);
 	}
 
-	public void setValue(Object val, TipiComponent source) {
+	public void setValue(Object val) {
 		for (Property p : propertyList) {
 			p.setAnyValue(val);
 		}
+	}
+
+	public Object getValue() {
+		return null;
 	}
 
 }

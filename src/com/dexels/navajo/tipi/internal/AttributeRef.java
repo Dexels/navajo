@@ -32,7 +32,7 @@ public class AttributeRef implements TipiReference {
 		return myComponent.getValue(myName);
 	}
 
-	public void setValue(Object val, TipiComponent source) {
+	public void setValue(Object val) {
 		myComponent.setValue(myName, val);
 	}
 

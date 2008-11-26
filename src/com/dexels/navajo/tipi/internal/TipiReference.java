@@ -1,6 +1,5 @@
 package com.dexels.navajo.tipi.internal;
 
-import com.dexels.navajo.tipi.*;
 
 /**
  * <p>
@@ -34,5 +33,7 @@ public interface TipiReference {
 	 * @param tc
 	 *            The owner of this reference.
 	 */
-	public void setValue(Object expression, TipiComponent tc);
+	public void setValue(Object expression);
+	public  Object getValue();
+
 }

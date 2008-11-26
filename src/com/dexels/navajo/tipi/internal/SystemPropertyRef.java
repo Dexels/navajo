@@ -1,6 +1,5 @@
 package com.dexels.navajo.tipi.internal;
 
-import com.dexels.navajo.tipi.*;
 
 /**
  * <p>
@@ -28,7 +27,11 @@ public class SystemPropertyRef implements TipiReference {
 		this.name = name;
 	}
 
-	public void setValue(Object expression, TipiComponent tc) {
+	public void setValue(Object expression) {
 		System.setProperty(name, "" + expression);
+	}
+
+	public Object getValue() {
+		return System.getProperty(name);
 	}
 }

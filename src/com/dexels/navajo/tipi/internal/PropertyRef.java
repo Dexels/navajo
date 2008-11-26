@@ -30,8 +30,13 @@ public class PropertyRef implements TipiReference {
 		// myProperty = p;
 	}
 
-	public void setValue(Object expression, TipiComponent tc) {
+	public void setValue(Object expression) {
 
+	}
+
+	public Object getValue() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

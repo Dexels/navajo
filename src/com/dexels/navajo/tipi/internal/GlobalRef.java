@@ -29,7 +29,11 @@ public class GlobalRef implements TipiReference {
 		myContext = context;
 	}
 
-	public void setValue(Object expression, TipiComponent tc) {
+	public void setValue(Object expression) {
 		myContext.setGlobalValue(name, expression);
+	}
+
+	public Object getValue() {
+		return myContext.getGlobalValue(name);
 	}
 }

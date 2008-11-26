@@ -30,11 +30,15 @@ public class EventRef implements TipiReference {
 		this.myKey = key;
 	}
 
-	public void setValue(Object val, TipiComponent source) {
+	public void setValue(Object val) {
 		TipiValue tv = new TipiValue(null);
 		tv.setValue(val);
 
 		myEvent.addEventParameter(myKey, tv);
+	}
+
+	public Object getValue() {
+		return myEvent.getEventParameter(myKey);
 	}
 
 }
