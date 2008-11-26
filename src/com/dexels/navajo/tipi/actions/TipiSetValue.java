@@ -40,7 +40,7 @@ public final class TipiSetValue extends TipiAction {
 				p.setAnyValue(evaluatedValue.value);
 			} else if (evaluated.value instanceof TipiReference) {
 				TipiReference p = (TipiReference) evaluated.value;
-				p.setValue(evaluatedValue.value, getComponent());
+				p.setValue(evaluatedValue.value);
 			} else {
 				throw new TipiException("Error in setValue: illegal 'to' parameter. Expression: " + path + " (from: " + value + ")");
 			}
