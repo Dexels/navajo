@@ -54,6 +54,9 @@ public class TipiSwingTab extends JPanel implements TipiTabbable {
 	public void setTabIcon(Icon tabIcon) {
 		Icon old = this.tabIcon;
 		this.tabIcon = tabIcon;
+		if(old==tabIcon) {
+			System.err.println("whoops, identical");
+		}
 		firePropertyChange("tabIcon", old, tabIcon);
 		System.err.println("Tab set!"+tabIcon);
 

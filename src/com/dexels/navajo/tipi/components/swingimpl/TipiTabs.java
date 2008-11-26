@@ -204,8 +204,8 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 					jc.revalidate();
 
 				}
-				int nextIndex = childList.size()-1;
-				JTabbedPane pane = (JTabbedPane) getContainer();
+				final int nextIndex = childList.size()-1;
+				final JTabbedPane pane = (JTabbedPane) getContainer();
 				if (jc instanceof TipiTabbable) {
 					TipiTabbable tb = (TipiTabbable) jc;
 					Icon tabIcon = tb.getTabIcon();
@@ -232,7 +232,11 @@ public class TipiTabs extends TipiSwingDataComponentImpl {
 					tb.addPropertyChangeListener(new PropertyChangeListener()  {
 
 						public void propertyChange(PropertyChangeEvent evt) {
-							
+							System.err.println("Propertychanged: "+evt.getPropertyName());
+							if(evt.getPropertyName().equals("tabIcon")) {
+								pane.setIconAt(nextIndex, (Icon) evt.getNewValue());
+							}
+
 						}});
 					 
 				} else {
