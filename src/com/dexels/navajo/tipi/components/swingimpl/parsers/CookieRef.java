@@ -29,12 +29,16 @@ public class CookieRef implements TipiReference {
 //		myCookie = c;
 //	}
 
-	public void setValue(Object val, TipiComponent source) {
+	public void setValue(Object val) {
 //		System.err.println("Current cookie: "+myCookie.getName()+" will be set to value: "+val);
 //		myCookie.setValue(""+val);
 //		BrowserSetCookieCommand bs = new BrowserSetCookieCommand(myCookie);
 //		ApplicationInstance.getActive().enqueueCommand(bs);
 
+	}
+
+	public Object getValue() {
+		return null;
 	}
 	
 	
