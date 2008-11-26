@@ -40,7 +40,11 @@ public abstract class TipiComponentImpl implements TipiEventListener, TipiCompon
 	protected boolean isHomeComponent = false;
 
 	private final Map<String, TipiComponent> tipiComponentMap = new HashMap<String, TipiComponent>();
+
 	protected final List<PropertyComponent> properties = new ArrayList<PropertyComponent>();
+	protected final List<MessageComponent> messages = new ArrayList<MessageComponent>();
+	
+	
 	protected final List<TipiEvent> myEventList = new ArrayList<TipiEvent>();
 	private final List<TipiComponent> tipiComponentList = new ArrayList<TipiComponent>();
 //	private final Map<String, String> detectedExpressions = new HashMap<String, String>();
