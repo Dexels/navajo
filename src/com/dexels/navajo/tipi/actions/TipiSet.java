@@ -32,13 +32,13 @@ public final class TipiSet extends TipiAction {
 		if (element == null) {
 			throw new TipiException("Error in setValue: to evaluation failed. Expression: " + path + " (from: " + value + ")");
 		}
-		if (value != null) {
+		if (value != null || hasParameter("value")) {
 			if (element instanceof Property) {
 				Property p = (Property) element;
 				p.setAnyValue(value);
 			} else if (element instanceof TipiReference) {
 				TipiReference p = (TipiReference) element;
-				p.setValue(value, getComponent());
+				p.setValue(value);
 			} else {
 				throw new TipiException("Error in setValue: illegal 'to' parameter. Expression: " + path + " (from: " + value + ")");
 			}
