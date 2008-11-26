@@ -2,6 +2,7 @@ package com.dexels.navajo.document.types;
 
 import java.math.*;
 import java.text.*;
+import java.util.*;
 import java.util.regex.*;
 
 import com.dexels.navajo.document.*;
@@ -29,7 +30,11 @@ private Double value = null;
   private DecimalFormat customFormat = null;
 
   static {
-//    nf.setNegativePrefix("- \u00A4");
+	  internalTmlFormat = (DecimalFormat) NumberFormat.getInstance(Locale.US);
+	  internalTmlFormat.setGroupingUsed(false);
+	  internalTmlFormat.setMaximumFractionDigits(2);
+	  internalTmlFormat.setMinimumFractionDigits(2);
+	  //    nf.setNegativePrefix("- \u00A4");
 //    nf.setNegativeSuffix("\u00A4");
   }
 
@@ -212,13 +217,13 @@ private void setValue(Double d) {
      return formatted;
   }
 
-  public String tmlString() {
-	    if (value == null) {
-	      return "";
-	    }
-	
-	    return internalTmlFormat.format(value);
-	  }
+//  public String tmlString() {
+//	    if (value == null) {
+//	      return "";
+//	    }
+//	
+//	    return internalTmlFormat.format(value);
+//	  }
 
 public String editingString() {
 	    if (value == null) {
@@ -228,11 +233,21 @@ public String editingString() {
 	}
 
   
+	public String toTmlString() {
+		if (value == null) {
+			return "";
+		} else {
+			String format = internalTmlFormat.format(value);
+			return format;
+		}
+	}
+
   /**
    * Get the String representation of this Money object
    * @return String
    */
   public String toString() {
+//	  throw new IllegalStateException("KABLAM!");
     if (value == null) {
       return "";
     }

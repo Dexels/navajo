@@ -29,6 +29,10 @@ public abstract class NavajoType implements  Serializable {
 	  
   }
   
+  public String toTmlString() {
+	  return toString();
+  }
+  
   public NavajoType(String type, String subtype) {
     if (subtype!=null) {
       subTypeMap = NavajoFactory.getInstance().parseSubTypes(subtype);
