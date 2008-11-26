@@ -23,7 +23,7 @@ public class TipiShowInfo extends TipiAction {
 		} else {
 			result = oo.toString();
 		}
-		final String txt = (result).replaceAll("\n", " ");
+		final String txt = result.replaceAll("\n", " ");
 		myContext.showInfo(txt, "Info");
 	}
 }
