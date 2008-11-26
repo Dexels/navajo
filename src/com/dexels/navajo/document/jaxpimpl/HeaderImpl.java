@@ -15,7 +15,6 @@ import javax.xml.transform.stream.*;
 
 import org.w3c.dom.*;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.jaxpimpl.xml.*;
@@ -326,7 +325,7 @@ public final class HeaderImpl implements Header {
     }
     
     public String[] getCallBackPointers() {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
     public void removeCallBackPointers() {

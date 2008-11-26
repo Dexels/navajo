@@ -6,6 +6,8 @@ import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import sun.rmi.runtime.*;
+
 import com.dexels.navajo.document.*;
 import com.dexels.navajo.document.base.BaseMessageImpl;
 import com.dexels.navajo.document.base.BaseNavajoFactoryImpl;
@@ -95,6 +97,7 @@ public class TestProperty extends TestCase {
 		// Money
 		p1.setAnyValue(new Money(5000));
 		assertEquals("money", p1.getType());
+		
 		assertEquals("5000.00", p1.getValue());
 		assertTrue(p1.getTypedValue().equals(new Money(5000)));
 		
@@ -610,8 +613,9 @@ public class TestProperty extends TestCase {
 	
 	public void testMoneyFormat(){
 	     Money m = new Money(10); 
-	     System.err.println("m: "+m.tmlString()+" :: "+m.editingString());
-	     Assert.assertEquals(m.tmlString(), "10.00");
+	     System.err.println("Country: "+Locale.getDefault().getCountry());
+	     System.err.println("m: "+m.toTmlString()+" :: "+m.editingString());
+	     Assert.assertEquals(m.toTmlString(), "10.00");
 	     Assert.assertEquals(m.editingString(), "10");
 
 	     m = new Money("10.000");
@@ -640,8 +644,8 @@ public class TestProperty extends TestCase {
 //		n2.write(System.err);
 	     Money mon = (Money) p2.getTypedValue(); 
 
-//	     System.err.println("m: "+mon.tmlString()+" :: "+mon.editingString()+" :: "+mon.toString());
-	     Assert.assertEquals(mon.tmlString(), "10.30");
+	     System.err.println("m: "+mon.toTmlString()+" :: "+mon.editingString()+" :: "+mon.toString());
+	     Assert.assertEquals(mon.toTmlString(), "10.30");
 	     Assert.assertEquals(mon.doubleValue(), 10.30d);
 
 		
@@ -666,5 +670,22 @@ public class TestProperty extends TestCase {
 
 	}
 
+
+	public void testExpression() throws NavajoException{
+		BaseNavajoImpl n = new BaseNavajoImpl(NavajoFactory.getInstance());
+		BaseMessageImpl m = new BaseMessageImpl(n, "Aap");
+		n.addMessage(m);
+		BasePropertyImpl p1 = new BasePropertyImpl(n, "Noot");
+		m.addProperty(p1);
+		p1.setType(Property.EXPRESSION_PROPERTY);
+		String illegalExpression = "123";
+		p1.setValue(illegalExpression);
+		String res = p1.getValue();
+		assertEquals(illegalExpression, res);
+		// Can't really test, need an expression evaluator, which has a dep to Navajo
+		// TODO: Move test to navajo
+		//		assertEquals(illegalExpression, p1.getTypedValue());
+		
+	}
 	
 }
