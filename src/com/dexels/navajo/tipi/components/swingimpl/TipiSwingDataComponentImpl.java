@@ -28,18 +28,10 @@ public abstract class TipiSwingDataComponentImpl
     implements TipiSwingComponent {
   protected TipiPopupMenu myPopupMenu = null;
   protected TipiGradientPaint myPaint;
-//  private String myHeader = null;
-//  private String myFooter = null;
-//  private double scale = 0;
-//  private int pageCount = -1;
   private int currentPage = -1;
 
 
   protected SwingTipiContext mySwingTipiContext;
-  
-//  private boolean committedInUI;
-
-
   
   public void initContainer() {
 	  mySwingTipiContext = (SwingTipiContext)myContext;
@@ -67,13 +59,6 @@ public abstract class TipiSwingDataComponentImpl
 		}});
 		 
 	 }
-
-//    for (int i = 0; i < getChildCount(); i++) {
-//      TipiComponent current = getTipiComponent(i);
-//      if (TipiSwingComponent.class.isInstance(current)) {
-//         ( (TipiSwingComponent) current).setWaitCursor(b);
-//      }
-//    }
 
   public void addToContainer(final Object c, final Object constraints) {
     try {
@@ -104,11 +89,6 @@ public abstract class TipiSwingDataComponentImpl
     });
   }
 
-//  public void setCursor(Cursor c) {
-//    if (getSwingContainer() != null) {
-//      getSwingContainer().setCursor(c);
-//    }
-//  }w
 
   protected Object getComponentValue(String name) {
     if (name != null) {

@@ -64,17 +64,6 @@ public abstract class TipiSwingComponentImpl extends TipiComponentImpl implement
 		return myPaint;
 	}
 
-	// public void setCursor(int cursorid) {
-	// if (getContainer() != null) {
-	// ( (Container)
-	// getContainer()).setCursor(Cursor.getPredefinedCursor(cursorid));
-	// }
-	// }
-	// public void setCursor(Cursor c) {
-	// if (getSwingContainer()!=null) {
-	// getSwingContainer().setCursor(c);
-	// }
-	// }
 
 	public void initContainer() {
 		mySwingTipiContext = (SwingTipiContext) myContext;
@@ -115,13 +104,6 @@ public abstract class TipiSwingComponentImpl extends TipiComponentImpl implement
 		});
 	}
 
-	public void print() {
-		if (getSwingContainer() != null) {
-			PrintJob pj = Toolkit.getDefaultToolkit().getPrintJob((Frame) myContext.getTopLevel(), "aap", null);
-			Graphics g = pj.getGraphics();
-			getSwingContainer().print(g);
-		}
-	}
 
 	public void animateTransition(TipiEvent te, TipiExecutable executableParent, List<TipiExecutable> exe, int duration) throws TipiBreakException {
 		mySwingTipiContext.animateDefaultTransition(this, te, executableParent, getSwingContainer(), exe,duration);
