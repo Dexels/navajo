@@ -579,15 +579,12 @@ public void removePropertyChangeListener(PropertyChangeListener p) {
 }
 
 public static void main(String [] args) throws Exception {
-	Navajo n = NavajoFactory.getInstance().createNavajo();
-	Message m = NavajoFactory.getInstance().createMessage(n, "Test");
-	Property p = NavajoFactory.getInstance().createProperty(n, "Date", Property.DATE_PROPERTY, "", 0, "","", "");
-	n.addMessage(m);
-	m.addProperty(p);
-	FileOutputStream fos = new FileOutputStream("/home/arjen/OBJECT");
-	ObjectOutputStream oos = new ObjectOutputStream(fos);
-	oos.writeObject(n);
-	oos.close();
+	Navajo bitch = NavajoFactory.getInstance().createNavajo(new FileInputStream("/home/arjen/projecten/Navajo/inheritance/JarnoBitch.xml"));
+	Navajo master = NavajoFactory.getInstance().createNavajo(new FileInputStream("/home/arjen/projecten/Navajo/inheritance/JarnoMaster.xml"));
+	
+	Navajo merge = bitch.merge(master);
+	
+	merge.write(System.err);
 }
 
 public NavajoFactory getNavajoFactory() {
@@ -650,11 +647,11 @@ public Navajo merge(Navajo with) throws NavajoException {
 	for (int i = 0; i < subMessages.size(); i++) {
 		Message subMsg = subMessages.get(i);
 		boolean newMsg = true;
-		for (int j = 0; j < subMessages.size(); j++) {
+		for (int j = 0; j < superMessages.size(); j++) {
 			Message superMsg = superMessages.get(j);
 			if ( superMsg.getName().equals(subMsg.getName()) ) {
 				newMsg = false;
-				j = subMessages.size() + 1;
+				j = superMessages.size() + 1;
 			}
 		}
 		if ( newMsg ) {
