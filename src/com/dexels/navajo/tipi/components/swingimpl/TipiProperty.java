@@ -165,7 +165,7 @@ public class TipiProperty extends TipiSwingComponentImpl implements PropertyComp
 				}
 				// TODO: Not sure about this one:
 				if(myProperty!=null) {
-					myContext.unlink(myProperty);
+					myContext.unlink(myProperty.getRootDoc(),myProperty);
 				}
 				if(p!=null) {
 					p.addPropertyChangeListener(TipiProperty.this);
