@@ -130,7 +130,7 @@ public class DesktopButton extends JButton {
 		gBuf = buffer.createGraphics();
 
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		g2.setColor(Color.white);
+		g2.setColor(getForeground());
 		g2.setFont(fA);
 		g2.setComposite(AlphaComposite.SrcOver.derive(Math.min(1.0f, 1.05f * glow)));
 
