@@ -884,30 +884,31 @@ public class BasePropertyImpl extends BaseNode implements Property, Comparable<P
 	 * @param newValue
 	 */
 	protected void firePropertyChanged(String name, Object oldValue, Object newValue) {
-//		if (myPropertyDataListeners == null) {
-//			return;
-//		}
-		if (oldValue == null && newValue == null) {
-			return;
-		}
-		if (oldValue != null) {
-			if (oldValue.equals(newValue)) {
+		if (myPropertyDataListeners != null) {
+
+			if (oldValue == null && newValue == null) {
 				return;
 			}
-		}
-		if (newValue != null) {
-			if (newValue.equals(oldValue)) {
-				return;
+			if (oldValue != null) {
+				if (oldValue.equals(newValue)) {
+					return;
+				}
+			}
+			if (newValue != null) {
+				if (newValue.equals(oldValue)) {
+					return;
+				}
+			}
+
+			if (myPropertyDataListeners != null) {
+				for (int i = 0; i < myPropertyDataListeners.size(); i++) {
+					PropertyChangeListener c = myPropertyDataListeners.get(i);
+					c.propertyChange(new PropertyChangeEvent(this, name, oldValue, newValue));
+
+				}
 			}
 		}
 
-		if (myPropertyDataListeners != null) {
-			for (int i = 0; i < myPropertyDataListeners.size(); i++) {
-				PropertyChangeListener c = myPropertyDataListeners.get(i);
-				c.propertyChange(new PropertyChangeEvent(this, name, oldValue, newValue));
-		
-			}
-		}
 		if (getParentMessage() != null) {
 			getParentMessage().firePropertyDataChanged(this, oldValue, newValue);
 		}
