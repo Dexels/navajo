@@ -34,7 +34,7 @@
       </values>
       <methods/>
    </tipiclass>
-   <tipiclass addtocontainer="true" childcount="*" class="TipiRichPanel" layoutmanager="false" module="container" name="richtipi" package="com.dexels.navajo.tipi.components.rich" studio-icon="tabs.gif" type="tipi">
+   <tipiclass addtocontainer="true" childcount="*" class="TipiRichPanel" layoutmanager="true" module="container" name="richtipi" package="com.dexels.navajo.tipi.components.rich" studio-icon="tabs.gif" type="tipi">
       <events>
          <event name="onInstantiate"/>
          <event name="onLoad">
@@ -43,7 +43,7 @@
       </events>
       <values>
          <value direction="in" name="background" type="color" property="background"/>
-         <value direction="in" name="foreground" type="color"/>
+         <value direction="in" name="foreground" type="color" property="foreground"/>
          <value direction="in" name="border" type="border"/>
          <value direction="in" name="opacity" type="float" property="opacity"/>
          <value direction="in" name="bordersize" type="float" property="borderWidth"/>
@@ -108,8 +108,8 @@
          </event>
       </events>
       <values>
-         <value direction="in" name="background" type="color"/>
-         <value direction="in" name="foreground" type="color"/>
+         <value direction="in" name="background" type="color" property="background"/>
+         <value direction="in" name="foreground" type="color" property="foreground"/>
          <value direction="in" name="border" type="border"/>
          <value direction="in" name="text" type="string" property="text"/>
          <value direction="in" name="tooltiptext" type="string" property="toolTipText"/>
