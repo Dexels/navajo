@@ -39,7 +39,6 @@ public class TipiNavajoView extends TipiPanel {
 		super.setComponentValue(name, object);
 		if(name.equals("navajo")) {
 			Navajo n = (Navajo)object;
-			System.err.println("Loading service: "+n.getHeader().getRPCName());
 			try {
 					createNavajoXML(n);
 					myNavajo = n;
