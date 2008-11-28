@@ -99,8 +99,7 @@ public class TipiInstantiateTipi extends TipiAction {
 				}
 			}
 		}
-		System.err.println("XE: "+xe);
-		TipiComponent inst = context.instantiateComponent(xe, event, this);
+		TipiComponent inst = context.instantiateComponent(xe, event, this,parent);
 		inst.setHomeComponent(true);
 		inst.setId(id);
 		parent.addComponent(inst, context, constraints);
@@ -134,9 +133,10 @@ public class TipiInstantiateTipi extends TipiAction {
 
 		force = forceString.equals("true");
 		try {
-			constraints = getEvaluatedParameter("constraints", event);
+			constraints = getEvaluatedParameter("constraint", event);
 			if (constraints != null) {
 				constraints = ((Operand) constraints).value;
+				System.err.println("Constraints::::::: "+constraints);
 			}
 			// TODO Do extra type checking
 //			Operand expectTypeOperand = getEvaluatedParameter("expectType", event);

@@ -3,6 +3,7 @@ package com.dexels.navajo.tipi;
 import java.util.*;
 
 import com.dexels.navajo.document.*;
+import com.dexels.navajo.tipi.components.core.*;
 import com.dexels.navajo.tipi.internal.*;
 
 /**
@@ -51,5 +52,7 @@ public interface TipiDataComponent extends TipiComponent {
 	public void replaceLayout(TipiLayout tl);
 
 	public void refreshLayout();
+
+	public void registerPropertyChild(TipiComponent tipiComponentImpl);
 
 }

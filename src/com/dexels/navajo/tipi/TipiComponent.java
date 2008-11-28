@@ -27,7 +27,10 @@ public interface TipiComponent extends TipiEventListener, TipiLink {
 	public void removeFromContainer(Object c);
 
 	public void addToContainer(Object c, Object constraints);
-
+	public void loadPropertiesFromNavajo(Navajo n);
+	public void loadPropertiesFromMessage(Message n);
+	public TipiDataComponent getServiceRoot();
+		
 
 
 	public TipiContext getContext();

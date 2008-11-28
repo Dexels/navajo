@@ -179,6 +179,9 @@
    <tipi-parser name="cookie" parser="com.dexels.navajo.tipi.components.core.parsers.CookieParser" type="java.lang.String" />
    <tipi-parser name="cookieref" parser="com.dexels.navajo.tipi.components.core.parsers.CookieRefParser" type="com.dexels.navajo.tipi.internal.TipiReference" />
    <tipi-parser name="navajo" type="com.dexels.navajo.document.Navajo" parser="com.dexels.navajo.tipi.components.core.parsers.NavajoParser" />
+   <tipi-parser name="link" type="com.dexels.navajo.tipi.PropertyLinkRequest" parser="com.dexels.navajo.tipi.components.core.parsers.LinkParser" />
+
    <tipi-parser name="selection" type="java.lang.String" parser="com.dexels.navajo.tipi.components.core.parsers.StringParser" />
    <tipi-parser type="java.lang.Object" name="object" parser="com.dexels.navajo.tipi.components.core.parsers.ObjectParser" />
+
 </tid>

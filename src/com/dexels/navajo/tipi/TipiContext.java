@@ -20,7 +20,6 @@ import com.dexels.navajo.tipi.components.core.*;
 import com.dexels.navajo.tipi.connectors.*;
 import com.dexels.navajo.tipi.extension.*;
 import com.dexels.navajo.tipi.internal.*;
-import com.dexels.navajo.tipi.internal.cookie.*;
 import com.dexels.navajo.tipi.internal.cookie.CookieManager;
 import com.dexels.navajo.tipi.tipixml.*;
 import com.dexels.navajo.tipi.validation.*;
@@ -219,6 +218,7 @@ public abstract class TipiContext {
 		fakeExtension(optionalExtensionList, "tipi.TipiCalendarExtension");
 		fakeExtension(optionalExtensionList, "tipi.TipiFacilityOccupationExtension");
 		fakeExtension(optionalExtensionList, "tipi.TipiJxLayerExtension");
+		fakeExtension(optionalExtensionList, "tipi.TipiMigExtension");
 
 		fakeExtension(mainExtensionList, "tipi.TipiEchoExtension");
 
@@ -503,7 +503,6 @@ public abstract class TipiContext {
 		String value = systemPropertyMap.get(name);
 		String sysVal = null;
 		if (value != null) {
-			System.err.println("Local value: " + value);
 			return value;
 		}
 		try {
@@ -511,7 +510,6 @@ public abstract class TipiContext {
 			systemPropertyMap.put(name, sysVal);
 			value = sysVal;
 		} catch (SecurityException e) {
-			// System.err.println("No system propery access allowed.");
 		}
 		return value;
 
@@ -979,7 +977,7 @@ public abstract class TipiContext {
 				System.err.println("WARNING, STRANGE LAYOUT TAG: " + instance);
 			}
 		}
-		TipiLayout tl = (TipiLayout) instantiateClass(type, null, instance);
+		TipiLayout tl = (TipiLayout) instantiateClass(type, null, instance,cc);
 		if (tl == null) {
 			return null;
 		}
@@ -1000,7 +998,7 @@ public abstract class TipiContext {
 	// return instantiateLayout(instance,null);
 	// }
 
-	protected TipiComponent instantiateComponentByDefinition(XMLElement definition, XMLElement instance, TipiEvent event)
+	protected TipiComponent instantiateComponentByDefinition(XMLElement definition, XMLElement instance, TipiEvent event,TipiComponent parent)
 			throws TipiException {
 		String clas = definition.getStringAttribute("class");
 		if (clas == null) {
@@ -1015,7 +1013,7 @@ public abstract class TipiContext {
 			showInternalError("Error instantiating component: " + clas + ". No name supplied. instance: " + instance);
 		}
 		if (!clas.equals("")) {
-			TipiComponent tc = (TipiComponent) instantiateClass(clas, name, instance);
+			TipiComponent tc = (TipiComponent) instantiateClass(clas, name, instance,parent);
 			// tc.setHomeComponent(true);
 			// System.err.println("Instantiating component by definition:
 			// "+clas);
@@ -1055,7 +1053,7 @@ public abstract class TipiContext {
 		}
 	}
 
-	public TipiComponent instantiateComponent(XMLElement instance, TipiEvent event, TipiInstantiateTipi t) throws TipiException {
+	public TipiComponent instantiateComponent(XMLElement instance, TipiEvent event, TipiInstantiateTipi t,TipiComponent parent) throws TipiException {
 		String name = (String) instance.getAttribute("name");
 		String tagName = instance.getName();
 		String clas = instance.getStringAttribute("class");
@@ -1077,14 +1075,15 @@ public abstract class TipiContext {
 			if (xx == null) {
 				throw new TipiException("Definition based instance, but no definition found. Definition: " + name);
 			}
-			tc = instantiateComponentByDefinition(xx, instance, event);
+			tc = instantiateComponentByDefinition(xx, instance, event,parent);
 
 		} else {
 			// Class provided. Not instantiating from a definition, name is
 			// irrelevant.
-			tc = (TipiComponent) instantiateClass(clas, null, instance);
+			tc = (TipiComponent) instantiateClass(clas, null, instance,parent);
 		}
-
+		tc.setParent(parent);
+		
 		if (t == null) {
 			tc.loadStartValues(instance, event);
 		} else {
@@ -1160,7 +1159,7 @@ public abstract class TipiContext {
 		fireTipiStructureChanged(parent);
 	}
 
-	private Object instantiateClass(String className, String defname, XMLElement instance) throws TipiException {
+	private Object instantiateClass(String className, String defname, XMLElement instance, TipiComponent parent) throws TipiException {
 
 		XMLElement tipiDefinition = null;
 		Class<?> c = getTipiClass(className);
@@ -1187,6 +1186,7 @@ public abstract class TipiContext {
 		if (TipiComponent.class.isInstance(o)) {
 			TipiComponent tc = (TipiComponent) o;
 			tc.setContext(this);
+			tc.setParent(parent);
 			if (tc.getId() == null) {
 				tc.setId(generateComponentId(null, tc));
 			}
@@ -1442,13 +1442,13 @@ public abstract class TipiContext {
 			throw new TipiException("Fatal tipi error: Can not switch. Unknown definition: " + name);
 		}
 		componentDefinition.setAttribute("id", "init");
-		TipiComponent tc = instantiateComponent(componentDefinition, null, null);
+		TipiComponent tc = instantiateComponent(componentDefinition, null, null,null);
 		tc.commitToUi();
 
 		try {
 			TipiExtension t = extensionMap.get("develop");
 			if (t != null) {
-				TipiComponent dev = instantiateComponent(getComponentDefinition("develop"), null, null);
+				TipiComponent dev = instantiateComponent(getComponentDefinition("develop"), null, null,null);
 				tc.addComponent(dev, this, null);
 			}
 		} catch (Throwable e) {
@@ -1725,9 +1725,14 @@ public abstract class TipiContext {
 		List<TipiDataComponent> tipiList;
 		tipiList = getTipiInstancesByService(method);
 		if (tipiList == null) {
+			System.err.println("Unregistered");
 			fireNavajoReceived(reply, method);
 			return;
 		}
+//
+//		for (TipiDataComponent tipiDataComponent : tipiList) {
+//			System.err.println("Delivering to: "+tipiDataComponent.getPath());
+//		}
 
 		for (int i = 0; i < tipiList.size(); i++) {
 			TipiDataComponent t = tipiList.get(i);

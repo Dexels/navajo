@@ -37,6 +37,7 @@ public class TipiInjectMessage extends TipiAction {
 		String service = (String) serviceOperand.value;
 
 		Navajo nn = NavajoFactory.getInstance().createNavajo();
+		nn.addHeader(NavajoFactory.getInstance().createHeader(nn, service, "", "", -1));
 		try {
 			nn.addMessage(message);
 		} catch (NavajoException e) {

@@ -27,11 +27,12 @@ import com.dexels.navajo.tipi.tipixml.*;
 public abstract class TipiDataComponentImpl extends TipiComponentImpl implements TipiDataComponent {
 	private final List<String> myServices = new ArrayList<String>();
 	protected String myMethod;
+	protected final Set<TipiComponent> propertyComponentSet = new HashSet<TipiComponent>();
 
 	public TipiDataComponentImpl() {
 	}
 
-	private final void loadServices(String myService) {
+	protected final void loadServices(String myService) {
 		if (myService != null) {
 			if (myService.indexOf(';') >= 0) {
 				StringTokenizer st = new StringTokenizer(myService, ";");
@@ -46,22 +47,34 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 			}
 		}
 	}
+ 
+	public boolean isServiceRoot() {
+		return !myServices.isEmpty();
+	}
+	
 
+	
 	public void load(XMLElement definition, XMLElement instance, TipiContext context) throws TipiException {
-		super.load(definition, instance, context);
 		if (definition.equals(instance)) {
 			loadServices((String) definition.getAttribute("service"));
 		} else {
 			setHomeComponent(true);
-			if(instance.getAttribute("service")!=null) {
+			if (instance.getAttribute("service") != null) {
 				loadServices((String) instance.getAttribute("service"));
 			}
-			if(definition.getAttribute("service")!=null) {
+			if (definition.getAttribute("service") != null) {
 				loadServices((String) definition.getAttribute("service"));
 			}
 		}
+		super.load(definition, instance, context);
+		
 	}
 
+	public void registerPropertyChild(TipiComponent component) {
+		propertyComponentSet.add(component);
+	}
+
+	
 	public String getName() {
 		return myName;
 	}
@@ -114,6 +127,8 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 		tipiPath = "*";
 		if (myNavajo == null) {
 			myNavajo = NavajoFactory.getInstance().createNavajo();
+			myNavajo.addHeader(NavajoFactory.getInstance().createHeader(myNavajo, service, "", "", -1));
+				
 		}
 		context.performTipiMethod(this, myNavajo, tipiPath, service, breakOnError, event, expirationInterval, hostUrl, username, password,
 				keystore, keypass);
@@ -124,15 +139,49 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 	}
 
 	public void loadData(Navajo n, String method) throws TipiException, TipiBreakException {
+		System.err.println("Load data: "+method+" on component: "+getPath());
 		myMethod = method;
 		if (n == null) {
 			throw new TipiException("Loading with null Navajo! ");
 		}
+		myNavajo = n;
+		
+		if(true || "true".equals(myContext.getSystemProperty("isNewNavajoLoading"))) {
+			System.err.println("Loading. # of componentS: "+propertyComponentSet.size()+" loading: "+getPath() );
+			for (TipiComponent tc : propertyComponentSet) {
+				tc.loadPropertiesFromNavajo(n);
+			}
+			loadProperties(n);
+			cascadeLoad(n, method);
+			doPerformOnLoad(method, n, true);
+			doLayout();
+		} else {
+			loadProperties(n);
+			loadPropertiesFromNavajo(n);
+			loadMessages(n);
+			cascadeLoad(n, method);
+			doPerformOnLoad(method, n, true);
+			doLayout();
+		}
+		
+	}
 
+	protected void loadMessages(Navajo n) {
+		for (MessageComponent current : messages) {
+			Message m = n.getMessage(current.getMessageName());
+			if (m != null) {
+				current.setMessage(m.getMessage(current.getMessageIndex()));
+			}
+		}
+	}
+
+	/**
+	 * @param n
+	 */
+	protected void loadProperties(Navajo n) {
 		for (int i = 0; i < properties.size(); i++) {
 			PropertyComponent current = properties.get(i);
 			Property p;
-			System.err.println("Current: "+current);
 			p = n.getProperty(current.getPropertyName());
 			if (p != null) {
 				try {
@@ -148,7 +197,14 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 				current.setProperty(p);
 			}
 		}
-		myNavajo = n;
+	}
+
+	/**
+	 * @param n
+	 * @param method
+	 * @throws TipiException
+	 */
+	protected void cascadeLoad(Navajo n, String method) throws TipiException {
 		/** @TODO Maybe it is not a good idea that it is recursive. */
 		if ("true".equals(myContext.getSystemProperty("noCascadedLoading"))) {
 			// new style
@@ -160,13 +216,11 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 				if (TipiDataComponent.class.isInstance(tcomp)) {
 					TipiDataComponent current = (TipiDataComponent) tcomp;
 					current.loadData(n, method);
+				} else{
+					tcomp.loadPropertiesFromNavajo(n);
 				}
 			}
 		}
-
-		// hmmmmmmmmm
-		doPerformOnLoad(method, n, true);
-		doLayout();
 	}
 
 	protected void doPerformOnLoad(String method, Navajo n, boolean sync) throws TipiException {
@@ -229,6 +283,8 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 	}
 
 	public void clearProperties() {
+		System.err.println("Clearingproperty");
+		
 		properties.clear();
 	}
 
@@ -237,4 +293,42 @@ public abstract class TipiDataComponentImpl extends TipiComponentImpl implements
 		myContext.removeTipiInstance(this);
 		myNavajo = null;
 	}
+
+	public void loadArrayData(final Navajo n, String method, String messagePath) throws TipiBreakException {
+		if (messagePath == null) {
+			return;
+		}
+		final Message m = n.getMessage(messagePath);
+		runSyncInEventThread(new Runnable() {
+
+			public void run() {
+				ArrayList<Message> al = m.getAllMessages();
+				try {
+					performTipiEvent("onStart", null, true);
+					int index = 0;
+
+					for (Message message : al) {
+						Map<String, Object> eventParams = new HashMap<String, Object>();
+						eventParams.put("message", message);
+						eventParams.put("index", index);
+						performTipiEvent("onBeforeElement", eventParams, true);
+						TipiComponent child = getTipiComponent(""+index);
+					
+						if(child instanceof MessageComponent) {
+							MessageComponent mc = (MessageComponent)child;
+							mc.setMessage(message);
+						}
+						performTipiEvent("onAfterElement", eventParams, true);
+						index++;
+					}
+					performTipiEvent("onEnd", null, true);
+				
+					
+				} catch (TipiException e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
 }

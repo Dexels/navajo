@@ -26,8 +26,12 @@ public final class TipiSetAttributes extends TipiAction {
 
 	public final void execute(TipiEvent event) throws com.dexels.navajo.tipi.TipiException, com.dexels.navajo.tipi.TipiBreakException {
 		Object o = getEvaluatedParameterValue("path", event);
+		if(o==null) {
+			throw new TipiException("TipiSetAttributes: Path component missing ");
+	
+		}
 		if(!(o instanceof TipiComponent)) {
-			throw new TipiException("TipiSetAttributes: Path component missing or wrong type");
+			throw new TipiException("TipiSetAttributes: Path component wrong type");
 		}
 		TipiComponent tc = (TipiComponent)o;
 		Set<String> p = getParameterNames();

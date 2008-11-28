@@ -71,6 +71,16 @@ public final class TipiSet extends TipiAction {
 				throw new TipiException("Error in set: Can't change type of attributeref:" + path);
 			}
 		}
+		
+		if (hasParameter("subType")) {
+			String type = (String) getEvaluatedParameterValue("propertyType", event);
+			if (element instanceof Property) {
+				Property p = (Property) element;
+				p.setSubType(type);
+			} else {
+				throw new TipiException("Error in set: Can't subType type of attributeref:" + path);
+			}
+		}
 
 	}
 }

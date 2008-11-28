@@ -46,7 +46,7 @@ public class TipiRemoveMessage extends TipiAction {
 		Message mm = arrayMessage.getMessage(ii.intValue());
 		arrayMessage.removeMessage(mm);
 		try {
-			myContext.unlink(mm);
+			myContext.unlink(mm.getRootDoc(),mm);
 		} catch (NavajoException e) {
 			throw new TipiException("Error unlinking message: " + mm.getFullMessageName(), e);
 		}
