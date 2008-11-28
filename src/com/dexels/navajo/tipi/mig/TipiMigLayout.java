@@ -1,11 +1,9 @@
 package com.dexels.navajo.tipi.mig;
 
-import java.awt.*;
-
 import net.miginfocom.swing.MigLayout;
 
-import com.dexels.navajo.tipi.*;
-import com.dexels.navajo.tipi.components.core.*;
+import com.dexels.navajo.tipi.TipiValue;
+import com.dexels.navajo.tipi.components.core.TipiLayoutImpl;
 
 /**
  * <p>Title: </p>
