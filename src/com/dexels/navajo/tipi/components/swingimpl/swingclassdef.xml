@@ -756,13 +756,18 @@
          <event name="onLoad">
             <param name="service" type="string" />
             <param name="navajo" type="navajo" />
+            <param name="message" type="message"/>
          </event>
          <event name="onGeneratedErrors">
             <param name="id" type="string" />
             <param name="description" type="string" />
          </event>
          <event name="onClear" />
-         <event name="onElement">
+         <event name="onBeforeElement">
+            <param name="index" type="integer"/>
+            <param name="message" type="message"/>
+         </event>         
+         <event name="onAfterElement">
             <param name="index" type="integer"/>
             <param name="message" type="message"/>
          </event>         
@@ -793,7 +798,7 @@
    </tipiclass>
    
       <!-- Identical to tipi -->
-   <tipiclass addtocontainer="true" deprecated="true" childcount="*" class="TipiPanel" layoutmanager="true" module="container" name="messagepanel"
+   <tipiclass addtocontainer="true" deprecated="true" childcount="*" class="TipiMessagePanel" layoutmanager="true" module="container" name="messagepanel"
       package="com.dexels.navajo.tipi.components.swingimpl" studio-icon="tipi.gif" type="tipi">
       <description>
       Based on the panel
@@ -814,7 +819,8 @@
       <values>
          <!-- only addition from panel -->
          <value direction="in" name="messageName" type="string" />
-         
+          <value direction="in" name="message" type="message" />
+        
          <value direction="in" name="opaque" type="boolean" property="opaque" />
          <value direction="in" name="background" type="color" property="background" />
          <value direction="in" name="border" type="border" property="border" />
@@ -1551,7 +1557,7 @@
 
 
    <tipiclass addtocontainer="true" class="TipiHtmlLabel" module="component" name="htmllabel" layoutmanager="false" package="com.dexels.navajo.tipi.components.swingimpl"
-      propertycomponent="false" studio-icon="label.gif" type="component" childcount="0">
+      propertycomponent="true" studio-icon="label.gif" type="component" childcount="0" >
       <events>
          <event name="onInstantiate" />
       </events>
@@ -1561,7 +1567,8 @@
          <value direction="in" name="font" type="font" property="font" />
          <value direction="inout" name="tooltip" type="string" property="ToolTipText" />
          <value direction="in" name="visible" type="boolean" property="visible" />
-      </values>
+        <value direction="in" name="propertyName" type="string" />
+    </values>
       <methods />
    </tipiclass>
    <tipiclass addtocontainer="true" class="TipiProgressBar" module="component" name="progressbar" childcount="0" layoutmanager="false"
@@ -1767,7 +1774,10 @@
 
    <tipiclass addtocontainer="true" class="TipiLabel" module="component" name="hidden" layoutmanager="false" package="com.dexels.navajo.tipi.components.swingimpl"
       studio-icon="hidden.gif" type="component" childcount="0" />
+  <tipiclass addtocontainer="true" class="TipiProperty" module="component" name="property" layoutmanager="false" package="com.dexels.navajo.tipi.components.swingimpl" propertycomponent="true" studio-icon="property.gif" type="component" childcount="0">
 
+    </tipiclass>
+    
    <tipiclass addtocontainer="true" class="TipiProperty" module="component" name="property" layoutmanager="false" package="com.dexels.navajo.tipi.components.swingimpl"
       propertycomponent="true" studio-icon="property.gif" type="component" childcount="0">
       <events>

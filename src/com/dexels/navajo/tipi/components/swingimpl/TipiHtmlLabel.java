@@ -6,8 +6,10 @@ import javax.swing.*;
 import javax.swing.text.*;
 import javax.swing.text.html.*;
 
+import com.dexels.navajo.document.*;
 import com.dexels.navajo.tipi.*;
 import com.dexels.navajo.tipi.components.swingimpl.swing.*;
+import com.dexels.navajo.tipi.internal.*;
 
 /**
  * <p>
@@ -26,12 +28,17 @@ import com.dexels.navajo.tipi.components.swingimpl.swing.*;
  * @author not attributable
  * @version 1.0
  */
-public class TipiHtmlLabel extends TipiSwingDataComponentImpl {
+public class TipiHtmlLabel extends TipiSwingDataComponentImpl implements PropertyComponent {
 	private JEditorPane myLabel;
 	private JScrollPane jsp;
-
+	private String myPropertyName;
+	private  PropertyHandler myHandler;
+	private Property myProperty;
+	
 	public Object createContainer() {
-	    myLabel = new JEditorPane();
+		myHandler = new PropertyHandler(this,null);
+//		myHandler.addMapping("value", "text");
+		myLabel = new JEditorPane();
 	    TipiHelper th = new TipiSwingHelper();
 	    myLabel.setAutoscrolls(true);
 	    th.initHelper(this);
@@ -41,10 +48,10 @@ public class TipiHtmlLabel extends TipiSwingDataComponentImpl {
 //	    myLabel.setText("some very very very long text  ....");
 
 	    
-	    Font font = UIManager.getFont("Label.font");
-        String bodyRule = "body { font-family: " + font.getFamily() + "; " +
-                "font-size: " + font.getSize() + "pt; }";
-        ((HTMLDocument)myLabel.getDocument()).getStyleSheet().addRule(bodyRule);
+//	    Font font = UIManager.getFont("Label.font");
+//        String bodyRule = "body { font-family: " + font.getFamily() + "; " +
+//                "font-size: " + font.getSize() + "pt; }";
+//        ((HTMLDocument)myLabel.getDocument()).getStyleSheet().addRule(bodyRule);
 
 
 	    myLabel.setEditable(false);
@@ -66,25 +73,47 @@ public class TipiHtmlLabel extends TipiSwingDataComponentImpl {
 
 	public void setComponentValue(final String name, final Object object) {
 		if (name.equals("text")) {
-			runSyncInEventThread(new Runnable() {
-				public void run() {
-					myLabel.setText("" + object);
-					myLabel.setCaretPosition(0);
-				}
-			});
+			setHtmlText(""+object);
 //			((TipiSwingLabel) getContainer()).revalidate();
 			return;
+		}
+		if (name.equals("propertyName")) {
+			myPropertyName = (String) object;
 		}
 		super.setComponentValue(name, object);
 	}
 
-//	public Object getComponentValue(String name) {
-//		if (name.equals("text")) {
-//			return ((TipiSwingLabel) getContainer()).getText();
-//		}
-//		if (name.equals("icon")) {
-//			return ((TipiSwingLabel) getContainer()).getIcon();
-//		}
-//		return super.getComponentValue(name);
-//	}
+
+
+	/**
+	 * @param object
+	 */
+	private void setHtmlText(final String text) {
+		runSyncInEventThread(new Runnable() {
+			public void run() {
+				myLabel.setText(text);
+				myLabel.setCaretPosition(0);
+			}
+		});
+	}
+
+
+
+	public void addTipiEventListener(TipiEventListener listener) {
+	}
+
+	public Property getProperty() {
+		return myProperty;
+	}
+
+	public String getPropertyName() {
+		return myPropertyName;
+	}
+
+	public void setProperty(Property p) {
+		myProperty = p;
+		myHandler.setProperty(p);
+	}
+
+
 }

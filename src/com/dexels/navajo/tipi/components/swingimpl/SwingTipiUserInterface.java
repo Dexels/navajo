@@ -49,7 +49,7 @@ public class SwingTipiUserInterface implements UserInterface{
   public void addDialog(JDialog d) {
 //    d.setLocationRelativeTo(getMainFrame());
 	  myContext.addDialog(d);
-	  d.pack();
+//	  d.pack();
 	  d.getContentPane().repaint();
     showCenteredDialog(d);
   }

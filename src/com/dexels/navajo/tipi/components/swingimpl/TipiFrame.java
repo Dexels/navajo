@@ -56,7 +56,7 @@ public class TipiFrame extends TipiSwingDataComponentImpl {
 //						System.err.println("Changed: "+evt.getPropertyName()+" old: "+evt.getOldValue()+" new: "+evt.getNewValue());
 //					}});
 				ta.getContentPane().add(mySuperPanel, BorderLayout.CENTER);
-				
+				mySuperPanel.setOpaque(false);
 				return ta;
 			}
 
@@ -115,7 +115,7 @@ public class TipiFrame extends TipiSwingDataComponentImpl {
 					runSyncInEventThread(new Runnable() {
 						public void run() {
 							mySuperPanel.add((Component) c, constraints);
-							mySuperPanel.doLayout();
+//							mySuperPanel.doLayout();
 							System.err.println("Size: "+mySuperPanel.getLayout());
 							
 						}
@@ -166,9 +166,6 @@ public class TipiFrame extends TipiSwingDataComponentImpl {
 	}
 
 	public void setContainerLayout(Object layout) {
-
-		// myToplevel.getContentPane().setLayout((LayoutManager) layout);
-		System.err.println("Setting toplevel layout:: "+layout);
 		mySuperPanel.setLayout((LayoutManager) layout);
 	}
 
@@ -197,6 +194,12 @@ public class TipiFrame extends TipiSwingDataComponentImpl {
 				if ("title".equals(name)) {
 					TipiFrame.this.setTitle((String) object);
 				}
+
+				if ("background".equals(name)) {
+					mySuperPanel.setBackground((Color) object);
+				}
+
+				
 				if (name.equals("x")) {
 					x = ((Integer) object).intValue();
 				}
@@ -213,6 +216,24 @@ public class TipiFrame extends TipiSwingDataComponentImpl {
 		});
 
 		super.setComponentValue(name, object);
+	}
+
+	
+	
+	protected void setBackground(Color object) {
+		if(myToplevel instanceof JFrame) {
+			((JFrame) myToplevel).setBackground(object);
+			return;
+		}
+		if(myToplevel instanceof JApplet) {
+			((JApplet) myToplevel).setBackground(object);
+			// not pretty. eat me.
+			((JApplet) myToplevel).getContentPane().setBackground(object);
+			return;
+		}
+		if(myToplevel instanceof Container) {
+			((Container) myToplevel).setBackground(object);
+		}
 	}
 
 	public Object getComponentValue(String name) {

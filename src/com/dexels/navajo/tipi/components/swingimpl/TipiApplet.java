@@ -101,12 +101,12 @@ public class TipiApplet extends JApplet {
 //		}
 //		removeAll();
 		myContext.shutdown();
-		try {
-		// TODO: Setup in applet parameter
-			getAppletContext().showDocument(new URL("http://penelope1.dexels.com/sportlink/club"));
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
+//		try {
+//		// TODO: Setup in applet parameter
+//			getAppletContext().showDocument(new URL("http://penelope1.dexels.com/sportlink/club"));
+//		} catch (MalformedURLException e) {
+//			e.printStackTrace();
+//		}
 //		init();
 //		repaint();
 	}
