@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jnlp spec="1.0+" codebase="http://www.navajo.nl/Tipi/TipiSwingMig" href="TipiSwingMig.jnlp">
+    <information>
+        <title>Navajo Swing Mig integration</title>
+        <vendor>Dexels BV</vendor>
+        <homepage href="www.navajo.nl" />
+        <offline-allowed />
+    </information>  
+
+    <security>
+        <all-permissions/>
+    </security>
+    <resources>
+        <jar href="lib/miglayout-3.6-swing.jar" main="false"/>
+        <jar href="lib/TipiSwingMig.jar" main="false"/>
+    </resources>
+    <component-desc />
+</jnlp>
