@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jnlp spec="1.0+" codebase="http://www.navajo.nl/Tipi/TipiRss" href="TipiRss.jnlp">
     <information>
-        <title>Navajo Mail Tipi component</title>
+        <title>Navajo Rss Tipi component</title>
         <vendor>Dexels BV</vendor>
         <homepage href="www.navajo.nl" />
         <offline-allowed />
