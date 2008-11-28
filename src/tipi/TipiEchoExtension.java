@@ -4,7 +4,7 @@ import java.util.*;
 
 import com.dexels.navajo.tipi.*;
 
-public class TipiEchoExtension implements TipiExtension {
+public class TipiEchoExtension extends AbstractTipiExtension implements TipiExtension {
 
 	public void initialize(TipiContext tc) {
 		// Do nothing

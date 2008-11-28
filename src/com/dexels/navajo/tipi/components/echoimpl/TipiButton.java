@@ -101,7 +101,7 @@ public class TipiButton extends TipiEchoComponentImpl {
         if ("fireAction".equals(name)) {
           for (int i = 0; i < getEventList().size(); i++) {
             TipiEvent current = getEventList().get(i);
-            if (current.isTrigger("onActionPerformed", "aap")) {
+            if (current.isTrigger("onActionPerformed")) {
               try {
 //            	  System.err.println("Button performing action (explicit fire): "+current.getEventName());
                 current.performAction(current,current,0);

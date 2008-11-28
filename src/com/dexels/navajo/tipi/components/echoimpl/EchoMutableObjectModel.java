@@ -25,8 +25,6 @@ public class EchoMutableObjectModel implements OptionModel {
 	}
 
 	public void setId(String id) {
-		//ignored
-//		this.id = id;
 	}
 
 	public void setText(String text) {
@@ -34,18 +32,15 @@ public class EchoMutableObjectModel implements OptionModel {
 	}
 
 	public ImageReference getIcon() {
-		// TODO Auto-generated method stub
 		return image;
 	}
 
 	public String getText() {
-		// TODO Auto-generated method stub
 		return text;
 	}
 
 	public String getId() {
-		// TODO Auto-generated method stub
-		return myComponent.getPath("");
+		return myComponent.getPath();
 	}
 
 }

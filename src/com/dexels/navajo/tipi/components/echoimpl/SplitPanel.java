@@ -23,7 +23,7 @@ import nextapp.echo2.app.SplitPane;
 
 public class SplitPanel extends TipiEchoDataComponentImpl {
 
-    public SplitPanel() {
+    public SplitPanel() { 
     }
 
     public Object createContainer() {

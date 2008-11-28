@@ -123,28 +123,7 @@ public class EchoTipiHelper implements TipiHelper {
             System.err.println("Cannot register echo event: Container is null!");
             return;
         }
-        if (te.isTrigger("onActionPerformed", null)) {
-//            // System.err.println("\nAttempting to REGISTER:
-//            // onActionPerformed!!\n\n\n\n");
-//            // MenuItem m;
-//            Button b;
-//            try {
-//                java.lang.reflect.Method m = c.getClass().getMethod("addActionListener", new Class[] { ActionListener.class });
-//                ActionListener bert = new ActionListener() {
-//                    public void actionPerformed(ActionEvent e) {
-//                            try {
-//								myComponent.performTipiEvent("onActionPerformed", null, true);
-//							} catch (TipiException e1) {
-//							
-//								e1.printStackTrace();
-//							}
-//                        }
-//                    }
-//                };
-//                m.invoke(c, new Object[] { bert });
-//            } catch (Exception exe) {
-//                exe.printStackTrace();
-//            }
+        if (te.isTrigger("onActionPerformed")) {
         }
 
     }

@@ -118,15 +118,7 @@ public class TipiMegaTable extends TipiEchoDataComponentImpl {
         }
     }
 
-    public XMLElement store() {
-        XMLElement xx = super.store();
-        for (int i = layers.size() - 1; i >= 0; i--) {
-            TipiTableBaseLayer tmtl = (TipiTableBaseLayer) layers.get(i);
-            XMLElement cc = tmtl.store();
-            xx.addChild(cc);
-        }
-        return xx;
-    }
+   
 
     // unchamged
     public void flatten(String serviceName, String hostUrl, String username, String password, String pincode, String keystore, String keypass)

@@ -50,7 +50,6 @@ public class TipiQuestionList extends TipiBaseQuestionList {
     }
 
     protected void clearQuestions() {
-        removeInstantiatedChildren();
     }
 
  
