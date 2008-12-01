@@ -141,26 +141,7 @@ public class ResolveAttatchments extends FunctionInterface {
 	
 
 	public static void main(String[] args) throws IOException, TMLExpressionException {
-		ResolveAttatchments sp = new ResolveAttatchments();
-		String ss = "";
-		FileReader fr = new FileReader("sourcemail.html");
-		BufferedReader br = new BufferedReader(fr);
-		String line = br.readLine();
-		StringBuffer sb = new StringBuffer();
-		do {
-			sb.append(line);
-			sb.append("\n");
-			line = br.readLine();
-		} while (line != null);
 
-		fr.close();
-		TidyHtml ht = new TidyHtml();
-		String res = ht.tidyString(sb.toString());
-		System.err.println("Monkey: "+res);
-		sp.renderHTML(res, "apenlul");
-		System.err.println("Source: "+sb.toString());
-//		ss = sp.stripProlog(sb.toString());
-	//	System.err.println("SS: "+ss);
 	}
 
 }
