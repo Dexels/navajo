@@ -1046,7 +1046,7 @@ private void setBlob(PreparedStatement statement, int i, Binary b) throws SQLExc
 
     if (query != null) {
     	if ( isScrollable() ) {
-    		this.statement = con.prepareStatement(query, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+    		this.statement = con.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
     	} else {
     		this.statement = con.prepareStatement(query);
     	}
