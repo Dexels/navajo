@@ -44,7 +44,6 @@ public class Lock extends TipiAction {
 				if(parent instanceof JXLayer) {
 					System.err.println("Layer present");
 					JXLayer<JComponent> jj = (JXLayer<JComponent>) parent;
-					// only check for the effect when locking
 					LayerUI<JComponent> luj = null;
 					if(value) {
 						luj = getLockableUI(effect);
@@ -57,6 +56,8 @@ public class Lock extends TipiAction {
 						LockableUI lu = (LockableUI)luj;
 						lu.setLocked(value);
 						jj.getParent().repaint();
+						jj.getParent().invalidate();
+						
 					} else {
 						System.err.println("No lockable ui detected. Odd."); 
 					
@@ -74,7 +75,7 @@ public class Lock extends TipiAction {
 			        layer.setUI(blurUI);
 			        parent.add(layer);
 			        blurUI.setLocked(true);
-			        
+			        parent.doLayout();
 
 				}
 		        

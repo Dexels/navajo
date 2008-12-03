@@ -13,6 +13,7 @@
     <resources>
         <jar href="lib/filters.jar" main="false"/>
         <jar href="lib/jxlayer.jar" main="false"/>
-   </resources>
+       <jar href="lib/TipiJxLayer.jar" main="false"/>
+    </resources>
     <component-desc/>
 </jnlp>

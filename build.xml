@@ -64,7 +64,7 @@
                  <exclude name="**/*.txt"/>
                </fileset>
     			<service type="tipi.TipiExtension">
-    				<provider classname="tipi.TipiSwingXExtension" />
+    				<provider classname="tipi.TipiJxLayerExtension" />
     			</service>
     			<manifest>
     				<attribute name="Built-By" value="Frank Lyaruu" />
