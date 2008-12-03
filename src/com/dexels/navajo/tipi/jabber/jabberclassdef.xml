@@ -22,6 +22,7 @@
          <value direction="in" name="password" type="string" />
          <value direction="in" name="server" type="string" />
          <value direction="in" name="resource" type="string" />
+         <value direction="out" name="nickName" type="string" />
          <value direction="in" name="domain" type="string" />
          <value direction="in" name="conferenceName" type="string" />
          <value direction="in" name="currentUser" type="string" />
@@ -35,7 +36,7 @@
             <param name="text" type="string" />
             <param name="recipient" type="string" />
          </method>
-         <method name="broadcast">
+         <method name="talk">
             <param name="text" type="string" />
          </method>
          <method name="joinRoom">
