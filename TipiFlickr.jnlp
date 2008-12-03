@@ -13,7 +13,7 @@
     <resources>
         <j2se version="1.5+" max-heap-size="256m"/>
         <jar href="lib/flickrapi-1.0b4.jar" main="false"/>
-        <jar href="TipiFlickr.jar" main="false"/>
+        <jar href="lib/TipiFlickr.jar" main="false"/>
     </resources>
     <component-desc />
 </jnlp>
