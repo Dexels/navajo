@@ -156,7 +156,9 @@ public class NavajoMap extends AsyncMappable  implements Mappable {
           Message clone = inDoc.copyMessage(inMsg, currentDoc);
           if (currentMsg != null) {
         	  if ( appendTo != null ) {
-        		  if ( currentMsg.getMessage(appendTo) != null ) {
+        		  if ( appendTo.equals(Navajo.MESSAGE_SEPARATOR)) {
+        			  currentDoc.addMessage(clone, true);
+        		  } else if ( currentMsg.getMessage(appendTo) != null ) {
         			  if ( currentMsg.getMessage(appendTo).getType().equals(Message.MSG_TYPE_ARRAY )  ) { // For array messages do not overwrite.
         				  currentMsg.getMessage(appendTo).addMessage(clone);
         			  } else {
@@ -169,7 +171,7 @@ public class NavajoMap extends AsyncMappable  implements Mappable {
         		  currentMsg.addMessage(clone, true);
         	  }
           } else {
-        	  if ( appendTo != null ) {
+        	  if ( appendTo != null && !appendTo.equals(Navajo.MESSAGE_SEPARATOR) ) {
         		  if ( currentDoc.getMessage(appendTo) != null ) {
         			  if ( currentDoc.getMessage(appendTo).getType().equals(Message.MSG_TYPE_ARRAY )  ) { // For array messages do not overwrite.
         				  currentDoc.getMessage(appendTo).addMessage(clone);
