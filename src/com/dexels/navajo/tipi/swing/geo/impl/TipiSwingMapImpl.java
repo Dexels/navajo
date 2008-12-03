@@ -35,6 +35,16 @@ public class TipiSwingMapImpl extends JXMapKit {
 //					System.err.println("My center: "+myCenter);
 					if(allowEvents) {
 						myCenter = (GeoPosition) p.getNewValue();
+						double newLat = ((GeoPosition) p.getNewValue()).getLatitude();
+						double oldLat = ((GeoPosition) p.getOldValue()).getLatitude();
+						if(Math.abs(newLat-oldLat)>0.01) {
+							firePropertyChange("lat", oldLat, newLat);
+						}
+						double oldLon = ((GeoPosition) p.getOldValue()).getLongitude();
+						double newLon = ((GeoPosition) p.getNewValue()).getLongitude();
+						if(Math.abs(oldLon-newLon)>0.01) {
+							firePropertyChange("lon", oldLon, newLon);
+						}
 					}
 				}
 			}});
@@ -42,6 +52,7 @@ public class TipiSwingMapImpl extends JXMapKit {
 
 	public void setZoomExternal(int z) {
 		myZoom = z;
+		
 		super.setZoom(z);
 	}
 	
@@ -63,15 +74,19 @@ public class TipiSwingMapImpl extends JXMapKit {
 				setCenterPosition(myCenter);
 				setZoomExternal(myZoom);
 			}
-		}
-		if(factory.equals("openstreetmap")) {
+			allowEvents = true;
+			return;
+		} else if(factory.equals("openstreetmap")) {
 			setTileFactory(new DefaultTileFactory(new OpenStreetMapTileFactoryInfo(17)));
 			// zoom and center is lost after switching:
 			if(myCenter!=null) {
 				setCenterPosition(myCenter);
 				setZoomExternal(myZoom);
 			}
+			allowEvents = true;
+			return;
 		}
-		allowEvents = true;
+		throw new IllegalArgumentException("Can not set mapfactory: "+factory+" use 'google' or 'openstreetmap'");
+		
 	}
 }

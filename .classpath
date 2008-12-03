@@ -2,7 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry exported="true" kind="lib" path="lib/swingx-ws-2008_05_04.jar"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/TipiSwingX"/>
+	<classpathentry kind="lib" path="lib/swingx-ws.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

@@ -14,11 +14,11 @@
          </event>
       </events>
       <values>
-         <value direction="in" name="lon" type="float" />
-         <value direction="in" name="lat" type="float" />
+         <value direction="in" name="lon" type="float" property="lon"/>
+         <value direction="in" name="lat" type="float" property="lat"/>
          <value direction="in" name="factory" type="string" />
          <value direction="in" name="messagePath" type="string" />
-         <value direction="in" name="zoom" type="integer" />
+         <value direction="in" name="zoom" type="integer"/>
       </values>
       <methods>
 

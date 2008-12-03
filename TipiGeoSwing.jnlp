@@ -11,7 +11,7 @@
         <all-permissions/>
     </security>
     <resources>
-         <jar href="lib/swingx-ws-2008_05_04.jar" main="false"/>
+         <jar href="lib/swingx-ws.jar" main="false"/>
          <jar href="lib/TipiGeoSwing.jar" main="false"/>
     </resources>
     <component-desc/>
