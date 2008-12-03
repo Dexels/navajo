@@ -204,7 +204,7 @@ public class JabberUtils {
 			return nickName;
 	}
 
-	private static void registerRoomListeners(String nickName, final MultiUserChat muc, final TipiContext tc,final Set<String> occupants) throws XMPPException {
+	private static void registerRoomListeners(String nickName, final MultiUserChat muc, final TipiContext tc,final Set<String> occupants)  {
 		muc.addParticipantStatusListener(new ParticipantStatusListener() {
 			public void adminGranted(String arg0) {
 			}

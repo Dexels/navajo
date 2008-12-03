@@ -5,8 +5,6 @@ import java.util.*;
 import org.jivesoftware.smack.*;
 import org.jivesoftware.smackx.muc.*;
 
-import com.dexels.navajo.tipi.jabber.*;
-
 public class JabberLockImpl extends BaseLockImpl {
 	private Random generator = new Random();
 	private String nick = null;

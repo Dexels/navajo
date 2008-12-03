@@ -8,7 +8,6 @@ import org.jivesoftware.smack.filter.*;
 import org.jivesoftware.smack.packet.*;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Message.*;
-import org.jivesoftware.smackx.*;
 import org.jivesoftware.smackx.muc.*;
 
 import com.dexels.navajo.client.*;
