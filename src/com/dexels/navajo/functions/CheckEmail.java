@@ -45,7 +45,7 @@ public class CheckEmail extends FunctionInterface {
     String email = (String) o;
 
     try {
-     Pattern re = Pattern.compile("[A-z.\\-_0-9]+[@]{1}[A-z\\-_0-9]+[A-z.\\-_0-9]+[A-z\\-_0-9]{1}");
+     Pattern re = Pattern.compile("[A-z.\\-_&0-9]+[@]{1}[A-z\\-_0-9]+[A-z.\\-_0-9]+[A-z\\-_0-9]{1}");
      boolean isMatch = re.matcher(email).matches();
      if(!isMatch) {
        return new Boolean(false);
