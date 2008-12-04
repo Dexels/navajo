@@ -266,7 +266,7 @@ public final void paintComponent(Graphics g) {
            } else {
            	cpd = new CalendarPickerDialog(ff);
            }
-          cpd.getMainPanel().setPreferredSize(new Dimension(255,185));
+          cpd.getMainPanel().setPreferredSize(new Dimension(255,198));
           System.err.println("Entering: checkMouseClick: "+isEditable()+" -- "+showCalendarPickerButton+" >>> "+getHeight());
           System.err.println("ThreaD: "+Thread.currentThread().getName());
           Property pp = getProperty();
