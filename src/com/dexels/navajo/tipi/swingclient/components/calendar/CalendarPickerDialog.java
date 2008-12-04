@@ -28,12 +28,17 @@ import com.dexels.navajo.tipi.swingclient.components.*;
 
 public class CalendarPickerDialog extends StandardDialog implements CalendarManager {
 	BasePanel mainPanel = new BasePanel();
-	BasePanel controlPanel = new BasePanel();
+	BasePanel mainControlPanel = new BasePanel();
+	BasePanel controlMonthPanel = new BasePanel();
+	BasePanel controlYearPanel = new BasePanel();
 	CalendarTable calendar = new CalendarTable();
 	CalendarConstants constants = new CalendarConstants();
 	JButton nextMonthButton = new JButton();
 	JButton previousMonthButton = new JButton();
 	JLabel monthLabel = new JLabel();
+	JButton nextYearButton = new JButton();
+	JButton previousYearButton = new JButton();
+	JLabel yearLabel = new JLabel();
 	Date selected = null;
 
 	public void load(Date d) {
@@ -55,7 +60,10 @@ public class CalendarPickerDialog extends StandardDialog implements CalendarMana
 	private void init() {
 		addMainPanel(mainPanel);
 		mainPanel.setLayout(new BorderLayout());
-		mainPanel.add(controlPanel, BorderLayout.NORTH);
+		mainControlPanel.setLayout(new BorderLayout());
+		mainPanel.add(mainControlPanel, BorderLayout.NORTH);
+		mainControlPanel.add(controlYearPanel, BorderLayout.NORTH);
+		mainControlPanel.add(controlMonthPanel, BorderLayout.SOUTH);
 		mainPanel.add(calendar, BorderLayout.CENTER);
 		calendar.setCalendarConstants(constants);
 		calendar.getConstants().setColumnWidth(22);
@@ -64,19 +72,21 @@ public class CalendarPickerDialog extends StandardDialog implements CalendarMana
 		CalendarConstants.setColorScheme(CalendarConstants.COLORSCHEME_SPORTLINK);
 		calendar.rebuildUI();
 		setTitle("Selecteer datum");
-		setMode(DialogConstants.MODE_OK_CANCEL);
+		setMode(DialogConstants.MODE_CLOSE);
+		iconButtonPanel.setButtonAlignment(FlowLayout.RIGHT);
+		//setMode(DialogConstants.MODE_OK_CANCEL);
 		calendar.setBorder(BorderFactory.createEtchedBorder());
 
 		nextMonthButton.setIcon(new ImageIcon(CalendarPickerDialog.class.getResource("next-small.gif")));
 		previousMonthButton.setIcon(new ImageIcon(CalendarPickerDialog.class.getResource("previous-small.gif")));
 		nextMonthButton.setMargin(new Insets(0, 0, 0, 0));
 		previousMonthButton.setMargin(new Insets(0, 0, 0, 0));
-		controlPanel.setLayout(new GridBagLayout());
-		controlPanel.add(previousMonthButton, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST,
+		controlMonthPanel.setLayout(new GridBagLayout());
+		controlMonthPanel.add(previousMonthButton, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST,
 				GridBagConstraints.NONE, new Insets(2, 2, 2, 2), 0, 0));
-		controlPanel.add(monthLabel, new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
+		controlMonthPanel.add(monthLabel, new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
 				new Insets(2, 2, 2, 2), 0, 0));
-		controlPanel.add(nextMonthButton, new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.NONE,
+		controlMonthPanel.add(nextMonthButton, new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.NONE,
 				new Insets(2, 2, 2, 2), 0, 0));
 		nextMonthButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -88,9 +98,33 @@ public class CalendarPickerDialog extends StandardDialog implements CalendarMana
 				performAction(-1);
 			}
 		});
-		monthLabel.setText(calendar.getMonthString() + " " + calendar.getYear());
+		monthLabel.setText(calendar.getMonthString());
+		
+		nextYearButton.setIcon(new ImageIcon(CalendarPickerDialog.class.getResource("next-small.gif")));
+		previousYearButton.setIcon(new ImageIcon(CalendarPickerDialog.class.getResource("previous-small.gif")));
+		nextYearButton.setMargin(new Insets(0, 0, 0, 0));
+		previousYearButton.setMargin(new Insets(0, 0, 0, 0));
+		controlYearPanel.setLayout(new GridBagLayout());
+		controlYearPanel.add(previousYearButton, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, 
+				GridBagConstraints.NONE, new Insets(2, 2, 2, 2), 0, 0));
+		controlYearPanel.add(yearLabel, new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
+				new Insets(2, 2, 2, 2), 0, 0));
+		controlYearPanel.add(nextYearButton, new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.NONE,
+				new Insets(2, 2, 2, 2), 0, 0));
+		nextYearButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				performAction(12);
+			}
+		});
+		previousYearButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				performAction(-12);
+			}
+		});
+		yearLabel.setText("" + calendar.getYear());
+		
 		calendar.setCalendarManager(this);
-		mainPanel.setPreferredSize(new Dimension(250, 180));
+		mainPanel.setPreferredSize(new Dimension(250, 250));
 		// setUndecorated(true);
 		SwingUtilities.invokeLater(new Runnable(){
 
@@ -115,7 +149,10 @@ public class CalendarPickerDialog extends StandardDialog implements CalendarMana
 	}
 
 	public void performAction(int add) {
-		if (add == 1) {
+		if (add == 12) {
+			calendar.setYear(calendar.getYear()+1);
+			calendar.repaint();
+		} else if (add == 1) {
 			if (calendar.getMonth() == 11) {
 				calendar.setYear(calendar.getYear() + 1);
 			}
@@ -125,8 +162,12 @@ public class CalendarPickerDialog extends StandardDialog implements CalendarMana
 				calendar.setYear(calendar.getYear() - 1);
 			}
 			calendar.previousMonth();
+		} else if (add == -12) {
+			calendar.setYear(calendar.getYear()-1);
+			calendar.repaint();
 		}
-		monthLabel.setText(calendar.getMonthString() + " " + calendar.getYear());
+		monthLabel.setText(calendar.getMonthString());
+		yearLabel.setText(calendar.getYear()+"");
 	}
 
 	/**
