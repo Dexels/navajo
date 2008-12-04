@@ -97,6 +97,10 @@ public class IconButtonPanel extends JPanel {
     this.add(cancelButton, null);
   }
 
+  public void setButtonAlignment(int buttonAlignment) {
+	  flowLayout1.setAlignment(buttonAlignment);
+  }
+  
   public void setButtonVisible(String button, boolean state){
     if(button.equals(NEW_BUTTON)) {
       newButton.setVisible(state);
