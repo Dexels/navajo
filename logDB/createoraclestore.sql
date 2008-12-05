@@ -266,5 +266,8 @@ comment on column PROPERTYDESCRIPTION.LASTUPDATE is
 'last time the row was updated';
 /
 
+create sequence propertydescription_seq
+/
+
 SHOW ERRORS
 QUIT
