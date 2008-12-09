@@ -2208,12 +2208,13 @@ public String mapNode(int ident, Element n) throws Exception {
 
 	    try {
 			if (!MapMetaData.isMetaScript(script, scriptPath, packagePath)) {
-				compileScript(new FileInputStream(scriptPath + "/" + packagePath + "/" + script + ".xml"), 
-						      packagePath, script, scriptPath, workingPath);
+				FileInputStream fis = new FileInputStream(scriptPath + "/" + packagePath + "/" + script + ".xml"); 
+				compileScript(ScriptInheritance.inherit(fis, scriptPath), packagePath, script, scriptPath, workingPath);
+				fis.close();
 			} else {
 				MapMetaData mmd = MapMetaData.getInstance();
 				String intermed = mmd.parse(scriptPath + "/" + packagePath + "/" + script + ".xml");
-				compileScript(new ByteArrayInputStream(intermed.getBytes()), 
+				compileScript(ScriptInheritance.inherit(new ByteArrayInputStream(intermed.getBytes()), scriptPath), 
 						     packagePath, script, scriptPath, workingPath );
 			}
 		} catch (Exception e) {
