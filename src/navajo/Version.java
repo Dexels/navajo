@@ -27,6 +27,8 @@ package navajo;
 /**
  * VERSION HISTORY
  * 
+ * 7.7.0 Added support for Script Inheritance via <inject> semantics.
+ * 
  * 7.0.4 Minor Changes. Do not persist access objects anymore. Clone access and do not clone indoc and outdoc if
  *       not needed. This should reduce the burden on the GC.
  *       
@@ -137,11 +139,11 @@ package navajo;
 public class Version extends dexels.Version {
 
 	public static final int MAJOR = 7;
-	public static final int MINOR = 0;
-	public static final int PATCHLEVEL = 5;
+	public static final int MINOR = 7;
+	public static final int PATCHLEVEL = 0;
 	public static final String VENDOR = "Dexels";
 	public static final String PRODUCTNAME = "Navajo Kernel";
-	public static final String RELEASEDATE = "2008-11-11";
+	public static final String RELEASEDATE = "2008-12-09";
 	
 //	 Included packages.
 	String [] includes = {"navajodocument.Version"};
@@ -149,7 +151,7 @@ public class Version extends dexels.Version {
 	public Version() {
 		addIncludes(includes);
 		setReleaseDate(RELEASEDATE);
-		setSpecialVersion("The Saint Martin Edition");
+		setSpecialVersion("The Darwinian (R)evolution Edition");
 	}
 	
 	public int getMajor() {
