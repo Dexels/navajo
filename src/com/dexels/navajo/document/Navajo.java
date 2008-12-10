@@ -374,4 +374,6 @@ public interface Navajo
    */
   public Navajo merge(Navajo with) throws NavajoException;
   
+  public Map<String,Message> getMessages();
+
 }

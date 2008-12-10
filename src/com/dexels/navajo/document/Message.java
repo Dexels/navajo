@@ -418,6 +418,12 @@ public interface Message
   public void addPropertyChangeListener(PropertyChangeListener p);
   public void removePropertyChangeListener(PropertyChangeListener p);
   public void firePropertyDataChanged(Property p,Object oldValue, Object newValue);
-  
+	public Map<String, Property> getProperties();
+
+	public Map<String, Message> getMessages();
+
+	public List<Message> getElements();
+
+
 
 }

@@ -1411,5 +1411,23 @@ public final Message getParentMessage() {
 			}
 			
 		}
-	
+		
+		public Map<String,Property> getProperties() {
+			return new HashMap<String, Property>(propertyMap);
+		}
+		
+		public Map<String,Message> getMessages() {
+			return new HashMap<String, Message>(messageMap);
+		}
+
+		public List<Message> getElements() {
+			if (messageList==null) {
+				System.err.println("RETURNING NULL ELEMENTS = EMPTY LIST");
+				return new ArrayList<Message>();
+			} else {
+				System.err.println("RETURNING NONNULL ELEMENTS = LIST SZIE: "+messageList.size());
+				return new ArrayList<Message>(messageList);
+			}
+		}
+		
 }
